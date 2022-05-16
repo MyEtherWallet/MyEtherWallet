@@ -216,6 +216,7 @@ export default {
       newObj.price =
         item.pricef && item.pricef !== '0' ? '$' + item.pricef : '';
 
+      // Use eth.svg icon for ETH
       if (item.symbol == 'ETH') {
         newObj.tokenImg = require('@/assets/images/networks/eth.svg');
       } else {
