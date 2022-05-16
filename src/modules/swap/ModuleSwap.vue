@@ -175,7 +175,7 @@
                       collateral in DeFi apps, etc. There are multiple kinds of
                       wrapped Bitcoins, but they roughly do the same thing.
                       <a
-                        href="https://help.myetherwallet.com/en/articles/5461528-move-your-btc-to-the-ethereum-blockchain-with-mew-swap"
+                        :href="getArticle('mv-btc-to-eth-mew-swap')"
                         target="_blank"
                       >
                         Learn more about Wrapped Bitcoin.
@@ -402,6 +402,7 @@ export default {
       'contractToToken',
       'getCoinGeckoTokenById'
     ]),
+    ...mapGetters('article', ['getArticle']),
     /**
      * @returns string
      * is used as a label for module-address-book
@@ -779,7 +780,6 @@ export default {
         this.currentTrade.transactions?.forEach(tx => {
           totalGas = totalGas.add(toBN(tx.gas));
         });
-        2;
         return totalGas.toString();
       }
       return '0';
@@ -1329,7 +1329,6 @@ export default {
           new BigNumber(10).pow(new BigNumber(this.fromTokenType.decimals))
         )
       };
-
       if (this.isFromNonChain) {
         swapObj['refundAddress'] = this.refundAddress;
       }
@@ -1393,7 +1392,6 @@ export default {
         fromTokenType: this.fromTokenType,
         toTokenType: this.toTokenType
       };
-
       if (this.isFromNonChain) {
         obj['refundAddress'] = this.refundAddress;
       }

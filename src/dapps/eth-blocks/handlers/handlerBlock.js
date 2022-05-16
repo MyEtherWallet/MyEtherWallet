@@ -23,13 +23,13 @@ export default class HandlerBlock {
     this.blockNumber = toBN(_blockNumber).toNumber();
     this.currAdr = _currAdr;
     //Block Data:
-    this.owner = null;
     this.img = '';
     this.rawImg = '';
     this.mintPrice = '';
     this.description = '';
     this.date = '';
     this.author = '';
+    this.mintData = '';
     this.transactions = 0;
     this.gasUsed = 0;
     this.uncles = 0;
@@ -50,6 +50,7 @@ export default class HandlerBlock {
     this.description = '';
     this.date = '';
     this.author = '';
+    this.mintData = '';
     this.transactions = 0;
     this.gasUsed = 0;
     this.uncles = 0;
@@ -97,8 +98,14 @@ export default class HandlerBlock {
         //Set Block Data
         this.extra = [];
         const meta = resp.data.metadata;
-        this.hasOwner = resp.data.tokenOwner !== NO_OWNER;
-        this.owner = resp.data.tokenOwner;
+        this.hasOwner =
+          this.blockNumber === 13784390
+            ? true
+            : resp.data.tokenOwner !== NO_OWNER;
+        this.owner =
+          this.blockNumber === 13784390
+            ? '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
+            : resp.data.tokenOwner;
         this.rawImg = meta.image;
         this.img = `${IMAGE_PROXY}${meta.image}`;
         this.mintPrice = meta.mintPrice;
@@ -119,6 +126,27 @@ export default class HandlerBlock {
       })
       .catch(err => {
         this.loading = false;
+        Toast(err, {}, ERROR);
+      });
+  }
+
+  generateMintData() {
+    const payload = {
+      blockNumber: this.blockNumber,
+      chainId: this.network.type.chainID,
+      to: this.currAdr
+    };
+    return axios
+      .post(URL_POST_MINT, payload)
+      .then(resp => {
+        //Set Block Data
+        if (resp.data.error) {
+          this.getBlock();
+          throw new Error(resp.data.error);
+        }
+        this.mintData = resp.data.txData;
+      })
+      .catch(err => {
         Toast(err, {}, ERROR);
       });
   }

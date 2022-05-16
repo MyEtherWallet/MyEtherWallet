@@ -208,7 +208,6 @@
 
 * add mobile app store redirecting page [#3645](https://github.com/MyEtherWallet/MyEtherWallet/pull/3645)
 * allow test transactions [#3617](https://github.com/MyEtherWallet/MyEtherWallet/pull/3617)
-* add ens dapp balance check [#3710](https://github.com/MyEtherWallet/MyEtherWallet/pull/3710)
 
 ### fix
 
@@ -244,7 +243,6 @@
 
 * add in log message on app start [#3572](https://github.com/MyEtherWallet/MyEtherWallet/pull/3572)
 * add job postings page [#3577](https://github.com/MyEtherWallet/MyEtherWallet/pull/3577)
-* add ens dapp balance check [#3710](https://github.com/MyEtherWallet/MyEtherWallet/pull/3710)
 
 ### Release v6.4.3
 

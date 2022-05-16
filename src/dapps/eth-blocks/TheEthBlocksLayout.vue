@@ -34,20 +34,6 @@ export default {
         subtext: 'Mint generative art NFTs of Ethereum blocks. '
       },
       activeTab: 0,
-      tabs: [
-        {
-          name: 'Mint a new block',
-          route: { name: ETH_BLOCKS_ROUTE.CORE.NAME },
-          id: 0
-        },
-        {
-          name: 'My blocks',
-          route: {
-            name: ETH_BLOCKS_ROUTE.MY_BLOCKS.NAME
-          },
-          id: 1
-        }
-      ],
       headerImg: require('@/assets/images/icons/icon-dapp-eth-blocks.svg'),
       validNetworks: SUPPORTED_NETWORKS,
       checkPendingInterval: false
@@ -55,7 +41,8 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['web3']),
-    ...mapGetters('global', ['network']),
+    ...mapState('ethBlocksTxs', ['cart']),
+    ...mapGetters('global', ['network', 'isTestNetwork']),
     ...mapGetters('ethBlocksTxs', ['getAllEthBlocksTxs']),
 
     /**
@@ -64,6 +51,39 @@ export default {
      */
     hasPendingTxs() {
       return this.getAllEthBlocksTxs.length > 0;
+    },
+    identifyNetwork() {
+      return this.isTestNetwork ? this.cart.RIN : this.cart.ETH;
+    },
+    tabs() {
+      return [
+        {
+          name: 'Mint a New block',
+          route: { name: ETH_BLOCKS_ROUTE.CORE.NAME },
+          id: 0,
+          hasBadge: false
+        },
+        {
+          name: 'My Blocks',
+          route: {
+            name: ETH_BLOCKS_ROUTE.MY_BLOCKS.NAME
+          },
+          id: 1,
+          hasBadge: false
+        },
+        {
+          name: `Bulk Minting `,
+          route: {
+            name: ETH_BLOCKS_ROUTE.BATCH_MINTING.NAME
+          },
+          id: 2,
+          hasBadge: this.identifyNetwork.length > 0 ? true : false,
+          badgeContent:
+            this.identifyNetwork.length > 0
+              ? `${this.identifyNetwork.length}`
+              : ''
+        }
+      ];
     }
   },
   watch: {
@@ -78,6 +98,8 @@ export default {
     $route(to) {
       if (to.name === ETH_BLOCKS_ROUTE.MY_BLOCKS.NAME) {
         this.activeTab = this.tabs[1].id;
+      } else if (to.name === ETH_BLOCKS_ROUTE.BATCH_MINTING.NAME) {
+        this.activeTab = this.tabs[2].id;
       } else {
         this.activeTab = this.tabs[0].id;
       }
@@ -89,6 +111,9 @@ export default {
     }
     if (this.$route.name === ETH_BLOCKS_ROUTE.MY_BLOCKS.NAME) {
       this.activeTab = this.tabs[1].id;
+    }
+    if (this.$route.name === ETH_BLOCKS_ROUTE.BATCH_MINTING.NAME) {
+      this.activeTab = this.tabs[2].id;
     }
   },
   beforeDestroy() {

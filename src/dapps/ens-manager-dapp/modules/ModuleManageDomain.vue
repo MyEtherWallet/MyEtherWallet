@@ -10,7 +10,12 @@
     :close="close"
     content-size="large"
   >
-    <transfer v-if="isTransfer" ref="transfer" :transfer="transfer" />
+    <transfer
+      v-if="isTransfer"
+      ref="transfer"
+      :transfer="transfer"
+      :manage-domain-handler="manageDomainHandler"
+    />
     <renew
       v-if="isRenew"
       :get-rent-price="getRentPrice"
@@ -147,6 +152,10 @@ export default {
       default: null
     },
     textRecords: {
+      type: [Object, null],
+      default: null
+    },
+    manageDomainHandler: {
       type: [Object, null],
       default: null
     }

@@ -126,7 +126,7 @@
             >
             <v-spacer />
             <p class="teal--text text--lighten-1 ma-0">
-              {{ $t('footer.copyright') }}
+              {{ $t('footer.copyright', { year: new Date().getFullYear() }) }}
               <a
                 class="cyan--text text--lighten-3"
                 href="https://www.coingecko.com/en"
@@ -293,7 +293,7 @@
             </div>
             <v-sheet color="transparent" max-width="300px" class="mx-auto">
               <p class="teal--text text--lighten-1 mt-6 mb-0 text-center">
-                {{ $t('footer.copyright') }}
+                {{ $t('footer.copyright', { year: new Date().getFullYear() }) }}
                 <a
                   class="cyan--text text--lighten-3"
                   href="https://www.coingecko.com/en"
@@ -389,15 +389,14 @@ export default {
             label: 'Generate keystore file',
             routerLink: 'Tools',
             query: { tool: 'keystore' }
-          }
-          /*
-          ,
-          {
-            label: 'Send offline help',
-            routerLink: 'Tools',
-            query: { tool: 'offline' }
           },
           {
+            label: 'Send Offline Helper',
+            routerLink: 'Tools',
+            query: { tool: 'offline' }
+          }
+          /*
+          ,{
             label: 'Transaction status',
             routerLink: 'SendTX'
           },
@@ -407,11 +406,6 @@ export default {
             query: { tool: 'watch' }
           },
           { label: 'Submit Dapp', routerLink: 'Home' },
-          {
-            label: 'Convert units',
-            routerLink: 'Tools',
-            query: { tool: 'convert' }
-          }
           */
         ]
       }

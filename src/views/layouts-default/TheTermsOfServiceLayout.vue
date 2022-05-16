@@ -92,7 +92,7 @@
               >
                 <template #article1>
                   <a
-                    href="https://help.myetherwallet.com/en/articles/5377591-myetherwallet-an-introduction"
+                    :href="getArticle('mew-introduction')"
                     target="_blank"
                     rel="noopener noreferrer"
                     >"{{ parent.$t('termsOfService.article1') }}"</a
@@ -100,7 +100,7 @@
                 </template>
                 <template #article2>
                   <a
-                    href="https://help.myetherwallet.com/en/articles/5377928-pro-tips-how-to-avoid-phishing-scams"
+                    :href="getArticle('avoid-phishing-scams')"
                     target="_blank"
                     rel="noopener noreferrer"
                     >“{{ parent.$t('termsOfService.article2') }}”</a
@@ -346,8 +346,12 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 export default {
-  name: 'TheTermsOfServiceLayout'
+  name: 'TheTermsOfServiceLayout',
+  computed: {
+    ...mapGetters('article', ['getArticle'])
+  }
 };
 </script>
 
