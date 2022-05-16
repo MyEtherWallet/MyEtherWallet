@@ -18,7 +18,9 @@ export const knownErrors = {
     'Execution Reverted',
   'Transaction has been reverted by the EVM':
     'Transaction has been reverted by the EVM',
-  'TypeError: Failed to fetch': 'Request Failed. Please refresh and try again.'
+  'TypeError: Failed to fetch': 'Request Failed. Please refresh and try again.',
+  "Returned values aren't valid, did it run Out of Gas?":
+    "Returned values aren't valid, did it run Out of Gas?"
 };
 
 const handleError = err => {
