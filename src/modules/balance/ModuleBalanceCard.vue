@@ -379,6 +379,11 @@ export default {
      * returns @String
      */
     walletChainBalance() {
+      // eslint-disable-next-line
+      console.log(
+        this.balanceInETH,
+        formatFloatingPointValue(this.balanceInETH).value
+      );
       return `${formatFloatingPointValue(this.balanceInETH).value}`;
     },
     /**
