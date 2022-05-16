@@ -204,7 +204,6 @@ import MultiCoinValidator from 'multicoin-address-validator';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import { isEmpty, cloneDeep, isEqual } from 'lodash';
 import BigNumber from 'bignumber.js';
-import { LOCALE } from '../helpers';
 import { mapGetters, mapActions, mapState } from 'vuex';
 import { fromWei } from 'web3-utils';
 import Web3 from 'web3';
@@ -253,27 +252,27 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('global', ['network']),
+    ...mapGetters('global', ['network', 'getFiatValue']),
     ...mapState('wallet', ['address']),
     includesFeeText() {
-      return `Includes ${this.percentFee} fee (${this.currencyFormatter(
+      return `Includes ${this.percentFee} fee (${this.getFiatValue(
         this.minFee
       )} min)`;
     },
     networkFeeText() {
       return `${
         this.selectedCurrency.name
-      } network fee (for transfers to your wallet) ~${this.currencyFormatter(
+      } network fee (for transfers to your wallet) ~${this.getFiatValue(
         this.networkFeeToFiat
       )}`;
     },
     dailyLimit() {
       const value = BigNumber(this.fiatMultiplier).times(12000);
-      return `Daily limit: ${this.currencyFormatter(value.toString())}`;
+      return `Daily limit: ${this.getFiatValue(value.toString())}`;
     },
     monthlyLimit() {
       const value = BigNumber(this.fiatMultiplier).times(50000);
-      return `Monthly limit: ${this.currencyFormatter(value.toString())}`;
+      return `Monthly limit: ${this.getFiatValue(value.toString())}`;
     },
     fiatMultiplier() {
       if (this.hasData) {
@@ -321,7 +320,7 @@ export default {
       return withFee.minus(this.networkFeeToFiat).toString();
     },
     plusFeeF() {
-      return this.currencyFormatter(this.plusFee);
+      return this.getFiatValue(this.plusFee);
     },
     percentFee() {
       return this.isEUR ? '0.7%' : '3.25%';
@@ -463,7 +462,7 @@ export default {
                 return quote.fiat_currency === this.selectedFiatName;
               });
 
-              token.price = this.currencyFormatter(
+              token.price = this.getFiatValue(
                 actualPrice ? actualPrice.price : '0'
               );
               return token;
@@ -643,13 +642,6 @@ export default {
     setMax() {
       const simplexMax = this.max.simplex;
       this.amount = simplexMax.toString();
-    },
-    currencyFormatter(value) {
-      const locale = this.hasData ? LOCALE[this.selectedFiatName] : 'en-US';
-      return new Intl.NumberFormat(locale, {
-        style: 'currency',
-        currency: this.selectedFiatName
-      }).format(value);
     },
     setCurrency(e) {
       this.selectedCurrency = e;
