@@ -17,7 +17,6 @@ const exportObj = {
     }
   },
   chainWebpack: config => {
-    2;
     // GraphQL Loader
     config.module
       .rule('graphql')

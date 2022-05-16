@@ -34,6 +34,9 @@
 * Selecting other currency in Sell shouldn't crash browser anymore [#3823](https://github.com/MyEtherWallet/MyEtherWallet/pull/3823)
 * Error message in Send Module will sometimes be null [#3824](https://github.com/MyEtherWallet/MyEtherWallet/pull/3824)
 * Clears the sell input form when changing currency in Sell [#3825](https://github.com/MyEtherWallet/MyEtherWallet/pull/3825)
+* fix ens dapp balance check [#3710](https://github.com/MyEtherWallet/MyEtherWallet/pull/3710) [#3710](https://github.com/MyEtherWallet/MyEtherWallet/pull/3710)
+* fix Cannot read properties of undefined [#3713](https://github.com/MyEtherWallet/MyEtherWallet/pull/3713)
+* fix BSC undefined swap issue [#3828](https://github.com/MyEtherWallet/MyEtherWallet/pull/3828)
 
 ### Release v6.5.3
 
