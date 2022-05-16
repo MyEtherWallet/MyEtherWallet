@@ -39,10 +39,7 @@
 </template>
 
 <script>
-import {
-  formatFloatingPointValue,
-  formatFiatValue
-} from '@/core/helpers/numberFormatHelper';
+import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { currencyToNumber } from '@/core/helpers/localization';
 import { mapGetters } from 'vuex';
 
@@ -87,16 +84,13 @@ export default {
     this.rentPrice();
   },
   methods: {
-    ...mapGetters('global', ['currencyConfig']),
+    ...mapGetters('global', ['getFiatValue']),
     rentPrice() {
       if (this.duration > 0) {
         return this.getRentPrice(this.duration).then(resp => {
           if (resp) {
             this.rentPriceETH = formatFloatingPointValue(resp.eth).value;
-            this.rentPriceUSD = formatFiatValue(
-              currencyToNumber(resp.usd),
-              this.currencyConfig
-            ).value;
+            this.rentPriceUSD = this.getFiatValue(currencyToNumber(resp.usd));
           }
         });
       }

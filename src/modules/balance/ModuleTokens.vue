@@ -83,7 +83,6 @@ import { mapGetters, mapState } from 'vuex';
 import BalanceEmptyBlock from './components/BalanceEmptyBlock';
 import TokenAddCustom from './components/TokenAddCustom';
 import TokenDeleteCustom from './components/TokenDeleteCustom';
-import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { uniqWith, isEqual } from 'lodash';
 import { currencyToNumber } from '@/core/helpers/localization';
@@ -170,7 +169,7 @@ export default {
       'isEthNetwork',
       'network',
       'hasSwap',
-      'currencyConfig'
+      'getFiatValue'
     ]),
     ...mapGetters('external', ['totalTokenFiatValue']),
     loading() {
@@ -195,8 +194,7 @@ export default {
       return tokens;
     },
     totalTokensValue() {
-      return formatFiatValue(this.totalTokenFiatValue, this.currencyConfig)
-        .value;
+      return this.getFiatValue(this.totalTokenFiatValue);
     }
   },
   methods: {
@@ -205,14 +203,11 @@ export default {
      */
     formatValues(item) {
       const newObj = {};
-      console.log('balance: %s', item.usdBalancef);
       newObj.balance = [
         item.balancef
           ? item.balancef + ' ' + item.symbol
           : '0' + ' ' + item.symbol,
-        item.usdBalancef
-          ? formatFiatValue(item.usdBalancef, this.currencyConfig).value
-          : '0'
+        item.usdBalancef ? this.getFiatValue(item.usdBalancef) : '0'
       ];
       newObj.usdBalance = item.usdBalance ? item.usdBalance : '0';
       newObj.token = item.symbol;
@@ -226,7 +221,7 @@ export default {
       const priceUF = currencyToNumber(item.pricef);
       newObj.price =
         item.pricef && priceUF.toString() !== '0'
-          ? formatFiatValue(item.pricef, this.currencyConfig).value
+          ? this.getFiatValue(item.pricef)
           : '';
       newObj.tokenImg = item.img ? item.img : this.network.type.icon;
       if (this.hasSwap) {

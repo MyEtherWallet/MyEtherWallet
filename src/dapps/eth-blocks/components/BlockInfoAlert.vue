@@ -196,7 +196,6 @@ import { fromWei } from 'web3-utils';
 import { mapGetters } from 'vuex';
 import {
   formatIntegerToString,
-  formatFiatValue,
   formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
 import BigNumber from 'bignumber.js';
@@ -252,7 +251,7 @@ export default {
     /**
      * STORE GETTERS
      */
-    ...mapGetters('global', ['network', 'isTestNetwork', 'currencyConfig']),
+    ...mapGetters('global', ['network', 'isTestNetwork', 'getFiatValue']),
     ...mapGetters('external', ['fiatValue']),
     /**
      * @returns{string}
@@ -350,10 +349,9 @@ export default {
      * Property returns formatted FIAT price
      */
     formatFiatPrice() {
-      const value = formatFiatValue(
-        BigNumber(fromWei(this.price)).times(this.fiatValue),
-        this.currencyConfig
-      ).value;
+      const value = this.getFiatValue(
+        BigNumber(fromWei(this.price)).times(this.fiatValue)
+      );
       return `~${value}`;
     },
 

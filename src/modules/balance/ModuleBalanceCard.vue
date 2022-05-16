@@ -241,10 +241,7 @@ import { mapGetters, mapActions, mapState } from 'vuex';
 import clipboardCopy from 'clipboard-copy';
 import { Toast, INFO, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
-import {
-  formatFiatValue,
-  formatFloatingPointValue
-} from '@/core/helpers/numberFormatHelper';
+import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { isEmpty } from 'lodash';
 import ModuleAccessWalletHardware from '@/modules/access-wallet/ModuleAccessWalletHardware';
 import ModuleAccessWalletSoftware from '@/modules/access-wallet/ModuleAccessWalletSoftware';
@@ -281,7 +278,7 @@ export default {
       'isEthNetwork',
       'network',
       'isTestNetwork',
-      'currencyConfig'
+      'getFiatValue'
     ]),
     /**
      * verify address title
@@ -368,8 +365,7 @@ export default {
     totalWalletBalance() {
       if (!this.isTestNetwork) {
         const total = this.totalTokenBalance;
-        console.log('card: %s', total.toString());
-        return formatFiatValue(total, this.currencyConfig).value;
+        return this.getFiatValue(total);
       }
       return this.walletChainBalance;
     },

@@ -51,7 +51,6 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex';
-import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 import AppModal from '@/core/components/AppModal';
 import ModuleTokens from '@/modules/balance/ModuleTokens';
 export default {
@@ -65,13 +64,12 @@ export default {
     ...mapGetters('wallet', ['tokensList']),
     ...mapState('wallet', ['initialLoad']),
     ...mapGetters('external', ['totalTokenFiatValue']),
-    ...mapGetters('global', ['currencyConfig']),
+    ...mapGetters('global', ['getFiatValue']),
     tokenTitle() {
       return `My Token${this.tokensList.length > 1 ? 's' : ''} Value`;
     },
     totalTokenValues() {
-      return formatFiatValue(this.totalTokenFiatValue, this.currencyConfig)
-        .value;
+      return this.getFiatValue(this.totalTokenFiatValue);
     },
     tokenImages() {
       return this.tokensList

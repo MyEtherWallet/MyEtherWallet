@@ -149,10 +149,7 @@ import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 import { isAddress } from '@/core/helpers/addressUtils';
 import { debounce } from 'lodash';
 import BigNumber from 'bignumber.js';
-import {
-  formatFloatingPointValue,
-  formatFiatValue
-} from '@/core/helpers/numberFormatHelper';
+import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 
 export default {
   props: {
@@ -182,7 +179,7 @@ export default {
     ...mapGetters('wallet', ['tokensList']),
     ...mapGetters('external', ['contractToToken']),
     ...mapGetters('custom', ['customTokens']),
-    ...mapGetters('global', ['currencyConfig']),
+    ...mapGetters('global', ['getFiatValue']),
     /**
      * @returns token data to display on form
      */
@@ -401,12 +398,9 @@ export default {
             .div(denominator)
             .times(this.token.price)
             .toString();
-          this.token.usdBalancef = formatFiatValue(
-            this.token.usdBalance,
-            this.currencyConfig
-          ).value
-            ? formatFiatValue(this.token.usdBalance, this.currencyConfig).value
-            : formatFiatValue(0, this.currencyConfig);
+          this.token.usdBalancef = this.getFiatValue(this.token.usdBalance)
+            ? this.getFiatValue(this.token.usdBalance)
+            : this.getFiatValue(0);
         } else {
           this.token.name = await contract.methods.name().call();
           this.token.symbol = await contract.methods.symbol().call();

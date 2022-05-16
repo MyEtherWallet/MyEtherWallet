@@ -8,6 +8,7 @@ import {
 } from '@/core/helpers/gasPriceHelper';
 import { toBN } from 'web3-utils';
 import { isEmpty } from 'lodash';
+import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 
 const Networks = function () {
   return nodeList;
@@ -80,6 +81,21 @@ const currencyConfig = (state, getters, rootState) => {
   const rate = currencyRate.data ? currencyRate.data.exchange_rate : 1;
   return { currency, rate };
 };
+
+const getFiatValue =
+  (state, getters) =>
+  /**
+   *
+   * @param {Number|String} value
+   * @param {Object} options
+   * @param {Boolean} options.doNotLocalize - formats value to currency, no rate
+   * @returns - Formatted localized currency
+   */
+  (value, options = {}) => {
+    const config = options.doNotLocalize ? {} : getters.currencyConfig;
+    return formatFiatValue(value, config).value;
+  };
+
 const isEIP1559SupportedNetwork = function (state) {
   return state.eip1559.baseFeePerGas !== '0';
 };
@@ -110,6 +126,7 @@ export default {
   isEthNetwork,
   localContracts,
   currencyConfig,
+  getFiatValue,
   isTestNetwork,
   hasSwap,
   swapLink,

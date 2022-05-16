@@ -273,7 +273,6 @@ import * as locStore from 'store';
 import { sanitizeHex } from '@/modules/access-wallet/common/helpers';
 import dataToAction from './handlers/dataToAction';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
 
 export default {
@@ -326,7 +325,7 @@ export default {
       'isHardware'
     ]),
     ...mapGetters('external', ['fiatValue']),
-    ...mapGetters('global', ['network', 'currencyConfig']),
+    ...mapGetters('global', ['network', 'getFiatValue']),
     ...mapGetters('article', ['getArticle']),
     ...mapState('addressBook', ['addressBookStore']),
     txTo() {
@@ -403,10 +402,9 @@ export default {
       return fromWei(parsedTxFee);
     },
     txFeeUSD() {
-      return formatFiatValue(
-        BigNumber(this.txFee).times(this.fiatValue).toFixed(2),
-        this.currencyConfig
-      ).value;
+      return this.getFiatValue(
+        BigNumber(this.txFee).times(this.fiatValue).toFixed(2)
+      );
     },
     value() {
       if (!this.isBatch) {

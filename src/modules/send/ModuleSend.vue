@@ -191,12 +191,10 @@ import SendLowBalanceNotice from './components/SendLowBalanceNotice.vue';
 import AppButtonBalance from '@/core/components/AppButtonBalance';
 import AppTransactionFee from '@/core/components/AppTransactionFee.vue';
 import {
-  formatFiatValue,
   formatIntegerToString,
   toBNSafe
 } from '@/core/helpers/numberFormatHelper';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
-import { currencyToNumber } from '@/core/helpers/localization';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 export default {
   components: {
@@ -256,7 +254,7 @@ export default {
       'gasPrice',
       'isEthNetwork',
       'swapLink',
-      'currencyConfig'
+      'getFiatValue'
     ]),
     ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
     ...mapGetters('custom', ['hasCustom', 'customTokens']),
@@ -334,15 +332,9 @@ export default {
       // no ref copy
       const tokensList = this.tokensList.slice();
       const imgs = tokensList.map(item => {
-        item.totalBalance = formatFiatValue(
-          currencyToNumber(item.usdBalancef),
-          this.currencyConfig
-        ).value;
+        item.totalBalance = this.getFiatValue(item.usdBalancef);
         item.tokenBalance = item.balancef;
-        item.price = formatFiatValue(
-          currencyToNumber(item.pricef),
-          this.currencyConfig
-        ).value;
+        item.price = this.getFiatValue(item.pricef);
         item.subtext = item.name;
         item.value = item.name;
         item.name = item.symbol;

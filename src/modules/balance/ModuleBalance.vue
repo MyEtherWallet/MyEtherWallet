@@ -106,7 +106,6 @@ import handlerBalanceHistory from './handlers/handlerBalanceHistory.mixin';
 import { mapGetters, mapState } from 'vuex';
 import {
   formatPercentageValue,
-  formatFiatValue,
   formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
 import BigNumber from 'bignumber.js';
@@ -130,7 +129,7 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['address']),
-    ...mapGetters('global', ['network', 'hasSwap', 'currencyConfig']),
+    ...mapGetters('global', ['network', 'hasSwap', 'getFiatValue']),
     ...mapGetters('wallet', ['balanceInETH', 'balanceInWei']),
     ...mapGetters('external', [
       'fiatValue',
@@ -168,8 +167,7 @@ export default {
      */
     convertedBalance() {
       if (this.fiatLoaded) {
-        return formatFiatValue(this.balanceFiatValue, this.currencyConfig)
-          .value;
+        return this.getFiatValue(this.balanceFiatValue);
       }
       return '';
     },
@@ -191,9 +189,7 @@ export default {
      */
     formatFiatPrice() {
       if (this.fiatLoaded) {
-        return formatFiatValue(this.fiatValue, {
-          currency: this.currencyConfig.currency
-        }).value;
+        return this.getFiatValue(this.fiatValue);
       }
       return '';
     },

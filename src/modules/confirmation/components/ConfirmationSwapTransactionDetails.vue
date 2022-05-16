@@ -60,7 +60,6 @@
 
 <script>
 import {
-  formatFiatValue,
   formatFloatingPointValue,
   formatGasValue
 } from '@/core/helpers/numberFormatHelper';
@@ -69,7 +68,6 @@ import ConfirmationValuesContainer from './ConfirmationValuesContainer';
 import BigNumber from 'bignumber.js';
 import { mapGetters } from 'vuex';
 import { fromWei } from 'web3-utils';
-import { currencyToNumber } from '@/core/helpers/localization';
 export default {
   components: {
     ConfirmationSummaryBlock,
@@ -139,14 +137,13 @@ export default {
   },
   computed: {
     ...mapGetters('external', ['fiatValue']),
-    ...mapGetters('global', ['currencyConfig']),
+    ...mapGetters('global', ['getFiatValue']),
     convertedFees() {
       return formatGasValue(this.txFee);
     },
     txFeeUSD() {
       const feeETH = BigNumber(fromWei(this.txFee));
-      return formatFiatValue(feeETH.times(this.fiatValue), this.currencyConfig)
-        .value;
+      return this.getFiatValue(feeETH.times(this.fiatValue));
     },
     summaryItems() {
       const newArr = ['Exchange rate', 'Transaction fee'];
@@ -182,10 +179,7 @@ export default {
           type: this.toType,
           address: this.to,
           amount: formatFloatingPointValue(this.toVal).value,
-          usd: formatFiatValue(
-            currencyToNumber(this.toUsd),
-            this.currencyConfig
-          ).value
+          usd: this.getFiatValue(this.toUsd)
         }
       ];
     }

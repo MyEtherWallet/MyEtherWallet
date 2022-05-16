@@ -35,10 +35,7 @@
 </template>
 
 <script>
-import {
-  formatFiatValue,
-  formatFloatingPointValue
-} from '@/core/helpers/numberFormatHelper';
+import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
 import BigNumber from 'bignumber.js';
 import ConfirmationSummaryBlock from './ConfirmationSummaryBlock';
@@ -88,7 +85,7 @@ export default {
   },
   computed: {
     ...mapGetters('external', ['fiatValue']),
-    ...mapGetters('global', ['currencyConfig']),
+    ...mapGetters('global', ['getFiatValue']),
     currency() {
       const obj = Object.assign({}, this.sendCurrency);
       if (!obj.hasOwnProperty('amount')) obj['amount'] = this.value;
@@ -112,20 +109,17 @@ export default {
     totalFeeUSD() {
       const ethFeeToUsd = BigNumber(this.txFee).times(this.value);
       if (this.currency.symbol === this.network.type.currencyName) {
-        return formatFiatValue(
-          BigNumber(this.totalFee).times(this.fiatValue).toFixed(2),
-          this.currencyConfig
-        ).value;
+        return this.getFiatValue(
+          BigNumber(this.totalFee).times(this.fiatValue).toFixed(2)
+        );
       }
       const tokenPrice = BigNumber(this.currency.priceRaw).times(this.value);
-      return formatFiatValue(tokenPrice.plus(ethFeeToUsd), this.currencyConfig)
-        .value;
+      return this.getFiatValue(tokenPrice.plus(ethFeeToUsd));
     },
     usdAmount() {
-      return formatFiatValue(
-        BigNumber(this.value).times(this.currency.priceRaw),
-        this.currencyConfig
-      ).value;
+      return this.getFiatValue(
+        BigNumber(this.value).times(this.currency.priceRaw)
+      );
     },
     summaryItems() {
       return this.isNetworkCurrency

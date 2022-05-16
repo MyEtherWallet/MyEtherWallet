@@ -312,8 +312,6 @@ import { TRENDING_LIST } from './handlers/configs/configTrendingTokens';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 import xss from 'xss';
-import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
-import { currencyToNumber } from '@/core/helpers/localization';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 
 const MIN_GAS_LIMIT = 800000;
@@ -396,7 +394,7 @@ export default {
       'network',
       'isEthNetwork',
       'gasPriceByType',
-      'currencyConfig'
+      'getFiatValue'
     ]),
     ...mapGetters('wallet', [
       'balanceInETH',
@@ -626,20 +624,14 @@ export default {
         .map(token => {
           if (token.cgid) {
             const foundToken = this.getCoinGeckoTokenById(token.cgid);
-            foundToken.price = formatFiatValue(
-              currencyToNumber(foundToken.pricef),
-              this.currencyConfig
-            ).value;
+            foundToken.price = this.getFiatValue(foundToken.pricef);
             foundToken.name = token.symbol;
             return Object.assign(token, foundToken);
           }
           const foundToken = this.contractToToken(token.contract);
           if (foundToken) {
             foundToken.contract = token.contract;
-            foundToken.price = formatFiatValue(
-              currencyToNumber(foundToken.pricef),
-              this.currencyConfig
-            ).value;
+            foundToken.price = this.getFiatValue(foundToken.pricef);
             foundToken.isEth = token.isEth;
             foundToken.name = token.symbol;
             return foundToken;
@@ -666,10 +658,7 @@ export default {
           item.contract.toLowerCase() !==
           this.toTokenType?.contract?.toLowerCase()
         ) {
-          item.price = formatFiatValue(
-            currencyToNumber(item.pricef),
-            this.currencyConfig
-          ).value;
+          item.price = this.getFiatValue(item.pricef);
           return item;
         }
       });
@@ -737,10 +726,7 @@ export default {
         const foundToken = this.contractToToken(token.contract);
         if (foundToken) {
           foundToken.contract = token.contract;
-          foundToken.price = formatFiatValue(
-            currencyToNumber(foundToken.pricef),
-            this.currencyConfig
-          );
+          foundToken.price = this.getFiatValue(foundToken.pricef);
           foundToken.isEth = token.isEth;
           foundToken.subtext = foundToken.name;
           foundToken.value = foundToken.name;
@@ -767,21 +753,15 @@ export default {
         .map(token => {
           if (token.cgid) {
             const foundToken = this.getCoinGeckoTokenById(token.cgid);
-            foundToken.price = formatFiatValue(
-              currencyToNumber(foundToken.pricef),
-              this.currencyConfig
-            ).value;
+            foundToken.price = this.getFiatValue(foundToken.pricef);
             return Object.assign(token, foundToken);
           }
           const foundToken = this.contractToToken(token.contract);
           if (foundToken) {
             token = Object.assign(token, foundToken);
-            token.price = formatFiatValue(
-              currencyToNumber(token.pricef),
-              this.currencyConfig
-            ).value;
+            token.price = this.getFiatValue(token.pricef);
           } else {
-            token.price = formatFiatValue('0.00', this.currencyConfig);
+            token.price = this.getFiatValue('0.00');
           }
           const name = token.name;
           token.subtext = name;
@@ -1117,15 +1097,11 @@ export default {
       if (!Array.isArray(tokens)) return [];
       return tokens.map(t => {
         t.totalBalance = t.hasOwnProperty('usdBalancef')
-          ? formatFiatValue(
-              currencyToNumber(t.usdBalancef),
-              this.currencyConfig
-            ).value
+          ? this.getFiatValue(t.usdBalancef)
           : '0.00';
         t.tokenBalance = t.hasOwnProperty('balancef') ? t.balancef : '0.00';
         t.price = t.hasOwnProperty('pricef')
-          ? formatFiatValue(currencyToNumber(t.pricef), this.currencyConfig)
-              .value
+          ? this.getFiatValue(t.pricef)
           : '0.00';
         t.name = t.hasOwnProperty('symbol') ? t.symbol : '';
         return t;
