@@ -215,7 +215,13 @@ export default {
       newObj.status = item.price_change_percentage_24h > 0 ? '+' : '-';
       newObj.price =
         item.pricef && item.pricef !== '0' ? '$' + item.pricef : '';
-      newObj.tokenImg = item.img ? item.img : this.network.type.icon;
+
+      if (item.symbol == 'ETH') {
+        newObj.tokenImg = require('@/assets/images/networks/eth.svg');
+      } else {
+        newObj.tokenImg = item.img ? item.img : this.network.type.icon;
+      }
+
       if (this.hasSwap) {
         newObj.callToAction = [
           {
