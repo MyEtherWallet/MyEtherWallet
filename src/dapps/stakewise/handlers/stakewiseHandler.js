@@ -44,19 +44,25 @@ export default class StakewiseHandler {
 
   getValidatorApr() {
     return new Promise((resolve, reject) => {
-      fetch(POOL_API)
-        .then(res => {
-          return res.json();
-        })
-        .then(res => {
-          const val = res.validators_apr;
-          // netFee = val - (val * (10/100))
-          const netFee = BigNumber(val).minus(
-            BigNumber(val).times(BigNumber(25).div(100))
-          );
-          resolve(netFee.toString());
-        })
-        .catch(reject);
+      try {
+        fetch(POOL_API)
+          .then(res => {
+            return res.json();
+          })
+          .then(res => {
+            const val = res.validators_apr;
+            // netFee = val - (val * (10/100))
+            const netFee = BigNumber(val).minus(
+              BigNumber(val).times(BigNumber(25).div(100))
+            );
+            resolve(netFee.toString());
+          })
+          .catch(e => {
+            reject(e);
+          });
+      } catch (e) {
+        reject(e);
+      }
     });
   }
 }

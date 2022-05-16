@@ -14,6 +14,7 @@ const EXCEPTIONS = [
   'postcss-url',
   'webpack',
   'copy-webpack-plugin',
+  'sass',
   'sass-loader',
   'husky',
   '@aave/protocol-js',
@@ -26,6 +27,12 @@ const EXCEPTIONS = [
   'remark-cli',
   'node-fetch',
   'vuetify',
+  'vue-i18n',
+  'stylelint',
+  'stylelint-config-standard',
+  'vue',
+  'vue-router',
+  'vuex',
   'eslint',
   'imagemin-mozjpeg', // issue with importing it to vue config will look into it more if we need it
   '@vue/eslint-config-prettier', // creates more warnings
