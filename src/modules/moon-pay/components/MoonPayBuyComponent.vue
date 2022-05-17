@@ -32,42 +32,20 @@
           class="selectedFiat"
         />
       </div>
-      <div class="d-flex align-center">
-        <mew-button
-          btn-style="outline"
-          title="Min"
-          class="mr-2 flex-grow-1"
-          @click.native="setMin"
-        />
-        <mew-button
-          btn-style="outline"
-          title="Max"
-          class="flex-grow-1"
-          @click.native="setMax"
-        />
-      </div>
     </div>
-    <div class="mb-3">
-      <div class="mew-heading-3 textDark--text mb-5">Select Provider</div>
-      <div
-        v-if="!hideSimplex"
-        class="section-block pa-5"
-        :class="{ selected: isMoonpay }"
-        @click="selectMoonpay"
-      >
-        <img
-          class="provider-logo"
-          src="@/modules/moon-pay/assets/moonpay-logo.svg"
-          height="18"
-        />
-        <div v-if="!loading" class="mb-1">
-          <div class="d-flex mb-1 align-center justify-space-between">
-            <div class="d-flex mew-heading-3 textDark--text">
-              {{ cryptoToFiat }}
-              <span class="mew-heading-3 pl-1">{{ selectedCryptoName }}</span>
-            </div>
-          </div>
-          <div class="d-flex align-center">
+    <!-- ============================================================== -->
+    <!-- Provider Select -->
+    <!-- ============================================================== -->
+    <div class="mb-1">
+      <!-- ============================================================== -->
+      <!-- My Attempt -->
+      <!-- ============================================================== -->
+      <div>You will get</div>
+      <div v-if="!loading" class="mb-1">
+        <div class="d-flex mb-1 align-center justify-space-between">
+          <div class="d-flex mew-heading-3 textDark--text">
+            {{ cryptoToFiat }}
+            <span class="mew-heading-3 pl-1">{{ selectedCryptoName }}</span>
             <div class="mr-1 textDark--text">≈ {{ plusFeeF }}</div>
             <mew-tooltip style="height: 21px">
               <template #contentSlot>
@@ -86,121 +64,27 @@
             </mew-tooltip>
           </div>
         </div>
+        <div class="d-flex align-center"></div>
+      </div>
 
-        <div v-else class="mb-1">
-          <v-skeleton-loader type="heading" class="mb-1" />
-          <v-skeleton-loader max-width="200px" type="heading" />
-        </div>
-
-        <div class="d-flex align-center mb-1">
-          <img
-            src="@/assets/images/icons/moonpay/icon-visa.svg"
-            alt="Visa"
-            height="24"
-            class="mr-2"
-          />
-          <img
-            src="@/assets/images/icons/moonpay/icon-master.svg"
-            alt="Master"
-            height="24"
-            class="mr-2"
-          />
-          <img
-            src="@/assets/images/icons/moonpay/icon-apple-pay.svg"
-            alt="Master"
-            height="24"
-            class="mr-2"
-          />
-          <img
-            v-if="isEUR"
-            src="@/assets/images/icons/moonpay/icon-bank.svg"
-            alt="Bank"
-            height="24"
-          />
-        </div>
-        <div class="mew-label mb-5">
-          {{ paymentOptionString }}
-        </div>
+      <div v-else class="mb-1">
+        <v-skeleton-loader type="heading" class="mb-1" />
+        <v-skeleton-loader max-width="200px" type="heading" />
       </div>
     </div>
 
-    <div
-      v-if="!hideSimplex"
-      class="section-block pa-5"
-      :class="{ selected: isSimplex }"
-      @click="selectSimplex"
-    >
-      <div class="mew-heading-3 textDark--text mb-5">Check for rates</div>
-      <div class="d-flex align-center justify-space-between">
-        <div class="d-flex align-start mb-1">
-          <img
-            src="@/assets/images/icons/moonpay/icon-visa.svg"
-            alt="Visa"
-            height="24"
-            class="mr-2"
-          />
-          <img
-            src="@/assets/images/icons/moonpay/icon-master.svg"
-            alt="Master"
-            height="24"
-            class="mr-2"
-          />
-        </div>
-        <img
-          class="provider-logo"
-          src="@/assets/images/icons/icon-simplex.svg"
-          alt="simplex"
-          height="28"
-        />
-      </div>
-      <div class="mew-label mb-5">Visa, Mastercard</div>
-    </div>
-    <!------ WEN USER IS NOT IN WALLET, SHOW BELOW -------->
-    <div v-if="!inWallet" class="mt-5">
-      <div class="mew-heading-3 textDark--text mb-5">
-        Where should we send your crypto?
-      </div>
-      <module-address-book @setAddress="setAddress" />
+    <div class="mb-1">
       <mew-button
-        v-if="!isSimplex"
         has-full-width
-        :disabled="!validToAddress || !isMoonpay || disableMoonPay"
-        :is-valid-address-func="isValidToAddress"
-        :title="moonpayBtnTitle"
-        @click.native="buyFromHome"
-      />
-      <mew-button
-        v-if="isSimplex"
-        has-full-width
-        :disabled="!validToAddress || !isSimplex || disableSimplex"
-        :is-valid-address-func="isValidToAddress"
-        :title="simplexBtnTitle"
-        @click.native="openSimplexFromHome"
-      />
-    </div>
-    <!------ WEN USER IS IN WALLET, SHOW BELOW -------->
-    <div v-else class="pa-5">
-      <mew-button
-        v-if="!isSimplex"
-        has-full-width
-        :disabled="!isMoonpay || disableMoonPay"
-        :title="moonpayBtnTitle"
+        :disabled="amountErrorMessages !== ''"
+        :title="buyBtnTitle"
         @click.native="buy"
-      />
-      <mew-button
-        v-if="isSimplex"
-        has-full-width
-        :disabled="!isSimplex || disableSimplex"
-        :title="simplexBtnTitle"
-        @click.native="openSimplex"
       />
     </div>
   </div>
 </template>
 
 <script>
-import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
-import MultiCoinValidator from 'multicoin-address-validator';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import { isEmpty, cloneDeep, isEqual } from 'lodash';
 import BigNumber from 'bignumber.js';
@@ -212,7 +96,6 @@ import nodeList from '@/utils/networks';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 export default {
   name: 'ModuleBuyEth',
-  components: { ModuleAddressBook },
   props: {
     moonpayHandler: {
       type: Object,
@@ -243,13 +126,14 @@ export default {
       },
       fetchedData: {},
       currencyRates: [],
-      amount: '300',
+      amount: '100',
       toAddress: '',
-      validToAddress: false,
+      //validToAddress: false,
       gasPrice: '0',
       web3Connections: {},
-      isMoonpay: false,
-      isSimplex: false
+      onlySimplex: false
+      //isMoonpay: false
+      //isSimplex: false
     };
   },
   computed: {
@@ -272,7 +156,7 @@ export default {
       return `Daily limit: ${this.currencyFormatter(value.toString())}`;
     },
     monthlyLimit() {
-      const value = BigNumber(this.fiatMultiplier).times(50000);
+      const value = BigNumber(this.fiatMultiplier).times(20000);
       return `Monthly limit: ${this.currencyFormatter(value.toString())}`;
     },
     fiatMultiplier() {
@@ -292,9 +176,9 @@ export default {
     actualAddress() {
       return this.inWallet ? this.address : this.toAddress;
     },
-    actualValidAddress() {
-      return this.inWallet ? true : this.validToAddress;
-    },
+    // actualValidAddress() {
+    //   return this.inWallet ? true : this.validToAddress;
+    // },
     networkFee() {
       return fromWei(BigNumber(this.gasPrice).times(21000).toString());
     },
@@ -332,51 +216,47 @@ export default {
     isEUR() {
       return this.selectedFiatName === 'EUR' || this.selectedFiatName === 'GBP';
     },
-    hideSimplex() {
-      return (
-        this.selectedCryptoName === 'USDC' || this.selectedCryptoName === 'USDT'
-      );
-    },
-    disableSimplex() {
-      const simplexMax = this.max.simplex;
-      // simplexMax.lt(BigNumber(this.amount));
-      return (
-        (!this.inWallet && !this.actualValidAddress) ||
-        this.loading ||
-        this.amountErrorMessages !== '' ||
-        simplexMax.lt(BigNumber(this.amount))
-      );
-    },
-    simplexBtnTitle() {
-      const simplexMax = this.max.simplex;
-      if (simplexMax.lt(BigNumber(this.amount))) {
-        return `CANNOT EXCEED PROVIDER MAX OF ${simplexMax}`;
-      }
-      return 'CONTINUE WITH SIMPLEX';
-    },
-    disableMoonPay() {
-      const moonpayMax = this.max.moonpay;
-      return (
-        (!this.inWallet && !this.actualValidAddress) ||
-        this.loading ||
-        this.amountErrorMessages !== '' ||
-        moonpayMax.lt(BigNumber(this.amount))
-      );
-    },
-    moonpayBtnTitle() {
-      const moonpayMax = this.max.moonpay;
-      if (moonpayMax.lt(BigNumber(this.amount))) {
-        return `CANNOT EXCEED PROVIDER MAX OF ${moonpayMax}`;
-      }
-      return 'CONTINUE WITH MOONPAY';
+    // hideSimplex() {
+    //   return (
+    //     this.selectedCryptoName === 'USDC' || this.selectedCryptoName === 'USDT'
+    //   );
+    // },
+    // disableSimplex() {
+    //   const simplexMax = this.max.simplex;
+    //   // simplexMax.lt(BigNumber(this.amount));
+    //   return (
+    //     (!this.inWallet && !this.actualValidAddress) ||
+    //     this.loading ||
+    //     this.amountErrorMessages !== '' ||
+    //     simplexMax.lt(BigNumber(this.amount))
+    //   );
+    // },
+    // simplexBtnTitle() {
+    //   const simplexMax = this.max.simplex;
+    //   if (simplexMax.lt(BigNumber(this.amount))) {
+    //     return `CANNOT EXCEED PROVIDER MAX OF ${simplexMax}`;
+    //   }
+    //   return 'CONTINUE WITH SIMPLEX';
+    // },
+    // disableMoonPay() {
+    //   const moonpayMax = this.max.moonpay;
+    //   return (
+    //     (!this.inWallet && !this.actualValidAddress) ||
+    //     this.loading ||
+    //     this.amountErrorMessages !== '' ||
+    //     moonpayMax.lt(BigNumber(this.amount))
+    //   );
+    // },
+    buyBtnTitle() {
+      return 'BUY NOW';
     },
     // disableMax() {
     //   const simplexMax = this.max.simplex;
     //   return simplexMax.lt(BigNumber(this.amount));
     // },
-    paymentOptionString() {
-      return `Visa, Mastercard, Apple Pay${this.isEUR ? ', Bank account' : ''}`;
-    },
+    // paymentOptionString() {
+    //   return `Visa, Mastercard, Apple Pay${this.isEUR ? ', Bank account' : ''}`;
+    // },
     amountErrorMessages() {
       const moonpayMax = this.max.moonpay;
       const simplexMax = this.max.simplex;
@@ -579,6 +459,7 @@ export default {
     amount: {
       handler: function (newVal) {
         const simplexMax = this.max.simplex;
+        this.checkMoonPayMax();
         if (simplexMax.lt(newVal)) {
           this.loading = true;
         } else {
@@ -603,47 +484,54 @@ export default {
       }
       this.gasPrice = await this.web3Connections[nodeType].eth.getGasPrice();
     },
-    setAddress(address, valid) {
-      this.acutalAddress = address;
-      this.toAddress = address;
-      this.validToAddress = valid;
+    // setAddress(address, valid) {
+    //   this.acutalAddress = address;
+    //   this.toAddress = address;
+    //   this.validToAddress = valid;
+    // },
+    // isValidToAddress(address) {
+    //   return MultiCoinValidator.validate(address, this.selectedCurrency.name);
+    // },
+    // selectMoonpay() {
+    //   this.isMoonpay = true;
+    //   this.isSimplex = false;
+    // },
+    // selectSimplex() {
+    //   this.isSimplex = true;
+    //   this.isMoonpay = false;
+    // },
+    // openSimplex() {
+    //   // eslint-disable-next-line
+    //   window.open(
+    //     `https://ccswap.myetherwallet.com/#/?fiat=${this.selectedFiatName.toLowerCase()}&amount=${
+    //       this.amount
+    //     }&to=${this.actualAddress}`,
+    //     '_blank'
+    //   );
+    // },
+    // openSimplexFromHome() {
+    //   // eslint-disable-next-line
+    //   window.open(
+    //     `https://ccswap.myetherwallet.com/#/?fiat=${this.selectedFiatName.toLowerCase()}&amount=${
+    //       this.amount
+    //     }&to=${this.toAddress}`,
+    //     '_blank'
+    //   );
+    // },
+    checkMoonPayMax() {
+      const moonpayMax = this.max.moonpay;
+      const isLT = (num, num2) => {
+        return num.lt(BigNumber(num2));
+      };
+      this.onlySimplex = isLT(moonpayMax, this.amount);
     },
-    isValidToAddress(address) {
-      return MultiCoinValidator.validate(address, this.selectedCurrency.name);
-    },
-    selectMoonpay() {
-      this.isMoonpay = true;
-      this.isSimplex = false;
-    },
-    selectSimplex() {
-      this.isSimplex = true;
-      this.isMoonpay = false;
-    },
-    openSimplex() {
-      // eslint-disable-next-line
-      window.open(
-        `https://ccswap.myetherwallet.com/#/?fiat=${this.selectedFiatName.toLowerCase()}&amount=${
-          this.amount
-        }&to=${this.actualAddress}`,
-        '_blank'
-      );
-    },
-    openSimplexFromHome() {
-      // eslint-disable-next-line
-      window.open(
-        `https://ccswap.myetherwallet.com/#/?fiat=${this.selectedFiatName.toLowerCase()}&amount=${
-          this.amount
-        }&to=${this.toAddress}`,
-        '_blank'
-      );
-    },
-    setMin() {
-      this.amount = this.min.toFixed();
-    },
-    setMax() {
-      const simplexMax = this.max.simplex;
-      this.amount = simplexMax.toString();
-    },
+    // setMin() {
+    //   this.amount = this.min.toFixed();
+    // },
+    // setMax() {
+    //   const simplexMax = this.max.simplex;
+    //   this.amount = simplexMax.toString();
+    // },
     currencyFormatter(value) {
       const locale = this.hasData ? LOCALE[this.selectedFiatName] : 'en-US';
       return new Intl.NumberFormat(locale, {
@@ -674,7 +562,7 @@ export default {
           this.moonpayHandler.getFiatRatesForBuy().then(res => {
             this.currencyRates = cloneDeep(res);
             this.loading = false;
-            this.selectMoonpay();
+            //this.selectMoonpay();
           });
           this.fetchedData = Object.assign({}, res);
         })
@@ -701,27 +589,27 @@ export default {
           this.close();
           this.selectedCurrency = this.defaultCurrency;
         });
-    },
-    buyFromHome() {
-      this.moonpayHandler
-        .buy(
-          this.selectedCurrency.name,
-          this.selectedFiatName,
-          this.amount,
-          this.toAddress
-        )
-        .then(() => {
-          this.reset();
-          this.close();
-          this.selectedCurrency = this.defaultCurrency;
-        })
-        .catch(err => {
-          this.reset();
-          Toast(err, {}, ERROR);
-          this.close();
-          this.selectedCurrency = this.defaultCurrency;
-        });
     }
+    // buyFromHome() {
+    //   this.moonpayHandler
+    //     .buy(
+    //       this.selectedCurrency.name,
+    //       this.selectedFiatName,
+    //       this.amount,
+    //       this.toAddress
+    //     )
+    //     .then(() => {
+    //       this.reset();
+    //       this.close();
+    //       this.selectedCurrency = this.defaultCurrency;
+    //     })
+    //     .catch(err => {
+    //       this.reset();
+    //       Toast(err, {}, ERROR);
+    //       this.close();
+    //       this.selectedCurrency = this.defaultCurrency;
+    //     });
+    // }
   }
 };
 </script>
