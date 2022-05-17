@@ -150,10 +150,12 @@
               </div>
             </v-list-item>
 
+            <!-- Sub-menu items -->
             <v-list-group
               v-if="item.children"
               :key="item + idx + 2"
               prepend-icon=""
+              :value="expendSubMenu(item.children)"
             >
               <template #activator>
                 <v-list-item-icon class="mx-3">
@@ -438,6 +440,9 @@ export default {
     }
   },
   mounted() {
+    // If no menu item is selected on load, redirect user to Dashboard
+    this.redirectToDashboard();
+
     if (this.$route.name == ROUTES_WALLET.SETTINGS.NAME) {
       this.openSettings();
     }
@@ -478,6 +483,22 @@ export default {
     },
     toggleLogout() {
       this.showLogoutPopup = !this.showLogoutPopup;
+    },
+    /* =================================================================== */
+    /* If no menu item is selected on load, redirect user to Dashboard     */
+    /* =================================================================== */
+    redirectToDashboard() {
+      if (this.$route.name == ROUTES_WALLET.WALLETS.NAME) {
+        this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
+      }
+    },
+    /* =================================================================== */
+    /* If sub-menu item is selected on load, expend the sub-menu slot      */
+    /* =================================================================== */
+    expendSubMenu(children) {
+      for (const c of children) {
+        if (this.$route.name == c.route.name) return true;
+      }
     }
   }
 };
