@@ -700,7 +700,7 @@ export default {
         })
         .catch(error => {
           this.clear();
-          this.instance.errorHandler(error.message);
+          this.instance.errorHandler(error);
         });
     },
     prefillForm() {

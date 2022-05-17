@@ -6,26 +6,41 @@
       :items="items"
       @input="setDuration"
     />
-
     <div class="font-weight-bold text-center">
       {{ $t('ens.request.estimated-price') }}: {{ rentPriceETH }}
       {{ $t('common.currency.eth') }} (${{ rentPriceUSD }})
     </div>
     <div class="d-flex align-center justify-center mt-3">
-      <mew-button
-        :title="$t('ens.renew')"
-        btn-size="xlarge"
-        @click.native="renew(duration)"
-      />
+      <div>
+        <span
+          v-if="noFundsForRenewalFees"
+          class="balance-error d-flex mt-2 mb-3 justify-center align-center"
+        >
+          Not enough balance:
+          <a target="_blank" class="link" @click="openMoonpay">
+            <u>Buy More Eth</u>
+          </a>
+        </span>
+        <div class="d-flex align-center justify-center">
+          <mew-button
+            :loading="loadingRenew"
+            :disabled="noFundsForRenewalFees || loadingRenew"
+            :title="$t('ens.renew')"
+            btn-size="xlarge"
+            @click.native="renew(duration)"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
-import { currencyToNumber } from '@/core/helpers/localization';
 import { mapGetters } from 'vuex';
+import buyMore from '@/core/mixins/buyMore.mixin.js';
 export default {
+  mixins: [buyMore],
   props: {
     getRentPrice: {
       default: function () {
@@ -38,6 +53,20 @@ export default {
         return {};
       },
       type: Function
+    },
+    getTotalRenewFeeOnly: {
+      default: function () {
+        return {};
+      },
+      type: Function
+    },
+    noFundsForRenewalFees: {
+      default: false,
+      type: Boolean
+    },
+    loadingRenew: {
+      default: false,
+      type: Boolean
     }
   },
   data() {
@@ -59,8 +88,14 @@ export default {
       return items;
     }
   },
+  watch: {
+    duration(newVal) {
+      this.getTotalRenewFeeOnly(newVal);
+    }
+  },
   mounted() {
     this.rentPrice();
+    this.getTotalRenewFeeOnly(1);
   },
   methods: {
     ...mapGetters('global', ['getFiatValue']),
@@ -68,7 +103,7 @@ export default {
       return this.getRentPrice(this.duration).then(resp => {
         if (resp) {
           this.rentPriceETH = formatFloatingPointValue(resp.eth).value;
-          this.rentPriceUSD = this.getFiatValue(currencyToNumber(resp.usd));
+          this.rentPriceUSD = this.getFiatValue(resp.usd);
         }
       });
     },
@@ -79,3 +114,18 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+.balance-error {
+  color: #ff445b;
+  font-size: 12px;
+}
+.link {
+  color: #ff445b;
+  font-weight: 600;
+  padding-left: 5px;
+  font-size: 12px;
+}
+.link:hover {
+  color: #e96071;
+}
+</style>

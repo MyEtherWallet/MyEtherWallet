@@ -13,7 +13,8 @@
     "not-the-owner": "You are not the owner!",
     "error-getting-ipfs-hash": "Error getting IPFS Hash!",
     "file-upload-error": "Uploading file errored",
-    "empty-invalid-ipfs": "Empty or Invalid IPFS Hash"
+    "empty-invalid-ipfs": "Empty or Invalid IPFS Hash",
+    "no-funds-to-commit": "Balance Too Low: Not enough funds to complete committment & registeration!"
   },
   "warning": {
     "contract-not-ready": "Contract is not ready yet, transaction might fail.",
@@ -132,6 +133,7 @@
     "term": "Term",
     "name": "Register",
     "create-commitment": "Create commitment",
+    "estimated-fee": "Estimated Fee",
     "complete-reg": "Complete Registration",
     "complete-reg-desc": "Please click 'Register' and follow the prompts to complete a final transaction and complete your domain registration."
   },

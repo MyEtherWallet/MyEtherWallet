@@ -48,6 +48,7 @@
     <!-- Sell button -->
     <!-- ============================================================== -->
     <mew-button
+      class="mb-6"
       title="Sell now"
       btn-size="xlarge"
       has-full-width
@@ -320,7 +321,6 @@ export default {
           this.sendHandler.setCurrency(newVal);
         }
         this.fetchSellInfo();
-        this.$emit('selectedCurrency', newVal);
       },
       deep: true
     },
@@ -409,6 +409,7 @@ export default {
       }
     }, 500),
     setCurrency(e) {
+      this.amount = '0';
       this.selectedCurrency = e;
     },
     setMax() {
@@ -469,7 +470,7 @@ export default {
         .getSupportedFiatToSell(this.name)
         .then(res => {
           this.loading = false;
-          this.fetchedData = Object.assign({}, res);
+          this.fetchedData = res[0];
         })
         .catch(e => {
           this.loading = false;

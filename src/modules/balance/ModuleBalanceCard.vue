@@ -97,6 +97,7 @@
       =====================================================================================
       -->
       <div
+        v-if="!isOfflineApp"
         :class="[
           { 'ml-n5': !isTestNetwork },
           'mew-subtitle text-shadow white--text mt-5 mb-4'
@@ -107,8 +108,11 @@
           network.type.currencyName
         }}</span>
       </div>
-      <div class="d-flex justify-space-between align-center">
-        <div class="justify-start">
+      <div
+        class="d-flex justify-space-between align-center"
+        :style="isOfflineApp ? 'margin-top:74px' : ''"
+      >
+        <div v-if="!isOfflineApp" class="justify-start">
           <!--
           =====================================================================================
             Total Wallet chain balance: prensent if not Test network
@@ -267,8 +271,14 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
-    ...mapState('wallet', ['address', 'instance', 'identifier', 'isHardware']),
+    ...mapGetters('wallet', ['balanceInWei', 'tokensList']),
+    ...mapState('wallet', [
+      'address',
+      'instance',
+      'identifier',
+      'isHardware',
+      'isOfflineApp'
+    ]),
     ...mapGetters('external', [
       'fiatValue',
       'balanceFiatValue',

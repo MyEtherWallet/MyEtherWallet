@@ -1,190 +1,320 @@
 <template>
-  <mew-alert
-    :theme="alertTheme"
-    has-white-background
-    hide-alert-icon
-    hide-close-icon
-  >
-    <v-row class="align-center justify-start" no-gutters>
-      <!--
+  <div>
+    <!--
+    ===================================================
+      Updated Block Information // Will delete old one later
+    ===================================================
+    -->
+    <div class="alert-container mb-10">
+      <v-row class="alert-container-top pt-4 px-3">
+        <v-col cols="12" class="d-flex align-center">
+          <v-icon :class="['mr-2', alertTitleColor]" size="16px">{{
+            alertIcon
+          }}</v-icon>
+          <p :class="['font-weight-bold mb-0', alertTitleColor]">
+            {{ alertTitle }}
+          </p>
+        </v-col>
+      </v-row>
+      <v-row v-if="isAvailable" class="mt-1 px-3" align="center">
+        <!--
+        ===================================================
+          Block is available: BLOCK PRICE INFO
+        ===================================================
+        -->
+        <v-col cols="6">
+          <div>Price</div>
+        </v-col>
+        <v-col cols="6" class="text-end">
+          <div>
+            <h2 class="mb-1 textDark--text">
+              {{ formattedPrice }} {{ network.type.currencyName }}
+            </h2>
+            <p v-if="!isTestNetwork" class="textLight--text mb-0">
+              {{ formatFiatPrice }}
+            </p>
+          </div>
+        </v-col>
+      </v-row>
+
+      <v-row v-if="isAvailable" class="mt-1 px-3" align="center">
+        <!--
+        ===================================================
+          Block is available: TOTAL PRICE INFO
+        ===================================================
+        -->
+        <v-col cols="6">
+          <div>Transaction fee</div>
+        </v-col>
+        <v-col cols="6" class="text-end">
+          <div>
+            <h2 class="mb-1 textDark--text">
+              {{ txFee }} {{ network.type.currencyName }}
+            </h2>
+            <p v-if="!isTestNetwork" class="textLight--text mb-0">
+              {{ formattedFiatTxFee }}
+            </p>
+          </div>
+        </v-col>
+      </v-row>
+
+      <v-row v-if="isAvailable" class="mt-1 px-3" align="center">
+        <!--
+        ===================================================
+          Block is available: TOTAL PRICE INFO
+        ===================================================
+        -->
+        <v-col cols="6">
+          <div>Total</div>
+        </v-col>
+        <v-col cols="6" class="text-end">
+          <div>
+            <h2 class="mb-1 textDark--text">
+              {{ formattedFiatTotalPrice }} {{ network.type.currencyName }}
+            </h2>
+            <p v-if="!isTestNetwork" class="textLight--text mb-0">
+              {{ formattedTotalPrice }}
+            </p>
+          </div>
+        </v-col>
+      </v-row>
+
+      <v-row class="px-3 py-4">
+        <!--
+        ===================================================
+          Block Buttons
+        ===================================================
+        -->
+        <v-col cols="6">
+          <mew-button
+            btn-style="outline"
+            color-theme="primary"
+            has-full-width
+            :disabled="!isAdded && isAvailable"
+            @click.native="addToCart"
+          >
+            <div class="d-flex align-center">
+              <v-icon v-if="isAdded && isAvailable" left
+                >mdi-plus-circle-outline</v-icon
+              >
+              <div>{{ addText }}</div>
+            </div>
+          </mew-button>
+        </v-col>
+        <v-col cols="6">
+          <mew-button
+            v-if="!isPending"
+            :title="$vuetify.breakpoint.xs ? 'Mint' : 'Mint now'"
+            btn-style="background"
+            color-theme="primary"
+            has-full-width
+            :loading="disableAction"
+            :disabled="disableActionBtn"
+            @click.native="emitMint()"
+          >
+          </mew-button>
+          <mew-button v-else disabled btn-style="light">
+            <div class="d-flex flex-row align-center">
+              <v-progress-circular
+                indeterminate
+                color="primary"
+                class="ma-auto"
+                size="16"
+                width="2"
+              ></v-progress-circular>
+              <div class="textDark--text pl-2">Pending</div>
+            </div>
+          </mew-button>
+        </v-col>
+      </v-row>
+    </div>
+    <mew-alert
+      :theme="alertTheme"
+      has-white-background
+      hide-alert-icon
+      hide-close-icon
+    >
+      <v-row class="align-center justify-start" no-gutters>
+        <!--
         ===================================================
           ALERT TITLE:
         ===================================================
         -->
-      <v-col cols="12" class="d-flex align-center">
-        <v-icon :class="['mr-2', alertTitleColor]" size="16px">{{
-          alertIcon
-        }}</v-icon>
-        <p :class="['font-weight-bold mb-0', alertTitleColor]">
-          {{ alertTitle }}
-        </p>
-      </v-col>
-      <!--
+        <v-col cols="12" class="d-flex align-center">
+          <v-icon :class="['mr-2', alertTitleColor]" size="16px">{{
+            alertIcon
+          }}</v-icon>
+          <p :class="['font-weight-bold mb-0', alertTitleColor]">
+            {{ alertTitle }}
+          </p>
+        </v-col>
+        <!--
         ===================================================
           Block is Not available: OWNER INFO
         ===================================================
         -->
-      <v-col v-if="isNotAvailable" cols="12" class="d-flex align-center mt-3">
-        <p class="mb-0 mr-1">Owner:</p>
-        <a :href="raribleOwnerLink" target="_blank">
-          {{ ownerFormatted }}
-        </a>
-      </v-col>
-      <!--
+        <v-col v-if="isNotAvailable" cols="12" class="d-flex align-center mt-3">
+          <p class="mb-0 mr-1">Owner:</p>
+          <a :href="raribleOwnerLink" target="_blank">
+            {{ ownerFormatted }}
+          </a>
+        </v-col>
+        <!--
         ===================================================
           Block is Not available: Rarible LINK
         ===================================================
         -->
-      <v-col v-if="isNotAvailable" cols="12" class="mt-1">
-        <a :href="raribleLink" target="_blank" class="d-flex align-center">
-          <p class="mb-0">See if it's available on Rarible</p>
-          <v-icon class="ml-2 greenPrimary--text" size="16px"
-            >mdi-open-in-new</v-icon
-          >
-        </a>
-      </v-col>
-      <!--
+        <v-col v-if="isNotAvailable" cols="12" class="mt-1">
+          <a :href="raribleLink" target="_blank" class="d-flex align-center">
+            <p class="mb-0">See if it's available on Rarible</p>
+            <v-icon class="ml-2 greenPrimary--text" size="16px"
+              >mdi-open-in-new</v-icon
+            >
+          </a>
+        </v-col>
+        <!--
         ===================================================
           Block is available: PRICE INFO
         ===================================================
         -->
-      <v-col v-if="isAvailable" cols="6" class="mt-1">
-        <h2 class="mb-1 textDark--text">
-          {{ formattedPrice }} {{ network.type.currencyName }}
-        </h2>
-        <p v-if="!isTestNetwork" class="textLight--text mb-0">
-          {{ formatFiatPrice }}
-        </p>
-      </v-col>
-      <!--
+        <v-col v-if="isAvailable" cols="6" class="mt-1">
+          <h2 class="mb-1 textDark--text">
+            {{ formattedPrice }} {{ network.type.currencyName }}
+          </h2>
+          <p v-if="!isTestNetwork" class="textLight--text mb-0">
+            {{ formatFiatPrice }}
+          </p>
+        </v-col>
+        <!--
         ===================================================
           Block is available: MINT BUTTON
         ===================================================
         -->
-      <v-col v-if="isAvailable" cols="6" class="mt-1 d-flex justify-end">
-        <mew-button
-          v-if="!isPending"
-          :title="$vuetify.breakpoint.xs ? 'Mint' : 'Mint Block'"
-          :disabled="disableActionBtn"
-          :loading="disableAction"
-          @click.native="emitMint()"
-        />
-        <mew-button v-else disabled btn-style="light">
-          <div class="d-flex flex-row align-center">
-            <v-progress-circular
-              indeterminate
-              color="primary"
-              class="ma-auto"
-              size="16"
-              width="2"
-            ></v-progress-circular>
-            <div class="textDark--text pl-2">Pending</div>
-          </div>
-        </mew-button>
-      </v-col>
-      <!--
+        <v-col v-if="isAvailable" cols="6" class="mt-1 d-flex justify-end">
+          <mew-button
+            v-if="!isPending"
+            :title="$vuetify.breakpoint.xs ? 'Mint' : 'Mint Block'"
+            :disabled="disableActionBtn"
+            :loading="disableAction"
+            @click.native="emitMint()"
+          />
+          <mew-button v-else disabled btn-style="light">
+            <div class="d-flex flex-row align-center">
+              <v-progress-circular
+                indeterminate
+                color="primary"
+                class="ma-auto"
+                size="16"
+                width="2"
+              ></v-progress-circular>
+              <div class="textDark--text pl-2">Pending</div>
+            </div>
+          </mew-button>
+        </v-col>
+        <!--
         ===================================================
           Block is owned: SEND NFT BUTTON
         ===================================================
         -->
-      <v-col v-if="isOwned" cols="12" sm="6" class="mt-4 pr-sm-2 mb-sm-2">
-        <mew-button
-          v-if="!isPending"
-          has-full-width
-          title="Send ETH Block"
-          btn-style="outline"
-          :disabled="disableActionBtn"
-          :loading="disableAction"
-          @click.native="emitOpenSend()"
-        />
-        <mew-button v-else disabled btn-style="light">
-          <div class="d-flex flex-row align-center">
-            <v-progress-circular
-              indeterminate
-              color="primary"
-              class="ma-auto"
-              size="16"
-              width="2"
-            ></v-progress-circular>
-            <div class="textDark--text pl-2">Pending</div>
-          </div>
-        </mew-button>
-      </v-col>
-      <!--
+        <v-col v-if="isOwned" cols="12" sm="6" class="mt-4 pr-sm-2 mb-sm-2">
+          <mew-button
+            v-if="!isPending"
+            has-full-width
+            title="Send ETH Block"
+            btn-style="outline"
+            :disabled="disableActionBtn"
+            :loading="disableAction"
+            @click.native="emitOpenSend()"
+          />
+          <mew-button v-else disabled btn-style="light">
+            <div class="d-flex flex-row align-center">
+              <v-progress-circular
+                indeterminate
+                color="primary"
+                class="ma-auto"
+                size="16"
+                width="2"
+              ></v-progress-circular>
+              <div class="textDark--text pl-2">Pending</div>
+            </div>
+          </mew-button>
+        </v-col>
+        <!--
         ===================================================
           Block is owned: LIST FOR SALE BUTTON
         ===================================================
         -->
-      <v-col
-        v-if="isOwned"
-        cols="12"
-        sm="6"
-        class="mt-5 mb-2 mt-sm-4 pl-sm-2"
-        :order="$vuetify.breakpoint.xs ? 'last' : ''"
-      >
-        <mew-button
-          v-if="!isPending"
-          has-full-width
-          :btn-link="raribleLink"
-          @click.native="trackToRarible"
+        <v-col
+          v-if="isOwned"
+          cols="12"
+          sm="6"
+          class="mt-5 mb-2 mt-sm-4 pl-sm-2"
+          :order="$vuetify.breakpoint.xs ? 'last' : ''"
         >
-          <v-row class="align-center justify-center">
-            <div>List for sale</div>
-            <v-icon class="ml-2 white--text" size="16px"
-              >mdi-open-in-new</v-icon
-            >
-          </v-row>
-        </mew-button>
-      </v-col>
-      <!--
+          <mew-button
+            v-if="!isPending"
+            has-full-width
+            :btn-link="raribleLink"
+            @click.native="trackToRarible"
+          >
+            <v-row class="align-center justify-center">
+              <div>List for sale</div>
+              <v-icon class="ml-2 white--text" size="16px"
+                >mdi-open-in-new</v-icon
+              >
+            </v-row>
+          </mew-button>
+        </v-col>
+        <!--
         ===================================================
           Block is available OR is Owned: not enough Eth
         ===================================================
         -->
-      <v-col
-        v-if="!hasEnoughEth && (isOwned || isAvailable)"
-        cols="12"
-        :class="[
-          'd-flex align-center mt-1',
-          isOwned ? 'justify-start' : 'justify-end'
-        ]"
-      >
-        <div class="mb-0 redPrimary--text mew-label d-flex">
-          <span
-            >{{ notEnoughMessage }}
-            <a
-              v-if="!isTestNetwork && network.type.canBuy"
-              class="mew-label font-weight-medium buy-more-link"
-              @click="openMoonpay"
-            >
-              Buy more {{ network.type.name }}.
+        <v-col
+          v-if="!hasEnoughEth && (isOwned || isAvailable)"
+          cols="12"
+          :class="[
+            'd-flex align-center mt-1',
+            isOwned ? 'justify-start' : 'justify-end'
+          ]"
+        >
+          <div class="mb-0 redPrimary--text mew-label d-flex">
+            <span
+              >{{ notEnoughMessage }}
+              <a
+                v-if="!isTestNetwork && network.type.canBuy"
+                class="mew-label font-weight-medium buy-more-link"
+                @click="openMoonpay"
+              >
+                Buy more {{ network.type.name }}.
 
-              <span
+                <span
+                  ><mew-tooltip
+                    class="d-inline-block"
+                    :text="estimatedFeesTooltip"
+                /></span>
+              </a>
+              <span v-else
                 ><mew-tooltip
-                  class="d-inline-block"
+                  class="buy-more-link d-inline-block"
                   :text="estimatedFeesTooltip"
               /></span>
-            </a>
-            <span v-else
-              ><mew-tooltip
-                class="buy-more-link d-inline-block"
-                :text="estimatedFeesTooltip"
-            /></span>
-          </span>
-        </div>
-      </v-col>
-      <!--
+            </span>
+          </div>
+        </v-col>
+        <!--
         ===================================================
           Block is reserved
         ===================================================
         -->
-      <v-col v-if="isReserved" cols="12" class="d-flex align-center mt-3">
-        <p class="mb-0 textLight--text">
-          ETH Blocks 1-10 are reserved for the Ethereum founders
-        </p>
-      </v-col>
-    </v-row>
-  </mew-alert>
+        <v-col v-if="isReserved" cols="12" class="d-flex align-center mt-3">
+          <p class="mb-0 textLight--text">
+            ETH Blocks 1-10 are reserved for the Ethereum founders
+          </p>
+        </v-col>
+      </v-row>
+    </mew-alert>
+  </div>
 </template>
 
 <script>
@@ -193,7 +323,7 @@ import {
   blockAlertValidator
 } from '../handlers/helpers/blockAlertType';
 import { fromWei } from 'web3-utils';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState, mapActions } from 'vuex';
 import {
   formatIntegerToString,
   formatFloatingPointValue
@@ -251,8 +381,14 @@ export default {
     /**
      * STORE GETTERS
      */
-    ...mapGetters('global', ['network', 'isTestNetwork', 'getFiatValue']),
+    ...mapGetters('global', [
+      'network',
+      'isTestNetwork',
+      'getFiatValue',
+      'gasPrice'
+    ]),
     ...mapGetters('external', ['fiatValue']),
+    ...mapState('ethBlocksTxs', ['cart']),
     /**
      * @returns{string}
      */
@@ -339,6 +475,25 @@ export default {
     },
     /**
      * @returns{string}
+     * Property returns formatted transaction fee in ETH
+     */
+    txFee() {
+      const GAS_LIMIT = '21000';
+      const val = BigNumber(GAS_LIMIT).times(this.gasPrice);
+      return formatFloatingPointValue(fromWei(val.toString())).value;
+    },
+    /**
+     * @returns{string}
+     * Property returns formatted FIAT price
+     */
+    formattedFiatTxFee() {
+      const value = this.getFiatValue(
+        BigNumber(fromWei(this.gasPrice)).times(this.fiatValue)
+      );
+      return value;
+    },
+    /**
+     * @returns{string}
      * Property returns formatted ETH price
      */
     formattedPrice() {
@@ -354,7 +509,6 @@ export default {
       );
       return `~${value}`;
     },
-
     /**
      * Property returns rarible link to a block based on block number and current netowrk
      * @returns{string}
@@ -404,9 +558,24 @@ export default {
         ? `Estimated transaction fee is ${formattedTotal} ${this.network.type.name}.`
         : `Estimated total: mint price + transaction fee = ${formattedTotal} ${this.network.type.name}.`;
       return estimate;
+    },
+    isAdded() {
+      if (this.length >= 1) {
+        const found = this.cart.find(item => {
+          return item === this.blockNumber;
+        });
+        return found;
+      }
+      return false;
+    },
+    addText() {
+      return !this.isAdded && this.isAvailable
+        ? 'Added to batch'
+        : 'Add to batch';
     }
   },
   methods: {
+    ...mapActions('ethBlocksTxs', ['addBlockToCart', 'removeBlockFromCart']),
     /**
      * Emits 'mint' to the parent
      * ONLY USED IN AVALAILABLE block alert Mint button
@@ -429,6 +598,11 @@ export default {
     },
     trackToRarible() {
       this.trackDapp('ethBlocksToRarible');
+    },
+    addToCart() {
+      if (this.isAvailable && !this.isAdded) {
+        this.addBlockToCart(this.blockNumber);
+      }
     }
   }
 };
@@ -437,5 +611,13 @@ export default {
 <style lang="scss">
 .buy-more-link {
   padding-left: 2px;
+}
+.alert-container {
+  border: 1px solid var(--v-greenMedium-base);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.alert-container-top {
+  background-color: #ebfaf8;
 }
 </style>

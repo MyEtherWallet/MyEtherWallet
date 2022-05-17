@@ -787,7 +787,6 @@ export default {
         this.currentTrade.transactions?.forEach(tx => {
           totalGas = totalGas.add(toBN(tx.gas));
         });
-        2;
         return totalGas.toString();
       }
       return '0';
@@ -1329,7 +1328,6 @@ export default {
           new BigNumber(10).pow(new BigNumber(this.fromTokenType.decimals))
         )
       };
-
       if (this.isFromNonChain) {
         swapObj['refundAddress'] = this.refundAddress;
       }
@@ -1393,7 +1391,6 @@ export default {
         fromTokenType: this.fromTokenType,
         toTokenType: this.toTokenType
       };
-
       if (this.isFromNonChain) {
         obj['refundAddress'] = this.refundAddress;
       }

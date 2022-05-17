@@ -55,13 +55,18 @@ export default {
         this.isDisabled = true;
         return;
       }
-      this.manageDomainHandler.estimateGas(this.resolvedAddr).then(val => {
-        const hasBalance = val != 0 ? BigNumber(val).lte(this.balance) : false;
-        this.isDisabled = !(isvalid && hasBalance);
-        if (!hasBalance || val == 0) {
-          Toast('Not enough balance', {}, ERROR);
-        }
-      });
+      this.manageDomainHandler
+        .estimateGas(this.resolvedAddr)
+        .then(val => {
+          const hasBalance = BigNumber(val).lte(this.balance);
+          this.isDisabled = !(isvalid && hasBalance);
+          if (!hasBalance) {
+            Toast('Not enough balance', {}, ERROR);
+          }
+        })
+        .catch(val => {
+          Toast(val, {}, ERROR);
+        });
     }
   }
 };
