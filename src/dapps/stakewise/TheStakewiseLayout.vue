@@ -104,37 +104,21 @@ export default {
       }, 14000);
     },
     collectiveFetch() {
-      console.log(this.address);
       Promise.all([
         this.stakewiseHandler.getEthPool(),
         this.stakewiseHandler.getStakingFee(),
         this.stakewiseHandler.getValidatorApr(),
         this.stakewiseHandler.getSethBalance(this.address),
         this.stakewiseHandler.getRethBalance(this.address)
-      ])
-        .then(res => {
-          const names = [
-            'Pool Supply',
-            'Staking Fee',
-            'Validator APR',
-            'sETH Balance',
-            'rETH Balance'
-          ];
-          for (let i = 0; i < res.length; i++) {
-            console.log(names[i], res[i]);
-          }
-          this.setPoolSupply(res[0]);
-          this.setStakingFee(res[1]);
-          this.setValidatorApr(
-            BigNumber(res[2])
-              .minus(BigNumber(res[2]).times(0.1))
-              .dp(2)
-              .toString()
-          );
-          this.setStakeBalance(fromWei(res[3]));
-          this.setRewardBalance(fromWei(res[4]));
-        })
-        .catch(console.log);
+      ]).then(res => {
+        this.setPoolSupply(res[0]);
+        this.setStakingFee(res[1]);
+        this.setValidatorApr(
+          BigNumber(res[2]).minus(BigNumber(res[2]).times(0.1)).dp(2).toString()
+        );
+        this.setStakeBalance(fromWei(res[3]));
+        this.setRewardBalance(fromWei(res[4]));
+      });
     }
   }
 };
