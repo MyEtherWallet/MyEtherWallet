@@ -71,7 +71,7 @@
                 <h5 class="font-weight-bold">
                   {{ selectedContract.name }}
                 </h5>
-                <div>Total: {{ selectedContract.count }}</div>
+                <div>Total: {{ selectedContract.stat_count }}</div>
               </div>
               <div v-if="displayedTokens && displayedTokens.length === 0">
                 Loading ...
@@ -195,7 +195,15 @@ export default {
      */
     tabs() {
       return this.contracts.map(item => {
-        return { name: `${item.name} (${item.count})` };
+        return {
+          name: `${item.name} (${item.count})`,
+          symbol: item.symbol,
+          description: item.description,
+          image: item.image,
+          website: item.website,
+          token_id: item.token_id,
+          owners: item.stat_owners
+        };
       });
     },
     /**

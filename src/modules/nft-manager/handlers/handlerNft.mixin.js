@@ -94,10 +94,17 @@ export default {
     },
     contracts() {
       if (!this.loadingContracts) {
-        return this.contractNames.map((name, idx) => {
+        return this.contractNames.map((res, idx) => {
           return {
-            contract: this.getOwnersERC721Balances[idx]?.tokenInfo.contract,
-            name: name,
+            contract: res[idx].contract_address,
+            name: res[idx].name,
+            symbol: res[idx].symbol,
+            description: res[idx].description,
+            image: res[idx].image,
+            website: res[idx].social.website,
+            token_id: res[idx].assets[0].token_id,
+            stat_count: res[idx].stats.count,
+            state_owners: res[idx].stats.owners,
             count: BigNumber(
               this.getOwnersERC721Balances[idx]?.balance
             ).toFixed(0)
@@ -118,7 +125,9 @@ export default {
       const promiseNames = [];
       this.getOwnersERC721Balances.forEach(token => {
         try {
-          promiseNames.push(this._getName(token.tokenInfo.contract));
+          promiseNames.push(
+            this._getName(this.address, token.tokenInfo.contract)
+          );
         } catch (error) {
           Toast(error.message, {}, ERROR);
         }
@@ -126,13 +135,13 @@ export default {
       this.contractNames = await Promise.all(promiseNames);
       this.isLoadingNames = false;
     },
-    async _getName(contract) {
-      return await fetch(`https://nft.mewapi.io/nft?contractHash=${contract}`)
+    async _getName(address) {
+      return await fetch(
+        `https://development.mewwallet.dev/v3/nfts/account?address=${address}`
+      )
         .then(res => res.json())
         .then(json => {
-          return json.tokenContracts
-            ? json.tokenContracts[0].name || 'Unknown Nft'
-            : json.name;
+          return json ? json || 'Uknown Nft' : json;
         });
     }
   }
