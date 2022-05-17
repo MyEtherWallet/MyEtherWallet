@@ -16,6 +16,8 @@ import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 import { formatReserves, formatUserSummary } from '@aave/math-utils';
 import { ethers } from 'ethers';
 import { ChainId } from '@aave/contract-helpers';
+import { toHex } from 'web3-utils';
+import { cloneDeep } from 'lodash';
 
 const STABLE_COINS = ['TUSD', 'DAI', 'USDT', 'USDC', 'sUSD'];
 
@@ -60,7 +62,10 @@ export default {
      * get lending pool tx methods
      */
     this.lendingPool = new LendingPool(provider, {
-      LENDING_POOL: '0xB53C1a33016B2DC2fF3653530bfF1848a515c8c5',
+      LENDING_POOL: '0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9',
+      REPAY_WITH_COLLATERAL_ADAPTER:
+        '0x80Aca0C645fEdABaa20fd2Bf0Daf57885A309FE6',
+      SWAP_COLLATERAL_ADAPTER: '0x135896DE8421be2ec868E0b811006171D9df802A',
       WETH_GATEWAY: '0xcc9a0B7c43DC2a5F023Bb9b738E45B0Ef6B06E04'
     });
   },
@@ -195,9 +200,8 @@ export default {
      */
     async onDeposit(data) {
       try {
-        return await this.lendingPool.deposit(data).then(res => {
-          this.formatTxData(res, 'deposit');
-        });
+        const tx = await this.lendingPool.deposit(data);
+        return this.formatTxData(tx, 'deposit');
       } catch (e) {
         throw new Error(e);
       }
@@ -266,29 +270,42 @@ export default {
      * Check and prepare data to send tx
      * or errors out
      */
-    formatTxData(res, kind) {
-      if (res.errors?.length > 0) {
-        throw new Error(
-          'You may not have enough token balance or eth to execute transaction!'
-        );
-      }
-      const txArr = [];
-      if (res.data[kind].length > 0) {
-        res.data[kind].forEach(data => {
-          txArr.push(data.tx);
-        });
-      }
-      this.sendTransaction(txArr)
-        .then(() => {
-          Toast(
-            'Success! Your transaction will be displayed shortly',
-            {},
-            SUCCESS
-          );
-        })
-        .catch(err => {
-          Toast(err, {}, ERROR);
-        });
+    formatTxData(txs) {
+      // error should be handled in the function calling this
+      // if (res.errors?.length > 0) {
+      //   throw new Error(
+      //     'You may not have enough token balance or eth to execute transaction!'
+      //   );
+      // }
+      const txArr = txs.map(tx => {
+        return tx.tx();
+      });
+
+      console.log(txArr, 'BBBBB');
+
+      Promise.all(txArr).then(res => {
+        console.log(res, 'AAAAAA');
+      });
+
+      // console.log(txArr, 'gets here?');
+
+      // if (res.data[kind].length > 0) {
+      //   res.data[kind].forEach(data => {
+      //     txArr.push(data.tx);
+      //   });
+      // }
+
+      // this.sendTransaction(txArr)
+      //   .then(() => {
+      //     Toast(
+      //       'Success! Your transaction will be displayed shortly',
+      //       {},
+      //       SUCCESS
+      //     );
+      //   })
+      //   .catch(err => {
+      //     Toast(err, {}, ERROR);
+      //   });
     },
     /**
      * Sends the tx
