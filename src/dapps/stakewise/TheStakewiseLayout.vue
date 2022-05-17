@@ -111,41 +111,30 @@ export default {
         this.stakewiseHandler.getValidatorApr(),
         this.stakewiseHandler.getSethBalance(this.address),
         this.stakewiseHandler.getRethBalance(this.address)
-      ]).then(res => {
-        let count = 0;
-        res.map(item => {
-          let name;
-          switch (count) {
-            case 0:
-              name = 'Pool Supply';
-              break;
-            case 1:
-              name = 'Staking Fee';
-              break;
-            case 2:
-              name = 'Validator APR';
-              break;
-            case 3:
-              name = 'sETH Balance';
-              break;
-            case 4:
-              name = 'rETH Balance';
-              break;
-            default:
-              name = 'item';
-              break;
+      ])
+        .then(res => {
+          const names = [
+            'Pool Supply',
+            'Staking Fee',
+            'Validator APR',
+            'sETH Balance',
+            'rETH Balance'
+          ];
+          for (let i = 0; i < res.length; i++) {
+            console.log(names[i], res[i]);
           }
-          console.log(name, item);
-          count++;
-        });
-        this.setPoolSupply(res[0]);
-        this.setStakingFee(res[1]);
-        this.setValidatorApr(
-          BigNumber(res[2]).minus(BigNumber(res[2]).times(0.1)).dp(2).toString()
-        );
-        this.setStakeBalance(fromWei(res[3]));
-        this.setRewardBalance(fromWei(res[4]));
-      });
+          this.setPoolSupply(res[0]);
+          this.setStakingFee(res[1]);
+          this.setValidatorApr(
+            BigNumber(res[2])
+              .minus(BigNumber(res[2]).times(0.1))
+              .dp(2)
+              .toString()
+          );
+          this.setStakeBalance(fromWei(res[3]));
+          this.setRewardBalance(fromWei(res[4]));
+        })
+        .catch(console.log);
     }
   }
 };
