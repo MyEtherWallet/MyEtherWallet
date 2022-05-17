@@ -30,97 +30,74 @@
           <!-- Wallet balance card -->
           <!-- ================================================================================== -->
           <balance-card />
+        </div>
+      </template>
 
-          <!-- ================================================================================== -->
-          <!-- Buy Sell / Send / Swap buttons -->
-          <!-- ================================================================================== -->
-          <div
-            v-if="online"
-            class="d-flex align-center justify-space-between pt-6 pb-4 mx-2"
-          >
-            <v-btn
-              color="transparent"
-              height="65px"
-              dark
-              depressed
-              x-small
+      <!-- ================================================================================== -->
+      <!-- Buy Sell / Send / Swap buttons -->
+      <!-- ================================================================================== -->
+      <v-list class="px-5">
+        <v-list-item-group>
+          <div class="d-flex align-center">
+            <v-list-item
+              class="px-0"
+              active-class="remove-select-state"
               @click="openMoonpay"
             >
-              <div class="text-center" style="min-width: 50px">
+              <div class="text-center mx-auto my-2">
                 <img
                   src="@/assets/images/icons/menu/icon-menu-buy-sell.svg"
                   alt="Buy or Sell"
                   height="30"
                 />
-                <div
-                  class="whiteAlways--text mew-label text-transform--initial"
-                  style="margin-top: 3px"
-                >
+                <div class="white--text font-weight-regular mew-label">
                   Buy/Sell
                 </div>
               </div>
-            </v-btn>
+            </v-list-item>
 
-            <v-divider vertical></v-divider>
+            <v-divider vertical class="mx-3"></v-divider>
 
-            <v-btn
-              color="transparent"
-              height="65px"
-              dark
-              depressed
-              x-small
-              @click="$router.push({ name: ROUTES_WALLET.SEND_TX.NAME })"
+            <v-list-item
+              class="px-0"
+              :to="{ name: ROUTES_WALLET.SEND_TX.NAME }"
             >
-              <div class="text-center" style="min-width: 50px">
+              <div class="text-center mx-auto my-2">
                 <img
                   src="@/assets/images/icons/menu/icon-menu-send.svg"
                   alt="Send"
                   height="30"
                 />
-                <div
-                  class="whiteAlways--text mew-label text-transform--initial"
-                  style="margin-top: 3px"
-                >
+                <div class="white--text font-weight-regular mew-label">
                   Send
                 </div>
               </div>
-            </v-btn>
+            </v-list-item>
 
-            <v-divider vertical></v-divider>
+            <v-divider vertical class="mx-3"></v-divider>
 
-            <v-btn
-              color="transparent"
-              height="65px"
-              dark
-              depressed
-              x-small
-              :class="[!hasSwap ? 'pointer-event--none' : '']"
-              @click="$router.push({ name: ROUTES_WALLET.SWAP.NAME })"
-            >
-              <div class="text-center" style="min-width: 50px">
+            <v-list-item class="px-0" :to="{ name: ROUTES_WALLET.SWAP.NAME }">
+              <div class="text-center mx-auto my-2">
                 <img
                   src="@/assets/images/icons/menu/icon-menu-swap.svg"
                   alt="Swap"
                   height="30"
                   :class="[!hasSwap ? 'opacity--30' : '']"
                 />
-                <div
-                  :class="[
-                    !hasSwap ? 'textMedium--text' : '',
-                    'whiteAlways--text mew-label text-transform--initial'
-                  ]"
-                  style="margin-top: 3px"
-                >
+                <div class="white--text font-weight-regular mew-label">
                   Swap
                 </div>
               </div>
-            </v-btn>
+            </v-list-item>
           </div>
-        </div>
-      </template>
+        </v-list-item-group>
+      </v-list>
 
+      <!-- ================================================================================== -->
+      <!-- Wallet Side Nav -->
+      <!-- ================================================================================== -->
       <v-list>
-        <v-list-item-group model="menuSelected">
+        <v-list-item-group>
           <template v-for="(item, idx) in sectionOne">
             <v-list-item
               v-if="!item.children && shouldShow(item.route)"
@@ -505,6 +482,14 @@ export default {
 </script>
 
 <style lang="scss">
+.wallet-sidemenu
+  .v-list-item--active.v-list-item:not(.v-list-group__header).remove-select-state {
+  background-color: transparent !important;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+  }
+}
 .new-dapp-label {
   border-radius: 2px;
   background: #ff445b;
