@@ -275,7 +275,6 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('wallet', ['balanceInWei', 'tokensList']),
     ...mapState('wallet', [
       'address',
       'instance',
@@ -283,12 +282,9 @@ export default {
       'isHardware',
       'isOfflineApp'
     ]),
-    ...mapGetters('external', [
-      'fiatValue',
-      'balanceFiatValue',
-      'totalTokenFiatValue'
-    ]),
-    ...mapGetters('global', ['isEthNetwork', 'network', 'isTestNetwork']),
+    ...mapGetters('external', ['totalTokenFiatValue']),
+    ...mapGetters('global', ['network', 'isTestNetwork']),
+    ...mapGetters('wallet', ['tokensList', 'balanceInETH']),
     /**
      * verify address title
      * returns @String
