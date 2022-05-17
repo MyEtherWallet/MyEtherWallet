@@ -2,11 +2,8 @@ name: generate offline zip
 
 on:
   push:
-    branches-ignore:
-      - 'gh-pages'
-      - 'gh-pages-history'
-    tags-ignore:
-      - '*'
+    branches:
+      - **/*offline
 
 jobs:
   offline-build:
