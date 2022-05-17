@@ -48,6 +48,7 @@
     <!-- Sell button -->
     <!-- ============================================================== -->
     <mew-button
+      class="mb-6"
       title="Sell now"
       btn-size="xlarge"
       has-full-width
@@ -408,6 +409,7 @@ export default {
       }
     }, 500),
     setCurrency(e) {
+      this.amount = '0';
       this.selectedCurrency = e;
     },
     setMax() {

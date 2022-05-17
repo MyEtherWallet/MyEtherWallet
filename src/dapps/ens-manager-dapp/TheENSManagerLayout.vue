@@ -248,15 +248,24 @@
       :on-register="onRegister"
       :close="closeRegister"
       :register="register"
+      :not-enough-funds="notEnoughFunds"
       :loading-commit="loadingCommit"
       :commited="committed"
       :minimum-age="minimumAge"
       :commit="commit"
+      :no-funds-for-reg-fees="noFundsForRegFees"
+      :commit-fee-in-eth="commitFeeInEth"
+      :commit-fee-in-wei="commitFeeInWei"
+      :commit-fee-usd="commitFeeUsd"
+      :total-cost-usd="totalCostUsd"
+      :total-cost="totalCost"
       :name="nameHandler.name"
       :parsed-host-name="nameHandler.parsedHostName"
       :checking-domain-avail="loading"
       :generate-key-phrase="generateKeyPhrase"
       :get-rent-price="getRentPrice"
+      :waiting-for-reg="waitingForReg"
+      @getCommitFeeOnly="getCommitFeeOnly"
     />
     <!--
     =====================================================================================
@@ -271,6 +280,8 @@
       :type="manageType"
       :transfer="transfer"
       :renew="renew"
+      :no-funds-for-renewal-fees="noFundsForRenewalFees"
+      :loading-renew="loadingRenew"
       :upload-file="uploadFile"
       :uploaded-hash="manageDomainHandler.contentHash"
       :set-text-records="setTextRecords"
@@ -280,6 +291,7 @@
       :set-ipfs="setIpfs"
       :host-name="manageDomainHandler.parsedHostName"
       :get-rent-price="getRentPrice"
+      :get-total-renew-fee-only="getTotalRenewFeeOnly"
       :manage-domain-handler="manageDomainHandler"
     />
   </div>
@@ -296,7 +308,8 @@ import { mapGetters, mapState } from 'vuex';
 import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import BigNumber from 'bignumber.js';
 import ENS from 'ethereum-ens';
-import { fromWei, toBN } from 'web3-utils';
+
+import { fromWei, toBN, toWei } from 'web3-utils';
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 import { ENS_MANAGER_ROUTE } from './configsRoutes';
 import normalise from '@/core/helpers/normalise';
@@ -324,6 +337,7 @@ export default {
       },
       activeTab: 0,
       loadingCommit: false,
+      loadingRenew: false,
       minimumAge: '',
       committed: false,
       settingIpfs: false,
@@ -335,6 +349,20 @@ export default {
       ensManager: {},
       onRegister: false,
       searchError: '',
+      notEnoughFunds: false,
+      noFundsForRegFees: false,
+      noFundsForRenewalFees: false,
+      durationPick: '',
+      commitFeeInEth: '',
+      commitFeeInWei: '0',
+      commitFeeUsd: '0',
+      renewalInEth: '',
+      renewalInWei: '',
+      renewalInUsd: '0',
+      regFee: '0',
+      totalCost: '0',
+      totalCostUsd: '0',
+      waitingForReg: true,
       ensTokens: {
         claimed: false,
         balance: '0',
@@ -409,8 +437,10 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('global', ['network', 'gasPrice']),
+    ...mapGetters('global', ['network', 'gasPrice', 'gasPriceByType']),
     ...mapGetters('external', ['fiatValue']),
+    ...mapState('wallet', ['balance', 'address', 'web3']),
+    ...mapState('global', ['gasPriceType']),
     ...mapState('wallet', ['balance', 'address', 'web3', 'instance']),
     hasEnsTokenBalance() {
       if (this.ensTokens.balance) {
@@ -453,7 +483,7 @@ export default {
       return false;
     },
     balanceToWei() {
-      return this.web3.utils.toWei(BigNumber(this.balance).toString(), 'ether');
+      return toWei(BigNumber(this.balance).toString(), 'ether');
     },
     loading() {
       return this.nameHandler.checkingDomainAvail;
@@ -518,7 +548,6 @@ export default {
       ens,
       this.gasPrice
     );
-
     this.getDomains();
     hasClaimed(this.address, this.web3).then(data => {
       this.ensTokens.claimed = data.claimed;
@@ -613,6 +642,30 @@ export default {
         });
       this.closeManage();
     },
+
+    async getTotalRenewFeeOnly(duration) {
+      this.loadingRenew = true;
+      const renewFeeOnly = await this.manageDomainHandler.totalRenewCost(
+        duration
+      ); // ETH
+      if (!renewFeeOnly) {
+        this.noFundsForRenewalFees = true;
+      } else {
+        this.renewalInEth = renewFeeOnly;
+        this.renewalInWei = toWei(renewFeeOnly);
+        this.renewalInUsd = new BigNumber(this.renewalInEth)
+          .times(this.fiatValue)
+          .toFixed(2);
+        if (toBN(this.renewalInWei).gte(this.balance)) {
+          // commit fee vs current user balance in wei
+          this.noFundsForRenewalFees = true;
+        } else {
+          this.noFundsForRenewalFees = false;
+        }
+      }
+      this.loadingRenew = false;
+    },
+
     renew(duration) {
       this.manageDomainHandler
         .renew(duration, this.balanceToWei)
@@ -668,12 +721,9 @@ export default {
         });
       this.closeManage();
     },
-    /**
-     * Register Domain
-     */
-    findDomain() {
+    async findDomain() {
       try {
-        this.nameHandler = this.ensManager.searchName(this.name);
+        this.nameHandler = await this.ensManager.searchName(this.name);
       } catch (e) {
         Toast(e, {}, ERROR);
       }
@@ -729,25 +779,69 @@ export default {
         .on('receipt', () => {
           this.loadingCommit = true;
           this.committed = false;
+          this.waitingForReg = true;
           setTimeout(() => {
             this.committed = true;
-            this.loadingCommit = false;
+            this.waitingForReg = false;
+            this.getTotalCost(); //calling total cost for regfees
           }, waitingTime * 1000);
         })
         .on('error', err => {
           Toast(err, {}, ERROR);
         });
     },
+
+    async getCommitFeeOnly() {
+      const commitFeeOnly = await this.nameHandler.getCommitmentFees(); // ETH
+      this.commitFeeInEth = commitFeeOnly.toString();
+      this.commitFeeInWei = toWei(commitFeeOnly);
+      this.commitFeeUsd = new BigNumber(this.commitFeeInEth)
+        .times(this.fiatValue)
+        .toFixed(2);
+      if (toBN(this.commitFeeInWei).gte(this.balance)) {
+        // commit fee vs current user balance in wei
+        this.notEnoughFunds = true;
+      } else {
+        this.notEnoughFunds = false;
+      }
+    },
+
+    async getTotalCost() {
+      const registerFeesOnly = await this.nameHandler.getRegFees(
+        this.durationPick,
+        this.balance
+      );
+      if (!registerFeesOnly) {
+        this.noFundsForRegFees = true;
+      } else {
+        this.regFee = registerFeesOnly;
+        const feesAdded =
+          BigNumber(this.regFee) + BigNumber(this.commitFeeInEth);
+        this.totalCost = feesAdded.toString();
+        this.totalCostUsd = new BigNumber(this.totalCost)
+          .times(this.fiatValue)
+          .toFixed(2);
+        if (this.totalCost >= this.balance) {
+          this.noFundsForRegFees = true;
+        } else {
+          this.noFundsForRegFees = false;
+        }
+      }
+      this.loadingCommit = false;
+    },
+
     generateKeyPhrase() {
       if (this.nameHandler.generateKeyPhrase) {
         this.nameHandler.generateKeyPhrase();
       }
     },
+
     getRentPrice(duration) {
+      this.durationPick = duration;
       const handler = this.onManage
         ? this.manageDomainHandler
         : this.nameHandler;
-      return handler.getRentPrice(duration).then(resp => {
+      return handler.getRentPrice(this.durationPick).then(resp => {
         if (resp) {
           const ethValue = fromWei(resp);
           return {

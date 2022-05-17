@@ -8,7 +8,6 @@ const exportObj = {
   integrity: process.env.WEBPACK_INTEGRITY === 'false' ? false : true,
   productionSourceMap: true,
   chainWebpack: config => {
-    2;
     // GraphQL Loader
     config.module
       .rule('graphql')
