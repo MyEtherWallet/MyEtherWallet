@@ -79,21 +79,35 @@
       v-if="tabItems.length > 0 && isNewHeader"
       :value="activeTab"
       background-color="backgroundGrey"
+      show-arrows
       color="blue500"
       height="46"
       active-class="blue500--text"
+      @change="onTab"
     >
       <v-tab
         v-for="(item, index) in tabItems"
-        :key="item.route.name"
+        :key="index"
         :class="[
-          'px-4 px-md-10 textMedium--text  menu-tab-text mew-body',
-          { 'ml-3 ml-md-13': index === 0 },
+          'px-4 px-md-10 textMedium--text menu-tab-text mew-body',
+          { 'ml-md-13': index === 0 },
           { 'mr-3 mr-md-13': index + 1 === tabItems.length }
         ]"
         @click="routeToTab(item.route)"
       >
-        {{ item.name }}
+        <v-badge
+          v-if="item.hasBadge"
+          color="red"
+          :content="item.badgeContent"
+          :dot="item.badgeContent === ''"
+          :inline="item.badgeContent !== ''"
+          right
+        >
+          {{ item.name }}
+        </v-badge>
+        <div v-else>
+          {{ item.name }}
+        </div>
       </v-tab>
     </v-tabs>
     <!--
@@ -101,7 +115,27 @@
      NEW ROUTER VIEW: FOR is NEW HEADER (specify in dapp metaInfo)
     =====================================================================================
     -->
-    <router-view v-if="tabItems.length > 0 && isNewHeader && isValidNetwork" />
+    <slot
+      v-if="activeTab === 0 && externalContents && isValidNetwork"
+      name="tabContent1"
+    />
+    <slot
+      v-if="activeTab === 1 && externalContents && isValidNetwork"
+      name="tabContent2"
+    />
+    <slot
+      v-if="activeTab === 2 && externalContents && isValidNetwork"
+      name="tabContent3"
+    />
+
+    <router-view
+      v-if="
+        tabItems.length > 0 &&
+        isNewHeader &&
+        isValidNetwork &&
+        !externalContents
+      "
+    />
     <div
       v-if="tabItems.length > 0 && isNewHeader && !isValidNetwork"
       class="px-3 py-8 pa-md-15"
@@ -210,6 +244,10 @@ export default {
     validNetworks: {
       default: () => [],
       type: Array
+    },
+    externalContents: {
+      default: false,
+      type: Boolean
     }
   },
   data() {
@@ -229,7 +267,7 @@ export default {
     networkAlertText() {
       const names = this.validNetworks.map(item => item.name_long).join(', ');
       const netString = this.validNetworks.length > 1 ? 'networks' : 'network';
-      return `Please selelect ${names} ${netString} to use this Dapp.`;
+      return `Please select ${names} ${netString} to use this Dapp.`;
     }
   },
 

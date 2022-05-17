@@ -3,6 +3,6 @@ export default {
     ethBlocksTxs: 'eth-blocks-txs-store'
   },
   VERSION: {
-    ethBlocksTxs: '0.0.1'
+    ethBlocksTxs: '0.0.2'
   }
 };

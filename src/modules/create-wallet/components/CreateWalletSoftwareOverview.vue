@@ -88,16 +88,22 @@
 
 <script>
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
+import { mapGetters } from 'vuex';
 export default {
   name: 'CreateWalletSoftwareOverview',
   data: () => ({
     walletTypes: WALLET_TYPES,
     linkToLearnMore: {
-      url: 'https://help.myetherwallet.com/en/articles/5377921-mew-says-not-recommended-when-i-access-my-wallet-why',
+      url: '',
       title: 'Learn more'
     }
   }),
-
+  computed: {
+    ...mapGetters('article', ['getArticle'])
+  },
+  mounted() {
+    this.linkToLearnMore.url = this.getArticle('not-rec-when-access-wallet');
+  },
   methods: {
     /**
      * Emit wallet type creation.

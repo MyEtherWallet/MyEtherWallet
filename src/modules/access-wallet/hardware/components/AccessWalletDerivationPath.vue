@@ -211,7 +211,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('global', ['addCustomPath']),
+    ...mapActions('custom', ['addCustomPath']),
     /**
      * Emits the path value and name back to parent
      * then closes dropdown
