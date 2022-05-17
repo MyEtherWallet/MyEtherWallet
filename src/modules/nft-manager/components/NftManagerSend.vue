@@ -16,9 +16,12 @@
       />
     </div>
     <span class="mew-heading-2">Send Your NFT </span>
+    <!--Getting error: Refused to load the img: 
+    because it violates the following Content Security Policy directive: "img-src 'self' 
+    -->
     <img
       height="150"
-      :src="nft.image ? nft.image : getImageUrl(nft)"
+      :src="selectedContract.image ? selectedContract.image : getImageUrl(nft)"
       alt="nft image"
       @error="onImgErr"
     />
@@ -68,6 +71,12 @@ export default {
         return;
       },
       type: Function
+    },
+    selectedContract: {
+      default: () => {
+        return {};
+      },
+      type: Object
     },
     send: {
       default: () => {

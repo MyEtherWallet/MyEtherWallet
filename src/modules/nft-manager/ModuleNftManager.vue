@@ -92,6 +92,7 @@
                     :on-click="openNftSend"
                     :get-image-url="getImageUrl"
                     :token="token"
+                    :selected-contract="selectedContract"
                   />
                 </div>
                 <!--
@@ -126,6 +127,7 @@
           v-if="onNftSend"
           :close="closeNftSend"
           :get-image-url="getImageUrl"
+          :selected-contract="selectedContract"
           :nft="selectedNft"
           :nft-category="selectedContract.name"
           :send="sendTx"

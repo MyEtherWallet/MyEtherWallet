@@ -23,9 +23,14 @@
   =====================================================================================
   -->
     <div v-if="!loading" class="d-flex align-center full-width">
+      <!--Getting error: Refused to load the img: 
+      because it violates the following Content Security Policy directive: "img-src 'self' 
+      -->
       <img
         height="100"
-        :src="token.image ? token.image : getImageUrl(token)"
+        :src="
+          selectedContract.image ? selectedContract.image : getImageUrl(token)
+        "
         alt="nft token"
         @error="onImgErr"
       />
@@ -66,6 +71,12 @@ export default {
         return;
       },
       type: Function
+    },
+    selectedContract: {
+      default: () => {
+        return {};
+      },
+      type: Object
     },
     onClick: {
       default: () => {
