@@ -1,5 +1,13 @@
 <template>
   <div class="py-8 px-8">
+    <div
+      class="d-flex align-center textDark--text mb-10 cursor--pointer"
+      @click="$emit('close')"
+    >
+      <v-icon color="textDark">mdi-arrow-left mr-4</v-icon>
+      <div class="mew-heading-2">Select provider</div>
+    </div>
+
     <!-- ============================================================== -->
     <!-- Moonpay -->
     <!-- ============================================================== -->

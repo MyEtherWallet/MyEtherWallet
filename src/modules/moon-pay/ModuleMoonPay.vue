@@ -68,6 +68,7 @@
         :selected-currency="selectedCurrency"
         :selected-fiat="selectedFiat"
         :buy-obj="buyObj"
+        @close="step = 0"
         @openProviders="openProviders"
       />
     </mew-popup>
