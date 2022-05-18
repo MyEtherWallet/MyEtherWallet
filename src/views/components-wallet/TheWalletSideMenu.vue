@@ -531,15 +531,18 @@ export default {
   .v-list-item,
   .v-input--switch {
     opacity: 0.7 !important;
+    filter: grayscale(1);
 
     &:hover {
       opacity: 1 !important;
+      filter: grayscale(0);
     }
   }
 
   a.v-item--active,
   .v-input--is-label-active {
     opacity: 1 !important;
+    filter: grayscale(0);
   }
 
   .v-list-item--active.v-list-item:not(.v-list-group__header).remove-select-state {
