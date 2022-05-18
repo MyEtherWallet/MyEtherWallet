@@ -36,44 +36,22 @@ export default class MoonPayHandler {
   /**
    *
    * @param {String} symbol - Crypto Symbol ex. ETH
-   * @param {Object} options
-   * @param {Boolean} options.all - Gets all supported fait options
    * @returns
    */
-  getSupportedFiatToBuy(symbol, options = {}) {
-    return new Promise((resolve, reject) => {
-      axios
-        .get(
-          options.all
-            ? `https://development.mewwallet.dev/v3/purchase/moonpay/quotes`
-            : `${API}/v3/purchase/providers/web?iso=us&cryptoCurrency=${symbol}`
-        )
-        .then(res => resolve(res.data))
-        .catch(reject);
-    });
+  getSupportedFiatToBuy(symbol) {
+    return axios
+      .get(`${API}/v3/purchase/providers/web?iso=us&cryptoCurrency=${symbol}`)
+      .then(res => res.data);
   }
 
   getFiatRatesForBuy() {
-    return new Promise((resolve, reject) => {
-      axios
-        .get(`${API}/v3/purchase/moonpay/quotes`)
-        .then(res => {
-          resolve(res.data);
-        })
-        .catch(reject);
-    });
+    return axios.get(`${API}/v3/purchase/moonpay/quotes`).then(res => res.data);
   }
 
   getSupportedFiatToSell(symbol) {
-    return new Promise((resolve, reject) => {
-      axios
-        .get(`${API}/v3/sell/providers/web?iso=us&cryptoCurrency=${symbol}`)
-        .then(res => {
-          const supportedFiat = res.data;
-          resolve(supportedFiat);
-        })
-        .catch(reject);
-    });
+    return axios
+      .get(`${API}/v3/sell/providers/web?iso=us&cryptoCurrency=${symbol}`)
+      .then(res => res.data);
   }
   // this won't be used for awhile but is setup here
   getHistory() {}
