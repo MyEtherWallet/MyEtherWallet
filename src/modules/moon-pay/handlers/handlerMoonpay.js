@@ -33,14 +33,22 @@ export default class MoonPayHandler {
     });
   }
 
-  getSupportedFiatToBuy(symbol) {
+  /**
+   *
+   * @param {String} symbol - Crypto Symbol ex. ETH
+   * @param {Object} options
+   * @param {Boolean} options.all - Gets all supported fait options
+   * @returns
+   */
+  getSupportedFiatToBuy(symbol, options = {}) {
     return new Promise((resolve, reject) => {
       axios
-        .get(`${API}/v3/purchase/providers/web?iso=us&cryptoCurrency=${symbol}`)
-        .then(res => {
-          const supportedFiat = res.data;
-          resolve(supportedFiat);
-        })
+        .get(
+          options.all
+            ? `https://development.mewwallet.dev/v3/purchase/moonpay/quotes`
+            : `${API}/v3/purchase/providers/web?iso=us&cryptoCurrency=${symbol}`
+        )
+        .then(res => resolve(res.data))
         .catch(reject);
     });
   }

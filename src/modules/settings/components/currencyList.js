@@ -14,10 +14,7 @@ class Currency {
     this.img = img ? img : flags.usFlag;
   }
 }
-/**
- * Returns array of Currency values with icons
- */
-export default [
+const allCurrencies = [
   /**
    * Unsorted currencies go here
    */
@@ -194,3 +191,30 @@ export default [
     return 0;
   })
 ];
+
+/**
+ * @typedef currency
+ * @type {Object}
+ * @property {String} name - Currency name for display
+ * @property {String} value - Value for currency
+ * @property {String} img - path to currency flag
+ *
+ * @param {String|String[]} val - currency name
+ * @returns {currency|currency[]} Currency
+ */
+export const getCurrency = val => {
+  try {
+    if (typeof val === 'string')
+      return allCurrencies.find(c => c.name.includes(val.toUpperCase().trim()));
+    return allCurrencies.filter(c =>
+      val.find(v => c.name === v.toUpperCase().trim())
+    );
+  } catch {
+    return {};
+  }
+};
+
+/**
+ * Returns array of Currency values with icons
+ */
+export default allCurrencies;

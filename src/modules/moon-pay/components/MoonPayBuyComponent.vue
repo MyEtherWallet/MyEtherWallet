@@ -208,7 +208,11 @@ import { mapGetters, mapActions, mapState } from 'vuex';
 import { fromWei } from 'web3-utils';
 import Web3 from 'web3';
 import nodeList from '@/utils/networks';
-import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
+import {
+  formatFloatingPointValue,
+  formatFiatValue
+} from '@/core/helpers/numberFormatHelper';
+import { getCurrency } from '@/modules/settings/components/currencyList';
 export default {
   name: 'ModuleBuyEth',
   components: { ModuleAddressBook },
@@ -254,34 +258,50 @@ export default {
   computed: {
     ...mapGetters('global', ['network', 'getFiatValue']),
     ...mapState('wallet', ['address']),
+    ...mapState('external', ['currencyRate']),
     includesFeeText() {
-      return `Includes ${this.percentFee} fee (${this.getFiatValue(
-        this.minFee
-      )} min)`;
+      return `Includes ${this.percentFee} fee (${
+        formatFiatValue(this.minFee, this.currencyConfig).value
+      } min)`;
     },
     networkFeeText() {
       return `${
         this.selectedCurrency.name
-      } network fee (for transfers to your wallet) ~${this.getFiatValue(
-        this.networkFeeToFiat
-      )}`;
+      } network fee (for transfers to your wallet) ~${
+        formatFiatValue(this.networkFeeToFiat, this.currencyConfig).value
+      }`;
     },
     dailyLimit() {
       const value = BigNumber(this.fiatMultiplier).times(12000);
-      return `Daily limit: ${this.getFiatValue(value.toString())}`;
+      return `Daily limit: ${
+        formatFiatValue(value.toString(), this.currencyConfig).value
+      }`;
     },
     monthlyLimit() {
       const value = BigNumber(this.fiatMultiplier).times(50000);
-      return `Monthly limit: ${this.getFiatValue(value.toString())}`;
+      return `Monthly limit: ${
+        formatFiatValue(value.toString(), this.currencyConfig).value
+      }`;
+    },
+    currencyConfig() {
+      const fiat = this.selectedFiat.value;
+      const rate = this.currencyRate[fiat];
+      const currency = fiat;
+      return { rate, currency };
     },
     fiatMultiplier() {
       if (this.hasData) {
-        const selectedCurrencyPrice = this.fetchedData[0].conversion_rates.find(
-          item => item.fiat_currency === this.selectedFiatName
-        );
-        return selectedCurrencyPrice
-          ? BigNumber(selectedCurrencyPrice.exchange_rate)
-          : BigNumber(1);
+        try {
+          const selectedCurrencyPrice =
+            this.fetchedData[0].conversion_rates.find(
+              item => item.fiat_currency === this.selectedFiatName
+            );
+          return selectedCurrencyPrice
+            ? BigNumber(selectedCurrencyPrice.exchange_rate)
+            : BigNumber(1);
+        } catch {
+          return BigNumber(1);
+        }
       }
       return BigNumber(1);
     },
@@ -299,7 +319,7 @@ export default {
     },
     priceOb() {
       return !isEmpty(this.fetchedData)
-        ? this.fetchedData[0].prices.find(
+        ? this.fetchedData[0].quotes.find(
             item => item.fiat_currency === this.selectedFiatName
           )
         : { crypto_currency: 'ETH', fiat_currency: 'USD', price: '3379.08322' };
@@ -320,7 +340,7 @@ export default {
       return withFee.minus(this.networkFeeToFiat).toString();
     },
     plusFeeF() {
-      return this.getFiatValue(this.plusFee);
+      return formatFiatValue(this.plusFee, this.currencyConfig).value;
     },
     percentFee() {
       return this.isEUR ? '0.7%' : '3.25%';
@@ -462,9 +482,10 @@ export default {
                 return quote.fiat_currency === this.selectedFiatName;
               });
 
-              token.price = this.getFiatValue(
-                actualPrice ? actualPrice.price : '0'
-              );
+              token.price = formatFiatValue(
+                actualPrice ? actualPrice.price : '0',
+                this.currencyConfig
+              ).value;
               return token;
             })
           : tokensList;
@@ -490,33 +511,35 @@ export default {
     },
     fiatCurrencyItems() {
       const arrItems = this.hasData
-        ? this.fetchedData[0].fiat_currencies.filter(item => item !== 'RUB')
+        ? this.fetchedData[0].quotes.filter(
+            item => item.fiat_currency !== 'RUB'
+          )
         : ['USD'];
-      return arrItems.map(item => {
-        return {
-          name: item,
-          value: item,
-          // eslint-disable-next-line
-          img: require(`@/assets/images/currencies/${item}.svg`)
-        };
-      });
+      return getCurrency(arrItems.map(i => i.fiat_currency));
     },
     max() {
       if (this.hasData) {
-        const moonpayMax = this.fetchedData[0]?.limits.find(
-          item => item.fiat_currency === this.selectedFiatName
-        );
-        const simplexMax = this.fetchedData[1]?.limits.find(
-          item => item.fiat_currency === this.selectedFiatName
-        );
-        return {
-          moonpay: moonpayMax
-            ? BigNumber(moonpayMax.limit.max)
-            : BigNumber(12000),
-          simplex: simplexMax
-            ? BigNumber(simplexMax.limit.max)
-            : BigNumber(12000)
-        };
+        try {
+          const moonpayMax = this.fetchedData[0]?.limits.find(
+            item => item.fiat_currency === this.selectedFiatName
+          );
+          const simplexMax = this.fetchedData[1]?.limits.find(
+            item => item.fiat_currency === this.selectedFiatName
+          );
+          return {
+            moonpay: moonpayMax
+              ? BigNumber(moonpayMax.limit.max)
+              : BigNumber(12000),
+            simplex: simplexMax
+              ? BigNumber(simplexMax.limit.max)
+              : BigNumber(12000)
+          };
+        } catch {
+          return {
+            moonpay: BigNumber(12000),
+            simplex: BigNumber(12000)
+          };
+        }
       }
       return {
         moonpay: BigNumber(12000),
@@ -525,10 +548,14 @@ export default {
     },
     min() {
       if (this.hasData) {
-        const foundLimit = this.fetchedData[0].limits.find(
-          item => item.fiat_currency === this.selectedFiatName
-        );
-        return foundLimit ? BigNumber(foundLimit.limit.min) : BigNumber(30);
+        try {
+          const foundLimit = this.fetchedData[0].limits.find(
+            item => item.fiat_currency === this.selectedFiatName
+          );
+          return foundLimit ? BigNumber(foundLimit.limit.min) : BigNumber(30);
+        } catch {
+          return BigNumber(30);
+        }
       }
       return BigNumber(30);
     }
@@ -547,18 +574,22 @@ export default {
     selectedFiat: {
       handler: function (newVal, oldVal) {
         if (!isEqual(newVal, oldVal)) {
-          const selectedCurrencyPrice =
-            this.fetchedData[0].conversion_rates.find(
-              item => item.fiat_currency === oldVal.name
+          try {
+            const selectedCurrencyPrice =
+              this.fetchedData[0].conversion_rates.find(
+                item => item.fiat_currency === oldVal.name
+              );
+            const revertedVal = BigNumber(this.amount).div(
+              selectedCurrencyPrice.exchange_rate
             );
-          const revertedVal = BigNumber(this.amount).div(
-            selectedCurrencyPrice.exchange_rate
-          );
-          const value = BigNumber(revertedVal)
-            .times(this.fiatMultiplier)
-            .dp(0)
-            .toFixed();
-          this.amount = value;
+            const value = BigNumber(revertedVal)
+              .times(this.fiatMultiplier)
+              .dp(0)
+              .toFixed();
+            this.amount = value;
+          } catch {
+            this.amount = BigNumber(1);
+          }
         }
       },
       deep: true
@@ -661,7 +692,7 @@ export default {
       this.fetchData = {};
       this.fetchGasPrice();
       this.moonpayHandler
-        .getSupportedFiatToBuy(this.selectedCurrency.name)
+        .getSupportedFiatToBuy(this.selectedCurrency.name, { all: true })
         .then(res => {
           this.moonpayHandler.getFiatRatesForBuy().then(res => {
             this.currencyRates = cloneDeep(res);
