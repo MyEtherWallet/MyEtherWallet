@@ -659,7 +659,6 @@ export default {
   height: 20px;
 }
 .section-block {
-  height: 145px;
   border-radius: 12px;
   left: 0px;
   top: 0px;
