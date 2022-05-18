@@ -11,7 +11,7 @@ export default class MoonPayHandler {
     return new Promise(resolve => {
       let link = `${API}/v3/purchase/moonpay/order?address=${address}&id=${id}&cryptoCurrency=${tokenSymbol}&fiatCurrency=${fiatCurrency}`;
       if (amount) {
-        link += `${link}&requestedAmount=${amount}`;
+        link += `&requestedAmount=${amount}`;
       }
       const parsedUrl = encodeURI(link);
       // eslint-disable-next-line
