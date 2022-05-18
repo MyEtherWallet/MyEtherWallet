@@ -65,7 +65,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
     // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve, reject) => {
       const txns = this.getTransactions(toAddress).map(item => {
-        //delete item['gasPrice'];
+        delete item['gasPrice'];
         return item;
       });
       try {
