@@ -31,6 +31,7 @@
                 @selectedCurrency="setSelectedCurrency"
                 @openProviders="openProviders"
                 @selectedFiat="setSelectedFiat"
+                @setBuyObject="setBuyObj"
               />
             </template>
             <template #tabContent2>
@@ -54,6 +55,7 @@
             @selectedCurrency="setSelectedCurrency"
             @openProviders="openProviders"
             @selectedFiat="setSelectedFiat"
+            @setBuyObject="setBuyObj"
           />
         </div>
       </div>
@@ -61,7 +63,8 @@
     <mew-popup
       :show="open && step == 1"
       :has-buttons="false"
-      :has-title="false"
+      :has-title="true"
+      title="Select Provider"
       :has-padding="false"
       max-width="540"
       :left-btn="leftBtn"
@@ -71,11 +74,11 @@
       <MoonPayBuyProviderComponent
         :moonpay-handler="moonpayHandler"
         :close="close"
-        :tab="activeTab"
-        :default-currency="defaltCurrency"
         :in-wallet="inWallet"
+        :only-simplex="onlySimplex"
         :selected-currency="selectedCurrency"
         :selected-fiat="selectedFiat"
+        :buy-obj="buyObj"
         @openProviders="openProviders"
       />
     </mew-popup>
@@ -115,6 +118,8 @@ export default {
       selectedCurrency: {},
       selectedFiat: {},
       nodes: nodes,
+      onlySimplex: false,
+      buyObj: {},
       step: 0 // 0 -> Buy | 1 -> Providers
     };
   },
@@ -217,16 +222,23 @@ export default {
     },
     close() {
       this.activeTab = 0;
+      this.step = 0;
       this.$emit('close', false);
     },
     setSelectedCurrency(e) {
+      console.log('setSelectedCurrency', e);
       this.selectedCurrency = e;
     },
     setSelectedFiat(e) {
+      console.log('setSelectedFiat', e);
       this.selectedFiat = e;
     },
     openProviders(val) {
       this.step = val;
+    },
+    setBuyObj(val) {
+      console.log('Buy Object', val);
+      this.buyObj = val;
     }
   }
 };

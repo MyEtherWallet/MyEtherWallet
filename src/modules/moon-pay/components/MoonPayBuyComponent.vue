@@ -94,10 +94,6 @@ export default {
       type: Object,
       default: () => {}
     },
-    // close: {
-    //   type: Function,
-    //   default: () => {}
-    // },
     defaultCurrency: {
       type: Object,
       default: () => {}
@@ -120,7 +116,16 @@ export default {
       //validToAddress: false,
       gasPrice: '0',
       web3Connections: {},
-      onlySimplex: false
+      onlySimplex: false,
+      buyObj: {
+        cryptoToFiat: '',
+        selectedCryptoName: '',
+        plusFeeF: '',
+        includesFeeText: '',
+        networkFeeText: '',
+        dailyLimit: '',
+        monthlyLimit: ''
+      }
       //isMoonpay: false
       //isSimplex: false
     };
@@ -415,8 +420,10 @@ export default {
     },
     selectedFiat: {
       handler: function (newVal, oldVal) {
-        console.log(this.selectedFiat);
+        console.log(newVal);
         if (!isEqual(newVal, oldVal)) {
+          this.amount = newVal.name != 'JPY' ? '100' : '10000';
+          /*
           const selectedCurrencyPrice =
             this.fetchedData[0].conversion_rates.find(
               item => item.fiat_currency === oldVal.name
@@ -432,7 +439,8 @@ export default {
             .toFixed();
           console.log('value', value);
           this.amount = value;
-          this.$emit('selectedFiat', this.selectedFiat);
+          */
+          this.$emit('selectedFiat', newVal);
         }
       },
       deep: true
@@ -565,9 +573,21 @@ export default {
         });
     },
     buy() {
-      this.$emit('openProviders', 1);
-      //this.close();
       this.selectedCurrency = this.defaultCurrency;
+      this.buyObj = {
+        cryptoToFiat: this.cryptoToFiat,
+        selectedCryptoName: this.selectedCryptoName,
+        plusFeeF: this.plusFeeF,
+        includesFeeText: this.includesFeeText,
+        networkFeeText: this.networkFeeText,
+        dailyLimit: this.dailyLimit,
+        monthlyLimit: this.monthlyLimit
+      };
+      this.$emit('setBuyObject', this.buyObj);
+      this.$emit('openProviders', 1);
+      this.$emit('selectedCurrency', this.selectedCurrency);
+      this.$emit('selectedFiat', this.selectedFiat);
+      //this.close();
       // this.moonpayHandler
       //   .buy(
       //     this.selectedCurrency.name,

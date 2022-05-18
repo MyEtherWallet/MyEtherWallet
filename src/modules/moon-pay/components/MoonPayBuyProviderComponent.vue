@@ -1,49 +1,41 @@
 <template>
   <div class="py-8 px-8">
-    <div class="mew-heading-3 textDark--text mb-5">Select Provider</div>
     <!-- ============================================================== -->
     <!-- Moonpay -->
     <!-- ============================================================== -->
-    <div
-      v-if="!hideSimplex || !onlySimplex"
-      class="section-block pa-5"
-      :class="{ selected: isMoonpay }"
-    >
+    <div v-if="!hideSimplex || !onlySimplex" class="section-block pa-5">
       <img
         class="provider-logo"
         src="@/modules/moon-pay/assets/moonpay-logo.svg"
         height="18"
       />
-      <div v-if="!loading" class="mb-1">
+      <div class="mb-1">
         <div class="d-flex mb-1 align-center justify-space-between">
           <div class="d-flex mew-heading-3 textDark--text">
-            {{ cryptoToFiat }}
-            <span class="mew-heading-3 pl-1">{{ selectedCryptoName }}</span>
+            {{ buyObj.cryptoToFiat }}
+            <span class="mew-heading-3 pl-1">{{
+              buyObj.selectedCryptoName
+            }}</span>
           </div>
         </div>
         <div class="d-flex align-center">
-          <div class="mr-1 textDark--text">≈ {{ plusFeeF }}</div>
+          <div class="mr-1 textDark--text">≈ {{ buyObj.plusFeeF }}</div>
           <mew-tooltip style="height: 21px">
             <template #contentSlot>
               <div>
-                {{ includesFeeText }}
+                {{ buyObj.includesFeeText }}
                 <br />
                 <br />
-                {{ networkFeeText }}
+                {{ buyObj.networkFeeText }}
                 <br />
                 <br />
-                {{ dailyLimit }}
+                {{ buyObj.dailyLimit }}
                 <br />
-                {{ monthlyLimit }}
+                {{ buyObj.monthlyLimit }}
               </div>
             </template>
           </mew-tooltip>
         </div>
-      </div>
-
-      <div v-else class="mb-1">
-        <v-skeleton-loader type="heading" class="mb-1" />
-        <v-skeleton-loader max-width="200px" type="heading" />
       </div>
 
       <div class="d-flex align-center mb-1">
@@ -99,12 +91,35 @@
     <!-- ============================================================== -->
     <!-- Simplex -->
     <!-- ============================================================== -->
-    <div
-      v-if="!hideSimplex"
-      class="section-block pa-5"
-      :class="{ selected: isSimplex }"
-    >
-      <div class="mew-heading-3 textDark--text mb-5">Check for rates</div>
+    <div v-if="!hideSimplex" class="section-block pa-5">
+      <div class="mb-1">
+        <div class="d-flex mb-1 align-center justify-space-between">
+          <div class="d-flex mew-heading-3 textDark--text">
+            {{ buyObj.cryptoToFiat }}
+            <span class="mew-heading-3 pl-1">{{
+              buyObj.selectedCryptoName
+            }}</span>
+          </div>
+        </div>
+        <div class="d-flex align-center">
+          <div class="mr-1 textDark--text">≈ {{ buyObj.plusFeeF }}</div>
+          <mew-tooltip style="height: 21px">
+            <template #contentSlot>
+              <div>
+                {{ buyObj.includesFeeText }}
+                <br />
+                <br />
+                {{ buyObj.networkFeeText }}
+                <br />
+                <br />
+                {{ buyObj.dailyLimit }}
+                <br />
+                {{ buyObj.monthlyLimit }}
+              </div>
+            </template>
+          </mew-tooltip>
+        </div>
+      </div>
       <div class="d-flex align-center justify-space-between">
         <div class="d-flex align-start mb-1">
           <img
@@ -151,14 +166,9 @@
 <script>
 import MultiCoinValidator from 'multicoin-address-validator';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
-import { isEmpty, cloneDeep } from 'lodash';
+import { isEmpty } from 'lodash';
 import BigNumber from 'bignumber.js';
-import { LOCALE } from '../helpers';
 import { mapGetters, mapActions, mapState } from 'vuex';
-import { fromWei } from 'web3-utils';
-import Web3 from 'web3';
-import nodeList from '@/utils/networks';
-import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 export default {
   name: 'ModuleBuyEthProvider',
   props: {
@@ -185,97 +195,99 @@ export default {
     selectedCurrency: {
       type: Object,
       default: () => ({})
+    },
+    buyObj: {
+      type: Object,
+      default: () => ({})
     }
   },
   data() {
     return {
       //   selectedCurrency: this.defaultCurrency,
       loading: true,
-      fetchedData: {},
-      currencyRates: [],
+      //   currencyRates: [],
       amount: '100',
-      toAddress: '',
-      validToAddress: false,
-      gasPrice: '0',
-      web3Connections: {},
-      isMoonpay: false,
-      isSimplex: false
+      validToAddress: false
+      //   gasPrice: '0'
+      //   web3Connections: {},
+      //   isMoonpay: false,
+      //   isSimplex: false
     };
   },
   computed: {
     ...mapGetters('global', ['network']),
     ...mapState('wallet', ['address']),
-    includesFeeText() {
-      return `Includes ${this.percentFee} fee (${this.currencyFormatter(
-        this.minFee
-      )} min)`;
-    },
-    networkFeeText() {
-      return `${
-        this.selectedCurrency.name
-      } network fee (for transfers to your wallet) ~${this.currencyFormatter(
-        this.networkFeeToFiat
-      )}`;
-    },
-    dailyLimit() {
-      const value = BigNumber(this.fiatMultiplier).times(12000);
-      return `Daily limit: ${this.currencyFormatter(value.toString())}`;
-    },
-    monthlyLimit() {
-      const value = BigNumber(this.fiatMultiplier).times(20000);
-      return `Monthly limit: ${this.currencyFormatter(value.toString())}`;
-    },
-    fiatMultiplier() {
-      if (this.hasData) {
-        const selectedCurrencyPrice = this.fetchedData[0].conversion_rates.find(
-          item => item.fiat_currency === this.selectedFiatName
-        );
-        return selectedCurrencyPrice
-          ? BigNumber(selectedCurrencyPrice.exchange_rate)
-          : BigNumber(1);
-      }
-      return BigNumber(1);
-    },
+    // includesFeeText() {
+    //   return `Includes ${this.percentFee} fee (${this.currencyFormatter(
+    //     this.minFee
+    //   )} min)`;
+    // },
+    // networkFeeText() {
+    //   return `${
+    //     this.selectedCurrency.name
+    //   } network fee (for transfers to your wallet) ~${this.currencyFormatter(
+    //     this.networkFeeToFiat
+    //   )}`;
+    // },
+    // dailyLimit() {
+    //   const value = BigNumber(this.fiatMultiplier).times(12000);
+    //   return `Daily limit: ${this.currencyFormatter(value.toString())}`;
+    // },
+    // monthlyLimit() {
+    //   const value = BigNumber(this.fiatMultiplier).times(20000);
+    //   return `Monthly limit: ${this.currencyFormatter(value.toString())}`;
+    // },
+    // fiatMultiplier() {
+    //   if (this.hasData) {
+    //     const selectedCurrencyPrice = this.fetchedData[0].conversion_rates.find(
+    //       item => item.fiat_currency === this.selectedFiatName
+    //     );
+    //     return selectedCurrencyPrice
+    //       ? BigNumber(selectedCurrencyPrice.exchange_rate)
+    //       : BigNumber(1);
+    //   }
+    //   return BigNumber(1);
+    // },
     selectedFiatName() {
       return this.selectedFiat.name;
     },
     actualAddress() {
-      return this.inWallet ? this.address : this.toAddress;
+      return this.inWallet ? this.address : '';
     },
     // actualValidAddress() {
     //   return this.inWallet ? true : this.validToAddress;
     // },
-    networkFee() {
-      return fromWei(BigNumber(this.gasPrice).times(21000).toString());
-    },
-    priceOb() {
-      return !isEmpty(this.fetchedData)
-        ? this.fetchedData[0].prices.find(
-            item => item.fiat_currency === this.selectedFiatName
-          )
-        : { crypto_currency: 'ETH', fiat_currency: 'USD', price: '3379.08322' };
-    },
-    networkFeeToFiat() {
-      return BigNumber(this.networkFee).times(this.priceOb.price).toString();
-    },
-    minFee() {
-      return BigNumber(4.43).times(this.fiatMultiplier).toString();
-    },
-    plusFee() {
-      const fee = this.isEUR
-        ? BigNumber(BigNumber(0.7).div(100)).times(this.amount)
-        : BigNumber(BigNumber(3.25).div(100)).times(this.amount);
-      const withFee = fee.gt(this.minFee)
-        ? BigNumber(this.amount).minus(fee)
-        : BigNumber(this.amount).minus(fee).minus(this.minFee);
-      return withFee.minus(this.networkFeeToFiat).toString();
-    },
-    plusFeeF() {
-      return this.currencyFormatter(this.plusFee);
-    },
-    percentFee() {
-      return this.isEUR ? '0.7%' : '3.25%';
-    },
+    // networkFee() {
+    //   return fromWei(BigNumber(this.gasPrice).times(21000).toString());
+    // },
+    // priceOb() {
+    //   return !isEmpty(this.fetchedData)
+    //     ? this.fetchedData[0].prices.find(
+    //         item => item.fiat_currency === this.selectedFiatName
+    //       )
+    //     : { crypto_currency: 'ETH', fiat_currency: 'USD', price: '3379.08322' };
+    // },
+    // networkFeeToFiat() {
+    //   return BigNumber(this.networkFee).times(this.priceOb.price).toString();
+    // },
+    // minFee() {
+    //   return BigNumber(4.43).times(this.fiatMultiplier).toString();
+    // },
+    // plusFee() {
+    //   const fee = this.isEUR
+    //     ? BigNumber(BigNumber(0.7).div(100)).times(this.amount)
+    //     : BigNumber(BigNumber(3.25).div(100)).times(this.amount);
+    //   const withFee = fee.gt(this.minFee)
+    //     ? BigNumber(this.amount).minus(fee)
+    //     : BigNumber(this.amount).minus(fee).minus(this.minFee);
+    //   return withFee.minus(this.networkFeeToFiat).toString();
+    // },
+    // plusFeeF() {
+    //   return this.currencyFormatter(this.plusFee);
+    // },
+    // percentFee() {
+    //   return this.isEUR ? '0.7%' : '3.25%';
+    // },
     selectedCryptoName() {
       return this.selectedCurrency.name;
     },
@@ -434,11 +446,11 @@ export default {
     hasData() {
       return !isEmpty(this.fetchedData);
     },
-    cryptoToFiat() {
-      return formatFloatingPointValue(
-        BigNumber(this.plusFee).div(this.priceOb.price).toString()
-      ).value;
-    },
+    // cryptoToFiat() {
+    //   return formatFloatingPointValue(
+    //     BigNumber(this.plusFee).div(this.priceOb.price).toString()
+    //   ).value;
+    // },
     // fiatCurrencyItems() {
     //   const arrItems = this.hasData
     //     ? this.fetchedData[0].fiat_currencies.filter(item => item !== 'RUB')
@@ -493,7 +505,7 @@ export default {
     },
     moonpayHandler: {
       handler: function () {
-        this.fetchCurrencyData();
+        //this.fetchCurrencyData();
       },
       deep: true
     },
@@ -509,21 +521,21 @@ export default {
     }
   },
   mounted() {
-    this.fetchCurrencyData();
+    //this.fetchCurrencyData();
   },
   methods: {
     ...mapActions('global', ['setNetwork']),
-    async fetchGasPrice() {
-      const nodeType = this.selectedCurrency.hasOwnProperty('network')
-        ? this.selectedCurrency.network
-        : this.selectedCurrency.name;
-      const node = nodeList[nodeType];
-      if (!this.web3Connections[nodeType]) {
-        const web3 = new Web3(node[0].url);
-        this.web3Connections[nodeType] = web3;
-      }
-      this.gasPrice = await this.web3Connections[nodeType].eth.getGasPrice();
-    },
+    // async fetchGasPrice() {
+    //   const nodeType = this.selectedCurrency.hasOwnProperty('network')
+    //     ? this.selectedCurrency.network
+    //     : this.selectedCurrency.name;
+    //   const node = nodeList[nodeType];
+    //   if (!this.web3Connections[nodeType]) {
+    //     const web3 = new Web3(node[0].url);
+    //     this.web3Connections[nodeType] = web3;
+    //   }
+    //   this.gasPrice = await this.web3Connections[nodeType].eth.getGasPrice();
+    // },
     // setAddress(address, valid) {
     //   this.acutalAddress = address;
     //   this.toAddress = address;
@@ -532,10 +544,10 @@ export default {
     isValidToAddress(address) {
       return MultiCoinValidator.validate(address, this.selectedCurrency.name);
     },
-    selectMoonpay() {
-      this.isMoonpay = true;
-      this.isSimplex = false;
-    },
+    // selectMoonpay() {
+    //   this.isMoonpay = true;
+    //   this.isSimplex = false;
+    // },
     // selectSimplex() {
     //   this.isSimplex = true;
     //   this.isMoonpay = false;
@@ -554,7 +566,7 @@ export default {
       window.open(
         `https://ccswap.myetherwallet.com/#/?fiat=${this.selectedFiatName.toLowerCase()}&amount=${
           this.amount
-        }&to=${this.toAddress}`,
+        }`,
         '_blank'
       );
     },
@@ -565,13 +577,13 @@ export default {
     //   const simplexMax = this.max.simplex;
     //   this.amount = simplexMax.toString();
     // },
-    currencyFormatter(value) {
-      const locale = this.hasData ? LOCALE[this.selectedFiatName] : 'en-US';
-      return new Intl.NumberFormat(locale, {
-        style: 'currency',
-        currency: this.selectedFiatName
-      }).format(value);
-    },
+    // currencyFormatter(value) {
+    //   const locale = this.hasData ? LOCALE[this.selectedFiatName] : 'en-US';
+    //   return new Intl.NumberFormat(locale, {
+    //     style: 'currency',
+    //     currency: this.selectedFiatName
+    //   }).format(value);
+    // },
     // setCurrency(e) {
     //   this.selectedCurrency = e;
     // },
@@ -585,25 +597,30 @@ export default {
       this.loading = true;
       this.fetchData = {};
     },
-    fetchCurrencyData() {
-      this.loading = true;
-      this.fetchData = {};
-      this.fetchGasPrice();
-      this.moonpayHandler
-        .getSupportedFiatToBuy(this.selectedCurrency.name)
-        .then(res => {
-          this.moonpayHandler.getFiatRatesForBuy().then(res => {
-            this.currencyRates = cloneDeep(res);
-            this.loading = false;
-            this.selectMoonpay();
-          });
-          this.fetchedData = Object.assign({}, res);
-        })
-        .catch(e => {
-          Toast(e, {}, ERROR);
-        });
-    },
+    // fetchCurrencyData() {
+    //   this.loading = true;
+    //   this.fetchData = {};
+    //   this.fetchGasPrice();
+    //   this.moonpayHandler
+    //     .getSupportedFiatToBuy(this.selectedCurrency.name)
+    //     .then(res => {
+    //       this.moonpayHandler.getFiatRatesForBuy().then(res => {
+    //         this.currencyRates = cloneDeep(res);
+    //         this.loading = false;
+    //         this.selectMoonpay();
+    //       });
+    //       this.fetchedData = Object.assign({}, res);
+    //     })
+    //     .catch(e => {
+    //       Toast(e, {}, ERROR);
+    //     });
+    // },
     buy() {
+      console.log('buyObj', this.buyObj);
+      console.log('selectedCurrency', this.selectedCurrency.name);
+      console.log('selectedFiatName', this.selectedFiatName);
+      console.log('amount', this.amount);
+      console.log('actualAddress', this.actualAddress);
       this.moonpayHandler
         .buy(
           this.selectedCurrency.name,
