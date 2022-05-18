@@ -175,7 +175,6 @@
         <v-list-item
           v-for="(item, idx) in sectionTwo"
           :key="item + idx"
-          dense
           :to="item.route"
           @click="item.fn()"
         >
