@@ -193,6 +193,7 @@
         <div v-if="online" class="mt-3 px-8">
           <div class="matomo-tracking-switch">
             <v-switch
+              dark
               :input-value="consentToTrack"
               inset
               :label="`Data Tracking ${consentToTrack ? 'On' : 'Off'}`"
