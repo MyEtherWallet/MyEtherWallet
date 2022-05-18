@@ -32,11 +32,6 @@
           class="selectedFiat"
         />
       </div>
-    </div>
-    <!-- ============================================================== -->
-    <!-- Provider Select -->
-    <!-- ============================================================== -->
-    <div class="mb-1">
       <!-- ============================================================== -->
       <!-- My Attempt -->
       <!-- ============================================================== -->
@@ -68,11 +63,9 @@
       </div>
 
       <div v-else class="mb-1">
-        <v-skeleton-loader type="heading" class="mb-1" />
         <v-skeleton-loader max-width="200px" type="heading" />
       </div>
     </div>
-
     <div class="mb-1">
       <mew-button
         has-full-width
@@ -101,17 +94,13 @@ export default {
       type: Object,
       default: () => {}
     },
-    close: {
-      type: Function,
-      default: () => {}
-    },
+    // close: {
+    //   type: Function,
+    //   default: () => {}
+    // },
     defaultCurrency: {
       type: Object,
       default: () => {}
-    },
-    inWallet: {
-      type: Boolean,
-      default: false
     }
   },
   data() {
@@ -127,7 +116,7 @@ export default {
       fetchedData: {},
       currencyRates: [],
       amount: '100',
-      toAddress: '',
+      // toAddress: '',
       //validToAddress: false,
       gasPrice: '0',
       web3Connections: {},
@@ -173,9 +162,9 @@ export default {
     selectedFiatName() {
       return this.selectedFiat.name;
     },
-    actualAddress() {
-      return this.inWallet ? this.address : this.toAddress;
-    },
+    // actualAddress() {
+    //   return this.inWallet ? this.address : this.toAddress;
+    // },
     // actualValidAddress() {
     //   return this.inWallet ? true : this.validToAddress;
     // },
@@ -420,26 +409,30 @@ export default {
         if (!isEqual(newVal, oldVal)) {
           this.fetchCurrencyData();
         }
-
         this.$emit('selectedCurrency', newVal);
       },
       deep: true
     },
     selectedFiat: {
       handler: function (newVal, oldVal) {
+        console.log(this.selectedFiat);
         if (!isEqual(newVal, oldVal)) {
           const selectedCurrencyPrice =
             this.fetchedData[0].conversion_rates.find(
               item => item.fiat_currency === oldVal.name
             );
+          console.log('newVal', newVal);
           const revertedVal = BigNumber(this.amount).div(
             selectedCurrencyPrice.exchange_rate
           );
+          console.log('revertedVal', revertedVal);
           const value = BigNumber(revertedVal)
             .times(this.fiatMultiplier)
             .dp(0)
             .toFixed();
+          console.log('value', value);
           this.amount = value;
+          this.$emit('selectedFiat', this.selectedFiat);
         }
       },
       deep: true
@@ -524,6 +517,7 @@ export default {
         return num.lt(BigNumber(num2));
       };
       this.onlySimplex = isLT(moonpayMax, this.amount);
+      this.$emit('onlySimplex', this.onlySimplex);
     },
     // setMin() {
     //   this.amount = this.min.toFixed();
@@ -542,16 +536,16 @@ export default {
     setCurrency(e) {
       this.selectedCurrency = e;
     },
-    reset() {
-      this.selectedFiat = {
-        name: 'USD',
-        value: 'USD',
-        // eslint-disable-next-line
-        img: require(`@/assets/images/currencies/USD.svg`)
-      };
-      this.loading = true;
-      this.fetchData = {};
-    },
+    // reset() {
+    //   this.selectedFiat = {
+    //     name: 'USD',
+    //     value: 'USD',
+    //     // eslint-disable-next-line
+    //     img: require(`@/assets/images/currencies/USD.svg`)
+    //   };
+    //   this.loading = true;
+    //   this.fetchData = {};
+    // },
     fetchCurrencyData() {
       this.loading = true;
       this.fetchData = {};
@@ -571,24 +565,27 @@ export default {
         });
     },
     buy() {
-      this.moonpayHandler
-        .buy(
-          this.selectedCurrency.name,
-          this.selectedFiatName,
-          this.amount,
-          this.actualAddress
-        )
-        .then(() => {
-          this.reset();
-          this.close();
-          this.selectedCurrency = this.defaultCurrency;
-        })
-        .catch(err => {
-          this.reset();
-          Toast(err, {}, ERROR);
-          this.close();
-          this.selectedCurrency = this.defaultCurrency;
-        });
+      this.$emit('openProviders', 1);
+      //this.close();
+      this.selectedCurrency = this.defaultCurrency;
+      // this.moonpayHandler
+      //   .buy(
+      //     this.selectedCurrency.name,
+      //     this.selectedFiatName,
+      //     this.amount,
+      //     this.actualAddress
+      //   )
+      //   .then(() => {
+      //     this.reset();
+      //     this.close();
+      //     this.selectedCurrency = this.defaultCurrency;
+      //   })
+      //   .catch(err => {
+      //     this.reset();
+      //     Toast(err, {}, ERROR);
+      //     this.close();
+      //     this.selectedCurrency = this.defaultCurrency;
+      //   });
     }
     // buyFromHome() {
     //   this.moonpayHandler

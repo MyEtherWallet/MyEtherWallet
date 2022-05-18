@@ -8,7 +8,6 @@
       v-if="!hideSimplex || !onlySimplex"
       class="section-block pa-5"
       :class="{ selected: isMoonpay }"
-      @click="selectMoonpay"
     >
       <img
         class="provider-logo"
@@ -76,6 +75,26 @@
       <div class="mew-label mb-5">
         {{ paymentOptionString }}
       </div>
+      <!------ WEN USER IS NOT IN WALLET, SHOW BELOW -------->
+      <div v-if="!inWallet">
+        <mew-button
+          v-if="!onlySimplex"
+          has-full-width
+          :disabled="!validToAddress"
+          :is-valid-address-func="isValidToAddress"
+          :title="moonpayBtnTitle"
+          @click.native="buyFromHome"
+        />
+      </div>
+      <!------ WEN USER IS IN WALLET, SHOW BELOW -------->
+      <div v-else>
+        <mew-button
+          v-if="!onlySimplex"
+          has-full-width
+          :title="moonpayBtnTitle"
+          @click.native="buy"
+        />
+      </div>
     </div>
     <!-- ============================================================== -->
     <!-- Simplex -->
@@ -84,7 +103,6 @@
       v-if="!hideSimplex"
       class="section-block pa-5"
       :class="{ selected: isSimplex }"
-      @click="selectSimplex"
     >
       <div class="mew-heading-3 textDark--text mb-5">Check for rates</div>
       <div class="d-flex align-center justify-space-between">
@@ -110,42 +128,22 @@
         />
       </div>
       <div class="mew-label mb-5">Visa, Mastercard</div>
-    </div>
-    <!------ WEN USER IS NOT IN WALLET, SHOW BELOW -------->
-    <div v-if="!inWallet" class="mt-5">
-      <div class="mew-heading-3 textDark--text mb-5">
-        Where should we send your crypto?
+      <div v-if="!inWallet">
+        <mew-button
+          has-full-width
+          :disabled="!validToAddress"
+          :is-valid-address-func="isValidToAddress"
+          :title="simplexBtnTitle"
+          @click.native="openSimplexFromHome"
+        />
       </div>
-      <module-address-book @setAddress="setAddress" />
-      <mew-button
-        v-if="!onlySimplex"
-        has-full-width
-        :disabled="!validToAddress"
-        :is-valid-address-func="isValidToAddress"
-        :title="moonpayBtnTitle"
-        @click.native="buyFromHome"
-      />
-      <mew-button
-        has-full-width
-        :disabled="!validToAddress"
-        :is-valid-address-func="isValidToAddress"
-        :title="simplexBtnTitle"
-        @click.native="openSimplexFromHome"
-      />
-    </div>
-    <!------ WEN USER IS IN WALLET, SHOW BELOW -------->
-    <div v-else class="pa-5">
-      <mew-button
-        v-if="!onlySimplex"
-        has-full-width
-        :title="moonpayBtnTitle"
-        @click.native="buy"
-      />
-      <mew-button
-        has-full-width
-        :title="simplexBtnTitle"
-        @click.native="openSimplex"
-      />
+      <div v-else>
+        <mew-button
+          has-full-width
+          :title="simplexBtnTitle"
+          @click.native="openSimplex"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -153,7 +151,7 @@
 <script>
 import MultiCoinValidator from 'multicoin-address-validator';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
-import { isEmpty, cloneDeep, isEqual } from 'lodash';
+import { isEmpty, cloneDeep } from 'lodash';
 import BigNumber from 'bignumber.js';
 import { LOCALE } from '../helpers';
 import { mapGetters, mapActions, mapState } from 'vuex';
@@ -172,10 +170,6 @@ export default {
       type: Function,
       default: () => {}
     },
-    defaultCurrency: {
-      type: Object,
-      default: () => {}
-    },
     inWallet: {
       type: Boolean,
       default: false
@@ -183,18 +177,20 @@ export default {
     onlySimplex: {
       type: Boolean,
       default: false
+    },
+    selectedFiat: {
+      type: Object,
+      default: () => ({})
+    },
+    selectedCurrency: {
+      type: Object,
+      default: () => ({})
     }
   },
   data() {
     return {
-      selectedCurrency: this.defaultCurrency,
+      //   selectedCurrency: this.defaultCurrency,
       loading: true,
-      selectedFiat: {
-        name: 'USD',
-        value: 'USD',
-        // eslint-disable-next-line
-        img: require(`@/assets/images/currencies/USD.svg`)
-      },
       fetchedData: {},
       currencyRates: [],
       amount: '100',
@@ -489,38 +485,9 @@ export default {
     // }
   },
   watch: {
-    selectedCurrency: {
-      handler: function (newVal, oldVal) {
-        if (!isEqual(newVal, oldVal)) {
-          this.fetchCurrencyData();
-        }
-
-        this.$emit('selectedCurrency', newVal);
-      },
-      deep: true
-    },
-    selectedFiat: {
-      handler: function (newVal, oldVal) {
-        if (!isEqual(newVal, oldVal)) {
-          const selectedCurrencyPrice =
-            this.fetchedData[0].conversion_rates.find(
-              item => item.fiat_currency === oldVal.name
-            );
-          const revertedVal = BigNumber(this.amount).div(
-            selectedCurrencyPrice.exchange_rate
-          );
-          const value = BigNumber(revertedVal)
-            .times(this.fiatMultiplier)
-            .dp(0)
-            .toFixed();
-          this.amount = value;
-        }
-      },
-      deep: true
-    },
     network: {
       handler: function () {
-        this.selectedCurrency = this.defaultCurrency;
+        // this.selectedCurrency = this.defaultCurrency;
       },
       deep: true
     },
@@ -557,11 +524,11 @@ export default {
       }
       this.gasPrice = await this.web3Connections[nodeType].eth.getGasPrice();
     },
-    setAddress(address, valid) {
-      this.acutalAddress = address;
-      this.toAddress = address;
-      this.validToAddress = valid;
-    },
+    // setAddress(address, valid) {
+    //   this.acutalAddress = address;
+    //   this.toAddress = address;
+    //   this.validToAddress = valid;
+    // },
     isValidToAddress(address) {
       return MultiCoinValidator.validate(address, this.selectedCurrency.name);
     },
@@ -569,10 +536,10 @@ export default {
       this.isMoonpay = true;
       this.isSimplex = false;
     },
-    selectSimplex() {
-      this.isSimplex = true;
-      this.isMoonpay = false;
-    },
+    // selectSimplex() {
+    //   this.isSimplex = true;
+    //   this.isMoonpay = false;
+    // },
     openSimplex() {
       // eslint-disable-next-line
       window.open(
@@ -609,12 +576,12 @@ export default {
     //   this.selectedCurrency = e;
     // },
     reset() {
-      this.selectedFiat = {
-        name: 'USD',
-        value: 'USD',
-        // eslint-disable-next-line
-        img: require(`@/assets/images/currencies/USD.svg`)
-      };
+      //   this.selectedFiat = {
+      //     name: 'USD',
+      //     value: 'USD',
+      //     // eslint-disable-next-line
+      //     img: require(`@/assets/images/currencies/USD.svg`)
+      //   };
       this.loading = true;
       this.fetchData = {};
     },
@@ -647,13 +614,13 @@ export default {
         .then(() => {
           this.reset();
           this.close();
-          this.selectedCurrency = this.defaultCurrency;
+          //this.selectedCurrency = this.defaultCurrency;
         })
         .catch(err => {
           this.reset();
           Toast(err, {}, ERROR);
           this.close();
-          this.selectedCurrency = this.defaultCurrency;
+          //this.selectedCurrency = this.defaultCurrency;
         });
     },
     buyFromHome() {
@@ -667,13 +634,13 @@ export default {
         .then(() => {
           this.reset();
           this.close();
-          this.selectedCurrency = this.defaultCurrency;
+          //   this.selectedCurrency = this.defaultCurrency;
         })
         .catch(err => {
           this.reset();
           Toast(err, {}, ERROR);
           this.close();
-          this.selectedCurrency = this.defaultCurrency;
+          //   this.selectedCurrency = this.defaultCurrency;
         });
     }
   }

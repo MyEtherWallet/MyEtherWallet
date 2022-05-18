@@ -1,7 +1,7 @@
 <template>
   <div class="mew-component--moon-pay">
     <mew-popup
-      :show="open"
+      :show="open && step == 0"
       :has-buttons="false"
       :has-title="false"
       :has-padding="false"
@@ -29,6 +29,8 @@
                 :default-currency="defaltCurrency"
                 :in-wallet="inWallet"
                 @selectedCurrency="setSelectedCurrency"
+                @openProviders="openProviders"
+                @selectedFiat="setSelectedFiat"
               />
             </template>
             <template #tabContent2>
@@ -50,9 +52,32 @@
             :default-currency="defaltCurrency"
             :in-wallet="inWallet"
             @selectedCurrency="setSelectedCurrency"
+            @openProviders="openProviders"
+            @selectedFiat="setSelectedFiat"
           />
         </div>
       </div>
+    </mew-popup>
+    <mew-popup
+      :show="open && step == 1"
+      :has-buttons="false"
+      :has-title="false"
+      :has-padding="false"
+      max-width="540"
+      :left-btn="leftBtn"
+      scrollable
+      has-body-content
+    >
+      <MoonPayBuyProviderComponent
+        :moonpay-handler="moonpayHandler"
+        :close="close"
+        :tab="activeTab"
+        :default-currency="defaltCurrency"
+        :in-wallet="inWallet"
+        :selected-currency="selectedCurrency"
+        :selected-fiat="selectedFiat"
+        @openProviders="openProviders"
+      />
     </mew-popup>
   </div>
 </template>
@@ -67,9 +92,15 @@ import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import { isEmpty } from 'lodash';
 import nodes from '@/utils/networks';
 import { SUCCESS, Toast } from '../toast/handler/handlerToast';
+import MoonPayBuyProviderComponent from './components/MoonPayBuyProviderComponent.vue';
+
 export default {
   name: 'MoonPay',
-  components: { BuyEthComponent, SellEthComponent },
+  components: {
+    BuyEthComponent,
+    SellEthComponent,
+    MoonPayBuyProviderComponent
+  },
   props: {
     open: {
       type: Boolean,
@@ -82,7 +113,9 @@ export default {
       activeTab: 0,
       moonpayHandler: {},
       selectedCurrency: {},
-      nodes: nodes
+      selectedFiat: {},
+      nodes: nodes,
+      step: 0 // 0 -> Buy | 1 -> Providers
     };
   },
   computed: {
@@ -188,6 +221,12 @@ export default {
     },
     setSelectedCurrency(e) {
       this.selectedCurrency = e;
+    },
+    setSelectedFiat(e) {
+      this.selectedFiat = e;
+    },
+    openProviders(val) {
+      this.step = val;
     }
   }
 };
