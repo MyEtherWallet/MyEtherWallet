@@ -670,7 +670,7 @@ export default {
       this.fetchData = {};
       this.fetchGasPrice();
       this.moonpayHandler
-        .getSupportedFiatToBuy(this.selectedCurrency.name, { all: true })
+        .getSupportedFiatToBuy(this.selectedCurrency.name)
         .then(res => {
           this.moonpayHandler.getFiatRatesForBuy().then(res => {
             this.currencyRates = cloneDeep(res);
