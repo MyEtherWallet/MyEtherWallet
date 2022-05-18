@@ -35,14 +35,14 @@
       <!-- ============================================================== -->
       <!-- My Attempt -->
       <!-- ============================================================== -->
-      <div>You will get</div>
+      <div class="mb-2">You will get</div>
       <div v-if="!loading" class="mb-1">
         <div class="d-flex mb-1 align-center justify-space-between">
-          <div class="d-flex mew-heading-3 textDark--text">
+          <div class="d-flex align-center mew-heading-3 textDark--text">
             {{ cryptoToFiat }}
             <span class="mew-heading-3 pl-1">{{ selectedCryptoName }}</span>
             <div class="mr-1 textDark--text">≈ {{ plusFeeF }}</div>
-            <mew-tooltip style="height: 21px">
+            <mew-tooltip style="height: 23px">
               <template #contentSlot>
                 <div>
                   {{ includesFeeText }}
@@ -68,6 +68,7 @@
     </div>
     <div class="mb-1">
       <mew-button
+        btn-size="xlarge"
         has-full-width
         :disabled="amountErrorMessages !== ''"
         :title="buyBtnTitle"
