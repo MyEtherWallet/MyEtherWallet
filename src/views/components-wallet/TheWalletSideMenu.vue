@@ -197,7 +197,7 @@
               :input-value="consentToTrack"
               inset
               :label="`Data Tracking ${consentToTrack ? 'On' : 'Off'}`"
-              color="greenPrimary"
+              color="white"
               off-icon="mdi-alert-circle"
               @change="setConsent"
             />
@@ -483,14 +483,9 @@ export default {
 </script>
 
 <style lang="scss">
-.wallet-sidemenu
-  .v-list-item--active.v-list-item:not(.v-list-group__header).remove-select-state {
-  background-color: transparent !important;
-
-  &:hover {
-    background-color: rgba(255, 255, 255, 0.2) !important;
-  }
-}
+// =======================================================
+// Global styles
+// =======================================================
 .new-dapp-label {
   border-radius: 2px;
   background: #ff445b;
@@ -525,7 +520,36 @@ export default {
   font-size: 36px !important;
   color: white !important;
 }
+
+// =======================================================
+// Scoped styles for .wallet-sidemenu
+// =======================================================
 .wallet-sidemenu {
+  .v-list-item--dense .v-list-item__title {
+    line-height: 20px !important;
+  }
+  .v-list-item,
+  .v-input--switch {
+    opacity: 0.7 !important;
+
+    &:hover {
+      opacity: 1 !important;
+    }
+  }
+
+  a.v-item--active,
+  .v-input--is-label-active {
+    opacity: 1 !important;
+  }
+
+  .v-list-item--active.v-list-item:not(.v-list-group__header).remove-select-state {
+    background-color: transparent !important;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.2) !important;
+    }
+  }
+
   .v-list-item--link {
     border-top: none;
   }
