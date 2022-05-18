@@ -586,8 +586,7 @@ export default {
     opacity: 0 !important;
   }
   .v-navigation-drawer__content {
-    margin-right: 5px;
-    margin-bottom: 10px;
+    margin-right: 2px;
     &::-webkit-scrollbar {
       width: 4px;
       height: 4px;
