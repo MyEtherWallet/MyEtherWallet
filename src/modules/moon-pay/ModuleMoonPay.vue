@@ -1,7 +1,7 @@
 <template>
   <div class="mew-component--moon-pay">
     <mew-popup
-      :show="open && step == 0"
+      :show="open"
       :has-buttons="false"
       :has-title="false"
       :has-padding="false"
@@ -10,7 +10,7 @@
       scrollable
       has-body-content
     >
-      <div>
+      <div v-if="step == 0">
         <div v-if="inWallet">
           <mew-tabs
             v-if="open"
@@ -59,19 +59,8 @@
           />
         </div>
       </div>
-    </mew-popup>
-    <mew-popup
-      :show="open && step == 1"
-      :has-buttons="false"
-      :has-title="true"
-      title="Select Provider"
-      :has-padding="false"
-      max-width="540"
-      :left-btn="leftBtn"
-      scrollable
-      has-body-content
-    >
       <MoonPayBuyProviderComponent
+        v-if="step == 1"
         :moonpay-handler="moonpayHandler"
         :close="close"
         :in-wallet="inWallet"
