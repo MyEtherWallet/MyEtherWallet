@@ -1,3 +1,7 @@
+### fix
+
+* fix offline build [#3838](https://github.com/MyEtherWallet/MyEtherWallet/pull/3838)
+
 ### Release v6.5.4-hotfix.1
 
 ### fix
