@@ -32,9 +32,7 @@
           class="selectedFiat"
         />
       </div>
-      <!-- ============================================================== -->
-      <!-- My Attempt -->
-      <!-- ============================================================== -->
+
       <div class="mb-2">You will get</div>
       <div v-if="!loading" class="mb-1">
         <div class="d-flex mb-1 align-center justify-space-between">
@@ -411,7 +409,6 @@ export default {
     },
     selectedFiat: {
       handler: function (newVal, oldVal) {
-        console.log(newVal);
         if (!isEqual(newVal, oldVal)) {
           this.amount = newVal.name != 'JPY' ? '100' : '10000';
           /*
@@ -564,7 +561,6 @@ export default {
         });
     },
     buy() {
-      this.selectedCurrency = this.defaultCurrency;
       const buyObj = {
         cryptoToFiat: this.cryptoToFiat,
         selectedCryptoName: this.selectedCryptoName,
@@ -572,13 +568,15 @@ export default {
         includesFeeText: this.includesFeeText,
         networkFeeText: this.networkFeeText,
         dailyLimit: this.dailyLimit,
-        monthlyLimit: this.monthlyLimit
+        monthlyLimit: this.monthlyLimit,
+        fiatAmount: this.amount
       };
       this.checkMoonPayMax();
-      this.$emit('setBuyObject', buyObj);
+      this.$emit('setBuyObj', buyObj);
       this.$emit('openProviders', 1);
       this.$emit('selectedCurrency', this.selectedCurrency);
       this.$emit('selectedFiat', this.selectedFiat);
+      //this.selectedCurrency = this.defaultCurrency;
     }
   }
 };

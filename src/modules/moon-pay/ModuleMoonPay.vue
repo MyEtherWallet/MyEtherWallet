@@ -31,7 +31,7 @@
                 @selectedCurrency="setSelectedCurrency"
                 @openProviders="openProviders"
                 @selectedFiat="setSelectedFiat"
-                @setBuyObject="setBuyObj"
+                @setBuyObj="setBuyObj"
                 @hideMoonpay="hideMoonpay"
               />
             </template>
@@ -56,7 +56,7 @@
             @selectedCurrency="setSelectedCurrency"
             @openProviders="openProviders"
             @selectedFiat="setSelectedFiat"
-            @setBuyObject="setBuyObj"
+            @setBuyObj="setBuyObj"
             @hideMoonpay="hideMoonpay"
           />
         </div>
@@ -220,6 +220,7 @@ export default {
       this.$emit('close', false);
     },
     setSelectedCurrency(e) {
+      console.log('setSelectedCurrency', e);
       this.selectedCurrency = e;
     },
     setSelectedFiat(e) {
@@ -230,6 +231,7 @@ export default {
     },
     setBuyObj(val) {
       this.buyObj = val;
+      console.log('buyObj', this.buyObj);
     },
     reset() {
       this.selectedCurrency = this.defaltCurrency;
