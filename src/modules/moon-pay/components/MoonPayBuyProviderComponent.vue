@@ -25,7 +25,7 @@
           </div>
         </div>
         <div class="d-flex align-center">
-          <div class="mr-1 textDark--text">aaa≈ {{ buyObj.plusFeeF }}</div>
+          <div class="mr-1 textDark--text">≈ {{ buyObj.plusFeeF }}</div>
           <mew-tooltip style="height: 21px">
             <template #contentSlot>
               <div>

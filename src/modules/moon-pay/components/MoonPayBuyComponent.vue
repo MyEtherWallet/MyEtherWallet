@@ -44,7 +44,7 @@
           <div class="d-flex align-center mew-heading-3 textDark--text">
             {{ cryptoToFiat }}
             <span class="mew-heading-3 pl-1">{{ selectedCryptoName }}</span>
-            <div class="mr-1 textDark--text">≈ {{ plusFeeF }}</div>
+            <div class="mr-1 textDark--text">&nbsp;≈ {{ plusFeeF }}</div>
             <mew-tooltip style="height: 23px">
               <template #contentSlot>
                 <div>
