@@ -116,17 +116,7 @@ export default {
       // toAddress: '',
       //validToAddress: false,
       gasPrice: '0',
-      web3Connections: {},
-      onlySimplex: false,
-      buyObj: {
-        cryptoToFiat: '',
-        selectedCryptoName: '',
-        plusFeeF: '',
-        includesFeeText: '',
-        networkFeeText: '',
-        dailyLimit: '',
-        monthlyLimit: ''
-      }
+      web3Connections: {}
       //isMoonpay: false
       //isSimplex: false
     };
@@ -525,8 +515,8 @@ export default {
       const isLT = (num, num2) => {
         return num.lt(BigNumber(num2));
       };
-      this.onlySimplex = isLT(moonpayMax, this.amount);
-      this.$emit('onlySimplex', this.onlySimplex);
+      const hideMoonpay = isLT(moonpayMax, this.amount);
+      this.$emit('hideMoonpay', hideMoonpay);
     },
     // setMin() {
     //   this.amount = this.min.toFixed();
@@ -575,7 +565,7 @@ export default {
     },
     buy() {
       this.selectedCurrency = this.defaultCurrency;
-      this.buyObj = {
+      const buyObj = {
         cryptoToFiat: this.cryptoToFiat,
         selectedCryptoName: this.selectedCryptoName,
         plusFeeF: this.plusFeeF,
@@ -584,50 +574,12 @@ export default {
         dailyLimit: this.dailyLimit,
         monthlyLimit: this.monthlyLimit
       };
-      this.$emit('setBuyObject', this.buyObj);
+      this.checkMoonPayMax();
+      this.$emit('setBuyObject', buyObj);
       this.$emit('openProviders', 1);
       this.$emit('selectedCurrency', this.selectedCurrency);
       this.$emit('selectedFiat', this.selectedFiat);
-      //this.close();
-      // this.moonpayHandler
-      //   .buy(
-      //     this.selectedCurrency.name,
-      //     this.selectedFiatName,
-      //     this.amount,
-      //     this.actualAddress
-      //   )
-      //   .then(() => {
-      //     this.reset();
-      //     this.close();
-      //     this.selectedCurrency = this.defaultCurrency;
-      //   })
-      //   .catch(err => {
-      //     this.reset();
-      //     Toast(err, {}, ERROR);
-      //     this.close();
-      //     this.selectedCurrency = this.defaultCurrency;
-      //   });
     }
-    // buyFromHome() {
-    //   this.moonpayHandler
-    //     .buy(
-    //       this.selectedCurrency.name,
-    //       this.selectedFiatName,
-    //       this.amount,
-    //       this.toAddress
-    //     )
-    //     .then(() => {
-    //       this.reset();
-    //       this.close();
-    //       this.selectedCurrency = this.defaultCurrency;
-    //     })
-    //     .catch(err => {
-    //       this.reset();
-    //       Toast(err, {}, ERROR);
-    //       this.close();
-    //       this.selectedCurrency = this.defaultCurrency;
-    //     });
-    // }
   }
 };
 </script>

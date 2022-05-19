@@ -32,6 +32,7 @@
                 @openProviders="openProviders"
                 @selectedFiat="setSelectedFiat"
                 @setBuyObject="setBuyObj"
+                @hideMoonpay="hideMoonpay"
               />
             </template>
             <template #tabContent2>
@@ -56,6 +57,7 @@
             @openProviders="openProviders"
             @selectedFiat="setSelectedFiat"
             @setBuyObject="setBuyObj"
+            @hideMoonpay="hideMoonpay"
           />
         </div>
       </div>
@@ -70,6 +72,7 @@
         :buy-obj="buyObj"
         @close="step = 0"
         @openProviders="openProviders"
+        @reset="reset"
       />
     </mew-popup>
   </div>
@@ -110,7 +113,7 @@ export default {
       nodes: nodes,
       onlySimplex: false,
       buyObj: {},
-      step: 0 // 0 -> Buy | 1 -> Providers
+      step: 0
     };
   },
   computed: {
@@ -213,22 +216,33 @@ export default {
     close() {
       this.activeTab = 0;
       this.step = 0;
+      this.onlySimplex = false;
       this.$emit('close', false);
     },
     setSelectedCurrency(e) {
-      console.log('setSelectedCurrency', e);
       this.selectedCurrency = e;
     },
     setSelectedFiat(e) {
-      console.log('setSelectedFiat', e);
       this.selectedFiat = e;
     },
     openProviders(val) {
       this.step = val;
     },
     setBuyObj(val) {
-      console.log('Buy Object', val);
       this.buyObj = val;
+    },
+    reset() {
+      this.selectedCurrency = this.defaltCurrency;
+      this.selectedFiat = {
+        name: 'USD',
+        value: 'USD',
+        // eslint-disable-next-line
+          img: require(`@/assets/images/currencies/USD.svg`)
+      };
+      this.onlySimplex = false;
+    },
+    hideMoonpay(val) {
+      this.onlySimplex = val;
     }
   }
 };
