@@ -18,7 +18,7 @@ export default class NFT {
   async getNfts() {
     try {
       return await fetch(
-        `https://development.mewwallet.dev/v3/nfts/account?address=${this.address}`
+        `${configs.api}/v3/nfts/account?address=${this.address}`
       ).then(res => res.json());
     } catch (e) {
       throw new Error(e);

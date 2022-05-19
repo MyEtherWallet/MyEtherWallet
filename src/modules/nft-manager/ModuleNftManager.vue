@@ -201,19 +201,19 @@ export default {
     },
     tokens() {
       if (this.nftApiResponse.length > 0) {
-        const contract = this.nftApiResponse.filter(item => {
+        const contract = this.nftApiResponse.find(item => {
           return (
             item.contract_address.toLowerCase() ===
             this.selectedContract.contract
           );
         });
-        if (contract.length > 0) {
-          return contract[0].assets.map(item => {
+        if (contract) {
+          return contract.assets.map(item => {
             return {
               image: `https://img.mewapi.io/?image=${item.image}`,
               name: item.name,
               token_id: item.token_id,
-              contract: contract[0].contract_address
+              contract: contract.contract_address
             };
           });
         }
