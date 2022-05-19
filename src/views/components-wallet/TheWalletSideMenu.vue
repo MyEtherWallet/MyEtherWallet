@@ -50,9 +50,7 @@
                   alt="Buy or Sell"
                   height="30"
                 />
-                <div class="white--text font-weight-regular mew-label">
-                  Buy/Sell
-                </div>
+                <div class="white--text mew-label btn-title">Buy/Sell</div>
               </div>
             </v-list-item>
 
@@ -68,9 +66,7 @@
                   alt="Send"
                   height="30"
                 />
-                <div class="white--text font-weight-regular mew-label">
-                  Send
-                </div>
+                <div class="white--text mew-label btn-title">Send</div>
               </div>
             </v-list-item>
 
@@ -84,9 +80,7 @@
                   height="30"
                   :class="[!hasSwap ? 'opacity--30' : '']"
                 />
-                <div class="white--text font-weight-regular mew-label">
-                  Swap
-                </div>
+                <div class="white--text mew-label btn-title">Swap</div>
               </div>
             </v-list-item>
           </div>
@@ -480,6 +474,13 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+// Make selected top three button bold
+.v-list-item--active .btn-title {
+  font-weight: 500;
+}
+</style>
 
 <style lang="scss">
 // =======================================================
