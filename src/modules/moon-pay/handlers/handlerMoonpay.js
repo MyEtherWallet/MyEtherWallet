@@ -78,7 +78,7 @@ export default class MoonPayHandler {
     const id = `WEB|${hash.substring(0, 42)}`;
     return new Promise(resolve => {
       const parsedUrl = encodeURI(
-        `${API}/v2/purchase/simplex/order?address=${address}&id=${id}&requestedCurrency=${tokenSymbol}&fiatCurrency=${fiatCurrency}&requestedAmount=${amount}`
+        `${API}/v2/purchase/simplex/order?address=${address}&id=${id}&requestedCurrency=${fiatCurrency}&fiatCurrency=${fiatCurrency}&requestedAmount=${amount}&cryptoCurrency=${tokenSymbol}`
       );
       // eslint-disable-next-line
       window.open(parsedUrl, '_blank');
@@ -107,7 +107,9 @@ export default class MoonPayHandler {
     return new Promise((resolve, reject) => {
       axios
         .get(
-          `${API}/purchase/simplex/quote?id=${id}&requestedCurrency=${tokenSymbol}&fiatCurrency=${fiatCurrency}&requestedAmount=${amount}`
+          encodeURI(
+            `${API}/purchase/simplex/quote?id=${id}&requestedCurrency=${fiatCurrency}&fiatCurrency=${fiatCurrency}&requestedAmount=${amount}&cryptoCurrency=${tokenSymbol}`
+          )
         )
         .then(res => {
           resolve(res.data);

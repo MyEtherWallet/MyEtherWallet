@@ -98,11 +98,15 @@
         <div class="d-flex mb-1 align-center justify-space-between">
           <div class="d-flex mew-heading-3 textDark--text">
             {{ simplexQuote.crypto_amount }}
-            <span class="mew-heading-3 pl-1">{{ selectedCryptoName }}</span>
+            <span class="mew-heading-3 pl-1">{{
+              simplexQuote.crypto_currency
+            }}</span>
           </div>
         </div>
         <div class="d-flex align-center">
-          <div class="mr-1 textDark--text">≈ {{ buyObj.plusFeeF }}</div>
+          <div class="mr-1 textDark--text">
+            ≈ {{ simplexQuote.fiat_amount }}
+          </div>
           <mew-tooltip style="height: 21px">
             <template #contentSlot>
               <div>
@@ -149,14 +153,6 @@
         />
       </div>
       <div class="mew-label mb-5">Visa, Mastercard</div>
-      <!--
-      <div v-if="!inWallet">
-        <mew-button
-          has-full-width
-          :title="simplexBtnTitle"
-          @click.native="openSimplex"
-        />
-      </div>-->
       <div>
         <mew-button
           has-full-width
@@ -297,7 +293,7 @@ export default {
         .getSimplexQuote(
           this.selectedCryptoName,
           this.selectedFiatName,
-          this.buyObj.cryptoToFiat,
+          this.buyObj.fiatAmount,
           this.actualAddress
         )
         .then(res => {
@@ -314,7 +310,7 @@ export default {
         .simplexBuy(
           this.selectedCryptoName,
           this.selectedFiatName,
-          this.buyObj.cryptoToFiat,
+          this.buyObj.fiatAmount,
           this.actualAddress
         )
         .then(() => {
