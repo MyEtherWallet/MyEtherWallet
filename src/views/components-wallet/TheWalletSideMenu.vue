@@ -195,7 +195,7 @@
               dark
               :input-value="consentToTrack"
               inset
-              :label="`Data Tracking ${consentToTrack ? 'On' : 'Off'}`"
+              :label="`Data Tracking is ${consentToTrack ? 'On' : 'Off'}`"
               color="white"
               off-icon="mdi-alert-circle"
               @change="setConsent"
