@@ -259,15 +259,15 @@
 <script>
 import AppBtnMenu from '@/core/components/AppBtnMenu';
 import ModuleNotifications from '@/modules/notifications/ModuleNotifications';
-import send from '@/assets/images/icons/icon-send-enable.png';
+import send from '@/assets/images/icons/icon-send-enable.svg';
 import background from '@/assets/images/backgrounds/bg-light.jpg';
-import dashboard from '@/assets/images/icons/icon-dashboard-enable.png';
-import nft from '@/assets/images/icons/icon-nft.png';
-import dapp from '@/assets/images/icons/icon-dapp-center-enable.png';
-import contract from '@/assets/images/icons/icon-contract-enable.png';
-import message from '@/assets/images/icons/icon-message-enable.png';
-import settings from '@/assets/images/icons/icon-setting-enable.png';
-import logout from '@/assets/images/icons/icon-logout-enable.png';
+import dashboard from '@/assets/images/icons/icon-dashboard-enable.svg';
+import nft from '@/assets/images/icons/icon-nft.svg';
+import dapp from '@/assets/images/icons/icon-dapp-center-enable.svg';
+import contract from '@/assets/images/icons/icon-contract-enable.svg';
+import message from '@/assets/images/icons/icon-message-enable.svg';
+import settings from '@/assets/images/icons/icon-setting-enable.svg';
+import logout from '@/assets/images/icons/icon-logout-enable.svg';
 import BalanceCard from '@/modules/balance/ModuleBalanceCard';
 import ModuleSettings from '@/modules/settings/ModuleSettings';
 import { EventBus } from '@/core/plugins/eventBus';
