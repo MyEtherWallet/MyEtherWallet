@@ -75,6 +75,7 @@
           label="From Address"
           copy-tooltip="Copy"
           save-tooltip="Save Address"
+          :show-copy="detailLength"
           :show-save="false"
           :items="addresses"
           :enable-save-address="false"
