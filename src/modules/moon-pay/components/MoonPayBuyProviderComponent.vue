@@ -94,10 +94,10 @@
     <!-- Simplex -->
     <!-- ============================================================== -->
     <div v-if="!hideSimplex" class="section-block pa-5">
-      <div class="mb-1">
+      <div v-if="!loading" class="mb-1">
         <div class="d-flex mb-1 align-center justify-space-between">
           <div class="d-flex mew-heading-3 textDark--text">
-            {{ buyObj.cryptoToFiat }}
+            {{ simplexQuote.crypto_amount }}
             <span class="mew-heading-3 pl-1">{{ selectedCryptoName }}</span>
           </div>
         </div>
@@ -120,6 +120,12 @@
           </mew-tooltip>
         </div>
       </div>
+
+      <div v-else class="mb-1">
+        <v-skeleton-loader type="heading" class="mb-1" />
+        <v-skeleton-loader max-width="200px" type="heading" />
+      </div>
+
       <div class="d-flex align-center justify-space-between">
         <div class="d-flex align-start mb-1">
           <img
@@ -143,15 +149,15 @@
         />
       </div>
       <div class="mew-label mb-5">Visa, Mastercard</div>
+      <!--
       <div v-if="!inWallet">
         <mew-button
           has-full-width
-          :is-valid-address-func="isValidToAddress"
           :title="simplexBtnTitle"
-          @click.native="openSimplexFromHome"
+          @click.native="openSimplex"
         />
-      </div>
-      <div v-else>
+      </div>-->
+      <div>
         <mew-button
           has-full-width
           :title="simplexBtnTitle"
@@ -165,8 +171,6 @@
 <script>
 import MultiCoinValidator from 'multicoin-address-validator';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
-import { isEmpty } from 'lodash';
-import BigNumber from 'bignumber.js';
 import { mapGetters, mapActions, mapState } from 'vuex';
 import { randomHex } from 'web3-utils';
 export default {
@@ -204,7 +208,7 @@ export default {
   data() {
     return {
       loading: true,
-      amount: '100'
+      simplexQuote: {}
     };
   },
   computed: {
@@ -238,68 +242,120 @@ export default {
     },
     paymentOptionString() {
       return `Visa, Mastercard, Apple Pay${this.isEUR ? ', Bank account' : ''}`;
-    },
-    hasData() {
-      return !isEmpty(this.fetchedData);
-    },
-    max() {
-      if (this.hasData) {
-        const moonpayMax = this.fetchedData[0]?.limits.find(
-          item => item.fiat_currency === this.selectedFiatName
-        );
-        const simplexMax = this.fetchedData[1]?.limits.find(
-          item => item.fiat_currency === this.selectedFiatName
-        );
-        return {
-          moonpay: moonpayMax
-            ? BigNumber(moonpayMax.limit.max)
-            : BigNumber(12000),
-          simplex: simplexMax
-            ? BigNumber(simplexMax.limit.max)
-            : BigNumber(12000)
-        };
-      }
-      return {
-        moonpay: BigNumber(12000),
-        simplex: BigNumber(12000)
-      };
     }
+    // hasData() {
+    //   return !isEmpty(this.fetchedData);
+    // },
+    // max() {
+    //   if (this.hasData) {
+    //     const moonpayMax = this.fetchedData[0]?.limits.find(
+    //       item => item.fiat_currency === this.selectedFiatName
+    //     );
+    //     const simplexMax = this.fetchedData[1]?.limits.find(
+    //       item => item.fiat_currency === this.selectedFiatName
+    //     );
+    //     return {
+    //       moonpay: moonpayMax
+    //         ? BigNumber(moonpayMax.limit.max)
+    //         : BigNumber(12000),
+    //       simplex: simplexMax
+    //         ? BigNumber(simplexMax.limit.max)
+    //         : BigNumber(12000)
+    //     };
+    //   }
+    //   return {
+    //     moonpay: BigNumber(12000),
+    //     simplex: BigNumber(12000)
+    //   };
+    // }
   },
   watch: {
-    amount: {
-      handler: function (newVal) {
-        const simplexMax = this.max.simplex;
-        if (simplexMax.lt(newVal)) {
-          this.loading = true;
-        } else {
-          this.loading = false;
-        }
-      }
-    }
+    // SimplexQuote
+  },
+  mounted() {
+    this.getSimplexQuote();
   },
   methods: {
     ...mapActions('global', ['setNetwork']),
     isValidToAddress(address) {
       return MultiCoinValidator.validate(address, this.selectedCurrency.name);
     },
+    // reset() {
+    //   this.selectedFiat = {
+    //     name: 'USD',
+    //     value: 'USD',
+    //     // eslint-disable-next-line
+    //     img: require(`@/assets/images/currencies/USD.svg`)
+    //   };
+    //   this.loading = true;
+    //   this.fetchData = {};
+    // },
+    getSimplexQuote() {
+      this.loading = true;
+      this.simplexQuote = {};
+      this.moonpayHandler
+        .getSimplexQuote(
+          this.selectedCryptoName,
+          this.selectedFiatName,
+          this.buyObj.cryptoToFiat,
+          this.actualAddress
+        )
+        .then(res => {
+          this.simplexQuote = Object.assign({}, res);
+          this.loading = false;
+          console.log(this.simplexQuote);
+        })
+        .catch(e => {
+          Toast(e, {}, ERROR);
+        });
+    },
     openSimplex() {
-      // eslint-disable-next-line
-      window.open(
-        `https://ccswap.myetherwallet.com/#/?fiat=${this.selectedFiatName.toLowerCase()}&amount=${
-          this.amount
-        }&to=${this.actualAddress}`,
-        '_blank'
-      );
+      this.moonpayHandler
+        .simplexBuy(
+          this.selectedCryptoName,
+          this.selectedFiatName,
+          this.buyObj.cryptoToFiat,
+          this.actualAddress
+        )
+        .then(() => {
+          this.reset();
+          this.close();
+          this.$emit('reset');
+        })
+        .catch(err => {
+          this.reset();
+          Toast(err, {}, ERROR);
+          this.close();
+          this.$emit('reset');
+        });
     },
-    openSimplexFromHome() {
-      // eslint-disable-next-line
-      window.open(
-        `https://ccswap.myetherwallet.com/#/?fiat=${this.selectedFiatName.toLowerCase()}&amount=${
-          this.amount
-        }`,
-        '_blank'
-      );
-    },
+    // openSimplexFromHome() {
+    //   // eslint-disable-next-line
+    //   this.moonpayHandler
+    //     .simplexBuy(
+    //       this.selectedCurrency.name,
+    //       this.selectedFiatName,
+    //       this.amount,
+    //       this.actualAddress
+    //     )
+    //     .then(() => {
+    //       this.reset();
+    //       this.close();
+    //       this.$emit('reset');
+    //     })
+    //     .catch(err => {
+    //       this.reset();
+    //       Toast(err, {}, ERROR);
+    //       this.close();
+    //       this.$emit('reset');
+    //     });
+    // //   window.open(
+    // //     `https://ccswap.myetherwallet.com/#/?fiat=${this.selectedFiatName.toLowerCase()}&amount=${
+    // //       this.amount
+    // //     }`,
+    // //     '_blank'
+    // //   );
+    // },
     reset() {
       this.loading = true;
       this.fetchData = {};
@@ -307,9 +363,9 @@ export default {
     buy() {
       this.moonpayHandler
         .buy(
-          this.selectedCurrency.name,
+          this.selectedCryptoName,
           this.selectedFiatName,
-          this.amount,
+          this.buyObj.fiatAmount,
           this.actualAddress
         )
         .then(() => {
@@ -327,9 +383,9 @@ export default {
     buyFromHome() {
       this.moonpayHandler
         .buy(
-          this.selectedCurrency.name,
+          this.selectedCryptoName,
           this.selectedFiatName,
-          this.amount,
+          this.buyObj.fiatAmount,
           randomHex(20) // Random hex placeholder
         )
         .then(() => {
