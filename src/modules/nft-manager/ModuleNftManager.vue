@@ -152,7 +152,6 @@ import {
 import getService from '@/core/helpers/getService';
 import NftManagerDetails from './components/NftManagerDetails';
 import NftManagerSend from './components/NftManagerSend';
-import handlerNft from './handlers/handlerNft.mixin';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { toBN, isAddress } from 'web3-utils';
 
@@ -163,7 +162,7 @@ export default {
     NftManagerDetails,
     NftManagerSend
   },
-  mixins: [handlerNft],
+  // mixins: [handlerNft],
   data() {
     return {
       nft: {},
@@ -177,7 +176,9 @@ export default {
       gasFees: '0',
       enoughFunds: false,
       showBalanceError: false,
-      localGasPrice: '0'
+      localGasPrice: '0',
+      loadingContracts: true,
+      contracts: []
     };
   },
   computed: {
@@ -271,6 +272,10 @@ export default {
         address: this.address,
         web3: this.web3
       });
+
+      this.nft.getNfts().then(res => {
+        console.log(res);
+      });
       this.localGasPrice = this.gasPriceByType(this.gasPriceType);
     },
     hasMinEth() {
@@ -360,7 +365,6 @@ export default {
       if (this.tokens.length === 0 && this.contracts.length === 1) {
         this.hasNoTokens = true;
       }
-      this.$apollo.queries.getOwnersERC721Balances.refetch();
     },
     setAddress(address) {
       if (typeof address === 'object' && !!address) {
