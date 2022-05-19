@@ -167,7 +167,6 @@ export default {
     return {
       nft: {},
       activeTab: 0,
-      tokens: [],
       onNftSend: false,
       hasNoTokens: false,
       selectedNft: {},
@@ -178,6 +177,7 @@ export default {
       showBalanceError: false,
       localGasPrice: '0',
       loadingContracts: true,
+      loadingTokens: true,
       nftApiResponse: []
     };
   },
@@ -198,6 +198,27 @@ export default {
       return this.contracts.map(item => {
         return { name: `${item.name} (${item.count})` };
       });
+    },
+    tokens() {
+      if (this.nftApiResponse.length > 0) {
+        const contract = this.nftApiResponse.filter(item => {
+          return (
+            item.contract_address.toLowerCase() ===
+            this.selectedContract.contract
+          );
+        });
+        if (contract.length > 0) {
+          return contract[0].assets.map(item => {
+            return {
+              image: `https://img.mewapi.io/?image=${item.image}`,
+              name: item.name,
+              token_id: item.token_id,
+              contract: contract[0].contract_address
+            };
+          });
+        }
+      }
+      return [];
     },
     contracts() {
       if (this.nftApiResponse.length > 0) {
@@ -288,6 +309,9 @@ export default {
       this.nft.getNfts().then(res => {
         this.nftApiResponse = res;
         this.loadingContracts = false;
+        setTimeout(() => {
+          this.loadingTokens = false;
+        }, 500);
       });
       this.localGasPrice = this.gasPriceByType(this.gasPriceType);
     },
