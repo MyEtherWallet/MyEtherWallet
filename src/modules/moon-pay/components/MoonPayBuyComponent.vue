@@ -32,7 +32,12 @@
           class="selectedFiat"
         />
       </div>
-
+      <div v-if="!inWallet" class="mt-5">
+        <div class="mew-heading-3 textDark--text mb-5">
+          Where should we send your crypto?
+        </div>
+        <module-address-book @setAddress="setAddress" />
+      </div>
       <div class="mb-2">You will get</div>
       <div v-if="!loading" class="mb-1">
         <div class="d-flex mb-1 align-center justify-space-between">
@@ -68,8 +73,9 @@
       <mew-button
         btn-size="xlarge"
         has-full-width
-        :disabled="amountErrorMessages !== ''"
+        :disabled="disableBuy"
         :title="buyBtnTitle"
+        :is-valid-address-func="isValidToAddress"
         @click.native="buy"
       />
     </div>
@@ -77,6 +83,8 @@
 </template>
 
 <script>
+import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
+import MultiCoinValidator from 'multicoin-address-validator';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import { isEmpty, cloneDeep, isEqual } from 'lodash';
 import BigNumber from 'bignumber.js';
@@ -88,6 +96,7 @@ import nodeList from '@/utils/networks';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 export default {
   name: 'ModuleBuyEth',
+  components: { ModuleAddressBook },
   props: {
     moonpayHandler: {
       type: Object,
@@ -96,6 +105,10 @@ export default {
     defaultCurrency: {
       type: Object,
       default: () => {}
+    },
+    inWallet: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -111,8 +124,8 @@ export default {
       fetchedData: {},
       currencyRates: [],
       amount: '100',
-      // toAddress: '',
-      //validToAddress: false,
+      toAddress: '',
+      validToAddress: false,
       gasPrice: '0',
       web3Connections: {}
       //isMoonpay: false
@@ -159,9 +172,9 @@ export default {
     // actualAddress() {
     //   return this.inWallet ? this.address : this.toAddress;
     // },
-    // actualValidAddress() {
-    //   return this.inWallet ? true : this.validToAddress;
-    // },
+    actualValidAddress() {
+      return this.inWallet ? true : this.validToAddress;
+    },
     networkFee() {
       return fromWei(BigNumber(this.gasPrice).times(21000).toString());
     },
@@ -230,6 +243,13 @@ export default {
     //     moonpayMax.lt(BigNumber(this.amount))
     //   );
     // },
+    disableBuy() {
+      return (
+        (!this.inWallet && !this.actualValidAddress) ||
+        this.loading ||
+        this.amountErrorMessages !== ''
+      );
+    },
     buyBtnTitle() {
       return 'BUY NOW';
     },
@@ -473,14 +493,14 @@ export default {
       }
       this.gasPrice = await this.web3Connections[nodeType].eth.getGasPrice();
     },
-    // setAddress(address, valid) {
-    //   this.acutalAddress = address;
-    //   this.toAddress = address;
-    //   this.validToAddress = valid;
-    // },
-    // isValidToAddress(address) {
-    //   return MultiCoinValidator.validate(address, this.selectedCurrency.name);
-    // },
+    setAddress(address, valid) {
+      //this.acutalAddress = address;
+      this.toAddress = address;
+      this.validToAddress = valid;
+    },
+    isValidToAddress(address) {
+      return MultiCoinValidator.validate(address, this.selectedCurrency.name);
+    },
     // selectMoonpay() {
     //   this.isMoonpay = true;
     //   this.isSimplex = false;
