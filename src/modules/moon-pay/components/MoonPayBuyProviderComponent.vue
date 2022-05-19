@@ -7,16 +7,17 @@
       <v-icon color="textDark">mdi-arrow-left mr-4</v-icon>
       <div class="mew-heading-2">Select provider</div>
     </div>
+
     <!-- ============================================================== -->
     <!-- Moonpay -->
     <!-- ============================================================== -->
-    <div v-if="!hideMoonpay" class="section-block pa-5">
+    <div v-if="!hideMoonpay" class="section-block pa-5 mb-6">
       <img
         class="provider-logo"
         src="@/modules/moon-pay/assets/moonpay-logo.svg"
         height="18"
       />
-      <div class="mb-1">
+      <div class="mb-3">
         <div class="d-flex mb-1 align-center justify-space-between">
           <div class="d-flex mew-heading-3 textDark--text">
             {{ buyObj.cryptoToFiat }}
@@ -24,7 +25,7 @@
           </div>
         </div>
         <div class="d-flex align-center">
-          <div class="mr-1 textDark--text">≈ {{ buyObj.plusFeeF }}</div>
+          <div class="mr-1 textDark--text">aaa≈ {{ buyObj.plusFeeF }}</div>
           <mew-tooltip style="height: 21px">
             <template #contentSlot>
               <div>
@@ -75,6 +76,9 @@
       <!------ WEN USER IS NOT IN WALLET, SHOW BELOW -------->
       <div v-if="!inWallet">
         <mew-button
+          btn-size="large"
+          btn-style="light"
+          color-theme="basic"
           has-full-width
           :is-valid-address-func="isValidToAddress"
           :title="moonpayBtnTitle"
@@ -84,17 +88,21 @@
       <!------ WEN USER IS IN WALLET, SHOW BELOW -------->
       <div v-else>
         <mew-button
+          btn-size="large"
+          btn-style="light"
+          color-theme="basic"
           has-full-width
           :title="moonpayBtnTitle"
           @click.native="buy"
         />
       </div>
     </div>
+
     <!-- ============================================================== -->
     <!-- Simplex -->
     <!-- ============================================================== -->
     <div v-if="!hideSimplex" class="section-block pa-5">
-      <div v-if="!loading" class="mb-1">
+      <div v-if="!loading" class="mb-3">
         <div class="d-flex mb-1 align-center justify-space-between">
           <div class="d-flex mew-heading-3 textDark--text">
             {{ simplexQuote.crypto_amount }}
@@ -125,7 +133,7 @@
         </div>
       </div>
 
-      <div v-else class="mb-1">
+      <div v-else class="mb-3">
         <v-skeleton-loader type="heading" class="mb-1" />
         <v-skeleton-loader max-width="200px" type="heading" />
       </div>
@@ -155,6 +163,9 @@
       <div class="mew-label mb-5">Visa, Mastercard</div>
       <div>
         <mew-button
+          btn-size="large"
+          btn-style="light"
+          color-theme="basic"
           has-full-width
           :title="simplexBtnTitle"
           @click.native="openSimplex"
@@ -401,22 +412,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// Force set button border color(greyMedium) for not selected buttons
-.not-selected {
-  border: 1px solid var(--v-greyMedium-base);
-}
-.icon-holder {
-  border: 2px solid var(--v-greyMedium-base);
-  border-radius: 100px;
-  width: 20px;
-  height: 20px;
-}
 .section-block {
   border-radius: 12px;
   left: 0px;
   top: 0px;
   box-sizing: border-box;
-  border: 2px solid var(--v-greyMedium-base);
+  border: 1px solid var(--v-greyMedium-base);
   flex: none;
   order: 0;
   align-self: stretch;
@@ -424,20 +425,9 @@ export default {
   margin: 8px 0px;
   position: relative;
 }
-.section-block:hover {
-  cursor: pointer;
-  border: 2px solid #1eb19b;
-  background-color: #e5eaee;
-}
-.selected {
-  border: 2px solid #1eb19b;
-}
 .provider-logo {
   position: absolute;
   top: 18px;
   right: 20px;
-}
-.selectedFiat {
-  max-width: 120px;
 }
 </style>
