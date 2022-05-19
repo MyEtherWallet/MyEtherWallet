@@ -178,7 +178,7 @@ export default {
       showBalanceError: false,
       localGasPrice: '0',
       loadingContracts: true,
-      contracts: []
+      nftApiResponse: []
     };
   },
   computed: {
@@ -198,6 +198,18 @@ export default {
       return this.contracts.map(item => {
         return { name: `${item.name} (${item.count})` };
       });
+    },
+    contracts() {
+      if (this.nftApiResponse.length > 0) {
+        return this.nftApiResponse.map(item => {
+          return {
+            contract: item.contract_address,
+            count: item.assets.length,
+            name: item.contract_name
+          };
+        });
+      }
+      return [];
     },
     /**
      * Pagination
@@ -274,7 +286,8 @@ export default {
       });
 
       this.nft.getNfts().then(res => {
-        console.log(res);
+        this.nftApiResponse = res;
+        this.loadingContracts = false;
       });
       this.localGasPrice = this.gasPriceByType(this.gasPriceType);
     },
