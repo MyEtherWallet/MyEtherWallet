@@ -11,11 +11,16 @@ const setLocale = function ({ commit }, val) {
 
 const updateGasPrice = function ({ rootState, dispatch, getters, state }) {
   const web3 = rootState.wallet.web3;
+  const { currencyName, gasPriceMultiplier } = getters.network.type;
+  if (currencyName === 'MATIC') {
+    return web3.eth.getGasPrice().then(res => {
+      const modifiedGasPrice = toBNSafe(res).muln(gasPriceMultiplier);
+      return dispatch('setGasPrice', modifiedGasPrice.toString());
+    });
+  }
   if (!getters.isEIP1559SupportedNetwork) {
     return web3.eth.getGasPrice().then(res => {
-      const modifiedGasPrice = toBNSafe(res).muln(
-        getters.network.type.gasPriceMultiplier
-      );
+      const modifiedGasPrice = toBNSafe(res).muln(gasPriceMultiplier);
       return dispatch('setGasPrice', modifiedGasPrice.toString());
     });
   }
