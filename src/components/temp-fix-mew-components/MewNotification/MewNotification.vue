@@ -1,11 +1,18 @@
 <template>
-  <div>
+  <div class="mew-components--mew-notification">
     <!-- ===================================================================================== -->
     <!-- NEW -->
     <!-- ===================================================================================== -->
     <div class="notification-container">
       <v-expansion-panels flat>
-        <v-expansion-panel>
+        <v-expansion-panel
+          :class="
+            getBorderClasses(
+              notification.status.value.toLowerCase(),
+              notification.read
+            )
+          "
+        >
           <v-expansion-panel-header
             hide-actions
             class="px-2 py-0"
@@ -129,7 +136,7 @@
 
           <v-expansion-panel-content class="pa-0" :color="backgroundColor">
             <div class="expanded-container capitalize">
-              <v-container class="pa-5">
+              <v-container>
                 <v-row v-for="(detail, idx) in getDetails" :key="idx">
                   <v-col cols="6" class="textPrimary--text">
                     {{ detail.string }}:
@@ -496,6 +503,26 @@ export default {
         return 'error';
       }
     },
+    getBorderClasses(status, read) {
+      if (status === this.txStatusOptions.success) {
+        if (read) {
+          return 'success-type read';
+        }
+        return 'success-type';
+      }
+      if (status === this.txStatusOptions.pending) {
+        if (read) {
+          return 'sucpendingcess-type read';
+        }
+        return 'pending-type';
+      }
+      if (status === this.txStatusOptions.failed) {
+        if (read) {
+          return 'failed-type read';
+        }
+        return 'failed-type';
+      }
+    },
     onToggle() {
       this.expanded = !this.expanded;
     }
@@ -503,10 +530,26 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.notification-container {
-  border-radius: 6px;
+<style lang="scss">
+.mew-components--mew-notification {
+  .v-expansion-panel-content__wrap {
+    padding: 10px !important;
+  }
+}
+</style>
 
+<style lang="scss" scoped>
+.warning,
+.error,
+.primary {
+  border-radius: 0 !important;
+}
+
+.v-expansion-panel {
+  overflow: hidden;
+}
+
+.notification-container {
   .detail-container {
     max-width: 100%;
 
@@ -530,7 +573,7 @@ export default {
 }
 
 .success-type {
-  background-color: var(--v-superPrimary-base);
+  //background-color: var(--v-superPrimary-base);
   border: 1px solid var(--v-primary-base);
   &.expanded {
     border: 1px solid var(--v-superPrimary-base);
@@ -542,7 +585,7 @@ export default {
 }
 
 .pending-type {
-  background-color: var(--v-warning-base);
+  //background-color: var(--v-warning-base);
   border: 1px solid var(--v-warning-darken1);
   &.expanded {
     border: 1px solid var(--v-warning-base);
@@ -554,7 +597,7 @@ export default {
 }
 
 .failed-type {
-  background-color: var(--v-error-lighten1);
+  //background-color: var(--v-error-lighten1);
   border: 1px solid var(--v-error-base);
   &.expanded {
     border: 1px solid var(--v-error-lighten1);
