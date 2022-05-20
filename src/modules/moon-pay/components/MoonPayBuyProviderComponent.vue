@@ -73,25 +73,13 @@
       <div class="mew-label mb-5">
         {{ paymentOptionString }}
       </div>
-      <!------ WEN USER IS NOT IN WALLET, SHOW BELOW -------->
-      <div v-if="!inWallet">
+      <div>
         <mew-button
           btn-size="large"
           btn-style="light"
           color-theme="basic"
           has-full-width
           :is-valid-address-func="isValidToAddress"
-          :title="moonpayBtnTitle"
-          @click.native="buyFromHome"
-        />
-      </div>
-      <!------ WEN USER IS IN WALLET, SHOW BELOW -------->
-      <div v-else>
-        <mew-button
-          btn-size="large"
-          btn-style="light"
-          color-theme="basic"
-          has-full-width
           :title="moonpayBtnTitle"
           @click.native="buy"
         />
@@ -113,7 +101,7 @@
         </div>
         <div class="d-flex align-center">
           <div class="mr-1 textDark--text">
-            ≈ {{ simplexQuote.fiat_amount }}
+            ≈ {{ currencyFormatter(simplexQuote.fiat_base_amount) }}
           </div>
           <mew-tooltip style="height: 21px">
             <template #contentSlot>
@@ -179,7 +167,7 @@
 import MultiCoinValidator from 'multicoin-address-validator';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import { mapGetters, mapActions, mapState } from 'vuex';
-import { randomHex } from 'web3-utils';
+import { LOCALE } from '../helpers';
 export default {
   name: 'ModuleBuyEthProvider',
   props: {
@@ -225,7 +213,7 @@ export default {
       return this.selectedFiat.name;
     },
     actualAddress() {
-      return this.inWallet ? this.address : randomHex(20);
+      return this.inWallet ? this.address : this.buyObj.address;
     },
     selectedCryptoName() {
       return this.selectedCurrency.name;
@@ -250,31 +238,6 @@ export default {
     paymentOptionString() {
       return `Visa, Mastercard, Apple Pay${this.isEUR ? ', Bank account' : ''}`;
     }
-    // hasData() {
-    //   return !isEmpty(this.fetchedData);
-    // },
-    // max() {
-    //   if (this.hasData) {
-    //     const moonpayMax = this.fetchedData[0]?.limits.find(
-    //       item => item.fiat_currency === this.selectedFiatName
-    //     );
-    //     const simplexMax = this.fetchedData[1]?.limits.find(
-    //       item => item.fiat_currency === this.selectedFiatName
-    //     );
-    //     return {
-    //       moonpay: moonpayMax
-    //         ? BigNumber(moonpayMax.limit.max)
-    //         : BigNumber(12000),
-    //       simplex: simplexMax
-    //         ? BigNumber(simplexMax.limit.max)
-    //         : BigNumber(12000)
-    //     };
-    //   }
-    //   return {
-    //     moonpay: BigNumber(12000),
-    //     simplex: BigNumber(12000)
-    //   };
-    // }
   },
   watch: {
     // SimplexQuote
@@ -298,6 +261,7 @@ export default {
     //   this.fetchData = {};
     // },
     getSimplexQuote() {
+      if (this.hideSimplex) return;
       this.loading = true;
       this.simplexQuote = {};
       this.moonpayHandler
@@ -336,33 +300,13 @@ export default {
           this.$emit('reset');
         });
     },
-    // openSimplexFromHome() {
-    //   // eslint-disable-next-line
-    //   this.moonpayHandler
-    //     .simplexBuy(
-    //       this.selectedCurrency.name,
-    //       this.selectedFiatName,
-    //       this.amount,
-    //       this.actualAddress
-    //     )
-    //     .then(() => {
-    //       this.reset();
-    //       this.close();
-    //       this.$emit('reset');
-    //     })
-    //     .catch(err => {
-    //       this.reset();
-    //       Toast(err, {}, ERROR);
-    //       this.close();
-    //       this.$emit('reset');
-    //     });
-    // //   window.open(
-    // //     `https://ccswap.myetherwallet.com/#/?fiat=${this.selectedFiatName.toLowerCase()}&amount=${
-    // //       this.amount
-    // //     }`,
-    // //     '_blank'
-    // //   );
-    // },
+    currencyFormatter(value) {
+      const locale = this.hasData ? LOCALE[this.selectedFiatName] : 'en-US';
+      return new Intl.NumberFormat(locale, {
+        style: 'currency',
+        currency: this.selectedFiatName
+      }).format(value);
+    },
     reset() {
       this.loading = true;
       this.fetchData = {};
@@ -374,26 +318,6 @@ export default {
           this.selectedFiatName,
           this.buyObj.fiatAmount,
           this.actualAddress
-        )
-        .then(() => {
-          this.reset();
-          this.close();
-          this.$emit('reset');
-        })
-        .catch(err => {
-          this.reset();
-          Toast(err, {}, ERROR);
-          this.close();
-          this.$emit('reset');
-        });
-    },
-    buyFromHome() {
-      this.moonpayHandler
-        .buy(
-          this.selectedCryptoName,
-          this.selectedFiatName,
-          this.buyObj.fiatAmount,
-          randomHex(20) // Random hex placeholder
         )
         .then(() => {
           this.reset();

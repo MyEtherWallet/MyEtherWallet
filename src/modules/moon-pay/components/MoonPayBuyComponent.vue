@@ -128,8 +128,6 @@ export default {
       validToAddress: false,
       gasPrice: '0',
       web3Connections: {}
-      //isMoonpay: false
-      //isSimplex: false
     };
   },
   computed: {
@@ -169,9 +167,9 @@ export default {
     selectedFiatName() {
       return this.selectedFiat.name;
     },
-    // actualAddress() {
-    //   return this.inWallet ? this.address : this.toAddress;
-    // },
+    actualAddress() {
+      return this.inWallet ? this.address : this.toAddress;
+    },
     actualValidAddress() {
       return this.inWallet ? true : this.validToAddress;
     },
@@ -212,37 +210,6 @@ export default {
     isEUR() {
       return this.selectedFiatName === 'EUR' || this.selectedFiatName === 'GBP';
     },
-    // hideSimplex() {
-    //   return (
-    //     this.selectedCryptoName === 'USDC' || this.selectedCryptoName === 'USDT'
-    //   );
-    // },
-    // disableSimplex() {
-    //   const simplexMax = this.max.simplex;
-    //   // simplexMax.lt(BigNumber(this.amount));
-    //   return (
-    //     (!this.inWallet && !this.actualValidAddress) ||
-    //     this.loading ||
-    //     this.amountErrorMessages !== '' ||
-    //     simplexMax.lt(BigNumber(this.amount))
-    //   );
-    // },
-    // simplexBtnTitle() {
-    //   const simplexMax = this.max.simplex;
-    //   if (simplexMax.lt(BigNumber(this.amount))) {
-    //     return `CANNOT EXCEED PROVIDER MAX OF ${simplexMax}`;
-    //   }
-    //   return 'CONTINUE WITH SIMPLEX';
-    // },
-    // disableMoonPay() {
-    //   const moonpayMax = this.max.moonpay;
-    //   return (
-    //     (!this.inWallet && !this.actualValidAddress) ||
-    //     this.loading ||
-    //     this.amountErrorMessages !== '' ||
-    //     moonpayMax.lt(BigNumber(this.amount))
-    //   );
-    // },
     disableBuy() {
       return (
         (!this.inWallet && !this.actualValidAddress) ||
@@ -589,7 +556,8 @@ export default {
         networkFeeText: this.networkFeeText,
         dailyLimit: this.dailyLimit,
         monthlyLimit: this.monthlyLimit,
-        fiatAmount: this.amount
+        fiatAmount: this.amount,
+        address: this.actualAddress
       };
       this.checkMoonPayMax();
       this.$emit('setBuyObj', buyObj);
