@@ -3,8 +3,16 @@ RELEASE="$1"
 GITHUB_TOKEN="$2"
 REPO="$3"
 CHANGELOG=`awk -v version="$RELEASE" '/### Release / {printit = $3 == version}; printit;' 'CHANGELOG.md'`
+npm run build
 mkdir release
 cd dist && zip -r ../release/MyEtherWallet-$RELEASE.zip * && cd ..
+if [ -n "$4" ]; then
+    for f in release/*; do
+        gpg --output $f.sig --detach-sig $f
+    done
+fi
+npm run build:offline
+cd dist && zip -r ../release/MyEtherWallet-$RELEASE-Offline.zip * && cd ..
 if [ -n "$4" ]; then
     for f in release/*; do
         gpg --output $f.sig --detach-sig $f
