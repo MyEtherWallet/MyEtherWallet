@@ -11,55 +11,40 @@
       has-body-content
     >
       <div v-if="step == 0">
-        <div v-if="inWallet">
-          <mew-tabs
-            v-if="open"
-            :items="tabItems"
-            :active-tab="activeTab"
-            active-color="greenPrimary"
-            has-underline
-            class="pt-3"
-            @onTab="onTab"
-          >
-            <template #tabContent1>
-              <buy-eth-component
-                :moonpay-handler="moonpayHandler"
-                :close="close"
-                :tab="activeTab"
-                :default-currency="defaltCurrency"
-                :in-wallet="inWallet"
-                @selectedCurrency="setSelectedCurrency"
-                @openProviders="openProviders"
-                @selectedFiat="setSelectedFiat"
-                @setBuyObj="setBuyObj"
-                @hideMoonpay="hideMoonpay"
-              />
-            </template>
-            <template #tabContent2>
-              <sell-eth-component
-                :moonpay-handler="moonpayHandler"
-                :close="close"
-                :tab="activeTab"
-                :default-currency="defaltCurrency"
-                @selectedCurrency="setSelectedCurrency"
-              />
-            </template>
-          </mew-tabs>
-        </div>
-        <div v-else>
-          <buy-eth-component
-            :moonpay-handler="moonpayHandler"
-            :close="close"
-            :tab="activeTab"
-            :default-currency="defaltCurrency"
-            :in-wallet="inWallet"
-            @selectedCurrency="setSelectedCurrency"
-            @openProviders="openProviders"
-            @selectedFiat="setSelectedFiat"
-            @setBuyObj="setBuyObj"
-            @hideMoonpay="hideMoonpay"
-          />
-        </div>
+        <mew-tabs
+          v-if="open"
+          :items="tabItems"
+          :active-tab="activeTab"
+          active-color="greenPrimary"
+          has-underline
+          class="pt-3"
+          @onTab="onTab"
+        >
+          <template #tabContent1>
+            <buy-eth-component
+              :moonpay-handler="moonpayHandler"
+              :close="close"
+              :tab="activeTab"
+              :default-currency="defaltCurrency"
+              :in-wallet="inWallet"
+              @selectedCurrency="setSelectedCurrency"
+              @openProviders="openProviders"
+              @selectedFiat="setSelectedFiat"
+              @setBuyObj="setBuyObj"
+              @hideMoonpay="hideMoonpay"
+            />
+          </template>
+          <template #tabContent2>
+            <sell-eth-component
+              :moonpay-handler="moonpayHandler"
+              :close="close"
+              :tab="activeTab"
+              :in-wallet="inWallet"
+              :default-currency="defaltCurrency"
+              @selectedCurrency="setSelectedCurrency"
+            />
+          </template>
+        </mew-tabs>
       </div>
       <MoonPayBuyProviderComponent
         v-if="step == 1"
@@ -162,21 +147,21 @@ export default {
       };
     },
     tabItems() {
-      if (this.inWallet) {
-        return [
-          {
-            name: `Buy`
-          },
-          {
-            name: `Sell`
-          }
-        ];
-      }
+      //if (this.inWallet) {
       return [
         {
-          name: 'Buy'
+          name: `Buy`
+        },
+        {
+          name: `Sell`
         }
       ];
+      //   }
+      //   return [
+      //     {
+      //       name: 'Buy'
+      //     }
+      //   ];
     }
   },
   watch: {

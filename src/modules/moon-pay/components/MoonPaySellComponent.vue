@@ -15,7 +15,7 @@
     <!-- ============================================================== -->
     <!-- Amount -->
     <!-- ============================================================== -->
-    <div class="position--relative mt-9">
+    <div v-if="inWallet" class="position--relative mt-9">
       <button-balance :balance="selectedBalance" :loading="fetchingBalance" />
       <mew-input
         v-model="amount"
@@ -29,6 +29,19 @@
         :hint="persistentHintMessage"
       />
     </div>
+    <div v-else class="position--relative mt-9">
+      <mew-input
+        v-model="amount"
+        type="number"
+        label="Amount"
+        placeholder="Enter amount to sell"
+        :disabled="loading"
+        :error-messages="errorMessages"
+        :persistent-hint="hasPersistentHint"
+        :hint="persistentHintMessage"
+      />
+    </div>
+
     <div class="pt-8 pb-13">
       <div class="d-flex align-center justify-space-between mb-2">
         <div class="mew-body textDark--text font-weight-bold">
@@ -83,6 +96,10 @@ export default {
     close: {
       type: Function,
       default: () => {}
+    },
+    inWallet: {
+      type: Boolean,
+      default: false
     },
     defaultCurrency: {
       type: Object,
@@ -251,12 +268,16 @@ export default {
         return "Amount can't be negative.";
       }
 
-      if (amount.gt(this.selectedBalance)) {
-        return `You do not have enough ${symbol} to sell.`;
-      }
-
-      if (!isEmpty(this.sendHandler) && !this.sendHandler.hasEnoughBalance()) {
-        return `You do not have enough ETH to pay for network fee.`;
+      if (this.inWallet) {
+        if (amount.gt(this.selectedBalance)) {
+          return `You do not have enough ${symbol} to sell.`;
+        }
+        if (
+          !isEmpty(this.sendHandler) &&
+          !this.sendHandler.hasEnoughBalance()
+        ) {
+          return `You do not have enough ETH to pay for network fee.`;
+        }
       }
 
       if (
@@ -355,6 +376,7 @@ export default {
   },
   methods: {
     getEthBalance() {
+      if (!this.inWallet) return;
       const web3Instance = new Web3('https://nodes.mewapi.io/rpc/eth');
       web3Instance.eth.getBalance(this.address).then(res => {
         this.fetchingBalance = false;
@@ -362,6 +384,7 @@ export default {
       });
     },
     getTokenBalance() {
+      if (!this.inWallet) return;
       const web3Instance = new Web3('https://nodes.mewapi.io/rpc/eth');
       const contract = new web3Instance.eth.Contract(
         abi,
@@ -446,25 +469,31 @@ export default {
         });
     },
     fetchSellInfo() {
-      this.sendHandler.setCurrency(this.actualSelectedCurrency);
-      this.sendHandler.setValue(this.getCalculatedAmount);
-      // eslint-disable-next-line
-      this.sendHandler.setTo(ETH_DONATION_ADDRESS, 'TYPED');
-      this.estimatingFees = true;
-      this.sendHandler
-        .estimateGas()
-        .then(res => {
-          this.estimatingFees = false;
-          this.gasLimit = res;
-        })
-        .catch(err => {
-          Toast(err, {}, ERROR);
-        });
-      this.fetchingBalance = true;
-      if (this.actualSelectedCurrency.contract === MAIN_TOKEN_ADDRESS) {
-        this.getEthBalance();
+      if (this.inWallet) {
+        this.sendHandler.setCurrency(this.actualSelectedCurrency);
+        this.sendHandler.setValue(this.getCalculatedAmount);
+        // eslint-disable-next-line
+        this.sendHandler.setTo(ETH_DONATION_ADDRESS, 'TYPED');
+        console.log('sendHandler', this.sendHandler);
+        this.estimatingFees = true;
+        this.sendHandler
+          .estimateGas()
+          .then(res => {
+            this.estimatingFees = false;
+            this.gasLimit = res;
+          })
+          .catch(err => {
+            Toast(err, {}, ERROR);
+          });
+        this.fetchingBalance = true;
+        if (this.actualSelectedCurrency.contract === MAIN_TOKEN_ADDRESS) {
+          this.getEthBalance();
+        } else {
+          this.getTokenBalance();
+        }
       } else {
-        this.getTokenBalance();
+        this.fetchingBalance = false;
+        this.selectedBalance = fromWei('0');
       }
       this.moonpayHandler
         .getSupportedFiatToSell(this.name)
