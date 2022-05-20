@@ -86,21 +86,6 @@ export default class MoonPayHandler {
     });
   }
 
-  /* Simplex Quotes
-  Parameters: 
-    PurchaseOrderReferenceId, 
-    FiatCurrency, 
-    PurchaseOrderRequestedCurrency, 
-    RequestedAmount, // Must be ETH amount ~0.027 - ~9
-    PurchaseOrderCryptoCurrency
-  Returns:
-    payment_id: string,
-    crypto_amount: number,
-    crypto_currency: string,
-    fiat_currency: string,
-    fiat_amount: number,
-    fiat_base_amount: number
-  */
   getSimplexQuote(tokenSymbol, fiatCurrency, amount, address) {
     const hash = sha3(address);
     const id = `WEB|${hash.substring(0, 42)}`;
