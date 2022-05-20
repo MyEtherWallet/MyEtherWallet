@@ -147,7 +147,6 @@ export default {
       };
     },
     tabItems() {
-      //if (this.inWallet) {
       return [
         {
           name: `Buy`
@@ -156,12 +155,6 @@ export default {
           name: `Sell`
         }
       ];
-      //   }
-      //   return [
-      //     {
-      //       name: 'Buy'
-      //     }
-      //   ];
     }
   },
   watch: {

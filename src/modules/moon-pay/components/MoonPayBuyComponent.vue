@@ -36,7 +36,7 @@
         <div class="mew-heading-3 textDark--text mb-5">
           Where should we send your crypto?
         </div>
-        <module-address-book @setAddress="setAddress" />
+        <module-address-book :show-copy="false" @setAddress="setAddress" />
       </div>
       <div class="mb-2">You will get</div>
       <div v-if="!loading" class="mb-1">
@@ -220,13 +220,6 @@ export default {
     buyBtnTitle() {
       return 'BUY NOW';
     },
-    // disableMax() {
-    //   const simplexMax = this.max.simplex;
-    //   return simplexMax.lt(BigNumber(this.amount));
-    // },
-    // paymentOptionString() {
-    //   return `Visa, Mastercard, Apple Pay${this.isEUR ? ', Bank account' : ''}`;
-    // },
     amountErrorMessages() {
       const moonpayMax = this.max.moonpay;
       const simplexMax = this.max.simplex;
@@ -398,23 +391,6 @@ export default {
       handler: function (newVal, oldVal) {
         if (!isEqual(newVal, oldVal)) {
           this.amount = newVal.name != 'JPY' ? '100' : '10000';
-          /*
-          const selectedCurrencyPrice =
-            this.fetchedData[0].conversion_rates.find(
-              item => item.fiat_currency === oldVal.name
-            );
-          console.log('newVal', newVal);
-          const revertedVal = BigNumber(this.amount).div(
-            selectedCurrencyPrice.exchange_rate
-          );
-          console.log('revertedVal', revertedVal);
-          const value = BigNumber(revertedVal)
-            .times(this.fiatMultiplier)
-            .dp(0)
-            .toFixed();
-          console.log('value', value);
-          this.amount = value;
-          */
           this.$emit('selectedFiat', newVal);
         }
       },
@@ -461,39 +437,12 @@ export default {
       this.gasPrice = await this.web3Connections[nodeType].eth.getGasPrice();
     },
     setAddress(address, valid) {
-      //this.acutalAddress = address;
       this.toAddress = address;
       this.validToAddress = valid;
     },
     isValidToAddress(address) {
       return MultiCoinValidator.validate(address, this.selectedCurrency.name);
     },
-    // selectMoonpay() {
-    //   this.isMoonpay = true;
-    //   this.isSimplex = false;
-    // },
-    // selectSimplex() {
-    //   this.isSimplex = true;
-    //   this.isMoonpay = false;
-    // },
-    // openSimplex() {
-    //   // eslint-disable-next-line
-    //   window.open(
-    //     `https://ccswap.myetherwallet.com/#/?fiat=${this.selectedFiatName.toLowerCase()}&amount=${
-    //       this.amount
-    //     }&to=${this.actualAddress}`,
-    //     '_blank'
-    //   );
-    // },
-    // openSimplexFromHome() {
-    //   // eslint-disable-next-line
-    //   window.open(
-    //     `https://ccswap.myetherwallet.com/#/?fiat=${this.selectedFiatName.toLowerCase()}&amount=${
-    //       this.amount
-    //     }&to=${this.toAddress}`,
-    //     '_blank'
-    //   );
-    // },
     checkMoonPayMax() {
       const moonpayMax = this.max.moonpay;
       const isLT = (num, num2) => {
@@ -502,13 +451,6 @@ export default {
       const hideMoonpay = isLT(moonpayMax, this.amount);
       this.$emit('hideMoonpay', hideMoonpay);
     },
-    // setMin() {
-    //   this.amount = this.min.toFixed();
-    // },
-    // setMax() {
-    //   const simplexMax = this.max.simplex;
-    //   this.amount = simplexMax.toString();
-    // },
     currencyFormatter(value) {
       const locale = this.hasData ? LOCALE[this.selectedFiatName] : 'en-US';
       return new Intl.NumberFormat(locale, {
@@ -519,16 +461,6 @@ export default {
     setCurrency(e) {
       this.selectedCurrency = e;
     },
-    // reset() {
-    //   this.selectedFiat = {
-    //     name: 'USD',
-    //     value: 'USD',
-    //     // eslint-disable-next-line
-    //     img: require(`@/assets/images/currencies/USD.svg`)
-    //   };
-    //   this.loading = true;
-    //   this.fetchData = {};
-    // },
     fetchCurrencyData() {
       this.loading = true;
       this.fetchData = {};
@@ -539,7 +471,6 @@ export default {
           this.moonpayHandler.getFiatRatesForBuy().then(res => {
             this.currencyRates = cloneDeep(res);
             this.loading = false;
-            //this.selectMoonpay();
           });
           this.fetchedData = Object.assign({}, res);
         })
@@ -564,7 +495,6 @@ export default {
       this.$emit('openProviders', 1);
       this.$emit('selectedCurrency', this.selectedCurrency);
       this.$emit('selectedFiat', this.selectedFiat);
-      //this.selectedCurrency = this.defaultCurrency;
     }
   }
 };

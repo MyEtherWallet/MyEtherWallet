@@ -250,16 +250,6 @@ export default {
     isValidToAddress(address) {
       return MultiCoinValidator.validate(address, this.selectedCurrency.name);
     },
-    // reset() {
-    //   this.selectedFiat = {
-    //     name: 'USD',
-    //     value: 'USD',
-    //     // eslint-disable-next-line
-    //     img: require(`@/assets/images/currencies/USD.svg`)
-    //   };
-    //   this.loading = true;
-    //   this.fetchData = {};
-    // },
     getSimplexQuote() {
       if (this.hideSimplex) return;
       this.loading = true;
