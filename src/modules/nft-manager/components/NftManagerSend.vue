@@ -9,7 +9,6 @@
       class="cursor-pointer d-flex align-center justify-start full-width mb-4 mr-2"
     >
       <mew-button
-        class="pl-0"
         btn-style="transparent"
         :title="backTxt"
         @click.native="close"

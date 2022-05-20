@@ -269,6 +269,16 @@ export default {
     }
   },
   watch: {
+    balanceInWei() {
+      this.hasMinEth();
+    },
+    address() {
+      this.loadingContracts = true;
+      this.loadingTokens = true;
+      this.onNftSend = false;
+      this.$router.push({ name: ROUTES_WALLET.NFT_MANAGER.NAME });
+      this.setUpNFT();
+    },
     contracts(newVal) {
       if (newVal.length > 0) {
         this.onTab(0);
@@ -293,7 +303,6 @@ export default {
   },
   mounted() {
     this.setUpNFT();
-    this.hasMinEth();
   },
   methods: {
     setUpNFT() {
@@ -306,6 +315,11 @@ export default {
         web3: this.web3
       });
 
+      this.getNfts();
+      this.localGasPrice = this.gasPriceByType(this.gasPriceType);
+      this.hasMinEth();
+    },
+    getNfts() {
       this.nft.getNfts().then(res => {
         this.nftApiResponse = res;
         this.loadingContracts = false;
@@ -313,14 +327,11 @@ export default {
           this.loadingTokens = false;
         }, 500);
       });
-      this.localGasPrice = this.gasPriceByType(this.gasPriceType);
     },
     hasMinEth() {
       const currentGasPrice = this.localGasPrice;
       if (
-        toBN(this.balanceInWei).gt(
-          toBN(currentGasPrice).mul(toBN(MIN_GAS_LIMIT))
-        )
+        toBN(this.balanceInWei).gt(toBN(currentGasPrice).muln(MIN_GAS_LIMIT))
       ) {
         this.enoughFunds = true;
         this.showBalanceError = false;
@@ -354,43 +365,32 @@ export default {
     },
     async sendTx() {
       if (this.isValid) {
-        const gasTypeFee = this.localGasPrice;
-        const gasFees = await this.nft.getGasFees(
-          this.toAddress,
-          this.selectedNft
-        );
-        const gasFeesToBN = toBN(gasFees).mul(toBN(gasTypeFee));
-        this.gasFees = gasFeesToBN.toString();
-        if (gasFeesToBN.gte(toBN(this.balance))) {
-          this.enoughFunds = false;
-        } else {
-          try {
-            this.nft
-              .send(this.toAddress, this.selectedNft)
-              .then(response => {
-                this.updateValues();
-                this.enoughFunds = true;
-                Toast(
-                  'Cheers! Your transaction was mined. Check it in ',
-                  {
-                    title: `${getService(this.network.type.blockExplorerTX)}`,
-                    url: this.network.type.blockExplorerTX.replace(
-                      '[[txHash]]',
-                      response.blockHash
-                    )
-                  },
-                  SUCCESS,
-                  5000
-                );
-              })
-              .catch(e => {
-                Toast(e.message, {}, ERROR);
-              });
-            this.closeNftSend();
-            this.selectedNft = {};
-          } catch (e) {
-            Toast(e.message, {}, WARNING);
-          }
+        try {
+          this.nft
+            .send(this.toAddress, this.selectedNft)
+            .then(response => {
+              this.updateValues();
+              this.enoughFunds = true;
+              this.closeNftSend();
+              Toast(
+                'Cheers! Your transaction was mined. Check it in ',
+                {
+                  title: `${getService(this.network.type.blockExplorerTX)}`,
+                  url: this.network.type.blockExplorerTX.replace(
+                    '[[txHash]]',
+                    response.blockHash
+                  )
+                },
+                SUCCESS,
+                5000
+              );
+            })
+            .catch(e => {
+              Toast(e.message, {}, ERROR);
+            });
+          this.selectedNft = {};
+        } catch (e) {
+          Toast(e.message, {}, WARNING);
         }
       }
     },
@@ -402,6 +402,7 @@ export default {
       if (this.tokens.length === 0 && this.contracts.length === 1) {
         this.hasNoTokens = true;
       }
+      this.getNfts();
     },
     setAddress(address) {
       if (typeof address === 'object' && !!address) {
