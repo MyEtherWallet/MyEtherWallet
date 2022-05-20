@@ -298,7 +298,7 @@ import SwapProviderMentions from './components/SwapProviderMentions.vue';
 import Swapper from './handlers/handlerSwap';
 import AppTransactionFee from '@/core/components/AppTransactionFee.vue';
 import { toBN, fromWei, toWei, isAddress } from 'web3-utils';
-import { isEmpty, clone, isUndefined, debounce, isObject } from 'lodash';
+import { isEmpty, clone, isUndefined, isObject } from 'lodash';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import Notification, {
   NOTIFICATION_TYPES,
@@ -383,7 +383,8 @@ export default {
       refundAddress: '',
       isValidRefundAddr: false,
       localGasPrice: '0',
-      mainTokenDetails: {}
+      mainTokenDetails: {},
+      cachedAmount: '0'
     };
   },
   computed: {
@@ -1194,7 +1195,7 @@ export default {
       }
       this.setTokenInValue(this.tokenInValue);
     },
-    setTokenInValue: debounce(function (value) {
+    setTokenInValue(value) {
       /**
        * Ensure that both pairs have been set
        * before calling the providers
@@ -1261,6 +1262,7 @@ export default {
       ) {
         this.isLoadingProviders = true;
         this.showAnimation = true;
+        this.cachedAmount = this.tokenInValue;
         this.swapper
           .getAllQuotes({
             fromT: this.fromTokenType,
@@ -1270,25 +1272,28 @@ export default {
             )
           })
           .then(quotes => {
-            this.selectedProvider = {};
-            this.availableQuotes = quotes.map(q => {
-              q.rate = new BigNumber(q.amount)
-                .dividedBy(new BigNumber(this.tokenInValue))
-                .toString();
-              q.isSelected = false;
-              return q;
-            });
-            if (this.availableQuotes.length > 1) {
-              this.availableQuotes = quotes.filter(q => q.rate !== '0');
+            if (this.tokenInValue === this.cachedAmount) {
+              this.selectedProvider = {};
+              this.lastSetToken = quotes[0].amount;
+              this.availableQuotes = quotes.map(q => {
+                q.rate = new BigNumber(q.amount)
+                  .dividedBy(new BigNumber(this.tokenInValue))
+                  .toString();
+                q.isSelected = false;
+                return q;
+              });
+              if (this.availableQuotes.length > 1) {
+                this.availableQuotes = quotes.filter(q => q.rate !== '0');
+              }
+              if (quotes.length) {
+                this.tokenOutValue = quotes[0].amount;
+              }
+              this.step = 1;
+              this.isLoadingProviders = false;
             }
-            if (quotes.length) {
-              this.tokenOutValue = quotes[0].amount;
-            }
-            this.step = 1;
-            this.isLoadingProviders = false;
           });
       }
-    }, 500),
+    },
     setProvider(idx) {
       this.belowMinError = false;
       this.availableQuotes.forEach((q, _idx) => {
@@ -1300,7 +1305,7 @@ export default {
         }
       });
     },
-    getTrade: debounce(function (idx) {
+    getTrade(idx) {
       if (this.isFromNonChain && !this.isValidRefundAddr) {
         return;
       }
@@ -1346,7 +1351,7 @@ export default {
       } else {
         this.setupTrade(trade);
       }
-    }, 500),
+    },
     setupTrade(trade) {
       this.loadingFee = false;
       // fixes race case where address gets invalidated when
