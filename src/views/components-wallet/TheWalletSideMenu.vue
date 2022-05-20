@@ -531,11 +531,9 @@ export default {
   .v-list-item,
   .v-input--switch {
     opacity: 0.7 !important;
-    filter: grayscale(1);
 
     &:hover {
       opacity: 1 !important;
-      filter: grayscale(0);
     }
   }
 
