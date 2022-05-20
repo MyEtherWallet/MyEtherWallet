@@ -13,7 +13,7 @@ const updateGasPrice = function ({ rootState, dispatch, getters, state }) {
   const web3 = rootState.wallet.web3;
   if (!getters.isEIP1559SupportedNetwork) {
     return web3.eth.getGasPrice().then(res => {
-      const modifiedGasPrice = toBNSafe(res).mul(
+      const modifiedGasPrice = toBNSafe(res).muln(
         getters.network.type.gasPriceMultiplier
       );
       return dispatch('setGasPrice', modifiedGasPrice.toString());
