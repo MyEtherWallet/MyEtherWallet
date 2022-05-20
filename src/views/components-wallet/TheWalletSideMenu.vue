@@ -72,13 +72,16 @@
 
             <v-divider vertical class="mx-3"></v-divider>
 
-            <v-list-item class="px-0" :to="{ name: ROUTES_WALLET.SWAP.NAME }">
+            <v-list-item
+              :class="[!hasSwap ? 'opacity--30 pointer-event--none' : '']"
+              class="px-0"
+              :to="{ name: ROUTES_WALLET.SWAP.NAME }"
+            >
               <div class="text-center mx-auto my-2">
                 <img
                   src="@/assets/images/icons/menu/icon-menu-swap.svg"
                   alt="Swap"
                   height="30"
-                  :class="[!hasSwap ? 'opacity--30' : '']"
                 />
                 <div class="white--text mew-label btn-title">Swap</div>
               </div>
