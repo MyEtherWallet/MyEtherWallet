@@ -91,6 +91,7 @@
 </template>
 
 <script>
+import MewNotification from '@/components/temp-fix-mew-components/MewNotification/MewNotification';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import Notification, {
   NOTIFICATION_TYPES,
@@ -107,6 +108,7 @@ import NonChainNotification from './handlers/nonChainNotification';
 
 export default {
   name: 'ModuleNotifications',
+  components: { MewNotification },
   mixins: [handlerNotification],
   props: {
     invertIcon: {
