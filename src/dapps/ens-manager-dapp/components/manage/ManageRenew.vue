@@ -8,7 +8,7 @@
     />
     <div class="font-weight-bold text-center">
       {{ $t('ens.request.estimated-price') }}: {{ rentPriceETH }}
-      {{ $t('common.currency.eth') }} (${{ rentPriceUSD }})
+      {{ $t('common.currency.eth') }} ({{ rentPriceUSD }})
     </div>
     <div class="d-flex align-center justify-center mt-3">
       <div>
@@ -103,7 +103,7 @@ export default {
       return this.getRentPrice(this.duration).then(resp => {
         if (resp) {
           this.rentPriceETH = formatFloatingPointValue(resp.eth).value;
-          this.rentPriceUSD = this.getFiatValue(resp.usd);
+          this.rentPriceUSD = this.getFiatValue()(resp.usd);
         }
       });
     },

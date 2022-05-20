@@ -85,14 +85,15 @@ const currencyConfig = (state, getters, rootState) => {
 const getFiatValue =
   (state, getters) =>
   /**
-   *
    * @param {Number|String} value
    * @param {Object} options
    * @param {Boolean} options.doNotLocalize - formats value to currency, no rate
    * @returns - Formatted localized currency
    */
   (value, options = {}) => {
-    const config = options.doNotLocalize ? {} : getters.currencyConfig;
+    const config = options.doNotLocalize
+      ? { currency: getters.currencyConfig.currency }
+      : getters.currencyConfig;
     return formatFiatValue(value, config).value;
   };
 
