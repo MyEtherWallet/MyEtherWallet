@@ -36,7 +36,12 @@
         <div class="mew-heading-3 textDark--text mb-5">
           Where should we send your crypto?
         </div>
-        <module-address-book :show-copy="false" @setAddress="setAddress" />
+        <module-address-book
+          ref="addressInput"
+          :enable-save-address="false"
+          :is-valid-address-func="isValidToAddress"
+          @setAddress="setAddress"
+        />
       </div>
       <div class="mb-2">You will get</div>
       <div v-if="!loading" class="mb-1">
