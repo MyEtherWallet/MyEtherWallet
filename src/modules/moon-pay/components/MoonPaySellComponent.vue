@@ -41,6 +41,18 @@
         :hint="persistentHintMessage"
       />
     </div>
+    <div v-if="!inWallet" class="mt-5">
+      <div class="mew-heading-3 textDark--text mb-5">
+        Where are you sending your crypto from?
+      </div>
+      <module-address-book
+        ref="addressInput"
+        :enable-save-address="false"
+        :is-valid-address-func="isValidToAddress"
+        label="From Address"
+        @setAddress="setAddress"
+      />
+    </div>
 
     <div class="pt-8 pb-13">
       <div class="d-flex align-center justify-space-between mb-2">
@@ -66,12 +78,15 @@
       btn-size="xlarge"
       has-full-width
       :disabled="disableSell"
+      :is-valid-address-func="isValidToAddress"
       @click.native="sell"
     />
   </div>
 </template>
 
 <script>
+import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
+import MultiCoinValidator from 'multicoin-address-validator';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import ButtonBalance from '@/core/components/AppButtonBalance';
 import { mapGetters, mapState } from 'vuex';
@@ -87,7 +102,7 @@ import Web3 from 'web3';
 import { toBNSafe } from '@/core/helpers/numberFormatHelper';
 export default {
   name: 'ModuleSellEth',
-  components: { ButtonBalance },
+  components: { ButtonBalance, ModuleAddressBook },
   props: {
     moonpayHandler: {
       type: Object,
@@ -119,7 +134,9 @@ export default {
       gasLimit: 21000,
       estimatingFees: true,
       maxBalance: '0',
-      selectedBalance: '0'
+      selectedBalance: '0',
+      toAddress: '',
+      validToAddress: false
     };
   },
   computed: {
@@ -220,7 +237,8 @@ export default {
         this.amount === '' ||
         BigNumber(this.amount).eq(0) ||
         this.loading ||
-        this.errorMessages !== ''
+        this.errorMessages !== '' ||
+        !this.actualValidAddress
       );
     },
     min() {
@@ -328,6 +346,12 @@ export default {
         .times(new BigNumber(10).pow(this.selectedCurrency.decimals))
         .toFixed(0);
       return toBNSafe(amount);
+    },
+    actualAddress() {
+      return this.inWallet ? this.address : this.toAddress;
+    },
+    actualValidAddress() {
+      return this.inWallet ? true : this.validToAddress;
     }
   },
   watch: {
@@ -360,6 +384,12 @@ export default {
     gasLimit(val) {
       this.sendHandler.setGasLimit(val);
     },
+    toAddress(val) {
+      if (this.inWallet || !this.actualValidAddress) return;
+      console.log('val', val);
+      this.sendHandler.setFrom(val);
+      this.fetchSellInfo();
+    },
     moonpayHandler: {
       handler: function () {
         this.sendHandler = new handlerSend();
@@ -376,9 +406,11 @@ export default {
   },
   methods: {
     getEthBalance() {
-      if (!this.inWallet) return;
+      if (!this.inWallet) {
+        return;
+      }
       const web3Instance = new Web3('https://nodes.mewapi.io/rpc/eth');
-      web3Instance.eth.getBalance(this.address).then(res => {
+      web3Instance.eth.getBalance(this.actualAddress).then(res => {
         this.fetchingBalance = false;
         this.selectedBalance = fromWei(res);
       });
@@ -391,7 +423,7 @@ export default {
         this.actualSelectedCurrency.contract
       );
       contract.methods
-        .balanceOf(this.address)
+        .balanceOf(this.actualAddress)
         .call()
         .then(res => {
           this.fetchingBalance = false;
@@ -408,7 +440,12 @@ export default {
       if (BigNumber(newVal).lt(0)) {
         return;
       }
-      if (newVal && !isEmpty(this.sendHandler) && this.isValidAmount) {
+      if (
+        newVal &&
+        !isEmpty(this.sendHandler) &&
+        this.isValidAmount &&
+        this.inWallet
+      ) {
         const newValue = BigNumber(newVal ? newVal : 0)
           .times(
             BigNumber(10).pow(
@@ -455,7 +492,7 @@ export default {
     },
     sell() {
       this.moonpayHandler
-        .sell(this.name, this.amount, this.address)
+        .sell(this.name, this.amount, this.actualAddress)
         .then(() => {
           this.amount = '0';
           this.close();
@@ -469,7 +506,9 @@ export default {
         });
     },
     fetchSellInfo() {
-      if (this.inWallet) {
+      console.log('actualValidAddress', this.actualValidAddress);
+      if (this.actualValidAddress) {
+        this.sendHandler.setFrom(this.actualAddress);
         this.sendHandler.setCurrency(this.actualSelectedCurrency);
         this.sendHandler.setValue(this.getCalculatedAmount);
         // eslint-disable-next-line
@@ -481,6 +520,7 @@ export default {
           .then(res => {
             this.estimatingFees = false;
             this.gasLimit = res;
+            console.log('estimated gas');
           })
           .catch(err => {
             Toast(err, {}, ERROR);
@@ -505,6 +545,15 @@ export default {
           this.loading = false;
           Toast(e, {}, ERROR);
         });
+    },
+    setAddress(address, valid) {
+      this.toAddress = address;
+      this.validToAddress = valid;
+      console.log('address', address);
+      console.log('validToAddress', valid);
+    },
+    isValidToAddress(address) {
+      return MultiCoinValidator.validate(address, this.selectedCurrency.name);
     }
   }
 };
