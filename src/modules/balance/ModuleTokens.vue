@@ -223,7 +223,14 @@ export default {
         item.pricef && priceUF.toString() !== '0'
           ? this.getFiatValue(item.pricef)
           : '';
-      newObj.tokenImg = item.img ? item.img : this.network.type.icon;
+
+      // Use eth.svg icon for ETH
+      if (item.symbol == 'ETH') {
+        newObj.tokenImg = require('@/assets/images/networks/eth.svg');
+      } else {
+        newObj.tokenImg = item.img ? item.img : this.network.type.icon;
+      }
+
       if (this.hasSwap) {
         newObj.callToAction = [
           {
