@@ -386,7 +386,6 @@ export default {
     },
     toAddress(val) {
       if (this.inWallet || !this.actualValidAddress) return;
-      console.log('val', val);
       this.sendHandler.setFrom(val);
       this.fetchSellInfo();
     },
@@ -506,21 +505,18 @@ export default {
         });
     },
     fetchSellInfo() {
-      console.log('actualValidAddress', this.actualValidAddress);
       if (this.actualValidAddress) {
         this.sendHandler.setFrom(this.actualAddress);
         this.sendHandler.setCurrency(this.actualSelectedCurrency);
         this.sendHandler.setValue(this.getCalculatedAmount);
         // eslint-disable-next-line
         this.sendHandler.setTo(ETH_DONATION_ADDRESS, 'TYPED');
-        console.log('sendHandler', this.sendHandler);
         this.estimatingFees = true;
         this.sendHandler
           .estimateGas()
           .then(res => {
             this.estimatingFees = false;
             this.gasLimit = res;
-            console.log('estimated gas');
           })
           .catch(err => {
             Toast(err, {}, ERROR);
@@ -549,8 +545,6 @@ export default {
     setAddress(address, valid) {
       this.toAddress = address;
       this.validToAddress = valid;
-      console.log('address', address);
-      console.log('validToAddress', valid);
     },
     isValidToAddress(address) {
       return MultiCoinValidator.validate(address, this.selectedCurrency.name);

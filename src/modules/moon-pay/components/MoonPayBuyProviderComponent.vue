@@ -264,7 +264,6 @@ export default {
         .then(res => {
           this.simplexQuote = Object.assign({}, res);
           this.loading = false;
-          console.log(this.simplexQuote);
         })
         .catch(e => {
           Toast(e, {}, ERROR);
