@@ -154,6 +154,7 @@ import NftManagerDetails from './components/NftManagerDetails';
 import NftManagerSend from './components/NftManagerSend';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { toBN, isAddress } from 'web3-utils';
+import { ETH } from '@/utils/networks/types';
 
 const MIN_GAS_LIMIT = 21000;
 
@@ -272,6 +273,21 @@ export default {
     balanceInWei() {
       this.hasMinEth();
     },
+    web3() {
+      this.loadingContracts = true;
+      this.loadingTokens = true;
+      this.onNftSend = false;
+      this.$router.push({ name: ROUTES_WALLET.NFT_MANAGER.NAME });
+      if (this.network.type.name === ETH.name) {
+        this.setUpNFT();
+      } else {
+        Toast(
+          `NFT Manager not supported in network: ${this.network.type.name}`,
+          {},
+          WARNING
+        );
+      }
+    },
     address() {
       this.loadingContracts = true;
       this.loadingTokens = true;
@@ -364,6 +380,7 @@ export default {
       this.$router.push({ name: ROUTES_WALLET.NFT_MANAGER.NAME });
     },
     async sendTx() {
+      console.log('huh?');
       if (this.isValid) {
         try {
           this.nft
@@ -388,7 +405,6 @@ export default {
             .catch(e => {
               Toast(e.message, {}, ERROR);
             });
-          this.selectedNft = {};
         } catch (e) {
           Toast(e.message, {}, WARNING);
         }

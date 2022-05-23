@@ -50,7 +50,9 @@ const EXCEPTIONS = [
   'vue',
   // update after release
   '@ethereumjs/common',
-  'ethers'
+  'ethers',
+  '@commitlint/config-conventional',
+  'commitlint'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
