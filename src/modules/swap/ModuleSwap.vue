@@ -389,8 +389,13 @@ export default {
   computed: {
     ...mapState('swap', ['prefetched', 'swapTokens']),
     ...mapState('wallet', ['web3', 'address', 'balance']),
-    ...mapState('global', ['gasPriceType', 'preferredCurrency']),
-    ...mapGetters('global', ['network', 'isEthNetwork', 'gasPriceByType']),
+    ...mapState('global', ['gasPriceType']),
+    ...mapGetters('global', [
+      'network',
+      'isEthNetwork',
+      'gasPriceByType',
+      'getFiatValue'
+    ]),
     ...mapGetters('wallet', [
       'balanceInETH',
       'tokensList',
@@ -619,14 +624,14 @@ export default {
         .map(token => {
           if (token.cgid) {
             const foundToken = this.getCoinGeckoTokenById(token.cgid);
-            foundToken.price = `$${foundToken.pricef}`;
+            foundToken.price = this.getFiatValue(foundToken.pricef);
             foundToken.name = token.symbol;
             return Object.assign(token, foundToken);
           }
           const foundToken = this.contractToToken(token.contract);
           if (foundToken) {
             foundToken.contract = token.contract;
-            foundToken.price = `$${foundToken.pricef}`;
+            foundToken.price = this.getFiatValue(foundToken.pricef);
             foundToken.isEth = token.isEth;
             foundToken.name = token.symbol;
             return foundToken;
@@ -652,8 +657,10 @@ export default {
         if (
           item.contract.toLowerCase() !==
           this.toTokenType?.contract?.toLowerCase()
-        )
+        ) {
+          item.price = this.getFiatValue(item.pricef);
           return item;
+        }
       });
       let tradebleWalletTokens = this.tokensList.filter(item => {
         for (const vt of validFromTokens) {
@@ -719,7 +726,7 @@ export default {
         const foundToken = this.contractToToken(token.contract);
         if (foundToken) {
           foundToken.contract = token.contract;
-          foundToken.price = this.currencyFormatter(foundToken.pricef);
+          foundToken.price = this.getFiatValue(foundToken.pricef);
           foundToken.isEth = token.isEth;
           foundToken.subtext = foundToken.name;
           foundToken.value = foundToken.name;
@@ -746,15 +753,15 @@ export default {
         .map(token => {
           if (token.cgid) {
             const foundToken = this.getCoinGeckoTokenById(token.cgid);
-            foundToken.price = `$${foundToken.pricef}`;
+            foundToken.price = this.getFiatValue(foundToken.pricef);
             return Object.assign(token, foundToken);
           }
           const foundToken = this.contractToToken(token.contract);
           if (foundToken) {
             token = Object.assign(token, foundToken);
-            token.price = `$${token.pricef}`;
+            token.price = this.getFiatValue(token.pricef);
           } else {
-            token.price = '0.00';
+            token.price = this.getFiatValue('0.00');
           }
           const name = token.name;
           token.subtext = name;
@@ -1085,23 +1092,15 @@ export default {
       this.isValidRefundAddr = false;
       this.setupSwap();
     },
-    // replace this once localization is merged
-    currencyFormatter(val) {
-      return new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: this.preferredCurrency,
-        currencyDisplay: 'symbol'
-      }).format(val.replace(',', ''));
-    },
     formatTokensForSelect(tokens) {
       if (!Array.isArray(tokens)) return [];
       return tokens.map(t => {
         t.totalBalance = t.hasOwnProperty('usdBalancef')
-          ? `$${t.usdBalancef}`
+          ? this.getFiatValue(t.usdBalancef)
           : '0.00';
         t.tokenBalance = t.hasOwnProperty('balancef') ? t.balancef : '0.00';
         t.price = t.hasOwnProperty('pricef')
-          ? this.currencyFormatter(t.pricef)
+          ? this.getFiatValue(t.pricef)
           : '0.00';
         t.name = t.hasOwnProperty('symbol') ? t.symbol : '';
         return t;

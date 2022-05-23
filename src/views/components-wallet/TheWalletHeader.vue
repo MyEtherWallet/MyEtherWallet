@@ -136,6 +136,7 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['identifier']),
+    ...mapState('global', ['online']),
     daysLeft() {
       const eventDate = moment(MOONPAY_OFFER_END);
       const todaysDate = moment();
