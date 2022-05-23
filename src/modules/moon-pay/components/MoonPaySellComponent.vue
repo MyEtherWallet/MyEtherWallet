@@ -74,7 +74,7 @@
     <!-- ============================================================== -->
     <mew-button
       class="mb-6"
-      title="OPEN MOONPAY"
+      title="SELL WITH MOONPAY"
       btn-size="xlarge"
       has-full-width
       :disabled="disableSell"
