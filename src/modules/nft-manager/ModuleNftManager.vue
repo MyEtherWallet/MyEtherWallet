@@ -380,7 +380,6 @@ export default {
       this.$router.push({ name: ROUTES_WALLET.NFT_MANAGER.NAME });
     },
     async sendTx() {
-      console.log('huh?');
       if (this.isValid) {
         try {
           this.nft
