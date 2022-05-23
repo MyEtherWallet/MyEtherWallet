@@ -7,7 +7,7 @@ import contentHash from 'content-hash';
 import EventEmitter from 'events';
 import vuexStore from '@/core/store';
 import { mapGetters, mapState } from 'vuex';
-import { toBN, toHex } from 'web3-utils';
+import { toBN, toHex, fromWei, sha3 } from 'web3-utils';
 import { estimateGasList } from '@/core/helpers/gasPriceHelper.js';
 const bip39 = require('bip39');
 
@@ -15,8 +15,8 @@ export default class PermanentNameModule extends ENSManagerInterface {
   constructor(name, address, network, web3, ens, expiry) {
     super(name, address, network, web3, ens);
     this.$store = vuexStore;
-    Object.assign(this, mapGetters('global', ['gasPriceByType']));
     Object.assign(this, mapState('global', ['gasPriceType']));
+    Object.assign(this, mapGetters('global', ['gasPriceByType']));
     this.expiryTime = expiry;
     this.secretPhrase = '';
     this.expiration = null;
@@ -65,7 +65,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
     // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve, reject) => {
       const txns = this.getTransactions(toAddress).map(item => {
-        //delete item['gasPrice'];
+        delete item['gasPrice'];
         return item;
       });
       try {
@@ -101,6 +101,29 @@ export default class PermanentNameModule extends ENSManagerInterface {
         .rentPrice(this.parsedHostName, this.getActualDuration(duration))
         .call();
       return rentPrice;
+    }
+  }
+  async totalRenewCost(duration) {
+    try {
+      const gasPrice = this.gasPriceByType()(this.gasPriceType());
+      const rentPrice = await this.getRentPrice(duration);
+      const withFivePercent = BigNumber(rentPrice)
+        .times(1.05)
+        .integerValue()
+        .toFixed();
+      const txObj = {
+        from: this.address,
+        value: withFivePercent
+      };
+      const extraFee = await this.registrarControllerContract.methods
+        .renew(this.parsedHostName, this.getActualDuration(duration))
+        .estimateGas(txObj);
+      if (!extraFee) {
+        return false;
+      }
+      return fromWei(toBN(gasPrice).add(toBN(extraFee)));
+    } catch (e) {
+      return false;
     }
   }
 
@@ -155,17 +178,18 @@ export default class PermanentNameModule extends ENSManagerInterface {
       );
     }
     this.secretPhrase = words.join(' ');
+    return this.secretPhrase;
   }
 
   createCommitment() {
-    const utils = this.web3.utils;
-    const txObj = { from: this.address };
+    const gasPrice = this.gasPriceByType()(this.gasPriceType());
+    const txObj = { from: this.address, gasPrice: gasPrice };
     const promiEvent = new EventEmitter();
     this.registrarControllerContract.methods
       .makeCommitmentWithConfig(
         this.parsedHostName,
         this.address,
-        utils.sha3(this.secretPhrase),
+        sha3(this.secretPhrase),
         this.publicResolverAddress,
         this.address
       )
@@ -183,6 +207,28 @@ export default class PermanentNameModule extends ENSManagerInterface {
           .catch(err => promiEvent.emit('error', err));
       });
     return promiEvent;
+  }
+
+  async getCommitmentFees() {
+    try {
+      const gasPrice = this.gasPriceByType()(this.gasPriceType());
+      const commitTxObj = { from: this.address };
+      const createCommitment = await this.registrarControllerContract.methods
+        .makeCommitmentWithConfig(
+          this.parsedHostName,
+          this.address,
+          sha3(this.secretPhrase),
+          this.publicResolverAddress,
+          this.address
+        )
+        .call();
+      const gasLimit = await this.registrarControllerContract.methods
+        .commit(createCommitment)
+        .estimateGas(commitTxObj);
+      return fromWei(toBN(gasPrice).mul(toBN(gasLimit)));
+    } catch (e) {
+      return e;
+    }
   }
 
   async getMinimumAge() {
@@ -295,5 +341,41 @@ export default class PermanentNameModule extends ENSManagerInterface {
         .on('receipt', receipt => promiEvent.emit('receipt', receipt));
     });
     return promiEvent;
+  }
+
+  async getRegFees(duration, balance) {
+    try {
+      const gasPrice = this.gasPriceByType()(this.gasPriceType());
+      const rentPrice = await this.getRentPrice(duration);
+      const hasBalance = new BigNumber(balance).gte(rentPrice);
+      if (hasBalance) {
+        const rentPriceWithFivePercent = new BigNumber(rentPrice)
+          .times(1.05)
+          .integerValue()
+          .toFixed();
+        const txObj = {
+          from: this.address,
+          value: rentPriceWithFivePercent
+        };
+        const gasAmt = await this.registrarControllerContract.methods
+          .registerWithConfig(
+            this.parsedHostName,
+            this.address,
+            this.getActualDuration(duration),
+            sha3(this.secretPhrase),
+            this.publicResolverAddress,
+            this.address
+          )
+          .estimateGas(txObj);
+        if (!gasAmt) {
+          return false;
+        }
+        return fromWei(
+          toBN(gasAmt).mul(toBN(gasPrice)).add(toBN(rentPriceWithFivePercent))
+        );
+      }
+    } catch (e) {
+      return false;
+    }
   }
 }

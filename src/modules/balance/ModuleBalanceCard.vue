@@ -103,8 +103,7 @@
           'mew-subtitle text-shadow white--text mt-5 mb-4'
         ]"
       >
-        <span v-if="!isTestNetwork" style="padding-right: 2px">$</span
-        >{{ totalWalletBalance }}
+        {{ totalWalletBalance }}
         <span v-if="isTestNetwork" style="padding-left: 2px; font-size: 14px">{{
           network.type.currencyName
         }}</span>
@@ -246,10 +245,7 @@ import { mapGetters, mapActions, mapState } from 'vuex';
 import clipboardCopy from 'clipboard-copy';
 import { Toast, INFO, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
-import {
-  formatFiatValue,
-  formatFloatingPointValue
-} from '@/core/helpers/numberFormatHelper';
+import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { isEmpty } from 'lodash';
 import ModuleAccessWalletHardware from '@/modules/access-wallet/ModuleAccessWalletHardware';
 import ModuleAccessWalletSoftware from '@/modules/access-wallet/ModuleAccessWalletSoftware';
@@ -275,7 +271,6 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('wallet', ['balanceInWei', 'tokensList']),
     ...mapState('wallet', [
       'address',
       'instance',
@@ -283,12 +278,9 @@ export default {
       'isHardware',
       'isOfflineApp'
     ]),
-    ...mapGetters('external', [
-      'fiatValue',
-      'balanceFiatValue',
-      'totalTokenFiatValue'
-    ]),
-    ...mapGetters('global', ['isEthNetwork', 'network', 'isTestNetwork']),
+    ...mapGetters('external', ['totalTokenFiatValue']),
+    ...mapGetters('global', ['network', 'isTestNetwork', 'getFiatValue']),
+    ...mapGetters('wallet', ['tokensList', 'balanceInETH']),
     /**
      * verify address title
      * returns @String
@@ -374,7 +366,7 @@ export default {
     totalWalletBalance() {
       if (!this.isTestNetwork) {
         const total = this.totalTokenBalance;
-        return formatFiatValue(total).value;
+        return this.getFiatValue(total);
       }
       return this.walletChainBalance;
     },
