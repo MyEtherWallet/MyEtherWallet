@@ -8,7 +8,7 @@
     />
     <div class="font-weight-bold text-center">
       {{ $t('ens.request.estimated-price') }}: {{ rentPriceETH }}
-      {{ $t('common.currency.eth') }} (${{ rentPriceUSD }})
+      {{ $t('common.currency.eth') }} ({{ rentPriceUSD }})
     </div>
     <div class="d-flex align-center justify-center mt-3">
       <div>
@@ -36,10 +36,8 @@
 </template>
 
 <script>
-import {
-  formatFloatingPointValue,
-  formatFiatValue
-} from '@/core/helpers/numberFormatHelper';
+import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
+import { mapGetters } from 'vuex';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 export default {
   mixins: [buyMore],
@@ -100,11 +98,12 @@ export default {
     this.getTotalRenewFeeOnly(1);
   },
   methods: {
+    ...mapGetters('global', ['getFiatValue']),
     rentPrice() {
       return this.getRentPrice(this.duration).then(resp => {
         if (resp) {
           this.rentPriceETH = formatFloatingPointValue(resp.eth).value;
-          this.rentPriceUSD = formatFiatValue(resp.usd).value;
+          this.rentPriceUSD = this.getFiatValue()(resp.usd);
         }
       });
     },

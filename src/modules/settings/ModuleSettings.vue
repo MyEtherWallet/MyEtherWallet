@@ -57,6 +57,9 @@
           </div>
         </div>
       </template>
+      <template #panelBody5>
+        <settings-locale-config />
+      </template>
       <!-- <template #panelBody5>
         <notifications />
       </template> -->
@@ -79,6 +82,7 @@
 import SettingsImportConfig from './components/SettingsImportConfig';
 import SettingsExportConfig from './components/SettingsExportConfig';
 import SettingsGasPrice from './components/SettingsGasPrice';
+import SettingsLocaleConfig from './components/SettingsLocaleConfig.vue';
 import AddressBookAddEdit from '@/modules/address-book/components/AddressBookAddEdit';
 import handlerSettings from './handler/handlerSettings';
 import { mapState } from 'vuex';
@@ -92,7 +96,8 @@ export default {
     SettingsImportConfig,
     SettingsExportConfig,
     SettingsGasPrice,
-    AddressBookAddEdit
+    AddressBookAddEdit,
+    SettingsLocaleConfig
   },
   mixins: [gasPriceMixin],
   beforeRouteLeave(to, from, next) {
@@ -162,6 +167,9 @@ export default {
         },
         {
           name: 'Contact addresses'
+        },
+        {
+          name: 'Currency settings'
         }
       ];
     },
