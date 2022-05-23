@@ -28,10 +28,17 @@ class WalletInterface {
       const _privKey = Buffer.isBuffer(key)
         ? key
         : getBufferFromHex(sanitizeHex(key));
-      if (!isValidPrivate(_privKey))
-        throw new Error(
-          'Private key does not satisfy the curve requirements (ie. it is invalid)'
-        );
+
+      try {
+        if (_privKey.length !== 32 || !isValidPrivate(_privKey)) {
+          throw new Error(
+            'Private key does not satisfy the curve requirements (ie. it is invalid)'
+          );
+        }
+      } catch (e) {
+        throw new Error(e);
+      }
+
       this.privateKey = _privKey;
       this.publicKey = privateToPublic(_privKey);
       this.isPubOnly = false;

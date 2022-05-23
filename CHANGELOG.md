@@ -1,3 +1,49 @@
+### Release v6.5.4-hotfix.1
+
+### fix
+
+* fix offline generation on builds [#3838](https://github.com/MyEtherWallet/MyEtherWallet/pull/3838)
+
+### Release v6.5.4
+
+### devop
+
+* ethblocks update [#3604](https://github.com/MyEtherWallet/MyEtherWallet/pull/3604)
+* added offline helper [#3612](https://github.com/MyEtherWallet/MyEtherWallet/pull/3612)
+* added informative popup for bluetooth requirement [#3776](https://github.com/MyEtherWallet/MyEtherWallet/pull/3776)
+* add new nodes [#3798](https://github.com/MyEtherWallet/MyEtherWallet/pull/3798)
+* add new nodes [#3801](https://github.com/MyEtherWallet/MyEtherWallet/pull/3801)
+* add unit.js [#3822](https://github.com/MyEtherWallet/MyEtherWallet/pull/3822)
+
+### feat
+
+* feature integrate ledger nano x [#3797](https://github.com/MyEtherWallet/MyEtherWallet/pull/3797)
+* offline app [#3484](https://github.com/MyEtherWallet/MyEtherWallet/pull/3484)
+* dynamic data for article links [#3777](https://github.com/MyEtherWallet/MyEtherWallet/pull/3777)
+* automated the year displayed and dashboard version number links to github release [#3789](https://github.com/MyEtherWallet/MyEtherWallet/pull/3789)
+* disabled ENS transfer button if there is not enough balance [#3802](https://github.com/MyEtherWallet/MyEtherWallet/pull/3802)
+* created estimateGasList function [#3807](https://github.com/MyEtherWallet/MyEtherWallet/pull/3807)
+
+### fix
+
+* replace ens management header to new dapp header [#3661](https://github.com/MyEtherWallet/MyEtherWallet/pull/3661)
+* fix moon pay popup ui [#3748](https://github.com/MyEtherWallet/MyEtherWallet/pull/3748)
+* fix hardware wallet custom path [#3770](https://github.com/MyEtherWallet/MyEtherWallet/pull/3770)
+* fix erc owner balance token not an object [#3786](https://github.com/MyEtherWallet/MyEtherWallet/pull/3786)
+* fix failed to fetch pool api [#3787](https://github.com/MyEtherWallet/MyEtherWallet/pull/3787)
+* fix missing currency issue [#3804](https://github.com/MyEtherWallet/MyEtherWallet/pull/3804)
+* Merge response data when fetching in Moonpay sell [#3809](https://github.com/MyEtherWallet/MyEtherWallet/pull/3809)
+* Check for uploaded file type in the Keystore Generator tool [#3812](https://github.com/MyEtherWallet/MyEtherWallet/pull/3812)
+* fix invalid remainder, txn underpriced, txn and exec reverted sentry errors [#3814](https://github.com/MyEtherWallet/MyEtherWallet/pull/3814)
+* fix sentry type error json rpc request [#3816](https://github.com/MyEtherWallet/MyEtherWallet/pull/3816)
+* Check public key buffer length [#3817](https://github.com/MyEtherWallet/MyEtherWallet/pull/3817)
+* Selecting other currency in Sell shouldn't crash browser anymore [#3823](https://github.com/MyEtherWallet/MyEtherWallet/pull/3823)
+* Error message in Send Module will sometimes be null [#3824](https://github.com/MyEtherWallet/MyEtherWallet/pull/3824)
+* Clears the sell input form when changing currency in Sell [#3825](https://github.com/MyEtherWallet/MyEtherWallet/pull/3825)
+* fix ens dapp balance check [#3710](https://github.com/MyEtherWallet/MyEtherWallet/pull/3710) [#3710](https://github.com/MyEtherWallet/MyEtherWallet/pull/3710)
+* fix Cannot read properties of undefined [#3713](https://github.com/MyEtherWallet/MyEtherWallet/pull/3713)
+* fix BSC undefined swap issue [#3828](https://github.com/MyEtherWallet/MyEtherWallet/pull/3828)
+
 ### Release v6.5.3
 
 ### devop

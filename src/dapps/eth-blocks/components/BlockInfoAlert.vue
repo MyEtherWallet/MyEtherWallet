@@ -326,7 +326,6 @@ import { fromWei } from 'web3-utils';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import {
   formatIntegerToString,
-  formatFiatValue,
   formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
 import BigNumber from 'bignumber.js';
@@ -382,7 +381,12 @@ export default {
     /**
      * STORE GETTERS
      */
-    ...mapGetters('global', ['network', 'isTestNetwork', 'gasPrice']),
+    ...mapGetters('global', [
+      'network',
+      'isTestNetwork',
+      'getFiatValue',
+      'gasPrice'
+    ]),
     ...mapGetters('external', ['fiatValue']),
     ...mapState('ethBlocksTxs', ['cart']),
     /**
@@ -483,10 +487,10 @@ export default {
      * Property returns formatted FIAT price
      */
     formattedFiatTxFee() {
-      const value = formatFiatValue(
+      const value = this.getFiatValue(
         BigNumber(fromWei(this.gasPrice)).times(this.fiatValue)
-      ).value;
-      return `${'$' + value}`;
+      );
+      return value;
     },
     /**
      * @returns{string}
@@ -500,27 +504,10 @@ export default {
      * Property returns formatted FIAT price
      */
     formatFiatPrice() {
-      const value = formatFiatValue(
+      const value = this.getFiatValue(
         BigNumber(fromWei(this.price)).times(this.fiatValue)
-      ).value;
-      return `${'$' + value}`;
-    },
-    /**
-     * @returns{string}
-     * Property returns formatted Total price
-     */
-    formattedFiatTotalPrice() {
-      return Number(this.txFee) + Number(this.formattedPrice);
-    },
-    /**
-     * @returns{string}
-     * Property returns formatted Total price in ETH
-     */
-    formattedTotalPrice() {
-      const tx = Number(this.formattedFiatTxFee.substring(1));
-      const price = Number(this.formatFiatPrice.substring(1));
-      const total = (tx + price).toFixed(2);
-      return `${'$' + total}`;
+      );
+      return `~${value}`;
     },
     /**
      * Property returns rarible link to a block based on block number and current netowrk

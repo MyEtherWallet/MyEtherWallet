@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "6.5.3",
+  "version": "6.5.4-hotfix.1",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build:offline": "WEBPACK_INTEGRITY=false npm run build:hash",
@@ -73,7 +73,7 @@
     "crypto": "1.0.1",
     "ethereum-block-by-date": "1.4.5",
     "ethers": "5.6.5",
-    "graphql": "16.4.0",
+    "graphql": "16.5.0",
     "graphql-tag": "2.12.6",
     "highcharts": "10.1.0",
     "highcharts-vue": "1.4.0",
@@ -115,7 +115,7 @@
     "axios": "0.27.2",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "10.1.0",
-    "babel-jest": "27.5.1",
+    "babel-jest": "28.1.0",
     "bc-vault-js": "2.1.1",
     "bignumber.js": "9.0.2",
     "bip39": "3.0.4",
@@ -178,7 +178,6 @@
     "npm": ">= 6.0.0"
   },
   "resolutions": {
-    "ansi-regex": "3.0.1",
     "engine.io": "4.1.2",
     "glob-parent": "5.1.2",
     "follow-redirects": "1.14.9",
@@ -194,7 +193,6 @@
     "elliptic": "6.5.4",
     "dns-packet": "5.2.2",
     "trim-newlines": "3.0.1",
-    "css-what": "5.0.1",
     "normalize-url": "6.0.1",
     "scrypt.js": "0.3.0",
     "simple-get": "4.0.1",
@@ -202,9 +200,6 @@
     "socket.io-parser": "3.4.1",
     "keccak": "3.0.1",
     "diff": "3.5.0",
-    "tar": "4.4.18",
-    "async": "3.2.2",
-    "moment": "2.29.3",
     "ejs": "3.1.7"
   },
   "license": "MIT",

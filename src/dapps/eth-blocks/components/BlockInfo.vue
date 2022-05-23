@@ -262,13 +262,13 @@ import { fromWei } from 'web3-utils';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import {
   formatIntegerToString,
-  formatFiatValue,
   formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
 import BigNumber from 'bignumber.js';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { some } from 'lodash';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
+import { currencyToNumber } from '@/core/helpers/localization';
 const RARIBLE_CONTRACT = 'token/0x01234567bac6ff94d7e4f0ee23119cf848f93245:';
 const RARIBLE = 'https://rarible.com/';
 const RARIBLE_TOKEN = `${RARIBLE}${RARIBLE_CONTRACT}`;
@@ -323,7 +323,8 @@ export default {
       'network',
       'isTestNetwork',
       'swapLink',
-      'gasPrice'
+      'gasPrice',
+      'getFiatValue'
     ]),
     ...mapGetters('external', ['fiatValue']),
     ...mapState('ethBlocksTxs', ['cart']),
@@ -440,10 +441,10 @@ export default {
      * Property returns formatted FIAT price
      */
     formattedFiatTxFee() {
-      const value = formatFiatValue(
+      const value = this.getFiatValue(
         BigNumber(fromWei(this.gasPrice)).times(this.fiatValue)
-      ).value;
-      return `${'$' + value}`;
+      );
+      return value;
     },
     /**
      * @returns{string}
@@ -457,10 +458,10 @@ export default {
      * Property returns formatted FIAT price
      */
     formatFiatPrice() {
-      const value = formatFiatValue(
+      const value = this.getFiatValue(
         BigNumber(fromWei(this.price)).times(this.fiatValue)
-      ).value;
-      return `${'$' + value}`;
+      );
+      return value;
     },
     /**
      * @returns{string}
@@ -476,9 +477,11 @@ export default {
      */
     formattedTotalPrice() {
       const tx = Number(this.formattedFiatTxFee.substring(1));
-      const price = Number(this.formatFiatPrice.substring(1));
-      const total = (tx + price).toFixed(2);
-      return `${'$' + total}`;
+      const price = currencyToNumber(this.formatFiatPrice.substring(1));
+      const total = this.getFiatValue((tx + price).toFixed(2), {
+        doNotLocalize: true
+      });
+      return total;
     },
     /**
      * Property returns rarible link to a block based on block number and current netowrk

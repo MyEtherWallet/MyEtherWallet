@@ -9,7 +9,8 @@
     "dns-sec-not-found": "DNSSEC НЕ НАЙДЕН!",
     "balance-too-low": "Balance too low!",
     "txt-not-supported": "Not text record support!",
-    "not-the-owner": "You are not the owner!"
+    "not-the-owner": "You are not the owner!",
+    "no-funds-to-commit": "Balance Too Low: Not enough funds to complete committment & registration!"
   },
   "warning": {
     "contract-not-ready": "Контракт еще не готов, транзакция может не пройти.",

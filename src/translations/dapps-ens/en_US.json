@@ -9,6 +9,8 @@
     "something-went-wrong": "Something went wrong! Please try again.",
     "dns-sec-not-found": "DNSSEC NOT FOUND!",
     "balance-too-low": "Balance too low!",
+    "not-enough-funds-to-register": "Not enough funds to register domain!",
+    "not-enough-funds-to-transfer": "Not enough funds to transfer domain!",
     "txt-not-supported": "Not text record support!",
     "not-the-owner": "You are not the owner!",
     "error-getting-ipfs-hash": "Error getting IPFS Hash!",
