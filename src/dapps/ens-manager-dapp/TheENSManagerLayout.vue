@@ -437,7 +437,12 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('global', ['network', 'gasPrice', 'gasPriceByType']),
+    ...mapGetters('global', [
+      'network',
+      'gasPrice',
+      'gasPriceByType',
+      'getFiatValue'
+    ]),
     ...mapGetters('external', ['fiatValue']),
     ...mapState('wallet', ['balance', 'address', 'web3']),
     ...mapState('global', ['gasPriceType']),
@@ -795,9 +800,9 @@ export default {
       const commitFeeOnly = await this.nameHandler.getCommitmentFees(); // ETH
       this.commitFeeInEth = commitFeeOnly.toString();
       this.commitFeeInWei = toWei(commitFeeOnly);
-      this.commitFeeUsd = new BigNumber(this.commitFeeInEth)
-        .times(this.fiatValue)
-        .toFixed(2);
+      this.commitFeeUsd = this.getFiatValue(
+        new BigNumber(this.commitFeeInEth).times(this.fiatValue).toFixed(2)
+      );
       if (toBN(this.commitFeeInWei).gte(this.balance)) {
         // commit fee vs current user balance in wei
         this.notEnoughFunds = true;

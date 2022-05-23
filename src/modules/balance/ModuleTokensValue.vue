@@ -7,7 +7,7 @@
         </v-col>
         <v-col cols="12">
           <div v-if="!initialLoad" class="mew-heading-3">
-            ${{ totalTokenValues }}
+            {{ totalTokenValues }}
           </div>
           <v-skeleton-loader
             v-else
@@ -41,7 +41,7 @@
     >
       <template #dialogBody>
         <div class="mew-heading-3 mb-3 black--text">
-          Total Value: ${{ totalTokenValues }}
+          Total Value: {{ totalTokenValues }}
         </div>
         <module-tokens class="pa-0" dense @trade="handleTokensPopup" />
       </template>
@@ -51,7 +51,6 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex';
-import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 import AppModal from '@/core/components/AppModal';
 import ModuleTokens from '@/modules/balance/ModuleTokens';
 export default {
@@ -64,13 +63,13 @@ export default {
   computed: {
     ...mapGetters('wallet', ['tokensList']),
     ...mapState('wallet', ['initialLoad']),
-
     ...mapGetters('external', ['totalTokenFiatValue']),
+    ...mapGetters('global', ['getFiatValue']),
     tokenTitle() {
       return `My Token${this.tokensList.length > 1 ? 's' : ''} Value`;
     },
     totalTokenValues() {
-      return formatFiatValue(this.totalTokenFiatValue).value;
+      return this.getFiatValue(this.totalTokenFiatValue);
     },
     tokenImages() {
       return this.tokensList
