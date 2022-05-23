@@ -88,7 +88,7 @@
               </div>
               <div class="text-right">
                 <div class="">{{ ethTotalFee }} ETH</div>
-                <div class="mew-label textLight--text">${{ gasPriceFiat }}</div>
+                <div class="mew-label textLight--text">{{ gasPriceFiat }}</div>
               </div>
             </div>
           </div>
@@ -186,10 +186,7 @@ import { mapGetters, mapState, mapActions } from 'vuex';
 import { find, clone, isEmpty } from 'lodash';
 import { fromWei } from 'web3-utils';
 import { EventBus } from '@/core/plugins/eventBus';
-import {
-  formatFiatValue,
-  formatFloatingPointValue
-} from '@/core/helpers/numberFormatHelper';
+import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import Notification, {
   NOTIFICATION_TYPES,
@@ -243,7 +240,12 @@ export default {
   },
   computed: {
     ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
-    ...mapGetters('global', ['network', 'isEthNetwork', 'gasPriceByType']),
+    ...mapGetters('global', [
+      'network',
+      'isEthNetwork',
+      'gasPriceByType',
+      'getFiatValue'
+    ]),
     ...mapGetters('external', ['fiatValue']),
     ...mapState('wallet', ['web3', 'address']),
     ...mapState('stakewise', ['rethBalance', 'sethBalance']),
@@ -291,8 +293,8 @@ export default {
     gasPriceFiat() {
       const gasPrice = BigNumber(this.ethTotalFee);
       return gasPrice.gt(0)
-        ? formatFiatValue(gasPrice.times(this.fiatValue).toFixed()).value
-        : '0';
+        ? this.getFiatValue(gasPrice.times(this.fiatValue).toFixed())
+        : this.getFiatValue('0');
     },
     hasEnoughBalance() {
       return BigNumber(this.ethTotalFee).lte(this.balanceInETH);

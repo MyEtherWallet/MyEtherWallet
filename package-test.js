@@ -51,6 +51,9 @@ const EXCEPTIONS = [
   // update after release
   '@ethereumjs/common',
   'ethers',
+  '@actions/github',
+  '@shapeshiftoss/hdwallet-core',
+  '@shapeshiftoss/hdwallet-keepkey-webusb',
   '@commitlint/config-conventional',
   'commitlint'
 ];
