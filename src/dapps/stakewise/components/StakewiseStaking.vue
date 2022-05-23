@@ -22,7 +22,7 @@
           {{ formattedBalance }}
         </div>
         <div v-if="ethvmSupport" class="textLight--text">
-          ${{ sethBalanceFiat }}
+          {{ sethBalanceFiat }}
         </div>
       </div>
     </div>
@@ -143,10 +143,7 @@ import { mapActions, mapGetters, mapState } from 'vuex';
 import { fromWei } from 'web3-utils';
 import BigNumber from 'bignumber.js';
 import { STAKEWISE_ROUTES } from '../configsRoutes';
-import {
-  formatFloatingPointValue,
-  formatFiatValue
-} from '@/core/helpers/numberFormatHelper';
+import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 export default {
   name: 'ModuleSideStaking',
@@ -172,7 +169,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('global', ['isEthNetwork', 'network']),
+    ...mapGetters('global', ['isEthNetwork', 'network', 'getFiatValue']),
     ...mapGetters('wallet', ['tokensList']),
     ...mapGetters('external', ['fiatValue']),
     ...mapState('wallet', ['web3', 'address', 'balance']),
@@ -216,9 +213,9 @@ export default {
       return formatFloatingPointValue(this.sethBalance).value;
     },
     sethBalanceFiat() {
-      return formatFiatValue(
+      return this.getFiatValue(
         BigNumber(this.sethBalance).times(this.fiatValue).toString()
-      ).value;
+      );
     },
     seth2Contract() {
       return this.isEthNetwork ? SETH2_MAINNET_CONTRACT : SETH2_GOERLI_CONTRACT;
