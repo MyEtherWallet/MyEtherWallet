@@ -198,7 +198,6 @@ export default {
       this.$emit('close', false);
     },
     setSelectedCurrency(e) {
-      console.log('setSelectedCurrency', e);
       this.selectedCurrency = e;
     },
     setSelectedFiat(e) {
@@ -209,7 +208,6 @@ export default {
     },
     setBuyObj(val) {
       this.buyObj = val;
-      console.log('buyObj', this.buyObj);
     },
     reset() {
       this.selectedCurrency = this.defaltCurrency;
