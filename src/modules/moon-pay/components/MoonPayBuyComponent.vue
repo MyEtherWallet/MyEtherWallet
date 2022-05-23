@@ -32,17 +32,6 @@
           class="selectedFiat"
         />
       </div>
-      <div v-if="!inWallet" class="mt-5">
-        <div class="mew-heading-3 textDark--text mb-5">
-          Where should we send your crypto?
-        </div>
-        <module-address-book
-          ref="addressInput"
-          :enable-save-address="false"
-          :is-valid-address-func="isValidToAddress"
-          @setAddress="setAddress"
-        />
-      </div>
       <div class="mb-2">You will get</div>
       <div v-if="!loading" class="mb-1">
         <div class="d-flex mb-1 align-center justify-space-between">
@@ -73,6 +62,17 @@
       <div v-else class="mb-1">
         <v-skeleton-loader max-width="200px" type="heading" />
       </div>
+      <div v-if="!inWallet" class="mt-5">
+        <div class="mew-heading-3 textDark--text mb-5">
+          Where should we send your crypto?
+        </div>
+        <module-address-book
+          ref="addressInput"
+          :enable-save-address="false"
+          :is-valid-address-func="isValidToAddress"
+          @setAddress="setAddress"
+        />
+      </div>
     </div>
     <div class="mb-1">
       <mew-button
@@ -99,6 +99,7 @@ import { fromWei } from 'web3-utils';
 import Web3 from 'web3';
 import nodeList from '@/utils/networks';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
+import { toBase } from '@/core/helpers/unit';
 export default {
   name: 'ModuleBuyEth',
   components: { ModuleAddressBook },
@@ -128,11 +129,13 @@ export default {
       },
       fetchedData: {},
       currencyRates: [],
-      amount: '100',
+      amount: '300',
       toAddress: '',
       validToAddress: false,
       gasPrice: '0',
-      web3Connections: {}
+      web3Connections: {},
+      simplexQuote: {},
+      showMoonpay: true
     };
   },
   computed: {
@@ -333,6 +336,11 @@ export default {
       return !isEmpty(this.fetchedData);
     },
     cryptoToFiat() {
+      return this.showMoonpay
+        ? this.moonpayCryptoAmount
+        : this.simplexQuote.crypto_amount;
+    },
+    moonpayCryptoAmount() {
       return formatFloatingPointValue(
         BigNumber(this.plusFee).div(this.priceOb.price).toString()
       ).value;
@@ -380,6 +388,11 @@ export default {
         return foundLimit ? BigNumber(foundLimit.limit.min) : BigNumber(30);
       }
       return BigNumber(30);
+    },
+    hideSimplex() {
+      return (
+        this.selectedCryptoName === 'USDC' || this.selectedCryptoName === 'USDT'
+      );
     }
   },
   watch: {
@@ -395,7 +408,7 @@ export default {
     selectedFiat: {
       handler: function (newVal, oldVal) {
         if (!isEqual(newVal, oldVal)) {
-          this.amount = newVal.name != 'JPY' ? '100' : '10000';
+          this.amount = newVal.name != 'JPY' ? '300' : '30000';
           this.$emit('selectedFiat', newVal);
         }
       },
@@ -421,7 +434,13 @@ export default {
           this.loading = true;
         } else {
           this.loading = false;
+          this.getSimplexQuote();
         }
+      }
+    },
+    validToAddress: {
+      handler: function (newVal) {
+        if (newVal) this.getSimplexQuote();
       }
     }
   },
@@ -482,10 +501,49 @@ export default {
         .catch(e => {
           Toast(e, {}, ERROR);
         });
+      this.getSimplexQuote();
+    },
+    getSimplexQuote() {
+      if (this.hideSimplex || !this.actualValidAddress) return;
+      this.loading = true;
+      this.simplexQuote = {};
+      this.moonpayHandler
+        .getSimplexQuote(
+          this.selectedCryptoName,
+          this.selectedFiatName,
+          this.amount,
+          this.actualAddress
+        )
+        .then(res => {
+          this.simplexQuote = Object.assign({}, res);
+          this.loading = false;
+        })
+        .catch(e => {
+          Toast(e, {}, ERROR);
+        });
+      this.compareQuotes();
+    },
+    compareQuotes() {
+      const moonpayAmount = toBase(
+        this.moonpayCryptoAmount ? this.moonpayCryptoAmount : 0,
+        this.selectedCurrency.decimals
+      );
+      const simplexAmount = toBase(
+        this.simplexQuote.crypto_amount ? this.simplexQuote.crypto_amount : 0,
+        this.selectedCurrency.decimals
+      );
+      const moonpayMax = this.max.moonpay;
+      const isLT = (num, num2) => {
+        return num.lt(BigNumber(num2));
+      };
+      // Moonpay has better rate and is not above max
+      this.showMoonpay = isLT(moonpayMax, this.amount)
+        ? false
+        : moonpayAmount > simplexAmount;
     },
     buy() {
       const buyObj = {
-        cryptoToFiat: this.cryptoToFiat,
+        cryptoToFiat: this.moonpayCryptoAmount,
         selectedCryptoName: this.selectedCryptoName,
         plusFeeF: this.plusFeeF,
         includesFeeText: this.includesFeeText,
@@ -493,7 +551,8 @@ export default {
         dailyLimit: this.dailyLimit,
         monthlyLimit: this.monthlyLimit,
         fiatAmount: this.amount,
-        address: this.actualAddress
+        address: this.actualAddress,
+        simplexQuote: this.simplexQuote
       };
       this.checkMoonPayMax();
       this.$emit('setBuyObj', buyObj);

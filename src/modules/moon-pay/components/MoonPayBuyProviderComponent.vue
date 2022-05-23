@@ -93,15 +93,15 @@
       <div v-if="!loading" class="mb-3">
         <div class="d-flex mb-1 align-center justify-space-between">
           <div class="d-flex mew-heading-3 textDark--text">
-            {{ simplexQuote.crypto_amount }}
+            {{ buyObj.simplexQuote.crypto_amount }}
             <span class="mew-heading-3 pl-1">{{
-              simplexQuote.crypto_currency
+              buyObj.simplexQuote.crypto_currency
             }}</span>
           </div>
         </div>
         <div class="d-flex align-center">
           <div class="mr-1 textDark--text">
-            ≈ {{ currencyFormatter(simplexQuote.fiat_base_amount) }}
+            ≈ {{ currencyFormatter(buyObj.simplexQuote.fiat_base_amount) }}
           </div>
           <mew-tooltip style="height: 21px">
             <template #contentSlot>
@@ -202,8 +202,7 @@ export default {
   },
   data() {
     return {
-      loading: true,
-      simplexQuote: {}
+      loading: false
     };
   },
   computed: {
@@ -242,32 +241,10 @@ export default {
   watch: {
     // SimplexQuote
   },
-  mounted() {
-    this.getSimplexQuote();
-  },
   methods: {
     ...mapActions('global', ['setNetwork']),
     isValidToAddress(address) {
       return MultiCoinValidator.validate(address, this.selectedCurrency.name);
-    },
-    getSimplexQuote() {
-      if (this.hideSimplex) return;
-      this.loading = true;
-      this.simplexQuote = {};
-      this.moonpayHandler
-        .getSimplexQuote(
-          this.selectedCryptoName,
-          this.selectedFiatName,
-          this.buyObj.fiatAmount,
-          this.actualAddress
-        )
-        .then(res => {
-          this.simplexQuote = Object.assign({}, res);
-          this.loading = false;
-        })
-        .catch(e => {
-          Toast(e, {}, ERROR);
-        });
     },
     openSimplex() {
       this.moonpayHandler
