@@ -262,7 +262,7 @@ export default {
     title: {
       title: 'Send Offline Helper',
       description:
-        'This is a recommended way to view your balance. You can only view your balance via this option.'
+        'Use this tool to help you sign transactions securely on an offline computer'
     },
     exPanelStep2: [
       {

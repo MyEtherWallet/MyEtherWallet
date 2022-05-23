@@ -5,7 +5,7 @@ on:
     branches-ignore:
       - 'gh-pages'
       - 'gh-pages-history'
-      - 'master'
+      - 'main'
     tags-ignore:
       - '*'
     paths:
