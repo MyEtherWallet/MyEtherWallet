@@ -13,7 +13,6 @@ const fromMyEtherWalletV2 = json => {
   return new Wallet(privKey);
 };
 const getWalletFromPrivKeyFile = (jsonfile, password) => {
-  2;
   if (jsonfile.encseed != null) return Wallet.fromEthSale(jsonfile, password);
   else if (jsonfile.Crypto != null || jsonfile.crypto != null)
     return Wallet.fromV3(jsonfile, password, true);

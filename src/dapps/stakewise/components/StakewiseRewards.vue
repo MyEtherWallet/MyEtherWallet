@@ -22,7 +22,7 @@
           {{ formattedBalance }}
         </div>
         <div v-if="ethvmSupport" class="textLight--text">
-          ${{ rethBalanceFiat }}
+          {{ rethBalanceFiat }}
         </div>
       </div>
     </div>
@@ -74,10 +74,7 @@
 import BigNumber from 'bignumber.js';
 import { STAKEWISE_ROUTES } from '@/dapps/stakewise/configsRoutes';
 import { mapGetters, mapState } from 'vuex';
-import {
-  formatFloatingPointValue,
-  formatFiatValue
-} from '@/core/helpers/numberFormatHelper';
+import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 
 export default {
   name: 'ModuleSideRewards',
@@ -98,7 +95,7 @@ export default {
   },
   computed: {
     ...mapGetters('wallet', ['tokensList']),
-    ...mapGetters('global', ['isEthNetwork', 'network']),
+    ...mapGetters('global', ['isEthNetwork', 'network', 'getFiatValue']),
     ...mapGetters('external', ['fiatValue']),
     ...mapState('wallet', ['web3', 'address', 'balance']),
     ...mapState('stakewise', ['rethBalance', 'sethBalance']),
@@ -132,9 +129,9 @@ export default {
       return formatFloatingPointValue(this.rethBalance).value;
     },
     rethBalanceFiat() {
-      return formatFiatValue(
+      return this.getFiatValue(
         BigNumber(this.rethBalance).times(this.fiatValue).toString()
-      ).value;
+      );
     }
   },
   watch: {

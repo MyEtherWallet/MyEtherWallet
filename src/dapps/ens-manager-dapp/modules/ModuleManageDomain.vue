@@ -21,6 +21,9 @@
       :get-rent-price="getRentPrice"
       :host-name="hostName"
       :renew="renew"
+      :no-funds-for-renewal-fees="noFundsForRenewalFees"
+      :get-total-renew-fee-only="getTotalRenewFeeOnly"
+      :loading-renew="loadingRenew"
     />
     <manage-multicoins
       v-if="isManageMulticoin"
@@ -79,7 +82,21 @@ export default {
       },
       type: Function
     },
+    getTotalRenewFeeOnly: {
+      default: function () {
+        return {};
+      },
+      type: Function
+    },
     settingIpfs: {
+      default: false,
+      type: Boolean
+    },
+    noFundsForRenewalFees: {
+      default: false,
+      type: Boolean
+    },
+    loadingRenew: {
       default: false,
       type: Boolean
     },

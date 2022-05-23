@@ -35,9 +35,6 @@ jobs:
       - name: npm install
         run: docker run --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" mew-build-container /bin/bash -c "npm install"
 
-      - name: build
-        run: docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:offline"
-
       - name: Get release tag
         id: get_release_tag
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
