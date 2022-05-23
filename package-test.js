@@ -50,7 +50,12 @@ const EXCEPTIONS = [
   'vue',
   // update after release
   '@ethereumjs/common',
-  'ethers'
+  'ethers',
+  '@actions/github',
+  '@shapeshiftoss/hdwallet-core',
+  '@shapeshiftoss/hdwallet-keepkey-webusb',
+  '@commitlint/config-conventional',
+  'commitlint'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

@@ -116,7 +116,7 @@
                   {{ item.type }}
                 </span>
               </div>
-              <div class="mew-heading-4 textMedium--text">${{ item.usd }}</div>
+              <div class="mew-heading-4 textMedium--text">{{ item.usd }}</div>
             </div>
             <!--
             =====================================================================================

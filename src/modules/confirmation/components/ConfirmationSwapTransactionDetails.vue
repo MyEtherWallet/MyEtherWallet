@@ -60,7 +60,6 @@
 
 <script>
 import {
-  formatFiatValue,
   formatFloatingPointValue,
   formatGasValue
 } from '@/core/helpers/numberFormatHelper';
@@ -138,12 +137,13 @@ export default {
   },
   computed: {
     ...mapGetters('external', ['fiatValue']),
+    ...mapGetters('global', ['getFiatValue']),
     convertedFees() {
       return formatGasValue(this.txFee);
     },
     txFeeUSD() {
       const feeETH = BigNumber(fromWei(this.txFee));
-      return `$ ${formatFiatValue(feeETH.times(this.fiatValue)).value}`;
+      return this.getFiatValue(feeETH.times(this.fiatValue));
     },
     summaryItems() {
       const newArr = ['Exchange rate', 'Transaction fee'];
@@ -179,7 +179,7 @@ export default {
           type: this.toType,
           address: this.to,
           amount: formatFloatingPointValue(this.toVal).value,
-          usd: formatFiatValue(this.toUsd).value
+          usd: this.getFiatValue(this.toUsd)
         }
       ];
     }
