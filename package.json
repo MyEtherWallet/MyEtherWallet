@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "6.5.4",
+  "version": "6.5.4-hotfix.1",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build:offline": "WEBPACK_INTEGRITY=false npm run build:hash",
@@ -179,7 +179,6 @@
     "npm": ">= 6.0.0"
   },
   "resolutions": {
-    "ansi-regex": "3.0.1",
     "engine.io": "4.1.2",
     "glob-parent": "5.1.2",
     "follow-redirects": "1.14.9",
@@ -195,7 +194,6 @@
     "elliptic": "6.5.4",
     "dns-packet": "5.2.2",
     "trim-newlines": "3.0.1",
-    "css-what": "5.0.1",
     "normalize-url": "6.0.1",
     "scrypt.js": "0.3.0",
     "simple-get": "4.0.1",
@@ -203,9 +201,6 @@
     "socket.io-parser": "3.4.1",
     "keccak": "3.0.1",
     "diff": "3.5.0",
-    "tar": "4.4.18",
-    "async": "3.2.2",
-    "moment": "2.29.3",
     "ejs": "3.1.7"
   },
   "license": "MIT",

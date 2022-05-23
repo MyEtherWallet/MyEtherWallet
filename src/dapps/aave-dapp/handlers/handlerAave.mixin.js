@@ -200,8 +200,11 @@ export default {
      */
     async onDeposit(data) {
       try {
-        const tx = await this.lendingPool.deposit(data);
-        return this.formatTxData(tx, 'deposit');
+        const txs = await this.lendingPool.deposit(data);
+        const txArr = txs.map(tx => {
+          return tx.tx();
+        });
+        console.log(txArr);
       } catch (e) {
         throw new Error(e);
       }
