@@ -152,9 +152,9 @@ import {
 import getService from '@/core/helpers/getService';
 import NftManagerDetails from './components/NftManagerDetails';
 import NftManagerSend from './components/NftManagerSend';
-import handlerNft from './handlers/handlerNft.mixin';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { toBN, isAddress } from 'web3-utils';
+import { ETH } from '@/utils/networks/types';
 
 const MIN_GAS_LIMIT = 21000;
 
@@ -163,12 +163,11 @@ export default {
     NftManagerDetails,
     NftManagerSend
   },
-  mixins: [handlerNft],
+  // mixins: [handlerNft],
   data() {
     return {
       nft: {},
       activeTab: 0,
-      tokens: [],
       onNftSend: false,
       hasNoTokens: false,
       selectedNft: {},
@@ -177,7 +176,10 @@ export default {
       gasFees: '0',
       enoughFunds: false,
       showBalanceError: false,
-      localGasPrice: '0'
+      localGasPrice: '0',
+      loadingContracts: true,
+      loadingTokens: true,
+      nftApiResponse: []
     };
   },
   computed: {
@@ -197,6 +199,39 @@ export default {
       return this.contracts.map(item => {
         return { name: `${item.name} (${item.count})` };
       });
+    },
+    tokens() {
+      if (this.nftApiResponse.length > 0) {
+        const contract = this.nftApiResponse.find(item => {
+          return (
+            item.contract_address.toLowerCase() ===
+            this.selectedContract.contract
+          );
+        });
+        if (contract) {
+          return contract.assets.map(item => {
+            return {
+              image: `https://img.mewapi.io/?image=${item.image}`,
+              name: item.name,
+              token_id: item.token_id,
+              contract: contract.contract_address
+            };
+          });
+        }
+      }
+      return [];
+    },
+    contracts() {
+      if (this.nftApiResponse.length > 0) {
+        return this.nftApiResponse.map(item => {
+          return {
+            contract: item.contract_address,
+            count: item.assets.length,
+            name: item.contract_name
+          };
+        });
+      }
+      return [];
     },
     /**
      * Pagination
@@ -235,6 +270,31 @@ export default {
     }
   },
   watch: {
+    balanceInWei() {
+      this.hasMinEth();
+    },
+    web3() {
+      this.loadingContracts = true;
+      this.loadingTokens = true;
+      this.onNftSend = false;
+      this.$router.push({ name: ROUTES_WALLET.NFT_MANAGER.NAME });
+      if (this.network.type.name === ETH.name) {
+        this.setUpNFT();
+      } else {
+        Toast(
+          `NFT Manager not supported in network: ${this.network.type.name}`,
+          {},
+          WARNING
+        );
+      }
+    },
+    address() {
+      this.loadingContracts = true;
+      this.loadingTokens = true;
+      this.onNftSend = false;
+      this.$router.push({ name: ROUTES_WALLET.NFT_MANAGER.NAME });
+      this.setUpNFT();
+    },
     contracts(newVal) {
       if (newVal.length > 0) {
         this.onTab(0);
@@ -259,7 +319,6 @@ export default {
   },
   mounted() {
     this.setUpNFT();
-    this.hasMinEth();
   },
   methods: {
     setUpNFT() {
@@ -271,14 +330,24 @@ export default {
         address: this.address,
         web3: this.web3
       });
+
+      this.getNfts();
       this.localGasPrice = this.gasPriceByType(this.gasPriceType);
+      this.hasMinEth();
+    },
+    getNfts() {
+      this.nft.getNfts().then(res => {
+        this.nftApiResponse = res;
+        this.loadingContracts = false;
+        setTimeout(() => {
+          this.loadingTokens = false;
+        }, 500);
+      });
     },
     hasMinEth() {
       const currentGasPrice = this.localGasPrice;
       if (
-        toBN(this.balanceInWei).gt(
-          toBN(currentGasPrice).mul(toBN(MIN_GAS_LIMIT))
-        )
+        toBN(this.balanceInWei).gt(toBN(currentGasPrice).muln(MIN_GAS_LIMIT))
       ) {
         this.enoughFunds = true;
         this.showBalanceError = false;
@@ -312,43 +381,31 @@ export default {
     },
     async sendTx() {
       if (this.isValid) {
-        const gasTypeFee = this.localGasPrice;
-        const gasFees = await this.nft.getGasFees(
-          this.toAddress,
-          this.selectedNft
-        );
-        const gasFeesToBN = toBN(gasFees).mul(toBN(gasTypeFee));
-        this.gasFees = gasFeesToBN.toString();
-        if (gasFeesToBN.gte(toBN(this.balance))) {
-          this.enoughFunds = false;
-        } else {
-          try {
-            this.nft
-              .send(this.toAddress, this.selectedNft)
-              .then(response => {
-                this.updateValues();
-                this.enoughFunds = true;
-                Toast(
-                  'Cheers! Your transaction was mined. Check it in ',
-                  {
-                    title: `${getService(this.network.type.blockExplorerTX)}`,
-                    url: this.network.type.blockExplorerTX.replace(
-                      '[[txHash]]',
-                      response.blockHash
-                    )
-                  },
-                  SUCCESS,
-                  5000
-                );
-              })
-              .catch(e => {
-                Toast(e.message, {}, ERROR);
-              });
-            this.closeNftSend();
-            this.selectedNft = {};
-          } catch (e) {
-            Toast(e.message, {}, WARNING);
-          }
+        try {
+          this.nft
+            .send(this.toAddress, this.selectedNft)
+            .then(response => {
+              this.updateValues();
+              this.enoughFunds = true;
+              this.closeNftSend();
+              Toast(
+                'Cheers! Your transaction was mined. Check it in ',
+                {
+                  title: `${getService(this.network.type.blockExplorerTX)}`,
+                  url: this.network.type.blockExplorerTX.replace(
+                    '[[txHash]]',
+                    response.blockHash
+                  )
+                },
+                SUCCESS,
+                5000
+              );
+            })
+            .catch(e => {
+              Toast(e.message, {}, ERROR);
+            });
+        } catch (e) {
+          Toast(e.message, {}, WARNING);
         }
       }
     },
@@ -360,7 +417,7 @@ export default {
       if (this.tokens.length === 0 && this.contracts.length === 1) {
         this.hasNoTokens = true;
       }
-      this.$apollo.queries.getOwnersERC721Balances.refetch();
+      this.getNfts();
     },
     setAddress(address) {
       if (typeof address === 'object' && !!address) {
