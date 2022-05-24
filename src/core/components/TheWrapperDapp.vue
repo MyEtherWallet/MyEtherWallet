@@ -79,9 +79,9 @@
       v-if="tabItems.length > 0 && isNewHeader"
       :value="activeTab"
       background-color="backgroundGrey"
-      show-arrows
       color="blue500"
       height="46"
+      class="tab-container"
       active-class="blue500--text"
       @change="onTab"
     >
@@ -295,6 +295,11 @@ export default {
 </script>
 
 <style lang="scss">
+.tab-container {
+  .v-slide-group__prev {
+    display: none;
+  }
+}
 .hide-default-tab-header {
   .v-tabs {
     display: none;
