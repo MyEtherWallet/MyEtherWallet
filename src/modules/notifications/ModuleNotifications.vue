@@ -64,7 +64,7 @@
             </v-btn>
           </div> -->
           <v-sheet color="transparent" max-width="150px">
-            <mew-select :items="items" @input="setSelected" />
+            <mew-select :items="items" normal-dropdown @input="setSelected" />
           </v-sheet>
         </div>
         <div
@@ -91,6 +91,7 @@
 </template>
 
 <script>
+import MewSelect from './MewSelect';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import Notification, {
   NOTIFICATION_TYPES,
@@ -107,6 +108,7 @@ import NonChainNotification from './handlers/nonChainNotification';
 
 export default {
   name: 'ModuleNotifications',
+  components: { MewSelect },
   mixins: [handlerNotification],
   props: {
     invertIcon: {
