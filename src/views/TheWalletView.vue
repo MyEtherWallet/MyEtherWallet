@@ -76,10 +76,7 @@ export default {
   },
   beforeDestroy() {
     if (window.ethereum) {
-      window.ethereum.removeListener(
-        'chainChanged',
-        this.setWeb3WalletInstance
-      );
+      window.ethereum.removeListener('chainChanged', this.findAndSetNetwork);
       window.ethereum.removeListener('accountsChanged', this.setWeb3Account);
     }
   },
@@ -174,9 +171,6 @@ export default {
       const web3 = new Web3(window.ethereum);
       const wallet = new Web3Wallet(acc[0]);
       this.setWallet([wallet, web3.currentProvider]);
-    },
-    setWeb3WalletInstance() {
-      this.findAndSetNetwork();
     }
   }
 };
