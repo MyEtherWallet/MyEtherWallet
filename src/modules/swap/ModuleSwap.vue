@@ -1271,25 +1271,24 @@ export default {
             )
           })
           .then(quotes => {
-            if (this.tokenInValue === this.cachedAmount) {
-              this.selectedProvider = {};
-              this.lastSetToken = quotes[0].amount;
-              this.availableQuotes = quotes.map(q => {
-                q.rate = new BigNumber(q.amount)
-                  .dividedBy(new BigNumber(this.tokenInValue))
-                  .toString();
-                q.isSelected = false;
-                return q;
-              });
-              if (this.availableQuotes.length > 1) {
-                this.availableQuotes = quotes.filter(q => q.rate !== '0');
-              }
-              if (quotes.length) {
-                this.tokenOutValue = quotes[0].amount;
-              }
-              this.step = 1;
-              this.isLoadingProviders = false;
+            if (this.tokenInValue === this.cachedAmount) return;
+            this.selectedProvider = {};
+            this.lastSetToken = quotes[0].amount;
+            this.availableQuotes = quotes.map(q => {
+              q.rate = new BigNumber(q.amount)
+                .dividedBy(new BigNumber(this.tokenInValue))
+                .toString();
+              q.isSelected = false;
+              return q;
+            });
+            if (this.availableQuotes.length > 1) {
+              this.availableQuotes = quotes.filter(q => q.rate !== '0');
             }
+            if (quotes.length) {
+              this.tokenOutValue = quotes[0].amount;
+            }
+            this.step = 1;
+            this.isLoadingProviders = false;
           });
       }
     },
@@ -1300,6 +1299,8 @@ export default {
           q.isSelected = true;
           this.tokenOutValue = q.amount;
           this.getTrade(idx);
+          if (this.tokenInValue !== this.cachedAmount) return;
+          console.log(q);
           this.selectedProvider = q !== this.selectedProvider ? q : {};
         }
       });
@@ -1339,6 +1340,7 @@ export default {
       const trade = this.swapper.getTrade(swapObj);
       if (trade instanceof Promise) {
         trade.then(tradeResponse => {
+          if (this.tokenInValue !== this.cachedAmount) return;
           if (
             isObject(tradeResponse) &&
             tradeResponse.hasOwnProperty('provider')
@@ -1362,6 +1364,7 @@ export default {
         this.feeError = 'Provider issue';
         return;
       }
+      if (this.tokenInValue !== this.cachedAmount) return;
       this.feeError = '';
       this.currentTrade = trade;
       this.currentTrade.gasPrice = this.localGasPrice;
