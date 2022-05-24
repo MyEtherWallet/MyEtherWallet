@@ -321,7 +321,7 @@ export default {
 .token-icon-box {
   width: 25px;
   height: 25px;
-  box-shadow: inset 0 0 2px #7b7b7b;
+  box-shadow: inset 0 0 2px rgb(25 33 51 / 16%);
   background-color: white;
   border-radius: 50%;
   overflow: hidden;
