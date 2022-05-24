@@ -2,7 +2,7 @@ import { sha3 } from 'web3-utils';
 import axios from 'axios';
 const API = 'https://mainnet.mewwallet.dev';
 
-export default class MoonPayHandler {
+export default class OrderHandler {
   constructor() {}
   /*
    ** MoonPay
