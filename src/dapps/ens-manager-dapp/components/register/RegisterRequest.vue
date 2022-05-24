@@ -26,7 +26,7 @@
 
     <div class="font-weight-bold text-center">
       {{ $t('ens.request.estimated-price') }}: {{ rentPriceETH }}
-      {{ $t('common.currency.eth') }} (${{ rentPriceUSD }})
+      {{ $t('common.currency.eth') }} ({{ rentPriceUSD }})
     </div>
     <div class="d-flex justify-center mt-6">
       <mew-button
@@ -39,10 +39,8 @@
 </template>
 
 <script>
-import {
-  formatFloatingPointValue,
-  formatFiatValue
-} from '@/core/helpers/numberFormatHelper';
+import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
+import { mapGetters } from 'vuex';
 
 export default {
   components: {},
@@ -85,12 +83,13 @@ export default {
     this.rentPrice();
   },
   methods: {
+    ...mapGetters('global', ['getFiatValue']),
     rentPrice() {
       if (this.duration > 0) {
         return this.getRentPrice(this.duration).then(resp => {
           if (resp) {
             this.rentPriceETH = formatFloatingPointValue(resp.eth).value;
-            this.rentPriceUSD = formatFiatValue(resp.usd).value;
+            this.rentPriceUSD = this.getFiatValue()(resp.usd);
           }
         });
       }

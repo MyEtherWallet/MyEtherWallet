@@ -13,7 +13,6 @@ import { mapActions, mapGetters, mapState } from 'vuex';
 import ModuleToast from '@/modules/toast/ModuleToast.vue';
 import ModuleGlobalModals from '@/modules/global-modals/ModuleGlobalModals';
 import ModuleAnalytics from '@/modules/analytics-opt-in/ModuleAnalytics';
-import currencyTypes from '@/core/configs/configCurrencyTypes';
 import { PWA_EVENTS } from '@/core/helpers/common';
 import {
   Toast,
@@ -40,6 +39,7 @@ export default {
   computed: {
     ...mapState('custom', ['addressBook']),
     ...mapState('addressBook', ['isMigrated']),
+    ...mapState('global', ['preferredCurrency']),
     ...mapState('article', ['timestamp']),
     ...mapGetters('article', ['articleList'])
   },
@@ -65,7 +65,7 @@ export default {
     this.logMessage();
     this.setOnlineStatus(window.navigator.onLine);
     if (window.navigator.onLine) {
-      this.setCurrency(currencyTypes.USD);
+      this.setCurrency(this.preferredCurrency);
       this.updateArticles({
         timestamp: this.timestamp,
         articleList: this.articleList
@@ -77,7 +77,7 @@ export default {
     });
     window.addEventListener('online', () => {
       this.setOnlineStatus(true);
-      this.setCurrency(currencyTypes.USD);
+      this.setCurrency(this.preferredCurrency);
     });
     if (!this.isMigrated) {
       // this.addressBook is the old one that resides in custom store

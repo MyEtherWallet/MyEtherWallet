@@ -12,8 +12,7 @@ const tempTokenCache = {};
  */
 const fiatValue = function (state, getters) {
   const tokenUSDValue = getters.networkTokenUSDMarket.value;
-  const rate = state.currencyRate.data?.exchange_rate || 1;
-  return new BigNumber(tokenUSDValue).times(rate);
+  return new BigNumber(tokenUSDValue);
 };
 
 /**
@@ -26,7 +25,6 @@ const balanceFiatValue = function (state, getters, rootState, rootGetters) {
 
 const totalTokenFiatValue = function (state, getters, rootState, rootGetters) {
   const tokenList = rootGetters['wallet/tokensList'];
-  const rate = state.currencyRate.data?.exchange_rate || 1;
   if (!tokenList.length) return new BigNumber(0);
   const totalValue = tokenList.reduce((total, currentVal) => {
     const balance =
@@ -37,7 +35,7 @@ const totalTokenFiatValue = function (state, getters, rootState, rootGetters) {
         : 0;
     return new BigNumber(total).plus(balance);
   }, 0);
-  return totalValue.times(rate);
+  return totalValue;
 };
 
 /**

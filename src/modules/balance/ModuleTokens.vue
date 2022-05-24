@@ -14,7 +14,7 @@
       v-if="!loading && tokensData.length > 0 && !dense"
       subtitle="My Tokens Value"
       :has-body-padding="false"
-      :title="`$ ${totalTokensValue}`"
+      :title="totalTokensValue"
     >
       <template #rightHeaderContainer>
         <div>
@@ -83,9 +83,9 @@ import { mapGetters, mapState } from 'vuex';
 import BalanceEmptyBlock from './components/BalanceEmptyBlock';
 import TokenAddCustom from './components/TokenAddCustom';
 import TokenDeleteCustom from './components/TokenDeleteCustom';
-import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { uniqWith, isEqual } from 'lodash';
+import { currencyToNumber } from '@/core/helpers/localization';
 export default {
   components: {
     BalanceEmptyBlock,
@@ -165,7 +165,12 @@ export default {
     ...mapGetters('wallet', ['tokensList', 'web3']),
     ...mapState('wallet', ['web3', 'loadingWalletInfo']),
     ...mapGetters('custom', ['customTokens', 'hasCustom']),
-    ...mapGetters('global', ['isEthNetwork', 'network', 'hasSwap']),
+    ...mapGetters('global', [
+      'isEthNetwork',
+      'network',
+      'hasSwap',
+      'getFiatValue'
+    ]),
     ...mapGetters('external', ['totalTokenFiatValue']),
     loading() {
       return this.loadingWalletInfo;
@@ -189,7 +194,7 @@ export default {
       return tokens;
     },
     totalTokensValue() {
-      return formatFiatValue(this.totalTokenFiatValue).value;
+      return this.getFiatValue(this.totalTokenFiatValue);
     }
   },
   methods: {
@@ -202,7 +207,7 @@ export default {
         item.balancef
           ? item.balancef + ' ' + item.symbol
           : '0' + ' ' + item.symbol,
-        '$' + item.usdBalancef ? item.usdBalancef : '0'
+        item.usdBalancef ? this.getFiatValue(item.usdBalancef) : '0'
       ];
       newObj.usdBalance = item.usdBalance ? item.usdBalance : '0';
       newObj.token = item.symbol;
@@ -213,9 +218,19 @@ export default {
           ? item.price_change_percentage_24hf.replaceAll('%', '')
           : '';
       newObj.status = item.price_change_percentage_24h > 0 ? '+' : '-';
+      const priceUF = currencyToNumber(item.pricef);
       newObj.price =
-        item.pricef && item.pricef !== '0' ? '$' + item.pricef : '';
-      newObj.tokenImg = item.img ? item.img : this.network.type.icon;
+        item.pricef && priceUF.toString() !== '0'
+          ? this.getFiatValue(item.pricef)
+          : '';
+
+      // Use eth.svg icon for ETH
+      if (item.symbol == 'ETH') {
+        newObj.tokenImg = require('@/assets/images/networks/eth.svg');
+      } else {
+        newObj.tokenImg = item.img ? item.img : this.network.type.icon;
+      }
+
       if (this.hasSwap) {
         newObj.callToAction = [
           {
