@@ -94,7 +94,7 @@ import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import { isEmpty, cloneDeep, isEqual } from 'lodash';
 import BigNumber from 'bignumber.js';
 import { mapGetters, mapActions, mapState } from 'vuex';
-import { fromWei } from 'web3-utils';
+import { fromWei, toBN } from 'web3-utils';
 import Web3 from 'web3';
 import nodeList from '@/utils/networks';
 import { toBase } from '@/core/helpers/unit';
@@ -103,11 +103,13 @@ import {
   formatFiatValue
 } from '@/core/helpers/numberFormatHelper';
 import { getCurrency } from '@/modules/settings/components/currencyList';
+import { tokenIds } from './tokenList';
+import axios from 'axios';
 export default {
   name: 'ModuleBuyEth',
   components: { ModuleAddressBook },
   props: {
-    moonpayHandler: {
+    orderHandler: {
       type: Object,
       default: () => {}
     },
@@ -138,13 +140,15 @@ export default {
       gasPrice: '0',
       web3Connections: {},
       simplexQuote: {},
-      showMoonpay: true
+      showMoonpay: true,
+      tokensList: []
     };
   },
   computed: {
     ...mapGetters('global', ['network', 'getFiatValue']),
     ...mapState('wallet', ['address']),
-    ...mapState('external', ['currencyRate']),
+    ...mapState('external', ['currencyRate', 'coinGeckoTokens']),
+    ...mapGetters('external', ['getCoinGeckoTokenById']),
     includesFeeText() {
       return `Includes ${this.percentFee} fee (${
         formatFiatValue(this.minFee, this.currencyConfig).value
@@ -182,9 +186,9 @@ export default {
         );
         return selectedCurrencyPrice
           ? BigNumber(selectedCurrencyPrice.exchange_rate)
-          : BigNumber(1);
+          : toBN(1);
       }
-      return BigNumber(1);
+      return toBN(1);
     },
     selectedFiatName() {
       return this.selectedFiat.name;
@@ -267,60 +271,19 @@ export default {
       return '';
     },
     currencyItems() {
-      // hard writing for now
-      const tokensList = [
-        {
-          decimals: 18,
-          img: 'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ETH-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.svg',
-          name: 'ETH',
-          subtext: 'Ethereum',
-          value: 'Ethereum',
-          symbol: 'ETH',
-          network: 'ETH'
-        },
-        {
-          decimals: 18,
-          img: 'https://img.mewapi.io/?image=https://assets.coingecko.com/coins/images/4713/large/matic-token-icon.png?1624446912',
-          name: 'MATIC',
-          subtext: 'Polygon',
-          value: 'Polygon (Matic)',
-          symbol: 'MATIC (Matic)',
-          network: 'MATIC'
-        },
-        {
-          decimals: 18,
-          img: 'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/BNB-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.png',
-          name: 'BNB',
-          subtext: 'Binance Smart Chain',
-          value: 'Binance Smart Chain',
-          symbol: 'BNB (BSC/BEP20)',
-          network: 'BSC'
-        },
-        {
-          decimals: 6,
-          img: 'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/USDT-0xdAC17F958D2ee523a2206206994597C13D831ec7-eth.png',
-          name: 'USDT',
-          subtext: 'Tether',
-          value: 'Tether',
-          symbol: 'USDT (ERC20)',
-          network: 'ETH'
-        },
-        {
-          decimals: 6,
-          img: 'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/USDC-0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48-eth.svg',
-          name: 'USDC',
-          subtext: 'USD Coin',
-          value: 'USD Coin',
-          symbol: 'USDC (ERC20)',
-          network: 'ETH'
-        }
-      ];
-      const imgs = tokensList.map(item => {
+      /**
+       * Replace this with tokenbycoingeckoid
+       */
+      if (this.coinGeckoTokens.size == 0) return this.tokensList;
+      console.log('tokens', this.coinGeckoTokens);
+      const tokenList = tokenIds.map(this.getCoinGeckoById);
+      console.log(tokenList);
+      const imgs = tokenList.map(item => {
         return item.img;
       });
       const tokensListWPrice =
         this.currencyRates.length > 0
-          ? tokensList.map(token => {
+          ? tokenList.map(token => {
               const priceRate = this.currencyRates.find(rate => {
                 return rate.crypto_currency === token.name;
               });
@@ -334,12 +297,12 @@ export default {
               ).value;
               return token;
             })
-          : tokensList;
+          : tokenList;
       const returnedArray = [
         {
           text: 'Select Token',
           imgs: imgs.splice(0, 3),
-          total: `${tokensList.length}`,
+          total: `${tokenList.length}`,
           divider: true,
           selectLabel: true
         },
@@ -428,7 +391,7 @@ export default {
       },
       deep: true
     },
-    moonpayHandler: {
+    orderHandler: {
       handler: function () {
         this.fetchCurrencyData();
       },
@@ -448,7 +411,16 @@ export default {
     },
     validToAddress: {
       handler: function (newVal) {
-        if (newVal) this.getSimplexQuote();
+        if (newVal) {
+          this.getSimplexQuote();
+          this.$emit('toAddress', this.toAddress);
+        }
+      }
+    },
+    coinGeckoTokens: {
+      handler: function () {
+        const tokenList = tokenIds.map(this.getCoinGeckoById);
+        console.log('coinGeckoTokens', tokenList);
       }
     }
   },
@@ -457,6 +429,7 @@ export default {
   },
   methods: {
     ...mapActions('global', ['setNetwork']),
+    ...mapActions('external', ['setCoinGeckoTokens']),
     async fetchGasPrice() {
       const nodeType = this.selectedCurrency.hasOwnProperty('network')
         ? this.selectedCurrency.network
@@ -472,28 +445,42 @@ export default {
       this.toAddress = address;
       this.validToAddress = valid;
     },
+    isLT(num, num2) {
+      return BigNumber(num).lt(num2);
+    },
     isValidToAddress(address) {
       return MultiCoinValidator.validate(address, this.selectedCurrency.name);
     },
     checkMoonPayMax() {
       const moonpayMax = this.max.moonpay;
-      const isLT = (num, num2) => {
-        return num.lt(BigNumber(num2));
-      };
-      const hideMoonpay = isLT(moonpayMax, this.amount);
+      const hideMoonpay = this.isLT(moonpayMax, this.amount);
       this.$emit('hideMoonpay', hideMoonpay);
     },
     setCurrency(e) {
       this.selectedCurrency = e;
     },
     fetchCurrencyData() {
+      if (this.coinGeckoTokens.size == 0) {
+        console.log('fetching token list');
+        // Get coin gecko tokens
+        this.fetchTokens().then(val => {
+          const tokenMap = new Map(
+            val.map(object => {
+              const tokenInfo = {};
+              Object.assign(tokenInfo, object);
+              return [tokenInfo.id, tokenInfo];
+            })
+          );
+          this.setCoinGeckoTokens(tokenMap);
+        });
+      }
       this.loading = true;
       this.fetchData = {};
       this.fetchGasPrice();
-      this.moonpayHandler
+      this.orderHandler
         .getSupportedFiatToBuy(this.selectedCurrency.name)
         .then(res => {
-          this.moonpayHandler.getFiatRatesForBuy().then(res => {
+          this.orderHandler.getFiatRatesForBuy().then(res => {
             this.currencyRates = cloneDeep(res);
             this.loading = false;
           });
@@ -504,11 +491,18 @@ export default {
         });
       this.getSimplexQuote();
     },
+    fetchTokens() {
+      return axios
+        .get(
+          `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1&sparkline=false`
+        )
+        .then(res => res.data);
+    },
     getSimplexQuote() {
       if (this.hideSimplex || !this.actualValidAddress) return;
       this.loading = true;
       this.simplexQuote = {};
-      this.moonpayHandler
+      this.orderHandler
         .getSimplexQuote(
           this.selectedCryptoName,
           this.selectedFiatName,
@@ -518,11 +512,12 @@ export default {
         .then(res => {
           this.simplexQuote = Object.assign({}, res);
           this.loading = false;
+          this.$emit('simplexQuote', this.simplexQuote);
+          this.compareQuotes();
         })
         .catch(e => {
           Toast(e, {}, ERROR);
         });
-      this.compareQuotes();
     },
     compareQuotes() {
       const moonpayAmount = toBase(
@@ -534,15 +529,13 @@ export default {
         this.selectedCurrency.decimals
       );
       const moonpayMax = this.max.moonpay;
-      const isLT = (num, num2) => {
-        return num.lt(BigNumber(num2));
-      };
       // Moonpay has better rate and is not above max
-      this.showMoonpay = isLT(moonpayMax, this.amount)
+      this.showMoonpay = this.isLT(moonpayMax, this.amount)
         ? false
         : moonpayAmount > simplexAmount;
     },
     buy() {
+      // Moonpay Buy object
       const buyObj = {
         cryptoToFiat: this.moonpayCryptoAmount,
         selectedCryptoName: this.selectedCryptoName,
@@ -551,11 +544,11 @@ export default {
         networkFeeText: this.networkFeeText,
         dailyLimit: this.dailyLimit,
         monthlyLimit: this.monthlyLimit,
-        fiatAmount: this.amount,
-        address: this.actualAddress,
-        simplexQuote: this.simplexQuote
+        fiatAmount: this.amount
       };
       this.checkMoonPayMax();
+      this.$emit('simplexQuote', this.simplexQuote);
+      this.$emit('toAddress', this.toAddress);
       this.$emit('setBuyObj', buyObj);
       this.$emit('openProviders', 1);
       this.$emit('selectedCurrency', this.selectedCurrency);

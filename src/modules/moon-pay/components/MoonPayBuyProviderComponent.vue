@@ -93,15 +93,13 @@
       <div v-if="!loading" class="mb-3">
         <div class="d-flex mb-1 align-center justify-space-between">
           <div class="d-flex mew-heading-3 textDark--text">
-            {{ buyObj.simplexQuote.crypto_amount }}
-            <span class="mew-heading-3 pl-1">{{
-              buyObj.simplexQuote.crypto_currency
-            }}</span>
+            {{ simplexQuote.crypto_amount }}
+            <span class="mew-heading-3 pl-1">{{ selectedCryptoName }}</span>
           </div>
         </div>
         <div class="d-flex align-center">
           <div class="mr-1 textDark--text">
-            ≈ {{ currencyFormatter(buyObj.simplexQuote.fiat_base_amount) }}
+            ≈ {{ currencyFormatter(simplexQuote.fiat_base_amount) }}
           </div>
           <mew-tooltip style="height: 21px">
             <template #contentSlot>
@@ -171,7 +169,7 @@ import { LOCALE } from '../helpers';
 export default {
   name: 'ModuleBuyEthProvider',
   props: {
-    moonpayHandler: {
+    orderHandler: {
       type: Object,
       default: () => {}
     },
@@ -198,6 +196,14 @@ export default {
     buyObj: {
       type: Object,
       default: () => ({})
+    },
+    simplexQuote: {
+      type: Object,
+      default: () => ({})
+    },
+    toAddress: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -212,7 +218,7 @@ export default {
       return this.selectedFiat.name;
     },
     actualAddress() {
-      return this.inWallet ? this.address : this.buyObj.address;
+      return this.inWallet ? this.address : this.toAddress;
     },
     selectedCryptoName() {
       return this.selectedCurrency.name;
@@ -238,16 +244,13 @@ export default {
       return `Visa, Mastercard, Apple Pay${this.isEUR ? ', Bank account' : ''}`;
     }
   },
-  watch: {
-    // SimplexQuote
-  },
   methods: {
     ...mapActions('global', ['setNetwork']),
     isValidToAddress(address) {
       return MultiCoinValidator.validate(address, this.selectedCurrency.name);
     },
     openSimplex() {
-      this.moonpayHandler
+      this.orderHandler
         .simplexBuy(
           this.selectedCryptoName,
           this.selectedFiatName,
@@ -278,7 +281,7 @@ export default {
       this.fetchData = {};
     },
     buy() {
-      this.moonpayHandler
+      this.orderHandler
         .buy(
           this.selectedCryptoName,
           this.selectedFiatName,

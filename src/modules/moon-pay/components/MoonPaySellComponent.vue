@@ -105,7 +105,7 @@ export default {
   name: 'ModuleSellEth',
   components: { ButtonBalance, ModuleAddressBook },
   props: {
-    moonpayHandler: {
+    orderHandler: {
       type: Object,
       default: () => {}
     },
@@ -404,7 +404,7 @@ export default {
       this.sendHandler.setFrom(val);
       this.fetchSellInfo();
     },
-    moonpayHandler: {
+    orderHandler: {
       handler: function () {
         this.sendHandler = new handlerSend();
         this.fetchSellInfo();
@@ -505,7 +505,7 @@ export default {
       this.hasPersistentHint = true;
     },
     sell() {
-      this.moonpayHandler
+      this.orderHandler
         .sell(this.name, this.amount, this.actualAddress)
         .then(() => {
           this.amount = '0';
@@ -548,7 +548,7 @@ export default {
         this.fetchingBalance = false;
         this.selectedBalance = fromWei('0');
       }
-      this.moonpayHandler
+      this.orderHandler
         .getSupportedFiatToSell(this.name)
         .then(res => {
           this.loading = false;

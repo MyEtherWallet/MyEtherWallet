@@ -22,7 +22,7 @@
         >
           <template #tabContent1>
             <buy-eth-component
-              :moonpay-handler="moonpayHandler"
+              :order-handler="orderHandler"
               :close="close"
               :tab="activeTab"
               :default-currency="defaltCurrency"
@@ -32,11 +32,13 @@
               @selectedFiat="setSelectedFiat"
               @setBuyObj="setBuyObj"
               @hideMoonpay="hideMoonpay"
+              @simplexQuote="setSimplexQuote"
+              @toAddress="setToAddress"
             />
           </template>
           <template #tabContent2>
             <sell-eth-component
-              :moonpay-handler="moonpayHandler"
+              :order-handler="orderHandler"
               :close="close"
               :tab="activeTab"
               :in-wallet="inWallet"
@@ -48,13 +50,15 @@
       </div>
       <MoonPayBuyProviderComponent
         v-if="step == 1"
-        :moonpay-handler="moonpayHandler"
+        :order-handler="orderHandler"
         :close="close"
         :in-wallet="inWallet"
         :only-simplex="onlySimplex"
         :selected-currency="selectedCurrency"
         :selected-fiat="selectedFiat"
         :buy-obj="buyObj"
+        :simplex-quote="simplexQuote"
+        :to-address="toAddress"
         @close="step = 0"
         @openProviders="openProviders"
         @reset="reset"
@@ -68,7 +72,7 @@ import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import BuyEthComponent from './components/MoonPayBuyComponent';
 import SellEthComponent from './components/MoonPaySellComponent';
-import handler from './handlers/handlerMoonpay';
+import handler from './handlers/handlerOrder';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import { isEmpty } from 'lodash';
 import nodes from '@/utils/networks';
@@ -92,13 +96,15 @@ export default {
     return {
       isOpen: false,
       activeTab: 0,
-      moonpayHandler: {},
+      orderHandler: {},
       selectedCurrency: {},
       selectedFiat: {},
       nodes: nodes,
       onlySimplex: false,
       buyObj: {},
-      step: 0
+      step: 0,
+      simplexQuote: {},
+      toAddress: ''
     };
   },
   computed: {
@@ -161,7 +167,7 @@ export default {
     open(newVal) {
       this.isOpen = newVal;
       if (newVal) {
-        this.moonpayHandler = new handler();
+        this.orderHandler = new handler();
       }
       this.selectedCurrency = {};
     },
@@ -208,6 +214,12 @@ export default {
     },
     setBuyObj(val) {
       this.buyObj = val;
+    },
+    setSimplexQuote(val) {
+      this.simplexQuote = val;
+    },
+    setToAddress(val) {
+      this.toAddress = val;
     },
     reset() {
       this.selectedCurrency = this.defaltCurrency;
