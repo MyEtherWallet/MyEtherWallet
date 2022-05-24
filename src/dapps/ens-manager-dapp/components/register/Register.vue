@@ -19,7 +19,7 @@
       >
         <span>Estimated Fee:</span>
         <span class="font-weight-medium">
-          {{ commitFeeInEth }} ETH (${{ commitFeeUsd }})
+          {{ commitFeeInEth }} ETH ({{ commitFeeUsd }})
         </span>
       </div>
 
@@ -29,7 +29,7 @@
       >
         <span>Commitment Cost:</span>
         <span class="font-weight-medium">
-          {{ commitFeeInEth }} ETH (${{ commitFeeUsd }})
+          {{ commitFeeInEth }} ETH ({{ commitFeeUsd }})
         </span>
       </div>
 
@@ -39,7 +39,7 @@
       >
         <span>Commitment Cost:</span>
         <span class="font-weight-medium">
-          {{ commitFeeInEth }} ETH (${{ commitFeeUsd }})
+          {{ commitFeeInEth }} ETH ({{ commitFeeUsd }})
         </span>
       </div>
 

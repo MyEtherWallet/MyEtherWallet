@@ -7,7 +7,9 @@ import {
   ethSendRawTransaction,
   ethSign,
   ethSignTransaction,
-  ethGetTransactionCount
+  ethGetTransactionCount,
+  ethCoinbase,
+  ethAccounts
 } from '../methods';
 class CustomRequestManager extends Web3RequestManager {
   constructor(host) {
@@ -72,6 +74,8 @@ class GivenProvider {
         middleware.use(ethSignTransaction);
         middleware.use(ethGetTransactionCount);
         middleware.use(ethSign);
+        middleware.use(ethCoinbase);
+        middleware.use(ethAccounts);
         middleware.run(req, callback).then(() => {
           if (this.givenProvider.request_) {
             this.givenProvider.request_(payload).then(resolve).catch(reject);
