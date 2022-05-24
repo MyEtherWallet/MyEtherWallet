@@ -25,7 +25,6 @@ import ModuleConfirmation from '@/modules/confirmation/ModuleConfirmation';
 import handlerWallet from '@/core/mixins/handlerWallet.mixin';
 import nodeList from '@/utils/networks';
 import { ERROR, Toast, WARNING } from '@/modules/toast/handler/handlerToast';
-import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { Web3Wallet } from '@/modules/access-wallet/common';
 import Web3 from 'web3';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
@@ -71,13 +70,8 @@ export default {
   mounted() {
     if (this.online) {
       this.setup();
-      if (this.identifier === WALLET_TYPES.WEB3_WALLET) {
-        const web3Instance = new Web3(window.ethereum);
-        web3Instance.eth.net.getId().then(id => {
-          this.findAndSetNetwork(id);
-        });
-        this.web3Listeners();
-      }
+      this.findAndSetNetwork();
+      this.web3Listeners();
     }
   },
   beforeDestroy() {
@@ -146,8 +140,7 @@ export default {
      */
     web3Listeners() {
       if (window.ethereum.on) {
-        window.ethereum.on('chainChanged', this.setWeb3WalletInstance);
-
+        window.ethereum.on('chainChanged', this.findAndSetNetwork);
         window.ethereum.on('accountsChanged', this.setWeb3Account);
       } else {
         Toast(
@@ -157,12 +150,15 @@ export default {
         );
       }
     },
-    findAndSetNetwork(web3ChainId) {
+    async findAndSetNetwork() {
+      const networkId = await window.ethereum.request({
+        method: 'net_version'
+      });
       const foundNetwork = Object.values(nodeList).find(item => {
-        if (toBN(web3ChainId).toNumber() === item[0].type.chainID) return item;
+        if (toBN(networkId).toNumber() === item[0].type.chainID) return item;
       });
 
-      if (foundNetwork) {
+      if (window.ethereum.isMetaMask) {
         this.setNetwork(foundNetwork[0]).then(() => {
           this.setWeb3Instance(new Web3(window.ethereum));
         });
@@ -179,8 +175,8 @@ export default {
       const wallet = new Web3Wallet(acc[0]);
       this.setWallet([wallet, web3.currentProvider]);
     },
-    setWeb3WalletInstance(chainId) {
-      this.findAndSetNetwork(chainId);
+    setWeb3WalletInstance() {
+      this.findAndSetNetwork();
     }
   }
 };
