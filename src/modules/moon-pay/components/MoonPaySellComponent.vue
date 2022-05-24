@@ -41,19 +41,6 @@
         :hint="persistentHintMessage"
       />
     </div>
-    <div v-if="!inWallet" class="mt-5">
-      <div class="mew-heading-3 textDark--text mb-5">
-        Where are you sending your crypto from?
-      </div>
-      <module-address-book
-        ref="addressInput"
-        :enable-save-address="false"
-        :is-valid-address-func="isValidToAddress"
-        label="From Address"
-        @setAddress="setAddress"
-      />
-    </div>
-
     <div class="pt-8 pb-13">
       <div class="d-flex align-center justify-space-between mb-2">
         <div class="mew-body textDark--text font-weight-bold">
@@ -68,6 +55,19 @@
         After submitting your sell order, you will have to send your crypto to
         Moonpay. Remember to have enough ETH for the Send Network Fee.
       </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- Refund address -->
+    <!-- ============================================================== -->
+    <div v-if="!inWallet" class="mt-5">
+      <div class="mew-heading-3 textDark--text mb-5">Refund address</div>
+      <module-address-book
+        ref="addressInput"
+        :enable-save-address="false"
+        :is-valid-address-func="isValidToAddress"
+        label="Enter Crypto Address"
+        @setAddress="setAddress"
+      />
     </div>
     <!-- ============================================================== -->
     <!-- Sell button -->
@@ -94,12 +94,13 @@ import { isEmpty, debounce, isNumber } from 'lodash';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import BigNumber from 'bignumber.js';
 import handlerSend from '@/modules/send/handlers/handlerSend.js';
-import { fromWei } from 'web3-utils';
+import { fromWei, toBN } from 'web3-utils';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common.js';
 import abi from '@/modules/balance/handlers/abiERC20.js';
 // import nodes from '@/utils/networks';
 import Web3 from 'web3';
 import { toBNSafe } from '@/core/helpers/numberFormatHelper';
+import { toBase } from '@/core/helpers/unit';
 export default {
   name: 'ModuleSellEth',
   components: { ButtonBalance, ModuleAddressBook },
@@ -296,6 +297,10 @@ export default {
         ) {
           return `You do not have enough ETH to pay for network fee.`;
         }
+      } else {
+        if (!this.hasEnoughAssets && this.actualValidAddress) {
+          return 'Address provided does not have enough balance to complete the transaction';
+        }
       }
 
       if (
@@ -346,6 +351,16 @@ export default {
         .times(new BigNumber(10).pow(this.selectedCurrency.decimals))
         .toFixed(0);
       return toBNSafe(amount);
+    },
+    getAmountBN() {
+      const amount = toBase(
+        this.amount ? this.amount : 0,
+        this.selectedCurrency.decimals
+      );
+      return toBNSafe(amount);
+    },
+    hasEnoughAssets() {
+      return toBN(this.selectedBalance).gte(this.getAmountBN);
     },
     actualAddress() {
       return this.inWallet ? this.address : this.toAddress;
@@ -506,26 +521,28 @@ export default {
     },
     fetchSellInfo() {
       if (this.actualValidAddress) {
-        this.sendHandler.setFrom(this.actualAddress);
-        this.sendHandler.setCurrency(this.actualSelectedCurrency);
-        this.sendHandler.setValue(this.getCalculatedAmount);
-        // eslint-disable-next-line
-        this.sendHandler.setTo(ETH_DONATION_ADDRESS, 'TYPED');
-        this.estimatingFees = true;
-        this.sendHandler
-          .estimateGas()
-          .then(res => {
-            this.estimatingFees = false;
-            this.gasLimit = res;
-          })
-          .catch(err => {
-            Toast(err, {}, ERROR);
-          });
         this.fetchingBalance = true;
         if (this.actualSelectedCurrency.contract === MAIN_TOKEN_ADDRESS) {
           this.getEthBalance();
         } else {
           this.getTokenBalance();
+        }
+        if (this.hasEnoughAssets) {
+          this.sendHandler.setFrom(this.actualAddress);
+          this.sendHandler.setCurrency(this.actualSelectedCurrency);
+          this.sendHandler.setValue(this.getCalculatedAmount);
+          // eslint-disable-next-line
+        this.sendHandler.setTo(ETH_DONATION_ADDRESS, 'TYPED');
+          this.estimatingFees = true;
+          this.sendHandler
+            .estimateGas()
+            .then(res => {
+              this.estimatingFees = false;
+              this.gasLimit = res;
+            })
+            .catch(err => {
+              Toast(err, {}, ERROR);
+            });
         }
       } else {
         this.fetchingBalance = false;
