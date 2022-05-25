@@ -145,6 +145,7 @@ export default {
     ...mapState('global', ['gasPriceType']),
     ...mapGetters('wallet', ['balanceInETH']),
     ...mapGetters('global', ['isEthNetwork', 'network', 'gasPriceByType']),
+    ...mapGetters('external', ['getCoinGeckoTokenById']),
     persistentHintMessage() {
       return this.hasPersistentHint
         ? `Max adjusted to leave sufficient ${this.actualSelectedCurrency.name} for network fee`
@@ -177,35 +178,21 @@ export default {
     },
     preselectedCurrencies() {
       // hard writing for now
-      return [
-        {
-          decimals: 18,
-          img: 'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ETH-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.svg',
-          name: 'ETH',
-          subtext: 'Ethereum',
-          value: 'Ethereum',
-          symbol: 'ETH',
-          contract: MAIN_TOKEN_ADDRESS
-        },
-        {
-          decimals: 6,
-          img: 'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/USDT-0xdAC17F958D2ee523a2206206994597C13D831ec7-eth.png',
-          name: 'USDT',
-          subtext: 'Tether',
-          value: 'Tether',
-          symbol: 'USDT (ERC20)',
-          contract: '0xdAC17F958D2ee523a2206206994597C13D831ec7'
-        },
-        {
-          decimals: 6,
-          img: 'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/USDC-0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48-eth.svg',
-          name: 'USDC',
-          subtext: 'USD Coin',
-          value: 'USD Coin',
-          symbol: 'USDC (ERC20)',
-          contract: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
-        }
+      const preSel = ['ethereum', 'tether', 'usd-coin'];
+      const decimals = [18, 6, 6];
+      const contracts = [
+        MAIN_TOKEN_ADDRESS,
+        '0xdAC17F958D2ee523a2206206994597C13D831ec7',
+        '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
       ];
+      const arr = new Array();
+      for (let i = 0; i < preSel.length; i++) {
+        const crypto = this.getCoinGeckoTokenById(preSel[i]);
+        crypto['decimals'] = decimals[i];
+        crypto['contract'] = contracts[i];
+        arr.push(crypto);
+      }
+      return arr;
     },
     currencyItems() {
       const tokensList = this.preselectedCurrencies;
@@ -302,7 +289,6 @@ export default {
           return 'Address provided does not have enough balance to complete the transaction';
         }
       }
-
       if (
         this.amount &&
         !handlerSend.helpers.hasValidDecimals(
@@ -353,6 +339,7 @@ export default {
       return toBNSafe(amount);
     },
     getAmountBN() {
+      if (!this.isValidAmount) return toBNSafe(0);
       const amount = toBase(
         this.amount ? this.amount : 0,
         this.selectedCurrency.decimals
@@ -360,6 +347,7 @@ export default {
       return toBNSafe(amount);
     },
     hasEnoughAssets() {
+      if (this.amount && !this.isValidAmount) return false;
       return toBN(this.selectedBalance).gte(this.getAmountBN);
     },
     actualAddress() {

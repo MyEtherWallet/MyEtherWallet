@@ -97,7 +97,7 @@ import { mapGetters, mapActions, mapState } from 'vuex';
 import { fromWei, toBN } from 'web3-utils';
 import Web3 from 'web3';
 import nodeList from '@/utils/networks';
-import { toBase } from '@/core/helpers/unit';
+//import { toBase } from '@/core/helpers/unit';
 import {
   formatFloatingPointValue,
   formatFiatValue
@@ -140,8 +140,7 @@ export default {
       gasPrice: '0',
       web3Connections: {},
       simplexQuote: {},
-      showMoonpay: true,
-      tokensList: []
+      showMoonpay: true
     };
   },
   computed: {
@@ -271,13 +270,11 @@ export default {
       return '';
     },
     currencyItems() {
-      /**
-       * Replace this with tokenbycoingeckoid
-       */
-      if (this.coinGeckoTokens.size == 0) return this.tokensList;
-      console.log('tokens', this.coinGeckoTokens);
-      const tokenList = tokenIds.map(this.getCoinGeckoById);
-      console.log(tokenList);
+      if (this.coinGeckoTokens.size == 0) return [];
+      const tokenList = new Array();
+      for (const id of tokenIds) {
+        tokenList.push(this.getCoinGeckoTokenById(id));
+      }
       const imgs = tokenList.map(item => {
         return item.img;
       });
@@ -419,8 +416,7 @@ export default {
     },
     coinGeckoTokens: {
       handler: function () {
-        const tokenList = tokenIds.map(this.getCoinGeckoById);
-        console.log('coinGeckoTokens', tokenList);
+        this.fetchCurrencyData();
       }
     }
   },
@@ -461,7 +457,6 @@ export default {
     },
     fetchCurrencyData() {
       if (this.coinGeckoTokens.size == 0) {
-        console.log('fetching token list');
         // Get coin gecko tokens
         this.fetchTokens().then(val => {
           const tokenMap = new Map(
@@ -473,6 +468,7 @@ export default {
           );
           this.setCoinGeckoTokens(tokenMap);
         });
+        return;
       }
       this.loading = true;
       this.fetchData = {};
@@ -520,22 +516,13 @@ export default {
         });
     },
     compareQuotes() {
-      const moonpayAmount = toBase(
-        this.moonpayCryptoAmount ? this.moonpayCryptoAmount : 0,
-        this.selectedCurrency.decimals
-      );
-      const simplexAmount = toBase(
-        this.simplexQuote.crypto_amount ? this.simplexQuote.crypto_amount : 0,
-        this.selectedCurrency.decimals
-      );
       const moonpayMax = this.max.moonpay;
       // Moonpay has better rate and is not above max
-      this.showMoonpay = this.isLT(moonpayMax, this.amount)
+      this.showMoonpay = this.isLT(moonpayMax, this.amount) // max < amount
         ? false
-        : moonpayAmount > simplexAmount;
+        : this.isLT(this.simplexQuote.crypto_amount, this.moonpayCryptoAmount);
     },
     buy() {
-      // Moonpay Buy object
       const buyObj = {
         cryptoToFiat: this.moonpayCryptoAmount,
         selectedCryptoName: this.selectedCryptoName,
