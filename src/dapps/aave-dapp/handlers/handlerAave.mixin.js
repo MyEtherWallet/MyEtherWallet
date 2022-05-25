@@ -21,6 +21,12 @@ import { cloneDeep } from 'lodash';
 
 const STABLE_COINS = ['TUSD', 'DAI', 'USDT', 'USDC', 'sUSD'];
 
+const LENDING_POOL = '0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9';
+const REPAY_WITH_COLLATERAL_ADAPTER =
+  '0x80Aca0C645fEdABaa20fd2Bf0Daf57885A309FE6';
+const SWAP_COLLATERAL_ADAPTER = '0x135896DE8421be2ec868E0b811006171D9df802A';
+const WETH_GATEWAY = '0xcc9a0B7c43DC2a5F023Bb9b738E45B0Ef6B06E04';
+
 export default {
   name: 'handlerAave',
   props: {
@@ -62,11 +68,10 @@ export default {
      * get lending pool tx methods
      */
     this.lendingPool = new LendingPool(provider, {
-      LENDING_POOL: '0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9',
-      REPAY_WITH_COLLATERAL_ADAPTER:
-        '0x80Aca0C645fEdABaa20fd2Bf0Daf57885A309FE6',
-      SWAP_COLLATERAL_ADAPTER: '0x135896DE8421be2ec868E0b811006171D9df802A',
-      WETH_GATEWAY: '0xcc9a0B7c43DC2a5F023Bb9b738E45B0Ef6B06E04'
+      LENDING_POOL: LENDING_POOL,
+      REPAY_WITH_COLLATERAL_ADAPTER: REPAY_WITH_COLLATERAL_ADAPTER,
+      SWAP_COLLATERAL_ADAPTER: SWAP_COLLATERAL_ADAPTER,
+      WETH_GATEWAY: WETH_GATEWAY
     });
   },
   apollo: {
@@ -198,13 +203,22 @@ export default {
     /**
      * Deposit funds
      */
-    async onDeposit(data) {
+    async onDeposit({ amount, reserve, referralCode, user }) {
       try {
-        const txs = await this.lendingPool.deposit(data);
-        const txArr = txs.map(tx => {
-          return tx.tx();
-        });
-        console.log(txArr);
+        // coonthis.lendingPool.deposit(data);
+        // const txArr = txs.map(tx => {
+        //   return tx.tx();
+        // });
+        // console.log(txArr);
+        console.log(amount, reserve, referralCode, user);
+        const poolContract = this.lendingPool.getContractInstance(LENDING_POOL);
+        const txData = await poolContract.populateTransaction.deposit(
+          reserve,
+          BigNumber(amount),
+          user,
+          referralCode
+        );
+        console.log(txData);
       } catch (e) {
         throw new Error(e);
       }
