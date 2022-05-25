@@ -30,97 +30,71 @@
           <!-- Wallet balance card -->
           <!-- ================================================================================== -->
           <balance-card />
+        </div>
+      </template>
 
-          <!-- ================================================================================== -->
-          <!-- Buy Sell / Send / Swap buttons -->
-          <!-- ================================================================================== -->
-          <div
-            v-if="online"
-            class="d-flex align-center justify-space-between pt-6 pb-4 mx-2"
-          >
-            <v-btn
-              color="transparent"
-              height="65px"
-              dark
-              depressed
-              x-small
+      <!-- ================================================================================== -->
+      <!-- Buy Sell / Send / Swap buttons -->
+      <!-- ================================================================================== -->
+      <v-list class="px-5">
+        <v-list-item-group>
+          <div class="d-flex align-center">
+            <v-list-item
+              class="px-0"
+              active-class="remove-select-state"
               @click="openMoonpay"
             >
-              <div class="text-center" style="min-width: 50px">
+              <div class="text-center mx-auto my-2">
                 <img
                   src="@/assets/images/icons/menu/icon-menu-buy-sell.svg"
                   alt="Buy or Sell"
                   height="30"
                 />
-                <div
-                  class="whiteAlways--text mew-label text-transform--initial"
-                  style="margin-top: 3px"
-                >
-                  Buy/Sell
-                </div>
+                <div class="white--text mew-label btn-title">Buy/Sell</div>
               </div>
-            </v-btn>
+            </v-list-item>
 
-            <v-divider vertical></v-divider>
+            <v-divider vertical class="mx-3"></v-divider>
 
-            <v-btn
-              color="transparent"
-              height="65px"
-              dark
-              depressed
-              x-small
-              @click="$router.push({ name: ROUTES_WALLET.SEND_TX.NAME })"
+            <v-list-item
+              class="px-0"
+              :to="{ name: ROUTES_WALLET.SEND_TX.NAME }"
             >
-              <div class="text-center" style="min-width: 50px">
+              <div class="text-center mx-auto my-2">
                 <img
                   src="@/assets/images/icons/menu/icon-menu-send.svg"
                   alt="Send"
                   height="30"
                 />
-                <div
-                  class="whiteAlways--text mew-label text-transform--initial"
-                  style="margin-top: 3px"
-                >
-                  Send
-                </div>
+                <div class="white--text mew-label btn-title">Send</div>
               </div>
-            </v-btn>
+            </v-list-item>
 
-            <v-divider vertical></v-divider>
+            <v-divider vertical class="mx-3"></v-divider>
 
-            <v-btn
-              color="transparent"
-              height="65px"
-              dark
-              depressed
-              x-small
-              :class="[!hasSwap ? 'pointer-event--none' : '']"
-              @click="$router.push({ name: ROUTES_WALLET.SWAP.NAME })"
+            <v-list-item
+              :class="[!hasSwap ? 'opacity--30 pointer-event--none' : '']"
+              class="px-0"
+              :to="{ name: ROUTES_WALLET.SWAP.NAME }"
             >
-              <div class="text-center" style="min-width: 50px">
+              <div class="text-center mx-auto my-2">
                 <img
                   src="@/assets/images/icons/menu/icon-menu-swap.svg"
                   alt="Swap"
                   height="30"
-                  :class="[!hasSwap ? 'opacity--30' : '']"
                 />
-                <div
-                  :class="[
-                    !hasSwap ? 'textMedium--text' : '',
-                    'whiteAlways--text mew-label text-transform--initial'
-                  ]"
-                  style="margin-top: 3px"
-                >
-                  Swap
-                </div>
+                <div class="white--text mew-label btn-title">Swap</div>
               </div>
-            </v-btn>
+            </v-list-item>
           </div>
-        </div>
-      </template>
+        </v-list-item-group>
+      </v-list>
 
+      <!-- ================================================================================== -->
+      <!-- Wallet Side Nav -->
+      <!-- ================================================================================== -->
       <v-list>
-        <v-list-item-group model="menuSelected">
+        <v-list-item-group>
           <template v-for="(item, idx) in sectionOne">
             <v-list-item
               v-if="!item.children && shouldShow(item.route)"
@@ -150,10 +124,12 @@
               </div>
             </v-list-item>
 
+            <!-- Sub-menu items -->
             <v-list-group
               v-if="item.children"
               :key="item + idx + 2"
               prepend-icon=""
+              :value="expendSubMenu(item.children)"
             >
               <template #activator>
                 <v-list-item-icon class="mx-3">
@@ -196,7 +172,6 @@
         <v-list-item
           v-for="(item, idx) in sectionTwo"
           :key="item + idx"
-          dense
           :to="item.route"
           @click="item.fn()"
         >
@@ -214,10 +189,11 @@
         <div v-if="online" class="mt-3 px-8">
           <div class="matomo-tracking-switch">
             <v-switch
+              dark
               :input-value="consentToTrack"
               inset
-              :label="`Data Tracking ${consentToTrack ? 'On' : 'Off'}`"
-              color="greenPrimary"
+              :label="`Data Tracking is ${consentToTrack ? 'On' : 'Off'}`"
+              color="white"
               off-icon="mdi-alert-circle"
               @change="setConsent"
             />
@@ -280,15 +256,15 @@
 <script>
 import AppBtnMenu from '@/core/components/AppBtnMenu';
 import ModuleNotifications from '@/modules/notifications/ModuleNotifications';
-import send from '@/assets/images/icons/icon-send-enable.png';
+import send from '@/assets/images/icons/icon-send-enable.svg';
 import background from '@/assets/images/backgrounds/bg-light.jpg';
-import dashboard from '@/assets/images/icons/icon-dashboard-enable.png';
-import nft from '@/assets/images/icons/icon-nft.png';
-import dapp from '@/assets/images/icons/icon-dapp-center-enable.png';
-import contract from '@/assets/images/icons/icon-contract-enable.png';
-import message from '@/assets/images/icons/icon-message-enable.png';
-import settings from '@/assets/images/icons/icon-setting-enable.png';
-import logout from '@/assets/images/icons/icon-logout-enable.png';
+import dashboard from '@/assets/images/icons/icon-dashboard-enable.svg';
+import nft from '@/assets/images/icons/icon-nft.svg';
+import dapp from '@/assets/images/icons/icon-dapp-center-enable.svg';
+import contract from '@/assets/images/icons/icon-contract-enable.svg';
+import message from '@/assets/images/icons/icon-message-enable.svg';
+import settings from '@/assets/images/icons/icon-setting-enable.svg';
+import logout from '@/assets/images/icons/icon-logout-enable.svg';
 import BalanceCard from '@/modules/balance/ModuleBalanceCard';
 import ModuleSettings from '@/modules/settings/ModuleSettings';
 import { EventBus } from '@/core/plugins/eventBus';
@@ -438,6 +414,9 @@ export default {
     }
   },
   mounted() {
+    // If no menu item is selected on load, redirect user to Dashboard
+    this.redirectToDashboard();
+
     if (this.$route.name == ROUTES_WALLET.SETTINGS.NAME) {
       this.openSettings();
     }
@@ -478,12 +457,38 @@ export default {
     },
     toggleLogout() {
       this.showLogoutPopup = !this.showLogoutPopup;
+    },
+    /* =================================================================== */
+    /* If no menu item is selected on load, redirect user to Dashboard     */
+    /* =================================================================== */
+    redirectToDashboard() {
+      if (this.$route.name == ROUTES_WALLET.WALLETS.NAME) {
+        this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
+      }
+    },
+    /* =================================================================== */
+    /* If sub-menu item is selected on load, expend the sub-menu slot      */
+    /* =================================================================== */
+    expendSubMenu(children) {
+      for (const c of children) {
+        if (this.$route.name == c.route.name) return true;
+      }
     }
   }
 };
 </script>
 
+<style lang="scss" scoped>
+// Make selected top three button bold
+.v-list-item--active .btn-title {
+  font-weight: 500;
+}
+</style>
+
 <style lang="scss">
+// =======================================================
+// Global styles
+// =======================================================
 .new-dapp-label {
   border-radius: 2px;
   background: #ff445b;
@@ -518,7 +523,37 @@ export default {
   font-size: 36px !important;
   color: white !important;
 }
+
+// =======================================================
+// Scoped styles for .wallet-sidemenu
+// =======================================================
 .wallet-sidemenu {
+  .v-list-item--dense .v-list-item__title {
+    line-height: 20px !important;
+  }
+  .v-list-item,
+  .v-input--switch {
+    opacity: 0.7 !important;
+
+    &:hover {
+      opacity: 1 !important;
+    }
+  }
+
+  a.v-item--active,
+  .v-input--is-label-active {
+    opacity: 1 !important;
+    filter: grayscale(0);
+  }
+
+  .v-list-item--active.v-list-item:not(.v-list-group__header).remove-select-state {
+    background-color: transparent !important;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.2) !important;
+    }
+  }
+
   .v-list-item--link {
     border-top: none;
   }
@@ -553,8 +588,7 @@ export default {
     opacity: 0 !important;
   }
   .v-navigation-drawer__content {
-    margin-right: 5px;
-    margin-bottom: 10px;
+    margin-right: 2px;
     &::-webkit-scrollbar {
       width: 4px;
       height: 4px;
