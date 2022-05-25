@@ -101,6 +101,7 @@ import abi from '@/modules/balance/handlers/abiERC20.js';
 import Web3 from 'web3';
 import { toBNSafe } from '@/core/helpers/numberFormatHelper';
 import { toBase } from '@/core/helpers/unit';
+import { sellContracts } from './tokenList';
 export default {
   name: 'ModuleSellEth',
   components: { ButtonBalance, ModuleAddressBook },
@@ -145,10 +146,10 @@ export default {
     ...mapState('global', ['gasPriceType']),
     ...mapGetters('wallet', ['balanceInETH']),
     ...mapGetters('global', ['isEthNetwork', 'network', 'gasPriceByType']),
-    ...mapGetters('external', ['getCoinGeckoTokenById']),
+    ...mapGetters('external', ['contractToToken']),
     persistentHintMessage() {
       return this.hasPersistentHint
-        ? `Max adjusted to leave sufficient ${this.actualSelectedCurrency.name} for network fee`
+        ? `Max adjusted to leave sufficient ${this.actualSelectedCurrency.symbol} for network fee`
         : '';
     },
     maxButton() {
@@ -169,7 +170,6 @@ export default {
           item.contract === this.selectedCurrency.contract
         );
       });
-
       if (isInPreselected) {
         return this.selectedCurrency;
       }
@@ -177,20 +177,9 @@ export default {
       return this.preselectedCurrencies[0];
     },
     preselectedCurrencies() {
-      // hard writing for now
-      const preSel = ['ethereum', 'tether', 'usd-coin'];
-      const decimals = [18, 6, 6];
-      const contracts = [
-        MAIN_TOKEN_ADDRESS,
-        '0xdAC17F958D2ee523a2206206994597C13D831ec7',
-        '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
-      ];
       const arr = new Array();
-      for (let i = 0; i < preSel.length; i++) {
-        const crypto = this.getCoinGeckoTokenById(preSel[i]);
-        crypto['decimals'] = decimals[i];
-        crypto['contract'] = contracts[i];
-        arr.push(crypto);
+      for (const contract of sellContracts) {
+        arr.push(this.contractToToken(contract));
       }
       return arr;
     },
@@ -213,11 +202,11 @@ export default {
       return returnedArray;
     },
     name() {
-      return this.actualSelectedCurrency.name !== 'ETH' &&
-        this.actualSelectedCurrency.name !== 'USDC' &&
-        this.actualSelectedCurrency.name !== 'USDT'
+      return this.actualSelectedCurrency.symbol !== 'ETH' &&
+        this.actualSelectedCurrency.symbol !== 'USDC' &&
+        this.actualSelectedCurrency.symbol !== 'USDT'
         ? 'ETH'
-        : this.actualSelectedCurrency.name;
+        : this.actualSelectedCurrency.symbol;
     },
     disableSell() {
       return (
@@ -262,7 +251,7 @@ export default {
       return `${BigNumber(this.txFee).decimalPlaces(4)} ETH`;
     },
     errorMessages() {
-      const symbol = this.actualSelectedCurrency?.name
+      const symbol = this.actualSelectedCurrency?.symbol
         ? this.name
         : this.network.type.currencyName;
       const amount = BigNumber(this.amount);
@@ -451,7 +440,9 @@ export default {
         const newValue = BigNumber(newVal ? newVal : 0)
           .times(
             BigNumber(10).pow(
-              this.selectedCurrency?.text ? 18 : this.selectedCurrency.decimals
+              this.selectedCurrency?.decimals
+                ? 18
+                : this.selectedCurrency.decimals
             )
           )
           .toString();
@@ -552,7 +543,7 @@ export default {
       this.validToAddress = valid;
     },
     isValidToAddress(address) {
-      return MultiCoinValidator.validate(address, this.selectedCurrency.name);
+      return MultiCoinValidator.validate(address, this.selectedCurrency.symbol);
     }
   }
 };

@@ -221,7 +221,7 @@ export default {
       return this.inWallet ? this.address : this.toAddress;
     },
     selectedCryptoName() {
-      return this.selectedCurrency.name;
+      return this.selectedCurrency.symbol;
     },
     isEUR() {
       return this.selectedFiatName === 'EUR' || this.selectedFiatName === 'GBP';
@@ -247,7 +247,7 @@ export default {
   methods: {
     ...mapActions('global', ['setNetwork']),
     isValidToAddress(address) {
-      return MultiCoinValidator.validate(address, this.selectedCurrency.name);
+      return MultiCoinValidator.validate(address, this.selectedCurrency.symbol);
     },
     openSimplex() {
       this.orderHandler
