@@ -94,7 +94,7 @@ import { isEmpty, debounce, isNumber } from 'lodash';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import BigNumber from 'bignumber.js';
 import handlerSend from '@/modules/send/handlers/handlerSend.js';
-import { fromWei, toBN } from 'web3-utils';
+import { fromWei } from 'web3-utils';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common.js';
 import abi from '@/modules/balance/handlers/abiERC20.js';
 // import nodes from '@/utils/networks';
@@ -263,6 +263,13 @@ export default {
         return "Amount can't be negative.";
       }
 
+      if (amount.gt(0) && amount.lt(this.min)) {
+        return `The minimum amount to sell is ${this.min.toString()} ${symbol}.`;
+      }
+      if (amount.gt(0) && amount.gt(this.max)) {
+        return `The maximum amount to sell is ${this.max.toString()} ${symbol}.`;
+      }
+
       if (this.inWallet) {
         if (amount.gt(this.selectedBalance)) {
           return `You do not have enough ${symbol} to sell.`;
@@ -274,7 +281,12 @@ export default {
           return `You do not have enough ETH to pay for network fee.`;
         }
       } else {
-        if (!this.hasEnoughAssets && this.actualValidAddress) {
+        // Not in wallet
+        if (
+          this.actualValidAddress &&
+          this.isValidAmount &&
+          !this.hasEnoughAssets
+        ) {
           return 'Address provided does not have enough balance to complete the transaction';
         }
       }
@@ -286,13 +298,6 @@ export default {
         )
       ) {
         return `Invalid decimals! Max decimals for selected currency is ${this.actualSelectedCurrency.decimals}`;
-      }
-
-      if (amount.gt(0) && amount.lt(this.min)) {
-        return `The minimum amount to sell is ${this.min.toString()} ${symbol}.`;
-      }
-      if (amount.gt(0) && amount.gt(this.max)) {
-        return `The maximum amount to sell is ${this.max.toString()} ${symbol}.`;
       }
 
       return '';
@@ -328,6 +333,7 @@ export default {
       return toBNSafe(amount);
     },
     getAmountBN() {
+      // Duplicate of getCalculatedAmount
       if (!this.isValidAmount) return toBNSafe(0);
       const amount = toBase(
         this.amount ? this.amount : 0,
@@ -336,8 +342,16 @@ export default {
       return toBNSafe(amount);
     },
     hasEnoughAssets() {
-      if (this.amount && !this.isValidAmount) return false;
-      return toBN(this.selectedBalance).gte(this.getAmountBN);
+      try {
+        const bal = toBase(
+          this.selectedBalance,
+          this.actualSelectedCurrency.decimals
+        );
+        return toBNSafe(bal).gte(this.getAmountBN);
+      } catch (e) {
+        console.log(e);
+        return false;
+      }
     },
     actualAddress() {
       return this.inWallet ? this.address : this.toAddress;
@@ -397,9 +411,7 @@ export default {
   },
   methods: {
     getEthBalance() {
-      if (!this.inWallet) {
-        return;
-      }
+      if (!this.actualValidAddress) return;
       const web3Instance = new Web3('https://nodes.mewapi.io/rpc/eth');
       web3Instance.eth.getBalance(this.actualAddress).then(res => {
         this.fetchingBalance = false;
@@ -407,7 +419,7 @@ export default {
       });
     },
     getTokenBalance() {
-      if (!this.inWallet) return;
+      if (!this.actualValidAddress) return;
       const web3Instance = new Web3('https://nodes.mewapi.io/rpc/eth');
       const contract = new web3Instance.eth.Contract(
         abi,
@@ -447,7 +459,9 @@ export default {
           )
           .toString();
         this.sendHandler.setValue(newValue);
-        if (this.errorMessages === '') {
+        // Check if user has enough assets or it throws insufficient funds
+        // Throws error when switching to token with lower decimals
+        if (this.errorMessages === '' && this.hasEnoughAssets) {
           this.estimatingFees = true;
           this.sendHandler
             .estimateGas()
