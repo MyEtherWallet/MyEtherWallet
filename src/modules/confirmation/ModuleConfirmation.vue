@@ -75,6 +75,7 @@
             :is-to-non-eth="toNonEth"
             :to-currency="swapInfo.toType"
             :to-address="swapInfo.to"
+            :from-price="swapInfo.fromTokenType.price"
           />
           <!-- Warning Sheet -->
           <div

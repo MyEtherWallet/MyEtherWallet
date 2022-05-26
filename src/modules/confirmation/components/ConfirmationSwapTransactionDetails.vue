@@ -23,9 +23,14 @@
         </div>
       </template>
       <template #rightColItem1>
-        <div class="mew-body">
+        <div v-if="fromType != 'MATIC'" class="mew-body">
           {{ convertedFees.value }}
           <span class="greyPrimary--text">{{ convertedFees.unit }}</span>
+          ~{{ txFeeUSD }}
+        </div>
+        <div v-else class="mew-body">
+          {{ txFeeToken }}
+          <span class="greyPrimary--text">{{ fromType }}</span>
           ~{{ txFeeUSD }}
         </div>
       </template>
@@ -133,6 +138,10 @@ export default {
     toAddress: {
       type: String,
       default: ''
+    },
+    fromPrice: {
+      type: String,
+      default: ''
     }
   },
   computed: {
@@ -144,6 +153,13 @@ export default {
     txFeeUSD() {
       const feeETH = BigNumber(fromWei(this.txFee));
       return this.getFiatValue(feeETH.times(this.fiatValue));
+    },
+    txFeeToken() {
+      const feeETH = BigNumber(fromWei(this.txFee));
+      const feeUSD = feeETH.times(this.fiatValue);
+      const tokenPrice = BigNumber(this.fromPrice.substring(1));
+      const feeInToken = feeUSD.div(tokenPrice);
+      return feeInToken.toNumber().toFixed(6);
     },
     summaryItems() {
       const newArr = ['Exchange rate', 'Transaction fee'];
