@@ -289,6 +289,7 @@
 </template>
 
 <script>
+import MewSelect from './MewSelect';
 import MultiCoinValidator from 'multicoin-address-validator';
 import AppButtonBalance from '@/core/components/AppButtonBalance';
 import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
@@ -319,6 +320,7 @@ const MIN_GAS_LIMIT = 800000;
 export default {
   name: 'ModuleSwap',
   components: {
+    MewSelect,
     AppButtonBalance,
     AppUserMsgBlock,
     ModuleAddressBook,
