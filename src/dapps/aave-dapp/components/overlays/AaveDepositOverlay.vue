@@ -32,6 +32,7 @@
       :form-text="aaveDepositForm.formText"
       :button-title="aaveDepositForm.buttonTitle"
       :token-balance="tokenBalance"
+      :token-decimals="selectedTokenDecimal"
       @cancel="callClose"
       @emitValues="handleDepositAmount"
     />
@@ -64,6 +65,7 @@ import { isEmpty } from 'lodash';
 import handlerAave from '../../handlers/handlerAave.mixin';
 import BigNumber from 'bignumber.js';
 import { mapGetters } from 'vuex';
+import { toBase } from '@/core/helpers/unit';
 
 export default {
   components: { AaveTable, AaveSummary, AaveAmountForm },
@@ -79,6 +81,11 @@ export default {
   computed: {
     ...mapGetters('wallet', ['tokensList', 'balanceInETH']),
     ...mapGetters('global', ['network']),
+    selectedTokenDecimal() {
+      return this.selectedTokenDetails
+        ? this.selectedTokenDetails.decimals
+        : 18;
+    },
     tokenBalance() {
       const symbol = this.selectedToken.token;
       if (symbol === this.network.type.currencyName) return this.balanceInETH;
@@ -169,9 +176,10 @@ export default {
       this.close();
     },
     handleConfirm() {
+      const amount = toBase(this.amount, this.selectedTokenDetails.decimals);
       const param = {
         user: this.address,
-        amount: this.amount,
+        amount: amount,
         referralCode: '14',
         reserve: this.selectedTokenDetails.underlyingAsset
       };

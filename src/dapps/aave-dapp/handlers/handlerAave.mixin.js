@@ -214,7 +214,7 @@ export default {
         const poolContract = this.lendingPool.getContractInstance(LENDING_POOL);
         const txData = await poolContract.populateTransaction.deposit(
           reserve,
-          BigNumber(amount),
+          amount,
           user,
           referralCode
         );

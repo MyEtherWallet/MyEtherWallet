@@ -74,6 +74,10 @@ import { ACTION_TYPES } from '@/dapps/aave-dapp/handlers/helpers';
 export default {
   name: 'AaveAmountForm',
   props: {
+    tokenDecimal: {
+      type: Number,
+      default: 18
+    },
     selectedToken: {
       type: Object,
       default: () => {}
@@ -177,7 +181,7 @@ export default {
         this.buttonTitle.action.toLowerCase() === ACTION_TYPES.withdraw
           ? this.aaveBalance
           : this.tokenBalance;
-      return BigNumber(amt).times(per).toFixed();
+      return BigNumber(amt).times(per).toFixed(this.tokenDecimal);
     }
   }
 };
