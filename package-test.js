@@ -39,6 +39,7 @@ const EXCEPTIONS = [
   // versions for vue3
   'vue-router',
   'vuex',
+  'eslint-plugin-vue',
   '@vue/test-utils',
   '@vue/babel-preset-app',
   '@vue/cli-plugin-babel',
