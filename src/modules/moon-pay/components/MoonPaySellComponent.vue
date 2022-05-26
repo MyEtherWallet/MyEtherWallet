@@ -349,7 +349,7 @@ export default {
         );
         return toBNSafe(bal).gte(this.getAmountBN);
       } catch (e) {
-        console.log(e);
+        Toast(e, {}, ERROR);
         return false;
       }
     },
@@ -365,6 +365,7 @@ export default {
       handler: function (newVal) {
         this.maxBalance = '0';
         this.hasPersistentHint = false;
+        this.selectedBalance = '0';
         if (
           !isEmpty(this.sendHandler) &&
           this.actualSelectedCurrency.hasOwnProperty('name')
@@ -459,8 +460,6 @@ export default {
           )
           .toString();
         this.sendHandler.setValue(newValue);
-        // Check if user has enough assets or it throws insufficient funds
-        // Throws error when switching to token with lower decimals
         if (this.errorMessages === '' && this.hasEnoughAssets) {
           this.estimatingFees = true;
           this.sendHandler
