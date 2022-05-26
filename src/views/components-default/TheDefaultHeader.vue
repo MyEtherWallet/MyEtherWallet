@@ -1,13 +1,5 @@
 <template>
   <div class="default-header expandHeader">
-    <div
-      class="d-flex align-center justify-center pa-2 greyLight textMedium--text"
-    >
-      Missing the old version?&nbsp;
-      <a href="https://v5.myetherwallet.com" rel="noopener noreferrer">
-        You can find version 5 here
-      </a>
-    </div>
     <v-container class="d-flex align-center pt-8">
       <v-row align="center" no-gutters>
         <v-col class="d-md-none" cols="4">
