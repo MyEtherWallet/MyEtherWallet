@@ -240,6 +240,7 @@
                 :is-loading="isLoadingProviders"
                 :providers-error="providersErrorMsg"
                 :class="isFromNonChain ? '' : 'mt-7'"
+                :selected-provider-id="selectedProviderId"
               />
               <!--
                   =====================================================================================
@@ -384,7 +385,8 @@ export default {
       isValidRefundAddr: false,
       localGasPrice: '0',
       mainTokenDetails: {},
-      cachedAmount: '0'
+      cachedAmount: '0',
+      selectedProviderId: undefined
     };
   },
   computed: {
@@ -966,6 +968,9 @@ export default {
       },
       immediate: true
     },
+    selectedProvider(p) {
+      if (isEmpty(p)) this.selectedProviderId = undefined;
+    },
     defaults: {
       handler: function () {
         this.setDefaults();
@@ -1079,6 +1084,7 @@ export default {
       this.isLoading = false;
       this.loadingFee = false;
       this.feeError = '';
+      this.selectedProviderId = undefined;
       this.defaults = {
         fromToken: this.fromToken
       };
@@ -1271,37 +1277,40 @@ export default {
             )
           })
           .then(quotes => {
-            if (this.tokenInValue === this.cachedAmount) return;
-            this.selectedProvider = {};
-            this.lastSetToken = quotes[0].amount;
-            this.availableQuotes = quotes.map(q => {
-              q.rate = new BigNumber(q.amount)
-                .dividedBy(new BigNumber(this.tokenInValue))
-                .toString();
-              q.isSelected = false;
-              return q;
-            });
-            if (this.availableQuotes.length > 1) {
-              this.availableQuotes = quotes.filter(q => q.rate !== '0');
+            if (this.tokenInValue === this.cachedAmount) {
+              this.selectedProvider = {};
+              this.lastSetToken = quotes[0].amount;
+              this.availableQuotes = quotes.map(q => {
+                q.rate = new BigNumber(q.amount)
+                  .dividedBy(new BigNumber(this.tokenInValue))
+                  .toString();
+                q.isSelected = false;
+                return q;
+              });
+              if (this.availableQuotes.length > 1) {
+                this.availableQuotes = quotes.filter(q => q.rate !== '0');
+              }
+              if (quotes.length) {
+                this.tokenOutValue = quotes[0].amount;
+              }
+              this.step = 1;
+              this.isLoadingProviders = false;
             }
-            if (quotes.length) {
-              this.tokenOutValue = quotes[0].amount;
-            }
-            this.step = 1;
-            this.isLoadingProviders = false;
           });
       }
     },
-    setProvider(idx) {
+    setProvider(idx, clicked) {
       this.belowMinError = false;
       this.availableQuotes.forEach((q, _idx) => {
         if (_idx === idx) {
+          this.selectedProviderId = _idx;
           q.isSelected = true;
           this.tokenOutValue = q.amount;
           this.getTrade(idx);
-          if (this.tokenInValue !== this.cachedAmount) return;
-          console.log(q);
-          this.selectedProvider = q !== this.selectedProvider ? q : {};
+          if (!clicked) this.selectedProvider = q;
+          else
+            this.selectedProvider =
+              q.amount !== this.selectedProvider.amount ? q : {};
         }
       });
     },
@@ -1340,14 +1349,15 @@ export default {
       const trade = this.swapper.getTrade(swapObj);
       if (trade instanceof Promise) {
         trade.then(tradeResponse => {
-          if (this.tokenInValue !== this.cachedAmount) return;
-          if (
-            isObject(tradeResponse) &&
-            tradeResponse.hasOwnProperty('provider')
-          ) {
-            this.allTrades[idx] = tradeResponse;
+          if (this.tokenInValue === this.cachedAmount) {
+            if (
+              isObject(tradeResponse) &&
+              tradeResponse.hasOwnProperty('provider')
+            ) {
+              this.allTrades[idx] = tradeResponse;
+            }
+            this.setupTrade(tradeResponse);
           }
-          this.setupTrade(tradeResponse);
         });
       } else {
         this.setupTrade(trade);
@@ -1364,7 +1374,6 @@ export default {
         this.feeError = 'Provider issue';
         return;
       }
-      if (this.tokenInValue !== this.cachedAmount) return;
       this.feeError = '';
       this.currentTrade = trade;
       this.currentTrade.gasPrice = this.localGasPrice;
