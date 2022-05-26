@@ -97,7 +97,7 @@ import handlerSend from '@/modules/send/handlers/handlerSend.js';
 import { fromWei } from 'web3-utils';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common.js';
 import abi from '@/modules/balance/handlers/abiERC20.js';
-// import nodes from '@/utils/networks';
+import nodes from '@/utils/networks';
 import Web3 from 'web3';
 import { toBNSafe } from '@/core/helpers/numberFormatHelper';
 import { toBase } from '@/core/helpers/unit';
@@ -412,7 +412,7 @@ export default {
   methods: {
     getEthBalance() {
       if (!this.actualValidAddress) return;
-      const web3Instance = new Web3('https://nodes.mewapi.io/rpc/eth');
+      const web3Instance = new Web3(nodes.ETH[0].url);
       web3Instance.eth.getBalance(this.actualAddress).then(res => {
         this.fetchingBalance = false;
         this.selectedBalance = fromWei(res);
@@ -420,7 +420,7 @@ export default {
     },
     getTokenBalance() {
       if (!this.actualValidAddress) return;
-      const web3Instance = new Web3('https://nodes.mewapi.io/rpc/eth');
+      const web3Instance = new Web3(nodes.ETH[0].url);
       const contract = new web3Instance.eth.Contract(
         abi,
         this.actualSelectedCurrency.contract
