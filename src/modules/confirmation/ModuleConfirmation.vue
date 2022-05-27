@@ -30,7 +30,7 @@
       @close="reset"
     >
       <template #dialogBody>
-        <v-card-text ref="scrollableContent" class="py-0 px-5 px-md-0">
+        <v-card-text ref="scrollableContent" class="py-0 px-4 px-md-0">
           <div
             v-if="toNonEth"
             class="px-4 py-6 pr-6 textBlack2--text border-radius--5px mb-5"

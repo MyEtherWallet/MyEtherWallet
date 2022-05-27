@@ -8,7 +8,7 @@
     :persistent="isPersistent"
     @click:outside="handleClickOutside"
   >
-    <v-card v-if="scrollable" color="white" class="py-0 px-5 px-md-7">
+    <v-card v-if="scrollable" color="white" class="py-0 px-0 px-md-0">
       <!--
       =====================================================================================
         Dialog Header
@@ -39,7 +39,9 @@
         Dialog Body: Anchored
       =====================================================================================
       -->
-      <slot v-else name="dialogBody" />
+      <div v-else class="px-0 px-md-6 pb-2" style="overflow-y: auto">
+        <slot name="dialogBody" />
+      </div>
       <!--
       =====================================================================================
         Dialog action
@@ -270,8 +272,9 @@ export default {
 
 <style lang="scss" scoped>
 .header-close-icon {
-  right: 10px;
-  top: 10px;
+  right: 30px;
+  top: auto;
+  bottom: auto;
   position: absolute;
 }
 </style>
