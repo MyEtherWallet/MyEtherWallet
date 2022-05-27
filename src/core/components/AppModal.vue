@@ -15,10 +15,18 @@
         =====================================================================================
       -->
       <v-card-title class="justify-center py-5 py-md-8">
-        <div class="mew-heading-2 text-center">
+        <div class="mew-heading-2 text-center pr-6 pr-md-0">
           {{ title }}
         </div>
-        <v-btn v-if="hasCloseButton" icon class="header-close-icon">
+        <v-btn
+          v-if="hasCloseButton"
+          icon
+          :class="
+            $vuetify.breakpoint.mdAndUp
+              ? 'header-close-icon'
+              : 'header-close-icon-mobile'
+          "
+        >
           <v-icon size="x-large" color="grey cursor--pointer" @click="close">
             mdi-close
           </v-icon>
@@ -273,6 +281,13 @@ export default {
 <style lang="scss" scoped>
 .header-close-icon {
   right: 30px;
+  top: auto;
+  bottom: auto;
+  position: absolute;
+}
+
+.header-close-icon-mobile {
+  right: 10px;
   top: auto;
   bottom: auto;
   position: absolute;
