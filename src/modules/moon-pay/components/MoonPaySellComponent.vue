@@ -378,9 +378,9 @@ export default {
       },
       deep: true
     },
-    defaultCurrency(e) {
-      this.selectedCurrency = e;
-    },
+    // defaultCurrency(e) {
+    //   this.selectedCurrency = e;
+    // },
     amount(newVal) {
       this.debouncedSetAmount(newVal);
     },

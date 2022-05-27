@@ -132,7 +132,7 @@ export default {
           img: 'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ETH-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.svg',
           name: 'ETH',
           subtext: 'Ethereum',
-          value: 'Ethereum',
+          value: 'ETH',
           symbol: 'ETH',
           network: 'ETH',
           contract: MAIN_TOKEN_ADDRESS
@@ -165,21 +165,22 @@ export default {
   },
   watch: {
     open(newVal) {
+      console.log('open', newVal);
       this.isOpen = newVal;
       if (newVal) {
         this.orderHandler = new handler();
       }
-      this.selectedCurrency = {};
+      this.selectedCurrency = this.defaltCurrency;
     },
     address() {
-      this.selectedCurrency = {};
+      this.selectedCurrency = this.defaltCurrency;
     }
   },
   methods: {
     ...mapActions('wallet', ['setWeb3Instance']),
     ...mapActions('global', ['setNetwork']),
     onTab(val) {
-      this.selectedCurrency = {};
+      this.selectedCurrency = this.defaltCurrency;
       if (val === 1) {
         if (this.network.type.chainID !== 1) {
           const defaultNetwork = this.nodes['ETH'].find(item => {
@@ -198,6 +199,7 @@ export default {
       }
     },
     close() {
+      console.log('close');
       this.activeTab = 0;
       this.step = 0;
       this.onlySimplex = false;
