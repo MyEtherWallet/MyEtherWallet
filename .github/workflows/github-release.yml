@@ -2,6 +2,9 @@ name: create github release [v6]
 
 on:
   push:
+    # tags:
+    #  - 'v6.*'
+    # revert later
     branches:
       - 'hotfix/build'
 
@@ -10,8 +13,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        with:
-          ref: main
+        #with:
+        #  ref: main
+
+      #- name: verify tag
+      #  run: |
+      #    git branch --contains $GITHUB_SHA | sed -e 's/^[ \t *]*//' | grep '^main$'
+      #    git checkout $GITHUB_SHA
 
       - name: setup env
         id: node-version
@@ -45,16 +53,16 @@ jobs:
         run: docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build"
 
       - name: generate release files
-        run: bash ./scripts/generateReleaseFiles.sh "v6.5.5"
+        run: bash ./scripts/generateReleaseFiles.sh ${{ steps.get_release_tag.outputs.VERSION }}
 
       - name: build offline
         run: docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:offline"
 
-      - name: generate release files
-        run: bash ./scripts/generateOfflineFiles.sh "v6.5.5"
+      - name: generate offline files
+        run: bash ./scripts/generateOfflineFiles.sh ${{ steps.get_release_tag.outputs.VERSION }}
 
       - name: create release
         env:
           GITHUB_TOKEN: ${{secrets.MEW_BOT_TOKEN}}
         run: |
-          bash ./scripts/release.sh "v6.5.5" $GITHUB_TOKEN $GITHUB_REPOSITORY true
+          bash ./scripts/release.sh ${{ steps.get_release_tag.outputs.VERSION }} $GITHUB_TOKEN $GITHUB_REPOSITORY true
