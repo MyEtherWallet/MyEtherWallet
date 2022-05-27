@@ -14,8 +14,7 @@ export const knownErrors = {
   'Provided address null is invalid': 'No address provided',
   'transaction underpriced': 'Transaction gas price too low',
   'invalid remainder': 'invalid remainder',
-  'Internal JSON-RPC error. { "code": -32000, "message": "execution reverted" }':
-    'Execution Reverted',
+  'Internal JSON-RPC error': 'Internal JSON-RPC error. Execution Reverted',
   'Transaction has been reverted by the EVM':
     'Transaction has been reverted by the EVM',
   'TypeError: Failed to fetch': 'Request Failed. Please refresh and try again.',
