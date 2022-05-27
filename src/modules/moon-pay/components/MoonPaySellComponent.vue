@@ -186,6 +186,8 @@ export default {
     currencyItems() {
       const tokensList = this.preselectedCurrencies;
       const imgs = tokensList.map(item => {
+        item.value = item.name;
+        item.name = item.symbol;
         return item.img;
       });
 

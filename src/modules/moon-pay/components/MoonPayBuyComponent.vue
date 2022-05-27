@@ -289,6 +289,8 @@ export default {
                 actualPrice ? actualPrice.price : '0',
                 this.currencyConfig
               ).value;
+              token.value = token.name;
+              token.name = token.symbol;
               return token;
             })
           : tokenList;
