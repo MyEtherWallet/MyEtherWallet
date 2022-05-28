@@ -3,6 +3,7 @@ import toBuffer from '@/core/helpers/toBuffer';
 import vuexStore from '@/core/store';
 import { mapState } from 'vuex';
 import ErrorList from '../errors';
+import { verifyMessage as universalVerifyMessage } from '@ambire/signature-validator';
 
 export default class SignAndVerifyMessage {
   constructor() {
@@ -37,29 +38,43 @@ export default class SignAndVerifyMessage {
     }
   }
 
-  verifyMessage(message) {
+  async verifyMessage(message, web3) {
     try {
       const json = JSON.parse(message);
-      let hash = hashPersonalMessage(toBuffer(json.msg));
-      const sig = Buffer.from(json.sig.replace('0x', ''), 'hex');
-      if (sig.length !== 65) {
-        throw ErrorList.INVALID_LENGTH;
+      const signerToVerify = json.address;
+
+      const isValid = await universalVerifyMessage({
+        provider: web3.currentProvider,
+        message: Buffer.from(json.msg.substr(2), 'hex'),
+        signer: signerToVerify,
+        signature: '0x' + json.sig
+      });
+
+      let signer = signerToVerify.substr(2);
+
+      if (!isValid) {
+        // keeping the original feature in case signers do not match as we still want to display the recovered signer
+        let hash = hashPersonalMessage(toBuffer(json.msg));
+        const sig = Buffer.from(json.sig.replace('0x', ''), 'hex');
+        if (sig.length !== 65) {
+          throw ErrorList.INVALID_LENGTH;
+        }
+        sig[64] = sig[64] === 0 || sig[64] === 1 ? sig[64] + 27 : sig[64];
+        if (json.version === '1') {
+          hash = this.web3().utils.sha3(json.msg);
+        }
+        const pubKey = ecrecover(
+          hash,
+          sig[64],
+          sig.slice(0, 32),
+          sig.slice(32, 64)
+        );
+        signer = pubToAddress(pubKey).toString('hex').toLowerCase();
       }
-      sig[64] = sig[64] === 0 || sig[64] === 1 ? sig[64] + 27 : sig[64];
-      if (json.version === '1') {
-        hash = this.web3().utils.sha3(json.msg);
-      }
-      const pubKey = ecrecover(
-        hash,
-        sig[64],
-        sig.slice(0, 32),
-        sig.slice(32, 64)
-      );
+
       return {
-        verified:
-          !json.address.replace('0x', '').toLowerCase() !==
-          pubToAddress(pubKey).toString('hex').toLowerCase(),
-        signer: pubToAddress(pubKey).toString('hex').toLowerCase()
+        verified: isValid,
+        signer
       };
     } catch (e) {
       throw ErrorList.FAILED_TO_VERIFY;

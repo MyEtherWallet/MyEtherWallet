@@ -64,15 +64,21 @@ export default {
   },
   computed: {},
   mounted() {
-    this.signAndVerify = new SignAndVerifyMessage(this.web3, this.address);
+    this.signAndVerify = new SignAndVerifyMessage(
+      this.$store.state.wallet.web3,
+      this.$store.state.wallet.address
+    );
   },
   methods: {
-    verifyMessage() {
+    async verifyMessage() {
       try {
         this.verificationError = false;
         this.signResult = false;
 
-        const signCheck = this.signAndVerify.verifyMessage(this.message);
+        const signCheck = await this.signAndVerify.verifyMessage(
+          this.message,
+          this.$store.state.wallet.web3
+        );
 
         if (signCheck.verified) {
           this.signResult = true;
