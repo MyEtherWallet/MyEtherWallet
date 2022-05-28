@@ -23,11 +23,17 @@
             1 {{ data.fromT.symbol }} / {{ data.rate }} {{ data.toT.symbol }}
           </div>
           <div class="d-flex align-center">
+            <!--
             <img
               width="22"
               height="22"
               src="https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ETH-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.svg"
               alt="currency-icon"
+            />
+            -->
+            <mew-token-container
+              :img="require('@/assets/images/networks/eth.svg')"
+              size="small"
             />
             <img
               width="18"
@@ -69,6 +75,7 @@
 </template>
 
 <script>
+import MewTokenContainer from '@/components/MewTokenContainer.vue';
 import handlerSwap from '@/modules/swap/handlers/handlerSwap';
 import { mapState, mapGetters } from 'vuex';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
@@ -157,7 +164,7 @@ const STATIC_PAIRS = [
 ];
 export default {
   name: 'ModuleSwapRates',
-  components: {},
+  components: { MewTokenContainer },
   mixins: [handlerAnalytics],
   props: {
     mobile: {

@@ -3,7 +3,6 @@
   <!-- Mew Token Container -->
   <!-- ===================================================================================== -->
   <div
-    :style="'height:' + getSize + ';width:' + getSize"
     class="mew-components--mew-token-container d-flex align-center justify-center"
   >
     <!-- ===================================================================================== -->
@@ -23,7 +22,7 @@
 -->
     <img
       v-if="!loading && img"
-      :height="getSize"
+      :style="{ height: `${getSize}`, width: `${getSize}` }"
       :src="img || ethTokenPlaceholder"
       :alt="name"
       loading="lazy"
@@ -136,6 +135,7 @@ export default {
   * has to be global styles to override vuetify
   */
 .mew-components--mew-token-container {
+  height: 100%;
   overflow: hidden;
   background-color: var(--v-white-base);
   border-radius: 50%;

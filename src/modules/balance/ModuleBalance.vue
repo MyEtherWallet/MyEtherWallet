@@ -99,6 +99,7 @@
 </template>
 
 <script>
+import MewModule from '@/components/MewModule';
 import Loader from './ModuleBalanceLoader';
 import BalanceChart from '@/modules/balance/components/BalanceChart';
 import BalanceEmptyBlock from './components/BalanceEmptyBlock';
@@ -112,6 +113,7 @@ import BigNumber from 'bignumber.js';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 export default {
   components: {
+    MewModule,
     Loader,
     BalanceChart,
     BalanceEmptyBlock

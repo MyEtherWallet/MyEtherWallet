@@ -28,7 +28,7 @@
           -->
           <div class="text-center">
             <v-img
-              src="../assets/eth-blocks-qrs.svg"
+              src="../assets/eth-blocks-qrs.png"
               height="129"
               contain
               class="mt-8 mt-md-0"

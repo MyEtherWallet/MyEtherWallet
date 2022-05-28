@@ -39,12 +39,14 @@
           <div>Last Block: {{ lastBlock }}</div>
         </div>
       </div>
-      <v-img :src="icon" :max-height="65" :max-width="65" contain />
+      <!-- <v-img :src="icon" :max-height="65" :max-width="65" contain /> -->
+      <mew-token-container :img="icon" size="large" />
     </mew6-white-sheet>
   </div>
 </template>
 
 <script>
+import MewTokenContainer from '@/components/MewTokenContainer.vue';
 import NetworkSwitch from './components/NetworkSwitch';
 import { mapGetters, mapState } from 'vuex';
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
@@ -52,7 +54,7 @@ import WALLET_TYPES from '../access-wallet/common/walletTypes';
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
 export default {
   name: 'ModuleNetwork',
-  components: { NetworkSwitch },
+  components: { NetworkSwitch, MewTokenContainer },
   beforeRouteLeave(to, from, next) {
     if (to.name == ROUTES_HOME.ACCESS_WALLET.NAME) {
       next({ name: ROUTES_WALLET.DASHBOARD.NAME });
