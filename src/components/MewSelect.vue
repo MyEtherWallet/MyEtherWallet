@@ -76,7 +76,7 @@
             class="label-token-img"
             :loading="loading"
             :img="url"
-            size="small"
+            size="medium"
           />
           <div
             class="total-token-placeholder inputBorder d-flex align-center justify-center mew-caption"

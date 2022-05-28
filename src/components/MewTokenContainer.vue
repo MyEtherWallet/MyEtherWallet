@@ -4,7 +4,7 @@
   <!-- ===================================================================================== -->
   <div
     :style="'height:' + getSize + ';width:' + getSize"
-    class="mew-token-container d-flex align-center justify-center"
+    class="mew-components--mew-token-container d-flex align-center justify-center"
   >
     <!-- ===================================================================================== -->
     <!-- Loading State -->
@@ -130,18 +130,17 @@ export default {
   }
 };
 </script>
-<style lang="scss" scoped>
-.mew-token-container {
-  background-color: var(--v-white-base);
-  border-radius: 50%;
-  box-shadow: inset 0px 0px 2px rgba(25, 33, 51, 0.16);
-}
-</style>
+
 <style lang="scss">
 /**
   * has to be global styles to override vuetify
   */
-.mew-token-container {
+.mew-components--mew-token-container {
+  overflow: hidden;
+  background-color: var(--v-white-base);
+  border-radius: 50%;
+  box-shadow: inset 0px 0px 2px rgba(0, 0, 0, 0.3);
+
   .token-skeleton {
     .v-skeleton-loader__avatar {
       background-color: var(--v-greyLight-base);

@@ -289,7 +289,7 @@
 </template>
 
 <script>
-import MewSelect from './MewSelect';
+import MewSelect from '@/components/MewSelect';
 import MultiCoinValidator from 'multicoin-address-validator';
 import AppButtonBalance from '@/core/components/AppButtonBalance';
 import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
