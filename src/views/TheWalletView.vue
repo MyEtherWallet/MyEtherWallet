@@ -16,7 +16,7 @@
 
 <script>
 import { mapActions, mapState, mapGetters } from 'vuex';
-import { toBN } from 'web3-utils';
+import { toBN, toHex } from 'web3-utils';
 import TheWalletSideMenu from './components-wallet/TheWalletSideMenu';
 import TheWalletHeader from './components-wallet/TheWalletHeader';
 import TheWalletFooter from './components-wallet/TheWalletFooter';
@@ -58,6 +58,7 @@ export default {
     },
     network() {
       this.web3.eth.clearSubscriptions();
+      this.matchNetwork();
     },
     web3() {
       this.subscribeToBlockNumber();
@@ -133,7 +134,7 @@ export default {
     },
     /**
      * Checks Metamask chainID on load, switches current network if it doesn't match
-     * and setup listenerss for metamask changes
+     * and setup listeners for metamask changes
      */
     web3Listeners() {
       if (window.ethereum.on) {
@@ -147,6 +148,34 @@ export default {
         );
       }
     },
+    async matchNetwork() {
+      const { ethereum } = window;
+      if (ethereum) {
+        const { type: network, url } = this.network;
+        const data = {
+          chainId: toHex(network.chainID),
+          chainName: network.name_long,
+          rpcUrls: [url],
+          nativeCurrency: {
+            name: network.name_long,
+            symbol: network.name,
+            decimals: ''
+          },
+          blockExplorerUrls: [
+            network.blockExplorerAddr,
+            network.blockExplorerTX
+          ]
+        };
+        try {
+          await ethereum.request({
+            method: 'wallet_addEthereumChain',
+            params: [data]
+          });
+        } catch {
+          Toast('There was an error switching metamask network.', {}, ERROR);
+        }
+      }
+    },
     async findAndSetNetwork() {
       const networkId = await window.ethereum.request({
         method: 'net_version'
@@ -154,7 +183,6 @@ export default {
       const foundNetwork = Object.values(nodeList).find(item => {
         if (toBN(networkId).toNumber() === item[0].type.chainID) return item;
       });
-
       if (window.ethereum.isMetaMask) {
         this.setNetwork(foundNetwork[0]).then(() => {
           this.setWeb3Instance(new Web3(window.ethereum));
