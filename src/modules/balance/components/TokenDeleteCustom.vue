@@ -108,16 +108,16 @@ export default {
       step: 1,
       tableHeaders: [
         {
-          text: 'Token',
-          value: 'token',
-          sortable: false,
-          width: '20%'
-        },
-        {
           text: 'Contract Address',
           value: 'address',
           sortable: false,
           width: '50%'
+        },
+        {
+          text: 'Token',
+          value: 'token',
+          sortable: false,
+          width: '20%'
         },
         {
           text: 'Balance',
@@ -152,12 +152,6 @@ export default {
       return this.tokensList
         ? this.tokensList
             .map(item => {
-              if (
-                // Hardcoded old MNE contract
-                item.contract == '0xc92e74b131d7b1d46e60e07f3fae5d8877dd03f0'
-              ) {
-                item.symbol = 'MNE(OLD)';
-              }
               return this.formatValues(item);
             })
             .filter(t => {
