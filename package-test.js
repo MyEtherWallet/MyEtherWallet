@@ -57,7 +57,10 @@ const EXCEPTIONS = [
   '@commitlint/config-conventional',
   'commitlint',
   '@mdi/font',
-  'eslint-plugin-vue'
+  'eslint-plugin-vue',
+  'protobufjs',
+  'apollo',
+  'vue-cli-plugin-vuetify'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
