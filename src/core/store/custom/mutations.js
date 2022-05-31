@@ -76,7 +76,6 @@ const DELETE_HIDDEN_TOKEN = function (state, { token, rootGetters }) {
     }
   );
   Vue.set(state.hiddenTokens, network.type.name, currentHiddenTokens);
-  console.log('state.hiddenTokens', state.hiddenTokens);
 };
 
 const DELETE_ALL_TOKENS = function (state, { rootGetters }) {
