@@ -66,6 +66,5 @@ jobs:
       - name: create release
         env:
           GITHUB_TOKEN: ${{secrets.MEW_BOT_TOKEN}}
-        run: |
-          #bash ./scripts/release.sh ${{ steps.get_release_tag.outputs.VERSION }} $GITHUB_TOKEN $GITHUB_REPOSITORY true
-          bash ./scripts/release.sh "v6.5.5" $GITHUB_TOKEN $GITHUB_REPOSITORY true
+        #run: bash ./scripts/release.sh ${{ steps.get_release_tag.outputs.VERSION }} $GITHUB_TOKEN $GITHUB_REPOSITORY true
+        run: bash ./scripts/release.sh "v6.5.5" $GITHUB_TOKEN $GITHUB_REPOSITORY true
