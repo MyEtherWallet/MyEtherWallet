@@ -165,7 +165,6 @@ export default {
   },
   watch: {
     open(newVal) {
-      console.log('open', newVal);
       this.isOpen = newVal;
       if (newVal) {
         this.orderHandler = new handler();
@@ -199,7 +198,6 @@ export default {
       }
     },
     close() {
-      console.log('do you get here like at all?');
       this.activeTab = 0;
       this.step = 0;
       this.onlySimplex = false;
