@@ -171,7 +171,6 @@ export default {
     },
     formattedAllTokens() {
       const x = this.formattedCustomTokens.concat(this.formattedTokens);
-      console.log('formattedAllTokens', x);
       return x;
     },
     enableDeleteButton() {
@@ -253,10 +252,6 @@ export default {
      */
     confirmDelete() {
       // Add check for type of selected tokens (custom, native, hidden)
-      console.log('selectedTokens', this.selectedTokens);
-      console.log('customTokens', this.customTokens);
-      console.log('hiddenTokens', this.hiddenTokens);
-      console.log('tokenList', this.tokensList);
 
       // Delete custom token
       const allCustomSelected =
@@ -265,7 +260,6 @@ export default {
               return this.selectedTokens.indexOf(val) !== -1;
             })
           : false;
-      console.log('allCustomSelected', allCustomSelected);
       if (allCustomSelected) {
         this.deleteAll().then(() => {
           this.closeDelete();
@@ -274,17 +268,10 @@ export default {
       } else {
         // If token is a custom token delete
         const isCustomToken = this.selectedTokens.every(val => {
-          console.log('selectedToken', val);
-          console.log(
-            'formattedCustomTokens.indexOf(val)',
-            this.formattedCustomTokens.indexOf(val)
-          );
           return this.formattedCustomTokens.indexOf(val) !== -1;
         });
-        console.log('isCustomToken', isCustomToken);
         if (isCustomToken) {
           this.deleteToken(this.selectedTokens).then(() => {
-            console.log('selectedTokens', this.selectedTokens);
             this.closeDelete();
             Toast('Token Hidden succesfully', {}, SUCCESS);
           });
@@ -293,8 +280,6 @@ export default {
 
       this.selectedTokens.map(item => {
         this.setHiddenToken(item).then(() => {
-          console.log('item', item);
-          console.log('hiddenTokens', this.hiddenTokens);
           this.closeDelete();
           Toast('Token Hidden succesfully', {}, SUCCESS);
         });
