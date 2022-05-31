@@ -53,16 +53,19 @@ jobs:
         run: docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build"
 
       - name: generate release files
-        run: bash ./scripts/generateReleaseFiles.sh ${{ steps.get_release_tag.outputs.VERSION }}
+        #run: bash ./scripts/generateReleaseFiles.sh ${{ steps.get_release_tag.outputs.VERSION }}
+        run: bash ./scripts/generateReleaseFiles.sh "v6.5.5"
 
       - name: build offline
         run: docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:offline"
 
       - name: generate offline files
-        run: bash ./scripts/generateOfflineFiles.sh ${{ steps.get_release_tag.outputs.VERSION }}
+        #run: bash ./scripts/generateOfflineFiles.sh ${{ steps.get_release_tag.outputs.VERSION }}
+        run: bash ./scripts/generateOfflineFiles.sh "v6.5.5"
 
       - name: create release
         env:
           GITHUB_TOKEN: ${{secrets.MEW_BOT_TOKEN}}
         run: |
-          bash ./scripts/release.sh ${{ steps.get_release_tag.outputs.VERSION }} $GITHUB_TOKEN $GITHUB_REPOSITORY true
+          #bash ./scripts/release.sh ${{ steps.get_release_tag.outputs.VERSION }} $GITHUB_TOKEN $GITHUB_REPOSITORY true
+          bash ./scripts/release.sh "v6.5.5" $GITHUB_TOKEN $GITHUB_REPOSITORY true
