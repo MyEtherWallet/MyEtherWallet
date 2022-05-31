@@ -179,32 +179,24 @@ export default {
      * will be sorted by usd balance for both
      */
     tokensData() {
-      console.log('this.tokensList', this.tokensList);
-      console.log('this.hiddenTokens', this.hiddenTokens);
       if (!this.tokensList && !this.customTokens && !this.hiddenTokens)
         return [];
       const customTokens = this.customTokens.map(item => {
         return this.formatValues(item);
       });
-      const uniqueTokens = uniqWith(this.tokensList, isEqual);
-      const tokenList = uniqueTokens
-        .map(item => {
-          return this.formatValues(item);
-        })
-        .filter(t => {
-          console.log('t', t);
+      const uniqueTokens = uniqWith(
+        this.tokensList.filter(t => {
           // Check if token is in hiddenTokens
           const isHidden = this.hiddenTokens.find(token => {
-            console.log('token', token);
-            console.log('isHidden', t.address == token.address);
-            return t.address == token.address;
+            return t.contract == token.address;
           });
-          console.log('isHidden', isHidden);
           return !isHidden;
-        });
-      console.log('tokenList', tokenList);
-      // const hiddenTokens = tokenList.find(token => token.);
-      // console.log('hiddenTokens', hiddenTokens);
+        }),
+        isEqual
+      );
+      const tokenList = uniqueTokens.map(item => {
+        return this.formatValues(item);
+      });
       tokenList.sort((a, b) => b.usdBalance - a.usdBalance);
       const tokens = customTokens.concat(tokenList);
       return tokens;

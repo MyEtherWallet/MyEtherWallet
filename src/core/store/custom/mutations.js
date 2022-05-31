@@ -47,7 +47,6 @@ const DELETE_CUSTOM_TOKEN = function (state, { token, rootGetters }) {
 const SET_HIDDEN_TOKEN = function (state, { token, rootGetters }) {
   const network = rootGetters['global/network'];
   let hiddenTokensByNetwork = state.hiddenTokens[network.type.name];
-  console.log('hiddenTokensByNetwork', hiddenTokensByNetwork);
   if (!state.hiddenTokens[network.type.name]) {
     hiddenTokensByNetwork = [];
   }
@@ -60,7 +59,6 @@ const SET_HIDDEN_TOKEN = function (state, { token, rootGetters }) {
     hiddenTokensByNetwork.unshift(token);
   }
   Vue.set(state.hiddenTokens, network.type.name, hiddenTokensByNetwork);
-  console.log('state.hiddenTokens', state.hiddenTokens);
 };
 
 const DELETE_HIDDEN_TOKEN = function (state, { token, rootGetters }) {
