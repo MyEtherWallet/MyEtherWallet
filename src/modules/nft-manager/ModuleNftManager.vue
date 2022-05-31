@@ -210,8 +210,16 @@ export default {
         });
         if (contract) {
           return contract.assets.map(item => {
+            const getImage =
+              item.urls.length > 0
+                ? item.urls.find(obj => {
+                    if (obj.type === 'IMAGE') return obj;
+                  })
+                : '';
+
+            const url = getImage ? getImage.url : '';
             return {
-              image: `https://img.mewapi.io/?image=${item.image}`,
+              image: `https://img.mewapi.io/?image=${url}`,
               name: item.name,
               token_id: item.token_id,
               contract: contract.contract_address
