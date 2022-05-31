@@ -52,7 +52,7 @@ const SET_HIDDEN_TOKEN = function (state, { token, rootGetters }) {
     hiddenTokensByNetwork = [];
   }
   const found = hiddenTokensByNetwork.findIndex(
-    t => t.contract.toLowerCase() === token.contract.toLowerCase()
+    t => t.address.toLowerCase() === token.address.toLowerCase()
   );
   if (found !== -1) {
     hiddenTokensByNetwork[found] = token;
