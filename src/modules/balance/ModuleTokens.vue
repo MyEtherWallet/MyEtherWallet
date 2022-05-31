@@ -18,14 +18,7 @@
     >
       <template #rightHeaderContainer>
         <div>
-          <span
-            v-if="!hasCustom"
-            class="greenPrimary--text cursor-pointer pl-3"
-            @click="toggleAddCustomToken"
-            >+ Custom Token</span
-          >
           <mew-menu
-            v-else
             activator-text-color="greenPrimary--text"
             :list-obj="menuObj"
             @goToPage="customTokenAction"
@@ -151,7 +144,7 @@ export default {
                 iconName: 'mdi-plus'
               },
               {
-                title: 'Remove Token',
+                title: 'Hide Token',
                 to: 'remove',
                 iconName: 'mdi-minus'
               }
@@ -164,7 +157,12 @@ export default {
   computed: {
     ...mapGetters('wallet', ['tokensList', 'web3']),
     ...mapState('wallet', ['web3', 'loadingWalletInfo']),
-    ...mapGetters('custom', ['customTokens', 'hasCustom']),
+    ...mapGetters('custom', [
+      'customTokens',
+      'hasCustom',
+      'hiddenTokens',
+      'hasHidden'
+    ]),
     ...mapGetters('global', [
       'isEthNetwork',
       'network',
@@ -181,14 +179,32 @@ export default {
      * will be sorted by usd balance for both
      */
     tokensData() {
-      if (!this.tokensList && !this.customTokens) return [];
+      console.log('this.tokensList', this.tokensList);
+      console.log('this.hiddenTokens', this.hiddenTokens);
+      if (!this.tokensList && !this.customTokens && !this.hiddenTokens)
+        return [];
       const customTokens = this.customTokens.map(item => {
         return this.formatValues(item);
       });
       const uniqueTokens = uniqWith(this.tokensList, isEqual);
-      const tokenList = uniqueTokens.map(item => {
-        return this.formatValues(item);
-      });
+      const tokenList = uniqueTokens
+        .map(item => {
+          return this.formatValues(item);
+        })
+        .filter(t => {
+          console.log('t', t);
+          // Check if token is in hiddenTokens
+          const isHidden = this.hiddenTokens.find(token => {
+            console.log('token', token);
+            console.log('isHidden', t.address == token.address);
+            return t.address == token.address;
+          });
+          console.log('isHidden', isHidden);
+          return !isHidden;
+        });
+      console.log('tokenList', tokenList);
+      // const hiddenTokens = tokenList.find(token => token.);
+      // console.log('hiddenTokens', hiddenTokens);
       tokenList.sort((a, b) => b.usdBalance - a.usdBalance);
       const tokens = customTokens.concat(tokenList);
       return tokens;

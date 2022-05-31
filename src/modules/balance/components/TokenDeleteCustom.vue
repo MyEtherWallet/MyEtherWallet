@@ -25,12 +25,15 @@
       <mew-table
         has-select
         :table-headers="tableHeaders"
-        :table-data="formattedCustomTokens"
-        no-data-text="No custom tokens found!"
+        :table-data="formattedAllTokens"
+        no-data-text="No tokens found!"
         @selectedRow="selectedValues"
         @selectedAll="onSelectAll"
       />
-      <div v-if="customTokens.length > 0" class="d-flex justify-center mt-6">
+      <div
+        v-if="formattedAllTokens.length > 0"
+        class="d-flex justify-center mt-6"
+      >
         <mew-button
           title="Next"
           color-theme="primary"
@@ -65,7 +68,7 @@
       </div>
       <div class="mt-9">
         <mew-button
-          title="Remove Tokens"
+          title="Hide Tokens"
           color-theme="error"
           :has-full-width="true"
           btn-size="xlarge"
@@ -86,6 +89,7 @@
 </template>
 
 <script>
+import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import { SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 import { mapGetters, mapActions } from 'vuex';
 export default {
@@ -126,7 +130,8 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('custom', ['customTokens']),
+    ...mapGetters('wallet', ['tokensList']),
+    ...mapGetters('custom', ['customTokens', 'hiddenTokens']),
     ...mapGetters('global', ['network']),
     formattedCustomTokens() {
       return this.customTokens
@@ -134,6 +139,40 @@ export default {
             return this.formatValues(item);
           })
         : [];
+    },
+    // formattedHiddenTokens() {
+    //   return this.hiddenTokens
+    //     ? this.hiddenTokens.map(item => {
+    //         return item;
+    //       })
+    //     : [];
+    // },
+    formattedTokens() {
+      // Check for duplicate keys (token Symbols)
+      return this.tokensList
+        ? this.tokensList
+            .map(item => {
+              if (
+                // Hardcoded old MNE contract
+                item.contract == '0xc92e74b131d7b1d46e60e07f3fae5d8877dd03f0'
+              ) {
+                item.symbol = 'MNE(OLD)';
+              }
+              return this.formatValues(item);
+            })
+            .filter(t => {
+              // Check if token is in hiddenTokens
+              const isHidden = this.hiddenTokens.find(token => {
+                return t.address == token.address;
+              });
+              return !isHidden && t.address !== MAIN_TOKEN_ADDRESS;
+            })
+        : [];
+    },
+    formattedAllTokens() {
+      const x = this.formattedCustomTokens.concat(this.formattedTokens);
+      console.log('formattedAllTokens', x);
+      return x;
     },
     enableDeleteButton() {
       return this.selectedTokens.length > 0;
@@ -149,7 +188,12 @@ export default {
     }
   },
   methods: {
-    ...mapActions('custom', ['deleteAll', 'deleteToken']),
+    ...mapActions('custom', [
+      'deleteAll',
+      'deleteToken',
+      'setHiddenToken',
+      'deleteHiddenToken'
+    ]),
     /**
      * close overlay
      */
@@ -208,17 +252,53 @@ export default {
      * it will call deleteAll or deleteToken
      */
     confirmDelete() {
-      if (this.selectedTokens.length === this.customTokens.length) {
+      // Add check for type of selected tokens (custom, native, hidden)
+      console.log('selectedTokens', this.selectedTokens);
+      console.log('customTokens', this.customTokens);
+      console.log('hiddenTokens', this.hiddenTokens);
+      console.log('tokenList', this.tokensList);
+
+      // Delete custom token
+      const allCustomSelected =
+        this.customTokens.length > 0
+          ? this.formattedCustomTokens.every(val => {
+              return this.selectedTokens.indexOf(val) !== -1;
+            })
+          : false;
+      console.log('allCustomSelected', allCustomSelected);
+      if (allCustomSelected) {
         this.deleteAll().then(() => {
           this.closeDelete();
-          Toast('Token Remove succesfully', {}, SUCCESS);
+          Toast('Token Hidden succesfully', {}, SUCCESS);
         });
       } else {
-        this.deleteToken(this.selectedTokens).then(() => {
-          this.closeDelete();
-          Toast('Token Remove succesfully', {}, SUCCESS);
+        // If token is a custom token delete
+        const isCustomToken = this.selectedTokens.every(val => {
+          console.log('selectedToken', val);
+          console.log(
+            'formattedCustomTokens.indexOf(val)',
+            this.formattedCustomTokens.indexOf(val)
+          );
+          return this.formattedCustomTokens.indexOf(val) !== -1;
         });
-      }
+        console.log('isCustomToken', isCustomToken);
+        if (isCustomToken) {
+          this.deleteToken(this.selectedTokens).then(() => {
+            console.log('selectedTokens', this.selectedTokens);
+            this.closeDelete();
+            Toast('Token Hidden succesfully', {}, SUCCESS);
+          });
+        }
+      } // End if token is custom
+
+      this.selectedTokens.map(item => {
+        this.setHiddenToken(item).then(() => {
+          console.log('item', item);
+          console.log('hiddenTokens', this.hiddenTokens);
+          this.closeDelete();
+          Toast('Token Hidden succesfully', {}, SUCCESS);
+        });
+      });
     }
   }
 };
