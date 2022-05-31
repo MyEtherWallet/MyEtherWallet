@@ -199,7 +199,7 @@ export default {
       }
     },
     close() {
-      console.log('close');
+      console.log('do you get here like at all?');
       this.activeTab = 0;
       this.step = 0;
       this.onlySimplex = false;
@@ -229,7 +229,7 @@ export default {
         name: 'USD',
         value: 'USD',
         // eslint-disable-next-line
-          img: require(`@/assets/images/currencies/USD.svg`)
+        img: require(`@/assets/images/currencies/USD.svg`)
       };
       this.onlySimplex = false;
     },
