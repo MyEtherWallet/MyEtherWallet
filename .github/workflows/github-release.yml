@@ -40,7 +40,8 @@ jobs:
 
       - name: Get release tag
         id: get_release_tag
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+        #run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+        run: echo ::set-output name=VERSION::"v6.5.5"
 
       - name: setup gpg keys
         run: |
