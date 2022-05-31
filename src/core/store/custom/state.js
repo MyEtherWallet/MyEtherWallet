@@ -5,7 +5,8 @@ const state = {
   tokens: {},
   paths: [],
   stateVersion: Configs.VERSION.custom,
-  addressBook: []
+  addressBook: [],
+  hiddenTokens: {}
 };
 
 export default state;

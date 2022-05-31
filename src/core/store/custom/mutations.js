@@ -44,6 +44,43 @@ const DELETE_CUSTOM_TOKEN = function (state, { token, rootGetters }) {
   Vue.set(state.tokens, network.type.name, currentCustomTokens);
 };
 
+const SET_HIDDEN_TOKEN = function (state, { token, rootGetters }) {
+  const network = rootGetters['global/network'];
+  let hiddenTokensByNetwork = state.hiddenTokens[network.type.name];
+  console.log('hiddenTokensByNetwork', hiddenTokensByNetwork);
+  if (!state.hiddenTokens[network.type.name]) {
+    hiddenTokensByNetwork = [];
+  }
+  const found = hiddenTokensByNetwork.findIndex(
+    t => t.contract.toLowerCase() === token.contract.toLowerCase()
+  );
+  if (found !== -1) {
+    hiddenTokensByNetwork[found] = token;
+  } else {
+    hiddenTokensByNetwork.unshift(token);
+  }
+  Vue.set(state.hiddenTokens, network.type.name, hiddenTokensByNetwork);
+  console.log('state.hiddenTokens', state.hiddenTokens);
+};
+
+const DELETE_HIDDEN_TOKEN = function (state, { token, rootGetters }) {
+  const network = rootGetters['global/network'];
+  const currentHiddenTokens = state.hiddenTokens[network.type.name].filter(
+    currentTokens => {
+      const found = token.find(item => {
+        if (item.address === currentTokens.contract) {
+          return item;
+        }
+      });
+      if (!found) {
+        return currentTokens;
+      }
+    }
+  );
+  Vue.set(state.hiddenTokens, network.type.name, currentHiddenTokens);
+  console.log('state.hiddenTokens', state.hiddenTokens);
+};
+
 const DELETE_ALL_TOKENS = function (state, { rootGetters }) {
   const network = rootGetters['global/network'];
   let customTokensByNetwork = state.tokens[network.type.name];
@@ -78,5 +115,7 @@ export default {
   INIT_STORE,
   SET_ADDRESS_BOOK,
   ADD_CUSTOM_PATH,
-  DELETE_CUSTOM_PATH
+  DELETE_CUSTOM_PATH,
+  SET_HIDDEN_TOKEN,
+  DELETE_HIDDEN_TOKEN
 };
