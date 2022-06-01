@@ -66,8 +66,9 @@
                   v-if="child.to"
                   class="pl-4 white--text font-weight-regular mew-body"
                   @click="pushRoute(child.to)"
-                  v-text="child.label"
-                ></v-list-item-title>
+                >
+                  {{ child.label }}</v-list-item-title
+                >
                 <a
                   v-if="child.url"
                   :href="child.url"
@@ -76,8 +77,9 @@
                 >
                   <v-list-item-title
                     class="pl-13 white--text font-weight-regular mew-body"
-                    v-text="child.label"
-                  ></v-list-item-title>
+                  >
+                    {{ child.label }}</v-list-item-title
+                  >
                 </a>
               </v-list-item-content>
             </v-list-item>
