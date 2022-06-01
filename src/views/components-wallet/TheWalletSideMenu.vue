@@ -144,9 +144,8 @@
                 <v-list-item-content>
                   <v-list-item-title
                     class="white--text font-weight-regular mew-body"
+                    >{{ item.title }}</v-list-item-title
                   >
-                    {{ item.title }}
-                  </v-list-item-title>
                 </v-list-item-content>
               </template>
               <v-list-item
@@ -159,9 +158,8 @@
                 <v-list-item-content>
                   <v-list-item-title
                     class="pl-13 white--text font-weight-regular mew-body"
+                    >{{ child.title }}</v-list-item-title
                   >
-                    {{ child.title }}
-                  </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
             </v-list-group>
@@ -183,9 +181,10 @@
           </v-list-item-icon>
 
           <v-list-item-content>
-            <v-list-item-title class="white--text mew-body font-weight-regular">
-              {{ item.title }}
-            </v-list-item-title>
+            <v-list-item-title
+              class="white--text mew-body font-weight-regular"
+              >{{ item.title }}</v-list-item-title
+            >
           </v-list-item-content>
         </v-list-item>
         <div v-if="online" class="mt-3 px-8">
