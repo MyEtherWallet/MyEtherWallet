@@ -48,16 +48,7 @@ const EXCEPTIONS = [
   '@vue/cli-plugin-unit-jest',
   '@vue/cli-service',
   'vue-i18n',
-  'vue',
-  // update after release
-  '@ethereumjs/common',
-  'ethers',
-  '@actions/github',
-  '@shapeshiftoss/hdwallet-core',
-  '@shapeshiftoss/hdwallet-keepkey-webusb',
-  '@commitlint/config-conventional',
-  'commitlint',
-  '@mdi/font'
+  'vue'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
