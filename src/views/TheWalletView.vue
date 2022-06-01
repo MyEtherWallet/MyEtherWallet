@@ -150,29 +150,37 @@ export default {
     },
     async matchNetwork() {
       const { ethereum } = window;
+      const {
+        type: { chainID }
+      } = this.network;
       if (ethereum) {
-        const { type: network, url } = this.network;
-        const data = {
-          chainId: toHex(network.chainID),
-          chainName: network.name_long,
-          rpcUrls: [url],
-          nativeCurrency: {
-            name: network.name_long,
-            symbol: network.name,
-            decimals: ''
-          },
-          blockExplorerUrls: [
-            network.blockExplorerAddr,
-            network.blockExplorerTX
-          ]
-        };
+        const data = { chainId: toHex(chainID) };
         try {
           await ethereum.request({
-            method: 'wallet_addEthereumChain',
+            method: 'wallet_switchEthereumChain',
             params: [data]
           });
-        } catch {
-          Toast('There was an error switching metamask network.', {}, ERROR);
+        } catch (er) {
+          const { message } = er;
+          let toastMsg = '';
+          let toastLink = {};
+          if (message) {
+            if (message.includes('pending')) {
+              toastMsg =
+                'There is a pending request to MetaMask, make your selection before continuing';
+            } else if (message.includes('adding')) {
+              toastMsg =
+                "It seems like you don't have this network setup in MetaMask,";
+              toastLink = {
+                title: 'please go here to add the network',
+                url: 'https://chainlist.org/'
+              };
+            } else {
+              toastMsg =
+                'There was a problem processing your request to MetaMask';
+            }
+          }
+          Toast(toastMsg, toastLink, ERROR, 5000);
         }
       }
     },
