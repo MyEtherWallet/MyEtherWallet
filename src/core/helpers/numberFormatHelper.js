@@ -505,13 +505,19 @@ const getRoundNumber = (value, round, hasTrailingZeros = false) => {
 };
 
 /**
- * handeles edgecases for web3 util toBN
+ * handles edge cases for web3 util toBN
  * @param {number} number - expects number, handles non numbers
  * @return {import('bn.js')} BN from web3
  */
 
 const toBNSafe = number => {
-  if (isNaN(number) || isNull(number) || isUndefined(number) || number === '')
+  if (
+    isNaN(number) ||
+    isNull(number) ||
+    isUndefined(number) ||
+    number === '' ||
+    number === 'NaN'
+  )
     number = 0;
   number = toBN(new BigNumber(number).toFixed(0));
   return number;
