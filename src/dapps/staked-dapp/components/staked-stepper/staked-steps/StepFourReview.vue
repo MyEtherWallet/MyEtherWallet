@@ -196,10 +196,7 @@ import BigNumber from 'bignumber.js';
 import configNetworkTypes from '@/dapps/staked-dapp/handlers/configNetworkTypes';
 import { mapState, mapGetters } from 'vuex';
 import iconColorfulETH from '@/assets/images/icons/icon-colorful-eth.svg';
-import {
-  formatFiatValue,
-  formatBalanceEthValue
-} from '@/core/helpers/numberFormatHelper';
+import { formatBalanceEthValue } from '@/core/helpers/numberFormatHelper';
 import { ABI_GET_FEES } from '@/dapps/staked-dapp/handlers/handlerStaked';
 
 export default {
@@ -238,12 +235,12 @@ export default {
   },
   computed: {
     ...mapGetters('external', ['fiatValue']),
-    ...mapGetters('global', ['network']),
+    ...mapGetters('global', ['network', 'getFiatValue']),
     ...mapState('wallet', ['web3']),
     ...mapGetters('global', ['gasPrice', 'network']),
 
     /**
-     * Returns current netork eth icon
+     * Returns current network eth icon
      * @return string
      */
     networkImg() {
@@ -279,7 +276,7 @@ export default {
         {
           title: 'Network fee',
           ethValue: this.networkFees.eth,
-          fiatValue: '$' + this.networkFees.fiat
+          fiatValue: this.networkFees.fiat
         },
         {
           title: 'Service fee',
@@ -301,8 +298,7 @@ export default {
       const gasPriceETH = formatBalanceEthValue(this.gasPrice).value;
       return {
         eth: gasPriceETH,
-        fiat: formatFiatValue(BigNumber(this.fiatValue).times(gasPriceETH))
-          .value
+        fiat: this.getFiatValue(BigNumber(this.fiatValue).times(gasPriceETH))
       };
     },
     /**
@@ -315,7 +311,9 @@ export default {
         .toFixed();
       return {
         eth: totalETH,
-        fiat: new BigNumber(this.fiatValue).times(totalETH).toFixed()
+        fiat: this.getFiatValue(
+          new BigNumber(this.fiatValue).times(totalETH).toFixed()
+        )
       };
     },
     /**
@@ -331,8 +329,9 @@ export default {
      * @returns eth staking amount in fiat
      */
     amountFiat() {
-      return formatFiatValue(new BigNumber(this.amount).times(this.fiatValue))
-        .value;
+      return this.getFiatValue(
+        new BigNumber(this.amount).times(this.fiatValue)
+      );
     }
   },
   watch: {
@@ -383,7 +382,7 @@ export default {
       const feesETH = formatBalanceEthValue(feesWEI).value;
       this.serviceFees = {
         eth: feesETH,
-        fiat: formatFiatValue(BigNumber(this.fiatValue).times(feesETH)).value
+        fiat: this.getFiatValue(BigNumber(this.fiatValue).times(feesETH))
       };
     },
     /**

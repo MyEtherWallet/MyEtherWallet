@@ -60,7 +60,7 @@
                   {{ pending.amount }} <span class="mew-caption">ETH</span>
                 </div>
                 <div class="textMedium--text mt-1">
-                  {{ '$' + pending.amountFiat }}
+                  {{ pending.amountFiat }}
                 </div>
               </div>
             </div>
@@ -220,7 +220,7 @@
                 {{ active.totalBalanceETH + ' ETH' }}
               </div>
               <div class="font-weight-medium mt-1">
-                {{ '$' + active.totalBalanceFiat }}
+                {{ active.totalBalanceFiat }}
               </div>
               <div class="textLight--text mt-2">
                 Earned
@@ -252,7 +252,6 @@ import iconETHNavy from '@/assets/images/currencies/eth-dark-navy.svg';
 import BigNumber from 'bignumber.js';
 import {
   formatFloatingPointValue,
-  formatFiatValue,
   formatPercentageValue
 } from '@/core/helpers/numberFormatHelper';
 import moment from 'moment';
@@ -291,8 +290,10 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['address']),
+    ...mapState('global', ['preferredCurrency']),
+    ...mapState('external', ['currencyRate']),
     ...mapGetters('external', ['fiatValue']),
-    ...mapGetters('global', ['network']),
+    ...mapGetters('global', ['network', 'getFiatValue']),
     /**
      * @returns array
      * Returns all the raw objects in all the validators
@@ -329,9 +330,9 @@ export default {
               raw.address,
             earned: formatFloatingPointValue(earning).value,
             totalBalanceETH: formatFloatingPointValue(totalBalanceETH).value,
-            totalBalanceFiat: formatFiatValue(
+            totalBalanceFiat: this.getFiatValue(
               new BigNumber(totalBalanceETH).times(this.fiatValue)
-            ).value,
+            ),
             averageApr: formatPercentageValue(
               this.getAverageApr(raw.activation_timestamp, earning, raw.amount)
             ).value
@@ -359,9 +360,9 @@ export default {
         .map(raw => {
           return {
             amount: formatFloatingPointValue(raw.amount).value,
-            amountFiat: formatFiatValue(
+            amountFiat: this.getFiatValue(
               new BigNumber(raw.amount).times(this.fiatValue)
-            ).value,
+            ),
             status: raw.status,
             ethVmUrl:
               configNetworkTypes.network[this.network.type.name].ethvmAddrUrl +
@@ -393,9 +394,9 @@ export default {
         return [
           {
             amount: formatFloatingPointValue(this.amount).value,
-            amountFiat: formatFiatValue(
+            amountFiat: this.getFiatValue(
               new BigNumber(this.amount).times(this.fiatValue)
-            ).value,
+            ),
             justStaked: true,
             status: STATUS_TYPES.CREATED,
             ethVmUrl: this.pendingHash
