@@ -55,7 +55,9 @@ const EXCEPTIONS = [
   '@shapeshiftoss/hdwallet-core',
   '@shapeshiftoss/hdwallet-keepkey-webusb',
   '@commitlint/config-conventional',
-  'commitlint'
+  'commitlint',
+  '@mdi/font',
+  'eslint-plugin-vue'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
