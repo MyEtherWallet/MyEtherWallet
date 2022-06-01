@@ -1,7 +1,6 @@
 import BigNumber from 'bignumber.js';
 import { isNull, isUndefined } from 'lodash';
-import { toBN } from 'web3-utils';
-import { fromWei } from 'web3-utils';
+import { fromWei, toBN } from 'web3-utils';
 import { localizeCurrency } from './localization';
 
 /**
@@ -508,7 +507,7 @@ const getRoundNumber = (value, round, hasTrailingZeros = false) => {
 /**
  * handeles edgecases for web3 util toBN
  * @param {number} number - expects number, handles non numbers
- * @return {BigNumber} BN from web3
+ * @return {import('bn.js')} BN from web3
  */
 
 const toBNSafe = number => {

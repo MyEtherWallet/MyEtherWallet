@@ -9,7 +9,6 @@
       class="cursor-pointer d-flex align-center justify-start full-width mb-4 mr-2"
     >
       <mew-button
-        class="pl-0"
         btn-style="transparent"
         :title="backTxt"
         @click.native="close"
@@ -28,12 +27,8 @@
       v-if="!enoughFunds && showBalanceError"
       class="redPrimary--text px-6 py-0 py-sm-3 mb-3 mb-sm-0"
       >You do not have enough ETH to send.
-      <a
-        href="https://ccswap.myetherwallet.com/#/"
-        target="_blank"
-        class="link"
-      >
-        <u>Buy More</u>
+      <a target="_blank" class="link" @click="openMoonpay">
+        <u>Buy More Eth</u>
       </a>
     </span>
     <mew-button
@@ -51,11 +46,12 @@
 <script>
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import nftPlaceholder from '@/assets/images/icons/icon-nft-placeholder.png';
-
+import buyMore from '@/core/mixins/buyMore.mixin.js';
 export default {
   components: {
     ModuleAddressBook
   },
+  mixins: [buyMore],
   props: {
     nft: {
       default: () => {
