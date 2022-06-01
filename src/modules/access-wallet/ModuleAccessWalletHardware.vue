@@ -85,7 +85,9 @@
           <h3>Supported Browsers</h3>
           <v-list-item v-for="(browser, i) in supportedBrowsers" :key="i">
             <v-list-item-content>
-              <v-list-item-title v-text="browser" />
+              <v-list-item-title>
+                {{ browser }}
+              </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-list>
