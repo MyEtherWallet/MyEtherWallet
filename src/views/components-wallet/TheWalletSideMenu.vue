@@ -30,94 +30,71 @@
           <!-- Wallet balance card -->
           <!-- ================================================================================== -->
           <balance-card />
+        </div>
+      </template>
 
-          <!-- ================================================================================== -->
-          <!-- Buy Sell / Send / Swap buttons -->
-          <!-- ================================================================================== -->
-          <div class="d-flex align-center justify-space-between pt-6 pb-4 mx-2">
-            <v-btn
-              color="transparent"
-              height="65px"
-              dark
-              depressed
-              x-small
+      <!-- ================================================================================== -->
+      <!-- Buy Sell / Send / Swap buttons -->
+      <!-- ================================================================================== -->
+      <v-list class="px-5">
+        <v-list-item-group>
+          <div class="d-flex align-center">
+            <v-list-item
+              class="px-0"
+              active-class="remove-select-state"
               @click="openMoonpay"
             >
-              <div class="text-center" style="min-width: 50px">
+              <div class="text-center mx-auto my-2">
                 <img
                   src="@/assets/images/icons/menu/icon-menu-buy-sell.svg"
                   alt="Buy or Sell"
                   height="30"
                 />
-                <div
-                  class="whiteAlways--text mew-label text-transform--initial"
-                  style="margin-top: 3px"
-                >
-                  Buy/Sell
-                </div>
+                <div class="white--text mew-label btn-title">Buy/Sell</div>
               </div>
-            </v-btn>
+            </v-list-item>
 
-            <v-divider vertical></v-divider>
+            <v-divider vertical class="mx-3"></v-divider>
 
-            <v-btn
-              color="transparent"
-              height="65px"
-              dark
-              depressed
-              x-small
-              @click="$router.push({ name: ROUTES_WALLET.SEND_TX.NAME })"
+            <v-list-item
+              class="px-0"
+              :to="{ name: ROUTES_WALLET.SEND_TX.NAME }"
             >
-              <div class="text-center" style="min-width: 50px">
+              <div class="text-center mx-auto my-2">
                 <img
                   src="@/assets/images/icons/menu/icon-menu-send.svg"
                   alt="Send"
                   height="30"
                 />
-                <div
-                  class="whiteAlways--text mew-label text-transform--initial"
-                  style="margin-top: 3px"
-                >
-                  Send
-                </div>
+                <div class="white--text mew-label btn-title">Send</div>
               </div>
-            </v-btn>
+            </v-list-item>
 
-            <v-divider vertical></v-divider>
+            <v-divider vertical class="mx-3"></v-divider>
 
-            <v-btn
-              color="transparent"
-              height="65px"
-              dark
-              depressed
-              x-small
-              :class="[!hasSwap ? 'pointer-event--none' : '']"
-              @click="$router.push({ name: ROUTES_WALLET.SWAP.NAME })"
+            <v-list-item
+              :class="[!hasSwap ? 'opacity--30 pointer-event--none' : '']"
+              class="px-0"
+              :to="{ name: ROUTES_WALLET.SWAP.NAME }"
             >
-              <div class="text-center" style="min-width: 50px">
+              <div class="text-center mx-auto my-2">
                 <img
                   src="@/assets/images/icons/menu/icon-menu-swap.svg"
                   alt="Swap"
                   height="30"
-                  :class="[!hasSwap ? 'opacity--30' : '']"
                 />
-                <div
-                  :class="[
-                    !hasSwap ? 'textMedium--text' : '',
-                    'whiteAlways--text mew-label text-transform--initial'
-                  ]"
-                  style="margin-top: 3px"
-                >
-                  Swap
-                </div>
+                <div class="white--text mew-label btn-title">Swap</div>
               </div>
-            </v-btn>
+            </v-list-item>
           </div>
-        </div>
-      </template>
+        </v-list-item-group>
+      </v-list>
 
+      <!-- ================================================================================== -->
+      <!-- Wallet Side Nav -->
+      <!-- ================================================================================== -->
       <v-list>
-        <v-list-item-group model="menuSelected">
+        <v-list-item-group>
           <template v-for="(item, idx) in sectionOne">
             <v-list-item
               v-if="!item.children && shouldShow(item.route)"
@@ -136,8 +113,9 @@
               <v-list-item-content>
                 <v-list-item-title
                   class="white--text font-weight-regular mew-body"
-                  v-text="item.title"
-                />
+                >
+                  {{ item.title }}
+                </v-list-item-title>
               </v-list-item-content>
               <div
                 v-if="item.hasNew"
@@ -147,10 +125,12 @@
               </div>
             </v-list-item>
 
+            <!-- Sub-menu items -->
             <v-list-group
               v-if="item.children"
               :key="item + idx + 2"
               prepend-icon=""
+              :value="expendSubMenu(item.children)"
             >
               <template #activator>
                 <v-list-item-icon class="mx-3">
@@ -164,8 +144,8 @@
                 <v-list-item-content>
                   <v-list-item-title
                     class="white--text font-weight-regular mew-body"
-                    v-text="item.title"
-                  ></v-list-item-title>
+                    >{{ item.title }}</v-list-item-title
+                  >
                 </v-list-item-content>
               </template>
               <v-list-item
@@ -178,8 +158,8 @@
                 <v-list-item-content>
                   <v-list-item-title
                     class="pl-13 white--text font-weight-regular mew-body"
-                    v-text="child.title"
-                  ></v-list-item-title>
+                    >{{ child.title }}</v-list-item-title
+                  >
                 </v-list-item-content>
               </v-list-item>
             </v-list-group>
@@ -193,7 +173,6 @@
         <v-list-item
           v-for="(item, idx) in sectionTwo"
           :key="item + idx"
-          dense
           :to="item.route"
           @click="item.fn()"
         >
@@ -204,17 +183,18 @@
           <v-list-item-content>
             <v-list-item-title
               class="white--text mew-body font-weight-regular"
-              v-text="item.title"
-            />
+              >{{ item.title }}</v-list-item-title
+            >
           </v-list-item-content>
         </v-list-item>
-        <div class="mt-3 px-8">
+        <div v-if="online" class="mt-3 px-8">
           <div class="matomo-tracking-switch">
             <v-switch
+              dark
               :input-value="consentToTrack"
               inset
-              :label="`Data Tracking ${consentToTrack ? 'On' : 'Off'}`"
-              color="greenPrimary"
+              :label="`Data Tracking is ${consentToTrack ? 'On' : 'Off'}`"
+              color="white"
               off-icon="mdi-alert-circle"
               @change="setConsent"
             />
@@ -277,14 +257,15 @@
 <script>
 import AppBtnMenu from '@/core/components/AppBtnMenu';
 import ModuleNotifications from '@/modules/notifications/ModuleNotifications';
+import send from '@/assets/images/icons/icon-send-enable.svg';
 import background from '@/assets/images/backgrounds/bg-light.jpg';
-import dashboard from '@/assets/images/icons/icon-dashboard-enable.png';
-import nft from '@/assets/images/icons/icon-nft.png';
-import dapp from '@/assets/images/icons/icon-dapp-center-enable.png';
-import contract from '@/assets/images/icons/icon-contract-enable.png';
-import message from '@/assets/images/icons/icon-message-enable.png';
-import settings from '@/assets/images/icons/icon-setting-enable.png';
-import logout from '@/assets/images/icons/icon-logout-enable.png';
+import dashboard from '@/assets/images/icons/icon-dashboard-enable.svg';
+import nft from '@/assets/images/icons/icon-nft.svg';
+import dapp from '@/assets/images/icons/icon-dapp-center-enable.svg';
+import contract from '@/assets/images/icons/icon-contract-enable.svg';
+import message from '@/assets/images/icons/icon-message-enable.svg';
+import settings from '@/assets/images/icons/icon-setting-enable.svg';
+import logout from '@/assets/images/icons/icon-logout-enable.svg';
 import BalanceCard from '@/modules/balance/ModuleBalanceCard';
 import ModuleSettings from '@/modules/settings/ModuleSettings';
 import { EventBus } from '@/core/plugins/eventBus';
@@ -312,19 +293,19 @@ export default {
       background: background,
       onSettings: false,
       showLogoutPopup: false,
-      sectionTwo: [
-        {
-          title: this.$t('common.settings'),
-          icon: settings,
-          fn: this.openSettings,
-          route: { name: ROUTES_WALLET.SETTINGS.NAME }
-        },
-        {
-          title: this.$t('common.logout'),
-          icon: logout,
-          fn: this.toggleLogout
-        }
-      ],
+      // sectionTwo: [
+      //   {
+      //     title: this.$t('common.settings'),
+      //     icon: settings,
+      //     fn: this.openSettings,
+      //     route: { name: ROUTES_WALLET.SETTINGS.NAME }
+      //   },
+      //   {
+      //     title: this.$t('common.logout'),
+      //     icon: logout,
+      //     fn: this.toggleLogout
+      //   }
+      // ],
       routeNetworks: {
         [ROUTES_WALLET.SWAP.NAME]: [ETH, BSC, MATIC],
         [ROUTES_WALLET.NFT_MANAGER.NAME]: [ETH]
@@ -335,66 +316,108 @@ export default {
   computed: {
     ...mapGetters('global', ['network', 'isEthNetwork', 'hasSwap']),
     ...mapState('wallet', ['instance']),
+    ...mapState('global', ['online']),
     sectionOne() {
-      const hasNew = Object.values(dappsMeta).filter(item => {
-        const dateToday = new Date();
-        const millisecondsInDay = 1000 * 60 * 60 * 24;
-        const releaseDate = new Date(item.release);
-        const daysFromRelease =
-          (dateToday.getTime() - releaseDate.getTime()) / millisecondsInDay;
-        if (Math.ceil(daysFromRelease) <= 21) {
-          return item;
-        }
-      });
+      if (this.online) {
+        const hasNew = Object.values(dappsMeta).filter(item => {
+          const dateToday = new Date();
+          const millisecondsInDay = 1000 * 60 * 60 * 24;
+          const releaseDate = new Date(item.release);
+          const daysFromRelease =
+            (dateToday.getTime() - releaseDate.getTime()) / millisecondsInDay;
+          if (Math.ceil(daysFromRelease) <= 21) {
+            return item;
+          }
+        });
+        return [
+          {
+            title: this.$t('interface.menu.dashboard'),
+            route: { name: ROUTES_WALLET.DASHBOARD.NAME },
+            icon: dashboard
+          },
+          {
+            title: this.$t('interface.menu.nft'),
+            route: { name: ROUTES_WALLET.NFT_MANAGER.NAME },
+            icon: nft
+          },
+          {
+            title: this.$t('interface.menu.dapps'),
+            route: { name: ROUTES_WALLET.DAPPS.NAME },
+            icon: dapp,
+            hasNew: hasNew.length > 0
+          },
+          {
+            title: this.$t('interface.menu.contract'),
+            icon: contract,
+            children: [
+              {
+                title: this.$t('interface.menu.deploy'),
+                route: { name: ROUTES_WALLET.DEPLOY_CONTRACT.NAME }
+              },
+              {
+                title: this.$t('interface.menu.interact-contract'),
+                route: { name: ROUTES_WALLET.INTERACT_WITH_CONTRACT.NAME }
+              }
+            ]
+          },
+          {
+            title: this.$t('interface.menu.message'),
+            icon: message,
+            children: [
+              {
+                title: this.$t('interface.menu.sign-message'),
+                route: { name: ROUTES_WALLET.SIGN_MESSAGE.NAME }
+              },
+              {
+                title: this.$t('interface.menu.verify-message'),
+                route: { name: ROUTES_WALLET.VERIFY_MESSAGE.NAME }
+              }
+            ]
+          }
+        ];
+      }
       return [
         {
-          title: this.$t('interface.menu.dashboard'),
-          route: { name: ROUTES_WALLET.DASHBOARD.NAME },
-          icon: dashboard
+          title: this.$t('sendTx.send-offline'),
+          route: { name: ROUTES_WALLET.SEND_TX_OFFLINE.NAME },
+          icon: send
         },
         {
-          title: this.$t('interface.menu.nft'),
-          route: { name: ROUTES_WALLET.NFT_MANAGER.NAME },
-          icon: nft
-        },
+          title: this.$t('interface.menu.sign-message'),
+          route: { name: ROUTES_WALLET.SIGN_MESSAGE.NAME },
+          icon: message
+        }
+      ];
+    },
+    sectionTwo() {
+      if (this.online) {
+        return [
+          {
+            title: this.$t('common.settings'),
+            icon: settings,
+            fn: this.openSettings,
+            route: { name: ROUTES_WALLET.SETTINGS.NAME }
+          },
+          {
+            title: this.$t('common.logout'),
+            icon: logout,
+            fn: this.toggleLogout
+          }
+        ];
+      }
+      return [
         {
-          title: this.$t('interface.menu.dapps'),
-          route: { name: ROUTES_WALLET.DAPPS.NAME },
-          icon: dapp,
-          hasNew: hasNew.length > 0
-        },
-        {
-          title: this.$t('interface.menu.contract'),
-          icon: contract,
-          children: [
-            {
-              title: this.$t('interface.menu.deploy'),
-              route: { name: ROUTES_WALLET.DEPLOY_CONTRACT.NAME }
-            },
-            {
-              title: this.$t('interface.menu.interact-contract'),
-              route: { name: ROUTES_WALLET.INTERACT_WITH_CONTRACT.NAME }
-            }
-          ]
-        },
-        {
-          title: this.$t('interface.menu.message'),
-          icon: message,
-          children: [
-            {
-              title: this.$t('interface.menu.sign-message'),
-              route: { name: ROUTES_WALLET.SIGN_MESSAGE.NAME }
-            },
-            {
-              title: this.$t('interface.menu.verify-message'),
-              route: { name: ROUTES_WALLET.VERIFY_MESSAGE.NAME }
-            }
-          ]
+          title: this.$t('common.logout'),
+          icon: logout,
+          fn: this.toggleLogout
         }
       ];
     }
   },
   mounted() {
+    // If no menu item is selected on load, redirect user to Dashboard
+    this.redirectToDashboard();
+
     if (this.$route.name == ROUTES_WALLET.SETTINGS.NAME) {
       this.openSettings();
     }
@@ -435,12 +458,38 @@ export default {
     },
     toggleLogout() {
       this.showLogoutPopup = !this.showLogoutPopup;
+    },
+    /* =================================================================== */
+    /* If no menu item is selected on load, redirect user to Dashboard     */
+    /* =================================================================== */
+    redirectToDashboard() {
+      if (this.$route.name == ROUTES_WALLET.WALLETS.NAME) {
+        this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
+      }
+    },
+    /* =================================================================== */
+    /* If sub-menu item is selected on load, expend the sub-menu slot      */
+    /* =================================================================== */
+    expendSubMenu(children) {
+      for (const c of children) {
+        if (this.$route.name == c.route.name) return true;
+      }
     }
   }
 };
 </script>
 
+<style lang="scss" scoped>
+// Make selected top three button bold
+.v-list-item--active .btn-title {
+  font-weight: 500;
+}
+</style>
+
 <style lang="scss">
+// =======================================================
+// Global styles
+// =======================================================
 .new-dapp-label {
   border-radius: 2px;
   background: #ff445b;
@@ -471,17 +520,44 @@ export default {
     box-shadow: 0 0 0 0 rgba(204, 169, 44, 0);
   }
 }
-
 .v-system-bar .v-icon {
   font-size: 36px !important;
   color: white !important;
 }
 
+// =======================================================
+// Scoped styles for .wallet-sidemenu
+// =======================================================
 .wallet-sidemenu {
+  .v-list-item--dense .v-list-item__title {
+    line-height: 20px !important;
+  }
+  .v-list-item,
+  .v-input--switch {
+    opacity: 0.7 !important;
+
+    &:hover {
+      opacity: 1 !important;
+    }
+  }
+
+  a.v-item--active,
+  .v-input--is-label-active {
+    opacity: 1 !important;
+    filter: grayscale(0);
+  }
+
+  .v-list-item--active.v-list-item:not(.v-list-group__header).remove-select-state {
+    background-color: transparent !important;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.2) !important;
+    }
+  }
+
   .v-list-item--link {
     border-top: none;
   }
-
   .v-list-item--active {
     .v-list-item__content {
       .v-list-item__title {
@@ -489,79 +565,61 @@ export default {
       }
     }
   }
-
   .v-list-group__header__append-icon {
     .v-icon {
       color: var(--v-white-base) !important;
     }
   }
-
   .v-divider {
     border-color: rgba(255, 255, 255, 0.22) !important;
   }
-
   .v-list-item--link:hover {
     background-color: rgba(255, 255, 255, 0.2) !important;
   }
-
   .v-list-item:after {
     min-height: 40px !important;
   }
-
   .mew-body.font-weight-bold {
     font-weight: 400 !important;
   }
-
   .v-list-item--active.v-list-item:not(.v-list-group__header) {
     background-color: rgba(255, 255, 255, 0.1) !important;
   }
-
   .v-list-item--active::before {
     opacity: 0 !important;
   }
-
   .v-navigation-drawer__content {
-    margin-right: 5px;
-    margin-bottom: 10px;
-
+    margin-right: 2px;
     &::-webkit-scrollbar {
       width: 4px;
       height: 4px;
     }
-
     &::-webkit-scrollbar-button {
       width: 0;
       height: 0;
     }
-
     &::-webkit-scrollbar-thumb {
       background: #7b91ac;
       border: 0 none #fff;
       border-radius: 50px;
     }
-
     &::-webkit-scrollbar-thumb:hover {
       background: #7b91ac;
     }
-
     &::-webkit-scrollbar-thumb:active {
       background: #4b4949;
     }
-
     &::-webkit-scrollbar-track {
       background: #e1dfdf;
       border: 0 none #fff;
       border-radius: 39px;
     }
-
     &::-webkit-scrollbar-track:hover {
       background: #ddd5d5;
     }
-
     &::-webkit-scrollbar-track:active {
       background: #dedede;
     }
-
     &::-webkit-scrollbar-corner {
       background: transparent;
     }

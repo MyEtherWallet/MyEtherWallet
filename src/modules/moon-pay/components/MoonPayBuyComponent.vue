@@ -47,15 +47,6 @@
         />
       </div>
     </div>
-    <!-- <div v-if="!inWallet" class="mb-6">
-      <module-address-book
-        ref="toAddress"
-        label="To Address"
-        :is-valid-address-func="isValidToAddress"
-        :preselect-curr-wallet-adr="false"
-        @setAddress="setAddress"
-      />
-    </div> -->
     <div class="mb-3">
       <div class="mew-heading-3 textDark--text mb-5">Select Provider</div>
       <div
@@ -213,12 +204,15 @@ import MultiCoinValidator from 'multicoin-address-validator';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import { isEmpty, cloneDeep, isEqual } from 'lodash';
 import BigNumber from 'bignumber.js';
-import { LOCALE } from '../helpers';
 import { mapGetters, mapActions, mapState } from 'vuex';
 import { fromWei } from 'web3-utils';
 import Web3 from 'web3';
 import nodeList from '@/utils/networks';
-import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
+import {
+  formatFloatingPointValue,
+  formatFiatValue
+} from '@/core/helpers/numberFormatHelper';
+import { getCurrency } from '@/modules/settings/components/currencyList';
 export default {
   name: 'ModuleBuyEth',
   components: { ModuleAddressBook },
@@ -262,27 +256,38 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('global', ['network']),
+    ...mapGetters('global', ['network', 'getFiatValue']),
     ...mapState('wallet', ['address']),
+    ...mapState('external', ['currencyRate']),
     includesFeeText() {
-      return `Includes ${this.percentFee} fee (${this.currencyFormatter(
-        this.minFee
-      )} min)`;
+      return `Includes ${this.percentFee} fee (${
+        formatFiatValue(this.minFee, this.currencyConfig).value
+      } min)`;
     },
     networkFeeText() {
       return `${
         this.selectedCurrency.name
-      } network fee (for transfers to your wallet) ~${this.currencyFormatter(
-        this.networkFeeToFiat
-      )}`;
+      } network fee (for transfers to your wallet) ~${
+        formatFiatValue(this.networkFeeToFiat, this.currencyConfig).value
+      }`;
     },
     dailyLimit() {
       const value = BigNumber(this.fiatMultiplier).times(12000);
-      return `Daily limit: ${this.currencyFormatter(value.toString())}`;
+      return `Daily limit: ${
+        formatFiatValue(value.toString(), this.currencyConfig).value
+      }`;
     },
     monthlyLimit() {
       const value = BigNumber(this.fiatMultiplier).times(50000);
-      return `Monthly limit: ${this.currencyFormatter(value.toString())}`;
+      return `Monthly limit: ${
+        formatFiatValue(value.toString(), this.currencyConfig).value
+      }`;
+    },
+    currencyConfig() {
+      const fiat = this.selectedFiat.value;
+      const rate = this.currencyRate[fiat];
+      const currency = fiat;
+      return { rate, currency };
     },
     fiatMultiplier() {
       if (this.hasData) {
@@ -330,7 +335,7 @@ export default {
       return withFee.minus(this.networkFeeToFiat).toString();
     },
     plusFeeF() {
-      return this.currencyFormatter(this.plusFee);
+      return formatFiatValue(this.plusFee, this.currencyConfig).value;
     },
     percentFee() {
       return this.isEUR ? '0.7%' : '3.25%';
@@ -472,9 +477,10 @@ export default {
                 return quote.fiat_currency === this.selectedFiatName;
               });
 
-              token.price = this.currencyFormatter(
-                actualPrice ? actualPrice.price : '0'
-              );
+              token.price = formatFiatValue(
+                actualPrice ? actualPrice.price : '0',
+                this.currencyConfig
+              ).value;
               return token;
             })
           : tokensList;
@@ -502,14 +508,7 @@ export default {
       const arrItems = this.hasData
         ? this.fetchedData[0].fiat_currencies.filter(item => item !== 'RUB')
         : ['USD'];
-      return arrItems.map(item => {
-        return {
-          name: item,
-          value: item,
-          // eslint-disable-next-line
-          img: require(`@/assets/images/currencies/${item}.svg`)
-        };
-      });
+      return getCurrency(arrItems);
     },
     max() {
       if (this.hasData) {
@@ -653,13 +652,6 @@ export default {
       const simplexMax = this.max.simplex;
       this.amount = simplexMax.toString();
     },
-    currencyFormatter(value) {
-      const locale = this.hasData ? LOCALE[this.selectedFiatName] : 'en-US';
-      return new Intl.NumberFormat(locale, {
-        style: 'currency',
-        currency: this.selectedFiatName
-      }).format(value);
-    },
     setCurrency(e) {
       this.selectedCurrency = e;
     },
@@ -743,8 +735,8 @@ export default {
 .icon-holder {
   border: 2px solid var(--v-greyMedium-base);
   border-radius: 100px;
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
 }
 .section-block {
   height: 145px;

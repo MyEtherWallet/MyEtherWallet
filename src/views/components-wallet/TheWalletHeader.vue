@@ -116,7 +116,7 @@
       class="ml-auto d-flex align-center justify-end"
     >
       <div class="align-center d-none d-lg-block">
-        <notification-overlay />
+        <notification-overlay v-if="online" />
       </div>
     </v-col>
   </v-row>
@@ -136,6 +136,7 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['identifier']),
+    ...mapState('global', ['online']),
     daysLeft() {
       const eventDate = moment(MOONPAY_OFFER_END);
       const todaysDate = moment();

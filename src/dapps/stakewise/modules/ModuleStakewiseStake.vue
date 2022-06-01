@@ -94,7 +94,7 @@
               <div class="text-right">
                 <div class="">{{ ethTotalFee }} {{ currencyName }}</div>
                 <div v-show="isEthNetwork" class="mew-body textLight--text">
-                  $ {{ gasPriceFiat }}
+                  {{ gasPriceFiat }}
                 </div>
               </div>
             </div>
@@ -206,10 +206,7 @@ import BigNumber from 'bignumber.js';
 import stakeHandler from '../handlers/stakewiseStakeHandler';
 import Swapper from '@/modules/swap/handlers/handlerSwap';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
-import {
-  formatFiatValue,
-  formatFloatingPointValue
-} from '@/core/helpers/numberFormatHelper';
+import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { debounce, isEmpty, clone, find } from 'lodash';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import { EventBus } from '@/core/plugins/eventBus';
@@ -264,7 +261,12 @@ export default {
   },
   computed: {
     ...mapGetters('wallet', ['balanceInETH']),
-    ...mapGetters('global', ['network', 'isEthNetwork', 'gasPriceByType']),
+    ...mapGetters('global', [
+      'network',
+      'isEthNetwork',
+      'gasPriceByType',
+      'getFiatValue'
+    ]),
     ...mapGetters('external', ['fiatValue']),
     ...mapState('stakewise', ['validatorApr']),
     ...mapState('global', ['gasPriceType']),
@@ -293,7 +295,7 @@ export default {
     gasPriceFiat() {
       const gasPrice = BigNumber(this.ethTotalFee);
       return gasPrice.gt(0)
-        ? formatFiatValue(gasPrice.times(this.fiatValue).toFixed()).value
+        ? this.getFiatValue(gasPrice.times(this.fiatValue).toFixed())
         : '0';
     },
     hasEnoughBalanceToStake() {

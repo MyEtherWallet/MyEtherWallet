@@ -1,0 +1,1 @@
+fix github release generator

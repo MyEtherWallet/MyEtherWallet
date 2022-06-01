@@ -97,19 +97,22 @@
       =====================================================================================
       -->
       <div
+        v-if="!isOfflineApp"
         :class="[
           { 'ml-n5': !isTestNetwork },
           'mew-subtitle text-shadow white--text mt-5 mb-4'
         ]"
       >
-        <span v-if="!isTestNetwork" style="padding-right: 2px">$</span
-        >{{ totalWalletBalance }}
+        {{ totalWalletBalance }}
         <span v-if="isTestNetwork" style="padding-left: 2px; font-size: 14px">{{
           network.type.currencyName
         }}</span>
       </div>
-      <div class="d-flex justify-space-between align-center">
-        <div class="justify-start">
+      <div
+        class="d-flex justify-space-between align-center"
+        :style="isOfflineApp ? 'margin-top:74px' : ''"
+      >
+        <div v-if="!isOfflineApp" class="justify-start">
           <!--
           =====================================================================================
             Total Wallet chain balance: prensent if not Test network
@@ -242,10 +245,7 @@ import { mapGetters, mapActions, mapState } from 'vuex';
 import clipboardCopy from 'clipboard-copy';
 import { Toast, INFO, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
-import {
-  formatFiatValue,
-  formatFloatingPointValue
-} from '@/core/helpers/numberFormatHelper';
+import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { isEmpty } from 'lodash';
 import ModuleAccessWalletHardware from '@/modules/access-wallet/ModuleAccessWalletHardware';
 import ModuleAccessWalletSoftware from '@/modules/access-wallet/ModuleAccessWalletSoftware';
@@ -271,14 +271,16 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
-    ...mapState('wallet', ['address', 'instance', 'identifier', 'isHardware']),
-    ...mapGetters('external', [
-      'fiatValue',
-      'balanceFiatValue',
-      'totalTokenFiatValue'
+    ...mapState('wallet', [
+      'address',
+      'instance',
+      'identifier',
+      'isHardware',
+      'isOfflineApp'
     ]),
-    ...mapGetters('global', ['isEthNetwork', 'network', 'isTestNetwork']),
+    ...mapGetters('external', ['totalTokenFiatValue']),
+    ...mapGetters('global', ['network', 'isTestNetwork', 'getFiatValue']),
+    ...mapGetters('wallet', ['tokensList', 'balanceInETH']),
     /**
      * verify address title
      * returns @String
@@ -364,7 +366,7 @@ export default {
     totalWalletBalance() {
       if (!this.isTestNetwork) {
         const total = this.totalTokenBalance;
-        return formatFiatValue(total).value;
+        return this.getFiatValue(total);
       }
       return this.walletChainBalance;
     },
@@ -516,6 +518,7 @@ export default {
   width: 100%;
 }
 .mew-card {
+  opacity: 0;
   border-radius: 16px;
   overflow: hidden;
   position: absolute;

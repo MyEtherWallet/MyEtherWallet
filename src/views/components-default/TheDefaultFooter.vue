@@ -389,15 +389,14 @@ export default {
             label: 'Generate keystore file',
             routerLink: 'Tools',
             query: { tool: 'keystore' }
-          }
-          /*
-          ,
-          {
-            label: 'Send offline help',
-            routerLink: 'Tools',
-            query: { tool: 'offline' }
           },
           {
+            label: 'Send Offline Helper',
+            routerLink: 'Tools',
+            query: { tool: 'offline' }
+          }
+          /*
+          ,{
             label: 'Transaction status',
             routerLink: 'SendTX'
           },
@@ -407,11 +406,6 @@ export default {
             query: { tool: 'watch' }
           },
           { label: 'Submit Dapp', routerLink: 'Home' },
-          {
-            label: 'Convert units',
-            routerLink: 'Tools',
-            query: { tool: 'convert' }
-          }
           */
         ]
       }
