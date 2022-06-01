@@ -159,6 +159,10 @@ export default {
         );
       }
     },
+    /**
+     * Attempts to switch metamask network to current mew network.
+     * Informs user of pending or unknown networks.
+     */
     async matchNetwork() {
       const { ethereum } = window;
       const {
@@ -186,7 +190,8 @@ export default {
                 title: 'please go here to add the network',
                 url: 'https://chainlist.org/'
               };
-            } else {
+            } else if (message.includes('rejected')) return;
+            else {
               toastMsg =
                 'There was a problem processing your request to MetaMask';
             }
