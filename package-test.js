@@ -34,6 +34,7 @@ const EXCEPTIONS = [
   'vue-router',
   'vuex',
   'eslint',
+  'eslint-plugin-vue',
   'imagemin-mozjpeg', // issue with importing it to vue config will look into it more if we need it
   '@vue/eslint-config-prettier', // creates more warnings
   // versions for vue3
