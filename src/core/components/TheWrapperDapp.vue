@@ -297,7 +297,7 @@ export default {
 <style lang="scss">
 .tab-container {
   .v-slide-group__prev {
-    display: none;
+    display: none !important;
   }
 }
 .hide-default-tab-header {
