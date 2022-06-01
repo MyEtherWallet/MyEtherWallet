@@ -23,7 +23,6 @@
     =====================================================================================
     -->
       <mew-table
-        has-select
         :table-headers="tableHeaders"
         :table-data="formattedAllTokens"
         no-data-text="No tokens found!"
@@ -124,6 +123,12 @@ export default {
           value: 'balance',
           sortable: false,
           width: '20%'
+        },
+        {
+          text: 'Hide Token',
+          value: 'toggle',
+          sortable: false,
+          width: '20%'
         }
       ],
       selectedTokens: []
@@ -143,7 +148,7 @@ export default {
     formattedHiddenTokens() {
       return this.hiddenTokens
         ? this.hiddenTokens.map(item => {
-            return item;
+            return this.formatHiddenValues(item);
           })
         : [];
     },
@@ -210,6 +215,28 @@ export default {
       newObj.token = item.symbol;
       newObj.address = item.contract;
       newObj.tokenImg = item.img ? item.img : this.network.type.icon;
+      newObj.toggle = {
+        color: 'blue500',
+        value: false,
+        method() {
+          console.log('clicked', newObj.toggle);
+        }
+      };
+      return newObj;
+    },
+    /**
+     * @returns formatted values to display correctly on token table
+     */
+    formatHiddenValues(item) {
+      console.log('item', item);
+      const newObj = item;
+      newObj.toggle = {
+        color: 'blue500',
+        value: true,
+        method() {
+          console.log('clicked', newObj.toggle);
+        }
+      };
       return newObj;
     },
     /**
@@ -275,6 +302,7 @@ export default {
       } // End if token is custom
 
       this.selectedTokens.map(item => {
+        console.log('item', item);
         this.setHiddenToken(item).then(() => {
           this.closeDelete();
           Toast('Token Hidden succesfully', {}, SUCCESS);
