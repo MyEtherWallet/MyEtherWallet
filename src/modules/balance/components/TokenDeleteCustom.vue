@@ -140,13 +140,13 @@ export default {
           })
         : [];
     },
-    // formattedHiddenTokens() {
-    //   return this.hiddenTokens
-    //     ? this.hiddenTokens.map(item => {
-    //         return item;
-    //       })
-    //     : [];
-    // },
+    formattedHiddenTokens() {
+      return this.hiddenTokens
+        ? this.hiddenTokens.map(item => {
+            return item;
+          })
+        : [];
+    },
     formattedTokens() {
       // Check for duplicate keys (token Symbols)
       return this.tokensList
@@ -164,7 +164,9 @@ export default {
         : [];
     },
     formattedAllTokens() {
-      const x = this.formattedCustomTokens.concat(this.formattedTokens);
+      const x = this.formattedCustomTokens
+        .concat(this.formattedTokens)
+        .concat(this.formattedHiddenTokens);
       return x;
     },
     enableDeleteButton() {
