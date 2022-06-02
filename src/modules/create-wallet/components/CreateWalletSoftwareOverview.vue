@@ -117,7 +117,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .mew-overview {
   max-width: 650px;
 }
