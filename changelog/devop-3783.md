@@ -1,0 +1,1 @@
+handle eth.subscribe error
