@@ -26,6 +26,13 @@ export default class ENSManager {
       `TLD: ${getTld(name, this.network)} is not supported in this network!`
     );
   }
+  // searchForDomainByAddr(address) {
+  //   const formattedDomainResults = address.replace('0x', '');
+  //   if (tldSupported(this.network, address)) {
+  //     const actualDomainResults = formattedDomainResults.addr.reverse;
+  //     return actualDomainResults;
+  //   }
+  // }
   fetchAllNames() {
     const query = `
                   query getRegistrations($id: ID!, $first: Int, $skip: Int, $orderBy: Registration_orderBy, $orderDirection: OrderDirection, $expiryDate: Int) {
@@ -63,6 +70,58 @@ export default class ENSManager {
           return r.domain;
         });
       });
+  }
+  fetchAllNamesForReverseLookup(address) {
+    const query = `
+                  query getRegistrations($id: ID!, $first: Int, $skip: Int, $orderBy: Registration_orderBy, $orderDirection: OrderDirection, $expiryDate: Int) {
+                    account(id: $id) {
+                        registrations(first: $first, skip: $skip, orderBy: $orderBy, orderDirection: $orderDirection, where: {expiryDate_gt: $expiryDate}) {
+                          expiryDate
+                          domain {
+                            labelName
+                            labelhash
+                            name
+                            isMigrated
+                            parent {
+                              name
+                            }
+                          }
+                        }
+                      }
+                  }
+                `;
+    const variables = {
+      id: address.toLowerCase(),
+      first: 1000,
+      expiryDate: Math.floor(new Date().getTime() / 1000) - 86400 * 90 // grace period
+    };
+    return fetch(this.network.type.ens.subgraphPath, {
+      method: 'POST',
+      'Content-Type': 'application/json',
+      body: JSON.stringify({ query, variables })
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (!data.data.account) return [];
+        return data.data.account.registrations.map(r => {
+          r.domain.expiryDate = r.expiryDate;
+          return r.domain;
+        });
+      });
+  }
+  getAllNamesForReverseLookup(address) {
+    return this.fetchAllNamesForReverseLookup(address).then(names => {
+      return names.map(item => {
+        return new PermanentNameModule(
+          item.name,
+          address,
+          this.network,
+          this.web3,
+          this.ens,
+          item.expiryDate
+        );
+      });
+    });
   }
   getAllNamesForAddress() {
     return this.fetchAllNames().then(names => {

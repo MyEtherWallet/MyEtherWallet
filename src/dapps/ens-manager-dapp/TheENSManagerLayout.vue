@@ -61,6 +61,45 @@
                 </v-col>
               </v-row>
             </form>
+            <!--
+    =====================================================================================
+      Reverse ENS Lookup - Tab 1
+    =====================================================================================
+    -->
+            <form @submit.prevent="findDomainByAddress">
+              <div class="mew-heading-2 mb-8 ml-2">
+                Search for domain by address
+              </div>
+              <v-row class="mx-0">
+                <v-col class="pr-0" cols="8">
+                  <module-address-book
+                    label="Domain Address"
+                    class="mr-3 flex-grow-1"
+                    @setAddress="setReverseAddressLookup"
+                  />
+                </v-col>
+                <v-col class="pl-0" cols="4">
+                  <mew-button
+                    :loading="loading"
+                    :disabled="
+                      !reverseAddress ||
+                      (reverseAddress && reverseAddress.length < 3) ||
+                      loading ||
+                      (reverseAddress && reverseAddress.split('.').length > 3)
+                    "
+                    :has-full-width="true"
+                    btn-size="xlarge"
+                    title="Lookup"
+                    @click.native="findDomainByAddress"
+                  />
+                </v-col>
+                <v-col class="pr-0" cols="8">
+                  <div v-for="domain in reverseSearchResults" :key="domain">
+                    {{ domain.name }}
+                  </div>
+                </v-col>
+              </v-row>
+            </form>
           </div>
         </v-sheet>
       </template>
@@ -345,6 +384,8 @@ export default {
       manageType: '',
       onManage: false,
       name: '',
+      reverseAddress: '',
+      reverseSearchResults: '',
       nameHandler: {},
       ensManager: {},
       onRegister: false,
@@ -474,15 +515,17 @@ export default {
       return [
         this.searchError === '' || this.searchError,
         (this.name && this.name.length > 2) ||
+          (this.reverseAddress && this.reverseAddress.length > 2) ||
           this.$t('ens.warning.not-enough-char'),
         !this.hasInvalidChars || this.$t('ens.warning.invalid-symbol'),
         (this.name && this.name.split('.').length <= 2) ||
+          (this.reverseAddress && this.reverseAddress.split('.').length <= 2) ||
           this.$t('ens.warning.invalid-symbol')
       ];
     },
     hasInvalidChars() {
       const letters = /^[0-9a-zA-Z_.-]+$/;
-      if (!letters.test(this.name)) {
+      if (!letters.test(this.name) && !letters.test(this.reverseAddress)) {
         return true;
       }
       return false;
@@ -491,10 +534,10 @@ export default {
       return toWei(BigNumber(this.balance).toString(), 'ether');
     },
     loading() {
-      return this.nameHandler.checkingDomainAvail;
+      return this.nameHandler?.checkingDomainAvail;
     },
     ensDomainAvailable() {
-      return this.nameHandler.isAvailable;
+      return this.nameHandler?.isAvailable;
     },
     isNameEmpty() {
       return this.name === null || this.name === '';
@@ -733,6 +776,20 @@ export default {
         Toast(e, {}, ERROR);
       }
     },
+    async findDomainByAddress() {
+      try {
+        const lookupDomains = await this.ensManager.getAllNamesForReverseLookup(
+          this.reverseAddress
+        );
+        if (lookupDomains.length === 0) {
+          Toast('Address provided does not own any ens domains', {}, ERROR);
+        }
+        this.reverseSearchResults = lookupDomains;
+        return this.reverseSearchResults;
+      } catch (e) {
+        Toast(e, {}, ERROR);
+      }
+    },
     closeRegister() {
       this.onRegister = false;
       this.committed = false;
@@ -753,6 +810,20 @@ export default {
           ? 'Invalid name!'
           : e.message;
         this.name = name;
+      }
+    },
+    setReverseAddressLookup(lookupAddr) {
+      this.searchError = '';
+      if (this.reverseAddress === null || this.reverseAddress === '') {
+        this.nameHandler = {};
+      }
+      try {
+        this.reverseAddress = normalise(lookupAddr);
+      } catch (e) {
+        this.searchError = e.message.includes('Failed to validate')
+          ? 'Invalid name!'
+          : e.message;
+        this.reverseAddress = lookupAddr;
       }
     },
     register(duration) {
