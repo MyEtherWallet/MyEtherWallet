@@ -177,17 +177,16 @@ export default {
           });
         } catch (er) {
           const { message } = er;
-          let toastMsg = '';
+          let toastMsg = ' ';
           let toastLink = {};
           if (message) {
             if (message.includes('pending')) {
               toastMsg =
                 'There is a pending request to MetaMask, make your selection before continuing';
             } else if (message.includes('adding')) {
-              toastMsg =
-                "It seems like you don't have this network setup in MetaMask,";
               toastLink = {
-                title: 'please go here to add the network',
+                title:
+                  "It seems like you don't have this network setup in MetaMask, please go here to add the network",
                 url: 'https://chainlist.org/'
               };
             } else if (message.includes('rejected')) return;
@@ -195,8 +194,8 @@ export default {
               toastMsg =
                 'There was a problem processing your request to MetaMask';
             }
+            Toast(toastMsg, toastLink, ERROR, 5000);
           }
-          Toast(toastMsg, toastLink, ERROR, 5000);
         }
       }
     },
