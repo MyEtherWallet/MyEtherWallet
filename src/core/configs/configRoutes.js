@@ -32,6 +32,7 @@ const ROUTES_WALLET = {
   ENS_1: { NAME: 'ENS1', PATH: 'ens-1' },
   ENS_2: { NAME: 'ENS2', PATH: 'ens-2' },
   ENS_3: { NAME: 'ENS3', PATH: 'ens-3' },
+  ENS_4: { NAME: 'ENS4', PATH: 'ens-4' },
   INTERACT_WITH_CONTRACT: { NAME: 'InteractWithContract', PATH: 'interact' },
   NETWORK: { NAME: 'Network', PATH: 'network' },
   NFT_MANAGER: { NAME: 'NFTManager', PATH: 'nft' },

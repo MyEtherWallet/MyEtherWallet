@@ -275,6 +275,22 @@
           </div>
         </v-sheet>
       </template>
+      <!--
+    =====================================================================================
+      Reverse Lookup - Tab 4
+    =====================================================================================
+    -->
+      <template #tabContent4>
+        <v-sheet
+          max-width="500px"
+          color="transparent"
+          class="px-3 py-8 py-md-13 mx-auto"
+        >
+          <div>
+            <ens-reverse-lookup v-if="onReverseTab" />
+          </div>
+        </v-sheet>
+      </template>
     </the-wrapper-dapp>
     <!--
     =====================================================================================
@@ -343,6 +359,7 @@ import ModuleRegisterDomain from './modules/ModuleRegisterDomain';
 import ModuleManageDomain from './modules/ModuleManageDomain';
 import handlerEnsManager from './handlers/handlerEnsManager';
 import ClaimBalance from './components/claim/ClaimBalance';
+import EnsReverseLookup from './components/reverse/EnsReverseLookup';
 import { mapGetters, mapState } from 'vuex';
 import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import BigNumber from 'bignumber.js';
@@ -364,7 +381,8 @@ export default {
     ModuleManageDomain,
     TheWrapperDapp,
     ModuleAddressBook,
-    ClaimBalance
+    ClaimBalance,
+    EnsReverseLookup
   },
   data() {
     return {
@@ -383,6 +401,7 @@ export default {
       manageDomainHandler: {},
       manageType: '',
       onManage: false,
+      onReverseTab: false,
       name: '',
       reverseAddress: '',
       reverseSearchResults: '',
@@ -457,6 +476,14 @@ export default {
             path: ENS_MANAGER_ROUTE.CLAIM.PATH
           },
           id: 2
+        },
+        {
+          name: this.$t('ENS Reverse Lookup'),
+          route: {
+            name: ENS_MANAGER_ROUTE.REVERSE.NAME,
+            path: ENS_MANAGER_ROUTE.REVERSE.PATH
+          },
+          id: 3
         }
       ],
       /*
@@ -610,6 +637,8 @@ export default {
         this.activeTab = this.tabs[1].id;
       } else if (currentRoute === ENS_MANAGER_ROUTE.CLAIM.NAME) {
         this.activeTab = this.tabs[2].id;
+      } else if (currentRoute === ENS_MANAGER_ROUTE.REVERSE.NAME) {
+        this.activeTab = this.tabs[3].id;
       } else {
         this.activeTab = this.tabs[0].id;
       }

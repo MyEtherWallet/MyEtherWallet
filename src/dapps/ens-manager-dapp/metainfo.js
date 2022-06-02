@@ -40,6 +40,11 @@ export default {
       path: ENS_MANAGER_ROUTE.ENS_3.PATH,
       name: ENS_MANAGER_ROUTE.ENS_3.NAME,
       beforeEnter: ensRouterGuard
+    },
+    {
+      path: ENS_MANAGER_ROUTE.ENS_4.PATH,
+      name: ENS_MANAGER_ROUTE.ENS_4.NAME,
+      beforeEnter: ensRouterGuard
     }
   ]
 };
