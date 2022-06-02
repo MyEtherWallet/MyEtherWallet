@@ -1,6 +1,18 @@
 import BigNumber from 'bignumber.js';
 import { isNull } from 'lodash';
 import { isBigNumber } from 'web3-utils';
+// import { shouldPolyfill } from '@formatjs/intl-numberformat/should-polyfill';
+import { store } from '@/core/store';
+// async function polyfill(locale) {
+//   const unsupportedLocale = shouldPolyfill(locale);
+//   // This locale is supported
+//   if (!unsupportedLocale) {
+//     return;
+//   }
+//   // Load the polyfill 1st BEFORE loading data
+//   await import('@formatjs/intl-numberformat/polyfill-force');
+//   await import(`@formatjs/intl-numberformat/locale-data/${unsupportedLocale}`);
+// }
 
 /**
  * Localizes numbers to its specified currency
@@ -65,13 +77,17 @@ export const currencyToNumber = currency =>
  * Converts number to a local currency
  * @returns {string} Converted Number
  */
-const convertNumber = ({ currency, options, convertedPrice }) =>
+const convertNumber = ({ currency, options, convertedPrice }) => {
+  console.log('store', store);
+  console.log('locale', store.state.locale);
+  //polyfill(store.state.locale.substring(0, 2)).then(console.log);
   new Intl.NumberFormat(undefined, {
     style: 'currency',
     currency,
     currencyDisplay: 'narrowSymbol',
     ...options
   }).format(convertedPrice);
+};
 
 /******************************
  * Locale Codes From Currency *
