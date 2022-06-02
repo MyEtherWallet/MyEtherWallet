@@ -27,6 +27,10 @@ export default {
       name: ENS_MANAGER_ROUTE.CLAIM.NAME
     },
     {
+      path: ENS_MANAGER_ROUTE.REVERSE.PATH,
+      name: ENS_MANAGER_ROUTE.REVERSE.NAME
+    },
+    {
       path: ENS_MANAGER_ROUTE.ENS_1.PATH,
       name: ENS_MANAGER_ROUTE.ENS_1.NAME,
       beforeEnter: ensRouterGuard
@@ -39,11 +43,6 @@ export default {
     {
       path: ENS_MANAGER_ROUTE.ENS_3.PATH,
       name: ENS_MANAGER_ROUTE.ENS_3.NAME,
-      beforeEnter: ensRouterGuard
-    },
-    {
-      path: ENS_MANAGER_ROUTE.ENS_4.PATH,
-      name: ENS_MANAGER_ROUTE.ENS_4.NAME,
       beforeEnter: ensRouterGuard
     }
   ]

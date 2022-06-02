@@ -18,8 +18,7 @@ const ENS_MANAGER_ROUTE = {
   },
   ENS_1: { NAME: 'ENS1', PATH: 'ens-1' },
   ENS_2: { NAME: 'ENS2', PATH: 'ens-2' },
-  ENS_3: { NAME: 'ENS3', PATH: 'ens-3' },
-  ENS_4: { NAME: 'ENS4', PATH: 'ens-4' }
+  ENS_3: { NAME: 'ENS3', PATH: 'ens-3' }
 };
 
 const ensRouterGuard = (to, from, next) => {
@@ -39,12 +38,6 @@ const ensRouterGuard = (to, from, next) => {
     // ENS 2 => ENS 3
     from.name == ENS_MANAGER_ROUTE.ENS_2.NAME &&
     to.name == ENS_MANAGER_ROUTE.ENS_3.NAME
-  ) {
-    next();
-  } else if (
-    // ENS 3 => ENS 4
-    from.name == ENS_MANAGER_ROUTE.ENS_3.NAME &&
-    to.name == ENS_MANAGER_ROUTE.ENS_4.NAME
   ) {
     next();
   }
