@@ -44,7 +44,7 @@
     "@ensdomains/ensjs": "2.1.0",
     "@ethereumjs/common": "2.6.4",
     "@ethereumjs/tx": "3.5.1",
-    "@formatjs/intl-numberformat": "^8.0.1",
+    "@formatjs/intl-numberformat": "8.0.1",
     "@ledgerhq/hw-transport-web-ble": "6.27.1",
     "@lokalise/node-api": "7.2.0",
     "@mathieustan/vue-intercom": "0.0.7",

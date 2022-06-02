@@ -2,6 +2,9 @@ import app from './mainApp';
 import '@/assets/fonts/MaterialDesignIcons/css/materialdesignicons.min.css';
 import '@/assets/fonts/Roboto/css/Roboto.css';
 
+import '@formatjs/intl-numberformat/polyfill';
+import '@formatjs/intl-numberformat/locale-data/en';
+
 import './sentry';
 import './components';
 import './matomo';
