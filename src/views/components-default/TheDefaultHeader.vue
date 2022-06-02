@@ -6,18 +6,18 @@
           <the-default-mobile-navigation class="ml-n2" />
         </v-col>
         <v-col cols="4">
-          <router-link :to="{ name: ROUTES_HOME.HOME.NAME, query: {} }">
-            <v-img
-              :class="$vuetify.breakpoint.smAndDown ? 'mx-auto' : ''"
-              src="@/assets/images/icons/logo-mew.svg"
-              max-height="36"
-              max-width="130"
-            />
-          </router-link>
+          <v-img
+            :class="$vuetify.breakpoint.smAndDown ? 'mx-auto' : ''"
+            class="cursor--pointer"
+            src="@/assets/images/icons/logo-mew.svg"
+            max-height="36"
+            max-width="130"
+            @click="$router.push({ name: ROUTES_HOME.HOME.NAME })"
+          />
         </v-col>
         <v-col class="justify-space-between d-none d-md-flex" cols="4">
           <router-link
-            class="white--text text-decoration--none"
+            class="white--text text-decoration--none menu-item"
             :to="{ name: ROUTES_HOME.HOW_IT_WORKS.NAME }"
           >
             {{ $t('header.what-is-mew') }}
@@ -27,7 +27,10 @@
             :list-obj="menuObj"
             @goToPage="routeTo"
           />
-          <a class="white--text text-decoration--none" @click="openMoonpay">
+          <a
+            class="white--text text-decoration--none menu-item"
+            @click="openMoonpay"
+          >
             {{ $t('header.buy-eth') }}
           </a>
         </v-col>
@@ -102,3 +105,9 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.menu-item:hover {
+  font-weight: 500;
+}
+</style>

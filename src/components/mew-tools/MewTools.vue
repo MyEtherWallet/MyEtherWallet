@@ -148,9 +148,13 @@ export default {
     }
   }
 
-  .tools-btn:hover {
-    * {
-      font-weight: 600;
+  .tools-btn {
+    opacity: 0.9;
+    &:hover {
+      opacity: 1;
+      * {
+        font-weight: 500;
+      }
     }
   }
 }
