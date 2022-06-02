@@ -16,8 +16,9 @@ import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 import { formatReserves, formatUserSummary } from '@aave/math-utils';
 import { ethers } from 'ethers';
 import { ChainId } from '@aave/contract-helpers';
-import { toHex } from 'web3-utils';
-import { cloneDeep } from 'lodash';
+// import { toHex } from 'web3-utils';
+// import { cloneDeep } from 'lodash';
+import { INTEREST_TYPES } from '../handlers/helpers';
 
 const STABLE_COINS = ['TUSD', 'DAI', 'USDT', 'USDC', 'sUSD'];
 
@@ -56,7 +57,8 @@ export default {
       usdPriceEth: '',
       userSummary: {},
       isLoadingData: true,
-      lendingPool: {}
+      lendingPool: {},
+      poolContract: {}
     };
   },
   mounted() {
@@ -73,6 +75,8 @@ export default {
       SWAP_COLLATERAL_ADAPTER: SWAP_COLLATERAL_ADAPTER,
       WETH_GATEWAY: WETH_GATEWAY
     });
+
+    this.poolContract = this.lendingPool.getContractInstance(LENDING_POOL);
   },
   apollo: {
     $subscribe: {
@@ -205,20 +209,13 @@ export default {
      */
     async onDeposit({ amount, reserve, referralCode, user }) {
       try {
-        // coonthis.lendingPool.deposit(data);
-        // const txArr = txs.map(tx => {
-        //   return tx.tx();
-        // });
-        // console.log(txArr);
-        console.log(amount, reserve, referralCode, user);
-        const poolContract = this.lendingPool.getContractInstance(LENDING_POOL);
-        const txData = await poolContract.populateTransaction.deposit(
+        const txData = await this.poolContract.populateTransaction.deposit(
           reserve,
           amount,
           user,
           referralCode
         );
-        console.log(txData);
+        this.formatTxData(txData);
       } catch (e) {
         throw new Error(e);
       }
@@ -226,11 +223,16 @@ export default {
     /**
      * Apollo mutation to borrow funds
      */
-    async onBorrow(data) {
+    async onBorrow({ amount, reserve, referralCode, interestRateMode, user }) {
       try {
-        return await this.lendingPool.borrow(data).then(res => {
-          this.formatTxData(res, 'borrow');
-        });
+        const txData = await this.poolContract.populateTransaction.borrow(
+          reserve,
+          amount,
+          interestRateMode === INTEREST_TYPES.variable ? 2 : 1,
+          referralCode,
+          user
+        );
+        this.formatTxData(txData);
       } catch (e) {
         throw new Error(e);
       }
@@ -287,52 +289,39 @@ export default {
      * Check and prepare data to send tx
      * or errors out
      */
-    formatTxData(txs) {
-      // error should be handled in the function calling this
-      // if (res.errors?.length > 0) {
-      //   throw new Error(
-      //     'You may not have enough token balance or eth to execute transaction!'
-      //   );
-      // }
-      const txArr = txs.map(tx => {
-        return tx.tx();
-      });
-
-      console.log(txArr, 'BBBBB');
-
-      Promise.all(txArr).then(res => {
-        console.log(res, 'AAAAAA');
-      });
-
-      // console.log(txArr, 'gets here?');
-
-      // if (res.data[kind].length > 0) {
-      //   res.data[kind].forEach(data => {
+    formatTxData(txData) {
+      // if (txData.length > 0) {
+      //   txData.forEach(data => {
       //     txArr.push(data.tx);
       //   });
       // }
 
-      // this.sendTransaction(txArr)
-      //   .then(() => {
-      //     Toast(
-      //       'Success! Your transaction will be displayed shortly',
-      //       {},
-      //       SUCCESS
-      //     );
-      //   })
-      //   .catch(err => {
-      //     Toast(err, {}, ERROR);
-      //   });
+      this.sendTransaction({
+        from: this.address,
+        gas: '0x5208',
+        to: txData.to,
+        data: txData.data
+      })
+        .then(() => {
+          Toast(
+            'Success! Your transaction will be displayed shortly',
+            {},
+            SUCCESS
+          );
+        })
+        .catch(err => {
+          Toast(err, {}, ERROR);
+        });
     },
     /**
      * Sends the tx
      */
     sendTransaction(param) {
       if (param) {
-        if (param.length > 1) {
-          return this.web3.mew.sendBatchTransactions(param);
-        }
-        return this.web3.eth.sendTransaction(param[0]);
+        // if (param.length > 1) {
+        //   return this.web3.mew.sendBatchTransactions(param);
+        // }
+        return this.web3.eth.sendTransaction(param);
       }
       return new Error('No Parameters sent!');
     },

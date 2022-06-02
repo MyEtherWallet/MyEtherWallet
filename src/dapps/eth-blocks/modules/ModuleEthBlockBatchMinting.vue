@@ -104,10 +104,7 @@ import abi from '../handlers/helpers/multicall.js';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import handlerBlock from '../handlers/handlerBlock';
 import BlockResultComponent from '../components/BlockResultComponent';
-import {
-  formatFiatValue,
-  formatFloatingPointValue
-} from '@/core/helpers/numberFormatHelper';
+import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import BigNumber from 'bignumber.js';
 import { fromWei, toWei, toBN } from 'web3-utils';
 import { mapActions } from 'vuex';
@@ -139,7 +136,8 @@ export default {
       'isTestNetwork',
       'gasPrice',
       'gasPriceType',
-      'gasPriceByType'
+      'gasPriceByType',
+      'getFiatValue'
     ]),
     ...mapGetters('external', ['fiatValue']),
     totalAvailable() {
@@ -157,20 +155,20 @@ export default {
       return formatFloatingPointValue(fromWei(price)).value;
     },
     totalMintPriceFiat() {
-      const value = formatFiatValue(
+      const value = this.getFiatValue(
         BigNumber(this.totalMintPrice).times(this.fiatValue).toFixed(2)
-      ).value;
-      return `$ ${value}`;
+      );
+      return value;
     },
     totalNetworkFee() {
       const val = toBN(this.gasLimit).mul(toBN(this.localGasPrice));
       return formatFloatingPointValue(fromWei(val.toString())).value;
     },
     totalNetworkFiatFee() {
-      const value = formatFiatValue(
+      const value = this.getFiatValue(
         BigNumber(this.totalNetworkFee).times(this.fiatValue).toFixed(2)
-      ).value;
-      return `$ ${value}`;
+      );
+      return value;
     },
     totalTransactionPrice() {
       const val = toBN(this.gasLimit)
@@ -179,10 +177,10 @@ export default {
       return formatFloatingPointValue(fromWei(val.toString())).value;
     },
     totalTransactionFiatPrice() {
-      const value = formatFiatValue(
+      const value = this.getFiatValue(
         BigNumber(this.totalTransactionPrice).times(this.fiatValue).toFixed(2)
-      ).value;
-      return `$ ${value}`;
+      );
+      return value;
     },
     blockCount() {
       const cart = this.isTestNetwork ? this.cart.RIN : this.cart.ETH;

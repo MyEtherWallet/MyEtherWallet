@@ -2,7 +2,6 @@ module.exports = [
   'https://localhost:8080',
   'wss://localhost:8080',
   'https://swap.mewapi.io:443',
-  'https://nodes.mewapi.io:443',
   'wss://connect.mewapi.io:443',
   'wss://connect2.mewapi.io:443',
   'http://localhost:8178',

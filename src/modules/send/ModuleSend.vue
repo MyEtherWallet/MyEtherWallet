@@ -253,7 +253,8 @@ export default {
       'network',
       'gasPrice',
       'isEthNetwork',
-      'swapLink'
+      'swapLink',
+      'getFiatValue'
     ]),
     ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
     ...mapGetters('custom', ['hasCustom', 'customTokens']),
@@ -331,8 +332,9 @@ export default {
       // no ref copy
       const tokensList = this.tokensList.slice();
       const imgs = tokensList.map(item => {
-        item.totalBalance = this.currencyFormatter(item.usdBalance);
+        item.totalBalance = this.getFiatValue(item.usdBalancef);
         item.tokenBalance = item.balancef;
+        item.price = this.getFiatValue(item.pricef);
         item.subtext = item.name;
         item.value = item.name;
         item.name = item.symbol;
@@ -580,14 +582,6 @@ export default {
     }, 500);
   },
   methods: {
-    // replace this once localization is merged
-    currencyFormatter(value) {
-      return new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: this.preferredCurrency,
-        currencyDisplay: 'symbol'
-      }).format(value);
-    },
     /**
      * Resets values to default
      */
