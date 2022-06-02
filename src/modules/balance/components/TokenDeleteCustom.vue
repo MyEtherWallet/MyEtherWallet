@@ -25,7 +25,7 @@
       <mew-table
         has-select
         :table-headers="tableHeaders"
-        :selected-values="formattedHiddenTokens"
+        :selected-values="selectedTokens"
         :table-data="formattedAllTokens"
         no-data-text="No tokens found!"
         @selectedRow="selectedValues"
@@ -183,6 +183,14 @@ export default {
           }?`;
     }
   },
+  mounted() {
+    for (const token of this.formattedHiddenTokens) {
+      const newObj = { item: token, value: true };
+      console.log('token', newObj);
+      this.selectedValues(newObj);
+    }
+    console.log('selectedTokens', this.selectedTokens);
+  },
   methods: {
     ...mapActions('custom', [
       'deleteAll',
@@ -233,6 +241,7 @@ export default {
           }
         });
       }
+      console.log('selectedTokens', this.selectedTokens);
     },
     /**
      * Handles select all
