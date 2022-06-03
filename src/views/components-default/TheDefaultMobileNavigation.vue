@@ -162,8 +162,6 @@ export default {
 };
 </script>
 
-<style scoped lang="scss"></style>
-
 <style lang="scss">
 .mew-component--landing-page-menu-mobile {
   .mobile-menu-button .v-icon.v-icon {
