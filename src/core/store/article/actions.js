@@ -1,3 +1,4 @@
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 const Url =
   'https://raw.githubusercontent.com/MyEtherWallet/dynamic-data/main/articles.json';
 /**
@@ -10,10 +11,14 @@ const updateArticles = async function ({ commit }, stateObj) {
     temp.getTime() <= Date.now() ||
     !Object.keys(stateObj.articleList).length
   ) {
-    const res = await fetch(Url);
-    const articles = await res.json();
-    commit('SET_ARTICLES', articles);
-    commit('UPDATE_TIMESTAMP', new Date().getTime());
+    try {
+      const res = await fetch(Url);
+      const articles = await res.json();
+      commit('SET_ARTICLES', articles);
+      commit('UPDATE_TIMESTAMP', new Date().getTime());
+    } catch (err) {
+      Toast(err, {}, ERROR);
+    }
   }
 };
 
