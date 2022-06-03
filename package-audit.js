@@ -12,7 +12,9 @@ const AUDIT_EXCEPTIONS = [
   'minimist',
   'moment',
   'axios',
-  'async'
+  'async',
+  'nth-check',
+  'semver-regex'
 ];
 const execute = (command, callback) => {
   exec(

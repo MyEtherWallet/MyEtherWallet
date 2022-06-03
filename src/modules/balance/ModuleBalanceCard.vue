@@ -518,6 +518,7 @@ export default {
   width: 100%;
 }
 .mew-card {
+  opacity: 0;
   border-radius: 16px;
   overflow: hidden;
   position: absolute;
