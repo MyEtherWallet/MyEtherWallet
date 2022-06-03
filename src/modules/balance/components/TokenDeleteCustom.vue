@@ -187,11 +187,37 @@ export default {
           }?`;
     },
     displaySelectedTokens() {
-      if (!this.loading && !this.preselected) this.preselectTokens();
-      return !this.loading ? this.selectedTokens : [];
+      return this.selectedTokens;
     },
     loading() {
       return this.loadingWalletInfo;
+    }
+  },
+  watch: {
+    loading(val) {
+      if (!val && !this.preselected) this.preselected = true;
+    },
+    preselected(val) {
+      console.log('val', val);
+      console.log('preselected', this.preselected);
+      if (val) {
+        const preselectedTokens = [];
+        console.log('formattedAllTokens', this.formattedAllTokens);
+        console.log(
+          'formattedAllTokens length',
+          this.formattedAllTokens.length
+        );
+        for (const token of this.formattedHiddenTokens) {
+          const newObj = this.formattedAllTokens.filter(item => {
+            return item.address === token.address;
+          })[0];
+          console.log('newObj', newObj);
+          preselectedTokens.push(newObj);
+        }
+        console.log('selectedTokens', preselectedTokens);
+        this.selectedTokens = preselectedTokens;
+        this.preselected = val;
+      }
     }
   },
   methods: {
@@ -201,21 +227,21 @@ export default {
       'setHiddenToken',
       'deleteHiddenToken'
     ]),
-    preselectTokens() {
-      const preselectedTokens = [];
-      console.log('formattedAllTokens', this.formattedAllTokens);
-      console.log('formattedAllTokens length', this.formattedAllTokens.length);
-      for (const token of this.formattedHiddenTokens) {
-        const newObj = this.formattedAllTokens.filter(item => {
-          return item.address === token.address;
-        })[0];
-        console.log('newObj', newObj);
-        preselectedTokens.push(newObj);
-      }
-      console.log('selectedTokens', preselectedTokens);
-      this.selectedTokens = preselectedTokens;
-      this.preselected = true;
-    },
+    // preselectTokens() {
+    //   const preselectedTokens = [];
+    //   console.log('formattedAllTokens', this.formattedAllTokens);
+    //   console.log('formattedAllTokens length', this.formattedAllTokens.length);
+    //   for (const token of this.formattedHiddenTokens) {
+    //     const newObj = this.formattedAllTokens.filter(item => {
+    //       return item.address === token.address;
+    //     })[0];
+    //     console.log('newObj', newObj);
+    //     preselectedTokens.push(newObj);
+    //   }
+    //   console.log('selectedTokens', preselectedTokens);
+    //   this.selectedTokens = preselectedTokens;
+    //   this.preselected = true;
+    // },
     /**
      * close overlay
      */
