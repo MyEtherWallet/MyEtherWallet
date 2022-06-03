@@ -186,7 +186,7 @@ export default {
             } else if (message.includes('adding')) {
               toastLink = {
                 title:
-                  "It seems like you don't have this network setup in MetaMask, please go here to add the network",
+                  "It seems like you don't have this network set up in MetaMask. Please go here to add the network.",
                 url: 'https://chainlist.org/'
               };
             } else if (message.includes('rejected')) return;
