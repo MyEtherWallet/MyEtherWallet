@@ -191,34 +191,34 @@ export default {
     },
     loading() {
       return this.loadingWalletInfo;
+    },
+    preselectedTokens() {
+      const tokens = [];
+      console.log('formattedAllTokens', this.formattedAllTokens);
+      console.log('formattedAllTokens length', this.formattedAllTokens.length);
+      for (const token of this.formattedHiddenTokens) {
+        const newObj = this.formattedAllTokens.filter(item => {
+          return item.address === token.address;
+        })[0];
+        console.log('newObj', newObj);
+        tokens.push(newObj);
+      }
+      console.log('selectedTokens', tokens);
+      return tokens;
     }
   },
   watch: {
     loading(val) {
-      if (!val && !this.preselected) this.preselected = true;
-    },
-    preselected(val) {
-      console.log('val', val);
-      console.log('preselected', this.preselected);
-      if (val) {
-        const preselectedTokens = [];
-        console.log('formattedAllTokens', this.formattedAllTokens);
-        console.log(
-          'formattedAllTokens length',
-          this.formattedAllTokens.length
-        );
-        for (const token of this.formattedHiddenTokens) {
-          const newObj = this.formattedAllTokens.filter(item => {
-            return item.address === token.address;
-          })[0];
-          console.log('newObj', newObj);
-          preselectedTokens.push(newObj);
-        }
-        console.log('selectedTokens', preselectedTokens);
-        this.selectedTokens = preselectedTokens;
-        this.preselected = val;
+      if (!val && !this.preselected) {
+        this.selectedTokens = this.preselectedTokens;
+        this.preselected = true;
       }
-    }
+    },
+    // preselected(val) {
+    //   console.log('val', val);
+    //   console.log('preselected', this.preselected);
+    //   if (val) this.selectedTokens = this.preselectedTokens;
+    // }
   },
   methods: {
     ...mapActions('custom', [
