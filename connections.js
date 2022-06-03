@@ -48,7 +48,6 @@ module.exports = [
   'https://registry.walletconnect.org:443/data/wallets.json',
   'wss://*.bridge.walletconnect.org:443',
   'https://buy-staging.moonpay.com:443',
-  'https://api.coingecko.com:443',
   // Dapps
   'https://staked.mewapi.io:443', // staked
   'https://stakedtest.mewapi.io:443', // staked
