@@ -446,7 +446,7 @@ export default {
         )
       )
         return '0';
-      const amountToWei = toWei(this.amount);
+      const amountToWei = toWei(toBNSafe(this.amount));
       return this.isFromNetworkCurrency
         ? BigNumber(this.txFee).plus(amountToWei).toString()
         : this.txFee;
