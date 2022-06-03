@@ -25,8 +25,8 @@
       <mew-table
         has-select
         :table-headers="tableHeaders"
-        :selected-values="selectedTokens"
         :table-data="formattedAllTokens"
+        :selected-values="displaySelectedTokens"
         no-data-text="No tokens found!"
         @selectedRow="selectedValues"
         @selectedAll="onSelectAll"
@@ -92,7 +92,7 @@
 <script>
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import { SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters, mapActions, mapState } from 'vuex';
 export default {
   props: {
     open: {
@@ -127,11 +127,13 @@ export default {
           width: '20%'
         }
       ],
-      selectedTokens: []
+      selectedTokens: [],
+      preselected: false
     };
   },
   computed: {
     ...mapGetters('wallet', ['tokensList']),
+    ...mapState('wallet', ['loadingWalletInfo']),
     ...mapGetters('custom', ['customTokens', 'hiddenTokens']),
     ...mapGetters('global', ['network']),
     formattedCustomTokens() {
@@ -168,7 +170,9 @@ export default {
       const x = this.formattedCustomTokens
         .concat(this.formattedTokens)
         .concat(this.formattedHiddenTokens);
-      return x;
+      return x.map((item, index) => {
+        return { id: index, ...item };
+      });
     },
     enableDeleteButton() {
       return this.selectedTokens.length > 0;
@@ -181,15 +185,14 @@ export default {
         : `Are you sure you want to remove ${
             this.selectedTokens.length > 1 ? 'these tokens' : 'this token'
           }?`;
+    },
+    displaySelectedTokens() {
+      if (!this.loading && !this.preselected) this.preselectTokens();
+      return !this.loading ? this.selectedTokens : [];
+    },
+    loading() {
+      return this.loadingWalletInfo;
     }
-  },
-  mounted() {
-    for (const token of this.formattedHiddenTokens) {
-      const newObj = { item: token, value: true };
-      console.log('token', newObj);
-      this.selectedValues(newObj);
-    }
-    console.log('selectedTokens', this.selectedTokens);
   },
   methods: {
     ...mapActions('custom', [
@@ -198,6 +201,21 @@ export default {
       'setHiddenToken',
       'deleteHiddenToken'
     ]),
+    preselectTokens() {
+      const preselectedTokens = [];
+      console.log('formattedAllTokens', this.formattedAllTokens);
+      console.log('formattedAllTokens length', this.formattedAllTokens.length);
+      for (const token of this.formattedHiddenTokens) {
+        const newObj = this.formattedAllTokens.filter(item => {
+          return item.address === token.address;
+        })[0];
+        console.log('newObj', newObj);
+        preselectedTokens.push(newObj);
+      }
+      console.log('selectedTokens', preselectedTokens);
+      this.selectedTokens = preselectedTokens;
+      this.preselected = true;
+    },
     /**
      * close overlay
      */
