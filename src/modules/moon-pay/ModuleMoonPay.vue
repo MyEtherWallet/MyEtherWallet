@@ -10,7 +10,7 @@
       scrollable
       has-body-content
     >
-      <div v-if="step == 0">
+      <div v-if="step === 0">
         <mew-tabs
           v-if="open"
           :items="tabItems"
@@ -30,10 +30,10 @@
               @selectedCurrency="setSelectedCurrency"
               @openProviders="openProviders"
               @selectedFiat="setSelectedFiat"
-              @setBuyObj="setBuyObj"
               @hideMoonpay="hideMoonpay"
               @simplexQuote="setSimplexQuote"
               @toAddress="setToAddress"
+              @success="buySuccess"
             />
           </template>
           <template #tabContent2>
@@ -49,7 +49,7 @@
         </mew-tabs>
       </div>
       <MoonPayBuyProviderComponent
-        v-if="step == 1"
+        v-if="step === 1"
         :order-handler="orderHandler"
         :close="close"
         :in-wallet="inWallet"
@@ -233,6 +233,14 @@ export default {
     },
     hideMoonpay(val) {
       this.onlySimplex = val;
+    },
+    buySuccess(items) {
+      this.setSimplexQuote(items[0]);
+      this.setToAddress(items[1]);
+      this.setBuyObj(items[2]);
+      this.openProviders(items[3]);
+      this.setSelectedCurrency(items[4]);
+      this.setSelectedFiat(items[5]);
     }
   }
 };

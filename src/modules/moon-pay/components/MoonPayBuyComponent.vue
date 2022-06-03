@@ -519,12 +519,14 @@ export default {
         fiatAmount: this.amount
       };
       this.checkMoonPayMax();
-      this.$emit('simplexQuote', this.simplexQuote);
-      this.$emit('toAddress', this.toAddress);
-      this.$emit('setBuyObj', buyObj);
-      this.$emit('openProviders', 1);
-      this.$emit('selectedCurrency', this.selectedCurrency);
-      this.$emit('selectedFiat', this.selectedFiat);
+      this.$emit('success', [
+        this.simplexQuote,
+        this.toAddress,
+        buyObj,
+        1,
+        this.selectedCurrency,
+        this.selectedFiat
+      ]);
     }
   }
 };
