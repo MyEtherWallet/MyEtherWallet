@@ -257,7 +257,7 @@ export default {
       'getFiatValue'
     ]),
     ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
-    ...mapGetters('custom', ['hasCustom', 'customTokens']),
+    ...mapGetters('custom', ['hasCustom', 'customTokens', 'hiddenTokens']),
     isFromNetworkCurrency() {
       return this.selectedCurrency?.symbol === this.currencyName;
     },
@@ -330,7 +330,12 @@ export default {
      */
     tokens() {
       // no ref copy
-      const tokensList = this.tokensList.slice();
+      const tokensList = this.tokensList.slice().filter(t => {
+        const isHidden = this.hiddenTokens.find(token => {
+          return t.contract == token.address;
+        });
+        return !isHidden;
+      });
       const imgs = tokensList.map(item => {
         item.totalBalance = this.getFiatValue(item.usdBalancef);
         item.tokenBalance = item.balancef;
