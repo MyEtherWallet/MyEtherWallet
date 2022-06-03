@@ -187,6 +187,7 @@ export default {
           }?`;
     },
     displaySelectedTokens() {
+      console.log('selectedTokens', this.selectedTokens);
       return this.selectedTokens;
     },
     loading() {
@@ -203,7 +204,7 @@ export default {
         console.log('newObj', newObj);
         tokens.push(newObj);
       }
-      console.log('selectedTokens', tokens);
+      console.log('preselectedTokens', tokens);
       return tokens;
     }
   },
@@ -214,6 +215,12 @@ export default {
         this.preselected = true;
       }
     },
+    open(val) {
+      if (val && !this.preselected) {
+        this.selectedTokens = this.preselectedTokens;
+        this.preselected = true;
+      }
+    }
     // preselected(val) {
     //   console.log('val', val);
     //   console.log('preselected', this.preselected);
@@ -247,6 +254,7 @@ export default {
      */
     closeDelete() {
       this.selectedTokens = [];
+      this.preselected = false;
       this.step = 1;
       this.close();
     },
