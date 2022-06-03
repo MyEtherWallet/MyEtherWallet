@@ -216,16 +216,15 @@ export default {
       }
     },
     open(val) {
-      if (val && !this.preselected) {
+      console.log('open', val);
+      if (val && !this.preselected && !this.loading) {
         this.selectedTokens = this.preselectedTokens;
         this.preselected = true;
       }
+    },
+    preselected(val) {
+      console.log('preselected', val);
     }
-    // preselected(val) {
-    //   console.log('val', val);
-    //   console.log('preselected', this.preselected);
-    //   if (val) this.selectedTokens = this.preselectedTokens;
-    // }
   },
   methods: {
     ...mapActions('custom', [
