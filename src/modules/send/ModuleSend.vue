@@ -102,7 +102,7 @@
           <mew-expand-panel
             ref="expandPanel"
             :panel-items="expandPanel"
-            :idx-to-expand="[]"
+            :idx-to-expand="openedPanels"
             @toggled="closeToggle"
           >
             <template #panelBody1>
@@ -238,6 +238,7 @@ export default {
           toggleTitle: 'Gas Limit & Data'
         }
       ],
+      openedPanels: [],
       defaultGasLimit: '21000',
       gasLimitError: '',
       amountError: '',
