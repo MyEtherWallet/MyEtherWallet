@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { isNull, isUndefined } from 'lodash';
+import { isNull, isUndefined, isNaN } from 'lodash';
 import { fromWei, toBN } from 'web3-utils';
 import { localizeCurrency } from './localization';
 
