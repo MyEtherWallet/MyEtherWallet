@@ -16,20 +16,8 @@
           style="height: 50px"
           v-on="on"
         >
-          <mew-button
-            class="px-2"
-            color-theme="primary"
-            btn-size="large"
-            btn-style="outline"
-          >
-            <div class="d-flex align-center">
-              <img
-                src="@/assets/images/icons/icon-grid-dot.png"
-                alt="Mew tools"
-              />
-              <div class="d-none d-md-block mew-label">MEW Hub</div>
-            </div>
-          </mew-button>
+          <img src="@/assets/images/icons/icon-grid-dot.png" alt="Mew tools" />
+          <div class="d-none d-md-block mew-label">MEW Hub</div>
         </v-btn>
 
         <!--
