@@ -26,13 +26,6 @@ export default class ENSManager {
       `TLD: ${getTld(name, this.network)} is not supported in this network!`
     );
   }
-  // searchForDomainByAddr(address) {
-  //   const formattedDomainResults = address.replace('0x', '');
-  //   if (tldSupported(this.network, address)) {
-  //     const actualDomainResults = formattedDomainResults.addr.reverse;
-  //     return actualDomainResults;
-  //   }
-  // }
   fetchAllNames() {
     const query = `
                   query getRegistrations($id: ID!, $first: Int, $skip: Int, $orderBy: Registration_orderBy, $orderDirection: OrderDirection, $expiryDate: Int) {

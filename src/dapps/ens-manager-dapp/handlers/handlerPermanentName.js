@@ -9,6 +9,8 @@ import vuexStore from '@/core/store';
 import { mapGetters, mapState } from 'vuex';
 import { toBN, toHex, fromWei, sha3 } from 'web3-utils';
 import { estimateGasList } from '@/core/helpers/gasPriceHelper.js';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+
 const bip39 = require('bip39');
 
 export default class PermanentNameModule extends ENSManagerInterface {
@@ -37,6 +39,17 @@ export default class PermanentNameModule extends ENSManagerInterface {
 
   register(duration, balance) {
     return this._registerWithDuration(duration, balance);
+  }
+
+  async setNameReverseRecord(domain) {
+    try {
+      const setReverse = await this.publicResolverContract.methods
+        .setName(this.address, domain)
+        .send({ from: this.address });
+      return setReverse;
+    } catch (e) {
+      Toast(e, {}, ERROR);
+    }
   }
 
   getTransactions(toAddress) {
