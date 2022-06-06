@@ -7,7 +7,7 @@ import contentHash from 'content-hash';
 import EventEmitter from 'events';
 import vuexStore from '@/core/store';
 import { mapGetters, mapState } from 'vuex';
-import { toBN, toHex, fromWei, sha3, padLeft, hexToBytes } from 'web3-utils';
+import { toBN, toHex, fromWei, sha3 } from 'web3-utils';
 import { estimateGasList } from '@/core/helpers/gasPriceHelper.js';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 
@@ -41,13 +41,15 @@ export default class PermanentNameModule extends ENSManagerInterface {
     return this._registerWithDuration(duration, balance);
   }
 
-  async setNameReverseRecord(domain) {
-    // const splitAddress = this.address.replace('0x', '');
-    // const byte32 = padLeft(hexToBytes(splitAddress, 32));
-    const byte32 = padLeft(hexToBytes(this.address, 32));
+  async setNameReverseRecord(registry, domain) {
+    // const splitReg = registry.replace('0x', '');
+    // const regByte32 = padLeft(hexToBytes(registry, 32));
+    // const byte32 = padLeft(hexToBytes(this.address, 32));
+    // const numToHex = numberToHex(chainID);
+    // const regToByte32 = padLeft(hexToBytes(registry, 32));
     try {
       const setReverse = await this.publicResolverContract.methods
-        .setName(byte32, domain)
+        .setName(registry, domain)
         .send({ from: this.address });
       return setReverse;
     } catch (e) {

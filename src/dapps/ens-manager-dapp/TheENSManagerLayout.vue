@@ -250,8 +250,8 @@
           <div>
             <ens-reverse-lookup
               :address="address"
+              :network="network"
               :ens-manager="ensManager"
-              :handler-perm="handlerPerm"
             />
           </div>
         </v-sheet>
@@ -369,7 +369,6 @@ export default {
       name: '',
       nameHandler: {},
       ensManager: {},
-      handlerPerm: {},
       onRegister: false,
       searchError: '',
       notEnoughFunds: false,
@@ -573,7 +572,6 @@ export default {
      * Check url and change tab on load
      */
     this.detactUrlChangeTab();
-    // this.findDomainByAddress();
 
     const ens = this.network.type.ens
       ? new ENS(this.web3.currentProvider, this.network.type.ens.registry)
