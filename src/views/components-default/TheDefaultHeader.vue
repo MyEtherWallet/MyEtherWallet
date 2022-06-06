@@ -35,10 +35,7 @@
           </a>
         </v-col>
         <v-col cols="4" class="text-right">
-          <mew-tools v-if="false" class="ml-auto" />
-          <mew-menu-popup btn-title="Click me">
-            <h1>Hello</h1>
-          </mew-menu-popup>
+          <mew-tools class="ml-auto" />
         </v-col>
       </v-row>
     </v-container>
@@ -46,7 +43,6 @@
 </template>
 
 <script>
-import MewMenuPopup from '@/components/mew-menu-popup/MewMenuPopup';
 import mewTools from '@/components/mew-tools/MewTools';
 import TheDefaultMobileNavigation from './TheDefaultMobileNavigation';
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
@@ -55,7 +51,7 @@ import buyMore from '@/core/mixins/buyMore.mixin.js';
 
 export default {
   name: 'TheDefaultHeader',
-  components: { MewMenuPopup, mewTools, TheDefaultMobileNavigation },
+  components: { mewTools, TheDefaultMobileNavigation },
   mixins: [buyMore],
   data: () => ({
     menuObj: {

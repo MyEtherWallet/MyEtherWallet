@@ -1,12 +1,10 @@
 <template>
   <div class="mew-component--mew-tools">
-    <v-menu offset-y close-on-click bottom left>
-      <template #activator="{ on, attrs }">
-        <!--
-        =============================================================
-        Desktop MEW tools button
-        =============================================================
-        -->
+    <mew-menu-popup spacing="45px">
+      <!-- ======================================================================================== -->
+      <!-- Menu button -->
+      <!-- ======================================================================================== -->
+      <template #activator>
         <v-btn
           class="d-none d-lg-block btn-remove-style"
           outlined
@@ -19,33 +17,11 @@
           <img src="@/assets/images/icons/icon-grid-dot.png" alt="Mew tools" />
           <div class="d-none d-md-block mew-label">MEW Hub</div>
         </v-btn>
-
-        <!--
-        =============================================================
-        Mobile MEW tools button
-        =============================================================
-        -->
-        <v-btn
-          style="height: 36px; min-width: 36px; padding: 0; border-radius: 10px"
-          color="greenPrimary"
-          outlined
-          class="d-lg-none"
-          v-bind="attrs"
-          v-on="on"
-        >
-          <img
-            src="@/assets/images/icons/icon-grid-dot.png"
-            alt="Mew Hub"
-            height="20"
-          />
-        </v-btn>
       </template>
 
-      <!--
-      =============================================================
-      MEW tools menu
-      =============================================================
-      -->
+      <!-- ======================================================================================== -->
+      <!-- Menu content -->
+      <!-- ======================================================================================== -->
       <div
         class="pa-6 white mew-tools-menu"
         :class="[
@@ -72,13 +48,15 @@
           </v-col>
         </v-row>
       </div>
-    </v-menu>
+    </mew-menu-popup>
   </div>
 </template>
 
 <script>
+import MewMenuPopup from '@/components/mew-menu-popup/MewMenuPopup';
+
 export default {
-  components: {},
+  components: { MewMenuPopup },
   props: {},
   data() {
     return {

@@ -1,11 +1,23 @@
 <template>
   <div class="mew-menu-popup">
-    <v-btn id="unique-id--mew-menu-popup-activator" @click="toggleMenu">
-      {{ btnTitle }}
-    </v-btn>
+    <!-- ================================================================== -->
+    <!-- Activator slot -->
+    <!-- ================================================================== -->
+    <div
+      id="unique-id--mew-menu-popup-activator"
+      class="mew-menu-popup-activator"
+      style="display: inline-block"
+      @click.stop="toggleMenu"
+    >
+      <slot name="activator"></slot>
+    </div>
 
+    <!-- ================================================================== -->
+    <!-- Content slot -->
+    <!-- ================================================================== -->
     <div
       id="unique-id--mew-menu-popup-content"
+      :style="`top: ${spacing}`"
       class="mew-menu-popup-content"
       :class="show ? '' : 'content-fade-out'"
     >
@@ -17,9 +29,10 @@
 <script>
 export default {
   props: {
-    btnTitle: {
-      default: '',
-      type: String
+    // Space between activator and content
+    spacing: {
+      type: String,
+      default: '50px'
     }
   },
   data() {
@@ -35,42 +48,9 @@ export default {
       return document.querySelector('#unique-id--mew-menu-popup-content');
     }
   },
-  mounted() {
-    this.activate();
-  },
-  destroyed() {
-    this.deactivate();
-  },
   methods: {
-    // Reposition popup content
-    contentReposition() {
-      const activatorPosition = this.activatorEl.getBoundingClientRect();
-      this.contentEl.style.position = 'fixed';
-      this.contentEl.style.top = activatorPosition.bottom + 10 + 'px';
-      this.contentEl.style.left = activatorPosition.left + 'px';
-    },
-    // Append popup content to root
-    contentAppend() {
-      this.$root.$el.append(this.contentEl);
-    },
-    // Remove popup content from root
-    contentRemove() {
-      this.$root.$el.removeChild(this.contentEl);
-    },
-    activate() {
-      window.addEventListener('resize', this.contentReposition);
-      window.addEventListener('scroll', this.contentReposition);
-      this.contentReposition();
-      this.contentAppend();
-    },
-    deactivate() {
-      window.removeEventListener('resize', this.contentReposition);
-      window.removeEventListener('scroll', this.contentReposition);
-      this.contentRemove();
-    },
     detactOutsideClick(e) {
       const targetEl = e.target;
-
       if (
         !(
           targetEl == this.contentEl ||
@@ -85,7 +65,6 @@ export default {
     },
     toggleMenu() {
       this.show = !this.show;
-
       if (this.show) {
         window.addEventListener('click', this.detactOutsideClick);
       } else {
@@ -97,17 +76,42 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+// ======================================================================
+// Setup main container
+// ======================================================================
+.mew-menu-popup {
+  position: relative;
+  display: inline-block;
+}
+
+// ======================================================================
+// Setup activator container
+// ======================================================================
+.mew-menu-popup-activator {
+  cursor: pointer;
+  user-select: none;
+}
+
+// ======================================================================
+// Setup content container
+// ======================================================================
 .mew-menu-popup-content {
   background-color: white;
   border-radius: 4px;
   padding: 10px;
   box-shadow: 0 5px 5px -3px rgb(13 41 66 / 20%),
     0 8px 10px 1px rgb(13 41 66 / 14%), 0 3px 14px 2px rgb(13 41 66 / 12%);
-
   opacity: 1;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.25s ease;
+  position: absolute;
+  z-index: 999;
+  top: 0;
+  right: 0;
 }
 
+// ======================================================================
+// Setup content block fade in/out animation
+// ======================================================================
 .content-fade-out {
   opacity: 0;
   pointer-events: none;
