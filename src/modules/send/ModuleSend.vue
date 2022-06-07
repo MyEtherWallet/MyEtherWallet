@@ -142,6 +142,7 @@
 
                 <mew-input
                   v-show="!isToken"
+                  ref="data"
                   v-model="data"
                   :label="$t('sendTx.add-data')"
                   placeholder="0x..."
@@ -211,7 +212,7 @@ export default {
     },
     prefilledData: {
       type: String,
-      default: ''
+      default: '0x'
     },
     prefilledAddress: {
       type: String,
@@ -497,6 +498,9 @@ export default {
       }
       return true;
     }
+    // dataValue() {
+    //   return !this.data || isEmpty(this.data) ? this.data : '0x';
+    // }
   },
   watch: {
     multiwatch() {
@@ -544,8 +548,11 @@ export default {
       immediate: true,
       deep: true
     },
-    data() {
+    data(val) {
+      console.log('val', val);
+      if (!val || val === '') this.data = '0x';
       if (isHexStrict(this.data)) this.sendTx.setData(this.data);
+      console.log('data', this.data);
     },
     gasLimit(newVal) {
       if (this.isValidGasLimit) {
@@ -580,6 +587,9 @@ export default {
       if (this.allValidInputs) {
         this.estimateAndSetGas();
       }
+    }, 500);
+    this.debounceData = debounce(value => {
+      this.setData(value);
     }, 500);
   },
   methods: {
@@ -711,7 +721,7 @@ export default {
               return item.name.toLowerCase() === this.tokenSymbol.toLowerCase();
             })
           : undefined;
-        this.data = isHexStrict(this.prefilledData) ? this.prefilledData : '';
+        this.data = isHexStrict(this.prefilledData) ? this.prefilledData : '0x';
         this.amount = this.prefilledAmount;
         this.toAddress = this.prefilledAddress;
         this.gasLimit = this.prefilledGasLimit;
@@ -757,6 +767,11 @@ export default {
     handleLocalGasPrice(e) {
       this.localGasPrice = e;
       this.sendTx.setLocalGasPrice(e);
+    },
+    setData(value) {
+      console.log('value', value);
+      this.data = !value || isEmpty(value) ? '0x' : value;
+      console.log('dataInput', this.data);
     }
   }
 };
