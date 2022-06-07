@@ -1269,6 +1269,7 @@ export default {
             )
           })
           .then(quotes => {
+            console.log('quotes:', quotes);
             this.selectedProvider = {};
             this.availableQuotes = quotes.map(q => {
               q.rate = new BigNumber(q.amount)
@@ -1281,7 +1282,7 @@ export default {
               this.availableQuotes = quotes.filter(q => q.rate !== '0');
             }
             if (quotes.length) {
-              this.tokenOutValue = quotes[0].amount;
+              this.tokenOutValue = quotes[0]?.amount;
             }
             this.step = 1;
             this.isLoadingProviders = false;
