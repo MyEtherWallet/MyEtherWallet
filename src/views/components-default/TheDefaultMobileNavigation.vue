@@ -1,6 +1,6 @@
 <template>
   <div class="mew-component--landing-page-menu-mobile">
-    <app-btn-menu @click="openMobileMenu" />
+    <app-btn-menu @click.native="isOpen = !isOpen" />
 
     <v-navigation-drawer
       v-model="isOpen"
@@ -157,15 +157,10 @@ export default {
     pushRoute(to) {
       this.$router.push(to).catch(() => true);
       this.isOpen = false;
-    },
-    openMobileMenu() {
-      this.isOpen = true;
     }
   }
 };
 </script>
-
-<style scoped lang="scss"></style>
 
 <style lang="scss">
 .mew-component--landing-page-menu-mobile {
