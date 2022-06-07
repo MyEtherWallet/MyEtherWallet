@@ -113,7 +113,7 @@ export default {
       return [
         { label: 'How it works', to: { name: ROUTES_HOME.HOW_IT_WORKS.NAME } },
         {
-          label: 'Wallet',
+          label: 'Popular actions',
           sub: [
             {
               label: 'Send transaction',
@@ -134,7 +134,7 @@ export default {
           ]
         },
         {
-          label: 'Tools',
+          label: 'More actions',
           sub: [
             {
               label: 'Verify message',
