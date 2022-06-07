@@ -88,7 +88,7 @@ export default {
     const _self = this;
     // Close modal with 'esc' key
     document.addEventListener('keydown', e => {
-      if (e.keyCode == 27) {
+      if (e.keyCode === 27) {
         _self.moonPayOpen = false;
       }
     });
