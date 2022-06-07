@@ -85,18 +85,25 @@
             </v-list-item>
           </v-list-group>
         </template>
+        <v-list-item class="mb-3">
+          <v-list-item-content @click="openMoonpay">
+            <div class="mew-heading-2">Buy ETH</div>
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
   </div>
 </template>
 
 <script>
+import buyMore from '@/core/mixins/buyMore.mixin.js';
 import AppBtnMenu from '@/core/components/AppBtnMenu';
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { mapGetters } from 'vuex';
 export default {
   name: 'MobileMenu',
   components: { AppBtnMenu },
+  mixins: [buyMore],
   data: () => ({
     isOpen: false
   }),
@@ -106,7 +113,7 @@ export default {
       return [
         { label: 'How it works', to: { name: ROUTES_HOME.HOW_IT_WORKS.NAME } },
         {
-          label: 'Popular',
+          label: 'Wallet',
           sub: [
             {
               label: 'Send transaction',
@@ -127,29 +134,26 @@ export default {
           ]
         },
         {
-          label: 'More',
+          label: 'Tools',
           sub: [
             {
               label: 'Verify message',
-              to: { name: ROUTES_HOME.TOOLS.NAME, query: { tab: '3' } }
+              to: { name: ROUTES_HOME.TOOLS.NAME, query: { tool: 'verify' } }
+            },
+            {
+              label: 'Convert Units',
+              to: { name: ROUTES_HOME.TOOLS.NAME, query: { tool: 'convert' } }
+            },
+            {
+              label: 'Generate Keystore file',
+              to: { name: ROUTES_HOME.TOOLS.NAME, query: { tool: 'keystore' } }
+            },
+            {
+              label: 'Send Offline Helper',
+              to: { name: ROUTES_HOME.TOOLS.NAME, query: { tool: 'offline' } }
             }
-            /*
-          {
-            label: 'Watch only address',
-            to: { name: ROUTES_HOME.TOOLS.NAME, query: { tab: '1' } }
-          },
-          {
-            label: 'Send offline helper',
-            to: { name: ROUTES_HOME.TOOLS.NAME, query: { tab: '2' } }
-          },
-          {
-            label: 'Convery units',
-            to: { name: ROUTES_HOME.TOOLS.NAME, query: { tab: '4' } }
-          }
-          */
           ]
-        },
-        { label: 'Buy ETH', url: this.swapLink }
+        }
       ];
     }
   },
