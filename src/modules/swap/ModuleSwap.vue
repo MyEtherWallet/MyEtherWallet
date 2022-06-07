@@ -1269,7 +1269,6 @@ export default {
             )
           })
           .then(quotes => {
-            console.log('quotes:', quotes);
             this.selectedProvider = {};
             this.availableQuotes = quotes.map(q => {
               q.rate = new BigNumber(q.amount)
