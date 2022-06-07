@@ -1,3 +1,25 @@
+### ui
+
+* * updated trezor logo [#3853](https://github.com/MyEtherWallet/MyEtherWallet/pull/3853)
+
+### devop
+
+* handle eth.subscribe error [#3783](https://github.com/MyEtherWallet/MyEtherWallet/pull/3783)
+* fix github release generator [#3870](https://github.com/MyEtherWallet/MyEtherWallet/pull/3870)
+* update packages [#3871](https://github.com/MyEtherWallet/MyEtherWallet/pull/3871)
+* * update sidemenu background color [#3874](https://github.com/MyEtherWallet/MyEtherWallet/pull/3874)
+* * added check to wei conversion [#3889](https://github.com/MyEtherWallet/MyEtherWallet/pull/3889)
+
+### fix
+
+* * fix ledger transport status sentry error [#3808](https://github.com/MyEtherWallet/MyEtherWallet/pull/3808)
+* * fixed auto-closing dropdowns [#3856](https://github.com/MyEtherWallet/MyEtherWallet/pull/3856)
+* * Failed to fetch when updating articles list [#3865](https://github.com/MyEtherWallet/MyEtherWallet/pull/3865)
+* * Internal JSON-RPC sentry error [#3869](https://github.com/MyEtherWallet/MyEtherWallet/pull/3869)
+* * Cannot read properties of null (reading 'getAddressString') [#3875](https://github.com/MyEtherWallet/MyEtherWallet/pull/3875)
+* * Sentry The operation could not be completed. Invalid argument. [#3877](https://github.com/MyEtherWallet/MyEtherWallet/pull/3877)
+* * remove global styles [#3883](https://github.com/MyEtherWallet/MyEtherWallet/pull/3883)
+
 ### Release v6.5.5
 
 ### devop
