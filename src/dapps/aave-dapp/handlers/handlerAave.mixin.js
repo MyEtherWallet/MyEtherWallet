@@ -77,6 +77,7 @@ export default {
     });
 
     this.poolContract = this.lendingPool.getContractInstance(LENDING_POOL);
+    console.log('aave', this.poolContract);
   },
   apollo: {
     $subscribe: {
@@ -263,12 +264,23 @@ export default {
     },
     /**
      * Apollo mutation to withdraw funds
+     *
+     * @param user The ethereum address that will receive the aTokens
+     * @param reserve The ethereum address of the reserve asset
+     * @param amount The amount of aToken being redeemed
+     * @param aTokenAddress @optional The ethereum address of the aToken. Only needed if the reserve is ETH mock address
+     * @param onBehalfOf @optional The amount of aToken being redeemed. It will default to the user address
      */
-    async onWithdraw(data) {
+    async onWithdraw({ user, reserve, amount, aTokenAddress, onBehalfOf }) {
       try {
-        return await this.lendingPool.withdraw(data).then(res => {
-          this.formatTxData(res, 'redeem');
-        });
+        const data = await this.poolContract.withdraw(
+          user,
+          reserve,
+          amount,
+          aTokenAddress,
+          onBehalfOf
+        );
+        this.formatTxData(data);
       } catch (e) {
         throw new Error(e);
       }
