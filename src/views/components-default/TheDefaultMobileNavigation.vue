@@ -8,7 +8,7 @@
       temporary
       color="expandHeader"
     >
-      <v-list-item class="py-8 px-4">
+      <v-list-item class="py-8 pl-2 pr-4">
         <v-btn large icon light @click="isOpen = false">
           <v-icon color="white" large>mdi-window-close</v-icon>
         </v-btn>
@@ -172,6 +172,6 @@ export default {
 <style scoped lang="scss">
 .v-navigation-drawer {
   width: 100% !important;
-  max-width: 400px;
+  max-width: 500px;
 }
 </style>
