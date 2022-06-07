@@ -9,6 +9,7 @@
     :btn-size="$vuetify.breakpoint.mdAndUp ? 'x-large' : ''"
     color="primary"
     outlined
+    right
   >
     <!-- ======================================================================================== -->
     <!-- Menu content -->

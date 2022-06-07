@@ -32,7 +32,7 @@
       <!-- ================================================================== -->
       <!-- Activator slot -->
       <!-- ================================================================== -->
-      <slot name="activator"></slot>
+      <slot name="activator" />
 
       <!-- ================================================================== -->
       <!-- Top arrow for content window -->
@@ -41,7 +41,7 @@
         id="unique-id--mew-menu-popup--top-arrow"
         class="top-arrow content-fade-base"
         :class="show ? '' : 'content-fade-out'"
-      ></div>
+      />
     </div>
 
     <!-- ================================================================== -->
@@ -52,8 +52,9 @@
         id="unique-id--mew-menu-popup--content"
         class="mew-menu-popup-content content-fade-base"
         :class="show ? '' : 'content-fade-out'"
+        :style="contentWindowStyle"
       >
-        <slot></slot>
+        <slot />
       </div>
     </div>
   </div>
@@ -93,6 +94,14 @@ export default {
     btnIconSize: {
       type: String,
       default: '30px'
+    },
+    left: {
+      type: Boolean,
+      default: false
+    },
+    right: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -110,6 +119,27 @@ export default {
     btnTitleStyle() {
       return `
         font-size: ${this.btnFontSize};
+      `;
+    },
+    contentWindowStyle() {
+      // Align content to left edge
+      if (this.left) {
+        return `
+          left: 0;
+        `;
+      }
+
+      // Align content to right edge
+      if (this.right) {
+        return `
+          right: 0;
+        `;
+      }
+
+      // Align content to center
+      return `
+          left: 50%;
+          transform: translate(-50%, 0);
       `;
     }
   },
@@ -178,8 +208,8 @@ export default {
   z-index: 1000;
   bottom: -16px;
   right: 0;
-  left: 0;
-  margin: auto;
+  left: 50%;
+  transform: translate(-50%, 0);
   pointer-events: none;
 }
 
@@ -195,7 +225,6 @@ export default {
   position: absolute;
   z-index: 999;
   top: 16px;
-  right: 0;
 }
 
 // ======================================================================
