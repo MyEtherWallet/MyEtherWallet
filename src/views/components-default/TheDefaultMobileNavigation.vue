@@ -8,7 +8,7 @@
       temporary
       color="expandHeader"
     >
-      <v-list-item class="py-8 pl-2 pr-4">
+      <v-list-item class="py-8 pl-4 pr-6">
         <v-btn large icon light @click="isOpen = false">
           <v-icon color="white" large>mdi-window-close</v-icon>
         </v-btn>

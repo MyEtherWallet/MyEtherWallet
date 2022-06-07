@@ -1,11 +1,11 @@
 <template>
   <div class="default-header expandHeader">
-    <v-container class="d-flex align-center pt-8">
+    <v-container class="pl-6 pr-6 d-flex align-center pt-8">
       <v-row align="center" no-gutters>
-        <v-col class="d-md-none" cols="4">
+        <v-col class="d-md-none" cols="2" md="4">
           <the-default-mobile-navigation class="ml-n2" />
         </v-col>
-        <v-col cols="4">
+        <v-col cols="8" md="4">
           <v-img
             :class="$vuetify.breakpoint.smAndDown ? 'mx-auto' : ''"
             class="cursor--pointer"
@@ -34,7 +34,7 @@
             {{ $t('header.buy-eth') }}
           </a>
         </v-col>
-        <v-col cols="4" class="text-right">
+        <v-col cols="2" md="4" class="text-right">
           <mew-tools class="ml-auto" />
         </v-col>
       </v-row>
