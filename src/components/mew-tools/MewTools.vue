@@ -1,55 +1,45 @@
 <template>
-  <div class="mew-component--mew-tools">
-    <mew-menu-popup spacing="45px">
-      <!-- ======================================================================================== -->
-      <!-- Menu button -->
-      <!-- ======================================================================================== -->
-      <template #activator>
-        <v-btn
-          class="d-none d-lg-block btn-remove-style"
-          outlined
-          x-large
-          v-bind="attrs"
-          :ripple="false"
-          style="height: 50px"
-          v-on="on"
+  <mew-menu-popup
+    class="mew-component--mew-tools"
+    :icon="$vuetify.breakpoint.smAndDown"
+    :btn-icon="require('@/assets/images/icons/icon-grid-dot-green.svg')"
+    :btn-icon-size="$vuetify.breakpoint.mdAndUp ? '18px' : '20px'"
+    :btn-title="$vuetify.breakpoint.mdAndUp ? 'MEW Hub' : ''"
+    btn-font-size="12px"
+    :btn-size="$vuetify.breakpoint.mdAndUp ? 'x-large' : ''"
+    color="primary"
+    outlined
+  >
+    <!-- ======================================================================================== -->
+    <!-- Menu content -->
+    <!-- ======================================================================================== -->
+    <div
+      class="pa-6 white mew-tools-menu"
+      :class="[
+        $vuetify.breakpoint.md ? 'md' : '',
+        $vuetify.breakpoint.sm ? 'sm' : '',
+        $vuetify.breakpoint.xs ? 'xs' : ''
+      ]"
+    >
+      <v-row>
+        <v-col
+          v-for="(t, key) in tools"
+          :key="key"
+          cols="6"
+          sm="4"
+          class="text-center"
         >
-          <img src="@/assets/images/icons/icon-grid-dot.png" alt="Mew tools" />
-          <div class="d-none d-md-block mew-label">MEW Hub</div>
-        </v-btn>
-      </template>
-
-      <!-- ======================================================================================== -->
-      <!-- Menu content -->
-      <!-- ======================================================================================== -->
-      <div
-        class="pa-6 white mew-tools-menu"
-        :class="[
-          $vuetify.breakpoint.md ? 'md' : '',
-          $vuetify.breakpoint.sm ? 'sm' : '',
-          $vuetify.breakpoint.xs ? 'xs' : ''
-        ]"
-      >
-        <v-row>
-          <v-col
-            v-for="(t, key) in tools"
-            :key="key"
-            cols="6"
-            sm="4"
-            class="text-center"
-          >
-            <!-- Button with url link -->
-            <a v-if="t.link" :href="t.link" target="_blank">
-              <div class="tools-btn">
-                <img :src="t.img" :alt="t.label" height="50" />
-                <h6 class="mt-1 btn-lable basic--text">{{ t.label }}</h6>
-              </div>
-            </a>
-          </v-col>
-        </v-row>
-      </div>
-    </mew-menu-popup>
-  </div>
+          <!-- Button with url link -->
+          <a v-if="t.link" :href="t.link" target="_blank">
+            <div class="tools-btn">
+              <img :src="t.img" :alt="t.label" height="50" />
+              <h6 class="mt-1 btn-lable basic--text">{{ t.label }}</h6>
+            </div>
+          </a>
+        </v-col>
+      </v-row>
+    </div>
+  </mew-menu-popup>
 </template>
 
 <script>
@@ -57,7 +47,6 @@ import MewMenuPopup from '@/components/mew-menu-popup/MewMenuPopup';
 
 export default {
   components: { MewMenuPopup },
-  props: {},
   data() {
     return {
       tools: [
@@ -93,59 +82,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.mew-component--mew-tools {
-  display: inline-block;
-}
 .mew-tools-menu {
   width: 300px;
-  position: relative;
-
-  &.md,
-  &.sm {
-    &:after {
-      right: 10px;
-    }
-  }
 
   &.xs {
-    width: 190px;
-    &:after {
-      right: 10px;
-    }
-  }
-
-  .tools-btn {
-    opacity: 0.9;
-    &:hover {
-      opacity: 1;
-      * {
-        font-weight: 500;
-      }
-    }
+    width: 250px;
   }
 }
-
-.btn-remove-style {
-  margin: 0 !important;
-  padding: 0 !important;
-  border: 0;
-  &::before {
-    opacity: 0 !important;
-  }
-}
-</style>
-
-<style lang="scss">
-.mew-component--mew-tools {
-  .mew-button {
-    font-weight: 400 !important;
-    height: initial !important;
-    > span {
-      padding: 16px 10px !important;
-    }
-    img {
-      height: 16px !important;
-      margin-right: 6px !important;
+.tools-btn {
+  opacity: 0.9;
+  &:hover {
+    opacity: 1;
+    * {
+      font-weight: 500;
     }
   }
 }

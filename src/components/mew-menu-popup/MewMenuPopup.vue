@@ -1,27 +1,60 @@
 <template>
   <div class="mew-menu-popup">
-    <!-- ================================================================== -->
-    <!-- Activator slot -->
-    <!-- ================================================================== -->
     <div
-      id="unique-id--mew-menu-popup-activator"
+      id="unique-id--mew-menu-popup--activator"
       class="mew-menu-popup-activator"
       style="display: inline-block"
       @click.stop="toggleMenu"
     >
+      <!-- ================================================================== -->
+      <!-- Activator button by prop -->
+      <!-- ================================================================== -->
+      <v-btn
+        id="unique-id--mew-menu-popup--activator-button"
+        :icon="icon"
+        :color="color"
+        :outlined="outlined"
+        :x-small="btnSize == 'x-small'"
+        :small="btnSize == 'small'"
+        :large="btnSize == 'large'"
+        :x-large="btnSize == 'x-large'"
+      >
+        <img
+          v-if="btnIcon"
+          :style="`height: ${btnIconSize}; width: ${btnIconSize}`"
+          :src="btnIcon"
+          alt="Icon"
+          :class="btnTitle ? 'mr-2' : ''"
+        />
+        <span :style="btnTitleStyle">{{ btnTitle }}</span>
+      </v-btn>
+
+      <!-- ================================================================== -->
+      <!-- Activator slot -->
+      <!-- ================================================================== -->
       <slot name="activator"></slot>
+
+      <!-- ================================================================== -->
+      <!-- Top arrow for content window -->
+      <!-- ================================================================== -->
+      <div
+        id="unique-id--mew-menu-popup--top-arrow"
+        class="top-arrow content-fade-base"
+        :class="show ? '' : 'content-fade-out'"
+      ></div>
     </div>
 
     <!-- ================================================================== -->
     <!-- Content slot -->
     <!-- ================================================================== -->
-    <div
-      id="unique-id--mew-menu-popup-content"
-      :style="`top: ${spacing}`"
-      class="mew-menu-popup-content"
-      :class="show ? '' : 'content-fade-out'"
-    >
-      <slot></slot>
+    <div style="position: relative">
+      <div
+        id="unique-id--mew-menu-popup--content"
+        class="mew-menu-popup-content content-fade-base"
+        :class="show ? '' : 'content-fade-out'"
+      >
+        <slot></slot>
+      </div>
     </div>
   </div>
 </template>
@@ -29,10 +62,37 @@
 <script>
 export default {
   props: {
-    // Space between activator and content
-    spacing: {
+    icon: {
+      type: Boolean,
+      default: false
+    },
+    outlined: {
+      type: Boolean,
+      default: false
+    },
+    color: {
       type: String,
-      default: '50px'
+      default: 'white'
+    },
+    btnTitle: {
+      type: String,
+      default: ''
+    },
+    btnSize: {
+      type: String,
+      default: 'large'
+    },
+    btnFontSize: {
+      type: String,
+      default: '14px'
+    },
+    btnIcon: {
+      type: String,
+      default: ''
+    },
+    btnIconSize: {
+      type: String,
+      default: '30px'
     }
   },
   data() {
@@ -42,13 +102,29 @@ export default {
   },
   computed: {
     activatorEl() {
-      return document.querySelector('#unique-id--mew-menu-popup-activator');
+      return document.querySelector('#unique-id--mew-menu-popup--activator');
     },
     contentEl() {
-      return document.querySelector('#unique-id--mew-menu-popup-content');
+      return document.querySelector('#unique-id--mew-menu-popup--content');
+    },
+    btnTitleStyle() {
+      return `
+        font-size: ${this.btnFontSize};
+      `;
     }
   },
   methods: {
+    toggleMenu() {
+      this.show = !this.show;
+      if (this.show) {
+        window.addEventListener('click', this.detactOutsideClick);
+      } else {
+        window.removeEventListener('click', this.detactOutsideClick);
+      }
+    },
+    // =============================================================================
+    // Whenever outside of menu content window is clicked, close the menu
+    // =============================================================================
     detactOutsideClick(e) {
       const targetEl = e.target;
       if (
@@ -62,14 +138,6 @@ export default {
         this.show = false;
         window.removeEventListener('click', this.detactOutsideClick);
       }
-    },
-    toggleMenu() {
-      this.show = !this.show;
-      if (this.show) {
-        window.addEventListener('click', this.detactOutsideClick);
-      } else {
-        window.removeEventListener('click', this.detactOutsideClick);
-      }
     }
   }
 };
@@ -77,15 +145,20 @@ export default {
 
 <style lang="scss" scoped>
 // ======================================================================
-// Setup main container
+// main container
 // ======================================================================
 .mew-menu-popup {
   position: relative;
   display: inline-block;
+
+  .v-btn {
+    border-radius: 10px;
+    text-transform: none;
+  }
 }
 
 // ======================================================================
-// Setup activator container
+// activator container
 // ======================================================================
 .mew-menu-popup-activator {
   cursor: pointer;
@@ -93,25 +166,45 @@ export default {
 }
 
 // ======================================================================
-// Setup content container
+// top arrow
+// ======================================================================
+.top-arrow {
+  width: 0;
+  height: 0;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-bottom: 7px solid white;
+  position: absolute;
+  z-index: 1000;
+  bottom: -16px;
+  right: 0;
+  left: 0;
+  margin: auto;
+  pointer-events: none;
+}
+
+// ======================================================================
+// content container
 // ======================================================================
 .mew-menu-popup-content {
   background-color: white;
   border-radius: 4px;
-  padding: 10px;
+  overflow: hidden;
   box-shadow: 0 5px 5px -3px rgb(13 41 66 / 20%),
     0 8px 10px 1px rgb(13 41 66 / 14%), 0 3px 14px 2px rgb(13 41 66 / 12%);
-  opacity: 1;
-  transition: opacity 0.25s ease;
   position: absolute;
   z-index: 999;
-  top: 0;
+  top: 16px;
   right: 0;
 }
 
 // ======================================================================
-// Setup content block fade in/out animation
+// content block fade in/out animation
 // ======================================================================
+.content-fade-base {
+  opacity: 1;
+  transition: opacity 0.2s ease;
+}
 .content-fade-out {
   opacity: 0;
   pointer-events: none;
