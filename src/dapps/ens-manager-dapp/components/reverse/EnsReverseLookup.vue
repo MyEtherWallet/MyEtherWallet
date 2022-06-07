@@ -32,10 +32,6 @@ export default {
       default: '',
       type: String
     },
-    network: {
-      default: () => {},
-      type: Object
-    },
     ensManager: {
       default: () => {},
       type: Object
@@ -71,10 +67,7 @@ export default {
     },
     async setReverseRecord(domain) {
       try {
-        const reverseRecord = await domain.setNameReverseRecord(
-          this.network.type.ens.registry,
-          domain.name
-        );
+        const reverseRecord = await domain.setNameReverseRecord(domain.name);
         return reverseRecord;
       } catch (e) {
         Toast(e, {}, ERROR);

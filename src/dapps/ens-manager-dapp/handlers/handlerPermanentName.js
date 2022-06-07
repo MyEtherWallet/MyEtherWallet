@@ -41,15 +41,12 @@ export default class PermanentNameModule extends ENSManagerInterface {
     return this._registerWithDuration(duration, balance);
   }
 
-  async setNameReverseRecord(registry, domain) {
-    // const splitReg = registry.replace('0x', '');
-    // const regByte32 = padLeft(hexToBytes(registry, 32));
-    // const byte32 = padLeft(hexToBytes(this.address, 32));
-    // const numToHex = numberToHex(chainID);
-    // const regToByte32 = padLeft(hexToBytes(registry, 32));
+  async setNameReverseRecord(domain) {
+    // const splitResolverAddr = this.resolverAddress.replace('0x', '');
+    // const addrToByte32 = padLeft(hexToBytes(splitResolverAddr, 32));
     try {
       const setReverse = await this.publicResolverContract.methods
-        .setName(registry, domain)
+        .setName(this.resolverAddress, domain)
         .send({ from: this.address });
       return setReverse;
     } catch (e) {
