@@ -119,8 +119,14 @@ export default {
               nickname: 'My Address',
               resolverAddr: ''
             }
-          ]
-        : [].concat(this.addressBookStore);
+          ].concat(this.addressBookStore)
+        : [
+            {
+              address: toChecksumAddress(this.$store.state.wallet.address),
+              nickname: 'My Address',
+              resolverAddr: ''
+            }
+          ];
     },
     enableSave() {
       return this.isHomePage ? false : this.isValidAddress;
