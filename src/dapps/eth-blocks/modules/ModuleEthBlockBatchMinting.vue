@@ -387,7 +387,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .minting-info-container {
   border: 1px solid var(--v-greyMedium-base);
 }
