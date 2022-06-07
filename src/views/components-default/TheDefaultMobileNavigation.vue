@@ -8,20 +8,19 @@
       temporary
       color="expandHeader"
     >
-      <v-list-item class="pt-8 pb-8 pl-4 pr-1">
+      <v-list-item class="py-8 px-4">
+        <v-btn large icon light @click="isOpen = false">
+          <v-icon color="white" large>mdi-window-close</v-icon>
+        </v-btn>
+        <v-spacer></v-spacer>
         <v-img
-          class="mx-auto"
           src="@/assets/images/icons/logo-mew.svg"
           max-height="36"
           max-width="130"
           @click="pushRoute({ name: 'Home' })"
         />
-
         <v-spacer></v-spacer>
-
-        <v-btn x-large icon light @click="isOpen = false">
-          <v-icon color="white" large>mdi-window-close</v-icon>
-        </v-btn>
+        <mew-tools />
       </v-list-item>
 
       <v-list color="expandHeader" dark class="px-2">
@@ -96,13 +95,14 @@
 </template>
 
 <script>
+import mewTools from '@/components/mew-tools/MewTools';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 import AppBtnMenu from '@/core/components/AppBtnMenu';
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { mapGetters } from 'vuex';
 export default {
   name: 'MobileMenu',
-  components: { AppBtnMenu },
+  components: { AppBtnMenu, mewTools },
   mixins: [buyMore],
   data: () => ({
     isOpen: false
@@ -169,20 +169,9 @@ export default {
 };
 </script>
 
-<style scoped lang="scss"></style>
-
-<style lang="scss">
-.mew-component--landing-page-menu-mobile {
-  .mobile-menu-button .v-icon.v-icon {
-    font-size: 43px;
-  }
-  .v-list-group__header,
-  .v-list-item {
-    border-top: 0 !important;
-  }
-  .theme--dark.v-list-item:hover {
-    background-color: rgba(255, 255, 255, 0.2) !important;
-    cursor: pointer;
-  }
+<style scoped lang="scss">
+.v-navigation-drawer {
+  width: 100% !important;
+  max-width: 400px;
 }
 </style>
