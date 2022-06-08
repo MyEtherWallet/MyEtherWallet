@@ -398,6 +398,7 @@ export default {
     },
     amount: {
       handler: function (newVal) {
+        if (isEmpty(newVal)) return;
         const simplexMax = this.max.simplex;
         this.checkMoonPayMax();
         if (simplexMax.lt(newVal)) {
@@ -410,10 +411,9 @@ export default {
     },
     validToAddress: {
       handler: function (newVal) {
-        if (newVal) {
-          this.getSimplexQuote();
-          this.$emit('toAddress', this.toAddress);
-        }
+        if (!newVal) return;
+        this.$emit('toAddress', this.toAddress);
+        this.getSimplexQuote();
       }
     },
     coinGeckoTokens: {
@@ -480,7 +480,13 @@ export default {
       this.getSimplexQuote();
     },
     getSimplexQuote() {
-      if (this.hideSimplex || !this.actualValidAddress) return;
+      if (
+        this.hideSimplex ||
+        !this.actualValidAddress ||
+        isEmpty(this.amount) ||
+        this.min.gt(this.amount)
+      )
+        return;
       this.loading = true;
       this.simplexQuote = {};
       this.orderHandler
