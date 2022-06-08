@@ -223,13 +223,17 @@ export default {
      */
     async onBorrow({ amount, reserve, referralCode, interestRateMode, user }) {
       try {
-        const txData = await this.poolContract.populateTransaction.borrow(
+        const data = [
           reserve,
           amount,
           interestRateMode === INTEREST_TYPES.variable ? 2 : 1,
           referralCode,
           user
+        ];
+        const txData = await this.poolContract.populateTransaction.borrow(
+          ...data
         );
+        //const gas = await this.poolContract.estimateGas.borrow(...data);
         this.formatTxData(txData);
       } catch (e) {
         throw new Error(e);
@@ -314,7 +318,6 @@ export default {
       //     txArr.push(data.tx);
       //   });
       // }
-      console.log(txData);
       this.sendTransaction({
         from: this.address,
         gas: '0x5208',
