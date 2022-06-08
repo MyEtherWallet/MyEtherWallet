@@ -1,25 +1,34 @@
 <template>
   <div>
-    <v-sheet class="addressBlock d-flex justify-space-between align-center">
+    <v-sheet
+      class="addressBlock d-flex justify-space-between align-center mb-7"
+    >
       <mew-blockie :address="address" />
-      <span class="font-weight-light">{{ address }}</span>
+      <span class="font-weight-heavy pr-15">{{ address }}</span>
     </v-sheet>
     <div v-if="!hasDomains">
-      <div class="font-weight-light d-flex justify-space-between align-center">
+      <mew-alert
+        hide-close-icon
+        class="font-weight-light d-flex justify-space-between align-center mb-7 mt-7"
+      >
         No ENS names have their ETH Address records set to this address. Only
         ENS names that point to your Ethereum account can be set as your Primary
         ENS Name.
-      </div>
+      </mew-alert>
     </div>
 
-    <mew-button
+    <mew-sheet
       v-for="domain in ensLookupResults"
       :key="domain.name"
-      :title="domain.name"
-      :transparent="true"
-      @click.native="setReverseRecord(domain)"
+      class="d-flex justify-space-between align-center mb-5 pr-5"
     >
-    </mew-button>
+      <p class="font-weight-heavy pt-5 pl-5">{{ domain.name }}</p>
+      <mew-button
+        title="Set Name"
+        btn-size="medium"
+        @click.native="setReverseRecord(domain)"
+      />
+    </mew-sheet>
   </div>
 </template>
 
@@ -55,7 +64,6 @@ export default {
         );
         if (lookupDomains.length === 0) {
           this.hasDomains = false;
-          Toast('Address provided does not own any ens domains', {}, ERROR);
         } else {
           this.hasDomains = true;
         }
