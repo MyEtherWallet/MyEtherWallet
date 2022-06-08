@@ -1,5 +1,6 @@
 <template>
   <div
+    class="eth-blocks--block-info"
     :style="{
       border: alertBorderColor,
       'border-radius': '12px',
@@ -577,7 +578,9 @@ export default {
 </script>
 
 <style lang="scss">
-.buy-more-link {
-  padding-left: 2px;
+.eth-blocks--block-info {
+  .buy-more-link {
+    padding-left: 2px;
+  }
 }
 </style>

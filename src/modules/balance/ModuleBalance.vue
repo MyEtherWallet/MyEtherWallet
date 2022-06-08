@@ -290,10 +290,3 @@ export default {
   }
 };
 </script>
-<style lang="scss">
-.module-balance-loader {
-  .v-skeleton-loader__image {
-    height: 352px;
-  }
-}
-</style>
