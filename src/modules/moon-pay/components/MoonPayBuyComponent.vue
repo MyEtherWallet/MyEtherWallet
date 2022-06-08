@@ -22,6 +22,7 @@
       <div class="d-flex align-center">
         <mew-input
           v-model="amount"
+          type="number"
           :error-messages="amountErrorMessages"
           class="mr-2"
         />
