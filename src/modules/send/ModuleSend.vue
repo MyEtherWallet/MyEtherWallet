@@ -142,11 +142,13 @@
 
                 <mew-input
                   v-show="!isToken"
-                  v-model="data"
+                  :value="dataValue"
                   :label="$t('sendTx.add-data')"
                   placeholder="0x..."
                   :rules="dataRules"
+                  :hide-clear-btn="dataValue === '0x'"
                   class="mb-8"
+                  @input="setData"
                 />
               </div>
             </template>
@@ -546,15 +548,8 @@ export default {
       immediate: true,
       deep: true
     },
-    dataValue(newVal) {
-      console.log('dataValue', newVal);
-    },
-    data(val) {
-      console.log('val', val);
-      if (!val || val === '') val = '0x';
-      this.data = val;
+    data() {
       if (isHexStrict(this.data)) this.sendTx.setData(this.data);
-      console.log('data', this.data);
     },
     gasLimit(newVal) {
       if (this.isValidGasLimit) {
@@ -771,9 +766,7 @@ export default {
       this.sendTx.setLocalGasPrice(e);
     },
     setData(value) {
-      console.log('value', value);
       this.data = !value || isEmpty(value) ? '0x' : value;
-      console.log('dataInput', this.data);
     }
   }
 };
