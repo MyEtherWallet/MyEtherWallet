@@ -1,6 +1,6 @@
 <template>
   <div class="mew-component--landing-page-menu-mobile">
-    <app-btn-menu @click="openMobileMenu" />
+    <app-btn-menu @click.native="isOpen = !isOpen" />
 
     <v-navigation-drawer
       v-model="isOpen"
@@ -67,8 +67,8 @@
                   class="pl-4 white--text font-weight-regular mew-body"
                   @click="pushRoute(child.to)"
                 >
-                  {{ child.label }}</v-list-item-title
-                >
+                  {{ child.label }}
+                </v-list-item-title>
                 <a
                   v-if="child.url"
                   :href="child.url"
@@ -78,8 +78,8 @@
                   <v-list-item-title
                     class="pl-13 white--text font-weight-regular mew-body"
                   >
-                    {{ child.label }}</v-list-item-title
-                  >
+                    {{ child.label }}
+                  </v-list-item-title>
                 </a>
               </v-list-item-content>
             </v-list-item>
@@ -157,15 +157,10 @@ export default {
     pushRoute(to) {
       this.$router.push(to).catch(() => true);
       this.isOpen = false;
-    },
-    openMobileMenu() {
-      this.isOpen = true;
     }
   }
 };
 </script>
-
-<style scoped lang="scss"></style>
 
 <style lang="scss">
 .mew-component--landing-page-menu-mobile {
