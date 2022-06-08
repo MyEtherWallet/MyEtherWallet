@@ -668,8 +668,8 @@ export default {
             return item;
         }
       });
-      const nonChainTokens = this.availableTokens.fromTokens
-        .filter(item => {
+      const nonChainTokens = this.availableTokens.fromTokens.reduce(
+        (arr, item) => {
           if (
             item.hasOwnProperty('isEth') &&
             !item.isEth &&
@@ -677,14 +677,13 @@ export default {
             item.symbol &&
             item.subtext
           ) {
-            return item;
+            delete item['tokenBalance'];
+            delete item['totalBalance'];
+            arr.push(item);
           }
-        })
-        .map(item => {
-          delete item['tokenBalance'];
-          delete item['totalBalance'];
-          return item;
-        });
+          return arr;
+        }
+      );
       tradebleWalletTokens = this.formatTokensForSelect(tradebleWalletTokens);
       let returnableTokens = [
         {

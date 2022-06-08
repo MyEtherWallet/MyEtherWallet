@@ -14,19 +14,22 @@ const getFormattedList = async (url, network) => {
     }
   });
   const data = await response.json();
-  const tokens = Object.values(data.tokens)
-    .map(t => {
+  const tokens = Object.values(data.tokens).reduce((currVal, t) => {
+    if (t && t.address !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
       t.contract_address = t.address.toLowerCase();
       t.icon = IMAGE_PROXY + t.logoURI;
       t.icon_png = IMAGE_PROXY + t.logoURI;
       t.network = network;
       delete t.logoURI;
       delete t.chainId;
-      return t;
-    })
-    .filter(t => t.address !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
+
+      currVal.push(t);
+    }
+    return currVal;
+  }, []);
   return tokens;
 };
+
 const fetchOneInchLists = async () => {
   const ethTokens = await getFormattedList(
     'https://api.1inch.exchange/v3.0/1/tokens',
