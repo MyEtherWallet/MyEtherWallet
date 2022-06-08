@@ -91,7 +91,7 @@
         :class="[
           'px-4 px-md-10 textMedium--text menu-tab-text mew-body',
           { 'ml-md-13': index === 0 },
-          { 'mr-3 mr-md-13': index + 1 === tabItems.length }
+          { 'mr-md-13': index + 1 === tabItems.length }
         ]"
         @click="routeToTab(item.route)"
       >
