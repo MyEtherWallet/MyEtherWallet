@@ -64,7 +64,7 @@
             </v-btn>
           </div> -->
           <v-sheet color="transparent" max-width="150px">
-            <mew-select :items="items" @input="setSelected" />
+            <mew-select :items="items" normal-dropdown @input="setSelected" />
           </v-sheet>
         </div>
         <div
