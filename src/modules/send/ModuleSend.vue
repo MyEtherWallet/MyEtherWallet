@@ -142,7 +142,6 @@
 
                 <mew-input
                   v-show="!isToken"
-                  ref="data"
                   v-model="data"
                   :label="$t('sendTx.add-data')"
                   placeholder="0x..."
@@ -497,10 +496,10 @@ export default {
         return !this.sendTx.hasEnoughBalance();
       }
       return true;
+    },
+    dataValue() {
+      return !this.data || isEmpty(this.data) ? '0x' : this.data;
     }
-    // dataValue() {
-    //   return !this.data || isEmpty(this.data) ? this.data : '0x';
-    // }
   },
   watch: {
     multiwatch() {
@@ -508,7 +507,6 @@ export default {
         this.debounceEstimateGas();
       }
     },
-
     isPrefilled() {
       this.prefillForm();
     },
@@ -548,9 +546,13 @@ export default {
       immediate: true,
       deep: true
     },
+    dataValue(newVal) {
+      console.log('dataValue', newVal);
+    },
     data(val) {
       console.log('val', val);
-      if (!val || val === '') this.data = '0x';
+      if (!val || val === '') val = '0x';
+      this.data = val;
       if (isHexStrict(this.data)) this.sendTx.setData(this.data);
       console.log('data', this.data);
     },
