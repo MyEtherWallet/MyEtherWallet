@@ -3,7 +3,6 @@
     <div
       id="unique-id--mew-menu-popup--activator"
       class="mew-menu-popup-activator"
-      style="display: inline-block"
       @click.stop="toggleMenu"
     >
       <!-- ================================================================== -->
@@ -191,6 +190,7 @@ export default {
 // activator container
 // ======================================================================
 .mew-menu-popup-activator {
+  display: inline-block;
   cursor: pointer;
   user-select: none;
 }
