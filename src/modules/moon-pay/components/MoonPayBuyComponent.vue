@@ -489,7 +489,7 @@ export default {
         !this.actualValidAddress ||
         isEmpty(this.amount) ||
         this.min.gt(this.amount) ||
-        isNaN(newVal)
+        isNaN(this.amount)
       )
         return;
       this.loading = true;
