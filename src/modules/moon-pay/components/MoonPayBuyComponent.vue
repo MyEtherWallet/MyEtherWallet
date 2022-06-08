@@ -398,10 +398,9 @@ export default {
     },
     amount: {
       handler: function (newVal) {
-        if (isEmpty(newVal)) return;
         const simplexMax = this.max.simplex;
         this.checkMoonPayMax();
-        if (simplexMax.lt(newVal)) {
+        if (simplexMax.lt(newVal) || isEmpty(newVal) || this.min.gt(newVal)) {
           this.loading = true;
         } else {
           this.loading = false;
