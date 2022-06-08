@@ -261,6 +261,10 @@ export default {
         return 'Please switch your network to the Ethereum Mainnet on Metamask.';
       }
 
+      if (amount.isNaN() || amount.eq(0)) {
+        return 'Amount required';
+      }
+
       if (amount.lt(0)) {
         return "Amount can't be negative.";
       }
