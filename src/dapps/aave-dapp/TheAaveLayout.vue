@@ -533,7 +533,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .loan-value-container {
   border-radius: 5px;
 }
