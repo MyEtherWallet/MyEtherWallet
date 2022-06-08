@@ -29,7 +29,7 @@
               <div class="greyLight pa-5 border-radius--5px">
                 <h5 class="mb-2 font-weight-bold">Aggregated Balance</h5>
                 <h3 v-if="!isLoadingData" class="">
-                  $ {{ totalLiquidity.usd }}
+                  {{ totalLiquidity.usd }}
                 </h3>
                 <v-skeleton-loader
                   v-else
@@ -129,7 +129,7 @@
             <v-col cols="12" md="6">
               <div class="greyLight pa-5 border-radius--5px">
                 <h5 class="mb-2 font-weight-bold">You Borrowed</h5>
-                <h3 v-if="!isLoadingData">$ {{ totalBorrow.usd }}</h3>
+                <h3 v-if="!isLoadingData">{{ totalBorrow.usd }}</h3>
                 <v-skeleton-loader
                   v-else
                   height="20px"
@@ -167,7 +167,7 @@
             <v-col cols="12" md="6">
               <div class="greyLight pa-5 border-radius--5px">
                 <h5 class="mb-2 font-weight-bold">Your Collateral</h5>
-                <h3 v-if="!isLoadingData">$ {{ totalCollateral.usd }}</h3>
+                <h3 v-if="!isLoadingData">{{ totalCollateral.usd }}</h3>
                 <v-skeleton-loader
                   v-else
                   height="20px"
@@ -296,7 +296,6 @@ import AaveTable from './components/AaveTable';
 import handlerAave from './handlers/handlerAave.mixin';
 import {
   formatPercentageValue,
-  formatFiatValue,
   formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
 const COLORS = {
@@ -358,7 +357,7 @@ export default {
   computed: {
     ...mapState('wallet', ['web3']),
     ...mapGetters('wallet', ['tokensList', 'balanceInETH']),
-    ...mapGetters('global', ['isEthNetwork']),
+    ...mapGetters('global', ['isEthNetwork', 'getFiatValue']),
     ...mapGetters('external', ['fiatValue', 'contractToToken']),
     loanValue() {
       return formatPercentageValue(
@@ -374,7 +373,7 @@ export default {
       return {
         eth: formatFloatingPointValue(this.userSummary.totalLiquidityETH || '0')
           .value,
-        usd: formatFiatValue(this.userSummary.totalLiquidityUSD || '0').value
+        usd: this.getFiatValue(this.userSummary.totalLiquidityUSD || '0')
       };
     },
     totalCollateral() {
@@ -382,14 +381,14 @@ export default {
         eth: formatFloatingPointValue(
           this.userSummary.totalCollateralETH || '0'
         ).value,
-        usd: formatFiatValue(this.userSummary.totalCollateralUSD || '0').value
+        usd: this.getFiatValue(this.userSummary.totalCollateralUSD || '0')
       };
     },
     totalBorrow() {
       return {
         eth: formatFloatingPointValue(this.userSummary.totalBorrowsETH || '0')
           .value,
-        usd: formatFiatValue(this.userSummary.totalBorrowsUSD || '0').value
+        usd: this.getFiatValue(this.userSummary.totalBorrowsUSD || '0')
       };
     },
     compositionPercentage() {

@@ -7,7 +7,7 @@
   >
     <!--
       =====================================================================================
-        Step 1: Select a token to depost (Aave token deposit table)
+        Step 1: Select a token to deposit (Aave token deposit table)
       =====================================================================================
       -->
     <aave-table
@@ -57,10 +57,7 @@ import AaveTable from '../AaveTable';
 import AaveSummary from '../AaveSummary';
 import AaveAmountForm from '../AaveAmountForm.vue';
 import { AAVE_TABLE_TITLE } from '../../handlers/helpers';
-import {
-  formatFiatValue,
-  formatFloatingPointValue
-} from '@/core/helpers/numberFormatHelper';
+import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { isEmpty } from 'lodash';
 import handlerAave from '../../handlers/handlerAave.mixin';
 import BigNumber from 'bignumber.js';
@@ -80,7 +77,7 @@ export default {
   },
   computed: {
     ...mapGetters('wallet', ['tokensList', 'balanceInETH']),
-    ...mapGetters('global', ['network']),
+    ...mapGetters('global', ['network', 'getFiatValue']),
     selectedTokenDecimal() {
       return this.selectedTokenDetails
         ? this.selectedTokenDetails.decimals
@@ -112,22 +109,18 @@ export default {
         formatFloatingPointValue(hasDeposit?.currentUnderlyingBalance || 0)
           .value
       } ${this.selectedToken.token}`;
-      const depositedBalanceInUSD = `$ ${
-        formatFiatValue(
-          BigNumber(this.selectedTokenUSD).times(
-            hasDeposit?.currentUnderlyingBalance || 0
-          )
-        ).value
-      }`;
+      const depositedBalanceInUSD = this.getFiatValue(
+        BigNumber(this.selectedTokenUSD).times(
+          hasDeposit?.currentUnderlyingBalance || 0
+        )
+      );
 
       const tokenBalance = `${
         formatFloatingPointValue(this.tokenBalance).value
       } ${this.selectedToken.token}`;
-      const usd = `$ ${
-        formatFiatValue(
-          BigNumber(this.tokenBalance).times(this.selectedTokenUSD)
-        ).value
-      }`;
+      const usd = this.getFiatValue(
+        BigNumber(this.tokenBalance).times(this.selectedTokenUSD)
+      );
       return {
         showToggle: true,
         leftSideValues: {

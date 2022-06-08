@@ -27,10 +27,8 @@
 <script>
 import AaveAmountForm from '../AaveAmountForm';
 import handlerAave from '../../handlers/handlerAave.mixin';
-import {
-  formatFiatValue,
-  formatFloatingPointValue
-} from '@/core/helpers/numberFormatHelper';
+import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
+import { mapGetters } from 'vuex';
 
 export default {
   components: {
@@ -43,6 +41,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters('global', ['getFiatValue']),
     totalBorrow() {
       return this.selectedTokenInUserSummary?.currentBorrows || '0';
     },
@@ -52,16 +51,14 @@ export default {
         ? `${formatFloatingPointValue(hasBorrowed.currentBorrows).value} ${
             this.preSelectedToken.token
           }`
-        : `$ 0.00`;
+        : this.getFiatValue(0);
       const borrowedUSD = hasBorrowed
-        ? `$ ${formatFiatValue(hasBorrowed.currentBorrowsUSD).value}`
+        ? this.getFiatValue(hasBorrowed.currentBorrowsUSD)
         : `0 ETH`;
       const eth = `${
         formatFloatingPointValue(this.userSummary.totalCollateralETH).value
       } ETH`;
-      const usd = `$ ${
-        formatFiatValue(this.userSummary.totalCollateralUSD).value
-      }`;
+      const usd = this.getFiatValue(this.userSummary.totalCollateralUSD);
       return {
         showToggle: true,
         leftSideValues: {

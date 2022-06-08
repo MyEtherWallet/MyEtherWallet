@@ -12,7 +12,6 @@ import eth from '@/assets/images/currencies/eth.png';
 import { LendingPool } from '@aave/contract-helpers';
 import { mapState, mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
-import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 import { formatReserves, formatUserSummary } from '@aave/math-utils';
 import { ethers } from 'ethers';
 import { ChainId } from '@aave/contract-helpers';
@@ -172,6 +171,7 @@ export default {
     ...mapState('wallet', ['address', 'web3']),
     ...mapGetters('wallet', ['tokensList']),
     ...mapGetters('external', ['contractToToken']),
+    ...mapGetters('global', ['getFiatValue']),
     userReservesData() {
       return this.userSummary.userReservesData;
     },
@@ -196,12 +196,9 @@ export default {
       });
     },
     amountUsd() {
-      return `$
-        ${
-          formatFiatValue(
-            BigNumber(this.selectedTokenUSD).times(this.amount || 0)
-          ).value
-        }`;
+      return this.getFiatValue(
+        BigNumber(this.selectedTokenUSD).times(this.amount || 0)
+      );
     }
   },
   methods: {
@@ -240,12 +237,22 @@ export default {
     },
     /**
      * Apollo mutation to repay funds
+     *  @param {object} data
+     * @param {String} data.user - The ethereum address that repays
+     * @param {String} data.reserve - The ethereum address of the reserve on which the user borrowed
+     * @param {String|Number} data.amount - The amount to repay, or (-1) if the user wants to repay everything
+     * @param data.interestRateMode -  // Whether stable (InterestRate.Stable) or variable (InterestRate.Variable) debt will be repaid
      */
-    async onRepay(data) {
+    async onRepay({ amount, reserve, referralCode, interestRateMode, user }) {
       try {
-        return await this.lendingPool.repay(data).then(res => {
-          this.formatTxData(res, 'repay');
-        });
+        const data = await this.poolContract.repay(
+          reserve,
+          amount,
+          interestRateMode === INTEREST_TYPES.variable ? 2 : 1,
+          referralCode,
+          user
+        );
+        this.formatTxData(data);
       } catch (e) {
         throw new Error(e);
       }
@@ -307,7 +314,7 @@ export default {
       //     txArr.push(data.tx);
       //   });
       // }
-
+      console.log(txData);
       this.sendTransaction({
         from: this.address,
         gas: '0x5208',

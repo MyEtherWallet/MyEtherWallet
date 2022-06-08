@@ -29,10 +29,7 @@ import BigNumber from 'bignumber.js';
 import AaveAmountForm from '../AaveAmountForm';
 import handlerAave from '../../handlers/handlerAave.mixin';
 import { mapGetters } from 'vuex';
-import {
-  formatFiatValue,
-  formatFloatingPointValue
-} from '@/core/helpers/numberFormatHelper';
+import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 
 export default {
   components: {
@@ -41,7 +38,7 @@ export default {
   mixins: [handlerAave],
   computed: {
     ...mapGetters('wallet', ['tokensList', 'balanceInETH']),
-    ...mapGetters('global', ['network']),
+    ...mapGetters('global', ['network', 'getFiatValue']),
     tokenBalance() {
       const symbol = this.preSelectedToken.token;
       if (symbol === this.network.type.currencyName) return this.balanceInETH;
@@ -58,21 +55,17 @@ export default {
         formatFloatingPointValue(hasDeposit?.currentUnderlyingBalance || 0)
           .value
       } ${this.preSelectedToken.token}`;
-      const depositedBalanceInUSD = `$ ${
-        formatFiatValue(
-          BigNumber(this.selectedTokenUSD).times(
-            hasDeposit?.currentUnderlyingBalance || 0
-          )
-        ).value
-      }`;
+      const depositedBalanceInUSD = this.getFiatValue(
+        BigNumber(this.selectedTokenUSD).times(
+          hasDeposit?.currentUnderlyingBalance || 0
+        )
+      );
       const tokenBalance = `${
         formatFloatingPointValue(this.tokenBalance).value
       } ${this.preSelectedToken.token}`;
-      const usd = `$ ${
-        formatFiatValue(
-          BigNumber(this.tokenBalance).times(this.selectedTokenUSD)
-        ).value
-      }`;
+      const usd = this.getFiatValue(
+        BigNumber(this.tokenBalance).times(this.selectedTokenUSD)
+      );
       return {
         showToggle: true,
         leftSideValues: {

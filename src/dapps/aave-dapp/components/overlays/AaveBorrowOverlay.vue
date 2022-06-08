@@ -65,13 +65,10 @@ import AaveSummary from '../AaveSummary';
 import AaveAmountForm from '../AaveAmountForm.vue';
 import AaveSelectInterest from '../AaveSelectInterest.vue';
 import { AAVE_TABLE_TITLE } from '../../handlers/helpers';
-import { mapState } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 import { isEmpty } from 'lodash';
 import handlerAave from '../../handlers/handlerAave.mixin';
-import {
-  formatFiatValue,
-  formatFloatingPointValue
-} from '@/core/helpers/numberFormatHelper';
+import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 
 export default {
   components: { AaveTable, AaveAmountForm, AaveSelectInterest, AaveSummary },
@@ -87,22 +84,21 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['address']),
+    ...mapGetters('global', ['getFiatValue']),
     aaveBorrowForm() {
       const hasBorrowed = this.selectedTokenInUserSummary;
       const borrowedEth = hasBorrowed
         ? `${formatFloatingPointValue(hasBorrowed.currentBorrows).value} ${
             this.selectedToken.token
           }`
-        : `$ 0.00`;
+        : this.getFiatValue(0);
       const borrowedUSD = hasBorrowed
-        ? `$ ${formatFiatValue(hasBorrowed.currentBorrowsUSD).value}`
+        ? this.getFiatValue(hasBorrowed.currentBorrowsUSD)
         : `0 ETH`;
       const eth = `${
         formatFloatingPointValue(this.userSummary.totalCollateralETH).value
       } ETH`;
-      const usd = `$ ${
-        formatFiatValue(this.userSummary.totalCollateralUSD).value
-      }`;
+      const usd = this.getFiatValue(this.userSummary.totalCollateralUSD);
       return {
         showToggle: false,
         leftSideValues: {

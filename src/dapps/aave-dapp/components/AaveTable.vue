@@ -22,7 +22,7 @@
         <v-btn-toggle
           v-model="toggleType"
           mandatory
-          active-class="textDark white--text alig-end"
+          active-class="textDark white--text align-end"
         >
           <v-btn small>All</v-btn>
           <v-btn small>Stable</v-btn>
@@ -54,7 +54,6 @@ import {
 import BigNumber from 'bignumber.js';
 import { mapGetters } from 'vuex';
 import {
-  formatFiatValue,
   formatFloatingPointValue,
   formatPercentageValue
 } from '@/core/helpers/numberFormatHelper';
@@ -89,7 +88,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('global', ['network']),
+    ...mapGetters('global', ['network', 'getFiatValue']),
     ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
     userReservesData() {
       return this.userSummary?.reservesData || [];
@@ -217,7 +216,7 @@ export default {
               });
             break;
           /**
-           * Case: Aave Exhisting Deposits Table
+           * Case: Aave Existing Deposits Table
            */
           case AAVE_TABLE_TITLE.balance_deposit:
             list = list.map(item => {
@@ -230,7 +229,7 @@ export default {
                     formatFloatingPointValue(item.currentUnderlyingBalance)
                       .value
                   } ${item.reserve.symbol}`,
-                  `$${formatFiatValue(item.currentUnderlyingBalanceUSD).value}`
+                  this.getFiatValue(item.currentUnderlyingBalanceUSD)
                 ],
                 apy: formatPercentageValue(
                   new BigNumber(item.reserve.liquidityRate)
@@ -250,7 +249,7 @@ export default {
             });
             break;
           /**
-           * Case: Aave Exhisting Borrowings Table
+           * Case: Aave Existing Borrowings Table
            */
           case AAVE_TABLE_TITLE.balance_borrow:
             list = list.map(item => {
@@ -270,7 +269,7 @@ export default {
                   `${formatFloatingPointValue(item.currentBorrows).value} ${
                     item.reserve.symbol
                   }`,
-                  `$${formatFiatValue(item.currentBorrowsUSD).value}`
+                  this.getFiatValue(item.currentBorrowsUSD)
                 ],
                 apy: formatPercentageValue(
                   new BigNumber(item.borrowRate).multipliedBy(100).toString()
