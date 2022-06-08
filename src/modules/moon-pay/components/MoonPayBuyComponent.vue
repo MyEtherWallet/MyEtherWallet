@@ -400,7 +400,12 @@ export default {
       handler: function (newVal) {
         const simplexMax = this.max.simplex;
         this.checkMoonPayMax();
-        if (simplexMax.lt(newVal) || isEmpty(newVal) || this.min.gt(newVal)) {
+        if (
+          simplexMax.lt(newVal) ||
+          isEmpty(newVal) ||
+          this.min.gt(newVal) ||
+          isNaN(newVal)
+        ) {
           this.loading = true;
         } else {
           this.loading = false;
@@ -483,7 +488,8 @@ export default {
         this.hideSimplex ||
         !this.actualValidAddress ||
         isEmpty(this.amount) ||
-        this.min.gt(this.amount)
+        this.min.gt(this.amount) ||
+        isNaN(newVal)
       )
         return;
       this.loading = true;
