@@ -25,7 +25,7 @@
       <template #rightColItem1>
         <div class="mew-body">
           {{ convertedFees.value }}
-          <span class="greyPrimary--text">{{ network.type.name }}</span>
+          <span class="greyPrimary--text">{{ network.type.currencyName }}</span>
           ~{{ txFeeUSD }}
         </div>
       </template>
