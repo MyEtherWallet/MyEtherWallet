@@ -17,18 +17,16 @@
       </mew-alert>
     </div>
 
-    <mew-sheet
-      v-for="domain in ensLookupResults"
-      :key="domain.name"
+    <mew-select
       class="d-flex justify-space-between align-center mb-5 pr-5"
+      :items="ensLookUpResults"
     >
-      <p class="font-weight-heavy pt-5 pl-5">{{ domain.name }}</p>
       <mew-button
-        title="Set Name"
+        title="Register"
         btn-size="medium"
         @click.native="setReverseRecord(domain)"
       />
-    </mew-sheet>
+    </mew-select>
   </div>
 </template>
 
@@ -67,8 +65,11 @@ export default {
         } else {
           this.hasDomains = true;
         }
-        this.ensLookupResults = lookupDomains;
-        return this.ensLookupResults;
+        this.ensLookupResults = lookupDomains.filter(item => {
+          const domainList = item.name;
+          return domainList;
+        });
+        console.log('this.ensLookupRestults:', this.ensLookupResults);
       } catch (e) {
         Toast(e, {}, ERROR);
       }
