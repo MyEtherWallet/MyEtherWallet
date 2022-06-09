@@ -49,6 +49,8 @@ const EXCEPTIONS = [
   '@vue/cli-service',
   'vue-i18n',
   'vue',
+  '@shapeshiftoss/hdwallet-core',
+  '@shapeshiftoss/hdwallet-keepkey-webusb',
   // fix after release
   '@commitlint/config-conventional',
   'commitlint',
