@@ -40,6 +40,7 @@ const EXCEPTIONS = [
   // versions for vue3
   'vue-router',
   'vuex',
+  'eslint-plugin-vue',
   '@vue/test-utils',
   '@vue/babel-preset-app',
   '@vue/cli-plugin-babel',
@@ -49,11 +50,7 @@ const EXCEPTIONS = [
   '@vue/cli-service',
   'vue-i18n',
   'vue',
-  // fix after release
-  '@commitlint/config-conventional',
-  'commitlint',
-  'vue-cli-plugin-vuetify',
-  'trezor-connect'
+  'trezor-connect' // currently in beta
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
