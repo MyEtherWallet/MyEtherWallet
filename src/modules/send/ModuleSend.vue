@@ -102,7 +102,7 @@
           <mew-expand-panel
             ref="expandPanel"
             :panel-items="expandPanel"
-            :idx-to-expand="[]"
+            :idx-to-expand="openedPanels"
             @toggled="closeToggle"
           >
             <template #panelBody1>
@@ -238,6 +238,7 @@ export default {
           toggleTitle: 'Gas Limit & Data'
         }
       ],
+      openedPanels: [],
       defaultGasLimit: '21000',
       gasLimitError: '',
       amountError: '',
@@ -446,7 +447,7 @@ export default {
         )
       )
         return '0';
-      const amountToWei = toWei(this.amount);
+      const amountToWei = toWei(toBNSafe(this.amount));
       return this.isFromNetworkCurrency
         ? BigNumber(this.txFee).plus(amountToWei).toString()
         : this.txFee;
