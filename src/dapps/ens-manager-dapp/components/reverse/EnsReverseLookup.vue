@@ -18,6 +18,7 @@
     </div>
 
     <mew-select
+      v-else
       class="d-flex justify-space-between align-center mb-5 pr-5"
       :items="ensLookUpResults"
     >
@@ -46,7 +47,7 @@ export default {
   },
   data() {
     return {
-      ensLookupResults: '',
+      ensLookupResults: [],
       hasDomains: false
     };
   },
