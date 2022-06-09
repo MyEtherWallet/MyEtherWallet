@@ -14,8 +14,7 @@ const AUDIT_EXCEPTIONS = [
   'axios',
   'async',
   'nth-check',
-  'semver-regex',
-  '@cosmjs/amino'
+  'semver-regex'
 ];
 const execute = (command, callback) => {
   exec(
