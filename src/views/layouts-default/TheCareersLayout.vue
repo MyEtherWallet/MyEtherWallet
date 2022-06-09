@@ -125,23 +125,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss">
-.job-button {
-  &:hover {
-    background-color: var(--v-backgroundGrey-base);
-  }
-}
-</style>
-
-<style lang="scss">
-.mew-component--jobs--job-detail-dialog {
-  margin: 0 !important;
-
-  .close-btn {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-  }
-}
-</style>

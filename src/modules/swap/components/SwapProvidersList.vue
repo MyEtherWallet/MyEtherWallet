@@ -266,6 +266,7 @@ export default {
   }
 };
 </script>
+
 <style lang="scss" scoped>
 .rate-active {
   border: 1px solid var(--v-greenPrimary-base) !important;
