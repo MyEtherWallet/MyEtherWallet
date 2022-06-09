@@ -48,7 +48,9 @@ const EXCEPTIONS = [
   '@vue/cli-plugin-unit-jest',
   '@vue/cli-service',
   'vue-i18n',
-  'vue'
+  'vue',
+  '@shapeshiftoss/hdwallet-core',
+  '@shapeshiftoss/hdwallet-keepkey-webusb'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
