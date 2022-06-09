@@ -40,6 +40,7 @@ const EXCEPTIONS = [
   // versions for vue3
   'vue-router',
   'vuex',
+  'eslint-plugin-vue',
   '@vue/test-utils',
   '@vue/babel-preset-app',
   '@vue/cli-plugin-babel',
@@ -50,7 +51,8 @@ const EXCEPTIONS = [
   'vue-i18n',
   'vue',
   '@shapeshiftoss/hdwallet-core',
-  '@shapeshiftoss/hdwallet-keepkey-webusb'
+  '@shapeshiftoss/hdwallet-keepkey-webusb',
+  'trezor-connect' // currently in beta
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
