@@ -185,7 +185,7 @@ import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import SendTransaction from '@/modules/send/handlers/handlerSend';
 import { ETH } from '@/utils/networks/types';
-import { Toast, WARNING } from '@/modules/toast/handler/handlerToast';
+import { Toast, ERROR, WARNING } from '@/modules/toast/handler/handlerToast';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import SendLowBalanceNotice from './components/SendLowBalanceNotice.vue';
 import AppButtonBalance from '@/core/components/AppButtonBalance';
@@ -700,7 +700,9 @@ export default {
         })
         .catch(error => {
           this.clear();
-          this.instance?.errorHandler(error);
+          if (!this.instance) {
+            Toast(error, {}, ERROR);
+          }
         });
     },
     prefillForm() {
