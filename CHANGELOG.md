@@ -1,3 +1,51 @@
+### Release v6.5.6
+
+### ui
+
+* updated trezor logo [#3853](https://github.com/MyEtherWallet/MyEtherWallet/pull/3853)
+
+### devop
+
+* handle eth.subscribe error [#3783](https://github.com/MyEtherWallet/MyEtherWallet/pull/3783)
+* fix github release generator [#3870](https://github.com/MyEtherWallet/MyEtherWallet/pull/3870)
+* update packages [#3871](https://github.com/MyEtherWallet/MyEtherWallet/pull/3871)
+* update sidemenu background color [#3874](https://github.com/MyEtherWallet/MyEtherWallet/pull/3874)
+* added check to wei conversion [#3889](https://github.com/MyEtherWallet/MyEtherWallet/pull/3889)
+
+### fix
+
+* fix ledger transport status sentry error [#3808](https://github.com/MyEtherWallet/MyEtherWallet/pull/3808)
+* fixed auto-closing dropdowns [#3856](https://github.com/MyEtherWallet/MyEtherWallet/pull/3856)
+* Failed to fetch when updating articles list [#3865](https://github.com/MyEtherWallet/MyEtherWallet/pull/3865)
+* Internal JSON-RPC sentry error [#3869](https://github.com/MyEtherWallet/MyEtherWallet/pull/3869)
+* Cannot read properties of null (reading 'getAddressString') [#3875](https://github.com/MyEtherWallet/MyEtherWallet/pull/3875)
+* Sentry The operation could not be completed. Invalid argument. [#3877](https://github.com/MyEtherWallet/MyEtherWallet/pull/3877)
+* remove global styles [#3883](https://github.com/MyEtherWallet/MyEtherWallet/pull/3883)
+
+### Release v6.5.5
+
+### devop
+
+* Added currency localization helpers, currency setting, and modified currency display [#3686](https://github.com/MyEtherWallet/MyEtherWallet/pull/3686)
+* replace nft api [#3843](https://github.com/MyEtherWallet/MyEtherWallet/pull/3843)
+
+### chore
+
+* remove v5 link [#3851](https://github.com/MyEtherWallet/MyEtherWallet/pull/3851)
+
+### fix
+
+* fix error handler null [#3827](https://github.com/MyEtherWallet/MyEtherWallet/pull/3827)
+* fix sentry expected private key 32 length [#3829](https://github.com/MyEtherWallet/MyEtherWallet/pull/3829)
+* replace png ethereum icon with svg icon on dashboard tokens table [#3831](https://github.com/MyEtherWallet/MyEtherWallet/pull/3831)
+* fixed brave not using coinbase issue [#3833](https://github.com/MyEtherWallet/MyEtherWallet/pull/3833)
+* fix sentry returned values not valid on stakewise [#3834](https://github.com/MyEtherWallet/MyEtherWallet/pull/3834)
+* fix wallet card fade-in animation glitch on load [#3836](https://github.com/MyEtherWallet/MyEtherWallet/pull/3836)
+* fix offline helper copy button [#3840](https://github.com/MyEtherWallet/MyEtherWallet/pull/3840)
+* fixed underpriced transactions [#3849](https://github.com/MyEtherWallet/MyEtherWallet/pull/3849)
+* fix side menu [#3850](https://github.com/MyEtherWallet/MyEtherWallet/pull/3850)
+* fix create wallet keystore file button border [#3855](https://github.com/MyEtherWallet/MyEtherWallet/pull/3855)
+
 ### Release v6.5.4-hotfix.1
 
 ### fix

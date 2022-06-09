@@ -1566,53 +1566,6 @@ export default {
   margin: 0;
 }
 
-.invert {
-  filter: invert(100%);
-}
-
-.border-radius--10px::before {
-  border-radius: 10px !important;
-}
-
-.available-balance {
-  width: 39%;
-}
-
-.icon {
-  margin-right: 6px;
-}
-
-.wrapped-btc-text {
-  border-radius: 5px;
-  background-color: var(--v-selectorBg-lighten1);
-}
-</style>
-
-<style lang="scss">
-.mew-component--swap {
-  width: 100%;
-  .swap-expend {
-    .v-application .white {
-      background-color: transparent !important;
-    }
-  }
-}
-
-.wrapped-btc-text {
-  .v-expansion-panel-content__wrap {
-    padding: 0 !important;
-  }
-
-  .v-expansion-panel,
-  .v-expansion-panels {
-    background-color: transparent !important;
-  }
-
-  .v-expansion-panel-header {
-    padding: 16px 0px !important;
-  }
-}
-
 .border-top {
   border-top: 1px solid var(--v-greyMedium-base);
 }
@@ -1621,18 +1574,5 @@ export default {
   @media (min-width: 960px) {
     min-height: 45vh;
   }
-}
-
-.swap-to-input {
-  pointer-events: none !important;
-  user-select: none !important;
-}
-
-.pb-sm-15px {
-  padding-bottom: 15px !important;
-}
-
-.pb-sm-29px {
-  padding-bottom: 29px !important;
 }
 </style>
