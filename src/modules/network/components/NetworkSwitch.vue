@@ -64,7 +64,7 @@
         <v-row class="pa-0 mew-body align-center justify-start">
           <!--
                 =====================================================================================
-                  Incon
+                  Icon
                 =====================================================================================
                 -->
           <v-img
@@ -77,7 +77,7 @@
           />
           <!--
                 =====================================================================================
-                  Symbol/Namte
+                  Symbol/Name
                 =====================================================================================
                 -->
           <div class="textDark--text Capitalize pl-3">
@@ -135,7 +135,7 @@ export default {
   computed: {
     ...mapGetters('global', ['network']),
     /**
-     * Property returns sorted network names alphabeticaly in this order: ETH, main and then test networks
+     * Property returns sorted network names alphabetically in this order: ETH, main and then test networks
      * @returns {string[]}
      */
     typeNames() {
@@ -189,7 +189,7 @@ export default {
       return allNetworks;
     },
     /**
-     * Property shows invalid search if user inlcuded input and networks length is 0
+     * Property shows invalid search if user included input and networks length is 0
      * @returns {boolean}
      */
     showEmptySearch() {
@@ -259,7 +259,7 @@ export default {
     ...mapActions('global', ['setNetwork']),
     ...mapActions('external', ['setTokenAndEthBalance']),
     /**
-     * Method checks whther symbol or name has searchInput substring
+     * Method checks whether symbol or name has searchInput substring
      * @returns {boolean}
      */
     hasString(symbol, name) {
