@@ -66,10 +66,10 @@ export default {
           this.hasDomains = true;
         }
         this.ensLookupResults = lookupDomains.filter(item => {
-          const domainList = item.name;
-          return domainList;
+          return {
+            name: item.name
+          };
         });
-        console.log('this.ensLookupRestults:', this.ensLookupResults);
       } catch (e) {
         Toast(e, {}, ERROR);
       }
