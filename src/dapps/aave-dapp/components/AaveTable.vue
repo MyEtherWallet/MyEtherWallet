@@ -22,7 +22,7 @@
         <v-btn-toggle
           v-model="toggleType"
           mandatory
-          active-class="textDark white--text align-end"
+          active-class="textDark white--text"
         >
           <v-btn small>All</v-btn>
           <v-btn small>Stable</v-btn>
@@ -158,15 +158,19 @@ export default {
                 }
               });
               /* Get User Balance for the item */
-              const userBalance =
+              const findBalance =
                 item.symbol === 'ETH'
                   ? this.balanceInETH
                   : this.tokensList.find(balance => {
-                      return item.symbol === balance.symbol;
+                      if (item.symbol === balance.symbol) return balance;
                     });
-              AAVE_TABLE_BUTTON.deposit.disabled = userBalance
-                ? BigNumber(userBalance).lte(0)
-                : true;
+              if (findBalance) {
+                console.log(findBalance, 'foundBalance');
+              }
+              const userBalance = findBalance ? findBalance.balancef : 0;
+              const depositObj = Object.assign({}, AAVE_TABLE_BUTTON.deposit);
+              depositObj.disabled = BigNumber(userBalance).lte(0);
+
               AAVE_TABLE_BUTTON.swap.method = this.onSwapClick;
               return {
                 price: item.price,
@@ -182,10 +186,7 @@ export default {
                 apy: this.getDepositAPY(item.liquidityRate),
                 tokenImg: `${item.icon}`,
                 address: item.aToken.id,
-                callToAction: [
-                  AAVE_TABLE_BUTTON.deposit,
-                  AAVE_TABLE_BUTTON.swap
-                ]
+                callToAction: [depositObj, AAVE_TABLE_BUTTON.swap]
               };
             });
             break;
@@ -362,8 +363,8 @@ export default {
       this.$router.push({
         name: ROUTES_WALLET.SWAP.NAME,
         query: {
-          fromT: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
-          toT: newVal.address,
+          fromToken: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+          toToken: newVal.address,
           amount: '1'
         }
       });
