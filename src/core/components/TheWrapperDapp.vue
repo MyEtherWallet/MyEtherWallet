@@ -4,7 +4,7 @@
     DAPP WRAPPER:
   =====================================================================================
   -->
-  <mew6-white-sheet class="mt-5">
+  <mew6-white-sheet class="mt-5 the-wrapper-dapp">
     <!--
     =====================================================================================
       Mew Banner - props: bannerText, bannerImg
@@ -300,24 +300,14 @@ export default {
     display: none !important;
   }
 }
-.hide-default-tab-header {
-  .v-tabs {
-    display: none;
+.the-wrapper-dapp {
+  .hide-default-tab-header {
+    .v-tabs {
+      display: none;
+    }
   }
-}
-.menu-tab-text {
-  text-transform: none !important;
-}
-
-.slide-fade-enter-active {
-  transition: all 0.3s ease;
-}
-.slide-fade-leave-active {
-  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
-}
-.slide-fade-enter, .slide-fade-leave-to
-/* .slide-fade-leave-active below version 2.1.8 */ {
-  transform: translateX(10px);
-  opacity: 0;
+  .menu-tab-text {
+    text-transform: none !important;
+  }
 }
 </style>

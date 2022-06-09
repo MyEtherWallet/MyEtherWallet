@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "6.5.5",
+  "version": "6.5.6",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build:offline": "WEBPACK_INTEGRITY=false npm run build:hash",
@@ -44,6 +44,7 @@
     "@ensdomains/ensjs": "2.1.0",
     "@ethereumjs/common": "2.6.4",
     "@ethereumjs/tx": "3.5.1",
+    "@formatjs/intl-numberformat": "8.0.1",
     "@ledgerhq/hw-transport-web-ble": "6.27.1",
     "@lokalise/node-api": "7.2.0",
     "@mathieustan/vue-intercom": "0.0.7",
@@ -163,7 +164,7 @@
     "u2f-api": "1.2.1",
     "uglify-es": "3.3.9",
     "uuid": "8.3.2",
-    "vue-cli-plugin-vuetify": "2.5.0",
+    "vue-cli-plugin-vuetify": "2.5.1",
     "vue-i18n": "8.27.0",
     "vue-matomo": "4.1.0",
     "vue-template-compiler": "2.6.14",
