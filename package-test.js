@@ -48,7 +48,12 @@ const EXCEPTIONS = [
   '@vue/cli-plugin-unit-jest',
   '@vue/cli-service',
   'vue-i18n',
-  'vue'
+  'vue',
+  // fix after release
+  '@commitlint/config-conventional',
+  'commitlint',
+  'vue-cli-plugin-vuetify',
+  'trezor-connect'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
