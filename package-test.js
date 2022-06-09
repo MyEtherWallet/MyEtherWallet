@@ -50,7 +50,9 @@ const EXCEPTIONS = [
   '@vue/cli-service',
   'vue-i18n',
   'vue',
-  'trezor-connect' // currently in beta
+  'trezor-connect', // currently in beta
+  '@shapeshiftoss/hdwallet-core',
+  '@shapeshiftoss/hdwallet-keepkey-webusb'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
