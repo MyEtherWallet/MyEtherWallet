@@ -11,6 +11,7 @@ export const knownErrors = {
   "CONNECTION ERROR: Couldn't connect to node on WS":
     "Couldn't connect to WS node. Please refresh and try again.",
   'connection not open on send': mewApiError,
+  'Ledger device: Condition of use not satisfied': mewApiError,
   'Provided address null is invalid': 'No address provided',
   'transaction underpriced': 'Transaction gas price too low',
   'invalid remainder': 'invalid remainder',
@@ -25,7 +26,9 @@ export const knownErrors = {
     'You might also see this error if you are not using the ' +
     'correct ABI for the contract you are retrieving data from, ' +
     'requesting data from a block number that does not exist, ' +
-    'or querying a node which is not fully synced.'
+    'or querying a node which is not fully synced.',
+  '未能完成该操作。无效的自变量':
+    'The operation could not be completed. Invalid argument.'
 };
 
 const handleError = err => {
