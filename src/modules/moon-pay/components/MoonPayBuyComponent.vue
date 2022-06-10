@@ -67,11 +67,11 @@
         <div class="mew-heading-3 textDark--text mb-5">
           Where should we send your crypto?
         </div>
-        <module-address-book
-          ref="addressInput"
-          :enable-save-address="false"
-          :is-valid-address-func="isValidToAddress"
-          @setAddress="setAddress"
+        <mew-input
+          v-model="toAddress"
+          label="Enter Crypto Address"
+          :rules="[isValidToAddress]"
+          :error-messages="addressErrorMessages"
         />
       </div>
     </div>
@@ -89,7 +89,6 @@
 </template>
 
 <script>
-import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import MultiCoinValidator from 'multicoin-address-validator';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import { isEmpty, cloneDeep, isEqual } from 'lodash';
@@ -106,7 +105,6 @@ import { getCurrency } from '@/modules/settings/components/currencyList';
 import { buyContracts } from './tokenList';
 export default {
   name: 'ModuleBuyEth',
-  components: { ModuleAddressBook },
   props: {
     orderHandler: {
       type: Object,
@@ -268,6 +266,12 @@ export default {
       }
       return '';
     },
+    addressErrorMessages() {
+      if (!this.actualValidAddress && !isEmpty(this.toAddress)) {
+        return 'Invalid Address';
+      }
+      return '';
+    },
     currencyItems() {
       const tokenList = new Array();
       for (const contract of buyContracts) {
@@ -421,6 +425,9 @@ export default {
         this.getSimplexQuote();
       }
     },
+    toAddress(newVal) {
+      this.validToAddress = this.isValidToAddress(newVal);
+    },
     coinGeckoTokens: {
       handler: function () {
         this.fetchCurrencyData();
@@ -447,10 +454,6 @@ export default {
         this.web3Connections[nodeType] = web3;
       }
       this.gasPrice = await this.web3Connections[nodeType].eth.getGasPrice();
-    },
-    setAddress(address, valid) {
-      this.toAddress = address;
-      this.validToAddress = valid;
     },
     isLT(num, num2) {
       return BigNumber(num).lt(num2);

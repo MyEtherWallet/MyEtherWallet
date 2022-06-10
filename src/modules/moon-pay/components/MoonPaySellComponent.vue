@@ -61,12 +61,11 @@
     <!-- ============================================================== -->
     <div v-if="!inWallet" class="mt-5">
       <div class="mew-heading-3 textDark--text mb-5">Refund address</div>
-      <module-address-book
-        ref="addressInput"
-        :enable-save-address="false"
-        :is-valid-address-func="isValidToAddress"
+      <mew-input
+        v-model="toAddress"
+        :rules="[isValidToAddress]"
         label="Enter Crypto Address"
-        @setAddress="setAddress"
+        :error-messages="addressErrorMessages"
       />
     </div>
     <!-- ============================================================== -->
@@ -85,7 +84,6 @@
 </template>
 
 <script>
-import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import MultiCoinValidator from 'multicoin-address-validator';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import ButtonBalance from '@/core/components/AppButtonBalance';
@@ -104,7 +102,7 @@ import { toBase } from '@/core/helpers/unit';
 import { sellContracts } from './tokenList';
 export default {
   name: 'ModuleSellEth',
-  components: { ButtonBalance, ModuleAddressBook },
+  components: { ButtonBalance },
   props: {
     orderHandler: {
       type: Object,
@@ -308,6 +306,12 @@ export default {
 
       return '';
     },
+    addressErrorMessages() {
+      if (!this.actualValidAddress && !isEmpty(this.toAddress)) {
+        return 'Invalid Address';
+      }
+      return '';
+    },
     nonMainnetMetamask() {
       return (
         this.instance?.identifier === WALLET_TYPES.WEB3_WALLET &&
@@ -395,6 +399,7 @@ export default {
       this.sendHandler.setGasLimit(val);
     },
     toAddress(val) {
+      this.validToAddress = this.isValidToAddress(val);
       if (this.inWallet || !this.actualValidAddress) return;
       this.sendHandler.setFrom(val);
       this.fetchSellInfo();
@@ -553,10 +558,6 @@ export default {
           this.loading = false;
           Toast(e, {}, ERROR);
         });
-    },
-    setAddress(address, valid) {
-      this.toAddress = address;
-      this.validToAddress = valid;
     },
     isValidToAddress(address) {
       return MultiCoinValidator.validate(address, this.selectedCurrency.symbol);
