@@ -4,9 +4,9 @@
       v-model="navOpen"
       app
       class="wallet-sidemenu"
-      :src="background"
       width="300"
       :dark="$vuetify.theme.dark"
+      color="#07385F"
     >
       <template #prepend>
         <div class="pa-5 pb-3">
@@ -144,8 +144,9 @@
                 <v-list-item-content>
                   <v-list-item-title
                     class="white--text font-weight-regular mew-body"
-                    >{{ item.title }}</v-list-item-title
                   >
+                    {{ item.title }}
+                  </v-list-item-title>
                 </v-list-item-content>
               </template>
               <v-list-item
@@ -158,8 +159,9 @@
                 <v-list-item-content>
                   <v-list-item-title
                     class="pl-13 white--text font-weight-regular mew-body"
-                    >{{ child.title }}</v-list-item-title
                   >
+                    {{ child.title }}
+                  </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
             </v-list-group>
@@ -181,10 +183,9 @@
           </v-list-item-icon>
 
           <v-list-item-content>
-            <v-list-item-title
-              class="white--text mew-body font-weight-regular"
-              >{{ item.title }}</v-list-item-title
-            >
+            <v-list-item-title class="white--text mew-body font-weight-regular">
+              {{ item.title }}
+            </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
         <div v-if="online" class="mt-3 px-8">
@@ -258,7 +259,6 @@
 import AppBtnMenu from '@/core/components/AppBtnMenu';
 import ModuleNotifications from '@/modules/notifications/ModuleNotifications';
 import send from '@/assets/images/icons/icon-send-enable.svg';
-import background from '@/assets/images/backgrounds/bg-light.jpg';
 import dashboard from '@/assets/images/icons/icon-dashboard-enable.svg';
 import nft from '@/assets/images/icons/icon-nft.svg';
 import dapp from '@/assets/images/icons/icon-dapp-center-enable.svg';
@@ -290,7 +290,6 @@ export default {
     return {
       navOpen: null,
       version: VERSION,
-      background: background,
       onSettings: false,
       showLogoutPopup: false,
       // sectionTwo: [
@@ -484,12 +483,7 @@ export default {
 .v-list-item--active .btn-title {
   font-weight: 500;
 }
-</style>
 
-<style lang="scss">
-// =======================================================
-// Global styles
-// =======================================================
 .new-dapp-label {
   border-radius: 2px;
   background: #ff445b;
@@ -520,15 +514,18 @@ export default {
     box-shadow: 0 0 0 0 rgba(204, 169, 44, 0);
   }
 }
-.v-system-bar .v-icon {
-  font-size: 36px !important;
-  color: white !important;
-}
+</style>
 
+<style lang="scss">
 // =======================================================
 // Scoped styles for .wallet-sidemenu
 // =======================================================
 .wallet-sidemenu {
+  .v-system-bar .v-icon {
+    font-size: 36px !important;
+    color: white !important;
+  }
+
   .v-list-item--dense .v-list-item__title {
     line-height: 20px !important;
   }

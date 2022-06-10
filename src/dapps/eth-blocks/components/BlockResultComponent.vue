@@ -326,7 +326,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .container-border {
   border-bottom: 1px solid var(--v-greyMedium-base);
 }

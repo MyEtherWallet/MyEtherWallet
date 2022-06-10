@@ -608,7 +608,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .buy-more-link {
   padding-left: 2px;
 }
