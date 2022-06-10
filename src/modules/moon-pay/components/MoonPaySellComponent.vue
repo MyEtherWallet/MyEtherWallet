@@ -59,7 +59,7 @@
     <!-- ============================================================== -->
     <!-- Refund address -->
     <!-- ============================================================== -->
-    <div v-if="!inWallet" class="mt-5">
+    <div v-if="!inWallet" class="mt-0">
       <div class="mew-heading-3 textDark--text mb-5">Refund address</div>
       <mew-input
         v-model="toAddress"
