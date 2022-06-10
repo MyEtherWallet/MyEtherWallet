@@ -20,7 +20,8 @@
     <mew-select
       v-else
       class="d-flex justify-space-between align-center mb-5 pr-5"
-      :items="ensLookUpResults"
+      filter-placeholder="Search for Domain"
+      :items="ensLookupResults"
     >
       <mew-button
         title="Register"
@@ -47,9 +48,14 @@ export default {
   },
   data() {
     return {
-      ensLookupResults: [],
+      ensLookupResults: null,
       hasDomains: false
     };
+  },
+  watch: {
+    ensLookupResults(newVal) {
+      console.log('newVal:', newVal);
+    }
   },
   mounted() {
     this.findDomainByAddress();
@@ -66,9 +72,10 @@ export default {
         } else {
           this.hasDomains = true;
         }
-        this.ensLookupResults = lookupDomains.filter(item => {
+        this.ensLookupResults = lookupDomains.map(item => {
           return {
-            name: item.name
+            name: item.name,
+            value: item.name
           };
         });
       } catch (e) {

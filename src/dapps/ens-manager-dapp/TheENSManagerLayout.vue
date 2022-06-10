@@ -888,7 +888,8 @@ export default {
   }
 };
 </script>
-<style lang="scss">
+
+<style lang="scss" scoped>
 .my-domains-panel {
   .active-border {
     .subheader-container {
@@ -898,9 +899,5 @@ export default {
       }
     }
   }
-}
-
-.claim-border-container {
-  border: 1px solid var(--v-greyMedium-base);
 }
 </style>
