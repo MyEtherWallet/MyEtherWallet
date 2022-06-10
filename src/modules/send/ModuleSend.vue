@@ -148,6 +148,7 @@
                   :rules="dataRules"
                   :hide-clear-btn="data === '0x'"
                   class="mb-8"
+                  @keyup.native="verifyHexFormat"
                 />
               </div>
             </template>
@@ -544,8 +545,7 @@ export default {
       immediate: true,
       deep: true
     },
-    data(newVal) {
-      this.data = !newVal || isEmpty(newVal) ? '0x' : newVal;
+    data() {
       if (isHexStrict(this.data)) this.sendTx.setData(this.data);
     },
     gasLimit(newVal) {
@@ -584,6 +584,16 @@ export default {
     }, 500);
   },
   methods: {
+    verifyHexFormat() {
+      const first2 = this.data.substring(0, 2);
+      if (first2 != '0x') {
+        if (first2 == '0' || first2 == '') {
+          this.data = '0x';
+          return;
+        }
+        this.data = '0x' + this.data;
+      }
+    },
     /**
      * Resets values to default
      */
