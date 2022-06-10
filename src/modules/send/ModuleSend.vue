@@ -546,6 +546,7 @@ export default {
       deep: true
     },
     data() {
+      if (!this.data) this.data = '0x';
       if (isHexStrict(this.data)) this.sendTx.setData(this.data);
     },
     gasLimit(newVal) {
@@ -585,6 +586,10 @@ export default {
   },
   methods: {
     verifyHexFormat() {
+      if (!this.data) {
+        this.data = '0x';
+        return;
+      }
       const first2 = this.data.substring(0, 2);
       if (first2 != '0x') {
         if (first2 == '0' || first2 == '') {
