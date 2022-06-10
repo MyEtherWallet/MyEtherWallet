@@ -260,6 +260,12 @@ export default {
     ModuleAccessWalletHardware,
     ModuleAccessWalletSoftware
   },
+  props: {
+    sidemenuStatus: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
       showChangeAddress: false,
@@ -396,6 +402,14 @@ export default {
      */
     nonChainTokensCount() {
       return this.tokensList.length - 1;
+    }
+  },
+  watch: {
+    sidemenuStatus() {
+      /**
+       * At side menu closes, close paper wallet
+       */
+      this.showPaperWallet = false;
     }
   },
   methods: {
