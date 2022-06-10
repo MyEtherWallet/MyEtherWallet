@@ -221,7 +221,7 @@
                 class="mr-2"
               />
               <div>
-                <div>{{ $t('footer.donation.btc') }}</div>
+                <div>{{ $t('footer.donation.bitcoin') }}</div>
                 <div v-show="false" class="overline">
                   Address: {{ btcDonationAddress }}
                 </div>
@@ -513,6 +513,10 @@ a {
   > div {
     line-height: 11px;
   }
+}
+.v-expansion-panel-header {
+  max-width: 524px;
+  margin: 0 auto;
 }
 </style>
 
