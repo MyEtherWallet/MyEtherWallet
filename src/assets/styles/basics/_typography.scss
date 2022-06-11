@@ -1,0 +1,82 @@
+/**
+  * Global Typography styles
+  */
+.mew-address {
+  color: inherit;
+  font-family: "PT Mono";
+}
+
+.mew-title {
+  /* size - 48px,  line-height - 64px */
+  font-size: 3.428rem;
+  font-weight: 700;
+  line-height: 4.571rem;
+  letter-spacing: 0.0178rem;
+}
+
+.mew-subtitle {
+/* size - 32px,  line-height - 44px */
+  font-size: 2.285rem;
+  font-weight: 700;
+  line-height: 3.142rem;
+  letter-spacing: 0.0178rem;
+}
+
+.mew-heading-1 {
+  /* size - 24px */
+  font-size: 1.714rem;
+  font-weight: 700;
+  }
+  
+  .mew-heading-2 {
+  /* size - 20px */
+  font-size: 1.429rem !important;
+  font-weight: 700 !important;
+  }
+  
+  .mew-heading-3 {
+  /* size - 16px*/
+  font-size: 1.143rem; 
+  font-weight: 700;
+  }
+  
+.mew-body {
+  /* size - 14px*/
+  font-size: 1rem !important; 
+  font-weight: 400;
+}
+  
+ .mew-caption {
+  /* size - 12px*/
+  font-size: 0.8571rem;
+  font-weight: 700; 
+  text-transform: uppercase;
+}
+
+.capitalize {
+  text-transform: capitalize !important;
+}
+
+.no-decoration {
+  text-decoration: none !important;
+}
+
+.mew-header-block {
+  color: var(--v-titlePrimary-base);
+  font-weight: bold;
+  margin-bottom: 15px;
+  padding-left: 10px;
+}
+
+.mew-label {
+  /* size - 12px,  height - 16px */
+  font-size: 0.8571rem;
+  font-weight: 400;
+} 
+  
+.mew-heading-4 {
+  /* size - 16px,  height - 24px */
+  font-size: 1.143rem; 
+  font-weight: 400;
+}
+  

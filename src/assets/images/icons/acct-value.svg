@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
+    <title>icon\</title>
+    <desc>Created with Sketch.</desc>
+    <g id="icon\" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="My-Account-value" transform="translate(3.000000, 13.000000)">
+            <g id="Group">
+                <path d="M58,28.7238095 C58,34.2150979 53.5484312,38.6666667 48.0571429,38.6666667 L9.94285714,38.6666667 C4.45156877,38.6666667 6.72488873e-16,34.2150979 0,28.7238095 L0,8 C-5.41083001e-16,3.581722 3.581722,8.11624501e-16 8,0 L50,0 C54.418278,-8.11624501e-16 58,3.581722 58,8 L58,28.7238095 Z" id="Combined-Shape" fill="#CDF4EE"></path>
+                <text id="$" font-family="LiGothicMed, Apple LiGothic" font-size="28" font-weight="400" line-spacing="30" fill="#05C0A5">
+                    <tspan x="5.82352941" y="27.1960784">$</tspan>
+                </text>
+                <g id="Group-5" transform="translate(22.000000, 12.000000)">
+                    <rect id="Rectangle" fill="#05C0A5" x="9.64561764e-13" y="2.05169215e-13" width="28.8823529" height="4.54901961" rx="2"></rect>
+                    <rect id="Rectangle" fill="#5A78F0" x="4.28101998e-13" y="10.2352941" width="22.0588235" height="4.54901961" rx="2"></rect>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

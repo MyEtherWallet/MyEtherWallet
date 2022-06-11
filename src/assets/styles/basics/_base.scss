@@ -1,0 +1,93 @@
+
+/**
+  * Global Classes
+  */
+a {
+  text-decoration: none;
+}
+
+.bg-white {
+  background-color: var(--v-white-base) !important;
+}
+
+.break-word {
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.no-display {
+  display: none;
+}
+
+.no-pointer-events {
+  pointer-events: none;
+}
+
+.all-pointer-events {
+  pointer-events: all;
+}
+
+.text-decoration-underline {
+  text-decoration: underline;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.full-max-width {
+  max-width: 100%;
+}
+
+.full-height {
+  height: 100%;
+}
+
+.column-reverse {
+  flex-direction: column-reverse;
+}
+
+.tooltip-inner {
+  background-color: var(--v-white-base) !important;
+  border: 1px solid var(--v-inputBorder-base) !important;
+  opacity: 1 !important;
+
+  &:after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    width: 1px;
+    z-index: 15;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid var(--v-inputBorder-base);
+  }
+
+  &:before {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    width: 1px;
+    z-index: 20;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid var(--v-white-base);
+  }
+}
+

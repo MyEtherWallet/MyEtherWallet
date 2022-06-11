@@ -49,6 +49,7 @@
 </template>
 
 <script>
+import MewOverlay from '@/components/MewOverlay/MewOverlay';
 import CreateWalletSoftwareOverview from './components/CreateWalletSoftwareOverview';
 import CreateWalletKeystore from './components/CreateWalletKeystore';
 import CreateWalletMnemonicPhrase from './components/CreateWalletMnemonicPhrase';
@@ -59,6 +60,7 @@ import handlerCreateWallet from './handlers/handlerCreateWallet';
 export default {
   name: 'ModuleCreateWalletSoftware',
   components: {
+    MewOverlay,
     CreateWalletSoftwareOverview,
     CreateWalletKeystore,
     CreateWalletMnemonicPhrase

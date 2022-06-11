@@ -1,0 +1,12 @@
+/**
+  * Global Button styles
+  */
+.v-application {
+  // v-btn (mew button)
+  .v-btn.mew-button {
+    text-transform: capitalize;
+    .v-btn__content {
+      max-width: 100%;
+    }
+  }
+}
