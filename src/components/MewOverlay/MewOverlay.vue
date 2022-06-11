@@ -1,22 +1,45 @@
 <template>
-  <!--
-  =====================================================================================
-    Mew Overlay
-  =====================================================================================
-  -->
-  <v-bottom-sheet :value="isOverlayShown" :fullscreen="true" persistent>
+  <!-- ===================================================================================== -->
+  <!-- Mew Overlay -->
+  <!-- ===================================================================================== -->
+  <v-bottom-sheet
+    :value="isOverlayShown"
+    :fullscreen="true"
+    persistent
+    content-class="mew-overlay"
+  >
     <v-sheet
       height="100%"
       color="emerald100"
       class="mew-overlay-container d-flex align-center flex-column"
     >
-      <!--
-  =====================================================================================
-    Mew Overlay action fab buttons (back and close)
-  =====================================================================================
-  -->
+      <div
+        v-if="isMobile"
+        class="mobile-title-block pa-4 d-flex align-center justify-space-between full-width"
+      >
+        <div style="min-width: 36px">
+          <v-btn v-if="back" icon color="textBlack2" @click="back">
+            <v-icon size="24"> mdi-arrow-left </v-icon>
+          </v-btn>
+        </div>
+        <h2
+          class="titlePrimary--text mx-4 text-center"
+          style="line-height: 26px"
+        >
+          {{ title }}
+        </h2>
+        <div style="min-width: 36px">
+          <v-btn v-if="close" icon color="textBlack2" @click="close">
+            <v-icon size="24" color="textBlack2"> mdi-close </v-icon>
+          </v-btn>
+        </div>
+      </div>
+
+      <!-- ===================================================================================== -->
+      <!-- Mew Overlay action fab buttons (back and close) -->
+      <!-- ===================================================================================== -->
       <v-btn
-        v-if="back"
+        v-if="back && !isMobile"
         top
         left
         absolute
@@ -32,7 +55,7 @@
         <v-icon size="24"> mdi-arrow-left </v-icon>
       </v-btn>
       <v-btn
-        v-if="close"
+        v-if="close && !isMobile"
         fab
         top
         right
@@ -49,11 +72,9 @@
         <v-icon size="24" color="textBlack2"> mdi-close </v-icon>
       </v-btn>
       <v-container :class="['ma-0 pa-0', isMobile ? 'full-height' : '']" fluid>
-        <!--
-  =====================================================================================
-    White sheet (displays on the overlay - size is based on the contentSize prop)
-  =====================================================================================
-  -->
+        <!-- ===================================================================================== -->
+        <!-- White sheet (displays on the overlay - size is based on the contentSize prop) -->
+        <!-- ===================================================================================== -->
         <v-row class="ma-0 pa-0 d-flex align-center justify-center flex-column">
           <v-sheet
             :width="isMobile ? '100%' : sheetWidth"
@@ -62,18 +83,12 @@
             :class="['white-sheet-container', isMobile ? 'mt-0' : 'mt-4']"
           >
             <div
-              :class="[
-                isMobile
-                  ? 'text-left pt-6 px-15 pb-3 mobile-title white'
-                  : 'text-center pa-8',
-                isMobile && !back ? 'pl-0' : ''
-              ]"
+              v-if="!isMobile"
+              :class="['text-center pa-8', isMobile && !back ? 'pl-0' : '']"
             >
-              <!--
-      =====================================================================================
-      Title displayed on white sheet
-      =====================================================================================
-      -->
+              <!-- ===================================================================================== -->
+              <!-- Title displayed on white sheet -->
+              <!-- ===================================================================================== -->
               <div
                 :class="[
                   'titlePrimary--text',
@@ -87,11 +102,10 @@
                 {{ title }}
               </div>
             </div>
-            <!--
-        =====================================================================================
-          Slot: used to place custom ui content
-        =====================================================================================
-        -->
+
+            <!-- ===================================================================================== -->
+            <!-- Slot: used to place custom ui content -->
+            <!-- ===================================================================================== -->
             <div
               :class="[
                 'd-flex flex-column align-center justify-center',
@@ -102,11 +116,10 @@
             </div>
           </v-sheet>
         </v-row>
-        <!--
-        =====================================================================================
-          Footer
-        =====================================================================================
-        -->
+
+        <!-- ===================================================================================== -->
+        <!-- Footer -->
+        <!-- ===================================================================================== -->
         <v-row justify="center" class="ma-0 py-8 footer-text">
           {{ footer.text }}
           <a
@@ -266,6 +279,13 @@ export default {
   }
   .mobile-btn {
     z-index: 99999;
+  }
+}
+
+.mew-overlay {
+  .mobile-title-block {
+    background-color: white;
+    border-bottom: 1px solid var(--v-greyLight-base);
   }
 }
 </style>

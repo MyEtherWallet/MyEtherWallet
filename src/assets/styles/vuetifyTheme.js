@@ -8,7 +8,7 @@ export default {
     },
     themes: {
       light: {
-      // new colors
+        // new colors
         backgroundWallet: '#F2F4FA',
         backgroundOverlay: '#F2FAFA',
         backgroundGrey: '#F8F9FB',
@@ -18,7 +18,7 @@ export default {
         textDark: '#192133',
         textMedium: '#5A678A',
         textLight: '#939FB9',
-        greyPrimary:'#5A678A',
+        greyPrimary: '#5A678A',
         greyMedium: '#D7DAE3',
         greyLight: '#F2F3F6',
         greenPrimary: '#05C0A5',
@@ -102,7 +102,7 @@ export default {
         surface: '#192133' // name from figma. not sure if its correct
       },
       dark: {
-      // new colors
+        // new colors
         backgroundWallet: '#000000',
         backgroundOverlay: '#000000',
         backgroundGrey: '#000000',
@@ -112,7 +112,7 @@ export default {
         textDark: '#CCD4E6',
         textMedium: '#626E86',
         textLight: '#3A4561',
-        greyPrimary:'#5A678A',
+        greyPrimary: '#5A678A',
         greyMedium: '#323D57',
         greyLight: '#263149',
         greenPrimary: '#06D9B9',
@@ -130,7 +130,7 @@ export default {
         disabledPrimary: '#606670',
         disabledMedium: '#383F4A',
         disabledLight: '#242D3E',
-      //old colors
+        //old colors
         primaryHover: '#1eb19b',
         primaryActive: '#56c5b4',
         primaryOutlineHover: '#03292c',
@@ -200,4 +200,4 @@ export default {
       }
     }
   }
-}
+};

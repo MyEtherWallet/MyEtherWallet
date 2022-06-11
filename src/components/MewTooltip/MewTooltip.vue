@@ -13,12 +13,8 @@
       color="titlePrimary--text"
       top
     >
-      <template v-slot:activator="{ on }"> 
-        <v-icon
-          class="cursor-pointer mew-body"
-          color="searchText"
-          v-on="on"
-        >
+      <template #activator="{ on }">
+        <v-icon class="cursor-pointer mew-body" color="searchText" v-on="on">
           mdi-information
         </v-icon>
         <slot name="activatorSlot" />
@@ -44,9 +40,9 @@ export default {
      * The max width for tooltip text.
      */
     maxWidth: {
-      type: [String , Number],
+      type: [String, Number],
       default: '100%'
     }
   }
-}
+};
 </script>
