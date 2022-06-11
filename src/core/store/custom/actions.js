@@ -4,6 +4,7 @@ import {
   formatIntegerValue
 } from '@/core/helpers/numberFormatHelper';
 import abi from '@/modules/balance/handlers/abiERC20.js';
+import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 
 const setCustomToken = function ({ rootGetters, commit }, token) {
   commit('SET_CUSTOM_TOKEN', { token, rootGetters });
@@ -54,7 +55,8 @@ const updateCustomTokenBalances = function ({ dispatch, getters, rootState }) {
           newToken.balancef = _getTokenBalance(res, item.decimals).value;
           newToken.balance = _getTokenBalance(newToken.balancef).value;
           dispatch('setCustomToken', newToken);
-        });
+        })
+        .catch(e => Toast(e.message, {}, ERROR));
     });
   }
 };
