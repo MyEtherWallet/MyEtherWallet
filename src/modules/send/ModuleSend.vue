@@ -148,7 +148,7 @@
                   :rules="dataRules"
                   :hide-clear-btn="data === '0x'"
                   class="mb-8"
-                  @keyup.native="verifyHexFormat"
+                  @focusout.native="verifyHexFormat"
                 />
               </div>
             </template>
@@ -546,7 +546,7 @@ export default {
       deep: true
     },
     data() {
-      if (!this.data) this.data = '0x';
+      //if (!this.data) this.data = '0x';
       if (isHexStrict(this.data)) this.sendTx.setData(this.data);
     },
     gasLimit(newVal) {
