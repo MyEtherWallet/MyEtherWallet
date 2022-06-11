@@ -15,19 +15,19 @@
     >
       <div
         v-if="isMobile"
-        class="mobile-title-block pa-4 d-flex align-center justify-space-between full-width"
+        class="mobile-title-block pa-3 d-flex align-center justify-space-between full-width"
       >
         <div style="min-width: 36px">
           <v-btn v-if="back" icon color="textBlack2" @click="back">
             <v-icon size="24"> mdi-arrow-left </v-icon>
           </v-btn>
         </div>
-        <h2
+        <h3
           class="titlePrimary--text mx-4 text-center"
-          style="line-height: 26px"
+          style="line-height: 21px"
         >
           {{ title }}
-        </h2>
+        </h3>
         <div style="min-width: 36px">
           <v-btn v-if="close" icon color="textBlack2" @click="close">
             <v-icon size="24" color="textBlack2"> mdi-close </v-icon>
@@ -275,7 +275,7 @@ export default {
     z-index: 9999;
   }
   .mobile-content {
-    margin-top: 68px;
+    //margin-top: 68px;
   }
   .mobile-btn {
     z-index: 99999;
@@ -284,8 +284,8 @@ export default {
 
 .mew-overlay {
   .mobile-title-block {
-    background-color: white;
-    border-bottom: 1px solid var(--v-greyLight-base);
+    background-color: var(--v-greyLight-base);
+    //border-bottom: 1px solid var(--v-greyLight-base);
   }
 }
 </style>
