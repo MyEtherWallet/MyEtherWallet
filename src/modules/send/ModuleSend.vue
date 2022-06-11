@@ -546,7 +546,6 @@ export default {
       deep: true
     },
     data() {
-      //if (!this.data) this.data = '0x';
       if (isHexStrict(this.data)) this.sendTx.setData(this.data);
     },
     gasLimit(newVal) {
