@@ -415,8 +415,10 @@ export default {
       return false;
     },
     dataRules() {
+      console.log('data rules called!');
       return [
         value => {
+          console.log('value', value);
           return isHexStrict(value);
         }
       ];
@@ -546,6 +548,7 @@ export default {
       deep: true
     },
     data() {
+      if (!this.data) this.data = '0x';
       if (isHexStrict(this.data)) this.sendTx.setData(this.data);
     },
     gasLimit(newVal) {
