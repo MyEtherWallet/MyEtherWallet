@@ -146,9 +146,10 @@
                   :label="$t('sendTx.add-data')"
                   placeholder="0x..."
                   :rules="dataRules"
+                  :error-messages="dataInvalidHexMessage"
                   :hide-clear-btn="data === '0x'"
                   class="mb-8"
-                  @focusout.native="verifyHexFormat"
+                  @keyup.native="verifyHexFormat"
                 />
               </div>
             </template>
@@ -269,7 +270,8 @@ export default {
         this.feeError !== '' ||
         !this.isValidGasLimit ||
         !this.allValidInputs ||
-        !this.gasEstimationIsReady
+        !this.gasEstimationIsReady ||
+        !isHexStrict(this.data)
       );
     },
     buyMoreStr() {
@@ -418,10 +420,15 @@ export default {
       console.log('data rules called!');
       return [
         value => {
-          console.log('value', value);
           return isHexStrict(value);
         }
       ];
+    },
+    dataInvalidHexMessage() {
+      if (isHexStrict(this.data)) {
+        return '';
+      }
+      return 'Invalid hex data';
     },
     isEthNetwork() {
       return this.network.type.name === ETH.name;
