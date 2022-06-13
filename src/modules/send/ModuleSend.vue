@@ -150,6 +150,7 @@
                   :hide-clear-btn="data === '0x'"
                   class="mb-8"
                   @keyup.native="verifyHexFormat"
+                  @focusout.native="verifyHexFormat"
                 />
               </div>
             </template>
@@ -417,7 +418,6 @@ export default {
       return false;
     },
     dataRules() {
-      console.log('data rules called!');
       return [
         value => {
           return isHexStrict(value);
@@ -595,7 +595,7 @@ export default {
   },
   methods: {
     verifyHexFormat() {
-      if (!this.data) {
+      if (!this.data || isEmpty(this.data)) {
         this.data = '0x';
         return;
       }
