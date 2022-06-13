@@ -29,7 +29,9 @@ export const knownErrors = {
     'or querying a node which is not fully synced.',
   'ENS is not supported': 'ENS is not supported on network private',
   '未能完成该操作。无效的自变量':
-    'The operation could not be completed. Invalid argument.'
+    'The operation could not be completed. Invalid argument.',
+  'Error: TypeError: Origin https://www.myetherwallet.com is not allowed by Access-Control-Allow-Origin.':
+    'CORS Request cannot be made due to security reasons'
 };
 
 const handleError = err => {
