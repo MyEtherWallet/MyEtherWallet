@@ -29,7 +29,9 @@ export const knownErrors = {
     'or querying a node which is not fully synced.',
   'ENS is not supported': 'ENS is not supported on network private',
   '未能完成该操作。无效的自变量':
-    'The operation could not be completed. Invalid argument.'
+    'The operation could not be completed. Invalid argument.',
+  'JsonRpcEngine: Response has no error or result for request':
+    'Unexpected response from request. Please try again.'
 };
 
 const handleError = err => {
