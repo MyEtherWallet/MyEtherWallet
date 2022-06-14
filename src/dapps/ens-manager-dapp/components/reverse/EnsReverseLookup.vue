@@ -19,22 +19,27 @@
 
     <mew-select
       v-else-if="hasDomains"
+      :value="selectedDomain"
       class="d-flex justify-space-between align-center mb-5 pr-5"
       filter-placeholder="Search for Domain"
       :items="domainListItems"
+      @input="setDomain"
     >
     </mew-select>
-    <!-- <mew-button
-        title="Register"
-        btn-size="medium"
-        @click.native="setReverseRecord(domain)"
-      /> -->
+    <mew-button
+      title="Register"
+      btn-size="medium"
+      @click.native="setReverseRecord(selectedDomain)"
+    />
   </div>
 </template>
 
 <script>
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { isEmpty } from 'lodash';
+import ENS from 'ethereum-ens';
+import { mapGetters, mapState } from 'vuex';
+import PermanentNameModule from '../../handlers/handlerPermanentName';
 export default {
   name: 'EnsReverseLookup',
   props: {
@@ -50,16 +55,38 @@ export default {
   data() {
     return {
       ensLookupResults: null,
-      hasDomains: false
+      hasDomains: false,
+      selectedDomain: {},
+      permHandler: {}
     };
   },
   computed: {
+    ...mapGetters('global', [
+      'network',
+      'gasPrice',
+      'gasPriceByType',
+      'getFiatValue'
+    ]),
+    ...mapGetters('external', ['fiatValue']),
+    ...mapState('wallet', ['balance', 'address', 'web3']),
+    ...mapState('global', ['gasPriceType']),
+    ...mapState('wallet', ['balance', 'address', 'web3', 'instance']),
     domainListItems() {
       return this.ensLookupResults || [];
     }
   },
   async mounted() {
     await this.findDomainByAddress();
+    const ens = this.network.type.ens
+      ? new ENS(this.web3.currentProvider, this.network.type.ens.registry)
+      : null;
+    this.permHandler = new PermanentNameModule(
+      this.name,
+      this.network,
+      this.address,
+      this.web3,
+      ens
+    );
   },
   methods: {
     async fetchDomains() {
@@ -76,18 +103,25 @@ export default {
             value: item.name
           };
         });
+        console.log('ensLookupResults:', this.ensLookupResults);
       } catch (e) {
         Toast(e, {}, ERROR);
       }
+    },
+    setDomain(value) {
+      this.selectedDomain = value;
+    },
+    async setReverseRecord(domain) {
+      try {
+        const reverseRecord = await this.permHandler.setNameReverseRecord(
+          domain.name
+        );
+        return reverseRecord;
+      } catch (e) {
+        console.error(e);
+        Toast(e, {}, ERROR);
+      }
     }
-    // async setReverseRecord(domain) {
-    //   try {
-    //     const reverseRecord = await domain.setNameReverseRecord(domain.name);
-    //     return reverseRecord;
-    //   } catch (e) {
-    //     Toast(e, {}, ERROR);
-    //   }
-    // }
   }
 };
 </script>
