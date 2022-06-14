@@ -513,8 +513,8 @@ const getRoundNumber = (value, round, hasTrailingZeros = false) => {
 const toBNSafe = number => {
   if (isNaN(number) || isNull(number) || isUndefined(number) || number === '')
     number = 0;
-  const tempBN = new BigNumber(number).toFixed(0);
-  if (isNaN(tempBN)) number = new BigNumber(0).toFixed(0);
+  let tempBN = new BigNumber(number).toFixed(0);
+  if (tempBN.isNaN()) tempBN = new BigNumber(0).toFixed(0);
   number = toBN(tempBN);
   return number;
 };
