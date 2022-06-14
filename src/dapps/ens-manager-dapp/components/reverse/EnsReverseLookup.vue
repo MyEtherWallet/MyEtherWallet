@@ -18,22 +18,23 @@
     </div>
 
     <mew-select
-      v-else
+      v-else-if="hasDomains"
       class="d-flex justify-space-between align-center mb-5 pr-5"
       filter-placeholder="Search for Domain"
-      :items="ensLookupResults"
+      :items="domainListItems"
     >
-      <mew-button
+    </mew-select>
+    <!-- <mew-button
         title="Register"
         btn-size="medium"
         @click.native="setReverseRecord(domain)"
-      />
-    </mew-select>
+      /> -->
   </div>
 </template>
 
 <script>
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+import { isEmpty } from 'lodash';
 export default {
   name: 'EnsReverseLookup',
   props: {
@@ -52,27 +53,24 @@ export default {
       hasDomains: false
     };
   },
-  watch: {
-    ensLookupResults(newVal) {
-      console.log('newVal:', newVal);
+  computed: {
+    domainListItems() {
+      return this.ensLookupResults || [];
     }
   },
-  mounted() {
-    this.findDomainByAddress();
+  async mounted() {
+    await this.findDomainByAddress();
   },
   methods: {
+    async fetchDomains() {
+      return await this.ensManager.getAllNamesForReverseLookup(this.address);
+    },
     async findDomainByAddress() {
-      this.hasDomains = true;
       try {
-        const lookupDomains = await this.ensManager.getAllNamesForReverseLookup(
-          this.address
-        );
-        if (lookupDomains.length === 0) {
-          this.hasDomains = false;
-        } else {
-          this.hasDomains = true;
-        }
-        this.ensLookupResults = lookupDomains.map(item => {
+        this.hasDomains = true;
+        const domains = await this.fetchDomains();
+        if (isEmpty(domains)) this.hasDomains = false;
+        this.ensLookupResults = domains.map(item => {
           return {
             name: item.name,
             value: item.name
@@ -81,15 +79,15 @@ export default {
       } catch (e) {
         Toast(e, {}, ERROR);
       }
-    },
-    async setReverseRecord(domain) {
-      try {
-        const reverseRecord = await domain.setNameReverseRecord(domain.name);
-        return reverseRecord;
-      } catch (e) {
-        Toast(e, {}, ERROR);
-      }
     }
+    // async setReverseRecord(domain) {
+    //   try {
+    //     const reverseRecord = await domain.setNameReverseRecord(domain.name);
+    //     return reverseRecord;
+    //   } catch (e) {
+    //     Toast(e, {}, ERROR);
+    //   }
+    // }
   }
 };
 </script>
