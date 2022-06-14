@@ -76,7 +76,6 @@ export default {
     });
 
     this.poolContract = this.lendingPool.getContractInstance(LENDING_POOL);
-    console.log('aave', this.poolContract);
   },
   apollo: {
     $subscribe: {
@@ -169,9 +168,10 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['address', 'web3']),
+    ...mapState('global', ['gasPriceType']),
     ...mapGetters('wallet', ['tokensList']),
     ...mapGetters('external', ['contractToToken']),
-    ...mapGetters('global', ['getFiatValue']),
+    ...mapGetters('global', ['getFiatValue', 'gasPriceByType']),
     userReservesData() {
       return this.userSummary.userReservesData;
     },
@@ -206,6 +206,7 @@ export default {
      * Deposit funds
      */
     async onDeposit({ amount, reserve, referralCode, user }) {
+      console.log(this.poolContract);
       try {
         const txData = await this.poolContract.populateTransaction.deposit(
           reserve,
@@ -213,7 +214,14 @@ export default {
           user,
           referralCode
         );
-        this.formatTxData(txData);
+        const gas = await this.poolContract.estimateGas.deposit(
+          reserve,
+          amount,
+          user,
+          referralCode
+        );
+        console.log(gas, txData);
+        // this.formatTxData(txData, gas);
       } catch (e) {
         throw new Error(e);
       }
@@ -313,27 +321,34 @@ export default {
      * or errors out
      */
     formatTxData(txData) {
-      // if (txData.length > 0) {
-      //   txData.forEach(data => {
-      //     txArr.push(data.tx);
-      //   });
-      // }
-      this.sendTransaction({
-        from: this.address,
-        gas: '0x5208',
-        to: txData.to,
-        data: txData.data
-      })
-        .then(() => {
-          Toast(
-            'Success! Your transaction will be displayed shortly',
-            {},
-            SUCCESS
-          );
-        })
-        .catch(err => {
-          Toast(err, {}, ERROR);
-        });
+      try {
+        const tx = {
+          from: this.address,
+          to: txData.to,
+          data: txData.data,
+          gas: '0x5208',
+          value: '0',
+          gasPrice: this.gasPriceByType(this.gasPriceType)
+        };
+        console.log(tx);
+        // this.web3.eth.estimateGas(tx).then(res => {
+        // tx['gas'] = res;
+        this.sendTransaction(tx)
+          .then(() => {
+            Toast(
+              'Success! Your transaction will be displayed shortly',
+              {},
+              SUCCESS
+            );
+          })
+          .catch(err => {
+            console.log(err);
+            Toast(err, {}, ERROR);
+          });
+        // });
+      } catch (e) {
+        Toast(e, {}, ERROR);
+      }
     },
     /**
      * Sends the tx

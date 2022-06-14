@@ -164,9 +164,6 @@ export default {
                   : this.tokensList.find(balance => {
                       if (item.symbol === balance.symbol) return balance;
                     });
-              if (findBalance) {
-                console.log(findBalance, 'foundBalance');
-              }
               const userBalance = findBalance ? findBalance.balancef : 0;
               const depositObj = Object.assign({}, AAVE_TABLE_BUTTON.deposit);
               depositObj.disabled = BigNumber(userBalance).lte(0);
