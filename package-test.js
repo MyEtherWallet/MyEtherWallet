@@ -2,8 +2,8 @@
 // to date. If dependencies are too outdated, exit with an error, failing `npm
 // run update:packages` and thus eventually the entire build.
 
-const package = require('./package.json');
-const packageJson = require('package-json');
+const package = import('./package.json');
+const packageJson = import('package-json');
 const SAFE_TIME = 1000 * 1 * 60 * 60 * 24 * 7; //7days
 // webpack has a major update
 // copy-webpack-plugin major update
@@ -57,10 +57,7 @@ const EXCEPTIONS = [
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
 };
-const ALL_PACKAGES = Object.assign(
-  package.dependencies,
-  package.devDependencies
-);
+const ALL_PACKAGES = Object(package.dependencies, package.devDependencies);
 const names = Object.keys(ALL_PACKAGES);
 let updatesFound = false;
 const looper = () => {
