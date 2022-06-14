@@ -1,7 +1,7 @@
 <template>
   <tippy-component
     class="mew-tooltip"
-    style="display: inline-block; line-height: initial"
+    style="line-height: 1px"
     arrow
     theme="light"
     :max-width="maxWidth"
@@ -12,10 +12,8 @@
       <v-icon v-if="!hideIcon" class="cursor-pointer" color="searchText" small>
         mdi-information
       </v-icon>
-
       <slot name="activatorSlot" />
     </template>
-
     <!-- Popover content -->
     <slot name="contentSlot" />
   </tippy-component>
@@ -23,7 +21,6 @@
 
 <script>
 import { TippyComponent } from 'vue-tippy';
-
 export default {
   name: 'MewTooltip',
   components: {
@@ -47,6 +44,9 @@ export default {
 </script>
 
 <style lang="scss">
+.mew-tooltip > div {
+  display: inline-block;
+}
 .tippy-tooltip.light-theme {
   background-color: rgb(255, 255, 255);
   color: initial;

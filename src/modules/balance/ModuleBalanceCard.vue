@@ -137,41 +137,33 @@
             QR CODE
           =====================================================================================
           -->
-          <mew-tooltipp text="Show QR Code for public address" hide-icon>
-            <template #activatorSlot>
-              <v-btn
-                class="info-container--action-btn mr-2 px-0"
-                fab
-                depressed
-                color="white"
-                @click="openQR = true"
-              >
-                <v-icon class="info-container--icon" size="18px">
-                  mdi-qrcode
-                </v-icon>
-              </v-btn>
-            </template>
-          </mew-tooltipp>
+          <v-btn
+            class="info-container--action-btn mr-2 px-0"
+            fab
+            depressed
+            color="white"
+            @click="openQR = true"
+          >
+            <v-icon class="info-container--icon" size="18px">
+              mdi-qrcode
+            </v-icon>
+          </v-btn>
           <!--
           =====================================================================================
             Copy Button
           =====================================================================================
           -->
-          <mew-tooltipp text="Copy public address to clipboard" hide-icon>
-            <template #activatorSlot>
-              <v-btn
-                class="info-container--action-btn px-0"
-                depressed
-                fab
-                color="white"
-                @click="copyAddress"
-              >
-                <v-icon class="info-container--icon" small>
-                  mdi-content-copy
-                </v-icon>
-              </v-btn>
-            </template>
-          </mew-tooltipp>
+          <v-btn
+            class="info-container--action-btn px-0"
+            depressed
+            fab
+            color="white"
+            @click="copyAddress"
+          >
+            <v-icon class="info-container--icon" small>
+              mdi-content-copy
+            </v-icon>
+          </v-btn>
         </div>
       </div>
     </div>
