@@ -2,8 +2,8 @@
 // to date. If dependencies are too outdated, exit with an error, failing `npm
 // run update:packages` and thus eventually the entire build.
 
-const package = import('./package.json');
-const packageJson = import('package-json');
+const package = require('./package.json');
+const packageJson = require('package-json');
 const SAFE_TIME = 1000 * 1 * 60 * 60 * 24 * 7; //7days
 // webpack has a major update
 // copy-webpack-plugin major update
@@ -52,12 +52,13 @@ const EXCEPTIONS = [
   'vue',
   'trezor-connect', // currently in beta
   '@shapeshiftoss/hdwallet-core',
-  '@shapeshiftoss/hdwallet-keepkey-webusb'
+  '@shapeshiftoss/hdwallet-keepkey-webusb',
+  'package-json'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
 };
-const ALL_PACKAGES = Object(
+const ALL_PACKAGES = Object.assign(
   package.dependencies,
   package.devDependencies
 );
