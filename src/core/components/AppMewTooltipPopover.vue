@@ -47,13 +47,30 @@ export default {
 .mew-tooltip > div {
   display: inline-block;
 }
+
 .tippy-tooltip.light-theme {
   background-color: rgb(255, 255, 255);
   color: initial;
-  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.4);
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #dadada;
+  padding: 10px;
+
   .tippy-arrow {
     border-top-color: rgb(255, 255, 255);
   }
+
+  .tippy-arrow::after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    border-color: transparent;
+    border-style: solid;
+    border-top-color: #dadada;
+    border-width: 7px 7px 0;
+    top: -6px;
+    left: -7px;
+  }
+
   .tippy-content {
     word-break: break-all;
   }
