@@ -41,6 +41,9 @@ import apolloProvider from './apolloProvider';
 import i18n from './i18n';
 import * as locStore from 'store';
 
+import AppMewTooltipPopover from '@/core/components/AppMewTooltipPopover.vue';
+Vue.component('MewTooltipp', AppMewTooltipPopover);
+
 // Directives
 Vue.directive('lottie', LottieAnimation);
 

@@ -72,11 +72,10 @@
             </v-list>
           </v-menu>
           <!-- ===================================================================================== -->
-          <!-- Full wallet address popover -->
+          <!-- Wallet address popover -->
           <!-- ===================================================================================== -->
-          <app-mew-tooltip-popover :content="getChecksumAddressString">
-            <!-- Popover trigger -->
-            <template #trigger>
+          <mew-tooltipp hide-icon>
+            <template #activatorSlot>
               <div
                 class="justify-start d-flex align-center info-container--addr monospace"
               >
@@ -87,7 +86,10 @@
                 {{ addrlastFour }}
               </div>
             </template>
-          </app-mew-tooltip-popover>
+            <template #contentSlot>
+              <div class="monospace">{{ getChecksumAddressString }}</div>
+            </template>
+          </mew-tooltipp>
         </div>
       </div>
       <!--
@@ -135,31 +137,41 @@
             QR CODE
           =====================================================================================
           -->
-          <v-btn
-            class="info-container--action-btn mr-2 px-0"
-            fab
-            depressed
-            color="white"
-            @click="openQR = true"
-            ><v-icon class="info-container--icon" size="18px"
-              >mdi-qrcode</v-icon
-            ></v-btn
-          >
+          <mew-tooltipp text="Show QR Code for public address" hide-icon>
+            <template #activatorSlot>
+              <v-btn
+                class="info-container--action-btn mr-2 px-0"
+                fab
+                depressed
+                color="white"
+                @click="openQR = true"
+              >
+                <v-icon class="info-container--icon" size="18px">
+                  mdi-qrcode
+                </v-icon>
+              </v-btn>
+            </template>
+          </mew-tooltipp>
           <!--
           =====================================================================================
             Copy Button
           =====================================================================================
           -->
-          <v-btn
-            class="info-container--action-btn px-0"
-            depressed
-            fab
-            color="white"
-            @click="copyAddress"
-            ><v-icon class="info-container--icon" small
-              >mdi-content-copy</v-icon
-            ></v-btn
-          >
+          <mew-tooltipp text="Copy public address to clipboard" hide-icon>
+            <template #activatorSlot>
+              <v-btn
+                class="info-container--action-btn px-0"
+                depressed
+                fab
+                color="white"
+                @click="copyAddress"
+              >
+                <v-icon class="info-container--icon" small>
+                  mdi-content-copy
+                </v-icon>
+              </v-btn>
+            </template>
+          </mew-tooltipp>
         </div>
       </div>
     </div>
@@ -236,7 +248,6 @@
 </template>
 
 <script>
-import AppMewTooltipPopover from '@/core/components/AppMewTooltipPopover';
 import anime from 'animejs/lib/anime.es.js';
 import AppModal from '@/core/components/AppModal';
 import AppAddrQr from '@/core/components/AppAddrQr';
@@ -254,7 +265,6 @@ import WALLET_TYPES from '../access-wallet/common/walletTypes';
 
 export default {
   components: {
-    AppMewTooltipPopover,
     BalanceAddressPaperWallet,
     AppModal,
     AppAddrQr,
