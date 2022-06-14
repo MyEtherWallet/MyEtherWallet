@@ -98,6 +98,7 @@
     "vue-apollo": "3.1.0",
     "vue-router": "3.5.3",
     "vue-social-sharing": "3.0.9",
+    "vue-tippy": "^4.13.0",
     "vuex": "3.6.2",
     "walletlink": "2.5.0"
   },

@@ -71,24 +71,23 @@
               </v-list-item>
             </v-list>
           </v-menu>
-          <div class="d-flex align-center">
-            <v-tooltip top content-class="tooltip-inner">
-              <template #activator="{ on }">
-                <div
-                  class="justify-start d-flex align-center info-container--addr monospace"
-                  v-on="on"
-                >
-                  {{ addrFirstSix }}
-                  <v-icon class="info-container--addr pt-1"
-                    >mdi-dots-horizontal</v-icon
-                  >
-
-                  {{ addrlastFour }}
-                </div>
-              </template>
-              <span class="textDark--text">{{ getChecksumAddressString }}</span>
-            </v-tooltip>
-          </div>
+          <!-- ===================================================================================== -->
+          <!-- Full wallet address popover -->
+          <!-- ===================================================================================== -->
+          <app-mew-tooltip-popover :content="getChecksumAddressString">
+            <!-- Popover trigger -->
+            <template #trigger>
+              <div
+                class="justify-start d-flex align-center info-container--addr monospace"
+              >
+                {{ addrFirstSix }}
+                <v-icon class="info-container--addr pt-1">
+                  mdi-dots-horizontal
+                </v-icon>
+                {{ addrlastFour }}
+              </div>
+            </template>
+          </app-mew-tooltip-popover>
         </div>
       </div>
       <!--
@@ -237,6 +236,7 @@
 </template>
 
 <script>
+import AppMewTooltipPopover from '@/core/components/AppMewTooltipPopover';
 import anime from 'animejs/lib/anime.es.js';
 import AppModal from '@/core/components/AppModal';
 import AppAddrQr from '@/core/components/AppAddrQr';
@@ -254,6 +254,7 @@ import WALLET_TYPES from '../access-wallet/common/walletTypes';
 
 export default {
   components: {
+    AppMewTooltipPopover,
     BalanceAddressPaperWallet,
     AppModal,
     AppAddrQr,
