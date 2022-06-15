@@ -151,7 +151,9 @@
                     />
                     <v-progress-circular
                       v-show="
-                        !isBatch && Object.keys(signedTxObject).length === 0
+                        !isBatch &&
+                        signedTxObject &&
+                        Object.keys(signedTxObject).length === 0
                       "
                       indeterminate
                       color="greenPrimary"
@@ -161,7 +163,9 @@
                     />
                     <v-icon
                       v-show="
-                        !isBatch && Object.keys(signedTxObject).length !== 0
+                        !isBatch &&
+                        signedTxObject &&
+                        Object.keys(signedTxObject).length !== 0
                       "
                       color="greenPrimary"
                     >
