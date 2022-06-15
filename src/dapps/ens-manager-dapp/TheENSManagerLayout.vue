@@ -248,7 +248,12 @@
           class="px-3 py-8 py-md-13 mx-auto"
         >
           <div>
-            <ens-reverse-lookup :address="address" :ens-manager="ensManager" />
+            <ens-reverse-lookup
+              :address="address"
+              :ens-manager="ensManager"
+              :name="name"
+              :duration-pick="durationPick"
+            />
           </div>
         </v-sheet>
       </template>

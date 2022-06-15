@@ -41,10 +41,10 @@ export default class PermanentNameModule extends ENSManagerInterface {
     return this._registerWithDuration(duration, balance);
   }
 
-  async setNameReverseRecord(domain) {
+  async setNameReverseRecord(nameHash, domain) {
     try {
       const setReverse = await this.publicResolverContract.methods
-        .setName(this.nameHash, domain)
+        .setName(nameHash, domain)
         .send({ from: this.address });
       return setReverse;
     } catch (e) {

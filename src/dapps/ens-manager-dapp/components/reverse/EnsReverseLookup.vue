@@ -17,20 +17,21 @@
       </mew-alert>
     </div>
 
-    <mew-select
-      v-else-if="hasDomains"
-      :value="selectedDomain"
-      class="d-flex justify-space-between align-center mb-5 pr-5"
-      filter-placeholder="Search for Domain"
-      :items="domainListItems"
-      @input="setDomain"
-    >
-    </mew-select>
-    <mew-button
-      title="Register"
-      btn-size="medium"
-      @click.native="setReverseRecord(selectedDomain)"
-    />
+    <div v-else-if="hasDomains" class="d-flex justify-space-between">
+      <mew-select
+        :value="selectedDomain"
+        filter-placeholder="Search for Domain"
+        :items="domainListItems"
+        @input="setDomain"
+      >
+      </mew-select>
+      <mew-button
+        title="Register"
+        class="set-button"
+        btn-size="xlarge"
+        @click.native="setReverseRecord(selectedDomain)"
+      />
+    </div>
   </div>
 </template>
 
@@ -44,6 +45,14 @@ export default {
   name: 'EnsReverseLookup',
   props: {
     address: {
+      default: '',
+      type: String
+    },
+    name: {
+      default: '',
+      type: String
+    },
+    durationPick: {
       default: '',
       type: String
     },
@@ -68,9 +77,8 @@ export default {
       'getFiatValue'
     ]),
     ...mapGetters('external', ['fiatValue']),
-    ...mapState('wallet', ['balance', 'address', 'web3']),
     ...mapState('global', ['gasPriceType']),
-    ...mapState('wallet', ['balance', 'address', 'web3', 'instance']),
+    ...mapState('wallet', ['balance', 'web3', 'instance']),
     domainListItems() {
       return this.ensLookupResults || [];
     }
@@ -82,10 +90,11 @@ export default {
       : null;
     this.permHandler = new PermanentNameModule(
       this.name,
-      this.network,
       this.address,
+      this.network,
       this.web3,
-      ens
+      ens,
+      this.durationPick
     );
   },
   methods: {
@@ -100,10 +109,9 @@ export default {
         this.ensLookupResults = domains.map(item => {
           return {
             name: item.name,
-            value: item.name
+            value: item.nameHash
           };
         });
-        console.log('ensLookupResults:', this.ensLookupResults);
       } catch (e) {
         Toast(e, {}, ERROR);
       }
@@ -111,17 +119,22 @@ export default {
     setDomain(value) {
       this.selectedDomain = value;
     },
-    async setReverseRecord(domain) {
+    async setReverseRecord(chosenDomain) {
       try {
         const reverseRecord = await this.permHandler.setNameReverseRecord(
-          domain.name
+          chosenDomain.value.toString(),
+          chosenDomain.name
         );
         return reverseRecord;
       } catch (e) {
-        console.error(e);
         Toast(e, {}, ERROR);
       }
     }
   }
 };
 </script>
+<style lang="scss" scoped>
+.set-button {
+  margin-left: 10px;
+}
+</style>
