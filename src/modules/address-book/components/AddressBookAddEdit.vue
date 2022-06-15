@@ -150,6 +150,7 @@ export default {
       ];
     },
     validAddress() {
+      if (this.addressToAdd.length > 94) return false;
       return this.resolvedAddr.length > 0
         ? isAddress(this.resolvedAddr) || isValidCoinAddress(this.resolvedAddr)
         : isAddress(this.addressToAdd) || isValidCoinAddress(this.addressToAdd);
