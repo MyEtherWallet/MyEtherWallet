@@ -22,7 +22,7 @@ export const knownErrors = {
   "TypeError: Cannot read properties of null (reading 'errorHandler')":
     'There was an error signing transaction with this wallet',
   "Returned values aren't valid, did it run Out of Gas?":
-    'Unexpected token value. Please refresh and try again.',
+    "Returned values aren't valid, did it run Out of Gas?",
   'ENS is not supported': 'ENS is not supported on network private',
   '未能完成该操作。无效的自变量':
     'The operation could not be completed. Invalid argument.'
