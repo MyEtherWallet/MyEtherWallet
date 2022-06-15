@@ -7,7 +7,10 @@ module.exports = [
   'http://localhost:8178',
   'ws://127.0.0.1:8178',
   'https://o382951.ingest.sentry.io:443',
-  'https://estimategas.mewapi.io:443',
+  'https://estimategas.mewapi.io:443/eth',
+  'https://estimategas.mewapi.io:443/bsc',
+  'https://estimategas.mewapi.io:443/matic',
+  'https://estimategas.mewapi.io:443/goerli',
   'https://api.ethvm.com:443',
   'wss://apiws.ethvm.com:443',
   'https://nft.mewapi.io:443',
@@ -53,13 +56,13 @@ module.exports = [
   // Dapps
   'https://staked.mewapi.io:443', // staked
   'https://stakedtest.mewapi.io:443', // staked
-  'https://api.stakewise.io:443', // stakewise
-  'https://api.stakewise.io:443/pool-stats', //stakewise pool
   'https://ethblocksapi.mewapi.io:443', // Eth Blocks
   'https://unstoppabledomains.com:443', // unstoppable
   'wss://api.thegraph.com/subgraphs/name/aave/', // Aave
   'https://api.thegraph.com:443/subgraphs/name/aave/', // Aave
   'https://protocol-api.aave.com:443', // Aave
   'https://api.thegraph.com:443/subgraphs/name/ensdomains/', // ENS
-  'https://s3.us-west-2.amazonaws.com:443/mew-ipfs-bucket' // ENS
+  'https://s3.us-west-2.amazonaws.com:443/mew-ipfs-bucket', // ENS
+  'https://api.stakewise.io:443', // stakewise
+  'https://api.stakewise.io:443/pool-stats' // stakewise pool
 ];
