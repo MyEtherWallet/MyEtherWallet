@@ -30,6 +30,8 @@ module.exports = [
   'wss://mewws.blocksscan.io:443/ws',
   'wss://www.ethercluster.com:443',
   'wss://node1.mintme.com:443/ws',
+  'wss://wss.api.moonriver.moonbeam.network:443',
+  'wss://wss.api.moonbeam.network:443',
   // intercom stuff
   'api-iam.intercom.io:443',
   'https://api.zilliqa.com:443',
