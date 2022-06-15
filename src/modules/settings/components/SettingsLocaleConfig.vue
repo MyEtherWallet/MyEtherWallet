@@ -16,7 +16,6 @@
 </template>
 
 <script>
-import { debounce } from 'vuetify/lib/util/helpers';
 import { mapActions, mapState } from 'vuex';
 import currencyList from './currencyList';
 export default {
@@ -50,10 +49,8 @@ export default {
     ...mapActions('global', ['setLocale', 'setPreferredCurrency']),
     ...mapActions('external', ['setCurrency']),
     setCurrencyType(value) {
-      debounce(() => {
-        this.setPreferredCurrency(value.value);
-        this.setCurrency(value.value);
-      }, 1000);
+      this.setPreferredCurrency(value.value);
+      this.setCurrency(value.value);
     }
   }
 };
