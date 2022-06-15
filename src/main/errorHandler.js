@@ -27,6 +27,7 @@ export const knownErrors = {
     'correct ABI for the contract you are retrieving data from, ' +
     'requesting data from a block number that does not exist, ' +
     'or querying a node which is not fully synced.',
+  'ENS is not supported': 'ENS is not supported on network private',
   '未能完成该操作。无效的自变量':
     'The operation could not be completed. Invalid argument.',
   "Cannot read properties of undefined (reading 'click')": ''
