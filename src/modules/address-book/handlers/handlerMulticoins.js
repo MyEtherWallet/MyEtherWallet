@@ -141,10 +141,10 @@ const supportedCoins = [
 function isValidCoinAddress(address) {
   for (const coin of supportedCoins) {
     if (WAValidator.validate(address, coin)) {
-      return true;
+      return { coin: coin, valid: true };
     }
   }
-  return false;
+  return { coin: '', valid: false };
 }
 
 export { isValidCoinAddress };

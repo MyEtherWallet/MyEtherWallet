@@ -12,6 +12,8 @@
       :placeholder="$t('interface.address-book.enter-addr')"
       :value="addressToAdd"
       :rules="addressRules"
+      :persistent-hint="validAddress"
+      :hint="coin"
       autofocus
       :resolved-addr="resolvedAddr"
       @input="setAddress"
@@ -152,8 +154,20 @@ export default {
     validAddress() {
       if (this.addressToAdd.length > 94) return false;
       return this.resolvedAddr.length > 0
-        ? isAddress(this.resolvedAddr) || isValidCoinAddress(this.resolvedAddr)
-        : isAddress(this.addressToAdd) || isValidCoinAddress(this.addressToAdd);
+        ? isAddress(this.resolvedAddr) ||
+            isValidCoinAddress(this.resolvedAddr).valid
+        : isAddress(this.addressToAdd) ||
+            isValidCoinAddress(this.addressToAdd).valid;
+    },
+    coin() {
+      if (!this.validAddress) return '';
+      return (
+        'Valid ' +
+        (this.resolvedAddr.length > 0
+          ? isValidCoinAddress(this.resolvedAddr).coin
+          : isValidCoinAddress(this.addressToAdd).coin) +
+        ' address'
+      );
     },
     editMode() {
       return this.mode === modes[1];
