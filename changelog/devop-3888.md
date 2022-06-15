@@ -1,1 +1,1 @@
-* added debounce to currency setting
+* added catch for edge case for v-select
