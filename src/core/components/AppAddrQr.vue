@@ -64,7 +64,7 @@
 <script>
 import anime from 'animejs/lib/anime.es.js';
 import clipboardCopy from 'clipboard-copy';
-import { Toast, INFO } from '@/modules/toast/handler/handlerToast';
+import { Toast, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import { mapState, mapGetters } from 'vuex';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
 export default {
@@ -78,7 +78,7 @@ export default {
   methods: {
     copyAddress() {
       clipboardCopy(this.address);
-      Toast(`Copied ${this.address} successfully!`, {}, INFO);
+      Toast(`Copied ${this.address} successfully!`, {}, SUCCESS);
     },
     getNetwork() {
       return this.network ? this.network.type.currencyName : 'ETH';
