@@ -35,7 +35,8 @@
       "invalid-address": "Invalid Address",
       "nickname-length": "Nickname cannot be longer than 20 chars",
       "already-exists": "This address already exists in the contact book",
-      "addr-required": "Address is required"
+      "addr-required": "Address is required",
+      "nickname-required": "Nickname is required"
     }
   },
   "gas": {
