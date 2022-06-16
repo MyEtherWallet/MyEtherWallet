@@ -28,15 +28,15 @@
     "enter-addr": "Enter an address",
     "enter-nickname": "Enter a nickname",
     "add-addr": "Add a contact address",
-    "remove-addr": "Remove address",
     "address": "Address",
     "update": "Update",
+    "remove-addr": "Remove Address",
     "validations": {
       "invalid-address": "Invalid Address",
       "nickname-length": "Nickname cannot be longer than 20 chars",
       "already-exists": "This address already exists in the contact book",
       "addr-required": "Address is required",
-      "nickname-required": "Nickname is required"
+      "nickname-required": "Please enter a nickname for the address"
     }
   },
   "gas": {

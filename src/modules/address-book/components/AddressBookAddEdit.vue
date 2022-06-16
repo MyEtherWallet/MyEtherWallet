@@ -149,7 +149,7 @@ export default {
     nicknameRules() {
       return [
         value =>
-          !isEmpty(value) ||
+          (value && value.length >= 1) ||
           this.$t('interface.address-book.validations.nickname-required'),
         value =>
           (value && value.length < 20) ||
