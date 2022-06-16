@@ -150,11 +150,7 @@
                       class="pr-7"
                     />
                     <v-progress-circular
-                      v-show="
-                        !isBatch &&
-                        signedTxObject &&
-                        Object.keys(signedTxObject).length === 0
-                      "
+                      v-show="!isBatch && checkSignedTxObject"
                       indeterminate
                       color="greenPrimary"
                       size="20"
@@ -162,11 +158,7 @@
                       class="pr-7"
                     />
                     <v-icon
-                      v-show="
-                        !isBatch &&
-                        signedTxObject &&
-                        Object.keys(signedTxObject).length !== 0
-                      "
+                      v-show="!isBatch && !checkSignedTxObject"
                       color="greenPrimary"
                     >
                       mdi-check
@@ -462,6 +454,11 @@ export default {
       return this.showSuccessSwap
         ? 'Once completed, the token amount will be deposited to your wallet. This should take a few minutes depending on how congested the Ethereum network is.'
         : 'Once completed, the token amount will be deposited to the address you provided. This should take a few minutes depending on how congested the Ethereum network is.';
+    },
+    checkSignedTxObject() {
+      return (
+        this.signedTxObject && Object.keys(this.signedTxObject).length === 0
+      );
     }
   },
   watch: {
