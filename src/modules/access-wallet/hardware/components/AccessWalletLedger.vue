@@ -1,57 +1,52 @@
 <template>
   <div>
     <div class="subtitle-1 font-weight-bold mb-2">Connecting to:</div>
-    <div>
+    <div class="d-flex align-center justify-center">
       <mew-select v-model="ledgerApp" :items="ledgerApps" :is-custom="true" />
-      <div class="text-right">
+      <div class="pathBox text-right pb-8 pl-5">
         <access-wallet-derivation-path
           :selected-path="selectedPath"
           :passed-paths="paths"
           @setPath="setPath"
         />
       </div>
-      <div class="d-flex flex-column align-center justify-center">
-        <div class="pb-8 pt-15 pt-md-18">
-          <v-img
-            :src="
-              require('@/assets/images/hardware-wallets/ledger-graphic.svg')
-            "
-            alt="Ledger Wallet"
-            max-width="21em"
-            max-height="10em"
-            contain
-          />
-        </div>
-        <v-card-title
-          v-if="!ledgerConnected"
-          class="border justify-center font-wrapping"
-        >
-          <div class="mew-heading-4 font-weight-medium pl-1">
-            Connect your Ledger device and open Ethereum app
-          </div>
-        </v-card-title>
-        <v-card-title
-          v-if="ledgerConnected"
-          class="border justify-center font-wrapping"
-        >
-          <img
-            src="@/assets/images/icons/icon-checked.svg"
-            alt="Green check mark"
-            height="20"
-          />
-          <div class="mew-heading-4 font-weight-medium pl-1">
-            Ledger connected
-          </div>
-        </v-card-title>
+    </div>
+    <div class="sheet d-flex align-center justify-center">
+      <div class="d-flex align-center justify-center pb-8 pt-15 pt-md-18">
+        <p class="para">
+          Choose <b>Ethereum</b> on your device and connect with one of the
+          methods below.
+        </p>
+        <v-img
+          :src="require('@/assets/images/hardware-wallets/ledger-graphic.svg')"
+          alt="Ledger Wallet"
+          max-width="21em"
+          max-height="10em"
+          contain
+        />
       </div>
     </div>
-    <div class="text-center">
-      <mew-button
-        btn-size="xlarge"
-        :has-full-width="true"
-        :title="btnTitle"
-        @click.native="ledgerUnlock"
-      />
+    <div class="d-flex justify-space-between justify-center text-center mt-5">
+      <div class="section-block" @click="ledgerUnlockBle">
+        <img
+          src="@/assets/images/icons/moonpay/icon-master.svg"
+          alt="Master"
+          height="24"
+          class="connect-img"
+        />
+        <div class="buttonTitle mew-heading-3">Connect via Bluetooth</div>
+        <div class="mew-label mb-5">Ledger Nano X Only</div>
+      </div>
+      <div class="section-block" @click="ledgerUnlock">
+        <img
+          src="@/assets/images/icons/moonpay/icon-master.svg"
+          alt="Master"
+          height="24"
+          class="connect-img"
+        />
+        <div class="buttonTitle mew-heading-3">Connect via USB</div>
+        <div class="mew-label mb-5">All Ledgers</div>
+      </div>
     </div>
   </div>
 </template>
@@ -67,10 +62,6 @@ export default {
     ledgerApps: {
       type: Array,
       default: () => []
-    },
-    ledgerConnected: {
-      type: Boolean,
-      default: false
     },
     ledgerUnlock: {
       type: Function,
@@ -95,9 +86,9 @@ export default {
     };
   },
   computed: {
-    btnTitle() {
-      return this.ledgerConnected ? 'Unlock Ledger' : 'Connect Ledger';
-    }
+    // btnTitle() {
+    //   return this.ledgerConnected ? 'Unlock Ledger' : 'Connect Ledger';
+    // }
   },
   watch: {
     ledgerApp: {
@@ -105,6 +96,11 @@ export default {
         this.$emit('ledgerApp', newVal);
       },
       deep: true
+    }
+  },
+  methods: {
+    ledgerUnlockBle() {
+      this.$emit('setBluetoothLedgerUnlock');
     }
   }
 };
@@ -118,9 +114,47 @@ export default {
   margin-bottom: 30px;
   width: 100%;
 }
+.buttonTitle {
+  color: #1eb19b;
+}
+.connect-img {
+  margin-top: 20px;
+}
+.sheet {
+  background-color: #ebfaf8;
+  border-radius: 12px;
+}
+.para {
+  width: 300px;
+}
 .font-wrapping {
   text-align: center;
   white-space: pre-wrap;
   word-break: break-word;
+}
+.section-block {
+  height: 200px;
+  width: 300px;
+  border-radius: 12px;
+  left: 0px;
+  top: 0px;
+  box-sizing: border-box;
+  border: 2px solid var(--v-greyMedium-base);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  order: 0;
+  align-self: stretch;
+  flex-grow: 0;
+  margin: 8px 0px;
+  position: relative;
+}
+.section-block:hover {
+  cursor: pointer;
+  border: 2px solid #1eb19b;
+  background-color: #e5eaee;
+}
+.selected {
+  border: 2px solid #1eb19b;
 }
 </style>

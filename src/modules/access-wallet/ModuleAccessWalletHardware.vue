@@ -183,13 +183,13 @@
         =====================================================================================
         -->
       <access-wallet-ledger
-        v-if="onLedger"
+        v-if="onLedger || onLedgerX"
         :ledger-unlock="nextStep"
         :ledger-apps="ledgerApps"
-        :ledger-connected="ledgerConnected"
         :paths="paths"
         :selected-path="selectedPath"
         :set-path="setPath"
+        @setBluetoothLedgerUnlock="setBluetoothLedgerUnlock"
         @ledgerApp="setSelectedApp"
       />
 
@@ -198,7 +198,7 @@
           LedgerX
         =====================================================================================
         -->
-      <access-wallet-ledger-x
+      <!-- <access-wallet-ledger-x
         v-if="onLedgerX"
         :ledger-unlock-ble="nextStep"
         :ledger-apps="ledgerApps"
@@ -207,7 +207,7 @@
         :selected-path="selectedPath"
         :set-path="setPath"
         @ledgerApp="setSelectedApp"
-      />
+      /> -->
 
       <!--
         =====================================================================================
@@ -301,17 +301,16 @@ export default {
     return {
       buttons: [
         {
-          label: 'Ledger USB',
-          icon: require('@/assets/images/icons/hardware-wallets/icon-ledger.svg'),
-          ble: false,
-          type: WALLET_TYPES.LEDGER
-        },
-        {
-          label: 'Ledger Bluetooth',
+          label: 'Ledger',
           icon: require('@/assets/images/icons/hardware-wallets/Ledger-Nano-X-Label-Icon.svg'),
-          ble: true,
           type: WALLET_TYPES.LEDGER
         },
+        // {
+        //   label: 'Ledger Bluetooth',
+        //   icon: require('@/assets/images/icons/hardware-wallets/Ledger-Nano-X-Label-Icon.svg'),
+        //   ble: true,
+        //   type: WALLET_TYPES.LEDGER
+        // },
         {
           label: 'Trezor',
           icon: require('@/assets/images/icons/hardware-wallets/icon-trezor.svg'),
@@ -484,13 +483,13 @@ export default {
      * On Ledger
      */
     onLedger() {
-      return !this.ledgerBluetooth && this.walletType == WALLET_TYPES.LEDGER;
+      return this.walletType == WALLET_TYPES.LEDGER;
     },
     /**
      * On Ledger X
      */
     onLedgerX() {
-      return this.ledgerBluetooth && this.walletType === WALLET_TYPES.LEDGER;
+      return this.walletType === WALLET_TYPES.LEDGER;
     },
     /**
      * On CoolWallet
@@ -713,9 +712,6 @@ export default {
       this.walletType = WALLET_TYPES.TREZOR;
     },
     setWalletInstance(btnObj) {
-      if (btnObj.type === WALLET_TYPES.LEDGER) {
-        this.ledgerBluetooth = btnObj.ble;
-      }
       this.walletType = btnObj.type;
       this.nextStep();
     },
@@ -734,9 +730,17 @@ export default {
      * Unlock the hardware wallets
      */
     ledgerUnlock() {
-      this.unlockPathOnly();
+      if (this.ledgerBluetooth) {
+        this.bluetoothLedgerUnlock();
+      } else {
+        this.unlockPathOnly();
+      }
     },
-    ledgerXUnlockBLE() {
+    setBluetoothLedgerUnlock() {
+      this.ledgerBluetooth = true;
+      this.nextStep();
+    },
+    bluetoothLedgerUnlock() {
       this.unlockPathOnly();
     },
     trezorUnlock() {
@@ -765,8 +769,8 @@ export default {
         .then(_hwWallet => {
           try {
             this.loaded = true;
-            if (this.onLedger) this.ledgerConnected = true;
-            if (this.onLedgerX) this.nextStep();
+            // if (this.onLedger) this.ledgerConnected = true;
+            if (this.onLedgerX || this.onLedger) this.nextStep();
             if ((this.onTrezor || this.onKeepkey) && this.step == 2)
               this.step++;
             if (this.onBitbox2) {
