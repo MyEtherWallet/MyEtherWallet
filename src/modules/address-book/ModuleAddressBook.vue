@@ -76,6 +76,10 @@ export default {
     preselectCurrWalletAdr: {
       type: Boolean,
       default: false
+    },
+    enableSaveAddress: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
@@ -129,7 +133,9 @@ export default {
           ];
     },
     enableSave() {
-      return this.isHomePage ? false : this.isValidAddress;
+      return this.isHomePage
+        ? false
+        : this.isValidAddress && this.enableSaveAddress;
     },
     addrLabel() {
       return this.label === '' ? this.$t('sendTx.to-addr') : this.label;
