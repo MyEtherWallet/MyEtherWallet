@@ -243,7 +243,7 @@ import AppAddrQr from '@/core/components/AppAddrQr';
 import BalanceAddressPaperWallet from './components/BalanceAddressPaperWallet';
 import { mapGetters, mapActions, mapState } from 'vuex';
 import clipboardCopy from 'clipboard-copy';
-import { Toast, INFO, SUCCESS } from '@/modules/toast/handler/handlerToast';
+import { Toast, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { isEmpty } from 'lodash';
@@ -483,7 +483,11 @@ export default {
      */
     copyAddress() {
       clipboardCopy(this.getChecksumAddressString);
-      Toast(`Copied ${this.getChecksumAddressString} successfully!`, {}, INFO);
+      Toast(
+        `Copied ${this.getChecksumAddressString} successfully!`,
+        {},
+        SUCCESS
+      );
     },
     /**
      * set openQR to false

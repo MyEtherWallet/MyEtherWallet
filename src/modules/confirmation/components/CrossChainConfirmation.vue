@@ -130,7 +130,7 @@
 import clipboardCopy from 'clipboard-copy';
 import moment from 'moment';
 import AppModal from '@/core/components/AppModal';
-import { Toast, INFO } from '@/modules/toast/handler/handlerToast';
+import { Toast, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import qrDisabled from '@/assets/images/icons/qr-disabled.png';
 import { isEmpty, debounce } from 'lodash';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
@@ -282,7 +282,7 @@ export default {
       Toast(
         `Copied ${this.txObj.actualTrade.response.payinAddress} successfully!`,
         {},
-        INFO
+        SUCCESS
       );
     },
     locReset() {
