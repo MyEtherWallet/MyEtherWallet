@@ -76,6 +76,10 @@ export default {
     preselectCurrWalletAdr: {
       type: Boolean,
       default: false
+    },
+    enableSaveAddress: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
@@ -92,7 +96,7 @@ export default {
   computed: {
     ...mapState('addressBook', ['addressBookStore']),
     ...mapGetters('global', ['network']),
-    ...mapState('wallet', ['web3']),
+    ...mapState('wallet', ['web3', 'address']),
     errorMessages() {
       if (!this.isValidAddress && this.loadedAddressValidation) {
         return this.$t('interface.address-book.validations.invalid-address');
@@ -112,18 +116,26 @@ export default {
               resolverAddr: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
             }
           ]
-        : this.$store.state.wallet.address
+        : this.address
         ? [
             {
-              address: toChecksumAddress(this.$store.state.wallet.address),
+              address: toChecksumAddress(this.address),
               nickname: 'My Address',
               resolverAddr: ''
             }
-          ]
-        : [].concat(this.addressBookStore);
+          ].concat(this.addressBookStore)
+        : [
+            {
+              address: toChecksumAddress(this.address),
+              nickname: 'My Address',
+              resolverAddr: ''
+            }
+          ];
     },
     enableSave() {
-      return this.isHomePage ? false : this.isValidAddress;
+      return this.isHomePage
+        ? false
+        : this.isValidAddress && this.enableSaveAddress;
     },
     addrLabel() {
       return this.label === '' ? this.$t('sendTx.to-addr') : this.label;
@@ -147,7 +159,7 @@ export default {
     if (this.preselectCurrWalletAdr) {
       this.$refs.addressSelect.selectAddress(this.addressBookWithMyAddress[0]);
       this.setAddress(
-        toChecksumAddress(this.$store.state.wallet.address),
+        toChecksumAddress(this.address),
         USER_INPUT_TYPES.selected
       );
     }

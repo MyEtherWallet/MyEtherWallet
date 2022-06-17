@@ -79,9 +79,9 @@
       v-if="tabItems.length > 0 && isNewHeader"
       :value="activeTab"
       background-color="backgroundGrey"
-      show-arrows
       color="blue500"
       height="46"
+      class="tab-container"
       active-class="blue500--text"
       @change="onTab"
     >
@@ -91,7 +91,7 @@
         :class="[
           'px-4 px-md-10 textMedium--text menu-tab-text mew-body',
           { 'ml-md-13': index === 0 },
-          { 'mr-3 mr-md-13': index + 1 === tabItems.length }
+          { 'mr-md-13': index + 1 === tabItems.length }
         ]"
         @click="routeToTab(item.route)"
       >
@@ -295,6 +295,11 @@ export default {
 </script>
 
 <style lang="scss">
+.tab-container {
+  .v-slide-group__prev {
+    display: none !important;
+  }
+}
 .the-wrapper-dapp {
   .hide-default-tab-header {
     .v-tabs {
