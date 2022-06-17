@@ -240,6 +240,7 @@
                 :is-loading="isLoadingProviders"
                 :providers-error="providersErrorMsg"
                 :class="isFromNonChain ? '' : 'mt-7'"
+                :selected-provider-id="selectedProviderId"
               />
               <!--
                   =====================================================================================
@@ -298,7 +299,7 @@ import SwapProviderMentions from './components/SwapProviderMentions.vue';
 import Swapper from './handlers/handlerSwap';
 import AppTransactionFee from '@/core/components/AppTransactionFee.vue';
 import { toBN, fromWei, toWei, isAddress } from 'web3-utils';
-import { isEmpty, clone, isUndefined, debounce, isObject } from 'lodash';
+import { isEmpty, clone, isUndefined, isObject } from 'lodash';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import Notification, {
   NOTIFICATION_TYPES,
@@ -383,7 +384,9 @@ export default {
       refundAddress: '',
       isValidRefundAddr: false,
       localGasPrice: '0',
-      mainTokenDetails: {}
+      mainTokenDetails: {},
+      cachedAmount: '0',
+      selectedProviderId: undefined
     };
   },
   computed: {
@@ -965,6 +968,9 @@ export default {
       },
       immediate: true
     },
+    selectedProvider(p) {
+      if (isEmpty(p)) this.selectedProviderId = undefined;
+    },
     defaults: {
       handler: function () {
         this.setDefaults();
@@ -1078,6 +1084,7 @@ export default {
       this.isLoading = false;
       this.loadingFee = false;
       this.feeError = '';
+      this.selectedProviderId = undefined;
       this.defaults = {
         fromToken: this.fromToken
       };
@@ -1193,7 +1200,7 @@ export default {
       }
       this.setTokenInValue(this.tokenInValue);
     },
-    setTokenInValue: debounce(function (value) {
+    setTokenInValue(value) {
       /**
        * Ensure that both pairs have been set
        * before calling the providers
@@ -1260,6 +1267,7 @@ export default {
       ) {
         this.isLoadingProviders = true;
         this.showAnimation = true;
+        this.cachedAmount = this.tokenInValue;
         this.swapper
           .getAllQuotes({
             fromT: this.fromTokenType,
@@ -1269,37 +1277,44 @@ export default {
             )
           })
           .then(quotes => {
-            this.selectedProvider = {};
-            this.availableQuotes = quotes.map(q => {
-              q.rate = new BigNumber(q.amount)
-                .dividedBy(new BigNumber(this.tokenInValue))
-                .toString();
-              q.isSelected = false;
-              return q;
-            });
-            if (this.availableQuotes.length > 1) {
-              this.availableQuotes = quotes.filter(q => q.rate !== '0');
+            if (this.tokenInValue === this.cachedAmount) {
+              this.selectedProvider = {};
+              this.lastSetToken = quotes[0].amount;
+              this.availableQuotes = quotes.map(q => {
+                q.rate = new BigNumber(q.amount)
+                  .dividedBy(new BigNumber(this.tokenInValue))
+                  .toString();
+                q.isSelected = false;
+                return q;
+              });
+              if (this.availableQuotes.length > 1) {
+                this.availableQuotes = quotes.filter(q => q.rate !== '0');
+              }
+              if (quotes.length) {
+                this.tokenOutValue = quotes[0]?.amount;
+              }
+              this.step = 1;
+              this.isLoadingProviders = false;
             }
-            if (quotes.length) {
-              this.tokenOutValue = quotes[0].amount;
-            }
-            this.step = 1;
-            this.isLoadingProviders = false;
           });
       }
-    }, 500),
-    setProvider(idx) {
+    },
+    setProvider(idx, clicked) {
       this.belowMinError = false;
       this.availableQuotes.forEach((q, _idx) => {
         if (_idx === idx) {
+          this.selectedProviderId = _idx;
           q.isSelected = true;
           this.tokenOutValue = q.amount;
           this.getTrade(idx);
-          this.selectedProvider = q !== this.selectedProvider ? q : {};
+          if (!clicked) this.selectedProvider = q;
+          else
+            this.selectedProvider =
+              q.amount !== this.selectedProvider.amount ? q : {};
         }
       });
     },
-    getTrade: debounce(function (idx) {
+    getTrade(idx) {
       if (this.isFromNonChain && !this.isValidRefundAddr) {
         return;
       }
@@ -1334,18 +1349,20 @@ export default {
       const trade = this.swapper.getTrade(swapObj);
       if (trade instanceof Promise) {
         trade.then(tradeResponse => {
-          if (
-            isObject(tradeResponse) &&
-            tradeResponse.hasOwnProperty('provider')
-          ) {
-            this.allTrades[idx] = tradeResponse;
+          if (this.tokenInValue === this.cachedAmount) {
+            if (
+              isObject(tradeResponse) &&
+              tradeResponse.hasOwnProperty('provider')
+            ) {
+              this.allTrades[idx] = tradeResponse;
+            }
+            this.setupTrade(tradeResponse);
           }
-          this.setupTrade(tradeResponse);
         });
       } else {
         this.setupTrade(trade);
       }
-    }, 500),
+    },
     setupTrade(trade) {
       this.loadingFee = false;
       // fixes race case where address gets invalidated when
@@ -1549,53 +1566,6 @@ export default {
   margin: 0;
 }
 
-.invert {
-  filter: invert(100%);
-}
-
-.border-radius--10px::before {
-  border-radius: 10px !important;
-}
-
-.available-balance {
-  width: 39%;
-}
-
-.icon {
-  margin-right: 6px;
-}
-
-.wrapped-btc-text {
-  border-radius: 5px;
-  background-color: var(--v-selectorBg-lighten1);
-}
-</style>
-
-<style lang="scss">
-.mew-component--swap {
-  width: 100%;
-  .swap-expend {
-    .v-application .white {
-      background-color: transparent !important;
-    }
-  }
-}
-
-.wrapped-btc-text {
-  .v-expansion-panel-content__wrap {
-    padding: 0 !important;
-  }
-
-  .v-expansion-panel,
-  .v-expansion-panels {
-    background-color: transparent !important;
-  }
-
-  .v-expansion-panel-header {
-    padding: 16px 0px !important;
-  }
-}
-
 .border-top {
   border-top: 1px solid var(--v-greyMedium-base);
 }
@@ -1604,18 +1574,5 @@ export default {
   @media (min-width: 960px) {
     min-height: 45vh;
   }
-}
-
-.swap-to-input {
-  pointer-events: none !important;
-  user-select: none !important;
-}
-
-.pb-sm-15px {
-  padding-bottom: 15px !important;
-}
-
-.pb-sm-29px {
-  padding-bottom: 29px !important;
 }
 </style>
