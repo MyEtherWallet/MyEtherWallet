@@ -2,16 +2,18 @@ import { sha3 } from 'web3-utils';
 import axios from 'axios';
 const API = 'https://mainnet.mewwallet.dev';
 
-export default class MoonPayHandler {
+export default class OrderHandler {
   constructor() {}
-
+  /*
+   ** MoonPay
+   */
   buy(tokenSymbol, fiatCurrency, amount, address) {
     const hash = sha3(address);
     const id = `WEB|${hash.substring(0, 42)}`;
     return new Promise(resolve => {
       let link = `${API}/v3/purchase/moonpay/order?address=${address}&id=${id}&cryptoCurrency=${tokenSymbol}&fiatCurrency=${fiatCurrency}`;
       if (amount) {
-        link += `${link}&requestedAmount=${amount}`;
+        link += `&requestedAmount=${amount}`;
       }
       const parsedUrl = encodeURI(link);
       // eslint-disable-next-line
@@ -53,6 +55,40 @@ export default class MoonPayHandler {
       .get(`${API}/v3/sell/providers/web?iso=us&cryptoCurrency=${symbol}`)
       .then(res => res.data);
   }
+
+  /*
+   ** Simplex
+   */
+  simplexBuy(tokenSymbol, fiatCurrency, amount, address) {
+    const hash = sha3(address);
+    const id = `WEB|${hash.substring(0, 42)}`;
+    return new Promise(resolve => {
+      const parsedUrl = encodeURI(
+        `${API}/v2/purchase/simplex/order?address=${address}&id=${id}&requestedCurrency=${fiatCurrency}&fiatCurrency=${fiatCurrency}&requestedAmount=${amount}&cryptoCurrency=${tokenSymbol}`
+      );
+      // eslint-disable-next-line
+      window.open(parsedUrl, '_blank');
+      resolve();
+    });
+  }
+
+  getSimplexQuote(tokenSymbol, fiatCurrency, amount, address) {
+    const hash = sha3(address);
+    const id = `WEB|${hash.substring(0, 42)}`;
+    return new Promise((resolve, reject) => {
+      axios
+        .get(
+          encodeURI(
+            `${API}/purchase/simplex/quote?id=${id}&requestedCurrency=${fiatCurrency}&fiatCurrency=${fiatCurrency}&requestedAmount=${amount}&cryptoCurrency=${tokenSymbol}`
+          )
+        )
+        .then(res => {
+          resolve(res.data);
+        })
+        .catch(reject);
+    });
+  }
+
   // this won't be used for awhile but is setup here
   getHistory() {}
 }
