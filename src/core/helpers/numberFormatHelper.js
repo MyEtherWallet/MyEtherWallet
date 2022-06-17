@@ -1,5 +1,4 @@
 import BigNumber from 'bignumber.js';
-import { isNull, isUndefined } from 'lodash';
 import { fromWei, toBN } from 'web3-utils';
 import { localizeCurrency } from './localization';
 
@@ -505,14 +504,13 @@ const getRoundNumber = (value, round, hasTrailingZeros = false) => {
 };
 
 /**
- * handeles edgecases for web3 util toBN
- * @param {number} number - expects number, handles non numbers
+ * Handles edge cases for web3 util toBN
+ * @param {Number|String} number
  * @return {import('bn.js')} BN from web3
  */
 
 const toBNSafe = number => {
-  if (isNaN(number) || isNull(number) || isUndefined(number) || number === '')
-    number = 0;
+  if (isNaN(number) || !number) number = 0;
   number = toBN(new BigNumber(number).toFixed(0));
   return number;
 };
