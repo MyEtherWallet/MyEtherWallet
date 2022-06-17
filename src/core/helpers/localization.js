@@ -65,13 +65,18 @@ export const currencyToNumber = currency =>
  * Converts number to a local currency
  * @returns {string} Converted Number
  */
-const convertNumber = ({ currency, options, convertedPrice }) =>
-  new Intl.NumberFormat(undefined, {
-    style: 'currency',
-    currency,
-    currencyDisplay: 'narrowSymbol',
-    ...options
-  }).format(convertedPrice);
+const convertNumber = ({ currency, options, convertedPrice }) => {
+  try {
+    return new Intl.NumberFormat(undefined, {
+      style: 'currency',
+      currency,
+      currencyDisplay: 'narrowSymbol',
+      ...options
+    }).format(convertedPrice);
+  } catch (e) {
+    throw new Error(e);
+  }
+};
 
 /******************************
  * Locale Codes From Currency *
