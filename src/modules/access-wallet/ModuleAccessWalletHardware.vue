@@ -641,9 +641,13 @@ export default {
       this.reset();
     });
 
-    const { bluetooth } = navigator;
-    if (!bluetooth) return (this.bluetooth = false);
-    this.bluetooth = await bluetooth.getAvailability();
+    try {
+      const { bluetooth } = navigator;
+      if (!bluetooth) this.bluetooth = false;
+      this.bluetooth = await bluetooth.getAvailability();
+    } catch (e) {
+      Toast(e, {}, ERROR);
+    }
   },
   methods: {
     ...mapActions('wallet', ['setWallet', 'setLedgerBluetooth']),
