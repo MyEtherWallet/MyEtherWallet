@@ -87,10 +87,9 @@ export default {
       return this.network.type.icon;
     },
     show() {
-      return (
-        this.identifier !== WALLET_TYPES.WEB3_WALLET ||
-        window.ethereum.isMetaMask
-      );
+      let metamask = false;
+      if (window.ethereum) metamask = window.ethereum.isMetaMask;
+      return this.identifier !== WALLET_TYPES.WEB3_WALLET || metamask;
     },
     /**
      * IMPORTANT TO DO:
