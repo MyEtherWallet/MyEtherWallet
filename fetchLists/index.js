@@ -18,8 +18,8 @@ const getFormattedList = async (url, network) => {
   const tokens = Object.values(data.tokens)
     .map(t => {
       t.contract_address = t.address.toLowerCase();
-      t.icon = IMAGE_PROXY + t.logoURI;
-      t.icon_png = IMAGE_PROXY + t.logoURI;
+      t.icon = IMAGE_PROXY + encodeURIComponent(t.logoURI);
+      t.icon_png = IMAGE_PROXY + encodeURIComponent(t.logoURI);
       t.network = network;
       delete t.logoURI;
       delete t.chainId;
@@ -124,8 +124,8 @@ const fetchMasterFile = async () => {
           token.contract_address = token.contract_address.toLowerCase();
           token.address = token.contract_address;
           if (token.icon !== '') {
-            token.icon = IMAGE_PROXY + token.icon;
-            token.icon_png = IMAGE_PROXY + token.icon_png;
+            token.icon = IMAGE_PROXY + encodeURIComponent(token.icon);
+            token.icon_png = IMAGE_PROXY + encodeURIComponent(token.icon_png);
           }
           delete token.link;
           if (!networkTokens[token.network]) networkTokens[token.network] = {};
