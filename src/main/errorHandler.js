@@ -30,7 +30,7 @@ export const knownErrors = {
   'ENS is not supported': 'ENS is not supported on network private',
   '未能完成该操作。无效的自变量':
     'The operation could not be completed. Invalid argument.',
-  'TypeError Failed to fetch': 'Failes to fetch incoming data'
+  'TypeError Failed to fetch': 'Failed to fetch incoming data'
 };
 
 const handleError = err => {
