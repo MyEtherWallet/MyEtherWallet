@@ -1275,6 +1275,11 @@ export default {
             )
           })
           .then(quotes => {
+            if (quotes.length === 0) {
+              this.step = 1;
+              this.isLoadingProviders = false;
+              return;
+            }
             if (this.tokenInValue === this.cachedAmount) {
               this.selectedProvider = {};
               if (quotes.length) {
