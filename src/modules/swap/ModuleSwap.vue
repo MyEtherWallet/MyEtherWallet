@@ -1093,7 +1093,7 @@ export default {
       this.addressValue = {};
       this.selectedProvider = {};
       this.localGasPrice = '0';
-      if (this.$refs.toToken) this.$refs.toToken.clear();
+      // if (this.$refs.toToken) this.$refs.toToken.clear();
       if (this.$refs.amountInput) this.$refs.amountInput.clear();
       this.refundAddress = '';
       this.isValidRefundAddr = false;
@@ -1277,6 +1277,11 @@ export default {
             )
           })
           .then(quotes => {
+            if (quotes.length === 0) {
+              this.step = 1;
+              this.isLoadingProviders = false;
+              return;
+            }
             if (this.tokenInValue === this.cachedAmount) {
               this.selectedProvider = {};
               this.lastSetToken = quotes[0].amount;
