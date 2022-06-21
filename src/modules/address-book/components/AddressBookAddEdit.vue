@@ -130,7 +130,9 @@ export default {
       }
       if (this.editMode) {
         return (
-          this.nickname === this.item.nickname || this.nickname?.length > 20
+          this.nickname === this.item.nickname ||
+          this.nickname?.length > 20 ||
+          isEmpty(this.nickname)
         );
       }
       return true;
@@ -161,8 +163,8 @@ export default {
       return this.resolvedAddr.length > 0
         ? isAddress(this.resolvedAddr) ||
             isValidCoinAddress(this.resolvedAddr).valid
-        : isAddress(this.addressToAdd) ||
-            isValidCoinAddress(this.addressToAdd).valid;
+        : isAddress(this.lowercaseAddressToAdd) ||
+            isValidCoinAddress(this.lowercaseAddressToAdd).valid;
     },
     coin() {
       if (!this.validAddress) return '';
@@ -170,7 +172,7 @@ export default {
         'Valid ' +
         (this.resolvedAddr.length > 0
           ? isValidCoinAddress(this.resolvedAddr).coin
-          : isValidCoinAddress(this.addressToAdd).coin) +
+          : isValidCoinAddress(this.lowercaseAddressToAdd).coin) +
         ' address'
       );
     },
@@ -202,6 +204,9 @@ export default {
         return toChecksumAddress(this.addressToAdd);
       }
       return this.addressToAdd;
+    },
+    lowercaseAddressToAdd() {
+      return this.addressToAdd.toLowerCase();
     }
   },
   watch: {
