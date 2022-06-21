@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites errors="0"
+            failures="1"
+            tests="1">
+
+  <testsuite name="test"
+    errors="0" failures="1" hostname="" id="" package="test" skipped="0"
+    tests="1" time="11.94" timestamp="">
+  
+    <testcase name="default e2e tests" classname="test" time="11.94" assertions="1">  <failure message="Timed out while waiting for element &lt;#app&gt; to be present for 10000 milliseconds. - expected &#34;visible&#34; but got: &#34;not found&#34; (10333ms)">    at Object.default e2e tests (/Users/yelpadillo/workspace/work/myetherwalletv6/tests/e2e/specs/test.js:9:8)
+    at processTicksAndRejections (internal/process/task_queues.js:97:5)</failure>
+
+    
+    </testcase>
+  
+
+  
+
+    
+
+  
+  </testsuite>
+</testsuites>

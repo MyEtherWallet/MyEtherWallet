@@ -65,7 +65,7 @@ import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalyti
 import { EventBus } from '@/core/plugins/eventBus';
 import BigNumber from 'bignumber.js';
 import handler from '@/dapps/stakewise/handlers/stakewiseHandler';
-import { STAKEWISE_EVENT } from '@/dapps/stakewise/helpers/index';
+import { STAKEWISE_EVENT } from '@/dapps/stakewise/handlers/configs.js';
 import { SUPPORTED_NETWORKS } from '@/dapps/stakewise/handlers/helpers/supportedNetworks';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
