@@ -17,7 +17,7 @@
       </mew-alert>
     </div>
 
-    <div v-else-if="hasDomains" class="d-flex justify-space-between">
+    <div v-else class="d-flex justify-space-between">
       <mew-select
         :value="selectedDomain"
         filter-placeholder="Search for Domain"
