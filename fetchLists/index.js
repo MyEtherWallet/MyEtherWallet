@@ -2,6 +2,7 @@ const fetch = require('node-fetch');
 const fs = require('fs');
 const configs = require('./configs');
 const contractList = require('./lists/contracts.json');
+const tokensList = require('./lists/tokens.json');
 const IMAGE_PROXY = 'https://img.mewapi.io/?image=';
 const v4 = require('uuid').v4;
 if (!fs.existsSync(configs.GENERATED_FOLDER_PATH)) {
@@ -119,6 +120,9 @@ const fetchMasterFile = async () => {
       .then(res => res.json())
       .then(tokens => {
         const networkTokens = {};
+        tokensList.forEach(item => {
+          networkTokens[item.name] = [];
+        });
         tokens.forEach(token => {
           token.contract_address = token.contract_address.toLowerCase();
           token.address = token.contract_address;

@@ -4,7 +4,8 @@ const ERRORS = {
   'UNKNOWN_ERROR (0x6801)': 'ledgerError.unknown-0x6801',
   'UNKNOWN_ERROR (0x6804)': 'ledgerError.unknown-0x6804',
   'UNKNOWN_ERROR (0x6b0c)': 'ledgerError.unknown-0x6boc',
-  'UNKNOWN_ERROR (0x650f)': 'ledgerError.unknown-0x6boc',
+  'UNKNOWN_ERROR (0x650f)': 'ledgerError.unknown-0x650f',
+  'UNKNOWN_ERROR (0x6a15)': 'ledgerError.unknown-0x6a15',
   'Failed to sign with Ledger device: U2F TIMEOUT':
     'ledgerError.failed-to-sign',
   'Failed to sign with Ledger device: U2F DEVICE_INELIGIBLE':
