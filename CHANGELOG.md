@@ -1,7 +1,3 @@
-### fix
-
-* * fixed polygon gas underpaying [#3926](https://github.com/MyEtherWallet/MyEtherWallet/pull/3926)
-
 ### Release v6.6.0
 
 ### devop
@@ -13,6 +9,7 @@
 
 ### fix
 
+* fixed polygon gas underpaying [#3926](https://github.com/MyEtherWallet/MyEtherWallet/pull/3926)
 * fix ledger transport status sentry error [#3808](https://github.com/MyEtherWallet/MyEtherWallet/pull/3808)
 * Added check for swap call [#3846](https://github.com/MyEtherWallet/MyEtherWallet/pull/3846)
 * fix eth blocks remove tab arrows [#3860](https://github.com/MyEtherWallet/MyEtherWallet/pull/3860)
