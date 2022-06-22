@@ -7,6 +7,7 @@
         <access-wallet-derivation-path
           :selected-path="selectedPath"
           :passed-paths="paths"
+          class="path-box"
           @setPath="setPath"
         />
       </div>
@@ -29,23 +30,23 @@
     <div class="d-flex justify-space-between justify-center text-center mt-5">
       <div class="section-block" @click="ledgerUnlockBle">
         <img
-          src="@/assets/images/icons/moonpay/icon-master.svg"
-          alt="Master"
-          height="24"
+          src="@/assets/images/hardware-wallets/Bluetooth.svg"
+          alt="Bluetooth"
+          height="50"
           class="connect-img"
         />
-        <div class="buttonTitle mew-heading-3">Connect via Bluetooth</div>
-        <div class="mew-label mb-5">Ledger Nano X Only</div>
+        <div class="buttonTitle mew-heading-3 mt-8">Connect via Bluetooth</div>
+        <div class="mew-label mb-10 label">Ledger Nano X Only</div>
       </div>
       <div class="section-block" @click="ledgerUnlock">
         <img
-          src="@/assets/images/icons/moonpay/icon-master.svg"
-          alt="Master"
-          height="24"
+          src="@/assets/images/hardware-wallets/USB.svg"
+          alt="USB"
+          height="50"
           class="connect-img"
         />
-        <div class="buttonTitle mew-heading-3">Connect via USB</div>
-        <div class="mew-label mb-5">All Ledgers</div>
+        <div class="buttonTitle mew-heading-3 mt-8">Connect via USB</div>
+        <div class="mew-label mb-10 label">All Ledgers</div>
       </div>
     </div>
   </div>
@@ -114,6 +115,9 @@ export default {
   margin-bottom: 30px;
   width: 100%;
 }
+.path-box {
+  height: 150px;
+}
 .buttonTitle {
   color: #1eb19b;
 }
@@ -127,6 +131,10 @@ export default {
 .para {
   width: 300px;
 }
+.label {
+  color: #999999;
+  font-size: 14px;
+}
 .font-wrapping {
   text-align: center;
   white-space: pre-wrap;
@@ -134,7 +142,7 @@ export default {
 }
 .section-block {
   height: 200px;
-  width: 300px;
+  width: 330px;
   border-radius: 12px;
   left: 0px;
   top: 0px;
@@ -142,7 +150,7 @@ export default {
   border: 2px solid var(--v-greyMedium-base);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: space-evenly;
   order: 0;
   align-self: stretch;
   flex-grow: 0;
