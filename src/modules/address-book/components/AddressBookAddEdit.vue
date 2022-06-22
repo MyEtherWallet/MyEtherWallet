@@ -158,13 +158,20 @@ export default {
           this.$t('interface.address-book.validations.nickname-length')
       ];
     },
+    actualValidAddress() {
+      if (!this.validAddress) return '';
+      return isAddress(this.lowercaseAddressToAdd)
+        ? this.lowercaseAddressToAdd
+        : this.addressToAdd;
+    },
     validAddress() {
       if (this.addressToAdd.length > 94) return false;
       return this.resolvedAddr.length > 0
         ? isAddress(this.resolvedAddr) ||
             isValidCoinAddress(this.resolvedAddr).valid
         : isAddress(this.lowercaseAddressToAdd) ||
-            isValidCoinAddress(this.lowercaseAddressToAdd).valid;
+            isValidCoinAddress(this.lowercaseAddressToAdd).valid ||
+            isValidCoinAddress(this.addressToAdd).valid;
     },
     coin() {
       if (!this.validAddress) return '';
@@ -172,7 +179,7 @@ export default {
         'Valid ' +
         (this.resolvedAddr.length > 0
           ? isValidCoinAddress(this.resolvedAddr).coin
-          : isValidCoinAddress(this.lowercaseAddressToAdd).coin) +
+          : isValidCoinAddress(this.actualValidAddress).coin) +
         ' address'
       );
     },
