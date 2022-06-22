@@ -6,7 +6,7 @@ yarn-debug.log*
 yarn-error.log*
 /tests/unit/coverage/
 selenium-debug.log
-src/tests/e2e/reports/*
+/tests/e2e/reports/
 chromedriver.log
 
 # Editor directories and files
