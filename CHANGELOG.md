@@ -1,3 +1,40 @@
+### Release v6.6.0
+
+### devop
+
+* Buy / Sell Moonpay and Simplex [#3844](https://github.com/MyEtherWallet/MyEtherWallet/pull/3844)
+* added catch for edge case for v-select [#3888](https://github.com/MyEtherWallet/MyEtherWallet/pull/3888)
+* update packages [#3903](https://github.com/MyEtherWallet/MyEtherWallet/pull/3903)
+* add moonbeam and moonriver [#3927](https://github.com/MyEtherWallet/MyEtherWallet/pull/3927)
+
+### fix
+
+* fixed polygon gas underpaying [#3926](https://github.com/MyEtherWallet/MyEtherWallet/pull/3926)
+* fix ledger transport status sentry error [#3808](https://github.com/MyEtherWallet/MyEtherWallet/pull/3808)
+* Added check for swap call [#3846](https://github.com/MyEtherWallet/MyEtherWallet/pull/3846)
+* fix eth blocks remove tab arrows [#3860](https://github.com/MyEtherWallet/MyEtherWallet/pull/3860)
+* fix verify swap windows to show native swap fee currency for MATIC [#3866](https://github.com/MyEtherWallet/MyEtherWallet/pull/3866)
+* fix confirmation window layout and paddings [#3868](https://github.com/MyEtherWallet/MyEtherWallet/pull/3868)
+* fix sentry errorhandler reading null [#3873](https://github.com/MyEtherWallet/MyEtherWallet/pull/3873)
+* fix mew tools menu button, fix mobile landingpage menu [#3880](https://github.com/MyEtherWallet/MyEtherWallet/pull/3880)
+* NumberFormat currencyDisplay 'narrowSymbol' [#3885](https://github.com/MyEtherWallet/MyEtherWallet/pull/3885)
+* fix sentry undefined to token amount [#3896](https://github.com/MyEtherWallet/MyEtherWallet/pull/3896)
+* Correctly display addresses in To Address dropdown [#3899](https://github.com/MyEtherWallet/MyEtherWallet/pull/3899)
+* add data defaults to '0x' when cleared [#3900](https://github.com/MyEtherWallet/MyEtherWallet/pull/3900)
+* addresses safe number check, trezor popup window error, unknown ledger device error, bluetooth error, and number converter issue for safari [#3907](https://github.com/MyEtherWallet/MyEtherWallet/pull/3907)
+* fix paperwallet not opening bug on mobile wallet [#3908](https://github.com/MyEtherWallet/MyEtherWallet/pull/3908)
+* Added catch for contract balanceOf call [#3913](https://github.com/MyEtherWallet/MyEtherWallet/pull/3913)
+* fix sentry handler nft error [#3916](https://github.com/MyEtherWallet/MyEtherWallet/pull/3916)
+* json response has no error or result [#3918](https://github.com/MyEtherWallet/MyEtherWallet/pull/3918)
+* Handle AbortError: The user aborted a request [#3921](https://github.com/MyEtherWallet/MyEtherWallet/pull/3921)
+* fix ENS select duration text [#3922](https://github.com/MyEtherWallet/MyEtherWallet/pull/3922)
+* QR Code and the sign message copy toast consistent [#3925](https://github.com/MyEtherWallet/MyEtherWallet/pull/3925)
+* Fix access wallet popup error on mobile [#3943](https://github.com/MyEtherWallet/MyEtherWallet/pull/3943)
+
+### sentry
+
+* fixed bn issue [#3878](https://github.com/MyEtherWallet/MyEtherWallet/pull/3878)
+
 ### Release v6.5.6
 
 ### ui
