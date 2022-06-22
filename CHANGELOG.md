@@ -1,3 +1,7 @@
+### fix
+
+* * fixed polygon gas underpaying [#3926](https://github.com/MyEtherWallet/MyEtherWallet/pull/3926)
+
 ### Release v6.6.0
 
 ### devop
