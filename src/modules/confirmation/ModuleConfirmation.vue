@@ -30,7 +30,7 @@
       @close="reset"
     >
       <template #dialogBody>
-        <v-card-text ref="scrollableContent" class="py-0 px-5 px-md-0">
+        <v-card-text ref="scrollableContent" class="py-0 px-4 px-md-0">
           <div
             v-if="toNonEth"
             class="px-4 py-6 pr-6 textBlack2--text border-radius--5px mb-5"
@@ -265,7 +265,7 @@ import {
 import { isEmpty, isArray, cloneDeep } from 'lodash';
 import { mapState, mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
-import { Toast, INFO } from '@/modules/toast/handler/handlerToast';
+import { Toast, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import parseTokenData from './handlers/parseTokenData';
 import { EventBus } from '@/core/plugins/eventBus';
 import { setEvents } from '@/utils/web3-provider/methods/utils';
@@ -843,7 +843,7 @@ export default {
       this.$refs.messageConfirmationContainer.$refs.signatureContent.$refs.input.select();
       document.execCommand('copy');
       window.getSelection().removeAllRanges();
-      Toast(this.$t('common.copied'), {}, INFO);
+      Toast(this.$t('common.copied'), {}, SUCCESS);
       this.reset();
     },
     arrayParser(arr) {

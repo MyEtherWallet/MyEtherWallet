@@ -36,10 +36,8 @@ const EXCEPTIONS = [
   'eslint',
   'eslint-plugin-vue',
   'imagemin-mozjpeg', // issue with importing it to vue config will look into it more if we need it
-  '@vue/eslint-config-prettier', // creates more warnings
   // versions for vue3
-  'vue-router',
-  'vuex',
+  '@vue/eslint-config-prettier', // creates more warnings
   '@vue/test-utils',
   '@vue/babel-preset-app',
   '@vue/cli-plugin-babel',
@@ -49,11 +47,10 @@ const EXCEPTIONS = [
   '@vue/cli-service',
   'vue-i18n',
   'vue',
-  // fix after release
-  '@commitlint/config-conventional',
-  'commitlint',
-  'vue-cli-plugin-vuetify',
-  'trezor-connect'
+  'trezor-connect', // currently in beta
+  '@shapeshiftoss/hdwallet-core',
+  '@shapeshiftoss/hdwallet-keepkey-webusb',
+  'package-json'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

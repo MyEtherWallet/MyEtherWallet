@@ -9,6 +9,8 @@ import maticmewws from './matic-mew-ws';
 import gochain from './gochain-ws';
 import mintmemewws from './mintme-mew-ws';
 import xdcnetwork from './xdcnetwork-ws';
+import moonbeam from './moonbeam-ws';
+import moonriver from './moonriver-ws';
 
 export {
   etcethereumclassiccooperativeparityws,
@@ -21,5 +23,7 @@ export {
   maticmewws,
   gochain,
   mintmemewws,
-  xdcnetwork
+  xdcnetwork,
+  moonbeam,
+  moonriver
 };

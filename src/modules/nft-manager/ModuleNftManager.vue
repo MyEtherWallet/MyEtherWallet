@@ -155,6 +155,7 @@ import NftManagerSend from './components/NftManagerSend';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { toBN, isAddress } from 'web3-utils';
 import { ETH } from '@/utils/networks/types';
+import { toBNSafe } from '@/core/helpers/numberFormatHelper';
 
 const MIN_GAS_LIMIT = 21000;
 
@@ -312,7 +313,7 @@ export default {
       if (isAddress(newVal)) {
         const gasTypeFee = this.gasPriceByType(this.gasPriceType);
         const gasFees = await this.nft.getGasFees(newVal, this.selectedNft);
-        const gasFeesToBN = toBN(gasFees).mul(toBN(gasTypeFee));
+        const gasFeesToBN = toBNSafe(gasFees).mul(toBNSafe(gasTypeFee));
         this.gasFees = gasFeesToBN.toString();
         if (gasFeesToBN.gte(toBN(this.balanceInWei))) {
           //gasFeesToBN vs current balance
