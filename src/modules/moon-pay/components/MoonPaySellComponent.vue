@@ -177,7 +177,8 @@ export default {
     preselectedCurrencies() {
       const arr = new Array();
       for (const contract of sellContracts) {
-        arr.push(this.contractToToken(contract));
+        const token = this.contractToToken(contract);
+        if (token) arr.push(token);
       }
       return arr;
     },
@@ -314,7 +315,8 @@ export default {
     },
     nonMainnetMetamask() {
       return (
-        this.instance?.identifier === WALLET_TYPES.WEB3_WALLET &&
+        this.instance &&
+        this.instance.identifier === WALLET_TYPES.WEB3_WALLET &&
         this.network?.type.name !== 'ETH'
       );
     },
@@ -532,7 +534,7 @@ export default {
           this.sendHandler.setCurrency(this.actualSelectedCurrency);
           this.sendHandler.setValue(this.getCalculatedAmount);
           // eslint-disable-next-line
-        this.sendHandler.setTo(ETH_DONATION_ADDRESS, 'TYPED');
+          this.sendHandler.setTo(ETH_DONATION_ADDRESS, 'TYPED');
           this.estimatingFees = true;
           this.sendHandler
             .estimateGas()
