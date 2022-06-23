@@ -19,10 +19,13 @@
           methods below.
         </p>
         <v-img
-          :src="require('@/assets/images/hardware-wallets/ledger-graphic.svg')"
+          :src="
+            require('@/assets/images/hardware-wallets/Ledger_Device_main.svg')
+          "
           alt="Ledger Wallet"
           max-width="21em"
           max-height="10em"
+          class="mb-10 ml-10"
           contain
         />
       </div>
