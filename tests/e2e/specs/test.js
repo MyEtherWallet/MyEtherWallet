@@ -6,7 +6,7 @@ module.exports = {
     browser
       .init()
       .url('https://localhost:8080')
-      .waitForElementVisible('#app', 10000)
+      .waitForElementVisible('#app', 15000)
       .end();
   }
 };
