@@ -761,7 +761,7 @@ export default {
     unlockPathOnly() {
       const path = isObject(this.selectedPath)
         ? this.selectedPath.hasOwnProperty('value')
-          ? this.selectedPath.value
+          ? this.selectedPath?.value
           : this.selectedPath
         : this.paths[0].value;
       this.wallets[this.walletType]
