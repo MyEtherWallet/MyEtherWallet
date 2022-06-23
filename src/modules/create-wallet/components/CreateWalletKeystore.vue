@@ -229,7 +229,7 @@ export default {
       cofirmPassword: '',
       passwordRulles: [
         value => !!value || 'Required',
-        value => value.length >= 7 || 'Password is less than 7 characters'
+        value => value.length >= 8 || 'Password is less than 8 characters'
       ],
 
       walletFile: '',
@@ -242,7 +242,7 @@ export default {
       return (
         this.password !== '' &&
         this.cofirmPassword === this.password &&
-        this.password.length >= 7
+        this.password.length >= 8
       );
     },
     passwordConfirmRulles() {
