@@ -36,7 +36,9 @@ export const knownErrors = {
     'Unexpected response from request. Please try again.',
   'Error: TypeError: Origin https://www.myetherwallet.com is not allowed by Access-Control-Allow-Origin.':
     'CORS Request cannot be made due to security reasons',
-  "Cannot read properties of undefined (reading 'click')": ''
+  "Cannot read properties of undefined (reading 'click')": '',
+  'Error: Error: [number-to-bn] while converting number undefined to BN.js instance, error: invalid number value.':
+    ''
 };
 
 const handleError = err => {
