@@ -1,7 +1,6 @@
 const exec = require('child_process').exec;
 
 const AUDIT_EXCEPTIONS = [
-  'underscore',
   'trim-newlines',
   'css-what',
   'normalize-url',
