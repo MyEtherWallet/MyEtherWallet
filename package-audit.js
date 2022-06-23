@@ -14,7 +14,8 @@ const AUDIT_EXCEPTIONS = [
   'axios',
   'async',
   'nth-check',
-  'semver-regex'
+  'semver-regex',
+  'codecov'
 ];
 const execute = (command, callback) => {
   exec(
