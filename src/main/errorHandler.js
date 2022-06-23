@@ -30,6 +30,7 @@ export const knownErrors = {
   'ENS is not supported': 'ENS is not supported on network private',
   '未能完成该操作。无效的自变量':
     'The operation could not be completed. Invalid argument.',
+  'TypeError Failed to fetch': 'Failed to fetch incoming data',
   'AbortError: The user aborted a request':
     'Request was aborted. Please try again.',
   'JsonRpcEngine: Response has no error or result for request':
@@ -38,7 +39,9 @@ export const knownErrors = {
     'CORS Request cannot be made due to security reasons',
   "Cannot read properties of undefined (reading 'click')": '',
   'GATT operation failed for unknown reason.':
-    'Please reset/disconnect then reconnect bluetooth pairings on device and on connected devices'
+    'Please reset/disconnect then reconnect bluetooth pairings on device and on connected devices',
+  'TypeError: Cannot read properties of undefined (reading "value")':
+    'Selected path unknown'
 };
 
 const handleError = err => {

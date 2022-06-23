@@ -644,7 +644,7 @@ export default {
 
     try {
       const { bluetooth } = navigator;
-      if (!bluetooth) this.bluetooth = false;
+      if (!bluetooth) return (this.bluetooth = false);
       this.bluetooth = await bluetooth.getAvailability();
     } catch (e) {
       Toast(e, {}, ERROR);
@@ -761,7 +761,7 @@ export default {
     unlockPathOnly() {
       const path = isObject(this.selectedPath)
         ? this.selectedPath.hasOwnProperty('value')
-          ? this.selectedPath.value
+          ? this.selectedPath?.value
           : this.selectedPath
         : this.paths[0].value;
       this.wallets[this.walletType]
