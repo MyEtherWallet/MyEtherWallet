@@ -38,7 +38,8 @@ export const knownErrors = {
     'CORS Request cannot be made due to security reasons',
   "Cannot read properties of undefined (reading 'click')": '',
   'Transaction was not mined within 50 blocks, please make sure your transaction was properly sent. Be aware that it might still be mined!':
-    'Gas prices are too low'
+    'Gas prices are too low',
+  'refreshData is not defined': 'Refresh data is not defined'
 };
 
 const handleError = err => {
