@@ -36,7 +36,9 @@ export const knownErrors = {
     'Unexpected response from request. Please try again.',
   'Error: TypeError: Origin https://www.myetherwallet.com is not allowed by Access-Control-Allow-Origin.':
     'CORS Request cannot be made due to security reasons',
-  "Cannot read properties of undefined (reading 'click')": ''
+  "Cannot read properties of undefined (reading 'click')": '',
+  'Transaction was not mined within 50 blocks, please make sure your transaction was properly sent. Be aware that it might still be mined!':
+    'Gas prices are too low'
 };
 
 const handleError = err => {
