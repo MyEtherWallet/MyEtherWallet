@@ -644,7 +644,7 @@ export default {
 
     try {
       const { bluetooth } = navigator;
-      if (!bluetooth) this.bluetooth = false;
+      if (!bluetooth) return (this.bluetooth = false);
       this.bluetooth = await bluetooth.getAvailability();
     } catch (e) {
       Toast(e, {}, ERROR);

@@ -275,7 +275,8 @@ export default {
     currencyItems() {
       const tokenList = new Array();
       for (const contract of buyContracts) {
-        tokenList.push(this.contractToToken(contract));
+        const token = this.contractToToken(contract);
+        if (token) tokenList.push(token);
       }
       const imgs = tokenList.map(item => {
         return item.img;
