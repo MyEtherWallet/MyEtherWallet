@@ -22,7 +22,7 @@
           :value="searchValue"
           class="mb-8"
           placeholder="find a path"
-          is-search-block
+          is-compact
           @input="setSearch"
         />
         <!--
