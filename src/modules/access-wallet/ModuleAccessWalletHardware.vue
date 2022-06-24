@@ -642,9 +642,13 @@ export default {
       this.reset();
     });
 
-    const { bluetooth } = navigator;
-    if (!bluetooth) return (this.bluetooth = false);
-    this.bluetooth = await bluetooth.getAvailability();
+    try {
+      const { bluetooth } = navigator;
+      if (!bluetooth) return (this.bluetooth = false);
+      this.bluetooth = await bluetooth.getAvailability();
+    } catch (e) {
+      Toast(e, {}, ERROR);
+    }
   },
   methods: {
     ...mapActions('wallet', ['setWallet', 'setLedgerBluetooth']),
@@ -757,7 +761,7 @@ export default {
     unlockPathOnly() {
       const path = isObject(this.selectedPath)
         ? this.selectedPath.hasOwnProperty('value')
-          ? this.selectedPath.value
+          ? this.selectedPath?.value
           : this.selectedPath
         : this.paths[0].value;
       this.wallets[this.walletType]
