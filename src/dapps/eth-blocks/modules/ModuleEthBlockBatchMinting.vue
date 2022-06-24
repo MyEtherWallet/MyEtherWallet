@@ -371,6 +371,7 @@ export default {
         .send({
           from: this.address,
           gas: this.gasLimit,
+          gasPrice: this.localGasPrice,
           value: this.totalMintValue
         })
         .on('transactionHash', () => {
