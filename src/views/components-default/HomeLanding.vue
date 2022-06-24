@@ -18,7 +18,7 @@
           </p>
           <div class="mt-9 d-flex">
             <mew-button
-              class="mr-3"
+              class="mr-3 homeLandingCreateWallet"
               :has-full-width="false"
               title="Create a new wallet"
               btn-size="xlarge"

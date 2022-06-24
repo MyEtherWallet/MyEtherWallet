@@ -8,6 +8,7 @@
       -->
       <div class="mb-5">
         <mew-button
+          id="createWalletSoftwareOverviewKeystore"
           has-full-width
           color-theme="greyMedium"
           btn-style="outline"

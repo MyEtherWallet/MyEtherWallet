@@ -13,7 +13,9 @@ const AUDIT_EXCEPTIONS = [
   'axios',
   'async',
   'nth-check',
-  'semver-regex'
+  'semver-regex',
+  // no package found
+  'codecov'
 ];
 const execute = (command, callback) => {
   exec(

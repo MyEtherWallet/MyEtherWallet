@@ -19,7 +19,7 @@
         label="Password"
         placeholder="Enter Password"
         :has-clear-btn="true"
-        class="flex-grow-1 mb-2"
+        class="flex-grow-1 mb-2 createWalletKeystorePasswordInput"
         :rules="passwordRulles"
         type="password"
       />
@@ -33,7 +33,7 @@
         hint=""
         label="Confirm Password"
         placeholder="Confirm password"
-        class="flex-grow-1"
+        class="flex-grow-1 createWalletKeystoreConfirmPWInput"
         :rules="passwordConfirmRulles"
         type="password"
       />
@@ -44,6 +44,7 @@
           -->
       <div v-if="!isGeneratingKeystore" class="d-flex justify-center">
         <mew-button
+          id="createWalletKeystoreSubmitButton"
           title="Create Wallet"
           btn-size="xlarge"
           :has-full-width="false"
