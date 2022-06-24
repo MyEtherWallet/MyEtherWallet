@@ -45,7 +45,9 @@ export const knownErrors = {
     'Selected path unknown',
   'Transaction was not mined within 50 blocks, please make sure your transaction was properly sent. Be aware that it might still be mined!':
     'Gas prices are too low',
-  'refreshData is not defined': 'Refresh data is not defined'
+  'refreshData is not defined': 'Refresh data is not defined',
+  "Non-200 status code: '404'":
+    'The requested URL was not found on this server.'
 };
 
 const handleError = err => {
