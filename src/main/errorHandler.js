@@ -42,7 +42,10 @@ export const knownErrors = {
   'GATT operation failed for unknown reason.':
     'Please reset/disconnect then reconnect bluetooth pairings on device and on connected devices',
   'TypeError: Cannot read properties of undefined (reading "value")':
-    'Selected path unknown'
+    'Selected path unknown',
+  'Transaction was not mined within 50 blocks, please make sure your transaction was properly sent. Be aware that it might still be mined!':
+    'Gas prices are too low',
+  'refreshData is not defined': 'Refresh data is not defined'
 };
 
 const handleError = err => {
