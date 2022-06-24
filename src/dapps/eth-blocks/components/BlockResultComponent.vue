@@ -132,6 +132,7 @@
                 btn-style="transparent"
                 btn-size="large"
                 color-theme="error"
+                class="mr-2"
                 @click.native="hideRemove"
               />
               <mew-button
