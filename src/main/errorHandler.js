@@ -41,7 +41,9 @@ export const knownErrors = {
   'GATT operation failed for unknown reason.':
     'Please reset/disconnect then reconnect bluetooth pairings on device and on connected devices',
   'TypeError: Cannot read properties of undefined (reading "value")':
-    'Selected path unknown'
+    'Selected path unknown',
+  'GATT Server is disconnected. Cannot retrieve services.':
+    'Please reset/disconnect then reconnect bluetooth pairings on device and on connected devices'
 };
 
 const handleError = err => {
