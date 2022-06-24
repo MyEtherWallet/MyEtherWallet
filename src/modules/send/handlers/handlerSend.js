@@ -96,7 +96,7 @@ class SendTransaction {
     return toBN(this.localGasPrice).mul(toBN(this.TX.gas));
   }
   estimateGas() {
-    this.setFrom(this.address());
+    if (this.address()) this.setFrom(this.address());
     this._setTo();
     this._setValue();
     this._setGasPrice();
