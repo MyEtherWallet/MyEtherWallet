@@ -3,22 +3,19 @@
     <v-snackbar
       :value="show"
       vertical
-      multi-line
-      height="260px"
-      min-height="260px"
       :width="width"
       :min-width="width"
       :timeout="-1"
       right
       :class="[
-        notSmallOrXs ? 'pr-12' : 'pr-6',
+        notSmallOrXs ? 'pr-8' : 'pr-6',
         'mr-16 snackbar-container',
         'snackbar-border'
       ]"
       transition="scale-transition"
-      content-class="mew-survey-content d-flex flex-column justify-space-between pa-3"
+      content-class="mew-survey-content"
     >
-      <div class="d-flex align-center">
+      <div class="d-flex align-center mb-2">
         <img
           class="eth--icon mr-4"
           src="@/dapps/stakewise/assets/icon-stakewise-purple.svg"
@@ -48,21 +45,27 @@
           >
             ETH in pool
           </div>
-          <div class="textDark--text">{{ formattedPoolSupply }} ETH</div>
+          <div class="textDark--text text-right">
+            {{ formattedPoolSupply }} ETH
+          </div>
         </div>
       </div>
-      <div class="d-flex justify-space-between py-2">
+      <div class="my-2">
         <mew-button
-          title="Close"
-          btn-style="transparent"
-          btn-size="large"
-          @click.native="close"
-        />
-        <mew-button
+          has-full-width
           title="Start Staking"
           btn-style="background"
           btn-size="large"
           @click.native="openStaking"
+        />
+      </div>
+      <div>
+        <mew-button
+          has-full-width
+          title="Close"
+          btn-style="transparent"
+          btn-size="large"
+          @click.native="close"
         />
       </div>
     </v-snackbar>
@@ -174,21 +177,15 @@ export default {
   }
 };
 </script>
+
 <style lang="scss">
 .wallet-promo-snackbar {
-  margin-bottom: -50px;
-
-  .snackbar-container {
-    margin-bottom: -40px;
-  }
-
-  .mew-survey-content {
-    width: 100% !important;
-  }
-
   .eth--icon {
     border: 1px solid var(--v-greyMedium-base);
     border-radius: 8px;
+  }
+  .v-snack__action {
+    margin: 0 !important;
   }
 }
 </style>
