@@ -87,6 +87,13 @@ export default {
         this.setMigrated(true);
       });
     }
+    const _self = this;
+    // Close modal with 'esc' key
+    document.addEventListener('keydown', e => {
+      if (e.keyCode === 27) {
+        _self.moonPayOpen = false;
+      }
+    });
   },
   methods: {
     ...mapActions('global', ['setOnlineStatus']),
