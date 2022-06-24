@@ -397,13 +397,9 @@ export default {
       };
 
       this.raw = raw;
-      console.log('raw', this.raw);
       const signed = await this.instance.signTransaction(this.raw);
-      console.log('signed', signed);
       this.signedTransaction = signed;
-      console.log('signedTransaction', this.signedTransaction);
       this.signed = JSON.stringify(signed);
-      console.log('signedJSON', this.signed);
       window.scrollTo(0, 0);
       this.clear();
       this.isSignedTxOpen = true;
