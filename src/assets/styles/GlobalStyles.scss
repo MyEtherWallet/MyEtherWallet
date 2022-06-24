@@ -143,10 +143,6 @@ h6 {
   height: 100% !important;
 }
 
-.vertical-align--middle {
-  vertical-align: middle;
-}
-
 .display--block {
   display: block !important;
 }
@@ -166,16 +162,6 @@ h6 {
 
   &.r90 {
     transform: rotate(90deg);
-  }
-}
-
-.btn-circle {
-  cursor: pointer;
-  transition: filter 0.2s linear;
-  height: 30px;
-
-  &:hover {
-    filter: brightness(90%);
   }
 }
 
@@ -205,20 +191,20 @@ h6 {
 /* Firefox */
 * {
   scrollbar-width: auto;
-  scrollbar-color: var(--v-greenPrimary-base) #d6d6d6;
+  scrollbar-color: #c8c8c8 #f4f4f4;
 }
 
 /* Chrome, Edge, and Safari */
 *::-webkit-scrollbar {
-  width: 6px;
+  width: 10px;
 }
 
 *::-webkit-scrollbar-track {
-  background: #d6d6d6;
+  background: #f4f4f4;
 }
 
 *::-webkit-scrollbar-thumb {
-  background-color: #949494;
-  border-radius: 0px;
-  border: 0px solid #ffffff;
+  background-color: #c8c8c8;
+  border-radius: 10px;
+  border: 2px solid #f4f4f4;
 }
