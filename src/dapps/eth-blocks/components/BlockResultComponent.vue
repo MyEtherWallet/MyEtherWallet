@@ -1,5 +1,8 @@
 <template>
-  <div :class="hasBorder ? 'container-border' : ''">
+  <div
+    class="dapp--eth-blocks--block-result-component"
+    :class="hasBorder ? 'container-border' : ''"
+  >
     <div class="py-5 d-flex align-center justify-space-between">
       <v-row v-if="isLoading" dense>
         <v-col class="d-flex">
