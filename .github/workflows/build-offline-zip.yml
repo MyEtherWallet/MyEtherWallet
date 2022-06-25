@@ -3,6 +3,7 @@ name: generate offline zip
 on:
   push:
     branches:
+      - '**/*offline'
       - '*offline'
 
 jobs:
