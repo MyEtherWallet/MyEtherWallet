@@ -207,9 +207,15 @@ export default {
         if (toBN(networkId).toNumber() === item[0].type.chainID) return item;
       });
       if (window.ethereum.isMetaMask) {
-        this.setNetwork(foundNetwork[0]).then(() => {
-          this.setWeb3Instance(new Web3(window.ethereum));
-        });
+        try {
+          console.log(foundNetwork[0]);
+          await this.setNetwork(foundNetwork[0]);
+          //await this.setWeb3Instance();
+          await this.setTokenAndEthBalance();
+        } catch (er) {
+          console.log('in');
+          console.log(er);
+        }
       } else {
         Toast(
           "Can't find matching nodes for selected MetaMask node! MetaMask may not function properly. Please select a supported node",

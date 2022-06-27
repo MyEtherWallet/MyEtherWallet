@@ -286,6 +286,7 @@ export default {
         }
       });
       try {
+        console.log(found[0]);
         this.setNetwork(found[0]).then(() => {
           if (this.isWallet) {
             this.setWeb3Instance().then(() => {
