@@ -1470,7 +1470,7 @@ export default {
         const main = {
           from: this.address,
           type: NOTIFICATION_TYPES.SWAP,
-          network: this.network.type.name,
+          network: this.network.type?.name,
           status: NOTIFICATION_STATUS.PENDING,
           fromTxData: {
             currency: this.confirmInfo.fromType,
