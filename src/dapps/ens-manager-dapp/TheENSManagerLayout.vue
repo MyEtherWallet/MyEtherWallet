@@ -474,7 +474,6 @@ export default {
       'getFiatValue'
     ]),
     ...mapGetters('external', ['fiatValue']),
-    ...mapState('wallet', ['balance', 'address', 'web3']),
     ...mapState('global', ['gasPriceType']),
     ...mapState('wallet', ['balance', 'address', 'web3', 'instance']),
     hasEnsTokenBalance() {

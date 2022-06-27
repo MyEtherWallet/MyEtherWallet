@@ -52,6 +52,17 @@ export default class PermanentNameModule extends ENSManagerInterface {
     }
   }
 
+  async getReverseNameRecords() {
+    try {
+      const reverseNames = await this.publicResolverContract?.methods.name(
+        this.nameHash
+      );
+      return reverseNames;
+    } catch (e) {
+      Toast(e, {}, ERROR);
+    }
+  }
+
   getTransactions(toAddress) {
     const transferMethod = this.registrarContract?.methods.transferFrom(
       this.address,

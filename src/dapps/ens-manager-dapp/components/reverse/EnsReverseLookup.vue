@@ -17,20 +17,42 @@
       </mew-alert>
     </div>
 
-    <div v-else class="d-flex justify-space-between">
-      <mew-select
-        :value="selectedDomain"
-        filter-placeholder="Search for Domain"
-        :items="domainListItems"
-        @input="setDomain"
-      >
-      </mew-select>
-      <mew-button
-        title="Register"
-        class="set-button"
-        btn-size="xlarge"
-        @click.native="setReverseRecord(selectedDomain)"
-      />
+    <div v-else class="d-flex flex-column justify-space-between">
+      <div class="mew-heading-2 mb-2">Your Domains:</div>
+      <div class="d-flex justify-space-between">
+        <mew-select
+          :value="selectedDomain"
+          filter-placeholder="Search for Domain"
+          :items="domainListItems"
+          @input="setDomain"
+        >
+        </mew-select>
+        <mew-button
+          title="Register"
+          class="set-button"
+          btn-size="xlarge"
+          @click.native="setReverseRecord(selectedDomain)"
+        />
+      </div>
+    </div>
+    <div v-if="hasReverseRecordNames">
+      <div class="mew-heading-2 mb-2">Reverse Names:</div>
+      <div class="d-flex justify-space-between">
+        {{ reverseRecordNames }}
+        <!-- <mew-select
+          :value="selectedDomain"
+          filter-placeholder="Search for Domain"
+          :items="domainListItems"
+          @input="setDomain"
+        >
+        </mew-select> -->
+        <!-- <mew-button
+          title="Register"
+          class="set-button"
+          btn-size="xlarge"
+          @click.native="setReverseRecord(selectedDomain)"
+        /> -->
+      </div>
     </div>
   </div>
 </template>
@@ -66,7 +88,9 @@ export default {
       ensLookupResults: null,
       hasDomains: false,
       selectedDomain: {},
-      permHandler: {}
+      permHandler: {},
+      hasReverseRecordNames: false,
+      reverseRecordNames: ''
     };
   },
   computed: {
@@ -96,6 +120,7 @@ export default {
       ens,
       this.durationPick
     );
+    this.getReverseRecordNames();
   },
   methods: {
     async fetchDomains() {
@@ -125,7 +150,18 @@ export default {
           chosenDomain.value.toString(),
           chosenDomain.name
         );
+        this.hasReverseRecordNames = true;
         return reverseRecord;
+      } catch (e) {
+        Toast(e, {}, ERROR);
+      }
+    },
+    async getReverseRecordNames() {
+      try {
+        const reverseRecordNames =
+          await this.permHandler.getReverseNameRecords();
+        this.reverseRecordNames = reverseRecordNames;
+        return reverseRecordNames;
       } catch (e) {
         Toast(e, {}, ERROR);
       }
