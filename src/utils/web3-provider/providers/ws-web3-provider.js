@@ -1,6 +1,6 @@
 'use strict';
 
-import { Toast, SENTRY } from '@/modules/toast/handler/handlerToast';
+import { Toast, SENTRY, ERROR } from '@/modules/toast/handler/handlerToast';
 const errors = require('web3-core-helpers').errors;
 import { isArray, isFunction } from 'lodash';
 let Ws = null;
@@ -45,26 +45,30 @@ const WebsocketProvider = function WebsocketProvider(url, options) {
   this.connection.onmessage = function (e) {
     const data = typeof e.data === 'string' ? e.data : '';
     _this._parseResponse(data).forEach(function (result) {
-      let id = null;
-      if (isArray(result)) {
-        result.forEach(function (load) {
-          if (_this.responseCallbacks[load.id]) id = load.id;
-        });
-      } else {
-        id = result.id;
-      }
-      if (
-        !id &&
-        result &&
-        result.method &&
-        result.method.indexOf('_subscription') !== -1
-      ) {
-        _this.notificationCallbacks.forEach(function (callback) {
-          if (isFunction(callback)) callback(result);
-        });
-      } else if (_this.responseCallbacks[id]) {
-        _this.responseCallbacks[id](null, result);
-        delete _this.responseCallbacks[id];
+      try {
+        let id = null;
+        if (isArray(result)) {
+          result.forEach(function (load) {
+            if (_this.responseCallbacks[load.id]) id = load.id;
+          });
+        } else {
+          id = result.id;
+        }
+        if (
+          !id &&
+          result &&
+          result.method &&
+          result.method.indexOf('_subscription') !== -1
+        ) {
+          _this.notificationCallbacks.forEach(function (callback) {
+            if (isFunction(callback)) callback(result);
+          });
+        } else if (_this.responseCallbacks[id]) {
+          _this.responseCallbacks[id](null, result);
+          delete _this.responseCallbacks[id];
+        }
+      } catch (err) {
+        Toast(err, {}, ERROR);
       }
     });
   };
