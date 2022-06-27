@@ -324,7 +324,7 @@ export default {
             this.$router.push({ name: ROUTES_WALLET.WALLETS.NAME });
           }
         } catch (e) {
-          Toast(e.message, {}, WARNING);
+          Toast(e, {}, WARNING);
         }
       } else {
         Toast('No web3 wallet found!', {}, WARNING);

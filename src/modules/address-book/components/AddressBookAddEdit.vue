@@ -227,7 +227,7 @@ export default {
       if (
         this.nameResolver &&
         this.addressToAdd &&
-        this.addressToAdd.includes('.')
+        this.addressToAdd?.includes?.('.')
       ) {
         await this.nameResolver
           .resolveName(this.addressToAdd)
