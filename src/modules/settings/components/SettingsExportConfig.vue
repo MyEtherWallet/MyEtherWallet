@@ -6,7 +6,7 @@
     <div class="d-flex justify-center mt-5">
       <mew-button
         title="Export"
-        button-size="xlarge"
+        btn-size="xlarge"
         @click.native="exportConfig"
       />
     </div>

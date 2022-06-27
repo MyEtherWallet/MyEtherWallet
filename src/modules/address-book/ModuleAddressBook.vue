@@ -143,7 +143,7 @@ export default {
   },
   watch: {
     web3() {
-      if (this.network.type.ens) {
+      if (this.network.type.ens && this.web3.currentProvider) {
         this.nameResolver = new NameResolver(this.network, this.web3);
       } else {
         this.nameResolver = null;
@@ -151,7 +151,7 @@ export default {
     }
   },
   mounted() {
-    if (this.network.type.ens)
+    if (this.network.type.ens && this.web3.currentProvider)
       this.nameResolver = new NameResolver(this.network, this.web3);
     if (this.isHomePage) {
       this.setDonationAddress();
