@@ -52,11 +52,9 @@ export default class PermanentNameModule extends ENSManagerInterface {
     }
   }
 
-  async getReverseNameRecords() {
+  async getReverseNameRecords(hash) {
     try {
-      const reverseNames = await this.publicResolverContract?.methods.name(
-        this.nameHash
-      );
+      const reverseNames = await this.publicResolverContract.methods.name(hash);
       return reverseNames;
     } catch (e) {
       Toast(e, {}, ERROR);

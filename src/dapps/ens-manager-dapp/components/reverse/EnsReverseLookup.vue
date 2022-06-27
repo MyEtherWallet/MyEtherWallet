@@ -158,8 +158,9 @@ export default {
     },
     async getReverseRecordNames() {
       try {
-        const reverseRecordNames =
-          await this.permHandler.getReverseNameRecords();
+        const reverseRecordNames = await this.permHandler.getReverseNameRecords(
+          this.permHandler.nameHash
+        );
         this.reverseRecordNames = reverseRecordNames;
         return reverseRecordNames;
       } catch (e) {
