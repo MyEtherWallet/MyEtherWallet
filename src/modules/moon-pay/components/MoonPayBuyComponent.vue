@@ -287,14 +287,9 @@ export default {
               const priceRate = this.currencyRates.find(rate => {
                 return rate.crypto_currency === token.symbol;
               });
-
-              const actualPrice =
-                priceRate && priceRate.hasOwnProperty('quotes')
-                  ? priceRate.quotes.find(quote => {
-                      return quote.fiat_currency === this.selectedFiatName;
-                    })
-                  : '0';
-
+              const actualPrice = priceRate?.quotes.find(quote => {
+                return quote.fiat_currency === this.selectedFiatName;
+              });
               token.price = formatFiatValue(
                 actualPrice ? actualPrice.price : '0',
                 this.currencyConfig
