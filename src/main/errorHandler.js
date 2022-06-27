@@ -50,7 +50,9 @@ export const knownErrors = {
   "Non-200 status code: '404'":
     'The requested URL was not found on this server.',
   'GATT Server is disconnected. Cannot retrieve services.':
-    'Please reset/disconnect then reconnect bluetooth pairings on device and on connected devices'
+    'Please reset/disconnect then reconnect bluetooth pairings on device and on connected devices',
+  'DisconnectedDeviceDuringOperation: The device was disconnected.':
+    'Ledger device has been disconnected, please reconnect and try again'
 };
 
 const handleError = err => {
