@@ -47,7 +47,8 @@ export const knownErrors = {
     'Gas prices are too low',
   'refreshData is not defined': 'Refresh data is not defined',
   "Non-200 status code: '404'":
-    'The requested URL was not found on this server.'
+    'The requested URL was not found on this server.',
+  "execution reverted: it's not your token": 'You do not own this token'
 };
 
 const handleError = err => {
