@@ -108,6 +108,7 @@ const setTokenAndEthBalance = function ({
 
       hasPreTokens.forEach(t => {
         const token = getters.contractToToken(t.contract);
+        if (!t.contract) return;
         if (!token) {
           promises.push(
             getTokenInfo(t.contract, rootState.wallet.web3).then(info => {
@@ -162,7 +163,9 @@ const setTokenAndEthBalance = function ({
           root: true
         }).then(() => {
           // dispatch can't be blank
-          dispatch('custom/updateCustomTokenBalances', false, { root: true });
+          dispatch('custom/updateCustomTokenBalances', false, {
+            root: true
+          }).catch(e => Toast(e, {}, ERROR));
           commit('wallet/SET_LOADING_WALLET_INFO', false, { root: true });
         })
       );
