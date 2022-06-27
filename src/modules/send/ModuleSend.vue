@@ -599,13 +599,10 @@ export default {
         this.data = '0x';
         return;
       }
-      const first2 = this.data.substring(0, 2);
-      if (first2 != '0x') {
-        if (first2 == '0' || first2 == '') {
-          this.data = '0x';
-          return;
-        }
-        this.data = '0x' + this.data;
+      if (!isHexStrict(this.data)) {
+        if (!this.data.includes('0x'))
+          this.data = '0x' + (this.data === '0' ? '' : this.data);
+        else this.data = '0x';
       }
     },
     /**
