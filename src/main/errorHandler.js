@@ -48,7 +48,9 @@ export const knownErrors = {
     'Gas prices are too low',
   'refreshData is not defined': 'Refresh data is not defined',
   "Non-200 status code: '404'":
-    'The requested URL was not found on this server.'
+    'The requested URL was not found on this server.',
+  'GATT Server is disconnected. Cannot retrieve services.':
+    'Please reset/disconnect then reconnect bluetooth pairings on device and on connected devices'
 };
 
 const handleError = err => {
