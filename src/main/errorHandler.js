@@ -38,9 +38,17 @@ export const knownErrors = {
   'Error: TypeError: Origin https://www.myetherwallet.com is not allowed by Access-Control-Allow-Origin.':
     'CORS Request cannot be made due to security reasons',
   "Cannot read properties of undefined (reading 'click')": '',
+  'Cannot read properties of undefined (reading "msg")': '',
+  'GATT operation failed for unknown reason.':
+    'Please reset/disconnect then reconnect bluetooth pairings on device and on connected devices',
   'TypeError: Cannot read properties of undefined (reading "value")':
     'Selected path unknown',
-  'Permission denied.': 'Permission denied. Please try again.'
+  'Permission denied.': 'Permission denied. Please try again.',
+  'Transaction was not mined within 50 blocks, please make sure your transaction was properly sent. Be aware that it might still be mined!':
+    'Gas prices are too low',
+  'refreshData is not defined': 'Refresh data is not defined',
+  "Non-200 status code: '404'":
+    'The requested URL was not found on this server.'
 };
 
 const handleError = err => {
