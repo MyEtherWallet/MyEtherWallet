@@ -107,8 +107,8 @@ const setTokenAndEthBalance = function ({
       const promises = [];
 
       hasPreTokens.forEach(t => {
-        const token = getters.contractToToken(t.contract);
         if (!t.contract) return;
+        const token = getters.contractToToken(t.contract);
         if (!token) {
           promises.push(
             getTokenInfo(t.contract, rootState.wallet.web3).then(info => {
