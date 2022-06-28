@@ -23,11 +23,15 @@ module.exports = {
       .click('css selector', '.homeLandingCreateWallet')
       // successfully navigated to create wallet
       .assert.urlContains('/wallet/create')
-      .waitForElementVisible('css selector', '.createWalletSoftware')
-      // .getLocationInView('css selector', '.createWalletSoftware')
-      .click('css selector', '.createWalletSoftware')
-      // select and fill in password
-      .assert.urlContains('wallet/create/software?type=overview')
+      .waitForElementVisible('css selector', '.createWalletSoftware');
+    // .getLocationInView('css selector', '.createWalletSoftware')
+    // .click('css selector', '.createWalletSoftware')
+    browser.execute(function () {
+      document.querySelector('.createWalletSoftware').click();
+    });
+    // select and fill in password
+    browser.assert
+      .urlContains('wallet/create/software?type=overview')
       .waitForElementVisible(
         'css selector',
         '.createWalletSoftwareOverviewKeystore'
