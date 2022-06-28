@@ -48,5 +48,23 @@
       "title": "Custom Tokens",
       "text": "MEW automatically supports most ERC20 tokens through our API, but if you don’t see the token you’re looking for, you can add it as a custom token right in the interface!"
     }
+  },
+  "more": {
+    "title": "More tools",
+    "smart-contracts": {
+      "title": "Smart Contracts",
+      "description":
+        "Interact with any smart contract on Ethereum, whether we’ve integrated it or not!"
+    },
+    "messages": {
+      "title": "Messages",
+      "description":
+        "Send or verify messages from the MEW interface to verify ownership of your wallet."
+    },
+    "buy-eth": {
+      "title": "Buy ETH",
+      "description":
+        "Purchase Ether with a credit card through our providers"
+    }
   }
 }
