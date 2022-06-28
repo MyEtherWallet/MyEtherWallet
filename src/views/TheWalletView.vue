@@ -210,13 +210,12 @@ export default {
       if (window.ethereum.isMetaMask) {
         try {
           await this.setNetwork(foundNetwork[0]);
-          // await this.setWeb3Instance();
+          await this.setWeb3Instance();
           await this.setTokenAndEthBalance();
           this.trackNetworkSwitch(foundNetwork[0].type.name);
           this.$emit('newNetwork');
-        } catch (er) {
-          console.log('in');
-          console.log(er);
+        } catch {
+          Toast('There was an error switching networks', {}, ERROR);
         }
       } else {
         Toast(
