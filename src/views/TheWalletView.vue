@@ -29,6 +29,7 @@ import { Web3Wallet } from '@/modules/access-wallet/common';
 import Web3 from 'web3';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
 import WalletPromoSnackbar from '@/views/components-wallet/WalletPromoSnackbar';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 export default {
   components: {
     TheWalletSideMenu,
@@ -38,7 +39,7 @@ export default {
     ModuleConfirmation,
     WalletPromoSnackbar
   },
-  mixins: [handlerWallet],
+  mixins: [handlerWallet, handlerAnalytics],
   computed: {
     ...mapState('wallet', ['address', 'web3', 'identifier']),
     ...mapState('global', ['online', 'gasPriceType', 'baseGasPrice']),
@@ -211,6 +212,8 @@ export default {
           await this.setNetwork(foundNetwork[0]);
           // await this.setWeb3Instance();
           await this.setTokenAndEthBalance();
+          this.trackNetworkSwitch(foundNetwork[0].type.name);
+          this.$emit('newNetwork');
         } catch (er) {
           console.log('in');
           console.log(er);
