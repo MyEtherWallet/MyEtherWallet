@@ -7,7 +7,13 @@ module.exports = {
         acceptSslCerts: true,
         acceptInsecureCerts: true,
         chromeOptions: {
-          args: ['window-size=1980,1080'],
+          args: [
+            'window-size=1980,1080',
+            // take these out on local
+            'headless',
+            'no-sandbox',
+            'disable-gpu'
+          ],
           prefs: {
             download: {
               default_directory: './download_folder',
