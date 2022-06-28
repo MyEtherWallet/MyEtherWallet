@@ -102,13 +102,6 @@ export default {
       ledgerApp: {}
     };
   },
-  computed: {
-    // btnTitle() {
-    //   return this.ledgerConnected
-    //     ? 'Unlock Ledger Nano X'
-    //     : 'Connect Ledger Nano X';
-    // }
-  },
   watch: {
     ledgerApp: {
       handler: function (newVal) {

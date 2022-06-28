@@ -195,22 +195,6 @@
 
       <!--
         =====================================================================================
-          LedgerX
-        =====================================================================================
-        -->
-      <!-- <access-wallet-ledger-x
-        v-if="onLedgerX"
-        :ledger-unlock-ble="nextStep"
-        :ledger-apps="ledgerApps"
-        :ledger-connected="ledgerConnected"
-        :paths="paths"
-        :selected-path="selectedPath"
-        :set-path="setPath"
-        @ledgerApp="setSelectedApp"
-      /> -->
-
-      <!--
-        =====================================================================================
           Trezor
         =====================================================================================
         -->
@@ -305,12 +289,6 @@ export default {
           icon: require('@/assets/images/icons/hardware-wallets/Ledger-Nano-X-Label-Icon.svg'),
           type: WALLET_TYPES.LEDGER
         },
-        // {
-        //   label: 'Ledger Bluetooth',
-        //   icon: require('@/assets/images/icons/hardware-wallets/Ledger-Nano-X-Label-Icon.svg'),
-        //   ble: true,
-        //   type: WALLET_TYPES.LEDGER
-        // },
         {
           label: 'Trezor',
           icon: require('@/assets/images/icons/hardware-wallets/icon-trezor.svg'),
@@ -773,7 +751,6 @@ export default {
         .then(_hwWallet => {
           try {
             this.loaded = true;
-            // if (this.onLedger) this.ledgerConnected = true;
             if (this.onLedgerX || this.onLedger) this.nextStep();
             if ((this.onTrezor || this.onKeepkey) && this.step == 2)
               this.step++;

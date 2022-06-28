@@ -89,11 +89,6 @@ export default {
       ledgerApp: {}
     };
   },
-  computed: {
-    // btnTitle() {
-    //   return this.ledgerConnected ? 'Unlock Ledger' : 'Connect Ledger';
-    // }
-  },
   watch: {
     ledgerApp: {
       handler: function (newVal) {
