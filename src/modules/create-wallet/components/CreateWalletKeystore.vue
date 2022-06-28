@@ -44,7 +44,7 @@
           -->
       <div v-if="!isGeneratingKeystore" class="d-flex justify-center">
         <mew-button
-          id="createWalletKeystoreSubmitButton"
+          class="createWalletKeystoreSubmitButton"
           title="Create Wallet"
           btn-size="xlarge"
           :has-full-width="false"
@@ -81,7 +81,9 @@
       =====================================================================================
       -->
     <template v-if="step === 2" #stepperContent2>
-      <div class="subtitle-1 font-weight-bold grey--text">STEP 2.</div>
+      <div class="subtitle-1 font-weight-bold grey--text step-two-header">
+        STEP 2.
+      </div>
       <div class="headline font-weight-bold">Download keystore file</div>
       <div class="mb-5">
         Important things to know before downloading your keystore file.
@@ -109,7 +111,7 @@
           title="Acknowledge & Download"
           btn-size="xlarge"
           :has-full-width="false"
-          class="mx-md-1 my-1"
+          class="mx-md-1 my-1 createWalletKeystoreAcceptAndDownload"
           @click.native="downloadWallet"
         />
       </div>
@@ -134,7 +136,9 @@
     <template v-if="step === 3" #stepperContent3>
       <div class="d-flex align-center">
         <div>
-          <div class="subtitle-1 font-weight-bold grey--text">STEP 3.</div>
+          <div class="subtitle-1 font-weight-bold grey--text step-three-header">
+            STEP 3.
+          </div>
           <div class="headline font-weight-bold mb-3">You are done!</div>
           <p class="mb-6">
             You are now ready to take advantage of all that Ethereum has to
@@ -152,7 +156,7 @@
               title="Access Wallet"
               btn-size="xlarge"
               :has-full-width="false"
-              class="mb-3"
+              class="mb-3 createWalletKeystoreGoToAccessButton"
               @click.native="goToAccess"
             />
             <mew-button

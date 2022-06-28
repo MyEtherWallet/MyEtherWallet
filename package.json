@@ -109,7 +109,7 @@
     "@mdi/font": "6.7.96",
     "@vue/babel-preset-app": "4.5.15",
     "@vue/cli-plugin-babel": "4.5.15",
-    "@vue/cli-plugin-e2e-nightwatch": "^4.5.18",
+    "@vue/cli-plugin-e2e-nightwatch": "4.5.18",
     "@vue/cli-plugin-eslint": "4.5.15",
     "@vue/cli-plugin-pwa": "4.5.15",
     "@vue/cli-plugin-unit-jest": "4.5.15",
