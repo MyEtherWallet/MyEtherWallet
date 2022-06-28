@@ -14,8 +14,8 @@
 =====================================================================================
 -->
     <v-skeleton-loader
-      class="token-skeleton"
       v-if="loading"
+      class="token-skeleton"
       :height="getSize"
       :width="getSize"
       type="avatar"
@@ -31,15 +31,18 @@
       :src="img || ethTokenPlaceholder"
       :alt="name"
       loading="lazy"
-    >
+    />
     <!--
 =====================================================================================
   Img Placeholder
 =====================================================================================
 -->
     <span
-      :class="['d-flex align-center justify-center full-height textLight--text text-uppercase font-weight-medium', getFontClass]"
       v-if="!loading && !img"
+      :class="[
+        'd-flex align-center justify-center full-height textLight--text text-uppercase font-weight-medium',
+        getFontClass
+      ]"
     >
       {{ getPlaceholderText }}
     </span>
@@ -51,45 +54,45 @@ import ethTokenPlaceholder from '@/assets/images/icons/eth.svg';
 
 export default {
   name: 'MewTokenContainer',
-  data() {
-    return {
-      ethTokenPlaceholder,
-      sizeOptions: {
-        small: 'small',
-        medium: 'medium',
-        large: 'large',
-      },
-    };
-  },
   props: {
     /**
      * Turns on loading state if true.
      */
     loading: {
       type: Boolean,
-      default: false,
+      default: false
     },
     /**
      * Accepts small, medium or large sizes.
      */
     size: {
       type: String,
-      default: 'small',
+      default: 'small'
     },
     /**
      * Token name. Used for placeholder if there is no icon img.
      */
     name: {
       type: String,
-      default: 'MEW',
+      default: 'MEW'
     },
     /**
      * Token Icon img src
      */
     img: {
       type: [String, Array],
-      default: '',
-    },
+      default: ''
+    }
+  },
+  data() {
+    return {
+      ethTokenPlaceholder,
+      sizeOptions: {
+        small: 'small',
+        medium: 'medium',
+        large: 'large'
+      }
+    };
   },
   computed: {
     /**
@@ -128,8 +131,8 @@ export default {
       }
 
       return '52px';
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>
