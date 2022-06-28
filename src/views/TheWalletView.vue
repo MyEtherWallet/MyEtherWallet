@@ -7,10 +7,10 @@
         <module-confirmation />
         <wallet-promo-pop-up />
         <router-view />
-        <wallet-promo-snackbar />
       </v-container>
     </v-main>
     <the-wallet-footer />
+    <wallet-promo-snackbar />
   </div>
 </template>
 

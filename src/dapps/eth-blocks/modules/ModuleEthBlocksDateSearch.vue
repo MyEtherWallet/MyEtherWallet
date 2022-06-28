@@ -1,5 +1,5 @@
 <template>
-  <div class="pt-8 px-3 px-lg-12 pb-12 px-md-12">
+  <div class="dapps--eth-blocks--data-search pt-8 px-3 px-lg-12 pb-12 px-md-12">
     <block-search />
     <div class="pt-12">
       <div v-if="foundBlocks.length > 0">
