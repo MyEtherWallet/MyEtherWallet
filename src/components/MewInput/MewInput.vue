@@ -104,7 +104,6 @@
 <script>
 import MewBlockie from '@/components/MewBlockie/MewBlockie.vue';
 import MewTokenContainer from '@/components/MewTokenContainer/MewTokenContainer.vue';
-import _ from 'lodash';
 
 const types = ['password', 'text', 'number'];
 
