@@ -180,6 +180,7 @@
 </template>
 
 <script>
+import MewInput from '@/components/MewInput/MewInput';
 import { fromWei, isHexStrict, toWei } from 'web3-utils';
 import { debounce, isEmpty, isNumber } from 'lodash';
 import { mapGetters, mapState } from 'vuex';
@@ -199,6 +200,7 @@ import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 export default {
   components: {
+    MewInput,
     ModuleAddressBook,
     SendLowBalanceNotice,
     AppButtonBalance,
