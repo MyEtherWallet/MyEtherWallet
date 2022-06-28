@@ -451,12 +451,12 @@ export default {
           };
     },
     /**
-     *Returns errors messages based on netowrk
+     *Returns errors messages based on network
      */
     errorMsgs() {
       return {
-        amountEthIsTooLow: `You do not have enough ${this.network.type.name} to swap.`,
-        amountExceedsEthBalance: `Amount exceeds your ${this.network.type.name} balance.`,
+        amountEthIsTooLow: `You do not have enough ${this.networkName} to swap.`,
+        amountExceedsEthBalance: `Amount exceeds your ${this.networkName} balance.`,
         amountExceedsTxFee: `Amount entered doesn't allow for transaction fee`,
         amountLessThan0: 'Swap amount must be greater than 0',
         doNotOwnToken: 'You do not own this token'
@@ -468,14 +468,18 @@ export default {
     msg() {
       return {
         lowBalance: {
-          title: `Your ${this.network.type.name} balance is too low`,
-          subtitle: `Every transaction requires a small amount of ${this.network.type.name} to execute. Even if you have tokens to swap, when your ${this.network.type.name} balance is close to zero, you won't be able to send anything until you fund your account.`
+          title: `Your ${this.networkName} balance is too low`,
+          subtitle: `Every transaction requires a small amount of ${this.networkName} to execute. Even if you have tokens to swap, when your ${this.networkName} balance is close to zero, you won't be able to send anything until you fund your account.`
         },
         storeBitcoin: {
           title: `Did you know? You can store your Bitcoin on ${this.network.type.name_long}`,
           subtitle: `To swap to BTC you need a Bitcoin wallet, but you can swap to wrapped Bitcoin instead and store it in your ${this.network.type.name_long} wallet.`
         }
       };
+    },
+    networkName() {
+      const name = this.network.type.name;
+      return name === 'BSC' ? 'BNB' : name;
     },
     disableNext() {
       const disableSet =
@@ -1518,7 +1522,7 @@ export default {
     checkFeeBalance() {
       this.feeError = '';
       if (this.notEnoughEth) {
-        this.feeError = `Not enough ${this.network.type.name} to pay for transaction fee.`;
+        this.feeError = `Not enough ${this.networkName} to pay for transaction fee.`;
       }
     },
     setTokenFromURL() {
