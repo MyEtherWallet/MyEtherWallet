@@ -208,9 +208,8 @@ export default {
       });
       if (window.ethereum.isMetaMask) {
         try {
-          console.log(foundNetwork[0]);
           await this.setNetwork(foundNetwork[0]);
-          //await this.setWeb3Instance();
+          // await this.setWeb3Instance();
           await this.setTokenAndEthBalance();
         } catch (er) {
           console.log('in');
