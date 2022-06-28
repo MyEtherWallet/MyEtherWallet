@@ -24,8 +24,6 @@ module.exports = {
       // successfully navigated to create wallet
       .assert.urlContains('/wallet/create')
       .waitForElementVisible('css selector', '.createWalletSoftware');
-    // .getLocationInView('css selector', '.createWalletSoftware')
-    // .click('css selector', '.createWalletSoftware')
     browser.execute(function () {
       document.querySelector('.createWalletSoftware').click();
     });

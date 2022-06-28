@@ -8,6 +8,7 @@ yarn-error.log*
 selenium-debug.log
 /tests/e2e/reports/
 /download_folder
+/logs
 chromedriver.log
 
 # Editor directories and files
