@@ -32,20 +32,22 @@
     </div>
     <div class="d-flex justify-space-between justify-center text-center mt-5">
       <div class="section-block" @click="ledgerUnlockBle">
-        <img
+        <v-img
           src="@/assets/images/hardware-wallets/Bluetooth.svg"
           alt="Bluetooth"
-          height="50"
+          max-width="50px"
+          max-height="50px"
           class="connect-img"
         />
         <div class="buttonTitle mew-heading-3 mt-8">Connect via Bluetooth</div>
         <div class="mew-label mb-10 label">Ledger Nano X Only</div>
       </div>
       <div class="section-block" @click="ledgerUnlock">
-        <img
+        <v-img
           src="@/assets/images/hardware-wallets/USB.svg"
           alt="USB"
-          height="50"
+          max-width="50px"
+          max-height="50px"
           class="connect-img"
         />
         <div class="buttonTitle mew-heading-3 mt-8">Connect via USB</div>
@@ -120,7 +122,8 @@ export default {
   color: #1eb19b;
 }
 .connect-img {
-  margin-top: 20px;
+  margin-top: 50px;
+  margin-left: 140px;
 }
 .sheet {
   background-color: #ebfaf8;
