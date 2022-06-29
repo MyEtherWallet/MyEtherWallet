@@ -5,6 +5,7 @@ import dappsSubmission from './dapps-submission/en_US';
 import home from './home/en_US';
 import howItWorks from './how-it-works/en_US.json';
 import aboutUs from './about-us/en_US.json';
+import team from './team/en_US.json';
 import footer from './footer/en_US';
 import gettingStarted from './getting-started/en_US';
 import privacyPolicy from './privacy-policy/en_US';
@@ -41,6 +42,7 @@ const en_US = {
   home: home,
   howItWorks: howItWorks,
   aboutUs: aboutUs,
+  team: team,
   footer: footer,
   gettingStarted: gettingStarted,
   privacyPol: privacyPolicy,
