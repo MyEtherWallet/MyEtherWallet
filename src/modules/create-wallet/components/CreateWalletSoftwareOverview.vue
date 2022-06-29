@@ -43,6 +43,7 @@
       -->
       <div class="mb-5">
         <mew-button
+          class="createWalletSoftwareOverviewMnemonic"
           has-full-width
           color-theme="greyMedium"
           btn-style="outline"

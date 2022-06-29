@@ -39,7 +39,7 @@
             Phrase Table
           =====================================================================================
           -->
-        <phrase-block class="mb-8">
+        <phrase-block class="mb-8 createWalletMnemonicTable">
           <mnemonic-phrase-table :data="phrase" />
         </phrase-block>
         <!--
