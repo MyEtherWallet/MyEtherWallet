@@ -320,7 +320,7 @@ export default {
     sanitizeInput(e) {
       // Sanitize for number type
       if (this.isNumberType) {
-        const keysNotAllowed = ['-', 'e'];
+        const keysNotAllowed = ['+', '-', 'e'];
         const keyPressed = e.key;
 
         // Exit for keys not allowed
@@ -349,7 +349,7 @@ export default {
         }
 
         // Insert '0' for empty inputValue
-        if (keyPressed == 'Backspace' && this.inputValue == '') {
+        if (this.inputValue == '') {
           this.inputValue = '0';
           this.sanitizationBuffer = this.inputValue;
           return;
