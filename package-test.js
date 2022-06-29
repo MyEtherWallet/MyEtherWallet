@@ -47,6 +47,8 @@ const EXCEPTIONS = [
   '@vue/cli-service',
   'vue-i18n',
   'vue',
+  '@vue/cli-plugin-e2e-nightwatch',
+  'geckodriver',
   'trezor-connect', // currently in beta
   '@shapeshiftoss/hdwallet-core',
   '@shapeshiftoss/hdwallet-keepkey-webusb',
