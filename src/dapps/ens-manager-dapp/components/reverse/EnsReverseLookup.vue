@@ -178,7 +178,7 @@ export default {
         const reverse = ens.reverse(this.address);
         this.reverseRecordNames = await reverse.name();
         this.hasReverseRecordNames = true;
-      } catch {
+      } catch (e) {
         this.hasReverseRecordNames = false;
       }
     }
