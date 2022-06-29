@@ -113,7 +113,13 @@ export default {
     fetchJobs() {
       axios
         .get(
-          'https://raw.githubusercontent.com/MyEtherWallet/dynamic-data/main/careers.json'
+          'https://raw.githubusercontent.com/MyEtherWallet/dynamic-data/main/careers.json',
+          {
+            headers: {
+              accept: 'application/json, text/plain, */*',
+              'Accept-Language': 'en-US,en;q=0.9'
+            }
+          }
         )
         .then(res => {
           this.loadingCareers = false;
