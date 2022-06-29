@@ -158,7 +158,7 @@
               title="Create Another Wallet"
               :has-full-width="false"
               btn-style="transparent"
-              @click.native="updateStep(1)"
+              @click.native="restart"
             />
           </div>
         </div>
@@ -281,6 +281,11 @@ export default {
      */
     updateStep(step) {
       this.step = step ? step : 1;
+    },
+    restart() {
+      this.step = 1;
+      this.password = '';
+      this.cofirmPassword = '';
     }
   }
 };
