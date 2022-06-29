@@ -88,6 +88,7 @@ export default {
       ensLookupResults: null,
       hasDomains: false,
       selectedDomain: {},
+      selectedDomainAddr: '',
       permHandler: {},
       hasReverseRecordNames: false,
       reverseRecordNames: ''
@@ -134,7 +135,8 @@ export default {
         this.ensLookupResults = domains.map(item => {
           return {
             name: item.name,
-            value: item.nameHash
+            value: item.nameHash,
+            address: item.address
           };
         });
       } catch (e) {
@@ -143,6 +145,7 @@ export default {
     },
     setDomain(value) {
       this.selectedDomain = value;
+      this.getReverseRecordNames(this.selectedDomainAddr);
     },
     async setReverseRecord(chosenDomain) {
       try {
@@ -156,15 +159,27 @@ export default {
         Toast(e, {}, ERROR);
       }
     },
+    // async getReverseRecordNames() {
+    //   try {
+    //     const reverseRecordNames = await this.permHandler.getReverseNameRecords(
+    //       this.permHandler.nameHash
+    //     );
+    //     this.reverseRecordNames = reverseRecordNames;
+    //     return reverseRecordNames;
+    //   } catch (e) {
+    //     Toast(e, {}, ERROR);
+    //   }
+    // },
     async getReverseRecordNames() {
       try {
-        const reverseRecordNames = await this.permHandler.getReverseNameRecords(
-          this.permHandler.nameHash
-        );
-        this.reverseRecordNames = reverseRecordNames;
-        return reverseRecordNames;
-      } catch (e) {
-        Toast(e, {}, ERROR);
+        const ens = this.network.type.ens
+          ? new ENS(this.web3.currentProvider, this.network.type.ens.registry)
+          : null;
+        const reverse = ens.reverse(this.address);
+        this.reverseRecordNames = await reverse.name();
+        this.hasReverseRecordNames = true;
+      } catch {
+        this.hasReverseRecordNames = false;
       }
     }
   }
