@@ -43,6 +43,12 @@
       "heading": "MEW supports ETH and all ERC-20 tokens!"
     }
   },
+  "eth-blocks": {
+    "title": "Home of ETH Block NFTs!",
+    "description": "ETH Blocks is an NFT series representing mined Ethereum blocks and their properties. Whether it's a special block number, the block of your first transaction, or a block that contains a transaction with a special message. Own a part of history with ETH Blocks by MEW.",
+    "btn-text": "Access your wallet to Mint"
+  },
+  "community-title": "Join MEW Community", 
   "about-mew": {
     "heading": "Easy and secure access to the Ethereum Blockchain",
     "subheading": "Why MEW",
