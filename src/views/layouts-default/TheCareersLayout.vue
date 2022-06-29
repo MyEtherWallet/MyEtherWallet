@@ -95,6 +95,7 @@
 <script>
 import TheLayoutHeader from '../components-default/TheLayoutHeader';
 import axios from 'axios';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 
 export default {
   name: 'TheCareersLayout',
@@ -117,7 +118,8 @@ export default {
         .then(res => {
           this.loadingCareers = false;
           this.jobs = res.data;
-        });
+        })
+        .catch(e => Toast(e, {}, ERROR));
     }
   }
 };
