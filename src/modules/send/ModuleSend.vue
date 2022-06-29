@@ -597,12 +597,6 @@ export default {
     verifyHexFormat() {
       if (!this.data || isEmpty(this.data)) {
         this.data = '0x';
-        return;
-      }
-      if (!isHexStrict(this.data)) {
-        if (!this.data.includes('0x'))
-          this.data = '0x' + (this.data === '0' ? '' : this.data);
-        else this.data = '0x';
       }
     },
     /**
