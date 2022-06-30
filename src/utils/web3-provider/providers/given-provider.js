@@ -11,7 +11,6 @@ import {
   ethCoinbase,
   ethAccounts
 } from '../methods';
-import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 class CustomRequestManager extends Web3RequestManager {
   constructor(host) {
     super(host);
@@ -40,7 +39,7 @@ class CustomRequestManager extends Web3RequestManager {
         .then(res => {
           callback(null, res);
         })
-        .catch(err => Toast(err, {}, ERROR));
+        .catch(err => callback(err));
     } else {
       this.request({ method, params })
         .then(res => {
