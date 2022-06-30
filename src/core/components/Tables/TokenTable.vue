@@ -9,6 +9,8 @@
     :title="title"
     :divider="divider"
     :padding-around="paddingAround"
+    :padding-side="paddingSide"
+    :round-corner="roundCorner"
   >
     <table>
       <thead>
@@ -113,6 +115,14 @@ export default {
       default: ''
     },
     paddingAround: {
+      type: Boolean,
+      default: false
+    },
+    paddingSide: {
+      type: Boolean,
+      default: false
+    },
+    roundCorner: {
       type: Boolean,
       default: false
     }

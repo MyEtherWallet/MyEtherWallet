@@ -50,6 +50,14 @@ export default {
     paddingAround: {
       type: Boolean,
       default: false
+    },
+    paddingSide: {
+      type: Boolean,
+      default: false
+    },
+    roundCorner: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -66,10 +74,12 @@ export default {
         this.hoverEffect ? 'hover-effect' : '',
         this.background ? 'alteranting-background' : '',
         this.borderAround ? 'border-around' : '',
+        this.roundCorner ? 'round-corner' : '',
         this.loading ? 'loading' : '',
         this.flat ? '' : 'box-shadow',
         this.divider ? 'divider' : '',
-        this.paddingAround ? 'padding-around' : ''
+        this.paddingAround ? 'padding-around' : '',
+        this.paddingSide ? 'padding-side' : ''
       ];
     }
   }
@@ -78,7 +88,7 @@ export default {
 
 <style lang="scss">
 .table-component {
-  // Vuetify skeleton loader
+  // Force style Vuetify skeleton loader
   .v-skeleton-loader__heading {
     width: 100%;
   }
@@ -95,42 +105,33 @@ export default {
   }
 }
 
+// Default styles
 .table-component {
   --bg-color: #f4f7fe;
   --hover-color: #eaeffb;
   --border-color: #e0e5f2;
   --shadow-color: rgba(0, 0, 0, 0.15);
-
-  border-radius: 8px;
-  overflow: hidden;
-
-  &.border-around {
-    border: 1px solid var(--border-color);
-  }
-
-  &.box-shadow {
-    box-shadow: 0 2px 6px var(--shadow-color);
-  }
-}
-
-table {
-  border-collapse: collapse;
-  width: 100%;
-
-  thead {
-    border-bottom: 1px solid var(--border-color);
-    font-size: 12px;
-  }
-
-  tbody {
-  }
-
-  td {
-    height: 58px;
-    padding: 0px 20px;
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    thead {
+      border-bottom: 1px solid var(--border-color);
+      font-size: 12px;
+    }
+    td {
+      height: 58px;
+      padding: 0px 20px;
+    }
   }
 }
 
+// Options by props
+.box-shadow {
+  box-shadow: 0 2px 6px var(--shadow-color);
+}
+.border-around {
+  border: 1px solid var(--border-color);
+}
 .hover-effect {
   tbody {
     tr:hover {
@@ -138,7 +139,6 @@ table {
     }
   }
 }
-
 .alteranting-background {
   tbody {
     tr:nth-child(odd) {
@@ -146,13 +146,11 @@ table {
     }
   }
 }
-
 .loading {
   tbody {
     display: none;
   }
 }
-
 .divider {
   tbody {
     tr:not(:last-child) {
@@ -160,8 +158,15 @@ table {
     }
   }
 }
-
 .padding-around {
   padding: 10px 15px 15px 15px;
+}
+
+.padding-side {
+  padding: 0px 15px;
+}
+.round-corner {
+  border-radius: 8px;
+  overflow: hidden;
 }
 </style>

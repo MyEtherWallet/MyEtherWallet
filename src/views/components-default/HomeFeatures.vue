@@ -5,12 +5,14 @@
         :full-width="fullWidth"
         :background="background"
         :border-around="borderAround"
+        :round-corner="roundCorner"
         :loading="loading"
         :hover-effect="hoverEffect"
         :flat="flat"
         :title="title"
         :divider="divider"
         :padding-around="paddingAround"
+        :padding-side="paddingSide"
       ></token-table>
       <div>
         <v-switch v-model="fullWidth" hide-details label="fullWidth"></v-switch>
@@ -29,6 +31,11 @@
           hide-details
           label="borderAround"
         ></v-switch>
+        <v-switch
+          v-model="roundCorner"
+          hide-details
+          label="roundCorner"
+        ></v-switch>
         <v-switch v-model="loading" hide-details label="loading"></v-switch>
         <v-switch v-model="flat" hide-details label="flat"></v-switch>
         <v-switch v-model="divider" hide-details label="divider"></v-switch>
@@ -36,6 +43,11 @@
           v-model="paddingAround"
           hide-details
           label="paddingAround"
+        ></v-switch>
+        <v-switch
+          v-model="paddingSide"
+          hide-details
+          label="paddingSide"
         ></v-switch>
 
         <v-text-field v-model="title" class="mt-5" label="Title"></v-text-field>
@@ -134,6 +146,8 @@ export default {
     flat: false,
     divider: false,
     paddingAround: false,
+    paddingSide: false,
+    roundCorner: false,
     title: 'TOKENS TABLE',
     mobileTab: null,
     mobileItems: [
