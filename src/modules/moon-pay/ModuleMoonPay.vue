@@ -180,22 +180,20 @@ export default {
     ...mapActions('global', ['setNetwork']),
     onTab(val) {
       this.selectedCurrency = this.defaltCurrency;
-      if (val === 1) {
-        if (this.network.type.chainID !== 1) {
-          const defaultNetwork = this.nodes['ETH'].find(item => {
-            return item.service === 'myetherwallet.com-ws';
+      if (this.network.type.chainID !== 1) {
+        const defaultNetwork = this.nodes['ETH'].find(item => {
+          return item.service === 'myetherwallet.com-ws';
+        });
+        if (
+          !this.instance ||
+          (this.instance &&
+            this.instance.identifier !== WALLET_TYPES.WEB3_WALLET)
+        ) {
+          this.setNetwork(defaultNetwork).then(() => {
+            this.setWeb3Instance();
+            this.activeTab = val;
+            Toast(`Switched network to: ETH`, {}, SUCCESS);
           });
-          if (
-            !this.instance ||
-            (this.instance &&
-              this.instance.identifier !== WALLET_TYPES.WEB3_WALLET)
-          ) {
-            this.setNetwork(defaultNetwork).then(() => {
-              this.setWeb3Instance();
-              this.activeTab = val;
-              Toast(`Switched network to: ETH`, {}, SUCCESS);
-            });
-          }
         }
       } else {
         this.activeTab = val;
