@@ -10,7 +10,7 @@ selenium-debug.log
 /download_folder
 /logs
 chromedriver.log
-
+build
 # Editor directories and files
 .cache
 .idea
