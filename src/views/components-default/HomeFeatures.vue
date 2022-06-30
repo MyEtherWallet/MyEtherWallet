@@ -1,5 +1,24 @@
 <template>
   <div class="mew-component--features">
+    <v-container>
+      <token-table
+        :full-width="fullWidth"
+        :background="background"
+        :border-around="borderAround"
+        :loading="loading"
+        :hover-effect="hoverEffect"
+        :flat="flat"
+      ></token-table>
+      <div>
+        <v-switch v-model="fullWidth" label="fullWidth"></v-switch>
+        <v-switch v-model="hoverEffect" label="hoverEffect"></v-switch>
+        <v-switch v-model="background" label="background"></v-switch>
+        <v-switch v-model="borderAround" label="borderAround"></v-switch>
+        <v-switch v-model="loading" label="loading"></v-switch>
+        <v-switch v-model="flat" label="flat"></v-switch>
+      </div>
+    </v-container>
+
     <div class="desktop-content d-none d-lg-block">
       <div class="py-10" />
       <v-sheet
@@ -68,6 +87,7 @@
 </template>
 
 <script>
+import TokenTable from '@/components/TokenTable';
 import HomeFeaturesSend from './HomeFeaturesSend';
 import HomeFeaturesSwap from './HomeFeaturesSwap';
 import HomeFeaturesDapps from './HomeFeaturesDapps';
@@ -76,12 +96,19 @@ import HomeFeaturesTokens from './HomeFeaturesTokens';
 export default {
   name: 'HomeFeatures',
   components: {
+    TokenTable,
     HomeFeaturesSend,
     HomeFeaturesSwap,
     HomeFeaturesDapps,
     HomeFeaturesTokens
   },
   data: () => ({
+    fullWidth: false,
+    background: false,
+    borderAround: false,
+    loading: false,
+    hoverEffect: false,
+    flat: false,
     mobileTab: null,
     mobileItems: [
       {

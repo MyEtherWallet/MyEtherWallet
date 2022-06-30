@@ -1,414 +1,135 @@
 <template>
-  <!-- ===================================================================================== -->
-  <!-- Mew Input -->
-  <!-- ===================================================================================== -->
-  <v-text-field
-    v-model="inputValue"
-    class="mew-input rounded-lg"
-    :disabled="disabled"
-    :label="label"
-    :placeholder="placeholder"
-    :error-messages="errorMessages"
-    :outlined="!hasNoBorder"
-    :solo="hasNoBorder"
-    color="primary"
-    :autofocus="autofocus"
-    :hint="resolvedAddr ? resolvedAddr : hint"
-    :persistent-hint="persistentHint || resolvedAddr.length > 0"
-    :suffix="rightLabel"
-    :clearable="!hideClearBtn"
-    :rules="rules"
-    :type="inputType"
-    :append-icon="showPasswordIcon"
-    :readonly="isReadOnly"
-    validate-on-blur
-    height="62"
-    @click:append="onPasswordIconClick"
-    @keyup="sanitizeInput"
-  >
-    <!-- ===================================================================================== -->
-    <!-- Mew Input: Error Messages -->
-    <!-- ===================================================================================== -->
-    <template #message="item">
-      <span class="mew-label">
-        {{ item.message }}
-        <a
-          v-if="buyMoreStr"
-          rel="noopener noreferrer"
-          class="mew-label"
-          @click="emitBuyMore"
-          >{{ buyMoreStr }}</a
-        >
-      </span>
-    </template>
-    <template #prepend-inner>
-      <!-- ===================================================================================== -->
-      <!-- Mew Input: Blockie (displays at the beginning of the input) -->
-      <!-- ===================================================================================== -->
-      <div
-        v-if="showBlockie && !value"
-        class="blockie-placeholder mr-1 selectHover"
-      />
-      <mew-blockie
-        v-if="showBlockie && value"
-        :address="resolvedAddr ? resolvedAddr : value"
-        width="25px"
-        height="25px"
-      />
-      <div class="d-flex align-center justify-center">
-        <!-- ===================================================================================== -->
-        <!-- slot: prependInnerIcon -->
-        <!-- prepends content to the beginning of the input. -->
-        <!-- ===================================================================================== -->
-        <slot name="prependInnerIcon" />
-
-        <!-- ===================================================================================== -->
-        <!-- Mew Input: Token Image  (displays at the beginning of the input) -->
-        <!-- ===================================================================================== -->
-        <mew-token-container
-          v-if="image"
-          class="mx-1 mt-1"
-          :img="image"
-          alt="image"
-          size="small"
-        />
+  <div class="table-component" :class="containerClass" :style="containerStyle">
+    <slot />
+    <div v-if="loading" class="skeleton-loader-container">
+      <div v-for="n in 4" :key="n">
+        <v-skeleton-loader width="100%" type="heading"></v-skeleton-loader>
       </div>
-    </template>
-
-    <!-- ===================================================================================== -->
-    <!-- Max Button (displays at the end of the input) -->
-    <!-- ===================================================================================== -->
-    <template #append>
-      <v-btn
-        v-if="maxBtnObj.method"
-        :class="[
-          maxBtnObj.disabled
-            ? 'disabled--text no-pointer-events'
-            : 'greyPrimary--text',
-          'rounded-lg mt-n2 mew-caption font-weight-medium'
-        ]"
-        min-width="40"
-        min-height="40"
-        height="40"
-        width="40"
-        depressed
-        color="greyLight"
-        @click="maxBtnObj.method"
-      >
-        {{ maxBtnObj.title }}
-      </v-btn>
-    </template>
-  </v-text-field>
+    </div>
+  </div>
 </template>
 
 <script>
-import MewBlockie from '@/components/MewBlockie/MewBlockie.vue';
-import MewTokenContainer from '@/components/MewTokenContainer/MewTokenContainer.vue';
-
-const types = ['password', 'text', 'number'];
-
 export default {
-  name: 'MewInput',
-  components: {
-    MewBlockie,
-    MewTokenContainer
-  },
+  name: 'TableComponent',
+  components: {},
   props: {
-    /**
-     * Error messages to display at the bottom of the input.
-     */
-    errorMessages: {
-      type: [String, Array],
-      default: ''
-    },
-    /**
-     * Input becomes read only.
-     */
-    isReadOnly: {
+    fullWidth: {
       type: Boolean,
       default: false
     },
-    /**
-     * Prepends the blockie to the beginning of the input.
-     */
-    showBlockie: {
+    hoverEffect: {
       type: Boolean,
       default: false
     },
-    /**
-     * Removes the input border and adds a box shadow.
-     */
-    hasNoBorder: {
+    background: {
       type: Boolean,
       default: false
     },
-    /**
-     * Disables the input.
-     */
-    disabled: {
+    loading: {
       type: Boolean,
       default: false
     },
-    /**
-     * The input label.
-     */
-    label: {
-      type: String,
-      default: ''
-    },
-    /**
-     * The input placeholder.
-     */
-    placeholder: {
-      type: String,
-      default: ''
-    },
-    /**
-     * The input value.
-     */
-    value: {
-      type: String,
-      default: ''
-    },
-    /**
-     * The input id.
-     */
-    id: {
-      type: Number,
-      default: null
-    },
-    /**
-     * Displays text on the right inner side of the input.
-     */
-    rightLabel: {
-      type: String,
-      default: ''
-    },
-    /**
-     * Hides input clear functionality. Clear symbol will be displayed on the right side.
-     */
-    hideClearBtn: {
+    borderAround: {
       type: Boolean,
       default: false
     },
-    /**
-     * For validating your input - accepts an array of functions that take an input value as an argument and returns either true / false
-     * or a string containing an error message. The input field will enter an error state if a function returns (or any value in the array contains) false or is a string.
-     */
-    rules: {
-      type: Array,
-      default: () => {
-        return [];
-      }
-    },
-    /**
-     * The resolved address.
-     */
-    resolvedAddr: {
-      type: String,
-      default: ''
-    },
-    /**
-     * Enables persistent hint.
-     */
-    persistentHint: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Hint text (will be displayed at the bottom of the input).
-     */
-    hint: {
-      type: String,
-      default: ''
-    },
-    /**
-     * Sets input type.
-     */
-    type: {
-      type: String,
-      default: 'text'
-    },
-    /**
-     * Prepends an image to the beginning of the input.
-     */
-    image: {
-      type: String,
-      default: ''
-    },
-    /**
-     * Adds a "Buy more" string to the end of the first index of the errorMessages prop.
-     */
-    buyMoreStr: {
-      type: String,
-      default: ''
-    },
-    /**
-     * Displays a button to the right inner side of the input.
-     * Takes an object.
-     * i.e. {title: 'Max', disabled: false, method: () => {}}.
-     */
-    maxBtnObj: {
-      type: Object,
-      default: () => {
-        return {};
-      }
-    },
-    /**
-     * Autofocuses the input.
-     */
-    autofocus: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Hides the toggle show password icon on the right
-     * when input type is password.
-     */
-    hidePasswordIcon: {
+    flat: {
       type: Boolean,
       default: false
     }
   },
   data() {
-    return {
-      inputValue: '',
-      showPassword: false,
-      sanitizationBuffer: ''
-    };
+    return {};
   },
   computed: {
-    isPasswordType() {
-      return this.type === types[0];
+    containerStyle() {
+      return {
+        display: this.fullWidth ? 'block' : 'inline-block'
+      };
     },
-    isNumberType() {
-      return this.type === types[2];
-    },
-    showPasswordIcon() {
-      if (this.isPasswordType && !this.hidePasswordIcon) {
-        return !this.showPassword ? 'mdi-eye' : 'mdi-eye-off';
-      }
-      return '';
-    },
-    inputType() {
-      if (this.isNumberType) {
-        return types[2];
-      }
-      if (this.isPasswordType && this.showPassword) {
-        return types[1];
-      }
-      return this.type;
-    }
-  },
-  watch: {
-    inputValue(newVal, oldVal) {
-      if (newVal !== oldVal) {
-        this.$emit('input', newVal, this.id);
-      }
-    },
-    value(newVal, oldVal) {
-      if (newVal !== oldVal) {
-        this.inputValue = newVal;
-      }
-    }
-  },
-  mounted() {
-    this.inputValue = this.value;
-    this.sanitizationBuffer = this.value;
-  },
-  methods: {
-    sanitizeInput(e) {
-      // Sanitize for number type
-      if (this.isNumberType) {
-        const keysNotAllowed = ['+', '-', 'e'];
-        const keyPressed = e.key;
-
-        // Exit for keys not allowed
-        if (keysNotAllowed.includes(keyPressed)) {
-          if (this.inputValue == '') {
-            this.inputValue = '0';
-            return;
-          }
-          this.inputValue = this.sanitizationBuffer;
-          return;
-        }
-
-        // Exit for inputValue '0'
-        if (this.inputValue == '0') {
-          return;
-        }
-
-        // Exit for inputValue '0.'
-        if (this.inputValue == '0.') {
-          return;
-        }
-
-        // Exit for valid decimal point number
-        if (this.inputValue.slice(0, 2) == '0.' && this.inputValue.length > 2) {
-          return;
-        }
-
-        // Insert '0' for empty inputValue
-        if (this.inputValue == '') {
-          this.inputValue = '0';
-          this.sanitizationBuffer = this.inputValue;
-          return;
-        }
-
-        // Insert '0' for empty inputValue
-        // (v-text-field returns empty string when user input '0')
-        if (keyPressed == '0' && this.inputValue == '00') {
-          this.inputValue = '0';
-          this.sanitizationBuffer = '0';
-          return;
-        }
-
-        // Remove leading zeros
-        this.inputValue = this.inputValue.replace(/^0+/, '');
-        this.sanitizationBuffer = this.inputValue;
-      }
-    },
-    emitBuyMore() {
-      this.$emit('buyMore');
-    },
-    onPasswordIconClick() {
-      if (this.isPasswordType) {
-        this.showPassword = !this.showPassword;
-      }
+    containerClass() {
+      return [
+        this.hoverEffect ? 'hover-effect' : '',
+        this.background ? 'alteranting-background' : '',
+        this.borderAround ? 'border-around' : '',
+        this.loading ? 'loading' : '',
+        this.flat ? '' : 'box-shadow'
+      ];
     }
   }
 };
 </script>
 
 <style lang="scss">
-/**
-  * Mew Input styles
-  */
-.mew-input {
-  .mdi-close {
-    font-size: 20px !important;
+.table-component {
+  // Vuetify skeleton loader
+  .v-skeleton-loader__heading {
+    width: 100%;
+  }
+}
+</style>
+
+<style lang="scss" scoped>
+.skeleton-loader-container {
+  & > div {
+    padding: 15px 20px;
+  }
+}
+
+.table-component {
+  --bg-color: #f4f7fe;
+  --border-color: #e0e5f2;
+  --shadow-color: rgba(0, 0, 0, 0.15);
+
+  border-radius: 8px;
+  overflow: hidden;
+
+  &.border-around {
+    border: 1px solid var(--border-color);
   }
 
-  &.v-input--is-focused {
-    .mdi-close {
-      color: var(--v-titlePrimary-base) !important;
-    }
+  &.box-shadow {
+    box-shadow: 0 2px 6px var(--shadow-color);
+  }
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+
+  thead {
+    border-bottom: 1px solid var(--border-color);
+    font-size: 12px;
   }
 
-  .v-text-field__slot {
-    .v-label {
-      margin-top: 5px;
-    }
-
-    .v-label--active {
-      margin-top: 0;
-    }
+  tbody {
   }
 
-  .v-input__icon--append {
-    .mdi {
-      color: var(--v-disabled-base);
+  td {
+    padding: 15px 20px;
+  }
+}
+
+.hover-effect {
+  tbody {
+    tr:hover {
+      background-color: var(--bg-color);
     }
+  }
+}
+
+.alteranting-background {
+  tbody {
+    tr:nth-child(odd) {
+      background-color: var(--bg-color);
+    }
+  }
+}
+
+.loading {
+  tbody {
+    display: none;
   }
 }
 </style>
