@@ -7,8 +7,8 @@
     =====================================================================================
     -->
     <mew-input
-      class="PrivateKeyInput"
       v-model="privateKey"
+      class="PrivateKeyInput"
       label="Private Key"
       placeholder="Enter your Private Key"
       :rules="privKeyRulles"
