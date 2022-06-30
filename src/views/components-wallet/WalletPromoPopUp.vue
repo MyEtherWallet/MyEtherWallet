@@ -1,6 +1,7 @@
 <template>
   <app-modal
     width="420"
+    class="PromoBackground"
     :show="showInitialPromo"
     has-body-content
     :has-buttons="false"
