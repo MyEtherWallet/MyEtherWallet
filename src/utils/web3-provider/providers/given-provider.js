@@ -28,7 +28,7 @@ class CustomRequestManager extends Web3RequestManager {
       } else if (this.provider.sendAsync) {
         this.provider.sendAsync(payload, callback);
       } else if (this.provider.send) {
-        this.provider.send(payload, callback).catch(reject);
+        this.provider.send(payload, callback);
       }
     });
   }
@@ -83,7 +83,7 @@ class GivenProvider {
           } else if (this.givenProvider.sendAsync) {
             this.givenProvider.sendAsync(payload, callback);
           } else if (this.givenProvider.send) {
-            this.givenProvider.send(payload, callback).catch(reject);
+            this.givenProvider.send(payload, callback);
           }
         });
       });
