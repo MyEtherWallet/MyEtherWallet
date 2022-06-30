@@ -1,4 +1,9 @@
 module.exports = {
+  // uncomment for windows support
+  // webdriver: {
+  //   start_process: true,
+  //   server_path: require('chromedriver').path
+  // },
   test_settings: {
     default: {
       launch_url: 'https://localhost:8080',
