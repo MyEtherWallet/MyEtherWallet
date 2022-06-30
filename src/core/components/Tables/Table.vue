@@ -1,5 +1,6 @@
 <template>
   <div class="table-component" :class="containerClass" :style="containerStyle">
+    <div v-if="title" class="font-weight-bold mt-6 ml-5 mb-10">{{ title }}</div>
     <slot />
     <div v-if="loading" class="skeleton-loader-container">
       <div v-for="n in 4" :key="n">
@@ -34,9 +35,17 @@ export default {
       type: Boolean,
       default: false
     },
+    divider: {
+      type: Boolean,
+      default: false
+    },
     flat: {
       type: Boolean,
       default: false
+    },
+    title: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -54,7 +63,8 @@ export default {
         this.background ? 'alteranting-background' : '',
         this.borderAround ? 'border-around' : '',
         this.loading ? 'loading' : '',
-        this.flat ? '' : 'box-shadow'
+        this.flat ? '' : 'box-shadow',
+        this.divider ? 'divider' : ''
       ];
     }
   }
@@ -130,6 +140,14 @@ table {
 .loading {
   tbody {
     display: none;
+  }
+}
+
+.divider {
+  tbody {
+    tr:not(:last-child) {
+      border-bottom: 1px solid var(--border-color);
+    }
   }
 }
 </style>

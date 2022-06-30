@@ -6,6 +6,8 @@
     :loading="loading"
     :hover-effect="hoverEffect"
     :flat="flat"
+    :title="title"
+    :divider="divider"
   >
     <table>
       <thead>
@@ -62,7 +64,7 @@
 </template>
 
 <script>
-import TableComponent from '@/components/Table';
+import TableComponent from '@/core/components/Tables/Table';
 
 export default {
   name: 'TokenTable',
@@ -88,9 +90,17 @@ export default {
       type: Boolean,
       default: false
     },
+    divider: {
+      type: Boolean,
+      default: false
+    },
     flat: {
       type: Boolean,
       default: false
+    },
+    title: {
+      type: String,
+      default: ''
     }
   }
 };

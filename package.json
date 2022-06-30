@@ -42,7 +42,7 @@
     "@ensdomains/address-encoder": "0.2.17",
     "@ensdomains/ens-contracts": "0.0.11",
     "@ensdomains/ensjs": "2.1.0",
-    "@ethereumjs/common": "2.6.4",
+    "@ethereumjs/common": "2.6.5",
     "@ethereumjs/tx": "3.5.2",
     "@formatjs/intl-numberformat": "8.0.2",
     "@ledgerhq/hw-transport-web-ble": "6.27.1",

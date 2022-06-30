@@ -8,14 +8,31 @@
         :loading="loading"
         :hover-effect="hoverEffect"
         :flat="flat"
+        :title="title"
+        :divider="divider"
       ></token-table>
       <div>
-        <v-switch v-model="fullWidth" label="fullWidth"></v-switch>
-        <v-switch v-model="hoverEffect" label="hoverEffect"></v-switch>
-        <v-switch v-model="background" label="background"></v-switch>
-        <v-switch v-model="borderAround" label="borderAround"></v-switch>
-        <v-switch v-model="loading" label="loading"></v-switch>
-        <v-switch v-model="flat" label="flat"></v-switch>
+        <v-switch v-model="fullWidth" hide-details label="fullWidth"></v-switch>
+        <v-switch
+          v-model="hoverEffect"
+          hide-details
+          label="hoverEffect"
+        ></v-switch>
+        <v-switch
+          v-model="background"
+          hide-details
+          label="background"
+        ></v-switch>
+        <v-switch
+          v-model="borderAround"
+          hide-details
+          label="borderAround"
+        ></v-switch>
+        <v-switch v-model="loading" hide-details label="loading"></v-switch>
+        <v-switch v-model="flat" hide-details label="flat"></v-switch>
+        <v-switch v-model="divider" hide-details label="divider"></v-switch>
+
+        <v-text-field v-model="title" class="mt-5" label="Title"></v-text-field>
       </div>
     </v-container>
 
@@ -87,7 +104,7 @@
 </template>
 
 <script>
-import TokenTable from '@/components/TokenTable';
+import TokenTable from '@/core/components/Tables/TokenTable';
 import HomeFeaturesSend from './HomeFeaturesSend';
 import HomeFeaturesSwap from './HomeFeaturesSwap';
 import HomeFeaturesDapps from './HomeFeaturesDapps';
@@ -109,6 +126,8 @@ export default {
     loading: false,
     hoverEffect: false,
     flat: false,
+    divider: false,
+    title: 'TOKENS TABLE',
     mobileTab: null,
     mobileItems: [
       {
