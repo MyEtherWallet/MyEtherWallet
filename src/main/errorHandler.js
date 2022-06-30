@@ -49,7 +49,9 @@ export const knownErrors = {
     'Please reset/disconnect then reconnect bluetooth pairings on device and on connected devices',
   'DisconnectedDeviceDuringOperation: The device was disconnected.':
     'Ledger device has been disconnected, please reconnect and try again',
-  "execution reverted: it's not your token": 'You do not own this token'
+  "execution reverted: it's not your token": 'You do not own this token',
+  'Returned error: gas required exceeds allowance':
+    'Your gas limit is too low. Please increase your gas limit and try again.'
 };
 
 const handleError = err => {
