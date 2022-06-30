@@ -8,6 +8,7 @@
     :flat="flat"
     :title="title"
     :divider="divider"
+    :padding-around="paddingAround"
   >
     <table>
       <thead>
@@ -41,19 +42,28 @@
                 class="mr-2"
               />
               <div class="mr-2">0xAB3Afc4...8C059</div>
-              <v-btn small icon>
-                <v-icon small color="greenPrimary">mdi-content-copy</v-icon>
+              <v-btn small icon color="white">
+                <!-- <v-icon small color="greenPrimary">mdi-content-copy</v-icon> -->
+                <img
+                  src="@/assets/images/icons/icon-copy-green.svg"
+                  alt="copy"
+                  height="13"
+                />
               </v-btn>
             </div>
           </td>
           <td>2.20585 PSN</td>
           <td class="pa-0">
-            <v-btn small icon>
-              <v-icon small color="textLight">mdi-trash-can-outline</v-icon>
+            <v-btn small icon color="white">
+              <img
+                src="@/assets/images/icons/icon-trash-gray.svg"
+                alt="trash"
+                height="13"
+              />
             </v-btn>
           </td>
           <td>
-            <v-btn small icon>
+            <v-btn small icon color="white">
               <v-icon small color="greenPrimary">mdi-check-circle</v-icon>
             </v-btn>
           </td>
@@ -101,6 +111,10 @@ export default {
     title: {
       type: String,
       default: ''
+    },
+    paddingAround: {
+      type: Boolean,
+      default: false
     }
   }
 };

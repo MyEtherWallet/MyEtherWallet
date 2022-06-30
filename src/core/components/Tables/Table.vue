@@ -3,7 +3,7 @@
     <div v-if="title" class="font-weight-bold mt-6 ml-5 mb-10">{{ title }}</div>
     <slot />
     <div v-if="loading" class="skeleton-loader-container">
-      <div v-for="n in 4" :key="n">
+      <div v-for="n in 5" :key="n">
         <v-skeleton-loader width="100%" type="heading"></v-skeleton-loader>
       </div>
     </div>
@@ -46,6 +46,10 @@ export default {
     title: {
       type: String,
       default: ''
+    },
+    paddingAround: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -64,7 +68,8 @@ export default {
         this.borderAround ? 'border-around' : '',
         this.loading ? 'loading' : '',
         this.flat ? '' : 'box-shadow',
-        this.divider ? 'divider' : ''
+        this.divider ? 'divider' : '',
+        this.paddingAround ? 'padding-around' : ''
       ];
     }
   }
@@ -83,12 +88,16 @@ export default {
 <style lang="scss" scoped>
 .skeleton-loader-container {
   & > div {
-    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    height: 58px;
+    padding: 0px 20px;
   }
 }
 
 .table-component {
   --bg-color: #f4f7fe;
+  --hover-color: #eaeffb;
   --border-color: #e0e5f2;
   --shadow-color: rgba(0, 0, 0, 0.15);
 
@@ -117,14 +126,15 @@ table {
   }
 
   td {
-    padding: 15px 20px;
+    height: 58px;
+    padding: 0px 20px;
   }
 }
 
 .hover-effect {
   tbody {
     tr:hover {
-      background-color: var(--bg-color);
+      background-color: var(--hover-color) !important;
     }
   }
 }
@@ -149,5 +159,9 @@ table {
       border-bottom: 1px solid var(--border-color);
     }
   }
+}
+
+.padding-around {
+  padding: 10px 15px 15px 15px;
 }
 </style>

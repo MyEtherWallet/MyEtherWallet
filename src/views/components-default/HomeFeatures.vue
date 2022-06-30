@@ -10,6 +10,7 @@
         :flat="flat"
         :title="title"
         :divider="divider"
+        :padding-around="paddingAround"
       ></token-table>
       <div>
         <v-switch v-model="fullWidth" hide-details label="fullWidth"></v-switch>
@@ -31,6 +32,11 @@
         <v-switch v-model="loading" hide-details label="loading"></v-switch>
         <v-switch v-model="flat" hide-details label="flat"></v-switch>
         <v-switch v-model="divider" hide-details label="divider"></v-switch>
+        <v-switch
+          v-model="paddingAround"
+          hide-details
+          label="paddingAround"
+        ></v-switch>
 
         <v-text-field v-model="title" class="mt-5" label="Title"></v-text-field>
       </div>
@@ -127,6 +133,7 @@ export default {
     hoverEffect: false,
     flat: false,
     divider: false,
+    paddingAround: false,
     title: 'TOKENS TABLE',
     mobileTab: null,
     mobileItems: [
