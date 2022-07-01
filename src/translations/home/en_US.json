@@ -50,7 +50,22 @@
       "ambrpay": "Ambrpay"
     },
     "tokens": {
-      "heading": "MEW supports ETH and all ERC-20 tokens!"
+      "heading": "MEW supports ETH and all ERC-20 tokens!",
+      "usdt": "Tether (USDT)",
+      "uni": "Uniswap (UNI)",
+      "link": "Chainlink (LINK)",
+      "usdc": "USD Coin (USDC)",
+      "wbtc": "Wrapped Bitcoin (WBTC)",
+      "cro": "Crypto.com Coin (CRO)",
+      "aave": "Aave (AAVE)",
+      "okb": "OKB (OKB)",
+      "busd": "Binance USD (BUSD)",
+      "ftt": "FTX Token (FTT)",
+      "cusdc": "cUSDC (CUSDC)",
+      "dai": "Dai (DAI)",
+      "chz": "Chiliz (CHZ)",
+      "ceth": "cETH (CETH)",
+      "cdai": "cDAI (CDAI)"
     }
   },
   "eth-blocks": {
