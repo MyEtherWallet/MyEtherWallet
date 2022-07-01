@@ -2,7 +2,7 @@ import { getHashFromFile, uploadFileToIpfs } from './helpers/helperIpfs.js';
 import BigNumber from 'bignumber.js';
 import ENSManagerInterface from './handlerENSManagerInterface.js';
 import * as nameHashPckg from 'eth-ens-namehash';
-import { DNSRegistrar } from '@ensdomains/ens-contracts';
+import { DNSRegistrar } from '@ensdomains/ens-contracts/deployments/mainnet/DNSRegistrar.json';
 import contentHash from 'content-hash';
 import EventEmitter from 'events';
 import vuexStore from '@/core/store';
@@ -51,15 +51,6 @@ export default class PermanentNameModule extends ENSManagerInterface {
       Toast(e, {}, ERROR);
     }
   }
-
-  // async getReverseNameRecords(hash) {
-  //   try {
-  //     const reverseNames = await this.publicResolverContract.methods.name(hash);
-  //     return reverseNames;
-  //   } catch (e) {
-  //     Toast(e, {}, ERROR);
-  //   }
-  // }
 
   getTransactions(toAddress) {
     const transferMethod = this.registrarContract?.methods.transferFrom(
@@ -301,11 +292,13 @@ export default class PermanentNameModule extends ENSManagerInterface {
 
   async _setDnsContract() {
     if (this.tld && this.tld !== this.network.type.ens.registrarTLD) {
-      this.dnsRegistrarContract = new DNSRegistrar(
-        this.web3.currentProvider,
+      this.dnsRegistrarContract = new this.web3.eth.Contract(
+        DNSRegistrar.abi,
         this.registrarAddress
       );
-      this.dnsClaim = await this.dnsRegistrar.claim(this.parsedDomainName);
+      this.dnsClaim = await this.dnsRegistrar.methods
+        .claim(this.parsedDomainName)
+        .call();
       this._setDnsInfo();
     }
     return;

@@ -1,5 +1,6 @@
 import { tldSupported, getTld } from './helpers/helperTld';
 import PermanentNameModule from './handlerPermanentName';
+// import ENSNameInstance from './handlerENSNames';
 
 export default class ENSManager {
   constructor(network, address, web3, ens) {

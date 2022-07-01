@@ -60,7 +60,7 @@
 <script>
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { isEmpty } from 'lodash';
-import ENS from 'ethereum-ens';
+import ENS, { getEnsAddress } from '@ensdomains/ensjs';
 import { mapGetters, mapState } from 'vuex';
 import PermanentNameModule from '../../handlers/handlerPermanentName';
 export default {
@@ -111,7 +111,10 @@ export default {
   async mounted() {
     await this.findDomainByAddress();
     const ens = this.network.type.ens
-      ? new ENS(this.web3.currentProvider, this.network.type.ens.registry)
+      ? new ENS({
+          provider: this.web3.eth.currentProvider,
+          ensAddress: getEnsAddress(this.network.type.chainID.toString())
+        })
       : null;
     this.permHandler = new PermanentNameModule(
       this.name,
