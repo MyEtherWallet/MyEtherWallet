@@ -37,7 +37,17 @@
     },
     "dapps": {
       "text": "MEW team is working hard to update the DApps Center. Cant’s wait?",
-      "link-text": "Access all DApps in MEW Version 5"
+      "link-text": "Access all DApps in MEW Version 5",
+      "eth-blocks": "ETH Blocks",
+      "stake-eth2": "Stake on ETH 2.0",
+      "ens-manager": "ENS Manager",
+      "makerdao": "MakerDAO",
+      "safesend": "SafeSend transaction",
+      "aave": "AAVE",
+      "golem-migrator": "Golem Migrator",
+      "lend-migrator": "LEND Migrator",
+      "unstopabble": "Unstopabble Domain",
+      "ambrpay": "Ambrpay"
     },
     "tokens": {
       "heading": "MEW supports ETH and all ERC-20 tokens!"
