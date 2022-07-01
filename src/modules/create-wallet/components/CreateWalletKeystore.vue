@@ -140,9 +140,9 @@
             offer! Access with keystore file should only be used in an offline
             setting.
           </p>
-          <v-img
+          <img
             class="d-block d-sm-none mx-auto mt-12 mb-12"
-            max-width="170px"
+            style="max-width: 170px"
             src="@/assets/images/icons/icon-keystore-mew.png"
           />
 
@@ -162,9 +162,9 @@
             />
           </div>
         </div>
-        <v-img
+        <img
           class="d-none d-sm-block ml-8"
-          max-width="250px"
+          style="max-width: 250px"
           src="@/assets/images/icons/icon-keystore-mew.png"
         />
       </div>
