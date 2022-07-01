@@ -561,6 +561,12 @@ export default {
     address() {
       this.clear();
       this.debounceAmountError('0');
+    },
+    txFeeETH(newVal) {
+      const total = BigNumber(newVal).plus(this.amount);
+      if (total.gt(this.balanceInETH)) {
+        this.setEntireBal();
+      }
     }
   },
   mounted() {
