@@ -103,6 +103,7 @@ import {
 } from '@/core/helpers/numberFormatHelper';
 import { getCurrency } from '@/modules/settings/components/currencyList';
 import { buyContracts } from './tokenList';
+import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 export default {
   name: 'ModuleBuyEth',
   props: {
@@ -276,7 +277,14 @@ export default {
       const tokenList = new Array();
       for (const contract of buyContracts) {
         const token = this.contractToToken(contract);
-        if (token) tokenList.push(token);
+        if (token) {
+          if (
+            token.symbol === this.network.type.currencyName &&
+            token.contract !== MAIN_TOKEN_ADDRESS
+          )
+            continue;
+          tokenList.push(token);
+        }
       }
       const imgs = tokenList.map(item => {
         return item.img;
@@ -309,6 +317,7 @@ export default {
         },
         ...tokensListWPrice
       ];
+      console.log('currencyList', returnedArray);
       return returnedArray;
     },
     hasData() {
@@ -467,6 +476,7 @@ export default {
       this.$emit('hideMoonpay', hideMoonpay);
     },
     setCurrency(e) {
+      console.log('setCurrency', e);
       this.selectedCurrency = e;
     },
     fetchCurrencyData() {
