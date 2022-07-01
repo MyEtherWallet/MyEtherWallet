@@ -86,7 +86,7 @@
             NOT RECOMMENDED
           </div>
           <mew-button
-            class="mb-5 createWalletSoftware"
+            class="mb-5"
             color-theme="white"
             btn-style="outline"
             style="height: 160px; position: relative"
