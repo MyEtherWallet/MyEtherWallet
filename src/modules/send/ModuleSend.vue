@@ -268,7 +268,8 @@ export default {
         this.feeError !== '' ||
         !this.isValidGasLimit ||
         !this.allValidInputs ||
-        !this.gasEstimationIsReady
+        !this.gasEstimationIsReady ||
+        !this.isValidAmount
       );
     },
     buyMoreStr() {
@@ -387,7 +388,7 @@ export default {
      */
     isValidAmount() {
       /** !amount */
-      if (!this.amount) {
+      if (!this.amount || Number(this.amount) == 0) {
         return false;
       }
       if (!isNumber(this.selectedCurrency?.decimals)) {
