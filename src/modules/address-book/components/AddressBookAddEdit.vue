@@ -12,6 +12,8 @@
       :placeholder="$t('interface.address-book.enter-addr')"
       :value="addressToAdd"
       :rules="addressRules"
+      :persistent-hint="validAddress"
+      :hint="coin"
       autofocus
       :resolved-addr="resolvedAddr"
       @input="setAddress"
@@ -92,6 +94,7 @@ import { mapState, mapActions, mapGetters } from 'vuex';
 import NameResolver from '@/modules/name-resolver/index';
 import { toChecksumAddress, isAddress } from '@/core/helpers/addressUtils';
 import { isValidCoinAddress } from '../handlers/handlerMulticoins.js';
+import { isEmpty } from 'lodash';
 
 const modes = ['add', 'edit'];
 
@@ -120,13 +123,16 @@ export default {
         return (
           !this.addressToAdd ||
           !this.validAddress ||
+          isEmpty(this.nickname) ||
           this.nickname?.length > 20 ||
           this.alreadyExists
         );
       }
       if (this.editMode) {
         return (
-          this.nickname === this.item.nickname || this.nickname?.length > 20
+          this.nickname === this.item.nickname ||
+          this.nickname?.length > 20 ||
+          isEmpty(this.nickname)
         );
       }
       return true;
@@ -152,10 +158,30 @@ export default {
           this.$t('interface.address-book.validations.nickname-length')
       ];
     },
+    actualValidAddress() {
+      if (!this.validAddress) return '';
+      return isAddress(this.lowercaseAddressToAdd)
+        ? this.lowercaseAddressToAdd
+        : this.addressToAdd;
+    },
     validAddress() {
+      if (this.addressToAdd.length > 94) return false;
       return this.resolvedAddr.length > 0
-        ? isAddress(this.resolvedAddr) || isValidCoinAddress(this.resolvedAddr)
-        : isAddress(this.addressToAdd) || isValidCoinAddress(this.addressToAdd);
+        ? isAddress(this.resolvedAddr) ||
+            isValidCoinAddress(this.resolvedAddr).valid
+        : isAddress(this.lowercaseAddressToAdd) ||
+            isValidCoinAddress(this.lowercaseAddressToAdd).valid ||
+            isValidCoinAddress(this.addressToAdd).valid;
+    },
+    coin() {
+      if (!this.validAddress) return '';
+      return (
+        'Valid ' +
+        (this.resolvedAddr.length > 0
+          ? isValidCoinAddress(this.resolvedAddr).coin
+          : isValidCoinAddress(this.actualValidAddress).coin) +
+        ' address'
+      );
     },
     editMode() {
       return this.mode === modes[1];
@@ -185,6 +211,9 @@ export default {
         return toChecksumAddress(this.addressToAdd);
       }
       return this.addressToAdd;
+    },
+    lowercaseAddressToAdd() {
+      return this.addressToAdd.toLowerCase();
     }
   },
   watch: {
