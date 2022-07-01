@@ -3,7 +3,7 @@
     <div v-if="title" class="font-weight-bold mt-6 ml-5 mb-10">{{ title }}</div>
     <slot />
     <div v-if="loading" class="skeleton-loader-container">
-      <div v-for="n in 5" :key="n">
+      <div v-for="n in Number(loaderCount)" :key="n">
         <v-skeleton-loader width="100%" type="heading"></v-skeleton-loader>
       </div>
     </div>
@@ -30,6 +30,10 @@ export default {
     loading: {
       type: Boolean,
       default: false
+    },
+    loaderCount: {
+      type: [String, Number],
+      default: 1
     },
     borderAround: {
       type: Boolean,

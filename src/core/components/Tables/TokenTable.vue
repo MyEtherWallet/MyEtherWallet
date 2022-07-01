@@ -4,6 +4,7 @@
     :background="background"
     :border-around="borderAround"
     :loading="loading"
+    :loader-count="loaderCount"
     :hover-effect="hoverEffect"
     :flat="flat"
     :title="title"
@@ -97,6 +98,10 @@ export default {
     loading: {
       type: Boolean,
       default: false
+    },
+    loaderCount: {
+      type: [String, Number],
+      default: 1
     },
     borderAround: {
       type: Boolean,

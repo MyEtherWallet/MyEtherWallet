@@ -7,6 +7,7 @@
         :border-around="borderAround"
         :round-corner="roundCorner"
         :loading="loading"
+        :loader-count="loaderCount"
         :hover-effect="hoverEffect"
         :flat="flat"
         :title="title"
@@ -51,6 +52,11 @@
         ></v-switch>
 
         <v-text-field v-model="title" class="mt-5" label="Title"></v-text-field>
+        <v-text-field
+          v-model="loaderCount"
+          class="mt-5"
+          label="loaderCount"
+        ></v-text-field>
       </div>
     </v-container>
 
@@ -149,6 +155,7 @@ export default {
     paddingSide: false,
     roundCorner: false,
     title: 'TOKENS TABLE',
+    loaderCount: '5',
     mobileTab: null,
     mobileItems: [
       {
