@@ -50,7 +50,8 @@ const EXCEPTIONS = [
   '@shapeshiftoss/hdwallet-core',
   '@shapeshiftoss/hdwallet-keepkey-webusb',
   'trezor-connect', // currently in beta
-  'package-json'
+  'package-json',
+  'codecov'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

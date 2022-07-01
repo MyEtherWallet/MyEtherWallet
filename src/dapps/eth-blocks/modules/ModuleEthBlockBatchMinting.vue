@@ -1,5 +1,7 @@
 <template>
-  <div class="py-13 px-5 px-sm-15 px-lg-15">
+  <div
+    class="dapps--eth-blocks--module-eth-block-batch-minting py-13 px-5 px-sm-15 px-lg-15"
+  >
     <!-- Header titles -->
     <v-row justify-lg="space-between" justify-md="space-between">
       <v-col cols="12" md="6" lg="7">
