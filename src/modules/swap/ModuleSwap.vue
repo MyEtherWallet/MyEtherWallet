@@ -346,7 +346,7 @@ export default {
       swapNotAvailableMes: {
         title: `Swap is not available on this network`,
         subtitle:
-          'Please select ETH, BSC or MATIC networks to use this feature.'
+          'Please select ETH, BNB or MATIC networks to use this feature.'
       },
       step: 0,
       confirmInfo: {
