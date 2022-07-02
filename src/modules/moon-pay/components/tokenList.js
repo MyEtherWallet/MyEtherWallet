@@ -1,5 +1,13 @@
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common.js';
 
+const tokenIds = [
+  'ethereum',
+  'matic-network',
+  'binancecoin',
+  'tether',
+  'usd-coin'
+];
+
 const tokenContracts = {
   eth: MAIN_TOKEN_ADDRESS,
   matic: '0x7D1AfA7B718fb893dB30A3aBc0Cfc608AaCfeBB0',
@@ -21,4 +29,4 @@ const buyContracts = [
   tokenContracts.usdc
 ];
 
-export { buyContracts, sellContracts };
+export { tokenIds, buyContracts, sellContracts };

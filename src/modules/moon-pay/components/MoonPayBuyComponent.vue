@@ -102,7 +102,7 @@ import {
   formatFiatValue
 } from '@/core/helpers/numberFormatHelper';
 import { getCurrency } from '@/modules/settings/components/currencyList';
-import { buyContracts } from './tokenList';
+import { buyContracts, tokenIds } from './tokenList';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 export default {
   name: 'ModuleBuyEth',
@@ -145,7 +145,7 @@ export default {
     ...mapGetters('global', ['network', 'getFiatValue']),
     ...mapState('wallet', ['address']),
     ...mapState('external', ['currencyRate', 'coinGeckoTokens']),
-    ...mapGetters('external', ['contractToToken']),
+    ...mapGetters('external', ['contractToToken', 'getCoinGeckoTokenById']),
     includesFeeText() {
       return `Includes ${this.percentFee} fee (${
         formatFiatValue(this.minFee, this.currencyConfig).value
@@ -273,17 +273,35 @@ export default {
       }
       return '';
     },
+    supportedBuy() {
+      return (
+        this.network.type.name === 'ETH' ||
+        this.network.type.name === 'BSC' ||
+        this.network.type.name === 'MATIC'
+      );
+    },
     currencyItems() {
       const tokenList = new Array();
-      for (const contract of buyContracts) {
-        const token = this.contractToToken(contract);
-        if (token) {
-          if (
-            token.symbol === this.network.type.currencyName &&
-            token.contract !== MAIN_TOKEN_ADDRESS
-          )
-            continue;
-          tokenList.push(token);
+      console.log('supported', this.supportedBuy);
+      // use coingecko IDs instead of contracts
+      if (this.supportedBuy) {
+        for (const contract of buyContracts) {
+          const token = this.contractToToken(contract);
+          if (token) {
+            if (
+              token.symbol === this.network.type.currencyName &&
+              token.contract !== MAIN_TOKEN_ADDRESS
+            )
+              continue;
+            tokenList.push(token);
+          }
+        }
+      } else {
+        for (const tokenId of tokenIds) {
+          console.log('tokenId', tokenId);
+          const token = this.getCoinGeckoTokenById(tokenId);
+          console.log('token', token);
+          if (token) tokenList.push(token);
         }
       }
       const imgs = tokenList.map(item => {
