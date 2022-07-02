@@ -317,7 +317,6 @@ export default {
         },
         ...tokensListWPrice
       ];
-      console.log('currencyList', returnedArray);
       return returnedArray;
     },
     hasData() {
@@ -400,6 +399,7 @@ export default {
     },
     network: {
       handler: function () {
+        this.selectedCurrency = {};
         this.selectedCurrency = this.defaultCurrency;
       },
       deep: true
@@ -476,7 +476,6 @@ export default {
       this.$emit('hideMoonpay', hideMoonpay);
     },
     setCurrency(e) {
-      console.log('setCurrency', e);
       this.selectedCurrency = e;
     },
     fetchCurrencyData() {

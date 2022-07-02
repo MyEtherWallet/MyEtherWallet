@@ -111,21 +111,17 @@ export default {
     ...mapState('wallet', ['address', 'instance']),
     ...mapGetters('wallet', ['tokensList']),
     ...mapGetters('global', ['network']),
+    ...mapGetters('external', ['contractToToken']),
     inWallet() {
       return (
         this.$route.fullPath.includes('/wallet') && !this.$route.meta.noAuth
       );
     },
     defaltCurrency() {
-      if (
-        isEmpty(this.selectedCurrency) &&
-        this.supportedBuy &&
-        this.tokensList.length > 0
-      ) {
-        return this.tokensList.filter(
-          item =>
-            item.contract.toLowerCase() === MAIN_TOKEN_ADDRESS.toLowerCase()
-        )[0];
+      if (isEmpty(this.selectedCurrency) && this.supportedBuy) {
+        const token = this.contractToToken(MAIN_TOKEN_ADDRESS);
+        token.value = token.symbol;
+        return token;
       } else if (isEmpty(this.selectedCurrency) || !this.supportedBuy) {
         return {
           decimals: 18,
@@ -142,9 +138,9 @@ export default {
     },
     supportedBuy() {
       return (
-        this.network.type === 'ETH' ||
-        this.network.type === 'BSC' ||
-        this.network.type === 'MATIC'
+        this.network.type.name === 'ETH' ||
+        this.network.type.name === 'BSC' ||
+        this.network.type.name === 'MATIC'
       );
     },
     leftBtn() {
@@ -169,10 +165,15 @@ export default {
       if (newVal) {
         this.orderHandler = new handler();
       }
+      this.selectedCurrency = {};
       this.selectedCurrency = this.defaltCurrency;
     },
     address() {
       this.selectedCurrency = this.defaltCurrency;
+    },
+    network() {
+      this.selectedCurrency = {};
+      this.selectedCurrency = this.defaultCurrency;
     }
   },
   methods: {
@@ -180,20 +181,22 @@ export default {
     ...mapActions('global', ['setNetwork']),
     onTab(val) {
       this.selectedCurrency = this.defaltCurrency;
-      if (this.network.type.chainID !== 1) {
-        const defaultNetwork = this.nodes['ETH'].find(item => {
-          return item.service === 'myetherwallet.com-ws';
-        });
-        if (
-          !this.instance ||
-          (this.instance &&
-            this.instance.identifier !== WALLET_TYPES.WEB3_WALLET)
-        ) {
-          this.setNetwork(defaultNetwork).then(() => {
-            this.setWeb3Instance();
-            this.activeTab = val;
-            Toast(`Switched network to: ETH`, {}, SUCCESS);
+      if (val === 1) {
+        if (this.network.type.chainID !== 1) {
+          const defaultNetwork = this.nodes['ETH'].find(item => {
+            return item.service === 'myetherwallet.com-ws';
           });
+          if (
+            !this.instance ||
+            (this.instance &&
+              this.instance.identifier !== WALLET_TYPES.WEB3_WALLET)
+          ) {
+            this.setNetwork(defaultNetwork).then(() => {
+              this.setWeb3Instance();
+              this.activeTab = val;
+              Toast(`Switched network to: ETH`, {}, SUCCESS);
+            });
+          }
         }
       } else {
         this.activeTab = val;
