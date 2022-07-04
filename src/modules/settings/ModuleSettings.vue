@@ -127,7 +127,7 @@ export default {
         },
         {
           text: 'Address',
-          value: 'address',
+          value: 'addr',
           sortable: false,
           filterable: false,
           width: '50%'
@@ -206,7 +206,7 @@ export default {
       this.addressBookStore.forEach((item, idx) => {
         this.tableData.push({
           number: idx + 1,
-          address: item.address,
+          addr: item.address,
           nickname: item.nickname,
           resolvedAddr: item.address.includes('.') ? item.resolvedAddr : null,
           callToAction: [
