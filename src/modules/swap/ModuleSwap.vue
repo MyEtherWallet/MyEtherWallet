@@ -440,7 +440,8 @@ export default {
      * if native token, return empty
      */
     maxBtn() {
-      return this.isFromNonChain
+      return this.isFromNonChain ||
+        this.amountErrorMessage === this.errorMsgs.doNotOwnToken
         ? {}
         : {
             title: 'Max',
