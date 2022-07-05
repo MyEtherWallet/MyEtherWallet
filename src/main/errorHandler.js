@@ -48,7 +48,9 @@ export const knownErrors = {
   'GATT Server is disconnected. Cannot retrieve services.':
     'Please reset/disconnect then reconnect bluetooth pairings on device and on connected devices',
   'DisconnectedDeviceDuringOperation: The device was disconnected.':
-    'Ledger device has been disconnected, please reconnect and try again'
+    'Ledger device has been disconnected, please reconnect and try again',
+  "Non-200 status code: '429'":
+    'Rate limit exceeded. Please try again in about 30 seconds.'
 };
 
 const handleError = err => {
