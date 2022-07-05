@@ -41,7 +41,7 @@
     "@coolwallets/wallet": "0.2.0-beta.1",
     "@ensdomains/address-encoder": "0.2.17",
     "@ensdomains/ens-contracts": "0.0.11",
-    "@ensdomains/ensjs": "2.1.0",
+    "@ensdomains/ensjs": "3.0.0-alpha.2",
     "@ethereumjs/common": "2.6.5",
     "@ethereumjs/tx": "3.5.2",
     "@formatjs/intl-numberformat": "8.0.2",
@@ -102,7 +102,7 @@
     "walletlink": "2.5.0"
   },
   "devDependencies": {
-    "@commitlint/config-conventional": "17.0.2",
+    "@commitlint/config-conventional": "17.0.3",
     "@ledgerhq/hw-app-eth": "6.29.0",
     "@ledgerhq/hw-transport-webusb": "6.27.1",
     "@mdi/font": "6.7.96",
@@ -123,7 +123,7 @@
     "bignumber.js": "9.0.2",
     "bip39": "3.0.4",
     "codecov": "3.8.3",
-    "commitlint": "17.0.2",
+    "commitlint": "17.0.3",
     "copy-webpack-plugin": "6.3.2",
     "eslint": "7.32.0",
     "eslint-plugin-prettier": "4.0.0",
