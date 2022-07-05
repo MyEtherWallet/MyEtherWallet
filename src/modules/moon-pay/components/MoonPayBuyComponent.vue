@@ -10,6 +10,7 @@
         :items="currencyItems"
         :value="selectedCurrency"
         :disabled="loading"
+        :error-messages="currencyErrorMessages"
         is-custom
         @input="setCurrency"
       />
@@ -102,7 +103,7 @@ import {
   formatFiatValue
 } from '@/core/helpers/numberFormatHelper';
 import { getCurrency } from '@/modules/settings/components/currencyList';
-import { buyContracts, tokenIds } from './tokenList';
+import { buyContracts } from './tokenList';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 export default {
   name: 'ModuleBuyEth',
@@ -237,7 +238,8 @@ export default {
       return (
         (!this.inWallet && !this.actualValidAddress) ||
         this.loading ||
-        this.amountErrorMessages !== ''
+        this.amountErrorMessages !== '' ||
+        !this.supportedBuy
       );
     },
     buyBtnTitle() {
@@ -273,6 +275,12 @@ export default {
       }
       return '';
     },
+    currencyErrorMessages() {
+      if (!this.supportedBuy) {
+        return 'Please switch your network to the Ethereum Mainnet on Metamask.';
+      }
+      return '';
+    },
     supportedBuy() {
       return (
         this.network.type.name === 'ETH' ||
@@ -282,26 +290,16 @@ export default {
     },
     currencyItems() {
       const tokenList = new Array();
-      console.log('supported', this.supportedBuy);
-      // use coingecko IDs instead of contracts
-      if (this.supportedBuy) {
-        for (const contract of buyContracts) {
-          const token = this.contractToToken(contract);
-          if (token) {
-            if (
-              token.symbol === this.network.type.currencyName &&
-              token.contract !== MAIN_TOKEN_ADDRESS
-            )
-              continue;
-            tokenList.push(token);
-          }
-        }
-      } else {
-        for (const tokenId of tokenIds) {
-          console.log('tokenId', tokenId);
-          const token = this.getCoinGeckoTokenById(tokenId);
-          console.log('token', token);
-          if (token) tokenList.push(token);
+      if (!this.supportedBuy) return;
+      for (const contract of buyContracts) {
+        const token = this.contractToToken(contract);
+        if (token) {
+          if (
+            token.symbol === this.network.type.currencyName &&
+            token.contract !== MAIN_TOKEN_ADDRESS
+          )
+            continue;
+          tokenList.push(token);
         }
       }
       const imgs = tokenList.map(item => {
