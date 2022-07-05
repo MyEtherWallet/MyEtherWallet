@@ -146,6 +146,7 @@
                   :label="$t('sendTx.add-data')"
                   placeholder="0x..."
                   :rules="dataRules"
+                  :hide-clear-btn="data === '0x'"
                   class="mb-8"
                 />
               </div>
@@ -185,7 +186,7 @@ import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import SendTransaction from '@/modules/send/handlers/handlerSend';
 import { ETH } from '@/utils/networks/types';
-import { Toast, WARNING } from '@/modules/toast/handler/handlerToast';
+import { Toast, ERROR, WARNING } from '@/modules/toast/handler/handlerToast';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import SendLowBalanceNotice from './components/SendLowBalanceNotice.vue';
 import AppButtonBalance from '@/core/components/AppButtonBalance';
@@ -211,7 +212,7 @@ export default {
     },
     prefilledData: {
       type: String,
-      default: ''
+      default: '0x'
     },
     prefilledAddress: {
       type: String,
@@ -504,7 +505,6 @@ export default {
         this.debounceEstimateGas();
       }
     },
-
     isPrefilled() {
       this.prefillForm();
     },
@@ -544,7 +544,8 @@ export default {
       immediate: true,
       deep: true
     },
-    data() {
+    data(newVal) {
+      this.data = !newVal || isEmpty(newVal) ? '0x' : newVal;
       if (isHexStrict(this.data)) this.sendTx.setData(this.data);
     },
     gasLimit(newVal) {
@@ -560,6 +561,12 @@ export default {
     address() {
       this.clear();
       this.debounceAmountError('0');
+    },
+    txFeeETH(newVal) {
+      const total = BigNumber(newVal).plus(this.amount);
+      if (total.gt(this.balanceInETH)) {
+        this.setEntireBal();
+      }
     }
   },
   mounted() {
@@ -701,7 +708,9 @@ export default {
         })
         .catch(error => {
           this.clear();
-          this.instance.errorHandler(error);
+          if (!this.instance) {
+            Toast(error, {}, ERROR);
+          }
         });
     },
     prefillForm() {
@@ -711,7 +720,7 @@ export default {
               return item.name.toLowerCase() === this.tokenSymbol.toLowerCase();
             })
           : undefined;
-        this.data = isHexStrict(this.prefilledData) ? this.prefilledData : '';
+        this.data = isHexStrict(this.prefilledData) ? this.prefilledData : '0x';
         this.amount = this.prefilledAmount;
         this.toAddress = this.prefilledAddress;
         this.gasLimit = this.prefilledGasLimit;
