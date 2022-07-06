@@ -181,7 +181,10 @@ export default {
         this.buttonTitle.action.toLowerCase() === ACTION_TYPES.withdraw
           ? this.aaveBalance
           : this.tokenBalance;
-      return BigNumber(amt).times(per).toFixed(this.tokenDecimal);
+      return BigNumber(amt)
+        .times(per)
+        .decimalPlaces(this.tokenDecimal)
+        .toString();
     }
   }
 };

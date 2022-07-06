@@ -32,7 +32,7 @@
       :form-text="aaveDepositForm.formText"
       :button-title="aaveDepositForm.buttonTitle"
       :token-balance="tokenBalance"
-      :token-decimals="selectedTokenDecimal"
+      :token-decimal="selectedTokenDecimal"
       @cancel="callClose"
       @emitValues="handleDepositAmount"
     />
