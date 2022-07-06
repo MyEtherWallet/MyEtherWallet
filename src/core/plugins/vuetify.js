@@ -87,7 +87,8 @@ import Vuetify, {
   VSkeletonLoader,
   VChip,
   VSystemBar,
-  VSnackbar
+  VSnackbar,
+  VChipGroup
 } from 'vuetify/lib';
 
 Vue.use(Vuetify, {
@@ -175,7 +176,8 @@ Vue.use(Vuetify, {
     VSkeletonLoader,
     VChip,
     VSystemBar,
-    VSnackbar
+    VSnackbar,
+    VChipGroup
   }
 });
 

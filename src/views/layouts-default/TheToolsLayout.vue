@@ -1,16 +1,14 @@
 <template>
-  <div
-    class="mew-component--tools"
-    :class="$vuetify.breakpoint.smAndDown ? 'mobile' : 'desktop'"
-  >
+  <div class="mew-component--tools" :class="isMobile ? 'mobile' : 'desktop'">
     <the-layout-header title="Tools" />
 
-    <v-container class="px-3 my-12">
+    <v-container class="px-3" :class="isMobile ? '' : 'my-12'">
       <mew-tabs
         :is-vertical="$vuetify.breakpoint.smAndDown ? false : true"
         :items="items"
         :active-tab="activeTab"
         show-arrows
+        :compact="isMobile"
         @onTab="tabChanged"
       >
         <template #tabItemContent1>
@@ -35,6 +33,7 @@
 </template>
 
 <script>
+import MewTabs from '@/components/MewTabs/MewTabs';
 import TheLayoutHeader from '../components-default/TheLayoutHeader';
 import AppGetStarted from '@/core/components/AppGetStarted';
 import ModuleToolsWatchOnly from '@/modules/tools/ModuleToolsWatchOnly';
@@ -47,6 +46,7 @@ import { ROUTES_HOME } from '@/core/configs/configRoutes';
 export default {
   name: 'TheToolsLayout',
   components: {
+    MewTabs,
     TheLayoutHeader,
     AppGetStarted,
     ModuleToolsWatchOnly,
@@ -83,6 +83,11 @@ export default {
       */
     ]
   }),
+  computed: {
+    isMobile() {
+      return this.$vuetify.breakpoint.smAndDown;
+    }
+  },
   watch: {
     $route() {
       this.setCurrentTool();
