@@ -5,9 +5,11 @@
 
   <testsuite name="access-wallet"
     errors="0" failures="0" hostname="" id="" package="access-wallet" skipped="0"
-    tests="1" time="4.248" timestamp="">
+    tests="1" time="5.637" timestamp="">
   
-    <testcase name="Access Private Wallet test" classname="access-wallet" time="4.248" assertions="12">
+    <testcase name="Access Private Wallet test" classname="access-wallet" time="5.637" assertions="13">
+
+    
 
     
 

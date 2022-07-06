@@ -39,7 +39,7 @@
   
     
     <testcase
-      name="Access wallet tests" classname="access-wallet">
+      name="Access Private Wallet test" classname="access-wallet">
       <skipped />
     </testcase>
     
