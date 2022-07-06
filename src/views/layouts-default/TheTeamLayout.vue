@@ -31,6 +31,7 @@
 <script>
 import TheLayoutHeader from '../components-default/TheLayoutHeader';
 import AppBlockTitle from '@/core/components/AppBlockTitle';
+// import axios from 'axios';
 import Kosala from '@/assets/images/team/kosala.jpg';
 import Brian from '@/assets/images/team/brian.jpg';
 import Olga from '@/assets/images/team/olga.jpg';
@@ -50,12 +51,12 @@ import Michael from '@/assets/images/team/michael.jpg';
 import Chindalath from '@/assets/images/team/chindalath.jpg';
 import Andrew from '@/assets/images/team/andrew.jpg';
 import Jazmine from '@/assets/images/team/jazmine.jpg';
-import Jason from '@/assets/images/team/jason.jpg';
 import Brionne from '@/assets/images/team/brionne.jpg';
 import Russell from '@/assets/images/team/russell.jpg';
 import Marcus from '@/assets/images/team/marcus.jpg';
 import AndrewDao from '@/assets/images/team/andrew-dao.jpg';
 import Christian from '@/assets/images/team/christian.jpg';
+import Kealii from '@/assets/images/team/kealii.png';
 
 export default {
   name: 'TheTeamLayout',
@@ -64,11 +65,28 @@ export default {
     titleData: {
       textProps: '',
       toptitle: '',
+      team: {},
+      loadingTeam: true,
       title: 'Meet the #MEWteam',
       description:
         'MyEtherWallet is a group of talented, inspiring, and hardworking individuals from around the world. We share the passion to code, create, and ultimately build an open, accessible and fair financial future, one piece of software at a time.',
       centered: true
     },
+    // created() {
+    //   this.fetchTeam();
+    // },
+    // methods: {
+    //   fetchTeam() {
+    //     axios
+    //       .get(
+    //         'https://raw.githubusercontent.com/MyEtherWallet/dynamic-data/main/careers.json'
+    //       )
+    //       .then(res => {
+    //         this.loadingTeam = false;
+    //         this.team = res.data;
+    //       });
+    //   }
+    // }
     team: [
       { img: Kosala, name: 'Kosala', title: 'Founder/CEO' },
       { img: Brian, name: 'Brian', title: 'COO' },
@@ -86,8 +104,8 @@ export default {
       { img: Vince, name: 'Vince', title: 'Marketing Manager' },
       { img: Katya, name: 'Katya', title: 'Community and Content Lead' },
       {
-        img: Jason,
-        name: 'Jason',
+        img: Kealii,
+        name: 'Kealii',
         title: 'Social Media Specialist'
       },
       {

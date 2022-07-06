@@ -52,7 +52,8 @@ const EXCEPTIONS = [
   'trezor-connect', // currently in beta
   'package-json',
   'codecov',
-  'node-polyfill-webpack-plugin'
+  'node-polyfill-webpack-plugin',
+  '@ensdomains/ensjs'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
