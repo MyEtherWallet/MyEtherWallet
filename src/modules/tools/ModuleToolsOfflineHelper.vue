@@ -38,17 +38,13 @@
     </v-dialog>
 
     <mew-module
-      class="mew-component--convert-units pt-6"
+      class="pt-6"
       :title="title.title"
       :has-elevation="true"
       :has-indicator="true"
     >
       <template #moduleBody>
-        <mew-stepper
-          class="mx-n12 mx-sm-0"
-          :items="stepperItems"
-          :on-step="currentStep"
-        ></mew-stepper>
+        <mew-stepper :items="stepperItems" :on-step="currentStep"></mew-stepper>
 
         <h5
           v-if="$vuetify.breakpoint.mdAndDown"
