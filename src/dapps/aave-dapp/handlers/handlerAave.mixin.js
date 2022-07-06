@@ -18,6 +18,7 @@ import { ChainId } from '@aave/contract-helpers';
 // import { toHex } from 'web3-utils';
 // import { cloneDeep } from 'lodash';
 import { INTEREST_TYPES } from '../handlers/helpers';
+import { estimateGasList } from '@/core/helpers/gasPriceHelper';
 
 const STABLE_COINS = ['TUSD', 'DAI', 'USDT', 'USDC', 'sUSD'];
 
@@ -171,7 +172,7 @@ export default {
     ...mapState('global', ['gasPriceType']),
     ...mapGetters('wallet', ['tokensList']),
     ...mapGetters('external', ['contractToToken']),
-    ...mapGetters('global', ['getFiatValue', 'gasPriceByType']),
+    ...mapGetters('global', ['getFiatValue', 'gasPriceByType', 'network']),
     userReservesData() {
       return this.userSummary.userReservesData;
     },
@@ -214,14 +215,31 @@ export default {
           user,
           referralCode
         );
-        const gas = await this.poolContract.estimateGas.deposit(
+        txData.from = user;
+        console.log('txData', txData);
+        console.log('reserve', reserve);
+        const ABI = [
+          'function approve(address _spender, uint256 _value) public returns (bool success)'
+        ];
+        const token = new ethers.Contract(
           reserve,
-          amount,
-          user,
-          referralCode
+          ABI,
+          this.poolContract.provider
         );
-        console.log(gas, txData);
-        // this.formatTxData(txData, gas);
+        console.log('tokenContract', token);
+        const approveData = await token.populateTransaction.approve(
+          this.poolContract.address,
+          amount
+        );
+        approveData.from = user;
+        console.log('approveData', approveData);
+        const gasLimits = await estimateGasList(this.network.type.name, [
+          approveData,
+          txData
+        ]);
+        console.log('gasLimits', gasLimits);
+        this.formatTxData(approveData, gasLimits[0]); // Approve token
+        this.formatTxData(txData, gasLimits[1]); // Deposit token
       } catch (e) {
         throw new Error(e);
       }
@@ -320,13 +338,13 @@ export default {
      * Check and prepare data to send tx
      * or errors out
      */
-    formatTxData(txData) {
+    formatTxData(txData, gas) {
       try {
         const tx = {
           from: this.address,
           to: txData.to,
           data: txData.data,
-          gas: '0x5208',
+          gas: !gas ? '0x5208' : gas,
           value: '0',
           gasPrice: this.gasPriceByType(this.gasPriceType)
         };
