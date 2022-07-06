@@ -156,10 +156,10 @@ export default {
       {
         logoText: 'COOL WALLET',
         // logoImg: require('@/assets/images/icons/hardware-wallets/icon-coolwallet.svg'),
-        walletImg: require('@/assets/images/hardware-wallets/coolwallet-sample.png'),
+        walletImg: require('@/assets/images/hardware-wallets/CoolwalletMEW_new.png'),
         priceNote: 'Starting from',
         currency: '$',
-        price: '89.00',
+        price: '99.00',
         note: 'Unmatched physical security for your private keys.',
         link: 'https://www.coolwallet.io/mew/?ref=myetherwallet1'
       }
