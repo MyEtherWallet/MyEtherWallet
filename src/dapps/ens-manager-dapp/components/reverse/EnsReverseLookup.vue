@@ -128,7 +128,7 @@ export default {
   },
   methods: {
     async fetchDomains() {
-      return await this.ensManager.getAllNamesForReverseLookup(this.address);
+      return await this.ensManager.getAllNamesForAddress(this.address);
     },
     async findDomainByAddress() {
       try {
@@ -153,7 +153,6 @@ export default {
     async setReverseRecord(chosenDomain) {
       try {
         const reverseRecord = await this.permHandler.setNameReverseRecord(
-          chosenDomain.value.toString(),
           chosenDomain.name
         );
         this.hasReverseRecordNames = true;

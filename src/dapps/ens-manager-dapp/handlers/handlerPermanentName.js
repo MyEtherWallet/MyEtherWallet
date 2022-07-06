@@ -41,12 +41,9 @@ export default class PermanentNameModule extends ENSManagerInterface {
     return this._registerWithDuration(duration, balance);
   }
 
-  async setNameReverseRecord(nameHash, domain) {
+  async setNameReverseRecord(domain) {
     try {
-      const setReverse = await this.publicResolverContract.methods
-        .setName(nameHash, domain)
-        .send({ from: this.address });
-      return setReverse;
+      return this.ensInstance.setReverseRecord(domain);
     } catch (e) {
       Toast(e, {}, ERROR);
     }
@@ -169,7 +166,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
       .setContenthash(this.nameHash, ipfsToHash)
       .send({ from: this.address })
       .on('receipt', () => {
-        this._setContentHash();
+        this._getContentHash();
       });
   }
 
@@ -275,10 +272,10 @@ export default class PermanentNameModule extends ENSManagerInterface {
         }
       });
     });
-    this._setExpiry();
+    this._getExpiry();
   }
 
-  async _setExpiry() {
+  async _getExpiry() {
     if (!this.isAvailable) {
       this.expired = this.expiryTime * 1000 < new Date().getTime();
       if (!this.expired) {
@@ -287,10 +284,10 @@ export default class PermanentNameModule extends ENSManagerInterface {
           date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear();
       }
     }
-    this._setDnsContract();
+    this._getDnsContract();
   }
 
-  async _setDnsContract() {
+  async _getDnsContract() {
     if (this.tld && this.tld !== this.network.type.ens.registrarTLD) {
       this.dnsRegistrarContract = new this.web3.eth.Contract(
         DNSRegistrar.abi,
@@ -299,11 +296,11 @@ export default class PermanentNameModule extends ENSManagerInterface {
       this.dnsClaim = await this.dnsRegistrar.methods
         .claim(this.parsedDomainName)
         .call();
-      this._setDnsInfo();
+      this._getDnsInfo();
     }
     return;
   }
-  async _setDnsInfo() {
+  async _getDnsInfo() {
     const _owner = await this.ens.owner(this.parsedDomainName);
     const isInNewRegistry = await this.registryContract.methods
       .recordExists(nameHashPckg.hash(this.parsedDomainName))

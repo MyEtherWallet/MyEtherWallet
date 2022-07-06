@@ -145,6 +145,9 @@ export default {
     nicknameRules() {
       return [
         value =>
+          (value && value.length >= 1) ||
+          this.$t('interface.address-book.validations.nickname-required'),
+        value =>
           (value && value.length < 20) ||
           this.$t('interface.address-book.validations.nickname-length')
       ];
@@ -188,8 +191,12 @@ export default {
     toAddress(newVal) {
       this.addressToAdd = newVal;
     },
-    addressToAdd() {
-      this.resolveName();
+    addressToAdd(newVal) {
+      if (isAddress(newVal)) {
+        this.resolveAddress();
+      } else {
+        this.resolveName();
+      }
     },
     web3() {
       if (this.network.type.ens) {
@@ -220,11 +227,23 @@ export default {
       this.nickname = '';
       this.resolvedAddr = '';
     },
+    async resolveAddress() {
+      if (this.nameResolver) {
+        try {
+          const resolvedName = await this.nameResolver.resolveAddress(
+            this.addressToAdd
+          );
+          this.resolvedAddr = resolvedName.name ? resolvedName.name : '';
+        } catch (e) {
+          this.resolvedAddr = '';
+        }
+      }
+    },
     async resolveName() {
       if (
         this.nameResolver &&
         this.addressToAdd &&
-        this.addressToAdd.includes('.')
+        this.addressToAdd?.includes?.('.')
       ) {
         await this.nameResolver
           .resolveName(this.addressToAdd)

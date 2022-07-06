@@ -13,7 +13,6 @@ import { toChecksumAddress } from 'web3-utils';
 import { clone } from 'lodash';
 import normalise from '@/core/helpers/normalise';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
-import { getEnsAddress } from '@ensdomains/ensjs';
 
 export default class ENSManagerInterface {
   constructor(name, address, network, web3, ens) {
@@ -21,6 +20,7 @@ export default class ENSManagerInterface {
     this.network = network ? network : null;
     this.web3 = web3 ? web3 : null;
     this.ensInstance = ens ? ens : null;
+    this.nameInstance = ens ? ens.name(name) : null;
     // Returned value
     this.tld = getTld(name, network);
     this.parsedHostName = normalise(getHostName(name));
@@ -75,9 +75,12 @@ export default class ENSManagerInterface {
         return this._migrateCoinsAndRecords();
       });
   }
+  // not migrating this to v2 library
+  // as it will cost user more
+  // for editing multiple records
   async setMulticoin(coins) {
-    const isMigrate = await this.migrate();
-    if (isMigrate) return;
+    // const isMigrate = await this.migrate();
+    // if (isMigrate) return;
     const coinaddresses = coins.map(item => {
       return this.publicResolverContract.methods
         .setAddr(this.nameHash, item.id, decodeCoinAddress(item))
@@ -86,9 +89,12 @@ export default class ENSManagerInterface {
     return this.publicResolverContract.methods
       .multicall(coinaddresses)
       .send({ from: this.address })
-      .on('receipt', this._setMulticoins);
+      .on('receipt', this._getMulticoins);
   }
 
+  // not migrating this to v2 library
+  // as it will cost user more
+  // for editing multiple records
   async setTxtRecord(obj) {
     if (this.address === '0x') {
       throw new Error('Owner not set! Please initialize module properly!');
@@ -97,8 +103,8 @@ export default class ENSManagerInterface {
     for (const _record in obj) {
       this.txtRecords[_record] = obj[_record];
     }
-    const isMigrate = await this.migrate();
-    if (isMigrate) return;
+    // const isMigrate = await this.migrate();
+    // if (isMigrate) return;
 
     const multicalls = [];
     for (const i in obj) {
@@ -111,7 +117,7 @@ export default class ENSManagerInterface {
     return this.resolverContract.methods
       .multicall(multicalls)
       .send({ from: this.address })
-      .on('receipt', this._setTxtRecords);
+      .on('receipt', this._getTxtRecords);
   }
 
   async _init() {
@@ -183,11 +189,10 @@ export default class ENSManagerInterface {
     const registryAddress = this.network.type.ens.registry;
     this.registryContract = new this.web3.eth.Contract(
       ENSRegistry.abi,
-      registryAddress.address
+      registryAddress
     );
     const nameInstance = await this.ensInstance.name(this.tld);
     this.registrarAddress = await nameInstance.getOwner();
-    console.log(this.registrarAddress);
     this._setRegistrarContracts();
   }
 
@@ -217,7 +222,7 @@ export default class ENSManagerInterface {
     this._setPublicResolverAddress();
   }
 
-  async _setContentHash() {
+  async _getContentHash() {
     try {
       const hash = await this.resolverContract.methods
         .contenthash(this.nameHash)
@@ -228,7 +233,7 @@ export default class ENSManagerInterface {
     }
   }
 
-  async _setOwner() {
+  async _getOwner() {
     try {
       this.owner = await this.registrarContract.methods
         .ownerOf(this.labelHash)
@@ -240,8 +245,10 @@ export default class ENSManagerInterface {
 
   async _setPublicResolverAddress() {
     try {
-      const resolver = await this.ensinstance.ens.resolver('resolver.eth');
-      this.publicResolverAddress = await resolver.addr();
+      const nameInstance = await this.ensInstance.name('resolver.eth');
+      this.publicResolverAddress = await nameInstance.ens.resolver(
+        nameHashPckg.hash('resolver.eth')
+      );
     } catch (e) {
       this.publicResolverAddress = '0x';
     }
@@ -250,32 +257,31 @@ export default class ENSManagerInterface {
 
   async _setResolverContracts() {
     const web3 = this.web3;
-    this.resolverAddress = await this.registryContract.methods
-      .resolver(this.nameHash)
-      .call();
+    this.resolverAddress = await this.ensInstance.ens.resolver(this.nameHash);
     this.resolverContract = new web3.eth.Contract(
-      PublicResolver,
+      PublicResolver.abi,
       this.resolverAddress
     );
+
     this.publicResolverContract = new web3.eth.Contract(
-      PublicResolver,
-      this.publicResolverAddress
+      PublicResolver.abi,
+      PublicResolver.address
     );
-    this._setMoreInfo();
+    this._getMoreInfo();
   }
 
-  async _setMoreInfo() {
+  async _getMoreInfo() {
     if (!this.isAvailable) {
-      this._setOwner();
-      this._setContentHash();
-      this._setTxtRecords();
+      this._getOwner();
+      this._getContentHash();
+      this._getTxtRecords();
       this._checkController();
-      this._setMulticoins();
-      this._setMainResolvingAddress();
+      this._getMulticoins();
+      this._getMainResolvingAddress();
     }
   }
 
-  async _setTxtRecords() {
+  async _getTxtRecords() {
     try {
       const supportsTxt = await this.resolverContract.methods
         .supportsInterface(registrarInterface.TEXT_RECORD)
@@ -285,9 +291,7 @@ export default class ENSManagerInterface {
         this.txtRecords = {};
         const promises = [];
         textrecords.forEach(txt => {
-          promises.push(
-            this.resolverContract.methods.text(this.nameHash, txt.name).call()
-          );
+          promises.push(this.nameInstance.getText(txt.name));
         });
         Promise.all(promises).then(vals => {
           vals.forEach((val, idx) => {
@@ -310,17 +314,16 @@ export default class ENSManagerInterface {
       this.web3.utils.toChecksumAddress(owner) ===
       this.web3.utils.toChecksumAddress(this.address);
   }
-  _setMainResolvingAddress() {
-    this.ensinstance.ens
-      .resolver(this.name)
-      .addr()
+  _getMainResolvingAddress() {
+    this.ensInstance.ens
+      .resolver(this.nameHash)
       .then(addr => {
         this.mainResolvingAddress = toChecksumAddress(addr);
         this.subtext = this.mainResolvingAddress;
       })
       .catch(err => Toast(err, {}, ERROR));
   }
-  async _setMulticoins() {
+  async _getMulticoins() {
     const newObj = {};
     Object.keys(multicoins).forEach(item => {
       newObj[item] = clone(multicoins[item]);
@@ -337,14 +340,15 @@ export default class ENSManagerInterface {
         const coinTypes = Object.keys(this.multiCoin);
         coinTypes.forEach(type => {
           promises.push(
-            this.ensinstance.ens
-              .resolver(this.name, Resolver)
-              .addr(this.multiCoin[type].id)
+            this.nameInstance.getAddress(this.multiCoin[type].symbol)
           );
         });
         await Promise.all(promises).then(vals => {
           vals.forEach((address, idx) => {
-            if (address) {
+            if (
+              address &&
+              address !== '0x0000000000000000000000000000000000000000'
+            ) {
               this.multiCoin[coinTypes[idx]].value = this.multiCoin[
                 coinTypes[idx]
               ].encode(Buffer.from(address.replace('0x', ''), 'hex'));
@@ -352,9 +356,7 @@ export default class ENSManagerInterface {
           });
         });
       } else {
-        this.multiCoin.ETH.value = await this.ensinstance.ens
-          .resolver(this.name)
-          .addr();
+        this.multiCoin.ETH.value = await this.nameInstance.getAddress('ETH');
       }
     } catch (e) {
       this.multiCoin.ETH.value = '0x';

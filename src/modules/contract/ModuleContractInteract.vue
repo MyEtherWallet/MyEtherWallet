@@ -9,7 +9,7 @@
       <div>
         <mew-select
           :items="mergedContracts"
-          label="Contract Type"
+          label="Contract Name"
           @input="selectedContract"
         />
         <mew-input

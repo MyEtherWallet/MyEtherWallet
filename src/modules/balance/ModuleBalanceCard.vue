@@ -21,10 +21,8 @@
                 class="d-flex align-center cursor--pointer personal-account-container"
                 v-on="on"
               >
-                <div
-                  class="info-container--text font-weight-bold text-uppercase white--text"
-                >
-                  MY Personal Account
+                <div class="info-container--text font-weight-bold white--text">
+                  {{ title }}
                 </div>
                 <v-icon class="white--text ml-2" small dense>
                   mdi-menu-down
@@ -238,19 +236,21 @@
 
 <script>
 import anime from 'animejs/lib/anime.es.js';
+import { mapGetters, mapActions, mapState } from 'vuex';
+import clipboardCopy from 'clipboard-copy';
+import { isEmpty } from 'lodash';
+
 import AppModal from '@/core/components/AppModal';
 import AppAddrQr from '@/core/components/AppAddrQr';
 import BalanceAddressPaperWallet from './components/BalanceAddressPaperWallet';
-import { mapGetters, mapActions, mapState } from 'vuex';
-import clipboardCopy from 'clipboard-copy';
-import { Toast, INFO, SUCCESS } from '@/modules/toast/handler/handlerToast';
+import { Toast, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
-import { isEmpty } from 'lodash';
 import ModuleAccessWalletHardware from '@/modules/access-wallet/ModuleAccessWalletHardware';
 import ModuleAccessWalletSoftware from '@/modules/access-wallet/ModuleAccessWalletSoftware';
 import wallets from './handlers/config';
 import WALLET_TYPES from '../access-wallet/common/walletTypes';
+import NameResolver from '@/modules/name-resolver/index';
 
 export default {
   components: {
@@ -260,6 +260,12 @@ export default {
     ModuleAccessWalletHardware,
     ModuleAccessWalletSoftware
   },
+  props: {
+    sidemenuStatus: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
       showChangeAddress: false,
@@ -267,7 +273,9 @@ export default {
       openQR: false,
       showLogout: false,
       showVerify: false,
-      wallets: wallets
+      wallets: wallets,
+      resolvedName: '',
+      nameResolver: null
     };
   },
   computed: {
@@ -281,6 +289,17 @@ export default {
     ...mapGetters('external', ['totalTokenFiatValue']),
     ...mapGetters('global', ['network', 'isTestNetwork', 'getFiatValue']),
     ...mapGetters('wallet', ['tokensList', 'balanceInETH']),
+    ...mapState('wallet', ['web3']),
+    /**
+     * show default title
+     * unless resolved name isn't false
+     * returns @string
+     */
+    title() {
+      return this.resolvedName
+        ? this.resolvedName
+        : 'My Personal Account'.toUpperCase();
+    },
     /**
      * verify address title
      * returns @String
@@ -398,9 +417,46 @@ export default {
       return this.tokensList.length - 1;
     }
   },
+  watch: {
+    /**
+     * run setup for name resolver when web3 changes
+     */
+    web3() {
+      this.setupNameResolver();
+    },
+    sidemenuStatus() {
+      /**
+       * At side menu closes, close paper wallet
+       */
+      this.showPaperWallet = false;
+    }
+  },
+  mounted() {
+    this.setupNameResolver();
+  },
   methods: {
     ...mapActions('external', ['setTokenAndEthBalance']),
     ...mapActions('wallet', ['removeWallet']),
+    /**
+     * checks if network supoorts ens
+     * and creates a new name resolver instance
+     */
+    async setupNameResolver() {
+      if (this.network.type.ens && this.web3.currentProvider) {
+        this.nameResolver = new NameResolver(this.network, this.web3);
+      } else {
+        this.nameResolver = null;
+      }
+
+      if (this.nameResolver) {
+        try {
+          const { name } = await this.nameResolver.resolveAddress(this.address);
+          this.resolvedName = name;
+        } catch (e) {
+          this.resolvedName = '';
+        }
+      }
+    },
     /**
      * refreshes the token and eth balance
      */
@@ -469,7 +525,11 @@ export default {
      */
     copyAddress() {
       clipboardCopy(this.getChecksumAddressString);
-      Toast(`Copied ${this.getChecksumAddressString} successfully!`, {}, INFO);
+      Toast(
+        `Copied ${this.getChecksumAddressString} successfully!`,
+        {},
+        SUCCESS
+      );
     },
     /**
      * set openQR to false

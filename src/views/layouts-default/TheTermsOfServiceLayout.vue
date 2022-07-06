@@ -92,7 +92,11 @@
               >
                 <template #article1>
                   <a
-                    :href="getArticle('mew-introduction')"
+                    :href="
+                      parent.$store.getters['article/getArticle'](
+                        'mew-introduction'
+                      )
+                    "
                     target="_blank"
                     rel="noopener noreferrer"
                     >"{{ parent.$t('termsOfService.article1') }}"</a
@@ -100,7 +104,11 @@
                 </template>
                 <template #article2>
                   <a
-                    :href="getArticle('avoid-phishing-scams')"
+                    :href="
+                      parent.$store.getters['article/getArticle'](
+                        'avoid-phishing-scams'
+                      )
+                    "
                     target="_blank"
                     rel="noopener noreferrer"
                     >“{{ parent.$t('termsOfService.article2') }}”</a
@@ -346,12 +354,8 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
 export default {
-  name: 'TheTermsOfServiceLayout',
-  computed: {
-    ...mapGetters('article', ['getArticle'])
-  }
+  name: 'TheTermsOfServiceLayout'
 };
 </script>
 

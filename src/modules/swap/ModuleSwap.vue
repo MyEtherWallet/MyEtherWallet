@@ -72,7 +72,6 @@
               </v-col>
               <v-col cols="12" sm="5" class="pb-0 pb-sm-3 pl-sm-0">
                 <mew-select
-                  ref="toToken"
                   :value="toTokenType"
                   :items="actualToTokens"
                   :is-custom="true"
@@ -1093,7 +1092,6 @@ export default {
       this.addressValue = {};
       this.selectedProvider = {};
       this.localGasPrice = '0';
-      if (this.$refs.toToken) this.$refs.toToken.clear();
       if (this.$refs.amountInput) this.$refs.amountInput.clear();
       this.refundAddress = '';
       this.isValidRefundAddr = false;
@@ -1279,18 +1277,18 @@ export default {
           .then(quotes => {
             if (this.tokenInValue === this.cachedAmount) {
               this.selectedProvider = {};
-              this.lastSetToken = quotes[0].amount;
-              this.availableQuotes = quotes.map(q => {
-                q.rate = new BigNumber(q.amount)
-                  .dividedBy(new BigNumber(this.tokenInValue))
-                  .toString();
-                q.isSelected = false;
-                return q;
-              });
-              if (this.availableQuotes.length > 1) {
-                this.availableQuotes = quotes.filter(q => q.rate !== '0');
-              }
               if (quotes.length) {
+                this.lastSetToken = quotes[0].amount;
+                this.availableQuotes = quotes.map(q => {
+                  q.rate = new BigNumber(q.amount)
+                    .dividedBy(new BigNumber(this.tokenInValue))
+                    .toString();
+                  q.isSelected = false;
+                  return q;
+                });
+                if (this.availableQuotes.length > 1) {
+                  this.availableQuotes = quotes.filter(q => q.rate !== '0');
+                }
                 this.tokenOutValue = quotes[0].amount;
               }
               this.step = 1;
@@ -1472,7 +1470,7 @@ export default {
         const main = {
           from: this.address,
           type: NOTIFICATION_TYPES.SWAP,
-          network: this.network.type.name,
+          network: this.network.type?.name,
           status: NOTIFICATION_STATUS.PENDING,
           fromTxData: {
             currency: this.confirmInfo.fromType,
