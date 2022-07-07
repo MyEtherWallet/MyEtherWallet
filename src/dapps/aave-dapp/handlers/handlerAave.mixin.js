@@ -209,15 +209,6 @@ export default {
     async onDeposit({ amount, reserve, referralCode, user }) {
       console.log(this.poolContract);
       try {
-        const txData = await this.poolContract.populateTransaction.deposit(
-          reserve,
-          amount,
-          user,
-          referralCode
-        );
-        txData.from = user;
-        console.log('txData', txData);
-        console.log('reserve', reserve);
         const ABI = [
           'function approve(address _spender, uint256 _value) public returns (bool success)'
         ];
@@ -226,20 +217,23 @@ export default {
           ABI,
           this.poolContract.provider
         );
-        console.log('tokenContract', token);
         const approveData = await token.populateTransaction.approve(
           this.poolContract.address,
           amount
         );
         approveData.from = user;
-        console.log('approveData', approveData);
+        const txData = await this.poolContract.populateTransaction.deposit(
+          reserve,
+          amount,
+          user,
+          referralCode
+        );
+        txData.from = user;
         const gasLimits = await estimateGasList(this.network.type.name, [
           approveData,
           txData
         ]);
-        console.log('gasLimits', gasLimits);
-        this.formatTxData(approveData, gasLimits[0]); // Approve token
-        this.formatTxData(txData, gasLimits[1]); // Deposit token
+        this.sendTxns([approveData, txData], gasLimits);
       } catch (e) {
         throw new Error(e);
       }
@@ -364,6 +358,41 @@ export default {
             Toast(err, {}, ERROR);
           });
         // });
+      } catch (e) {
+        Toast(e, {}, ERROR);
+      }
+    },
+    /**
+     * Check and prepare data to send multiple txns
+     * or errors out
+     */
+    sendTxns(txns, gasLimits) {
+      try {
+        for (let i = 0; i < txns.length; i++) {
+          const tx = {
+            from: this.address,
+            to: txns[i].to,
+            data: txns[i].data,
+            gas: gasLimits[i],
+            value: '0',
+            gasPrice: this.gasPriceByType(this.gasPriceType)
+          };
+          txns[i] = tx;
+        }
+        console.log('txns', txns);
+        this.web3.mew
+          .sendBatchTransactions(txns)
+          .then(() => {
+            Toast(
+              'Success! Your transaction will be displayed shortly',
+              {},
+              SUCCESS
+            );
+          })
+          .catch(err => {
+            console.log(err);
+            Toast(err, {}, ERROR);
+          });
       } catch (e) {
         Toast(e, {}, ERROR);
       }
