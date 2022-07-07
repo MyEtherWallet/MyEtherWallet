@@ -332,13 +332,13 @@ export default {
      * Check and prepare data to send tx
      * or errors out
      */
-    formatTxData(txData, gas) {
+    formatTxData(txData) {
       try {
         const tx = {
           from: this.address,
           to: txData.to,
           data: txData.data,
-          gas: !gas ? '0x5208' : gas,
+          gas: '0x5208',
           value: '0',
           gasPrice: this.gasPriceByType(this.gasPriceType)
         };
