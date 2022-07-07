@@ -91,7 +91,7 @@ export default {
     ...mapGetters('global', ['network', 'getFiatValue']),
     ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
     userReservesData() {
-      return this.userSummary?.reservesData || [];
+      return this.userSummary?.userReservesData || [];
     },
     header() {
       switch (this.title) {
@@ -129,8 +129,10 @@ export default {
         );
       }
       if (this.title === AAVE_TABLE_TITLE.balance_deposit) {
+        console.log('userReservesData', this.userReservesData);
+        console.log('userSummary', this.userSummary);
         return this.userReservesData.filter(item =>
-          new BigNumber(item.principalATokenBalance).gt(0)
+          new BigNumber(item.scaledATokenBalance).gt(0)
         );
       }
 
@@ -217,6 +219,7 @@ export default {
            * Case: Aave Existing Deposits Table
            */
           case AAVE_TABLE_TITLE.balance_deposit:
+            console.log('list', list);
             list = list.map(item => {
               AAVE_TABLE_BUTTON.method = this.onWithdrawClick;
               return {
