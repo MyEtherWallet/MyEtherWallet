@@ -60,7 +60,7 @@
 <script>
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { isEmpty } from 'lodash';
-import ENS, { getEnsAddress } from '@ensdomains/ensjs';
+import ENS from '@ensdomains/ensjs';
 import { mapGetters, mapState } from 'vuex';
 import PermanentNameModule from '../../handlers/handlerPermanentName';
 export default {
@@ -113,7 +113,7 @@ export default {
     const ens = this.network.type.ens
       ? new ENS({
           provider: this.web3.eth.currentProvider,
-          ensAddress: getEnsAddress(this.network.type.chainID.toString())
+          ensAddress: this.network.type.ens.registry
         })
       : null;
     this.permHandler = new PermanentNameModule(

@@ -329,7 +329,7 @@ import EnsReverseLookup from './components/reverse/EnsReverseLookup';
 import { mapGetters, mapState } from 'vuex';
 import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import BigNumber from 'bignumber.js';
-import ENS, { getEnsAddress } from '@ensdomains/ensjs';
+import ENS from '@ensdomains/ensjs';
 import { fromWei, toBN, toWei } from 'web3-utils';
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 import { ENS_MANAGER_ROUTE } from './configsRoutes';
@@ -575,7 +575,7 @@ export default {
     const ens = this.network.type.ens
       ? new ENS({
           provider: this.web3.eth.currentProvider,
-          ensAddress: getEnsAddress(this.network.type.chainID.toString())
+          ensAddress: this.network.type.ens.registry
         })
       : null;
     this.ensManager = new handlerEnsManager(
