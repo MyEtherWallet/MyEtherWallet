@@ -1,3 +1,43 @@
+### Release v6.6.1
+
+### ui
+
+* * Replace search bar on derivation path [#3930](https://github.com/MyEtherWallet/MyEtherWallet/pull/3930)
+* * updated select contract text [#3965](https://github.com/MyEtherWallet/MyEtherWallet/pull/3965)
+
+### fix
+
+* * fix gas estimate max bug [#3905](https://github.com/MyEtherWallet/MyEtherWallet/pull/3905)
+* * Show transaction fee in Eth blocks dapp pop up [#3906](https://github.com/MyEtherWallet/MyEtherWallet/pull/3906)
+* * fix mobile social icons\* fix mobile expending block styles
+* fix mobile BTC donation text
+  [#3909](https://github.com/MyEtherWallet/MyEtherWallet/pull/3909)
+* * fix export configurations btn size [#3910](https://github.com/MyEtherWallet/MyEtherWallet/pull/3910)
+* * update unexpected token value message [#3912](https://github.com/MyEtherWallet/MyEtherWallet/pull/3912)
+* * sentry fix failed to fetch pool api [#3917](https://github.com/MyEtherWallet/MyEtherWallet/pull/3917)
+* * eth blocks close button [#3924](https://github.com/MyEtherWallet/MyEtherWallet/pull/3924)
+* * fix eth block batch minting btn layout [#3929](https://github.com/MyEtherWallet/MyEtherWallet/pull/3929)
+* * fix mobile wallet footer overlap issue [#3931](https://github.com/MyEtherWallet/MyEtherWallet/pull/3931)
+* * fix ios input field zooming issue [#3932](https://github.com/MyEtherWallet/MyEtherWallet/pull/3932)
+* * sentry undefined reading value [#3935](https://github.com/MyEtherWallet/MyEtherWallet/pull/3935)
+* * Address book ENS missing provider [#3936](https://github.com/MyEtherWallet/MyEtherWallet/pull/3936)
+* * fix pass numbers as strings or BN objects error [#3941](https://github.com/MyEtherWallet/MyEtherWallet/pull/3941)
+* * unmerged changes in package-lock [#3942](https://github.com/MyEtherWallet/MyEtherWallet/pull/3942)
+* * Fix certain token icons not loading in swap [#3945](https://github.com/MyEtherWallet/MyEtherWallet/pull/3945)
+* * fix "Cannot read properties of undefined (reading 'message')" [#3946](https://github.com/MyEtherWallet/MyEtherWallet/pull/3946)
+* * sentry type error msg [#3947](https://github.com/MyEtherWallet/MyEtherWallet/pull/3947)
+* * sentry status code 404 error [#3948](https://github.com/MyEtherWallet/MyEtherWallet/pull/3948)
+* * sentry gatt operation unknown reasons [#3949](https://github.com/MyEtherWallet/MyEtherWallet/pull/3949)
+* * Fix Terms of Service page [#3950](https://github.com/MyEtherWallet/MyEtherWallet/pull/3950)
+* * Fix low gas for eth blocks, checks for quotes, and handles refresh data error [#3953](https://github.com/MyEtherWallet/MyEtherWallet/pull/3953)
+* * add permission denied error to handler [#3954](https://github.com/MyEtherWallet/MyEtherWallet/pull/3954)
+* * sentry gatt server disconnected error [#3958](https://github.com/MyEtherWallet/MyEtherWallet/pull/3958)
+* * sentry device disconnected [#3959](https://github.com/MyEtherWallet/MyEtherWallet/pull/3959)
+
+### sentry
+
+* * added checks for undefined [#3957](https://github.com/MyEtherWallet/MyEtherWallet/pull/3957)
+
 ### Release v6.6.0
 
 ### devop
