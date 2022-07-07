@@ -52,7 +52,8 @@ const EXCEPTIONS = [
   'trezor-connect', // currently in beta
   'package-json',
   'codecov',
-  'node-polyfill-webpack-plugin'
+  'node-polyfill-webpack-plugin',
+  '@ensdomains/ensjs'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
@@ -108,12 +109,12 @@ const looper = () => {
           if (!isMewComponentBeta) {
             console.error(
               'ERROR: Update ' +
-                _name +
-                ' from ' +
-                ALL_PACKAGES[_name] +
-                ' to ' +
-                latestVersion +
-                '. Released:',
+              _name +
+              ' from ' +
+              ALL_PACKAGES[_name] +
+              ' to ' +
+              latestVersion +
+              '. Released:',
               latestVersionTime
             );
             updatesFound = true;

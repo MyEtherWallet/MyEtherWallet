@@ -45,6 +45,7 @@
     />
 
     <mew-stepper
+      compact
       class="mx-n12 mx-sm-0"
       :items="stepperItems"
       :on-step="currentStep"
@@ -220,6 +221,7 @@
 </template>
 
 <script>
+import MewStepper from '@/components/MewStepper/MewStepper';
 import AppBlockTitle from '@/core/components/AppBlockTitle';
 import { mapGetters, mapState } from 'vuex';
 import { isAddress, fromWei, toHex } from 'web3-utils';
@@ -232,7 +234,7 @@ import { toChecksumAddress } from 'ethereumjs-util';
 import { isEmpty } from 'lodash';
 export default {
   name: 'ModuleToolsOfflineHelper',
-  components: { AppBlockTitle, NetworkSwitch },
+  components: { MewStepper, AppBlockTitle, NetworkSwitch },
   props: {
     isHomePage: {
       type: Boolean,
