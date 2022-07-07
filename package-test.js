@@ -47,11 +47,19 @@ const EXCEPTIONS = [
   '@vue/cli-service',
   'vue-i18n',
   'vue',
-  'trezor-connect', // currently in beta
   '@shapeshiftoss/hdwallet-core',
   '@shapeshiftoss/hdwallet-keepkey-webusb',
+  'trezor-connect', // currently in beta
   'package-json',
-  'codecov'
+  'codecov',
+  'node-polyfill-webpack-plugin',
+  // fix after release
+  '@ensdomains/ensjs',
+  '@commitlint/config-conventional',
+  '@mdi/font',
+  'babel-jest',
+  'commitlint',
+  'eslint-plugin-prettier'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
