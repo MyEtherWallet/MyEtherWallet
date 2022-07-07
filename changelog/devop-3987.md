@@ -1,0 +1,1 @@
+* add compact option for mobile
