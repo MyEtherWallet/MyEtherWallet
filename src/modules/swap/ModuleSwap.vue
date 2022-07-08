@@ -346,7 +346,7 @@ export default {
       swapNotAvailableMes: {
         title: `Swap is not available on this network`,
         subtitle:
-          'Please select ETH, BSC or MATIC networks to use this feature.'
+          'Please select ETH, BNB or MATIC networks to use this feature.'
       },
       step: 0,
       confirmInfo: {
@@ -452,12 +452,12 @@ export default {
           };
     },
     /**
-     *Returns errors messages based on netowrk
+     *Returns errors messages based on network
      */
     errorMsgs() {
       return {
-        amountEthIsTooLow: `You do not have enough ${this.network.type.name} to swap.`,
-        amountExceedsEthBalance: `Amount exceeds your ${this.network.type.name} balance.`,
+        amountEthIsTooLow: `You do not have enough ${this.network.type.currencyName} to swap.`,
+        amountExceedsEthBalance: `Amount exceeds your ${this.network.type.currencyName} balance.`,
         amountExceedsTxFee: `Amount entered doesn't allow for transaction fee`,
         amountLessThan0: 'Swap amount must be greater than 0',
         doNotOwnToken: 'You do not own this token'
@@ -469,8 +469,8 @@ export default {
     msg() {
       return {
         lowBalance: {
-          title: `Your ${this.network.type.name} balance is too low`,
-          subtitle: `Every transaction requires a small amount of ${this.network.type.name} to execute. Even if you have tokens to swap, when your ${this.network.type.name} balance is close to zero, you won't be able to send anything until you fund your account.`
+          title: `Your ${this.network.type.currencyName} balance is too low`,
+          subtitle: `Every transaction requires a small amount of ${this.network.type.currencyName} to execute. Even if you have tokens to swap, when your ${this.network.type.currencyName} balance is close to zero, you won't be able to send anything until you fund your account.`
         },
         storeBitcoin: {
           title: `Did you know? You can store your Bitcoin on ${this.network.type.name_long}`,
@@ -671,8 +671,8 @@ export default {
             return item;
         }
       });
-      const nonChainTokens = this.availableTokens.fromTokens
-        .filter(item => {
+      const nonChainTokens = this.availableTokens.fromTokens.reduce(
+        (arr, item) => {
           if (
             item.hasOwnProperty('isEth') &&
             !item.isEth &&
@@ -680,14 +680,13 @@ export default {
             item.symbol &&
             item.subtext
           ) {
-            return item;
+            delete item['tokenBalance'];
+            delete item['totalBalance'];
+            arr.push(item);
           }
-        })
-        .map(item => {
-          delete item['tokenBalance'];
-          delete item['totalBalance'];
-          return item;
-        });
+          return arr;
+        }
+      );
       tradebleWalletTokens = this.formatTokensForSelect(tradebleWalletTokens);
       let returnableTokens = [
         {
@@ -1519,7 +1518,7 @@ export default {
     checkFeeBalance() {
       this.feeError = '';
       if (this.notEnoughEth) {
-        this.feeError = `Not enough ${this.network.type.name} to pay for transaction fee.`;
+        this.feeError = `Not enough ${this.network.type.currencyName} to pay for transaction fee.`;
       }
     },
     setTokenFromURL() {

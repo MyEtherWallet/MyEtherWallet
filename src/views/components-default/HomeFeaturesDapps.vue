@@ -50,51 +50,51 @@
 export default {
   name: 'HomeFeaturesDapps',
   components: {},
-  data: () => ({
+  data: vm => ({
     dapps: [
       {
-        label: 'ETH Blocks',
+        label: vm.$t('home.features.dapps.eth-blocks'),
         icon: require('@/assets/images/icons/icon-eth-blocks-logo.png'),
         isAccessible: true,
         isNew: true
       },
       {
-        label: 'Stake on ETH 2.0',
+        label: vm.$t('home.features.dapps.stake-eth2'),
         icon: require('@/assets/images/icons/icon-dapp-eth20.png'),
         isAccessible: true
       },
       {
-        label: 'ENS Manager',
+        label: vm.$t('home.features.dapps.ens-manager'),
         icon: require('@/assets/images/icons/icon-dapp-ens-manager.png'),
         isAccessible: true
       },
       {
-        label: 'MakerDAO',
+        label: vm.$t('home.features.dapps.makerdao'),
         icon: require('@/assets/images/icons/icon-dapp-makerdao.png')
       },
       {
-        label: 'SafeSend transaction',
+        label: vm.$t('home.features.dapps.safesend'),
         icon: require('@/assets/images/icons/icon-dapp-lock.png')
       },
 
       {
-        label: 'AAVE',
+        label: vm.$t('home.features.dapps.aave'),
         icon: require('@/assets/images/icons/icon-dapp-aave.png')
       },
       {
-        label: 'Golem Migrator',
+        label: vm.$t('home.features.dapps.golem-migrator'),
         icon: require('@/assets/images/icons/icon-dapp-golem.png')
       },
       {
-        label: 'LEND Migrator',
+        label: vm.$t('home.features.dapps.lend-migrator'),
         icon: require('@/assets/images/icons/icon-dapp-lend.png')
       },
       {
-        label: 'Unstopabble Domain',
+        label: vm.$t('home.features.dapps.unstopabble'),
         icon: require('@/assets/images/icons/icon-dapp-unstoppable.png')
       },
       {
-        label: 'Ambrpay',
+        label: vm.$t('home.features.dapps.ambrpay'),
         icon: require('@/assets/images/icons/icon-dapp-ambrpay.png')
       }
     ]
