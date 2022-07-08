@@ -25,7 +25,7 @@
               :order-handler="orderHandler"
               :close="close"
               :tab="activeTab"
-              :default-currency="defaltCurrency"
+              :default-currency="defaultCurrency"
               :in-wallet="inWallet"
               @selectedCurrency="setSelectedCurrency"
               @openProviders="openProviders"
@@ -42,7 +42,7 @@
               :close="close"
               :tab="activeTab"
               :in-wallet="inWallet"
-              :default-currency="defaltCurrency"
+              :default-currency="defaultCurrency"
               @selectedCurrency="setSelectedCurrency"
             />
           </template>
@@ -117,7 +117,7 @@ export default {
         this.$route.fullPath.includes('/wallet') && !this.$route.meta.noAuth
       );
     },
-    defaltCurrency() {
+    defaultCurrency() {
       if (isEmpty(this.selectedCurrency) && this.supportedBuy) {
         const token = this.contractToToken(MAIN_TOKEN_ADDRESS);
         token.value = token.symbol;
@@ -166,10 +166,10 @@ export default {
         this.orderHandler = new handler();
       }
       this.selectedCurrency = {};
-      this.selectedCurrency = this.defaltCurrency;
+      this.selectedCurrency = this.defaultCurrency;
     },
     address() {
-      this.selectedCurrency = this.defaltCurrency;
+      this.selectedCurrency = this.defaultCurrency;
     },
     network() {
       this.selectedCurrency = {};
@@ -180,7 +180,7 @@ export default {
     ...mapActions('wallet', ['setWeb3Instance']),
     ...mapActions('global', ['setNetwork']),
     onTab(val) {
-      this.selectedCurrency = this.defaltCurrency;
+      this.selectedCurrency = this.defaultCurrency;
       if (val === 1 || (val === 0 && !this.supportedBuy)) {
         if (this.network.type.chainID !== 1) {
           const defaultNetwork = this.nodes['ETH'].find(item => {
@@ -227,7 +227,7 @@ export default {
       this.toAddress = val;
     },
     reset() {
-      this.selectedCurrency = this.defaltCurrency;
+      this.selectedCurrency = this.defaultCurrency;
       this.selectedFiat = {
         name: 'USD',
         value: 'USD',
