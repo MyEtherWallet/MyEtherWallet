@@ -128,7 +128,9 @@ export default {
       }
       if (this.editMode) {
         return (
-          this.nickname === this.item.nickname || this.nickname?.length > 20
+          this.nickname === this.item.nickname ||
+          this.nickname?.length > 20 ||
+          isEmpty(this.nickname)
         );
       }
       return true;
