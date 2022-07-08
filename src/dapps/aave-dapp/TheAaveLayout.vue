@@ -265,6 +265,7 @@
     <aave-withdraw-overlay
       :open="showWithdrawOverlay"
       :close="closeWithdrawOverlay"
+      :pre-selected-token="tokenSelected"
       @onConfirm="onWithdraw"
     />
     <aave-repay-overlay

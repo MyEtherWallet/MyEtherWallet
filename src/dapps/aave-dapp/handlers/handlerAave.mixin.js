@@ -190,7 +190,7 @@ export default {
       ).times(this.fiatValue);
     },
     selectedTokenInUserSummary() {
-      return this.userSummary?.reservesData?.find(item => {
+      return this.userSummary?.userReservesData?.find(item => {
         if (item.reserve.symbol === this.selectedTokenToUse.token) {
           return item;
         }

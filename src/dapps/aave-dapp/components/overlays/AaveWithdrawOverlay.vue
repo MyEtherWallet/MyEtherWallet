@@ -17,7 +17,8 @@
       :right-side-values="aaveWithdrawForm.rightSideValues"
       :form-text="aaveWithdrawForm.formText"
       :button-title="aaveWithdrawForm.buttonTitle"
-      :token-balance="tokenBalance"
+      :aave-balance="aaveWithdrawForm.depositedBalance"
+      :token-decimal="aaveWithdrawForm.decimals"
       @cancel="handleCancel"
       @emitValues="handleWithdrawAmount"
     />
@@ -52,12 +53,11 @@ export default {
     aaveWithdrawForm() {
       const hasDeposit = this.selectedTokenInUserSummary;
       const depositedBalance = `${
-        formatFloatingPointValue(hasDeposit?.currentUnderlyingBalance || 0)
-          .value
+        formatFloatingPointValue(hasDeposit?.underlyingBalance || 0).value
       } ${this.preSelectedToken.token}`;
       const depositedBalanceInUSD = this.getFiatValue(
         BigNumber(this.selectedTokenUSD).times(
-          hasDeposit?.currentUnderlyingBalance || 0
+          hasDeposit?.underlyingBalance || 0
         )
       );
       const tokenBalance = `${
@@ -86,7 +86,11 @@ export default {
         buttonTitle: {
           action: 'Withdraw',
           cancel: 'Cancel Withdraw'
-        }
+        },
+        depositedBalance: formatFloatingPointValue(
+          hasDeposit?.underlyingBalance || 0
+        ).value, // token balance
+        decimals: hasDeposit?.reserve?.decimals || 18 // decimals
       };
     }
   },
