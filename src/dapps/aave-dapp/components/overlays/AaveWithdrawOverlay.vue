@@ -31,6 +31,8 @@ import AaveAmountForm from '../AaveAmountForm';
 import handlerAave from '../../handlers/handlerAave.mixin';
 import { mapGetters } from 'vuex';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
+import { toBase } from '@/core/helpers/unit';
+import { toHex } from 'web3-utils';
 
 export default {
   components: {
@@ -97,12 +99,11 @@ export default {
   methods: {
     handleWithdrawAmount(e) {
       const param = {
-        aavePool: 'proto',
-        amount: e,
-        userAddress: this.address,
-        aToken: this.selectedTokenDetails.aToken.id
+        user: this.address,
+        reserve: this.selectedTokenDetails.underlyingAsset,
+        amount: toHex(toBase(e, this.selectedTokenDetails.decimals))
       };
-
+      console.log('param', param);
       this.$emit('onConfirm', param);
       this.close();
     },

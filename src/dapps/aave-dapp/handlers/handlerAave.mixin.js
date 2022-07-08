@@ -296,22 +296,22 @@ export default {
     /**
      * Apollo mutation to withdraw funds
      *
-     * @param user The ethereum address that will receive the aTokens
      * @param reserve The ethereum address of the reserve asset
      * @param amount The amount of aToken being redeemed
-     * @param aTokenAddress @optional The ethereum address of the aToken. Only needed if the reserve is ETH mock address
-     * @param onBehalfOf @optional The amount of aToken being redeemed. It will default to the user address
+     * @param user The ethereum address that will receive the reserve asset
      */
-    async onWithdraw({ user, reserve, amount, aTokenAddress, onBehalfOf }) {
+    async onWithdraw({ reserve, amount, user }) {
       try {
-        const data = await this.poolContract.withdraw(
-          user,
+        //  If user has any existing debt backed by the underlying token,
+        //  then the max amount available to withdraw is the amount that
+        //  will not leave user health factor < 1 after withdrawal.
+        const txData = await this.poolContract.populateTransaction.withdraw(
           reserve,
           amount,
-          aTokenAddress,
-          onBehalfOf
+          user
         );
-        this.formatTxData(data);
+        console.log('txData', txData);
+        // this.formatTxData(txData);
       } catch (e) {
         throw new Error(e);
       }
