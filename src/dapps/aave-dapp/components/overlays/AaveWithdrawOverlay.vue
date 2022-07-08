@@ -32,7 +32,8 @@ import handlerAave from '../../handlers/handlerAave.mixin';
 import { mapGetters } from 'vuex';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { toBase } from '@/core/helpers/unit';
-import { toHex } from 'web3-utils';
+import { toBN, toHex } from 'web3-utils';
+import { MAX_UINT_AMOUNT } from '@aave/contract-helpers';
 
 export default {
   components: {
@@ -89,19 +90,22 @@ export default {
           action: 'Withdraw',
           cancel: 'Cancel Withdraw'
         },
-        depositedBalance: formatFloatingPointValue(
-          hasDeposit?.underlyingBalance || 0
-        ).value, // token balance
-        decimals: hasDeposit?.reserve?.decimals || 18 // decimals
+        depositedBalance: hasDeposit?.underlyingBalance || '0',
+        decimals: hasDeposit?.reserve?.decimals || 18
       };
     }
   },
   methods: {
     handleWithdrawAmount(e) {
+      const amount =
+        e === this.selectedTokenInUserSummary.underlyingBalance
+          ? toBN(MAX_UINT_AMOUNT)
+          : toBase(e, this.selectedTokenDetails.decimals);
       const param = {
         user: this.address,
         reserve: this.selectedTokenDetails.underlyingAsset,
-        amount: toHex(toBase(e, this.selectedTokenDetails.decimals))
+        amount: toHex(amount),
+        aTokenAddress: this.selectedTokenDetails.aToken.id
       };
       console.log('param', param);
       this.$emit('onConfirm', param);

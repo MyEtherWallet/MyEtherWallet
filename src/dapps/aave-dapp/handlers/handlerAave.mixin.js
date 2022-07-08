@@ -209,19 +209,12 @@ export default {
     async onDeposit({ amount, reserve, referralCode, user }) {
       console.log(this.poolContract);
       try {
-        const ABI = [
-          'function approve(address _spender, uint256 _value) public returns (bool success)'
-        ];
-        const token = new ethers.Contract(
+        const approveData = await this.formatApprovalData(
           reserve,
-          ABI,
-          this.poolContract.provider
-        );
-        const approveData = await token.populateTransaction.approve(
+          user,
           this.poolContract.address,
           amount
         );
-        approveData.from = user;
         const txData = await this.poolContract.populateTransaction.deposit(
           reserve,
           amount,
@@ -297,21 +290,62 @@ export default {
      * Apollo mutation to withdraw funds
      *
      * @param reserve The ethereum address of the reserve asset
-     * @param amount The amount of aToken being redeemed
+     * @param amount The amount of reserve asset being redeemed
      * @param user The ethereum address that will receive the reserve asset
      */
-    async onWithdraw({ reserve, amount, user }) {
+    async onWithdraw({ reserve, amount, user, aTokenAddress }) {
       try {
         //  If user has any existing debt backed by the underlying token,
         //  then the max amount available to withdraw is the amount that
         //  will not leave user health factor < 1 after withdrawal.
+        const approveData = await this.formatApprovalData(
+          aTokenAddress,
+          user,
+          this.poolContract.address,
+          amount
+        );
         const txData = await this.poolContract.populateTransaction.withdraw(
           reserve,
           amount,
           user
         );
+        txData.from = user;
         console.log('txData', txData);
-        // this.formatTxData(txData);
+        const gasLimits = await estimateGasList(this.network.type.name, [
+          approveData,
+          txData
+        ]);
+        console.log('gasLimits', gasLimits);
+        this.sendTxns([approveData, txData], gasLimits);
+      } catch (e) {
+        throw new Error(e);
+      }
+    },
+    /**
+     * format transaction data for token approval
+     *
+     * @param tokenAddress The ethereum address of the token needing approval
+     * @param user The ethereum address that owns the asset
+     * @param spender The ethereum address that will spend the asset
+     * @param amount The amount of asset that will be approved
+     */
+    async formatApprovalData(tokenAddress, user, spender, amount) {
+      try {
+        const ABI = [
+          'function approve(address _spender, uint256 _value) public returns (bool success)'
+        ];
+        const token = new ethers.Contract(
+          tokenAddress,
+          ABI,
+          this.poolContract.provider
+        );
+        const approveData = await token.populateTransaction.approve(
+          spender,
+          amount
+        );
+        approveData.from = user;
+        console.log('approveData', approveData);
+        return approveData;
       } catch (e) {
         throw new Error(e);
       }
