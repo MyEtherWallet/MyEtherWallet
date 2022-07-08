@@ -96,20 +96,19 @@ export default {
     },
     submit() {
       /** Creates a no reference clone to be submitted to the contract */
-      const copyMulticoin = Object.keys(this.multicoin)
-        .map(item => {
-          const newItem = Object.assign({}, clone(this.multicoin[item]));
-          newItem.value = this.setCoins[item];
-          return newItem;
-        })
-        .filter(item => {
-          if (
-            item.value &&
-            item.value !== '' &&
-            item.value !== this.multicoin[item.symbol].value
-          )
-            return item;
-        });
+      const copyMulticoin = Object.keys(this.multicoin).reduce((acc, item) => {
+        const newItem = Object.assign({}, clone(this.multicoin[item]));
+        newItem.value = this.setCoins[item];
+
+        if (
+          newItem.value &&
+          newItem.value !== '' &&
+          newItem.value !== this.multicoin[newItem.symbol].value
+        ) {
+          acc.push(newItem);
+        }
+        return acc;
+      }, []);
       if (copyMulticoin.length > 0) {
         this.setMulticoin(copyMulticoin);
       } else {
