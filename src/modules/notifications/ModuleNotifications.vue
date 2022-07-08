@@ -163,20 +163,21 @@ export default {
       const address = this.address ? this.address.toLowerCase() : '';
       if (!this.loading) {
         return this.ethTransfersIncoming
-          .filter(notification => {
-            return notification.to.toLowerCase() === address;
-          })
-          .map(notification => {
-            notification.type = NOTIFICATION_TYPES.IN;
-            if (notification.status) notification.read = true;
-            else notification.read = false;
-            if (notification.hasOwnProperty('hash')) {
-              notification = new Notification(notification);
-              return formatNotification(notification, this.network);
+          .reduce((arr, notification) => {
+            if (notification.to.toLowerCase() === address) {
+              notification.type = NOTIFICATION_TYPES.IN;
+              if (notification.status) notification.read = true;
+              else notification.read = false;
+              if (notification.hasOwnProperty('hash')) {
+                notification = new Notification(notification);
+                arr.push(formatNotification(notification, this.network));
+              } else {
+                notification = new NonChainNotification(notification);
+                arr.push(formatNonChainNotification(notification));
+              }
             }
-            notification = new NonChainNotification(notification);
-            return formatNonChainNotification(notification);
-          })
+            return arr;
+          }, [])
           .sort(this.sortByDate);
       }
       return [];
