@@ -77,12 +77,12 @@ import AppBlockTitle from '@/core/components/AppBlockTitle';
 
 export default {
   components: { AppBlockTitle },
-  data: () => ({
+  data: vm => ({
     titleData: {
       textProps: 'white--text',
       toptitle: '',
-      title: 'Tokens',
-      description: 'If it is on Ethereum, you can manage it with MEW.',
+      title: vm.$t('howItWorks.tokens.title'),
+      description: vm.$t('howItWorks.tokens.description'),
       centered: false
     }
   })
