@@ -3,7 +3,7 @@ import Notification, {
   NOTIFICATION_TYPES,
   NOTIFICATION_STATUS
 } from '@/modules/notifications/handlers/handlerNotification';
-import { clone } from 'underscore';
+import { clone } from 'lodash';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 const getSanitizedTx = tx => {
   return new Promise((resolve, reject) => {

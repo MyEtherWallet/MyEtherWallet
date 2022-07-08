@@ -278,7 +278,7 @@ export default {
         setTimeout(() => {
           if (id !== undefined) {
             const card = this.$refs[`card${id}`][0];
-            if (!card?.isActive) {
+            if (card.hasOwnProperty('isActive') && !card?.isActive) {
               card.toggle();
             }
           } else {

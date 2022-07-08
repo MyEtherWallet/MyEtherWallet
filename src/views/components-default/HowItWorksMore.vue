@@ -37,33 +37,35 @@ import BuyEth from '@/assets/images/icons/icon-buy-eth-mew.svg';
 
 export default {
   components: { AppBlockTitle },
-  data: () => ({
-    titleData: {
-      textProps: '',
-      toptitle: '',
-      title: 'More tools',
-      description: '',
-      centered: false
-    },
-    blockContent: [
-      {
-        img: Contract,
-        title: 'Smart Contracts',
-        description:
-          'Interact with any smart contract on Ethereum, whether we’ve integrated it or not!'
+  data: function () {
+    return {
+      titleData: {
+        textProps: '',
+        toptitle: '',
+        title: this.$i18n.t('howItWorks.more.title'),
+        description: '',
+        centered: false
       },
-      {
-        img: Message,
-        title: 'Messages',
-        description:
-          'Send or verify messages from the MEW interface to verify ownership of your wallet.'
-      },
-      {
-        img: BuyEth,
-        title: 'Buy ETH',
-        description: 'Purchase Ether with a credit card through our providers'
-      }
-    ]
-  })
+      blockContent: [
+        {
+          img: Contract,
+          title: this.$i18n.t('howItWorks.more.smart-contracts.title'),
+          description: this.$i18n.t(
+            'howItWorks.more.smart-contracts.description'
+          )
+        },
+        {
+          img: Message,
+          title: this.$i18n.t('howItWorks.more.messages.title'),
+          description: this.$i18n.t('howItWorks.more.messages.description')
+        },
+        {
+          img: BuyEth,
+          title: this.$i18n.t('howItWorks.more.buy-eth.title'),
+          description: this.$i18n.t('howItWorks.more.buy-eth.description')
+        }
+      ]
+    };
+  }
 };
 </script>
