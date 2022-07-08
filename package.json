@@ -15,7 +15,7 @@
     "build:history": "ROUTER_MODE=history npm run build",
     "build:history:sourcemaps": "ROUTER_MODE=history FULL_SOURCEMAPS=true npm run build",
     "build:offline": "WEBPACK_INTEGRITY=false npm run build:hash",
-    "codecov": "npm run test &&  NODE_OPTIONS=--max-old-space-size=8192 npm run test:e2e && codecov",
+    "codecov": "npm run test && codecov",
     "dev": "npm run update && npm run juststart",
     "juststart": "vue-cli-service serve --watch",
     "juststart:offline": "ROUTER_MODE=hash BUILD=offline vue-cli-service serve --watch",
