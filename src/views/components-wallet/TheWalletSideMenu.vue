@@ -275,7 +275,7 @@ import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import dappsMeta from '@/dapps/metainfo-dapps';
 import { MOONPAY_EVENT } from '@/modules/moon-pay/helpers';
-import { STAKEWISE_EVENT } from '@/dapps/stakewise/helpers/index';
+import { STAKEWISE_EVENT } from '@/dapps/stakewise/handlers/configs.js';
 import { STAKEWISE_ROUTES } from '@/dapps/stakewise/configsRoutes';
 
 export default {
