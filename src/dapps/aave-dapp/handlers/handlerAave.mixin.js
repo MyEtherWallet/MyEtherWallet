@@ -19,6 +19,7 @@ import { ChainId } from '@aave/contract-helpers';
 // import { cloneDeep } from 'lodash';
 import { INTEREST_TYPES } from '../handlers/helpers';
 import { estimateGasList } from '@/core/helpers/gasPriceHelper';
+import { toBN } from 'web3-utils';
 
 const STABLE_COINS = ['TUSD', 'DAI', 'USDT', 'USDC', 'sUSD'];
 
@@ -170,7 +171,7 @@ export default {
   computed: {
     ...mapState('wallet', ['address', 'web3']),
     ...mapState('global', ['gasPriceType']),
-    ...mapGetters('wallet', ['tokensList']),
+    ...mapGetters('wallet', ['tokensList', 'balanceInWei']),
     ...mapGetters('external', ['contractToToken']),
     ...mapGetters('global', ['getFiatValue', 'gasPriceByType', 'network']),
     userReservesData() {
@@ -414,6 +415,18 @@ export default {
           txns[i] = tx;
         }
         console.log('txns', txns);
+        let totalGasPrice = toBN(0);
+        for (const tx of txns) {
+          totalGasPrice = totalGasPrice.add(
+            toBN(tx.gasPrice).mul(toBN(tx.gas))
+          );
+        }
+        console.log('totalGas', totalGasPrice.toString());
+        console.log('balance', this.balanceInWei);
+        if (totalGasPrice.gt(toBN(this.balanceInWei))) {
+          Toast('Insufficient funds for gas', {}, ERROR);
+          return;
+        }
         this.web3.mew
           .sendBatchTransactions(txns)
           .then(() => {
