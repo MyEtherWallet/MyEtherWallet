@@ -178,9 +178,8 @@ export default {
                   ? formatFloatingPointValue(userBalance).value
                   : '0',
                 deposited: userDeposited
-                  ? formatFloatingPointValue(
-                      userDeposited.currentUnderlyingBalance
-                    ).value
+                  ? formatFloatingPointValue(userDeposited.underlyingBalance)
+                      .value
                   : '0',
                 apy: this.getDepositAPY(item.liquidityRate),
                 tokenImg: `${item.icon}`,
@@ -219,24 +218,18 @@ export default {
            * Case: Aave Existing Deposits Table
            */
           case AAVE_TABLE_TITLE.balance_deposit:
-            console.log('list', list);
             list = list.map(item => {
-              AAVE_TABLE_BUTTON.method = this.onWithdrawClick;
+              AAVE_TABLE_BUTTON.withdraw.method = this.onWithdrawClick;
               return {
                 token: item.reserve.symbol,
                 tokenImg: `${item.reserve.icon}`,
                 balance: [
-                  `${
-                    formatFloatingPointValue(item.currentUnderlyingBalance)
-                      .value
-                  } ${item.reserve.symbol}`,
-                  this.getFiatValue(item.currentUnderlyingBalanceUSD)
+                  `${formatFloatingPointValue(item.underlyingBalance).value} ${
+                    item.reserve.symbol
+                  }`,
+                  this.getFiatValue(item.underlyingBalanceUSD)
                 ],
-                apy: formatPercentageValue(
-                  new BigNumber(item.reserve.liquidityRate)
-                    .multipliedBy(100)
-                    .toString()
-                ).value,
+                apy: this.getDepositAPY(item.reserve.liquidityRate),
                 toggle: {
                   color: 'secondary',
                   method: this.onToggleClick,
