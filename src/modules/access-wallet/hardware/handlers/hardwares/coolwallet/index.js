@@ -65,6 +65,9 @@ class CoolWallet {
             .connect(device)
             .then(async _transport => {
               _this.transport = _transport;
+              _this.identifier = device.name.includes('CWP')
+                ? 'coolWalletPro'
+                : 'coolWalletS';
               try {
                 /**
                  * if lastCWDeviceUsed !== device.name
