@@ -28,7 +28,7 @@
           </div>
           <mew-button
             has-full-width
-            class="mb-5"
+            :class="btn.class ? `mb-5 ${btn.class}` : 'mb-5'"
             :color-theme="btn.color"
             :btn-style="btn.style === 'outline' ? 'outline' : ''"
             style="height: 160px"
@@ -249,6 +249,7 @@ export default {
             titleIcon: 'mdi-alert',
             titleIconType: 'mdi',
             titleIconClass: 'warning darken-1',
+            class: 'AccessSoftwareWallet',
             fn: () => {
               this.openOverlay(ACCESS_VALID_OVERLAYS.SOFTWARE);
             }
