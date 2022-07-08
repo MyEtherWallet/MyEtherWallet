@@ -46,7 +46,9 @@
           <qr-code :data="address" :height="132" :width="132" />
         </div>
         <div class="pl-3">
-          <div class="d-block monospace textDark-text container-qr--addr">
+          <div
+            class="d-block monospace textDark-text container-qr--addr BalanceCardAddress"
+          >
             {{ getChecksumAddressString }}
           </div>
           <div
