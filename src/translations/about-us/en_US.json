@@ -1,0 +1,24 @@
+{
+    "title": "About us - Company",
+    "what-is-mew": {
+      "title": "What is MEW?",
+      "description":
+        "MEW is an expanding suite of products offering complete access to all the Ethereum blockchain has to offer. With a web platform, a mobile app, a chrome extension, an explorer, and educational resources, MEW has all the tools to help newcomers and experienced users explore new Ethereum applications in a trusted environment."
+    },
+    "about-us": {
+      "title": "About us",
+      "description": 
+        "MyEtherWallet - please, call us MEW - puts the Ethereum blockchain at your fingertips. We are a team of crypto-enthusiasts dedicated to bring you the most secure, most intuitive, and dare we say prettiest way to manage your ETH and ERC20 tokens. We are always here to help, and we are never giving away ETH. Cheers!"
+    },
+    "get-answers": {
+      "title": "Get answers to questions",
+      "description":
+        "See our Help Center for assistance with using MEW, sending transactions, swapping, DeFi, DApps, and much more.",
+      "btn-title": "Visit Help Center"
+    },
+    "community": {
+      "title": "Join the MEW community",
+      "description": "Follow us on our social channels for Ethereum news, guides, security tips, and support from other MEW users."
+    },
+    "partners": "Partners"
+}

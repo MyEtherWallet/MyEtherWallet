@@ -75,7 +75,7 @@ export default {
     ...mapState('wallet', ['blockNumber', 'identifier', 'isHardware']),
     ...mapGetters('global', ['network']),
     type() {
-      return this.network.type.name;
+      return this.network.type.currencyName;
     },
     fullName() {
       return this.network.type.name_long;
