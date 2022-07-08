@@ -24,12 +24,16 @@ class Changelly {
   }
   getSupportedTokens() {
     return axios
-      .post(`${REQUEST_CACHER}${HOST_URL}`, {
-        id: '1',
-        jsonrpc: '2.0',
-        method: 'getCurrenciesFull',
-        params: {}
-      })
+      .post(
+        `${REQUEST_CACHER}${HOST_URL}`,
+        {
+          id: '1',
+          jsonrpc: '2.0',
+          method: 'getCurrenciesFull',
+          params: {}
+        },
+        { headers: { 'Accept-Language': 'en-US,en;q=0.9' } }
+      )
       .then(response => {
         if (response.error) {
           Toast(response.error, {}, ERROR);
@@ -58,15 +62,19 @@ class Changelly {
   isValidToAddress({ toT, address }) {
     const type = toT.symbol.toLowerCase();
     return axios
-      .post(`${HOST_URL}`, {
-        id: uuidv4(),
-        jsonrpc: '2.0',
-        method: 'validateAddress',
-        params: {
-          currency: type,
-          address: address
-        }
-      })
+      .post(
+        `${HOST_URL}`,
+        {
+          id: uuidv4(),
+          jsonrpc: '2.0',
+          method: 'validateAddress',
+          params: {
+            currency: type,
+            address: address
+          }
+        },
+        { headers: { 'Accept-Language': 'en-US,en;q=0.9' } }
+      )
       .then(response => {
         if (response.error) {
           Toast(response.error, {}, ERROR);
@@ -80,17 +88,21 @@ class Changelly {
   }
   getMinMaxAmount({ fromT, toT }) {
     return axios
-      .post(`${HOST_URL}`, {
-        id: uuidv4(),
-        jsonrpc: '2.0',
-        method: 'getFixRate',
-        params: [
-          {
-            from: fromT.symbol.toLowerCase(),
-            to: toT.symbol.toLowerCase()
-          }
-        ]
-      })
+      .post(
+        `${HOST_URL}`,
+        {
+          id: uuidv4(),
+          jsonrpc: '2.0',
+          method: 'getFixRate',
+          params: [
+            {
+              from: fromT.symbol.toLowerCase(),
+              to: toT.symbol.toLowerCase()
+            }
+          ]
+        },
+        { headers: { 'Accept-Language': 'en-US,en;q=0.9' } }
+      )
       .then(response => {
         if (response.error) {
           Toast(response.error, {}, ERROR);
@@ -117,18 +129,22 @@ class Changelly {
         return [];
       }
       return axios
-        .post(`${HOST_URL}`, {
-          id: uuidv4(),
-          jsonrpc: '2.0',
-          method: 'getFixRateForAmount',
-          params: [
-            {
-              from: fromT.symbol.toLowerCase(),
-              to: toT.symbol.toLowerCase(),
-              amountFrom: queryAmount.toString()
-            }
-          ]
-        })
+        .post(
+          `${HOST_URL}`,
+          {
+            id: uuidv4(),
+            jsonrpc: '2.0',
+            method: 'getFixRateForAmount',
+            params: [
+              {
+                from: fromT.symbol.toLowerCase(),
+                to: toT.symbol.toLowerCase(),
+                amountFrom: queryAmount.toString()
+              }
+            ]
+          },
+          { headers: { 'Accept-Language': 'en-US,en;q=0.9' } }
+        )
         .then(response => {
           if (response.error) {
             Toast(response.error, {}, ERROR);
@@ -171,19 +187,23 @@ class Changelly {
     );
     const providedRefundAddress = refundAddress ? refundAddress : fromAddress;
     return axios
-      .post(`${HOST_URL}`, {
-        id: uuidv4(),
-        jsonrpc: '2.0',
-        method: 'createFixTransaction',
-        params: {
-          from: fromT.symbol.toLowerCase(),
-          to: toT.symbol.toLowerCase(),
-          refundAddress: providedRefundAddress,
-          address: toAddress,
-          amountFrom: queryAmount.toString(),
-          rateId: quote.rateId
-        }
-      })
+      .post(
+        `${HOST_URL}`,
+        {
+          id: uuidv4(),
+          jsonrpc: '2.0',
+          method: 'createFixTransaction',
+          params: {
+            from: fromT.symbol.toLowerCase(),
+            to: toT.symbol.toLowerCase(),
+            refundAddress: providedRefundAddress,
+            address: toAddress,
+            amountFrom: queryAmount.toString(),
+            rateId: quote.rateId
+          }
+        },
+        { headers: { 'Accept-Language': 'en-US,en;q=0.9' } }
+      )
       .then(async response => {
         if (response.error) {
           Toast(response.error, {}, ERROR);
@@ -292,14 +312,18 @@ class Changelly {
   getStatus(statusObj) {
     statusObj = statusObj.statusObj;
     return axios
-      .post(`${HOST_URL}`, {
-        id: uuidv4(),
-        jsonrpc: '2.0',
-        method: 'getStatus',
-        params: {
-          id: statusObj.id
-        }
-      })
+      .post(
+        `${HOST_URL}`,
+        {
+          id: uuidv4(),
+          jsonrpc: '2.0',
+          method: 'getStatus',
+          params: {
+            id: statusObj.id
+          }
+        },
+        { headers: { 'Accept-Language': 'en-US,en;q=0.9' } }
+      )
       .then(async response => {
         const pendingStatuses = [
           'confirming',
