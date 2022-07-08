@@ -38,6 +38,7 @@
 </template>
 
 <script>
+import MewAddressSelect from '@/components/MewAddressSelect/MewAddressSelect';
 import { isAddress } from '@/core/helpers/addressUtils';
 import { mapGetters, mapState } from 'vuex';
 import NameResolver from '@/modules/name-resolver/index';
@@ -54,6 +55,7 @@ const USER_INPUT_TYPES = {
 
 export default {
   components: {
+    MewAddressSelect,
     AddressBookAddEdit
   },
   props: {
