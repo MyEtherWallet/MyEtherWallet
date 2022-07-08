@@ -53,7 +53,13 @@ const EXCEPTIONS = [
   'package-json',
   'codecov',
   'node-polyfill-webpack-plugin',
-  '@ensdomains/ensjs'
+  // fix after release
+  '@ensdomains/ensjs',
+  '@commitlint/config-conventional',
+  '@mdi/font',
+  'babel-jest',
+  'commitlint',
+  'eslint-plugin-prettier'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
