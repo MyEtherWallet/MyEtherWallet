@@ -684,7 +684,8 @@ export default {
             arr.push(item);
           }
           return arr;
-        }
+        },
+        []
       );
       tradebleWalletTokens = this.formatTokensForSelect(tradebleWalletTokens);
       let returnableTokens = [
