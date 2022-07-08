@@ -209,7 +209,8 @@
     "socket.io-parser": "3.4.1",
     "keccak": "3.0.1",
     "diff": "3.5.0",
-    "ejs": "3.1.7"
+    "ejs": "3.1.7",
+    "parse-path": "5.0.0"
   },
   "license": "MIT",
   "repository": "https://github.com/myetherwallet/myetherwallet"
