@@ -14,6 +14,8 @@ const supportedCoins = [
 */
 
 const supportedCoins = [
+  'Ethereum',
+  'Bitcoin',
   //'0x', // ETHValidator
   // 'Aave Coin',
   'Algorand',
@@ -27,7 +29,6 @@ const supportedCoins = [
   'BeaverCoin',
   //'Binance', (no validator is included in the library)
   'BioCoin',
-  'Bitcoin',
   'Bitcoin SV',
   'BitcoinCash',
   'BitcoinGold',
@@ -51,7 +52,6 @@ const supportedCoins = [
   'DogeCoin',
   // 'Enjin Coin',
   //'EOS', // Non-existent accounts are valid
-  'Ethereum',
   //'EthereumClassic', // ETHValidator
   //'EtherZero', // ETHValidator
   // 'Expanse',
