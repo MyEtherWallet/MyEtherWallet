@@ -59,7 +59,7 @@ module.exports = {
     // open browser
     startBrowser(browser);
 
-     // click on link
+    // click on link
     browser
       .moveToElement('.FooterConvertTool', 10, 10)
       .click(css, '.FooterConvertTool');
