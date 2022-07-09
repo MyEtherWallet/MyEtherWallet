@@ -54,7 +54,7 @@
                 class="mr-2"
               />
               <div>
-                <div>BTC Donation</div>
+                <div>{{ $t('footer.donation.bitcoin') }}</div>
                 <div v-show="false" class="overline">
                   Address: {{ btcDonationAddress }}
                 </div>
@@ -203,7 +203,7 @@
                 class="mr-2"
               />
               <div>
-                <div>ETH Donation</div>
+                <div>{{ $t('footer.donation.ether') }}</div>
                 <div v-show="false" class="overline">
                   Address: {{ ethDonationAddress }}
                 </div>

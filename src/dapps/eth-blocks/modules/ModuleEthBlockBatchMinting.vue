@@ -372,7 +372,8 @@ export default {
         .multicall(this.batchMintData)
         .send({
           from: this.address,
-          gasPrice: this.gasLimit,
+          gas: this.gasLimit,
+          gasPrice: this.localGasPrice,
           value: this.totalMintValue
         })
         .on('transactionHash', () => {

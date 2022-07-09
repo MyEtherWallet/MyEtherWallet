@@ -146,8 +146,11 @@
                   :label="$t('sendTx.add-data')"
                   placeholder="0x..."
                   :rules="dataRules"
+                  :error-messages="dataInvalidHexMessage"
                   :hide-clear-btn="data === '0x'"
                   class="mb-8"
+                  @keyup.native="verifyHexFormat"
+                  @focusout.native="verifyHexFormat"
                 />
               </div>
             </template>
@@ -268,7 +271,8 @@ export default {
         this.feeError !== '' ||
         !this.isValidGasLimit ||
         !this.allValidInputs ||
-        !this.gasEstimationIsReady
+        !this.gasEstimationIsReady ||
+        !isHexStrict(this.data)
       );
     },
     buyMoreStr() {
@@ -420,6 +424,12 @@ export default {
         }
       ];
     },
+    dataInvalidHexMessage() {
+      if (isHexStrict(this.data)) {
+        return '';
+      }
+      return 'Invalid hex data';
+    },
     isEthNetwork() {
       return this.network.type.name === ETH.name;
     },
@@ -544,8 +554,8 @@ export default {
       immediate: true,
       deep: true
     },
-    data(newVal) {
-      this.data = !newVal || isEmpty(newVal) ? '0x' : newVal;
+    data() {
+      if (!this.data) this.data = '0x';
       if (isHexStrict(this.data)) this.sendTx.setData(this.data);
     },
     gasLimit(newVal) {
@@ -561,6 +571,12 @@ export default {
     address() {
       this.clear();
       this.debounceAmountError('0');
+    },
+    txFeeETH(newVal) {
+      const total = BigNumber(newVal).plus(this.amount);
+      if (total.gt(this.balanceInETH)) {
+        this.setEntireBal();
+      }
     }
   },
   mounted() {
@@ -584,6 +600,11 @@ export default {
     }, 500);
   },
   methods: {
+    verifyHexFormat() {
+      if (!this.data || isEmpty(this.data)) {
+        this.data = '0x';
+      }
+    },
     /**
      * Resets values to default
      */
