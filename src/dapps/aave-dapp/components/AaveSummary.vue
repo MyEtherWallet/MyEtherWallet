@@ -138,6 +138,10 @@ export default {
       type: String,
       default: '0'
     },
+    amountUsd: {
+      type: String,
+      default: '0'
+    },
     step: {
       type: Number,
       default: 0

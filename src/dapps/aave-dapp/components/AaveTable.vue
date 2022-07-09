@@ -227,7 +227,7 @@ export default {
                   `${formatFloatingPointValue(item.underlyingBalance).value} ${
                     item.reserve.symbol
                   }`,
-                  this.getFiatValue(item.underlyingBalanceUSD)
+                  this.getFiatValue(10 ** 8 * item.underlyingBalanceUSD)
                 ],
                 apy: this.getDepositAPY(item.reserve.liquidityRate),
                 toggle: {

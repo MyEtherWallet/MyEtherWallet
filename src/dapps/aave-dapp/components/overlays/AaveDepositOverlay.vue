@@ -47,6 +47,7 @@
       :amount="amount"
       :step="step"
       :action-type="depositTitle"
+      :amount-usd="amountUSD"
       @onConfirm="handleConfirm"
     />
   </mew-overlay>
@@ -83,6 +84,24 @@ export default {
         ? this.selectedTokenDetails.decimals
         : 18;
     },
+    tokenBalanceUSD() {
+      const symbol = this.selectedToken.token;
+      const hasBalance = this.tokensList.find(item => {
+        if (item.symbol === symbol) {
+          return item;
+        }
+      });
+      return hasBalance ? BigNumber(hasBalance.usdBalance).toFixed() : '0';
+    },
+    tokenPrice() {
+      const symbol = this.selectedToken.token;
+      const hasBalance = this.tokensList.find(item => {
+        if (item.symbol === symbol) {
+          return item;
+        }
+      });
+      return hasBalance ? BigNumber(hasBalance.price).toFixed() : '0';
+    },
     tokenBalance() {
       const symbol = this.selectedToken.token;
       if (symbol === this.network.type.currencyName) return this.balanceInETH;
@@ -91,7 +110,16 @@ export default {
           return item;
         }
       });
-      return hasBalance ? BigNumber(hasBalance.usdBalance).toFixed() : '0';
+      return hasBalance
+        ? BigNumber(hasBalance.balancef)
+            .decimalPlaces(hasBalance.decimals)
+            .toString()
+        : '0';
+    },
+    amountUSD() {
+      return this.getFiatValue(
+        BigNumber(this.amount).times(this.tokenPrice).toFixed()
+      );
     },
     header() {
       switch (this.step) {
@@ -106,21 +134,16 @@ export default {
     aaveDepositForm() {
       const hasDeposit = this.selectedTokenInUserSummary;
       const depositedBalance = `${
-        formatFloatingPointValue(hasDeposit?.currentUnderlyingBalance || 0)
-          .value
+        formatFloatingPointValue(hasDeposit?.underlyingBalance || 0).value
       } ${this.selectedToken.token}`;
       const depositedBalanceInUSD = this.getFiatValue(
-        BigNumber(this.selectedTokenUSD).times(
-          hasDeposit?.currentUnderlyingBalance || 0
-        )
+        BigNumber(this.tokenPrice).times(hasDeposit?.underlyingBalance || 0)
       );
 
       const tokenBalance = `${
         formatFloatingPointValue(this.tokenBalance).value
       } ${this.selectedToken.token}`;
-      const usd = this.getFiatValue(
-        BigNumber(this.tokenBalance).times(this.selectedTokenUSD)
-      );
+      const usd = this.getFiatValue(this.tokenBalanceUSD);
       return {
         showToggle: true,
         leftSideValues: {

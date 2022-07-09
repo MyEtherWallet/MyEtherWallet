@@ -43,6 +43,24 @@ export default {
   computed: {
     ...mapGetters('wallet', ['tokensList', 'balanceInETH']),
     ...mapGetters('global', ['network', 'getFiatValue']),
+    tokenBalanceUSD() {
+      const symbol = this.preSelectedToken.token;
+      const hasBalance = this.tokensList.find(item => {
+        if (item.symbol === symbol) {
+          return item;
+        }
+      });
+      return hasBalance ? BigNumber(hasBalance.usdBalance).toFixed() : '0';
+    },
+    tokenPrice() {
+      const symbol = this.preSelectedToken.token;
+      const hasBalance = this.tokensList.find(item => {
+        if (item.symbol === symbol) {
+          return item;
+        }
+      });
+      return hasBalance ? BigNumber(hasBalance.price).toFixed() : '0';
+    },
     tokenBalance() {
       const symbol = this.preSelectedToken.token;
       if (symbol === this.network.type.currencyName) return this.balanceInETH;
@@ -51,7 +69,11 @@ export default {
           return item;
         }
       });
-      return hasBalance ? BigNumber(hasBalance.usdBalance).toFixed() : '0';
+      return hasBalance
+        ? BigNumber(hasBalance.balancef)
+            .decimalPlaces(hasBalance.decimals)
+            .toString()
+        : '0';
     },
     aaveWithdrawForm() {
       const hasDeposit = this.selectedTokenInUserSummary;
@@ -59,16 +81,12 @@ export default {
         formatFloatingPointValue(hasDeposit?.underlyingBalance || 0).value
       } ${this.preSelectedToken.token}`;
       const depositedBalanceInUSD = this.getFiatValue(
-        BigNumber(this.selectedTokenUSD).times(
-          hasDeposit?.underlyingBalance || 0
-        )
+        BigNumber(this.tokenPrice).times(hasDeposit?.underlyingBalance || 0)
       );
       const tokenBalance = `${
         formatFloatingPointValue(this.tokenBalance).value
       } ${this.preSelectedToken.token}`;
-      const usd = this.getFiatValue(
-        BigNumber(this.tokenBalance).times(this.selectedTokenUSD)
-      );
+      const usd = this.getFiatValue(this.tokenBalanceUSD);
       return {
         showToggle: true,
         leftSideValues: {

@@ -196,12 +196,12 @@ export default {
           return item;
         }
       });
-    },
-    amountUsd() {
-      return this.getFiatValue(
-        BigNumber(this.selectedTokenUSD).times(this.amount || 0)
-      );
     }
+    // amountUsd() {
+    //   return this.getFiatValue(
+    //     BigNumber(this.selectedTokenUSD).times(this.amount || 0)
+    //   );
+    // }
   },
   methods: {
     /**
