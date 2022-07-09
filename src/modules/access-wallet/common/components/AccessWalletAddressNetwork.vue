@@ -427,6 +427,8 @@ export default {
   },
   methods: {
     setPath(path) {
+      console.log('setPath in address network triggered');
+      console.log('path:', path);
       this.$emit('setPath', path);
     },
     changeHandler() {

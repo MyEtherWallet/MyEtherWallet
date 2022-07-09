@@ -69,14 +69,14 @@
           </mew-button>
         </v-col>
       </v-row>
-      <mew-alert
+      <!-- <mew-alert
         v-if="!bluetooth"
         class="mt-5"
         title="Bluetooth Required"
         description="Bluetooth is required for some wallets."
         theme="warning"
         hide-close-icon
-      />
+      /> -->
     </div>
     <v-dialog v-model="bluetoothModal" persistent max-width="500">
       <v-sheet color="white" class="pa-5">
@@ -701,8 +701,6 @@ export default {
       if (this.walletType) {
         this.step++;
         if (this.step === this.walletInitialized) {
-          if (this.onLedger || this.onLedgerX)
-            this.selectedPath = this.paths[0];
           if (this.onCoolWallet || this.onBitbox2) return;
           this[`${this.walletType}Unlock`]();
         }

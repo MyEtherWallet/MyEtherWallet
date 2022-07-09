@@ -17,6 +17,10 @@
         <p class="para">
           Choose <b>Ethereum</b> on your device and connect with one of the
           methods below.
+          <!-- <a
+            href="https://winaero.com/enable-or-disable-bluetooth-device-permissions-in-google-chrome/"
+            ><b class="ble-article-link"><u>Here's Why</u></b>
+          </a> -->
         </p>
         <v-img
           :src="
@@ -54,6 +58,16 @@
         <div class="mew-label mb-10 label">All Ledgers</div>
       </div>
     </div>
+    <div>
+      <mew-alert
+        class="mt-5"
+        title="Device not showing when pairing on Google Chrome?"
+        description="You may have to allow backened permissions."
+        theme="warning"
+        hide-close-icon
+        :link-object="article"
+      />
+    </div>
   </div>
 </template>
 <script>
@@ -88,7 +102,11 @@ export default {
   },
   data() {
     return {
-      ledgerApp: {}
+      ledgerApp: {},
+      article: {
+        text: 'See article here for instructions',
+        url: 'https://winaero.com/enable-or-disable-bluetooth-device-permissions-in-google-chrome/'
+      }
     };
   },
   watch: {
@@ -140,6 +158,10 @@ export default {
   text-align: center;
   white-space: pre-wrap;
   word-break: break-word;
+}
+
+.ble-article-link {
+  color: #05c0a5;
 }
 .section-block {
   height: 200px;
