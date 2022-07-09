@@ -191,7 +191,13 @@ export default {
                 url: 'https://chainlist.org/'
               };
             } else if (message.includes('rejected')) return;
-            else {
+            else if (message.includes("hasn't been added")) {
+              toastLink = {
+                title:
+                  "It seems like you don't have this network set up in your wallet. Please go here to add the network.",
+                url: 'https://chainlist.org/'
+              };
+            } else {
               toastMsg =
                 'There was a problem processing your request to MetaMask';
             }
