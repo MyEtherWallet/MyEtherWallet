@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites errors="0"
+            failures="0"
+            tests="6">
+
+  <testsuite name="footer-tools"
+    errors="0" failures="0" hostname="" id="" package="footer-tools" skipped="0"
+    tests="6" time="23.13" timestamp="">
+  
+    <testcase name="MEW Wallet Link test" classname="footer-tools" time="4.254" assertions="4">
+
+    
+
+    
+
+    
+
+    
+    </testcase>
+  
+    <testcase name="MEW CX Link test" classname="footer-tools" time="4.138" assertions="4">
+
+    
+
+    
+
+    
+
+    
+    </testcase>
+  
+    <testcase name="Verify Message test" classname="footer-tools" time="3.479" assertions="4">
+
+    
+
+    
+
+    
+
+    
+    </testcase>
+  
+    <testcase name="Convert Unit test" classname="footer-tools" time="3.161" assertions="4">
+
+    
+
+    
+
+    
+
+    
+    </testcase>
+  
+    <testcase name="Generate Keystore test" classname="footer-tools" time="3.439" assertions="4">
+
+    
+
+    
+
+    
+
+    
+    </testcase>
+  
+    <testcase name="Send Offline Helper test" classname="footer-tools" time="4.658" assertions="7">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    </testcase>
+  
+
+  
+
+    
+
+  
+  </testsuite>
+</testsuites>
