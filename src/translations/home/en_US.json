@@ -37,12 +37,43 @@
     },
     "dapps": {
       "text": "MEW team is working hard to update the DApps Center. Cant’s wait?",
-      "link-text": "Access all DApps in MEW Version 5"
+      "link-text": "Access all DApps in MEW Version 5",
+      "eth-blocks": "ETH Blocks",
+      "stake-eth2": "Stake on ETH 2.0",
+      "ens-manager": "ENS Manager",
+      "makerdao": "MakerDAO",
+      "safesend": "SafeSend transaction",
+      "aave": "AAVE",
+      "golem-migrator": "Golem Migrator",
+      "lend-migrator": "LEND Migrator",
+      "unstopabble": "Unstopabble Domain",
+      "ambrpay": "Ambrpay"
     },
     "tokens": {
-      "heading": "MEW supports ETH and all ERC-20 tokens!"
+      "heading": "MEW supports ETH and all ERC-20 tokens!",
+      "usdt": "Tether (USDT)",
+      "uni": "Uniswap (UNI)",
+      "link": "Chainlink (LINK)",
+      "usdc": "USD Coin (USDC)",
+      "wbtc": "Wrapped Bitcoin (WBTC)",
+      "cro": "Crypto.com Coin (CRO)",
+      "aave": "Aave (AAVE)",
+      "okb": "OKB (OKB)",
+      "busd": "Binance USD (BUSD)",
+      "ftt": "FTX Token (FTT)",
+      "cusdc": "cUSDC (CUSDC)",
+      "dai": "Dai (DAI)",
+      "chz": "Chiliz (CHZ)",
+      "ceth": "cETH (CETH)",
+      "cdai": "cDAI (CDAI)"
     }
   },
+  "eth-blocks": {
+    "title": "Home of ETH Block NFTs!",
+    "description": "ETH Blocks is an NFT series representing mined Ethereum blocks and their properties. Whether it's a special block number, the block of your first transaction, or a block that contains a transaction with a special message. Own a part of history with ETH Blocks by MEW.",
+    "btn-text": "Access your wallet to Mint"
+  },
+  "community-title": "Join MEW Community", 
   "about-mew": {
     "heading": "Easy and secure access to the Ethereum Blockchain",
     "subheading": "Why MEW",

@@ -107,6 +107,7 @@ const setTokenAndEthBalance = function ({
       const promises = [];
 
       hasPreTokens.forEach(t => {
+        if (!t.contract) return;
         const token = getters.contractToToken(t.contract);
         if (!token) {
           promises.push(
@@ -162,7 +163,9 @@ const setTokenAndEthBalance = function ({
           root: true
         }).then(() => {
           // dispatch can't be blank
-          dispatch('custom/updateCustomTokenBalances', false, { root: true });
+          dispatch('custom/updateCustomTokenBalances', false, {
+            root: true
+          }).catch(e => Toast(e, {}, ERROR));
           commit('wallet/SET_LOADING_WALLET_INFO', false, { root: true });
         })
       );
