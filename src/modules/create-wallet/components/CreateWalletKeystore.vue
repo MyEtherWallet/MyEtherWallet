@@ -163,7 +163,7 @@
               title="Create Another Wallet"
               :has-full-width="false"
               btn-style="transparent"
-              @click.native="updateStep(1)"
+              @click.native="restart"
             />
           </div>
         </div>
@@ -180,6 +180,7 @@
 <script>
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
+import { isEmpty } from 'lodash';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 
@@ -233,8 +234,8 @@ export default {
       password: '',
       cofirmPassword: '',
       passwordRulles: [
-        value => !!value || 'Required',
-        value => value.length >= 7 || 'Password is less than 7 characters'
+        value => !isEmpty(value) || 'Required',
+        value => value?.length >= 8 || 'Password is less than 8 characters'
       ],
 
       walletFile: '',
@@ -245,9 +246,9 @@ export default {
   computed: {
     enableCreateButton() {
       return (
-        this.password !== '' &&
+        !isEmpty(this.password) &&
         this.cofirmPassword === this.password &&
-        this.password.length >= 7
+        this.password.length >= 8
       );
     },
     passwordConfirmRulles() {
@@ -285,6 +286,11 @@ export default {
      */
     updateStep(step) {
       this.step = step ? step : 1;
+    },
+    restart() {
+      this.step = 1;
+      this.password = '';
+      this.cofirmPassword = '';
     }
   }
 };

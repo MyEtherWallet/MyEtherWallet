@@ -137,7 +137,7 @@
           =====================================================================================
           -->
           <v-btn
-            class="info-container--action-btn mr-2 px-0"
+            class="info-container--action-btn mr-2 px-0 BalanceCardQR"
             fab
             depressed
             color="white"

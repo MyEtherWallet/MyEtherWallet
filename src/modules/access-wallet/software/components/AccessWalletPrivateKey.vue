@@ -8,6 +8,7 @@
     -->
     <mew-input
       v-model="privateKey"
+      class="PrivateKeyInput"
       label="Private Key"
       placeholder="Enter your Private Key"
       :rules="privKeyRulles"
@@ -23,11 +24,12 @@
         v-model="acceptTerms"
         label="To access my wallet, I accept "
         :link="link"
-        class="justify-center"
+        class="justify-center PrivateKeyTerms"
       />
       <v-row dense class="align-center justify-center pt-4">
         <v-col cols="12" sm="4">
           <mew-button
+            class="PrivateKeyAccess"
             has-full-width
             title="Access Wallet"
             btn-size="xlarge"
