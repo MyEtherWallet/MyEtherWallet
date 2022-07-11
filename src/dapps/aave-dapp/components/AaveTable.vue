@@ -125,7 +125,7 @@ export default {
       }
       if (this.title === AAVE_TABLE_TITLE.balance_borrow) {
         return this.userReservesData.filter(item =>
-          new BigNumber(item.currentBorrows).gt(0)
+          new BigNumber(item.totalBorrows).gt(0)
         );
       }
       if (this.title === AAVE_TABLE_TITLE.balance_deposit) {
@@ -248,8 +248,7 @@ export default {
           case AAVE_TABLE_TITLE.balance_borrow:
             list = list.map(item => {
               AAVE_TABLE_BUTTON.repay.method = this.onRepayClick;
-              const isVariable =
-                item.borrowRateMode === INTEREST_TYPES.variable;
+              const isVariable = item.variableBorrows > 0;
               const reserve = this.reservesData.find(reserve => {
                 return reserve.symbol === item.reserve.symbol;
               });
@@ -260,13 +259,19 @@ export default {
                 token: item.reserve.symbol,
                 tokenImg: `${item.reserve.icon}`,
                 balance: [
-                  `${formatFloatingPointValue(item.currentBorrows).value} ${
+                  `${formatFloatingPointValue(item.totalBorrows).value} ${
                     item.reserve.symbol
                   }`,
-                  this.getFiatValue(item.currentBorrowsUSD)
+                  this.getFiatValue(this.formatUSDValue(item.totalBorrowsUSD))
                 ],
                 apy: formatPercentageValue(
-                  new BigNumber(item.borrowRate).multipliedBy(100).toString()
+                  new BigNumber(
+                    isVariable
+                      ? item.reserve.variableBorrowAPY
+                      : item.reserve.stableBorrowAPY
+                  )
+                    .times(100)
+                    .toString()
                 ).value,
                 toggle: {
                   color: isVariable ? 'greenMedium' : 'greenPrimary',

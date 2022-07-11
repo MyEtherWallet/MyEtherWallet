@@ -54,6 +54,7 @@
       :step="step"
       :apr="apr"
       :action-type="borrowTitle"
+      :amount-usd="aaveBorrowForm.amountInUSD"
       @onConfirm="handleConfirm"
     />
   </mew-overlay>
@@ -88,17 +89,24 @@ export default {
     aaveBorrowForm() {
       const hasBorrowed = this.selectedTokenInUserSummary;
       const borrowedEth = hasBorrowed
-        ? `${formatFloatingPointValue(hasBorrowed.currentBorrows).value} ${
+        ? `${formatFloatingPointValue(hasBorrowed.totalBorrows).value} ${
             this.selectedToken.token
           }`
         : this.getFiatValue(0);
       const borrowedUSD = hasBorrowed
-        ? this.getFiatValue(hasBorrowed.currentBorrowsUSD)
+        ? this.getFiatValue(this.formatUSDValue(hasBorrowed.totalBorrowsUSD))
         : `0 ETH`;
       const eth = `${
-        formatFloatingPointValue(this.userSummary.totalCollateralETH).value
+        formatFloatingPointValue(
+          this.userSummary.totalCollateralMarketReferenceCurrency
+        ).value
       } ETH`;
-      const usd = this.getFiatValue(this.userSummary.totalCollateralUSD);
+      const usd = this.getFiatValue(
+        this.formatUSDValue(this.userSummary.totalCollateralUSD)
+      );
+      const amountUSD = this.getFiatValue(
+        this.formatUSDValue(this.amount * hasBorrowed.reserve.priceInUSD)
+      );
       return {
         showToggle: false,
         leftSideValues: {
@@ -118,7 +126,8 @@ export default {
         buttonTitle: {
           action: 'Borrow',
           cancel: 'Cancel Borrow'
-        }
+        },
+        amountInUSD: amountUSD
       };
     },
     header() {
@@ -132,6 +141,9 @@ export default {
         default:
           return 'Select the token you want to borrow';
       }
+    },
+    amountWithDecimals() {
+      return 10 ** this.selectedTokenDetails.decimals * this.amount;
     }
   },
   watch: {
@@ -168,7 +180,7 @@ export default {
       const data = {
         user: this.address,
         reserve: this.selectedTokenDetails.underlyingAsset,
-        amount: this.amount,
+        amount: this.amountWithDecimals,
         interestRateMode: this.apr.type,
         referralCode: '14'
       };
