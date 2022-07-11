@@ -9,8 +9,6 @@ const el = {
     '#app > div > div:nth-child(1) > main > div > div > div.container > div.mx-auto > div',
   'Mnemonic Phrase':
     '#app > div.v-dialog__content.v-dialog__content--active > div > div > div > div.row.ma-0.pa-0.d-flex.align-center.justify-center.flex-column > div > div.d-flex.flex-column.align-center.justify-center.px-8.pb-8 > div > div > div:nth-child(2)',
-  'Hide Footer':
-    '#app > div.v-application--wrap > div:nth-child(1) > div.white.d-flex.justify-center.align-center.text-center.full-width.footer-banner-container.footer-banner > div.cursor-pointer.font-weight-medium.close-container',
   'I Wrote Them Down':
     '#app > div.v-dialog__content.v-dialog__content--active > div > div > div > div.row.ma-0.pa-0.d-flex.align-center.justify-center.flex-column > div > div.d-flex.flex-column.align-center.justify-center.px-8.pb-8 > div > div > div:nth-child(2) > div.d-flex.justify-center.mt-6',
   Verify:
@@ -72,18 +70,18 @@ module.exports = {
       .click(css, '#app')
 
       // remove footer
-      .click(css, el['Hide Footer'])
+      .click(css, '.HideWalletBanner')
 
       // create a new wallet
-      .waitForElementVisible(css, el['Create a New Wallet'])
+      .waitForElementVisible(css, '.HomeCreateWallet')
       .click(css, '#app')
-      .click(css, el['Create a New Wallet'])
+      .click(css, '.HomeCreateWallet')
       .assert.urlContains('/wallet/create');
 
     // click software
     browser
-      .waitForElementVisible(el['Software'], 500)
-      .click(css, el['Software'])
+      .waitForElementVisible('.CreateSoftwareWallet', 500)
+      .click(css, '.CreateSoftwareWallet')
       .assert.urlContains('/software');
 
     // select mnemonic phrase
