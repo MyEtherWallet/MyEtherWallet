@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="d-flex flex-column superPrimary pa-6 rounded">
+    <div class="d-flex flex-column greyLight pa-6 rounded">
       <div class="d-flex justify-space-between">
         <span>{{ $t('ens.register.domain-name') }}:</span>
         <span class="font-weight-medium">{{ name }}</span>
@@ -13,6 +13,68 @@
             : $tc('ens.commit.year', 2, { duration: duration })
         }}</span>
       </div>
+      <div
+        v-if="!committed && !loadingCommit && waitingForReg"
+        class="d-flex justify-space-between"
+      >
+        <span>Estimated Fee:</span>
+        <span class="font-weight-medium">
+          {{ commitFeeInEth }} ETH ({{ commitFeeUsd }})
+        </span>
+      </div>
+
+      <div
+        v-if="!committed && loadingCommit && waitingForReg"
+        class="d-flex justify-space-between"
+      >
+        <span>Commitment Cost:</span>
+        <span class="font-weight-medium">
+          {{ commitFeeInEth }} ETH ({{ commitFeeUsd }})
+        </span>
+      </div>
+
+      <div
+        v-if="committed && !loadingCommit && !waitingForReg"
+        class="d-flex justify-space-between"
+      >
+        <span>Commitment Cost:</span>
+        <span class="font-weight-medium">
+          {{ commitFeeInEth }} ETH ({{ commitFeeUsd }})
+        </span>
+      </div>
+
+      <div
+        v-if="!committed && loadingCommit && waitingForReg"
+        class="d-flex justify-space-between"
+      >
+        <span class="font-weight-medium">
+          Generating registration cost, please wait...
+        </span>
+      </div>
+
+      <div
+        v-if="
+          !committed && !loadingCommit && !waitingForReg && !noFundsForRegFees
+        "
+        class="d-flex justify-space-between"
+      >
+        <span>Registration Cost:</span>
+        <span class="font-weight-medium">
+          {{ totalCost }} ETH (${{ totalCostUsd }})
+        </span>
+      </div>
+
+      <div
+        v-if="
+          !committed && !loadingCommit && !waitingForReg && noFundsForRegFees
+        "
+        class="d-flex justify-space-between"
+      >
+        <span>Registration Cost:</span>
+        <span class="font-weight-medium">
+          Not enough funds to complete registration
+        </span>
+      </div>
     </div>
     <div
       v-if="minimumAge || canRegister"
@@ -23,7 +85,7 @@
         icon-name="clock"
         :img-height="80"
       />
-      <span class="ticket-subtitle primary--text">{{ ticker }}</span>
+      <span class="ticket-subtitle greenPrimary--text">{{ ticker }}</span>
       <div
         v-if="!canRegister"
         class="d-flex flex-column mt-5 justify-center align-center"
@@ -43,9 +105,22 @@
         }}</span>
       </div>
     </div>
+    <div v-if="notEnoughFunds || noFundsForRegFees">
+      <span class="balance-error d-flex mt-5 justify-center align-center">
+        Not enough balance:
+        <a target="_blank" class="link" @click="openMoonpay">
+          <u>Buy More Eth</u>
+        </a>
+      </span>
+    </div>
     <div class="d-flex justify-center mt-6">
       <mew-button
-        :disabled="loadingCommit || ticker !== '00:00'"
+        :disabled="
+          loadingCommit ||
+          ticker !== '00:00' ||
+          notEnoughFunds ||
+          noFundsForRegFees
+        "
         :title="
           canRegister
             ? $t('ens.register.name')
@@ -59,10 +134,44 @@
 </template>
 
 <script>
+import buyMore from '@/core/mixins/buyMore.mixin.js';
 export default {
   name: 'EnsRegister',
+  mixins: [buyMore],
   props: {
+    notEnoughFunds: {
+      default: false,
+      type: Boolean
+    },
+    noFundsForRegFees: {
+      default: false,
+      type: Boolean
+    },
+    commitFeeInEth: {
+      type: String,
+      default: ''
+    },
+    commitFeeUsd: {
+      type: String,
+      default: ''
+    },
+    totalCost: {
+      type: String,
+      default: ''
+    },
+    totalCostUsd: {
+      type: String,
+      default: ''
+    },
+    waitingForReg: {
+      default: false,
+      type: Boolean
+    },
     loadingCommit: {
+      default: false,
+      type: Boolean
+    },
+    committed: {
       default: false,
       type: Boolean
     },
@@ -149,5 +258,18 @@ export default {
   .ticket-subtitle {
     line-height: 34px;
   }
+}
+.balance-error {
+  color: #ff445b;
+  font-size: 12px;
+}
+.link {
+  color: #ff445b;
+  font-weight: 600;
+  padding-left: 5px;
+  font-size: 12px;
+}
+.link:hover {
+  color: #e96071;
 }
 </style>

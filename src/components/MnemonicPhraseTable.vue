@@ -1,5 +1,5 @@
 <template>
-  <v-row>
+  <v-row class="mnemonic-phrase-table">
     <v-col v-for="(p, key) in data" :key="key" cols="6" lg="3" md="3" sm="4">
       <div class="phrase">
         <span>{{ key + 1 }}.</span> {{ p }}
@@ -23,16 +23,18 @@ export default {
 
 <style lang="scss" scoped>
 .phrase {
-  border-bottom: 1px solid var(--v-primary-lighten2);
+  border-bottom: 1px solid var(--v-greenPrimary-base);
   line-height: 30px;
   span {
-    color: var(--v-primary-base);
+    color: var(--v-greenPrimary-base);
   }
 }
 </style>
 
 <style lang="scss">
-.v-application .v-input input {
-  min-height: initial !important;
+.mnemonic-phrase-table {
+  .v-application .v-input input {
+    min-height: initial !important;
+  }
 }
 </style>

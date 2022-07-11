@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="textPrimary--text mb-5">
+    <div class="textMedium--text mb-5">
       This fee is charged by the Ethereum network and fluctuates depending on
       network traffic. MEW does not profit from this fee.
     </div>
@@ -28,7 +28,7 @@
             class="mr-1 ml-n1 text-center"
             style="width: 40px; line-height: 0"
           >
-            <v-icon v-if="b.title === gasPriceTypes.ECONOMY" color="textBlack">
+            <v-icon v-if="b.title === gasPriceTypes.ECONOMY" color="textDark">
               mdi-check
             </v-icon>
             <img
@@ -75,21 +75,21 @@
               </div>
               <div
                 v-if="b.title === gasPriceTypes.ECONOMY"
-                class="textSecondary--text"
+                class="textLight--text"
               >
-                ${{ economyInUsd }}
+                {{ economyInUsd }}
               </div>
               <div
                 v-if="b.title === gasPriceTypes.REGULAR"
-                class="textSecondary--text"
+                class="textLight--text"
               >
-                ${{ regularInUsd }}
+                {{ regularInUsd }}
               </div>
               <div
                 v-if="b.title === gasPriceTypes.FAST"
-                class="textSecondary--text"
+                class="textLight--text"
               >
-                ${{ fastInUsd }}
+                {{ fastInUsd }}
               </div>
             </div>
           </div>
@@ -97,32 +97,39 @@
 
         <!-- Show Priority Time-->
         <div class="d-flex align-center">
-          <v-icon class="mr-1" color="primary" small>mdi-clock-outline</v-icon>
-          <div class="primary--text">{{ b.time }}</div>
+          <v-icon class="mr-1" color="greenPrimary" small
+            >mdi-clock-outline</v-icon
+          >
+          <div class="greenPrimary--text">{{ b.time }}</div>
         </div>
       </div>
     </div>
     <div class="mt-4 d-flex flex-column align-center">
       <div v-if="!fromSettings && showGetMoreEth" class="mt-3">
         <span class="secondary--text">Can't increase priority? </span>
-        <a target="_blank" :href="swapLink"> Buy more ETH </a>
+        <a v-if="network.type.canBuy" @click="openMoonpay">
+          Buy more {{ network.type.currencyName }}
+        </a>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { toBN, fromWei } from 'web3-utils';
+import { fromWei } from 'web3-utils';
 import { gasPriceTypes } from '@/core/helpers/gasPriceHelper';
 import { mapState, mapGetters } from 'vuex';
 import {
   formatFiatValue,
-  formatFloatingPointValue
+  formatFloatingPointValue,
+  toBNSafe
 } from '@/core/helpers/numberFormatHelper';
 import BigNumber from 'bignumber.js';
+import buyMore from '@/core/mixins/buyMore.mixin.js';
 
 export default {
   name: 'SettingsGasPrice',
+  mixins: [buyMore],
   props: {
     setSelected: {
       type: Function,
@@ -160,8 +167,8 @@ export default {
   },
   computed: {
     ...mapGetters('external', ['fiatValue']),
-    ...mapGetters('global', ['swapLink', 'gasPriceByType', 'network']),
-    ...mapState('global', ['gasPriceType', 'gasPrice']),
+    ...mapGetters('global', ['gasPriceByType', 'network']),
+    ...mapState('global', ['gasPriceType', 'gasPrice', 'preferredCurrency']),
     ...mapGetters('wallet', ['balanceInETH']),
     currencyName() {
       return this.network.type.currencyName;
@@ -241,15 +248,19 @@ export default {
   methods: {
     calcTxFee(priority) {
       return fromWei(
-        toBN(this.totalGasLimit).mul(toBN(this.gasPriceByType(priority)))
-      ).toString();
+        toBNSafe(this.totalGasLimit)
+          .mul(toBNSafe(this.gasPriceByType(priority)))
+          .toString()
+      );
     },
     formatInEth(fee) {
       return formatFloatingPointValue(fee).value;
     },
     formatInUsd(fee) {
-      return formatFiatValue(BigNumber(fee).times(this.fiatValue).toFixed(2))
-        .value;
+      const number = BigNumber(fee).times(this.fiatValue).toFixed(2);
+      return formatFiatValue(number, {
+        currency: this.preferredCurrency
+      }).value;
     },
     recalculate() {
       const amount = BigNumber(this.costInEth).minus(
@@ -272,7 +283,7 @@ export default {
   cursor: pointer;
   user-select: none;
   width: 100%;
-  border: 1px solid #eaedf7;
+  border: 1px solid var(--v-greyLight-base);
   &#disabled {
     filter: grayscale(1);
     opacity: 0.25 !important;

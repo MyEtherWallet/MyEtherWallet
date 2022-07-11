@@ -1,5 +1,7 @@
 import BigNumber from 'bignumber.js';
-import { fromWei } from 'web3-utils';
+import { fromWei, toBN } from 'web3-utils';
+import { localizeCurrency } from './localization';
+
 /**
  * ---------------------------------
  * Number Format Helper.
@@ -362,14 +364,17 @@ const formatPercentageValue = _value => {
  * @param _value: BigNumber
  * @returns Object FormattedNumber with value as formatted string and tooltipText
  */
-const formatFiatValue = _value => {
+const formatFiatValue = (
+  _value,
+  options = { locale: 'en-US', currency: 'USD', rate: 1 }
+) => {
   const value = new BigNumber(_value);
   /**
    * Case I: value === 0
    * Return: "$0.00"
    */
   if (value === undefined || value.isZero() || value.isNaN()) {
-    return { value: '0.00' };
+    return { value: localizeCurrency({ number: _value, ...options }) };
   }
 
   /**
@@ -377,7 +382,9 @@ const formatFiatValue = _value => {
    * Return: formated integer value with tooltip
    */
   if (value.isGreaterThanOrEqualTo(OneMillion)) {
-    return formatIntegerValue(value);
+    return {
+      value: localizeCurrency({ number: formatIntegerValue(value), ...options })
+    };
   }
 
   /**
@@ -385,7 +392,12 @@ const formatFiatValue = _value => {
    * Return: rounded number up to 2 decimal points,  no tooltip
    */
   if (value.isGreaterThanOrEqualTo(SmallFiatBreakpoint)) {
-    return { value: getRoundNumber(value, 2, true).value };
+    return {
+      value: localizeCurrency({
+        number: getRoundNumber(value, 2, true).value,
+        ...options
+      })
+    };
   }
 
   /**
@@ -393,14 +405,27 @@ const formatFiatValue = _value => {
    * Return: rounded number up to 6 decimal points", no tooltip
    */
   if (value.isGreaterThanOrEqualTo(SmallNumberBreakpoint)) {
-    return { value: getRoundNumber(value, 6).value };
+    return {
+      value: localizeCurrency({
+        number: getRoundNumber(value, 6).value,
+        small: true,
+        ...options
+      })
+    };
   }
 
   /**
    * Case V: value < 0.0000001
    * Return: string "< $0.0000001" and tooltip with full value with tooltip
    */
-  return { value: `< ${SmallNumberBreakpoint}`, tooltipText: value.toFormat() };
+  return {
+    value: `< ${localizeCurrency({
+      number: SmallNumberBreakpoint,
+      verySmall: true,
+      ...options
+    })}`,
+    tooltipText: value.toFormat()
+  };
 };
 
 /**
@@ -478,6 +503,18 @@ const getRoundNumber = (value, round, hasTrailingZeros = false) => {
   };
 };
 
+/**
+ * Handles edge cases for web3 util toBN
+ * @param {Number|String} number
+ * @return {import('bn.js')} BN from web3
+ */
+
+const toBNSafe = number => {
+  if (isNaN(number) || !number) number = 0;
+  number = toBN(new BigNumber(number).toFixed(0));
+  return number;
+};
+
 export {
   formatIntegerToString,
   formatIntegerValue,
@@ -485,5 +522,6 @@ export {
   formatFiatValue,
   formatBalanceEthValue,
   formatPercentageValue,
-  formatGasValue
+  formatGasValue,
+  toBNSafe
 };

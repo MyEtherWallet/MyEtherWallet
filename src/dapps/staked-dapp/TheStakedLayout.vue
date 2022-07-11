@@ -5,14 +5,14 @@
     ===================================================
     -->
   <the-wrapper-dapp
-    :has-exit-btn="true"
-    :banner-img="bgDappsStake"
-    :title-icon="iconColorfulETH"
+    :is-new-header="true"
+    :dapp-img="iconColorfulETH"
     :banner-text="header"
-    :hide-default-tab-header="true"
     :tab-items="tabs"
     :active-tab="activeTab"
-    top-strip
+    external-contents
+    :on-tab="tabChanged"
+    :valid-networks="validNetworks"
   >
     <!--
     ===================================================
@@ -20,16 +20,16 @@
     ===================================================
     -->
     <template #HeaderBody>
-      <v-divider class="textPrimary my-3" />
+      <v-divider class="textMedium my-3" />
       <div class="d-flex flex-wrap align-center justify-center">
-        <div class="text-uppercase textPrimary--text font-weight-bold">
+        <div class="text-uppercase textMedium--text font-weight-bold">
           Total Staked:
-          <span class="primary--text">{{ totalStaked }}</span>
+          <span class="greenPrimary--text">{{ totalStaked }}</span>
         </div>
-        <v-icon color="textPrimary">mdi-circle-medium</v-icon>
-        <div class="text-uppercase textPrimary--text font-weight-bold">
+        <v-icon color="textMedium">mdi-circle-medium</v-icon>
+        <div class="text-uppercase textMedium--text font-weight-bold">
           Current APR:
-          <span class="primary--text">{{ currentAprFormatted }}</span>
+          <span class="greenPrimary--text">{{ currentAprFormatted }}</span>
         </div>
       </div>
       <!--
@@ -68,7 +68,7 @@
             >
               My stake
             </div>
-            <div v-if="!loadingValidators" class="mew-caption tagLabel--text">
+            <div v-if="!loadingValidators" class="mew-caption textLight--text">
               {{ !loadingValidators ? myETHTotalStaked : '--' }}
             </div>
           </div>
@@ -83,12 +83,14 @@
     <template #HeaderRight>
       <div class="text-right">
         <a
-          href="https://help.myetherwallet.com/en/articles/5449132-stake-on-eth2-using-mew-web"
+          :href="getArticle('stake-eth2-mew-web')"
           target="_blank"
-          class="primary--text font-weight-medium text-right"
+          class="greenPrimary--text font-weight-medium text-right"
         >
           New to staking? Learn more
-          <v-icon class="ml-1" small color="primary">mdi-open-in-new</v-icon>
+          <v-icon class="ml-1" small color="greenPrimary"
+            >mdi-open-in-new</v-icon
+          >
         </a>
       </div>
     </template>
@@ -139,10 +141,12 @@
 </template>
 
 <script>
-import iconColorfulETH from '@/assets/images/icons/icon-colorful-eth.svg';
+import { SUPPORTED_NETWORKS } from './handlers/supportedNetworks';
+import { STAKED_ROUTE } from './configsRoutes';
+import iconColorfulETH from '@/assets/images/icons/icon-dapp-eth.svg';
 import TheWrapperDapp from '@/core/components/TheWrapperDapp';
 import handlerStaked from './handlers/handlerStaked';
-import bgDappsStake from '@/assets/images/backgrounds/bg-dapps-stake.svg';
+//import bgDappsStake from '@/assets/images/backgrounds/bg-dapps-stake.svg';
 import { mapGetters, mapState } from 'vuex';
 import StakedStepper from './components/staked-stepper/StakedStepper';
 import StakedStatus from './components/StakedStatus';
@@ -160,23 +164,38 @@ export default {
   },
   data() {
     return {
+      validNetworks: SUPPORTED_NETWORKS,
       iconColorfulETH: iconColorfulETH,
       amount: 0,
       header: {
         title: 'Ethereum 2.0 staking',
         subtext:
           'Stake on Ethereum 2.0 and earn continuous rewards for providing a public good to the community.',
-        subtextClass: 'textPrimary--text'
+        subtextClass: 'textMedium--text'
       },
       activeTab: 0,
       handlerStaked: {},
-      bgDappsStake: bgDappsStake,
-      tabs: [{ name: 'stake' }, { name: 'status' }]
+      tabs: [
+        {
+          name: 'Stake',
+          route: { name: STAKED_ROUTE.STAKED.NAME },
+          id: 0
+        },
+        {
+          name: 'Status',
+          route: {
+            name: STAKED_ROUTE.STATUS.NAME,
+            path: STAKED_ROUTE.STATUS.PATH
+          },
+          id: 1
+        }
+      ]
     };
   },
   computed: {
     ...mapState('wallet', ['web3', 'address']),
     ...mapGetters('global', ['network']),
+    ...mapGetters('article', ['getArticle']),
     /**
      * Total staked by user
      * @returns string
@@ -233,9 +252,19 @@ export default {
      */
     pendingTxHash() {
       return this.handlerStaked.pendingTxHash;
+    },
+    isValidNetwork() {
+      const chainID = this.network.type.chainID;
+      const validChain = this.validNetworks.filter(
+        item => item.chainID === chainID
+      );
+      return validChain.length > 0;
     }
   },
   watch: {
+    $route() {
+      this.detactUrlChangeTab();
+    },
     /**
      * @watches pendingTxHash (comes after send transaction)
      * if it gets set then go to staked status
@@ -247,19 +276,48 @@ export default {
       if (this.$refs.stakedStepper) {
         this.$refs.stakedStepper.reset();
       }
+    },
+    /*
+    - watches for address state change
+    - updates handlerStaked with new address
+    - if user is currently onStep within the stakeStepper component, it will run the reset function
+    */
+    address(newVal) {
+      this.handlerStaked.address = newVal;
+      if (this.$refs.stakedStepper) {
+        this.$refs.stakedStepper.reset();
+      }
     }
   },
   mounted() {
     /**
+     * Check url and change tab on load
+     */
+    this.detactUrlChangeTab();
+
+    /**
      * Initiate Stake Handler
      */
-    this.handlerStaked = new handlerStaked(
-      this.web3,
-      this.network,
-      this.address
-    );
+    if (this.isValidNetwork) {
+      this.handlerStaked = new handlerStaked(
+        this.web3,
+        this.network,
+        this.address
+      );
+    }
   },
   methods: {
+    detactUrlChangeTab() {
+      const currentRoute = this.$route.name;
+      if (currentRoute === STAKED_ROUTE.STATUS.NAME) {
+        this.activeTab = this.tabs[1].id;
+      } else {
+        this.activeTab = this.tabs[0].id;
+      }
+    },
+    tabChanged(tab) {
+      this.activeTab = tab;
+    },
     /**
      * Start provisioning
      */

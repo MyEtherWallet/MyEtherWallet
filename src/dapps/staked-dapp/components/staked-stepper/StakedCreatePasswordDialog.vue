@@ -31,10 +31,10 @@
           label="Confirm password"
         />
 
-        <div class="mt-1 tableHeader terms-container pa-5">
+        <div class="mt-1 greyLight terms-container pa-5">
           <mew-checkbox
             v-model="userTermsAgreed"
-            color-text="textBlack2--text"
+            class-name="textMedium--text"
             :label="userTermsLabel"
           ></mew-checkbox>
         </div>
@@ -86,7 +86,7 @@ export default {
      */
     passwordErrMessages() {
       if (this.password && this.password.length < 8) {
-        return 'Password is less then 8 characters';
+        return 'Password is less than 8 characters';
       }
       return '';
     },

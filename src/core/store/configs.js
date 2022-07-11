@@ -5,13 +5,15 @@ export default {
     notifications: 'notifications-store',
     custom: 'custom-store',
     addressBook: 'address-book',
+    article: 'article-store',
     ...dappStoreConfigs.LOCAL_STORAGE_KEYS
   },
   VERSION: {
-    global: '1.0.5',
-    notifications: '1.0.1',
+    global: '1.0.7',
+    notifications: '1.0.4',
     custom: '1.0.4',
     addressBook: '1.0.0',
+    article: '1.0.0',
     ...dappStoreConfigs.VERSION
   }
 };

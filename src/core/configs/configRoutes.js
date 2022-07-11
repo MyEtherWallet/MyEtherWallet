@@ -1,6 +1,7 @@
 const ROUTES_HOME = {
   HOME: { NAME: 'Home', PATH: '' },
   //A-Z
+  PAGE_NOT_FOUND: { NAME: 'PageNotFound', PATH: '*' },
   ACCESS_WALLET: { NAME: 'AccessWallet', PATH: 'wallet/access/:overlay?' },
   BUY_HARDWARE_WALLET: { NAME: 'BuyHardwareWallet', PATH: 'buy-hardware' },
   ABOUT_PAGE: { NAME: 'AboutPage', PATH: 'about' },
@@ -13,8 +14,12 @@ const ROUTES_HOME = {
   TEAM_PAGE: { NAME: 'TeamPage', PATH: 'team' },
   TERMS_OF_SERVICE: { NAME: 'TermsOfService', PATH: 'terms-of-service' },
   TOOLS: { NAME: 'Tools', PATH: 'tools' },
+  TOOLS_KEYSTORE: { NAME: 'ToolsKeystore', PATH: 'tools-keystore' },
+  TOOLS_KEYSTORE_1: { NAME: 'ToolsKeystore1', PATH: 'tools-keystore-1' },
+  TOOLS_KEYSTORE_2: { NAME: 'ToolsKeystore2', PATH: 'tools-keystore-2' },
   CONVERT_UNITS: { NAME: 'ConvertUnits', PATH: 'convert-units' },
-  JOBS: { NAME: 'Careers', PATH: 'careers' }
+  JOBS: { NAME: 'Careers', PATH: 'careers' },
+  QR_CODE: { NAME: 'QrCode', PATH: 'qr-code' }
 };
 const ROUTES_WALLET = {
   WALLETS: { NAME: 'Wallets', PATH: '' },
@@ -33,13 +38,16 @@ const ROUTES_WALLET = {
   NFT_MANAGER_SEND: { NAME: 'NftManagerSend', PATH: 'send-your-nft' },
   // NOTIFICATIONS: { NAME: 'Notifications', PATH: 'notifications' },
   SEND_TX: { NAME: 'SendTX', PATH: 'send-tx' },
+  SEND_TX_OFFLINE: { NAME: 'SendTXOffline', PATH: 'send-tx-offline' },
   SETTINGS: { NAME: 'Settings', PATH: 'settings' },
   SIGN_MESSAGE: { NAME: 'SignMessage', PATH: 'sign' },
   STAKED: { NAME: 'Staked', PATH: 'staked' },
+  STAKED_STATUS: { NAME: 'StakedStatus', PATH: 'status' },
   STAKED_1: { NAME: 'Staked1', PATH: 'staked-1' },
   STAKED_2: { NAME: 'Staked2', PATH: 'staked-2' },
   STAKED_3: { NAME: 'Staked3', PATH: 'staked-3' },
   STAKED_4: { NAME: 'Staked4', PATH: 'staked-4' },
+  STAKEWISE: { NAME: 'Stakewise', PATH: 'stakewise' },
   SWAP: { NAME: 'Swap', PATH: 'swap' },
   UNSTOPPABLE: { NAME: 'Unstoppable', PATH: 'unstoppable' },
   VERIFY_MESSAGE: { NAME: 'VerifyMessage', PATH: 'verify' }

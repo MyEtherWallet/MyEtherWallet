@@ -5,19 +5,28 @@
     :fullscreen="scrollable ? $vuetify.breakpoint.xs : false"
     content-class="core--components--app-modal"
     :scrollable="scrollable"
+    :persistent="isPersistent"
     @click:outside="handleClickOutside"
   >
-    <v-card v-if="scrollable" color="white" class="py-0 px-5 px-md-7">
+    <v-card v-if="scrollable" color="white" class="py-0 px-0 px-md-0">
       <!--
       =====================================================================================
         Dialog Header
         =====================================================================================
       -->
       <v-card-title class="justify-center py-5 py-md-8">
-        <div class="mew-heading-2 text-center">
+        <div class="mew-heading-2 text-center pr-6 pr-md-0">
           {{ title }}
         </div>
-        <v-btn icon class="header-close-icon">
+        <v-btn
+          v-if="hasCloseButton"
+          icon
+          :class="
+            $vuetify.breakpoint.mdAndUp
+              ? 'header-close-icon'
+              : 'header-close-icon-mobile'
+          "
+        >
           <v-icon size="x-large" color="grey cursor--pointer" @click="close">
             mdi-close
           </v-icon>
@@ -38,7 +47,9 @@
         Dialog Body: Anchored
       =====================================================================================
       -->
-      <slot v-else name="dialogBody" />
+      <div v-else class="px-0 px-md-6 pb-2" style="overflow-y: auto">
+        <slot name="dialogBody" />
+      </div>
       <!--
       =====================================================================================
         Dialog action
@@ -47,7 +58,7 @@
       <v-card-actions class="py-5 py-md-8">
         <v-row v-if="hasButtons" class="pa-0" justify="space-around" dense>
           <v-col
-            v-if="!closeOnly"
+            v-if="!closeOnly && !acceptOnly"
             cols="12"
             sm="5"
             class="text-right"
@@ -63,7 +74,7 @@
             />
           </v-col>
           <v-col
-            v-if="!closeOnly"
+            v-if="!closeOnly && !acceptOnly"
             cols="12"
             sm="7"
             class="text-left"
@@ -86,11 +97,20 @@
               @click.native="close"
             />
           </v-col>
+          <v-col v-if="acceptOnly" cols="12" class="text-left">
+            <mew-button
+              btn-size="xlarge"
+              :title="btnText"
+              :disabled="!btnEnabled"
+              :has-full-width="true"
+              @click.native="btnAction"
+            />
+          </v-col>
         </v-row>
       </v-card-actions>
     </v-card>
     <v-sheet v-else class="py-6 px-5 px-8 position--relative">
-      <v-btn icon class="header-close-icon">
+      <v-btn v-if="hasCloseButton" icon class="header-close-icon">
         <v-icon size="x-large" color="grey cursor--pointer" @click="close">
           mdi-close
         </v-icon>
@@ -102,7 +122,9 @@
         -->
       <v-row class="header-container">
         <v-col cols="12" align-self="center">
-          <div class="mew-heading-2 text-center">{{ title }}</div>
+          <div :class="['mew-heading-2', titleCenter ? 'text-center' : '']">
+            {{ title }}
+          </div>
         </v-col>
       </v-row>
       <!--
@@ -173,6 +195,10 @@ export default {
       type: String,
       default: ''
     },
+    titleCenter: {
+      type: Boolean,
+      default: true
+    },
     close: {
       type: Function,
       default: () => {}
@@ -209,6 +235,14 @@ export default {
       type: Boolean,
       default: true
     },
+    acceptOnly: {
+      type: Boolean,
+      default: false
+    },
+    isPersistent: {
+      type: Boolean,
+      default: false
+    },
     /**
      * NOTE:
      * This prop will allow scroll anchoring for vuetify.goTo() inside scrollable content
@@ -223,6 +257,10 @@ export default {
     anchored: {
       type: Boolean,
       default: false
+    },
+    hasCloseButton: {
+      type: Boolean,
+      default: true
     }
   },
   methods: {
@@ -242,8 +280,16 @@ export default {
 
 <style lang="scss" scoped>
 .header-close-icon {
+  right: 30px;
+  top: auto;
+  bottom: auto;
+  position: absolute;
+}
+
+.header-close-icon-mobile {
   right: 10px;
-  top: 10px;
+  top: auto;
+  bottom: auto;
   position: absolute;
 }
 </style>

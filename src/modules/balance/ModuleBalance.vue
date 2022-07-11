@@ -1,18 +1,12 @@
 <template>
   <div class="mew6-component--module-balance">
     <!--
-  =====================================================================================
-    display if the user has an eth balance > 0
-  =====================================================================================
-  -->
-    <v-skeleton-loader
-      v-if="loading"
-      class="mx-auto module-balance-loader"
-      width="100%"
-      min-height="352px"
-      max-width="100%"
-      type="card"
-    ></v-skeleton-loader>
+    =====================================================================================
+      display if the user has an eth balance > 0
+    =====================================================================================
+    -->
+    <loader v-if="loading" />
+
     <mew-module
       v-if="hasBalance && !loading"
       :subtitle="subtitle"
@@ -32,13 +26,6 @@
             @onBtnClick="onToggle"
           />
           <!-- not sure what this button is for, commented out for now -->
-          <!-- <mew-button
-            btn-size="small"
-            icon-type="mdi"
-            icon="mdi-dots-vertical"
-            btn-style="transparent"
-            color-theme="secondary"
-          /> -->
         </div>
       </template>
       <template #moduleBody>
@@ -54,33 +41,45 @@
             class="d-flex flex-column flex-sm-row align-center justify-center"
           >
             <div class="d-flex align-center">
-              <div class="font-weight-bold">{{ network.type.name }} PRICE</div>
+              <div class="font-weight-bold">
+                {{ network.type.currencyName }} PRICE
+              </div>
               <div
                 :class="[
                   'ml-2 font-weight-regular',
-                  priceChange ? 'primary--text' : 'error--text'
+                  priceChange ? 'greenPrimary--text' : 'redPrimary--text'
                 ]"
               >
                 {{ formatChange }}
               </div>
               <v-icon
                 :class="[
-                  priceChange ? 'primary--text' : 'error--text',
+                  priceChange ? 'greenPrimary--text' : 'redPrimary--text',
                   'body-2'
                 ]"
                 >{{ priceChangeArrow }}</v-icon
               >
             </div>
             <div class="ml-sm-5">
-              {{ formatFiatPrice }} / 1 {{ network.type.name }}
+              {{ formatFiatPrice }} / 1 {{ network.type.currencyName }}
             </div>
           </div>
           <div class="text-center text-md-right mt-4 mt-md-0">
             <mew-button
               :has-full-width="false"
-              title="Send Transaction"
-              btn-size="xlarge"
+              :title="sendText"
+              btn-size="large"
+              btn-style="transparent"
+              class="mr-3"
               @click.native="navigateToSend"
+            />
+            <mew-button
+              v-if="hasSwap"
+              :has-full-width="false"
+              :title="swapText"
+              btn-size="large"
+              btn-style="outline"
+              @click.native="navigateToSwap"
             />
           </div>
         </div>
@@ -93,26 +92,27 @@
     -->
     <balance-empty-block
       v-if="!hasBalance && !loading"
-      :network-type="network.type.name"
+      :network-type="network.type.currencyName"
       :is-eth="isEthNetwork"
     />
   </div>
 </template>
 
 <script>
+import Loader from './ModuleBalanceLoader';
 import BalanceChart from '@/modules/balance/components/BalanceChart';
 import BalanceEmptyBlock from './components/BalanceEmptyBlock';
 import handlerBalanceHistory from './handlers/handlerBalanceHistory.mixin';
 import { mapGetters, mapState } from 'vuex';
 import {
   formatPercentageValue,
-  formatFiatValue,
   formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
 import BigNumber from 'bignumber.js';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 export default {
   components: {
+    Loader,
     BalanceChart,
     BalanceEmptyBlock
   },
@@ -129,7 +129,7 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['address']),
-    ...mapGetters('global', ['network']),
+    ...mapGetters('global', ['network', 'hasSwap', 'getFiatValue']),
     ...mapGetters('wallet', ['balanceInETH', 'balanceInWei']),
     ...mapGetters('external', [
       'fiatValue',
@@ -149,11 +149,17 @@ export default {
      */
     title() {
       return `${formatFloatingPointValue(this.balanceInETH).value} ${
-        this.network.type.name
+        this.network.type.currencyName
       }`;
     },
+    sendText() {
+      return `Send ${this.network.type.currencyName}`;
+    },
+    swapText() {
+      return `Swap ${this.network.type.currencyName}`;
+    },
     subtitle() {
-      return `My ${this.network.type.name} Balance`;
+      return `My ${this.network.type.currencyName} Balance`;
     },
     /**
      * Computed property returns formated eth wallet balance value in USD
@@ -161,9 +167,7 @@ export default {
      */
     convertedBalance() {
       if (this.fiatLoaded) {
-        return `${this.networkTokenUSDMarket.symbol}${
-          formatFiatValue(this.balanceFiatValue).value
-        }`;
+        return this.getFiatValue(this.balanceFiatValue);
       }
       return '';
     },
@@ -185,9 +189,7 @@ export default {
      */
     formatFiatPrice() {
       if (this.fiatLoaded) {
-        return `${this.networkTokenUSDMarket.symbol}${
-          formatFiatValue(this.fiatValue).value
-        }`;
+        return this.getFiatValue(this.fiatValue);
       }
       return '';
     },
@@ -281,14 +283,10 @@ export default {
     },
     navigateToSend() {
       this.$router.push({ name: ROUTES_WALLET.SEND_TX.NAME });
+    },
+    navigateToSwap() {
+      this.$router.push({ name: ROUTES_WALLET.SWAP.NAME });
     }
   }
 };
 </script>
-<style lang="scss">
-.module-balance-loader {
-  .v-skeleton-loader__image {
-    height: 352px;
-  }
-}
-</style>

@@ -5,7 +5,7 @@
       linkTitle: 'Contact support',
       link: 'mailto:support@myetherwallet.com'
     }"
-    color-type="mewBg"
+    color-type="white"
     :show-overlay="isOverlayOpen"
     title="My paper wallet"
     content-size="xlarge"
@@ -58,7 +58,7 @@ export default {
   },
   computed: {
     isOverlayOpen() {
-      return !this.$vuetify.breakpoint.smAndDown && this.open;
+      return this.open;
     }
   },
   watch: {

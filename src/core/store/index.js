@@ -7,6 +7,7 @@ import externalData from './external';
 import swap from './swap';
 import custom from './custom';
 import addressBook from './addressBook';
+import article from './article';
 import Configs from './configs';
 import LocalStore from 'store';
 import unstoppableStore from '@/dapps/unstoppable-domains-dapp/store/index.js';
@@ -24,6 +25,7 @@ const store = new Vuex.Store({
     unstoppable: unstoppableStore,
     custom: custom,
     addressBook: addressBook,
+    article: article,
     ...dappStore
   }
 });

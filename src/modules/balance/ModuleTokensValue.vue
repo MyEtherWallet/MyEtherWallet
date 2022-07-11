@@ -7,7 +7,7 @@
         </v-col>
         <v-col cols="12">
           <div v-if="!initialLoad" class="mew-heading-3">
-            ${{ totalTokenValues }}
+            {{ totalTokenValues }}
           </div>
           <v-skeleton-loader
             v-else
@@ -21,7 +21,7 @@
             <v-col v-for="(img, idx) in tokenImages" :key="idx + img" cols="2">
               <img :src="img" height="32px" />
             </v-col>
-            <v-col cols="2">
+            <v-col v-if="tokensList.length > 1" cols="2">
               <div class="circled-total" @click="handleTokensPopup">
                 {{ getText }}
               </div>
@@ -41,7 +41,7 @@
     >
       <template #dialogBody>
         <div class="mew-heading-3 mb-3 black--text">
-          Total Value: ${{ totalTokenValues }}
+          Total Value: {{ totalTokenValues }}
         </div>
         <module-tokens class="pa-0" dense @trade="handleTokensPopup" />
       </template>
@@ -51,7 +51,6 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex';
-import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 import AppModal from '@/core/components/AppModal';
 import ModuleTokens from '@/modules/balance/ModuleTokens';
 export default {
@@ -64,21 +63,23 @@ export default {
   computed: {
     ...mapGetters('wallet', ['tokensList']),
     ...mapState('wallet', ['initialLoad']),
-
     ...mapGetters('external', ['totalTokenFiatValue']),
+    ...mapGetters('global', ['getFiatValue']),
     tokenTitle() {
       return `My Token${this.tokensList.length > 1 ? 's' : ''} Value`;
     },
     totalTokenValues() {
-      return formatFiatValue(this.totalTokenFiatValue).value;
+      return this.getFiatValue(this.totalTokenFiatValue);
     },
     tokenImages() {
       return this.tokensList
-        .filter(token => token.img)
-        .slice(0, 5)
-        .map(item => {
-          return item.img;
-        });
+        .reduce((arr, token) => {
+          if (token.img) {
+            arr.push(token.img);
+          }
+          return arr;
+        }, [])
+        .slice(0, 5);
     },
     moreTokensCount() {
       return this.tokensList.length - this.tokenImages.length;
@@ -115,6 +116,6 @@ export default {
   font-size: 10px;
 }
 .circled-total:hover {
-  background-color: var(--v-superPrimaryHover-base);
+  background-color: var(--v-greyLight-base);
 }
 </style>

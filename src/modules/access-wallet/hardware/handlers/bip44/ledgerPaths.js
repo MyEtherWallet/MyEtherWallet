@@ -7,7 +7,9 @@ import {
   rskMainnet,
   rskTestnet,
   thundercore,
-  solidum
+  solidum,
+  goChain,
+  xdcnetwork
 } from '../configs/configPaths';
 export default [
   ledgerEthereum,
@@ -18,5 +20,7 @@ export default [
   rskMainnet,
   rskTestnet,
   thundercore,
-  solidum
+  solidum,
+  goChain,
+  xdcnetwork
 ];

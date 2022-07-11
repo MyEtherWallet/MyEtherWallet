@@ -49,8 +49,7 @@
       <mew-button
         btn-size="xlarge"
         :has-full-width="true"
-        title="Unlock wallet"
-        :disabled="!ledgerConnected"
+        :title="btnTitle"
         @click.native="ledgerUnlock"
       />
     </div>
@@ -94,13 +93,26 @@ export default {
     return {
       ledgerApp: {}
     };
+  },
+  computed: {
+    btnTitle() {
+      return this.ledgerConnected ? 'Unlock Ledger' : 'Connect Ledger';
+    }
+  },
+  watch: {
+    ledgerApp: {
+      handler: function (newVal) {
+        this.$emit('ledgerApp', newVal);
+      },
+      deep: true
+    }
   }
 };
 </script>
 
 <style lang="scss" scoped>
 .border {
-  border: 1px solid var(--v-inputBorder-base);
+  border: 1px solid var(--v-greyMedium-base);
   border-radius: 5px;
   padding: 20px;
   margin-bottom: 30px;

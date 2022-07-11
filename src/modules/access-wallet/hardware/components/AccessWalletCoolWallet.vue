@@ -40,7 +40,7 @@
             rel="noopener noreferrer"
             target="_blank"
             >Read More
-            <v-icon size="small" color="primary"> mdi-launch </v-icon>
+            <v-icon size="small" color="greenPrimary"> mdi-launch </v-icon>
           </a>
         </p>
         <p></p>

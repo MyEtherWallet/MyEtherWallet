@@ -25,7 +25,7 @@
               <div>
                 <div class="mb-2 d-flex align-center">
                   <div class="mew-heading-2">Get MEW wallet app</div>
-                  <v-icon dense color="primary" class="ml-1">
+                  <v-icon dense color="greenPrimary" class="ml-1">
                     mdi-shield-check
                   </v-icon>
                 </div>
@@ -58,7 +58,7 @@
             <div>
               <div class="mb-2 d-flex align-center">
                 <div class="mew-heading-2">Buy a Hardware Wallet</div>
-                <v-icon dense color="primary" class="ml-1">
+                <v-icon dense color="greenPrimary" class="ml-1">
                   mdi-shield-check
                 </v-icon>
               </div>
@@ -80,13 +80,13 @@
 
         <div class="position--relative">
           <div
-            class="warning--text text--darken-1 mew-label"
+            class="orangePrimary--text mew-label"
             style="position: absolute; top: 15px; right: 25px"
           >
             NOT RECOMMENDED
           </div>
           <mew-button
-            class="mb-5"
+            class="mb-5 createWalletSoftware"
             color-theme="white"
             btn-style="outline"
             style="height: 160px; position: relative"
@@ -95,7 +95,7 @@
             <div class="px-2 textDark--text text-left">
               <div class="mb-2 d-flex align-center">
                 <div class="mew-heading-2 white--text">Software</div>
-                <v-icon dense color="warning darken-1" class="ml-1">
+                <v-icon dense color="orangePrimary" class="ml-1">
                   mdi-alert
                 </v-icon>
               </div>
@@ -185,5 +185,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss"></style>

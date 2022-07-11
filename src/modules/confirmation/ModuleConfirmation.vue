@@ -1,88 +1,50 @@
 <template>
   <div>
-    <app-modal
-      :show="showSuccessModal"
-      :title="successTitle"
-      :close="resetSuccess"
-      :close-only="true"
-      width="480"
-      @close="resetSuccess"
-    >
-      <template #dialogBody>
-        <div>
-          <!--
-          ====================================================================================
-            Lottie or icon
-          =====================================================================================
-          -->
-          <div
-            v-if="showSuccessModal"
-            v-lottie="successLottie"
-            :class="[{ 'py-7': showSuccessSwap }, 'lottie']"
-          />
-          <!--
-          ====================================================================================
-            Body
-          =====================================================================================
-          -->
-          <div class="mew-body">
-            {{ successBodyText }}
-          </div>
-          <!--
-          ====================================================================================
-            Links
-          =====================================================================================
-          -->
-          <v-row class="justify-sm-space-around align-center pt-3" dense>
-            <v-col cols="12" sm="auto" class="pb-2" order-sm="3">
-              <a
-                class="d-flex justify-center justify-sm-end"
-                @click.stop="viewProgress"
-                >View Progress</a
-              >
-            </v-col>
-            <v-col cols="12" sm="auto" class="pb-2">
-              <a
-                rel="noopener noreferrer"
-                target="_blank"
-                :href="links.etherscan"
-                class="d-flex justify-center justify-sm-start"
-                >View on Etherscan
-                <v-icon color="primary" small>mdi-launch</v-icon></a
-              >
-            </v-col>
-            <v-col
-              v-if="network.type.isEthVMSupported.supported"
-              cols="12"
-              sm="auto"
-              class="pb-2"
-            >
-              <a
-                rel="noopener noreferrer"
-                target="_blank"
-                :href="links.ethvm"
-                class="d-flex justify-center"
-                >View on EthVM
-                <v-icon color="primary" small>mdi-launch</v-icon></a
-              >
-            </v-col>
-          </v-row>
-        </div>
-      </template>
-    </app-modal>
+    <success-modal
+      :show-success-modal="showSuccessModal"
+      :show-success-swap="showSuccessSwap"
+      :success-title="successTitle"
+      :reset-success="resetSuccess"
+      :reset="reset"
+      :network="network"
+      :links="links"
+      :success-body-text="successBodyText"
+    />
+    <cross-chain-confirmation
+      :show-cross-chain-modal="showCrossChainModal"
+      :tx-obj="tx"
+      :title="title"
+      :reset="reset"
+      :sent-btc="resolver"
+    />
     <app-modal
       :show="showTxOverlay"
       :title="title !== '' ? title : 'Confirmation'"
       :close="reset"
       :btn-action="btnAction"
       :btn-enabled="disableBtn"
+      :btn-text="toNonEth ? 'Proceed with swap' : 'Confirm & Send'"
       :scrollable="true"
       :anchored="true"
       width="650"
       @close="reset"
     >
       <template #dialogBody>
-        <v-card-text ref="scrollableContent" class="py-0 px-5 px-md-0">
+        <v-card-text ref="scrollableContent" class="py-0 px-4 px-md-0">
+          <div
+            v-if="toNonEth"
+            class="px-4 py-6 pr-6 textBlack2--text border-radius--5px mb-5"
+          >
+            <b>Please double check everything.</b> MEW team will not be able to
+            reverse your transaction once its submitted. You will still be
+            charged gas fee even if the transaction fails.
+            <a
+              :href="getArticle('my-txn-failed-charged')"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Learn more.</a
+            >
+          </div>
           <confirmation-send-transaction-details
             v-if="!isSwap"
             :to="txTo"
@@ -110,16 +72,19 @@
             :tx-fee="swapInfo.txFee"
             :gas-price-type="swapInfo.gasPriceType"
             :is-hardware="isHardware"
+            :is-to-non-eth="toNonEth"
+            :to-currency="swapInfo.toType"
+            :to-address="swapInfo.to"
           />
           <!-- Warning Sheet -->
           <div
-            class="px-4 py-6 pr-6 warning textBlack2--text border-radius--5px mb-5"
+            class="px-4 py-6 pr-6 warning textMedium--text border-radius--5px mb-5"
           >
-            <b>Make sure all the information is correct.</b> Canceling or
+            <b>Make sure all the information is correct.</b> Cancelling or
             reversing a transaction cannot be guaranteed. You will still be
             charged gas fee even if transaction fails.
             <a
-              href="https://help.myetherwallet.com/en/articles/5380674-my-transaction-failed-why-was-i-charged"
+              :href="getArticle('my-txn-failed-charged')"
               target="_blank"
               rel="noopener noreferrer"
               >Learn more.</a
@@ -160,13 +125,15 @@
                       {{ transactions.length > 1 ? `${i + 1}` : `details` }}
                     </span>
                     <br />
-                    <span v-if="isBatch" class="ma-0 mew-label searchText--text"
+                    <span
+                      v-if="isBatch"
+                      class="ma-0 mew-label greyPrimary--text"
                       >{{ isSwap ? 'Swap ' : '' }} part {{ i + 1 }} -
                       {{ dataToAction(unsignedTxArr[i]) }}</span
                     >
                     <span
                       v-else-if="dataToAction(tx) !== ''"
-                      class="ma-0 mew-label searchText--text"
+                      class="ma-0 mew-label greyPrimary--text"
                       >{{ dataToAction(tx) }}</span
                     >
                   </p>
@@ -177,7 +144,7 @@
                         error === '' && isBatch && signedTxArray.length < i + 1
                       "
                       indeterminate
-                      color="primary"
+                      color="greenPrimary"
                       size="20"
                       width="2"
                       class="pr-7"
@@ -187,7 +154,7 @@
                         !isBatch && Object.keys(signedTxObject).length === 0
                       "
                       indeterminate
-                      color="primary"
+                      color="greenPrimary"
                       size="20"
                       width="2"
                       class="pr-7"
@@ -196,7 +163,7 @@
                       v-show="
                         !isBatch && Object.keys(signedTxObject).length !== 0
                       "
-                      color="primary"
+                      color="greenPrimary"
                     >
                       mdi-check
                     </v-icon>
@@ -204,7 +171,7 @@
                       v-show="
                         error === '' && isBatch && signedTxArray.length >= i + 1
                       "
-                      color="primary"
+                      color="greenPrimary"
                     >
                       mdi-check
                     </v-icon>
@@ -222,7 +189,7 @@
                     <v-col
                       cols="12"
                       md="3"
-                      class="d-flex d-sm-block ma-0 searchText--text"
+                      class="d-flex d-sm-block ma-0 greyPrimary--text"
                     >
                       {{ txVal.title }}
                     </v-col>
@@ -239,6 +206,13 @@
               </v-expansion-panel-content>
             </v-expansion-panel>
           </v-expansion-panels>
+          <div v-if="toNonEth" class="pt-4">
+            By clicking 'Proceed with swap', I agree to the
+            <a href="https://changelly.com/aml-kyc" target="_blank">
+              Changelly AML/KYC
+            </a>
+            and <router-link :to="termRoute">Terms of Service</router-link>
+          </div>
         </v-card-text>
       </template>
     </app-modal>
@@ -276,7 +250,10 @@ import ConfirmationMesssage from './components/ConfirmationMessage';
 import ConfirmationSwapTransactionDetails from './components/ConfirmationSwapTransactionDetails';
 import ConfirmationSendTransactionDetails from './components/ConfirmationSendTransactionDetails';
 import ConfirmWithWallet from './components/ConfirmWithWallet';
-import { toChecksumAddress } from '@/core/helpers/addressUtils';
+import CrossChainConfirmation from './components/CrossChainConfirmation';
+
+import SuccessModal from './components/SuccessModal';
+
 import {
   fromWei,
   hexToNumberString,
@@ -285,10 +262,10 @@ import {
   sha3,
   isHex
 } from 'web3-utils';
-import { isEmpty, isArray } from 'lodash';
+import { isEmpty, isArray, cloneDeep } from 'lodash';
 import { mapState, mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
-import { Toast, INFO } from '@/modules/toast/handler/handlerToast';
+import { Toast, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import parseTokenData from './handlers/parseTokenData';
 import { EventBus } from '@/core/plugins/eventBus';
 import { setEvents } from '@/utils/web3-provider/methods/utils';
@@ -296,6 +273,7 @@ import * as locStore from 'store';
 import { sanitizeHex } from '@/modules/access-wallet/common/helpers';
 import dataToAction from './handlers/dataToAction';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { ROUTES_HOME } from '@/core/configs/configRoutes';
 
 export default {
   name: 'ModuleConfirmation',
@@ -305,7 +283,9 @@ export default {
     AppModal,
     ConfirmationSwapTransactionDetails,
     ConfirmationSendTransactionDetails,
-    ConfirmWithWallet
+    ConfirmWithWallet,
+    SuccessModal,
+    CrossChainConfirmation
   },
   mixins: [handlerAnalytics],
   data() {
@@ -314,6 +294,8 @@ export default {
       showSignOverlay: false,
       showSuccessModal: false,
       showSuccessSwap: false,
+      showCrossChainModal: false,
+      toNonEth: false,
       tx: {},
       resolver: () => {},
       title: '',
@@ -330,7 +312,8 @@ export default {
         etherscan: ''
       },
       error: '',
-      panel: []
+      panel: [],
+      termRoute: ROUTES_HOME.TERMS_OF_SERVICE.NAME
     };
   },
   computed: {
@@ -342,7 +325,8 @@ export default {
       'isHardware'
     ]),
     ...mapGetters('external', ['fiatValue']),
-    ...mapGetters('global', ['network']),
+    ...mapGetters('global', ['network', 'getFiatValue']),
+    ...mapGetters('article', ['getArticle']),
     ...mapState('addressBook', ['addressBookStore']),
     txTo() {
       if (!this.isBatch)
@@ -393,9 +377,8 @@ export default {
         const gasPrice = this.tx.gasPrice ? this.tx.gasPrice : '0x';
         return fromWei(hexToNumberString(gasPrice), 'gwei');
       }
-      const batchGasPrice = this.unsignedTxArr.reduce((acc, currentValue) => {
-        return acc.plus(currentValue.gasPrice);
-      }, BigNumber(0));
+
+      const batchGasPrice = this.unsignedTxArr[0].gasPrice;
       return fromWei(hexToNumberString(batchGasPrice), 'gwei');
     },
     gasLimit() {
@@ -419,7 +402,9 @@ export default {
       return fromWei(parsedTxFee);
     },
     txFeeUSD() {
-      return BigNumber(this.txFee).times(this.fiatValue).toFixed(2);
+      return this.getFiatValue(
+        BigNumber(this.txFee).times(this.fiatValue).toFixed(2)
+      );
     },
     value() {
       if (!this.isBatch) {
@@ -444,7 +429,12 @@ export default {
         : !isEmpty(this.signedTxObject);
     },
     isSwap() {
-      return !isEmpty(this.swapInfo);
+      return (
+        !isEmpty(this.swapInfo) ||
+        (!isEmpty(this.tx) &&
+          this.tx.hasOwnProperty('fromTokenType') &&
+          !this.tx.fromTokenType.isEth)
+      );
     },
     isBatch() {
       return this.unsignedTxArr.length > 0;
@@ -468,12 +458,6 @@ export default {
       return this.showSuccessSwap
         ? 'Once completed, the token amount will be deposited to your wallet. This should take a few minutes depending on how congested the Ethereum network is.'
         : 'Once completed, the token amount will be deposited to the address you provided. This should take a few minutes depending on how congested the Ethereum network is.';
-    },
-    /**
-     * Property returns string, depending whether or not this is a swap or send
-     */
-    successLottie() {
-      return this.showSuccessSwap ? 'swap' : 'checkmark';
     }
   },
   watch: {
@@ -484,6 +468,14 @@ export default {
       if (newVal !== '') {
         this.signedTxArray = [];
         this.signedTxObject = {};
+      }
+    },
+    /**
+     * Closes modal then brings it back to the start fetching new address data
+     */
+    address(newVal) {
+      if (newVal) {
+        this.resetSuccess();
       }
     },
     signedTxArray: {
@@ -535,8 +527,9 @@ export default {
       _self.resolver = resolver;
       _self.showTxOverlay = true;
       _self.title = 'Verify Swap';
-      if (!this.isHardware && this.identifier !== WALLET_TYPES.WEB3_WALLET) {
-        await this.signTx();
+      _self.toNonEth = !_self.swapInfo.toTokenType.isEth;
+      if (!_self.isHardware && _self.identifier !== WALLET_TYPES.WEB3_WALLET) {
+        await _self.signTx();
       }
     });
 
@@ -559,7 +552,7 @@ export default {
         _self.showTxOverlay = true;
 
         if (!isHardware && _self.identifier !== WALLET_TYPES.WEB3_WALLET) {
-          this.signBatchTx();
+          _self.signBatchTx();
         }
       }
     );
@@ -585,9 +578,22 @@ export default {
           _self.showSignOverlay = true;
         })
         .catch(e => {
-          this.reset();
+          _self.reset();
           _self.instance.errorHandler(e);
         });
+    });
+    /**
+     * receives an @Object which contains info about the currency and rates
+     * and a resolver which resets the module confirmation
+     */
+    EventBus.$on(EventNames.SHOW_CROSS_CHAIN_MODAL, (txObj, resolver) => {
+      _self.title = `Send ${txObj.fromType}`;
+      _self.tx = txObj;
+      _self.showCrossChainModal = true;
+      _self.resolver = val => {
+        resolver(val);
+        _self.reset();
+      };
     });
   },
   methods: {
@@ -616,6 +622,7 @@ export default {
       this.showTxOverlay = false;
       this.showSignOverlay = false;
       this.showSuccessModal = false;
+      this.showCrossChainModal = false;
       this.tx = {};
       this.resolver = () => {};
       this.title = '';
@@ -702,10 +709,6 @@ export default {
       this.reset();
       this.showSuccess(hash);
     },
-    viewProgress() {
-      EventBus.$emit('openNotifications');
-      this.reset();
-    },
     showSuccess(param) {
       if (isArray(param)) {
         const lastHash = param[param.length - 1].tx.hash;
@@ -778,11 +781,14 @@ export default {
         this.signing = true;
       }
       for (let i = 0; i < this.unsignedTxArr.length; i++) {
+        const objClone = cloneDeep(this.unsignedTxArr[i]);
+        // fixes circular reference for signing
+        delete objClone['handleNotification'];
+        delete objClone['currency'];
+        delete objClone['confirmInfo'];
         try {
           if (!this.isWeb3Wallet) {
-            const _signedTx = await this.instance.signTransaction(
-              this.unsignedTxArr[i]
-            );
+            const _signedTx = await this.instance.signTransaction(objClone);
             if (this.unsignedTxArr[i].hasOwnProperty('handleNotification')) {
               _signedTx.tx['handleNotification'] =
                 this.unsignedTxArr[i].handleNotification;
@@ -792,7 +798,7 @@ export default {
               this.btnAction();
             }
           } else {
-            const event = this.instance.signTransaction(this.unsignedTxArr[i]);
+            const event = this.instance.signTransaction(objClone);
             batchTxEvents.push(event);
             event
               .on('transactionHash', res => {
@@ -837,7 +843,7 @@ export default {
       this.$refs.messageConfirmationContainer.$refs.signatureContent.$refs.input.select();
       document.execCommand('copy');
       window.getSelection().removeAllRanges();
-      Toast(this.$t('common.copied'), {}, INFO);
+      Toast(this.$t('common.copied'), {}, SUCCESS);
       this.reset();
     },
     arrayParser(arr) {
@@ -853,12 +859,17 @@ export default {
           : item.hasOwnProperty('encodeABI')
           ? item.encodeABI()
           : '0x';
+        const symbol = isEmpty(this.sendCurrency)
+          ? this.network.type.currencyName
+          : this.sendCurrency.symbol;
         const value =
           data !== '0x'
             ? !this.isSwap && !this.isBatch
-              ? `${this.value} ${this.sendCurrency.symbol}`
+              ? `${this.value} ${symbol}`
               : `0 ${this.network.type.currencyName}`
-            : `${this.value} ${this.sendCurrency.symbol}`;
+            : `${this.value} ${symbol}`;
+        const from = item.from ? item.from : this.address;
+        const toAdd = item.to ? item.to : this.txTo;
         return [
           {
             title: 'Network',
@@ -870,18 +881,14 @@ export default {
           },
           {
             title: 'From address',
-            value: item.from
-              ? toChecksumAddress(item.from)
-              : toChecksumAddress(this.address)
+            value: from
           },
           {
             title:
               data !== '0x' && !this.isBatch
                 ? 'Via Contract Address'
                 : 'To address',
-            value: item.to
-              ? toChecksumAddress(item.to)
-              : toChecksumAddress(this.txTo)
+            value: toAdd
           },
           {
             title: 'Sending',
@@ -917,7 +924,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-$borderPanels: 1px solid var(--v-selectBorder-base) !important;
+$borderPanels: 1px solid var(--v-greyLight-base) !important;
 .expansion-border {
   border: $borderPanels;
   border-radius: 8px;
@@ -931,8 +938,5 @@ $borderPanels: 1px solid var(--v-selectBorder-base) !important;
 }
 .expansion-panel-border-bottom {
   border-bottom: $borderPanels;
-}
-.lottie {
-  height: 120px;
 }
 </style>

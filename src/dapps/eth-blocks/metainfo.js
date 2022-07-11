@@ -1,8 +1,15 @@
-import { ETH_BLOCKS_ROUTE, blockGuard, myBlocksProps } from './configsRoutes';
+import {
+  ETH_BLOCKS_ROUTE,
+  blockGuard,
+  myBlocksProps,
+  dateSearchGuard
+} from './configsRoutes';
 import layout from './TheEthBlocksLayout';
 import ModuleEthBlocksMyBlocks from './modules/ModuleEthBlocksMyBlocks';
 import ModuleEthBlocksMint from './modules/ModuleEthBlocksMint';
 import ModuleEthBlockInfo from './modules/ModuleEthBlockInfo';
+import ModuleEthBlocksDateSearch from './modules/ModuleEthBlocksDateSearch';
+import ModuleEthBlockBatchMinting from './modules/ModuleEthBlockBatchMinting';
 import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
 export default {
   title: 'ETH Blocks',
@@ -31,12 +38,23 @@ export default {
       props: myBlocksProps
     },
     {
+      path: ETH_BLOCKS_ROUTE.DATE_SEARCH.PATH,
+      name: ETH_BLOCKS_ROUTE.DATE_SEARCH.NAME,
+      component: ModuleEthBlocksDateSearch,
+      beforeEnter: dateSearchGuard
+    },
+    {
       path: ETH_BLOCKS_ROUTE.BLOCK.PATH,
       name: ETH_BLOCKS_ROUTE.BLOCK.NAME,
       props: true,
-
       beforeEnter: blockGuard,
       component: ModuleEthBlockInfo
+    },
+    {
+      path: ETH_BLOCKS_ROUTE.BATCH_MINTING.PATH,
+      name: ETH_BLOCKS_ROUTE.BATCH_MINTING.NAME,
+      props: true,
+      component: ModuleEthBlockBatchMinting
     }
   ]
 };

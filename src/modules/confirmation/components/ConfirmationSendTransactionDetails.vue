@@ -1,5 +1,5 @@
 <template>
-  <v-sheet max-width="600px" class="pa-2">
+  <v-sheet max-width="600px">
     <!--
       =====================================================================================
         Values
@@ -15,15 +15,19 @@
       <template #rightColItem0>
         <div class="mew-body">
           {{ feeFormatted }}
-          <span class="searchText--text">{{ network.type.currencyName }}/</span>
-          ~${{ txFeeUsd }}
+          <span class="greyPrimary--text"
+            >{{ network.type.currencyName }}/</span
+          >
+          ~{{ txFeeUsd }}
         </div>
       </template>
       <template #rightColItem1>
         <div class="mew-body">
           {{ totalFee }}
-          <span class="searchText--text">{{ network.type.currencyName }}/</span>
-          ~${{ totalFeeUSD }}
+          <span class="greyPrimary--text"
+            >{{ network.type.currencyName }}/</span
+          >
+          ~{{ totalFeeUSD }}
         </div>
       </template>
     </confirmation-summary-block>
@@ -31,10 +35,7 @@
 </template>
 
 <script>
-import {
-  formatFiatValue,
-  formatFloatingPointValue
-} from '@/core/helpers/numberFormatHelper';
+import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
 import BigNumber from 'bignumber.js';
 import ConfirmationSummaryBlock from './ConfirmationSummaryBlock';
@@ -84,6 +85,7 @@ export default {
   },
   computed: {
     ...mapGetters('external', ['fiatValue']),
+    ...mapGetters('global', ['getFiatValue']),
     currency() {
       const obj = Object.assign({}, this.sendCurrency);
       if (!obj.hasOwnProperty('amount')) obj['amount'] = this.value;
@@ -107,17 +109,17 @@ export default {
     totalFeeUSD() {
       const ethFeeToUsd = BigNumber(this.txFee).times(this.value);
       if (this.currency.symbol === this.network.type.currencyName) {
-        return formatFiatValue(
+        return this.getFiatValue(
           BigNumber(this.totalFee).times(this.fiatValue).toFixed(2)
-        ).value;
+        );
       }
       const tokenPrice = BigNumber(this.currency.priceRaw).times(this.value);
-      return formatFiatValue(tokenPrice.plus(ethFeeToUsd)).value;
+      return this.getFiatValue(tokenPrice.plus(ethFeeToUsd));
     },
     usdAmount() {
-      return formatFiatValue(
+      return this.getFiatValue(
         BigNumber(this.value).times(this.currency.priceRaw)
-      ).value;
+      );
     },
     summaryItems() {
       return this.isNetworkCurrency

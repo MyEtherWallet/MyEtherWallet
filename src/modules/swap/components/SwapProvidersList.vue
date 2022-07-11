@@ -5,7 +5,10 @@
       Provider Rate Row
     =====================================================================================
     -->
-    <v-item-group v-if="step >= 1 && toTokenSymbol && !hasProviderError">
+    <v-item-group
+      v-if="step >= 1 && toTokenSymbol && !hasProviderError"
+      :value="0"
+    >
       <v-row no-gutters>
         <div v-if="providersList.length > 0" class="mew-heading-3 mb-5 pl-4">
           Select rate
@@ -24,7 +27,7 @@
               ]"
               @click="
                 toggle();
-                setProvider(idx);
+                setProvider(idx, true);
               "
             >
               <v-row no-gutters class="align-center justify-start">
@@ -45,7 +48,7 @@
                       Token Icon
                     =====================================================================================
                     -->
-                      <mew-token-container size="small" :icon="toTokenIcon" />
+                      <mew-token-container size="small" :img="toTokenIcon" />
                       <!--
                       =====================================================================================
                         Rate
@@ -56,7 +59,7 @@
                       >
                         <div
                           v-if="bestRate !== null && bestRate === quote.rate"
-                          class="primary--text font-weight-medium mew-label order-sm-12 pl-sm-2"
+                          class="greenPrimary--text font-weight-medium mew-label order-sm-12 pl-sm-2"
                         >
                           Best Rate
                         </div>
@@ -102,12 +105,14 @@
     -->
     <div
       v-if="step >= 1 && providersCut > 0 && toTokenSymbol && !hasProviderError"
-      class="cursor--pointer user-select--none primary--text mt-7 ml-4"
+      class="cursor--pointer user-select--none greenPrimary--text mt-7 ml-4"
       @click="showMore = !showMore"
     >
       {{ moreProvidersText }}
-      <v-icon v-show="!showMore" small color="primary">mdi-arrow-down</v-icon>
-      <v-icon v-show="showMore" small color="primary">mdi-arrow-up</v-icon>
+      <v-icon v-show="!showMore" small color="greenPrimary"
+        >mdi-arrow-down</v-icon
+      >
+      <v-icon v-show="showMore" small color="greenPrimary">mdi-arrow-up</v-icon>
     </div>
     <!--
     =====================================================================================
@@ -162,6 +167,10 @@ export default {
       default: () => {
         return { subtitle: '' };
       }
+    },
+    selectedProviderId: {
+      type: Number,
+      default: () => undefined
     }
   },
   data() {
@@ -191,7 +200,7 @@ export default {
         : null;
     },
     /**
-     * Property returns quotes to be displaid on the ui
+     * Property returns quotes to be displayed on the ui
      * If more then 3 quotes found: the list will be sliced by max_providers
      * List Fitlers out null and undefined items
      * Used in Providers Rate Row
@@ -253,25 +262,52 @@ export default {
 
           this.$nextTick(() => {
             if (bestRate !== -1) {
-              this.$refs[`card${bestRate}`][0].toggle();
-              this.setProvider(bestRate);
+              const card = this.$refs[`card${bestRate}`][0];
+              if (!card?.isActive) {
+                card.toggle();
+              }
+              this.setProvider(bestRate, this.step === 1);
             }
           });
         }
       },
       immediate: true
+    },
+    selectedProviderId: {
+      handler: function (id) {
+        setTimeout(() => {
+          if (id !== undefined) {
+            const card = this.$refs[`card${id}`][0];
+            if (card.hasOwnProperty('isActive') && !card?.isActive) {
+              card.toggle();
+            }
+          } else {
+            setTimeout(() => {
+              const refs = Object.keys(this.$refs);
+              const cards = refs.filter(c => c.includes('card'));
+              cards.forEach(c => {
+                const card = this.$refs[c][0];
+                if (card?.isActive) {
+                  card.toggle();
+                }
+              });
+            }, 500);
+          }
+        }, 100);
+      }
     }
   }
 };
 </script>
+
 <style lang="scss" scoped>
 .rate-active {
-  border: 1px solid var(--v-primary-base) !important;
-  background-color: var(--v-superPrimary-base) !important;
+  border: 1px solid var(--v-greenPrimary-base) !important;
+  background-color: var(--v-greyLight-base) !important;
 }
 .rate {
   min-height: 60px;
   border-radius: 8px;
-  border: 1px solid var(--v-selectBorder-base);
+  border: 1px solid var(--v-greyLight-base);
 }
 </style>

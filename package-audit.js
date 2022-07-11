@@ -1,13 +1,22 @@
 const exec = require('child_process').exec;
 
 const AUDIT_EXCEPTIONS = [
-  'underscore',
+  'tar',
   'trim-newlines',
   'css-what',
   'normalize-url',
   'diff',
-  'ansi-html', // no patches available
-  'set-value'
+  'shelljs',
+  // no patches available
+  'ansi-html',
+  'minimist',
+  'moment',
+  'axios',
+  'async',
+  'nth-check',
+  'semver-regex',
+  // no package found
+  'codecov'
 ];
 const execute = (command, callback) => {
   exec(

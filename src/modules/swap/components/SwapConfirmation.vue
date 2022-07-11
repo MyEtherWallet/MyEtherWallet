@@ -11,8 +11,8 @@
     :close="backFunc"
   >
     <div class="text-center mb-5">
-      <h2 class="error--text">{{ timeLeftStr }}</h2>
-      <div class="searchText--text font-weight-bold text-uppercase">
+      <h2 class="redPrimary--text">{{ timeLeftStr }}</h2>
+      <div class="textLight--text font-weight-bold text-uppercase">
         Time Remaining
       </div>
     </div>
@@ -130,9 +130,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss">
-.v-application .warning {
-  border-radius: 10px;
-}
-</style>

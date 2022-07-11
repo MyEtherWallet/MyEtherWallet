@@ -11,6 +11,20 @@ export default class NFT {
     this.countPerPage = configs.countPerPage;
     this.currentPage = 1;
   }
+  /**
+   * retrieves all NFTs for account
+   * returns {Object}
+   */
+  async getNfts() {
+    try {
+      return await fetch(
+        `${configs.api}/v3/nfts/account?address=${this.address}`
+      ).then(res => res.json());
+    } catch (e) {
+      throw new Error(e);
+    }
+  }
+
   isValidAddress(hash) {
     return hash !== '' && utils.isAddress(hash);
   }
@@ -26,13 +40,27 @@ export default class NFT {
     } else {
       raw = this.safeTransferFrom(to, token);
     }
-
     raw.from = this.address;
     return this.web3.eth.sendTransaction(raw);
   }
+  /**
+   * Get Gas Fees
+   */
+
+  async getGasFees(to, token) {
+    let raw;
+    this.contract = new this.web3.eth.Contract(ABI);
+    if (token.contract.includes(configs.cryptoKittiesContract)) {
+      raw = this.cryptoKittiesTransfer(to, token);
+    } else {
+      raw = this.safeTransferFrom(to, token);
+    }
+    raw.from = this.address;
+    const gasEst = this.web3.eth.estimateGas(raw);
+    return gasEst;
+  }
 
   safeTransferFrom(to, token) {
-    this.contract.options.address = token.contract;
     return {
       to: token.contract,
       data: this.contract.methods

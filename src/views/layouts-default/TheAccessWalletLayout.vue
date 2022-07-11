@@ -21,14 +21,14 @@
       <div style="max-width: 650px" class="mx-auto">
         <div v-for="btn in buttons" :key="btn.title" class="position--relative">
           <div
-            class="warning--text text--darken-1 mew-label"
+            class="orangePrimary--text mew-label"
             style="position: absolute; top: 15px; right: 25px"
           >
             NOT RECOMMENDED
           </div>
           <mew-button
             has-full-width
-            class="mb-5"
+            :class="btn.class ? `mb-5 ${btn.class}` : 'mb-5'"
             :color-theme="btn.color"
             :btn-style="btn.style === 'outline' ? 'outline' : ''"
             style="height: 160px"
@@ -136,87 +136,14 @@ export default {
         text: 'Create Wallet',
         routeName: 'CreateWallet'
       },
-      buttons: [
-        /* MEW wallet Button */
-        {
-          color: 'white',
-          title: 'MEW wallet',
-          subtitle: 'Connect MEW wallet app to MEW web',
-          note: '',
-          rightIcon: require('@/assets/images/icons/icon-mew-wallet.png'),
-          titleIcon: 'mdi-shield-check',
-          titleIconType: 'mdi',
-          titleIconClass: 'primary',
-          fn: () => {
-            this.openMEWconnect();
-          }
-        },
-        /* Browser Extension */
-        {
-          color: 'white',
-          title: 'Browser Extension',
-          subtitle: 'Use your web3 wallet with MEW.',
-          note: '',
-          rightIcon: require('@/assets/images/icons/icon-mew-cx.png'),
-          titleIcon: 'mdi-shield-check',
-          titleIconType: 'mdi',
-          titleIconClass: 'primary',
-          fn: () => {
-            this.openWeb3Wallet();
-          }
-        },
-        /* Hardware Wallet */
-        {
-          color: 'white',
-          title: 'Hardware Wallets',
-          subtitle: 'Ledger, Trezor, KeepKey, FINNEY, BitBox',
-          note: '',
-          rightIcon: require('@/assets/images/icons/icon-hardware-wallet.png'),
-          titleIcon: 'mdi-shield-check',
-          titleIconType: 'mdi',
-          titleIconClass: 'primary',
-          fn: () => {
-            this.openOverlay(ACCESS_VALID_OVERLAYS.HARDWARE);
-          }
-        },
-        /* Mobile Apps */
-        {
-          color: 'white',
-          title: 'Mobile Apps',
-          subtitle: 'WalletConnect, WalletLink',
-          note: '',
-          rightIcons: [
-            require('@/assets/images/icons/icon-wallet-connect.svg'),
-            require('@/assets/images/icons/icon-wallet-link.png')
-          ],
-          titleIcon: 'mdi-shield-check',
-          titleIconType: 'mdi',
-          titleIconClass: 'primary',
-          fn: () => {
-            this.openOverlay(ACCESS_VALID_OVERLAYS.MOBILE);
-          }
-        },
-        /* Software */
-        {
-          color: 'white',
-          style: 'outline',
-          title: 'Software',
-          subtitle: 'Keystore files, Mnemonic phrase, Private key',
-          note: 'NOT RECOMMENDED',
-          rightIcon: '',
-          titleIcon: 'mdi-alert',
-          titleIconType: 'mdi',
-          titleIconClass: 'warning darken-1',
-          fn: () => {
-            this.openOverlay(ACCESS_VALID_OVERLAYS.SOFTWARE);
-          }
-        }
-      ],
       showBrowser: false
     };
   },
   computed: {
     ...mapState('external', ['path']),
+    ...mapState('global', ['online']),
+    ...mapState('wallet', ['isOfflineApp', 'isOfflineApp']),
+
     /**
      * Used in the creation of a MEWconnect instance
      **/
@@ -241,10 +168,108 @@ export default {
      */
     showMobile() {
       return this.overlay === ACCESS_VALID_OVERLAYS.MOBILE;
+    },
+    /**
+     * Opens up software module overlay. Returns true if overlay prop from route is ACCESS_VALID_OVERLAYS.SOFTWARE
+     * @return - boolean
+     */
+    showOffline() {
+      return this.overlay === ACCESS_VALID_OVERLAYS.SOFTWARE;
+    },
+    buttons() {
+      if (this.online) {
+        return [
+          /* MEW wallet Button */
+          {
+            color: 'white',
+            title: 'MEW wallet',
+            subtitle: 'Connect MEW wallet app to MEW web',
+            note: '',
+            rightIcon: require('@/assets/images/icons/icon-mew-wallet.png'),
+            titleIcon: 'mdi-shield-check',
+            titleIconType: 'mdi',
+            titleIconClass: 'primary',
+            fn: () => {
+              this.openMEWconnect();
+            }
+          },
+          /* Browser Extension */
+          {
+            color: 'white',
+            title: 'Browser Extension',
+            subtitle: 'Use your web3 wallet with MEW.',
+            note: '',
+            rightIcon: require('@/assets/images/icons/icon-mew-cx.png'),
+            titleIcon: 'mdi-shield-check',
+            titleIconType: 'mdi',
+            titleIconClass: 'primary',
+            fn: () => {
+              this.openWeb3Wallet();
+            }
+          },
+          /* Hardware Wallet */
+          {
+            color: 'white',
+            title: 'Hardware Wallets',
+            subtitle: 'Ledger, Trezor, KeepKey, FINNEY, BitBox',
+            note: '',
+            rightIcon: require('@/assets/images/icons/icon-hardware-wallet.png'),
+            titleIcon: 'mdi-shield-check',
+            titleIconType: 'mdi',
+            titleIconClass: 'primary',
+            fn: () => {
+              this.openOverlay(ACCESS_VALID_OVERLAYS.HARDWARE);
+            }
+          },
+          /* Mobile Apps */
+          {
+            color: 'white',
+            title: 'Mobile Apps',
+            subtitle: 'WalletConnect, WalletLink',
+            note: '',
+            rightIcons: [
+              require('@/assets/images/icons/icon-wallet-connect.svg'),
+              require('@/assets/images/icons/icon-wallet-link.png')
+            ],
+            titleIcon: 'mdi-shield-check',
+            titleIconType: 'mdi',
+            titleIconClass: 'primary',
+            fn: () => {
+              this.openOverlay(ACCESS_VALID_OVERLAYS.MOBILE);
+            }
+          },
+          /* Software */
+          {
+            color: 'white',
+            style: 'outline',
+            title: 'Software',
+            subtitle: 'Keystore files, Mnemonic phrase, Private key',
+            note: 'NOT RECOMMENDED',
+            rightIcon: '',
+            titleIcon: 'mdi-alert',
+            titleIconType: 'mdi',
+            titleIconClass: 'warning darken-1',
+            class: 'AccessSoftwareWallet',
+            fn: () => {
+              this.openOverlay(ACCESS_VALID_OVERLAYS.SOFTWARE);
+            }
+          }
+        ];
+      }
+      return [
+        {
+          color: 'white',
+          title: 'Software',
+          subtitle: 'Keystore files, Mnemonic phrase, Private key',
+          fn: () => {
+            this.openOverlay(ACCESS_VALID_OVERLAYS.SOFTWARE);
+          }
+        }
+      ];
     }
   },
   methods: {
-    ...mapActions('wallet', ['setWallet']),
+    ...mapActions('wallet', ['setWallet', 'setOfflineApp']),
     /**
      * Used to set the MEWconnect instance as the wallet
      **/
@@ -268,7 +293,9 @@ export default {
      * Consiquently this will open the correct module overlay.
      * @type - must be one of the VALID_OVERLAYS
      */
-    openOverlay(type) {
+    openOverlay(type, offline) {
+      this.setOfflineApp(offline);
+
       try {
         this.$router.push({
           name: ROUTES_HOME.ACCESS_WALLET.NAME,
@@ -288,7 +315,7 @@ export default {
         const web3 = new Web3(window.ethereum);
         try {
           await window.ethereum.enable();
-          const acc = await web3.eth.getAccounts();
+          const acc = await web3.eth.requestAccounts();
           const wallet = new Web3Wallet(acc[0]);
           this.setWallet([wallet, window.ethereum]);
           this.trackAccessWallet(WALLET_TYPES.WEB3_WALLET);
@@ -298,7 +325,7 @@ export default {
             this.$router.push({ name: ROUTES_WALLET.WALLETS.NAME });
           }
         } catch (e) {
-          Toast(e.message, {}, WARNING);
+          Toast(e, {}, WARNING);
         }
       } else {
         Toast('No web3 wallet found!', {}, WARNING);

@@ -8,6 +8,9 @@ import ErrorList from '../errors';
 import Web3Contract from 'web3-eth-contract';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import hasValidDecimals from '@/core/helpers/hasValidDecimals.js';
+import { isNull } from 'lodash';
+import BigNumber from 'bignumber.js';
+import { toBNSafe } from '@/core/helpers/numberFormatHelper';
 
 class SendTransaction {
   constructor() {
@@ -53,8 +56,9 @@ class SendTransaction {
     this.localGasPrice = toHex(toBN(gasPrice));
   }
   setValue(_value) {
-    const _valueBN = toBN(_value);
-    if (!_valueBN.ltn(0)) this.TX.destinationValue = toHex(_valueBN);
+    if (isNaN(_value) || isNull(_value)) _value = 0;
+    const _valueBN = new BigNumber(_value);
+    if (!_valueBN.lt(0)) this.TX.destinationValue = toHex(_valueBN.toFixed());
     else throw ErrorList.NEGATIVE_VALUE;
   }
   _setValue() {
@@ -84,7 +88,7 @@ class SendTransaction {
     }
     const gasPriceBN = toBN(this.localGasPrice);
     const fee = gasPriceBN.mul(toBN(this.TX.gas));
-    return this.balance().gt(this.balance().sub(fee)) > 0
+    return this.balance().gt(this.balance().sub(fee))
       ? this.balance().sub(fee)
       : 0;
   }
@@ -92,7 +96,7 @@ class SendTransaction {
     return toBN(this.localGasPrice).mul(toBN(this.TX.gas));
   }
   estimateGas() {
-    this.setFrom(this.address());
+    if (this.address()) this.setFrom(this.address());
     this._setTo();
     this._setValue();
     this._setGasPrice();
@@ -109,7 +113,7 @@ class SendTransaction {
   hasEnoughBalance() {
     const amount = toBN(this.TX.destinationValue);
     if (this.isToken() && this.currency.balance) {
-      const hasAmountToken = amount.lte(toBN(this.currency.balance));
+      const hasAmountToken = amount.lte(toBNSafe(this.currency.balance));
       const hasGas = this.txFee().lte(this.balance());
       return hasAmountToken && hasGas;
     }

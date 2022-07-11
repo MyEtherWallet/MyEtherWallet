@@ -29,7 +29,8 @@ const state = {
   },
   showedBanner: false,
   showWalletPromo: true,
-  showSurvey: true
+  promoOver: false,
+  testing: false
 };
 state.currentNetwork.type = {
   name: state.currentNetwork.type.name

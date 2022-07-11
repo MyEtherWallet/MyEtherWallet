@@ -1,8 +1,8 @@
 <template>
   <v-container class="mew-component--partners py-7 py-md-12 mb-6">
     <v-sheet color="transparent" align="center">
-      <div class="mew-heading-3 text-uppercase textPrimary--text mb-1">
-        Partners
+      <div class="mew-heading-3 text-uppercase textMedium--text mb-1">
+        {{ $t('aboutUs.partners') }}
       </div>
     </v-sheet>
     <v-row class="mt-2 px-4" align="center">

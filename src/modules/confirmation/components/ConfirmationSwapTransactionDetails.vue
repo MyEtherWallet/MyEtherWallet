@@ -11,15 +11,43 @@
         Summary
       =====================================================================================
     -->
-    <confirmation-summary-block :items="summaryItems">
+    <confirmation-summary-block
+      v-if="summaryItems.length == 2"
+      :items="summaryItems"
+    >
       <template #rightColItem0>
+        <div class="mew-body">
+          1 <span class="greyPrimary--text">{{ fromType }}</span> =
+          {{ formattedRate }}
+          <span class="greyPrimary--text">{{ toType }}</span>
+        </div>
+      </template>
+      <template #rightColItem1>
+        <div class="mew-body">
+          {{ convertedFees.value }}
+          <span class="greyPrimary--text">{{ network.type.currencyName }}</span>
+          ~{{ txFeeUSD }}
+        </div>
+      </template>
+    </confirmation-summary-block>
+    <confirmation-summary-block
+      v-if="summaryItems.length == 3"
+      :items="summaryItems"
+    >
+      <template #rightColItem0>
+        <div class="mew-body d-flex justify-end">
+          <mew-blockie :address="toAddress" width="20px" height="20px" />
+          <span class="searchText--text ml-2">{{ toAddress }}</span>
+        </div>
+      </template>
+      <template #rightColItem1>
         <div class="mew-body">
           1 <span class="searchText--text">{{ fromType }}</span> =
           {{ formattedRate }}
           <span class="searchText--text">{{ toType }}</span>
         </div>
       </template>
-      <template #rightColItem1>
+      <template #rightColItem2>
         <div class="mew-body">
           {{ convertedFees.value }}
           <span class="searchText--text">{{ convertedFees.unit }}</span>
@@ -32,7 +60,6 @@
 
 <script>
 import {
-  formatFiatValue,
   formatFloatingPointValue,
   formatGasValue
 } from '@/core/helpers/numberFormatHelper';
@@ -94,19 +121,36 @@ export default {
     txFee: {
       type: String,
       default: '0'
+    },
+    isToNonEth: {
+      type: Boolean,
+      default: false
+    },
+    toCurrency: {
+      type: String,
+      default: 'ETH'
+    },
+    toAddress: {
+      type: String,
+      default: ''
     }
   },
   computed: {
     ...mapGetters('external', ['fiatValue']),
+    ...mapGetters('global', ['network', 'getFiatValue']),
     convertedFees() {
       return formatGasValue(this.txFee);
     },
     txFeeUSD() {
       const feeETH = BigNumber(fromWei(this.txFee));
-      return `$ ${formatFiatValue(feeETH.times(this.fiatValue)).value}`;
+      return this.getFiatValue(feeETH.times(this.fiatValue));
     },
     summaryItems() {
-      return ['Exchange rate', 'Transaction fee'];
+      const newArr = ['Exchange rate', 'Transaction fee'];
+      if (this.isToNonEth) {
+        newArr.unshift(`Receive ${this.toCurrency} to`);
+      }
+      return newArr;
     },
     formattedToVal() {
       return formatFloatingPointValue(this.toVal).value;
@@ -135,7 +179,7 @@ export default {
           type: this.toType,
           address: this.to,
           amount: formatFloatingPointValue(this.toVal).value,
-          usd: formatFiatValue(this.toUsd).value
+          usd: this.getFiatValue(this.toUsd)
         }
       ];
     }

@@ -23,7 +23,7 @@
     ===================================================
     -->
       <div v-if="step === 1" class="full-width">
-        <div class="mew-heading-3 mb-4 titlePrimary--text">
+        <div class="mew-heading-3 mb-4 textDark--text">
           What is the token contract address?
         </div>
         <mew-input
@@ -62,11 +62,11 @@
     -->
           <v-col
             cols="2"
-            class="ml-5 captionPrimary--text mew-body font-weight-bold"
+            class="ml-5 textLight--text mew-body font-weight-bold"
           >
             {{ tkn.name }}
           </v-col>
-          <v-col cols="8" class="titlePrimary--text ml-2"
+          <v-col cols="8" class="textDark--text ml-2"
             ><!--
     ===================================================
     displays all token values if it is there except for icon and contract address
@@ -149,10 +149,7 @@ import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 import { isAddress } from '@/core/helpers/addressUtils';
 import { debounce } from 'lodash';
 import BigNumber from 'bignumber.js';
-import {
-  formatFloatingPointValue,
-  formatFiatValue
-} from '@/core/helpers/numberFormatHelper';
+import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 
 export default {
   props: {
@@ -182,6 +179,7 @@ export default {
     ...mapGetters('wallet', ['tokensList']),
     ...mapGetters('external', ['contractToToken']),
     ...mapGetters('custom', ['customTokens']),
+    ...mapGetters('global', ['getFiatValue']),
     /**
      * @returns token data to display on form
      */
@@ -400,9 +398,9 @@ export default {
             .div(denominator)
             .times(this.token.price)
             .toString();
-          this.token.usdBalancef = formatFiatValue(this.token.usdBalance).value
-            ? formatFiatValue(this.token.usdBalance).value
-            : formatFiatValue(0);
+          this.token.usdBalancef = this.getFiatValue(this.token.usdBalance)
+            ? this.getFiatValue(this.token.usdBalance)
+            : this.getFiatValue(0);
         } else {
           this.token.name = await contract.methods.name().call();
           this.token.symbol = await contract.methods.symbol().call();
@@ -438,8 +436,8 @@ export default {
 </script>
 <style lang="scss" scoped>
 .token-placeholder {
-  color: var(--v-textBlack2-base);
-  background-color: var(--v-disabled-base);
+  color: var(--v-textMedium-base);
+  background-color: var(--v-disabledMedium-base);
   border-radius: 24px;
   height: 24px;
   width: 24px;

@@ -8,6 +8,7 @@
     -->
     <mew-input
       v-model="privateKey"
+      class="PrivateKeyInput"
       label="Private Key"
       placeholder="Enter your Private Key"
       :rules="privKeyRulles"
@@ -23,11 +24,12 @@
         v-model="acceptTerms"
         label="To access my wallet, I accept "
         :link="link"
-        class="justify-center"
+        class="justify-center PrivateKeyTerms"
       />
       <v-row dense class="align-center justify-center pt-4">
         <v-col cols="12" sm="4">
           <mew-button
+            class="PrivateKeyAccess"
             has-full-width
             title="Access Wallet"
             btn-size="xlarge"
@@ -47,6 +49,7 @@ import {
   getBufferFromHex,
   sanitizeHex
 } from '../../../access-wallet/common/helpers';
+import { isString } from 'lodash';
 export default {
   name: 'AccessWalletPrivateKey',
   props: {
@@ -91,6 +94,7 @@ export default {
      * @returns actual private without '0x' prefix
      */
     actualPrivateKey() {
+      if (!isString(this.privateKey)) return '';
       return this.privateKey && this.privateKey.substr(0, 2) === '0x'
         ? this.privateKey.replace('0x', '')
         : this.privateKey;

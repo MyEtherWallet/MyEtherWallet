@@ -78,7 +78,7 @@ const accessRouteGuard = (to, from, next) => {
       if (validTypes.includes(to.query.type)) {
         next();
       } else {
-        next('*');
+        next('wallet/access/hardware?type=overview'); //redirects to overlay pop up on invalid url type "/wallet/access/hardware"
       }
     }
     if (to.params.overlay === ACCESS_VALID_OVERLAYS.MOBILE) {
@@ -128,28 +128,6 @@ const swapRouterGuard = (to, from, next) => {
   }
 };
 
-const ensRouterGuard = (to, from, next) => {
-  if (
-    // ENS MANAGER => ENS 1
-    from.name == ROUTES_WALLET.ENS_MANAGER.NAME &&
-    to.name == ROUTES_WALLET.ENS_1.NAME
-  ) {
-    next();
-  } else if (
-    // ENS 1 => ENS 2
-    from.name == ROUTES_WALLET.ENS_1.NAME &&
-    to.name == ROUTES_WALLET.ENS_2.NAME
-  ) {
-    next();
-  } else if (
-    // ENS 2 => ENS 3
-    from.name == ROUTES_WALLET.ENS_2.NAME &&
-    to.name == ROUTES_WALLET.ENS_3.NAME
-  ) {
-    next();
-  }
-};
-
 const stakedRouterGuard = (to, from, next) => {
   if (
     // STAKED => STAKED 1
@@ -186,6 +164,5 @@ export {
   ACCESS_VALID_OVERLAYS,
   swapProps,
   swapRouterGuard,
-  ensRouterGuard,
   stakedRouterGuard
 };

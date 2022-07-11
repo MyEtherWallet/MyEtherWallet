@@ -20,6 +20,7 @@
 <script>
 import { mapState, mapGetters } from 'vuex';
 import formatNotification from '@/modules/notifications/helpers/formatNotification';
+import formatNonChainNotification from '@/modules/notifications/helpers/formatNonChainNotification';
 
 export default {
   name: 'ModuleTransferHistory',
@@ -40,14 +41,20 @@ export default {
     parsedTxNotifications() {
       return this.txNotifications
         .map(item => {
-          return formatNotification(item, this.network);
+          if (item.hasOwnProperty('hash')) {
+            return formatNotification(item, this.network);
+          }
+          return formatNonChainNotification(item);
         })
         .sort(this.sortByDate);
     },
     parsedSwapNotifications() {
       return this.swapNotifications
         .map(item => {
-          return formatNotification(item, this.network);
+          if (item.hasOwnProperty('hash')) {
+            return formatNotification(item, this.network);
+          }
+          return formatNonChainNotification(item);
         })
         .sort(this.sortByDate);
     },

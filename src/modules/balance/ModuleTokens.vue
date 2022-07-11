@@ -4,7 +4,7 @@
   Module Tokens
   =============================================================
   -->
-  <div>
+  <div class="module-tokens">
     <v-skeleton-loader
       v-if="loading && tokensData"
       class="mx-auto"
@@ -14,21 +14,19 @@
       v-if="!loading && tokensData.length > 0 && !dense"
       subtitle="My Tokens Value"
       :has-body-padding="false"
-      :title="`$ ${totalTokensValue}`"
-      :icon="require('@/assets/images/icons/icon-token-grey.png')"
-      icon-align="left"
+      :title="totalTokensValue"
     >
       <template #rightHeaderContainer>
         <div>
           <span
             v-if="!hasCustom"
-            class="primary--text cursor-pointer pl-3"
+            class="greenPrimary--text cursor-pointer pl-3"
             @click="toggleAddCustomToken"
             >+ Custom Token</span
           >
           <mew-menu
             v-else
-            activator-text-color="primary--text"
+            activator-text-color="greenPrimary--text"
             :list-obj="menuObj"
             @goToPage="customTokenAction"
           />
@@ -85,9 +83,9 @@ import { mapGetters, mapState } from 'vuex';
 import BalanceEmptyBlock from './components/BalanceEmptyBlock';
 import TokenAddCustom from './components/TokenAddCustom';
 import TokenDeleteCustom from './components/TokenDeleteCustom';
-import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
-const _ = require('lodash');
+import { uniqWith, isEqual } from 'lodash';
+import { currencyToNumber } from '@/core/helpers/localization';
 export default {
   components: {
     BalanceEmptyBlock,
@@ -167,7 +165,12 @@ export default {
     ...mapGetters('wallet', ['tokensList', 'web3']),
     ...mapState('wallet', ['web3', 'loadingWalletInfo']),
     ...mapGetters('custom', ['customTokens', 'hasCustom']),
-    ...mapGetters('global', ['isEthNetwork', 'network', 'hasSwap']),
+    ...mapGetters('global', [
+      'isEthNetwork',
+      'network',
+      'hasSwap',
+      'getFiatValue'
+    ]),
     ...mapGetters('external', ['totalTokenFiatValue']),
     loading() {
       return this.loadingWalletInfo;
@@ -182,7 +185,7 @@ export default {
       const customTokens = this.customTokens.map(item => {
         return this.formatValues(item);
       });
-      const uniqueTokens = _.uniqWith(this.tokensList, _.isEqual);
+      const uniqueTokens = uniqWith(this.tokensList, isEqual);
       const tokenList = uniqueTokens.map(item => {
         return this.formatValues(item);
       });
@@ -191,7 +194,7 @@ export default {
       return tokens;
     },
     totalTokensValue() {
-      return formatFiatValue(this.totalTokenFiatValue).value;
+      return this.getFiatValue(this.totalTokenFiatValue);
     }
   },
   methods: {
@@ -204,7 +207,7 @@ export default {
         item.balancef
           ? item.balancef + ' ' + item.symbol
           : '0' + ' ' + item.symbol,
-        '$' + item.usdBalancef ? item.usdBalancef : '0'
+        item.usdBalancef ? this.getFiatValue(item.usdBalancef) : '0'
       ];
       newObj.usdBalance = item.usdBalance ? item.usdBalance : '0';
       newObj.token = item.symbol;
@@ -215,13 +218,23 @@ export default {
           ? item.price_change_percentage_24hf.replaceAll('%', '')
           : '';
       newObj.status = item.price_change_percentage_24h > 0 ? '+' : '-';
+      const priceUF = currencyToNumber(item.pricef);
       newObj.price =
-        item.pricef && item.pricef !== '0' ? '$' + item.pricef : '';
-      newObj.tokenImg = item.img ? item.img : this.network.type.icon;
+        item.pricef && priceUF.toString() !== '0'
+          ? this.getFiatValue(item.pricef)
+          : '';
+
+      // Use eth.svg icon for ETH
+      if (item.symbol == 'ETH') {
+        newObj.tokenImg = require('@/assets/images/networks/eth.svg');
+      } else {
+        newObj.tokenImg = item.img ? item.img : this.network.type.icon;
+      }
+
       if (this.hasSwap) {
         newObj.callToAction = [
           {
-            title: 'Trade',
+            title: 'Swap',
             method: () => {
               const obj = {
                 fromToken: item.contract,
@@ -237,7 +250,7 @@ export default {
                 });
             },
             btnStyle: 'outline',
-            colorTheme: 'primary'
+            colorTheme: 'greenPrimary'
           }
         ];
       }
@@ -259,3 +272,12 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+.module-tokens {
+  .mew-table td.text-start:nth-last-of-type(2) div span:first-child {
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+}
+</style>

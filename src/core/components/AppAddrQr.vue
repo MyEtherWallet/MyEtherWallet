@@ -14,10 +14,9 @@
       Subtext
     =====================================================================================
     -->
-    <div class="textPrimary--text mb-8">
-      {{ $t('interface.qr.desc') }}
+    <div class="textDark--text mb-8">
+      {{ $t('interface.qr.desc', { network: getNetwork() }) }}
     </div>
-
     <!--
     =====================================================================================
       Identicon and acount
@@ -47,7 +46,9 @@
           <qr-code :data="address" :height="132" :width="132" />
         </div>
         <div class="pl-3">
-          <div class="d-block monospace titlePrimary-text container-qr--addr">
+          <div
+            class="d-block monospace textDark-text container-qr--addr BalanceCardAddress"
+          >
             {{ getChecksumAddressString }}
           </div>
           <div
@@ -62,17 +63,16 @@
     </div>
   </div>
 </template>
-
 <script>
 import anime from 'animejs/lib/anime.es.js';
 import clipboardCopy from 'clipboard-copy';
-import { Toast, INFO } from '@/modules/toast/handler/handlerToast';
-import { mapState } from 'vuex';
+import { Toast, SUCCESS } from '@/modules/toast/handler/handlerToast';
+import { mapState, mapGetters } from 'vuex';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
-
 export default {
   computed: {
     ...mapState('wallet', ['address']),
+    ...mapGetters('global', ['network']),
     getChecksumAddressString() {
       return toChecksumAddress(this.address);
     }
@@ -80,7 +80,10 @@ export default {
   methods: {
     copyAddress() {
       clipboardCopy(this.address);
-      Toast(`Copied ${this.address} successfully!`, {}, INFO);
+      Toast(`Copied ${this.address} successfully!`, {}, SUCCESS);
+    },
+    getNetwork() {
+      return this.network ? this.network.type.currencyName : 'ETH';
     },
     animateMewCard() {
       const el = document.querySelector('.mew-card');

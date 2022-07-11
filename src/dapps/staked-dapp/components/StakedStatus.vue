@@ -48,7 +48,7 @@
     -->
           <div
             :class="[
-              'rounded-t-lg header-container tableHeader pa-5 full-width d-flex flex-row align-center justify-space-between',
+              'rounded-t-lg header-container greyLight pa-5 full-width d-flex flex-row align-center justify-space-between',
               isExpanded(idx) ? 'rounded-t-lg' : 'rounded-lg'
             ]"
             @click="expand(idx)"
@@ -59,8 +59,8 @@
                 <div class="mew-heading-3">
                   {{ pending.amount }} <span class="mew-caption">ETH</span>
                 </div>
-                <div class="textPrimary--text mt-1">
-                  {{ '$' + pending.amountFiat }}
+                <div class="textMedium--text mt-1">
+                  {{ pending.amountFiat }}
                 </div>
               </div>
             </div>
@@ -68,10 +68,10 @@
               <v-progress-circular
                 size="18"
                 width="2"
-                color="primary"
+                color="greenPrimary"
                 indeterminate
               />
-              <v-icon class="ml-5" color="searchText" size="22">{{
+              <v-icon class="ml-5" color="greyPrimary" size="22">{{
                 isExpanded(idx) ? 'mdi-chevron-up' : 'mdi-chevron-down'
               }}</v-icon>
             </div>
@@ -99,7 +99,7 @@
                 class="ml-4"
                 size="18"
                 width="2"
-                color="primary"
+                color="greenPrimary"
                 indeterminate
               />
               <span class="ml-2">{{
@@ -118,7 +118,7 @@
               "
               class="d-flex"
             >
-              <v-icon size="20" color="primary">mdi-check-circle</v-icon>
+              <v-icon size="20" color="greenPrimary">mdi-check-circle</v-icon>
               <span class="ml-2">Deposited</span>
             </div>
             <!--
@@ -130,7 +130,7 @@
               v-if="pending.status.toLowerCase() === STATUS_TYPES.FAILED"
               class="d-flex align-center"
             >
-              <v-icon size="20" color="error">mdi-close-circle</v-icon>
+              <v-icon size="20" color="redPrimary">mdi-close-circle</v-icon>
               <span class="ml-2">Failed</span>
             </div>
             <!--
@@ -146,7 +146,9 @@
                 :href="pending.etherscanUrl"
                 target="_blank"
                 >View on Etherscan
-                <v-icon color="primary" size="14">mdi-open-in-new</v-icon></a
+                <v-icon color="greenPrimary" size="14"
+                  >mdi-open-in-new</v-icon
+                ></a
               >
               <a
                 v-if="pending.ethVmUrl && !onGoerli"
@@ -155,7 +157,9 @@
                 :href="pending.ethVmUrl"
                 target="_blank"
                 >View on EthVM
-                <v-icon color="primary" size="14">mdi-open-in-new</v-icon></a
+                <v-icon color="greenPrimary" size="14"
+                  >mdi-open-in-new</v-icon
+                ></a
               >
             </div>
             <!--
@@ -174,13 +178,12 @@
                 <v-progress-circular
                   size="18"
                   width="2"
-                  color="primary"
+                  color="greenPrimary"
                   indeterminate
                 />
                 <span class="ml-2">Waiting for validator activation</span>
               </div>
-              <span
-                class="mew-label font-weight-medium captionPrimary--text mt-1"
+              <span class="mew-label font-weight-medium textLight--text mt-1"
                 >Estimated wait time: {{ pending.estimatedWaitTime }}
               </span>
               <a
@@ -190,7 +193,9 @@
                 :href="pending.url"
                 target="_blank"
                 >Eth2 Beacon Chain transactions
-                <v-icon color="primary" size="14">mdi-open-in-new</v-icon></a
+                <v-icon color="greenPrimary" size="14"
+                  >mdi-open-in-new</v-icon
+                ></a
               >
             </div>
           </div>
@@ -215,11 +220,13 @@
                 {{ active.totalBalanceETH + ' ETH' }}
               </div>
               <div class="font-weight-medium mt-1">
-                {{ '$' + active.totalBalanceFiat }}
+                {{ active.totalBalanceFiat }}
               </div>
-              <div class="textPrimary--text mt-2">
+              <div class="textLight--text mt-2">
                 Earned
-                <span class="primary--text">{{ active.earned + ' ETH' }}</span>
+                <span class="greenPrimary--text">{{
+                  active.earned + ' ETH'
+                }}</span>
                 · Average APR {{ active.averageApr }}
               </div>
             </div>
@@ -230,7 +237,7 @@
             :href="active.url"
             target="_blank"
             >View Eth2 address
-            <v-icon color="primary" size="14">mdi-open-in-new</v-icon></a
+            <v-icon color="greenPrimary" size="14">mdi-open-in-new</v-icon></a
           >
         </div>
       </div>
@@ -245,7 +252,6 @@ import iconETHNavy from '@/assets/images/currencies/eth-dark-navy.svg';
 import BigNumber from 'bignumber.js';
 import {
   formatFloatingPointValue,
-  formatFiatValue,
   formatPercentageValue
 } from '@/core/helpers/numberFormatHelper';
 import moment from 'moment';
@@ -284,8 +290,10 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['address']),
+    ...mapState('global', ['preferredCurrency']),
+    ...mapState('external', ['currencyRate']),
     ...mapGetters('external', ['fiatValue']),
-    ...mapGetters('global', ['network']),
+    ...mapGetters('global', ['network', 'getFiatValue']),
     /**
      * @returns array
      * Returns all the raw objects in all the validators
@@ -305,31 +313,30 @@ export default {
      * includes status: ACTIVE, EXITED
      */
     activeValidators() {
-      return this.validatorsRaw
-        .filter(raw => {
-          return (
-            raw.status.toLowerCase() === STATUS_TYPES.ACTIVE ||
-            raw.status.toLowerCase() === STATUS_TYPES.EXITED
-          );
-        })
-        .map(raw => {
+      return this.validatorsRaw.reduce((acc, raw) => {
+        if (
+          raw.status.toLowerCase() === STATUS_TYPES.ACTIVE ||
+          raw.status.toLowerCase() === STATUS_TYPES.EXITED
+        ) {
           const totalBalanceETH = this.convertToEth1(raw.balance);
           const earning = new BigNumber(totalBalanceETH).minus(raw.amount);
-          return {
+          acc.push({
             url:
               configNetworkTypes.network[this.network.type.name].url +
               '0x' +
               raw.address,
             earned: formatFloatingPointValue(earning).value,
             totalBalanceETH: formatFloatingPointValue(totalBalanceETH).value,
-            totalBalanceFiat: formatFiatValue(
+            totalBalanceFiat: this.getFiatValue(
               new BigNumber(totalBalanceETH).times(this.fiatValue)
-            ).value,
+            ),
             averageApr: formatPercentageValue(
               this.getAverageApr(raw.activation_timestamp, earning, raw.amount)
             ).value
-          };
-        });
+          });
+        }
+        return acc;
+      }, []);
     },
     /**
      * @returns array
@@ -337,24 +344,21 @@ export default {
      * includes status: DEPOSITED, PENDING, FAILED, CREATED
      */
     pendingValidators() {
-      return this.validatorsRaw
-        .filter(raw => {
-          const nextDay = 60 * 60 * 24 * 1000;
-          const createdDate = new Date(raw.created).getTime() + nextDay;
-          const withinTheDay = new Date().getTime() <= createdDate;
-          return (
-            raw.status.toLowerCase() === STATUS_TYPES.DEPOSITED ||
-            raw.status.toLowerCase() === STATUS_TYPES.PENDING ||
-            raw.status.toLowerCase() === STATUS_TYPES.FAILED ||
-            (raw.status.toLowerCase() === STATUS_TYPES.CREATED && withinTheDay)
-          );
-        })
-        .map(raw => {
-          return {
+      return this.validatorsRaw.reduce((acc, raw) => {
+        const nextDay = 60 * 60 * 24 * 1000;
+        const createdDate = new Date(raw.created).getTime() + nextDay;
+        const withinTheDay = new Date().getTime() <= createdDate;
+        if (
+          raw.status.toLowerCase() === STATUS_TYPES.DEPOSITED ||
+          raw.status.toLowerCase() === STATUS_TYPES.PENDING ||
+          raw.status.toLowerCase() === STATUS_TYPES.FAILED ||
+          (raw.status.toLowerCase() === STATUS_TYPES.CREATED && withinTheDay)
+        ) {
+          acc.push({
             amount: formatFloatingPointValue(raw.amount).value,
-            amountFiat: formatFiatValue(
+            amountFiat: this.getFiatValue(
               new BigNumber(raw.amount).times(this.fiatValue)
-            ).value,
+            ),
             status: raw.status,
             ethVmUrl:
               configNetworkTypes.network[this.network.type.name].ethvmAddrUrl +
@@ -373,8 +377,10 @@ export default {
                     raw.queue.estimated_activation_timestamp
                   )
                 : '~'
-          };
-        });
+          });
+        }
+        return acc;
+      }, []);
     },
     /**
      * @returns array
@@ -386,9 +392,9 @@ export default {
         return [
           {
             amount: formatFloatingPointValue(this.amount).value,
-            amountFiat: formatFiatValue(
+            amountFiat: this.getFiatValue(
               new BigNumber(this.amount).times(this.fiatValue)
-            ).value,
+            ),
             justStaked: true,
             status: STATUS_TYPES.CREATED,
             ethVmUrl: this.pendingHash
@@ -478,6 +484,6 @@ export default {
   max-width: 500px;
 }
 .border-container {
-  border: 1px solid var(--v-selectBorder-base);
+  border: 1px solid var(--v-greyLight-base);
 }
 </style>

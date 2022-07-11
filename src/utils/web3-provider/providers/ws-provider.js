@@ -1,13 +1,13 @@
 import Web3WSProvider from './ws-web3-provider';
 import { Manager as Web3RequestManager } from 'web3-core-requestmanager';
 import MiddleWare from '../middleware';
-import workerTimer from '@/core/helpers/webWorkerTimer.js';
 import { EventBus } from '@/core/plugins/eventBus';
 import VuexStore from '@/core/store';
 import { Toast, SENTRY } from '@/modules/toast/handler/handlerToast';
 import { v4 as uuidv4 } from 'uuid';
 import {
   ethSendTransaction,
+  ethSendRawTransaction,
   ethSignTransaction,
   ethSign,
   ethAccounts,
@@ -22,35 +22,6 @@ class WSProvider {
     this.oWSProvider = new Web3WSProvider(host, options);
     this.lastMessage = new Date().getTime();
     this.connectionRetries = 0;
-    const keepAlive = () => {
-      if (
-        this.wsProvider.connection.readyState == this.wsProvider.connection.OPEN
-      ) {
-        this.wsProvider.connection.send('');
-      }
-      if (
-        this.oWSProvider.connection.readyState ==
-        this.oWSProvider.connection.OPEN
-      ) {
-        this.oWSProvider.connection.send('');
-      }
-      if (
-        this.wsProvider.connectionId !==
-        VuexStore.state.wallet.web3.currentProvider.connectionId
-      ) {
-        if (this.wsProvider?.disconnect) {
-          this.wsProvider.disconnect();
-        }
-        if (this.oWSProvider?.disconnect) {
-          this.oWSProvider.disconnect();
-        }
-        workerTimer.clearInterval(this.keepAliveTimer);
-      }
-    };
-    this.wsProvider.connectionId = `${new Date().getTime()}${Math.floor(
-      Math.random() * 1000
-    )}`;
-    this.keepAliveTimer = workerTimer.setInterval(keepAlive, 5000);
     delete this.wsProvider['send'];
     this.wsProvider.send = (payload, callback) => {
       this.lastMessage = new Date().getTime();
@@ -84,10 +55,13 @@ class WSProvider {
             this.oWSProvider.connection.CONNECTING
         ) {
           this.connectionRetries++;
-          this.oWSProvider.connection = new Web3WSProvider(
-            host,
-            options
-          ).connection;
+          const tempConn = new Web3WSProvider(host, options);
+          delete tempConn['send'];
+          Object.assign(this.oWSProvider, tempConn);
+          setTimeout(() => {
+            this.wsProvider.send(payload, callback);
+          }, 1000);
+          return;
         }
       }
       if (
@@ -106,6 +80,7 @@ class WSProvider {
       };
       const middleware = new MiddleWare();
       middleware.use(ethSendTransaction);
+      middleware.use(ethSendRawTransaction);
       middleware.use(ethSignTransaction);
       middleware.use(ethSign);
       middleware.use(ethAccounts);
@@ -117,6 +92,7 @@ class WSProvider {
         this.wsProvider._addResponseCallback(payload, callback);
       });
     };
+
     this.wsProvider.request = payload => {
       return new Promise((resolve, reject) => {
         this.wsProvider.send(

@@ -4,9 +4,12 @@ import { EventBus } from '@/core/plugins/eventBus';
 import VuexStore from '@/core/store';
 import {
   ethSendTransaction,
+  ethSendRawTransaction,
   ethSign,
   ethSignTransaction,
-  ethGetTransactionCount
+  ethGetTransactionCount,
+  ethCoinbase,
+  ethAccounts
 } from '../methods';
 class CustomRequestManager extends Web3RequestManager {
   constructor(host) {
@@ -67,9 +70,12 @@ class GivenProvider {
         };
         const middleware = new MiddleWare();
         middleware.use(ethSendTransaction);
+        middleware.use(ethSendRawTransaction);
         middleware.use(ethSignTransaction);
         middleware.use(ethGetTransactionCount);
         middleware.use(ethSign);
+        middleware.use(ethCoinbase);
+        middleware.use(ethAccounts);
         middleware.run(req, callback).then(() => {
           if (this.givenProvider.request_) {
             this.givenProvider.request_(payload).then(resolve).catch(reject);

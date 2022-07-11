@@ -88,11 +88,17 @@
                     class="mr-2"
                   />
                   <v-col cols="9" class="d-none d-sm-flex flex-column">
-                    <span v-if="acc.nickname" class="font-weight-bold">{{
-                      acc.nickname
-                    }}</span>
-                    <mew-transform-hash :hash="acc.address" />
-                    <span v-if="acc.ensName">{{ acc.ensName }}</span>
+                    <a
+                      :href="getExplorerLink(acc.address)"
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
+                      <span v-if="acc.nickname" class="font-weight-bold">{{
+                        acc.nickname
+                      }}</span>
+                      <mew-transform-hash :hash="acc.address" />
+                      <span v-if="acc.ensName">{{ acc.ensName }}</span>
+                    </a>
                   </v-col>
                   <p class="d-block d-sm-none">
                     {{ acc.address | concatAddressXS }}
@@ -195,7 +201,7 @@ import { getEthBalance } from '@/apollo/queries/wallets/wallets.graphql';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { fromWei, toChecksumAddress } from 'web3-utils';
 import { mapGetters, mapState } from 'vuex';
-import { isEmpty, isEqual } from 'underscore';
+import { isEmpty, isEqual } from 'lodash';
 import ENS, { getEnsAddress } from '@ensdomains/ensjs';
 import BigNumber from 'bignumber.js';
 import Web3 from 'web3';
@@ -355,7 +361,7 @@ export default {
         {
           name: 'Address',
           subtext: this.panelAddressSubstring,
-          colorTheme: 'superPrimary',
+          colorTheme: 'greyLight',
           hasActiveBorder: true
         }
       ];
@@ -363,7 +369,7 @@ export default {
         panelItems.push({
           name: 'Network',
           subtext: this.panelNetworkSubstring,
-          colorTheme: 'superPrimary',
+          colorTheme: 'greyLight',
           hasActiveBorder: true
         });
       }
@@ -429,61 +435,61 @@ export default {
       this.selectedAddress = '';
       this.accountAddress = '';
       this.currentIdx = 0;
-      /**
-       * prevents error when this.handlerWallet
-       * is empty due to selectedPatch changing
-       */
-      if (!isEmpty(this.handlerWallet)) {
-        this.setAccounts();
-      }
+      this.setAccounts();
     },
     /**
      * Async method that gets accounts according to the pagination
      */
     async setAccounts() {
-      const accountsArray = [];
-      try {
-        // resets the array to empty
-        this.accounts.splice(0);
-        const chainId = BigNumber(this.network.type.chainID);
-        const ens = this.network.type.hasOwnProperty('ens')
-          ? new ENS({
-              provider: this.web3.eth.currentProvider,
-              ensAddress: getEnsAddress(chainId.toString())
-            })
-          : null;
-        for (
-          let i = this.currentIdx;
-          i < this.currentIdx + MAX_ADDRESSES;
-          i++
-        ) {
-          const account = await this.handlerWallet.getAccount(i);
-          const address = account.getAddressString();
-          const name = ens
-            ? await ens.getName(address)
-            : {
-                name: ''
-              };
-          const balance = this.network.type.isEthVMSupported.supported
-            ? 'Loading..'
-            : await this.web3.eth.getBalance(address);
-          const nickname = this.getNickname(address);
-          accountsArray.push({
-            address: address,
-            account: account,
-            idx: i,
-            balance: balance !== 'Loading..' ? fromWei(balance) : balance,
-            ensName: name.name ? name.name : '',
-            nickname: nickname
-          });
+      /**
+       * prevents error when this.handlerWallet
+       * is empty due to selectedPatch changing
+       */
+      if (!isEmpty(this.handlerWallet)) {
+        const accountsArray = [];
+        try {
+          // resets the array to empty
+          this.accounts.splice(0);
+          const chainId = BigNumber(this.network.type.chainID);
+          const ens = this.network.type.hasOwnProperty('ens')
+            ? new ENS({
+                provider: this.web3.eth.currentProvider,
+                ensAddress: getEnsAddress(chainId.toString())
+              })
+            : null;
+          for (
+            let i = this.currentIdx;
+            i < this.currentIdx + MAX_ADDRESSES;
+            i++
+          ) {
+            const account = await this.handlerWallet.getAccount(i);
+            const address = account.getAddressString();
+            const name = ens
+              ? await ens.getName(address)
+              : {
+                  name: ''
+                };
+            const balance = this.network.type.isEthVMSupported.supported
+              ? 'Loading..'
+              : await this.web3.eth.getBalance(address);
+            const nickname = this.getNickname(address);
+            accountsArray.push({
+              address: address,
+              account: account,
+              idx: i,
+              balance: balance !== 'Loading..' ? fromWei(balance) : balance,
+              ensName: name.name ? name.name : '',
+              nickname: nickname
+            });
+          }
+          this.currentIdx += MAX_ADDRESSES;
+          this.addressPage += 1;
+          this.selectedAddress = accountsArray[0].address;
+          this.accountAddress = accountsArray[0].address;
+          this.accounts = accountsArray;
+        } catch (e) {
+          Toast(e, {}, ERROR);
         }
-        this.currentIdx += MAX_ADDRESSES;
-        this.addressPage += 1;
-        this.selectedAddress = accountsArray[0].address;
-        this.accountAddress = accountsArray[0].address;
-        this.accounts = accountsArray;
-      } catch (e) {
-        Toast(e, {}, ERROR);
       }
     },
     getNickname(address) {
@@ -537,6 +543,9 @@ export default {
       if (this.walletAccount) {
         this.$emit('unlock', this.walletAccount);
       }
+    },
+    getExplorerLink(addr) {
+      return this.network.type.blockExplorerAddr.replace('[[address]]', addr);
     }
   }
 };

@@ -154,6 +154,7 @@ export default {
     DomainTable,
     UnstoppableInfoCard
   },
+  // mixins: [buyMore],
   data() {
     return {
       dappImg: require('@/assets/images/icons/icons-dapp-unstoppable.svg'),

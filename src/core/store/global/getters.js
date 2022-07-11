@@ -7,6 +7,8 @@ import {
   gasPriceTypes
 } from '@/core/helpers/gasPriceHelper';
 import { toBN } from 'web3-utils';
+import { isEmpty } from 'lodash';
+import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 
 const Networks = function () {
   return nodeList;
@@ -18,7 +20,9 @@ const network = function (state) {
   }
   const iteratableArr = nodeList[state.currentNetwork.type.name];
   network = Object.assign({}, state.currentNetwork);
-  network.type = nodeList[state.currentNetwork.type.name][0].type;
+  network.type = !isEmpty(nodeList[state.currentNetwork.type.name])
+    ? nodeList[state.currentNetwork.type.name][0].type
+    : ETH;
   for (let index = 0; index < iteratableArr.length; index++) {
     if (state.currentNetwork.service === iteratableArr[index].service) {
       network = iteratableArr[index];
@@ -71,6 +75,28 @@ const swapLink = function (state, getters, rootState) {
   const link = 'https://ccswap.myetherwallet.com/#/';
   return hasAddress ? `${link}?to=${hasAddress}` : link;
 };
+const currencyConfig = (state, getters, rootState) => {
+  const currency = state.preferredCurrency;
+  const { currencyRate } = rootState.external;
+  const rate = currencyRate.data ? currencyRate.data.exchange_rate : 1;
+  return { currency, rate };
+};
+
+const getFiatValue =
+  (state, getters) =>
+  /**
+   * @param {Number|String} value
+   * @param {Object} options
+   * @param {Boolean} options.doNotLocalize - formats value to currency, no rate
+   * @returns - Formatted localized currency
+   */
+  (value, options = {}) => {
+    const config = options.doNotLocalize
+      ? { currency: getters.currencyConfig.currency }
+      : getters.currencyConfig;
+    return formatFiatValue(value, config).value;
+  };
+
 const isEIP1559SupportedNetwork = function (state) {
   return state.eip1559.baseFeePerGas !== '0';
 };
@@ -100,6 +126,8 @@ export default {
   gasPrice,
   isEthNetwork,
   localContracts,
+  currencyConfig,
+  getFiatValue,
   isTestNetwork,
   hasSwap,
   swapLink,

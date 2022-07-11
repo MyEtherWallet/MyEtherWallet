@@ -24,10 +24,10 @@
             </v-row>
           </v-carousel-item>
         </v-carousel>
-        <div class="titlePrimary--text font-weight-medium py-5">
+        <div class="textDark--text font-weight-medium py-5">
           Finding best rates...
         </div>
-        <v-progress-linear indeterminate color="primary" />
+        <v-progress-linear indeterminate color="greenPrimary" />
       </v-container>
     </div>
   </div>
@@ -59,30 +59,14 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.modules--swap--components--swap-providers-list {
-  .loading {
-    .v-skeleton-loader__avatar {
-      height: 25px !important;
-      width: 25px !important;
-    }
-    .v-skeleton-loader__heading {
-      height: 25px !important;
-      width: 100px !important;
-      border-radius: 15px !important;
-    }
-  }
-}
-</style>
-
 <style lang="scss" scoped>
 .rate-active {
-  border: 1px solid var(--v-primary-base) !important;
-  background-color: var(--v-superPrimary-base) !important;
+  border: 1px solid var(--v-greenPrimary-base) !important;
+  background-color: var(--v-greyLight-base) !important;
 }
 .rate {
   min-height: 60px;
   border-radius: 8px;
-  border: 1px solid var(--v-selectBorder-base);
+  border: 1px solid var(--v-greyLight-base);
 }
 </style>

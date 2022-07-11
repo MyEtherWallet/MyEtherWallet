@@ -7,14 +7,11 @@
     <div class="border-top mt-3">
       <v-expansion-panels flat class="expansion-panels--remove-paddings">
         <v-expansion-panel>
-          <v-expansion-panel-header
-            color="tableHeader"
-            class="textPrimaryModule--text"
-          >
+          <v-expansion-panel-header color="greyLight" class="textMedium--text">
             How can I get wrapped Bitcoin?
           </v-expansion-panel-header>
-          <v-expansion-panel-content color="tableHeader" class="pa-0">
-            <div class="textPrimaryModule--text mb-2">
+          <v-expansion-panel-content color="greyLight" class="pa-0">
+            <div class="textMedium--text mb-2">
               When you swap to Bitcoin, it is moved to the Bitcoin blockchain, &
               requires a Bitcoin wallet. In order to keep Bitcoin in
               MyEtherWallet, you can swap to wrapped Bitcoin instead. Wrapped
@@ -23,10 +20,7 @@
               any other Ethereum asset: you can swap it to other tokens, use it
               as collateral in DeFi apps, etc. There are multiple kinds of
               wrapped Bitcoins, but they roughly do the same thing.
-              <a
-                href="https://help.myetherwallet.com/en/articles/5461528-move-your-btc-to-the-ethereum-blockchain-with-mew-swap"
-                target="_blank"
-              >
+              <a :href="getArticle('mv-btc-to-eth-mew-swap')" target="_blank">
                 Learn more about Wrapped Bitcoin.
               </a>
             </div>
@@ -65,6 +59,7 @@
 
 <script>
 import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
+import { mapGetters } from 'vuex';
 
 export default {
   components: {
@@ -81,6 +76,9 @@ export default {
       type: String,
       default: ''
     }
+  },
+  computed: {
+    ...mapGetters('article', ['getArticle'])
   }
 };
 </script>

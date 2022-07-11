@@ -79,7 +79,7 @@
   -->
     <div
       v-if="editMode"
-      class="text-center mt-6 error--text cursor-pointer"
+      class="text-center mt-6 redPrimary--text cursor-pointer"
       @click="remove"
     >
       {{ $t('interface.address-book.remove-addr') }}
@@ -91,6 +91,7 @@
 import { mapState, mapActions, mapGetters } from 'vuex';
 import NameResolver from '@/modules/name-resolver/index';
 import { toChecksumAddress, isAddress } from '@/core/helpers/addressUtils';
+import { isValidCoinAddress } from '../handlers/handlerMulticoins.js';
 
 const modes = ['add', 'edit'];
 
@@ -144,14 +145,17 @@ export default {
     nicknameRules() {
       return [
         value =>
+          (value && value.length >= 1) ||
+          this.$t('interface.address-book.validations.nickname-required'),
+        value =>
           (value && value.length < 20) ||
           this.$t('interface.address-book.validations.nickname-length')
       ];
     },
     validAddress() {
       return this.resolvedAddr.length > 0
-        ? isAddress(this.resolvedAddr)
-        : isAddress(this.addressToAdd);
+        ? isAddress(this.resolvedAddr) || isValidCoinAddress(this.resolvedAddr)
+        : isAddress(this.addressToAdd) || isValidCoinAddress(this.addressToAdd);
     },
     editMode() {
       return this.mode === modes[1];
@@ -223,7 +227,7 @@ export default {
       if (
         this.nameResolver &&
         this.addressToAdd &&
-        this.addressToAdd.includes('.')
+        this.addressToAdd?.includes?.('.')
       ) {
         await this.nameResolver
           .resolveName(this.addressToAdd)

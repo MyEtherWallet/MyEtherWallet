@@ -14,6 +14,7 @@ const EXCEPTIONS = [
   'postcss-url',
   'webpack',
   'copy-webpack-plugin',
+  'sass',
   'sass-loader',
   'husky',
   '@aave/protocol-js',
@@ -26,9 +27,35 @@ const EXCEPTIONS = [
   'remark-cli',
   'node-fetch',
   'vuetify',
+  'vue-i18n',
+  'stylelint',
+  'stylelint-config-standard',
+  'vue',
+  'vue-router',
+  'vuex',
   'eslint',
+  'eslint-plugin-vue',
   'imagemin-mozjpeg', // issue with importing it to vue config will look into it more if we need it
-  '@vue/eslint-config-prettier' // creates more warnings
+  // versions for vue3
+  '@vue/eslint-config-prettier', // creates more warnings
+  '@vue/test-utils',
+  '@vue/babel-preset-app',
+  '@vue/cli-plugin-babel',
+  '@vue/cli-plugin-eslint',
+  '@vue/cli-plugin-pwa',
+  '@vue/cli-plugin-unit-jest',
+  '@vue/cli-service',
+  'vue-i18n',
+  'vue',
+  '@vue/cli-plugin-e2e-nightwatch',
+  'geckodriver',
+  '@shapeshiftoss/hdwallet-core',
+  '@shapeshiftoss/hdwallet-keepkey-webusb',
+  'trezor-connect', // currently in beta
+  'package-json',
+  'codecov',
+  'node-polyfill-webpack-plugin',
+  '@ensdomains/ensjs' // major alpha update
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
@@ -84,12 +111,12 @@ const looper = () => {
           if (!isMewComponentBeta) {
             console.error(
               'ERROR: Update ' +
-                _name +
-                ' from ' +
-                ALL_PACKAGES[_name] +
-                ' to ' +
-                latestVersion +
-                '. Released:',
+              _name +
+              ' from ' +
+              ALL_PACKAGES[_name] +
+              ' to ' +
+              latestVersion +
+              '. Released:',
               latestVersionTime
             );
             updatesFound = true;

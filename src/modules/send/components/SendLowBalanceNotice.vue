@@ -10,7 +10,7 @@
         <app-addr-qr />
       </template>
     </app-modal>
-    <v-row class="pa-2 selectHeaderBg border-radius--5px">
+    <v-row class="pa-2 backgroundGrey border-radius--5px">
       <v-col cols="12">
         <v-row align-content="center" justify="space-around">
           <v-col cols="12" class="pb-0">
@@ -22,7 +22,7 @@
             </p>
           </v-col>
           <v-col cols="12" sm="6">
-            <div class="mew-body textBlack2--text">
+            <div class="mew-body textMedium--text">
               Every transaction requires a small amount of
               {{ currencyName }} to execute. Even if you have tokens to swap,
               when your {{ currencyName }} balance is close to zero, you won't
@@ -31,7 +31,7 @@
           </v-col>
           <v-col cols="12" sm="6" class="d-flex flex-column">
             <div
-              class="mew-body primary--text font-weight-medium cursor--pointer"
+              class="mew-body greenPrimary--text font-weight-medium cursor--pointer"
               @click="openBarcodeModal"
             >
               Transfer {{ currencyName }} from another account
@@ -40,9 +40,8 @@
             <a
               v-if="isEthNetwork"
               class="mew-body font-weight-medium"
-              :href="swapLink"
-              target="_blank"
               rel="noopener noreferrer"
+              @click="openMoonpay"
             >
               Buy {{ currencyName }}
             </a>
@@ -57,12 +56,14 @@
 import AppModal from '@/core/components/AppModal';
 import AppAddrQr from '@/core/components/AppAddrQr';
 import { mapGetters } from 'vuex';
+import buyMore from '@/core/mixins/buyMore.mixin.js';
 
 export default {
   components: {
     AppModal,
     AppAddrQr
   },
+  mixins: [buyMore],
   props: {
     currencyName: {
       type: String,
@@ -75,7 +76,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('global', ['isEthNetwork', 'swapLink'])
+    ...mapGetters('global', ['isEthNetwork'])
   },
   methods: {
     openBarcodeModal() {
@@ -90,7 +91,7 @@ export default {
 
 <style lang="scss" scoped>
 .modal-caption {
-  color: var(--v-captionPrimary);
+  color: var(--v-textLight);
 }
 
 .address-overflow {
@@ -98,6 +99,6 @@ export default {
 }
 
 .info-container {
-  border: 1px solid var(--v-basicOutlineActive-base);
+  border: 1px solid var(--v-greyMedium-base);
 }
 </style>

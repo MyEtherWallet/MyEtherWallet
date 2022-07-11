@@ -15,7 +15,7 @@
         <v-btn-toggle
           v-model="toggleType"
           mandatory
-          active-class="titlePrimary white--text alig-end"
+          active-class="textDark white--text alig-end"
         >
           <v-btn small>Main</v-btn>
           <v-btn small>Test</v-btn>
@@ -68,6 +68,7 @@
                 =====================================================================================
                 -->
           <v-img
+            :class="network.name === 'MINTME' ? 'mint-me-color' : ''"
             :src="network.icon"
             :lazy-src="require('@/assets/images/currencies/icon-eth-grey.svg')"
             contain
@@ -79,11 +80,11 @@
                   Symbol/Namte
                 =====================================================================================
                 -->
-          <div class="titlePrimary--text Capitalize pl-3">
+          <div class="textDark--text Capitalize pl-3">
             {{ network.name }}
           </div>
-          <div class="px-2 textSecondary--text">-</div>
-          <div class="textSecondary--text">
+          <div class="px-2 textLight--text">-</div>
+          <div class="textLight--text">
             {{ network.name_long }}
           </div>
           <v-spacer />
@@ -117,7 +118,11 @@ export default {
     /** Set this prop to pass specific networks to be displayed */
     filterTypes: { type: Array, default: () => [] },
     /** Set this prop to false if device does not support networks */
-    hasNetworks: { type: Boolean, default: true }
+    hasNetworks: { type: Boolean, default: true },
+    isSwapPage: {
+      type: Boolean,
+      default: false
+    }
   },
   data() {
     return {
@@ -219,13 +224,6 @@ export default {
           ? 'Select different feature to see all networks.'
           : 'We do not have a network with this name.'
       };
-    },
-    /**
-     * Property returns whether or not you are on the swap page
-     * @returns {boolean}
-     */
-    isSwapPage() {
-      return this.$route.name === 'Swap';
     }
   },
   watch: {
@@ -259,6 +257,7 @@ export default {
   methods: {
     ...mapActions('wallet', ['setWeb3Instance']),
     ...mapActions('global', ['setNetwork']),
+    ...mapActions('external', ['setTokenAndEthBalance']),
     /**
      * Method checks whther symbol or name has searchInput substring
      * @returns {boolean}
@@ -289,12 +288,10 @@ export default {
       try {
         this.setNetwork(found[0]).then(() => {
           if (this.isWallet) {
-            this.setWeb3Instance();
-            Toast(
-              `Switched network to: ${found[0].type.name} - ${found[0].service}`,
-              {},
-              SUCCESS
-            );
+            this.setWeb3Instance().then(() => {
+              this.setTokenAndEthBalance();
+            });
+            Toast(`Switched network to: ${found[0].type.name}`, {}, SUCCESS);
           }
           this.trackNetworkSwitch(found[0].type.name);
           this.$emit('newNetwork');
@@ -321,5 +318,9 @@ $borderNetwork: 1px solid #ececec;
 
 .network-border-last {
   border-radius: 0px 0px 4px 4px;
+}
+.mint-me-color {
+  filter: brightness(0) saturate(100%) invert(90%) sepia(3%) saturate(5171%)
+    hue-rotate(348deg) brightness(92%) contrast(63%);
 }
 </style>

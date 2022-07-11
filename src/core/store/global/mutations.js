@@ -1,9 +1,19 @@
 import localStore from 'store';
 import Configs from '../configs';
+import nodeList from '@/utils/networks';
+const defaultNetwork = nodeList['ETH'].find(item => {
+  return item.service === 'myetherwallet.com-ws';
+});
 const INIT_STORE = function (state) {
   if (localStore.get(Configs.LOCAL_STORAGE_KEYS.global)) {
     const savedStore = localStore.get(Configs.LOCAL_STORAGE_KEYS.global);
     if (savedStore.stateVersion === Configs.VERSION.global) {
+      if (!nodeList[savedStore.currentNetwork.type.name]) {
+        savedStore['currentNetwork'] = defaultNetwork;
+        savedStore.currentNetwork.type = {
+          name: 'ETH'
+        };
+      }
       Object.assign(state, savedStore);
     }
   }
@@ -12,8 +22,16 @@ const SET_ONLINE_STATUS = async function (state, status) {
   state.online = status;
 };
 
+const SET_PROMO_OVER = async function (state) {
+  state.promoOver = true;
+};
+
 const SET_LOCALE = function (state, { locale }) {
   state.locale = locale;
+};
+
+const SET_PREFERRED_CURRENCY = function (state, currency) {
+  state.preferredCurrency = currency;
 };
 
 const SET_GAS_PRICE = function (state, val) {
@@ -68,13 +86,10 @@ const NEVER_SHOW_WALLET_PROMO = function (state) {
   state.showWalletPromo = false;
 };
 
-const SET_SHOW_SURVEY = function (state, val) {
-  state.showSurvey = val;
-};
-
 export default {
   SET_ONLINE_STATUS,
   SET_LOCALE,
+  SET_PREFERRED_CURRENCY,
   SET_GAS_PRICE,
   SET_NETWORK,
   INIT_STORE,
@@ -87,5 +102,5 @@ export default {
   NEVER_SHOW_TRACKING,
   NEVER_SHOW_BANNER,
   NEVER_SHOW_WALLET_PROMO,
-  SET_SHOW_SURVEY
+  SET_PROMO_OVER
 };
