@@ -19,7 +19,7 @@ import { ChainId } from '@aave/contract-helpers';
 // import { cloneDeep } from 'lodash';
 import { INTEREST_TYPES } from '../handlers/helpers';
 import { estimateGasList } from '@/core/helpers/gasPriceHelper';
-import { toBN } from 'web3-utils';
+import { toBN, toHex } from 'web3-utils';
 
 const STABLE_COINS = ['TUSD', 'DAI', 'USDT', 'USDC', 'sUSD'];
 
@@ -247,7 +247,7 @@ export default {
         const txData = await this.poolContract.populateTransaction.borrow(
           ...data
         );
-        //const gas = await this.poolContract.estimateGas.borrow(...data);
+        console.log('txData', txData);
         this.formatTxData(txData);
       } catch (e) {
         throw new Error(e);
@@ -373,26 +373,29 @@ export default {
           from: this.address,
           to: txData.to,
           data: txData.data,
-          gas: '0x5208',
           value: '0',
           gasPrice: this.gasPriceByType(this.gasPriceType)
         };
         console.log(tx);
-        // this.web3.eth.estimateGas(tx).then(res => {
-        // tx['gas'] = res;
-        this.sendTransaction(tx)
-          .then(() => {
-            Toast(
-              'Success! Your transaction will be displayed shortly',
-              {},
-              SUCCESS
-            );
-          })
-          .catch(err => {
-            console.log(err);
-            Toast(err, {}, ERROR);
-          });
-        // });
+        this.web3.eth
+          .estimateGas(tx)
+          .then(res => {
+            tx['gas'] = toHex(res);
+            console.log('gas', tx.gas);
+            this.sendTransaction(tx)
+              .then(() => {
+                Toast(
+                  'Success! Your transaction will be displayed shortly',
+                  {},
+                  SUCCESS
+                );
+              })
+              .catch(err => {
+                console.log(err);
+                Toast(err, {}, ERROR);
+              });
+          }) // Estimate Gas Catch
+          .catch(e => Toast(e, {}, ERROR));
       } catch (e) {
         Toast(e, {}, ERROR);
       }
@@ -521,6 +524,12 @@ export default {
         });
       }
       this.isLoadingData = false;
+    },
+    /**
+     * Format USD value to actual USD amount
+     */
+    formatUSDValue(usdValue) {
+      return 10 ** 8 * usdValue;
     }
   }
 };
