@@ -74,7 +74,7 @@
            Button
           =====================================================================================
           -->
-        <div class="d-flex justify-center mt-6">
+        <div class="MnemonicWroteThemDown d-flex justify-center mt-6">
           <mew-button
             title="I wrote them down"
             btn-size="xlarge"
@@ -158,7 +158,7 @@
             title="Verify"
             btn-size="xlarge"
             :disabled="!canVerify"
-            class="mx-md-1 my-1"
+            class="CreateMnemonicVerify mx-md-1 my-1"
             @click.native="verify"
           />
         </div>
@@ -194,7 +194,7 @@
                 title="Access Wallet"
                 btn-size="xlarge"
                 :has-full-width="false"
-                class="mb-5"
+                class="CreateMnemonicAccessWallet mb-5"
                 @click.native="goToAccess"
               />
               <mew-button

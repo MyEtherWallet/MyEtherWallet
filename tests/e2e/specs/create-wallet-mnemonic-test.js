@@ -3,22 +3,10 @@
 const { chunk } = require('lodash');
 
 const el = {
-  'Create a New Wallet':
-    '#app > div > div:nth-child(1) > main > div > div > div.mew-component--landing > div.desktop-content.d-none.d-lg-block.expandHeader > div > div > div.mt-9.d-flex > button.mr-3.v-btn.v-btn--has-bg.theme--light.v-size--default.greenPrimary.xlarge-btn.white--text.btn-background.mew-button',
-  Software:
-    '#app > div > div:nth-child(1) > main > div > div > div.container > div.mx-auto > div',
-  'Mnemonic Phrase':
-    '#app > div.v-dialog__content.v-dialog__content--active > div > div > div > div.row.ma-0.pa-0.d-flex.align-center.justify-center.flex-column > div > div.d-flex.flex-column.align-center.justify-center.px-8.pb-8 > div > div > div:nth-child(2)',
-  'I Wrote Them Down':
-    '#app > div.v-dialog__content.v-dialog__content--active > div > div > div > div.row.ma-0.pa-0.d-flex.align-center.justify-center.flex-column > div > div.d-flex.flex-column.align-center.justify-center.px-8.pb-8 > div > div > div:nth-child(2) > div.d-flex.justify-center.mt-6',
-  Verify:
-    '#app > div.v-dialog__content.v-dialog__content--active > div > div > div > div.row.ma-0.pa-0.d-flex.align-center.justify-center.flex-column > div > div.d-flex.flex-column.align-center.justify-center.px-8.pb-8 > div > div > div:nth-child(3) > div.d-flex.flex-column.flex-md-row.justify-center.mt-6 > button.mx-md-1.my-1.v-btn.v-btn--has-bg.theme--light.v-size--default.greenPrimary.xlarge-btn.white--text.btn-background.mew-button',
   Phrases:
     '#app > div.v-dialog__content.v-dialog__content--active > div > div > div > div.row.ma-0.pa-0.d-flex.align-center.justify-center.flex-column > div > div.d-flex.flex-column.align-center.justify-center.px-8.pb-8 > div > div > div:nth-child(2) > div.phrase-block.border-radius--5px.px-7.py-4.mb-8 > div',
   Checks:
-    '#app > div.v-dialog__content.v-dialog__content--active > div > div > div > div.row.ma-0.pa-0.d-flex.align-center.justify-center.flex-column > div > div.d-flex.flex-column.align-center.justify-center.px-8.pb-8 > div > div > div:nth-child(3) > div.mx-auto.v-sheet.theme--light',
-  'Access Wallet':
-    '#app > div.v-dialog__content.v-dialog__content--active > div > div > div > div.row.ma-0.pa-0.d-flex.align-center.justify-center.flex-column > div > div.d-flex.flex-column.align-center.justify-center.px-8.pb-8 > div > div > div:nth-child(4) > div > div:nth-child(1) > div.d-flex.flex-column > button.mb-5.v-btn.v-btn--has-bg.theme--light.v-size--default.greenPrimary.xlarge-btn.white--text.btn-background.mew-button'
+    '#app > div.v-dialog__content.v-dialog__content--active > div > div > div > div.row.ma-0.pa-0.d-flex.align-center.justify-center.flex-column > div > div.d-flex.flex-column.align-center.justify-center.px-8.pb-8 > div > div > div:nth-child(3) > div.mx-auto.v-sheet.theme--light'
 };
 
 const firstPhrases = {
@@ -86,21 +74,21 @@ module.exports = {
 
     // select mnemonic phrase
     browser
-      .waitForElementVisible(css, el['Mnemonic Phrase'])
-      .click(css, el['Mnemonic Phrase']);
+      .waitForElementVisible(css, '.CreateWalletSoftwareOverviewMnemonic')
+      .click(css, '.CreateWalletSoftwareOverviewMnemonic');
 
     // step 1
     browser.assert
       .urlContains('mnemonic')
-      .waitForElementVisible(css, el['I Wrote Them Down'])
+      .waitForElementVisible(css, '.MnemonicWroteThemDown')
       .getText(css, el['Phrases'], result => {
         phrases = result.value.split('\n');
       })
-      .click(css, el['I Wrote Them Down']);
+      .click(css, '.MnemonicWroteThemDown');
 
     // step 2
     browser
-      .waitForElementVisible(css, el['Verify'])
+      .waitForElementVisible(css, '.CreateMnemonicVerify')
       .getText(css, el['Checks'], result => {
         const checkPhrases = chunk(result.value.split('\n'), 4);
         const [first, second, third] = checkPhrases;
@@ -114,13 +102,13 @@ module.exports = {
           .click(css, secondPhrases[secondIndex])
           .click(css, thirdPhrases[thirdIndex])
           .pause(1000)
-          .click(css, el['Verify']);
+          .click(css, '.CreateMnemonicVerify');
       });
 
     // step 3
     browser
-      .waitForElementVisible(css, el['Access Wallet'])
-      .click(css, el['Access Wallet'])
+      .waitForElementVisible(css, '.CreateMnemonicAccessWallet')
+      .click(css, '.CreateMnemonicAccessWallet')
       .assert.urlContains('dashboard')
       .moveTo(null, 500, 0)
       .mouseButtonClick();
