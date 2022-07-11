@@ -2,7 +2,7 @@
   <div
     v-if="!showedBanner"
     :class="[
-      'HideWalletBanner white d-flex justify-center align-center text-center full-width footer-banner-container',
+      'white d-flex justify-center align-center text-center full-width footer-banner-container',
       isExpanded ? 'footer-banner-expanded' : 'footer-banner'
     ]"
   >
