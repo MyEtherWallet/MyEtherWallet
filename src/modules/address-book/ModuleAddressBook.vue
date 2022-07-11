@@ -253,7 +253,7 @@ export default {
       this.nameResolver = null;
       this.isValidAddress = false;
       this.loadedAddressValidation = false;
-      this.$refs.addressSelect.clear();
+      //this.$refs.addressSelect.clear();
       this.$emit('setAddress', this.resolvedAddr, this.isValidAddress, {
         type: USER_INPUT_TYPES.typed,
         value: this.inputAddr

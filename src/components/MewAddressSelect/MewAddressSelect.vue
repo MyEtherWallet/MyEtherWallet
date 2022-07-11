@@ -1,9 +1,7 @@
 <template>
-  <!--
-=====================================================================================
-  Mew Address Select
-=====================================================================================
--->
+  <!-- ===================================================================================== -->
+  <!-- Mew Address Select -->
+  <!-- ===================================================================================== -->
   <v-combobox
     ref="mewAddressSelect"
     v-model="addressValue"
@@ -25,13 +23,13 @@
     outlined
     @update:search-input="onChange"
     @input.native="onInputChange"
+    @blur="dropdown = false"
   >
-    <!--
-=====================================================================================
-  Blockie: displays placeholder if invalid address, otherwise displays the correct blockie.
-  The blockie is always displayed at the beginning of the input. 
-=====================================================================================
--->
+    <!-- ===================================================================================== -->
+    <!-- Blockie: displays placeholder if invalid address, otherwise displays -->
+    <!-- the correct blockie. The blockie is always displayed at the beginning -->
+    <!-- of the input. -->
+    <!-- ===================================================================================== -->
     <template #prepend-inner>
       <div
         v-if="!isValidAddress"
@@ -45,11 +43,11 @@
         height="25px"
       />
     </template>
-    <!--
-=====================================================================================
-  Copy and save address button. Always displayed at the end of the input before the dropdown arrow.
-=====================================================================================
--->
+
+    <!-- ===================================================================================== -->
+    <!-- Copy and save address button. Always displayed at the end of the input -->
+    <!-- before the dropdown arrow.  -->
+    <!-- ===================================================================================== -->
     <template #append>
       <div class="icon-container d-flex align-center">
         <mew-copy
@@ -76,11 +74,10 @@
           <span>{{ saveTooltip }}</span>
         </v-tooltip>
       </div>
-      <!--
-=====================================================================================
-  Dropdown arrow. Toggles the dropdown.
-=====================================================================================
--->
+
+      <!-- ===================================================================================== -->
+      <!-- Dropdown arrow. Toggles the dropdown. -->
+      <!-- ===================================================================================== -->
       <div
         class="dropdown-icon-container d-flex align-center justify-center cursor-pointer full-height"
         @click="toggle"
@@ -88,11 +85,10 @@
         <v-icon class="mew-heading-1 mx-5"> mdi-chevron-down </v-icon>
       </div>
     </template>
-    <!--
-=====================================================================================
-  Displays each item in the dropdown. 
-=====================================================================================
--->
+
+    <!-- ===================================================================================== -->
+    <!-- Displays each item in the dropdown. -->
+    <!-- ===================================================================================== -->
     <template #item="{ item }">
       <div
         :class="[
@@ -139,7 +135,9 @@ export default {
   },
   props: {
     /**
-     * For validating your input - accepts an array of functions that take an input value as an argument and return either true / false or a string with an error message.
+     * For validating your input - accepts an array of functions that take
+     * an input value as an argument and return either true / false or a
+     * string with an error message.
      */
     rules: {
       type: Array,
@@ -253,7 +251,9 @@ export default {
   },
   computed: {
     /**
-     * If the input item is a name (i.e, ens) and has a valid resolved address, display the blockie for the resolved address otherwise display the blockie for the regular address value.
+     * If the input item is a name (i.e, ens) and has a valid resolved address,
+     * display the blockie for the resolved address otherwise display
+     * the blockie for the regular address value.
      */
     blockieHash() {
       return this.resolvedAddr.length > 0

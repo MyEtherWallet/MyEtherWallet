@@ -82,7 +82,7 @@
     "hmac-drbg": "1.0.1",
     "keccak256": "1.0.6",
     "lodash": "4.17.21",
-    "lottie-web": "5.9.4",
+    "lottie-web": "5.9.6",
     "merkletreejs": "0.2.32",
     "minimalistic-crypto-utils": "1.0.1",
     "moment": "2.29.3",
