@@ -19,12 +19,7 @@
                 mdi-block-helper
               </v-icon>
               <div
-                class="
-                  warning--text
-                  text--darken-2
-                  mew-heading-2
-                  font-weight-regular
-                "
+                class="warning--text text--darken-2 mew-heading-2 font-weight-regular"
               >
                 {{ d.name }} is unavailable
               </div>
@@ -47,14 +42,7 @@
         <div v-for="(d, key) in searchResults" :key="key">
           <div
             v-if="d.available"
-            class="
-              table-border-bottom
-              py-6
-              px-5
-              d-md-flex
-              align-center
-              justify-space-between
-            "
+            class="table-border-bottom py-6 px-5 d-md-flex align-center justify-space-between"
           >
             <div
               :class="
