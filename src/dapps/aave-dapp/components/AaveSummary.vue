@@ -242,7 +242,8 @@ export default {
     nextHealthFactor() {
       const selectedToken = this.selectedToken;
       let nextHealthFactor = this.currentHealthFactor,
-        collateralBalanceETH = this.userSummary.totalCollateralETH,
+        collateralBalanceETH =
+          this.userSummary.totalCollateralMarketReferenceCurrency,
         totalBorrowsETH = this.userSummary.totalBorrowsETH;
       if (selectedToken?.price && this.amount !== '0') {
         const ethBalance = BigNumber(this.amount).times(
@@ -250,21 +251,20 @@ export default {
         );
         if (this.isDeposit) {
           collateralBalanceETH = new BigNumber(
-            this.userSummary.totalCollateralETH
+            this.userSummary.totalCollateralMarketReferenceCurrency
           ).plus(ethBalance);
         } else if (this.isWithdraw) {
           collateralBalanceETH = new BigNumber(
-            this.userSummary.totalCollateralETH
+            this.userSummary.totalCollateralMarketReferenceCurrency
           ).minus(ethBalance);
         } else if (this.isRepay) {
           totalBorrowsETH = new BigNumber(
-            this.userSummary.totalBorrowsETH
+            this.userSummary.totalBorrowsMarketReferenceCurrency
           ).minus(ethBalance);
         }
         nextHealthFactor = calculateHealthFactorFromBalancesBigUnits(
           collateralBalanceETH,
           totalBorrowsETH,
-          this.userSummary.totalFeesETH,
           this.userSummary.currentLiquidationThreshold
         ).toFixed(3);
       }

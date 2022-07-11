@@ -372,42 +372,52 @@ export default {
     },
     totalLiquidity() {
       return {
-        eth: formatFloatingPointValue(this.userSummary.totalLiquidityETH || '0')
-          .value,
-        usd: this.getFiatValue(this.userSummary.totalLiquidityUSD || '0')
+        eth: formatFloatingPointValue(
+          this.userSummary.totalLiquidityMarketReferenceCurrency || '0'
+        ).value,
+        usd: this.getFiatValue(
+          this.formatUSDValue(this.userSummary.totalLiquidityUSD || '0')
+        )
       };
     },
     totalCollateral() {
       return {
         eth: formatFloatingPointValue(
-          this.userSummary.totalCollateralETH || '0'
+          this.userSummary.totalCollateralMarketReferenceCurrency || '0'
         ).value,
-        usd: this.getFiatValue(this.userSummary.totalCollateralUSD || '0')
+        usd: this.getFiatValue(
+          this.formatUSDValue(this.userSummary.totalCollateralUSD || '0')
+        )
       };
     },
     totalBorrow() {
       return {
-        eth: formatFloatingPointValue(this.userSummary.totalBorrowsETH || '0')
-          .value,
-        usd: this.getFiatValue(this.userSummary.totalBorrowsUSD || '0')
+        eth: formatFloatingPointValue(
+          this.userSummary.totalBorrowsMarketReferenceCurrency || '0'
+        ).value,
+        usd: this.getFiatValue(
+          this.formatUSDValue(this.userSummary.totalBorrowsUSD || '0')
+        )
       };
     },
     compositionPercentage() {
       if (this.userSummary && Object.keys(this.userSummary).length > 0) {
-        const total = this.userSummary.totalLiquidityETH;
+        const total = this.userSummary.totalLiquidityMarketReferenceCurrency;
         return this.userSummary.userReservesData
           .filter(item => {
-            return item.currentUnderlyingBalance > 0.00001;
+            return item.underlyingBalance > 0.00001;
           })
           .map(item => {
             return {
-              percentage: BigNumber(item.currentUnderlyingBalanceETH)
+              percentage: BigNumber(
+                item.underlyingBalanceMarketReferenceCurrency
+              )
                 .div(total)
                 .times(100)
                 .toFixed(),
               color: COLORS[item.reserve.symbol],
               tooltip:
-                formatFloatingPointValue(item.currentUnderlyingBalance).value +
+                formatFloatingPointValue(item.underlyingBalance).value +
                 ' ' +
                 item.reserve.symbol
             };
@@ -421,18 +431,20 @@ export default {
           .filter(item => {
             return (
               item.usageAsCollateralEnabledOnUser &&
-              item.currentUnderlyingBalanceETH > 0
+              item.underlyingBalanceMarketReferenceCurrency > 0
             );
           })
           .map(item => {
             return {
-              percentage: BigNumber(item.currentUnderlyingBalanceETH)
+              percentage: BigNumber(
+                item.underlyingBalanceMarketReferenceCurrency
+              )
                 .times(100)
-                .div(this.userSummary.totalCollateralETH)
+                .div(this.userSummary.totalCollateralMarketReferenceCurrency)
                 .toFixed(),
               color: COLORS[item.reserve.symbol],
               tooltip:
-                formatFloatingPointValue(item.currentUnderlyingBalance).value +
+                formatFloatingPointValue(item.underlyingBalance).value +
                 ' ' +
                 item.reserve.symbol
             };
@@ -445,19 +457,23 @@ export default {
         let totalAvailablePercentage = 100;
         const data = this.userSummary.userReservesData
           .filter(item => {
-            return item.currentBorrowsETH > 0.001;
+            return item.totalBorrowsMarketReferenceCurrency > 0.001;
           })
           .map(item => {
-            const percentage = BigNumber(item.currentBorrowsETH)
+            const percentage = BigNumber(
+              item.totalBorrowsMarketReferenceCurrency
+            )
               .times(100)
-              .div(this.userSummary.totalBorrowsEth)
+              .div(this.userSummary.totalBorrowsMarketReferenceCurrency)
               .toFixed();
             totalAvailablePercentage = totalAvailablePercentage - percentage;
             return {
               percentage: percentage,
               color: COLORS[item.reserve.symbol],
               tooltip:
-                formatFloatingPointValue(item.currentBorrowsETH).value +
+                formatFloatingPointValue(
+                  item.totalBorrowsMarketReferenceCurrency
+                ).value +
                 ' ' +
                 item.reserve.symbol
             };
@@ -467,8 +483,9 @@ export default {
             percentage: totalAvailablePercentage,
             color: '#c7c7c7',
             tooltip:
-              formatFloatingPointValue(this.userSummary.availableBorrowsETH)
-                .value + ' Available to Borrow'
+              formatFloatingPointValue(
+                this.userSummary.availableBorrowsMarketReferenceCurrency
+              ).value + ' Available to Borrow'
           });
         }
         return data;
@@ -479,6 +496,8 @@ export default {
   },
   methods: {
     toggleDepositOverlay(boolean) {
+      console.log('showDepositOverlay', this.showDepositOverlay);
+      console.log('showWithdrawOverlay', this.showWithdrawOverlay);
       if (boolean === false) {
         this.tokenSelected = {};
       }
@@ -491,6 +510,8 @@ export default {
       this.showBorrowOverlay = boolean;
     },
     openDepositOverlayWithToken(token) {
+      console.log('showDepositOverlay', this.showDepositOverlay);
+      console.log('showWithdrawOverlay', this.showWithdrawOverlay);
       this.tokenSelected = token;
       this.showDepositOverlay = true;
     },
