@@ -119,6 +119,10 @@ export default {
     inWallet: {
       type: Boolean,
       default: false
+    },
+    supportedBuy: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -146,7 +150,7 @@ export default {
     ...mapGetters('global', ['network', 'getFiatValue']),
     ...mapState('wallet', ['address']),
     ...mapState('external', ['currencyRate', 'coinGeckoTokens']),
-    ...mapGetters('external', ['contractToToken', 'getCoinGeckoTokenById']),
+    ...mapGetters('external', ['contractToToken']),
     includesFeeText() {
       return `Includes ${this.percentFee} fee (${
         formatFiatValue(this.minFee, this.currencyConfig).value
@@ -280,13 +284,6 @@ export default {
         return 'Please switch your network to the Ethereum Mainnet on Metamask.';
       }
       return '';
-    },
-    supportedBuy() {
-      return (
-        this.network.type.name === 'ETH' ||
-        this.network.type.name === 'BSC' ||
-        this.network.type.name === 'MATIC'
-      );
     },
     currencyItems() {
       const tokenList = new Array();

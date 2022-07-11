@@ -27,6 +27,7 @@
               :tab="activeTab"
               :default-currency="defaultCurrency"
               :in-wallet="inWallet"
+              :supported-buy="supportedBuy"
               @selectedCurrency="setSelectedCurrency"
               @openProviders="openProviders"
               @selectedFiat="setSelectedFiat"
