@@ -142,7 +142,6 @@ export default {
   computed: {
     ...mapState('external', ['path']),
     ...mapState('global', ['online']),
-    ...mapState('wallet', ['isOfflineApp', 'isOfflineApp']),
 
     /**
      * Used in the creation of a MEWconnect instance
