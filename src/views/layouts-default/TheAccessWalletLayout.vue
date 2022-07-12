@@ -28,7 +28,7 @@
           </div>
           <mew-button
             has-full-width
-            class="mb-5"
+            :class="btn.class ? `mb-5 ${btn.class}` : 'mb-5'"
             :color-theme="btn.color"
             :btn-style="btn.style === 'outline' ? 'outline' : ''"
             style="height: 160px"
@@ -249,6 +249,7 @@ export default {
             titleIcon: 'mdi-alert',
             titleIconType: 'mdi',
             titleIconClass: 'warning darken-1',
+            class: 'AccessSoftwareWallet',
             fn: () => {
               this.openOverlay(ACCESS_VALID_OVERLAYS.SOFTWARE);
             }
@@ -314,7 +315,7 @@ export default {
         const web3 = new Web3(window.ethereum);
         try {
           await window.ethereum.enable();
-          const acc = await web3.eth.getAccounts();
+          const acc = await web3.eth.requestAccounts();
           const wallet = new Web3Wallet(acc[0]);
           this.setWallet([wallet, window.ethereum]);
           this.trackAccessWallet(WALLET_TYPES.WEB3_WALLET);

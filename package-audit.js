@@ -1,7 +1,7 @@
 const exec = require('child_process').exec;
 
 const AUDIT_EXCEPTIONS = [
-  'underscore',
+  'tar',
   'trim-newlines',
   'css-what',
   'normalize-url',
