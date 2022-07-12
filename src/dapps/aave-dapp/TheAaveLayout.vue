@@ -362,7 +362,7 @@ export default {
     ...mapGetters('external', ['fiatValue', 'contractToToken']),
     loanValue() {
       return formatPercentageValue(
-        BigNumber(this.userSummary.currentLiquidationThreshold).times(100)
+        BigNumber(this.userSummary.currentLoanToValue).times(100)
       ).value;
     },
     healthFactor() {
@@ -496,8 +496,6 @@ export default {
   },
   methods: {
     toggleDepositOverlay(boolean) {
-      console.log('showDepositOverlay', this.showDepositOverlay);
-      console.log('showWithdrawOverlay', this.showWithdrawOverlay);
       if (boolean === false) {
         this.tokenSelected = {};
       }
