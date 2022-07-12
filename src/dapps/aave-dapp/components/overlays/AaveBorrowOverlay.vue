@@ -70,6 +70,7 @@ import { mapGetters, mapState } from 'vuex';
 import { isEmpty } from 'lodash';
 import handlerAave from '../../handlers/handlerAave.mixin';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
+import { toBase } from '@/core/helpers/unit';
 
 export default {
   components: { AaveTable, AaveAmountForm, AaveSelectInterest, AaveSummary },
@@ -105,7 +106,7 @@ export default {
         this.formatUSDValue(this.userSummary.totalCollateralUSD)
       );
       const amountUSD = this.getFiatValue(
-        this.formatUSDValue(this.amount * hasBorrowed.reserve.priceInUSD)
+        this.formatUSDValue(this.amount * hasBorrowed?.reserve?.priceInUSD || 0)
       );
       return {
         showToggle: false,
@@ -143,7 +144,7 @@ export default {
       }
     },
     amountWithDecimals() {
-      return 10 ** this.selectedTokenDetails.decimals * this.amount;
+      return toBase(this.amount, this.selectedTokenDetails.decimals);
     }
   },
   watch: {
@@ -184,6 +185,7 @@ export default {
         interestRateMode: this.apr.type,
         referralCode: '14'
       };
+      console.log(data);
       this.onBorrow(data);
       this.callClose();
     }
