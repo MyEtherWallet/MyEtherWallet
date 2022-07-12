@@ -39,7 +39,7 @@
             Phrase Table
           =====================================================================================
           -->
-        <phrase-block class="mb-8 createWalletMnemonicTable">
+        <phrase-block class="mb-8 CreateWalletMnemonicTable">
           <mnemonic-phrase-table :data="phrase" />
         </phrase-block>
         <!--
@@ -104,7 +104,7 @@
            Words Radio Group
           =====================================================================================
           -->
-        <v-sheet max-width="600px" class="mx-auto">
+        <v-sheet max-width="600px" class="MnemonicRadioOptions mx-auto">
           <v-radio-group
             v-for="(item, idx) in generatedVerification"
             :key="`${idx}verification`"
