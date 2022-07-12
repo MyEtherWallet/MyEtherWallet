@@ -11,6 +11,7 @@
     :close="close"
   >
     <aave-amount-form
+      v-if="step === 0"
       :selected-token="preSelectedToken"
       :show-toggle="aaveWithdrawForm.showToggle"
       :left-side-values="aaveWithdrawForm.leftSideValues"
@@ -22,13 +23,29 @@
       @cancel="handleCancel"
       @emitValues="handleWithdrawAmount"
     />
+
+    <!--
+        =====================================================================================
+          Step 2: Withdraw Summary
+        =====================================================================================
+        -->
+    <aave-summary
+      v-if="step === 1"
+      :selected-token="selectedTokenDetails"
+      :amount="amount"
+      :action-type="withdrawTitle"
+      :amount-usd="amountUSD"
+      @onConfirm="handleConfirm"
+    />
   </mew-overlay>
 </template>
 
 <script>
 import BigNumber from 'bignumber.js';
 import AaveAmountForm from '../AaveAmountForm';
+import AaveSummary from '../AaveSummary';
 import handlerAave from '../../handlers/handlerAave.mixin';
+import { AAVE_TABLE_TITLE } from '../../handlers/helpers';
 import { mapGetters } from 'vuex';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { toBase } from '@/core/helpers/unit';
@@ -37,9 +54,17 @@ import { MAX_UINT_AMOUNT } from '@aave/contract-helpers';
 
 export default {
   components: {
-    AaveAmountForm
+    AaveAmountForm,
+    AaveSummary
   },
   mixins: [handlerAave],
+  data() {
+    return {
+      step: 0,
+      amount: '0',
+      withdrawTitle: AAVE_TABLE_TITLE.withdraw
+    };
+  },
   computed: {
     ...mapGetters('wallet', ['tokensList', 'balanceInETH']),
     ...mapGetters('global', ['network', 'getFiatValue']),
@@ -74,6 +99,11 @@ export default {
             .decimalPlaces(hasBalance.decimals)
             .toString()
         : '0';
+    },
+    amountUSD() {
+      return this.getFiatValue(
+        BigNumber(this.amount).times(this.tokenPrice).toFixed()
+      );
     },
     aaveWithdrawForm() {
       const hasDeposit = this.selectedTokenInUserSummary;
@@ -113,20 +143,33 @@ export default {
       };
     }
   },
+  watch: {
+    preSelectedToken() {
+      this.handleSelectedToken();
+    }
+  },
   methods: {
+    handleSelectedToken() {
+      this.step = 0;
+    },
     handleWithdrawAmount(e) {
-      const amount =
-        e === this.selectedTokenInUserSummary.underlyingBalance
+      this.amount = e;
+      this.step = 1;
+    },
+    handleConfirm() {
+      this.amount =
+        this.amount === this.selectedTokenInUserSummary.underlyingBalance
           ? toBN(MAX_UINT_AMOUNT)
-          : toBase(e, this.selectedTokenDetails.decimals);
+          : toBase(this.amount, this.selectedTokenDetails.decimals);
       const param = {
         user: this.address,
         reserve: this.selectedTokenDetails.underlyingAsset,
-        amount: toHex(amount),
+        amount: toHex(this.amount),
         aTokenAddress: this.selectedTokenDetails.aToken.id
       };
       console.log('param', param);
-      this.$emit('onConfirm', param);
+      this.$emit('onConfirm');
+      this.step = 0;
       this.close();
     },
     handleCancel() {

@@ -158,6 +158,9 @@ export default {
       if (this.isRepay) {
         return 'Repay';
       }
+      if (this.isWithdraw) {
+        return 'Withdraw';
+      }
       return 'Deposit';
     },
     isDeposit() {
@@ -172,19 +175,23 @@ export default {
     isInterest() {
       return this.actionType.toLowerCase() === ACTION_TYPES.interest;
     },
+    isWithdraw() {
+      return this.actionType.toLowerCase() === ACTION_TYPES.withdraw;
+    },
     details() {
       let details = [
         {
           title: 'Currency',
-          value: this.selectedToken.token,
-          icon: this.selectedToken.tokenImg
+          value: this.selectedToken?.name,
+          icon: this.selectedToken?.icon
         }
       ];
       switch (this.actionType.toLowerCase()) {
         /**
-         * Case: Aave Deposit and Collateral Summary
+         * Case: Aave Deposit, Withdraw and Collateral Summary
          */
         case ACTION_TYPES.deposit:
+        case ACTION_TYPES.withdraw:
         case ACTION_TYPES.collateral:
           details = this.step === 1 && this.isDeposit ? [] : details;
           details.push(
@@ -241,13 +248,18 @@ export default {
     },
     nextHealthFactor() {
       const selectedToken = this.selectedToken;
+      console.log('selectedToken', selectedToken);
+      // Find out why nextHealth is not calculated correctly
       let nextHealthFactor = this.currentHealthFactor,
         collateralBalanceETH =
           this.userSummary.totalCollateralMarketReferenceCurrency,
-        totalBorrowsETH = this.userSummary.totalBorrowsETH;
-      if (selectedToken?.price && this.amount !== '0') {
+        totalBorrowsETH = this.userSummary.totalBorrowsMarketReferenceCurrency;
+      if (
+        selectedToken?.formattedPriceInMarketReferenceCurrency &&
+        this.amount !== '0'
+      ) {
         const ethBalance = BigNumber(this.amount).times(
-          selectedToken?.price?.priceInEth
+          selectedToken?.formattedPriceInMarketReferenceCurrency
         );
         if (this.isDeposit) {
           collateralBalanceETH = new BigNumber(
