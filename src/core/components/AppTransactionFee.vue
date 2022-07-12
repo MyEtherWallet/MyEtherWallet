@@ -143,7 +143,7 @@
           >
             {{ error }}
             <a v-if="notEnoughEth && network.type.canBuy" @click="openMoonpay">
-              Buy more {{ network.type.name }}
+              Buy more {{ network.type.currencyName }}
             </a>
           </div>
           <div>

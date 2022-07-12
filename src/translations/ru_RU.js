@@ -27,6 +27,7 @@ import dappsAmbrpay from './dapps-ambrpay/ru_RU';
 import phishing from './other/phishing/ru_RU';
 import header from './header/ru_RU';
 import dappsMCDMaker from './dapps-mcd-maker/ru_RU';
+import aboutUs from './about-us/ru_RU.json';
 
 const ru_RU = {
   common: common,
@@ -37,6 +38,7 @@ const ru_RU = {
   termsOfService: termsOfService,
   accessWallet: accessWallet,
   interface: interfaceTranslations,
+  aboutUs: aboutUs,
   errorsGlobal: errorsGlobal,
   trezorError: trezorError,
   ledgerError: ledgerError,

@@ -313,17 +313,14 @@ export default {
      * includes status: ACTIVE, EXITED
      */
     activeValidators() {
-      return this.validatorsRaw
-        .filter(raw => {
-          return (
-            raw.status.toLowerCase() === STATUS_TYPES.ACTIVE ||
-            raw.status.toLowerCase() === STATUS_TYPES.EXITED
-          );
-        })
-        .map(raw => {
+      return this.validatorsRaw.reduce((acc, raw) => {
+        if (
+          raw.status.toLowerCase() === STATUS_TYPES.ACTIVE ||
+          raw.status.toLowerCase() === STATUS_TYPES.EXITED
+        ) {
           const totalBalanceETH = this.convertToEth1(raw.balance);
           const earning = new BigNumber(totalBalanceETH).minus(raw.amount);
-          return {
+          acc.push({
             url:
               configNetworkTypes.network[this.network.type.name].url +
               '0x' +
@@ -336,8 +333,10 @@ export default {
             averageApr: formatPercentageValue(
               this.getAverageApr(raw.activation_timestamp, earning, raw.amount)
             ).value
-          };
-        });
+          });
+        }
+        return acc;
+      }, []);
     },
     /**
      * @returns array
@@ -345,20 +344,17 @@ export default {
      * includes status: DEPOSITED, PENDING, FAILED, CREATED
      */
     pendingValidators() {
-      return this.validatorsRaw
-        .filter(raw => {
-          const nextDay = 60 * 60 * 24 * 1000;
-          const createdDate = new Date(raw.created).getTime() + nextDay;
-          const withinTheDay = new Date().getTime() <= createdDate;
-          return (
-            raw.status.toLowerCase() === STATUS_TYPES.DEPOSITED ||
-            raw.status.toLowerCase() === STATUS_TYPES.PENDING ||
-            raw.status.toLowerCase() === STATUS_TYPES.FAILED ||
-            (raw.status.toLowerCase() === STATUS_TYPES.CREATED && withinTheDay)
-          );
-        })
-        .map(raw => {
-          return {
+      return this.validatorsRaw.reduce((acc, raw) => {
+        const nextDay = 60 * 60 * 24 * 1000;
+        const createdDate = new Date(raw.created).getTime() + nextDay;
+        const withinTheDay = new Date().getTime() <= createdDate;
+        if (
+          raw.status.toLowerCase() === STATUS_TYPES.DEPOSITED ||
+          raw.status.toLowerCase() === STATUS_TYPES.PENDING ||
+          raw.status.toLowerCase() === STATUS_TYPES.FAILED ||
+          (raw.status.toLowerCase() === STATUS_TYPES.CREATED && withinTheDay)
+        ) {
+          acc.push({
             amount: formatFloatingPointValue(raw.amount).value,
             amountFiat: this.getFiatValue(
               new BigNumber(raw.amount).times(this.fiatValue)
@@ -381,8 +377,10 @@ export default {
                     raw.queue.estimated_activation_timestamp
                   )
                 : '~'
-          };
-        });
+          });
+        }
+        return acc;
+      }, []);
     },
     /**
      * @returns array

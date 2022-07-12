@@ -69,6 +69,9 @@ const webpackConfig = {
       minSize: 1000000,
       maxSize: 20000000
     }
+  },
+  output: {
+    filename: '[name].[hash].js'
   }
 };
 

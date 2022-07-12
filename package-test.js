@@ -47,11 +47,15 @@ const EXCEPTIONS = [
   '@vue/cli-service',
   'vue-i18n',
   'vue',
-  'trezor-connect', // currently in beta
+  '@vue/cli-plugin-e2e-nightwatch',
+  'geckodriver',
   '@shapeshiftoss/hdwallet-core',
   '@shapeshiftoss/hdwallet-keepkey-webusb',
+  'trezor-connect', // currently in beta
   'package-json',
-  'codecov'
+  'codecov',
+  'node-polyfill-webpack-plugin',
+  '@ensdomains/ensjs' // major alpha update
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
@@ -107,12 +111,12 @@ const looper = () => {
           if (!isMewComponentBeta) {
             console.error(
               'ERROR: Update ' +
-                _name +
-                ' from ' +
-                ALL_PACKAGES[_name] +
-                ' to ' +
-                latestVersion +
-                '. Released:',
+              _name +
+              ' from ' +
+              ALL_PACKAGES[_name] +
+              ' to ' +
+              latestVersion +
+              '. Released:',
               latestVersionTime
             );
             updatesFound = true;
