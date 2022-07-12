@@ -27,9 +27,6 @@ module.exports = [
   'https://raw.githubusercontent.com:443/MyEtherWallet/dynamic-data/main/careers.json',
   'https://raw.githubusercontent.com:443/MyEtherWallet/dynamic-data/main/articles.json',
   'https://formspree.io:443/f/mqjndkkx',
-  //team images
-  'https://raw.githubusercontent.com:443/MyEtherWallet/dynamic-data/main/assets/images/team/*',
-  'https://raw.githubusercontent.com:443/MyEtherWallet/dynamic-data/main/assets/images/team/',
   // nodes
   'https://nodes.mewapi.io:443',
   'wss://nodes.mewapi.io:443',
