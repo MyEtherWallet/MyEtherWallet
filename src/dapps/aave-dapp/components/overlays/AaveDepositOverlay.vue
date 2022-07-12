@@ -43,7 +43,7 @@
         -->
     <aave-summary
       v-if="step === 2"
-      :selected-token="selectedToken"
+      :selected-token="selectedTokenDetails"
       :amount="amount"
       :step="step"
       :action-type="depositTitle"
