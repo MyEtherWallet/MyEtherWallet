@@ -48,8 +48,8 @@
       =====================================================================================
       -->
     <aave-summary
-      v-if="step === 3"
-      :selected-token="selectedToken"
+      v-if="step === 3 || step === 4"
+      :selected-token="selectedTokenDetails"
       :amount="amount"
       :step="step"
       :apr="apr"
@@ -178,16 +178,19 @@ export default {
       this.step = 3;
     },
     handleConfirm() {
-      const data = {
-        user: this.address,
-        reserve: this.selectedTokenDetails.underlyingAsset,
-        amount: this.amountWithDecimals,
-        interestRateMode: this.apr.type,
-        referralCode: '14'
-      };
-      console.log(data);
-      this.onBorrow(data);
-      this.callClose();
+      if (this.step === 3) this.step = 4;
+      else if (this.step === 4) {
+        const data = {
+          user: this.address,
+          reserve: this.selectedTokenDetails.underlyingAsset,
+          amount: this.amountWithDecimals,
+          interestRateMode: this.apr.type,
+          referralCode: '14'
+        };
+        console.log(data);
+        this.onBorrow(data);
+        this.callClose();
+      }
     }
   }
 };

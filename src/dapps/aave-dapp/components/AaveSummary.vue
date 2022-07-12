@@ -222,24 +222,53 @@ export default {
           );
           return details;
         case ACTION_TYPES.borrow:
-          details = [
-            {
-              title: 'Interest APR',
-              value: this.apr.percentage,
-              class:
-                this.apr.type.toLowerCase() === INTEREST_TYPES.stable
-                  ? 'secondary--text'
-                  : 'warning--text text--darken-1'
-            },
-            {
-              title: 'Interest rate type',
-              value: this.apr.type,
-              class:
-                this.apr.type.toLowerCase() === INTEREST_TYPES.stable
-                  ? 'secondary--text capitalize'
-                  : 'warning--text text--darken-1 capitalize'
-            }
-          ];
+          if (this.step === 3) {
+            details = [
+              {
+                title: 'Interest APR',
+                value: this.apr.percentage,
+                class:
+                  this.apr.type.toLowerCase() === INTEREST_TYPES.stable
+                    ? 'secondary--text'
+                    : 'warning--text text--darken-1'
+              },
+              {
+                title: 'Interest rate type',
+                value: this.apr.type,
+                class:
+                  this.apr.type.toLowerCase() === INTEREST_TYPES.stable
+                    ? 'secondary--text capitalize'
+                    : 'warning--text text--darken-1 capitalize'
+              }
+            ];
+          } else if (this.step === 4) {
+            details.push(
+              {
+                title: 'Current Health Factor',
+                tooltip: 'Tooltip text',
+                value: this.currentHealthFactor,
+                class:
+                  this.currentHealthFactor > this.nextHealthFactor
+                    ? 'greenPrimary--text'
+                    : 'redPrimary--text'
+              },
+              {
+                title: 'Next Health Factor',
+                tooltip: 'Tooltip text',
+                value: this.nextHealthFactor,
+                class:
+                  this.currentHealthFactor >= this.nextHealthFactor
+                    ? 'redPrimary--text'
+                    : 'greenPrimary--text',
+                indicator:
+                  this.currentHealthFactor == this.nextHealthFactor
+                    ? ''
+                    : this.currentHealthFactor < this.nextHealthFactor
+                    ? 'mdi-arrow-up-bold'
+                    : 'mdi-arrow-down-bold'
+              }
+            );
+          }
       }
       return details;
     },
@@ -273,6 +302,10 @@ export default {
           totalBorrowsETH = new BigNumber(
             this.userSummary.totalBorrowsMarketReferenceCurrency
           ).minus(ethBalance);
+        } else if (this.isBorrow) {
+          totalBorrowsETH = new BigNumber(
+            this.userSummary.totalBorrowsMarketReferenceCurrency
+          ).plus(ethBalance);
         }
         nextHealthFactor = calculateHealthFactorFromBalancesBigUnits(
           collateralBalanceETH,
