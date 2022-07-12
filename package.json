@@ -76,7 +76,7 @@
     "ethers": "5.6.9",
     "graphql": "16.5.0",
     "graphql-tag": "2.12.6",
-    "highcharts": "10.1.0",
+    "highcharts": "10.2.0",
     "highcharts-vue": "1.4.0",
     "hmac-drbg": "1.0.1",
     "keccak256": "1.0.6",
@@ -103,7 +103,7 @@
   },
   "devDependencies": {
     "@commitlint/config-conventional": "17.0.3",
-    "@ledgerhq/hw-app-eth": "6.29.0",
+    "@ledgerhq/hw-app-eth": "6.29.1",
     "@ledgerhq/hw-transport-webusb": "6.27.1",
     "@mdi/font": "6.9.96",
     "@vue/babel-preset-app": "4.5.15",
