@@ -73,8 +73,8 @@ export default {
         link: 'https://app.1inch.io/'
       },
       {
-        img: require('@/assets/images/partners/dexag.png'),
-        link: 'https://dex.ag/'
+        img: require('@/assets/images/partners/buitl-w-rivet-light-bg.svg'),
+        link: 'https://rivet.cloud/'
       }
     ]
   })
