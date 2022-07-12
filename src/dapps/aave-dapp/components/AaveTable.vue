@@ -51,6 +51,7 @@ import {
   AAVE_TABLE_TITLE,
   INTEREST_TYPES
 } from '@/dapps/aave-dapp/handlers/helpers';
+import { calculateHealthFactorFromBalancesBigUnits } from '@aave/protocol-js';
 import BigNumber from 'bignumber.js';
 import { mapGetters } from 'vuex';
 import {
@@ -199,7 +200,9 @@ export default {
               .map(item => {
                 return {
                   token: item.symbol,
-                  available: formatFloatingPointValue(item.borrowCap).value, // need to double check this
+                  available: formatFloatingPointValue(
+                    this.userBorrowPower(item)
+                  ).value, // need to double check this
                   stableApy: item.stableBorrowRateEnabled
                     ? formatPercentageValue(
                         new BigNumber(item.stableBorrowAPY).multipliedBy(100)
@@ -220,6 +223,7 @@ export default {
           case AAVE_TABLE_TITLE.balance_deposit:
             list = list.map(item => {
               AAVE_TABLE_BUTTON.withdraw.method = this.onWithdrawClick;
+              AAVE_TABLE_BUTTON.deposit.method = this.onDepositClick;
               return {
                 token: item.reserve.symbol,
                 tokenImg: `${item.reserve.icon}`,
@@ -227,7 +231,9 @@ export default {
                   `${formatFloatingPointValue(item.underlyingBalance).value} ${
                     item.reserve.symbol
                   }`,
-                  this.getFiatValue(10 ** 8 * item.underlyingBalanceUSD)
+                  this.getFiatValue(
+                    this.formatUSDValue(item.underlyingBalanceUSD)
+                  )
                 ],
                 apy: this.getDepositAPY(item.reserve.liquidityRate),
                 toggle: {
@@ -331,6 +337,41 @@ export default {
         Math.pow(1 + depositAPR / SECONDS_PER_YEAR, SECONDS_PER_YEAR) - 1;
       return formatPercentageValue(new BigNumber(depositAPY).multipliedBy(100))
         .value;
+    },
+    nextHealthFactor(selectedToken, amount) {
+      let nextHealthFactor = this.currentHealthFactor,
+        totalBorrowsETH = this.userSummary.totalBorrowsMarketReferenceCurrency;
+      const collateralBalanceETH =
+        this.userSummary.totalCollateralMarketReferenceCurrency;
+      if (
+        selectedToken?.formattedPriceInMarketReferenceCurrency &&
+        amount !== '0'
+      ) {
+        const ethBalance = BigNumber(amount).times(
+          selectedToken?.formattedPriceInMarketReferenceCurrency
+        );
+        totalBorrowsETH = new BigNumber(
+          this.userSummary.totalBorrowsMarketReferenceCurrency
+        ).plus(ethBalance);
+        nextHealthFactor = calculateHealthFactorFromBalancesBigUnits(
+          collateralBalanceETH,
+          totalBorrowsETH,
+          this.userSummary.currentLiquidationThreshold
+        ).toFixed(3);
+      }
+      return nextHealthFactor;
+    },
+    userBorrowPower(token) {
+      let borrowPower = 0;
+      const tokenAmount = BigNumber(this.userBorrowingPowerInETH)
+        .dividedBy(token.formattedPriceInMarketReferenceCurrency)
+        .dividedBy(1.0105); // Hardcode to match AAVE protocol health 1.12 limit
+      const healthFactor = this.nextHealthFactor(token, tokenAmount);
+      console.log(`${token.name} token`, token);
+      console.log(`${token.name} available`, tokenAmount.toFixed());
+      console.log(`${token.name} health`, healthFactor);
+      borrowPower = tokenAmount;
+      return borrowPower.isFinite() && !borrowPower.isNaN() ? borrowPower : 0;
     },
     /**
      * Method emits to the parent to open deposit token overlay
