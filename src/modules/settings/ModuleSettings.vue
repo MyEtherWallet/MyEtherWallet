@@ -79,6 +79,7 @@
 </template>
 
 <script>
+import MewTable from '@/components/MewTable/MewTable';
 import SettingsImportConfig from './components/SettingsImportConfig';
 import SettingsExportConfig from './components/SettingsExportConfig';
 import SettingsGasPrice from './components/SettingsGasPrice';
@@ -93,6 +94,7 @@ const modes = ['add', 'edit'];
 export default {
   name: 'ModuleSettings',
   components: {
+    MewTable,
     SettingsImportConfig,
     SettingsExportConfig,
     SettingsGasPrice,
