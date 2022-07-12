@@ -9,12 +9,11 @@ import {
 import { Toast, SUCCESS, ERROR } from '@/modules/toast/handler/handlerToast';
 import configs from '@/dapps/aave-dapp/apollo/configs';
 import eth from '@/assets/images/currencies/eth.png';
-import { LendingPool } from '@aave/contract-helpers';
+import { LendingPool, ChainId } from '@aave/contract-helpers';
 import { mapState, mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { formatReserves, formatUserSummary } from '@aave/math-utils';
 import { ethers } from 'ethers';
-import { ChainId } from '@aave/contract-helpers';
 // import { toHex } from 'web3-utils';
 // import { cloneDeep } from 'lodash';
 import { INTEREST_TYPES } from '../handlers/helpers';
@@ -76,7 +75,6 @@ export default {
       SWAP_COLLATERAL_ADAPTER: SWAP_COLLATERAL_ADAPTER,
       WETH_GATEWAY: WETH_GATEWAY
     });
-
     this.poolContract = this.lendingPool.getContractInstance(LENDING_POOL);
   },
   apollo: {
@@ -196,12 +194,16 @@ export default {
           return item;
         }
       });
+    },
+    userBorrowingPowerInETH() {
+      let buyingPower = 0;
+      for (const reserve of this.userReservesData) {
+        buyingPower +=
+          reserve.underlyingBalanceMarketReferenceCurrency *
+          reserve.reserve.formattedBaseLTVasCollateral;
+      }
+      return buyingPower - this.userSummary.totalBorrowsMarketReferenceCurrency;
     }
-    // amountUsd() {
-    //   return this.getFiatValue(
-    //     BigNumber(this.selectedTokenUSD).times(this.amount || 0)
-    //   );
-    // }
   },
   methods: {
     /**
