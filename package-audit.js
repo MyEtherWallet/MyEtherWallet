@@ -17,7 +17,8 @@ const AUDIT_EXCEPTIONS = [
   'semver-regex',
   // no package found
   'codecov',
-  'parse-url' // fix after release
+  'parse-url', // fix after release,
+  'parse-path'
 ];
 const execute = (command, callback) => {
   exec(
