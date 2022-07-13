@@ -292,9 +292,7 @@ export default {
      * Consiquently this will open the correct module overlay.
      * @type - must be one of the VALID_OVERLAYS
      */
-    openOverlay(type, offline) {
-      this.setOfflineApp(offline);
-
+    openOverlay(type) {
       try {
         this.$router.push({
           name: ROUTES_HOME.ACCESS_WALLET.NAME,
