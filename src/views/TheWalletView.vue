@@ -16,7 +16,7 @@
 
 <script>
 import { mapActions, mapState, mapGetters } from 'vuex';
-import { toBN, toHex } from 'web3-utils';
+import { toBN } from 'web3-utils';
 import TheWalletSideMenu from './components-wallet/TheWalletSideMenu';
 import TheWalletHeader from './components-wallet/TheWalletHeader';
 import TheWalletFooter from './components-wallet/TheWalletFooter';
@@ -59,7 +59,6 @@ export default {
     },
     network() {
       this.web3.eth.clearSubscriptions();
-      this.matchNetwork();
     },
     web3() {
       this.subscribeToBlockNumber();
@@ -158,52 +157,6 @@ export default {
           {},
           ERROR
         );
-      }
-    },
-    /**
-     * Attempts to switch metamask network to current mew network.
-     * Informs user of pending or unknown networks.
-     */
-    async matchNetwork() {
-      const { ethereum } = window;
-      const {
-        type: { chainID }
-      } = this.network;
-      if (ethereum) {
-        const data = { chainId: toHex(chainID) };
-        try {
-          await ethereum.request({
-            method: 'wallet_switchEthereumChain',
-            params: [data]
-          });
-        } catch (er) {
-          const { message } = er;
-          let toastMsg = ' ';
-          let toastLink = {};
-          if (message) {
-            if (message.includes('pending')) {
-              toastMsg =
-                'There is a pending request to MetaMask, make your selection before continuing';
-            } else if (message.includes('adding')) {
-              toastLink = {
-                title:
-                  "It seems like you don't have this network set up in MetaMask. Please go here to add the network.",
-                url: 'https://chainlist.org/'
-              };
-            } else if (message.includes('rejected')) return;
-            else if (message.includes("hasn't been added")) {
-              toastLink = {
-                title:
-                  "It seems like you don't have this network set up in your wallet. Please go here to add the network.",
-                url: 'https://chainlist.org/'
-              };
-            } else {
-              toastMsg =
-                'There was a problem processing your request to MetaMask';
-            }
-            Toast(toastMsg, toastLink, ERROR, 5000);
-          }
-        }
       }
     },
     async findAndSetNetwork() {

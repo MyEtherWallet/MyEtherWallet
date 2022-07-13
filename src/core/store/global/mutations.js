@@ -1,6 +1,8 @@
 import localStore from 'store';
 import Configs from '../configs';
 import nodeList from '@/utils/networks';
+import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
+import { toHex } from 'web3-utils';
 const defaultNetwork = nodeList['ETH'].find(item => {
   return item.service === 'myetherwallet.com-ws';
 });
@@ -38,12 +40,65 @@ const SET_GAS_PRICE = function (state, val) {
   state.baseGasPrice = val;
 };
 
-const SET_NETWORK = function (state, networkObj) {
+/**
+ * Attempts to switch metamask network to current mew network.
+ * Informs user of pending or unknown networks.
+ */
+
+const MATCH_NETWORK = async chainID => {
+  const { ethereum } = window;
+  if (ethereum) {
+    const data = { chainId: toHex(chainID) };
+    try {
+      if (chainID) {
+        await ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [data]
+        });
+        return true;
+      }
+      return false;
+    } catch (er) {
+      const { message } = er;
+      let toastMsg = ' ';
+      let toastLink = {};
+      if (message) {
+        if (message.includes('pending')) {
+          toastMsg =
+            'There is a pending request to MetaMask, make your selection before continuing';
+        } else if (message.includes('adding')) {
+          toastLink = {
+            title:
+              "It seems like you don't have this network set up in MetaMask. Please go here to add the network.",
+            url: 'https://chainlist.org/'
+          };
+        } else if (message.includes('rejected')) return;
+        else if (message.includes("hasn't been added")) {
+          toastLink = {
+            title:
+              "It seems like you don't have this network set up in your wallet. Please go here to add the network.",
+            url: 'https://chainlist.org/'
+          };
+        } else {
+          toastMsg = 'There was a problem processing your request to MetaMask';
+        }
+        Toast(toastMsg, toastLink, ERROR, 5000);
+      }
+      return false;
+    }
+  }
+  return true
+};
+
+const SET_NETWORK = async function (state, networkObj) {
   const _netObj = Object.assign({}, networkObj);
   _netObj.type = {
     name: networkObj.type.name
   };
-  state.currentNetwork = _netObj;
+  const matched = await MATCH_NETWORK(networkObj.type.chainID);
+  if (matched) {
+    state.currentNetwork = _netObj;
+  }
 };
 const SET_GAS_PRICE_TYPE = function (state, type) {
   state.gasPriceType = type;
@@ -92,6 +147,7 @@ export default {
   SET_PREFERRED_CURRENCY,
   SET_GAS_PRICE,
   SET_NETWORK,
+  MATCH_NETWORK,
   INIT_STORE,
   SET_GAS_PRICE_TYPE,
   SET_IMPORTED_STATE,
