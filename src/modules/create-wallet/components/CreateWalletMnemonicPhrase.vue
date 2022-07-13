@@ -52,11 +52,7 @@
             :has-dividers="true"
             :is-toggle="true"
             :interactive-content="true"
-            :panel-items="[
-              {
-                name: 'Add Extra Word'
-              }
-            ]"
+            :panel-items="[{ name: 'Add Extra Word' }]"
           >
             <template #panelBody1>
               <div class="px-5">
@@ -126,6 +122,7 @@
               <v-col
                 v-for="(entries, id) in getEntries(item)"
                 :key="entries + id"
+                class="Options"
                 cols="12"
                 sm="4"
               >

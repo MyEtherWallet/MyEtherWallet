@@ -90,16 +90,21 @@ module.exports = {
         const secondIndex = findIndex(second);
         const thirdIndex = findIndex(third);
 
-        console.log('selector', firstIndex);
-        browser.getText(css, '.MnemonicRadioOption', result => {
-          console.log('result', result);
-        });
+        // browser.elements(css, '.Options', r => {
+        //   const options = chunk(r.value, 3);
+        //   const [uno, dos, tres] = options;
+
+        //   browser
+        //     .elementIdClick(uno[firstIndex])
+        //     .elementIdClick(dos[secondIndex])
+        //     .elementIdClick(tres[thirdIndex]);
+        // });
 
         browser
           .click(css, firstPhrases[firstIndex])
           .click(css, secondPhrases[secondIndex])
           .click(css, thirdPhrases[thirdIndex])
-          .pause()
+          .pause(1000)
           .click(css, '.CreateMnemonicVerify');
       });
 
