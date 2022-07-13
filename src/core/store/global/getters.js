@@ -9,6 +9,7 @@ import {
 import { toBN } from 'web3-utils';
 import { isEmpty } from 'lodash';
 import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 
 const Networks = function () {
   return nodeList;
@@ -69,7 +70,7 @@ const hasSwap = function (state, getters, rootState) {
   const name = getters.network.type.name;
   const device = rootState.wallet.instance.identifier;
 
-  if (device === 'coolWallet') return false;
+  if (device === WALLET_TYPES.COOL_WALLET_S) return false;
   return name === ETH.name || name === BSC.name || name === MATIC.name;
 };
 
