@@ -25,7 +25,7 @@
               <v-col offset="3">
                 <p>Address</p>
               </v-col>
-              <v-col cols="4" sm="3">
+              <v-col v-if="!isOfflineApp" cols="4" sm="3">
                 <p class="text-center">{{ network.type.name }} Balance</p>
               </v-col>
             </v-row>
@@ -111,7 +111,7 @@
                   />
                 </v-row>
               </v-col>
-              <v-col cols="3">
+              <v-col v-if="!isOfflineApp" cols="3">
                 <p class="balance-overflow text-center">
                   {{
                     acc.balance === 'Loading..'
