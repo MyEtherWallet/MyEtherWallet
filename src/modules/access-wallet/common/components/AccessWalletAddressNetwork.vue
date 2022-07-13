@@ -268,7 +268,9 @@ export default {
         };
       },
       skip() {
-        return this.skipApollo || this.accountAddress === null;
+        return this.isOfflineApp
+          ? false
+          : this.skipApollo || this.accountAddress === null;
       },
       result({ data }) {
         if (data && data.getEthBalance) {
@@ -315,6 +317,7 @@ export default {
   computed: {
     ...mapGetters('global', ['network']),
     ...mapState('addressBook', ['addressBookStore']),
+    ...mapState('wallet', ['isOfflineApp']),
     web3() {
       return new Web3(this.network.url);
     },
@@ -469,7 +472,9 @@ export default {
               : {
                   name: ''
                 };
-            const balance = this.network.type.isEthVMSupported.supported
+            const balance = this.isOfflineApp
+              ? '0'
+              : this.network.type.isEthVMSupported.supported
               ? 'Loading..'
               : await this.web3.eth.getBalance(address);
             const nickname = this.getNickname(address);
