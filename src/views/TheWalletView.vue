@@ -5,12 +5,12 @@
       <v-container class="pa-2 pa-md-3 mb-14" fluid>
         <the-wallet-header />
         <module-confirmation />
-        <wallet-promo-pop-up />
+        <wallet-promo-pop-up v-if="!isOfflineApp" />
         <router-view />
       </v-container>
     </v-main>
     <the-wallet-footer />
-    <wallet-promo-snackbar />
+    <wallet-promo-snackbar v-if="!isOfflineApp" />
   </div>
 </template>
 
@@ -41,7 +41,7 @@ export default {
   },
   mixins: [handlerWallet],
   computed: {
-    ...mapState('wallet', ['address', 'web3', 'identifier']),
+    ...mapState('wallet', ['address', 'web3', 'identifier', 'isOfflineApp']),
     ...mapState('global', ['online', 'gasPriceType', 'baseGasPrice']),
     ...mapGetters('global', [
       'network',

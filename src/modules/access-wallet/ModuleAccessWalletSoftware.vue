@@ -245,8 +245,10 @@ export default {
               return;
             }
             if (this.path !== '') {
+              console.log('was it here?');
               this.$router.push({ path: this.path });
             } else {
+              console.log('or here?');
               this.$router.push({ name: ROUTES_WALLET.WALLETS.NAME });
             }
             this.trackAccessWallet(this.type);
