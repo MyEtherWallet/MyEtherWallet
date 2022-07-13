@@ -290,12 +290,18 @@ export default {
     },
     /**
      * Apollo mutation to set the borrow rate (stable or variable)
+     * function swapBorrowRateMode(address asset, uint256 rateMode)
+     * the rate mode the user is swapping from. Stable: 1, Variable: 2
      */
-    async setBorrowRate(data) {
+    async setBorrowRate({ reserve, rateMode }) {
       try {
-        return await this.lendingPool.swapBorrowRateMode(data).then(res => {
-          this.formatTxData(res, 'swapBorrowRateMode');
-        });
+        const txData =
+          await this.poolContract.populateTransaction.swapBorrowRateMode(
+            reserve,
+            rateMode
+          );
+        console.log('txData', txData);
+        this.formatTxData(txData);
       } catch (e) {
         throw new Error(e);
       }

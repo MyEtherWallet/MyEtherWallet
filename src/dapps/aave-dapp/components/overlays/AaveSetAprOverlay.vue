@@ -19,6 +19,7 @@
 <script>
 import { Toast, WARNING } from '@/modules/toast/handler/handlerToast';
 import handlerAave from '../../handlers/handlerAave.mixin';
+import { INTEREST_TYPES } from '../../handlers/helpers';
 import AaveSelectInterest from '../AaveSelectInterest';
 export default {
   components: {
@@ -32,17 +33,17 @@ export default {
   },
   methods: {
     handleSetInterestRate(e) {
-      this.rateType = e;
+      this.rateType = e.type;
+      const type =
+        this.selectedTokenInUserSummary.variableBorrows > 0
+          ? INTEREST_TYPES.variable
+          : INTEREST_TYPES.stable;
       const param = {
-        aavePool: 'proto',
-        userAddress: this.address,
-        reserve: this.selectedTokenDetails.underlyingAsset
+        reserve: this.selectedTokenDetails.underlyingAsset,
+        rateMode: type === INTEREST_TYPES.variable ? 2 : 1 // rateMode to switch FROM
       };
-      if (
-        e.toLowerCase() ===
-        this.selectedTokenInUserSummary.borrowRateMode.toLowerCase()
-      ) {
-        Toast(`Selected rate is already ${e}`, {}, WARNING);
+      if (e.type === type) {
+        Toast(`Selected rate is already ${e.type}`, {}, WARNING);
       } else {
         this.$emit('onConfirm', param);
         this.close();

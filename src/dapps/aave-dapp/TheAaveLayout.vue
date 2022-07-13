@@ -277,6 +277,7 @@
     <aave-set-apr-overlay
       :open="showAprTypeOverlay"
       :close="closeAprTypeOverlay"
+      :pre-selected-token="tokenSelected"
       @onConfirm="setBorrowRate"
     />
   </div>

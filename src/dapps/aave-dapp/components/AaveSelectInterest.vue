@@ -89,7 +89,7 @@ export default {
           ).value
         : '--';
       const variable =
-        this.selectedToken.variableBorrowAPY > 0
+        this.selectedToken?.variableBorrowAPY > 0
           ? formatPercentageValue(
               new BigNumber(this.selectedToken.variableBorrowAPY).multipliedBy(
                 100

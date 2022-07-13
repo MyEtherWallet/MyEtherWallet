@@ -280,7 +280,7 @@ export default {
                     .toString()
                 ).value,
                 toggle: {
-                  color: isVariable ? 'greenMedium' : 'greenPrimary',
+                  color: 'greenPrimary',
                   method: this.onToggleAprType,
                   value: isVariable,
                   label: isVariable
