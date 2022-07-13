@@ -363,13 +363,14 @@ export default {
     },
     userBorrowPower(token) {
       let borrowPower = 0;
-      const tokenAmount = BigNumber(this.userBorrowingPowerInETH)
-        .dividedBy(token.formattedPriceInMarketReferenceCurrency)
-        .dividedBy(1.0105); // Hardcode to match AAVE protocol health 1.12 limit
+      const tokenAmount = BigNumber(this.userBorrowingPowerInETH).dividedBy(
+        token.formattedPriceInMarketReferenceCurrency
+      );
       const healthFactor = this.nextHealthFactor(token, tokenAmount);
-      console.log(`${token.name} token`, token);
-      console.log(`${token.name} available`, tokenAmount.toFixed());
-      console.log(`${token.name} health`, healthFactor);
+      if (healthFactor < 1.1) {
+        console.log(`${token.name} health factor is ${healthFactor}...`);
+        console.log(`${token.name}: ${tokenAmount.toString()}...`);
+      }
       borrowPower = tokenAmount;
       return borrowPower.isFinite() && !borrowPower.isNaN() ? borrowPower : 0;
     },

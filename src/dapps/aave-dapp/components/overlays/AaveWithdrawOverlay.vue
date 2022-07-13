@@ -164,11 +164,10 @@ export default {
       const param = {
         user: this.address,
         reserve: this.selectedTokenDetails.underlyingAsset,
-        amount: toHex(this.amount),
-        aTokenAddress: this.selectedTokenDetails.aToken.id
+        amount: toHex(this.amount)
       };
       console.log('param', param);
-      this.$emit('onConfirm');
+      this.$emit('onConfirm', param);
       this.step = 0;
       this.close();
     },

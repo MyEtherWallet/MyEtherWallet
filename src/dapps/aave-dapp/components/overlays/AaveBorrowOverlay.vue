@@ -54,7 +54,7 @@
       :step="step"
       :apr="apr"
       :action-type="borrowTitle"
-      :amount-usd="aaveBorrowForm.amountInUSD"
+      :amount-usd="amountUsd"
       @onConfirm="handleConfirm"
     />
   </mew-overlay>
@@ -93,10 +93,10 @@ export default {
         ? `${formatFloatingPointValue(hasBorrowed.totalBorrows).value} ${
             this.selectedToken.token
           }`
-        : this.getFiatValue(0);
+        : `0 ${this.selectedToken.token}`;
       const borrowedUSD = hasBorrowed
         ? this.getFiatValue(this.formatUSDValue(hasBorrowed.totalBorrowsUSD))
-        : `0 ETH`;
+        : this.getFiatValue(0);
       const eth = `${
         formatFloatingPointValue(
           this.userSummary.totalCollateralMarketReferenceCurrency
@@ -145,6 +145,14 @@ export default {
     },
     amountWithDecimals() {
       return toBase(this.amount, this.selectedTokenDetails.decimals);
+    },
+    amountUsd() {
+      const amountUSD = this.getFiatValue(
+        this.formatUSDValue(
+          this.amount * this.selectedTokenDetails.priceInUSD || 0
+        )
+      );
+      return this.step === 1 ? this.aaveBorrowForm.amountInUSD : amountUSD;
     }
   },
   watch: {
