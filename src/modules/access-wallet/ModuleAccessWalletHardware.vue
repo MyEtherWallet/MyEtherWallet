@@ -69,14 +69,14 @@
           </mew-button>
         </v-col>
       </v-row>
-      <mew-alert
+      <!-- <mew-alert
         v-if="!bluetooth"
         class="mt-5"
         title="Bluetooth Required"
         description="Bluetooth is required for some wallets."
         theme="warning"
         hide-close-icon
-      />
+      /> -->
     </div>
     <v-dialog v-model="bluetoothModal" persistent max-width="500">
       <v-sheet color="white" class="pa-5">
@@ -183,29 +183,13 @@
         =====================================================================================
         -->
       <access-wallet-ledger
-        v-if="onLedger"
+        v-if="onLedger || onLedgerX"
         :ledger-unlock="nextStep"
         :ledger-apps="ledgerApps"
-        :ledger-connected="ledgerConnected"
         :paths="paths"
         :selected-path="selectedPath"
         :set-path="setPath"
-        @ledgerApp="setSelectedApp"
-      />
-
-      <!--
-        =====================================================================================
-          LedgerX
-        =====================================================================================
-        -->
-      <access-wallet-ledger-x
-        v-if="onLedgerX"
-        :ledger-unlock-ble="nextStep"
-        :ledger-apps="ledgerApps"
-        :ledger-connected="ledgerConnected"
-        :paths="paths"
-        :selected-path="selectedPath"
-        :set-path="setPath"
+        @setBluetoothLedgerUnlock="setBluetoothLedgerUnlock"
         @ledgerApp="setSelectedApp"
       />
 
@@ -301,15 +285,8 @@ export default {
     return {
       buttons: [
         {
-          label: 'Ledger USB',
-          icon: require('@/assets/images/icons/hardware-wallets/icon-ledger.svg'),
-          ble: false,
-          type: WALLET_TYPES.LEDGER
-        },
-        {
-          label: 'Ledger Bluetooth',
+          label: 'Ledger',
           icon: require('@/assets/images/icons/hardware-wallets/Ledger-Nano-X-Label-Icon.svg'),
-          ble: true,
           type: WALLET_TYPES.LEDGER
         },
         {
@@ -484,13 +461,13 @@ export default {
      * On Ledger
      */
     onLedger() {
-      return !this.ledgerBluetooth && this.walletType == WALLET_TYPES.LEDGER;
+      return this.walletType == WALLET_TYPES.LEDGER;
     },
     /**
      * On Ledger X
      */
     onLedgerX() {
-      return this.ledgerBluetooth && this.walletType === WALLET_TYPES.LEDGER;
+      return this.walletType === WALLET_TYPES.LEDGER;
     },
     /**
      * On CoolWallet
@@ -717,9 +694,6 @@ export default {
       this.walletType = WALLET_TYPES.TREZOR;
     },
     setWalletInstance(btnObj) {
-      if (btnObj.type === WALLET_TYPES.LEDGER) {
-        this.ledgerBluetooth = btnObj.ble;
-      }
       this.walletType = btnObj.type;
       this.nextStep();
     },
@@ -727,8 +701,6 @@ export default {
       if (this.walletType) {
         this.step++;
         if (this.step === this.walletInitialized) {
-          if (this.onLedger || this.onLedgerX)
-            this.selectedPath = this.paths[0];
           if (this.onCoolWallet || this.onBitbox2) return;
           this[`${this.walletType}Unlock`]();
         }
@@ -738,9 +710,17 @@ export default {
      * Unlock the hardware wallets
      */
     ledgerUnlock() {
-      this.unlockPathOnly();
+      if (this.ledgerBluetooth) {
+        this.bluetoothLedgerUnlock();
+      } else {
+        this.unlockPathOnly();
+      }
     },
-    ledgerXUnlockBLE() {
+    setBluetoothLedgerUnlock() {
+      this.ledgerBluetooth = true;
+      this.nextStep();
+    },
+    bluetoothLedgerUnlock() {
       this.unlockPathOnly();
     },
     trezorUnlock() {
@@ -769,8 +749,7 @@ export default {
         .then(_hwWallet => {
           try {
             this.loaded = true;
-            if (this.onLedger) this.ledgerConnected = true;
-            if (this.onLedgerX) this.nextStep();
+            if (this.onLedgerX || this.onLedger) this.nextStep();
             if ((this.onTrezor || this.onKeepkey) && this.step == 2)
               this.step++;
             if (this.onBitbox2) {
