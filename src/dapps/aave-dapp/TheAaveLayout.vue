@@ -271,6 +271,7 @@
     <aave-repay-overlay
       :open="showRepayOverlay"
       :close="closeRepayOverlay"
+      :pre-selected-token="tokenSelected"
       @onConfirm="onRepay"
     />
     <aave-set-apr-overlay

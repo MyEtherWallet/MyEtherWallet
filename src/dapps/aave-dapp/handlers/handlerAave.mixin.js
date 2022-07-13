@@ -263,16 +263,27 @@ export default {
      * @param {String|Number} data.amount - The amount to repay, or (-1) if the user wants to repay everything
      * @param data.interestRateMode -  // Whether stable (InterestRate.Stable) or variable (InterestRate.Variable) debt will be repaid
      */
-    async onRepay({ amount, reserve, referralCode, interestRateMode, user }) {
+    async onRepay({ amount, reserve, interestRateMode, user }) {
       try {
-        const data = await this.poolContract.repay(
+        const approveData = await this.formatApprovalData(
+          reserve,
+          user,
+          this.poolContract.address,
+          amount
+        );
+        const data = await this.poolContract.populateTransaction.repay(
           reserve,
           amount,
           interestRateMode === INTEREST_TYPES.variable ? 2 : 1,
-          referralCode,
           user
         );
-        this.formatTxData(data);
+        data.from = user;
+        const gasLimits = await estimateGasList(this.network.type.name, [
+          approveData,
+          data
+        ]);
+        console.log('txData', data);
+        this.sendTxns([approveData, data], gasLimits);
       } catch (e) {
         throw new Error(e);
       }
@@ -296,30 +307,17 @@ export default {
      * @param amount The amount of reserve asset being redeemed
      * @param user The ethereum address that will receive the reserve asset
      */
-    async onWithdraw({ reserve, amount, user, aTokenAddress }) {
+    async onWithdraw({ reserve, amount, user }) {
       try {
         //  If user has any existing debt backed by the underlying token,
         //  then the max amount available to withdraw is the amount that
         //  will not leave user health factor < 1 after withdrawal.
-        const approveData = await this.formatApprovalData(
-          aTokenAddress,
-          user,
-          this.poolContract.address,
-          amount
-        );
         const txData = await this.poolContract.populateTransaction.withdraw(
           reserve,
           amount,
           user
         );
-        txData.from = user;
-        console.log('txData', txData);
-        const gasLimits = await estimateGasList(this.network.type.name, [
-          approveData,
-          txData
-        ]);
-        console.log('gasLimits', gasLimits);
-        this.sendTxns([approveData, txData], gasLimits);
+        this.formatTxData(txData);
       } catch (e) {
         throw new Error(e);
       }
