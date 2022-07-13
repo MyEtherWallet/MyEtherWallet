@@ -2,22 +2,6 @@
 // https://nightwatchjs.org/guide
 const { chunk } = require('lodash');
 
-const firstPhrases = {
-  1: '#app > div.v-dialog__content.v-dialog__content--active > div > div > div > div.row.ma-0.pa-0.d-flex.align-center.justify-center.flex-column > div > div.d-flex.flex-column.align-center.justify-center.px-8.pb-8 > div > div > div:nth-child(3) > div.mx-auto.v-sheet.theme--light > div:nth-child(1) > div > div > div > div > div:nth-child(1) > div > div',
-  2: '#app > div.v-dialog__content.v-dialog__content--active > div > div > div > div.row.ma-0.pa-0.d-flex.align-center.justify-center.flex-column > div > div.d-flex.flex-column.align-center.justify-center.px-8.pb-8 > div > div > div:nth-child(3) > div.mx-auto.v-sheet.theme--light > div:nth-child(1) > div > div > div > div > div:nth-child(2) > div > div',
-  3: '#app > div.v-dialog__content.v-dialog__content--active > div > div > div > div.row.ma-0.pa-0.d-flex.align-center.justify-center.flex-column > div > div.d-flex.flex-column.align-center.justify-center.px-8.pb-8 > div > div > div:nth-child(3) > div.mx-auto.v-sheet.theme--light > div:nth-child(1) > div > div > div > div > div:nth-child(3) > div > div'
-};
-const secondPhrases = {
-  1: '#app > div.v-dialog__content.v-dialog__content--active > div > div > div > div.row.ma-0.pa-0.d-flex.align-center.justify-center.flex-column > div > div.d-flex.flex-column.align-center.justify-center.px-8.pb-8 > div > div > div:nth-child(3) > div.mx-auto.v-sheet.theme--light > div:nth-child(2) > div > div > div > div > div:nth-child(1) > div > div',
-  2: '#app > div.v-dialog__content.v-dialog__content--active > div > div > div > div.row.ma-0.pa-0.d-flex.align-center.justify-center.flex-column > div > div.d-flex.flex-column.align-center.justify-center.px-8.pb-8 > div > div > div:nth-child(3) > div.mx-auto.v-sheet.theme--light > div:nth-child(2) > div > div > div > div > div:nth-child(2) > div > div',
-  3: '#app > div.v-dialog__content.v-dialog__content--active > div > div > div > div.row.ma-0.pa-0.d-flex.align-center.justify-center.flex-column > div > div.d-flex.flex-column.align-center.justify-center.px-8.pb-8 > div > div > div:nth-child(3) > div.mx-auto.v-sheet.theme--light > div:nth-child(2) > div > div > div > div > div:nth-child(3) > div > div'
-};
-const thirdPhrases = {
-  1: '#app > div.v-dialog__content.v-dialog__content--active > div > div > div > div.row.ma-0.pa-0.d-flex.align-center.justify-center.flex-column > div > div.d-flex.flex-column.align-center.justify-center.px-8.pb-8 > div > div > div:nth-child(3) > div.mx-auto.v-sheet.theme--light > div:nth-child(3) > div > div > div > div > div:nth-child(1) > div > div',
-  2: '#app > div.v-dialog__content.v-dialog__content--active > div > div > div > div.row.ma-0.pa-0.d-flex.align-center.justify-center.flex-column > div > div.d-flex.flex-column.align-center.justify-center.px-8.pb-8 > div > div > div:nth-child(3) > div.mx-auto.v-sheet.theme--light > div:nth-child(3) > div > div > div > div > div:nth-child(2) > div > div',
-  3: '#app > div.v-dialog__content.v-dialog__content--active > div > div > div > div.row.ma-0.pa-0.d-flex.align-center.justify-center.flex-column > div > div.d-flex.flex-column.align-center.justify-center.px-8.pb-8 > div > div > div:nth-child(3) > div.mx-auto.v-sheet.theme--light > div:nth-child(3) > div > div > div > div > div:nth-child(3) > div > div'
-};
-
 const css = 'css selector';
 let phrases = [];
 
@@ -86,26 +70,21 @@ module.exports = {
         const checkPhrases = chunk(result.value.split('\n'), 4);
         const [first, second, third] = checkPhrases;
 
-        const firstIndex = findIndex(first);
-        const secondIndex = findIndex(second);
-        const thirdIndex = findIndex(third);
+        const firstIndex = findIndex(first) - 1;
+        const secondIndex = findIndex(second) - 1;
+        const thirdIndex = findIndex(third) - 1;
 
-        // browser.elements(css, '.Options', r => {
-        //   const options = chunk(r.value, 3);
-        //   const [uno, dos, tres] = options;
+        browser.elements(css, '.Options', r => {
+          const options = chunk(r.value, 3);
+          const [firstWord, secondWord, thirdWord] = options;
 
-        //   browser
-        //     .elementIdClick(uno[firstIndex])
-        //     .elementIdClick(dos[secondIndex])
-        //     .elementIdClick(tres[thirdIndex]);
-        // });
+          browser
+            .elementIdClick(firstWord[firstIndex].ELEMENT)
+            .elementIdClick(secondWord[secondIndex].ELEMENT)
+            .elementIdClick(thirdWord[thirdIndex].ELEMENT);
+        });
 
-        browser
-          .click(css, firstPhrases[firstIndex])
-          .click(css, secondPhrases[secondIndex])
-          .click(css, thirdPhrases[thirdIndex])
-          .pause(1000)
-          .click(css, '.CreateMnemonicVerify');
+        browser.pause(1000).click(css, '.CreateMnemonicVerify');
       });
 
     // step 3
