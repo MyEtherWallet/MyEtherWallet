@@ -55,8 +55,7 @@ const EXCEPTIONS = [
   'package-json',
   'codecov',
   'node-polyfill-webpack-plugin',
-  '@ensdomains/ensjs', // major alpha update,
-  '@vue/cli-plugin-e2e-nightwatch'
+  '@ensdomains/ensjs'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
