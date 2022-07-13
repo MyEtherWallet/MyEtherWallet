@@ -440,7 +440,7 @@ export default {
      * if native token, return empty
      */
     maxBtn() {
-      return this.isFromNonChain
+      return this.isFromNonChain || this.availableBalance.isZero()
         ? {}
         : {
             title: 'Max',
@@ -684,7 +684,8 @@ export default {
             arr.push(item);
           }
           return arr;
-        }
+        },
+        []
       );
       tradebleWalletTokens = this.formatTokensForSelect(tradebleWalletTokens);
       let returnableTokens = [
