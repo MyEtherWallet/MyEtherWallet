@@ -1,19 +1,16 @@
 <template>
   <div class="mew-component--create--mnemonic-phrase" style="max-width: 800px">
     <mew-stepper class="mx-md-0" :items="steppers" :on-step="step">
-      <!--
-      =====================================================================================
-        Step 1: Write Down Words
-      =====================================================================================
-      -->
+      <!-- ===================================================================================== -->
+      <!-- Step 1: Write Down Words -->
+      <!-- ===================================================================================== -->
       <template v-if="step === 1" #stepperContent1>
         <div class="subtitle-1 font-weight-bold grey--text">STEP 1.</div>
         <div class="headline font-weight-bold mb-5">Write down these words</div>
-        <!--
-          =====================================================================================
-            Update Button & Word Number Selector
-          =====================================================================================
-          -->
+
+        <!-- ===================================================================================== -->
+        <!-- Update Button & Word Number Selector -->
+        <!-- ===================================================================================== -->
         <div class="d-flex align-center justify-end pb-4">
           <div
             class="greenPrimary--text cursor--pointer d-flex align-center mr-2 pa-2"
@@ -34,29 +31,23 @@
             outlined
           ></v-select>
         </div>
-        <!--
-          =====================================================================================
-            Phrase Table
-          =====================================================================================
-          -->
+
+        <!-- ===================================================================================== -->
+        <!-- Phrase Table -->
+        <!-- ===================================================================================== -->
         <phrase-block class="mb-8">
           <mnemonic-phrase-table :data="phrase" />
         </phrase-block>
-        <!--
-          =====================================================================================
-            Extra Word
-          =====================================================================================
-          -->
+
+        <!-- ===================================================================================== -->
+        <!-- Extra Word -->
+        <!-- ===================================================================================== -->
         <div class="mt-10">
           <mew-expand-panel
             :has-dividers="true"
             :is-toggle="true"
             :interactive-content="true"
-            :panel-items="[
-              {
-                name: 'Add Extra Word'
-              }
-            ]"
+            :panel-items="expandPanelItems"
           >
             <template #panelBody1>
               <div class="px-5">
@@ -69,11 +60,10 @@
             </template>
           </mew-expand-panel>
         </div>
-        <!--
-          =====================================================================================
-           Button
-          =====================================================================================
-          -->
+
+        <!-- ===================================================================================== -->
+        <!-- Button -->
+        <!-- ===================================================================================== -->
         <div class="d-flex justify-center mt-6">
           <mew-button
             title="I wrote them down"
@@ -88,22 +78,20 @@
           description="This information is sensitive, and these options should only be used in offline settings by experienced crypto users. Your phrase is the key to your wallet. Please make sure to write it down and save it in a secure location. We CAN NOT retrieve or reset your phrase if you lose it."
         />
       </template>
-      <!--
-      =====================================================================================
-        Step 2: Verification
-      =====================================================================================
-      -->
+
+      <!-- ===================================================================================== -->
+      <!-- Step 2: Verification -->
+      <!-- ===================================================================================== -->
       <template v-if="step === 2" #stepperContent2>
         <div class="subtitle-1 font-weight-bold grey--text">STEP 2.</div>
         <div class="headline font-weight-bold">Verification</div>
         <div class="mb-5">
           {{ stepTwoText }}
         </div>
-        <!--
-          =====================================================================================
-           Words Radio Group
-          =====================================================================================
-          -->
+
+        <!-- ===================================================================================== -->
+        <!-- Words Radio Group -->
+        <!-- ===================================================================================== -->
         <v-sheet max-width="600px" class="mx-auto">
           <v-radio-group
             v-for="(item, idx) in generatedVerification"
@@ -141,11 +129,10 @@
             class="mt-10 mb-3"
           />
         </v-sheet>
-        <!--
-          =====================================================================================
-           Back Button & Verify Button
-          =====================================================================================
-          -->
+
+        <!-- ===================================================================================== -->
+        <!-- Back Button & Verify Button -->
+        <!-- ===================================================================================== -->
         <div class="d-flex flex-column flex-md-row justify-center mt-6">
           <mew-button
             title="Back"
@@ -168,11 +155,10 @@
           description="This information is sensitive, and these options should only be used in offline settings by experienced crypto users. Your phrase is the key to your wallet. Please make sure to write it down and save it in a secure location. We CAN NOT retrieve or reset your phrase if you lose it."
         />
       </template>
-      <!--
-      =====================================================================================
-        Step 3: Done
-      =====================================================================================
-      -->
+
+      <!-- ===================================================================================== -->
+      <!-- Step 3: Done -->
+      <!-- ===================================================================================== -->
       <template v-if="step === 3" #stepperContent3>
         <div class="d-flex align-center">
           <div>
@@ -201,7 +187,7 @@
                 title="Create Another Wallet"
                 :has-full-width="false"
                 btn-style="transparent"
-                @click.native="updateStep(1)"
+                @click.native="createAnotherWallet()"
               />
             </div>
           </div>
@@ -256,6 +242,11 @@ export default {
       {
         step: 3,
         name: 'STEP 3. Well done'
+      }
+    ],
+    expandPanelItems: [
+      {
+        name: 'Add Extra Word'
       }
     ],
     mnemonicOptions: [
@@ -357,6 +348,14 @@ export default {
         this.setPhrase();
       }
       this.step = newStep;
+    },
+    /**
+     * Go back to step 1 to create another wallet
+     * and reset extra word
+     */
+    createAnotherWallet() {
+      this.extraWord = '';
+      this.updateStep(1);
     }
   }
 };
