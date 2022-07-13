@@ -11,6 +11,7 @@
     class="mew-component--aave-repay-overlay"
   >
     <aave-amount-form
+      v-if="step === 0"
       :selected-token="preSelectedToken"
       :show-toggle="aaveRepayForm.showToggle"
       :left-side-values="aaveRepayForm.leftSideValues"
@@ -22,26 +23,45 @@
       @cancel="handleCancel"
       @emitValues="handleRepayAmount"
     />
+
+    <!--
+        =====================================================================================
+          Step 2: Repay Summary
+        =====================================================================================
+        -->
+    <aave-summary
+      v-if="step === 1"
+      :selected-token="selectedTokenDetails"
+      :amount="amount"
+      :action-type="repayTitle"
+      :amount-usd="amountUSD"
+      @onConfirm="handleConfirm"
+    />
   </mew-overlay>
 </template>
 
 <script>
 import AaveAmountForm from '../AaveAmountForm';
+import AaveSummary from '../AaveSummary';
 import handlerAave from '../../handlers/handlerAave.mixin';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { mapGetters } from 'vuex';
-import { INTEREST_TYPES } from '../../handlers/helpers';
+import { INTEREST_TYPES, AAVE_TABLE_TITLE } from '../../handlers/helpers';
 import { toBase } from '@/core/helpers/unit';
 import { MAX_UINT_AMOUNT } from '@aave/protocol-js';
+import BigNumber from 'bignumber.js';
 
 export default {
   components: {
-    AaveAmountForm
+    AaveAmountForm,
+    AaveSummary
   },
   mixins: [handlerAave],
   data() {
     return {
-      amount: ''
+      amount: '',
+      step: 0,
+      repayTitle: AAVE_TABLE_TITLE.repay
     };
   },
   computed: {
@@ -65,9 +85,22 @@ export default {
     totalBorrow() {
       return this.selectedTokenInUserSummary?.totalBorrows || 0;
     },
+    tokenPrice() {
+      const symbol = this.preSelectedToken.token;
+      const hasBalance = this.tokensList.find(item => {
+        if (item.symbol === symbol) {
+          return item;
+        }
+      });
+      return hasBalance ? BigNumber(hasBalance.price).toFixed() : '0';
+    },
+    amountUSD() {
+      return this.getFiatValue(
+        BigNumber(this.amount).times(this.tokenPrice).toFixed()
+      );
+    },
     aaveRepayForm() {
       const hasBorrowed = this.selectedTokenInUserSummary;
-      console.log('hasBorrowed', hasBorrowed);
       const borrowedEth = hasBorrowed
         ? `${formatFloatingPointValue(hasBorrowed.totalBorrows).value} ${
             hasBorrowed.reserve?.symbol
@@ -108,18 +141,28 @@ export default {
       };
     }
   },
+  watch: {
+    preSelectedToken() {
+      this.handleSelectedToken();
+    }
+  },
   methods: {
+    handleSelectedToken() {
+      this.step = 0;
+    },
     handleRepayAmount(e) {
-      // function repay(address asset, uint256 amount, uint256 rateMode, address onBehalfOf)
-      // Repays onBehalfOf's debt amount of asset which has a rateMode
+      this.amount = e;
+      this.step = 1;
+    },
+    handleConfirm() {
       const isVariable = this.selectedTokenInUserSummary.variableBorrows > 0;
       const totalBorrow = isVariable
         ? this.selectedTokenInUserSummary.variableBorrows
         : this.selectedTokenInUserSummary.stableBorrows;
       const amount =
-        totalBorrow === e
+        totalBorrow === this.amount
           ? MAX_UINT_AMOUNT
-          : toBase(e, this.selectedTokenDetails.decimals);
+          : toBase(this.amount, this.selectedTokenDetails.decimals);
       const param = {
         amount: amount,
         user: this.address,
@@ -134,6 +177,7 @@ export default {
     },
     handleCancel() {
       this.amount = '';
+      this.step = 0;
       this.close();
     }
   }

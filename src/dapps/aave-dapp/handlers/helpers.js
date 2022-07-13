@@ -2,6 +2,7 @@ const AAVE_TABLE_TITLE = {
   deposit: 'DEPOSIT',
   borrow: 'BORROW',
   withdraw: 'WITHDRAW',
+  repay: 'REPAY',
   balance_deposit: 'BALANCE_DEPOSIT',
   balance_borrow: 'BALANCE_BORROW'
 };

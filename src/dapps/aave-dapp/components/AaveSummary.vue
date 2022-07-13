@@ -192,6 +192,7 @@ export default {
          */
         case ACTION_TYPES.deposit:
         case ACTION_TYPES.withdraw:
+        case ACTION_TYPES.repay:
         case ACTION_TYPES.collateral:
           details = this.step === 1 && this.isDeposit ? [] : details;
           details.push(
