@@ -8,8 +8,9 @@
       -->
       <div class="mb-5">
         <mew-button
+          class="createWalletSoftwareOverviewKeystore"
           has-full-width
-          color-theme="greyLight"
+          color-theme="greyMedium"
           btn-style="outline"
           style="height: 160px"
           @click.native="selectWalletType(walletTypes.KEYSTORE)"
@@ -88,16 +89,22 @@
 
 <script>
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
+import { mapGetters } from 'vuex';
 export default {
   name: 'CreateWalletSoftwareOverview',
   data: () => ({
     walletTypes: WALLET_TYPES,
     linkToLearnMore: {
-      url: 'https://help.myetherwallet.com/en/articles/5377921-mew-says-not-recommended-when-i-access-my-wallet-why',
+      url: '',
       title: 'Learn more'
     }
   }),
-
+  computed: {
+    ...mapGetters('article', ['getArticle'])
+  },
+  mounted() {
+    this.linkToLearnMore.url = this.getArticle('not-rec-when-access-wallet');
+  },
   methods: {
     /**
      * Emit wallet type creation.
@@ -111,7 +118,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .mew-overview {
   max-width: 650px;
 }

@@ -4,7 +4,8 @@ const ERRORS = {
   'UNKNOWN_ERROR (0x6801)': 'ledgerError.unknown-0x6801',
   'UNKNOWN_ERROR (0x6804)': 'ledgerError.unknown-0x6804',
   'UNKNOWN_ERROR (0x6b0c)': 'ledgerError.unknown-0x6boc',
-  'UNKNOWN_ERROR (0x650f)': 'ledgerError.unknown-0x6boc',
+  'UNKNOWN_ERROR (0x650f)': 'ledgerError.unknown-0x650f',
+  'UNKNOWN_ERROR (0x6a15)': 'ledgerError.unknown-0x6a15',
   'Failed to sign with Ledger device: U2F TIMEOUT':
     'ledgerError.failed-to-sign',
   'Failed to sign with Ledger device: U2F DEVICE_INELIGIBLE':
@@ -53,10 +54,14 @@ const ERRORS = {
   'Access denied.': 'ledgerError.access-denied',
   'WebUsb not supported.  Please try a different browser.':
     'ledgerError.web-usb-not-supported',
+  'Web bluetooth is not supported.  Please try a different browser.':
+    'ledgerError.web-ble-not-supported',
   'Please enable Blind signing or Contract data in the Ethereum app Settings':
     'Please enable Blind signing or Contract data in the Ethereum app Settings',
   'Ledger device: Security not satisfied':
-    'Ledger device is locked or has invalid access rights'
+    'Ledger device is locked or has invalid access rights',
+  'GATT Server is disconnected. Cannot perform GATT operations.':
+    'Device has been disconnected, please reconnect.'
 };
 const WARNINGS = {
   'Ledger device: Condition of use not satisfied (denied by the user?) (0x6985)':

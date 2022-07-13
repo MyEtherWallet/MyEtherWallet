@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 100%">
+  <div style="width: 100%" class="confirmation-message">
     <v-row dense no-gutters class="mb-2">
       <v-col cols="12" align-self="center">
         <v-textarea
@@ -38,7 +38,9 @@ export default {
 </script>
 
 <style lang="scss">
-.v-application .warning {
-  border-radius: 10px;
+.confirmation-message {
+  .v-application .warning {
+    border-radius: 10px;
+  }
 }
 </style>

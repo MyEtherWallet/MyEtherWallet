@@ -145,6 +145,9 @@ export default {
     nicknameRules() {
       return [
         value =>
+          (value && value.length >= 1) ||
+          this.$t('interface.address-book.validations.nickname-required'),
+        value =>
           (value && value.length < 20) ||
           this.$t('interface.address-book.validations.nickname-length')
       ];
@@ -224,7 +227,7 @@ export default {
       if (
         this.nameResolver &&
         this.addressToAdd &&
-        this.addressToAdd.includes('.')
+        this.addressToAdd?.includes?.('.')
       ) {
         await this.nameResolver
           .resolveName(this.addressToAdd)

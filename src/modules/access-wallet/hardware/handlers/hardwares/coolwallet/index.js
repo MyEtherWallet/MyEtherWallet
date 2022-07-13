@@ -69,10 +69,6 @@ class CoolWallet {
           reject(error);
         }
         if (device) {
-          if (device.name.includes('CWP')) {
-            _this.isPro = true;
-            _this.meta.name = 'CoolWallet Pro';
-          }
           cwsTransportLib
             .connect(device)
             .then(async _transport => {
@@ -85,44 +81,14 @@ class CoolWallet {
                  */
                 if (_this.lastCWDeviceUsed !== device.name) throw '';
                 locstore.set(CW_DEVICE_NAME, device.name);
-                if (_this.isPro) {
-                  _this.connectToCWP();
-                  const chainID = store.getters['global/network'].type.chainID;
-                  await _this.deviceInstance[chainID].getAddress(
-                    _this.transport,
-                    _this.appPrivateKey,
-                    _this.appId,
-                    0
-                  );
-                } else {
-                  _this.connectToCWS();
-                  await _this.deviceInstance.getAddress(0);
-                }
+                _this.connectToCW();
+                await _this.deviceInstance.getAddress(0);
                 resolve();
               } catch (e) {
-                if (_this.isPro) {
-                  core.config.getSEPublicKey(_this.transport).then(res => {
-                    localStorage.setItem(CW_SE_PUBKEY, res);
-                    this.generateAndRegisterCWP(
-                      password,
-                      resolve,
-                      device,
-                      reject
-                    );
-                  });
-                } else {
-                  this.generateAndRegisterCWS(
-                    password,
-                    resolve,
-                    device,
-                    reject
-                  );
-                }
+                this.generateAndRegister(password, resolve, device, reject);
               }
             })
-            .catch(err => {
-              errorHandler(err);
-            });
+            .catch(er => reject(new Error(er)));
         } else {
           reject(new Error('no device'));
         }
@@ -359,3 +325,38 @@ const createWallet = async (_, password) => {
 createWallet.errorHandler = errorHandler;
 
 export default createWallet;
+
+// try {
+// if (_this.isPro) {
+//   _this.connectToCWP();
+//   const chainID = store.getters['global/network'].type.chainID;
+//   await _this.deviceInstance[chainID].getAddress(
+//     _this.transport,
+//     _this.appPrivateKey,
+//     _this.appId,
+//     0
+//   );
+// } else {
+//   _this.connectToCWS();
+//   await _this.deviceInstance.getAddress(0);
+// }
+// resolve();
+// } catch (e) {
+// if (_this.isPro) {
+//   core.config.getSEPublicKey(_this.transport).then(res => {
+//     localStorage.setItem(CW_SE_PUBKEY, res);
+//     this.generateAndRegisterCWP(
+//       password,
+//       resolve,
+//       device,
+//       reject
+//     );
+//   });
+// } else {
+//   this.generateAndRegisterCWS(
+//     password,
+//     resolve,
+//     device,
+//     reject
+//   );
+// }

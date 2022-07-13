@@ -1,201 +1,309 @@
 <template>
-  <div class="pt-10 px-8">
+  <div class="py-8 px-8">
     <!-- ============================================================== -->
     <!-- Currency Select -->
     <!-- ============================================================== -->
-    <mew-select
-      label="Currency"
-      :items="currencyItems"
-      :value="selectedCurrency"
-      :disabled="loading"
-      is-custom
-      @input="setCurrency"
-    />
-
-    <!-- ============================================================== -->
-    <!-- Fiat currency select -->
-    <!-- ============================================================== -->
-    <div class="d-flex align-center justify-space-between mt-3 mb-3">
-      <div class="font-weight-medium textDark--text">Select amount</div>
-      <div class="d-flex align-center justify-end">
-        <img
-          :src="require(`@/assets/images/currencies/${selectedFiat}.svg`)"
-          class="icon-holder"
-        />
-        <v-select
-          v-model="selectedFiat"
-          style="margin-top: -1px; max-width: 85px"
-          hide-details
-          :items="fiatCurrencyItems"
-          :disabled="loading"
-          dense
-          solo
-          flat
-          append-icon="mdi-chevron-down"
-        >
-          <template #item="data">
-            <div class="d-flex align-center">
-              <img
-                :src="require(`@/assets/images/currencies/${data.item}.svg`)"
-                class="icon-holder mr-2"
-              />
-              {{ data.item }}
-            </div>
-          </template>
-        </v-select>
-      </div>
+    <div class="mb-2">
+      <div class="mew-heading-3 textDark--text mb-5">Select currency</div>
+      <mew-select
+        label="Currency"
+        :items="currencyItems"
+        :value="selectedCurrency"
+        :disabled="loading"
+        is-custom
+        @input="setCurrency"
+      />
     </div>
 
-    <!-- ============================================================== -->
-    <!-- Fiat currency pre-selection buttons -->
-    <!-- ============================================================== -->
-    <v-row dense>
-      <v-col v-for="(button, bkey) in buttons" :key="bkey" cols="6">
-        <mew-button
-          style="height: 96px !important"
-          has-full-width
-          btn-style="outline"
-          color-theme="basic"
-          class="not-selected"
-          :disabled="loading"
-          @click.native="buy(button)"
-        >
-          <div v-if="!loading" class="py-5">
-            <!-- Button top text -->
-            <div class="mb-1">
-              <div class="letter-spacing--none mew-heading-1 textDark--text">
-                {{ button.fiatFormatted ? button.fiatFormatted : button.title }}
-              </div>
-            </div>
+    <div class="mb-11">
+      <div class="mew-heading-3 textDark--text mb-5">
+        How much do you want to spend?
+      </div>
+      <div class="d-flex align-center">
+        <mew-input
+          v-model="amount"
+          type="number"
+          :error-messages="amountErrorMessages"
+          class="mr-2"
+        />
+        <mew-select
+          v-model="selectedFiat"
+          :items="fiatCurrencyItems"
+          is-custom
+          class="selectedFiat"
+        />
+      </div>
+      <div class="mb-2">You will get</div>
+      <div v-if="!loading" class="mb-1">
+        <div class="d-flex mb-1 align-center justify-space-between">
+          <div class="d-flex align-center mew-heading-3 textDark--text">
+            {{ cryptoToFiat }}
+            <span class="mew-heading-3 pl-1">{{ selectedCryptoName }}</span>
+            <div class="mr-1 textDark--text">&nbsp;≈ {{ plusFeeF }}</div>
+            <mew-tooltip style="height: 23px">
+              <template #contentSlot>
+                <div>
+                  {{ includesFeeText }}
+                  <br />
+                  <br />
+                  {{ networkFeeText }}
+                  <br />
+                  <br />
+                  {{ dailyLimit }}
+                  <br />
+                  {{ monthlyLimit }}
+                </div>
+              </template>
+            </mew-tooltip>
+          </div>
+        </div>
+        <div class="d-flex align-center"></div>
+      </div>
 
-            <!-- Button bottom text -->
-            <div>
-              <div class="letter-spacing--none mew-label textMedium--text">
-                {{ button.subTitle }}
-              </div>
-            </div>
-          </div>
-          <div v-else class="py-5">
-            <div class="mb-1">
-              <v-skeleton-loader type="heading" height="32px" width="172px" />
-            </div>
-            <div>
-              <v-skeleton-loader type="text" height="16px" width="172px" />
-            </div>
-          </div>
-        </mew-button>
-      </v-col>
-    </v-row>
+      <div v-else class="mb-1">
+        <v-skeleton-loader max-width="200px" type="heading" />
+      </div>
+      <div v-if="!inWallet" class="mt-5">
+        <div class="mew-heading-3 textDark--text mb-5">
+          Where should we send your crypto?
+        </div>
+        <mew-input
+          v-model="toAddress"
+          label="Enter Crypto Address"
+          :rules="[isValidToAddress]"
+          :error-messages="addressErrorMessages"
+        />
+      </div>
+    </div>
+    <div class="mb-1">
+      <mew-button
+        btn-size="xlarge"
+        has-full-width
+        :disabled="disableBuy"
+        :title="buyBtnTitle"
+        :is-valid-address-func="isValidToAddress"
+        @click.native="buy"
+      />
+    </div>
   </div>
 </template>
 
 <script>
+import MultiCoinValidator from 'multicoin-address-validator';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
-import { isEmpty } from 'lodash';
+import { isEmpty, cloneDeep, isEqual } from 'lodash';
 import BigNumber from 'bignumber.js';
-import { LOCALE } from '../helpers';
-import { mapGetters, mapActions } from 'vuex';
-import { cloneDeep, isEqual } from 'apollo-utilities';
+import { mapGetters, mapActions, mapState } from 'vuex';
+import { fromWei, toBN } from 'web3-utils';
+import Web3 from 'web3';
+import nodeList from '@/utils/networks';
+import {
+  formatFloatingPointValue,
+  formatFiatValue
+} from '@/core/helpers/numberFormatHelper';
+import { getCurrency } from '@/modules/settings/components/currencyList';
+import { buyContracts } from './tokenList';
 export default {
   name: 'ModuleBuyEth',
   props: {
-    moonpayHandler: {
+    orderHandler: {
       type: Object,
-      default: () => {}
-    },
-    close: {
-      type: Function,
       default: () => {}
     },
     defaultCurrency: {
       type: Object,
       default: () => {}
+    },
+    inWallet: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
     return {
       selectedCurrency: this.defaultCurrency,
       loading: true,
-      selectedFiat: 'USD',
+      selectedFiat: {
+        name: 'USD',
+        value: 'USD',
+        // eslint-disable-next-line
+        img: require(`@/assets/images/currencies/USD.svg`)
+      },
       fetchedData: {},
-      currencyRates: []
+      currencyRates: [],
+      amount: '300',
+      toAddress: '',
+      validToAddress: false,
+      gasPrice: '0',
+      web3Connections: {},
+      simplexQuote: {},
+      showMoonpay: true
     };
   },
   computed: {
-    ...mapGetters('global', ['network']),
+    ...mapGetters('global', ['network', 'getFiatValue']),
+    ...mapState('wallet', ['address']),
+    ...mapState('external', ['currencyRate', 'coinGeckoTokens']),
+    ...mapGetters('external', ['contractToToken']),
+    includesFeeText() {
+      return `Includes ${this.percentFee} fee (${
+        formatFiatValue(this.minFee, this.currencyConfig).value
+      } min)`;
+    },
+    networkFeeText() {
+      return `${
+        this.selectedCurrency.symbol
+      } network fee (for transfers to your wallet) ~${
+        formatFiatValue(this.networkFeeToFiat, this.currencyConfig).value
+      }`;
+    },
+    dailyLimit() {
+      const value = BigNumber(this.fiatMultiplier).times(12000);
+      return `Daily limit: ${
+        formatFiatValue(value.toString(), this.currencyConfig).value
+      }`;
+    },
+    monthlyLimit() {
+      const value = BigNumber(this.fiatMultiplier).times(50000);
+      return `Monthly limit: ${
+        formatFiatValue(value.toString(), this.currencyConfig).value
+      }`;
+    },
+    currencyConfig() {
+      const fiat = this.selectedFiat.value;
+      const rate = this.currencyRate[fiat];
+      const currency = fiat;
+      return { rate, currency };
+    },
+    fiatMultiplier() {
+      if (this.hasData) {
+        const selectedCurrencyPrice = this.fetchedData[0].conversion_rates.find(
+          item => item.fiat_currency === this.selectedFiatName
+        );
+        return selectedCurrencyPrice
+          ? BigNumber(selectedCurrencyPrice.exchange_rate)
+          : toBN(1);
+      }
+      return toBN(1);
+    },
+    selectedFiatName() {
+      return this.selectedFiat.name;
+    },
+    actualAddress() {
+      return this.inWallet ? this.address : this.toAddress;
+    },
+    actualValidAddress() {
+      return this.inWallet ? true : this.validToAddress;
+    },
+    networkFee() {
+      return fromWei(BigNumber(this.gasPrice).times(21000).toString());
+    },
+    priceOb() {
+      return !isEmpty(this.fetchedData)
+        ? this.fetchedData[0].prices.find(
+            item => item.fiat_currency === this.selectedFiatName
+          )
+        : { crypto_currency: 'ETH', fiat_currency: 'USD', price: '3379.08322' };
+    },
+    networkFeeToFiat() {
+      return BigNumber(this.networkFee).times(this.priceOb.price).toString();
+    },
+    minFee() {
+      return BigNumber(4.43).times(this.fiatMultiplier).toString();
+    },
+    plusFee() {
+      const fee = this.isEUR
+        ? BigNumber(BigNumber(0.7).div(100)).times(this.amount)
+        : BigNumber(BigNumber(3.25).div(100)).times(this.amount);
+      const withFee = fee.gt(this.minFee)
+        ? BigNumber(this.amount).minus(fee)
+        : BigNumber(this.amount).minus(fee).minus(this.minFee);
+      return withFee.minus(this.networkFeeToFiat).toString();
+    },
+    plusFeeF() {
+      return formatFiatValue(this.plusFee, this.currencyConfig).value;
+    },
+    percentFee() {
+      return this.isEUR ? '0.7%' : '3.25%';
+    },
+    selectedCryptoName() {
+      return this.selectedCurrency.symbol;
+    },
+    isEUR() {
+      return this.selectedFiatName === 'EUR' || this.selectedFiatName === 'GBP';
+    },
+    disableBuy() {
+      return (
+        (!this.inWallet && !this.actualValidAddress) ||
+        this.loading ||
+        this.amountErrorMessages !== ''
+      );
+    },
+    buyBtnTitle() {
+      return 'BUY NOW';
+    },
+    amountErrorMessages() {
+      const moonpayMax = this.max.moonpay;
+      const simplexMax = this.max.simplex;
+      if (BigNumber(this.amount).isNaN() || BigNumber(this.amount).eq(0)) {
+        return 'Amount required';
+      }
+      if (BigNumber(this.amount).lt(0)) {
+        return `Amount can't be negative`;
+      }
+      if (this.min.gt(this.amount)) {
+        return `Amount can't be below provider's minimum: ${this.min.toFixed()} ${
+          this.selectedFiatName
+        }`;
+      }
+      if (
+        moonpayMax.lt(BigNumber(this.amount)) &&
+        simplexMax.lt(BigNumber(this.amount))
+      ) {
+        return `Amount can't be above provider's maximum: ${simplexMax.toFixed()} ${
+          this.selectedFiatName
+        }`;
+      }
+      return '';
+    },
+    addressErrorMessages() {
+      if (!this.actualValidAddress && !isEmpty(this.toAddress)) {
+        return 'Invalid Address';
+      }
+      return '';
+    },
     currencyItems() {
-      // hard writing for now
-      const tokensList = [
-        {
-          decimals: 18,
-          img: 'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ETH-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.svg',
-          name: 'ETH',
-          subtext: 'Ethereum',
-          value: 'Ethereum',
-          symbol: 'ETH',
-          network: 1
-        },
-        {
-          decimals: 18,
-          img: 'https://img.mewapi.io/?image=https://assets.coingecko.com/coins/images/4713/large/matic-token-icon.png?1624446912',
-          name: 'MATIC',
-          subtext: 'Polygon',
-          value: 'Polygon (Matic)',
-          symbol: 'MATIC (Matic)',
-          network: 137
-        },
-        {
-          decimals: 18,
-          img: 'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/BNB-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.png',
-          name: 'BNB',
-          subtext: 'Binance Smart Chain',
-          value: 'Binance Smart Chain',
-          symbol: 'BNB (BSC/BEP20)',
-          network: 56
-        },
-        {
-          decimals: 6,
-          img: 'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/USDT-0xdAC17F958D2ee523a2206206994597C13D831ec7-eth.png',
-          name: 'USDT',
-          subtext: 'Tether',
-          value: 'Tether',
-          symbol: 'USDT (ERC20)',
-          network: 1
-        },
-        {
-          decimals: 6,
-          img: 'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/USDC-0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48-eth.svg',
-          name: 'USDC',
-          subtext: 'USD Coin',
-          value: 'USD Coin',
-          symbol: 'USDC (ERC20)',
-          network: 1
-        }
-      ];
-      const imgs = tokensList.map(item => {
+      const tokenList = new Array();
+      for (const contract of buyContracts) {
+        const token = this.contractToToken(contract);
+        if (token) tokenList.push(token);
+      }
+      const imgs = tokenList.map(item => {
         return item.img;
       });
       const tokensListWPrice =
         this.currencyRates.length > 0
-          ? tokensList.map(token => {
+          ? tokenList.map(token => {
               const priceRate = this.currencyRates.find(rate => {
-                return rate.crypto_currency === token.name;
+                return rate.crypto_currency === token.symbol;
               });
-              const actualPrice = priceRate.quotes.find(quote => {
-                return quote.fiat_currency === this.selectedFiat;
+              const actualPrice = priceRate?.quotes.find(quote => {
+                return quote.fiat_currency === this.selectedFiatName;
               });
-
-              token.price = this.currencyFormatter(
-                actualPrice ? actualPrice.price : '0'
-              );
+              token.price = formatFiatValue(
+                actualPrice ? actualPrice.price : '0',
+                this.currencyConfig
+              ).value;
+              token.value = token.name;
+              token.name = token.symbol;
               return token;
             })
-          : tokensList;
+          : tokenList;
       const returnedArray = [
         {
           text: 'Select Token',
           imgs: imgs.splice(0, 3),
-          total: `${tokensList.length}`,
+          total: `${tokenList.length}`,
           divider: true,
           selectLabel: true
         },
@@ -206,82 +314,60 @@ export default {
     hasData() {
       return !isEmpty(this.fetchedData);
     },
+    cryptoToFiat() {
+      return this.showMoonpay
+        ? this.moonpayCryptoAmount
+        : this.simplexCryptoAmount;
+    },
+    moonpayCryptoAmount() {
+      return formatFloatingPointValue(
+        BigNumber(this.plusFee).div(this.priceOb.price).toString()
+      ).value;
+    },
+    simplexCryptoAmount() {
+      return formatFloatingPointValue(this.simplexQuote.crypto_amount).value;
+    },
     fiatCurrencyItems() {
-      return this.hasData
-        ? this.fetchedData.fiat_currencies.filter(item => item !== 'RUB')
+      const arrItems = this.hasData
+        ? this.fetchedData[0].fiat_currencies.filter(item => item !== 'RUB')
         : ['USD'];
+      return getCurrency(arrItems);
     },
     max() {
       if (this.hasData) {
-        const foundLimit = this.fetchedData.limits.find(
-          item => item.fiat_currency === this.selectedFiat
+        const moonpayMax = this.fetchedData[0]?.limits.find(
+          item => item.fiat_currency === this.selectedFiatName
         );
-        return foundLimit ? BigNumber(foundLimit.limit.max) : BigNumber(12000);
-      }
-      return BigNumber(12000);
-    },
-    fiatConversion() {
-      if (this.hasData) {
-        const fiatConversion = this.fetchedData.prices.find(
-          item => item.fiat_currency === this.selectedFiat
+        const simplexMax = this.fetchedData[1]?.limits.find(
+          item => item.fiat_currency === this.selectedFiatName
         );
-        const currencyPerFiat = BigNumber(
-          BigNumber(1).div(fiatConversion.price)
-        ).times(fiatConversion.price);
-        return fiatConversion ? currencyPerFiat : BigNumber(1);
+        return {
+          moonpay: moonpayMax
+            ? BigNumber(moonpayMax.limit.max)
+            : BigNumber(12000),
+          simplex: simplexMax
+            ? BigNumber(simplexMax.limit.max)
+            : BigNumber(12000)
+        };
       }
-      return BigNumber(1);
+      return {
+        moonpay: BigNumber(12000),
+        simplex: BigNumber(12000)
+      };
     },
-    currencyPriceFromProvider() {
+    min() {
       if (this.hasData) {
-        const selectedCurrencyPrice = this.fetchedData.prices.find(
-          item => item.fiat_currency === this.selectedFiat
+        const foundLimit = this.fetchedData[0].limits.find(
+          item => item.fiat_currency === this.selectedFiatName
         );
-        return selectedCurrencyPrice
-          ? BigNumber(selectedCurrencyPrice.price)
-          : BigNumber(1);
+        return foundLimit ? BigNumber(foundLimit.limit.min) : BigNumber(30);
       }
-      return BigNumber(1);
+      return BigNumber(30);
     },
-    buttons() {
-      if (this.hasData) {
-        const priceHolder = [
-          this.selectedFiat === 'JPY' ? 10000 : 100,
-          this.selectedFiat === 'JPY' ? 50000 : 250,
-          this.selectedFiat === 'JPY' ? 100000 : 500,
-          this.selectedFiat === 'JPY' ? 150000 : 1000,
-          this.selectedFiat === 'JPY' ? 1000000 : 5000
-        ];
-        const formattedPricing = priceHolder.map((item, idx) => {
-          return {
-            id: `${BigNumber(idx).toString()}${this.selectedFiat}`,
-            fiat: this.fiatConversion.times(item).toString(),
-            fiatFormatted: this.currencyFormatter(
-              this.fiatConversion.times(item).toString()
-            ),
-            subTitle: `~${BigNumber(item)
-              .div(this.currencyPriceFromProvider.decimalPlaces(2))
-              .decimalPlaces(4)
-              .toString()} ${this.selectedCurrency.name}`
-          };
-        });
-        return [
-          ...formattedPricing,
-          {
-            id: '6',
-            title: 'Custom',
-            subTitle: `Up to ${this.currencyFormatter(this.max)}`
-          }
-        ];
-      }
-      return [
-        { id: '1', fiat: '100', fiatFormatted: '$100', subTitle: '0.16 ETH' },
-        { id: '2', fiat: '250', fiatFormatted: '$250', subTitle: '0.16 ETH' },
-        { id: '3', fiat: '500', fiatFormatted: '$500', subTitle: '0.16 ETH' },
-        { id: '4', fiat: '1000', fiatFormatted: '$1000', subTitle: '0.16 ETH' },
-        { id: '5', fiat: '5000', fiatFormatted: '$5000', subTitle: '0.16 ETH' },
-        { id: '6', title: 'Custom', subTitle: `Up to $12,000` }
-      ];
+    hideSimplex() {
+      return (
+        this.selectedCryptoName === 'USDC' || this.selectedCryptoName === 'USDT'
+      );
     }
   },
   watch: {
@@ -290,8 +376,16 @@ export default {
         if (!isEqual(newVal, oldVal)) {
           this.fetchCurrencyData();
         }
-
         this.$emit('selectedCurrency', newVal);
+      },
+      deep: true
+    },
+    selectedFiat: {
+      handler: function (newVal, oldVal) {
+        if (!isEqual(newVal, oldVal)) {
+          this.amount = newVal.name != 'JPY' ? '300' : '30000';
+          this.$emit('selectedFiat', newVal);
+        }
       },
       deep: true
     },
@@ -301,11 +395,43 @@ export default {
       },
       deep: true
     },
-    moonpayHandler: {
+    orderHandler: {
       handler: function () {
         this.fetchCurrencyData();
       },
       deep: true
+    },
+    amount: {
+      handler: function (newVal) {
+        const simplexMax = this.max.simplex;
+        this.checkMoonPayMax();
+        if (
+          simplexMax.lt(newVal) ||
+          isEmpty(newVal) ||
+          this.min.gt(newVal) ||
+          isNaN(newVal)
+        ) {
+          this.loading = true;
+        } else {
+          this.loading = false;
+          this.getSimplexQuote();
+        }
+      }
+    },
+    validToAddress: {
+      handler: function (newVal) {
+        if (!newVal) return;
+        this.$emit('toAddress', this.toAddress);
+        this.getSimplexQuote();
+      }
+    },
+    toAddress(newVal) {
+      this.validToAddress = this.isValidToAddress(newVal);
+    },
+    coinGeckoTokens: {
+      handler: function () {
+        this.fetchCurrencyData();
+      }
     }
   },
   mounted() {
@@ -313,28 +439,44 @@ export default {
   },
   methods: {
     ...mapActions('global', ['setNetwork']),
-    currencyFormatter(value) {
-      const locale = this.hasData ? LOCALE[this.selectedFiat] : 'en-US';
-      return new Intl.NumberFormat(locale, {
-        style: 'currency',
-        currency: this.selectedFiat
-      }).format(value);
+    async fetchGasPrice() {
+      const supportedNodes = {
+        ETH: 'ETH',
+        BNB: 'BSC',
+        MATIC: 'MATIC'
+      };
+      const nodeType = !supportedNodes[this.selectedCurrency.symbol]
+        ? 'ETH'
+        : supportedNodes[this.selectedCurrency.symbol];
+      const node = nodeList[nodeType];
+      if (!this.web3Connections[nodeType]) {
+        const web3 = new Web3(node[0].url);
+        this.web3Connections[nodeType] = web3;
+      }
+      this.gasPrice = await this.web3Connections[nodeType].eth.getGasPrice();
+    },
+    isLT(num, num2) {
+      return BigNumber(num).lt(num2);
+    },
+    isValidToAddress(address) {
+      return MultiCoinValidator.validate(address, this.selectedCurrency.symbol);
+    },
+    checkMoonPayMax() {
+      const moonpayMax = this.max.moonpay;
+      const hideMoonpay = this.isLT(moonpayMax, this.amount);
+      this.$emit('hideMoonpay', hideMoonpay);
     },
     setCurrency(e) {
       this.selectedCurrency = e;
     },
-    reset() {
-      this.selectedFiat = 'USD';
-      this.loading = true;
-      this.fetchData = {};
-    },
     fetchCurrencyData() {
       this.loading = true;
       this.fetchData = {};
-      this.moonpayHandler
-        .getSupportedFiatToBuy(this.selectedCurrency.name)
+      this.fetchGasPrice();
+      this.orderHandler
+        .getSupportedFiatToBuy(this.selectedCurrency.symbol)
         .then(res => {
-          this.moonpayHandler.getFiatRatesForBuy().then(res => {
+          this.orderHandler.getFiatRatesForBuy().then(res => {
             this.currencyRates = cloneDeep(res);
             this.loading = false;
           });
@@ -343,22 +485,63 @@ export default {
         .catch(e => {
           Toast(e, {}, ERROR);
         });
+      this.getSimplexQuote();
     },
-    buy(btn) {
-      const amount = btn.hasOwnProperty('fiat') ? btn.fiat.toString() : null;
-      this.moonpayHandler
-        .buy(this.selectedCurrency.name, this.selectedFiat, amount)
-        .then(() => {
-          this.reset();
-          this.close();
-          this.selectedCurrency = this.defaultCurrency;
+    getSimplexQuote() {
+      if (
+        this.hideSimplex ||
+        !this.actualValidAddress ||
+        isEmpty(this.amount) ||
+        this.min.gt(this.amount) ||
+        isNaN(this.amount)
+      )
+        return;
+      this.loading = true;
+      this.simplexQuote = {};
+      this.orderHandler
+        .getSimplexQuote(
+          this.selectedCryptoName,
+          this.selectedFiatName,
+          this.amount,
+          this.actualAddress
+        )
+        .then(res => {
+          this.simplexQuote = Object.assign({}, res);
+          this.loading = false;
+          this.$emit('simplexQuote', this.simplexQuote);
+          this.compareQuotes();
         })
-        .catch(err => {
-          this.reset();
-          Toast(err, {}, ERROR);
-          this.close();
-          this.selectedCurrency = this.defaultCurrency;
+        .catch(e => {
+          Toast(e, {}, ERROR);
         });
+    },
+    compareQuotes() {
+      const moonpayMax = this.max.moonpay;
+      // Moonpay has better rate and is not above max
+      this.showMoonpay = this.isLT(moonpayMax, this.amount) // max < amount
+        ? false
+        : this.isLT(this.simplexQuote.crypto_amount, this.moonpayCryptoAmount);
+    },
+    buy() {
+      const buyObj = {
+        cryptoToFiat: this.moonpayCryptoAmount,
+        selectedCryptoName: this.selectedCryptoName,
+        plusFeeF: this.plusFeeF,
+        includesFeeText: this.includesFeeText,
+        networkFeeText: this.networkFeeText,
+        dailyLimit: this.dailyLimit,
+        monthlyLimit: this.monthlyLimit,
+        fiatAmount: this.amount
+      };
+      this.checkMoonPayMax();
+      this.$emit('success', [
+        this.simplexQuote,
+        this.toAddress,
+        buyObj,
+        1,
+        this.selectedCurrency,
+        this.selectedFiat
+      ]);
     }
   }
 };
@@ -369,11 +552,40 @@ export default {
 .not-selected {
   border: 1px solid var(--v-greyMedium-base);
 }
-
 .icon-holder {
   border: 2px solid var(--v-greyMedium-base);
   border-radius: 100px;
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
+}
+.section-block {
+  height: 145px;
+  border-radius: 12px;
+  left: 0px;
+  top: 0px;
+  box-sizing: border-box;
+  border: 2px solid var(--v-greyMedium-base);
+  flex: none;
+  order: 0;
+  align-self: stretch;
+  flex-grow: 0;
+  margin: 8px 0px;
+  position: relative;
+}
+.section-block:hover {
+  cursor: pointer;
+  border: 2px solid #1eb19b;
+  background-color: #e5eaee;
+}
+.selected {
+  border: 2px solid #1eb19b;
+}
+.provider-logo {
+  position: absolute;
+  top: 18px;
+  right: 20px;
+}
+.selectedFiat {
+  max-width: 120px;
 }
 </style>

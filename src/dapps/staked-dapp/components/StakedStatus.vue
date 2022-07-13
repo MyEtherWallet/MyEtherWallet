@@ -60,7 +60,7 @@
                   {{ pending.amount }} <span class="mew-caption">ETH</span>
                 </div>
                 <div class="textMedium--text mt-1">
-                  {{ '$' + pending.amountFiat }}
+                  {{ pending.amountFiat }}
                 </div>
               </div>
             </div>
@@ -220,7 +220,7 @@
                 {{ active.totalBalanceETH + ' ETH' }}
               </div>
               <div class="font-weight-medium mt-1">
-                {{ '$' + active.totalBalanceFiat }}
+                {{ active.totalBalanceFiat }}
               </div>
               <div class="textLight--text mt-2">
                 Earned
@@ -252,7 +252,6 @@ import iconETHNavy from '@/assets/images/currencies/eth-dark-navy.svg';
 import BigNumber from 'bignumber.js';
 import {
   formatFloatingPointValue,
-  formatFiatValue,
   formatPercentageValue
 } from '@/core/helpers/numberFormatHelper';
 import moment from 'moment';
@@ -291,8 +290,10 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['address']),
+    ...mapState('global', ['preferredCurrency']),
+    ...mapState('external', ['currencyRate']),
     ...mapGetters('external', ['fiatValue']),
-    ...mapGetters('global', ['network']),
+    ...mapGetters('global', ['network', 'getFiatValue']),
     /**
      * @returns array
      * Returns all the raw objects in all the validators
@@ -312,31 +313,30 @@ export default {
      * includes status: ACTIVE, EXITED
      */
     activeValidators() {
-      return this.validatorsRaw
-        .filter(raw => {
-          return (
-            raw.status.toLowerCase() === STATUS_TYPES.ACTIVE ||
-            raw.status.toLowerCase() === STATUS_TYPES.EXITED
-          );
-        })
-        .map(raw => {
+      return this.validatorsRaw.reduce((acc, raw) => {
+        if (
+          raw.status.toLowerCase() === STATUS_TYPES.ACTIVE ||
+          raw.status.toLowerCase() === STATUS_TYPES.EXITED
+        ) {
           const totalBalanceETH = this.convertToEth1(raw.balance);
           const earning = new BigNumber(totalBalanceETH).minus(raw.amount);
-          return {
+          acc.push({
             url:
               configNetworkTypes.network[this.network.type.name].url +
               '0x' +
               raw.address,
             earned: formatFloatingPointValue(earning).value,
             totalBalanceETH: formatFloatingPointValue(totalBalanceETH).value,
-            totalBalanceFiat: formatFiatValue(
+            totalBalanceFiat: this.getFiatValue(
               new BigNumber(totalBalanceETH).times(this.fiatValue)
-            ).value,
+            ),
             averageApr: formatPercentageValue(
               this.getAverageApr(raw.activation_timestamp, earning, raw.amount)
             ).value
-          };
-        });
+          });
+        }
+        return acc;
+      }, []);
     },
     /**
      * @returns array
@@ -344,24 +344,21 @@ export default {
      * includes status: DEPOSITED, PENDING, FAILED, CREATED
      */
     pendingValidators() {
-      return this.validatorsRaw
-        .filter(raw => {
-          const nextDay = 60 * 60 * 24 * 1000;
-          const createdDate = new Date(raw.created).getTime() + nextDay;
-          const withinTheDay = new Date().getTime() <= createdDate;
-          return (
-            raw.status.toLowerCase() === STATUS_TYPES.DEPOSITED ||
-            raw.status.toLowerCase() === STATUS_TYPES.PENDING ||
-            raw.status.toLowerCase() === STATUS_TYPES.FAILED ||
-            (raw.status.toLowerCase() === STATUS_TYPES.CREATED && withinTheDay)
-          );
-        })
-        .map(raw => {
-          return {
+      return this.validatorsRaw.reduce((acc, raw) => {
+        const nextDay = 60 * 60 * 24 * 1000;
+        const createdDate = new Date(raw.created).getTime() + nextDay;
+        const withinTheDay = new Date().getTime() <= createdDate;
+        if (
+          raw.status.toLowerCase() === STATUS_TYPES.DEPOSITED ||
+          raw.status.toLowerCase() === STATUS_TYPES.PENDING ||
+          raw.status.toLowerCase() === STATUS_TYPES.FAILED ||
+          (raw.status.toLowerCase() === STATUS_TYPES.CREATED && withinTheDay)
+        ) {
+          acc.push({
             amount: formatFloatingPointValue(raw.amount).value,
-            amountFiat: formatFiatValue(
+            amountFiat: this.getFiatValue(
               new BigNumber(raw.amount).times(this.fiatValue)
-            ).value,
+            ),
             status: raw.status,
             ethVmUrl:
               configNetworkTypes.network[this.network.type.name].ethvmAddrUrl +
@@ -380,8 +377,10 @@ export default {
                     raw.queue.estimated_activation_timestamp
                   )
                 : '~'
-          };
-        });
+          });
+        }
+        return acc;
+      }, []);
     },
     /**
      * @returns array
@@ -393,9 +392,9 @@ export default {
         return [
           {
             amount: formatFloatingPointValue(this.amount).value,
-            amountFiat: formatFiatValue(
+            amountFiat: this.getFiatValue(
               new BigNumber(this.amount).times(this.fiatValue)
-            ).value,
+            ),
             justStaked: true,
             status: STATUS_TYPES.CREATED,
             ethVmUrl: this.pendingHash

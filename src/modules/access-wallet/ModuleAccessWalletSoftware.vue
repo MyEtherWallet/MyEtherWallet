@@ -1,4 +1,4 @@
-<template>
+<template class="AccessSoftwareWallet">
   <!--
   =====================================================================================
     Overlay - access using software
@@ -28,6 +28,7 @@
     >
       <div v-for="(btn, key) in buttons" :key="key" class="mb-5">
         <mew-button
+          :class="btn.class"
           has-full-width
           color-theme="greyMedium"
           btn-style="outline"
@@ -98,7 +99,7 @@
 import AccessWalletKeystore from './software/components/AccessWalletKeystore';
 import AccessWalletMnemonic from './software/components/AccessWalletMnemonic';
 import AccessWalletPrivateKey from './software/components/AccessWalletPrivateKey';
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { SOFTWARE_WALLET_TYPES } from './software/handlers/helpers';
 import handlerAccessWalletSoftware from './software/handlers/handlerAccessWalletSoftware';
@@ -137,7 +138,7 @@ export default {
       types: SOFTWARE_WALLET_TYPES,
       warningSheetObj: {
         title: 'Learn More',
-        url: 'https://help.myetherwallet.com/en/articles/5380611-using-mew-offline-cold-storage'
+        url: ''
       },
       buttons: [
         /* Keystore Button */
@@ -160,6 +161,7 @@ export default {
         {
           label: 'Private Key',
           icon: require('@/assets/images/icons/icon-private-key-grey.png'),
+          class: 'AccessPrivateKeyWallet',
           fn: () => {
             if (process.env.VUE_APP_PRIV_KEY) {
               this.accessHandler.unlockPrivateKeyWallet(
@@ -200,7 +202,8 @@ export default {
       }
     },
     ...mapState('external', ['path']),
-    ...mapState('wallet', ['identifier'])
+    ...mapState('wallet', ['identifier']),
+    ...mapGetters('article', ['getArticle'])
   },
   watch: {
     open(newVal) {
@@ -214,6 +217,7 @@ export default {
    */
   mounted() {
     this.accessHandler = new handlerAccessWalletSoftware();
+    this.warningSheetObj.url = this.getArticle('using-mew-offline');
   },
   destroyed() {
     this.accessHandler = {};

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <the-layout-header title="About us - Team" />
+    <the-layout-header :title="$t('team.header')" />
     <div class="py-7" />
     <v-container>
       <v-sheet max-width="700px" class="mx-auto">
@@ -60,13 +60,12 @@ import Christian from '@/assets/images/team/christian.jpg';
 export default {
   name: 'TheTeamLayout',
   components: { TheLayoutHeader, AppBlockTitle },
-  data: () => ({
+  data: vm => ({
     titleData: {
       textProps: '',
       toptitle: '',
-      title: 'Meet the #MEWteam',
-      description:
-        'MyEtherWallet is a group of talented, inspiring, and hardworking individuals from around the world. We share the passion to code, create, and ultimately build an open, accessible and fair financial future, one piece of software at a time.',
+      title: vm.$t('team.title'),
+      description: vm.$t('team.description'),
       centered: true
     },
     team: [
@@ -95,7 +94,7 @@ export default {
         name: 'Brionne',
         title: 'Educational Content Writer'
       },
-      { img: Marcus, name: 'Marcus', title: 'Blockchain Community Specialist' },
+      { img: Marcus, name: 'Marcus', title: 'Junior Developer' },
       {
         img: Chindalath,
         name: 'Chindalath',

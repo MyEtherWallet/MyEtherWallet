@@ -32,7 +32,8 @@ const ERRORS = {
   'Forbidden key path': 'Path not supported!',
   'DOMException: Blocked a frame with origin "https://myetherwallet.com" from accessing a cross-origin frame.':
     'Block frame',
-  'Manifest not set.': 'Device is busy! Please try again.'
+  'Manifest not set.': 'Device is busy! Please try again.',
+  't._window is null': 'Please try again.'
 };
 
 const WARNINGS = {};

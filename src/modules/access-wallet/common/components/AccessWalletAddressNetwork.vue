@@ -88,11 +88,17 @@
                     class="mr-2"
                   />
                   <v-col cols="9" class="d-none d-sm-flex flex-column">
-                    <span v-if="acc.nickname" class="font-weight-bold">{{
-                      acc.nickname
-                    }}</span>
-                    <mew-transform-hash :hash="acc.address" />
-                    <span v-if="acc.ensName">{{ acc.ensName }}</span>
+                    <a
+                      :href="getExplorerLink(acc.address)"
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
+                      <span v-if="acc.nickname" class="font-weight-bold">{{
+                        acc.nickname
+                      }}</span>
+                      <mew-transform-hash :hash="acc.address" />
+                      <span v-if="acc.ensName">{{ acc.ensName }}</span>
+                    </a>
                   </v-col>
                   <p class="d-block d-sm-none">
                     {{ acc.address | concatAddressXS }}
@@ -195,7 +201,7 @@ import { getEthBalance } from '@/apollo/queries/wallets/wallets.graphql';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { fromWei, toChecksumAddress } from 'web3-utils';
 import { mapGetters, mapState } from 'vuex';
-import { isEmpty, isEqual } from 'underscore';
+import { isEmpty, isEqual } from 'lodash';
 import ENS, { getEnsAddress } from '@ensdomains/ensjs';
 import BigNumber from 'bignumber.js';
 import Web3 from 'web3';
@@ -540,6 +546,9 @@ export default {
       if (this.walletAccount) {
         this.$emit('unlock', this.walletAccount);
       }
+    },
+    getExplorerLink(addr) {
+      return this.network.type.blockExplorerAddr.replace('[[address]]', addr);
     }
   }
 };

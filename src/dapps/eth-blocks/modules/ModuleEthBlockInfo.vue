@@ -4,7 +4,9 @@
     Blocks Mint Tab
     ===================================================
     -->
-  <v-container class="px-3 pb-13 pt-5 px-md-15 pb-md-15 pt-md-8">
+  <v-container
+    class="dapps--module-eth-block-info px-3 pb-13 pt-5 px-md-15 pb-md-15 pt-md-8"
+  >
     <!--
         ===================================================
           Block Search or BlockInfo
@@ -89,15 +91,32 @@
           NFT Title
         ===================================================
         -->
-        <h2 class="mb-4 mb-md-5 text-center text-md-left">
-          Block #{{ blockNumberFormatted }}
-        </h2>
+        <div
+          class="d-flex flex-row align-center justify-space-between mb-4 mb-md-5"
+        >
+          <h2 class="text-center text-md-left">
+            Block #{{ blockNumberFormatted }}
+          </h2>
+          <share-network
+            network="twitter"
+            :url="`https://www.ethvm.com/block/number/${blockRef}`"
+            title="Twitter message"
+            hashtags="MyEtherWallet,MEW,EthBlocks"
+          >
+            <mew-button class="mr-1" btn-style="light" color-theme="basic">
+              <div class="d-flex align-center">
+                <v-icon left>mdi-twitter</v-icon>
+                <div>Share</div>
+              </div>
+            </mew-button>
+          </share-network>
+        </div>
         <!--
         ===================================================
           Block Info Alert component
         ===================================================
         -->
-        <block-info-alert
+        <block-info
           :block-alert="alert"
           :block-number="blockRef"
           :owner="alertOwner"
@@ -114,28 +133,18 @@
           Block Description
         ===================================================
         -->
-        <div v-if="!isReserved" class="border-container mt-4 mt-md-5 pa-5">
+        <div v-if="!isReserved" class="mt-10 mt-md-5">
           <div :class="['textMedium--text', { 'mb-2': !isTestNetwork }]">
             {{ handlerBlock.description }}
           </div>
-          <a
-            v-if="!isTestNetwork"
-            :href="`https://www.ethvm.com/block/number/${blockRef}`"
-            target="_blank"
-            @click="trackToEthVM"
-          >
-            View block #{{ blockRef }} info on EthVM
-          </a>
         </div>
-      </v-col>
-      <!--
-      ===================================================
-        NFT Properties
-        XS12
-      ===================================================
-      -->
-      <v-col v-if="!isReserved" cols="12" class="mt-4 mt-md-11">
-        <div class="table-properties">
+        <!--
+        ===================================================
+          NFT Properties
+          XS12
+        ===================================================
+        -->
+        <div v-if="!isReserved" class="table-properties mt-10">
           <div
             class="table-properties--header py-3 px-5 textLight--text mew-caption"
           >
@@ -158,6 +167,15 @@
         </div>
       </v-col>
     </v-row>
+    <a
+      v-if="!isReserved && !loading"
+      class="d-flex flex-row-reverse mt-3"
+      :href="`https://www.ethvm.com/block/number/${blockRef}`"
+      target="_blank"
+      @click="trackToEthVM"
+    >
+      View block info on EthVM
+    </a>
     <blocks-loading v-else />
     <block-send
       :open="openSendOverlay"
@@ -170,7 +188,7 @@
 </template>
 
 <script>
-import BlockInfoAlert from '../components/BlockInfoAlert.vue';
+import BlockInfo from '../components/BlockInfo.vue';
 import BlockSearch from '../components/BlockSearch.vue';
 import BlockSend from '../components/BlockSend.vue';
 import BlocksLoading from '../components/BlocksLoading.vue';
@@ -189,7 +207,7 @@ const MIN_GAS_MINT = 350000;
 export default {
   name: 'ModuleEthBlockInfo',
   components: {
-    BlockInfoAlert,
+    BlockInfo,
     BlockSearch,
     BlocksLoading,
     BlockSend

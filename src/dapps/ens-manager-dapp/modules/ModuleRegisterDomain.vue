@@ -21,13 +21,21 @@
           :get-rent-price="getRentPrice"
           @onRequest="onRequest"
       /></template>
-      <template #stepperContent2
-        ><register
+      <template #stepperContent2>
+        <register
           v-if="onStep === 2"
           class="mt-3"
           :name="name"
           :duration="duration"
           :register="register"
+          :not-enough-funds="notEnoughFunds"
+          :no-funds-for-reg-fees="noFundsForRegFees"
+          :commit-fee-in-eth="commitFeeInEth"
+          :commit-fee-in-wei="commitFeeInWei"
+          :commit-fee-usd="commitFeeUsd"
+          :total-cost="totalCost"
+          :total-cost-usd="totalCostUsd"
+          :waiting-for-reg="waitingForReg"
           :commit="commit"
           :committed="committed"
           :minimum-age="minimumAge"
@@ -42,6 +50,8 @@
 import Request from '../components/register/RegisterRequest';
 import Register from '../components/register/Register';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
+import BigNumber from 'bignumber.js';
+import { mapGetters, mapState } from 'vuex';
 
 export default {
   components: { Request, Register },
@@ -76,6 +86,38 @@ export default {
         return {};
       },
       type: Function
+    },
+    waitingForReg: {
+      default: false,
+      type: Boolean
+    },
+    notEnoughFunds: {
+      default: false,
+      type: Boolean
+    },
+    noFundsForRegFees: {
+      default: false,
+      type: Boolean
+    },
+    commitFeeInWei: {
+      type: String,
+      default: ''
+    },
+    commitFeeInEth: {
+      type: String,
+      default: ''
+    },
+    commitFeeUsd: {
+      type: String,
+      default: ''
+    },
+    totalCost: {
+      type: String,
+      default: ''
+    },
+    totalCostUsd: {
+      type: String,
+      default: ''
     },
     loadingCommit: {
       default: false,
@@ -122,6 +164,15 @@ export default {
       ]
     };
   },
+  computed: {
+    ...mapGetters('global', ['network', 'gasPrice', 'gasPriceByType']),
+    ...mapGetters('external', ['fiatValue']),
+    ...mapState('wallet', ['balance', 'address', 'web3']),
+    ...mapState('global', ['gasPriceType'])
+  },
+  balanceToWei() {
+    return this.web3.utils.toWei(BigNumber(this.balance).toString(), 'ether');
+  },
   watch: {
     onStep(newStep) {
       if (newStep == 2) {
@@ -138,8 +189,9 @@ export default {
   },
   methods: {
     onRequest(val) {
-      this.generateKeyPhrase();
       this.duration = val;
+      this.generateKeyPhrase();
+      this.$emit('getCommitFeeOnly');
       this.onStep += 1;
     }
   }

@@ -22,7 +22,7 @@
           :value="searchValue"
           class="mb-8"
           placeholder="find a path"
-          is-search-block
+          is-compact
           @input="setSearch"
         />
         <!--
@@ -211,7 +211,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('global', ['addCustomPath']),
+    ...mapActions('custom', ['addCustomPath']),
     /**
      * Emits the path value and name back to parent
      * then closes dropdown

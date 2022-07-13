@@ -11,6 +11,20 @@ export default class NFT {
     this.countPerPage = configs.countPerPage;
     this.currentPage = 1;
   }
+  /**
+   * retrieves all NFTs for account
+   * returns {Object}
+   */
+  async getNfts() {
+    try {
+      return await fetch(
+        `${configs.api}/v3/nfts/account?address=${this.address}`
+      ).then(res => res.json());
+    } catch (e) {
+      throw new Error(e);
+    }
+  }
+
   isValidAddress(hash) {
     return hash !== '' && utils.isAddress(hash);
   }

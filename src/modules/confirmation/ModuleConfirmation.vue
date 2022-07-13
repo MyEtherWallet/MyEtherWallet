@@ -30,7 +30,7 @@
       @close="reset"
     >
       <template #dialogBody>
-        <v-card-text ref="scrollableContent" class="py-0 px-5 px-md-0">
+        <v-card-text ref="scrollableContent" class="py-0 px-4 px-md-0">
           <div
             v-if="toNonEth"
             class="px-4 py-6 pr-6 textBlack2--text border-radius--5px mb-5"
@@ -39,7 +39,7 @@
             reverse your transaction once its submitted. You will still be
             charged gas fee even if the transaction fails.
             <a
-              href="https://help.myetherwallet.com/en/articles/5461501-my-transaction-failed-why-was-i-charged"
+              :href="getArticle('my-txn-failed-charged')"
               target="_blank"
               rel="noopener noreferrer"
               >Learn more.</a
@@ -84,7 +84,7 @@
             reversing a transaction cannot be guaranteed. You will still be
             charged gas fee even if transaction fails.
             <a
-              href="https://help.myetherwallet.com/en/articles/5461501-my-transaction-failed-why-was-i-charged"
+              :href="getArticle('my-txn-failed-charged')"
               target="_blank"
               rel="noopener noreferrer"
               >Learn more.</a
@@ -265,7 +265,7 @@ import {
 import { isEmpty, isArray, cloneDeep } from 'lodash';
 import { mapState, mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
-import { Toast, INFO } from '@/modules/toast/handler/handlerToast';
+import { Toast, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import parseTokenData from './handlers/parseTokenData';
 import { EventBus } from '@/core/plugins/eventBus';
 import { setEvents } from '@/utils/web3-provider/methods/utils';
@@ -325,7 +325,8 @@ export default {
       'isHardware'
     ]),
     ...mapGetters('external', ['fiatValue']),
-    ...mapGetters('global', ['network']),
+    ...mapGetters('global', ['network', 'getFiatValue']),
+    ...mapGetters('article', ['getArticle']),
     ...mapState('addressBook', ['addressBookStore']),
     txTo() {
       if (!this.isBatch)
@@ -376,9 +377,8 @@ export default {
         const gasPrice = this.tx.gasPrice ? this.tx.gasPrice : '0x';
         return fromWei(hexToNumberString(gasPrice), 'gwei');
       }
-      const batchGasPrice = this.unsignedTxArr.reduce((acc, currentValue) => {
-        return acc.plus(currentValue.gasPrice);
-      }, BigNumber(0));
+
+      const batchGasPrice = this.unsignedTxArr[0].gasPrice;
       return fromWei(hexToNumberString(batchGasPrice), 'gwei');
     },
     gasLimit() {
@@ -402,7 +402,9 @@ export default {
       return fromWei(parsedTxFee);
     },
     txFeeUSD() {
-      return BigNumber(this.txFee).times(this.fiatValue).toFixed(2);
+      return this.getFiatValue(
+        BigNumber(this.txFee).times(this.fiatValue).toFixed(2)
+      );
     },
     value() {
       if (!this.isBatch) {
@@ -841,7 +843,7 @@ export default {
       this.$refs.messageConfirmationContainer.$refs.signatureContent.$refs.input.select();
       document.execCommand('copy');
       window.getSelection().removeAllRanges();
-      Toast(this.$t('common.copied'), {}, INFO);
+      Toast(this.$t('common.copied'), {}, SUCCESS);
       this.reset();
     },
     arrayParser(arr) {

@@ -4,7 +4,7 @@
     DAPP WRAPPER:
   =====================================================================================
   -->
-  <mew6-white-sheet class="mt-5">
+  <mew6-white-sheet class="mt-5 the-wrapper-dapp">
     <!--
     =====================================================================================
       Mew Banner - props: bannerText, bannerImg
@@ -81,19 +81,33 @@
       background-color="backgroundGrey"
       color="blue500"
       height="46"
+      class="tab-container"
       active-class="blue500--text"
+      @change="onTab"
     >
       <v-tab
         v-for="(item, index) in tabItems"
-        :key="item.route.name"
+        :key="index"
         :class="[
-          'px-4 px-md-10 textMedium--text  menu-tab-text mew-body',
-          { 'ml-3 ml-md-13': index === 0 },
-          { 'mr-3 mr-md-13': index + 1 === tabItems.length }
+          'px-4 px-md-10 textMedium--text menu-tab-text mew-body',
+          { 'ml-md-13': index === 0 },
+          { 'mr-md-13': index + 1 === tabItems.length }
         ]"
         @click="routeToTab(item.route)"
       >
-        {{ item.name }}
+        <v-badge
+          v-if="item.hasBadge"
+          color="red"
+          :content="item.badgeContent"
+          :dot="item.badgeContent === ''"
+          :inline="item.badgeContent !== ''"
+          right
+        >
+          {{ item.name }}
+        </v-badge>
+        <div v-else>
+          {{ item.name }}
+        </div>
       </v-tab>
     </v-tabs>
     <!--
@@ -101,7 +115,27 @@
      NEW ROUTER VIEW: FOR is NEW HEADER (specify in dapp metaInfo)
     =====================================================================================
     -->
-    <router-view v-if="tabItems.length > 0 && isNewHeader && isValidNetwork" />
+    <slot
+      v-if="activeTab === 0 && externalContents && isValidNetwork"
+      name="tabContent1"
+    />
+    <slot
+      v-if="activeTab === 1 && externalContents && isValidNetwork"
+      name="tabContent2"
+    />
+    <slot
+      v-if="activeTab === 2 && externalContents && isValidNetwork"
+      name="tabContent3"
+    />
+
+    <router-view
+      v-if="
+        tabItems.length > 0 &&
+        isNewHeader &&
+        isValidNetwork &&
+        !externalContents
+      "
+    />
     <div
       v-if="tabItems.length > 0 && isNewHeader && !isValidNetwork"
       class="px-3 py-8 pa-md-15"
@@ -210,6 +244,10 @@ export default {
     validNetworks: {
       default: () => [],
       type: Array
+    },
+    externalContents: {
+      default: false,
+      type: Boolean
     }
   },
   data() {
@@ -229,7 +267,7 @@ export default {
     networkAlertText() {
       const names = this.validNetworks.map(item => item.name_long).join(', ');
       const netString = this.validNetworks.length > 1 ? 'networks' : 'network';
-      return `Please selelect ${names} ${netString} to use this Dapp.`;
+      return `Please select ${names} ${netString} to use this Dapp.`;
     }
   },
 
@@ -257,24 +295,19 @@ export default {
 </script>
 
 <style lang="scss">
-.hide-default-tab-header {
-  .v-tabs {
-    display: none;
+.tab-container {
+  .v-slide-group__prev {
+    display: none !important;
   }
 }
-.menu-tab-text {
-  text-transform: none !important;
-}
-
-.slide-fade-enter-active {
-  transition: all 0.3s ease;
-}
-.slide-fade-leave-active {
-  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
-}
-.slide-fade-enter, .slide-fade-leave-to
-/* .slide-fade-leave-active below version 2.1.8 */ {
-  transform: translateX(10px);
-  opacity: 0;
+.the-wrapper-dapp {
+  .hide-default-tab-header {
+    .v-tabs {
+      display: none;
+    }
+  }
+  .menu-tab-text {
+    text-transform: none !important;
+  }
 }
 </style>

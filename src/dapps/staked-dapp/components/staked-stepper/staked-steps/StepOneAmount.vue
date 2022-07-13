@@ -82,7 +82,7 @@
                 forecast.duration
               }}</v-col>
               <v-col cols="6" md="6" class="py-1 text-right textLight--text">
-                {{ '$' + forecast.balanceFiat }}
+                {{ forecast.balanceFiat }}
               </v-col>
             </v-row>
             <v-row>
@@ -136,7 +136,6 @@ import BorderBlock from '@/components/BorderBlock';
 import BigNumber from 'bignumber.js';
 import { mapState, mapGetters } from 'vuex';
 import {
-  formatFiatValue,
   formatPercentageValue,
   formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
@@ -160,10 +159,9 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['web3']),
-    ...mapState('global', ['preferredCurrency']),
     ...mapGetters('wallet', ['balanceInETH']),
     ...mapGetters('external', ['fiatValue']),
-    ...mapGetters('global', ['network']),
+    ...mapGetters('global', ['network', 'getFiatValue']),
     networkImg() {
       return this.network.type.icon;
     },
@@ -192,12 +190,7 @@ export default {
             name: i + ' ETH',
             value: i + '', //change to string to make mew select filter work
             img: this.networkImg,
-            // change this in localization branch
-            price: new Intl.NumberFormat('en-US', {
-              style: 'currency',
-              currency: this.preferredCurrency,
-              currencyDisplay: 'symbol'
-            }).format(new BigNumber(i).times(this.fiatValue).toString())
+            price: this.getFiatValue(new BigNumber(i).times(this.fiatValue))
           });
         }
       }
@@ -241,11 +234,11 @@ export default {
       return [
         {
           duration: 'In 3 months',
-          balanceFiat: formatFiatValue(
+          balanceFiat: this.getFiatValue(
             new BigNumber(this.amount)
               .plus(threeMonthsEarning)
               .times(this.fiatValue)
-          ).value,
+          ),
           balanceETH: formatFloatingPointValue(
             new BigNumber(this.amount).plus(threeMonthsEarning)
           ).value,
@@ -253,11 +246,11 @@ export default {
         },
         {
           duration: 'In 1 year',
-          balanceFiat: formatFiatValue(
+          balanceFiat: this.getFiatValue(
             new BigNumber(this.amount)
               .plus(oneYearEarnings)
               .times(this.fiatValue)
-          ).value,
+          ),
           balanceETH: formatFloatingPointValue(
             new BigNumber(this.amount).plus(oneYearEarnings)
           ).value,
@@ -265,11 +258,11 @@ export default {
         },
         {
           duration: 'In 2 years',
-          balanceFiat: formatFiatValue(
+          balanceFiat: this.getFiatValue(
             new BigNumber(this.amount)
               .plus(twoYearEarnings)
               .times(this.fiatValue)
-          ).value,
+          ),
           balanceETH: formatFloatingPointValue(
             new BigNumber(this.amount).plus(twoYearEarnings)
           ).value,

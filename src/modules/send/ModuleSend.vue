@@ -102,7 +102,7 @@
           <mew-expand-panel
             ref="expandPanel"
             :panel-items="expandPanel"
-            :idx-to-expand="[]"
+            :idx-to-expand="openedPanels"
             @toggled="closeToggle"
           >
             <template #panelBody1>
@@ -146,7 +146,11 @@
                   :label="$t('sendTx.add-data')"
                   placeholder="0x..."
                   :rules="dataRules"
+                  :error-messages="dataInvalidHexMessage"
+                  :hide-clear-btn="data === '0x'"
                   class="mb-8"
+                  @keyup.native="verifyHexFormat"
+                  @focusout.native="verifyHexFormat"
                 />
               </div>
             </template>
@@ -185,7 +189,7 @@ import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import SendTransaction from '@/modules/send/handlers/handlerSend';
 import { ETH } from '@/utils/networks/types';
-import { Toast, WARNING } from '@/modules/toast/handler/handlerToast';
+import { Toast, ERROR, WARNING } from '@/modules/toast/handler/handlerToast';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import SendLowBalanceNotice from './components/SendLowBalanceNotice.vue';
 import AppButtonBalance from '@/core/components/AppButtonBalance';
@@ -211,7 +215,7 @@ export default {
     },
     prefilledData: {
       type: String,
-      default: ''
+      default: '0x'
     },
     prefilledAddress: {
       type: String,
@@ -238,6 +242,7 @@ export default {
           toggleTitle: 'Gas Limit & Data'
         }
       ],
+      openedPanels: [],
       defaultGasLimit: '21000',
       gasLimitError: '',
       amountError: '',
@@ -254,7 +259,7 @@ export default {
       'gasPrice',
       'isEthNetwork',
       'swapLink',
-      'gasPriceByType'
+      'getFiatValue'
     ]),
     ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
     ...mapGetters('custom', ['hasCustom', 'customTokens']),
@@ -266,7 +271,8 @@ export default {
         this.feeError !== '' ||
         !this.isValidGasLimit ||
         !this.allValidInputs ||
-        !this.gasEstimationIsReady
+        !this.gasEstimationIsReady ||
+        !isHexStrict(this.data)
       );
     },
     buyMoreStr() {
@@ -332,8 +338,9 @@ export default {
       // no ref copy
       const tokensList = this.tokensList.slice();
       const imgs = tokensList.map(item => {
-        item.totalBalance = this.currencyFormatter(item.usdBalance);
+        item.totalBalance = this.getFiatValue(item.usdBalancef);
         item.tokenBalance = item.balancef;
+        item.price = this.getFiatValue(item.pricef);
         item.subtext = item.name;
         item.value = item.name;
         item.name = item.symbol;
@@ -417,6 +424,12 @@ export default {
         }
       ];
     },
+    dataInvalidHexMessage() {
+      if (isHexStrict(this.data)) {
+        return '';
+      }
+      return 'Invalid hex data';
+    },
     isEthNetwork() {
       return this.network.type.name === ETH.name;
     },
@@ -445,7 +458,7 @@ export default {
         )
       )
         return '0';
-      const amountToWei = toWei(this.amount);
+      const amountToWei = toWei(toBNSafe(this.amount));
       return this.isFromNetworkCurrency
         ? BigNumber(this.txFee).plus(amountToWei).toString()
         : this.txFee;
@@ -502,7 +515,6 @@ export default {
         this.debounceEstimateGas();
       }
     },
-
     isPrefilled() {
       this.prefillForm();
     },
@@ -543,6 +555,7 @@ export default {
       deep: true
     },
     data() {
+      if (!this.data) this.data = '0x';
       if (isHexStrict(this.data)) this.sendTx.setData(this.data);
     },
     gasLimit(newVal) {
@@ -558,6 +571,12 @@ export default {
     address() {
       this.clear();
       this.debounceAmountError('0');
+    },
+    txFeeETH(newVal) {
+      const total = BigNumber(newVal).plus(this.amount);
+      if (total.gt(this.balanceInETH)) {
+        this.setEntireBal();
+      }
     }
   },
   mounted() {
@@ -581,13 +600,10 @@ export default {
     }, 500);
   },
   methods: {
-    // replace this once localization is merged
-    currencyFormatter(value) {
-      return new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: this.preferredCurrency,
-        currencyDisplay: 'symbol'
-      }).format(value);
+    verifyHexFormat() {
+      if (!this.data || isEmpty(this.data)) {
+        this.data = '0x';
+      }
     },
     /**
      * Resets values to default
@@ -707,7 +723,9 @@ export default {
         })
         .catch(error => {
           this.clear();
-          this.instance.errorHandler(error.message);
+          if (!this.instance) {
+            Toast(error, {}, ERROR);
+          }
         });
     },
     prefillForm() {
@@ -717,7 +735,7 @@ export default {
               return item.name.toLowerCase() === this.tokenSymbol.toLowerCase();
             })
           : undefined;
-        this.data = isHexStrict(this.prefilledData) ? this.prefilledData : '';
+        this.data = isHexStrict(this.prefilledData) ? this.prefilledData : '0x';
         this.amount = this.prefilledAmount;
         this.toAddress = this.prefilledAddress;
         this.gasLimit = this.prefilledGasLimit;

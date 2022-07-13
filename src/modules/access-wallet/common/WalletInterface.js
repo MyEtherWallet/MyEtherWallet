@@ -28,17 +28,30 @@ class WalletInterface {
       const _privKey = Buffer.isBuffer(key)
         ? key
         : getBufferFromHex(sanitizeHex(key));
-      if (!isValidPrivate(_privKey))
-        throw new Error(
-          'Private key does not satisfy the curve requirements (ie. it is invalid)'
-        );
+
+      try {
+        if (_privKey.length !== 32 || !isValidPrivate(_privKey)) {
+          throw new Error(
+            'Private key does not satisfy the curve requirements (ie. it is invalid)'
+          );
+        }
+      } catch (e) {
+        throw new Error(e);
+      }
+
       this.privateKey = _privKey;
       this.publicKey = privateToPublic(_privKey);
       this.isPubOnly = false;
     } else {
       const _pubKey = Buffer.isBuffer(key) ? key : getBufferFromHex(key);
-      if (_pubKey.length !== 20 && !isValidPublic(_pubKey, true))
-        throw new Error('Invalid public key');
+      if (_pubKey.length !== 20) {
+        try {
+          if (!isValidPublic(_pubKey, true))
+            throw new Error('Invalid public key');
+        } catch (e) {
+          throw new Error('Invalid public key');
+        }
+      }
       if (_pubKey.length === 20) this.isAddress = true;
       this.publicKey = _pubKey;
       this.isPubOnly = true;

@@ -54,7 +54,7 @@
                 class="mr-2"
               />
               <div>
-                <div>BTC Donation</div>
+                <div>{{ $t('footer.donation.bitcoin') }}</div>
                 <div v-show="false" class="overline">
                   Address: {{ btcDonationAddress }}
                 </div>
@@ -126,7 +126,7 @@
             >
             <v-spacer />
             <p class="teal--text text--lighten-1 ma-0">
-              {{ $t('footer.copyright') }}
+              {{ $t('footer.copyright', { year: new Date().getFullYear() }) }}
               <a
                 class="cyan--text text--lighten-3"
                 href="https://www.coingecko.com/en"
@@ -203,7 +203,7 @@
                 class="mr-2"
               />
               <div>
-                <div>ETH Donation</div>
+                <div>{{ $t('footer.donation.ether') }}</div>
                 <div v-show="false" class="overline">
                   Address: {{ ethDonationAddress }}
                 </div>
@@ -221,7 +221,7 @@
                 class="mr-2"
               />
               <div>
-                <div>{{ $t('footer.donation.btc') }}</div>
+                <div>{{ $t('footer.donation.bitcoin') }}</div>
                 <div v-show="false" class="overline">
                   Address: {{ btcDonationAddress }}
                 </div>
@@ -230,21 +230,29 @@
           </div>
 
           <div
-            class="social-icons d-flex align-center justify-space-between mt-12"
+            class="social-icons d-flex align-center flex-wrap justify-center mt-12"
           >
             <a
               v-for="(i, key) in socialIcons"
               :key="key"
               :href="i.link"
               target="_blank"
+              style="height: 23px"
+              class="px-4 my-5"
             >
-              <mew-icon :img-height="23" :icon-name="i.icon" />
+              <mew-icon v-if="i.icon" :img-height="23" :icon-name="i.icon" />
+              <img
+                v-if="i.iconImage"
+                :src="i.iconImage"
+                alt="Social"
+                height="19"
+              />
             </a>
           </div>
 
           <div class="d-flex mt-10">
             <div class="d-flex align-center line-height-small mx-auto">
-              <div class="px-2 px-lg-6 border-right">
+              <div class="px-4 px-lg-6 border-right">
                 <a
                   class="color--inherit"
                   href="mailto:support@myetherwallet.com"
@@ -253,12 +261,12 @@
                   {{ $t('footer.feedback') }}
                 </a>
               </div>
-              <div class="px-2 px-lg-6 border-right">
+              <div class="px-4 px-lg-6 border-right">
                 <router-link :to="{ name: ROUTES_HOME.PRIVACY_POLICY.NAME }">
                   Privacy
                 </router-link>
               </div>
-              <div class="px-2 px-lg-6">
+              <div class="px-4 px-lg-6">
                 <router-link :to="{ name: ROUTES_HOME.TERMS_OF_SERVICE.NAME }">
                   Terms
                 </router-link>
@@ -293,7 +301,7 @@
             </div>
             <v-sheet color="transparent" max-width="300px" class="mx-auto">
               <p class="teal--text text--lighten-1 mt-6 mb-0 text-center">
-                {{ $t('footer.copyright') }}
+                {{ $t('footer.copyright', { year: new Date().getFullYear() }) }}
                 <a
                   class="cyan--text text--lighten-3"
                   href="https://www.coingecko.com/en"
@@ -389,15 +397,14 @@ export default {
             label: 'Generate keystore file',
             routerLink: 'Tools',
             query: { tool: 'keystore' }
-          }
-          /*
-          ,
-          {
-            label: 'Send offline help',
-            routerLink: 'Tools',
-            query: { tool: 'offline' }
           },
           {
+            label: 'Send Offline Helper',
+            routerLink: 'Tools',
+            query: { tool: 'offline' }
+          }
+          /*
+          ,{
             label: 'Transaction status',
             routerLink: 'SendTX'
           },
@@ -407,11 +414,6 @@ export default {
             query: { tool: 'watch' }
           },
           { label: 'Submit Dapp', routerLink: 'Home' },
-          {
-            label: 'Convert units',
-            routerLink: 'Tools',
-            query: { tool: 'convert' }
-          }
           */
         ]
       }
@@ -511,6 +513,10 @@ a {
   > div {
     line-height: 11px;
   }
+}
+.v-expansion-panel-header {
+  max-width: 524px;
+  margin: 0 auto;
 }
 </style>
 

@@ -1,9 +1,16 @@
 {
   "send-tx": "Send Transaction",
+  "send-tx-break": "Send {transaction}",
+  "send-offline": "Send Transaction Offline",
   "to-addr": "To Address",
   "amount": "Amount",
   "add-data": "Add Data",
   "nonce": "Nonce",
+  "data": "Data",
+  "data-gas": "Data & Gas Limit",
+  "gas-price": "Gas Price (in Gwei)",
+  "dep-amount": "Deposit Amount",
+  "button-entire": "Entire Balance",
   "enter-addr": "Enter address",
   "success": {
     "title": "Success"

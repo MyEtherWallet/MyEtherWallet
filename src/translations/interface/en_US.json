@@ -30,11 +30,13 @@
     "add-addr": "Add a contact address",
     "address": "Address",
     "update": "Update",
+    "remove-addr": "Remove Address",
     "validations": {
       "invalid-address": "Invalid Address",
       "nickname-length": "Nickname cannot be longer than 20 chars",
       "already-exists": "This address already exists in the contact book",
-      "addr-required": "Address is required"
+      "addr-required": "Address is required",
+      "nickname-required": "Please enter a nickname for the address"
     }
   },
   "gas": {

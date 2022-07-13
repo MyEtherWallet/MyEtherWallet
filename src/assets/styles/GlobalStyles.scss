@@ -111,8 +111,15 @@ h6 {
 }
 
 /* ========== Border ========== */
+.border-radius--12px {
+  border-radius: 12px !important;
+}
 .border-radius--10px {
   border-radius: 10px !important;
+}
+
+.border-radius--8px {
+  border-radius: 8px !important;
 }
 
 .border-radius--5px {
@@ -134,10 +141,6 @@ h6 {
 
 .height--full {
   height: 100% !important;
-}
-
-.vertical-align--middle {
-  vertical-align: middle;
 }
 
 .display--block {
@@ -162,14 +165,21 @@ h6 {
   }
 }
 
-.btn-circle {
-  cursor: pointer;
-  transition: filter 0.2s linear;
-  height: 30px;
+// temp addition, remove once stakewise promo is done
 
-  &:hover {
-    filter: brightness(90%);
+.snackbar-border {
+  .v-snack__wrapper {
+    border-radius: 8px !important;
+    border: 1px solid var(--v-greenPrimary-base) !important;
+    background-color: var(--v-whiteBackground-base) !important;
   }
+  // .white {
+  //   border: 1px solid var(--v-greenPrimary-base) !important;
+  // }
+
+  // .application .white {
+  //   border: 1px solid var(--v-greenPrimary-base) !important;
+  // }
 }
 
 /* ========= Convert SVG to white ========= */
@@ -181,20 +191,20 @@ h6 {
 /* Firefox */
 * {
   scrollbar-width: auto;
-  scrollbar-color: var(--v-greenPrimary-base) #d6d6d6;
+  scrollbar-color: #c8c8c8 #f4f4f4;
 }
 
 /* Chrome, Edge, and Safari */
 *::-webkit-scrollbar {
-  width: 6px;
+  width: 10px;
 }
 
 *::-webkit-scrollbar-track {
-  background: #d6d6d6;
+  background: #f4f4f4;
 }
 
 *::-webkit-scrollbar-thumb {
-  background-color: #949494;
-  border-radius: 0px;
-  border: 0px solid #ffffff;
+  background-color: #c8c8c8;
+  border-radius: 10px;
+  border: 2px solid #f4f4f4;
 }
