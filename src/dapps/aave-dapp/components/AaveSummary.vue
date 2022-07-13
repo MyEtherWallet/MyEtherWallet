@@ -277,8 +277,6 @@ export default {
     },
     nextHealthFactor() {
       const selectedToken = this.selectedToken;
-      console.log('selectedToken', selectedToken);
-      // Find out why nextHealth is not calculated correctly
       let nextHealthFactor = this.currentHealthFactor,
         collateralBalanceETH =
           this.userSummary.totalCollateralMarketReferenceCurrency,
