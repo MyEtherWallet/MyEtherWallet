@@ -184,7 +184,7 @@
                       >
                         <div>
                           {{
-                            $t('ens.manage-domains.expire-at', {
+                            $t('ens.manage-domains.expire-on', {
                               date: domain.expiration
                             })
                           }}
