@@ -171,8 +171,14 @@ export default {
   watch: {
     preSelectedToken(newVal) {
       if (newVal && !isEmpty(newVal)) {
+        console.log('preselectedTokenChanged', newVal);
         this.handleSelectedDeposit(this.preSelectedToken);
       }
+      console.log('depositPreselectedToken', this.preSelectedToken);
+    },
+    selectedToken(newVal, oldVal) {
+      console.log('depositedSelectedToken (old)', oldVal);
+      console.log('depositedSelectedToken', newVal);
     }
   },
   methods: {
