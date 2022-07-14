@@ -31,7 +31,7 @@
         -->
     <aave-summary
       v-if="step === 1"
-      :selected-token="selectedTokenDetails"
+      :selected-token="selectedTokenInUserSummary"
       :amount="amount"
       :action-type="withdrawTitle"
       :amount-usd="amountUSD"
@@ -166,7 +166,6 @@ export default {
         reserve: this.selectedTokenDetails.underlyingAsset,
         amount: toHex(this.amount)
       };
-      console.log('param', param);
       this.$emit('onConfirm', param);
       this.step = 0;
       this.close();

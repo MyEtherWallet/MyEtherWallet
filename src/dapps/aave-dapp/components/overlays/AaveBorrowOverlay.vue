@@ -49,7 +49,7 @@
       -->
     <aave-summary
       v-if="step === 3 || step === 4"
-      :selected-token="selectedTokenDetails"
+      :selected-token="selectedTokenInUserSummary"
       :amount="amount"
       :step="step"
       :apr="apr"
@@ -195,7 +195,6 @@ export default {
           interestRateMode: this.apr.type,
           referralCode: '14'
         };
-        console.log(data);
         this.onBorrow(data);
         this.callClose();
       }

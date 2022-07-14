@@ -31,7 +31,7 @@
         -->
     <aave-summary
       v-if="step === 1"
-      :selected-token="selectedTokenDetails"
+      :selected-token="selectedTokenInUserSummary"
       :amount="amount"
       :action-type="repayTitle"
       :amount-usd="amountUSD"
@@ -171,7 +171,6 @@ export default {
           ? INTEREST_TYPES.variable
           : INTEREST_TYPES.stable
       };
-      console.log('param', param);
       this.$emit('onConfirm', param);
       this.handleCancel();
     },

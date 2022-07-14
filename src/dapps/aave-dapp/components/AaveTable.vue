@@ -130,8 +130,6 @@ export default {
         );
       }
       if (this.title === AAVE_TABLE_TITLE.balance_deposit) {
-        console.log('userReservesData', this.userReservesData);
-        console.log('userSummary', this.userSummary);
         return this.userReservesData.filter(item =>
           new BigNumber(item.scaledATokenBalance).gt(0)
         );
@@ -368,8 +366,7 @@ export default {
       );
       const healthFactor = this.nextHealthFactor(token, tokenAmount);
       if (healthFactor < 1.1) {
-        console.log(`${token.name} health factor is ${healthFactor}...`);
-        console.log(`${token.name}: ${tokenAmount.toString()}...`);
+        // recalculate token amount until HF >= 1.1
       }
       borrowPower = tokenAmount;
       return borrowPower.isFinite() && !borrowPower.isNaN() ? borrowPower : 0;
