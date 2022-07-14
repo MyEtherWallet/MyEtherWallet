@@ -5,34 +5,37 @@
         <v-col class="d-md-none" cols="2" md="4">
           <the-default-mobile-navigation class="ml-n2" />
         </v-col>
-        <v-col cols="8" md="4">
+        <v-col cols="8" md="8" class="d-flex align-center">
           <v-img
             :class="$vuetify.breakpoint.smAndDown ? 'mx-auto' : ''"
-            class="cursor--pointer"
+            class="cursor--pointer mr-md-14"
             src="@/assets/images/icons/logo-mew.svg"
             max-height="36"
             max-width="130"
             @click="$router.push({ name: ROUTES_HOME.HOME.NAME })"
           />
-        </v-col>
-        <v-col class="justify-space-between d-none d-md-flex" cols="4">
-          <router-link
-            class="white--text text-decoration--none menu-item"
-            :to="{ name: ROUTES_HOME.HOW_IT_WORKS.NAME }"
-          >
-            {{ $t('header.what-is-mew') }}
-          </router-link>
-          <mew-menu
-            activator-text-color="white--text"
-            :list-obj="menuObj"
-            @goToPage="routeTo"
-          />
-          <a
-            class="white--text text-decoration--none menu-item"
-            @click="openMoonpay"
-          >
-            {{ $t('header.buy-eth') }}
-          </a>
+
+          <div class="d-none d-md-flex">
+            <router-link
+              class="white--text text-decoration--none menu-item"
+              :to="{ name: ROUTES_HOME.HOW_IT_WORKS.NAME }"
+            >
+              {{ $t('header.what-is-mew') }}
+            </router-link>
+            <div class="mx-8">
+              <mew-menu
+                activator-text-color="white--text"
+                :list-obj="menuObj"
+                @goToPage="routeTo"
+              />
+            </div>
+            <a
+              class="white--text text-decoration--none menu-item"
+              @click="openMoonpay"
+            >
+              {{ $t('header.buy-eth') }}
+            </a>
+          </div>
         </v-col>
         <v-col cols="2" md="4" class="text-right">
           <mew-tools class="ml-auto" />
