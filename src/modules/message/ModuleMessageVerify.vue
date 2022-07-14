@@ -7,8 +7,8 @@
   >
     <template #moduleBody>
       <v-textarea
-        class="VerifyInput"
         v-model="message"
+        class="VerifyInput"
         outlined
         label="Signature"
         :value="message"
