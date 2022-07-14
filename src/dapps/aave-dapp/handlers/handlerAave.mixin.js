@@ -400,7 +400,6 @@ export default {
                 );
               })
               .catch(err => {
-                console.error(err);
                 Toast(err, {}, ERROR);
               });
           }) // Estimate Gas Catch
@@ -446,7 +445,6 @@ export default {
             );
           })
           .catch(err => {
-            console.error(err);
             Toast(err, {}, ERROR);
           });
       } catch (e) {
