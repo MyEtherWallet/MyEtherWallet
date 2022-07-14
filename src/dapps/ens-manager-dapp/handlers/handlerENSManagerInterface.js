@@ -245,10 +245,8 @@ export default class ENSManagerInterface {
 
   async _setPublicResolverAddress() {
     try {
-      const nameInstance = await this.ensInstance.name('resolver.eth');
-      this.publicResolverAddress = await nameInstance.ens.resolver(
-        nameHashPckg.hash('resolver.eth')
-      );
+      const nameInstance = this.ensInstance.name('resolver.eth');
+      this.publicResolverAddress = await nameInstance.getAddress();
     } catch (e) {
       this.publicResolverAddress = '0x';
     }
