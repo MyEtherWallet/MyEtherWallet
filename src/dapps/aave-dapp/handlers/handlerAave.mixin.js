@@ -19,6 +19,7 @@ import { ethers } from 'ethers';
 import { INTEREST_TYPES } from '../handlers/helpers';
 import { estimateGasList } from '@/core/helpers/gasPriceHelper';
 import { toBN, toHex } from 'web3-utils';
+import { calculateHealthFactorFromBalancesBigUnits } from '@aave/protocol-js';
 
 const STABLE_COINS = ['TUSD', 'DAI', 'USDT', 'USDC', 'sUSD'];
 
@@ -198,11 +199,15 @@ export default {
     userBorrowingPowerInETH() {
       let buyingPower = 0;
       for (const reserve of this.userReservesData) {
-        buyingPower +=
-          reserve.underlyingBalanceMarketReferenceCurrency *
-          reserve.reserve.formattedBaseLTVasCollateral;
+        if (reserve.usageAsCollateralEnabledOnUser) {
+          buyingPower +=
+            reserve.underlyingBalanceMarketReferenceCurrency *
+            reserve.reserve.formattedBaseLTVasCollateral;
+        }
       }
-      return buyingPower - this.userSummary.totalBorrowsMarketReferenceCurrency;
+      buyingPower -= this.userSummary.totalBorrowsMarketReferenceCurrency;
+      if (buyingPower <= 0) buyingPower = 0;
+      return buyingPower;
     }
   },
   methods: {
@@ -531,6 +536,41 @@ export default {
      */
     formatUSDValue(usdValue) {
       return 10 ** 8 * usdValue;
+    },
+    nextTokenHealthFactor(selectedToken, amount) {
+      let nextHealthFactor = this.currentHealthFactor,
+        totalBorrowsETH = this.userSummary.totalBorrowsMarketReferenceCurrency;
+      const collateralBalanceETH =
+        this.userSummary.totalCollateralMarketReferenceCurrency;
+      if (
+        selectedToken?.formattedPriceInMarketReferenceCurrency &&
+        amount !== '0'
+      ) {
+        const ethBalance = BigNumber(amount).times(
+          selectedToken?.formattedPriceInMarketReferenceCurrency
+        );
+        totalBorrowsETH = new BigNumber(
+          this.userSummary.totalBorrowsMarketReferenceCurrency
+        ).plus(ethBalance);
+        nextHealthFactor = calculateHealthFactorFromBalancesBigUnits(
+          collateralBalanceETH,
+          totalBorrowsETH,
+          this.userSummary.currentLiquidationThreshold
+        ).toFixed(3);
+      }
+      return nextHealthFactor;
+    },
+    userBorrowPower(token) {
+      let borrowPower = 0;
+      const tokenAmount = BigNumber(this.userBorrowingPowerInETH).dividedBy(
+        token.formattedPriceInMarketReferenceCurrency
+      );
+      const healthFactor = this.nextTokenHealthFactor(token, tokenAmount);
+      if (healthFactor < 1.1) {
+        // recalculate token amount until HF >= 1.1
+      }
+      borrowPower = tokenAmount;
+      return borrowPower.isFinite() && !borrowPower.isNaN() ? borrowPower : 0;
     }
   }
 };

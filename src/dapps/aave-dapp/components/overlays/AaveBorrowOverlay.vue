@@ -29,6 +29,7 @@
       :right-side-values="aaveBorrowForm.rightSideValues"
       :form-text="aaveBorrowForm.formText"
       :button-title="aaveBorrowForm.buttonTitle"
+      :token-balance="tokenBalance.toFixed()"
       @cancel="handleCancel"
       @emitValues="handleValues"
     />
@@ -109,7 +110,7 @@ export default {
         this.formatUSDValue(this.amount * hasBorrowed?.reserve?.priceInUSD || 0)
       );
       return {
-        showToggle: false,
+        showToggle: true,
         leftSideValues: {
           title: borrowedEth,
           caption: borrowedUSD,
@@ -153,6 +154,9 @@ export default {
         )
       );
       return this.step === 1 ? this.aaveBorrowForm.amountInUSD : amountUSD;
+    },
+    tokenBalance() {
+      return this.userBorrowPower(this.selectedTokenDetails);
     }
   },
   watch: {

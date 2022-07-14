@@ -105,8 +105,9 @@
   -->
     <mew-button
       class="mt-10 mx-auto d-block"
-      title="Confirm"
+      :title="btnTitle"
       btn-size="xlarge"
+      :disabled="disableBtn"
       @click.native="confirm"
     />
   </div>
@@ -333,6 +334,12 @@ export default {
         type: 'Stable',
         percentage: '2.837%'
       };
+    },
+    disableBtn() {
+      return this.nextHealthFactor < 1.1;
+    },
+    btnTitle() {
+      return !this.disableBtn ? 'Confirm' : 'Health Factor Too Low';
     }
   },
   methods: {

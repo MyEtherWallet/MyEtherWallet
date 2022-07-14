@@ -51,7 +51,6 @@ import {
   AAVE_TABLE_TITLE,
   INTEREST_TYPES
 } from '@/dapps/aave-dapp/handlers/helpers';
-import { calculateHealthFactorFromBalancesBigUnits } from '@aave/protocol-js';
 import BigNumber from 'bignumber.js';
 import { mapGetters } from 'vuex';
 import {
@@ -196,11 +195,12 @@ export default {
                 return item.variableBorrowAPY > 0;
               })
               .map(item => {
+                const available = formatFloatingPointValue(
+                  this.userBorrowPower(item)
+                ).value;
                 return {
                   token: item.symbol,
-                  available: formatFloatingPointValue(
-                    this.userBorrowPower(item)
-                  ).value, // need to double check this
+                  available: available, // need to double check this
                   stableApy: item.stableBorrowRateEnabled
                     ? formatPercentageValue(
                         new BigNumber(item.stableBorrowAPY).multipliedBy(100)
@@ -211,7 +211,9 @@ export default {
                   ).value,
                   tokenImg: `${item.icon}`,
                   address: item.aToken.id,
-                  callToAction: [AAVE_TABLE_BUTTON.borrow]
+                  callToAction: [
+                    { ...AAVE_TABLE_BUTTON.borrow, disabled: available <= 0 }
+                  ]
                 };
               });
             break;
@@ -259,6 +261,9 @@ export default {
               const enableToggle = reserve
                 ? !reserve.stableBorrowRateEnabled
                 : false;
+              const available = formatFloatingPointValue(
+                this.userBorrowPower(item)
+              ).value;
               return {
                 token: item.reserve.symbol,
                 tokenImg: `${item.reserve.icon}`,
@@ -287,7 +292,7 @@ export default {
                   disabled: enableToggle
                 },
                 callToAction: [
-                  AAVE_TABLE_BUTTON.borrow,
+                  { ...AAVE_TABLE_BUTTON.borrow, disabled: available <= 0 },
                   AAVE_TABLE_BUTTON.repay
                 ]
               };
@@ -335,41 +340,6 @@ export default {
         Math.pow(1 + depositAPR / SECONDS_PER_YEAR, SECONDS_PER_YEAR) - 1;
       return formatPercentageValue(new BigNumber(depositAPY).multipliedBy(100))
         .value;
-    },
-    nextHealthFactor(selectedToken, amount) {
-      let nextHealthFactor = this.currentHealthFactor,
-        totalBorrowsETH = this.userSummary.totalBorrowsMarketReferenceCurrency;
-      const collateralBalanceETH =
-        this.userSummary.totalCollateralMarketReferenceCurrency;
-      if (
-        selectedToken?.formattedPriceInMarketReferenceCurrency &&
-        amount !== '0'
-      ) {
-        const ethBalance = BigNumber(amount).times(
-          selectedToken?.formattedPriceInMarketReferenceCurrency
-        );
-        totalBorrowsETH = new BigNumber(
-          this.userSummary.totalBorrowsMarketReferenceCurrency
-        ).plus(ethBalance);
-        nextHealthFactor = calculateHealthFactorFromBalancesBigUnits(
-          collateralBalanceETH,
-          totalBorrowsETH,
-          this.userSummary.currentLiquidationThreshold
-        ).toFixed(3);
-      }
-      return nextHealthFactor;
-    },
-    userBorrowPower(token) {
-      let borrowPower = 0;
-      const tokenAmount = BigNumber(this.userBorrowingPowerInETH).dividedBy(
-        token.formattedPriceInMarketReferenceCurrency
-      );
-      const healthFactor = this.nextHealthFactor(token, tokenAmount);
-      if (healthFactor < 1.1) {
-        // recalculate token amount until HF >= 1.1
-      }
-      borrowPower = tokenAmount;
-      return borrowPower.isFinite() && !borrowPower.isNaN() ? borrowPower : 0;
     },
     /**
      * Method emits to the parent to open deposit token overlay
