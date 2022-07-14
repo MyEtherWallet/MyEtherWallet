@@ -177,6 +177,7 @@ export default {
   },
   methods: {
     handleSelectedDeposit(val) {
+      console.log('tokenHandled', val);
       this.selectedToken = val;
       this.step = 1;
     },
@@ -188,6 +189,7 @@ export default {
       this.step = 0;
       this.selectedToken = {};
       this.amount = '0';
+      this.depositTitle = AAVE_TABLE_TITLE.deposit;
 
       this.close();
     },

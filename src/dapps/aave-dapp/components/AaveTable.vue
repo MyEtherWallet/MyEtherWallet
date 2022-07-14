@@ -347,7 +347,7 @@ export default {
      *  Used in deposit Button within the table
      */
     onDepositClick(newVal) {
-      console.log('emittedDeposit');
+      console.log('emittedDeposit', newVal);
       this.$emit('selectedDeposit', newVal);
     },
     /**

@@ -499,6 +499,9 @@ export default {
   },
   watch: {
     showDepositOverlay(newVal) {
+      /* eslint-disable no-console */
+      console.log('showDepositOverlay', newVal);
+      /* eslint-enable no-console */
       if (!newVal) this.tokenSelected = {};
     },
     showBorrowOverlay(newVal) {
