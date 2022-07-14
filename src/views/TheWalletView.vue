@@ -69,7 +69,7 @@ export default {
     }
   },
   mounted() {
-    if (this.online) {
+    if (this.online && !this.isOfflineApp) {
       this.setup();
       if (this.identifier === WALLET_TYPES.WEB3_WALLET) {
         const web3Instance = new Web3(window.ethereum);

@@ -141,7 +141,7 @@ export default {
   },
   computed: {
     ...mapState('external', ['path']),
-    ...mapState('global', ['online']),
+    ...mapState('wallet', ['isOfflineApp']),
 
     /**
      * Used in the creation of a MEWconnect instance
@@ -176,7 +176,7 @@ export default {
       return this.overlay === ACCESS_VALID_OVERLAYS.SOFTWARE;
     },
     buttons() {
-      if (this.online) {
+      if (!this.isOfflineApp) {
         return [
           /* MEW wallet Button */
           {
@@ -268,7 +268,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('wallet', ['setWallet', 'setOfflineApp']),
+    ...mapActions('wallet', ['setWallet']),
     /**
      * Used to set the MEWconnect instance as the wallet
      **/
