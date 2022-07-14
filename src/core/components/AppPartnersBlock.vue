@@ -5,7 +5,7 @@
         {{ $t('aboutUs.partners') }}
       </div>
     </v-sheet>
-    <v-row class="mt-2 px-4" align="center">
+    <v-row class="mt-2 ml-10 px-4" align="center">
       <v-col
         v-for="(p, key) in partners"
         :key="key"
@@ -73,8 +73,8 @@ export default {
         link: 'https://app.1inch.io/'
       },
       {
-        img: require('@/assets/images/partners/dexag.png'),
-        link: 'https://dex.ag/'
+        img: require('@/assets/images/partners/buitl-w-rivet-light-bg.svg'),
+        link: 'https://rivet.cloud/'
       }
     ]
   })
