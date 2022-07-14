@@ -269,7 +269,7 @@ export default {
       },
       skip() {
         return this.isOfflineApp
-          ? false
+          ? true
           : this.skipApollo || this.accountAddress === null;
       },
       result({ data }) {
@@ -454,12 +454,13 @@ export default {
           // resets the array to empty
           this.accounts.splice(0);
           const chainId = BigNumber(this.network.type.chainID);
-          const ens = this.network.type.hasOwnProperty('ens')
-            ? new ENS({
-                provider: this.web3.eth.currentProvider,
-                ensAddress: getEnsAddress(chainId.toString())
-              })
-            : null;
+          const ens =
+            this.network.type.hasOwnProperty('ens') && !this.isOfflineApp
+              ? new ENS({
+                  provider: this.web3.eth.currentProvider,
+                  ensAddress: getEnsAddress(chainId.toString())
+                })
+              : null;
           for (
             let i = this.currentIdx;
             i < this.currentIdx + MAX_ADDRESSES;
