@@ -254,6 +254,7 @@ export default {
           case AAVE_TABLE_TITLE.balance_borrow:
             list = list.map(item => {
               AAVE_TABLE_BUTTON.repay.method = this.onRepayClick;
+              AAVE_TABLE_BUTTON.borrow.method = this.onBorrowClick;
               const isVariable = item.variableBorrows > 0;
               const reserve = this.reservesData.find(reserve => {
                 return reserve.symbol === item.reserve.symbol;
@@ -346,6 +347,7 @@ export default {
      *  Used in deposit Button within the table
      */
     onDepositClick(newVal) {
+      console.log('emittedDeposit');
       this.$emit('selectedDeposit', newVal);
     },
     /**

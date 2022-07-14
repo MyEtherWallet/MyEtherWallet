@@ -497,6 +497,14 @@ export default {
       return [];
     }
   },
+  watch: {
+    showDepositOverlay(newVal) {
+      if (!newVal) this.tokenSelected = {};
+    },
+    showBorrowOverlay(newVal) {
+      if (!newVal) this.tokenSelected = {};
+    }
+  },
   methods: {
     toggleDepositOverlay(boolean) {
       if (boolean === false) {
@@ -513,14 +521,12 @@ export default {
     openDepositOverlayWithToken(token) {
       /* eslint-disable no-console */
       console.log('showDepositOverlay', this.showDepositOverlay);
+      console.log('token', token);
       /* eslint-enable no-console */
       this.tokenSelected = token;
       this.showDepositOverlay = true;
     },
     openBorrowOverlayWithToken(token) {
-      /* eslint-disable no-console */
-      console.log('showBorrowOverlay', this.showBorrowOverlay);
-      /* eslint-enable no-console */
       this.tokenSelected = token;
       this.showBorrowOverlay = true;
     },
