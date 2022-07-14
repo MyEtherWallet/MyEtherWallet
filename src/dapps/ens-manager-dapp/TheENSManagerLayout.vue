@@ -271,6 +271,7 @@
       :register="register"
       :not-enough-funds="notEnoughFunds"
       :loading-commit="loadingCommit"
+      :loading-reg="loadingReg"
       :commited="committed"
       :minimum-age="minimumAge"
       :commit="commit"
@@ -359,6 +360,7 @@ export default {
       },
       activeTab: 0,
       loadingCommit: false,
+      loadingReg: false,
       loadingRenew: false,
       minimumAge: '',
       committed: false,
@@ -771,6 +773,7 @@ export default {
       this.onRegister = false;
       this.committed = false;
       this.loadingCommit = false;
+      this.loadingReg = false;
       this.name = '';
       this.nameHandler = {};
       this.$router.push({ name: ENS_MANAGER_ROUTE.ENS_MANAGER.NAME });
@@ -793,13 +796,19 @@ export default {
       this.nameHandler
         .register(duration, this.balanceToWei)
         .on('transactionHash', () => {
-          Toast(`ENS name: ${this.name} registered`, {}, SUCCESS);
-          this.closeRegister();
+          Toast(
+            `Registering ENS name: ${this.name} please wait...`,
+            {},
+            SUCCESS
+          );
+          this.loadingReg = true;
         })
         .once('receipt', () => {
           setTimeout(() => {
             this.getDomains();
           }, 15000);
+          this.closeRegister();
+          Toast(`Registration successful!`, {}, SUCCESS);
         })
         .on('error', err => {
           this.instance.errorHandler(err);
