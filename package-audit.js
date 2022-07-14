@@ -16,7 +16,8 @@ const AUDIT_EXCEPTIONS = [
   'nth-check',
   'semver-regex',
   // no package found
-  'codecov'
+  'codecov',
+  'scss-tokenizer'
 ];
 const execute = (command, callback) => {
   exec(
