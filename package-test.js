@@ -55,7 +55,7 @@ const EXCEPTIONS = [
   'package-json',
   'codecov',
   'node-polyfill-webpack-plugin',
-  '@ensdomains/ensjs' // major alpha update
+  '@ensdomains/ensjs'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

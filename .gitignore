@@ -21,7 +21,7 @@ build
 .npm
 .config
 /tests/unit/coverage/
-tests_output
+tests_output/
 release
 chrome-extension
 .env
