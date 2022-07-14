@@ -336,7 +336,7 @@ export default {
       };
     },
     disableBtn() {
-      return this.nextHealthFactor < 1.1;
+      return this.nextHealthFactor <= 1;
     },
     btnTitle() {
       return !this.disableBtn ? 'Confirm' : 'Health Factor Too Low';
