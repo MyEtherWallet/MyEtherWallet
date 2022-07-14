@@ -262,7 +262,7 @@ export default {
                 ? !reserve.stableBorrowRateEnabled
                 : false;
               const available = formatFloatingPointValue(
-                this.userBorrowPower(item)
+                this.userBorrowPower(reserve)
               ).value;
               return {
                 token: item.reserve.symbol,

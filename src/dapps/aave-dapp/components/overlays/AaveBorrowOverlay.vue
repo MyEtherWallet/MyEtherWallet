@@ -30,6 +30,7 @@
       :form-text="aaveBorrowForm.formText"
       :button-title="aaveBorrowForm.buttonTitle"
       :token-balance="tokenBalance.toFixed()"
+      :token-decimal="tokenDecimals"
       @cancel="handleCancel"
       @emitValues="handleValues"
     />
@@ -157,6 +158,9 @@ export default {
     },
     tokenBalance() {
       return this.userBorrowPower(this.selectedTokenDetails);
+    },
+    tokenDecimals() {
+      return this.selectedTokenDetails.decimals;
     }
   },
   watch: {
