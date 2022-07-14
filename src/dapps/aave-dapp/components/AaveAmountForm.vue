@@ -35,6 +35,7 @@
         :right-label="selectedToken.token"
         :hide-clear-btn="true"
         :rules="checkIfNumerical"
+        :error-messages="errorMessages"
         @input="setAmount"
       />
       <mew-toggle
@@ -52,7 +53,7 @@
         color-theme="primary"
         btn-style="background"
         btn-size="xlarge"
-        :disabled="!hasAmount"
+        :disabled="disabled"
         @click.native="emitValues"
       />
       <mew-button
@@ -70,6 +71,7 @@
 <script>
 import BigNumber from 'bignumber.js';
 import { ACTION_TYPES } from '@/dapps/aave-dapp/handlers/helpers';
+import hasValidDecimals from '@/core/helpers/hasValidDecimals';
 
 export default {
   name: 'AaveAmountForm',
@@ -138,6 +140,15 @@ export default {
       const regex = new RegExp('^-?[0-9]+[.]?[0-9]*$');
       const test = regex.test(this.amount);
       return [test || 'Please enter a valid value!'];
+    },
+    errorMessages() {
+      if (!hasValidDecimals(this.amount, this.tokenDecimal))
+        return 'Too many decimal places';
+
+      return '';
+    },
+    disabled() {
+      return !this.hasAmount || this.errorMessages !== '';
     }
   },
   mounted() {
