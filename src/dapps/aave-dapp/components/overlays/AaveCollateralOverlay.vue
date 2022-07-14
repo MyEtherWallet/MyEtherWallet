@@ -6,8 +6,9 @@
   -->
   <mew-overlay :show-overlay="open" :title="title" :close="close">
     <aave-summary
-      :selected-token="preSelectedToken"
+      :selected-token="selectedTokenInUserSummary"
       :action-type="collateral"
+      :amount="tokenAmount"
       @onConfirm="callSwitchCollateral"
     />
   </mew-overlay>
@@ -22,12 +23,6 @@ export default {
   components: { AaveSummary },
   mixins: [handlerAave],
   props: {
-    preSelectedToken: {
-      default: () => {
-        return {};
-      },
-      type: Object
-    },
     open: {
       default: false,
       type: Boolean
@@ -45,21 +40,21 @@ export default {
   computed: {
     ...mapState('wallet', ['address']),
     title() {
-      return Object.keys(this.preSelectedToken).length === 0
+      return !this.selectedTokenInUserSummary
         ? ''
-        : this.preSelectedToken?.toggle?.value
+        : !this.selectedTokenInUserSummary?.usageAsCollateralEnabledOnUser
         ? 'Usage as collateral'
         : 'Disable usage as collateral';
+    },
+    tokenAmount() {
+      return this.selectedTokenInUserSummary?.underlyingBalance;
     }
   },
   methods: {
     callSwitchCollateral() {
       const param = {
-        aavePool: 'proto',
-        userAddress: this.address,
         reserve: this.selectedTokenDetails.underlyingAsset,
-        interestRateMode: this.type,
-        usageAsCollateral: !this.selectedTokenDetails.usageAsCollateralEnabled
+        useAsCollateral: !this.selectedTokenDetails.usageAsCollateralEnabled
       };
 
       this.$emit('onConfirm', param);

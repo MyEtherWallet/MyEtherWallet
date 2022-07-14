@@ -178,12 +178,15 @@ export default {
     isWithdraw() {
       return this.actionType.toLowerCase() === ACTION_TYPES.withdraw;
     },
+    isCollateral() {
+      return this.actionType.toLowerCase() === ACTION_TYPES.collateral;
+    },
     details() {
       let details = [
         {
           title: 'Currency',
-          value: this.selectedToken?.name,
-          icon: this.selectedToken?.icon
+          value: this.selectedToken?.reserve?.name,
+          icon: this.selectedToken?.reserve?.icon
         }
       ];
       switch (this.actionType.toLowerCase()) {
@@ -282,18 +285,22 @@ export default {
         collateralBalanceETH =
           this.userSummary.totalCollateralMarketReferenceCurrency,
         totalBorrowsETH = this.userSummary.totalBorrowsMarketReferenceCurrency;
-      if (
-        selectedToken?.formattedPriceInMarketReferenceCurrency &&
-        this.amount !== '0'
-      ) {
-        const ethBalance = BigNumber(this.amount).times(
-          selectedToken?.formattedPriceInMarketReferenceCurrency
-        );
-        if (this.isDeposit) {
+
+      const formattedPriceInETH =
+        selectedToken?.reserve?.formattedPriceInMarketReferenceCurrency;
+      if (formattedPriceInETH && this.amount !== '0') {
+        const ethBalance = BigNumber(this.amount).times(formattedPriceInETH);
+        if (
+          this.isDeposit ||
+          (this.isCollateral && !selectedToken?.usageAsCollateralEnabledOnUser)
+        ) {
           collateralBalanceETH = new BigNumber(
             this.userSummary.totalCollateralMarketReferenceCurrency
           ).plus(ethBalance);
-        } else if (this.isWithdraw) {
+        } else if (
+          (this.isWithdraw && selectedToken?.usageAsCollateralEnabledOnUser) ||
+          (this.isCollateral && selectedToken?.usageAsCollateralEnabledOnUser)
+        ) {
           collateralBalanceETH = new BigNumber(
             this.userSummary.totalCollateralMarketReferenceCurrency
           ).minus(ethBalance);

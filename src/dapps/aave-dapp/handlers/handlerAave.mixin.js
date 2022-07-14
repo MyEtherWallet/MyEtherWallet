@@ -210,7 +210,6 @@ export default {
      * Deposit funds
      */
     async onDeposit({ amount, reserve, referralCode, user }) {
-      console.log(this.poolContract);
       try {
         const approveData = await this.formatApprovalData(
           reserve,
@@ -249,7 +248,6 @@ export default {
         const txData = await this.poolContract.populateTransaction.borrow(
           ...data
         );
-        console.log('txData', txData);
         this.formatTxData(txData);
       } catch (e) {
         throw new Error(e);
@@ -282,7 +280,6 @@ export default {
           approveData,
           data
         ]);
-        console.log('txData', data);
         this.sendTxns([approveData, data], gasLimits);
       } catch (e) {
         throw new Error(e);
@@ -300,7 +297,6 @@ export default {
             reserve,
             rateMode
           );
-        console.log('txData', txData);
         this.formatTxData(txData);
       } catch (e) {
         throw new Error(e);
@@ -351,7 +347,6 @@ export default {
           amount
         );
         approveData.from = user;
-        console.log('approveData', approveData);
         return approveData;
       } catch (e) {
         throw new Error(e);
@@ -359,12 +354,17 @@ export default {
     },
     /**
      * Apollo mutation to enable or disable collateral
+     * function setUserUseReserveAsCollateral(address asset, bool useAsCollateral)
+     * Sets the asset of msg.sender to be used as collateral or not.
      */
-    async setCollateral(data) {
+    async setCollateral({ reserve, useAsCollateral }) {
       try {
-        return await this.lendingPool.setUsageAsCollateral(data).then(res => {
-          this.formatTxData(res, 'setUsageAsCollateral');
-        });
+        const txData =
+          await this.poolContract.populateTransaction.setUserUseReserveAsCollateral(
+            reserve,
+            useAsCollateral
+          );
+        this.formatTxData(txData);
       } catch (e) {
         throw new Error(e);
       }
@@ -382,12 +382,10 @@ export default {
           value: '0',
           gasPrice: this.gasPriceByType(this.gasPriceType)
         };
-        console.log(tx);
         this.web3.eth
           .estimateGas(tx)
           .then(res => {
             tx['gas'] = toHex(res);
-            console.log('gas', tx.gas);
             this.sendTransaction(tx)
               .then(() => {
                 Toast(
@@ -397,11 +395,11 @@ export default {
                 );
               })
               .catch(err => {
-                console.log(err);
+                console.error(err);
                 Toast(err, {}, ERROR);
               });
           }) // Estimate Gas Catch
-          .catch(e => Toast(e, {}, ERROR));
+          .catch(() => Toast('Insufficient funds for gas', {}, ERROR));
       } catch (e) {
         Toast(e, {}, ERROR);
       }
@@ -423,15 +421,12 @@ export default {
           };
           txns[i] = tx;
         }
-        console.log('txns', txns);
         let totalGasPrice = toBN(0);
         for (const tx of txns) {
           totalGasPrice = totalGasPrice.add(
             toBN(tx.gasPrice).mul(toBN(tx.gas))
           );
         }
-        console.log('totalGas', totalGasPrice.toString());
-        console.log('balance', this.balanceInWei);
         if (totalGasPrice.gt(toBN(this.balanceInWei))) {
           Toast('Insufficient funds for gas', {}, ERROR);
           return;
@@ -446,7 +441,7 @@ export default {
             );
           })
           .catch(err => {
-            console.log(err);
+            console.error(err);
             Toast(err, {}, ERROR);
           });
       } catch (e) {

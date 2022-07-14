@@ -260,6 +260,7 @@
     <aave-collateral-overlay
       :open="showCollateralOverlay"
       :close="closeCollateralOverlay"
+      :pre-selected-token="tokenSelected"
       @onConfirm="setCollateral"
     />
     <aave-withdraw-overlay
@@ -510,12 +511,16 @@ export default {
       this.showBorrowOverlay = boolean;
     },
     openDepositOverlayWithToken(token) {
+      /* eslint-disable no-console */
       console.log('showDepositOverlay', this.showDepositOverlay);
-      console.log('showWithdrawOverlay', this.showWithdrawOverlay);
+      /* eslint-enable no-console */
       this.tokenSelected = token;
       this.showDepositOverlay = true;
     },
     openBorrowOverlayWithToken(token) {
+      /* eslint-disable no-console */
+      console.log('showBorrowOverlay', this.showBorrowOverlay);
+      /* eslint-enable no-console */
       this.tokenSelected = token;
       this.showBorrowOverlay = true;
     },
