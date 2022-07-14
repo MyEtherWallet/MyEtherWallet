@@ -4,12 +4,16 @@ import HDWalletInterface from '@/modules/access-wallet/common/HDWalletInterface'
 import errorHandler from './errorHandler';
 import cwsETH from '@coolwallets/eth';
 import cwsWallet, { generateKeyPair } from '@coolwallets/wallet';
-import cwpETH from '@coolwallet/eth';
-import cwpBSC from '@coolwallet/bsc';
+import ETH from '@coolwallet/eth';
+import BSC from '@coolwallet/bsc';
 import * as core from '@coolwallet/core';
 import bip44Paths from '@/modules/access-wallet/hardware/handlers/bip44';
 import { bufferToHex } from 'ethereumjs-util';
 import cwsTransportLib from '@coolwallets/transport-web-ble';
+// import cwsTransportLib, {
+//   createTransport
+// } from '@coolwallet/transport-web-ble';
+
 import Vue from 'vue';
 import coolwallet from '@/assets/images/icons/wallets/coolwallet.svg';
 import * as locstore from 'store';
@@ -59,13 +63,30 @@ class CoolWallet {
       ? locstore.get(APP_PUBLIC_KEY)
       : '';
   }
-  init(password) {
+  async init(password) {
     const _this = this;
+    // const transport = await createTransport();
+    // const { publicKey: appPublicKey, privateKey: appPrivateKey } =
+    //   core.crypto.key.generateKeyPair();
+    // const SEPublicKey = await core.config.getSEPublicKey(transport);
+    // localStorage.setItem(APP_PUBLIC_KEY, appPublicKey);
+    // localStorage.setItem(APP_PRIVATE_KEY, appPrivateKey);
+    // const appId = await core.apdu.pair.register(
+    //   transport,
+    //   appPublicKey,
+    //   password,
+    //   APP_NAME,
+    //   SEPublicKey
+    // );
+    // console.log('app id', appId);
+    // const eth = new ETH();
+    // const address = await eth.getAddress(transport, appPrivateKey, appId, 0);
+    // console.log('address', address);
     return new Promise((resolve, reject) => {
       if (!window.navigator.bluetooth) {
         return reject(new Error('browser not supported'));
       }
-      cwsTransportLib.listen((error, device) => {
+      cwsTransportLib.listen(async (error, device) => {
         if (error) {
           reject(error);
         }
@@ -92,12 +113,15 @@ class CoolWallet {
                   console.log(1, _this.transport);
                   console.log(2, _this.appPrivateKey);
                   console.log(3, _this.appId);
-                  await _this.deviceInstance[chainID].getAddress(
+                  const address = await _this.deviceInstance[
+                    chainID
+                  ].getAddress(
                     _this.transport,
                     _this.appPrivateKey,
                     _this.appId,
                     0
                   );
+                  console.log('response', address);
                 } else {
                   _this.connectToCWS();
                   await _this.deviceInstance.getAddress(0);
@@ -133,6 +157,7 @@ class CoolWallet {
       });
     });
   }
+
   generateAndRegisterCWP(password, cb, device, reject) {
     const sePublicKey = localStorage.getItem(CW_SE_PUBKEY) || '';
     const { publicKey: appPublicKey, privateKey: appPrivateKey } =
@@ -190,8 +215,8 @@ class CoolWallet {
 
   connectToCWP() {
     this.deviceInstance = {
-      1: new cwpETH(),
-      56: new cwpBSC()
+      1: new ETH(),
+      56: new BSC()
     };
   }
 
