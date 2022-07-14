@@ -338,19 +338,29 @@ export default class PermanentNameModule extends ENSManagerInterface {
         from: this.address,
         value: withFivePercent
       };
-      this.registrarControllerContract.methods
-        .registerWithConfig(
+      const registerWithConfig =
+        this.registrarControllerContract.methods.registerWithConfig(
           this.parsedHostName,
           this.address,
           this.getActualDuration(duration),
           utils.sha3(this.secretPhrase),
           this.publicResolverAddress,
           this.address
-        )
-        .send(txObj)
-        .on('transactionHash', hash => promiEvent.emit('transactionHash', hash))
-        .on('error', err => promiEvent.emit('error', err))
-        .on('receipt', receipt => promiEvent.emit('receipt', receipt));
+        );
+
+      registerWithConfig
+        .estimateGas(txObj)
+        .then(res => {
+          txObj['gas'] = res;
+          registerWithConfig
+            .send(txObj)
+            .on('transactionHash', hash =>
+              promiEvent.emit('transactionHash', hash)
+            )
+            .on('error', err => promiEvent.emit('error', err))
+            .on('receipt', receipt => promiEvent.emit('receipt', receipt));
+        })
+        .catch(err => promiEvent.emit('error', err));
     });
     return promiEvent;
   }
