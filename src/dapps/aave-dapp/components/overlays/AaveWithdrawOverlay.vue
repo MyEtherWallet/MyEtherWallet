@@ -31,7 +31,7 @@
         -->
     <aave-summary
       v-if="step === 1"
-      :selected-token="selectedTokenInUserSummary"
+      :selected-token="preSelectedToken"
       :amount="amount"
       :action-type="withdrawTitle"
       :amount-usd="amountUSD"

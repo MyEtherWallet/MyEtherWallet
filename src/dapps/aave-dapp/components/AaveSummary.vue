@@ -12,7 +12,7 @@
   =====================================================================================
   -->
     <v-card
-      v-if="isDeposit || isBorrow"
+      v-if="isDeposit || isBorrow || isWithdraw || isRepay"
       class="d-flex align-center justify-space-between pa-7 mb-6"
       flat
       color="overlayBg"
@@ -22,14 +22,14 @@
           >Amount to {{ actionTitle }}</span
         >
         <span class="mew-heading-1 mb-2"
-          >{{ formattedAmount }} {{ selectedToken.token }}</span
+          >{{ formattedAmount }} {{ tokenSymbol }}</span
         >
         <span class="textLight--text">{{ amountUsd }}</span>
       </div>
       <img
         :height="$vuetify.breakpoint.mdAndUp ? '80' : '30'"
-        :src="selectedToken.tokenImg"
-        :alt="selectedToken.token"
+        :src="tokenIcon"
+        :alt="tokenSymbol"
       />
     </v-card>
     <!--
@@ -186,8 +186,8 @@ export default {
       let details = [
         {
           title: 'Currency',
-          value: this.selectedToken?.reserve?.name,
-          icon: this.selectedToken?.reserve?.icon
+          value: this.tokenSymbol,
+          icon: this.tokenIcon
         }
       ];
       switch (this.actionType.toLowerCase()) {
@@ -281,14 +281,14 @@ export default {
       return new BigNumber(this.userSummary?.healthFactor).toFixed(3);
     },
     nextHealthFactor() {
-      const selectedToken = this.selectedToken;
+      const selectedToken = this.selectedTokenInUserSummary;
       let nextHealthFactor = this.currentHealthFactor,
         collateralBalanceETH =
           this.userSummary.totalCollateralMarketReferenceCurrency,
         totalBorrowsETH = this.userSummary.totalBorrowsMarketReferenceCurrency;
 
       const formattedPriceInETH =
-        selectedToken?.reserve?.formattedPriceInMarketReferenceCurrency;
+        this.selectedTokenDetails?.formattedPriceInMarketReferenceCurrency;
       if (formattedPriceInETH && this.amount !== '0') {
         const ethBalance = BigNumber(this.amount).times(formattedPriceInETH);
         if (
@@ -336,10 +336,16 @@ export default {
       };
     },
     disableBtn() {
-      return this.nextHealthFactor <= 1;
+      return this.nextHealthFactor <= 1 && this.nextHealthFactor !== '-1.000';
     },
     btnTitle() {
       return !this.disableBtn ? 'Confirm' : 'Health Factor Too Low';
+    },
+    tokenSymbol() {
+      return this.selectedToken?.token;
+    },
+    tokenIcon() {
+      return this.selectedToken?.tokenImg;
     }
   },
   methods: {

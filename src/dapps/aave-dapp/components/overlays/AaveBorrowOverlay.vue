@@ -50,7 +50,7 @@
       -->
     <aave-summary
       v-if="step === 3 || step === 4"
-      :selected-token="selectedTokenInUserSummary"
+      :selected-token="selectedToken"
       :amount="amount"
       :step="step"
       :apr="apr"
