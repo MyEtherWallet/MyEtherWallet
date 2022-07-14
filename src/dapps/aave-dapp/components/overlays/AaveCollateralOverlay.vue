@@ -6,7 +6,7 @@
   -->
   <mew-overlay :show-overlay="open" :title="title" :close="close">
     <aave-summary
-      :selected-token="selectedTokenInUserSummary"
+      :selected-token="preSelectedToken"
       :action-type="collateral"
       :amount="tokenAmount"
       @onConfirm="callSwitchCollateral"
@@ -54,9 +54,9 @@ export default {
     callSwitchCollateral() {
       const param = {
         reserve: this.selectedTokenDetails.underlyingAsset,
-        useAsCollateral: !this.selectedTokenDetails.usageAsCollateralEnabled
+        useAsCollateral:
+          !this.selectedTokenInUserSummary.usageAsCollateralEnabledOnUser
       };
-
       this.$emit('onConfirm', param);
       this.close();
     }
