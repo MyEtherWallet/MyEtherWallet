@@ -103,7 +103,7 @@
 <script>
 import * as nodes from '@/utils/networks/nodes';
 import * as types from '@/utils/networks/types';
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 import { Toast, SUCCESS, ERROR } from '@/modules/toast/handler/handlerToast';
 import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
 import { debounce } from 'lodash';
@@ -258,6 +258,7 @@ export default {
     ...mapActions('wallet', ['setWeb3Instance']),
     ...mapActions('global', ['setNetwork']),
     ...mapActions('external', ['setTokenAndEthBalance']),
+    ...mapState('wallet', ['instance']),
     /**
      * Method checks whether symbol or name has searchInput substring
      * @returns {boolean}
@@ -286,7 +287,7 @@ export default {
         }
       });
       try {
-        this.setNetwork(found[0]).then(() => {
+        this.setNetwork(found[0], this.instance).then(() => {
           if (this.isWallet) {
             this.setWeb3Instance().then(() => {
               this.setTokenAndEthBalance();

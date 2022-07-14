@@ -89,7 +89,8 @@ export default {
       'setBlockNumber',
       'setTokens',
       'setWallet',
-      'setWeb3Instance'
+      'setWeb3Instance',
+      'instance'
     ]),
     ...mapActions('global', [
       'setNetwork',
@@ -169,7 +170,7 @@ export default {
       if (window.ethereum.isMetaMask) {
         try {
           if (foundNetwork) {
-            await this.setNetwork(foundNetwork[0]);
+            await this.setNetwork(foundNetwork[0], this.instance);
             await this.setTokenAndEthBalance();
             this.trackNetworkSwitch(foundNetwork[0].type.name);
             this.$emit('newNetwork');

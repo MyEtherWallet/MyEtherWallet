@@ -3,6 +3,8 @@ import Configs from '../configs';
 import nodeList from '@/utils/networks';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import { toHex } from 'web3-utils';
+import { WEB3_WALLET } from '@/modules/access-wallet/common/walletTypes';
+
 const defaultNetwork = nodeList['ETH'].find(item => {
   return item.service === 'myetherwallet.com-ws';
 });
@@ -45,9 +47,9 @@ const SET_GAS_PRICE = function (state, val) {
  * Informs user of pending or unknown networks.
  */
 
-const MATCH_NETWORK = async chainID => {
+const MATCH_NETWORK = async (chainID, walletType) => {
   const { ethereum } = window;
-  if (ethereum) {
+  if (walletType === WEB3_WALLET) {
     const data = { chainId: toHex(chainID) };
     try {
       if (chainID) {
@@ -87,15 +89,15 @@ const MATCH_NETWORK = async chainID => {
       return false;
     }
   }
-  return true
+  return true;
 };
 
-const SET_NETWORK = async function (state, networkObj) {
+const SET_NETWORK = async function (state, networkObj, walletType) {
   const _netObj = Object.assign({}, networkObj);
   _netObj.type = {
     name: networkObj.type.name
   };
-  const matched = await MATCH_NETWORK(networkObj.type.chainID);
+  const matched = await MATCH_NETWORK(networkObj.type.chainID, walletType);
   if (matched) {
     state.currentNetwork = _netObj;
   }
