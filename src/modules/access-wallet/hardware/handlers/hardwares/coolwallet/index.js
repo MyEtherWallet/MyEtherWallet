@@ -9,10 +9,9 @@ import BSC from '@coolwallet/bsc';
 import * as core from '@coolwallet/core';
 import bip44Paths from '@/modules/access-wallet/hardware/handlers/bip44';
 import { bufferToHex } from 'ethereumjs-util';
-import cwsTransportLib from '@coolwallets/transport-web-ble';
-// import cwsTransportLib, {
-//   createTransport
-// } from '@coolwallet/transport-web-ble';
+import WebBleTransport, {
+  createTransport
+} from '@coolwallet/transport-web-ble';
 
 import Vue from 'vue';
 import coolwallet from '@/assets/images/icons/wallets/coolwallet.svg';
@@ -65,96 +64,65 @@ class CoolWallet {
   }
   async init(password) {
     const _this = this;
-    // const transport = await createTransport();
-    // const { publicKey: appPublicKey, privateKey: appPrivateKey } =
-    //   core.crypto.key.generateKeyPair();
-    // const SEPublicKey = await core.config.getSEPublicKey(transport);
-    // localStorage.setItem(APP_PUBLIC_KEY, appPublicKey);
-    // localStorage.setItem(APP_PRIVATE_KEY, appPrivateKey);
-    // const appId = await core.apdu.pair.register(
-    //   transport,
-    //   appPublicKey,
-    //   password,
-    //   APP_NAME,
-    //   SEPublicKey
-    // );
-    // console.log('app id', appId);
-    // const eth = new ETH();
-    // const address = await eth.getAddress(transport, appPrivateKey, appId, 0);
-    // console.log('address', address);
+    const transport = await createTransport();
+    const device = transport.device;
     return new Promise((resolve, reject) => {
       if (!window.navigator.bluetooth) {
         return reject(new Error('browser not supported'));
       }
-      cwsTransportLib.listen(async (error, device) => {
-        if (error) {
-          reject(error);
+      if (device) {
+        if (device.name.includes('CWP')) {
+          _this.isPro = true;
+          _this.meta.name = 'CoolWallet Pro';
         }
-        if (device) {
-          if (device.name.includes('CWP')) {
-            _this.isPro = true;
-            _this.meta.name = 'CoolWallet Pro';
-          }
-          cwsTransportLib
-            .connect(device)
-            .then(async _transport => {
-              _this.transport = _transport;
-              try {
-                /**
-                 * if lastCWDeviceUsed !== device.name
-                 * assume that its a different cw device
-                 * throw moves it to catch so it registers
-                 */
-                if (_this.lastCWDeviceUsed !== device.name) throw '';
-                locstore.set(CW_DEVICE_NAME, device.name);
-                if (_this.isPro) {
-                  _this.connectToCWP();
-                  const chainID = store.getters['global/network'].type.chainID;
-                  console.log(1, _this.transport);
-                  console.log(2, _this.appPrivateKey);
-                  console.log(3, _this.appId);
-                  const address = await _this.deviceInstance[
-                    chainID
-                  ].getAddress(
-                    _this.transport,
-                    _this.appPrivateKey,
-                    _this.appId,
-                    0
-                  );
-                  console.log('response', address);
-                } else {
-                  _this.connectToCWS();
-                  await _this.deviceInstance.getAddress(0);
-                }
-                resolve();
-              } catch (e) {
-                if (_this.isPro) {
-                  core.config.getSEPublicKey(_this.transport).then(res => {
-                    localStorage.setItem(CW_SE_PUBKEY, res);
-                    this.generateAndRegisterCWP(
-                      password,
-                      resolve,
-                      device,
-                      reject
-                    );
-                  });
-                } else {
-                  this.generateAndRegisterCWS(
+
+        WebBleTransport.connect(device)
+          .then(async () => {
+            _this.transport = transport;
+            try {
+              /**
+               * if lastCWDeviceUsed !== device.name
+               * assume that its a different cw device
+               * throw moves it to catch so it registers
+               */
+              if (_this.lastCWDeviceUsed !== device.name) throw '';
+              locstore.set(CW_DEVICE_NAME, device.name);
+              if (_this.isPro) {
+                _this.connectToCWP();
+                const chainID = store.getters['global/network'].type.chainID;
+                await _this.deviceInstance[chainID].getAddress(
+                  _this.transport,
+                  _this.appPrivateKey,
+                  _this.appId,
+                  0
+                );
+              } else {
+                _this.connectToCWS();
+                await _this.deviceInstance.getAddress(0);
+              }
+              resolve();
+            } catch (e) {
+              if (_this.isPro) {
+                core.config.getSEPublicKey(_this.transport).then(res => {
+                  localStorage.setItem(CW_SE_PUBKEY, res);
+                  this.generateAndRegisterCWP(
                     password,
                     resolve,
                     device,
                     reject
                   );
-                }
+                });
+              } else {
+                this.generateAndRegisterCWS(password, resolve, device, reject);
               }
-            })
-            .catch(err => {
-              errorHandler(err);
-            });
-        } else {
-          reject(new Error('no device'));
-        }
-      });
+            }
+          })
+          .catch(err => {
+            errorHandler(err);
+          });
+      } else {
+        reject(new Error('no device'));
+      }
     });
   }
 
