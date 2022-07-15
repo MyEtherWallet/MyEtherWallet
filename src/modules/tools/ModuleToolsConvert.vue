@@ -16,6 +16,7 @@
             @input="updateCurrencyLeft"
           />
           <mew-input
+            class="CurrencyLeftInput"
             :value="valueLeft"
             type="number"
             label="Amount"
@@ -36,7 +37,7 @@
             :has-filter="false"
             :items="items"
             :value="selectedRight"
-            class="mb-2"
+            class="mb-2 CurrencyRightSelect"
             @input="updateCurrencyRight"
           />
           <mew-input
