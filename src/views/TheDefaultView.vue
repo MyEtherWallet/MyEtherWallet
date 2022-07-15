@@ -6,6 +6,7 @@
     </v-main>
     <the-default-footer />
     <the-default-wallet-banner />
+    <the-enkrypt-popup />
   </div>
 </template>
 
@@ -13,12 +14,14 @@
 import TheDefaultHeader from './components-default/TheDefaultHeader';
 import TheDefaultFooter from './components-default/TheDefaultFooter';
 import TheDefaultWalletBanner from './components-default/TheDefaultWalletBanner';
+import TheEnkryptPopup from './components-default/TheEnkryptPopup';
 export default {
   name: 'TheDefaultView',
   components: {
     TheDefaultHeader,
     TheDefaultFooter,
-    TheDefaultWalletBanner
+    TheDefaultWalletBanner,
+    TheEnkryptPopup
   }
 };
 </script>
