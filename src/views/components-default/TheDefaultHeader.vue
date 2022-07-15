@@ -37,7 +37,7 @@
             </a>
           </div>
         </v-col>
-        <v-col cols="2" md="4" class="text-right">
+        <v-col cols="2" md="4" class="d-flex justify-end">
           <mew-tools class="ml-auto" />
         </v-col>
       </v-row>
