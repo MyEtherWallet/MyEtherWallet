@@ -31,11 +31,12 @@
             outlined
           ></v-select>
         </div>
-
-        <!-- ===================================================================================== -->
-        <!-- Phrase Table -->
-        <!-- ===================================================================================== -->
-        <phrase-block class="mb-8">
+        <!--
+          =====================================================================================
+            Phrase Table
+          =====================================================================================
+          -->
+        <phrase-block class="mb-8 CreateWalletMnemonicTable">
           <mnemonic-phrase-table :data="phrase" />
         </phrase-block>
 
@@ -47,7 +48,7 @@
             :has-dividers="true"
             :is-toggle="true"
             :interactive-content="true"
-            :panel-items="expandPanelItems"
+            :panel-items="[{ name: 'Add Extra Word' }]"
           >
             <template #panelBody1>
               <div class="px-5">
@@ -60,11 +61,12 @@
             </template>
           </mew-expand-panel>
         </div>
-
-        <!-- ===================================================================================== -->
-        <!-- Button -->
-        <!-- ===================================================================================== -->
-        <div class="d-flex justify-center mt-6">
+        <!--
+          =====================================================================================
+           Button
+          =====================================================================================
+          -->
+        <div class="MnemonicWroteThemDown d-flex justify-center mt-6">
           <mew-button
             title="I wrote them down"
             btn-size="xlarge"
@@ -88,11 +90,12 @@
         <div class="mb-5">
           {{ stepTwoText }}
         </div>
-
-        <!-- ===================================================================================== -->
-        <!-- Words Radio Group -->
-        <!-- ===================================================================================== -->
-        <v-sheet max-width="600px" class="mx-auto">
+        <!--
+          =====================================================================================
+           Words Radio Group
+          =====================================================================================
+          -->
+        <v-sheet max-width="600px" class="MnemonicRadioOptions mx-auto">
           <v-radio-group
             v-for="(item, idx) in generatedVerification"
             :key="`${idx}verification`"
@@ -114,6 +117,7 @@
               <v-col
                 v-for="(entries, id) in getEntries(item)"
                 :key="entries + id"
+                class="Options"
                 cols="12"
                 sm="4"
               >
@@ -145,7 +149,7 @@
             title="Verify"
             btn-size="xlarge"
             :disabled="!canVerify"
-            class="mx-md-1 my-1"
+            class="CreateMnemonicVerify mx-md-1 my-1"
             @click.native="verify"
           />
         </div>
@@ -180,7 +184,7 @@
                 title="Access Wallet"
                 btn-size="xlarge"
                 :has-full-width="false"
-                class="mb-5"
+                class="CreateMnemonicAccessWallet mb-5"
                 @click.native="goToAccess"
               />
               <mew-button
@@ -242,11 +246,6 @@ export default {
       {
         step: 3,
         name: 'STEP 3. Well done'
-      }
-    ],
-    expandPanelItems: [
-      {
-        name: 'Add Extra Word'
       }
     ],
     mnemonicOptions: [
