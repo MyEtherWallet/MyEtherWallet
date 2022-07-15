@@ -176,14 +176,19 @@ export default {
       }
       console.log('depositPreselectedToken', this.preSelectedToken);
     },
-    selectedToken(newVal, oldVal) {
-      console.log('depositedSelectedToken (old)', oldVal);
-      console.log('depositedSelectedToken', newVal);
+    open(newVal, oldVal) {
+      console.log('open(old)', oldVal);
+      console.log('open', newVal);
+      if (!newVal) {
+        this.selectedToken = {};
+        this.step = 0;
+      }
     }
   },
   methods: {
     handleSelectedDeposit(val) {
       console.log('tokenHandled', val);
+      console.log('isOpen', this.open);
       this.selectedToken = val;
       this.step = 1;
     },
