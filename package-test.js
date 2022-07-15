@@ -56,7 +56,7 @@ const EXCEPTIONS = [
   'codecov',
   'node-polyfill-webpack-plugin',
   '@ensdomains/ensjs',
-  '@ensdomains/contracts',
+  '@ensdomains/ens-contracts',
   'protobufjs'
 ];
 const CUSTOM_DIST = {
