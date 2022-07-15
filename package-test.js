@@ -56,7 +56,8 @@ const EXCEPTIONS = [
   'codecov',
   'node-polyfill-webpack-plugin',
   '@ensdomains/ensjs',
-  '@ensdomains/ens-contracts'
+  '@ensdomains/ens-contracts',
+  'protobufjs'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
