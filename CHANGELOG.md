@@ -1,3 +1,39 @@
+### Release v6.6.2
+
+### devop
+
+* * changed bsc to bnb in swap [#3963](https://github.com/MyEtherWallet/MyEtherWallet/pull/3963)
+* * add all text to translation files [#3968](https://github.com/MyEtherWallet/MyEtherWallet/pull/3968)
+* * fixed failing e2e tests [#3993](https://github.com/MyEtherWallet/MyEtherWallet/pull/3993)
+* * added check for address match [#3998](https://github.com/MyEtherWallet/MyEtherWallet/pull/3998)
+* * devop update partner page [#4000](https://github.com/MyEtherWallet/MyEtherWallet/pull/4000)
+* * Added tests for all tools [#4006](https://github.com/MyEtherWallet/MyEtherWallet/pull/4006)
+
+### feat
+
+* * feature access wallet button merge [#3933](https://github.com/MyEtherWallet/MyEtherWallet/pull/3933)
+
+### fix
+
+* * fix 'add data' field clear [#3900](https://github.com/MyEtherWallet/MyEtherWallet/pull/3900)
+* * fix tools items title [#3911](https://github.com/MyEtherWallet/MyEtherWallet/pull/3911)
+* * fix keystore password 8 char minimum [#3956](https://github.com/MyEtherWallet/MyEtherWallet/pull/3956)
+* * fix offline transaction to address and signature [#3960](https://github.com/MyEtherWallet/MyEtherWallet/pull/3960)
+* * catch gas required exceeds allowance, it's not your token errors [#3961](https://github.com/MyEtherWallet/MyEtherWallet/pull/3961)
+* * fix invalid address error [#3962](https://github.com/MyEtherWallet/MyEtherWallet/pull/3962)
+* * Cannot read properties of undefined (reading 'isActive') [#3966](https://github.com/MyEtherWallet/MyEtherWallet/pull/3966)
+* * network error on home page features section [#3969](https://github.com/MyEtherWallet/MyEtherWallet/pull/3969)
+* * selected currency empty when buying [#3970](https://github.com/MyEtherWallet/MyEtherWallet/pull/3970)
+* * fix metamask logout issue [#3973](https://github.com/MyEtherWallet/MyEtherWallet/pull/3973)
+* * footer donation translations [#3974](https://github.com/MyEtherWallet/MyEtherWallet/pull/3974)
+* * addressbook nickname disables confirm button [#3977](https://github.com/MyEtherWallet/MyEtherWallet/pull/3977)
+* * fix address book validation [#3979](https://github.com/MyEtherWallet/MyEtherWallet/pull/3979)
+* * fix max button shown on tokens with 0 balance on swap [#3982](https://github.com/MyEtherWallet/MyEtherWallet/pull/3982)
+* * fix add buy cool wallet [#3983](https://github.com/MyEtherWallet/MyEtherWallet/pull/3983)
+* * Rate limit exceeded error '429' [#3984](https://github.com/MyEtherWallet/MyEtherWallet/pull/3984)
+* * create wallet with mnemonic phrase > reset extra word when user clicks create another wallet button [#4001](https://github.com/MyEtherWallet/MyEtherWallet/pull/4001)
+* fix offline routing, fix address loading [#4002](https://github.com/MyEtherWallet/MyEtherWallet/pull/4002)
+
 ### Release v6.6.1
 
 ### ui
