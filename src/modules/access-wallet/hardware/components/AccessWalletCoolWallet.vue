@@ -43,7 +43,11 @@
             <v-icon size="small" color="greenPrimary"> mdi-launch </v-icon>
           </a>
         </p>
-        <p></p>
+        <p>
+          Note: If device is not available in the pairing selection pop-up,
+          please enable
+          <b>Allow New Pairing</b> in the mobile app settings
+        </p>
       </v-col>
     </v-row>
     <mew-button
