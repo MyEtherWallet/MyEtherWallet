@@ -78,7 +78,7 @@
           </div>
         </mew-button>
 
-        <div class="position--relative">
+        <div class="CreateSoftwareWallet position--relative">
           <div
             class="orangePrimary--text mew-label"
             style="position: absolute; top: 15px; right: 25px"

@@ -12,6 +12,7 @@ module.exports = {
         acceptSslCerts: true,
         acceptInsecureCerts: true,
         chromeOptions: {
+          w3c: false,
           args: [
             'window-size=1980,1080',
             // take these out on local
