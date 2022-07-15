@@ -224,6 +224,9 @@ export default {
       if (!isNaN(idx)) {
         this.idxToExpand = idx ? idx : null;
       }
+      if (idx instanceof PointerEvent) {
+        this.idxToExpand = [3];
+      }
       this.addMode = false;
       this.editMode = false;
     },
