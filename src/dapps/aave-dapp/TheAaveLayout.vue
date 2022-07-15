@@ -17,7 +17,8 @@
             <div class="mr-3">Health factor</div>
             <div
               v-if="!isLoadingData"
-              class="greenPrimary--text font-weight-bold mr-3"
+              class="font-weight-bold mr-3"
+              :class="healthFactorColor"
             >
               {{ healthFactor }}
             </div>
@@ -117,7 +118,8 @@
             <div class="mr-3">Health factor</div>
             <div
               v-if="!isLoadingData"
-              class="greenPrimary--text font-weight-bold mr-3"
+              class="font-weight-bold mr-3"
+              :class="healthFactorColor"
             >
               {{ healthFactor }}
             </div>
@@ -495,6 +497,13 @@ export default {
       }
 
       return [];
+    },
+    healthFactorColor() {
+      if (this.healthFactor < 2 && this.healthFactor >= 1.2)
+        return 'orangePrimary--text';
+      else if (this.healthFactor < 1.2) return 'redPrimary--text';
+
+      return 'greenPrimary--text';
     }
   },
   watch: {
