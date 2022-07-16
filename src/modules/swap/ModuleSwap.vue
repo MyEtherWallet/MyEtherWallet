@@ -1347,6 +1347,16 @@ export default {
       const trade = this.swapper.getTrade(swapObj);
       if (trade instanceof Promise) {
         trade.then(tradeResponse => {
+          if (!tradeResponse) {
+            const index = this.availableQuotes.indexOf(swapObj.quote);
+            if (index > -1) {
+              // Remove the quote
+              this.availableQuotes.splice(index, 1);
+            }
+            // Hide the 404 & 500 Error Toast
+            Toast('There was an issue with the provider', {}, ERROR);
+            return;
+          }
           if (this.tokenInValue === this.cachedAmount) {
             if (
               isObject(tradeResponse) &&
