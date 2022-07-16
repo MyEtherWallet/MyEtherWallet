@@ -1,6 +1,7 @@
 <template>
   <div>
     <home-landing />
+    <home-enkrypt />
     <home-features />
     <home-eth-blocks />
     <home-socials />
@@ -12,6 +13,7 @@
 </template>
 
 <script>
+import HomeEnkrypt from '../components-default/HomeEnkrypt';
 import HomeLanding from '../components-default/HomeLanding';
 import HomeFeatures from '../components-default/HomeFeatures';
 import HomeEthBlocks from '../components-default/HomeEthBlocks';
@@ -24,6 +26,7 @@ import AppPartnersBlock from '@/core/components/AppPartnersBlock';
 export default {
   name: 'TheHomeLayout',
   components: {
+    HomeEnkrypt,
     HomeLanding,
     HomeFeatures,
     HomeEthBlocks,
