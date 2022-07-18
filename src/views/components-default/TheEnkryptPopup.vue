@@ -44,10 +44,8 @@
   </div>
 </template>
 <script>
-import image from '@/assets/images/team/placeholder.jpg';
-import image2 from '@/assets/images/team/placeholder.jpg';
-import image3 from '@/assets/images/team/placeholder.jpg';
-import image4 from '@/assets/images/team/placeholder.jpg';
+import imageOne from '@/assets/images/icons/enkrypt/Frame 895.png';
+import imageTwo from '@/assets/images/icons/enkrypt/Frame 984.png';
 export default {
   name: 'TheEnkryptPopup',
   data() {
@@ -55,16 +53,10 @@ export default {
       showEnkrypt: false,
       nfts: [
         {
-          src: image
+          src: imageOne
         },
         {
-          src: image2
-        },
-        {
-          src: image3
-        },
-        {
-          src: image4
+          src: imageTwo
         }
       ]
     };
@@ -116,7 +108,7 @@ export default {
 
 .carousel-box {
   width: 320px;
-  height: 240px;
+  height: 250px;
   border-radius: 8px;
   background: white;
   box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.27);
