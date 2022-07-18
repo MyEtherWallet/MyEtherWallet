@@ -8,12 +8,13 @@
     <template #moduleBody>
       <v-textarea
         v-model="message"
+        class="VerifyInput"
         outlined
         label="Signature"
         :value="message"
       ></v-textarea>
 
-      <div v-if="signResult" class="walletBg pa-3">
+      <div v-if="signResult" class="walletBg pa-3 VerifyMessage">
         {{ signer }}
         <span v-if="didSign" class="font-weight-medium">
           did sign the message
@@ -31,7 +32,7 @@
         :disabled="!message"
         title="Verify"
         btn-size="xlarge"
-        class="display--block mx-auto mt-5"
+        class="display--block mx-auto mt-5 VerifyButton"
         @click.native="verifyMessage"
       />
       <mew-button

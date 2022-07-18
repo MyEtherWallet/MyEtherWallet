@@ -10,6 +10,7 @@
         :items="currencyItems"
         :value="selectedCurrency"
         :disabled="loading"
+        :error-messages="currencyErrorMessages"
         is-custom
         @input="setCurrency"
       />
@@ -103,6 +104,7 @@ import {
 } from '@/core/helpers/numberFormatHelper';
 import { getCurrency } from '@/modules/settings/components/currencyList';
 import { buyContracts } from './tokenList';
+import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 export default {
   name: 'ModuleBuyEth',
   props: {
@@ -115,6 +117,10 @@ export default {
       default: () => {}
     },
     inWallet: {
+      type: Boolean,
+      default: false
+    },
+    supportedBuy: {
       type: Boolean,
       default: false
     }
@@ -236,7 +242,8 @@ export default {
       return (
         (!this.inWallet && !this.actualValidAddress) ||
         this.loading ||
-        this.amountErrorMessages !== ''
+        this.amountErrorMessages !== '' ||
+        !this.supportedBuy
       );
     },
     buyBtnTitle() {
@@ -272,11 +279,25 @@ export default {
       }
       return '';
     },
+    currencyErrorMessages() {
+      if (!this.supportedBuy) {
+        return 'Please switch your network to the Ethereum Mainnet on Metamask.';
+      }
+      return '';
+    },
     currencyItems() {
       const tokenList = new Array();
+      if (!this.supportedBuy) return;
       for (const contract of buyContracts) {
         const token = this.contractToToken(contract);
-        if (token) tokenList.push(token);
+        if (token) {
+          if (
+            token.symbol === this.network.type.currencyName &&
+            token.contract !== MAIN_TOKEN_ADDRESS
+          )
+            continue;
+          tokenList.push(token);
+        }
       }
       const imgs = tokenList.map(item => {
         return item.img;
@@ -391,6 +412,7 @@ export default {
     },
     network: {
       handler: function () {
+        this.selectedCurrency = {};
         this.selectedCurrency = this.defaultCurrency;
       },
       deep: true
