@@ -68,7 +68,7 @@
               <img
                 class="mr-2"
                 src="@/assets/images/icons/apple google.svg"
-                style="width: 55px; height: 55px"
+                style="width: 55px; max-height: 55px"
               />
               Get the app
             </mew-button>
