@@ -43,6 +43,36 @@
               "
             />
           </div>
+          <div class="d-flex">
+            <mew-button
+              class="extension-btns chrome-extension mt-5"
+              :has-full-width="false"
+              btn-style="transparent"
+              color-theme="white"
+              style="width: 280px; height: 50px"
+            >
+              <img
+                class="mr-3"
+                src="@/assets/images/icons/icon-chrome.svg"
+                style="width: 25px; height: 25px"
+              />
+              Get the Enkrypt Extension
+            </mew-button>
+            <mew-button
+              class="extension-btns app-extension mt-5 ml-5"
+              :has-full-width="false"
+              btn-style="transparent"
+              color-theme="white"
+              style="width: 174px; height: 50px"
+            >
+              <img
+                class="mr-2"
+                src="@/assets/images/icons/apple google.svg"
+                style="width: 55px; height: 55px"
+              />
+              Get the app
+            </mew-button>
+          </div>
         </v-card>
         <img
           src="@/assets/images/backgrounds/bg-home-spaceman-and-dog.svg"
@@ -136,5 +166,10 @@ export default {
   background-position: bottom center;
   background-size: 88rem;
   padding: 0 0 30rem 0;
+}
+
+.extension-btns {
+  color: white;
+  background: rgba(0, 0, 0, 0.12);
 }
 </style>
