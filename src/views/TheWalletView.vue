@@ -89,8 +89,7 @@ export default {
       'setBlockNumber',
       'setTokens',
       'setWallet',
-      'setWeb3Instance',
-      'instance'
+      'setWeb3Instance'
     ]),
     ...mapActions('global', [
       'setNetwork',
@@ -98,6 +97,7 @@ export default {
       'updateGasPrice'
     ]),
     ...mapActions('external', ['setCoinGeckoTokens', 'setTokenAndEthBalance']),
+    ...mapState('wallet', ['instance']),
     setup() {
       this.setTokensAndBalance();
       this.subscribeToBlockNumber();
@@ -170,14 +170,17 @@ export default {
       if (window.ethereum.isMetaMask) {
         try {
           if (foundNetwork) {
-            await this.setNetwork(foundNetwork[0], this.instance);
+            await this.setNetwork({
+              network: foundNetwork[0],
+              walletType: this.instance().identifier
+            });
             await this.setTokenAndEthBalance();
             this.trackNetworkSwitch(foundNetwork[0].type.name);
             this.$emit('newNetwork');
           } else {
             Toast("Current wallet's network is unsupported", {}, ERROR);
           }
-        } catch {
+        } catch (er) {
           Toast('There was an error switching networks', {}, ERROR);
         }
       } else {

@@ -1,3 +1,4 @@
+import matchNetwork from '@/core/helpers/matchNetwork';
 import { toBNSafe } from '@/core/helpers/numberFormatHelper';
 
 const setOnlineStatus = function ({ commit, dispatch }, val) {
@@ -36,8 +37,13 @@ const setGasPrice = function ({ commit }, gasPrice) {
 const setGasPriceType = function ({ commit }, type) {
   commit('SET_GAS_PRICE_TYPE', type);
 };
-const setNetwork = function ({ commit, dispatch }, networkObj) {
-  commit('SET_NETWORK', networkObj);
+const setNetwork = async function (
+  { commit, dispatch },
+  { network, walletType }
+) {
+  const chainID = network?.type?.chainID;
+  const matched = await matchNetwork(chainID, walletType);
+  if (matched) commit('SET_NETWORK', network);
   dispatch('swap/resetPrefetch', null, { root: true });
 };
 const addLocalContract = function ({ commit }, localContract) {
@@ -89,11 +95,13 @@ const setTracking = function ({ state }) {
     else this._vm.$matomo.forgetConsentGiven();
   });
 };
+
 export default {
   updateGasPrice,
   setOnlineStatus,
   setLocale,
   setPreferredCurrency,
+  matchNetwork,
   setNetwork,
   setGasPrice,
   setGasPriceType,

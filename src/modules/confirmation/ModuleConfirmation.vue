@@ -251,6 +251,7 @@ import ConfirmationSwapTransactionDetails from './components/ConfirmationSwapTra
 import ConfirmationSendTransactionDetails from './components/ConfirmationSendTransactionDetails';
 import ConfirmWithWallet from './components/ConfirmWithWallet';
 import CrossChainConfirmation from './components/CrossChainConfirmation';
+import matchNetwork from '@/core/helpers/matchNetwork';
 
 import SuccessModal from './components/SuccessModal';
 
@@ -265,7 +266,7 @@ import {
 import { isEmpty, isArray, cloneDeep } from 'lodash';
 import { mapState, mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
-import { Toast, SUCCESS } from '@/modules/toast/handler/handlerToast';
+import { Toast, SUCCESS, ERROR } from '@/modules/toast/handler/handlerToast';
 import parseTokenData from './handlers/parseTokenData';
 import { EventBus } from '@/core/plugins/eventBus';
 import { setEvents } from '@/utils/web3-provider/methods/utils';
@@ -597,6 +598,17 @@ export default {
     });
   },
   methods: {
+    ...mapGetters('global', ['network']),
+    ...mapState('wallet', ['instance']),
+    async confirmNetwork() {
+      const chainID = this.network.type.chainID;
+      const walletType = this.instance.identifier;
+      const matched = await matchNetwork(chainID, walletType);
+      if (!matched) {
+        Toast('Wallet network must match MEW Network', {}, ERROR);
+      }
+      return matched;
+    },
     dataToAction(data) {
       return dataToAction(data);
     },
@@ -824,20 +836,23 @@ export default {
         this.signing = false;
       }
     },
-    btnAction() {
-      if (!this.isWeb3Wallet) {
-        if (
-          (this.signedTxArray.length === 0 ||
-            this.signedTxArray.length < this.unsignedTxArr.length) &&
-          isEmpty(this.signedTxObject)
-        ) {
-          this.isBatch ? this.signBatchTx() : this.signTx();
+    async btnAction() {
+      const confirmed = await this.confirmNetwork();
+      if (confirmed) {
+        if (!this.isWeb3Wallet) {
+          if (
+            (this.signedTxArray.length === 0 ||
+              this.signedTxArray.length < this.unsignedTxArr.length) &&
+            isEmpty(this.signedTxObject)
+          ) {
+            this.isBatch ? this.signBatchTx() : this.signTx();
+            return;
+          }
+          this.isBatch ? this.sendBatchTransaction() : this.sendSignedTx();
           return;
         }
-        this.isBatch ? this.sendBatchTransaction() : this.sendSignedTx();
-        return;
+        this.isBatch ? this.signBatchTx() : this.signTx();
       }
-      this.isBatch ? this.signBatchTx() : this.signTx();
     },
     copyToClipboard() {
       this.$refs.messageConfirmationContainer.$refs.signatureContent.$refs.input.select();

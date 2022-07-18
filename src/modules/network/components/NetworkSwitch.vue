@@ -287,7 +287,10 @@ export default {
         }
       });
       try {
-        this.setNetwork(found[0], this.instance).then(() => {
+        this.setNetwork({
+          network: found[0],
+          walletType: this.instance().identifier
+        }).then(() => {
           if (this.isWallet) {
             this.setWeb3Instance().then(() => {
               this.setTokenAndEthBalance();
