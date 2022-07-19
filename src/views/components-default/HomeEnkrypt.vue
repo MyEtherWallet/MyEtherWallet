@@ -25,20 +25,26 @@
             Use thousands of web3 apps across multiple networks, buy crypto,
             swap tokens, and manage your NFTs. Welcome to the multichain future.
           </div>
-          <mew-button
-            class="download-button"
-            color-theme="#7E44F2"
-            style="border-radius: 100px !important"
-            btn-size="large"
+
+          <a
+            href="https://chrome.google.com/webstore/category/extensions"
+            target="_blank"
           >
-            <img
-              src="@/assets/images/icons/icon-chrome.svg"
-              alt="Chrome"
-              height="25"
-              class="mr-2"
-            />
-            <span class="font-weight-bold"> Get the extension </span>
-          </mew-button>
+            <mew-button
+              class="download-button"
+              color-theme="#7E44F2"
+              style="border-radius: 100px !important"
+              btn-size="large"
+            >
+              <img
+                src="@/assets/images/icons/icon-chrome.svg"
+                alt="Chrome"
+                height="25"
+                class="mr-2"
+              />
+              <span class="font-weight-bold"> Get the extension </span>
+            </mew-button>
+          </a>
         </v-col>
 
         <v-col cols="12" md="7" class="product-images">
