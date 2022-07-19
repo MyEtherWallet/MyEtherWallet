@@ -60,7 +60,7 @@
           <mew-button
             btn-size="xlarge"
             title="Next"
-            class="mx-auto display--block"
+            class="mx-auto display--block NextButton"
             @click.native="currentStep = 2"
           />
         </div>
@@ -68,6 +68,7 @@
         <div v-if="currentStep === 2">
           <v-sheet color="transparent" max-width="600px" class="mx-auto py-10">
             <mew-address-select
+              class="OfflineAddressInput"
               label="From Address"
               copy-tooltip="Copy"
               save-tooltip="Save Address"
@@ -85,7 +86,7 @@
               is-toggle
               has-dividers
               :panel-items="exPanelStep2"
-              class="mt-4 mb-10 swap-expend"
+              class="mt-4 mb-10 swap-expend OfflineDetails"
             >
               <template #panelBody1>
                 <div
@@ -108,7 +109,7 @@
                 @click.native="handleBack"
               />
               <mew-button
-                class="mx-1 mb-3"
+                class="mx-1 mb-3 NextButton2"
                 title="Next"
                 btn-size="xlarge"
                 :disabled="!detailLength"
@@ -117,7 +118,7 @@
             </div>
             <mew-button
               v-if="detailLength"
-              class="mt-2 display--block mx-auto"
+              class="mt-2 display--block mx-auto DownloadButton"
               title="Export JSON file"
               btn-size="small"
               btn-style="transparent"
@@ -132,7 +133,7 @@
             <v-textarea
               outlined
               label="Signature"
-              class="mb-1"
+              class="mb-1 SignatureInput"
               :value="signature"
               :error="signatureError"
               :error-messages="signatureMessage"
@@ -152,7 +153,7 @@
               is-toggle
               has-dividers
               :panel-items="exPanelStep3"
-              class="mt-4 mb-10 swap-expend"
+              class="mt-4 mb-10 swap-expend SignatureRawDetails"
             >
               <template #panelBody1>
                 <div
@@ -191,7 +192,7 @@
               <mew-button
                 title="Confirm & Send"
                 btn-size="xlarge"
-                class="mx-1 mb-3"
+                class="mx-1 mb-3 ConfirmSendButton"
                 :disabled="!validTx || error"
                 @click.native="sendTx"
               />

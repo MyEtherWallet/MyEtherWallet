@@ -47,7 +47,7 @@
             <mew-button
               color-theme="primary"
               btn-style="background"
-              class="mr-4 homeLandingCreateWallet"
+              class="mr-4"
               :title="$t('home.get-started.button-text-one')"
               btn-size="xlarge"
               @click.native="
