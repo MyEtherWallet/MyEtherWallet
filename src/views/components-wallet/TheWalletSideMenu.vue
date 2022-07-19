@@ -14,7 +14,7 @@
             <!-- ================================================================================== -->
             <!-- MEW logo -->
             <!-- ================================================================================== -->
-            <router-link :to="{ name: ROUTES_WALLET.DASHBOARD.NAME }">
+            <router-link :to="offlineModeRoute">
               <img width="120" src="@/assets/images/icons/logo-mew.svg" />
             </router-link>
 
@@ -36,7 +36,7 @@
       <!-- ================================================================================== -->
       <!-- Buy Sell / Send / Swap buttons -->
       <!-- ================================================================================== -->
-      <v-list class="px-5">
+      <v-list v-if="!isOfflineApp" class="px-5">
         <v-list-item-group>
           <div class="d-flex align-center">
             <v-list-item
@@ -242,14 +242,11 @@
       <v-row class="pa-3 align-center justify-space-between">
         <app-btn-menu class="mr-3" @click.native="openNavigation" />
 
-        <router-link
-          :to="{ name: ROUTES_WALLET.DASHBOARD.NAME }"
-          style="line-height: 0"
-        >
+        <router-link :to="offlineModeRoute" style="line-height: 0">
           <img height="26" src="@/assets/images/icons/logo-mew.svg" />
         </router-link>
         <v-spacer />
-        <module-notifications invert-icon />
+        <module-notifications v-if="!isOfflineApp" invert-icon />
       </v-row>
     </v-system-bar>
   </div>
@@ -275,7 +272,7 @@ import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import dappsMeta from '@/dapps/metainfo-dapps';
 import { MOONPAY_EVENT } from '@/modules/moon-pay/helpers';
-import { STAKEWISE_EVENT } from '@/dapps/stakewise/helpers/index';
+import { STAKEWISE_EVENT } from '@/dapps/stakewise/handlers/configs.js';
 import { STAKEWISE_ROUTES } from '@/dapps/stakewise/configsRoutes';
 
 export default {
@@ -292,19 +289,6 @@ export default {
       version: VERSION,
       onSettings: false,
       showLogoutPopup: false,
-      // sectionTwo: [
-      //   {
-      //     title: this.$t('common.settings'),
-      //     icon: settings,
-      //     fn: this.openSettings,
-      //     route: { name: ROUTES_WALLET.SETTINGS.NAME }
-      //   },
-      //   {
-      //     title: this.$t('common.logout'),
-      //     icon: logout,
-      //     fn: this.toggleLogout
-      //   }
-      // ],
       routeNetworks: {
         [ROUTES_WALLET.SWAP.NAME]: [ETH, BSC, MATIC],
         [ROUTES_WALLET.NFT_MANAGER.NAME]: [ETH]
@@ -314,7 +298,7 @@ export default {
   },
   computed: {
     ...mapGetters('global', ['network', 'isEthNetwork', 'hasSwap']),
-    ...mapState('wallet', ['instance']),
+    ...mapState('wallet', ['instance', 'isOfflineApp']),
     ...mapState('global', ['online']),
     sectionOne() {
       if (this.online) {
@@ -331,7 +315,7 @@ export default {
         return [
           {
             title: this.$t('interface.menu.dashboard'),
-            route: { name: ROUTES_WALLET.DASHBOARD.NAME },
+            route: this.offlineModeRoute,
             icon: dashboard
           },
           {
@@ -411,11 +395,18 @@ export default {
           fn: this.toggleLogout
         }
       ];
+    },
+    offlineModeRoute() {
+      return this.isOfflineApp
+        ? { name: ROUTES_WALLET.WALLETS.NAME }
+        : { name: ROUTES_WALLET.DASHBOARD.NAME };
     }
   },
   mounted() {
     // If no menu item is selected on load, redirect user to Dashboard
-    this.redirectToDashboard();
+    if (!this.isOfflineApp) {
+      this.redirectToDashboard();
+    }
 
     if (this.$route.name == ROUTES_WALLET.SETTINGS.NAME) {
       this.openSettings();
@@ -463,7 +454,7 @@ export default {
     /* =================================================================== */
     redirectToDashboard() {
       if (this.$route.name == ROUTES_WALLET.WALLETS.NAME) {
-        this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
+        this.$router.push(this.offlineModeRoute);
       }
     },
     /* =================================================================== */

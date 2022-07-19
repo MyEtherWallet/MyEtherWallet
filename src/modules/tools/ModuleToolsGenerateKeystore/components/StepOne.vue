@@ -71,7 +71,7 @@
               </div>
             </div>
             <mew-button
-              class="my-2"
+              class="my-2 KeystoreDownloadButton"
               btn-size="small"
               title="Download"
               btn-style="outline"

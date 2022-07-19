@@ -6,7 +6,11 @@ yarn-debug.log*
 yarn-error.log*
 /tests/unit/coverage/
 selenium-debug.log
-
+/tests/e2e/reports/
+/download_folder
+/logs
+chromedriver.log
+build
 # Editor directories and files
 .cache
 .idea
@@ -17,6 +21,7 @@ selenium-debug.log
 .npm
 .config
 /tests/unit/coverage/
+tests_output/
 release
 chrome-extension
 .env

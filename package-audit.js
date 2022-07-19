@@ -1,7 +1,7 @@
 const exec = require('child_process').exec;
 
 const AUDIT_EXCEPTIONS = [
-  'underscore',
+  'tar',
   'trim-newlines',
   'css-what',
   'normalize-url',
@@ -15,8 +15,10 @@ const AUDIT_EXCEPTIONS = [
   'async',
   'nth-check',
   'semver-regex',
+  'scss-tokenizer',
   // no package found
-  'codecov'
+  'codecov',
+  'scss-tokenizer'
 ];
 const execute = (command, callback) => {
   exec(

@@ -45,12 +45,16 @@
         </v-card-title>
       </div>
     </div>
-    <div class="text-center">
+    <div class="d-flex justify-space-between justify-center text-center">
       <mew-button
         btn-size="xlarge"
-        :has-full-width="true"
-        :title="btnTitle"
+        title="Connect via Bluetooth"
         @click.native="ledgerUnlockBle"
+      />
+      <mew-button
+        btn-size="xlarge"
+        title="Connect via USB"
+        @click.native="ledgerUnlock"
       />
     </div>
   </div>
@@ -71,6 +75,10 @@ export default {
     ledgerConnected: {
       type: Boolean,
       default: false
+    },
+    ledgerUnlock: {
+      type: Function,
+      default: () => {}
     },
     ledgerUnlockBle: {
       type: Function,
@@ -93,13 +101,6 @@ export default {
     return {
       ledgerApp: {}
     };
-  },
-  computed: {
-    btnTitle() {
-      return this.ledgerConnected
-        ? 'Unlock Ledger Nano X'
-        : 'Connect Ledger Nano X';
-    }
   },
   watch: {
     ledgerApp: {
