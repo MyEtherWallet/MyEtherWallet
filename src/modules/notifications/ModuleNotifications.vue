@@ -310,11 +310,9 @@ export default {
       }
     },
     openNotifications() {
-      // this.$router.push({ name: ROUTES_WALLET.NOTIFICATIONS.NAME });
       this.isOpenNotifications = true;
     },
     closeNotifications() {
-      // this.$router.go(-1);
       this.isOpenNotifications = false;
     }
   }

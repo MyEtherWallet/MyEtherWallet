@@ -15,6 +15,7 @@ const AUDIT_EXCEPTIONS = [
   'async',
   'nth-check',
   'semver-regex',
+  'scss-tokenizer',
   // no package found
   'codecov',
   'scss-tokenizer'
