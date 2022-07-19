@@ -146,8 +146,7 @@
             setting.
           </p>
           <img
-            class="d-block d-sm-none mx-auto mt-12 mb-12"
-            style="max-width: 170px"
+            class="done-image d-block d-sm-none mx-auto mt-12 mb-12"
             src="@/assets/images/icons/icon-keystore-mew.png"
           />
 
@@ -311,5 +310,8 @@ export default {
   border-radius: 7px;
   box-shadow: 0 8px 15px var(--v-greyLight-base);
   height: 100%;
+}
+.done-image {
+  max-width: 170px;
 }
 </style>
