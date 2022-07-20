@@ -10,6 +10,7 @@
         <mew-select
           :items="mergedContracts"
           label="Contract Name"
+          normal-dropdown
           @input="selectedContract"
         />
         <mew-input
@@ -67,6 +68,7 @@
           label="Function"
           :items="methods"
           class="mb-1"
+          normal-dropdown
           @input="methodSelect"
         />
 
