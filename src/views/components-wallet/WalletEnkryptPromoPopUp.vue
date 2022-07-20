@@ -22,16 +22,10 @@
         Polkadot! Download Enkrypt and LFG!
       </div>
       <div class="text-center mt-6">
-        <a
-          href="https://chrome.google.com/webstore/category/extensions"
-          target="_blank"
-        >
+        <a href="https://enkrypt.com/" target="_blank">
           <mew-button class="mr-3" btn-style="transparent" title="Learn more" />
         </a>
-        <a
-          href="https://chrome.google.com/webstore/category/extensions"
-          target="_blank"
-        >
+        <a href="https://enkrypt.com/" target="_blank">
           <mew-button color-theme="#7E44F2">
             <img
               class="circle-border mr-2"
