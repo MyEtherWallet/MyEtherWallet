@@ -142,8 +142,8 @@
 
                 <mew-input
                   v-show="!isToken"
-                  v-model="data"
                   ref="dataInput"
+                  v-model="data"
                   :label="$t('sendTx.add-data')"
                   placeholder="0x..."
                   :rules="dataRules"

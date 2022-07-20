@@ -57,7 +57,9 @@ const EXCEPTIONS = [
   'node-polyfill-webpack-plugin',
   '@ensdomains/ensjs',
   '@ensdomains/ens-contracts',
-  'protobufjs'
+  'protobufjs',
+  '@formatjs/intl-numberformat',
+  'babel-jest'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
