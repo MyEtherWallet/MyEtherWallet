@@ -81,6 +81,7 @@ export default {
 <style lang="scss" scoped>
 .promo-container {
   background-image: url('~@/assets/images/snippets/snippets-blue-circle-gradient.svg');
+  background-size: contain;
 }
 .width-100 {
   width: 100%;
