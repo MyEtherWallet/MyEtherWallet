@@ -75,7 +75,6 @@
             <template #activatorSlot>
               <div
                 class="justify-start d-flex align-center info-container--addr monospace"
-                v-on="on"
               >
                 {{ addrFirstSix }}
                 <v-icon class="info-container--addr pt-1"

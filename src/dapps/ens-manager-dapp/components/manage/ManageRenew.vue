@@ -5,6 +5,7 @@
       :label="$t('ens.request.select-duration')"
       :items="items"
       @input="setDuration"
+      normal-dropdown
     />
     <div class="font-weight-bold text-center">
       {{ $t('ens.request.estimated-price') }}: {{ rentPriceETH }}
