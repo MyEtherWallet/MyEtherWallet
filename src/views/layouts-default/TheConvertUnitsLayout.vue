@@ -12,8 +12,8 @@
             :items="items"
             :value="selectedLeft"
             class="mb-2"
-            @input="updateCurrencyLeft"
             normal-dropdown
+            @input="updateCurrencyLeft"
           />
           <mew-input
             :value="valueLeft"
@@ -37,8 +37,8 @@
             :items="items"
             :value="selectedRight"
             class="mb-2"
-            @input="updateCurrencyRight"
             normal-dropdown
+            @input="updateCurrencyRight"
           />
           <mew-input
             :value="valueRight"
