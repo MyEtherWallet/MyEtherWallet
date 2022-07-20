@@ -51,6 +51,8 @@ export const knownErrors = {
     'Please reset/disconnect then reconnect bluetooth pairings on device and on connected devices',
   'DisconnectedDeviceDuringOperation: The device was disconnected.':
     'Ledger device has been disconnected, please reconnect and try again',
+  "Non-200 status code: '429'":
+    'Rate limit exceeded. Please try again in about 30 seconds.',
   "execution reverted: it's not your token": 'You do not own this token',
   'Returned error: gas required exceeds allowance':
     'Your gas limit is too low. Please increase your gas limit and try again.'
