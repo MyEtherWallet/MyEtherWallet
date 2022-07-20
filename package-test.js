@@ -59,7 +59,8 @@ const EXCEPTIONS = [
   '@ensdomains/ens-contracts',
   'protobufjs',
   '@formatjs/intl-numberformat',
-  'babel-jest'
+  'babel-jest',
+  'qrcode'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
