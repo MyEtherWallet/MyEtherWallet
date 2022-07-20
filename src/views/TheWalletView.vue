@@ -6,6 +6,7 @@
         <the-wallet-header />
         <module-confirmation />
         <wallet-promo-pop-up v-if="!isOfflineApp" />
+        <enkrypt-promo-pop-up />
         <router-view />
       </v-container>
     </v-main>
@@ -15,6 +16,7 @@
 </template>
 
 <script>
+import EnkryptPromoPopUp from '@/views/components-wallet/EnkryptPromoPopUp';
 import { mapActions, mapState, mapGetters } from 'vuex';
 import { toBN } from 'web3-utils';
 import TheWalletSideMenu from './components-wallet/TheWalletSideMenu';
@@ -32,6 +34,7 @@ import { ROUTES_HOME } from '@/core/configs/configRoutes';
 import WalletPromoSnackbar from '@/views/components-wallet/WalletPromoSnackbar';
 export default {
   components: {
+    EnkryptPromoPopUp,
     TheWalletSideMenu,
     TheWalletHeader,
     TheWalletFooter,

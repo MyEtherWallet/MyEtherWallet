@@ -29,6 +29,7 @@ const state = {
   },
   showedBanner: false,
   showWalletPromo: true,
+  showEnkryptPromo: true,
   promoOver: false,
   testing: false
 };
