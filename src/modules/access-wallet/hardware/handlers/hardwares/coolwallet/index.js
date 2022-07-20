@@ -15,6 +15,7 @@ import WebBleTransport, {
 
 import Vue from 'vue';
 import coolwallet from '@/assets/images/icons/wallets/coolwallet.svg';
+import coolwalletPro from '@/assets/images/icons/wallets/coolwalletpro.svg';
 import * as locstore from 'store';
 import store from '@/core/store';
 import {
@@ -74,6 +75,7 @@ class CoolWallet {
         if (device.name.includes('CWP')) {
           _this.isPro = true;
           _this.meta.name = 'CoolWallet Pro';
+          _this.meta.img.value = coolwalletPro;
         }
 
         WebBleTransport.connect(device)
