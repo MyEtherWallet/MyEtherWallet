@@ -71,24 +71,22 @@
               </v-list-item>
             </v-list>
           </v-menu>
-          <div class="d-flex align-center">
-            <v-tooltip top content-class="tooltip-inner">
-              <template #activator="{ on }">
-                <div
-                  class="justify-start d-flex align-center info-container--addr monospace"
-                  v-on="on"
+          <mew-tooltip hide-icon :text="getChecksumAddressString">
+            <template #activatorSlot>
+              <div
+                class="justify-start d-flex align-center info-container--addr monospace"
+                v-on="on"
+              >
+                {{ addrFirstSix }}
+                <v-icon class="info-container--addr pt-1"
+                  >mdi-dots-horizontal</v-icon
                 >
-                  {{ addrFirstSix }}
-                  <v-icon class="info-container--addr pt-1"
-                    >mdi-dots-horizontal</v-icon
-                  >
 
-                  {{ addrlastFour }}
-                </div>
-              </template>
-              <span class="textDark--text">{{ getChecksumAddressString }}</span>
-            </v-tooltip>
-          </div>
+                {{ addrlastFour }}
+              </div>
+            </template>
+            <span class="textDark--text">{{ getChecksumAddressString }}</span>
+          </mew-tooltip>
         </div>
       </div>
       <!--
