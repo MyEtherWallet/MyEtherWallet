@@ -50,6 +50,13 @@ const SET_OFFLINE_APP = function (state, isOfflineApp) {
   state.isOfflineApp = isOfflineApp;
 };
 
+const HIDE_ENKRYPT_FOR_SEVEN = function (state) {
+  state.showForSeven = false;
+};
+const HIDE_ENRKYPT_FOR_FOURTEEN = function (state) {
+  state.showForFourteen = false;
+};
+
 export default {
   REMOVE_WALLET,
   SET_WALLET,
@@ -60,5 +67,7 @@ export default {
   SET_OWNED_DOMAINS,
   SET_TOKENS,
   SET_LOADING_WALLET_INFO,
-  SET_OFFLINE_APP
+  SET_OFFLINE_APP,
+  HIDE_ENKRYPT_FOR_SEVEN,
+  HIDE_ENRKYPT_FOR_FOURTEEN
 };

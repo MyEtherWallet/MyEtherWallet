@@ -11,7 +11,11 @@ const state = {
   web3: {},
   ensDomains: null,
   tokens: [],
-  loadingWalletInfo: true
+  loadingWalletInfo: true,
+  showInitialPromo: true,
+  closedInitialPromo: '',
+  showForSeven: true,
+  showForFourteen: true
 };
 
 export default state;

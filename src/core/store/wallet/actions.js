@@ -119,6 +119,14 @@ const setOfflineApp = function ({ commit }, val) {
   commit('SET_OFFLINE_APP', val);
 };
 
+const hideEnkryptForSeven = function ({ commit }) {
+  commit('HIDE_ENKRYPT_FOR_SEVEN');
+};
+
+const hideEnkryptForFourteen = function ({ commit }) {
+  commit('HIDE_ENRKYPT_FOR_FOURTEEN');
+};
+
 export default {
   removeWallet,
   setWallet,
@@ -128,5 +136,7 @@ export default {
   setBlockNumber,
   setOwnedDomains,
   setTokens,
-  setOfflineApp
+  setOfflineApp,
+  hideEnkryptForSeven,
+  hideEnkryptForFourteen
 };

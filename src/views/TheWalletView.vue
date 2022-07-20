@@ -11,6 +11,7 @@
     </v-main>
     <the-wallet-footer />
     <wallet-promo-snackbar v-if="!isOfflineApp" />
+    <enkrypt-promo-snackbar v-if="!isOfflineApp" />
   </div>
 </template>
 
@@ -30,6 +31,7 @@ import { Web3Wallet } from '@/modules/access-wallet/common';
 import Web3 from 'web3';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
 import WalletPromoSnackbar from '@/views/components-wallet/WalletPromoSnackbar';
+import EnkryptPromoSnackbar from '@/views/components-wallet/EnkryptPromoSnackbar';
 export default {
   components: {
     TheWalletSideMenu,
@@ -37,7 +39,8 @@ export default {
     TheWalletFooter,
     WalletPromoPopUp,
     ModuleConfirmation,
-    WalletPromoSnackbar
+    WalletPromoSnackbar,
+    EnkryptPromoSnackbar
   },
   mixins: [handlerWallet],
   computed: {
