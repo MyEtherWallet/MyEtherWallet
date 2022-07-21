@@ -724,8 +724,8 @@ export default {
       window.scrollTo(0, 0);
       this.sendTx
         .submitTransaction()
-        .then(res => {
-          if (res) this.clear();
+        .then(() => {
+          this.clear();
         })
         .catch(error => {
           this.clear();
