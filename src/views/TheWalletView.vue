@@ -30,6 +30,7 @@ import Web3 from 'web3';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
 import WalletPromoSnackbar from '@/views/components-wallet/WalletPromoSnackbar';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import matchNetwork from '@/core/helpers/matchNetwork';
 export default {
   components: {
     TheWalletSideMenu,
@@ -73,6 +74,7 @@ export default {
       this.setup();
       this.findAndSetNetwork();
       this.web3Listeners();
+      this.checkNetwork();
     }
   },
   beforeDestroy() {
@@ -94,13 +96,23 @@ export default {
     ...mapActions('global', [
       'setNetwork',
       'setBaseFeePerGas',
-      'updateGasPrice'
+      'updateGasPrice',
+      'setValidNetwork'
     ]),
     ...mapActions('external', ['setCoinGeckoTokens', 'setTokenAndEthBalance']),
     ...mapState('wallet', ['instance']),
+    ...mapState('global', ['validNetwork']),
     setup() {
       this.setTokensAndBalance();
       this.subscribeToBlockNumber();
+    },
+    async checkNetwork() {
+      const matched = await matchNetwork(
+        this.network.type.chainID,
+        this.identifier
+      );
+      console.log(matched)
+      if (!matched) this.setValidNetwork(matched);
     },
     setTokensAndBalance() {
       if (this.coinGeckoTokens?.get) {
@@ -174,10 +186,12 @@ export default {
               network: foundNetwork[0],
               walletType: this.instance().identifier
             });
+            this.setValidNetwork(true);
             await this.setTokenAndEthBalance();
             this.trackNetworkSwitch(foundNetwork[0].type.name);
             this.$emit('newNetwork');
           } else {
+            this.setValidNetwork(false);
             Toast("Current wallet's network is unsupported", {}, ERROR);
           }
         } catch (er) {

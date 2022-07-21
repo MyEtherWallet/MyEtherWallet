@@ -93,7 +93,12 @@
                   Radio
                 =====================================================================================
                 -->
-          <v-radio :value="network.name" :class="['py-2 mb-0']"> </v-radio>
+          <v-radio
+            :value="network.name"
+            :class="['py-2 mb-0']"
+            :disabled="networkLoading"
+          >
+          </v-radio>
         </v-row>
       </v-container>
     </v-radio-group>
@@ -108,6 +113,7 @@ import { Toast, SUCCESS, ERROR } from '@/modules/toast/handler/handlerToast';
 import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
 import { debounce } from 'lodash';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import matchNetwork from '@/core/helpers/matchNetwork';
 
 export default {
   name: 'NetworkSwitch',
@@ -129,11 +135,14 @@ export default {
       networkSelected: null,
       nodes: nodes,
       toggleType: 0,
-      searchInput: ''
+      searchInput: '',
+      networkLoading: false
     };
   },
   computed: {
     ...mapGetters('global', ['network']),
+    ...mapState('global', ['validNetwork']),
+    ...mapState('wallet', ['identifier']),
     /**
      * Property returns sorted network names alphabetically in this order: ETH, main and then test networks
      * @returns {string[]}
@@ -228,7 +237,8 @@ export default {
   },
   watch: {
     networkSelected(value) {
-      if (value && value !== this.network.type.name) {
+      if (value && (value !== this.network.type.name || !this.validNetwork)) {
+        this.networkLoading = true;
         this.setNetworkDebounced(value);
       }
     },
@@ -236,6 +246,19 @@ export default {
       if (newVal != oldVal && (!oldVal || oldVal === '')) {
         this.toggleType = 2;
       }
+    },
+    validNetwork(val) {
+      if (!val) this.networkSelected = null;
+      else this.networkSelected = this.network.type.name;
+    },
+    async network() {
+      this.networkLoading = true;
+      const matched = await matchNetwork(
+        this.network.type.chainID,
+        this.identifier
+      );
+      if (matched) this.networkSelected = this.network.type.name;
+      this.networkLoading = false;
     },
     /**
      * Set networkSelected on toggle change, if network is in the list
@@ -246,19 +269,22 @@ export default {
           this.networks.filter(item => item.name === this.network.type.name)
             .length > 0
         ) {
-          this.networkSelected = this.network.type.name;
+          this.networkSelected = this.validNetwork
+            ? this.network.type.name
+            : '';
         }
       }
     }
   },
   mounted() {
-    this.networkSelected = this.network.type.name;
+    this.networkSelected = this.validNetwork ? this.network.type.name : '';
   },
   methods: {
     ...mapActions('wallet', ['setWeb3Instance']),
     ...mapActions('global', ['setNetwork']),
     ...mapActions('external', ['setTokenAndEthBalance']),
     ...mapState('wallet', ['instance']),
+    ...mapState('global', ['validNetwork']),
     /**
      * Method checks whether symbol or name has searchInput substring
      * @returns {boolean}
@@ -292,6 +318,10 @@ export default {
           walletType: this.instance().identifier
         }).then(() => {
           if (this.isWallet) {
+            this.networkSelected = this.validNetwork
+              ? this.network.type.name
+              : '';
+            this.networkLoading = false;
             this.setWeb3Instance().then(() => {
               this.setTokenAndEthBalance();
             });
@@ -301,6 +331,8 @@ export default {
           this.$emit('newNetwork');
         });
       } catch (e) {
+        this.networkSelected = this.validNetwork ? this.network.type.name : '';
+        this.networkLoading = false;
         Toast(`Could not switch network`, {}, ERROR);
       }
     }, 1000)

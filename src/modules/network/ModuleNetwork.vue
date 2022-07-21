@@ -6,10 +6,14 @@
         linkTitle: 'Contact support',
         link: 'mailto:support@myetherwallet.com'
       }"
-      :show-overlay="isOpenNetworkOverlay"
-      title="Select Network"
+      :show-overlay="isOpenNetworkOverlay || !validNetwork"
+      :title="
+        validNetwork
+          ? 'Select Network'
+          : 'Current network is not supported. Select a network below.'
+      "
       content-size="large"
-      :close="closeNetworkOverlay"
+      :close="validNetwork ? closeNetworkOverlay : null"
     >
       <network-switch
         :filter-types="filterNetworks"
@@ -73,6 +77,7 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['blockNumber', 'identifier', 'isHardware']),
+    ...mapState('global', ['validNetwork']),
     ...mapGetters('global', ['network']),
     type() {
       return this.network.type.currencyName;
@@ -120,8 +125,10 @@ export default {
       this.isOpenNetworkOverlay = true;
     },
     closeNetworkOverlay() {
-      this.$router.go(-1);
-      this.isOpenNetworkOverlay = false;
+      if (this.validNetwork) {
+        this.$router.go(-1);
+        this.isOpenNetworkOverlay = false;
+      }
     }
   }
 };

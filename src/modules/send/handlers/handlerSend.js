@@ -11,16 +11,11 @@ import hasValidDecimals from '@/core/helpers/hasValidDecimals.js';
 import { isNull } from 'lodash';
 import BigNumber from 'bignumber.js';
 import { toBNSafe } from '@/core/helpers/numberFormatHelper';
-import matchNetwork from '@/core/helpers/matchNetwork';
-import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 
 class SendTransaction {
   constructor() {
     this.$store = vuexStore;
-    Object.assign(
-      this,
-      mapState('wallet', ['balance', 'web3', 'address', 'instance'])
-    );
+    Object.assign(this, mapState('wallet', ['balance', 'web3', 'address']));
     Object.assign(this, mapGetters('global', ['network']));
     this.currency = null;
     this.localGasPrice = '0';
@@ -147,26 +142,18 @@ class SendTransaction {
   }
   async submitTransaction() {
     try {
-      const chainID = this.network()?.type?.chainID;
-      const walletType = this.instance().identifier;
-      const matched = await matchNetwork(chainID, walletType);
-      if (matched) {
-        this._setTo();
-        this._setValue();
-        this._setGasPrice();
-        const nonce = await this.web3().eth.getTransactionCount(this.address());
-        this.setNonce(nonce);
-        this.TX.gasLimit = this.TX.gas;
-        const _tx = Transaction.fromTxData(this.TX);
-        const json = _tx.toJSON(true);
-        json.from = this.address();
-        json.toDetails = this.TX.toDetails;
-        return this.web3().eth.sendTransaction(json);
-      }
-      Toast('Wallet network must match MEW Network', {}, ERROR);
-      return false;
+      this._setTo();
+      this._setValue();
+      this._setGasPrice();
+      const nonce = await this.web3().eth.getTransactionCount(this.address());
+      this.setNonce(nonce);
+      this.TX.gasLimit = this.TX.gas;
+      const _tx = Transaction.fromTxData(this.TX);
+      const json = _tx.toJSON(true);
+      json.from = this.address();
+      json.toDetails = this.TX.toDetails;
+      return this.web3().eth.sendTransaction(json);
     } catch (e) {
-      console.log(e);
       return e;
     }
   }

@@ -9,10 +9,14 @@ import wallets from '@/modules/access-wallet/common/walletTypes';
 
 /**
  * @param {Number} chainID - Chain Id for network
- * @param {String} walletType
+ * @param {String} walletType - Wallet type
+ * @param {Boolean} options.toast - Show toast
+ * @return {Boolean} returns false if networks do not match, true if they do, or if its not a web3 wallet
  */
-export default async (chainID, walletType) => {
+export default async (chainID, walletType, options = { toast: true }) => {
   const { ethereum } = window;
+  console.log(chainID)
+  console.log(walletType)
   if (walletType === wallets.WEB3_WALLET) {
     try {
       if (chainID) {
@@ -28,7 +32,7 @@ export default async (chainID, walletType) => {
       const { message } = er;
       let toastMsg = ' ';
       let toastLink = {};
-      if (message) {
+      if (message && options.toast) {
         if (message.includes('pending')) {
           toastMsg =
             'There is a pending request to MetaMask, make your selection before continuing';
@@ -38,7 +42,7 @@ export default async (chainID, walletType) => {
               "It seems like you don't have this network set up in MetaMask. Please go here to add the network.",
             url: 'https://chainlist.org/'
           };
-        } else if (message.includes('rejected')) return;
+        } else if (message.includes('rejected')) return false;
         else if (message.includes("hasn't been added")) {
           toastLink = {
             title:

@@ -46,6 +46,9 @@ const setNetwork = async function (
   if (matched) commit('SET_NETWORK', network);
   dispatch('swap/resetPrefetch', null, { root: true });
 };
+const setValidNetwork = function ({ commit }, valid) {
+  commit('SET_VALID_NETWORK', valid);
+};
 const addLocalContract = function ({ commit }, localContract) {
   commit('ADD_LOCAL_CONTRACT', localContract);
 };
@@ -101,7 +104,7 @@ export default {
   setOnlineStatus,
   setLocale,
   setPreferredCurrency,
-  matchNetwork,
+  setValidNetwork,
   setNetwork,
   setGasPrice,
   setGasPriceType,
