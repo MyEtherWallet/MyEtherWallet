@@ -28,10 +28,7 @@
             Use thousands of web3 apps across multiple networks, buy crypto,
             swap tokens, and manage your NFTs. Welcome to the multichain future.
           </div>
-          <a
-            href="https://chrome.google.com/webstore/category/extensions"
-            target="_blank"
-          >
+          <a href="https://enkrypt.com" target="_blank">
             <mew-button
               class="download-button"
               color-theme="#7E44F2"
