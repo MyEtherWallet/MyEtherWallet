@@ -2,6 +2,9 @@
   <div class="home--enkrypt" :class="isMobile ? '' : 'bg'">
     <v-container class="product-info-container">
       <v-row class="justify-space-between">
+        <!-- ============================================================================= -->
+        <!-- Left section -->
+        <!-- ============================================================================= -->
         <v-col
           cols="12"
           md="5"
@@ -25,7 +28,6 @@
             Use thousands of web3 apps across multiple networks, buy crypto,
             swap tokens, and manage your NFTs. Welcome to the multichain future.
           </div>
-
           <a
             href="https://chrome.google.com/webstore/category/extensions"
             target="_blank"
@@ -45,8 +47,57 @@
               <span class="font-weight-bold"> Get the extension </span>
             </mew-button>
           </a>
+
+          <div class="d-flex align-center mt-3">
+            <div class="mr-3 textSecondary--text">Also available</div>
+            <a
+              href="https://enkrypt.com"
+              target="_blank"
+              class="mr-3 no-line-height"
+            >
+              <img
+                src="@/assets/images/icons/icon-firefox.svg"
+                alt="Chrome"
+                height="25"
+              />
+            </a>
+            <a
+              href="https://enkrypt.com"
+              target="_blank"
+              class="mr-3 no-line-height"
+            >
+              <img
+                src="@/assets/images/icons/icon-brave.png"
+                alt="Chrome"
+                height="25"
+              />
+            </a>
+            <a
+              href="https://enkrypt.com"
+              target="_blank"
+              class="no-line-height"
+            >
+              <img
+                src="@/assets/images/icons/icon-edge.svg"
+                alt="Chrome"
+                height="25"
+              />
+            </a>
+          </div>
+          <div class="mt-2 textSecondary--text">
+            More info on
+            <a
+              class="text-decoration-underline textSecondary--text"
+              href="https://enkrypt.com"
+              target="_blank"
+              >enkrypt.com</a
+            >
+          </div>
         </v-col>
 
+        <!-- ============================================================================= -->
+        <!-- Right section -->
+        <!-- ============================================================================= -->
         <v-col cols="12" md="7" class="product-images">
           <img
             class="cx-previews"
@@ -79,9 +130,7 @@ export default {
 
 <style lang="scss" scoped>
 .home--enkrypt {
-  margin-top: -88px;
   background-color: var(--v-backgroundGrey-base);
-
   &.bg {
     background-image: url('~@/assets/images/snippets/snippet-circle-blue.svg');
     background-position: top -626px right -304px;
@@ -107,10 +156,12 @@ export default {
     }
   }
 }
-
 .product-images {
   position: relative;
   .cx-previews {
   }
+}
+.no-line-height {
+  line-height: 0;
 }
 </style>
