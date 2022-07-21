@@ -57,14 +57,8 @@
           </div>
         </v-sheet>
         <div v-if="hasNotification" class="d-flex align-center justify-end">
-          <!-- <div>
-            <div>6 notifications</div>
-            <v-btn depressed x-small color="textLight" dark>
-              Delete all
-            </v-btn>
-          </div> -->
           <v-sheet color="transparent" max-width="150px">
-            <mew-select :items="items" @input="setSelected" />
+            <mew-select :items="items" normal-dropdown @input="setSelected" />
           </v-sheet>
         </div>
         <div
