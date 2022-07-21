@@ -10,6 +10,7 @@
       <!-- ================================================================== -->
       <v-btn
         id="unique-id--mew-menu-popup--activator-button"
+        class="px-3"
         :icon="icon"
         :color="color"
         :outlined="outlined"
@@ -20,7 +21,7 @@
       >
         <img
           v-if="btnIcon"
-          :style="`height: ${btnIconSize}; width: ${btnIconSize}`"
+          :style="`height: ${btnIconSize}; width: ${btnIconSize}; filter: brightness(0.8)`"
           :src="btnIcon"
           alt="Icon"
           :class="btnTitle ? 'mr-2' : ''"
@@ -181,7 +182,7 @@ export default {
   display: inline-block;
 
   .v-btn {
-    border-radius: 10px;
+    border-radius: 8px;
     text-transform: none;
   }
 }
