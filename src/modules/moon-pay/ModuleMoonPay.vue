@@ -25,8 +25,9 @@
               :order-handler="orderHandler"
               :close="close"
               :tab="activeTab"
-              :default-currency="defaltCurrency"
+              :default-currency="defaultCurrency"
               :in-wallet="inWallet"
+              :supported-buy="supportedBuy"
               @selectedCurrency="setSelectedCurrency"
               @openProviders="openProviders"
               @selectedFiat="setSelectedFiat"
@@ -42,7 +43,7 @@
               :close="close"
               :tab="activeTab"
               :in-wallet="inWallet"
-              :default-currency="defaltCurrency"
+              :default-currency="defaultCurrency"
               @selectedCurrency="setSelectedCurrency"
             />
           </template>
@@ -111,21 +112,17 @@ export default {
     ...mapState('wallet', ['address', 'instance']),
     ...mapGetters('wallet', ['tokensList']),
     ...mapGetters('global', ['network']),
+    ...mapGetters('external', ['contractToToken']),
     inWallet() {
       return (
         this.$route.fullPath.includes('/wallet') && !this.$route.meta.noAuth
       );
     },
-    defaltCurrency() {
-      if (
-        isEmpty(this.selectedCurrency) &&
-        this.supportedBuy &&
-        this.tokensList.length > 0
-      ) {
-        return this.tokensList.filter(
-          item =>
-            item.contract.toLowerCase() === MAIN_TOKEN_ADDRESS.toLowerCase()
-        )[0];
+    defaultCurrency() {
+      if (isEmpty(this.selectedCurrency) && this.supportedBuy) {
+        const token = this.contractToToken(MAIN_TOKEN_ADDRESS);
+        token.value = token.symbol;
+        return token;
       } else if (isEmpty(this.selectedCurrency) || !this.supportedBuy) {
         return {
           decimals: 18,
@@ -142,9 +139,9 @@ export default {
     },
     supportedBuy() {
       return (
-        this.network.type === 'ETH' ||
-        this.network.type === 'BSC' ||
-        this.network.type === 'MATIC'
+        this.network.type.name === 'ETH' ||
+        this.network.type.name === 'BSC' ||
+        this.network.type.name === 'MATIC'
       );
     },
     leftBtn() {
@@ -169,18 +166,23 @@ export default {
       if (newVal) {
         this.orderHandler = new handler();
       }
-      this.selectedCurrency = this.defaltCurrency;
+      this.selectedCurrency = {};
+      this.selectedCurrency = this.defaultCurrency;
     },
     address() {
-      this.selectedCurrency = this.defaltCurrency;
+      this.selectedCurrency = this.defaultCurrency;
+    },
+    network() {
+      this.selectedCurrency = {};
+      this.selectedCurrency = this.defaultCurrency;
     }
   },
   methods: {
     ...mapActions('wallet', ['setWeb3Instance']),
     ...mapActions('global', ['setNetwork']),
     onTab(val) {
-      this.selectedCurrency = this.defaltCurrency;
-      if (val === 1) {
+      this.selectedCurrency = this.defaultCurrency;
+      if (val === 1 || (val === 0 && !this.supportedBuy)) {
         if (this.network.type.chainID !== 1) {
           const defaultNetwork = this.nodes['ETH'].find(item => {
             return item.service === 'myetherwallet.com-ws';
@@ -226,7 +228,7 @@ export default {
       this.toAddress = val;
     },
     reset() {
-      this.selectedCurrency = this.defaltCurrency;
+      this.selectedCurrency = this.defaultCurrency;
       this.selectedFiat = {
         name: 'USD',
         value: 'USD',

@@ -202,7 +202,7 @@ export default {
       }
     },
     ...mapState('external', ['path']),
-    ...mapState('wallet', ['identifier']),
+    ...mapState('wallet', ['identifier', 'isOfflineApp']),
     ...mapGetters('article', ['getArticle'])
   },
   watch: {
