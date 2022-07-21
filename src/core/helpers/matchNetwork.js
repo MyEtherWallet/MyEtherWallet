@@ -15,8 +15,6 @@ import wallets from '@/modules/access-wallet/common/walletTypes';
  */
 export default async (chainID, walletType, options = { toast: true }) => {
   const { ethereum } = window;
-  console.log(chainID)
-  console.log(walletType)
   if (walletType === wallets.WEB3_WALLET) {
     try {
       if (chainID) {

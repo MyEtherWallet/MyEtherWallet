@@ -111,7 +111,6 @@ export default {
         this.network.type.chainID,
         this.identifier
       );
-      console.log(matched)
       if (!matched) this.setValidNetwork(matched);
     },
     setTokensAndBalance() {
