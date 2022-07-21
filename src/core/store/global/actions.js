@@ -67,6 +67,10 @@ const setPromoOver = function ({ commit }) {
   commit('SET_PROMO_OVER');
 };
 
+const neverShowEnkryptPromo = function ({ commit }) {
+  commit('NEVER_SHOW_ENKRYPT_PROMO');
+};
+
 const setTracking = function ({ state }) {
   const matomoExists = () => {
     return new Promise(resolve => {
@@ -104,5 +108,6 @@ export default {
   setTrackingConsent,
   setTracking,
   neverShowPromo,
+  neverShowEnkryptPromo,
   setPromoOver
 };

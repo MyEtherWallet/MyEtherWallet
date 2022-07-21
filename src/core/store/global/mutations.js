@@ -86,6 +86,10 @@ const NEVER_SHOW_WALLET_PROMO = function (state) {
   state.showWalletPromo = false;
 };
 
+const NEVER_SHOW_ENKRYPT_PROMO = function (state) {
+  state.showEnkryptPromo = false;
+};
+
 export default {
   SET_ONLINE_STATUS,
   SET_LOCALE,
@@ -102,5 +106,6 @@ export default {
   NEVER_SHOW_TRACKING,
   NEVER_SHOW_BANNER,
   NEVER_SHOW_WALLET_PROMO,
+  NEVER_SHOW_ENKRYPT_PROMO,
   SET_PROMO_OVER
 };
