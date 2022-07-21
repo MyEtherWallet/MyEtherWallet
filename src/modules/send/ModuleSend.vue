@@ -142,6 +142,7 @@
 
                 <mew-input
                   v-show="!isToken"
+                  ref="dataInput"
                   v-model="data"
                   :label="$t('sendTx.add-data')"
                   placeholder="0x..."
@@ -425,6 +426,9 @@ export default {
       ];
     },
     dataInvalidHexMessage() {
+      if (this.data === '') {
+        return 'Data cannot be empty!';
+      }
       if (isHexStrict(this.data)) {
         return '';
       }
@@ -601,8 +605,10 @@ export default {
   },
   methods: {
     verifyHexFormat() {
+      this.$refs.dataInput._data.inputValue = this.data;
       if (!this.data || isEmpty(this.data)) {
         this.data = '0x';
+        this.$refs.dataInput._data.inputValue = '0x';
       }
     },
     /**
