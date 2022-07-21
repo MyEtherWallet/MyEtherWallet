@@ -31,9 +31,19 @@
             </v-carousel-item>
           </v-carousel>
         </div>
-        <div class="mew-heading-4 content">
-          Connect to web3 on Ethereum and Polkadot, manage your NFTs, buy, send
-          and swap. <br />Welcome to the multichain future.
+        <div class="mew-heading-4 content text-left">
+          Easily access all your favorite apps across <br />Ethereum and
+          Polkadot chains.
+        </div>
+        <div class="width--full px-12">
+          <div
+            v-for="cText in checkedText"
+            :key="cText"
+            class="text-left d-flex"
+          >
+            <img src="@/assets/images/icons/enkrypt/check.svg" class="mr-3" />
+            <div>{{ cText }}</div>
+          </div>
         </div>
         <div v-lottie="surpriseLottie" class="lottie" />
         <div class="btn-container">
@@ -102,6 +112,15 @@ export default {
   },
   computed: {
     ...mapState('popups', ['enkryptLandingPopup']),
+    checkedText() {
+      return [
+        'Lives in your favorite browser',
+        'All the wallet features you already love',
+        'State of the art security',
+        'Hardware wallet support',
+        'Use your existing MEW accounts'
+      ];
+    },
     surpriseLottie() {
       return 'confetti';
     },
@@ -140,7 +159,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .popup-container {
-  height: 590px;
+  min-height: 706px;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
