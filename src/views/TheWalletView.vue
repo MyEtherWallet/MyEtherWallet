@@ -11,7 +11,6 @@
       </v-container>
     </v-main>
     <the-wallet-footer />
-    <wallet-promo-snackbar v-if="!isOfflineApp" />
     <enkrypt-promo-snackbar v-if="!isOfflineApp" />
   </div>
 </template>
@@ -23,7 +22,6 @@ import { toBN } from 'web3-utils';
 import TheWalletSideMenu from './components-wallet/TheWalletSideMenu';
 import TheWalletHeader from './components-wallet/TheWalletHeader';
 import TheWalletFooter from './components-wallet/TheWalletFooter';
-import WalletPromoPopUp from './components-wallet/WalletPromoPopUp';
 import ModuleConfirmation from '@/modules/confirmation/ModuleConfirmation';
 import handlerWallet from '@/core/mixins/handlerWallet.mixin';
 import nodeList from '@/utils/networks';
@@ -40,7 +38,6 @@ export default {
     TheWalletSideMenu,
     TheWalletHeader,
     TheWalletFooter,
-    WalletPromoPopUp,
     ModuleConfirmation,
     WalletPromoSnackbar,
     EnkryptPromoSnackbar
