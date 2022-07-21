@@ -87,6 +87,12 @@ h6 {
 
 .word-break--break-all {
   word-break: break-all;
+  white-space: initial;
+}
+
+.break-word {
+  word-break: break-word;
+  white-space: initial;
 }
 
 .white-space--nowrap {
@@ -95,6 +101,14 @@ h6 {
 
 .letter-spacing--none {
   letter-spacing: 0 !important;
+}
+
+.letter-spacing--initial {
+  letter-spacing: initial !important;
+}
+
+.line-height--initial {
+  line-height: initial !important;
 }
 
 /* ========== Cursor ========== */

@@ -19,21 +19,56 @@
       =====================================================================================
       -->
       <div style="max-width: 650px" class="mx-auto">
-        <div v-for="btn in buttons" :key="btn.title" class="position--relative">
-          <div
-            class="orangePrimary--text mew-label"
-            style="position: absolute; top: 15px; right: 25px"
-          >
-            NOT RECOMMENDED
+        <mew-button
+          v-for="(btn, key) in buttons"
+          :key="key"
+          has-full-width
+          class="mb-5 py-6"
+          style="height: initial; min-height: 157px"
+          :color-theme="btn.color"
+          :btn-style="btn.style === 'outline' ? 'outline' : ''"
+          @click.native="btn.fn"
+        >
+          <div class="chip-official d-flex align-center">
+            <v-icon size="15px" class="mr-1">mdi-shield-check</v-icon>
+            <div
+              class="font-weight-medium letter-spacing--initial line-height--initial"
+            >
+              Official
+            </div>
           </div>
-          <mew-button
-            has-full-width
-            :class="btn.class ? `mb-5 ${btn.class}` : 'mb-5'"
-            :color-theme="btn.color"
-            :btn-style="btn.style === 'outline' ? 'outline' : ''"
-            style="height: 160px"
-            @click.native="btn.fn"
-          >
+          <div class="width--full d-flex align-center text-left">
+            <img
+              v-if="btn.icon && !isMobile"
+              class="ml-5 mr-6"
+              :src="btn.icon"
+              :alt="btn.alt"
+              style="height: 70px"
+            />
+            <div class="px-3">
+              <div class="d-flex align-center">
+                <img
+                  v-if="btn.icon && isMobile"
+                  class="mr-4"
+                  :src="btn.icon"
+                  :alt="btn.alt"
+                  style="height: 40px"
+                />
+
+                <div class="mew-heading-2 break-word letter-spacing--initial">
+                  {{ btn.title }}
+                </div>
+              </div>
+              <div
+                class="mew-heading-4 reset-subtitle break-word letter-spacing--initial mt-4"
+              >
+                {{ btn.subtitle }}
+              </div>
+            </div>
+          </div>
+        </mew-button>
+
+        <!--
             <div
               class="px-2 text-left d-flex align-center justify-space-between"
               :class="
@@ -70,8 +105,7 @@
                 />
               </div>
             </div>
-          </mew-button>
-        </div>
+            -->
       </div>
 
       <!--
@@ -178,63 +212,43 @@ export default {
     buttons() {
       if (!this.isOfflineApp) {
         return [
-          /* MEW wallet Button */
+          /* Enkrypt */
           {
             color: 'white',
-            title: 'MEW wallet',
-            subtitle: 'Connect MEW wallet app to MEW web',
+            title: 'Install Enkrypt browser extension',
+            subtitle:
+              'MEW’s official browser extension. Connect to web3 on Ethereum and Polkadot, manage your NFTs, buy, send and swap',
             note: '',
-            rightIcon: require('@/assets/images/icons/icon-mew-wallet.png'),
-            titleIcon: 'mdi-shield-check',
-            titleIconType: 'mdi',
-            titleIconClass: 'primary',
+            icon: require('@/assets/images/icons/icon-enkrypt-block.svg'),
+            alt: 'Enkrypt',
             fn: () => {
               this.openMEWconnect();
             }
           },
-          /* Browser Extension */
+          /* MEW wallet Button */
           {
             color: 'white',
-            title: 'Browser Extension',
-            subtitle: 'Use your web3 wallet with MEW.',
+            title: 'Download MEW wallet app',
+            subtitle:
+              'Our official mobile app to create your wallet, and connect to MEW Web using your mobile phone',
             note: '',
-            rightIcon: require('@/assets/images/icons/icon-mew-cx.png'),
-            titleIcon: 'mdi-shield-check',
-            titleIconType: 'mdi',
-            titleIconClass: 'primary',
+            icon: require('@/assets/images/icons/icon-mew-wallet.png'),
+            alt: 'MEW wallet',
             fn: () => {
-              this.openWeb3Wallet();
+              this.openMEWconnect();
             }
           },
           /* Hardware Wallet */
           {
             color: 'white',
-            title: 'Hardware Wallets',
-            subtitle: 'Ledger, Trezor, KeepKey, FINNEY, BitBox',
+            title: 'Buy a hardware wallet',
+            subtitle:
+              'For the highest standard of security, buy a hardware wallet and us it with MEW',
             note: '',
-            rightIcon: require('@/assets/images/icons/icon-hardware-wallet.png'),
-            titleIcon: 'mdi-shield-check',
-            titleIconType: 'mdi',
-            titleIconClass: 'primary',
+            icon: require('@/assets/images/icons/icon-hardware-wallet.png'),
+            alt: 'Hardware Wallets',
             fn: () => {
               this.openOverlay(ACCESS_VALID_OVERLAYS.HARDWARE);
-            }
-          },
-          /* Mobile Apps */
-          {
-            color: 'white',
-            title: 'Mobile Apps',
-            subtitle: 'WalletConnect, WalletLink',
-            note: '',
-            rightIcons: [
-              require('@/assets/images/icons/icon-wallet-connect.svg'),
-              require('@/assets/images/icons/icon-wallet-link.png')
-            ],
-            titleIcon: 'mdi-shield-check',
-            titleIconType: 'mdi',
-            titleIconClass: 'primary',
-            fn: () => {
-              this.openOverlay(ACCESS_VALID_OVERLAYS.MOBILE);
             }
           },
           /* Software */
@@ -242,13 +256,9 @@ export default {
             color: 'white',
             style: 'outline',
             title: 'Software',
-            subtitle: 'Keystore files, Mnemonic phrase, Private key',
+            subtitle:
+              'Software Methods like Keystore file and Mnemonic phrase should only be used in offline msettings by experienced users',
             note: 'NOT RECOMMENDED',
-            rightIcon: '',
-            titleIcon: 'mdi-alert',
-            titleIconType: 'mdi',
-            titleIconClass: 'warning darken-1',
-            class: 'AccessSoftwareWallet',
             fn: () => {
               this.openOverlay(ACCESS_VALID_OVERLAYS.SOFTWARE);
             }
@@ -265,6 +275,9 @@ export default {
           }
         }
       ];
+    },
+    isMobile() {
+      return this.$vuetify.breakpoint.smAndDown;
     }
   },
   methods: {
@@ -346,3 +359,19 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.reset-subtitle {
+  line-height: 24px;
+}
+
+.chip-official {
+  background-color: var(--v-greenPrimary-base);
+  color: white;
+  padding: 6px 10px;
+  border-radius: 30px;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
+</style>
