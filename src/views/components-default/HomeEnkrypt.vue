@@ -1,5 +1,5 @@
 <template>
-  <div class="home--enkrypt" :class="isMobile ? '' : 'bg'">
+  <div class="home--enkrypt" :class="bgStyle">
     <v-container class="product-info-container">
       <v-row class="justify-space-between">
         <!-- ============================================================================= -->
@@ -8,7 +8,7 @@
         <v-col
           cols="12"
           md="5"
-          class="product-contexts"
+          class="product-contexts position-relative"
           :style="
             isMobile
               ? 'padding-top: 70px'
@@ -24,80 +24,88 @@
           <div class="text-title mb-5">
             Enkrypt - MEW's mulitchain browser extension
           </div>
-          <div class="text-subtitle mb-10">
+          <div class="text-subtitle mb-md-10">
             Use thousands of web3 apps across multiple networks, buy crypto,
             swap tokens, and manage your NFTs. Welcome to the multichain future.
           </div>
-          <a href="https://enkrypt.com" target="_blank">
-            <mew-button
-              class="download-button"
-              color-theme="#7E44F2"
-              style="border-radius: 100px !important"
-              btn-size="large"
-            >
-              <img
-                src="@/assets/images/icons/icon-chrome.svg"
-                alt="Chrome"
-                height="25"
-                class="mr-2"
-              />
-              <span class="font-weight-bold"> Get the extension </span>
-            </mew-button>
-          </a>
 
-          <div class="d-flex align-center mt-3">
-            <div class="mr-3 textSecondary--text">Also available</div>
-            <a
-              href="https://enkrypt.com"
-              target="_blank"
-              class="mr-3 no-line-height"
-            >
-              <img
-                src="@/assets/images/icons/icon-firefox.svg"
-                alt="Chrome"
-                height="25"
-              />
-            </a>
-            <a
-              href="https://enkrypt.com"
-              target="_blank"
-              class="mr-3 no-line-height"
-            >
-              <img
-                src="@/assets/images/icons/icon-brave.png"
-                alt="Chrome"
-                height="25"
-              />
-            </a>
-            <a
-              href="https://enkrypt.com"
-              target="_blank"
-              class="no-line-height"
-            >
-              <img
-                src="@/assets/images/icons/icon-edge.svg"
-                alt="Chrome"
-                height="25"
-              />
-            </a>
-          </div>
-          <div class="mt-2 textSecondary--text">
-            More info on
-            <a
-              class="text-decoration-underline textSecondary--text"
-              href="https://enkrypt.com"
-              target="_blank"
-              >enkrypt.com</a
-            >
+          <div class="text-center text-md-left">
+            <img
+              class="cx-previews-mobile d-inline d-md-none"
+              src="@/assets/images/snippets/snippet-cx-previews.png"
+              alt="Enkrypt"
+            />
+            <div>
+              <a href="https://enkrypt.com" target="_blank">
+                <mew-button
+                  class="download-button"
+                  color-theme="#7E44F2"
+                  style="border-radius: 100px !important"
+                  btn-size="large"
+                >
+                  <img
+                    src="@/assets/images/icons/icon-chrome.svg"
+                    alt="Chrome"
+                    height="25"
+                    class="mr-2"
+                  />
+                  <span class="font-weight-bold"> Get the extension </span>
+                </mew-button>
+              </a>
+            </div>
+            <div class="d-inline-flex align-center mt-3">
+              <div class="mr-3 textSecondary--text">Also available</div>
+              <a
+                href="https://enkrypt.com"
+                target="_blank"
+                class="mr-3 no-line-height"
+              >
+                <img
+                  src="@/assets/images/icons/icon-firefox.svg"
+                  alt="Chrome"
+                  height="25"
+                />
+              </a>
+              <a
+                href="https://enkrypt.com"
+                target="_blank"
+                class="mr-3 no-line-height"
+              >
+                <img
+                  src="@/assets/images/icons/icon-brave.png"
+                  alt="Chrome"
+                  height="25"
+                />
+              </a>
+              <a
+                href="https://enkrypt.com"
+                target="_blank"
+                class="no-line-height"
+              >
+                <img
+                  src="@/assets/images/icons/icon-edge.svg"
+                  alt="Chrome"
+                  height="25"
+                />
+              </a>
+            </div>
+            <div class="mt-2 textSecondary--text">
+              More info on
+              <a
+                class="text-decoration-underline textSecondary--text"
+                href="https://enkrypt.com"
+                target="_blank"
+                >enkrypt.com</a
+              >
+            </div>
           </div>
         </v-col>
 
         <!-- ============================================================================= -->
         <!-- Right section -->
         <!-- ============================================================================= -->
-        <v-col cols="12" md="7" class="product-images">
+        <v-col cols="12" md="7" class="d-none d-md-block position-relative">
           <img
-            class="cx-previews"
             src="@/assets/images/snippets/snippet-cx-previews.png"
             alt="Enkrypt"
             :style="
@@ -118,8 +126,17 @@ export default {
   components: {},
   data: () => ({}),
   computed: {
-    isMobile() {
-      return this.$vuetify.breakpoint.smAndDown;
+    bgStyle() {
+      if (
+        this.$vuetify.breakpoint.mdAndUp &&
+        this.$vuetify.breakpoint.width < 2300
+      ) {
+        return 'bgLarge';
+      }
+      if (this.$vuetify.breakpoint.width >= 2300) {
+        return 'bgXLarge';
+      }
+      return 'bgSmall';
     }
   }
 };
@@ -128,13 +145,21 @@ export default {
 <style lang="scss" scoped>
 .home--enkrypt {
   background-color: var(--v-backgroundGrey-base);
-  &.bg {
+  &.bgSmall {
     background-image: url('~@/assets/images/snippets/snippet-circle-blue.svg');
-    background-position: top -626px right -304px;
-    background-size: 1130px;
+    background-position: top 191px right calc(50% - 415px);
+    background-size: 725px;
   }
-}
-.product-info-container {
+  &.bgLarge {
+    background-image: url('~@/assets/images/snippets/snippet-circle-blue.svg');
+    background-position: top -933px right calc(50% - 717px);
+    background-size: 1468px;
+  }
+  &.bgXLarge {
+    background-image: url('~@/assets/images/snippets/snippet-circle-blue.svg');
+    background-position: top -515px right calc(50% - 550px);
+    background-size: 994px;
+  }
 }
 .product-contexts {
   .text-title {
@@ -153,10 +178,11 @@ export default {
     }
   }
 }
-.product-images {
+.cx-previews-mobile {
+  width: 85vw;
+}
+.position-relative {
   position: relative;
-  .cx-previews {
-  }
 }
 .no-line-height {
   line-height: 0;
