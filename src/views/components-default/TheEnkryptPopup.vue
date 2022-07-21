@@ -1,11 +1,15 @@
 <template>
   <div class="mew-component--enkrypt">
     <mew-popup
-      :show="showEnkrypt"
+      :show="enkryptLandingPopup"
       :has-buttons="false"
       :has-title="false"
       :has-padding="false"
-      :left-btn="{ text: 'Cancel', color: 'basic', method: closeEnkryptPopup }"
+      :left-btn="{
+        text: 'Cancel',
+        color: 'basic',
+        method: neverShowEnkryptLandingPage
+      }"
       max-width="430"
       has-body-content
       class="popup"
@@ -16,10 +20,10 @@
           src="@/assets/images/backgrounds/bg-enkrypt.png"
           alt="blob"
         />
-        <span class="mew-heading-2 heading mt-7">Enkrypt</span>
-        <span class="mew-heading-2 heading">
+        <div class="mew-heading-2 heading mt-7">Enkrypt</div>
+        <div class="mew-heading-2 heading">
           Our official Browser Extension is here!
-        </span>
+        </div>
         <div class="carousel-box">
           <v-carousel cycle height="255" hide-delimiters :show-arrows="false">
             <v-carousel-item v-for="(nft, i) in nfts" :key="i">
@@ -27,20 +31,30 @@
             </v-carousel-item>
           </v-carousel>
         </div>
-        <span class="mew-heading-4 content">
+        <div class="mew-heading-4 content">
           Connect to web3 on Ethereum and Polkadot, manage your NFTs, buy, send
           and swap. <br />Welcome to the multichain future.
-        </span>
-        <div v-if="showEnkrypt" v-lottie="surpriseLottie" class="lottie" />
+        </div>
+        <div v-lottie="surpriseLottie" class="lottie" />
         <div class="btn-container">
-          <a href="" class="learn-more">Learn More</a>
-          <mew-button color-theme="#7E44F2" class="extension-btn ml-4">
+          <a
+            href="https://help.myetherwallet.com/en/"
+            target="_blank"
+            class="learn-more"
+            >Learn More</a
+          >
+          <mew-button
+            color-theme="#7E44F2"
+            class="extension-btn ml-4"
+            @click.native="install"
+          >
             <img
+              v-if="browser !== 'default'"
               class="chrome-logo mr-3"
-              src="@/assets/images/icons/icon-chrome.svg"
+              :src="browserLogo"
               alt="chrome"
             />
-            Install Extension
+            {{ text }}
           </mew-button>
         </div>
       </div>
@@ -48,13 +62,16 @@
   </div>
 </template>
 <script>
+import platform from 'platform';
 import imageOne from '@/assets/images/icons/enkrypt/promo1.png';
 import imageTwo from '@/assets/images/icons/enkrypt/promo2.png';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { mapState, mapActions } from 'vuex';
 export default {
   name: 'TheEnkryptPopup',
+  mixins: [handlerAnalytics],
   data() {
     return {
-      showEnkrypt: false,
       nfts: [
         {
           src: imageOne
@@ -62,20 +79,61 @@ export default {
         {
           src: imageTwo
         }
-      ]
+      ],
+      extensionLinks: {
+        chrome: {
+          link: 'https://chrome.google.com/webstore',
+          img: require('@/assets/images/icons/icon-chrome.svg')
+        },
+        firefox: {
+          link: 'https://chrome.google.com/webstore',
+          img: require('@/assets/images/icons/icon-chrome.svg')
+        },
+        opera: {
+          link: 'https://chrome.google.com/webstore',
+          img: require('@/assets/images/icons/icon-chrome.svg')
+        },
+        default: {
+          link: 'https://chrome.google.com/webstore',
+          img: require('@/assets/images/icons/icon-chrome.svg')
+        }
+      }
     };
   },
   computed: {
+    ...mapState('popups', ['enkryptLandingPopup']),
     surpriseLottie() {
       return 'confetti';
+    },
+    browser() {
+      const browser = platform.name.toLowerCase();
+      if (
+        browser !== 'chrome' &&
+        browser !== 'firefox' &&
+        browser !== 'opera'
+      ) {
+        return 'default';
+      }
+      return browser;
+    },
+    text() {
+      return this.browser !== 'default'
+        ? `Install for ${platform.name}`
+        : 'Download Now';
+    },
+    browserLogo() {
+      return this.extensionLinks[this.browser].img;
+    },
+    browserLink() {
+      return this.extensionLinks[this.browser].link;
     }
   },
-  mounted() {
-    this.showEnkrypt = true;
-  },
   methods: {
-    closeEnkryptPopup() {
-      this.showEnkrypt = false;
+    ...mapActions('popups', ['neverShowEnkryptLandingPage']),
+    install() {
+      window.open(this.browserLink, '_blank');
+      this.trackEnkryptInstall();
+      this.neverShowEnkryptLandingPage();
     }
   }
 };
@@ -122,10 +180,6 @@ export default {
 .main-image {
   width: 100%;
   height: 100%;
-  // border-radius: 8px;
-  // background: white;
-  // box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.27);
-  // z-index: 1;
 }
 .content {
   width: 320px;

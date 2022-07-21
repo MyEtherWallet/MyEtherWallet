@@ -29,8 +29,13 @@ const setTracking = function ({ state }) {
     else this._vm.$matomo.forgetConsentGiven();
   });
 };
+
+const neverShowEnkryptLandingPage = function ({ commit }) {
+  commit('NEVER_SHOW_LANDING_ENKRYPT_POPUP');
+};
 export default {
   setTrackingConsent,
   setTracking,
-  neverShowEnkryptPromo
+  neverShowEnkryptPromo,
+  neverShowEnkryptLandingPage
 };

@@ -67,7 +67,7 @@
 
 <script>
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
-const platform = require('platform');
+import platform from 'platform';
 
 export default {
   data: () => ({

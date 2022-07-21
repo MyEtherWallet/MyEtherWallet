@@ -128,7 +128,7 @@ export default {
   }
 };
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .title {
   position: absolute;
   top: 12%;
@@ -144,15 +144,7 @@ export default {
   height: 40px;
   margin-bottom: 20px;
 }
-.popup-container {
-  height: 210px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: left;
-  overflow: hidden;
-  border: 3px solid red;
-}
+
 .btn-container {
   width: 100%;
   height: 40px;
@@ -164,9 +156,7 @@ export default {
   bottom: 15%;
   left: 0%;
 }
-.mew-pop-btns {
-  display: none;
-}
+
 .extension-btn {
   width: 212px;
   height: 48px;

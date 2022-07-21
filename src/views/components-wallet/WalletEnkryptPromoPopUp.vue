@@ -52,13 +52,13 @@ export default {
     return { showInitialPromo: true };
   },
   computed: {
-    ...mapState('global', ['showEnkryptPromo'])
+    ...mapState('popups', ['showEnkryptPromo'])
   },
   mounted() {
     this.showPromo();
   },
   methods: {
-    ...mapActions('global', ['neverShowEnkryptPromo']),
+    ...mapActions('popups', ['neverShowEnkryptPromo']),
     showPromo() {
       // commented for future use
       /*

@@ -22,10 +22,6 @@ const SET_ONLINE_STATUS = async function (state, status) {
   state.online = status;
 };
 
-const SET_PROMO_OVER = async function (state) {
-  state.promoOver = true;
-};
-
 const SET_LOCALE = function (state, { locale }) {
   state.locale = locale;
 };
@@ -65,30 +61,6 @@ const SET_BASE_FEE_PER_GAS = function (state, baseFeePerGasBN) {
 const SET_MAX_PRIORITY_FEE_PER_GAS = function (state, maxPriorityFeePerGasBN) {
   state.eip1559.maxPriorityFeePerGas = maxPriorityFeePerGasBN.toString();
 };
-const SET_TRACKING_CONSENT = function (state, val) {
-  if (this._vm.$matomo) {
-    this._vm.$matomo.setConsentGiven();
-    this._vm.$matomo.trackEvent('consent', val ? 'true' : 'false');
-    if (!val) this._vm.$matomo.forgetConsentGiven();
-  }
-  state.consentToTrack = val;
-};
-
-const NEVER_SHOW_TRACKING = function (state) {
-  state.displayedTrackingPopup = true;
-};
-
-const NEVER_SHOW_BANNER = function (state) {
-  state.showedBanner = true;
-};
-
-const NEVER_SHOW_WALLET_PROMO = function (state) {
-  state.showWalletPromo = false;
-};
-
-const NEVER_SHOW_ENKRYPT_PROMO = function (state) {
-  state.showEnkryptPromo = false;
-};
 
 export default {
   SET_ONLINE_STATUS,
@@ -101,11 +73,5 @@ export default {
   SET_IMPORTED_STATE,
   ADD_LOCAL_CONTRACT,
   SET_BASE_FEE_PER_GAS,
-  SET_MAX_PRIORITY_FEE_PER_GAS,
-  SET_TRACKING_CONSENT,
-  NEVER_SHOW_TRACKING,
-  NEVER_SHOW_BANNER,
-  NEVER_SHOW_WALLET_PROMO,
-  NEVER_SHOW_ENKRYPT_PROMO,
-  SET_PROMO_OVER
+  SET_MAX_PRIORITY_FEE_PER_GAS
 };
