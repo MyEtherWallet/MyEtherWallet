@@ -141,8 +141,7 @@ export default {
   },
   computed: {
     ...mapState('external', ['path']),
-    ...mapState('global', ['online']),
-    ...mapState('wallet', ['isOfflineApp', 'isOfflineApp']),
+    ...mapState('wallet', ['isOfflineApp']),
 
     /**
      * Used in the creation of a MEWconnect instance
@@ -177,7 +176,7 @@ export default {
       return this.overlay === ACCESS_VALID_OVERLAYS.SOFTWARE;
     },
     buttons() {
-      if (this.online) {
+      if (!this.isOfflineApp) {
         return [
           /* MEW wallet Button */
           {
@@ -269,7 +268,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('wallet', ['setWallet', 'setOfflineApp']),
+    ...mapActions('wallet', ['setWallet']),
     /**
      * Used to set the MEWconnect instance as the wallet
      **/
@@ -293,9 +292,7 @@ export default {
      * Consiquently this will open the correct module overlay.
      * @type - must be one of the VALID_OVERLAYS
      */
-    openOverlay(type, offline) {
-      this.setOfflineApp(offline);
-
+    openOverlay(type) {
       try {
         this.$router.push({
           name: ROUTES_HOME.ACCESS_WALLET.NAME,

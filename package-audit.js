@@ -15,10 +15,10 @@ const AUDIT_EXCEPTIONS = [
   'async',
   'nth-check',
   'semver-regex',
+  'scss-tokenizer',
   // no package found
   'codecov',
-  'parse-url', // fix after release,
-  'parse-path'
+  'scss-tokenizer'
 ];
 const execute = (command, callback) => {
   exec(
