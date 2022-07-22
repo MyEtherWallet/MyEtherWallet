@@ -1,167 +1,120 @@
 <template>
   <div class="enkrypt-promo-snackbar">
     <v-snackbar
-      :value="showEnkrypt"
-      :width="width"
-      :height="height"
+      :value="enkryptWalletSnackbar"
+      width="380px"
+      height="200px"
       :timeout="-1"
       light
       left
       rounded
       transition="scale-transition"
-      style="padding-left: 20px"
+      class="pl-5"
     >
-      <div class="d-flex justify-space-between flex-column">
-        <div class="close d-flex justify-space-between align-center">
-          <v-btn icon @click="closeEnkryptPopup"
-            ><v-icon>mdi-close</v-icon>
-          </v-btn>
-        </div>
-        <div>
-          <div class="d-flex justify-space-between">
-            <span class="title mew-heading-1">Enkrypt</span>
-            <span class="content ml-4 mew-heading-5 font-weight-bold">
-              Access your wallet and switch accounts in seconds with our
-              official browser extension
-            </span>
-          </div>
-        </div>
-      </div>
-      <div class="btn-container">
-        <a href="" class="learn-more" style="color: #939fb9">Learn More</a>
-        <mew-button color-theme="#7E44F2" class="extension-btn ml-4">
+      <div class="d-flex flex-column pa-6 justify-space-between height--full">
+        <div class="d-flex justify-space-between align-center">
           <img
-            class="chrome-logo mr-3"
-            src="@/assets/images/icons/icon-chrome.svg"
-            alt="chrome"
+            alt="enkrypt logo"
+            src="@/assets/images/icons/enkrypt/icon-enkrypt-colored.svg"
+            height="20px"
           />
-          Install Extension
-        </mew-button>
+          <v-icon
+            class="cursor--pointer"
+            medium
+            @click="closeEnkryptWalletSnackbar"
+            >mdi-close</v-icon
+          >
+        </div>
+        <div class="d-flex justify-space-between mew-body">
+          Access your wallet and switch accounts in seconds with our official
+          browser extension
+        </div>
+        <div class="btn-container d-flex justify-space-between align-center">
+          <mew-button
+            color-theme="#939fb9"
+            btn-style="transparent"
+            @click.native="openHelpCenter"
+            >Learn More</mew-button
+          >
+          <mew-button
+            color-theme="#7E44F2"
+            class="extension-btn"
+            @click.native="openEnkrypt"
+          >
+            <img
+              class="mr-3"
+              :src="browserLogo"
+              alt="chrome"
+              width="25px"
+              height="25px"
+            />
+            Install Extension
+          </mew-button>
+        </div>
       </div>
     </v-snackbar>
   </div>
 </template>
 <script>
-import { mapActions, mapGetters, mapState } from 'vuex';
+import { mapActions, mapState } from 'vuex';
+
+import enkryptMarketing from '@/core/mixins/enkryptMarketing.mixin';
 import moment from 'moment';
 export default {
+  mixins: [enkryptMarketing],
   data() {
-    return {
-      timeoutHolder: null,
-      showEnkrypt: false
-    };
+    return {};
   },
   computed: {
-    ...mapState('wallet', [
-      'address',
-      'web3',
-      'showInitialPromo',
-      'closedInitialPromo',
-      'showForSeven',
-      'showForFourteen'
-    ]),
-    ...mapGetters('global', ['network']),
-    ...mapGetters('global', ['isEthNetwork', 'network']),
-    width() {
-      return '375px';
-    },
-    height() {
-      return '200px';
-    },
-    shouldShow() {
-      if (this.diff === 7 && this.showForSeven) {
-        return true;
-      }
-      if (this.diff === 14 && this.showForFourteen) {
-        return true;
-      }
-      return !this.showInitialPromo;
-    },
-    diff() {
-      if (this.closedInitialPromo !== '') {
-        const diff = moment(new Date()).diff(
-          moment(this.closedInitialPromo),
-          'days'
-        );
-        return diff;
-      }
-      return 0;
-    }
-  },
-  watch: {
-    closedInitialPromo(newVal) {
-      if (newVal) {
-        this.checkAndOpen();
-      }
-    }
+    ...mapState('popups', [
+      'enkryptWalletPopup',
+      'enkryptWalletPopupClosed',
+      'enkryptWalletSnackbarClosed',
+      'enkryptWalletSnackbar'
+    ])
   },
   mounted() {
-    this.checkAndOpen();
+    this.checkIfShouldShow();
   },
   methods: {
-    ...mapActions('wallet', ['hideForSeven', 'hideForFourteen']),
-    checkAndOpen() {
-      if (this.closedInitialPromo) {
-        if (this.diff === 7 || this.diff === 14) {
-          this.delayOpenSnackBar();
-        }
+    ...mapActions('popups', [
+      'showEnkryptWalletSnackbar',
+      'closeEnkryptWalletSnackbar',
+      'enkryptWalletSnackbarCounter'
+    ]),
+    /**
+     * checks if the enkrypt wallet ad has been shown
+     * and if it has been 7 days since closing
+     * and if snackbard has not been closed or 7 days since it was closed
+     * and the snacknar has not been shown 3 times
+     */
+    checkIfShouldShow() {
+      if (
+        !this.enkryptWalletPopup &&
+        moment(this.enkryptWalletPopupClosed).diff(new Date(), 'days') >= 7 &&
+        (this.enkryptWalletSnackbarClosed > 0 ||
+          moment(this.enkryptWalletSnackbarClosed).diff(new Date(), 'days') >=
+            7) &&
+        this.enkryptWalletSnackbarCounter <= 3
+      ) {
+        this.showEnkryptWalletSnackbar();
       }
-    },
-    setCloseState() {
-      if (this.diff === 7) {
-        this.hideForSeven();
-      }
-      if (this.diff === 14) {
-        this.hideForFourteen();
-      }
-    },
-    closeEnkryptPopup() {
-      this.setCloseState();
-      this.showEnkrypt = false;
-    },
-    delayOpenSnackBar() {
-      this.timeoutHolder = setTimeout(() => {
-        this.showEnkrypt = this.shouldShow;
-      }, 3000);
     }
   }
 };
 </script>
+<style lang="scss">
+.enkrypt-promo-snackbar {
+  .v-snack__content {
+    padding: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+}
+</style>
 <style lang="scss" scoped>
-.title {
-  position: absolute;
-  top: 12%;
-  left: 8%;
-}
-.close {
-  position: absolute;
-  top: 8%;
-  right: 5%;
-}
-.content {
-  width: 312px;
-  height: 40px;
-  margin-bottom: 20px;
-}
-
 .btn-container {
   width: 100%;
   height: 40px;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  bottom: 15%;
-  left: 0%;
-}
-
-.extension-btn {
-  width: 212px;
-  height: 48px;
-}
-.chrome-logo {
-  width: 25px;
-  height: 25px;
 }
 </style>

@@ -12,7 +12,10 @@ const state = {
   enkryptLandingPopup: true,
   enkryptLandingPopupClosed: 0,
   enkryptWalletPopup: true,
-  enkryptWalletPopupClosed: 0
+  enkryptWalletPopupClosed: 0,
+  enkryptWalletSnackbar: false,
+  enkryptWalletSnackbarClosed: 0,
+  enkryptWalletSnackbarCounter: 0
 };
 
 export default state;

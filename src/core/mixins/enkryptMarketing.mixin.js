@@ -81,6 +81,10 @@ export default {
         // eslint-disable-next-line
         window.open('https://www.mewwallet.com/', '_blank');
       }
+    },
+    openHelpCenter() {
+      // eslint-disable-next-line
+      window.open('https://help.myetherwallet.com/en/', '_blank');
     }
   }
 };

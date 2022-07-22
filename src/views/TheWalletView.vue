@@ -5,8 +5,7 @@
       <v-container class="pa-2 pa-md-3 mb-14" fluid>
         <the-wallet-header />
         <module-confirmation />
-        <the-enkrypt-popup :show="walletEnkryptPopup" v-if="!isOfflineApp" />
-        <wallet-enkrypt-promo-pop-up />
+        <the-enkrypt-popup v-if="!isOfflineApp" :show="walletEnkryptPopup" />
         <router-view />
       </v-container>
     </v-main>

@@ -40,6 +40,16 @@ const NEVER_SHOW_WALLET_ENKRYPT_POPUP = function (state) {
   state.enkryptWalletPopupClosed = new Date().getTime();
 };
 
+const SHOW_WALLET_ENKRYPT_SNACKBAR = function (state) {
+  state.enkryptWalletSnackbar = true;
+  state.enkryptWalletSnackbarCounter += 1;
+};
+
+const CLOSE_WALLET_ENKRYPT_SNACKBAR = function (state) {
+  state.enkryptWalletSnackbar = false;
+  state.enkryptWalletSnackbarClosed = new Date().getTime();
+};
+
 export default {
   INIT_STORE,
   SET_TRACKING_CONSENT,
@@ -47,5 +57,7 @@ export default {
   NEVER_SHOW_BANNER,
   NEVER_SHOW_ENKRYPT_PROMO,
   NEVER_SHOW_LANDING_ENKRYPT_POPUP,
-  NEVER_SHOW_WALLET_ENKRYPT_POPUP
+  NEVER_SHOW_WALLET_ENKRYPT_POPUP,
+  SHOW_WALLET_ENKRYPT_SNACKBAR,
+  CLOSE_WALLET_ENKRYPT_SNACKBAR
 };

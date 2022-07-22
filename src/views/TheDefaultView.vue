@@ -5,7 +5,7 @@
       <router-view />
     </v-main>
     <the-default-footer />
-    <the-enkrypt-popup :show="enkryptLandingPopup" />
+    <the-enkrypt-popup v-if="!isOfflineApp" :show="enkryptLandingPopup" />
   </div>
 </template>
 
@@ -22,7 +22,8 @@ export default {
     TheEnkryptPopup
   },
   computed: {
-    ...mapState('popups', ['enkryptLandingPopup'])
+    ...mapState('popups', ['enkryptLandingPopup']),
+    ...mapState('wallet', ['isOfflineAppe'])
   }
 };
 </script>

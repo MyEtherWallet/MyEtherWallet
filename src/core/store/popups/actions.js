@@ -37,10 +37,20 @@ const neverShowEnkryptLandingPage = function ({ commit }) {
 const neverShowEnkryptWalletPage = function ({ commit }) {
   commit('NEVER_SHOW_WALLET_ENKRYPT_POPUP');
 };
+
+const showEnkryptWalletSnackbar = function ({ commit }) {
+  commit('SHOW_WALLET_ENKRYPT_SNACKBAR');
+};
+
+const closeEnkryptWalletSnackbar = function ({ commit }) {
+  commit('CLOSE_WALLET_ENKRYPT_SNACKBAR');
+};
 export default {
   setTrackingConsent,
   setTracking,
   neverShowEnkryptPromo,
   neverShowEnkryptLandingPage,
-  neverShowEnkryptWalletPage
+  neverShowEnkryptWalletPage,
+  showEnkryptWalletSnackbar,
+  closeEnkryptWalletSnackbar
 };

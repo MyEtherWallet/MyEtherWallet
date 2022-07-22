@@ -43,11 +43,11 @@
         </div>
         <div v-lottie="surpriseLottie" class="lottie" />
         <div class="btn-container">
-          <a
-            href="https://help.myetherwallet.com/en/"
-            target="_blank"
-            class="learn-more"
-            >Learn More</a
+          <mew-button
+            color-theme="#939fb9"
+            btn-style="transparent"
+            @click.native="openHelpCenter"
+            >Learn More</mew-button
           >
           <mew-button
             color-theme="#7E44F2"
