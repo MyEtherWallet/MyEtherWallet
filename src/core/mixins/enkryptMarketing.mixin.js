@@ -58,6 +58,7 @@ export default {
   },
   methods: {
     openEnkrypt() {
+      // eslint-disable-next-line
       window.open(
         this.isMobile ? 'https://enkrypt.com' : this.browserLink,
         '_blank'
@@ -77,6 +78,7 @@ export default {
           window.location.href = 'https://itunes.apple.com/app/id1464614025';
         }
       } else {
+        // eslint-disable-next-line
         window.open('https://www.mewwallet.com/', '_blank');
       }
     }

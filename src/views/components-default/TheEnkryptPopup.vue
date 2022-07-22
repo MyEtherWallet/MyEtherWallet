@@ -76,11 +76,11 @@ import imageOne from '@/assets/images/icons/enkrypt/promo1.png';
 import imageTwo from '@/assets/images/icons/enkrypt/promo2.png';
 import white from '@/assets/images/icons/enkrypt/icon-enkrypt-white.svg';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-import enkryptMarketingMixin from '@/core/mixins/enkryptMarketing.mixin.js';
+import enkryptMarketing from '@/core/mixins/enkryptMarketing.mixin.js';
 import { mapActions } from 'vuex';
 export default {
   name: 'TheEnkryptPopup',
-  mixins: [handlerAnalytics, enkryptMarketingMixin],
+  mixins: [handlerAnalytics, enkryptMarketing],
   data() {
     return {
       white: white,
@@ -111,6 +111,7 @@ export default {
   methods: {
     ...mapActions('popups', ['neverShowEnkryptLandingPage']),
     install() {
+      // eslint-disable-next-line
       window.open(this.browserLink, '_blank');
       this.trackEnkryptInstall();
       this.neverShowEnkryptLandingPage();
