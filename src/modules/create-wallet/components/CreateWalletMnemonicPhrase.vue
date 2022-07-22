@@ -354,6 +354,7 @@ export default {
      */
     createAnotherWallet() {
       this.extraWord = '';
+      this.validateMnemonicValues = {};
       this.updateStep(1);
     }
   }
