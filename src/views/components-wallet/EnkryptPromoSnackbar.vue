@@ -9,7 +9,6 @@
       left
       rounded
       transition="scale-transition"
-      content-class="mew-survey-content"
       style="padding-left: 20px"
     >
       <div class="d-flex justify-space-between flex-column">

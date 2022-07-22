@@ -49,13 +49,10 @@
               :has-full-width="false"
               btn-style="transparent"
               color-theme="white"
-              style="width: 280px; height: 50px"
+              btn-size="large"
+              @click.native="openEnkrypt"
             >
-              <img
-                class="mr-3"
-                src="@/assets/images/icons/icon-chrome.svg"
-                style="width: 25px; height: 25px"
-              />
+              <img class="mr-3 browser-icons" :src="browserLogo" />
               Get the Enkrypt Extension
             </mew-button>
             <mew-button
@@ -63,12 +60,12 @@
               :has-full-width="false"
               btn-style="transparent"
               color-theme="white"
-              style="width: 174px; height: 50px"
+              btn-size="large"
+              @click.native="openMewWallet"
             >
               <img
-                class="mr-2"
-                src="@/assets/images/icons/apple google.svg"
-                style="width: 55px; max-height: 55px"
+                class="mr-2 app-icons"
+                src="@/assets/images/icons/icon-apple-google.svg"
               />
               Get the app
             </mew-button>
@@ -134,11 +131,12 @@
 <script>
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import enkryptMarketing from '@/core/mixins/enkryptMarketing.mixin.js';
 
 export default {
   name: 'HomeLanding',
   components: {},
-  mixins: [handlerAnalytics],
+  mixins: [handlerAnalytics, enkryptMarketing],
   data() {
     return { ROUTES_HOME: ROUTES_HOME };
   },
@@ -171,5 +169,15 @@ export default {
 .extension-btns {
   color: white;
   background: rgba(0, 0, 0, 0.12);
+}
+
+.browser-icons {
+  width: 25px;
+  height: 25px;
+}
+
+.app-icons {
+  width: 55px;
+  max-height: 55px;
 }
 </style>

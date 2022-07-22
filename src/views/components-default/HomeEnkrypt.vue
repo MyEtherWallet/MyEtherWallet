@@ -35,13 +35,9 @@
               color-theme="#7E44F2"
               style="border-radius: 100px !important"
               btn-size="large"
+              @click.native="openEnkrypt"
             >
-              <img
-                src="@/assets/images/icons/icon-chrome.svg"
-                alt="Chrome"
-                height="25"
-                class="mr-2"
-              />
+              <img :src="browserLogo" alt="Chrome" height="25" class="mr-2" />
               <span class="font-weight-bold"> Get the extension </span>
             </mew-button>
           </a>
@@ -65,15 +61,11 @@
 </template>
 
 <script>
+import enkryptMarketing from '@/core/mixins/enkryptMarketing.mixin.js';
 export default {
   name: 'HomeEnkrypt',
-  components: {},
-  data: () => ({}),
-  computed: {
-    isMobile() {
-      return this.$vuetify.breakpoint.smAndDown;
-    }
-  }
+  mixins: [enkryptMarketing],
+  data: () => ({})
 };
 </script>
 

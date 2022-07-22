@@ -30,7 +30,6 @@ import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { Web3Wallet } from '@/modules/access-wallet/common';
 import Web3 from 'web3';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
-import WalletPromoSnackbar from '@/views/components-wallet/WalletPromoSnackbar';
 import EnkryptPromoSnackbar from '@/views/components-wallet/EnkryptPromoSnackbar';
 export default {
   components: {
@@ -39,7 +38,6 @@ export default {
     TheWalletHeader,
     TheWalletFooter,
     ModuleConfirmation,
-    WalletPromoSnackbar,
     EnkryptPromoSnackbar
   },
   mixins: [handlerWallet],

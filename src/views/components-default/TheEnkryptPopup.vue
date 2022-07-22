@@ -20,7 +20,7 @@
           src="@/assets/images/backgrounds/bg-enkrypt.png"
           alt="blob"
         />
-        <div class="mew-heading-2 heading mt-7">Enkrypt</div>
+        <img :src="white" alt="enkrypt logo" class="enkrypt-logo" />
         <div class="mew-heading-2 heading">
           Our official Browser Extension is here!
         </div>
@@ -72,16 +72,18 @@
   </div>
 </template>
 <script>
-import platform from 'platform';
 import imageOne from '@/assets/images/icons/enkrypt/promo1.png';
 import imageTwo from '@/assets/images/icons/enkrypt/promo2.png';
+import white from '@/assets/images/icons/enkrypt/icon-enkrypt-white.svg';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-import { mapState, mapActions } from 'vuex';
+import enkryptMarketingMixin from '@/core/mixins/enkryptMarketing.mixin.js';
+import { mapActions } from 'vuex';
 export default {
   name: 'TheEnkryptPopup',
-  mixins: [handlerAnalytics],
+  mixins: [handlerAnalytics, enkryptMarketingMixin],
   data() {
     return {
+      white: white,
       nfts: [
         {
           src: imageOne
@@ -89,29 +91,10 @@ export default {
         {
           src: imageTwo
         }
-      ],
-      extensionLinks: {
-        chrome: {
-          link: 'https://chrome.google.com/webstore',
-          img: require('@/assets/images/icons/icon-chrome.svg')
-        },
-        firefox: {
-          link: 'https://chrome.google.com/webstore',
-          img: require('@/assets/images/icons/icon-chrome.svg')
-        },
-        opera: {
-          link: 'https://chrome.google.com/webstore',
-          img: require('@/assets/images/icons/icon-chrome.svg')
-        },
-        default: {
-          link: 'https://chrome.google.com/webstore',
-          img: require('@/assets/images/icons/icon-chrome.svg')
-        }
-      }
+      ]
     };
   },
   computed: {
-    ...mapState('popups', ['enkryptLandingPopup']),
     checkedText() {
       return [
         'Lives in your favorite browser',
@@ -123,28 +106,6 @@ export default {
     },
     surpriseLottie() {
       return 'confetti';
-    },
-    browser() {
-      const browser = platform.name.toLowerCase();
-      if (
-        browser !== 'chrome' &&
-        browser !== 'firefox' &&
-        browser !== 'opera'
-      ) {
-        return 'default';
-      }
-      return browser;
-    },
-    text() {
-      return this.browser !== 'default'
-        ? `Install for ${platform.name}`
-        : 'Download Now';
-    },
-    browserLogo() {
-      return this.extensionLinks[this.browser].img;
-    },
-    browserLink() {
-      return this.extensionLinks[this.browser].link;
     }
   },
   methods: {
@@ -229,5 +190,8 @@ export default {
 .chrome-logo {
   width: 25px;
   height: 25px;
+}
+.enkrypt-logo {
+  z-index: 9999;
 }
 </style>

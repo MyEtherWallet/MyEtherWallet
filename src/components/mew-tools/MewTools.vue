@@ -52,14 +52,6 @@
               {{ item.description }}
             </div>
             <div v-if="item.imgDescription" class="d-flex align-center">
-              <img
-                v-for="(img, imgKey) in item.imgDescription.icons"
-                :key="imgKey"
-                class="mr-3"
-                :src="img"
-                alt=""
-                height="17"
-              />
               <div class="bluePrimary--text fw-500">
                 {{ item.imgDescription.label }}
               </div>
