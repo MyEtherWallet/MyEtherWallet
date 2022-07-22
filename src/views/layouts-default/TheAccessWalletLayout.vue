@@ -1,11 +1,9 @@
 <template>
   <div class="expandHeader">
     <v-container>
-      <!--
-      =====================================================================================
-        Layout Title
-      =====================================================================================
-      -->
+      <!-- ===================================================================================== -->
+      <!-- Layout Title -->
+      <!-- ===================================================================================== -->
       <the-layout-header
         :title="$t('home.access-my-wallet.title')"
         :subtitle-line-one="$t('home.access-my-wallet.subtitle-one')"
@@ -13,38 +11,33 @@
         :route-obj="titleRoute"
         has-link
       />
-      <!--
-      =====================================================================================
-        Options
-      =====================================================================================
-      -->
+
+      <!-- ===================================================================================== -->
+      <!-- Options -->
+      <!-- ===================================================================================== -->
       <div style="max-width: 650px" class="mx-auto">
         <mew-button
           v-for="(btn, key) in buttons"
           :key="key"
           has-full-width
-          class="mb-5 py-6"
+          class="mb-5 py-10 py-md-6"
           style="height: initial; min-height: 157px"
           :color-theme="btn.color"
           :btn-style="btn.style === 'outline' ? 'outline' : ''"
           @click.native="btn.fn"
         >
-          <div class="chip-official d-flex align-center">
-            <v-icon size="15px" class="mr-1">mdi-shield-check</v-icon>
-            <div
-              class="font-weight-medium letter-spacing--initial line-height--initial"
-            >
-              Official
-            </div>
-          </div>
           <div class="width--full d-flex align-center text-left">
-            <img
+            <div
               v-if="btn.icon && !isMobile"
-              class="ml-5 mr-6"
-              :src="btn.icon"
-              :alt="btn.alt"
-              style="height: 70px"
-            />
+              style="min-width: 113px"
+              class="d-flex justify-center"
+            >
+              <img
+                :src="btn.icon"
+                :alt="btn.alt"
+                :style="btn.height ? `height: ${btn.height}` : 'height: 71px'"
+              />
+            </div>
             <div class="px-3">
               <div class="d-flex align-center">
                 <img
@@ -54,9 +47,42 @@
                   :alt="btn.alt"
                   style="height: 40px"
                 />
-
-                <div class="mew-heading-2 break-word letter-spacing--initial">
+                <div
+                  class="mew-heading-2 break-word letter-spacing--initial mr-auto"
+                >
                   {{ btn.title }}
+                </div>
+
+                <!-- ===================================================================================== -->
+                <!-- Official -->
+                <!-- ===================================================================================== -->
+                <div
+                  v-if="btn.official"
+                  class="ml-3 chip-official d-flex align-center"
+                  :class="isMobile ? 'mobile' : ''"
+                >
+                  <v-icon size="14px" class="mr-1">mdi-shield-check</v-icon>
+                  <div
+                    class="line-height--none font-weight-medium letter-spacing--initial line-height--initial"
+                  >
+                    Official
+                  </div>
+                </div>
+
+                <!-- ===================================================================================== -->
+                <!-- Not recommended -->
+                <!-- ===================================================================================== -->
+                <div
+                  v-if="btn.notRecommended"
+                  class="ml-3 chip-not-recommended d-flex align-center"
+                  :class="isMobile ? 'mobile' : ''"
+                >
+                  <v-icon size="15px" class="mr-1">mdi-shield-alert</v-icon>
+                  <div
+                    class="line-height--none font-weight-medium letter-spacing--initial line-height--initial"
+                  >
+                    Not recommended
+                  </div>
                 </div>
               </div>
               <div
@@ -67,52 +93,11 @@
             </div>
           </div>
         </mew-button>
-
-        <!--
-            <div
-              class="px-2 text-left d-flex align-center justify-space-between"
-              :class="
-                btn.style === 'outline' ? 'white--text' : 'textDark--text'
-              "
-              style="width: 100%"
-            >
-              <div>
-                <div class="mb-2 d-flex align-center">
-                  <div class="mew-heading-2">{{ btn.title }}</div>
-                  <v-icon dense :color="btn.titleIconClass" class="ml-1">
-                    {{ btn.titleIcon }}
-                  </v-icon>
-                </div>
-                <div class="break-word">
-                  {{ btn.subtitle }}
-                </div>
-              </div>
-              <div class="d-none d-sm-flex align-center pl-5">
-                <img
-                  v-if="btn.rightIcon"
-                  class="mew-wallet-img"
-                  :src="btn.rightIcon"
-                  :alt="btn.rightIcon"
-                  style="height: 90px"
-                />
-                <img
-                  v-for="(icon, index) in btn.rightIcons"
-                  v-else
-                  :key="index"
-                  :src="icon"
-                  width="70"
-                  class="px-2"
-                />
-              </div>
-            </div>
-            -->
       </div>
 
-      <!--
-      =====================================================================================
-        Acccess Wallet Module Overlays - activate on Options Button click
-      =====================================================================================
-      -->
+      <!-- ===================================================================================== -->
+      <!-- Acccess Wallet Module Overlays - activate on Options Button click -->
+      <!-- ===================================================================================== -->
       <div class="spacer-y-medium" />
       <module-access-wallet-mobile :open="showMobile" :close="close" />
       <module-access-wallet-hardware :open="showHardware" :close="close" />
@@ -218,11 +203,12 @@ export default {
             title: 'Install Enkrypt browser extension',
             subtitle:
               'MEW’s official browser extension. Connect to web3 on Ethereum and Polkadot, manage your NFTs, buy, send and swap',
-            note: '',
-            icon: require('@/assets/images/icons/icon-enkrypt-block.svg'),
+            icon: require('@/assets/images/icons/icon-enkrypt-gradient.svg'),
+            height: '55px',
             alt: 'Enkrypt',
+            official: true,
             fn: () => {
-              this.openMEWconnect();
+              window.open('https://enkrypt.com', '_blank');
             }
           },
           /* MEW wallet Button */
@@ -231,11 +217,36 @@ export default {
             title: 'Download MEW wallet app',
             subtitle:
               'Our official mobile app to create your wallet, and connect to MEW Web using your mobile phone',
-            note: '',
             icon: require('@/assets/images/icons/icon-mew-wallet.png'),
+            height: '',
             alt: 'MEW wallet',
+            official: true,
             fn: () => {
-              this.openMEWconnect();
+              window.open('https://www.mewwallet.com/', '_blank');
+            }
+          },
+          /* Browser Extension */
+          {
+            color: 'white',
+            title: 'Browser Extension',
+            subtitle: 'Use your web3 wallet with MEW.',
+            alt: 'Browser Extension',
+            icon: require('@/assets/images/icons/icon-browser-extension.svg'),
+            height: '53px',
+            fn: () => {
+              this.openWeb3Wallet();
+            }
+          },
+          /* Mobile Apps */
+          {
+            color: 'white',
+            title: 'Mobile Apps',
+            subtitle: 'WalletConnect, WalletLink',
+            icon: require('@/assets/images/icons/icon-mobile-apps.svg'),
+            height: '70px',
+            alt: 'Hardware Wallets',
+            fn: () => {
+              this.openOverlay(ACCESS_VALID_OVERLAYS.MOBILE);
             }
           },
           /* Hardware Wallet */
@@ -244,11 +255,11 @@ export default {
             title: 'Buy a hardware wallet',
             subtitle:
               'For the highest standard of security, buy a hardware wallet and us it with MEW',
-            note: '',
             icon: require('@/assets/images/icons/icon-hardware-wallet.png'),
+            height: '',
             alt: 'Hardware Wallets',
             fn: () => {
-              this.openOverlay(ACCESS_VALID_OVERLAYS.HARDWARE);
+              this.$router.push({ name: ROUTES_HOME.BUY_HARDWARE_WALLET.NAME });
             }
           },
           /* Software */
@@ -258,7 +269,7 @@ export default {
             title: 'Software',
             subtitle:
               'Software Methods like Keystore file and Mnemonic phrase should only be used in offline msettings by experienced users',
-            note: 'NOT RECOMMENDED',
+            notRecommended: true,
             fn: () => {
               this.openOverlay(ACCESS_VALID_OVERLAYS.SOFTWARE);
             }
@@ -370,8 +381,26 @@ export default {
   color: white;
   padding: 6px 10px;
   border-radius: 30px;
-  position: absolute;
-  top: 5px;
-  right: 5px;
+
+  &.mobile {
+    background-color: transparent;
+    color: var(--v-greenPrimary-base);
+    position: absolute;
+    top: -32px;
+    right: -17px;
+  }
+}
+
+.chip-not-recommended {
+  background-color: transparent;
+  color: var(--v-orangePrimary-base);
+  padding: 6px 10px;
+  border-radius: 30px;
+
+  &.mobile {
+    position: absolute;
+    top: -32px;
+    right: -17px;
+  }
 }
 </style>

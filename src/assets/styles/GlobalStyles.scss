@@ -111,6 +111,10 @@ h6 {
   line-height: initial !important;
 }
 
+.line-height--none {
+  line-height: 0 !important;
+}
+
 /* ========== Cursor ========== */
 .pointer-event--none {
   pointer-events: none;
