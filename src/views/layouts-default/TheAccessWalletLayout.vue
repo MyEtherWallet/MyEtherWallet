@@ -45,7 +45,7 @@
                   class="mr-4"
                   :src="btn.icon"
                   :alt="btn.alt"
-                  style="height: 40px"
+                  style="width: 40px"
                 />
                 <div
                   class="mew-heading-2 break-word letter-spacing--initial mr-auto"
