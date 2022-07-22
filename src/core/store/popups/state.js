@@ -10,7 +10,9 @@ const state = {
   showEnkryptPromo: true,
   promoOver: false,
   enkryptLandingPopup: true,
-  enkryptLandingPopupClosed: 0
+  enkryptLandingPopupClosed: 0,
+  enkryptWalletPopup: true,
+  enkryptWalletPopupClosed: 0
 };
 
 export default state;

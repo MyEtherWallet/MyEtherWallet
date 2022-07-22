@@ -5,7 +5,7 @@
       <router-view />
     </v-main>
     <the-default-footer />
-    <the-enkrypt-popup />
+    <the-enkrypt-popup :show="enkryptLandingPopup" />
   </div>
 </template>
 
@@ -13,12 +13,16 @@
 import TheDefaultHeader from './components-default/TheDefaultHeader';
 import TheDefaultFooter from './components-default/TheDefaultFooter';
 import TheEnkryptPopup from './components-default/TheEnkryptPopup';
+import { mapState } from 'vuex';
 export default {
   name: 'TheDefaultView',
   components: {
     TheDefaultHeader,
     TheDefaultFooter,
     TheEnkryptPopup
+  },
+  computed: {
+    ...mapState('popups', ['enkryptLandingPopup'])
   }
 };
 </script>

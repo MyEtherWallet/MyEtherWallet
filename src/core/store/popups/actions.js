@@ -33,9 +33,14 @@ const setTracking = function ({ state }) {
 const neverShowEnkryptLandingPage = function ({ commit }) {
   commit('NEVER_SHOW_LANDING_ENKRYPT_POPUP');
 };
+
+const neverShowEnkryptWalletPage = function ({ commit }) {
+  commit('NEVER_SHOW_WALLET_ENKRYPT_POPUP');
+};
 export default {
   setTrackingConsent,
   setTracking,
   neverShowEnkryptPromo,
-  neverShowEnkryptLandingPage
+  neverShowEnkryptLandingPage,
+  neverShowEnkryptWalletPage
 };

@@ -1,15 +1,11 @@
 <template>
   <div class="mew-component--enkrypt">
     <mew-popup
-      :show="enkryptLandingPopup"
+      :show="show"
       :has-buttons="false"
       :has-title="false"
       :has-padding="false"
-      :left-btn="{
-        text: 'Cancel',
-        color: 'basic',
-        method: neverShowEnkryptLandingPage
-      }"
+      :left-btn="leftBtn"
       max-width="430"
       has-body-content
       class="popup"
@@ -81,6 +77,12 @@ import { mapActions } from 'vuex';
 export default {
   name: 'TheEnkryptPopup',
   mixins: [handlerAnalytics, enkryptMarketing],
+  props: {
+    show: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
       white: white,
@@ -106,15 +108,32 @@ export default {
     },
     surpriseLottie() {
       return 'confetti';
+    },
+    leftBtn() {
+      return {
+        text: 'Cancel',
+        color: 'basic',
+        method: this.close
+      };
     }
   },
   methods: {
-    ...mapActions('popups', ['neverShowEnkryptLandingPage']),
+    ...mapActions('popups', [
+      'neverShowEnkryptLandingPage',
+      'neverShowEnkryptWalletPage'
+    ]),
     install() {
       // eslint-disable-next-line
       window.open(this.browserLink, '_blank');
       this.trackEnkryptInstall();
-      this.neverShowEnkryptLandingPage();
+      this.close();
+    },
+    close() {
+      if (this.enkryptLandingPopup) {
+        this.neverShowEnkryptLandingPage();
+      } else {
+        this.neverShowEnkryptWalletPage();
+      }
     }
   }
 };

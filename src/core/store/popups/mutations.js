@@ -35,11 +35,17 @@ const NEVER_SHOW_LANDING_ENKRYPT_POPUP = function (state) {
   state.enkryptLandingPopupClosed = new Date().getTime();
 };
 
+const NEVER_SHOW_WALLET_ENKRYPT_POPUP = function (state) {
+  state.enkryptWalletPopup = false;
+  state.enkryptWalletPopupClosed = new Date().getTime();
+};
+
 export default {
   INIT_STORE,
   SET_TRACKING_CONSENT,
   NEVER_SHOW_TRACKING,
   NEVER_SHOW_BANNER,
   NEVER_SHOW_ENKRYPT_PROMO,
-  NEVER_SHOW_LANDING_ENKRYPT_POPUP
+  NEVER_SHOW_LANDING_ENKRYPT_POPUP,
+  NEVER_SHOW_WALLET_ENKRYPT_POPUP
 };

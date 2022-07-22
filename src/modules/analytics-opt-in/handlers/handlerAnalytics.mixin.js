@@ -20,7 +20,7 @@ export default {
         new Date(),
         'hours'
       );
-      if (!this.enkryptLandingPopup && dayAgo === 24) {
+      if (!this.enkryptLandingPopup && dayAgo >= 24) {
         return this.displayedTrackingPopup;
       }
       return true;
