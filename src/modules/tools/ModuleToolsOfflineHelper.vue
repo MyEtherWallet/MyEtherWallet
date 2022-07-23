@@ -44,14 +44,11 @@
       :has-indicator="true"
     >
       <template #moduleBody>
-        <mew-stepper :items="stepperItems" :on-step="currentStep"></mew-stepper>
-
-        <h5
-          v-if="$vuetify.breakpoint.mdAndDown"
-          class="text-center font-weight-medium"
-        >
-          {{ stepperItems[currentStep - 1].name }}
-        </h5>
+        <mew-stepper
+          :compact="$vuetify.breakpoint.smAndDown"
+          :items="stepperItems"
+          :on-step="currentStep"
+        ></mew-stepper>
 
         <div v-if="currentStep === 1">
           <v-sheet color="transparent" max-width="600px" class="mx-auto py-10">

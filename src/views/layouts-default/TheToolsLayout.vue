@@ -7,7 +7,7 @@
 
     <v-container class="px-3 my-12">
       <mew-tabs
-        :is-vertical="$vuetify.breakpoint.smAndDown ? false : true"
+        :compact="$vuetify.breakpoint.smAndDown"
         :items="items"
         :active-tab="activeTab"
         show-arrows
@@ -35,6 +35,7 @@
 </template>
 
 <script>
+import MewTabs from '@/components/MewTabs';
 import TheLayoutHeader from '../components-default/TheLayoutHeader';
 import AppGetStarted from '@/core/components/AppGetStarted';
 import ModuleToolsWatchOnly from '@/modules/tools/ModuleToolsWatchOnly';
@@ -47,6 +48,7 @@ import { ROUTES_HOME } from '@/core/configs/configRoutes';
 export default {
   name: 'TheToolsLayout',
   components: {
+    MewTabs,
     TheLayoutHeader,
     AppGetStarted,
     ModuleToolsWatchOnly,
