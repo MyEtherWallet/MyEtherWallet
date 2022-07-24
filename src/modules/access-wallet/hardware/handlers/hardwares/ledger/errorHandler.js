@@ -70,7 +70,9 @@ const WARNINGS = {
   "U2F browser support is needed for Ledger. Please use Chrome, Opera or Firefox with a U2F extension. Also make sure you're on an HTTPS connection":
     'ledgerError.unsupported-browser-u2f',
   'Ledger device: Incorrect length (0x6700)':
-    'Wrong or No app selected in Ledger Device'
+    'Wrong or No app selected in Ledger Device',
+  "Failed to execute 'transferIn' on 'USBDevice': A transfer error has occurred.":
+    'Please confirm app on Ledger device to continue'
 };
 
 export default WalletErrorHandler(ERRORS, WARNINGS);

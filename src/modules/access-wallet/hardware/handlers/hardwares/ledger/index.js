@@ -1,4 +1,9 @@
 import Ledger from '@ledgerhq/hw-app-eth';
+import getDeviceInfo from '@ledgerhq/live-common/lib/hw/getDeviceInfo';
+import openApp from '@ledgerhq/live-common/lib/hw/openApp';
+import getAppAndVersion from '@ledgerhq/live-common/lib/hw/getAppAndVersion';
+import { DeviceOnDashboardExpected } from '@ledgerhq/errors';
+import { appNames } from './config';
 import { byContractAddressAndChainId } from '@ledgerhq/hw-app-eth/erc20';
 import { Transaction, FeeMarketEIP1559Transaction } from '@ethereumjs/tx';
 import webUsbTransport from '@ledgerhq/hw-transport-webusb';
@@ -41,12 +46,17 @@ class ledgerWallet {
     };
   }
   async init(basePath, bluetooth) {
+    const network = store.getters['global/network'].type.name_long;
     this.basePath = basePath ? basePath : this.supportedPaths[0].path;
     this.isHardened = this.basePath.toString().split('/').length - 1 === 2;
     this.transport = bluetooth
       ? await getLedgerXTransport()
       : await getLedgerTransport();
-    this.ledger = new Ledger(this.transport);
+
+    await connectToApp(this.transport, network).then(result => {
+      if (result) this.ledger = new Ledger(this.transport);
+    });
+
     if (!this.isHardened) {
       const rootPub = await getRootPubKey(this.ledger, this.basePath);
       this.hdKey = new HDKey();
@@ -226,6 +236,32 @@ const getRootPubKey = async (_ledger, _path) => {
     publicKey: pubObj.publicKey,
     chainCode: pubObj.chainCode
   };
+};
+
+const connectToApp = async (transport, network) => {
+  return getDeviceInfo(transport)
+    .then(() =>
+      openApp(transport, appNames[network])
+        .then(() => true)
+        .catch(() => {
+          throw new Error(
+            `Make sure you have ${appNames[network]} App installed on your ledger`
+          );
+        })
+    )
+    .catch(e => {
+      if (e instanceof DeviceOnDashboardExpected) {
+        return getAppAndVersion(transport).then(appInfo => {
+          if (appInfo.name !== appNames[network]) {
+            throw new Error(
+              `Make sure you have ${appNames[network]} App opened`
+            );
+          }
+          return true;
+        });
+      }
+      throw e;
+    });
 };
 
 export default createWallet;
