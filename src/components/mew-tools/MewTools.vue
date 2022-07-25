@@ -100,7 +100,7 @@ export default {
                 label: 'Get the extension'
               },
               img: require('@/assets/images/icons/icon-enkrypt.svg'),
-              link: 'https://chrome.google.com/webstore/category/extensions'
+              link: 'https://chrome.google.com/webstore/detail/enkrypt/kkpllkodjeloidieedojogacfhpaihoh?hl=en'
             }
           ]
         },

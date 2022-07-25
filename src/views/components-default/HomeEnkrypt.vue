@@ -27,7 +27,7 @@
           </div>
 
           <a
-            href="https://chrome.google.com/webstore/category/extensions"
+            href="https://chrome.google.com/webstore/detail/enkrypt/kkpllkodjeloidieedojogacfhpaihoh?hl=en"
             target="_blank"
           >
             <mew-button

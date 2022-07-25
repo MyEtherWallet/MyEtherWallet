@@ -135,10 +135,10 @@
                 <br />
                 Chrome Web Store:
                 <a
-                  href="https://chrome.google.com/webstore/category/extensions"
+                  href="https://chrome.google.com/webstore/detail/enkrypt/kkpllkodjeloidieedojogacfhpaihoh?hl=en"
                   target="_blank"
                 >
-                  https://chrome.google.com/webstore/category/extensions
+                  https://chrome.google.com/webstore/detail/enkrypt/kkpllkodjeloidieedojogacfhpaihoh?hl=en
                 </a>
               </div>
             </div>
