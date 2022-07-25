@@ -209,7 +209,9 @@
     "keccak": "3.0.1",
     "diff": "3.5.0",
     "ejs": "3.1.7",
-    "parse-path": "5.0.0"
+    "parse-path": "5.0.0",
+    "terser": "4.8.1",
+    "@openzeppelin/contracts": "4.7.1"
   },
   "license": "MIT",
   "repository": "https://github.com/myetherwallet/myetherwallet"
