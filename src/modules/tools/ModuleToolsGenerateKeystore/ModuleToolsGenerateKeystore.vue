@@ -10,6 +10,7 @@
       <!-- Staked MEW Stepper -->
       <!-- =================================================== -->
       <mew-stepper
+        :compact="$vuetify.breakpoint.smAndDown"
         :items="stepperItems"
         :on-step="onStep"
         @onContinue="nextStep"
