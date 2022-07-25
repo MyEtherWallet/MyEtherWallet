@@ -676,7 +676,7 @@ export default {
         setEvents(promiEvent, _tx, this.$store.dispatch);
         promiEvent.once('transactionHash', hash => {
           const storeKey = sha3(
-            `${this.network.type.name}-${this.address.toLowerCase()}`
+            `${this.network.type.name}-${this?.address.toLowerCase()}`
           );
           const localStoredObj = locStore.get(storeKey);
           locStore.set(storeKey, {
