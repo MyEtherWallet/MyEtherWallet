@@ -1,29 +1,24 @@
 <template>
   <div class="enkrypt-not-found-snackbar">
-    <v-snackbar
-      :value="show"
-      vertical
-      width="360px"
-      min-width="360px"
-      height="212px"
-      right
-      light
-      transition="scale-transition"
-      :timeout="-1"
-      multi-line
+    <mew-popup
+      :show="show"
+      :has-buttons="false"
+      :has-title="false"
+      :has-padding="false"
+      :left-btn="leftBtn"
+      max-width="430"
+      has-body-content
+      class="popup"
     >
       <div
         class="enkrypt-not-found-content-container pa-6 height--full width--full d-flex flex-column"
       >
-        <div class="d-flex justify-space-between align-center">
+        <div class="d-flex align-center">
           <img
             alt="enkrypt logo"
             src="@/assets/images/icons/enkrypt/icon-enkrypt-colored.svg"
             height="20px"
           />
-          <v-icon class="cursor--pointer" medium @click="emitClose"
-            >mdi-close</v-icon
-          >
         </div>
         <div class="mew-heading-4">
           Please install Enkrypt or enable it in your <br />
@@ -42,7 +37,7 @@
           </mew-button>
         </div>
       </div>
-    </v-snackbar>
+    </mew-popup>
   </div>
 </template>
 
@@ -59,7 +54,15 @@ export default {
   data() {
     return {};
   },
-  computed: {},
+  computed: {
+    leftBtn() {
+      return {
+        text: 'Cancel',
+        color: 'basic',
+        method: this.emitClose
+      };
+    }
+  },
   mounted() {},
   methods: {
     emitClose() {

@@ -35,9 +35,9 @@
           <div
             v-for="cText in checkedText"
             :key="cText"
-            class="text-left d-flex"
+            class="text-left d-flex align-center"
           >
-            <img src="@/assets/images/icons/enkrypt/check.svg" class="mr-3" />
+            <div class="purple-dots mr-1" />
             <div>{{ cText }}</div>
           </div>
         </div>
@@ -132,13 +132,21 @@ export default {
       if (this.enkryptLandingPopup) {
         this.neverShowEnkryptLandingPage();
       } else {
-        this.neverShowEnkryptWalletPage();
+        this.$emit('tempClose');
+        // this.neverShowEnkryptWalletPage();
       }
     }
   }
 };
 </script>
 <style lang="scss" scoped>
+.purple-dots {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #974bff;
+}
+
 .popup-container {
   min-height: 706px;
   display: flex;

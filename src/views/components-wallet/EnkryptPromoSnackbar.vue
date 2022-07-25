@@ -1,7 +1,7 @@
 <template>
   <div class="enkrypt-promo-snackbar">
     <v-snackbar
-      :value="enkryptWalletSnackbar"
+      :value="true"
       width="380px"
       height="200px"
       :timeout="-1"

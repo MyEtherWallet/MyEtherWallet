@@ -23,7 +23,7 @@ export default {
   },
   computed: {
     ...mapState('popups', ['enkryptLandingPopup']),
-    ...mapState('wallet', ['isOfflineAppe'])
+    ...mapState('wallet', ['isOfflineApp'])
   }
 };
 </script>
