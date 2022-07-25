@@ -1,3 +1,6 @@
+### v5.8.9
+
+* CX deprecation notice update
 ### v5.8.8
 
 ### Fixes

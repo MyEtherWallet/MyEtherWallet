@@ -87,7 +87,20 @@ const EXCEPTIONS = [
   'fuse.js',
   'imagemin-mozjpeg',
   'vue-i18n',
-  'stylelint-config-prettier'
+  'stylelint-config-prettier',
+  'moment',
+  'vue',
+  'vue-chartjs',
+  'vue-router',
+  'vuex',
+  'walletlink',
+  'xss',
+  'bitbox02-api',
+  'eslint',
+  'eslint-plugin-security',
+  'jest-canvas-mock',
+  'sinon',
+  'trezor-connect'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

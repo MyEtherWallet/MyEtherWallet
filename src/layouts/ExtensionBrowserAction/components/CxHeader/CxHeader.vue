@@ -1,5 +1,17 @@
 <template>
   <div class="cx-menu-container">
+    <div class="deprecation-notice">
+      MEW CX will not longer be supported on <b>October 4th, 2022 </b> <br />
+
+      Hello user! MEW will be sunsetting MEW CX in favor of our new browser
+      extension wallet Enkrypt. <br />We highly recommend downloading Enkrypt
+      from the Chrome Store and migrating your assets. <br />Enkrypt is taking
+      the lessons learned from MEW CX, improving upon them, as well as embracing
+      the multichain future. <br />Again, after <b>October 4th, 2022 </b>, MEW
+      CX will no longer be maintained or updated by our developers.<br />
+      Download Enkrypt here:
+      <a href="https://enkrypt.com">Enkrypt</a>
+    </div>
     <settings-modal
       v-if="address !== null"
       ref="settings"
@@ -311,6 +323,12 @@ export default {
       background-color: $mew-green !important;
     }
   }
+}
+
+.deprecation-notice {
+  background-color: #fff6e6;
+  padding: 30px;
+  text-align: center;
 }
 </style>
 
