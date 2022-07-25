@@ -18,7 +18,9 @@ const AUDIT_EXCEPTIONS = [
   'scss-tokenizer',
   // no package found
   'codecov',
-  'scss-tokenizer'
+  'lodash',
+  '@openzeppelin/contracts',
+  'terser'
 ];
 const execute = (command, callback) => {
   exec(
