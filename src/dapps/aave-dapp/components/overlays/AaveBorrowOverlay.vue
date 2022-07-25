@@ -187,7 +187,7 @@ export default {
       this.selectedToken = {};
       this.borrowTitle = AAVE_TABLE_TITLE.borrow;
       this.amount = '0';
-      this.close();
+      this.close(false);
     },
     handleContinue(apr) {
       this.apr = apr;

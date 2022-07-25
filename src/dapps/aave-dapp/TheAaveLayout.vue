@@ -514,9 +514,7 @@ export default {
       console.log('tokenSelected', this.tokenSelected);
       console.log('preSelectedToken', this.preSelectedToken);
       /* eslint-enable no-console */
-      if (newVal === undefined) {
-        this.showDepositOverlay = false;
-      }
+      if (!newVal) this.tokenSelected = {};
     },
     showBorrowOverlay(newVal) {
       if (!newVal) this.tokenSelected = {};
@@ -524,6 +522,7 @@ export default {
   },
   methods: {
     toggleDepositOverlay(boolean) {
+      console.log('toggleDepositOverlay', boolean);
       if (boolean === false) {
         this.tokenSelected = {};
       }

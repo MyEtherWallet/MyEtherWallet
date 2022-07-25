@@ -171,7 +171,6 @@ export default {
   watch: {
     preSelectedToken(newVal) {
       if (newVal && !isEmpty(newVal)) {
-        console.log('preselectedTokenChanged', newVal);
         this.handleSelectedDeposit(this.preSelectedToken);
       }
       console.log('depositPreselectedToken', this.preSelectedToken);
@@ -179,10 +178,6 @@ export default {
     open(newVal, oldVal) {
       console.log('open(old)', oldVal);
       console.log('open', newVal);
-      if (!newVal) {
-        this.selectedToken = {};
-        this.step = 0;
-      }
     }
   },
   methods: {
@@ -202,7 +197,7 @@ export default {
       this.amount = '0';
       this.depositTitle = AAVE_TABLE_TITLE.deposit;
 
-      this.close();
+      this.close(false);
     },
     handleConfirm() {
       const amount = toBase(this.amount, this.selectedTokenDetails.decimals);
