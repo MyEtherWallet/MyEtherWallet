@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="module-tokens-value">
     <mew6-white-sheet class="px-5 px-lg-7 py-5 d-flex justify-space-between">
       <v-row no-gutters>
         <v-col cols="12">
@@ -19,7 +19,10 @@
         <v-col v-if="showTokens" cols="12" class="mt-3">
           <v-row justify="start">
             <v-col v-for="(img, idx) in tokenImages" :key="idx + img" cols="2">
-              <img :src="img" height="32px" />
+              <mew-token-container
+                size="medium"
+                :img="img"
+              ></mew-token-container>
             </v-col>
             <v-col v-if="tokensList.length > 1" cols="2">
               <div class="circled-total" @click="handleTokensPopup">
