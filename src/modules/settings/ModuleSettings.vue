@@ -49,7 +49,7 @@
 
           <div class="d-flex justify-center mt-5">
             <mew-button
-              :disabled="addressBookStore.length > 10"
+              :disabled="addressBookStore.length >= 10"
               title="+ Add"
               btn-size="xlarge"
               @click.native="addMode = !addMode"
