@@ -210,6 +210,7 @@
     "keccak": "3.0.1",
     "diff": "3.5.0",
     "ejs": "3.1.7",
+    "parse-url": "6.0.1",
     "parse-path": "5.0.0"
   },
   "license": "MIT",
