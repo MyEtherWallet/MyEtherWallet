@@ -1353,8 +1353,7 @@ export default {
               // Remove the quote
               this.availableQuotes.splice(index, 1);
             }
-            // Hide the 404 & 500 Error Toast
-            Toast('There was an issue with the provider', {}, ERROR);
+            this.feeError = 'There was an issue with the provider';
             return;
           }
           if (this.tokenInValue === this.cachedAmount) {
