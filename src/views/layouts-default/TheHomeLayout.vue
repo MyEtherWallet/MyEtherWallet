@@ -1,8 +1,8 @@
 <template>
   <div>
     <home-landing />
-    <home-enkrypt />
     <home-features />
+    <home-enkrypt />
     <home-eth-blocks />
     <home-socials />
     <home-why-mew />

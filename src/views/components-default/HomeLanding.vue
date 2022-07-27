@@ -45,22 +45,24 @@
           </div>
           <div class="d-flex">
             <mew-button
-              class="extension-btns chrome-extension mt-5"
+              class="extension-btns chrome-extension mt-5 mr-2"
               :has-full-width="false"
               btn-style="transparent"
               color-theme="white"
               btn-size="large"
+              style="border-radius: 40px !important"
               @click.native="openEnkrypt"
             >
               <img class="mr-3 browser-icons" :src="browserLogo" />
               Get the Enkrypt Extension
             </mew-button>
             <mew-button
-              class="extension-btns app-extension mt-5 ml-5"
+              class="extension-btns app-extension mt-5"
               :has-full-width="false"
               btn-style="transparent"
               color-theme="white"
               btn-size="large"
+              style="border-radius: 40px !important"
               @click.native="openMewWallet"
             >
               <img

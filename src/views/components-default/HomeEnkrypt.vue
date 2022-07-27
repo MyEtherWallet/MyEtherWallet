@@ -1,11 +1,14 @@
 <template>
-  <div class="home--enkrypt" :class="isMobile ? '' : 'bg'">
+  <div class="home--enkrypt" :class="bgStyle">
     <v-container class="product-info-container">
       <v-row class="justify-space-between">
+        <!-- ============================================================================= -->
+        <!-- Left section -->
+        <!-- ============================================================================= -->
         <v-col
           cols="12"
           md="5"
-          class="product-contexts"
+          class="product-contexts position-relative"
           :style="
             isMobile
               ? 'padding-top: 70px'
@@ -19,33 +22,55 @@
             class="mb-4"
           />
           <div class="text-title mb-5">
-            Enkrypt - MEW's mulitchain browser extension
+            Introducing MEW’s multichain wallet extension
           </div>
-          <div class="text-subtitle mb-10">
+          <div class="text-subtitle mb-md-10" style="color: #60666d">
             Use thousands of web3 apps across multiple networks, buy crypto,
             swap tokens, and manage your NFTs. Welcome to the multichain future.
           </div>
 
-          <a
-            href="https://chrome.google.com/webstore/detail/enkrypt/kkpllkodjeloidieedojogacfhpaihoh?hl=en"
-            target="_blank"
-          >
-            <mew-button
-              class="extension-btn"
-              color-theme="#7E44F2"
-              style="border-radius: 100px !important"
-              btn-size="large"
-              @click.native="openEnkrypt"
-            >
-              <img :src="browserLogo" alt="Chrome" height="25" class="mr-2" />
-              <span class="font-weight-bold"> Get the extension </span>
-            </mew-button>
-          </a>
+          <div class="text-center text-md-left">
+            <img
+              class="cx-previews-mobile d-inline d-md-none"
+              src="@/assets/images/snippets/snippet-cx-previews.png"
+              alt="Enkrypt"
+            />
+            <div>
+              <a
+                href="href=https://chrome.google.com/webstore/detail/enkrypt/kkpllkodjeloidieedojogacfhpaihoh?hl=en"
+                target="_blank"
+              >
+                <mew-button
+                  class="extension-btn"
+                  color-theme="#7E44F2"
+                  style="border-radius: 100px !important"
+                  btn-size="large"
+                  @click.native="openEnkrypt"
+                >
+                  <img
+                    :src="browserLogo"
+                    alt="Chrome"
+                    height="25"
+                    class="mr-2"
+                  />
+                  <span class="font-weight-bold"> Install for Chrome </span>
+                </mew-button>
+              </a>
+              <a
+                class="text-decoration-underline textSecondary--text ml-5"
+                href="https://enkrypt.com"
+                target="_blank"
+                >Learn more</a
+              >
+            </div>
+          </div>
         </v-col>
 
-        <v-col cols="12" md="7" class="product-images">
+        <!-- ============================================================================= -->
+        <!-- Right section -->
+        <!-- ============================================================================= -->
+        <v-col cols="12" md="7" class="d-none d-md-block position-relative">
           <img
-            class="cx-previews"
             src="@/assets/images/snippets/snippet-cx-previews.png"
             alt="Enkrypt"
             :style="
@@ -64,8 +89,23 @@
 import enkryptMarketing from '@/core/mixins/enkryptMarketing.mixin.js';
 export default {
   name: 'HomeEnkrypt',
+  components: {},
   mixins: [enkryptMarketing],
-  data: () => ({})
+  data: () => ({}),
+  computed: {
+    bgStyle() {
+      if (
+        this.$vuetify.breakpoint.mdAndUp &&
+        this.$vuetify.breakpoint.width < 2300
+      ) {
+        return 'bgLarge';
+      }
+      if (this.$vuetify.breakpoint.width >= 2300) {
+        return 'bgXLarge';
+      }
+      return 'bgSmall';
+    }
+  }
 };
 </script>
 
@@ -88,38 +128,41 @@ export default {
 
 <style lang="scss" scoped>
 .home--enkrypt {
-  margin-top: -88px;
-  background-color: var(--v-backgroundGrey-base);
-
-  &.bg {
+  background-color: #eeeeee;
+  &.bgSmall {
     background-image: url('~@/assets/images/snippets/snippet-circle-blue.svg');
-    background-position: top -626px right -304px;
-    background-size: 1130px;
+    background-position: top 191px right calc(50% - 415px);
+    background-size: 725px;
   }
-}
-.product-info-container {
+  &.bgLarge {
+    background-image: url('~@/assets/images/snippets/snippet-circle-blue.svg');
+    background-position: top -933px right calc(50% - 717px);
+    background-size: 1468px;
+  }
+  &.bgXLarge {
+    background-image: url('~@/assets/images/snippets/snippet-circle-blue.svg');
+    background-position: top -515px right calc(50% - 550px);
+    background-size: 994px;
+  }
 }
 .product-contexts {
   .text-title {
-    font-size: 48px;
+    font-size: 32px;
     font-weight: 700;
-    line-height: 64px;
+    line-height: 44px;
     letter-spacing: 0px;
   }
   .text-subtitle {
     font-size: 18px;
   }
-  .download-button {
-    img {
-      border: 2px solid white;
-      border-radius: 50%;
-    }
-  }
 }
-
-.product-images {
+.cx-previews-mobile {
+  width: 85vw;
+}
+.position-relative {
   position: relative;
-  .cx-previews {
-  }
+}
+.no-line-height {
+  line-height: 0;
 }
 </style>
