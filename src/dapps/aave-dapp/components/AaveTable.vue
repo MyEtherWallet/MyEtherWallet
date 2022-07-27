@@ -63,6 +63,7 @@ import {
   AAVE_TABLE_BUTTON,
   AAVE_TABLE_HEADER
 } from '@/dapps/aave-dapp/handlers/helpers';
+import { EventBus } from '@/core/plugins/eventBus';
 
 export default {
   name: 'AaveTable',
@@ -347,22 +348,21 @@ export default {
      *  Used in deposit Button within the table
      */
     onDepositClick(newVal) {
-      console.log('emittingDeposit', newVal);
-      this.$emit('selectedDeposit', newVal);
+      EventBus.$emit('selectedDeposit', newVal);
     },
     /**
      * Method emits to the parent to open deposit token overlay
      *  Used in deposit Button within the table
      */
     onBorrowClick(newVal) {
-      this.$emit('selectedBorrow', newVal);
+      EventBus.$emit('selectedBorrow', newVal);
     },
     /**
      * Method emits to the parent to open withdraw token overlay
      *  Used in withdraw Button within the table
      */
     onWithdrawClick(newval) {
-      this.$emit('withdrawToken', newval);
+      EventBus.$emit('withdrawToken', newval);
     },
     /**
      * Method open new tab with swap parameters
@@ -385,7 +385,7 @@ export default {
      * Within Borrow Balance table
      */
     onRepayClick(newVal) {
-      this.$emit('repayBorrowing', newVal);
+      EventBus.$emit('repayBorrowing', newVal);
     },
     /**
      * Method emits to the parent to open collateral overlay
@@ -393,11 +393,11 @@ export default {
      * Within Deposit Balance table
      */
     onToggleClick(newVal) {
-      this.$emit('collateralChange', newVal);
+      EventBus.$emit('collateralChange', newVal);
     },
 
     onToggleAprType(newVal) {
-      this.$emit('changeAprType', newVal);
+      EventBus.$emit('changeAprType', newVal);
     },
     /**
      * Method sets the search value

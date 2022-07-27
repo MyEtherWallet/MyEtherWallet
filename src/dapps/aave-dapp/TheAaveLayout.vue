@@ -92,9 +92,6 @@
                 :title="aaveTableTitle.balance_deposit"
                 :has-search="false"
                 :has-toggle="false"
-                @selectedDeposit="openDepositOverlayWithToken"
-                @withdrawToken="openWithdrawOverlay"
-                @collateralChange="openCollateralOverlay"
               />
             </v-col>
           </v-row>
@@ -233,9 +230,6 @@
                 :title="aaveTableTitle.balance_borrow"
                 :has-search="false"
                 :has-toggle="false"
-                @selectedBorrow="openBorrowOverlayWithToken"
-                @repayBorrowing="openRepayOverlay"
-                @changeAprType="openAprTypeOverlay"
               />
             </v-col>
           </v-row>
@@ -287,6 +281,9 @@
 </template>
 
 <script>
+import { mapGetters, mapState } from 'vuex';
+import BigNumber from 'bignumber.js';
+
 import TheWrapperDapp from '@/core/components/TheWrapperDapp';
 import AaveBorrowOverlay from './components/overlays/AaveBorrowOverlay';
 import AaveDepositOverlay from './components/overlays/AaveDepositOverlay';
@@ -295,8 +292,6 @@ import AaveRepayOverlay from './components/overlays/AaveRepayOverlay';
 import AaveWithdrawOverlay from './components/overlays/AaveWithdrawOverlay';
 import AaveSetAprOverlay from './components/overlays/AaveSetAprOverlay';
 import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.png';
-import { mapGetters, mapState } from 'vuex';
-import BigNumber from 'bignumber.js';
 import { AAVE_TABLE_TITLE } from '@/dapps/aave-dapp/handlers/helpers';
 import AaveTable from './components/AaveTable';
 import handlerAave from './handlers/handlerAave.mixin';
@@ -304,6 +299,7 @@ import {
   formatPercentageValue,
   formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
+import { EventBus } from '@/core/plugins/eventBus';
 const COLORS = {
   ENJ: 'bluePrimary',
   ETH: 'greenPrimary',
@@ -512,13 +508,15 @@ export default {
     },
     showBorrowOverlay(newVal) {
       if (!newVal) this.tokenSelected = {};
-    },
-    tokenSelected: {
-      handler: function (val) {
-        console.log(val);
-      },
-      deep: true
     }
+  },
+  mounted() {
+    EventBus.$on('selectedBorrow', this.openBorrowOverlayWithToken);
+    EventBus.$on('repayBorrowing', this.openRepayOverlay);
+    EventBus.$on('changeAprType', this.openAprTypeOverlay);
+    EventBus.$on('selectedDeposit', this.openDepositOverlayWithToken);
+    EventBus.$on('withdrawToken', this.openWithdrawOverlay);
+    EventBus.$on('collateralChange', this.openCollateralOverlay);
   },
   methods: {
     toggleDepositOverlay(boolean) {

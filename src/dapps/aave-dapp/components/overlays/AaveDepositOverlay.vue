@@ -170,10 +170,17 @@ export default {
     }
   },
   watch: {
-    preSelectedToken(newVal) {
-      if (newVal && !isEmpty(newVal)) {
-        this.handleSelectedDeposit(this.preSelectedToken);
-      }
+    preSelectedToken: {
+      handler: function (newVal) {
+        if (newVal && !isEmpty(newVal)) {
+          this.handleSelectedDeposit(this.preSelectedToken);
+        }
+        if (isEmpty(newVal)) {
+          this.selectedToken = {};
+          this.step = 0;
+        }
+      },
+      deep: true
     }
   },
   methods: {
