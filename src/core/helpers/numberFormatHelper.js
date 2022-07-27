@@ -1,5 +1,6 @@
 import BigNumber from 'bignumber.js';
 import { fromWei, toBN } from 'web3-utils';
+import { isNaN as lodashIsNaN } from 'lodash';
 import { localizeCurrency } from './localization';
 
 /**
@@ -510,7 +511,7 @@ const getRoundNumber = (value, round, hasTrailingZeros = false) => {
  */
 
 const toBNSafe = number => {
-  if (isNaN(number) || !number) number = 0;
+  if (lodashIsNaN(number) || !number) number = 0;
   number = toBN(new BigNumber(number).toFixed(0));
   return number;
 };
