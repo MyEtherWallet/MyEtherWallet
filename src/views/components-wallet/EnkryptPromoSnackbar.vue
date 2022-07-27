@@ -35,7 +35,7 @@
           >
           <mew-button
             color-theme="#7E44F2"
-            class="extension-btn"
+            style="border-radius: 40px !important"
             @click.native="openEnkrypt"
           >
             <img
@@ -45,7 +45,7 @@
               width="25px"
               height="25px"
             />
-            Install Extension
+            <span class="font-weight-bold"> Install Extension </span>
           </mew-button>
         </div>
       </div>

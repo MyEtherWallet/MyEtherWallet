@@ -50,6 +50,7 @@
             >Learn More</mew-button
           >
           <mew-button
+            style="border-radius: 40px !important"
             color-theme="#7E44F2"
             class="extension-btn ml-4"
             @click.native="install"
@@ -60,7 +61,7 @@
               :src="browserLogo"
               alt="chrome"
             />
-            {{ text }}
+            <span class="font-weight-bold"> {{ text }}</span>
           </mew-button>
         </div>
       </div>
