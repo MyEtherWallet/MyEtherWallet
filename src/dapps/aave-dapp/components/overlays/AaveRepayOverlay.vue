@@ -52,6 +52,7 @@ import { MAX_UINT_AMOUNT } from '@aave/protocol-js';
 import BigNumber from 'bignumber.js';
 
 export default {
+  name: 'AaveRepayOverlay',
   components: {
     AaveAmountForm,
     AaveSummary

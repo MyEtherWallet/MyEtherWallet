@@ -75,6 +75,7 @@ import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { toBase } from '@/core/helpers/unit';
 
 export default {
+  name: 'AaveBorrowOverlay',
   components: { AaveTable, AaveAmountForm, AaveSelectInterest, AaveSummary },
   mixins: [handlerAave],
   data() {

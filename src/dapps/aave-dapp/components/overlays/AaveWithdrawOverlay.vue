@@ -53,6 +53,7 @@ import { toBN, toHex } from 'web3-utils';
 import { MAX_UINT_AMOUNT } from '@aave/contract-helpers';
 
 export default {
+  name: 'AaveWithdrawOverlay',
   components: {
     AaveAmountForm,
     AaveSummary

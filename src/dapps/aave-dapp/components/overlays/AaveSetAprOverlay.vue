@@ -22,6 +22,7 @@ import handlerAave from '../../handlers/handlerAave.mixin';
 import { INTEREST_TYPES } from '../../handlers/helpers';
 import AaveSelectInterest from '../AaveSelectInterest';
 export default {
+  name: 'AaveSetAprOverlay',
   components: {
     AaveSelectInterest
   },

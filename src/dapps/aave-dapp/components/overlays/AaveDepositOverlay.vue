@@ -66,6 +66,7 @@ import { mapGetters } from 'vuex';
 import { toBase } from '@/core/helpers/unit';
 
 export default {
+  name: 'AaveDepositOverlay',
   components: { AaveTable, AaveSummary, AaveAmountForm },
   mixins: [handlerAave],
   data() {
@@ -173,17 +174,10 @@ export default {
       if (newVal && !isEmpty(newVal)) {
         this.handleSelectedDeposit(this.preSelectedToken);
       }
-      console.log('depositPreselectedToken', this.preSelectedToken);
-    },
-    open(newVal, oldVal) {
-      console.log('open(old)', oldVal);
-      console.log('open', newVal);
     }
   },
   methods: {
     handleSelectedDeposit(val) {
-      console.log('tokenHandled', val);
-      console.log('isOpen', this.open);
       this.selectedToken = val;
       this.step = 1;
     },

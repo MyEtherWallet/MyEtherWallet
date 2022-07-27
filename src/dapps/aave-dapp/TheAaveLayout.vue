@@ -507,38 +507,33 @@ export default {
     }
   },
   watch: {
-    showDepositOverlay(newVal, oldVal) {
-      /* eslint-disable no-console */
-      console.log('showDepositOverlay (oldVal)', oldVal);
-      console.log('showDepositOverlay', newVal);
-      console.log('tokenSelected', this.tokenSelected);
-      console.log('preSelectedToken', this.preSelectedToken);
-      /* eslint-enable no-console */
+    showDepositOverlay(newVal) {
       if (!newVal) this.tokenSelected = {};
     },
     showBorrowOverlay(newVal) {
       if (!newVal) this.tokenSelected = {};
+    },
+    tokenSelected: {
+      handler: function (val) {
+        console.log(val);
+      },
+      deep: true
     }
   },
   methods: {
     toggleDepositOverlay(boolean) {
-      console.log('toggleDepositOverlay', boolean);
-      if (boolean === false) {
+      if (!boolean) {
         this.tokenSelected = {};
       }
       this.showDepositOverlay = boolean;
     },
     toggleBorrowOverlay(boolean) {
-      if (boolean === false) {
+      if (!boolean) {
         this.tokenSelected = {};
       }
       this.showBorrowOverlay = boolean;
     },
     openDepositOverlayWithToken(token) {
-      /* eslint-disable no-console */
-      console.log('showDepositOverlay', this.showDepositOverlay);
-      console.log('token', token);
-      /* eslint-enable no-console */
       this.tokenSelected = token;
       this.showDepositOverlay = true;
     },

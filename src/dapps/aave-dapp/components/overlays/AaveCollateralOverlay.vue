@@ -20,6 +20,7 @@ import { ACTION_TYPES } from '@/dapps/aave-dapp/handlers/helpers';
 import { mapState } from 'vuex';
 import handlerAave from '../../handlers/handlerAave.mixin';
 export default {
+  name: 'AaveCollateralOverlay',
   components: { AaveSummary },
   mixins: [handlerAave],
   props: {
