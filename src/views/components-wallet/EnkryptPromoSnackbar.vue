@@ -1,7 +1,7 @@
 <template>
   <div class="enkrypt-promo-snackbar">
     <v-snackbar
-      :value="true"
+      :value="show"
       width="380px"
       height="200px"
       :timeout="-1"
@@ -18,10 +18,7 @@
             src="@/assets/images/icons/enkrypt/icon-enkrypt-colored.svg"
             height="20px"
           />
-          <v-icon
-            class="cursor--pointer"
-            medium
-            @click="closeEnkryptWalletSnackbar"
+          <v-icon class="cursor--pointer" medium @click="closeSnackbar"
             >mdi-close</v-icon
           >
         </div>
@@ -63,7 +60,9 @@ import moment from 'moment';
 export default {
   mixins: [enkryptMarketing],
   data() {
-    return {};
+    return {
+      show: false
+    };
   },
   computed: {
     ...mapState('popups', [
@@ -75,6 +74,8 @@ export default {
   },
   mounted() {
     this.checkIfShouldShow();
+    // (temp) Force show
+    this.show = true;
   },
   methods: {
     ...mapActions('popups', [
@@ -82,6 +83,10 @@ export default {
       'closeEnkryptWalletSnackbar',
       'enkryptWalletSnackbarCounter'
     ]),
+    closeSnackbar() {
+      this.show = false;
+      this.closeEnkryptWalletSnackbar();
+    },
     /**
      * checks if the enkrypt wallet ad has been shown
      * and if it has been 7 days since closing
@@ -97,6 +102,7 @@ export default {
             7) &&
         this.enkryptWalletSnackbarCounter <= 3
       ) {
+        this.show = true;
         this.showEnkryptWalletSnackbar();
       }
     }
