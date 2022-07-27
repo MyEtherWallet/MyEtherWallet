@@ -12,6 +12,10 @@ const ENS_MANAGER_ROUTE = {
     NAME: 'ENSManagerClame',
     PATH: 'claim'
   },
+  REVERSE: {
+    NAME: 'ENSReverseLookup',
+    PATH: 'reverse'
+  },
   ENS_1: { NAME: 'ENS1', PATH: 'ens-1' },
   ENS_2: { NAME: 'ENS2', PATH: 'ens-2' },
   ENS_3: { NAME: 'ENS3', PATH: 'ens-3' }
