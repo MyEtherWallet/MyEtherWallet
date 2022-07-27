@@ -21,7 +21,7 @@
       >
         <img
           v-if="btnIcon"
-          :style="`height: ${btnIconSize}; width: ${btnIconSize}; filter: brightness(0.8)`"
+          :style="`height: ${btnIconSize}; width: ${btnIconSize}`"
           :src="btnIcon"
           alt="Icon"
           :class="btnTitle ? 'mr-2' : ''"

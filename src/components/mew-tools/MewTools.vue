@@ -6,7 +6,7 @@
     :btn-icon-size="$vuetify.breakpoint.mdAndUp ? '18px' : '20px'"
     :btn-title="$vuetify.breakpoint.mdAndUp ? 'MEW Products' : ''"
     btn-font-size="12px"
-    color="#bfbfbf"
+    color="white"
     outlined
     right
   >
