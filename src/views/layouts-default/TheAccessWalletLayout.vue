@@ -218,7 +218,7 @@ export default {
             subtitle: 'Use your Web3 wallet with MEW',
             official: false,
             recommended: true,
-            icon: require('@/assets/images/icons/icon-extensions.svg'),
+            icon: require('@/assets/images/icons/icon-extensions.png'),
             alt: 'Hardware Wallets',
             fn: () => {
               this.openWeb3Wallet();
@@ -231,7 +231,7 @@ export default {
             subtitle: 'WalletConnect, Walletlink',
             official: false,
             recommended: true,
-            icon: require('@/assets/images/icons/icon-mobile-apps.svg'),
+            icon: require('@/assets/images/icons/icon-mobile-apps.png'),
             alt: 'Hardware Wallets',
             fn: () => {
               this.openOverlay(ACCESS_VALID_OVERLAYS.MOBILE);
