@@ -103,7 +103,7 @@ export default {
               const price = this.getTokenPrice(item.underlyingAsset);
               item.price.priceInEth = price.toString();
               console.log('item', item);
-              console.log('price', price.toString());
+              console.log('price', price);
             }
             return {
               ...item,
@@ -586,8 +586,11 @@ export default {
       return borrowPower.isFinite() && !borrowPower.isNaN() ? borrowPower : 0;
     },
     async getTokenPrice(contractAddress) {
-      const price = await this.priceOracle.getAssetPrice(contractAddress);
-      return price;
+      try {
+        return await this.priceOracle.getAssetPrice(contractAddress);
+      } catch (e) {
+        return '0';
+      }
     }
   }
 };
