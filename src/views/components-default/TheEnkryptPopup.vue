@@ -1,72 +1,107 @@
 <template>
-  <div class="mew-component--enkrypt">
-    <mew-popup
-      :show="show"
-      :has-buttons="false"
-      :has-title="false"
-      :has-padding="false"
-      :left-btn="leftBtn"
-      max-width="430"
-      has-body-content
-      class="popup"
-    >
-      <div class="popup-container">
-        <img
-          class="blob"
-          src="@/assets/images/backgrounds/bg-enkrypt.png"
-          alt="blob"
-        />
-        <img :src="white" alt="enkrypt logo" class="enkrypt-logo" />
-        <div class="mew-heading-2 heading">
-          Our official Browser Extension is here!
+  <mew-popup
+    hide-close-btn
+    :show="show"
+    :has-buttons="false"
+    :has-title="false"
+    :has-padding="false"
+    :left-btn="leftBtn"
+    max-width="500"
+    has-body-content
+  >
+    <div class="the-enkrypt-popup popup-container py-10 px-6 px-sm-15">
+      <!-- ======================================================================= -->
+      <!-- Popup close button -->
+      <!-- ======================================================================= -->
+      <v-btn icon class="close-button" @click="close">
+        <v-icon color="white">mdi-close</v-icon>
+      </v-btn>
+
+      <!-- ======================================================================= -->
+      <!-- Lottie image -->
+      <!-- ======================================================================= -->
+      <div v-lottie="surpriseLottie" class="lottie" />
+
+      <!-- ======================================================================= -->
+      <!-- Header -->
+      <!-- ======================================================================= -->
+      <div class="text-center mb-6">
+        <img :src="white" alt="enkrypt logo" class="enkrypt-logo mb-4" />
+        <div class="mew-heading-3 heading">
+          Introducing our multi-chain wallet extension!
         </div>
-        <div class="carousel-box">
-          <v-carousel cycle height="255" hide-delimiters :show-arrows="false">
-            <v-carousel-item v-for="(nft, i) in nfts" :key="i">
-              <img :src="nfts[i].src" alt="nft-image" class="main-image" />
-            </v-carousel-item>
-          </v-carousel>
-        </div>
-        <div class="mew-heading-4 content text-left">
+      </div>
+
+      <!-- ======================================================================= -->
+      <!-- Carousel -->
+      <!-- ======================================================================= -->
+      <v-carousel cycle height="100%" hide-delimiters :show-arrows="false">
+        <v-carousel-item v-for="(nft, i) in nfts" :key="i">
+          <img :src="nfts[i].src" alt="nft-image" class="main-image" />
+        </v-carousel-item>
+      </v-carousel>
+
+      <!-- ======================================================================= -->
+      <!-- Text content -->
+      <!-- ======================================================================= -->
+      <div class="px-2">
+        <div
+          class="mew-heading-4 mt-5 mb-4 black--text"
+          style="line-height: 24px !important"
+        >
           Easily access all your favorite apps across <br />Ethereum and
           Polkadot chains.
         </div>
-        <div class="width--full px-12">
+        <div>
           <div
             v-for="cText in checkedText"
             :key="cText"
-            class="text-left d-flex align-center"
+            class="d-flex align-center mb-2"
           >
-            <div class="purple-dots mr-1" />
-            <div>{{ cText }}</div>
+            <div class="purple-dots mr-3" />
+            <div class="black--text">{{ cText }}</div>
           </div>
         </div>
-        <div v-lottie="surpriseLottie" class="lottie" />
-        <div class="btn-container">
-          <mew-button
-            color-theme="#939fb9"
-            btn-style="transparent"
-            @click.native="openHelpCenter"
-            >Learn More</mew-button
-          >
-          <mew-button
-            style="border-radius: 40px !important"
-            color-theme="#7E44F2"
-            class="extension-btn ml-4"
-            @click.native="install"
-          >
-            <img
-              v-if="browser !== 'default'"
-              class="chrome-logo mr-3"
-              :src="browserLogo"
-              alt="chrome"
-            />
-            <span class="font-weight-bold"> {{ text }}</span>
-          </mew-button>
-        </div>
       </div>
-    </mew-popup>
-  </div>
+
+      <!-- ======================================================================= -->
+      <!-- Buttons -->
+      <!-- ======================================================================= -->
+      <div
+        class="d-flex flex-column-reverse flex-md-row align-center justify-space-around mt-6"
+      >
+        <mew-button
+          class="mt-1 mt-md-0"
+          color-theme="#939fb9"
+          btn-style="transparent"
+          @click.native="openHelpCenter"
+        >
+          <span
+            style="letter-spacing: 0.5px; text-transform: none"
+            class="font-weight-medium"
+          >
+            Learn more
+          </span>
+        </mew-button>
+        <mew-button
+          style="border-radius: 40px !important"
+          color-theme="#7E44F2"
+          class="extension-btn"
+          @click.native="install"
+        >
+          <img
+            v-if="browser !== 'default'"
+            class="chrome-logo mr-3"
+            :src="browserLogo"
+            alt="chrome"
+          />
+          <span style="letter-spacing: 0.5px; text-transform: none">
+            {{ text }}
+          </span>
+        </mew-button>
+      </div>
+    </div>
+  </mew-popup>
 </template>
 <script>
 import imageOne from '@/assets/images/icons/enkrypt/promo1.png';
@@ -127,7 +162,7 @@ export default {
       // eslint-disable-next-line
       window.open(this.browserLink, '_blank');
       this.trackEnkryptInstall();
-      this.close();
+      //this.close();
     },
     close() {
       if (this.enkryptLandingPopup) {
@@ -140,51 +175,39 @@ export default {
   }
 };
 </script>
-<style lang="scss" scoped>
-.purple-dots {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: #974bff;
-}
 
+<style lang="scss" scoped>
 .popup-container {
-  min-height: 706px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
-  border-radius: 8px;
-  margin-top: -30px;
+  position: relative;
+  background-image: url(~@/assets/images/backgrounds/bg-enkrypt.png);
+  background-position: top -280px center;
+  background-size: 700px;
+  margin-top: -20px;
   position: relative;
   overflow: hidden;
 }
 .lottie {
   position: absolute;
   top: 0px;
+  left: 0;
   z-index: 0;
-}
-
-.blob {
-  position: absolute;
-  z-index: 0;
-  top: -220px;
-  right: -120px;
 }
 .heading {
   z-index: 1;
   color: #ffffff;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.15px;
 }
-
 .carousel-box {
-  width: 320px;
-  height: 250px;
   border-radius: 8px;
   background: white;
   box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.27);
   overflow: hidden;
-  z-index: 2;
+}
+.purple-dots {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #974bff;
 }
 .main-image {
   width: 100%;
@@ -198,29 +221,19 @@ export default {
   line-height: 24px;
   font-weight: 500;
 }
-.btn-container {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  z-index: 2;
-}
-.learn-more {
-  color: #939fb9;
-}
-.mew-pop-btns {
-  display: none;
-}
-.extension-btn {
-  width: 235px;
-  height: 48px;
+.extension-btn span {
+  font-size: 18px;
+  font-weight: 500;
 }
 .chrome-logo {
   width: 25px;
   height: 25px;
 }
-.enkrypt-logo {
-  z-index: 9999;
+
+.close-button {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  z-index: 9;
 }
 </style>
