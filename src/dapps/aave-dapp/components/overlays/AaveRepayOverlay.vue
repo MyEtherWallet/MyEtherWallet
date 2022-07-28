@@ -9,6 +9,7 @@
     title="Repay"
     :close="close"
     class="mew-component--aave-repay-overlay"
+    content-size="xlarge"
   >
     <aave-amount-form
       v-if="step === 0"

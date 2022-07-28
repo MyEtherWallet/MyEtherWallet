@@ -9,6 +9,7 @@
     title="Withdraw"
     right-btn-text="Close"
     :close="close"
+    content-size="xlarge"
   >
     <aave-amount-form
       v-if="step === 0"
