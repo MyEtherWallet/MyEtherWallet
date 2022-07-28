@@ -1,6 +1,13 @@
 /**
  * The Aave Apollo Mixin
  */
+import { LendingPool, ChainId } from '@aave/contract-helpers';
+import { mapState, mapGetters } from 'vuex';
+import BigNumber from 'bignumber.js';
+import { formatReserves, formatUserSummary } from '@aave/math-utils';
+import { toBN, toHex } from 'web3-utils';
+import { calculateHealthFactorFromBalancesBigUnits } from '@aave/protocol-js';
+
 import {
   ReserveUpdateSubscription,
   UserPositionUpdateSubscription,
@@ -9,17 +16,9 @@ import {
 import { Toast, SUCCESS, ERROR } from '@/modules/toast/handler/handlerToast';
 import configs from '@/dapps/aave-dapp/apollo/configs';
 import eth from '@/assets/images/currencies/eth.png';
-import { LendingPool, ChainId } from '@aave/contract-helpers';
-import { mapState, mapGetters } from 'vuex';
-import BigNumber from 'bignumber.js';
-import { formatReserves, formatUserSummary } from '@aave/math-utils';
 import { ethers } from 'ethers';
-// import { toHex } from 'web3-utils';
-// import { cloneDeep } from 'lodash';
 import { INTEREST_TYPES } from '../handlers/helpers';
 import { estimateGasList } from '@/core/helpers/gasPriceHelper';
-import { toBN, toHex } from 'web3-utils';
-import { calculateHealthFactorFromBalancesBigUnits } from '@aave/protocol-js';
 import { ABI } from './ABI';
 
 const STABLE_COINS = ['TUSD', 'DAI', 'USDT', 'USDC', 'sUSD'];
@@ -96,41 +95,18 @@ export default {
         },
         client: 'aave',
         result({ data }) {
-          this.rawReserveData = data.reserves.map(item => {
-            const token = this.contractToToken(item.underlyingAsset);
-            item['icon'] = token?.img || eth;
-            if (item.price.priceInEth === '0') {
-              const price = this.getTokenPrice(item.underlyingAsset);
-              item.price.priceInEth = price.toString();
-              console.log('item', item);
-              console.log('price', price);
+          Promise.all(data.reserves.map(item => this.rawDataParser(item))).then(
+            values => {
+              this.rawReserveData = values.filter(item => item !== undefined);
+              this.reservesData = formatReserves({
+                reserves: this.rawReserveData,
+                currentTimestamp: Math.floor(Date.now() / 1000),
+                marketReferenceCurrencyDecimals: 18,
+                marketReferencePriceInUsd: 1 / (this.usdPriceEth / 10 ** 18)
+              }).reverse();
+              this.setFormatUserSummaryData();
             }
-            return {
-              ...item,
-              priceInMarketReferenceCurrency: item.price.priceInEth,
-              eModeCategoryId: 0,
-              borrowCap: '',
-              supplyCap: '',
-              debtCeiling: '',
-              debtCeilingDecimals: 0,
-              isolationModeTotalDebt: '',
-              eModeLtv: 0,
-              eModeLiquidationThreshold: 0,
-              eModeLiquidationBonus: 0
-            };
-          });
-
-          console.log('rawReserveData', this.rawReserveData);
-          this.rawReserveData = this.rawReserveData.filter(item => {
-            return item !== undefined;
-          });
-          this.reservesData = formatReserves({
-            reserves: this.rawReserveData,
-            currentTimestamp: Math.floor(Date.now() / 1000),
-            marketReferenceCurrencyDecimals: 18,
-            marketReferencePriceInUsd: 1 / (this.usdPriceEth / 10 ** 18)
-          }).reverse();
-          this.setFormatUserSummaryData();
+          );
         },
         error(error) {
           Toast(error.message, {}, ERROR);
@@ -226,6 +202,27 @@ export default {
     }
   },
   methods: {
+    async rawDataParser(item) {
+      const token = this.contractToToken(item.underlyingAsset);
+      item['icon'] = token?.img || eth;
+      if (item.price.priceInEth === '0') {
+        const price = await this.getTokenPrice(item.underlyingAsset);
+        item.price.priceInEth = price.toString();
+      }
+      return {
+        ...item,
+        priceInMarketReferenceCurrency: item.price.priceInEth,
+        eModeCategoryId: 0,
+        borrowCap: '',
+        supplyCap: '',
+        debtCeiling: '',
+        debtCeilingDecimals: 0,
+        isolationModeTotalDebt: '',
+        eModeLtv: 0,
+        eModeLiquidationThreshold: 0,
+        eModeLiquidationBonus: 0
+      };
+    },
     /**
      * Deposit funds
      */
