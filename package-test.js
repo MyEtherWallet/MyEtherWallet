@@ -49,9 +49,9 @@ const EXCEPTIONS = [
   'vue',
   '@vue/cli-plugin-e2e-nightwatch',
   'geckodriver',
+  // breaking
   '@shapeshiftoss/hdwallet-core',
   '@shapeshiftoss/hdwallet-keepkey-webusb',
-  'trezor-connect', // currently in beta
   'package-json',
   'codecov',
   'node-polyfill-webpack-plugin',
