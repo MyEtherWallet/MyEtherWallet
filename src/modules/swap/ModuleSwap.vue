@@ -641,7 +641,7 @@ export default {
           const name = token.name;
           token.price = '';
           token.subtext = name;
-          token.value = name;
+          token.value = token.contract;
           token.name = token.symbol;
           return token;
         })
@@ -737,7 +737,7 @@ export default {
         }
         token.price = '';
         token.subtext = token.name;
-        token.value = token.name;
+        token.value = token.contract.name;
         token.name = token.symbol;
         return token;
       });
@@ -767,7 +767,7 @@ export default {
           }
           const name = token.name;
           token.subtext = name;
-          token.value = name;
+          token.value = token.contract;
           token.name = token.symbol;
           return token;
         })
