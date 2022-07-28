@@ -100,42 +100,24 @@ export default {
             const token = this.contractToToken(item.underlyingAsset);
             item['icon'] = token?.img || eth;
             if (item.price.priceInEth === '0') {
-              this.priceOracle
-                .getAssetPrice(item.underlyingAsset)
-                .then(price => {
-                  item.price.priceInEth = price.toString();
-                  console.log('item', item);
-                  console.log('price', price.toString());
-                  return {
-                    ...item,
-                    priceInMarketReferenceCurrency: item.price.priceInEth,
-                    eModeCategoryId: 0,
-                    borrowCap: '',
-                    supplyCap: '',
-                    debtCeiling: '',
-                    debtCeilingDecimals: 0,
-                    isolationModeTotalDebt: '',
-                    eModeLtv: 0,
-                    eModeLiquidationThreshold: 0,
-                    eModeLiquidationBonus: 0
-                  };
-                })
-                .catch(console.log);
-            } else {
-              return {
-                ...item,
-                priceInMarketReferenceCurrency: item.price.priceInEth,
-                eModeCategoryId: 0,
-                borrowCap: '',
-                supplyCap: '',
-                debtCeiling: '',
-                debtCeilingDecimals: 0,
-                isolationModeTotalDebt: '',
-                eModeLtv: 0,
-                eModeLiquidationThreshold: 0,
-                eModeLiquidationBonus: 0
-              };
+              const price = this.getTokenPrice(item.underlyingAsset);
+              item.price.priceInEth = price.toString();
+              console.log('item', item);
+              console.log('price', price.toString());
             }
+            return {
+              ...item,
+              priceInMarketReferenceCurrency: item.price.priceInEth,
+              eModeCategoryId: 0,
+              borrowCap: '',
+              supplyCap: '',
+              debtCeiling: '',
+              debtCeilingDecimals: 0,
+              isolationModeTotalDebt: '',
+              eModeLtv: 0,
+              eModeLiquidationThreshold: 0,
+              eModeLiquidationBonus: 0
+            };
           });
 
           console.log('rawReserveData', this.rawReserveData);
@@ -602,6 +584,10 @@ export default {
       }
       borrowPower = tokenAmount;
       return borrowPower.isFinite() && !borrowPower.isNaN() ? borrowPower : 0;
+    },
+    async getTokenPrice(contractAddress) {
+      const price = await this.priceOracle.getAssetPrice(contractAddress);
+      return price;
     }
   }
 };
