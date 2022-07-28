@@ -16,7 +16,7 @@
           "
         >
           <img
-            src="@/assets/images/icons/icon-enkrypt-full-logo.svg"
+            src="@/assets/images/icons/enkrypt/icon-enkrypt-colored.svg"
             alt="Enkrypt"
             height="28"
             class="mb-4"
@@ -25,8 +25,9 @@
             Introducing MEW’s multichain wallet extension
           </div>
           <div class="text-subtitle mb-md-10" style="color: #60666d">
-            Use thousands of web3 apps across multiple networks, buy crypto,
-            swap tokens, and manage your NFTs. Welcome to the multichain future.
+            Easily access all you favorite apps across Ethereum and Polkadot
+            chains, buy crypto, swap tokens, and manage your NFTs. Welcome to
+            the multichain future.
           </div>
 
           <div class="text-center text-md-left">

@@ -39,8 +39,9 @@
           </div>
           <div
             v-if="!btn.recommended"
-            class="orangePrimary--text mew-label note-position"
+            class="orangePrimary--text mew-label note-position d-flex align-center"
           >
+            <v-icon size="18px" class="mr-1">mdi-shield-alert</v-icon>
             NOT RECOMMENDED
           </div>
           <div class="width--full d-flex align-center text-left">

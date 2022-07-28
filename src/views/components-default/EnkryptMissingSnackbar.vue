@@ -30,7 +30,7 @@
             :has-full-width="true"
             btn-size="large"
             color-theme="#7E44F2"
-            @click.native="openEnkrypt"
+            @click.native="downloadAndClose"
           >
             <img class="mr-3" width="25px" height="25px" :src="browserLogo" />
             Get the Enkrypt Extension
@@ -67,6 +67,10 @@ export default {
   methods: {
     emitClose() {
       this.$emit('closeEnkryptMissingSnackbar');
+    },
+    downloadAndClose() {
+      this.openEnkrypt();
+      this.emitClose();
     }
   }
 };

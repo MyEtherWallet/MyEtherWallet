@@ -77,7 +77,7 @@ export default {
   mixins: [enkryptMarketing],
   data() {
     return {
-      show: false
+      show: true
     };
   },
   computed: {
@@ -90,8 +90,6 @@ export default {
   },
   mounted() {
     this.checkIfShouldShow();
-    // (temp) Force show
-    this.show = true;
   },
   methods: {
     ...mapActions('popups', [
@@ -100,7 +98,6 @@ export default {
       'enkryptWalletSnackbarCounter'
     ]),
     closeSnackbar() {
-      this.show = false;
       this.closeEnkryptWalletSnackbar();
     },
     /**
