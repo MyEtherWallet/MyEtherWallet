@@ -24,7 +24,9 @@ const AUDIT_EXCEPTIONS = [
   'xmlhttprequest-ssl',
   'node-forge',
   'engine.io',
-  'parse-path'
+  'parse-path',
+  '@openzeppelin/contracts',
+  'terser'
 ];
 const execute = (command, callback) => {
   exec(
