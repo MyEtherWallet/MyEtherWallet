@@ -21,10 +21,8 @@
                 class="d-flex align-center cursor--pointer personal-account-container"
                 v-on="on"
               >
-                <div
-                  class="info-container--text font-weight-bold text-uppercase white--text"
-                >
-                  MY Personal Account
+                <div class="info-container--text font-weight-bold white--text">
+                  {{ title }}
                 </div>
                 <v-icon class="white--text ml-2" small dense>
                   mdi-menu-down
@@ -71,24 +69,21 @@
               </v-list-item>
             </v-list>
           </v-menu>
-          <div class="d-flex align-center">
-            <v-tooltip top content-class="tooltip-inner">
-              <template #activator="{ on }">
-                <div
-                  class="justify-start d-flex align-center info-container--addr monospace"
-                  v-on="on"
+          <mew-tooltip hide-icon :text="getChecksumAddressString">
+            <template #activatorSlot>
+              <div
+                class="justify-start d-flex align-center info-container--addr monospace"
+              >
+                {{ addrFirstSix }}
+                <v-icon class="info-container--addr pt-1"
+                  >mdi-dots-horizontal</v-icon
                 >
-                  {{ addrFirstSix }}
-                  <v-icon class="info-container--addr pt-1"
-                    >mdi-dots-horizontal</v-icon
-                  >
 
-                  {{ addrlastFour }}
-                </div>
-              </template>
-              <span class="textDark--text">{{ getChecksumAddressString }}</span>
-            </v-tooltip>
-          </div>
+                {{ addrlastFour }}
+              </div>
+            </template>
+            <span class="textDark--text">{{ getChecksumAddressString }}</span>
+          </mew-tooltip>
         </div>
       </div>
       <!--
@@ -137,7 +132,7 @@
           =====================================================================================
           -->
           <v-btn
-            class="info-container--action-btn mr-2 px-0"
+            class="info-container--action-btn mr-2 px-0 BalanceCardQR"
             fab
             depressed
             color="white"
@@ -238,19 +233,21 @@
 
 <script>
 import anime from 'animejs/lib/anime.es.js';
+import { mapGetters, mapActions, mapState } from 'vuex';
+import clipboardCopy from 'clipboard-copy';
+import { isEmpty } from 'lodash';
+
 import AppModal from '@/core/components/AppModal';
 import AppAddrQr from '@/core/components/AppAddrQr';
 import BalanceAddressPaperWallet from './components/BalanceAddressPaperWallet';
-import { mapGetters, mapActions, mapState } from 'vuex';
-import clipboardCopy from 'clipboard-copy';
 import { Toast, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
-import { isEmpty } from 'lodash';
 import ModuleAccessWalletHardware from '@/modules/access-wallet/ModuleAccessWalletHardware';
 import ModuleAccessWalletSoftware from '@/modules/access-wallet/ModuleAccessWalletSoftware';
 import wallets from './handlers/config';
 import WALLET_TYPES from '../access-wallet/common/walletTypes';
+import NameResolver from '@/modules/name-resolver/index';
 
 export default {
   components: {
@@ -273,7 +270,9 @@ export default {
       openQR: false,
       showLogout: false,
       showVerify: false,
-      wallets: wallets
+      wallets: wallets,
+      resolvedName: '',
+      nameResolver: null
     };
   },
   computed: {
@@ -287,6 +286,17 @@ export default {
     ...mapGetters('external', ['totalTokenFiatValue']),
     ...mapGetters('global', ['network', 'isTestNetwork', 'getFiatValue']),
     ...mapGetters('wallet', ['tokensList', 'balanceInETH']),
+    ...mapState('wallet', ['web3']),
+    /**
+     * show default title
+     * unless resolved name isn't false
+     * returns @string
+     */
+    title() {
+      return this.resolvedName
+        ? this.resolvedName
+        : 'My Personal Account'.toUpperCase();
+    },
     /**
      * verify address title
      * returns @String
@@ -405,6 +415,12 @@ export default {
     }
   },
   watch: {
+    /**
+     * run setup for name resolver when web3 changes
+     */
+    web3() {
+      this.setupNameResolver();
+    },
     sidemenuStatus() {
       /**
        * At side menu closes, close paper wallet
@@ -412,9 +428,32 @@ export default {
       this.showPaperWallet = false;
     }
   },
+  mounted() {
+    this.setupNameResolver();
+  },
   methods: {
     ...mapActions('external', ['setTokenAndEthBalance']),
     ...mapActions('wallet', ['removeWallet']),
+    /**
+     * checks if network supoorts ens
+     * and creates a new name resolver instance
+     */
+    async setupNameResolver() {
+      if (this.network.type.ens && this.web3.currentProvider) {
+        this.nameResolver = new NameResolver(this.network, this.web3);
+      } else {
+        this.nameResolver = null;
+      }
+
+      if (this.nameResolver) {
+        try {
+          const { name } = await this.nameResolver.resolveAddress(this.address);
+          this.resolvedName = name;
+        } catch (e) {
+          this.resolvedName = '';
+        }
+      }
+    },
     /**
      * refreshes the token and eth balance
      */

@@ -73,11 +73,13 @@ export default {
     },
     tokenImages() {
       return this.tokensList
-        .filter(token => token.img)
-        .slice(0, 5)
-        .map(item => {
-          return item.img;
-        });
+        .reduce((arr, token) => {
+          if (token.img) {
+            arr.push(token.img);
+          }
+          return arr;
+        }, [])
+        .slice(0, 5);
     },
     moreTokensCount() {
       return this.tokensList.length - this.tokenImages.length;

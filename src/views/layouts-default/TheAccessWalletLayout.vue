@@ -28,7 +28,7 @@
           </div>
           <mew-button
             has-full-width
-            class="mb-5"
+            :class="btn.class ? `mb-5 ${btn.class}` : 'mb-5'"
             :color-theme="btn.color"
             :btn-style="btn.style === 'outline' ? 'outline' : ''"
             style="height: 160px"
@@ -141,8 +141,7 @@ export default {
   },
   computed: {
     ...mapState('external', ['path']),
-    ...mapState('global', ['online']),
-    ...mapState('wallet', ['isOfflineApp', 'isOfflineApp']),
+    ...mapState('wallet', ['isOfflineApp']),
 
     /**
      * Used in the creation of a MEWconnect instance
@@ -177,7 +176,7 @@ export default {
       return this.overlay === ACCESS_VALID_OVERLAYS.SOFTWARE;
     },
     buttons() {
-      if (this.online) {
+      if (!this.isOfflineApp) {
         return [
           /* MEW wallet Button */
           {
@@ -249,6 +248,7 @@ export default {
             titleIcon: 'mdi-alert',
             titleIconType: 'mdi',
             titleIconClass: 'warning darken-1',
+            class: 'AccessSoftwareWallet',
             fn: () => {
               this.openOverlay(ACCESS_VALID_OVERLAYS.SOFTWARE);
             }
@@ -268,7 +268,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('wallet', ['setWallet', 'setOfflineApp']),
+    ...mapActions('wallet', ['setWallet']),
     /**
      * Used to set the MEWconnect instance as the wallet
      **/
@@ -292,9 +292,7 @@ export default {
      * Consiquently this will open the correct module overlay.
      * @type - must be one of the VALID_OVERLAYS
      */
-    openOverlay(type, offline) {
-      this.setOfflineApp(offline);
-
+    openOverlay(type) {
       try {
         this.$router.push({
           name: ROUTES_HOME.ACCESS_WALLET.NAME,
@@ -314,7 +312,7 @@ export default {
         const web3 = new Web3(window.ethereum);
         try {
           await window.ethereum.enable();
-          const acc = await web3.eth.getAccounts();
+          const acc = await web3.eth.requestAccounts();
           const wallet = new Web3Wallet(acc[0]);
           this.setWallet([wallet, window.ethereum]);
           this.trackAccessWallet(WALLET_TYPES.WEB3_WALLET);

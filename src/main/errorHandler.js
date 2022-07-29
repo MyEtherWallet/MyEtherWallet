@@ -26,6 +26,8 @@ export const knownErrors = {
   'ENS is not supported': 'ENS is not supported on network private',
   '未能完成该操作。无效的自变量':
     'The operation could not be completed. Invalid argument.',
+  'DOMException: Failed to execute "stopNotifications" on "BluetoothRemoteGATTCharacteristic"':
+    'Please remove or reset and reconnect your bluetooth device',
   'TypeError Failed to fetch': 'Failed to fetch incoming data',
   'AbortError: The user aborted a request':
     'Request was aborted. Please try again.',
@@ -48,7 +50,12 @@ export const knownErrors = {
   'GATT Server is disconnected. Cannot retrieve services.':
     'Please reset/disconnect then reconnect bluetooth pairings on device and on connected devices',
   'DisconnectedDeviceDuringOperation: The device was disconnected.':
-    'Ledger device has been disconnected, please reconnect and try again'
+    'Ledger device has been disconnected, please reconnect and try again',
+  "Non-200 status code: '429'":
+    'Rate limit exceeded. Please try again in about 30 seconds.',
+  "execution reverted: it's not your token": 'You do not own this token',
+  'Returned error: gas required exceeds allowance':
+    'Your gas limit is too low. Please increase your gas limit and try again.'
 };
 
 const handleError = err => {

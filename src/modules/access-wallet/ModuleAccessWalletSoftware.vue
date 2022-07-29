@@ -1,4 +1,4 @@
-<template>
+<template class="AccessSoftwareWallet">
   <!--
   =====================================================================================
     Overlay - access using software
@@ -28,6 +28,7 @@
     >
       <div v-for="(btn, key) in buttons" :key="key" class="mb-5">
         <mew-button
+          :class="btn.class"
           has-full-width
           color-theme="greyMedium"
           btn-style="outline"
@@ -160,6 +161,7 @@ export default {
         {
           label: 'Private Key',
           icon: require('@/assets/images/icons/icon-private-key-grey.png'),
+          class: 'AccessPrivateKeyWallet',
           fn: () => {
             if (process.env.VUE_APP_PRIV_KEY) {
               this.accessHandler.unlockPrivateKeyWallet(
@@ -200,7 +202,7 @@ export default {
       }
     },
     ...mapState('external', ['path']),
-    ...mapState('wallet', ['identifier']),
+    ...mapState('wallet', ['identifier', 'isOfflineApp']),
     ...mapGetters('article', ['getArticle'])
   },
   watch: {

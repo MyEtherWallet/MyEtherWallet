@@ -25,7 +25,7 @@
               <v-col offset="3">
                 <p>Address</p>
               </v-col>
-              <v-col cols="4" sm="3">
+              <v-col v-if="!isOfflineApp" cols="4" sm="3">
                 <p class="text-center">{{ network.type.name }} Balance</p>
               </v-col>
             </v-row>
@@ -111,7 +111,7 @@
                   />
                 </v-row>
               </v-col>
-              <v-col cols="3">
+              <v-col v-if="!isOfflineApp" cols="3">
                 <p class="balance-overflow text-center">
                   {{
                     acc.balance === 'Loading..'
@@ -202,8 +202,7 @@ import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { fromWei, toChecksumAddress } from 'web3-utils';
 import { mapGetters, mapState } from 'vuex';
 import { isEmpty, isEqual } from 'underscore';
-import ENS, { getEnsAddress } from '@ensdomains/ensjs';
-import BigNumber from 'bignumber.js';
+import ENS from '@ensdomains/ensjs';
 import Web3 from 'web3';
 
 const MAX_ADDRESSES = 5;
@@ -268,7 +267,9 @@ export default {
         };
       },
       skip() {
-        return this.skipApollo || this.accountAddress === null;
+        return this.isOfflineApp
+          ? true
+          : this.skipApollo || this.accountAddress === null;
       },
       result({ data }) {
         if (data && data.getEthBalance) {
@@ -315,6 +316,7 @@ export default {
   computed: {
     ...mapGetters('global', ['network']),
     ...mapState('addressBook', ['addressBookStore']),
+    ...mapState('wallet', ['isOfflineApp']),
     web3() {
       return new Web3(this.network.url);
     },
@@ -450,13 +452,13 @@ export default {
         try {
           // resets the array to empty
           this.accounts.splice(0);
-          const chainId = BigNumber(this.network.type.chainID);
-          const ens = this.network.type.hasOwnProperty('ens')
-            ? new ENS({
-                provider: this.web3.eth.currentProvider,
-                ensAddress: getEnsAddress(chainId.toString())
-              })
-            : null;
+          const ens =
+            this.network.type.hasOwnProperty('ens') && !this.isOfflineApp
+              ? new ENS({
+                  provider: this.web3.eth.currentProvider,
+                  ensAddress: this.network.type.ens.registry
+                })
+              : null;
           for (
             let i = this.currentIdx;
             i < this.currentIdx + MAX_ADDRESSES;
@@ -469,7 +471,9 @@ export default {
               : {
                   name: ''
                 };
-            const balance = this.network.type.isEthVMSupported.supported
+            const balance = this.isOfflineApp
+              ? '0'
+              : this.network.type.isEthVMSupported.supported
               ? 'Loading..'
               : await this.web3.eth.getBalance(address);
             const nickname = this.getNickname(address);
