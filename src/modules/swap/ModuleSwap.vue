@@ -638,23 +638,20 @@ export default {
             return item;
         }
       });
-      const nonChainTokens = this.availableTokens.fromTokens.reduce(
-        (arr, item) => {
-          if (
-            item.hasOwnProperty('isEth') &&
-            !item.isEth &&
-            item.name &&
-            item.symbol &&
-            item.subtext
-          ) {
-            delete item['tokenBalance'];
-            delete item['totalBalance'];
-            arr.push(item);
-          }
-          return arr;
-        },
-        []
-      );
+      const nonChainTokens = this.fromTokens.reduce((arr, item) => {
+        if (
+          item.hasOwnProperty('isEth') &&
+          !item.isEth &&
+          item.name &&
+          item.symbol &&
+          item.subtext
+        ) {
+          delete item['tokenBalance'];
+          delete item['totalBalance'];
+          arr.push(item);
+        }
+        return arr;
+      }, []);
       tradebleWalletTokens = this.formatTokensForSelect(tradebleWalletTokens);
       let returnableTokens = [
         {
@@ -954,10 +951,10 @@ export default {
         })
         .filter(token => token);
     },
-    setupTokenInfo(tokens) {
+    setupTokenInfo(tokens, checkCGId = true) {
       tokens.forEach(token => {
         if (localContractToToken[token.contract]) return;
-        if (token.cgid) {
+        if (checkCGId && token.cgid) {
           const foundToken = this.getCoinGeckoTokenById(token.cgid);
           foundToken.price = this.getFiatValue(foundToken.pricef);
           foundToken.name = token.symbol;
@@ -1136,7 +1133,7 @@ export default {
       this.setToToken(fromToken);
     },
     processTokens(tokens, storeTokens) {
-      this.setupTokenInfo(tokens.fromTokens);
+      this.setupTokenInfo(tokens.fromTokens, false);
       this.setupTokenInfo(tokens.toTokens);
       this.setupTokenInfo(TRENDING_LIST[this.network.type.name]);
       this.availableTokens = tokens;
