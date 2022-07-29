@@ -201,6 +201,7 @@ import {
 } from '@/core/helpers/numberFormatHelper';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
+import { toBase } from '@/core/helpers/unit';
 export default {
   components: {
     ModuleAddressBook,
@@ -578,7 +579,13 @@ export default {
     },
     txFeeETH(newVal) {
       const total = BigNumber(newVal).plus(this.amount);
-      if (total.gt(this.balanceInETH)) {
+      const amt = toBase(this.amount, this.selectedCurrency.decimals);
+      if (
+        (this.selectedCurrency.contract === MAIN_TOKEN_ADDRESS &&
+          total.gt(this.balanceInETH)) ||
+        (this.selectedCurrency.contract !== MAIN_TOKEN_ADDRESS &&
+          this.selectedCurrency.balance.lt(amt))
+      ) {
         this.setEntireBal();
       }
     }
