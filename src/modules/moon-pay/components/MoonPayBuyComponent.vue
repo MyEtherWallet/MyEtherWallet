@@ -164,7 +164,9 @@ export default {
       }`;
     },
     dailyLimit() {
-      const value = BigNumber(this.fiatMultiplier).times(12000);
+      const moonpayMax = this.max.moonpay;
+      const simplexMax = this.max.simplex;
+      const value = Math.max(moonpayMax.toString(), simplexMax.toString());
       return `Daily limit: ${
         formatFiatValue(value.toString(), this.currencyConfig).value
       }`;
