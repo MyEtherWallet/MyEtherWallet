@@ -56,9 +56,9 @@ export default class ENSManager {
       body: JSON.stringify({ query, variables })
     })
       .then(response => response.json())
-      .then(data => {
-        if (!data.data.account) return [];
-        return data.data.account.registrations.map(r => {
+      .then(({ data }) => {
+        if (!data.account) return [];
+        return data.account.registrations.map(r => {
           r.domain.expiryDate = r.expiryDate;
           return r.domain;
         });
