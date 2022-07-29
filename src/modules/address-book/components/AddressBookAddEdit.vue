@@ -13,9 +13,8 @@
       :value="addressToAdd"
       :rules="addressRules"
       :persistent-hint="validAddress"
-      :hint="coin"
+      :hint="nametag || coin"
       autofocus
-      :resolved-addr="resolvedAddr"
       @input="setAddress"
     />
     <!--
@@ -95,6 +94,7 @@ import NameResolver from '@/modules/name-resolver/index';
 import { toChecksumAddress, isAddress } from '@/core/helpers/addressUtils';
 import { isValidCoinAddress } from '../handlers/handlerMulticoins.js';
 import { isEmpty } from 'lodash';
+import { getAddressInfo } from '@kleros/address-tags-sdk';
 
 const modes = ['add', 'edit'];
 
@@ -111,7 +111,8 @@ export default {
       nameResolver: null,
       currentIdx: null,
       nickname: '',
-      addressToAdd: ''
+      addressToAdd: '',
+      nametag: ''
     };
   },
   computed: {
@@ -221,6 +222,7 @@ export default {
       this.addressToAdd = newVal;
     },
     addressToAdd(newVal) {
+      this.nametag = '';
       if (isAddress(newVal)) {
         this.resolveAddress();
       } else {
@@ -255,6 +257,7 @@ export default {
       this.addressToAdd = '';
       this.nickname = '';
       this.resolvedAddr = '';
+      this.nametag = '';
     },
     async resolveAddress() {
       if (this.nameResolver) {
@@ -262,6 +265,15 @@ export default {
           const resolvedName = await this.nameResolver.resolveAddress(
             this.addressToAdd
           );
+          if (isEmpty(resolvedName.name)) {
+            this.nametag =
+              (
+                await getAddressInfo(
+                  toChecksumAddress(this.addressToAdd),
+                  'https://ipfs.kleros.io'
+                )
+              )?.publicNameTag || '';
+          }
           this.resolvedAddr = resolvedName.name ? resolvedName.name : '';
         } catch (e) {
           this.resolvedAddr = '';

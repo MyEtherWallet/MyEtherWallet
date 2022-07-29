@@ -2,7 +2,7 @@
   <div>
     <mew-address-select
       ref="addressSelect"
-      :resolved-addr="resolvedAddr"
+      :hint="resolvedAddr"
       :copy-tooltip="$t('common.copy')"
       :save-tooltip="$t('common.save')"
       :enable-save-address="enableSave"
@@ -38,12 +38,12 @@
 </template>
 
 <script>
-import { isAddress } from '@/core/helpers/addressUtils';
+import { isAddress, toChecksumAddress } from '@/core/helpers/addressUtils';
 import { mapGetters, mapState } from 'vuex';
 import NameResolver from '@/modules/name-resolver/index';
+import { getAddressInfo } from '@kleros/address-tags-sdk';
 import AddressBookAddEdit from './components/AddressBookAddEdit';
 import { isObject, throttle } from 'lodash';
-import { toChecksumAddress } from '@/core/helpers/addressUtils';
 import WAValidator from 'multicoin-address-validator';
 
 const USER_INPUT_TYPES = {
@@ -201,7 +201,17 @@ export default {
             const reverseName = await this.nameResolver.resolveAddress(
               this.inputAddr
             );
-            this.resolvedAddr = reverseName.name ? reverseName.name : '';
+            if (!reverseName.name) {
+              reverseName.name =
+                (
+                  await getAddressInfo(
+                    toChecksumAddress(this.inputAddr),
+                    'https://ipfs.kleros.io'
+                  )
+                )?.publicNameTag || '';
+            }
+            this.resolvedAddr =
+              reverseName && reverseName.name ? reverseName.name : '';
           }
 
           /**
