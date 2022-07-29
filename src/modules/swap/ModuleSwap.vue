@@ -557,7 +557,8 @@ export default {
      * from other chains
      */
     isFromNonChain() {
-      if (this.isLoading) return false;
+      if (this.isLoading || this.fromTokenType?.contract === undefined)
+        return false;
       return this.fromTokenType?.hasOwnProperty('isEth')
         ? !this.fromTokenType?.isEth
         : !isAddress(this.fromTokenType?.contract);

@@ -182,7 +182,7 @@ export default {
     ...mapActions('global', ['setNetwork']),
     onTab(val) {
       this.selectedCurrency = this.defaultCurrency;
-      if (val === 1 || (val === 0 && !this.supportedBuy)) {
+      if (val === 1 || (val === 0 && (!this.supportedBuy || !this.inWallet))) {
         if (this.network.type.chainID !== 1) {
           const defaultNetwork = this.nodes['ETH'].find(item => {
             return item.service === 'myetherwallet.com-ws';
