@@ -310,12 +310,11 @@ import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import { TRENDING_LIST } from './handlers/configs/configTrendingTokens';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-
 import xss from 'xss';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 
 const MIN_GAS_LIMIT = 800000;
-
+const localContractToToken = {};
 export default {
   name: 'ModuleSwap',
   components: {
@@ -526,14 +525,6 @@ export default {
       };
     },
     /**
-     * @rejects object
-     * Gets the ETH token dropdown item details
-     */
-    // mainTokenDetails() {
-    //   const ethToken = this.contractToToken(MAIN_TOKEN_ADDRESS);
-    //   return ethToken;
-    // },
-    /**
      * checks whether both token fields are empty
      */
     enableTokenSwitch() {
@@ -581,11 +572,9 @@ export default {
         )
           return item;
       });
-      const filteredTrendingTokens = this.trendingTokens.length
-        ? this.trendingTokens.filter(token => {
-            return token.contract !== this.fromTokenType?.contract;
-          })
-        : [];
+      const filteredTrendingTokens = this.trendingTokens().filter(token => {
+        return token.contract !== this.fromTokenType?.contract;
+      });
       let returnableTokens = [
         {
           text: 'Select Token',
@@ -622,32 +611,14 @@ export default {
      */
     toTokens() {
       if (this.isLoading) return [];
-      return this.availableTokens.toTokens
+      const vals = this.availableTokens.toTokens
         .map(token => {
-          if (token.cgid) {
-            const foundToken = this.getCoinGeckoTokenById(token.cgid);
-            foundToken.price = this.getFiatValue(foundToken.pricef);
-            foundToken.name = token.symbol;
-            return Object.assign(token, foundToken);
-          }
-          const foundToken = this.contractToToken(token.contract);
-          if (foundToken) {
-            foundToken.contract = token.contract;
-            foundToken.price = this.getFiatValue(foundToken.pricef);
-            foundToken.isEth = token.isEth;
-            foundToken.name = token.symbol;
-            return foundToken;
-          }
-          const name = token.name;
-          token.price = '';
-          token.subtext = name;
-          token.value = name;
-          token.name = token.symbol;
-          return token;
+          return localContractToToken[token.contract];
         })
         .filter(
           item => item.name !== '' && item.symbol !== '' && item.subtext !== ''
         );
+      return vals;
     },
     /**
      * @returns object of all token data
@@ -655,15 +626,11 @@ export default {
      */
     actualFromTokens() {
       if (this.isLoading) return [];
-      const validFromTokens = this.fromTokens.filter(item => {
-        if (
+      const validFromTokens = this.fromTokens.filter(
+        item =>
           item.contract.toLowerCase() !==
           this.toTokenType?.contract?.toLowerCase()
-        ) {
-          item.price = this.getFiatValue(item.pricef);
-          return item;
-        }
-      });
+      );
       let tradebleWalletTokens = this.tokensList.filter(item => {
         for (const vt of validFromTokens) {
           if (vt.contract.toLowerCase() === item?.contract?.toLowerCase())
@@ -725,55 +692,8 @@ export default {
      */
     fromTokens() {
       return this.availableTokens.fromTokens.map(token => {
-        const foundToken = this.contractToToken(token.contract);
-        if (foundToken) {
-          foundToken.contract = token.contract;
-          foundToken.price = this.getFiatValue(foundToken.pricef);
-          foundToken.isEth = token.isEth;
-          foundToken.subtext = foundToken.name;
-          foundToken.value = foundToken.name;
-          foundToken.name = foundToken.symbol;
-          return foundToken;
-        }
-        token.price = '';
-        token.subtext = token.name;
-        token.value = token.name;
-        token.name = token.symbol;
-        return token;
+        return localContractToToken[token.contract];
       });
-    },
-    /**
-     * @returns all trending tokens
-     * to swap to
-     */
-    trendingTokens() {
-      if (!TRENDING_LIST[this.network.type.name]) return [];
-      return TRENDING_LIST[this.network.type.name]
-        .filter(token => {
-          return token.contract !== this.fromTokenType?.contract;
-        })
-        .map(token => {
-          if (token.cgid) {
-            const foundToken = this.getCoinGeckoTokenById(token.cgid);
-            foundToken.price = this.getFiatValue(foundToken.pricef);
-            return Object.assign(token, foundToken);
-          }
-          const foundToken = this.contractToToken(token.contract);
-          if (foundToken) {
-            token = Object.assign(token, foundToken);
-            token.price = this.getFiatValue(token.pricef);
-          } else {
-            token.price = this.getFiatValue('0.00');
-          }
-          const name = token.name;
-          token.subtext = name;
-          token.value = name;
-          token.name = token.symbol;
-          return token;
-        })
-        .filter(
-          item => item.name !== '' && item.symbol !== '' && item.subtext !== ''
-        );
     },
     txFee() {
       return toBN(this.totalGasLimit).mul(toBN(this.localGasPrice)).toString();
@@ -991,6 +911,7 @@ export default {
   },
   mounted() {
     this.mainTokenDetails = this.contractToToken(MAIN_TOKEN_ADDRESS);
+    localContractToToken[MAIN_TOKEN_ADDRESS] = this.mainTokenDetails;
     this.setupSwap();
     // multi value watcher to clear
     // refund address and to address
@@ -1021,6 +942,48 @@ export default {
       this.setTokenInValue(this.tokenInValue);
     },
     /**
+     * @returns all trending tokens
+     * to swap to
+     */
+    trendingTokens() {
+      if (!TRENDING_LIST[this.network.type.name]) return [];
+      return TRENDING_LIST[this.network.type.name]
+        .map(token => {
+          return localContractToToken[token.contract];
+        })
+        .filter(token => token);
+    },
+    setupTokenInfo(tokens) {
+      tokens.forEach(token => {
+        if (localContractToToken[token.contract]) return;
+        if (token.cgid) {
+          const foundToken = this.getCoinGeckoTokenById(token.cgid);
+          foundToken.price = this.getFiatValue(foundToken.pricef);
+          foundToken.name = token.symbol;
+          localContractToToken[token.contract] = Object.assign(
+            foundToken,
+            token
+          );
+          return;
+        }
+        const foundToken = this.contractToToken(token.contract);
+        if (foundToken) {
+          foundToken.contract = token.contract;
+          foundToken.price = this.getFiatValue(foundToken.pricef);
+          foundToken.isEth = token.isEth;
+          foundToken.name = token.symbol;
+          localContractToToken[token.contract] = foundToken;
+          return;
+        }
+        const name = token.name;
+        token.price = '';
+        token.subtext = name;
+        token.value = name;
+        token.name = token.symbol;
+        localContractToToken[token.contract] = token;
+      });
+    },
+    /**
      * Handles emitted values from module-address-book
      */
     setToAddress(value, isValid) {
@@ -1042,7 +1005,9 @@ export default {
       if (!this.prefetched) {
         this.swapper
           .getAllTokens()
-          .then(this.processTokens)
+          .then(tokens => {
+            this.processTokens(tokens);
+          })
           .then(() => {
             this.setDefaults();
             this.isLoading = false;
@@ -1170,6 +1135,9 @@ export default {
       this.setToToken(fromToken);
     },
     processTokens(tokens, storeTokens) {
+      this.setupTokenInfo(tokens.fromTokens);
+      this.setupTokenInfo(tokens.toTokens);
+      this.setupTokenInfo(TRENDING_LIST[this.network.type.name]);
       this.availableTokens = tokens;
       if (isUndefined(storeTokens)) {
         this.setSwapTokens(tokens);
