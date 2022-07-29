@@ -6,7 +6,7 @@
       :has-title="false"
       :has-padding="false"
       :left-btn="leftBtn"
-      max-width="430"
+      max-width="360"
       has-body-content
       class="popup"
     >
@@ -20,7 +20,7 @@
             height="20px"
           />
         </div>
-        <div class="mew-heading-4">
+        <div class="mew-heading-4 mt-5">
           Please install Enkrypt or enable it in your <br />
           browser
         </div>
@@ -34,7 +34,7 @@
             @click.native="downloadAndClose"
           >
             <img class="mr-3" width="25px" height="25px" :src="browserLogo" />
-            Get the Enkrypt Extension
+            {{ text }}
           </mew-button>
         </div>
       </div>
