@@ -167,8 +167,7 @@
           </div>
         </div>
         <img
-          class="d-none d-sm-block ml-8"
-          style="max-width: 250px"
+          class="d-none d-sm-block ml-8 icon-keystore"
           src="@/assets/images/icons/icon-keystore-mew.png"
         />
       </div>
@@ -313,5 +312,8 @@ export default {
 }
 .done-image {
   max-width: 170px;
+}
+.icon-keystore {
+  max-width: 250px;
 }
 </style>
