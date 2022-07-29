@@ -184,7 +184,7 @@
 </template>
 
 <script>
-import { fromWei, isHexStrict, toWei } from 'web3-utils';
+import { fromWei, isHexStrict } from 'web3-utils';
 import { debounce, isEmpty, isNumber } from 'lodash';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
@@ -201,6 +201,7 @@ import {
 } from '@/core/helpers/numberFormatHelper';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
+import { toBase } from '@/core/helpers/unit';
 export default {
   components: {
     ModuleAddressBook,
@@ -462,7 +463,7 @@ export default {
         )
       )
         return '0';
-      const amountToWei = toWei(toBNSafe(this.amount));
+      const amountToWei = toBase(this.amount, this.selectedCurrency?.decimals);
       return this.isFromNetworkCurrency
         ? BigNumber(this.txFee).plus(amountToWei).toString()
         : this.txFee;
