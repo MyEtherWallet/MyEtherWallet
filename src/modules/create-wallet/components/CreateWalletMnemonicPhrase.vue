@@ -344,6 +344,7 @@ export default {
      */
     updateStep(newStep) {
       if (this.step === 3 && newStep === 1) {
+        this.validateMnemonicValues = {};
         this.setPhrase();
       }
       this.step = newStep;
@@ -354,7 +355,6 @@ export default {
      */
     createAnotherWallet() {
       this.extraWord = '';
-      this.validateMnemonicValues = {};
       this.updateStep(1);
     }
   }
