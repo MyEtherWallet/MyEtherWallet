@@ -11,7 +11,7 @@
       class="popup"
     >
       <div
-        class="enkrypt-not-found-content-container pa-6 height--full width--full d-flex flex-column"
+        class="enkrypt-not-found-content-container pb-6 px-6 height--full width--full d-flex flex-column"
       >
         <div class="d-flex align-center">
           <img
@@ -30,6 +30,7 @@
             :has-full-width="true"
             btn-size="large"
             color-theme="#7E44F2"
+            style="border-radius: 40px !important"
             @click.native="downloadAndClose"
           >
             <img class="mr-3" width="25px" height="25px" :src="browserLogo" />
