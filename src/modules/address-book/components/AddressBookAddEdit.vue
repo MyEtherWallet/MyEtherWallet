@@ -307,13 +307,13 @@ export default {
         this.checksumAddressToAdd;
       this.addressBookStore[this.currentIdx].nickname = this.nickname;
       this.setAddressBook(this.addressBookStore);
-      this.$emit('back', 3);
+      this.$emit('back', [3]);
     },
     remove() {
       this.addressBookStore.splice(this.currentIdx, 1);
       this.setAddressBook(this.addressBookStore);
       this.reset();
-      this.$emit('back', 3);
+      this.$emit('back', [3]);
     },
     add() {
       if (this.alreadyExists) {
@@ -327,7 +327,7 @@ export default {
       });
       this.setAddressBook(this.addressBookStore);
       this.reset();
-      this.$emit('back', 3);
+      this.$emit('back', [3]);
     }
   }
 };
