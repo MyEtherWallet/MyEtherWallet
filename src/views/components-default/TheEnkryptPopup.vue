@@ -162,14 +162,13 @@ export default {
       // eslint-disable-next-line
       window.open(this.browserLink, '_blank');
       this.trackEnkryptInstall();
-      //this.close();
+      this.close();
     },
     close() {
       if (this.enkryptLandingPopup) {
         this.neverShowEnkryptLandingPage();
       } else {
-        this.$emit('tempClose');
-        // this.neverShowEnkryptWalletPage();
+        this.neverShowEnkryptWalletPage();
       }
     }
   }

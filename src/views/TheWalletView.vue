@@ -5,11 +5,7 @@
       <v-container class="pa-2 pa-md-3 mb-14" fluid>
         <the-wallet-header />
         <module-confirmation />
-        <the-enkrypt-popup
-          v-if="!isOfflineApp"
-          :show="walletEnkryptPopup"
-          @tempClose="showEnkryptTemporarily = false"
-        />
+        <the-enkrypt-popup v-if="!isOfflineApp" :show="walletEnkryptPopup" />
         <router-view />
       </v-container>
     </v-main>
@@ -35,7 +31,7 @@ import { Web3Wallet } from '@/modules/access-wallet/common';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
 import EnkryptPromoSnackbar from '@/views/components-wallet/EnkryptPromoSnackbar';
 import TheEnkryptPopup from '@/views/components-default/TheEnkryptPopup.vue';
-// import moment from 'moment';
+import moment from 'moment';
 export default {
   components: {
     TheWalletSideMenu,
@@ -46,11 +42,6 @@ export default {
     TheEnkryptPopup
   },
   mixins: [handlerWallet],
-  data() {
-    return {
-      showEnkryptTemporarily: true
-    };
-  },
   computed: {
     ...mapState('wallet', ['address', 'web3', 'identifier', 'isOfflineApp']),
     ...mapState('global', ['online', 'gasPriceType', 'baseGasPrice']),
@@ -67,14 +58,12 @@ export default {
     ]),
     ...mapGetters('wallet', ['balanceInWei']),
     walletEnkryptPopup() {
-      // return (
-      //   !this.enkryptLandingPopup &&
-      //   moment(this.enkryptLandingPopupClosed).diff(new Date(), 'hours') >=
-      //     24 &&
-      //   this.enkryptWalletPopup
-      // );
-
-      return this.showEnkryptTemporarily;
+      return (
+        !this.enkryptLandingPopup &&
+        moment(this.enkryptLandingPopupClosed).diff(new Date(), 'hours') >=
+          24 &&
+        this.enkryptWalletPopup
+      );
     }
   },
   watch: {

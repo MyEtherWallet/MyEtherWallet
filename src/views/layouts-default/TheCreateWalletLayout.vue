@@ -67,7 +67,7 @@
                 </div>
               </div>
               <div
-                class="mew-heading-4 reset-subtitle break-word letter-spacing--initial mt-4"
+                class="mew-heading-4 reset-subtitle break-word letter-spacing--initial text-transform--none mt-4"
               >
                 {{ btn.subtitle }}
               </div>

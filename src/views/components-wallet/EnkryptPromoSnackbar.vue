@@ -1,7 +1,7 @@
 <template>
   <div class="enkrypt-promo-snackbar">
     <v-snackbar
-      :value="show"
+      :value="enkryptWalletSnackbar"
       max-width="380px"
       min-width="auto"
       :timeout="-1"
@@ -75,11 +75,6 @@ import enkryptMarketing from '@/core/mixins/enkryptMarketing.mixin';
 import moment from 'moment';
 export default {
   mixins: [enkryptMarketing],
-  data() {
-    return {
-      show: true
-    };
-  },
   computed: {
     ...mapState('popups', [
       'enkryptWalletPopup',
@@ -115,7 +110,6 @@ export default {
             7) &&
         this.enkryptWalletSnackbarCounter <= 3
       ) {
-        this.show = true;
         this.showEnkryptWalletSnackbar();
       }
     }
