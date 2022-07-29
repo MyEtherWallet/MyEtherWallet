@@ -45,7 +45,7 @@
           </div>
           <div class="d-flex">
             <mew-button
-              class="extension-btns chrome-extension mt-5 mr-2"
+              class="extension-btns chrome-extension text-transform--none mt-5 mr-2"
               :has-full-width="false"
               btn-style="transparent"
               color-theme="white"

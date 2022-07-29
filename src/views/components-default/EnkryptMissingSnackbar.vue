@@ -26,7 +26,7 @@
         </div>
         <div>
           <mew-button
-            class="extension-btn mt-5"
+            class="extension-btn mt-5 text-transform--none"
             :has-full-width="true"
             btn-size="large"
             color-theme="#7E44F2"
