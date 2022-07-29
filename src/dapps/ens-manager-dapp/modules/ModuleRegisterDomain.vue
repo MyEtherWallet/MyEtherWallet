@@ -40,6 +40,7 @@
           :committed="committed"
           :minimum-age="minimumAge"
           :loading-commit="loadingCommit"
+          :loading-reg="loadingReg"
       /></template>
       <template #stepperContent3><complete v-if="onStep === 3" /></template>
     </mew-stepper>
@@ -120,6 +121,10 @@ export default {
       default: ''
     },
     loadingCommit: {
+      default: false,
+      type: Boolean
+    },
+    loadingReg: {
       default: false,
       type: Boolean
     },
