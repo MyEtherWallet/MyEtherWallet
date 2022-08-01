@@ -87,7 +87,7 @@
 import MultiCoinValidator from 'multicoin-address-validator';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import ButtonBalance from '@/core/components/AppButtonBalance';
-import { mapGetters, mapState } from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 import { isEmpty, debounce, isNumber } from 'lodash';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import BigNumber from 'bignumber.js';
@@ -100,9 +100,11 @@ import Web3 from 'web3';
 import { toBNSafe } from '@/core/helpers/numberFormatHelper';
 import { toBase } from '@/core/helpers/unit';
 import { sellContracts } from './tokenList';
+import handlerWallet from '@/core/mixins/handlerWallet.mixin';
 export default {
   name: 'ModuleSellEth',
   components: { ButtonBalance },
+  mixins: [handlerWallet],
   props: {
     orderHandler: {
       type: Object,
@@ -421,6 +423,7 @@ export default {
     this.locGasPrice = this.gasPriceByType(this.gasPriceType);
   },
   methods: {
+    ...mapActions('external', ['setCoinGeckoTokens']),
     getEthBalance() {
       if (!this.actualValidAddress) return;
       const web3Instance = new Web3(nodes.ETH[0].url);
