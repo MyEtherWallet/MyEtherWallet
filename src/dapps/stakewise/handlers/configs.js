@@ -7,7 +7,6 @@ const RETH2_GOERLI_CONTRACT = '0x826f88d423440c305D9096cC1581Ae751eFCAfB0';
 const POOL_GOERLI_CONTRACT = '0x8c1EfEcFb5c4F1099AB0460b5659342943764Df7';
 const MEW_REFERRAL_ADDRESS = '0xeafbdfca5d8346f409b7c322c77692f89d061c78';
 const POOL_API = 'https://api.stakewise.io/pool-stats';
-const STAKEWISE_EVENT = 'stakewiseEvent';
 
 const ETH_Token = {
   contract: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
@@ -48,6 +47,5 @@ export {
   MEW_REFERRAL_ADDRESS,
   SETH2_Token,
   RETH2_Token,
-  ETH_Token,
-  STAKEWISE_EVENT
+  ETH_Token
 };

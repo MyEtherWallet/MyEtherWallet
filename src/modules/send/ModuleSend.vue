@@ -50,7 +50,7 @@
               }"
               :buy-more-str="buyMoreStr"
               @buyMore="openMoonpay"
-              @input="setAmount"
+              @input="val => setAmount(val, false)"
             />
           </div>
         </v-col>
@@ -250,7 +250,8 @@ export default {
       amountError: '',
       gasEstimationError: '',
       gasEstimationIsReady: false,
-      localGasPrice: '0'
+      localGasPrice: '0',
+      selectedMax: false
     };
   },
   computed: {
@@ -578,9 +579,11 @@ export default {
       this.debounceAmountError('0');
     },
     txFeeETH(newVal) {
-      const total = BigNumber(newVal).plus(this.amount);
-      if (total.gt(this.balanceInETH)) {
-        this.setEntireBal();
+      if (this.selectedMax) {
+        const total = BigNumber(newVal).plus(this.amount);
+        if (total.gt(this.balanceInETH)) {
+          this.setEntireBal();
+        }
       }
     }
   },
@@ -764,19 +767,22 @@ export default {
         this.selectedCurrency.contract === MAIN_TOKEN_ADDRESS
       ) {
         this.setAmount(
-          BigNumber(this.balanceInETH).minus(this.txFeeETH).toFixed()
+          BigNumber(this.balanceInETH).minus(this.txFeeETH).toFixed(),
+          true
         );
       } else {
         this.setAmount(
           this.convertToDisplay(
             this.selectedCurrency.balance,
             this.selectedCurrency.decimals
-          )
+          ),
+          true
         );
       }
     },
-    setAmount(value) {
+    setAmount(value, max) {
       this.amount = value;
+      this.selectedMax = max;
     },
     setGasLimit(value) {
       this.gasLimit = value;

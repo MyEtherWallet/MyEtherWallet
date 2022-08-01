@@ -6,7 +6,7 @@
     -->
   <div>
     <v-dialog
-      :value="!displayedTrackingPopup"
+      :value="!shouldDisplayTrackingPopup"
       width="360"
       max-width="360"
       overlay-opacity="0"
