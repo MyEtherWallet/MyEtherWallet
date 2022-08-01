@@ -289,6 +289,10 @@
 </template>
 
 <script>
+import { toBN, fromWei, toWei, isAddress } from 'web3-utils';
+import { isEmpty, clone, isUndefined, isObject } from 'lodash';
+import { mapGetters, mapState, mapActions } from 'vuex';
+import xss from 'xss';
 import MultiCoinValidator from 'multicoin-address-validator';
 import AppButtonBalance from '@/core/components/AppButtonBalance';
 import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
@@ -297,9 +301,6 @@ import SwapProvidersList from './components/SwapProvidersList.vue';
 import SwapProviderMentions from './components/SwapProviderMentions.vue';
 import Swapper from './handlers/handlerSwap';
 import AppTransactionFee from '@/core/components/AppTransactionFee.vue';
-import { toBN, fromWei, toWei, isAddress } from 'web3-utils';
-import { isEmpty, clone, isUndefined, isObject } from 'lodash';
-import { mapGetters, mapState, mapActions } from 'vuex';
 import Notification, {
   NOTIFICATION_TYPES,
   NOTIFICATION_STATUS
@@ -310,7 +311,6 @@ import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import { TRENDING_LIST } from './handlers/configs/configTrendingTokens';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-import xss from 'xss';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 
 const MIN_GAS_LIMIT = 800000;
@@ -902,6 +902,11 @@ export default {
       handler: function () {
         this.setTokenFromURL();
       }
+    },
+    web3: {
+      handler: function () {
+        this.setupSwap();
+      }
     }
   },
   beforeMount() {
@@ -951,16 +956,17 @@ export default {
         })
         .filter(token => token);
     },
-    setupTokenInfo(tokens, checkCGId = true) {
+    setupTokenInfo(tokens) {
       tokens.forEach(token => {
         if (localContractToToken[token.contract]) return;
-        if (checkCGId && token.cgid) {
+        if (token.cgid) {
           const foundToken = this.getCoinGeckoTokenById(token.cgid);
           foundToken.price = this.getFiatValue(foundToken.pricef);
           foundToken.name = token.symbol;
           localContractToToken[token.contract] = Object.assign(
-            foundToken,
-            token
+            {},
+            token,
+            foundToken
           );
           return;
         }
@@ -998,25 +1004,27 @@ export default {
       this.toTokenType = findToken;
     },
     setupSwap() {
-      this.isLoading = !this.prefetched;
-      this.swapper = new Swapper(this.web3, this.network.type.name);
-      if (!this.prefetched) {
-        this.swapper
-          .getAllTokens()
-          .then(tokens => {
-            this.processTokens(tokens);
-          })
-          .then(() => {
-            this.setDefaults();
-            this.isLoading = false;
-          });
-      } else {
-        this.processTokens(this.swapTokens, false);
-        this.setDefaults();
-        this.isLoading = false;
-      }
+      if (this.isAvailable) {
+        this.isLoading = !this.prefetched;
+        this.swapper = new Swapper(this.web3, this.network.type.name);
+        if (!this.prefetched) {
+          this.swapper
+            .getAllTokens()
+            .then(tokens => {
+              this.processTokens(tokens);
+            })
+            .then(() => {
+              this.setDefaults();
+              this.isLoading = false;
+            });
+        } else {
+          this.processTokens(this.swapTokens, false);
+          this.setDefaults();
+          this.isLoading = false;
+        }
 
-      this.localGasPrice = this.gasPriceByType(this.gasPriceType);
+        this.localGasPrice = this.gasPriceByType(this.gasPriceType);
+      }
     },
     // reset values after executing transaction
     clear() {
@@ -1133,7 +1141,7 @@ export default {
       this.setToToken(fromToken);
     },
     processTokens(tokens, storeTokens) {
-      this.setupTokenInfo(tokens.fromTokens, false);
+      this.setupTokenInfo(tokens.fromTokens);
       this.setupTokenInfo(tokens.toTokens);
       this.setupTokenInfo(TRENDING_LIST[this.network.type.name]);
       this.availableTokens = tokens;

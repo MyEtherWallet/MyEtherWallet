@@ -19,12 +19,15 @@ class Swap {
     return this.providers[0].getSupportedTokens().then(baseList => {
       baseList.forEach(t => (allTokens[t.contract] = t));
       return Promise.all(
-        this.providers.map(p => {
+        this.providers.slice(3).map(p => {
           if (!p.isSupportedNetwork(this.chain)) return Promise.resolve();
           return p.getSupportedTokens().then(tokens => {
+            console.log(tokens);
             if (tokens && tokens.length > 0) {
               tokens.forEach(t => {
-                if (!allTokens[t.contract]) allTokens[t.contract] = t;
+                if (!allTokens[t.contract]) {
+                  allTokens[t.contract] = t;
+                }
               });
             }
           });
