@@ -37,10 +37,7 @@
               alt="Enkrypt"
             />
             <div>
-              <a
-                href="href=https://chrome.google.com/webstore/detail/enkrypt/kkpllkodjeloidieedojogacfhpaihoh?hl=en"
-                target="_blank"
-              >
+              <a :href="browserLink" target="_blank">
                 <mew-button
                   class="extension-btn"
                   color-theme="#7E44F2"
@@ -50,11 +47,13 @@
                 >
                   <img
                     :src="browserLogo"
-                    alt="Chrome"
+                    :alt="browser"
                     height="25"
                     class="mr-2"
                   />
-                  <span class="font-weight-bold"> Install for Chrome </span>
+                  <span class="font-weight-bold">
+                    Install for {{ browser }}
+                  </span>
                 </mew-button>
               </a>
               <a
