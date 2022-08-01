@@ -1294,6 +1294,9 @@ export default {
               }
               this.step = 1;
               this.isLoadingProviders = false;
+            } else {
+              this.isLoadingProviders = false;
+              this.showAnimation = false;
             }
           });
       }
