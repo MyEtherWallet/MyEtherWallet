@@ -344,6 +344,7 @@ export default {
      */
     updateStep(newStep) {
       if (this.step === 3 && newStep === 1) {
+        this.validateMnemonicValues = {};
         this.setPhrase();
       }
       this.step = newStep;
