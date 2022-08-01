@@ -253,14 +253,19 @@ export default {
             const error = 'Custom path already exists';
             Toast(error, {}, ERROR);
           } else {
-            const newPath = {
-              name: this.customAlias,
-              value: this.customPath
-            };
-            this.addCustomPath(newPath).then(() => {
-              this.customPath = '';
-              Toast('You have added custom path successfully.', {}, SUCCESS);
-            });
+            if (this.customAlias === '') {
+              const error = 'Custom alias cannot be empty';
+              Toast(error, {}, ERROR);
+            } else {
+              const newPath = {
+                name: this.customAlias,
+                value: this.customPath
+              };
+              this.addCustomPath(newPath).then(() => {
+                this.customPath = '';
+                Toast('You have added custom path successfully.', {}, SUCCESS);
+              });
+            }
             this.showCustomField = false;
           }
         } else {
