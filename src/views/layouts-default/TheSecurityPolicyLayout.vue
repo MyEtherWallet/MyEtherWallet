@@ -134,7 +134,9 @@
                 </a>
                 <br />
                 Website:
-                <a href="https://enkrypt.com" target="_blank"> Enkrypt.com </a>
+                <a href="https://www.enkrypt.com" target="_blank">
+                  Enkrypt.com
+                </a>
               </div>
             </div>
           </td>
