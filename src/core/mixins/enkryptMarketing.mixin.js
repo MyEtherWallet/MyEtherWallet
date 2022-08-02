@@ -10,19 +10,19 @@ export default {
     return {
       extensionLinks: {
         chrome: {
-          link: 'https://chrome.google.com/webstore',
+          link: 'https://chrome.google.com/webstore/detail/enkrypt/kkpllkodjeloidieedojogacfhpaihoh',
           img: require('@/assets/images/icons/icon-chrome.svg')
         },
         firefox: {
-          link: 'https://chrome.google.com/webstore',
+          link: 'https://chrome.google.com/webstore/detail/enkrypt/kkpllkodjeloidieedojogacfhpaihoh',
           img: require('@/assets/images/icons/icon-firefox.svg')
         },
         opera: {
-          link: 'https://chrome.google.com/webstore',
+          link: 'https://chrome.google.com/webstore/detail/enkrypt/kkpllkodjeloidieedojogacfhpaihoh',
           img: require('@/assets/images/icons/icon-opera.svg')
         },
         default: {
-          link: 'https://chrome.google.com/webstore',
+          link: 'https://chrome.google.com/webstore/detail/enkrypt/kkpllkodjeloidieedojogacfhpaihoh',
           img: require('@/assets/images/icons/icon-chrome.svg')
         }
       }

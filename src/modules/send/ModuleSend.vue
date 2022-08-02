@@ -464,7 +464,10 @@ export default {
         )
       )
         return '0';
-      const amountToWei = toBase(this.amount, this.selectedCurrency?.decimals);
+      const decimals = this.selectedCurrency?.decimals
+        ? this.selectedCurrency.decimals
+        : 18;
+      const amountToWei = toBase(this.amount, decimals);
       return this.isFromNetworkCurrency
         ? BigNumber(this.txFee).plus(amountToWei).toString()
         : this.txFee;
