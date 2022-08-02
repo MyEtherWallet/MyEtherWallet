@@ -109,11 +109,10 @@ import {
   SENTRY
 } from '@/modules/toast/handler/handlerToast';
 import { ACCESS_VALID_OVERLAYS } from '@/core/router/helpers';
-import { Web3Wallet } from '@/modules/access-wallet/common';
+import { Web3Wallet, MewConnectWallet } from '@/modules/access-wallet/common';
 import { mapActions, mapState, mapGetters } from 'vuex';
 import Web3 from 'web3';
 import TheLayoutHeader from '../components-default/TheLayoutHeader';
-import { MewConnectWallet } from '@/modules/access-wallet/common';
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
