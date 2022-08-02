@@ -29,7 +29,6 @@
         />
         <mew-select
           v-model="selectedFiat"
-          normal-dropdown
           :items="fiatCurrencyItems"
           is-custom
           class="selectedFiat"
