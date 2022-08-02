@@ -349,7 +349,15 @@ export default {
             this.$router.push({ name: ROUTES_WALLET.WALLETS.NAME });
           }
         } catch (e) {
-          Toast(e, {}, WARNING);
+          if (
+            e.message === 'Already processing eth_requestAccounts. Please wait.'
+          )
+            Toast(
+              'Please open the MetaMask extension and unlock your wallet.',
+              {},
+              WARNING
+            );
+          else Toast(e, {}, WARNING);
         }
       } else {
         Toast('No web3 wallet found!', {}, WARNING);
