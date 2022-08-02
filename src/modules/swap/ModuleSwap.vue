@@ -962,7 +962,10 @@ export default {
         if (token.cgid) {
           const foundToken = this.getCoinGeckoTokenById(token.cgid);
           foundToken.price = this.getFiatValue(foundToken.pricef);
+          const name = foundToken.name;
           foundToken.name = token.symbol;
+          foundToken.value = foundToken.contract;
+          foundToken.subtext = name;
           localContractToToken[token.contract] = Object.assign(
             {},
             token,
@@ -972,17 +975,20 @@ export default {
         }
         const foundToken = this.contractToToken(token.contract);
         if (foundToken) {
+          const name = foundToken.name;
           foundToken.contract = token.contract;
           foundToken.price = this.getFiatValue(foundToken.pricef);
           foundToken.isEth = token.isEth;
           foundToken.name = token.symbol;
+          foundToken.value = foundToken.contract;
+          foundToken.subtext = name;
           localContractToToken[token.contract] = foundToken;
           return;
         }
         const name = token.name;
         token.price = '';
         token.subtext = name;
-        token.value = name;
+        token.value = token.contract;
         token.name = token.symbol;
         localContractToToken[token.contract] = token;
       });

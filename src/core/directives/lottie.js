@@ -10,7 +10,7 @@ const ICONS = {
 const LottieAnimation = {
   bind: function (element, binding) {
     if (!ICONS[binding.value]) throw new Error('Lottie icon not found!');
-    if (ICONS.confetti) {
+    if (ICONS[binding.value] === ICONS.confetti) {
       lottie.loadAnimation({
         container: element,
         renderer: 'svg',
@@ -18,6 +18,8 @@ const LottieAnimation = {
         autoplay: true,
         animationData: ICONS[binding.value]
       });
+
+      return;
     }
     lottie.loadAnimation({
       container: element,
