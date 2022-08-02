@@ -60,7 +60,8 @@ const EXCEPTIONS = [
   'protobufjs',
   '@formatjs/intl-numberformat',
   'babel-jest',
-  'qrcode'
+  'qrcode',
+  'vue-template-compiler'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

@@ -201,10 +201,10 @@ import { getEthBalance } from '@/apollo/queries/wallets/wallets.graphql';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { fromWei, toChecksumAddress } from 'web3-utils';
 import { mapGetters, mapState } from 'vuex';
-import { isEmpty, isEqual } from 'lodash';
-import ENS, { getEnsAddress } from '@ensdomains/ensjs';
-import BigNumber from 'bignumber.js';
+import { isEmpty, isEqual } from 'underscore';
+import ENS from '@ensdomains/ensjs';
 import Web3 from 'web3';
+import { isValidAddress } from 'ethereumjs-utils';
 
 const MAX_ADDRESSES = 5;
 
@@ -453,12 +453,11 @@ export default {
         try {
           // resets the array to empty
           this.accounts.splice(0);
-          const chainId = BigNumber(this.network.type.chainID);
           const ens =
             this.network.type.hasOwnProperty('ens') && !this.isOfflineApp
               ? new ENS({
                   provider: this.web3.eth.currentProvider,
-                  ensAddress: getEnsAddress(chainId.toString())
+                  ensAddress: this.network.type.ens.registry
                 })
               : null;
           for (
@@ -501,10 +500,11 @@ export default {
     getNickname(address) {
       const checksummedAddress = toChecksumAddress(address);
       const isStored = this.addressBookStore.find(item => {
-        const address = item.resolvedAddr
+        if (!isValidAddress(item.address)) return;
+        const addressStored = item.resolvedAddr
           ? toChecksumAddress(item.resolvedAddr)
           : toChecksumAddress(item.address);
-        if (address === checksummedAddress) {
+        if (addressStored === checksummedAddress) {
           return item;
         }
       });
