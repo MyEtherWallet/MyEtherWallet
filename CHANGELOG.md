@@ -34,6 +34,7 @@
 * corrected address limit check [#4043](https://github.com/MyEtherWallet/MyEtherWallet/pull/4043)
 * Fix mnemonic phrase not loading when Non-Ethereum address saved in address book [#4045](https://github.com/MyEtherWallet/MyEtherWallet/pull/4045)
 * fix swap tokens loading issue [#4056](https://github.com/MyEtherWallet/MyEtherWallet/pull/4056)
+* fix extra word verification [#4069](https://github.com/MyEtherWallet/MyEtherWallet/pull/4069)
 
 ### Release v6.6.2
 
