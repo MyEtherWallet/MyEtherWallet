@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="ens-reverse-lookup">
     <v-sheet
       class="addressBlock d-flex justify-space-between align-center mb-7"
     >
@@ -21,6 +21,7 @@
       <div class="mew-heading-2 mb-2">Your Domains:</div>
       <div class="d-flex justify-space-between">
         <mew-select
+          normal-dropdown
           :value="selectedDomain"
           filter-placeholder="Search for Domain"
           :items="domainListItems"
