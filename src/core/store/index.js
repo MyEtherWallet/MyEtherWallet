@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import globalModule from './global';
+import popups from './popups';
 import wallet from './wallet';
 import notifications from './notifications';
 import externalData from './external';
@@ -17,6 +18,7 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
   modules: {
     global: globalModule,
+    popups: popups,
     wallet: wallet,
     external: externalData,
     notifications: notifications,

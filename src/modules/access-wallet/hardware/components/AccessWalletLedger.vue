@@ -62,7 +62,7 @@
       <mew-alert
         class="mt-5"
         title="Device not showing when pairing on Google Chrome?"
-        description="You may have to allow backened permissions."
+        description="You may have to allow backend permissions."
         theme="warning"
         hide-close-icon
         :link-object="article"

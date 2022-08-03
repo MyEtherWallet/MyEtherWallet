@@ -5,52 +5,67 @@
       <v-container class="pa-2 pa-md-3 mb-14" fluid>
         <the-wallet-header />
         <module-confirmation />
-        <wallet-promo-pop-up v-if="!isOfflineApp" />
+        <the-enkrypt-popup v-if="!isOfflineApp" :show="walletEnkryptPopup" />
         <router-view />
       </v-container>
     </v-main>
     <the-wallet-footer />
-    <wallet-promo-snackbar v-if="!isOfflineApp" />
+    <enkrypt-promo-snackbar v-if="!isOfflineApp" />
   </div>
 </template>
 
 <script>
 import { mapActions, mapState, mapGetters } from 'vuex';
 import { toBN } from 'web3-utils';
+import Web3 from 'web3';
+
 import TheWalletSideMenu from './components-wallet/TheWalletSideMenu';
 import TheWalletHeader from './components-wallet/TheWalletHeader';
 import TheWalletFooter from './components-wallet/TheWalletFooter';
-import WalletPromoPopUp from './components-wallet/WalletPromoPopUp';
 import ModuleConfirmation from '@/modules/confirmation/ModuleConfirmation';
 import handlerWallet from '@/core/mixins/handlerWallet.mixin';
 import nodeList from '@/utils/networks';
 import { ERROR, Toast, WARNING } from '@/modules/toast/handler/handlerToast';
 import { Web3Wallet } from '@/modules/access-wallet/common';
-import Web3 from 'web3';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
-import WalletPromoSnackbar from '@/views/components-wallet/WalletPromoSnackbar';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import matchNetwork from '@/core/helpers/matchNetwork';
+import EnkryptPromoSnackbar from '@/views/components-wallet/EnkryptPromoSnackbar';
+import TheEnkryptPopup from '@/views/components-default/TheEnkryptPopup.vue';
+import moment from 'moment';
 export default {
   components: {
     TheWalletSideMenu,
     TheWalletHeader,
     TheWalletFooter,
-    WalletPromoPopUp,
     ModuleConfirmation,
-    WalletPromoSnackbar
+    EnkryptPromoSnackbar,
+    TheEnkryptPopup
   },
   mixins: [handlerWallet, handlerAnalytics],
   computed: {
     ...mapState('wallet', ['address', 'web3', 'identifier', 'isOfflineApp']),
     ...mapState('global', ['online', 'gasPriceType', 'baseGasPrice']),
+    ...mapState('external', ['coinGeckoTokens']),
+    ...mapState('popups', [
+      'enkryptWalletPopup',
+      'enkryptLandingPopup',
+      'enkryptLandingPopupClosed'
+    ]),
     ...mapGetters('global', [
       'network',
       'gasPrice',
       'isEIP1559SupportedNetwork'
     ]),
-    ...mapState('external', ['coinGeckoTokens']),
-    ...mapGetters('wallet', ['balanceInWei'])
+    ...mapGetters('wallet', ['balanceInWei']),
+    walletEnkryptPopup() {
+      return (
+        !this.enkryptLandingPopup &&
+        moment(this.enkryptLandingPopupClosed).diff(new Date(), 'hours') >=
+          24 &&
+        this.enkryptWalletPopup
+      );
+    }
   },
   watch: {
     address() {
@@ -99,10 +114,15 @@ export default {
       'updateGasPrice',
       'setValidNetwork'
     ]),
-    ...mapActions('external', ['setCoinGeckoTokens', 'setTokenAndEthBalance']),
+    ...mapActions('external', [
+      'setCoinGeckoTokens',
+      'setTokenAndEthBalance',
+      'setNetworkTokens'
+    ]),
     ...mapState('wallet', ['instance']),
     ...mapState('global', ['validNetwork']),
     setup() {
+      this.processNetworkTokens();
       this.setTokensAndBalance();
       this.subscribeToBlockNumber();
     },
@@ -112,6 +132,13 @@ export default {
         this.identifier
       );
       if (!matched) this.setValidNetwork(matched);
+    },
+    processNetworkTokens() {
+      const tokenMap = new Map();
+      this.network.type.tokens.forEach(token => {
+        tokenMap.set(token.address.toLowerCase(), token);
+      });
+      this.setNetworkTokens(tokenMap);
     },
     setTokensAndBalance() {
       if (this.coinGeckoTokens?.get) {

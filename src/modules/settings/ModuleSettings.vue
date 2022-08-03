@@ -49,7 +49,7 @@
 
           <div class="d-flex justify-center mt-5">
             <mew-button
-              :disabled="addressBookStore.length > 10"
+              :disabled="addressBookStore.length >= 10"
               title="+ Add"
               btn-size="xlarge"
               @click.native="addMode = !addMode"
@@ -223,6 +223,9 @@ export default {
     back(idx) {
       if (!isNaN(idx)) {
         this.idxToExpand = idx ? idx : null;
+      }
+      if (idx instanceof PointerEvent) {
+        this.idxToExpand = [3];
       }
       this.addMode = false;
       this.editMode = false;
