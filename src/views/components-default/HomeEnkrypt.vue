@@ -56,7 +56,7 @@
               </mew-button>
               <a
                 class="text-decoration-underline textSecondary--text ml-5"
-                href="https://enkrypt.com"
+                href="https://www.enkrypt.com"
                 target="_blank"
                 >Learn more</a
               >

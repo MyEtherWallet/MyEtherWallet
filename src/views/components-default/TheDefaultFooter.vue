@@ -392,7 +392,7 @@ export default {
           {
             label: 'Enkrypt',
             class: 'FooterCXTool',
-            link: 'https://enkrypt.com'
+            link: 'https://www.enkrypt.com'
           },
           {
             label: 'Verify message',

@@ -100,7 +100,7 @@ export default {
                 label: 'Get the extension'
               },
               img: require('@/assets/images/icons/icon-enkrypt-block.svg'),
-              link: 'https://enkrypt.com'
+              link: 'https://www.enkrypt.com'
             }
           ]
         },
