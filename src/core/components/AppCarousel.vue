@@ -9,7 +9,7 @@
         cycle
       >
         <v-carousel-item>
-          <a :href="mobileOrWebLink()" target="_blank">
+          <a href="https://www.enkrypt.com/" target="_blank">
             <img
               class="slide-img"
               src="@/assets/images/slides/slide1.png"
@@ -18,7 +18,7 @@
           </a>
         </v-carousel-item>
         <v-carousel-item>
-          <a href="https://www.mewwallet.com/" target="_blank">
+          <a :href="mobileOrWebLink()" target="_blank">
             <img
               class="slide-img"
               src="@/assets/images/slides/slide2.png"
