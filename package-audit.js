@@ -25,7 +25,9 @@ const AUDIT_EXCEPTIONS = [
   'engine.io',
   'parse-path',
   '@openzeppelin/contracts',
-  'terser'
+  'terser',
+  'protobufjs',
+  'lodash'
 ];
 const execute = (command, callback) => {
   exec(
