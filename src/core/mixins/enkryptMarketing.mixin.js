@@ -60,7 +60,7 @@ export default {
     openEnkrypt() {
       // eslint-disable-next-line
       window.open(
-        this.isMobile ? 'https://enkrypt.com' : this.browserLink,
+        this.isMobile ? 'https://www.enkrypt.com' : this.browserLink,
         '_blank'
       );
     },
@@ -84,7 +84,7 @@ export default {
     },
     openHelpCenter() {
       // eslint-disable-next-line
-      window.open('https://help.myetherwallet.com/en/', '_blank');
+      window.open('https://www.enkrypt.com', '_blank');
     }
   }
 };

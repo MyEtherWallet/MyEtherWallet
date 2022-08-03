@@ -35,6 +35,7 @@
 * Fix mnemonic phrase not loading when Non-Ethereum address saved in address book [#4045](https://github.com/MyEtherWallet/MyEtherWallet/pull/4045)
 * fix swap tokens loading issue [#4056](https://github.com/MyEtherWallet/MyEtherWallet/pull/4056)
 * fix extra word verification [#4069](https://github.com/MyEtherWallet/MyEtherWallet/pull/4069)
+* fix token loading on switching network [#4071](https://github.com/MyEtherWallet/MyEtherWallet/pull/4071)
 
 ### Release v6.6.2
 

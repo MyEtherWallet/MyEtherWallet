@@ -76,8 +76,7 @@ export default {
       this.web3.eth.clearSubscriptions();
     },
     web3() {
-      this.subscribeToBlockNumber();
-      this.setTokensAndBalance();
+      this.setup();
     },
     coinGeckoTokens() {
       this.setTokenAndEthBalance();
