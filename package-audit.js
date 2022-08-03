@@ -18,7 +18,12 @@ const AUDIT_EXCEPTIONS = [
   'scss-tokenizer',
   // no package found
   'codecov',
-  'lodash',
+  'glob-parent',
+  'socket.io-parser',
+  'xmlhttprequest-ssl',
+  'node-forge',
+  'engine.io',
+  'parse-path',
   '@openzeppelin/contracts',
   'terser'
 ];
