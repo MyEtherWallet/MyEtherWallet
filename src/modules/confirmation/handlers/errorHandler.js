@@ -1,0 +1,22 @@
+import { isObject } from 'lodash';
+const errors = {
+  'transaction underpriced': 'Current network is busy. Please try again later.'
+};
+/**
+ * @param {Object | String} err
+ * @returns {String} Error Message
+ */
+const handleError = err => {
+  const errorValues = Object.keys(errors);
+  const message =
+    err && err.message
+      ? isObject(err.message)
+        ? err.message.message
+        : err.message
+      : err;
+  if (!message) return '';
+  const foundError = errorValues.find(item => message.includes(item));
+  return foundError ? errors[foundError] : message;
+};
+
+export default handleError;
