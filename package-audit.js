@@ -27,7 +27,8 @@ const AUDIT_EXCEPTIONS = [
   '@openzeppelin/contracts',
   'terser',
   'protobufjs',
-  'lodash'
+  'lodash',
+  'elliptic'
 ];
 const execute = (command, callback) => {
   exec(
