@@ -958,8 +958,16 @@ export default {
     },
     setupTokenInfo(tokens) {
       console.log('localContractToToken (before)', localContractToToken);
+      console.log(
+        'Main Token (before)',
+        localContractToToken[MAIN_TOKEN_ADDRESS]
+      );
       tokens.forEach(token => {
-        if (localContractToToken[token.contract]) return;
+        if (
+          localContractToToken[token.contract] &&
+          localContractToToken[token.contract]?.price !== '0'
+        )
+          return;
         if (token.cgid) {
           const foundToken = this.getCoinGeckoTokenById(token.cgid);
           foundToken.price = this.getFiatValue(foundToken.pricef);
@@ -972,7 +980,7 @@ export default {
             token,
             foundToken
           );
-          if (token.contract === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee')
+          if (token.contract === MAIN_TOKEN_ADDRESS)
             console.log(
               'foundToken (cgID)',
               localContractToToken[token.contract]
@@ -988,7 +996,7 @@ export default {
           foundToken.name = token.symbol;
           foundToken.value = foundToken.contract;
           foundToken.subtext = name;
-          if (token.contract === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee')
+          if (token.contract === MAIN_TOKEN_ADDRESS)
             console.log('foundToken', foundToken);
           localContractToToken[token.contract] = foundToken;
           return;
@@ -999,7 +1007,7 @@ export default {
         token.value = token.contract;
         token.name = token.symbol;
         localContractToToken[token.contract] = token;
-        if (token.contract === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee')
+        if (token.contract === MAIN_TOKEN_ADDRESS)
           console.log(
             `localToken ${name}`,
             localContractToToken[token.contract]
@@ -1007,10 +1015,7 @@ export default {
       });
       console.log('tokens', tokens);
       console.log('localContractToToken', localContractToToken);
-      console.log(
-        'Main Token',
-        localContractToToken['0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee']
-      );
+      console.log('Main Token', localContractToToken[MAIN_TOKEN_ADDRESS]);
     },
     /**
      * Handles emitted values from module-address-book
