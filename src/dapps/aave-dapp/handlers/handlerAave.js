@@ -7,7 +7,7 @@ import {
   withdrawDetails
 } from './graphQLHelpers.js';
 
-import masterFile from '@/_generated/master-file.json';
+// import masterFile from '@/_generated/master-file.json';
 import eth from '@/assets/images/currencies/eth.png';
 import { toChecksumAddress } from 'web3-utils';
 
@@ -305,7 +305,7 @@ export default class AaveHandler {
       if (toChecksumAddress(item.address) === toChecksumAddress(address))
         return item;
     });
-    const filteredMasterFile = masterFile.find(item => {
+    const filteredMasterFile = [].find(item => {
       if (
         toChecksumAddress(item.contract_address) === toChecksumAddress(address)
       )

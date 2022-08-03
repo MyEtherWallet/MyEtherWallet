@@ -1,10 +1,12 @@
 const imageminMozjpeg = require('imagemin-mozjpeg');
+const TerserPlugin = require('terser-webpack-plugin');
 const ImageminPlugin = require('imagemin-webpack-plugin').default;
 const webpack = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const UglifyJS = require('uglify-es');
 const env_vars = require('../ENV_VARS');
 const allowedConnections = require('../connections');
+const path = require('path');
 
 const sourceMapsConfig = {
   filename: 'sourcemaps/[file].map'
@@ -68,10 +70,38 @@ const webpackConfig = {
     splitChunks: {
       minSize: 1000000,
       maxSize: 20000000
-    }
+    },
+    concatenateModules: true,
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          ecma: undefined,
+          warnings: false,
+          parse: {},
+          compress: {},
+          mangle: true, // Note `mangle.properties` is `false` by default.
+          module: false,
+          output: null,
+          toplevel: false,
+          nameCache: null,
+          ie8: false,
+          keep_classnames: undefined,
+          keep_fnames: false,
+          safari10: false
+        }
+      })
+    ]
   },
   output: {
     filename: '[name].[hash].js'
+  },
+  module: {
+    rules: [
+      {
+        include: path.resolve('node_modules', 'targetLibraryName'),
+        sideEffects: false
+      }
+    ]
   }
 };
 
