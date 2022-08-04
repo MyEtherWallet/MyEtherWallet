@@ -45,18 +45,16 @@ class ledgerWallet {
       }
     };
   }
-  async init(basePath, bluetooth) {
-    const network = store.getters['global/network'].type.name_long;
+  async init(basePath, bluetooth, network) {
     this.basePath = basePath ? basePath : this.supportedPaths[0].path;
     this.isHardened = this.basePath.toString().split('/').length - 1 === 2;
     this.transport = bluetooth
       ? await getLedgerXTransport()
       : await getLedgerTransport();
 
-    await connectToApp(this.transport, network).then(result => {
-      if (result) this.ledger = new Ledger(this.transport);
+    await connectToApp(this.transport, network.value).then(async () => {
+      this.ledger = new Ledger(this.transport);
     });
-
     if (!this.isHardened) {
       const rootPub = await getRootPubKey(this.ledger, this.basePath);
       this.hdKey = new HDKey();
@@ -182,9 +180,9 @@ class ledgerWallet {
     return this.supportedPaths;
   }
 }
-const createWallet = async (basePath, bluetooth = false) => {
+const createWallet = async (basePath, bluetooth = false, network) => {
   const _ledgerWallet = new ledgerWallet();
-  await _ledgerWallet.init(basePath, bluetooth);
+  await _ledgerWallet.init(basePath, bluetooth, network);
   return _ledgerWallet;
 };
 createWallet.errorHandler = errorHandler;
