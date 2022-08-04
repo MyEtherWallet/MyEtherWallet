@@ -1,5 +1,9 @@
 ### Release v6.6.3-hotfix.1
 
+### devop
+
+* add opera link [#4077](https://github.com/MyEtherWallet/MyEtherWallet/pull/4077)
+
 ### fix
 
 * fix banner link, redo intercom [#4072](https://github.com/MyEtherWallet/MyEtherWallet/pull/4072)
