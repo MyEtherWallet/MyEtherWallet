@@ -286,7 +286,7 @@ class Changelly {
               statusObj: { id: tradeObj.response.id }
             });
           })
-          .catch(reject);
+          .catch(e => reject(e));
       } else {
         // resolver for when user does non chain transaction
         const resolver = val => {
