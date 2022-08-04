@@ -36,6 +36,9 @@ const setLastPath = function ({ commit }, val) {
 const setCoinGeckoTokens = function ({ commit }, params) {
   commit('SET_COIN_GECKO_TOKENS', params);
 };
+const setNetworkTokens = function ({ commit }, params) {
+  commit('SET_NETWORK_TOKENS', params);
+};
 const setTokenAndEthBalance = function ({
   rootGetters,
   getters,
@@ -176,5 +179,6 @@ export default {
   setLastPath,
   setCurrency,
   setCoinGeckoTokens,
-  setTokenAndEthBalance
+  setTokenAndEthBalance,
+  setNetworkTokens
 };

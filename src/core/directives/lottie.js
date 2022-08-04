@@ -7,23 +7,26 @@ const ICONS = {
   swap: swap,
   confetti: confetti
 };
+
+const LOOP = {
+  checkmark: false,
+  swap: false,
+  confetti: true
+};
+
+const AUTOPLAY = {
+  checkmark: true,
+  swap: true,
+  confetti: true
+};
 const LottieAnimation = {
   bind: function (element, binding) {
     if (!ICONS[binding.value]) throw new Error('Lottie icon not found!');
-    if (ICONS.confetti) {
-      lottie.loadAnimation({
-        container: element,
-        renderer: 'svg',
-        loop: true,
-        autoplay: true,
-        animationData: ICONS[binding.value]
-      });
-    }
     lottie.loadAnimation({
       container: element,
       renderer: 'svg',
-      loop: false,
-      autoplay: true,
+      loop: LOOP[binding.value],
+      autoplay: AUTOPLAY[binding.value],
       animationData: ICONS[binding.value]
     });
   }
