@@ -47,7 +47,7 @@
     "@ethereumjs/tx": "3.5.2",
     "@formatjs/intl-numberformat": "8.0.4",
     "@ledgerhq/hw-transport-web-ble": "6.27.1",
-    "@ledgerhq/live-common": "24.1.0",
+    "@ledgerhq/live-common": "25.0.0",
     "@lokalise/node-api": "7.3.1",
     "@mathieustan/vue-intercom": "0.0.9",
     "@myetherwallet/eth2-keystore": "0.2.3",
