@@ -68,4 +68,5 @@ module.exports = [
   'https://api.stakewise.io:443/pool-stats', // stakewise pool
   'https://api.thegraph.com:443/subgraphs/name/kleros/curate', // Kleros Subtags
   'https://api.thegraph.com/subgraphs/name/eccentricexit/curate-xdai-ii', // Kleros Subtags
+  'https://ipfs.kleros.io', // Kleros Subtags
 ];
