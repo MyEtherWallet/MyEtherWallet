@@ -1275,7 +1275,6 @@ export default {
               this.isLoadingProviders = false;
             } else {
               this.isLoadingProviders = false;
-              this.showAnimation = false;
             }
           });
       }
