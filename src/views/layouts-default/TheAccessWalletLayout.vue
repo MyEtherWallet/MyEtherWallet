@@ -190,7 +190,7 @@ export default {
           {
             color: 'white',
             title: 'Enkrypt',
-            subtitle: 'Connect with Enrypt browser extension',
+            subtitle: 'Connect with Enkrypt browser extension',
             official: true,
             recommended: true,
             icon: require('@/assets/images/icons/icon-enkrypt-block.svg'),
