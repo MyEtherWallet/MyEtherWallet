@@ -12,7 +12,10 @@
     :max-width="maxWidth"
     :fullscreen="$vuetify.breakpoint.smAndDown"
   >
-    <div :class="$vuetify.breakpoint.smAndDown ? 'pa-3' : 'pa-8 pt-5'">
+    <div
+      v-if="!noPadding"
+      :class="$vuetify.breakpoint.smAndDown ? 'pa-3' : 'pa-8 pt-5'"
+    >
       <div
         v-if="!noTitle"
         :class="[
@@ -27,6 +30,18 @@
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </div>
+      <slot />
+    </div>
+    <div v-else class="position-relative">
+      <v-btn
+        class="close-button"
+        fab
+        color="transparent"
+        depressed
+        @click="isDialogOpen = false"
+      >
+        <v-icon color="white">mdi-close</v-icon>
+      </v-btn>
       <slot />
     </div>
   </v-dialog>
@@ -57,6 +72,10 @@ export default {
       default: ''
     },
     noTitle: {
+      type: Boolean,
+      default: false
+    },
+    noPadding: {
       type: Boolean,
       default: false
     }
@@ -115,4 +134,13 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.position-relative {
+  position: relative;
+}
+.close-button {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+</style>

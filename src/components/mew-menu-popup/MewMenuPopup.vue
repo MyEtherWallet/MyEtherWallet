@@ -10,6 +10,7 @@
       <!-- ================================================================== -->
       <v-btn
         id="unique-id--mew-menu-popup--activator-button"
+        class="px-3"
         :icon="icon"
         :color="color"
         :outlined="outlined"
@@ -181,7 +182,7 @@ export default {
   display: inline-block;
 
   .v-btn {
-    border-radius: 10px;
+    border-radius: 8px;
     text-transform: none;
   }
 }

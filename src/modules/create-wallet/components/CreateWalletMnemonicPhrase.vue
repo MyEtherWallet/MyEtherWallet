@@ -270,7 +270,9 @@ export default {
       return this.phrase.length === this.phraseSize;
     },
     extraWordMatch() {
-      return this.extraWord === this.extraWordVerification;
+      return this.extraWord
+        ? this.extraWord === this.extraWordVerification
+        : true;
     },
     stepTwoText() {
       return this.extraWord === ''
