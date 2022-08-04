@@ -1,5 +1,9 @@
-import tokens from '@/_generated/tokens/tokens-moonbeam.json';
-import contracts from '@/_generated/contracts/contract-abi-moonbeam.json';
+let tokens, contracts;
+
+import('@/_generated/tokens/tokens-moonbeam.json').then(val => (tokens = val));
+import('@/_generated/contracts/contract-abi-moonbeam.json').then(
+  val => (contracts = val)
+);
 import moonbeam from '@/assets/images/networks/moonbeam.svg';
 
 export default {

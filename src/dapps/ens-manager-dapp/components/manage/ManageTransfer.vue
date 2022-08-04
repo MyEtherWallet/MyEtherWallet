@@ -13,9 +13,10 @@
 </template>
 
 <script>
-import addressBook from '@/modules/address-book/ModuleAddressBook';
 import BigNumber from 'bignumber.js';
 import { mapState } from 'vuex';
+
+import addressBook from '@/modules/address-book/ModuleAddressBook';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 export default {
   components: {

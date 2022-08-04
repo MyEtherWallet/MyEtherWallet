@@ -134,14 +134,15 @@
 
 <script>
 import { isEmpty } from 'lodash';
+import { mapActions, mapGetters, mapState } from 'vuex';
+import { fromWei } from 'web3-utils';
+import BigNumber from 'bignumber.js';
+
 import {
   SETH2_GOERLI_CONTRACT,
   SETH2_MAINNET_CONTRACT
 } from '@/dapps/stakewise/handlers/configs.js';
 import sEthAbi from '@/dapps/stakewise/handlers/abi/stakedEthToken.js';
-import { mapActions, mapGetters, mapState } from 'vuex';
-import { fromWei } from 'web3-utils';
-import BigNumber from 'bignumber.js';
 import { STAKEWISE_ROUTES } from '../configsRoutes';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import buyMore from '@/core/mixins/buyMore.mixin.js';

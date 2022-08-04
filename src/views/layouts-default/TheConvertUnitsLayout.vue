@@ -100,8 +100,6 @@
 </template>
 
 <script>
-import TheLayoutHeader from '../components-default/TheLayoutHeader';
-import AppGetStarted from '@/core/components/AppGetStarted';
 import { mapState } from 'vuex';
 import { BigNumber } from 'bignumber.js';
 import utils from 'web3-utils';
@@ -109,8 +107,8 @@ import utils from 'web3-utils';
 export default {
   name: 'TheConvertUnitsLayout',
   components: {
-    TheLayoutHeader,
-    AppGetStarted
+    TheLayoutHeader: () => import('../components-default/TheLayoutHeader'),
+    AppGetStarted: () => import('@/core/components/AppGetStarted')
   },
   data() {
     return {

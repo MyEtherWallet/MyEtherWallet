@@ -39,12 +39,12 @@
 </template>
 
 <script>
-import AppModal from '@/core/components/AppModal';
 import { isEmpty } from 'lodash';
+
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 export default {
   name: 'DateSelectorPopup',
-  components: { AppModal },
+  components: { AppModal: () => import('@/core/components/AppModal') },
   props: {
     showBlock: {
       type: Boolean,

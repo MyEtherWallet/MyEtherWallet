@@ -16,19 +16,13 @@
 </template>
 
 <script>
-import TheWrapperWallet from '@/core/components/TheWrapperWallet';
-import AppCarousel from '@/core/components/AppCarousel';
-import ModuleBalance from '@/modules/balance/ModuleBalance';
-import ModuleTokens from '@/modules/balance/ModuleTokens';
-import ModuleSwapRates from '@/modules/swap/ModuleSwapRates';
-
 export default {
   components: {
-    AppCarousel,
-    ModuleBalance,
-    ModuleTokens,
-    ModuleSwapRates,
-    TheWrapperWallet
+    AppCarousel: () => import('@/core/components/AppCarousel'),
+    ModuleBalance: () => import('@/modules/balance/ModuleBalance'),
+    ModuleTokens: () => import('@/modules/balance/ModuleTokens'),
+    ModuleSwapRates: () => import('@/modules/swap/ModuleSwapRates'),
+    TheWrapperWallet: () => import('@/core/components/TheWrapperWallet')
   }
 };
 </script>

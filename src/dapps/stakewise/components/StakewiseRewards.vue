@@ -72,10 +72,10 @@
 
 <script>
 import BigNumber from 'bignumber.js';
-import { STAKEWISE_ROUTES } from '@/dapps/stakewise/configsRoutes';
 import { mapGetters, mapState } from 'vuex';
-import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 
+import { STAKEWISE_ROUTES } from '@/dapps/stakewise/configsRoutes';
+import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 export default {
   name: 'ModuleSideRewards',
   components: {},

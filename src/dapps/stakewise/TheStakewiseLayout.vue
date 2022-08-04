@@ -12,19 +12,20 @@
 </template>
 
 <script>
-import TheWrapperDapp from '@/core/components/TheWrapperDapp';
-import { STAKEWISE_ROUTES } from './configsRoutes';
-import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
 import { mapActions, mapGetters, mapState } from 'vuex';
-import handler from './handlers/stakewiseHandler';
 import BigNumber from 'bignumber.js';
 import { fromWei } from 'web3-utils';
+
+import { STAKEWISE_ROUTES } from './configsRoutes';
+import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
 import { toBNSafe } from '@/core/helpers/numberFormatHelper';
+
+import handler from './handlers/stakewiseHandler';
 
 export default {
   name: 'TheStakewiseLayout',
   components: {
-    TheWrapperDapp
+    TheWrapperDapp: () => import('@/core/components/TheWrapperDapp')
   },
   data() {
     return {

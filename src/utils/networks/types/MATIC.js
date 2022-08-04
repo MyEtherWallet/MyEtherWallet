@@ -1,5 +1,8 @@
+let tokens;
+
+import('@/_generated/tokens/tokens-matic.json').then(val => (tokens = val));
+
 import matic from '@/assets/images/networks/matic.svg';
-import tokens from '@/_generated/tokens/tokens-matic.json';
 export default {
   name: 'MATIC',
   name_long: 'Polygon (Matic)',

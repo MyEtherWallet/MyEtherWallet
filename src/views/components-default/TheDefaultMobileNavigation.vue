@@ -95,14 +95,15 @@
 </template>
 
 <script>
-import mewTools from '@/components/mew-tools/MewTools';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
-import AppBtnMenu from '@/core/components/AppBtnMenu';
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { mapGetters } from 'vuex';
 export default {
   name: 'MobileMenu',
-  components: { AppBtnMenu, mewTools },
+  components: {
+    AppBtnMenu: () => import('@/core/components/AppBtnMenu'),
+    mewTools: () => import('@/components/mew-tools/MewTools')
+  },
   mixins: [buyMore],
   data: () => ({
     isOpen: false

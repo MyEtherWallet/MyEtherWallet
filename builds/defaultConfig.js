@@ -67,7 +67,7 @@ const webpackConfig = {
   optimization: {
     splitChunks: {
       minSize: 1000000,
-      maxSize: 20000000
+      maxSize: 5242880
     }
   },
   output: {

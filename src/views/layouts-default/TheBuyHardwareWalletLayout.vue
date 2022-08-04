@@ -81,11 +81,11 @@
 </template>
 
 <script>
-import TheLayoutHeader from '../components-default/TheLayoutHeader';
-
 export default {
   name: 'TheBuyHardwareWalletLayout',
-  components: { TheLayoutHeader },
+  components: {
+    TheLayoutHeader: () => import('../components-default/TheLayoutHeader')
+  },
   data: () => ({
     buttons: [
       {

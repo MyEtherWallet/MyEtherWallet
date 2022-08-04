@@ -1,5 +1,9 @@
-import tokens from '@/_generated/tokens/tokens-rop.json';
-import contracts from '@/_generated/contracts/contract-abi-rop.json';
+let tokens, contracts;
+
+import('@/_generated/tokens/tokens-rop.json').then(val => (tokens = val));
+import('@/_generated/contracts/contract-abi-rop.json').then(
+  val => (contracts = val)
+);
 import rop from '@/assets/images/networks/network.svg';
 import { ROP } from '../tlds';
 

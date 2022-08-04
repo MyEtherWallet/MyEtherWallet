@@ -1,5 +1,9 @@
-import tokens from '@/_generated/tokens/tokens-moonriver.json';
-import contracts from '@/_generated/contracts/contract-abi-moonriver.json';
+let tokens, contracts;
+
+import('@/_generated/tokens/tokens-moonriver.json').then(val => (tokens = val));
+import('@/_generated/contracts/contract-abi-moonriver.json').then(
+  val => (contracts = val)
+);
 import moonriver from '@/assets/images/networks/moonriver.svg';
 
 export default {

@@ -1,5 +1,9 @@
-import tokens from '@/_generated/tokens/tokens-etc.json';
-import contracts from '@/_generated/contracts/contract-abi-etc.json';
+let tokens, contracts;
+
+import('@/_generated/tokens/tokens-etc.json').then(val => (tokens = val));
+import('@/_generated/contracts/contract-abi-etc.json').then(
+  val => (contracts = val)
+);
 import etc from '@/assets/images/networks/etc.svg';
 
 export default {

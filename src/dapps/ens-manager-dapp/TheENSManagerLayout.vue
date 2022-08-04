@@ -320,35 +320,30 @@
 </template>
 
 <script>
-import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
-import TheWrapperDapp from '@/core/components/TheWrapperDapp';
-import ModuleRegisterDomain from './modules/ModuleRegisterDomain';
-import ModuleManageDomain from './modules/ModuleManageDomain';
-import handlerEnsManager from './handlers/handlerEnsManager';
-import ClaimBalance from './components/claim/ClaimBalance';
-import EnsReverseLookup from './components/reverse/EnsReverseLookup';
 import { mapGetters, mapState } from 'vuex';
-import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import BigNumber from 'bignumber.js';
 import ENS from '@ensdomains/ensjs';
 import { fromWei, toBN, toWei } from 'web3-utils';
+
+import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
+import handlerEnsManager from './handlers/handlerEnsManager';
+import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 import { ENS_MANAGER_ROUTE } from './configsRoutes';
 import normalise from '@/core/helpers/normalise';
 import { isAddress } from '@/core/helpers/addressUtils';
-import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import { hasClaimed, submitClaim } from './handlers/handlerENSTokenClaim';
 import stripQuery from '@/core/helpers/stripQuery.js';
 
 export default {
   name: 'ENSManagerLayout',
   components: {
-    ModuleRegisterDomain,
-    ModuleManageDomain,
-    TheWrapperDapp,
-    ModuleAddressBook,
-    ClaimBalance,
-    EnsReverseLookup
+    ModuleRegisterDomain: () => import('./modules/ModuleRegisterDomain'),
+    ModuleManageDomain: () => import('./modules/ModuleManageDomain'),
+    TheWrapperDapp: () => import('@/core/components/TheWrapperDapp'),
+    ModuleAddressBook: () => import('@/modules/address-book/ModuleAddressBook'),
+    ClaimBalance: () => import('./components/claim/ClaimBalance'),
+    EnsReverseLookup: () => import('./components/reverse/EnsReverseLookup')
   },
   data() {
     return {

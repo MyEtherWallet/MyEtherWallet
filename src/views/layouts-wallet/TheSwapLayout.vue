@@ -18,10 +18,6 @@
 </template>
 
 <script>
-import TheWrapperWallet from '@/core/components/TheWrapperWallet';
-import ModuleSwap from '@/modules/swap/ModuleSwap';
-import ModuleTokensValue from '@/modules/balance/ModuleTokensValue';
-import ModuleTransferHistory from '@/modules/transfer-history/ModuleTransferHistory';
 import { mapGetters } from 'vuex';
 
 const ETH_TOKEN = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
@@ -29,10 +25,11 @@ const DAI_TOKEN = '0x6b175474e89094c44da98b954eedeac495271d0f';
 
 export default {
   components: {
-    TheWrapperWallet,
-    ModuleSwap,
-    ModuleTokensValue,
-    ModuleTransferHistory
+    TheWrapperWallet: () => import('@/core/components/TheWrapperWallet'),
+    ModuleSwap: () => import('@/modules/swap/ModuleSwap'),
+    ModuleTokensValue: () => import('@/modules/balance/ModuleTokensValue'),
+    ModuleTransferHistory: () =>
+      import('@/modules/transfer-history/ModuleTransferHistory')
   },
   props: {
     fromToken: {

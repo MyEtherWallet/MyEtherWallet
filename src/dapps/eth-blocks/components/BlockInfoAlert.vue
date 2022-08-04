@@ -318,17 +318,18 @@
 </template>
 
 <script>
+import { fromWei } from 'web3-utils';
+import { mapGetters, mapState, mapActions } from 'vuex';
+import BigNumber from 'bignumber.js';
+
 import {
   BLOCK_ALERT,
   blockAlertValidator
 } from '../handlers/helpers/blockAlertType';
-import { fromWei } from 'web3-utils';
-import { mapGetters, mapState, mapActions } from 'vuex';
 import {
   formatIntegerToString,
   formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
-import BigNumber from 'bignumber.js';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 const RARIBLE_CONTRACT = 'token/0x01234567bac6ff94d7e4f0ee23119cf848f93245:';
 const RARIBLE = 'https://rarible.com/';

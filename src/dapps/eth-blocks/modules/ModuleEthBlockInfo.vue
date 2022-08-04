@@ -188,17 +188,15 @@
 </template>
 
 <script>
-import BlockInfo from '../components/BlockInfo.vue';
-import BlockSearch from '../components/BlockSearch.vue';
-import BlockSend from '../components/BlockSend.vue';
-import BlocksLoading from '../components/BlocksLoading.vue';
-import handlerBlock from '../handlers/handlerBlock';
+import { mapActions, mapGetters, mapState } from 'vuex';
+import { toBN } from 'web3-utils';
+
 import { BLOCK_ALERT } from '../handlers/helpers/blockAlertType';
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 import { ETH_BLOCKS_ROUTE } from '../configsRoutes';
-import { mapActions, mapGetters, mapState } from 'vuex';
 import { validBlockNumber } from '../handlers/helpers/common';
-import { toBN } from 'web3-utils';
+
+import handlerBlock from '../handlers/handlerBlock';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 const MIN_GAS_TRANSFER = 150000;
@@ -207,10 +205,10 @@ const MIN_GAS_MINT = 350000;
 export default {
   name: 'ModuleEthBlockInfo',
   components: {
-    BlockInfo,
-    BlockSearch,
-    BlocksLoading,
-    BlockSend
+    BlockInfo: () => import('../components/BlockInfo.vue'),
+    BlockSearch: () => import('../components/BlockSearch.vue'),
+    BlockSend: () => import('../components/BlockSend.vue'),
+    BlocksLoading: () => import('../components/BlocksLoading.vue')
   },
   mixins: [handlerAnalytics],
   props: {

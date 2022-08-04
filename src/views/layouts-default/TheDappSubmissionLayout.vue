@@ -828,13 +828,14 @@
 </template>
 
 <script>
-import TheLayoutHeader from '../components-default/TheLayoutHeader';
 import axios from 'axios';
 import web3 from 'web3';
 
 export default {
   name: 'DappSubmition',
-  components: { TheLayoutHeader },
+  components: {
+    TheLayoutHeader: () => import('../components-default/TheLayoutHeader')
+  },
   data: () => ({
     imgMockFlow: '',
     imgDappIcon: '',

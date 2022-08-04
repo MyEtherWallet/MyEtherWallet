@@ -1,5 +1,8 @@
+let tokens;
+
+import('@/_generated/tokens/tokens-bsc.json').then(val => (tokens = val));
+
 import bsc from '@/assets/images/networks/bsc.svg';
-import tokens from '@/_generated/tokens/tokens-bsc.json';
 export default {
   name: 'BSC',
   name_long: 'Binance Smart Chain',

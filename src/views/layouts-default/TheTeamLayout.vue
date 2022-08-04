@@ -29,13 +29,14 @@
 </template>
 
 <script>
-import TheLayoutHeader from '../components-default/TheLayoutHeader';
-import AppBlockTitle from '@/core/components/AppBlockTitle';
 import axios from 'axios';
 
 export default {
   name: 'TheTeamLayout',
-  components: { TheLayoutHeader, AppBlockTitle },
+  components: {
+    TheLayoutHeader: () => import('../components-default/TheLayoutHeader'),
+    AppBlockTitle: () => import('@/core/components/AppBlockTitle')
+  },
   data: vm => ({
     titleData: {
       textProps: '',

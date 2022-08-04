@@ -5,13 +5,10 @@
 </template>
 
 <script>
-import ModuleMessage from '@/modules/message/ModuleMessageVerify';
-import TheWrapperWallet from '@/core/components/TheWrapperWallet';
-
 export default {
   components: {
-    ModuleMessage,
-    TheWrapperWallet
+    ModuleMessage: () => import('@/modules/message/ModuleMessageVerify'),
+    TheWrapperWallet: () => import('@/core/components/TheWrapperWallet')
   }
 };
 </script>

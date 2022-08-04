@@ -101,25 +101,24 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex';
+import { mapGetters, mapState, mapActions } from 'vuex';
+import BigNumber from 'bignumber.js';
+import { fromWei, toWei, toBN } from 'web3-utils';
+
 import abi from '../handlers/helpers/multicall.js';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import handlerBlock from '../handlers/handlerBlock';
-import BlockResultComponent from '../components/BlockResultComponent';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
-import BigNumber from 'bignumber.js';
-import { fromWei, toWei, toBN } from 'web3-utils';
-import { mapActions } from 'vuex';
 import { EventBus } from '@/core/plugins/eventBus';
+
 export default {
   name: 'ModuleEthBlockBatchMinting',
   components: {
-    BlockResultComponent
+    BlockResultComponent: () => import('../components/BlockResultComponent')
   },
   data() {
     return {
       blocks: [],
-      //localBlocks: [],
       blockCache: {},
       isLoading: true,
       gasLimit: '21000',

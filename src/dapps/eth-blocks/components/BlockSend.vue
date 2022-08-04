@@ -30,12 +30,10 @@
 </template>
 
 <script>
-import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
-
 export default {
   name: 'BlockSend',
   components: {
-    ModuleAddressBook
+    ModuleAddressBook: () => import('@/modules/address-book/ModuleAddressBook')
   },
   props: {
     open: {

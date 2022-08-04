@@ -37,8 +37,9 @@
 </template>
 
 <script>
-import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { mapGetters } from 'vuex';
+
+import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 export default {
   mixins: [buyMore],

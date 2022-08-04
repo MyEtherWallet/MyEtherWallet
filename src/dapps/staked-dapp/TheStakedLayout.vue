@@ -141,26 +141,23 @@
 </template>
 
 <script>
+import { mapGetters, mapState } from 'vuex';
+
 import { SUPPORTED_NETWORKS } from './handlers/supportedNetworks';
 import { STAKED_ROUTE } from './configsRoutes';
 import iconColorfulETH from '@/assets/images/icons/icon-dapp-eth.svg';
-import TheWrapperDapp from '@/core/components/TheWrapperDapp';
-import handlerStaked from './handlers/handlerStaked';
-//import bgDappsStake from '@/assets/images/backgrounds/bg-dapps-stake.svg';
-import { mapGetters, mapState } from 'vuex';
-import StakedStepper from './components/staked-stepper/StakedStepper';
-import StakedStatus from './components/StakedStatus';
 import {
   formatPercentageValue,
   formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
 
+import handlerStaked from './handlers/handlerStaked';
 export default {
   name: 'TheStakedLayout',
   components: {
-    TheWrapperDapp,
-    StakedStepper,
-    StakedStatus
+    TheWrapperDapp: () => import('@/core/components/TheWrapperDapp'),
+    StakedStepper: () => import('./components/staked-stepper/StakedStepper'),
+    StakedStatus: () => import('./components/StakedStatus')
   },
   data() {
     return {

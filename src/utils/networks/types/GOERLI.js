@@ -1,5 +1,9 @@
-import tokens from '@/_generated/tokens/tokens-goerli.json';
-import contracts from '@/_generated/contracts/contract-abi-goerli.json';
+let tokens, contracts;
+
+import('@/_generated/tokens/tokens-goerli.json').then(val => (tokens = val));
+import('@/_generated/contracts/contract-abi-goerli.json').then(
+  val => (contracts = val)
+);
 import { GOERLI } from '../tlds';
 import goerli from '@/assets/images/networks/network.svg';
 

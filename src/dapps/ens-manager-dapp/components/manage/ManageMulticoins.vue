@@ -23,8 +23,9 @@
 </template>
 
 <script>
-import { Toast, WARNING } from '@/modules/toast/handler/handlerToast';
 import { clone } from 'lodash';
+
+import { Toast, WARNING } from '@/modules/toast/handler/handlerToast';
 export default {
   props: {
     setMulticoin: {

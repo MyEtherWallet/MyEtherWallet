@@ -1,5 +1,9 @@
-import tokens from '@/_generated/tokens/tokens-kov.json';
-import contracts from '@/_generated/contracts/contract-abi-kov.json';
+let tokens, contracts;
+
+import('@/_generated/tokens/tokens-kov.json').then(val => (tokens = val));
+import('@/_generated/contracts/contract-abi-kov.json').then(
+  val => (contracts = val)
+);
 import kov from '@/assets/images/networks/network.svg';
 
 export default {

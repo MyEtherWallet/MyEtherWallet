@@ -93,13 +93,12 @@
 </template>
 
 <script>
-import TheLayoutHeader from '../components-default/TheLayoutHeader';
 import axios from 'axios';
-import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 export default {
   name: 'TheCareersLayout',
-  components: { TheLayoutHeader },
+  TheLayoutHeader: () => import('../components-default/TheLayoutHeader'),
   data() {
     return {
       loadingCareers: true,

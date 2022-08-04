@@ -21,8 +21,9 @@
 </template>
 
 <script>
-import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { mapGetters, mapState } from 'vuex';
+
+import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 export default {
   name: 'StakewiseApr',
   computed: {

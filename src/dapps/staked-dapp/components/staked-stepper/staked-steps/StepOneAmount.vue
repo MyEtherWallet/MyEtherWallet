@@ -132,16 +132,17 @@
 </template>
 
 <script>
-import BorderBlock from '@/components/BorderBlock';
 import BigNumber from 'bignumber.js';
 import { mapState, mapGetters } from 'vuex';
+
 import {
   formatPercentageValue,
   formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
+
 export default {
-  components: { BorderBlock },
+  components: { BorderBlock: () => import('@/components/BorderBlock') },
   mixins: [buyMore],
   props: {
     currentApr: {

@@ -57,11 +57,11 @@
 
 <script>
 import { mapState } from 'vuex';
-import BlockSearch from '../components/BlockSearch.vue';
+
 export default {
   name: 'ModuleEthBlocksMint',
   components: {
-    BlockSearch
+    BlockSearch: () => import('../components/BlockSearch.vue')
   },
   computed: {
     /**

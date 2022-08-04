@@ -164,15 +164,16 @@
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex';
 import BigNumber from 'bignumber.js';
-import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 import { fromWei } from 'web3-utils';
-import { ETH_BLOCKS_ROUTE } from '../configsRoutes';
 import { some, isEmpty } from 'lodash';
-import BlockQuickViewPopup from './BlockQuickViewPopup';
+
+import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
+import { ETH_BLOCKS_ROUTE } from '../configsRoutes';
+
 export default {
   name: 'BlockResultComponent',
   components: {
-    BlockQuickViewPopup
+    BlockQuickViewPopup: () => import('./BlockQuickViewPopup')
   },
   props: {
     blockHandler: {

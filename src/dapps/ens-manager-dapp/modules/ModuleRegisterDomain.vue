@@ -48,14 +48,15 @@
 </template>
 
 <script>
-import Request from '../components/register/RegisterRequest';
-import Register from '../components/register/Register';
-import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import BigNumber from 'bignumber.js';
 import { mapGetters, mapState } from 'vuex';
 
+import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 export default {
-  components: { Request, Register },
+  components: {
+    Request: () => import('../components/register/RegisterRequest'),
+    Register: () => import('../components/register/Register')
+  },
   props: {
     getRentPrice: {
       default: function () {

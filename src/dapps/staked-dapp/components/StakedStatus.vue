@@ -246,17 +246,19 @@
 </template>
 
 <script>
-import configNetworkTypes from '@/dapps/staked-dapp/handlers/configNetworkTypes';
 import { mapGetters, mapState } from 'vuex';
-import iconETHNavy from '@/assets/images/currencies/eth-dark-navy.svg';
 import BigNumber from 'bignumber.js';
+import moment from 'moment';
+
+import configNetworkTypes from '@/dapps/staked-dapp/handlers/configNetworkTypes';
 import {
   formatFloatingPointValue,
   formatPercentageValue
 } from '@/core/helpers/numberFormatHelper';
-import moment from 'moment';
 import { STATUS_TYPES } from '@/dapps/staked-dapp/handlers/handlerStaked';
 import { GOERLI } from '@/utils/networks/types';
+
+import iconETHNavy from '@/assets/images/currencies/eth-dark-navy.svg';
 
 export default {
   props: {

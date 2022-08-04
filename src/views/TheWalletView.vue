@@ -18,28 +18,26 @@
 import { mapActions, mapState, mapGetters } from 'vuex';
 import { toBN } from 'web3-utils';
 import Web3 from 'web3';
+import moment from 'moment';
 
-import TheWalletSideMenu from './components-wallet/TheWalletSideMenu';
-import TheWalletHeader from './components-wallet/TheWalletHeader';
-import TheWalletFooter from './components-wallet/TheWalletFooter';
-import ModuleConfirmation from '@/modules/confirmation/ModuleConfirmation';
 import handlerWallet from '@/core/mixins/handlerWallet.mixin';
 import nodeList from '@/utils/networks';
 import { ERROR, Toast, WARNING } from '@/modules/toast/handler/handlerToast';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { Web3Wallet } from '@/modules/access-wallet/common';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
-import EnkryptPromoSnackbar from '@/views/components-wallet/EnkryptPromoSnackbar';
-import TheEnkryptPopup from '@/views/components-default/TheEnkryptPopup.vue';
-import moment from 'moment';
+
 export default {
   components: {
-    TheWalletSideMenu,
-    TheWalletHeader,
-    TheWalletFooter,
-    ModuleConfirmation,
-    EnkryptPromoSnackbar,
-    TheEnkryptPopup
+    TheWalletSideMenu: () => import('./components-wallet/TheWalletSideMenu'),
+    TheWalletHeader: () => import('./components-wallet/TheWalletHeader'),
+    TheWalletFooter: () => import('./components-wallet/TheWalletFooter'),
+    ModuleConfirmation: () =>
+      import('@/modules/confirmation/ModuleConfirmation'),
+    EnkryptPromoSnackbar: () =>
+      import('@/views/components-wallet/EnkryptPromoSnackbar'),
+    TheEnkryptPopup: () =>
+      import('@/views/components-default/TheEnkryptPopup.vue')
   },
   mixins: [handlerWallet],
   computed: {
@@ -130,8 +128,8 @@ export default {
     },
     processNetworkTokens() {
       const tokenMap = new Map();
-      this.network.type.tokens.forEach(token => {
-        tokenMap.set(token.address.toLowerCase(), token);
+      this.network.type.tokens.then(res => {
+        this.setNetworkTokens(new Map(res.map(item => item)));
       });
       this.setNetworkTokens(tokenMap);
     },
