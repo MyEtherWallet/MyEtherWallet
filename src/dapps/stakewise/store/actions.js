@@ -20,18 +20,6 @@ const removePendingTxsGoerli = function ({ commit }, val) {
   commit('REMOVE_TO_PENDING_TXS_GOERLI', val);
 };
 
-const closeStakewisePromo = function ({ commit }) {
-  commit('CLOSE_STAKEWISE_PROMO');
-};
-
-const hideForSeven = function ({ commit }) {
-  commit('HIDE_FOR_SEVEN');
-};
-
-const hideForFourteen = function ({ commit }) {
-  commit('HIDE_FOR_FOURTEEN');
-};
-
 const setRewardBalance = function ({ commit }, val) {
   commit('SET_RETH_BALANCE', val);
 };
@@ -48,9 +36,6 @@ export default {
   addToPendingTxsGoerli,
   removePendingTxs,
   removePendingTxsGoerli,
-  closeStakewisePromo,
-  hideForSeven,
-  hideForFourteen,
   setRewardBalance,
   setStakeBalance
 };
