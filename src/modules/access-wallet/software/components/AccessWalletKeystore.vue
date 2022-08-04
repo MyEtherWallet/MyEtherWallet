@@ -101,12 +101,11 @@
 
 <script>
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
-import AppBtnRow from '@/core/components/AppBtnRow';
 
 export default {
   name: 'AccessWalletKeystore',
   components: {
-    AppBtnRow
+    AppBtnRow: () => import('@/core/components/AppBtnRow')
   },
   props: {
     handlerAccessWallet: {

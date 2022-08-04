@@ -44,12 +44,11 @@
 </template>
 
 <script>
-import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import nftPlaceholder from '@/assets/images/icons/icon-nft-placeholder.png';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 export default {
   components: {
-    ModuleAddressBook
+    ModuleAddressBook: () => import('@/modules/address-book/ModuleAddressBook')
   },
   mixins: [buyMore],
   props: {

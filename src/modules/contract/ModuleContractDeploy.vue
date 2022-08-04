@@ -108,6 +108,8 @@
 <script>
 import Vue from 'vue';
 import { mapState, mapActions, mapGetters } from 'vuex';
+import { toWei, toBN, toHex } from 'web3-utils';
+
 import sanitizeHex from '@/core/helpers/sanitizeHex';
 import validateHexString from '@/core/helpers/validateHexString';
 import {
@@ -117,7 +119,6 @@ import {
   isContractArgValid
 } from './handlers/common';
 import { stringToArray } from '@/core/helpers/common';
-import { toWei, toBN, toHex } from 'web3-utils';
 
 export default {
   name: 'ModuleContractDeploy',

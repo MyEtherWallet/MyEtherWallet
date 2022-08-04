@@ -49,9 +49,6 @@
 </template>
 
 <script>
-import CreateWalletSoftwareOverview from './components/CreateWalletSoftwareOverview';
-import CreateWalletKeystore from './components/CreateWalletKeystore';
-import CreateWalletMnemonicPhrase from './components/CreateWalletMnemonicPhrase';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import handlerCreateWallet from './handlers/handlerCreateWallet';
@@ -59,9 +56,11 @@ import handlerCreateWallet from './handlers/handlerCreateWallet';
 export default {
   name: 'ModuleCreateWalletSoftware',
   components: {
-    CreateWalletSoftwareOverview,
-    CreateWalletKeystore,
-    CreateWalletMnemonicPhrase
+    CreateWalletSoftwareOverview: () =>
+      import('./components/CreateWalletSoftwareOverview'),
+    CreateWalletKeystore: () => import('./components/CreateWalletKeystore'),
+    CreateWalletMnemonicPhrase: () =>
+      import('./components/CreateWalletMnemonicPhrase')
   },
   props: {
     open: {

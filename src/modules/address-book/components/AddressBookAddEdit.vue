@@ -91,10 +91,12 @@
 
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex';
-import NameResolver from '@/modules/name-resolver/index';
+import { isEmpty } from 'lodash';
+
 import { toChecksumAddress, isAddress } from '@/core/helpers/addressUtils';
 import { isValidCoinAddress } from '../handlers/handlerMulticoins.js';
-import { isEmpty } from 'lodash';
+
+import NameResolver from '@/modules/name-resolver/index';
 
 const modes = ['add', 'edit'];
 

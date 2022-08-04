@@ -32,9 +32,9 @@
 </template>
 
 <script>
-import SignAndVerifyMessage from '@/modules/message/handlers';
 import { mapState } from 'vuex';
 
+import SignAndVerifyMessage from '@/modules/message/handlers';
 export default {
   name: 'ModuleMessageVerify',
   data() {

@@ -80,17 +80,16 @@
 </template>
 <script>
 import { mapGetters, mapState } from 'vuex';
-import BalanceEmptyBlock from './components/BalanceEmptyBlock';
-import TokenAddCustom from './components/TokenAddCustom';
-import TokenDeleteCustom from './components/TokenDeleteCustom';
-import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { uniqWith, isEqual } from 'lodash';
+
+import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { currencyToNumber } from '@/core/helpers/localization';
+
 export default {
   components: {
-    BalanceEmptyBlock,
-    TokenDeleteCustom,
-    TokenAddCustom
+    BalanceEmptyBlock: () => import('./components/BalanceEmptyBlock'),
+    TokenAddCustom: () => import('./components/TokenAddCustom'),
+    TokenDeleteCustom: () => import('./components/TokenDeleteCustom')
   },
   props: {
     dense: {

@@ -176,9 +176,10 @@
 </template>
 
 <script>
+import { isEmpty } from 'lodash';
+
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
-import { isEmpty } from 'lodash';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 

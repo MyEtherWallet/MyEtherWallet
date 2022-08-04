@@ -38,14 +38,12 @@
 </template>
 
 <script>
-import StepOne from './components/StepOne';
-import StepTwo from './components/StepTwo';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
 
 export default {
   components: {
-    StepOne,
-    StepTwo
+    StepOne: () => import('./components/StepOne'),
+    StepTwo: () => import('./components/StepTwo')
   },
   data() {
     return {

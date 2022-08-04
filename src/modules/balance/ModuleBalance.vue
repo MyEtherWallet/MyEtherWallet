@@ -99,22 +99,21 @@
 </template>
 
 <script>
-import Loader from './ModuleBalanceLoader';
-import BalanceChart from '@/modules/balance/components/BalanceChart';
-import BalanceEmptyBlock from './components/BalanceEmptyBlock';
-import handlerBalanceHistory from './handlers/handlerBalanceHistory.mixin';
 import { mapGetters, mapState } from 'vuex';
+import BigNumber from 'bignumber.js';
+
 import {
   formatPercentageValue,
   formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
-import BigNumber from 'bignumber.js';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
+
+import handlerBalanceHistory from './handlers/handlerBalanceHistory.mixin';
 export default {
   components: {
-    Loader,
-    BalanceChart,
-    BalanceEmptyBlock
+    Loader: () => import('./ModuleBalanceLoader'),
+    BalanceChart: () => import('@/modules/balance/components/BalanceChart'),
+    BalanceEmptyBlock: () => import('./components/BalanceEmptyBlock')
   },
   mixins: [handlerBalanceHistory],
   data() {

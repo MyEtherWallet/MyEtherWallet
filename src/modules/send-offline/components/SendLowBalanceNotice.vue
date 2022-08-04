@@ -54,14 +54,12 @@
 </template>
 
 <script>
-import AppModal from '@/core/components/AppModal';
-import AppAddrQr from '@/core/components/AppAddrQr';
 import { mapGetters } from 'vuex';
 
 export default {
   components: {
-    AppModal,
-    AppAddrQr
+    AppModal: () => import('@/core/components/AppModal'),
+    AppAddrQr: () => import('@/core/components/AppAddrQr')
   },
   props: {
     currencyName: {

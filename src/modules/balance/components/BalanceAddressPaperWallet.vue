@@ -35,17 +35,16 @@
 </template>
 
 <script>
-import PaperWalletToPrint from './PaperWalletToPrint';
-import PaperWalletToDisplay from './PaperWalletToDisplay';
 import printJS from 'print-js';
 import html2canvas from 'html2canvas';
+
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 
 export default {
   name: 'BalanceAddressPaperWallet',
   components: {
-    PaperWalletToPrint,
-    PaperWalletToDisplay
+    PaperWalletToPrint: () => import('./PaperWalletToPrint'),
+    PaperWalletToDisplay: () => import('./PaperWalletToDisplay')
   },
   props: {
     open: { default: false, type: Boolean },

@@ -26,19 +26,18 @@
 </template>
 
 <script>
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-import HardwarePasswordModal from './components/HardwarePasswordModal.vue';
-import AppModal from '@/core/components/AppModal.vue';
-import AppErrorMsg from '@/core/components/AppErrorMsg.vue';
-import { EventBus } from '@/core/plugins/eventBus';
 import { isEmpty } from 'lodash';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { EventBus } from '@/core/plugins/eventBus';
+
 const OPEN_HARDWARE_PASSWORD = 'showHardwarePassword';
 const ISSUE_MODAL = 'issueModal';
 export default {
   components: {
-    AppModal,
-    HardwarePasswordModal,
-    AppErrorMsg
+    AppModal: () => import('@/core/components/AppModal.vue'),
+    HardwarePasswordModal: () =>
+      import('./components/HardwarePasswordModal.vue'),
+    AppErrorMsg: () => import('@/core/components/AppErrorMsg.vue')
   },
   mixins: [handlerAnalytics],
   data() {

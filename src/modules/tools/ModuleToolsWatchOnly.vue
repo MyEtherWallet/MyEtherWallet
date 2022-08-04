@@ -34,12 +34,12 @@
 </template>
 
 <script>
-import AppBlockTitle from '@/core/components/AppBlockTitle';
-import ToolsTableContainer from './components/ToolsTableContainer';
-
 export default {
   name: 'ModuleToolsWatchOnly',
-  components: { AppBlockTitle, ToolsTableContainer },
+  components: {
+    AppBlockTitle: () => import('@/core/components/AppBlockTitle'),
+    ToolsTableContainer: () => import('./components/ToolsTableContainer')
+  },
   data: () => ({
     addDialog: false,
     addresses: [

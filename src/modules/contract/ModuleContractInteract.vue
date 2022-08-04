@@ -152,6 +152,8 @@
 import Vue from 'vue';
 import { mapState, mapGetters } from 'vuex';
 import { toBN, toWei } from 'web3-utils';
+import { isString } from 'lodash';
+
 import { isAddress } from '@/core/helpers/addressUtils';
 import { stringToArray } from '@/core/helpers/common';
 import {
@@ -161,7 +163,6 @@ import {
   isContractArgValid
 } from './handlers/common';
 import { ERROR, Toast } from '../toast/handler/handlerToast';
-import { isString } from 'lodash';
 export default {
   name: 'ModuleContractInteract',
   data() {

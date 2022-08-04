@@ -50,15 +50,17 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 import { Toast, SENTRY } from '@/modules/toast/handler/handlerToast';
 import {
   WalletConnectWallet,
   WalletLinkWallet
 } from '@/modules/access-wallet/hybrid/handlers';
-import { mapActions } from 'vuex';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import WALLET_TYPES from './common/walletTypes';
+
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 export default {
   name: 'ModuleAccessWalletMobile',

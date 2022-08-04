@@ -112,12 +112,12 @@
 </template>
 
 <script>
-import ToolsTable from './ToolsTable';
-import WhiteSheet from '@/components/white-sheet/WhiteSheet';
-
 export default {
   name: 'ToolsTableContainer',
-  components: { ToolsTable, WhiteSheet },
+  components: {
+    ToolsTable: () => import('./ToolsTable'),
+    WhiteSheet: () => import('@/components/white-sheet/WhiteSheet')
+  },
   data: () => ({ panel: [] }),
   methods: {
     openPanel() {

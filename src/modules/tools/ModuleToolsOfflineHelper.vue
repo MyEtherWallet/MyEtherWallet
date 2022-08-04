@@ -224,15 +224,19 @@
 import { mapGetters, mapState } from 'vuex';
 import { isAddress, fromWei, toHex } from 'web3-utils';
 import { Transaction } from 'ethereumjs-tx';
-import commonGenerator from '@/core/helpers/commonGenerator';
-import sanitizeHex from '@/core/helpers/sanitizeHex';
-import NetworkSwitch from '@/modules/network/components/NetworkSwitch.vue';
 import { BigNumber } from 'bignumber.js';
 import { toChecksumAddress } from 'ethereumjs-util';
 import { isEmpty } from 'lodash';
+
+import commonGenerator from '@/core/helpers/commonGenerator';
+import sanitizeHex from '@/core/helpers/sanitizeHex';
+
 export default {
   name: 'ModuleToolsOfflineHelper',
-  components: { NetworkSwitch },
+  components: {
+    NetworkSwitch: () =>
+      import('@/modules/network/components/NetworkSwitch.vue')
+  },
   props: {
     isHomePage: {
       type: Boolean,

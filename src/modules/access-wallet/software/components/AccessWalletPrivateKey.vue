@@ -43,13 +43,14 @@
 </template>
 
 <script>
-import { isPrivateKey } from '../handlers/helpers';
 import { isValidPrivate } from 'ethereumjs-util';
+import { isString } from 'lodash';
+
+import { isPrivateKey } from '../handlers/helpers';
 import {
   getBufferFromHex,
   sanitizeHex
 } from '../../../access-wallet/common/helpers';
-import { isString } from 'lodash';
 export default {
   name: 'AccessWalletPrivateKey',
   props: {

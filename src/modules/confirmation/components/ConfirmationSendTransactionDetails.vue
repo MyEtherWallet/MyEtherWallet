@@ -35,16 +35,16 @@
 </template>
 
 <script>
+import BigNumber from 'bignumber.js';
+import { mapGetters } from 'vuex';
+
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
-import BigNumber from 'bignumber.js';
-import ConfirmationSummaryBlock from './ConfirmationSummaryBlock';
-import ConfirmationValuesContainer from './ConfirmationValuesContainer';
-import { mapGetters } from 'vuex';
+
 export default {
   components: {
-    ConfirmationSummaryBlock,
-    ConfirmationValuesContainer
+    ConfirmationSummaryBlock: () => import('./ConfirmationSummaryBlock'),
+    ConfirmationValuesContainer: () => import('./ConfirmationValuesContainer')
   },
   props: {
     to: {

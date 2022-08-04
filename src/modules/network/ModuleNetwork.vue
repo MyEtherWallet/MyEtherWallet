@@ -45,14 +45,15 @@
 </template>
 
 <script>
-import NetworkSwitch from './components/NetworkSwitch';
 import { mapGetters, mapState } from 'vuex';
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
+
 import WALLET_TYPES from '../access-wallet/common/walletTypes';
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
+
 export default {
   name: 'ModuleNetwork',
-  components: { NetworkSwitch },
+  components: { NetworkSwitch: () => import('./components/NetworkSwitch') },
   beforeRouteLeave(to, from, next) {
     if (to.name == ROUTES_HOME.ACCESS_WALLET.NAME) {
       next({ name: ROUTES_WALLET.DASHBOARD.NAME });

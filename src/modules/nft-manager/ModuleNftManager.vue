@@ -141,8 +141,8 @@
 </template>
 
 <script>
-import NFT from './handlers/handlerNftManager';
 import { mapGetters, mapState } from 'vuex';
+import { toBN, isAddress } from 'web3-utils';
 import {
   Toast,
   SUCCESS,
@@ -150,21 +150,20 @@ import {
   ERROR
 } from '@/modules/toast/handler/handlerToast';
 import getService from '@/core/helpers/getService';
-import NftManagerDetails from './components/NftManagerDetails';
-import NftManagerSend from './components/NftManagerSend';
+
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
-import { toBN, isAddress } from 'web3-utils';
 import { ETH } from '@/utils/networks/types';
 import { toBNSafe } from '@/core/helpers/numberFormatHelper';
+
+import NFT from './handlers/handlerNftManager';
 
 const MIN_GAS_LIMIT = 21000;
 
 export default {
   components: {
-    NftManagerDetails,
-    NftManagerSend
+    NftManagerDetails: () => import('./components/NftManagerDetails'),
+    NftManagerSend: () => import('./components/NftManagerSend')
   },
-  // mixins: [handlerNft],
   data() {
     return {
       nft: {},

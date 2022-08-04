@@ -38,13 +38,13 @@
 </template>
 
 <script>
-import { isAddress } from '@/core/helpers/addressUtils';
 import { mapGetters, mapState } from 'vuex';
-import NameResolver from '@/modules/name-resolver/index';
-import AddressBookAddEdit from './components/AddressBookAddEdit';
 import { isObject, throttle } from 'lodash';
-import { toChecksumAddress } from '@/core/helpers/addressUtils';
 import WAValidator from 'multicoin-address-validator';
+
+import { isAddress } from '@/core/helpers/addressUtils';
+import NameResolver from '@/modules/name-resolver/index';
+import { toChecksumAddress } from '@/core/helpers/addressUtils';
 
 const USER_INPUT_TYPES = {
   typed: 'TYPED',
@@ -54,7 +54,7 @@ const USER_INPUT_TYPES = {
 
 export default {
   components: {
-    AddressBookAddEdit
+    AddressBookAddEdit: () => import('./components/AddressBookAddEdit')
   },
   props: {
     isValidAddressFunc: {
