@@ -127,11 +127,13 @@ export default {
       this.subscribeToBlockNumber();
     },
     processNetworkTokens() {
-      const tokenMap = new Map();
       this.network.type.tokens.then(res => {
-        this.setNetworkTokens(new Map(res.map(item => item)));
+        const tokenMap = new Map();
+        res.forEach(item => {
+          tokenMap.set(item.address.toLowerCase(), item);
+        });
+        this.setNetworkTokens(tokenMap);
       });
-      this.setNetworkTokens(tokenMap);
     },
     setTokensAndBalance() {
       if (this.coinGeckoTokens?.get) {

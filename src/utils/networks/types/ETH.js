@@ -1,6 +1,3 @@
-const tokens = () => import('@/_generated/tokens/tokens-eth.json');
-const contracts = () => import('@/_generated/contracts/contract-abi-eth.json');
-
 import eth from '@/assets/images/networks/eth.svg';
 import { GOERLI } from '../tlds';
 

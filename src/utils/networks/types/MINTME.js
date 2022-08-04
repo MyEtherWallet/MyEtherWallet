@@ -7,8 +7,12 @@ export default {
   blockExplorerTX: 'https://www.mintme.com/explorer/tx/[[txHash]]',
   blockExplorerAddr: 'https://www.mintme.com/explorer/addr/[[address]]',
   chainID: 24734,
-  tokens: [],
-  contracts: [],
+  tokens: import('@/_generated/tokens/tokens-etc.json').then(
+    val => val.default
+  ),
+  contracts: import('@/_generated/contracts/contract-abi-etc.json').then(
+    val => val.default
+  ),
   isTestNetwork: false,
   icon: mintme,
   currencyName: 'MINTME',

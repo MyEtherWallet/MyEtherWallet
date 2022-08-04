@@ -194,7 +194,8 @@ export default {
       raw: null,
       signedTransaction: null,
       jsonFileName: '',
-      jsonFile: null
+      jsonFile: null,
+      tokens: []
     };
   },
   computed: {
@@ -205,9 +206,6 @@ export default {
         symbol: this.network.type.currencyName,
         name: this.network.type.name
       };
-    },
-    tokens() {
-      return [this.networkToken].concat(this.network.type.tokens);
     },
     isDisabledNextBtn() {
       return (
@@ -305,8 +303,15 @@ export default {
   },
   mounted() {
     this.selectedCurrency = this.networkToken;
+    this.generateTokens();
   },
   methods: {
+    generateTokens() {
+      const networkToken = [this.networkToken];
+      this.network.type.tokens.then(tokens => {
+        this.tokens = networkToken.concat(tokens);
+      });
+    },
     generateData() {
       const web3 = new Web3(this.network.url);
       const jsonInterface = [

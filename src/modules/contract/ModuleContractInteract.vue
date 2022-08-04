@@ -178,7 +178,8 @@ export default {
         outputs: []
       },
       outputValues: [],
-      ethPayable: '0'
+      ethPayable: '0',
+      networkContracts: []
     };
   },
   computed: {
@@ -219,7 +220,7 @@ export default {
         { text: 'Select a Contract', selectLabel: true, divider: true }
       ].concat(
         checkContract(this.localContracts),
-        checkContract(this.network.type.contracts)
+        checkContract(this.networkContracts)
       );
     },
     methods() {
@@ -249,7 +250,22 @@ export default {
       return outputsWithValues.length > 0;
     }
   },
+  watch: {
+    web3: {
+      handler: function () {
+        this.generateNetworkContracts();
+      }
+    }
+  },
+  mounted() {
+    this.generateNetworkContracts();
+  },
   methods: {
+    generateNetworkContracts() {
+      this.network.type.contracts.then(contracts => {
+        this.networkContracts = contracts;
+      });
+    },
     resetDefaults() {
       this.currentContract = null;
       this.abi = [];

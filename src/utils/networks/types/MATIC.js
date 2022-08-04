@@ -1,7 +1,3 @@
-let tokens;
-
-import('@/_generated/tokens/tokens-matic.json').then(val => (tokens = val));
-
 import matic from '@/assets/images/networks/matic.svg';
 export default {
   name: 'MATIC',
@@ -10,8 +6,12 @@ export default {
   blockExplorerTX: 'https://polygonscan.com/tx/[[txHash]]',
   blockExplorerAddr: 'https://polygonscan.com/address/[[address]]',
   chainID: 137,
-  tokens: tokens,
-  contracts: [],
+  tokens: import('@/_generated/tokens/tokens-matic.json').then(
+    val => val.default
+  ),
+  contracts: import('@/_generated/contracts/contract-abi-etc.json').then(
+    val => val.default
+  ),
   icon: matic,
   isTestNetwork: false,
   currencyName: 'MATIC',
