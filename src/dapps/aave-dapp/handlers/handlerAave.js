@@ -7,9 +7,7 @@ import {
   withdrawDetails
 } from './graphQLHelpers.js';
 
-import masterFile from '@/_generated/master-file.json';
 import eth from '@/assets/images/currencies/eth.png';
-import { toChecksumAddress } from 'web3-utils';
 
 import vuexStore from '@/core/store';
 import { mapState, mapGetters } from 'vuex';
@@ -300,33 +298,7 @@ export default class AaveHandler {
    * finds token from network list
    * or masterfile and uses the icon found
    */
-  getTokenIcon(address) {
-    const networkToken = this.network().type.tokens.find(item => {
-      if (toChecksumAddress(item.address) === toChecksumAddress(address))
-        return item;
-    });
-    const filteredMasterFile = masterFile.find(item => {
-      if (
-        toChecksumAddress(item.contract_address) === toChecksumAddress(address)
-      )
-        return item;
-    });
-    const networkIcon = networkToken
-      ? networkToken.logo.src !== ''
-        ? networkToken.logo.src
-        : ''
-      : '';
-    const masterFileIcon = filteredMasterFile
-      ? filteredMasterFile.icon !== ''
-        ? filteredMasterFile.icon
-        : filteredMasterFile.icon_png !== ''
-        ? filteredMasterFile.icon_png
-        : ''
-      : '';
-    return networkIcon !== ''
-      ? networkIcon
-      : masterFileIcon !== ''
-      ? masterFileIcon
-      : eth;
+  getTokenIcon() {
+    return eth;
   }
 }

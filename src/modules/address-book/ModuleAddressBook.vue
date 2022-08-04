@@ -197,6 +197,12 @@ export default {
             this.isValidAddress = isAddValid;
           }
           this.loadedAddressValidation = !this.isValidAddress ? false : true;
+          if (this.isValidAddress) {
+            const reverseName = await this.nameResolver.resolveAddress(
+              this.inputAddr
+            );
+            this.resolvedAddr = reverseName.name ? reverseName.name : '';
+          }
 
           /**
            * @emits setAddress

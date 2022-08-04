@@ -145,9 +145,8 @@
             offer! Access with keystore file should only be used in an offline
             setting.
           </p>
-          <v-img
-            class="d-block d-sm-none mx-auto mt-12 mb-12"
-            max-width="170px"
+          <img
+            class="done-image d-block d-sm-none mx-auto mt-12 mb-12"
             src="@/assets/images/icons/icon-keystore-mew.png"
           />
 
@@ -167,9 +166,8 @@
             />
           </div>
         </div>
-        <v-img
-          class="d-none d-sm-block ml-8"
-          max-width="250px"
+        <img
+          class="d-none d-sm-block ml-8 icon-keystore"
           src="@/assets/images/icons/icon-keystore-mew.png"
         />
       </div>
@@ -311,5 +309,11 @@ export default {
   border-radius: 7px;
   box-shadow: 0 8px 15px var(--v-greyLight-base);
   height: 100%;
+}
+.done-image {
+  max-width: 170px;
+}
+.icon-keystore {
+  max-width: 250px;
 }
 </style>

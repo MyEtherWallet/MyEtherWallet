@@ -9,24 +9,16 @@
         :src="blockieImg"
         alt="Blockie Image"
         style="display: block; border-radius: 50%"
-      >
+      />
 
       <!--
       =====================================================================
       Inset shadow on edge of blockie image
       =====================================================================
       -->
-      <div
-        v-if="!flat"
-        class="inset-shadow"
-      />
+      <div v-if="!flat" class="inset-shadow" />
     </div>
-    <img
-      v-if="currency"
-      alt="icon"
-      class="currency-icon"
-      :src="currency"
-    >
+    <img v-if="currency" alt="icon" class="currency-icon" :src="currency" />
   </div>
 </template>
 
