@@ -254,6 +254,7 @@ export default {
     amountErrorMessages() {
       const moonpayMax = this.max.moonpay;
       const simplexMax = this.max.simplex;
+      const maxVal = Math.max(moonpayMax.toString(), simplexMax.toString());
       if (BigNumber(this.amount).isNaN() || BigNumber(this.amount).eq(0)) {
         return 'Amount required';
       }
@@ -265,13 +266,10 @@ export default {
           this.selectedFiatName
         }`;
       }
-      if (
-        moonpayMax.lt(BigNumber(this.amount)) &&
-        simplexMax.lt(BigNumber(this.amount))
-      ) {
-        return `Amount can't be above provider's maximum: ${simplexMax.toFixed()} ${
-          this.selectedFiatName
-        }`;
+      if (BigNumber(this.amount).gt(maxVal)) {
+        return `Amount can't be above provider's maximum: ${
+          formatFiatValue(maxVal.toString(), this.currencyConfig).value
+        } ${this.selectedFiatName}`;
       }
       return '';
     },
@@ -517,7 +515,8 @@ export default {
         !this.actualValidAddress ||
         isEmpty(this.amount) ||
         this.min.gt(this.amount) ||
-        isNaN(this.amount)
+        isNaN(this.amount) ||
+        this.max.simplex.lt(this.amount)
       )
         return;
       this.loading = true;
