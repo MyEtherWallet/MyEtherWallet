@@ -76,8 +76,7 @@ export default {
       this.web3.eth.clearSubscriptions();
     },
     web3() {
-      this.subscribeToBlockNumber();
-      this.setTokensAndBalance();
+      this.setup();
     },
     coinGeckoTokens() {
       this.setTokenAndEthBalance();
@@ -119,10 +118,22 @@ export default {
       'setBaseFeePerGas',
       'updateGasPrice'
     ]),
-    ...mapActions('external', ['setCoinGeckoTokens', 'setTokenAndEthBalance']),
+    ...mapActions('external', [
+      'setCoinGeckoTokens',
+      'setTokenAndEthBalance',
+      'setNetworkTokens'
+    ]),
     setup() {
+      this.processNetworkTokens();
       this.setTokensAndBalance();
       this.subscribeToBlockNumber();
+    },
+    processNetworkTokens() {
+      const tokenMap = new Map();
+      this.network.type.tokens.forEach(token => {
+        tokenMap.set(token.address.toLowerCase(), token);
+      });
+      this.setNetworkTokens(tokenMap);
     },
     setTokensAndBalance() {
       if (this.coinGeckoTokens?.get) {

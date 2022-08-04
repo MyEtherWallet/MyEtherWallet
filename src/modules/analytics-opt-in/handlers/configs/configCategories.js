@@ -10,5 +10,6 @@ export default {
   dapp: 'dapp',
   swapRates: 'swapRates',
   globalError: 'globalError',
-  enkrypt: 'enkrypt'
+  enkrypt: 'enkrypt',
+  mewwallet: 'mewwallet'
 };
