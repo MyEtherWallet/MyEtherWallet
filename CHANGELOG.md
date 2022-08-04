@@ -1,8 +1,8 @@
+### Release v6.6.3-hotfix.1
+
 ### devop
 
 * add opera link [#4077](https://github.com/MyEtherWallet/MyEtherWallet/pull/4077)
-
-### Release v6.6.3-hotfix.1
 
 ### fix
 
