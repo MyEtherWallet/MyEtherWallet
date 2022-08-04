@@ -97,10 +97,11 @@ import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common.js';
 import abi from '@/modules/balance/handlers/abiERC20.js';
 import nodes from '@/utils/networks';
 import Web3 from 'web3';
-import { toBNSafe } from '@/core/helpers/numberFormatHelper';
+import { toBNSafe, formatFiatValue } from '@/core/helpers/numberFormatHelper';
 import { toBase } from '@/core/helpers/unit';
 import { sellContracts } from './tokenList';
 import handlerWallet from '@/core/mixins/handlerWallet.mixin';
+
 export default {
   name: 'ModuleSellEth',
   components: { ButtonBalance },
@@ -180,7 +181,10 @@ export default {
       const arr = new Array();
       for (const contract of sellContracts) {
         const token = this.contractToToken(contract);
-        if (token) arr.push(token);
+        if (token) {
+          token.price = formatFiatValue(token ? token.price : '0').value;
+          arr.push(token);
+        }
       }
       return arr;
     },
