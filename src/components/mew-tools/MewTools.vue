@@ -100,7 +100,7 @@ export default {
                 label: 'Get the extension'
               },
               img: require('@/assets/images/icons/icon-enkrypt-block.svg'),
-              link: 'https://enkrypt.com'
+              link: 'https://www.enkrypt.com'
             }
           ]
         },
@@ -109,13 +109,13 @@ export default {
           classes: 'tools-block',
           items: [
             {
-              label: 'ETHvm',
+              label: 'EthVM',
               description: 'Blockchain explorer',
               img: require('@/assets/images/icons/icon-ethvm.svg'),
               link: 'https://www.ethvm.com/'
             },
             {
-              label: 'Mewtopia',
+              label: 'MEWtopia',
               description: 'Education Blog',
               img: require('@/assets/images/icons/icon-puppy-mew.svg'),
               link: 'https://www.mewtopia.com/'

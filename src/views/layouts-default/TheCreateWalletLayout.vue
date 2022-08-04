@@ -152,7 +152,7 @@ export default {
           color: 'white',
           title: 'Download MEW wallet app',
           subtitle:
-            'Our official mobile app to create your wallet, and connect to MEW Web using your mobile phone.',
+            'Our official mobile app to create your wallet, and connect to MEW Web using your mobile phone',
           official: true,
           recommended: true,
           icon: require('@/assets/images/icons/icon-mew-wallet.png'),
@@ -166,7 +166,7 @@ export default {
           color: 'white',
           title: 'Buy a hardware wallet',
           subtitle:
-            'For the highest standard of security, buy a hardware wallet and us it with MEW',
+            'For the highest standard of security, buy a hardware wallet and use it with MEW',
           official: false,
           recommended: true,
           icon: require('@/assets/images/icons/icon-hardware-wallet.png'),
@@ -181,7 +181,7 @@ export default {
           style: 'outline',
           title: 'Software',
           subtitle:
-            'Software Methods like Keystore file and Mnemonic phrase should only be used in offline msettings by experienced users',
+            'Software Methods like Keystore file and Mnemonic phrase should only be used in offline settings by experienced users',
           official: false,
           recommended: false,
           fn: () => {
