@@ -2,10 +2,6 @@
   "name": "myetherwallet",
   "version": "6.6.3",
   "description": "Client side ethereum wallet",
-  "sideEffects": [
-    "*.scss",
-    "*.vue"
-  ],
   "scripts": {
     "build": "npm run update && vue-cli-service build",
     "test:unit": "vue-cli-service test:unit --logHeapUsage",
