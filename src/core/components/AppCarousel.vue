@@ -62,13 +62,13 @@ export default {
   },
   methods: {
     openMewWallet() {
-      // eslint-disable-next-line
       this.trackMewWalletInstall();
+      // eslint-disable-next-line
       window.open(this.mobileOrWebLink, '_blank');
     },
     openEnkrypt() {
-      // eslint-disable-next-line
       this.trackEnkryptInstall();
+      // eslint-disable-next-line
       window.open(this.browserLink, '_blank');
     }
   }
