@@ -89,6 +89,7 @@
             </v-col>
             <v-col cols="12" class="pt-md-2">
               <aave-table
+                ref="depositsTable"
                 :title="aaveTableTitle.balance_deposit"
                 :has-search="false"
                 :has-toggle="false"
@@ -227,6 +228,7 @@
             </v-col>
             <v-col cols="12" class="pt-md-2">
               <aave-table
+                ref="borrowsTable"
                 :title="aaveTableTitle.balance_borrow"
                 :has-search="false"
                 :has-toggle="false"
@@ -258,6 +260,7 @@
       :close="closeCollateralOverlay"
       :pre-selected-token="tokenSelected"
       @onConfirm="setCollateral"
+      @onClose="resetCollateralToggle"
     />
     <aave-withdraw-overlay
       :open="showWithdrawOverlay"
@@ -276,6 +279,7 @@
       :close="closeAprTypeOverlay"
       :pre-selected-token="tokenSelected"
       @onConfirm="setBorrowRate"
+      @onClose="resetAprToggle"
     />
   </div>
 </template>
@@ -555,6 +559,15 @@ export default {
       this.tokenSelected = {};
       this.showCollateralOverlay = false;
     },
+    resetCollateralToggle({ reserve, useAsCollateral }) {
+      const tableData =
+        this.$refs.depositsTable.$children[0].$options.propsData.tableData;
+      tableData.forEach(item => {
+        if (item.token === reserve) item.toggle.value = useAsCollateral;
+      });
+      this.tokenSelected = {};
+      this.showCollateralOverlay = false;
+    },
     openRepayOverlay(token) {
       this.tokenSelected = token;
       this.showRepayOverlay = true;
@@ -566,6 +579,15 @@ export default {
     openAprTypeOverlay(token) {
       this.tokenSelected = token;
       this.showAprTypeOverlay = true;
+    },
+    resetAprToggle({ reserve, value }) {
+      const tableData =
+        this.$refs.borrowsTable.$children[0].$options.propsData.tableData;
+      tableData.forEach(item => {
+        if (item.token === reserve) item.toggle.value = value;
+      });
+      this.tokenSelected = {};
+      this.showCollateralOverlay = false;
     },
     closeAprTypeOverlay() {
       this.tokenSelected = {};

@@ -4,7 +4,7 @@
     Collateral Overlay
   =====================================================================================
   -->
-  <mew-overlay :show-overlay="open" :title="title" :close="close">
+  <mew-overlay :show-overlay="open" :title="title" :close="resetToggle">
     <aave-summary
       :selected-token="preSelectedToken"
       :action-type="collateral"
@@ -59,6 +59,15 @@ export default {
           !this.selectedTokenInUserSummary.usageAsCollateralEnabledOnUser
       };
       this.$emit('onConfirm', param);
+      this.close();
+    },
+    resetToggle() {
+      const param = {
+        reserve: this.selectedTokenDetails.symbol,
+        useAsCollateral:
+          this.selectedTokenInUserSummary.usageAsCollateralEnabledOnUser
+      };
+      this.$emit('onClose', param);
       this.close();
     }
   }

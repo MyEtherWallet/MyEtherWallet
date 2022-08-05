@@ -7,7 +7,7 @@
   <mew-overlay
     :show-overlay="open"
     title="Select your interest rate"
-    :close="close"
+    :close="resetToggle"
   >
     <aave-select-interest
       :selected-token="selectedTokenDetails"
@@ -49,6 +49,18 @@ export default {
         this.$emit('onConfirm', param);
         this.close();
       }
+    },
+    resetToggle() {
+      const type =
+        this.selectedTokenInUserSummary.variableBorrows > 0
+          ? INTEREST_TYPES.variable
+          : INTEREST_TYPES.stable;
+      const param = {
+        reserve: this.selectedTokenDetails.symbol,
+        value: type === INTEREST_TYPES.variable // rateMode to reset to
+      };
+      this.$emit('onClose', param);
+      this.close();
     }
   }
 };
