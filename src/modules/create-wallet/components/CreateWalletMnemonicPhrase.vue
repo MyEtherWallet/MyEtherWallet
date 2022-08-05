@@ -270,7 +270,9 @@ export default {
       return this.phrase.length === this.phraseSize;
     },
     extraWordMatch() {
-      return this.extraWord === this.extraWordVerification;
+      return this.extraWord
+        ? this.extraWord === this.extraWordVerification
+        : true;
     },
     stepTwoText() {
       return this.extraWord === ''
@@ -344,6 +346,7 @@ export default {
      */
     updateStep(newStep) {
       if (this.step === 3 && newStep === 1) {
+        this.validateMnemonicValues = {};
         this.setPhrase();
       }
       this.step = newStep;
