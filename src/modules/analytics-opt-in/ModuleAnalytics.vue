@@ -201,7 +201,7 @@ export default {
     };
   },
   methods: {
-    ...mapMutations('global', ['NEVER_SHOW_TRACKING']),
+    ...mapMutations('popups', ['NEVER_SHOW_TRACKING']),
     /**
      * Returns back to home page
      */
