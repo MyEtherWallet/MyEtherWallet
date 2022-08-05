@@ -1,6 +1,7 @@
 import { isObject } from 'lodash';
 const errors = {
-  'transaction underpriced': 'Current network is busy. Please try again later.'
+  'transaction underpriced':
+    'Current network is busy. Please try again with a higher priority.'
 };
 /**
  * @param {Object | String} err
