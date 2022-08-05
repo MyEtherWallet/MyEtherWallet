@@ -426,6 +426,7 @@ export default {
      */
     sendTxns(txns, gasLimits) {
       try {
+        if (!gasLimits) throw new Error('Unable to estimate transaction fees');
         for (let i = 0; i < txns.length; i++) {
           const tx = {
             from: this.address,
