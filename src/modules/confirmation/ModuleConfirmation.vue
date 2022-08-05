@@ -309,7 +309,9 @@ export default {
       signing: false,
       links: {
         ethvm: '',
-        etherscan: ''
+        etherscan: '',
+        bscscan: '',
+        polygonscan: ''
       },
       error: '',
       panel: [],
@@ -635,8 +637,10 @@ export default {
       this.toDetails = {};
       this.signing = false;
       this.links = {
+        ethvm: '',
         etherscan: '',
-        ethvm: ''
+        bscscan: '',
+        polygonscan: ''
       };
       this.error = '';
     },
@@ -719,6 +723,14 @@ export default {
             )
           : '';
         this.links.etherscan = this.network.type.blockExplorerTX.replace(
+          '[[txHash]]',
+          lastHash
+        );
+        this.links.bscscan = this.network.type.blockExplorerTX.replace(
+          '[[txHash]]',
+          lastHash
+        );
+        this.links.polygonscan = this.network.type.blockExplorerTX.replace(
           '[[txHash]]',
           lastHash
         );

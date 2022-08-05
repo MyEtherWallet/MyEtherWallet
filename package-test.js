@@ -61,7 +61,10 @@ const EXCEPTIONS = [
   '@formatjs/intl-numberformat',
   'babel-jest',
   'qrcode',
-  'vue-template-compiler'
+  'vue-template-compiler',
+  '@ledgerhq/hw-app-eth',
+  '@ledgerhq/hw-transport-webusb',
+  '@ledgerhq/hw-transport-web-ble'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

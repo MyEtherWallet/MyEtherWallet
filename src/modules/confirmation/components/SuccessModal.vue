@@ -41,7 +41,12 @@
                 >View Progress</a
               >
             </v-col>
-            <v-col cols="12" sm="auto" class="pb-2">
+            <v-col
+              v-if="network.type.name === 'ETH'"
+              cols="12"
+              sm="auto"
+              class="pb-2"
+            >
               <a
                 rel="noopener noreferrer"
                 target="_blank"
@@ -63,6 +68,36 @@
                 :href="links.ethvm"
                 class="d-flex justify-center"
                 >View on EthVM
+                <v-icon color="primary" small>mdi-launch</v-icon></a
+              >
+            </v-col>
+            <v-col
+              v-if="network.type.name === 'BSC'"
+              cols="12"
+              sm="auto"
+              class="pb-2"
+            >
+              <a
+                rel="noopener noreferrer"
+                target="_blank"
+                :href="links.bscscan"
+                class="d-flex justify-center"
+                >View on BSC Scan
+                <v-icon color="primary" small>mdi-launch</v-icon></a
+              >
+            </v-col>
+            <v-col
+              v-if="network.type.name === 'MATIC'"
+              cols="12"
+              sm="auto"
+              class="pb-2"
+            >
+              <a
+                rel="noopener noreferrer"
+                target="_blank"
+                :href="links.polygonscan"
+                class="d-flex justify-center"
+                >View on Polygon Scan
                 <v-icon color="primary" small>mdi-launch</v-icon></a
               >
             </v-col>
@@ -120,6 +155,9 @@ export default {
     successLottie() {
       return this.showSuccessSwap ? 'swap' : 'checkmark';
     }
+  },
+  mounted() {
+    console.log('network.type:', this.network.type);
   },
   methods: {
     viewProgress() {
