@@ -689,24 +689,26 @@ export default {
      * to swap from
      */
     fromTokens() {
-      return this.availableTokens.fromTokens.map(token => {
-        const foundToken = this.contractToToken(token.contract);
-        if (foundToken) {
-          foundToken.contract = token.contract;
-          foundToken.price = this.getFiatValue(foundToken.pricef);
-          foundToken.isEth = token.isEth;
-          foundToken.subtext = foundToken.name;
-          foundToken.value = foundToken.name;
-          foundToken.name = foundToken.symbol;
-          return foundToken;
-        }
-        token.price = '';
-        token.subtext = token.name;
-        token.value = token.name;
-        token.name = token.symbol;
-        return token;
-        // return localContractToToken[token.contract];
-      });
+      return this.availableTokens.fromTokens
+        .map(token => {
+          const foundToken = this.contractToToken(token.contract);
+          if (foundToken) {
+            foundToken.contract = token.contract;
+            foundToken.price = this.getFiatValue(foundToken.pricef);
+            foundToken.isEth = token.isEth;
+            foundToken.subtext = foundToken.name;
+            foundToken.value = foundToken.name;
+            foundToken.name = foundToken.symbol;
+            return foundToken;
+          }
+          token.price = '';
+          token.subtext = token.name;
+          token.value = token.name;
+          token.name = token.symbol;
+          return token;
+          // return localContractToToken[token.contract];
+        })
+        .filter(token => token.isEth === true);
     },
     txFee() {
       return toBN(this.totalGasLimit).mul(toBN(this.localGasPrice)).toString();
