@@ -156,9 +156,6 @@ export default {
       return this.showSuccessSwap ? 'swap' : 'checkmark';
     }
   },
-  mounted() {
-    console.log('network.type:', this.network.type);
-  },
   methods: {
     viewProgress() {
       EventBus.$emit('openNotifications');
