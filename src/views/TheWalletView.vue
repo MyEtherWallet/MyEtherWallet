@@ -158,7 +158,7 @@ export default {
               Toast(
                 err.message === 'Load failed'
                   ? 'eth_subscribe is not supported. Please make sure your provider supports eth_subscribe'
-                  : err,
+                  : 'Network Subscription Error: Please refresh and try again.',
                 {},
                 ERROR
               );
