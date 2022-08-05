@@ -188,8 +188,8 @@ export default {
       return this.paths.filter(path => {
         if (this.searchValue) {
           return (
-            path.name.toLowerCase().includes(this.searchValue.toLowerCase()) ||
-            path.value.toLowerCase().includes(this.searchValue.toLowerCase())
+            path.name.toLowerCase().includes(this.searchValue?.toLowerCase()) ||
+            path.value.toLowerCase().includes(this.searchValue?.toLowerCase())
           );
         }
         return path;
