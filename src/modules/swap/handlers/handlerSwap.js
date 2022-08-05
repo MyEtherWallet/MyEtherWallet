@@ -17,7 +17,6 @@ class Swap {
   getAllTokens() {
     const allTokens = {};
     return this.providers[0].getSupportedTokens().then(baseList => {
-      console.log('baseList', baseList);
       baseList.forEach(t => (allTokens[t.contract] = t));
       return Promise.all(
         this.providers.slice(3).map(p => {
@@ -30,7 +29,6 @@ class Swap {
                 }
               });
             }
-            console.log('allTokens', allTokens);
           });
         })
       ).then(() => {
