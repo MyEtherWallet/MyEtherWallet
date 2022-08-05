@@ -18,14 +18,14 @@ const AUDIT_EXCEPTIONS = [
   'scss-tokenizer',
   // no package found
   'codecov',
-  'scss-tokenizer',
-  'high',
+  'glob-parent',
   'socket.io-parser',
   'xmlhttprequest-ssl',
   'node-forge',
   'engine.io',
   'parse-path',
-  'glob-parent'
+  '@openzeppelin/contracts',
+  'terser'
 ];
 const execute = (command, callback) => {
   exec(

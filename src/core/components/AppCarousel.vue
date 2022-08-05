@@ -1,79 +1,56 @@
 <template>
   <div class="mew-component--banner-ads cursor--pointer">
-    <mew6-white-sheet>
-      <mew-carousel class="box-shadow" carousel-height="155" :total-slides="2">
-        <template #slide1>
-          <a :href="mobileOrWebLink()" target="_blank">
-            <div class="ad1 px-5 d-flex flex-column justify-center">
-              <div class="title font-weight-bold mb-n1">MEW wallet App</div>
-              <div class="mb-2">Download it today!</div>
-              <div class="d-flex align-center pb-3">
-                <img
-                  class="mr-1"
-                  height="23"
-                  src="@/assets/images/icons/button-app-store.svg"
-                />
-                <img
-                  class="mr-1"
-                  height="23"
-                  src="@/assets/images/icons/button-play-store.svg"
-                />
-              </div>
-            </div>
+    <mew6-white-sheet class="overflow--hidden">
+      <v-carousel
+        v-model="currentSlide"
+        height="100%"
+        hide-delimiters
+        show-arrows-on-hover
+        cycle
+      >
+        <v-carousel-item>
+          <a @click="openEnkrypt">
+            <img
+              class="slide-img"
+              src="@/assets/images/slides/slide1.png"
+              alt="Enkrypt"
+            />
           </a>
-        </template>
-        <template #slide2>
-          <router-link
-            :to="{ name: ROUTES_HOME.BUY_HARDWARE_WALLET.NAME }"
-            target="_blank"
-          >
-            <div class="ad2 px-5 d-flex flex-column justify-center">
-              <div class="title font-weight-bold mb-n1">Hardware wallets</div>
-              <div class="mb-2">Buy a hardware wallet!</div>
-              <div class="d-flex align-center">
-                <img
-                  class="mr-2"
-                  height="38"
-                  src="@/assets/images/hardware-wallets/bitmap.png"
-                />
-                <img
-                  class="mr-2"
-                  height="38"
-                  src="@/assets/images/hardware-wallets/bitbox.png"
-                />
-                <img
-                  class="mr-2"
-                  height="38"
-                  src="@/assets/images/hardware-wallets/billfodl.png"
-                />
-                <img
-                  class="mr-2"
-                  height="38"
-                  src="@/assets/images/hardware-wallets/finney.png"
-                />
-                <img
-                  class="mr-2"
-                  height="38"
-                  src="@/assets/images/hardware-wallets/keepkey.png"
-                />
-              </div>
-            </div>
-          </router-link>
-        </template>
-      </mew-carousel>
+        </v-carousel-item>
+        <v-carousel-item>
+          <a @click="openMewWallet">
+            <img
+              class="slide-img"
+              src="@/assets/images/slides/slide2.png"
+              alt="Enkrypt"
+            />
+          </a>
+        </v-carousel-item>
+        <v-carousel-item :to="{ name: ROUTES_HOME.BUY_HARDWARE_WALLET.NAME }">
+          <img
+            class="slide-img"
+            src="@/assets/images/slides/slide3.png"
+            alt="Enkrypt"
+          />
+        </v-carousel-item>
+      </v-carousel>
     </mew6-white-sheet>
   </div>
 </template>
 
 <script>
-import { ROUTES_HOME } from '@/core/configs/configRoutes';
-const platform = require('platform');
+import platform from 'platform';
 
+import { ROUTES_HOME } from '@/core/configs/configRoutes';
+import enkryptMarketing from '@/core/mixins/enkryptMarketing.mixin.js';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin.js';
 export default {
+  mixins: [enkryptMarketing, handlerAnalytics],
   data: () => ({
+    currentSlide: 0,
     ROUTES_HOME: ROUTES_HOME
   }),
-  methods: {
+  computed: {
     mobileOrWebLink() {
       if (platform.os.family.includes('iOS')) {
         return 'https://apps.apple.com/app/id1464614025';
@@ -82,46 +59,25 @@ export default {
       }
       return 'https://www.mewwallet.com/';
     }
+  },
+  methods: {
+    openMewWallet() {
+      this.trackMewWalletInstall();
+      // eslint-disable-next-line
+      window.open(this.mobileOrWebLink, '_blank');
+    },
+    openEnkrypt() {
+      this.trackEnkryptInstall();
+      // eslint-disable-next-line
+      window.open(this.browserLink, '_blank');
+    }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.mew-component--banner-ads {
-  * {
-    user-select: none;
-    color: var(--v-textDark-base) !important;
-  }
-}
-.ad1 {
+.slide-img {
+  width: 100%;
   height: 100%;
-  background: url('~@/assets/images/snippets/bg-mew-wallet.png');
-  background-size: 130px;
-  background-position: right -10px bottom -10px;
-  background-repeat: no-repeat;
-}
-.ad2 {
-  height: 100%;
-  background: url('~@/assets/images/hardware-wallets/ledger.png');
-  background-size: 110px;
-  background-position: right 0px bottom 0px;
-  background-repeat: no-repeat;
-}
-</style>
-
-<style lang="scss">
-.mew-component--banner-ads {
-  .v-btn--active:before {
-    opacity: 0 !important;
-  }
-  .v-icon {
-    font-size: 10px !important;
-  }
-  .v-btn--icon {
-    margin: 0 !important;
-  }
-  .v-item-group {
-    margin-bottom: -15px;
-  }
 }
 </style>
