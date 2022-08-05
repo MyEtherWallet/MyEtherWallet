@@ -974,15 +974,12 @@ export default {
         .filter(token => token);
     },
     setupTokenInfo(tokens) {
-      console.log('localContractToToken (before)', localContractToToken);
-      console.log(
-        'Main Token (before)',
-        localContractToToken[MAIN_TOKEN_ADDRESS]
-      );
+      localContractToToken[MAIN_TOKEN_ADDRESS].price =
+        localContractToToken[MAIN_TOKEN_ADDRESS].pricef;
       tokens.forEach(token => {
         if (
           localContractToToken[token.contract] &&
-          localContractToToken[token.contract]?.price !== '0'
+          localContractToToken[token.contract].pricef?.includes('$')
         )
           return;
         if (token.cgid) {
@@ -997,11 +994,6 @@ export default {
             token,
             foundToken
           );
-          if (token.contract === MAIN_TOKEN_ADDRESS)
-            console.log(
-              'foundToken (cgID)',
-              localContractToToken[token.contract]
-            );
           return;
         }
         const foundToken = this.contractToToken(token.contract);
@@ -1013,8 +1005,6 @@ export default {
           foundToken.name = token.symbol;
           foundToken.value = foundToken.contract;
           foundToken.subtext = name;
-          if (token.contract === MAIN_TOKEN_ADDRESS)
-            console.log('foundToken', foundToken);
           localContractToToken[token.contract] = foundToken;
           return;
         }
@@ -1024,15 +1014,7 @@ export default {
         token.value = token.contract;
         token.name = token.symbol;
         localContractToToken[token.contract] = token;
-        if (token.contract === MAIN_TOKEN_ADDRESS)
-          console.log(
-            `localToken ${name}`,
-            localContractToToken[token.contract]
-          );
       });
-      console.log('tokens', tokens);
-      console.log('localContractToToken', localContractToToken);
-      console.log('Main Token', localContractToToken[MAIN_TOKEN_ADDRESS]);
     },
     /**
      * Handles emitted values from module-address-book
@@ -1188,8 +1170,6 @@ export default {
       this.setToToken(fromToken);
     },
     processTokens(tokens, storeTokens) {
-      console.log('processTokens', tokens);
-      console.log('storeTokens', storeTokens);
       this.setupTokenInfo(tokens.fromTokens);
       this.setupTokenInfo(tokens.toTokens);
       this.setupTokenInfo(TRENDING_LIST[this.network.type.name]);
