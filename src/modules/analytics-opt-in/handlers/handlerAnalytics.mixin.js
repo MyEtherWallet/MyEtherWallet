@@ -120,11 +120,19 @@ export default {
       }
     },
     /**
-     * Tracks when user logs out of dashboard
+     * Tracks when user clicks enkrypt install
      */
     trackEnkryptInstall() {
       if (this.$matomo && this.consentToTrack) {
         this.$matomo.trackEvent(categories.enkrypt, 'true');
+      }
+    },
+    /**
+     * Tracks when user clicks mewwallet install
+     */
+    trackMewWalletInstall() {
+      if (this.$matomo && this.consentToTrack) {
+        this.$matomo.trackEvent(categories.mewwallet, 'true');
       }
     }
   }
