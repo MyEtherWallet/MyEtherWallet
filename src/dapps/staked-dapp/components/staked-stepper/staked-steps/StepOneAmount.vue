@@ -53,7 +53,7 @@
               md="6"
               class="py-1 text-uppercase textLight--text font-weight-bold d-flex align-center"
             >
-              <div style="line-height: 20px">Staking Fee</div>
+              <div class="staking-fee">Staking Fee</div>
               <mew-tooltip class="ml-1" :text="toolTipFee" max-width="320px" />
             </v-col>
             <v-col cols="6" md="6" class="py-1 text-right">
@@ -311,5 +311,9 @@ export default {
       margin-bottom: 0;
     }
   }
+}
+// Set line height to align center with tooltip icon
+.staking-fee {
+  line-height: 20px;
 }
 </style>
