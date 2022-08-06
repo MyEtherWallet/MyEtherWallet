@@ -612,7 +612,7 @@ export default {
      */
     toTokens() {
       if (this.isLoading) return [];
-      const vals = this.availableTokens.toTokens
+      return this.availableTokens.toTokens
         .map(token => {
           if (token.cgid) {
             const foundToken = this.getCoinGeckoTokenById(token.cgid);
@@ -639,7 +639,6 @@ export default {
         .filter(
           item => item.name !== '' && item.symbol !== '' && item.subtext !== ''
         );
-      return vals;
     },
     /**
      * @returns object of all token data
@@ -1024,7 +1023,7 @@ export default {
       tokens.forEach(token => {
         if (
           localContractToToken[token.contract] &&
-          localContractToToken[token.contract].pricef?.includes('$')
+          localContractToToken[token.contract].price !== '0'
         )
           return;
         if (token.cgid) {
