@@ -614,7 +614,27 @@ export default {
       if (this.isLoading) return [];
       const vals = this.availableTokens.toTokens
         .map(token => {
-          return localContractToToken[token.contract];
+          if (token.cgid) {
+            const foundToken = this.getCoinGeckoTokenById(token.cgid);
+            foundToken.price = this.getFiatValue(foundToken.pricef);
+            foundToken.name = token.symbol;
+            return Object.assign(token, foundToken);
+          }
+          const foundToken = this.contractToToken(token.contract);
+          if (foundToken) {
+            foundToken.contract = token.contract;
+            foundToken.price = this.getFiatValue(foundToken.pricef);
+            foundToken.isEth = token.isEth;
+            foundToken.name = token.symbol;
+            return foundToken;
+          }
+          const name = token.name;
+          token.price = '';
+          token.subtext = name;
+          token.value = name;
+          token.name = token.symbol;
+          return token;
+          // return localContractToToken[token.contract];
         })
         .filter(
           item => item.name !== '' && item.symbol !== '' && item.subtext !== ''
@@ -968,10 +988,35 @@ export default {
     trendingTokens() {
       if (!TRENDING_LIST[this.network.type.name]) return [];
       return TRENDING_LIST[this.network.type.name]
-        .map(token => {
-          return localContractToToken[token.contract];
+        .filter(token => {
+          return token.contract !== this.fromTokenType?.contract;
         })
-        .filter(token => token);
+        .map(token => {
+          if (token.cgid) {
+            const foundToken = this.getCoinGeckoTokenById(token.cgid);
+            foundToken.price = this.getFiatValue(foundToken.pricef);
+            return Object.assign(token, foundToken);
+          }
+          const foundToken = this.contractToToken(token.contract);
+          if (foundToken) {
+            token = Object.assign(token, foundToken);
+            token.price = this.getFiatValue(token.pricef);
+          } else {
+            token.price = this.getFiatValue('0.00');
+          }
+          const name = token.name;
+          token.subtext = name;
+          token.value = name;
+          token.name = token.symbol;
+          return token;
+        })
+        .filter(
+          item => item.name !== '' && item.symbol !== '' && item.subtext !== ''
+        );
+      // .map(token => {
+      //   return localContractToToken[token.contract];
+      // })
+      // .filter(token => token);
     },
     setupTokenInfo(tokens) {
       localContractToToken[MAIN_TOKEN_ADDRESS].price =
