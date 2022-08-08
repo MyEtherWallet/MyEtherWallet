@@ -614,27 +614,7 @@ export default {
       if (this.isLoading) return [];
       return this.availableTokens.toTokens
         .map(token => {
-          if (token.cgid) {
-            const foundToken = this.getCoinGeckoTokenById(token.cgid);
-            foundToken.price = this.getFiatValue(foundToken.pricef);
-            foundToken.name = token.symbol;
-            return Object.assign(token, foundToken);
-          }
-          const foundToken = this.contractToToken(token.contract);
-          if (foundToken) {
-            foundToken.contract = token.contract;
-            foundToken.price = this.getFiatValue(foundToken.pricef);
-            foundToken.isEth = token.isEth;
-            foundToken.name = token.symbol;
-            return foundToken;
-          }
-          const name = token.name;
-          token.price = '';
-          token.subtext = name;
-          token.value = name;
-          token.name = token.symbol;
-          return token;
-          // return localContractToToken[token.contract];
+          return localContractToToken[token.contract];
         })
         .filter(
           item => item.name !== '' && item.symbol !== '' && item.subtext !== ''
@@ -710,22 +690,7 @@ export default {
     fromTokens() {
       return this.availableTokens.fromTokens
         .map(token => {
-          const foundToken = this.contractToToken(token.contract);
-          if (foundToken) {
-            foundToken.contract = token.contract;
-            foundToken.price = this.getFiatValue(foundToken.pricef);
-            foundToken.isEth = token.isEth;
-            foundToken.subtext = foundToken.name;
-            foundToken.value = foundToken.name;
-            foundToken.name = foundToken.symbol;
-            return foundToken;
-          }
-          token.price = '';
-          token.subtext = token.name;
-          token.value = token.name;
-          token.name = token.symbol;
-          return token;
-          // return localContractToToken[token.contract];
+          return localContractToToken[token.contract];
         })
         .filter(token => token.isEth === true);
     },
@@ -987,45 +952,16 @@ export default {
     trendingTokens() {
       if (!TRENDING_LIST[this.network.type.name]) return [];
       return TRENDING_LIST[this.network.type.name]
-        .filter(token => {
-          return token.contract !== this.fromTokenType?.contract;
-        })
         .map(token => {
-          if (token.cgid) {
-            const foundToken = this.getCoinGeckoTokenById(token.cgid);
-            foundToken.price = this.getFiatValue(foundToken.pricef);
-            return Object.assign(token, foundToken);
-          }
-          const foundToken = this.contractToToken(token.contract);
-          if (foundToken) {
-            token = Object.assign(token, foundToken);
-            token.price = this.getFiatValue(token.pricef);
-          } else {
-            token.price = this.getFiatValue('0.00');
-          }
-          const name = token.name;
-          token.subtext = name;
-          token.value = name;
-          token.name = token.symbol;
-          return token;
+          return localContractToToken[token.contract];
         })
-        .filter(
-          item => item.name !== '' && item.symbol !== '' && item.subtext !== ''
-        );
-      // .map(token => {
-      //   return localContractToToken[token.contract];
-      // })
-      // .filter(token => token);
+        .filter(token => token);
     },
     setupTokenInfo(tokens) {
       localContractToToken[MAIN_TOKEN_ADDRESS].price =
         localContractToToken[MAIN_TOKEN_ADDRESS].pricef;
       tokens.forEach(token => {
-        if (
-          localContractToToken[token.contract] &&
-          localContractToToken[token.contract].price !== '0'
-        )
-          return;
+        if (localContractToToken[token.contract]) return;
         if (token.cgid) {
           const foundToken = this.getCoinGeckoTokenById(token.cgid);
           foundToken.price = this.getFiatValue(foundToken.pricef);
