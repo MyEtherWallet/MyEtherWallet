@@ -517,13 +517,16 @@ export default {
       this.getSimplexQuote();
     },
     getSimplexQuote() {
+      const moonpayMax = this.max.moonpay;
+      const simplexMax = this.max.simplex;
+      const maxVal = Math.max(moonpayMax.toString(), simplexMax.toString());
       if (
         this.hideSimplex ||
         !this.actualValidAddress ||
         isEmpty(this.amount) ||
         this.min.gt(this.amount) ||
         isNaN(this.amount) ||
-        this.max.simplex.lt(this.amount)
+        BigNumber(maxVal).lt(this.amount)
       )
         return;
       this.loading = true;
