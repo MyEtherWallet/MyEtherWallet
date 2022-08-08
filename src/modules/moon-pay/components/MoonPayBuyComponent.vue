@@ -260,11 +260,11 @@ export default {
         return `Amount can't be negative`;
       }
       if (this.min.gt(this.amount)) {
-        return `Amount can't be below provider's minimum: ${this.min.toFixed()} ${
-          this.selectedFiatName
-        }`;
+        return `Amount can't be below provider's minimum: ${
+          formatFiatValue(this.min.toFixed(), this.currencyConfig).value
+        } ${this.selectedFiatName}`;
       }
-      if (BigNumber(this.amount).gt(this.maxVal)) {
+      if (this.maxVal.lt(this.amount)) {
         return `Amount can't be above provider's maximum: ${
           formatFiatValue(this.maxVal.toFixed(), this.currencyConfig).value
         } ${this.selectedFiatName}`;
