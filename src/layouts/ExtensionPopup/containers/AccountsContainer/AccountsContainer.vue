@@ -9,7 +9,7 @@
         <b-tab :active="hasMyWallets" title="My Wallets" class="tab-container">
           <network-component />
           <div class="deprecation-notice">
-            MEW CX will not longer be supported on
+            MEW CX will no longer be supported on
             <b>October 4th, 2022</b>
           </div>
           <div class="total-balance-container">
@@ -47,7 +47,7 @@
         >
           <network-component />
           <div class="deprecation-notice">
-            MEW CX will not longer be supported on
+            MEW CX will no longer be supported on
             <b>October 4th, 2022</b>
           </div>
           <div class="wallet-component-container watch-only">

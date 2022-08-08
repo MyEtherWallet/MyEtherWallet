@@ -1,7 +1,7 @@
 <template>
   <div class="cx-menu-container">
     <div class="deprecation-notice">
-      MEW CX will not longer be supported on <b>October 4th, 2022 </b> <br />
+      MEW CX will no longer be supported on <b>October 4th, 2022 </b> <br />
 
       Hello user! MEW will be sunsetting MEW CX in favor of our new browser
       extension wallet Enkrypt. <br />We highly recommend downloading Enkrypt
@@ -10,7 +10,14 @@
       the multichain future. <br />Again, after <b>October 4th, 2022 </b>, MEW
       CX will no longer be maintained or updated by our developers.<br />
       Download Enkrypt here:
-      <a href="https://enkrypt.com">Enkrypt</a>
+      <a href="https://enkrypt.com" target="_blank">Enkrypt</a> <br />
+      We have also created a guide for migrating your assets into Enkrypt:
+      <a
+        href="https://help.myetherwallet.com/en/articles/6434663-migrating-from-mew-cx-to-enkrypt"
+        target="_blank"
+      >
+        Here</a
+      >
     </div>
     <settings-modal
       v-if="address !== null"

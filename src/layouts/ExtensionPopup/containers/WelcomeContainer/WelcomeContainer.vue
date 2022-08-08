@@ -6,7 +6,7 @@
     </div>
     <div class="content">
       <div class="deprecation-notice">
-        MEW CX will not longer be supported on
+        MEW CX will no longer be supported on
         <b>October 4th, 2022</b>
       </div>
       <img class="logo-ex" src="@/assets/images/mew-cx-logo.png" width="75" />
