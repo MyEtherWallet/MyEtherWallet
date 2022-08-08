@@ -104,7 +104,7 @@ import {
 } from '@/core/helpers/numberFormatHelper';
 import { getCurrency } from '@/modules/settings/components/currencyList';
 import { buyContracts } from './tokenList';
-import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
+
 export default {
   name: 'ModuleBuyEth',
   props: {
@@ -151,6 +151,7 @@ export default {
     ...mapState('wallet', ['address']),
     ...mapState('external', ['currencyRate', 'coinGeckoTokens']),
     ...mapGetters('external', ['contractToToken']),
+    ...mapGetters('wallet', ['tokensList']),
     includesFeeText() {
       return `Includes ${this.percentFee} fee (${
         formatFiatValue(this.minFee, this.currencyConfig).value
@@ -285,26 +286,34 @@ export default {
       }
       return '';
     },
-    currencyItems() {
-      const tokenList = new Array();
-      if (!this.supportedBuy) return;
+    tokens() {
+      if (this.inWallet) {
+        return buyContracts.reduce((arr, item) => {
+          const inList = this.tokensList.find(t => {
+            if (t.contract.toLowerCase() === item.toLowerCase()) return t;
+          });
+          if (inList) {
+            arr.push(inList);
+            return arr;
+          }
+
+          const token = this.contractToToken(item);
+          if (token) arr.push(token);
+          return arr;
+        }, []);
+      }
+      const arr = new Array();
       for (const contract of buyContracts) {
         const token = this.contractToToken(contract);
-        if (token) {
-          if (
-            token.symbol === this.network.type.currencyName &&
-            token.contract !== MAIN_TOKEN_ADDRESS
-          )
-            continue;
-          tokenList.push(token);
-        }
+        if (token) arr.push(token);
       }
-      const imgs = tokenList.map(item => {
-        return item.img;
-      });
+      return arr;
+    },
+    currencyItems() {
+      if (!this.supportedBuy) return;
       const tokensListWPrice =
         this.currencyRates.length > 0
-          ? tokenList.map(token => {
+          ? this.tokens.map(token => {
               const priceRate = this.currencyRates.find(rate => {
                 return rate.crypto_currency === token.symbol;
               });
@@ -319,12 +328,10 @@ export default {
               token.name = token.symbol;
               return token;
             })
-          : tokenList;
+          : this.tokens;
       const returnedArray = [
         {
           text: 'Select Token',
-          imgs: imgs.splice(0, 3),
-          total: `${tokenList.length}`,
           divider: true,
           selectLabel: true
         },
