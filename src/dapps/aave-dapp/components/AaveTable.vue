@@ -49,7 +49,9 @@
 <script>
 import {
   AAVE_TABLE_TITLE,
-  INTEREST_TYPES
+  INTEREST_TYPES,
+  AAVE_TABLE_BUTTON,
+  AAVE_TABLE_HEADER
 } from '@/dapps/aave-dapp/handlers/helpers';
 import BigNumber from 'bignumber.js';
 import { mapGetters } from 'vuex';
@@ -59,10 +61,6 @@ import {
 } from '@/core/helpers/numberFormatHelper';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import handlerAave from '../handlers/handlerAave.mixin';
-import {
-  AAVE_TABLE_BUTTON,
-  AAVE_TABLE_HEADER
-} from '@/dapps/aave-dapp/handlers/helpers';
 import { EventBus } from '@/core/plugins/eventBus';
 
 export default {
