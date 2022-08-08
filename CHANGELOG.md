@@ -1,3 +1,10 @@
+### Release v6.6.3-hotfix.2
+
+### fix
+
+* show matching tokens in Send and Dashboard [#4034](https://github.com/MyEtherWallet/MyEtherWallet/pull/4034)
+* fix popups, usdt out of gas [#4086](https://github.com/MyEtherWallet/MyEtherWallet/pull/4086)
+
 ### Release v6.6.3-hotfix.1
 
 ### devop
