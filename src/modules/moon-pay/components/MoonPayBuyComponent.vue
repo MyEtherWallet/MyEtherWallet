@@ -253,9 +253,6 @@ export default {
       return 'BUY NOW';
     },
     amountErrorMessages() {
-      const moonpayMax = this.max.moonpay;
-      const simplexMax = this.max.simplex;
-      const maxVal = Math.max(moonpayMax.toString(), simplexMax.toString());
       if (BigNumber(this.amount).isNaN() || BigNumber(this.amount).eq(0)) {
         return 'Amount required';
       }
@@ -267,9 +264,9 @@ export default {
           this.selectedFiatName
         }`;
       }
-      if (BigNumber(this.amount).gt(maxVal)) {
+      if (BigNumber(this.amount).gt(this.maxVal)) {
         return `Amount can't be above provider's maximum: ${
-          formatFiatValue(maxVal.toString(), this.currencyConfig).value
+          formatFiatValue(this.maxVal.toFixed(), this.currencyConfig).value
         } ${this.selectedFiatName}`;
       }
       return '';
@@ -382,6 +379,12 @@ export default {
         moonpay: BigNumber(12000),
         simplex: BigNumber(12000)
       };
+    },
+    maxVal() {
+      const moonpayMax = this.max.moonpay;
+      const simplexMax = this.max.simplex;
+      const maxVal = Math.max(moonpayMax.toString(), simplexMax.toString());
+      return BigNumber(maxVal);
     },
     min() {
       if (this.hasData) {
@@ -517,16 +520,13 @@ export default {
       this.getSimplexQuote();
     },
     getSimplexQuote() {
-      const moonpayMax = this.max.moonpay;
-      const simplexMax = this.max.simplex;
-      const maxVal = Math.max(moonpayMax.toString(), simplexMax.toString());
       if (
         this.hideSimplex ||
         !this.actualValidAddress ||
         isEmpty(this.amount) ||
         this.min.gt(this.amount) ||
         isNaN(this.amount) ||
-        BigNumber(maxVal).lt(this.amount)
+        this.maxVal.lt(this.amount)
       )
         return;
       this.loading = true;
