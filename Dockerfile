@@ -9,6 +9,7 @@ COPY package-audit.js ./
 RUN  node package-audit.js
 RUN rm package-audit.js
 RUN rm -rf package*.json*
+RUN git config --global url."https://github".insteadOf git://github
 WORKDIR /home
 
 EXPOSE 8080
