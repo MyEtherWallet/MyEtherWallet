@@ -345,7 +345,7 @@ export default {
         item.tokenBalance = item.balancef;
         item.price = this.getFiatValue(item.pricef);
         item.subtext = item.name;
-        item.value = item.name;
+        item.value = item.contract;
         item.name = item.symbol;
         return item.img;
       });

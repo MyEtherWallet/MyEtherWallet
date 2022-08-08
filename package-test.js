@@ -49,12 +49,13 @@ const EXCEPTIONS = [
   'vue',
   '@vue/cli-plugin-e2e-nightwatch',
   'geckodriver',
+  // breaking
   '@shapeshiftoss/hdwallet-core',
   '@shapeshiftoss/hdwallet-keepkey-webusb',
-  'trezor-connect', // currently in beta
   'package-json',
   'codecov',
   'node-polyfill-webpack-plugin',
+  // check if fixable after hotfix
   '@ensdomains/ensjs',
   '@ensdomains/ens-contracts',
   'protobufjs',
@@ -64,7 +65,9 @@ const EXCEPTIONS = [
   'vue-template-compiler',
   '@ledgerhq/hw-transport-web-ble',
   '@ledgerhq/hw-app-eth',
-  '@ledgerhq/hw-transport-webusb'
+  '@ledgerhq/hw-transport-webusb',
+  '@lokalise/node-api',
+  '@unstoppabledomains/resolution'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
