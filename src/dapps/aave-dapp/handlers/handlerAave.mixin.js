@@ -97,7 +97,9 @@ export default {
         result({ data }) {
           Promise.all(data.reserves.map(item => this.rawDataParser(item))).then(
             values => {
-              this.rawReserveData = values.filter(item => item !== undefined);
+              this.rawReserveData = values.filter(
+                item => item !== undefined && !item.isFrozen
+              );
               this.reservesData = formatReserves({
                 reserves: this.rawReserveData,
                 currentTimestamp: Math.floor(Date.now() / 1000),
