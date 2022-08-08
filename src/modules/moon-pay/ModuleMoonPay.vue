@@ -120,6 +120,7 @@ export default {
     },
     defaultCurrency() {
       if (isEmpty(this.selectedCurrency) && this.supportedBuy) {
+        if (this.inWallet) return this.tokensList[0];
         const token = this.contractToToken(MAIN_TOKEN_ADDRESS);
         token.value = token.symbol;
         return token;

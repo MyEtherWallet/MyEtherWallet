@@ -60,7 +60,7 @@ export default {
     walletEnkryptPopup() {
       return (
         !this.enkryptLandingPopup &&
-        moment(this.enkryptLandingPopupClosed).diff(new Date(), 'hours') >=
+        moment(new Date()).diff(this.enkryptLandingPopupClosed, 'hours') >=
           24 &&
         this.enkryptWalletPopup
       );
