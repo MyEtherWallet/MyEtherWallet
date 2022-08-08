@@ -49,7 +49,7 @@
 import mewTools from '@/components/mew-tools/MewTools';
 import TheDefaultMobileNavigation from './TheDefaultMobileNavigation';
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 
 export default {
@@ -107,9 +107,17 @@ export default {
     ROUTES_HOME: ROUTES_HOME
   }),
   computed: {
-    ...mapGetters('global', ['swapLink'])
+    ...mapGetters('global', ['swapLink', 'network'])
+  },
+  mounted() {
+    const tokenMap = new Map();
+    this.network.type.tokens.forEach(token => {
+      tokenMap.set(token.address.toLowerCase(), token);
+    });
+    this.setNetworkTokens(tokenMap);
   },
   methods: {
+    ...mapActions('external', ['setNetworkTokens']),
     routeTo(route) {
       this.$router.push(route);
     }

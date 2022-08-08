@@ -229,7 +229,7 @@ export default {
           {
             color: 'white',
             title: 'Mobile Apps',
-            subtitle: 'WalletConnect, Walletlink',
+            subtitle: 'WalletConnect, WalletLink',
             official: false,
             recommended: true,
             icon: require('@/assets/images/icons/icon-mobile-apps.png'),

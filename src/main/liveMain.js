@@ -10,6 +10,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import { v4 as uuidv4 } from 'uuid';
 
+import VueIntercom from '@mathieustan/vue-intercom';
 import VueSocialSharing from 'vue-social-sharing';
 
 /**Dapps Store */
@@ -47,7 +48,7 @@ Vue.directive('lottie', LottieAnimation);
 Vue.filter('lokalise', lokalise);
 
 // eslint-disable-next-line
-// Vue.use(VueIntercom, { appId: 'ja20qe25' });
+Vue.use(VueIntercom, { appId: 'ja20qe25' });
 Vue.use(VueSocialSharing);
 
 //Router
@@ -62,6 +63,11 @@ new Vue({
   apolloProvider,
   vuetify,
   beforeCreate() {
+    const userId = this.$route.query.intercomid
+      ? this.$route.query.intercomid
+      : uuidv4();
+    this.$intercom.boot({ user_id: userId });
+
     if (locStore.get('mew-testing') === undefined) {
       locStore.set('mew-testing', false);
     }
@@ -73,18 +79,6 @@ new Vue({
     this.$store.commit('popups/INIT_STORE');
     dappStoreBeforeCreate(this.$store);
     this.$store.dispatch('popups/setTracking');
-  },
-  mounted() {
-    window.Intercom('shutdown');
-    this.bootIntercom();
-  },
-  methods: {
-    bootIntercom() {
-      const userId = this.$route.query.intercomid
-        ? this.$route.query.intercomid
-        : uuidv4();
-      window.Intercom('boot', { app_id: 'ja20qe25', user_id: userId });
-    }
   },
   render: h => h(app)
 });

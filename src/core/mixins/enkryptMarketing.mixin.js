@@ -18,7 +18,7 @@ export default {
           img: require('@/assets/images/icons/icon-firefox.svg')
         },
         opera: {
-          link: 'https://chrome.google.com/webstore/detail/enkrypt/kkpllkodjeloidieedojogacfhpaihoh',
+          link: 'https://addons.opera.com/en/extensions/details/enkrypt/',
           img: require('@/assets/images/icons/icon-opera.svg')
         },
         default: {

@@ -1,3 +1,20 @@
+### Release v6.6.3-hotfix.2
+
+### fix
+
+* show matching tokens in Send and Dashboard [#4034](https://github.com/MyEtherWallet/MyEtherWallet/pull/4034)
+* fix popups, usdt out of gas [#4086](https://github.com/MyEtherWallet/MyEtherWallet/pull/4086)
+
+### Release v6.6.3-hotfix.1
+
+### devop
+
+* add opera link [#4077](https://github.com/MyEtherWallet/MyEtherWallet/pull/4077)
+
+### fix
+
+* fix banner link, redo intercom [#4072](https://github.com/MyEtherWallet/MyEtherWallet/pull/4072)
+
 ### Release v6.6.3
 
 ### devop

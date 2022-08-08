@@ -43,7 +43,7 @@ import platform from 'platform';
 
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
 import enkryptMarketing from '@/core/mixins/enkryptMarketing.mixin.js';
-import handlerAnalytics from '@/core/mixins/handlerWallet.mixin.js';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin.js';
 export default {
   mixins: [enkryptMarketing, handlerAnalytics],
   data: () => ({

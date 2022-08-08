@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "6.6.3",
+  "version": "6.6.3-hotfix.2",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build": "npm run update && vue-cli-service build",
@@ -48,6 +48,7 @@
     "@formatjs/intl-numberformat": "8.0.4",
     "@ledgerhq/hw-transport-web-ble": "6.27.1",
     "@lokalise/node-api": "7.3.1",
+    "@mathieustan/vue-intercom": "0.0.9",
     "@myetherwallet/eth2-keystore": "0.2.3",
     "@myetherwallet/mew-components": "1.3.0",
     "@myetherwallet/mewconnect-web-client": "2.2.0-beta.16",
@@ -163,7 +164,7 @@
     "stylelint": "14.8.2",
     "stylelint-config-prettier": "9.0.3",
     "stylelint-config-standard": "25.0.0",
-    "trezor-connect": "8.2.8",
+    "trezor-connect": "8.2.10",
     "u2f-api": "1.2.1",
     "uglify-es": "3.3.9",
     "uuid": "8.3.2",
