@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "6.6.3-hotfix.1",
+  "version": "6.6.3-hotfix.2",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build": "npm run update && vue-cli-service build",
@@ -164,7 +164,7 @@
     "stylelint": "14.8.2",
     "stylelint-config-prettier": "9.0.3",
     "stylelint-config-standard": "25.0.0",
-    "trezor-connect": "8.2.8",
+    "trezor-connect": "8.2.10",
     "u2f-api": "1.2.1",
     "uglify-es": "3.3.9",
     "uuid": "8.3.2",
