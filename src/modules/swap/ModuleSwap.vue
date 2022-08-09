@@ -688,11 +688,9 @@ export default {
      * to swap from
      */
     fromTokens() {
-      return this.availableTokens.fromTokens
-        .map(token => {
-          return localContractToToken[token.contract];
-        })
-        .filter(token => token.isEth === true);
+      return this.availableTokens.fromTokens.map(token => {
+        return localContractToToken[token.contract];
+      });
     },
     txFee() {
       return toBN(this.totalGasLimit).mul(toBN(this.localGasPrice)).toString();
