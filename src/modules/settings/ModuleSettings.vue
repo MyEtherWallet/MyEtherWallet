@@ -79,6 +79,8 @@
 </template>
 
 <script>
+import MewTable from '@/components/MewTable/MewTable';
+import MultiCoinValidator from 'multicoin-address-validator';
 import SettingsImportConfig from './components/SettingsImportConfig';
 import SettingsExportConfig from './components/SettingsExportConfig';
 import SettingsGasPrice from './components/SettingsGasPrice';
@@ -93,6 +95,7 @@ const modes = ['add', 'edit'];
 export default {
   name: 'ModuleSettings',
   components: {
+    MewTable,
     SettingsImportConfig,
     SettingsExportConfig,
     SettingsGasPrice,
@@ -201,6 +204,18 @@ export default {
     this.settingsHandler = new handlerSettings();
   },
   methods: {
+    getCoinType(address) {
+      if (!address) {
+        return false;
+      }
+      if (MultiCoinValidator.validate(address, 'eth')) {
+        return 'eth';
+      }
+      if (MultiCoinValidator.validate(address, 'btc')) {
+        return 'btc';
+      }
+      return false;
+    },
     getAddressBookTableData() {
       this.tableData = [];
       this.addressBookStore.forEach((item, idx) => {
@@ -216,7 +231,11 @@ export default {
               colorTheme: 'greenPrimary',
               method: this.onEdit
             }
-          ]
+          ],
+          coinType:
+            this.getCoinType(
+              item.address.includes('.') ? item.resolvedAddr : null
+            ) || this.getCoinType(item.address)
         });
       });
     },
