@@ -1160,7 +1160,9 @@ export default {
       console.log('toTokens', tokens.toTokens);
       const toTokens = localContractToToken;
       tokens.fromTokens.forEach(token => {
-        if (toTokens[token.contract] !== fromTokens[token.contract]) {
+        if (
+          toTokens[token.contract].price !== fromTokens[token.contract].price
+        ) {
           console.log(`${token.symbol} fromTokens`, fromTokens[token.contract]);
           console.log(`${token.symbol} toTokens`, toTokens[token.contract]);
         }
@@ -1171,6 +1173,7 @@ export default {
       console.log(localContractToToken);
       this.availableTokens = tokens;
       console.log('availableTokens', this.availableTokens);
+      console.log('storeTokens', isUndefined(storeTokens));
       if (isUndefined(storeTokens)) {
         this.setSwapTokens(tokens);
       }
