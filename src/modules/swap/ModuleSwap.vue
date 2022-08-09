@@ -959,7 +959,11 @@ export default {
       localContractToToken[MAIN_TOKEN_ADDRESS].price =
         localContractToToken[MAIN_TOKEN_ADDRESS].pricef;
       tokens.forEach(token => {
-        if (localContractToToken[token.contract]) return;
+        if (
+          localContractToToken[token.contract] &&
+          localContractToToken[token.contract].price !== '0'
+        )
+          return;
         if (token.cgid) {
           const foundToken = this.getCoinGeckoTokenById(token.cgid);
           foundToken.price = this.getFiatValue(foundToken.pricef);
@@ -1149,9 +1153,24 @@ export default {
     },
     processTokens(tokens, storeTokens) {
       this.setupTokenInfo(tokens.fromTokens);
+      console.log('fromTokens', tokens.fromTokens);
+      const fromTokens = localContractToToken;
+      console.log('ETH', localContractToToken[MAIN_TOKEN_ADDRESS]);
       this.setupTokenInfo(tokens.toTokens);
+      console.log('toTokens', tokens.toTokens);
+      const toTokens = localContractToToken;
+      tokens.fromTokens.forEach(token => {
+        if (toTokens[token.contract] !== fromTokens[token.contract]) {
+          console.log(`${token.symbol} fromTokens`, fromTokens[token.contract]);
+          console.log(`${token.symbol} toTokens`, toTokens[token.contract]);
+        }
+      });
+      console.log('ETH', localContractToToken[MAIN_TOKEN_ADDRESS]);
       this.setupTokenInfo(TRENDING_LIST[this.network.type.name]);
+      console.log('trendingTokens', TRENDING_LIST[this.network.type.name]);
+      console.log(localContractToToken);
       this.availableTokens = tokens;
+      console.log('availableTokens', this.availableTokens);
       if (isUndefined(storeTokens)) {
         this.setSwapTokens(tokens);
       }
