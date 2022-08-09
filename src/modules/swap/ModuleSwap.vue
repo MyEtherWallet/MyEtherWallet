@@ -966,6 +966,7 @@ export default {
           foundToken.name = token.symbol;
           foundToken.value = foundToken.contract;
           foundToken.subtext = name;
+          if (token.symbol) foundToken.symbol = token.symbol;
           localContractToToken[token.contract] = Object.assign(
             {},
             token,
@@ -1225,7 +1226,6 @@ export default {
       )
         return;
       if (this.showToAddress && !this.addressValue.isValid) return;
-
       if (
         !isEmpty(this.toTokenType) &&
         this.toTokenType.hasOwnProperty('isEth') &&
