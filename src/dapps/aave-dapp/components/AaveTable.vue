@@ -223,6 +223,7 @@ export default {
             list = list.map(item => {
               AAVE_TABLE_BUTTON.withdraw.method = this.onWithdrawClick;
               AAVE_TABLE_BUTTON.deposit.method = this.onDepositClick;
+              const enableToggle = item.reserve.usageAsCollateralEnabled;
               return {
                 token: item.reserve.symbol,
                 tokenImg: `${item.reserve.icon}`,
@@ -235,11 +236,13 @@ export default {
                   )
                 ],
                 apy: this.getDepositAPY(item.reserve.liquidityRate),
-                toggle: {
-                  color: 'secondary',
-                  method: this.onToggleClick,
-                  value: item.usageAsCollateralEnabledOnUser
-                },
+                toggle: enableToggle
+                  ? {
+                      color: 'secondary',
+                      method: this.onToggleClick,
+                      value: item.usageAsCollateralEnabledOnUser
+                    }
+                  : null,
                 callToAction: [
                   AAVE_TABLE_BUTTON.deposit,
                   AAVE_TABLE_BUTTON.withdraw
