@@ -1,9 +1,23 @@
 import lottie from 'lottie-web';
 import checkmark from '@/assets/images/icons/lottie/checkmark.json';
 import swap from '@/assets/images/icons/lottie/swap.json';
+import confetti from '@/assets/images/icons/lottie/confetti.json';
 const ICONS = {
   checkmark: checkmark,
-  swap: swap
+  swap: swap,
+  confetti: confetti
+};
+
+const LOOP = {
+  checkmark: false,
+  swap: false,
+  confetti: true
+};
+
+const AUTOPLAY = {
+  checkmark: true,
+  swap: true,
+  confetti: true
 };
 const LottieAnimation = {
   bind: function (element, binding) {
@@ -11,8 +25,8 @@ const LottieAnimation = {
     lottie.loadAnimation({
       container: element,
       renderer: 'svg',
-      loop: false,
-      autoplay: true,
+      loop: LOOP[binding.value],
+      autoplay: AUTOPLAY[binding.value],
       animationData: ICONS[binding.value]
     });
   }

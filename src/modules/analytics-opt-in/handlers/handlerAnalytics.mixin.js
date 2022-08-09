@@ -1,16 +1,33 @@
 /**
  * Matomo Analytics Mixin
  */
-import categories from './configs/configCategories';
 import { mapState, mapActions } from 'vuex';
+import moment from 'moment';
+
+import categories from './configs/configCategories';
 
 export default {
   name: 'HandlerAnalytics',
   computed: {
-    ...mapState('global', ['consentToTrack', 'displayedTrackingPopup'])
+    ...mapState('popups', [
+      'consentToTrack',
+      'displayedTrackingPopup',
+      'enkryptLandingPopup',
+      'enkryptLandingPopupClosed'
+    ]),
+    shouldDisplayTrackingPopup() {
+      const dayAgo = moment(new Date()).diff(
+        this.enkryptLandingPopupClosed,
+        'hours'
+      );
+      if (!this.enkryptLandingPopup && dayAgo >= 24) {
+        return this.displayedTrackingPopup;
+      }
+      return true;
+    }
   },
   methods: {
-    ...mapActions('global', ['setTrackingConsent']),
+    ...mapActions('popups', ['setTrackingConsent']),
     /**
      * Sets the consent to track on wallet page
      */
@@ -100,6 +117,22 @@ export default {
     trackLogout() {
       if (this.$matomo && this.consentToTrack) {
         this.$matomo.trackEvent(categories.exitDashboard, 'true');
+      }
+    },
+    /**
+     * Tracks when user clicks enkrypt install
+     */
+    trackEnkryptInstall() {
+      if (this.$matomo && this.consentToTrack) {
+        this.$matomo.trackEvent(categories.enkrypt, 'true');
+      }
+    },
+    /**
+     * Tracks when user clicks mewwallet install
+     */
+    trackMewWalletInstall() {
+      if (this.$matomo && this.consentToTrack) {
+        this.$matomo.trackEvent(categories.mewwallet, 'true');
       }
     }
   }

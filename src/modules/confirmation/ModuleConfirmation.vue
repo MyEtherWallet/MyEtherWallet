@@ -703,7 +703,7 @@ export default {
       if (this.isSwap) {
         this.showSuccessSwap = true;
       }
-      if (this.tx.data.includes('0x33aaf6f2')) {
+      if (this.tx.data && this.tx.data.includes('0x33aaf6f2')) {
         this.trackDapp('ethBlocksMinted');
       }
       this.reset();

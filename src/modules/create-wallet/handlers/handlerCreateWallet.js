@@ -86,7 +86,7 @@ export default class CreateWallet {
       });
       if (holder.includes(false)) {
         this.generateVerification(this.phrase);
-        reject('Wrong values selected, please try again!');
+        reject('Wrong values selected. Please try again!');
       } else {
         resolve(!holder.includes(false));
       }

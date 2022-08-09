@@ -295,6 +295,7 @@ export default {
           {},
           WARNING
         );
+        this.nftApiResponse = [];
       }
     },
     address() {

@@ -6,7 +6,6 @@ import {
   formatIntegerValue
 } from '@/core/helpers/numberFormatHelper';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
-const tempTokenCache = {};
 /**
  * Get Eth Fiat value
  */
@@ -112,13 +111,8 @@ const contractToToken =
     }
     let cgToken;
     cgToken = getters.getCoinGeckoTokenById(tokenId);
-    let networkToken = tempTokenCache[contractAddress];
-    if (!networkToken) {
-      networkToken = rootGetters['global/network'].type.tokens.find(
-        t => t.address.toLowerCase() === contractAddress
-      );
-      tempTokenCache[contractAddress] = networkToken;
-    }
+    const networkToken = state.networkTokens.get(contractAddress);
+
     if (!networkToken) return null;
     return Object.assign(cgToken, {
       name: networkToken.name,

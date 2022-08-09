@@ -50,7 +50,7 @@
               }"
               :buy-more-str="buyMoreStr"
               @buyMore="openMoonpay"
-              @input="setAmount"
+              @input="val => setAmount(val, false)"
             />
           </div>
         </v-col>
@@ -184,7 +184,7 @@
 </template>
 
 <script>
-import { fromWei, isHexStrict, toWei } from 'web3-utils';
+import { fromWei, isHexStrict } from 'web3-utils';
 import { debounce, isEmpty, isNumber } from 'lodash';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
@@ -250,7 +250,8 @@ export default {
       amountError: '',
       gasEstimationError: '',
       gasEstimationIsReady: false,
-      localGasPrice: '0'
+      localGasPrice: '0',
+      selectedMax: false
     };
   },
   computed: {
@@ -344,7 +345,7 @@ export default {
         item.tokenBalance = item.balancef;
         item.price = this.getFiatValue(item.pricef);
         item.subtext = item.name;
-        item.value = item.name;
+        item.value = item.contract;
         item.name = item.symbol;
         return item.img;
       });
@@ -463,7 +464,10 @@ export default {
         )
       )
         return '0';
-      const amountToWei = toWei(toBNSafe(this.amount));
+      const decimals = this.selectedCurrency?.decimals
+        ? this.selectedCurrency.decimals
+        : 18;
+      const amountToWei = toBase(this.amount, decimals);
       return this.isFromNetworkCurrency
         ? BigNumber(this.txFee).plus(amountToWei).toString()
         : this.txFee;
@@ -770,19 +774,22 @@ export default {
         this.selectedCurrency.contract === MAIN_TOKEN_ADDRESS
       ) {
         this.setAmount(
-          BigNumber(this.balanceInETH).minus(this.txFeeETH).toFixed()
+          BigNumber(this.balanceInETH).minus(this.txFeeETH).toFixed(),
+          true
         );
       } else {
         this.setAmount(
           this.convertToDisplay(
             this.selectedCurrency.balance,
             this.selectedCurrency.decimals
-          )
+          ),
+          true
         );
       }
     },
-    setAmount(value) {
+    setAmount(value, max) {
       this.amount = value;
+      this.selectedMax = max;
     },
     setGasLimit(value) {
       this.gasLimit = value;
