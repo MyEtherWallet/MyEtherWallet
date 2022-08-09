@@ -259,7 +259,7 @@ export default {
                 return reserve.symbol === item.reserve.symbol;
               });
               const enableToggle = reserve
-                ? !reserve.stableBorrowRateEnabled
+                ? reserve.stableBorrowRateEnabled
                 : false;
               const available = formatFloatingPointValue(
                 this.userBorrowPower(reserve)
@@ -282,15 +282,17 @@ export default {
                     .times(100)
                     .toString()
                 ).value,
-                toggle: {
-                  color: 'greenPrimary',
-                  method: this.onToggleAprType,
-                  value: isVariable,
-                  label: isVariable
-                    ? INTEREST_TYPES.variable
-                    : INTEREST_TYPES.stable,
-                  disabled: enableToggle
-                },
+                toggle: enableToggle
+                  ? {
+                      color: 'greenPrimary',
+                      method: this.onToggleAprType,
+                      value: isVariable,
+                      label: isVariable
+                        ? INTEREST_TYPES.variable
+                        : INTEREST_TYPES.stable,
+                      disabled: false
+                    }
+                  : null,
                 callToAction: [
                   { ...AAVE_TABLE_BUTTON.borrow, disabled: available <= 0 },
                   AAVE_TABLE_BUTTON.repay
