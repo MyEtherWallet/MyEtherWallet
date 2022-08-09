@@ -6,6 +6,7 @@ export default {
   name: 'Moonriver',
   name_long: 'Moonriver',
   homePage: 'https://moonriver.network/',
+  blockExplorer: 'Moonscan',
   blockExplorerTX: 'https://moonriver.moonscan.io/tx/[[txHash]]',
   blockExplorerAddr: 'https://moonriver.moonscan.io/addr/[[address]]',
   chainID: 1285,
