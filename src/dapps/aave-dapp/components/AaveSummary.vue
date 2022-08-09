@@ -289,18 +289,23 @@ export default {
 
       const formattedPriceInETH =
         this.selectedTokenDetails?.formattedPriceInMarketReferenceCurrency;
+      const collateralEnabled = selectedToken?.reserve.usageAsCollateralEnabled;
       if (formattedPriceInETH && this.amount !== '0') {
         const ethBalance = BigNumber(this.amount).times(formattedPriceInETH);
         if (
-          this.isDeposit ||
-          (this.isCollateral && !selectedToken?.usageAsCollateralEnabledOnUser)
+          collateralEnabled &&
+          (this.isDeposit ||
+            (this.isCollateral &&
+              !selectedToken?.usageAsCollateralEnabledOnUser))
         ) {
           collateralBalanceETH = new BigNumber(
             this.userSummary.totalCollateralMarketReferenceCurrency
           ).plus(ethBalance);
         } else if (
-          (this.isWithdraw && selectedToken?.usageAsCollateralEnabledOnUser) ||
-          (this.isCollateral && selectedToken?.usageAsCollateralEnabledOnUser)
+          collateralEnabled &&
+          ((this.isWithdraw && selectedToken?.usageAsCollateralEnabledOnUser) ||
+            (this.isCollateral &&
+              selectedToken?.usageAsCollateralEnabledOnUser))
         ) {
           collateralBalanceETH = new BigNumber(
             this.userSummary.totalCollateralMarketReferenceCurrency

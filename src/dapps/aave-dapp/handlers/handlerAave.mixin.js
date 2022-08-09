@@ -556,6 +556,7 @@ export default {
       const collateralBalanceETH =
         this.userSummary.totalCollateralMarketReferenceCurrency;
       if (
+        selectedToken?.usageAsCollateralEnabled &&
         selectedToken?.formattedPriceInMarketReferenceCurrency &&
         amount !== '0'
       ) {
