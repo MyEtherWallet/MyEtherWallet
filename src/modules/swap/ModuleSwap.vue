@@ -724,7 +724,6 @@ export default {
             ? this.addressValue.value
             : this.address;
         }
-
         return this.address;
       }
 
@@ -1241,8 +1240,10 @@ export default {
         !isEmpty(this.fromTokenType) &&
         !isEmpty(this.toTokenType) &&
         !isEmpty(this.fromTokenType?.symbol) &&
-        !isEmpty(this.toTokenType?.symbol)
+        !isEmpty(this.toTokenType?.symbol) &&
+        this.showToAddress
       ) {
+        if (this.showToAddress && !this.addressValue?.valid) return;
         this.isLoadingProviders = true;
         this.showAnimation = true;
         this.cachedAmount = this.tokenInValue;
