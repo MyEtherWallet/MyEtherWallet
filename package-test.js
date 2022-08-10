@@ -67,7 +67,10 @@ const EXCEPTIONS = [
   '@ledgerhq/hw-app-eth',
   '@ledgerhq/hw-transport-webusb',
   '@lokalise/node-api',
-  '@unstoppabledomains/resolution'
+  '@unstoppabledomains/resolution',
+  '@walletconnect/client',
+  '@walletconnect/qrcode-modal',
+  'chromedriver'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
