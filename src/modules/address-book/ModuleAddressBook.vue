@@ -2,7 +2,8 @@
   <div>
     <mew-address-select
       ref="addressSelect"
-      :resolved-addr="resolvedAddr"
+      :resolved-addr="addressOnly"
+      :hint="nameOnly"
       :copy-tooltip="$t('common.copy')"
       :save-tooltip="$t('common.save')"
       :enable-save-address="enableSave"
@@ -38,12 +39,11 @@
 </template>
 
 <script>
-import { isAddress } from '@/core/helpers/addressUtils';
+import { isAddress, toChecksumAddress } from '@/core/helpers/addressUtils';
 import { mapGetters, mapState } from 'vuex';
 import NameResolver from '@/modules/name-resolver/index';
 import AddressBookAddEdit from './components/AddressBookAddEdit';
 import { isObject, throttle } from 'lodash';
-import { toChecksumAddress } from '@/core/helpers/addressUtils';
 import WAValidator from 'multicoin-address-validator';
 
 const USER_INPUT_TYPES = {
@@ -139,6 +139,16 @@ export default {
     },
     addrLabel() {
       return this.label === '' ? this.$t('sendTx.to-addr') : this.label;
+    },
+    addressOnly() {
+      return isAddress(this.resolvedAddr) && this.isValidAddress
+        ? this.resolvedAddr
+        : '';
+    },
+    nameOnly() {
+      return !isAddress(this.resolvedAddr) && this.isValidAddress
+        ? this.resolvedAddr
+        : '';
     }
   },
   watch: {
@@ -207,6 +217,8 @@ export default {
           /**
            * @emits setAddress
            */
+          console.log('inputAddr (1)', this.inputAddr);
+          console.log('resolvedAddr (1)', this.resolvedAddr);
           this.$emit('setAddress', value, this.isValidAddress, {
             type: inputType,
             value: isObject(typeVal) ? typeVal.nickname : typeVal
@@ -233,6 +245,8 @@ export default {
             /**
              * @emits setAddress
              */
+            console.log('inputAddr (2)', value);
+            console.log('resolvedAddr (2)', this.resolvedAddr);
             this.$emit('setAddress', value, this.isValidAddress, {
               type: inputType,
               value: value
@@ -240,6 +254,8 @@ export default {
           } else {
             this.isValidAddress = false;
             this.loadedAddressValidation = true;
+            console.log('inputAddr (3)', value);
+            console.log('resolvedAddr (1)', this.resolvedAddr);
             this.$emit('setAddress', value, this.isValidAddress, {
               type: inputType,
               value: value
@@ -287,6 +303,8 @@ export default {
       if (this.nameResolver) {
         try {
           await this.nameResolver.resolveName(this.inputAddr).then(addr => {
+            console.log('addr', addr);
+            console.log('inputAddr', this.inputAddr);
             this.resolvedAddr = addr;
             this.isValidAddress = true;
             this.loadedAddressValidation = true;
