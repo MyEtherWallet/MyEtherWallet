@@ -929,19 +929,6 @@ export default {
       localContractToToken[MAIN_TOKEN_ADDRESS] = this.mainTokenDetails;
       this.setupSwap();
     }
-    this.$watch(
-      vm => [vm.toTokenType, vm.fromTokenType],
-      () => {
-        if (this.$refs.refundAddressInput) {
-          this.$refs.refundAddressInput.clear();
-        }
-
-        if (this.$refs.toAddressInput) {
-          this.$refs.toAddressInput.clear();
-        }
-        this.selectedProvider = {};
-      }
-    );
   },
   methods: {
     ...mapActions('notifications', ['addNotification']),
@@ -1098,6 +1085,17 @@ export default {
         return t;
       });
     },
+    resetAddressValues({ clearRefund = true, clearTo = true }) {
+      if (clearRefund)
+        if (this.$refs.refundAddressInput) {
+          this.$refs.refundAddressInput.clear();
+        }
+      if (clearTo)
+        if (this.$refs.toAddressInput) {
+          this.$refs.toAddressInput.clear();
+        }
+      this.selectedProvider = {};
+    },
     /**
      * Set the max available amount to swap from
      */
@@ -1175,6 +1173,7 @@ export default {
     },
     setFromToken(value) {
       this.fromTokenType = value;
+      this.resetAddressValues({ clearTo: false });
       this.$nextTick(() => {
         if (value && value.name) {
           this.trackSwap('from: ' + value.name);
@@ -1184,112 +1183,109 @@ export default {
     },
     setToToken(value) {
       this.toTokenType = value;
+      this.resetAddressValues({ clearRefund: false });
       if (value && value.name) {
         this.trackSwap('to: ' + value.name);
       }
       this.setTokenInValue(this.tokenInValue);
     },
     setTokenInValue(value) {
-      this.$nextTick(() => {
-        /**
-         * Ensure that both pairs have been set
-         * before calling the providers
-         */
-        this.belowMinError = false;
-        if (this.isLoading || this.initialLoad) return;
-        this.tokenInValue = value || '0';
-        // Check if (in amount) is larger than (available balance)
-        if (
-          !this.isFromNonChain &&
-          (this.availableBalance.lt(new BigNumber(this.tokenInValue)) ||
-            !this.hasMinEth)
-        ) {
-          this.step = 0;
-          return;
-        }
-
-        if (isEmpty(this.fromTokenType)) {
-          Toast('From token cannot be empty!', {}, ERROR);
-          return;
-        }
-
-        if (
-          !Swapper.helpers.hasValidDecimals(
-            this.tokenInValue,
-            this.fromTokenType.decimals
-          )
-        ) {
-          return;
-        }
-        this.tokenOutValue = '0';
-        this.availableQuotes.forEach(q => {
-          if (q) {
-            q.isSelected = false;
-          }
-        });
-        this.availableQuotes = [];
-        this.allTrades = [];
+      /**
+       * Ensure that both pairs have been set
+       * before calling the providers
+       */
+      this.belowMinError = false;
+      if (this.isLoading || this.initialLoad) return;
+      this.tokenInValue = value || '0';
+      // Check if (in amount) is larger than (available balance)
+      if (
+        !this.isFromNonChain &&
+        (this.availableBalance.lt(new BigNumber(this.tokenInValue)) ||
+          !this.hasMinEth)
+      ) {
         this.step = 0;
+        return;
+      }
 
-        if (
-          this.isFromNonChain &&
-          (this.refundAddress === '' || !this.isValidRefundAddr)
+      if (isEmpty(this.fromTokenType)) {
+        Toast('From token cannot be empty!', {}, ERROR);
+        return;
+      }
+
+      if (
+        !Swapper.helpers.hasValidDecimals(
+          this.tokenInValue,
+          this.fromTokenType.decimals
         )
-          return;
-        if (this.showToAddress && !this.addressValue?.isValid) return;
-        if (
-          !isEmpty(this.toTokenType) &&
-          this.toTokenType.hasOwnProperty('isEth') &&
-          !this.toTokenType.isEth &&
-          (isEmpty(this.addressValue) ||
-            (!isEmpty(this.addressValue) && !this.addressValue.isValid))
-        ) {
-          return;
-        }
-        if (
-          !BigNumber(value).isNaN() &&
-          BigNumber(value).gt(0) &&
-          !isEmpty(this.fromTokenType) &&
-          !isEmpty(this.toTokenType) &&
-          !isEmpty(this.fromTokenType?.symbol) &&
-          !isEmpty(this.toTokenType?.symbol)
-        ) {
-          this.isLoadingProviders = true;
-          this.showAnimation = true;
-          this.cachedAmount = this.tokenInValue;
-          this.swapper
-            .getAllQuotes({
-              fromT: this.fromTokenType,
-              toT: this.toTokenType,
-              fromAmount: new BigNumber(this.tokenInValue).times(
-                new BigNumber(10).pow(
-                  new BigNumber(this.fromTokenType.decimals)
-                )
-              )
-            })
-            .then(quotes => {
-              if (this.tokenInValue === this.cachedAmount) {
-                this.selectedProvider = {};
-                if (quotes.length) {
-                  this.lastSetToken = quotes[0].amount;
-                  this.availableQuotes = quotes.map(q => {
-                    q.rate = new BigNumber(q.amount)
-                      .dividedBy(new BigNumber(this.tokenInValue))
-                      .toString();
-                    q.isSelected = false;
-                    return q;
-                  });
-                  if (this.availableQuotes.length > 0) {
-                    this.availableQuotes = quotes.filter(q => q.rate !== '0');
-                  }
-                  this.tokenOutValue = quotes[0].amount;
-                }
-                this.step = 1;
-                this.isLoadingProviders = false;
-              }
-            });
+      ) {
+        return;
+      }
+      this.tokenOutValue = '0';
+      this.availableQuotes.forEach(q => {
+        if (q) {
+          q.isSelected = false;
         }
       });
+      this.availableQuotes = [];
+      this.allTrades = [];
+      this.step = 0;
+
+      if (
+        this.isFromNonChain &&
+        (this.refundAddress === '' || !this.isValidRefundAddr)
+      )
+        return;
+      if (this.showToAddress && !this.addressValue?.isValid) return;
+      if (
+        !isEmpty(this.toTokenType) &&
+        this.toTokenType.hasOwnProperty('isEth') &&
+        !this.toTokenType.isEth &&
+        (isEmpty(this.addressValue) ||
+          (!isEmpty(this.addressValue) && !this.addressValue.isValid))
+      ) {
+        return;
+      }
+      if (
+        !BigNumber(value).isNaN() &&
+        BigNumber(value).gt(0) &&
+        !isEmpty(this.fromTokenType) &&
+        !isEmpty(this.toTokenType) &&
+        !isEmpty(this.fromTokenType?.symbol) &&
+        !isEmpty(this.toTokenType?.symbol)
+      ) {
+        this.isLoadingProviders = true;
+        this.showAnimation = true;
+        this.cachedAmount = this.tokenInValue;
+        this.swapper
+          .getAllQuotes({
+            fromT: this.fromTokenType,
+            toT: this.toTokenType,
+            fromAmount: new BigNumber(this.tokenInValue).times(
+              new BigNumber(10).pow(new BigNumber(this.fromTokenType.decimals))
+            )
+          })
+          .then(quotes => {
+            if (this.tokenInValue === this.cachedAmount) {
+              this.selectedProvider = {};
+              if (quotes.length) {
+                this.lastSetToken = quotes[0].amount;
+                this.availableQuotes = quotes.map(q => {
+                  q.rate = new BigNumber(q.amount)
+                    .dividedBy(new BigNumber(this.tokenInValue))
+                    .toString();
+                  q.isSelected = false;
+                  return q;
+                });
+                if (this.availableQuotes.length > 0) {
+                  this.availableQuotes = quotes.filter(q => q.rate !== '0');
+                }
+                this.tokenOutValue = quotes[0].amount;
+              }
+              this.step = 1;
+              this.isLoadingProviders = false;
+            }
+          });
+      }
     },
     setProvider(idx, clicked) {
       this.belowMinError = false;
