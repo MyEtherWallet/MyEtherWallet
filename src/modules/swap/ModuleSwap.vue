@@ -1242,7 +1242,7 @@ export default {
         !isEmpty(this.fromTokenType?.symbol) &&
         !isEmpty(this.toTokenType?.symbol)
       ) {
-        if (this.showToAddress && !this.addressValue?.valid) return;
+        if (this.showToAddress && !this.addressValue?.isValid) return;
         this.isLoadingProviders = true;
         this.showAnimation = true;
         this.cachedAmount = this.tokenInValue;
