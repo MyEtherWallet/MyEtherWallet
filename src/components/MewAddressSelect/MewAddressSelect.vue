@@ -38,7 +38,7 @@
       <mew-blockie
         v-if="isValidAddress"
         class="mr-1"
-        :address="addressValue.address || addressValue"
+        :address="blockieHash"
         width="25px"
         height="25px"
       />
@@ -262,16 +262,16 @@ export default {
      * display the blockie for the resolved address otherwise display
      * the blockie for the regular address value.
      */
-    /*
-    * Commented for testing
     blockieHash() {
+      return this.addressValue.address || this.addressValue;
+      /*
       return this.resolvedAddr.length > 0
         ? this.resolvedAddr
         : this.addressValue.address
         ? this.addressValue.address
         : this.addressValue;
+      */
     }
-    */
   },
   methods: {
     /**
