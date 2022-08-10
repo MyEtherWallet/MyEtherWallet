@@ -512,7 +512,10 @@ export default {
         } else if (this.availableQuotes.length === 0) {
           msg =
             'No providers found for this token pair. Select a different token pair or try again later.';
-        } else if (this.feeError === 'Invalid Input') {
+        } else if (
+          this.selectedProvider.rate === '0' ||
+          this.feeError === 'Invalid Input'
+        ) {
           msg =
             'Provided input is invalid or provider is having issues. Please try again!';
         } else {
@@ -1265,6 +1268,7 @@ export default {
             )
           })
           .then(quotes => {
+            console.log(quotes);
             if (this.tokenInValue === this.cachedAmount) {
               this.selectedProvider = {};
               if (quotes.length) {
@@ -1276,9 +1280,6 @@ export default {
                   q.isSelected = false;
                   return q;
                 });
-                if (this.availableQuotes.length > 0) {
-                  this.availableQuotes = quotes.filter(q => q.rate !== '0');
-                }
                 this.tokenOutValue = quotes[0].amount;
               }
               this.step = 1;
