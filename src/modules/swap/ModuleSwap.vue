@@ -725,7 +725,6 @@ export default {
             ? this.addressValue.value
             : this.address;
         }
-
         return this.address;
       }
 
@@ -978,6 +977,7 @@ export default {
           foundToken.name = token.symbol;
           foundToken.value = foundToken.contract;
           foundToken.subtext = name;
+          if (token.symbol) foundToken.symbol = token.symbol;
           localContractToToken[token.contract] = Object.assign(
             {},
             token,
@@ -1236,7 +1236,6 @@ export default {
       )
         return;
       if (this.showToAddress && !this.addressValue.isValid) return;
-
       if (
         !isEmpty(this.toTokenType) &&
         this.toTokenType.hasOwnProperty('isEth') &&
@@ -1254,6 +1253,7 @@ export default {
         !isEmpty(this.fromTokenType?.symbol) &&
         !isEmpty(this.toTokenType?.symbol)
       ) {
+        if (this.showToAddress && !this.addressValue?.isValid) return;
         this.isLoadingProviders = true;
         this.showAnimation = true;
         this.cachedAmount = this.tokenInValue;
