@@ -314,7 +314,7 @@ import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalyti
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 
 const MIN_GAS_LIMIT = 800000;
-let localContractToToken = {};
+const localContractToToken = {};
 export default {
   name: 'ModuleSwap',
   components: {
