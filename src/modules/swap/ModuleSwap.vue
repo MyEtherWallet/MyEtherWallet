@@ -907,6 +907,20 @@ export default {
       handler: function () {
         this.setupSwap();
       }
+    },
+    fromTokenType: {
+      handler: function (newVal) {
+        this.fromTokenType = newVal;
+      },
+      deep: true,
+      immediate: false
+    },
+    toTokenType: {
+      handler: function (newVal) {
+        this.toTokenType = newVal;
+      },
+      deep: true,
+      immediate: false
     }
   },
   beforeMount() {
