@@ -1,12 +1,11 @@
+### Release v6.6.3-hotfix.2
 ### devop
 
 * swap token prices not showing [#4096](https://github.com/MyEtherWallet/MyEtherWallet/pull/4096)
 
 ### fix
 
-* * added checks for missing properties [#4091](https://github.com/MyEtherWallet/MyEtherWallet/pull/4091)
-
-### Release v6.6.3-hotfix.2
+* added checks for missing properties [#4091](https://github.com/MyEtherWallet/MyEtherWallet/pull/4091)
 
 ### fix
 
