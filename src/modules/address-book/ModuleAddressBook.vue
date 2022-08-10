@@ -201,7 +201,7 @@ export default {
             const reverseName = await this.nameResolver.resolveAddress(
               this.inputAddr
             );
-            this.resolvedAddr = reverseName.name ? reverseName.name : '';
+            this.resolvedAddr = reverseName?.name ? reverseName.name : '';
           }
 
           /**
