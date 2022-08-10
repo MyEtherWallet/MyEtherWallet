@@ -961,7 +961,8 @@ export default {
       tokens.forEach(token => {
         if (
           localContractToToken[token.contract] &&
-          localContractToToken[token.contract].price !== '0'
+          localContractToToken[token.contract].price !== '0' &&
+          localContractToToken[token.contract].pricef !== '0'
         )
           return;
         if (token.cgid) {
@@ -1153,34 +1154,19 @@ export default {
     },
     processTokens(tokens, storeTokens) {
       this.setupTokenInfo(tokens.fromTokens);
-      console.log('fromTokens', tokens.fromTokens);
-      const fromTokens = localContractToToken;
-      console.log('ETH', localContractToToken[MAIN_TOKEN_ADDRESS]);
       this.setupTokenInfo(tokens.toTokens);
-      console.log('toTokens', tokens.toTokens);
-      const toTokens = localContractToToken;
-      tokens.fromTokens.forEach(token => {
-        if (
-          toTokens[token.contract].price !== fromTokens[token.contract].price
-        ) {
-          console.log(`${token.symbol} fromTokens`, fromTokens[token.contract]);
-          console.log(`${token.symbol} toTokens`, toTokens[token.contract]);
-        }
-      });
-      console.log('ETH', localContractToToken[MAIN_TOKEN_ADDRESS]);
       this.setupTokenInfo(TRENDING_LIST[this.network.type.name]);
-      console.log('trendingTokens', TRENDING_LIST[this.network.type.name]);
-      console.log(localContractToToken);
       this.availableTokens = tokens;
-      console.log('availableTokens', this.availableTokens);
-      console.log('storeTokens', isUndefined(storeTokens));
       if (isUndefined(storeTokens)) {
         this.setSwapTokens(tokens);
       }
     },
     setDefaults() {
       setTimeout(() => {
-        this.fromTokenType = this.getDefaultFromToken();
+        const defaultToken = this.getDefaultFromToken();
+        if (defaultToken && isUndefined(defaultToken.name))
+          defaultToken.name = defaultToken.symbol;
+        this.fromTokenType = defaultToken;
         this.toTokenType = this.getDefaultToToken();
         this.setTokenInValue(this.tokenInValue);
       }, 500);
