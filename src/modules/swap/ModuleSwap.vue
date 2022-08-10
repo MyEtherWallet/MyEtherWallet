@@ -1240,8 +1240,7 @@ export default {
         !isEmpty(this.fromTokenType) &&
         !isEmpty(this.toTokenType) &&
         !isEmpty(this.fromTokenType?.symbol) &&
-        !isEmpty(this.toTokenType?.symbol) &&
-        this.showToAddress
+        !isEmpty(this.toTokenType?.symbol)
       ) {
         if (this.showToAddress && !this.addressValue?.valid) return;
         this.isLoadingProviders = true;
