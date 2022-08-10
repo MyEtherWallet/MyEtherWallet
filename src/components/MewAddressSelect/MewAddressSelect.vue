@@ -16,7 +16,7 @@
     :disabled="disabled"
     :error-messages="errorMessages"
     :hint="hint || resolvedAddr || ''"
-    :persistent-hint="resolvedAddr.length > 0 || hint.length > 0"
+    :persistent-hint="resolvedAddr.length > 0"
     :rules="rules"
     :no-data-text="noDataText"
     :menu-props="{ value: dropdown, closeOnClick: true }"
