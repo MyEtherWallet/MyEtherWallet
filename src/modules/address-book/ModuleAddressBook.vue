@@ -217,8 +217,6 @@ export default {
           /**
            * @emits setAddress
            */
-          console.log('inputAddr (1)', this.inputAddr);
-          console.log('resolvedAddr (1)', this.resolvedAddr);
           this.$emit('setAddress', value, this.isValidAddress, {
             type: inputType,
             value: isObject(typeVal) ? typeVal.nickname : typeVal
@@ -245,8 +243,6 @@ export default {
             /**
              * @emits setAddress
              */
-            console.log('inputAddr (2)', value);
-            console.log('resolvedAddr (2)', this.resolvedAddr);
             this.$emit('setAddress', value, this.isValidAddress, {
               type: inputType,
               value: value
@@ -254,8 +250,6 @@ export default {
           } else {
             this.isValidAddress = false;
             this.loadedAddressValidation = true;
-            console.log('inputAddr (3)', value);
-            console.log('resolvedAddr (1)', this.resolvedAddr);
             this.$emit('setAddress', value, this.isValidAddress, {
               type: inputType,
               value: value
@@ -303,8 +297,6 @@ export default {
       if (this.nameResolver) {
         try {
           await this.nameResolver.resolveName(this.inputAddr).then(addr => {
-            console.log('addr', addr);
-            console.log('inputAddr', this.inputAddr);
             this.resolvedAddr = addr;
             this.isValidAddress = true;
             this.loadedAddressValidation = true;
