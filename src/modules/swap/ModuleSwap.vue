@@ -41,9 +41,8 @@
                   :error-messages="amountErrorMessage"
                   :disabled="initialLoad"
                   :buy-more-str="
-                    isEthNetwork &&
-                    (amountErrorMessage === errorMsgs.amountExceedsEthBalance ||
-                      amountErrorMessage === errorMsgs.amountEthIsTooLow)
+                    amountErrorMessage === errorMsgs.amountExceedsEthBalance ||
+                    amountErrorMessage === errorMsgs.amountEthIsTooLow
                       ? network.type.canBuy
                         ? 'Buy more.'
                         : ''
@@ -101,7 +100,7 @@
             class="mt-sm-5"
             :message="msg.lowBalance"
           >
-            <div v-if="isEthNetwork" class="mt-3 mx-n1">
+            <div class="mt-3 mx-n1">
               <mew-button
                 btn-size="small"
                 btn-style="outline"
