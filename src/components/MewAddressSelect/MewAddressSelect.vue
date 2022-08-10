@@ -262,6 +262,8 @@ export default {
      * display the blockie for the resolved address otherwise display
      * the blockie for the regular address value.
      */
+    /*
+    * Commented for testing
     blockieHash() {
       return this.resolvedAddr.length > 0
         ? this.resolvedAddr
@@ -269,6 +271,7 @@ export default {
         ? this.addressValue.address
         : this.addressValue;
     }
+    */
   },
   methods: {
     /**
