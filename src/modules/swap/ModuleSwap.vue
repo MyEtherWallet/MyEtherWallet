@@ -1268,7 +1268,6 @@ export default {
             )
           })
           .then(quotes => {
-            console.log(quotes);
             if (this.tokenInValue === this.cachedAmount) {
               this.selectedProvider = {};
               if (quotes.length) {
