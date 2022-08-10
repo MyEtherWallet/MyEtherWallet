@@ -368,7 +368,7 @@ export default {
       availableQuotes: [],
       currentTrade: null,
       allTrades: [],
-      isLoading: false,
+      isLoading: true,
       loadingFee: false,
       feeError: '',
       defaults: {
@@ -391,6 +391,7 @@ export default {
     ...mapState('swap', ['prefetched', 'swapTokens']),
     ...mapState('wallet', ['web3', 'address', 'balance']),
     ...mapState('global', ['gasPriceType']),
+    ...mapState('external', ['coinGeckoTokens']),
     ...mapGetters('global', [
       'network',
       'isEthNetwork',
@@ -872,6 +873,13 @@ export default {
     }
   },
   watch: {
+    coinGeckoTokens(newVal) {
+      if (newVal.size > 0) {
+        this.mainTokenDetails = this.contractToToken(MAIN_TOKEN_ADDRESS);
+        localContractToToken[MAIN_TOKEN_ADDRESS] = this.mainTokenDetails;
+        this.setupSwap();
+      }
+    },
     tokenInValue() {
       this.feeError = '';
     },
@@ -904,6 +912,8 @@ export default {
     },
     web3: {
       handler: function () {
+        this.mainTokenDetails = this.contractToToken(MAIN_TOKEN_ADDRESS);
+        localContractToToken[MAIN_TOKEN_ADDRESS] = this.mainTokenDetails;
         this.setupSwap();
       }
     }
@@ -912,11 +922,13 @@ export default {
     this.setTokenFromURL();
   },
   mounted() {
-    this.mainTokenDetails = this.contractToToken(MAIN_TOKEN_ADDRESS);
-    localContractToToken[MAIN_TOKEN_ADDRESS] = this.mainTokenDetails;
-    this.setupSwap();
     // multi value watcher to clear
     // refund address and to address
+    if (this.coinGeckoTokens.size > 0) {
+      this.mainTokenDetails = this.contractToToken(MAIN_TOKEN_ADDRESS);
+      localContractToToken[MAIN_TOKEN_ADDRESS] = this.mainTokenDetails;
+      this.setupSwap();
+    }
     this.$watch(
       vm => [vm.toTokenType, vm.fromTokenType],
       () => {
@@ -1020,12 +1032,10 @@ export default {
               this.processTokens(tokens);
             })
             .then(() => {
-              this.setDefaults();
               this.isLoading = false;
             });
         } else {
           this.processTokens(this.swapTokens, false);
-          this.setDefaults();
           this.isLoading = false;
         }
 
@@ -1151,6 +1161,7 @@ export default {
       this.setupTokenInfo(tokens.toTokens);
       this.setupTokenInfo(TRENDING_LIST[this.network.type.name]);
       this.availableTokens = tokens;
+      this.setDefaults();
       if (isUndefined(storeTokens)) {
         this.setSwapTokens(tokens);
       }
