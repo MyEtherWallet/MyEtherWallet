@@ -21,7 +21,6 @@ jobs:
         run: |
           docker build -t mew-build-container .
           echo ::set-output name=NODE_VERSION::$(docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "node --version")
-          git config --global url.https://github.com/.insteadOf git://github.com/
         id: node-version
       - name: Cache node modules
         uses: actions/cache@v1
@@ -33,7 +32,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-${{steps.node-version.outputs.NODE_VERSION}}-
       - name: npm install
-        run: docker run --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" mew-build-container /bin/bash -c "npm install"
+        run: docker run --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" mew-build-container /bin/bash -c "git config --global url.https://github.com/.insteadOf git://github.com/ && npm install --loglevel verbose"
 
       - name: build
         run: docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:offline && npm run build:mewcx"
