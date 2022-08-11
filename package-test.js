@@ -100,7 +100,8 @@ const EXCEPTIONS = [
   'eslint-plugin-security',
   'jest-canvas-mock',
   'sinon',
-  'trezor-connect'
+  'trezor-connect',
+  'vue-template-compiler'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

@@ -1,4 +1,4 @@
-FROM node:10.17.0-stretch
+FROM node:10.17.0-buster
 
 ENV HOME /home
 ENV NODE_OPTIONS --max-old-space-size=6144
