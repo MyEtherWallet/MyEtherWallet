@@ -2,7 +2,8 @@
   <div>
     <mew-address-select
       ref="addressSelect"
-      :hint="resolvedAddr"
+      :resolved-addr="addressOnly"
+      :hint="nameOnly"
       :copy-tooltip="$t('common.copy')"
       :save-tooltip="$t('common.save')"
       :enable-save-address="enableSave"
@@ -139,6 +140,16 @@ export default {
     },
     addrLabel() {
       return this.label === '' ? this.$t('sendTx.to-addr') : this.label;
+    },
+    addressOnly() {
+      return isAddress(this.resolvedAddr) && this.isValidAddress
+        ? this.resolvedAddr
+        : '';
+    },
+    nameOnly() {
+      return !isAddress(this.resolvedAddr) && this.isValidAddress
+        ? this.resolvedAddr
+        : '';
     }
   },
   watch: {
@@ -210,8 +221,7 @@ export default {
                   )
                 )?.publicNameTag || '';
             }
-            this.resolvedAddr =
-              reverseName && reverseName.name ? reverseName.name : '';
+            this.resolvedAddr = reverseName?.name ? reverseName.name : '';
           }
 
           /**
