@@ -274,6 +274,7 @@ import { sanitizeHex } from '@/modules/access-wallet/common/helpers';
 import dataToAction from './handlers/dataToAction';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
+import errorHandler from './handlers/errorHandler';
 
 export default {
   name: 'ModuleConfirmation',
@@ -752,7 +753,7 @@ export default {
           })
           .catch(e => {
             this.signedTxObject = {};
-            this.error = e.message;
+            this.error = errorHandler(e);
             this.signing = false;
           });
         this.resolver(event);
@@ -767,7 +768,7 @@ export default {
           })
           .catch(e => {
             this.signedTxObject = {};
-            this.error = e.message;
+            this.error = errorHandler(e);
             this.signing = false;
             this.instance.errorHandler(e.message);
           });
@@ -815,7 +816,7 @@ export default {
           this.signedTxArray = signed;
           if (this.isWeb3Wallet) this.resolver(batchTxEvents);
         } catch (err) {
-          this.error = err.message ? err.message : err;
+          this.error = errorHandler(err);
           this.signedTxArray = [];
           return;
         }

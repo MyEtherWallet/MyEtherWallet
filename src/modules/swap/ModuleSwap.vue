@@ -1283,6 +1283,8 @@ export default {
               }
               this.step = 1;
               this.isLoadingProviders = false;
+            } else {
+              this.isLoadingProviders = false;
             }
           });
       }
@@ -1337,6 +1339,15 @@ export default {
       const trade = this.swapper.getTrade(swapObj);
       if (trade instanceof Promise) {
         trade.then(tradeResponse => {
+          if (!tradeResponse) {
+            const index = this.availableQuotes.indexOf(swapObj.quote);
+            if (index > -1) {
+              // Remove the quote
+              this.availableQuotes.splice(index, 1);
+            }
+            this.feeError = 'There was an issue with the provider';
+            return;
+          }
           if (this.tokenInValue === this.cachedAmount) {
             if (
               isObject(tradeResponse) &&
