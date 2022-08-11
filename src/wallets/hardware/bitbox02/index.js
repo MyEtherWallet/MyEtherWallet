@@ -1,4 +1,4 @@
-import { BitBox02API, getDevicePath, constants } from 'bitbox02-api';
+// import { BitBox02API, getDevicePath, constants } from 'bitbox02-api';
 
 import { BITBOX02 as bitbox02Type } from '../../bip44/walletTypes';
 import bip44Paths from '../../bip44';
