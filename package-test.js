@@ -2,7 +2,7 @@
 // to date. If dependencies are too outdated, exit with an error, failing `npm
 // run update:packages` and thus eventually the entire build.
 
-const package = require('./package.json');
+const parsedPackage = require('./package.json');
 const packageJson = require('package-json');
 const SAFE_TIME = 1000 * 1 * 60 * 60 * 24 * 7; //7days
 // webpack has a major update
@@ -52,32 +52,18 @@ const EXCEPTIONS = [
   // breaking
   '@shapeshiftoss/hdwallet-core',
   '@shapeshiftoss/hdwallet-keepkey-webusb',
-  'package-json',
-  'codecov',
-  'node-polyfill-webpack-plugin',
-  // check if fixable after hotfix
-  '@ensdomains/ensjs',
-  '@ensdomains/ens-contracts',
-  'protobufjs',
-  '@formatjs/intl-numberformat',
-  'babel-jest',
-  'qrcode',
-  'vue-template-compiler',
   '@ledgerhq/hw-transport-web-ble',
-  '@ledgerhq/hw-app-eth',
   '@ledgerhq/hw-transport-webusb',
-  '@lokalise/node-api',
-  '@unstoppabledomains/resolution',
-  '@walletconnect/client',
-  '@walletconnect/qrcode-modal',
-  'chromedriver'
+  'codecov', // no fix
+  'vue-template-compiler', // no fix
+  'package-json' // switched to es
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
 };
 const ALL_PACKAGES = Object.assign(
-  package.dependencies,
-  package.devDependencies
+  parsedPackage.dependencies,
+  parsedPackage.devDependencies
 );
 const names = Object.keys(ALL_PACKAGES);
 let updatesFound = false;
@@ -126,12 +112,12 @@ const looper = () => {
           if (!isMewComponentBeta) {
             console.error(
               'ERROR: Update ' +
-              _name +
-              ' from ' +
-              ALL_PACKAGES[_name] +
-              ' to ' +
-              latestVersion +
-              '. Released:',
+                _name +
+                ' from ' +
+                ALL_PACKAGES[_name] +
+                ' to ' +
+                latestVersion +
+                '. Released:',
               latestVersionTime
             );
             updatesFound = true;
