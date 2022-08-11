@@ -155,38 +155,38 @@ class CompileSwapOptions {
       other: {}
     }
   ) {
-    try {
-      const tokenListRaw = await this.post('https://swap.mewapi.io/dexag', {
-        jsonrpc: '2.0',
-        method: 'getSupportedCurrencies',
-        params: {},
-        id: v4()
-      });
-      const tokenList = tokenListRaw.result || tokenListRaw;
-      const tokenDetails = priorCollected.ETH;
-      for (let i = 0; i < tokenList.length; i++) {
-        if (!tokenDetails[tokenList[i].symbol] && tokenList[i].address) {
-          this.needDecimalCheck.push({
-            symbol: tokenList[i].symbol.toUpperCase(),
-            contractAddress: tokenList[i].address
-          });
-          const symbol = tokenList[i].symbol.toUpperCase();
-          tokenDetails[symbol] = {
-            symbol: tokenList[i].symbol,
-            name: tokenList[i].name.trim(),
-            decimals: 18,
-            contractAddress: tokenList[i].address
-          };
-        }
-      }
-
-      return {
-        ETH: tokenDetails,
-        other: priorCollected.other
-      };
-    } catch (e) {
-      console.error(e);
-    }
+    return priorCollected;
+    // try {
+    //   const tokenListRaw = await this.post('https://swap.mewapi.io/dexag', {
+    //     jsonrpc: '2.0',
+    //     method: 'getSupportedCurrencies',
+    //     params: {},
+    //     id: v4()
+    //   });
+    //   const tokenList = tokenListRaw.result || tokenListRaw;
+    //   const tokenDetails = priorCollected.ETH;
+    //   for (let i = 0; i < tokenList.length; i++) {
+    //     if (!tokenDetails[tokenList[i].symbol] && tokenList[i].address) {
+    //       this.needDecimalCheck.push({
+    //         symbol: tokenList[i].symbol.toUpperCase(),
+    //         contractAddress: tokenList[i].address
+    //       });
+    //       const symbol = tokenList[i].symbol.toUpperCase();
+    //       tokenDetails[symbol] = {
+    //         symbol: tokenList[i].symbol,
+    //         name: tokenList[i].name.trim(),
+    //         decimals: 18,
+    //         contractAddress: tokenList[i].address
+    //       };
+    //     }
+    //   }
+    //   return {
+    //     ETH: tokenDetails,
+    //     other: priorCollected.other
+    //   };
+    // } catch (e) {
+    //   console.error(e);
+    // }
   }
 
   async getChangellyCurrencies() {
