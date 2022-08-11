@@ -1167,7 +1167,7 @@ export default {
     switchTokens() {
       const fromToken = clone(this.fromTokenType);
       const toToken = clone(this.toTokenType);
-      this.tokenInValue = '0';
+      this.tokenInValue = this.tokenOutValue;
       this.setFromToken(toToken);
       this.setToToken(fromToken);
     },
