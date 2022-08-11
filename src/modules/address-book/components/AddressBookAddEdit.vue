@@ -13,7 +13,8 @@
       :value="addressToAdd"
       :rules="addressRules"
       :persistent-hint="validAddress"
-      :hint="nametag || coin"
+      :hint="resolvedName || nametag || coin"
+      :resolved-addr="resolvedAddress"
       autofocus
       @input="setAddress"
     />
@@ -159,15 +160,15 @@ export default {
           this.$t('interface.address-book.validations.nickname-length')
       ];
     },
-    actualValidAddress() {
-      if (!this.validAddress) return '';
-      return isAddress(this.lowercaseAddressToAdd)
-        ? this.lowercaseAddressToAdd
-        : this.addressToAdd;
-    },
+    // actualValidAddress() {
+    //   if (!this.validAddress) return '';
+    //   return isAddress(this.lowercaseAddressToAdd)
+    //     ? this.checksumAddressToAdd
+    //     : this.addressToAdd;
+    // },
     validAddress() {
       if (this.addressToAdd.length > 94) return false;
-      return this.resolvedAddr.length > 0
+      return this.resolvedAddr.length > 0 && !this.resolvedAddr?.includes('.')
         ? isAddress(this.resolvedAddr) ||
             isValidCoinAddress(this.resolvedAddr).valid
         : isAddress(this.lowercaseAddressToAdd) ||
@@ -178,9 +179,9 @@ export default {
       if (!this.validAddress) return '';
       return (
         'Valid ' +
-        (this.resolvedAddr.length > 0
+        (this.resolvedAddr.length > 0 && !this.resolvedAddr?.includes('.')
           ? isValidCoinAddress(this.resolvedAddr).coin
-          : isValidCoinAddress(this.actualValidAddress).coin) +
+          : isValidCoinAddress(this.lowercaseAddressToAdd).coin) +
         ' address'
       );
     },
@@ -208,13 +209,25 @@ export default {
       return false;
     },
     checksumAddressToAdd() {
-      if (this.addressToAdd !== '' && isAddress(this.addressToAdd)) {
-        return toChecksumAddress(this.addressToAdd);
+      if (this.addressToAdd !== '' && isAddress(this.lowercaseAddressToAdd)) {
+        return toChecksumAddress(this.lowercaseAddressToAdd);
       }
       return this.addressToAdd;
     },
     lowercaseAddressToAdd() {
       return this.addressToAdd.toLowerCase();
+    },
+    resolvedAddress() {
+      if (this.resolvedAddr.length === 0) return '';
+      return this.validAddress && !this.resolvedAddr?.includes('.')
+        ? this.resolvedAddr
+        : '';
+    },
+    resolvedName() {
+      if (this.resolvedAddr.length === 0) return '';
+      return this.validAddress && this.resolvedAddr?.includes('.')
+        ? this.resolvedAddr
+        : '';
     }
   },
   watch: {
@@ -223,7 +236,7 @@ export default {
     },
     addressToAdd(newVal) {
       this.nametag = '';
-      if (isAddress(newVal)) {
+      if (isAddress(newVal.toLowerCase())) {
         this.resolveAddress();
       } else {
         this.resolveName();
@@ -265,11 +278,11 @@ export default {
           const resolvedName = await this.nameResolver.resolveAddress(
             this.addressToAdd
           );
-          if (isEmpty(resolvedName.name)) {
+          if (isEmpty(resolvedName?.name)) {
             this.nametag =
               (
                 await getAddressInfo(
-                  toChecksumAddress(this.addressToAdd),
+                  this.checksumAddressToAdd,
                   'https://ipfs.kleros.io'
                 )
               )?.publicNameTag || '';
