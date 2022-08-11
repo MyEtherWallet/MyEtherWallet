@@ -262,7 +262,9 @@ export default {
 
           this.$nextTick(() => {
             if (bestRate !== -1) {
-              const card = this.$refs[`card${bestRate}`][0];
+              const rateCard = this.$refs[`card${bestRate}`];
+              if (!rateCard) return;
+              const card = rateCard[0];
               if (!card?.isActive) {
                 card.toggle();
               }
@@ -278,7 +280,7 @@ export default {
         setTimeout(() => {
           if (id !== undefined) {
             const card = this.$refs[`card${id}`][0];
-            if (card.hasOwnProperty('isActive') && !card?.isActive) {
+            if (card?.hasOwnProperty('isActive') && !card?.isActive) {
               card.toggle();
             }
           } else {

@@ -120,6 +120,7 @@ export default {
     },
     defaultCurrency() {
       if (isEmpty(this.selectedCurrency) && this.supportedBuy) {
+        if (this.inWallet) return this.tokensList[0];
         const token = this.contractToToken(MAIN_TOKEN_ADDRESS);
         token.value = token.symbol;
         return token;
@@ -182,7 +183,7 @@ export default {
     ...mapActions('global', ['setNetwork']),
     onTab(val) {
       this.selectedCurrency = this.defaultCurrency;
-      if (val === 1 || (val === 0 && !this.supportedBuy)) {
+      if (val === 1 || (val === 0 && (!this.supportedBuy || !this.inWallet))) {
         if (this.network.type.chainID !== 1) {
           const defaultNetwork = this.nodes['ETH'].find(item => {
             return item.service === 'myetherwallet.com-ws';

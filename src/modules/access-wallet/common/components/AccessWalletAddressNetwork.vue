@@ -204,6 +204,7 @@ import { mapGetters, mapState } from 'vuex';
 import { isEmpty, isEqual } from 'underscore';
 import ENS from '@ensdomains/ensjs';
 import Web3 from 'web3';
+import { isValidAddress } from 'ethereumjs-utils';
 
 const MAX_ADDRESSES = 5;
 
@@ -499,10 +500,11 @@ export default {
     getNickname(address) {
       const checksummedAddress = toChecksumAddress(address);
       const isStored = this.addressBookStore.find(item => {
-        const address = item.resolvedAddr
+        if (!isValidAddress(item.address)) return;
+        const addressStored = item.resolvedAddr
           ? toChecksumAddress(item.resolvedAddr)
           : toChecksumAddress(item.address);
-        if (address === checksummedAddress) {
+        if (addressStored === checksummedAddress) {
           return item;
         }
       });

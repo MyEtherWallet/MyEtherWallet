@@ -69,14 +69,6 @@
           </mew-button>
         </v-col>
       </v-row>
-      <!-- <mew-alert
-        v-if="!bluetooth"
-        class="mt-5"
-        title="Bluetooth Required"
-        description="Bluetooth is required for some wallets."
-        theme="warning"
-        hide-close-icon
-      /> -->
     </div>
     <v-dialog v-model="bluetoothModal" persistent max-width="500">
       <v-sheet color="white" class="pa-5">
@@ -227,8 +219,8 @@
 </template>
 
 <script>
-import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { isEmpty, isObject } from 'lodash';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import AccessWalletBitbox from './hardware/components/AccessWalletBitbox';
 import AccessWalletAddressNetwork from '@/modules/access-wallet/common/components/AccessWalletAddressNetwork';
 import AccessWalletKeepkey from './hardware/components/AccessWalletKeepkey';
@@ -242,7 +234,6 @@ import wallets from '@/modules/access-wallet/hardware/handlers/configs/configWal
 import { mapActions, mapGetters, mapState } from 'vuex';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
-// TODO: add these changes to mew components
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { EventBus } from '@/core/plugins/eventBus.js';
 
@@ -674,8 +665,8 @@ export default {
         } else {
           this.hwWalletInstance = {};
           if (this.onLedger || this.onLedgerX) {
-            this.step -= 1;
-            this[`${this.walletType}Unlock`]();
+            this.step = 2;
+            //this[`${this.walletType}Unlock`]();
           } else {
             this.walletType = '';
             this.step = 1;

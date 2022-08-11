@@ -8,8 +8,6 @@ const defaultNetwork = nodeList['ETH'].find(item => {
 
 const state = {
   localStore: true,
-  consentToTrack: false,
-  displayedTrackingPopup: false,
   Errors: {},
   online: true,
   linkQuery: {},
@@ -21,15 +19,13 @@ const state = {
   currentNetwork: defaultNetwork
     ? Object.assign({}, defaultNetwork)
     : Object.assign({}, nodeList['ETH'][0]),
+  validNetwork: true,
   preferredCurrency: 'USD',
   localContracts: {},
   eip1559: {
     baseFeePerGas: '0',
     maxPriorityFeePerGas: '0'
   },
-  showedBanner: false,
-  showWalletPromo: true,
-  promoOver: false,
   testing: false
 };
 state.currentNetwork.type = {

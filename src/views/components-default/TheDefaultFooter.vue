@@ -390,9 +390,9 @@ export default {
             link: 'https://www.mewwallet.com/'
           },
           {
-            label: 'MEW CX',
+            label: 'Enkrypt',
             class: 'FooterCXTool',
-            link: 'https://chrome.google.com/webstore/detail/mew-cx/nlbmnnijcnlegkjjpcfjclmcfggfefdm?utm_source=chrome-ntp-icon'
+            link: 'https://www.enkrypt.com'
           },
           {
             label: 'Verify message',

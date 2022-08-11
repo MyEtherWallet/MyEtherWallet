@@ -60,7 +60,7 @@ class MnemonicWallet {
           common: commonGenerator(store.getters['global/network'])
         });
       }
-      const networkId = tx.common.chainId();
+      const networkId = tx.common.chainIdBN().toString();
       tx = tx.sign(derivedKey.privateKey);
       const signedChainId = tx.chainId
         ? parseInt(tx.chainId.toString())

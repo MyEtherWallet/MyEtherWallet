@@ -62,7 +62,9 @@ const ERRORS = {
   'Ledger device: Security not satisfied':
     'Ledger device is locked or has invalid access rights',
   'GATT Server is disconnected. Cannot perform GATT operations.':
-    'Device has been disconnected, please reconnect.'
+    'Device has been disconnected, please reconnect.',
+  "Failed to execute 'transferOut' on 'USBDevice': A transfer error has occurred.":
+    'Error transferring out with USB device. Please try again.'
 };
 const WARNINGS = {
   'Ledger device: Condition of use not satisfied (denied by the user?) (0x6985)':
