@@ -958,7 +958,7 @@ export default {
         .filter(token => token);
     },
     setupTokenInfo(tokens) {
-      tokens.forEach(token => {
+      tokens?.forEach(token => {
         if (localContractToToken[token.contract]) return;
         if (token.cgid) {
           const foundToken = this.getCoinGeckoTokenById(token.cgid);

@@ -17,7 +17,7 @@ class Swap {
   getAllTokens() {
     const allTokens = {};
     return this.providers[0].getSupportedTokens().then(baseList => {
-      baseList.forEach(t => (allTokens[t.contract] = t));
+      baseList?.forEach(t => (allTokens[t.contract] = t));
       return Promise.all(
         this.providers.slice(3).map(p => {
           if (!p.isSupportedNetwork(this.chain)) return Promise.resolve();
