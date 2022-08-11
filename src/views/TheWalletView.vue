@@ -118,11 +118,7 @@ export default {
       'setBaseFeePerGas',
       'updateGasPrice'
     ]),
-    ...mapActions('external', [
-      'setCoinGeckoTokens',
-      'setTokenAndEthBalance',
-      'setNetworkTokens'
-    ]),
+    ...mapActions('external', ['setTokenAndEthBalance', 'setNetworkTokens']),
     setup() {
       this.processNetworkTokens();
       this.setTokensAndBalance();
