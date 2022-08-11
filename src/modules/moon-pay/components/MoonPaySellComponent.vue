@@ -42,7 +42,10 @@
       />
     </div>
     <div class="pt-8 pb-13">
-      <div class="d-flex align-center justify-space-between mb-2">
+      <div
+        v-if="inWallet"
+        class="d-flex align-center justify-space-between mb-2"
+      >
         <div class="mew-body textDark--text font-weight-bold">
           Estimated Network Fee
         </div>
