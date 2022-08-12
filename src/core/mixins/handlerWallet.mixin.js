@@ -1,6 +1,7 @@
 /**
  * The Wallet View Apollo Mixin
  */
+import { mapActions } from 'vuex';
 import { getLatestPrices } from '@/apollo/queries/wallets/wallets.graphql';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 export default {
@@ -32,5 +33,8 @@ export default {
         Toast(error.message, {}, ERROR);
       }
     }
+  },
+  methods: {
+    ...mapActions('external', ['setCoinGeckoTokens'])
   }
 };

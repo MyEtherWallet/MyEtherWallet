@@ -368,7 +368,7 @@ export default {
       availableQuotes: [],
       currentTrade: null,
       allTrades: [],
-      isLoading: false,
+      isLoading: true,
       loadingFee: false,
       feeError: '',
       defaults: {
@@ -391,6 +391,7 @@ export default {
     ...mapState('swap', ['prefetched', 'swapTokens']),
     ...mapState('wallet', ['web3', 'address', 'balance']),
     ...mapState('global', ['gasPriceType']),
+    ...mapState('external', ['coinGeckoTokens']),
     ...mapGetters('global', [
       'network',
       'isEthNetwork',
@@ -511,7 +512,10 @@ export default {
         } else if (this.availableQuotes.length === 0) {
           msg =
             'No providers found for this token pair. Select a different token pair or try again later.';
-        } else if (this.feeError === 'Invalid Input') {
+        } else if (
+          this.selectedProvider.rate === '0' ||
+          this.feeError === 'Invalid Input'
+        ) {
           msg =
             'Provided input is invalid or provider is having issues. Please try again!';
         } else {
@@ -724,7 +728,6 @@ export default {
             ? this.addressValue.value
             : this.address;
         }
-
         return this.address;
       }
 
@@ -873,6 +876,13 @@ export default {
     }
   },
   watch: {
+    coinGeckoTokens(newVal) {
+      if (newVal.size > 0) {
+        this.mainTokenDetails = this.contractToToken(MAIN_TOKEN_ADDRESS);
+        localContractToToken[MAIN_TOKEN_ADDRESS] = this.mainTokenDetails;
+        this.setupSwap();
+      }
+    },
     tokenInValue() {
       this.feeError = '';
     },
@@ -905,6 +915,8 @@ export default {
     },
     web3: {
       handler: function () {
+        this.mainTokenDetails = this.contractToToken(MAIN_TOKEN_ADDRESS);
+        localContractToToken[MAIN_TOKEN_ADDRESS] = this.mainTokenDetails;
         this.setupSwap();
       }
     }
@@ -913,24 +925,13 @@ export default {
     this.setTokenFromURL();
   },
   mounted() {
-    this.mainTokenDetails = this.contractToToken(MAIN_TOKEN_ADDRESS);
-    localContractToToken[MAIN_TOKEN_ADDRESS] = this.mainTokenDetails;
-    this.setupSwap();
     // multi value watcher to clear
     // refund address and to address
-    this.$watch(
-      vm => [vm.toTokenType, vm.fromTokenType],
-      () => {
-        if (this.$refs.refundAddressInput) {
-          this.$refs.refundAddressInput.clear();
-        }
-
-        if (this.$refs.toAddressInput) {
-          this.$refs.toAddressInput.clear();
-        }
-        this.selectedProvider = {};
-      }
-    );
+    if (this.coinGeckoTokens.size > 0) {
+      this.mainTokenDetails = this.contractToToken(MAIN_TOKEN_ADDRESS);
+      localContractToToken[MAIN_TOKEN_ADDRESS] = this.mainTokenDetails;
+      this.setupSwap();
+    }
   },
   methods: {
     ...mapActions('notifications', ['addNotification']),
@@ -966,6 +967,7 @@ export default {
           foundToken.name = token.symbol;
           foundToken.value = foundToken.contract;
           foundToken.subtext = name;
+          if (token.symbol) foundToken.symbol = token.symbol;
           localContractToToken[token.contract] = Object.assign(
             {},
             token,
@@ -1020,12 +1022,10 @@ export default {
               this.processTokens(tokens);
             })
             .then(() => {
-              this.setDefaults();
               this.isLoading = false;
             });
         } else {
           this.processTokens(this.swapTokens, false);
-          this.setDefaults();
           this.isLoading = false;
         }
 
@@ -1087,6 +1087,17 @@ export default {
         t.name = t.hasOwnProperty('symbol') ? t.symbol : '';
         return t;
       });
+    },
+    resetAddressValues({ clearRefund = true, clearTo = true }) {
+      if (clearRefund)
+        if (this.$refs.refundAddressInput) {
+          this.$refs.refundAddressInput.clear();
+        }
+      if (clearTo)
+        if (this.$refs.toAddressInput) {
+          this.$refs.toAddressInput.clear();
+        }
+      this.selectedProvider = {};
     },
     /**
      * Set the max available amount to swap from
@@ -1151,6 +1162,7 @@ export default {
       this.setupTokenInfo(tokens.toTokens);
       this.setupTokenInfo(TRENDING_LIST[this.network.type.name]);
       this.availableTokens = tokens;
+      this.setDefaults();
       if (isUndefined(storeTokens)) {
         this.setSwapTokens(tokens);
       }
@@ -1164,6 +1176,7 @@ export default {
     },
     setFromToken(value) {
       this.fromTokenType = value;
+      this.resetAddressValues({ clearTo: false });
       this.$nextTick(() => {
         if (value && value.name) {
           this.trackSwap('from: ' + value.name);
@@ -1173,6 +1186,7 @@ export default {
     },
     setToToken(value) {
       this.toTokenType = value;
+      this.resetAddressValues({ clearRefund: false });
       if (value && value.name) {
         this.trackSwap('to: ' + value.name);
       }
@@ -1224,8 +1238,7 @@ export default {
         (this.refundAddress === '' || !this.isValidRefundAddr)
       )
         return;
-      if (this.showToAddress && !this.addressValue.isValid) return;
-
+      if (this.showToAddress && !this.addressValue?.isValid) return;
       if (
         !isEmpty(this.toTokenType) &&
         this.toTokenType.hasOwnProperty('isEth') &&
@@ -1266,12 +1279,11 @@ export default {
                   q.isSelected = false;
                   return q;
                 });
-                if (this.availableQuotes.length > 1) {
-                  this.availableQuotes = quotes.filter(q => q.rate !== '0');
-                }
                 this.tokenOutValue = quotes[0].amount;
               }
               this.step = 1;
+              this.isLoadingProviders = false;
+            } else {
               this.isLoadingProviders = false;
             }
           });
@@ -1327,6 +1339,15 @@ export default {
       const trade = this.swapper.getTrade(swapObj);
       if (trade instanceof Promise) {
         trade.then(tradeResponse => {
+          if (!tradeResponse) {
+            const index = this.availableQuotes.indexOf(swapObj.quote);
+            if (index > -1) {
+              // Remove the quote
+              this.availableQuotes.splice(index, 1);
+            }
+            this.feeError = 'There was an issue with the provider';
+            return;
+          }
           if (this.tokenInValue === this.cachedAmount) {
             if (
               isObject(tradeResponse) &&

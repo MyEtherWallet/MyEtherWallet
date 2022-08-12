@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "6.6.3-hotfix.1",
+  "version": "6.6.3-hotfix.3",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build": "npm run update && vue-cli-service build",
@@ -57,7 +57,7 @@
     "@sentry/vue": "7.7.0",
     "@shapeshiftoss/hdwallet-core": "1.22.0",
     "@shapeshiftoss/hdwallet-keepkey-webusb": "1.22.0",
-    "@unstoppabledomains/resolution": "8.3.1",
+    "@unstoppabledomains/resolution": "8.2.0",
     "@walletconnect/client": "1.8.0",
     "@walletconnect/qrcode-modal": "1.8.0",
     "animejs": "3.2.1",
@@ -164,7 +164,7 @@
     "stylelint": "14.8.2",
     "stylelint-config-prettier": "9.0.3",
     "stylelint-config-standard": "25.0.0",
-    "trezor-connect": "8.2.8",
+    "trezor-connect": "8.2.10",
     "u2f-api": "1.2.1",
     "uglify-es": "3.3.9",
     "uuid": "8.3.2",
