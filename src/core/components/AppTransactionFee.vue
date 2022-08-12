@@ -85,6 +85,7 @@
               color="greyLight"
               depressed
               class="text-transform--initial"
+              :disabled="error !== ''"
               @click="openGasPriceModal"
             >
               <div class="d-flex align-center">

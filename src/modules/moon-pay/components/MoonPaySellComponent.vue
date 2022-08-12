@@ -42,7 +42,10 @@
       />
     </div>
     <div class="pt-8 pb-13">
-      <div class="d-flex align-center justify-space-between mb-2">
+      <div
+        v-if="inWallet"
+        class="d-flex align-center justify-space-between mb-2"
+      >
         <div class="mew-body textDark--text font-weight-bold">
           Estimated Network Fee
         </div>
@@ -87,7 +90,7 @@
 import MultiCoinValidator from 'multicoin-address-validator';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import ButtonBalance from '@/core/components/AppButtonBalance';
-import { mapGetters, mapState } from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 import { isEmpty, debounce, isNumber } from 'lodash';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import BigNumber from 'bignumber.js';
@@ -97,12 +100,15 @@ import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common.js';
 import abi from '@/modules/balance/handlers/abiERC20.js';
 import nodes from '@/utils/networks';
 import Web3 from 'web3';
-import { toBNSafe } from '@/core/helpers/numberFormatHelper';
+import { toBNSafe, formatFiatValue } from '@/core/helpers/numberFormatHelper';
 import { toBase } from '@/core/helpers/unit';
 import { sellContracts } from './tokenList';
+import handlerWallet from '@/core/mixins/handlerWallet.mixin';
+
 export default {
   name: 'ModuleSellEth',
   components: { ButtonBalance },
+  mixins: [handlerWallet],
   props: {
     orderHandler: {
       type: Object,
@@ -180,7 +186,10 @@ export default {
       const arr = new Array();
       for (const contract of sellContracts) {
         const token = this.contractToToken(contract);
-        if (token) arr.push(token);
+        if (token) {
+          token.price = formatFiatValue(token ? token.price : '0').value;
+          arr.push(token);
+        }
       }
       return arr;
     },
@@ -423,6 +432,7 @@ export default {
     this.locGasPrice = this.gasPriceByType(this.gasPriceType);
   },
   methods: {
+    ...mapActions('external', ['setCoinGeckoTokens']),
     getEthBalance() {
       if (!this.actualValidAddress) return;
       const web3Instance = new Web3(nodes.ETH[0].url);
