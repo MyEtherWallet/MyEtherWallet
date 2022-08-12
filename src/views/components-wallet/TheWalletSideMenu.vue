@@ -313,7 +313,8 @@ export default {
         [ROUTES_WALLET.SWAP.NAME]: [ETH, BSC, MATIC],
         [ROUTES_WALLET.NFT_MANAGER.NAME]: [ETH]
       },
-      ROUTES_WALLET: ROUTES_WALLET
+      ROUTES_WALLET: ROUTES_WALLET,
+      isOpenNetworkOverlay: false
     };
   },
   computed: {

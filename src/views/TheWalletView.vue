@@ -18,6 +18,7 @@
 import { mapActions, mapState, mapGetters } from 'vuex';
 import { toBN } from 'web3-utils';
 import Web3 from 'web3';
+import moment from 'moment';
 
 import TheWalletSideMenu from './components-wallet/TheWalletSideMenu';
 import TheWalletHeader from './components-wallet/TheWalletHeader';
@@ -32,7 +33,8 @@ import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalyti
 import matchNetwork from '@/core/helpers/matchNetwork';
 import EnkryptPromoSnackbar from '@/views/components-wallet/EnkryptPromoSnackbar';
 import TheEnkryptPopup from '@/views/components-default/TheEnkryptPopup.vue';
-import moment from 'moment';
+import { WEB3_WALLET } from '@/modules/access-wallet/common';
+
 export default {
   components: {
     TheWalletSideMenu,
@@ -92,8 +94,9 @@ export default {
   mounted() {
     if (this.online && !this.isOfflineApp) {
       this.setup();
-      this.findAndSetNetwork();
-      this.web3Listeners();
+      if (this.identifier === WEB3_WALLET) {
+        this.web3Listeners();
+      }
       this.checkNetwork();
     }
   },
