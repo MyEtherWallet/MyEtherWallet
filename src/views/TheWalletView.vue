@@ -99,8 +99,10 @@ export default {
   },
   beforeDestroy() {
     if (window.ethereum) {
-      window.ethereum.removeListener('chainChanged', this.findAndSetNetwork);
-      window.ethereum.removeListener('accountsChanged', this.setWeb3Account);
+      if (this.findAndSetNetwork instanceof Function)
+        window.ethereum.removeListener('chainChanged', this.findAndSetNetwork);
+      if (this.setWeb3Account instanceof Function)
+        window.ethereum.removeListener('accountsChanged', this.setWeb3Account);
     }
   },
   destroyed() {
@@ -186,6 +188,7 @@ export default {
      * and setup listeners for metamask changes
      */
     web3Listeners() {
+      if (!window.ethereum) return;
       if (window.ethereum.on) {
         window.ethereum.on('chainChanged', this.findAndSetNetwork);
         window.ethereum.on('accountsChanged', this.setWeb3Account);
@@ -198,6 +201,7 @@ export default {
       }
     },
     async findAndSetNetwork() {
+      if (!window.ethereum) return;
       const networkId = await window.ethereum.request({
         method: 'net_version'
       });
