@@ -160,12 +160,6 @@ export default {
           this.$t('interface.address-book.validations.nickname-length')
       ];
     },
-    // actualValidAddress() {
-    //   if (!this.validAddress) return '';
-    //   return isAddress(this.lowercaseAddressToAdd)
-    //     ? this.checksumAddressToAdd
-    //     : this.addressToAdd;
-    // },
     validAddress() {
       if (this.addressToAdd.length > 94) return false;
       return this.resolvedAddr.length > 0 && !this.resolvedAddr?.includes('.')
