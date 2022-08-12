@@ -45,7 +45,7 @@
     "@ensdomains/ensjs": "2.1.0",
     "@ethereumjs/common": "2.6.5",
     "@ethereumjs/tx": "3.5.2",
-    "@kleros/address-tags-sdk": "0.1.0",
+    "@kleros/address-tags-sdk": "0.2.0",
     "@formatjs/intl-numberformat": "8.0.4",
     "@ledgerhq/hw-transport-web-ble": "6.27.1",
     "@lokalise/node-api": "7.3.1",
