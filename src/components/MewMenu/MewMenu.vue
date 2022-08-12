@@ -161,7 +161,7 @@ export default {
     border-bottom: 7px solid white;
     position: absolute;
     z-index: 1000;
-    top: 5px;
+    top: -7px;
     left: 50%;
     pointer-events: none;
   }
