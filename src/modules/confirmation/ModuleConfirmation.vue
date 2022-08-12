@@ -14,20 +14,20 @@
       :show-cross-chain-modal="showCrossChainModal"
       :tx-obj="tx"
       :title="title"
-      :reset="reset"
+      :reset="rejectTransaction"
       :sent-btc="resolver"
     />
     <app-modal
       :show="showTxOverlay"
       :title="title !== '' ? title : 'Confirmation'"
-      :close="reset"
+      :close="rejectTransaction"
       :btn-action="btnAction"
       :btn-enabled="disableBtn"
       :btn-text="toNonEth ? 'Proceed with swap' : 'Confirm & Send'"
       :scrollable="true"
       :anchored="true"
       width="650"
-      @close="reset"
+      @close="rejectTransaction"
     >
       <template #dialogBody>
         <v-card-text ref="scrollableContent" class="py-0 px-4 px-md-0">
@@ -598,6 +598,10 @@ export default {
     });
   },
   methods: {
+    rejectTransaction() {
+      this.resolver({ rejected: true });
+      this.reset();
+    },
     dataToAction(data) {
       return dataToAction(data);
     },
