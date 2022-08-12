@@ -45,9 +45,9 @@
               <a
                 rel="noopener noreferrer"
                 target="_blank"
-                :href="links.etherscan"
+                :href="links.explorer"
                 class="d-flex justify-center justify-sm-start"
-                >View on Etherscan
+                >View on {{ explorerText }}
                 <v-icon color="primary" small>mdi-launch</v-icon></a
               >
             </v-col>
@@ -119,6 +119,9 @@ export default {
      */
     successLottie() {
       return this.showSuccessSwap ? 'swap' : 'checkmark';
+    },
+    explorerText() {
+      return this.network.type.blockExplorer;
     }
   },
   methods: {
