@@ -49,16 +49,6 @@ const webpackConfigCXWeb3 = {
                   }
                 }
               });
-
-              // json.name =
-              //   JSON.parse(env_vars.CX_PROD) === 'true'
-              //     ? json.name
-              //     : `${json.name} TEST`;
-              // json.short_name =
-              //   JSON.parse(env_vars.CX_PROD) === 'true'
-              //     ? json.short_name
-              //     : `${json.short_name} TEST`;
-
               return JSON.stringify(json, null, 2);
             }
 
