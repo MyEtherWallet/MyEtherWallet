@@ -309,14 +309,20 @@ export default {
      * function swapBorrowRateMode(address asset, uint256 rateMode)
      * the rate mode the user is swapping from. Stable: 1, Variable: 2
      */
-    async setBorrowRate({ reserve, rateMode }) {
+    async setBorrowRate({ reserve, rateMode, symbol }) {
       try {
         const txData =
           await this.poolContract.populateTransaction.swapBorrowRateMode(
             reserve,
             rateMode
           );
-        this.formatTxData(txData);
+        const defaultValue = rateMode === 2;
+        const params = {
+          reserve: symbol,
+          value: defaultValue
+        };
+        const callback = [this.resetAprToggle, params];
+        this.formatTxData(txData, callback);
       } catch (e) {
         throw new Error(e);
       }
@@ -376,14 +382,19 @@ export default {
      * function setUserUseReserveAsCollateral(address asset, bool useAsCollateral)
      * Sets the asset of msg.sender to be used as collateral or not.
      */
-    async setCollateral({ reserve, useAsCollateral }) {
+    async setCollateral({ reserve, useAsCollateral, symbol }) {
       try {
         const txData =
           await this.poolContract.populateTransaction.setUserUseReserveAsCollateral(
             reserve,
             useAsCollateral
           );
-        this.formatTxData(txData);
+        const params = {
+          reserve: symbol,
+          useAsCollateral: !useAsCollateral
+        };
+        const callback = [this.resetCollateralToggle, params];
+        this.formatTxData(txData, callback);
       } catch (e) {
         throw new Error(e);
       }
@@ -392,7 +403,7 @@ export default {
      * Check and prepare data to send tx
      * or errors out
      */
-    formatTxData(txData) {
+    formatTxData(txData, callback) {
       try {
         const tx = {
           from: this.address,
@@ -415,9 +426,13 @@ export default {
               })
               .catch(err => {
                 Toast(err, {}, ERROR);
+                if (callback) callback[0](callback[1]);
               });
           }) // Estimate Gas Catch
-          .catch(() => Toast('Insufficient funds for gas', {}, ERROR));
+          .catch(() => {
+            Toast('Insufficient funds for gas', {}, ERROR);
+            if (callback) callback[0](callback[1]);
+          });
       } catch (e) {
         Toast(e, {}, ERROR);
       }

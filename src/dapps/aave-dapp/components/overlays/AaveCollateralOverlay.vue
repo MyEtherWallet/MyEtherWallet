@@ -56,7 +56,8 @@ export default {
       const param = {
         reserve: this.selectedTokenDetails.underlyingAsset,
         useAsCollateral:
-          !this.selectedTokenInUserSummary.usageAsCollateralEnabledOnUser
+          !this.selectedTokenInUserSummary.usageAsCollateralEnabledOnUser,
+        symbol: this.selectedTokenDetails.symbol
       };
       this.$emit('onConfirm', param);
       this.close();

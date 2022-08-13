@@ -41,7 +41,8 @@ export default {
           : INTEREST_TYPES.stable;
       const param = {
         reserve: this.selectedTokenDetails.underlyingAsset,
-        rateMode: type === INTEREST_TYPES.variable ? 2 : 1 // rateMode to switch FROM
+        rateMode: type === INTEREST_TYPES.variable ? 2 : 1, // rateMode to switch FROM
+        symbol: this.selectedTokenDetails.symbol
       };
       if (e.type === type) {
         Toast(`Selected rate is already ${e.type}`, {}, WARNING);

@@ -71,6 +71,10 @@ export default async ({ payload, store, requestManager }, res, next) => {
         store.state.wallet.identifier === WALLET_TYPES.WALLET_CONNECT
       ) {
         EventBus.$emit(event, params, _promiObj => {
+          if (_promiObj.rejected) {
+            res(new Error('User rejected action'));
+            return;
+          }
           setEvents(_promiObj, _tx, store.dispatch);
           _promiObj
             .once('transactionHash', hash => {
