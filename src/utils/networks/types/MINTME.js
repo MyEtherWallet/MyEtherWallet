@@ -6,6 +6,7 @@ export default {
   name: 'MINTME',
   name_long: 'MintMe Coin',
   homePage: 'https://www.mintme.com/coin/',
+  blockExplorer: 'MintMe',
   blockExplorerTX: 'https://www.mintme.com/explorer/tx/[[txHash]]',
   blockExplorerAddr: 'https://www.mintme.com/explorer/addr/[[address]]',
   chainID: 24734,

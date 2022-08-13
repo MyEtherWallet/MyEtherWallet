@@ -280,9 +280,8 @@ export default {
 
 <style lang="scss" scoped>
 .header-close-icon {
-  right: 30px;
-  top: auto;
-  bottom: auto;
+  right: 13px;
+  top: 13px;
   position: absolute;
 }
 
