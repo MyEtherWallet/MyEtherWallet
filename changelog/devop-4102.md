@@ -1,0 +1,1 @@
+* Consistent address book identicons

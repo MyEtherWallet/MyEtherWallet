@@ -27,8 +27,8 @@ const ERRORS = {
   'connection not open': 'coolWalletError.connection-not-open-on-send',
   'error function: executeAPDU, message: executeAPDU error: NotSupportedError: GATT operation failed for unknown reason.':
     'Unexpected error! Please refresh page and try again!',
-  'REGISTER - ': 'Registration Error! Please refresh page and try again',
-  'invalid remainder': 'Not enough balance!'
+  'REGISTER - ': 'Registration Error! Please refresh page and try again'
+  // 'invalid remainder': 'Not enough balance!'
 };
 const WARNINGS = {
   'command info: {"CLA":"80","INS":"1C","P1":"00","P2":"00"}, returnCode: 6A84, message: file full':

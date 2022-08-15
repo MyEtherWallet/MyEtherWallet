@@ -81,6 +81,9 @@ class CoolWallet {
         WebBleTransport.connect(device)
           .then(async () => {
             _this.transport = transport;
+            _this.identifier = device.name.includes('CWP')
+              ? WALLET_TYPES.COOL_WALLET_PRO
+              : WALLET_TYPES.COOL_WALLET_S;
             try {
               /**
                * if lastCWDeviceUsed !== device.name
@@ -237,6 +240,7 @@ class CoolWallet {
           const resultTx = Transaction.fromSerializedTx(result, {
             common: commonGenerator(store.getters['global/network'])
           });
+
           const signedChainId = calculateChainIdFromV(resultTx.v);
           if (signedChainId !== chainID)
             throw new Error(
@@ -278,6 +282,7 @@ class CoolWallet {
           addressIndex: idx
         };
         const result = await instance.signEIP1559Transaction(signTxData);
+
         if (result) {
           const resultTx = Transaction.fromSerializedTx(result, {
             common: commonGenerator(store.getters['global/network'])

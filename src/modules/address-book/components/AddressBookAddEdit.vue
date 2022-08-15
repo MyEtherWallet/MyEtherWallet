@@ -220,8 +220,12 @@ export default {
     toAddress(newVal) {
       this.addressToAdd = newVal;
     },
-    addressToAdd() {
-      this.resolveName();
+    addressToAdd(newVal) {
+      if (isAddress(newVal)) {
+        this.resolveAddress();
+      } else {
+        this.resolveName();
+      }
     },
     web3() {
       if (this.network.type.ens) {
@@ -252,6 +256,18 @@ export default {
       this.nickname = '';
       this.resolvedAddr = '';
     },
+    async resolveAddress() {
+      if (this.nameResolver) {
+        try {
+          const resolvedName = await this.nameResolver.resolveAddress(
+            this.addressToAdd
+          );
+          this.resolvedAddr = resolvedName.name ? resolvedName.name : '';
+        } catch (e) {
+          this.resolvedAddr = '';
+        }
+      }
+    },
     async resolveName() {
       if (
         this.nameResolver &&
@@ -279,13 +295,13 @@ export default {
         this.checksumAddressToAdd;
       this.addressBookStore[this.currentIdx].nickname = this.nickname;
       this.setAddressBook(this.addressBookStore);
-      this.$emit('back', 3);
+      this.$emit('back', [3]);
     },
     remove() {
       this.addressBookStore.splice(this.currentIdx, 1);
       this.setAddressBook(this.addressBookStore);
       this.reset();
-      this.$emit('back', 3);
+      this.$emit('back', [3]);
     },
     add() {
       if (this.alreadyExists) {
@@ -299,7 +315,7 @@ export default {
       });
       this.setAddressBook(this.addressBookStore);
       this.reset();
-      this.$emit('back', 3);
+      this.$emit('back', [3]);
     }
   }
 };

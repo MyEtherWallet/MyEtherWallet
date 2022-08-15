@@ -150,7 +150,7 @@
     "manage-txt": "Manage Text Records",
     "upload-site": "Upload Website",
     "return-funds": "Return funds",
-    "expire-at": "Expire at {date}",
+    "expire-on": "Expires on {date}",
     "add-owned-domain": "Add an owned domain",
     "registrant": "Registrant",
     "controller": "Controller",
@@ -160,7 +160,6 @@
   "claim-tokens": "Claim Tokens",
   "claim-token-title": "Claim",
   "claim-token-desc": "Claim your ENS tokens",
-
   "delegator": {
     "title": "Delegator",
     "addr": "Delegator Address",

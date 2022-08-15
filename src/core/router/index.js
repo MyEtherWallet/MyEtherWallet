@@ -10,7 +10,7 @@ import { ROUTES_HOME } from '../configs/configRoutes';
 const routes =
   // eslint-disable-next-line
   BUILD === 'offline'
-    ? [routesOfflineDefault, routesOfflineWallet]
+    ? [routesOfflineDefault, routesOfflineWallet, routesNotFound]
     : [routesDefault, routesWallet, routesNotFound];
 
 const getLangBasePath = () => {
