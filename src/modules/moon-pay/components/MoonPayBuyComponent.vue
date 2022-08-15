@@ -104,7 +104,7 @@ import {
 } from '@/core/helpers/numberFormatHelper';
 import { getCurrency } from '@/modules/settings/components/currencyList';
 import { buyContracts } from './tokenList';
-import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
+
 export default {
   name: 'ModuleBuyEth',
   props: {
@@ -151,6 +151,7 @@ export default {
     ...mapState('wallet', ['address']),
     ...mapState('external', ['currencyRate', 'coinGeckoTokens']),
     ...mapGetters('external', ['contractToToken']),
+    ...mapGetters('wallet', ['tokensList']),
     includesFeeText() {
       return `Includes ${this.percentFee} fee (${
         formatFiatValue(this.minFee, this.currencyConfig).value
@@ -164,7 +165,9 @@ export default {
       }`;
     },
     dailyLimit() {
-      const value = BigNumber(this.fiatMultiplier).times(12000);
+      const moonpayMax = this.max.moonpay;
+      const simplexMax = this.max.simplex;
+      const value = Math.max(moonpayMax.toString(), simplexMax.toString());
       return `Daily limit: ${
         formatFiatValue(value.toString(), this.currencyConfig).value
       }`;
@@ -250,8 +253,6 @@ export default {
       return 'BUY NOW';
     },
     amountErrorMessages() {
-      const moonpayMax = this.max.moonpay;
-      const simplexMax = this.max.simplex;
       if (BigNumber(this.amount).isNaN() || BigNumber(this.amount).eq(0)) {
         return 'Amount required';
       }
@@ -259,17 +260,14 @@ export default {
         return `Amount can't be negative`;
       }
       if (this.min.gt(this.amount)) {
-        return `Amount can't be below provider's minimum: ${this.min.toFixed()} ${
-          this.selectedFiatName
-        }`;
+        return `Amount can't be below provider's minimum: ${
+          formatFiatValue(this.min.toFixed(), this.currencyConfig).value
+        } ${this.selectedFiatName}`;
       }
-      if (
-        moonpayMax.lt(BigNumber(this.amount)) &&
-        simplexMax.lt(BigNumber(this.amount))
-      ) {
-        return `Amount can't be above provider's maximum: ${simplexMax.toFixed()} ${
-          this.selectedFiatName
-        }`;
+      if (this.maxVal.lt(this.amount)) {
+        return `Amount can't be above provider's maximum: ${
+          formatFiatValue(this.maxVal.toFixed(), this.currencyConfig).value
+        } ${this.selectedFiatName}`;
       }
       return '';
     },
@@ -285,26 +283,34 @@ export default {
       }
       return '';
     },
-    currencyItems() {
-      const tokenList = new Array();
-      if (!this.supportedBuy) return;
+    tokens() {
+      if (this.inWallet) {
+        return buyContracts.reduce((arr, item) => {
+          const inList = this.tokensList.find(t => {
+            if (t.contract.toLowerCase() === item.toLowerCase()) return t;
+          });
+          if (inList) {
+            arr.push(inList);
+            return arr;
+          }
+
+          const token = this.contractToToken(item);
+          if (token) arr.push(token);
+          return arr;
+        }, []);
+      }
+      const arr = new Array();
       for (const contract of buyContracts) {
         const token = this.contractToToken(contract);
-        if (token) {
-          if (
-            token.symbol === this.network.type.currencyName &&
-            token.contract !== MAIN_TOKEN_ADDRESS
-          )
-            continue;
-          tokenList.push(token);
-        }
+        if (token) arr.push(token);
       }
-      const imgs = tokenList.map(item => {
-        return item.img;
-      });
+      return arr;
+    },
+    currencyItems() {
+      if (!this.supportedBuy) return;
       const tokensListWPrice =
         this.currencyRates.length > 0
-          ? tokenList.map(token => {
+          ? this.tokens.map(token => {
               const priceRate = this.currencyRates.find(rate => {
                 return rate.crypto_currency === token.symbol;
               });
@@ -319,12 +325,10 @@ export default {
               token.name = token.symbol;
               return token;
             })
-          : tokenList;
+          : this.tokens;
       const returnedArray = [
         {
           text: 'Select Token',
-          imgs: imgs.splice(0, 3),
-          total: `${tokenList.length}`,
           divider: true,
           selectLabel: true
         },
@@ -375,6 +379,12 @@ export default {
         moonpay: BigNumber(12000),
         simplex: BigNumber(12000)
       };
+    },
+    maxVal() {
+      const moonpayMax = this.max.moonpay;
+      const simplexMax = this.max.simplex;
+      const maxVal = Math.max(moonpayMax.toString(), simplexMax.toString());
+      return BigNumber(maxVal);
     },
     min() {
       if (this.hasData) {
@@ -515,7 +525,8 @@ export default {
         !this.actualValidAddress ||
         isEmpty(this.amount) ||
         this.min.gt(this.amount) ||
-        isNaN(this.amount)
+        isNaN(this.amount) ||
+        this.maxVal.lt(this.amount)
       )
         return;
       this.loading = true;

@@ -6,6 +6,7 @@ export default {
   name: 'Moonbeam',
   name_long: 'Moonbeam',
   homePage: 'https://moonbeam.network/',
+  blockExplorer: 'Moonscan',
   blockExplorerTX: 'https://moonscan.io/tx/[[txHash]]',
   blockExplorerAddr: 'https://moonscan.io/addr/[[address]]',
   chainID: 1284,
