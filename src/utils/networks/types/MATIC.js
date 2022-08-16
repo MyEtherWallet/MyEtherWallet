@@ -4,6 +4,7 @@ export default {
   name: 'MATIC',
   name_long: 'Polygon (Matic)',
   homePage: 'https://polygonscan.com/',
+  blockExplorer: 'PolygonScan',
   blockExplorerTX: 'https://polygonscan.com/tx/[[txHash]]',
   blockExplorerAddr: 'https://polygonscan.com/address/[[address]]',
   chainID: 137,

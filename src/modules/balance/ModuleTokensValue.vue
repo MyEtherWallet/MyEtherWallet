@@ -43,7 +43,7 @@
       @close="handleTokensPopup"
     >
       <template #dialogBody>
-        <div class="mew-heading-3 mb-3 black--text">
+        <div class="mew-heading-3 mb-3 black--text px-4">
           Total Value: {{ totalTokenValues }}
         </div>
         <module-tokens class="pa-0" dense @trade="handleTokensPopup" />
