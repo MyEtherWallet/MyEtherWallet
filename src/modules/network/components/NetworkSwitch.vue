@@ -315,7 +315,7 @@ export default {
       try {
         this.setNetwork({
           network: found[0],
-          walletType: this.instance().identifier
+          walletType: this.instance()?.identifier || ''
         }).then(() => {
           if (this.isWallet) {
             this.networkSelected = this.validNetwork
