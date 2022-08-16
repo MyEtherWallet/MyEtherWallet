@@ -730,11 +730,13 @@ export default {
      * Unlock only the path step
      */
     unlockPathOnly() {
-      const path = isObject(this.selectedPath)
-        ? this.selectedPath.hasOwnProperty('value')
-          ? this.selectedPath?.value
-          : this.selectedPath
-        : this.paths[0].value;
+      const path =
+        isObject(this.selectedPath) && this.selectedPath.hasOwnProperty('value')
+          ? this.onLedgerX || this.onLedger
+            ? this.paths[0].value
+            : this.selectedPath?.value
+          : this.paths[0].value;
+      this.selectedPath = path;
       this.wallets[this.walletType]
         .create(path, this.ledgerBluetooth)
         .then(_hwWallet => {
