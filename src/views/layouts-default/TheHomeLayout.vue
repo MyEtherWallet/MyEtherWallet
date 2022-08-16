@@ -3,6 +3,7 @@
     <home-landing />
     <home-features />
     <home-enkrypt />
+    <home-mewcx-enkrypt />
     <home-eth-blocks />
     <home-socials />
     <home-why-mew />
@@ -13,6 +14,7 @@
 </template>
 
 <script>
+import HomeMewcxEnkrypt from '../components-default/HomeMewcxEnkrypt';
 import HomeEnkrypt from '../components-default/HomeEnkrypt';
 import HomeLanding from '../components-default/HomeLanding';
 import HomeFeatures from '../components-default/HomeFeatures';
@@ -26,6 +28,7 @@ import AppPartnersBlock from '@/core/components/AppPartnersBlock';
 export default {
   name: 'TheHomeLayout',
   components: {
+    HomeMewcxEnkrypt,
     HomeEnkrypt,
     HomeLanding,
     HomeFeatures,

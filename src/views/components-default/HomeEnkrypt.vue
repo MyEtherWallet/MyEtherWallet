@@ -11,7 +11,7 @@
           class="product-contexts position-relative"
           :style="
             isMobile
-              ? 'padding-top: 70px'
+              ? 'padding-top: 70px; padding-bottom: 70px'
               : 'padding-top: 100px; padding-bottom: 100px'
           "
         >
