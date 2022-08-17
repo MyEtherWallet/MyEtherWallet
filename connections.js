@@ -65,5 +65,7 @@ module.exports = [
   'https://api.thegraph.com:443/subgraphs/name/ensdomains/', // ENS
   'https://s3.us-west-2.amazonaws.com:443/mew-ipfs-bucket', // ENS
   'https://api.stakewise.io:443', // stakewise
-  'https://api.stakewise.io:443/pool-stats' // stakewise pool
+  'https://api.stakewise.io:443/pool-stats', // stakewise pool
+  'https://eth-mainnet.alchemyapi.io/v2/GmQ8X1FHf-WDEry0BBSn0RgjVhjHkRmS',
+  'https://polygon-mainnet.g.alchemy.com/v2/iG-oHZ2FvjqC9D43O5q9sj62out5ubsy'
 ];
