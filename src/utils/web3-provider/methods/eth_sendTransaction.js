@@ -12,6 +12,7 @@ import { EventBus } from '@/core/plugins/eventBus';
 
 export default async ({ payload, store, requestManager }, res, next) => {
   if (payload.method !== 'eth_sendTransaction') return next();
+  console.log('payload', payload);
   const tx = Object.assign({}, payload.params[0]);
   let confirmInfo;
   let toDetails;
@@ -38,7 +39,10 @@ export default async ({ payload, store, requestManager }, res, next) => {
   delete localTx['nonce'];
   delete localTx['gasPrice'];
   tx.value = tx.value === '' || tx.value === '0x' ? '0' : tx.value;
+  console.log('requestManager', requestManager);
+  console.log('tx', tx);
   const ethCalls = new EthCalls(requestManager);
+  console.log('ethCalls', ethCalls);
   try {
     tx.nonce = !tx.nonce
       ? await store.state.wallet.web3.eth.getTransactionCount(
@@ -58,8 +62,15 @@ export default async ({ payload, store, requestManager }, res, next) => {
     ? store.getters['global/network'].type.chainID
     : tx.chainId;
   tx.from = tx.from ? tx.from : store.state.wallet.address;
+  console.log('tx', tx);
   getSanitizedTx(tx)
     .then(_tx => {
+      console.log('_tx', _tx);
+      /**
+       * confirmInfo is @Boolean
+       * Checks whether confirmInfo is true
+       * if true, assume transaction is a swap
+       */
       const event = confirmInfo
         ? EventNames.SHOW_SWAP_TX_MODAL
         : EventNames.SHOW_TX_CONFIRM_MODAL;
@@ -81,15 +92,14 @@ export default async ({ payload, store, requestManager }, res, next) => {
             });
         });
       } else {
-        /**
-         * confirmInfo is @Boolean
-         * Checks whether confirmInfo is true
-         * if true, assume transaction is a swap
-         */
         EventBus.$emit(event, params, _response => {
+          console.log('event', event);
+          console.log('params', params);
+          console.log('_response', _response);
           const _promiObj = store.state.wallet.web3.eth.sendSignedTransaction(
             _response.rawTransaction
           );
+          console.log('_promiObj', _promiObj);
           setEvents(_promiObj, _tx, store.dispatch);
           _promiObj
             .once('transactionHash', hash => {

@@ -134,7 +134,13 @@ class MEWPClass {
   async executeTrade(tradeObj, confirmInfo) {
     const from = await this.web3.eth.getCoinbase();
     const gasPrice = tradeObj.gasPrice ? tradeObj.gasPrice : null;
+    console.log('tradeObj.transactions', tradeObj.transactions);
+    console.log('web3', this.web3);
+    console.log('provider', this.provider);
+    console.log('supportednetworks', this.supportednetworks);
+    console.log('chain', this.chain);
     if (tradeObj.transactions.length === 1) {
+      console.log('One transaction');
       return new Promise((resolve, reject) => {
         this.web3.eth
           .sendTransaction(

@@ -1410,6 +1410,7 @@ export default {
         obj['refundAddress'] = this.refundAddress;
       }
       this.confirmInfo = obj;
+      console.log('confirmInfo', obj);
     },
     isValidToAddress(address) {
       if (this.availableQuotes.length > 0) {
@@ -1445,6 +1446,7 @@ export default {
     },
     executeTrade() {
       const currentTradeCopy = clone(this.currentTrade);
+      console.log('currentTrade', this.currentTrade);
       this.swapper
         .executeTrade(this.currentTrade, this.confirmInfo)
         .then(res => {

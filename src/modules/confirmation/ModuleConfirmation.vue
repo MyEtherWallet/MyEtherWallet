@@ -275,6 +275,8 @@ import dataToAction from './handlers/dataToAction';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
 import errorHandler from './handlers/errorHandler';
+import ledgerService from '@ledgerhq/hw-app-eth/lib/services/ledger';
+import { serializeTransaction } from 'ethers/lib/utils';
 
 export default {
   name: 'ModuleConfirmation',
@@ -757,6 +759,36 @@ export default {
             this.signing = false;
           });
         this.resolver(event);
+      } else if (this.identifier === WALLET_TYPES.LEDGER) {
+        console.log('tx', this.tx);
+        const txn = {
+          nonce: this.tx.nonce,
+          gasPrice: this.tx.gasPrice,
+          gasLimit: this.tx.gasLimit,
+          to: this.tx.to,
+          value: this.tx.value,
+          data: this.tx.data,
+          chainId: this.tx.chainId
+        };
+        console.log('txn', txn);
+        const rawTxHex = serializeTransaction(txn);
+        console.log('rawTxHex', this.rawTxHex);
+        const resolution = await ledgerService.resolveTransaction(rawTxHex);
+        console.log('resolution', resolution);
+        await this.instance
+          .signTransaction(this.tx, resolution)
+          .then(res => {
+            this.signedTxObject = res;
+            if (this.isHardware && this.txSigned) {
+              this.btnAction();
+            }
+          })
+          .catch(e => {
+            this.signedTxObject = {};
+            this.error = errorHandler(e);
+            this.signing = false;
+            this.instance.errorHandler(e.message);
+          });
       } else {
         await this.instance
           .signTransaction(this.tx)
