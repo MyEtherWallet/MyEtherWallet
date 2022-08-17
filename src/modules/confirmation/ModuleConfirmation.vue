@@ -276,7 +276,7 @@ import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalyti
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
 import errorHandler from './handlers/errorHandler';
 import ledgerService from '@ledgerhq/hw-app-eth/lib/services/ledger';
-import { serializeTransaction } from 'ethers/lib/utils';
+import { serialize } from '@ethersproject/transactions';
 
 export default {
   name: 'ModuleConfirmation',
@@ -762,17 +762,17 @@ export default {
       } else if (this.identifier === WALLET_TYPES.LEDGER) {
         console.log('tx', this.tx);
         const txn = {
-          nonce: this.tx.nonce,
-          gasPrice: this.tx.gasPrice,
-          gasLimit: this.tx.gasLimit,
           to: this.tx.to,
-          value: this.tx.value,
+          nonce: this.tx.nonce,
+          gasLimit: this.tx.gasLimit,
+          gasPrice: this.tx.gasPrice,
           data: this.tx.data,
+          value: this.tx.value,
           chainId: this.tx.chainId
         };
         console.log('txn', txn);
-        const rawTxHex = serializeTransaction(txn);
-        console.log('rawTxHex', this.rawTxHex);
+        const rawTxHex = serialize(txn);
+        console.log('rawTxHex', rawTxHex);
         const resolution = await ledgerService.resolveTransaction(rawTxHex);
         console.log('resolution', resolution);
         await this.instance
