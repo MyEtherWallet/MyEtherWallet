@@ -176,6 +176,7 @@ export default {
     network() {
       this.selectedCurrency = {};
       this.selectedCurrency = this.defaultCurrency;
+      this.setTokens();
     }
   },
   methods: {
@@ -199,18 +200,20 @@ export default {
               this.setWeb3Instance();
               this.activeTab = val;
               Toast(`Switched network to: ETH`, {}, SUCCESS);
-              if (!this.inWallet) {
-                const tokenMap = new Map();
-                this.network.type.tokens.forEach(token => {
-                  tokenMap.set(token.address.toLowerCase(), token);
-                });
-                this.setNetworkTokens(tokenMap);
-              }
             });
           }
         }
       } else {
         this.activeTab = val;
+      }
+    },
+    setTokens() {
+      if (!this.inWallet) {
+        const tokenMap = new Map();
+        this.network.type.tokens.forEach(token => {
+          tokenMap.set(token.address.toLowerCase(), token);
+        });
+        this.setNetworkTokens(tokenMap);
       }
     },
     close() {
