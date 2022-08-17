@@ -199,13 +199,12 @@ export default {
               this.setWeb3Instance();
               this.activeTab = val;
               Toast(`Switched network to: ETH`, {}, SUCCESS);
-              if (!this.inWallet) {
-                const tokenMap = new Map();
-                this.network.type.tokens.forEach(token => {
-                  tokenMap.set(token.address.toLowerCase(), token);
-                });
-                this.setNetworkTokens(tokenMap);
-              }
+
+              const tokenMap = new Map();
+              this.network.type.tokens.forEach(token => {
+                tokenMap.set(token.address.toLowerCase(), token);
+              });
+              this.setNetworkTokens(tokenMap);
             });
           }
         }
