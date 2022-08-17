@@ -1167,6 +1167,8 @@ export default {
       const fromToken = clone(this.fromTokenType);
       const toToken = clone(this.toTokenType);
       this.tokenInValue = this.tokenOutValue;
+      console.log('fromToken', fromToken);
+      console.log('toToken', toToken);
       this.setFromToken(toToken);
       this.setToToken(fromToken);
     },
