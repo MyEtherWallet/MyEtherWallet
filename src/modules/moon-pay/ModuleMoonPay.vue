@@ -193,7 +193,7 @@ export default {
             (this.instance &&
               this.instance.identifier !== WALLET_TYPES.WEB3_WALLET)
           ) {
-            this.setNetwork(defaultNetwork).then(() => {
+            this.setNetwork({ network: defaultNetwork }).then(() => {
               this.setWeb3Instance();
               this.activeTab = val;
               Toast(`Switched network to: ETH`, {}, SUCCESS);
