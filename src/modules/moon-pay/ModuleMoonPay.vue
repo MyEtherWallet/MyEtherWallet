@@ -181,6 +181,8 @@ export default {
   methods: {
     ...mapActions('wallet', ['setWeb3Instance']),
     ...mapActions('global', ['setNetwork']),
+    ...mapActions('external', ['setNetworkTokens']),
+    ...mapGetters('global', ['network']),
     onTab(val) {
       this.selectedCurrency = this.defaultCurrency;
       if (val === 1 || (val === 0 && (!this.supportedBuy || !this.inWallet))) {
@@ -197,6 +199,13 @@ export default {
               this.setWeb3Instance();
               this.activeTab = val;
               Toast(`Switched network to: ETH`, {}, SUCCESS);
+              if (!this.inWallet) {
+                const tokenMap = new Map();
+                this.network.type.tokens.forEach(token => {
+                  tokenMap.set(token.address.toLowerCase(), token);
+                });
+                this.setNetworkTokens(tokenMap);
+              }
             });
           }
         }

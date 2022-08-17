@@ -186,7 +186,7 @@ export default {
      * and setup listeners for metamask changes
      */
     web3Listeners() {
-      if (window.ethereum.on) {
+      if (window.ethereum?.on) {
         window.ethereum.on('chainChanged', this.findAndSetNetwork);
         window.ethereum.on('accountsChanged', this.setWeb3Account);
       } else {
@@ -198,7 +198,7 @@ export default {
       }
     },
     async findAndSetNetwork() {
-      const networkId = await window.ethereum.request({
+      const networkId = await window.ethereum?.request({
         method: 'net_version'
       });
       const foundNetwork = Object.values(nodeList).find(item => {
