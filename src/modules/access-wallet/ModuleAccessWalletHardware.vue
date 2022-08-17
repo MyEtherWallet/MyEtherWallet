@@ -691,6 +691,8 @@ export default {
     nextStep() {
       if (this.walletType) {
         this.step++;
+        console.log('paths', this.paths);
+        console.log('selectedPath', this.selectedPath);
         if (this.step === this.walletInitialized) {
           if (this.onCoolWallet || this.onBitbox2) return;
           this[`${this.walletType}Unlock`]();
@@ -736,7 +738,7 @@ export default {
             ? this.paths[0].value
             : this.selectedPath?.value
           : this.paths[0].value;
-      this.selectedPath = path;
+      if (this.selectedPath?.value) this.selectedPath.value = path;
       this.wallets[this.walletType]
         .create(path, this.ledgerBluetooth)
         .then(_hwWallet => {
