@@ -7,6 +7,7 @@ export default {
   name: 'ETH',
   name_long: 'Ethereum',
   homePage: 'https://ethereum.org',
+  blockExplorer: 'Etherscan',
   blockExplorerTX: 'https://etherscan.io/tx/[[txHash]]',
   blockExplorerAddr: 'https://etherscan.io/address/[[address]]',
   chainID: 1,
