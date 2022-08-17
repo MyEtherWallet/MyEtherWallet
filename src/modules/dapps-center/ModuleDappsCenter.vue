@@ -62,7 +62,7 @@
     </template>
     <template #moduleBody>
       <div class="swap-not-available">
-        <app-user-msg-block message="sdfsdfsdfsdf" />
+        <app-user-msg-block message="" />
       </div>
     </template>
   </the-wrapper-dapp>
