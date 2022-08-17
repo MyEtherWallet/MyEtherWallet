@@ -189,12 +189,6 @@ export default {
       if (window.ethereum?.on) {
         window.ethereum.on('chainChanged', this.findAndSetNetwork);
         window.ethereum.on('accountsChanged', this.setWeb3Account);
-      } else {
-        Toast(
-          'Something is wrong with Metamask. (window.ethereum.on is not a function).  Please refresh the page and reload Metamask.',
-          {},
-          ERROR
-        );
       }
     },
     async findAndSetNetwork() {
