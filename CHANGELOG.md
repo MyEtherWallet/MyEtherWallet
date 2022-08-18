@@ -26,7 +26,7 @@
 * fix team page background color [#4103](https://github.com/MyEtherWallet/MyEtherWallet/pull/4103)
 * remove periods from dapps menu [#4109](https://github.com/MyEtherWallet/MyEtherWallet/pull/4109)
 * remove bottom close button\* fix layout of top right close button
-    [#4110](https://github.com/MyEtherWallet/MyEtherWallet/pull/4110)
+  [#4110](https://github.com/MyEtherWallet/MyEtherWallet/pull/4110)
 * added check for network switch out of wallet [#4116](https://github.com/MyEtherWallet/MyEtherWallet/pull/4116)
 * fixed network switch bug not switching correctly [#4119](https://github.com/MyEtherWallet/MyEtherWallet/pull/4119)
 * fix wallet side menu error \[method "isOpenNetworkOverlay" is not defined] [#4121](https://github.com/MyEtherWallet/MyEtherWallet/pull/4121)
