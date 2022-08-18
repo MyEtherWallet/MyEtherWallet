@@ -181,7 +181,7 @@ export default {
           style: 'outline',
           title: 'Software',
           subtitle:
-            'Software Methods like Keystore file and Mnemonic phrase should only be used in offline settings by experienced users',
+            'Software methods like Keystore File and Mnemonic Phrase should only be used in offline settings by experienced users',
           official: false,
           recommended: false,
           fn: () => {
