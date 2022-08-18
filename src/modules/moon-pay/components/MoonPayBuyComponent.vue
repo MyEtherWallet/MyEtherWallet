@@ -293,7 +293,6 @@ export default {
             arr.push(inList);
             return arr;
           }
-
           const token = this.contractToToken(item);
           if (token) arr.push(token);
           return arr;
