@@ -23,7 +23,8 @@
           <div>Last Block: {{ lastBlock }}</div>
         </div>
       </div>
-      <v-img :src="icon" :max-height="65" :max-width="65" contain />
+
+      <mew-token-container size="50px" :img="icon" />
     </mew6-white-sheet>
   </div>
 </template>

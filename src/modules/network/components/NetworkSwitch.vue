@@ -67,14 +67,7 @@
                   Icon
                 =====================================================================================
                 -->
-          <v-img
-            :class="network.name === 'MINTME' ? 'mint-me-color' : ''"
-            :src="network.icon"
-            :lazy-src="require('@/assets/images/currencies/icon-eth-grey.svg')"
-            contain
-            max-height="24px"
-            max-width="24px"
-          />
+          <mew-token-container :img="network.icon" />
           <!--
                 =====================================================================================
                   Symbol/Name

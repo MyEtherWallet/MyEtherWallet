@@ -23,11 +23,9 @@
             1 {{ data.fromT.symbol }} / {{ data.rate }} {{ data.toT.symbol }}
           </div>
           <div class="d-flex align-center">
-            <img
-              width="22"
-              height="22"
-              src="https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ETH-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.svg"
-              alt="currency-icon"
+            <mew-token-container
+              size="22px"
+              :img="require('@/assets/images/networks/eth.svg')"
             />
             <img
               width="18"
@@ -35,14 +33,13 @@
               src="@/assets/images/icons/icon-swap-arrow-grey.png"
               alt="swap-icon"
             />
-            <img
-              width="22"
-              :src="
+            <mew-token-container
+              size="22px"
+              :img="
                 require('@/assets/images/currencies/' +
                   data.toT.symbol.toLowerCase() +
                   '.png')
               "
-              alt="eth-icon"
             />
           </div>
         </v-sheet>
