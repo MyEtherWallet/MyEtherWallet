@@ -8,20 +8,16 @@
       temporary
       color="expandHeader"
     >
-      <v-list-item class="py-8 pl-2 pr-4">
-        <v-btn large icon light @click="isOpen = false">
+      <div class="text-center mt-7 mb-8" style="position: relative">
+        <v-btn class="close-button" large icon light @click="isOpen = false">
           <v-icon color="white" large>mdi-window-close</v-icon>
         </v-btn>
-        <v-spacer></v-spacer>
-        <v-img
+        <img
           src="@/assets/images/icons/logo-mew.svg"
-          max-height="36"
-          max-width="130"
+          height="36"
           @click="pushRoute({ name: 'Home' })"
         />
-        <v-spacer></v-spacer>
-        <mew-tools />
-      </v-list-item>
+      </div>
 
       <v-list color="expandHeader" dark class="px-2">
         <template v-for="(item, index) in menu">
@@ -95,14 +91,13 @@
 </template>
 
 <script>
-import mewTools from '@/components/mew-tools/MewTools';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 import AppBtnMenu from '@/core/components/AppBtnMenu';
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { mapGetters } from 'vuex';
 export default {
   name: 'MobileMenu',
-  components: { AppBtnMenu, mewTools },
+  components: { AppBtnMenu },
   mixins: [buyMore],
   data: () => ({
     isOpen: false
@@ -170,5 +165,10 @@ export default {
 .v-navigation-drawer {
   width: 100% !important;
   max-width: 500px;
+}
+.close-button {
+  position: absolute;
+  left: 10px;
+  top: -3px;
 }
 </style>
