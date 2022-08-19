@@ -12,6 +12,7 @@ import gettingStarted from './getting-started/en_US';
 import privacyPolicy from './privacy-policy/en_US';
 import termsOfService from './terms-of-conditions/en_US';
 import accessWallet from './access-wallet/en_US';
+import createWallet from './create-wallet/en_US';
 import interfaceTranslations from './interface/en_US';
 import errorsGlobal from './errors-global/en_US';
 import trezorError from './errors-trezor/en_US';
@@ -50,6 +51,7 @@ const en_US = {
   privacyPol: privacyPolicy,
   termsOfService: termsOfService,
   accessWallet: accessWallet,
+  createWallet: createWallet,
   interface: interfaceTranslations,
   errorsGlobal: errorsGlobal,
   trezorError: trezorError,

@@ -665,8 +665,8 @@ export default {
         } else {
           this.hwWalletInstance = {};
           if (this.onLedger || this.onLedgerX) {
-            this.step -= 1;
-            this[`${this.walletType}Unlock`]();
+            this.step = 2;
+            //this[`${this.walletType}Unlock`]();
           } else {
             this.walletType = '';
             this.step = 1;

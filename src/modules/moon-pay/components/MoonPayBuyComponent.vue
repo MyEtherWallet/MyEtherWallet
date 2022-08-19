@@ -165,7 +165,9 @@ export default {
       }`;
     },
     dailyLimit() {
-      const value = BigNumber(this.fiatMultiplier).times(12000);
+      const moonpayMax = this.max.moonpay;
+      const simplexMax = this.max.simplex;
+      const value = Math.max(moonpayMax.toString(), simplexMax.toString());
       return `Daily limit: ${
         formatFiatValue(value.toString(), this.currencyConfig).value
       }`;
@@ -251,8 +253,6 @@ export default {
       return 'BUY NOW';
     },
     amountErrorMessages() {
-      const moonpayMax = this.max.moonpay;
-      const simplexMax = this.max.simplex;
       if (BigNumber(this.amount).isNaN() || BigNumber(this.amount).eq(0)) {
         return 'Amount required';
       }
@@ -260,17 +260,14 @@ export default {
         return `Amount can't be negative`;
       }
       if (this.min.gt(this.amount)) {
-        return `Amount can't be below provider's minimum: ${this.min.toFixed()} ${
-          this.selectedFiatName
-        }`;
+        return `Amount can't be below provider's minimum: ${
+          formatFiatValue(this.min.toFixed(), this.currencyConfig).value
+        } ${this.selectedFiatName}`;
       }
-      if (
-        moonpayMax.lt(BigNumber(this.amount)) &&
-        simplexMax.lt(BigNumber(this.amount))
-      ) {
-        return `Amount can't be above provider's maximum: ${simplexMax.toFixed()} ${
-          this.selectedFiatName
-        }`;
+      if (this.maxVal.lt(this.amount)) {
+        return `Amount can't be above provider's maximum: ${
+          formatFiatValue(this.maxVal.toFixed(), this.currencyConfig).value
+        } ${this.selectedFiatName}`;
       }
       return '';
     },
@@ -296,7 +293,6 @@ export default {
             arr.push(inList);
             return arr;
           }
-
           const token = this.contractToToken(item);
           if (token) arr.push(token);
           return arr;
@@ -382,6 +378,12 @@ export default {
         moonpay: BigNumber(12000),
         simplex: BigNumber(12000)
       };
+    },
+    maxVal() {
+      const moonpayMax = this.max.moonpay;
+      const simplexMax = this.max.simplex;
+      const maxVal = Math.max(moonpayMax.toString(), simplexMax.toString());
+      return BigNumber(maxVal);
     },
     min() {
       if (this.hasData) {
@@ -522,7 +524,8 @@ export default {
         !this.actualValidAddress ||
         isEmpty(this.amount) ||
         this.min.gt(this.amount) ||
-        isNaN(this.amount)
+        isNaN(this.amount) ||
+        this.maxVal.lt(this.amount)
       )
         return;
       this.loading = true;
