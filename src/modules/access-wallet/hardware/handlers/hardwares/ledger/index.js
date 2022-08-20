@@ -28,7 +28,6 @@ import ledger from '@/assets/images/icons/wallets/ledger.svg';
 import { rlp } from 'ethereumjs-util';
 import TransportWebBLE from '@ledgerhq/hw-transport-web-ble';
 import { EventBus } from '@/core/plugins/eventBus.js';
-import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 
 const NEED_PASSWORD = false;
 
@@ -243,10 +242,8 @@ const connectToApp = async (transport, network) => {
       openApp(transport, appNames[network])
         .then(() => true)
         .catch(() => {
-          Toast(
-            `Make sure you have ${appNames[network]} App installed on your Ledger`,
-            {},
-            ERROR
+          throw new Error(
+            `Please make sure you have ${appNames[network]} App installed on your Ledger`
           );
         })
     )
@@ -254,10 +251,8 @@ const connectToApp = async (transport, network) => {
       if (e instanceof DeviceOnDashboardExpected) {
         return getAppAndVersion(transport).then(appInfo => {
           if (appInfo.name !== appNames[network]) {
-            Toast(
-              `Make sure you have ${appNames[network]} App opened.`,
-              {},
-              ERROR
+            throw new Error(
+              `Please make sure you have ${appNames[network]} app opened.`
             );
           }
           return true;
