@@ -41,9 +41,8 @@
                   :error-messages="amountErrorMessage"
                   :disabled="initialLoad"
                   :buy-more-str="
-                    isEthNetwork &&
-                    (amountErrorMessage === errorMsgs.amountExceedsEthBalance ||
-                      amountErrorMessage === errorMsgs.amountEthIsTooLow)
+                    amountErrorMessage === errorMsgs.amountExceedsEthBalance ||
+                    amountErrorMessage === errorMsgs.amountEthIsTooLow
                       ? network.type.canBuy
                         ? 'Buy more.'
                         : ''
@@ -101,7 +100,7 @@
             class="mt-sm-5"
             :message="msg.lowBalance"
           >
-            <div v-if="isEthNetwork" class="mt-3 mx-n1">
+            <div class="mt-3 mx-n1">
               <mew-button
                 btn-size="small"
                 btn-style="outline"
@@ -577,9 +576,10 @@ export default {
         )
           return item;
       });
-      const filteredTrendingTokens = this.trendingTokens().filter(token => {
+      let filteredTrendingTokens = this.trendingTokens().filter(token => {
         return token.contract !== this.fromTokenType?.contract;
       });
+      filteredTrendingTokens = this.formatTokenPrice(filteredTrendingTokens);
       let returnableTokens = [
         {
           text: 'Select Token',
@@ -1085,6 +1085,15 @@ export default {
           ? this.getFiatValue(t.pricef)
           : '0.00';
         t.name = t.hasOwnProperty('symbol') ? t.symbol : '';
+        return t;
+      });
+    },
+    formatTokenPrice(tokens) {
+      if (!Array.isArray(tokens)) return [];
+      return tokens.map(t => {
+        t.price = t.hasOwnProperty('pricef')
+          ? this.getFiatValue(t.pricef)
+          : '0.00';
         return t;
       });
     },

@@ -188,50 +188,44 @@ export default {
      * and setup listeners for metamask changes
      */
     web3Listeners() {
-      if (!window.ethereum) return;
-      if (window.ethereum.on) {
+      if (window.ethereum?.on) {
         window.ethereum.on('chainChanged', this.findAndSetNetwork);
         window.ethereum.on('accountsChanged', this.setWeb3Account);
-      } else {
-        Toast(
-          'Something is wrong with Metamask. (window.ethereum.on is not a function).  Please refresh the page and reload Metamask.',
-          {},
-          ERROR
-        );
       }
     },
     async findAndSetNetwork() {
-      if (!window.ethereum) return;
-      const networkId = await window.ethereum.request({
-        method: 'net_version'
-      });
-      const foundNetwork = Object.values(nodeList).find(item => {
-        if (toBN(networkId).toNumber() === item[0].type.chainID) return item;
-      });
-      if (window.ethereum.isMetaMask) {
-        try {
-          if (foundNetwork) {
-            await this.setNetwork({
-              network: foundNetwork[0],
-              walletType: this.instance.identifier
-            });
-            this.setValidNetwork(true);
-            await this.setTokenAndEthBalance();
-            this.trackNetworkSwitch(foundNetwork[0].type.name);
-            this.$emit('newNetwork');
-          } else {
-            this.setValidNetwork(false);
-            Toast("Current wallet's network is unsupported", {}, ERROR);
+      if (window.ethereum) {
+        const networkId = await window.ethereum?.request({
+          method: 'net_version'
+        });
+        const foundNetwork = Object.values(nodeList).find(item => {
+          if (toBN(networkId).toNumber() === item[0].type.chainID) return item;
+        });
+        if (window.ethereum.isMetaMask) {
+          try {
+            if (foundNetwork) {
+              await this.setNetwork({
+                network: foundNetwork[0],
+                walletType: this.instance.identifier
+              });
+              this.setValidNetwork(true);
+              await this.setTokenAndEthBalance();
+              this.trackNetworkSwitch(foundNetwork[0].type.name);
+              this.$emit('newNetwork');
+            } else {
+              this.setValidNetwork(false);
+              Toast("Current wallet's network is unsupported", {}, ERROR);
+            }
+          } catch (er) {
+            Toast('There was an error switching networks', {}, ERROR);
           }
-        } catch (er) {
-          Toast('There was an error switching networks', {}, ERROR);
+        } else {
+          Toast(
+            "Can't find matching nodes for selected MetaMask node! MetaMask may not function properly. Please select a supported node",
+            {},
+            WARNING
+          );
         }
-      } else {
-        Toast(
-          "Can't find matching nodes for selected MetaMask node! MetaMask may not function properly. Please select a supported node",
-          {},
-          WARNING
-        );
       }
     },
     setWeb3Account(acc) {

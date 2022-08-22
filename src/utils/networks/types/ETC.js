@@ -6,6 +6,7 @@ export default {
   name: 'ETC',
   name_long: 'Ethereum Classic',
   homePage: 'https://ethereumclassic.org/',
+  blockExplorer: 'Blockscout',
   blockExplorerTX: 'https://blockscout.com/etc/mainnet/tx/[[txHash]]',
   blockExplorerAddr: 'https://blockscout.com/etc/mainnet/address/[[address]]',
   chainID: 61,
