@@ -2,8 +2,6 @@
  * Matomo Analytics Mixin
  */
 import { mapState, mapActions } from 'vuex';
-import moment from 'moment';
-
 import categories from './configs/configCategories';
 
 export default {
@@ -16,11 +14,7 @@ export default {
       'enkryptLandingPopupClosed'
     ]),
     shouldDisplayTrackingPopup() {
-      const dayAgo = moment(new Date()).diff(
-        this.enkryptLandingPopupClosed,
-        'hours'
-      );
-      if (!this.enkryptLandingPopup && dayAgo >= 24) {
+      if (!this.enkryptLandingPopup) {
         return this.displayedTrackingPopup;
       }
       return true;
