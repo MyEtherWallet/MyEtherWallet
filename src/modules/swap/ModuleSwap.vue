@@ -578,9 +578,10 @@ export default {
         )
           return item;
       });
-      const filteredTrendingTokens = this.trendingTokens().filter(token => {
+      let filteredTrendingTokens = this.trendingTokens().filter(token => {
         return token.contract !== this.fromTokenType?.contract;
       });
+      filteredTrendingTokens = this.formatTokenPrice(filteredTrendingTokens);
       let returnableTokens = [
         {
           text: 'Select Token',
@@ -1086,6 +1087,15 @@ export default {
           ? this.getFiatValue(t.pricef)
           : '0.00';
         t.name = t.hasOwnProperty('symbol') ? t.symbol : '';
+        return t;
+      });
+    },
+    formatTokenPrice(tokens) {
+      if (!Array.isArray(tokens)) return [];
+      return tokens.map(t => {
+        t.price = t.hasOwnProperty('pricef')
+          ? this.getFiatValue(t.pricef)
+          : '0.00';
         return t;
       });
     },
