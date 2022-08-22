@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "6.6.3-hotfix.3",
+  "version": "6.6.4",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build": "npm run update && vue-cli-service build",
@@ -50,7 +50,7 @@
     "@lokalise/node-api": "7.3.1",
     "@mathieustan/vue-intercom": "0.0.9",
     "@myetherwallet/eth2-keystore": "0.2.3",
-    "@myetherwallet/mew-components": "1.3.0",
+    "@myetherwallet/mew-components": "1.3.1",
     "@myetherwallet/mewconnect-web-client": "2.2.0-beta.16",
     "@sentry/browser": "7.7.0",
     "@sentry/tracing": "7.7.0",

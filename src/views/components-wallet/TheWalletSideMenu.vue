@@ -305,6 +305,7 @@ export default {
   mixins: [handlerAnalytics],
   data() {
     return {
+      isOpenNetworkOverlay: false,
       navOpen: null,
       version: VERSION,
       onSettings: false,
