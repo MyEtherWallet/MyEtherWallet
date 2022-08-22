@@ -24,6 +24,8 @@
           :value="selectedDomain"
           filter-placeholder="Search for Domain"
           :items="domainListItems"
+          normal-dropdown
+          no-capitalize
           @input="setDomain"
         >
         </mew-select>
