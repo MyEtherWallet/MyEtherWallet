@@ -572,8 +572,7 @@ export default {
       const validToTokens = this.toTokens.filter(item => {
         if (
           item.contract.toLowerCase() !==
-            this.fromTokenType?.contract?.toLowerCase() &&
-          item.contract.toLowerCase() !== '0xeth'
+          this.fromTokenType?.contract?.toLowerCase()
         )
           return item;
       });
@@ -617,14 +616,11 @@ export default {
      */
     toTokens() {
       if (this.isLoading) return [];
-      const vals = this.availableTokens.toTokens
+      return this.availableTokens.toTokens
         .map(token => {
           return localContractToToken[token.contract];
         })
-        .filter(
-          item => item.name !== '' && item.symbol !== '' && item.subtext !== ''
-        );
-      return vals;
+        .filter(token => token);
     },
     /**
      * @returns object of all token data
@@ -635,8 +631,7 @@ export default {
       const validFromTokens = this.fromTokens.filter(
         item =>
           item.contract.toLowerCase() !==
-            this.toTokenType?.contract?.toLowerCase() &&
-          item.contract.toLowerCase() !== '0xeth'
+          this.toTokenType?.contract?.toLowerCase()
       );
       let tradebleWalletTokens = this.tokensList.filter(item => {
         for (const vt of validFromTokens) {
@@ -700,9 +695,7 @@ export default {
         .map(token => {
           return localContractToToken[token.contract];
         })
-        .filter(
-          item => item.name !== '' && item.symbol !== '' && item.subtext !== ''
-        );
+        .filter(token => token);
     },
     txFee() {
       return toBN(this.totalGasLimit).mul(toBN(this.localGasPrice)).toString();
@@ -967,6 +960,13 @@ export default {
     setupTokenInfo(tokens) {
       tokens.forEach(token => {
         if (localContractToToken[token.contract]) return;
+        if (
+          token.contract?.toLowerCase() === '0xeth' ||
+          token.contract?.toLowerCase() === '0xbnb' ||
+          token.contract?.toLowerCase() === '0xbnbbsc' ||
+          token.contract?.toLowerCase() === '0xbusdbnb'
+        )
+          return;
         if (token.cgid) {
           const foundToken = this.getCoinGeckoTokenById(token.cgid);
           foundToken.price = this.getFiatValue(foundToken.pricef);
@@ -999,6 +999,8 @@ export default {
         token.subtext = name;
         token.value = token.contract;
         token.name = token.symbol;
+        if (token.name !== '' && token.symbol !== '' && token.subtext !== '')
+          return;
         localContractToToken[token.contract] = token;
       });
     },
