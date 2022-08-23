@@ -65,5 +65,8 @@ module.exports = [
   'https://api.thegraph.com:443/subgraphs/name/ensdomains/', // ENS
   'https://s3.us-west-2.amazonaws.com:443/mew-ipfs-bucket', // ENS
   'https://api.stakewise.io:443', // stakewise
-  'https://api.stakewise.io:443/pool-stats' // stakewise pool
+  'https://api.stakewise.io:443/pool-stats', // stakewise pool
+  'https://api.thegraph.com:443/subgraphs/name/kleros/curate', // Kleros Subtags
+  'https://api.thegraph.com:443/subgraphs/name/eccentricexit/curate-xdai-ii', // Kleros Subtags
+  'https://ipfs.kleros.io:443', // Kleros Subtags
 ];
