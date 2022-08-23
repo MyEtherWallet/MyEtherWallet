@@ -42,6 +42,7 @@
 import { isAddress, toChecksumAddress } from '@/core/helpers/addressUtils';
 import { mapGetters, mapState } from 'vuex';
 import NameResolver from '@/modules/name-resolver/index';
+import { getAddressInfo } from '@kleros/address-tags-sdk';
 import AddressBookAddEdit from './components/AddressBookAddEdit';
 import { isObject, throttle } from 'lodash';
 import WAValidator from 'multicoin-address-validator';
@@ -211,6 +212,15 @@ export default {
             const reverseName = await this.nameResolver.resolveAddress(
               this.inputAddr
             );
+            if (!reverseName.name) {
+              reverseName.name =
+                (
+                  await getAddressInfo(
+                    toChecksumAddress(this.inputAddr),
+                    'https://ipfs.kleros.io'
+                  )
+                )?.publicNameTag || '';
+            }
             this.resolvedAddr = reverseName?.name ? reverseName.name : '';
           }
 
