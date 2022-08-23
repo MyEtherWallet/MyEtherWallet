@@ -17,35 +17,37 @@ class Swap {
   getAllTokens() {
     const allTokens = {};
     return this.providers[0].getSupportedTokens().then(baseList => {
-      baseList?.forEach(t => (allTokens[t.contract] = t));
-      return Promise.all(
-        this.providers.slice(3).map(p => {
-          if (!p.isSupportedNetwork(this.chain)) return Promise.resolve();
-          return p.getSupportedTokens().then(tokens => {
-            if (tokens && tokens.length > 0) {
-              tokens.forEach(t => {
-                if (!allTokens[t.contract]) {
-                  allTokens[t.contract] = t;
-                }
-              });
-            }
-          });
-        })
-      ).then(() => {
-        const sorted = Object.values(allTokens)
-          .filter(t => isObject(t))
-          .sort((a, b) => {
-            if (a.name > b.name) return 1;
-            return -1;
-          });
-        return {
-          fromTokens: sorted.filter(t => {
-            if (!t || !t.contract) return false;
-            return t;
-          }),
-          toTokens: sorted
-        };
-      });
+      if (baseList && baseList.length > 0) {
+        baseList.forEach(t => (allTokens[t.contract] = t));
+        return Promise.all(
+          this.providers.slice(3).map(p => {
+            if (!p.isSupportedNetwork(this.chain)) return Promise.resolve();
+            return p.getSupportedTokens().then(tokens => {
+              if (tokens && tokens.length > 0) {
+                tokens.forEach(t => {
+                  if (!allTokens[t.contract]) {
+                    allTokens[t.contract] = t;
+                  }
+                });
+              }
+            });
+          })
+        ).then(() => {
+          const sorted = Object.values(allTokens)
+            .filter(t => isObject(t))
+            .sort((a, b) => {
+              if (a.name > b.name) return 1;
+              return -1;
+            });
+          return {
+            fromTokens: sorted.filter(t => {
+              if (!t || !t.contract) return false;
+              return t;
+            }),
+            toTokens: sorted
+          };
+        });
+      }
     });
   }
   getAllQuotes({ fromT, toT, fromAmount }) {
