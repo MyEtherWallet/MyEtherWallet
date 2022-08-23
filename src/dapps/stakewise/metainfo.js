@@ -5,7 +5,7 @@ import ModuleStakewiseStake from './modules/ModuleStakewiseStake';
 import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
 export default {
   title: 'Stakewise',
-  subtitle: 'Stake any amount of ETH and begin earning rewards.',
+  subtitle: 'Stake any amount of ETH and begin earning rewards',
   tag: '#DeFi',
   rightIconType: 'mew',
   rightIcon: 'stakewise',

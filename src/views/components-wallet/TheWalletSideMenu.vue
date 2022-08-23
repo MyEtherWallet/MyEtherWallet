@@ -305,6 +305,7 @@ export default {
   mixins: [handlerAnalytics],
   data() {
     return {
+      isOpenNetworkOverlay: false,
       navOpen: null,
       version: VERSION,
       onSettings: false,
@@ -313,8 +314,7 @@ export default {
         [ROUTES_WALLET.SWAP.NAME]: [ETH, BSC, MATIC],
         [ROUTES_WALLET.NFT_MANAGER.NAME]: [ETH]
       },
-      ROUTES_WALLET: ROUTES_WALLET,
-      isOpenNetworkOverlay: false
+      ROUTES_WALLET: ROUTES_WALLET
     };
   },
   computed: {
