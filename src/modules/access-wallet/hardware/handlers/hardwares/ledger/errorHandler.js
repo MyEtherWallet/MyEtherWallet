@@ -68,7 +68,8 @@ const ERRORS = {
     'Please select app on Ledger device and try again.',
   'Ledger device: UNKNOWN_ERROR (0x6807)': 'Device is supported',
   'Please make sure you have':
-    'Please make sure app is installed and opened on Ledger device'
+    'Please make sure app is installed and opened on Ledger device',
+  'Authentication canceled.': 'Authentication canceled'
 };
 const WARNINGS = {
   'Ledger device: Condition of use not satisfied (denied by the user?) (0x6985)':
