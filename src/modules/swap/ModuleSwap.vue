@@ -572,7 +572,8 @@ export default {
       const validToTokens = this.toTokens.filter(item => {
         if (
           item.contract.toLowerCase() !==
-          this.fromTokenType?.contract?.toLowerCase()
+            this.fromTokenType?.contract?.toLowerCase() &&
+          item.contract.toLowerCase() !== '0xeth'
         )
           return item;
       });
@@ -634,7 +635,8 @@ export default {
       const validFromTokens = this.fromTokens.filter(
         item =>
           item.contract.toLowerCase() !==
-          this.toTokenType?.contract?.toLowerCase()
+            this.toTokenType?.contract?.toLowerCase() &&
+          item.contract.toLowerCase() !== '0xeth'
       );
       let tradebleWalletTokens = this.tokensList.filter(item => {
         for (const vt of validFromTokens) {
@@ -648,7 +650,8 @@ export default {
           !item.isEth &&
           item.name &&
           item.symbol &&
-          item.subtext
+          item.subtext &&
+          item.symbol !== this.network.type.currencyName
         ) {
           delete item['tokenBalance'];
           delete item['totalBalance'];
@@ -693,9 +696,13 @@ export default {
      * to swap from
      */
     fromTokens() {
-      return this.availableTokens.fromTokens.map(token => {
-        return localContractToToken[token.contract];
-      });
+      return this.availableTokens.fromTokens
+        .map(token => {
+          return localContractToToken[token.contract];
+        })
+        .filter(
+          item => item.name !== '' && item.symbol !== '' && item.subtext !== ''
+        );
     },
     txFee() {
       return toBN(this.totalGasLimit).mul(toBN(this.localGasPrice)).toString();
