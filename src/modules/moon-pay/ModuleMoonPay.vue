@@ -183,7 +183,6 @@ export default {
     ...mapActions('wallet', ['setWeb3Instance']),
     ...mapActions('global', ['setNetwork']),
     ...mapActions('external', ['setNetworkTokens']),
-    ...mapGetters('global', ['network']),
     onTab(val) {
       this.selectedCurrency = this.defaultCurrency;
       if (val === 1 || (val === 0 && (!this.supportedBuy || !this.inWallet))) {
