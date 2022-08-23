@@ -30,6 +30,9 @@ const addCustomPath = function ({ commit }, val) {
 const deleteCustomPath = function ({ commit }, val) {
   commit('DELETE_CUSTOM_PATH', val);
 };
+const deleteAllCustomPaths = function ({ commit }) {
+  commit('DELETE_ALL_CUSTOM_PATHS');
+};
 
 const updateCustomTokenBalances = function ({ dispatch, getters, rootState }) {
   const _getTokenBalance = (balance, decimals) => {
@@ -70,5 +73,6 @@ export default {
   deleteToken,
   addCustomPath,
   deleteCustomPath,
+  deleteAllCustomPaths,
   updateCustomTokenBalances
 };

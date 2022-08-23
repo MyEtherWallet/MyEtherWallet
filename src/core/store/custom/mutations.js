@@ -59,16 +59,12 @@ const ADD_CUSTOM_PATH = function (state, path) {
   state.paths.push(path);
 };
 
-const DELETE_CUSTOM_PATH = function (state, paths) {
-  const idx = state.paths.findIndex(item => {
-    if (item.path === paths.path) {
-      return item;
-    }
-  });
+const DELETE_CUSTOM_PATH = function (state, path) {
+  state.paths = state.paths.filter(p => p.value !== path.value);
+};
 
-  if (idx >= 0) {
-    state.paths.splice(idx, 1);
-  }
+const DELETE_ALL_CUSTOM_PATHS = function (state) {
+  state.paths = [];
 };
 
 export default {
@@ -78,5 +74,6 @@ export default {
   INIT_STORE,
   SET_ADDRESS_BOOK,
   ADD_CUSTOM_PATH,
-  DELETE_CUSTOM_PATH
+  DELETE_CUSTOM_PATH,
+  DELETE_ALL_CUSTOM_PATHS
 };
