@@ -23,7 +23,7 @@
               {{ healthFactor }}
             </div>
             <v-skeleton-loader v-else width="31px" type="text" class="mr-3" />
-            <mew-tooltip text="Health factor" />
+            <mew-tooltip :text="healthFactorTooltip" />
           </div>
           <v-row class="mb-1 mt-2" dense>
             <v-col cols="12" md="6">
@@ -122,7 +122,7 @@
               {{ healthFactor }}
             </div>
             <v-skeleton-loader v-else width="31px" type="text" class="mr-3" />
-            <mew-tooltip text="Health factor" />
+            <mew-tooltip :text="healthFactorTooltip" />
           </div>
 
           <v-row class="mb-1 mt-2" dense>
@@ -374,6 +374,9 @@ export default {
       return BigNumber(this.userSummary.healthFactor).gt(0)
         ? formatFloatingPointValue(this.userSummary.healthFactor).value
         : `-`;
+    },
+    healthFactorTooltip() {
+      return 'The health factor is the numeric representation of the safety of your deposited assets against the borrowed assets and its underlying value. The higher the value is, the safer the state of your funds are against a liquidation scenario.';
     },
     totalLiquidity() {
       return {

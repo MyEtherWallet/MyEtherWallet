@@ -182,6 +182,16 @@ export default {
     isCollateral() {
       return this.actionType.toLowerCase() === ACTION_TYPES.collateral;
     },
+    currentHealthFactorTooltip() {
+      return 'The health factor is the numeric representation of the safety of your deposited assets against the borrowed assets and its underlying value. The higher the value is, the safer the state of your funds are against a liquidation scenario.';
+    },
+    nextHealthFactorTooltip() {
+      return `This transaction will ${
+        +this.currentHealthFactor > +this.nextHealthFactor
+          ? 'lower'
+          : 'increase'
+      } your health factor. If the health factor reaches 1, the liquidation of your deposits will be triggered. A Health Factor below 1 can get liquidated.`;
+    },
     details() {
       let details = [
         {
@@ -202,25 +212,22 @@ export default {
           details.push(
             {
               title: 'Current Health Factor',
-              tooltip: 'Tooltip text',
+              tooltip: this.currentHealthFactorTooltip,
               value: this.currentHealthFactor,
-              class:
-                this.currentHealthFactor > this.nextHealthFactor
-                  ? 'greenPrimary--text'
-                  : 'redPrimary--text'
+              class: ''
             },
             {
               title: 'Next Health Factor',
-              tooltip: 'Tooltip text',
+              tooltip: this.nextHealthFactorTooltip,
               value: this.nextHealthFactor,
               class:
-                this.currentHealthFactor >= this.nextHealthFactor
+                +this.currentHealthFactor > +this.nextHealthFactor
                   ? 'redPrimary--text'
                   : 'greenPrimary--text',
               indicator:
-                this.currentHealthFactor == this.nextHealthFactor
+                +this.currentHealthFactor == +this.nextHealthFactor
                   ? ''
-                  : this.currentHealthFactor < this.nextHealthFactor
+                  : +this.currentHealthFactor < +this.nextHealthFactor
                   ? 'mdi-arrow-up-bold'
                   : 'mdi-arrow-down-bold'
             }
@@ -250,25 +257,22 @@ export default {
             details.push(
               {
                 title: 'Current Health Factor',
-                tooltip: 'Tooltip text',
+                tooltip: this.currentHealthFactorTooltip,
                 value: this.currentHealthFactor,
-                class:
-                  this.currentHealthFactor > this.nextHealthFactor
-                    ? 'greenPrimary--text'
-                    : 'redPrimary--text'
+                class: ''
               },
               {
                 title: 'Next Health Factor',
-                tooltip: 'Tooltip text',
+                tooltip: this.nextHealthFactorTooltip,
                 value: this.nextHealthFactor,
                 class:
-                  this.currentHealthFactor >= this.nextHealthFactor
+                  +this.currentHealthFactor >= +this.nextHealthFactor
                     ? 'redPrimary--text'
                     : 'greenPrimary--text',
                 indicator:
-                  this.currentHealthFactor == this.nextHealthFactor
+                  +this.currentHealthFactor == +this.nextHealthFactor
                     ? ''
-                    : this.currentHealthFactor < this.nextHealthFactor
+                    : +this.currentHealthFactor < +this.nextHealthFactor
                     ? 'mdi-arrow-up-bold'
                     : 'mdi-arrow-down-bold'
               }
