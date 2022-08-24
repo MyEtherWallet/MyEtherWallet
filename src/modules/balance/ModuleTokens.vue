@@ -79,7 +79,6 @@
   </div>
 </template>
 <script>
-import MewTable from '@/components/MewTable/MewTable';
 import { mapGetters, mapState } from 'vuex';
 import BalanceEmptyBlock from './components/BalanceEmptyBlock';
 import TokenAddCustom from './components/TokenAddCustom';
@@ -89,7 +88,6 @@ import { uniqWith, isEqual } from 'lodash';
 import { currencyToNumber } from '@/core/helpers/localization';
 export default {
   components: {
-    MewTable,
     BalanceEmptyBlock,
     TokenDeleteCustom,
     TokenAddCustom
