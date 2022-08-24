@@ -47,7 +47,6 @@
 </template>
 
 <script>
-import MewMenu from '@/components/MewMenu/MewMenu';
 import mewTools from '@/components/mew-tools/MewTools';
 import TheDefaultMobileNavigation from './TheDefaultMobileNavigation';
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
@@ -56,7 +55,7 @@ import buyMore from '@/core/mixins/buyMore.mixin.js';
 
 export default {
   name: 'TheDefaultHeader',
-  components: { MewMenu, mewTools, TheDefaultMobileNavigation },
+  components: { mewTools, TheDefaultMobileNavigation },
   mixins: [buyMore],
   data: () => ({
     menuObj: {
