@@ -90,7 +90,7 @@
             x-small
             color="rgba(11, 40, 64, 0.5)"
             class="pa-3 mb-7"
-            @click="() => handleRemove(filteredCustomPath)"
+            @click="handleRemove(filteredCustomPath)"
           >
             <v-icon>mdi-close</v-icon>
           </v-btn>
