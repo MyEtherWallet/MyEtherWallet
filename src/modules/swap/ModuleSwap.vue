@@ -979,11 +979,11 @@ export default {
         }
         const foundToken = this.contractToToken(token.contract);
         if (foundToken) {
-          const name = foundToken.name;
+          const name = foundToken.name || foundToken.subtext;
           foundToken.contract = token.contract;
           foundToken.price = this.getFiatValue(foundToken.pricef);
           foundToken.isEth = token.isEth;
-          foundToken.name = token.symbol;
+          foundToken.name = token.symbol || foundToken.symbol;
           foundToken.value = foundToken.contract;
           foundToken.subtext = name;
           localContractToToken[token.contract] = foundToken;
@@ -993,7 +993,7 @@ export default {
         token.price = '';
         token.subtext = name;
         token.value = token.contract;
-        token.name = token.symbol;
+        token.name = token.symbol || token.subtext;
         localContractToToken[token.contract] = token;
       });
     },
