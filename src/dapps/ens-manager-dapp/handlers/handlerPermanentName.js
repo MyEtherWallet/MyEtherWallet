@@ -98,7 +98,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
   }
 
   getActualDuration(duration) {
-    const SECONDS_YEAR = 60 * 60 * 24 * 365.25;
+    const SECONDS_YEAR = 60 * 60 * 24 * 365.2425;
     return Math.ceil(SECONDS_YEAR * duration);
   }
 
@@ -211,9 +211,13 @@ export default class PermanentNameModule extends ENSManagerInterface {
           .on('transactionHash', hash =>
             promiEvent.emit('transactionHash', hash)
           )
-          .once('receipt', receipt => promiEvent.emit('receipt', receipt))
+          .once('receipt', receipt => {
+            promiEvent.emit('receipt', receipt);
+          })
           .on('error', err => promiEvent.emit('error', err))
-          .then(receipt => promiEvent.emit('receipt', receipt))
+          .then(receipt => {
+            promiEvent.emit('receipt', receipt);
+          })
           .catch(err => promiEvent.emit('error', err));
       });
     return promiEvent;
