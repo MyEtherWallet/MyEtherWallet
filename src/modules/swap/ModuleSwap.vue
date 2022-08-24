@@ -288,7 +288,6 @@
 </template>
 
 <script>
-import MewSelect from '@/components/MewSelect/MewSelect';
 import { toBN, fromWei, toWei, isAddress } from 'web3-utils';
 import { isEmpty, clone, isUndefined, isObject } from 'lodash';
 import { mapGetters, mapState, mapActions } from 'vuex';
@@ -318,7 +317,6 @@ const localContractToToken = {};
 export default {
   name: 'ModuleSwap',
   components: {
-    MewSelect,
     AppButtonBalance,
     AppUserMsgBlock,
     ModuleAddressBook,
