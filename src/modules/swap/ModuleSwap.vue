@@ -628,7 +628,7 @@ export default {
      */
     actualFromTokens() {
       if (this.isLoading) return [];
-      const validFromTokens = this.fromTokens.filter(
+      let validFromTokens = this.fromTokens.filter(
         item =>
           item.contract.toLowerCase() !==
           this.toTokenType?.contract?.toLowerCase()
@@ -639,6 +639,13 @@ export default {
             return item;
         }
       });
+      for (const token of tradebleWalletTokens) {
+        validFromTokens = validFromTokens.filter(item => {
+          if (token?.contract?.toLowerCase() !== item.contract.toLowerCase()) {
+            return item;
+          }
+        });
+      }
       const nonChainTokens = this.fromTokens.reduce((arr, item) => {
         if (
           item.hasOwnProperty('isEth') &&
