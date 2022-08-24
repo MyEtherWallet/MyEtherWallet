@@ -120,6 +120,7 @@ export default {
     },
     defaultCurrency() {
       if (isEmpty(this.selectedCurrency) && this.supportedBuy) {
+        if (this.inWallet) return this.tokensList[0];
         const token = this.contractToToken(MAIN_TOKEN_ADDRESS);
         token.value = token.symbol;
         return token;
@@ -175,11 +176,13 @@ export default {
     network() {
       this.selectedCurrency = {};
       this.selectedCurrency = this.defaultCurrency;
+      this.setTokens();
     }
   },
   methods: {
     ...mapActions('wallet', ['setWeb3Instance']),
     ...mapActions('global', ['setNetwork']),
+    ...mapActions('external', ['setNetworkTokens']),
     onTab(val) {
       this.selectedCurrency = this.defaultCurrency;
       if (val === 1 || (val === 0 && (!this.supportedBuy || !this.inWallet))) {
@@ -192,7 +195,7 @@ export default {
             (this.instance &&
               this.instance.identifier !== WALLET_TYPES.WEB3_WALLET)
           ) {
-            this.setNetwork(defaultNetwork).then(() => {
+            this.setNetwork({ network: defaultNetwork }).then(() => {
               this.setWeb3Instance();
               this.activeTab = val;
               Toast(`Switched network to: ETH`, {}, SUCCESS);
@@ -201,6 +204,15 @@ export default {
         }
       } else {
         this.activeTab = val;
+      }
+    },
+    setTokens() {
+      if (!this.inWallet) {
+        const tokenMap = new Map();
+        this.network.type.tokens.forEach(token => {
+          tokenMap.set(token.address.toLowerCase(), token);
+        });
+        this.setNetworkTokens(tokenMap);
       }
     },
     close() {

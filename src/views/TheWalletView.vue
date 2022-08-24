@@ -26,9 +26,10 @@ import ModuleConfirmation from '@/modules/confirmation/ModuleConfirmation';
 import handlerWallet from '@/core/mixins/handlerWallet.mixin';
 import nodeList from '@/utils/networks';
 import { ERROR, Toast, WARNING } from '@/modules/toast/handler/handlerToast';
-import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { Web3Wallet } from '@/modules/access-wallet/common';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import matchNetwork from '@/core/helpers/matchNetwork';
 import EnkryptPromoSnackbar from '@/views/components-wallet/EnkryptPromoSnackbar';
 import TheEnkryptPopup from '@/views/components-default/TheEnkryptPopup.vue';
 import moment from 'moment';
@@ -41,9 +42,15 @@ export default {
     EnkryptPromoSnackbar,
     TheEnkryptPopup
   },
-  mixins: [handlerWallet],
+  mixins: [handlerWallet, handlerAnalytics],
   computed: {
-    ...mapState('wallet', ['address', 'web3', 'identifier', 'isOfflineApp']),
+    ...mapState('wallet', [
+      'address',
+      'web3',
+      'identifier',
+      'isOfflineApp',
+      'instance'
+    ]),
     ...mapState('global', ['online', 'gasPriceType', 'baseGasPrice']),
     ...mapState('external', ['coinGeckoTokens']),
     ...mapState('popups', [
@@ -60,7 +67,7 @@ export default {
     walletEnkryptPopup() {
       return (
         !this.enkryptLandingPopup &&
-        moment(this.enkryptLandingPopupClosed).diff(new Date(), 'hours') >=
+        moment(new Date()).diff(this.enkryptLandingPopupClosed, 'hours') >=
           24 &&
         this.enkryptWalletPopup
       );
@@ -85,22 +92,17 @@ export default {
   mounted() {
     if (this.online && !this.isOfflineApp) {
       this.setup();
-      if (this.identifier === WALLET_TYPES.WEB3_WALLET) {
-        const web3Instance = new Web3(window.ethereum);
-        web3Instance.eth.net.getId().then(id => {
-          this.findAndSetNetwork(id);
-        });
-        this.web3Listeners();
-      }
+      this.findAndSetNetwork();
+      this.web3Listeners();
+      this.checkNetwork();
     }
   },
   beforeDestroy() {
     if (window.ethereum) {
-      window.ethereum.removeListener(
-        'chainChanged',
-        this.setWeb3WalletInstance
-      );
-      window.ethereum.removeListener('accountsChanged', this.setWeb3Account);
+      if (this.findAndSetNetwork instanceof Function)
+        window.ethereum.removeListener('chainChanged', this.findAndSetNetwork);
+      if (this.setWeb3Account instanceof Function)
+        window.ethereum.removeListener('accountsChanged', this.setWeb3Account);
     }
   },
   destroyed() {
@@ -116,17 +118,21 @@ export default {
     ...mapActions('global', [
       'setNetwork',
       'setBaseFeePerGas',
-      'updateGasPrice'
+      'updateGasPrice',
+      'setValidNetwork'
     ]),
-    ...mapActions('external', [
-      'setCoinGeckoTokens',
-      'setTokenAndEthBalance',
-      'setNetworkTokens'
-    ]),
+    ...mapActions('external', ['setTokenAndEthBalance', 'setNetworkTokens']),
     setup() {
       this.processNetworkTokens();
       this.setTokensAndBalance();
       this.subscribeToBlockNumber();
+    },
+    async checkNetwork() {
+      const matched = await matchNetwork(
+        this.network.type.chainID,
+        this.identifier
+      );
+      if (!matched) this.setValidNetwork(matched);
     },
     processNetworkTokens() {
       const tokenMap = new Map();
@@ -179,45 +185,53 @@ export default {
     },
     /**
      * Checks Metamask chainID on load, switches current network if it doesn't match
-     * and setup listenerss for metamask changes
+     * and setup listeners for metamask changes
      */
     web3Listeners() {
-      if (window.ethereum.on) {
-        window.ethereum.on('chainChanged', this.setWeb3WalletInstance);
-
+      if (window.ethereum?.on) {
+        window.ethereum.on('chainChanged', this.findAndSetNetwork);
         window.ethereum.on('accountsChanged', this.setWeb3Account);
-      } else {
-        Toast(
-          'Something is wrong with Metamask. (window.ethereum.on is not a function).  Please refresh the page and reload Metamask.',
-          {},
-          ERROR
-        );
       }
     },
-    findAndSetNetwork(web3ChainId) {
-      const foundNetwork = Object.values(nodeList).find(item => {
-        if (toBN(web3ChainId).toNumber() === item[0].type.chainID) return item;
-      });
-
-      if (foundNetwork) {
-        this.setNetwork(foundNetwork[0]).then(() => {
-          this.setWeb3Instance(new Web3(window.ethereum));
+    async findAndSetNetwork() {
+      if (window.ethereum) {
+        const networkId = await window.ethereum?.request({
+          method: 'net_version'
         });
-      } else {
-        Toast(
-          "Can't find matching nodes for selected MetaMask node! MetaMask may not function properly. Please select a supported node",
-          {},
-          WARNING
-        );
+        const foundNetwork = Object.values(nodeList).find(item => {
+          if (toBN(networkId).toNumber() === item[0].type.chainID) return item;
+        });
+        if (window.ethereum.isMetaMask) {
+          try {
+            if (foundNetwork) {
+              await this.setNetwork({
+                network: foundNetwork[0],
+                walletType: this.instance.identifier
+              });
+              this.setValidNetwork(true);
+              await this.setTokenAndEthBalance();
+              this.trackNetworkSwitch(foundNetwork[0].type.name);
+              this.$emit('newNetwork');
+            } else {
+              this.setValidNetwork(false);
+              Toast("Current wallet's network is unsupported", {}, ERROR);
+            }
+          } catch (er) {
+            Toast('There was an error switching networks', {}, ERROR);
+          }
+        } else {
+          Toast(
+            "Can't find matching nodes for selected MetaMask node! MetaMask may not function properly. Please select a supported node",
+            {},
+            WARNING
+          );
+        }
       }
     },
     setWeb3Account(acc) {
       const web3 = new Web3(window.ethereum);
       const wallet = new Web3Wallet(acc[0]);
       this.setWallet([wallet, web3.currentProvider]);
-    },
-    setWeb3WalletInstance(chainId) {
-      this.findAndSetNetwork(chainId);
     }
   }
 };

@@ -1,3 +1,53 @@
+### Release v6.6.4
+
+### devop
+
+* devop metamask network [#3854](https://github.com/MyEtherWallet/MyEtherWallet/pull/3854)
+* swap token prices not showing [#4096](https://github.com/MyEtherWallet/MyEtherWallet/pull/4096)
+* Consistent address book identicons [#4102](https://github.com/MyEtherWallet/MyEtherWallet/pull/4102)
+
+### fix
+
+* fix Renew Domain Wording on ENS [#4003](https://github.com/MyEtherWallet/MyEtherWallet/pull/4003)
+* Fix swap 404 & 500 errors [#4012](https://github.com/MyEtherWallet/MyEtherWallet/pull/4012)
+* add padding to total value text [#4053](https://github.com/MyEtherWallet/MyEtherWallet/pull/4053)
+* Fix max token balance autofill on send page [#4055](https://github.com/MyEtherWallet/MyEtherWallet/pull/4055)
+* Fix buy page daily limit tooltip [#4058](https://github.com/MyEtherWallet/MyEtherWallet/pull/4058)
+* Fix error message for invalid mnemonic [#4059](https://github.com/MyEtherWallet/MyEtherWallet/pull/4059)
+* Fix fiat values for sell popup on landing page [#4063](https://github.com/MyEtherWallet/MyEtherWallet/pull/4063)
+* Fix swap loading forever when token value changed during rates check [#4064](https://github.com/MyEtherWallet/MyEtherWallet/pull/4064)
+* Fix MetaMask login error message [#4068](https://github.com/MyEtherWallet/MyEtherWallet/pull/4068)
+* Fix Ledger access wallet back button [#4070](https://github.com/MyEtherWallet/MyEtherWallet/pull/4070)
+* fix mew-tooltip content word wrap issue [#4081](https://github.com/MyEtherWallet/MyEtherWallet/pull/4081)
+* fix view on etherscan network text [#4082](https://github.com/MyEtherWallet/MyEtherWallet/pull/4082)
+* Hide network fee if out of wallet [#4085](https://github.com/MyEtherWallet/MyEtherWallet/pull/4085)
+* fix buy more link [#4097](https://github.com/MyEtherWallet/MyEtherWallet/pull/4097)
+* Fix Create Wallet page software text capitalization [#4098](https://github.com/MyEtherWallet/MyEtherWallet/pull/4098)
+* fix team page background color [#4103](https://github.com/MyEtherWallet/MyEtherWallet/pull/4103)
+* remove periods from dapps menu [#4109](https://github.com/MyEtherWallet/MyEtherWallet/pull/4109)
+* remove bottom close button\* fix layout of top right close button
+  [#4110](https://github.com/MyEtherWallet/MyEtherWallet/pull/4110)
+* added check for network switch out of wallet [#4116](https://github.com/MyEtherWallet/MyEtherWallet/pull/4116)
+* fixed network switch bug not switching correctly [#4119](https://github.com/MyEtherWallet/MyEtherWallet/pull/4119)
+* fix wallet side menu error \[method "isOpenNetworkOverlay" is not defined] [#4121](https://github.com/MyEtherWallet/MyEtherWallet/pull/4121)
+
+### Release v6.6.3-hotfix.3
+
+### devop
+
+* swap token prices not showing [#4096](https://github.com/MyEtherWallet/MyEtherWallet/pull/4096)
+
+### fix
+
+* added checks for missing properties [#4091](https://github.com/MyEtherWallet/MyEtherWallet/pull/4091)
+
+### Release v6.6.3-hotfix.2
+
+### fix
+
+* show matching tokens in Send and Dashboard [#4034](https://github.com/MyEtherWallet/MyEtherWallet/pull/4034)
+* fix popups, usdt out of gas [#4086](https://github.com/MyEtherWallet/MyEtherWallet/pull/4086)
+
 ### Release v6.6.3-hotfix.1
 
 ### devop

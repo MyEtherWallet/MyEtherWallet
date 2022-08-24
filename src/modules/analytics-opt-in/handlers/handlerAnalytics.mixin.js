@@ -16,8 +16,8 @@ export default {
       'enkryptLandingPopupClosed'
     ]),
     shouldDisplayTrackingPopup() {
-      const dayAgo = moment(this.enkryptLandingPopupClosed).diff(
-        new Date(),
+      const dayAgo = moment(new Date()).diff(
+        this.enkryptLandingPopupClosed,
         'hours'
       );
       if (!this.enkryptLandingPopup && dayAgo >= 24) {

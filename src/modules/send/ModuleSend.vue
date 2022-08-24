@@ -345,7 +345,7 @@ export default {
         item.tokenBalance = item.balancef;
         item.price = this.getFiatValue(item.pricef);
         item.subtext = item.name;
-        item.value = item.name;
+        item.value = item.contract;
         item.name = item.symbol;
         return item.img;
       });
@@ -582,11 +582,15 @@ export default {
       this.debounceAmountError('0');
     },
     txFeeETH(newVal) {
-      if (this.selectedMax) {
-        const total = BigNumber(newVal).plus(this.amount);
-        if (total.gt(this.balanceInETH)) {
-          this.setEntireBal();
-        }
+      const total = BigNumber(newVal).plus(this.amount);
+      const amt = toBase(this.amount, this.selectedCurrency.decimals);
+      if (
+        (this.selectedCurrency.contract === MAIN_TOKEN_ADDRESS &&
+          total.gt(this.balanceInETH)) ||
+        (this.selectedCurrency.contract !== MAIN_TOKEN_ADDRESS &&
+          this.selectedCurrency.balance.lt(amt))
+      ) {
+        this.setEntireBal();
       }
     }
   },

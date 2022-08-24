@@ -9,6 +9,26 @@
       color="#07385F"
     >
       <template #prepend>
+        <mew-overlay
+          :footer="{
+            text: 'Need help?',
+            linkTitle: 'Contact support',
+            link: 'mailto:support@myetherwallet.com'
+          }"
+          :show-overlay="isOpenNetworkOverlay || !validNetwork"
+          :title="
+            validNetwork
+              ? 'Select Network'
+              : 'Current network is not supported. Select a network below.'
+          "
+          content-size="large"
+          :close="validNetwork ? closeNetworkOverlay : null"
+        >
+          <network-switch
+            :filter-types="filterNetworks"
+            :is-swap-page="isSwapPage"
+          />
+        </mew-overlay>
         <div class="pa-5 pb-3">
           <div class="mt-2 mb-4 d-flex align-center justify-space-between">
             <!-- ================================================================================== -->
@@ -255,6 +275,7 @@
 <script>
 import AppBtnMenu from '@/core/components/AppBtnMenu';
 import ModuleNotifications from '@/modules/notifications/ModuleNotifications';
+import NetworkSwitch from '@/modules/network/components/NetworkSwitch.vue';
 import send from '@/assets/images/icons/icon-send-enable.svg';
 import dashboard from '@/assets/images/icons/icon-dashboard-enable.svg';
 import nft from '@/assets/images/icons/icon-nft.svg';
@@ -278,11 +299,13 @@ export default {
     AppBtnMenu,
     BalanceCard,
     ModuleSettings,
-    ModuleNotifications
+    ModuleNotifications,
+    NetworkSwitch
   },
   mixins: [handlerAnalytics],
   data() {
     return {
+      isOpenNetworkOverlay: false,
       navOpen: null,
       version: VERSION,
       onSettings: false,
@@ -297,7 +320,24 @@ export default {
   computed: {
     ...mapGetters('global', ['network', 'isEthNetwork', 'hasSwap']),
     ...mapState('wallet', ['instance', 'isOfflineApp']),
-    ...mapState('global', ['online']),
+    ...mapState('global', ['online', 'validNetwork']),
+    /**
+     * IMPORTANT TO DO:
+     * @returns {boolean}
+     */
+    filterNetworks() {
+      if (this.isHardware) {
+        return [];
+      }
+      return [];
+    },
+    /**
+     * Property returns whether or not you are on the swap page
+     * @returns {boolean}
+     */
+    isSwapPage() {
+      return this.$route.name === 'Swap';
+    },
     sectionOne() {
       if (this.online) {
         const hasNew = Object.values(dappsMeta).filter(item => {
@@ -412,9 +452,18 @@ export default {
     EventBus.$on('openSettings', () => {
       this.openSettings();
     });
+    EventBus.$on('openNetwork', () => {
+      this.openNetwork();
+    });
   },
   methods: {
     ...mapActions('wallet', ['removeWallet']),
+    closeNetworkOverlay() {
+      if (this.validNetwork) {
+        this.$router.go(-1);
+        this.isOpenNetworkOverlay = false;
+      }
+    },
     shouldShow(route) {
       if (this.routeNetworks[route.name]) {
         for (const net of this.routeNetworks[route.name]) {
@@ -423,6 +472,9 @@ export default {
         return false;
       }
       return true;
+    },
+    openNetwork() {
+      this.isOpenNetworkOverlay = true;
     },
     openMoonpay() {
       EventBus.$emit(MOONPAY_EVENT);
