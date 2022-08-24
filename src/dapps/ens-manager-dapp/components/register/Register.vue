@@ -48,7 +48,7 @@
         class="d-flex justify-space-between"
       >
         <span class="font-weight-medium">
-          Generating registration cost, please wait...
+          Generating registration cost. Please wait...
         </span>
       </div>
 

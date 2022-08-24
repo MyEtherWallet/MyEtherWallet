@@ -796,11 +796,7 @@ export default {
       this.nameHandler
         .register(duration, this.balanceToWei)
         .on('transactionHash', () => {
-          Toast(
-            `Registering ENS name: ${this.name} please wait...`,
-            {},
-            SUCCESS
-          );
+          Toast(`Registering ENS name: ${this.name}`, {}, SUCCESS);
           this.loadingReg = true;
         })
         .once('receipt', () => {
@@ -863,8 +859,7 @@ export default {
         this.noFundsForRegFees = true;
       } else {
         this.regFee = registerFeesOnly;
-        const feesAdded =
-          BigNumber(this.regFee) + BigNumber(this.commitFeeInEth);
+        const feesAdded = BigNumber(this.regFee).plus(this.commitFeeInEth);
         this.totalCost = feesAdded.toString();
         this.totalCostUsd = new BigNumber(this.totalCost)
           .times(this.fiatValue)
