@@ -412,8 +412,10 @@ export default {
         if (
           newVal.contract.toLowerCase() === MAIN_TOKEN_ADDRESS &&
           !supportedCoins[newVal.symbol]
-        )
+        ) {
           this.selectedCurrency = oldVal;
+          return;
+        }
 
         if (!isEqual(newVal, oldVal)) {
           this.fetchCurrencyData();
