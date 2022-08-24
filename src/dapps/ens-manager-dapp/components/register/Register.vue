@@ -60,7 +60,7 @@
       >
         <span>Registration Cost:</span>
         <span class="font-weight-medium">
-          {{ totalCost }} ETH (${{ totalCostUsd }})
+          {{ totalCost }} ETH ({{ totalCostUsd }})
         </span>
       </div>
 

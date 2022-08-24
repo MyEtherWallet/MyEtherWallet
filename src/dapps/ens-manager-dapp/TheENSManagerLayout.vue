@@ -859,11 +859,12 @@ export default {
         this.noFundsForRegFees = true;
       } else {
         this.regFee = registerFeesOnly;
-        const feesAdded = BigNumber(this.regFee).plus(this.commitFeeInEth);
+        const feesAdded = new BigNumber(this.regFee).plus(this.commitFeeInEth);
         this.totalCost = feesAdded.toString();
-        this.totalCostUsd = new BigNumber(this.totalCost)
-          .times(this.fiatValue)
-          .toFixed(2);
+        this.totalCostUsd = this.getFiatValue(
+          new BigNumber(this.totalCost).times(this.fiatValue).toFixed(2)
+        );
+        console.log(2, this.totalCostUsd);
         if (this.totalCost >= this.balance) {
           this.noFundsForRegFees = true;
         } else {
