@@ -33,6 +33,7 @@ import matchNetwork from '@/core/helpers/matchNetwork';
 import EnkryptPromoSnackbar from '@/views/components-wallet/EnkryptPromoSnackbar';
 import TheEnkryptPopup from '@/views/components-default/TheEnkryptPopup.vue';
 import moment from 'moment';
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 export default {
   components: {
     TheWalletSideMenu,
@@ -194,7 +195,10 @@ export default {
       }
     },
     async findAndSetNetwork() {
-      if (window.ethereum) {
+      if (
+        window.ethereum &&
+        this.instance.identifier === WALLET_TYPES.WEB3_WALLET
+      ) {
         const networkId = await window.ethereum?.request({
           method: 'net_version'
         });
