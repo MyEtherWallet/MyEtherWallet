@@ -864,7 +864,6 @@ export default {
         this.totalCostUsd = this.getFiatValue(
           new BigNumber(this.totalCost).times(this.fiatValue).toFixed(2)
         );
-        console.log(2, this.totalCostUsd);
         if (this.totalCost >= this.balance) {
           this.noFundsForRegFees = true;
         } else {
