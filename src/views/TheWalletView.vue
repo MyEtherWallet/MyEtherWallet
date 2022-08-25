@@ -81,6 +81,7 @@ export default {
     },
     network() {
       this.web3.eth.clearSubscriptions();
+      if (this.online && !this.isOfflineApp) this.setup();
     },
     web3() {
       this.setup();
