@@ -807,8 +807,9 @@ export default {
           Toast(`Registration successful!`, {}, SUCCESS);
         })
         .on('error', err => {
+          this.loadingReg = false;
           this.instance.errorHandler(err);
-        });
+        })
     },
     commit() {
       let waitingTime;

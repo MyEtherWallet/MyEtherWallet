@@ -117,13 +117,13 @@ export default class PermanentNameModule extends ENSManagerInterface {
     try {
       const gasPrice = this.gasPriceByType()(this.gasPriceType());
       const rentPrice = await this.getRentPrice(duration);
-      const withFivePercent = BigNumber(rentPrice)
-        .times(1.05)
+      const withTenPercent = BigNumber(rentPrice)
+        .times(1.1)
         .integerValue()
         .toFixed();
       const txObj = {
         from: this.address,
-        value: withFivePercent
+        value: withTenPercent
       };
       const extraFee = await this.registrarControllerContract.methods
         .renew(this.parsedHostName, this.getActualDuration(duration))
@@ -370,13 +370,13 @@ export default class PermanentNameModule extends ENSManagerInterface {
       const rentPrice = await this.getRentPrice(duration);
       const hasBalance = new BigNumber(balance).gte(rentPrice);
       if (hasBalance) {
-        const rentPriceWithFivePercent = new BigNumber(rentPrice)
-          .times(1.05)
+        const rentPriceWithTenPercent = new BigNumber(rentPrice)
+          .times(1.1)
           .integerValue()
           .toFixed();
         const txObj = {
           from: this.address,
-          value: rentPriceWithFivePercent
+          value: rentPriceWithTenPercent
         };
         const gasAmt = await this.registrarControllerContract.methods
           .registerWithConfig(
@@ -392,7 +392,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
           return false;
         }
         return fromWei(
-          toBN(gasAmt).mul(toBN(gasPrice)).add(toBN(rentPriceWithFivePercent))
+          toBN(gasAmt).mul(toBN(gasPrice)).add(toBN(rentPriceWithTenPercent))
         );
       }
     } catch (e) {
