@@ -201,7 +201,7 @@ import {
 } from '@/core/helpers/numberFormatHelper';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
-import { toBase } from '@/core/helpers/unit';
+import { fromBase, toBase } from '@/core/helpers/unit';
 export default {
   components: {
     ModuleAddressBook,
@@ -456,6 +456,11 @@ export default {
     txFeeETH() {
       return fromWei(this.txFee);
     },
+    currencyDecimals() {
+      return this.selectedCurrency?.decimals
+        ? this.selectedCurrency.decimals
+        : 18;
+    },
     totalCost() {
       if (
         !SendTransaction.helpers.hasValidDecimals(
@@ -464,10 +469,7 @@ export default {
         )
       )
         return '0';
-      const decimals = this.selectedCurrency?.decimals
-        ? this.selectedCurrency.decimals
-        : 18;
-      const amountToWei = toBase(this.amount, decimals);
+      const amountToWei = toBase(this.amount, this.currencyDecimals);
       return this.isFromNetworkCurrency
         ? BigNumber(this.txFee).plus(amountToWei).toString()
         : this.txFee;
@@ -487,10 +489,7 @@ export default {
       return this.isValidAmount && this.isValidGasLimit;
     },
     getCalculatedAmount() {
-      const amount = new BigNumber(this.amount ? this.amount : 0)
-        .times(new BigNumber(10).pow(this.selectedCurrency.decimals))
-        .toFixed(0);
-      return toBNSafe(amount);
+      return toBase(this.amount ? this.amount : 0, this.currencyDecimals);
     },
     allValidInputs() {
       if (this.sendTx && this.sendTx.currency) {
@@ -516,6 +515,14 @@ export default {
         return !this.sendTx.hasEnoughBalance();
       }
       return true;
+    },
+    isValidForGas() {
+      return (
+        this.sendTx &&
+        this.sendTx.currency &&
+        this.isValidAmount &&
+        this.isValidAddress
+      );
     }
   },
   watch: {
@@ -555,7 +562,8 @@ export default {
       handler: function (newVal) {
         if (this.sendTx) {
           this.sendTx.setCurrency(newVal);
-          this.setAmountError(this.amount);
+          if (this.isValidForGas) this.debounceEstimateGas();
+          this.debounceAmountError(this.amount);
           this.gasLimit = this.defaultGasLimit;
         }
         this.data = '0x';
@@ -583,7 +591,7 @@ export default {
     },
     txFeeETH(newVal) {
       const total = BigNumber(newVal).plus(this.amount);
-      const amt = toBase(this.amount, this.selectedCurrency.decimals);
+      const amt = toBase(this.amount, this.currencyDecimals);
       if (
         (this.selectedCurrency.contract === MAIN_TOKEN_ADDRESS &&
           total.gt(this.balanceInETH)) ||
@@ -609,7 +617,7 @@ export default {
       this.setAmountError(value);
     }, 1000);
     this.debounceEstimateGas = debounce(() => {
-      if (this.allValidInputs) {
+      if (this.isValidForGas) {
         this.estimateAndSetGas();
       }
     }, 500);
@@ -674,7 +682,7 @@ export default {
           )
         ) {
           this.amountError = 'Invalid decimal points';
-        } else if (value && this.sendTx && this.sendTx.currency) {
+        } else if (this.sendTx && this.sendTx.currency) {
           this.amountError = this.sendTx.hasEnoughBalance()
             ? ''
             : 'Not enough balance to send!';
@@ -764,9 +772,7 @@ export default {
     },
     convertToDisplay(amount, decimals) {
       const amt = toBNSafe(amount).toString();
-      return decimals
-        ? BigNumber(amt).div(BigNumber(10).pow(decimals)).toString()
-        : amt;
+      return decimals ? fromBase(amt, decimals).toString() : amt;
     },
     setEntireBal() {
       if (
