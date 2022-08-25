@@ -143,13 +143,13 @@ export default class PermanentNameModule extends ENSManagerInterface {
     if (!hasBalance) {
       throw new Error('Not enough balance');
     }
-    const withFivePercent = BigNumber(rentPrice)
-      .times(1.05)
+    const withTenPercent = BigNumber(rentPrice)
+      .times(1.1)
       .integerValue()
       .toFixed();
     return this.registrarControllerContract.methods
       .renew(this.parsedHostName, this.getActualDuration(duration))
-      .send({ from: this.address, value: withFivePercent });
+      .send({ from: this.address, value: withTenPercent });
   }
 
   uploadFile(file) {
@@ -330,13 +330,13 @@ export default class PermanentNameModule extends ENSManagerInterface {
         promiEvent.emit('error', new Error('Not enough balance'));
         return;
       }
-      const withFivePercent = BigNumber(rentPrice)
-        .times(1.05)
+      const withTenPercent = BigNumber(rentPrice)
+        .times(1.1)
         .integerValue()
         .toFixed();
       const txObj = {
         from: this.address,
-        value: withFivePercent
+        value: withTenPercent
       };
       const registerWithConfig =
         this.registrarControllerContract.methods.registerWithConfig(
