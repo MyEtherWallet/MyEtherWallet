@@ -310,7 +310,7 @@ export default {
       signing: false,
       links: {
         ethvm: '',
-        etherscan: ''
+        explorer: ''
       },
       error: '',
       panel: [],
@@ -636,8 +636,8 @@ export default {
       this.toDetails = {};
       this.signing = false;
       this.links = {
-        etherscan: '',
-        ethvm: ''
+        ethvm: '',
+        explorer: ''
       };
       this.error = '';
     },
@@ -719,7 +719,7 @@ export default {
               lastHash
             )
           : '';
-        this.links.etherscan = this.network.type.blockExplorerTX.replace(
+        this.links.explorer = this.network.type.blockExplorerTX.replace(
           '[[txHash]]',
           lastHash
         );
@@ -733,7 +733,7 @@ export default {
             param
           )
         : '';
-      this.links.etherscan = this.network.type.blockExplorerTX.replace(
+      this.links.explorer = this.network.type.blockExplorerTX.replace(
         '[[txHash]]',
         param
       );

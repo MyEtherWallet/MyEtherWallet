@@ -142,7 +142,7 @@ export default {
   computed: {
     ...mapGetters('global', ['network']),
     ...mapState('global', ['validNetwork']),
-    ...mapState('wallet', ['identifier']),
+    ...mapState('wallet', ['identifier', 'instance']),
     /**
      * Property returns sorted network names alphabetically in this order: ETH, main and then test networks
      * @returns {string[]}
@@ -283,8 +283,6 @@ export default {
     ...mapActions('wallet', ['setWeb3Instance']),
     ...mapActions('global', ['setNetwork']),
     ...mapActions('external', ['setTokenAndEthBalance']),
-    ...mapState('wallet', ['instance']),
-    ...mapState('global', ['validNetwork']),
     /**
      * Method checks whether symbol or name has searchInput substring
      * @returns {boolean}
@@ -315,7 +313,7 @@ export default {
       try {
         this.setNetwork({
           network: found[0],
-          walletType: this.instance().identifier
+          walletType: this.instance?.identifier || ''
         }).then(() => {
           if (this.isWallet) {
             this.networkSelected = this.validNetwork

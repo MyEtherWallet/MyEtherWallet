@@ -2,7 +2,8 @@
   <div>
     <mew-address-select
       ref="addressSelect"
-      :resolved-addr="resolvedAddr"
+      :resolved-addr="addressOnly"
+      :hint="nameOnly"
       :copy-tooltip="$t('common.copy')"
       :save-tooltip="$t('common.save')"
       :enable-save-address="enableSave"
@@ -38,12 +39,12 @@
 </template>
 
 <script>
-import { isAddress } from '@/core/helpers/addressUtils';
+import { isAddress, toChecksumAddress } from '@/core/helpers/addressUtils';
 import { mapGetters, mapState } from 'vuex';
 import NameResolver from '@/modules/name-resolver/index';
+import { getAddressInfo } from '@kleros/address-tags-sdk';
 import AddressBookAddEdit from './components/AddressBookAddEdit';
 import { isObject, throttle } from 'lodash';
-import { toChecksumAddress } from '@/core/helpers/addressUtils';
 import WAValidator from 'multicoin-address-validator';
 
 const USER_INPUT_TYPES = {
@@ -96,7 +97,7 @@ export default {
   computed: {
     ...mapState('addressBook', ['addressBookStore']),
     ...mapGetters('global', ['network']),
-    ...mapState('wallet', ['web3', 'address']),
+    ...mapState('wallet', ['web3', 'address', 'isOfflineApp']),
     errorMessages() {
       if (!this.isValidAddress && this.loadedAddressValidation) {
         return this.$t('interface.address-book.validations.invalid-address');
@@ -139,6 +140,16 @@ export default {
     },
     addrLabel() {
       return this.label === '' ? this.$t('sendTx.to-addr') : this.label;
+    },
+    addressOnly() {
+      return isAddress(this.resolvedAddr) && this.isValidAddress
+        ? this.resolvedAddr
+        : '';
+    },
+    nameOnly() {
+      return !isAddress(this.resolvedAddr) && this.isValidAddress
+        ? this.resolvedAddr
+        : '';
     }
   },
   watch: {
@@ -197,10 +208,19 @@ export default {
             this.isValidAddress = isAddValid;
           }
           this.loadedAddressValidation = !this.isValidAddress ? false : true;
-          if (this.isValidAddress) {
+          if (this.isValidAddress && !this.isOfflineApp) {
             const reverseName = await this.nameResolver.resolveAddress(
               this.inputAddr
             );
+            if (!reverseName.name) {
+              reverseName.name =
+                (
+                  await getAddressInfo(
+                    toChecksumAddress(this.inputAddr),
+                    'https://ipfs.kleros.io'
+                  )
+                )?.publicNameTag || '';
+            }
             this.resolvedAddr = reverseName?.name ? reverseName.name : '';
           }
 
