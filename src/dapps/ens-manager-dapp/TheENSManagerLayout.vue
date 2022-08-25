@@ -809,7 +809,7 @@ export default {
         .on('error', err => {
           this.loadingReg = false;
           this.instance.errorHandler(err);
-        })
+        });
     },
     commit() {
       let waitingTime;
@@ -832,6 +832,10 @@ export default {
           }, waitingTime * 1000);
         })
         .on('error', err => {
+          this.loadingCommit = false;
+          this.committed = false;
+          this.waitingForReg = false;
+          this.notEnoughFunds = false;
           Toast(err, {}, ERROR);
         });
     },
