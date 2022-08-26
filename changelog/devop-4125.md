@@ -1,1 +1,3 @@
-* remove mew products button from mobile button since mobile button doesn't show whole menu content
+* remove mew products button from mobile button
+* apply new menu design
+* make menu scrollable
