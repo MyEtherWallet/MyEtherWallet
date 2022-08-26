@@ -691,7 +691,8 @@ export default {
     nextStep() {
       if (this.walletType) {
         this.step++;
-        if (this.walletType === 'ledger') this.selectedPath = this.paths[0];
+        if (this.walletType === WALLET_TYPES.LEDGER)
+          this.selectedPath = this.paths[0];
         if (this.step === this.walletInitialized) {
           if (this.onCoolWallet || this.onBitbox2) return;
           this[`${this.walletType}Unlock`]();
