@@ -5,7 +5,10 @@
       Provider Rate Row
     =====================================================================================
     -->
-    <v-item-group v-if="step >= 1 && toTokenSymbol && !hasProviderError">
+    <v-item-group
+      v-if="step >= 1 && toTokenSymbol && !hasProviderError"
+      :value="0"
+    >
       <v-row no-gutters>
         <div v-if="providersList.length > 0" class="mew-heading-3 mb-5 pl-4">
           Select rate
@@ -24,7 +27,7 @@
               ]"
               @click="
                 toggle();
-                setProvider(idx);
+                setProvider(idx, true);
               "
             >
               <v-row no-gutters class="align-center justify-start">
@@ -164,6 +167,10 @@ export default {
       default: () => {
         return { subtitle: '' };
       }
+    },
+    selectedProviderId: {
+      type: Number,
+      default: () => undefined
     }
   },
   data() {
@@ -255,17 +262,46 @@ export default {
 
           this.$nextTick(() => {
             if (bestRate !== -1) {
-              this.$refs[`card${bestRate}`][0].toggle();
-              this.setProvider(bestRate);
+              const rateCard = this.$refs[`card${bestRate}`];
+              if (!rateCard) return;
+              const card = rateCard[0];
+              if (!card?.isActive) {
+                card.toggle();
+              }
+              this.setProvider(bestRate, this.step === 1);
             }
           });
         }
       },
       immediate: true
+    },
+    selectedProviderId: {
+      handler: function (id) {
+        setTimeout(() => {
+          if (id !== undefined) {
+            const card = this.$refs[`card${id}`][0];
+            if (card?.hasOwnProperty('isActive') && !card?.isActive) {
+              card.toggle();
+            }
+          } else {
+            setTimeout(() => {
+              const refs = Object.keys(this.$refs);
+              const cards = refs.filter(c => c.includes('card'));
+              cards.forEach(c => {
+                const card = this.$refs[c][0];
+                if (card?.isActive) {
+                  card.toggle();
+                }
+              });
+            }, 500);
+          }
+        }, 100);
+      }
     }
   }
 };
 </script>
+
 <style lang="scss" scoped>
 .rate-active {
   border: 1px solid var(--v-greenPrimary-base) !important;

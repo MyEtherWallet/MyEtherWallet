@@ -37,190 +37,190 @@
       </v-sheet>
     </v-dialog>
 
-    <app-block-title
-      max-width="600px"
-      no-page-title
-      :data="title"
-      class="mb-7"
-    />
-
-    <mew-stepper
-      class="mx-n12 mx-sm-0"
-      :items="stepperItems"
-      :on-step="currentStep"
-    ></mew-stepper>
-
-    <h5
-      v-if="$vuetify.breakpoint.mdAndDown"
-      class="text-center font-weight-medium"
+    <mew-module
+      class="pt-6"
+      :title="title.title"
+      :has-elevation="true"
+      :has-indicator="true"
     >
-      {{ stepperItems[currentStep - 1].name }}
-    </h5>
+      <template #moduleBody>
+        <mew-stepper :items="stepperItems" :on-step="currentStep"></mew-stepper>
 
-    <div v-if="currentStep === 1">
-      <v-sheet color="transparent" max-width="600px" class="mx-auto py-10">
-        <network-switch />
-      </v-sheet>
-      <mew-button
-        btn-size="xlarge"
-        title="Next"
-        class="mx-auto display--block"
-        @click.native="currentStep = 2"
-      />
-    </div>
-
-    <div v-if="currentStep === 2">
-      <v-sheet color="transparent" max-width="600px" class="mx-auto py-10">
-        <mew-address-select
-          label="From Address"
-          copy-tooltip="Copy"
-          save-tooltip="Save Address"
-          :show-copy="detailLength"
-          :show-save="false"
-          :items="addresses"
-          :enable-save-address="false"
-          :is-valid-address="detailLength"
-          :address-value="fromAddress"
-          :error-messages="fromAddressMessage"
-          @input="setAddress"
-        />
-        <mew-expand-panel
-          v-if="detailLength"
-          is-toggle
-          has-dividers
-          :panel-items="exPanelStep2"
-          class="mt-4 mb-10 swap-expend"
+        <h5
+          v-if="$vuetify.breakpoint.mdAndDown"
+          class="text-center font-weight-medium"
         >
-          <template #panelBody1>
-            <div
-              v-for="(d, key) in details"
-              :key="key"
-              class="d-flex align-center justify-space-between mb-3 px-5"
-            >
-              <div v-if="d.title" class="pr-3">{{ d.title }}</div>
-              <div v-if="d.value" class="text-right">{{ d.value }}</div>
-              <mew-transform-hash v-if="d.address" :hash="d.address" />
-            </div>
-          </template>
-        </mew-expand-panel>
-        <div class="d-block d-lg-flex justify-center mt-2 text-center">
+          {{ stepperItems[currentStep - 1].name }}
+        </h5>
+
+        <div v-if="currentStep === 1">
+          <v-sheet color="transparent" max-width="600px" class="mx-auto py-10">
+            <network-switch />
+          </v-sheet>
           <mew-button
-            class="mx-1 mb-3"
-            title="Back"
             btn-size="xlarge"
-            btn-style="outline"
-            @click.native="handleBack"
-          />
-          <mew-button
-            class="mx-1 mb-3"
             title="Next"
-            btn-size="xlarge"
-            :disabled="!detailLength"
-            @click.native="currentStep = 3"
+            class="mx-auto display--block NextButton"
+            @click.native="currentStep = 2"
           />
         </div>
-        <mew-button
-          v-if="detailLength"
-          class="mt-2 display--block mx-auto"
-          title="Export JSON file"
-          btn-size="small"
-          btn-style="transparent"
-          :btn-link="fileLink"
-          :download="exportFileName"
-        />
-      </v-sheet>
-    </div>
 
-    <div v-if="currentStep === 3">
-      <v-sheet color="transparent" max-width="600px" class="mx-auto py-10">
-        <v-textarea
-          outlined
-          label="Signature"
-          class="mb-1"
-          :value="signature"
-          :error="signatureError"
-          :error-messages="signatureMessage"
-          @input="checkTx"
-        ></v-textarea>
-        <mew-alert
-          v-for="alert in sortedAlerts"
-          :key="alert.key"
-          class="mb-3"
-          hide-close-icon
-          :theme="alert.severity"
-          :title="alert.title"
-          :description="alert.message"
-        />
-        <mew-expand-panel
-          v-if="!signatureError && signature !== ''"
-          is-toggle
-          has-dividers
-          :panel-items="exPanelStep3"
-          class="mt-4 mb-10 swap-expend"
-        >
-          <template #panelBody1>
-            <div class="d-flex align-center justify-space-between mb-3 px-5">
-              <v-textarea readonly auto-grow :value="rawTransaction" />
-            </div>
-          </template>
-          <template #panelBody2>
-            <div
-              v-for="(d, key) in transactionDetails"
-              :key="key"
-              class="d-flex align-center justify-space-between mb-3 pa-5"
+        <div v-if="currentStep === 2">
+          <v-sheet color="transparent" max-width="600px" class="mx-auto py-10">
+            <mew-address-select
+              class="OfflineAddressInput"
+              label="From Address"
+              copy-tooltip="Copy"
+              save-tooltip="Save Address"
+              :show-copy="detailLength"
+              :show-save="false"
+              :items="addresses"
+              :enable-save-address="false"
+              :is-valid-address="detailLength"
+              :address-value="fromAddress"
+              :error-messages="fromAddressMessage"
+              @input="setAddress"
+            />
+            <mew-expand-panel
+              v-if="detailLength"
+              is-toggle
+              has-dividers
+              :panel-items="exPanelStep2"
+              class="mt-4 mb-10 swap-expend OfflineDetails"
             >
-              <div v-if="d.title" class="pr-3">{{ d.title }}</div>
-              <div
-                v-if="d.value"
-                class="text-right"
-                style="overflow-x: hidden; text-overflow: ellipsis"
-              >
-                {{ d.value }}
-              </div>
-              <mew-transform-hash v-if="d.address" :hash="d.address" />
+              <template #panelBody1>
+                <div
+                  v-for="(d, key) in details"
+                  :key="key"
+                  class="d-flex align-center justify-space-between mb-3 px-5"
+                >
+                  <div v-if="d.title" class="pr-3">{{ d.title }}</div>
+                  <div v-if="d.value" class="text-right">{{ d.value }}</div>
+                  <mew-transform-hash v-if="d.address" :hash="d.address" />
+                </div>
+              </template>
+            </mew-expand-panel>
+            <div class="d-block d-lg-flex justify-center mt-2 text-center">
+              <mew-button
+                class="mx-1 mb-3"
+                title="Back"
+                btn-size="xlarge"
+                btn-style="outline"
+                @click.native="handleBack"
+              />
+              <mew-button
+                class="mx-1 mb-3 NextButton2"
+                title="Next"
+                btn-size="xlarge"
+                :disabled="!detailLength"
+                @click.native="currentStep = 3"
+              />
             </div>
-          </template>
-        </mew-expand-panel>
+            <mew-button
+              v-if="detailLength"
+              class="mt-2 display--block mx-auto DownloadButton"
+              title="Export JSON file"
+              btn-size="small"
+              btn-style="transparent"
+              :btn-link="fileLink"
+              :download="exportFileName"
+            />
+          </v-sheet>
+        </div>
 
-        <div class="d-block d-lg-flex justify-center mt-2 text-center">
-          <mew-button
-            class="mx-1 mb-3"
-            title="Back"
-            btn-size="xlarge"
-            btn-style="outline"
-            @click.native="handleBack"
-          />
-          <mew-button
-            title="Confirm & Send"
-            btn-size="xlarge"
-            class="mx-1 mb-3"
-            :disabled="!validTx || error"
-            @click.native="sendTx"
-          />
+        <div v-if="currentStep === 3">
+          <v-sheet color="transparent" max-width="600px" class="mx-auto py-10">
+            <v-textarea
+              outlined
+              label="Signature"
+              class="mb-1 SignatureInput"
+              :value="signature"
+              :error="signatureError"
+              :error-messages="signatureMessage"
+              @input="checkTx"
+            ></v-textarea>
+            <mew-alert
+              v-for="alert in sortedAlerts"
+              :key="alert.key"
+              class="mb-3"
+              hide-close-icon
+              :theme="alert.severity"
+              :title="alert.title"
+              :description="alert.message"
+            />
+            <mew-expand-panel
+              v-if="!signatureError && signature !== ''"
+              is-toggle
+              has-dividers
+              :panel-items="exPanelStep3"
+              class="mt-4 mb-10 swap-expend SignatureRawDetails"
+            >
+              <template #panelBody1>
+                <div
+                  class="d-flex align-center justify-space-between mb-3 px-5"
+                >
+                  <v-textarea readonly auto-grow :value="rawTransaction" />
+                </div>
+              </template>
+              <template #panelBody2>
+                <div
+                  v-for="(d, key) in transactionDetails"
+                  :key="key"
+                  class="d-flex align-center justify-space-between mb-3 pa-5"
+                >
+                  <div v-if="d.title" class="pr-3">{{ d.title }}</div>
+                  <div
+                    v-if="d.value"
+                    class="text-right"
+                    style="overflow-x: hidden; text-overflow: ellipsis"
+                  >
+                    {{ d.value }}
+                  </div>
+                  <mew-transform-hash v-if="d.address" :hash="d.address" />
+                </div>
+              </template>
+            </mew-expand-panel>
+
+            <div class="d-block d-lg-flex justify-center mt-2 text-center">
+              <mew-button
+                class="mx-1 mb-3"
+                title="Back"
+                btn-size="xlarge"
+                btn-style="outline"
+                @click.native="handleBack"
+              />
+              <mew-button
+                title="Confirm & Send"
+                btn-size="xlarge"
+                class="mx-1 mb-3 ConfirmSendButton"
+                :disabled="!validTx || error"
+                @click.native="sendTx"
+              />
+            </div>
+            <div class="d-flex justify-center">
+              <input
+                ref="uploadSig"
+                type="file"
+                style="display: none"
+                accept="json"
+                @change="uploadFile"
+              />
+              <mew-button
+                class="mt-2 display--block mx-auto"
+                title="Upload JSON file"
+                btn-size="small"
+                btn-style="transparent"
+                @click.native="$refs.uploadSig.click()"
+              />
+            </div>
+          </v-sheet>
         </div>
-        <div class="d-flex justify-center">
-          <input
-            ref="uploadSig"
-            type="file"
-            style="display: none"
-            accept="json"
-            @change="uploadFile"
-          />
-          <mew-button
-            class="mt-2 display--block mx-auto"
-            title="Upload JSON file"
-            btn-size="small"
-            btn-style="transparent"
-            @click.native="$refs.uploadSig.click()"
-          />
-        </div>
-      </v-sheet>
-    </div>
+      </template>
+    </mew-module>
   </div>
 </template>
 
 <script>
-import AppBlockTitle from '@/core/components/AppBlockTitle';
 import { mapGetters, mapState } from 'vuex';
 import { isAddress, fromWei, toHex } from 'web3-utils';
 import { Transaction } from 'ethereumjs-tx';
@@ -232,7 +232,7 @@ import { toChecksumAddress } from 'ethereumjs-util';
 import { isEmpty } from 'lodash';
 export default {
   name: 'ModuleToolsOfflineHelper',
-  components: { AppBlockTitle, NetworkSwitch },
+  components: { NetworkSwitch },
   props: {
     isHomePage: {
       type: Boolean,

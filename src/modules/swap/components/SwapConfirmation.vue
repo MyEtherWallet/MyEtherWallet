@@ -130,9 +130,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss">
-.v-application .warning {
-  border-radius: 10px;
-}
-</style>

@@ -36,10 +36,8 @@ const EXCEPTIONS = [
   'eslint',
   'eslint-plugin-vue',
   'imagemin-mozjpeg', // issue with importing it to vue config will look into it more if we need it
-  '@vue/eslint-config-prettier', // creates more warnings
   // versions for vue3
-  'vue-router',
-  'vuex',
+  '@vue/eslint-config-prettier', // creates more warnings
   '@vue/test-utils',
   '@vue/babel-preset-app',
   '@vue/cli-plugin-babel',
@@ -48,7 +46,31 @@ const EXCEPTIONS = [
   '@vue/cli-plugin-unit-jest',
   '@vue/cli-service',
   'vue-i18n',
-  'vue'
+  'vue',
+  '@vue/cli-plugin-e2e-nightwatch',
+  'geckodriver',
+  // breaking
+  '@shapeshiftoss/hdwallet-core',
+  '@shapeshiftoss/hdwallet-keepkey-webusb',
+  'package-json',
+  'codecov',
+  'node-polyfill-webpack-plugin',
+  // check if fixable after hotfix
+  '@ensdomains/ensjs',
+  '@ensdomains/ens-contracts',
+  'protobufjs',
+  '@formatjs/intl-numberformat',
+  'babel-jest',
+  'qrcode',
+  'vue-template-compiler',
+  '@ledgerhq/hw-transport-web-ble',
+  '@ledgerhq/hw-app-eth',
+  '@ledgerhq/hw-transport-webusb',
+  '@lokalise/node-api',
+  '@unstoppabledomains/resolution',
+  '@walletconnect/client',
+  '@walletconnect/qrcode-modal',
+  'chromedriver'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
@@ -104,12 +126,12 @@ const looper = () => {
           if (!isMewComponentBeta) {
             console.error(
               'ERROR: Update ' +
-                _name +
-                ' from ' +
-                ALL_PACKAGES[_name] +
-                ' to ' +
-                latestVersion +
-                '. Released:',
+              _name +
+              ' from ' +
+              ALL_PACKAGES[_name] +
+              ' to ' +
+              latestVersion +
+              '. Released:',
               latestVersionTime
             );
             updatesFound = true;

@@ -88,7 +88,7 @@
     </v-row>
     <div
       v-if="!isExpanded"
-      class="cursor-pointer font-weight-medium close-container"
+      class="cursor-pointer font-weight-medium close-container HideWalletBanner"
       @click="setHideBanner()"
     >
       <p>{{ $t('home.mew-wallet-modal.hide') }}</p>

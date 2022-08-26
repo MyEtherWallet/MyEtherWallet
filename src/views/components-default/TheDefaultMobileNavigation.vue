@@ -1,6 +1,6 @@
 <template>
   <div class="mew-component--landing-page-menu-mobile">
-    <app-btn-menu @click="openMobileMenu" />
+    <app-btn-menu @click.native="isOpen = !isOpen" />
 
     <v-navigation-drawer
       v-model="isOpen"
@@ -8,20 +8,19 @@
       temporary
       color="expandHeader"
     >
-      <v-list-item class="pt-8 pb-8 pl-4 pr-1">
+      <v-list-item class="py-8 pl-2 pr-4">
+        <v-btn large icon light @click="isOpen = false">
+          <v-icon color="white" large>mdi-window-close</v-icon>
+        </v-btn>
+        <v-spacer></v-spacer>
         <v-img
-          class="mx-auto"
           src="@/assets/images/icons/logo-mew.svg"
           max-height="36"
           max-width="130"
           @click="pushRoute({ name: 'Home' })"
         />
-
         <v-spacer></v-spacer>
-
-        <v-btn x-large icon light @click="isOpen = false">
-          <v-icon color="white" large>mdi-window-close</v-icon>
-        </v-btn>
+        <mew-tools />
       </v-list-item>
 
       <v-list color="expandHeader" dark class="px-2">
@@ -85,18 +84,26 @@
             </v-list-item>
           </v-list-group>
         </template>
+        <v-list-item class="mb-3">
+          <v-list-item-content @click="openMoonpay">
+            <div class="mew-heading-2">Buy ETH</div>
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
   </div>
 </template>
 
 <script>
+import mewTools from '@/components/mew-tools/MewTools';
+import buyMore from '@/core/mixins/buyMore.mixin.js';
 import AppBtnMenu from '@/core/components/AppBtnMenu';
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { mapGetters } from 'vuex';
 export default {
   name: 'MobileMenu',
-  components: { AppBtnMenu },
+  components: { AppBtnMenu, mewTools },
+  mixins: [buyMore],
   data: () => ({
     isOpen: false
   }),
@@ -106,7 +113,7 @@ export default {
       return [
         { label: 'How it works', to: { name: ROUTES_HOME.HOW_IT_WORKS.NAME } },
         {
-          label: 'Popular',
+          label: 'Popular actions',
           sub: [
             {
               label: 'Send transaction',
@@ -127,29 +134,26 @@ export default {
           ]
         },
         {
-          label: 'More',
+          label: 'More actions',
           sub: [
             {
               label: 'Verify message',
-              to: { name: ROUTES_HOME.TOOLS.NAME, query: { tab: '3' } }
+              to: { name: ROUTES_HOME.TOOLS.NAME, query: { tool: 'verify' } }
+            },
+            {
+              label: 'Convert Units',
+              to: { name: ROUTES_HOME.TOOLS.NAME, query: { tool: 'convert' } }
+            },
+            {
+              label: 'Generate Keystore file',
+              to: { name: ROUTES_HOME.TOOLS.NAME, query: { tool: 'keystore' } }
+            },
+            {
+              label: 'Send Offline Helper',
+              to: { name: ROUTES_HOME.TOOLS.NAME, query: { tool: 'offline' } }
             }
-            /*
-          {
-            label: 'Watch only address',
-            to: { name: ROUTES_HOME.TOOLS.NAME, query: { tab: '1' } }
-          },
-          {
-            label: 'Send offline helper',
-            to: { name: ROUTES_HOME.TOOLS.NAME, query: { tab: '2' } }
-          },
-          {
-            label: 'Convery units',
-            to: { name: ROUTES_HOME.TOOLS.NAME, query: { tab: '4' } }
-          }
-          */
           ]
-        },
-        { label: 'Buy ETH', url: this.swapLink }
+        }
       ];
     }
   },
@@ -157,28 +161,14 @@ export default {
     pushRoute(to) {
       this.$router.push(to).catch(() => true);
       this.isOpen = false;
-    },
-    openMobileMenu() {
-      this.isOpen = true;
     }
   }
 };
 </script>
 
-<style scoped lang="scss"></style>
-
-<style lang="scss">
-.mew-component--landing-page-menu-mobile {
-  .mobile-menu-button .v-icon.v-icon {
-    font-size: 43px;
-  }
-  .v-list-group__header,
-  .v-list-item {
-    border-top: 0 !important;
-  }
-  .theme--dark.v-list-item:hover {
-    background-color: rgba(255, 255, 255, 0.2) !important;
-    cursor: pointer;
-  }
+<style scoped lang="scss">
+.v-navigation-drawer {
+  width: 100% !important;
+  max-width: 500px;
 }
 </style>

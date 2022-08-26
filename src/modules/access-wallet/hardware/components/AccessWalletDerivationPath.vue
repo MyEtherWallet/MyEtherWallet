@@ -22,7 +22,7 @@
           :value="searchValue"
           class="mb-8"
           placeholder="find a path"
-          is-search-block
+          is-compact
           @input="setSearch"
         />
         <!--
@@ -188,8 +188,10 @@ export default {
       return this.paths.filter(path => {
         if (this.searchValue) {
           return (
-            path.name.toLowerCase().includes(this.searchValue.toLowerCase()) ||
-            path.value.toLowerCase().includes(this.searchValue.toLowerCase())
+            path.name
+              ?.toLowerCase()
+              .includes(this.searchValue?.toLowerCase()) ||
+            path.value?.toLowerCase().includes(this.searchValue?.toLowerCase())
           );
         }
         return path;
@@ -202,8 +204,10 @@ export default {
       return this.passedPaths.filter(path => {
         if (this.searchValue) {
           return (
-            path.name.toLowerCase().includes(this.searchValue.toLowerCase()) ||
-            path.value.toLowerCase().includes(this.searchValue.toLowerCase())
+            path.name
+              ?.toLowerCase()
+              .includes(this.searchValue?.toLowerCase()) ||
+            path.value?.toLowerCase().includes(this.searchValue?.toLowerCase())
           );
         }
         return path;
@@ -246,19 +250,26 @@ export default {
       try {
         const customPath = checkCustomPath(this.customPath);
         if (customPath) {
-          if (this.filteredPaths.some(e => e.value === this.customPath)) {
-            const error = `Custom path already exists: ${
-              this.filteredPaths.find(e => e.value === this.customPath).name
-            }`;
+          if (
+            this.filteredPaths.some(e => e.value === this.customPath) ||
+            this.filteredCustomPaths.some(e => e.value === this.customPath)
+          ) {
+            const error = 'Custom path already exists';
             Toast(error, {}, ERROR);
           } else {
-            const newPath = {
-              name: this.customAlias,
-              value: this.customPath
-            };
-            this.addCustomPath(newPath).then(() => {
-              Toast('You have added custom path successfully.', {}, SUCCESS);
-            });
+            if (this.customAlias === '') {
+              const error = 'Custom alias cannot be empty';
+              Toast(error, {}, ERROR);
+            } else {
+              const newPath = {
+                name: this.customAlias,
+                value: this.customPath
+              };
+              this.addCustomPath(newPath).then(() => {
+                this.customPath = '';
+                Toast('You have added custom path successfully.', {}, SUCCESS);
+              });
+            }
             this.showCustomField = false;
           }
         } else {

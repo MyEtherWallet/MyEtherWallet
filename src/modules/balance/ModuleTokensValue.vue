@@ -40,7 +40,7 @@
       @close="handleTokensPopup"
     >
       <template #dialogBody>
-        <div class="mew-heading-3 mb-3 black--text">
+        <div class="mew-heading-3 mb-3 black--text px-4">
           Total Value: {{ totalTokenValues }}
         </div>
         <module-tokens class="pa-0" dense @trade="handleTokensPopup" />
@@ -73,11 +73,13 @@ export default {
     },
     tokenImages() {
       return this.tokensList
-        .filter(token => token.img)
-        .slice(0, 5)
-        .map(item => {
-          return item.img;
-        });
+        .reduce((arr, token) => {
+          if (token.img) {
+            arr.push(token.img);
+          }
+          return arr;
+        }, [])
+        .slice(0, 5);
     },
     moreTokensCount() {
       return this.tokensList.length - this.tokenImages.length;

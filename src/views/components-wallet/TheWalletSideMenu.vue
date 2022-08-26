@@ -9,12 +9,32 @@
       color="#07385F"
     >
       <template #prepend>
+        <mew-overlay
+          :footer="{
+            text: 'Need help?',
+            linkTitle: 'Contact support',
+            link: 'mailto:support@myetherwallet.com'
+          }"
+          :show-overlay="isOpenNetworkOverlay || !validNetwork"
+          :title="
+            validNetwork
+              ? 'Select Network'
+              : 'Current network is not supported. Select a network below.'
+          "
+          content-size="large"
+          :close="validNetwork ? closeNetworkOverlay : null"
+        >
+          <network-switch
+            :filter-types="filterNetworks"
+            :is-swap-page="isSwapPage"
+          />
+        </mew-overlay>
         <div class="pa-5 pb-3">
           <div class="mt-2 mb-4 d-flex align-center justify-space-between">
             <!-- ================================================================================== -->
             <!-- MEW logo -->
             <!-- ================================================================================== -->
-            <router-link :to="{ name: ROUTES_WALLET.DASHBOARD.NAME }">
+            <router-link :to="offlineModeRoute">
               <img width="120" src="@/assets/images/icons/logo-mew.svg" />
             </router-link>
 
@@ -29,14 +49,14 @@
           <!-- ================================================================================== -->
           <!-- Wallet balance card -->
           <!-- ================================================================================== -->
-          <balance-card />
+          <balance-card :sidemenu-status="navOpen" />
         </div>
       </template>
 
       <!-- ================================================================================== -->
       <!-- Buy Sell / Send / Swap buttons -->
       <!-- ================================================================================== -->
-      <v-list class="px-5">
+      <v-list v-if="!isOfflineApp" class="px-5">
         <v-list-item-group>
           <div class="d-flex align-center">
             <v-list-item
@@ -242,14 +262,11 @@
       <v-row class="pa-3 align-center justify-space-between">
         <app-btn-menu class="mr-3" @click.native="openNavigation" />
 
-        <router-link
-          :to="{ name: ROUTES_WALLET.DASHBOARD.NAME }"
-          style="line-height: 0"
-        >
+        <router-link :to="offlineModeRoute" style="line-height: 0">
           <img height="26" src="@/assets/images/icons/logo-mew.svg" />
         </router-link>
         <v-spacer />
-        <module-notifications invert-icon />
+        <module-notifications v-if="!isOfflineApp" invert-icon />
       </v-row>
     </v-system-bar>
   </div>
@@ -258,6 +275,7 @@
 <script>
 import AppBtnMenu from '@/core/components/AppBtnMenu';
 import ModuleNotifications from '@/modules/notifications/ModuleNotifications';
+import NetworkSwitch from '@/modules/network/components/NetworkSwitch.vue';
 import send from '@/assets/images/icons/icon-send-enable.svg';
 import dashboard from '@/assets/images/icons/icon-dashboard-enable.svg';
 import nft from '@/assets/images/icons/icon-nft.svg';
@@ -275,36 +293,23 @@ import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import dappsMeta from '@/dapps/metainfo-dapps';
 import { MOONPAY_EVENT } from '@/modules/moon-pay/helpers';
-import { STAKEWISE_EVENT } from '@/dapps/stakewise/helpers/index';
-import { STAKEWISE_ROUTES } from '@/dapps/stakewise/configsRoutes';
 
 export default {
   components: {
     AppBtnMenu,
     BalanceCard,
     ModuleSettings,
-    ModuleNotifications
+    ModuleNotifications,
+    NetworkSwitch
   },
   mixins: [handlerAnalytics],
   data() {
     return {
+      isOpenNetworkOverlay: false,
       navOpen: null,
       version: VERSION,
       onSettings: false,
       showLogoutPopup: false,
-      // sectionTwo: [
-      //   {
-      //     title: this.$t('common.settings'),
-      //     icon: settings,
-      //     fn: this.openSettings,
-      //     route: { name: ROUTES_WALLET.SETTINGS.NAME }
-      //   },
-      //   {
-      //     title: this.$t('common.logout'),
-      //     icon: logout,
-      //     fn: this.toggleLogout
-      //   }
-      // ],
       routeNetworks: {
         [ROUTES_WALLET.SWAP.NAME]: [ETH, BSC, MATIC],
         [ROUTES_WALLET.NFT_MANAGER.NAME]: [ETH]
@@ -314,8 +319,25 @@ export default {
   },
   computed: {
     ...mapGetters('global', ['network', 'isEthNetwork', 'hasSwap']),
-    ...mapState('wallet', ['instance']),
-    ...mapState('global', ['online']),
+    ...mapState('wallet', ['instance', 'isOfflineApp']),
+    ...mapState('global', ['online', 'validNetwork']),
+    /**
+     * IMPORTANT TO DO:
+     * @returns {boolean}
+     */
+    filterNetworks() {
+      if (this.isHardware) {
+        return [];
+      }
+      return [];
+    },
+    /**
+     * Property returns whether or not you are on the swap page
+     * @returns {boolean}
+     */
+    isSwapPage() {
+      return this.$route.name === 'Swap';
+    },
     sectionOne() {
       if (this.online) {
         const hasNew = Object.values(dappsMeta).filter(item => {
@@ -331,7 +353,7 @@ export default {
         return [
           {
             title: this.$t('interface.menu.dashboard'),
-            route: { name: ROUTES_WALLET.DASHBOARD.NAME },
+            route: this.offlineModeRoute,
             icon: dashboard
           },
           {
@@ -411,11 +433,18 @@ export default {
           fn: this.toggleLogout
         }
       ];
+    },
+    offlineModeRoute() {
+      return this.isOfflineApp
+        ? { name: ROUTES_WALLET.WALLETS.NAME }
+        : { name: ROUTES_WALLET.DASHBOARD.NAME };
     }
   },
   mounted() {
     // If no menu item is selected on load, redirect user to Dashboard
-    this.redirectToDashboard();
+    if (!this.isOfflineApp) {
+      this.redirectToDashboard();
+    }
 
     if (this.$route.name == ROUTES_WALLET.SETTINGS.NAME) {
       this.openSettings();
@@ -423,12 +452,18 @@ export default {
     EventBus.$on('openSettings', () => {
       this.openSettings();
     });
-    EventBus.$on(STAKEWISE_EVENT, () => {
-      this.$router.push({ name: STAKEWISE_ROUTES.CORE.NAME });
+    EventBus.$on('openNetwork', () => {
+      this.openNetwork();
     });
   },
   methods: {
     ...mapActions('wallet', ['removeWallet']),
+    closeNetworkOverlay() {
+      if (this.validNetwork) {
+        this.$router.go(-1);
+        this.isOpenNetworkOverlay = false;
+      }
+    },
     shouldShow(route) {
       if (this.routeNetworks[route.name]) {
         for (const net of this.routeNetworks[route.name]) {
@@ -437,6 +472,9 @@ export default {
         return false;
       }
       return true;
+    },
+    openNetwork() {
+      this.isOpenNetworkOverlay = true;
     },
     openMoonpay() {
       EventBus.$emit(MOONPAY_EVENT);
@@ -463,7 +501,7 @@ export default {
     /* =================================================================== */
     redirectToDashboard() {
       if (this.$route.name == ROUTES_WALLET.WALLETS.NAME) {
-        this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
+        this.$router.push(this.offlineModeRoute);
       }
     },
     /* =================================================================== */
@@ -483,12 +521,7 @@ export default {
 .v-list-item--active .btn-title {
   font-weight: 500;
 }
-</style>
 
-<style lang="scss">
-// =======================================================
-// Global styles
-// =======================================================
 .new-dapp-label {
   border-radius: 2px;
   background: #ff445b;
@@ -519,15 +552,18 @@ export default {
     box-shadow: 0 0 0 0 rgba(204, 169, 44, 0);
   }
 }
-.v-system-bar .v-icon {
-  font-size: 36px !important;
-  color: white !important;
-}
+</style>
 
+<style lang="scss">
 // =======================================================
 // Scoped styles for .wallet-sidemenu
 // =======================================================
 .wallet-sidemenu {
+  .v-system-bar .v-icon {
+    font-size: 36px !important;
+    color: white !important;
+  }
+
   .v-list-item--dense .v-list-item__title {
     line-height: 20px !important;
   }

@@ -57,14 +57,8 @@
           </div>
         </v-sheet>
         <div v-if="hasNotification" class="d-flex align-center justify-end">
-          <!-- <div>
-            <div>6 notifications</div>
-            <v-btn depressed x-small color="textLight" dark>
-              Delete all
-            </v-btn>
-          </div> -->
           <v-sheet color="transparent" max-width="150px">
-            <mew-select :items="items" @input="setSelected" />
+            <mew-select :items="items" normal-dropdown @input="setSelected" />
           </v-sheet>
         </div>
         <div
@@ -163,20 +157,21 @@ export default {
       const address = this.address ? this.address.toLowerCase() : '';
       if (!this.loading) {
         return this.ethTransfersIncoming
-          .filter(notification => {
-            return notification.to.toLowerCase() === address;
-          })
-          .map(notification => {
-            notification.type = NOTIFICATION_TYPES.IN;
-            if (notification.status) notification.read = true;
-            else notification.read = false;
-            if (notification.hasOwnProperty('hash')) {
-              notification = new Notification(notification);
-              return formatNotification(notification, this.network);
+          .reduce((arr, notification) => {
+            if (notification.to.toLowerCase() === address) {
+              notification.type = NOTIFICATION_TYPES.IN;
+              if (notification.status) notification.read = true;
+              else notification.read = false;
+              if (notification.hasOwnProperty('hash')) {
+                notification = new Notification(notification);
+                arr.push(formatNotification(notification, this.network));
+              } else {
+                notification = new NonChainNotification(notification);
+                arr.push(formatNonChainNotification(notification));
+              }
             }
-            notification = new NonChainNotification(notification);
-            return formatNonChainNotification(notification);
-          })
+            return arr;
+          }, [])
           .sort(this.sortByDate);
       }
       return [];
@@ -309,11 +304,9 @@ export default {
       }
     },
     openNotifications() {
-      // this.$router.push({ name: ROUTES_WALLET.NOTIFICATIONS.NAME });
       this.isOpenNotifications = true;
     },
     closeNotifications() {
-      // this.$router.go(-1);
       this.isOpenNotifications = false;
     }
   }

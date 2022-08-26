@@ -91,12 +91,12 @@ import AppBlockTitle from '@/core/components/AppBlockTitle';
 
 export default {
   components: { AppBlockTitle },
-  data: () => ({
+  data: vm => ({
     titleData: {
       textProps: '',
       toptitle: '',
-      title: 'Send ETH, ERC20 tokens & NFT',
-      description: 'Send your funds with the press of a button.',
+      title: vm.$t('howItWorks.send-funds.title'),
+      description: vm.$t('howItWorks.send-funds.description'),
       centered: false
     }
   })

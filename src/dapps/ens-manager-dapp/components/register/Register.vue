@@ -119,8 +119,10 @@
           loadingCommit ||
           ticker !== '00:00' ||
           notEnoughFunds ||
-          noFundsForRegFees
+          noFundsForRegFees ||
+          loadingReg
         "
+        :loading="loadingReg"
         :title="
           canRegister
             ? $t('ens.register.name')
@@ -168,6 +170,10 @@ export default {
       type: Boolean
     },
     loadingCommit: {
+      default: false,
+      type: Boolean
+    },
+    loadingReg: {
       default: false,
       type: Boolean
     },

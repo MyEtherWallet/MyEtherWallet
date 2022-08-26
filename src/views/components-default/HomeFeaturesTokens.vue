@@ -33,66 +33,66 @@ import { ROUTES_HOME } from '@/core/configs/configRoutes';
 export default {
   name: 'HomeFeaturesTokens',
   components: {},
-  data: () => ({
+  data: vm => ({
     tokens: [
       {
-        label: 'Tether (USDT)',
+        label: vm.$t('home.features.tokens.usdt'),
         icon: 'https://img.mewapi.io/?image=https://assets.coingecko.com/coins/images/325/thumb/Tether-logo.png'
       },
       {
-        label: 'Uniswap (UNI)',
+        label: vm.$t('home.features.tokens.uni'),
         icon: 'https://img.mewapi.io/?image=https://assets.coingecko.com/coins/images/12504/thumb/uniswap-uni.png'
       },
       {
-        label: 'Chainlink (LINK)',
+        label: vm.$t('home.features.tokens.link'),
         icon: 'https://img.mewapi.io/?image=https://assets.coingecko.com/coins/images/877/thumb/chainlink-new-logo.png'
       },
       {
-        label: 'USD Coin (USDC)',
+        label: vm.$t('home.features.tokens.usdc'),
         icon: 'https://img.mewapi.io/?image=https://assets.coingecko.com/coins/images/6319/thumb/USD_Coin_icon.png'
       },
       {
-        label: 'Wrapped Bitcoin (WBTC)',
+        label: vm.$t('home.features.tokens.wbtc'),
         icon: 'https://img.mewapi.io/?image=https://assets.coingecko.com/coins/images/7598/thumb/wrapped_bitcoin_wbtc.png'
       },
       {
-        label: 'Crypto.com Coin (CRO)',
+        label: vm.$t('home.features.tokens.cro'),
         icon: 'https://img.mewapi.io/?image=https://assets.coingecko.com/coins/images/7310/thumb/cypto.png'
       },
       {
-        label: 'Aave (AAVE)',
+        label: vm.$t('home.features.tokens.aave'),
         icon: 'https://img.mewapi.io/?image=https://assets.coingecko.com/coins/images/12645/thumb/AAVE.png'
       },
       {
-        label: 'OKB (OKB)',
+        label: vm.$t('home.features.tokens.okb'),
         icon: 'https://img.mewapi.io/?image=https://assets.coingecko.com/coins/images/4463/thumb/okb_token.png'
       },
       {
-        label: 'Binance USD (BUSD)',
+        label: vm.$t('home.features.tokens.busd'),
         icon: 'https://img.mewapi.io/?image=https://assets.coingecko.com/coins/images/9576/thumb/BUSD.png'
       },
       {
-        label: 'FTX Token (FTT)',
+        label: vm.$t('home.features.tokens.ftt'),
         icon: 'https://img.mewapi.io/?image=https://assets.coingecko.com/coins/images/9026/thumb/F.png'
       },
       {
-        label: 'cUSDC (CUSDC)',
+        label: vm.$t('home.features.tokens.cusdc'),
         icon: 'https://img.mewapi.io/?image=https://assets.coingecko.com/coins/images/9442/thumb/Compound_USDC.png'
       },
       {
-        label: 'Dai (DAI)',
+        label: vm.$t('home.features.tokens.dai'),
         icon: 'https://img.mewapi.io/?image=https://assets.coingecko.com/coins/images/9956/thumb/dai-multi-collateral-mcd.png'
       },
       {
-        label: 'Chiliz (CHZ)',
+        label: vm.$t('home.features.tokens.chz'),
         icon: 'https://img.mewapi.io/?image=https://assets.coingecko.com/coins/images/8834/thumb/Chiliz.png'
       },
       {
-        label: 'cETH (CETH)',
+        label: vm.$t('home.features.tokens.ceth'),
         icon: 'https://img.mewapi.io/?image=https://assets.coingecko.com/coins/images/10643/thumb/ceth2.JPG'
       },
       {
-        label: 'cDAI (CDAI)',
+        label: vm.$t('home.features.tokens.cdai'),
         icon: 'https://img.mewapi.io/?image=https://assets.coingecko.com/coins/images/9281/thumb/cDAI.png'
       }
     ],

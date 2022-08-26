@@ -1,7 +1,13 @@
 import TheOfflineDefaultView from '@/views/TheOfflineDefaultView';
 import TheAccessWalletLayout from '@/views/layouts-default/TheAccessWalletLayout';
+import TheCreateWalletLayout from '@/views/layouts-default/TheCreateWalletLayout';
 import { ROUTES_HOME } from '../configs/configRoutes';
-import { accessWalletProps, accessRouteGuard } from './helpers';
+import {
+  accessWalletProps,
+  accessRouteGuard,
+  createWalletProps,
+  createRouteGuard
+} from './helpers';
 
 export default {
   path: '/',
@@ -25,6 +31,16 @@ export default {
         noAuth: true
       },
       beforeEnter: accessRouteGuard
+    },
+    {
+      path: ROUTES_HOME.CREATE_WALLET.PATH,
+      name: ROUTES_HOME.CREATE_WALLET.NAME,
+      component: TheCreateWalletLayout,
+      props: createWalletProps,
+      meta: {
+        noAuth: true
+      },
+      beforeEnter: createRouteGuard
     }
   ]
 };

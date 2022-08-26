@@ -85,6 +85,7 @@
               color="greyLight"
               depressed
               class="text-transform--initial"
+              :disabled="error !== ''"
               @click="openGasPriceModal"
             >
               <div class="d-flex align-center">
@@ -143,7 +144,7 @@
           >
             {{ error }}
             <a v-if="notEnoughEth && network.type.canBuy" @click="openMoonpay">
-              Buy more {{ network.type.name }}
+              Buy more {{ network.type.currencyName }}
             </a>
           </div>
           <div>
@@ -217,7 +218,7 @@ export default {
   computed: {
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network', 'isEthNetwork', 'gasPriceByType']),
-    ...mapState('global', ['online', 'gasPriceType', 'preferredCurrency']),
+    ...mapState('global', ['gasPriceType', 'preferredCurrency']),
     txFeeInEth() {
       return fromWei(this.txFee);
     },

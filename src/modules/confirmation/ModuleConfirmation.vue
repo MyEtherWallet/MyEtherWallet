@@ -30,7 +30,7 @@
       @close="reset"
     >
       <template #dialogBody>
-        <v-card-text ref="scrollableContent" class="py-0 px-5 px-md-0">
+        <v-card-text ref="scrollableContent" class="py-0 px-4 px-md-0">
           <div
             v-if="toNonEth"
             class="px-4 py-6 pr-6 textBlack2--text border-radius--5px mb-5"
@@ -265,7 +265,7 @@ import {
 import { isEmpty, isArray, cloneDeep } from 'lodash';
 import { mapState, mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
-import { Toast, INFO } from '@/modules/toast/handler/handlerToast';
+import { Toast, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import parseTokenData from './handlers/parseTokenData';
 import { EventBus } from '@/core/plugins/eventBus';
 import { setEvents } from '@/utils/web3-provider/methods/utils';
@@ -274,6 +274,7 @@ import { sanitizeHex } from '@/modules/access-wallet/common/helpers';
 import dataToAction from './handlers/dataToAction';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
+import errorHandler from './handlers/errorHandler';
 
 export default {
   name: 'ModuleConfirmation',
@@ -309,7 +310,7 @@ export default {
       signing: false,
       links: {
         ethvm: '',
-        etherscan: ''
+        explorer: ''
       },
       error: '',
       panel: [],
@@ -635,8 +636,8 @@ export default {
       this.toDetails = {};
       this.signing = false;
       this.links = {
-        etherscan: '',
-        ethvm: ''
+        ethvm: '',
+        explorer: ''
       };
       this.error = '';
     },
@@ -703,7 +704,7 @@ export default {
       if (this.isSwap) {
         this.showSuccessSwap = true;
       }
-      if (this.tx.data.includes('0x33aaf6f2')) {
+      if (this.tx.data && this.tx.data.includes('0x33aaf6f2')) {
         this.trackDapp('ethBlocksMinted');
       }
       this.reset();
@@ -718,7 +719,7 @@ export default {
               lastHash
             )
           : '';
-        this.links.etherscan = this.network.type.blockExplorerTX.replace(
+        this.links.explorer = this.network.type.blockExplorerTX.replace(
           '[[txHash]]',
           lastHash
         );
@@ -732,7 +733,7 @@ export default {
             param
           )
         : '';
-      this.links.etherscan = this.network.type.blockExplorerTX.replace(
+      this.links.explorer = this.network.type.blockExplorerTX.replace(
         '[[txHash]]',
         param
       );
@@ -752,7 +753,7 @@ export default {
           })
           .catch(e => {
             this.signedTxObject = {};
-            this.error = e.message;
+            this.error = errorHandler(e);
             this.signing = false;
           });
         this.resolver(event);
@@ -767,7 +768,7 @@ export default {
           })
           .catch(e => {
             this.signedTxObject = {};
-            this.error = e.message;
+            this.error = errorHandler(e);
             this.signing = false;
             this.instance.errorHandler(e.message);
           });
@@ -815,7 +816,7 @@ export default {
           this.signedTxArray = signed;
           if (this.isWeb3Wallet) this.resolver(batchTxEvents);
         } catch (err) {
-          this.error = err.message ? err.message : err;
+          this.error = errorHandler(err);
           this.signedTxArray = [];
           return;
         }
@@ -843,7 +844,7 @@ export default {
       this.$refs.messageConfirmationContainer.$refs.signatureContent.$refs.input.select();
       document.execCommand('copy');
       window.getSelection().removeAllRanges();
-      Toast(this.$t('common.copied'), {}, INFO);
+      Toast(this.$t('common.copied'), {}, SUCCESS);
       this.reset();
     },
     arrayParser(arr) {

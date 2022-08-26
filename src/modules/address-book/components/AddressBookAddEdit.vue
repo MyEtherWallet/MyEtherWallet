@@ -12,8 +12,10 @@
       :placeholder="$t('interface.address-book.enter-addr')"
       :value="addressToAdd"
       :rules="addressRules"
+      :persistent-hint="validAddress"
+      :hint="resolvedName || nametag || coin"
+      :resolved-addr="resolvedAddress"
       autofocus
-      :resolved-addr="resolvedAddr"
       @input="setAddress"
     />
     <!--
@@ -92,6 +94,8 @@ import { mapState, mapActions, mapGetters } from 'vuex';
 import NameResolver from '@/modules/name-resolver/index';
 import { toChecksumAddress, isAddress } from '@/core/helpers/addressUtils';
 import { isValidCoinAddress } from '../handlers/handlerMulticoins.js';
+import { isEmpty } from 'lodash';
+import { getAddressInfo } from '@kleros/address-tags-sdk';
 
 const modes = ['add', 'edit'];
 
@@ -108,7 +112,8 @@ export default {
       nameResolver: null,
       currentIdx: null,
       nickname: '',
-      addressToAdd: ''
+      addressToAdd: '',
+      nametag: ''
     };
   },
   computed: {
@@ -120,13 +125,16 @@ export default {
         return (
           !this.addressToAdd ||
           !this.validAddress ||
+          isEmpty(this.nickname) ||
           this.nickname?.length > 20 ||
           this.alreadyExists
         );
       }
       if (this.editMode) {
         return (
-          this.nickname === this.item.nickname || this.nickname?.length > 20
+          this.nickname === this.item.nickname ||
+          this.nickname?.length > 20 ||
+          isEmpty(this.nickname)
         );
       }
       return true;
@@ -145,14 +153,31 @@ export default {
     nicknameRules() {
       return [
         value =>
-          (value && value.length < 20) ||
+          (value && value.length >= 1) ||
+          this.$t('interface.address-book.validations.nickname-required'),
+        value =>
+          (value && value.length <= 20) ||
           this.$t('interface.address-book.validations.nickname-length')
       ];
     },
     validAddress() {
-      return this.resolvedAddr.length > 0
-        ? isAddress(this.resolvedAddr) || isValidCoinAddress(this.resolvedAddr)
-        : isAddress(this.addressToAdd) || isValidCoinAddress(this.addressToAdd);
+      if (this.addressToAdd.length > 94) return false;
+      return this.resolvedAddr.length > 0 && !this.resolvedAddr?.includes('.')
+        ? isAddress(this.resolvedAddr) ||
+            isValidCoinAddress(this.resolvedAddr).valid
+        : isAddress(this.lowercaseAddressToAdd) ||
+            isValidCoinAddress(this.lowercaseAddressToAdd).valid ||
+            isValidCoinAddress(this.addressToAdd).valid;
+    },
+    coin() {
+      if (!this.validAddress) return '';
+      return (
+        'Valid ' +
+        (this.resolvedAddr.length > 0 && !this.resolvedAddr?.includes('.')
+          ? isValidCoinAddress(this.resolvedAddr).coin
+          : isValidCoinAddress(this.lowercaseAddressToAdd).coin) +
+        ' address'
+      );
     },
     editMode() {
       return this.mode === modes[1];
@@ -178,18 +203,38 @@ export default {
       return false;
     },
     checksumAddressToAdd() {
-      if (this.addressToAdd !== '' && isAddress(this.addressToAdd)) {
-        return toChecksumAddress(this.addressToAdd);
+      if (this.addressToAdd !== '' && isAddress(this.lowercaseAddressToAdd)) {
+        return toChecksumAddress(this.lowercaseAddressToAdd);
       }
       return this.addressToAdd;
+    },
+    lowercaseAddressToAdd() {
+      return this.addressToAdd.toLowerCase();
+    },
+    resolvedAddress() {
+      if (this.resolvedAddr.length === 0) return '';
+      return this.validAddress && !this.resolvedAddr?.includes('.')
+        ? this.resolvedAddr
+        : '';
+    },
+    resolvedName() {
+      if (this.resolvedAddr.length === 0) return '';
+      return this.validAddress && this.resolvedAddr?.includes('.')
+        ? this.resolvedAddr
+        : '';
     }
   },
   watch: {
     toAddress(newVal) {
       this.addressToAdd = newVal;
     },
-    addressToAdd() {
-      this.resolveName();
+    addressToAdd(newVal) {
+      this.nametag = '';
+      if (isAddress(newVal.toLowerCase())) {
+        this.resolveAddress();
+      } else {
+        this.resolveName();
+      }
     },
     web3() {
       if (this.network.type.ens) {
@@ -219,12 +264,34 @@ export default {
       this.addressToAdd = '';
       this.nickname = '';
       this.resolvedAddr = '';
+      this.nametag = '';
+    },
+    async resolveAddress() {
+      if (this.nameResolver) {
+        try {
+          const resolvedName = await this.nameResolver.resolveAddress(
+            this.addressToAdd
+          );
+          if (isEmpty(resolvedName?.name)) {
+            this.nametag =
+              (
+                await getAddressInfo(
+                  this.checksumAddressToAdd,
+                  'https://ipfs.kleros.io'
+                )
+              )?.publicNameTag || '';
+          }
+          this.resolvedAddr = resolvedName.name ? resolvedName.name : '';
+        } catch (e) {
+          this.resolvedAddr = '';
+        }
+      }
     },
     async resolveName() {
       if (
         this.nameResolver &&
         this.addressToAdd &&
-        this.addressToAdd.includes('.')
+        this.addressToAdd?.includes?.('.')
       ) {
         await this.nameResolver
           .resolveName(this.addressToAdd)
@@ -247,13 +314,13 @@ export default {
         this.checksumAddressToAdd;
       this.addressBookStore[this.currentIdx].nickname = this.nickname;
       this.setAddressBook(this.addressBookStore);
-      this.$emit('back', 3);
+      this.$emit('back', [3]);
     },
     remove() {
       this.addressBookStore.splice(this.currentIdx, 1);
       this.setAddressBook(this.addressBookStore);
       this.reset();
-      this.$emit('back', 3);
+      this.$emit('back', [3]);
     },
     add() {
       if (this.alreadyExists) {
@@ -267,7 +334,7 @@ export default {
       });
       this.setAddressBook(this.addressBookStore);
       this.reset();
-      this.$emit('back', 3);
+      this.$emit('back', [3]);
     }
   }
 };

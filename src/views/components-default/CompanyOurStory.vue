@@ -21,13 +21,12 @@ import AppBlockTitle from '@/core/components/AppBlockTitle';
 
 export default {
   components: { AppBlockTitle },
-  data: () => ({
+  data: vm => ({
     titleData: {
       textProps: '',
       toptitle: '',
-      title: 'About Us',
-      description:
-        'MyEtherWallet - please, call us MEW - puts the Ethereum blockchain at your fingertips. We are a team of crypto-enthusiasts dedicated to bring you the most secure, most intuitive, and dare we say prettiest way to manage your ETH and ERC20 tokens. We are always here to help, and we are never giving away ETH. Cheers!',
+      title: vm.$t('aboutUs.about-us.title'),
+      description: vm.$t('aboutUs.about-us.description'),
       centered: true
     }
   })

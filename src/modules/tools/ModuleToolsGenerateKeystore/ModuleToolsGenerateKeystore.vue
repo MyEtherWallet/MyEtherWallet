@@ -1,34 +1,40 @@
 <template>
-  <div class="pa-3">
-    <!--
-    ===================================================
-    Staked MEW Stepper
-    ===================================================
-    -->
-    <mew-stepper :items="stepperItems" :on-step="onStep" @onContinue="nextStep">
-      <!--
-      ===================================================
-      Step 1: Generate ETH2 Address
-      ===================================================
-      -->
-      <template v-if="onStep === 1" #stepperContent1>
-        <step-one :skipped="skipped" @onContinue="nextStep" @back="back" />
-      </template>
-      <!--
-      ===================================================
-      Step 2: Verify Keystore file
-      ===================================================
-      -->
-      <template v-if="onStep === 2" #stepperContent2>
-        <step-two
-          :skipped="skipped"
-          :address="address"
-          @onContinue="nextStep"
-          @back="back"
-        />
-      </template>
-    </mew-stepper>
-  </div>
+  <mew-module
+    class="mew-component--convert-units pt-6"
+    title="Generate Keystore file"
+    :has-elevation="true"
+    :has-indicator="true"
+  >
+    <template #moduleBody>
+      <!-- =================================================== -->
+      <!-- Staked MEW Stepper -->
+      <!-- =================================================== -->
+      <mew-stepper
+        :items="stepperItems"
+        :on-step="onStep"
+        @onContinue="nextStep"
+      >
+        <!-- =================================================== -->
+        <!-- Step 1: Generate ETH2 Address -->
+        <!-- =================================================== -->
+        <template v-if="onStep === 1" #stepperContent1>
+          <step-one :skipped="skipped" @onContinue="nextStep" @back="back" />
+        </template>
+
+        <!-- =================================================== -->
+        <!-- Step 2: Verify Keystore file -->
+        <!-- =================================================== -->
+        <template v-if="onStep === 2" #stepperContent2>
+          <step-two
+            :skipped="skipped"
+            :address="address"
+            @onContinue="nextStep"
+            @back="back"
+          />
+        </template>
+      </mew-stepper>
+    </template>
+  </mew-module>
 </template>
 
 <script>

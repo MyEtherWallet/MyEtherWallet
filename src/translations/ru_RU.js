@@ -8,6 +8,7 @@ import gettingStarted from './getting-started/ru_RU';
 import privacyPolicy from './privacy-policy/ru_RU';
 import termsOfService from './terms-of-conditions/ru_RU';
 import accessWallet from './access-wallet/ru_RU';
+import createWallet from './create-wallet/ru_RU';
 import interfaceTranslations from './interface/ru_RU';
 import errorsGlobal from './errors-global/ru_RU';
 import trezorError from './errors-trezor/ru_RU';
@@ -27,6 +28,7 @@ import dappsAmbrpay from './dapps-ambrpay/ru_RU';
 import phishing from './other/phishing/ru_RU';
 import header from './header/ru_RU';
 import dappsMCDMaker from './dapps-mcd-maker/ru_RU';
+import aboutUs from './about-us/ru_RU.json';
 
 const ru_RU = {
   common: common,
@@ -36,7 +38,9 @@ const ru_RU = {
   privacyPol: privacyPolicy,
   termsOfService: termsOfService,
   accessWallet: accessWallet,
+  createWallet: createWallet,
   interface: interfaceTranslations,
+  aboutUs: aboutUs,
   errorsGlobal: errorsGlobal,
   trezorError: trezorError,
   ledgerError: ledgerError,

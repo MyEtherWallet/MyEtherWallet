@@ -1,12 +1,10 @@
 name: generate offline zip
 
-on:
-  push:
-    branches:
-      - '**/*offline'
+on: [push]
 
 jobs:
   offline-build:
+    if: ${{contains(github.ref, 'offline')}}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

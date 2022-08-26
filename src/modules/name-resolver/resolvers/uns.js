@@ -28,4 +28,8 @@ export default class UNS {
       .addr(name, 'ETH')
       .then(addr => toChecksumAddress(addr));
   }
+
+  resolveAddres() {
+    return new Error(`Reverse Registrar not supported!`);
+  }
 }

@@ -8,12 +8,13 @@
     <template #moduleBody>
       <v-textarea
         v-model="message"
+        class="VerifyInput"
         outlined
         label="Signature"
         :value="message"
       ></v-textarea>
 
-      <div v-if="signResult" class="walletBg pa-3">
+      <div v-if="signResult" class="walletBg pa-3 VerifyMessage">
         {{ signer }}
         <span v-if="didSign" class="font-weight-medium">
           did sign the message
@@ -31,7 +32,7 @@
         :disabled="!message"
         title="Verify"
         btn-size="xlarge"
-        class="display--block mx-auto mt-5"
+        class="display--block mx-auto mt-5 VerifyButton"
         @click.native="verifyMessage"
       />
       <mew-button
@@ -47,6 +48,7 @@
 
 <script>
 import SignAndVerifyMessage from '@/modules/message/handlers';
+import { toChecksumAddress } from 'ethereumjs-util';
 
 export default {
   name: 'ModuleMessageVerify',
@@ -71,18 +73,26 @@ export default {
       try {
         this.verificationError = false;
         this.signResult = false;
-
+        this.didSign = false;
+        this.didntSign = false;
         const signCheck = this.signAndVerify.verifyMessage(this.message);
-
-        if (signCheck.verified) {
-          this.signResult = true;
+        const parsedMessage = JSON.parse(this.message);
+        if (!parsedMessage.address) {
+          this.verificationError = true;
+          return;
+        }
+        if (
+          signCheck.verified &&
+          toChecksumAddress(parsedMessage.address) ===
+            toChecksumAddress('0x' + signCheck.signer)
+        ) {
           this.didSign = true;
         } else {
-          this.signResult = true;
           this.didntSign = true;
         }
-        this.signer = '0x' + signCheck.signer;
-      } catch (e) {
+        this.signer = parsedMessage.address;
+        this.signResult = true;
+      } catch {
         this.verificationError = true;
       }
     },

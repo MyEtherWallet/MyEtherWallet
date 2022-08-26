@@ -4,6 +4,8 @@ import {
   formatIntegerValue
 } from '@/core/helpers/numberFormatHelper';
 import abi from '@/modules/balance/handlers/abiERC20.js';
+import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
+import { isValidAddress } from 'ethereumjs-util';
 
 const setCustomToken = function ({ rootGetters, commit }, token) {
   commit('SET_CUSTOM_TOKEN', { token, rootGetters });
@@ -51,6 +53,7 @@ const updateCustomTokenBalances = function ({ dispatch, getters, rootState }) {
   if (getters.hasCustom) {
     getters.customTokens.forEach(item => {
       const newToken = Object.assign({}, item);
+      if (!isValidAddress(item.contract)) return;
       const newContract = new rootState.wallet.web3.eth.Contract(
         abi,
         item.contract
@@ -62,7 +65,8 @@ const updateCustomTokenBalances = function ({ dispatch, getters, rootState }) {
           newToken.balancef = _getTokenBalance(res, item.decimals).value;
           newToken.balance = _getTokenBalance(newToken.balancef).value;
           dispatch('setCustomToken', newToken);
-        });
+        })
+        .catch(e => Toast(e.message, {}, ERROR));
     });
   }
 };

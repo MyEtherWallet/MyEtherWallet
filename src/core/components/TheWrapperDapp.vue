@@ -4,7 +4,7 @@
     DAPP WRAPPER:
   =====================================================================================
   -->
-  <mew6-white-sheet class="mt-5">
+  <mew6-white-sheet class="mt-5 the-wrapper-dapp">
     <!--
     =====================================================================================
       Mew Banner - props: bannerText, bannerImg
@@ -79,9 +79,9 @@
       v-if="tabItems.length > 0 && isNewHeader"
       :value="activeTab"
       background-color="backgroundGrey"
-      show-arrows
       color="blue500"
       height="46"
+      class="tab-container"
       active-class="blue500--text"
       @change="onTab"
     >
@@ -91,7 +91,7 @@
         :class="[
           'px-4 px-md-10 textMedium--text menu-tab-text mew-body',
           { 'ml-md-13': index === 0 },
-          { 'mr-3 mr-md-13': index + 1 === tabItems.length }
+          { 'mr-md-13': index + 1 === tabItems.length }
         ]"
         @click="routeToTab(item.route)"
       >
@@ -126,6 +126,10 @@
     <slot
       v-if="activeTab === 2 && externalContents && isValidNetwork"
       name="tabContent3"
+    />
+    <slot
+      v-if="activeTab === 3 && externalContents && isValidNetwork"
+      name="tabContent4"
     />
 
     <router-view
@@ -295,24 +299,19 @@ export default {
 </script>
 
 <style lang="scss">
-.hide-default-tab-header {
-  .v-tabs {
-    display: none;
+.tab-container {
+  .v-slide-group__prev {
+    display: none !important;
   }
 }
-.menu-tab-text {
-  text-transform: none !important;
-}
-
-.slide-fade-enter-active {
-  transition: all 0.3s ease;
-}
-.slide-fade-leave-active {
-  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
-}
-.slide-fade-enter, .slide-fade-leave-to
-/* .slide-fade-leave-active below version 2.1.8 */ {
-  transform: translateX(10px);
-  opacity: 0;
+.the-wrapper-dapp {
+  .hide-default-tab-header {
+    .v-tabs {
+      display: none;
+    }
+  }
+  .menu-tab-text {
+    text-transform: none !important;
+  }
 }
 </style>

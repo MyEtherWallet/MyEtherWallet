@@ -19,8 +19,9 @@
     </div>
     <mew-select
       :has-filter="true"
-      :label="$t('ens.request.choose-term')"
+      :label="$t('ens.request.select-duration')"
       :items="items"
+      normal-dropdown
       @input="setDuration"
     />
 

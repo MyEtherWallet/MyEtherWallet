@@ -1,37 +1,43 @@
 <template>
   <div class="default-header expandHeader">
-    <v-container class="d-flex align-center pt-8">
+    <v-container class="pl-4 pr-4 d-flex align-center pt-8">
       <v-row align="center" no-gutters>
-        <v-col class="d-md-none" cols="4">
+        <v-col class="d-md-none" cols="2" md="4">
           <the-default-mobile-navigation class="ml-n2" />
         </v-col>
-        <v-col cols="4">
-          <router-link :to="{ name: ROUTES_HOME.HOME.NAME, query: {} }">
-            <v-img
-              :class="$vuetify.breakpoint.smAndDown ? 'mx-auto' : ''"
-              src="@/assets/images/icons/logo-mew.svg"
-              max-height="36"
-              max-width="130"
-            />
-          </router-link>
-        </v-col>
-        <v-col class="justify-space-between d-none d-md-flex" cols="4">
-          <router-link
-            class="white--text text-decoration--none"
-            :to="{ name: ROUTES_HOME.HOW_IT_WORKS.NAME }"
-          >
-            {{ $t('header.what-is-mew') }}
-          </router-link>
-          <mew-menu
-            activator-text-color="white--text"
-            :list-obj="menuObj"
-            @goToPage="routeTo"
+        <v-col cols="8" md="8" class="d-flex align-center">
+          <v-img
+            :class="$vuetify.breakpoint.smAndDown ? 'mx-auto' : ''"
+            class="cursor--pointer mr-md-14"
+            src="@/assets/images/icons/logo-mew.svg"
+            max-height="36"
+            max-width="130"
+            @click="$router.push({ name: ROUTES_HOME.HOME.NAME })"
           />
-          <a class="white--text text-decoration--none" @click="openMoonpay">
-            {{ $t('header.buy-eth') }}
-          </a>
+
+          <div class="d-none d-md-flex">
+            <router-link
+              class="white--text text-decoration--none menu-item"
+              :to="{ name: ROUTES_HOME.HOW_IT_WORKS.NAME }"
+            >
+              {{ $t('header.what-is-mew') }}
+            </router-link>
+            <div class="mx-8">
+              <mew-menu
+                activator-text-color="white--text"
+                :list-obj="menuObj"
+                @goToPage="routeTo"
+              />
+            </div>
+            <a
+              class="white--text text-decoration--none menu-item"
+              @click="openMoonpay"
+            >
+              {{ $t('header.buy-eth') }}
+            </a>
+          </div>
         </v-col>
-        <v-col cols="4" class="text-right">
+        <v-col cols="2" md="4" class="d-flex justify-end">
           <mew-tools class="ml-auto" />
         </v-col>
       </v-row>
@@ -43,7 +49,7 @@
 import mewTools from '@/components/mew-tools/MewTools';
 import TheDefaultMobileNavigation from './TheDefaultMobileNavigation';
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 
 export default {
@@ -83,8 +89,16 @@ export default {
               to: { name: ROUTES_HOME.TOOLS.NAME, query: { tool: 'verify' } }
             },
             {
-              title: 'Convert units',
+              title: 'Convert Units',
               to: { name: ROUTES_HOME.TOOLS.NAME, query: { tool: 'convert' } }
+            },
+            {
+              title: 'Generate Keystore file',
+              to: { name: ROUTES_HOME.TOOLS.NAME, query: { tool: 'keystore' } }
+            },
+            {
+              title: 'Send Offline Helper',
+              to: { name: ROUTES_HOME.TOOLS.NAME, query: { tool: 'offline' } }
             }
           ]
         }
@@ -93,12 +107,26 @@ export default {
     ROUTES_HOME: ROUTES_HOME
   }),
   computed: {
-    ...mapGetters('global', ['swapLink'])
+    ...mapGetters('global', ['swapLink', 'network'])
+  },
+  mounted() {
+    const tokenMap = new Map();
+    this.network.type.tokens.forEach(token => {
+      tokenMap.set(token.address.toLowerCase(), token);
+    });
+    this.setNetworkTokens(tokenMap);
   },
   methods: {
+    ...mapActions('external', ['setNetworkTokens']),
     routeTo(route) {
       this.$router.push(route);
     }
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.menu-item:hover {
+  font-weight: 500;
+}
+</style>

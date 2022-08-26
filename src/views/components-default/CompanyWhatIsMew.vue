@@ -21,13 +21,12 @@ import AppBlockTitle from '@/core/components/AppBlockTitle';
 
 export default {
   components: { AppBlockTitle },
-  data: () => ({
+  data: vm => ({
     titleData: {
       textProps: '',
       toptitle: '',
-      title: 'What is MEW?',
-      description:
-        'MEW is an expanding suite of products offering complete access to all the Ethereum blockchain has to offer. With a web platform, a mobile app, a chrome extension, an explorer, and educational resources, MEW has all the tools to help newcomers and experienced users explore new Ethereum applications in a trusted environment.',
+      title: vm.$t('aboutUs.what-is-mew.title'),
+      description: vm.$t('aboutUs.what-is-mew.description'),
       centered: false
     }
   })

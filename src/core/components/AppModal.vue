@@ -8,17 +8,25 @@
     :persistent="isPersistent"
     @click:outside="handleClickOutside"
   >
-    <v-card v-if="scrollable" color="white" class="py-0 px-5 px-md-7">
+    <v-card v-if="scrollable" color="white" class="py-0 px-0 px-md-0">
       <!--
       =====================================================================================
         Dialog Header
         =====================================================================================
       -->
       <v-card-title class="justify-center py-5 py-md-8">
-        <div class="mew-heading-2 text-center">
+        <div class="mew-heading-2 text-center pr-6 pr-md-0">
           {{ title }}
         </div>
-        <v-btn v-if="hasCloseButton" icon class="header-close-icon">
+        <v-btn
+          v-if="hasCloseButton"
+          icon
+          :class="
+            $vuetify.breakpoint.mdAndUp
+              ? 'header-close-icon'
+              : 'header-close-icon-mobile'
+          "
+        >
           <v-icon size="x-large" color="grey cursor--pointer" @click="close">
             mdi-close
           </v-icon>
@@ -39,7 +47,9 @@
         Dialog Body: Anchored
       =====================================================================================
       -->
-      <slot v-else name="dialogBody" />
+      <div v-else class="px-0 px-md-6 pb-2" style="overflow-y: auto">
+        <slot name="dialogBody" />
+      </div>
       <!--
       =====================================================================================
         Dialog action
@@ -270,8 +280,15 @@ export default {
 
 <style lang="scss" scoped>
 .header-close-icon {
+  right: 13px;
+  top: 13px;
+  position: absolute;
+}
+
+.header-close-icon-mobile {
   right: 10px;
-  top: 10px;
+  top: auto;
+  bottom: auto;
   position: absolute;
 }
 </style>

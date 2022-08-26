@@ -8,9 +8,18 @@ const fetchLists = async () => {
   )
     .then(res => res.json())
     .catch(console.error);
+  const tokensList = await fetch(
+    'https://api.github.com/repos/MyEtherWallet/ethereum-lists/contents/dist/tokens'
+  )
+    .then(res => res.json())
+    .catch(console.error);
   fs.writeFileSync(
     configs.MAIN_LISTS_PATH + '/contracts.json',
     JSON.stringify(contractList)
+  );
+  fs.writeFileSync(
+    configs.MAIN_LISTS_PATH + '/tokens.json',
+    JSON.stringify(tokensList)
   );
 };
 (async () => {

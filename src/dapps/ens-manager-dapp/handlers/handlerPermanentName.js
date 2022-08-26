@@ -2,13 +2,15 @@ import { getHashFromFile, uploadFileToIpfs } from './helpers/helperIpfs.js';
 import BigNumber from 'bignumber.js';
 import ENSManagerInterface from './handlerENSManagerInterface.js';
 import * as nameHashPckg from 'eth-ens-namehash';
-import { DNSRegistrar } from '@ensdomains/ens-contracts';
+import { DNSRegistrar } from '@ensdomains/ens-contracts/deployments/mainnet/DNSRegistrar.json';
 import contentHash from 'content-hash';
 import EventEmitter from 'events';
 import vuexStore from '@/core/store';
 import { mapGetters, mapState } from 'vuex';
 import { toBN, toHex, fromWei, sha3 } from 'web3-utils';
 import { estimateGasList } from '@/core/helpers/gasPriceHelper.js';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+
 const bip39 = require('bip39');
 
 export default class PermanentNameModule extends ENSManagerInterface {
@@ -37,6 +39,14 @@ export default class PermanentNameModule extends ENSManagerInterface {
 
   register(duration, balance) {
     return this._registerWithDuration(duration, balance);
+  }
+
+  async setNameReverseRecord(domain) {
+    try {
+      return this.ensInstance.setReverseRecord(domain);
+    } catch (e) {
+      Toast(e, {}, ERROR);
+    }
   }
 
   getTransactions(toAddress) {
@@ -156,7 +166,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
       .setContenthash(this.nameHash, ipfsToHash)
       .send({ from: this.address })
       .on('receipt', () => {
-        this._setContentHash();
+        this._getContentHash();
       });
   }
 
@@ -262,10 +272,10 @@ export default class PermanentNameModule extends ENSManagerInterface {
         }
       });
     });
-    this._setExpiry();
+    this._getExpiry();
   }
 
-  async _setExpiry() {
+  async _getExpiry() {
     if (!this.isAvailable) {
       this.expired = this.expiryTime * 1000 < new Date().getTime();
       if (!this.expired) {
@@ -274,21 +284,23 @@ export default class PermanentNameModule extends ENSManagerInterface {
           date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear();
       }
     }
-    this._setDnsContract();
+    this._getDnsContract();
   }
 
-  async _setDnsContract() {
+  async _getDnsContract() {
     if (this.tld && this.tld !== this.network.type.ens.registrarTLD) {
-      this.dnsRegistrarContract = new DNSRegistrar(
-        this.web3.currentProvider,
+      this.dnsRegistrarContract = new this.web3.eth.Contract(
+        DNSRegistrar.abi,
         this.registrarAddress
       );
-      this.dnsClaim = await this.dnsRegistrar.claim(this.parsedDomainName);
-      this._setDnsInfo();
+      this.dnsClaim = await this.dnsRegistrar.methods
+        .claim(this.parsedDomainName)
+        .call();
+      this._getDnsInfo();
     }
     return;
   }
-  async _setDnsInfo() {
+  async _getDnsInfo() {
     const _owner = await this.ens.owner(this.parsedDomainName);
     const isInNewRegistry = await this.registryContract.methods
       .recordExists(nameHashPckg.hash(this.parsedDomainName))
@@ -326,19 +338,29 @@ export default class PermanentNameModule extends ENSManagerInterface {
         from: this.address,
         value: withFivePercent
       };
-      this.registrarControllerContract.methods
-        .registerWithConfig(
+      const registerWithConfig =
+        this.registrarControllerContract.methods.registerWithConfig(
           this.parsedHostName,
           this.address,
           this.getActualDuration(duration),
           utils.sha3(this.secretPhrase),
           this.publicResolverAddress,
           this.address
-        )
-        .send(txObj)
-        .on('transactionHash', hash => promiEvent.emit('transactionHash', hash))
-        .on('error', err => promiEvent.emit('error', err))
-        .on('receipt', receipt => promiEvent.emit('receipt', receipt));
+        );
+
+      registerWithConfig
+        .estimateGas(txObj)
+        .then(res => {
+          txObj['gas'] = res;
+          registerWithConfig
+            .send(txObj)
+            .on('transactionHash', hash =>
+              promiEvent.emit('transactionHash', hash)
+            )
+            .on('error', err => promiEvent.emit('error', err))
+            .on('receipt', receipt => promiEvent.emit('receipt', receipt));
+        })
+        .catch(err => promiEvent.emit('error', err));
     });
     return promiEvent;
   }

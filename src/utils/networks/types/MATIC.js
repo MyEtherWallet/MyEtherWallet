@@ -4,6 +4,7 @@ export default {
   name: 'MATIC',
   name_long: 'Polygon (Matic)',
   homePage: 'https://polygonscan.com/',
+  blockExplorer: 'PolygonScan',
   blockExplorerTX: 'https://polygonscan.com/tx/[[txHash]]',
   blockExplorerAddr: 'https://polygonscan.com/address/[[address]]',
   chainID: 137,
@@ -17,7 +18,7 @@ export default {
     url: null,
     websocket: null
   },
-  gasPriceMultiplier: 1.5,
+  gasPriceMultiplier: 1.7,
   canBuy: true,
   coingeckoID: 'matic-network'
 };

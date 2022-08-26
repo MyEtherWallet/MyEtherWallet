@@ -69,14 +69,6 @@
           </mew-button>
         </v-col>
       </v-row>
-      <mew-alert
-        v-if="!bluetooth"
-        class="mt-5"
-        title="Bluetooth Required"
-        description="Bluetooth is required for some wallets."
-        theme="warning"
-        hide-close-icon
-      />
     </div>
     <v-dialog v-model="bluetoothModal" persistent max-width="500">
       <v-sheet color="white" class="pa-5">
@@ -183,29 +175,13 @@
         =====================================================================================
         -->
       <access-wallet-ledger
-        v-if="onLedger"
+        v-if="onLedger || onLedgerX"
         :ledger-unlock="nextStep"
         :ledger-apps="ledgerApps"
-        :ledger-connected="ledgerConnected"
         :paths="paths"
         :selected-path="selectedPath"
         :set-path="setPath"
-        @ledgerApp="setSelectedApp"
-      />
-
-      <!--
-        =====================================================================================
-          LedgerX
-        =====================================================================================
-        -->
-      <access-wallet-ledger-x
-        v-if="onLedgerX"
-        :ledger-unlock-ble="nextStep"
-        :ledger-apps="ledgerApps"
-        :ledger-connected="ledgerConnected"
-        :paths="paths"
-        :selected-path="selectedPath"
-        :set-path="setPath"
+        @setBluetoothLedgerUnlock="setBluetoothLedgerUnlock"
         @ledgerApp="setSelectedApp"
       />
 
@@ -243,8 +219,8 @@
 </template>
 
 <script>
-import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { isEmpty, isObject } from 'lodash';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import AccessWalletBitbox from './hardware/components/AccessWalletBitbox';
 import AccessWalletAddressNetwork from '@/modules/access-wallet/common/components/AccessWalletAddressNetwork';
 import AccessWalletKeepkey from './hardware/components/AccessWalletKeepkey';
@@ -258,7 +234,6 @@ import wallets from '@/modules/access-wallet/hardware/handlers/configs/configWal
 import { mapActions, mapGetters, mapState } from 'vuex';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
-// TODO: add these changes to mew components
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { EventBus } from '@/core/plugins/eventBus.js';
 
@@ -301,15 +276,8 @@ export default {
     return {
       buttons: [
         {
-          label: 'Ledger USB',
-          icon: require('@/assets/images/icons/hardware-wallets/icon-ledger.svg'),
-          ble: false,
-          type: WALLET_TYPES.LEDGER
-        },
-        {
-          label: 'Ledger Bluetooth',
+          label: 'Ledger',
           icon: require('@/assets/images/icons/hardware-wallets/Ledger-Nano-X-Label-Icon.svg'),
-          ble: true,
           type: WALLET_TYPES.LEDGER
         },
         {
@@ -484,13 +452,13 @@ export default {
      * On Ledger
      */
     onLedger() {
-      return !this.ledgerBluetooth && this.walletType == WALLET_TYPES.LEDGER;
+      return this.walletType == WALLET_TYPES.LEDGER;
     },
     /**
      * On Ledger X
      */
     onLedgerX() {
-      return this.ledgerBluetooth && this.walletType === WALLET_TYPES.LEDGER;
+      return this.walletType === WALLET_TYPES.LEDGER;
     },
     /**
      * On CoolWallet
@@ -642,9 +610,13 @@ export default {
       this.reset();
     });
 
-    const { bluetooth } = navigator;
-    if (!bluetooth) return (this.bluetooth = false);
-    this.bluetooth = await bluetooth.getAvailability();
+    try {
+      const { bluetooth } = navigator;
+      if (!bluetooth) return (this.bluetooth = false);
+      this.bluetooth = await bluetooth.getAvailability();
+    } catch (e) {
+      Toast(e, {}, ERROR);
+    }
   },
   methods: {
     ...mapActions('wallet', ['setWallet', 'setLedgerBluetooth']),
@@ -693,8 +665,8 @@ export default {
         } else {
           this.hwWalletInstance = {};
           if (this.onLedger || this.onLedgerX) {
-            this.step -= 1;
-            this[`${this.walletType}Unlock`]();
+            this.step = 2;
+            //this[`${this.walletType}Unlock`]();
           } else {
             this.walletType = '';
             this.step = 1;
@@ -713,9 +685,6 @@ export default {
       this.walletType = WALLET_TYPES.TREZOR;
     },
     setWalletInstance(btnObj) {
-      if (btnObj.type === WALLET_TYPES.LEDGER) {
-        this.ledgerBluetooth = btnObj.ble;
-      }
       this.walletType = btnObj.type;
       this.nextStep();
     },
@@ -723,8 +692,6 @@ export default {
       if (this.walletType) {
         this.step++;
         if (this.step === this.walletInitialized) {
-          if (this.onLedger || this.onLedgerX)
-            this.selectedPath = this.paths[0];
           if (this.onCoolWallet || this.onBitbox2) return;
           this[`${this.walletType}Unlock`]();
         }
@@ -734,9 +701,17 @@ export default {
      * Unlock the hardware wallets
      */
     ledgerUnlock() {
-      this.unlockPathOnly();
+      if (this.ledgerBluetooth) {
+        this.bluetoothLedgerUnlock();
+      } else {
+        this.unlockPathOnly();
+      }
     },
-    ledgerXUnlockBLE() {
+    setBluetoothLedgerUnlock() {
+      this.ledgerBluetooth = true;
+      this.nextStep();
+    },
+    bluetoothLedgerUnlock() {
       this.unlockPathOnly();
     },
     trezorUnlock() {
@@ -757,7 +732,7 @@ export default {
     unlockPathOnly() {
       const path = isObject(this.selectedPath)
         ? this.selectedPath.hasOwnProperty('value')
-          ? this.selectedPath.value
+          ? this.selectedPath?.value
           : this.selectedPath
         : this.paths[0].value;
       this.wallets[this.walletType]
@@ -765,8 +740,7 @@ export default {
         .then(_hwWallet => {
           try {
             this.loaded = true;
-            if (this.onLedger) this.ledgerConnected = true;
-            if (this.onLedgerX) this.nextStep();
+            if (this.onLedgerX || this.onLedger) this.nextStep();
             if ((this.onTrezor || this.onKeepkey) && this.step == 2)
               this.step++;
             if (this.onBitbox2) {

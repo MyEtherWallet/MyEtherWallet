@@ -4,7 +4,7 @@
   Module Tokens
   =============================================================
   -->
-  <div class="mew-components--module-tokens">
+  <div class="module-tokens">
     <v-skeleton-loader
       v-if="loading && tokensData"
       class="mx-auto"
@@ -280,9 +280,12 @@ export default {
   }
 };
 </script>
+
 <style lang="scss">
-.mew-table td.text-start:nth-last-of-type(2) div span:first-child {
-  text-overflow: ellipsis;
-  overflow: hidden;
+.module-tokens {
+  .mew-table td.text-start:nth-last-of-type(2) div span:first-child {
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
 }
 </style>

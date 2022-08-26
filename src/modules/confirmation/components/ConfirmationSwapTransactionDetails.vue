@@ -25,7 +25,7 @@
       <template #rightColItem1>
         <div class="mew-body">
           {{ convertedFees.value }}
-          <span class="greyPrimary--text">{{ convertedFees.unit }}</span>
+          <span class="greyPrimary--text">{{ network.type.currencyName }}</span>
           ~{{ txFeeUSD }}
         </div>
       </template>
@@ -137,7 +137,7 @@ export default {
   },
   computed: {
     ...mapGetters('external', ['fiatValue']),
-    ...mapGetters('global', ['getFiatValue']),
+    ...mapGetters('global', ['network', 'getFiatValue']),
     convertedFees() {
       return formatGasValue(this.txFee);
     },

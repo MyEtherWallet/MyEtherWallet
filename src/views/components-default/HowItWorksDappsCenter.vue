@@ -86,13 +86,12 @@ import AppBlockTitle from '@/core/components/AppBlockTitle';
 
 export default {
   components: { AppBlockTitle },
-  data: () => ({
+  data: vm => ({
     titleData: {
       textProps: '',
       toptitle: '',
-      title: 'DApps',
-      description:
-        'Decentralized Applications (DApps) are what makes Ethereum special.',
+      title: vm.$t('howItWorks.dapps.title'),
+      description: vm.$t('howItWorks.dapps.description'),
       centered: false
     }
   })

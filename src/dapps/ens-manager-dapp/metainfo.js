@@ -1,5 +1,5 @@
 import { ENS_MANAGER_ROUTE, ensRouterGuard } from './configsRoutes';
-import { ETH, GOERLI, RIN, ROP } from '@/utils/networks/types';
+import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
 import layout from './TheENSManagerLayout';
 import ENSManagerLayout from '@/dapps/ens-manager-dapp/TheENSManagerLayout';
 export default {
@@ -11,7 +11,7 @@ export default {
   path: ENS_MANAGER_ROUTE.ENS_MANAGER.PATH,
   name: ENS_MANAGER_ROUTE.ENS_MANAGER.NAME,
   component: ENSManagerLayout,
-  networks: [ETH, GOERLI, RIN, ROP],
+  networks: SUPPORTED_NETWORKS,
   layout,
   release: '07/08/2021',
   meta: {
@@ -25,6 +25,10 @@ export default {
     {
       path: ENS_MANAGER_ROUTE.CLAIM.PATH,
       name: ENS_MANAGER_ROUTE.CLAIM.NAME
+    },
+    {
+      path: ENS_MANAGER_ROUTE.REVERSE.PATH,
+      name: ENS_MANAGER_ROUTE.REVERSE.NAME
     },
     {
       path: ENS_MANAGER_ROUTE.ENS_1.PATH,

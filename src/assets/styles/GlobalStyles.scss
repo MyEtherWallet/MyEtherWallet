@@ -77,6 +77,10 @@ h6 {
   text-transform: initial !important;
 }
 
+.text-transform--none {
+  text-transform: none !important;
+}
+
 .text-decoration--none {
   text-decoration: none !important;
 }
@@ -87,6 +91,12 @@ h6 {
 
 .word-break--break-all {
   word-break: break-all;
+  white-space: initial;
+}
+
+.break-word {
+  word-break: break-word;
+  white-space: initial;
 }
 
 .white-space--nowrap {
@@ -95,6 +105,14 @@ h6 {
 
 .letter-spacing--none {
   letter-spacing: 0 !important;
+}
+
+.letter-spacing--initial {
+  letter-spacing: initial !important;
+}
+
+.line-height--initial {
+  line-height: initial !important;
 }
 
 /* ========== Cursor ========== */
@@ -143,10 +161,6 @@ h6 {
   height: 100% !important;
 }
 
-.vertical-align--middle {
-  vertical-align: middle;
-}
-
 .display--block {
   display: block !important;
 }
@@ -169,33 +183,6 @@ h6 {
   }
 }
 
-.btn-circle {
-  cursor: pointer;
-  transition: filter 0.2s linear;
-  height: 30px;
-
-  &:hover {
-    filter: brightness(90%);
-  }
-}
-
-// temp addition, remove once stakewise promo is done
-
-.snackbar-border {
-  .v-snack__wrapper {
-    border-radius: 8px !important;
-    border: 1px solid var(--v-greenPrimary-base) !important;
-    background-color: var(--v-whiteBackground-base) !important;
-  }
-  // .white {
-  //   border: 1px solid var(--v-greenPrimary-base) !important;
-  // }
-
-  // .application .white {
-  //   border: 1px solid var(--v-greenPrimary-base) !important;
-  // }
-}
-
 /* ========= Convert SVG to white ========= */
 .make-white-svg {
   filter: brightness(10);
@@ -205,20 +192,20 @@ h6 {
 /* Firefox */
 * {
   scrollbar-width: auto;
-  scrollbar-color: var(--v-greenPrimary-base) #d6d6d6;
+  scrollbar-color: #c8c8c8 #f4f4f4;
 }
 
 /* Chrome, Edge, and Safari */
 *::-webkit-scrollbar {
-  width: 6px;
+  width: 10px;
 }
 
 *::-webkit-scrollbar-track {
-  background: #d6d6d6;
+  background: #f4f4f4;
 }
 
 *::-webkit-scrollbar-thumb {
-  background-color: #949494;
-  border-radius: 0px;
-  border: 0px solid #ffffff;
+  background-color: #c8c8c8;
+  border-radius: 10px;
+  border: 2px solid #f4f4f4;
 }

@@ -58,7 +58,7 @@ export default {
   },
   computed: {
     isOverlayOpen() {
-      return !this.$vuetify.breakpoint.smAndDown && this.open;
+      return this.open;
     }
   },
   watch: {

@@ -23,6 +23,8 @@ import {
 import ModuleMoonPay from '@/modules/moon-pay/ModuleMoonPay';
 import { MOONPAY_EVENT } from '@/modules/moon-pay/helpers';
 import { EventBus } from '@/core/plugins/eventBus';
+import '@formatjs/intl-numberformat/polyfill';
+import '@formatjs/intl-numberformat/locale-data/en';
 export default {
   name: 'App',
   components: {
@@ -85,6 +87,13 @@ export default {
         this.setMigrated(true);
       });
     }
+    const _self = this;
+    // Close modal with 'esc' key
+    document.addEventListener('keydown', e => {
+      if (e.keyCode === 27) {
+        _self.moonPayOpen = false;
+      }
+    });
   },
   methods: {
     ...mapActions('global', ['setOnlineStatus']),

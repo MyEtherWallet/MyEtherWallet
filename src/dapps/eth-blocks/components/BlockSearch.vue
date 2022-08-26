@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="dapp--eth-blocks--block-search">
     <!--
     ===================================================
       Max Block

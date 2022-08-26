@@ -137,3 +137,9 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.claim-border-container {
+  border: 1px solid var(--v-greyMedium-base);
+}
+</style>
