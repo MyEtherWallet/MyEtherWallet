@@ -88,8 +88,9 @@
               >Learn more.</a
             >
           </div>
+          <!-- Ledger Warning Sheet -->
           <div
-            v-if="isOnLedger"
+            v-if="isSwap && isOnLedger"
             class="ledger-warning d-flex justify-space-between px-4 py-6 border-radius--5px mb-5"
           >
             <div>
@@ -99,14 +100,16 @@
                 "
                 alt="Ledger Wallet"
                 max-width="11em"
-                max-height="5em"
+                max-height="2.5em"
                 contain
+                class="ml-15"
               />
             </div>
-            <span class="textBlack2--text ml-10">
+            <span class="textBlack2--text ml-2">
               <b>Using Ledger?</b> Consider turning off 'debug data' before
-              proceeding.Additional steps associated with the 'debug feature' on
-              Ledger may be required to approve this transaction.
+              proceeding.Additional steps associated with the 'debug
+              <br />
+              feature'on Ledger may be required to approve this transaction.
             </span>
           </div>
           <!-- transaction details -->
@@ -661,6 +664,7 @@ export default {
       this.sendCurrency = {};
       this.toDetails = {};
       this.signing = false;
+      this.isLedger = false;
       this.links = {
         ethvm: '',
         explorer: ''
