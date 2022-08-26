@@ -25,7 +25,12 @@ import TheWalletFooter from './components-wallet/TheWalletFooter';
 import ModuleConfirmation from '@/modules/confirmation/ModuleConfirmation';
 import handlerWallet from '@/core/mixins/handlerWallet.mixin';
 import nodeList from '@/utils/networks';
-import { ERROR, Toast, WARNING } from '@/modules/toast/handler/handlerToast';
+import {
+  ERROR,
+  SUCCESS,
+  Toast,
+  WARNING
+} from '@/modules/toast/handler/handlerToast';
 import { Web3Wallet } from '@/modules/access-wallet/common';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
@@ -212,6 +217,11 @@ export default {
               await this.setTokenAndEthBalance();
               this.trackNetworkSwitch(foundNetwork[0].type.name);
               this.$emit('newNetwork');
+              Toast(
+                `Switched network to: ${foundNetwork[0].type.name}`,
+                {},
+                SUCCESS
+              );
             } else {
               this.setValidNetwork(false);
               Toast("Current wallet's network is unsupported", {}, ERROR);
