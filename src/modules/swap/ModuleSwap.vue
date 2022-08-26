@@ -617,7 +617,7 @@ export default {
     toTokens() {
       if (this.isLoading) return [];
       return this.availableTokens.toTokens.reduce((arr, token) => {
-        if (localContractToToken[token.contract])
+        if (token && localContractToToken[token.contract])
           arr.push(localContractToToken[token.contract]);
         return arr;
       }, []);
@@ -699,7 +699,7 @@ export default {
      */
     fromTokens() {
       return this.availableTokens.fromTokens.reduce((arr, token) => {
-        if (localContractToToken[token.contract])
+        if (token && localContractToToken[token.contract])
           arr.push(localContractToToken[token.contract]);
         return arr;
       }, []);
