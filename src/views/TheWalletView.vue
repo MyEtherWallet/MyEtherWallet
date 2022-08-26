@@ -33,8 +33,7 @@ import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalyti
 import matchNetwork from '@/core/helpers/matchNetwork';
 import EnkryptPromoSnackbar from '@/views/components-wallet/EnkryptPromoSnackbar';
 import TheEnkryptPopup from '@/views/components-default/TheEnkryptPopup.vue';
-import { WEB3_WALLET } from '@/modules/access-wallet/common';
-
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 export default {
   components: {
     TheWalletSideMenu,
@@ -94,7 +93,7 @@ export default {
   mounted() {
     if (this.online && !this.isOfflineApp) {
       this.setup();
-      if (this.identifier === WEB3_WALLET) {
+      if (this.identifier === WALLET_TYPES.WEB3_WALLET) {
         this.web3Listeners();
       }
       this.checkNetwork();
@@ -197,7 +196,10 @@ export default {
       }
     },
     async findAndSetNetwork() {
-      if (window.ethereum) {
+      if (
+        window.ethereum &&
+        this.instance.identifier === WALLET_TYPES.WEB3_WALLET
+      ) {
         const networkId = await window.ethereum?.request({
           method: 'net_version'
         });
