@@ -1147,7 +1147,7 @@ export default {
         this.defaults.fromToken === MAIN_TOKEN_ADDRESS &&
         new BigNumber(this.balanceInETH).gt(0)
       ) {
-        return this.mainTokenDetails;
+        return findToken;
       }
       return findToken ? findToken : this.actualFromTokens[0];
     },
