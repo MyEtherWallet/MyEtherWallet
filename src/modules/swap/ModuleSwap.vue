@@ -616,11 +616,11 @@ export default {
      */
     toTokens() {
       if (this.isLoading) return [];
-      return this.availableTokens.toTokens
-        .map(token => {
-          return localContractToToken[token.contract];
-        })
-        .filter(token => token);
+      return this.availableTokens.toTokens.reduce((arr, token) => {
+        if (localContractToToken[token.contract])
+          arr.push(localContractToToken[token.contract]);
+        return arr;
+      }, []);
     },
     /**
      * @returns object of all token data
@@ -698,11 +698,11 @@ export default {
      * to swap from
      */
     fromTokens() {
-      return this.availableTokens.fromTokens
-        .map(token => {
-          return localContractToToken[token.contract];
-        })
-        .filter(token => token);
+      return this.availableTokens.fromTokens.reduce((arr, token) => {
+        if (localContractToToken[token.contract])
+          arr.push(localContractToToken[token.contract]);
+        return arr;
+      }, []);
     },
     txFee() {
       return toBN(this.totalGasLimit).mul(toBN(this.localGasPrice)).toString();
@@ -968,10 +968,10 @@ export default {
       tokens.forEach(token => {
         if (localContractToToken[token.contract]) return;
         if (
-          token.contract?.toLowerCase() === '0xeth' ||
-          token.contract?.toLowerCase() === '0xbnb' ||
-          token.contract?.toLowerCase() === '0xbnbbsc' ||
-          token.contract?.toLowerCase() === '0xbusdbnb'
+          token.isEth === false &&
+          (token.contract?.toLowerCase() === '0xeth' ||
+            token.contract?.toLowerCase().includes('matic') ||
+            token.contract?.toLowerCase().includes('bnb'))
         )
           return;
         if (token.cgid) {
