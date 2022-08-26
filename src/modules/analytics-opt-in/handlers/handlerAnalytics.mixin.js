@@ -65,28 +65,11 @@ export default {
       }
     },
     /**
-     * Tracks which swap rate user clicks
-     */
-    trackSwapRate(action) {
-      if (this.$matomo && action && this.consentToTrack) {
-        this.$matomo.trackEvent(categories.swapRates, action);
-      }
-    },
-    /**
      * Tracks which dapp user navigates to
      */
     trackDapp(action) {
       if (this.$matomo && action && this.consentToTrack) {
         this.$matomo.trackEvent(categories.dapp, action);
-      }
-    },
-    /**
-     * Tracks what user selects to swap from
-     * and swap to
-     */
-    trackSwap(action) {
-      if (this.$matomo && action && this.consentToTrack) {
-        this.$matomo.trackEvent(categories.swap, action);
       }
     },
     /**
@@ -127,6 +110,27 @@ export default {
     trackMewWalletInstall() {
       if (this.$matomo && this.consentToTrack) {
         this.$matomo.trackEvent(categories.mewwallet, 'true');
+      }
+    },
+    /**
+     * SWAP specific analytics
+     */
+
+    /**
+     * Tracks which swap rate user clicks
+     */
+    trackSwapRate(action) {
+      if (this.$matomo && action && this.consentToTrack) {
+        this.$matomo.trackEvent(categories.swapRates, action);
+      }
+    },
+    /**
+     * Tracks what user selects to swap from
+     * and swap to
+     */
+    trackSwap(action) {
+      if (this.$matomo && action && this.consentToTrack) {
+        this.$matomo.trackEvent(categories.swap, action);
       }
     }
   }

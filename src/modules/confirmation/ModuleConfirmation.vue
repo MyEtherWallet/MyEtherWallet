@@ -15,7 +15,7 @@
       :tx-obj="tx"
       :title="title"
       :reset="reset"
-      :sent-btc="resolver"
+      :sent-btc="sendCrossChain"
     />
     <app-modal
       :show="showTxOverlay"
@@ -598,6 +598,10 @@ export default {
     });
   },
   methods: {
+    sendCrossChain(bool) {
+      this.trackSwap('swapSendCrossChain');
+      this.resolver(bool);
+    },
     dataToAction(data) {
       return dataToAction(data);
     },
@@ -711,6 +715,9 @@ export default {
       this.showSuccess(hash);
     },
     showSuccess(param) {
+      if (this.isSwap) {
+        this.trackSwap('swapTransactionSuccessfullySent');
+      }
       if (isArray(param)) {
         const lastHash = param[param.length - 1].tx.hash;
         this.links.ethvm = this.network.type.isEthVMSupported.supported
@@ -826,6 +833,9 @@ export default {
       }
     },
     btnAction() {
+      if (this.isSwap) {
+        this.trackSwap('swapTransactionSend');
+      }
       if (!this.isWeb3Wallet) {
         if (
           (this.signedTxArray.length === 0 ||
