@@ -70,7 +70,8 @@ const EXCEPTIONS = [
   '@unstoppabledomains/resolution',
   '@walletconnect/client',
   '@walletconnect/qrcode-modal',
-  'chromedriver'
+  'chromedriver',
+  'graphql'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

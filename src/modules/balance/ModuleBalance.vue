@@ -1,5 +1,5 @@
 <template>
-  <div class="mew6-component--module-balance">
+  <div class="module-balance">
     <!--
     =====================================================================================
       display if the user has an eth balance > 0
