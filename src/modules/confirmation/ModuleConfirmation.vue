@@ -313,7 +313,6 @@ export default {
   mixins: [handlerAnalytics],
   data() {
     return {
-      isLedger: false,
       showTxOverlay: false,
       showSignOverlay: false,
       showSuccessModal: false,
@@ -557,9 +556,6 @@ export default {
       _self.toNonEth = !_self.swapInfo.toTokenType.isEth;
       if (!_self.isHardware && _self.identifier !== WALLET_TYPES.WEB3_WALLET) {
         await _self.signTx();
-      }
-      if (_self.identifier === WALLET_TYPES.LEDGER) {
-        this.isLedger = true;
       }
     });
 
