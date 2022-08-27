@@ -26,9 +26,10 @@ const tokensList = function (state, getters, rootState, rootGetters) {
         let isHidden = false;
         const hiddenTokens = rootGetters['custom/hiddenTokens'];
         if (hiddenTokens.length > 0) {
-          isHidden = hiddenTokens.find(token => {
-            return item.contract == token.address;
-          });
+          isHidden =
+            hiddenTokens.find(token => {
+              return item.contract == token.address;
+            }) !== undefined;
         }
         item.isHidden = isHidden;
         return item;
