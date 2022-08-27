@@ -187,7 +187,6 @@ export default {
           }?`;
     },
     displaySelectedTokens() {
-      console.log('selectedTokens', this.selectedTokens);
       return this.selectedTokens;
     },
     loading() {
@@ -195,16 +194,12 @@ export default {
     },
     preselectedTokens() {
       const tokens = [];
-      console.log('formattedAllTokens', this.formattedAllTokens);
-      console.log('formattedAllTokens length', this.formattedAllTokens.length);
       for (const token of this.formattedHiddenTokens) {
         const newObj = this.formattedAllTokens.filter(item => {
           return item.address === token.address;
         })[0];
-        console.log('newObj', newObj);
         tokens.push(newObj);
       }
-      console.log('preselectedTokens', tokens);
       return tokens;
     }
   },
@@ -216,14 +211,10 @@ export default {
       }
     },
     open(val) {
-      console.log('open', val);
       if (val && !this.preselected && !this.loading) {
         this.selectedTokens = this.preselectedTokens;
         this.preselected = true;
       }
-    },
-    preselected(val) {
-      console.log('preselected', val);
     }
   },
   methods: {
@@ -292,7 +283,6 @@ export default {
           }
         });
       }
-      console.log('selectedTokens', this.selectedTokens);
     },
     /**
      * Handles select all
@@ -343,7 +333,6 @@ export default {
       } // End if token is custom
 
       this.selectedTokens.map(item => {
-        console.log('item', item);
         this.setHiddenToken(item).then(() => {
           this.closeDelete();
           Toast('Token Hidden succesfully', {}, SUCCESS);
