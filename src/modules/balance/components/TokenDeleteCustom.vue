@@ -14,7 +14,7 @@
     :title="title"
     :close="closeDelete"
     :back="null"
-    :content-size="step === 1 ? 'large' : 'medium'"
+    :content-size="step === 1 ? 'xlarge' : 'medium'"
   >
     <div v-if="step === 1" class="full-width">
       <!--
@@ -23,7 +23,6 @@
     =====================================================================================
     -->
       <mew-table
-        has-select
         :table-headers="tableHeaders"
         :table-data="formattedCustomTokens"
         no-data-text="No custom tokens found!"
@@ -88,7 +87,11 @@
 <script>
 import { SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 import { mapGetters, mapActions } from 'vuex';
+import MewTable from '@/components/MewTable/MewTable';
 export default {
+  components: {
+    MewTable
+  },
   props: {
     open: {
       default: false,
@@ -104,6 +107,13 @@ export default {
       step: 1,
       tableHeaders: [
         {
+          text: 'Show',
+          value: 'toggle',
+          sortable: false,
+          filterable: false,
+          width: '15%'
+        },
+        {
           text: 'Token',
           value: 'token',
           sortable: false,
@@ -113,13 +123,20 @@ export default {
           text: 'Contract Address',
           value: 'address',
           sortable: false,
-          width: '50%'
+          width: '40%'
         },
         {
           text: 'Balance',
           value: 'balance',
           sortable: false,
           width: '20%'
+        },
+        {
+          text: 'Remove',
+          value: 'callToAction',
+          sortable: false,
+          filterable: false,
+          width: '15%'
         }
       ],
       selectedTokens: []
@@ -131,6 +148,7 @@ export default {
     formattedCustomTokens() {
       return this.customTokens
         ? this.customTokens.map(item => {
+            item.isCustom = true;
             return this.formatValues(item);
           })
         : [];
@@ -163,6 +181,13 @@ export default {
      */
     formatValues(item) {
       const newObj = {};
+      newObj.toggle = {
+        color: 'primary',
+        value: true,
+        method: () => {
+          // Placeholder
+        }
+      };
       newObj.balance = [
         item.balancef
           ? item.balancef + ' ' + item.symbol
@@ -170,7 +195,24 @@ export default {
       ];
       newObj.token = item.symbol;
       newObj.address = item.contract;
+      const networkType = this.network.type;
+      const isEthVMSupported = networkType.isEthVMSupported;
+      newObj.explorerAddr = isEthVMSupported.supported
+        ? isEthVMSupported.blockExplorerAddr
+        : networkType.blockExplorerAddr;
       newObj.tokenImg = item.img ? item.img : this.network.type.icon;
+      newObj.callToAction = item.isCustom
+        ? [
+            {
+              title: 'Remove',
+              btnStyle: 'transparent',
+              colorTheme: 'error',
+              method: () => {
+                // Placeholder
+              }
+            }
+          ]
+        : [];
       return newObj;
     },
     /**
