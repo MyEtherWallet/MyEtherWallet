@@ -36,6 +36,14 @@ const DELETE_CUSTOM_TOKEN = function (state, { token, rootGetters }) {
           return item;
         }
       });
+      // Check if token is in hiddenTokens
+      const hiddenTokens = rootGetters['custom/hiddenTokens'];
+      if (hiddenTokens.length > 0) {
+        const newHiddenTokens = hiddenTokens.filter(item => {
+          return found.address !== item.address;
+        });
+        Vue.set(state.hiddenTokens, network.type.name, newHiddenTokens);
+      }
       if (!found) {
         return currentTokens;
       }
@@ -66,7 +74,7 @@ const DELETE_HIDDEN_TOKEN = function (state, { token, rootGetters }) {
   const currentHiddenTokens = state.hiddenTokens[network.type.name].filter(
     currentTokens => {
       const found = token.find(item => {
-        if (item.address === currentTokens.contract) {
+        if (item.address === currentTokens.address) {
           return item;
         }
       });
