@@ -171,13 +171,13 @@ export default {
     },
     coin() {
       if (!this.validAddress) return '';
-      return (
-        'Valid ' +
-        (this.resolvedAddr.length > 0 && !this.resolvedAddr?.includes('.')
-          ? isValidCoinAddress(this.resolvedAddr).coin
-          : isValidCoinAddress(this.lowercaseAddressToAdd).coin) +
-        ' address'
-      );
+      return `Valid ${this.coinType} address`;
+    },
+    coinType() {
+      return this.resolvedAddr.length > 0 && !this.resolvedAddr?.includes('.')
+        ? isValidCoinAddress(this.resolvedAddr).coin
+        : isValidCoinAddress(this.lowercaseAddressToAdd).coin ||
+            isValidCoinAddress(this.addressToAdd).coin;
     },
     editMode() {
       return this.mode === modes[1];
@@ -312,6 +312,8 @@ export default {
     update() {
       this.addressBookStore[this.currentIdx].address =
         this.checksumAddressToAdd;
+      this.addressBookStore[this.currentIdx].coinType =
+        this.coinType.toLowerCase();
       this.addressBookStore[this.currentIdx].nickname = this.nickname;
       this.setAddressBook(this.addressBookStore);
       this.$emit('back', [3]);
@@ -330,7 +332,9 @@ export default {
       this.addressBookStore.push({
         address: this.checksumAddressToAdd,
         resolvedAddr: this.resolvedAddr,
-        nickname: this.nickname || (this.addressBookStore.length + 1).toString()
+        nickname:
+          this.nickname || (this.addressBookStore.length + 1).toString(),
+        coinType: this.coinType.toLowerCase()
       });
       this.setAddressBook(this.addressBookStore);
       this.reset();

@@ -88,6 +88,7 @@ import handlerSettings from './handler/handlerSettings';
 import { mapState } from 'vuex';
 import gasPriceMixin from './handler/gasPriceMixin';
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
+import MewTable from '@/components/MewTable/MewTable';
 const modes = ['add', 'edit'];
 
 export default {
@@ -97,7 +98,8 @@ export default {
     SettingsExportConfig,
     SettingsGasPrice,
     AddressBookAddEdit,
-    SettingsLocaleConfig
+    SettingsLocaleConfig,
+    MewTable
   },
   mixins: [gasPriceMixin],
   beforeRouteLeave(to, from, next) {
@@ -209,6 +211,7 @@ export default {
           address: item.address,
           nickname: item.nickname,
           resolvedAddr: item.address.includes('.') ? item.resolvedAddr : null,
+          coinType: item.coinType,
           callToAction: [
             {
               title: 'Edit',
