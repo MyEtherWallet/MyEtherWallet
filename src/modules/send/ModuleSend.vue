@@ -340,10 +340,7 @@ export default {
     tokens() {
       // no ref copy
       const tokensList = this.tokensList.slice().filter(t => {
-        const isHidden = this.hiddenTokens.find(token => {
-          return t.contract == token.address;
-        });
-        return !isHidden;
+        return !t.isHidden;
       });
       const imgs = tokensList.map(item => {
         item.totalBalance = this.getFiatValue(item.usdBalancef);
