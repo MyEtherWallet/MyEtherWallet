@@ -6,23 +6,30 @@
   -->
   <div class="module-tokens">
     <v-skeleton-loader
-      v-if="loading && tokensData"
+      v-if="loading && (tokensData || hiddenTokens)"
       class="mx-auto"
       type="table"
     />
     <mew-module
-      v-if="!loading && tokensData.length > 0 && !dense"
+      v-if="hasTokens && !dense"
       subtitle="My Tokens Value"
       :has-body-padding="false"
       :title="totalTokensValue"
     >
       <template #rightHeaderContainer>
         <div>
+          <!--
           <mew-menu
             activator-text-color="greenPrimary--text"
             :list-obj="menuObj"
             @goToPage="customTokenAction"
           />
+          -->
+          <span
+            class="greenPrimary--text cursor-pointer pl-3"
+            @click="toggleEditCustomToken"
+            >+ Edit Tokens</span
+          >
         </div>
       </template>
       <template #moduleBody>
@@ -36,7 +43,7 @@
       </template>
     </mew-module>
     <mew-table
-      v-if="!loading && tokensData.length > 0 && dense"
+      v-if="hasTokens && dense"
       :has-color="false"
       :table-headers="tableHeaders"
       :table-data="tokensData"
@@ -46,11 +53,7 @@
       display if the user has no tokens
     =====================================================================================
     -->
-    <balance-empty-block
-      v-if="!loading && tokensData.length === 0"
-      is-tokens
-      :is-eth="isEthNetwork"
-    />
+    <balance-empty-block v-if="emptyWallet" is-tokens :is-eth="isEthNetwork" />
     <!--
     =====================================================================================
       add Custom Token form
@@ -65,9 +68,19 @@
       delete Custom Token form
     =====================================================================================
     -->
-    <token-delete-custom
+    <!--<token-delete-custom
       :close="toggleDeleteCustomToken"
       :open="openDeleteCustomToken"
+    />-->
+    <!--
+    =====================================================================================
+      Edit Custom Token form
+    =====================================================================================
+    -->
+    <token-edit-custom
+      :close="toggleEditCustomToken"
+      :open="openEditCustomToken"
+      @addToken="toggleAddCustomToken"
     />
   </div>
 </template>
@@ -76,6 +89,7 @@ import { mapGetters, mapState } from 'vuex';
 import BalanceEmptyBlock from './components/BalanceEmptyBlock';
 import TokenAddCustom from './components/TokenAddCustom';
 import TokenDeleteCustom from './components/TokenDeleteCustom';
+import TokenEditCustom from './components/TokenEditCustom';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { uniqWith, isEqual } from 'lodash';
 import { currencyToNumber } from '@/core/helpers/localization';
@@ -83,7 +97,8 @@ export default {
   components: {
     BalanceEmptyBlock,
     TokenDeleteCustom,
-    TokenAddCustom
+    TokenAddCustom,
+    TokenEditCustom
   },
   props: {
     dense: {
@@ -94,7 +109,8 @@ export default {
   data() {
     return {
       openAddCustomToken: false,
-      openDeleteCustomToken: false,
+      // openDeleteCustomToken: false,
+      openEditCustomToken: false,
       tableHeaders: [
         {
           text: 'Token',
@@ -132,26 +148,26 @@ export default {
           sortable: false,
           width: '15%'
         }
-      ],
-      menuObj: {
-        name: 'Custom Tokens',
-        items: [
-          {
-            items: [
-              {
-                title: 'Add Token',
-                to: 'add',
-                iconName: 'mdi-plus'
-              },
-              {
-                title: 'Hide Token',
-                to: 'remove',
-                iconName: 'mdi-minus'
-              }
-            ]
-          }
-        ]
-      }
+      ]
+      // menuObj: {
+      //   name: 'Custom Tokens',
+      //   items: [
+      //     {
+      //       items: [
+      //         {
+      //           title: 'Add Token',
+      //           to: 'add',
+      //           iconName: 'mdi-plus'
+      //         },
+      //         {
+      //           title: 'Hide Token',
+      //           to: 'remove',
+      //           iconName: 'mdi-minus'
+      //         }
+      //       ]
+      //     }
+      //   ]
+      // }
     };
   },
   computed: {
@@ -173,6 +189,19 @@ export default {
     loading() {
       return this.loadingWalletInfo;
     },
+    hasTokens() {
+      return (
+        !this.loading &&
+        (this.tokensData.length > 0 || this.hiddenTokens.length > 0)
+      );
+    },
+    emptyWallet() {
+      return (
+        !this.loading &&
+        this.tokensData.length === 0 &&
+        this.hiddenTokens.length === 0
+      );
+    },
     /**
      * @returns formatted custom token values and token list values
      * displays custom tokens first and then token list
@@ -181,16 +210,17 @@ export default {
     tokensData() {
       if (!this.tokensList && !this.customTokens && !this.hiddenTokens)
         return [];
-      const customTokens = this.customTokens.map(item => {
-        return this.formatValues(item);
-      });
+      const customTokens = this.customTokens.reduce((arr, item) => {
+        // Check if token is in hiddenTokens
+        const isHidden = this.hiddenTokens.find(token => {
+          return item.contract == token.address;
+        });
+        if (!isHidden) arr.push(this.formatValues(item));
+        return arr;
+      }, []);
       const uniqueTokens = uniqWith(
         this.tokensList.filter(t => {
-          // Check if token is in hiddenTokens
-          const isHidden = this.hiddenTokens.find(token => {
-            return t.contract == token.address;
-          });
-          return !isHidden;
+          return !t.isHidden;
         }),
         isEqual
       );
@@ -265,18 +295,26 @@ export default {
       return newObj;
     },
     toggleAddCustomToken() {
+      this.openEditCustomToken = false;
       this.openAddCustomToken = !this.openAddCustomToken;
     },
-    toggleDeleteCustomToken() {
-      this.openDeleteCustomToken = !this.openDeleteCustomToken;
-    },
-    customTokenAction(param) {
-      if (param === 'add') {
-        this.toggleAddCustomToken();
-      } else if (param === 'remove') {
-        this.toggleDeleteCustomToken();
-      }
+    // toggleDeleteCustomToken() {
+    //   this.openDeleteCustomToken = !this.openDeleteCustomToken;
+    // },
+    toggleEditCustomToken() {
+      this.openEditCustomToken = !this.openEditCustomToken;
     }
+    // customTokenAction(param) {
+    //   console.log('param', param);
+    //   if (param === 'add') {
+    //     this.toggleAddCustomToken();
+    //   } else if (param === 'remove') {
+    //     this.toggleDeleteCustomToken();
+    //   }
+    // },
+    // customTokenAction() {
+    //   this.openEditCustomToken = true;
+    // }
   }
 };
 </script>
