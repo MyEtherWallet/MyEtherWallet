@@ -209,9 +209,8 @@ export default {
           }
           this.loadedAddressValidation = !this.isValidAddress ? false : true;
           if (this.isValidAddress && !this.isOfflineApp) {
-            const reverseName = await this.nameResolver.resolveAddress(
-              this.inputAddr
-            );
+            const reverseName =
+              (await this.nameResolver.resolveAddress(this.inputAddr)) || {};
             if (!reverseName.name) {
               reverseName.name =
                 (
