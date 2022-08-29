@@ -1,119 +1,10 @@
-import { BN } from 'web3-utils';
-import BigNumber from 'bignumber.js';
-const checkAmount = (total, amount) => {
-  if (BN(amount).gt(BN(total))) {
-    return true;
-  }
-};
-
-const findReserve = (id, reserves) => {
-  return reserves.find(reserve => {
-    return reserve.underlyingAsset
-      ? reserve.underlyingAsset === id
-      : reserve.reserve.underlyingAsset === id;
-  });
-};
-
-const convertToFixed = (val, num) => {
-  if (!val || val === 0) {
-    return 0;
-  }
-
-  if (!num) {
-    num = 2;
-  }
-
-  return new BigNumber(val).toFixed(num).toString();
-};
-
-/**
- * @param value - value to round, will be converted to BigNumber
- * @param round - number of decimal point to round to
- * @returns  a string of rounded number
- */
-const getRoundNumber = (value, dp) => {
-  return value.toFormat(Math.min(dp, value.decimalPlaces()));
-};
-
-const roundPercentage = val => {
-  const value = new BigNumber(val.replace('%', ''));
-  const isNegative = value.isNegative() ? '-' : '';
-  const absoluteValue = value.absoluteValue(); // Get Absolute value
-  /**
-   *Case |value| >= 1000
-   * Return: >1000 or <-1000
-   */
-  if (absoluteValue.isGreaterThanOrEqualTo(1000)) {
-    return isNegative === '-' ? '<-1000%' : '>1000%';
-  }
-
-  /**
-   * Case: |value| >= 100
-   * Return: whole number
-   */
-  if (absoluteValue.isGreaterThanOrEqualTo(100)) {
-    return `${value.toFormat(0)}%`;
-  }
-
-  /**
-   * Case: |value| <= 100
-   * Return: rounded to 2 decimal points number or no decimal points
-   */
-  return `${getRoundNumber(value, 2)}%`;
-};
-
-const roundNumber = val => {
-  const OneThousand = 1e3;
-  const OneMillion = 1e6;
-  const OneBillion = 1e9;
-  const OneTrillion = 1e12;
-  const value = new BigNumber(val);
-
-  /* Case I: value is 0 */
-  if (value.isZero()) {
-    return '0';
-  }
-
-  /* Case I: value >= 1,000,000,000,000 */
-  if (value.isGreaterThanOrEqualTo(OneTrillion)) {
-    return `${getRoundNumber(value.dividedBy(OneTrillion), 2)}T`;
-  }
-
-  /* Case II: value >= 1,000,000,000 */
-  if (value.isGreaterThanOrEqualTo(OneBillion)) {
-    return `${getRoundNumber(value.dividedBy(OneBillion), 2)}B`;
-  }
-
-  /* Case III: value >= 1,000,000*/
-  if (value.isGreaterThanOrEqualTo(OneMillion)) {
-    return `${getRoundNumber(value.dividedBy(OneMillion), 2)}M`;
-  }
-
-  /* Case IV: value >= 1,000*/
-  if (value.isGreaterThanOrEqualTo(OneThousand)) {
-    return value.toFormat(0);
-  }
-
-  /* Case V: value >= 1,000*/
-  if (value.isGreaterThanOrEqualTo(1)) {
-    return getRoundNumber(value, 2);
-  }
-
-  /**
-   * Case VI: value >= 0.0001
-   * Return: a number, rounded up to 4 decimal places
-   */
-  if (value.isGreaterThanOrEqualTo(0.0001)) {
-    return getRoundNumber(value, 4);
-  }
-  return '<0.0001';
-};
-
-const AAVE_TABLE_HEADER = {
-  DEPOSIT: 'DEPOSIT',
-  BORROW: 'BORROW',
-  BALANCE_DEPOSIT: 'BALANCE_DEPOSIT',
-  BALANCE_BORROW: 'BALANCE_BORROW'
+const AAVE_TABLE_TITLE = {
+  deposit: 'DEPOSIT',
+  borrow: 'BORROW',
+  withdraw: 'WITHDRAW',
+  repay: 'REPAY',
+  balance_deposit: 'BALANCE_DEPOSIT',
+  balance_borrow: 'BALANCE_BORROW'
 };
 
 const ACTION_TYPES = {
@@ -127,17 +18,180 @@ const ACTION_TYPES = {
 };
 
 const INTEREST_TYPES = {
-  stable: 'stable',
-  variable: 'variable'
+  stable: 'Stable',
+  variable: 'Variable'
+};
+
+const AAVE_TABLE_BUTTON = {
+  deposit: {
+    title: 'Deposit',
+    btnStyle: 'background',
+    colorTheme: 'greenPrimary',
+    disabled: false
+  },
+  swap: {
+    title: 'Swap',
+    btnStyle: 'outline',
+    colorTheme: 'greenPrimary'
+  },
+  borrow: {
+    title: 'Borrow',
+    btnStyle: 'background',
+    colorTheme: 'greenPrimary'
+  },
+  withdraw: {
+    title: 'Withdraw',
+    btnStyle: 'outline',
+    colorTheme: 'greenPrimary'
+  },
+  repay: {
+    title: 'Repay',
+    btnStyle: 'transparent',
+    colorTheme: 'greenPrimary'
+  }
+};
+
+const AAVE_TABLE_HEADER = {
+  deposit: [
+    {
+      text: 'Token',
+      value: 'token',
+      sortable: true,
+      width: '15%'
+    },
+    {
+      text: 'Available',
+      value: 'available',
+      sortable: true
+    },
+    {
+      text: 'Deposited',
+      value: 'deposited',
+      sortable: true
+    },
+    {
+      text: 'APY',
+      value: 'apy',
+      sortable: false,
+      width: '14%'
+    },
+    {
+      text: '',
+      value: 'callToAction',
+      sortable: false,
+      width: '32%'
+    }
+  ],
+  borrow: [
+    {
+      text: 'Token',
+      value: 'token',
+      sortable: false,
+      width: '15%'
+    },
+    {
+      text: 'Available',
+      value: 'available',
+      sortable: true
+    },
+    {
+      text: 'Stable APY',
+      value: 'stableApy',
+      sortable: false,
+      width: '15%'
+    },
+    {
+      text: 'Variable APY',
+      value: 'variableApy',
+      sortable: false,
+      width: '15%'
+    },
+    {
+      text: '',
+      value: 'callToAction',
+      sortable: false,
+      width: '32%'
+    }
+  ],
+  balanceDeposit: [
+    {
+      text: 'Token',
+      value: 'token',
+      sortable: false,
+      filterable: false,
+      width: '20%'
+    },
+    {
+      text: 'Deposited',
+      value: 'balance',
+      sortable: false,
+      filterable: false,
+      width: '20%'
+    },
+    {
+      text: 'APY',
+      value: 'apy',
+      sortable: false,
+      filterable: false,
+      width: '20%'
+    },
+    {
+      text: 'Use as collateral',
+      value: 'toggle',
+      sortable: false,
+      filterable: false,
+      width: '10%'
+    },
+    {
+      text: '',
+      value: 'callToAction',
+      sortable: false,
+      filterable: false,
+      containsLink: true,
+      width: '30%'
+    }
+  ],
+  balanceBorrow: [
+    {
+      text: 'Token',
+      value: 'token',
+      sortable: false,
+      filterable: false
+    },
+    {
+      text: 'Borrowed',
+      value: 'balance',
+      sortable: false,
+      filterable: false
+    },
+    {
+      text: 'APY',
+      value: 'apy',
+      sortable: false,
+      filterable: false,
+      containsLink: true
+    },
+    {
+      text: 'APR Type',
+      value: 'toggle',
+      sortable: false,
+      filterable: false
+    },
+    {
+      text: '',
+      value: 'callToAction',
+      sortable: false,
+      filterable: false,
+      containsLink: true,
+      width: '32%'
+    }
+  ]
 };
 
 export {
-  checkAmount,
-  findReserve,
-  convertToFixed,
-  roundPercentage,
-  roundNumber,
+  AAVE_TABLE_TITLE,
   AAVE_TABLE_HEADER,
+  AAVE_TABLE_BUTTON,
   ACTION_TYPES,
   INTEREST_TYPES
 };
