@@ -350,6 +350,9 @@ export default class PermanentNameModule extends ENSManagerInterface {
 
       registerWithConfig
         .estimateGas(txObj)
+        .then(res => {
+          txObj['gas'] = res;
+        })
         .then(() => {
           registerWithConfig
             .send(txObj)
