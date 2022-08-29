@@ -107,7 +107,7 @@
             </div>
             <span class="textBlack2--text ml-2">
               <b>Using Ledger?</b> Consider turning off 'debug data' before
-              proceeding.Additional steps associated with the 'debug
+              proceeding. Additional steps associated with the 'debug
               <br />
               feature'on Ledger may be required to approve this transaction.
             </span>
@@ -371,7 +371,7 @@ export default {
       );
     },
     isOnLedger() {
-      return this.identifier === WALLET_TYPES.LEDGER;
+      return this.tx.data !== '0x' && this.identifier === WALLET_TYPES.LEDGER;
     },
     isNotSoftware() {
       return this.isHardware || this.isWeb3Wallet || this.isOtherWallet;
