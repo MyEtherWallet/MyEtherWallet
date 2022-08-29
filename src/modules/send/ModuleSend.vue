@@ -342,6 +342,14 @@ export default {
       const tokensList = this.tokensList.slice().filter(t => {
         return !t.isHidden;
       });
+      const customTokens = this.customTokens.reduce((arr, item) => {
+        // Check if token is in hiddenTokens
+        const isHidden = this.hiddenTokens.find(token => {
+          return item.contract == token.address;
+        });
+        if (!isHidden) arr.push(item);
+        return arr;
+      }, []);
       const imgs = tokensList.map(item => {
         item.totalBalance = this.getFiatValue(item.usdBalancef);
         item.tokenBalance = item.balancef;
@@ -373,12 +381,12 @@ export default {
         },
         ...tokensList
       ];
-      if (this.hasCustom) {
+      if (customTokens.length > 0) {
         return returnedArray.concat([
           {
             header: 'Custom Tokens'
           },
-          ...this.customTokens
+          ...customTokens
         ]);
       }
       return returnedArray;
