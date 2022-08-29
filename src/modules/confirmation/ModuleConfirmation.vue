@@ -90,7 +90,7 @@
           </div>
           <!-- Ledger Warning Sheet -->
           <div
-            v-if="isSwap && isOnLedger"
+            v-if="isOnLedger"
             class="ledger-warning d-flex justify-space-between px-4 py-6 border-radius--5px mb-5"
           >
             <div>
