@@ -77,9 +77,7 @@
             :to-address="swapInfo.to"
           />
           <!-- Warning Sheet -->
-          <div
-            class="px-4 py-6 pr-6 warning textMedium--text border-radius--5px mb-5"
-          >
+          <div class="px-4 py-6 pr-6 textBlack2--text border-radius--5px mb-5">
             <b>Make sure all the information is correct.</b> Cancelling or
             reversing a transaction cannot be guaranteed. You will still be
             charged gas fee even if transaction fails.
@@ -89,6 +87,30 @@
               rel="noopener noreferrer"
               >Learn more.</a
             >
+          </div>
+          <!-- Ledger Warning Sheet -->
+          <div
+            v-if="isOnLedger"
+            class="ledger-warning d-flex justify-space-between px-4 py-6 border-radius--5px mb-5"
+          >
+            <div>
+              <v-img
+                :src="
+                  require('@/assets/images/icons/hardware-wallets/Ledger-Nano-X-Label-Icon.svg')
+                "
+                alt="Ledger Wallet"
+                max-width="11em"
+                max-height="2.5em"
+                contain
+                class="ml-15"
+              />
+            </div>
+            <span class="textBlack2--text ml-2">
+              <b>Using Ledger?</b> Consider turning off 'debug data' before
+              proceeding. Additional steps associated with the 'debug
+              <br />
+              feature'on Ledger may be required to approve this transaction.
+            </span>
           </div>
           <!-- transaction details -->
           <confirm-with-wallet
@@ -347,6 +369,9 @@ export default {
         this.identifier === WALLET_TYPES.MEW_CONNECT ||
         this.identifier === WALLET_TYPES.WALLET_LINK
       );
+    },
+    isOnLedger() {
+      return this.tx.data !== '0x' && this.identifier === WALLET_TYPES.LEDGER;
     },
     isNotSoftware() {
       return this.isHardware || this.isWeb3Wallet || this.isOtherWallet;
@@ -949,5 +974,8 @@ $borderPanels: 1px solid var(--v-greyLight-base) !important;
 }
 .expansion-panel-border-bottom {
   border-bottom: $borderPanels;
+}
+.ledger-warning {
+  border: 1px solid #d7dae3;
 }
 </style>
