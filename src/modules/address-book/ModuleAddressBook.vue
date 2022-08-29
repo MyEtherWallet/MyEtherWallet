@@ -96,7 +96,7 @@ export default {
   computed: {
     ...mapState('addressBook', ['addressBookStore']),
     ...mapGetters('global', ['network']),
-    ...mapState('wallet', ['web3', 'address']),
+    ...mapState('wallet', ['web3', 'address', 'isOfflineApp']),
     errorMessages() {
       if (!this.isValidAddress && this.loadedAddressValidation) {
         return this.$t('interface.address-book.validations.invalid-address');
@@ -207,7 +207,7 @@ export default {
             this.isValidAddress = isAddValid;
           }
           this.loadedAddressValidation = !this.isValidAddress ? false : true;
-          if (this.isValidAddress) {
+          if (this.isValidAddress && !this.isOfflineApp) {
             const reverseName = await this.nameResolver.resolveAddress(
               this.inputAddr
             );
