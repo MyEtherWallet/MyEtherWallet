@@ -174,12 +174,16 @@ export default {
             if (t.contract.toLowerCase() === item.toLowerCase()) return t;
           });
           if (inList) {
+            inList.price = formatFiatValue(inList ? inList.price : '0').value;
             arr.push(inList);
             return arr;
           }
 
           const token = this.contractToToken(item);
-          if (token) arr.push(token);
+          if (token) {
+            token.price = formatFiatValue(token ? token.price : '0').value;
+            arr.push(token);
+          }
           return arr;
         }, []);
       }
