@@ -70,7 +70,13 @@ const EXCEPTIONS = [
   '@unstoppabledomains/resolution',
   '@walletconnect/client',
   '@walletconnect/qrcode-modal',
-  'chromedriver'
+  'chromedriver',
+  '@sentry/browser',
+  '@sentry/tracing',
+  '@sentry/vue',
+  'ethers',
+  'graphql',
+  'xss'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
@@ -126,12 +132,12 @@ const looper = () => {
           if (!isMewComponentBeta) {
             console.error(
               'ERROR: Update ' +
-              _name +
-              ' from ' +
-              ALL_PACKAGES[_name] +
-              ' to ' +
-              latestVersion +
-              '. Released:',
+                _name +
+                ' from ' +
+                ALL_PACKAGES[_name] +
+                ' to ' +
+                latestVersion +
+                '. Released:',
               latestVersionTime
             );
             updatesFound = true;
