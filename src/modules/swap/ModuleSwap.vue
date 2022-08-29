@@ -616,14 +616,11 @@ export default {
      */
     toTokens() {
       if (this.isLoading) return [];
-      const vals = this.availableTokens.toTokens
-        .map(token => {
-          return localContractToToken[token.contract];
-        })
-        .filter(
-          item => item.name !== '' && item.symbol !== '' && item.subtext !== ''
-        );
-      return vals;
+      return this.availableTokens.toTokens.reduce((arr, token) => {
+        if (token && localContractToToken[token.contract])
+          arr.push(localContractToToken[token.contract]);
+        return arr;
+      }, []);
     },
     /**
      * @returns object of all token data
@@ -631,7 +628,7 @@ export default {
      */
     actualFromTokens() {
       if (this.isLoading) return [];
-      const validFromTokens = this.fromTokens.filter(
+      let validFromTokens = this.fromTokens.filter(
         item =>
           item.contract.toLowerCase() !==
           this.toTokenType?.contract?.toLowerCase()
@@ -642,6 +639,13 @@ export default {
             return item;
         }
       });
+      for (const token of tradebleWalletTokens) {
+        validFromTokens = validFromTokens.filter(item => {
+          if (token?.contract?.toLowerCase() !== item.contract.toLowerCase()) {
+            return item;
+          }
+        });
+      }
       const nonChainTokens = this.fromTokens.reduce((arr, item) => {
         if (
           item.hasOwnProperty('isEth') &&
@@ -694,9 +698,11 @@ export default {
      * to swap from
      */
     fromTokens() {
-      return this.availableTokens.fromTokens.map(token => {
-        return localContractToToken[token.contract];
-      });
+      return this.availableTokens.fromTokens.reduce((arr, token) => {
+        if (token && localContractToToken[token.contract])
+          arr.push(localContractToToken[token.contract]);
+        return arr;
+      }, []);
     },
     txFee() {
       return toBN(this.totalGasLimit).mul(toBN(this.localGasPrice)).toString();
@@ -975,6 +981,13 @@ export default {
     setupTokenInfo(tokens) {
       tokens.forEach(token => {
         if (localContractToToken[token.contract]) return;
+        if (
+          token.isEth === false &&
+          (token.contract?.toLowerCase() === '0xeth' ||
+            token.contract?.toLowerCase().includes('matic') ||
+            token.contract?.toLowerCase().includes('bnb'))
+        )
+          return;
         if (token.cgid) {
           const foundToken = this.getCoinGeckoTokenById(token.cgid);
           foundToken.price = this.getFiatValue(foundToken.pricef);
@@ -1007,6 +1020,8 @@ export default {
         token.subtext = name;
         token.value = token.contract;
         token.name = token.symbol || token.subtext;
+        if (token.name !== '' && token.symbol !== '' && token.subtext !== '')
+          return;
         localContractToToken[token.contract] = token;
       });
     },
