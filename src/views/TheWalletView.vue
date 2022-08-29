@@ -18,6 +18,7 @@
 import { mapActions, mapState, mapGetters } from 'vuex';
 import { toBN } from 'web3-utils';
 import Web3 from 'web3';
+import moment from 'moment';
 
 import TheWalletSideMenu from './components-wallet/TheWalletSideMenu';
 import TheWalletHeader from './components-wallet/TheWalletHeader';
@@ -32,7 +33,9 @@ import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalyti
 import matchNetwork from '@/core/helpers/matchNetwork';
 import EnkryptPromoSnackbar from '@/views/components-wallet/EnkryptPromoSnackbar';
 import TheEnkryptPopup from '@/views/components-default/TheEnkryptPopup.vue';
-import moment from 'moment';
+
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
+
 export default {
   components: {
     TheWalletSideMenu,
@@ -192,7 +195,10 @@ export default {
       }
     },
     async findAndSetNetwork() {
-      if (window.ethereum) {
+      if (
+        window.ethereum &&
+        this.instance.identifier === WALLET_TYPES.WEB3_WALLET
+      ) {
         const networkId = await window.ethereum?.request({
           method: 'net_version'
         });
