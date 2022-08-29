@@ -18,13 +18,6 @@
     >
       <template #rightHeaderContainer>
         <div>
-          <!--
-          <mew-menu
-            activator-text-color="greenPrimary--text"
-            :list-obj="menuObj"
-            @goToPage="customTokenAction"
-          />
-          -->
           <span
             class="greenPrimary--text cursor-pointer pl-3"
             @click="toggleEditCustomToken"
@@ -65,15 +58,6 @@
     />
     <!--
     =====================================================================================
-      delete Custom Token form
-    =====================================================================================
-    -->
-    <!--<token-delete-custom
-      :close="toggleDeleteCustomToken"
-      :open="openDeleteCustomToken"
-    />-->
-    <!--
-    =====================================================================================
       Edit Custom Token form
     =====================================================================================
     -->
@@ -88,7 +72,6 @@
 import { mapGetters, mapState } from 'vuex';
 import BalanceEmptyBlock from './components/BalanceEmptyBlock';
 import TokenAddCustom from './components/TokenAddCustom';
-import TokenDeleteCustom from './components/TokenDeleteCustom';
 import TokenEditCustom from './components/TokenEditCustom';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { uniqWith, isEqual } from 'lodash';
@@ -96,7 +79,6 @@ import { currencyToNumber } from '@/core/helpers/localization';
 export default {
   components: {
     BalanceEmptyBlock,
-    TokenDeleteCustom,
     TokenAddCustom,
     TokenEditCustom
   },
@@ -109,7 +91,6 @@ export default {
   data() {
     return {
       openAddCustomToken: false,
-      // openDeleteCustomToken: false,
       openEditCustomToken: false,
       tableHeaders: [
         {
@@ -149,25 +130,6 @@ export default {
           width: '15%'
         }
       ]
-      // menuObj: {
-      //   name: 'Custom Tokens',
-      //   items: [
-      //     {
-      //       items: [
-      //         {
-      //           title: 'Add Token',
-      //           to: 'add',
-      //           iconName: 'mdi-plus'
-      //         },
-      //         {
-      //           title: 'Hide Token',
-      //           to: 'remove',
-      //           iconName: 'mdi-minus'
-      //         }
-      //       ]
-      //     }
-      //   ]
-      // }
     };
   },
   computed: {
@@ -228,8 +190,7 @@ export default {
         return this.formatValues(item);
       });
       tokenList.sort((a, b) => b.usdBalance - a.usdBalance);
-      const tokens = customTokens.concat(tokenList);
-      return tokens;
+      return customTokens.concat(tokenList);
     },
     totalTokensValue() {
       return this.getFiatValue(this.totalTokenFiatValue);
@@ -298,23 +259,9 @@ export default {
       this.openEditCustomToken = false;
       this.openAddCustomToken = !this.openAddCustomToken;
     },
-    // toggleDeleteCustomToken() {
-    //   this.openDeleteCustomToken = !this.openDeleteCustomToken;
-    // },
     toggleEditCustomToken() {
       this.openEditCustomToken = !this.openEditCustomToken;
     }
-    // customTokenAction(param) {
-    //   console.log('param', param);
-    //   if (param === 'add') {
-    //     this.toggleAddCustomToken();
-    //   } else if (param === 'remove') {
-    //     this.toggleDeleteCustomToken();
-    //   }
-    // },
-    // customTokenAction() {
-    //   this.openEditCustomToken = true;
-    // }
   }
 };
 </script>
