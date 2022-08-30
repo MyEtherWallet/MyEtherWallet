@@ -616,14 +616,11 @@ export default {
      */
     toTokens() {
       if (this.isLoading) return [];
-      const vals = this.availableTokens.toTokens
-        .map(token => {
-          return localContractToToken[token.contract];
-        })
-        .filter(
-          item => item.name !== '' && item.symbol !== '' && item.subtext !== ''
-        );
-      return vals;
+      return this.availableTokens.toTokens.reduce((arr, token) => {
+        if (token && localContractToToken[token.contract])
+          arr.push(localContractToToken[token.contract]);
+        return arr;
+      }, []);
     },
     /**
      * @returns object of all token data
@@ -631,7 +628,7 @@ export default {
      */
     actualFromTokens() {
       if (this.isLoading) return [];
-      const validFromTokens = this.fromTokens.filter(
+      let validFromTokens = this.fromTokens.filter(
         item =>
           item.contract.toLowerCase() !==
           this.toTokenType?.contract?.toLowerCase()
@@ -642,13 +639,21 @@ export default {
             return item;
         }
       });
+      for (const token of tradebleWalletTokens) {
+        validFromTokens = validFromTokens.filter(item => {
+          if (token?.contract?.toLowerCase() !== item.contract.toLowerCase()) {
+            return item;
+          }
+        });
+      }
       const nonChainTokens = this.fromTokens.reduce((arr, item) => {
         if (
           item.hasOwnProperty('isEth') &&
           !item.isEth &&
           item.name &&
           item.symbol &&
-          item.subtext
+          item.subtext &&
+          item.symbol !== this.network.type.currencyName
         ) {
           delete item['tokenBalance'];
           delete item['totalBalance'];
@@ -693,9 +698,11 @@ export default {
      * to swap from
      */
     fromTokens() {
-      return this.availableTokens.fromTokens.map(token => {
-        return localContractToToken[token.contract];
-      });
+      return this.availableTokens.fromTokens.reduce((arr, token) => {
+        if (token && localContractToToken[token.contract])
+          arr.push(localContractToToken[token.contract]);
+        return arr;
+      }, []);
     },
     txFee() {
       return toBN(this.totalGasLimit).mul(toBN(this.localGasPrice)).toString();
@@ -919,6 +926,20 @@ export default {
         localContractToToken[MAIN_TOKEN_ADDRESS] = this.mainTokenDetails;
         this.setupSwap();
       }
+    },
+    fromTokenType: {
+      handler: function (newVal) {
+        this.fromTokenType = newVal;
+      },
+      deep: true,
+      immediate: false
+    },
+    toTokenType: {
+      handler: function (newVal) {
+        this.toTokenType = newVal;
+      },
+      deep: true,
+      immediate: false
     }
   },
   beforeMount() {
@@ -960,6 +981,13 @@ export default {
     setupTokenInfo(tokens) {
       tokens.forEach(token => {
         if (localContractToToken[token.contract]) return;
+        if (
+          token.isEth === false &&
+          (token.contract?.toLowerCase() === '0xeth' ||
+            token.contract?.toLowerCase().includes('matic') ||
+            token.contract?.toLowerCase().includes('bnb'))
+        )
+          return;
         if (token.cgid) {
           const foundToken = this.getCoinGeckoTokenById(token.cgid);
           foundToken.price = this.getFiatValue(foundToken.pricef);
@@ -992,6 +1020,8 @@ export default {
         token.subtext = name;
         token.value = token.contract;
         token.name = token.symbol || token.subtext;
+        if (token.name !== '' && token.symbol !== '' && token.subtext !== '')
+          return;
         localContractToToken[token.contract] = token;
       });
     },
@@ -1132,7 +1162,7 @@ export default {
         this.defaults.fromToken === MAIN_TOKEN_ADDRESS &&
         new BigNumber(this.balanceInETH).gt(0)
       ) {
-        return this.mainTokenDetails;
+        return findToken;
       }
       return findToken ? findToken : this.actualFromTokens[0];
     },
@@ -1162,7 +1192,7 @@ export default {
     switchTokens() {
       const fromToken = clone(this.fromTokenType);
       const toToken = clone(this.toTokenType);
-      this.tokenInValue = '0';
+      this.tokenInValue = this.tokenOutValue;
       this.setFromToken(toToken);
       this.setToToken(fromToken);
     },
@@ -1184,6 +1214,21 @@ export default {
       }, 500);
     },
     setFromToken(value) {
+      if (
+        value === undefined ||
+        (!value?.hasOwnProperty('isEth') &&
+          value?.contract?.toLowerCase() !== MAIN_TOKEN_ADDRESS)
+      ) {
+        const foundToken = this.actualFromTokens.filter(item => {
+          if (
+            item?.contract &&
+            item?.contract?.toLowerCase() === value?.contract?.toLowerCase()
+          )
+            return item;
+        });
+        value =
+          foundToken.length > 0 ? foundToken[0] : this.actualFromTokens[0];
+      }
       this.fromTokenType = value;
       this.resetAddressValues({ clearTo: false });
       this.$nextTick(() => {
@@ -1194,6 +1239,16 @@ export default {
       });
     },
     setToToken(value) {
+      if (!value?.hasOwnProperty('isEth')) {
+        const foundToken = this.actualToTokens.filter(item => {
+          if (
+            item?.contract &&
+            item?.contract?.toLowerCase() === value?.contract?.toLowerCase()
+          )
+            return item;
+        });
+        value = foundToken[0];
+      }
       this.toTokenType = value;
       this.resetAddressValues({ clearRefund: false });
       if (value && value.name) {
