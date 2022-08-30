@@ -293,22 +293,25 @@ import { isEmpty, clone, isUndefined, isObject } from 'lodash';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import xss from 'xss';
 import MultiCoinValidator from 'multicoin-address-validator';
+import BigNumber from 'bignumber.js';
+
 import AppButtonBalance from '@/core/components/AppButtonBalance';
 import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import SwapProvidersList from './components/SwapProvidersList.vue';
 import SwapProviderMentions from './components/SwapProviderMentions.vue';
-import Swapper from './handlers/handlerSwap';
 import AppTransactionFee from '@/core/components/AppTransactionFee.vue';
+import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
+import { TRENDING_LIST } from './handlers/configs/configTrendingTokens';
+
+import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import Notification, {
   NOTIFICATION_TYPES,
   NOTIFICATION_STATUS
 } from '@/modules/notifications/handlers/handlerNotification';
 import NonChainNotification from '@/modules/notifications/handlers/nonChainNotification';
-import BigNumber from 'bignumber.js';
-import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
-import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
-import { TRENDING_LIST } from './handlers/configs/configTrendingTokens';
+import Swapper from './handlers/handlerSwap';
+
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 
@@ -892,6 +895,7 @@ export default {
     },
     tokenInValue() {
       this.feeError = '';
+      this.trackSwap('tokenFromValueChanged');
     },
     gasPriceType() {
       if (this.currentTrade) this.currentTrade.gasPrice = this.localGasPrice;
@@ -902,7 +906,10 @@ export default {
       },
       immediate: true
     },
-    selectedProvider(p) {
+    selectedProvider(p, oldVal) {
+      if (!isEmpty(oldVal)) {
+        this.trackSwap('switchProviders');
+      }
       if (isEmpty(p)) this.selectedProviderId = undefined;
     },
     defaults: {
@@ -1039,6 +1046,7 @@ export default {
       const findToken = this.toTokens.find(
         item => item.symbol.toLowerCase() === to.toLowerCase()
       );
+      this.trackSwap('stayOnEth: ' + to);
       this.toTokenType = findToken;
     },
     setupSwap() {
@@ -1142,6 +1150,7 @@ export default {
      * Set the max available amount to swap from
      */
     setMaxAmount() {
+      this.trackSwap('setMaxValue');
       const availableBalanceMinusGas = new BigNumber(
         this.availableBalance
       ).minus(fromWei(toBN(this.localGasPrice).muln(MIN_GAS_LIMIT)));
@@ -1190,6 +1199,7 @@ export default {
       return [];
     },
     switchTokens() {
+      this.trackSwap('switchTokens');
       const fromToken = clone(this.fromTokenType);
       const toToken = clone(this.toTokenType);
       this.tokenInValue = this.tokenOutValue;
@@ -1446,6 +1456,7 @@ export default {
       }
     },
     showConfirm() {
+      this.trackSwap('showConfirm');
       this.setConfirmInfo();
       this.executeTrade();
     },
