@@ -645,7 +645,6 @@ export default {
       this.onManage = true;
       this.manageType = type;
       this.manageDomainHandler = this.myDomains[idx];
-      this.trackDapp('ensDomainManageTab');
     },
     getDomains() {
       this.trackDapp('ensGetDomainsEvent');
