@@ -212,7 +212,7 @@ export default {
             const reverseName = await this.nameResolver.resolveAddress(
               this.inputAddr
             );
-            if (!reverseName.name) {
+            if (reverseName && !reverseName.name) {
               reverseName.name =
                 (
                   await getAddressInfo(
