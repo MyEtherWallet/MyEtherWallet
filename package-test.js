@@ -76,7 +76,8 @@ const EXCEPTIONS = [
   '@sentry/vue',
   'ethers',
   'graphql',
-  'xss'
+  'xss',
+  '@myetherwallet/mew-components'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
