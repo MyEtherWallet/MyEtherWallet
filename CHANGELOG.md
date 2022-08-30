@@ -1,3 +1,32 @@
+### devop
+
+* * replace token images with mew-token-container for uniform look [#4040](https://github.com/MyEtherWallet/MyEtherWallet/pull/4040)
+* * Integrated Kleros name tags to address book [#4057](https://github.com/MyEtherWallet/MyEtherWallet/pull/4057)
+* Switch network toast for web3 extensions [#4145](https://github.com/MyEtherWallet/MyEtherWallet/pull/4145)
+
+### feat
+
+* Add Aave graphql mixin [#3133](https://github.com/MyEtherWallet/MyEtherWallet/pull/3133)
+* * add Aave v2 dApp [#3879](https://github.com/MyEtherWallet/MyEtherWallet/pull/3879)
+
+### fix
+
+* * fix invalid ledger derivation path [#4052](https://github.com/MyEtherWallet/MyEtherWallet/pull/4052)
+* * fix error switching networks metamask [#4087](https://github.com/MyEtherWallet/MyEtherWallet/pull/4087)
+* * fix eth blocks transaction fee wording [#4093](https://github.com/MyEtherWallet/MyEtherWallet/pull/4093)
+* * Fix offline send transaction [#4095](https://github.com/MyEtherWallet/MyEtherWallet/pull/4095)
+* * fix token switch interaction in Swap [#4099](https://github.com/MyEtherWallet/MyEtherWallet/pull/4099)
+* * add up arrow and add animation to open close indicator arrow [#4105](https://github.com/MyEtherWallet/MyEtherWallet/pull/4105)
+* * Added listener for settings [#4107](https://github.com/MyEtherWallet/MyEtherWallet/pull/4107)
+* * added info for blank tokens [#4113](https://github.com/MyEtherWallet/MyEtherWallet/pull/4113)
+* Fix 'create another wallet' not resetting extra word verification [#4115](https://github.com/MyEtherWallet/MyEtherWallet/pull/4115)
+* Fix Mnemonic Phrase not loading selected network [#4127](https://github.com/MyEtherWallet/MyEtherWallet/pull/4127)
+* Added check for undefined token baseList [#4130](https://github.com/MyEtherWallet/MyEtherWallet/pull/4130)
+* Fix multiple ETH and BNB swap options [#4131](https://github.com/MyEtherWallet/MyEtherWallet/pull/4131)
+* * fix ens domain register and text changes [#4134](https://github.com/MyEtherWallet/MyEtherWallet/pull/4134)
+* Fix moonpay token unselected on network change and undefined symbol [#4135](https://github.com/MyEtherWallet/MyEtherWallet/pull/4135)
+* Fix missing dollar sign on sell tab [#4139](https://github.com/MyEtherWallet/MyEtherWallet/pull/4139)
+
 ### Release v6.6.4-hotfix.1
 
 ### fix
