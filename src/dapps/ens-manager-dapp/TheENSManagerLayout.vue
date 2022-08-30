@@ -647,7 +647,6 @@ export default {
       this.manageDomainHandler = this.myDomains[idx];
     },
     getDomains() {
-      this.trackDapp('ensGetDomainsEvent');
       this.ensManager
         .getAllNamesForAddress()
         .then(res => {
@@ -662,7 +661,6 @@ export default {
                 }
               : '';
           });
-          this.trackDapp('ensGetDomainsRes');
           this.myDomains = res;
         })
         .catch(err => {
@@ -714,14 +712,15 @@ export default {
     },
 
     renew(duration) {
-      this.trackDapp('ensDomainRenewEvent');
       this.manageDomainHandler
         .renew(duration, this.balanceToWei)
-        .then(this.getDomains)
+        .then(() => {
+          this.getDomains;
+          this.trackDapp('ensDomainRenew');
+        })
         .catch(err => {
           this.instance.errorHandler(err);
         });
-      this.trackDapp('ensDomainRenew');
       this.closeManage();
     },
     setMulticoin(coin) {
