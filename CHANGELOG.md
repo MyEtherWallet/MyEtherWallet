@@ -1,3 +1,10 @@
+### Release v6.6.4-hotfix.1
+
+### fix
+
+* add more tracking for matomo [#4129](https://github.com/MyEtherWallet/MyEtherWallet/pull/4129)
+* add ledger debug warning [#4141](https://github.com/MyEtherWallet/MyEtherWallet/pull/4141)
+
 ### Release v6.6.4
 
 ### devop
