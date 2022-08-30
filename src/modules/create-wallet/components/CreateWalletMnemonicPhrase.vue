@@ -357,6 +357,7 @@ export default {
      */
     createAnotherWallet() {
       this.extraWord = '';
+      this.extraWordVerification = '';
       this.updateStep(1);
     }
   }

@@ -24,6 +24,7 @@
             </router-link>
             <div class="mx-8">
               <mew-menu
+                top-arrow
                 activator-text-color="white--text"
                 :list-obj="menuObj"
                 @goToPage="routeTo"
