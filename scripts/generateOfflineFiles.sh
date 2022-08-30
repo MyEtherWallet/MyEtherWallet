@@ -1,7 +1,7 @@
 #!/bin/sh
 RELEASE="$1"
 cd dist && zip -r ../release/MyEtherWallet-$RELEASE-Offline.zip * && cd ..
-if [ -n "$4" ]; then
+if [ -n "$2" ]; then
     for f in release/*; do
         gpg --output $f.sig --detach-sig $f
     done

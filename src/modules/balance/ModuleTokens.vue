@@ -80,18 +80,22 @@
 </template>
 <script>
 import { mapGetters, mapState } from 'vuex';
+import { uniqWith, isEqual } from 'lodash';
+
 import BalanceEmptyBlock from './components/BalanceEmptyBlock';
 import TokenAddCustom from './components/TokenAddCustom';
 import TokenDeleteCustom from './components/TokenDeleteCustom';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
-import { uniqWith, isEqual } from 'lodash';
 import { currencyToNumber } from '@/core/helpers/localization';
+
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 export default {
   components: {
     BalanceEmptyBlock,
     TokenDeleteCustom,
     TokenAddCustom
   },
+  mixins: [handlerAnalytics],
   props: {
     dense: {
       type: Boolean,
@@ -240,6 +244,7 @@ export default {
                 fromToken: item.contract,
                 amount: item.balancef
               };
+              this.trackSwap('fromDashboardTokensTable');
               this.$router
                 .push({
                   name: ROUTES_WALLET.SWAP.NAME,
