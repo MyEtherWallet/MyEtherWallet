@@ -23,11 +23,13 @@
     =====================================================================================
     -->
       <div class="text-right pb-1">
-        <span
-          class="greenPrimary--text cursor-pointer pr-3"
-          @click="addCustomToken"
-          >+ Add Token</span
-        >
+        <mew-button
+          title="+ Add Token"
+          color-theme="basic"
+          btn-style="light"
+          btn-size="medium"
+          @click.native="addCustomToken"
+        />
       </div>
       <mew-table
         :table-headers="tableHeaders"

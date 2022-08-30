@@ -18,11 +18,45 @@
     >
       <template #rightHeaderContainer>
         <div>
-          <span
+          <!-- <span
             class="greenPrimary--text cursor-pointer pl-3"
             @click="toggleEditCustomToken"
             >+ Edit Tokens</span
-          >
+          > -->
+          <!-- <v-menu offset-y>
+            <template #activator="{ on, attrs }"> -->
+          <mew-icon-button
+            mdi-icon="dots-vertical"
+            mdi-icon-size="medium"
+            btn-size="medium"
+            btn-style="transparent"
+            color-theme="basic"
+            rounded
+            @click.native="toggleEditCustomToken"
+          />
+          <!-- </template> -->
+          <!-- <v-list>
+              <v-list-item v-for="(item, index) in items" :key="index">
+                <v-icon small color="basic">{{ item.icon }}</v-icon>
+                <v-list-item-title>
+                  {{ item.text }}
+                </v-list-item-title>
+              </v-list-item>
+            </v-list> -->
+          <!-- <div>
+                <span
+                  class="basic--text cursor-pointer"
+                  @click="toggleAddCustomToken"
+                  >Add Tokens</span
+                >
+                <v-icon small color="white">mdi-pencil-outline</v-icon>
+                <span
+                  class="basic--text cursor-pointer"
+                  @click="toggleEditCustomToken"
+                  >Edit Tokens</span
+                >
+              </div> -->
+          <!-- </v-menu> -->
         </div>
       </template>
       <template #moduleBody>
@@ -76,11 +110,13 @@ import TokenEditCustom from './components/TokenEditCustom';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { uniqWith, isEqual } from 'lodash';
 import { currencyToNumber } from '@/core/helpers/localization';
+import MewMenuPopup from '@/components/mew-menu-popup/MewMenuPopup.vue';
 export default {
   components: {
     BalanceEmptyBlock,
     TokenAddCustom,
-    TokenEditCustom
+    TokenEditCustom,
+    MewMenuPopup
   },
   props: {
     dense: {
@@ -92,6 +128,7 @@ export default {
     return {
       openAddCustomToken: false,
       openEditCustomToken: false,
+      // showMenu: false,
       tableHeaders: [
         {
           text: 'Token',
@@ -130,6 +167,10 @@ export default {
           width: '15%'
         }
       ]
+      // items: [
+      //   { icon: 'mdi-plus', title: 'Add Token' },
+      //   { icon: 'mdi-pencil-outline', title: 'Edit Token' }
+      // ]
     };
   },
   computed: {
@@ -262,6 +303,10 @@ export default {
     toggleEditCustomToken() {
       this.openEditCustomToken = !this.openEditCustomToken;
     }
+    // toggleMenu() {
+    //   this.showMenu = !this.showMenu;
+    //   console.log('showMenu', this.showMenu);
+    // }
   }
 };
 </script>
