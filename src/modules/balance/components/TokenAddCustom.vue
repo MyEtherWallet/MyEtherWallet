@@ -62,7 +62,7 @@
     -->
           <v-col
             cols="2"
-            class="ml-5 textLight--text mew-body font-weight-bold"
+            class="ml-5 textLight--text mew-body font-weight-bold align-self-center"
           >
             {{ tkn.name }}
           </v-col>
@@ -74,7 +74,10 @@
     -->
             <span
               v-if="
-                !isIcon(tkn.name) && !isContractAddress(tkn.name) && tkn.value
+                !isIcon(tkn.name) &&
+                !isContractAddress(tkn.name) &&
+                !isSymbol(tkn.name) &&
+                tkn.value
               "
               >{{ tkn.value }}</span
             >
@@ -113,13 +116,14 @@
     ===================================================
     -->
             <mew-input
-              v-if="!isIcon(tkn.name) && !tkn.value"
+              v-if="(!isIcon(tkn.name) && !tkn.value) || isSymbol(tkn.name)"
               :id="idx"
               :error-messages="
                 idx === 3 ? symbolLengthTooLong : nameLengthTooLong
               "
-              class="mt-8"
+              :class="isSymbol(tkn.name) ? 'mt-0 mb-n4' : 'mt-6'"
               :placeholder="getPlaceholder(tkn.name)"
+              :value="tkn.value"
               @input="setInputValue"
             />
           </v-col>
@@ -275,6 +279,12 @@ export default {
       return name === this.tokenDataToDisplay[1].name;
     },
     /**
+     * @returns if symbol info displays icon
+     */
+    isSymbol(name) {
+      return name === this.tokenDataToDisplay[3].name;
+    },
+    /**
      * @returns mew input placeholders
      * if there is no value for name or symbol
      */
@@ -310,9 +320,7 @@ export default {
         return;
       }
       this.token.name = !this.token.name ? this.customName : this.token.name;
-      this.token.symbol = !this.token.symbol
-        ? this.customSymbol
-        : this.token.symbol;
+      this.token.symbol = this.customSymbol || this.token.symbol;
       this.token.contract = this.contractAddress;
       this.setCustomToken(this.token);
       Toast(
