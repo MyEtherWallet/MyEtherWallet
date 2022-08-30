@@ -1200,10 +1200,15 @@ export default {
     },
     switchTokens() {
       this.trackSwap('switchTokens');
-      const fromToken = clone(this.fromTokenType);
-      const toToken = clone(this.toTokenType);
+      const fromToken = this.fromTokenType;
+      const toToken = this.toTokenType;
+      this.fromTokenType = {};
+      this.toTokenType = {};
       this.tokenInValue = this.tokenOutValue;
-      this.setFromToken(toToken);
+      const toTokenFromTokenList = this.actualFromTokens.find(item => {
+        if (item.contract && item.contract === toToken.contract) return item;
+      });
+      this.setFromToken(toTokenFromTokenList ? toTokenFromTokenList : toToken);
       this.setToToken(fromToken);
     },
     processTokens(tokens, storeTokens) {
