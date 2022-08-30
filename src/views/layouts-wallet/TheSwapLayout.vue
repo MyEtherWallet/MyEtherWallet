@@ -18,11 +18,15 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 import TheWrapperWallet from '@/core/components/TheWrapperWallet';
 import ModuleSwap from '@/modules/swap/ModuleSwap';
 import ModuleTokensValue from '@/modules/balance/ModuleTokensValue';
 import ModuleTransferHistory from '@/modules/transfer-history/ModuleTransferHistory';
-import { mapGetters } from 'vuex';
+import { ROUTES_WALLET } from '@/core/configs/configRoutes';
+
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 const ETH_TOKEN = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
 const DAI_TOKEN = '0x6b175474e89094c44da98b954eedeac495271d0f';
@@ -33,6 +37,19 @@ export default {
     ModuleSwap,
     ModuleTokensValue,
     ModuleTransferHistory
+  },
+  mixins: [handlerAnalytics],
+  beforeRouteLeave(to, from, next) {
+    if (to.name === ROUTES_WALLET.NETWORK.NAME) {
+      this.trackSwap('switchingNetworkOnSwap');
+    }
+    if (
+      to.name !== ROUTES_WALLET.NETWORK.NAME &&
+      to.name !== ROUTES_WALLET.SWAP.NAME
+    ) {
+      this.trackSwap('leavingSwapTo: ' + to.name);
+    }
+    next();
   },
   props: {
     fromToken: {
