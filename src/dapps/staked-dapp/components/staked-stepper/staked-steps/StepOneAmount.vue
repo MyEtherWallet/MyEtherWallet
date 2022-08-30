@@ -26,6 +26,7 @@
           "
           is-custom
           outlined
+          :has-filter="false"
           @buyMore="openMoonpay"
           @input="setAmount"
         />
@@ -140,8 +141,9 @@ import {
   formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
+import MewSelect from '@/components/MewSelect/MewSelect';
 export default {
-  components: { BorderBlock },
+  components: { BorderBlock, MewSelect },
   mixins: [buyMore],
   props: {
     currentApr: {
