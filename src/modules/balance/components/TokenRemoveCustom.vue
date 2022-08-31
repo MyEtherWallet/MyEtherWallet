@@ -1,13 +1,11 @@
 <template>
   <div>
-    <!--
-    =====================================================================================
-      Add Custom Token Overlay
-    =====================================================================================
-    -->
+    <!-- ===================================================================================== -->
+    <!-- Remove Custom Token Overlay -->
+    <!-- ===================================================================================== -->
     <v-dialog :value="open" max-width="330" @click:outside="reset">
       <div class="white pa-7">
-        <div class="mew-heading-2 mb-10">Add custom token</div>
+        <div class="mew-heading-2 mb-10">Remove token?</div>
         <mew-input
           :value="contractAddress"
           placeholder="Contract address"
@@ -23,7 +21,7 @@
             style="flex-basis: 0"
             btn-size="large"
             btn-style="outline"
-            title="Cancel"
+            title="Keep token"
             @click.native="reset"
           />
           <mew-button
@@ -32,7 +30,7 @@
             btn-size="large"
             :loading="loading"
             :disabled="isDisabled"
-            :title="step === 1 ? 'Next' : 'Add Token'"
+            :title="step === 1 ? 'Next' : 'Remove Token'"
             @click.native="next"
           />
         </div>

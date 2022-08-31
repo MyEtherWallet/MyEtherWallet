@@ -25,15 +25,46 @@
           > -->
           <!-- <v-menu offset-y>
             <template #activator="{ on, attrs }"> -->
-          <mew-icon-button
-            mdi-icon="dots-vertical"
-            mdi-icon-size="medium"
-            btn-size="medium"
-            btn-style="transparent"
-            color-theme="basic"
-            rounded
-            @click.native="toggleEditCustomToken"
-          />
+
+          <v-menu
+            open-on-hover
+            offset-y
+            content-class="token-modification-menu"
+          >
+            <template #activator="{ on, attrs }">
+              <div class="px-2 mx-n2" v-bind="attrs" v-on="on">
+                <v-btn small depressed fab elevation="0">
+                  <v-icon>mdi-dots-vertical</v-icon>
+                </v-btn>
+              </div>
+            </template>
+            <div class="pa-2 white">
+              <div>
+                <v-btn
+                  block
+                  class="text-transform--none"
+                  depressed
+                  color="white"
+                  @click="toggleAddCustomToken"
+                >
+                  <v-icon dense class="mr-2">mdi-plus</v-icon>Add token
+                </v-btn>
+              </div>
+              <div>
+                <v-btn
+                  block
+                  class="text-transform--none"
+                  depressed
+                  color="white"
+                  @click="toggleEditCustomToken"
+                >
+                  <v-icon dense class="mr-2">mdi-pencil-outline</v-icon>Edit
+                  token list
+                </v-btn>
+              </div>
+            </div>
+          </v-menu>
+
           <!-- </template> -->
           <!-- <v-list>
               <v-list-item v-for="(item, index) in items" :key="index">
@@ -297,7 +328,7 @@ export default {
       return newObj;
     },
     toggleAddCustomToken() {
-      this.openEditCustomToken = false;
+      //this.openEditCustomToken = false;
       this.openAddCustomToken = !this.openAddCustomToken;
     },
     toggleEditCustomToken() {
@@ -316,6 +347,13 @@ export default {
   .mew-table td.text-start:nth-last-of-type(2) div span:first-child {
     text-overflow: ellipsis;
     overflow: hidden;
+  }
+}
+.v-menu__content.token-modification-menu {
+  border: none;
+  .v-btn__content {
+    display: block;
+    text-align: left;
   }
 }
 </style>

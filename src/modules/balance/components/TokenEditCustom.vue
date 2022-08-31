@@ -249,7 +249,7 @@ export default {
       });
     },
     addCustomToken() {
-      this.closeEdit();
+      //this.closeEdit();
       this.$emit('addToken');
     }
   }
