@@ -184,7 +184,7 @@
 </template>
 
 <script>
-import { fromWei, isHexStrict } from 'web3-utils';
+import { fromWei, isHexStrict, toBN } from 'web3-utils';
 import { debounce, isEmpty, isNumber } from 'lodash';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
@@ -349,6 +349,13 @@ export default {
         item.name = item.symbol;
         return item.img;
       });
+      const customTokens = this.customTokens.map(item => {
+        item.decimals = +item.decimals;
+        item.balance = item.balance.toString().includes('.')
+          ? toBN(toBase(item.balance, item.decimals))
+          : toBN(item.balance);
+        return item;
+      });
       BigNumber(this.balanceInETH).lte(0)
         ? tokensList.unshift({
             hasNoEth: true,
@@ -376,14 +383,14 @@ export default {
           {
             header: 'Custom Tokens'
           },
-          ...this.customTokens
+          ...customTokens
         ]);
       }
       return returnedArray;
     },
     /* Property returns either gas estimmation error or amount error*/
     amountErrorMessage() {
-      return this.gasEstimationError !== ''
+      return this.gasEstimationError !== '' && this.sendTx?.hasEnoughBalance()
         ? this.gasEstimationError
         : this.amountError;
     },
