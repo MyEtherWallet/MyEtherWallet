@@ -104,20 +104,22 @@
 </template>
 <script>
 import { mapGetters, mapState } from 'vuex';
+import { uniqWith, isEqual } from 'lodash';
+
 import BalanceEmptyBlock from './components/BalanceEmptyBlock';
 import TokenAddCustom from './components/TokenAddCustom';
 import TokenEditCustom from './components/TokenEditCustom';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
-import { uniqWith, isEqual } from 'lodash';
 import { currencyToNumber } from '@/core/helpers/localization';
-import MewMenuPopup from '@/components/mew-menu-popup/MewMenuPopup.vue';
+
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 export default {
   components: {
     BalanceEmptyBlock,
     TokenAddCustom,
-    TokenEditCustom,
-    MewMenuPopup
+    TokenEditCustom
   },
+  mixins: [handlerAnalytics],
   props: {
     dense: {
       type: Boolean,
@@ -280,6 +282,7 @@ export default {
                 fromToken: item.contract,
                 amount: item.balancef
               };
+              this.trackSwap('fromDashboardTokensTable');
               this.$router
                 .push({
                   name: ROUTES_WALLET.SWAP.NAME,
