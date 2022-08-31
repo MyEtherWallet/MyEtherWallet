@@ -31,7 +31,7 @@
                 <div class="mb-2 d-flex align-center justify-start flex-row">
                   <div class="mew-heading-3">{{ dapp.title }}</div>
                   <v-icon
-                    v-if="isNew(dapp.release)"
+                    v-if="checkIfNew(dapp.release)"
                     size="24"
                     class="ml-1 redPrimary--text"
                     >mdi-new-box</v-icon
@@ -70,13 +70,14 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import moment from 'moment';
 
 import TheWrapperDapp from '@/core/components/TheWrapperDapp';
 import bannerImage from '@/assets/images/backgrounds/bg-dapps-center.png';
 import dappsMeta from '@/dapps/metainfo-dapps';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
+
+import isNew from '@/core/helpers/isNew.js';
 export default {
   components: { TheWrapperDapp, AppUserMsgBlock },
   mixins: [handlerAnalytics],
@@ -110,10 +111,8 @@ export default {
     dappName(dapp) {
       return dapp.name || dapp.defaultName;
     },
-    isNew(release) {
-      const releaseToDate = new Date(release);
-      const diff = moment(new Date()).diff(releaseToDate, 'days') <= 21;
-      return diff;
+    checkIfNew(release) {
+      return isNew(release);
     }
   }
 };
