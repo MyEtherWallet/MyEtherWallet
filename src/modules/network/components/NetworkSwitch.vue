@@ -142,7 +142,7 @@ export default {
   computed: {
     ...mapGetters('global', ['network']),
     ...mapState('global', ['validNetwork']),
-    ...mapState('wallet', ['identifier', 'instance']),
+    ...mapState('wallet', ['identifier', 'instance', 'isOfflineApp']),
     /**
      * Property returns sorted network names alphabetically in this order: ETH, main and then test networks
      * @returns {string[]}
@@ -320,9 +320,11 @@ export default {
               ? this.network.type.name
               : '';
             this.networkLoading = false;
-            this.setWeb3Instance().then(() => {
-              this.setTokenAndEthBalance();
-            });
+            if (!this.isOffline) {
+              this.setWeb3Instance().then(() => {
+                this.setTokenAndEthBalance();
+              });
+            }
             Toast(`Switched network to: ${found[0].type.name}`, {}, SUCCESS);
           }
           this.trackNetworkSwitch(found[0].type.name);

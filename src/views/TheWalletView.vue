@@ -118,12 +118,7 @@ export default {
     this.web3.eth.clearSubscriptions();
   },
   methods: {
-    ...mapActions('wallet', [
-      'setBlockNumber',
-      'setTokens',
-      'setWallet',
-      'setWeb3Instance'
-    ]),
+    ...mapActions('wallet', ['setBlockNumber', 'setTokens', 'setWallet']),
     ...mapActions('global', [
       'setNetwork',
       'setBaseFeePerGas',
