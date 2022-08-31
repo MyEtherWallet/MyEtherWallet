@@ -50,13 +50,13 @@ jobs:
         run: docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build"
 
       - name: generate release files
-        run: bash ./scripts/generateReleaseFiles.sh ${{ steps.get_release_tag.outputs.VERSION }}
+        run: bash ./scripts/generateReleaseFiles.sh ${{ steps.get_release_tag.outputs.VERSION }} true
 
       - name: build offline
         run: docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:offline"
 
       - name: generate offline files
-        run: bash ./scripts/generateOfflineFiles.sh ${{ steps.get_release_tag.outputs.VERSION }}
+        run: bash ./scripts/generateOfflineFiles.sh ${{ steps.get_release_tag.outputs.VERSION }} true
 
       - name: create release
         env:

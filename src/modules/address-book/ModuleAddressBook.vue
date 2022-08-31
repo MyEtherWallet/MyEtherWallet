@@ -209,6 +209,7 @@ export default {
           }
           this.loadedAddressValidation = !this.isValidAddress ? false : true;
           if (this.isValidAddress && !this.isOfflineApp) {
+            // Make sure reverseName is not undefined
             const reverseName =
               (await this.nameResolver.resolveAddress(this.inputAddr)) || {};
             if (!reverseName.name) {

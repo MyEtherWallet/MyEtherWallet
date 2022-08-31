@@ -18,76 +18,29 @@
     >
       <template #rightHeaderContainer>
         <div>
-          <!-- <span
-            class="greenPrimary--text cursor-pointer pl-3"
-            @click="toggleEditCustomToken"
-            >+ Edit Tokens</span
-          > -->
-          <!-- <v-menu offset-y>
-            <template #activator="{ on, attrs }"> -->
-
-          <v-menu
-            open-on-hover
-            offset-y
-            content-class="token-modification-menu"
-          >
+          <v-menu bottom offset-y rounded="lg">
             <template #activator="{ on, attrs }">
-              <div class="px-2 mx-n2" v-bind="attrs" v-on="on">
-                <v-btn small depressed fab elevation="0">
-                  <v-icon>mdi-dots-vertical</v-icon>
-                </v-btn>
-              </div>
+              <v-btn
+                class="ma-2"
+                v-bind="attrs"
+                rounded
+                color="basic"
+                icon
+                v-on="on"
+              >
+                <v-icon medium color="basic">mdi-dots-vertical</v-icon>
+              </v-btn>
             </template>
-            <div class="pa-2 white">
-              <div>
-                <v-btn
-                  block
-                  class="text-transform--none"
-                  depressed
-                  color="white"
-                  @click="toggleAddCustomToken"
-                >
-                  <v-icon dense class="mr-2">mdi-plus</v-icon>Add token
-                </v-btn>
-              </div>
-              <div>
-                <v-btn
-                  block
-                  class="text-transform--none"
-                  depressed
-                  color="white"
-                  @click="toggleEditCustomToken"
-                >
-                  <v-icon dense class="mr-2">mdi-pencil-outline</v-icon>Edit
-                  token list
-                </v-btn>
-              </div>
-            </div>
-          </v-menu>
-
-          <!-- </template> -->
-          <!-- <v-list>
-              <v-list-item v-for="(item, index) in items" :key="index">
-                <v-icon small color="basic">{{ item.icon }}</v-icon>
-                <v-list-item-title>
-                  {{ item.text }}
-                </v-list-item-title>
+            <v-list>
+              <v-list-item
+                v-for="(item, i) in items"
+                :key="i"
+                @click="item.action"
+                ><v-icon medium color="basic" left>{{ item.icon }}</v-icon>
+                <v-list-item-title>{{ item.title }}</v-list-item-title>
               </v-list-item>
-            </v-list> -->
-          <!-- <div>
-                <span
-                  class="basic--text cursor-pointer"
-                  @click="toggleAddCustomToken"
-                  >Add Tokens</span
-                >
-                <v-icon small color="white">mdi-pencil-outline</v-icon>
-                <span
-                  class="basic--text cursor-pointer"
-                  @click="toggleEditCustomToken"
-                  >Edit Tokens</span
-                >
-              </div> -->
-          <!-- </v-menu> -->
+            </v-list>
+          </v-menu>
         </div>
       </template>
       <template #moduleBody>
@@ -135,20 +88,22 @@
 </template>
 <script>
 import { mapGetters, mapState } from 'vuex';
+import { uniqWith, isEqual } from 'lodash';
+
 import BalanceEmptyBlock from './components/BalanceEmptyBlock';
 import TokenAddCustom from './components/TokenAddCustom';
 import TokenEditCustom from './components/TokenEditCustom';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
-import { uniqWith, isEqual } from 'lodash';
 import { currencyToNumber } from '@/core/helpers/localization';
-import MewMenuPopup from '@/components/mew-menu-popup/MewMenuPopup.vue';
+
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 export default {
   components: {
     BalanceEmptyBlock,
     TokenAddCustom,
-    TokenEditCustom,
-    MewMenuPopup
+    TokenEditCustom
   },
+  mixins: [handlerAnalytics],
   props: {
     dense: {
       type: Boolean,
@@ -197,11 +152,19 @@ export default {
           sortable: false,
           width: '15%'
         }
+      ],
+      items: [
+        {
+          icon: 'mdi-plus',
+          title: 'Add Token',
+          action: this.toggleAddCustomToken
+        },
+        {
+          icon: 'mdi-pencil-outline',
+          title: 'Edit Token',
+          action: this.toggleEditCustomToken
+        }
       ]
-      // items: [
-      //   { icon: 'mdi-plus', title: 'Add Token' },
-      //   { icon: 'mdi-pencil-outline', title: 'Edit Token' }
-      // ]
     };
   },
   computed: {
@@ -311,6 +274,7 @@ export default {
                 fromToken: item.contract,
                 amount: item.balancef
               };
+              this.trackSwap('fromDashboardTokensTable');
               this.$router
                 .push({
                   name: ROUTES_WALLET.SWAP.NAME,
@@ -328,16 +292,12 @@ export default {
       return newObj;
     },
     toggleAddCustomToken() {
-      //this.openEditCustomToken = false;
+      this.openEditCustomToken = false;
       this.openAddCustomToken = !this.openAddCustomToken;
     },
     toggleEditCustomToken() {
       this.openEditCustomToken = !this.openEditCustomToken;
     }
-    // toggleMenu() {
-    //   this.showMenu = !this.showMenu;
-    //   console.log('showMenu', this.showMenu);
-    // }
   }
 };
 </script>
@@ -347,13 +307,6 @@ export default {
   .mew-table td.text-start:nth-last-of-type(2) div span:first-child {
     text-overflow: ellipsis;
     overflow: hidden;
-  }
-}
-.v-menu__content.token-modification-menu {
-  border: none;
-  .v-btn__content {
-    display: block;
-    text-align: left;
   }
 }
 </style>
