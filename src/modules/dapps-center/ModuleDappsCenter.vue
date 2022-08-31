@@ -70,6 +70,8 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import moment from 'moment';
+
 import TheWrapperDapp from '@/core/components/TheWrapperDapp';
 import bannerImage from '@/assets/images/backgrounds/bg-dapps-center.png';
 import dappsMeta from '@/dapps/metainfo-dapps';
@@ -109,12 +111,9 @@ export default {
       return dapp.name || dapp.defaultName;
     },
     isNew(release) {
-      const dateToday = new Date();
-      const millisecondsInDay = 1000 * 60 * 60 * 24;
-      const releaseDate = new Date(release);
-      const daysFromRelease =
-        (dateToday.getTime() - releaseDate.getTime()) / millisecondsInDay;
-      return Math.ceil(daysFromRelease) <= 21;
+      const releaseToDate = new Date(release);
+      const diff = moment(new Date()).diff(releaseToDate, 'days') <= 21;
+      return diff;
     }
   }
 };

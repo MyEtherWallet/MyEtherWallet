@@ -11,7 +11,7 @@ export default {
   path: ROUTES_WALLET.AAVE.PATH,
   networks: [ETH],
   layout,
-  release: '07/09/2021', // placeholder
+  release: '09/01/2022',
   meta: {
     noAuth: false
   }
