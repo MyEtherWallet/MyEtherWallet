@@ -37,50 +37,14 @@
         no-data-text="No tokens found!"
       />
     </div>
-    <!--
-    =====================================================================================
-      Step Two: Confirm Remove
-    =====================================================================================
-    -->
-    <div v-if="showRemove" class="full-width">
-      <div class="d-flex align-center justify-center py-1">
-        <div class="d-flex align-center justify-center">
-          <v-img
-            class="mr-2"
-            :src="selectedToken.tokenImg"
-            width="20"
-            height="20"
-            contain
-          />
-          {{ selectedToken.token }}
-        </div>
-      </div>
-      <div class="mt-9">
-        <mew-button
-          title="Remove Token"
-          color-theme="error"
-          :has-full-width="true"
-          btn-size="xlarge"
-          class="mb-4"
-          @click.native="confirmDelete"
-        />
-        <mew-button
-          title="Keep Token"
-          color-theme="textDark"
-          :has-full-width="true"
-          btn-size="xlarge"
-          btn-style="outline"
-          @click.native="back"
-        />
-      </div>
-    </div>
   </mew-overlay>
 </template>
 
 <script>
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
-import { SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
-import { mapGetters, mapActions, mapState } from 'vuex';
+// import { SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
+import { mapActions, mapGetters, mapState } from 'vuex';
+import { cloneDeep } from 'lodash';
 
 export default {
   props: {
@@ -171,19 +135,12 @@ export default {
         ? `Edit Tokens`
         : `Are you sure you want to remove ${this.selectedToken.token} token?`;
     },
-    showRemove() {
-      return this.step === 2;
-    },
     showBack() {
       return this.step !== 1;
     }
   },
   methods: {
-    ...mapActions('custom', [
-      'deleteToken',
-      'setHiddenToken',
-      'deleteHiddenToken'
-    ]),
+    ...mapActions('custom', ['setHiddenToken']),
     /**
      * close overlay
      */
@@ -201,8 +158,13 @@ export default {
         color: 'primary',
         value: !item.isHidden,
         method: token => {
-          if (item.isHidden) this.deleteHiddenToken([token]);
-          else this.setHiddenToken(token);
+          const tokenClone = cloneDeep(token);
+          delete tokenClone['callToAction'];
+          delete tokenClone['toggle'];
+          delete tokenClone['id'];
+          delete tokenClone['balance'];
+          if (item.isHidden) this.deleteHiddenToken([tokenClone]);
+          else this.setHiddenToken(tokenClone);
         }
       };
       newObj.balance = [
@@ -220,36 +182,18 @@ export default {
               btnStyle: 'transparent',
               colorTheme: 'error',
               method: token => {
-                this.selectedToken = token;
-                this.next();
+                this.$emit('removeToken', token);
               }
             }
           ]
         : [];
       return newObj;
     },
-    /**
-     * Takes user to the confirm step
-     */
-    next() {
-      this.step = 2;
-    },
     back() {
       this.selectedToken = {};
       this.step = 1;
     },
-    /**
-     * Delete custom token
-     */
-    confirmDelete() {
-      const tokenSymbol = this.selectedToken.token;
-      this.deleteToken([this.selectedToken]).then(() => {
-        this.closeEdit();
-        Toast(`${tokenSymbol} Token removed succesfully`, {}, SUCCESS);
-      });
-    },
     addCustomToken() {
-      //this.closeEdit();
       this.$emit('addToken');
     }
   }

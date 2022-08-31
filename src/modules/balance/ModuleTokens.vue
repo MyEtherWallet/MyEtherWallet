@@ -76,6 +76,16 @@
     />
     <!--
     =====================================================================================
+      Remove Custom Token form
+    =====================================================================================
+    -->
+    <token-remove-custom
+      :close="toggleRemoveCustomToken"
+      :open="openRemoveCustomToken"
+      :selected-token="selectedToken"
+    />
+    <!--
+    =====================================================================================
       Edit Custom Token form
     =====================================================================================
     -->
@@ -83,6 +93,7 @@
       :close="toggleEditCustomToken"
       :open="openEditCustomToken"
       @addToken="toggleAddCustomToken"
+      @removeToken="openRemoveToken"
     />
   </div>
 </template>
@@ -93,6 +104,7 @@ import { uniqWith, isEqual } from 'lodash';
 import BalanceEmptyBlock from './components/BalanceEmptyBlock';
 import TokenAddCustom from './components/TokenAddCustom';
 import TokenEditCustom from './components/TokenEditCustom';
+import TokenRemoveCustom from './components/TokenRemoveCustom';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { currencyToNumber } from '@/core/helpers/localization';
 
@@ -101,7 +113,8 @@ export default {
   components: {
     BalanceEmptyBlock,
     TokenAddCustom,
-    TokenEditCustom
+    TokenEditCustom,
+    TokenRemoveCustom
   },
   mixins: [handlerAnalytics],
   props: {
@@ -114,7 +127,7 @@ export default {
     return {
       openAddCustomToken: false,
       openEditCustomToken: false,
-      // showMenu: false,
+      openRemoveCustomToken: false,
       tableHeaders: [
         {
           text: 'Token',
@@ -164,7 +177,8 @@ export default {
           title: 'Edit Token',
           action: this.toggleEditCustomToken
         }
-      ]
+      ],
+      selectedToken: {}
     };
   },
   computed: {
@@ -292,8 +306,14 @@ export default {
       return newObj;
     },
     toggleAddCustomToken() {
-      this.openEditCustomToken = false;
       this.openAddCustomToken = !this.openAddCustomToken;
+    },
+    toggleRemoveCustomToken() {
+      this.openRemoveCustomToken = !this.openRemoveCustomToken;
+    },
+    openRemoveToken(token) {
+      this.selectedToken = token;
+      this.toggleRemoveCustomToken();
     },
     toggleEditCustomToken() {
       this.openEditCustomToken = !this.openEditCustomToken;

@@ -19,7 +19,6 @@ const SET_CUSTOM_TOKEN = function (state, { token, rootGetters }) {
   const found = customTokensByNetwork.findIndex(
     t => t.contract.toLowerCase() === token.contract.toLowerCase()
   );
-  token.decimals = +token.decimals;
   if (found !== -1) {
     customTokensByNetwork[found] = token;
   } else {

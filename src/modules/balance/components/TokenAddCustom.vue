@@ -7,13 +7,107 @@
     -->
     <v-dialog :value="open" max-width="330" @click:outside="reset">
       <div class="white pa-7">
-        <div class="mew-heading-2 mb-10">Add custom token</div>
-        <mew-input
-          :value="contractAddress"
-          placeholder="Contract address"
-          @input="setContractAddress"
-        />
-
+        <div v-if="step === 1" class="full-width">
+          <div class="mew-heading-2 mb-10">Add custom token</div>
+          <mew-input
+            :value="contractAddress"
+            placeholder="Contract address"
+            @input="setContractAddress"
+          />
+        </div>
+        <!--
+        ===================================================
+        Step two: display token info
+        adds mb-9 for basic info but will add mb-1 if there
+        are mew inputs (since there is extra spacing on bottom for mew inputs - 
+        I had to do it this way to center everything 
+        but TODO: find a better way to do this)
+        ===================================================
+        -->
+        <div v-if="step === 2" class="full-width">
+          <v-row
+            v-for="(tkn, idx) in tokenDataToDisplay"
+            :key="idx"
+            no-gutters
+            :class="[
+              'd-flex align-center mt-0',
+              tokenDataToDisplay[idx + 1] &&
+              !isIcon(tokenDataToDisplay[idx + 1].name) &&
+              !tokenDataToDisplay[idx + 1].value
+                ? 'mb-1'
+                : 'mb-9'
+            ]"
+          >
+            <!--
+            ===================================================
+            token info title
+            ===================================================
+            -->
+            <v-col
+              cols="2"
+              class="ml-5 textLight--text mew-body font-weight-bold"
+            >
+              {{ tkn.name }}
+            </v-col>
+            <v-col cols="8" class="textDark--text ml-2"
+              ><!--
+              ===================================================
+              displays all token values if it is there except for icon and contract address
+              ===================================================
+              -->
+              <span
+                v-if="
+                  !isIcon(tkn.name) && !isContractAddress(tkn.name) && tkn.value
+                "
+                >{{ tkn.value }}</span
+              >
+              <!--
+              ===================================================
+              transform hash for contract address incase theres not 
+              enough space
+              ===================================================
+              -->
+              <mew-transform-hash
+                v-if="isContractAddress(tkn.name)"
+                justify-start
+                :hash="tkn.value"
+              />
+              <!--
+              ===================================================
+              displays token icon img or placeholder if there is no src
+              ===================================================
+              -->
+              <img
+                v-if="isIcon(tkn.name) && tkn.value"
+                height="24px"
+                width="23.5px"
+                :src="tkn.value"
+                alt="token icon"
+              />
+              <div
+                v-if="isIcon(tkn.name) && !tkn.value"
+                class="token-placeholder mew-caption d-flex align-center justify-center"
+              >
+                NA
+              </div>
+              <!--
+              ===================================================
+              displays input to enter values if there is no name or symbol
+              ===================================================
+              -->
+              <mew-input
+                v-if="!isIcon(tkn.name) && !tkn.value"
+                :id="idx"
+                :error-messages="
+                  idx === 3 ? symbolLengthTooLong : nameLengthTooLong
+                "
+                class="mt-8"
+                :placeholder="getPlaceholder(tkn.name)"
+                @input="setInputValue"
+              />
+            </v-col>
+          </v-row>
+        </div>
         <!-- =================================================== -->
         <!-- Add token / next button -->
         <!-- =================================================== -->
@@ -444,7 +538,7 @@ export default {
           this.token.usdBalancef = '0.00';
           this.token.contract = this.contractAddress;
         }
-        this.token.decimals = decimals;
+        this.token.decimals = +decimals;
         this.token.balance = balance;
         this.token.balancef = this.getTokenBalance(balance, decimals).value;
         this.loading = false;
