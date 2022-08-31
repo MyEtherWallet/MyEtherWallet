@@ -311,11 +311,11 @@ export default {
           return item;
         }
       });
-      try {
-        this.setNetwork({
-          network: found[0],
-          walletType: this.instance?.identifier || ''
-        }).then(() => {
+      this.setNetwork({
+        network: found[0],
+        walletType: this.instance?.identifier || ''
+      })
+        .then(() => {
           if (this.isWallet) {
             this.networkSelected = this.validNetwork
               ? this.network.type.name
@@ -329,17 +329,19 @@ export default {
               provider.then(() => {
                 this.setTokenAndEthBalance();
               });
+              Toast(`Switched network to: ${found[0].type.name}`, {}, SUCCESS);
+              this.trackNetworkSwitch(found[0].type.name);
+              this.$emit('newNetwork');
             }
-            Toast(`Switched network to: ${found[0].type.name}`, {}, SUCCESS);
           }
-          this.trackNetworkSwitch(found[0].type.name);
-          this.$emit('newNetwork');
+        })
+        .catch(e => {
+          this.networkSelected = this.validNetwork
+            ? this.network.type.name
+            : '';
+          this.networkLoading = false;
+          Toast(e, {}, ERROR);
         });
-      } catch (e) {
-        this.networkSelected = this.validNetwork ? this.network.type.name : '';
-        this.networkLoading = false;
-        Toast(`Could not switch network`, {}, ERROR);
-      }
     }, 1000)
   }
 };

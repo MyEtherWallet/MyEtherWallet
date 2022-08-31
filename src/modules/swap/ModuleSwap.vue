@@ -391,7 +391,7 @@ export default {
   },
   computed: {
     ...mapState('swap', ['prefetched', 'swapTokens']),
-    ...mapState('wallet', ['web3', 'address', 'balance']),
+    ...mapState('wallet', ['web3', 'address', 'balance', 'identifier']),
     ...mapState('global', ['gasPriceType']),
     ...mapState('external', ['coinGeckoTokens']),
     ...mapGetters('global', [
@@ -883,14 +883,18 @@ export default {
           ? this.toTokenType.name
           : 'ETH';
       return `To ${name} address`;
+    },
+    networkAndWeb3() {
+      return this.network, this.web3;
     }
   },
   watch: {
+    tokensList() {
+      this.resetSwapState();
+    },
     coinGeckoTokens(newVal) {
       if (newVal.size > 0) {
-        this.mainTokenDetails = this.contractToToken(MAIN_TOKEN_ADDRESS);
-        localContractToToken[MAIN_TOKEN_ADDRESS] = this.mainTokenDetails;
-        this.setupSwap();
+        this.resetSwapState();
       }
     },
     tokenInValue() {
@@ -927,12 +931,14 @@ export default {
         this.setTokenFromURL();
       }
     },
+    networkAndWeb3: {
+      handler: function () {
+        this.resetSwapState();
+      }
+    },
     web3: {
       handler: function () {
-        localContractToToken = {};
-        this.mainTokenDetails = this.contractToToken(MAIN_TOKEN_ADDRESS);
-        localContractToToken[MAIN_TOKEN_ADDRESS] = this.mainTokenDetails;
-        this.setupSwap();
+        this.resetSwapState();
       }
     },
     fromTokenType: {
@@ -957,14 +963,18 @@ export default {
     // multi value watcher to clear
     // refund address and to address
     if (this.coinGeckoTokens.size > 0) {
-      this.mainTokenDetails = this.contractToToken(MAIN_TOKEN_ADDRESS);
-      localContractToToken[MAIN_TOKEN_ADDRESS] = this.mainTokenDetails;
-      this.setupSwap();
+      this.resetSwapState();
     }
   },
   methods: {
     ...mapActions('notifications', ['addNotification']),
     ...mapActions('swap', ['setSwapTokens']),
+    resetSwapState() {
+      this.mainTokenDetails = this.contractToToken(MAIN_TOKEN_ADDRESS);
+      localContractToToken = {};
+      localContractToToken[MAIN_TOKEN_ADDRESS] = this.mainTokenDetails;
+      this.setupSwap();
+    },
     /**
      * Handles emitted values from
      * module-address-book
