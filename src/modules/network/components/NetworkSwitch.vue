@@ -114,6 +114,7 @@ import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
 import { debounce } from 'lodash';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import matchNetwork from '@/core/helpers/matchNetwork';
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 
 export default {
   name: 'NetworkSwitch',
@@ -321,7 +322,11 @@ export default {
               : '';
             this.networkLoading = false;
             if (!this.isOffline) {
-              this.setWeb3Instance().then(() => {
+              const provider =
+                this.identifier === WALLET_TYPES.WEB3_WALLET
+                  ? this.setWeb3Instance(window.ethereum)
+                  : this.setWeb3Instance();
+              provider.then(() => {
                 this.setTokenAndEthBalance();
               });
             }

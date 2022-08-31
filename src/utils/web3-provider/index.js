@@ -8,6 +8,7 @@ class MEWProvider {
       VuexStore.state.wallet &&
       VuexStore.state.wallet.identifier === WALLET_TYPES.WEB3_WALLET
     ) {
+      console.log(host, options);
       return new GivenProvider(host, options);
     } else if (host && typeof host === 'string') {
       if (host.includes('etherscan')) {
