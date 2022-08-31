@@ -18,45 +18,29 @@
     >
       <template #rightHeaderContainer>
         <div>
-          <!-- <span
-            class="greenPrimary--text cursor-pointer pl-3"
-            @click="toggleEditCustomToken"
-            >+ Edit Tokens</span
-          > -->
-          <!-- <v-menu offset-y>
-            <template #activator="{ on, attrs }"> -->
-          <mew-icon-button
-            mdi-icon="dots-vertical"
-            mdi-icon-size="medium"
-            btn-size="medium"
-            btn-style="transparent"
-            color-theme="basic"
-            rounded
-            @click.native="toggleEditCustomToken"
-          />
-          <!-- </template> -->
-          <!-- <v-list>
-              <v-list-item v-for="(item, index) in items" :key="index">
-                <v-icon small color="basic">{{ item.icon }}</v-icon>
-                <v-list-item-title>
-                  {{ item.text }}
-                </v-list-item-title>
+          <v-menu bottom offset-y rounded="lg">
+            <template #activator="{ on, attrs }">
+              <v-btn
+                class="ma-2"
+                v-bind="attrs"
+                rounded
+                color="basic"
+                icon
+                v-on="on"
+              >
+                <v-icon medium color="basic">mdi-dots-vertical</v-icon>
+              </v-btn>
+            </template>
+            <v-list>
+              <v-list-item
+                v-for="(item, i) in items"
+                :key="i"
+                @click="item.action"
+                ><v-icon medium color="basic" left>{{ item.icon }}</v-icon>
+                <v-list-item-title>{{ item.title }}</v-list-item-title>
               </v-list-item>
-            </v-list> -->
-          <!-- <div>
-                <span
-                  class="basic--text cursor-pointer"
-                  @click="toggleAddCustomToken"
-                  >Add Tokens</span
-                >
-                <v-icon small color="white">mdi-pencil-outline</v-icon>
-                <span
-                  class="basic--text cursor-pointer"
-                  @click="toggleEditCustomToken"
-                  >Edit Tokens</span
-                >
-              </div> -->
-          <!-- </v-menu> -->
+            </v-list>
+          </v-menu>
         </div>
       </template>
       <template #moduleBody>
@@ -168,11 +152,19 @@ export default {
           sortable: false,
           width: '15%'
         }
+      ],
+      items: [
+        {
+          icon: 'mdi-plus',
+          title: 'Add Token',
+          action: this.toggleAddCustomToken
+        },
+        {
+          icon: 'mdi-pencil-outline',
+          title: 'Edit Token',
+          action: this.toggleEditCustomToken
+        }
       ]
-      // items: [
-      //   { icon: 'mdi-plus', title: 'Add Token' },
-      //   { icon: 'mdi-pencil-outline', title: 'Edit Token' }
-      // ]
     };
   },
   computed: {
@@ -306,10 +298,6 @@ export default {
     toggleEditCustomToken() {
       this.openEditCustomToken = !this.openEditCustomToken;
     }
-    // toggleMenu() {
-    //   this.showMenu = !this.showMenu;
-    //   console.log('showMenu', this.showMenu);
-    // }
   }
 };
 </script>
