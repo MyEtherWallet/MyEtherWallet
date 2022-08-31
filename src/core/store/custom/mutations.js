@@ -19,6 +19,7 @@ const SET_CUSTOM_TOKEN = function (state, { token, rootGetters }) {
   const found = customTokensByNetwork.findIndex(
     t => t.contract.toLowerCase() === token.contract.toLowerCase()
   );
+  token.decimals = +token.decimals;
   if (found !== -1) {
     customTokensByNetwork[found] = token;
   } else {
@@ -38,7 +39,7 @@ const DELETE_CUSTOM_TOKEN = function (state, { token, rootGetters }) {
       });
       // Check if token is in hiddenTokens
       const hiddenTokens = rootGetters['custom/hiddenTokens'];
-      if (hiddenTokens.length > 0) {
+      if (found && hiddenTokens.length > 0) {
         const newHiddenTokens = hiddenTokens.filter(item => {
           return found.address !== item.address;
         });
