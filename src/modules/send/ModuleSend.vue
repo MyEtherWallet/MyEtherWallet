@@ -202,6 +202,7 @@ import {
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 import { toBase } from '@/core/helpers/unit';
+import { BN } from 'bn.js';
 export default {
   components: {
     ModuleAddressBook,
@@ -594,6 +595,11 @@ export default {
     txFeeETH(newVal) {
       const total = BigNumber(newVal).plus(this.amount);
       const amt = toBase(this.amount, this.selectedCurrency.decimals);
+      const balance = this.selectedCurrency.balance;
+      if (!BN.isBN(balance))
+        this.selectedCurrency.balance = balance.toString().includes('.')
+          ? toBNSafe(toBase(balance, this.selectedCurrency.decimals))
+          : toBNSafe(balance);
       if (
         (this.selectedCurrency.contract === MAIN_TOKEN_ADDRESS &&
           total.gt(this.balanceInETH)) ||
