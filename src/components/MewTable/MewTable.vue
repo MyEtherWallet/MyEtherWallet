@@ -399,7 +399,7 @@ export default {
 
   .mew-checkbox {
     .v-icon {
-      font-size: 25px;
+      font-size: 22px;
       color: grey;
     }
   }
