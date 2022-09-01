@@ -45,6 +45,7 @@ const setNetwork = async function (
   const matched = await matchNetwork(chainID, walletType);
   if (matched) commit('SET_NETWORK', network);
   dispatch('swap/resetPrefetch', null, { root: true });
+  dispatch('wallet/setAccountBalance', '0', { root: true });
 };
 const setValidNetwork = function ({ commit }, valid) {
   commit('SET_VALID_NETWORK', valid);
