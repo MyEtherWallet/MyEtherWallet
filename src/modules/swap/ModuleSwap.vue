@@ -316,7 +316,7 @@ import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalyti
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 
 const MIN_GAS_LIMIT = 800000;
-const localContractToToken = {};
+let localContractToToken = {};
 export default {
   name: 'ModuleSwap',
   components: {
@@ -391,7 +391,7 @@ export default {
   },
   computed: {
     ...mapState('swap', ['prefetched', 'swapTokens']),
-    ...mapState('wallet', ['web3', 'address', 'balance']),
+    ...mapState('wallet', ['web3', 'address', 'balance', 'identifier']),
     ...mapState('global', ['gasPriceType']),
     ...mapState('external', ['coinGeckoTokens']),
     ...mapGetters('global', [
@@ -883,14 +883,18 @@ export default {
           ? this.toTokenType.name
           : 'ETH';
       return `To ${name} address`;
+    },
+    networkAndWeb3() {
+      return this.network, this.web3;
     }
   },
   watch: {
+    tokensList() {
+      this.resetSwapState();
+    },
     coinGeckoTokens(newVal) {
       if (newVal.size > 0) {
-        this.mainTokenDetails = this.contractToToken(MAIN_TOKEN_ADDRESS);
-        localContractToToken[MAIN_TOKEN_ADDRESS] = this.mainTokenDetails;
-        this.setupSwap();
+        this.resetSwapState();
       }
     },
     tokenInValue() {
@@ -927,11 +931,14 @@ export default {
         this.setTokenFromURL();
       }
     },
+    networkAndWeb3: {
+      handler: function () {
+        this.resetSwapState();
+      }
+    },
     web3: {
       handler: function () {
-        this.mainTokenDetails = this.contractToToken(MAIN_TOKEN_ADDRESS);
-        localContractToToken[MAIN_TOKEN_ADDRESS] = this.mainTokenDetails;
-        this.setupSwap();
+        this.resetSwapState();
       }
     },
     fromTokenType: {
@@ -956,14 +963,18 @@ export default {
     // multi value watcher to clear
     // refund address and to address
     if (this.coinGeckoTokens.size > 0) {
-      this.mainTokenDetails = this.contractToToken(MAIN_TOKEN_ADDRESS);
-      localContractToToken[MAIN_TOKEN_ADDRESS] = this.mainTokenDetails;
-      this.setupSwap();
+      this.resetSwapState();
     }
   },
   methods: {
     ...mapActions('notifications', ['addNotification']),
     ...mapActions('swap', ['setSwapTokens']),
+    resetSwapState() {
+      this.mainTokenDetails = this.contractToToken(MAIN_TOKEN_ADDRESS);
+      localContractToToken = {};
+      localContractToToken[MAIN_TOKEN_ADDRESS] = this.mainTokenDetails;
+      this.setupSwap();
+    },
     /**
      * Handles emitted values from
      * module-address-book
@@ -1002,12 +1013,8 @@ export default {
           foundToken.name = token.symbol;
           foundToken.value = foundToken.contract;
           foundToken.subtext = name;
-          if (token.symbol) foundToken.symbol = token.symbol;
-          localContractToToken[token.contract] = Object.assign(
-            {},
-            token,
-            foundToken
-          );
+          foundToken.symbol = token.symbol || foundToken.symbol;
+          this.setToLocaContractToToken(Object.assign({}, token, foundToken));
           return;
         }
         const foundToken = this.contractToToken(token.contract);
@@ -1019,18 +1026,25 @@ export default {
           foundToken.name = token.symbol || foundToken.symbol;
           foundToken.value = foundToken.contract;
           foundToken.subtext = name;
-          localContractToToken[token.contract] = foundToken;
+          this.setToLocaContractToToken(foundToken);
           return;
         }
-        const name = token.name;
         token.price = '';
-        token.subtext = name;
+        token.subtext = token.name;
         token.value = token.contract;
         token.name = token.symbol || token.subtext;
-        if (token.name !== '' && token.symbol !== '' && token.subtext !== '')
-          return;
-        localContractToToken[token.contract] = token;
+        this.setToLocaContractToToken(token);
       });
+    },
+    /**
+     * Add token to localContractToToken
+     */
+    setToLocaContractToToken(token) {
+      if (token.name === '' || token.symbol === '' || token.subtext === '') {
+        return;
+      }
+
+      localContractToToken[token.contract] = token;
     },
     /**
      * Handles emitted values from module-address-book
@@ -1200,11 +1214,18 @@ export default {
     },
     switchTokens() {
       this.trackSwap('switchTokens');
-      const fromToken = clone(this.fromTokenType);
-      const toToken = clone(this.toTokenType);
-      this.tokenInValue = this.tokenOutValue;
-      this.setFromToken(toToken);
+      const fromToken = this.fromTokenType;
+      const toToken = this.toTokenType;
+      const tokenOutValue = this.tokenOutValue;
+      this.fromTokenType = {};
+      this.toTokenType = {};
+      this.tokenOutValue = '0';
+      const toTokenFromTokenList = this.actualFromTokens.find(item => {
+        if (item.contract && item.contract === toToken.contract) return item;
+      });
+      this.setFromToken(toTokenFromTokenList ? toTokenFromTokenList : toToken);
       this.setToToken(fromToken);
+      this.setTokenInValue(tokenOutValue);
     },
     processTokens(tokens, storeTokens) {
       this.setupTokenInfo(tokens.fromTokens);

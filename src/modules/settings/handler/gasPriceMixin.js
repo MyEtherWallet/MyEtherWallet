@@ -12,10 +12,10 @@ const gasPriceMixin = {
     };
   },
   computed: {
-    ...mapState('wallet', ['web3']),
+    ...mapState('wallet', ['web3', 'isOfflineApp']),
     ...mapGetters('global', ['gasPrice', 'network', 'gasPriceByType']),
     ...mapGetters('external', ['fiatValue']),
-    ...mapState('global', ['gasPriceType', 'baseGasPrice']),
+    ...mapState('global', ['gasPriceType', 'baseGasPrice', 'online']),
     gasButtons() {
       if (!this.gasPrice) return [];
       const economy = fromWei(this.gasPriceByType(gasPriceTypes.ECONOMY));
@@ -72,7 +72,7 @@ const gasPriceMixin = {
       this.setGasPriceType(selected);
     },
     fetchGasPrice() {
-      this.updateGasPrice();
+      if (this.online && !this.isOfflineApp) this.updateGasPrice();
     }
   }
 };
