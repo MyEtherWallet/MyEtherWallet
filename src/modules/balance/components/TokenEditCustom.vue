@@ -13,10 +13,10 @@
     :show-overlay="open"
     :title="title"
     :close="closeEdit"
-    :back="showBack ? back : null"
-    :content-size="step === 1 ? 'xlarge' : 'medium'"
+    :back="back"
+    :content-size="'xlarge'"
   >
-    <div v-if="step === 1" class="full-width">
+    <div class="full-width">
       <!--
     =====================================================================================
       Step One: Table of tokens to edit
@@ -132,7 +132,7 @@
 <script>
 import TheTable from '@/components/TheTable';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
-import { mapActions, mapGetters, mapState } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import { cloneDeep } from 'lodash';
 import MewTokenContainer from '@/components/MewTokenContainer/MewTokenContainer';
 
@@ -153,13 +153,11 @@ export default {
   },
   data() {
     return {
-      step: 1,
       selectedToken: {}
     };
   },
   computed: {
     ...mapGetters('wallet', ['tokensList']),
-    ...mapState('wallet', ['loadingWalletInfo']),
     ...mapGetters('custom', ['customTokens', 'hiddenTokens']),
     ...mapGetters('global', ['network']),
     formattedCustomTokens() {
@@ -191,12 +189,7 @@ export default {
       });
     },
     title() {
-      return this.step === 1
-        ? `Edit Tokens`
-        : `Are you sure you want to remove ${this.selectedToken.token} token?`;
-    },
-    showBack() {
-      return this.step !== 1;
+      return 'Edit Tokens';
     },
     isMobile() {
       return this.$vuetify.breakpoint.xs;
@@ -209,7 +202,6 @@ export default {
      */
     closeEdit() {
       this.selectedToken = {};
-      this.step = 1;
       this.close();
     },
     /**
@@ -254,8 +246,7 @@ export default {
       return newObj;
     },
     back() {
-      this.selectedToken = {};
-      this.step = 1;
+      this.closeEdit();
     },
     addCustomToken() {
       this.$emit('addToken');

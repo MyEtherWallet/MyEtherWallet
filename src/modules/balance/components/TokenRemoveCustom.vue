@@ -3,7 +3,7 @@
     <!-- ===================================================================================== -->
     <!-- Remove Custom Token Overlay -->
     <!-- ===================================================================================== -->
-    <v-dialog :value="open" max-width="330" @click:outside="reset">
+    <v-dialog :value="open" max-width="330" @click:outside="close">
       <div class="white pa-7">
         <div class="mew-heading-2 mb-10">Remove token?</div>
         <!--
@@ -34,13 +34,12 @@
               btn-size="large"
               btn-style="outline"
               title="Keep token"
-              @click.native="reset"
+              @click.native="close"
             />
             <mew-button
               class="flex-grow-1 ml-1"
               style="flex-basis: 0"
               btn-size="large"
-              :loading="loading"
               title="Remove Token"
               @click.native="confirmDelete"
             />
@@ -52,7 +51,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from 'vuex';
+import { mapActions } from 'vuex';
 import { SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 
 export default {
@@ -70,48 +69,15 @@ export default {
       type: Object
     }
   },
-  data() {
-    return {
-      contractAddress: '',
-      customName: '',
-      customSymbol: '',
-      symbolLengthTooLong: '',
-      nameLengthTooLong: '',
-      loading: false,
-      step: 1,
-      token: {}
-    };
-  },
-  computed: {
-    ...mapState('wallet', ['web3', 'address']),
-    ...mapGetters('wallet', ['tokensList']),
-    ...mapGetters('external', ['contractToToken']),
-    ...mapGetters('custom', ['customTokens']),
-    ...mapGetters('global', ['getFiatValue'])
-  },
   methods: {
     ...mapActions('custom', ['deleteToken', 'deleteHiddenToken']),
-    /**
-     * resets data and closes overlay on close button click
-     */
-    reset() {
-      this.close();
-      this.step = 1;
-      this.token = {};
-      this.contractAddress = '';
-      this.customName = '';
-      this.customSymbol = '';
-      this.symbolLengthTooLong = '';
-      this.nameLengthTooLong = '';
-      this.loading = false;
-    },
     /**
      * Delete custom token
      */
     confirmDelete() {
       const tokenSymbol = this.selectedToken.token;
       this.deleteToken([this.selectedToken]).then(() => {
-        this.reset();
+        this.close();
         Toast(`${tokenSymbol} Token removed succesfully`, {}, SUCCESS);
       });
     }
