@@ -209,10 +209,10 @@ export default {
           }
           this.loadedAddressValidation = !this.isValidAddress ? false : true;
           if (this.isValidAddress && !this.isOfflineApp) {
-            // Make sure reverseName is not undefined
-            const reverseName =
-              (await this.nameResolver.resolveAddress(this.inputAddr)) || {};
-            if (!reverseName.name) {
+            const reverseName = await this.nameResolver.resolveAddress(
+              this.inputAddr
+            );
+            if (reverseName && !reverseName.name) {
               reverseName.name =
                 (
                   await getAddressInfo(
