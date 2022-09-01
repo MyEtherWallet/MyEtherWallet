@@ -43,9 +43,13 @@ const setNetwork = async function (
 ) {
   const chainID = network?.type?.chainID;
   const matched = await matchNetwork(chainID, walletType);
-  if (matched) commit('SET_NETWORK', network);
-  dispatch('swap/resetPrefetch', null, { root: true });
-  dispatch('wallet/setAccountBalance', '0', { root: true });
+  if (matched) {
+    commit('SET_NETWORK', network);
+    dispatch('swap/resetPrefetch', null, { root: true });
+    dispatch('wallet/setAccountBalance', '0', { root: true });
+    return;
+  }
+  throw new Error('Network not found');
 };
 const setValidNetwork = function ({ commit }, valid) {
   commit('SET_VALID_NETWORK', valid);
