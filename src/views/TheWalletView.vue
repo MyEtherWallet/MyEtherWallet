@@ -89,10 +89,9 @@ export default {
     },
     network() {
       this.web3.eth.clearSubscriptions();
-      if (this.online && !this.isOfflineApp) this.setup();
     },
     web3() {
-      this.setup();
+      if (this.online && !this.isOfflineApp) this.setup();
     },
     coinGeckoTokens() {
       this.setTokenAndEthBalance();
