@@ -1,9 +1,11 @@
 ### Release v6.6.5
+
 ### devop
 
 * replace token images with mew-token-container for uniform look [#4040](https://github.com/MyEtherWallet/MyEtherWallet/pull/4040)
 * Integrated Kleros name tags to address book [#4057](https://github.com/MyEtherWallet/MyEtherWallet/pull/4057)
 * Switch network toast for web3 extensions [#4145](https://github.com/MyEtherWallet/MyEtherWallet/pull/4145)
+
 ### feat
 
 * Add Aave graphql mixin [#3133](https://github.com/MyEtherWallet/MyEtherWallet/pull/3133)
