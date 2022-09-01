@@ -4,7 +4,7 @@
     Blocks Mint Tab
     ===================================================
     -->
-  <div class="pt-5 pb-13 px-3 pa-sm-15">
+  <div class="dapps--modules--module-eth-blocks-mint pt-5 pb-13 px-3 pa-sm-15">
     <v-sheet max-width="680" class="mx-auto">
       <v-row no-gutters>
         <!--

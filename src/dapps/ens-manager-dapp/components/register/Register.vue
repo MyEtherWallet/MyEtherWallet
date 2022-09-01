@@ -48,7 +48,7 @@
         class="d-flex justify-space-between"
       >
         <span class="font-weight-medium">
-          Generating registration cost, please wait...
+          Generating registration cost. Please wait...
         </span>
       </div>
 
@@ -60,7 +60,7 @@
       >
         <span>Registration Cost:</span>
         <span class="font-weight-medium">
-          {{ totalCost }} ETH (${{ totalCostUsd }})
+          {{ totalCost }} ETH ({{ totalCostUsd }})
         </span>
       </div>
 
@@ -119,8 +119,10 @@
           loadingCommit ||
           ticker !== '00:00' ||
           notEnoughFunds ||
-          noFundsForRegFees
+          noFundsForRegFees ||
+          loadingReg
         "
+        :loading="loadingReg"
         :title="
           canRegister
             ? $t('ens.register.name')
@@ -168,6 +170,10 @@ export default {
       type: Boolean
     },
     loadingCommit: {
+      default: false,
+      type: Boolean
+    },
+    loadingReg: {
       default: false,
       type: Boolean
     },

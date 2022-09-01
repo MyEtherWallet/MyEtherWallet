@@ -42,17 +42,31 @@ export default class OrderHandler {
    */
   getSupportedFiatToBuy(symbol) {
     return axios
-      .get(`${API}/v3/purchase/providers/web?iso=us&cryptoCurrency=${symbol}`)
+      .get(`${API}/v3/purchase/providers/web?iso=us&cryptoCurrency=${symbol}`, {
+        headers: {
+          'Accept-Language': 'en-US'
+        }
+      })
       .then(res => res.data);
   }
 
   getFiatRatesForBuy() {
-    return axios.get(`${API}/v3/purchase/moonpay/quotes`).then(res => res.data);
+    return axios
+      .get(`${API}/v3/purchase/moonpay/quotes`, {
+        headers: {
+          'Accept-Language': 'en-US'
+        }
+      })
+      .then(res => res.data);
   }
 
   getSupportedFiatToSell(symbol) {
     return axios
-      .get(`${API}/v3/sell/providers/web?iso=us&cryptoCurrency=${symbol}`)
+      .get(`${API}/v3/sell/providers/web?iso=us&cryptoCurrency=${symbol}`, {
+        headers: {
+          'Accept-Language': 'en-US'
+        }
+      })
       .then(res => res.data);
   }
 
@@ -80,7 +94,12 @@ export default class OrderHandler {
         .get(
           encodeURI(
             `${API}/purchase/simplex/quote?id=${id}&requestedCurrency=${fiatCurrency}&fiatCurrency=${fiatCurrency}&requestedAmount=${amount}&cryptoCurrency=${tokenSymbol}`
-          )
+          ),
+          {
+            headers: {
+              'Accept-Language': 'en-US'
+            }
+          }
         )
         .then(res => {
           resolve(res.data);

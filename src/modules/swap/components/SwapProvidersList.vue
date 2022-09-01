@@ -262,8 +262,10 @@ export default {
 
           this.$nextTick(() => {
             if (bestRate !== -1) {
-              const card = this.$refs[`card${bestRate}`][0];
-              if (!card.isActive) {
+              const rateCard = this.$refs[`card${bestRate}`];
+              if (!rateCard) return;
+              const card = rateCard[0];
+              if (!card?.isActive) {
                 card.toggle();
               }
               this.setProvider(bestRate, this.step === 1);
@@ -278,7 +280,7 @@ export default {
         setTimeout(() => {
           if (id !== undefined) {
             const card = this.$refs[`card${id}`][0];
-            if (!card.isActive) {
+            if (card?.hasOwnProperty('isActive') && !card?.isActive) {
               card.toggle();
             }
           } else {
@@ -287,10 +289,8 @@ export default {
               const cards = refs.filter(c => c.includes('card'));
               cards.forEach(c => {
                 const card = this.$refs[c][0];
-                if (card) {
-                  if (card.isActive) {
-                    card.toggle();
-                  }
+                if (card?.isActive) {
+                  card.toggle();
                 }
               });
             }, 500);

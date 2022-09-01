@@ -1,16 +1,27 @@
 /**
  * Matomo Analytics Mixin
  */
-import categories from './configs/configCategories';
 import { mapState, mapActions } from 'vuex';
+import categories from './configs/configCategories';
 
 export default {
   name: 'HandlerAnalytics',
   computed: {
-    ...mapState('global', ['consentToTrack', 'displayedTrackingPopup'])
+    ...mapState('popups', [
+      'consentToTrack',
+      'displayedTrackingPopup',
+      'enkryptLandingPopup',
+      'enkryptLandingPopupClosed'
+    ]),
+    shouldDisplayTrackingPopup() {
+      if (!this.enkryptLandingPopup) {
+        return this.displayedTrackingPopup;
+      }
+      return true;
+    }
   },
   methods: {
-    ...mapActions('global', ['setTrackingConsent']),
+    ...mapActions('popups', ['setTrackingConsent']),
     /**
      * Sets the consent to track on wallet page
      */
@@ -54,28 +65,11 @@ export default {
       }
     },
     /**
-     * Tracks which swap rate user clicks
-     */
-    trackSwapRate(action) {
-      if (this.$matomo && action && this.consentToTrack) {
-        this.$matomo.trackEvent(categories.swapRates, action);
-      }
-    },
-    /**
      * Tracks which dapp user navigates to
      */
     trackDapp(action) {
       if (this.$matomo && action && this.consentToTrack) {
         this.$matomo.trackEvent(categories.dapp, action);
-      }
-    },
-    /**
-     * Tracks what user selects to swap from
-     * and swap to
-     */
-    trackSwap(action) {
-      if (this.$matomo && action && this.consentToTrack) {
-        this.$matomo.trackEvent(categories.swap, action);
       }
     },
     /**
@@ -100,6 +94,43 @@ export default {
     trackLogout() {
       if (this.$matomo && this.consentToTrack) {
         this.$matomo.trackEvent(categories.exitDashboard, 'true');
+      }
+    },
+    /**
+     * Tracks when user clicks enkrypt install
+     */
+    trackEnkryptInstall() {
+      if (this.$matomo && this.consentToTrack) {
+        this.$matomo.trackEvent(categories.enkrypt, 'true');
+      }
+    },
+    /**
+     * Tracks when user clicks mewwallet install
+     */
+    trackMewWalletInstall() {
+      if (this.$matomo && this.consentToTrack) {
+        this.$matomo.trackEvent(categories.mewwallet, 'true');
+      }
+    },
+    /**
+     * SWAP specific analytics
+     */
+
+    /**
+     * Tracks which swap rate user clicks
+     */
+    trackSwapRate(action) {
+      if (this.$matomo && action && this.consentToTrack) {
+        this.$matomo.trackEvent(categories.swapRates, action);
+      }
+    },
+    /**
+     * Tracks what user selects to swap from
+     * and swap to
+     */
+    trackSwap(action) {
+      if (this.$matomo && action && this.consentToTrack) {
+        this.$matomo.trackEvent(categories.swap, action);
       }
     }
   }

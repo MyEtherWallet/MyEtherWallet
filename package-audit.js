@@ -1,7 +1,7 @@
 const exec = require('child_process').exec;
 
 const AUDIT_EXCEPTIONS = [
-  'underscore',
+  'tar',
   'trim-newlines',
   'css-what',
   'normalize-url',
@@ -14,7 +14,18 @@ const AUDIT_EXCEPTIONS = [
   'axios',
   'async',
   'nth-check',
-  'semver-regex'
+  'semver-regex',
+  'scss-tokenizer',
+  // no package found
+  'codecov',
+  'glob-parent',
+  'socket.io-parser',
+  'xmlhttprequest-ssl',
+  'node-forge',
+  'engine.io',
+  'parse-path',
+  '@openzeppelin/contracts',
+  'terser'
 ];
 const execute = (command, callback) => {
   exec(

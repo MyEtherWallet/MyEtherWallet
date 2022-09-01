@@ -4,11 +4,15 @@ import dappsMaker from './dapps-maker/en_US';
 import dappsSubmission from './dapps-submission/en_US';
 import home from './home/en_US';
 import howItWorks from './how-it-works/en_US.json';
+import aboutUs from './about-us/en_US.json';
+import team from './team/en_US.json';
+import careers from './careers/en_US.json';
 import footer from './footer/en_US';
 import gettingStarted from './getting-started/en_US';
 import privacyPolicy from './privacy-policy/en_US';
 import termsOfService from './terms-of-conditions/en_US';
 import accessWallet from './access-wallet/en_US';
+import createWallet from './create-wallet/en_US';
 import interfaceTranslations from './interface/en_US';
 import errorsGlobal from './errors-global/en_US';
 import trezorError from './errors-trezor/en_US';
@@ -39,11 +43,15 @@ const en_US = {
   common: common,
   home: home,
   howItWorks: howItWorks,
+  aboutUs: aboutUs,
+  team: team,
+  careers: careers,
   footer: footer,
   gettingStarted: gettingStarted,
   privacyPol: privacyPolicy,
   termsOfService: termsOfService,
   accessWallet: accessWallet,
+  createWallet: createWallet,
   interface: interfaceTranslations,
   errorsGlobal: errorsGlobal,
   trezorError: trezorError,

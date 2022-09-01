@@ -108,7 +108,7 @@
       <div v-if="!fromSettings && showGetMoreEth" class="mt-3">
         <span class="secondary--text">Can't increase priority? </span>
         <a v-if="network.type.canBuy" @click="openMoonpay">
-          Buy more {{ network.type.name }}
+          Buy more {{ network.type.currencyName }}
         </a>
       </div>
     </div>
@@ -212,24 +212,11 @@ export default {
     /**
      * If not enough balance to cover new priority, go back to previous priority
      */
+    fromSettings() {
+      this.setGasType();
+    },
     gasPriceType() {
-      if (this.notEnoughEth) {
-        if (this.gasPriceType == 'regular') {
-          this.regularDisabled = true;
-          this.fastDisabled = true;
-        } else if (this.gasPriceType == 'fast') {
-          this.fastDisabled = true;
-        } else {
-          this.economyDisabled = true;
-          this.regularDisabled = true;
-          this.fastDisabled = true;
-        }
-        this.setSelected(this.previousSelected);
-      }
-
-      if (!this.notEnoughEth) {
-        this.previousSelected = this.gasPriceType;
-      }
+      this.setGasType();
     },
     gasPrice() {
       this.recalculate();
@@ -246,6 +233,24 @@ export default {
     this.previousSelected = this.gasPriceType;
   },
   methods: {
+    setGasType() {
+      if (this.notEnoughEth && !this.fromSettings) {
+        if (this.gasPriceType == 'regular') {
+          this.regularDisabled = true;
+          this.fastDisabled = true;
+        } else if (this.gasPriceType == 'fast') {
+          this.fastDisabled = true;
+        } else {
+          this.economyDisabled = true;
+          this.regularDisabled = true;
+          this.fastDisabled = true;
+        }
+        this.setSelected(this.previousSelected);
+        if (!this.notEnoughEth) {
+          this.previousSelected = this.gasPriceType;
+        }
+      }
+    },
     calcTxFee(priority) {
       return fromWei(
         toBNSafe(this.totalGasLimit)

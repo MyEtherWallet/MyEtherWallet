@@ -8,6 +8,7 @@
       -->
       <div class="mb-5">
         <mew-button
+          class="CreateWalletSoftwareOverviewKeystore"
           has-full-width
           color-theme="greyMedium"
           btn-style="outline"
@@ -40,7 +41,7 @@
         Mnemonic Phrase Button
       =====================================================================================
       -->
-      <div class="mb-5">
+      <div class="CreateWalletSoftwareOverviewMnemonic mb-5">
         <mew-button
           has-full-width
           color-theme="greyMedium"

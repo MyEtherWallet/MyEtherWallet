@@ -10,10 +10,16 @@
                 <router-link
                   v-if="d.routerLink"
                   :to="{ name: d.routerLink, query: d.query }"
+                  :class="d.class"
                 >
                   {{ d.label }}
                 </router-link>
-                <a v-if="d.link" :href="d.link" target="_blank">
+                <a
+                  v-if="d.link"
+                  :href="d.link"
+                  target="_blank"
+                  :class="d.class"
+                >
                   {{ d.label }}
                 </a>
               </v-list-item>
@@ -54,7 +60,7 @@
                 class="mr-2"
               />
               <div>
-                <div>BTC Donation</div>
+                <div>{{ $t('footer.donation.bitcoin') }}</div>
                 <div v-show="false" class="overline">
                   Address: {{ btcDonationAddress }}
                 </div>
@@ -203,7 +209,7 @@
                 class="mr-2"
               />
               <div>
-                <div>ETH Donation</div>
+                <div>{{ $t('footer.donation.ether') }}</div>
                 <div v-show="false" class="overline">
                   Address: {{ ethDonationAddress }}
                 </div>
@@ -221,7 +227,7 @@
                 class="mr-2"
               />
               <div>
-                <div>{{ $t('footer.donation.btc') }}</div>
+                <div>{{ $t('footer.donation.bitcoin') }}</div>
                 <div v-show="false" class="overline">
                   Address: {{ btcDonationAddress }}
                 </div>
@@ -230,21 +236,29 @@
           </div>
 
           <div
-            class="social-icons d-flex align-center justify-space-between mt-12"
+            class="social-icons d-flex align-center flex-wrap justify-center mt-12"
           >
             <a
               v-for="(i, key) in socialIcons"
               :key="key"
               :href="i.link"
               target="_blank"
+              style="height: 23px"
+              class="px-4 my-5"
             >
-              <mew-icon :img-height="23" :icon-name="i.icon" />
+              <mew-icon v-if="i.icon" :img-height="23" :icon-name="i.icon" />
+              <img
+                v-if="i.iconImage"
+                :src="i.iconImage"
+                alt="Social"
+                height="19"
+              />
             </a>
           </div>
 
           <div class="d-flex mt-10">
             <div class="d-flex align-center line-height-small mx-auto">
-              <div class="px-2 px-lg-6 border-right">
+              <div class="px-4 px-lg-6 border-right">
                 <a
                   class="color--inherit"
                   href="mailto:support@myetherwallet.com"
@@ -253,12 +267,12 @@
                   {{ $t('footer.feedback') }}
                 </a>
               </div>
-              <div class="px-2 px-lg-6 border-right">
+              <div class="px-4 px-lg-6 border-right">
                 <router-link :to="{ name: ROUTES_HOME.PRIVACY_POLICY.NAME }">
                   Privacy
                 </router-link>
               </div>
-              <div class="px-2 px-lg-6">
+              <div class="px-4 px-lg-6">
                 <router-link :to="{ name: ROUTES_HOME.TERMS_OF_SERVICE.NAME }">
                   Terms
                 </router-link>
@@ -370,28 +384,37 @@ export default {
       {
         title: 'Tools',
         data: [
-          { label: 'MEW wallet', link: 'https://www.mewwallet.com/' },
           {
-            label: 'MEW CX',
-            link: 'https://chrome.google.com/webstore/detail/mew-cx/nlbmnnijcnlegkjjpcfjclmcfggfefdm?utm_source=chrome-ntp-icon'
+            label: 'MEW wallet',
+            class: 'FooterMEWTool',
+            link: 'https://www.mewwallet.com/'
+          },
+          {
+            label: 'Enkrypt',
+            class: 'FooterCXTool',
+            link: 'https://www.enkrypt.com'
           },
           {
             label: 'Verify message',
+            class: 'FooterVerifyTool',
             routerLink: 'Tools',
             query: { tool: 'verify' }
           },
           {
             label: 'Convert units',
+            class: 'FooterConvertTool',
             routerLink: 'Tools',
             query: { tool: 'convert' }
           },
           {
             label: 'Generate keystore file',
+            class: 'FooterKeystoreTool',
             routerLink: 'Tools',
             query: { tool: 'keystore' }
           },
           {
             label: 'Send Offline Helper',
+            class: 'FooterOfflineTool',
             routerLink: 'Tools',
             query: { tool: 'offline' }
           }
@@ -505,6 +528,10 @@ a {
   > div {
     line-height: 11px;
   }
+}
+.v-expansion-panel-header {
+  max-width: 524px;
+  margin: 0 auto;
 }
 </style>
 

@@ -19,6 +19,7 @@ import { mapActions, mapGetters, mapState } from 'vuex';
 import handler from './handlers/stakewiseHandler';
 import BigNumber from 'bignumber.js';
 import { fromWei } from 'web3-utils';
+import { toBNSafe } from '@/core/helpers/numberFormatHelper';
 
 export default {
   name: 'TheStakewiseLayout',
@@ -116,8 +117,8 @@ export default {
         this.setValidatorApr(
           BigNumber(res[2]).minus(BigNumber(res[2]).times(0.1)).dp(2).toString()
         );
-        this.setStakeBalance(fromWei(res[3]));
-        this.setRewardBalance(fromWei(res[4]));
+        this.setStakeBalance(fromWei(toBNSafe(res[3])));
+        this.setRewardBalance(fromWei(toBNSafe(res[4])));
       });
     }
   }

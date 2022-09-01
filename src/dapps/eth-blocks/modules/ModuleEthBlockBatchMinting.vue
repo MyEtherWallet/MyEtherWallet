@@ -1,5 +1,7 @@
 <template>
-  <div class="py-13 px-5 px-sm-15 px-lg-15">
+  <div
+    class="dapps--eth-blocks--module-eth-block-batch-minting py-13 px-5 px-sm-15 px-lg-15"
+  >
     <!-- Header titles -->
     <v-row justify-lg="space-between" justify-md="space-between">
       <v-col cols="12" md="6" lg="7">
@@ -57,7 +59,7 @@
           </div>
           <div class="d-flex justify-space-between pb-4">
             <div>
-              <div class="mew-body">Network Fee</div>
+              <div class="mew-body">Transaction Fee</div>
               <div
                 class="mew-body greenPrimary--text cursor--pointer"
                 @click="openSettings"
@@ -370,7 +372,8 @@ export default {
         .multicall(this.batchMintData)
         .send({
           from: this.address,
-          gasPrice: this.gasLimit,
+          gas: this.gasLimit,
+          gasPrice: this.localGasPrice,
           value: this.totalMintValue
         })
         .on('transactionHash', () => {

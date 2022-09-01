@@ -1,6 +1,8 @@
 {
   "title": "How it works",
   "send-funds": {
+    "title": "Send ETH, ERC20 tokens & NFT",
+    "description": "Send your funds with the press of a button.",
     "info-one": {
       "title": "Send Transactions",
       "text": "MEW gives you full control-send your funds to anyone, anywhere, at any time, without middlemen, minimums, or limits."
@@ -11,10 +13,12 @@
     },
     "info-three": {
       "title": "Work with other chains",
-      "text": "MEW supports additional Ethereum-compatible networks including Ethereum Classic (ETC), Binance Smart Chain (BSC) and Polygon, so that users can manage assets beyond the Ethereum mainnet."
+      "text": "MEW supports additional Ethereum-compatible networks including Ethereum Classic (ETC), Binance Smart Chain (BNB) and Polygon, so that users can manage assets beyond the Ethereum mainnet."
     }
   },
   "swap": {
+    "title": "Swap",
+    "description": "MEW has partnered with 1inch, DEX AG, Changelly, Bity, and Simplex for easy crypto purchases and swaps. Buy ETH right in the wallet, swap ETH for ERC20 tokens, BTC and more!",
     "info-one": {
       "title": "Cross-Chain Swaps",
       "text": "MEW offers cross-chain swaps for a variety of popular coins. Swap between Ether and Bitcoin, Litecoin, or even DOGE!"
@@ -29,6 +33,8 @@
     }
   },
   "dapps": {
+    "title": "DApps",
+    "description": "Decentralized Applications (DApps) are what makes Ethereum special.",
     "info-one": {
       "title": "DApps Center",
       "text": "Explore our integrated DApps to fully experience Ethereum’s capabilities. Take advantage of DeFi services with our partners Aave and MakerDAO, and register a domain name for your wallet through ENS or Unstoppable Domains. We are constantly adding more DApps!"
@@ -40,6 +46,8 @@
     }
   },
   "tokens": {
+    "title": "Tokens",
+    "description": "If it is on Ethereum, you can manage it with MEW.",
     "info-one": {
       "title": "Buy Tokens",
       "text": "Swap for ERC20 tokens and stablecoins through our decentralized providers."
@@ -47,6 +55,24 @@
     "info-two": {
       "title": "Custom Tokens",
       "text": "MEW automatically supports most ERC20 tokens through our API, but if you don’t see the token you’re looking for, you can add it as a custom token right in the interface!"
+    }
+  },
+  "more": {
+    "title": "More tools",
+    "smart-contracts": {
+      "title": "Smart Contracts",
+      "description":
+        "Interact with any smart contract on Ethereum, whether we’ve integrated it or not!"
+    },
+    "messages": {
+      "title": "Messages",
+      "description":
+        "Send or verify messages from the MEW interface to verify ownership of your wallet."
+    },
+    "buy-eth": {
+      "title": "Buy ETH",
+      "description":
+        "Purchase Ether with a credit card through our providers"
     }
   }
 }

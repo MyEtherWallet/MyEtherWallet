@@ -388,7 +388,7 @@ export default {
         gasPrice: sanitizeHex(toBNSafe(this.gasPrice).toString(16)),
         to: isToken
           ? this.selectedCurrency.address
-          : this.address.toLowerCase().trim(),
+          : this.toAddress.toLowerCase().trim(),
         value: isToken
           ? sanitizeHex(toBNSafe(0).toString(16))
           : sanitizeHex(toBNSafe(amtWei).toString(16)),

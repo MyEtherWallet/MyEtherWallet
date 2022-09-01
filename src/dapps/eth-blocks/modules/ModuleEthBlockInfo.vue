@@ -4,7 +4,9 @@
     Blocks Mint Tab
     ===================================================
     -->
-  <v-container class="px-3 pb-13 pt-5 px-md-15 pb-md-15 pt-md-8">
+  <v-container
+    class="dapps--module-eth-block-info px-3 pb-13 pt-5 px-md-15 pb-md-15 pt-md-8"
+  >
     <!--
         ===================================================
           Block Search or BlockInfo

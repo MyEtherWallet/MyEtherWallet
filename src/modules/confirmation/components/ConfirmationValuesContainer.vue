@@ -73,12 +73,7 @@
             =====================================================================================
             -->
           <div v-if="item.amount && item.icon">
-            <v-img
-              :src="item.icon"
-              max-height="24px"
-              max-width="24px"
-              contain
-            />
+            <mew-token-container :img="item.icon" />
           </div>
           <div v-if="!item.amount">
             <v-img

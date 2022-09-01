@@ -16,8 +16,10 @@ export default {
   components: { ModuleToast, ModuleGlobalModals },
   mounted() {
     this.setOnlineStatus(false);
+    this.setOfflineApp(true);
   },
   methods: {
+    ...mapActions('wallet', ['setOfflineApp']),
     ...mapActions('global', ['setOnlineStatus'])
   }
 };

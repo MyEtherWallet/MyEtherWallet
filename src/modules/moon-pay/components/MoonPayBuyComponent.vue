@@ -10,6 +10,7 @@
         :items="currencyItems"
         :value="selectedCurrency"
         :disabled="loading"
+        :error-messages="currencyErrorMessages"
         is-custom
         @input="setCurrency"
       />
@@ -103,6 +104,8 @@ import {
 } from '@/core/helpers/numberFormatHelper';
 import { getCurrency } from '@/modules/settings/components/currencyList';
 import { buyContracts } from './tokenList';
+import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
+
 export default {
   name: 'ModuleBuyEth',
   props: {
@@ -115,6 +118,10 @@ export default {
       default: () => {}
     },
     inWallet: {
+      type: Boolean,
+      default: false
+    },
+    supportedBuy: {
       type: Boolean,
       default: false
     }
@@ -145,6 +152,7 @@ export default {
     ...mapState('wallet', ['address']),
     ...mapState('external', ['currencyRate', 'coinGeckoTokens']),
     ...mapGetters('external', ['contractToToken']),
+    ...mapGetters('wallet', ['tokensList']),
     includesFeeText() {
       return `Includes ${this.percentFee} fee (${
         formatFiatValue(this.minFee, this.currencyConfig).value
@@ -158,7 +166,9 @@ export default {
       }`;
     },
     dailyLimit() {
-      const value = BigNumber(this.fiatMultiplier).times(12000);
+      const moonpayMax = this.max.moonpay;
+      const simplexMax = this.max.simplex;
+      const value = Math.max(moonpayMax.toString(), simplexMax.toString());
       return `Daily limit: ${
         formatFiatValue(value.toString(), this.currencyConfig).value
       }`;
@@ -236,15 +246,14 @@ export default {
       return (
         (!this.inWallet && !this.actualValidAddress) ||
         this.loading ||
-        this.amountErrorMessages !== ''
+        this.amountErrorMessages !== '' ||
+        !this.supportedBuy
       );
     },
     buyBtnTitle() {
       return 'BUY NOW';
     },
     amountErrorMessages() {
-      const moonpayMax = this.max.moonpay;
-      const simplexMax = this.max.simplex;
       if (BigNumber(this.amount).isNaN() || BigNumber(this.amount).eq(0)) {
         return 'Amount required';
       }
@@ -252,17 +261,14 @@ export default {
         return `Amount can't be negative`;
       }
       if (this.min.gt(this.amount)) {
-        return `Amount can't be below provider's minimum: ${this.min.toFixed()} ${
-          this.selectedFiatName
-        }`;
+        return `Amount can't be below provider's minimum: ${
+          formatFiatValue(this.min.toFixed(), this.currencyConfig).value
+        } ${this.selectedFiatName}`;
       }
-      if (
-        moonpayMax.lt(BigNumber(this.amount)) &&
-        simplexMax.lt(BigNumber(this.amount))
-      ) {
-        return `Amount can't be above provider's maximum: ${simplexMax.toFixed()} ${
-          this.selectedFiatName
-        }`;
+      if (this.maxVal.lt(this.amount)) {
+        return `Amount can't be above provider's maximum: ${
+          formatFiatValue(this.maxVal.toFixed(), this.currencyConfig).value
+        } ${this.selectedFiatName}`;
       }
       return '';
     },
@@ -272,25 +278,45 @@ export default {
       }
       return '';
     },
-    currencyItems() {
-      const tokenList = new Array();
+    currencyErrorMessages() {
+      if (!this.supportedBuy) {
+        return 'Please switch your network to the Ethereum Mainnet on Metamask.';
+      }
+      return '';
+    },
+    tokens() {
+      if (this.inWallet) {
+        return buyContracts.reduce((arr, item) => {
+          const inList = this.tokensList.find(t => {
+            if (t.contract.toLowerCase() === item.toLowerCase()) return t;
+          });
+          if (inList) {
+            arr.push(inList);
+            return arr;
+          }
+          const token = this.contractToToken(item);
+          if (token) arr.push(token);
+          return arr;
+        }, []);
+      }
+      const arr = new Array();
       for (const contract of buyContracts) {
         const token = this.contractToToken(contract);
-        if (token) tokenList.push(token);
+        if (token) arr.push(token);
       }
-      const imgs = tokenList.map(item => {
-        return item.img;
-      });
+      return arr;
+    },
+    currencyItems() {
+      if (!this.supportedBuy) return;
       const tokensListWPrice =
         this.currencyRates.length > 0
-          ? tokenList.map(token => {
+          ? this.tokens.map(token => {
               const priceRate = this.currencyRates.find(rate => {
                 return rate.crypto_currency === token.symbol;
               });
-              const actualPrice = priceRate.quotes.find(quote => {
+              const actualPrice = priceRate?.quotes.find(quote => {
                 return quote.fiat_currency === this.selectedFiatName;
               });
-
               token.price = formatFiatValue(
                 actualPrice ? actualPrice.price : '0',
                 this.currencyConfig
@@ -299,12 +325,10 @@ export default {
               token.name = token.symbol;
               return token;
             })
-          : tokenList;
+          : this.tokens;
       const returnedArray = [
         {
           text: 'Select Token',
-          imgs: imgs.splice(0, 3),
-          total: `${tokenList.length}`,
           divider: true,
           selectLabel: true
         },
@@ -356,6 +380,12 @@ export default {
         simplex: BigNumber(12000)
       };
     },
+    maxVal() {
+      const moonpayMax = this.max.moonpay;
+      const simplexMax = this.max.simplex;
+      const maxVal = Math.max(moonpayMax.toString(), simplexMax.toString());
+      return BigNumber(maxVal);
+    },
     min() {
       if (this.hasData) {
         const foundLimit = this.fetchedData[0].limits.find(
@@ -374,10 +404,23 @@ export default {
   watch: {
     selectedCurrency: {
       handler: function (newVal, oldVal) {
+        const supportedCoins = {
+          ETH: 'ETH',
+          BNB: 'BNB',
+          MATIC: 'MATIC'
+        };
+        if (
+          newVal.contract.toLowerCase() === MAIN_TOKEN_ADDRESS &&
+          !supportedCoins[newVal.symbol]
+        ) {
+          this.selectedCurrency = oldVal;
+          return;
+        }
+
         if (!isEqual(newVal, oldVal)) {
           this.fetchCurrencyData();
         }
-        this.$emit('selectedCurrency', newVal);
+        this.$emit('selectedCurrency', this.selectedCurrency);
       },
       deep: true
     },
@@ -392,6 +435,7 @@ export default {
     },
     network: {
       handler: function () {
+        this.selectedCurrency = {};
         this.selectedCurrency = this.defaultCurrency;
       },
       deep: true
@@ -446,7 +490,7 @@ export default {
         BNB: 'BSC',
         MATIC: 'MATIC'
       };
-      const nodeType = !supportedNodes[this.selectedCurrency.symbol]
+      const nodeType = !supportedNodes[this.selectedCurrency?.symbol]
         ? 'ETH'
         : supportedNodes[this.selectedCurrency.symbol];
       const node = nodeList[nodeType];
@@ -494,7 +538,8 @@ export default {
         !this.actualValidAddress ||
         isEmpty(this.amount) ||
         this.min.gt(this.amount) ||
-        isNaN(this.amount)
+        isNaN(this.amount) ||
+        this.maxVal.lt(this.amount)
       )
         return;
       this.loading = true;

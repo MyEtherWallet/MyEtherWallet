@@ -16,7 +16,7 @@
               class="mt-5"
               btn-link="https://help.myetherwallet.com/en/"
               :has-full-width="false"
-              title="Visit Help Center"
+              :title="$t('aboutUs.get-answers.btn-title')"
               btn-size="xlarge"
             />
           </v-sheet>
@@ -60,7 +60,7 @@ import Reddit from '@/assets/images/icons/icon-reddit-dark.svg';
 import Github from '@/assets/images/icons/icon-github-dark.svg';
 export default {
   components: { AppBlockTitle },
-  data: () => ({
+  data: vm => ({
     icons: [
       {
         link: 'https://t.me/myetherwallet',
@@ -80,15 +80,13 @@ export default {
       }
     ],
     titleData: {
-      title: 'Get answers to questions',
-      description:
-        'See our Help Center for assistance with using MEW, sending transactions, swapping, DeFi, DApps, and much more.',
+      title: vm.$t('aboutUs.get-answers.title'),
+      description: vm.$t('aboutUs.get-answers.description'),
       centered: false
     },
     titleDataRight: {
-      title: 'Join the MEW community',
-      description:
-        'Follow us on our social channels for Ethereum news, guides, security tips, and support from other MEW users.',
+      title: vm.$t('aboutUs.community.title'),
+      description: vm.$t('aboutUs.community.description'),
       centered: false
     }
   })

@@ -3,16 +3,7 @@ import BigNumber from 'bignumber.js';
 import Configs from './configs/providersConfigs';
 import hasValidDecimals from '@/core/helpers/hasValidDecimals.js';
 import { isObject } from 'lodash';
-const mergeIfNotExists = (baseList, newList) => {
-  newList.forEach(t => {
-    for (const bl of baseList) {
-      if (bl?.name.toLowerCase() === t?.name.toLowerCase()) return;
-      if (bl?.contract.toLowerCase() === t?.contract.toLowerCase()) return;
-    }
-    baseList.push(t);
-  });
-  return baseList;
-};
+
 class Swap {
   constructor(web3, chain) {
     this.providers = [
@@ -24,20 +15,25 @@ class Swap {
     this.chain = chain;
   }
   getAllTokens() {
-    let allTokens = [];
+    const allTokens = {};
     return this.providers[0].getSupportedTokens().then(baseList => {
-      allTokens = allTokens.concat(baseList);
+      if (baseList && baseList.length > 0)
+        baseList.forEach(t => (allTokens[t.contract] = t));
       return Promise.all(
-        this.providers.map(p => {
+        this.providers.slice(3).map(p => {
           if (!p.isSupportedNetwork(this.chain)) return Promise.resolve();
           return p.getSupportedTokens().then(tokens => {
             if (tokens && tokens.length > 0) {
-              allTokens = mergeIfNotExists(allTokens, tokens);
+              tokens.forEach(t => {
+                if (!allTokens[t.contract]) {
+                  allTokens[t.contract] = t;
+                }
+              });
             }
           });
         })
       ).then(() => {
-        const sorted = allTokens
+        const sorted = Object.values(allTokens)
           .filter(t => isObject(t))
           .sort((a, b) => {
             if (a.name > b.name) return 1;

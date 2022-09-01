@@ -19,7 +19,7 @@
         label="Password"
         placeholder="Enter Password"
         :has-clear-btn="true"
-        class="flex-grow-1 mb-2"
+        class="flex-grow-1 mb-2 CreateWalletKeystorePasswordInput"
         :rules="passwordRulles"
         type="password"
       />
@@ -33,7 +33,7 @@
         hint=""
         label="Confirm Password"
         placeholder="Confirm password"
-        class="flex-grow-1"
+        class="flex-grow-1 CreateWalletKeystoreConfirmPWInput"
         :rules="passwordConfirmRulles"
         type="password"
       />
@@ -44,6 +44,7 @@
           -->
       <div v-if="!isGeneratingKeystore" class="d-flex justify-center">
         <mew-button
+          class="CreateWalletKeystoreSubmitButton"
           title="Create Wallet"
           btn-size="xlarge"
           :has-full-width="false"
@@ -80,7 +81,9 @@
       =====================================================================================
       -->
     <template v-if="step === 2" #stepperContent2>
-      <div class="subtitle-1 font-weight-bold grey--text">STEP 2.</div>
+      <div class="subtitle-1 font-weight-bold grey--text step-two-header">
+        STEP 2.
+      </div>
       <div class="headline font-weight-bold">Download keystore file</div>
       <div class="mb-5">
         Important things to know before downloading your keystore file.
@@ -108,7 +111,7 @@
           title="Acknowledge & Download"
           btn-size="xlarge"
           :has-full-width="false"
-          class="mx-md-1 my-1"
+          class="mx-md-1 my-1 CreateWalletKeystoreAccept"
           @click.native="downloadWallet"
         />
       </div>
@@ -133,16 +136,17 @@
     <template v-if="step === 3" #stepperContent3>
       <div class="d-flex align-center">
         <div>
-          <div class="subtitle-1 font-weight-bold grey--text">STEP 3.</div>
+          <div class="subtitle-1 font-weight-bold grey--text step-three-header">
+            STEP 3.
+          </div>
           <div class="headline font-weight-bold mb-3">You are done!</div>
           <p class="mb-6">
             You are now ready to take advantage of all that Ethereum has to
             offer! Access with keystore file should only be used in an offline
             setting.
           </p>
-          <v-img
-            class="d-block d-sm-none mx-auto mt-12 mb-12"
-            max-width="170px"
+          <img
+            class="done-image d-block d-sm-none mx-auto mt-12 mb-12"
             src="@/assets/images/icons/icon-keystore-mew.png"
           />
 
@@ -151,20 +155,19 @@
               title="Access Wallet"
               btn-size="xlarge"
               :has-full-width="false"
-              class="mb-3"
+              class="mb-3 CreateWalletKeystoreAccess"
               @click.native="goToAccess"
             />
             <mew-button
               title="Create Another Wallet"
               :has-full-width="false"
               btn-style="transparent"
-              @click.native="updateStep(1)"
+              @click.native="restart"
             />
           </div>
         </div>
-        <v-img
-          class="d-none d-sm-block ml-8"
-          max-width="250px"
+        <img
+          class="d-none d-sm-block ml-8 icon-keystore"
           src="@/assets/images/icons/icon-keystore-mew.png"
         />
       </div>
@@ -175,6 +178,7 @@
 <script>
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
+import { isEmpty } from 'lodash';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 
@@ -228,8 +232,8 @@ export default {
       password: '',
       cofirmPassword: '',
       passwordRulles: [
-        value => !!value || 'Required',
-        value => value.length >= 7 || 'Password is less than 7 characters'
+        value => !isEmpty(value) || 'Required',
+        value => value?.length >= 8 || 'Password is less than 8 characters'
       ],
 
       walletFile: '',
@@ -240,9 +244,9 @@ export default {
   computed: {
     enableCreateButton() {
       return (
-        this.password !== '' &&
+        !isEmpty(this.password) &&
         this.cofirmPassword === this.password &&
-        this.password.length >= 7
+        this.password.length >= 8
       );
     },
     passwordConfirmRulles() {
@@ -280,6 +284,11 @@ export default {
      */
     updateStep(step) {
       this.step = step ? step : 1;
+    },
+    restart() {
+      this.step = 1;
+      this.password = '';
+      this.cofirmPassword = '';
     }
   }
 };
@@ -300,5 +309,11 @@ export default {
   border-radius: 7px;
   box-shadow: 0 8px 15px var(--v-greyLight-base);
   height: 100%;
+}
+.done-image {
+  max-width: 170px;
+}
+.icon-keystore {
+  max-width: 250px;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="dapp--eth-blocks--block-search">
     <!--
     ===================================================
       Max Block
@@ -63,7 +63,7 @@ export default {
     maxBlock() {
       const max = toBN(this.blockNumber).sub(toBN(50));
       const ZERO = toBN(0);
-      return max.gt(ZERO) ? max.toNumber() : '';
+      return max.gt(ZERO) ? max : '';
     },
     /**
      * Returns search error messages, empty string if no error.

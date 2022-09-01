@@ -17,7 +17,7 @@
           v-model="password"
           type="password"
           hint="Password must be 8 or more characters"
-          class="mt-8"
+          class="mt-8 KeystorePassword"
           :has-clear-btn="true"
           :error-messages="passwordErrMessages"
           :rules="[value => !!value || 'Required']"
@@ -27,14 +27,14 @@
           v-model="confirmPassword"
           :error-messages="confirmPasswordErrMessages"
           type="password"
-          class="mt-2"
+          class="mt-2 KeystoreConfirmPassword"
           label="Confirm password"
         />
 
         <div class="mt-1 greyLight terms-container pa-5">
           <mew-checkbox
             v-model="userTermsAgreed"
-            class-name="textMedium--text"
+            class-name="textMedium--text KeystoreConfirm"
             :label="userTermsLabel"
           ></mew-checkbox>
         </div>
@@ -43,7 +43,7 @@
           icon-align="left"
           icon="mdi-download"
           :has-full-width="$vuetify.breakpoint.smAndDown"
-          class="d-block mx-auto mt-8"
+          class="d-block mx-auto mt-8 KeystoreDownloadFile"
           btn-size="xlarge"
           :disabled="
             !password ||

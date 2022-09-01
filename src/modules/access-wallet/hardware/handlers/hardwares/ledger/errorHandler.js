@@ -4,7 +4,8 @@ const ERRORS = {
   'UNKNOWN_ERROR (0x6801)': 'ledgerError.unknown-0x6801',
   'UNKNOWN_ERROR (0x6804)': 'ledgerError.unknown-0x6804',
   'UNKNOWN_ERROR (0x6b0c)': 'ledgerError.unknown-0x6boc',
-  'UNKNOWN_ERROR (0x650f)': 'ledgerError.unknown-0x650f',
+  'UNKNOWN_ERROR (0x650f)':
+    'Error: Please refresh and select the Ethereum app on your device before pairing',
   'UNKNOWN_ERROR (0x6a15)': 'ledgerError.unknown-0x6a15',
   'Failed to sign with Ledger device: U2F TIMEOUT':
     'ledgerError.failed-to-sign',
@@ -61,7 +62,9 @@ const ERRORS = {
   'Ledger device: Security not satisfied':
     'Ledger device is locked or has invalid access rights',
   'GATT Server is disconnected. Cannot perform GATT operations.':
-    'Device has been disconnected, please reconnect.'
+    'Device has been disconnected, please reconnect.',
+  "Failed to execute 'transferOut' on 'USBDevice': A transfer error has occurred.":
+    'Error transferring out with USB device. Please try again.'
 };
 const WARNINGS = {
   'Ledger device: Condition of use not satisfied (denied by the user?) (0x6985)':

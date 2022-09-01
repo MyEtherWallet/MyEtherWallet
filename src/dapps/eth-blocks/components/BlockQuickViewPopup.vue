@@ -1,54 +1,39 @@
 <template>
-  <div>
-    <mew-popup
-      max-width="380px"
+  <div class="dapps--eth-blocks--block-quick-view-popup">
+    <app-modal
+      width="380px"
       :show="showBlock"
-      :left-btn="{
-        text: 'Go to block details',
-        method: navToBlock,
-        color: 'primary'
-      }"
-      :right-btn="{
-        text: 'Close',
-        method: close,
-        enabled: true
-      }"
       :has-buttons="false"
-      :has-body-content="true"
+      :has-close-button="true"
+      :close="close"
     >
-      <h2 class="black--text">{{ blockNumber }}</h2>
-      <div class="d-flex flex-column align-center justify-end py-5">
-        <img :src="img" width="300" height="300" />
-      </div>
-      <div>
-        {{ description }}
-      </div>
-      <div class="d-flex align-center justify-end mt-5">
-        <mew-button
-          btn-size="large"
-          btn-style="transparent"
-          title="Go to block details"
-          color-theme="primary"
-          @click.native="navToBlock"
-        />
-        <mew-button
-          btn-size="large"
-          btn-style="background"
-          title="Close"
-          color-theme="primary"
-          class="ml-1"
-          @click.native="close"
-        />
-      </div>
-    </mew-popup>
+      <template #dialogBody>
+        <h2 class="black--text">{{ blockNumber }}</h2>
+        <div class="d-flex flex-column align-center justify-end py-5">
+          <img :src="img" width="300" height="300" />
+        </div>
+        <div>
+          {{ description }}
+        </div>
+
+        <div
+          class="primary--text font-weight-medium cursor--pointer mt-3"
+          @click="navToBlock"
+        >
+          View Block details
+        </div>
+      </template>
+    </app-modal>
   </div>
 </template>
 
 <script>
+import AppModal from '@/core/components/AppModal';
 import { isEmpty } from 'lodash';
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 export default {
   name: 'DateSelectorPopup',
+  components: { AppModal },
   props: {
     showBlock: {
       type: Boolean,

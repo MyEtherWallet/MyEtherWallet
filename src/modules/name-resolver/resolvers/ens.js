@@ -10,4 +10,8 @@ export default class ENS {
   resolveName(name) {
     return this.resolver.name(name).getAddress();
   }
+
+  resolveAddress(address) {
+    return this.resolver.getName(address);
+  }
 }

@@ -1,5 +1,8 @@
 <template>
-  <div :class="hasBorder ? 'container-border' : ''">
+  <div
+    class="dapp--eth-blocks--block-result-component"
+    :class="hasBorder ? 'container-border' : ''"
+  >
     <div class="py-5 d-flex align-center justify-space-between">
       <v-row v-if="isLoading" dense>
         <v-col class="d-flex">
@@ -132,6 +135,7 @@
                 btn-style="transparent"
                 btn-size="large"
                 color-theme="error"
+                class="mr-2"
                 @click.native="hideRemove"
               />
               <mew-button
