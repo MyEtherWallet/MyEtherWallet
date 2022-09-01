@@ -51,6 +51,8 @@
                   color="primary"
                   on-icon="mdi-check-circle"
                   off-icon="mdi-checkbox-blank-circle-outline"
+                  :input-value="token.checkbox.value"
+                  @change="token.checkbox.method(token)"
                 ></v-checkbox>
               </td>
               <td>
@@ -64,14 +66,19 @@
                 <div style="max-width: 150px" class="d-flex align-center">
                   <mew-transform-hash :hash="token.address" class="mr-2" />
                   <mew-copy :copy-value="token.address" is-small />
+                  <a :href="explorerAddr(token.address)" target="_blank">
+                    <v-icon class="basic--text" small> mdi-launch </v-icon>
+                  </a>
                 </div>
               </td>
               <td class="text-center">
                 <mew-button
+                  v-if="token.callToAction.length > 0"
                   title="Remove"
                   btn-style="transparent"
                   color-theme="error"
                   btn-size="small"
+                  @click.native="token.callToAction[0].method(token)"
                 ></mew-button>
               </td>
             </tr>
@@ -91,6 +98,8 @@
               color="primary"
               on-icon="mdi-check-circle"
               off-icon="mdi-checkbox-blank-circle-outline"
+              :input-value="token.checkbox.value"
+              @change="token.checkbox.method(token)"
             ></v-checkbox>
             <mew-token-container class="mr-2" :img="token.tokenImg" />
             <div class="font-weight-medium">{{ token.token }}</div>
@@ -101,21 +110,21 @@
             <div style="max-width: 150px" class="d-flex align-center">
               <mew-transform-hash :hash="token.address" class="mr-2" />
               <mew-copy :copy-value="token.address" is-small />
+              <a :href="explorerAddr(token.address)" target="_blank">
+                <v-icon class="basic--text" small> mdi-launch </v-icon>
+              </a>
             </div>
             <v-spacer></v-spacer>
-            <div class="error--text font-weight-medium cursor--pointer">
+            <div
+              v-if="token.callToAction.length > 0"
+              class="error--text font-weight-medium cursor--pointer"
+              @click="token.calltoAction[0].method(token)"
+            >
               Remove
             </div>
           </div>
         </div>
       </div>
-
-      <mew-table
-        v-if="false"
-        :table-headers="tableHeaders"
-        :table-data="formattedAllTokens"
-        no-data-text="No tokens found!"
-      />
     </div>
   </mew-overlay>
 </template>
@@ -123,16 +132,13 @@
 <script>
 import TheTable from '@/components/TheTable';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
-// import { SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 import { mapActions, mapGetters, mapState } from 'vuex';
 import { cloneDeep } from 'lodash';
-import MewTable from '@/components/MewTable/MewTable';
 import MewTokenContainer from '@/components/MewTokenContainer/MewTokenContainer';
 
 export default {
   components: {
     MewTokenContainer,
-    MewTable,
     TheTable
   },
   props: {
@@ -148,40 +154,6 @@ export default {
   data() {
     return {
       step: 1,
-      tableHeaders: [
-        {
-          text: 'Show',
-          value: 'checkbox',
-          sortable: false,
-          filterable: false,
-          width: '10%'
-        },
-        {
-          text: 'Token',
-          value: 'token',
-          sortable: false,
-          width: '22%'
-        },
-        {
-          text: 'Balance',
-          value: 'balance',
-          sortable: false,
-          width: '23%'
-        },
-        {
-          text: 'Contract Address',
-          value: 'address',
-          sortable: false,
-          width: '40%'
-        },
-        {
-          text: 'Remove',
-          value: 'callToAction',
-          sortable: false,
-          filterable: false,
-          width: '15%'
-        }
-      ],
       selectedToken: {}
     };
   },
@@ -252,7 +224,7 @@ export default {
         method: token => {
           const tokenClone = cloneDeep(token);
           delete tokenClone['callToAction'];
-          delete tokenClone['toggle'];
+          delete tokenClone['checkbox'];
           delete tokenClone['id'];
           delete tokenClone['balance'];
           if (item.isHidden) this.deleteHiddenToken([tokenClone]);
@@ -287,6 +259,14 @@ export default {
     },
     addCustomToken() {
       this.$emit('addToken');
+    },
+    explorerAddr(addr) {
+      const networkType = this.network.type;
+      const EthVMSupported = networkType.isEthVMSupported;
+      const explorer = EthVMSupported.supported
+        ? EthVMSupported.blockExplorerAddr
+        : networkType.blockExplorerAddr;
+      return explorer.replace('[[address]]', addr);
     }
   }
 };
