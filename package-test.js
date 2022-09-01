@@ -71,13 +71,7 @@ const EXCEPTIONS = [
   '@walletconnect/client',
   '@walletconnect/qrcode-modal',
   'chromedriver',
-  '@sentry/browser',
-  '@sentry/tracing',
-  '@sentry/vue',
-  'ethers',
-  'graphql',
-  'xss',
-  '@myetherwallet/mew-components'
+  'graphql'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

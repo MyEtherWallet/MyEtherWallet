@@ -26,7 +26,12 @@ import TheWalletFooter from './components-wallet/TheWalletFooter';
 import ModuleConfirmation from '@/modules/confirmation/ModuleConfirmation';
 import handlerWallet from '@/core/mixins/handlerWallet.mixin';
 import nodeList from '@/utils/networks';
-import { ERROR, Toast, WARNING } from '@/modules/toast/handler/handlerToast';
+import {
+  ERROR,
+  SUCCESS,
+  Toast,
+  WARNING
+} from '@/modules/toast/handler/handlerToast';
 import { Web3Wallet } from '@/modules/access-wallet/common';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
@@ -83,7 +88,7 @@ export default {
       }
     },
     network() {
-      this.web3.eth.clearSubscriptions();
+      if (this.online && !this.isOfflineApp) this.web3.eth.clearSubscriptions();
     },
     web3() {
       this.setup();
@@ -95,27 +100,25 @@ export default {
   mounted() {
     if (this.online && !this.isOfflineApp) {
       this.setup();
-      this.findAndSetNetwork();
-      this.web3Listeners();
+      if (this.identifier === WALLET_TYPES.WEB3_WALLET) {
+        this.web3Listeners();
+      }
       this.checkNetwork();
     }
   },
   beforeDestroy() {
     if (window.ethereum) {
-      window.ethereum.removeListener('chainChanged', this.findAndSetNetwork);
-      window.ethereum.removeListener('accountsChanged', this.setWeb3Account);
+      if (this.findAndSetNetwork instanceof Function)
+        window.ethereum.removeListener('chainChanged', this.findAndSetNetwork);
+      if (this.setWeb3Account instanceof Function)
+        window.ethereum.removeListener('accountsChanged', this.setWeb3Account);
     }
   },
   destroyed() {
-    this.web3.eth.clearSubscriptions();
+    if (this.online && !this.isOfflineApp) this.web3.eth.clearSubscriptions();
   },
   methods: {
-    ...mapActions('wallet', [
-      'setBlockNumber',
-      'setTokens',
-      'setWallet',
-      'setWeb3Instance'
-    ]),
+    ...mapActions('wallet', ['setBlockNumber', 'setTokens', 'setWallet']),
     ...mapActions('global', [
       'setNetwork',
       'setBaseFeePerGas',
@@ -176,7 +179,7 @@ export default {
               Toast(
                 err.message === 'Load failed'
                   ? 'eth_subscribe is not supported. Please make sure your provider supports eth_subscribe'
-                  : err,
+                  : 'Network Subscription Error: Please wait a few seconds before continuing.',
                 {},
                 ERROR
               );
@@ -216,6 +219,11 @@ export default {
               await this.setTokenAndEthBalance();
               this.trackNetworkSwitch(foundNetwork[0].type.name);
               this.$emit('newNetwork');
+              Toast(
+                `Switched network to: ${foundNetwork[0].type.name}`,
+                {},
+                SUCCESS
+              );
             } else {
               this.setValidNetwork(false);
               Toast("Current wallet's network is unsupported", {}, ERROR);
