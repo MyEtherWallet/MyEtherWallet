@@ -54,6 +54,19 @@
       -->
 
       <!-- ===================================================================================== -->
+      <!-- Displays checkboxes next to each row (hasSelect does not need to be set to true) -->
+      <!-- ===================================================================================== -->
+      <template v-if="!loading" #[`item.checkbox`]="{ item }">
+        <mew-checkbox
+          :value="item.checkbox.value"
+          :dense="item.checkbox.dense"
+          :label="item.checkbox.label"
+          :class-name="item.checkbox.className"
+          @input="item.checkbox.method(item)"
+        />
+      </template>
+
+      <!-- ===================================================================================== -->
       <!-- Displays the token image and token title -->
       <!-- ===================================================================================== -->
       <template v-if="!loading" #[`item.token`]="{ item }">
