@@ -45,8 +45,12 @@ import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 // import { SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 import { mapActions, mapGetters, mapState } from 'vuex';
 import { cloneDeep } from 'lodash';
+import MewTable from '@/components/MewTable/MewTable';
 
 export default {
+  components: {
+    MewTable
+  },
   props: {
     open: {
       default: false,
@@ -63,28 +67,28 @@ export default {
       tableHeaders: [
         {
           text: 'Show',
-          value: 'toggle',
+          value: 'checkbox',
           sortable: false,
           filterable: false,
-          width: '15%'
+          width: '10%'
         },
         {
           text: 'Token',
           value: 'token',
           sortable: false,
-          width: '20%'
+          width: '22%'
+        },
+        {
+          text: 'Balance',
+          value: 'balance',
+          sortable: false,
+          width: '23%'
         },
         {
           text: 'Contract Address',
           value: 'address',
           sortable: false,
           width: '40%'
-        },
-        {
-          text: 'Balance',
-          value: 'balance',
-          sortable: false,
-          width: '20%'
         },
         {
           text: 'Remove',
@@ -140,7 +144,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('custom', ['setHiddenToken']),
+    ...mapActions('custom', ['setHiddenToken', 'deleteHiddenToken']),
     /**
      * close overlay
      */
@@ -154,9 +158,10 @@ export default {
      */
     formatValues(item) {
       const newObj = {};
-      newObj.toggle = {
-        color: 'primary',
+      newObj.checkbox = {
+        // color: 'primary',
         value: !item.isHidden,
+        label: '',
         method: token => {
           const tokenClone = cloneDeep(token);
           delete tokenClone['callToAction'];
