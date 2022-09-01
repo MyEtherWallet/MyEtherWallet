@@ -18,7 +18,12 @@
     >
       <template #rightHeaderContainer>
         <div>
-          <v-menu bottom offset-y rounded="lg">
+          <v-menu
+            bottom
+            offset-y
+            rounded="lg"
+            content-class="module-tokens-edit-menu"
+          >
             <template #activator="{ on, attrs }">
               <v-btn
                 class="ma-2"
@@ -36,8 +41,11 @@
                 v-for="(item, i) in items"
                 :key="i"
                 @click="item.action"
-                ><v-icon medium color="basic" left>{{ item.icon }}</v-icon>
-                <v-list-item-title>{{ item.title }}</v-list-item-title>
+              >
+                <div class="pl-2 pr-4 d-flex align-center">
+                  <v-icon dense color="basic" left>{{ item.icon }}</v-icon>
+                  <v-list-item-title>{{ item.title }}</v-list-item-title>
+                </div>
               </v-list-item>
             </v-list>
           </v-menu>
@@ -328,5 +336,8 @@ export default {
     text-overflow: ellipsis;
     overflow: hidden;
   }
+}
+.module-tokens-edit-menu {
+  border: none !important;
 }
 </style>
