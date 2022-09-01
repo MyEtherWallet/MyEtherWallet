@@ -400,6 +400,7 @@ export default {
   .mew-checkbox {
     .v-icon {
       font-size: 25px;
+      color: grey;
     }
   }
 
