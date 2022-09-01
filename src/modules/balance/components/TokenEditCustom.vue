@@ -22,7 +22,7 @@
       Step One: Table of tokens to edit
     =====================================================================================
     -->
-      <div class="text-right pb-1">
+      <div class="text-right my-4">
         <mew-button
           title="+ Add Token"
           color-theme="basic"
@@ -31,7 +31,87 @@
           @click.native="addCustomToken"
         />
       </div>
+
+      <the-table v-if="!isMobile" flat divider full-width>
+        <table>
+          <thead>
+            <tr class="text-uppercase">
+              <td>Show</td>
+              <td>Token</td>
+              <td>Balance</td>
+              <td>Address</td>
+              <td class="text-center">Remove</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(token, tableKey) in formattedAllTokens" :key="tableKey">
+              <td>
+                <v-checkbox
+                  hide-details
+                  color="primary"
+                  on-icon="mdi-check-circle"
+                  off-icon="mdi-checkbox-blank-circle-outline"
+                ></v-checkbox>
+              </td>
+              <td>
+                <div class="d-flex align-center">
+                  <mew-token-container class="mr-2" :img="token.tokenImg" />
+                  <div class="font-weight-medium">{{ token.token }}</div>
+                </div>
+              </td>
+              <td>{{ token.balance[0].replace(token.token, '') }}</td>
+              <td>
+                <div style="max-width: 150px" class="d-flex align-center">
+                  <mew-transform-hash :hash="token.address" class="mr-2" />
+                  <mew-copy :copy-value="token.address" is-small />
+                </div>
+              </td>
+              <td class="text-center">
+                <mew-button
+                  title="Remove"
+                  btn-style="transparent"
+                  color-theme="error"
+                  btn-size="small"
+                ></mew-button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </the-table>
+
+      <div v-else class="mt-6">
+        <div
+          v-for="(token, mobileTableKey) in formattedAllTokens"
+          :key="mobileTableKey"
+          class="mobile-table py-5"
+        >
+          <div class="d-flex align-center mb-3">
+            <v-checkbox
+              hide-details
+              color="primary"
+              on-icon="mdi-check-circle"
+              off-icon="mdi-checkbox-blank-circle-outline"
+            ></v-checkbox>
+            <mew-token-container class="mr-2" :img="token.tokenImg" />
+            <div class="font-weight-medium">{{ token.token }}</div>
+            <v-spacer></v-spacer>
+            <div>{{ token.balance[0].replace(token.token, '') }}</div>
+          </div>
+          <div class="d-flex align-center">
+            <div style="max-width: 150px" class="d-flex align-center">
+              <mew-transform-hash :hash="token.address" class="mr-2" />
+              <mew-copy :copy-value="token.address" is-small />
+            </div>
+            <v-spacer></v-spacer>
+            <div class="error--text font-weight-medium cursor--pointer">
+              Remove
+            </div>
+          </div>
+        </div>
+      </div>
+
       <mew-table
+        v-if="false"
         :table-headers="tableHeaders"
         :table-data="formattedAllTokens"
         no-data-text="No tokens found!"
@@ -41,15 +121,19 @@
 </template>
 
 <script>
+import TheTable from '@/components/TheTable';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 // import { SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 import { mapActions, mapGetters, mapState } from 'vuex';
 import { cloneDeep } from 'lodash';
 import MewTable from '@/components/MewTable/MewTable';
+import MewTokenContainer from '@/components/MewTokenContainer/MewTokenContainer';
 
 export default {
   components: {
-    MewTable
+    MewTokenContainer,
+    MewTable,
+    TheTable
   },
   props: {
     open: {
@@ -141,6 +225,9 @@ export default {
     },
     showBack() {
       return this.step !== 1;
+    },
+    isMobile() {
+      return this.$vuetify.breakpoint.xs;
     }
   },
   methods: {
@@ -204,3 +291,13 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.mobile-table {
+  border-bottom: 1px solid #e0e5f2;
+}
+.v-input--selection-controls {
+  margin-top: 0;
+  padding-top: 0;
+}
+</style>
