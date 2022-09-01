@@ -397,6 +397,12 @@ export default {
   //   justify-content: flex-end;
   // }
 
+  .mew-checkbox {
+    .v-icon {
+      font-size: 25px;
+    }
+  }
+
   .v-icon {
     color: inherit;
     font-size: 18px;
