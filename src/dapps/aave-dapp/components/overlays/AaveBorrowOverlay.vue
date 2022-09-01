@@ -141,7 +141,9 @@ export default {
         case 2:
           return 'Select Interest';
         case 3:
-          return 'Confirmation';
+          return 'Confirm Interest Rate';
+        case 4:
+          return 'Confirm Health Factor';
         default:
           return 'Select the token you want to borrow';
       }
