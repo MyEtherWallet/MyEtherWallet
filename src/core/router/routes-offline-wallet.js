@@ -2,7 +2,7 @@ import TheWalletView from '@/views/TheWalletView';
 import SendOffline from '@/views/layouts-wallet/TheSendTransactionOfflineLayout';
 import SignMessage from '@/views/layouts-wallet/TheSignMessageLayout';
 import VerifyMessage from '@/views/layouts-wallet/TheVerifyMessageLayout';
-// import Network from '@/modules/network/ModuleNetwork';
+import Network from '@/modules/network/ModuleNetwork';
 import { ROUTES_WALLET } from '../configs/configRoutes';
 export default {
   path: '/wallet',
@@ -13,6 +13,14 @@ export default {
       path: ROUTES_WALLET.WALLETS.PATH,
       name: ROUTES_WALLET.WALLETS.NAME,
       component: SendOffline,
+      meta: {
+        noAuth: false
+      }
+    },
+    {
+      path: ROUTES_WALLET.NETWORK.PATH,
+      name: ROUTES_WALLET.NETWORK.NAME,
+      component: Network,
       meta: {
         noAuth: false
       }

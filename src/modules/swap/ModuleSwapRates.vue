@@ -28,8 +28,8 @@
           </div>
           <div class="d-flex align-center">
             <mew-token-container
-              size="18px"
-              border-size="24px"
+              size="small"
+              class="pa-1"
               img="https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ETH-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.svg"
             ></mew-token-container>
             <img
@@ -39,6 +39,7 @@
               alt="swap-icon"
             />
             <mew-token-container
+              size="small"
               :img="
                 require('@/assets/images/currencies/' +
                   data.toT.symbol.toLowerCase() +
