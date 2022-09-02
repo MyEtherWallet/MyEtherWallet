@@ -59,7 +59,7 @@
           </div>
           <div class="d-flex justify-space-between pb-4">
             <div>
-              <div class="mew-body">Network Fee</div>
+              <div class="mew-body">Transaction Fee</div>
               <div
                 class="mew-body greenPrimary--text cursor--pointer"
                 @click="openSettings"

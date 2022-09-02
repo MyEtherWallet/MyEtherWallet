@@ -71,6 +71,10 @@ export default async ({ payload, store, requestManager }, res, next) => {
         store.state.wallet.identifier === WALLET_TYPES.WALLET_CONNECT
       ) {
         EventBus.$emit(event, params, _promiObj => {
+          if (_promiObj.rejected) {
+            res(new Error('User rejected action'));
+            return;
+          }
           setEvents(_promiObj, _tx, store.dispatch);
           _promiObj
             .once('transactionHash', hash => {
@@ -87,6 +91,10 @@ export default async ({ payload, store, requestManager }, res, next) => {
          * if true, assume transaction is a swap
          */
         EventBus.$emit(event, params, _response => {
+          if (_response.rejected) {
+            res(new Error('User rejected action'));
+            return;
+          }
           const _promiObj = store.state.wallet.web3.eth.sendSignedTransaction(
             _response.rawTransaction
           );

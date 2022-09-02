@@ -64,6 +64,7 @@ module.exports = [
   'https://protocol-api.aave.com:443', // Aave
   'https://api.thegraph.com:443/subgraphs/name/ensdomains/', // ENS
   'https://s3.us-west-2.amazonaws.com:443/mew-ipfs-bucket', // ENS
+  'https://assets.coingecko.com',
   'https://api.stakewise.io:443', // stakewise
   'https://api.stakewise.io:443/pool-stats', // stakewise pool
   'https://api.thegraph.com:443/subgraphs/name/kleros/curate', // Kleros Subtags
