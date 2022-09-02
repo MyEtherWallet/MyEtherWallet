@@ -134,11 +134,9 @@ import TheTable from '@/components/TheTable';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import { mapActions, mapGetters } from 'vuex';
 import { cloneDeep } from 'lodash';
-import MewTokenContainer from '@/components/MewTokenContainer/MewTokenContainer';
 
 export default {
   components: {
-    MewTokenContainer,
     TheTable
   },
   props: {
