@@ -1,5 +1,5 @@
 <template>
-  <div class="mew6-component--module-balance">
+  <div class="module-balance">
     <!--
     =====================================================================================
       display if the user has an eth balance > 0
@@ -99,24 +99,27 @@
 </template>
 
 <script>
+import { mapGetters, mapState } from 'vuex';
+import BigNumber from 'bignumber.js';
+
 import Loader from './ModuleBalanceLoader';
 import BalanceChart from '@/modules/balance/components/BalanceChart';
 import BalanceEmptyBlock from './components/BalanceEmptyBlock';
-import handlerBalanceHistory from './handlers/handlerBalanceHistory.mixin';
-import { mapGetters, mapState } from 'vuex';
 import {
   formatPercentageValue,
   formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
-import BigNumber from 'bignumber.js';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
+
+import handlerBalanceHistory from './handlers/handlerBalanceHistory.mixin';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 export default {
   components: {
     Loader,
     BalanceChart,
     BalanceEmptyBlock
   },
-  mixins: [handlerBalanceHistory],
+  mixins: [handlerBalanceHistory, handlerAnalytics],
   data() {
     return {
       chartButtons: ['1D', '1W', '1M', '1Y'],
@@ -285,6 +288,7 @@ export default {
       this.$router.push({ name: ROUTES_WALLET.SEND_TX.NAME });
     },
     navigateToSwap() {
+      this.trackSwap('fromDashboardBalanceModule');
       this.$router.push({ name: ROUTES_WALLET.SWAP.NAME });
     }
   }

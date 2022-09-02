@@ -1,0 +1,11 @@
+query ReservesRates30DaysAgoQuery($timestamp: Int, $pool: String) {
+  reserves(where: {pool: $pool}) {
+    id
+    symbol
+    paramsHistory(where: {timestamp_lte: $timestamp}, first: 1,  orderBy: timestamp, orderDirection: desc) {
+      variableBorrowIndex
+      liquidityIndex
+      timestamp
+    }
+  }
+}

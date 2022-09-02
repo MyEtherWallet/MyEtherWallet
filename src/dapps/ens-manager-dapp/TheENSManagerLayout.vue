@@ -796,11 +796,7 @@ export default {
       this.nameHandler
         .register(duration, this.balanceToWei)
         .on('transactionHash', () => {
-          Toast(
-            `Registering ENS name: ${this.name} please wait...`,
-            {},
-            SUCCESS
-          );
+          Toast(`Registering ENS name: ${this.name}`, {}, SUCCESS);
           this.loadingReg = true;
         })
         .once('receipt', () => {
@@ -811,6 +807,7 @@ export default {
           Toast(`Registration successful!`, {}, SUCCESS);
         })
         .on('error', err => {
+          this.loadingReg = false;
           this.instance.errorHandler(err);
         });
     },
@@ -835,6 +832,10 @@ export default {
           }, waitingTime * 1000);
         })
         .on('error', err => {
+          this.loadingCommit = false;
+          this.committed = false;
+          this.waitingForReg = false;
+          this.notEnoughFunds = false;
           Toast(err, {}, ERROR);
         });
     },
@@ -863,12 +864,11 @@ export default {
         this.noFundsForRegFees = true;
       } else {
         this.regFee = registerFeesOnly;
-        const feesAdded =
-          BigNumber(this.regFee) + BigNumber(this.commitFeeInEth);
+        const feesAdded = new BigNumber(this.regFee).plus(this.commitFeeInEth);
         this.totalCost = feesAdded.toString();
-        this.totalCostUsd = new BigNumber(this.totalCost)
-          .times(this.fiatValue)
-          .toFixed(2);
+        this.totalCostUsd = this.getFiatValue(
+          new BigNumber(this.totalCost).times(this.fiatValue).toFixed(2)
+        );
         if (this.totalCost >= this.balance) {
           this.noFundsForRegFees = true;
         } else {

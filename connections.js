@@ -64,8 +64,10 @@ module.exports = [
   'https://protocol-api.aave.com:443', // Aave
   'https://api.thegraph.com:443/subgraphs/name/ensdomains/', // ENS
   'https://s3.us-west-2.amazonaws.com:443/mew-ipfs-bucket', // ENS
+  'https://assets.coingecko.com',
   'https://api.stakewise.io:443', // stakewise
   'https://api.stakewise.io:443/pool-stats', // stakewise pool
-  'https://eth-mainnet.alchemyapi.io/v2/GmQ8X1FHf-WDEry0BBSn0RgjVhjHkRmS',
-  'https://polygon-mainnet.g.alchemy.com/v2/iG-oHZ2FvjqC9D43O5q9sj62out5ubsy'
+  'https://api.thegraph.com:443/subgraphs/name/kleros/curate', // Kleros Subtags
+  'https://api.thegraph.com:443/subgraphs/name/eccentricexit/curate-xdai-ii', // Kleros Subtags
+  'https://ipfs.kleros.io:443', // Kleros Subtags
 ];
