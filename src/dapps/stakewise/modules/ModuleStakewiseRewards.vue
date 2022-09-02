@@ -1,12 +1,8 @@
 <template>
-  <div class="pt-8 pb-13 px-3 pa-sm-15">
+  <div class="dapps-stakewise-rewards pt-8 pb-13 px-3 pa-sm-15">
     <v-row>
-      <v-col
-        :order="$vuetify.breakpoint.smAndDown ? 'last' : ''"
-        cols="12"
-        md="8"
-        :class="$vuetify.breakpoint.smAndDown ? 'my-10' : 'pr-7'"
-      >
+      <v-col :order="$vuetify.breakpoint.smAndDown ? 'last' : ''" cols="12" md="8"
+        :class="$vuetify.breakpoint.smAndDown ? 'my-10' : 'pr-7'">
         <mew-sheet class="pa-md-15">
           <div class="mew-heading-2 textDark--text mb-8">Compound Rewards</div>
 
@@ -14,40 +10,26 @@
           <!-- Stake direction information -->
           <!-- ======================================================================================= -->
           <div ref="input" class="d-flex align-center text-center">
-            <div
-              class="border-radius--8px backgroundGrey flex-grow-1 pa-5 d-flex flex-column align-center"
-              style="width: 30%"
-            >
-              <div
-                class="mew-caption textMedium--text font-weight-regular mb-2"
-              >
+            <div class="border-radius--8px backgroundGrey flex-grow-1 pa-5 d-flex flex-column align-center"
+              style="width: 30%">
+              <div class="mew-caption textMedium--text font-weight-regular mb-2">
                 You give
               </div>
               <div class="stake-icon">
-                <img
-                  src="@/dapps/stakewise/assets/icon-stakewise-red.svg"
-                  alt="Stakewise rETH2"
-                />
+                <img src="@/dapps/stakewise/assets/icon-stakewise-red.svg" alt="Stakewise rETH2" />
               </div>
               <div class="font-weight-bold mt-2">rETH2</div>
             </div>
             <div class="px-5">
               <v-icon color="greenPrimary">mdi-arrow-right</v-icon>
             </div>
-            <div
-              class="border-radius--8px backgroundGrey flex-grow-1 pa-5 d-flex flex-column align-center"
-              style="width: 30%"
-            >
-              <div
-                class="mew-caption textMedium--text font-weight-regular mb-2"
-              >
+            <div class="border-radius--8px backgroundGrey flex-grow-1 pa-5 d-flex flex-column align-center"
+              style="width: 30%">
+              <div class="mew-caption textMedium--text font-weight-regular mb-2">
                 You will get
               </div>
               <div class="stake-icon">
-                <img
-                  src="@/dapps/stakewise/assets/icon-stakewise-green.svg"
-                  alt="Stakewise sETH2"
-                />
+                <img src="@/dapps/stakewise/assets/icon-stakewise-green.svg" alt="Stakewise sETH2" />
               </div>
               <div class="font-weight-bold mt-2">sETH2</div>
             </div>
@@ -58,16 +40,8 @@
           <!-- ======================================================================================= -->
           <div class="position--relative mt-15">
             <button-balance :loading="loadingBalance" :balance="rethBalance" />
-            <mew-input
-              type="number"
-              :max-btn-obj="maxBtnObj"
-              :image="iconStakewise"
-              label="Amount to compound"
-              :value="compoundAmount"
-              placeholder="Enter amount"
-              :error-messages="errorMessages"
-              @input="setAmount"
-            />
+            <mew-input type="number" :max-btn-obj="maxBtnObj" :image="iconStakewise" label="Amount to compound"
+              :value="compoundAmount" placeholder="Enter amount" :error-messages="errorMessages" @input="setAmount" />
           </div>
 
           <!-- ======================================================================================= -->
@@ -78,10 +52,7 @@
               <div>
                 <div class="mew-body">
                   Network Fee
-                  <span
-                    class="ml-2 greenPrimary--text cursor--pointer"
-                    @click="openSettings"
-                  >
+                  <span class="ml-2 greenPrimary--text cursor--pointer" @click="openSettings">
                     Edit
                   </span>
                 </div>
@@ -108,16 +79,9 @@
               can transfer your rETH2 rewards balance to the sETH2 staking pool.
             </div>
 
-            <a
-              href="https://help.myetherwallet.com/en/articles/6136823-stake-your-eth-using-stakewise"
-              target="_blank"
-            >
+            <a href="https://help.myetherwallet.com/en/articles/6136823-stake-your-eth-using-stakewise" target="_blank">
               <div class="greenPrimary--text">
-                View StakeWise guide<v-icon
-                  color="greenPrimary"
-                  small
-                  class="ml-2"
-                >
+                View StakeWise guide<v-icon color="greenPrimary" small class="ml-2">
                   mdi-open-in-new
                 </v-icon>
               </div>
@@ -133,47 +97,27 @@
           <!-- Start -->
           <!-- ======================================================================================= -->
           <div class="d-flex flex-column align-center">
-            <mew-checkbox
-              v-model="agreeToTerms"
-              label="I have read and agreed to Stakewise terms of service."
-              :link="{
-                title: 'Stakewise terms',
-                url: 'https://stakewise.io/terms-and-conditions/'
-              }"
-            />
-            <mew-button
-              class="mt-8"
-              title="Compound Rewards"
-              btn-size="xlarge"
-              :loading="loading"
-              :disabled="!isValid"
-              @click.native="showConfirm"
-            />
+            <mew-checkbox v-model="agreeToTerms" label="I have read and agreed to Stakewise terms of service." :link="{
+              title: 'Stakewise terms',
+              url: 'https://stakewise.io/terms-and-conditions/'
+            }" />
+            <mew-button class="mt-8" title="Compound Rewards" btn-size="xlarge" :loading="loading" :disabled="!isValid"
+              @click.native="showConfirm" />
           </div>
         </mew-sheet>
       </v-col>
       <v-col cols="12" md="4">
         <stakewise-apr class="mb-4" />
-        <stakewise-staking
-          class="mb-4"
-          :tx-fee="txFee"
-          :has-enough-balance="hasEnoughBalance"
-          @set-max="setMax"
-          @scroll="scroll"
-          @redeem-to-eth="redeemToEth"
-        />
-        <stakewise-rewards
-          :tx-fee="txFee"
-          @set-max="setMax"
-          @scroll="scroll"
-          @redeem-to-eth="redeemToEth"
-        />
+        <stakewise-staking class="mb-4" :tx-fee="txFee" :has-enough-balance="hasEnoughBalance" @set-max="setMax"
+          @scroll="scroll" @redeem-to-eth="redeemToEth" />
+        <stakewise-rewards :tx-fee="txFee" @set-max="setMax" @scroll="scroll" @redeem-to-eth="redeemToEth" />
       </v-col>
     </v-row>
   </div>
 </template>
 
 <script>
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import StakewiseApr from '../components/StakewiseApr';
 import StakewiseStaking from '../components/StakewiseStaking';
 import StakewiseRewards from '../components/StakewiseRewards';
@@ -211,6 +155,7 @@ export default {
     StakewiseRewards,
     ButtonBalance
   },
+  mixins: [handlerAnalytics],
   data() {
     return {
       iconStakewise: require('@/dapps/stakewise/assets/icon-stakewise-red.svg'),
@@ -476,6 +421,7 @@ export default {
       }
     },
     async showConfirm() {
+      this.trackDapp('stakewiseRewardsShowConfirm');
       try {
         this.loading = true;
         await this.getTrade(this.hasReth, this.hasSeth, 'reth');
