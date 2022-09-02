@@ -6,17 +6,18 @@ export default class UNS {
     const networkname = 'mainnet';
     const polyname = 'polygon-mainnet';
     const polyprovider = new Web3('https://nodes.mewapi.io/rpc/matic');
-    const resolution = Resolution.fromWeb3Version1Provider({
-      ens: false,
-      uns: {
-        locations: {
-          Layer1: {
-            network: networkname,
-            provider: web3.currentProvider
-          },
-          Layer2: {
-            network: polyname,
-            provider: polyprovider.currentProvider
+    const resolution = new Resolution({
+      sourceConfig: {
+        uns: {
+          locations: {
+            Layer1: {
+              network: networkname,
+              url: web3.currentProvider.host
+            },
+            Layer2: {
+              network: polyname,
+              url: polyprovider.currentProvider.host
+            }
           }
         }
       }
@@ -29,7 +30,29 @@ export default class UNS {
       .then(addr => toChecksumAddress(addr));
   }
 
-  resolveAddres() {
-    return new Error(`Reverse Registrar not supported!`);
+  resolveAddress(address) {
+    return this.reverseUrl(address);
+    // return this.reverseTokenId(address);
+  }
+
+  reverseTokenId(address) {
+    return (
+      this.resolver
+        .reverseTokenId(address)
+        .then(tokenId => console.log(address, 'reversed to', tokenId))
+        // tokenId consists the namehash of the domain with reverse resolution to that address
+        .catch(console.error)
+    );
+  }
+
+  reverseUrl(address) {
+    return (
+      this.resolver
+        .reverse(address)
+        .then(domain => console.log(address, 'reversed to url', domain))
+        // domain consists of the domain with reverse resolution to that address
+        // use this domain in your application
+        .catch(console.error)
+    );
   }
 }
