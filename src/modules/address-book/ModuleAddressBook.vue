@@ -284,7 +284,7 @@ export default {
       });
 
       // Calls setups from mounted
-      if (this.network.type.ens)
+      if (this.network.type.ens && !this.isOfflineApp)
         this.nameResolver = new NameResolver(this.network, this.web3);
       if (this.isHomePage) {
         this.setDonationAddress();
