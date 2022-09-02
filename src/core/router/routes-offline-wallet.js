@@ -1,7 +1,9 @@
-import TheWalletView from '@/views/TheWalletView';
-import SendOffline from '@/views/layouts-wallet/TheSendTransactionOfflineLayout';
-import SignMessage from '@/views/layouts-wallet/TheSignMessageLayout';
-import VerifyMessage from '@/views/layouts-wallet/TheVerifyMessageLayout';
+const TheWalletView = () => import('@/views/TheWalletView');
+const SendOffline = () =>
+  import('@/views/layouts-wallet/TheSendTransactionOfflineLayout');
+const SignMessage = () => import('@/views/layouts-wallet/TheSignMessageLayout');
+const VerifyMessage = () =>
+  import('@/views/layouts-wallet/TheVerifyMessageLayout');
 import Network from '@/modules/network/ModuleNetwork';
 import { ROUTES_WALLET } from '../configs/configRoutes';
 export default {

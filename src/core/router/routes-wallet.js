@@ -1,18 +1,54 @@
-import TheWalletView from '@/views/TheWalletView';
-import Dashboard from '@/views/layouts-wallet/TheDashboardLayout';
-import Send from '@/views/layouts-wallet/TheSendTransactionLayout';
-import SendOffline from '@/views/layouts-wallet/TheSendTransactionOfflineLayout';
-import NftManager from '@/views/layouts-wallet/TheNFTManagerLayout';
-import Swap from '@/views/layouts-wallet/TheSwapLayout';
-import InteractContract from '@/views/layouts-wallet/TheInteractContractLayout';
-import DeployContract from '@/views/layouts-wallet/TheDeployContractLayout';
-import SignMessage from '@/views/layouts-wallet/TheSignMessageLayout';
-import VerifyMessage from '@/views/layouts-wallet/TheVerifyMessageLayout';
-import Dapps from '@/views/layouts-wallet/TheDappCenterLayout.vue';
+const TheWalletView = () =>
+  import(/* webpackChunkName: "wallet" */ '@/views/TheWalletView');
+const Dashboard = () =>
+  import(
+    /* webpackChunkName: "wallet" */ '@/views/layouts-wallet/TheDashboardLayout'
+  );
+const Send = () =>
+  import(
+    /* webpackChunkName: "wallet" */ '@/views/layouts-wallet/TheSendTransactionLayout'
+  );
+const SendOffline = () =>
+  import(
+    /* webpackChunkName: "wallet-offline" */ '@/views/layouts-wallet/TheSendTransactionOfflineLayout'
+  );
+const NftManager = () =>
+  import(
+    /* webpackChunkName: "nft" */ '@/views/layouts-wallet/TheNFTManagerLayout'
+  );
+const Swap = () =>
+  import(
+    /* webpackChunkName: "wallet" */ '@/views/layouts-wallet/TheSwapLayout'
+  );
+const InteractContract = () =>
+  import(
+    /* webpackChunkName: "contract" */ '@/views/layouts-wallet/TheInteractContractLayout'
+  );
+const DeployContract = () =>
+  import(
+    /* webpackChunkName: "contract" */ '@/views/layouts-wallet/TheDeployContractLayout'
+  );
+const SignMessage = () =>
+  import(
+    /* webpackChunkName: "contract" */ '@/views/layouts-wallet/TheSignMessageLayout'
+  );
+const VerifyMessage = () =>
+  import(
+    /* webpackChunkName: "contract" */ '@/views/layouts-wallet/TheVerifyMessageLayout'
+  );
+const Dapps = () =>
+  import(
+    /* webpackChunkName: "dapps" */ '@/views/layouts-wallet/TheDappCenterLayout.vue'
+  );
 import DappRoutes from '@/dapps/routes-dapps.js';
-import Settings from '@/modules/settings/ModuleSettings';
-import NftManagerSend from '@/modules/nft-manager/components/NftManagerSend';
-import Network from '@/modules/network/ModuleNetwork';
+const Settings = () =>
+  import(/* webpackChunkName: "wallet" */ '@/modules/settings/ModuleSettings');
+const NftManagerSend = () =>
+  import(
+    /* webpackChunkName: "nft" */ '@/modules/nft-manager/components/NftManagerSend'
+  );
+const Network = () =>
+  import(/* webpackChunkName: "wallet" */ '@/modules/network/ModuleNetwork');
 import { swapProps, swapRouterGuard } from './helpers';
 import { ROUTES_WALLET } from '../configs/configRoutes';
 export default {

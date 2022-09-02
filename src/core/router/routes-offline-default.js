@@ -1,6 +1,8 @@
-import TheOfflineDefaultView from '@/views/TheOfflineDefaultView';
-import TheAccessWalletLayout from '@/views/layouts-default/TheAccessWalletLayout';
-import TheCreateWalletLayout from '@/views/layouts-default/TheCreateWalletLayout';
+const TheOfflineDefaultView = () => import('@/views/TheOfflineDefaultView');
+const TheAccessWalletLayout = () =>
+  import('@/views/layouts-default/TheAccessWalletLayout');
+const TheCreateWalletLayout = () =>
+  import('@/views/layouts-default/TheCreateWalletLayout');
 import { ROUTES_HOME } from '../configs/configRoutes';
 import {
   accessWalletProps,

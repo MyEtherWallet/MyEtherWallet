@@ -1,7 +1,11 @@
 import { ENS_MANAGER_ROUTE, ensRouterGuard } from './configsRoutes';
 import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
-import layout from './TheENSManagerLayout';
-import ENSManagerLayout from '@/dapps/ens-manager-dapp/TheENSManagerLayout';
+const layout = () =>
+  import(/* webpackChunkName: "dapp" */ './TheENSManagerLayout');
+const ENSManagerLayout = () =>
+  import(
+    /* webpackChunkName: "dapp" */ '@/dapps/ens-manager-dapp/TheENSManagerLayout'
+  );
 export default {
   title: 'ENS manager',
   subtitle: 'Migrate or register ENS domain / subdomain',

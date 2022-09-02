@@ -1,20 +1,32 @@
-import TheDefaultView from '@/views/TheDefaultView';
-import TheHomeLayout from '@/views/layouts-default/TheHomeLayout';
-import TheHowItWorksLayout from '@/views/layouts-default/TheHowItWorksLayout';
-import TheCompanyLayout from '@/views/layouts-default/TheCompanyLayout';
-import TheTeamLayout from '@/views/layouts-default/TheTeamLayout';
-import ThePressKitLayout from '@/views/layouts-default/ThePressKitLayout';
-import TheDappSubmissionLayout from '@/views/layouts-default/TheDappSubmissionLayout';
-import TheBuyHardwareWalletLayout from '@/views/layouts-default/TheBuyHardwareWalletLayout';
-import TheToolsLayout from '@/views/layouts-default/TheToolsLayout';
-import TheCreateWalletLayout from '@/views/layouts-default/TheCreateWalletLayout';
-import TheAccessWalletLayout from '@/views/layouts-default/TheAccessWalletLayout';
-import ThePrivacyPolicyLayout from '@/views/layouts-default/ThePrivacyPolicyLayout';
-import TheSecurityPolicyLayout from '@/views/layouts-default/TheSecurityPolicyLayout';
-import TheTermsOfServiceLayout from '@/views/layouts-default/TheTermsOfServiceLayout';
-import TheConvertUnitsLayout from '@/views/layouts-default/TheConvertUnitsLayout';
-import TheCareersLayout from '@/views/layouts-default/TheCareersLayout';
-import TheQrCodeLayout from '@/views/layouts-default/TheQrCodeLayout';
+const TheDefaultView = () => import('@/views/TheDefaultView');
+const TheHomeLayout = () => import('@/views/layouts-default/TheHomeLayout');
+const TheHowItWorksLayout = () =>
+  import('@/views/layouts-default/TheHowItWorksLayout');
+const TheCompanyLayout = () =>
+  import('@/views/layouts-default/TheCompanyLayout');
+const TheTeamLayout = () => import('@/views/layouts-default/TheTeamLayout');
+const ThePressKitLayout = () =>
+  import('@/views/layouts-default/ThePressKitLayout');
+const TheDappSubmissionLayout = () =>
+  import('@/views/layouts-default/TheDappSubmissionLayout');
+const TheBuyHardwareWalletLayout = () =>
+  import('@/views/layouts-default/TheBuyHardwareWalletLayout');
+const TheToolsLayout = () => import('@/views/layouts-default/TheToolsLayout');
+const TheCreateWalletLayout = () =>
+  import('@/views/layouts-default/TheCreateWalletLayout');
+const TheAccessWalletLayout = () =>
+  import('@/views/layouts-default/TheAccessWalletLayout');
+const ThePrivacyPolicyLayout = () =>
+  import('@/views/layouts-default/ThePrivacyPolicyLayout');
+const TheSecurityPolicyLayout = () =>
+  import('@/views/layouts-default/TheSecurityPolicyLayout');
+const TheTermsOfServiceLayout = () =>
+  import('@/views/layouts-default/TheTermsOfServiceLayout');
+const TheConvertUnitsLayout = () =>
+  import('@/views/layouts-default/TheConvertUnitsLayout');
+const TheCareersLayout = () =>
+  import('@/views/layouts-default/TheCareersLayout');
+const TheQrCodeLayout = () => import('@/views/layouts-default/TheQrCodeLayout');
 import { ROUTES_HOME } from '../configs/configRoutes';
 import {
   createWalletProps,

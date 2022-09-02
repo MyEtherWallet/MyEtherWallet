@@ -1,5 +1,6 @@
-import TheDefaultView from '@/views/TheDefaultView';
-import ThePageNotFoundLayout from '@/views/layouts-default/ThePageNotFoundLayout';
+const TheDefaultView = () => import('@/views/TheDefaultView');
+const ThePageNotFoundLayout = () =>
+  import('@/views/layouts-default/ThePageNotFoundLayout');
 import { ROUTES_HOME } from '../configs/configRoutes';
 
 export default {
