@@ -140,7 +140,6 @@
     "ethereumjs-tx": "2.1.2",
     "ethereumjs-util": "7.1.5",
     "ethereumjs-wallet": "1.0.2",
-    "follow-redirects": "1.14.9",
     "geckodriver": "3.0.1",
     "hdkey": "2.0.1",
     "html2canvas": "1.4.1",
