@@ -61,9 +61,9 @@ export default {
      * @returns {string}
      */
     maxBlock() {
-      const max = toBN(this.blockNumber).sub(toBN(50));
+      const max = toBN(this.blockNumber ? this.blockNumber : 0).sub(toBN(50));
       const ZERO = toBN(0);
-      return max.gt(ZERO) ? max : '';
+      return max.gt(ZERO) ? max.toNumber() : '';
     },
     /**
      * Returns search error messages, empty string if no error.
