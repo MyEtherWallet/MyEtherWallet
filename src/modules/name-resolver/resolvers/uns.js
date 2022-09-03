@@ -35,9 +35,6 @@ export default class UNS {
   }
 
   reverseUrl(address) {
-    return this.resolver
-      .reverse(address)
-      .then(domain => domain)
-      .catch(console.error);
+    return this.resolver.reverse(address).then(domain => domain);
   }
 }
