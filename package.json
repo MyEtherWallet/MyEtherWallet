@@ -106,7 +106,7 @@
     "walletlink": "2.5.0"
   },
   "devDependencies": {
-    "@commitlint/config-conventional": "17.0.3",
+    "@commitlint/config-conventional": "17.1.0",
     "@ledgerhq/hw-app-eth": "6.29.1",
     "@ledgerhq/hw-transport-webusb": "6.27.1",
     "@mdi/font": "7.0.96",
