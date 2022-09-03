@@ -35,8 +35,8 @@
     "update:packages": "node package-test.js"
   },
   "dependencies": {
-    "@aave/contract-helpers": "1.5.0",
-    "@aave/math-utils": "1.5.0",
+    "@aave/contract-helpers": "1.6.0",
+    "@aave/math-utils": "1.6.0",
     "@aave/protocol-js": "4.3.0",
     "@actions/github": "5.0.3",
     "@coolwallets/eth": "0.2.0-beta.1",
@@ -106,7 +106,7 @@
     "walletlink": "2.5.0"
   },
   "devDependencies": {
-    "@commitlint/config-conventional": "17.0.3",
+    "@commitlint/config-conventional": "17.1.0",
     "@ledgerhq/hw-app-eth": "6.29.1",
     "@ledgerhq/hw-transport-webusb": "6.27.1",
     "@mdi/font": "7.0.96",
