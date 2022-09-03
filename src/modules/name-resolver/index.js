@@ -33,9 +33,9 @@ export default class NameResolver {
 
   async resolveAddress(address) {
     if (isAddress(address) && address !== ZERO_ADDRESS) {
-      let resolvedName = await this.ens.resolveAddress(address);
-      if (!resolvedName?.name) {
-        resolvedName = await this.uns.resolveAddress(address);
+      const resolvedName = await this.ens.resolveAddress(address);
+      if (!resolvedName.name) {
+        resolvedName.name = await this.uns.resolveAddress(address);
       }
       return resolvedName;
     }

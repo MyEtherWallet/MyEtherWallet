@@ -32,27 +32,12 @@ export default class UNS {
 
   resolveAddress(address) {
     return this.reverseUrl(address);
-    // return this.reverseTokenId(address);
-  }
-
-  reverseTokenId(address) {
-    return (
-      this.resolver
-        .reverseTokenId(address)
-        .then(tokenId => console.log(address, 'reversed to', tokenId))
-        // tokenId consists the namehash of the domain with reverse resolution to that address
-        .catch(console.error)
-    );
   }
 
   reverseUrl(address) {
-    return (
-      this.resolver
-        .reverse(address)
-        .then(domain => console.log(address, 'reversed to url', domain))
-        // domain consists of the domain with reverse resolution to that address
-        // use this domain in your application
-        .catch(console.error)
-    );
+    return this.resolver
+      .reverse(address)
+      .then(domain => domain)
+      .catch(console.error);
   }
 }
