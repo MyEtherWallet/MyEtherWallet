@@ -186,21 +186,39 @@ export default {
       return this.mode === modes[0];
     },
     isMyAddress() {
-      return this.address?.toLowerCase() === this.addressToAdd?.toLowerCase();
+      return (
+        this.address?.toLowerCase() === this.addressToAdd?.toLowerCase() ||
+        this.address?.toLowerCase() === this.resolvedAddr?.toLowerCase()
+      );
     },
     alreadyExists() {
       if (this.addMode) {
         if (this.isMyAddress) {
           return true;
         }
-        return Object.keys(this.addressBookStore).some(key => {
-          return (
-            this.addressBookStore[key].address.toLowerCase() ===
-            this.addressToAdd?.toLowerCase()
-          );
-        });
+        return this.checkResolvedExists || this.checkAddressExists;
       }
       return false;
+    },
+    checkResolvedExists() {
+      return Object.keys(this.addressBookStore).some(key => {
+        return (
+          this.addressBookStore[key].address.toLowerCase() ===
+            this.resolvedAddr?.toLowerCase() ||
+          this.addressBookStore[key].resolvedAddr.toLowerCase() ===
+            this.resolvedAddr?.toLowerCase()
+        );
+      });
+    },
+    checkAddressExists() {
+      return Object.keys(this.addressBookStore).some(key => {
+        return (
+          this.addressBookStore[key].address.toLowerCase() ===
+            this.addressToAdd?.toLowerCase() ||
+          this.addressBookStore[key].address.toLowerCase() ===
+            this.resolvedAddr?.toLowerCase()
+        );
+      });
     },
     checksumAddressToAdd() {
       if (this.addressToAdd !== '' && isAddress(this.lowercaseAddressToAdd)) {
@@ -272,7 +290,7 @@ export default {
           const resolvedName = await this.nameResolver.resolveAddress(
             this.addressToAdd
           );
-          if (isEmpty(resolvedName?.name)) {
+          if (resolvedName && !resolvedName.name) {
             this.nametag =
               (
                 await getAddressInfo(
@@ -329,7 +347,7 @@ export default {
       }
       this.addressBookStore.push({
         address: this.checksumAddressToAdd,
-        resolvedAddr: this.resolvedAddr,
+        resolvedAddr: this.resolvedAddress,
         nickname: this.nickname || (this.addressBookStore.length + 1).toString()
       });
       this.setAddressBook(this.addressBookStore);
