@@ -55,7 +55,9 @@ const EXCEPTIONS = [
   'package-json',
   'codecov',
   'node-polyfill-webpack-plugin',
-  'vue-template-compiler'
+  'vue-template-compiler',
+  '@ledgerhq/hw-transport-web-ble',
+  '@ledgerhq/hw-transport-webusb'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

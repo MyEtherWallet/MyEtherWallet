@@ -107,8 +107,8 @@
   "devDependencies": {
     "@commitlint/config-conventional": "17.1.0",
     "@ledgerhq/hw-app-eth": "6.29.1",
-    "@ledgerhq/hw-transport-web-ble": "6.27.2",
-    "@ledgerhq/hw-transport-webusb": "6.27.2",
+    "@ledgerhq/hw-transport-web-ble": "6.27.1",
+    "@ledgerhq/hw-transport-webusb": "6.27.1",
     "@ledgerhq/live-common": "26.0.0",
     "@mdi/font": "7.0.96",
     "@vue/babel-preset-app": "4.5.15",
