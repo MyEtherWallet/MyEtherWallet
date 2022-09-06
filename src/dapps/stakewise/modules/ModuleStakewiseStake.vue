@@ -467,6 +467,7 @@ export default {
             this.agreeToTerms = false;
             this.estimateGasError = false;
           });
+          this.trackDapp('startStake');
         })
         .catch(err => {
           Toast(err, {}, ERROR);
