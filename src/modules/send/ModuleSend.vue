@@ -582,11 +582,15 @@ export default {
       this.debounceAmountError('0');
     },
     txFeeETH(newVal) {
-      if (this.selectedMax) {
-        const total = BigNumber(newVal).plus(this.amount);
-        if (total.gt(this.balanceInETH)) {
-          this.setEntireBal();
-        }
+      const total = BigNumber(newVal).plus(this.amount);
+      const amt = toBase(this.amount, this.selectedCurrency.decimals);
+      if (
+        (this.selectedCurrency.contract === MAIN_TOKEN_ADDRESS &&
+          total.gt(this.balanceInETH)) ||
+        (this.selectedCurrency.contract !== MAIN_TOKEN_ADDRESS &&
+          this.selectedCurrency.balance.lt(amt))
+      ) {
+        this.setEntireBal();
       }
     }
   },
@@ -769,10 +773,8 @@ export default {
         isEmpty(this.selectedCurrency) ||
         this.selectedCurrency.contract === MAIN_TOKEN_ADDRESS
       ) {
-        this.setAmount(
-          BigNumber(this.balanceInETH).minus(this.txFeeETH).toFixed(),
-          true
-        );
+        const amt = BigNumber(this.balanceInETH).minus(this.txFeeETH);
+        this.setAmount(amt.lt(0) ? '0' : amt.toFixed(), true);
       } else {
         this.setAmount(
           this.convertToDisplay(

@@ -1,0 +1,5 @@
+subscription UsdPriceEth {
+  priceOracle(id: "1") {
+    usdPriceEth
+  }
+}

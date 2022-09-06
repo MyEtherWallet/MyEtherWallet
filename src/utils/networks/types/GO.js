@@ -6,6 +6,7 @@ export default {
   name: 'GO',
   name_long: 'Gochain',
   homePage: 'https://gochain.io/',
+  blockExplorer: 'Gochain',
   blockExplorerTX: 'https://explorer.gochain.io/tx/[[txHash]]',
   blockExplorerAddr: 'https://explorer.gochain.io/addr/[[address]]',
   chainID: 60,

@@ -13,9 +13,9 @@
       :value="addressToAdd"
       :rules="addressRules"
       :persistent-hint="validAddress"
-      :hint="coin"
+      :hint="resolvedName || nametag || coin"
+      :resolved-addr="resolvedAddress"
       autofocus
-      :resolved-addr="resolvedAddr"
       @input="setAddress"
     />
     <!--
@@ -79,12 +79,13 @@
     Address Book - remove address
   =====================================================================================
   -->
-    <div
-      v-if="editMode"
-      class="text-center mt-6 redPrimary--text cursor-pointer"
-      @click="remove"
-    >
-      {{ $t('interface.address-book.remove-addr') }}
+    <div v-if="editMode" class="mt-6 text-center">
+      <div
+        class="redPrimary--text cursor-pointer d-inline-block"
+        @click="remove"
+      >
+        {{ $t('interface.address-book.remove-addr') }}
+      </div>
     </div>
   </div>
 </template>
@@ -95,6 +96,7 @@ import NameResolver from '@/modules/name-resolver/index';
 import { toChecksumAddress, isAddress } from '@/core/helpers/addressUtils';
 import { isValidCoinAddress } from '../handlers/handlerMulticoins.js';
 import { isEmpty } from 'lodash';
+import { getAddressInfo } from '@kleros/address-tags-sdk';
 
 const modes = ['add', 'edit'];
 
@@ -111,7 +113,8 @@ export default {
       nameResolver: null,
       currentIdx: null,
       nickname: '',
-      addressToAdd: ''
+      addressToAdd: '',
+      nametag: ''
     };
   },
   computed: {
@@ -158,15 +161,9 @@ export default {
           this.$t('interface.address-book.validations.nickname-length')
       ];
     },
-    actualValidAddress() {
-      if (!this.validAddress) return '';
-      return isAddress(this.lowercaseAddressToAdd)
-        ? this.lowercaseAddressToAdd
-        : this.addressToAdd;
-    },
     validAddress() {
       if (this.addressToAdd.length > 94) return false;
-      return this.resolvedAddr.length > 0
+      return this.resolvedAddr.length > 0 && !this.resolvedAddr?.includes('.')
         ? isAddress(this.resolvedAddr) ||
             isValidCoinAddress(this.resolvedAddr).valid
         : isAddress(this.lowercaseAddressToAdd) ||
@@ -177,9 +174,9 @@ export default {
       if (!this.validAddress) return '';
       return (
         'Valid ' +
-        (this.resolvedAddr.length > 0
+        (this.resolvedAddr.length > 0 && !this.resolvedAddr?.includes('.')
           ? isValidCoinAddress(this.resolvedAddr).coin
-          : isValidCoinAddress(this.actualValidAddress).coin) +
+          : isValidCoinAddress(this.lowercaseAddressToAdd).coin) +
         ' address'
       );
     },
@@ -207,13 +204,25 @@ export default {
       return false;
     },
     checksumAddressToAdd() {
-      if (this.addressToAdd !== '' && isAddress(this.addressToAdd)) {
-        return toChecksumAddress(this.addressToAdd);
+      if (this.addressToAdd !== '' && isAddress(this.lowercaseAddressToAdd)) {
+        return toChecksumAddress(this.lowercaseAddressToAdd);
       }
       return this.addressToAdd;
     },
     lowercaseAddressToAdd() {
       return this.addressToAdd.toLowerCase();
+    },
+    resolvedAddress() {
+      if (this.resolvedAddr.length === 0) return '';
+      return this.validAddress && !this.resolvedAddr?.includes('.')
+        ? this.resolvedAddr
+        : '';
+    },
+    resolvedName() {
+      if (this.resolvedAddr.length === 0) return '';
+      return this.validAddress && this.resolvedAddr?.includes('.')
+        ? this.resolvedAddr
+        : '';
     }
   },
   watch: {
@@ -221,7 +230,8 @@ export default {
       this.addressToAdd = newVal;
     },
     addressToAdd(newVal) {
-      if (isAddress(newVal)) {
+      this.nametag = '';
+      if (isAddress(newVal.toLowerCase())) {
         this.resolveAddress();
       } else {
         this.resolveName();
@@ -255,6 +265,7 @@ export default {
       this.addressToAdd = '';
       this.nickname = '';
       this.resolvedAddr = '';
+      this.nametag = '';
     },
     async resolveAddress() {
       if (this.nameResolver) {
@@ -262,6 +273,15 @@ export default {
           const resolvedName = await this.nameResolver.resolveAddress(
             this.addressToAdd
           );
+          if (isEmpty(resolvedName?.name)) {
+            this.nametag =
+              (
+                await getAddressInfo(
+                  this.checksumAddressToAdd,
+                  'https://ipfs.kleros.io'
+                )
+              )?.publicNameTag || '';
+          }
           this.resolvedAddr = resolvedName.name ? resolvedName.name : '';
         } catch (e) {
           this.resolvedAddr = '';

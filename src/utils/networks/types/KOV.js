@@ -6,6 +6,7 @@ export default {
   name: 'KOV',
   name_long: 'Kovan',
   homePage: 'https://kovan-testnet.github.io/website/',
+  blockExplorer: 'Etherscan',
   blockExplorerTX: 'https://kovan.etherscan.io/tx/[[txHash]]',
   blockExplorerAddr: 'https://kovan.etherscan.io/address/[[address]]',
   chainID: 42,
