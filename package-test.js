@@ -55,23 +55,7 @@ const EXCEPTIONS = [
   'package-json',
   'codecov',
   'node-polyfill-webpack-plugin',
-  // check if fixable after hotfix
-  '@ensdomains/ensjs',
-  '@ensdomains/ens-contracts',
-  'protobufjs',
-  '@formatjs/intl-numberformat',
-  'babel-jest',
-  'qrcode',
-  'vue-template-compiler',
-  '@ledgerhq/hw-transport-web-ble',
-  '@ledgerhq/hw-app-eth',
-  '@ledgerhq/hw-transport-webusb',
-  '@lokalise/node-api',
-  '@unstoppabledomains/resolution',
-  '@walletconnect/client',
-  '@walletconnect/qrcode-modal',
-  'chromedriver',
-  'graphql'
+  'vue-template-compiler'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
