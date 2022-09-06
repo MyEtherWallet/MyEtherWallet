@@ -23,7 +23,7 @@
     "lint:md": "remark . -o",
     "lint:styles": "prettier --write 'src/**/*.{scss,css}' && stylelint 'src/**/*.{scss,css}' --fix",
     "lint:tests": "eslint --fix tests/",
-    "preinstall": "find node_modules -name \".git\" -exec rm -rf {} \\; || true && bash ./scripts/checklockconflicts.sh",
+    "preinstall": "find node_modules -name \".git\" -exec rm -rf {} \\; || true && bash ./scripts/checklockconflicts.sh && npx npm-force-resolutions",
     "prepare": "husky install",
     "start": "npm run update:mainlists && npm run dev",
     "start:history": "npm run update:mainlists && ROUTER_MODE=history npm run dev",
@@ -107,8 +107,8 @@
   "devDependencies": {
     "@commitlint/config-conventional": "17.1.0",
     "@ledgerhq/hw-app-eth": "6.29.1",
-    "@ledgerhq/hw-transport-webusb": "6.27.2",
     "@ledgerhq/hw-transport-web-ble": "6.27.2",
+    "@ledgerhq/hw-transport-webusb": "6.27.2",
     "@ledgerhq/live-common": "26.0.0",
     "@mdi/font": "7.0.96",
     "@vue/babel-preset-app": "4.5.15",
@@ -181,6 +181,7 @@
     "web3-core-helpers": "1.5.0",
     "web3-core-method": "1.5.0",
     "web3-core-requestmanager": "1.5.0",
+    "web3-eth-contract": "^1.7.5",
     "web3-utils": "1.5.0",
     "webpack": "4.44.2",
     "xss": "1.0.14"
