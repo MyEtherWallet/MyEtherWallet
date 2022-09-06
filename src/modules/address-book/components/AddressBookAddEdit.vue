@@ -79,12 +79,13 @@
     Address Book - remove address
   =====================================================================================
   -->
-    <div
-      v-if="editMode"
-      class="text-center mt-6 redPrimary--text cursor-pointer"
-      @click="remove"
-    >
-      {{ $t('interface.address-book.remove-addr') }}
+    <div v-if="editMode" class="mt-6 text-center">
+      <div
+        class="redPrimary--text cursor-pointer d-inline-block"
+        @click="remove"
+      >
+        {{ $t('interface.address-book.remove-addr') }}
+      </div>
     </div>
   </div>
 </template>
