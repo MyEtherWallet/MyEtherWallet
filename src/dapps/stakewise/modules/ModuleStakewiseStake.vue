@@ -7,7 +7,7 @@
         md="8"
         :class="$vuetify.breakpoint.smAndDown ? 'my-10' : 'pr-7'"
       >
-        <mew-sheet class="pa-md-15">
+        <mew-sheet class="pa-15">
           <div class="mew-heading-2 textDark--text mb-8">
             Stake {{ currencyName }} with Stakewise
           </div>
@@ -467,6 +467,7 @@ export default {
             this.agreeToTerms = false;
             this.estimateGasError = false;
           });
+          this.trackDapp('startStake');
         })
         .catch(err => {
           Toast(err, {}, ERROR);

@@ -230,8 +230,8 @@ export default {
      */
     setInputValue: debounce(function (value, idx) {
       if (idx == 3) {
-        if (value && value.length > 6) {
-          this.symbolLengthTooLong = 'Symbol cannot exceed 6 characters';
+        if (value && value.length > 4) {
+          this.symbolLengthTooLong = 'Symbol cannot exceed 4 characters';
           return;
         }
         this.symbolLengthTooLong = '';
