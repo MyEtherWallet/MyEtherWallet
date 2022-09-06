@@ -293,6 +293,7 @@ import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import dappsMeta from '@/dapps/metainfo-dapps';
 import { MOONPAY_EVENT } from '@/modules/moon-pay/helpers';
+import isNew from '@/core/helpers/isNew.js';
 
 export default {
   components: {
@@ -341,12 +342,7 @@ export default {
     sectionOne() {
       if (this.online) {
         const hasNew = Object.values(dappsMeta).filter(item => {
-          const dateToday = new Date();
-          const millisecondsInDay = 1000 * 60 * 60 * 24;
-          const releaseDate = new Date(item.release);
-          const daysFromRelease =
-            (dateToday.getTime() - releaseDate.getTime()) / millisecondsInDay;
-          if (Math.ceil(daysFromRelease) <= 21) {
+          if (isNew(item.release)) {
             return item;
           }
         });

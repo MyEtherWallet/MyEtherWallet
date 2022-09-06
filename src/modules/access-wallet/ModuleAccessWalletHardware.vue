@@ -356,7 +356,7 @@ export default {
       ledgerApps: appPaths.map(item => {
         return {
           name: item.network.name_long,
-          value: item.network.name_long,
+          value: item.network.name,
           img: item.network.icon
         };
       }),
@@ -736,7 +736,7 @@ export default {
           : this.selectedPath
         : this.paths[0].value;
       this.wallets[this.walletType]
-        .create(path, this.ledgerBluetooth)
+        .create(path, this.ledgerBluetooth, this.selectedLedgerApp)
         .then(_hwWallet => {
           try {
             this.loaded = true;

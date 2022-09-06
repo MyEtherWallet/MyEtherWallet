@@ -88,7 +88,10 @@ export default {
       }
     },
     network() {
-      this.web3.eth.clearSubscriptions();
+      if (this.online && !this.isOfflineApp) {
+        this.setup();
+        this.web3.eth.clearSubscriptions();
+      }
     },
     web3() {
       if (this.online && !this.isOfflineApp) this.setup();
@@ -115,15 +118,10 @@ export default {
     }
   },
   destroyed() {
-    this.web3.eth.clearSubscriptions();
+    if (this.online && !this.isOfflineApp) this.web3.eth.clearSubscriptions();
   },
   methods: {
-    ...mapActions('wallet', [
-      'setBlockNumber',
-      'setTokens',
-      'setWallet',
-      'setWeb3Instance'
-    ]),
+    ...mapActions('wallet', ['setBlockNumber', 'setTokens', 'setWallet']),
     ...mapActions('global', [
       'setNetwork',
       'setBaseFeePerGas',
