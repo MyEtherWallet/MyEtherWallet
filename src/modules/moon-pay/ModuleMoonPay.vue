@@ -79,10 +79,14 @@ import { isEmpty } from 'lodash';
 import nodes from '@/utils/networks';
 import { SUCCESS, Toast } from '../toast/handler/handlerToast';
 import MoonPayBuyProviderComponent from './components/MoonPayBuyProviderComponent.vue';
+import MewPopup from '@/components/MewPopup/MewPopup';
+import MewButton from '@/components/MewButton/MewButton';
 
 export default {
   name: 'MoonPay',
   components: {
+    MewPopup,
+    MewButton,
     BuyEthComponent,
     SellEthComponent,
     MoonPayBuyProviderComponent
