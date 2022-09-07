@@ -88,13 +88,10 @@ export default {
       }
     },
     network() {
-      if (this.online && !this.isOfflineApp) {
-        this.setup();
-        this.web3.eth.clearSubscriptions();
-      }
+      if (this.online && !this.isOfflineApp) this.web3.eth.clearSubscriptions();
     },
     web3() {
-      this.setup();
+      if (this.online && !this.isOfflineApp) this.setup();
     },
     coinGeckoTokens() {
       this.setTokenAndEthBalance();
@@ -139,7 +136,7 @@ export default {
         this.network.type.chainID,
         this.identifier
       );
-      if (!matched) this.setValidNetwork(matched);
+      this.setValidNetwork(matched);
     },
     processNetworkTokens() {
       const tokenMap = new Map();
@@ -205,11 +202,9 @@ export default {
         window.ethereum &&
         this.instance.identifier === WALLET_TYPES.WEB3_WALLET
       ) {
-        const networkId = await window.ethereum?.request({
-          method: 'net_version'
-        });
+        const chainId = window.ethereum.chainId;
         const foundNetwork = Object.values(nodeList).find(item => {
-          if (toBN(networkId).toNumber() === item[0].type.chainID) return item;
+          if (toBN(chainId).toNumber() === item[0].type.chainID) return item;
         });
         if (window.ethereum.isMetaMask) {
           try {

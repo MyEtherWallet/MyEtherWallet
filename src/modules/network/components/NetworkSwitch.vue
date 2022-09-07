@@ -323,7 +323,8 @@ export default {
             this.networkLoading = false;
             if (!this.isOffline) {
               const provider =
-                this.identifier === WALLET_TYPES.WEB3_WALLET
+                this.identifier === WALLET_TYPES.WEB3_WALLET &&
+                window.ethereum.isMetaMask
                   ? this.setWeb3Instance(window.ethereum)
                   : this.setWeb3Instance();
               provider.then(() => {
