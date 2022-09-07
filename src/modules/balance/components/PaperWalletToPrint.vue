@@ -97,7 +97,7 @@
 </template>
 
 <script>
-import logo from '@/assets/images/icons/icon-mew-logo.png';
+import logo from '@/assets/images/icons/logo-mew-small.png';
 import { mapState } from 'vuex';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
 
