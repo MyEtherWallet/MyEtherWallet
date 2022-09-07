@@ -7,7 +7,7 @@
         md="8"
         :class="$vuetify.breakpoint.smAndDown ? 'my-10' : 'pr-7'"
       >
-        <mew-sheet class="pa-md-15">
+        <mew-sheet class="pa-15">
           <div class="mew-heading-2 textDark--text mb-8">Compound Rewards</div>
 
           <!-- ======================================================================================= -->
@@ -509,6 +509,7 @@ export default {
         this.swapper
           .executeTrade(this.currentTrade, this.confirmInfo)
           .then(res => {
+            this.trackDapp('compoundRewards');
             this.swapNotificationFormatter(res, currentTradeCopy);
           })
           .then(() => {

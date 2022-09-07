@@ -18,7 +18,8 @@ const ERRORS = {
   'Ledger device: CLA_NOT_SUPPORTED (0x6e00)':
     'ledgerError.cla-not-support-0x6e00',
   'Ledger Device is busy (lock getAddress)': 'ledgerError.device-busy-2',
-  'Ledger device: INS_NOT_SUPPORTED (0x6d00)': 'ledgerError.wrong-wallet',
+  'Ledger device: INS_NOT_SUPPORTED (0x6d00)':
+    'Please select supported network',
   'Ledger Device is busy (lock provideERC20TokenInformation)':
     'ledgerError.device-busy-1',
   'Ledger Device is busy (lock signTransaction)': 'ledgerError.device-busy-1',
@@ -64,7 +65,11 @@ const ERRORS = {
   'GATT Server is disconnected. Cannot perform GATT operations.':
     'Device has been disconnected, please reconnect.',
   "Failed to execute 'transferOut' on 'USBDevice': A transfer error has occurred.":
-    'Error transferring out with USB device. Please try again.'
+    'Please select app on Ledger device and try again.',
+  'Ledger device: UNKNOWN_ERROR (0x6807)': 'Device is supported',
+  'Please make sure you have':
+    'Please make sure app is installed and opened on Ledger device',
+  'Authentication canceled.': 'Authentication canceled'
 };
 const WARNINGS = {
   'Ledger device: Condition of use not satisfied (denied by the user?) (0x6985)':
@@ -72,7 +77,9 @@ const WARNINGS = {
   "U2F browser support is needed for Ledger. Please use Chrome, Opera or Firefox with a U2F extension. Also make sure you're on an HTTPS connection":
     'ledgerError.unsupported-browser-u2f',
   'Ledger device: Incorrect length (0x6700)':
-    'Wrong or No app selected in Ledger Device'
+    'Wrong or No app selected in Ledger Device',
+  "Failed to execute 'transferIn' on 'USBDevice': A transfer error has occurred.":
+    'Please confirm app on Ledger device to continue'
 };
 
 export default WalletErrorHandler(ERRORS, WARNINGS);

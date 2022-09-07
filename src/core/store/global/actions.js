@@ -46,6 +46,7 @@ const setNetwork = async function (
   if (matched) {
     commit('SET_NETWORK', network);
     dispatch('swap/resetPrefetch', null, { root: true });
+    dispatch('wallet/setAccountBalance', '0', { root: true });
     return;
   }
   throw new Error('Network not found');
