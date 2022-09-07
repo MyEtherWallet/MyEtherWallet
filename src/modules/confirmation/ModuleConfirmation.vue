@@ -264,18 +264,6 @@
 </template>
 
 <script>
-import AppScrollBlock from '@/core/components/AppScrollBlock';
-import AppModal from '@/core/components/AppModal';
-import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
-import EventNames from '@/utils/web3-provider/events.js';
-import ConfirmationMesssage from './components/ConfirmationMessage';
-import ConfirmationSwapTransactionDetails from './components/ConfirmationSwapTransactionDetails';
-import ConfirmationSendTransactionDetails from './components/ConfirmationSendTransactionDetails';
-import ConfirmWithWallet from './components/ConfirmWithWallet';
-import CrossChainConfirmation from './components/CrossChainConfirmation';
-
-import SuccessModal from './components/SuccessModal';
-
 import {
   fromWei,
   hexToNumberString,
@@ -287,11 +275,15 @@ import {
 import { isEmpty, isArray, cloneDeep } from 'lodash';
 import { mapState, mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
+import * as locStore from 'store';
+
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
+import EventNames from '@/utils/web3-provider/events.js';
+
 import { Toast, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import parseTokenData from './handlers/parseTokenData';
 import { EventBus } from '@/core/plugins/eventBus';
 import { setEvents } from '@/utils/web3-provider/methods/utils';
-import * as locStore from 'store';
 import { sanitizeHex } from '@/modules/access-wallet/common/helpers';
 import dataToAction from './handlers/dataToAction';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
@@ -301,14 +293,16 @@ import errorHandler from './handlers/errorHandler';
 export default {
   name: 'ModuleConfirmation',
   components: {
-    AppScrollBlock,
-    ConfirmationMesssage,
-    AppModal,
-    ConfirmationSwapTransactionDetails,
-    ConfirmationSendTransactionDetails,
-    ConfirmWithWallet,
-    SuccessModal,
-    CrossChainConfirmation
+    AppScrollBlock: () => import('@/core/components/AppScrollBlock'),
+    ConfirmationMesssage: () => import('./components/ConfirmationMessage'),
+    AppModal: () => import('@/core/components/AppModal'),
+    ConfirmationSwapTransactionDetails: () =>
+      import('./components/ConfirmationSwapTransactionDetails'),
+    ConfirmationSendTransactionDetails: () =>
+      import('./components/ConfirmationSendTransactionDetails'),
+    ConfirmWithWallet: () => import('./components/ConfirmWithWallet'),
+    SuccessModal: () => import('./components/SuccessModal'),
+    CrossChainConfirmation: () => import('./components/CrossChainConfirmation')
   },
   mixins: [handlerAnalytics],
   data() {

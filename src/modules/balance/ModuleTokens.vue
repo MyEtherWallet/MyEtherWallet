@@ -82,18 +82,15 @@
 import { mapGetters, mapState } from 'vuex';
 import { uniqWith, isEqual } from 'lodash';
 
-import BalanceEmptyBlock from './components/BalanceEmptyBlock';
-import TokenAddCustom from './components/TokenAddCustom';
-import TokenDeleteCustom from './components/TokenDeleteCustom';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { currencyToNumber } from '@/core/helpers/localization';
 
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 export default {
   components: {
-    BalanceEmptyBlock,
-    TokenDeleteCustom,
-    TokenAddCustom
+    BalanceEmptyBlock: () => import('./components/BalanceEmptyBlock'),
+    TokenAddCustom: () => import('./components/TokenAddCustom'),
+    TokenDeleteCustom: () => import('./components/TokenDeleteCustom')
   },
   mixins: [handlerAnalytics],
   props: {
@@ -122,18 +119,6 @@ export default {
         {
           text: 'Market Cap',
           value: 'cap',
-          sortable: false,
-          width: '20%'
-        },
-        {
-          text: '24H',
-          value: 'change',
-          sortable: false,
-          width: '20%'
-        },
-        {
-          text: 'Balance',
-          value: 'balance',
           sortable: false,
           width: '20%'
         },

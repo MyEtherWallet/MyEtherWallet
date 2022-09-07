@@ -88,18 +88,18 @@
 
 <script>
 import MultiCoinValidator from 'multicoin-address-validator';
-import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
-import ButtonBalance from '@/core/components/AppButtonBalance';
 import { mapActions, mapGetters, mapState } from 'vuex';
 import { isEmpty, debounce, isNumber } from 'lodash';
-import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import BigNumber from 'bignumber.js';
-import handlerSend from '@/modules/send/handlers/handlerSend.js';
 import { fromWei } from 'web3-utils';
+import Web3 from 'web3';
+
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
+import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
+import handlerSend from '@/modules/send/handlers/handlerSend.js';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common.js';
 import abi from '@/modules/balance/handlers/abiERC20.js';
 import nodes from '@/utils/networks';
-import Web3 from 'web3';
 import { toBNSafe, formatFiatValue } from '@/core/helpers/numberFormatHelper';
 import { toBase } from '@/core/helpers/unit';
 import { sellContracts } from './tokenList';
@@ -107,7 +107,9 @@ import handlerWallet from '@/core/mixins/handlerWallet.mixin';
 
 export default {
   name: 'ModuleSellEth',
-  components: { ButtonBalance },
+  components: {
+    ButtonBalance: () => import('@/core/components/AppButtonBalance')
+  },
   mixins: [handlerWallet],
   props: {
     orderHandler: {

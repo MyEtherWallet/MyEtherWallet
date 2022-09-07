@@ -68,18 +68,13 @@
 </template>
 
 <script>
-import HomeFeaturesSend from './HomeFeaturesSend';
-import HomeFeaturesSwap from './HomeFeaturesSwap';
-import HomeFeaturesDapps from './HomeFeaturesDapps';
-import HomeFeaturesTokens from './HomeFeaturesTokens';
-
 export default {
   name: 'HomeFeatures',
   components: {
-    HomeFeaturesSend,
-    HomeFeaturesSwap,
-    HomeFeaturesDapps,
-    HomeFeaturesTokens
+    HomeFeaturesSend: () => import('./HomeFeaturesSend'),
+    HomeFeaturesSwap: () => import('./HomeFeaturesSwap'),
+    HomeFeaturesDapps: () => import('./HomeFeaturesDapps'),
+    HomeFeaturesTokens: () => import('./HomeFeaturesTokens')
   },
   data: () => ({
     mobileTab: null,

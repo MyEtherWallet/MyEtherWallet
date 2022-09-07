@@ -273,9 +273,7 @@
 </template>
 
 <script>
-import AppBtnMenu from '@/core/components/AppBtnMenu';
-import ModuleNotifications from '@/modules/notifications/ModuleNotifications';
-import NetworkSwitch from '@/modules/network/components/NetworkSwitch.vue';
+import { mapActions, mapGetters, mapState } from 'vuex';
 import send from '@/assets/images/icons/icon-send-enable.svg';
 import dashboard from '@/assets/images/icons/icon-dashboard-enable.svg';
 import nft from '@/assets/images/icons/icon-nft.svg';
@@ -284,10 +282,7 @@ import contract from '@/assets/images/icons/icon-contract-enable.svg';
 import message from '@/assets/images/icons/icon-message-enable.svg';
 import settings from '@/assets/images/icons/icon-setting-enable.svg';
 import logout from '@/assets/images/icons/icon-logout-enable.svg';
-import BalanceCard from '@/modules/balance/ModuleBalanceCard';
-import ModuleSettings from '@/modules/settings/ModuleSettings';
 import { EventBus } from '@/core/plugins/eventBus';
-import { mapActions, mapGetters, mapState } from 'vuex';
 import { ETH, BSC, MATIC } from '@/utils/networks/types';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
@@ -297,11 +292,13 @@ import isNew from '@/core/helpers/isNew.js';
 
 export default {
   components: {
-    AppBtnMenu,
-    BalanceCard,
-    ModuleSettings,
-    ModuleNotifications,
-    NetworkSwitch
+    AppBtnMenu: () => import('@/core/components/AppBtnMenu'),
+    BalanceCard: () => import('@/modules/balance/ModuleBalanceCard'),
+    ModuleSettings: () => import('@/modules/settings/ModuleSettings'),
+    ModuleNotifications: () =>
+      import('@/modules/notifications/ModuleNotifications'),
+    NetworkSwitch: () =>
+      import('@/modules/network/components/NetworkSwitch.vue')
   },
   mixins: [handlerAnalytics],
   data() {

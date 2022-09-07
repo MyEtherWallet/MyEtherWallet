@@ -86,8 +86,9 @@
 </template>
 
 <script>
-import { SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 import { mapGetters, mapActions } from 'vuex';
+
+import { SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 export default {
   props: {
     open: {

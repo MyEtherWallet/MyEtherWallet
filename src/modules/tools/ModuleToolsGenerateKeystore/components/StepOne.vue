@@ -121,15 +121,17 @@
 </template>
 
 <script>
-import BorderBlock from '@/components/BorderBlock';
-import GenerateKeystoreDialog from './GenerateKeystoreDialog';
-import MnemonicPhraseTable from '@/components/MnemonicPhraseTable';
-import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import KeyStore, { verifyKeystore } from '@myetherwallet/eth2-keystore';
+
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { createBlob } from '@/modules/create-wallet/handlers/helpers';
 
 export default {
-  components: { BorderBlock, GenerateKeystoreDialog, MnemonicPhraseTable },
+  components: {
+    BorderBlock: () => import('@/components/BorderBlock'),
+    GenerateKeystoreDialog: () => import('./GenerateKeystoreDialog'),
+    MnemonicPhraseTable: () => import('@/components/MnemonicPhraseTable')
+  },
   data() {
     return {
       ks: {},

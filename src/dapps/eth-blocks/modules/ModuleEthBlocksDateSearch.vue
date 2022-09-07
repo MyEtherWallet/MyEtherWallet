@@ -26,19 +26,17 @@
 <script>
 import { mapState, mapGetters } from 'vuex';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
-import handlerBlock from '../handlers/handlerBlock';
-// import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-import BlockSearch from '../components/BlockSearch';
-import BlockResultComponent from '../components/BlockResultComponent';
 import { toBN } from 'web3-utils';
 import EthDater from 'ethereum-block-by-date';
 import moment from 'moment';
 import { uniqBy } from 'lodash';
+import handlerBlock from '../handlers/handlerBlock';
+
 export default {
   name: 'ModuleEthBlocksDateSearch',
   components: {
-    BlockSearch,
-    BlockResultComponent
+    BlockSearch: () => import('../components/BlockSearch'),
+    BlockResultComponent: () => import('../components/BlockResultComponent')
   },
   data() {
     return {

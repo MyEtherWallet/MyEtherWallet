@@ -295,37 +295,29 @@ import xss from 'xss';
 import MultiCoinValidator from 'multicoin-address-validator';
 import BigNumber from 'bignumber.js';
 
-import AppButtonBalance from '@/core/components/AppButtonBalance';
-import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
-import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
-import SwapProvidersList from './components/SwapProvidersList.vue';
-import SwapProviderMentions from './components/SwapProviderMentions.vue';
-import AppTransactionFee from '@/core/components/AppTransactionFee.vue';
-import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
-import { TRENDING_LIST } from './handlers/configs/configTrendingTokens';
-
-import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import Notification, {
   NOTIFICATION_TYPES,
   NOTIFICATION_STATUS
 } from '@/modules/notifications/handlers/handlerNotification';
 import NonChainNotification from '@/modules/notifications/handlers/nonChainNotification';
-import Swapper from './handlers/handlerSwap';
-
+import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
+import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
+import { TRENDING_LIST } from './handlers/configs/configTrendingTokens';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
+import Swapper from './handlers/handlerSwap';
 
 const MIN_GAS_LIMIT = 800000;
 let localContractToToken = {};
 export default {
   name: 'ModuleSwap',
   components: {
-    AppButtonBalance,
-    AppUserMsgBlock,
-    ModuleAddressBook,
-    SwapProvidersList,
-    SwapProviderMentions,
-    AppTransactionFee
+    AppButtonBalance: () => import('@/core/components/AppButtonBalance'),
+    AppUserMsgBlock: () => import('@/core/components/AppUserMsgBlock'),
+    ModuleAddressBook: () => import('@/modules/address-book/ModuleAddressBook'),
+    SwapProvidersList: () => import('./components/SwapProvidersList.vue'),
+    SwapProviderMentions: () => import('./components/SwapProviderMentions.vue'),
+    AppTransactionFee: () => import('@/core/components/AppTransactionFee.vue')
   },
   mixins: [handlerAnalytics, buyMore],
   props: {

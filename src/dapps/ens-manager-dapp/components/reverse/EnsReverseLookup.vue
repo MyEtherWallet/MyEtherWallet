@@ -58,10 +58,11 @@
 </template>
 
 <script>
-import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { isEmpty } from 'lodash';
 import ENS from '@ensdomains/ensjs';
 import { mapGetters, mapState } from 'vuex';
+
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import PermanentNameModule from '../../handlers/handlerPermanentName';
 export default {
   name: 'EnsReverseLookup',

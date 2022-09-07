@@ -91,8 +91,7 @@
 </template>
 
 <script>
-import { fromWei } from 'web3-utils';
-import { toBN } from 'web3-utils';
+import { fromWei, toBN } from 'web3-utils';
 
 export default {
   props: {

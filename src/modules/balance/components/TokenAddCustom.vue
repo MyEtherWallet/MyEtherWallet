@@ -143,12 +143,13 @@
 </template>
 
 <script>
-import abiERC20 from '../handlers/abiERC20';
 import { mapState, mapGetters, mapActions } from 'vuex';
-import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
-import { isAddress } from '@/core/helpers/addressUtils';
 import { debounce } from 'lodash';
 import BigNumber from 'bignumber.js';
+
+import abiERC20 from '../handlers/abiERC20';
+import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
+import { isAddress } from '@/core/helpers/addressUtils';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 
 export default {

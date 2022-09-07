@@ -1,5 +1,4 @@
 import bsc from '@/assets/images/networks/bsc.svg';
-import tokens from '@/_generated/tokens/tokens-bsc.json';
 export default {
   name: 'BSC',
   name_long: 'Binance Smart Chain',
@@ -8,8 +7,12 @@ export default {
   blockExplorerTX: 'https://bscscan.com/tx/[[txHash]]',
   blockExplorerAddr: 'https://bscscan.com/address/[[address]]',
   chainID: 56,
-  tokens: tokens,
-  contracts: [],
+  tokens: import('@/_generated/tokens/tokens-bsc.json').then(
+    module => module.default
+  ),
+  contracts: import('@/_generated/contracts/contract-abi-etc.json').then(
+    module => module.default
+  ),
   icon: bsc,
   currencyName: 'BNB',
   isTestNetwork: false,

@@ -188,13 +188,10 @@ import { fromWei, isHexStrict } from 'web3-utils';
 import { debounce, isEmpty, isNumber } from 'lodash';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
-import SendTransaction from '@/modules/send/handlers/handlerSend';
+
 import { ETH } from '@/utils/networks/types';
 import { Toast, ERROR, WARNING } from '@/modules/toast/handler/handlerToast';
-import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
-import SendLowBalanceNotice from './components/SendLowBalanceNotice.vue';
-import AppButtonBalance from '@/core/components/AppButtonBalance';
-import AppTransactionFee from '@/core/components/AppTransactionFee.vue';
+
 import {
   formatIntegerToString,
   toBNSafe
@@ -202,12 +199,15 @@ import {
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 import { toBase } from '@/core/helpers/unit';
+
+import SendTransaction from '@/modules/send/handlers/handlerSend';
+
 export default {
   components: {
-    ModuleAddressBook,
-    SendLowBalanceNotice,
-    AppButtonBalance,
-    AppTransactionFee
+    ModuleAddressBook: () => import('@/modules/address-book/ModuleAddressBook'),
+    SendLowBalanceNotice: () => import('./components/SendLowBalanceNotice.vue'),
+    AppButtonBalance: () => import('@/core/components/AppButtonBalance'),
+    AppTransactionFee: () => import('@/core/components/AppTransactionFee.vue')
   },
   mixins: [buyMore],
   props: {
