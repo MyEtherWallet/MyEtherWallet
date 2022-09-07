@@ -24,6 +24,7 @@
           :buy-more-str="
             errorMessages ? (network.type.canBuy ? 'Buy more.' : null) : null
           "
+          filter-placeholder="Search for Amount"
           is-custom
           outlined
           @buyMore="openMoonpay"

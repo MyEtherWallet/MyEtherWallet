@@ -91,8 +91,9 @@
             {{ key }}
           </div>
         </v-col>
-        <v-col cols="auto">
+        <v-col cols="auto" class="qr-code">
           <qr-code :data="key" :height="140" :width="140" :type-number="10" />
+          <img class="qr-logo" :src="logo" alt="logo" />
         </v-col>
       </v-row>
     </v-container>
