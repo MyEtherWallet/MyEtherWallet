@@ -61,8 +61,9 @@
             {{ getChecksumAddressString }}
           </div>
         </v-col>
-        <v-col cols="auto" class="ml-auto">
+        <v-col cols="auto" class="ml-auto qr-code">
           <qr-code :data="address" :height="140" :width="140" />
+          <img class="qr-logo" :src="logo" alt="logo" />
         </v-col>
       </v-row>
 
@@ -84,8 +85,9 @@
             {{ key }}
           </div>
         </v-col>
-        <v-col cols="auto">
+        <v-col cols="auto" class="qr-code">
           <qr-code :data="key" :height="140" :width="140" :type-number="10" />
+          <img class="qr-logo" :src="logo" alt="logo" />
         </v-col>
       </v-row>
     </v-container>
@@ -95,13 +97,16 @@
 </template>
 
 <script>
+import logo from '@/assets/images/icons/icon-mew-logo.png';
 import { mapState } from 'vuex';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
 
 export default {
   name: 'BalanceAddressPaperWallet',
   data() {
-    return {};
+    return {
+      logo: logo
+    };
   },
   computed: {
     ...mapState('wallet', ['address', 'instance', 'isHardware']),
@@ -120,3 +125,16 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.qr-code {
+  position: relative;
+  .qr-logo {
+    position: absolute;
+    top: 65px;
+    left: 65px;
+    height: 33px;
+    width: 33px;
+  }
+}
+</style>

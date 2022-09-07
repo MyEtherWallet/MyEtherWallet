@@ -44,6 +44,7 @@
       <div class="inner-content pa-3 pa-sm-8 d-flex align-center">
         <div class="white pa-1" style="border-radius: 7px">
           <qr-code :data="address" :height="132" :width="132" />
+          <img class="qr-logo" :src="logo" alt="logo" />
         </div>
         <div class="pl-3">
           <div
@@ -64,12 +65,16 @@
   </div>
 </template>
 <script>
+import logo from '@/assets/images/icons/icon-mew-logo.svg';
 import anime from 'animejs/lib/anime.es.js';
 import clipboardCopy from 'clipboard-copy';
 import { Toast, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import { mapState, mapGetters } from 'vuex';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
 export default {
+  data() {
+    return { logo: logo };
+  },
   computed: {
     ...mapState('wallet', ['address']),
     ...mapGetters('global', ['network']),
@@ -130,6 +135,17 @@ export default {
     left: 0;
     bottom: 0;
     right: 0;
+
+    & > div {
+      position: relative;
+      .qr-logo {
+        position: absolute;
+        top: 54px;
+        left: 54px;
+        height: 31px;
+        width: 31px;
+      }
+    }
   }
 }
 </style>
