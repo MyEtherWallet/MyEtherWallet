@@ -230,9 +230,10 @@ import NetworkSwitch from '@/modules/network/components/NetworkSwitch.vue';
 import { BigNumber } from 'bignumber.js';
 import { toChecksumAddress } from 'ethereumjs-util';
 import { isEmpty } from 'lodash';
+import MewAddressSelect from '@/components/MewAddressSelect/MewAddressSelect';
 export default {
   name: 'ModuleToolsOfflineHelper',
-  components: { NetworkSwitch },
+  components: { NetworkSwitch, MewAddressSelect },
   props: {
     isHomePage: {
       type: Boolean,
