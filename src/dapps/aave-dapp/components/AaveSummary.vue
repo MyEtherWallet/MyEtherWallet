@@ -227,13 +227,13 @@ export default {
               class:
                 realHealthFactor == this.nextHealthFactor
                   ? ''
-                  : +realHealthFactor > +this.nextHealthFactor
+                  : BigNumber(realHealthFactor).gt(this.nextHealthFactor)
                   ? 'redPrimary--text'
                   : 'greenPrimary--text',
               indicator:
                 realHealthFactor == this.nextHealthFactor
                   ? ''
-                  : +realHealthFactor < +this.nextHealthFactor
+                  : BigNumber(realHealthFactor).lt(this.nextHealthFactor)
                   ? 'mdi-arrow-up-bold'
                   : 'mdi-arrow-down-bold'
             }
@@ -274,13 +274,13 @@ export default {
                 class:
                   realHealthFactor == this.nextHealthFactor
                     ? ''
-                    : +realHealthFactor >= +this.nextHealthFactor
+                    : BigNumber(realHealthFactor).gt(this.nextHealthFactor)
                     ? 'redPrimary--text'
                     : 'greenPrimary--text',
                 indicator:
                   realHealthFactor == this.nextHealthFactor
                     ? ''
-                    : +realHealthFactor < +this.nextHealthFactor
+                    : BigNumber(realHealthFactor).lt(this.nextHealthFactor)
                     ? 'mdi-arrow-up-bold'
                     : 'mdi-arrow-down-bold'
               }
