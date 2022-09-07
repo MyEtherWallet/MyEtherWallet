@@ -33,7 +33,7 @@ import BlockResultComponent from '../components/BlockResultComponent';
 import { toBN } from 'web3-utils';
 import EthDater from 'ethereum-block-by-date';
 import moment from 'moment';
-import _ from 'lodash';
+import { uniqBy } from 'lodash';
 export default {
   name: 'ModuleEthBlocksDateSearch',
   components: {
@@ -94,7 +94,7 @@ export default {
           1,
           true
         );
-        const filterBlocks = _.uniqBy(blocks, 'block');
+        const filterBlocks = uniqBy(blocks, 'block');
         this.totalResult = filterBlocks.length;
         for (let index = 0; index < filterBlocks.length; index++) {
           if (filterBlocks[index].block <= this.maxBlock) {
