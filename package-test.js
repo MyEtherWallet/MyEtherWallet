@@ -101,7 +101,9 @@ const EXCEPTIONS = [
   'jest-canvas-mock',
   'sinon',
   'trezor-connect',
-  'vue-template-compiler'
+  'vue-template-compiler',
+  'moment-timezone',
+  'bignumber.js'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

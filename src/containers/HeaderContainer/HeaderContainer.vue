@@ -41,13 +41,22 @@
           class="fixed-header"
         >
           <div class="v6-header">
-            A new version is available &nbsp;
-            <a href="https://www.myetherwallet.com" rel="noopener noreferrer"
-              >Try it out here</a
-            >&nbsp;&nbsp;
-            <a href="https://www.myetherwallet.com" rel="noopener noreferrer"
-              >Read about it here</a
-            >
+            <div>
+              Dear MEW users! After October 4th, 2022, MEW version 5 will no
+              longer be available online. Our current, official version of MEW
+              can be found at
+              <a href="https://www.myetherwallet.com/" target="_blank"
+                >https://www.myetherwallet.com</a
+              >
+              If you haven't used it yet, please do so now to make sure you
+              don't experience any issues with wallet access after the
+              sunsetting of MEW 5.
+              <br />
+              <br />
+              Keep in mind, you will still be able to download older versions of
+              MEW, including MEW 5, from our Github page and run them from your
+              computer.
+            </div>
           </div>
           <div
             :class="[
@@ -436,17 +445,18 @@ export default {
 <style lang="scss" scoped>
 @import 'HeaderContainer.scss';
 .v6-header {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #22a7c0;
-  background-image: linear-gradient(to right, #22a7c0, #06c0a5);
+  text-align: center;
+  background-color: $light-orange-3;
   padding: 8px !important;
-  color: $white !important;
+  color: $dark-blue-2 !important;
 
   a {
-    color: $white !important;
+    color: $dark-blue-2 !important;
     text-decoration: underline;
+  }
+  div {
+    margin: auto;
+    max-width: 850px;
   }
 }
 </style>
