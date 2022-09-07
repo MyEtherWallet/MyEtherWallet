@@ -19,7 +19,7 @@
 //   console.info('MEWCX Web3 provider injected');
 //   window.ethereum = ethereumProvider;
 // }
-
+// eslint-disable-next-line
 console.log(`
 MEW CX will no longer be supported on October 4th, 2022
 
