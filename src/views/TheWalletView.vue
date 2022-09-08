@@ -102,6 +102,10 @@ export default {
       this.setup();
       if (this.identifier === WALLET_TYPES.WEB3_WALLET) {
         this.web3Listeners();
+        if (
+          this.network.type.chainID !== toBN(window.ethereum.chainId).toNumber()
+        )
+          this.findAndSetNetwork();
       }
       this.checkNetwork();
     }
@@ -132,11 +136,21 @@ export default {
       this.subscribeToBlockNumber();
     },
     async checkNetwork() {
-      const matched = await matchNetwork(
-        this.network.type.chainID,
-        this.identifier
-      );
-      this.setValidNetwork(matched);
+      if (this.identifier === WALLET_TYPES.WEB3_WALLET) {
+        const chainId = toBN(window.ethereum.chainId).toNumber();
+
+        const foundNetwork = Object.values(nodeList).find(item => {
+          if (toBN(chainId).toNumber() === item[0].type.chainID) return item;
+        });
+        const matched = !foundNetwork
+          ? false
+          : await matchNetwork(chainId, this.identifier);
+        this.setValidNetwork(matched);
+      } else {
+        this.setValidNetwork(
+          await matchNetwork(this.network.type.chainID, this.identifier)
+        );
+      }
     },
     processNetworkTokens() {
       const tokenMap = new Map();
