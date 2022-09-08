@@ -5,6 +5,10 @@
       <p class="title-description">{{ parent.$t('mewcx.welcome-header') }}</p>
     </div>
     <div class="content">
+      <div class="deprecation-notice">
+        MEW CX will no longer be supported on
+        <b>October 4th, 2022</b>
+      </div>
       <img class="logo-ex" src="@/assets/images/mew-cx-logo.png" width="75" />
       <img class="logo-mew" src="@/assets/images/logo.png" height="25" />
       <div class="text-content">
@@ -33,5 +37,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.deprecation-notice {
+  margin: 0 !important;
+}
 @import 'WelcomeContainer.scss';
 </style>

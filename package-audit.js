@@ -29,7 +29,23 @@ const AUDIT_EXCEPTIONS = [
   'glob-parent',
   'ansi-html',
   'follow-redirects',
-  'simple-get'
+  'simple-get',
+  'moment',
+  'terser',
+  'scss-tokenizer',
+  'ansi-regex',
+  'parse-path',
+  'parse-url',
+  'mout',
+  'engine.io',
+  'protobufjs',
+  'async',
+  'semver-regex',
+  'nth-check',
+  'node-forge',
+  'tmpl',
+  'nconf',
+  'pathval'
 ];
 
 const execute = (command, callback) => {

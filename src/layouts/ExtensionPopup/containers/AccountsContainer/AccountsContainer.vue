@@ -8,6 +8,10 @@
       >
         <b-tab :active="hasMyWallets" title="My Wallets" class="tab-container">
           <network-component />
+          <div class="deprecation-notice">
+            MEW CX will no longer be supported on
+            <b>October 4th, 2022</b>
+          </div>
           <div class="total-balance-container">
             <p>{{ $t('common.balance.total') }}:</p>
             <div>
@@ -42,6 +46,10 @@
           class="tab-container"
         >
           <network-component />
+          <div class="deprecation-notice">
+            MEW CX will no longer be supported on
+            <b>October 4th, 2022</b>
+          </div>
           <div class="wallet-component-container watch-only">
             <wallet-view-component
               v-for="item in watchOnlyWallets"
@@ -283,5 +291,13 @@ export default {
 </style>
 
 <style lang="scss">
+.deprecation-notice {
+  background-color: #fff6e6;
+  padding: 10px;
+  text-align: center;
+  margin: 0 20px 15px 0;
+  border-radius: 5px;
+}
+
 @import 'AccountsContainerBtabs.scss';
 </style>

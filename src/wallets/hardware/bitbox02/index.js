@@ -1,4 +1,4 @@
-import { BitBox02API, getDevicePath, constants } from 'bitbox02-api';
+// import { BitBox02API, getDevicePath, constants } from 'bitbox02-api';
 
 import { BITBOX02 as bitbox02Type } from '../../bip44/walletTypes';
 import bip44Paths from '../../bip44';
@@ -23,8 +23,7 @@ class BitBox02Wallet {
     this.pairingConfirmed = false;
   }
   async connect() {
-    const devicePath = await getDevicePath();
-    this.BitBox02 = new BitBox02API(devicePath);
+    this.BitBox02 = {};
   }
 
   async init(basePath) {
@@ -50,9 +49,7 @@ class BitBox02Wallet {
       }
     );
 
-    if (
-      this.BitBox02.firmware().Product() !== constants.Product.BitBox02Multi
-    ) {
+    if (this.BitBox02.firmware().Product() !== '') {
       throw new Error('Unsupported device');
     }
 

@@ -20,6 +20,7 @@ selenium-debug.log
 /tests/unit/coverage/
 release
 chrome-extension
+.cache
 
 # Generated files
 src/_generated

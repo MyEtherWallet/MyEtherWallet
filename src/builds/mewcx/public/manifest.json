@@ -1,8 +1,8 @@
 {
-  "name": "MEW CX",
-  "short_name": "MEW CX",
+  "name": "MEW CX - is now Enkrypt",
+  "short_name": "MEW CX - is now Enkrypt",
   "manifest_version": 2,
-  "description": "MyEtherWallet Chrome Extension - Browse the blockchain. Bring your own MEW.",
+  "description": "MyEtherWallet Chrome Extension is now Enkrypt",
   "homepage_url": "https://www.myetherwallet.com/",
   "icons": {
     "16": "img/icons/icon16.png",
@@ -12,7 +12,7 @@
   },
   "browser_action": {
     "default_icon": "img/icons/icon48.png",
-    "default_title": "MEW CX",
+    "default_title": "MEW CX - is now Enkrypt",
     "default_popup": "browserActionLoading.html"
   },
   "options_page": "index.html",

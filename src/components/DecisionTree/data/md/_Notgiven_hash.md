@@ -8,9 +8,7 @@ If they cannot provide one..
 
 #### Search your public address on Etherscan.io to find your most recent transactions.
 
-It’s possible one of these is the transaction you’re looking for. This is how you will find the transaction hash.
-<br>
-<br>
+It’s possible one of these is the transaction you’re looking for. This is how you will find the transaction hash. <br> <br>
 
 1. The transaction I’m looking for is in this list
 
