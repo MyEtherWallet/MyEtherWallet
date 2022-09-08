@@ -585,6 +585,11 @@ export default {
     }
   },
   watch: {
+    step() {
+      // Fix multiple side scroll bar in hardware wallet overlay
+      const root = document.getElementsByTagName('html')[0];
+      root.classList.add('overflow-y-hidden');
+    },
     selectedPath: {
       handler: function () {
         /**
