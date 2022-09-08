@@ -5,7 +5,8 @@
   "scripts": {
     "build": "npm run update && vue-cli-service build",
     "test:unit": "vue-cli-service test:unit --logHeapUsage",
-    "test:e2e": "vue-cli-service test:e2e",
+    "test:e2e": "BUILD=offline vue-cli-service test:e2e --skiptags offline",
+    "test:e2e-offline": "vue-cli-service test:e2e --tag offline",
     "lint": "npm run lint:code && npm run lint:md",
     "apollo": "apollo",
     "apollo:aave": "apollo service:download -c=apolloAave.config.js src/dapps/aave-dapp/apollo/schemas/api.json && apollo client:codegen -c=apolloAave.config.js src/dapps/aave-dapp/apollo/global/globalTypes.json --target=json",

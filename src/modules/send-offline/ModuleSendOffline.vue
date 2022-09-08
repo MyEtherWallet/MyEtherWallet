@@ -27,6 +27,7 @@
             <div class="position--relative">
               <mew-input
                 v-model="amount"
+                class="SendOfflineAmountInput"
                 label="Amount"
                 placeholder="0"
                 :error-messages="amountErrors"
@@ -46,6 +47,7 @@
           <v-col cols="12">
             <mew-input
               v-model="localNonce"
+              class="SendOfflineNonceInput"
               :label="$t('sendTx.nonce')"
               placeholder="0"
               type="number"
@@ -58,13 +60,14 @@
               label="Data"
               placeholder="0x..."
               :error-messages="dataErrors"
-              class="mb-8"
+              class="mb-8 SendOFflineDataInput"
               :disabled="disableData"
             />
           </v-col>
           <v-col cols="12">
             <mew-input
               v-model="gasLimit"
+              class="SendOfflineGasLimitInput"
               :label="$t('common.gas.limit')"
               :error-messages="gasLimitErrors"
               type="number"
@@ -73,6 +76,7 @@
           <v-col cols="12">
             <mew-input
               v-model="gasPrice"
+              class="SendOfflineGasPriceInput"
               label="Gas Price (in wei)"
               :error-messages="gasPriceErrors"
               type="number"
@@ -84,6 +88,7 @@
           <div class="text-center">
             <mew-button
               title="Generate Transaction"
+              class="SendOfflineGenerateTransactionButton"
               :has-full-width="false"
               btn-size="xlarge"
               :disabled="isDisabledNextBtn"
@@ -94,13 +99,14 @@
             <div class="d-flex justify-center">
               <input
                 ref="upload"
+                class="SendOfflineUploadInput"
                 type="file"
                 style="display: none"
                 accept="json"
                 @change="upload"
               />
               <mew-button
-                class="mt-2 display--block mx-auto"
+                class="mt-2 display--block mx-auto SendOfflineUploadJsonButton"
                 title="Upload JSON file"
                 btn-size="small"
                 btn-style="transparent"
