@@ -68,7 +68,7 @@
           class="border-container d-none d-md-flex pa-1 mr-md-10 cursor-image"
         >
           <v-img
-            lazy-src="../assets/loading-block.svg"
+            lazy-src="../assets/1.png"
             :src="handlerBlock.img"
             max-width="332"
             contain
@@ -76,6 +76,7 @@
             <template #placeholder>
               <v-row class="fill-height ma-0" align="center" justify="center">
                 <v-progress-circular
+                  v-if="!isReserved"
                   indeterminate
                   color="disabledPrimary"
                 ></v-progress-circular>
@@ -83,6 +84,13 @@
             </template>
           </v-img>
         </a>
+        <!----- * BELOW IS COMMENTED OUT FOR NOW * ------->
+        <!-- <div v-if="isReserved">
+          <h3 class="text-center text-md-left mt-5 ml-1">Owners Comment:</h3>
+          <p class="ml-1">
+            {{ handlerBlock.description }}
+          </p>
+        </div> -->
       </div>
 
       <v-col>
@@ -97,19 +105,36 @@
           <h2 class="text-center text-md-left">
             Block #{{ blockNumberFormatted }}
           </h2>
-          <share-network
-            network="twitter"
-            :url="`https://www.ethvm.com/block/number/${blockRef}`"
-            title="Twitter message"
-            hashtags="MyEtherWallet,MEW,EthBlocks"
-          >
-            <mew-button class="mr-1" btn-style="light" color-theme="basic">
+          <div class="d-flex align-center">
+            <share-network
+              network="twitter"
+              :url="`https://www.ethvm.com/block/number/${blockRef}`"
+              title="Twitter message"
+              hashtags="MyEtherWallet,MEW,EthBlocks"
+            >
+              <mew-button class="mr-1" btn-style="light" color-theme="basic">
+                <div class="d-flex align-center">
+                  <v-icon left>mdi-twitter</v-icon>
+                  <div>Share</div>
+                </div>
+              </mew-button>
+            </share-network>
+            <!-------------* Below is commented out for now * ------------------->
+            <!-------------* Below is commented out for now * ------------------->
+            <!-- <share-network
+              network="twitter"
+              :url="`https://www.ethvm.com/block/number/${blockRef}`"
+              title="Eth Museum"
+              hashtags="MyEtherWallet,MEW,EthBlocks"
+            > -->
+            <mew-button class="ml-4" btn-style="light" color-theme="basic">
               <div class="d-flex align-center">
-                <v-icon left>mdi-twitter</v-icon>
-                <div>Share</div>
+                <v-icon left>mdi-launch</v-icon>
+                <div>View in Museum</div>
               </div>
             </mew-button>
-          </share-network>
+            <!-- </share-network> -->
+          </div>
         </div>
         <!--
         ===================================================
@@ -133,7 +158,7 @@
           Block Description
         ===================================================
         -->
-        <div v-if="!isReserved" class="mt-10 mt-md-5">
+        <div class="mt-10 mt-md-5">
           <div :class="['textMedium--text', { 'mb-2': !isTestNetwork }]">
             {{ handlerBlock.description }}
           </div>
@@ -144,7 +169,7 @@
           XS12
         ===================================================
         -->
-        <div v-if="!isReserved" class="table-properties mt-10">
+        <div class="table-properties mt-10">
           <div
             class="table-properties--header py-3 px-5 textLight--text mew-caption"
           >
@@ -168,7 +193,7 @@
       </v-col>
     </v-row>
     <a
-      v-if="!isReserved && !loading"
+      v-if="!loading"
       class="d-flex flex-row-reverse mt-3"
       :href="`https://www.ethvm.com/block/number/${blockRef}`"
       target="_blank"

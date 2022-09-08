@@ -246,8 +246,8 @@
         ===================================================
         -->
       <v-col v-if="isReserved" cols="12" class="d-flex align-center mt-3">
-        <p class="mb-0 textLight--text">
-          ETH Blocks 1-10 are reserved for the Ethereum founders
+        <p class="textLight--text ml-5">
+          Please contact support@myetherwallet.com to inquire about this block.
         </p>
       </v-col>
     </v-row>
@@ -384,7 +384,7 @@ export default {
         case BLOCK_ALERT.AVAILABLE:
           return '#EBFAF8';
         case BLOCK_ALERT.RESERVED:
-          return '#FF445B';
+          return '#FFF0F2';
         default:
           return '#EEF3FD';
       }
