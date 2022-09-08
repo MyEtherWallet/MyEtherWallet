@@ -236,10 +236,12 @@ import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { EventBus } from '@/core/plugins/eventBus.js';
+import MewOverlay from '@/components/MewOverlay/MewOverlay';
 
 export default {
   name: 'HardwareAccessOverlay',
   components: {
+    MewOverlay,
     AccessWalletKeepkey,
     AccessWalletCoolWallet,
     AccessWalletTrezor,
