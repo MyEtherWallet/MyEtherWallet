@@ -31,6 +31,11 @@ module.exports = {
           }
         }
       }
+    },
+    offline: {
+      globals: {
+        BUILD_TYPE: 'offline'
+      }
     }
   }
 };
