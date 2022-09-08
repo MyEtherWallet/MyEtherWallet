@@ -52,6 +52,8 @@ class CustomRequestManager extends Web3RequestManager {
 class GivenProvider {
   constructor(host) {
     this.givenProvider = host;
+    if (typeof this.givenProvider === 'string')
+      throw new Error('Not supported network type');
     const requestManager = new CustomRequestManager(this.givenProvider);
     if (this.givenProvider.request && !this.givenProvider.request_) {
       this.givenProvider.request_ = this.givenProvider.request;
