@@ -128,7 +128,7 @@
     "bc-vault-js": "2.1.1",
     "bignumber.js": "9.1.0",
     "bip39": "3.0.4",
-    "chromedriver": "104.0.0",
+    "chromedriver": "105.0.0",
     "codecov": "3.8.3",
     "commitlint": "17.1.2",
     "copy-webpack-plugin": "6.3.2",
@@ -146,6 +146,7 @@
     "html2canvas": "1.4.1",
     "husky": "5.0.9",
     "imagemin-mozjpeg": "9.0.0",
+    "imagemin-webp": "7.0.0",
     "imagemin-webpack-plugin": "2.4.2",
     "is-ipfs": "6.0.2",
     "jest-skipped-reporter": "0.0.5",
@@ -184,6 +185,7 @@
     "web3-eth-contract": "1.7.5",
     "web3-utils": "1.5.0",
     "webpack": "4.44.2",
+    "webpack-bundle-analyzer": "^4.6.1",
     "xss": "1.0.14"
   },
   "engines": {

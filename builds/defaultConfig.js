@@ -1,5 +1,7 @@
 const imageminMozjpeg = require('imagemin-mozjpeg');
 const ImageminPlugin = require('imagemin-webpack-plugin').default;
+const BundleAnalyzerPlugin =
+  require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const webpack = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const UglifyJS = require('uglify-es');
@@ -36,6 +38,7 @@ const webpackConfig = {
   plugins: [
     new webpack.SourceMapDevToolPlugin(sourceMapsConfig),
     new webpack.NormalModuleReplacementPlugin(/^any-promise$/, 'bluebird'),
+    new BundleAnalyzerPlugin(),
     new ImageminPlugin({
       disable: process.env.NODE_ENV !== 'production',
       test: /\.(jpe?g|png|gif|svg)$/i,
@@ -45,7 +48,8 @@ const webpackConfig = {
       plugins: [
         imageminMozjpeg({
           quality: 100,
-          progressive: true
+          progressive: true,
+          chunks: 'all'
         })
       ]
     }),
