@@ -20,8 +20,7 @@
           at
           <a href="https://www.myetherwallet.com/" target="_blank"
             >https://www.myetherwallet.com</a
-          >
-          If you haven't used it yet, please do so now to make sure you don't
+          >. If you haven't used it yet, please do so now to make sure you don't
           experience any issues with wallet access after the sunsetting of MEW
           5.
           <br />
