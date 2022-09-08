@@ -59,7 +59,12 @@ export default {
       'isOfflineApp',
       'instance'
     ]),
-    ...mapState('global', ['online', 'gasPriceType', 'baseGasPrice']),
+    ...mapState('global', [
+      'online',
+      'gasPriceType',
+      'baseGasPrice',
+      'validNetwork'
+    ]),
     ...mapState('external', ['coinGeckoTokens']),
     ...mapState('popups', [
       'enkryptWalletPopup',
@@ -88,7 +93,10 @@ export default {
       }
     },
     network() {
-      if (this.online && !this.isOfflineApp) this.web3.eth.clearSubscriptions();
+      if (this.online && !this.isOfflineApp) {
+        this.web3.eth.clearSubscriptions();
+        this.setup();
+      }
     },
     web3() {
       if (this.online && !this.isOfflineApp) this.setup();
@@ -131,9 +139,11 @@ export default {
     ]),
     ...mapActions('external', ['setTokenAndEthBalance', 'setNetworkTokens']),
     setup() {
-      this.processNetworkTokens();
-      this.setTokensAndBalance();
-      this.subscribeToBlockNumber();
+      if (this.validNetwork) {
+        this.processNetworkTokens();
+        this.setTokensAndBalance();
+        this.subscribeToBlockNumber();
+      }
     },
     async checkNetwork() {
       if (this.identifier === WALLET_TYPES.WEB3_WALLET) {
