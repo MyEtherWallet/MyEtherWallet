@@ -18,15 +18,8 @@
         class="mobile-title-block pa-3 d-flex align-center justify-space-between full-width"
       >
         <div style="min-width: 36px">
-          <v-btn
-            v-if="back"
-            icon
-            color="textBlack2"
-            @click="back"
-          >
-            <v-icon size="24">
-              mdi-arrow-left
-            </v-icon>
+          <v-btn v-if="back" icon color="textBlack2" @click="back">
+            <v-icon size="24">mdi-arrow-left</v-icon>
           </v-btn>
         </div>
         <h3
@@ -36,18 +29,8 @@
           {{ title }}
         </h3>
         <div style="min-width: 36px">
-          <v-btn
-            v-if="close"
-            icon
-            color="textBlack2"
-            @click="close"
-          >
-            <v-icon
-              size="24"
-              color="textBlack2"
-            >
-              mdi-close
-            </v-icon>
+          <v-btn v-if="close" icon color="textBlack2" @click="close">
+            <v-icon size="24" color="textBlack2">mdi-close</v-icon>
           </v-btn>
         </div>
       </div>
@@ -71,9 +54,7 @@
         ]"
         @click="back"
       >
-        <v-icon size="24">
-          mdi-arrow-left
-        </v-icon>
+        <v-icon size="24"> mdi-arrow-left</v-icon>
       </v-btn>
       <v-btn
         v-if="close && !isMobile"
@@ -90,17 +71,9 @@
         ]"
         @click="close"
       >
-        <v-icon
-          size="24"
-          color="textBlack2"
-        >
-          mdi-close
-        </v-icon>
+        <v-icon size="24" color="textBlack2">mdi-close</v-icon>
       </v-btn>
-      <v-container
-        :class="['ma-0 pa-0', isMobile ? 'full-height' : '']"
-        fluid
-      >
+      <v-container :class="['ma-0 pa-0', isMobile ? 'full-height' : '']" fluid>
         <!-- ===================================================================================== -->
         <!-- White sheet (displays on the overlay - size is based on the contentSize prop) -->
         <!-- ===================================================================================== -->
@@ -124,8 +97,8 @@
                   isMobile
                     ? 'mew-heading-2 ml-3'
                     : isMobile && !back
-                      ? 'mew-heading-2 ml-4'
-                      : 'mew-subtitle'
+                    ? 'mew-heading-2 ml-4'
+                    : 'mew-subtitle'
                 ]"
               >
                 {{ title }}
@@ -149,10 +122,7 @@
         <!-- ===================================================================================== -->
         <!-- Footer -->
         <!-- ===================================================================================== -->
-        <v-row
-          justify="center"
-          class="ma-0 py-8 footer-text"
-        >
+        <v-row justify="center" class="ma-0 py-8 footer-text">
           {{ footer.text }}
           <a
             v-if="footer && footer.linkTitle && footer.link"
