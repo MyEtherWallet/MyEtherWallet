@@ -107,7 +107,6 @@ export default {
   },
   mounted() {
     if (this.online && !this.isOfflineApp) {
-      this.setup();
       if (this.identifier === WALLET_TYPES.WEB3_WALLET) {
         this.web3Listeners();
         if (
@@ -116,6 +115,7 @@ export default {
           this.findAndSetNetwork();
       }
       this.checkNetwork();
+      this.setup();
     }
   },
   beforeDestroy() {
