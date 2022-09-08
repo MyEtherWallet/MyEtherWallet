@@ -206,12 +206,13 @@ export default {
 
 .v6-header {
   text-align: center;
-  background-color: $light-orange-3;
+  background-color: #22a7c0;
+  background-image: linear-gradient(to right, #22a7c0, #06c0a5);
   padding: 8px !important;
-  color: $dark-blue-2 !important;
+  color: $white !important;
 
   a {
-    color: $dark-blue-2 !important;
+    color: $white !important;
     text-decoration: underline;
   }
   div {
