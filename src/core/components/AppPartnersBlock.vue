@@ -1,11 +1,10 @@
 <template>
-  <v-container class="mew-component--partners py-7 py-md-12 mb-6">
-    <v-sheet color="transparent" align="center">
-      <div class="mew-heading-3 text-uppercase textMedium--text mb-1">
-        {{ $t('aboutUs.partners') }}
-      </div>
-    </v-sheet>
-    <v-row class="mt-2 ml-10 px-4" align="center">
+  <v-container class="mew-component--partners px-sm-15 py-15 py-md-12 mb-md-10">
+    <div class="mew-heading-3 text-uppercase textMedium--text mb-7 text-center">
+      {{ $t('aboutUs.partners') }}
+    </div>
+
+    <v-row>
       <v-col
         v-for="(p, key) in partners"
         :key="key"
@@ -13,9 +12,14 @@
         sm="4"
         md="3"
         lg="2"
+        class="text-center"
       >
         <a :href="p.link" target="_blank">
-          <img :src="p.img" style="width: 90%; max-width: 120px" />
+          <img
+            :src="p.img"
+            :height="$vuetify.breakpoint.mdAndUp ? '62' : '50'"
+            alt="Partner"
+          />
         </a>
       </v-col>
     </v-row>
@@ -73,7 +77,7 @@ export default {
         link: 'https://app.1inch.io/'
       },
       {
-        img: require('@/assets/images/partners/buitl-w-rivet-light-bg.svg'),
+        img: require('@/assets/images/partners/rivet.png'),
         link: 'https://rivet.cloud/'
       }
     ]

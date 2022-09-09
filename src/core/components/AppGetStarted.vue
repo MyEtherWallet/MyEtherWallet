@@ -16,7 +16,7 @@
                     : 'https://mewwallet.com'
                 "
                 target="_blank"
-                class="mr-1"
+                class="mr-2"
               >
                 <img
                   src="@/assets/images/icons/button-app-store.svg"
