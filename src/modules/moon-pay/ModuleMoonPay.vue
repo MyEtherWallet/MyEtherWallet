@@ -60,6 +60,7 @@
         :buy-obj="buyObj"
         :simplex-quote="simplexQuote"
         :to-address="toAddress"
+        class="pt-3"
         @close="step = 0"
         @openProviders="openProviders"
         @reset="reset"
@@ -79,14 +80,10 @@ import { isEmpty } from 'lodash';
 import nodes from '@/utils/networks';
 import { SUCCESS, Toast } from '../toast/handler/handlerToast';
 import MoonPayBuyProviderComponent from './components/MoonPayBuyProviderComponent.vue';
-import MewPopup from '@/components/MewPopup/MewPopup';
-import MewButton from '@/components/MewButton/MewButton';
 
 export default {
   name: 'MoonPay',
   components: {
-    MewPopup,
-    MewButton,
     BuyEthComponent,
     SellEthComponent,
     MoonPayBuyProviderComponent
