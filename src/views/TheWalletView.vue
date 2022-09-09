@@ -147,14 +147,17 @@ export default {
     },
     async checkNetwork() {
       if (this.identifier === WALLET_TYPES.WEB3_WALLET) {
-        const chainId = toBN(window.ethereum.chainId).toNumber();
+        const chainId = await window.ethereum.request({
+          method: 'eth_chainId'
+        });
+        const parsedChainId = toBN(chainId).toNumber();
 
         const foundNetwork = Object.values(nodeList).find(item => {
-          if (toBN(chainId).toNumber() === item[0].type.chainID) return item;
+          if (parsedChainId === item[0].type.chainID) return item;
         });
         const matched = !foundNetwork
           ? false
-          : await matchNetwork(chainId, this.identifier);
+          : await matchNetwork(parsedChainId, this.identifier);
         this.setValidNetwork(matched);
       } else {
         this.setValidNetwork(
