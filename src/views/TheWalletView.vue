@@ -59,7 +59,12 @@ export default {
       'isOfflineApp',
       'instance'
     ]),
-    ...mapState('global', ['online', 'gasPriceType', 'baseGasPrice']),
+    ...mapState('global', [
+      'online',
+      'gasPriceType',
+      'baseGasPrice',
+      'validNetwork'
+    ]),
     ...mapState('external', ['coinGeckoTokens']),
     ...mapState('popups', [
       'enkryptWalletPopup',
@@ -89,8 +94,8 @@ export default {
     },
     network() {
       if (this.online && !this.isOfflineApp) {
-        this.setup();
         this.web3.eth.clearSubscriptions();
+        this.setup();
       }
     },
     web3() {
@@ -102,11 +107,15 @@ export default {
   },
   mounted() {
     if (this.online && !this.isOfflineApp) {
-      this.setup();
       if (this.identifier === WALLET_TYPES.WEB3_WALLET) {
         this.web3Listeners();
+        if (
+          this.network.type.chainID !== toBN(window.ethereum.chainId).toNumber()
+        )
+          this.findAndSetNetwork();
       }
       this.checkNetwork();
+      this.setup();
     }
   },
   beforeDestroy() {
@@ -130,16 +139,31 @@ export default {
     ]),
     ...mapActions('external', ['setTokenAndEthBalance', 'setNetworkTokens']),
     setup() {
-      this.processNetworkTokens();
-      this.setTokensAndBalance();
-      this.subscribeToBlockNumber();
+      if (this.validNetwork) {
+        this.processNetworkTokens();
+        this.setTokensAndBalance();
+        this.subscribeToBlockNumber();
+      }
     },
     async checkNetwork() {
-      const matched = await matchNetwork(
-        this.network.type.chainID,
-        this.identifier
-      );
-      if (!matched) this.setValidNetwork(matched);
+      if (this.identifier === WALLET_TYPES.WEB3_WALLET) {
+        const chainId = await window.ethereum.request({
+          method: 'eth_chainId'
+        });
+        const parsedChainId = toBN(chainId).toNumber();
+
+        const foundNetwork = Object.values(nodeList).find(item => {
+          if (parsedChainId === item[0].type.chainID) return item;
+        });
+        const matched = !foundNetwork
+          ? false
+          : await matchNetwork(parsedChainId, this.identifier);
+        this.setValidNetwork(matched);
+      } else {
+        this.setValidNetwork(
+          await matchNetwork(this.network.type.chainID, this.identifier)
+        );
+      }
     },
     processNetworkTokens() {
       const tokenMap = new Map();
@@ -205,11 +229,9 @@ export default {
         window.ethereum &&
         this.instance.identifier === WALLET_TYPES.WEB3_WALLET
       ) {
-        const networkId = await window.ethereum?.request({
-          method: 'net_version'
-        });
+        const chainId = window.ethereum.chainId;
         const foundNetwork = Object.values(nodeList).find(item => {
-          if (toBN(networkId).toNumber() === item[0].type.chainID) return item;
+          if (toBN(chainId).toNumber() === item[0].type.chainID) return item;
         });
         if (window.ethereum.isMetaMask) {
           try {
