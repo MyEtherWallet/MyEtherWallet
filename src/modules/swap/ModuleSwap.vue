@@ -1554,7 +1554,7 @@ export default {
             });
             return;
           }
-          Toast(err.message, {}, ERROR);
+          Toast(err && err.message ? err.message : err, {}, ERROR);
         });
     },
     getTokenBalance(balance, decimals) {
