@@ -73,11 +73,12 @@ import { isEmpty } from 'lodash';
 import handlerAave from '../../handlers/handlerAave.mixin';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { toBase } from '@/core/helpers/unit';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 export default {
   name: 'AaveBorrowOverlay',
   components: { AaveTable, AaveAmountForm, AaveSelectInterest, AaveSummary },
-  mixins: [handlerAave],
+  mixins: [handlerAave, handlerAnalytics],
   data() {
     return {
       step: 0,
@@ -199,6 +200,7 @@ export default {
     handleConfirm() {
       if (this.step === 3) this.step = 4;
       else if (this.step === 4) {
+        this.trackDapp('aaveBorrowEvent');
         const data = {
           user: this.address,
           reserve: this.selectedTokenDetails.underlyingAsset,
@@ -206,7 +208,9 @@ export default {
           interestRateMode: this.apr.type,
           referralCode: '14'
         };
-        this.onBorrow(data);
+        this.onBorrow(data).then(() => {
+          this.trackDapp('aaveBorrowedAssets');
+        });
         this.callClose();
       }
     }

@@ -248,7 +248,6 @@ export default {
           txData
         ]);
         this.sendTxns([approveData, txData], gasLimits);
-        this.trackDapp('depositCollateral');
       } catch (e) {
         throw new Error(e);
       }
@@ -269,7 +268,6 @@ export default {
           ...data
         );
         this.formatTxData(txData);
-        this.trackDapp('borrowAssets');
       } catch (e) {
         throw new Error(e);
       }
@@ -302,7 +300,6 @@ export default {
           data
         ]);
         this.sendTxns([approveData, data], gasLimits);
-        this.trackDapp('repayDebt');
       } catch (e) {
         throw new Error(e);
       }
@@ -326,7 +323,6 @@ export default {
         };
         const callback = [this.resetAprToggle, params];
         this.formatTxData(txData, callback);
-        this.trackDapp('setBorrowRate');
       } catch (e) {
         throw new Error(e);
       }
@@ -349,7 +345,6 @@ export default {
           user
         );
         this.formatTxData(txData);
-        this.trackDapp('withdrawCollateral');
       } catch (e) {
         throw new Error(e);
       }
@@ -400,7 +395,6 @@ export default {
         };
         const callback = [this.resetCollateralToggle, params];
         this.formatTxData(txData, callback);
-        this.trackDapp('setCollateral');
       } catch (e) {
         throw new Error(e);
       }
