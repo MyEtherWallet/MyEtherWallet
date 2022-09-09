@@ -60,7 +60,6 @@
         :buy-obj="buyObj"
         :simplex-quote="simplexQuote"
         :to-address="toAddress"
-        class="pt-3"
         @close="step = 0"
         @openProviders="openProviders"
         @reset="reset"
