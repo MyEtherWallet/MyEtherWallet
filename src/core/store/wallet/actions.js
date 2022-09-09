@@ -96,7 +96,8 @@ const setWeb3Instance = function (
       }
 
       const batchSignCallback = promises => {
-        if (promises?.rejected) reject('User rejected transaction');
+        if (promises && promises.rejected)
+          reject(new Error('User rejected transaction'));
         resolve(promises);
       };
       EventBus.$emit(
