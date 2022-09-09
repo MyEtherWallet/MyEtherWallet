@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "6.6.5",
+  "version": "6.6.5-hotfix.1",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build": "npm run update && vue-cli-service build",
@@ -23,7 +23,7 @@
     "lint:md": "remark . -o",
     "lint:styles": "prettier --write 'src/**/*.{scss,css}' && stylelint 'src/**/*.{scss,css}' --fix",
     "lint:tests": "eslint --fix tests/",
-    "preinstall": "find node_modules -name \".git\" -exec rm -rf {} \\; || true && bash ./scripts/checklockconflicts.sh",
+    "preinstall": "find node_modules -name \".git\" -exec rm -rf {} \\; || true && bash ./scripts/checklockconflicts.sh && npx npm-force-resolutions",
     "prepare": "husky install",
     "start": "npm run update:mainlists && npm run dev",
     "start:history": "npm run update:mainlists && ROUTER_MODE=history npm run dev",
@@ -78,7 +78,7 @@
     "crypto": "1.0.1",
     "ethereum-block-by-date": "1.4.5",
     "ethers": "5.7.0",
-    "graphql": "16.6.0",
+    "graphql": "15.5.3",
     "graphql-tag": "2.12.6",
     "highcharts": "10.2.0",
     "highcharts-vue": "1.4.0",

@@ -13,6 +13,8 @@ module.exports = [
   'https://estimategas.mewapi.io:443/goerli',
   'https://api.ethvm.com:443',
   'wss://apiws.ethvm.com:443',
+  'https://api-2.ethvm.dev:443',
+  'wss://apiws-2.ethvm.dev:443',
   'https://nft.mewapi.io:443',
   'https://qa.mewwallet.dev:443',
   'https://mainnet.mewwallet.dev:443',
@@ -69,5 +71,5 @@ module.exports = [
   'https://api.stakewise.io:443/pool-stats', // stakewise pool
   'https://api.thegraph.com:443/subgraphs/name/kleros/curate', // Kleros Subtags
   'https://api.thegraph.com:443/subgraphs/name/eccentricexit/curate-xdai-ii', // Kleros Subtags
-  'https://ipfs.kleros.io:443', // Kleros Subtags
+  'https://ipfs.kleros.io:443' // Kleros Subtags
 ];

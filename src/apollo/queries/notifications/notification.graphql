@@ -1,12 +1,17 @@
 query getEthTransfersV2($owner: String!, $limit: Int, $nextKey: String) {
-    getEthTransfersV2(owner: $owner, filter: TO, limit: $limit, nextKey: $nextKey) {
-      transfers {
-        transfer {
-          transactionHash
-        }
+  getEthTransfersV2(
+    owner: $owner
+    filter: OUTGOING
+    limit: $limit
+    nextKey: $nextKey
+  ) {
+    transfers {
+      transfer {
+        transactionHash
       }
-      nextKey
     }
+    nextKey
+  }
 }
 
 query getTransactionsByHashes($hashes: [String]!) {
@@ -42,12 +47,12 @@ query getTransactionByHash($hash: String!) {
 }
 
 subscription pendingTransaction($owner: String) {
-    pendingTransaction(owner: $owner) {
-        transactionHash
-        to
-    }
+  pendingTransaction(owner: $owner) {
+    transactionHash
+    to
+  }
 }
 
 subscription transactionEvent($hash: String!) {
-    transactionEvent(hash: $hash)
+  transactionEvent(hash: $hash)
 }

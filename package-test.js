@@ -55,6 +55,7 @@ const EXCEPTIONS = [
   'package-json',
   'codecov',
   'node-polyfill-webpack-plugin',
+  'grahpql',
   // check if fixable after hotfix
   '@ensdomains/ensjs',
   '@ensdomains/ens-contracts',
@@ -70,8 +71,7 @@ const EXCEPTIONS = [
   '@unstoppabledomains/resolution',
   '@walletconnect/client',
   '@walletconnect/qrcode-modal',
-  'chromedriver',
-  'graphql'
+  'chromedriver'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
