@@ -350,7 +350,7 @@ export default {
         return item.img;
       });
       const customTokens = this.customTokens.map(item => {
-        item.decimals = +item.decimals;
+        item.decimals = BigNumber(item.decimals).toNumber();
         item.balance = item.balance.toString().includes('.')
           ? toBN(toBase(item.balance, item.decimals))
           : toBN(item.balance);
