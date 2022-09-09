@@ -15,7 +15,7 @@
         lg="2"
       >
         <a :href="p.link" target="_blank">
-          <img :src="p.img" style="width: 90%; max-width: 120px" />
+          <img v-lazy="p.img" style="width: 90%; max-width: 120px" />
         </a>
       </v-col>
     </v-row>

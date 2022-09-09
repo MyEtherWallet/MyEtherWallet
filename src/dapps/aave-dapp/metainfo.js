@@ -1,6 +1,7 @@
 import { ETH } from '@/utils/networks/types';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
-const layout = () => import(/* webpackChunkName: "dapp" */ './TheAaveLayout');
+const layout = () =>
+  import(/* webpackChunkName: "dapp-aave" */ './TheAaveLayout');
 export default {
   title: 'Aave V2',
   subtitle: 'Earn passive income on your deposits and borrow assets',

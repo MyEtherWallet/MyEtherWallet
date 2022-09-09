@@ -54,6 +54,7 @@ const EXCEPTIONS = [
   '@shapeshiftoss/hdwallet-keepkey-webusb',
   '@ledgerhq/hw-transport-web-ble',
   '@ledgerhq/hw-transport-webusb',
+  'vue-lazyload',
   'codecov', // no fix
   'vue-template-compiler', // no fix
   'package-json' // switched to es

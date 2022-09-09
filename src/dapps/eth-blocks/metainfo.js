@@ -5,7 +5,7 @@ import {
   dateSearchGuard
 } from './configsRoutes';
 const layout = () =>
-  import(/* webpackChunkName: "dapp" */ './TheEthBlocksLayout');
+  import(/* webpackChunkName: "dapp-blocks" */ './TheEthBlocksLayout');
 import ModuleEthBlocksMyBlocks from './modules/ModuleEthBlocksMyBlocks';
 import ModuleEthBlocksMint from './modules/ModuleEthBlocksMint';
 import ModuleEthBlockInfo from './modules/ModuleEthBlockInfo';

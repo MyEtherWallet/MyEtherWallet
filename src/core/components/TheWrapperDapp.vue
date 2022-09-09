@@ -127,10 +127,6 @@
       v-if="activeTab === 2 && externalContents && isValidNetwork"
       name="tabContent3"
     />
-    <slot
-      v-if="activeTab === 3 && externalContents && isValidNetwork"
-      name="tabContent4"
-    />
 
     <router-view
       v-if="

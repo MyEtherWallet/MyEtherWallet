@@ -198,50 +198,12 @@
           </mew-expand-panel>
         </v-sheet>
       </template>
-      <template #tabContent3>
-        <v-sheet
-          max-width="500px"
-          color="transparent"
-          class="px-3 py-8 py-md-13 mx-auto"
-        >
-          <div class="mb-5">
-            <!--
-            ===================================================
-              Claim TITLE: hasEnsTokenBalance
-            ===================================================
-            -->
-            <claim-balance
-              :balance="ensTokens.balance"
-              :claimed="ensTokens.claimed"
-            />
-            <form
-              v-if="!ensTokens.claimed && hasEnsTokenBalance"
-              @submit.prevent="claimTokens"
-            >
-              <module-address-book
-                :label="$t('ens.delegator.addr')"
-                :is-valid-address-func="isValidDelegatorAddress"
-                preselect-curr-wallet-adr
-                @setAddress="setDelegatorAddress"
-              />
-              <mew-button
-                :loading="loading"
-                :disabled="isClaimDisabled"
-                :has-full-width="true"
-                btn-size="xlarge"
-                :title="$t('ens.claim-token-title')"
-                @click.native="claimTokens"
-              />
-            </form>
-          </div>
-        </v-sheet>
-      </template>
       <!--
     =====================================================================================
       Reverse Lookup - Tab 4
     =====================================================================================
     -->
-      <template #tabContent4>
+      <template #tabContent3>
         <v-sheet
           max-width="500px"
           color="transparent"
@@ -331,8 +293,6 @@ import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 import { ENS_MANAGER_ROUTE } from './configsRoutes';
 import normalise from '@/core/helpers/normalise';
-import { isAddress } from '@/core/helpers/addressUtils';
-import { hasClaimed, submitClaim } from './handlers/handlerENSTokenClaim';
 import stripQuery from '@/core/helpers/stripQuery.js';
 
 export default {
@@ -342,7 +302,6 @@ export default {
     ModuleManageDomain: () => import('./modules/ModuleManageDomain'),
     TheWrapperDapp: () => import('@/core/components/TheWrapperDapp'),
     ModuleAddressBook: () => import('@/modules/address-book/ModuleAddressBook'),
-    ClaimBalance: () => import('./components/claim/ClaimBalance'),
     EnsReverseLookup: () => import('./components/reverse/EnsReverseLookup')
   },
   data() {
@@ -382,11 +341,6 @@ export default {
       totalCost: '0',
       totalCostUsd: '0',
       waitingForReg: true,
-      ensTokens: {
-        claimed: false,
-        balance: '0',
-        proof: ''
-      },
       manageDomainOptions: [
         {
           label: this.$t('ens.transfer-domain'),
@@ -429,30 +383,21 @@ export default {
           id: 1
         },
         {
-          name: this.$t('ens.claim-tokens'),
-          route: {
-            name: ENS_MANAGER_ROUTE.CLAIM.NAME,
-            path: ENS_MANAGER_ROUTE.CLAIM.PATH
-          },
-          id: 2
-        },
-        {
           name: this.$t('ENS Reverse Lookup'),
           route: {
             name: ENS_MANAGER_ROUTE.REVERSE.NAME,
             path: ENS_MANAGER_ROUTE.REVERSE.PATH
           },
-          id: 3
+          id: 2
         }
       ],
       /*
       tabs: [
         { name: this.$t('ens.register-domain') },
-        { name: this.$t('ens.manage-domain') },
-        { name: this.$t('ens.claim-tokens') }
+        { name: this.$t('ens.manage-domain') }
       ],
       */
-      myDomains: [],
+      myDomains: []
       /*,
       ensBannerImg: ensBannerImg,
       bannerText: {
@@ -460,7 +405,6 @@ export default {
         subtext: this.$t('ens.dapp-desc')
       }
       */
-      delegatorAddress: ''
     };
   },
   computed: {
@@ -473,28 +417,9 @@ export default {
     ...mapGetters('external', ['fiatValue']),
     ...mapState('global', ['gasPriceType']),
     ...mapState('wallet', ['balance', 'address', 'web3', 'instance']),
-    hasEnsTokenBalance() {
-      if (this.ensTokens.balance) {
-        return toBN(this.ensTokens.balance).gt(toBN(0));
-      }
-      return false;
-    },
     errorMessages() {
       if (this.domainTaken) return this.$t('ens.domain-taken');
       return this.searchError;
-    },
-    delegatorErrors() {
-      if (!isAddress(this.delegatorAddress)) {
-        return 'Invalid address!';
-      }
-      return '';
-    },
-    isClaimDisabled() {
-      return (
-        this.ensTokens.claimed ||
-        this.delegatorErrors !== '' ||
-        this.delegatorAddress === ''
-      );
     },
     rules() {
       return [
@@ -583,21 +508,14 @@ export default {
       this.gasPrice
     );
     this.getDomains();
-    hasClaimed(this.address, this.web3).then(data => {
-      this.ensTokens.claimed = data.claimed;
-      this.ensTokens.balance = data.balance;
-      this.ensTokens.proof = data.proof;
-    });
   },
   methods: {
     detactUrlChangeTab() {
       const currentRoute = this.$route.name;
       if (currentRoute === ENS_MANAGER_ROUTE.MANAGE.NAME) {
         this.activeTab = this.tabs[1].id;
-      } else if (currentRoute === ENS_MANAGER_ROUTE.CLAIM.NAME) {
-        this.activeTab = this.tabs[2].id;
       } else if (currentRoute === ENS_MANAGER_ROUTE.REVERSE.NAME) {
-        this.activeTab = this.tabs[3].id;
+        this.activeTab = this.tabs[2].id;
       } else {
         this.activeTab = this.tabs[0].id;
       }
@@ -610,24 +528,6 @@ export default {
         const { active } = stripQuery(this.$route.query);
         this.activeTab = BigNumber(active).toNumber();
       }
-    },
-    claimTokens() {
-      try {
-        submitClaim(
-          this.ensTokens.balance,
-          this.ensTokens.proof,
-          this.delegatorAddress,
-          this.web3
-        ).catch(this.instance.errorHandler);
-      } catch (e) {
-        this.instance.errorHandler(e);
-      }
-    },
-    setDelegatorAddress(address) {
-      this.delegatorAddress = address;
-    },
-    isValidDelegatorAddress(address) {
-      return isAddress(address);
     },
     buyDomain() {
       this.activeTab = 0;
