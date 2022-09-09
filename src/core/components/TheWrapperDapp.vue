@@ -163,7 +163,7 @@
 </template>
 
 <script>
-import bannerImage from '@/assets/images/backgrounds/bg-dapps-center.png';
+import bannerImage from '@/assets/images/backgrounds/bg-dapps-center.jpg';
 import BlockHeader from '@/core/components/AppBlockHeader';
 import TheDappHeader from '@/core/components/TheDappHeader';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';

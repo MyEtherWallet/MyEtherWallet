@@ -7,7 +7,7 @@
         </v-col>
         <v-col cols="7">
           <v-img
-            src="@/assets/images/backgrounds/bg-spaceman.png"
+            src="@/assets/images/backgrounds/bg-spaceman.jpg"
             max-width="100%"
           />
         </v-col>
