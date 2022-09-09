@@ -55,6 +55,7 @@ const EXCEPTIONS = [
   '@ledgerhq/hw-transport-web-ble',
   '@ledgerhq/hw-transport-webusb',
   'vue-lazyload',
+  'chromedriver',
   'codecov', // no fix
   'vue-template-compiler', // no fix
   'package-json' // switched to es
