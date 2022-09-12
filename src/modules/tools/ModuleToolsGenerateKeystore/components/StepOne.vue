@@ -149,7 +149,7 @@ export default {
     buttonText() {
       return this.downloadedKeystore
         ? 'Next: upload your keystore file'
-        : 'Continues after downloading keystore file';
+        : 'Continue after downloading keystore file';
     }
   },
   mounted() {
