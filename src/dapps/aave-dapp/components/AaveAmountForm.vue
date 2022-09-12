@@ -155,7 +155,7 @@ export default {
     if (this.showToggle) {
       setTimeout(() => {
         this.onToggle(this.group[1]);
-      }, 0);
+      }, 100);
     }
   },
   methods: {
