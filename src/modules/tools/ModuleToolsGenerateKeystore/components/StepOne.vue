@@ -99,7 +99,7 @@
         <mew-button
           :has-full-width="$vuetify.breakpoint.smAndDown"
           btn-size="xlarge"
-          class="d-block ma-2"
+          class="generate-button d-block ma-2"
           :title="buttonText"
           :disabled="!downloadedKeystore"
           @click.native="onContinue(false)"
@@ -149,7 +149,7 @@ export default {
     buttonText() {
       return this.downloadedKeystore
         ? 'Next: upload your keystore file'
-        : 'Continue after downloading keystore file';
+        : 'Continues after downloading keystore file';
     }
   },
   mounted() {
@@ -244,3 +244,9 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.generate-button {
+  white-space: normal;
+}
+</style>
