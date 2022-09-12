@@ -112,7 +112,7 @@ export default {
   },
   mounted() {
     const tokenMap = new Map();
-    this.network.type.tokens.forEach(token => {
+    this.network.type.tokens?.forEach(token => {
       tokenMap.set(token.address.toLowerCase(), token);
     });
     this.setNetworkTokens(tokenMap);
