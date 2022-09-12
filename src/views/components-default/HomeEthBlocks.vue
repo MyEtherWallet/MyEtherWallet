@@ -57,8 +57,8 @@
 </template>
 
 <script>
-import ethBlocksThree from '@/assets/images/icons/eth-blocks-3.png';
-import ethBlocksSix from '@/assets/images/icons/eth-blocks-6.png';
+import ethBlocksThree from '@/assets/images/icons/eth-blocks-3.jpg';
+import ethBlocksSix from '@/assets/images/icons/eth-blocks-6.jpg';
 export default {
   name: 'HomeEthBlocks',
   components: {},
