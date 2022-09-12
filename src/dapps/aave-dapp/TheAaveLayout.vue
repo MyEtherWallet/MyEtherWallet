@@ -513,6 +513,9 @@ export default {
     },
     showBorrowOverlay(newVal) {
       if (!newVal) this.tokenSelected = {};
+    },
+    activeTab() {
+      this.tokenSelected = {};
     }
   },
   mounted() {

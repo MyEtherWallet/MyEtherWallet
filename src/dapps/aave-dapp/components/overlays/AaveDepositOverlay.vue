@@ -182,6 +182,9 @@ export default {
         }
       },
       deep: true
+    },
+    step(val) {
+      if (val === 0) this.selectedToken = {};
     }
   },
   methods: {

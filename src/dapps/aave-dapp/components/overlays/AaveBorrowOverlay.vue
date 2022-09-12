@@ -172,6 +172,13 @@ export default {
       if (newVal && !isEmpty(newVal)) {
         this.handleSelectedBorrow(this.preSelectedToken);
       }
+      if (isEmpty(newVal)) {
+        this.selectedToken = {};
+        this.step = 0;
+      }
+    },
+    step(val) {
+      if (val === 0) this.selectedToken = {};
     }
   },
   methods: {
