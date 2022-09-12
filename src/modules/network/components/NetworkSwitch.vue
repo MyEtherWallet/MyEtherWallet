@@ -114,6 +114,7 @@ import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
 import { debounce } from 'lodash';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import matchNetwork from '@/core/helpers/matchNetwork';
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 
 export default {
   name: 'NetworkSwitch',
@@ -142,7 +143,7 @@ export default {
   computed: {
     ...mapGetters('global', ['network']),
     ...mapState('global', ['validNetwork']),
-    ...mapState('wallet', ['identifier', 'instance']),
+    ...mapState('wallet', ['identifier', 'instance', 'isOfflineApp']),
     /**
      * Property returns sorted network names alphabetically in this order: ETH, main and then test networks
      * @returns {string[]}
@@ -310,29 +311,37 @@ export default {
           return item;
         }
       });
-      try {
-        this.setNetwork({
-          network: found[0],
-          walletType: this.instance?.identifier || ''
-        }).then(() => {
+      this.setNetwork({
+        network: found[0],
+        walletType: this.instance?.identifier || ''
+      })
+        .then(() => {
           if (this.isWallet) {
             this.networkSelected = this.validNetwork
               ? this.network.type.name
               : '';
             this.networkLoading = false;
-            this.setWeb3Instance().then(() => {
-              this.setTokenAndEthBalance();
-            });
-            Toast(`Switched network to: ${found[0].type.name}`, {}, SUCCESS);
+            if (!this.isOffline) {
+              const provider =
+                this.identifier === WALLET_TYPES.WEB3_WALLET
+                  ? this.setWeb3Instance(window.ethereum)
+                  : this.setWeb3Instance();
+              provider.then(() => {
+                this.setTokenAndEthBalance();
+              });
+              Toast(`Switched network to: ${found[0].type.name}`, {}, SUCCESS);
+              this.trackNetworkSwitch(found[0].type.name);
+              this.$emit('newNetwork');
+            }
           }
-          this.trackNetworkSwitch(found[0].type.name);
-          this.$emit('newNetwork');
+        })
+        .catch(e => {
+          this.networkSelected = this.validNetwork
+            ? this.network.type.name
+            : '';
+          this.networkLoading = false;
+          Toast(e, {}, ERROR);
         });
-      } catch (e) {
-        this.networkSelected = this.validNetwork ? this.network.type.name : '';
-        this.networkLoading = false;
-        Toast(`Could not switch network`, {}, ERROR);
-      }
     }, 1000)
   }
 };

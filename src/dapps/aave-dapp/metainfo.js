@@ -3,7 +3,7 @@ import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import layout from './TheAaveLayout';
 export default {
   title: 'Aave V2',
-  subtitle: 'Earn passive income on your deposits and borrow assets',
+  subtitle: 'Earn on your deposits and borrow assets',
   tag: '#DeFi',
   rightIconType: 'mew',
   rightIcon: 'aave',
@@ -11,7 +11,7 @@ export default {
   path: ROUTES_WALLET.AAVE.PATH,
   networks: [ETH],
   layout,
-  release: '07/09/2021', // placeholder
+  release: '09/01/2022',
   meta: {
     noAuth: false
   }

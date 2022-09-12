@@ -219,7 +219,9 @@ export default {
           return {
             rate: formatted.value,
             amount: formattedAmt.value,
-            tooltip: `${formattedAmt.tooltipText} ${this.toTokenSymbol}`
+            tooltip: `${formattedAmt.tooltipText || formattedAmt.value} ${
+              this.toTokenSymbol
+            }`
           };
         });
         if (returnedList) return returnedList;

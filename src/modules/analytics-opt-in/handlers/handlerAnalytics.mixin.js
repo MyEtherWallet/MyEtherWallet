@@ -13,7 +13,9 @@ export default {
       'enkryptLandingPopup',
       'enkryptLandingPopupClosed'
     ]),
+    ...mapState('wallet', ['isOfflineApp']),
     shouldDisplayTrackingPopup() {
+      if (this.isOfflineApp) return false;
       if (!this.enkryptLandingPopup) {
         return this.displayedTrackingPopup;
       }
