@@ -320,18 +320,20 @@
 </template>
 
 <script>
+import { mapGetters, mapState } from 'vuex';
+import BigNumber from 'bignumber.js';
+import ENS from '@ensdomains/ensjs';
+import { fromWei, toBN, toWei } from 'web3-utils';
+
 import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
 import TheWrapperDapp from '@/core/components/TheWrapperDapp';
 import ModuleRegisterDomain from './modules/ModuleRegisterDomain';
 import ModuleManageDomain from './modules/ModuleManageDomain';
 import handlerEnsManager from './handlers/handlerEnsManager';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin.js';
 import ClaimBalance from './components/claim/ClaimBalance';
 import EnsReverseLookup from './components/reverse/EnsReverseLookup';
-import { mapGetters, mapState } from 'vuex';
 import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
-import BigNumber from 'bignumber.js';
-import ENS from '@ensdomains/ensjs';
-import { fromWei, toBN, toWei } from 'web3-utils';
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 import { ENS_MANAGER_ROUTE } from './configsRoutes';
 import normalise from '@/core/helpers/normalise';
@@ -350,6 +352,7 @@ export default {
     ClaimBalance,
     EnsReverseLookup
   },
+  mixins: [handlerAnalytics],
   data() {
     return {
       validNetworks: SUPPORTED_NETWORKS,
