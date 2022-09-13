@@ -569,13 +569,14 @@ export default {
      */
     actualToTokens() {
       if (this.isLoading) return [];
-      const validToTokens = this.toTokens.filter(item => {
+      let validToTokens = this.toTokens.filter(item => {
         if (
           item.contract.toLowerCase() !==
           this.fromTokenType?.contract?.toLowerCase()
         )
           return item;
       });
+      validToTokens = this.formatTokenPrice(validToTokens);
       let filteredTrendingTokens = this.trendingTokens().filter(token => {
         return token.contract !== this.fromTokenType?.contract;
       });
@@ -1293,9 +1294,8 @@ export default {
             item?.contract &&
             item?.contract?.toLowerCase() === value?.contract?.toLowerCase()
           )
-            return item;
+            value = foundToken[0];
         });
-        value = foundToken[0];
       }
       this.toTokenType = value;
       this.resetAddressValues({ clearRefund: false });
