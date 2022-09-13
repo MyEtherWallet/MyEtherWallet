@@ -569,13 +569,14 @@ export default {
      */
     actualToTokens() {
       if (this.isLoading) return [];
-      const validToTokens = this.toTokens.filter(item => {
+      let validToTokens = this.toTokens.filter(item => {
         if (
           item.contract.toLowerCase() !==
           this.fromTokenType?.contract?.toLowerCase()
         )
           return item;
       });
+      validToTokens = this.formatTokenPrice(validToTokens);
       let filteredTrendingTokens = this.trendingTokens().filter(token => {
         return token.contract !== this.fromTokenType?.contract;
       });
@@ -1232,7 +1233,7 @@ export default {
     switchTokens() {
       this.trackSwap('switchTokens');
       const fromToken = this.fromTokenType;
-      const toToken = this.toTokenType;
+      const toToken = this.toTokenType || this.actualToTokens[0];
       const tokenOutValue = this.tokenOutValue;
       this.fromTokenType = {};
       this.toTokenType = {};
