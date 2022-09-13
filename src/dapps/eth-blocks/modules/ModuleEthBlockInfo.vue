@@ -68,7 +68,7 @@
           class="border-container d-none d-md-flex pa-1 mr-md-10 cursor-image"
         >
           <v-img
-            lazy-src="../assets/1.png"
+            lazy-src="../assets/loading-block.svg"
             :src="handlerBlock.img"
             max-width="332"
             contain
@@ -76,7 +76,6 @@
             <template #placeholder>
               <v-row class="fill-height ma-0" align="center" justify="center">
                 <v-progress-circular
-                  v-if="!isReserved"
                   indeterminate
                   color="disabledPrimary"
                 ></v-progress-circular>
