@@ -1149,11 +1149,11 @@ export default {
       return tokens.map(t => {
         t.totalBalance = t.hasOwnProperty('usdBalancef')
           ? this.getFiatValue(t.usdBalancef)
-          : '0.00';
+          : this.getFiatValue('0.00');
         t.tokenBalance = t.hasOwnProperty('balancef') ? t.balancef : '0.00';
         t.price = t.hasOwnProperty('pricef')
           ? this.getFiatValue(t.pricef)
-          : '0.00';
+          : this.getFiatValue('0.00');
         t.name = t.hasOwnProperty('symbol') ? t.symbol : '';
         return t;
       });
@@ -1163,7 +1163,7 @@ export default {
       return tokens.map(t => {
         t.price = t.hasOwnProperty('pricef')
           ? this.getFiatValue(t.pricef)
-          : '0.00';
+          : this.getFiatValue('0.00');
         return t;
       });
     },
