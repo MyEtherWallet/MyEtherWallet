@@ -1294,8 +1294,9 @@ export default {
             item?.contract &&
             item?.contract?.toLowerCase() === value?.contract?.toLowerCase()
           )
-            value = foundToken[0];
+            return item;
         });
+        value = foundToken[0];
       }
       this.toTokenType = value;
       this.resetAddressValues({ clearRefund: false });
