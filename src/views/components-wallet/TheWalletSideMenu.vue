@@ -482,8 +482,9 @@ export default {
       this.onSettings = true;
     },
     closeSettings() {
+      if (this.$router.currentRoute.name === ROUTES_WALLET.SETTINGS.NAME)
+        this.$router.go(-1);
       this.onSettings = false;
-      this.$router.go(-1);
     },
     onLogout() {
       this.showLogoutPopup = false;
