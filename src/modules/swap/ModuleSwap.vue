@@ -819,6 +819,8 @@ export default {
               !this.isFromTokenMain &&
               !this.isFromNonChain
             ? this.errorMsgs.doNotOwnToken
+            : new BigNumber(this.tokenInValue).lt(0)
+            ? this.errorMsgs.amountLessThan0
             : '';
         }
         if (
@@ -829,7 +831,7 @@ export default {
         ) {
           return `Provided amount exceeds valid decimal.`;
         }
-        /*Eth Balance is to low to send a transaction*/
+        /*Eth Balance is too low to send a transaction*/
         if (!this.hasMinEth) {
           return this.errorMsgs.amountEthIsTooLow;
         }
