@@ -13,10 +13,13 @@
     </div>
 
     <div v-else class="d-flex align-center justify-end">
-      <div v-if="!text" class="greenPrimary--text mew-body">
+      <div
+        v-if="!text"
+        class="greenPrimary--text mew-body line-height--initial"
+      >
         Balance: {{ balanceFormatted.value }}
       </div>
-      <div else class="primary--text mew-body">
+      <div else class="primary--text mew-body line-height--initial">
         {{ text }}
       </div>
       <mew-tooltip
