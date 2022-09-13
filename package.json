@@ -44,7 +44,7 @@
     "@coolwallets/wallet": "0.2.0-beta.1",
     "@ensdomains/address-encoder": "0.2.18",
     "@ensdomains/ens-contracts": "0.0.12",
-    "@ensdomains/ensjs": "2.1.0",
+    "@ensdomains/ensjs": "3.0.0-alpha.19",
     "@ethereumjs/common": "2.6.5",
     "@ethereumjs/tx": "3.5.2",
     "@kleros/address-tags-sdk": "0.2.0",
