@@ -142,10 +142,11 @@ export default {
         ? this.$emit('onClick')
         : this.$emit('onClick');
     },
-    // showToast() {
-    //   this.showsToast = true;
-    //   this.setTimer();
-    // },
+    // eslint-disable-next-line vue/no-unused-properties
+    showToast() {
+      this.showsToast = true;
+      this.setTimer();
+    },
     getLinkClasses() {
       if (
         this.toastTypes.warning === this.toastType.toLowerCase() ||
