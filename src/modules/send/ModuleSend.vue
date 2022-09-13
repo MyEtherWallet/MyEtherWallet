@@ -596,13 +596,15 @@ export default {
       this.clear();
       this.debounceAmountError('0');
     },
-    txFeeETH(newVal) {
-      const total = BigNumber(newVal).plus(this.amount);
+    localGasPrice() {
+      const total = BigNumber(this.txFeeETH).plus(this.amount);
       const amt = toBase(this.amount, this.currencyDecimals);
       if (
-        (this.selectedCurrency.contract === MAIN_TOKEN_ADDRESS &&
+        (!isEmpty(this.selectedCurrency) &&
+          this.selectedCurrency.contract === MAIN_TOKEN_ADDRESS &&
           total.gt(this.balanceInETH)) ||
-        (this.selectedCurrency.contract !== MAIN_TOKEN_ADDRESS &&
+        (!isEmpty(this.selectedCurrency) &&
+          this.selectedCurrency.contract !== MAIN_TOKEN_ADDRESS &&
           this.selectedCurrency.balance.lt(amt))
       ) {
         this.setEntireBal();
