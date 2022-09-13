@@ -57,7 +57,10 @@ const EXCEPTIONS = [
   'codecov', // no fix
   'vue-template-compiler', // no fix
   'package-json', // switched to es
-  'chromedriver'
+  'chromedriver',
+  '@ensdomains/ensjs',
+  '@ethereumjs/common',
+  '@ethereumjs/tx'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
