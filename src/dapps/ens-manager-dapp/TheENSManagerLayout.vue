@@ -286,7 +286,7 @@ import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import ENS from '@ensdomains/ensjs';
 import { fromWei, toBN, toWei } from 'web3-utils';
-
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin.js';
 import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
 import handlerEnsManager from './handlers/handlerEnsManager';
 import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
@@ -304,6 +304,7 @@ export default {
     ModuleAddressBook: () => import('@/modules/address-book/ModuleAddressBook'),
     EnsReverseLookup: () => import('./components/reverse/EnsReverseLookup')
   },
+  mixins: [handlerAnalytics],
   data() {
     return {
       validNetworks: SUPPORTED_NETWORKS,
@@ -531,6 +532,7 @@ export default {
     },
     buyDomain() {
       this.activeTab = 0;
+      this.trackDapp('ensBuyDomainTab');
     },
     /**
      * Manage Domain
@@ -564,14 +566,17 @@ export default {
     closeManage() {
       this.onManage = false;
       this.settingIpfs = false;
+      this.trackDapp('closeEnsManageTab');
     },
     transfer(address) {
+      this.trackDapp('ensDomainTransferEvent');
       this.manageDomainHandler
         .transfer(address)
         .then(() => {
           setTimeout(() => {
             this.getDomains();
           }, 15000);
+          this.trackDapp('ensTransferred');
         })
         .catch(err => {
           this.instance.errorHandler(err);
@@ -605,7 +610,10 @@ export default {
     renew(duration) {
       this.manageDomainHandler
         .renew(duration, this.balanceToWei)
-        .then(this.getDomains)
+        .then(() => {
+          this.getDomains;
+          this.trackDapp('ensDomainRenew');
+        })
         .catch(err => {
           this.instance.errorHandler(err);
         });
@@ -635,6 +643,7 @@ export default {
         .uploadFile(file)
         .then(res => {
           this.manageDomainHandler.setIPFSHash(res);
+          this.trackDapp('ensFileUpload');
         })
         .then(resp => {
           this.settingIpfs = false;
@@ -651,6 +660,7 @@ export default {
         .setIPFSHash(hash)
         .then(() => {
           this.settingIpfs = false;
+          this.trackDapp('ensSetIpfs');
         })
         .catch(err => {
           this.instance.errorHandler(err);
@@ -660,6 +670,7 @@ export default {
     async findDomain() {
       try {
         this.nameHandler = await this.ensManager.searchName(this.name);
+        this.trackDapp('findEnsDomain');
       } catch (e) {
         Toast(e, {}, ERROR);
       }
@@ -672,6 +683,7 @@ export default {
       this.name = '';
       this.nameHandler = {};
       this.$router.push({ name: ENS_MANAGER_ROUTE.ENS_MANAGER.NAME });
+      this.trackDapp('closeEnsRegister');
     },
     setName(name) {
       this.searchError = '';
@@ -680,6 +692,7 @@ export default {
       }
       try {
         this.name = normalise(name);
+        this.trackDapp('setEnsDomainName');
       } catch (e) {
         this.searchError = e.message.includes('Failed to validate')
           ? 'Invalid name!'
@@ -688,6 +701,7 @@ export default {
       }
     },
     register(duration) {
+      this.trackDapp('ensDomainRegisterEvent');
       this.nameHandler
         .register(duration, this.balanceToWei)
         .on('transactionHash', () => {
@@ -699,6 +713,7 @@ export default {
             this.getDomains();
           }, 15000);
           this.closeRegister();
+          this.trackDapp('ensDomainRegisterReceipt');
           Toast(`Registration successful!`, {}, SUCCESS);
         })
         .on('error', err => {
@@ -708,6 +723,7 @@ export default {
     },
     commit() {
       let waitingTime;
+      this.trackDapp('ensDomainCommitEvent');
       this.nameHandler
         .createCommitment()
         .on('transactionHash', () => {
@@ -720,6 +736,7 @@ export default {
           this.loadingCommit = true;
           this.committed = false;
           this.waitingForReg = true;
+          this.trackDapp('ensDomainCommittReceipt');
           setTimeout(() => {
             this.committed = true;
             this.waitingForReg = false;

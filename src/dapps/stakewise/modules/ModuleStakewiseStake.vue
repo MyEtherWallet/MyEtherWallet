@@ -1,5 +1,5 @@
 <template>
-  <div class="pt-8 pb-13 px-3 pa-sm-15">
+  <div class="dapps-stakewise-stake pt-8 pb-13 px-3 pa-sm-15">
     <v-row>
       <v-col
         :order="$vuetify.breakpoint.smAndDown ? 'last' : ''"
@@ -196,6 +196,7 @@
 </template>
 
 <script>
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { fromWei } from 'web3-utils';
 import { mapActions, mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
@@ -231,7 +232,7 @@ export default {
     StakewiseRewards: () => import('../components/StakewiseRewards'),
     ButtonBalance: () => import('@/core/components/AppButtonBalance')
   },
-  mixins: [buyMore],
+  mixins: [buyMore, handlerAnalytics],
   data() {
     return {
       iconEth: require('@/assets/images/icons/icon-eth-gray.svg'),
@@ -447,6 +448,7 @@ export default {
       }
     },
     stake() {
+      this.trackDapp('stakewiseStake');
       this.stakeHandler
         .stake()
         .on('transactionHash', hash => {

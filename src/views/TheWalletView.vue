@@ -90,7 +90,7 @@ export default {
       }
     },
     web3() {
-      this.setup();
+      if (this.online && !this.isOfflineApp) this.setup();
     },
     coinGeckoTokens() {
       this.setTokenAndEthBalance();

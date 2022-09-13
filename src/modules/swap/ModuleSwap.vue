@@ -512,9 +512,6 @@ export default {
         ) {
           msg =
             'Provided input is invalid or provider is having issues. Please try again!';
-        } else {
-          msg = '';
-          subError = '';
         }
       }
       return {
@@ -652,6 +649,7 @@ export default {
         ) {
           delete item['tokenBalance'];
           delete item['totalBalance'];
+          item = this.checkMultiChainToken(item);
           arr.push(item);
         }
         return arr;
@@ -966,6 +964,25 @@ export default {
       localContractToToken = {};
       localContractToToken[MAIN_TOKEN_ADDRESS] = this.mainTokenDetails;
       this.setupSwap();
+    },
+    checkMultiChainToken(item) {
+      const multiChainTokens = ['USDT', 'SRM']; // Hardcoding for now
+      const name = item.name;
+      if (name.includes('SOL') || name.includes('OMNI')) {
+        for (let i = 0; i < multiChainTokens.length; i++) {
+          const token = multiChainTokens[i];
+          if (name.includes(token)) {
+            const networks = {
+              OMNI: 'Omni',
+              SOL: 'Solana'
+            };
+            const contractNetwork = networks[name.replace(token, '')];
+            item.subtext = `${token} - ${contractNetwork}`;
+            break;
+          }
+        }
+      }
+      return item;
     },
     /**
      * Handles emitted values from
@@ -1359,13 +1376,15 @@ export default {
               this.selectedProvider = {};
               if (quotes.length) {
                 this.lastSetToken = quotes[0].amount;
-                this.availableQuotes = quotes.map(q => {
-                  q.rate = new BigNumber(q.amount)
-                    .dividedBy(new BigNumber(this.tokenInValue))
-                    .toString();
-                  q.isSelected = false;
-                  return q;
-                });
+                this.availableQuotes = quotes
+                  .map(q => {
+                    q.rate = new BigNumber(q.amount)
+                      .dividedBy(new BigNumber(this.tokenInValue))
+                      .toString();
+                    q.isSelected = false;
+                    return q;
+                  })
+                  .filter(item => item.rate !== '0');
                 this.tokenOutValue = quotes[0].amount;
               }
               this.step = 1;
