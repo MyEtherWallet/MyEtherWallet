@@ -82,22 +82,19 @@
             class="non-bool-input"
           />
         </div>
-        <div class="text-center mt-3">
+        <div class="text-right">
+          <mew-button
+            btn-style="light"
+            title="Clear all"
+            :has-full-width="false"
+            class="mr-4"
+            @click.native="resetDefaults()"
+          />
           <mew-button
             title="Sign Transaction"
             :has-full-width="false"
-            btn-size="xlarge"
             :disabled="!canDeploy"
             @click.native="deploy"
-          />
-        </div>
-        <div class="text-center mt-4">
-          <mew-button
-            title="Clear all"
-            :has-full-width="false"
-            btn-size="small"
-            btn-style="transparent"
-            @click.native="resetDefaults()"
           />
         </div>
       </div>
