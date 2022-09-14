@@ -6,7 +6,7 @@ export default {
   exitDashboard: 'exitDashboard',
   networkSwitch: 'networkSwitch',
   gasSwitch: 'gasSwitch',
-  swap: 'swap',
+  swap: 'swapFlow',
   dapp: 'dapp',
   swapTokens: 'swapTokens',
   swapRates: 'swapRates',

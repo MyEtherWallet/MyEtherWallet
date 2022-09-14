@@ -96,6 +96,7 @@
               :class="[!hasSwap ? 'opacity--30 pointer-event--none' : '']"
               class="px-0"
               :to="{ name: ROUTES_WALLET.SWAP.NAME }"
+              @click="trackToSwap"
             >
               <div class="text-center mx-auto my-2">
                 <img
@@ -454,6 +455,9 @@ export default {
   },
   methods: {
     ...mapActions('wallet', ['removeWallet']),
+    trackToSwap() {
+      this.trackSwap('swapPageView');
+    },
     closeNetworkOverlay() {
       if (this.validNetwork) {
         this.$router.go(-1);

@@ -745,6 +745,7 @@ export default {
     },
     showSuccess(param) {
       if (this.isSwap) {
+        this.trackSwap('successModal');
         this.trackSwap('swapTransactionSuccessfullySent');
       }
       if (isArray(param)) {
