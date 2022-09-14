@@ -139,7 +139,7 @@ export default {
         this.network.type.chainID,
         this.identifier
       );
-      if (!matched) this.setValidNetwork(matched);
+      this.setValidNetwork(matched);
     },
     processNetworkTokens() {
       const tokenMap = new Map();
