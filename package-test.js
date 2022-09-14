@@ -58,7 +58,8 @@ const EXCEPTIONS = [
   'vue-template-compiler', // no fix
   'package-json', // switched to es
   'chromedriver',
-  'uuid'
+  'uuid',
+  '@ethereumjs/tx'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
@@ -114,12 +115,12 @@ const looper = () => {
           if (!isMewComponentBeta) {
             console.error(
               'ERROR: Update ' +
-                _name +
-                ' from ' +
-                ALL_PACKAGES[_name] +
-                ' to ' +
-                latestVersion +
-                '. Released:',
+              _name +
+              ' from ' +
+              ALL_PACKAGES[_name] +
+              ' to ' +
+              latestVersion +
+              '. Released:',
               latestVersionTime
             );
             updatesFound = true;
