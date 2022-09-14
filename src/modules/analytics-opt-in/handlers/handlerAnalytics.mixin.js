@@ -134,6 +134,15 @@ export default {
       if (this.$matomo && action && this.consentToTrack) {
         this.$matomo.trackEvent(categories.swap, action);
       }
+    },
+    /**
+     * Tracks what user selects to swap from
+     * and swap to
+     */
+    trackSwapTokens(action) {
+      if (this.$matomo && action && this.consentToTrack) {
+        this.$matomo.trackEvent(categories.trackSwapTokens, action);
+      }
     }
   }
 };
