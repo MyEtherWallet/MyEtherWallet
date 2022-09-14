@@ -306,6 +306,7 @@ import { TRENDING_LIST } from './handlers/configs/configTrendingTokens';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 import Swapper from './handlers/handlerSwap';
+import handleError from '../confirmation/handlers/errorHandler';
 
 const MIN_GAS_LIMIT = 800000;
 let localContractToToken = {};
@@ -1561,11 +1562,13 @@ export default {
         .catch(err => {
           if (err && err.statusObj?.hashes?.length > 0) {
             err.statusObj.hashes.forEach(item => {
-              Toast(item.message, {}, ERROR);
+              const error = handleError(item);
+              if (error) Toast(error, {}, ERROR);
             });
             return;
           }
-          Toast(err.message, {}, ERROR);
+          const error = handleError(err);
+          if (error) Toast(err.message, {}, ERROR);
         });
     },
     getTokenBalance(balance, decimals) {
