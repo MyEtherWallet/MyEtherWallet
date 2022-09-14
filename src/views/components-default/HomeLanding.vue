@@ -123,6 +123,33 @@
                 })
               "
             />
+            <mew-button
+              class="extension-btns chrome-extension text-transform--none mt-5 mb-2"
+              :has-full-width="true"
+              btn-style="transparent"
+              color-theme="white"
+              btn-size="large"
+              style="border-radius: 40px !important"
+              @click.native="openEnkrypt"
+            >
+              <img class="mr-3 browser-icons" :src="browserLogo" />
+              Get the Enkrypt Extension
+            </mew-button>
+            <mew-button
+              class="extension-btns app-extension"
+              :has-full-width="true"
+              btn-style="transparent"
+              color-theme="white"
+              btn-size="large"
+              style="border-radius: 40px !important"
+              @click.native="openMewWallet"
+            >
+              <img
+                class="mr-2 app-icons"
+                src="@/assets/images/icons/icon-apple-google.svg"
+              />
+              Get the app
+            </mew-button>
           </div>
         </v-card>
       </v-container>
