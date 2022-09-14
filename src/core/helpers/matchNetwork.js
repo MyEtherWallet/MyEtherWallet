@@ -15,7 +15,11 @@ import wallets from '@/modules/access-wallet/common/walletTypes';
  */
 export default async (chainID, walletType, options = { toast: true }) => {
   const { ethereum } = window;
-  if (walletType === wallets.WEB3_WALLET && ethereum.isMetaMask) {
+  if (
+    walletType === wallets.WEB3_WALLET &&
+    ethereum.isMetaMask &&
+    !ethereum.hasOwnProperty('isMewWallet')
+  ) {
     try {
       if (chainID) {
         const data = { chainId: toHex(chainID) };
