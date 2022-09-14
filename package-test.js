@@ -59,7 +59,8 @@ const EXCEPTIONS = [
   'package-json', // switched to es
   'chromedriver',
   'uuid',
-  '@ethereumjs/tx'
+  '@ethereumjs/tx',
+  '@ethereumjs/common'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
