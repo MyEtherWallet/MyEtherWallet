@@ -349,7 +349,7 @@ export default {
         const isHidden = this.hiddenTokens.find(token => {
           return item.contract == token.address;
         });
-        item.decimals = +item.decimals;
+        item.decimals = BigNumber(item.decimals).toNumber();
         item.balance = item.balance.toString().includes('.')
           ? toBN(toBase(item.balance, item.decimals))
           : toBN(item.balance);
