@@ -70,8 +70,8 @@ module.exports = [
   'https://api.thegraph.com:443/subgraphs/name/kleros/curate', // Kleros Subtags
   'https://api.thegraph.com:443/subgraphs/name/eccentricexit/curate-xdai-ii', // Kleros Subtags
   'https://ipfs.kleros.io:443', // Kleros Subtags
-  'https://eth-mainnet.alchemyapi.io:443/v2/GmQ8X1FHf-WDEry0BBSn0RgjVhjHkRmS', // Unstoppable domains
-  'https://polygon-mainnet.g.alchemy.com:443/v2/iG-oHZ2FvjqC9D43O5q9sj62out5ubsy', // Unstoppable domains
-  'https://unstoppabledomains.g.alchemy.com:433/domains', // Unstoppable domains
-  'https://metadata.unstoppabledomains.com:443/metadata/104751640954394079154938957475327412741655089823636638946475418833120028246023' // Unstoppable domains
+  'https://eth-mainnet.alchemyapi.io:443', // Unstoppable domains
+  'https://polygon-mainnet.g.alchemy.com:443', // Unstoppable domains
+  'https://unstoppabledomains.g.alchemy.com:443', // Unstoppable domains
+  'https://metadata.unstoppabledomains.com:443' // Unstoppable domains
 ];
