@@ -95,7 +95,7 @@ import { mapState, mapActions, mapGetters } from 'vuex';
 import NameResolver from '@/modules/name-resolver/index';
 import { toChecksumAddress, isAddress } from '@/core/helpers/addressUtils';
 import { isValidCoinAddress } from '../handlers/handlerMulticoins.js';
-import { isEmpty } from 'lodash';
+import { isEmpty, throttle } from 'lodash';
 import { getAddressInfo } from '@kleros/address-tags-sdk';
 
 const modes = ['add', 'edit'];
@@ -203,21 +203,24 @@ export default {
     },
     checkResolvedExists() {
       return Object.keys(this.addressBookStore).some(key => {
+        const storedAddr = this.addressBookStore[key];
         return (
-          this.addressBookStore[key].address.toLowerCase() ===
+          this.resolvedAddr !== '' &&
+          (storedAddr.address.toLowerCase() ===
             this.resolvedAddr?.toLowerCase() ||
-          this.addressBookStore[key].resolvedAddr.toLowerCase() ===
-            this.resolvedAddr?.toLowerCase()
+            storedAddr.resolvedAddr.toLowerCase() ===
+              this.resolvedAddr?.toLowerCase())
         );
       });
     },
     checkAddressExists() {
       return Object.keys(this.addressBookStore).some(key => {
+        const storedAddr = this.addressBookStore[key];
         return (
-          this.addressBookStore[key].address.toLowerCase() ===
-            this.addressToAdd?.toLowerCase() ||
-          this.addressBookStore[key].address.toLowerCase() ===
-            this.resolvedAddr?.toLowerCase()
+          (storedAddr.resolvedAddr !== '' &&
+            storedAddr.resolvedAddr?.toLowerCase() ===
+              this.addressToAdd?.toLowerCase()) ||
+          storedAddr.address.toLowerCase() === this.addressToAdd?.toLowerCase()
         );
       });
     },
@@ -285,43 +288,44 @@ export default {
       this.resolvedAddr = '';
       this.nametag = '';
     },
-    async resolveAddress() {
+    /**
+     * Resolves address and @returns name
+     */
+    resolveAddress: throttle(async function () {
       if (this.nameResolver) {
         try {
           const resolvedName = await this.nameResolver.resolveAddress(
             this.addressToAdd
           );
           if (resolvedName && !resolvedName.name) {
-            this.nametag =
-              (
-                await getAddressInfo(
-                  this.checksumAddressToAdd,
-                  'https://ipfs.kleros.io'
-                )
-              )?.publicNameTag || '';
+            await getAddressInfo(
+              this.checksumAddressToAdd,
+              'https://ipfs.kleros.io'
+            ).then(data => {
+              this.nametag = data?.publicNameTag || '';
+            });
           }
           this.resolvedAddr = resolvedName.name ? resolvedName.name : '';
+        } catch (e) {
+          this.nametag = '';
+          this.resolvedAddr = '';
+        }
+      }
+    }, 300),
+    /**
+     * Resolves name and @returns address
+     */
+    resolveName: throttle(async function () {
+      if (this.nameResolver) {
+        try {
+          await this.nameResolver.resolveName(this.addressToAdd).then(addr => {
+            this.resolvedAddr = addr;
+          });
         } catch (e) {
           this.resolvedAddr = '';
         }
       }
-    },
-    async resolveName() {
-      if (
-        this.nameResolver &&
-        this.addressToAdd &&
-        this.addressToAdd?.includes?.('.')
-      ) {
-        await this.nameResolver
-          .resolveName(this.addressToAdd)
-          .then(addr => {
-            this.resolvedAddr = addr;
-          })
-          .catch(() => {
-            this.resolvedAddr = '';
-          });
-      }
-    },
+    }, 500),
     setAddress(value) {
       this.addressToAdd = value ? value : '';
     },
