@@ -118,7 +118,7 @@
             <div
               v-if="token.callToAction.length > 0"
               class="error--text font-weight-medium cursor--pointer"
-              @click="token.calltoAction[0].method(token)"
+              @click="() => removeToken(token)"
             >
               Remove
             </div>
@@ -235,13 +235,14 @@ export default {
               title: 'Remove',
               btnStyle: 'transparent',
               colorTheme: 'error',
-              method: token => {
-                this.$emit('removeToken', token);
-              }
+              method: this.removeToken
             }
           ]
         : [];
       return newObj;
+    },
+    removeToken(token) {
+      this.$emit('removeToken', token);
     },
     back() {
       this.closeEdit();
