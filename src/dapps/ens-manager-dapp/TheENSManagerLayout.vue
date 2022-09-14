@@ -648,6 +648,7 @@ export default {
       this.onManage = true;
       this.manageType = type;
       this.manageDomainHandler = this.myDomains[idx];
+      console.log('manageDomainHandler', this.manageDomainHandler);
     },
     getDomains() {
       this.ensManager
@@ -665,6 +666,7 @@ export default {
               : '';
           });
           this.myDomains = res;
+          console.log('domains', this.myDomains);
         })
         .catch(err => {
           Toast(err, {}, ERROR);

@@ -2,7 +2,8 @@ import { getTld, getHostName } from './helpers/helperTld';
 import { decodeCoinAddress } from './helpers/helperMulticoin';
 import BaseRegistrarImplementation from '@ensdomains/ens-contracts/deployments/mainnet/BaseRegistrarImplementation.json';
 import ENSRegistry from '@ensdomains/ens-contracts/deployments/mainnet/ENSRegistry.json';
-import PublicResolver from '@ensdomains/ens-contracts/deployments/mainnet/PublicResolver.json';
+// import PublicResolver from '@ensdomains/ens-contracts/deployments/mainnet/PublicResolver.json';
+import PublicResolver from '@ensdomains/resolver/build/contracts/PublicResolver.json';
 import ETHRegistrarController from '@ensdomains/ens-contracts/deployments/mainnet/ETHRegistrarController.json';
 import multicoins from './handlerMulticoins';
 import textrecords from './handlerTextRecords';
@@ -81,6 +82,7 @@ export default class ENSManagerInterface {
   async setMulticoin(coins) {
     // const isMigrate = await this.migrate();
     // if (isMigrate) return;
+    console.log('publicResolverContract', this.publicResolverContract);
     const coinaddresses = coins.map(item => {
       return this.publicResolverContract.methods
         .setAddr(this.nameHash, item.id, decodeCoinAddress(item))
@@ -260,11 +262,13 @@ export default class ENSManagerInterface {
       PublicResolver.abi,
       this.resolverAddress
     );
+    console.log('resolverContract', this.resolverContract);
 
     this.publicResolverContract = new web3.eth.Contract(
       PublicResolver.abi,
-      PublicResolver.address
+      this.publicResolverAddress
     );
+    console.log('publicResolverContract', this.publicResolverContract);
     this._getMoreInfo();
   }
 
@@ -331,32 +335,47 @@ export default class ENSManagerInterface {
       const supportMultiCoin = await this.resolverContract.methods
         .supportsInterface(registrarInterface.MULTICOIN)
         .call();
+      console.log('supportMultiCoin (_getMulticoins)', supportMultiCoin);
       for (const type in this.multiCoin) this.multiCoin[type].value = '';
       if (supportMultiCoin) {
         this.multicoinSupport = supportMultiCoin;
         const promises = [];
         const coinTypes = Object.keys(this.multiCoin);
+        console.log('coinTypes (_getMulticoins)', coinTypes);
+        console.log('nameInstance (_getMulticoins)', this.nameInstance);
         coinTypes.forEach(type => {
           promises.push(
             this.nameInstance.getAddress(this.multiCoin[type].symbol)
           );
         });
         await Promise.all(promises).then(vals => {
+          console.log('vals (_getMulticoins)', vals);
           vals.forEach((address, idx) => {
+            console.log(`${coinTypes[idx]}: ${address}`);
             if (
               address &&
               address !== '0x0000000000000000000000000000000000000000'
             ) {
-              this.multiCoin[coinTypes[idx]].value = this.multiCoin[
-                coinTypes[idx]
-              ].encode(Buffer.from(address.replace('0x', ''), 'hex'));
+              const formattedAddress = Buffer.from(
+                address.replace('0x', ''),
+                coinTypes[idx] === 'ETH' || coinTypes[idx] === 'ETC'
+                  ? 'hex'
+                  : 'utf-8'
+              );
+              console.log('formattedAddress', formattedAddress);
+              const value =
+                this.multiCoin[coinTypes[idx]].encode(formattedAddress);
+              console.log(`${coinTypes[idx]} Value`, value);
+              this.multiCoin[coinTypes[idx]].value = value;
             }
           });
         });
+        console.log('multiCoin (_getMulticoins)', this.multiCoin);
       } else {
         this.multiCoin.ETH.value = await this.nameInstance.getAddress('ETH');
       }
     } catch (e) {
+      console.log(e);
       this.multiCoin.ETH.value = '0x';
     }
   }

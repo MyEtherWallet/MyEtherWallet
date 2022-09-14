@@ -293,6 +293,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
         DNSRegistrar.abi,
         this.registrarAddress
       );
+      console.log('dnsRegistrarContract', this.dnsRegistrarContract);
       this.dnsClaim = await this.dnsRegistrar.methods
         .claim(this.parsedDomainName)
         .call();
