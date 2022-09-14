@@ -58,7 +58,9 @@ const EXCEPTIONS = [
   'vue-template-compiler', // no fix
   'package-json', // switched to es
   'chromedriver',
-  'uuid'
+  'uuid',
+  '@ethereumjs/common',
+  '@ethereumjs/tx'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
