@@ -1,3 +1,45 @@
+### ui
+
+* * Remove full width on Remove Address button in Settings [#4147](https://github.com/MyEtherWallet/MyEtherWallet/pull/4147)
+
+### devop
+
+* * Add prompt to open app for Ledger device [#4031](https://github.com/MyEtherWallet/MyEtherWallet/pull/4031)
+* * remove mew products button from mobile button\* apply new menu design
+* make menu scrollable
+  [#4125](https://github.com/MyEtherWallet/MyEtherWallet/pull/4125)
+* * added option to remove custom paths [#4138](https://github.com/MyEtherWallet/MyEtherWallet/pull/4138)
+* * Add tracking metrics to Stakewise [#4150](https://github.com/MyEtherWallet/MyEtherWallet/pull/4150)
+* Add tracking metrics to Aave [#4151](https://github.com/MyEtherWallet/MyEtherWallet/pull/4151)
+* * devop add matomo tracking to ens manager [#4152](https://github.com/MyEtherWallet/MyEtherWallet/pull/4152)
+* Changed placeholder text for staked search bar [#4154](https://github.com/MyEtherWallet/MyEtherWallet/pull/4154)
+* * add matomo tracking for stake functions [#4162](https://github.com/MyEtherWallet/MyEtherWallet/pull/4162)
+
+### feat
+
+* * feature unstoppable reverse resolver [#4118](https://github.com/MyEtherWallet/MyEtherWallet/pull/4118)
+
+### fix
+
+* * sentry error maxblock tobn [#3952](https://github.com/MyEtherWallet/MyEtherWallet/pull/3952)
+* * fix enkrypt button links and add mobile enkrypt buttons [#4128](https://github.com/MyEtherWallet/MyEtherWallet/pull/4128)
+* Fix undefined swap tooltips and 0 rate swaps [#4133](https://github.com/MyEtherWallet/MyEtherWallet/pull/4133)
+* Fix default gaslimit not updating when switching tokens on send page [#4140](https://github.com/MyEtherWallet/MyEtherWallet/pull/4140)
+* Fix unable to add custom token and autopopulate token info [#4142](https://github.com/MyEtherWallet/MyEtherWallet/pull/4142)
+* Fix custom token symbol length placeholder [#4143](https://github.com/MyEtherWallet/MyEtherWallet/pull/4143)
+* * Add padding for all resolutions in Stakewise Rewards section [#4146](https://github.com/MyEtherWallet/MyEtherWallet/pull/4146)
+* Fix negative amount when gas limit is too high on send [#4148](https://github.com/MyEtherWallet/MyEtherWallet/pull/4148)
+* Fix addressbook get nickname issue [#4153](https://github.com/MyEtherWallet/MyEtherWallet/pull/4153)
+* * added error catch for nonce [#4155](https://github.com/MyEtherWallet/MyEtherWallet/pull/4155)
+* * clear balance on network change [#4160](https://github.com/MyEtherWallet/MyEtherWallet/pull/4160)
+* Fix offline send transaction 'Generate' button not working [#4163](https://github.com/MyEtherWallet/MyEtherWallet/pull/4163)
+* Update Aave dApp subtitle [#4165](https://github.com/MyEtherWallet/MyEtherWallet/pull/4165)
+* [#4181](https://github.com/MyEtherWallet/MyEtherWallet/pull/4181)
+
+### sentry
+
+* use lodash isNaN instead [#4044](https://github.com/MyEtherWallet/MyEtherWallet/pull/4044)
+
 ### Release v6.6.5
 
 ### devop
