@@ -222,6 +222,7 @@ import {
 
 import stakeHandler from '../handlers/stakewiseStakeHandler';
 import Swapper from '@/modules/swap/handlers/handlerSwap';
+import handleError from '@/modules/confirmation/handlers/errorHandler';
 
 const MIN_GAS_LIMIT = 150000;
 export default {
@@ -471,7 +472,8 @@ export default {
           this.trackDapp('startStake');
         })
         .catch(err => {
-          Toast(err, {}, ERROR);
+          const error = handleError(err);
+          if (error) Toast(err, {}, ERROR);
           this.setAmount(0);
         });
     },

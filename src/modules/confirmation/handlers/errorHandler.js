@@ -3,7 +3,8 @@ const errors = {
   'transaction underpriced':
     'Current network is busy. Please try again with a higher priority.',
   'nonce too low': 'Nonce too low.',
-  "reading 'message'": undefined
+  "reading 'message'": undefined,
+  falsy: undefined
 };
 /**
  * @param {Object | String} err

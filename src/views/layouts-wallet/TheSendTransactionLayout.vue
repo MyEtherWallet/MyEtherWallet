@@ -20,7 +20,7 @@ export default {
     ModuleSend: () => import('@/modules/send/ModuleSend'),
     TheWrapperWallet: () => import('@/core/components/TheWrapperWallet'),
     ModuleTokensValue: () => import('@/modules/balance/ModuleTokensValue'),
-    ModuleTransferHistor: () =>
+    ModuleTransferHistory: () =>
       import('@/modules/transfer-history/ModuleTransferHistory')
   },
   computed: {
