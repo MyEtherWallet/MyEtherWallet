@@ -56,6 +56,9 @@ const EXCEPTIONS = [
   '@ledgerhq/hw-transport-webusb',
   'vue-lazyload',
   'chromedriver',
+  '@ethereumjs/tx',
+  '@ethereumjs/common',
+  '@ensdomains/ensjs',
   'codecov', // no fix
   'vue-template-compiler', // no fix
   'package-json', // switched to es
