@@ -77,7 +77,7 @@
           </div>
           <div class="d-flex flex-column align-start">
             <span class="mew-body font-weight-bold textDark--text"
-              >You can now Buy crypto with low fees</span
+              >You can now buy crypto with low fees</span
             >
             <span
               :class="[
@@ -88,24 +88,15 @@
                   : 'py-2',
                 'mew-body textMedium--text'
               ]"
-              >Enjoy 0.7% fee when you select ‘Bank account’ as payment
-              method.</span
-            >
-            <mew-button
-              title="Buy crypto"
-              btn-size="medium"
-              class="d-md-none d-lg-none d-xl-none"
-              @click.native="buyCryptoNow"
-            />
+              >Enjoy 0.9% fee when you select ‘Bank account’ as payment method.
+              <span
+                class="greenPrimary--text font-weight-bold cursor--pointer"
+                @click="buyCryptoNow"
+                >Buy crypto now.</span
+              >
+            </span>
           </div>
         </div>
-        <!-- Hide this button when screen is smaller -->
-        <mew-button
-          title="Buy crypto now"
-          btn-size="medium"
-          class="d-none d-md-inline-flex d-lg-inline-flex d-xl-inline-flex"
-          @click.native="buyCryptoNow"
-        />
       </v-col>
       <v-col
         v-if="
