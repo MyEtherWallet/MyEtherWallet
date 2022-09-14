@@ -61,7 +61,9 @@ const EXCEPTIONS = [
   'uuid',
   '@ensdomains/ensjs',
   '@ethereumjs/common',
-  '@ethereumjs/tx'
+  '@ethereumjs/tx',
+  '@aave/contract-helpers',
+  '@aave/math-utils'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
