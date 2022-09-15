@@ -66,11 +66,7 @@ const isString = function (input) {
 
 const isHandle = function (input) {
   if (!input || input === '') return false;
-  const atIndex = input.indexOf('@');
-  const parsedInput = normalise(input.substr(atIndex + 1, input.length));
-  if (!isString(parsedInput)) return false;
-
-  return !parsedInput.includes('@');
+  return !(!isString(input) || input.indexOf('@') !== -1 || isUrl(input));
 };
 
 const supportedTxt = [
@@ -105,12 +101,12 @@ const supportedTxt = [
     validate: isString
   },
   {
-    name: 'vnd.twitter',
+    name: 'com.twitter',
     type: 'string',
     validate: isHandle
   },
   {
-    name: 'vnd.github',
+    name: 'com.github',
     type: 'string',
     validate: isHandle
   }
