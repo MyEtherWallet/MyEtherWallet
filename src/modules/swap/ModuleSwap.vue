@@ -1077,7 +1077,7 @@ export default {
       const findToken = this.toTokens.find(
         item => item.symbol.toLowerCase() === to.toLowerCase()
       );
-      this.trackSwapTokens('stayOnEth: ' + to);
+      this.trackSwap('stayOnEth: ' + to);
       this.toTokenType = findToken;
     },
     setupSwap() {
@@ -1230,7 +1230,7 @@ export default {
       return [];
     },
     switchTokens() {
-      this.trackSwapTokens('switchTokens');
+      this.trackSwap('switchTokens');
       const fromToken = this.fromTokenType;
       const toToken = this.toTokenType;
       const tokenOutValue = this.tokenOutValue;
@@ -1281,7 +1281,7 @@ export default {
       this.resetAddressValues({ clearTo: false });
       this.$nextTick(() => {
         if (value && value.name) {
-          this.trackSwapTokens('from: ' + value.name);
+          this.trackSwap('from: ' + value.name);
         }
         this.setTokenInValue(this.tokenInValue);
       });
@@ -1300,7 +1300,7 @@ export default {
       this.toTokenType = value;
       this.resetAddressValues({ clearRefund: false });
       if (value && value.name) {
-        this.trackSwapTokens('to: ' + value.name);
+        this.trackSwap('to: ' + value.name);
       }
       this.setTokenInValue(this.tokenInValue);
     },

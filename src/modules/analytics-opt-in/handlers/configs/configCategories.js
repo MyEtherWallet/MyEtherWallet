@@ -8,7 +8,6 @@ export default {
   gasSwitch: 'gasSwitch',
   swap: 'swap',
   dapp: 'dapp',
-  swapTokens: 'swapTokens',
   swapRates: 'swapRates',
   globalError: 'globalError',
   enkrypt: 'enkrypt',
