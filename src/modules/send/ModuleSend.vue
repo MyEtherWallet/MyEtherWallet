@@ -202,6 +202,8 @@ import {
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 import { fromBase, toBase } from '@/core/helpers/unit';
+import { BN } from 'bn.js';
+
 export default {
   components: {
     ModuleAddressBook,
@@ -265,7 +267,7 @@ export default {
       'getFiatValue'
     ]),
     ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
-    ...mapGetters('custom', ['hasCustom', 'customTokens']),
+    ...mapGetters('custom', ['hasCustom', 'customTokens', 'hiddenTokens']),
     isFromNetworkCurrency() {
       return this.selectedCurrency?.symbol === this.currencyName;
     },
@@ -339,7 +341,21 @@ export default {
      */
     tokens() {
       // no ref copy
-      const tokensList = this.tokensList.slice();
+      const tokensList = this.tokensList.slice().filter(t => {
+        return !t.isHidden;
+      });
+      const customTokens = this.customTokens.reduce((arr, item) => {
+        // Check if token is in hiddenTokens
+        const isHidden = this.hiddenTokens.find(token => {
+          return item.contract == token.address;
+        });
+        item.decimals = BigNumber(item.decimals).toNumber();
+        item.balance = item.balance.toString().includes('.')
+          ? toBN(toBase(item.balance, item.decimals))
+          : toBN(item.balance);
+        if (!isHidden) arr.push(item);
+        return arr;
+      }, []);
       const imgs = tokensList.map(item => {
         item.totalBalance = this.getFiatValue(item.usdBalancef);
         item.tokenBalance = item.balancef;
@@ -348,13 +364,6 @@ export default {
         item.value = item.contract;
         item.name = item.symbol;
         return item.img;
-      });
-      const customTokens = this.customTokens.map(item => {
-        item.decimals = BigNumber(item.decimals).toNumber();
-        item.balance = item.balance.toString().includes('.')
-          ? toBN(toBase(item.balance, item.decimals))
-          : toBN(item.balance);
-        return item;
       });
       BigNumber(this.balanceInETH).lte(0)
         ? tokensList.unshift({
@@ -378,7 +387,7 @@ export default {
         },
         ...tokensList
       ];
-      if (this.hasCustom) {
+      if (customTokens.length > 0) {
         return returnedArray.concat([
           {
             header: 'Custom Tokens'
@@ -574,6 +583,9 @@ export default {
           this.gasLimit = this.defaultGasLimit;
         }
         this.data = '0x';
+        if (!isEmpty(newVal)) {
+          this.localGasPriceWatcher(this.localGasPrice);
+        }
       },
       immediate: true,
       deep: true
@@ -596,17 +608,8 @@ export default {
       this.clear();
       this.debounceAmountError('0');
     },
-    txFeeETH(newVal) {
-      const total = BigNumber(newVal).plus(this.amount);
-      const amt = toBase(this.amount, this.currencyDecimals);
-      if (
-        (this.selectedCurrency.contract === MAIN_TOKEN_ADDRESS &&
-          total.gt(this.balanceInETH)) ||
-        (this.selectedCurrency.contract !== MAIN_TOKEN_ADDRESS &&
-          this.selectedCurrency.balance.lt(amt))
-      ) {
-        this.setEntireBal();
-      }
+    localGasPrice(newVal) {
+      if (!isEmpty(this.selectedCurrency)) this.localGasPriceWatcher(newVal);
     }
   },
   mounted() {
@@ -630,6 +633,25 @@ export default {
     }, 500);
   },
   methods: {
+    localGasPriceWatcher(newVal) {
+      const total = BigNumber(newVal).plus(this.amount);
+      const amt = toBase(this.amount, this.selectedCurrency?.decimals);
+      const balance = this.selectedCurrency?.balance;
+      if (!BN.isBN(balance))
+        this.selectedCurrency.balance = balance.toString().includes('.')
+          ? toBNSafe(toBase(balance, this.selectedCurrency.decimals))
+          : toBNSafe(balance);
+      if (
+        (this.selectedCurrency &&
+          this.selectedCurrency.contract === MAIN_TOKEN_ADDRESS &&
+          total.gt(this.balanceInETH)) ||
+        (this.selectedCurrency &&
+          this.selectedCurrency.contract !== MAIN_TOKEN_ADDRESS &&
+          this.selectedCurrency.balance.lt(amt))
+      ) {
+        this.setEntireBal();
+      }
+    },
     verifyHexFormat() {
       this.$refs.dataInput._data.inputValue = this.data;
       if (!this.data || isEmpty(this.data)) {
