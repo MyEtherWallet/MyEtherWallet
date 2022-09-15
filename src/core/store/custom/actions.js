@@ -66,7 +66,7 @@ const updateCustomTokenBalances = function ({ dispatch, getters, rootState }) {
         .call()
         .then(res => {
           newToken.balancef = _getTokenBalance(res, item.decimals).value;
-          newToken.balance = _getTokenBalance(newToken.balancef).value;
+          newToken.balance = res;
           dispatch('setCustomToken', newToken);
         })
         .catch(e => Toast(e.message, {}, ERROR));
