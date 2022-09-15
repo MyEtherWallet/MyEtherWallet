@@ -3,7 +3,7 @@ import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import layout from './TheAaveLayout';
 export default {
   title: 'Aave V2',
-  subtitle: 'Earn passive income on your deposits and borrow assets',
+  subtitle: 'Earn on your deposits and borrow assets',
   tag: '#DeFi',
   rightIconType: 'mew',
   rightIcon: 'aave',
