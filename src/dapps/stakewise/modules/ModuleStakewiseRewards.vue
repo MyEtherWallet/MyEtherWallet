@@ -1,5 +1,5 @@
 <template>
-  <div class="pt-8 pb-13 px-3 pa-sm-15">
+  <div class="dapps-stakewise-rewards pt-8 pb-13 px-3 pa-sm-15">
     <v-row>
       <v-col
         :order="$vuetify.breakpoint.smAndDown ? 'last' : ''"
@@ -7,7 +7,7 @@
         md="8"
         :class="$vuetify.breakpoint.smAndDown ? 'my-10' : 'pr-7'"
       >
-        <mew-sheet class="pa-md-15">
+        <mew-sheet class="pa-15">
           <div class="mew-heading-2 textDark--text mb-8">Compound Rewards</div>
 
           <!-- ======================================================================================= -->
@@ -174,6 +174,7 @@
 </template>
 
 <script>
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import StakewiseApr from '../components/StakewiseApr';
 import StakewiseStaking from '../components/StakewiseStaking';
 import StakewiseRewards from '../components/StakewiseRewards';
@@ -211,6 +212,7 @@ export default {
     StakewiseRewards,
     ButtonBalance
   },
+  mixins: [handlerAnalytics],
   data() {
     return {
       iconStakewise: require('@/dapps/stakewise/assets/icon-stakewise-red.svg'),
@@ -476,6 +478,7 @@ export default {
       }
     },
     async showConfirm() {
+      this.trackDapp('stakewiseRewardsShowConfirm');
       try {
         this.loading = true;
         await this.getTrade(this.hasReth, this.hasSeth, 'reth');
@@ -512,6 +515,7 @@ export default {
         this.swapper
           .executeTrade(this.currentTrade, this.confirmInfo)
           .then(res => {
+            this.trackDapp('compoundRewards');
             this.swapNotificationFormatter(res, currentTradeCopy);
           })
           .then(() => {

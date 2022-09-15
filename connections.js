@@ -13,6 +13,8 @@ module.exports = [
   'https://estimategas.mewapi.io:443/goerli',
   'https://api.ethvm.com:443',
   'wss://apiws.ethvm.com:443',
+  'https://api-v2.ethvm.dev:443',
+  'wss://apiws-v2.ethvm.dev:443',
   'https://nft.mewapi.io:443',
   'https://qa.mewwallet.dev:443',
   'https://mainnet.mewwallet.dev:443',
@@ -70,4 +72,8 @@ module.exports = [
   'https://api.thegraph.com:443/subgraphs/name/kleros/curate', // Kleros Subtags
   'https://api.thegraph.com:443/subgraphs/name/eccentricexit/curate-xdai-ii', // Kleros Subtags
   'https://ipfs.kleros.io:443', // Kleros Subtags
+  'https://eth-mainnet.alchemyapi.io:443', // Unstoppable domains
+  'https://polygon-mainnet.g.alchemy.com:443', // Unstoppable domains
+  'https://unstoppabledomains.g.alchemy.com:443', // Unstoppable domains
+  'https://metadata.unstoppabledomains.com:443' // Unstoppable domains
 ];

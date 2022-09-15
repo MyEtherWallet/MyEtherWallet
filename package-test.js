@@ -2,7 +2,7 @@
 // to date. If dependencies are too outdated, exit with an error, failing `npm
 // run update:packages` and thus eventually the entire build.
 
-const package = require('./package.json');
+const parsedPackage = require('./package.json');
 const packageJson = require('package-json');
 const SAFE_TIME = 1000 * 1 * 60 * 60 * 24 * 7; //7days
 // webpack has a major update
@@ -48,37 +48,31 @@ const EXCEPTIONS = [
   'vue-i18n',
   'vue',
   '@vue/cli-plugin-e2e-nightwatch',
-  'geckodriver',
   // breaking
   '@shapeshiftoss/hdwallet-core',
   '@shapeshiftoss/hdwallet-keepkey-webusb',
   'package-json',
   'codecov',
   'node-polyfill-webpack-plugin',
-  // check if fixable after hotfix
-  '@ensdomains/ensjs',
-  '@ensdomains/ens-contracts',
-  'protobufjs',
-  '@formatjs/intl-numberformat',
-  'babel-jest',
-  'qrcode',
-  'vue-template-compiler',
-  '@ledgerhq/hw-transport-web-ble',
-  '@ledgerhq/hw-app-eth',
-  '@ledgerhq/hw-transport-webusb',
   '@lokalise/node-api',
   '@unstoppabledomains/resolution',
   '@walletconnect/client',
   '@walletconnect/qrcode-modal',
   'chromedriver',
-  'graphql'
+  '@ethereumjs/common',
+  '@ethereumjs/tx',
+  'graphql',
+  'vue-template-compiler',
+  '@aave/contract-helpers',
+  '@aave/math-utils',
+  'node-sass'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
 };
 const ALL_PACKAGES = Object.assign(
-  package.dependencies,
-  package.devDependencies
+  parsedPackage.dependencies,
+  parsedPackage.devDependencies
 );
 const names = Object.keys(ALL_PACKAGES);
 let updatesFound = false;

@@ -27,6 +27,7 @@
             <div class="position--relative">
               <mew-input
                 v-model="amount"
+                class="SendOfflineAmountInput"
                 label="Amount"
                 placeholder="0"
                 :error-messages="amountErrors"
@@ -40,12 +41,17 @@
         =====================================================================================
         -->
           <v-col cols="12" class="pt-4 pb-2">
-            <module-address-book ref="addressInput" @setAddress="setAddress" />
+            <module-address-book
+              ref="addressInput"
+              class="SendOfflineAddressBook"
+              @setAddress="setAddress"
+            />
           </v-col>
 
           <v-col cols="12">
             <mew-input
               v-model="localNonce"
+              class="SendOfflineNonceInput"
               :label="$t('sendTx.nonce')"
               placeholder="0"
               type="number"
@@ -58,13 +64,14 @@
               label="Data"
               placeholder="0x..."
               :error-messages="dataErrors"
-              class="mb-8"
+              class="mb-8 SendOFflineDataInput"
               :disabled="disableData"
             />
           </v-col>
           <v-col cols="12">
             <mew-input
               v-model="gasLimit"
+              class="SendOfflineGasLimitInput"
               :label="$t('common.gas.limit')"
               :error-messages="gasLimitErrors"
               type="number"
@@ -73,6 +80,7 @@
           <v-col cols="12">
             <mew-input
               v-model="gasPrice"
+              class="SendOfflineGasPriceInput"
               label="Gas Price (in wei)"
               :error-messages="gasPriceErrors"
               type="number"
@@ -84,23 +92,25 @@
           <div class="text-center">
             <mew-button
               title="Generate Transaction"
+              class="SendOfflineGenerateTransactionButton"
               :has-full-width="false"
               btn-size="xlarge"
               :disabled="isDisabledNextBtn"
               @click.native="generateTx"
             />
           </div>
-          <div class="text-center mt-4">
-            <div class="d-flex justify-center">
+          <div class="text-center">
+            <div class="d-flex flex-column justify-center">
               <input
                 ref="upload"
+                class="SendOfflineUploadInput"
                 type="file"
-                style="display: none"
+                style="opacity: 0"
                 accept="json"
                 @change="upload"
               />
               <mew-button
-                class="mt-2 display--block mx-auto"
+                class="mt-2 display--block mx-auto SendOfflineUploadJsonButton"
                 title="Upload JSON file"
                 btn-size="small"
                 btn-style="transparent"
@@ -127,6 +137,7 @@
       <div v-if="signedTransaction" style="width: 100%" class="text-center">
         <mew-text-area
           ref="signedTxInput"
+          class="SendOfflineSignedTxResultInput"
           style="width: 100%"
           label="Signed Transaction"
           readonly
