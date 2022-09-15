@@ -5,6 +5,7 @@
       :title="successTitle"
       :close="resetSuccess"
       :close-only="true"
+      :has-close-button="hasCloseButton"
       width="480"
       @close="resetSuccess"
     >
@@ -111,6 +112,10 @@ export default {
     showSuccessSwap: {
       type: Boolean,
       default: false
+    },
+    hasCloseButton: {
+      type: Boolean,
+      default: true
     }
   },
   computed: {
