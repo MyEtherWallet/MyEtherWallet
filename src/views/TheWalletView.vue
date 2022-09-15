@@ -214,10 +214,15 @@ export default {
         if (window.ethereum.isMetaMask) {
           try {
             if (foundNetwork) {
-              await this.setNetwork({
+              const switched = await this.setNetwork({
                 network: foundNetwork[0],
                 walletType: this.instance.identifier
               });
+              console.log('switched', switched);
+              if (!switched) {
+                this.setValidNetwork(false);
+                return;
+              }
               this.setValidNetwork(true);
               await this.setTokenAndEthBalance();
               this.trackNetworkSwitch(foundNetwork[0].type.name);
