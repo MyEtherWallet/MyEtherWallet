@@ -13,6 +13,8 @@ module.exports = [
   'https://estimategas.mewapi.io:443/goerli',
   'https://api.ethvm.com:443',
   'wss://apiws.ethvm.com:443',
+  'https://api-v2.ethvm.dev:443',
+  'wss://apiws-v2.ethvm.dev:443',
   'https://nft.mewapi.io:443',
   'https://qa.mewwallet.dev:443',
   'https://mainnet.mewwallet.dev:443',
