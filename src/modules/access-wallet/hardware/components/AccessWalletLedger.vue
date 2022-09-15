@@ -72,10 +72,12 @@
 </template>
 <script>
 import AccessWalletDerivationPath from './AccessWalletDerivationPath.vue';
+import MewSelect from '@/components/MewSelect/MewSelect';
 
 export default {
   name: 'AccessWalletLedger',
   components: {
+    MewSelect,
     AccessWalletDerivationPath
   },
   props: {
