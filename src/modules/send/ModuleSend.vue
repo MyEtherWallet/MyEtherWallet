@@ -184,7 +184,7 @@
 </template>
 
 <script>
-import { fromWei, isHexStrict, toBN } from 'web3-utils';
+import { fromWei, isHexStrict } from 'web3-utils';
 import { debounce, isEmpty, isNumber } from 'lodash';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
@@ -202,7 +202,6 @@ import {
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 import { fromBase, toBase } from '@/core/helpers/unit';
-import { BN } from 'bn.js';
 
 export default {
   components: {
@@ -350,9 +349,6 @@ export default {
           return item.contract == token.address;
         });
         item.decimals = BigNumber(item.decimals).toNumber();
-        item.balance = item.balance.toString().includes('.')
-          ? toBN(toBase(item.balance, item.decimals))
-          : toBN(item.balance);
         if (!isHidden) arr.push(item);
         return arr;
       }, []);
@@ -583,9 +579,6 @@ export default {
           this.gasLimit = this.defaultGasLimit;
         }
         this.data = '0x';
-        if (!isEmpty(newVal)) {
-          this.localGasPriceWatcher(this.localGasPrice);
-        }
       },
       immediate: true,
       deep: true
@@ -608,7 +601,7 @@ export default {
       this.clear();
       this.debounceAmountError('0');
     },
-    localGasPrice(newVal) {
+    txFeeETH(newVal) {
       if (!isEmpty(this.selectedCurrency)) this.localGasPriceWatcher(newVal);
     }
   },
@@ -636,18 +629,16 @@ export default {
     localGasPriceWatcher(newVal) {
       const total = BigNumber(newVal).plus(this.amount);
       const amt = toBase(this.amount, this.selectedCurrency?.decimals);
-      const balance = this.selectedCurrency?.balance;
-      if (!BN.isBN(balance))
-        this.selectedCurrency.balance = balance.toString().includes('.')
-          ? toBNSafe(toBase(balance, this.selectedCurrency.decimals))
-          : toBNSafe(balance);
+      const balance = toBNSafe(this.selectedCurrency.balance);
+
       if (
-        (this.selectedCurrency &&
+        (this.selectedMax &&
+          this.selectedCurrency &&
           this.selectedCurrency.contract === MAIN_TOKEN_ADDRESS &&
           total.gt(this.balanceInETH)) ||
         (this.selectedCurrency &&
           this.selectedCurrency.contract !== MAIN_TOKEN_ADDRESS &&
-          this.selectedCurrency.balance.lt(amt))
+          balance.lt(amt))
       ) {
         this.setEntireBal();
       }

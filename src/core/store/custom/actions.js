@@ -1,4 +1,5 @@
 import BigNumber from 'bignumber.js';
+import { fromBase } from '@/core/helpers/unit';
 import {
   formatFloatingPointValue,
   formatIntegerValue
@@ -46,7 +47,7 @@ const updateCustomTokenBalances = function ({ dispatch, getters, rootState }) {
   const _getTokenBalance = (balance, decimals) => {
     let n = new BigNumber(balance);
     if (decimals) {
-      n = n.div(new BigNumber(10).pow(decimals));
+      n = fromBase(balance, decimals);
       n = formatFloatingPointValue(n);
     } else {
       n = formatIntegerValue(n);
@@ -66,7 +67,7 @@ const updateCustomTokenBalances = function ({ dispatch, getters, rootState }) {
         .call()
         .then(res => {
           newToken.balancef = _getTokenBalance(res, item.decimals).value;
-          newToken.balance = _getTokenBalance(newToken.balancef).value;
+          newToken.balance = res;
           dispatch('setCustomToken', newToken);
         })
         .catch(e => Toast(e.message, {}, ERROR));
