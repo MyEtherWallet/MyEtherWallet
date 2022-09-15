@@ -42,9 +42,6 @@ export default {
         link: 'https://shiftcrypto.ch/?ref=mew'
       },
       {
-        img: require('@/assets/images/partners/secalot.png')
-      },
-      {
         img: require('@/assets/images/partners/bity.png'),
         link: 'https://bity.com/af/jshkb37v'
       },
