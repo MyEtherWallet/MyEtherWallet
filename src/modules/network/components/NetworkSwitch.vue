@@ -284,6 +284,8 @@ export default {
     ...mapActions('wallet', ['setWeb3Instance']),
     ...mapActions('global', ['setNetwork']),
     ...mapActions('external', ['setTokenAndEthBalance']),
+    ...mapState('wallet', ['instance']),
+    ...mapState('global', ['validNetwork']),
     /**
      * Method checks whether symbol or name has searchInput substring
      * @returns {boolean}
