@@ -6,7 +6,7 @@ const gasPrice = 15729840604;
 const gasLimit = 38000;
 const address = '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D';
 const signedTx =
-  '0xf85f80648252089400450992bc72ab99ae55bccdce68e160412fdac0808026a02ded23817f70cae1b6b6a024d68e165e4fff9dafe8945bc07ba61f9bd87a3557a005f2aa88e4286ae112d283086e6329083cef52b2d924b73a1b3f64dd0d1c85f6';
+  '0xf86e058503a99251dc847d2c097094decaf9cd2367cdbb726e904cd6397edfcae6068d880de0b6b3a76400008025a0079785305b1fda847ea60c5c435b417e30214b580d4395c7c4326cf923e8a1fda044653cae077a15c206ec891167b4ccbea71a364fbe32b549045ebccfa6411713';
 module.exports = {
   '@tags': 'offline',
   before: function (browser) {
@@ -54,9 +54,10 @@ module.exports = {
       'disabled'
     );
     browser.click(css, '.SendOfflineGenerateTransactionButton');
-    browser.waitForElementVisible('#input-248');
-    browser.getValue('#input-248', result => {
-      this.assert.equal(result.value, signedTx);
-    });
+    browser.waitForElementVisible(css, '.SendOfflineSignedTxResultInput');
+    browser.assert.valueEquals(
+      '.SendOfflineSignedTxResultInput * textarea',
+      signedTx
+    );
   }
 };

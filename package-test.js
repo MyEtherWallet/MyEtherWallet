@@ -62,7 +62,8 @@ const EXCEPTIONS = [
   '@ethereumjs/common',
   '@ethereumjs/tx',
   '@aave/contract-helpers',
-  '@aave/math-utils'
+  '@aave/math-utils',
+  'node-sass'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
