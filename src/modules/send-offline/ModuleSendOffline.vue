@@ -41,7 +41,11 @@
         =====================================================================================
         -->
           <v-col cols="12" class="pt-4 pb-2">
-            <module-address-book ref="addressInput" @setAddress="setAddress" />
+            <module-address-book
+              ref="addressInput"
+              class="SendOfflineAddressBook"
+              @setAddress="setAddress"
+            />
           </v-col>
 
           <v-col cols="12">
@@ -95,13 +99,13 @@
               @click.native="generateTx"
             />
           </div>
-          <div class="text-center mt-4">
-            <div class="d-flex justify-center">
+          <div class="text-center">
+            <div class="d-flex flex-column justify-center">
               <input
                 ref="upload"
                 class="SendOfflineUploadInput"
                 type="file"
-                style="display: none"
+                style="opacity: 0"
                 accept="json"
                 @change="upload"
               />
@@ -133,6 +137,7 @@
       <div v-if="signedTransaction" style="width: 100%" class="text-center">
         <mew-text-area
           ref="signedTxInput"
+          class="SendOfflineSignedTxResultInput"
           style="width: 100%"
           label="Signed Transaction"
           readonly

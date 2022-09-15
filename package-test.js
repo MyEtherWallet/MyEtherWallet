@@ -55,7 +55,14 @@ const EXCEPTIONS = [
   '@ledgerhq/hw-transport-webusb',
   'codecov', // no fix
   'vue-template-compiler', // no fix
-  'package-json' // switched to es
+  'package-json', // switched to es
+  'chromedriver',
+  'uuid',
+  '@ensdomains/ensjs',
+  '@ethereumjs/common',
+  '@ethereumjs/tx',
+  '@aave/contract-helpers',
+  '@aave/math-utils'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
