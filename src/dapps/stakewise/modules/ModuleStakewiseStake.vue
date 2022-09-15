@@ -320,7 +320,9 @@ export default {
       }
 
       if (this.estimateGasError) {
-        return 'Issue with gas estimation. Please check if you have enough balance!';
+        return !this.hasEnoughBalanceToStake
+          ? 'Issue with gas estimation. Please check if you have enough balance!'
+          : '';
       }
       if (BigNumber(this.stakeAmount).lt(0)) {
         return 'Value cannot be negative';
