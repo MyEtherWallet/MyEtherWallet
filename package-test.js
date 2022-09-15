@@ -48,7 +48,6 @@ const EXCEPTIONS = [
   'vue-i18n',
   'vue',
   '@vue/cli-plugin-e2e-nightwatch',
-  'geckodriver',
   // breaking
   '@shapeshiftoss/hdwallet-core',
   '@shapeshiftoss/hdwallet-keepkey-webusb',
@@ -63,8 +62,10 @@ const EXCEPTIONS = [
   '@ethereumjs/common',
   '@ethereumjs/tx',
   'graphql',
-  'node-sass',
-  'vue-template-compiler'
+  'vue-template-compiler',
+  '@aave/contract-helpers',
+  '@aave/math-utils',
+  'node-sass'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
