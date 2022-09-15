@@ -8,7 +8,19 @@ const hasCustom = function (state, _, rootState, rootGetters) {
   return tokens.length > 0;
 };
 
+const hiddenTokens = function (state, _, rootState, rootGetters) {
+  const network = rootGetters['global/network'];
+  return state.hiddenTokens[network.type.name] || [];
+};
+
+const hasHidden = function (state, _, rootState, rootGetters) {
+  const tokens = rootGetters['custom/hiddenTokens'];
+  return tokens.length > 0;
+};
+
 export default {
   customTokens,
-  hasCustom
+  hasCustom,
+  hiddenTokens,
+  hasHidden
 };

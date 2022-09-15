@@ -14,9 +14,12 @@
 * devop add matomo tracking to ens manager [#4152](https://github.com/MyEtherWallet/MyEtherWallet/pull/4152)
 * Changed placeholder text for staked search bar [#4154](https://github.com/MyEtherWallet/MyEtherWallet/pull/4154)
 * add matomo tracking for stake functions [#4162](https://github.com/MyEtherWallet/MyEtherWallet/pull/4162)
+* release fixes and cleanup [#4187](https://github.com/MyEtherWallet/MyEtherWallet/pull/4187)
+* offline test and build [#4196](https://github.com/MyEtherWallet/MyEtherWallet/pull/4196)
 
 ### feat
 
+* add hide tokens feature [#3872](https://github.com/MyEtherWallet/MyEtherWallet/pull/3872)
 * feature unstoppable reverse resolver [#4118](https://github.com/MyEtherWallet/MyEtherWallet/pull/4118)
 
 ### fix
