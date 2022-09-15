@@ -1,9 +1,4 @@
 import Ledger from '@ledgerhq/hw-app-eth';
-import getDeviceInfo from '@ledgerhq/live-common/lib/hw/getDeviceInfo';
-import openApp from '@ledgerhq/live-common/lib/hw/openApp';
-import getAppAndVersion from '@ledgerhq/live-common/lib/hw/getAppAndVersion';
-import { DeviceOnDashboardExpected } from '@ledgerhq/errors';
-import { appNames } from './config';
 import { byContractAddressAndChainId } from '@ledgerhq/hw-app-eth/erc20';
 import { Transaction, FeeMarketEIP1559Transaction } from '@ethereumjs/tx';
 import webUsbTransport from '@ledgerhq/hw-transport-webusb';
@@ -45,16 +40,15 @@ class ledgerWallet {
       }
     };
   }
-  async init(basePath, bluetooth, network) {
+  async init(basePath, bluetooth) {
     this.basePath = basePath ? basePath : this.supportedPaths[0].path;
     this.isHardened = this.basePath.toString().split('/').length - 1 === 2;
     this.transport = bluetooth
       ? await getLedgerXTransport()
       : await getLedgerTransport();
 
-    await connectToApp(this.transport, network.value).then(async () => {
-      this.ledger = new Ledger(this.transport);
-    });
+    this.ledger = new Ledger(this.transport);
+
     if (!this.isHardened) {
       const rootPub = await getRootPubKey(this.ledger, this.basePath);
       this.hdKey = new HDKey();
@@ -180,9 +174,9 @@ class ledgerWallet {
     return this.supportedPaths;
   }
 }
-const createWallet = async (basePath, bluetooth = false, network) => {
+const createWallet = async (basePath, bluetooth = false) => {
   const _ledgerWallet = new ledgerWallet();
-  await _ledgerWallet.init(basePath, bluetooth, network);
+  await _ledgerWallet.init(basePath, bluetooth);
   return _ledgerWallet;
 };
 createWallet.errorHandler = errorHandler;
@@ -234,32 +228,6 @@ const getRootPubKey = async (_ledger, _path) => {
     publicKey: pubObj.publicKey,
     chainCode: pubObj.chainCode
   };
-};
-
-const connectToApp = async (transport, network) => {
-  return getDeviceInfo(transport)
-    .then(() =>
-      openApp(transport, appNames[network])
-        .then(() => true)
-        .catch(() => {
-          throw new Error(
-            `Please make sure you have ${appNames[network]} App installed on your Ledger`
-          );
-        })
-    )
-    .catch(e => {
-      if (e instanceof DeviceOnDashboardExpected) {
-        return getAppAndVersion(transport).then(appInfo => {
-          if (appInfo.name !== appNames[network]) {
-            throw new Error(
-              `Please make sure you have ${appNames[network]} app opened.`
-            );
-          }
-          return true;
-        });
-      }
-      throw e;
-    });
 };
 
 export default createWallet;

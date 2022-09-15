@@ -70,7 +70,11 @@ export default {
     },
     show() {
       let metamask = false;
-      if (window.ethereum) metamask = window.ethereum.isMetaMask;
+      if (window.ethereum)
+        metamask =
+          window.ethereum.isMetaMask &&
+          !window.ethereum.hasOwnProperty('isMewWallet') &&
+          !window.ethereum.hasOwnProperty('isTrust');
       return this.identifier !== WALLET_TYPES.WEB3_WALLET || metamask;
     }
   },

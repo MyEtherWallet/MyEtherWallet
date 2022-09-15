@@ -19,6 +19,14 @@ const deleteAll = function ({ rootGetters, commit }) {
   commit('DELETE_ALL_TOKENS', { rootGetters });
 };
 
+const setHiddenToken = function ({ rootGetters, commit }, token) {
+  commit('SET_HIDDEN_TOKEN', { token, rootGetters });
+};
+
+const deleteHiddenToken = function ({ rootGetters, commit }, token) {
+  commit('DELETE_HIDDEN_TOKEN', { token, rootGetters });
+};
+
 const setAddressBook = function ({ commit }, addressBook) {
   commit('SET_ADDRESS_BOOK', addressBook);
 };
@@ -74,5 +82,7 @@ export default {
   addCustomPath,
   deleteCustomPath,
   deleteAllCustomPaths,
-  updateCustomTokenBalances
+  updateCustomTokenBalances,
+  setHiddenToken,
+  deleteHiddenToken
 };
