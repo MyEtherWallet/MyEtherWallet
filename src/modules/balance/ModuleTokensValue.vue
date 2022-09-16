@@ -56,9 +56,11 @@
 import { mapGetters, mapState } from 'vuex';
 import AppModal from '@/core/components/AppModal';
 import ModuleTokens from '@/modules/balance/ModuleTokens';
+import MewTokenContainer from '@/components/MewTokenContainer/MewTokenContainer';
 export default {
   name: 'ModuleTokensValue',
   components: {
+    MewTokenContainer,
     AppModal,
     ModuleTokens
   },
