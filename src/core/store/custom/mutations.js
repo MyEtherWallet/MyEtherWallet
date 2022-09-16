@@ -36,12 +36,54 @@ const DELETE_CUSTOM_TOKEN = function (state, { token, rootGetters }) {
           return item;
         }
       });
+      // Check if token is in hiddenTokens
+      const hiddenTokens = rootGetters['custom/hiddenTokens'];
+      if (found && hiddenTokens.length > 0) {
+        const newHiddenTokens = hiddenTokens.filter(item => {
+          return found.address !== item.address;
+        });
+        Vue.set(state.hiddenTokens, network.type.name, newHiddenTokens);
+      }
       if (!found) {
         return currentTokens;
       }
     }
   );
   Vue.set(state.tokens, network.type.name, currentCustomTokens);
+};
+
+const SET_HIDDEN_TOKEN = function (state, { token, rootGetters }) {
+  const network = rootGetters['global/network'];
+  let hiddenTokensByNetwork = state.hiddenTokens[network.type.name];
+  if (!state.hiddenTokens[network.type.name]) {
+    hiddenTokensByNetwork = [];
+  }
+  const found = hiddenTokensByNetwork.findIndex(
+    t => t.address.toLowerCase() === token.address.toLowerCase()
+  );
+  if (found !== -1) {
+    hiddenTokensByNetwork[found] = token;
+  } else {
+    hiddenTokensByNetwork.unshift(token);
+  }
+  Vue.set(state.hiddenTokens, network.type.name, hiddenTokensByNetwork);
+};
+
+const DELETE_HIDDEN_TOKEN = function (state, { token, rootGetters }) {
+  const network = rootGetters['global/network'];
+  const currentHiddenTokens = state.hiddenTokens[network.type.name].filter(
+    currentTokens => {
+      const found = token.find(item => {
+        if (item.address === currentTokens.address) {
+          return item;
+        }
+      });
+      if (!found) {
+        return currentTokens;
+      }
+    }
+  );
+  Vue.set(state.hiddenTokens, network.type.name, currentHiddenTokens);
 };
 
 const DELETE_ALL_TOKENS = function (state, { rootGetters }) {
@@ -75,5 +117,7 @@ export default {
   SET_ADDRESS_BOOK,
   ADD_CUSTOM_PATH,
   DELETE_CUSTOM_PATH,
-  DELETE_ALL_CUSTOM_PATHS
+  DELETE_ALL_CUSTOM_PATHS,
+  SET_HIDDEN_TOKEN,
+  DELETE_HIDDEN_TOKEN
 };
