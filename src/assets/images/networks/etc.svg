@@ -1,8 +1,16 @@
-<svg width="16" height="24" viewBox="0 0 16 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M7.99609 0V8.87185L15.4947 12.2225L7.99609 0Z" fill="#328332" fill-opacity="0.6"/>
-<path d="M7.99761 0L0.498047 12.2225L7.99761 8.87185V0Z" fill="#328332" fill-opacity="0.4"/>
-<path d="M7.99609 17.9718V24.0001L15.4997 13.6189L7.99609 17.9718Z" fill="#328332" fill-opacity="0.6"/>
-<path d="M7.99761 24.0001V17.9708L0.498047 13.6189L7.99761 24.0001Z" fill="#328332" fill-opacity="0.4"/>
-<path d="M7.99609 16.5765L15.4947 12.2226L7.99609 8.8739V16.5765Z" fill="#328332"/>
-<path d="M0.498047 12.2226L7.99761 16.5765V8.8739L0.498047 12.2226Z" fill="#328332" fill-opacity="0.6"/>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 23.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 300 300" style="enable-background:new 0 0 300 300;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#328332;fill-opacity:0.6;}
+	.st1{fill:#328332;fill-opacity:0.4;}
+	.st2{fill:#328332;}
+</style>
+<path class="st0" d="M150,23.9v93.3l78.8,35.2L150,23.9z"/>
+<path class="st1" d="M150,23.9L71.2,152.3l78.8-35.2V23.9z"/>
+<path class="st0" d="M150,212.8v63.4L228.8,167L150,212.8z"/>
+<path class="st1" d="M150,276.1v-63.4L71.2,167L150,276.1z"/>
+<path class="st2" d="M150,198.1l78.8-45.8L150,117.1V198.1z"/>
+<path class="st0" d="M71.2,152.3l78.8,45.8v-81L71.2,152.3z"/>
 </svg>
