@@ -27,7 +27,7 @@
       :src="img || ethTokenPlaceholder"
       :alt="name"
       loading="lazy"
-    >
+    />
 
     <!-- ===================================================================================== -->
     <!-- Img Placeholder -->
@@ -36,7 +36,7 @@
       v-if="!loading && !img"
       :class="[
         'd-flex align-center justify-center full-height textLight--text text-uppercase font-weight-medium',
-        getFontClass,
+        getFontClass
       ]"
     >
       {{ getPlaceholderText }}
