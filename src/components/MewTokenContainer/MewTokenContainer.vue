@@ -27,7 +27,7 @@
       :src="img || ethTokenPlaceholder"
       :alt="name"
       loading="lazy"
-    >
+    />
 
     <!-- ===================================================================================== -->
     <!-- Img Placeholder -->
@@ -36,7 +36,7 @@
       v-if="!loading && !img"
       :class="[
         'd-flex align-center justify-center full-height textLight--text text-uppercase font-weight-medium',
-        getFontClass,
+        getFontClass
       ]"
     >
       {{ getPlaceholderText }}
@@ -55,7 +55,7 @@ export default {
      */
     loading: {
       type: Boolean,
-      default: false,
+      default: false
     },
     /**
      * Accepts small, medium or large sizes.
@@ -81,7 +81,7 @@ export default {
     img: {
       type: [String, Array],
       default: ''
-    },
+    }
   },
   data() {
     return {
@@ -134,8 +134,8 @@ export default {
       }
 
       return this.size;
-    },
-  },
+    }
+  }
 };
 </script>
 
