@@ -28,7 +28,8 @@ const AUDIT_EXCEPTIONS = [
   'terser',
   'protobufjs',
   'lodash',
-  'elliptic'
+  'elliptic',
+  'parse-url'
 ];
 const execute = (command, callback) => {
   exec(
