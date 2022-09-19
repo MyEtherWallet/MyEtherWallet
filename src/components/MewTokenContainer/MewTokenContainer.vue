@@ -4,6 +4,7 @@
   <!-- ===================================================================================== -->
   <div
     class="mew-token-container d-flex align-center justify-center"
+    :class="tokenBorder ? 'token-border' : ''"
     :style="{ height: `${getSize}`, width: `${getSize}` }"
   >
     <!-- ===================================================================================== -->
@@ -26,7 +27,7 @@
       :src="img || ethTokenPlaceholder"
       :alt="name"
       loading="lazy"
-    />
+    >
 
     <!-- ===================================================================================== -->
     <!-- Img Placeholder -->
@@ -35,7 +36,7 @@
       v-if="!loading && !img"
       :class="[
         'd-flex align-center justify-center full-height textLight--text text-uppercase font-weight-medium',
-        getFontClass
+        getFontClass,
       ]"
     >
       {{ getPlaceholderText }}
@@ -54,7 +55,7 @@ export default {
      */
     loading: {
       type: Boolean,
-      default: false
+      default: false,
     },
     /**
      * Accepts small, medium or large sizes.
@@ -65,7 +66,7 @@ export default {
     },
     // borderSize: {
     //   type: String,
-    //   default: ''
+    //   default: '',
     // },
     /**
      * Token name. Used for placeholder if there is no icon img.
@@ -80,7 +81,7 @@ export default {
     img: {
       type: [String, Array],
       default: ''
-    }
+    },
   },
   data() {
     return {
@@ -117,7 +118,7 @@ export default {
     },
     /**
      * @returns size in pxs.
-     * returns small as default.
+     * returns large as default.
      */
     getSize() {
       if (this.size.toLowerCase() === this.sizeOptions.small) {
@@ -132,9 +133,9 @@ export default {
         return '52px';
       }
 
-      return '24px';
-    }
-  }
+      return this.size;
+    },
+  },
 };
 </script>
 
@@ -147,6 +148,10 @@ export default {
   background-color: var(--v-white-base);
   border-radius: 50%;
   box-shadow: inset 0px 0px 2px rgba(0, 0, 0, 0.3);
+
+  &.token-border {
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.6);
+  }
 
   .token-skeleton {
     .v-skeleton-loader__avatar {
