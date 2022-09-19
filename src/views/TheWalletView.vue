@@ -139,7 +139,7 @@ export default {
         this.network.type.chainID,
         this.identifier
       );
-      if (!matched) this.setValidNetwork(matched);
+      this.setValidNetwork(matched);
     },
     processNetworkTokens() {
       const tokenMap = new Map();
@@ -206,10 +206,10 @@ export default {
         this.instance.identifier === WALLET_TYPES.WEB3_WALLET
       ) {
         const networkId = await window.ethereum?.request({
-          method: 'net_version'
+          method: 'eth_chainId'
         });
         const foundNetwork = Object.values(nodeList).find(item => {
-          if (toBN(networkId).toNumber() === item[0].type.chainID) return item;
+          if (toBN(networkId).eq(toBN(item[0].type.chainID))) return item;
         });
         if (window.ethereum.isMetaMask) {
           try {
