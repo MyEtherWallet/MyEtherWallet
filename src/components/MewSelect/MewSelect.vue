@@ -226,7 +226,7 @@
   </v-select>
 </template>
 <script>
-import MewTokenContainer from '@/components/MewTokenContainer/MewTokenContainer.vue';
+import MewTokenContainer from '@/components/MewTokenContainer/MewTokenContainer';
 import get from 'lodash/get';
 
 export default {

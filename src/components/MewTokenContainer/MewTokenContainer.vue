@@ -133,7 +133,7 @@ export default {
         return '52px';
       }
 
-      return this.size;
+      return '52px';
     }
   }
 };
