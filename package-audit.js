@@ -25,7 +25,10 @@ const AUDIT_EXCEPTIONS = [
   'engine.io',
   'parse-path',
   '@openzeppelin/contracts',
-  'terser'
+  'terser',
+  'protobufjs',
+  'lodash',
+  'elliptic'
 ];
 const execute = (command, callback) => {
   exec(
@@ -55,4 +58,5 @@ execute('npm audit --json', json => {
     }
   }
   if (!auditPass) process.exit(1);
+  console.log('AUDIT complete');
 });

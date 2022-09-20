@@ -104,6 +104,7 @@ import {
 } from '@/core/helpers/numberFormatHelper';
 import { getCurrency } from '@/modules/settings/components/currencyList';
 import { buyContracts } from './tokenList';
+import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 
 export default {
   name: 'ModuleBuyEth',
@@ -403,10 +404,23 @@ export default {
   watch: {
     selectedCurrency: {
       handler: function (newVal, oldVal) {
+        const supportedCoins = {
+          ETH: 'ETH',
+          BNB: 'BNB',
+          MATIC: 'MATIC'
+        };
+        if (
+          newVal.contract.toLowerCase() === MAIN_TOKEN_ADDRESS &&
+          !supportedCoins[newVal.symbol]
+        ) {
+          this.selectedCurrency = oldVal;
+          return;
+        }
+
         if (!isEqual(newVal, oldVal)) {
           this.fetchCurrencyData();
         }
-        this.$emit('selectedCurrency', newVal);
+        this.$emit('selectedCurrency', this.selectedCurrency);
       },
       deep: true
     },
@@ -476,7 +490,7 @@ export default {
         BNB: 'BSC',
         MATIC: 'MATIC'
       };
-      const nodeType = !supportedNodes[this.selectedCurrency.symbol]
+      const nodeType = !supportedNodes[this.selectedCurrency?.symbol]
         ? 'ETH'
         : supportedNodes[this.selectedCurrency.symbol];
       const node = nodeList[nodeType];

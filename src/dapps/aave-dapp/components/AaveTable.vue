@@ -7,7 +7,11 @@
       =====================================================================================
       -->
       <v-col v-if="hasSearch" cols="12" sm="6">
-        <mew-search placeholder="Search Token Symbol" :value="searchInput" />
+        <mew-search
+          placeholder="Search Token Symbol"
+          :value="searchInput"
+          @input="setSearchInput"
+        />
       </v-col>
       <!--
       =====================================================================================
@@ -18,7 +22,7 @@
         <v-btn-toggle
           v-model="toggleType"
           mandatory
-          active-class="textDark white--text alig-end"
+          active-class="textDark white--text"
         >
           <v-btn small>All</v-btn>
           <v-btn small>Stable</v-btn>
@@ -34,7 +38,8 @@
           :has-color="false"
           :table-headers="header"
           :table-data="listData"
-          :loading="isLoading"
+          no-data-text="You currently don't have any tokens."
+          :loading="isLoadingData"
         />
       </v-col>
     </v-row>
@@ -43,20 +48,28 @@
 
 <script>
 import {
-  roundNumber,
-  roundPercentage,
+  AAVE_TABLE_TITLE,
+  INTEREST_TYPES,
+  AAVE_TABLE_BUTTON,
   AAVE_TABLE_HEADER
 } from '@/dapps/aave-dapp/handlers/helpers';
 import BigNumber from 'bignumber.js';
 import { mapGetters } from 'vuex';
+import {
+  formatFloatingPointValue,
+  formatPercentageValue
+} from '@/core/helpers/numberFormatHelper';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
+import handlerAave from '../handlers/handlerAave.mixin';
+import { EventBus } from '@/core/plugins/eventBus';
 
 export default {
   name: 'AaveTable',
+  mixins: [handlerAave],
   props: {
-    tableHeader: {
+    title: {
       type: String,
-      default: AAVE_TABLE_HEADER.DEPOSIT
+      default: AAVE_TABLE_TITLE.deposit
     },
     hasSearch: {
       type: Boolean,
@@ -65,198 +78,34 @@ export default {
     hasToggle: {
       type: Boolean,
       default: true
-    },
-    handler: {
-      type: [Object, null],
-      validator: item => typeof item === 'object' || null,
-      default: () => {}
     }
   },
   data() {
     return {
       searchInput: '',
-      toggleType: 0,
-      btnDeposit: {
-        title: 'Deposit',
-        btnStyle: 'background',
-        colorTheme: 'greenPrimary',
-        method: this.onDepositClick,
-        disabled: false
-      },
-      btnSwap: {
-        title: 'Swap',
-        btnStyle: 'outline',
-        colorTheme: 'greenPrimary',
-        method: this.onSwapClick
-      },
-      btnBorrow: {
-        title: 'Borrow',
-        btnStyle: 'background',
-        colorTheme: 'greenPrimary',
-        method: this.onBorrowClick
-      },
-      btnWithdraw: {
-        title: 'Withdraw',
-        btnStyle: 'outline',
-        colorTheme: 'greenPrimary',
-        method: this.onWithdrawClick
-      },
-      btnRepay: {
-        title: 'Repay',
-        btnStyle: 'transparent',
-        colorTheme: 'greenPrimary',
-        method: this.onRepayClick
-      },
-      tableDepositHeader: [
-        {
-          text: 'Token',
-          value: 'token',
-          sortable: true,
-          width: '15%'
-        },
-        {
-          text: 'Available',
-          value: 'available',
-          sortable: true
-        },
-        {
-          text: 'Deposited',
-          value: 'deposited',
-          sortable: true
-        },
-        {
-          text: 'APR',
-          value: 'apr',
-          sortable: false,
-          width: '14%'
-        },
-        {
-          text: '',
-          value: 'callToAction',
-          sortable: false,
-          width: '32%'
-        }
-      ],
-      tableBorrowHeader: [
-        {
-          text: 'Token',
-          value: 'token',
-          sortable: false,
-          width: '15%'
-        },
-        {
-          text: 'Available',
-          value: 'available',
-          sortable: true
-        },
-        {
-          text: 'Stable APR',
-          value: 'stableApr',
-          sortable: false,
-          width: '15%'
-        },
-        {
-          text: 'Variable APR',
-          value: 'variableApr',
-          sortable: false,
-          width: '15%'
-        },
-        {
-          text: '',
-          value: 'callToAction',
-          sortable: false,
-          width: '32%'
-        }
-      ],
-      tableBalanceDepositHeader: [
-        {
-          text: 'Token',
-          value: 'token',
-          sortable: false,
-          filterable: false
-        },
-        {
-          text: 'Deposited',
-          value: 'balance',
-          sortable: false,
-          filterable: false
-        },
-        {
-          text: 'Use as collateral',
-          value: 'toggle',
-          sortable: false,
-          filterable: false
-        },
-        {
-          text: '',
-          value: 'callToAction',
-          sortable: false,
-          filterable: false,
-          containsLink: true,
-          width: '32%'
-        }
-      ],
-      tableBalanceBorrowHeader: [
-        {
-          text: 'Token',
-          value: 'token',
-          sortable: false,
-          filterable: false
-        },
-        {
-          text: 'Borrowed',
-          value: 'balance',
-          sortable: false,
-          filterable: false
-        },
-        {
-          text: 'APR',
-          value: 'apr',
-          sortable: false,
-          filterable: false,
-          containsLink: true
-        },
-        {
-          text: 'APR Type',
-          value: 'toggle',
-          sortable: false,
-          filterable: false
-        },
-        {
-          text: '',
-          value: 'callToAction',
-          sortable: false,
-          filterable: false,
-          containsLink: true,
-          width: '32%'
-        }
-      ]
+      toggleType: 0
     };
   },
   computed: {
-    ...mapGetters('global', ['network']),
+    ...mapGetters('global', ['network', 'getFiatValue']),
     ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
+    userReservesData() {
+      return this.userSummary?.userReservesData || [];
+    },
     header() {
-      switch (this.tableHeader) {
-        case AAVE_TABLE_HEADER.DEPOSIT:
-          return this.tableDepositHeader;
-        case AAVE_TABLE_HEADER.BORROW:
-          return this.tableBorrowHeader;
-        case AAVE_TABLE_HEADER.BALANCE_DEPOSIT:
-          return this.tableBalanceDepositHeader;
+      switch (this.title) {
+        case AAVE_TABLE_TITLE.deposit:
+          return AAVE_TABLE_HEADER.deposit;
+        case AAVE_TABLE_TITLE.borrow:
+          return AAVE_TABLE_HEADER.borrow;
+        case AAVE_TABLE_TITLE.balance_deposit:
+          return AAVE_TABLE_HEADER.balanceDeposit;
         default:
-          return this.tableBalanceBorrowHeader;
+          return AAVE_TABLE_HEADER.balanceBorrow;
       }
     },
-    /**
-     * Returns true if the data has not been loaded yet
-     */
-    isLoading() {
-      return this.handler.isLoading;
-    },
-
     stableCoins() {
-      if (!this.isLoading) {
+      if (!this.isLoadingData) {
         const stableCoins = ['TUSD', 'DAI', 'USDT', 'USDC', 'sUSD'];
         const reserves = this.list?.filter(item => {
           if (stableCoins.includes(item.symbol)) return item;
@@ -267,23 +116,24 @@ export default {
     },
 
     list() {
-      if (!this.isLoading) {
-        if (
-          this.tableHeader === AAVE_TABLE_HEADER.DEPOSIT ||
-          this.tableHeader === AAVE_TABLE_HEADER.BORROW
-        ) {
-          return this.handler.reservesData;
-        }
-        if (this.tableHeader === AAVE_TABLE_HEADER.BALANCE_BORROW) {
-          return this.handler.userSummary.reservesData.filter(item =>
-            new BigNumber(item.currentBorrows).gt(0)
-          );
-        }
-        return this.handler.userSummary.reservesData.filter(item => {
-          return new BigNumber(item.principalATokenBalance).gt(0);
-        });
+      if (
+        this.title === AAVE_TABLE_TITLE.deposit ||
+        this.title === AAVE_TABLE_TITLE.borrow
+      ) {
+        return this.reservesData;
       }
-      return undefined;
+      if (this.title === AAVE_TABLE_TITLE.balance_borrow) {
+        return this.userReservesData.filter(item =>
+          new BigNumber(item.totalBorrows).gt(0)
+        );
+      }
+      if (this.title === AAVE_TABLE_TITLE.balance_deposit) {
+        return this.userReservesData.filter(item =>
+          new BigNumber(item.scaledATokenBalance).gt(0)
+        );
+      }
+
+      return {};
     },
 
     /**
@@ -291,14 +141,14 @@ export default {
      * Filters through search requests
      */
     listData() {
-      if (!this.isLoading) {
+      if (!this.isLoadingData) {
         let list = this.toggleType ? this.stableCoins : this.list;
-        const userReserves = this.handler.userSummary.reservesData;
-        switch (this.tableHeader) {
+        const userReserves = this.userReservesData;
+        switch (this.title) {
           /**
            * Case: Aave Deposits Table used in Overlay
            */
-          case AAVE_TABLE_HEADER.DEPOSIT:
+          case AAVE_TABLE_TITLE.deposit:
             list = list.map(item => {
               /* Get How much user has already deposited */
               const userDeposited = userReserves.find(uItem => {
@@ -306,112 +156,150 @@ export default {
                   return uItem;
                 }
               });
-
               /* Get User Balance for the item */
-              const userBalance =
+              const findBalance =
                 item.symbol === 'ETH'
                   ? this.balanceInETH
                   : this.tokensList.find(balance => {
-                      return item.symbol === balance.symbol;
+                      if (item.symbol === balance.symbol) return balance;
                     });
-              /* If !balance or balance = 0, disable deposit button */
-              const depositButton = Object.assign({}, this.btnDeposit);
-              depositButton['disabled'] = userBalance
-                ? BigNumber(userBalance).lte(0)
-                : true;
+              const userBalance = findBalance ? findBalance.balancef : 0;
+              const depositObj = Object.assign({}, AAVE_TABLE_BUTTON.deposit);
+              depositObj.disabled = BigNumber(userBalance).lte(0);
+
+              AAVE_TABLE_BUTTON.swap.method = this.onSwapClick;
               return {
+                price: item.price,
                 token: item.symbol,
-                available: userBalance ? roundNumber(userBalance) : '0',
-                deposited: userDeposited
-                  ? roundNumber(userDeposited.currentUnderlyingBalance)
+                available: userBalance
+                  ? formatFloatingPointValue(userBalance).value
                   : '0',
-                apr: roundPercentage(item.liquidityRate),
+                deposited: userDeposited
+                  ? formatFloatingPointValue(userDeposited.underlyingBalance)
+                      .value
+                  : '0',
+                apy: this.getDepositAPY(item.liquidityRate),
                 tokenImg: `${item.icon}`,
                 address: item.aToken.id,
-                callToAction: [depositButton, this.btnSwap]
+                callToAction: [depositObj, AAVE_TABLE_BUTTON.swap]
               };
             });
             break;
           /**
            * Case: Aave Borrow Table used in Overlay
            */
-          case AAVE_TABLE_HEADER.BORROW:
-            list = list.map(item => {
-              return {
-                token: item.symbol,
-                available: roundNumber(item.availableLiquidity),
-                stableApr: item.stableBorrowRateEnabled
-                  ? roundPercentage(
-                      new BigNumber(item.stableBorrowRate)
-                        .multipliedBy(100)
-                        .toString()
-                    )
-                  : '--',
-                variableApr: roundPercentage(
-                  new BigNumber(item.variableBorrowRate)
-                    .multipliedBy(100)
-                    .toString()
-                ),
-
-                tokenImg: `${item.icon}`,
-                address: item.aToken.id,
-                callToAction: [this.btnBorrow]
-              };
-            });
+          case AAVE_TABLE_TITLE.borrow:
+            list = list
+              .filter(item => {
+                return item.variableBorrowAPY > 0;
+              })
+              .map(item => {
+                const available = formatFloatingPointValue(
+                  this.userBorrowPower(item)
+                ).value;
+                return {
+                  token: item.symbol,
+                  available: available, // need to double check this
+                  stableApy: item.stableBorrowRateEnabled
+                    ? formatPercentageValue(
+                        new BigNumber(item.stableBorrowAPY).multipliedBy(100)
+                      ).value
+                    : '--',
+                  variableApy: formatPercentageValue(
+                    new BigNumber(item.variableBorrowAPY).multipliedBy(100)
+                  ).value,
+                  tokenImg: `${item.icon}`,
+                  address: item.aToken.id,
+                  callToAction: [
+                    { ...AAVE_TABLE_BUTTON.borrow, disabled: available <= 0 }
+                  ]
+                };
+              });
             break;
           /**
-           * Case: Aave Exhisting Deposits Table
+           * Case: Aave Existing Deposits Table
            */
-          case AAVE_TABLE_HEADER.BALANCE_DEPOSIT:
+          case AAVE_TABLE_TITLE.balance_deposit:
             list = list.map(item => {
+              AAVE_TABLE_BUTTON.withdraw.method = this.onWithdrawClick;
+              AAVE_TABLE_BUTTON.deposit.method = this.onDepositClick;
+              const enableToggle = item.reserve.usageAsCollateralEnabled;
               return {
                 token: item.reserve.symbol,
                 tokenImg: `${item.reserve.icon}`,
                 balance: [
-                  `${roundNumber(item.currentUnderlyingBalance)} ${
+                  `${formatFloatingPointValue(item.underlyingBalance).value} ${
                     item.reserve.symbol
                   }`,
-                  `$${roundNumber(item.currentUnderlyingBalanceUSD)}`
+                  this.getFiatValue(
+                    this.formatUSDValue(item.underlyingBalanceUSD)
+                  )
                 ],
-                toggle: {
-                  color: 'secondary',
-                  method: this.onToggleClick,
-                  value: item.usageAsCollateralEnabledOnUser
-                },
-                callToAction: [this.btnDeposit, this.btnWithdraw]
+                apy: this.getDepositAPY(item.reserve.liquidityRate),
+                toggle: enableToggle
+                  ? {
+                      color: 'secondary',
+                      method: this.onToggleClick,
+                      value: item.usageAsCollateralEnabledOnUser
+                    }
+                  : null,
+                callToAction: [
+                  AAVE_TABLE_BUTTON.deposit,
+                  AAVE_TABLE_BUTTON.withdraw
+                ]
               };
             });
             break;
           /**
-           * Case: Aave Exhisting Borrowings Table
+           * Case: Aave Existing Borrowings Table
            */
-          case AAVE_TABLE_HEADER.BALANCE_BORROW:
+          case AAVE_TABLE_TITLE.balance_borrow:
             list = list.map(item => {
-              const isVariable = item.borrowRateMode === 'Variable';
-              const reserve = this.handler.reservesData.find(reserve => {
+              AAVE_TABLE_BUTTON.repay.method = this.onRepayClick;
+              AAVE_TABLE_BUTTON.borrow.method = this.onBorrowClick;
+              const isVariable = item.variableBorrows > 0;
+              const reserve = this.reservesData.find(reserve => {
                 return reserve.symbol === item.reserve.symbol;
               });
               const enableToggle = reserve
-                ? !reserve.stableBorrowRateEnabled
+                ? reserve.stableBorrowRateEnabled
                 : false;
+              const available = formatFloatingPointValue(
+                this.userBorrowPower(reserve)
+              ).value;
               return {
                 token: item.reserve.symbol,
                 tokenImg: `${item.reserve.icon}`,
                 balance: [
-                  `${roundNumber(item.currentBorrows)} ${item.reserve.symbol}`,
-                  `$${roundNumber(item.currentBorrowsUSD)}`
+                  `${formatFloatingPointValue(item.totalBorrows).value} ${
+                    item.reserve.symbol
+                  }`,
+                  this.getFiatValue(this.formatUSDValue(item.totalBorrowsUSD))
                 ],
-                apr: roundPercentage(
-                  new BigNumber(item.borrowRate).multipliedBy(100).toString()
-                ),
-                toggle: {
-                  color: isVariable ? 'greenMedium' : 'greenPrimary',
-                  method: this.onToggleAprType,
-                  value: isVariable,
-                  label: isVariable ? 'variable' : 'stable',
-                  disabled: enableToggle
-                },
-                callToAction: [this.btnBorrow, this.btnRepay]
+                apy: formatPercentageValue(
+                  new BigNumber(
+                    isVariable
+                      ? item.reserve.variableBorrowAPY
+                      : item.reserve.stableBorrowAPY
+                  )
+                    .times(100)
+                    .toString()
+                ).value,
+                toggle: enableToggle
+                  ? {
+                      color: 'greenPrimary',
+                      method: this.onToggleAprType,
+                      value: isVariable,
+                      label: isVariable
+                        ? INTEREST_TYPES.variable
+                        : INTEREST_TYPES.stable,
+                      disabled: false
+                    }
+                  : null,
+                callToAction: [
+                  { ...AAVE_TABLE_BUTTON.borrow, disabled: available <= 0 },
+                  AAVE_TABLE_BUTTON.repay
+                ]
               };
             });
             break;
@@ -435,35 +323,49 @@ export default {
   mounted() {
     /* Set Button styles to transparent for balance deposit table */
     if (
-      this.tableHeader === AAVE_TABLE_HEADER.BALANCE_DEPOSIT ||
-      this.tableHeader === AAVE_TABLE_HEADER.BALANCE_BORROW
+      this.title === AAVE_TABLE_TITLE.balance_deposit ||
+      this.title === AAVE_TABLE_TITLE.balance_borrow
     ) {
-      this.btnDeposit.btnStyle = 'transparent';
-      this.btnWithdraw.btnStyle = 'transparent';
-      this.btnBorrow.btnStyle = 'transparent';
+      AAVE_TABLE_BUTTON.deposit.btnStyle = 'transparent';
+      AAVE_TABLE_BUTTON.withdraw.btnStyle = 'transparent';
+      AAVE_TABLE_BUTTON.borrow.btnStyle = 'transparent';
     }
+    AAVE_TABLE_BUTTON.deposit.method = this.onDepositClick;
+    AAVE_TABLE_BUTTON.borrow.method = this.onBorrowClick;
   },
   methods: {
+    /**
+     * Calculates Deposit APY
+     */
+    getDepositAPY(liqRate) {
+      const ray = Math.pow(10, 27);
+      const SECONDS_PER_YEAR = 31536000;
+      const depositAPR = new BigNumber(liqRate).dividedBy(ray).toFixed();
+      const depositAPY =
+        Math.pow(1 + depositAPR / SECONDS_PER_YEAR, SECONDS_PER_YEAR) - 1;
+      return formatPercentageValue(new BigNumber(depositAPY).multipliedBy(100))
+        .value;
+    },
     /**
      * Method emits to the parent to open deposit token overlay
      *  Used in deposit Button within the table
      */
     onDepositClick(newVal) {
-      this.$emit('selectedDeposit', newVal);
+      EventBus.$emit('selectedDeposit', newVal);
     },
     /**
      * Method emits to the parent to open deposit token overlay
      *  Used in deposit Button within the table
      */
     onBorrowClick(newVal) {
-      this.$emit('selectedBorrow', newVal);
+      EventBus.$emit('selectedBorrow', newVal);
     },
     /**
      * Method emits to the parent to open withdraw token overlay
      *  Used in withdraw Button within the table
      */
     onWithdrawClick(newval) {
-      this.$emit('withdrawToken', newval);
+      EventBus.$emit('withdrawToken', newval);
     },
     /**
      * Method open new tab with swap parameters
@@ -473,8 +375,8 @@ export default {
       this.$router.push({
         name: ROUTES_WALLET.SWAP.NAME,
         query: {
-          fromT: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
-          toT: newVal.address,
+          fromToken: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+          toToken: newVal.address,
           amount: '1'
         }
       });
@@ -486,7 +388,7 @@ export default {
      * Within Borrow Balance table
      */
     onRepayClick(newVal) {
-      this.$emit('repayBorrowing', newVal);
+      EventBus.$emit('repayBorrowing', newVal);
     },
     /**
      * Method emits to the parent to open collateral overlay
@@ -494,11 +396,17 @@ export default {
      * Within Deposit Balance table
      */
     onToggleClick(newVal) {
-      this.$emit('collateralChange', newVal);
+      EventBus.$emit('collateralChange', newVal);
     },
 
     onToggleAprType(newVal) {
-      this.$emit('changeAprType', newVal);
+      EventBus.$emit('changeAprType', newVal);
+    },
+    /**
+     * Method sets the search value
+     */
+    setSearchInput(val) {
+      this.searchInput = val;
     }
   }
 };

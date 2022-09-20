@@ -23,7 +23,7 @@
           <div>Last Block: {{ lastBlock }}</div>
         </div>
       </div>
-      <v-img :src="icon" :max-height="65" :max-width="65" contain />
+      <mew-token-container size="65px" :img="icon"></mew-token-container>
     </mew6-white-sheet>
   </div>
 </template>
@@ -70,7 +70,11 @@ export default {
     },
     show() {
       let metamask = false;
-      if (window.ethereum) metamask = window.ethereum.isMetaMask;
+      if (window.ethereum)
+        metamask =
+          window.ethereum.isMetaMask &&
+          !window.ethereum.hasOwnProperty('isMewWallet') &&
+          !window.ethereum.hasOwnProperty('isTrust');
       return this.identifier !== WALLET_TYPES.WEB3_WALLET || metamask;
     }
   },
