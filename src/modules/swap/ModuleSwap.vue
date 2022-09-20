@@ -1586,7 +1586,7 @@ export default {
             return;
           }
           const error = handleError(err);
-          if (error) Toast(err.message, {}, ERROR);
+          if (error) Toast(err && err.message ? err.message : err, {}, ERROR);
         });
     },
     getTokenBalance(balance, decimals) {
