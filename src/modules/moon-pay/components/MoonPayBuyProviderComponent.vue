@@ -1,5 +1,5 @@
 <template>
-  <div class="py-8 px-8">
+  <div class="py-8 px-8 pt-3">
     <div
       class="d-flex align-center textDark--text mb-10 cursor--pointer"
       @click="$emit('close')"
