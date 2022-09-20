@@ -38,7 +38,9 @@
             <!-- =================================================== -->
             <!-- token info title -->
             <!-- =================================================== -->
-            <div class="textLight--text mew-body font-weight-bold">
+            <div
+              class="textLight--text mew-body font-weight-bold align-self-center"
+            >
               {{ tkn.name }}
             </div>
             <div class="textDark--text">
@@ -47,7 +49,10 @@
               <!-- ============================================================================= -->
               <span
                 v-if="
-                  !isIcon(tkn.name) && !isContractAddress(tkn.name) && tkn.value
+                  !isIcon(tkn.name) &&
+                  !isContractAddress(tkn.name) &&
+                  !isSymbol(tkn.name) &&
+                  tkn.value
                 "
               >
                 {{ tkn.value }}
@@ -84,12 +89,13 @@
               <!-- displays input to enter values if there is no name or symbol -->
               <!-- ============================================================================= -->
               <mew-input
-                v-if="!isIcon(tkn.name) && !tkn.value"
+                v-if="(!isIcon(tkn.name) && !tkn.value) || isSymbol(tkn.name)"
                 :id="idx"
                 :error-messages="
                   idx === 3 ? symbolLengthTooLong : nameLengthTooLong
                 "
-                class="mb-n8"
+                :class="isSymbol(tkn.name) ? 'mt-0 mb-n4' : 'mb-n8'"
+                :value="tkn.value"
                 :placeholder="getPlaceholder(tkn.name)"
                 @input="setInputValue"
               />
@@ -257,6 +263,12 @@ export default {
       return name === this.tokenDataToDisplay[1].name;
     },
     /**
+     * @returns if symbol info displays icon
+     */
+    isSymbol(name) {
+      return name === this.tokenDataToDisplay[3].name;
+    },
+    /**
      * @returns mew input placeholders
      * if there is no value for name or symbol
      */
@@ -292,9 +304,7 @@ export default {
         return;
       }
       this.token.name = !this.token.name ? this.customName : this.token.name;
-      this.token.symbol = !this.token.symbol
-        ? this.customSymbol
-        : this.token.symbol;
+      this.token.symbol = this.customSymbol || this.token.symbol;
       this.token.contract = this.contractAddress;
       this.setCustomToken(this.token);
       Toast(
