@@ -1,14 +1,12 @@
 <template>
-  <div class="full-width">
+  <div class="module-network-switch full-width">
     <v-row
       v-if="!isSwapPage && hasNetworks"
       class="align-end justify-center justify-sm-space-between pa-0"
     >
-      <!--
-            =====================================================================================
-              Toggle: Main/Test/All
-            =====================================================================================
-            -->
+      <!-- ===================================================================================== -->
+      <!-- Toggle: Main/Test/All -->
+      <!-- ===================================================================================== -->
       <div
         class="align-center align-sm-end justify-center pr-sm-3 pb-sm-3 order-sm-2"
       >
@@ -22,11 +20,10 @@
           <v-btn small>All</v-btn>
         </v-btn-toggle>
       </div>
-      <!--
-            =====================================================================================
-              Search Data
-            =====================================================================================
-            -->
+
+      <!-- ===================================================================================== -->
+      <!-- Search Data -->
+      <!-- ===================================================================================== -->
       <v-col cols="12" sm="7" class="order-sm-1">
         <mew-search
           placeholder="Find Network"
@@ -35,22 +32,20 @@
         />
       </v-col>
     </v-row>
-    <!--
-          =====================================================================================
-            Empty Search Message
-          =====================================================================================
-          -->
+
+    <!-- ===================================================================================== -->
+    <!-- Empty Search Message -->
+    <!-- ===================================================================================== -->
     <app-user-msg-block
       v-if="showEmptySearch || isSwapPage"
       :message="emptySearchMes"
       :is-alert="isSwapPage"
       class="mt-5"
     />
-    <!--
-          =====================================================================================
-            Networks
-          =====================================================================================
-          -->
+
+    <!-- ===================================================================================== -->
+    <!-- Networks -->
+    <!-- ===================================================================================== -->
     <v-radio-group v-model="networkSelected">
       <v-container
         v-for="(network, i) in networks"
@@ -62,11 +57,9 @@
         ]"
       >
         <v-row class="pa-0 mew-body align-center justify-start">
-          <!--
-                =====================================================================================
-                  Icon
-                =====================================================================================
-                -->
+          <!-- ===================================================================================== -->
+          <!-- Icon -->
+          <!-- ===================================================================================== -->
           <v-img
             :class="network.name === 'MINTME' ? 'mint-me-color' : ''"
             :src="network.icon"
@@ -75,11 +68,10 @@
             max-height="24px"
             max-width="24px"
           />
-          <!--
-                =====================================================================================
-                  Symbol/Name
-                =====================================================================================
-                -->
+
+          <!-- ===================================================================================== -->
+          <!-- Symbol/Name -->
+          <!-- ===================================================================================== -->
           <div class="textDark--text Capitalize pl-3">
             {{ network.name }}
           </div>
@@ -88,11 +80,10 @@
             {{ network.name_long }}
           </div>
           <v-spacer />
-          <!--
-                =====================================================================================
-                  Radio
-                =====================================================================================
-                -->
+
+          <!-- ===================================================================================== -->
+          <!-- Radio -->
+          <!-- ===================================================================================== -->
           <v-radio
             :value="network.name"
             :class="['py-2 mb-0']"
@@ -136,6 +127,7 @@ export default {
   },
   data() {
     return {
+      networkSelectedBefore: null,
       networkSelected: null,
       nodes: nodes,
       toggleType: 0,
@@ -247,6 +239,13 @@ export default {
       }
     },
     searchInput(newVal, oldVal) {
+      /**
+       * Set current network to prevent undefined networkSelected value
+       */
+      if (this.networks.length > 0) {
+        this.networkSelected = this.networkSelectedBefore;
+      }
+
       if (newVal != oldVal && (!oldVal || oldVal === '')) {
         this.toggleType = 2;
       }
@@ -282,6 +281,7 @@ export default {
   },
   mounted() {
     this.networkSelected = this.validNetwork ? this.network.type.name : '';
+    this.networkSelectedBefore = this.networkSelected;
   },
   methods: {
     ...mapActions('wallet', ['setWeb3Instance']),
@@ -309,6 +309,8 @@ export default {
      * @return {void}
      */
     setNetworkDebounced: debounce(function (value) {
+      this.savePreviousNetwork();
+
       const found = Object.values(this.nodes).filter(item => {
         if (item.type.name === value) {
           return item;
@@ -345,10 +347,19 @@ export default {
           this.networkLoading = false;
           Toast(e, {}, ERROR);
         });
-    }, 1000)
+    }, 1000),
+    /**
+     * Backup current network value
+     */
+    savePreviousNetwork() {
+      if (this.networkSelected) {
+        this.networkSelectedBefore = this.networkSelected;
+      }
+    }
   }
 };
 </script>
+
 <style lang="scss" scoped>
 $borderNetwork: 1px solid #ececec;
 .network-border {
