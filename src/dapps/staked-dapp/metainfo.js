@@ -1,7 +1,8 @@
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { SUPPORTED_NETWORKS } from './handlers/supportedNetworks';
-import layout from './TheStakedLayout';
-import stakedRouterGuard from '@/core/router/helpers';
+const layout = () =>
+  import(/* webpackChunkName: "dapp-staked" */ './TheStakedLayout');
+import { stakedRouterGuard } from '@/core/router/helpers';
 export default {
   title: 'Stake on Eth2',
   subtitle: 'Stake your ETH on Ethereum 2.0 and watch your rewards grow',

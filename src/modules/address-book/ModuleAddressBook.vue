@@ -39,13 +39,12 @@
 </template>
 
 <script>
-import { isAddress, toChecksumAddress } from '@/core/helpers/addressUtils';
 import { mapGetters, mapState } from 'vuex';
-import NameResolver from '@/modules/name-resolver/index';
-import { getAddressInfo } from '@kleros/address-tags-sdk';
-import AddressBookAddEdit from './components/AddressBookAddEdit';
 import { isObject, throttle } from 'lodash';
 import WAValidator from 'multicoin-address-validator';
+import { isAddress, toChecksumAddress } from '@/core/helpers/addressUtils';
+import NameResolver from '@/modules/name-resolver/index';
+import { getAddressInfo } from '@kleros/address-tags-sdk';
 
 const USER_INPUT_TYPES = {
   typed: 'TYPED',
@@ -55,7 +54,7 @@ const USER_INPUT_TYPES = {
 
 export default {
   components: {
-    AddressBookAddEdit
+    AddressBookAddEdit: () => import('./components/AddressBookAddEdit')
   },
   props: {
     isValidAddressFunc: {
@@ -90,7 +89,8 @@ export default {
       inputAddr: '',
       nameResolver: null,
       isValidAddress: false,
-      loadedAddressValidation: false
+      loadedAddressValidation: false,
+      nametag: ''
     };
   },
 
@@ -148,7 +148,7 @@ export default {
     },
     nameOnly() {
       return !isAddress(this.resolvedAddr) && this.isValidAddress
-        ? this.resolvedAddr
+        ? this.resolvedAddr || this.nametag
         : '';
     }
   },
@@ -158,6 +158,14 @@ export default {
         this.nameResolver = new NameResolver(this.network, this.web3);
       } else {
         this.nameResolver = null;
+      }
+    },
+    inputAddr(newVal) {
+      this.nametag = '';
+      if (isAddress(newVal.toLowerCase())) {
+        this.resolveAddress();
+      } else {
+        this.resolveName();
       }
     }
   },
@@ -208,21 +216,10 @@ export default {
             this.isValidAddress = isAddValid;
           }
           this.loadedAddressValidation = !this.isValidAddress ? false : true;
-          if (this.isValidAddress && !this.isOfflineApp) {
-            const reverseName = await this.nameResolver.resolveAddress(
-              this.inputAddr
-            );
-            if (reverseName && !reverseName.name) {
-              reverseName.name =
-                (
-                  await getAddressInfo(
-                    toChecksumAddress(this.inputAddr),
-                    'https://ipfs.kleros.io'
-                  )
-                )?.publicNameTag || '';
-            }
-            this.resolvedAddr = reverseName?.name ? reverseName.name : '';
-          }
+          /**
+           * Resolve address with ENS/US/Kleros
+           */
+          if (this.isValidAddress && !this.isOfflineApp) this.resolveAddress();
 
           /**
            * @emits setAddress
@@ -300,6 +297,29 @@ export default {
     toggleOverlay() {
       this.addMode = !this.addMode;
     },
+    /**
+     * Resolves address and @returns name
+     */
+    resolveAddress: throttle(async function () {
+      if (this.nameResolver) {
+        const reverseName = await this.nameResolver.resolveAddress(
+          this.inputAddr
+        );
+        if (reverseName && !reverseName.name) {
+          try {
+            await getAddressInfo(
+              toChecksumAddress(this.inputAddr),
+              'https://ipfs.kleros.io'
+            ).then(data => {
+              this.nametag = data?.publicNameTag || '';
+            });
+          } catch (e) {
+            this.nametag = '';
+          }
+        }
+        this.resolvedAddr = reverseName?.name ? reverseName.name : '';
+      }
+    }, 300),
     /**
      * Resolves name and @returns address
      */

@@ -1,9 +1,9 @@
 module.exports = {
   client: {
-      service: {
-          name: 'api',
-          url: 'https://hbfzqg7jia.execute-api.us-west-2.amazonaws.com/dev',
-        },
-      includes: ['src/apollo/**/*.graphql'],
+    service: {
+      name: 'api',
+      url: 'https://api-v2.ethvm.dev:443'
+    },
+    includes: ['src/apollo/**/*.graphql']
   }
-}
+};

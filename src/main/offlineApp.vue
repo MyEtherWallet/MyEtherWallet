@@ -7,13 +7,15 @@
 </template>
 
 <script>
-import ModuleToast from '@/modules/toast/ModuleToast.vue';
-import ModuleGlobalModals from '@/modules/global-modals/ModuleGlobalModals';
 import { mapActions } from 'vuex';
 
 export default {
   name: 'App',
-  components: { ModuleToast, ModuleGlobalModals },
+  components: {
+    ModuleToast: () => import('@/modules/toast/ModuleToast.vue'),
+    ModuleGlobalModals: () =>
+      import('@/modules/global-modals/ModuleGlobalModals')
+  },
   mounted() {
     this.setOnlineStatus(false);
     this.setOfflineApp(true);

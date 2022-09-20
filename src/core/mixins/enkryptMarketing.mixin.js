@@ -53,16 +53,19 @@ export default {
       return this.extensionLinks[this.browser].link;
     },
     isMobile() {
-      return this.$vuetify.breakpoint.smAndDown;
+      return this.$vuetify.breakpoint.mdAndDown;
     }
   },
   methods: {
     openEnkrypt() {
       // eslint-disable-next-line
-      window.open(
-        this.isMobile ? 'https://www.enkrypt.com' : this.browserLink,
-        '_blank'
-      );
+       /*
+       window.open(
+         this.isMobile ? 'https://www.enkrypt.com' : this.browserLink,
+         '_blank'
+       );
+       */
+      window.open('https://www.enkrypt.com', '_blank');
     },
     openMewWallet() {
       if (this.isMobile) {
@@ -79,12 +82,12 @@ export default {
         }
       } else {
         // eslint-disable-next-line
-        window.open('https://www.mewwallet.com/', '_blank');
+         window.open('https://www.mewwallet.com/', '_blank');
       }
     },
     openHelpCenter() {
       // eslint-disable-next-line
-      window.open('https://www.enkrypt.com', '_blank');
+       window.open('https://www.enkrypt.com', '_blank');
     }
   }
 };

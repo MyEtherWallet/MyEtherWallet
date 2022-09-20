@@ -60,12 +60,10 @@
   </div>
 </template>
 <script>
-import AccessWalletDerivationPath from './AccessWalletDerivationPath.vue';
-
 export default {
   name: 'AccessWalletLedgerX',
   components: {
-    AccessWalletDerivationPath
+    AccessWalletDerivationPath: () => import('./AccessWalletDerivationPath.vue')
   },
   props: {
     ledgerApps: {

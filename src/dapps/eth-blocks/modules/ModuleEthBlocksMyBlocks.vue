@@ -128,19 +128,22 @@
 </template>
 
 <script>
-import BlocksLoading from '../components/BlocksLoading.vue';
-import BlocksSort from '../components/BlocksSort.vue';
-import ModuleEthBlockInfo from './ModuleEthBlockInfo.vue';
-import HandlerMyBlocks from '../handlers/handlerMyBlocks';
+import { mapState, mapGetters } from 'vuex';
+
 import { ETH_BLOCKS_ROUTE } from '../configsRoutes';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
-import { mapState, mapGetters } from 'vuex';
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 import { validBlockNumber } from '../handlers/helpers/common';
 
+import HandlerMyBlocks from '../handlers/handlerMyBlocks';
+
 export default {
   name: 'ModuleEthBlocksMyBlocks',
-  components: { BlocksLoading, BlocksSort, ModuleEthBlockInfo },
+  components: {
+    BlocksLoading: () => import('../components/BlocksLoading.vue'),
+    BlocksSort: () => import('../components/BlocksSort.vue'),
+    ModuleEthBlockInfo: () => import('./ModuleEthBlockInfo.vue')
+  },
   props: {
     blockRef: {
       type: String,

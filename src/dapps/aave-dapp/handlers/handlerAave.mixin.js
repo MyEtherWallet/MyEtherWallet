@@ -13,13 +13,19 @@ import {
   UserPositionUpdateSubscription,
   UsdPriceEth
 } from '@/dapps/aave-dapp/apollo/graphql/subscriptions';
-import { Toast, SUCCESS, ERROR } from '@/modules/toast/handler/handlerToast';
+import {
+  Toast,
+  SUCCESS,
+  ERROR,
+  WARNING
+} from '@/modules/toast/handler/handlerToast';
 import configs from '@/dapps/aave-dapp/apollo/configs';
 import eth from '@/assets/images/currencies/eth.png';
 import { ethers } from 'ethers';
 import { INTEREST_TYPES } from '../handlers/helpers';
 import { estimateGasList } from '@/core/helpers/gasPriceHelper';
 import { ABI } from './ABI';
+import handleError from '@/modules/confirmation/handlers/errorHandler';
 
 const STABLE_COINS = ['TUSD', 'DAI', 'USDT', 'USDC', 'sUSD'];
 
@@ -29,9 +35,10 @@ const REPAY_WITH_COLLATERAL_ADAPTER =
 const SWAP_COLLATERAL_ADAPTER = '0x135896DE8421be2ec868E0b811006171D9df802A';
 const WETH_GATEWAY = '0xcc9a0B7c43DC2a5F023Bb9b738E45B0Ef6B06E04';
 const PRICE_ORACLE = '0xA50ba011c48153De246E5192C8f9258A2ba79Ca9';
-
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 export default {
   name: 'handlerAave',
+  mixins: [handlerAnalytics],
   props: {
     open: {
       default: false,
@@ -423,7 +430,10 @@ export default {
           .then(res => {
             tx['gas'] = toHex(res);
             this.sendTransaction(tx)
-              .then(() => {
+              .then(res => {
+                if (res?.rejected) {
+                  Toast('User rejected action!', {}, WARNING);
+                }
                 Toast(
                   'Success! Your transaction will be displayed shortly',
                   {},
@@ -431,7 +441,8 @@ export default {
                 );
               })
               .catch(err => {
-                Toast(err, {}, ERROR);
+                const error = handleError(err);
+                if (error) Toast(err, {}, ERROR);
                 if (callback) callback[0](callback[1]);
               });
           }) // Estimate Gas Catch
@@ -473,7 +484,10 @@ export default {
         }
         this.web3.mew
           .sendBatchTransactions(txns)
-          .then(() => {
+          .then(res => {
+            if (res?.rejected) {
+              Toast('User rejected action!', {}, WARNING);
+            }
             Toast(
               'Success! Your transaction will be displayed shortly',
               {},

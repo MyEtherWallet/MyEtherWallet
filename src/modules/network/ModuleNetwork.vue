@@ -31,6 +31,7 @@
 <script>
 import { mapGetters, mapState } from 'vuex';
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
+
 import WALLET_TYPES from '../access-wallet/common/walletTypes';
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { EventBus } from '@/core/plugins/eventBus';
@@ -70,7 +71,11 @@ export default {
     },
     show() {
       let metamask = false;
-      if (window.ethereum) metamask = window.ethereum.isMetaMask;
+      if (window.ethereum)
+        metamask =
+          window.ethereum.isMetaMask &&
+          !window.ethereum.hasOwnProperty('isMewWallet') &&
+          !window.ethereum.hasOwnProperty('isTrust');
       return this.identifier !== WALLET_TYPES.WEB3_WALLET || metamask;
     }
   },
