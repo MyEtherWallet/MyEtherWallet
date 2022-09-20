@@ -184,7 +184,7 @@
                       >
                         <div>
                           {{
-                            $t('ens.manage-domains.expire-at', {
+                            $t('ens.manage-domains.expire-on', {
                               date: domain.expiration
                             })
                           }}
@@ -236,6 +236,27 @@
           </div>
         </v-sheet>
       </template>
+      <!--
+    =====================================================================================
+      Reverse Lookup - Tab 4
+    =====================================================================================
+    -->
+      <template #tabContent4>
+        <v-sheet
+          max-width="500px"
+          color="transparent"
+          class="px-3 py-8 py-md-13 mx-auto"
+        >
+          <div>
+            <ens-reverse-lookup
+              :address="address"
+              :ens-manager="ensManager"
+              :name="name"
+              :duration-pick="durationPick"
+            />
+          </div>
+        </v-sheet>
+      </template>
     </the-wrapper-dapp>
     <!--
     =====================================================================================
@@ -250,6 +271,7 @@
       :register="register"
       :not-enough-funds="notEnoughFunds"
       :loading-commit="loadingCommit"
+      :loading-reg="loadingReg"
       :commited="committed"
       :minimum-age="minimumAge"
       :commit="commit"
@@ -298,18 +320,20 @@
 </template>
 
 <script>
+import { mapGetters, mapState } from 'vuex';
+import BigNumber from 'bignumber.js';
+import ENS from '@ensdomains/ensjs';
+import { fromWei, toBN, toWei } from 'web3-utils';
+
 import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
 import TheWrapperDapp from '@/core/components/TheWrapperDapp';
 import ModuleRegisterDomain from './modules/ModuleRegisterDomain';
 import ModuleManageDomain from './modules/ModuleManageDomain';
 import handlerEnsManager from './handlers/handlerEnsManager';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin.js';
 import ClaimBalance from './components/claim/ClaimBalance';
-import { mapGetters, mapState } from 'vuex';
+import EnsReverseLookup from './components/reverse/EnsReverseLookup';
 import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
-import BigNumber from 'bignumber.js';
-import ENS from 'ethereum-ens';
-
-import { fromWei, toBN, toWei } from 'web3-utils';
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 import { ENS_MANAGER_ROUTE } from './configsRoutes';
 import normalise from '@/core/helpers/normalise';
@@ -325,8 +349,10 @@ export default {
     ModuleManageDomain,
     TheWrapperDapp,
     ModuleAddressBook,
-    ClaimBalance
+    ClaimBalance,
+    EnsReverseLookup
   },
+  mixins: [handlerAnalytics],
   data() {
     return {
       validNetworks: SUPPORTED_NETWORKS,
@@ -337,6 +363,7 @@ export default {
       },
       activeTab: 0,
       loadingCommit: false,
+      loadingReg: false,
       loadingRenew: false,
       minimumAge: '',
       committed: false,
@@ -416,6 +443,14 @@ export default {
             path: ENS_MANAGER_ROUTE.CLAIM.PATH
           },
           id: 2
+        },
+        {
+          name: this.$t('ENS Reverse Lookup'),
+          route: {
+            name: ENS_MANAGER_ROUTE.REVERSE.NAME,
+            path: ENS_MANAGER_ROUTE.REVERSE.PATH
+          },
+          id: 3
         }
       ],
       /*
@@ -444,7 +479,6 @@ export default {
       'getFiatValue'
     ]),
     ...mapGetters('external', ['fiatValue']),
-    ...mapState('wallet', ['balance', 'address', 'web3']),
     ...mapState('global', ['gasPriceType']),
     ...mapState('wallet', ['balance', 'address', 'web3', 'instance']),
     hasEnsTokenBalance() {
@@ -491,10 +525,10 @@ export default {
       return toWei(BigNumber(this.balance).toString(), 'ether');
     },
     loading() {
-      return this.nameHandler.checkingDomainAvail;
+      return this.nameHandler?.checkingDomainAvail;
     },
     ensDomainAvailable() {
-      return this.nameHandler.isAvailable;
+      return this.nameHandler?.isAvailable;
     },
     isNameEmpty() {
       return this.name === null || this.name === '';
@@ -544,7 +578,10 @@ export default {
     this.detactUrlChangeTab();
 
     const ens = this.network.type.ens
-      ? new ENS(this.web3.currentProvider, this.network.type.ens.registry)
+      ? new ENS({
+          provider: this.web3.eth.currentProvider,
+          ensAddress: this.network.type.ens.registry
+        })
       : null;
     this.ensManager = new handlerEnsManager(
       this.network,
@@ -567,6 +604,8 @@ export default {
         this.activeTab = this.tabs[1].id;
       } else if (currentRoute === ENS_MANAGER_ROUTE.CLAIM.NAME) {
         this.activeTab = this.tabs[2].id;
+      } else if (currentRoute === ENS_MANAGER_ROUTE.REVERSE.NAME) {
+        this.activeTab = this.tabs[3].id;
       } else {
         this.activeTab = this.tabs[0].id;
       }
@@ -600,6 +639,7 @@ export default {
     },
     buyDomain() {
       this.activeTab = 0;
+      this.trackDapp('ensBuyDomainTab');
     },
     /**
      * Manage Domain
@@ -633,14 +673,17 @@ export default {
     closeManage() {
       this.onManage = false;
       this.settingIpfs = false;
+      this.trackDapp('closeEnsManageTab');
     },
     transfer(address) {
+      this.trackDapp('ensDomainTransferEvent');
       this.manageDomainHandler
         .transfer(address)
         .then(() => {
           setTimeout(() => {
             this.getDomains();
           }, 15000);
+          this.trackDapp('ensTransferred');
         })
         .catch(err => {
           this.instance.errorHandler(err);
@@ -674,7 +717,10 @@ export default {
     renew(duration) {
       this.manageDomainHandler
         .renew(duration, this.balanceToWei)
-        .then(this.getDomains)
+        .then(() => {
+          this.getDomains;
+          this.trackDapp('ensDomainRenew');
+        })
         .catch(err => {
           this.instance.errorHandler(err);
         });
@@ -704,6 +750,7 @@ export default {
         .uploadFile(file)
         .then(res => {
           this.manageDomainHandler.setIPFSHash(res);
+          this.trackDapp('ensFileUpload');
         })
         .then(resp => {
           this.settingIpfs = false;
@@ -720,6 +767,7 @@ export default {
         .setIPFSHash(hash)
         .then(() => {
           this.settingIpfs = false;
+          this.trackDapp('ensSetIpfs');
         })
         .catch(err => {
           this.instance.errorHandler(err);
@@ -729,6 +777,7 @@ export default {
     async findDomain() {
       try {
         this.nameHandler = await this.ensManager.searchName(this.name);
+        this.trackDapp('findEnsDomain');
       } catch (e) {
         Toast(e, {}, ERROR);
       }
@@ -737,9 +786,11 @@ export default {
       this.onRegister = false;
       this.committed = false;
       this.loadingCommit = false;
+      this.loadingReg = false;
       this.name = '';
       this.nameHandler = {};
       this.$router.push({ name: ENS_MANAGER_ROUTE.ENS_MANAGER.NAME });
+      this.trackDapp('closeEnsRegister');
     },
     setName(name) {
       this.searchError = '';
@@ -748,6 +799,7 @@ export default {
       }
       try {
         this.name = normalise(name);
+        this.trackDapp('setEnsDomainName');
       } catch (e) {
         this.searchError = e.message.includes('Failed to validate')
           ? 'Invalid name!'
@@ -756,23 +808,29 @@ export default {
       }
     },
     register(duration) {
+      this.trackDapp('ensDomainRegisterEvent');
       this.nameHandler
         .register(duration, this.balanceToWei)
         .on('transactionHash', () => {
-          Toast(`ENS name: ${this.name} registered`, {}, SUCCESS);
-          this.closeRegister();
+          Toast(`Registering ENS name: ${this.name}`, {}, SUCCESS);
+          this.loadingReg = true;
         })
         .once('receipt', () => {
           setTimeout(() => {
             this.getDomains();
           }, 15000);
+          this.closeRegister();
+          this.trackDapp('ensDomainRegisterReceipt');
+          Toast(`Registration successful!`, {}, SUCCESS);
         })
         .on('error', err => {
+          this.loadingReg = false;
           this.instance.errorHandler(err);
         });
     },
     commit() {
       let waitingTime;
+      this.trackDapp('ensDomainCommitEvent');
       this.nameHandler
         .createCommitment()
         .on('transactionHash', () => {
@@ -785,6 +843,7 @@ export default {
           this.loadingCommit = true;
           this.committed = false;
           this.waitingForReg = true;
+          this.trackDapp('ensDomainCommittReceipt');
           setTimeout(() => {
             this.committed = true;
             this.waitingForReg = false;
@@ -792,6 +851,10 @@ export default {
           }, waitingTime * 1000);
         })
         .on('error', err => {
+          this.loadingCommit = false;
+          this.committed = false;
+          this.waitingForReg = false;
+          this.notEnoughFunds = false;
           Toast(err, {}, ERROR);
         });
     },
@@ -820,12 +883,11 @@ export default {
         this.noFundsForRegFees = true;
       } else {
         this.regFee = registerFeesOnly;
-        const feesAdded =
-          BigNumber(this.regFee) + BigNumber(this.commitFeeInEth);
+        const feesAdded = new BigNumber(this.regFee).plus(this.commitFeeInEth);
         this.totalCost = feesAdded.toString();
-        this.totalCostUsd = new BigNumber(this.totalCost)
-          .times(this.fiatValue)
-          .toFixed(2);
+        this.totalCostUsd = this.getFiatValue(
+          new BigNumber(this.totalCost).times(this.fiatValue).toFixed(2)
+        );
         if (this.totalCost >= this.balance) {
           this.noFundsForRegFees = true;
         } else {

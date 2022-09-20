@@ -2,7 +2,8 @@
   <div>
     <mew-address-select
       ref="addressSelect"
-      :resolved-addr="resolvedAddr"
+      :resolved-addr="addressOnly"
+      :hint="nameOnly"
       :copy-tooltip="$t('common.copy')"
       :save-tooltip="$t('common.save')"
       :enable-save-address="enableSave"
@@ -38,12 +39,12 @@
 </template>
 
 <script>
-import { isAddress } from '@/core/helpers/addressUtils';
+import { isAddress, toChecksumAddress } from '@/core/helpers/addressUtils';
 import { mapGetters, mapState } from 'vuex';
 import NameResolver from '@/modules/name-resolver/index';
+import { getAddressInfo } from '@kleros/address-tags-sdk';
 import AddressBookAddEdit from './components/AddressBookAddEdit';
 import { isObject, throttle } from 'lodash';
-import { toChecksumAddress } from '@/core/helpers/addressUtils';
 import WAValidator from 'multicoin-address-validator';
 
 const USER_INPUT_TYPES = {
@@ -89,14 +90,15 @@ export default {
       inputAddr: '',
       nameResolver: null,
       isValidAddress: false,
-      loadedAddressValidation: false
+      loadedAddressValidation: false,
+      nametag: ''
     };
   },
 
   computed: {
     ...mapState('addressBook', ['addressBookStore']),
     ...mapGetters('global', ['network']),
-    ...mapState('wallet', ['web3', 'address']),
+    ...mapState('wallet', ['web3', 'address', 'isOfflineApp']),
     errorMessages() {
       if (!this.isValidAddress && this.loadedAddressValidation) {
         return this.$t('interface.address-book.validations.invalid-address');
@@ -139,6 +141,16 @@ export default {
     },
     addrLabel() {
       return this.label === '' ? this.$t('sendTx.to-addr') : this.label;
+    },
+    addressOnly() {
+      return isAddress(this.resolvedAddr) && this.isValidAddress
+        ? this.resolvedAddr
+        : '';
+    },
+    nameOnly() {
+      return !isAddress(this.resolvedAddr) && this.isValidAddress
+        ? this.resolvedAddr || this.nametag
+        : '';
     }
   },
   watch: {
@@ -147,6 +159,14 @@ export default {
         this.nameResolver = new NameResolver(this.network, this.web3);
       } else {
         this.nameResolver = null;
+      }
+    },
+    inputAddr(newVal) {
+      this.nametag = '';
+      if (isAddress(newVal.toLowerCase())) {
+        this.resolveAddress();
+      } else {
+        this.resolveName();
       }
     }
   },
@@ -197,6 +217,10 @@ export default {
             this.isValidAddress = isAddValid;
           }
           this.loadedAddressValidation = !this.isValidAddress ? false : true;
+          /**
+           * Resolve address with ENS/US/Kleros
+           */
+          if (this.isValidAddress && !this.isOfflineApp) this.resolveAddress();
 
           /**
            * @emits setAddress
@@ -258,7 +282,7 @@ export default {
       });
 
       // Calls setups from mounted
-      if (this.network.type.ens)
+      if (!this.isOfflineApp && this.network.type.ens)
         this.nameResolver = new NameResolver(this.network, this.web3);
       if (this.isHomePage) {
         this.setDonationAddress();
@@ -274,6 +298,29 @@ export default {
     toggleOverlay() {
       this.addMode = !this.addMode;
     },
+    /**
+     * Resolves address and @returns name
+     */
+    resolveAddress: throttle(async function () {
+      if (this.nameResolver) {
+        const reverseName = await this.nameResolver.resolveAddress(
+          this.inputAddr
+        );
+        if (reverseName && !reverseName.name) {
+          try {
+            await getAddressInfo(
+              toChecksumAddress(this.inputAddr),
+              'https://ipfs.kleros.io'
+            ).then(data => {
+              this.nametag = data?.publicNameTag || '';
+            });
+          } catch (e) {
+            this.nametag = '';
+          }
+        }
+        this.resolvedAddr = reverseName?.name ? reverseName.name : '';
+      }
+    }, 300),
     /**
      * Resolves name and @returns address
      */

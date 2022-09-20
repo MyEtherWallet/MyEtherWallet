@@ -4,6 +4,7 @@ export default {
   name: 'BSC',
   name_long: 'Binance Smart Chain',
   homePage: 'https://www.binance.org/en/smartChain',
+  blockExplorer: 'BscScan',
   blockExplorerTX: 'https://bscscan.com/tx/[[txHash]]',
   blockExplorerAddr: 'https://bscscan.com/address/[[address]]',
   chainID: 56,

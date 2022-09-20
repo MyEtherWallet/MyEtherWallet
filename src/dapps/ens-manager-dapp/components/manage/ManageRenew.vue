@@ -4,6 +4,7 @@
       :has-filter="true"
       :label="$t('ens.request.select-duration')"
       :items="items"
+      normal-dropdown
       @input="setDuration"
     />
     <div class="font-weight-bold text-center">

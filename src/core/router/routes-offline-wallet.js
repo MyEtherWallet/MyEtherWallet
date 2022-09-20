@@ -18,18 +18,18 @@ export default {
       }
     },
     {
-      path: ROUTES_WALLET.SEND_TX_OFFLINE.PATH,
-      name: ROUTES_WALLET.SEND_TX_OFFLINE.NAME,
-      component: SendOffline,
-      props: true,
+      path: ROUTES_WALLET.NETWORK.PATH,
+      name: ROUTES_WALLET.NETWORK.NAME,
+      component: Network,
       meta: {
         noAuth: false
       }
     },
     {
-      path: ROUTES_WALLET.NETWORK.PATH,
-      name: ROUTES_WALLET.NETWORK.NAME,
-      component: Network,
+      path: ROUTES_WALLET.SEND_TX_OFFLINE.PATH,
+      name: ROUTES_WALLET.SEND_TX_OFFLINE.NAME,
+      component: SendOffline,
+      props: true,
       meta: {
         noAuth: false
       }

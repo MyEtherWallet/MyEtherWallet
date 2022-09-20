@@ -7,6 +7,7 @@ export default {
   name: 'GOERLI',
   name_long: 'Goerli',
   homePage: 'https://github.com/goerli/testnet',
+  blockExplorer: 'Etherscan',
   blockExplorerTX: 'https://goerli.etherscan.io/tx/[[txHash]]',
   blockExplorerAddr: 'https://goerli.etherscan.io/address/[[address]]',
   chainID: 5,

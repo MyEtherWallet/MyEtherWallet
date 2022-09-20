@@ -2,13 +2,15 @@ import { getHashFromFile, uploadFileToIpfs } from './helpers/helperIpfs.js';
 import BigNumber from 'bignumber.js';
 import ENSManagerInterface from './handlerENSManagerInterface.js';
 import * as nameHashPckg from 'eth-ens-namehash';
-import { DNSRegistrar } from '@ensdomains/ens-contracts';
+import { DNSRegistrar } from '@ensdomains/ens-contracts/deployments/mainnet/DNSRegistrar.json';
 import contentHash from 'content-hash';
 import EventEmitter from 'events';
 import vuexStore from '@/core/store';
 import { mapGetters, mapState } from 'vuex';
 import { toBN, toHex, fromWei, sha3 } from 'web3-utils';
 import { estimateGasList } from '@/core/helpers/gasPriceHelper.js';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+
 const bip39 = require('bip39');
 
 export default class PermanentNameModule extends ENSManagerInterface {
@@ -37,6 +39,14 @@ export default class PermanentNameModule extends ENSManagerInterface {
 
   register(duration, balance) {
     return this._registerWithDuration(duration, balance);
+  }
+
+  async setNameReverseRecord(domain) {
+    try {
+      return this.ensInstance.setReverseRecord(domain);
+    } catch (e) {
+      Toast(e, {}, ERROR);
+    }
   }
 
   getTransactions(toAddress) {
@@ -88,7 +98,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
   }
 
   getActualDuration(duration) {
-    const SECONDS_YEAR = 60 * 60 * 24 * 365.25;
+    const SECONDS_YEAR = 60 * 60 * 24 * 365.2425;
     return Math.ceil(SECONDS_YEAR * duration);
   }
 
@@ -107,13 +117,13 @@ export default class PermanentNameModule extends ENSManagerInterface {
     try {
       const gasPrice = this.gasPriceByType()(this.gasPriceType());
       const rentPrice = await this.getRentPrice(duration);
-      const withFivePercent = BigNumber(rentPrice)
-        .times(1.05)
+      const withTenPercent = BigNumber(rentPrice)
+        .times(1.1)
         .integerValue()
         .toFixed();
       const txObj = {
         from: this.address,
-        value: withFivePercent
+        value: withTenPercent
       };
       const extraFee = await this.registrarControllerContract.methods
         .renew(this.parsedHostName, this.getActualDuration(duration))
@@ -133,13 +143,13 @@ export default class PermanentNameModule extends ENSManagerInterface {
     if (!hasBalance) {
       throw new Error('Not enough balance');
     }
-    const withFivePercent = BigNumber(rentPrice)
-      .times(1.05)
+    const withTenPercent = BigNumber(rentPrice)
+      .times(1.1)
       .integerValue()
       .toFixed();
     return this.registrarControllerContract.methods
       .renew(this.parsedHostName, this.getActualDuration(duration))
-      .send({ from: this.address, value: withFivePercent });
+      .send({ from: this.address, value: withTenPercent });
   }
 
   uploadFile(file) {
@@ -156,7 +166,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
       .setContenthash(this.nameHash, ipfsToHash)
       .send({ from: this.address })
       .on('receipt', () => {
-        this._setContentHash();
+        this._getContentHash();
       });
   }
 
@@ -262,10 +272,10 @@ export default class PermanentNameModule extends ENSManagerInterface {
         }
       });
     });
-    this._setExpiry();
+    this._getExpiry();
   }
 
-  async _setExpiry() {
+  async _getExpiry() {
     if (!this.isAvailable) {
       this.expired = this.expiryTime * 1000 < new Date().getTime();
       if (!this.expired) {
@@ -274,21 +284,23 @@ export default class PermanentNameModule extends ENSManagerInterface {
           date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear();
       }
     }
-    this._setDnsContract();
+    this._getDnsContract();
   }
 
-  async _setDnsContract() {
+  async _getDnsContract() {
     if (this.tld && this.tld !== this.network.type.ens.registrarTLD) {
-      this.dnsRegistrarContract = new DNSRegistrar(
-        this.web3.currentProvider,
+      this.dnsRegistrarContract = new this.web3.eth.Contract(
+        DNSRegistrar.abi,
         this.registrarAddress
       );
-      this.dnsClaim = await this.dnsRegistrar.claim(this.parsedDomainName);
-      this._setDnsInfo();
+      this.dnsClaim = await this.dnsRegistrar.methods
+        .claim(this.parsedDomainName)
+        .call();
+      this._getDnsInfo();
     }
     return;
   }
-  async _setDnsInfo() {
+  async _getDnsInfo() {
     const _owner = await this.ens.owner(this.parsedDomainName);
     const isInNewRegistry = await this.registryContract.methods
       .recordExists(nameHashPckg.hash(this.parsedDomainName))
@@ -318,27 +330,39 @@ export default class PermanentNameModule extends ENSManagerInterface {
         promiEvent.emit('error', new Error('Not enough balance'));
         return;
       }
-      const withFivePercent = BigNumber(rentPrice)
-        .times(1.05)
+      const withTenPercent = BigNumber(rentPrice)
+        .times(1.1)
         .integerValue()
         .toFixed();
       const txObj = {
         from: this.address,
-        value: withFivePercent
+        value: withTenPercent
       };
-      this.registrarControllerContract.methods
-        .registerWithConfig(
+      const registerWithConfig =
+        this.registrarControllerContract.methods.registerWithConfig(
           this.parsedHostName,
           this.address,
           this.getActualDuration(duration),
           utils.sha3(this.secretPhrase),
           this.publicResolverAddress,
           this.address
-        )
-        .send(txObj)
-        .on('transactionHash', hash => promiEvent.emit('transactionHash', hash))
-        .on('error', err => promiEvent.emit('error', err))
-        .on('receipt', receipt => promiEvent.emit('receipt', receipt));
+        );
+
+      registerWithConfig
+        .estimateGas(txObj)
+        .then(res => {
+          txObj['gas'] = res;
+        })
+        .then(() => {
+          registerWithConfig
+            .send(txObj)
+            .on('transactionHash', hash =>
+              promiEvent.emit('transactionHash', hash)
+            )
+            .on('error', err => promiEvent.emit('error', err))
+            .on('receipt', receipt => promiEvent.emit('receipt', receipt));
+        })
+        .catch(err => promiEvent.emit('error', err));
     });
     return promiEvent;
   }
@@ -349,13 +373,13 @@ export default class PermanentNameModule extends ENSManagerInterface {
       const rentPrice = await this.getRentPrice(duration);
       const hasBalance = new BigNumber(balance).gte(rentPrice);
       if (hasBalance) {
-        const rentPriceWithFivePercent = new BigNumber(rentPrice)
-          .times(1.05)
+        const rentPriceWithTenPercent = new BigNumber(rentPrice)
+          .times(1.1)
           .integerValue()
           .toFixed();
         const txObj = {
           from: this.address,
-          value: rentPriceWithFivePercent
+          value: rentPriceWithTenPercent
         };
         const gasAmt = await this.registrarControllerContract.methods
           .registerWithConfig(
@@ -371,7 +395,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
           return false;
         }
         return fromWei(
-          toBN(gasAmt).mul(toBN(gasPrice)).add(toBN(rentPriceWithFivePercent))
+          toBN(gasAmt).mul(toBN(gasPrice)).add(toBN(rentPriceWithTenPercent))
         );
       }
     } catch (e) {

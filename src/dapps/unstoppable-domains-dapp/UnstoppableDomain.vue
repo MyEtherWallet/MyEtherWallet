@@ -130,6 +130,80 @@
             </div>
           </div>
         </template>
+        <template #tabContent3>
+          <v-sheet color="transparent" max-width="700px" class="mx-auto py-12">
+            <!-- <div class="addressBlock d-flex align-center mb-7">
+              <mew-blockie :address="address" />
+              <span class="font-weight-heavy pl-15">{{ address }}</span>
+            </div> -->
+            <div class="mb-5">
+              <div class="mb-3">
+                <div class="addressBlock d-flex align-center mb-7">
+                  <!-- <mew-blockie :address="address" /> -->
+                  <!-- <span class="mew-heading-4 font-weight-heavy pl-5">{{
+                    address
+                  }}</span> -->
+                </div>
+              </div>
+              <div class="d-flex flex-column justify-space-between">
+                <div class="mew-heading-3 mb-2">
+                  Reverse Resolution for Address
+                </div>
+                <div class="d-flex justify-space-between">
+                  <!-- <mew-select
+                    :value="selectedAddress"
+                    :filter-placeholder="address"
+                    @input="setAddress"
+                  >
+                  </mew-select> -->
+                  <mew-input
+                    :value="address"
+                    :show-blockie="true"
+                    :hide-clear-btn="true"
+                    :is-read-only="true"
+                    :loading="true"
+                    :error-messages="inputErrorMessage"
+                    label="Wallet Address"
+                    class="mr-3 mt-10 flex-grow-1"
+                    @input="setAddress"
+                  />
+                  <div class="d-flex flex-column justify-space-between">
+                    <mew-button
+                      :has-full-width="false"
+                      btn-size="xlarge"
+                      title="Reverse TokenId"
+                      class="mb-1"
+                      @click.native="reverseTokenId()"
+                    />
+                    <mew-button
+                      :has-full-width="false"
+                      btn-size="xlarge"
+                      title="Reverse Url"
+                      class="mt-1"
+                      @click.native="reverseUrl()"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div v-if="hasTokenIdResults" class="d-flex flex-column mt-2">
+                <span class="mew-heading-3 font-weight-heavy"
+                  >Reverse Resolve TokenId by Address Result:
+                </span>
+                <span class="mew-heading-4 font-weight-heavy mt-2">
+                  {{ reverseTokenIdResults }}
+                </span>
+              </div>
+              <div v-if="hasUrlResults" class="d-flex flex-column mt-2">
+                <span class="mew-heading-3 font-weight-heavy"
+                  >Reverse Resolve Url by Address Result:
+                </span>
+                <span class="mew-heading-4 font-weight-heavy mt-2">
+                  {{ reverseUrlResults }}
+                </span>
+              </div>
+            </div>
+          </v-sheet>
+        </template>
       </mew-tabs>
     </mew6-white-sheet>
   </div>
@@ -142,9 +216,12 @@ import UnstoppableUploadIpfsOverlay from './components/UnstoppableUploadIpfsOver
 import UnstoppableInfoCard from './components/UnstoppableInfoCard.vue';
 import TheDappHeader from '@/core/components/TheDappHeader';
 import DomainTable from './components/UnstoppableDomainTable.vue';
-import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 import { parseUDRecordToLabel } from './handlers/records';
 import { fetchResellerApi, fetchSimillarities } from './handlers/resellerApi';
+import Resolution from '@unstoppabledomains/resolution';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+
 export default {
   components: {
     UnstoppableDomainBuyOverlay,
@@ -158,34 +235,53 @@ export default {
   data() {
     return {
       dappImg: require('@/assets/images/icons/icons-dapp-unstoppable.svg'),
-      bannerText: {
-        title: 'Unstoppable Domain',
-        subtext: 'Replace your crypto address with a human readable name'
-      },
+      bannerText: {},
       buyOverlay: false,
+      inputtedAddress: null,
+      reverseTokenIdResults: '',
+      reverseUrlResults: '',
+      hasUrlResults: false,
+      hasTokenIdResults: false,
+      isLoading: false,
+      tabs: [
+        { name: 'Buy domain' },
+        { name: 'Manage domain' },
+        { name: 'Reverse Resolver' }
+      ],
+      domainFunctions: [
+        { label: 'Transfer Domain' },
+        { label: 'Renew Domain', expire: '07/21/2020' },
+        { label: 'ENS Configurations' },
+        { label: 'Manage Multicoins' },
+        { label: 'Manage Text Records' },
+        { label: 'Upload Website' },
+        { label: 'Return Funds' }
+      ],
+      myDomains: [
+        {
+          name: 'mewdev009.eth',
+          toggleTitle: '',
+          colorTheme: 'greyLight',
+          warningBadge: {
+            color: 'orangePrimary',
+            text: 'Expire soon'
+          }
+        },
+        {
+          name: 'mewdev008.eth',
+          toggleTitle: '',
+          colorTheme: 'greyLight',
+          warningBadge: {
+            color: 'orangePrimary',
+            text: 'Expire soon'
+          }
+        }
+      ],
       manageRecordsOverlay: false,
       uploadIpfsOverlay: false,
       loading: false,
-      tabs: [
-        { name: this.$t('unstoppable.buyDomain') },
-        { name: this.$t('unstoppable.manage-domain') }
-      ],
       input: '',
-      searchResults: [],
-      domainFunctions: [
-        {
-          label: this.$t('unstoppable.resolve-domain'),
-          subtitle: this.$t('unstoppable.link-your-wallets'),
-          open: this.openManageRecordsOverlay,
-          icon: 'mdi-link-variant-plus'
-        },
-        {
-          label: this.$t('unstoppable.manage-ipfs-website'),
-          subtitle: this.$t('unstoppable.publish-your-website'),
-          open: this.openUploadIpfsOverlay,
-          icon: 'mdi-web'
-        }
-      ]
+      searchResults: []
       // menuSelect: {
       //   label: 'All extensions',
       //   items: [
@@ -234,39 +330,58 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['balance', 'address', 'web3']),
-    ...mapGetters('unstoppable', ['resellerId', 'myDomains', 'resolution'])
-  },
-  watch: {
-    input: function () {
-      this.searchResults = [];
-      this.CLEAR_DOMAIN();
-      this.loading = false;
-    }
-  },
-  async mounted() {
-    if (this.myDomains.length === 0) {
-      this.fetchMyDomains(this.address);
+    ...mapGetters('global', ['network']),
+    ...mapState('wallet', ['balance', 'web3', 'instance', 'address']),
+    inputErrorMessage() {
+      if (this.inputtedAddress === '') {
+        return `Address input cannot be empty.`;
+      }
+      return '';
     }
   },
   methods: {
-    ...mapMutations('unstoppable', [
-      'SET_CURRENT_DOMAIN',
-      'CLEAR_DOMAIN',
-      'SET_MANAGE_RECORD',
-      'SET_ACTIVE_OVERLAY'
-    ]),
-    ...mapActions('unstoppable', ['fetchMyDomains', 'fetchIpfsHash']),
-    openManageRecordsOverlay(domain) {
-      this.SET_ACTIVE_OVERLAY({ value: 'ManageRecordsOverlay' });
-      this.SET_MANAGE_RECORD({ value: domain });
-      this.manageRecordsOverlay = true;
+    async reverseTokenId() {
+      this.isLoading = true;
+      const address = this.inputtedAddress;
+      const resolution = new Resolution();
+      try {
+        const results = await resolution
+          .reverseTokenId(address)
+          .then(tokenId => {
+            const tokenIdRes = tokenId;
+            this.reverseTokenIdResults =
+              address + ' ' + `reversed to` + ' ' + tokenIdRes;
+          });
+        this.isLoading = false;
+        this.hasTokenIdResults = true;
+        return results;
+      } catch (e) {
+        Toast(e, {}, ERROR);
+      }
     },
-    async openUploadIpfsOverlay(domain) {
-      this.SET_ACTIVE_OVERLAY({ value: 'UploadIpfsOverlay' });
-      this.SET_MANAGE_RECORD({ value: domain });
-      await this.fetchIpfsHash();
-      this.uploadIpfsOverlay = true;
+    async reverseUrl() {
+      this.isLoading = true;
+      const address = this.inputtedAddress;
+      const resolution = new Resolution();
+      try {
+        const results = await resolution
+          .reverse(address, {
+            location: 'UNSLayer2'
+          })
+          .then(domain => {
+            const domainRes = domain;
+            this.reverseUrlResults =
+              address + ' ' + `reversed to` + ' ' + domainRes;
+          });
+        this.isLoading = false;
+        this.hasUrlResults = true;
+        return results;
+      } catch (e) {
+        Toast(e, {}, ERROR);
+      }
+    },
+    setAddress(value) {
+      this.inputtedAddress = value;
     },
     closeBuyOverlay() {
       this.buyOverlay = false;
@@ -348,3 +463,8 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+.set-button {
+  margin-left: 10px;
+}
+</style>

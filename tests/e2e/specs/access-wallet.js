@@ -1,3 +1,5 @@
+const { startBrowser } = require('../functions');
+
 const css = 'css selector';
 const privKey =
   '0x0077ce8e3d12432dc73e87943fe1e992db90964fbb6e8ae9f97a7163585c6019';
@@ -8,15 +10,10 @@ module.exports = {
   },
   'Access Private Wallet test': async browser => {
     // open browser
-    browser.url('https://localhost:8080').waitForElementVisible('#app');
+    startBrowser(browser);
     browser
       .waitForElementVisible(css, '.HomeAccessWallet')
-      .click(css, '#app')
-      .click(css, '.HomeAccessWallet')
-      .assert.urlContains('/wallet/access');
-
-    // remove popups
-    browser.click(css, '#app').click(css, '#app');
+      .click(css, '.HomeAccessWallet');
 
     // remove footer
     browser.click(css, '.HideWalletBanner');

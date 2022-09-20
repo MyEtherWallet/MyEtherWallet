@@ -1,5 +1,5 @@
 <template>
-  <div class="pt-8 pb-13 px-3 pa-sm-15">
+  <div class="dapps-stakewise-stake pt-8 pb-13 px-3 pa-sm-15">
     <v-row>
       <v-col
         :order="$vuetify.breakpoint.smAndDown ? 'last' : ''"
@@ -7,7 +7,7 @@
         md="8"
         :class="$vuetify.breakpoint.smAndDown ? 'my-10' : 'pr-7'"
       >
-        <mew-sheet class="pa-md-15">
+        <mew-sheet class="pa-15">
           <div class="mew-heading-2 textDark--text mb-8">
             Stake {{ currencyName }} with Stakewise
           </div>
@@ -196,6 +196,7 @@
 </template>
 
 <script>
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import StakewiseApr from '../components/StakewiseApr';
 import StakewiseStaking from '../components/StakewiseStaking';
 import StakewiseRewards from '../components/StakewiseRewards';
@@ -232,7 +233,7 @@ export default {
     StakewiseRewards,
     ButtonBalance
   },
-  mixins: [buyMore],
+  mixins: [buyMore, handlerAnalytics],
   data() {
     return {
       iconEth: require('@/assets/images/icons/icon-eth-gray.svg'),
@@ -448,6 +449,7 @@ export default {
       }
     },
     stake() {
+      this.trackDapp('stakewiseStake');
       this.stakeHandler
         .stake()
         .on('transactionHash', hash => {
@@ -467,6 +469,7 @@ export default {
             this.agreeToTerms = false;
             this.estimateGasError = false;
           });
+          this.trackDapp('startStake');
         })
         .catch(err => {
           Toast(err, {}, ERROR);

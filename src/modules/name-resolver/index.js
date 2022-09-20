@@ -30,4 +30,14 @@ export default class NameResolver {
     }
     throw new Error('Invalid Address!');
   }
+
+  async resolveAddress(address) {
+    if (isAddress(address) && address !== ZERO_ADDRESS) {
+      const resolvedName = await this.ens.resolveAddress(address);
+      if (!resolvedName.name) {
+        resolvedName.name = await this.uns.resolveAddress(address);
+      }
+      return resolvedName;
+    }
+  }
 }

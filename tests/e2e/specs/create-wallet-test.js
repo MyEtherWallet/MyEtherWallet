@@ -1,65 +1,56 @@
 // For authoring Nightwatch tests, see
 // https://nightwatchjs.org/guide
 
+const { startBrowser } = require('../functions');
+
 module.exports = {
   before: function (browser) {
     browser.globals.waitForConditionTimeout = 15000;
   },
   'create wallet tests': browser => {
     // start browser
-    browser
-      .init()
-      .url('https://localhost:8080')
-      .waitForElementVisible('#app')
-      .assert.title('MyEtherWallet | MEW')
-      // click out overlay
-
-      .waitForElementVisible('css selector', '.v-overlay')
-      .click('css selector', '.v-overlay')
+    startBrowser(browser)
       // actual test starts here
       // wait and find create wallet button
+      .waitForElementVisible('css selector', '.HomeCreateWallet')
+      .click('css selector', '.HomeCreateWallet')
 
-      .waitForElementVisible('css selector', '.homeLandingCreateWallet')
-      .click('css selector', '.homeLandingCreateWallet')
       // successfully navigated to create wallet
       .assert.urlContains('/wallet/create')
-      .waitForElementVisible('css selector', '.createWalletSoftware');
+      .waitForElementVisible('css selector', '.CreateWalletSoftware');
     browser.execute(function () {
-      document.querySelector('.createWalletSoftware').click();
+      document.querySelector('.CreateWalletSoftware').click();
     });
     // select and fill in password
     browser.assert
       .urlContains('wallet/create/software?type=overview')
       .waitForElementVisible(
         'css selector',
-        '.createWalletSoftwareOverviewKeystore'
+        '.CreateWalletSoftwareOverviewKeystore'
       )
-      .click('css selector', '.createWalletSoftwareOverviewKeystore')
-      .waitForElementVisible('.createWalletKeystorePasswordInput')
+      .click('css selector', '.CreateWalletSoftwareOverviewKeystore')
+      .waitForElementVisible('.CreateWalletKeystorePasswordInput')
       .setValue(
-        '.createWalletKeystorePasswordInput * input',
+        '.CreateWalletKeystorePasswordInput * input',
         'mewcreatewalletkeystore1234'
       )
-      .waitForElementVisible('.createWalletKeystoreConfirmPWInput')
+      .waitForElementVisible('.CreateWalletKeystoreConfirmPWInput')
       .setValue(
-        '.createWalletKeystoreConfirmPWInput * input',
+        '.CreateWalletKeystoreConfirmPWInput * input',
         'mewcreatewalletkeystore1234'
       )
       // expect button to be green
-      .expect.element('.createWalletKeystoreSubmitButton')
+      .expect.element('.CreateWalletKeystoreSubmitButton')
       .to.have.attribute('class')
       .which.contains('greenPrimary');
     // click button
     browser
-      .click('css selector', '.createWalletKeystoreSubmitButton')
+      .click('css selector', '.CreateWalletKeystoreSubmitButton')
       .waitForElementVisible('css selector', '.step-two-header')
-      .waitForElementVisible(
-        'css selector',
-        '.createWalletKeystoreAcceptAndDownload'
-      )
-      .click('css selector', '.createWalletKeystoreAcceptAndDownload')
+      .waitForElementVisible('css selector', '.CreateWalletKeystoreAccept')
+      .click('css selector', '.CreateWalletKeystoreAccept')
       .waitForElementVisible('css selector', '.step-three-header')
-      .click('css selector', '.createWalletKeystoreGoToAccessButton')
+      .click('css selector', '.CreateWalletKeystoreAccess')
       .assert.urlContains('/wallet/access')
       .end();
   }

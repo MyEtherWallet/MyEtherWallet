@@ -6,17 +6,18 @@ export default class UNS {
     const networkname = 'mainnet';
     const polyname = 'polygon-mainnet';
     const polyprovider = new Web3('https://nodes.mewapi.io/rpc/matic');
-    const resolution = Resolution.fromWeb3Version1Provider({
-      ens: false,
-      uns: {
-        locations: {
-          Layer1: {
-            network: networkname,
-            provider: web3.currentProvider
-          },
-          Layer2: {
-            network: polyname,
-            provider: polyprovider.currentProvider
+    const resolution = new Resolution({
+      sourceConfig: {
+        uns: {
+          locations: {
+            Layer1: {
+              network: networkname,
+              url: web3.currentProvider.host
+            },
+            Layer2: {
+              network: polyname,
+              url: polyprovider.currentProvider.host
+            }
           }
         }
       }
@@ -27,5 +28,13 @@ export default class UNS {
     return this.resolver
       .addr(name, 'ETH')
       .then(addr => toChecksumAddress(addr));
+  }
+
+  resolveAddress(address) {
+    return this.reverseUrl(address);
+  }
+
+  reverseUrl(address) {
+    return this.resolver.reverse(address).then(domain => domain);
   }
 }

@@ -2,7 +2,7 @@
 // to date. If dependencies are too outdated, exit with an error, failing `npm
 // run update:packages` and thus eventually the entire build.
 
-const package = require('./package.json');
+const parsedPackage = require('./package.json');
 const packageJson = require('package-json');
 const SAFE_TIME = 1000 * 1 * 60 * 60 * 24 * 7; //7days
 // webpack has a major update
@@ -48,21 +48,31 @@ const EXCEPTIONS = [
   'vue-i18n',
   'vue',
   '@vue/cli-plugin-e2e-nightwatch',
-  'geckodriver',
+  // breaking
   '@shapeshiftoss/hdwallet-core',
   '@shapeshiftoss/hdwallet-keepkey-webusb',
-  'trezor-connect', // currently in beta
   'package-json',
   'codecov',
   'node-polyfill-webpack-plugin',
-  '@ensdomains/ensjs' // major alpha update
+  '@lokalise/node-api',
+  '@unstoppabledomains/resolution',
+  '@walletconnect/client',
+  '@walletconnect/qrcode-modal',
+  'chromedriver',
+  '@ethereumjs/common',
+  '@ethereumjs/tx',
+  'graphql',
+  'vue-template-compiler',
+  '@aave/contract-helpers',
+  '@aave/math-utils',
+  'node-sass'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
 };
 const ALL_PACKAGES = Object.assign(
-  package.dependencies,
-  package.devDependencies
+  parsedPackage.dependencies,
+  parsedPackage.devDependencies
 );
 const names = Object.keys(ALL_PACKAGES);
 let updatesFound = false;
@@ -111,12 +121,12 @@ const looper = () => {
           if (!isMewComponentBeta) {
             console.error(
               'ERROR: Update ' +
-              _name +
-              ' from ' +
-              ALL_PACKAGES[_name] +
-              ' to ' +
-              latestVersion +
-              '. Released:',
+                _name +
+                ' from ' +
+                ALL_PACKAGES[_name] +
+                ' to ' +
+                latestVersion +
+                '. Released:',
               latestVersionTime
             );
             updatesFound = true;

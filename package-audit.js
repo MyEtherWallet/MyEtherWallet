@@ -15,8 +15,20 @@ const AUDIT_EXCEPTIONS = [
   'async',
   'nth-check',
   'semver-regex',
+  'scss-tokenizer',
   // no package found
-  'codecov'
+  'codecov',
+  'glob-parent',
+  'socket.io-parser',
+  'xmlhttprequest-ssl',
+  'node-forge',
+  'engine.io',
+  'parse-path',
+  '@openzeppelin/contracts',
+  'terser',
+  'protobufjs',
+  'lodash',
+  'elliptic'
 ];
 const execute = (command, callback) => {
   exec(
@@ -46,4 +58,5 @@ execute('npm audit --json', json => {
     }
   }
   if (!auditPass) process.exit(1);
+  console.log('AUDIT complete');
 });

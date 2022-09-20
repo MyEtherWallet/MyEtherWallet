@@ -48,18 +48,6 @@ const REMOVE_TO_PENDING_TXS_GOERLI = function (state, val) {
   });
 };
 
-const CLOSE_STAKEWISE_PROMO = function (state) {
-  state.showInitialPromo = false;
-  state.closedInitialPromo = new Date();
-};
-
-const HIDE_FOR_SEVEN = function (state) {
-  state.showForSeven = false;
-};
-const HIDE_FOR_FOURTEEN = function (state) {
-  state.showForFourteen = false;
-};
-
 export default {
   INIT_STORE,
   SET_POOL_SUPPLY,
@@ -69,9 +57,6 @@ export default {
   ADD_TO_PENDING_TXS_GOERLI,
   REMOVE_TO_PENDING_TXS,
   REMOVE_TO_PENDING_TXS_GOERLI,
-  CLOSE_STAKEWISE_PROMO,
-  HIDE_FOR_SEVEN,
-  HIDE_FOR_FOURTEEN,
   SET_RETH_BALANCE,
   SET_SETH_BALANCE
 };

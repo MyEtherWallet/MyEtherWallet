@@ -77,6 +77,10 @@ h6 {
   text-transform: initial !important;
 }
 
+.text-transform--none {
+  text-transform: none !important;
+}
+
 .text-decoration--none {
   text-decoration: none !important;
 }
@@ -87,6 +91,12 @@ h6 {
 
 .word-break--break-all {
   word-break: break-all;
+  white-space: initial;
+}
+
+.break-word {
+  word-break: break-word;
+  white-space: initial;
 }
 
 .white-space--nowrap {
@@ -95,6 +105,14 @@ h6 {
 
 .letter-spacing--none {
   letter-spacing: 0 !important;
+}
+
+.letter-spacing--initial {
+  letter-spacing: initial !important;
+}
+
+.line-height--initial {
+  line-height: initial !important;
 }
 
 /* ========== Cursor ========== */
@@ -163,23 +181,6 @@ h6 {
   &.r90 {
     transform: rotate(90deg);
   }
-}
-
-// temp addition, remove once stakewise promo is done
-
-.snackbar-border {
-  .v-snack__wrapper {
-    border-radius: 8px !important;
-    border: 1px solid var(--v-greenPrimary-base) !important;
-    background-color: var(--v-whiteBackground-base) !important;
-  }
-  // .white {
-  //   border: 1px solid var(--v-greenPrimary-base) !important;
-  // }
-
-  // .application .white {
-  //   border: 1px solid var(--v-greenPrimary-base) !important;
-  // }
 }
 
 /* ========= Convert SVG to white ========= */

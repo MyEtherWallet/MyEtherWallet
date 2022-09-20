@@ -1,43 +1,92 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
-<g>
-	<g>
-		<path d="M464.867,96.4h-81.4V15c0-8.284-6.716-15-15-15H47.133c-8.284,0-15,6.716-15,15v385.601c0,8.284,6.716,15,15,15h81.4V497
-			c0,8.284,6.716,15,15,15h321.334c8.284,0,15-6.716,15-15V111.4C479.867,103.116,473.151,96.4,464.867,96.4z M62.133,385.601V30
-			h291.334v81.149c-0.002,0.084-0.013,0.166-0.013,0.251c0,0.085,0.011,0.167,0.013,0.252v273.949H62.133z M449.867,482H158.533
-			v-66.399h209.934c8.284,0,15-6.716,15-15V126.4h66.4V482z"/>
+
+<svg
+   version="1.1"
+   id="Capa_1"
+   x="0px"
+   y="0px"
+   viewBox="0 0 512 512"
+   style="enable-background:new 0 0 512 512;"
+   xml:space="preserve"
+   sodipodi:docname="icon-copy.svg"
+   inkscape:version="1.2 (56b05e47e7, 2022-06-09, custom)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><defs
+   id="defs3495" /><sodipodi:namedview
+   id="namedview3493"
+   pagecolor="#ffffff"
+   bordercolor="#000000"
+   borderopacity="0.25"
+   inkscape:showpageshadow="2"
+   inkscape:pageopacity="0.0"
+   inkscape:pagecheckerboard="0"
+   inkscape:deskcolor="#d1d1d1"
+   showgrid="false"
+   inkscape:zoom="1.5878906"
+   inkscape:cx="256"
+   inkscape:cy="256"
+   inkscape:window-width="1872"
+   inkscape:window-height="1016"
+   inkscape:window-x="1968"
+   inkscape:window-y="27"
+   inkscape:window-maximized="1"
+   inkscape:current-layer="Capa_1" />
+<g
+   id="g3460"
+   transform="rotate(180,256,256)">
+	<g
+   id="g3458">
+		<path
+   d="m 464.867,96.4 h -81.4 V 15 c 0,-8.284 -6.716,-15 -15,-15 H 47.133 c -8.284,0 -15,6.716 -15,15 v 385.601 c 0,8.284 6.716,15 15,15 h 81.4 V 497 c 0,8.284 6.716,15 15,15 h 321.334 c 8.284,0 15,-6.716 15,-15 V 111.4 c 0,-8.284 -6.716,-15 -15,-15 z M 62.133,385.601 V 30 h 291.334 v 81.149 c -0.002,0.084 -0.013,0.166 -0.013,0.251 0,0.085 0.011,0.167 0.013,0.252 V 385.601 Z M 449.867,482 H 158.533 v -66.399 h 209.934 c 8.284,0 15,-6.716 15,-15 V 126.4 h 66.4 V 482 Z"
+   id="path3456" />
 	</g>
 </g>
-<g>
+<g
+   id="g3462">
 </g>
-<g>
+<g
+   id="g3464">
 </g>
-<g>
+<g
+   id="g3466">
 </g>
-<g>
+<g
+   id="g3468">
 </g>
-<g>
+<g
+   id="g3470">
 </g>
-<g>
+<g
+   id="g3472">
 </g>
-<g>
+<g
+   id="g3474">
 </g>
-<g>
+<g
+   id="g3476">
 </g>
-<g>
+<g
+   id="g3478">
 </g>
-<g>
+<g
+   id="g3480">
 </g>
-<g>
+<g
+   id="g3482">
 </g>
-<g>
+<g
+   id="g3484">
 </g>
-<g>
+<g
+   id="g3486">
 </g>
-<g>
+<g
+   id="g3488">
 </g>
-<g>
+<g
+   id="g3490">
 </g>
 </svg>

@@ -85,6 +85,7 @@
               color="greyLight"
               depressed
               class="text-transform--initial"
+              :disabled="error !== ''"
               @click="openGasPriceModal"
             >
               <div class="d-flex align-center">
@@ -164,6 +165,8 @@
 <script>
 import { mapGetters, mapActions, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
+import { fromWei } from 'web3-utils';
+
 import AppNetworkSettingsModal from './AppNetworkSettingsModal.vue';
 import AppModal from '@/core/components/AppModal.vue';
 import {
@@ -171,12 +174,13 @@ import {
   formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
 import { estimatedTime } from '@/core/helpers/gasPriceHelper';
-import { fromWei } from 'web3-utils';
+
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 export default {
   name: 'AppTransactionFee',
   components: { AppNetworkSettingsModal, AppModal },
-  mixins: [buyMore],
+  mixins: [buyMore, handlerAnalytics],
   props: {
     showFee: {
       type: Boolean,
@@ -217,7 +221,7 @@ export default {
   computed: {
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network', 'isEthNetwork', 'gasPriceByType']),
-    ...mapState('global', ['online', 'gasPriceType', 'preferredCurrency']),
+    ...mapState('global', ['gasPriceType', 'preferredCurrency']),
     txFeeInEth() {
       return fromWei(this.txFee);
     },
@@ -274,6 +278,7 @@ export default {
       this.$emit('onLocalGasPrice', val);
     },
     showHighNote() {
+      this.trackGasSwitch('openHowGasIsEstimated');
       this.openHighFeeNote = true;
     },
     closeHighFeeNote() {

@@ -86,6 +86,7 @@ import Vuetify, {
   VScrollYTransition,
   VSkeletonLoader,
   VChip,
+  VChipGroup,
   VSystemBar,
   VSnackbar
 } from 'vuetify/lib';
@@ -174,6 +175,7 @@ Vue.use(Vuetify, {
     VScrollYTransition,
     VSkeletonLoader,
     VChip,
+    VChipGroup,
     VSystemBar,
     VSnackbar
   }

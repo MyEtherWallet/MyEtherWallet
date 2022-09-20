@@ -10,10 +10,16 @@
                 <router-link
                   v-if="d.routerLink"
                   :to="{ name: d.routerLink, query: d.query }"
+                  :class="d.class"
                 >
                   {{ d.label }}
                 </router-link>
-                <a v-if="d.link" :href="d.link" target="_blank">
+                <a
+                  v-if="d.link"
+                  :href="d.link"
+                  target="_blank"
+                  :class="d.class"
+                >
                   {{ d.label }}
                 </a>
               </v-list-item>
@@ -378,28 +384,37 @@ export default {
       {
         title: 'Tools',
         data: [
-          { label: 'MEW wallet', link: 'https://www.mewwallet.com/' },
           {
-            label: 'MEW CX',
-            link: 'https://chrome.google.com/webstore/detail/mew-cx/nlbmnnijcnlegkjjpcfjclmcfggfefdm?utm_source=chrome-ntp-icon'
+            label: 'MEW wallet',
+            class: 'FooterMEWTool',
+            link: 'https://www.mewwallet.com/'
+          },
+          {
+            label: 'Enkrypt',
+            class: 'FooterCXTool',
+            link: 'https://www.enkrypt.com'
           },
           {
             label: 'Verify message',
+            class: 'FooterVerifyTool',
             routerLink: 'Tools',
             query: { tool: 'verify' }
           },
           {
             label: 'Convert units',
+            class: 'FooterConvertTool',
             routerLink: 'Tools',
             query: { tool: 'convert' }
           },
           {
             label: 'Generate keystore file',
+            class: 'FooterKeystoreTool',
             routerLink: 'Tools',
             query: { tool: 'keystore' }
           },
           {
             label: 'Send Offline Helper',
+            class: 'FooterOfflineTool',
             routerLink: 'Tools',
             query: { tool: 'offline' }
           }

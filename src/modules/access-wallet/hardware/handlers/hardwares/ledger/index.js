@@ -46,7 +46,9 @@ class ledgerWallet {
     this.transport = bluetooth
       ? await getLedgerXTransport()
       : await getLedgerTransport();
+
     this.ledger = new Ledger(this.transport);
+
     if (!this.isHardened) {
       const rootPub = await getRootPubKey(this.ledger, this.basePath);
       this.hdKey = new HDKey();

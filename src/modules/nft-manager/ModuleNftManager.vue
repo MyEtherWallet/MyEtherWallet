@@ -185,7 +185,7 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['balance', 'web3', 'address']),
-    ...mapState('global', ['network', 'online', 'gasPriceType']),
+    ...mapState('global', ['network', 'gasPriceType']),
     ...mapGetters('wallet', ['balanceInETH', 'balanceInWei']),
     ...mapGetters('global', [
       'isEthNetwork',
@@ -295,6 +295,7 @@ export default {
           {},
           WARNING
         );
+        this.nftApiResponse = [];
       }
     },
     address() {

@@ -10,6 +10,7 @@
         <mew-select
           :items="mergedContracts"
           label="Contract Name"
+          normal-dropdown
           @input="selectedContract"
         />
         <mew-input
@@ -17,6 +18,8 @@
           label="Contract Address"
           placeholder=" "
           class="mr-3 flex-grow-1"
+          :persistent-hint="nametag.length > 0"
+          :hint="nametag"
         />
 
         <v-textarea
@@ -61,13 +64,13 @@
         title="Interact with contract"
         :show-overlay="interact"
         :close="closeInteract"
-        :back="backInteract"
         content-size="medium"
       >
         <mew-select
           label="Function"
           :items="methods"
           class="mb-1"
+          normal-dropdown
           @input="methodSelect"
         />
 
@@ -160,7 +163,8 @@ import {
   isContractArgValid
 } from './handlers/common';
 import { ERROR, Toast } from '../toast/handler/handlerToast';
-import { isString } from 'lodash';
+import { isString, throttle } from 'lodash';
+import { getAddressInfo } from '@kleros/address-tags-sdk';
 export default {
   name: 'ModuleContractInteract',
   data() {
@@ -176,7 +180,8 @@ export default {
         outputs: []
       },
       outputValues: [],
-      ethPayable: '0'
+      ethPayable: '0',
+      nametag: ''
     };
   },
   computed: {
@@ -245,6 +250,18 @@ export default {
       });
 
       return outputsWithValues.length > 0;
+    }
+  },
+  watch: {
+    contractAddress(newVal) {
+      this.nametag = '';
+      if (!newVal) {
+        this.contractAddress = '';
+        return;
+      }
+      if (isAddress(newVal.toLowerCase())) {
+        this.resolveAddress();
+      }
     }
   },
   methods: {
@@ -366,7 +383,22 @@ export default {
     },
     getType(type) {
       return getInputType(type);
-    }
+    },
+    /**
+     * Resolves address and @returns name
+     */
+    resolveAddress: throttle(async function () {
+      try {
+        await getAddressInfo(
+          this.contractAddress,
+          'https://ipfs.kleros.io'
+        ).then(data => {
+          this.nametag = data?.publicNameTag || '';
+        });
+      } catch (e) {
+        this.nametag = '';
+      }
+    }, 300)
   }
 };
 </script>

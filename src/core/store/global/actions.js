@@ -1,3 +1,4 @@
+import matchNetwork from '@/core/helpers/matchNetwork';
 import { toBNSafe } from '@/core/helpers/numberFormatHelper';
 
 const setOnlineStatus = function ({ commit, dispatch }, val) {
@@ -36,9 +37,22 @@ const setGasPrice = function ({ commit }, gasPrice) {
 const setGasPriceType = function ({ commit }, type) {
   commit('SET_GAS_PRICE_TYPE', type);
 };
-const setNetwork = function ({ commit, dispatch }, networkObj) {
-  commit('SET_NETWORK', networkObj);
-  dispatch('swap/resetPrefetch', null, { root: true });
+const setNetwork = async function (
+  { commit, dispatch },
+  { network, walletType }
+) {
+  const chainID = network?.type?.chainID;
+  const matched = await matchNetwork(chainID, walletType);
+  if (matched) {
+    commit('SET_NETWORK', network);
+    dispatch('swap/resetPrefetch', null, { root: true });
+    dispatch('wallet/setAccountBalance', '0', { root: true });
+    return;
+  }
+  throw new Error('Network not found');
+};
+const setValidNetwork = function ({ commit }, valid) {
+  commit('SET_VALID_NETWORK', valid);
 };
 const addLocalContract = function ({ commit }, localContract) {
   commit('ADD_LOCAL_CONTRACT', localContract);
@@ -54,55 +68,18 @@ const setMaxPriorityFeePerGas = function ({ commit }, valBN) {
 const setBaseFeePerGas = function ({ commit }, valBN) {
   commit('SET_BASE_FEE_PER_GAS', valBN);
 };
-const setTrackingConsent = function ({ commit, dispatch }, val) {
-  commit('SET_TRACKING_CONSENT', val);
-  dispatch('setTracking');
-};
 
-const neverShowPromo = function ({ commit }) {
-  commit('NEVER_SHOW_WALLET_PROMO');
-};
-
-const setPromoOver = function ({ commit }) {
-  commit('SET_PROMO_OVER');
-};
-
-const setTracking = function ({ state }) {
-  const matomoExists = () => {
-    return new Promise(resolve => {
-      const checkInterval = 50;
-      const timeout = 5000;
-      const waitStart = Date.now();
-      const interval = setInterval(() => {
-        if (this._vm.$matomo) {
-          clearInterval(interval);
-          return resolve();
-        }
-        if (Date.now() >= waitStart + timeout) {
-          clearInterval(interval);
-        }
-      }, checkInterval);
-    });
-  };
-  matomoExists().then(() => {
-    if (state.consentToTrack) this._vm.$matomo.setConsentGiven();
-    else this._vm.$matomo.forgetConsentGiven();
-  });
-};
 export default {
   updateGasPrice,
   setOnlineStatus,
   setLocale,
   setPreferredCurrency,
+  setValidNetwork,
   setNetwork,
   setGasPrice,
   setGasPriceType,
   setImportedState,
   addLocalContract,
   setMaxPriorityFeePerGas,
-  setBaseFeePerGas,
-  setTrackingConsent,
-  setTracking,
-  neverShowPromo,
-  setPromoOver
+  setBaseFeePerGas
 };

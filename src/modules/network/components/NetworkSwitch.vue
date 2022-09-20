@@ -64,7 +64,7 @@
         <v-row class="pa-0 mew-body align-center justify-start">
           <!--
                 =====================================================================================
-                  Incon
+                  Icon
                 =====================================================================================
                 -->
           <v-img
@@ -77,7 +77,7 @@
           />
           <!--
                 =====================================================================================
-                  Symbol/Namte
+                  Symbol/Name
                 =====================================================================================
                 -->
           <div class="textDark--text Capitalize pl-3">
@@ -93,7 +93,12 @@
                   Radio
                 =====================================================================================
                 -->
-          <v-radio :value="network.name" :class="['py-2 mb-0']"> </v-radio>
+          <v-radio
+            :value="network.name"
+            :class="['py-2 mb-0']"
+            :disabled="networkLoading"
+          >
+          </v-radio>
         </v-row>
       </v-container>
     </v-radio-group>
@@ -103,11 +108,13 @@
 <script>
 import * as nodes from '@/utils/networks/nodes';
 import * as types from '@/utils/networks/types';
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 import { Toast, SUCCESS, ERROR } from '@/modules/toast/handler/handlerToast';
 import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
 import { debounce } from 'lodash';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import matchNetwork from '@/core/helpers/matchNetwork';
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 
 export default {
   name: 'NetworkSwitch',
@@ -129,13 +136,16 @@ export default {
       networkSelected: null,
       nodes: nodes,
       toggleType: 0,
-      searchInput: ''
+      searchInput: '',
+      networkLoading: false
     };
   },
   computed: {
     ...mapGetters('global', ['network']),
+    ...mapState('global', ['validNetwork']),
+    ...mapState('wallet', ['identifier', 'instance', 'isOfflineApp']),
     /**
-     * Property returns sorted network names alphabeticaly in this order: ETH, main and then test networks
+     * Property returns sorted network names alphabetically in this order: ETH, main and then test networks
      * @returns {string[]}
      */
     typeNames() {
@@ -189,7 +199,7 @@ export default {
       return allNetworks;
     },
     /**
-     * Property shows invalid search if user inlcuded input and networks length is 0
+     * Property shows invalid search if user included input and networks length is 0
      * @returns {boolean}
      */
     showEmptySearch() {
@@ -228,7 +238,8 @@ export default {
   },
   watch: {
     networkSelected(value) {
-      if (value && value !== this.network.type.name) {
+      if (value && (value !== this.network.type.name || !this.validNetwork)) {
+        this.networkLoading = true;
         this.setNetworkDebounced(value);
       }
     },
@@ -236,6 +247,19 @@ export default {
       if (newVal != oldVal && (!oldVal || oldVal === '')) {
         this.toggleType = 2;
       }
+    },
+    validNetwork(val) {
+      if (!val) this.networkSelected = null;
+      else this.networkSelected = this.network.type.name;
+    },
+    async network() {
+      this.networkLoading = true;
+      const matched = await matchNetwork(
+        this.network.type.chainID,
+        this.identifier
+      );
+      if (matched) this.networkSelected = this.network.type.name;
+      this.networkLoading = false;
     },
     /**
      * Set networkSelected on toggle change, if network is in the list
@@ -246,20 +270,22 @@ export default {
           this.networks.filter(item => item.name === this.network.type.name)
             .length > 0
         ) {
-          this.networkSelected = this.network.type.name;
+          this.networkSelected = this.validNetwork
+            ? this.network.type.name
+            : '';
         }
       }
     }
   },
   mounted() {
-    this.networkSelected = this.network.type.name;
+    this.networkSelected = this.validNetwork ? this.network.type.name : '';
   },
   methods: {
     ...mapActions('wallet', ['setWeb3Instance']),
     ...mapActions('global', ['setNetwork']),
     ...mapActions('external', ['setTokenAndEthBalance']),
     /**
-     * Method checks whther symbol or name has searchInput substring
+     * Method checks whether symbol or name has searchInput substring
      * @returns {boolean}
      */
     hasString(symbol, name) {
@@ -285,20 +311,37 @@ export default {
           return item;
         }
       });
-      try {
-        this.setNetwork(found[0]).then(() => {
+      this.setNetwork({
+        network: found[0],
+        walletType: this.instance?.identifier || ''
+      })
+        .then(() => {
           if (this.isWallet) {
-            this.setWeb3Instance().then(() => {
-              this.setTokenAndEthBalance();
-            });
-            Toast(`Switched network to: ${found[0].type.name}`, {}, SUCCESS);
+            this.networkSelected = this.validNetwork
+              ? this.network.type.name
+              : '';
+            this.networkLoading = false;
+            if (!this.isOffline) {
+              const provider =
+                this.identifier === WALLET_TYPES.WEB3_WALLET
+                  ? this.setWeb3Instance(window.ethereum)
+                  : this.setWeb3Instance();
+              provider.then(() => {
+                this.setTokenAndEthBalance();
+              });
+              Toast(`Switched network to: ${found[0].type.name}`, {}, SUCCESS);
+              this.trackNetworkSwitch(found[0].type.name);
+              this.$emit('newNetwork');
+            }
           }
-          this.trackNetworkSwitch(found[0].type.name);
-          this.$emit('newNetwork');
+        })
+        .catch(e => {
+          this.networkSelected = this.validNetwork
+            ? this.network.type.name
+            : '';
+          this.networkLoading = false;
+          Toast(e, {}, ERROR);
         });
-      } catch (e) {
-        Toast(`Could not switch network`, {}, ERROR);
-      }
     }, 1000)
   }
 };
