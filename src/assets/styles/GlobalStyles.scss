@@ -132,6 +132,7 @@ h6 {
 .border-radius--12px {
   border-radius: 12px !important;
 }
+
 .border-radius--10px {
   border-radius: 10px !important;
 }
@@ -186,6 +187,20 @@ h6 {
 /* ========= Convert SVG to white ========= */
 .make-white-svg {
   filter: brightness(10);
+}
+
+/* ========= Remove up down button for input[type=number] ========= */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  /* display: none; <- Crashes Chrome on hover */
+  -webkit-appearance: none;
+  margin: 0;
+  /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+  /* Firefox */
 }
 
 /* ===== Custom Scrollbar ===== */

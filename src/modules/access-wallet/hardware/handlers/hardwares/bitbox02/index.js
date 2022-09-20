@@ -1,4 +1,3 @@
-import { BitBox02API, getDevicePath, constants } from 'bitbox02-api';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import bip44Paths from '@/modules/access-wallet/hardware/handlers/bip44';
 import HDWalletInterface from '@/modules/access-wallet/common/HDWalletInterface';
@@ -33,6 +32,7 @@ class BitBox02Wallet {
     };
   }
   async connect() {
+    const { getDevicePath, BitBox02API } = await import('bitbox02-api');
     const devicePath = await getDevicePath();
     this.BitBox02 = new BitBox02API(devicePath);
   }
@@ -60,7 +60,7 @@ class BitBox02Wallet {
           this.status = status;
         }
       );
-
+      const { constants } = await import('bitbox02-api');
       if (
         this.BitBox02.firmware().Product() !== constants.Product.BitBox02Multi
       ) {

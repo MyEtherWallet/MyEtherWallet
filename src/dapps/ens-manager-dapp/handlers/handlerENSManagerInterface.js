@@ -2,7 +2,7 @@ import { getTld, getHostName } from './helpers/helperTld';
 import { decodeCoinAddress } from './helpers/helperMulticoin';
 import BaseRegistrarImplementation from '@ensdomains/ens-contracts/deployments/mainnet/BaseRegistrarImplementation.json';
 import ENSRegistry from '@ensdomains/ens-contracts/deployments/mainnet/ENSRegistry.json';
-import PublicResolver from '@ensdomains/ens-contracts/deployments/mainnet/PublicResolver.json';
+import PublicResolver from '@ensdomains/resolver/build/contracts/PublicResolver.json';
 import ETHRegistrarController from '@ensdomains/ens-contracts/deployments/mainnet/ETHRegistrarController.json';
 import multicoins from './handlerMulticoins';
 import textrecords from './handlerTextRecords';
@@ -99,7 +99,6 @@ export default class ENSManagerInterface {
     if (this.address === '0x') {
       throw new Error('Owner not set! Please initialize module properly!');
     }
-
     for (const _record in obj) {
       this.txtRecords[_record] = obj[_record];
     }
@@ -263,7 +262,7 @@ export default class ENSManagerInterface {
 
     this.publicResolverContract = new web3.eth.Contract(
       PublicResolver.abi,
-      PublicResolver.address
+      this.publicResolverAddress
     );
     this._getMoreInfo();
   }
@@ -347,9 +346,13 @@ export default class ENSManagerInterface {
               address &&
               address !== '0x0000000000000000000000000000000000000000'
             ) {
-              this.multiCoin[coinTypes[idx]].value = this.multiCoin[
-                coinTypes[idx]
-              ].encode(Buffer.from(address.replace('0x', ''), 'hex'));
+              const formattedAddress =
+                coinTypes[idx] === 'ETH' || coinTypes[idx] === 'ETC'
+                  ? Buffer.from(address.replace('0x', ''), 'hex')
+                  : this.multiCoin[coinTypes[idx]].decode(address);
+              const value =
+                this.multiCoin[coinTypes[idx]].encode(formattedAddress);
+              this.multiCoin[coinTypes[idx]].value = value;
             }
           });
         });

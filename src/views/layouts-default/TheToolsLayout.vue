@@ -35,25 +35,22 @@
 </template>
 
 <script>
-import TheLayoutHeader from '../components-default/TheLayoutHeader';
-import AppGetStarted from '@/core/components/AppGetStarted';
-import ModuleToolsWatchOnly from '@/modules/tools/ModuleToolsWatchOnly';
-import ModuleToolsConvert from '@/modules/tools/ModuleToolsConvert';
-import ModuleToolsGenerateKeystore from '@/modules/tools/ModuleToolsGenerateKeystore/ModuleToolsGenerateKeystore';
-import ModuleToolsOfflineHelper from '@/modules/tools/ModuleToolsOfflineHelper';
-import ModuleMessageVerify from '@/modules/message/ModuleMessageVerify';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
 
 export default {
   name: 'TheToolsLayout',
   components: {
-    TheLayoutHeader,
-    AppGetStarted,
-    ModuleToolsWatchOnly,
-    ModuleToolsConvert,
-    ModuleToolsGenerateKeystore,
-    ModuleToolsOfflineHelper,
-    ModuleMessageVerify
+    TheLayoutHeader: () => import('../components-default/TheLayoutHeader'),
+    AppGetStarted: () => import('@/core/components/AppGetStarted'),
+    ModuleToolsWatchOnly: () => import('@/modules/tools/ModuleToolsWatchOnly'),
+    ModuleToolsConvert: () => import('@/modules/tools/ModuleToolsConvert'),
+    ModuleToolsGenerateKeystore: () =>
+      import(
+        '@/modules/tools/ModuleToolsGenerateKeystore/ModuleToolsGenerateKeystore'
+      ),
+    ModuleToolsOfflineHelper: () =>
+      import('@/modules/tools/ModuleToolsOfflineHelper'),
+    ModuleMessageVerify: () => import('@/modules/message/ModuleMessageVerify')
   },
   data: () => ({
     currentTool: '',

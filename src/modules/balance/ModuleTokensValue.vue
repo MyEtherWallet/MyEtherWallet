@@ -54,13 +54,12 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex';
-import AppModal from '@/core/components/AppModal';
-import ModuleTokens from '@/modules/balance/ModuleTokens';
+
 export default {
   name: 'ModuleTokensValue',
   components: {
-    AppModal,
-    ModuleTokens
+    AppModal: () => import('@/core/components/AppModal'),
+    ModuleTokens: () => import('@/modules/balance/ModuleTokens')
   },
   data: () => ({ showPopup: false }),
   computed: {

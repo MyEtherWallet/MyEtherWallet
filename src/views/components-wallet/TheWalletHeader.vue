@@ -1,21 +1,6 @@
 <template>
   <v-container>
     <v-row class="d-flex align-center py-2 pb-md-4 pb-lg-2 px-1">
-      <!-- <div class="d-flex align-center">
-      <img class="ml-2 mr-3" src="@/assets/images/icons/icon-puppy-mew.svg" />
-      <div>
-        <div class="font-weight-bold">MEWtopia</div>
-        <div>
-          {{ $t('interface.header.desc') }}
-          <a
-            href="https://www.mewtopia.com/tag/getting-started/"
-            rel="noopener noreferrer"
-            target="_blank"
-            >{{ $t('interface.header.read') }}</a
-          >
-        </div>
-      </div>
-    </div> -->
       <v-col
         cols="12"
         md="8"
@@ -116,16 +101,15 @@
 </template>
 
 <script>
-// import mobileStatus from './HeaderMobileStatus';
-import notificationOverlay from '@/modules/notifications/ModuleNotifications';
 import moment from 'moment';
 import { mapState } from 'vuex';
+
 import { MOONPAY_EVENT, MOONPAY_OFFER_END } from '@/modules/moon-pay/helpers';
 import { EventBus } from '@/core/plugins/eventBus';
 export default {
   components: {
-    notificationOverlay
-    // mobileStatus
+    notificationOverlay: () =>
+      import('@/modules/notifications/ModuleNotifications')
   },
   computed: {
     ...mapState('wallet', ['identifier']),

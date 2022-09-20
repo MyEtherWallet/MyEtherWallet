@@ -72,7 +72,7 @@
         <v-col cols="12" lg="7">
           <v-img
             class="block-image"
-            src="@/assets/images/snippets/new-dapps-page.png"
+            src="@/assets/images/snippets/new-dapps-page.jpg"
             contain
           />
         </v-col>
@@ -82,10 +82,10 @@
 </template>
 
 <script>
-import AppBlockTitle from '@/core/components/AppBlockTitle';
-
 export default {
-  components: { AppBlockTitle },
+  components: {
+    AppBlockTitle: () => import('@/core/components/AppBlockTitle')
+  },
   data: vm => ({
     titleData: {
       textProps: '',

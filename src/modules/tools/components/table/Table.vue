@@ -27,10 +27,11 @@
 </template>
 
 <script>
-import mobileTable from '@/components/mobile-table/MobileTable';
 export default {
   name: 'TableComponent',
-  components: { mobileTable },
+  components: {
+    mobileTable: () => import('@/components/mobile-table/MobileTable')
+  },
   data: () => ({
     mobileTable: [
       { label: 'Price', value: '$8.34' },

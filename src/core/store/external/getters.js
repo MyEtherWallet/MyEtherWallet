@@ -27,6 +27,7 @@ const totalTokenFiatValue = function (state, getters, rootState, rootGetters) {
   if (!tokenList.length) return new BigNumber(0);
   const totalValue = tokenList.reduce((total, currentVal) => {
     const balance =
+      !currentVal.isHidden &&
       currentVal.usdBalance !== null &&
       (currentVal.price_change_percentage_24h !== null ||
         currentVal.market_cap !== 0)

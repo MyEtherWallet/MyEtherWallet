@@ -129,10 +129,10 @@
 <script>
 import clipboardCopy from 'clipboard-copy';
 import moment from 'moment';
-import AppModal from '@/core/components/AppModal';
+import { isEmpty, debounce } from 'lodash';
+
 import { Toast, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import qrDisabled from '@/assets/images/icons/qr-disabled.png';
-import { isEmpty, debounce } from 'lodash';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { ROUTES_HOME } from '@/core/configs/configRoutes.js';
 
@@ -141,7 +141,7 @@ const MINUTES = 20;
 const SECONDS_IN_MINUTES = 60;
 export default {
   name: 'CrossChainModal',
-  components: { AppModal },
+  components: { AppModal: () => import('@/core/components/AppModal') },
   props: {
     showCrossChainModal: {
       type: Boolean,

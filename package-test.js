@@ -48,22 +48,29 @@ const EXCEPTIONS = [
   'vue-i18n',
   'vue',
   '@vue/cli-plugin-e2e-nightwatch',
-  'geckodriver',
   // breaking
   '@shapeshiftoss/hdwallet-core',
   '@shapeshiftoss/hdwallet-keepkey-webusb',
-  '@ledgerhq/hw-transport-web-ble',
-  '@ledgerhq/hw-transport-webusb',
-  'codecov', // no fix
-  'vue-template-compiler', // no fix
-  'package-json', // switched to es
+  'package-json',
+  'codecov',
+  'node-polyfill-webpack-plugin',
+  '@lokalise/node-api',
+  '@unstoppabledomains/resolution',
+  '@walletconnect/client',
+  '@walletconnect/qrcode-modal',
   'chromedriver',
-  'uuid',
-  '@ensdomains/ensjs',
   '@ethereumjs/common',
   '@ethereumjs/tx',
+  'graphql',
+  'vue-lazyload',
+  '@ensdomains/ensjs',
+  'vue-template-compiler',
   '@aave/contract-helpers',
-  '@aave/math-utils'
+  '@aave/math-utils',
+  'node-sass',
+  '@ledgerhq/hw-transport-web-ble',
+  '@ledgerhq/hw-transport-webusb',
+  'uuid'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

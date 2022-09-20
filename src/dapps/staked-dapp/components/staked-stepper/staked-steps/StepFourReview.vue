@@ -191,16 +191,16 @@
 </template>
 
 <script>
-import BorderBlock from '@/components/BorderBlock';
 import BigNumber from 'bignumber.js';
-import configNetworkTypes from '@/dapps/staked-dapp/handlers/configNetworkTypes';
 import { mapState, mapGetters } from 'vuex';
-import iconColorfulETH from '@/assets/images/icons/icon-colorful-eth.svg';
-import { formatBalanceEthValue } from '@/core/helpers/numberFormatHelper';
+
 import { ABI_GET_FEES } from '@/dapps/staked-dapp/handlers/handlerStaked';
+import { formatBalanceEthValue } from '@/core/helpers/numberFormatHelper';
+import iconColorfulETH from '@/assets/images/icons/icon-colorful-eth.svg';
+import configNetworkTypes from '@/dapps/staked-dapp/handlers/configNetworkTypes';
 
 export default {
-  components: { BorderBlock },
+  components: { BorderBlock: () => import('@/components/BorderBlock') },
   props: {
     amount: {
       type: Number,

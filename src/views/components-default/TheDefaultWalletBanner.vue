@@ -97,8 +97,8 @@
 </template>
 
 <script>
-import appStore from '@/assets/images/icons/button-app-store.png';
-import googlePlay from '@/assets/images/icons/button-play-store.png';
+import appStore from '@/assets/images/icons/button-app-store.svg';
+import googlePlay from '@/assets/images/icons/button-play-store.svg';
 import { mapMutations, mapState } from 'vuex';
 const platform = require('platform');
 export default {

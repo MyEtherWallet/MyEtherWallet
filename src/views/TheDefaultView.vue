@@ -10,16 +10,14 @@
 </template>
 
 <script>
-import TheDefaultHeader from './components-default/TheDefaultHeader';
-import TheDefaultFooter from './components-default/TheDefaultFooter';
-import TheEnkryptPopup from './components-default/TheEnkryptPopup';
 import { mapState } from 'vuex';
+
 export default {
   name: 'TheDefaultView',
   components: {
-    TheDefaultHeader,
-    TheDefaultFooter,
-    TheEnkryptPopup
+    TheDefaultHeader: () => import('./components-default/TheDefaultHeader'),
+    TheDefaultFooter: () => import('./components-default/TheDefaultFooter'),
+    TheEnkryptPopup: () => import('./components-default/TheEnkryptPopup')
   },
   computed: {
     ...mapState('popups', ['enkryptLandingPopup']),

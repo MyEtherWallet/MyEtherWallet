@@ -13,18 +13,15 @@
 </template>
 
 <script>
-import ModuleSend from '@/modules/send/ModuleSend';
-import TheWrapperWallet from '@/core/components/TheWrapperWallet';
-import ModuleTokensValue from '@/modules/balance/ModuleTokensValue';
-import ModuleTransferHistory from '@/modules/transfer-history/ModuleTransferHistory';
 import { mapGetters } from 'vuex';
 
 export default {
   components: {
-    ModuleSend,
-    TheWrapperWallet,
-    ModuleTokensValue,
-    ModuleTransferHistory
+    ModuleSend: () => import('@/modules/send/ModuleSend'),
+    TheWrapperWallet: () => import('@/core/components/TheWrapperWallet'),
+    ModuleTokensValue: () => import('@/modules/balance/ModuleTokensValue'),
+    ModuleTransferHistory: () =>
+      import('@/modules/transfer-history/ModuleTransferHistory')
   },
   computed: {
     ...mapGetters('notifications', ['txNotifications']),
