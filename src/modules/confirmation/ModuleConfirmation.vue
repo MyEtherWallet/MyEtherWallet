@@ -9,6 +9,7 @@
       :network="network"
       :links="links"
       :success-body-text="successBodyText"
+      :has-close-button="false"
     />
     <cross-chain-confirmation
       :show-cross-chain-modal="showCrossChainModal"
