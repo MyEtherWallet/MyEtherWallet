@@ -3,16 +3,16 @@
 <svg version="1.1" id="layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 300 300" style="enable-background:new 0 0 300 300;" xml:space="preserve">
 <style type="text/css">
-	.st0{fill:#CCCCCC;enable-background:new    ;}
-	.st1{fill:#BFBFBF;enable-background:new    ;}
-	.st2{fill:#B1B1B1;enable-background:new    ;}
+	.st0{fill:#CCCCCC;}
+	.st1{fill:#BFBFBF;}
+	.st2{fill:#B1B1B1;}
 </style>
 <g>
-	<polygon class="st0" points="145.7,21.6 67.3,151.8 146,115.9 	"/>
-	<polygon class="st1" points="145.9,198.3 67.3,151.8 146,115.9 	"/>
-	<polygon class="st1" points="153.6,21.6 153.6,115.9 232.7,151.7 	"/>
-	<polygon class="st2" points="153.6,198.3 153.6,115.9 232.7,151.7 	"/>
-	<polygon class="st0" points="67.6,168.1 145.9,278.4 145.9,214.2 	"/>
-	<polygon class="st1" points="153.6,278.4 153.6,214.2 232.1,168 	"/>
+	<polygon class="st0" points="146.1,35 75.9,151.6 146.4,119.5 	"/>
+	<polygon class="st1" points="146.3,193.3 75.9,151.6 146.4,119.5 	"/>
+	<polygon class="st1" points="153.2,35 153.2,119.5 224.1,151.5 	"/>
+	<polygon class="st2" points="153.2,193.3 153.2,119.5 224.1,151.5 	"/>
+	<polygon class="st0" points="76.2,166.2 146.3,265 146.3,207.5 	"/>
+	<polygon class="st1" points="153.2,265 153.2,207.5 223.5,166.1 	"/>
 </g>
 </svg>

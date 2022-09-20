@@ -10,46 +10,46 @@
 	.st4{fill:url(#SVGID_5_);}
 	.st5{opacity:0.5;fill:url(#SVGID_6_);enable-background:new    ;}
 </style>
-<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="111.8252" y1="26.5515" x2="114.1618" y2="113.0079" gradientTransform="matrix(1 0 0 -1 0 302.498)">
+<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="113.7277" y1="759.3027" x2="115.9485" y2="677.1334" gradientTransform="matrix(1 0 0 1 0 -489.502)">
 	<stop  offset="0" style="stop-color:#FFFFFF"/>
 	<stop  offset="0.19" style="stop-color:#E2E2E2"/>
 	<stop  offset="0.589" style="stop-color:#D5D5D5"/>
 	<stop  offset="0.868" style="stop-color:#C6C6C6"/>
 	<stop  offset="1" style="stop-color:#B7B7B7"/>
 </linearGradient>
-<path class="st0" d="M147,207.3l-67.4-36.8L147,273V207.3z"/>
-<linearGradient id="SVGID_2_" gradientUnits="userSpaceOnUse" x1="166.5058" y1="108.6807" x2="118.0202" y2="53.7693" gradientTransform="matrix(1 0 0 -1 0 302.498)">
+<path class="st0" d="M147.1,204.6l-64.1-35l64.1,97.4V204.6z"/>
+<linearGradient id="SVGID_2_" gradientUnits="userSpaceOnUse" x1="165.7266" y1="681.2805" x2="119.6453" y2="733.4689" gradientTransform="matrix(1 0 0 1 0 -489.502)">
 	<stop  offset="0" style="stop-color:#FFFFFF"/>
 	<stop  offset="1" style="stop-color:#FFFFFF;stop-opacity:0"/>
 </linearGradient>
-<path class="st1" d="M147,207.3l-28.8-15.7L147,273V207.3z"/>
-<linearGradient id="SVGID_3_" gradientUnits="userSpaceOnUse" x1="184.305" y1="24.5926" x2="186.6416" y2="111.049" gradientTransform="matrix(1 0 0 -1 0 302.498)">
+<path class="st1" d="M147.1,204.6l-27.4-14.9l27.4,77.4V204.6z"/>
+<linearGradient id="SVGID_3_" gradientUnits="userSpaceOnUse" x1="182.5939" y1="761.1639" x2="184.8147" y2="678.9946" gradientTransform="matrix(1 0 0 1 0 -489.502)">
 	<stop  offset="0" style="stop-color:#FFFFFF"/>
 	<stop  offset="0.19" style="stop-color:#E2E2E2"/>
 	<stop  offset="0.589" style="stop-color:#CFCFCF"/>
 	<stop  offset="0.868" style="stop-color:#CCCCCC"/>
 	<stop  offset="1" style="stop-color:#BABABA"/>
 </linearGradient>
-<path class="st2" d="M153,273l67.4-102.5L153,207.3L153,273z"/>
-<linearGradient id="SVGID_4_" gradientUnits="userSpaceOnUse" x1="136.6489" y1="269.112" x2="195.0656" y2="102.0405" gradientTransform="matrix(1 0 0 -1 0 302.498)">
+<path class="st2" d="M152.9,267l64.1-97.4l-64.1,35V267z"/>
+<linearGradient id="SVGID_4_" gradientUnits="userSpaceOnUse" x1="137.3109" y1="528.7697" x2="192.8309" y2="687.5566" gradientTransform="matrix(1 0 0 1 0 -489.502)">
 	<stop  offset="0" style="stop-color:#FFFFFF"/>
 	<stop  offset="0.19" style="stop-color:#E2E2E2"/>
 	<stop  offset="0.589" style="stop-color:#CCCCCC"/>
 	<stop  offset="0.868" style="stop-color:#BDBDBD"/>
 	<stop  offset="1" style="stop-color:#A3A3A3"/>
 </linearGradient>
-<path class="st3" d="M221,154L150,31v161.2L221,154z"/>
-<linearGradient id="SVGID_5_" gradientUnits="userSpaceOnUse" x1="61.0856" y1="190.8842" x2="155.4453" y2="190.8842" gradientTransform="matrix(1 0 0 -1 0 302.498)">
+<path class="st3" d="M217.5,153.9L150,37v153.2L217.5,153.9z"/>
+<linearGradient id="SVGID_5_" gradientUnits="userSpaceOnUse" x1="65.4946" y1="603.1053" x2="155.1753" y2="603.1053" gradientTransform="matrix(1 0 0 1 0 -489.502)">
 	<stop  offset="0" style="stop-color:#FFFFFF"/>
 	<stop  offset="0.19" style="stop-color:#EFEFEF"/>
 	<stop  offset="0.589" style="stop-color:#CFCFCF"/>
 	<stop  offset="0.868" style="stop-color:#C6C6C6"/>
 	<stop  offset="1" style="stop-color:#C6C6C6"/>
 </linearGradient>
-<path class="st4" d="M150,31L79,154l71,38.2h0L150,31L150,31z"/>
-<linearGradient id="SVGID_6_" gradientUnits="userSpaceOnUse" x1="169.4582" y1="214.9106" x2="111.431" y2="143.2532" gradientTransform="matrix(1 0 0 -1 0 302.498)">
+<path class="st4" d="M150,37L82.5,153.9l67.5,36.3l0,0V37L150,37z"/>
+<linearGradient id="SVGID_6_" gradientUnits="userSpaceOnUse" x1="168.4858" y1="580.2773" x2="113.336" y2="648.3815" gradientTransform="matrix(1 0 0 1 0 -489.502)">
 	<stop  offset="0" style="stop-color:#FFFFFF"/>
 	<stop  offset="1" style="stop-color:#FFFFFF;stop-opacity:0"/>
 </linearGradient>
-<path class="st5" d="M121.7,80.1L150,31v161.2L121.7,80.1z"/>
+<path class="st5" d="M123.1,83.7L150,37v153.2L123.1,83.7z"/>
 </svg>
