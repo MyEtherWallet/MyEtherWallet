@@ -56,9 +56,11 @@
             </div>
           </div>
         </div>
-        <div v-else class="d-flex align-center">
+        <div v-else class="eth-banner d-flex">
           <div class="mr-5">
-            <v-icon color="black"> mdi-bank </v-icon>
+            <mew6-white-sheet class="pa-3">
+              <v-icon color="black"> mdi-bank </v-icon>
+            </mew6-white-sheet>
           </div>
           <div class="d-flex flex-column align-start">
             <span class="mew-body font-weight-bold textDark--text"
@@ -172,5 +174,9 @@ a {
 
 .set-fixed-height {
   height: 52px;
+}
+
+.eth-banner {
+  margin-left: -15px;
 }
 </style>
