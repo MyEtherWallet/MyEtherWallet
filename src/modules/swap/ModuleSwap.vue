@@ -580,6 +580,21 @@ export default {
         return token.contract !== this.fromTokenType?.contract;
       });
       filteredTrendingTokens = this.formatTokenPrice(filteredTrendingTokens);
+      const nonChainTokens = validToTokens.reduce((arr, item) => {
+        if (
+          item.hasOwnProperty('isEth') &&
+          !item.isEth &&
+          item.name &&
+          item.symbol &&
+          item.subtext &&
+          item.symbol !== this.network.type.currencyName
+        ) {
+          delete item['tokenBalance'];
+          delete item['totalBalance'];
+          arr.push(item);
+        }
+        return arr;
+      }, []);
       let returnableTokens = [
         {
           text: 'Select Token',
@@ -594,20 +609,23 @@ export default {
           {
             header: 'Trending'
           },
-          ...filteredTrendingTokens,
-          {
-            header: 'All'
-          },
-          ...validToTokens
-        ]);
-      } else {
-        returnableTokens = returnableTokens.concat([
-          {
-            header: 'All'
-          },
-          ...validToTokens
+          ...filteredTrendingTokens
         ]);
       }
+      if (nonChainTokens.length > 0) {
+        returnableTokens = returnableTokens.concat([
+          {
+            header: 'Cross-Chain Tokens'
+          },
+          ...nonChainTokens
+        ]);
+      }
+      returnableTokens = returnableTokens.concat([
+        {
+          header: 'All'
+        },
+        ...validToTokens
+      ]);
       return returnableTokens;
     },
     /**
@@ -1216,7 +1234,7 @@ export default {
       ) {
         return this.mainTokenDetails;
       }
-      return findToken ? findToken : this.actualFromTokens[0];
+      return findToken ? findToken : this.actualToTokens[0];
     },
     /**
      * gets the select label placeholder token imgs
