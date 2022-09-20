@@ -616,6 +616,7 @@ export default {
   border: 1px solid var(--v-greenMedium-base);
   border-radius: 10px;
   overflow: hidden;
+  height: 200px;
 }
 .alert-container-top {
   background-color: #ebfaf8;
