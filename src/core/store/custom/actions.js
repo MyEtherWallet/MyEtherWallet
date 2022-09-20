@@ -1,4 +1,5 @@
 import BigNumber from 'bignumber.js';
+import { fromBase } from '@/core/helpers/unit';
 import {
   formatFloatingPointValue,
   formatIntegerValue
@@ -17,6 +18,14 @@ const deleteToken = function ({ rootGetters, commit }, token) {
 
 const deleteAll = function ({ rootGetters, commit }) {
   commit('DELETE_ALL_TOKENS', { rootGetters });
+};
+
+const setHiddenToken = function ({ rootGetters, commit }, token) {
+  commit('SET_HIDDEN_TOKEN', { token, rootGetters });
+};
+
+const deleteHiddenToken = function ({ rootGetters, commit }, token) {
+  commit('DELETE_HIDDEN_TOKEN', { token, rootGetters });
 };
 
 const setAddressBook = function ({ commit }, addressBook) {
@@ -38,7 +47,7 @@ const updateCustomTokenBalances = function ({ dispatch, getters, rootState }) {
   const _getTokenBalance = (balance, decimals) => {
     let n = new BigNumber(balance);
     if (decimals) {
-      n = n.div(new BigNumber(10).pow(decimals));
+      n = fromBase(balance, decimals);
       n = formatFloatingPointValue(n);
     } else {
       n = formatIntegerValue(n);
@@ -58,7 +67,7 @@ const updateCustomTokenBalances = function ({ dispatch, getters, rootState }) {
         .call()
         .then(res => {
           newToken.balancef = _getTokenBalance(res, item.decimals).value;
-          newToken.balance = _getTokenBalance(newToken.balancef).value;
+          newToken.balance = res;
           dispatch('setCustomToken', newToken);
         })
         .catch(e => Toast(e.message, {}, ERROR));
@@ -74,5 +83,7 @@ export default {
   addCustomPath,
   deleteCustomPath,
   deleteAllCustomPaths,
-  updateCustomTokenBalances
+  updateCustomTokenBalances,
+  setHiddenToken,
+  deleteHiddenToken
 };

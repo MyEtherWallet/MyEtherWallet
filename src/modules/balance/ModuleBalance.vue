@@ -18,7 +18,7 @@
       :has-full-height="true"
       icon-align="left"
     >
-      <template v-if="network.type.name === 'ETH'" #rightHeaderContainer>
+      <template v-if="false" #rightHeaderContainer>
         <div class="d-flex align-center ml-8 mt-3 mt-sm-0">
           <mew-toggle
             :button-group="chartButtons"
@@ -30,7 +30,7 @@
       </template>
       <template #moduleBody>
         <balance-chart
-          v-if="network.type.name === 'ETH'"
+          v-if="false"
           :data="chartData"
           class="full-width mt-5 pa-md-3"
         />
