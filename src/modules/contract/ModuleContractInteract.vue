@@ -30,22 +30,19 @@
           label="ABI/JSON Interface"
         ></v-textarea>
 
-        <div class="text-center mt-3">
+        <div class="text-right">
+          <mew-button
+            title="Clear all"
+            :has-full-width="false"
+            btn-style="light"
+            class="mr-4"
+            @click.native="resetDefaults"
+          />
           <mew-button
             title="Interact"
             :disabled="!canInteract"
             :has-full-width="false"
-            btn-size="xlarge"
             @click.native="showInteract"
-          />
-        </div>
-        <div class="text-center mt-4">
-          <mew-button
-            title="Clear all"
-            :has-full-width="false"
-            btn-size="small"
-            btn-style="transparent"
-            @click.native="resetDefaults"
           />
         </div>
       </div>
