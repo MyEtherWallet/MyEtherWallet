@@ -21,6 +21,7 @@
       <div class="mew-heading-2 mb-2">Your Domains:</div>
       <div class="d-flex justify-space-between">
         <mew-select
+          normal-dropdown
           :value="selectedDomain"
           filter-placeholder="Search for Domain"
           :items="domainListItems"

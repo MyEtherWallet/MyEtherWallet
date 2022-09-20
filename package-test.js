@@ -67,7 +67,8 @@ const EXCEPTIONS = [
   'vue-template-compiler',
   '@aave/contract-helpers',
   '@aave/math-utils',
-  'node-sass'
+  'node-sass',
+  'uuid'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
