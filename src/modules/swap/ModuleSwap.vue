@@ -562,13 +562,14 @@ export default {
      */
     actualToTokens() {
       if (this.isLoading) return [];
-      const validToTokens = this.toTokens.filter(item => {
+      let validToTokens = this.toTokens.filter(item => {
         if (
           item.contract.toLowerCase() !==
           this.fromTokenType?.contract?.toLowerCase()
         )
           return item;
       });
+      validToTokens = this.formatTokenPrice(validToTokens);
       let filteredTrendingTokens = this.trendingTokens().filter(token => {
         return token.contract !== this.fromTokenType?.contract;
       });
@@ -1159,11 +1160,11 @@ export default {
       return tokens.map(t => {
         t.totalBalance = t.hasOwnProperty('usdBalancef')
           ? this.getFiatValue(t.usdBalancef)
-          : '0.00';
+          : this.getFiatValue('0.00');
         t.tokenBalance = t.hasOwnProperty('balancef') ? t.balancef : '0.00';
         t.price = t.hasOwnProperty('pricef')
           ? this.getFiatValue(t.pricef)
-          : '0.00';
+          : this.getFiatValue('0.00');
         t.name = t.hasOwnProperty('symbol') ? t.symbol : '';
         return t;
       });
@@ -1173,7 +1174,7 @@ export default {
       return tokens.map(t => {
         t.price = t.hasOwnProperty('pricef')
           ? this.getFiatValue(t.pricef)
-          : '0.00';
+          : this.getFiatValue('0.00');
         return t;
       });
     },
@@ -1243,7 +1244,7 @@ export default {
     switchTokens() {
       this.trackSwap('switchTokens');
       const fromToken = this.fromTokenType;
-      const toToken = this.toTokenType;
+      const toToken = this.toTokenType || this.actualToTokens[0];
       const tokenOutValue = this.tokenOutValue;
       this.fromTokenType = {};
       this.toTokenType = {};
