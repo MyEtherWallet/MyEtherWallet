@@ -155,7 +155,7 @@
     "minizlib": "2.1.2",
     "multicoin-address-validator": "git+https://github.com/MyEtherWallet/multicoin-address-validator.git",
     "node-fetch": "2.6.7",
-    "node-sass": "7.0.1",
+    "node-sass": "7.0.3",
     "postcss-import": "12.0.1",
     "postcss-url": "8.0.0",
     "prettier": "2.7.1",
