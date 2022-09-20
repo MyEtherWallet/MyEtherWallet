@@ -68,6 +68,8 @@ const EXCEPTIONS = [
   '@aave/contract-helpers',
   '@aave/math-utils',
   'node-sass',
+  '@ledgerhq/hw-transport-web-ble',
+  '@ledgerhq/hw-transport-webusb',
   'uuid'
 ];
 const CUSTOM_DIST = {
@@ -124,12 +126,12 @@ const looper = () => {
           if (!isMewComponentBeta) {
             console.error(
               'ERROR: Update ' +
-              _name +
-              ' from ' +
-              ALL_PACKAGES[_name] +
-              ' to ' +
-              latestVersion +
-              '. Released:',
+                _name +
+                ' from ' +
+                ALL_PACKAGES[_name] +
+                ' to ' +
+                latestVersion +
+                '. Released:',
               latestVersionTime
             );
             updatesFound = true;
