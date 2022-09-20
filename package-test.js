@@ -62,6 +62,8 @@ const EXCEPTIONS = [
   '@ethereumjs/common',
   '@ethereumjs/tx',
   'graphql',
+  'vue-lazyload',
+  '@ensdomains/ensjs',
   'vue-template-compiler',
   '@aave/contract-helpers',
   '@aave/math-utils',

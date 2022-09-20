@@ -98,17 +98,16 @@
 </template>
 
 <script>
-import ModuleCreateWalletSoftware from '@/modules/create-wallet/ModuleCreateWalletSoftware';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
-import TheLayoutHeader from '../components-default/TheLayoutHeader';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
 import enkryptMarketing from '@/core/mixins/enkryptMarketing.mixin';
 
 export default {
   name: 'TheCreateWalletLayout',
   components: {
-    ModuleCreateWalletSoftware,
-    TheLayoutHeader
+    ModuleCreateWalletSoftware: () =>
+      import('@/modules/create-wallet/ModuleCreateWalletSoftware'),
+    TheLayoutHeader: () => import('../components-default/TheLayoutHeader')
   },
   mixins: [enkryptMarketing],
   props: {

@@ -175,16 +175,16 @@ import clipboardCopy from 'clipboard-copy';
 import { toBN, isHexStrict, toWei, hexToNumberString } from 'web3-utils';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
-import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
-import sanitizeHex from '@/core/helpers/sanitizeHex';
 import Web3 from 'web3';
 import { isValidAddress } from 'ethereumjs-util';
 import { isEmpty } from 'lodash';
+
+import sanitizeHex from '@/core/helpers/sanitizeHex';
 import { Toast } from '../toast/handler/handlerToast';
 import { toBNSafe } from '@/core/helpers/numberFormatHelper';
 export default {
   components: {
-    ModuleAddressBook
+    ModuleAddressBook: () => import('@/modules/address-book/ModuleAddressBook')
   },
   data() {
     return {
@@ -205,7 +205,8 @@ export default {
       raw: null,
       signedTransaction: null,
       jsonFileName: '',
-      jsonFile: null
+      jsonFile: null,
+      tokens: []
     };
   },
   computed: {
@@ -216,9 +217,6 @@ export default {
         symbol: this.network.type.currencyName,
         name: this.network.type.name
       };
-    },
-    tokens() {
-      return [this.networkToken].concat(this.network.type.tokens);
     },
     isDisabledNextBtn() {
       return (
@@ -316,8 +314,15 @@ export default {
   },
   mounted() {
     this.selectedCurrency = this.networkToken;
+    this.generateTokens();
   },
   methods: {
+    generateTokens() {
+      const networkToken = [this.networkToken];
+      this.network.type.tokens.then(tokens => {
+        this.tokens = networkToken.concat(tokens);
+      });
+    },
     generateData() {
       const web3 = new Web3(this.network.url);
       const jsonInterface = [

@@ -106,19 +106,22 @@
 </template>
 
 <script>
+import { mapActions, mapGetters, mapState } from 'vuex';
+import { debounce } from 'lodash';
+
 import * as nodes from '@/utils/networks/nodes';
 import * as types from '@/utils/networks/types';
-import { mapActions, mapGetters, mapState } from 'vuex';
 import { Toast, SUCCESS, ERROR } from '@/modules/toast/handler/handlerToast';
-import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
-import { debounce } from 'lodash';
+
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import matchNetwork from '@/core/helpers/matchNetwork';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 
 export default {
   name: 'NetworkSwitch',
-  components: { AppUserMsgBlock },
+  components: {
+    AppUserMsgBlock: () => import('@/core/components/AppUserMsgBlock')
+  },
   mixins: [handlerAnalytics],
   props: {
     isWallet: { type: Boolean, default: true },

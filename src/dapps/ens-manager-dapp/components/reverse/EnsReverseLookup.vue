@@ -58,11 +58,12 @@
 </template>
 
 <script>
-import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { isEmpty } from 'lodash';
 import ENS from '@ensdomains/ensjs';
 import { mapGetters, mapState } from 'vuex';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import PermanentNameModule from '../../handlers/handlerPermanentName';
+import errorHandler from '@/modules/confirmation/handlers/errorHandler.js';
 export default {
   name: 'EnsReverseLookup',
   props: {
@@ -158,7 +159,8 @@ export default {
         this.hasReverseRecordNames = true;
         return reverseRecord;
       } catch (e) {
-        Toast(e, {}, ERROR);
+        const err = errorHandler(e);
+        if (err) Toast(err, {}, ERROR);
       }
     },
     // async getReverseRecordNames() {

@@ -47,9 +47,9 @@
 </template>
 
 <script>
-import SignAndVerifyMessage from '@/modules/message/handlers';
 import { toChecksumAddress } from 'ethereumjs-util';
 
+import SignAndVerifyMessage from '@/modules/message/handlers';
 export default {
   name: 'ModuleMessageVerify',
   components: {},

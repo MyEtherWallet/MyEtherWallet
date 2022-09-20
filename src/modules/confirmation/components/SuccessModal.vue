@@ -74,11 +74,10 @@
 </template>
 
 <script>
-import AppModal from '@/core/components/AppModal';
 import { EventBus } from '@/core/plugins/eventBus';
 export default {
   name: 'SuccessModal',
-  components: { AppModal },
+  components: { AppModal: () => import('@/core/components/AppModal') },
   props: {
     showSuccessModal: {
       type: Boolean,

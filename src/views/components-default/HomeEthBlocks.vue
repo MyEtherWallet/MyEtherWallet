@@ -5,14 +5,14 @@
         <v-col class="pa-0" cols="12" md="6">
           <div style="max-width: 520px; margin: 0 auto">
             <img
+              v-lazy="three"
               class="d-lg-none d-md-none d-inline"
               width="100%"
-              :src="three"
             />
             <img
+              v-lazy="six"
               class="d-lg-inline d-md-inline d-none"
               width="100%"
-              :src="six"
             />
           </div>
         </v-col>
@@ -57,8 +57,8 @@
 </template>
 
 <script>
-import ethBlocksThree from '@/assets/images/icons/eth-blocks-3.png';
-import ethBlocksSix from '@/assets/images/icons/eth-blocks-6.png';
+import ethBlocksThree from '@/assets/images/icons/eth-blocks-3.jpg';
+import ethBlocksSix from '@/assets/images/icons/eth-blocks-6.jpg';
 export default {
   name: 'HomeEthBlocks',
   components: {},

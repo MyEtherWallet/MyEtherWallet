@@ -28,11 +28,12 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex';
-import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 
 export default {
   name: 'HomeFeaturesSend',
-  components: { ModuleAddressBook },
+  components: {
+    ModuleAddressBook: () => import('@/modules/address-book/ModuleAddressBook')
+  },
   data: () => ({
     data: '1337'
   }),

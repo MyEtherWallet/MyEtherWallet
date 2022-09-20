@@ -154,6 +154,9 @@
 import Vue from 'vue';
 import { mapState, mapGetters } from 'vuex';
 import { toBN, toWei } from 'web3-utils';
+import { isString, throttle } from 'lodash';
+import { getAddressInfo } from '@kleros/address-tags-sdk';
+
 import { isAddress } from '@/core/helpers/addressUtils';
 import { stringToArray } from '@/core/helpers/common';
 import {
@@ -163,8 +166,6 @@ import {
   isContractArgValid
 } from './handlers/common';
 import { ERROR, Toast } from '../toast/handler/handlerToast';
-import { isString, throttle } from 'lodash';
-import { getAddressInfo } from '@kleros/address-tags-sdk';
 export default {
   name: 'ModuleContractInteract',
   data() {
@@ -181,7 +182,8 @@ export default {
       },
       outputValues: [],
       ethPayable: '0',
-      nametag: ''
+      nametag: '',
+      networkContracts: []
     };
   },
   computed: {
@@ -222,7 +224,7 @@ export default {
         { text: 'Select a Contract', selectLabel: true, divider: true }
       ].concat(
         checkContract(this.localContracts),
-        checkContract(this.network.type.contracts)
+        checkContract(this.networkContracts)
       );
     },
     methods() {
@@ -262,9 +264,22 @@ export default {
       if (isAddress(newVal.toLowerCase())) {
         this.resolveAddress();
       }
+    },
+    web3: {
+      handler: function () {
+        this.generateNetworkContracts();
+      }
     }
   },
+  mounted() {
+    this.generateNetworkContracts();
+  },
   methods: {
+    generateNetworkContracts() {
+      this.network.type.contracts.then(contracts => {
+        this.networkContracts = contracts;
+      });
+    },
     resetDefaults() {
       this.currentContract = null;
       this.abi = [];
