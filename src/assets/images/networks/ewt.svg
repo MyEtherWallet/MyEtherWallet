@@ -1,7 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="325.909" height="550.308" viewBox="0 0 86.23 145.602">
-  <path fill="#fcfefe" d="M43.304 2.457l41.603 94.208-41.603 46.288L1.701 96.665z"/>
-  <path fill="#e1e1e1" d="M43.216 2.934l-41.5 93.944h41.5z"/>
-  <path fill="#f6f6f6" d="M43.216 3.164v93.714h41.397zM1.981 96.878l41.236 45.851V96.878z"/>
-  <path fill="#dedede" d="M43.216 96.878v45.748L84.35 96.878z"/>
-  <path fill="#fcfcfc" d="M43.304 43.149l23.703 53.677-23.703 26.362-23.702-26.362z"/>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 23.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 300 300" style="enable-background:new 0 0 300 300;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#FCFEFE;}
+	.st1{fill:#E1E1E1;}
+	.st2{fill:#F6F6F6;}
+	.st3{fill:#DEDEDE;}
+	.st4{fill:#FCFCFC;}
+</style>
+<path class="st0" d="M150.7,34.6l68.1,154.3l-68.1,75.7l-68.1-75.7L150.7,34.6z"/>
+<path class="st1" d="M150.6,35.4l-68,153.8h68V35.4z"/>
+<path class="st2" d="M150.6,35.8v153.4h67.8L150.6,35.8z M83,189.2l67.5,75.1v-75.1H83z"/>
+<path class="st3" d="M150.6,189.2v74.9l67.3-74.9H150.6z"/>
+<path class="st4" d="M150.7,101.3l38.8,87.9l-38.8,43.1l-38.8-43.1L150.7,101.3z"/>
 </svg>

@@ -1,1 +1,19 @@
-<svg xmlns="http://www.w3.org/2000/svg" data-name="Layer 1" viewBox="0 0 299.75 299.75"><path fill="#dadada" d="M81.81 207.63l29.25-29.57-28.31-28.18H0z"/><path fill="#f4f4f4" d="M81.81 92.13l29.25 29.56-28.31 28.19H0zM92.13 217.94l29.56-29.25L149.88 217v82.75z"/><path fill="#dadada" d="M207.63 217.94l-29.57-29.25L149.88 217v82.75z"/><path fill="#f4f4f4" d="M217.94 207.63l-29.25-29.57L217 149.88h82.75z"/><path fill="#dadada" d="M217.94 92.13l-29.25 29.56L217 149.88h82.75z"/><g><path fill="#dadada" d="M207.63 81.81l-29.57 29.25-28.18-28.31V0z"/><path fill="#f4f4f4" d="M92.13 81.81l29.56 29.25 28.19-28.31V0z"/></g><path fill="#dadada" d="M102.68 149.873l47.2-47.2 47.2 47.2-47.2 47.2z"/></svg>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 23.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 300 300" style="enable-background:new 0 0 300 300;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#DADADA;}
+	.st1{fill:#F4F4F4;}
+</style>
+<path class="st0" d="M97.8,194.3l22.5-22.7L98.5,150H35L97.8,194.3z"/>
+<path class="st1" d="M97.8,105.7l22.5,22.7L98.5,150H35L97.8,105.7z M105.7,202.2l22.7-22.5l21.6,21.7v63.5L105.7,202.2z"/>
+<path class="st0" d="M194.3,202.2l-22.7-22.5L150,201.5V265L194.3,202.2z"/>
+<path class="st1" d="M202.2,194.3l-22.5-22.7l21.7-21.6h63.5L202.2,194.3z"/>
+<path class="st0" d="M202.2,105.7l-22.5,22.7l21.7,21.6h63.5L202.2,105.7z"/>
+<g>
+	<path class="st0" d="M194.3,97.8l-22.7,22.5L150,98.5V35L194.3,97.8z"/>
+	<path class="st1" d="M105.7,97.8l22.7,22.5L150,98.5V35L105.7,97.8z"/>
+</g>
+<path class="st0" d="M113.8,150l36.2-36.2l36.2,36.2L150,186.2L113.8,150z"/>
+</svg>
