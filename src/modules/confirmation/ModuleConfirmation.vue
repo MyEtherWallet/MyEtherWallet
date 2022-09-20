@@ -45,6 +45,7 @@
               >Learn more.</a
             >
           </div>
+
           <confirmation-send-transaction-details
             v-if="!isSwap"
             :to="txTo"
@@ -77,6 +78,10 @@
             :to-address="swapInfo.to"
           />
           <!-- Warning Sheet -->
+          <!-- =========================================================================== -->
+          <!-- Commented to hide swap warning message -->
+          <!-- =========================================================================== -->
+          <!--
           <div class="px-4 py-6 pr-6 textBlack2--text border-radius--5px mb-5">
             <b>Make sure all the information is correct.</b> Cancelling or
             reversing a transaction cannot be guaranteed. You will still be
@@ -88,6 +93,8 @@
               >Learn more.</a
             >
           </div>
+          -->
+
           <!-- Ledger Warning Sheet -->
           <div
             v-if="isOnLedger"
