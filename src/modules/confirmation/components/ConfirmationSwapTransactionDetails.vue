@@ -59,19 +59,19 @@
 </template>
 
 <script>
+import BigNumber from 'bignumber.js';
+import { mapGetters } from 'vuex';
+import { fromWei } from 'web3-utils';
+
 import {
   formatFloatingPointValue,
   formatGasValue
 } from '@/core/helpers/numberFormatHelper';
-import ConfirmationSummaryBlock from './ConfirmationSummaryBlock';
-import ConfirmationValuesContainer from './ConfirmationValuesContainer';
-import BigNumber from 'bignumber.js';
-import { mapGetters } from 'vuex';
-import { fromWei } from 'web3-utils';
+
 export default {
   components: {
-    ConfirmationSummaryBlock,
-    ConfirmationValuesContainer
+    ConfirmationSummaryBlock: () => import('./ConfirmationSummaryBlock'),
+    ConfirmationValuesContainer: () => import('./ConfirmationValuesContainer')
   },
   props: {
     provider: {

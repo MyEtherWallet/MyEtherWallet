@@ -1,5 +1,3 @@
-import tokens from '@/_generated/tokens/tokens-moonbeam.json';
-import contracts from '@/_generated/contracts/contract-abi-moonbeam.json';
 import moonbeam from '@/assets/images/networks/moonbeam.svg';
 
 export default {
@@ -10,8 +8,12 @@ export default {
   blockExplorerTX: 'https://moonscan.io/tx/[[txHash]]',
   blockExplorerAddr: 'https://moonscan.io/addr/[[address]]',
   chainID: 1284,
-  tokens: tokens,
-  contracts: contracts,
+  tokens: import('@/_generated/tokens/tokens-moonbeam.json').then(
+    val => val.default
+  ),
+  contracts: import('@/_generated/contracts/contract-abi-moonbeam.json').then(
+    val => val.default
+  ),
   icon: moonbeam,
   currencyName: 'GLMR',
   isTestNetwork: false,

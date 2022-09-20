@@ -53,13 +53,14 @@
 </template>
 
 <script>
-import AppBlockTitle from '@/core/components/AppBlockTitle';
 import Telegram from '@/assets/images/icons/icon-telegram-dark.svg';
 import Slack from '@/assets/images/icons/icon-slack-dark.svg';
 import Reddit from '@/assets/images/icons/icon-reddit-dark.svg';
 import Github from '@/assets/images/icons/icon-github-dark.svg';
 export default {
-  components: { AppBlockTitle },
+  components: {
+    AppBlockTitle: () => import('@/core/components/AppBlockTitle')
+  },
   data: vm => ({
     icons: [
       {

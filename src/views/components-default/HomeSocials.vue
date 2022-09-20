@@ -17,8 +17,8 @@
           md="1"
         >
           <a :href="p.link" target="_blank">
-            <v-img
-              :src="p.img"
+            <img
+              v-lazy="p.img"
               max-height="40px"
               max-width="40px"
               contain

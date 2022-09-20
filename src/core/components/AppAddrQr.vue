@@ -5,7 +5,7 @@
       Title
     =====================================================================================
     -->
-    <div class="mew-heading-2 mb-3 mr-3">
+    <div class="mew-heading-2 mb-3">
       {{ $t('interface.qr.title') }}
     </div>
 

@@ -69,23 +69,23 @@
 </template>
 
 <script>
-import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { mapGetters, mapState, mapActions } from 'vuex';
-import BuyEthComponent from './components/MoonPayBuyComponent';
-import SellEthComponent from './components/MoonPaySellComponent';
-import handler from './handlers/handlerOrder';
-import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import { isEmpty } from 'lodash';
+
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
+import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import nodes from '@/utils/networks';
 import { SUCCESS, Toast } from '../toast/handler/handlerToast';
-import MoonPayBuyProviderComponent from './components/MoonPayBuyProviderComponent.vue';
+
+import handler from './handlers/handlerOrder';
 
 export default {
   name: 'MoonPay',
   components: {
-    BuyEthComponent,
-    SellEthComponent,
-    MoonPayBuyProviderComponent
+    BuyEthComponent: () => import('./components/MoonPayBuyComponent'),
+    SellEthComponent: () => import('./components/MoonPaySellComponent'),
+    MoonPayBuyProviderComponent: () =>
+      import('./components/MoonPayBuyProviderComponent.vue')
   },
   props: {
     open: {
