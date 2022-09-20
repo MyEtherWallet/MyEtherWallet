@@ -10,9 +10,9 @@
 
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex';
-import ModuleToast from '@/modules/toast/ModuleToast.vue';
-import ModuleGlobalModals from '@/modules/global-modals/ModuleGlobalModals';
-import ModuleAnalytics from '@/modules/analytics-opt-in/ModuleAnalytics';
+import '@formatjs/intl-numberformat/polyfill';
+import '@formatjs/intl-numberformat/locale-data/en';
+
 import { PWA_EVENTS } from '@/core/helpers/common';
 import {
   Toast,
@@ -20,18 +20,16 @@ import {
   SUCCESS,
   INFO
 } from '@/modules/toast/handler/handlerToast';
-import ModuleMoonPay from '@/modules/moon-pay/ModuleMoonPay';
 import { MOONPAY_EVENT } from '@/modules/moon-pay/helpers';
 import { EventBus } from '@/core/plugins/eventBus';
-import '@formatjs/intl-numberformat/polyfill';
-import '@formatjs/intl-numberformat/locale-data/en';
 export default {
   name: 'App',
   components: {
-    ModuleToast,
-    ModuleGlobalModals,
-    ModuleAnalytics,
-    ModuleMoonPay
+    ModuleToast: () => import('@/modules/toast/ModuleToast.vue'),
+    ModuleGlobalModals: () =>
+      import('@/modules/global-modals/ModuleGlobalModals'),
+    ModuleAnalytics: () => import('@/modules/analytics-opt-in/ModuleAnalytics'),
+    ModuleMoonPay: () => import('@/modules/moon-pay/ModuleMoonPay')
   },
   data() {
     return {

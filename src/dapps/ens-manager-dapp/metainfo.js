@@ -1,7 +1,5 @@
 import { ENS_MANAGER_ROUTE, ensRouterGuard } from './configsRoutes';
 import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
-import layout from './TheENSManagerLayout';
-import ENSManagerLayout from '@/dapps/ens-manager-dapp/TheENSManagerLayout';
 export default {
   title: 'ENS manager',
   subtitle: 'Migrate or register ENS domain / subdomain',
@@ -10,9 +8,13 @@ export default {
   rightIcon: 'ensManager',
   path: ENS_MANAGER_ROUTE.ENS_MANAGER.PATH,
   name: ENS_MANAGER_ROUTE.ENS_MANAGER.NAME,
-  component: ENSManagerLayout,
+  component: () =>
+    import(
+      /* webpackChunkName: "dapp-ens" */ '@/dapps/ens-manager-dapp/TheENSManagerLayout'
+    ),
   networks: SUPPORTED_NETWORKS,
-  layout,
+  layout: () =>
+    import(/* webpackChunkName: "dapp-ens" */ './TheENSManagerLayout'),
   release: '07/08/2021',
   meta: {
     noAuth: false
@@ -21,10 +23,6 @@ export default {
     {
       path: ENS_MANAGER_ROUTE.MANAGE.PATH,
       name: ENS_MANAGER_ROUTE.MANAGE.NAME
-    },
-    {
-      path: ENS_MANAGER_ROUTE.CLAIM.PATH,
-      name: ENS_MANAGER_ROUTE.CLAIM.NAME
     },
     {
       path: ENS_MANAGER_ROUTE.REVERSE.PATH,

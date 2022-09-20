@@ -96,22 +96,24 @@
 </template>
 
 <script>
-import AccessWalletKeystore from './software/components/AccessWalletKeystore';
-import AccessWalletMnemonic from './software/components/AccessWalletMnemonic';
-import AccessWalletPrivateKey from './software/components/AccessWalletPrivateKey';
 import { mapActions, mapGetters, mapState } from 'vuex';
+
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { SOFTWARE_WALLET_TYPES } from './software/handlers/helpers';
-import handlerAccessWalletSoftware from './software/handlers/handlerAccessWalletSoftware';
 import { ROUTES_WALLET } from '../../core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+
+import handlerAccessWalletSoftware from './software/handlers/handlerAccessWalletSoftware';
 
 export default {
   name: 'ModuleAccessWalletSoftware',
   components: {
-    AccessWalletKeystore,
-    AccessWalletMnemonic,
-    AccessWalletPrivateKey
+    AccessWalletKeystore: () =>
+      import('./software/components/AccessWalletKeystore'),
+    AccessWalletMnemonic: () =>
+      import('./software/components/AccessWalletMnemonic'),
+    AccessWalletPrivateKey: () =>
+      import('./software/components/AccessWalletPrivateKey')
   },
   mixins: [handlerAnalytics],
   props: {

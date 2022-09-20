@@ -39,13 +39,12 @@
 </template>
 
 <script>
-import { isAddress, toChecksumAddress } from '@/core/helpers/addressUtils';
 import { mapGetters, mapState } from 'vuex';
-import NameResolver from '@/modules/name-resolver/index';
-import { getAddressInfo } from '@kleros/address-tags-sdk';
-import AddressBookAddEdit from './components/AddressBookAddEdit';
 import { isObject, throttle } from 'lodash';
 import WAValidator from 'multicoin-address-validator';
+import { isAddress, toChecksumAddress } from '@/core/helpers/addressUtils';
+import NameResolver from '@/modules/name-resolver/index';
+import { getAddressInfo } from '@kleros/address-tags-sdk';
 
 const USER_INPUT_TYPES = {
   typed: 'TYPED',
@@ -55,7 +54,7 @@ const USER_INPUT_TYPES = {
 
 export default {
   components: {
-    AddressBookAddEdit
+    AddressBookAddEdit: () => import('./components/AddressBookAddEdit')
   },
   props: {
     isValidAddressFunc: {

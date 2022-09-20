@@ -30,13 +30,14 @@
 </template>
 
 <script>
-import AppBlockTitle from '@/core/components/AppBlockTitle';
 import Contract from '@/assets/images/icons/icon-contract-mew.svg';
 import Message from '@/assets/images/icons/icon-message-mew.svg';
 import BuyEth from '@/assets/images/icons/icon-buy-eth-mew.svg';
 
 export default {
-  components: { AppBlockTitle },
+  components: {
+    AppBlockTitle: () => import('@/core/components/AppBlockTitle')
+  },
   data: function () {
     return {
       titleData: {

@@ -16,22 +16,15 @@
 </template>
 
 <script>
-import TheLayoutHeader from '../components-default/TheLayoutHeader';
-import AppPartnersBlock from '@/core/components/AppPartnersBlock';
-import AppMewtopiaBlock from '@/core/components/AppMewtopiaBlock';
-import CompanyWhatIsMew from '../components-default/CompanyWhatIsMew';
-import CompanyOurStory from '../components-default/CompanyOurStory';
-import CompanyCommunity from '../components-default/CompanyCommunity';
-
 export default {
   name: 'TheCompanyLayout',
   components: {
-    TheLayoutHeader,
-    AppPartnersBlock,
-    AppMewtopiaBlock,
-    CompanyWhatIsMew,
-    CompanyOurStory,
-    CompanyCommunity
+    TheLayoutHeader: () => import('../components-default/TheLayoutHeader'),
+    AppPartnersBlock: () => import('@/core/components/AppPartnersBlock'),
+    AppMewtopiaBlock: () => import('@/core/components/AppMewtopiaBlock'),
+    CompanyWhatIsMew: () => import('../components-default/CompanyWhatIsMew'),
+    CompanyOurStory: () => import('../components-default/CompanyOurStory'),
+    CompanyCommunity: () => import('../components-default/CompanyCommunity')
   }
 };
 </script>
