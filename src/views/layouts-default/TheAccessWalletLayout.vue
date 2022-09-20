@@ -23,7 +23,11 @@
           v-for="(btn, key) in buttons"
           :key="key"
           has-full-width
-          class="mb-5 py-6"
+          :class="[
+            btn.title === 'Software'
+              ? 'AccessWalletSoftwareButton'
+              : 'mb-5 py-6'
+          ]"
           style="height: initial; min-height: 157px"
           :color-theme="btn.color"
           :btn-style="btn.style === 'outline' ? 'outline' : ''"
