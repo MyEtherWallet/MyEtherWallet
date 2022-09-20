@@ -117,7 +117,7 @@ export default {
   components: {
     BalanceEmptyBlock: () => import('./components/BalanceEmptyBlock'),
     TokenAddCustom: () => import('./components/TokenAddCustom'),
-    TokenEditCustom: () => import('./components/TokenEditCustom,'),
+    TokenEditCustom: () => import('./components/TokenEditCustom'),
     TokenRemoveCustom: () => import('./components/TokenRemoveCustom')
   },
   mixins: [handlerAnalytics],
