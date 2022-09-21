@@ -1,5 +1,6 @@
 <template>
   <div class="py-8 px-8">
+    <div>resolvedAddr: {{ resolvedAddr }}</div>
     <!-- ============================================================== -->
     <!-- Currency Select -->
     <!-- ============================================================== -->
@@ -90,6 +91,8 @@
 </template>
 
 <script>
+import { throttle } from 'lodash';
+import NameResolver from '@/modules/name-resolver/index';
 import MultiCoinValidator from 'multicoin-address-validator';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import { isEmpty, cloneDeep, isEqual } from 'lodash';
@@ -128,6 +131,8 @@ export default {
   },
   data() {
     return {
+      resolvedAddr: '',
+      nameResolver: null,
       selectedCurrency: this.defaultCurrency,
       loading: true,
       selectedFiat: {
@@ -149,7 +154,7 @@ export default {
   },
   computed: {
     ...mapGetters('global', ['network', 'getFiatValue']),
-    ...mapState('wallet', ['address']),
+    ...mapState('wallet', ['web3', 'address']),
     ...mapState('external', ['currencyRate', 'coinGeckoTokens']),
     ...mapGetters('external', ['contractToToken']),
     ...mapGetters('wallet', ['tokensList']),
@@ -472,6 +477,7 @@ export default {
     },
     toAddress(newVal) {
       this.validToAddress = this.isValidToAddress(newVal);
+      this.resolveName();
     },
     coinGeckoTokens: {
       handler: function () {
@@ -484,6 +490,28 @@ export default {
   },
   methods: {
     ...mapActions('global', ['setNetwork']),
+    /**
+     * Resolves name and @returns address
+     */
+    resolveName: throttle(async function () {
+      this.nameResolver = new NameResolver(this.network, this.web3);
+      if (this.nameResolver) {
+        console.log('this.network', this.network);
+        console.log('this.web3', this.web3);
+
+        try {
+          await this.nameResolver.resolveName(this.toAddress).then(addr => {
+            this.resolvedAddr = addr;
+            console.log(222222222, addr);
+
+            //this.isValidAddress = true;
+            //this.loadedAddressValidation = true;
+          });
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }, 500),
     async fetchGasPrice() {
       const supportedNodes = {
         ETH: 'ETH',
