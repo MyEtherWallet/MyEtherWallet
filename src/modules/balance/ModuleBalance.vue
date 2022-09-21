@@ -102,9 +102,6 @@
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 
-import Loader from './ModuleBalanceLoader';
-import BalanceChart from '@/modules/balance/components/BalanceChart';
-import BalanceEmptyBlock from './components/BalanceEmptyBlock';
 import {
   formatPercentageValue,
   formatFloatingPointValue
@@ -115,9 +112,9 @@ import handlerBalanceHistory from './handlers/handlerBalanceHistory.mixin';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 export default {
   components: {
-    Loader,
-    BalanceChart,
-    BalanceEmptyBlock
+    Loader: () => import('./ModuleBalanceLoader'),
+    BalanceChart: () => import('@/modules/balance/components/BalanceChart'),
+    BalanceEmptyBlock: () => import('./components/BalanceEmptyBlock')
   },
   mixins: [handlerBalanceHistory, handlerAnalytics],
   data() {

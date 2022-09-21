@@ -7,13 +7,10 @@
 </template>
 
 <script>
-import ModuleSendOffline from '@/modules/send-offline/ModuleSendOffline';
-import TheWrapperWallet from '@/core/components/TheWrapperWallet';
-
 export default {
   components: {
-    ModuleSendOffline,
-    TheWrapperWallet
+    ModuleSendOffline: () => import('@/modules/send-offline/ModuleSendOffline'),
+    TheWrapperWallet: () => import('@/core/components/TheWrapperWallet')
   }
 };
 </script>

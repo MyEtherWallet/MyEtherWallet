@@ -58,12 +58,11 @@
 </template>
 
 <script>
-import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
 import { mapGetters } from 'vuex';
 
 export default {
   components: {
-    AppUserMsgBlock
+    AppUserMsgBlock: () => import('@/core/components/AppUserMsgBlock')
   },
   props: {
     message: {

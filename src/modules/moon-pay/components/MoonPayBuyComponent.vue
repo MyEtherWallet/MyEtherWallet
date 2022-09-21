@@ -94,12 +94,13 @@
 import { throttle } from 'lodash';
 import NameResolver from '@/modules/name-resolver/index';
 import MultiCoinValidator from 'multicoin-address-validator';
-import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import { isEmpty, cloneDeep, isEqual } from 'lodash';
-import BigNumber from 'bignumber.js';
 import { mapGetters, mapActions, mapState } from 'vuex';
-import { fromWei, toBN } from 'web3-utils';
+import BigNumber from 'bignumber.js';
 import Web3 from 'web3';
+import { fromWei, toBN } from 'web3-utils';
+
+import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import nodeList from '@/utils/networks';
 import {
   formatFloatingPointValue,

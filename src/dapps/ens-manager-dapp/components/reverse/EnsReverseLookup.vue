@@ -21,6 +21,7 @@
       <div class="mew-heading-2 mb-2">Your Domains:</div>
       <div class="d-flex justify-space-between">
         <mew-select
+          normal-dropdown
           :value="selectedDomain"
           filter-placeholder="Search for Domain"
           :items="domainListItems"
@@ -58,11 +59,12 @@
 </template>
 
 <script>
-import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { isEmpty } from 'lodash';
 import ENS from '@ensdomains/ensjs';
 import { mapGetters, mapState } from 'vuex';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import PermanentNameModule from '../../handlers/handlerPermanentName';
+import errorHandler from '@/modules/confirmation/handlers/errorHandler.js';
 export default {
   name: 'EnsReverseLookup',
   props: {
@@ -158,7 +160,8 @@ export default {
         this.hasReverseRecordNames = true;
         return reverseRecord;
       } catch (e) {
-        Toast(e, {}, ERROR);
+        const err = errorHandler(e);
+        if (err) Toast(err, {}, ERROR);
       }
     },
     // async getReverseRecordNames() {

@@ -35,7 +35,13 @@
       <!-- ======================================================================= -->
       <!-- Carousel -->
       <!-- ======================================================================= -->
-      <v-carousel cycle height="100%" hide-delimiters :show-arrows="false">
+      <v-carousel
+        class="carousel-images"
+        cycle
+        height="100%"
+        hide-delimiters
+        :show-arrows="false"
+      >
         <v-carousel-item v-for="(nft, i) in nfts" :key="i">
           <img :src="nfts[i].src" alt="nft-image" class="main-image" />
         </v-carousel-item>
@@ -104,8 +110,8 @@
   </mew-popup>
 </template>
 <script>
-import imageOne from '@/assets/images/icons/enkrypt/promo1.png';
-import imageTwo from '@/assets/images/icons/enkrypt/promo2.png';
+import imageOne from '@/assets/images/icons/enkrypt/promo1.jpg';
+import imageTwo from '@/assets/images/icons/enkrypt/promo2.jpg';
 import white from '@/assets/images/icons/enkrypt/icon-enkrypt-white.svg';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import enkryptMarketing from '@/core/mixins/enkryptMarketing.mixin.js';
@@ -234,5 +240,10 @@ export default {
   top: 15px;
   right: 15px;
   z-index: 9;
+}
+
+.carousel-images {
+  overflow: hidden;
+  border-radius: 5px;
 }
 </style>

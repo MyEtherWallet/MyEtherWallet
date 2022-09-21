@@ -32,16 +32,16 @@
 
 <script>
 import { mapState } from 'vuex';
+import { toBN } from 'web3-utils';
+
 import { ETH_BLOCKS_ROUTE } from '../configsRoutes';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { validBlockNumber, beginsWithZero } from '../handlers/helpers/common';
-import { toBN } from 'web3-utils';
-import DateSelectorPopup from './DateSelectorPopup.vue';
 
 export default {
   name: 'ModuleEthBlocksMint',
   components: {
-    DateSelectorPopup
+    DateSelectorPopup: () => import('./DateSelectorPopup.vue')
   },
   data() {
     return {
