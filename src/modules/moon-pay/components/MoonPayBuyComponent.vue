@@ -69,6 +69,7 @@
           Where should we send your crypto?
         </div>
         <ModuleAddressBook
+          ref="addressInput"
           label="Enter Crypto Address"
           :currency="selectedCryptoName"
           :enable-save-address="false"
@@ -474,6 +475,7 @@ export default {
     }
   },
   mounted() {
+    this.$refs.addressInput.$refs.addressSelect.clear();
     this.fetchCurrencyData();
   },
   methods: {
