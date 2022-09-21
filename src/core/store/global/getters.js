@@ -70,7 +70,7 @@ const localContracts = function (state, getters) {
 
 const hasSwap = function (state, getters, rootState) {
   const name = getters.network.type.name;
-  const device = rootState.wallet.instance.identifier;
+  const device = rootState.wallet.instance?.identifier;
 
   if (device === WALLET_TYPES.COOL_WALLET_S) return false;
   return name === ETH.name || name === BSC.name || name === MATIC.name;

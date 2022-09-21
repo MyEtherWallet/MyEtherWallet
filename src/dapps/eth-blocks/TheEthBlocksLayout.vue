@@ -17,15 +17,15 @@
 </template>
 
 <script>
-import TheWrapperDapp from '@/core/components/TheWrapperDapp';
+import { mapActions, mapGetters, mapState } from 'vuex';
+
 import { ETH_BLOCKS_ROUTE } from './configsRoutes';
 import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
-import { mapActions, mapGetters, mapState } from 'vuex';
 
 export default {
   name: 'TheEthBlocksLayout',
   components: {
-    TheWrapperDapp
+    TheWrapperDapp: () => import('@/core/components/TheWrapperDapp')
   },
   data() {
     return {

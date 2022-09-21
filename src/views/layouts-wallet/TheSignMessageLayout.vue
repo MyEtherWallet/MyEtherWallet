@@ -7,13 +7,10 @@
 </template>
 
 <script>
-import ModuleMessage from '@/modules/message/ModuleMessageSign';
-import TheWrapperWallet from '@/core/components/TheWrapperWallet';
-
 export default {
   components: {
-    ModuleMessage,
-    TheWrapperWallet
+    ModuleMessage: () => import('@/modules/message/ModuleMessageSign'),
+    TheWrapperWallet: () => import('@/core/components/TheWrapperWallet')
   }
 };
 </script>

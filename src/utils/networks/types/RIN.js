@@ -9,8 +9,12 @@ export default {
   blockExplorerTX: 'https://rinkeby.etherscan.io/tx/[[txHash]]',
   blockExplorerAddr: 'https://rinkeby.etherscan.io/address/[[address]]',
   chainID: 4,
-  tokens: [],
-  contracts: [],
+  tokens: import('@/_generated/tokens/tokens-etc.json').then(
+    val => val.default
+  ),
+  contracts: import('@/_generated/contracts/contract-abi-etc.json').then(
+    val => val.default
+  ),
   isTestNetwork: true,
   ens: {
     registry: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',

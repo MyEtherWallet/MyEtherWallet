@@ -175,20 +175,13 @@
 
 <script>
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-import StakewiseApr from '../components/StakewiseApr';
-import StakewiseStaking from '../components/StakewiseStaking';
-import StakewiseRewards from '../components/StakewiseRewards';
-import ButtonBalance from '@/core/components/AppButtonBalance';
-import Swapper from '@/modules/swap/handlers/handlerSwap';
-import stakeHandler from '../handlers/stakewiseStakeHandler';
 import BigNumber from 'bignumber.js';
-import { debounce } from 'lodash';
 import { mapGetters, mapState, mapActions } from 'vuex';
-import { find, clone, isEmpty } from 'lodash';
+import { find, clone, isEmpty, debounce } from 'lodash';
 import { fromWei } from 'web3-utils';
+
 import { EventBus } from '@/core/plugins/eventBus';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
-import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import Notification, {
   NOTIFICATION_TYPES,
   NOTIFICATION_STATUS
@@ -202,15 +195,19 @@ import {
   RETH2_Token,
   ETH_Token
 } from '@/dapps/stakewise/handlers/configs.js';
+
+import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
+import Swapper from '@/modules/swap/handlers/handlerSwap';
+import stakeHandler from '../handlers/stakewiseStakeHandler';
 const MIN_GAS_LIMIT = 300000;
 
 export default {
   name: 'ModuleStakewiseRewards',
   components: {
-    StakewiseApr,
-    StakewiseStaking,
-    StakewiseRewards,
-    ButtonBalance
+    StakewiseApr: () => import('../components/StakewiseApr'),
+    StakewiseStaking: () => import('../components/StakewiseStaking'),
+    StakewiseRewards: () => import('../components/StakewiseRewards'),
+    ButtonBalance: () => import('@/core/components/AppButtonBalance')
   },
   mixins: [handlerAnalytics],
   data() {

@@ -117,14 +117,15 @@
 
 <script>
 import { fromWei } from 'web3-utils';
-import { gasPriceTypes } from '@/core/helpers/gasPriceHelper';
 import { mapState, mapGetters } from 'vuex';
+import BigNumber from 'bignumber.js';
+
+import { gasPriceTypes } from '@/core/helpers/gasPriceHelper';
 import {
   formatFiatValue,
   formatFloatingPointValue,
   toBNSafe
 } from '@/core/helpers/numberFormatHelper';
-import BigNumber from 'bignumber.js';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 
 export default {

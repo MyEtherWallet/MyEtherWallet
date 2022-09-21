@@ -1,5 +1,3 @@
-import tokens from '@/_generated/tokens/tokens-eth.json';
-import contracts from '@/_generated/contracts/contract-abi-eth.json';
 import eth from '@/assets/images/networks/eth.svg';
 import { GOERLI } from '../tlds';
 
@@ -11,8 +9,12 @@ export default {
   blockExplorerTX: 'https://etherscan.io/tx/[[txHash]]',
   blockExplorerAddr: 'https://etherscan.io/address/[[address]]',
   chainID: 1,
-  tokens: tokens,
-  contracts: contracts,
+  tokens: import('@/_generated/tokens/tokens-eth.json').then(
+    module => module.default
+  ),
+  contracts: import('@/_generated/contracts/contract-abi-eth.json').then(
+    module => module.default
+  ),
   isTestNetwork: false,
   ens: {
     registry: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',

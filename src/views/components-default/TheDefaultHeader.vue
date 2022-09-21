@@ -111,11 +111,13 @@ export default {
     ...mapGetters('global', ['swapLink', 'network'])
   },
   mounted() {
-    const tokenMap = new Map();
-    this.network.type.tokens.forEach(token => {
-      tokenMap.set(token.address.toLowerCase(), token);
+    this.network.type.tokens.then(res => {
+      const tokenMap = new Map();
+      res.forEach(item => {
+        tokenMap.set(item.address.toLowerCase(), item);
+      });
+      this.setNetworkTokens(tokenMap);
     });
-    this.setNetworkTokens(tokenMap);
   },
   methods: {
     ...mapActions('external', ['setNetworkTokens']),

@@ -220,33 +220,37 @@
 
 <script>
 import { isEmpty, isObject } from 'lodash';
+import { mapActions, mapGetters, mapState } from 'vuex';
+
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
-import AccessWalletBitbox from './hardware/components/AccessWalletBitbox';
-import AccessWalletAddressNetwork from '@/modules/access-wallet/common/components/AccessWalletAddressNetwork';
-import AccessWalletKeepkey from './hardware/components/AccessWalletKeepkey';
-import AccessWalletCoolWallet from './hardware/components/AccessWalletCoolWallet';
-import AccessWalletTrezor from './hardware/components/AccessWalletTrezor.vue';
-import AccessWalletLedger from './hardware/components/AccessWalletLedger.vue';
-import AccessWalletLedgerX from './hardware/components/AccessWalletLedgerX.vue';
+
 import appPaths from './hardware/handlers/hardwares/ledger/appPaths.js';
 import allPaths from '@/modules/access-wallet/hardware/handlers/bip44';
 import wallets from '@/modules/access-wallet/hardware/handlers/configs/configWallets';
-import { mapActions, mapGetters, mapState } from 'vuex';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { EventBus } from '@/core/plugins/eventBus.js';
+
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 export default {
   name: 'HardwareAccessOverlay',
   components: {
-    AccessWalletKeepkey,
-    AccessWalletCoolWallet,
-    AccessWalletTrezor,
-    AccessWalletLedger,
-    AccessWalletLedgerX,
-    AccessWalletAddressNetwork,
-    AccessWalletBitbox
+    AccessWalletKeepkey: () =>
+      import('./hardware/components/AccessWalletKeepkey'),
+    AccessWalletCoolWallet: () =>
+      import('./hardware/components/AccessWalletCoolWallet'),
+    AccessWalletTrezor: () =>
+      import('./hardware/components/AccessWalletTrezor.vue'),
+    AccessWalletLedger: () =>
+      import('./hardware/components/AccessWalletLedger.vue'),
+    AccessWalletLedgerX: () =>
+      import('./hardware/components/AccessWalletLedgerX.vue'),
+    AccessWalletAddressNetwork: () =>
+      import(
+        '@/modules/access-wallet/common/components/AccessWalletAddressNetwork'
+      ),
+    AccessWalletBitbox: () => import('./hardware/components/AccessWalletBitbox')
   },
   filters: {
     concatAddress(val) {
@@ -691,6 +695,8 @@ export default {
     nextStep() {
       if (this.walletType) {
         this.step++;
+        if (this.walletType === WALLET_TYPES.LEDGER)
+          this.selectedPath = this.paths[0];
         if (this.step === this.walletInitialized) {
           if (this.onCoolWallet || this.onBitbox2) return;
           this[`${this.walletType}Unlock`]();

@@ -28,28 +28,27 @@
         {{ $t('signMessage.failed') }}
       </div>
 
-      <mew-button
-        :disabled="!message"
-        title="Verify"
-        btn-size="xlarge"
-        class="display--block mx-auto mt-5 VerifyButton"
-        @click.native="verifyMessage"
-      />
-      <mew-button
-        btn-style="transparent"
-        title="Clear All"
-        btn-size="small"
-        class="display--block mx-auto mt-5"
-        @click.native="clearAll"
-      />
+      <div class="text-right">
+        <mew-button
+          btn-style="light"
+          title="Clear All"
+          class="mr-4"
+          @click.native="clearAll"
+        />
+        <mew-button
+          :disabled="!message"
+          title="Verify"
+          @click.native="verifyMessage"
+        />
+      </div>
     </template>
   </mew-module>
 </template>
 
 <script>
-import SignAndVerifyMessage from '@/modules/message/handlers';
 import { toChecksumAddress } from 'ethereumjs-util';
 
+import SignAndVerifyMessage from '@/modules/message/handlers';
 export default {
   name: 'ModuleMessageVerify',
   components: {},
