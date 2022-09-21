@@ -1,6 +1,5 @@
 <template>
   <div class="py-8 px-8">
-    <div>resolvedAddr: {{ resolvedAddr }}</div>
     <!-- ============================================================== -->
     <!-- Currency Select -->
     <!-- ============================================================== -->
@@ -69,11 +68,12 @@
         <div class="mew-heading-3 textDark--text mb-5">
           Where should we send your crypto?
         </div>
-        <mew-input
-          v-model="toAddress"
+        <ModuleAddressBook
           label="Enter Crypto Address"
-          :rules="[isValidToAddress]"
-          :error-messages="addressErrorMessages"
+          :currency="selectedCryptoName"
+          :enable-save-address="false"
+          :is-home-page="true"
+          @setAddress="setAddress"
         />
       </div>
     </div>
@@ -91,8 +91,6 @@
 </template>
 
 <script>
-import { throttle } from 'lodash';
-import NameResolver from '@/modules/name-resolver/index';
 import MultiCoinValidator from 'multicoin-address-validator';
 import { isEmpty, cloneDeep, isEqual } from 'lodash';
 import { mapGetters, mapActions, mapState } from 'vuex';
@@ -109,9 +107,11 @@ import {
 import { getCurrency } from '@/modules/settings/components/currencyList';
 import { buyContracts } from './tokenList';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
+import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 
 export default {
   name: 'ModuleBuyEth',
+  components: { ModuleAddressBook },
   props: {
     orderHandler: {
       type: Object,
@@ -132,15 +132,13 @@ export default {
   },
   data() {
     return {
-      resolvedAddr: '',
-      nameResolver: null,
       selectedCurrency: this.defaultCurrency,
       loading: true,
       selectedFiat: {
         name: 'USD',
         value: 'USD',
         // eslint-disable-next-line
-        img: require(`@/assets/images/currencies/USD.svg`)
+                img: require(`@/assets/images/currencies/USD.svg`)
       },
       fetchedData: {},
       currencyRates: [],
@@ -275,12 +273,6 @@ export default {
         return `Amount can't be above provider's maximum: ${
           formatFiatValue(this.maxVal.toFixed(), this.currencyConfig).value
         } ${this.selectedFiatName}`;
-      }
-      return '';
-    },
-    addressErrorMessages() {
-      if (!this.actualValidAddress && !isEmpty(this.toAddress)) {
-        return 'Invalid Address';
       }
       return '';
     },
@@ -422,7 +414,6 @@ export default {
           this.selectedCurrency = oldVal;
           return;
         }
-
         if (!isEqual(newVal, oldVal)) {
           this.fetchCurrencyData();
         }
@@ -476,10 +467,6 @@ export default {
         this.getSimplexQuote();
       }
     },
-    toAddress(newVal) {
-      this.validToAddress = this.isValidToAddress(newVal);
-      this.resolveName();
-    },
     coinGeckoTokens: {
       handler: function () {
         this.fetchCurrencyData();
@@ -491,28 +478,12 @@ export default {
   },
   methods: {
     ...mapActions('global', ['setNetwork']),
-    /**
-     * Resolves name and @returns address
-     */
-    resolveName: throttle(async function () {
-      this.nameResolver = new NameResolver(this.network, this.web3);
-      if (this.nameResolver) {
-        console.log('this.network', this.network);
-        console.log('this.web3', this.web3);
-
-        try {
-          await this.nameResolver.resolveName(this.toAddress).then(addr => {
-            this.resolvedAddr = addr;
-            console.log(222222222, addr);
-
-            //this.isValidAddress = true;
-            //this.loadedAddressValidation = true;
-          });
-        } catch (e) {
-          console.log(e);
-        }
-      }
-    }, 500),
+    setAddress(newVal, isValid, data) {
+      if (data.type === 'RESOLVED' && !data.value.includes('.'))
+        this.toAddress = data.value;
+      else this.toAddress = newVal;
+      this.validToAddress = isValid;
+    },
     async fetchGasPrice() {
       const supportedNodes = {
         ETH: 'ETH',
