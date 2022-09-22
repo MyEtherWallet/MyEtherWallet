@@ -255,15 +255,19 @@ export default {
      */
     filteredPaths() {
       return this.passedPaths.filter(path => {
-        if (this.searchValue) {
-          return (
-            path.name
-              ?.toLowerCase()
-              .includes(this.searchValue?.toLowerCase()) ||
-            path.value?.toLowerCase().includes(this.searchValue?.toLowerCase())
-          );
+        if (!this.paths.find(e => e.value === path.value)) {
+          if (this.searchValue) {
+            return (
+              path.name
+                ?.toLowerCase()
+                .includes(this.searchValue?.toLowerCase()) ||
+              path.value
+                ?.toLowerCase()
+                .includes(this.searchValue?.toLowerCase())
+            );
+          }
+          return path;
         }
-        return path;
       });
     }
   },
