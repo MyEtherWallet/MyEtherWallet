@@ -21,6 +21,7 @@
             has-full-width
             :class="[crypto ? 'selectedBorder' : '']"
             class="my-2"
+            :disabled="true"
             @click.native="selectTab($event)"
           >
             <div class="d-flex align-center justify-space-between">
@@ -232,8 +233,8 @@ export default {
   },
   data() {
     return {
-      crypto: true,
-      credit: false,
+      crypto: false,
+      credit: true,
       paymentError: '',
       confirmationStep: false,
       // publishableKey: 'pk_live_HAPE6Nv5bfhCJYKe6Nfaaj4P', // live key
@@ -372,14 +373,16 @@ export default {
             stripeToken = stripeToken.token.id;
             try {
               const response = await createResellerOrder({
-                domain: 'reseller-test-myetherwallet-434343421.crypto', // change number everytime for test
-                // domain: this.domain.name,
-                email: this.email,
+                //domain: 'reseller-test-myetherwallet-434343428.crypto', // change number everytime for test
+                domain: this.domain.name,
+                //email: this.email,
                 resellerId: this.resellerId,
                 address: this.address,
                 payment: {
-                  type: 'stripe',
-                  tokenId: stripeToken
+                  method: 'stripe'
+                  // properties: {
+                  //   tokenId: stripeToken
+                  // }
                 }
               });
               this.confirmationStep = true;
@@ -402,7 +405,7 @@ export default {
           resellerId: this.resellerId,
           address: this.address,
           payment: {
-            type: 'coinbase'
+            method: 'coinbase'
           }
         });
         this.SET_ORDER({ value: response.order });

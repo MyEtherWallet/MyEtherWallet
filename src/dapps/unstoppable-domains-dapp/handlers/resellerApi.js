@@ -1,30 +1,20 @@
-const api = 'https://unstoppabledomains.com/api/v1';
+const api = 'https://unstoppabledomains.com/api/v2/resellers/';
 
 export async function fetchResellerApi({ domain, resellerId }) {
-  const url = `${api}/resellers/${resellerId}/domains/${domain}`;
-  return await fetch(url).then(res => {
-    if (!res.ok) {
-      throw new Error("Couldn't fetch reseller domain info");
-    }
-    return res.json();
-  });
+  const url = `${api}${resellerId}/domains/${domain}`;
+  const res = await fetch(url);
+  if (!res.ok) return { error: true };
+  return await res.json();
 }
 
-export async function fetchSimillarities({ domain, resellerId }) {
-  const url = `${api}/resellers/${resellerId}/domains/variations?domains=["${domain}"]`;
-  return await fetch(url)
-    .then(res => {
-      if (!res.ok) {
-        throw new Error("Couldn't fetch reseller domain simillarities");
-      }
-      return res.json();
-    })
-    .then(response => {
-      return response[domain].filter(
-        domainObj => domainObj.extension === 'crypto'
-      );
-    })
-    .then(arr => arr.sort((a, b) => b.price - a.price));
+export async function fetchSimilarities({ domain, resellerId }) {
+  const url = `${api}${resellerId}/domains/suggestions?search=${domain}&tlds=crypto`;
+  const res = await fetch(url);
+  if (!res.ok) return [];
+  const domains = await res.json();
+  return domains
+    .sort((a, b) => b.price - a.price)
+    .filter(i => i.name !== domain + '.crypto');
 }
 
 export async function createResellerOrder({
@@ -34,26 +24,19 @@ export async function createResellerOrder({
   payment,
   resellerId
 }) {
-  const url = `${api}/resellers/${resellerId}/users/${email}/orders`;
+  const url = `${api}${resellerId}/orders`;
   const body = {
-    order: {
-      domains: [
-        {
-          name: domain,
-          owner: {
-            address
-          },
-          resolution: {
-            crypto: {
-              ETH: {
-                address
-              }
-            }
-          }
+    domains: [
+      {
+        name: domain,
+        ownerAddress: address,
+        email,
+        resolution: {
+          'crypto.ETH.address': address
         }
-      ],
-      payment
-    }
+      }
+    ],
+    payment
   };
   return await fetch(url, {
     method: 'POST',

@@ -52,8 +52,15 @@ const fetchIpfsHash = async ({ commit, state }) => {
   }
 };
 
+const setDomain = ({ commit }, domain) => {
+  commit('SET_CURRENT_DOMAIN', {
+    value: domain
+  });
+};
+
 export default {
   updateOrderStatus,
   fetchMyDomains,
-  fetchIpfsHash
+  fetchIpfsHash,
+  setDomain
 };

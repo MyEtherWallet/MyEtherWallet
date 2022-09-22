@@ -216,9 +216,9 @@ import UnstoppableUploadIpfsOverlay from './components/UnstoppableUploadIpfsOver
 import UnstoppableInfoCard from './components/UnstoppableInfoCard.vue';
 import TheDappHeader from '@/core/components/TheDappHeader';
 import DomainTable from './components/UnstoppableDomainTable.vue';
-import { mapState, mapGetters } from 'vuex';
+import { mapState, mapGetters, mapActions } from 'vuex';
 import { parseUDRecordToLabel } from './handlers/records';
-import { fetchResellerApi, fetchSimillarities } from './handlers/resellerApi';
+import { fetchResellerApi, fetchSimilarities } from './handlers/resellerApi';
 import Resolution from '@unstoppabledomains/resolution';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 
@@ -332,6 +332,7 @@ export default {
   computed: {
     ...mapGetters('global', ['network']),
     ...mapState('wallet', ['balance', 'web3', 'instance', 'address']),
+    ...mapGetters('unstoppable', ['resellerId']),
     inputErrorMessage() {
       if (this.inputtedAddress === '') {
         return `Address input cannot be empty.`;
@@ -340,6 +341,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions('unstoppable', ['setDomain']),
     async reverseTokenId() {
       this.isLoading = true;
       const address = this.inputtedAddress;
@@ -394,68 +396,67 @@ export default {
       this.uploadIpfsOverlay = false;
       this.SET_MANAGE_RECORD({ value: { name: '' } });
     },
-    async buyDomain(domain) {
-      this.SET_CURRENT_DOMAIN({ value: domain });
+    buyDomain(domain) {
+      this.setDomain(domain);
       this.buyOverlay = true;
     },
     async searchDomain() {
-      const desiredDomain = this.input.endsWith('.crypto')
-        ? this.input
-        : this.input + '.crypto';
+      const desiredDomain = this.input;
+      if (!desiredDomain || !desiredDomain.trim()) return;
       this.loading = true;
-      const { domain } = await fetchResellerApi({
-        domain: desiredDomain,
+      const { domain, availability, error } = await fetchResellerApi({
+        domain: desiredDomain + '.crypto',
         resellerId: this.resellerId
       });
       if (this.searchResults.length > 0) this.searchResults = [];
+      if (!error)
+        if (domain.ownerAddress) {
+          const records = await this.resolution.getAllRecords(domain.name);
+          const cryptoRecords = Object.entries(records)
+            .map(([key, value]) => {
+              if (value) {
+                return { label: parseUDRecordToLabel(key), value };
+              }
+            })
+            .filter(v => !!v && !!v.label)
+            .sort(a => (a.label.endsWith('Address') ? 1 : -1));
 
-      if (domain.owner) {
-        const records = await this.resolution.getAllRecords(domain.name);
-        const cryptoRecords = Object.entries(records)
-          .map(([key, value]) => {
-            if (value) {
-              return { label: parseUDRecordToLabel(key), value };
-            }
-          })
-          .filter(v => !!v && !!v.label)
-          .sort(a => (a.label.endsWith('Address') ? 1 : -1));
+          const ownerLabel = {
+            label:
+              this.address === domain.owner
+                ? this.$t('unstoppable.owner-you')
+                : this.$t('unstoppable.owner'),
+            value: domain.owner
+          };
 
-        const ownerLabel = {
-          label:
-            this.address === domain.owner
-              ? this.$t('unstoppable.owner-you')
-              : this.$t('unstoppable.owner'),
-          value: domain.owner
-        };
-
-        this.searchResults.push({
-          name: domain.name,
-          available: false,
-          records: [
-            ownerLabel,
-            {
-              label: this.$t('unstoppable.namehash'),
-              value: this.resolution.namehash(domain.name)
-            },
-            ...cryptoRecords
-          ]
-        });
-      } else {
-        this.searchResults.push({
-          name: domain.name,
-          available: !!domain?.reselling?.price,
-          price: domain?.reselling?.price || 0
-        });
-      }
-      const simillarities = await fetchSimillarities({
+          this.searchResults.push({
+            name: domain.name,
+            available: false,
+            records: [
+              ownerLabel,
+              {
+                label: this.$t('unstoppable.namehash'),
+                value: this.resolution.namehash(domain.name)
+              },
+              ...cryptoRecords
+            ]
+          });
+        } else {
+          this.searchResults.push({
+            name: domain.name,
+            available: !!availability?.price,
+            price: availability?.price / 100 || 0
+          });
+        }
+      const similarities = await fetchSimilarities({
         domain: desiredDomain,
         resellerId: this.resellerId
       });
-      simillarities.forEach(simillarity => {
+      similarities.forEach(({ name, price }) => {
         this.searchResults.push({
-          name: `${simillarity.label}.${simillarity.extension}`,
+          name,
           available: true,
-          price: simillarity.price / 100
+          price: price / 100
         });
       });
       this.loading = false;
