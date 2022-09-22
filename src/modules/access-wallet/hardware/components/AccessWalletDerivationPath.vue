@@ -164,7 +164,7 @@
 
         <div :class="showCustomField ? 'open' : ''" class="custom-field">
           <mew-input
-            class="mt-4"
+            class="mt-4 aliasInput"
             label="Alias"
             placeholder="my custom path"
             @input="setCustomAlias"
@@ -290,9 +290,13 @@ export default {
     toggleCustomField(scroll = false) {
       this.showCustomField = !this.showCustomField;
       if (scroll === true)
-        this.$nextTick(() =>
-          document.getElementById('bottomList').scrollIntoView()
-        );
+        setTimeout(() => {
+          document.getElementById('bottomList').scrollIntoView();
+          const aliasTxt = document
+            .getElementsByClassName('aliasInput')[0]
+            .getElementsByTagName('input')[0];
+          aliasTxt.focus();
+        }, 150);
     },
     deletePath(path) {
       this.deleteCustomPath(path);
