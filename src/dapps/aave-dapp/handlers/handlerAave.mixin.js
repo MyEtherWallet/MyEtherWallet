@@ -35,10 +35,8 @@ const REPAY_WITH_COLLATERAL_ADAPTER =
 const SWAP_COLLATERAL_ADAPTER = '0x135896DE8421be2ec868E0b811006171D9df802A';
 const WETH_GATEWAY = '0xcc9a0B7c43DC2a5F023Bb9b738E45B0Ef6B06E04';
 const PRICE_ORACLE = '0xA50ba011c48153De246E5192C8f9258A2ba79Ca9';
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 export default {
   name: 'handlerAave',
-  mixins: [handlerAnalytics],
   props: {
     open: {
       default: false,
