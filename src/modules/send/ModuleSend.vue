@@ -812,11 +812,7 @@ export default {
     },
     setAmount: debounce(function (val, max) {
       const value = val ? val : 0;
-      if (value === 0) {
-        this.amount = BigNumber(value).toFixed(1);
-      } else {
-        this.amount = BigNumber(value).toFixed();
-      }
+      this.amount = BigNumber(value).toFixed();
       this.selectedMax = max;
     }, 500),
     setGasLimit(value) {
