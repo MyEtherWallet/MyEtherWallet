@@ -25,6 +25,7 @@ import { ethers } from 'ethers';
 import { INTEREST_TYPES } from '../handlers/helpers';
 import { estimateGasList } from '@/core/helpers/gasPriceHelper';
 import { ABI } from './ABI';
+import handleError from '@/modules/confirmation/handlers/errorHandler';
 
 const STABLE_COINS = ['TUSD', 'DAI', 'USDT', 'USDC', 'sUSD'];
 
@@ -434,7 +435,8 @@ export default {
                 );
               })
               .catch(err => {
-                Toast(err, {}, ERROR);
+                const error = handleError(err);
+                if (error) Toast(err, {}, ERROR);
                 if (callback) callback[0](callback[1]);
               });
           }) // Estimate Gas Catch

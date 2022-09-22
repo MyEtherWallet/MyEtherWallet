@@ -1,5 +1,3 @@
-import tokens from '@/_generated/tokens/tokens-rop.json';
-import contracts from '@/_generated/contracts/contract-abi-rop.json';
 import rop from '@/assets/images/networks/network.svg';
 import { ROP } from '../tlds';
 
@@ -11,8 +9,12 @@ export default {
   blockExplorerTX: 'https://ropsten.etherscan.io/tx/[[txHash]]',
   blockExplorerAddr: 'https://ropsten.etherscan.io/address/[[address]]',
   chainID: 3,
-  tokens: tokens,
-  contracts: contracts,
+  tokens: import('@/_generated/tokens/tokens-rop.json').then(
+    val => val.default
+  ),
+  contracts: import('@/_generated/contracts/contract-abi-rop.json').then(
+    val => val.default
+  ),
   isTestNetwork: true,
   ens: {
     registry: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
