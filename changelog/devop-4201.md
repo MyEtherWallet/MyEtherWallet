@@ -1,0 +1,1 @@
+* Added minimum required message
