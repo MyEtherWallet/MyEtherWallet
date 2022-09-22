@@ -8,10 +8,6 @@ const ENS_MANAGER_ROUTE = {
     NAME: 'ENSManagerManage',
     PATH: 'manage'
   },
-  CLAIM: {
-    NAME: 'ENSManagerClame',
-    PATH: 'claim'
-  },
   REVERSE: {
     NAME: 'ENSReverseLookup',
     PATH: 'reverse'

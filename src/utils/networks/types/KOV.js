@@ -1,5 +1,3 @@
-import tokens from '@/_generated/tokens/tokens-kov.json';
-import contracts from '@/_generated/contracts/contract-abi-kov.json';
 import kov from '@/assets/images/networks/network.svg';
 
 export default {
@@ -10,8 +8,12 @@ export default {
   blockExplorerTX: 'https://kovan.etherscan.io/tx/[[txHash]]',
   blockExplorerAddr: 'https://kovan.etherscan.io/address/[[address]]',
   chainID: 42,
-  tokens: tokens,
-  contracts: contracts,
+  tokens: import('@/_generated/tokens/tokens-kov.json').then(
+    val => val.default
+  ),
+  contracts: import('@/_generated/contracts/contract-abi-kov.json').then(
+    val => val.default
+  ),
   icon: kov,
   isTestNetwork: true,
   currencyName: 'KOV',

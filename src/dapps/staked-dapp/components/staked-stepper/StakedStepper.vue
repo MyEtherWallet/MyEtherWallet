@@ -59,18 +59,14 @@
 </template>
 
 <script>
-import StepOneAmount from './staked-steps/StepOneAmount';
-import StepTwoGenerate from './staked-steps/StepTwoGenerate';
-import StepFourReview from './staked-steps/StepFourReview';
-import StepThreeUpload from './staked-steps/StepThreeUpload';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 
 export default {
   components: {
-    StepOneAmount,
-    StepTwoGenerate,
-    StepThreeUpload,
-    StepFourReview
+    StepOneAmount: () => import('./staked-steps/StepOneAmount'),
+    StepTwoGenerate: () => import('./staked-steps/StepTwoGenerate'),
+    StepFourReview: () => import('./staked-steps/StepFourReview'),
+    StepThreeUpload: () => import('./staked-steps/StepThreeUpload')
   },
   props: {
     currentApr: {

@@ -197,18 +197,13 @@
 
 <script>
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-import StakewiseApr from '../components/StakewiseApr';
-import StakewiseStaking from '../components/StakewiseStaking';
-import StakewiseRewards from '../components/StakewiseRewards';
-import ButtonBalance from '@/core/components/AppButtonBalance';
 import { fromWei } from 'web3-utils';
 import { mapActions, mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
-import stakeHandler from '../handlers/stakewiseStakeHandler';
-import Swapper from '@/modules/swap/handlers/handlerSwap';
+import { debounce, isEmpty, clone, find } from 'lodash';
+
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
-import { debounce, isEmpty, clone, find } from 'lodash';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import { EventBus } from '@/core/plugins/eventBus';
 import Notification, {
@@ -224,14 +219,19 @@ import {
   RETH2_Token,
   ETH_Token
 } from '@/dapps/stakewise/handlers/configs.js';
+
+import stakeHandler from '../handlers/stakewiseStakeHandler';
+import Swapper from '@/modules/swap/handlers/handlerSwap';
+import handleError from '@/modules/confirmation/handlers/errorHandler';
+
 const MIN_GAS_LIMIT = 150000;
 export default {
   name: 'ModuleStakewiseStake',
   components: {
-    StakewiseApr,
-    StakewiseStaking,
-    StakewiseRewards,
-    ButtonBalance
+    StakewiseApr: () => import('../components/StakewiseApr'),
+    StakewiseStaking: () => import('../components/StakewiseStaking'),
+    StakewiseRewards: () => import('../components/StakewiseRewards'),
+    ButtonBalance: () => import('@/core/components/AppButtonBalance')
   },
   mixins: [buyMore, handlerAnalytics],
   data() {
@@ -320,7 +320,9 @@ export default {
       }
 
       if (this.estimateGasError) {
-        return 'Issue with gas estimation. Please check if you have enough balance!';
+        return !this.hasEnoughBalanceToStake
+          ? 'Issue with gas estimation. Please check if you have enough balance!'
+          : '';
       }
       if (BigNumber(this.stakeAmount).lt(0)) {
         return 'Value cannot be negative';
@@ -472,7 +474,8 @@ export default {
           this.trackDapp('startStake');
         })
         .catch(err => {
-          Toast(err, {}, ERROR);
+          const error = handleError(err);
+          if (error) Toast(err, {}, ERROR);
           this.setAmount(0);
         });
     },

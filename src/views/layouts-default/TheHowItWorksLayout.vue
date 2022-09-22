@@ -18,25 +18,17 @@
 </template>
 
 <script>
-import TheLayoutHeader from '../components-default/TheLayoutHeader';
-import AppGetStarted from '@/core/components/AppGetStarted';
-
-import HowItWorksSwap from '../components-default/HowItWorksSwap';
-import HowItWorksSend from '../components-default/HowItWorksSend';
-import HowItWorksDappsCenter from '../components-default/HowItWorksDappsCenter';
-import HowItWorksTokens from '../components-default/HowItWorksTokens';
-import HowItWorksMore from '../components-default/HowItWorksMore';
-
 export default {
   name: 'TheHowItWorksLayout',
   components: {
-    TheLayoutHeader,
-    HowItWorksSwap,
-    HowItWorksSend,
-    HowItWorksDappsCenter,
-    HowItWorksTokens,
-    HowItWorksMore,
-    AppGetStarted
+    TheLayoutHeader: () => import('../components-default/TheLayoutHeader'),
+    AppGetStarted: () => import('@/core/components/AppGetStarted'),
+    HowItWorksSwap: () => import('../components-default/HowItWorksSwap'),
+    HowItWorksSend: () => import('../components-default/HowItWorksSend'),
+    HowItWorksDappsCenter: () =>
+      import('../components-default/HowItWorksDappsCenter'),
+    HowItWorksTokens: () => import('../components-default/HowItWorksTokens'),
+    HowItWorksMore: () => import('../components-default/HowItWorksMore')
   }
 };
 </script>

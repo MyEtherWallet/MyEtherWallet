@@ -127,10 +127,6 @@
       v-if="activeTab === 2 && externalContents && isValidNetwork"
       name="tabContent3"
     />
-    <slot
-      v-if="activeTab === 3 && externalContents && isValidNetwork"
-      name="tabContent4"
-    />
 
     <router-view
       v-if="
@@ -163,7 +159,7 @@
 </template>
 
 <script>
-import bannerImage from '@/assets/images/backgrounds/bg-dapps-center.png';
+import bannerImage from '@/assets/images/backgrounds/bg-dapps-center.jpg';
 import BlockHeader from '@/core/components/AppBlockHeader';
 import TheDappHeader from '@/core/components/TheDappHeader';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';

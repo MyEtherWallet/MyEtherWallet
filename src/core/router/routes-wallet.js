@@ -1,29 +1,15 @@
-import TheWalletView from '@/views/TheWalletView';
-import Dashboard from '@/views/layouts-wallet/TheDashboardLayout';
-import Send from '@/views/layouts-wallet/TheSendTransactionLayout';
-import SendOffline from '@/views/layouts-wallet/TheSendTransactionOfflineLayout';
-import NftManager from '@/views/layouts-wallet/TheNFTManagerLayout';
-import Swap from '@/views/layouts-wallet/TheSwapLayout';
-import InteractContract from '@/views/layouts-wallet/TheInteractContractLayout';
-import DeployContract from '@/views/layouts-wallet/TheDeployContractLayout';
-import SignMessage from '@/views/layouts-wallet/TheSignMessageLayout';
-import VerifyMessage from '@/views/layouts-wallet/TheVerifyMessageLayout';
-import Dapps from '@/views/layouts-wallet/TheDappCenterLayout.vue';
 import DappRoutes from '@/dapps/routes-dapps.js';
-import Settings from '@/modules/settings/ModuleSettings';
-import NftManagerSend from '@/modules/nft-manager/components/NftManagerSend';
-import Network from '@/modules/network/ModuleNetwork';
 import { swapProps, swapRouterGuard } from './helpers';
 import { ROUTES_WALLET } from '../configs/configRoutes';
 export default {
   path: '/wallet',
-  component: TheWalletView,
+  component: () => import('@/views/TheWalletView'),
   props: true,
   children: [
     {
       path: ROUTES_WALLET.WALLETS.PATH,
       name: ROUTES_WALLET.WALLETS.NAME,
-      component: Dashboard,
+      component: () => import('@/views/layouts-wallet/TheDashboardLayout'),
       meta: {
         noAuth: false
       }
@@ -31,7 +17,7 @@ export default {
     {
       path: ROUTES_WALLET.DASHBOARD.PATH,
       name: ROUTES_WALLET.DASHBOARD.NAME,
-      component: Dashboard,
+      component: () => import('@/views/layouts-wallet/TheDashboardLayout'),
       meta: {
         noAuth: false
       }
@@ -39,7 +25,7 @@ export default {
     {
       path: ROUTES_WALLET.SETTINGS.PATH,
       name: ROUTES_WALLET.SETTINGS.NAME,
-      component: Settings,
+      component: () => import('@/modules/settings/ModuleSettings'),
       meta: {
         noAuth: false
       }
@@ -47,16 +33,8 @@ export default {
     {
       path: ROUTES_WALLET.SEND_TX.PATH,
       name: ROUTES_WALLET.SEND_TX.NAME,
-      component: Send,
-      props: true,
-      meta: {
-        noAuth: false
-      }
-    },
-    {
-      path: ROUTES_WALLET.SEND_TX_OFFLINE.PATH,
-      name: ROUTES_WALLET.SEND_TX_OFFLINE.NAME,
-      component: SendOffline,
+      component: () =>
+        import('@/views/layouts-wallet/TheSendTransactionLayout'),
       props: true,
       meta: {
         noAuth: false
@@ -65,12 +43,13 @@ export default {
     {
       path: ROUTES_WALLET.NFT_MANAGER.PATH,
       name: ROUTES_WALLET.NFT_MANAGER.NAME,
-      component: NftManager,
+      component: () => import('@/views/layouts-wallet/TheNFTManagerLayout'),
       children: [
         {
           path: ROUTES_WALLET.NFT_MANAGER_SEND.PATH,
           name: ROUTES_WALLET.NFT_MANAGER_SEND.NAME,
-          component: NftManagerSend,
+          component: () =>
+            import('@/modules/nft-manager/components/NftManagerSend'),
           meta: {
             noAuth: false
           }
@@ -83,7 +62,7 @@ export default {
     {
       path: ROUTES_WALLET.NETWORK.PATH,
       name: ROUTES_WALLET.NETWORK.NAME,
-      component: Network,
+      component: () => import('@/modules/network/ModuleNetwork'),
       meta: {
         noAuth: false
       }
@@ -91,7 +70,7 @@ export default {
     {
       path: ROUTES_WALLET.SWAP.PATH,
       name: ROUTES_WALLET.SWAP.NAME,
-      component: Swap,
+      component: () => import('@/views/layouts-wallet/TheSwapLayout'),
       props: swapProps,
       beforeEnter: swapRouterGuard,
       meta: {
@@ -100,7 +79,7 @@ export default {
     },
     {
       path: ROUTES_WALLET.DAPPS.PATH,
-      component: Dapps,
+      component: () => import('@/views/layouts-wallet/TheDappCenterLayout.vue'),
       children: DappRoutes,
       meta: {
         noAuth: false
@@ -109,7 +88,7 @@ export default {
     {
       path: ROUTES_WALLET.DEPLOY_CONTRACT.PATH,
       name: ROUTES_WALLET.DEPLOY_CONTRACT.NAME,
-      component: DeployContract,
+      component: () => import('@/views/layouts-wallet/TheDeployContractLayout'),
       meta: {
         noAuth: false
       }
@@ -117,7 +96,8 @@ export default {
     {
       path: ROUTES_WALLET.INTERACT_WITH_CONTRACT.PATH,
       name: ROUTES_WALLET.INTERACT_WITH_CONTRACT.NAME,
-      component: InteractContract,
+      component: () =>
+        import('@/views/layouts-wallet/TheInteractContractLayout'),
       meta: {
         noAuth: false
       }
@@ -125,7 +105,7 @@ export default {
     {
       path: ROUTES_WALLET.SIGN_MESSAGE.PATH,
       name: ROUTES_WALLET.SIGN_MESSAGE.NAME,
-      component: SignMessage,
+      component: () => import('@/views/layouts-wallet/TheSignMessageLayout'),
       meta: {
         noAuth: false
       }
@@ -133,7 +113,7 @@ export default {
     {
       path: ROUTES_WALLET.VERIFY_MESSAGE.PATH,
       name: ROUTES_WALLET.VERIFY_MESSAGE.NAME,
-      component: VerifyMessage,
+      component: () => import('@/views/layouts-wallet/TheVerifyMessageLayout'),
       meta: {
         noAuth: false
       }

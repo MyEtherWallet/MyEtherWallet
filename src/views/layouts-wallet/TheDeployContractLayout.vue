@@ -10,16 +10,13 @@
 </template>
 
 <script>
-import TheWrapperWallet from '@/core/components/TheWrapperWallet';
-import ModuleSwapRates from '@/modules/swap/ModuleSwapRates';
-import ModuleContractDeploy from '@/modules/contract/ModuleContractDeploy';
-
 export default {
   name: 'TheDeployContractLayout',
   components: {
-    TheWrapperWallet,
-    ModuleSwapRates,
-    ModuleContractDeploy
+    TheWrapperWallet: () => import('@/core/components/TheWrapperWallet'),
+    ModuleSwapRates: () => import('@/modules/swap/ModuleSwapRates'),
+    ModuleContractDeploy: () =>
+      import('@/modules/contract/ModuleContractDeploy')
   }
 };
 </script>
