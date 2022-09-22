@@ -295,37 +295,30 @@ import xss from 'xss';
 import MultiCoinValidator from 'multicoin-address-validator';
 import BigNumber from 'bignumber.js';
 
-import AppButtonBalance from '@/core/components/AppButtonBalance';
-import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
-import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
-import SwapProvidersList from './components/SwapProvidersList.vue';
-import SwapProviderMentions from './components/SwapProviderMentions.vue';
-import AppTransactionFee from '@/core/components/AppTransactionFee.vue';
-import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
-import { TRENDING_LIST } from './handlers/configs/configTrendingTokens';
-
-import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import Notification, {
   NOTIFICATION_TYPES,
   NOTIFICATION_STATUS
 } from '@/modules/notifications/handlers/handlerNotification';
 import NonChainNotification from '@/modules/notifications/handlers/nonChainNotification';
-import Swapper from './handlers/handlerSwap';
-
+import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
+import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
+import { TRENDING_LIST } from './handlers/configs/configTrendingTokens';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
+import Swapper from './handlers/handlerSwap';
+import handleError from '../confirmation/handlers/errorHandler';
 
 const MIN_GAS_LIMIT = 800000;
 let localContractToToken = {};
 export default {
   name: 'ModuleSwap',
   components: {
-    AppButtonBalance,
-    AppUserMsgBlock,
-    ModuleAddressBook,
-    SwapProvidersList,
-    SwapProviderMentions,
-    AppTransactionFee
+    AppButtonBalance: () => import('@/core/components/AppButtonBalance'),
+    AppUserMsgBlock: () => import('@/core/components/AppUserMsgBlock'),
+    ModuleAddressBook: () => import('@/modules/address-book/ModuleAddressBook'),
+    SwapProvidersList: () => import('./components/SwapProvidersList.vue'),
+    SwapProviderMentions: () => import('./components/SwapProviderMentions.vue'),
+    AppTransactionFee: () => import('@/core/components/AppTransactionFee.vue')
   },
   mixins: [handlerAnalytics, buyMore],
   props: {
@@ -569,17 +562,33 @@ export default {
      */
     actualToTokens() {
       if (this.isLoading) return [];
-      const validToTokens = this.toTokens.filter(item => {
+      let validToTokens = this.toTokens.filter(item => {
         if (
           item.contract.toLowerCase() !==
           this.fromTokenType?.contract?.toLowerCase()
         )
           return item;
       });
+      validToTokens = this.formatTokenPrice(validToTokens);
       let filteredTrendingTokens = this.trendingTokens().filter(token => {
         return token.contract !== this.fromTokenType?.contract;
       });
       filteredTrendingTokens = this.formatTokenPrice(filteredTrendingTokens);
+      const nonChainTokens = validToTokens.reduce((arr, item) => {
+        if (
+          item.hasOwnProperty('isEth') &&
+          !item.isEth &&
+          item.name &&
+          item.symbol &&
+          item.subtext &&
+          item.symbol !== this.network.type.currencyName
+        ) {
+          delete item['tokenBalance'];
+          delete item['totalBalance'];
+          arr.push(item);
+        }
+        return arr;
+      }, []);
       let returnableTokens = [
         {
           text: 'Select Token',
@@ -594,20 +603,23 @@ export default {
           {
             header: 'Trending'
           },
-          ...filteredTrendingTokens,
-          {
-            header: 'All'
-          },
-          ...validToTokens
-        ]);
-      } else {
-        returnableTokens = returnableTokens.concat([
-          {
-            header: 'All'
-          },
-          ...validToTokens
+          ...filteredTrendingTokens
         ]);
       }
+      if (nonChainTokens.length > 0) {
+        returnableTokens = returnableTokens.concat([
+          {
+            header: 'Cross-Chain Tokens'
+          },
+          ...nonChainTokens
+        ]);
+      }
+      returnableTokens = returnableTokens.concat([
+        {
+          header: 'All'
+        },
+        ...validToTokens
+      ]);
       return returnableTokens;
     },
     /**
@@ -1148,11 +1160,11 @@ export default {
       return tokens.map(t => {
         t.totalBalance = t.hasOwnProperty('usdBalancef')
           ? this.getFiatValue(t.usdBalancef)
-          : '0.00';
+          : this.getFiatValue('0.00');
         t.tokenBalance = t.hasOwnProperty('balancef') ? t.balancef : '0.00';
         t.price = t.hasOwnProperty('pricef')
           ? this.getFiatValue(t.pricef)
-          : '0.00';
+          : this.getFiatValue('0.00');
         t.name = t.hasOwnProperty('symbol') ? t.symbol : '';
         return t;
       });
@@ -1162,7 +1174,7 @@ export default {
       return tokens.map(t => {
         t.price = t.hasOwnProperty('pricef')
           ? this.getFiatValue(t.pricef)
-          : '0.00';
+          : this.getFiatValue('0.00');
         return t;
       });
     },
@@ -1216,7 +1228,7 @@ export default {
       ) {
         return this.mainTokenDetails;
       }
-      return findToken ? findToken : this.actualFromTokens[0];
+      return findToken ? findToken : this.actualToTokens[0];
     },
     /**
      * gets the select label placeholder token imgs
@@ -1232,7 +1244,7 @@ export default {
     switchTokens() {
       this.trackSwap('switchTokens');
       const fromToken = this.fromTokenType;
-      const toToken = this.toTokenType;
+      const toToken = this.toTokenType || this.actualToTokens[0];
       const tokenOutValue = this.tokenOutValue;
       this.fromTokenType = {};
       this.toTokenType = {};
@@ -1384,15 +1396,13 @@ export default {
               this.selectedProvider = {};
               if (quotes.length) {
                 this.lastSetToken = quotes[0].amount;
-                this.availableQuotes = quotes
-                  .map(q => {
-                    q.rate = new BigNumber(q.amount)
-                      .dividedBy(new BigNumber(this.tokenInValue))
-                      .toString();
-                    q.isSelected = false;
-                    return q;
-                  })
-                  .filter(item => item.rate !== '0');
+                this.availableQuotes = quotes.map(q => {
+                  q.rate = new BigNumber(q.amount)
+                    .dividedBy(new BigNumber(this.tokenInValue))
+                    .toString();
+                  q.isSelected = false;
+                  return q;
+                });
                 this.tokenOutValue = quotes[0].amount;
               }
               this.step = 1;
@@ -1569,11 +1579,13 @@ export default {
         .catch(err => {
           if (err && err.statusObj?.hashes?.length > 0) {
             err.statusObj.hashes.forEach(item => {
-              Toast(item.message, {}, ERROR);
+              const error = handleError(item);
+              if (error) Toast(error, {}, ERROR);
             });
             return;
           }
-          Toast(err.message, {}, ERROR);
+          const error = handleError(err);
+          if (error) Toast(err && err.message ? err.message : err, {}, ERROR);
         });
     },
     getTokenBalance(balance, decimals) {

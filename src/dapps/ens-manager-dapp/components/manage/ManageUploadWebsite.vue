@@ -45,8 +45,9 @@
 </template>
 
 <script>
-import { Toast, WARNING } from '@/modules/toast/handler/handlerToast';
 import isIpfs from 'is-ipfs';
+
+import { Toast, WARNING } from '@/modules/toast/handler/handlerToast';
 
 export default {
   props: {

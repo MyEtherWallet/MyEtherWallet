@@ -18,7 +18,7 @@
       :has-full-height="true"
       icon-align="left"
     >
-      <template v-if="network.type.name === 'ETH'" #rightHeaderContainer>
+      <template v-if="false" #rightHeaderContainer>
         <div class="d-flex align-center ml-8 mt-3 mt-sm-0">
           <mew-toggle
             :button-group="chartButtons"
@@ -30,7 +30,7 @@
       </template>
       <template #moduleBody>
         <balance-chart
-          v-if="network.type.name === 'ETH'"
+          v-if="false"
           :data="chartData"
           class="full-width mt-5 pa-md-3"
         />
@@ -102,9 +102,6 @@
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 
-import Loader from './ModuleBalanceLoader';
-import BalanceChart from '@/modules/balance/components/BalanceChart';
-import BalanceEmptyBlock from './components/BalanceEmptyBlock';
 import {
   formatPercentageValue,
   formatFloatingPointValue
@@ -115,9 +112,9 @@ import handlerBalanceHistory from './handlers/handlerBalanceHistory.mixin';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 export default {
   components: {
-    Loader,
-    BalanceChart,
-    BalanceEmptyBlock
+    Loader: () => import('./ModuleBalanceLoader'),
+    BalanceChart: () => import('@/modules/balance/components/BalanceChart'),
+    BalanceEmptyBlock: () => import('./components/BalanceEmptyBlock')
   },
   mixins: [handlerBalanceHistory, handlerAnalytics],
   data() {

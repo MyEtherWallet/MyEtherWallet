@@ -7,7 +7,7 @@
         </v-col>
         <v-col cols="7">
           <v-img
-            src="@/assets/images/backgrounds/bg-spaceman.png"
+            src="@/assets/images/backgrounds/bg-spaceman.jpg"
             max-width="100%"
           />
         </v-col>
@@ -17,10 +17,10 @@
 </template>
 
 <script>
-import AppBlockTitle from '@/core/components/AppBlockTitle';
-
 export default {
-  components: { AppBlockTitle },
+  components: {
+    AppBlockTitle: () => import('@/core/components/AppBlockTitle')
+  },
   data: vm => ({
     titleData: {
       textProps: '',

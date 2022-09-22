@@ -70,9 +70,9 @@
 </template>
 <script>
 import { mapActions, mapState } from 'vuex';
+import moment from 'moment';
 
 import enkryptMarketing from '@/core/mixins/enkryptMarketing.mixin';
-import moment from 'moment';
 export default {
   mixins: [enkryptMarketing],
   computed: {

@@ -1,5 +1,5 @@
 <template>
-  <div class="py-8 px-8">
+  <div class="py-8 px-8 pt-3">
     <div
       class="d-flex align-center textDark--text mb-10 cursor--pointer"
       @click="$emit('close')"
@@ -163,8 +163,9 @@
 
 <script>
 import MultiCoinValidator from 'multicoin-address-validator';
-import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import { mapGetters, mapActions, mapState } from 'vuex';
+
+import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import { LOCALE } from '../helpers';
 export default {
   name: 'ModuleBuyEthProvider',

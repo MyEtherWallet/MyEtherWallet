@@ -14,9 +14,10 @@
         md="3"
         lg="2"
       >
-        <a :href="p.link" target="_blank">
+        <a v-if="p.link" :href="p.link" target="_blank">
           <img :src="p.img" style="width: 90%; max-width: 120px" />
         </a>
+        <img v-else :src="p.img" style="width: 90%; max-width: 120px" />
       </v-col>
     </v-row>
   </v-container>
@@ -39,10 +40,6 @@ export default {
       {
         img: require('@/assets/images/partners/bitbox.png'),
         link: 'https://shiftcrypto.ch/?ref=mew'
-      },
-      {
-        img: require('@/assets/images/partners/secalot.png'),
-        link: 'https://www.secalot.com/'
       },
       {
         img: require('@/assets/images/partners/bity.png'),

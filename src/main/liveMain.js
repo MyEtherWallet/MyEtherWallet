@@ -40,7 +40,7 @@ import vuetify from '@/core/plugins/vuetify';
 import apolloProvider from './apolloProvider';
 import i18n from './i18n';
 import * as locStore from 'store';
-
+import VueLazyLoad from 'vue-lazyload';
 // Directives
 Vue.directive('lottie', LottieAnimation);
 
@@ -55,6 +55,10 @@ Vue.use(VueSocialSharing);
 Vue.use(Router);
 Vue.use(Vuex);
 Vue.config.productionTip = false;
+
+// Lazy Loader
+Vue.use(VueLazyLoad);
+
 new Vue({
   el: '#app',
   i18n,

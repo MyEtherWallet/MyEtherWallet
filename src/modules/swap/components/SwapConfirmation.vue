@@ -40,11 +40,9 @@
 </template>
 
 <script>
-import fromToBlock from './SwapFromToBlock';
-
 export default {
   components: {
-    fromToBlock
+    fromToBlock: () => import('./SwapFromToBlock')
   },
   props: {
     to: {

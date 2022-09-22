@@ -326,17 +326,94 @@
             </div>
           </div>
         </template>
+        <template #tabContent3>
+          <v-sheet color="transparent" max-width="700px" class="mx-auto py-12">
+            <!-- <div class="addressBlock d-flex align-center mb-7">
+              <mew-blockie :address="address" />
+              <span class="font-weight-heavy pl-15">{{ address }}</span>
+            </div> -->
+            <div class="mb-5">
+              <div class="mb-3">
+                <div class="addressBlock d-flex align-center mb-7">
+                  <!-- <mew-blockie :address="address" /> -->
+                  <!-- <span class="mew-heading-4 font-weight-heavy pl-5">{{
+                    address
+                  }}</span> -->
+                </div>
+              </div>
+              <div class="d-flex flex-column justify-space-between">
+                <div class="mew-heading-3 mb-2">
+                  Reverse Resolution for Address
+                </div>
+                <div class="d-flex justify-space-between">
+                  <!-- <mew-select
+                    :value="selectedAddress"
+                    :filter-placeholder="address"
+                    @input="setAddress"
+                  >
+                  </mew-select> -->
+                  <mew-input
+                    :value="address"
+                    :show-blockie="true"
+                    :hide-clear-btn="true"
+                    :is-read-only="true"
+                    :loading="true"
+                    :error-messages="inputErrorMessage"
+                    label="Wallet Address"
+                    class="mr-3 mt-10 flex-grow-1"
+                    @input="setAddress"
+                  />
+                  <div class="d-flex flex-column justify-space-between">
+                    <mew-button
+                      :has-full-width="false"
+                      btn-size="xlarge"
+                      title="Reverse TokenId"
+                      class="mb-1"
+                      @click.native="reverseTokenId()"
+                    />
+                    <mew-button
+                      :has-full-width="false"
+                      btn-size="xlarge"
+                      title="Reverse Url"
+                      class="mt-1"
+                      @click.native="reverseUrl()"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div v-if="hasTokenIdResults" class="d-flex flex-column mt-2">
+                <span class="mew-heading-3 font-weight-heavy"
+                  >Reverse Resolve TokenId by Address Result:
+                </span>
+                <span class="mew-heading-4 font-weight-heavy mt-2">
+                  {{ reverseTokenIdResults }}
+                </span>
+              </div>
+              <div v-if="hasUrlResults" class="d-flex flex-column mt-2">
+                <span class="mew-heading-3 font-weight-heavy"
+                  >Reverse Resolve Url by Address Result:
+                </span>
+                <span class="mew-heading-4 font-weight-heavy mt-2">
+                  {{ reverseUrlResults }}
+                </span>
+              </div>
+            </div>
+          </v-sheet>
+        </template>
       </mew-tabs>
     </mew6-white-sheet>
   </div>
 </template>
 
 <script>
-import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.png';
+import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.jpg';
 import buyOverlay from './components/UnstoppableDomainBuyOverlay';
 import addOwnedDomainOverlay from './components/UnstoppableAddOwnedDomainOverlay';
 import transferDomainOverlay from './components/UnstoppableTransferDomainOverlay';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
+import { mapGetters, mapState } from 'vuex';
+import Resolution from '@unstoppabledomains/resolution';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 
 export default {
   components: {
@@ -350,7 +427,17 @@ export default {
       buyOverlay: false,
       addOverlay: false,
       transferOverlay: false,
-      tabs: [{ name: 'Buy domain' }, { name: 'Manage domain' }],
+      inputtedAddress: null,
+      reverseTokenIdResults: '',
+      reverseUrlResults: '',
+      hasUrlResults: false,
+      hasTokenIdResults: false,
+      isLoading: false,
+      tabs: [
+        { name: 'Buy domain' },
+        { name: 'Manage domain' },
+        { name: 'Reverse Resolver' }
+      ],
       domainFunctions: [
         { label: 'Transfer Domain' },
         { label: 'Renew Domain', expire: '07/21/2020' },
@@ -410,7 +497,60 @@ export default {
       ]
     };
   },
+  computed: {
+    ...mapGetters('global', ['network']),
+    ...mapState('wallet', ['balance', 'web3', 'instance', 'address']),
+    inputErrorMessage() {
+      if (this.inputtedAddress === '') {
+        return `Address input cannot be empty.`;
+      }
+      return '';
+    }
+  },
   methods: {
+    async reverseTokenId() {
+      this.isLoading = true;
+      const address = this.inputtedAddress;
+      const resolution = new Resolution();
+      try {
+        const results = await resolution
+          .reverseTokenId(address)
+          .then(tokenId => {
+            const tokenIdRes = tokenId;
+            this.reverseTokenIdResults =
+              address + ' ' + `reversed to` + ' ' + tokenIdRes;
+          });
+        this.isLoading = false;
+        this.hasTokenIdResults = true;
+        return results;
+      } catch (e) {
+        Toast(e, {}, ERROR);
+      }
+    },
+    async reverseUrl() {
+      this.isLoading = true;
+      const address = this.inputtedAddress;
+      const resolution = new Resolution();
+      try {
+        const results = await resolution
+          .reverse(address, {
+            location: 'UNSLayer2'
+          })
+          .then(domain => {
+            const domainRes = domain;
+            this.reverseUrlResults =
+              address + ' ' + `reversed to` + ' ' + domainRes;
+          });
+        this.isLoading = false;
+        this.hasUrlResults = true;
+        return results;
+      } catch (e) {
+        Toast(e, {}, ERROR);
+      }
+    },
+    setAddress(value) {
+      this.inputtedAddress = value;
+    },
     closeBuyOverlay() {
       this.buyOverlay = false;
     },
@@ -423,3 +563,8 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+.set-button {
+  margin-left: 10px;
+}
+</style>
