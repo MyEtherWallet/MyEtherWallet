@@ -42,6 +42,7 @@
           class="mb-8"
           placeholder="find a path"
           is-compact
+          is-filled
           @input="setSearch"
         />
         <!--
@@ -87,12 +88,11 @@
           </div>
           <v-btn
             icon
-            x-small
-            color="rgba(11, 40, 64, 0.5)"
-            class="pa-3 mb-7"
+            small
+            class="pa-3 mb-7 ml-2"
             @click="handleRemove(filteredCustomPath)"
           >
-            <v-icon>mdi-close</v-icon>
+            <v-icon color="textDark">mdi-close</v-icon>
           </v-btn>
         </div>
         <v-divider
@@ -137,30 +137,34 @@
             {{ filteredPath.value }}
           </span>
         </div>
+
         <div
-          :class="
-            filteredCustomPaths.length
-              ? 'd-flex justify-space-between'
-              : 'd-flex justify-end'
-          "
+          class="d-flex align-center justify-space-between bottom-buttons pt-4"
         >
-          <div
-            v-if="filteredCustomPaths.length"
-            class="text-left greenPrimary--text cursor-pointer"
-            @click="showRemoveAll = true"
+          <mew-button
+            btn-style="transparent"
+            btn-size="small"
+            color-theme="textDark"
+            @click.native="toggleCustomField(true)"
+          >
+            Add Path
+            <v-icon>mdi-menu-down</v-icon>
+          </mew-button>
+
+          <mew-button
+            v-if="!filteredCustomPaths.length"
+            btn-style="transparent"
+            btn-size="small"
+            color-theme="redPrimary"
+            @click.native="showRemoveAll = true"
           >
             Remove all custom
-          </div>
-          <div
-            class="text-left greenPrimary--text cursor-pointer"
-            @click="toggleCustomField(true)"
-          >
-            + Add Path
-          </div>
+          </mew-button>
         </div>
 
-        <div v-if="showCustomField" class="mt-4">
+        <div :class="showCustomField ? 'open' : ''" class="custom-field">
           <mew-input
+            class="mt-4"
             label="Alias"
             placeholder="my custom path"
             @input="setCustomAlias"
@@ -360,5 +364,17 @@ export default {
 <style lang="scss" scoped>
 .path {
   color: rgba(11, 40, 64, 0.5);
+}
+.custom-field {
+  max-height: 0px;
+  transition: max-height 0.3s ease;
+  overflow: hidden;
+
+  &.open {
+    max-height: 400px;
+  }
+}
+.bottom-buttons {
+  border-top: 1px solid var(--v-greyMedium-base) !important;
 }
 </style>
