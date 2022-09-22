@@ -152,7 +152,7 @@
           </mew-button>
 
           <mew-button
-            v-if="!filteredCustomPaths.length"
+            v-if="filteredCustomPaths.length > 0"
             btn-style="transparent"
             btn-size="small"
             color-theme="redPrimary"
@@ -164,12 +164,14 @@
 
         <div :class="showCustomField ? 'open' : ''" class="custom-field">
           <mew-input
-            class="mt-4 aliasInput"
+            ref="aliasInput"
+            class="mt-4"
             label="Alias"
             placeholder="my custom path"
             @input="setCustomAlias"
           />
           <mew-input
+            ref="pathInput"
             label="Path"
             placeholder="m/44’/1’/0’/0"
             @input="setCustomPath"
@@ -292,10 +294,7 @@ export default {
       if (scroll === true)
         setTimeout(() => {
           document.getElementById('bottomList').scrollIntoView();
-          const aliasTxt = document
-            .getElementsByClassName('aliasInput')[0]
-            .getElementsByTagName('input')[0];
-          aliasTxt.focus();
+          this.$refs.aliasInput.$children[0].focus();
         }, 150);
     },
     deletePath(path) {
@@ -332,11 +331,11 @@ export default {
       try {
         const customPath = checkCustomPath(this.customPath);
         if (customPath) {
-          if (
-            this.filteredPaths.some(e => e.value === this.customPath) ||
-            this.filteredCustomPaths.some(e => e.value === this.customPath)
-          ) {
-            const error = 'Custom path already exists';
+          const foundPath =
+            this.filteredPaths.find(e => e.value === this.customPath) ||
+            this.filteredCustomPaths.find(e => e.value === this.customPath);
+          if (foundPath) {
+            const error = `Path already exists: ${foundPath.name}`;
             Toast(error, {}, ERROR);
           } else {
             if (this.customAlias === '') {
@@ -349,13 +348,16 @@ export default {
               };
               this.addCustomPath(newPath).then(() => {
                 this.customPath = '';
-                Toast('You have added custom path successfully.', {}, SUCCESS);
+                this.customAlias = '';
+                this.$refs.aliasInput.clear();
+                this.$refs.pathInput.clear();
+                Toast('Custom derivation path added!', {}, SUCCESS);
               });
             }
             this.showCustomField = false;
           }
         } else {
-          Toast('Custom path is not valid', {}, ERROR);
+          Toast('Invalid Derivation path', {}, ERROR);
         }
       } catch (error) {
         Toast(error, {}, ERROR);
