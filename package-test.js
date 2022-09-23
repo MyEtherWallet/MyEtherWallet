@@ -70,7 +70,8 @@ const EXCEPTIONS = [
   'node-sass',
   '@ledgerhq/hw-transport-web-ble',
   '@ledgerhq/hw-transport-webusb',
-  'uuid'
+  'uuid',
+  'web3-eth-contract'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
