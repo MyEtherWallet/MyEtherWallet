@@ -7,6 +7,7 @@
       :copy-tooltip="$t('common.copy')"
       :save-tooltip="$t('common.save')"
       :enable-save-address="enableSave"
+      :show-save="enableSave"
       :label="addrLabel"
       :items="addressBookWithMyAddress"
       :placeholder="$t('sendTx.enter-addr')"
@@ -219,7 +220,8 @@ export default {
           /**
            * Resolve address with ENS/US/Kleros
            */
-          if (this.isValidAddress && !this.isOfflineApp) this.resolveAddress();
+          if (this.isValidAddress && !this.isOfflineApp)
+            await this.resolveAddress();
 
           /**
            * @emits setAddress
@@ -229,7 +231,7 @@ export default {
             value: isObject(typeVal) ? typeVal.nickname : typeVal
           });
           if (!this.isValidAddress) {
-            this.resolveName();
+            await this.resolveName();
           }
         } else {
           const currencyExists = WAValidator.findCurrency(
