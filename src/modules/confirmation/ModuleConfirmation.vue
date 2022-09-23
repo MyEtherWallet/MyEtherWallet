@@ -772,6 +772,10 @@ export default {
       this.showSuccessModal = true;
     },
     async signTx() {
+      console.log('\nattempting to sign transaction...');
+      console.log('this.tx', this.tx);
+      console.log('instance', this.instance);
+      console.log('signing', this.signing);
       this.error = '';
       if (this.isNotSoftware) {
         this.signing = true;
@@ -794,11 +798,13 @@ export default {
           .signTransaction(this.tx)
           .then(res => {
             this.signedTxObject = res;
+            console.log('signedTxObject', this.signedTxObject, '\n');
             if (this.isHardware && this.txSigned) {
               this.btnAction();
             }
           })
           .catch(e => {
+            console.log('e', e);
             this.signedTxObject = {};
             this.error = errorHandler(e);
             this.signing = false;
@@ -858,10 +864,16 @@ export default {
       }
     },
     btnAction() {
+      console.log('button clicked');
+      console.log('signedTxArray.length', this.signedTxArray.length);
+      console.log('unsignedTxArr.length', this.unsignedTxArr.length);
+      console.log('signedTxObject', this.signedTxObject);
+      console.log('isEmpty(signedTxObject)', isEmpty(this.signedTxObject));
       if (this.isSwap) {
         this.trackSwap('swapTransactionSend');
       }
       if (!this.isWeb3Wallet) {
+        console.log('isBatch', this.isBatch);
         if (
           (this.signedTxArray.length === 0 ||
             this.signedTxArray.length < this.unsignedTxArr.length) &&

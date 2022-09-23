@@ -95,6 +95,7 @@ class WSProvider {
 
     this.wsProvider.request = payload => {
       return new Promise((resolve, reject) => {
+        // console.log('payload', payload);
         this.wsProvider.send(
           {
             jsonrpc: '2.0',
@@ -103,6 +104,8 @@ class WSProvider {
             params: payload.params
           },
           (err, res) => {
+            // console.log('err', err);
+            // console.log('res', res);
             if (err) return reject(err);
             else if (res.error) return reject(res.error);
             resolve(res.result);
