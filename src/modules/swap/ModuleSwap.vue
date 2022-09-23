@@ -1036,6 +1036,9 @@ export default {
     setupTokenInfo(tokens) {
       tokens.forEach(token => {
         if (localContractToToken[token.contract]) return;
+        const DOGE_ADDRESS = '0x4206931337dc273a630d328dA6441786BfaD668f';
+        if (token.contract?.toLowerCase() === DOGE_ADDRESS.toLowerCase())
+          return;
         if (
           token.isEth === false &&
           (token.contract?.toLowerCase() === '0xeth' ||
