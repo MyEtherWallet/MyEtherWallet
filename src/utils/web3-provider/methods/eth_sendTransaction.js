@@ -58,7 +58,6 @@ export default async ({ payload, store, requestManager }, res, next) => {
     ? store.getters['global/network'].type.chainID
     : tx.chainId;
   tx.from = tx.from ? tx.from : store.state.wallet.address;
-  console.log('tx', tx);
   getSanitizedTx(tx)
     .then(_tx => {
       const event = confirmInfo
@@ -92,9 +91,6 @@ export default async ({ payload, store, requestManager }, res, next) => {
          * if true, assume transaction is a swap
          */
         EventBus.$emit(event, params, _response => {
-          console.log('_response', _response);
-          console.log('event', event);
-          console.log('params', params);
           if (_response.rejected) {
             res(new Error('User rejected action'));
             return;
@@ -102,9 +98,6 @@ export default async ({ payload, store, requestManager }, res, next) => {
           const _promiObj = store.state.wallet.web3.eth.sendSignedTransaction(
             _response.rawTransaction
           );
-          console.log('_promiObj', _promiObj);
-          console.log('_tx', _tx);
-          console.log('store.dispatch', store.dispatch);
           setEvents(_promiObj, _tx, store.dispatch);
           _promiObj
             .once('transactionHash', hash => {
