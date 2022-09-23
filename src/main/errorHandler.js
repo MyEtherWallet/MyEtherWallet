@@ -55,9 +55,7 @@ export const knownErrors = {
     'Rate limit exceeded. Please try again in about 30 seconds.',
   "execution reverted: it's not your token": 'You do not own this token',
   'Returned error: gas required exceeds allowance':
-    'Your gas limit is too low. Please increase your gas limit and try again.',
-  'while converting number to string, invalid number value':
-    'Please enter a valid amount'
+    'Your gas limit is too low. Please increase your gas limit and try again.'
 };
 
 const handleError = err => {

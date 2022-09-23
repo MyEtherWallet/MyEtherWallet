@@ -49,6 +49,7 @@
                 method: setEntireBal
               }"
               :buy-more-str="buyMoreStr"
+              @keydown.native="preventCharE($event)"
               @buyMore="openMoonpay"
               @input="val => setAmount(val, false)"
             />
@@ -824,6 +825,9 @@ export default {
     handleLocalGasPrice(e) {
       this.localGasPrice = e;
       this.sendTx.setLocalGasPrice(e);
+    },
+    preventCharE(e) {
+      if (e.key === 'e') e.preventDefault();
     }
   }
 };
