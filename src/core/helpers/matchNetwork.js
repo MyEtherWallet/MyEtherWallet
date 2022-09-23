@@ -55,7 +55,9 @@ export default async (chainID, walletType, options = { toast: true }) => {
         } else {
           toastMsg = 'There was a problem processing your request to MetaMask';
         }
-        Toast(toastMsg, toastLink, ERROR, 5000);
+        setTimeout(() => {
+          Toast(toastMsg, toastLink, ERROR, 5000);
+        }, 100);
       }
       return false;
     }
