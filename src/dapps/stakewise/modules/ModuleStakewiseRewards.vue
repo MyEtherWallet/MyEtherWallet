@@ -1,5 +1,5 @@
 <template>
-  <div class="pt-8 pb-13 px-3 pa-sm-15">
+  <div class="dapps-stakewise-rewards pt-8 pb-13 px-3 pa-sm-15">
     <v-row>
       <v-col
         :order="$vuetify.breakpoint.smAndDown ? 'last' : ''"
@@ -7,7 +7,7 @@
         md="8"
         :class="$vuetify.breakpoint.smAndDown ? 'my-10' : 'pr-7'"
       >
-        <mew-sheet class="pa-md-15">
+        <mew-sheet class="pa-15">
           <div class="mew-heading-2 textDark--text mb-8">Compound Rewards</div>
 
           <!-- ======================================================================================= -->
@@ -174,20 +174,14 @@
 </template>
 
 <script>
-import StakewiseApr from '../components/StakewiseApr';
-import StakewiseStaking from '../components/StakewiseStaking';
-import StakewiseRewards from '../components/StakewiseRewards';
-import ButtonBalance from '@/core/components/AppButtonBalance';
-import Swapper from '@/modules/swap/handlers/handlerSwap';
-import stakeHandler from '../handlers/stakewiseStakeHandler';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import BigNumber from 'bignumber.js';
-import { debounce } from 'lodash';
 import { mapGetters, mapState, mapActions } from 'vuex';
-import { find, clone, isEmpty } from 'lodash';
+import { find, clone, isEmpty, debounce } from 'lodash';
 import { fromWei } from 'web3-utils';
+
 import { EventBus } from '@/core/plugins/eventBus';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
-import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import Notification, {
   NOTIFICATION_TYPES,
   NOTIFICATION_STATUS
@@ -201,16 +195,21 @@ import {
   RETH2_Token,
   ETH_Token
 } from '@/dapps/stakewise/handlers/configs.js';
+
+import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
+import Swapper from '@/modules/swap/handlers/handlerSwap';
+import stakeHandler from '../handlers/stakewiseStakeHandler';
 const MIN_GAS_LIMIT = 300000;
 
 export default {
   name: 'ModuleStakewiseRewards',
   components: {
-    StakewiseApr,
-    StakewiseStaking,
-    StakewiseRewards,
-    ButtonBalance
+    StakewiseApr: () => import('../components/StakewiseApr'),
+    StakewiseStaking: () => import('../components/StakewiseStaking'),
+    StakewiseRewards: () => import('../components/StakewiseRewards'),
+    ButtonBalance: () => import('@/core/components/AppButtonBalance')
   },
+  mixins: [handlerAnalytics],
   data() {
     return {
       iconStakewise: require('@/dapps/stakewise/assets/icon-stakewise-red.svg'),
@@ -476,6 +475,7 @@ export default {
       }
     },
     async showConfirm() {
+      this.trackDapp('stakewiseRewardsShowConfirm');
       try {
         this.loading = true;
         await this.getTrade(this.hasReth, this.hasSeth, 'reth');
@@ -512,6 +512,7 @@ export default {
         this.swapper
           .executeTrade(this.currentTrade, this.confirmInfo)
           .then(res => {
+            this.trackDapp('compoundRewards');
             this.swapNotificationFormatter(res, currentTradeCopy);
           })
           .then(() => {

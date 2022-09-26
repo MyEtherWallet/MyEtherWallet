@@ -128,14 +128,14 @@
   </div>
 </template>
 <script>
-import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
-import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { isArray } from 'lodash';
+
+import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 const MAX_PROVIDERS = 3;
 export default {
   name: 'SwapProvidersList',
   components: {
-    AppUserMsgBlock
+    AppUserMsgBlock: () => import('@/core/components/AppUserMsgBlock')
   },
   props: {
     step: {
@@ -219,7 +219,9 @@ export default {
           return {
             rate: formatted.value,
             amount: formattedAmt.value,
-            tooltip: `${formattedAmt.tooltipText} ${this.toTokenSymbol}`
+            tooltip: `${formattedAmt.tooltipText || formattedAmt.value} ${
+              this.toTokenSymbol
+            }`
           };
         });
         if (returnedList) return returnedList;

@@ -500,11 +500,12 @@ export default {
     getNickname(address) {
       const checksummedAddress = toChecksumAddress(address);
       const isStored = this.addressBookStore.find(item => {
-        if (!isValidAddress(item.address)) return;
         const addressStored = item.resolvedAddr
-          ? toChecksumAddress(item.resolvedAddr)
-          : toChecksumAddress(item.address);
-        if (addressStored === checksummedAddress) {
+          ? item.resolvedAddr
+          : item.address;
+        if (!isValidAddress(addressStored)) return;
+        const storedAddr = toChecksumAddress(addressStored);
+        if (storedAddr === checksummedAddress) {
           return item;
         }
       });

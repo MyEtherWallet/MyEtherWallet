@@ -17,6 +17,7 @@
 
 <script>
 import { mapActions, mapState } from 'vuex';
+
 import currencyList from './currencyList';
 export default {
   name: 'SettingsLocaleConfig',

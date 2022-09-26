@@ -2,7 +2,7 @@ import { getHashFromFile, uploadFileToIpfs } from './helpers/helperIpfs.js';
 import BigNumber from 'bignumber.js';
 import ENSManagerInterface from './handlerENSManagerInterface.js';
 import * as nameHashPckg from 'eth-ens-namehash';
-import { DNSRegistrar } from '@ensdomains/ens-contracts/deployments/mainnet/DNSRegistrar.json';
+import DNSRegistrar from '@ensdomains/ens-contracts/deployments/mainnet/DNSRegistrar.json';
 import contentHash from 'content-hash';
 import EventEmitter from 'events';
 import vuexStore from '@/core/store';
@@ -98,7 +98,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
   }
 
   getActualDuration(duration) {
-    const SECONDS_YEAR = 60 * 60 * 24 * 365.25;
+    const SECONDS_YEAR = 60 * 60 * 24 * 365.2425;
     return Math.ceil(SECONDS_YEAR * duration);
   }
 
@@ -117,13 +117,13 @@ export default class PermanentNameModule extends ENSManagerInterface {
     try {
       const gasPrice = this.gasPriceByType()(this.gasPriceType());
       const rentPrice = await this.getRentPrice(duration);
-      const withFivePercent = BigNumber(rentPrice)
-        .times(1.05)
+      const withTenPercent = BigNumber(rentPrice)
+        .times(1.1)
         .integerValue()
         .toFixed();
       const txObj = {
         from: this.address,
-        value: withFivePercent
+        value: withTenPercent
       };
       const extraFee = await this.registrarControllerContract.methods
         .renew(this.parsedHostName, this.getActualDuration(duration))
@@ -143,13 +143,13 @@ export default class PermanentNameModule extends ENSManagerInterface {
     if (!hasBalance) {
       throw new Error('Not enough balance');
     }
-    const withFivePercent = BigNumber(rentPrice)
-      .times(1.05)
+    const withTenPercent = BigNumber(rentPrice)
+      .times(1.1)
       .integerValue()
       .toFixed();
     return this.registrarControllerContract.methods
       .renew(this.parsedHostName, this.getActualDuration(duration))
-      .send({ from: this.address, value: withFivePercent });
+      .send({ from: this.address, value: withTenPercent });
   }
 
   uploadFile(file) {
@@ -330,13 +330,13 @@ export default class PermanentNameModule extends ENSManagerInterface {
         promiEvent.emit('error', new Error('Not enough balance'));
         return;
       }
-      const withFivePercent = BigNumber(rentPrice)
-        .times(1.05)
+      const withTenPercent = BigNumber(rentPrice)
+        .times(1.1)
         .integerValue()
         .toFixed();
       const txObj = {
         from: this.address,
-        value: withFivePercent
+        value: withTenPercent
       };
       const registerWithConfig =
         this.registrarControllerContract.methods.registerWithConfig(
@@ -352,6 +352,8 @@ export default class PermanentNameModule extends ENSManagerInterface {
         .estimateGas(txObj)
         .then(res => {
           txObj['gas'] = res;
+        })
+        .then(() => {
           registerWithConfig
             .send(txObj)
             .on('transactionHash', hash =>
@@ -371,13 +373,13 @@ export default class PermanentNameModule extends ENSManagerInterface {
       const rentPrice = await this.getRentPrice(duration);
       const hasBalance = new BigNumber(balance).gte(rentPrice);
       if (hasBalance) {
-        const rentPriceWithFivePercent = new BigNumber(rentPrice)
-          .times(1.05)
+        const rentPriceWithTenPercent = new BigNumber(rentPrice)
+          .times(1.1)
           .integerValue()
           .toFixed();
         const txObj = {
           from: this.address,
-          value: rentPriceWithFivePercent
+          value: rentPriceWithTenPercent
         };
         const gasAmt = await this.registrarControllerContract.methods
           .registerWithConfig(
@@ -393,7 +395,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
           return false;
         }
         return fromWei(
-          toBN(gasAmt).mul(toBN(gasPrice)).add(toBN(rentPriceWithFivePercent))
+          toBN(gasAmt).mul(toBN(gasPrice)).add(toBN(rentPriceWithTenPercent))
         );
       }
     } catch (e) {

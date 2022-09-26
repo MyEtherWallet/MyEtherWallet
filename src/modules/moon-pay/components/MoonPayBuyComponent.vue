@@ -68,11 +68,13 @@
         <div class="mew-heading-3 textDark--text mb-5">
           Where should we send your crypto?
         </div>
-        <mew-input
-          v-model="toAddress"
+        <ModuleAddressBook
+          ref="addressInput"
           label="Enter Crypto Address"
-          :rules="[isValidToAddress]"
-          :error-messages="addressErrorMessages"
+          :currency="selectedCryptoName"
+          :enable-save-address="false"
+          :is-home-page="true"
+          @setAddress="setAddress"
         />
       </div>
     </div>
@@ -91,12 +93,13 @@
 
 <script>
 import MultiCoinValidator from 'multicoin-address-validator';
-import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import { isEmpty, cloneDeep, isEqual } from 'lodash';
-import BigNumber from 'bignumber.js';
 import { mapGetters, mapActions, mapState } from 'vuex';
-import { fromWei, toBN } from 'web3-utils';
+import BigNumber from 'bignumber.js';
 import Web3 from 'web3';
+import { fromWei, toBN } from 'web3-utils';
+
+import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import nodeList from '@/utils/networks';
 import {
   formatFloatingPointValue,
@@ -104,9 +107,12 @@ import {
 } from '@/core/helpers/numberFormatHelper';
 import { getCurrency } from '@/modules/settings/components/currencyList';
 import { buyContracts } from './tokenList';
+import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
+import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 
 export default {
   name: 'ModuleBuyEth',
+  components: { ModuleAddressBook },
   props: {
     orderHandler: {
       type: Object,
@@ -133,7 +139,7 @@ export default {
         name: 'USD',
         value: 'USD',
         // eslint-disable-next-line
-        img: require(`@/assets/images/currencies/USD.svg`)
+                img: require(`@/assets/images/currencies/USD.svg`)
       },
       fetchedData: {},
       currencyRates: [],
@@ -148,7 +154,7 @@ export default {
   },
   computed: {
     ...mapGetters('global', ['network', 'getFiatValue']),
-    ...mapState('wallet', ['address']),
+    ...mapState('wallet', ['web3', 'address']),
     ...mapState('external', ['currencyRate', 'coinGeckoTokens']),
     ...mapGetters('external', ['contractToToken']),
     ...mapGetters('wallet', ['tokensList']),
@@ -271,12 +277,6 @@ export default {
       }
       return '';
     },
-    addressErrorMessages() {
-      if (!this.actualValidAddress && !isEmpty(this.toAddress)) {
-        return 'Invalid Address';
-      }
-      return '';
-    },
     currencyErrorMessages() {
       if (!this.supportedBuy) {
         return 'Please switch your network to the Ethereum Mainnet on Metamask.';
@@ -293,7 +293,6 @@ export default {
             arr.push(inList);
             return arr;
           }
-
           const token = this.contractToToken(item);
           if (token) arr.push(token);
           return arr;
@@ -404,10 +403,22 @@ export default {
   watch: {
     selectedCurrency: {
       handler: function (newVal, oldVal) {
+        const supportedCoins = {
+          ETH: 'ETH',
+          BNB: 'BNB',
+          MATIC: 'MATIC'
+        };
+        if (
+          newVal.contract.toLowerCase() === MAIN_TOKEN_ADDRESS &&
+          !supportedCoins[newVal.symbol]
+        ) {
+          this.selectedCurrency = oldVal;
+          return;
+        }
         if (!isEqual(newVal, oldVal)) {
           this.fetchCurrencyData();
         }
-        this.$emit('selectedCurrency', newVal);
+        this.$emit('selectedCurrency', this.selectedCurrency);
       },
       deep: true
     },
@@ -457,9 +468,6 @@ export default {
         this.getSimplexQuote();
       }
     },
-    toAddress(newVal) {
-      this.validToAddress = this.isValidToAddress(newVal);
-    },
     coinGeckoTokens: {
       handler: function () {
         this.fetchCurrencyData();
@@ -467,17 +475,24 @@ export default {
     }
   },
   mounted() {
+    this.$refs.addressInput.$refs.addressSelect.clear();
     this.fetchCurrencyData();
   },
   methods: {
     ...mapActions('global', ['setNetwork']),
+    setAddress(newVal, isValid, data) {
+      if (data.type === 'RESOLVED' && !data.value.includes('.'))
+        this.toAddress = data.value;
+      else this.toAddress = newVal;
+      this.validToAddress = isValid;
+    },
     async fetchGasPrice() {
       const supportedNodes = {
         ETH: 'ETH',
         BNB: 'BSC',
         MATIC: 'MATIC'
       };
-      const nodeType = !supportedNodes[this.selectedCurrency.symbol]
+      const nodeType = !supportedNodes[this.selectedCurrency?.symbol]
         ? 'ETH'
         : supportedNodes[this.selectedCurrency.symbol];
       const node = nodeList[nodeType];

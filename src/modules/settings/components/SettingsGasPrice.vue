@@ -117,14 +117,15 @@
 
 <script>
 import { fromWei } from 'web3-utils';
-import { gasPriceTypes } from '@/core/helpers/gasPriceHelper';
 import { mapState, mapGetters } from 'vuex';
+import BigNumber from 'bignumber.js';
+
+import { gasPriceTypes } from '@/core/helpers/gasPriceHelper';
 import {
   formatFiatValue,
   formatFloatingPointValue,
   toBNSafe
 } from '@/core/helpers/numberFormatHelper';
-import BigNumber from 'bignumber.js';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 
 export default {
@@ -212,24 +213,11 @@ export default {
     /**
      * If not enough balance to cover new priority, go back to previous priority
      */
+    fromSettings() {
+      this.setGasType();
+    },
     gasPriceType() {
-      if (this.notEnoughEth) {
-        if (this.gasPriceType == 'regular') {
-          this.regularDisabled = true;
-          this.fastDisabled = true;
-        } else if (this.gasPriceType == 'fast') {
-          this.fastDisabled = true;
-        } else {
-          this.economyDisabled = true;
-          this.regularDisabled = true;
-          this.fastDisabled = true;
-        }
-        this.setSelected(this.previousSelected);
-      }
-
-      if (!this.notEnoughEth) {
-        this.previousSelected = this.gasPriceType;
-      }
+      this.setGasType();
     },
     gasPrice() {
       this.recalculate();
@@ -246,6 +234,24 @@ export default {
     this.previousSelected = this.gasPriceType;
   },
   methods: {
+    setGasType() {
+      if (this.notEnoughEth && !this.fromSettings) {
+        if (this.gasPriceType == 'regular') {
+          this.regularDisabled = true;
+          this.fastDisabled = true;
+        } else if (this.gasPriceType == 'fast') {
+          this.fastDisabled = true;
+        } else {
+          this.economyDisabled = true;
+          this.regularDisabled = true;
+          this.fastDisabled = true;
+        }
+        this.setSelected(this.previousSelected);
+        if (!this.notEnoughEth) {
+          this.previousSelected = this.gasPriceType;
+        }
+      }
+    },
     calcTxFee(priority) {
       return fromWei(
         toBNSafe(this.totalGasLimit)

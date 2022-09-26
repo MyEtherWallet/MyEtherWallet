@@ -32,16 +32,16 @@
 
 <script>
 import { mapState } from 'vuex';
+import { toBN } from 'web3-utils';
+
 import { ETH_BLOCKS_ROUTE } from '../configsRoutes';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { validBlockNumber, beginsWithZero } from '../handlers/helpers/common';
-import { toBN } from 'web3-utils';
-import DateSelectorPopup from './DateSelectorPopup.vue';
 
 export default {
   name: 'ModuleEthBlocksMint',
   components: {
-    DateSelectorPopup
+    DateSelectorPopup: () => import('./DateSelectorPopup.vue')
   },
   data() {
     return {
@@ -61,7 +61,7 @@ export default {
      * @returns {string}
      */
     maxBlock() {
-      const max = toBN(this.blockNumber).sub(toBN(50));
+      const max = toBN(this.blockNumber ? this.blockNumber : 0).sub(toBN(50));
       const ZERO = toBN(0);
       return max.gt(ZERO) ? max.toNumber() : '';
     },

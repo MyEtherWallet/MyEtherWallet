@@ -24,6 +24,7 @@
           :buy-more-str="
             errorMessages ? (network.type.canBuy ? 'Buy more.' : null) : null
           "
+          filter-placeholder="Search for Amount"
           is-custom
           outlined
           @buyMore="openMoonpay"
@@ -132,17 +133,17 @@
 </template>
 
 <script>
-import MewTooltip from '@/components/MewTooltip/MewTooltip';
-import BorderBlock from '@/components/BorderBlock';
 import BigNumber from 'bignumber.js';
 import { mapState, mapGetters } from 'vuex';
+
 import {
   formatPercentageValue,
   formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
+
 export default {
-  components: { MewTooltip, BorderBlock },
+  components: { BorderBlock: () => import('@/components/BorderBlock') },
   mixins: [buyMore],
   props: {
     currentApr: {

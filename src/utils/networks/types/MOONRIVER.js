@@ -1,5 +1,3 @@
-import tokens from '@/_generated/tokens/tokens-moonriver.json';
-import contracts from '@/_generated/contracts/contract-abi-moonriver.json';
 import moonriver from '@/assets/images/networks/moonriver.svg';
 
 export default {
@@ -10,8 +8,12 @@ export default {
   blockExplorerTX: 'https://moonriver.moonscan.io/tx/[[txHash]]',
   blockExplorerAddr: 'https://moonriver.moonscan.io/addr/[[address]]',
   chainID: 1285,
-  tokens: tokens,
-  contracts: contracts,
+  tokens: import('@/_generated/tokens/tokens-moonriver.json').then(
+    val => val.default
+  ),
+  contracts: import('@/_generated/contracts/contract-abi-moonriver.json').then(
+    val => val.default
+  ),
   icon: moonriver,
   currencyName: 'MOVR',
   isTestNetwork: false,

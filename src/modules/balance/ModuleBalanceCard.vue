@@ -237,25 +237,24 @@ import { mapGetters, mapActions, mapState } from 'vuex';
 import clipboardCopy from 'clipboard-copy';
 import { isEmpty } from 'lodash';
 
-import AppModal from '@/core/components/AppModal';
-import AppAddrQr from '@/core/components/AppAddrQr';
-import BalanceAddressPaperWallet from './components/BalanceAddressPaperWallet';
 import { Toast, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
-import ModuleAccessWalletHardware from '@/modules/access-wallet/ModuleAccessWalletHardware';
-import ModuleAccessWalletSoftware from '@/modules/access-wallet/ModuleAccessWalletSoftware';
+
 import wallets from './handlers/config';
 import WALLET_TYPES from '../access-wallet/common/walletTypes';
 import NameResolver from '@/modules/name-resolver/index';
 
 export default {
   components: {
-    BalanceAddressPaperWallet,
-    AppModal,
-    AppAddrQr,
-    ModuleAccessWalletHardware,
-    ModuleAccessWalletSoftware
+    AppModal: () => import('@/core/components/AppModal'),
+    AppAddrQr: () => import('@/core/components/AppAddrQr'),
+    BalanceAddressPaperWallet: () =>
+      import('./components/BalanceAddressPaperWallet'),
+    ModuleAccessWalletHardware: () =>
+      import('@/modules/access-wallet/ModuleAccessWalletHardware'),
+    ModuleAccessWalletSoftware: () =>
+      import('@/modules/access-wallet/ModuleAccessWalletSoftware')
   },
   props: {
     sidemenuStatus: {

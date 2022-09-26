@@ -4,7 +4,8 @@ import {
   myBlocksProps,
   dateSearchGuard
 } from './configsRoutes';
-import layout from './TheEthBlocksLayout';
+const layout = () =>
+  import(/* webpackChunkName: "dapp-blocks" */ './TheEthBlocksLayout');
 import ModuleEthBlocksMyBlocks from './modules/ModuleEthBlocksMyBlocks';
 import ModuleEthBlocksMint from './modules/ModuleEthBlocksMint';
 import ModuleEthBlockInfo from './modules/ModuleEthBlockInfo';
@@ -13,7 +14,7 @@ import ModuleEthBlockBatchMinting from './modules/ModuleEthBlockBatchMinting';
 import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
 export default {
   title: 'ETH Blocks',
-  subtitle: 'Mint stunning QR art-pieces based on your favorite blocks.',
+  subtitle: 'Mint stunning QR art-pieces based on your favorite blocks',
   tag: '#NFT',
   rightIconType: 'mew',
   rightIcon: 'ethBlocks',

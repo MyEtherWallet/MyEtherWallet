@@ -31,7 +31,7 @@
                 <div class="mb-2 d-flex align-center justify-start flex-row">
                   <div class="mew-heading-3">{{ dapp.title }}</div>
                   <v-icon
-                    v-if="isNew(dapp.release)"
+                    v-if="checkIfNew(dapp.release)"
                     size="24"
                     class="ml-1 redPrimary--text"
                     >mdi-new-box</v-icon
@@ -62,7 +62,7 @@
     </template>
     <template #moduleBody>
       <div class="swap-not-available">
-        <app-user-msg-block message="sdfsdfsdfsdf" />
+        <app-user-msg-block message="" />
       </div>
     </template>
   </the-wrapper-dapp>
@@ -70,13 +70,17 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import TheWrapperDapp from '@/core/components/TheWrapperDapp';
-import bannerImage from '@/assets/images/backgrounds/bg-dapps-center.png';
+
+import bannerImage from '@/assets/images/backgrounds/bg-dapps-center.jpg';
 import dappsMeta from '@/dapps/metainfo-dapps';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
+import isNew from '@/core/helpers/isNew.js';
+
 export default {
-  components: { TheWrapperDapp, AppUserMsgBlock },
+  components: {
+    TheWrapperDapp: () => import('@/core/components/TheWrapperDapp'),
+    AppUserMsgBlock: () => import('@/core/components/AppUserMsgBlock')
+  },
   mixins: [handlerAnalytics],
   data() {
     return {
@@ -108,13 +112,8 @@ export default {
     dappName(dapp) {
       return dapp.name || dapp.defaultName;
     },
-    isNew(release) {
-      const dateToday = new Date();
-      const millisecondsInDay = 1000 * 60 * 60 * 24;
-      const releaseDate = new Date(release);
-      const daysFromRelease =
-        (dateToday.getTime() - releaseDate.getTime()) / millisecondsInDay;
-      return Math.ceil(daysFromRelease) <= 21;
+    checkIfNew(release) {
+      return isNew(release);
     }
   }
 };

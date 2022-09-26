@@ -1,154 +1,143 @@
 <template>
-  <!--
-    =====================================================================================
-      Add Custom Token Overlay
-    =====================================================================================
-    -->
-  <mew-overlay
-    :footer="{
-      text: 'Need help?',
-      linkTitle: 'Contact support',
-      link: 'mailto:support@myetherwallet.com'
-    }"
-    :show-overlay="open"
-    title="Add custom token"
-    :close="reset"
-    :back="step === 2 ? back : null"
-    :content-size="step === 2 ? 'large' : 'medium'"
-  >
-    <div class="full-width">
-      <!--
-    ===================================================
-    Step one: input contract address
-    ===================================================
-    -->
-      <div v-if="step === 1" class="full-width">
-        <div class="mew-heading-3 mb-4 textDark--text">
-          What is the token contract address?
+  <div>
+    <!-- ===================================================================================== -->
+    <!-- Add Custom Token Overlay -->
+    <!-- ===================================================================================== -->
+    <v-dialog :value="open" max-width="330" @click:outside="reset">
+      <div class="white pa-7">
+        <div v-if="step === 1" class="full-width">
+          <div class="mew-heading-2 mb-10">Add custom token</div>
+          <mew-input
+            :value="contractAddress"
+            placeholder="Contract address"
+            @input="setContractAddress"
+          />
         </div>
-        <mew-input
-          :value="contractAddress"
-          placeholder="Contract address"
-          @input="setContractAddress"
-        />
-      </div>
-      <!--
-    ===================================================
-    Step two: display token info
-    adds mb-9 for basic info but will add mb-1 if there
-    are mew inputs (since there is extra spacing on bottom for mew inputs - 
-    I had to do it this way to center everything 
-    but TODO: find a better way to do this)
-    ===================================================
-    -->
-      <div v-if="step === 2" class="full-width">
-        <v-row
-          v-for="(tkn, idx) in tokenDataToDisplay"
-          :key="idx"
-          no-gutters
-          :class="[
-            'd-flex align-center mt-0',
-            tokenDataToDisplay[idx + 1] &&
-            !isIcon(tokenDataToDisplay[idx + 1].name) &&
-            !tokenDataToDisplay[idx + 1].value
-              ? 'mb-1'
-              : 'mb-9'
-          ]"
-        >
-          <!--
-    ===================================================
-    token info title
-    ===================================================
-    -->
-          <v-col
-            cols="2"
-            class="ml-5 textLight--text mew-body font-weight-bold"
+
+        <!-- ============================================================================= -->
+        <!-- Step two: display token info -->
+        <!-- adds mb-9 for basic info but will add mb-1 if there -->
+        <!-- are mew inputs (since there is extra spacing on bottom for mew inputs -->
+        <!-- I had to do it this way to center everything -->
+        <!-- but TODO: find a better way to do this) -->
+        <!-- ============================================================================= -->
+        <div v-if="step === 2" class="full-width">
+          <div
+            v-for="(tkn, idx) in tokenDataToDisplay"
+            :key="idx"
+            no-gutters
+            class="mb-9"
+            :class="[
+              tokenDataToDisplay[idx + 1] &&
+              !isIcon(tokenDataToDisplay[idx + 1].name) &&
+              !tokenDataToDisplay[idx + 1].value
+                ? 'mb-1'
+                : 'mb-9'
+            ]"
           >
-            {{ tkn.name }}
-          </v-col>
-          <v-col cols="8" class="textDark--text ml-2"
-            ><!--
-    ===================================================
-    displays all token values if it is there except for icon and contract address
-    ===================================================
-    -->
-            <span
-              v-if="
-                !isIcon(tkn.name) && !isContractAddress(tkn.name) && tkn.value
-              "
-              >{{ tkn.value }}</span
-            >
-            <!--
-    ===================================================
-    transform hash for contract address incase theres not 
-    enough space
-    ===================================================
-    -->
-            <mew-transform-hash
-              v-if="isContractAddress(tkn.name)"
-              justify-start
-              :hash="tkn.value"
-            />
-            <!--
-    ===================================================
-    displays token icon img or placeholder if there is no src
-    ===================================================
-    -->
-            <img
-              v-if="isIcon(tkn.name) && tkn.value"
-              height="24px"
-              width="23.5px"
-              :src="tkn.value"
-              alt="token icon"
-            />
+            <!-- =================================================== -->
+            <!-- token info title -->
+            <!-- =================================================== -->
             <div
-              v-if="isIcon(tkn.name) && !tkn.value"
-              class="token-placeholder mew-caption d-flex align-center justify-center"
+              class="textLight--text mew-body font-weight-bold align-self-center"
             >
-              NA
+              {{ tkn.name }}
             </div>
-            <!--
-    ===================================================
-    displays input to enter values if there is no name or symbol
-    ===================================================
-    -->
-            <mew-input
-              v-if="!isIcon(tkn.name) && !tkn.value"
-              :id="idx"
-              :error-messages="
-                idx === 3 ? symbolLengthTooLong : nameLengthTooLong
-              "
-              class="mt-8"
-              :placeholder="getPlaceholder(tkn.name)"
-              @input="setInputValue"
-            />
-          </v-col>
-        </v-row>
+            <div class="textDark--text">
+              <!-- ============================================================================= -->
+              <!-- displays all token values if it is there except for icon and contract address -->
+              <!-- ============================================================================= -->
+              <span
+                v-if="
+                  !isIcon(tkn.name) &&
+                  !isContractAddress(tkn.name) &&
+                  !isSymbol(tkn.name) &&
+                  tkn.value
+                "
+              >
+                {{ tkn.value }}
+              </span>
+
+              <!-- ============================================================================= -->
+              <!-- transform hash for contract address incase theres not -->
+              <!-- enough space -->
+              <!-- ============================================================================= -->
+              <mew-transform-hash
+                v-if="isContractAddress(tkn.name)"
+                justify-start
+                :hash="tkn.value"
+              />
+
+              <!-- ============================================================================= -->
+              <!-- displays token icon img or placeholder if there is no src -->
+              <!-- ============================================================================= -->
+              <img
+                v-if="isIcon(tkn.name) && tkn.value"
+                height="24px"
+                width="23.5px"
+                :src="tkn.value"
+                alt="token icon"
+              />
+              <div
+                v-if="isIcon(tkn.name) && !tkn.value"
+                class="token-placeholder mew-caption d-flex align-center justify-center"
+              >
+                NA
+              </div>
+
+              <!-- ============================================================================= -->
+              <!-- displays input to enter values if there is no name or symbol -->
+              <!-- ============================================================================= -->
+              <mew-input
+                v-if="(!isIcon(tkn.name) && !tkn.value) || isSymbol(tkn.name)"
+                :id="idx"
+                :error-messages="
+                  idx === 3 ? symbolLengthTooLong : nameLengthTooLong
+                "
+                :class="isSymbol(tkn.name) ? 'mt-0 mb-n4' : 'mb-n8'"
+                :value="tkn.value"
+                :placeholder="getPlaceholder(tkn.name)"
+                @input="setInputValue"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- =================================================== -->
+        <!-- Add token / next button -->
+        <!-- =================================================== -->
+        <div class="d-flex align-center mt-5">
+          <mew-button
+            class="flex-grow-1 mr-1"
+            style="flex-basis: 0"
+            btn-size="large"
+            btn-style="outline"
+            title="Cancel"
+            @click.native="reset"
+          />
+          <mew-button
+            class="flex-grow-1 ml-1"
+            style="flex-basis: 0"
+            btn-size="large"
+            :loading="loading"
+            :disabled="isDisabled"
+            :title="step === 1 ? 'Next' : 'Add Token'"
+            @click.native="next"
+          />
+        </div>
       </div>
-      <!--
-    ===================================================
-   Add token / next button
-    ===================================================
-    -->
-      <mew-button
-        btn-size="xlarge"
-        has-full-width
-        :loading="loading"
-        :disabled="isDisabled"
-        :title="step === 1 ? 'Next' : 'Add Token'"
-        @click.native="next"
-      />
-    </div>
-  </mew-overlay>
+    </v-dialog>
+  </div>
 </template>
 
 <script>
-import abiERC20 from '../handlers/abiERC20';
 import { mapState, mapGetters, mapActions } from 'vuex';
-import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
-import { isAddress } from '@/core/helpers/addressUtils';
 import { debounce } from 'lodash';
 import BigNumber from 'bignumber.js';
+
+import abiERC20 from '../handlers/abiERC20';
+import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
+import { isAddress } from '@/core/helpers/addressUtils';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 
 export default {
@@ -230,8 +219,8 @@ export default {
      */
     setInputValue: debounce(function (value, idx) {
       if (idx == 3) {
-        if (value && value.length > 6) {
-          this.symbolLengthTooLong = 'Symbol cannot exceed 6 characters';
+        if (value && value.length > 4) {
+          this.symbolLengthTooLong = 'Symbol cannot exceed 4 characters';
           return;
         }
         this.symbolLengthTooLong = '';
@@ -275,6 +264,12 @@ export default {
       return name === this.tokenDataToDisplay[1].name;
     },
     /**
+     * @returns if symbol info displays icon
+     */
+    isSymbol(name) {
+      return name === this.tokenDataToDisplay[3].name;
+    },
+    /**
      * @returns mew input placeholders
      * if there is no value for name or symbol
      */
@@ -310,9 +305,7 @@ export default {
         return;
       }
       this.token.name = !this.token.name ? this.customName : this.token.name;
-      this.token.symbol = !this.token.symbol
-        ? this.customSymbol
-        : this.token.symbol;
+      this.token.symbol = this.customSymbol || this.token.symbol;
       this.token.contract = this.contractAddress;
       this.setCustomToken(this.token);
       Toast(
@@ -321,9 +314,6 @@ export default {
         SUCCESS
       );
       this.reset();
-    },
-    back() {
-      this.step = 1;
     },
     /**
      * sets the contract address that user inputs
@@ -349,7 +339,6 @@ export default {
         this.loading = false;
         this.contractAddress = '';
         Toast('This is not a valid contract address', {}, ERROR);
-        return;
       }
     },
     /**
@@ -364,7 +353,6 @@ export default {
           this.contractAddress.toLowerCase() === token.contract?.toLowerCase()
         ) {
           foundToken = true;
-          return;
         }
       });
       if (foundToken) {
@@ -407,7 +395,7 @@ export default {
           this.token.usdBalancef = '0.00';
           this.token.contract = this.contractAddress;
         }
-        this.token.decimals = decimals;
+        this.token.decimals = +decimals;
         this.token.balance = balance;
         this.token.balancef = this.getTokenBalance(balance, decimals).value;
         this.loading = false;

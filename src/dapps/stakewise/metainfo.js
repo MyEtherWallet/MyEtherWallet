@@ -1,11 +1,12 @@
 import { STAKEWISE_ROUTES } from './configsRoutes';
-import layout from './TheStakewiseLayout';
+const layout = () =>
+  import(/* webpackChunkName: "dapp-stakewise" */ './TheStakewiseLayout');
 import ModuleStakewiseRewards from './modules/ModuleStakewiseRewards';
 import ModuleStakewiseStake from './modules/ModuleStakewiseStake';
 import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
 export default {
   title: 'Stakewise',
-  subtitle: 'Stake any amount of ETH and begin earning rewards.',
+  subtitle: 'Stake any amount of ETH and begin earning rewards',
   tag: '#DeFi',
   rightIconType: 'mew',
   rightIcon: 'stakewise',

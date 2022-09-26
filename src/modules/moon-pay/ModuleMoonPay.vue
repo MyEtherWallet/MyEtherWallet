@@ -69,23 +69,23 @@
 </template>
 
 <script>
-import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { mapGetters, mapState, mapActions } from 'vuex';
-import BuyEthComponent from './components/MoonPayBuyComponent';
-import SellEthComponent from './components/MoonPaySellComponent';
-import handler from './handlers/handlerOrder';
-import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import { isEmpty } from 'lodash';
+
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
+import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import nodes from '@/utils/networks';
 import { SUCCESS, Toast } from '../toast/handler/handlerToast';
-import MoonPayBuyProviderComponent from './components/MoonPayBuyProviderComponent.vue';
+
+import handler from './handlers/handlerOrder';
 
 export default {
   name: 'MoonPay',
   components: {
-    BuyEthComponent,
-    SellEthComponent,
-    MoonPayBuyProviderComponent
+    BuyEthComponent: () => import('./components/MoonPayBuyComponent'),
+    SellEthComponent: () => import('./components/MoonPaySellComponent'),
+    MoonPayBuyProviderComponent: () =>
+      import('./components/MoonPayBuyProviderComponent.vue')
   },
   props: {
     open: {
@@ -176,11 +176,13 @@ export default {
     network() {
       this.selectedCurrency = {};
       this.selectedCurrency = this.defaultCurrency;
+      this.setTokens();
     }
   },
   methods: {
     ...mapActions('wallet', ['setWeb3Instance']),
     ...mapActions('global', ['setNetwork']),
+    ...mapActions('external', ['setNetworkTokens']),
     onTab(val) {
       this.selectedCurrency = this.defaultCurrency;
       if (val === 1 || (val === 0 && (!this.supportedBuy || !this.inWallet))) {
@@ -193,7 +195,7 @@ export default {
             (this.instance &&
               this.instance.identifier !== WALLET_TYPES.WEB3_WALLET)
           ) {
-            this.setNetwork(defaultNetwork).then(() => {
+            this.setNetwork({ network: defaultNetwork }).then(() => {
               this.setWeb3Instance();
               this.activeTab = val;
               Toast(`Switched network to: ETH`, {}, SUCCESS);
@@ -202,6 +204,15 @@ export default {
         }
       } else {
         this.activeTab = val;
+      }
+    },
+    setTokens() {
+      if (!this.inWallet) {
+        const tokenMap = new Map();
+        this.network.type.tokens.forEach(token => {
+          tokenMap.set(token.address.toLowerCase(), token);
+        });
+        this.setNetworkTokens(tokenMap);
       }
     },
     close() {

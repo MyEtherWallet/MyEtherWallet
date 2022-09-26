@@ -76,7 +76,7 @@
         </v-col>
         <v-col cols="12" lg="7">
           <v-img
-            src="@/assets/images/snippets/send-tx-page.png"
+            src="@/assets/images/snippets/send-tx-page.jpg"
             class="mt-n6"
           />
         </v-col>
@@ -87,10 +87,10 @@
 </template>
 
 <script>
-import AppBlockTitle from '@/core/components/AppBlockTitle';
-
 export default {
-  components: { AppBlockTitle },
+  components: {
+    AppBlockTitle: () => import('@/core/components/AppBlockTitle')
+  },
   data: vm => ({
     titleData: {
       textProps: '',
