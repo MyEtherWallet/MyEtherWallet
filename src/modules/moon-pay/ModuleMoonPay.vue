@@ -206,10 +206,11 @@ export default {
         this.activeTab = val;
       }
     },
-    setTokens() {
+    async setTokens() {
       if (!this.inWallet) {
         const tokenMap = new Map();
-        this.network.type.tokens.forEach(token => {
+        const tokens = await this.network.type.tokens;
+        tokens.forEach(token => {
           tokenMap.set(token.address.toLowerCase(), token);
         });
         this.setNetworkTokens(tokenMap);
