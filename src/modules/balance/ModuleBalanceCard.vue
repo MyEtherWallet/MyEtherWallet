@@ -183,13 +183,13 @@
       v-if="showHardware"
       :open="showChangeAddress"
       :close="closeChangeAddress"
-      :switch-address="!!instance.path"
+      :switch-address="checkPath"
     />
     <module-access-wallet-software
       v-else
       :open="showChangeAddress"
       :close="closeChangeAddress"
-      :switch-address="!!instance.path"
+      :switch-address="checkPath"
       :wallet-type="identifier"
     />
 
@@ -317,7 +317,7 @@ export default {
     showHardware() {
       return (
         !isEmpty(this.instance) &&
-        this.instance.path &&
+        this.instance?.path &&
         this.identifier !== WALLET_TYPES.MNEMONIC
       );
     },
@@ -411,6 +411,9 @@ export default {
      */
     nonChainTokensCount() {
       return this.tokensList.length - 1;
+    },
+    checkPath() {
+      return !!this.instance?.path;
     }
   },
   watch: {
