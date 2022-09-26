@@ -424,7 +424,9 @@ export default {
     }
   },
   mounted() {
-    this.$refs.addressInput.$refs.addressSelect.clear();
+    if (this.$refs.addressInput) {
+      this.$refs.addressInput.$refs.addressSelect.clear();
+    }
     this.sendHandler = new handlerSend();
     this.fetchSellInfo();
     this.locGasPrice = this.gasPriceByType(this.gasPriceType);

@@ -139,7 +139,7 @@ export default {
         name: 'USD',
         value: 'USD',
         // eslint-disable-next-line
-                img: require(`@/assets/images/currencies/USD.svg`)
+        img: require(`@/assets/images/currencies/USD.svg`)
       },
       fetchedData: {},
       currencyRates: [],
@@ -475,7 +475,9 @@ export default {
     }
   },
   mounted() {
-    this.$refs.addressInput.$refs.addressSelect.clear();
+    if (this.$refs.addressInput) {
+      this.$refs.addressInput.$refs.addressSelect.clear();
+    }
     this.fetchCurrencyData();
   },
   methods: {
