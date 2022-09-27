@@ -7,6 +7,7 @@
       :copy-tooltip="$t('common.copy')"
       :save-tooltip="$t('common.save')"
       :enable-save-address="enableSave"
+      :show-save="enableSave"
       :label="addrLabel"
       :items="addressBookWithMyAddress"
       :placeholder="$t('sendTx.enter-addr')"
@@ -39,13 +40,12 @@
 </template>
 
 <script>
-import { isAddress, toChecksumAddress } from '@/core/helpers/addressUtils';
 import { mapGetters, mapState } from 'vuex';
-import NameResolver from '@/modules/name-resolver/index';
-import { getAddressInfo } from '@kleros/address-tags-sdk';
-import AddressBookAddEdit from './components/AddressBookAddEdit';
 import { isObject, throttle } from 'lodash';
 import WAValidator from 'multicoin-address-validator';
+import { isAddress, toChecksumAddress } from '@/core/helpers/addressUtils';
+import NameResolver from '@/modules/name-resolver/index';
+import { getAddressInfo } from '@kleros/address-tags-sdk';
 
 const USER_INPUT_TYPES = {
   typed: 'TYPED',
@@ -55,7 +55,7 @@ const USER_INPUT_TYPES = {
 
 export default {
   components: {
-    AddressBookAddEdit
+    AddressBookAddEdit: () => import('./components/AddressBookAddEdit')
   },
   props: {
     isValidAddressFunc: {
@@ -220,7 +220,8 @@ export default {
           /**
            * Resolve address with ENS/US/Kleros
            */
-          if (this.isValidAddress && !this.isOfflineApp) this.resolveAddress();
+          if (this.isValidAddress && !this.isOfflineApp)
+            await this.resolveAddress();
 
           /**
            * @emits setAddress
@@ -230,7 +231,7 @@ export default {
             value: isObject(typeVal) ? typeVal.nickname : typeVal
           });
           if (!this.isValidAddress) {
-            this.resolveName();
+            await this.resolveName();
           }
         } else {
           const currencyExists = WAValidator.findCurrency(

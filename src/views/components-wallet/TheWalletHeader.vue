@@ -1,21 +1,6 @@
 <template>
   <v-container>
     <v-row class="d-flex align-center py-2 pb-md-4 pb-lg-2 px-1">
-      <!-- <div class="d-flex align-center">
-      <img class="ml-2 mr-3" src="@/assets/images/icons/icon-puppy-mew.svg" />
-      <div>
-        <div class="font-weight-bold">MEWtopia</div>
-        <div>
-          {{ $t('interface.header.desc') }}
-          <a
-            href="https://www.mewtopia.com/tag/getting-started/"
-            rel="noopener noreferrer"
-            target="_blank"
-            >{{ $t('interface.header.read') }}</a
-          >
-        </div>
-      </div>
-    </div> -->
       <v-col
         cols="12"
         md="8"
@@ -71,13 +56,15 @@
             </div>
           </div>
         </div>
-        <div v-else class="d-flex align-center">
+        <div v-else class="eth-banner d-flex">
           <div class="mr-5">
-            <v-icon color="black"> mdi-bank </v-icon>
+            <mew6-white-sheet class="pa-3">
+              <v-icon color="black"> mdi-bank </v-icon>
+            </mew6-white-sheet>
           </div>
           <div class="d-flex flex-column align-start">
             <span class="mew-body font-weight-bold textDark--text"
-              >You can now Buy crypto with low fees</span
+              >You can now buy crypto with low fees</span
             >
             <span
               :class="[
@@ -88,24 +75,15 @@
                   : 'py-2',
                 'mew-body textMedium--text'
               ]"
-              >Enjoy 0.7% fee when you select ‘Bank account’ as payment
-              method.</span
-            >
-            <mew-button
-              title="Buy crypto"
-              btn-size="medium"
-              class="d-md-none d-lg-none d-xl-none"
-              @click.native="buyCryptoNow"
-            />
+              >Enjoy 0.9% fee when you select ‘Bank account’ as payment method.
+              <span
+                class="greenPrimary--text font-weight-bold cursor--pointer"
+                @click="buyCryptoNow"
+                >Buy crypto now.</span
+              >
+            </span>
           </div>
         </div>
-        <!-- Hide this button when screen is smaller -->
-        <mew-button
-          title="Buy crypto now"
-          btn-size="medium"
-          class="d-none d-md-inline-flex d-lg-inline-flex d-xl-inline-flex"
-          @click.native="buyCryptoNow"
-        />
       </v-col>
       <v-col
         v-if="
@@ -125,16 +103,15 @@
 </template>
 
 <script>
-// import mobileStatus from './HeaderMobileStatus';
-import notificationOverlay from '@/modules/notifications/ModuleNotifications';
 import moment from 'moment';
 import { mapState } from 'vuex';
+
 import { MOONPAY_EVENT, MOONPAY_OFFER_END } from '@/modules/moon-pay/helpers';
 import { EventBus } from '@/core/plugins/eventBus';
 export default {
   components: {
-    notificationOverlay
-    // mobileStatus
+    notificationOverlay: () =>
+      import('@/modules/notifications/ModuleNotifications')
   },
   computed: {
     ...mapState('wallet', ['identifier']),
@@ -197,5 +174,9 @@ a {
 
 .set-fixed-height {
   height: 52px;
+}
+
+.eth-banner {
+  margin-left: -15px;
 }
 </style>

@@ -4,6 +4,7 @@
     <div class="desktop-content d-none d-lg-block">
       <v-container>
         <div
+          v-lazy:background-image="backgroundImg"
           class="border-radius--10px card-content d-flex align-center justify-space-between"
         >
           <div>
@@ -26,7 +27,7 @@
 
     <!--Mobile -->
     <div class="mobile-content d-block d-lg-none">
-      <div class="card-content">
+      <div v-lazy:background-image="backgroundImg" class="card-content">
         <v-sheet color="transparent" max-width="500px" class="mx-auto">
           <div class="mb-8">
             <h1 class="white--text pb-2">
@@ -56,7 +57,12 @@
 <script>
 export default {
   name: 'AppMewtopiaBlock',
-  components: {}
+  components: {},
+  data() {
+    return {
+      backgroundImg: require('@/assets/images/backgrounds/bg-light.jpg')
+    };
+  }
 };
 </script>
 
@@ -64,7 +70,6 @@ export default {
 .desktop-content {
   .card-content {
     padding: 80px 90px;
-    background-image: url('~@/assets/images/backgrounds/bg-light.jpg');
     background-position: 0px 0px;
     background-size: 100%;
   }
@@ -73,7 +78,6 @@ export default {
 .mobile-content {
   .card-content {
     padding: 56px 20px;
-    background-image: url('~@/assets/images/backgrounds/bg-light.jpg');
     background-position: center right -30px;
     background-size: cover;
   }

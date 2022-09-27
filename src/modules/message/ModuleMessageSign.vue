@@ -13,28 +13,24 @@
           label="Signature"
           :value="message"
         ></v-textarea>
-        <mew-button
-          title="Sign"
-          btn-size="xlarge"
-          class="display--block mx-auto mt-5"
-          @click.native="signMessage"
-        />
-        <mew-button
-          btn-style="transparent"
-          title="Clear All"
-          btn-size="small"
-          class="display--block mx-auto mt-5"
-          @click.native="clearAll"
-        />
+        <div class="text-right">
+          <mew-button
+            btn-style="light"
+            title="Clear All"
+            class="mr-4"
+            @click.native="clearAll"
+          />
+          <mew-button title="Sign" @click.native="signMessage" />
+        </div>
       </div>
     </template>
   </mew-module>
 </template>
 
 <script>
-import SignAndVerifyMessage from '@/modules/message/handlers';
 import { mapState } from 'vuex';
 
+import SignAndVerifyMessage from '@/modules/message/handlers';
 export default {
   name: 'ModuleMessageVerify',
   data() {

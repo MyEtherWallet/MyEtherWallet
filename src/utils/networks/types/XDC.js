@@ -1,5 +1,3 @@
-import tokens from '@/_generated/tokens/tokens-etc.json';
-import contracts from '@/_generated/contracts/contract-abi-etc.json';
 import xdc from '@/assets/images/networks/xdc.svg';
 
 export default {
@@ -10,8 +8,12 @@ export default {
   blockExplorerTX: 'https://xdc.blocksscan.io/tx/[[txHash]]',
   blockExplorerAddr: 'https://xdc.blocksscan.io/addr/[[address]]',
   chainID: 50,
-  tokens: tokens,
-  contracts: contracts,
+  tokens: import('@/_generated/tokens/tokens-etc.json').then(
+    val => val.default
+  ),
+  contracts: import('@/_generated/contracts/contract-abi-etc.json').then(
+    val => val.default
+  ),
   icon: xdc,
   currencyName: 'XDC',
   isTestNetwork: false,

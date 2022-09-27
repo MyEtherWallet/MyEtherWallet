@@ -12,7 +12,7 @@
           <a @click="openEnkrypt">
             <img
               class="slide-img"
-              src="@/assets/images/slides/slide1.png"
+              src="@/assets/images/slides/slide1.jpg"
               alt="Enkrypt"
             />
           </a>
@@ -21,7 +21,7 @@
           <a @click="openMewWallet">
             <img
               class="slide-img"
-              src="@/assets/images/slides/slide2.png"
+              src="@/assets/images/slides/slide2.jpg"
               alt="Enkrypt"
             />
           </a>
@@ -29,7 +29,7 @@
         <v-carousel-item :to="{ name: ROUTES_HOME.BUY_HARDWARE_WALLET.NAME }">
           <img
             class="slide-img"
-            src="@/assets/images/slides/slide3.png"
+            src="@/assets/images/slides/slide3.jpg"
             alt="Enkrypt"
           />
         </v-carousel-item>

@@ -46,12 +46,6 @@
 </template>
 
 <script>
-import renew from '../components/manage/ManageRenew';
-import transfer from '../components/manage/ManageTransfer';
-import manageMulticoins from '../components/manage/ManageMulticoins';
-import manageTxtRecords from '../components/manage/ManageTxtRecords';
-import manageUploadWebsite from '../components/manage/ManageUploadWebsite';
-
 const types = [
   'transfer',
   'renew',
@@ -61,11 +55,12 @@ const types = [
 ];
 export default {
   components: {
-    transfer,
-    renew,
-    manageMulticoins,
-    manageTxtRecords,
-    manageUploadWebsite
+    renew: () => import('../components/manage/ManageRenew'),
+    transfer: () => import('../components/manage/ManageTransfer'),
+    manageMulticoins: () => import('../components/manage/ManageMulticoins'),
+    manageTxtRecords: () => import('../components/manage/ManageTxtRecords'),
+    manageUploadWebsite: () =>
+      import('../components/manage/ManageUploadWebsite')
   },
   props: {
     hostName: {
