@@ -222,7 +222,9 @@ export default {
     this.accessHandler = new handlerAccessWalletSoftware();
     if (this.isOfflineApp) {
       this.footer = {
-        text: 'Need help? Email us at support@myetherwallet.com'
+        text: 'Need help? Email us at support@myetherwallet.com',
+        linkTitle: '',
+        link: ''
       };
       this.warningSheetObj = {};
     } else
