@@ -69,9 +69,6 @@ module.exports = [
   'https://assets.coingecko.com',
   'https://api.stakewise.io:443', // stakewise
   'https://api.stakewise.io:443/pool-stats', // stakewise pool
-  'https://api.thegraph.com:443/subgraphs/name/kleros/curate', // Kleros Subtags
-  'https://api.thegraph.com:443/subgraphs/name/eccentricexit/curate-xdai-ii', // Kleros Subtags
-  'https://ipfs.kleros.io:443', // Kleros Subtags
   'https://eth-mainnet.alchemyapi.io:443', // Unstoppable domains
   'https://polygon-mainnet.g.alchemy.com:443', // Unstoppable domains
   'https://unstoppabledomains.g.alchemy.com:443', // Unstoppable domains

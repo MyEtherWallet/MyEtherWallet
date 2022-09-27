@@ -45,7 +45,6 @@ import { isObject, throttle } from 'lodash';
 import WAValidator from 'multicoin-address-validator';
 import { isAddress, toChecksumAddress } from '@/core/helpers/addressUtils';
 import NameResolver from '@/modules/name-resolver/index';
-import { getAddressInfo } from '@kleros/address-tags-sdk';
 
 const USER_INPUT_TYPES = {
   typed: 'TYPED',
@@ -218,7 +217,7 @@ export default {
           }
           this.loadedAddressValidation = !this.isValidAddress ? false : true;
           /**
-           * Resolve address with ENS/US/Kleros
+           * Resolve address with ENS/Unstoppable
            */
           if (this.isValidAddress && !this.isOfflineApp)
             await this.resolveAddress();
@@ -307,18 +306,6 @@ export default {
         const reverseName = await this.nameResolver.resolveAddress(
           this.inputAddr
         );
-        if (reverseName && !reverseName.name) {
-          try {
-            await getAddressInfo(
-              toChecksumAddress(this.inputAddr),
-              'https://ipfs.kleros.io'
-            ).then(data => {
-              this.nametag = data?.publicNameTag || '';
-            });
-          } catch (e) {
-            this.nametag = '';
-          }
-        }
         this.resolvedAddr = reverseName?.name ? reverseName.name : '';
       }
     }, 300),

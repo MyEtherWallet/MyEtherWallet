@@ -68,7 +68,7 @@
         <div class="mew-heading-3 textDark--text mb-5">
           Where should we send your crypto?
         </div>
-        <ModuleAddressBook
+        <module-address-book
           ref="addressInput"
           label="Enter Crypto Address"
           :currency="selectedCryptoName"
@@ -108,7 +108,8 @@ import {
 import { getCurrency } from '@/modules/settings/components/currencyList';
 import { buyContracts } from './tokenList';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
-import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
+
+import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook.vue';
 
 export default {
   name: 'ModuleBuyEth',
