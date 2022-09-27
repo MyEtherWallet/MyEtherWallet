@@ -297,9 +297,8 @@ export default {
     ]
   }),
   computed: {
-    ...mapState('wallet', ['web3']),
+    ...mapState('wallet', ['web3', 'address']),
     ...mapState('addressBook', ['addressBookStore']),
-    ...mapState('wallet', ['address']),
     ...mapGetters('global', ['network']),
     addresses() {
       return this.isHomePage
