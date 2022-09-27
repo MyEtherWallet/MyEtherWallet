@@ -278,7 +278,7 @@ export default {
       return '';
     },
     disableData() {
-      return this.selectedCurrency.symbol !== this.network.type.currencyName;
+      return this.selectedCurrency?.symbol !== this.network.type.currencyName;
     },
     validAddress() {
       return this.toAddress !== '' && isValidAddress(this.toAddress);
