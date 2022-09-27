@@ -326,7 +326,6 @@ export default {
   methods: {
     ...mapActions('wallet', ['setWeb3Instance']),
     ...mapActions('global', ['setNetwork']),
-    ...mapActions('external', ['setTokenAndEthBalance']),
     generateTokens() {
       const networkToken = [this.networkToken];
       this.network.type.tokens.then(tokens => {
@@ -447,10 +446,7 @@ export default {
         walletType: this.instance?.identifier || ''
       })
         .then(() => {
-          const provider = this.setWeb3Instance();
-          provider.then(() => {
-            this.setTokenAndEthBalance();
-          });
+          this.setWeb3Instance();
           Toast(`Switched network to: ${found[0].type.name}`, {}, SUCCESS);
         })
         .catch(e => {
