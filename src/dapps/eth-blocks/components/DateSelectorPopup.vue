@@ -14,6 +14,7 @@
             <v-date-picker
               v-model="date"
               :allowed-dates="allowedDates"
+              min="2015-07-30"
               color="#05C0A5"
               full-width
             />
@@ -92,8 +93,8 @@ export default {
     },
     allowedDates(val) {
       return (
-        new Date(val).getTime() >= new Date('07-30-2015').getTime() &&
-        new Date(val).getTime() <= new Date().getTime()
+        moment(val).isSameOrBefore(moment()) &&
+        moment(val).isSameOrAfter(moment('2015-07-30'))
       );
     }
   }
