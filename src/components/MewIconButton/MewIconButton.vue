@@ -57,10 +57,7 @@
       Loaded Button Content 
     =====================================================================================
     -->
-    <div
-      v-if="!loading"
-      class="d-flex justify-center align-center"
-    >
+    <div v-if="!loading" class="d-flex justify-center align-center">
       <!--
       =====================================================================================
       Button text (if no title prop is passed, then slot should be used)
@@ -91,28 +88,28 @@ export default {
      */
     loading: {
       type: Boolean,
-      default: false,
+      default: false
     },
     /**
      * Rounds button corners.
      */
     rounded: {
       type: Boolean,
-      default: false,
+      default: false
     },
     /**
      * Button sizes: small, medium.
      */
     btnSize: {
       type: String,
-      default: 'medium',
+      default: 'medium'
     },
     /**
      * Mdi icon size: xsmall, small, medium, large, xlarge.
      */
     mdiIconSize: {
       type: String,
-      default: '',
+      default: ''
     },
     /**
      * TODO: decide if we still want to allow this option.
@@ -137,7 +134,7 @@ export default {
      */
     btnStyle: {
       type: String,
-      default: 'background',
+      default: 'background'
     },
     /**
      * TODO: decide if we still want to allow this option.
@@ -153,14 +150,14 @@ export default {
      */
     colorTheme: {
       type: String,
-      default: 'primary',
+      default: 'primary'
     },
     /**
      * Removes the ability to click or target the component.
      */
     disabled: {
       type: Boolean,
-      default: false,
+      default: false
     },
     /**
      * Designates that the component is a link.
@@ -168,15 +165,15 @@ export default {
      */
     btnLink: {
       type: String,
-      default: '',
+      default: ''
     },
     /**
      * mdi icon name.
      */
     mdiIcon: {
       type: String,
-      default: '',
-    },
+      default: ''
+    }
     /**
      * TODO: decide if we still want to allow this option.
      * img icon path. (base dir: @/assets/images)
@@ -196,7 +193,7 @@ export default {
         secondary: 'secondary',
         primary: 'primary',
         basic: 'basic',
-        error: 'error',
+        error: 'error'
       },
       /**
        * all btn style options
@@ -205,14 +202,14 @@ export default {
         light: 'light',
         transparent: 'transparent',
         outline: 'outline',
-        background: 'background',
+        background: 'background'
       },
       /**
        * all btn size options
        */
       btnSizes: {
         small: 'small',
-        medium: 'medium',
+        medium: 'medium'
       },
       /**
        * all mdi icon size options
@@ -222,8 +219,8 @@ export default {
         small: 'small',
         dense: 'dense',
         large: 'large',
-        xlarge: 'x-large',
-      },
+        xlarge: 'x-large'
+      }
     };
   },
   computed: {
@@ -400,8 +397,8 @@ export default {
      */
     isBackground() {
       return this.btnStyle.toLowerCase() === this.btnStyles.background;
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -422,7 +419,7 @@ export default {
     &.medium-btn {
       padding: 0 20px;
     }
-    
+
     /**
     * PRIMARY COLOR THEME 
     */

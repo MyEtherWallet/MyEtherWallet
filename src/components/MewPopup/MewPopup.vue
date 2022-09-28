@@ -12,21 +12,14 @@
     :scrollable="scrollable"
     @click:outside="handleClickOutside"
   >
-    <v-card
-      color="white"
-      class="pa-0"
-    >
+    <v-card color="white" class="pa-0">
       <!--
       =====================================================================================
         Dialog Header
         =====================================================================================
       -->
       <div :class="title ? 'pt-0' : 'pt-5'">
-        <v-btn
-          v-if="!hideCloseBtn"
-          icon
-          class="header-close-icon"
-        >
+        <v-btn v-if="!hideCloseBtn" icon class="header-close-icon">
           <v-icon
             size="x-large"
             color="grey cursor--pointer"
@@ -64,15 +57,8 @@
         Dialog action
       =====================================================================================
       -->
-      <v-card-actions
-        v-if="hasButtons"
-        class="py-5 py-md-8"
-      >
-        <v-row
-          class="pa-0"
-          justify="space-around"
-          dense
-        >
+      <v-card-actions v-if="hasButtons" class="py-5 py-md-8">
+        <v-row class="pa-0" justify="space-around" dense>
           <v-col
             cols="12"
             :sm="!rightBtn ? '12' : '6'"

@@ -4,20 +4,24 @@
     Mew Info Card - mainly used on MEW's landing page.
   =====================================================================================
   -->
-  <v-card
-    :max-width="maxWidth"
-    class="info-card elevation-3"
-  >
+  <v-card :max-width="maxWidth" class="info-card elevation-3">
     <div class="pa-5">
       <div class="text-center">
-        <img :src="icon">
+        <img :src="icon" />
       </div>
       <!--
   =====================================================================================
     Mew Info Card Title, has slot: titleIconContainer (used to place a custom icon next to the title).
   =====================================================================================
   -->
-      <v-card-title :class="[ 'font-weight-bold', 'mew-heading-2', 'titlePrimary--text', 'pt-0' ]">
+      <v-card-title
+        :class="[
+          'font-weight-bold',
+          'mew-heading-2',
+          'titlePrimary--text',
+          'pt-0'
+        ]"
+      >
         {{ title }}
         <slot name="titleIconContainer" />
       </v-card-title>
@@ -36,13 +40,12 @@
   =====================================================================================
   -->
       <v-card-text v-if="link.url && link.title">
-        <a
-          class="font-weight-medium"
-          :href="link.url"
-        >{{ link.title }}<v-icon
-          class="subtitle-1 ml-1"
-          color="primary"
-        >mdi-arrow-right</v-icon></a>
+        <a class="font-weight-medium" :href="link.url"
+          >{{ link.title
+          }}<v-icon class="subtitle-1 ml-1" color="primary"
+            >mdi-arrow-right</v-icon
+          ></a
+        >
         <slot name="buttonContainer" />
       </v-card-text>
     </div>
@@ -79,7 +82,7 @@ export default {
      * The icon url. Inserts an icon on top.
      */
     icon: {
-      type: [ String, Array ],
+      type: [String, Array],
       default: ''
     },
     /**
@@ -96,14 +99,14 @@ export default {
       }
     },
     /**
-     * The max width of the info card. Default is 300px. 
+     * The max width of the info card. Default is 300px.
      */
     maxWidth: {
       type: String,
       default: '300'
-    },
+    }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

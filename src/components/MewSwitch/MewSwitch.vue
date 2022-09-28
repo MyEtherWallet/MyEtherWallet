@@ -4,30 +4,25 @@
     Mew Switch 
   =====================================================================================
   -->
-  <div class="d-flex align-center"> 
+  <div class="d-flex align-center">
     <span
       class="mew-body textPrimary--text mr-4 cursor-pointer"
       @click="switchToggle"
-    >{{ label }}</span>
+      >{{ label }}</span
+    >
     <v-switch
+      v-model="value"
       :ripple="false"
       color="white"
       class="mew-switch"
       inset
-      v-model="value"
     />
   </div>
 </template>
 
 <script>
-
 export default {
   name: 'MewSwitch',
-  data() {
-    return {
-      value: false
-    }
-  },
   props: {
     /**
      * The switch label.
@@ -37,16 +32,21 @@ export default {
       default: ''
     }
   },
+  data() {
+    return {
+      value: false
+    };
+  },
   methods: {
     setToggle(val) {
-      this.value = val
+      this.value = val;
     },
     switchToggle() {
       this.value = !this.value;
       this.$emit('switch', this.value);
     }
   }
-}
+};
 </script>
 
 <style lang="scss">

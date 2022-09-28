@@ -4,31 +4,26 @@
     Mew Checkbox
   =====================================================================================
   -->
-  <div class="d-flex align-center mew-checkbox"> 
+  <div class="d-flex align-center mew-checkbox">
     <v-checkbox
+      v-model="isChecked"
       hide-details
       :dense="dense"
       off-icon="mdi-circle-outline"
       on-icon="mdi-check-circle"
       class="titlePrimary--text"
-      v-model="isChecked"
     />
-    <span
-      :class="['mr-2 cursor-pointer', className]"
-      @click="toggleCheckbox"
-    >{{ label }}
-      <a
-        target="_blank"
-        v-if="link.url && link.title"
-        :href="link.url"
-      >{{ link.title }}</a>
+    <span :class="['mr-2 cursor-pointer', className]" @click="toggleCheckbox"
+      >{{ label }}
+      <a v-if="link.url && link.title" target="_blank" :href="link.url">{{
+        link.title
+      }}</a>
       <slot name="contentSlot" />
     </span>
   </div>
 </template>
 
 <script>
-
 export default {
   name: 'MewCheckbox',
   props: {
@@ -36,8 +31,8 @@ export default {
      * Pass a class to change the icon color (i.e error--text).
      */
     className: {
-        type: String,
-        default: 'titlePrimary--text'
+      type: String,
+      default: 'titlePrimary--text'
     },
     /**
      * Checkbox label text
@@ -52,7 +47,7 @@ export default {
     link: {
       type: Object,
       default: () => {
-        return { title: '', url: ''};
+        return { title: '', url: '' };
       }
     },
     /**
@@ -60,7 +55,7 @@ export default {
      */
     id: {
       type: Number,
-      default: null,
+      default: null
     },
     /**
      * Controls the value of the checkbox (checked or not).
@@ -83,7 +78,7 @@ export default {
         return this.value;
       },
       set(val) {
-        this.$emit('input', val, this.id)
+        this.$emit('input', val, this.id);
       }
     }
   },
@@ -92,7 +87,7 @@ export default {
       this.$emit('input', !this.value, this.id);
     }
   }
-}
+};
 </script>
 <style lang="scss" scoped>
 .mew-checkbox {

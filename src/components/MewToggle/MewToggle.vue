@@ -6,18 +6,18 @@
 -->
   <div>
     <v-btn-toggle
-      :mandatory="true"
+      v-if="isCustom"
       v-model="onBtn"
+      :mandatory="true"
       :borderless="true"
       class="mew-toggle"
-      v-if="isCustom"
     >
       <div
+        v-for="(btn, i) in buttonGroup"
+        :key="btn + i"
         :class="getClasses()"
         color="mewBg"
         @click="onBtnClick(btn)"
-        v-for="(btn, i) in buttonGroup"
-        :key="btn + i"
       >
         <!--
 =====================================================================================
@@ -28,18 +28,18 @@
       </div>
     </v-btn-toggle>
     <v-btn-toggle
-      :mandatory="isDefault"
+      v-if="!isCustom"
       v-model="onBtn"
+      :mandatory="isDefault"
       :borderless="true"
       class="mew-toggle"
-      v-if="!isCustom"
     >
       <v-btn
+        v-for="(btn, i) in buttonGroup"
+        :key="btn + i"
         :class="getClasses()"
         color="mewBg"
         @click="onBtnClick(btn)"
-        v-for="(btn, i) in buttonGroup"
-        :key="btn + i"
       >
         {{ btn }}
       </v-btn>
@@ -48,19 +48,8 @@
 </template>
 
 <script>
-
 export default {
   name: 'MewToggle',
-  data() {
-    return {
-      buttonTypes: {
-        custom: 'custom',
-        default: 'default',
-        percentage: 'percentage'
-      },
-      onBtn: null
-    }
-  },
   props: {
     /**
      * Controls which toggle button index is active.
@@ -70,7 +59,7 @@ export default {
       default: 0
     },
     /**
-     * Accepts an array of button names. 
+     * Accepts an array of button names.
      */
     buttonGroup: {
       type: Array,
@@ -79,20 +68,38 @@ export default {
       }
     },
     /**
-     * Applies the button type: 'custom', 'percentage', 'default'. Custom is used when you need to use the slots. 
+     * Applies the button type: 'custom', 'percentage', 'default'. Custom is used when you need to use the slots.
      */
     buttonType: {
       type: String,
       default: 'default'
     }
   },
-  mounted() {
-    this.onBtn = this.onToggleBtnIdx;
+  data() {
+    return {
+      buttonTypes: {
+        custom: 'custom',
+        default: 'default',
+        percentage: 'percentage'
+      },
+      onBtn: null
+    };
+  },
+  computed: {
+    isDefault() {
+      return this.buttonType.toLowerCase() === this.buttonTypes.default;
+    },
+    isCustom() {
+      return this.buttonType.toLowerCase() === this.buttonTypes.custom;
+    }
   },
   watch: {
     onToggleBtnIdx() {
-       this.onBtn = this.onToggleBtnIdx;
+      this.onBtn = this.onToggleBtnIdx;
     }
+  },
+  mounted() {
+    this.onBtn = this.onToggleBtnIdx;
   },
   methods: {
     onBtnClick(btn) {
@@ -107,16 +114,8 @@ export default {
         return 'percentage-btn';
       }
     }
-  },
-  computed: {
-    isDefault() {
-      return this.buttonType.toLowerCase() === this.buttonTypes.default
-    },
-    isCustom()  {
-      return this.buttonType.toLowerCase() === this.buttonTypes.custom
-    }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -143,7 +142,7 @@ export default {
     // percentage btn group
     &.percentage-btn {
       color: var(--v-titlePrimary-base);
-      height: 33px !important; 
+      height: 33px !important;
       margin-right: 15px;
       width: 49px !important;
       text-transform: capitalize;

@@ -1,4 +1,4 @@
-    <!--
+<!--
   =====================================================================================
     Mew Text Area 
   =====================================================================================
@@ -15,26 +15,6 @@
 
 <script>
 export default {
-  data() {
-    return {
-      inputValue : null
-    }
-  },
-  watch: {
-    inputValue(newVal, oldVal) {
-      if (newVal !== oldVal) {
-         this.$emit('input', newVal) 
-      }
-    },
-    value(newVal, oldVal) {
-      if (newVal !== oldVal) {
-        this.inputValue = newVal;
-      }
-    }
-  },
-  mounted() {
-    this.inputValue = this.value;
-  },
   props: {
     /**
      * Text area label.
@@ -58,7 +38,27 @@ export default {
       default: () => {
         return [];
       }
+    }
+  },
+  data() {
+    return {
+      inputValue: null
+    };
+  },
+  watch: {
+    inputValue(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        this.$emit('input', newVal);
+      }
     },
+    value(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        this.inputValue = newVal;
+      }
+    }
+  },
+  mounted() {
+    this.inputValue = this.value;
   }
 };
 </script>

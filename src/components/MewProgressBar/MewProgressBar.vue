@@ -4,33 +4,24 @@
     Mew Progress Bar
   =====================================================================================
   -->
-  <div
-    class="mew-progress-bar full-width d-flex cursor-pointer"
-  >
+  <div class="mew-progress-bar full-width d-flex cursor-pointer">
     <div
+      v-for="(section, idx) in data"
+      :key="section + idx"
       :class="[
         section.color,
         idx === 0 ? 'left-border-radius' : '',
         idx === data.length - 1 ? 'right-border-radius' : ''
       ]"
-      v-for="(section, idx) in data"
-      :key="section + idx"
-      :style="{ height: '10px', width: section.percentage + '%'}"
+      :style="{ height: '10px', width: section.percentage + '%' }"
       :title="section.tooltip ? section.tooltip : ''"
     />
   </div>
 </template>
 
 <script>
-
 export default {
   name: 'MewProgressBar',
-  data() {
-    return {
-       hasRightBorderRadius: false,
-       remainingAmt: null
-    }
-  },
   props: {
     /**
      * Array of progress bar data , i.e [ percentage: '', color: '' ]}
@@ -38,11 +29,17 @@ export default {
     data: {
       type: Array,
       default: () => {
-        return []
+        return [];
       }
     }
+  },
+  data() {
+    return {
+      hasRightBorderRadius: false,
+      remainingAmt: null
+    };
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

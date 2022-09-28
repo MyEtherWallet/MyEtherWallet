@@ -1,4 +1,4 @@
-    <!--
+<!--
   =====================================================================================
     Mew Chart
   =====================================================================================
@@ -7,8 +7,8 @@
 import { Line } from 'vue-chartjs';
 
 export default {
-name: 'MewChart',
-extends: Line,
+  name: 'MewChart',
+  extends: Line,
   props: {
     /**
      * Chart Data - takes a x and y attribute, i.e, { x: [], y: []}
@@ -51,27 +51,31 @@ extends: Line,
         },
         {
           elements: {
-              point:{
-                  radius: 0
-              }
+            point: {
+              radius: 0
+            }
           },
           scales: {
-            xAxes: [{
+            xAxes: [
+              {
                 gridLines: {
-                    display:false
+                  display: false
                 },
                 ticks: {
                   display: false
                 }
-            }],
-            yAxes: [{
+              }
+            ],
+            yAxes: [
+              {
                 gridLines: {
-                    display:false
+                  display: false
                 },
                 ticks: {
                   display: false
-                }   
-            }]
+                }
+              }
+            ]
           },
           legend: {
             display: false

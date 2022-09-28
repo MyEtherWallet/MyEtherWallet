@@ -27,7 +27,7 @@
       :src="img || ethTokenPlaceholder"
       :alt="name"
       loading="lazy"
-    >
+    />
 
     <!-- ===================================================================================== -->
     <!-- Img Placeholder -->
@@ -36,7 +36,7 @@
       v-if="!loading && !img"
       :class="[
         'd-flex align-center justify-center full-height textLight--text text-uppercase font-weight-medium',
-        getFontClass,
+        getFontClass
       ]"
     >
       {{ getPlaceholderText }}
@@ -55,40 +55,40 @@ export default {
      */
     loading: {
       type: Boolean,
-      default: false,
+      default: false
     },
     /**
      * Accepts small, medium or large sizes.
      */
     size: {
       type: String,
-      default: 'small',
+      default: 'small'
     },
     borderSize: {
       type: String,
-      default: '',
+      default: ''
     },
     /**
      * Token name. Used for placeholder if there is no icon img.
      */
     name: {
       type: String,
-      default: 'MEW',
+      default: 'MEW'
     },
     /**
      * Token Icon img src
      */
     img: {
       type: [String, Array],
-      default: '',
+      default: ''
     },
     /**
      * Add border
      */
-     tokenBorder: {
+    tokenBorder: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
   data() {
     return {
@@ -96,8 +96,8 @@ export default {
       sizeOptions: {
         small: 'small',
         medium: 'medium',
-        large: 'large',
-      },
+        large: 'large'
+      }
     };
   },
   computed: {
@@ -141,8 +141,8 @@ export default {
       }
 
       return this.size;
-    },
-  },
+    }
+  }
 };
 </script>
 

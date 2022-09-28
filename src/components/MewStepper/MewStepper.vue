@@ -3,10 +3,7 @@
   <!-- Mew Stepper -->
   <!-- ===================================================================================== -->
   <div class="full-width">
-    <div
-      v-if="compact"
-      class="d-flex justify-center"
-    >
+    <div v-if="compact" class="d-flex justify-center">
       <div class="d-inline-block">
         <div
           v-for="(item, i) in items"
@@ -42,17 +39,11 @@
           >
             {{ item.name }}
           </v-stepper-step>
-          <v-divider
-            v-if="i < items.length - 1"
-            :key="i"
-          />
+          <v-divider v-if="i < items.length - 1" :key="i" />
         </template>
       </v-stepper-header>
     </v-stepper>
-    <div
-      v-for="(step, i) in items"
-      :key="step + i"
-    >
+    <div v-for="(step, i) in items" :key="step + i">
       <!-- ===================================================================================== -->
       <!-- Slot: 'stepperContent' + number of stepper content -->
       <!-- (used to place custom ui into the stepper) -->

@@ -120,6 +120,7 @@
         </div>
       </div>
     </template>
+    <div v-if="false" @click="clear"></div>
   </v-combobox>
 </template>
 

@@ -1,13 +1,18 @@
 <template>
   <v-btn
-    @click="onBtnClick"
-    :class="[ getClasses() , 'mew-super-button','mew-button', isColumn ? 'full-height' : 'full-width mew-super-btn-row']"
+    :class="[
+      getClasses(),
+      'mew-super-button',
+      'mew-button',
+      isColumn ? 'full-height' : 'full-width mew-super-btn-row'
+    ]"
     :color="getColor()"
     :outlined="colorTheme.toLowerCase() === colorThemes.outline"
     :ripple="false"
     :disabled="disabled"
-    :text="disabled" 
+    :text="disabled"
     depressed
+    @click="onBtnClick"
   >
     <v-row
       class="pa-3 full-width align-center"
@@ -15,62 +20,67 @@
       :class="getRowClasses()"
     >
       <v-col
-        :class="['left-container', 'full-width', isColumn ? 'text-center' : 'text-left']"
+        :class="[
+          'left-container',
+          'full-width',
+          isColumn ? 'text-center' : 'text-left'
+        ]"
         :cols="isColumn ? 12 : leftColsNum"
       >
-        <div :class="['title-wrapper', 'd-flex', 'align-center', isColumn ? 'justify-center' : '' ]">
+        <div
+          :class="[
+            'title-wrapper',
+            'd-flex',
+            'align-center',
+            isColumn ? 'justify-center' : ''
+          ]"
+        >
           <div :class="[fontClass, 'font-weight-bold', 'truncate']">
             {{ title }}
           </div>
-          <div
-            class="body-2"
-            v-if="hasSrc(titleIcon) && !isColumn"
-          >
+          <div v-if="hasSrc(titleIcon) && !isColumn" class="body-2">
             <img
               v-if="showTitleIcon(titleIcon, 'img')"
               class="icon title-icon"
               :src="titleIcon"
               alt="Icon"
-            >
+            />
             <mew-icon
+              v-if="showTitleIcon(titleIcon, 'mew')"
               :img-height="20"
               class="icon title-icon"
-              v-if="showTitleIcon(titleIcon, 'mew')"
               :icon-name="titleIcon"
             />
             <v-icon
-              :class="['icon', 'title-icon', titleIconClass]"
               v-if="showTitleIcon(titleIcon, 'mdi')"
+              :class="['icon', 'title-icon', titleIconClass]"
             >
               {{ titleIcon }}
             </v-icon>
           </div>
         </div>
-        <div
-          class="mt-2 break-word font-weight-regular"
-          v-if="subtitle"
-        >
+        <div v-if="subtitle" class="mt-2 break-word font-weight-regular">
           {{ subtitle }}
         </div>
-        <div
-          v-if="tag"
-          class="body-2 mt-1 tagLabel--text"
-        >
+        <div v-if="tag" class="body-2 mt-1 tagLabel--text">
           {{ tag }}
         </div>
       </v-col>
       <v-col
         :cols="isColumn ? 12 : rightColsNum"
-        :class="['right-container', isColumn ? 'text-center, pb-0' : 'd-flex align-center justify-center text-right']"
+        :class="[
+          'right-container',
+          isColumn
+            ? 'text-center, pb-0'
+            : 'd-flex align-center justify-center text-right'
+        ]"
       >
         <slot name="contentSlot" />
         <div
           v-if="isNew"
           class="label-container d-flex align-center text-uppercase"
         >
-          <div class="label text-uppercase">
-            new 
-          </div>
+          <div class="label text-uppercase">new</div>
         </div>
         <div
           v-if="!hasSrc(rightIcon) && note && !isColumn"
@@ -83,16 +93,20 @@
           class="icon right-icon"
           :src="rightIcon"
           alt="Icon"
-        >
+        />
         <mew-icon
-          :img-height="100"
-          :class="['icon', 'right-icon', !isColumn ? 'd-flex align-center' : '']"
           v-if="showRightIcon(rightIcon, 'mew')"
+          :img-height="100"
+          :class="[
+            'icon',
+            'right-icon',
+            !isColumn ? 'd-flex align-center' : ''
+          ]"
           :icon-name="rightIcon"
         />
         <v-icon
-          class="icon right-icon primary--text"
           v-if="showRightIcon(rightIcon, 'mdi')"
+          class="icon right-icon primary--text"
         >
           {{ rightIcon }}
         </v-icon>
@@ -105,7 +119,7 @@
 import MewIcon from '@/components/MewIcon/MewIcon.vue';
 export default {
   name: 'MewSuperButton',
-    components: {
+  components: {
     MewIcon
   },
   props: {
@@ -169,7 +183,7 @@ export default {
      * The right-icon url. Inserts an icon on the right container of the button.
      */
     rightIcon: {
-      type:[String, Array],
+      type: [String, Array],
       default: ''
     },
     /**
@@ -239,10 +253,13 @@ export default {
   },
   methods: {
     showTitleIcon(icon, type) {
-      return this.titleIconType.toLowerCase() === this.iconTypes[type]
+      return this.titleIconType.toLowerCase() === this.iconTypes[type];
     },
     showRightIcon(icon, type) {
-      return this.rightIconType.toLowerCase() === this.iconTypes[type] && this.hasSrc(icon)
+      return (
+        this.rightIconType.toLowerCase() === this.iconTypes[type] &&
+        this.hasSrc(icon)
+      );
     },
     getRowClasses() {
       const classes = [];
@@ -253,7 +270,7 @@ export default {
         classes.push('column-reverse');
       }
       return classes;
-    }, 
+    },
     onBtnClick() {
       this.active = !this.active;
     },
@@ -262,27 +279,34 @@ export default {
       if (colorThemesWhite.indexOf(this.colorTheme) >= 0) {
         return 'white basic-border';
       }
-      
+
       if (this.colorTheme === this.colorThemes.primary) {
-        return 'superPrimary'
+        return 'superPrimary';
       }
       return this.colorTheme;
     },
     getClasses() {
       const classes = [];
-      if (this.colorTheme.toLowerCase() === this.colorThemes.basic || this.colorTheme.toLowerCase() === this.colorThemes.primary) {
+      if (
+        this.colorTheme.toLowerCase() === this.colorThemes.basic ||
+        this.colorTheme.toLowerCase() === this.colorThemes.primary
+      ) {
         classes.push('titlePrimary--text');
       }
       if (this.disabled) {
         classes.push('disabled-btn');
       }
-      if (this.active && !this.disabled && this.colorTheme.toLowerCase() === this.colorThemes.basic) {
+      if (
+        this.active &&
+        !this.disabled &&
+        this.colorTheme.toLowerCase() === this.colorThemes.basic
+      ) {
         classes.push('active');
       }
       return classes;
     },
     hasSrc(src) {
-      if (src === '' || src.length <= 0 ) {
+      if (src === '' || src.length <= 0) {
         return false;
       }
       return true;

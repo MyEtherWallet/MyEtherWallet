@@ -18,23 +18,17 @@
             class="px-2 py-0"
             :color="backgroundColor"
           >
-            <v-container
-              fluid
-              class="px-0"
-            >
+            <v-container fluid class="px-0">
               <v-row dense>
-                <v-col
-                  class="d-flex align-center"
-                  cols="8"
-                >
+                <v-col class="d-flex align-center" cols="8">
                   <!-- ===================================================================================== -->
                   <!-- Displays indicator if notification not read -->
                   <!-- ===================================================================================== -->
                   <div
                     v-if="
                       $vuetify.breakpoint.smAndUp &&
-                        !notification.read &&
-                        showIndicator
+                      !notification.read &&
+                      showIndicator
                     "
                     :class="[
                       getClasses(notification.status.value.toLowerCase()),
@@ -59,14 +53,13 @@
                   <!-- ===================================================================================== -->
                   <!-- Displays swap icons if it is a swap notification -->
                   <!-- ===================================================================================== -->
-                  <div
-                    v-else
-                    class="d-flex flex-column currency-symbol ml-2"
-                  >
+                  <div v-else class="d-flex flex-column currency-symbol ml-2">
                     <MewTokenContainer
-                      :img=" notification.fromObj.icon
-                        ? notification.fromObj.icon
-                        : ethTokenPlaceholder"
+                      :img="
+                        notification.fromObj.icon
+                          ? notification.fromObj.icon
+                          : ethTokenPlaceholder
+                      "
                       token-border
                     />
                     <MewTokenContainer
@@ -124,10 +117,7 @@
                     </div>
                   </div>
                 </v-col>
-                <v-col
-                  cols="4"
-                  class="text-right pr-2"
-                >
+                <v-col cols="4" class="text-right pr-2">
                   <mew-badge
                     :badge-title="notification.type.string"
                     :badge-type="getBadgeType"
@@ -142,20 +132,11 @@
             </v-container>
           </v-expansion-panel-header>
 
-          <v-expansion-panel-content
-            class="pa-0"
-            :color="backgroundColor"
-          >
+          <v-expansion-panel-content class="pa-0" :color="backgroundColor">
             <div class="expanded-container capitalize">
               <v-container>
-                <v-row
-                  v-for="(detail, idx) in getDetails"
-                  :key="idx"
-                >
-                  <v-col
-                    cols="6"
-                    class="textPrimary--text"
-                  >
+                <v-row v-for="(detail, idx) in getDetails" :key="idx">
+                  <v-col cols="6" class="textPrimary--text">
                     {{ detail.string }}:
                   </v-col>
                   <v-col
@@ -178,11 +159,7 @@
                       top
                     >
                       <template #activator="{ on }">
-                        <a
-                          :href="detail.link"
-                          target="_blank"
-                          v-on="on"
-                        >
+                        <a :href="detail.link" target="_blank" v-on="on">
                           <mew-transform-hash :hash="detail.value" />
                         </a>
                       </template>

@@ -24,7 +24,7 @@
           :src="btnIcon"
           alt="Icon"
           :class="btnTitle ? 'mr-2' : ''"
-        >
+        />
         <span :style="btnTitleStyle">{{ btnTitle }}</span>
       </v-btn>
 

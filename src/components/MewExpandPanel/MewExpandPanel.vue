@@ -12,9 +12,9 @@
     :flat="true"
   >
     <v-expansion-panel
-      :class="!isAccordion ? 'mb-2' : ''"
       v-for="(item, i) in panelItems"
       :key="i"
+      :class="!isAccordion ? 'mb-2' : ''"
     >
       <!--
     =====================================================================================
@@ -22,9 +22,7 @@
     =====================================================================================
     -->
       <v-expansion-panel-header
-        :class="[
-          'pa-5',
-        ]"
+        :class="['pa-5']"
         :color="isGreyTheme ? 'greyLight' : 'whiteAlways'"
       >
         <!--
@@ -32,7 +30,9 @@
       Panel Header - Left 
     =====================================================================================
     -->
-        <div class="d-flex align-center mew-body font-weight-medium textDark--text">
+        <div
+          class="d-flex align-center mew-body font-weight-medium textDark--text"
+        >
           {{ item.name }}
         </div>
         <!--
@@ -40,26 +40,26 @@
       Panel Header - Right
     =====================================================================================
     -->
-        <div
-          slot="actions"
-          class="d-flex align-center justify-center"
-        >
-          <span :class="['mew-body mr-5 text-right', isGreyTheme ? 'textMedium--text' : 'textLight--text']">{{ item.toggleTitle }}</span>
+        <div slot="actions" class="d-flex align-center justify-center">
+          <span
+            :class="[
+              'mew-body mr-5 text-right',
+              isGreyTheme ? 'textMedium--text' : 'textLight--text'
+            ]"
+            >{{ item.toggleTitle }}</span
+          >
           <!--
   =====================================================================================
     Chevron icon to toggle expand
   =====================================================================================
   -->
           <v-icon
-            :color="isGreyTheme ? 'textMedium' : 'textLight'"
             v-if="!isExpanded(i)"
+            :color="isGreyTheme ? 'textMedium' : 'textLight'"
           >
             mdi-chevron-down
           </v-icon>
-          <v-icon
-            :color="isGreyTheme ? 'textMedium' : 'textLight'"
-            v-else
-          >
+          <v-icon v-else :color="isGreyTheme ? 'textMedium' : 'textLight'">
             mdi-chevron-down
           </v-icon>
         </div>
@@ -76,22 +76,16 @@
   </v-expansion-panels>
 </template>
 <script>
-
 export default {
   name: 'MewExpandPanel',
-  data() {
-    return {
-      expandIdxArr: [],
-    };
-  },
   props: {
     /**
-     * Takes an array of panel indexes and 
+     * Takes an array of panel indexes and
      * will expand the panel indexes found in the array.
      */
     idxToExpand: {
       type: Array,
-      default: () => [0],
+      default: () => [0]
     },
     /**
      * Accepts an array of panel objects, i.e [{ name: '', toggleTitle: '' }]
@@ -116,6 +110,26 @@ export default {
       default: false
     }
   },
+  data() {
+    return {
+      expandIdxArr: []
+    };
+  },
+  computed: {
+    /**
+     * @returns classes for expand panel - needed for styling
+     */
+    expandPanelsClasses() {
+      const classes = ['mew-expand-panel', 'rounded-lg'];
+      this.isGreyTheme
+        ? classes.push('grey-theme')
+        : classes.push('white-theme');
+      if (!this.isAccordion) {
+        classes.push('split-panels');
+      }
+      return classes;
+    }
+  },
   watch: {
     /**
      * @watches idxToExpand to ensure the correct panel is expanded
@@ -124,19 +138,6 @@ export default {
       if (newVal !== oldVal) {
         this.expandIdxArr = newVal;
       }
-    },
-  },
-  computed: {
-    /**
-     * @returns classes for expand panel - needed for styling
-     */
-    expandPanelsClasses() {
-      const classes = ['mew-expand-panel', 'rounded-lg'];
-      this.isGreyTheme ? classes.push('grey-theme') : classes.push('white-theme');
-      if (!this.isAccordion) {
-        classes.push('split-panels');
-      }
-      return classes;
     }
   },
   mounted() {
@@ -150,14 +151,12 @@ export default {
      * @returns if the panel is expanded
      */
     isExpanded(idx) {
-      if (
-        (Array.isArray(this.expandIdxArr) && this.expandIdxArr.includes(idx))
-      ) {
+      if (Array.isArray(this.expandIdxArr) && this.expandIdxArr.includes(idx)) {
         return true;
       }
       return false;
     }
-  },
+  }
 };
 </script>
 
@@ -194,11 +193,15 @@ export default {
         .v-expansion-panel-header {
           border: 1px solid var(--v-greyMedium-base);
           border-bottom: none;
-          border-color: var(--v-greyMedium-base) !important; // adding this to override vuetify
+          border-color: var(
+            --v-greyMedium-base
+          ) !important; // adding this to override vuetify
         }
         // adds border to expand content
         .v-expansion-panel-content {
-          border-color: var(--v-greyMedium-base) !important; // adding this to override vuetify
+          border-color: var(
+            --v-greyMedium-base
+          ) !important; // adding this to override vuetify
           border-left: 1px solid var(--v-greyMedium-base);
           border-right: 1px solid var(--v-greyMedium-base);
         }
@@ -212,7 +215,7 @@ export default {
         }
         // adds border to last expand panel content
         .v-expansion-panel-content {
-          border-bottom: 1px solid var(--v-greyMedium-base);  
+          border-bottom: 1px solid var(--v-greyMedium-base);
           border-bottom-left-radius: 8px;
           border-bottom-right-radius: 8px;
         }
@@ -263,18 +266,17 @@ export default {
           border-bottom-right-radius: 8px;
         }
       }
-   }
+    }
   }
 }
-
 </style>
 
 <style lang="scss">
 // removes padding for expand panel content
 // needs to be global to override vuetify style
-  .v-expansion-panel {
-    .v-expansion-panel-content__wrap {
-      padding: 0;
-    }
+.v-expansion-panel {
+  .v-expansion-panel-content__wrap {
+    padding: 0;
   }
+}
 </style>

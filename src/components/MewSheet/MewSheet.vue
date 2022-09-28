@@ -1,14 +1,11 @@
-    <!--
+<!--
   =====================================================================================
     Mew Sheet 
     slot: used to place custom ui
   =====================================================================================
   -->
 <template>
-  <v-sheet
-    color="mewBg"
-    class="mew-sheet"
-  >
+  <v-sheet color="mewBg" class="mew-sheet">
     <slot />
   </v-sheet>
 </template>

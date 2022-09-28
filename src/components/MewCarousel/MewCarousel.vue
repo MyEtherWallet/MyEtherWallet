@@ -5,21 +5,21 @@
   =====================================================================================
   -->
   <v-carousel
+    v-model="currentSlide"
     class="mew-carousel"
     active-class="active-carousel-item"
     :cycle="cycle"
     :show-arrows-on-hover="showArrows"
     :show-arrows="showArrows"
     :height="carouselHeight"
-    v-model="currentSlide"
   >
     <v-carousel-item
+      v-for="(slide, idx) in totalSlides"
+      :key="idx"
       :ripple="ripple"
       eager
-      v-for="(slide, idx) in totalSlides"
       :link="typeof slide === 'string'"
       :href="typeof slide === 'string' ? slide : null"
-      :key="idx"
     >
       <!--
   =====================================================================================
@@ -31,7 +31,6 @@
   </v-carousel>
 </template>
 
-
 <script>
 export default {
   name: 'MewCarousel',
@@ -40,7 +39,7 @@ export default {
      * Pass the total number of slides if there are no links or else pass in an array of links, i.e ['https://www.google.com/', 'https://www.myetherwallet.com/'].
      */
     totalSlides: {
-      type: [ Number, Array ],
+      type: [Number, Array],
       default: 0
     },
     /**
@@ -80,17 +79,16 @@ export default {
     }
   },
   computed: {
-    currentSlide:{
+    currentSlide: {
       set(newVal) {
-        this.$emit('input', newVal)
+        this.$emit('input', newVal);
       },
       get() {
         return this.value;
       }
     }
   }
-
-}
+};
 </script>
 
 <style lang="scss">

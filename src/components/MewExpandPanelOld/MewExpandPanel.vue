@@ -11,10 +11,10 @@
     :flat="true"
   >
     <v-expansion-panel
-      :disabled="item.disabled"
       v-for="(item, i) in panelItems"
-      :class="item.hasActiveBorder ? 'active-border' : ''"
       :key="i"
+      :disabled="item.disabled"
+      :class="item.hasActiveBorder ? 'active-border' : ''"
     >
       <v-divider v-if="hasDividers" />
       <!--
@@ -27,7 +27,7 @@
           'rounded',
           'titlePrimary--text',
           'mew-heading-3',
-          isToggle ? 'pa-3 no-pointer-events' : 'pa-5',
+          isToggle ? 'pa-3 no-pointer-events' : 'pa-5'
         ]"
         :color="item.colorTheme"
       >
@@ -40,14 +40,14 @@
           <span
             :class="[
               'mew-heading-3',
-              item.tooltip ? 'd-flex align-center' : '',
+              item.tooltip ? 'd-flex align-center' : ''
             ]"
           >
             {{ item.name }}
             <mew-tooltip
+              v-if="item.tooltip"
               class="ml-1"
               :text="item.tooltip"
-              v-if="item.tooltip"
             />
           </span>
           <span
@@ -60,19 +60,17 @@
               'px-2',
               'py-1',
               'rounded',
-              'mew-caption',
+              'mew-caption'
             ]"
-          >{{ item.warningBadge.text }}</span>
+            >{{ item.warningBadge.text }}</span
+          >
         </div>
         <!--
     =====================================================================================
       Panel Header - Right
     =====================================================================================
     -->
-        <div
-          v-if="item.disabled"
-          class="text-right"
-        >
+        <div v-if="item.disabled" class="text-right">
           <mew-button
             btn-style="transparent"
             btn-size="xlarge"
@@ -81,11 +79,10 @@
             @click.native="onActionClick"
           />
         </div>
-        <div
-          slot="actions"
-          class="d-flex align-center justify-center"
-        >
-          <span class="inputLabel--text mew-body mx-2 text-right">{{ item.subtext }}</span>
+        <div slot="actions" class="d-flex align-center justify-center">
+          <span class="inputLabel--text mew-body mx-2 text-right">{{
+            item.subtext
+          }}</span>
           <!--
   =====================================================================================
     Slot: mewExpandPanelActions (used to place custom ui on the right side of the expand panel header)
@@ -93,19 +90,17 @@
   -->
           <slot name="mewExpandPanelActions" />
           <mew-switch
+            v-if="isToggle && !item.disabled"
             ref="switch"
             @click.native="onSwitch"
-            v-if="isToggle && !item.disabled"
           />
           <span v-if="!isToggle && !item.disabled">
             <img
               v-if="!isExpanded(i)"
               height="30"
               src="@/assets/images/icons/edit.svg"
-            >
-            <v-icon v-if="isExpanded(i)">
-              mdi-chevron-down
-            </v-icon>
+            />
+            <v-icon v-if="isExpanded(i)"> mdi-chevron-down </v-icon>
           </span>
         </div>
       </v-expansion-panel-header>
@@ -131,12 +126,7 @@ export default {
   components: {
     MewSwitch,
     MewButton,
-    MewTooltip,
-  },
-  data() {
-    return {
-      expandIdxArr: [],
-    };
+    MewTooltip
   },
   props: {
     /**
@@ -144,28 +134,28 @@ export default {
      */
     rightActionText: {
       type: String,
-      default: '',
+      default: ''
     },
     /**
      * Applies dividers to the expand panel.
      */
     idxToExpand: {
       type: Number,
-      default: 0,
+      default: 0
     },
     /**
      * Applies dividers to the expand panel.
      */
     hasDividers: {
       type: Boolean,
-      default: false,
+      default: false
     },
     /**
      * Turns the panel actions to a toggle btn. The subtext attribute in panelItems becomes the switch label.
      */
     isToggle: {
       type: Boolean,
-      default: false,
+      default: false
     },
     /**
      * Accepts an array of panel objects, i.e [{ name: '', tooltip: '', subtext: '', link: '', disabled: false }]
@@ -174,15 +164,20 @@ export default {
       type: Array,
       default: () => {
         return [];
-      },
-    },
+      }
+    }
+  },
+  data() {
+    return {
+      expandIdxArr: []
+    };
   },
   watch: {
     idxToExpand(newVal, oldVal) {
       if (newVal !== oldVal) {
         this.expandIdxArr = newVal;
       }
-    },
+    }
   },
   mounted() {
     this.expandIdxArr = this.idxToExpand;
@@ -212,7 +207,7 @@ export default {
     onSwitch() {
       this.$emit('toggled');
     }
-  },
+  }
 };
 </script>
 

@@ -5,6 +5,7 @@
 =====================================================================================
 -->
   <v-text-field
+    v-model="inputValue"
     :class="mewSearchClasses"
     :disabled="disabled"
     :background-color="isSearchBlock && isFilled ? 'backgroundWallet' : ''"
@@ -12,7 +13,6 @@
     :placeholder="placeholder"
     color="primary"
     :error-messages="errorMessages"
-    v-model="inputValue"
     :prepend-inner-icon="isSearchBlock ? '' : 'mdi-magnify'"
     clearable
     :height="searchHeight"
@@ -23,27 +23,27 @@
     :type="type"
     @keyup.enter="onSearch"
   >
-    <template v-slot:append>
+    <template #append>
       <!--
 =====================================================================================
   Menu Select
 =====================================================================================
 -->
       <v-select
+        v-if="menuSelect && menuSelect.label"
+        v-model="menuSelectModel"
         hide-details
         :height="searchHeight"
         single-line
         :items="menuSelect.items"
         item-text="name"
         item-value="value"
-        v-model="menuSelectModel"
-        @click="onMenuSelect"
-        v-if="menuSelect && menuSelect.label"
         :menu-props="{ bottom: true, offsetY: true, maxHeight: '200px' }"
         return-object
         append-icon="mdi-chevron-down"
         :label="menuSelect.label"
         class="mew-search-menu-select ma-0 pt-0"
+        @click="onMenuSelect"
       />
       <!--
   =====================================================================================
@@ -54,29 +54,20 @@
         v-if="isSearchBlock && !canSearchDate"
         :disabled="errorMessages.length > 0"
         :height="searchHeight"
-        @click="onSearch"
         width="64"
         depressed
         :class="[
           isCompact ? 'margin-offset' : '',
           $vuetify.breakpoint.smAndDown ? 'ml-2' : 'ml-4',
-          'search-btn',
+          'search-btn'
         ]"
         color="primary"
+        @click="onSearch"
       >
-        <v-icon color="white">
-          mdi-magnify
-        </v-icon>
+        <v-icon color="white"> mdi-magnify </v-icon>
       </v-btn>
-      <v-divider
-        v-if="isSearchBlock && canSearchDate"
-        vertical
-        light
-      />
-      <div
-        class="pl-3 pr-4"
-        v-if="isSearchBlock && canSearchDate"
-      >
+      <v-divider v-if="isSearchBlock && canSearchDate" vertical light />
+      <div v-if="isSearchBlock && canSearchDate" class="pl-3 pr-4">
         <mew-icon-button
           btn-style="transparent"
           mdi-icon-size="medium"
@@ -92,7 +83,7 @@
         />
       </div>
     </template>
-    <template v-slot:append-outer />
+    <template #append-outer />
   </v-text-field>
 </template>
 
@@ -100,6 +91,9 @@
 import MewIconButton from '@/components/MewIconButton/MewIconButton.vue';
 export default {
   name: 'MewSearch',
+  components: {
+    MewIconButton
+  },
   props: {
     /**
      * Click to search method for search button
@@ -107,7 +101,7 @@ export default {
      */
     onSearch: {
       type: Function,
-      default: () => {},
+      default: () => {}
     },
     /**
      * click function for calendar icon
@@ -115,28 +109,28 @@ export default {
      */
     onDateSearch: {
       type: Function,
-      default: () => {},
+      default: () => {}
     },
     /**
      * Disables the input.
      */
     disabled: {
       type: Boolean,
-      default: false,
+      default: false
     },
     /**
      * The input placeholder.
      */
     placeholder: {
       type: String,
-      default: '',
+      default: ''
     },
     /**
      * The input value.
      */
     value: {
       type: String,
-      default: '',
+      default: ''
     },
     /**
      * Displays an outline around input
@@ -145,7 +139,7 @@ export default {
      */
     isSearchBlock: {
       type: Boolean,
-      default: false,
+      default: false
     },
     /**
      * Displays a calendar icon.
@@ -153,7 +147,7 @@ export default {
      */
     canSearchDate: {
       type: Boolean,
-      default: false,
+      default: false
     },
     /**
      * Adds a grey background color to the search block.
@@ -161,7 +155,7 @@ export default {
      */
     isFilled: {
       type: Boolean,
-      default: false,
+      default: false
     },
     /**
      * Adds a menu select dropdown
@@ -169,7 +163,7 @@ export default {
      */
     menuSelect: {
       type: Object,
-      default: () => {},
+      default: () => {}
     },
     /**
      * Adds a 36px height
@@ -177,14 +171,14 @@ export default {
      */
     isCompact: {
       type: Boolean,
-      default: false,
+      default: false
     },
     /**
      * Error messages to display
      */
     errorMessages: {
       type: [String, Array],
-      default: '',
+      default: ''
     },
     /**
      * Input types
@@ -192,16 +186,13 @@ export default {
      */
     type: {
       type: String,
-      default: 'search',
-    },
-  },
-  components: {
-    MewIconButton,
+      default: 'search'
+    }
   },
   data() {
     return {
       inputValue: '',
-      menuSelectModel: {},
+      menuSelectModel: {}
     };
   },
   computed: {
@@ -232,7 +223,7 @@ export default {
         classes.push('search-filled');
       }
       return classes;
-    },
+    }
   },
   watch: {
     /**
@@ -250,7 +241,7 @@ export default {
       if (newVal !== oldVal) {
         this.inputValue = newVal;
       }
-    },
+    }
   },
   /**
    * sets prop value to inputValue on mount
@@ -265,8 +256,8 @@ export default {
      */
     onMenuSelect() {
       this.$emit('menu-select', this.menuSelectModel);
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="scss">
