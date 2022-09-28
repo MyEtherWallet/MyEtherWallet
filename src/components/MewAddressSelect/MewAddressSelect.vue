@@ -120,7 +120,6 @@
         </div>
       </div>
     </template>
-    <div v-if="false" @click="clear"></div>
   </v-combobox>
 </template>
 
@@ -251,6 +250,13 @@ export default {
     errorMessages: {
       type: [String, Array],
       default: ''
+    },
+    /**
+     * Clear address
+     */
+    clearAddress: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -281,6 +287,11 @@ export default {
       return this.resolvedAddr.length > 0
         ? this.resolvedAddr
         : this.addressValue.address || this.addressValue;
+    }
+  },
+  watch: {
+    clearAddress() {
+      this.clear();
     }
   },
   methods: {
