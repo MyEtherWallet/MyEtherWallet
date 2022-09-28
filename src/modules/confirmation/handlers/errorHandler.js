@@ -8,7 +8,7 @@ const errors = {
 };
 /**
  * @param {Object | String} err
- * @returns {String} Error Message
+ * @returns {String | undefined} Error Message
  */
 const handleError = err => {
   const errorValues = Object.keys(errors);
