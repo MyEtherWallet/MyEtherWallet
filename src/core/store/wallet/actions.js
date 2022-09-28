@@ -123,6 +123,10 @@ const setOfflineApp = function ({ commit }, val) {
   commit('SET_OFFLINE_APP', val);
 };
 
+const setLedgerApp = function ({ commit }, val) {
+  commit('SET_LEDGER_APP', val);
+};
+
 export default {
   removeWallet,
   setWallet,
@@ -132,5 +136,6 @@ export default {
   setBlockNumber,
   setOwnedDomains,
   setTokens,
-  setOfflineApp
+  setOfflineApp,
+  setLedgerApp
 };
