@@ -45,6 +45,7 @@ import { isObject, throttle } from 'lodash';
 import WAValidator from 'multicoin-address-validator';
 import { isAddress, toChecksumAddress } from '@/core/helpers/addressUtils';
 import NameResolver from '@/modules/name-resolver/index';
+import { ERROR, Toast } from '../toast/handler/handlerToast';
 
 const USER_INPUT_TYPES = {
   typed: 'TYPED',
@@ -208,12 +209,16 @@ export default {
           /**
            * Checks if the address is valid
            */
-          const isAddValid = this.isValidAddressFunc(this.inputAddr);
-          if (isAddValid instanceof Promise) {
-            const validation = await isAddValid;
-            this.isValidAddress = validation;
-          } else {
-            this.isValidAddress = isAddValid;
+          try {
+            const isAddValid = this.isValidAddressFunc(this.inputAddr);
+            if (isAddValid instanceof Promise) {
+              const validation = await isAddValid;
+              this.isValidAddress = validation;
+            } else {
+              this.isValidAddress = isAddValid;
+            }
+          } catch (e) {
+            this.isValidAddress = false;
           }
           this.loadedAddressValidation = !this.isValidAddress ? false : true;
           /**
@@ -303,10 +308,14 @@ export default {
      */
     resolveAddress: throttle(async function () {
       if (this.nameResolver) {
-        const reverseName = await this.nameResolver.resolveAddress(
-          this.inputAddr
-        );
-        this.resolvedAddr = reverseName?.name ? reverseName.name : '';
+        try {
+          const reverseName = await this.nameResolver.resolveAddress(
+            this.inputAddr
+          );
+          this.resolvedAddr = reverseName?.name ? reverseName.name : '';
+        } catch (e) {
+          Toast(e, {}, ERROR);
+        }
       }
     }, 300),
     /**
