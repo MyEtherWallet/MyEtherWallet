@@ -409,8 +409,9 @@ export default {
           MATIC: 'MATIC'
         };
         if (
-          newVal.contract.toLowerCase() === MAIN_TOKEN_ADDRESS &&
-          !supportedCoins[newVal.symbol]
+          !newVal ||
+          (newVal?.contract?.toLowerCase() === MAIN_TOKEN_ADDRESS &&
+            !supportedCoins[newVal.symbol])
         ) {
           this.selectedCurrency = oldVal;
           return;
@@ -475,7 +476,7 @@ export default {
     }
   },
   mounted() {
-    this.$refs.addressInput.$refs.addressSelect.clear();
+    if (!this.inWallet) this.$refs.addressInput.$refs.addressSelect.clear();
     this.fetchCurrencyData();
   },
   methods: {
