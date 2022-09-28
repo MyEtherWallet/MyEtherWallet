@@ -2,7 +2,12 @@
   <div>
     <div class="subtitle-1 font-weight-bold mb-2">Connecting to:</div>
     <div class="d-flex align-center justify-center">
-      <mew-select v-model="ledgerApp" :items="ledgerApps" :is-custom="true" />
+      <mew-select
+        :value="ledgerApp"
+        :items="ledgerApps"
+        :is-custom="true"
+        @input="handleApp"
+      />
       <div class="pathBox text-right pb-8 pl-5">
         <access-wallet-derivation-path
           :selected-path="selectedPath"
@@ -67,6 +72,8 @@
   </div>
 </template>
 <script>
+import { mapActions, mapGetters } from 'vuex';
+
 export default {
   name: 'AccessWalletLedger',
   components: {
@@ -96,24 +103,26 @@ export default {
   },
   data() {
     return {
-      ledgerApp: {},
       article: {
         text: 'See article here for instructions',
         url: 'https://winaero.com/enable-or-disable-bluetooth-device-permissions-in-google-chrome/'
       }
     };
   },
-  watch: {
-    ledgerApp: {
-      handler: function (newVal) {
-        this.$emit('ledgerApp', newVal);
-      },
-      deep: true
+  computed: {
+    ...mapGetters('wallet', ['getLedgerApp', 'initialLoad']),
+    ledgerApp() {
+      console.log(this.initialLoad);
+      return this.getLedgerApp;
     }
   },
   methods: {
+    ...mapActions('wallet', ['setLedgerApp']),
     ledgerUnlockBle() {
       this.$emit('setBluetoothLedgerUnlock');
+    },
+    handleApp(e) {
+      this.setLedgerApp(e);
     }
   }
 };
