@@ -72,7 +72,7 @@ const EXCEPTIONS = [
   '@ledgerhq/hw-transport-webusb',
   'uuid',
   'web3-eth-contract',
-  '@myetehrwallet/mewconnect-web-client',
+  '@myetherwallet/mewconnect-web-client',
   'is-ipfs'
 ];
 const CUSTOM_DIST = {
