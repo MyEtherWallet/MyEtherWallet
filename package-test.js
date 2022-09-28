@@ -71,7 +71,9 @@ const EXCEPTIONS = [
   '@ledgerhq/hw-transport-web-ble',
   '@ledgerhq/hw-transport-webusb',
   'uuid',
-  'web3-eth-contract'
+  'web3-eth-contract',
+  '@myetehrwallet/mewconnect-web-client',
+  'is-ipfs'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
