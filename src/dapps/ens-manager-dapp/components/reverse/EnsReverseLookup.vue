@@ -110,25 +110,33 @@ export default {
       return this.ensLookupResults || [];
     }
   },
+  watch: {
+    network() {
+      this.setup();
+    }
+  },
   async mounted() {
-    await this.findDomainByAddress();
-    const ens = this.network.type.ens
-      ? new ENS({
-          provider: this.web3.eth.currentProvider,
-          ensAddress: this.network.type.ens.registry
-        })
-      : null;
-    this.permHandler = new PermanentNameModule(
-      this.name,
-      this.address,
-      this.network,
-      this.web3,
-      ens,
-      this.durationPick
-    );
-    this.getReverseRecordNames();
+    await this.setup();
   },
   methods: {
+    async setup() {
+      await this.findDomainByAddress();
+      const ens = this.network.type.ens
+        ? new ENS({
+            provider: this.web3.eth.currentProvider,
+            ensAddress: this.network.type.ens.registry
+          })
+        : null;
+      this.permHandler = new PermanentNameModule(
+        this.name,
+        this.address,
+        this.network,
+        this.web3,
+        ens,
+        this.durationPick
+      );
+      this.getReverseRecordNames();
+    },
     async fetchDomains() {
       return await this.ensManager.getAllNamesForAddress(this.address);
     },

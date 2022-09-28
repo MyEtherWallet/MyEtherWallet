@@ -482,6 +482,19 @@ export default {
       }
       this.getDomains();
     },
+    /*
+    - watches for network change
+    - updates ensManager with new network
+    - if user is onRegister it will reset and take them back
+    - if user is onManage it will run getDomain to refresh domains
+    */
+    network() {
+      this.setup();
+      if (this.onRegister) {
+        this.closeRegister();
+      }
+      this.getDomains();
+    },
     $route() {
       this.detactUrlChangeTab();
     }
@@ -495,22 +508,25 @@ export default {
      */
     this.detactUrlChangeTab();
 
-    const ens = this.network.type.ens
-      ? new ENS({
-          provider: this.web3.eth.currentProvider,
-          ensAddress: this.network.type.ens.registry
-        })
-      : null;
-    this.ensManager = new handlerEnsManager(
-      this.network,
-      this.address,
-      this.web3,
-      ens,
-      this.gasPrice
-    );
+    this.setup();
     this.getDomains();
   },
   methods: {
+    setup() {
+      const ens = this.network.type.ens
+        ? new ENS({
+            provider: this.web3.eth.currentProvider,
+            ensAddress: this.network.type.ens.registry
+          })
+        : null;
+      this.ensManager = new handlerEnsManager(
+        this.network,
+        this.address,
+        this.web3,
+        ens,
+        this.gasPrice
+      );
+    },
     detactUrlChangeTab() {
       const currentRoute = this.$route.name;
       if (currentRoute === ENS_MANAGER_ROUTE.MANAGE.NAME) {
