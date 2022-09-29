@@ -32,10 +32,7 @@
     >
       <template #dialogBody>
         <v-card-text ref="scrollableContent" class="py-0 px-4 px-md-0">
-          <div
-            v-if="toNonEth"
-            class="px-4 py-6 pr-6 textBlack2--text border-radius--5px mb-5"
-          >
+          <div class="px-4 py-6 pr-6 textBlack2--text border-radius--5px mb-5">
             <b>Please double check everything.</b> MEW team will not be able to
             reverse your transaction once its submitted. You will still be
             charged gas fee even if the transaction fails.
@@ -46,7 +43,6 @@
               >Learn more.</a
             >
           </div>
-
           <confirmation-send-transaction-details
             v-if="!isSwap"
             :to="txTo"
@@ -78,20 +74,6 @@
             :to-currency="swapInfo.toType"
             :to-address="swapInfo.to"
           />
-          <div
-            v-if="!toNonEth"
-            class="px-4 py-6 pr-6 textBlack2--text border-radius--5px mb-5"
-          >
-            <b>Make sure all the information is correct.</b> Cancelling or
-            reversing a transaction cannot be guaranteed. You will still be
-            charged gas fee even if transaction fails.
-            <a
-              :href="getArticle('my-txn-failed-charged')"
-              target="_blank"
-              rel="noopener noreferrer"
-              >Learn more.</a
-            >
-          </div>
 
           <!-- Ledger Warning Sheet -->
           <div
