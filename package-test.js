@@ -74,7 +74,8 @@ const EXCEPTIONS = [
   'web3-eth-contract',
   '@myetherwallet/mewconnect-web-client',
   'is-ipfs',
-  'protobufjs'
+  'protobufjs',
+  '@myetherwallet/mew-components'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
