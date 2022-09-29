@@ -149,7 +149,7 @@
     "imagemin-mozjpeg": "9.0.0",
     "imagemin-webp": "7.0.0",
     "imagemin-webpack-plugin": "2.4.2",
-    "is-ipfs": "7.0.2",
+    "is-ipfs": "6.0.2",
     "jest-skipped-reporter": "0.0.5",
     "minizlib": "2.1.2",
     "multicoin-address-validator": "git+https://github.com/MyEtherWallet/multicoin-address-validator.git",
