@@ -28,7 +28,9 @@
         {{ $t('signMessage.failed') }}
       </div>
 
-      <div class="text-right">
+      <div
+        :class="['text-right', signResult || verificationError ? 'pt-3' : '']"
+      >
         <mew-button
           btn-style="light"
           title="Clear All"

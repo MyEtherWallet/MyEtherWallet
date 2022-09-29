@@ -209,10 +209,12 @@ export default {
     setTokens() {
       if (!this.inWallet) {
         const tokenMap = new Map();
-        this.network.type.tokens.forEach(token => {
-          tokenMap.set(token.address.toLowerCase(), token);
+        this.network.type.tokens.then(tokens => {
+          tokens.forEach(token => {
+            tokenMap.set(token.address.toLowerCase(), token);
+          });
+          this.setNetworkTokens(tokenMap);
         });
-        this.setNetworkTokens(tokenMap);
       }
     },
     close() {
