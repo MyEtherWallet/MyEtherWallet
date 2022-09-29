@@ -126,7 +126,12 @@
               title="Eth Museum"
               hashtags="MyEtherWallet,MEW,EthBlocks"
             > -->
-            <mew-button class="ml-4" btn-style="light" color-theme="basic">
+            <mew-button
+              class="ml-4"
+              btn-style="light"
+              color-theme="basic"
+              disabled
+            >
               <div class="d-flex align-center">
                 <v-icon left>mdi-launch</v-icon>
                 <div>View in Museum</div>
