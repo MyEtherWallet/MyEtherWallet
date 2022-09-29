@@ -802,7 +802,8 @@ export default {
             this.signedTxObject = {};
             this.error = errorHandler(e);
             this.signing = false;
-            this.instance.errorHandler(e.message);
+            const toastError = errorHandler(e, true);
+            if (toastError) this.instance.errorHandler(toastError);
           });
       }
     },
