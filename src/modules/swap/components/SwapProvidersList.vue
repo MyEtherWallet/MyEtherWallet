@@ -129,7 +129,6 @@
 </template>
 <script>
 import { isArray } from 'lodash';
-import BigNumber from 'bignumber.js';
 
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 const MAX_PROVIDERS = 3;
@@ -216,18 +215,13 @@ export default {
           if (item) {
             const formatted = formatFloatingPointValue(item.rate * 100);
             const formattedAmt = formatFloatingPointValue(item.amount);
-            if (
-              this.availableQuotes.length === 1 ||
-              BigNumber(item.rate).gt(0)
-            ) {
-              arr.push({
-                rate: formatted.value,
-                amount: formattedAmt.value,
-                tooltip: `${formattedAmt.tooltipText || formattedAmt.value} ${
-                  this.toTokenSymbol
-                }`
-              });
-            }
+            arr.push({
+              rate: formatted.value,
+              amount: formattedAmt.value,
+              tooltip: `${formattedAmt.tooltipText || formattedAmt.value} ${
+                this.toTokenSymbol
+              }`
+            });
           }
           return arr;
         }, []);

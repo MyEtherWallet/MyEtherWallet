@@ -1398,13 +1398,16 @@ export default {
               this.selectedProvider = {};
               if (quotes.length) {
                 this.lastSetToken = quotes[0].amount;
-                this.availableQuotes = quotes.map(q => {
-                  q.rate = new BigNumber(q.amount)
-                    .dividedBy(new BigNumber(this.tokenInValue))
-                    .toString();
-                  q.isSelected = false;
-                  return q;
-                });
+                this.availableQuotes = quotes.reduce((arr, q) => {
+                  if (quotes.length === 1 || BigNumber(q.amount).gt(0)) {
+                    q.rate = new BigNumber(q.amount)
+                      .dividedBy(new BigNumber(this.tokenInValue))
+                      .toString();
+                    q.isSelected = false;
+                    arr.push(q);
+                  }
+                  return arr;
+                }, []);
                 this.tokenOutValue = quotes[0].amount;
               }
               this.step = 1;
