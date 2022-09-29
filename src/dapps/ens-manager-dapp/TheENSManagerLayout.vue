@@ -489,11 +489,13 @@ export default {
     - if user is onManage it will run getDomain to refresh domains
     */
     network() {
-      this.setup();
+      if (this.checkNetwork()) {
+        this.setup();
+        this.getDomains();
+      }
       if (this.onRegister) {
         this.closeRegister();
       }
-      this.getDomains();
     },
     $route() {
       this.detactUrlChangeTab();
@@ -507,11 +509,17 @@ export default {
      * Check url and change tab on load
      */
     this.detactUrlChangeTab();
-
-    this.setup();
-    this.getDomains();
+    if (this.checkNetwork()) {
+      this.setup();
+      this.getDomains();
+    }
   },
   methods: {
+    checkNetwork() {
+      return this.validNetworks.find(
+        item => item.chainID === this.network.type.chainID
+      );
+    },
     setup() {
       const ens = this.network.type.ens
         ? new ENS({

@@ -65,6 +65,7 @@ import { mapGetters, mapState } from 'vuex';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import PermanentNameModule from '../../handlers/handlerPermanentName';
 import errorHandler from '@/modules/confirmation/handlers/errorHandler.js';
+import metainfo from '../../metainfo.js';
 export default {
   name: 'EnsReverseLookup',
   props: {
@@ -112,13 +113,18 @@ export default {
   },
   watch: {
     network() {
-      this.setup();
+      if (this.checkNetwork()) this.setup();
     }
   },
   async mounted() {
-    await this.setup();
+    if (this.checkNetwork()) await this.setup();
   },
   methods: {
+    checkNetwork() {
+      return metainfo.networks.find(
+        item => item.chainID === this.network.type.chainID
+      );
+    },
     async setup() {
       await this.findDomainByAddress();
       const ens = this.network.type.ens
