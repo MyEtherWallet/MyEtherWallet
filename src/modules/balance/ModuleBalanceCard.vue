@@ -167,6 +167,7 @@
     <balance-address-paper-wallet
       :open="showPaperWallet"
       :close="closePaperWallet"
+      :is-offline-app="isOfflineApp"
       @close="closePaperWallet"
     />
     <app-modal
