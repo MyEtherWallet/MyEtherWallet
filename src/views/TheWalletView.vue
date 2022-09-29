@@ -188,7 +188,7 @@ export default {
             });
         });
       });
-    }, 1000),
+    }, 500),
     /**
      * Checks Metamask chainID on load, switches current network if it doesn't match
      * and setup listeners for metamask changes
