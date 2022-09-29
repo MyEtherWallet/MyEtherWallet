@@ -1,3 +1,43 @@
+### ui
+
+* * Fix button texts being cut off in 'Generate Keystore' [#4180](https://github.com/MyEtherWallet/MyEtherWallet/pull/4180)
+* * Update Buy Eth banner [#4193](https://github.com/MyEtherWallet/MyEtherWallet/pull/4193)
+
+### devop
+
+* change components and json to dynamic imports [#4080](https://github.com/MyEtherWallet/MyEtherWallet/pull/4080)
+* Add cross chain tokens to 'To Tokens' swap dropdown [#4137](https://github.com/MyEtherWallet/MyEtherWallet/pull/4137)
+* * custom token symbols are now editable [#4158](https://github.com/MyEtherWallet/MyEtherWallet/pull/4158)
+* * Optimize Website [#4161](https://github.com/MyEtherWallet/MyEtherWallet/pull/4161)
+* * buy sell pop up padding [#4167](https://github.com/MyEtherWallet/MyEtherWallet/pull/4167)
+* * devop fix qr pop up 'x' padding and margin [#4168](https://github.com/MyEtherWallet/MyEtherWallet/pull/4168)
+* * Change Swap flow tracking for Matomo [#4192](https://github.com/MyEtherWallet/MyEtherWallet/pull/4192)
+* * invalid dates are no longer selectable for eth blocks [#4199](https://github.com/MyEtherWallet/MyEtherWallet/pull/4199)
+* * hide x button on successful modal [#4200](https://github.com/MyEtherWallet/MyEtherWallet/pull/4200)
+* * Added minimum required message [#4201](https://github.com/MyEtherWallet/MyEtherWallet/pull/4201)
+
+### fix
+
+* Fix default derivation path for Ledger [#4117](https://github.com/MyEtherWallet/MyEtherWallet/pull/4117)
+* * reserve eth blocks design fix [#4176](https://github.com/MyEtherWallet/MyEtherWallet/pull/4176)
+* Fix incorrect nonce for swaps that need approval [#4177](https://github.com/MyEtherWallet/MyEtherWallet/pull/4177)
+* * fix mew logo inside qr code not showing from safari browser [#4178](https://github.com/MyEtherWallet/MyEtherWallet/pull/4178)
+* * remove up down buttons for input fields [#4179](https://github.com/MyEtherWallet/MyEtherWallet/pull/4179)
+* * fix missing dollar sign on swap [#4183](https://github.com/MyEtherWallet/MyEtherWallet/pull/4183)
+* * remove ens-lookup dropdown icons [#4184](https://github.com/MyEtherWallet/MyEtherWallet/pull/4184)
+* Fix settings opening a different page on close [#4185](https://github.com/MyEtherWallet/MyEtherWallet/pull/4185)
+* Fix error when switching tokens on swap page [#4186](https://github.com/MyEtherWallet/MyEtherWallet/pull/4186)
+* * Add negative check for certain tokens in Swap [#4188](https://github.com/MyEtherWallet/MyEtherWallet/pull/4188)
+* * update buttons on contract and message pages [#4189](https://github.com/MyEtherWallet/MyEtherWallet/pull/4189)
+* * fix unavailable partner link [#4190](https://github.com/MyEtherWallet/MyEtherWallet/pull/4190)
+* * fix invalid selected-network value when user search for network on offline helper [#4191](https://github.com/MyEtherWallet/MyEtherWallet/pull/4191)
+* Fix ENS Manage multicall is not a function [#4194](https://github.com/MyEtherWallet/MyEtherWallet/pull/4194)
+* * Check for balance and gas estimation in Stakewise [#4198](https://github.com/MyEtherWallet/MyEtherWallet/pull/4198)
+* * access and create wallet button badge position for mobile [#4208](https://github.com/MyEtherWallet/MyEtherWallet/pull/4208)
+* Fix MetaMask network error message [#4209](https://github.com/MyEtherWallet/MyEtherWallet/pull/4209)
+* * fix moonpay domain name resolver [#4213](https://github.com/MyEtherWallet/MyEtherWallet/pull/4213)
+* fix develop bugs [#4218](https://github.com/MyEtherWallet/MyEtherWallet/pull/4218)
+
 ### Release v6.6.6
 
 ### ui
