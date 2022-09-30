@@ -112,7 +112,6 @@ export default {
   computed: {
     ...mapGetters('wallet', ['getLedgerApp', 'initialLoad']),
     ledgerApp() {
-      console.log(this.initialLoad);
       return this.getLedgerApp;
     }
   },

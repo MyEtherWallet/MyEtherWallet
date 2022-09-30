@@ -1,10 +1,13 @@
 import Ledger from '@ledgerhq/hw-app-eth';
+
 import { byContractAddressAndChainId } from '@ledgerhq/hw-app-eth/erc20';
 import { Transaction, FeeMarketEIP1559Transaction } from '@ethereumjs/tx';
 import webUsbTransport from '@ledgerhq/hw-transport-webusb';
+
 import openApp from '@ledgerhq/live-common/lib/hw/openApp';
 import getAppAndVersion from '@ledgerhq/live-common/lib/hw/getAppAndVersion';
 import attemptToQuitApp from '@ledgerhq/live-common/lib/hw/attemptToQuitApp';
+
 import { appNames } from './config';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import bip44Paths from '@/modules/access-wallet/hardware/handlers/bip44';
@@ -54,14 +57,17 @@ class ledgerWallet {
     const ledgerApp = store.getters['wallet/getLedgerApp'];
     try {
       this.openedApp = await (await getAppAndVersion(this.transport)).name;
-      if (this.openedApp !== 'BOLOS' && this.openedApp !== ledgerApp.name)
-        await attemptToQuitApp(this.transport, this.openedApp);
+      if (this.openedApp !== 'BOLOS' && this.openedApp !== ledgerApp.name) {
+        attemptToQuitApp(this.transport, this.openedApp);
+      }
       if (this.openedApp !== ledgerApp.name) {
         Toast('Confirm selection on ledger', undefined, WARNING);
         await openApp(this.transport, appNames[ledgerApp.value]);
+        this.transport = bluetooth
+          ? await getLedgerXTransport()
+          : await getLedgerTransport();
       }
     } catch (er) {
-      console.log(this.openedApp);
       if (this.openedApp === undefined) {
         if (er.message.includes('transferOut'))
           throw new Error(`App has switched. Please retry again.`);
@@ -214,7 +220,10 @@ const getLedgerTransport = async () => {
   let transport;
   const support = await isWebUsbSupported();
   if (support) {
-    transport = await webUsbTransport.create();
+    transport = await webUsbTransport.openConnected().then(res => {
+      if (!res) return webUsbTransport.create();
+      return res;
+    });
   } else {
     throw new Error('WebUsb not supported.  Please try a different browser.');
   }
@@ -245,6 +254,40 @@ const getLedgerXTransport = async () => {
   }
   return transport;
 };
+
+// const connectToApp = async (transport, ledgerApp) => {
+//   getDeviceInfo(transport)
+//     .then(() => {
+//       openApp(transport, appNames[ledgerApp.value])
+//         .then(() => true)
+//         .catch(() => {
+//           throw new Error(
+//             `Please make sure you have ${
+//               appNames[ledgerApp.value]
+//             } App installed on your Ledger`
+//           );
+//         });
+//     })
+//     .catch(e => {
+//       if (e.message === 'DeviceOnDashboardExpected') {
+//         getAppAndVersion(transport).then(appInfo => {
+//           if (appInfo.name !== appNames[ledgerApp.value]) {
+//             attemptToQuitApp(transport, appInfo.name);
+//             openApp(transport, appNames[ledgerApp.value])
+//               .then(() => true)
+//               .catch(() => {
+//                 throw new Error(
+//                   `Please make sure you have ${
+//                     appNames[ledgerApp.value]
+//                   } App installed on your Ledger`
+//                 );
+//               });
+//           }
+//         });
+//       }
+//       throw e;
+//     });
+// };
 
 const getRootPubKey = async (_ledger, _path) => {
   const pubObj = await _ledger.getAddress(_path, false, true);
