@@ -77,7 +77,7 @@
             <v-divider vertical class="mx-3"></v-divider>
 
             <v-list-item
-              class="px-0"
+              class="px-0 SendTransaction"
               :to="{ name: ROUTES_WALLET.SEND_TX.NAME }"
             >
               <div class="text-center mx-auto my-2">
