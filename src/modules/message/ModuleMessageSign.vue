@@ -32,7 +32,7 @@ import { mapState } from 'vuex';
 
 import SignAndVerifyMessage from '@/modules/message/handlers';
 export default {
-  name: 'ModuleMessageVerify',
+  name: 'ModuleMessageSign',
   data() {
     return {
       title: 'Sign Message',

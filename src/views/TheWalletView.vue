@@ -107,15 +107,13 @@ export default {
     }
   },
   beforeDestroy() {
+    if (this.online && !this.isOfflineApp) this.web3.eth.clearSubscriptions();
     if (window.ethereum) {
       if (this.findAndSetNetwork instanceof Function)
         window.ethereum.removeListener('chainChanged', this.findAndSetNetwork);
       if (this.setWeb3Account instanceof Function)
         window.ethereum.removeListener('accountsChanged', this.setWeb3Account);
     }
-  },
-  destroyed() {
-    if (this.online && !this.isOfflineApp) this.web3.eth.clearSubscriptions();
   },
   methods: {
     ...mapActions('wallet', ['setBlockNumber', 'setTokens', 'setWallet']),
