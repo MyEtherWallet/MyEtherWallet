@@ -79,13 +79,14 @@
     Address Book - remove address
   =====================================================================================
   -->
-    <div v-if="editMode" class="mt-6 text-center">
-      <div
-        class="redPrimary--text cursor-pointer d-inline-block"
-        @click="remove"
-      >
-        {{ $t('interface.address-book.remove-addr') }}
-      </div>
+    <div v-if="editMode" class="mt-4 text-center">
+      <mew-button
+        :title="$t('interface.address-book.remove-addr')"
+        :has-full-width="false"
+        btn-size="small"
+        btn-style="transparent"
+        @click.native="remove"
+      />
     </div>
   </div>
 </template>
