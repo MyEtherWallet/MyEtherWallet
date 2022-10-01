@@ -27,10 +27,5 @@ module.exports = {
 
     // click send when enabled
     browser.ensure.elementIsEnabled('.SendButton').click(css, '.SendButton');
-
-    // click confirm and send
-    browser
-      .waitForElementVisible(css, '.ConfirmButton')
-      .click(css, '.ConfirmButtom');
   }
 };
