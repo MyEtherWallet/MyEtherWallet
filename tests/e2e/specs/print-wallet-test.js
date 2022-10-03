@@ -10,15 +10,18 @@ module.exports = {
   'Print Wallet Test': browser => {
     // start browser
     startBrowser(browser);
+    browser.maximizeWindow();
+
+    // click access wallet
     browser
       .waitForElementVisible(css, '.HomeAccessWallet')
       .click(css, '.HomeAccessWallet');
 
     // select software type wallet
     browser
-      .moveToElement('.AccessSoftwareWallet', 10, 10)
-      .waitForElementVisible('.AccessSoftwareWallet', 500)
-      .click(css, '.AccessSoftwareWallet')
+      .moveToElement('.AccessWalletSoftwareButton', 10, 10)
+      .waitForElementVisible('.AccessWalletSoftwareButton', 500)
+      .click(css, '.AccessWalletSoftwareButton')
       .assert.urlContains('/software');
 
     // select private key
@@ -31,7 +34,7 @@ module.exports = {
       .urlContains('private-key')
       .waitForElementVisible(css, '.PrivateKeyInput')
       .click(css, '.PrivateKeyInput')
-      .keys(privKey)
+      .sendKeys(css, 'input:focus', privKey)
       .click(css, '.PrivateKeyTerms > div')
       .click(css, '.PrivateKeyAccess')
       .assert.urlContains('dashboard');
