@@ -99,7 +99,7 @@
         <mew-button
           :has-full-width="$vuetify.breakpoint.smAndDown"
           btn-size="xlarge"
-          class="d-block ma-2"
+          class="generate-button d-block ma-2"
           :title="buttonText"
           :disabled="!downloadedKeystore"
           @click.native="onContinue(false)"
@@ -121,15 +121,17 @@
 </template>
 
 <script>
-import BorderBlock from '@/components/BorderBlock';
-import GenerateKeystoreDialog from './GenerateKeystoreDialog';
-import MnemonicPhraseTable from '@/components/MnemonicPhraseTable';
-import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import KeyStore, { verifyKeystore } from '@myetherwallet/eth2-keystore';
+
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { createBlob } from '@/modules/create-wallet/handlers/helpers';
 
 export default {
-  components: { BorderBlock, GenerateKeystoreDialog, MnemonicPhraseTable },
+  components: {
+    BorderBlock: () => import('@/components/BorderBlock'),
+    GenerateKeystoreDialog: () => import('./GenerateKeystoreDialog'),
+    MnemonicPhraseTable: () => import('@/components/MnemonicPhraseTable')
+  },
   data() {
     return {
       ks: {},
@@ -244,3 +246,9 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.generate-button {
+  white-space: normal;
+}
+</style>

@@ -64,11 +64,12 @@
     <!-- ============================================================== -->
     <div v-if="!inWallet" class="mt-0">
       <div class="mew-heading-3 textDark--text mb-5">Refund address</div>
-      <mew-input
-        v-model="toAddress"
-        :rules="[isValidToAddress]"
+      <module-address-book
+        ref="addressInput"
         label="Enter Crypto Address"
-        :error-messages="addressErrorMessages"
+        :enable-save-address="false"
+        :is-home-page="true"
+        @setAddress="setAddress"
       />
     </div>
     <!-- ============================================================== -->
@@ -88,26 +89,30 @@
 
 <script>
 import MultiCoinValidator from 'multicoin-address-validator';
-import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
-import ButtonBalance from '@/core/components/AppButtonBalance';
 import { mapActions, mapGetters, mapState } from 'vuex';
 import { isEmpty, debounce, isNumber } from 'lodash';
-import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import BigNumber from 'bignumber.js';
-import handlerSend from '@/modules/send/handlers/handlerSend.js';
 import { fromWei } from 'web3-utils';
+import Web3 from 'web3';
+
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
+import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
+import handlerSend from '@/modules/send/handlers/handlerSend.js';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common.js';
 import abi from '@/modules/balance/handlers/abiERC20.js';
 import nodes from '@/utils/networks';
-import Web3 from 'web3';
 import { toBNSafe, formatFiatValue } from '@/core/helpers/numberFormatHelper';
 import { toBase } from '@/core/helpers/unit';
 import { sellContracts } from './tokenList';
 import handlerWallet from '@/core/mixins/handlerWallet.mixin';
+import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook.vue';
 
 export default {
   name: 'ModuleSellEth',
-  components: { ButtonBalance },
+  components: {
+    ButtonBalance: () => import('@/core/components/AppButtonBalance'),
+    ModuleAddressBook
+  },
   mixins: [handlerWallet],
   props: {
     orderHandler: {
@@ -322,12 +327,6 @@ export default {
 
       return '';
     },
-    addressErrorMessages() {
-      if (!this.actualValidAddress && !isEmpty(this.toAddress)) {
-        return 'Invalid Address';
-      }
-      return '';
-    },
     nonMainnetMetamask() {
       return (
         this.instance &&
@@ -415,12 +414,6 @@ export default {
     gasLimit(val) {
       this.sendHandler.setGasLimit(val);
     },
-    toAddress(val) {
-      this.validToAddress = this.isValidToAddress(val);
-      if (this.inWallet || !this.actualValidAddress) return;
-      this.sendHandler.setFrom(val);
-      this.fetchSellInfo();
-    },
     orderHandler: {
       handler: function () {
         this.sendHandler = new handlerSend();
@@ -431,12 +424,24 @@ export default {
     }
   },
   mounted() {
+    if (this.$refs.addressInput) {
+      this.$refs.addressInput.$refs.addressSelect.clear();
+    }
     this.sendHandler = new handlerSend();
     this.fetchSellInfo();
     this.locGasPrice = this.gasPriceByType(this.gasPriceType);
   },
   methods: {
     ...mapActions('external', ['setCoinGeckoTokens']),
+    setAddress(newVal, isValid, data) {
+      if (data.type === 'RESOLVED' && !data.value.includes('.'))
+        this.toAddress = data.value;
+      else this.toAddress = newVal;
+      this.validToAddress = isValid;
+      if (!this.validToAddress) return;
+      this.sendHandler.setFrom(this.toAddress);
+      this.fetchSellInfo();
+    },
     getEthBalance() {
       if (!this.actualValidAddress) return;
       const web3Instance = new Web3(nodes.ETH[0].url);

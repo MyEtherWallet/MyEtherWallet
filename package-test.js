@@ -62,10 +62,20 @@ const EXCEPTIONS = [
   '@ethereumjs/common',
   '@ethereumjs/tx',
   'graphql',
+  'vue-lazyload',
+  '@ensdomains/ensjs',
   'vue-template-compiler',
   '@aave/contract-helpers',
   '@aave/math-utils',
-  'node-sass'
+  'node-sass',
+  '@ledgerhq/hw-transport-web-ble',
+  '@ledgerhq/hw-transport-webusb',
+  'uuid',
+  'web3-eth-contract',
+  '@myetherwallet/mewconnect-web-client',
+  'is-ipfs',
+  'protobufjs',
+  '@myetherwallet/mew-components'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

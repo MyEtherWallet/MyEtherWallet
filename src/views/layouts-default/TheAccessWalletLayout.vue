@@ -19,22 +19,19 @@
       =====================================================================================
       -->
       <div style="max-width: 650px" class="mx-auto">
-        <mew-button
+        <div
           v-for="(btn, key) in buttons"
           :key="key"
-          has-full-width
-          :class="[
-            btn.title === 'Software'
-              ? 'AccessWalletSoftwareButton'
-              : 'mb-5 py-6'
-          ]"
-          style="height: initial; min-height: 157px"
-          :color-theme="btn.color"
-          :btn-style="btn.style === 'outline' ? 'outline' : ''"
-          @click.native="btn.fn"
+          class="position--relative"
         >
-          <div v-if="btn.official" class="chip-official d-flex align-center">
-            <v-icon size="15px" class="mr-1">mdi-shield-check</v-icon>
+          <div
+            v-if="btn.official"
+            class="chip-official d-flex align-center"
+            :class="isMobile ? 'note-position-mobile' : 'note-position'"
+          >
+            <v-icon color="whiteAlways" size="15px" class="mr-1">
+              mdi-shield-check
+            </v-icon>
             <div
               class="font-weight-medium letter-spacing--initial line-height--initial"
             >
@@ -45,39 +42,54 @@
             v-if="!btn.recommended"
             class="orangePrimary--text mew-label note-position d-flex align-center"
           >
-            <v-icon size="18px" class="mr-1">mdi-shield-alert</v-icon>
+            <v-icon color="orangePrimary" size="18px" class="mr-1">
+              mdi-shield-alert
+            </v-icon>
             NOT RECOMMENDED
           </div>
-          <div class="width--full d-flex align-center text-left">
-            <img
-              v-if="btn.icon && !isMobile"
-              class="ml-5 mr-6"
-              :src="btn.icon"
-              :alt="btn.alt"
-              style="height: 70px"
-            />
-            <div class="px-3">
-              <div class="d-flex align-center">
-                <img
-                  v-if="btn.icon && isMobile"
-                  class="mr-4"
-                  :src="btn.icon"
-                  :alt="btn.alt"
-                  style="height: 40px"
-                />
+          <mew-button
+            has-full-width
+            :class="[
+              btn.title === 'Software'
+                ? 'AccessWalletSoftwareButton'
+                : 'mb-5 py-6'
+            ]"
+            style="height: initial; min-height: 157px"
+            :color-theme="btn.color"
+            :btn-style="btn.style === 'outline' ? 'outline' : ''"
+            @click.native="btn.fn"
+          >
+            <div class="width--full d-flex align-center text-left">
+              <img
+                v-if="btn.icon && !isMobile"
+                class="ml-5 mr-6"
+                :src="btn.icon"
+                :alt="btn.alt"
+                style="height: 70px"
+              />
+              <div class="px-3">
+                <div class="d-flex align-center">
+                  <img
+                    v-if="btn.icon && isMobile"
+                    class="mr-4"
+                    :src="btn.icon"
+                    :alt="btn.alt"
+                    style="height: 40px"
+                  />
 
-                <div class="mew-heading-2 break-word letter-spacing--initial">
-                  {{ btn.title }}
+                  <div class="mew-heading-2 break-word letter-spacing--initial">
+                    {{ btn.title }}
+                  </div>
+                </div>
+                <div
+                  class="mew-heading-4 reset-subtitle break-word letter-spacing--initial text-transform--none mt-4"
+                >
+                  {{ btn.subtitle }}
                 </div>
               </div>
-              <div
-                class="mew-heading-4 reset-subtitle break-word letter-spacing--initial text-transform--none mt-4"
-              >
-                {{ btn.subtitle }}
-              </div>
             </div>
-          </div>
-        </mew-button>
+          </mew-button>
+        </div>
       </div>
 
       <!--
@@ -102,10 +114,9 @@
 </template>
 
 <script>
-import ModuleAccessWalletHardware from '@/modules/access-wallet/ModuleAccessWalletHardware';
-import ModuleAccessWalletSoftware from '@/modules/access-wallet/ModuleAccessWalletSoftware';
-import ModuleAccessWalletMobile from '@/modules/access-wallet/ModuleAccessWalletMobile';
-import EnkryptMissingSnackbar from '@/views/components-default/EnkryptMissingSnackbar.vue';
+import { mapActions, mapState, mapGetters } from 'vuex';
+import Web3 from 'web3';
+
 import {
   Toast,
   ERROR,
@@ -114,9 +125,6 @@ import {
 } from '@/modules/toast/handler/handlerToast';
 import { ACCESS_VALID_OVERLAYS } from '@/core/router/helpers';
 import { Web3Wallet, MewConnectWallet } from '@/modules/access-wallet/common';
-import { mapActions, mapState, mapGetters } from 'vuex';
-import Web3 from 'web3';
-import TheLayoutHeader from '../components-default/TheLayoutHeader';
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
@@ -124,11 +132,15 @@ import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 export default {
   name: 'TheAccessWalletLayout',
   components: {
-    ModuleAccessWalletHardware,
-    ModuleAccessWalletSoftware,
-    ModuleAccessWalletMobile,
-    EnkryptMissingSnackbar,
-    TheLayoutHeader
+    ModuleAccessWalletHardware: () =>
+      import('@/modules/access-wallet/ModuleAccessWalletHardware'),
+    ModuleAccessWalletSoftware: () =>
+      import('@/modules/access-wallet/ModuleAccessWalletSoftware'),
+    ModuleAccessWalletMobile: () =>
+      import('@/modules/access-wallet/ModuleAccessWalletMobile'),
+    EnkryptMissingSnackbar: () =>
+      import('@/views/components-default/EnkryptMissingSnackbar.vue'),
+    TheLayoutHeader: () => import('../components-default/TheLayoutHeader')
   },
   mixins: [handlerAnalytics],
   props: {
@@ -390,18 +402,25 @@ export default {
   line-height: 24px;
 }
 
-.note-position {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-}
-
 .chip-official {
   background-color: var(--v-greenPrimary-base);
   color: white;
   padding: 6px 10px;
   border-radius: 30px;
-  @extend .note-position;
-  top: -2px !important;
+  z-index: 1;
+}
+
+.note-position {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+}
+
+.note-position-mobile {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  padding: 4px 8px;
+  border-radius: 0px 10px 0 7px;
 }
 </style>

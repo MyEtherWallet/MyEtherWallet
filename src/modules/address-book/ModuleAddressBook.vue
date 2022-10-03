@@ -7,6 +7,7 @@
       :copy-tooltip="$t('common.copy')"
       :save-tooltip="$t('common.save')"
       :enable-save-address="enableSave"
+      :show-save="enableSave"
       :label="addrLabel"
       :items="addressBookWithMyAddress"
       :placeholder="$t('sendTx.enter-addr')"
@@ -39,13 +40,12 @@
 </template>
 
 <script>
-import { isAddress, toChecksumAddress } from '@/core/helpers/addressUtils';
 import { mapGetters, mapState } from 'vuex';
-import NameResolver from '@/modules/name-resolver/index';
-import { getAddressInfo } from '@kleros/address-tags-sdk';
-import AddressBookAddEdit from './components/AddressBookAddEdit';
 import { isObject, throttle } from 'lodash';
 import WAValidator from 'multicoin-address-validator';
+import { isAddress, toChecksumAddress } from '@/core/helpers/addressUtils';
+import NameResolver from '@/modules/name-resolver/index';
+import { ERROR, Toast } from '../toast/handler/handlerToast';
 
 const USER_INPUT_TYPES = {
   typed: 'TYPED',
@@ -55,7 +55,7 @@ const USER_INPUT_TYPES = {
 
 export default {
   components: {
-    AddressBookAddEdit
+    AddressBookAddEdit: () => import('./components/AddressBookAddEdit')
   },
   props: {
     isValidAddressFunc: {
@@ -209,18 +209,23 @@ export default {
           /**
            * Checks if the address is valid
            */
-          const isAddValid = this.isValidAddressFunc(this.inputAddr);
-          if (isAddValid instanceof Promise) {
-            const validation = await isAddValid;
-            this.isValidAddress = validation;
-          } else {
-            this.isValidAddress = isAddValid;
+          try {
+            const isAddValid = this.isValidAddressFunc(this.inputAddr);
+            if (isAddValid instanceof Promise) {
+              const validation = await isAddValid;
+              this.isValidAddress = validation;
+            } else {
+              this.isValidAddress = isAddValid;
+            }
+          } catch (e) {
+            this.isValidAddress = false;
           }
           this.loadedAddressValidation = !this.isValidAddress ? false : true;
           /**
-           * Resolve address with ENS/US/Kleros
+           * Resolve address with ENS/Unstoppable
            */
-          if (this.isValidAddress && !this.isOfflineApp) this.resolveAddress();
+          if (this.isValidAddress && !this.isOfflineApp)
+            await this.resolveAddress();
 
           /**
            * @emits setAddress
@@ -230,7 +235,7 @@ export default {
             value: isObject(typeVal) ? typeVal.nickname : typeVal
           });
           if (!this.isValidAddress) {
-            this.resolveName();
+            await this.resolveName();
           }
         } else {
           const currencyExists = WAValidator.findCurrency(
@@ -303,22 +308,14 @@ export default {
      */
     resolveAddress: throttle(async function () {
       if (this.nameResolver) {
-        const reverseName = await this.nameResolver.resolveAddress(
-          this.inputAddr
-        );
-        if (reverseName && !reverseName.name) {
-          try {
-            await getAddressInfo(
-              toChecksumAddress(this.inputAddr),
-              'https://ipfs.kleros.io'
-            ).then(data => {
-              this.nametag = data?.publicNameTag || '';
-            });
-          } catch (e) {
-            this.nametag = '';
-          }
+        try {
+          const reverseName = await this.nameResolver.resolveAddress(
+            this.inputAddr
+          );
+          this.resolvedAddr = reverseName?.name ? reverseName.name : '';
+        } catch (e) {
+          Toast(e, {}, ERROR);
         }
-        this.resolvedAddr = reverseName?.name ? reverseName.name : '';
       }
     }, 300),
     /**

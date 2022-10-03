@@ -20,10 +20,6 @@ import { toBN } from 'web3-utils';
 import Web3 from 'web3';
 import moment from 'moment';
 
-import TheWalletSideMenu from './components-wallet/TheWalletSideMenu';
-import TheWalletHeader from './components-wallet/TheWalletHeader';
-import TheWalletFooter from './components-wallet/TheWalletFooter';
-import ModuleConfirmation from '@/modules/confirmation/ModuleConfirmation';
 import handlerWallet from '@/core/mixins/handlerWallet.mixin';
 import nodeList from '@/utils/networks';
 import {
@@ -36,19 +32,20 @@ import { Web3Wallet } from '@/modules/access-wallet/common';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import matchNetwork from '@/core/helpers/matchNetwork';
-import EnkryptPromoSnackbar from '@/views/components-wallet/EnkryptPromoSnackbar';
-import TheEnkryptPopup from '@/views/components-default/TheEnkryptPopup.vue';
 
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 
 export default {
   components: {
-    TheWalletSideMenu,
-    TheWalletHeader,
-    TheWalletFooter,
-    ModuleConfirmation,
-    EnkryptPromoSnackbar,
-    TheEnkryptPopup
+    TheWalletSideMenu: () => import('./components-wallet/TheWalletSideMenu'),
+    TheWalletHeader: () => import('./components-wallet/TheWalletHeader'),
+    TheWalletFooter: () => import('./components-wallet/TheWalletFooter'),
+    ModuleConfirmation: () =>
+      import('@/modules/confirmation/ModuleConfirmation'),
+    EnkryptPromoSnackbar: () =>
+      import('@/views/components-wallet/EnkryptPromoSnackbar'),
+    TheEnkryptPopup: () =>
+      import('@/views/components-default/TheEnkryptPopup.vue')
   },
   mixins: [handlerWallet, handlerAnalytics],
   computed: {
@@ -110,15 +107,13 @@ export default {
     }
   },
   beforeDestroy() {
+    if (this.online && !this.isOfflineApp) this.web3.eth.clearSubscriptions();
     if (window.ethereum) {
       if (this.findAndSetNetwork instanceof Function)
         window.ethereum.removeListener('chainChanged', this.findAndSetNetwork);
       if (this.setWeb3Account instanceof Function)
         window.ethereum.removeListener('accountsChanged', this.setWeb3Account);
     }
-  },
-  destroyed() {
-    if (this.online && !this.isOfflineApp) this.web3.eth.clearSubscriptions();
   },
   methods: {
     ...mapActions('wallet', ['setBlockNumber', 'setTokens', 'setWallet']),
@@ -142,11 +137,13 @@ export default {
       this.setValidNetwork(matched);
     },
     processNetworkTokens() {
-      const tokenMap = new Map();
-      this.network.type.tokens.forEach(token => {
-        tokenMap.set(token.address.toLowerCase(), token);
+      this.network.type.tokens.then(res => {
+        const tokenMap = new Map();
+        res.forEach(item => {
+          tokenMap.set(item.address.toLowerCase(), item);
+        });
+        this.setNetworkTokens(tokenMap);
       });
-      this.setNetworkTokens(tokenMap);
     },
     setTokensAndBalance() {
       if (this.coinGeckoTokens?.get) {

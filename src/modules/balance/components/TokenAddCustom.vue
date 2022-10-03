@@ -38,7 +38,9 @@
             <!-- =================================================== -->
             <!-- token info title -->
             <!-- =================================================== -->
-            <div class="textLight--text mew-body font-weight-bold">
+            <div
+              class="textLight--text mew-body font-weight-bold align-self-center"
+            >
               {{ tkn.name }}
             </div>
             <div class="textDark--text">
@@ -47,7 +49,10 @@
               <!-- ============================================================================= -->
               <span
                 v-if="
-                  !isIcon(tkn.name) && !isContractAddress(tkn.name) && tkn.value
+                  !isIcon(tkn.name) &&
+                  !isContractAddress(tkn.name) &&
+                  !isSymbol(tkn.name) &&
+                  tkn.value
                 "
               >
                 {{ tkn.value }}
@@ -84,12 +89,13 @@
               <!-- displays input to enter values if there is no name or symbol -->
               <!-- ============================================================================= -->
               <mew-input
-                v-if="!isIcon(tkn.name) && !tkn.value"
+                v-if="(!isIcon(tkn.name) && !tkn.value) || isSymbol(tkn.name)"
                 :id="idx"
                 :error-messages="
                   idx === 3 ? symbolLengthTooLong : nameLengthTooLong
                 "
-                class="mb-n8"
+                :class="isSymbol(tkn.name) ? 'mt-0 mb-n4' : 'mb-n8'"
+                :value="tkn.value"
                 :placeholder="getPlaceholder(tkn.name)"
                 @input="setInputValue"
               />
@@ -125,12 +131,13 @@
 </template>
 
 <script>
-import abiERC20 from '../handlers/abiERC20';
 import { mapState, mapGetters, mapActions } from 'vuex';
-import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
-import { isAddress } from '@/core/helpers/addressUtils';
 import { debounce } from 'lodash';
 import BigNumber from 'bignumber.js';
+
+import abiERC20 from '../handlers/abiERC20';
+import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
+import { isAddress } from '@/core/helpers/addressUtils';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 
 export default {
@@ -212,8 +219,8 @@ export default {
      */
     setInputValue: debounce(function (value, idx) {
       if (idx == 3) {
-        if (value && value.length > 4) {
-          this.symbolLengthTooLong = 'Symbol cannot exceed 4 characters';
+        if (value && value.length > 8) {
+          this.symbolLengthTooLong = 'Symbol cannot exceed 8 characters';
           return;
         }
         this.symbolLengthTooLong = '';
@@ -257,6 +264,12 @@ export default {
       return name === this.tokenDataToDisplay[1].name;
     },
     /**
+     * @returns if symbol info displays icon
+     */
+    isSymbol(name) {
+      return name === this.tokenDataToDisplay[3].name;
+    },
+    /**
      * @returns mew input placeholders
      * if there is no value for name or symbol
      */
@@ -264,7 +277,7 @@ export default {
       if (name === this.tokenDataToDisplay[2].name) {
         return 'Enter the token’s name';
       }
-      return 'Enter up to 4 characters';
+      return 'Enter up to 8 characters';
     },
     /**
      * resets data and closes overlay on close button click
@@ -292,9 +305,7 @@ export default {
         return;
       }
       this.token.name = !this.token.name ? this.customName : this.token.name;
-      this.token.symbol = !this.token.symbol
-        ? this.customSymbol
-        : this.token.symbol;
+      this.token.symbol = this.customSymbol || this.token.symbol;
       this.token.contract = this.contractAddress;
       this.setCustomToken(this.token);
       Toast(

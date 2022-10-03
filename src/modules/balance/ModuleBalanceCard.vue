@@ -183,13 +183,13 @@
       v-if="showHardware"
       :open="showChangeAddress"
       :close="closeChangeAddress"
-      :switch-address="!!instance.path"
+      :switch-address="instancePath"
     />
     <module-access-wallet-software
       v-else
       :open="showChangeAddress"
       :close="closeChangeAddress"
-      :switch-address="!!instance.path"
+      :switch-address="instancePath"
       :wallet-type="identifier"
     />
 
@@ -237,25 +237,24 @@ import { mapGetters, mapActions, mapState } from 'vuex';
 import clipboardCopy from 'clipboard-copy';
 import { isEmpty } from 'lodash';
 
-import AppModal from '@/core/components/AppModal';
-import AppAddrQr from '@/core/components/AppAddrQr';
-import BalanceAddressPaperWallet from './components/BalanceAddressPaperWallet';
 import { Toast, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
-import ModuleAccessWalletHardware from '@/modules/access-wallet/ModuleAccessWalletHardware';
-import ModuleAccessWalletSoftware from '@/modules/access-wallet/ModuleAccessWalletSoftware';
+
 import wallets from './handlers/config';
 import WALLET_TYPES from '../access-wallet/common/walletTypes';
 import NameResolver from '@/modules/name-resolver/index';
 
 export default {
   components: {
-    BalanceAddressPaperWallet,
-    AppModal,
-    AppAddrQr,
-    ModuleAccessWalletHardware,
-    ModuleAccessWalletSoftware
+    AppModal: () => import('@/core/components/AppModal'),
+    AppAddrQr: () => import('@/core/components/AppAddrQr'),
+    BalanceAddressPaperWallet: () =>
+      import('./components/BalanceAddressPaperWallet'),
+    ModuleAccessWalletHardware: () =>
+      import('@/modules/access-wallet/ModuleAccessWalletHardware'),
+    ModuleAccessWalletSoftware: () =>
+      import('@/modules/access-wallet/ModuleAccessWalletSoftware')
   },
   props: {
     sidemenuStatus: {
@@ -287,6 +286,12 @@ export default {
     ...mapGetters('global', ['network', 'isTestNetwork', 'getFiatValue']),
     ...mapGetters('wallet', ['tokensList', 'balanceInETH']),
     ...mapState('wallet', ['web3']),
+    /**
+     * verifies whether instance exists before giving path
+     */
+    instancePath() {
+      return this.instance && this.instance.path ? true : false;
+    },
     /**
      * show default title
      * unless resolved name isn't false

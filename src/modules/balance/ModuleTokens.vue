@@ -109,20 +109,16 @@
 import { mapGetters, mapState } from 'vuex';
 import { uniqWith, isEqual } from 'lodash';
 
-import BalanceEmptyBlock from './components/BalanceEmptyBlock';
-import TokenAddCustom from './components/TokenAddCustom';
-import TokenEditCustom from './components/TokenEditCustom';
-import TokenRemoveCustom from './components/TokenRemoveCustom';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { currencyToNumber } from '@/core/helpers/localization';
 
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 export default {
   components: {
-    BalanceEmptyBlock,
-    TokenAddCustom,
-    TokenEditCustom,
-    TokenRemoveCustom
+    BalanceEmptyBlock: () => import('./components/BalanceEmptyBlock'),
+    TokenAddCustom: () => import('./components/TokenAddCustom'),
+    TokenEditCustom: () => import('./components/TokenEditCustom'),
+    TokenRemoveCustom: () => import('./components/TokenRemoveCustom')
   },
   mixins: [handlerAnalytics],
   props: {
@@ -147,7 +143,7 @@ export default {
           text: 'Price',
           value: 'price',
           sortable: false,
-          width: '20%'
+          width: '15%'
         },
         {
           text: 'Market Cap',
@@ -171,7 +167,7 @@ export default {
           text: '',
           value: 'callToAction',
           sortable: false,
-          width: '15%'
+          width: '10%'
         }
       ],
       items: [

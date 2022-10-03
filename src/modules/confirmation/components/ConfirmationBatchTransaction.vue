@@ -34,6 +34,7 @@
 import { mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { fromWei, toBN } from 'web3-utils';
+
 export default {
   props: {
     transactions: {

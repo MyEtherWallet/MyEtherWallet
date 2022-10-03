@@ -406,7 +406,7 @@
 </template>
 
 <script>
-import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.png';
+import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.jpg';
 import buyOverlay from './components/UnstoppableDomainBuyOverlay';
 import addOwnedDomainOverlay from './components/UnstoppableAddOwnedDomainOverlay';
 import transferDomainOverlay from './components/UnstoppableTransferDomainOverlay';

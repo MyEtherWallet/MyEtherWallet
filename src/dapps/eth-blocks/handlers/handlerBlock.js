@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+import handleError from '@/modules/confirmation/handlers/errorHandler';
 import {
   URL_POST_META,
   URL_POST_MINT,
@@ -184,7 +185,8 @@ export default class HandlerBlock {
               })
               .catch(err => {
                 this.isMinting = false;
-                Toast(err, {}, ERROR);
+                const error = handleError(err);
+                if (error) Toast(err, {}, ERROR);
               });
             this.isMinting = false;
           } else {
@@ -198,7 +200,8 @@ export default class HandlerBlock {
         })
         .catch(err => {
           this.isMinting = false;
-          Toast(err, {}, ERROR);
+          const error = handleError(err);
+          if (error) Toast(err, {}, ERROR);
         });
     }
   }

@@ -144,12 +144,13 @@
 
 <script>
 import buyMore from '@/core/mixins/buyMore.mixin.js';
-import AppBtnMenu from '@/core/components/AppBtnMenu';
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { mapGetters } from 'vuex';
 export default {
   name: 'MobileMenu',
-  components: { AppBtnMenu },
+  components: {
+    AppBtnMenu: () => import('@/core/components/AppBtnMenu')
+  },
   mixins: [buyMore],
   data: () => ({
     ROUTES_HOME: ROUTES_HOME,

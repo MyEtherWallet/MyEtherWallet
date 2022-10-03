@@ -71,15 +71,16 @@
 <script>
 import { mapGetters } from 'vuex';
 
-import TheWrapperDapp from '@/core/components/TheWrapperDapp';
-import bannerImage from '@/assets/images/backgrounds/bg-dapps-center.png';
+import bannerImage from '@/assets/images/backgrounds/bg-dapps-center.jpg';
 import dappsMeta from '@/dapps/metainfo-dapps';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
-
 import isNew from '@/core/helpers/isNew.js';
+
 export default {
-  components: { TheWrapperDapp, AppUserMsgBlock },
+  components: {
+    TheWrapperDapp: () => import('@/core/components/TheWrapperDapp'),
+    AppUserMsgBlock: () => import('@/core/components/AppUserMsgBlock')
+  },
   mixins: [handlerAnalytics],
   data() {
     return {

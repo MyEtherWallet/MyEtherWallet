@@ -68,11 +68,13 @@
         <div class="mew-heading-3 textDark--text mb-5">
           Where should we send your crypto?
         </div>
-        <mew-input
-          v-model="toAddress"
+        <module-address-book
+          ref="addressInput"
           label="Enter Crypto Address"
-          :rules="[isValidToAddress]"
-          :error-messages="addressErrorMessages"
+          :currency="selectedCryptoName"
+          :enable-save-address="false"
+          :is-home-page="true"
+          @setAddress="setAddress"
         />
       </div>
     </div>
@@ -91,12 +93,13 @@
 
 <script>
 import MultiCoinValidator from 'multicoin-address-validator';
-import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import { isEmpty, cloneDeep, isEqual } from 'lodash';
-import BigNumber from 'bignumber.js';
 import { mapGetters, mapActions, mapState } from 'vuex';
-import { fromWei, toBN } from 'web3-utils';
+import BigNumber from 'bignumber.js';
 import Web3 from 'web3';
+import { fromWei, toBN } from 'web3-utils';
+
+import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import nodeList from '@/utils/networks';
 import {
   formatFloatingPointValue,
@@ -106,8 +109,11 @@ import { getCurrency } from '@/modules/settings/components/currencyList';
 import { buyContracts } from './tokenList';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 
+import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook.vue';
+
 export default {
   name: 'ModuleBuyEth',
+  components: { ModuleAddressBook },
   props: {
     orderHandler: {
       type: Object,
@@ -149,7 +155,7 @@ export default {
   },
   computed: {
     ...mapGetters('global', ['network', 'getFiatValue']),
-    ...mapState('wallet', ['address']),
+    ...mapState('wallet', ['web3', 'address']),
     ...mapState('external', ['currencyRate', 'coinGeckoTokens']),
     ...mapGetters('external', ['contractToToken']),
     ...mapGetters('wallet', ['tokensList']),
@@ -269,12 +275,6 @@ export default {
         return `Amount can't be above provider's maximum: ${
           formatFiatValue(this.maxVal.toFixed(), this.currencyConfig).value
         } ${this.selectedFiatName}`;
-      }
-      return '';
-    },
-    addressErrorMessages() {
-      if (!this.actualValidAddress && !isEmpty(this.toAddress)) {
-        return 'Invalid Address';
       }
       return '';
     },
@@ -416,7 +416,6 @@ export default {
           this.selectedCurrency = oldVal;
           return;
         }
-
         if (!isEqual(newVal, oldVal)) {
           this.fetchCurrencyData();
         }
@@ -470,9 +469,6 @@ export default {
         this.getSimplexQuote();
       }
     },
-    toAddress(newVal) {
-      this.validToAddress = this.isValidToAddress(newVal);
-    },
     coinGeckoTokens: {
       handler: function () {
         this.fetchCurrencyData();
@@ -480,10 +476,19 @@ export default {
     }
   },
   mounted() {
+    if (this.$refs.addressInput) {
+      this.$refs.addressInput.$refs.addressSelect.clear();
+    }
     this.fetchCurrencyData();
   },
   methods: {
     ...mapActions('global', ['setNetwork']),
+    setAddress(newVal, isValid, data) {
+      if (data.type === 'RESOLVED' && !data.value.includes('.'))
+        this.toAddress = data.value;
+      else this.toAddress = newVal;
+      this.validToAddress = isValid;
+    },
     async fetchGasPrice() {
       const supportedNodes = {
         ETH: 'ETH',

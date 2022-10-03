@@ -4,6 +4,7 @@ import configNetworkTypes from './configNetworkTypes';
 import calculateEth2Rewards from './helpers';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { toBN } from 'web3-utils';
+import handleError from '@/modules/confirmation/handlers/errorHandler';
 
 /**
  * ABI to get fees
@@ -239,7 +240,8 @@ export default class Staked {
         this.txReceipt = true;
       })
       .catch(err => {
-        Toast(err, {}, ERROR);
+        const error = handleError(err);
+        if (error) Toast(err, {}, ERROR);
       });
   }
   /**
