@@ -38,6 +38,9 @@
           <div class="mb-4">
             {{ $t('interface.address-book.add-up-to') }}
           </div>
+
+          <settings-address-table />
+
           <mew-table
             :table-headers="tableHeaders"
             :table-data="tableData"
@@ -78,10 +81,9 @@
 </template>
 
 <script>
+import SettingsAddressTable from './components/SettingsAddressTable';
 import { mapState } from 'vuex';
-
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
-
 import handlerSettings from './handler/handlerSettings';
 import gasPriceMixin from './handler/gasPriceMixin';
 const modes = ['add', 'edit'];
@@ -89,6 +91,7 @@ const modes = ['add', 'edit'];
 export default {
   name: 'ModuleSettings',
   components: {
+    SettingsAddressTable,
     SettingsImportConfig: () => import('./components/SettingsImportConfig'),
     SettingsExportConfig: () => import('./components/SettingsExportConfig'),
     SettingsGasPrice: () => import('./components/SettingsGasPrice'),
