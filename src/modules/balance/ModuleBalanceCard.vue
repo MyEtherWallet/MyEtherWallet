@@ -1,5 +1,5 @@
 <template>
-  <div class="component--wallet-card">
+  <div class="component--wallet-card theBalanceCard">
     <div class="mew-card drop-shadow">
       <img
         :src="'https://mewcard.mewapi.io/?address=' + address"
@@ -29,7 +29,7 @@
                 </v-icon>
               </div>
             </template>
-            <v-list width="232px" class="balance-card-list">
+            <v-list width="232px">
               <v-list-item class="cursor-pointer" @click="refresh">
                 <v-icon color="textDark" class="mr-3">mdi-refresh</v-icon>
                 <v-list-item-title> Refresh Balance</v-list-item-title>

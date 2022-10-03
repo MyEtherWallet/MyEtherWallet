@@ -7,7 +7,7 @@ module.exports = {
   before: function (browser) {
     browser.globals.waitForConditionTimeout = 15000;
   },
-  'Print Wallet Test': browser => {
+  'Print Wallet Test': async browser => {
     // start browser
     startBrowser(browser);
     browser.maximizeWindow();
@@ -41,8 +41,8 @@ module.exports = {
 
     // select view paper wallet
     browser
-      .waitForElementVisible(css, '.balance-card-list')
-      .click(css, '.balance-card-list');
+      .waitForElementVisible(css, '.theBalanceCard')
+      .click(css, '.personal-account-container');
 
     // open paper wallet
     browser.execute(function () {
