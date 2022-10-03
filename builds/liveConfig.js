@@ -23,6 +23,13 @@ const exportObj = {
       .test(/\.graphql$/)
       .use('graphql-tag/loader')
       .loader('graphql-tag/loader')
+      .end()
+      .use('babel-loader')
+      .loader('babel-loader')
+      .options({
+        presets: ['@babel/preset-env'],
+        plugins: ['@babel/plugin-proposal-optional-chaining']
+      })
       .end();
   }
 };
