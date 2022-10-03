@@ -208,6 +208,7 @@ class CoolWallet {
       : await instance.getAddress(idx);
     const txSigner = async txParam => {
       const legacySigner = async _txParam => {
+        console.log(1);
         const tx = new Transaction.fromTxData(_txParam, {
           common: commonGenerator(store.getters['global/network'])
         });
@@ -220,6 +221,7 @@ class CoolWallet {
           value: bufferToHex(tx.value),
           chainId: tx.common.chainId()
         };
+        console.log(2);
 
         const signTxData = {
           transport: this.transport,
@@ -228,6 +230,8 @@ class CoolWallet {
           transaction: cwTx,
           addressIndex: idx
         };
+
+        console.log(3);
         const result = this.isPro
           ? await this.deviceInstance[chainID]
               .signTransaction(signTxData)
@@ -235,12 +239,12 @@ class CoolWallet {
           : await this.deviceInstance
               .signTransaction(cwTx, idx)
               .catch(errorHandler);
-
         if (result) {
+          console.log(4, result);
           const resultTx = Transaction.fromSerializedTx(result, {
             common: commonGenerator(store.getters['global/network'])
           });
-
+          console.log(5);
           const signedChainId = calculateChainIdFromV(resultTx.v);
           if (signedChainId !== chainID)
             throw new Error(
@@ -250,8 +254,10 @@ class CoolWallet {
               }),
               'InvalidNetworkId'
             );
+          console.log(6);
           return getSignTransactionObject(resultTx);
         }
+        console.log(7);
         return result;
       };
       const eip1559Signer = async _txParam => {
@@ -261,7 +267,7 @@ class CoolWallet {
           _txParam
         );
         delete _txParams.gasPrice;
-
+        console.log('a');
         const tx = FeeMarketEIP1559Transaction.fromTxData(_txParams, {
           common: commonGenerator(store.getters['global/network'])
         });
@@ -281,13 +287,16 @@ class CoolWallet {
           transaction: cwTx,
           addressIndex: idx
         };
+        console.log('b');
         const result = await instance.signEIP1559Transaction(signTxData);
 
         if (result) {
+          console.log('d', result);
           const resultTx = Transaction.fromSerializedTx(result, {
             common: commonGenerator(store.getters['global/network'])
           });
           const signedChainId = calculateChainIdFromV(resultTx.v);
+          console.log('e');
           if (signedChainId !== chainID)
             throw new Error(
               Vue.$i18n.t('errorsGlobal.invalid-network-id-sig', {
@@ -296,18 +305,23 @@ class CoolWallet {
               }),
               'InvalidNetworkId'
             );
+          console.log('f');
           return getSignTransactionObject(resultTx);
         }
+        console.log('c', result);
         return result;
       };
 
       if (store.getters['global/isEIP1559SupportedNetwork'] && this.isPro) {
         try {
+          console.log('where art thou?');
           return eip1559Signer(txParam);
         } catch (e) {
+          console.log('where are you?', e);
           return legacySigner(txParam);
         }
       }
+      console.log('where are you?????');
       return legacySigner(txParam);
     };
     const msgSigner = async msg => {
