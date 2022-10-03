@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack:///./src/core/components/AppScrollBlock.vue?5d6e"],"names":[],"mappings":"AAAA,qDAAqD,gBAAgB,gBAAgB,mBAAmB,mB","file":"css/chunk-6eac12a8.39c5bcc0.css","sourcesContent":[".core--components--app-scroll-block[data-v-8b9899fe]{overflow-y:auto;max-height:90px;padding-right:12px;margin-right:-12px}"],"sourceRoot":""}

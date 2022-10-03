@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack:///./src/core/components/AppErrorMsg.vue?fe5e"],"names":[],"mappings":"AAAA,+BAA+B,WAAW,aAAa,SAAS,WAAW,eAAe,Y","file":"css/chunk-04a63d80.c1acd270.css","sourcesContent":[".error-detail[data-v-04bafa66]{width:100%;height:150px;border:0;color:#000;font-size:12px;resize:none}"],"sourceRoot":""}
