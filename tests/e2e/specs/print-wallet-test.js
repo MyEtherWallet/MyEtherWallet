@@ -14,9 +14,6 @@ module.exports = {
       .waitForElementVisible(css, '.HomeAccessWallet')
       .click(css, '.HomeAccessWallet');
 
-    // remove footer
-    browser.click(css, '.HideWalletBanner');
-
     // select software type wallet
     browser
       .moveToElement('.AccessSoftwareWallet', 10, 10)
