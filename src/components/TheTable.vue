@@ -169,7 +169,7 @@ export default {
 }
 
 .padding-side {
-  padding: 0px 15px;
+  padding: 0px 10px;
 }
 .round-corner {
   border-radius: 8px;

@@ -39,15 +39,7 @@
             {{ $t('interface.address-book.add-up-to') }}
           </div>
 
-          <settings-address-table />
-
-          <mew-table
-            :table-headers="tableHeaders"
-            :table-data="tableData"
-            has-color
-            :success-toast="$t('common.copied')"
-            @onClick="onEdit"
-          />
+          <settings-address-table :table-data="tableData" @onClick="onEdit" />
 
           <div class="d-flex justify-center mt-5">
             <mew-button
@@ -117,37 +109,6 @@ export default {
       editMode: false,
       addMode: false,
       itemToEdit: {},
-      tableHeaders: [
-        {
-          text: '#',
-          value: 'number',
-          sortable: false,
-          filterable: false,
-          width: '5%'
-        },
-        {
-          text: 'Address',
-          value: 'address',
-          sortable: false,
-          filterable: false,
-          width: '50%'
-        },
-        {
-          text: 'Nickname',
-          value: 'nickname',
-          sortable: false,
-          filterable: false,
-          containsLink: true,
-          width: '20%'
-        },
-        {
-          text: '',
-          value: 'callToAction',
-          sortable: false,
-          filterable: false,
-          width: '20%'
-        }
-      ],
       tableData: []
     };
   },
