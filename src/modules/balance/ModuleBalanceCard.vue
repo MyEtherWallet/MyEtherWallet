@@ -184,13 +184,13 @@
       v-if="showHardware"
       :open="showChangeAddress"
       :close="closeChangeAddress"
-      :switch-address="!!instance.path"
+      :switch-address="instancePath"
     />
     <module-access-wallet-software
       v-else
       :open="showChangeAddress"
       :close="closeChangeAddress"
-      :switch-address="!!instance.path"
+      :switch-address="instancePath"
       :wallet-type="identifier"
     />
 
@@ -287,6 +287,12 @@ export default {
     ...mapGetters('global', ['network', 'isTestNetwork', 'getFiatValue']),
     ...mapGetters('wallet', ['tokensList', 'balanceInETH']),
     ...mapState('wallet', ['web3']),
+    /**
+     * verifies whether instance exists before giving path
+     */
+    instancePath() {
+      return this.instance && this.instance.path ? true : false;
+    },
     /**
      * show default title
      * unless resolved name isn't false
