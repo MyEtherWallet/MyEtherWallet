@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "6.6.6",
+  "version": "6.6.7",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build": "npm run update && vue-cli-service build",
@@ -49,7 +49,6 @@
     "@ethereumjs/common": "2.6.5",
     "@ethereumjs/tx": "3.5.2",
     "@formatjs/intl-numberformat": "8.1.3",
-    "@kleros/address-tags-sdk": "0.2.0",
     "@lokalise/node-api": "8.0.1",
     "@mathieustan/vue-intercom": "0.0.9",
     "@myetherwallet/eth2-keystore": "0.2.3",
@@ -92,7 +91,6 @@
     "node-polyfill-webpack-plugin": "2.0.1",
     "package-json": "7.0.0",
     "platform": "1.3.6",
-    "protobufjs": "7.0.0",
     "qrcode-with-logos": "1.0.3",
     "register-service-worker": "1.7.2",
     "stream": "0.0.2",
@@ -183,7 +181,7 @@
     "web3-core-helpers": "1.5.0",
     "web3-core-method": "1.5.0",
     "web3-core-requestmanager": "1.5.0",
-    "web3-eth-contract": "1.7.5",
+    "web3-eth-contract": "1.8.0",
     "web3-utils": "1.5.0",
     "webpack": "4.44.2",
     "webpack-bundle-analyzer": "4.6.1",
