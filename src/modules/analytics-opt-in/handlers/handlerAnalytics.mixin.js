@@ -134,6 +134,14 @@ export default {
       if (this.$matomo && action && this.consentToTrack) {
         this.$matomo.trackEvent(categories.swap, action);
       }
+    },
+    /**
+     * Tracks what user selects to buy or sell
+     */
+    trackBuySell(action) {
+      if (this.$matomo && action && this.consentToTrack) {
+        this.$matomo.trackEvent(categories.buySell, action);
+      }
     }
   }
 };

@@ -1,5 +1,5 @@
 <template>
-  <div class="component--wallet-card">
+  <div class="component--wallet-card theBalanceCard">
     <div class="mew-card drop-shadow">
       <img
         :src="'https://mewcard.mewapi.io/?address=' + address"
@@ -9,7 +9,7 @@
     </div>
     <div class="info-container pl-8 pr-5 py-4 text-shadow">
       <div class="d-flex flex-row justify-space-between align-start">
-        <div>
+        <div class="balanceMenu">
           <!--
           =====================================================================================
             Address
@@ -34,7 +34,10 @@
                 <v-icon color="textDark" class="mr-3">mdi-refresh</v-icon>
                 <v-list-item-title> Refresh Balance</v-list-item-title>
               </v-list-item>
-              <v-list-item class="cursor-pointer" @click="openPaperWallet">
+              <v-list-item
+                class="cursor-pointer openThePaperWallet"
+                @click="openPaperWallet"
+              >
                 <v-icon color="textDark" class="mr-3">mdi-printer</v-icon>
                 <v-list-item-title>View paper wallet</v-list-item-title>
               </v-list-item>
@@ -183,13 +186,13 @@
       v-if="showHardware"
       :open="showChangeAddress"
       :close="closeChangeAddress"
-      :switch-address="checkPath"
+      :switch-address="instancePath"
     />
     <module-access-wallet-software
       v-else
       :open="showChangeAddress"
       :close="closeChangeAddress"
-      :switch-address="checkPath"
+      :switch-address="instancePath"
       :wallet-type="identifier"
     />
 
@@ -286,6 +289,12 @@ export default {
     ...mapGetters('global', ['network', 'isTestNetwork', 'getFiatValue']),
     ...mapGetters('wallet', ['tokensList', 'balanceInETH']),
     ...mapState('wallet', ['web3']),
+    /**
+     * verifies whether instance exists before giving path
+     */
+    instancePath() {
+      return this.instance && this.instance.path ? true : false;
+    },
     /**
      * show default title
      * unless resolved name isn't false
@@ -411,9 +420,6 @@ export default {
      */
     nonChainTokensCount() {
       return this.tokensList.length - 1;
-    },
-    checkPath() {
-      return !!this.instance?.path;
     }
   },
   watch: {
