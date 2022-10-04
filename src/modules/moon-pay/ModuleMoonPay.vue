@@ -209,12 +209,20 @@ export default {
     setTokens() {
       if (!this.inWallet) {
         const tokenMap = new Map();
-        this.network.type.tokens.then(tokens => {
-          tokens.forEach(token => {
+        const tokens = this.network.type.tokens;
+        if (tokens instanceof Promise) {
+          tokens.then(tokens => {
+            tokens.forEach(token => {
+              tokenMap.set(token.address.toLowerCase(), token);
+            });
+            this.setNetworkTokens(tokenMap);
+          });
+        } else {
+          this.network.type.tokens.forEach(token => {
             tokenMap.set(token.address.toLowerCase(), token);
           });
           this.setNetworkTokens(tokenMap);
-        });
+        }
       }
     },
     close() {
