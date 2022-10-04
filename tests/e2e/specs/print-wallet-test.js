@@ -42,7 +42,7 @@ module.exports = {
     // select view paper wallet
     browser
       .waitForElementVisible(css, '.theBalanceCard')
-      .click(css, '.personal-account-container');
+      .click(css, '.balanceMenu');
 
     // open paper wallet
     browser.execute(function () {
