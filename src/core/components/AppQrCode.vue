@@ -23,12 +23,17 @@ export default {
     };
   },
   watch: {
-    data() {
-      this.generateQRCode();
+    data(val) {
+      if (val !== '') {
+        this.generateQRCode();
+      }
     }
   },
   mounted() {
     this.generateQRCode();
+  },
+  beforeDestroy() {
+    this.qrCode = null;
   },
   methods: {
     generateQRCode() {
