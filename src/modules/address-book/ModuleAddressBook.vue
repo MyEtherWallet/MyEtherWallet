@@ -20,11 +20,7 @@
     />
     <!-- add and edit the address book -->
     <mew-overlay
-      :footer="{
-        text: 'Need help?',
-        linkTitle: 'Contact support',
-        link: 'mailto:support@myetherwallet.com'
-      }"
+      :footer="footer"
       :title="$t('interface.address-book.add-addr')"
       :show-overlay="addMode"
       :close="toggleOverlay"
@@ -91,7 +87,12 @@ export default {
       nameResolver: null,
       isValidAddress: false,
       loadedAddressValidation: false,
-      nametag: ''
+      nametag: '',
+      footer: {
+        text: 'Need help?',
+        linkTitle: 'Contact support',
+        link: 'mailto:support@myetherwallet.com'
+      }
     };
   },
 
@@ -171,6 +172,13 @@ export default {
     }
   },
   mounted() {
+    if (this.isOfflineApp) {
+      this.footer = {
+        text: 'Need help? Email us at support@myetherwallet.com',
+        linkTitle: '',
+        link: ''
+      };
+    }
     if (this.network.type.ens && this.web3.currentProvider)
       this.nameResolver = new NameResolver(this.network, this.web3);
     if (this.isHomePage) {

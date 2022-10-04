@@ -245,11 +245,7 @@
     =====================================================================================
     -->
     <mew-overlay
-      :footer="{
-        text: 'Need help?',
-        linkTitle: 'Contact support',
-        link: 'mailto:support@myetherwallet.com'
-      }"
+      :footer="footer"
       :show-overlay="showSignOverlay"
       :title="title ? title : 'Message'"
       :close="reset"
@@ -308,6 +304,11 @@ export default {
   mixins: [handlerAnalytics],
   data() {
     return {
+      footer: {
+        text: 'Need help?',
+        linkTitle: 'Contact support',
+        link: 'mailto:support@myetherwallet.com'
+      },
       showTxOverlay: false,
       showSignOverlay: false,
       showSuccessModal: false,
@@ -340,7 +341,8 @@ export default {
       'web3',
       'address',
       'identifier',
-      'isHardware'
+      'isHardware',
+      'isOfflineApp'
     ]),
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network', 'getFiatValue']),
@@ -616,6 +618,15 @@ export default {
         _self.reset();
       };
     });
+  },
+  mounted() {
+    if (this.isOfflineApp) {
+      this.footer = {
+        text: 'Need help? Email us at support@myetherwallet.com',
+        linkTitle: '',
+        link: ''
+      };
+    }
   },
   methods: {
     rejectTransaction() {
