@@ -4,7 +4,7 @@ const css = 'css selector';
 const address = '0x9ccCb2B82f8F607db3F5D50BF4083665c3002f83';
 const privKey =
   '0x0077ce8e3d12432dc73e87943fe1e992db90964fbb6e8ae9f97a7163585c6019';
-const amount = '0';
+const amount = '0.00000001';
 
 module.exports = {
   before: function (browser) {
@@ -55,6 +55,12 @@ module.exports = {
 
     // input address
     browser.click(css, '.AddressInput').keys(address);
+
+    browser.ensure.elementIsDisabled('.SendButton').execute(function () {
+      document.querySelector('.SendButton').removeAttribute('disabled');
+      document.querySelector('.SendButton').className =
+        'SendButton v-btn v-btn--has-bg theme--light v-size--default greenPrimary xlarge-btn white--text btn-background mew-button';
+    });
 
     // click send when enabled
     browser.ensure.elementIsEnabled('.SendButton').click(css, '.SendButton');
