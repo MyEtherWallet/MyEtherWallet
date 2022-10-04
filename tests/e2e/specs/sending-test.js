@@ -13,6 +13,7 @@ module.exports = {
   'Send Transaction test': async browser => {
     // open browser
     startBrowser(browser);
+    browser.maximizeWindow();
 
     // click access wallet
     browser
@@ -21,9 +22,9 @@ module.exports = {
 
     // select software type wallet
     browser
-      .moveToElement('.AccessSoftwareWallet', 10, 10)
-      .waitForElementVisible('.AccessSoftwareWallet', 500)
-      .click(css, '.AccessSoftwareWallet')
+      .moveToElement('.AccessWalletSoftwareButton', 10, 10)
+      .waitForElementVisible('.AccessWalletSoftwareButton', 500)
+      .click(css, '.AccessWalletSoftwareButton')
       .assert.urlContains('/software');
 
     // select private key
@@ -36,7 +37,7 @@ module.exports = {
       .urlContains('private-key')
       .waitForElementVisible(css, '.PrivateKeyInput')
       .click(css, '.PrivateKeyInput')
-      .keys(privKey)
+      .sendKeys(css, '.v-text-field__slot > input', privKey)
       .click(css, '.PrivateKeyTerms > div')
       .click(css, '.PrivateKeyAccess')
       .assert.urlContains('dashboard');
@@ -51,10 +52,10 @@ module.exports = {
       .urlContains('send-tx')
       .waitForElementVisible(css, '.AmountInput')
       .click(css, '.AmountInput')
-      .keys(amount);
+      .sendKeys(css, 'input:focus', amount);
 
     // input address
-    browser.click(css, '.AddressInput').keys(address);
+    browser.click(css, '.AddressInput').sendKeys(css, 'input:focus', address);
 
     browser.ensure.elementIsDisabled('.SendButton').execute(function () {
       document.querySelector('.SendButton').removeAttribute('disabled');
