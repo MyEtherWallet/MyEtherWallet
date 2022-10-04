@@ -38,9 +38,9 @@
             />
             <mew-input
               label="Amount"
-              placeholder="0"
               :value="amount"
               type="number"
+              placeholder="0"
               :persistent-hint="true"
               :error-messages="amountErrorMessage"
               :max-btn-obj="{
@@ -810,10 +810,11 @@ export default {
         );
       }
     },
-    setAmount(value, max) {
-      this.amount = value;
+    setAmount: debounce(function (val, max) {
+      const value = val ? val : 0;
+      this.amount = BigNumber(value).toFixed();
       this.selectedMax = max;
-    },
+    }, 500),
     setGasLimit(value) {
       this.gasLimit = value;
     },

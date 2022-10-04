@@ -50,7 +50,7 @@
                   "
                   :max-btn-obj="maxBtn"
                   @buyMore="openMoonpay"
-                  @input="setTokenInValue"
+                  @input="val => triggerSetTokenInValue(val, false)"
               /></v-col>
               <v-col
                 cols="12"
@@ -289,7 +289,7 @@
 
 <script>
 import { toBN, fromWei, toWei, isAddress } from 'web3-utils';
-import { isEmpty, clone, isUndefined, isObject } from 'lodash';
+import { debounce, isEmpty, clone, isUndefined, isObject } from 'lodash';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import xss from 'xss';
 import MultiCoinValidator from 'multicoin-address-validator';
@@ -1252,7 +1252,7 @@ export default {
       this.toTokenType = {};
       this.tokenOutValue = '0';
       const toTokenFromTokenList = this.actualFromTokens.find(item => {
-        if (item.contract && item.contract === toToken.contract) return item;
+        if (item && item.contract === toToken?.contract) return item;
       });
       this.setFromToken(toTokenFromTokenList ? toTokenFromTokenList : toToken);
       this.setToToken(fromToken);
@@ -1318,6 +1318,9 @@ export default {
       }
       this.setTokenInValue(this.tokenInValue);
     },
+    triggerSetTokenInValue: debounce(function (val) {
+      this.setTokenInValue(val);
+    }, 500),
     setTokenInValue(value) {
       /**
        * Ensure that both pairs have been set
@@ -1325,7 +1328,8 @@ export default {
        */
       this.belowMinError = false;
       if (this.isLoading || this.initialLoad) return;
-      this.tokenInValue = value || '0';
+      const val = value ? value : 0;
+      this.tokenInValue = BigNumber(val).toFixed();
       // Check if (in amount) is larger than (available balance)
       if (
         !this.isFromNonChain &&
