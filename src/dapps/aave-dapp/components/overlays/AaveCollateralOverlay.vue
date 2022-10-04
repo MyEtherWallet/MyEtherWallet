@@ -19,10 +19,11 @@ import AaveSummary from '../AaveSummary';
 import { ACTION_TYPES } from '@/dapps/aave-dapp/handlers/helpers';
 import { mapState } from 'vuex';
 import handlerAave from '../../handlers/handlerAave.mixin';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 export default {
   name: 'AaveCollateralOverlay',
   components: { AaveSummary },
-  mixins: [handlerAave],
+  mixins: [handlerAave, handlerAnalytics],
   props: {
     open: {
       default: false,
@@ -60,6 +61,7 @@ export default {
         symbol: this.selectedTokenDetails.symbol
       };
       this.$emit('onConfirm', param);
+      this.trackDapp('aaveSetCollateral');
       this.close();
     },
     resetToggle() {
