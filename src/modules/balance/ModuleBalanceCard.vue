@@ -310,7 +310,7 @@ export default {
      * returns @String
      */
     verifyAddressTitle() {
-      return `This wallet is accessed with ${this.instance.meta.name}`;
+      return `This wallet is accessed with ${this.instance?.meta?.name}`;
     },
     /**
      * verify address body
