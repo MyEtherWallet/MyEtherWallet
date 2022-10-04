@@ -19,7 +19,7 @@ import { mapActions, mapState, mapGetters } from 'vuex';
 import { toBN } from 'web3-utils';
 import Web3 from 'web3';
 import moment from 'moment';
-
+import { debounce } from 'lodash';
 import handlerWallet from '@/core/mixins/handlerWallet.mixin';
 import nodeList from '@/utils/networks';
 import {
@@ -107,15 +107,13 @@ export default {
     }
   },
   beforeDestroy() {
+    if (this.online && !this.isOfflineApp) this.web3.eth.clearSubscriptions();
     if (window.ethereum) {
       if (this.findAndSetNetwork instanceof Function)
         window.ethereum.removeListener('chainChanged', this.findAndSetNetwork);
       if (this.setWeb3Account instanceof Function)
         window.ethereum.removeListener('accountsChanged', this.setWeb3Account);
     }
-  },
-  destroyed() {
-    if (this.online && !this.isOfflineApp) this.web3.eth.clearSubscriptions();
   },
   methods: {
     ...mapActions('wallet', ['setBlockNumber', 'setTokens', 'setWallet']),
@@ -162,7 +160,7 @@ export default {
       }
       this.updateGasPrice();
     },
-    subscribeToBlockNumber() {
+    subscribeToBlockNumber: debounce(function () {
       this.web3.eth.getBlockNumber().then(bNumber => {
         this.setBlockNumber(bNumber);
         this.web3.eth.getBlock(bNumber).then(block => {
@@ -188,7 +186,7 @@ export default {
             });
         });
       });
-    },
+    }, 500),
     /**
      * Checks Metamask chainID on load, switches current network if it doesn't match
      * and setup listeners for metamask changes
