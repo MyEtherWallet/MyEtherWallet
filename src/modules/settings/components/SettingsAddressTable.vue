@@ -1,5 +1,5 @@
 <template>
-  <the-table border-around divider round-corner background full-width flat>
+  <the-table border-around round-corner background full-width flat>
     <table>
       <thead>
         <tr>
