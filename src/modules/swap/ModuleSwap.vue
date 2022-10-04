@@ -1252,7 +1252,7 @@ export default {
       this.toTokenType = {};
       this.tokenOutValue = '0';
       const toTokenFromTokenList = this.actualFromTokens.find(item => {
-        if (item.contract && item.contract === toToken.contract) return item;
+        if (item && item.contract === toToken?.contract) return item;
       });
       this.setFromToken(toTokenFromTokenList ? toTokenFromTokenList : toToken);
       this.setToToken(fromToken);
