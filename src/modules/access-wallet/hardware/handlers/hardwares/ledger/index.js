@@ -56,16 +56,22 @@ class ledgerWallet {
       : await getLedgerTransport();
     const ledgerApp = store.getters['wallet/getLedgerApp'];
     try {
-      this.openedApp = await (await getAppAndVersion(this.transport)).name;
+      this.openedApp = (await getAppAndVersion(this.transport)).name;
       if (this.openedApp !== 'BOLOS' && this.openedApp !== ledgerApp.name) {
-        attemptToQuitApp(this.transport, this.openedApp);
+        await attemptToQuitApp(this.transport, this.openedApp);
       }
       if (this.openedApp !== ledgerApp.name) {
         Toast('Confirm selection on ledger', undefined, WARNING);
-        await openApp(this.transport, appNames[ledgerApp.value]);
-        this.transport = bluetooth
-          ? await getLedgerXTransport()
-          : await getLedgerTransport();
+        await openApp(this.transport, appNames[ledgerApp.value]).then(() => {
+          return new Promise(resolve => {
+            setTimeout(async () => {
+              this.transport = bluetooth
+                ? await getLedgerXTransport()
+                : await getLedgerTransport();
+              resolve();
+            }, 250);
+          });
+        });
       }
     } catch (er) {
       if (this.openedApp === undefined) {
@@ -77,7 +83,6 @@ class ledgerWallet {
         throw new Error(`missing app ${ledgerApp.value}`);
       } else throw new Error(er);
     }
-
     this.ledger = new Ledger(this.transport);
     if (!this.isHardened) {
       const rootPub = await getRootPubKey(this.ledger, this.basePath);
@@ -217,17 +222,14 @@ const isWebUsbSupported = async () => {
 };
 
 const getLedgerTransport = async () => {
-  let transport;
   const support = await isWebUsbSupported();
   if (support) {
-    transport = await webUsbTransport.openConnected().then(res => {
+    return webUsbTransport.openConnected().then(res => {
       if (!res) return webUsbTransport.create();
       return res;
     });
-  } else {
-    throw new Error('WebUsb not supported.  Please try a different browser.');
   }
-  return transport;
+  throw new Error('WebUsb not supported.  Please try a different browser.');
 };
 
 const isWebBLESupported = async () => {
