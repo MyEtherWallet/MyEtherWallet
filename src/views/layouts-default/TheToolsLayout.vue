@@ -14,7 +14,7 @@
         @onTab="tabChanged"
       >
         <template #tabItemContent1>
-          <module-message-verify />
+          <module-message-verify ref="verifyMessageModule" />
         </template>
         <template #tabItemContent2>
           <module-tools-convert />
@@ -85,6 +85,7 @@ export default {
       this.setCurrentTool();
     },
     currentTool(val) {
+      this.$refs.verifyMessageModule?.clearAll();
       this.$router.push({ name: ROUTES_HOME.TOOLS.NAME, query: { tool: val } });
     }
   },

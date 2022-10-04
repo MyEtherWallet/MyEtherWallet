@@ -219,8 +219,8 @@ export default {
      */
     setInputValue: debounce(function (value, idx) {
       if (idx == 3) {
-        if (value && value.length > 4) {
-          this.symbolLengthTooLong = 'Symbol cannot exceed 4 characters';
+        if (value && value.length > 8) {
+          this.symbolLengthTooLong = 'Symbol cannot exceed 8 characters';
           return;
         }
         this.symbolLengthTooLong = '';
@@ -277,7 +277,7 @@ export default {
       if (name === this.tokenDataToDisplay[2].name) {
         return 'Enter the token’s name';
       }
-      return 'Enter up to 4 characters';
+      return 'Enter up to 8 characters';
     },
     /**
      * resets data and closes overlay on close button click

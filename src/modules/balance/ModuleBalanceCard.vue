@@ -183,13 +183,13 @@
       v-if="showHardware"
       :open="showChangeAddress"
       :close="closeChangeAddress"
-      :switch-address="!!instance.path"
+      :switch-address="instancePath"
     />
     <module-access-wallet-software
       v-else
       :open="showChangeAddress"
       :close="closeChangeAddress"
-      :switch-address="!!instance.path"
+      :switch-address="instancePath"
       :wallet-type="identifier"
     />
 
@@ -287,6 +287,12 @@ export default {
     ...mapGetters('wallet', ['tokensList', 'balanceInETH']),
     ...mapState('wallet', ['web3']),
     /**
+     * verifies whether instance exists before giving path
+     */
+    instancePath() {
+      return this.instance && this.instance.path ? true : false;
+    },
+    /**
      * show default title
      * unless resolved name isn't false
      * returns @string
@@ -308,7 +314,10 @@ export default {
      * returns @String
      */
     verifyAddressBody() {
-      return `To verify, check the address on your ${this.instance?.meta.name} device & make sure it is the same address as the one shown below.`;
+      return `To verify, check the address on your ${this.instanceName} device & make sure it is the same address as the one shown below.`;
+    },
+    instanceName() {
+      return this.instance.meta.name ? this.instance.meta.name : '';
     },
     /**
      * Shows hardware access or software access
