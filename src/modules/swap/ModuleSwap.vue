@@ -988,17 +988,23 @@ export default {
       this.setupSwap();
     },
     checkMultiChainToken(item) {
-      const multiChainTokens = ['USDT', 'SRM']; // Hardcoding for now
+      const multiChainTokens = ['USDT', 'SRM', 'DOGE']; // Hardcoding for now
       const name = item.name;
-      if (name.includes('SOL') || name.includes('OMNI')) {
+      if (
+        name.includes('SOL') ||
+        name.includes('OMNI') ||
+        name.includes('DOGE')
+      ) {
         for (let i = 0; i < multiChainTokens.length; i++) {
           const token = multiChainTokens[i];
           if (name.includes(token)) {
             const networks = {
               OMNI: 'Omni',
-              SOL: 'Solana'
+              SOL: 'Solana',
+              DOGE: 'Dogecoin'
             };
-            const contractNetwork = networks[name.replace(token, '')];
+            const contractNetwork =
+              networks[name !== 'DOGE' ? name.replace(token, '') : name];
             item.subtext = `${token} - ${contractNetwork}`;
             break;
           }
