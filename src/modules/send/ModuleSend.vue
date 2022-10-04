@@ -49,6 +49,8 @@
                 method: setEntireBal
               }"
               :buy-more-str="buyMoreStr"
+              class="AmountInput"
+              @keydown.native="preventCharE($event)"
               @buyMore="openMoonpay"
               @input="val => setAmount(val, false)"
             />
@@ -72,7 +74,11 @@
         =====================================================================================
         -->
         <v-col cols="12" class="pt-4 pb-2">
-          <module-address-book ref="addressInput" @setAddress="setAddress" />
+          <module-address-book
+            ref="addressInput"
+            class="AddressInput"
+            @setAddress="setAddress"
+          />
         </v-col>
         <!--
       =====================================================================================
@@ -166,6 +172,7 @@
             :has-full-width="false"
             btn-size="xlarge"
             :disabled="isDisabledNextBtn"
+            class="SendButton"
             @click.native="send()"
           />
         </div>
@@ -825,6 +832,9 @@ export default {
     handleLocalGasPrice(e) {
       this.localGasPrice = e;
       this.sendTx.setLocalGasPrice(e);
+    },
+    preventCharE(e) {
+      if (e.key === 'e') e.preventDefault();
     }
   }
 };
