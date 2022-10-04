@@ -54,7 +54,7 @@ export default {
           this.instance.errorHandler(e.message);
         });
       } catch (e) {
-        this.instance.errorHandler(e.message);
+        this.instance.errorHandler(e.hasOwnProperty('message') ? e.message : e);
       }
     },
     clearAll() {
