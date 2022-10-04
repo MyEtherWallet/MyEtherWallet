@@ -155,7 +155,7 @@ export default {
     if (this.showToggle) {
       setTimeout(() => {
         this.onToggle(this.group[1]);
-      }, 0);
+      }, 100);
     }
   },
   methods: {
@@ -188,10 +188,11 @@ export default {
       this.$emit('emitValues', this.amount);
     },
     calculatedAmt(per) {
-      const amt =
+      let amt =
         this.buttonTitle.action.toLowerCase() === ACTION_TYPES.withdraw
           ? this.aaveBalance
           : this.tokenBalance;
+      if (isNaN(amt)) amt = 0;
       return BigNumber(amt)
         .times(per)
         .decimalPlaces(this.tokenDecimal)

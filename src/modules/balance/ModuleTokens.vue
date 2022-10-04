@@ -143,7 +143,7 @@ export default {
           text: 'Price',
           value: 'price',
           sortable: false,
-          width: '20%'
+          width: '15%'
         },
         {
           text: 'Market Cap',
@@ -152,10 +152,22 @@ export default {
           width: '20%'
         },
         {
+          text: '24H',
+          value: 'change',
+          sortable: false,
+          width: '20%'
+        },
+        {
+          text: 'Balance',
+          value: 'balance',
+          sortable: false,
+          width: '20%'
+        },
+        {
           text: '',
           value: 'callToAction',
           sortable: false,
-          width: '15%'
+          width: '10%'
         }
       ],
       items: [

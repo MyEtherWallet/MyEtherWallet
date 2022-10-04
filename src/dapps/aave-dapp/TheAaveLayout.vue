@@ -266,13 +266,11 @@
       :open="showWithdrawOverlay"
       :close="closeWithdrawOverlay"
       :pre-selected-token="tokenSelected"
-      @onConfirm="onWithdraw"
     />
     <aave-repay-overlay
       :open="showRepayOverlay"
       :close="closeRepayOverlay"
       :pre-selected-token="tokenSelected"
-      @onConfirm="onRepay"
     />
     <aave-set-apr-overlay
       :open="showAprTypeOverlay"
@@ -515,6 +513,9 @@ export default {
     },
     showBorrowOverlay(newVal) {
       if (!newVal) this.tokenSelected = {};
+    },
+    activeTab() {
+      this.tokenSelected = {};
     }
   },
   mounted() {
