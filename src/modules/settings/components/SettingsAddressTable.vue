@@ -85,15 +85,14 @@
       v-for="(td, dataKey) in tableData"
       v-else
       :key="dataKey"
-      class="mb-1"
+      class="mb-2 mobile-table"
       full-width
       padding-around
-      border-around
       flat
       round-corner
     >
       <div class="d-flex align-center justify-space-between">
-        <div class="mew-label">Address</div>
+        <div class="mew-label font-weight-bold">Address</div>
         <div
           class="d-flex align-center flex-shrink-1"
           style="width: 38vw; max-width: 160px"
@@ -124,7 +123,7 @@
         </div>
       </div>
       <div class="d-flex align-center justify-space-between">
-        <div class="mew-label">Nickname</div>
+        <div class="mew-label font-weight-bold">Nickname</div>
         <div class="mew-label">{{ td.nickname }}</div>
       </div>
       <div class="text-right mt-2">
@@ -208,4 +207,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.mobile-table {
+  background-color: var(--v-greyLight-base);
+}
+</style>
