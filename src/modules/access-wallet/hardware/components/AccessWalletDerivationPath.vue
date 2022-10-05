@@ -50,53 +50,59 @@
         Displays the filtered customs paths
         =====================================================================================
         -->
-        <div
-          v-for="(filteredCustomPath, idx) in filteredCustomPaths"
-          :key="filteredCustomPath.name + idx"
-          class="d-flex"
-        >
+        <div v-if="!disableCustomPaths">
           <div
-            class="mb-6 d-flex align-center justify-space-between cursor-pointer flex-grow-1"
-            @click="setPath(filteredCustomPath)"
+            v-for="(filteredCustomPath, idx) in filteredCustomPaths"
+            :key="filteredCustomPath.name + idx"
+            class="d-flex"
           >
-            <div class="d-flex align-center">
-              <v-img
-                :src="require('@/assets/images/currencies/eth.png')"
-                contain
-                class="mr-2"
-                max-height="24px"
-                max-width="24px"
-              />
-              <span
-                :class="[
-                  filteredCustomPath.name === selectedPath.name
-                    ? 'greenPrimary--text'
-                    : 'textDark--text'
-                ]"
-                >{{ filteredCustomPath.name }}</span
-              >
-            </div>
-            <span
-              :class="
-                filteredCustomPath.value === selectedPath.value
-                  ? 'greenPrimary--text'
-                  : 'path'
-              "
+            <div
+              class="mb-6 d-flex align-center justify-space-between cursor-pointer flex-grow-1"
+              @click="setPath(filteredCustomPath)"
             >
-              {{ filteredCustomPath.value }}
-            </span>
+              <div class="d-flex align-center">
+                <v-img
+                  :src="require('@/assets/images/currencies/eth.png')"
+                  contain
+                  class="mr-2"
+                  max-height="24px"
+                  max-width="24px"
+                />
+                <span
+                  :class="[
+                    filteredCustomPath.name === selectedPath.name
+                      ? 'greenPrimary--text'
+                      : 'textDark--text'
+                  ]"
+                  >{{ filteredCustomPath.name }}</span
+                >
+              </div>
+              <span
+                :class="
+                  filteredCustomPath.value === selectedPath.value
+                    ? 'greenPrimary--text'
+                    : 'path'
+                "
+              >
+                {{ filteredCustomPath.value }}
+              </span>
+            </div>
+            <v-btn
+              icon
+              small
+              class="pa-3 mb-7 ml-2"
+              @click="handleRemove(filteredCustomPath)"
+            >
+              <v-icon color="textDark">mdi-close</v-icon>
+            </v-btn>
           </div>
-          <v-btn
-            icon
-            small
-            class="pa-3 mb-7 ml-2"
-            @click="handleRemove(filteredCustomPath)"
-          >
-            <v-icon color="textDark">mdi-close</v-icon>
-          </v-btn>
         </div>
         <v-divider
-          v-if="filteredCustomPaths.length > 0 && filteredPaths.length > 0"
+          v-if="
+            !disableCustomPaths &&
+            filteredCustomPaths.length > 0 &&
+            filteredPaths.length > 0
+          "
           class="mb-6"
         />
         <!--
@@ -139,6 +145,7 @@
         </div>
 
         <div
+          v-if="!disableCustomPaths"
           class="d-flex align-center justify-space-between bottom-buttons pt-4"
         >
           <mew-button
@@ -218,6 +225,13 @@ export default {
           value: "m/44'/60'/0'/0"
         };
       }
+    },
+    /**
+     * disables custom derivation path
+     */
+    disableCustomPaths: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -238,6 +252,7 @@ export default {
      * Custom filtered paths based on search
      */
     filteredCustomPaths() {
+      if (this.disableCustomPaths) return [];
       return this.paths.filter(path => {
         if (this.searchValue) {
           return (
@@ -295,6 +310,12 @@ export default {
     },
     toggleCustomField(scroll = false) {
       this.showCustomField = !this.showCustomField;
+      if (!this.showCustomField) {
+        this.customPath = '';
+        this.customAlias = '';
+        this.$refs.aliasInput.clear();
+        this.$refs.pathInput.clear();
+      }
       if (scroll === true)
         setTimeout(() => {
           document.getElementById('bottomList').scrollIntoView();
