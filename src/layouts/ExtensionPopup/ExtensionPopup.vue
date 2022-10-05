@@ -49,10 +49,12 @@ export default {
     addWallet() {
       const chrome = window.chrome;
       if (chrome.runtime.openOptionsPage) {
-        chrome.runtime.openOptionsPage();
+        chrome.tabs.create({
+          url: 'https://www.enkrypt.com'
+        });
       } else {
         // eslint-disable-next-line
-        window.open(chrome.runtime.getURL('index.html'));
+        window.open('https://www.enkrypt.com', '_blank');
       }
     },
     fetchNewStore() {

@@ -21,15 +21,11 @@
 // }
 // eslint-disable-next-line
 console.log(`
-MEW CX will no longer be supported on October 4th, 2022
+MEW CX is no longer being maintained by the MEW team.
 
-Hello user! MEW will be sunsetting MEW CX in favor of our new browser extension wallet Enkrypt. We highly recommend downloading Enkrypt from the Chrome Store and migrating your assets.
+While it will continue to work, eventually it may develop errors and security issues since it's not being updated.
 
-Enkrypt is taking the lessons learned from MEW CX, improving upon them, as well as embracing the multichain future. 
+We recommend downloading our new multichain browser wallet Enkrypt here: https://www.enkrypt.com
 
-Again, after October 4th, 2022, MEW CX will no longer be maintained or updated by our developers.
-
-Download Enkrypt here: https://www.enkrypt.com
-
-We have also creat guide for migrating your assets into Enkrypt: https://help.myetherwallet.com/en/articles/6434663-migrating-from-mew-cx-to-enkrypt
+and migrating your wallet using this guide: https://help.myetherwallet.com/en/articles/6434663-migrating-from-mew-cx-to-enkrypt
 `);

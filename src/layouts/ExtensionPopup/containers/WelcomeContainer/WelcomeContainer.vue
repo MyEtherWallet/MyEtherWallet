@@ -5,22 +5,24 @@
       <p class="title-description">{{ parent.$t('mewcx.welcome-header') }}</p>
     </div>
     <div class="content">
-      <div class="deprecation-notice">
-        MEW CX will no longer be supported on
-        <b>October 4th, 2022</b>
-      </div>
+      <!-- <div class="deprecation-notice">
+        MEW CX is no longer being maintained by the MEW team.
+        <br />
+        <a
+          href="https://help.myetherwallet.com/en/articles/6434663-migrating-from-mew-cx-to-enkrypt"
+          target="_blank"
+        >
+          Migrate wallet to new extension</a
+        >
+      </div> -->
       <img class="logo-ex" src="@/assets/images/mew-cx-logo.png" width="75" />
-      <img class="logo-mew" src="@/assets/images/logo.png" height="25" />
       <div class="text-content">
         <h3>{{ parent.$t('mewcx.mew-cx-official') }}</h3>
-        <p>
-          {{ parent.$t('mewcx.no-wallet-add') }}
-        </p>
       </div>
     </div>
     <i class="down-arrow fa fa-arrow-down" aria-hidden="true"></i>
     <div class="add-wallet-content" @click="props.addWallet">
-      {{ parent.$t('mewcx.add-wallet') }}
+      Download Enkrypt
     </div>
   </div>
 </template>
@@ -39,6 +41,12 @@ export default {
 <style lang="scss" scoped>
 .deprecation-notice {
   margin: 0 !important;
+  width: 100%;
 }
+
 @import 'WelcomeContainer.scss';
+
+.content {
+  padding: 41px 0;
+}
 </style>
