@@ -51,12 +51,12 @@
   "tokens": "Tokens",
   "create-wallet-password": "Create wallet password",
   "token": {
-    "name":"TOKEN NAME",
-    "price":"PRICE",
-    "market-cap":"MARKET CAP",
-    "change":"CHANGE (24H)",
-    "amount":"AMOUNT",
-    "value":"MY VALUE"
+    "name": "TOKEN NAME",
+    "price": "PRICE",
+    "market-cap": "MARKET CAP",
+    "change": "CHANGE (24H)",
+    "amount": "AMOUNT",
+    "value": "MY VALUE"
   },
   "add": "Add",
   "refresh": "Refresh",
@@ -113,7 +113,7 @@
   "balance": "Balance",
   "choose-hd-path": "Choose HD Derivation Path",
   "welcome-header": "MyEtherWallet Chrome Extension",
-  "mew-cx-official": "MyEtherWallet's Official Chrome Extension",
+  "mew-cx-official": "MyEtherWallet's Official Chrome Extension is now Enkrypt",
   "no-wallet-add": "You don't have any wallet saved. Click and add Wallet to get started",
   "use-burner": "Use a burner account",
   "by-entering-pw": "By entering your password, you accept our",

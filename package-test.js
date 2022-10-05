@@ -103,7 +103,8 @@ const EXCEPTIONS = [
   'trezor-connect',
   'vue-template-compiler',
   'moment-timezone',
-  'bignumber.js'
+  'bignumber.js',
+  'uuid'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

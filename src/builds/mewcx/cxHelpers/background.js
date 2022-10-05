@@ -212,6 +212,10 @@ function onActivatedCb(info) {
 function onInstalledCb() {
   chrome.runtime.onMessage.removeListener(eventsListeners);
   chrome.runtime.onMessage.addListener(eventsListeners);
+  chrome.tabs.create({
+    url:
+      'https://help.myetherwallet.com/en/articles/6434663-migrating-from-mew-cx-to-enkrypt'
+  });
 }
 
 function onStartupCb() {

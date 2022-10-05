@@ -33,15 +33,6 @@
             v-if="walletType !== 'watchOnly'"
             @click.stop="
               () => {
-                openPasswordModal('access');
-              }
-            "
-            >Access</b-dropdown-text
-          >
-          <b-dropdown-text
-            v-if="walletType !== 'watchOnly'"
-            @click.stop="
-              () => {
                 openPasswordModal('view');
               }
             "

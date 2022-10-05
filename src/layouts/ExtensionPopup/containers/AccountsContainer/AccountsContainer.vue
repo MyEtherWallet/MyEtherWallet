@@ -9,8 +9,14 @@
         <b-tab :active="hasMyWallets" title="My Wallets" class="tab-container">
           <network-component />
           <div class="deprecation-notice">
-            MEW CX will no longer be supported on
-            <b>October 4th, 2022</b>
+            MEW CX is no longer being maintained by the MEW team.
+            <br />
+            <a
+              href="https://help.myetherwallet.com/en/articles/6434663-migrating-from-mew-cx-to-enkrypt"
+              target="_blank"
+            >
+              Migrate wallet to new extension</a
+            >
           </div>
           <div class="total-balance-container">
             <p>{{ $t('common.balance.total') }}:</p>
@@ -75,9 +81,7 @@
         <div class="button-option" @click="addWallet">
           {{ $t('mewcx.my-wallet') }}
         </div>
-        <div class="button-option" @click="moveToQuicksend">
-          {{ $t('mewcx.quick-send') }}
-        </div>
+        <div class="button-option" @click="moveToQuicksend">Migrate</div>
       </div>
     </div>
     <div v-show="quickSend">
@@ -265,11 +269,16 @@ export default {
       }
     },
     moveToQuicksend() {
-      if (this.myWallets.length === 0) {
-        this.addWallet();
-      } else {
-        this.$refs.fromModal.show();
-      }
+      // if (this.myWallets.length === 0) {
+      //   this.addWallet();
+      // } else {
+      //   this.$refs.fromModal.show();
+      // }
+
+      window.open(
+        'https://help.myetherwallet.com/en/articles/6434663-migrating-from-mew-cx-to-enkrypt',
+        '_blank'
+      );
     },
     closeFromModal() {
       this.$refs.fromModal.hide();
