@@ -219,7 +219,7 @@ export default {
    */
   mounted() {
     this.accessHandler = new handlerAccessWalletSoftware();
-    this.warningSheetObj.url = this.getArticle('using-mew-offline');
+    this.warningSheetObj.url = this.getArticle('not-rec-when-access-wallet');
   },
   destroyed() {
     this.accessHandler = {};
