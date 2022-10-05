@@ -1,9 +1,10 @@
 <template>
   <div style="width: 100%">
-    <div v-if="paths.length > 0 && !hideCustomPaths" class="text-right mb-3">
+    <div v-if="paths.length > 0 && !hidePathSelection" class="text-right mb-3">
       <access-wallet-derivation-path
         :selected-path="selectedPath"
         :passed-paths="paths"
+        :disable-custom-paths="disableCustomPaths"
         @setPath="setPath"
       />
     </div>
@@ -247,7 +248,14 @@ export default {
     /**
      * hides access wallet derivation path component
      */
-    hideCustomPaths: {
+    hidePathSelection: {
+      type: Boolean,
+      default: false
+    },
+    /**
+     * disables custom derivation path
+     */
+    disableCustomPaths: {
       type: Boolean,
       default: false
     },

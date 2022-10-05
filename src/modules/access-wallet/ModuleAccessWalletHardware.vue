@@ -207,7 +207,8 @@
     <access-wallet-address-network
       v-if="step > walletInitialized"
       :back="null"
-      :hide-custom-paths="onKeepkey || onLedger"
+      :hide-path-selection="onKeepkey || onLedger"
+      :disable-custom-paths="onLedger"
       :handler-wallet="hwWalletInstance"
       :selected-path="selectedPath"
       :paths="paths"
