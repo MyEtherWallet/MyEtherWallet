@@ -1638,7 +1638,6 @@ export default {
           );
           this.addNotification(new NonChainNotification(notif)).then(() => {
             const currency = this.toTokenType?.symbol;
-            console.log('currency:', currency);
             Toast(
               `Swap initiated, you should receive ${currency} in 1-3 hours. You will be notified when it's completed`,
               {},
