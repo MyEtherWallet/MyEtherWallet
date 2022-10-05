@@ -1,5 +1,9 @@
 <template>
-  <div class="table-component" :class="containerClass" :style="containerStyle">
+  <div
+    class="core-components--app-table"
+    :class="containerClass"
+    :style="containerStyle"
+  >
     <div v-if="title" class="font-weight-bold mt-6 ml-5 mb-10">{{ title }}</div>
     <slot />
     <div v-if="loading" class="skeleton-loader-container">
@@ -12,7 +16,7 @@
 
 <script>
 export default {
-  name: 'TableComponent',
+  name: 'AppTable',
   components: {},
   props: {
     fullWidth: {
@@ -91,7 +95,7 @@ export default {
 </script>
 
 <style lang="scss">
-.table-component {
+.core-components--app-table {
   // Force style Vuetify skeleton loader
   .v-skeleton-loader__heading {
     width: 100%;
@@ -110,7 +114,7 @@ export default {
 }
 
 // Default styles
-.table-component {
+.core-components--app-table {
   --bg-color: #f4f7fe;
   --hover-color: #eaeffb;
   --border-color: #e0e5f2;
@@ -165,7 +169,7 @@ export default {
   }
 }
 .padding-around {
-  padding: 10px 15px 15px 15px;
+  padding: 15px 15px 15px 15px;
 }
 
 .padding-side {

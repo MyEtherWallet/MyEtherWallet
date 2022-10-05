@@ -1,81 +1,156 @@
 <template>
-  <the-table border-around round-corner background full-width flat>
-    <table>
-      <thead>
-        <tr>
-          <td>#</td>
-          <td>ADDRESS</td>
-          <td>NICKNAME</td>
-          <td></td>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(td, dataKey) in tableData" :key="dataKey">
-          <td class="mew-label">{{ td.number }}</td>
-          <td>
-            <div
-              class="d-flex align-center flex-shrink-1"
-              style="width: 25vw; max-width: 225px"
+  <div>
+    <app-table
+      v-if="!isMobile"
+      border-around
+      round-corner
+      background
+      full-width
+      flat
+    >
+      <table>
+        <thead>
+          <tr>
+            <td>#</td>
+            <td>ADDRESS</td>
+            <td>NICKNAME</td>
+            <td></td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(td, dataKey) in tableData" :key="dataKey">
+            <td class="mew-label">{{ td.number }}</td>
+            <td>
+              <div
+                class="d-flex align-center flex-shrink-1"
+                style="width: 25vw; max-width: 225px"
+              >
+                <mew-blockie
+                  class="mr-1"
+                  height="20px"
+                  width="20px"
+                  :address="td.address"
+                />
+                <mew-transform-hash :hash="td.address" class="mr-2 mew-label" />
+                <app-copy-btn :copy-value="td.address">
+                  <v-btn x-small icon color="greenPrimary">
+                    <img
+                      src="@/assets/images/icons/icon-copy-green.svg"
+                      alt="copy"
+                      height="13"
+                    />
+                  </v-btn>
+                </app-copy-btn>
+                <a
+                  v-if="explorerAddr(td) !== ''"
+                  :href="explorerAddr(td)"
+                  target="_blank"
+                >
+                  <v-btn x-small icon color="greenPrimary">
+                    <img
+                      src="@/assets/images/icons/icon-arrow-top-right-green.svg"
+                      alt="copy"
+                      height="13"
+                    />
+                  </v-btn>
+                </a>
+              </div>
+            </td>
+            <td
+              style="
+                max-width: 95px;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+              "
+              class="mew-label"
             >
-              <mew-blockie
-                class="mr-1"
-                height="20px"
-                width="20px"
-                :address="td.address"
+              {{ td.nickname }}
+            </td>
+            <td>
+              <mew-button
+                btn-style="transparent"
+                btn-size="small"
+                @click.native="onEdit(td)"
+              >
+                <div class="mew-label">Edit</div>
+              </mew-button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </app-table>
+
+    <app-table
+      v-for="(td, dataKey) in tableData"
+      v-else
+      :key="dataKey"
+      class="mb-1"
+      full-width
+      padding-around
+      border-around
+      flat
+      round-corner
+    >
+      <div class="d-flex align-center justify-space-between">
+        <div class="mew-label">Address</div>
+        <div
+          class="d-flex align-center flex-shrink-1"
+          style="width: 38vw; max-width: 160px"
+        >
+          <mew-transform-hash :hash="td.address" class="mr-1 mew-label" />
+          <app-copy-btn :copy-value="td.address">
+            <v-btn x-small icon color="greenPrimary">
+              <img
+                src="@/assets/images/icons/icon-copy-green.svg"
+                alt="copy"
+                height="12"
               />
-              <mew-transform-hash :hash="td.address" class="mr-2 mew-label" />
-              <app-copy-btn :copy-value="td.address">
-                <v-btn x-small icon color="greenPrimary">
-                  <img
-                    src="@/assets/images/icons/icon-copy-green.svg"
-                    alt="copy"
-                    height="13"
-                  />
-                </v-btn>
-              </app-copy-btn>
-              <a :href="explorerAddr(td)" target="_blank">
-                <v-btn x-small icon color="greenPrimary">
-                  <img
-                    src="@/assets/images/icons/icon-arrow-top-right-green.svg"
-                    alt="copy"
-                    height="13"
-                  />
-                </v-btn>
-              </a>
-            </div>
-          </td>
-          <td
-            style="
-              max-width: 95px;
-              overflow: hidden;
-              white-space: nowrap;
-              text-overflow: ellipsis;
-            "
-            class="mew-label"
+            </v-btn>
+          </app-copy-btn>
+          <a
+            v-if="explorerAddr(td) !== ''"
+            :href="explorerAddr(td)"
+            target="_blank"
           >
-            {{ td.nickname }}
-          </td>
-          <td>
-            <mew-button
-              btn-style="transparent"
-              btn-size="small"
-              @click.native="onEdit(td)"
-            >
-              <div class="mew-label">Edit</div>
-            </mew-button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </the-table>
+            <v-btn x-small icon color="greenPrimary">
+              <img
+                src="@/assets/images/icons/icon-arrow-top-right-green.svg"
+                alt="copy"
+                height="12"
+              />
+            </v-btn>
+          </a>
+        </div>
+      </div>
+      <div class="d-flex align-center justify-space-between">
+        <div class="mew-label">Nickname</div>
+        <div class="mew-label">{{ td.nickname }}</div>
+      </div>
+      <div class="text-right mt-2">
+        <v-btn
+          outlined
+          color="greenPrimary"
+          small
+          depressed
+          @click="onEdit(td)"
+        >
+          <div class="greenPrimary--text mew-label text-transform--none">
+            Edit
+          </div>
+        </v-btn>
+      </div>
+    </app-table>
+  </div>
 </template>
 
 <script>
 import AppCopyBtn from '@/core/components/AppCopyBtn';
-import TheTable from '@/components/TheTable';
+import AppTable from '@/core/components/AppTable';
+
 export default {
   name: 'SettingsAddressTable',
-  components: { TheTable, AppCopyBtn },
+  components: { AppTable, AppCopyBtn },
   props: {
     tableData: {
       type: Array,
@@ -88,6 +163,9 @@ export default {
     return {};
   },
   computed: {
+    isMobile() {
+      return this.$vuetify.breakpoint.mdAndDown;
+    },
     /**
      * Default Address Explorer
      * if item doesn't include it
