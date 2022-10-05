@@ -1,3 +1,6 @@
+### v5.9.0
+* CX migration notice, remove access via cx dashboard, remove quicksend
+
 ### v5.8.9
 
 * CX deprecation notice update
