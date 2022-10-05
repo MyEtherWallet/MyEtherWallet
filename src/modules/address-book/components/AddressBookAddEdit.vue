@@ -92,10 +92,12 @@
 
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex';
+import { isEmpty, throttle } from 'lodash';
+import { getAddressInfo } from '@kleros/address-tags-sdk';
+
 import NameResolver from '@/modules/name-resolver/index';
 import { toChecksumAddress, isAddress } from '@/core/helpers/addressUtils';
 import { isValidCoinAddress } from '../handlers/handlerMulticoins.js';
-import { isEmpty, throttle } from 'lodash';
 
 const modes = ['add', 'edit'];
 
@@ -296,6 +298,14 @@ export default {
           const resolvedName = await this.nameResolver.resolveAddress(
             this.addressToAdd
           );
+          if (resolvedName && !resolvedName.name) {
+            await getAddressInfo(
+              this.checksumAddressToAdd,
+              'https://ipfs.kleros.io'
+            ).then(data => {
+              this.nametag = data?.publicNameTag || '';
+            });
+          }
           this.resolvedAddr = resolvedName.name ? resolvedName.name : '';
         } catch (e) {
           this.nametag = '';
