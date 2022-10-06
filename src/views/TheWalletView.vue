@@ -108,7 +108,7 @@ export default {
   },
   beforeDestroy() {
     if (this.online && !this.isOfflineApp) this.web3.eth.clearSubscriptions();
-    if (window.ethereum) {
+    if (window.ethereum && window.ethereum.removeListener instanceof Function) {
       if (this.findAndSetNetwork instanceof Function)
         window.ethereum.removeListener('chainChanged', this.findAndSetNetwork);
       if (this.setWeb3Account instanceof Function)
