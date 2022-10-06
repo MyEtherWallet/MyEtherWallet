@@ -1,3 +1,6 @@
+### v5.9.1
+* Fix my wallets opening enkrypt instead of allowing users to access
+
 ### v5.9.0
 * CX migration notice, remove access via cx dashboard, remove quicksend
 

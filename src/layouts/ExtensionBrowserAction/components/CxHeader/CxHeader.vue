@@ -6,7 +6,9 @@
       While it will continue to work, eventually it may develop errors and
       security issues since it's not being updated. <br />
       We recommend downloading our new multichain browser wallet Enkrypt here:
-      <a href="https://enkrypt.com" target="_blank">https://enkrypt.com</a>
+      <a href="https://www.enkrypt.com" target="_blank"
+        >https://www.enkrypt.com</a
+      >
       <br />and migrating your wallet using this guide:
       <a
         href="https://help.myetherwallet.com/en/articles/6434663-migrating-from-mew-cx-to-enkrypt"

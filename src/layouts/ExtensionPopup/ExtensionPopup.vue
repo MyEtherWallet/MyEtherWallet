@@ -8,7 +8,7 @@
       />
     </div>
     <div v-else>
-      <welcome-container :add-wallet="addWallet" />
+      <welcome-container :add-wallet="openEnkrypt" />
     </div>
   </div>
 </template>
@@ -47,6 +47,15 @@ export default {
   methods: {
     ...mapActions('main', ['setENS', 'setWeb3Instance', 'switchNetwork']),
     addWallet() {
+      const chrome = window.chrome;
+      if (chrome.runtime.openOptionsPage) {
+        chrome.runtime.openOptionsPage();
+      } else {
+        // eslint-disable-next-line
+        window.open(chrome.runtime.getURL('index.html'));
+      }
+    },
+    openEnkrypt() {
       const chrome = window.chrome;
       if (chrome.runtime.openOptionsPage) {
         chrome.tabs.create({
