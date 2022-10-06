@@ -31,6 +31,10 @@ export default {
       type: Boolean,
       default: false
     },
+    mobileBackground: {
+      type: Boolean,
+      default: false
+    },
     loading: {
       type: Boolean,
       default: false
@@ -87,7 +91,8 @@ export default {
         this.flat ? '' : 'box-shadow',
         this.divider ? 'divider' : '',
         this.paddingAround ? 'padding-around' : '',
-        this.paddingSide ? 'padding-side' : ''
+        this.paddingSide ? 'padding-side' : '',
+        this.mobileBackground ? 'mobile-background' : ''
       ];
     }
   }
@@ -178,5 +183,8 @@ export default {
 .round-corner {
   border-radius: 8px;
   overflow: hidden;
+}
+.mobile-background {
+  background-color: var(--v-greyLight-base);
 }
 </style>
