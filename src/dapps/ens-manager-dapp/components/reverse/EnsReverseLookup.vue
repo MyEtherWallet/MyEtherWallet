@@ -65,6 +65,7 @@ import { mapGetters, mapState } from 'vuex';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import PermanentNameModule from '../../handlers/handlerPermanentName';
 import errorHandler from '@/modules/confirmation/handlers/errorHandler.js';
+import metainfo from '../../metainfo.js';
 export default {
   name: 'EnsReverseLookup',
   props: {
@@ -110,25 +111,38 @@ export default {
       return this.ensLookupResults || [];
     }
   },
+  watch: {
+    network() {
+      if (this.checkNetwork()) this.setup();
+    }
+  },
   async mounted() {
-    await this.findDomainByAddress();
-    const ens = this.network.type.ens
-      ? new ENS({
-          provider: this.web3.eth.currentProvider,
-          ensAddress: this.network.type.ens.registry
-        })
-      : null;
-    this.permHandler = new PermanentNameModule(
-      this.name,
-      this.address,
-      this.network,
-      this.web3,
-      ens,
-      this.durationPick
-    );
-    this.getReverseRecordNames();
+    if (this.checkNetwork()) await this.setup();
   },
   methods: {
+    checkNetwork() {
+      return metainfo.networks.find(
+        item => item.chainID === this.network.type.chainID
+      );
+    },
+    async setup() {
+      await this.findDomainByAddress();
+      const ens = this.network.type.ens
+        ? new ENS({
+            provider: this.web3.eth.currentProvider,
+            ensAddress: this.network.type.ens.registry
+          })
+        : null;
+      this.permHandler = new PermanentNameModule(
+        this.name,
+        this.address,
+        this.network,
+        this.web3,
+        ens,
+        this.durationPick
+      );
+      this.getReverseRecordNames();
+    },
     async fetchDomains() {
       return await this.ensManager.getAllNamesForAddress(this.address);
     },

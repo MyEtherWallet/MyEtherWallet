@@ -11,5 +11,6 @@ export default {
   swapRates: 'swapRates',
   globalError: 'globalError',
   enkrypt: 'enkrypt',
-  mewwallet: 'mewwallet'
+  mewwallet: 'mewwallet',
+  buySell: 'buySell'
 };

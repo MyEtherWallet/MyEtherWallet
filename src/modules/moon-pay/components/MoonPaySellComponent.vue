@@ -64,7 +64,7 @@
     <!-- ============================================================== -->
     <div v-if="!inWallet" class="mt-0">
       <div class="mew-heading-3 textDark--text mb-5">Refund address</div>
-      <ModuleAddressBook
+      <module-address-book
         ref="addressInput"
         label="Enter Crypto Address"
         :enable-save-address="false"
@@ -424,7 +424,7 @@ export default {
     }
   },
   mounted() {
-    this.$refs.addressInput.$refs.addressSelect.clear();
+    if (!this.inWallet) this.$refs.addressInput.$refs.addressSelect.clear();
     this.sendHandler = new handlerSend();
     this.fetchSellInfo();
     this.locGasPrice = this.gasPriceByType(this.gasPriceType);

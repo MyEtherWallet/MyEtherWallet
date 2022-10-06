@@ -68,7 +68,7 @@
         <div class="mew-heading-3 textDark--text mb-5">
           Where should we send your crypto?
         </div>
-        <ModuleAddressBook
+        <module-address-book
           ref="addressInput"
           label="Enter Crypto Address"
           :currency="selectedCryptoName"
@@ -108,7 +108,8 @@ import {
 import { getCurrency } from '@/modules/settings/components/currencyList';
 import { buyContracts } from './tokenList';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
-import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
+
+import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook.vue';
 
 export default {
   name: 'ModuleBuyEth',
@@ -139,7 +140,7 @@ export default {
         name: 'USD',
         value: 'USD',
         // eslint-disable-next-line
-                img: require(`@/assets/images/currencies/USD.svg`)
+        img: require(`@/assets/images/currencies/USD.svg`)
       },
       fetchedData: {},
       currencyRates: [],
@@ -409,8 +410,9 @@ export default {
           MATIC: 'MATIC'
         };
         if (
-          newVal.contract.toLowerCase() === MAIN_TOKEN_ADDRESS &&
-          !supportedCoins[newVal.symbol]
+          !newVal ||
+          (newVal?.contract?.toLowerCase() === MAIN_TOKEN_ADDRESS &&
+            !supportedCoins[newVal.symbol])
         ) {
           this.selectedCurrency = oldVal;
           return;
@@ -475,7 +477,7 @@ export default {
     }
   },
   mounted() {
-    this.$refs.addressInput.$refs.addressSelect.clear();
+    if (!this.inWallet) this.$refs.addressInput.$refs.addressSelect.clear();
     this.fetchCurrencyData();
   },
   methods: {

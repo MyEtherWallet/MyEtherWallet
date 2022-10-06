@@ -17,7 +17,7 @@
           Printable paper wallet content
           ===============================================
           -->
-    <div ref="printContainer" class="printable-wallet">
+    <div ref="printContainer" class="printable-wallet-content">
       <paper-wallet-to-print />
     </div>
 
@@ -26,10 +26,15 @@
           Paper wallet to show
           ===============================================
           -->
-    <paper-wallet-to-display />
+    <paper-wallet-to-display class="printable-wallet-display" />
 
     <div class="d-flex justify-center mt-12">
-      <mew-button title="Print" btn-size="xlarge" @click.native="print" />
+      <mew-button
+        class="printButton"
+        title="Print"
+        btn-size="xlarge"
+        @click.native="print"
+      />
     </div>
   </mew-overlay>
 </template>

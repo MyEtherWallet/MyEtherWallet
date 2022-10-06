@@ -94,7 +94,8 @@ export default {
     allowedDates(val) {
       return (
         moment(val).isSameOrBefore(moment()) &&
-        moment(val).isSameOrAfter(moment('2015-07-30'))
+        moment(val).isSameOrAfter(moment('2015-07-30')) &&
+        moment(val).isSameOrBefore(moment())
       );
     }
   }

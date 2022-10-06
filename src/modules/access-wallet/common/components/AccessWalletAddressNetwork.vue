@@ -318,6 +318,9 @@ export default {
     ...mapGetters('global', ['network']),
     ...mapState('addressBook', ['addressBookStore']),
     ...mapState('wallet', ['isOfflineApp']),
+    buttonDisabled() {
+      return !this.acceptTerms && this.selectedAddress === '';
+    },
     web3() {
       return new Web3(this.network.url);
     },
