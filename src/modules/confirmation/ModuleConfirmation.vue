@@ -110,7 +110,7 @@
               <b>Using Ledger?</b> Consider turning off 'debug data' before
               proceeding. Additional steps associated with the 'debug
               <br />
-              feature'on Ledger may be required to approve this transaction.
+              feature' on Ledger may be required to approve this transaction.
             </span>
           </div>
           <!-- transaction details -->
