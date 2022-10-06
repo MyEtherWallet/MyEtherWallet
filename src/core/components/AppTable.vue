@@ -47,6 +47,18 @@ export default {
       type: Boolean,
       default: false
     },
+    borderTopBottom: {
+      type: Boolean,
+      default: false
+    },
+    borderTop: {
+      type: Boolean,
+      default: false
+    },
+    borderBottom: {
+      type: Boolean,
+      default: false
+    },
     divider: {
       type: Boolean,
       default: false
@@ -86,6 +98,9 @@ export default {
         this.hoverEffect ? 'hover-effect' : '',
         this.background ? 'alteranting-background' : '',
         this.borderAround ? 'border-around' : '',
+        this.borderTopBottom ? 'border-top-bottom' : '',
+        this.borderTop ? 'border-top' : '',
+        this.borderBottom ? 'border-bottom' : '',
         this.roundCorner ? 'round-corner' : '',
         this.loading ? 'loading' : '',
         this.flat ? '' : 'box-shadow',
@@ -147,6 +162,16 @@ export default {
 .border-around {
   border: 1px solid var(--border-color);
 }
+.border-top-bottom {
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+}
+.border-top {
+  border-top: 1px solid var(--border-color);
+}
+.border-bottom {
+  border-bottom: 1px solid var(--border-color);
+}
 .hover-effect {
   tbody {
     tr:hover {
@@ -185,6 +210,6 @@ export default {
   overflow: hidden;
 }
 .mobile-background {
-  background-color: var(--v-greyLight-base);
+  background-color: var(--v-blueLight-base);
 }
 </style>

@@ -87,6 +87,7 @@
       :key="dataKey"
       class="mb-2"
       full-width
+      border-around
       padding-around
       flat
       round-corner
