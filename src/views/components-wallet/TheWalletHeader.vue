@@ -105,7 +105,7 @@
 <script>
 import moment from 'moment';
 import { mapState } from 'vuex';
-
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { MOONPAY_EVENT, MOONPAY_OFFER_END } from '@/modules/moon-pay/helpers';
 import { EventBus } from '@/core/plugins/eventBus';
 export default {
@@ -113,6 +113,7 @@ export default {
     notificationOverlay: () =>
       import('@/modules/notifications/ModuleNotifications')
   },
+  mixins: [handlerAnalytics],
   computed: {
     ...mapState('wallet', ['identifier']),
     ...mapState('global', ['online']),
@@ -136,6 +137,7 @@ export default {
   },
   methods: {
     buyCryptoNow() {
+      this.trackBuySell('buySellBuyCryptoNow');
       EventBus.$emit(MOONPAY_EVENT);
     }
   }
