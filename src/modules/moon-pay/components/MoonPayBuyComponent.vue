@@ -477,7 +477,7 @@ export default {
     }
   },
   mounted() {
-    if (!this.inWallet) this.$refs.addressInput.$refs.addressSelect.clear();
+    if (!this.inWallet) this.$refs.addressInput.$refs?.addressSelect.clear();
     this.fetchCurrencyData();
   },
   methods: {
