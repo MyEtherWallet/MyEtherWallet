@@ -21,12 +21,13 @@ import { Toast, WARNING } from '@/modules/toast/handler/handlerToast';
 import handlerAave from '../../handlers/handlerAave.mixin';
 import { INTEREST_TYPES } from '../../handlers/helpers';
 import AaveSelectInterest from '../AaveSelectInterest';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 export default {
   name: 'AaveSetAprOverlay',
   components: {
     AaveSelectInterest
   },
-  mixins: [handlerAave],
+  mixins: [handlerAave, handlerAnalytics],
   data() {
     return {
       rateType: ''
@@ -48,6 +49,7 @@ export default {
         Toast(`Selected rate is already ${e.type}`, {}, WARNING);
       } else {
         this.$emit('onConfirm', param);
+        this.trackDapp('aaveSetBorrowRate');
         this.close();
       }
     },

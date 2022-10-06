@@ -72,7 +72,10 @@
             </div>
           </div>
         </v-col>
-        <v-col class="d-flex align-center justify-end">
+        <v-col
+          style="max-width: 270px"
+          class="d-flex align-center justify-space-between"
+        >
           <div v-if="isAvailable" class="pr-md-3">
             <div class="mew-heading-4">{{ mintPrice }}</div>
             <div class="mew-heading-4 textLight--text">
