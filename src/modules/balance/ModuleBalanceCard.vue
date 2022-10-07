@@ -1,5 +1,5 @@
 <template>
-  <div class="component--wallet-card">
+  <div class="component--wallet-card theBalanceCard">
     <div class="mew-card drop-shadow">
       <img
         :src="'https://mewcard.mewapi.io/?address=' + address"
@@ -9,7 +9,7 @@
     </div>
     <div class="info-container pl-8 pr-5 py-4 text-shadow">
       <div class="d-flex flex-row justify-space-between align-start">
-        <div>
+        <div class="balanceMenu">
           <!--
           =====================================================================================
             Address
@@ -34,7 +34,10 @@
                 <v-icon color="textDark" class="mr-3">mdi-refresh</v-icon>
                 <v-list-item-title> Refresh Balance</v-list-item-title>
               </v-list-item>
-              <v-list-item class="cursor-pointer" @click="openPaperWallet">
+              <v-list-item
+                class="cursor-pointer openThePaperWallet"
+                @click="openPaperWallet"
+              >
                 <v-icon color="textDark" class="mr-3">mdi-printer</v-icon>
                 <v-list-item-title>View paper wallet</v-list-item-title>
               </v-list-item>
