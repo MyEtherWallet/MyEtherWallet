@@ -1202,9 +1202,16 @@ export default {
      */
     setMaxAmount() {
       this.trackSwap('setMaxValue');
+      const gasPrice = fromWei(
+        toBN(this.localGasPrice).muln(
+          this.currentTrade
+            ? Number.parseInt(this.totalGasLimit)
+            : MIN_GAS_LIMIT
+        )
+      );
       const availableBalanceMinusGas = new BigNumber(
         this.availableBalance
-      ).minus(fromWei(toBN(this.localGasPrice).muln(MIN_GAS_LIMIT)));
+      ).minus(gasPrice);
       this.tokenInValue = this.isFromTokenMain
         ? availableBalanceMinusGas.gt(0)
           ? availableBalanceMinusGas.toFixed()
