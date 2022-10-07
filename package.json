@@ -106,7 +106,7 @@
   },
   "devDependencies": {
     "@commitlint/config-conventional": "17.1.0",
-    "@ledgerhq/hw-app-eth": "6.29.7",
+    "@ledgerhq/hw-app-eth": "6.29.9",
     "@ledgerhq/hw-transport-web-ble": "6.27.1",
     "@ledgerhq/hw-transport-webusb": "6.27.1",
     "@ledgerhq/live-common": "27.2.0",
@@ -124,7 +124,7 @@
     "axios": "0.27.2",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "10.1.0",
-    "babel-jest": "29.0.3",
+    "babel-jest": "29.1.2",
     "bc-vault-js": "2.1.1",
     "bignumber.js": "9.1.0",
     "bip39": "3.0.4",
