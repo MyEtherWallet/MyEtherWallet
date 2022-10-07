@@ -297,9 +297,8 @@ export default {
     ]
   }),
   computed: {
-    ...mapState('wallet', ['web3']),
+    ...mapState('wallet', ['web3', 'address']),
     ...mapState('addressBook', ['addressBookStore']),
-    ...mapState('wallet', ['address']),
     ...mapGetters('global', ['network']),
     addresses() {
       return this.isHomePage
@@ -398,7 +397,8 @@ export default {
       return {
         data: {
           nonce,
-          gasPrice
+          gasPrice,
+          chainID
         },
         details: {
           address: this.fromAddress,
@@ -451,7 +451,8 @@ export default {
       let { data } = await this.data();
       data = {
         nonce: toHex(data.nonce),
-        gasPrice: toHex(data.gasPrice)
+        gasPrice: toHex(data.gasPrice),
+        chainID: toHex(data.chainID)
       };
       const blob = new Blob([JSON.stringify(data)], { type: 'mime' });
       this.fileLink = window.URL.createObjectURL(blob);

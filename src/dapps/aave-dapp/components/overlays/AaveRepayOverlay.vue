@@ -51,6 +51,7 @@ import { INTEREST_TYPES, AAVE_TABLE_TITLE } from '../../handlers/helpers';
 import { toBase } from '@/core/helpers/unit';
 import { MAX_UINT_AMOUNT } from '@aave/protocol-js';
 import BigNumber from 'bignumber.js';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 export default {
   name: 'AaveRepayOverlay',
@@ -58,7 +59,7 @@ export default {
     AaveAmountForm,
     AaveSummary
   },
-  mixins: [handlerAave],
+  mixins: [handlerAave, handlerAnalytics],
   data() {
     return {
       amount: '',
@@ -157,6 +158,7 @@ export default {
       this.step = 1;
     },
     handleConfirm() {
+      this.trackDapp('aaveRepayEvent');
       const isVariable = this.selectedTokenInUserSummary.variableBorrows > 0;
       const totalBorrow = isVariable
         ? this.selectedTokenInUserSummary.variableBorrows
@@ -173,7 +175,9 @@ export default {
           ? INTEREST_TYPES.variable
           : INTEREST_TYPES.stable
       };
-      this.$emit('onConfirm', param);
+      this.onRepay(param).then(() => {
+        this.trackDapp('aaveRepayDebt');
+      });
       this.handleCancel();
     },
     handleCancel() {

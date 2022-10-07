@@ -52,6 +52,7 @@ import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { toBase } from '@/core/helpers/unit';
 import { toBN, toHex } from 'web3-utils';
 import { MAX_UINT_AMOUNT } from '@aave/contract-helpers';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 export default {
   name: 'AaveWithdrawOverlay',
@@ -59,7 +60,7 @@ export default {
     AaveAmountForm,
     AaveSummary
   },
-  mixins: [handlerAave],
+  mixins: [handlerAave, handlerAnalytics],
   data() {
     return {
       step: 0,
@@ -159,6 +160,7 @@ export default {
       this.step = 1;
     },
     handleConfirm() {
+      this.trackDapp('aaveWithdrawEvent');
       this.amount =
         this.amount === this.selectedTokenInUserSummary.underlyingBalance
           ? toBN(MAX_UINT_AMOUNT)
@@ -168,7 +170,9 @@ export default {
         reserve: this.selectedTokenDetails.underlyingAsset,
         amount: toHex(this.amount)
       };
-      this.$emit('onConfirm', param);
+      this.onWithdraw(param).then(() => {
+        this.trackDapp('aaveWithdrawCollateral');
+      });
       this.step = 0;
       this.close();
     },
