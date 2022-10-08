@@ -194,11 +194,9 @@
           v-if="!isPending"
           has-full-width
           :btn-link="raribleLink"
+          title="Sell on OpenSea"
           @click.native="trackToRarible"
         >
-          <v-row class="align-center justify-center">
-            <div>Sell on OpenSea</div>
-          </v-row>
         </mew-button>
       </v-col>
       <!--

@@ -16,7 +16,6 @@
     "eth": "ETH"
   },
   "support-email": "support@myetherwallet.com",
-
   "updates": {
     "new": "New update downloaded! Please refresh your browser to receive the most updated version",
     "update-found": "New update found! Downloading...",
@@ -51,7 +50,7 @@
   "gas": {
     "limit": "Gas Limit (usually ranges from 21,000 to 500,000)"
   },
-  "clear-all": "Clear All",
+  "clear-all": "Clear all",
   "logout": "Logout",
   "settings": "Settings",
   "exit-dapp": "Exit Dapp",
