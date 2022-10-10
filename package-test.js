@@ -48,6 +48,7 @@ const EXCEPTIONS = [
   'vue-i18n',
   'vue',
   '@vue/cli-plugin-e2e-nightwatch',
+  '@kleros/address-tags-sdk',
   // breaking
   '@shapeshiftoss/hdwallet-core',
   '@shapeshiftoss/hdwallet-keepkey-webusb',
