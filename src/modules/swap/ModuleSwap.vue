@@ -1301,7 +1301,7 @@ export default {
       this.resetAddressValues({ clearTo: false });
       this.$nextTick(() => {
         if (value && value.name) {
-          this.trackSwap('from: ' + value.name);
+          this.trackSwapToken('from: ' + value.name);
         }
         this.setTokenInValue(this.tokenInValue);
       });
@@ -1320,7 +1320,7 @@ export default {
       this.toTokenType = value;
       this.resetAddressValues({ clearRefund: false });
       if (value && value.name) {
-        this.trackSwap('to: ' + value.name);
+        this.trackSwapToken('to: ' + value.name);
       }
       this.setTokenInValue(this.tokenInValue);
     },
