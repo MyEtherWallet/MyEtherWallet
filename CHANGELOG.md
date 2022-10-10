@@ -1,3 +1,6 @@
+### v5.9.2
+* Fix cx always opening enkrypt migration
+
 ### v5.9.1
 * Fix my wallets opening enkrypt instead of allowing users to access
 

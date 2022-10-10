@@ -209,13 +209,15 @@ function onActivatedCb(info) {
   });
 }
 
-function onInstalledCb() {
+function onInstalledCb(e) {
   chrome.runtime.onMessage.removeListener(eventsListeners);
   chrome.runtime.onMessage.addListener(eventsListeners);
-  chrome.tabs.create({
-    url:
-      'https://help.myetherwallet.com/en/articles/6434663-migrating-from-mew-cx-to-enkrypt'
-  });
+  if (e.reason && e.reason === 'update') {
+    chrome.tabs.create({
+      url:
+        'https://help.myetherwallet.com/en/articles/6434663-migrating-from-mew-cx-to-enkrypt'
+    });
+  }
 }
 
 function onStartupCb() {
