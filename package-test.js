@@ -72,7 +72,8 @@ const EXCEPTIONS = [
   '@ledgerhq/hw-transport-webusb',
   'uuid',
   'web3-eth-contract',
-  'is-ipfs'
+  'is-ipfs',
+  '@actions/github'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
