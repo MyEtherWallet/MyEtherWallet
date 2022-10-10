@@ -15,143 +15,153 @@
           -->
       <template #panelBody1>
         <div>
-          <v-radio-group v-model="selectedAddress">
-            <!--
-                =====================================================================================
-                  Table - Header
-                =====================================================================================
-                -->
-            <v-row dense class="table-header mx-0">
-              <v-col offset="3">
-                <p>Address</p>
-              </v-col>
-              <v-col v-if="!isOfflineApp" cols="4" sm="3">
-                <p class="text-center">{{ network.type.name }} Balance</p>
-              </v-col>
-            </v-row>
-            <!--
-                =====================================================================================
-                  Table - Address Row
-                =====================================================================================
-                -->
-            <v-row
-              v-for="index in 5"
-              v-show="isLoading"
-              :key="`${index}addressLoader`"
-              dense
-              class="table-row-class align-center justify-center py-2 mx-0"
-            >
-              <v-col md="9" sm="9">
-                <v-row
-                  dense
-                  class="align-center justify-start pl-1 pl-sm-3 pr-2 pr-sm-3"
-                >
-                  <v-col cols="12" class="d-flex flex-column">
-                    <v-skeleton-loader
-                      max-height="25"
-                      type="list-item-avatar"
-                      class="custom-skeleton-loader"
+          <app-table
+            v-if="!isMobile"
+            border-around
+            round-corner
+            background
+            full-width
+            flat
+            class="mt-4 mb-4"
+          >
+            <v-radio-group v-model="selectedAddress">
+              <!--
+                  =====================================================================================
+                    Table - Header
+                  =====================================================================================
+                  -->
+              <v-row dense class="table-header mx-0">
+                <v-col offset="3">
+                  <p>Address</p>
+                </v-col>
+                <v-col v-if="!isOfflineApp" cols="4" sm="3">
+                  <p class="text-center">{{ network.type.name }} Balance</p>
+                </v-col>
+              </v-row>
+              <!--
+                  =====================================================================================
+                    Table - Address Row
+                  =====================================================================================
+                  -->
+              <v-row
+                v-for="index in 5"
+                v-show="isLoading"
+                :key="`${index}addressLoader`"
+                dense
+                class="table-row-class align-center justify-center py-2 mx-0"
+              >
+                <v-col md="9" sm="9">
+                  <v-row
+                    dense
+                    class="align-center justify-start pl-1 pl-sm-3 pr-2 pr-sm-3"
+                  >
+                    <v-col cols="12" class="d-flex flex-column">
+                      <v-skeleton-loader
+                        max-height="25"
+                        type="list-item-avatar"
+                        class="custom-skeleton-loader"
+                      />
+                    </v-col>
+                  </v-row>
+                </v-col>
+                <v-col md="3" sm="3">
+                  <v-skeleton-loader
+                    type="list-item"
+                    max-height="25"
+                    class="custom-skeleton-loader"
+                  />
+                </v-col>
+              </v-row>
+              <v-row
+                v-for="acc in accounts"
+                v-show="!isLoading"
+                :key="acc.address"
+                dense
+                class="table-row-class align-center justify-center py-2 mx-0"
+              >
+                <v-col cols="1" sm="1">
+                  <v-radio label="" :value="acc.address" class="mx-2" />
+                </v-col>
+                <v-col cols="1" sm="1" class="text-center">
+                  {{ acc.idx }}
+                </v-col>
+                <v-col cols="7">
+                  <v-row
+                    dense
+                    class="align-center justify-start pl-1 pl-sm-3 pr-2 pr-sm-3"
+                  >
+                    <mew-blockie
+                      width="25px"
+                      height="25px"
+                      :address="acc.address"
+                      class="mr-2"
                     />
-                  </v-col>
-                </v-row>
-              </v-col>
-              <v-col md="3" sm="3">
-                <v-skeleton-loader
-                  type="list-item"
-                  max-height="25"
-                  class="custom-skeleton-loader"
-                />
-              </v-col>
-            </v-row>
-            <v-row
-              v-for="acc in accounts"
-              v-show="!isLoading"
-              :key="acc.address"
-              dense
-              class="table-row-class align-center justify-center py-2 mx-0"
-            >
-              <v-col cols="1" sm="1">
-                <v-radio label="" :value="acc.address" class="mx-2" />
-              </v-col>
-              <v-col cols="1" sm="1" class="text-center">
-                {{ acc.idx }}
-              </v-col>
-              <v-col cols="7">
-                <v-row
-                  dense
-                  class="align-center justify-start pl-1 pl-sm-3 pr-2 pr-sm-3"
-                >
-                  <mew-blockie
-                    width="25px"
-                    height="25px"
-                    :address="acc.address"
-                    class="mr-2"
-                  />
-                  <v-col cols="9" class="d-none d-sm-flex flex-column">
-                    <a
-                      :href="getExplorerLink(acc.address)"
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      <span v-if="acc.nickname" class="font-weight-bold">{{
-                        acc.nickname
-                      }}</span>
-                      <mew-transform-hash :hash="acc.address" />
-                      <span v-if="acc.ensName">{{ acc.ensName }}</span>
-                    </a>
-                  </v-col>
-                  <p class="d-block d-sm-none">
-                    {{ acc.address | concatAddressXS }}
+                    <v-col cols="9" class="d-none d-sm-flex flex-column">
+                      <a
+                        :href="getExplorerLink(acc.address)"
+                        rel="noopener noreferrer"
+                        target="_blank"
+                      >
+                        <span v-if="acc.nickname" class="font-weight-bold">{{
+                          acc.nickname
+                        }}</span>
+                        <mew-transform-hash :hash="acc.address" />
+                        <span v-if="acc.ensName">{{ acc.ensName }}</span>
+                      </a>
+                    </v-col>
+                    <p class="d-block d-sm-none">
+                      {{ acc.address | concatAddressXS }}
+                    </p>
+                    <mew-copy
+                      is-small
+                      tooltip="Copy Address"
+                      :copy-value="acc.address"
+                      class="ml-2"
+                    />
+                  </v-row>
+                </v-col>
+                <v-col v-if="!isOfflineApp" cols="3">
+                  <p class="balance-overflow text-center">
+                    {{
+                      acc.balance === 'Loading..'
+                        ? acc.balance
+                        : `${acc.balance} ${network.type.name}`
+                    }}
                   </p>
-                  <mew-copy
-                    is-small
-                    tooltip="Copy Address"
-                    :copy-value="acc.address"
-                    class="ml-2"
-                  />
-                </v-row>
-              </v-col>
-              <v-col v-if="!isOfflineApp" cols="3">
-                <p class="balance-overflow text-center">
-                  {{
-                    acc.balance === 'Loading..'
-                      ? acc.balance
-                      : `${acc.balance} ${network.type.name}`
-                  }}
-                </p>
-              </v-col>
+                </v-col>
+              </v-row>
+            </v-radio-group>
+            <!--
+                =====================================================================================
+                Previous / Next Buttons
+                =====================================================================================
+                -->
+            <v-row class="pb-6" align="center" justify="center">
+              <div>
+                <mew-button
+                  title="Previous"
+                  color-theme="basic"
+                  icon="mdi-chevron-left"
+                  icon-type="mdi"
+                  btn-size="small"
+                  icon-align="left"
+                  btn-style="transparent"
+                  :disabled="currentIdx === 0"
+                  @click.native="previousAddressSet"
+                />
+                <mew-button
+                  title="Next"
+                  color-theme="basic"
+                  icon="mdi-chevron-right"
+                  icon-type="mdi"
+                  btn-size="small"
+                  icon-align="right"
+                  btn-style="transparent"
+                  @click.native="nextAddressSet"
+                />
+              </div>
             </v-row>
-          </v-radio-group>
-          <!--
-              =====================================================================================
-               Previous / Next Buttons
-              =====================================================================================
-              -->
-          <v-row class="pb-6" align="center" justify="center">
-            <div>
-              <mew-button
-                title="Previous"
-                color-theme="basic"
-                icon="mdi-chevron-left"
-                icon-type="mdi"
-                btn-size="small"
-                icon-align="left"
-                btn-style="transparent"
-                :disabled="currentIdx === 0"
-                @click.native="previousAddressSet"
-              />
-              <mew-button
-                title="Next"
-                color-theme="basic"
-                icon="mdi-chevron-right"
-                icon-type="mdi"
-                btn-size="small"
-                icon-align="right"
-                btn-style="transparent"
-                @click.native="nextAddressSet"
-              />
-            </div>
-          </v-row>
+        </app-table>
         </div>
       </template>
       <!--
@@ -167,7 +177,7 @@
     </mew-expand-panel>
     <!--
         =====================================================================================
-         Terms
+        Terms
         =====================================================================================
         -->
     <div class="d-flex align-center flex-column py-6">
@@ -205,6 +215,7 @@ import { isEmpty, isEqual } from 'underscore';
 import ENS from '@ensdomains/ensjs';
 import Web3 from 'web3';
 import { isValidAddress } from 'ethereumjs-utils';
+import AppTable from '@/core/components/AppTable';
 
 const MAX_ADDRESSES = 5;
 
@@ -227,7 +238,8 @@ export default {
   components: {
     AppBtnRow,
     NetworkSwitch,
-    AccessWalletDerivationPath
+    AccessWalletDerivationPath,
+    AppTable
   },
   props: {
     handlerWallet: {
@@ -395,6 +407,9 @@ export default {
         return wallet.account;
       }
       return null;
+    },
+    isMobile() {
+      return this.$vuetify.breakpoint.mdAndDown;
     }
   },
   watch: {
