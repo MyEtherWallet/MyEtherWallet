@@ -454,7 +454,7 @@ export default {
   methods: {
     ...mapActions('wallet', ['removeWallet']),
     trackToSwap() {
-      this.trackSwap('swapPageView');
+      this.trackSwap('fromSideMenu');
     },
     trackBuySell() {
       this.trackBuySell('buySellHome');
