@@ -161,7 +161,7 @@
                 />
               </div>
             </v-row>
-        </app-table>
+          </app-table>
         </div>
       </template>
       <!--
