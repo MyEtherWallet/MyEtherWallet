@@ -51,6 +51,7 @@
                   :max-btn-obj="maxBtn"
                   @buyMore="openMoonpay"
                   @input="val => triggerSetTokenInValue(val, false)"
+                  @keyup.native="selectedMax = false"
               /></v-col>
               <v-col
                 cols="12"
@@ -307,6 +308,9 @@ import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalyti
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 import Swapper from './handlers/handlerSwap';
 import handleError from '../confirmation/handlers/errorHandler';
+import { fromBase, toBase } from '@/core/helpers/unit';
+import { toBNSafe } from '@/core/helpers/numberFormatHelper';
+import AppTransactionFee from '@/core/components/AppTransactionFee.vue';
 
 const MIN_GAS_LIMIT = 800000;
 let localContractToToken = {};
@@ -318,7 +322,7 @@ export default {
     ModuleAddressBook: () => import('@/modules/address-book/ModuleAddressBook'),
     SwapProvidersList: () => import('./components/SwapProvidersList.vue'),
     SwapProviderMentions: () => import('./components/SwapProviderMentions.vue'),
-    AppTransactionFee: () => import('@/core/components/AppTransactionFee.vue')
+    AppTransactionFee
   },
   mixins: [handlerAnalytics, buyMore],
   props: {
@@ -379,7 +383,8 @@ export default {
       localGasPrice: '0',
       mainTokenDetails: {},
       cachedAmount: '0',
-      selectedProviderId: undefined
+      selectedProviderId: undefined,
+      selectedMax: false
     };
   },
   computed: {
@@ -720,6 +725,9 @@ export default {
     txFee() {
       return toBN(this.totalGasLimit).mul(toBN(this.localGasPrice)).toString();
     },
+    txFeeETH() {
+      return fromWei(this.txFee);
+    },
     totalCost() {
       const amount = this.isFromTokenMain ? this.tokenInValue : '0';
       const amountWei = toWei(amount);
@@ -914,7 +922,9 @@ export default {
       this.trackSwap('tokenFromValueChanged');
     },
     gasPriceType() {
-      if (this.currentTrade) this.currentTrade.gasPrice = this.localGasPrice;
+      if (this.currentTrade) {
+        this.currentTrade.gasPrice = this.localGasPrice;
+      }
     },
     txFee: {
       handler: function () {
@@ -955,6 +965,7 @@ export default {
     },
     fromTokenType: {
       handler: function (newVal) {
+        this.selectedMax = false;
         this.fromTokenType = newVal;
       },
       deep: true,
@@ -962,10 +973,14 @@ export default {
     },
     toTokenType: {
       handler: function (newVal) {
+        this.selectedMax = false;
         this.toTokenType = newVal;
       },
       deep: true,
       immediate: false
+    },
+    txFeeETH(newVal) {
+      if (!isEmpty(this.fromTokenType)) this.localGasPriceWatcher(newVal);
     }
   },
   beforeMount() {
@@ -981,6 +996,23 @@ export default {
   methods: {
     ...mapActions('notifications', ['addNotification']),
     ...mapActions('swap', ['setSwapTokens']),
+    localGasPriceWatcher(newVal) {
+      const total = BigNumber(newVal).plus(this.tokenInValue);
+      const amt = toBase(this.tokenInValue, this.fromTokenType?.decimals);
+      const balance = toBNSafe(this.fromTokenType.balance);
+
+      if (
+        (this.selectedMax &&
+          this.fromTokenType &&
+          this.fromTokenType.contract === MAIN_TOKEN_ADDRESS &&
+          total.gt(this.balanceInETH)) ||
+        (this.fromTokenType &&
+          this.fromTokenType.contract !== MAIN_TOKEN_ADDRESS &&
+          balance.lt(amt))
+      ) {
+        this.setMaxAmount();
+      }
+    },
     resetSwapState() {
       this.mainTokenDetails = this.contractToToken(MAIN_TOKEN_ADDRESS);
       localContractToToken = {};
@@ -1137,6 +1169,7 @@ export default {
         actualTrade: {}
       };
 
+      this.selectedMax = false;
       this.swapper = null;
       this.toTokenType = {};
       this.fromTokenType = {};
@@ -1197,27 +1230,36 @@ export default {
         }
       this.selectedProvider = {};
     },
+    convertToDisplay(amount, decimals) {
+      const amt = toBNSafe(amount).toString();
+      return decimals ? fromBase(amt, decimals).toString() : amt;
+    },
     /**
      * Set the max available amount to swap from
      */
     setMaxAmount() {
       this.trackSwap('setMaxValue');
-      const gasPrice = fromWei(
-        toBN(this.localGasPrice).muln(
-          this.currentTrade
-            ? Number.parseInt(this.totalGasLimit)
-            : MIN_GAS_LIMIT
-        )
-      );
-      const availableBalanceMinusGas = new BigNumber(
-        this.availableBalance
-      ).minus(gasPrice);
-      this.tokenInValue = this.isFromTokenMain
-        ? availableBalanceMinusGas.gt(0)
-          ? availableBalanceMinusGas.toFixed()
-          : '0'
-        : this.availableBalance.toFixed();
+      if (
+        isEmpty(this.fromTokenType) ||
+        this.fromTokenType?.contract === MAIN_TOKEN_ADDRESS
+      ) {
+        const amt = BigNumber(this.balanceInETH).minus(this.txFeeETH);
+        this.setAmount(amt.lt(0) ? '0' : amt.toFixed(), true);
+      } else {
+        this.setAmount(
+          this.convertToDisplay(
+            this.fromTokenType.balance,
+            this.fromTokenType.decimals
+          ),
+          true
+        );
+      }
     },
+    setAmount: debounce(function (val, max) {
+      const value = val ? val : 0;
+      this.tokenInValue = BigNumber(value).toFixed();
+      this.selectedMax = max;
+    }, 500),
     /**
      * Gets the default from token
      */
