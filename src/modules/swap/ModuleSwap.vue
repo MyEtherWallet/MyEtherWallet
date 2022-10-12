@@ -307,12 +307,14 @@ import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalyti
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 import Swapper from './handlers/handlerSwap';
 import handleError from '../confirmation/handlers/errorHandler';
+import MewSelect from '@/components/MewSelect/MewSelect';
 
 const MIN_GAS_LIMIT = 800000;
 let localContractToToken = {};
 export default {
   name: 'ModuleSwap',
   components: {
+    MewSelect,
     AppButtonBalance: () => import('@/core/components/AppButtonBalance'),
     AppUserMsgBlock: () => import('@/core/components/AppUserMsgBlock'),
     ModuleAddressBook: () => import('@/modules/address-book/ModuleAddressBook'),
