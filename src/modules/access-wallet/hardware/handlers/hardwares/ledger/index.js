@@ -7,6 +7,9 @@ import webUsbTransport from '@ledgerhq/hw-transport-webusb';
 import openApp from '@ledgerhq/live-common/lib/hw/openApp';
 import getAppAndVersion from '@ledgerhq/live-common/lib/hw/getAppAndVersion';
 import attemptToQuitApp from '@ledgerhq/live-common/lib/hw/attemptToQuitApp';
+import Vue from 'vue';
+import { rlp } from 'ethereumjs-util';
+import TransportWebBLE from '@ledgerhq/hw-transport-web-ble';
 
 import { appNames } from './config';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
@@ -25,10 +28,7 @@ import {
 } from '@/modules/access-wallet/common/helpers';
 import toBuffer from '@/core/helpers/toBuffer';
 import errorHandler from './errorHandler';
-import Vue from 'vue';
 import ledger from '@/assets/images/icons/wallets/ledger.svg';
-import { rlp } from 'ethereumjs-util';
-import TransportWebBLE from '@ledgerhq/hw-transport-web-ble';
 import { EventBus } from '@/core/plugins/eventBus.js';
 import { Toast, WARNING } from '@/modules/toast/handler/handlerToast';
 
@@ -66,12 +66,13 @@ class ledgerWallet {
           return new Promise(resolve => {
             setTimeout(async () => {
               this.transport = bluetooth
-                ? await getLedgerXTransport()
-                : await getLedgerTransport();
+                ? await getLedgerXTransport(this.transport.device)
+                : await getLedgerTransport(6000);
               resolve();
             }, 250);
           });
         });
+        console.log('gets past openApp');
       }
     } catch (er) {
       if (this.openedApp === undefined) {
@@ -221,11 +222,15 @@ const isWebUsbSupported = async () => {
   return isSupported && platform.name !== 'Opera';
 };
 
-const getLedgerTransport = async () => {
+const getLedgerTransport = async (timeout = 3000) => {
   const support = await isWebUsbSupported();
   if (support) {
     return webUsbTransport.openConnected().then(res => {
-      if (!res) return webUsbTransport.create();
+      if (!res) {
+        console.log('b');
+        return webUsbTransport.create(timeout);
+      }
+      console.log('c');
       return res;
     });
   }
@@ -237,11 +242,13 @@ const isWebBLESupported = async () => {
   return isSupported && platform.name !== 'Opera';
 };
 
-const getLedgerXTransport = async () => {
+const getLedgerXTransport = async (device = null) => {
   let transport;
   const support = await isWebBLESupported();
   if (support) {
-    transport = await TransportWebBLE.create();
+    transport = device
+      ? await TransportWebBLE.open(device)
+      : await TransportWebBLE.create();
     transport.on('disconnect', () => {
       transport = null;
       EventBus.$emit('bleDisconnect');

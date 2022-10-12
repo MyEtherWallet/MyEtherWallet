@@ -619,12 +619,16 @@ export default {
   },
   methods: {
     rejectTransaction() {
+      if (this.isSwap) this.trackSwap('swapRejected');
       this.resolver({ rejected: true });
       this.reset();
     },
     sendCrossChain(bool) {
       this.trackSwap('swapSendCrossChain');
       this.resolver(bool);
+    },
+    swapFailed() {
+      this.trackSwap('swapFailed');
     },
     dataToAction(data) {
       return dataToAction(data);
@@ -703,25 +707,29 @@ export default {
         );
         _tx.gasLimit = _tx.gas;
         setEvents(promiEvent, _tx, this.$store.dispatch);
-        promiEvent.once('transactionHash', hash => {
-          const storeKey = sha3(
-            `${this.network.type.name}-${this.address.toLowerCase()}`
-          );
-          const localStoredObj = locStore.get(storeKey);
-          locStore.set(storeKey, {
-            nonce: sanitizeHex(
-              new BigNumber(localStoredObj.nonce).plus(1).toString(16)
-            ),
-            timestamp: localStoredObj.timestamp
-          });
-          if (idx + 1 === _arr.length) {
-            if (this.isSwap) {
-              this.showSuccessSwap = true;
+        promiEvent
+          .once('transactionHash', hash => {
+            const storeKey = sha3(
+              `${this.network.type.name}-${this.address.toLowerCase()}`
+            );
+            const localStoredObj = locStore.get(storeKey);
+            locStore.set(storeKey, {
+              nonce: sanitizeHex(
+                new BigNumber(localStoredObj.nonce).plus(1).toString(16)
+              ),
+              timestamp: localStoredObj.timestamp
+            });
+            if (idx + 1 === _arr.length) {
+              if (this.isSwap) {
+                this.showSuccessSwap = true;
+              }
+              this.reset();
+              this.showSuccess(hash);
             }
-            this.reset();
-            this.showSuccess(hash);
-          }
-        });
+          })
+          .catch(() => {
+            if (this.isSwap) this.swapFailed();
+          });
         return promiEvent;
       });
       this.resolver(promises);
@@ -740,7 +748,6 @@ export default {
     },
     showSuccess(param) {
       if (this.isSwap) {
-        this.trackSwap('successModal');
         this.trackSwap('swapTransactionSuccessfullySent');
       }
       if (isArray(param)) {
@@ -784,6 +791,7 @@ export default {
             this.showSuccess(res);
           })
           .catch(e => {
+            if (this.isSwap) this.swapFailed();
             this.signedTxObject = {};
             this.error = errorHandler(e);
             this.signing = false;
@@ -799,6 +807,7 @@ export default {
             }
           })
           .catch(e => {
+            if (this.isSwap) this.swapFailed();
             this.signedTxObject = {};
             this.error = errorHandler(e);
             this.signing = false;
@@ -842,6 +851,7 @@ export default {
                 });
               })
               .catch(e => {
+                if (this.isSwap) this.swapFailed();
                 this.instance.errorHandler(e.message);
               });
           }

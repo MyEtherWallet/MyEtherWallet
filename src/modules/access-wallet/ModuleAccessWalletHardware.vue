@@ -745,6 +745,7 @@ export default {
       this.wallets[this.walletType]
         .create(path, this.ledgerBluetooth, this.getLedgerApp)
         .then(_hwWallet => {
+          console.log('what');
           try {
             this.loaded = true;
             if (this.onLedgerX || this.onLedger) this.nextStep();
@@ -777,6 +778,7 @@ export default {
           }
         })
         .catch(err => {
+          console.log('the');
           if (this.onLedger || this.onLedgerX) this.step--;
           if (this.wallets[this.walletType]) {
             this.wallets[this.walletType].create.errorHandler(err);

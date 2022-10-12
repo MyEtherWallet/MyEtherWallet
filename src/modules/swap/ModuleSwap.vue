@@ -988,17 +988,23 @@ export default {
       this.setupSwap();
     },
     checkMultiChainToken(item) {
-      const multiChainTokens = ['USDT', 'SRM']; // Hardcoding for now
+      const multiChainTokens = ['USDT', 'SRM', 'DOGE']; // Hardcoding for now
       const name = item.name;
-      if (name.includes('SOL') || name.includes('OMNI')) {
+      if (
+        name.includes('SOL') ||
+        name.includes('OMNI') ||
+        name.includes('DOGE')
+      ) {
         for (let i = 0; i < multiChainTokens.length; i++) {
           const token = multiChainTokens[i];
           if (name.includes(token)) {
             const networks = {
               OMNI: 'Omni',
-              SOL: 'Solana'
+              SOL: 'Solana',
+              DOGE: 'Dogecoin'
             };
-            const contractNetwork = networks[name.replace(token, '')];
+            const contractNetwork =
+              networks[name !== 'DOGE' ? name.replace(token, '') : name];
             item.subtext = `${token} - ${contractNetwork}`;
             break;
           }
@@ -1295,7 +1301,7 @@ export default {
       this.resetAddressValues({ clearTo: false });
       this.$nextTick(() => {
         if (value && value.name) {
-          this.trackSwap('from: ' + value.name);
+          this.trackSwapToken('from: ' + value.name);
         }
         this.setTokenInValue(this.tokenInValue);
       });
@@ -1314,7 +1320,7 @@ export default {
       this.toTokenType = value;
       this.resetAddressValues({ clearRefund: false });
       if (value && value.name) {
-        this.trackSwap('to: ' + value.name);
+        this.trackSwapToken('to: ' + value.name);
       }
       this.setTokenInValue(this.tokenInValue);
     },
