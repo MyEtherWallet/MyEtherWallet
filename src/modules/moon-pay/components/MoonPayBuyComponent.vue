@@ -26,6 +26,7 @@
           type="number"
           :error-messages="amountErrorMessages"
           class="mr-2"
+          @keydown.native="preventCharE($event)"
         />
         <mew-select
           v-model="selectedFiat"
@@ -592,6 +593,9 @@ export default {
         this.selectedCurrency,
         this.selectedFiat
       ]);
+    },
+    preventCharE(e) {
+      if (e.key === 'e') e.preventDefault();
     }
   }
 };
