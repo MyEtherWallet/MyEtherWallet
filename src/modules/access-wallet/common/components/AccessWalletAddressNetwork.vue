@@ -14,6 +14,36 @@
           =====================================================================================
           -->
       <template #panelBody1>
+        <app-table background full-width flat>
+          <table>
+            <thead>
+              <tr>
+                <td></td>
+                <td>ADDRESS</td>
+                <td>ETH BALANCE</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td></td>
+                <td>ADDRESS</td>
+                <td>
+                  ETH BALANCE
+                  <app-copy-btn copy-value="aaa">
+                    <v-btn x-small icon color="greenPrimary">
+                      <img
+                        src="@/assets/images/icons/icon-copy-green.svg"
+                        alt="copy"
+                        height="13"
+                      />
+                    </v-btn>
+                  </app-copy-btn>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </app-table>
+
         <div>
           <v-radio-group v-model="selectedAddress">
             <!--
@@ -193,6 +223,8 @@
   </div>
 </template>
 <script>
+import AppCopyBtn from '@/core/components/AppCopyBtn';
+import AppTable from '@/core/components/AppTable';
 import AppBtnRow from '@/core/components/AppBtnRow';
 import NetworkSwitch from '@/modules/network/components/NetworkSwitch.vue';
 import AccessWalletDerivationPath from '@/modules/access-wallet/hardware/components/AccessWalletDerivationPath.vue';
@@ -225,6 +257,8 @@ export default {
     }
   },
   components: {
+    AppCopyBtn,
+    AppTable,
     AppBtnRow,
     NetworkSwitch,
     AccessWalletDerivationPath
