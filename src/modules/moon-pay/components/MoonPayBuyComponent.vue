@@ -42,7 +42,7 @@
             {{ cryptoToFiat }}
             <span class="mew-heading-3 pl-1">{{ selectedCryptoName }}</span>
             <div class="mr-1 textDark--text">&nbsp;≈ {{ plusFeeF }}</div>
-            <mew-tooltip style="height: 23px">
+            <mew-tooltip style="height: 21px">
               <template #contentSlot>
                 <div>
                   {{ includesFeeText }}
