@@ -6,15 +6,13 @@
   -->
   <v-select
     v-model="selectModel"
-    height="62"
     class="mew-select rounded-lg"
     color="primary"
     append-icon="mdi-chevron-down"
     :items="selectItems"
     item-text="name"
     item-value="value"
-    :label="labelPlaceholder"
-    :style="labelStyle"
+    :label="label"
     :hide-selected="loading"
     :disabled="disabled"
     :error-messages="errorMessages"
@@ -330,10 +328,7 @@ export default {
     return {
       selectModel: null,
       selectItems: [],
-      search: '',
-      labelStyle: {
-        margin: ''
-      }
+      search: ''
     };
   },
   computed: {
@@ -341,12 +336,6 @@ export default {
       return this.items.find(obj => {
         return obj.selectLabel || obj.name;
       });
-    },
-    labelPlaceholder() {
-      if (this.loading) {
-        return `(this.labelStyle.margin = this.loading ? '' : '20px')`;
-      }
-      return this.label;
     }
   },
   watch: {
@@ -446,6 +435,7 @@ export default {
   * Mew Select styles
   */
 .mew-select {
+  height: 62px;
   .mdi-chevron-down {
     color: var(--v-titlePrimary-base);
     cursor: pointer;
