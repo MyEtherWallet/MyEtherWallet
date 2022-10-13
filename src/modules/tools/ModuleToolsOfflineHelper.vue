@@ -565,8 +565,8 @@ export default {
         if (!addressMatch)
           this.alerts.push({
             name: 'addressMatch',
-            severity: 'warning',
-            title: 'Warning',
+            severity: 'error',
+            title: 'Error',
             message: 'Signer does not match selected address!'
           });
         if (BigNumber(balance).lt(fee))
