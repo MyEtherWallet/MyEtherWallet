@@ -82,6 +82,10 @@ export default {
     roundCorner: {
       type: Boolean,
       default: false
+    },
+    noTablePadding: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -107,7 +111,8 @@ export default {
         this.divider ? 'divider' : '',
         this.paddingAround ? 'padding-around' : '',
         this.paddingSide ? 'padding-side' : '',
-        this.mobileBackground ? 'mobile-background' : ''
+        this.mobileBackground ? 'mobile-background' : '',
+        this.noTablePadding ? 'no-table-padding' : ''
       ];
     }
   }
@@ -211,5 +216,18 @@ export default {
 }
 .mobile-background {
   background-color: var(--v-blueLight-base);
+}
+.no-table-padding {
+  table {
+    td {
+      padding: 0 !important;
+    }
+    td:first-child {
+      padding-left: 15px !important;
+    }
+    td:last-child {
+      padding-right: 15px !important;
+    }
+  }
 }
 </style>

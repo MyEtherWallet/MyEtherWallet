@@ -14,144 +14,110 @@
           =====================================================================================
           -->
       <template #panelBody1>
-        <app-table background full-width flat>
-          <table>
-            <thead>
-              <tr>
-                <td></td>
-                <td>ADDRESS</td>
-                <td>ETH BALANCE</td>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td></td>
-                <td>ADDRESS</td>
-                <td>
-                  ETH BALANCE
-                  <app-copy-btn copy-value="aaa">
-                    <v-btn x-small icon color="greenPrimary">
-                      <img
-                        src="@/assets/images/icons/icon-copy-green.svg"
-                        alt="copy"
-                        height="13"
+        <v-radio-group v-model="selectedAddress">
+          <app-table
+            :loader-count="5"
+            background
+            full-width
+            flat
+            :loading="isLoading"
+            :no-table-padding="isMobile"
+          >
+            <table>
+              <thead>
+                <tr>
+                  <td style="width: 55px; padding-right: 0"></td>
+                  <td v-if="!isMobile" style="padding: 0"></td>
+                  <td>ADDRESS</td>
+                  <td v-if="!isOfflineApp" class="text-right">
+                    <span v-if="!isMobile">{{ network.type.name }}</span>
+                    BALANCE
+                  </td>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr v-for="acc in accounts" :key="acc.address">
+                  <td style="padding-right: 0">
+                    <v-radio label="" :value="acc.address" class="mb-0" />
+                  </td>
+                  <td v-if="!isMobile" style="padding: 0">{{ acc.idx }}</td>
+                  <td>
+                    <div class="d-flex align-center flex-shrink-1">
+                      <mew-blockie
+                        width="21px"
+                        height="21px"
+                        :address="acc.address"
+                        class="mr-2"
                       />
-                    </v-btn>
-                  </app-copy-btn>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </app-table>
+                      <div>
+                        <div
+                          v-if="acc.nickname"
+                          class="font-weight-bold mew-label"
+                        >
+                          {{ acc.nickname }}
+                        </div>
+                        <div class="d-flex align-center">
+                          <mew-transform-hash
+                            style="
+                              width: 34vw;
+                              max-width: 220px;
+                              min-width: 100px;
+                            "
+                            :hash="acc.address"
+                          />
+                          <app-copy-btn
+                            v-if="!isMobile"
+                            class="ml-2"
+                            :copy-value="acc.address"
+                          >
+                            <v-btn x-small icon color="greenPrimary">
+                              <img
+                                src="@/assets/images/icons/icon-copy-green.svg"
+                                alt="copy"
+                                height="13"
+                              />
+                            </v-btn>
+                          </app-copy-btn>
+                          <a
+                            v-if="!isMobile"
+                            :href="getExplorerLink(acc.address)"
+                            rel="noopener noreferrer"
+                            target="_blank"
+                          >
+                            <v-btn x-small icon color="greenPrimary">
+                              <img
+                                src="@/assets/images/icons/icon-arrow-top-right-green.svg"
+                                alt="copy"
+                                height="13"
+                              />
+                            </v-btn>
+                          </a>
+                        </div>
+
+                        <div v-if="acc.ensName" class="mew-label">
+                          {{ acc.ensName }}
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="d-flex justify-end align-center">
+                    <div
+                      v-if="!isOfflineApp"
+                      class="balance-overflow text-right mew-label"
+                      style="width: 18vw; max-width: 81px"
+                    >
+                      {{ acc.balance }}
+                      <span v-if="!isMobile">{{ network.type.name }}</span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </app-table>
+        </v-radio-group>
 
         <div>
-          <v-radio-group v-model="selectedAddress">
-            <!--
-                =====================================================================================
-                  Table - Header
-                =====================================================================================
-                -->
-            <v-row dense class="table-header mx-0">
-              <v-col offset="3">
-                <p>Address</p>
-              </v-col>
-              <v-col v-if="!isOfflineApp" cols="4" sm="3">
-                <p class="text-center">{{ network.type.name }} Balance</p>
-              </v-col>
-            </v-row>
-            <!--
-                =====================================================================================
-                  Table - Address Row
-                =====================================================================================
-                -->
-            <v-row
-              v-for="index in 5"
-              v-show="isLoading"
-              :key="`${index}addressLoader`"
-              dense
-              class="table-row-class align-center justify-center py-2 mx-0"
-            >
-              <v-col md="9" sm="9">
-                <v-row
-                  dense
-                  class="align-center justify-start pl-1 pl-sm-3 pr-2 pr-sm-3"
-                >
-                  <v-col cols="12" class="d-flex flex-column">
-                    <v-skeleton-loader
-                      max-height="25"
-                      type="list-item-avatar"
-                      class="custom-skeleton-loader"
-                    />
-                  </v-col>
-                </v-row>
-              </v-col>
-              <v-col md="3" sm="3">
-                <v-skeleton-loader
-                  type="list-item"
-                  max-height="25"
-                  class="custom-skeleton-loader"
-                />
-              </v-col>
-            </v-row>
-            <v-row
-              v-for="acc in accounts"
-              v-show="!isLoading"
-              :key="acc.address"
-              dense
-              class="table-row-class align-center justify-center py-2 mx-0"
-            >
-              <v-col cols="1" sm="1">
-                <v-radio label="" :value="acc.address" class="mx-2" />
-              </v-col>
-              <v-col cols="1" sm="1" class="text-center">
-                {{ acc.idx }}
-              </v-col>
-              <v-col cols="7">
-                <v-row
-                  dense
-                  class="align-center justify-start pl-1 pl-sm-3 pr-2 pr-sm-3"
-                >
-                  <mew-blockie
-                    width="25px"
-                    height="25px"
-                    :address="acc.address"
-                    class="mr-2"
-                  />
-                  <v-col cols="9" class="d-none d-sm-flex flex-column">
-                    <a
-                      :href="getExplorerLink(acc.address)"
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      <span v-if="acc.nickname" class="font-weight-bold">{{
-                        acc.nickname
-                      }}</span>
-                      <mew-transform-hash :hash="acc.address" />
-                      <span v-if="acc.ensName">{{ acc.ensName }}</span>
-                    </a>
-                  </v-col>
-                  <p class="d-block d-sm-none">
-                    {{ acc.address | concatAddressXS }}
-                  </p>
-                  <mew-copy
-                    is-small
-                    tooltip="Copy Address"
-                    :copy-value="acc.address"
-                    class="ml-2"
-                  />
-                </v-row>
-              </v-col>
-              <v-col v-if="!isOfflineApp" cols="3">
-                <p class="balance-overflow text-center">
-                  {{
-                    acc.balance === 'Loading..'
-                      ? acc.balance
-                      : `${acc.balance} ${network.type.name}`
-                  }}
-                </p>
-              </v-col>
-            </v-row>
-          </v-radio-group>
           <!--
               =====================================================================================
                Previous / Next Buttons
@@ -429,6 +395,9 @@ export default {
         return wallet.account;
       }
       return null;
+    },
+    isMobile() {
+      return this.$vuetify.breakpoint.smAndDown;
     }
   },
   watch: {
