@@ -515,7 +515,6 @@ export default {
     }
   },
   created() {
-    console.log('get here again?');
     const _self = this;
     /**
      * receives an @Array
@@ -579,7 +578,6 @@ export default {
       }
     );
     EventBus.$on(EventNames.SHOW_MSG_CONFIRM_MODAL, (msg, resolver) => {
-      console.log(msg);
       _self.title = 'Message Signed';
       _self.instance
         .signMessage(msg)
