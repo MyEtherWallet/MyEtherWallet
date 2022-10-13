@@ -90,7 +90,7 @@
 
             <v-list-item
               :class="[!hasSwap ? 'opacity--30 pointer-event--none' : '']"
-              class="px-0"
+              class="px-0 SwapButton"
               :to="{ name: ROUTES_WALLET.SWAP.NAME }"
               @click="trackToSwap"
             >

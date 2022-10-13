@@ -36,6 +36,7 @@
                   label="Amount"
                   placeholder="0"
                   type="number"
+                  class="FromAmountInput"
                   :value="tokenInValue"
                   :persistent-hint="true"
                   :error-messages="amountErrorMessage"
@@ -62,7 +63,7 @@
                 <div class="d-flex align-center justify-center pb-sm-10">
                   <mew-icon-button
                     mdi-icon="swap-horizontal"
-                    class="pa-2 d-flex align-center justify-center"
+                    class="pa-2 d-flex align-center justify-center SwitchTokens"
                     color-theme="basic"
                     btn-style="light"
                     :disabled="!enableTokenSwitch"
@@ -77,6 +78,7 @@
                   :is-custom="true"
                   :loading="isLoading"
                   label="To"
+                  class="ToTokenSelect"
                   @input="setToToken"
                 />
                 <mew-input
@@ -122,6 +124,7 @@
             <module-address-book
               v-if="isFromNonChain"
               ref="refundAddressInput"
+              class="FromAddressInput"
               :label="nativeLabel"
               :is-valid-address-func="isValidRefundAddress"
               @setAddress="setRefundAddr"
@@ -129,6 +132,7 @@
             <module-address-book
               v-show="showToAddress"
               ref="toAddressInput"
+              class="ToAddressInput"
               :is-valid-address-func="isValidToAddress"
               :label="toAddressLabel"
               @setAddress="setToAddress"
@@ -266,6 +270,7 @@
                   :has-full-width="true"
                   :disabled="disableNext"
                   btn-size="xlarge"
+                  class="NextButton"
                   style="max-width: 240px"
                   @click.native="showConfirm()"
                 />
