@@ -16,7 +16,7 @@
           'd-flex align-center justify-space-between'
         ]"
       >
-        <div v-if="!promoOver" class="d-flex align-center">
+        <div v-if="!promoOver && !isOfflineApp" class="d-flex align-center">
           <div class="party-popper-container ml-2 mr-3 d-flex pa-3">
             <img
               src="@/assets/images/icons/icon-party-popper.png"
@@ -56,7 +56,7 @@
             </div>
           </div>
         </div>
-        <div v-else class="eth-banner d-flex">
+        <div v-else-if="promoOver && !isOfflineApp" class="eth-banner d-flex">
           <div class="mr-5">
             <mew6-white-sheet class="pa-3">
               <v-icon color="black"> mdi-bank </v-icon>
@@ -115,7 +115,7 @@ export default {
   },
   mixins: [handlerAnalytics],
   computed: {
-    ...mapState('wallet', ['identifier']),
+    ...mapState('wallet', ['identifier', 'isOfflineApp']),
     ...mapState('global', ['online']),
     daysLeft() {
       const eventDate = moment(MOONPAY_OFFER_END);

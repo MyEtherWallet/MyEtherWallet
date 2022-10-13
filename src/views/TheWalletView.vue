@@ -9,7 +9,7 @@
         <router-view />
       </v-container>
     </v-main>
-    <the-wallet-footer />
+    <the-wallet-footer :is-offline-app="isOfflineApp" />
     <enkrypt-promo-snackbar v-if="!isOfflineApp" />
   </div>
 </template>

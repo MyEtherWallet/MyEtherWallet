@@ -10,11 +10,7 @@
     >
       <template #prepend>
         <mew-overlay
-          :footer="{
-            text: 'Need help?',
-            linkTitle: 'Contact support',
-            link: 'mailto:support@myetherwallet.com'
-          }"
+          :footer="footer"
           :show-overlay="isOpenNetworkOverlay || !validNetwork"
           :title="
             validNetwork
@@ -313,7 +309,12 @@ export default {
         [ROUTES_WALLET.SWAP.NAME]: [ETH, BSC, MATIC],
         [ROUTES_WALLET.NFT_MANAGER.NAME]: [ETH]
       },
-      ROUTES_WALLET: ROUTES_WALLET
+      ROUTES_WALLET: ROUTES_WALLET,
+      footer: {
+        text: 'Need help?',
+        linkTitle: 'Contact support',
+        link: 'mailto:support@myetherwallet.com'
+      }
     };
   },
   computed: {
@@ -439,6 +440,12 @@ export default {
     // If no menu item is selected on load, redirect user to Dashboard
     if (!this.isOfflineApp) {
       this.redirectToDashboard();
+    } else {
+      this.footer = {
+        text: 'Need help? Email us at support@myetherwallet.com',
+        linkTitle: '',
+        link: ''
+      };
     }
 
     if (this.$route.name == ROUTES_WALLET.SETTINGS.NAME) {
