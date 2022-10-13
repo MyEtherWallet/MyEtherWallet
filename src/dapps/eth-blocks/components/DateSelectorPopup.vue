@@ -14,6 +14,7 @@
             <v-date-picker
               v-model="date"
               :allowed-dates="allowedDates"
+              :max="new Date().toISOString()"
               min="2015-07-30"
               color="#05C0A5"
               full-width
