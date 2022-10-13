@@ -1,3 +1,34 @@
+### devop
+
+* * Add tracking to Buy Sell component [#4220](https://github.com/MyEtherWallet/MyEtherWallet/pull/4220)
+* Switch offline network with imported JSON [#4222](https://github.com/MyEtherWallet/MyEtherWallet/pull/4222)
+* Add e2e send transaction test [#4240](https://github.com/MyEtherWallet/MyEtherWallet/pull/4240)
+* * print wallet e2e testing [#4244](https://github.com/MyEtherWallet/MyEtherWallet/pull/4244)
+* change workflow to only run on staging [#4248](https://github.com/MyEtherWallet/MyEtherWallet/pull/4248)
+* add new matomo changes [#4267](https://github.com/MyEtherWallet/MyEtherWallet/pull/4267)
+* add more matomo changes [#4275](https://github.com/MyEtherWallet/MyEtherWallet/pull/4275)
+
+### feat
+
+* add back kleros [#4255](https://github.com/MyEtherWallet/MyEtherWallet/pull/4255)
+
+### fix
+
+* Fix Aave health factor displaying NaN or '-1.000' [#4164](https://github.com/MyEtherWallet/MyEtherWallet/pull/4164)
+* * Handles e as input in Module Send [#4206](https://github.com/MyEtherWallet/MyEtherWallet/pull/4206)
+* Fix duplicate DOGE token on swap page [#4211](https://github.com/MyEtherWallet/MyEtherWallet/pull/4211)
+* * fix decimal input gets deleted [#4214](https://github.com/MyEtherWallet/MyEtherWallet/pull/4214)
+* * add aave to features section [#4217](https://github.com/MyEtherWallet/MyEtherWallet/pull/4217)
+* * fix live learn more link [#4219](https://github.com/MyEtherWallet/MyEtherWallet/pull/4219)
+* * Fix Moonbeam switch error pertaining to incorrect block number [#4223](https://github.com/MyEtherWallet/MyEtherWallet/pull/4223)
+* Fix Sentry Cannot read properties of undefined (reading 'contract') [#4224](https://github.com/MyEtherWallet/MyEtherWallet/pull/4224)
+* * Disable Sign button when no input [#4226](https://github.com/MyEtherWallet/MyEtherWallet/pull/4226)
+* Fix Sentry Cannot read properties of undefined (reading 'toLowerCase') on MoonpayBuy [#4227](https://github.com/MyEtherWallet/MyEtherWallet/pull/4227)
+* * fix mint me token not showing issue [#4231](https://github.com/MyEtherWallet/MyEtherWallet/pull/4231)
+* * fix eth block search result alignment [#4232](https://github.com/MyEtherWallet/MyEtherWallet/pull/4232)
+* Network change not updating ENS reverse domains [#4234](https://github.com/MyEtherWallet/MyEtherWallet/pull/4234)
+* Sentry Error Cannot read properties of null (reading 'message') on TheWalletView [#4235](https://github.com/MyEtherWallet/MyEtherWallet/pull/4235)
+
 ### Release v6.6.7
 
 ### ui

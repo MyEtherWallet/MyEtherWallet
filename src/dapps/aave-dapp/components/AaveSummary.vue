@@ -200,6 +200,10 @@ export default {
           icon: this.tokenIcon
         }
       ];
+      const realHealthFactor =
+        this.currentHealthFactor === '-'
+          ? this.nextHealthFactor
+          : this.currentHealthFactor;
       switch (this.actionType.toLowerCase()) {
         /**
          * Case: Aave Deposit, Withdraw and Collateral Summary
@@ -221,13 +225,15 @@ export default {
               tooltip: this.nextHealthFactorTooltip,
               value: this.nextHealthFactor,
               class:
-                +this.currentHealthFactor > +this.nextHealthFactor
+                realHealthFactor == this.nextHealthFactor
+                  ? ''
+                  : BigNumber(realHealthFactor).gt(this.nextHealthFactor)
                   ? 'redPrimary--text'
                   : 'greenPrimary--text',
               indicator:
-                +this.currentHealthFactor == +this.nextHealthFactor
+                realHealthFactor == this.nextHealthFactor
                   ? ''
-                  : +this.currentHealthFactor < +this.nextHealthFactor
+                  : BigNumber(realHealthFactor).lt(this.nextHealthFactor)
                   ? 'mdi-arrow-up-bold'
                   : 'mdi-arrow-down-bold'
             }
@@ -266,13 +272,15 @@ export default {
                 tooltip: this.nextHealthFactorTooltip,
                 value: this.nextHealthFactor,
                 class:
-                  +this.currentHealthFactor >= +this.nextHealthFactor
+                  realHealthFactor == this.nextHealthFactor
+                    ? ''
+                    : BigNumber(realHealthFactor).gt(this.nextHealthFactor)
                     ? 'redPrimary--text'
                     : 'greenPrimary--text',
                 indicator:
-                  +this.currentHealthFactor == +this.nextHealthFactor
+                  realHealthFactor == this.nextHealthFactor
                     ? ''
-                    : +this.currentHealthFactor < +this.nextHealthFactor
+                    : BigNumber(realHealthFactor).lt(this.nextHealthFactor)
                     ? 'mdi-arrow-up-bold'
                     : 'mdi-arrow-down-bold'
               }
@@ -282,7 +290,9 @@ export default {
       return details;
     },
     currentHealthFactor() {
-      return new BigNumber(this.userSummary?.healthFactor).toFixed(3);
+      let curHF = new BigNumber(this.userSummary?.healthFactor).toFixed(3);
+      if (curHF === 'NaN' || curHF === '-1.000') curHF = '-';
+      return curHF;
     },
     nextHealthFactor() {
       const selectedToken = this.selectedTokenInUserSummary;
@@ -329,6 +339,8 @@ export default {
           this.userSummary.currentLiquidationThreshold
         ).toFixed(3);
       }
+      if (nextHealthFactor === 'NaN' || nextHealthFactor === '-1.000')
+        nextHealthFactor = '-';
       return nextHealthFactor;
     },
     /* currently using dummy data for values */
