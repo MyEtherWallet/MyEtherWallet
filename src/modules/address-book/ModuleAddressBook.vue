@@ -100,7 +100,13 @@ export default {
   computed: {
     ...mapState('addressBook', ['addressBookStore']),
     ...mapGetters('global', ['network']),
-    ...mapState('wallet', ['web3', 'address', 'isOfflineApp']),
+    ...mapState('wallet', [
+      'web3',
+      'address',
+      'isOfflineApp',
+      'identifier',
+      'instance'
+    ]),
     errorMessages() {
       if (!this.isValidAddress && this.loadedAddressValidation) {
         return this.$t('interface.address-book.validations.invalid-address');
@@ -120,7 +126,14 @@ export default {
               resolverAddr: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
             }
           ]
-        : this.address
+        : this.myAddressBook;
+    },
+    myAddressBook() {
+      if (!this.isHomePage && !this.identifier)
+        this.instance.errorHandler(
+          new Error('Wallet has no identifier! Please refresh the page')
+        );
+      return this.address
         ? [
             {
               address: toChecksumAddress(this.address),
@@ -128,13 +141,15 @@ export default {
               resolverAddr: ''
             }
           ].concat(this.addressBookStore)
-        : [
+        : // If address is undefined set to MEW Donations
+          [
             {
-              address: toChecksumAddress(this.address),
-              nickname: 'My Address',
-              resolverAddr: ''
+              address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
+              currency: 'ETH',
+              nickname: 'MEW Donations',
+              resolverAddr: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
             }
-          ];
+          ].concat(this.addressBookStore);
     },
     enableSave() {
       return this.isHomePage
