@@ -48,6 +48,7 @@ import { getAddressInfo } from '@kleros/address-tags-sdk';
 import { isAddress, toChecksumAddress } from '@/core/helpers/addressUtils';
 import NameResolver from '@/modules/name-resolver/index';
 import { ERROR, Toast } from '../toast/handler/handlerToast';
+import MewAddressSelect from '@/components/MewAddressSelect/MewAddressSelect';
 
 const USER_INPUT_TYPES = {
   typed: 'TYPED',
@@ -57,6 +58,7 @@ const USER_INPUT_TYPES = {
 
 export default {
   components: {
+    MewAddressSelect,
     AddressBookAddEdit: () => import('./components/AddressBookAddEdit')
   },
   props: {
