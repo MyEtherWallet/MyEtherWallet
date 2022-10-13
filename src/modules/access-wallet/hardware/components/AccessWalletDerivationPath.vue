@@ -363,7 +363,7 @@ export default {
             const error = `Path already exists: ${foundPath.name}`;
             Toast(error, {}, ERROR);
           } else {
-            if (this.customAlias === '') {
+            if (this.customAlias === '' || this.customAlias === null) {
               const error = 'Custom alias cannot be empty';
               Toast(error, {}, ERROR);
             } else {
