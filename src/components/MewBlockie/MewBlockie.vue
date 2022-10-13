@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import Blockies from '@/helpers/blockies.js';
+import Blockies from '@/core/helpers/blockies.js';
 
 export default {
   name: 'MewBlockie',

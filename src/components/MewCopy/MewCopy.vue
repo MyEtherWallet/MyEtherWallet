@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import copy from '@/helpers/copy.js';
+import copy from '@/core/helpers/copy.js';
 import MewToast from '@/components/MewToast/MewToast.vue';
 
 export default {
