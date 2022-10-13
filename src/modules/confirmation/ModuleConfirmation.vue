@@ -515,6 +515,7 @@ export default {
     }
   },
   created() {
+    console.log('get here again?');
     const _self = this;
     /**
      * receives an @Array
@@ -578,6 +579,7 @@ export default {
       }
     );
     EventBus.$on(EventNames.SHOW_MSG_CONFIRM_MODAL, (msg, resolver) => {
+      console.log(msg);
       _self.title = 'Message Signed';
       _self.instance
         .signMessage(msg)
@@ -616,6 +618,12 @@ export default {
         _self.reset();
       };
     });
+  },
+  beforeDestroy() {
+    EventBus.$off(EventNames.SHOW_TX_CONFIRM_MODAL);
+    EventBus.$off(EventNames.SHOW_SWAP_TX_MODAL);
+    EventBus.$off(EventNames.SHOW_MSG_CONFIRM_MODAL);
+    EventBus.$off(EventNames.SHOW_CROSS_CHAIN_MODAL);
   },
   methods: {
     rejectTransaction() {
