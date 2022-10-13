@@ -622,6 +622,9 @@ export default {
       Toast(e, {}, ERROR);
     }
   },
+  beforeDestroy() {
+    EventBus.$off('bleDisconnect');
+  },
   methods: {
     ...mapActions('wallet', ['setWallet', 'setLedgerBluetooth']),
     /**
