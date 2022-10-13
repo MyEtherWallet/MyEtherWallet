@@ -343,7 +343,7 @@ export default {
     * Address select input.
     */
   .address-select {
-    height: 62px;
+    min-height: 62px;
     &.v-text-field {
       input {
         font-family: 'PT Mono';
