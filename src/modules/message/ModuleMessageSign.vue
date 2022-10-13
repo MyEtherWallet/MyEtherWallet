@@ -20,7 +20,11 @@
             class="mr-4"
             @click.native="clearAll"
           />
-          <mew-button title="Sign" @click.native="signMessage" />
+          <mew-button
+            title="Sign"
+            :disabled="disableSignBtn"
+            @click.native="signMessage"
+          />
         </div>
       </div>
     </template>
@@ -42,7 +46,10 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['instance'])
+    ...mapState('wallet', ['instance']),
+    disableSignBtn() {
+      return this.message === '';
+    }
   },
   mounted() {
     this.signAndVerify = new SignAndVerifyMessage();

@@ -64,7 +64,7 @@
               active-class="remove-select-state"
               @click="openMoonpay"
             >
-              <div class="text-center mx-auto my-2">
+              <div class="text-center mx-auto my-2" @click="trackBuySellFunc">
                 <img
                   src="@/assets/images/icons/menu/icon-menu-buy-sell.svg"
                   alt="Buy or Sell"
@@ -77,7 +77,7 @@
             <v-divider vertical class="mx-3"></v-divider>
 
             <v-list-item
-              class="px-0"
+              class="px-0 SendTransaction"
               :to="{ name: ROUTES_WALLET.SEND_TX.NAME }"
             >
               <div class="text-center mx-auto my-2">
@@ -320,6 +320,7 @@ export default {
     ...mapGetters('global', ['network', 'isEthNetwork', 'hasSwap']),
     ...mapState('wallet', ['instance', 'isOfflineApp']),
     ...mapState('global', ['online', 'validNetwork']),
+    ...mapState('popups', ['consentToTrack']),
     /**
      * IMPORTANT TO DO:
      * @returns {boolean}
@@ -453,7 +454,10 @@ export default {
   methods: {
     ...mapActions('wallet', ['removeWallet']),
     trackToSwap() {
-      this.trackSwap('swapPageView');
+      this.trackSwap('fromSideMenu');
+    },
+    trackBuySellFunc() {
+      this.trackBuySell('buySellHome');
     },
     closeNetworkOverlay() {
       if (this.validNetwork) {

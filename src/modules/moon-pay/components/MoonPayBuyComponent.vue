@@ -26,6 +26,7 @@
           type="number"
           :error-messages="amountErrorMessages"
           class="mr-2"
+          @keydown.native="preventCharE($event)"
         />
         <mew-select
           v-model="selectedFiat"
@@ -41,7 +42,7 @@
             {{ cryptoToFiat }}
             <span class="mew-heading-3 pl-1">{{ selectedCryptoName }}</span>
             <div class="mr-1 textDark--text">&nbsp;≈ {{ plusFeeF }}</div>
-            <mew-tooltip style="height: 23px">
+            <mew-tooltip style="height: 21px">
               <template #contentSlot>
                 <div>
                   {{ includesFeeText }}
@@ -410,8 +411,9 @@ export default {
           MATIC: 'MATIC'
         };
         if (
-          newVal.contract.toLowerCase() === MAIN_TOKEN_ADDRESS &&
-          !supportedCoins[newVal.symbol]
+          !newVal ||
+          (newVal?.contract?.toLowerCase() === MAIN_TOKEN_ADDRESS &&
+            !supportedCoins[newVal.symbol])
         ) {
           this.selectedCurrency = oldVal;
           return;
@@ -476,9 +478,7 @@ export default {
     }
   },
   mounted() {
-    if (this.$refs.addressInput) {
-      this.$refs.addressInput.$refs.addressSelect.clear();
-    }
+    if (!this.inWallet) this.$refs.addressInput.$refs.addressSelect.clear();
     this.fetchCurrencyData();
   },
   methods: {
@@ -593,6 +593,9 @@ export default {
         this.selectedCurrency,
         this.selectedFiat
       ]);
+    },
+    preventCharE(e) {
+      if (e.key === 'e') e.preventDefault();
     }
   }
 };

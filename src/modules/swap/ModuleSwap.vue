@@ -50,7 +50,8 @@
                   "
                   :max-btn-obj="maxBtn"
                   @buyMore="openMoonpay"
-                  @input="setTokenInValue"
+                  @keydown.native="preventCharE($event)"
+                  @input="val => triggerSetTokenInValue(val, false)"
               /></v-col>
               <v-col
                 cols="12"
@@ -289,7 +290,7 @@
 
 <script>
 import { toBN, fromWei, toWei, isAddress } from 'web3-utils';
-import { isEmpty, clone, isUndefined, isObject } from 'lodash';
+import { debounce, isEmpty, clone, isUndefined, isObject } from 'lodash';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import xss from 'xss';
 import MultiCoinValidator from 'multicoin-address-validator';
@@ -988,17 +989,23 @@ export default {
       this.setupSwap();
     },
     checkMultiChainToken(item) {
-      const multiChainTokens = ['USDT', 'SRM']; // Hardcoding for now
+      const multiChainTokens = ['USDT', 'SRM', 'DOGE']; // Hardcoding for now
       const name = item.name;
-      if (name.includes('SOL') || name.includes('OMNI')) {
+      if (
+        name.includes('SOL') ||
+        name.includes('OMNI') ||
+        name.includes('DOGE')
+      ) {
         for (let i = 0; i < multiChainTokens.length; i++) {
           const token = multiChainTokens[i];
           if (name.includes(token)) {
             const networks = {
               OMNI: 'Omni',
-              SOL: 'Solana'
+              SOL: 'Solana',
+              DOGE: 'Dogecoin'
             };
-            const contractNetwork = networks[name.replace(token, '')];
+            const contractNetwork =
+              networks[name !== 'DOGE' ? name.replace(token, '') : name];
             item.subtext = `${token} - ${contractNetwork}`;
             break;
           }
@@ -1252,7 +1259,7 @@ export default {
       this.toTokenType = {};
       this.tokenOutValue = '0';
       const toTokenFromTokenList = this.actualFromTokens.find(item => {
-        if (item.contract && item.contract === toToken.contract) return item;
+        if (item && item.contract === toToken?.contract) return item;
       });
       this.setFromToken(toTokenFromTokenList ? toTokenFromTokenList : toToken);
       this.setToToken(fromToken);
@@ -1295,7 +1302,7 @@ export default {
       this.resetAddressValues({ clearTo: false });
       this.$nextTick(() => {
         if (value && value.name) {
-          this.trackSwap('from: ' + value.name);
+          this.trackSwapToken('from: ' + value.name);
         }
         this.setTokenInValue(this.tokenInValue);
       });
@@ -1314,10 +1321,13 @@ export default {
       this.toTokenType = value;
       this.resetAddressValues({ clearRefund: false });
       if (value && value.name) {
-        this.trackSwap('to: ' + value.name);
+        this.trackSwapToken('to: ' + value.name);
       }
       this.setTokenInValue(this.tokenInValue);
     },
+    triggerSetTokenInValue: debounce(function (val) {
+      this.setTokenInValue(val);
+    }, 500),
     setTokenInValue(value) {
       /**
        * Ensure that both pairs have been set
@@ -1325,7 +1335,8 @@ export default {
        */
       this.belowMinError = false;
       if (this.isLoading || this.initialLoad) return;
-      this.tokenInValue = value || '0';
+      const val = value ? value : 0;
+      this.tokenInValue = BigNumber(val).toFixed();
       // Check if (in amount) is larger than (available balance)
       if (
         !this.isFromNonChain &&
@@ -1680,6 +1691,9 @@ export default {
     },
     handleLocalGasPrice(e) {
       this.localGasPrice = e;
+    },
+    preventCharE(e) {
+      if (e.key === 'e') e.preventDefault();
     }
   }
 };
