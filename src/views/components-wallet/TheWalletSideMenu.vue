@@ -64,7 +64,7 @@
               active-class="remove-select-state"
               @click="openMoonpay"
             >
-              <div class="text-center mx-auto my-2" @click="trackBuySell">
+              <div class="text-center mx-auto my-2" @click="trackBuySellFunc">
                 <img
                   src="@/assets/images/icons/menu/icon-menu-buy-sell.svg"
                   alt="Buy or Sell"
@@ -456,7 +456,7 @@ export default {
     trackToSwap() {
       this.trackSwap('fromSideMenu');
     },
-    trackBuySell() {
+    trackBuySellFunc() {
       this.trackBuySell('buySellHome');
     },
     closeNetworkOverlay() {

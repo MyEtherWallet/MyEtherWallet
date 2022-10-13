@@ -27,6 +27,7 @@
         :error-messages="errorMessages"
         :persistent-hint="hasPersistentHint"
         :hint="persistentHintMessage"
+        @keydown.native="preventCharE($event)"
       />
     </div>
     <div v-else class="position--relative mt-9">
@@ -39,6 +40,7 @@
         :error-messages="errorMessages"
         :persistent-hint="hasPersistentHint"
         :hint="persistentHintMessage"
+        @keydown.native="preventCharE($event)"
       />
     </div>
     <div class="pt-8 pb-13">
@@ -582,6 +584,9 @@ export default {
     },
     isValidToAddress(address) {
       return MultiCoinValidator.validate(address, this.selectedCurrency.symbol);
+    },
+    preventCharE(e) {
+      if (e.key === 'e') e.preventDefault();
     }
   }
 };

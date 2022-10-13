@@ -617,6 +617,12 @@ export default {
       };
     });
   },
+  beforeDestroy() {
+    EventBus.$off(EventNames.SHOW_TX_CONFIRM_MODAL);
+    EventBus.$off(EventNames.SHOW_SWAP_TX_MODAL);
+    EventBus.$off(EventNames.SHOW_MSG_CONFIRM_MODAL);
+    EventBus.$off(EventNames.SHOW_CROSS_CHAIN_MODAL);
+  },
   methods: {
     rejectTransaction() {
       if (this.isSwap) this.trackSwap('swapRejected');

@@ -50,6 +50,7 @@
                   "
                   :max-btn-obj="maxBtn"
                   @buyMore="openMoonpay"
+                  @keydown.native="preventCharE($event)"
                   @input="val => triggerSetTokenInValue(val, false)"
               /></v-col>
               <v-col
@@ -1690,6 +1691,9 @@ export default {
     },
     handleLocalGasPrice(e) {
       this.localGasPrice = e;
+    },
+    preventCharE(e) {
+      if (e.key === 'e') e.preventDefault();
     }
   }
 };
