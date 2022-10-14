@@ -170,6 +170,7 @@
     <balance-address-paper-wallet
       :open="showPaperWallet"
       :close="closePaperWallet"
+      :is-offline-app="isOfflineApp"
       @close="closePaperWallet"
     />
     <app-modal
@@ -310,21 +311,14 @@ export default {
      * returns @String
      */
     verifyAddressTitle() {
-      return `This wallet is accessed with ${this.instanceName}`;
-    },
-    /**
-     * instance meta check
-     * returns @String
-     */
-    instanceName() {
-      return this.instance ? this.instance.meta.name : '';
+      return `This wallet is accessed with ${this.walletName}`;
     },
     /**
      * verify address body
      * returns @String
      */
     verifyAddressBody() {
-      return `To verify, check the address on your ${this.instance.meta.name} device & make sure it is the same address as the one shown below.`;
+      return `To verify, check the address on your ${this.walletName} device & make sure it is the same address as the one shown below.`;
     },
     /**
      * Shows hardware access or software access

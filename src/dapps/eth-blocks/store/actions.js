@@ -22,27 +22,11 @@ const addBlockToCart = function ({ commit }, val) {
 };
 
 /**
- * Adds blockNumber to cart (RIN)
- * @param {string} val
- */
-const addTestBlockToCart = function ({ commit }, val) {
-  commit('ADD_TEST_BLOCK_TO_CART', val);
-};
-
-/**
  * remove blockNumber to cart (ETH)
  * @param {string} val
  */
 const removeBlockFromCart = function ({ commit }, val) {
   commit('REMOVE_FROM_CART', val);
-};
-
-/**
- * remove blockNumber to cart (RIN)
- * @param {string} val
- */
-const removeTestBlockFromCart = function ({ commit }, val) {
-  commit('REMOVE_TEST_FROM_CART', val);
 };
 
 /**
@@ -55,10 +39,8 @@ const emptyCart = function ({ commit }, val) {
 
 export default {
   addEthBlockTx,
-  addTestBlockToCart,
   deleteEthBlockTx,
   addBlockToCart,
   removeBlockFromCart,
-  removeTestBlockFromCart,
   emptyCart
 };

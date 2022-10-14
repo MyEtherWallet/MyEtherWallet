@@ -113,6 +113,7 @@
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
 import enkryptMarketing from '@/core/mixins/enkryptMarketing.mixin';
+import { mapState } from 'vuex';
 
 export default {
   name: 'TheCreateWalletLayout',
@@ -142,64 +143,83 @@ export default {
     }
   }),
   computed: {
+    ...mapState('wallet', ['isOfflineApp']),
     buttons() {
-      return [
-        /* Enkrypt */
-        {
-          color: 'white',
-          title: 'Install Enkrypt browser extension',
-          subtitle:
-            'MEW’s official browser extension. Connect to web3 on Ethereum and Polkadot, manage your NFTs, buy, send and swap',
-          official: true,
-          recommended: true,
-          icon: require('@/assets/images/icons/icon-enkrypt-block.svg'),
-          alt: 'Enkrypt',
-          fn: () => {
-            this.openEnkrypt();
-          }
-        },
-        /* MEW wallet Button */
-        {
-          color: 'white',
-          title: 'Download MEW wallet app',
-          subtitle:
-            'Our official mobile app to create your wallet, and connect to MEW Web using your mobile phone',
-          official: true,
-          recommended: true,
-          icon: require('@/assets/images/icons/icon-mew-wallet.png'),
-          alt: 'MEW wallet',
-          fn: () => {
-            this.openMewWallet();
-          }
-        },
-        /* Hardware wallets */
-        {
-          color: 'white',
-          title: 'Buy a hardware wallet',
-          subtitle:
-            'For the highest standard of security, buy a hardware wallet and use it with MEW',
-          official: false,
-          recommended: true,
-          icon: require('@/assets/images/icons/icon-hardware-wallet.png'),
-          alt: 'Hardware Wallets',
-          fn: () => {
-            this.$router.push({ name: ROUTES_HOME.BUY_HARDWARE_WALLET.NAME });
-          }
-        },
-        /* Software */
-        {
-          color: 'white',
-          style: 'outline',
-          title: 'Software',
-          subtitle:
-            'Software methods like Keystore File and Mnemonic Phrase should only be used in offline settings by experienced users',
-          official: false,
-          recommended: false,
-          fn: () => {
-            this.openSoftwareModule();
-          }
-        }
-      ];
+      return !this.isOfflineApp
+        ? [
+            /* Enkrypt */
+            {
+              color: 'white',
+              title: 'Install Enkrypt browser extension',
+              subtitle:
+                'MEW’s official browser extension. Connect to web3 on Ethereum and Polkadot, manage your NFTs, buy, send and swap',
+              official: true,
+              recommended: true,
+              icon: require('@/assets/images/icons/icon-enkrypt-block.svg'),
+              alt: 'Enkrypt',
+              fn: () => {
+                this.openEnkrypt();
+              }
+            },
+            /* MEW wallet Button */
+            {
+              color: 'white',
+              title: 'Download MEW wallet app',
+              subtitle:
+                'Our official mobile app to create your wallet, and connect to MEW Web using your mobile phone',
+              official: true,
+              recommended: true,
+              icon: require('@/assets/images/icons/icon-mew-wallet.png'),
+              alt: 'MEW wallet',
+              fn: () => {
+                this.openMewWallet();
+              }
+            },
+            /* Hardware wallets */
+            {
+              color: 'white',
+              title: 'Buy a hardware wallet',
+              subtitle:
+                'For the highest standard of security, buy a hardware wallet and use it with MEW',
+              official: false,
+              recommended: true,
+              icon: require('@/assets/images/icons/icon-hardware-wallet.png'),
+              alt: 'Hardware Wallets',
+              fn: () => {
+                this.$router.push({
+                  name: ROUTES_HOME.BUY_HARDWARE_WALLET.NAME
+                });
+              }
+            },
+            /* Software */
+            {
+              color: 'white',
+              style: 'outline',
+              title: 'Software',
+              subtitle:
+                'Software methods like Keystore File and Mnemonic Phrase should only be used in offline settings by experienced users',
+              official: false,
+              recommended: false,
+              fn: () => {
+                this.openSoftwareModule();
+              }
+            }
+          ]
+        : [
+            /* Software */
+            {
+              color: 'white',
+              style: 'outline',
+              title: 'Software',
+              subtitle:
+                'Software methods like Keystore File and Mnemonic Phrase should only be used in offline settings by experienced users',
+              official: false,
+              recommended: false,
+              fn: () => {
+                this.openSoftwareModule();
+              }
+            }
+          ];
     }
   },
   methods: {

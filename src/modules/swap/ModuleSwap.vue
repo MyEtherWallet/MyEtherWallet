@@ -51,6 +51,7 @@
                   "
                   :max-btn-obj="maxBtn"
                   @buyMore="openMoonpay"
+                  @keydown.native="preventCharE($event)"
                   @input="val => triggerSetTokenInValue(val, false)"
               /></v-col>
               <v-col
@@ -1642,7 +1643,7 @@ export default {
             main
           );
           this.addNotification(new NonChainNotification(notif)).then(() => {
-            const currency = this.fromTokenType.symbol;
+            const currency = this.toTokenType?.symbol;
             Toast(
               `Swap initiated, you should receive ${currency} in 1-3 hours. You will be notified when it's completed`,
               {},
@@ -1695,6 +1696,9 @@ export default {
     },
     handleLocalGasPrice(e) {
       this.localGasPrice = e;
+    },
+    preventCharE(e) {
+      if (e.key === 'e') e.preventDefault();
     }
   }
 };
