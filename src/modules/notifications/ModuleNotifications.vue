@@ -155,7 +155,7 @@ export default {
       if (!this.loading) {
         return this.ethTransfersIncoming
           .reduce((arr, notification) => {
-            if (notification.to.toLowerCase() === address) {
+            if (notification.to?.toLowerCase() === address) {
               notification.type = NOTIFICATION_TYPES.IN;
               if (notification.status) notification.read = true;
               else notification.read = false;

@@ -48,6 +48,7 @@ const EXCEPTIONS = [
   'vue-i18n',
   'vue',
   '@vue/cli-plugin-e2e-nightwatch',
+  '@kleros/address-tags-sdk',
   // breaking
   '@shapeshiftoss/hdwallet-core',
   '@shapeshiftoss/hdwallet-keepkey-webusb',
@@ -128,12 +129,12 @@ const looper = () => {
           if (!isMewComponentBeta) {
             console.error(
               'ERROR: Update ' +
-                _name +
-                ' from ' +
-                ALL_PACKAGES[_name] +
-                ' to ' +
-                latestVersion +
-                '. Released:',
+              _name +
+              ' from ' +
+              ALL_PACKAGES[_name] +
+              ' to ' +
+              latestVersion +
+              '. Released:',
               latestVersionTime
             );
             updatesFound = true;

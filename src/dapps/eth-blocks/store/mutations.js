@@ -51,17 +51,6 @@ const ADD_BLOCK_TO_CART = function (state, blockNumber) {
  *
  * @param {string} blockNumber
  */
-const ADD_TEST_BLOCK_TO_CART = function (state, blockNumber) {
-  if (state.cart.RIN.length >= 100) {
-    state.cart.RIN.shift();
-  }
-  state.cart.RIN.push(blockNumber);
-};
-
-/**
- *
- * @param {string} blockNumber
- */
 const REMOVE_FROM_CART = function (state, blockNumber) {
   state.cart.ETH = state.cart.ETH.filter(item => {
     if (item !== blockNumber) return item;
@@ -72,22 +61,8 @@ const REMOVE_FROM_CART = function (state, blockNumber) {
  *
  * @param {string} blockNumber
  */
-const REMOVE_TEST_FROM_CART = function (state, blockNumber) {
-  state.cart.RIN = state.cart.RIN.filter(item => {
-    if (item !== blockNumber) return item;
-  });
-};
-
-/**
- *
- * @param {string} blockNumber
- */
-const EMPTY_CART = function (state, cartType) {
-  if (cartType === 'RIN') {
-    state.cart.RIN = [];
-  } else {
-    state.cart.ETH = [];
-  }
+const EMPTY_CART = function (state) {
+  state.cart.ETH = [];
 };
 
 export default {
@@ -95,8 +70,6 @@ export default {
   ADD_ETH_BLOCK_TX,
   DELETE_ETH_BLOCK_TX,
   ADD_BLOCK_TO_CART,
-  ADD_TEST_BLOCK_TO_CART,
   REMOVE_FROM_CART,
-  REMOVE_TEST_FROM_CART,
   EMPTY_CART
 };

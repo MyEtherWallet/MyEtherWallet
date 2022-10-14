@@ -36,6 +36,7 @@
                   label="Amount"
                   placeholder="0"
                   type="number"
+                  class="FromAmountInput"
                   :value="tokenInValue"
                   :persistent-hint="true"
                   :error-messages="amountErrorMessage"
@@ -50,6 +51,7 @@
                   "
                   :max-btn-obj="maxBtn"
                   @buyMore="openMoonpay"
+                  @keydown.native="preventCharE($event)"
                   @input="val => triggerSetTokenInValue(val, false)"
               /></v-col>
               <v-col
@@ -61,7 +63,7 @@
                 <div class="d-flex align-center justify-center pb-sm-10">
                   <mew-icon-button
                     mdi-icon="swap-horizontal"
-                    class="pa-2 d-flex align-center justify-center"
+                    class="pa-2 d-flex align-center justify-center SwitchTokens"
                     color-theme="basic"
                     btn-style="light"
                     :disabled="!enableTokenSwitch"
@@ -76,6 +78,7 @@
                   :is-custom="true"
                   :loading="isLoading"
                   label="To"
+                  class="ToTokenSelect"
                   @input="setToToken"
                 />
                 <mew-input
@@ -121,6 +124,7 @@
             <module-address-book
               v-if="isFromNonChain"
               ref="refundAddressInput"
+              class="FromAddressInput"
               :label="nativeLabel"
               :is-valid-address-func="isValidRefundAddress"
               @setAddress="setRefundAddr"
@@ -128,6 +132,7 @@
             <module-address-book
               v-show="showToAddress"
               ref="toAddressInput"
+              class="ToAddressInput"
               :is-valid-address-func="isValidToAddress"
               :label="toAddressLabel"
               @setAddress="setToAddress"
@@ -265,6 +270,7 @@
                   :has-full-width="true"
                   :disabled="disableNext"
                   btn-size="xlarge"
+                  class="NextButton"
                   style="max-width: 240px"
                   @click.native="showConfirm()"
                 />
@@ -1301,7 +1307,7 @@ export default {
       this.resetAddressValues({ clearTo: false });
       this.$nextTick(() => {
         if (value && value.name) {
-          this.trackSwap('from: ' + value.name);
+          this.trackSwapToken('from: ' + value.name);
         }
         this.setTokenInValue(this.tokenInValue);
       });
@@ -1320,7 +1326,7 @@ export default {
       this.toTokenType = value;
       this.resetAddressValues({ clearRefund: false });
       if (value && value.name) {
-        this.trackSwap('to: ' + value.name);
+        this.trackSwapToken('to: ' + value.name);
       }
       this.setTokenInValue(this.tokenInValue);
     },
@@ -1637,7 +1643,7 @@ export default {
             main
           );
           this.addNotification(new NonChainNotification(notif)).then(() => {
-            const currency = this.fromTokenType.symbol;
+            const currency = this.toTokenType?.symbol;
             Toast(
               `Swap initiated, you should receive ${currency} in 1-3 hours. You will be notified when it's completed`,
               {},
@@ -1690,6 +1696,9 @@ export default {
     },
     handleLocalGasPrice(e) {
       this.localGasPrice = e;
+    },
+    preventCharE(e) {
+      if (e.key === 'e') e.preventDefault();
     }
   }
 };

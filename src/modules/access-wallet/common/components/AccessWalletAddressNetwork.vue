@@ -1,9 +1,10 @@
 <template>
   <div style="width: 100%">
-    <div v-if="paths.length > 0 && !hideCustomPaths" class="text-right mb-3">
+    <div v-if="paths.length > 0 && !hidePathSelection" class="text-right mb-3">
       <access-wallet-derivation-path
         :selected-path="selectedPath"
         :passed-paths="paths"
+        :disable-custom-paths="disableCustomPaths"
         @setPath="setPath"
       />
     </div>
@@ -173,7 +174,7 @@
     <div class="d-flex align-center flex-column py-6">
       <mew-checkbox
         v-model="acceptTerms"
-        label="To access my wallet, I accept "
+        :label="label"
         :link="link"
         class="justify-center"
       />
@@ -247,7 +248,14 @@ export default {
     /**
      * hides access wallet derivation path component
      */
-    hideCustomPaths: {
+    hidePathSelection: {
+      type: Boolean,
+      default: false
+    },
+    /**
+     * disables custom derivation path
+     */
+    disableCustomPaths: {
       type: Boolean,
       default: false
     },
@@ -301,6 +309,7 @@ export default {
     return {
       currentIdx: 0,
       acceptTerms: false,
+      label: 'To access my wallet, I accept ',
       link: {
         title: 'Terms',
         url: 'https://www.myetherwallet.com/terms-of-service'
@@ -428,6 +437,10 @@ export default {
     }
   },
   mounted() {
+    if (this.isOfflineApp) {
+      this.link = {};
+      this.label = 'To access my wallet, I accept Terms';
+    }
     this.setNetworkPanel();
     this.setAccounts();
   },
