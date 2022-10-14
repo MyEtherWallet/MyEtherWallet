@@ -36,6 +36,8 @@ const WARNINGS = {
   'error function: executeAPDU, message: executeAPDU error: NetworkError: GATT Server is disconnected. Cannot perform GATT operations. (Re)connect first with `device.gatt.connect`.':
     'System Paired successfully, Please refresh page and try again!',
   'Max number of App paired. Delete one of the paired app.':
-    'coolWalletError.max-app-instance'
+    'coolWalletError.max-app-instance',
+  'error function: , message: Firmware version too low.':
+    "Please update your wallet's firmware!"
 };
 export default WalletErrorHandler(ERRORS, WARNINGS);
