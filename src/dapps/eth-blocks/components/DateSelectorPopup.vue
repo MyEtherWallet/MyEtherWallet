@@ -14,7 +14,7 @@
             <v-date-picker
               v-model="date"
               :allowed-dates="allowedDates"
-              :max="new Date().toISOString()"
+              :max="currentDate"
               min="2015-07-30"
               color="#05C0A5"
               full-width
@@ -85,6 +85,9 @@ export default {
   computed: {
     disableNext() {
       return this.time && this.date;
+    },
+    currentDate() {
+      return new Date().toISOString();
     }
   },
   methods: {
