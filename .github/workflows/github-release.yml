@@ -47,18 +47,19 @@ jobs:
           mkdir release
 
       - name: build
-        run: docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build"
-
-      - name: generate release files
-        run: bash ./scripts/generateReleaseFiles.sh ${{ steps.get_release_tag.outputs.VERSION }}
+        run: |
+          docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build"
+          cd dist && zip -r ../release/MyEtherWallet-${{ steps.get_release_tag.outputs.VERSION }}.zip * && cd ..
 
       - name: build offline
-        run: docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:offline"
+        run: |
+          docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:offline"
+          cd dist && zip -r ../release/MyEtherWallet-${{ steps.get_release_tag.outputs.VERSION }}-Offline.zip * && cd ..
 
-      - name: generate offline files
-        run: bash ./scripts/generateOfflineFiles.sh ${{ steps.get_release_tag.outputs.VERSION }}
+      - name: sign files
+        run: bash ./scripts/signFiles.sh
 
       - name: create release
         env:
           GITHUB_TOKEN: ${{secrets.MEW_BOT_TOKEN}}
-        run: bash ./scripts/release.sh ${{ steps.get_release_tag.outputs.VERSION }} $GITHUB_TOKEN $GITHUB_REPOSITORY true
+        run: bash ./scripts/release.sh ${{ steps.get_release_tag.outputs.VERSION }} $GITHUB_TOKEN $GITHUB_REPOSITORY

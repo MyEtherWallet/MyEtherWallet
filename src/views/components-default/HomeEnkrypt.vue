@@ -37,29 +37,26 @@
               alt="Enkrypt"
             />
             <div>
-              <a
-                href="href=https://chrome.google.com/webstore/detail/enkrypt/kkpllkodjeloidieedojogacfhpaihoh?hl=en"
-                target="_blank"
+              <mew-button
+                class="extension-btn"
+                color-theme="#7E44F2"
+                style="border-radius: 100px !important"
+                btn-size="large"
+                @click.native="openEnkrypt"
               >
-                <mew-button
-                  class="extension-btn"
-                  color-theme="#7E44F2"
-                  style="border-radius: 100px !important"
-                  btn-size="large"
-                  @click.native="openEnkrypt"
-                >
-                  <img
-                    :src="browserLogo"
-                    alt="Chrome"
-                    height="25"
-                    class="mr-2"
-                  />
-                  <span class="font-weight-bold"> Install for Chrome </span>
-                </mew-button>
-              </a>
+                <img
+                  :src="browserLogo"
+                  :alt="browser"
+                  height="25"
+                  class="mr-2"
+                />
+                <span class="font-weight-bold">
+                  Install for {{ browser }}
+                </span>
+              </mew-button>
               <a
                 class="text-decoration-underline textSecondary--text ml-5"
-                href="https://enkrypt.com"
+                href="https://www.enkrypt.com"
                 target="_blank"
                 >Learn more</a
               >

@@ -6,9 +6,12 @@ export default {
   exitDashboard: 'exitDashboard',
   networkSwitch: 'networkSwitch',
   gasSwitch: 'gasSwitch',
-  swap: 'swap',
+  swap: 'swapFlow',
   dapp: 'dapp',
-  swapRates: 'swapRates',
+  swapTokenPair: 'swapTokenPair',
+  swapToken: 'swapToken',
   globalError: 'globalError',
-  enkrypt: 'enkrypt'
+  enkrypt: 'enkrypt',
+  mewwallet: 'mewwallet',
+  buySell: 'buySell'
 };

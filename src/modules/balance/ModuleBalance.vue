@@ -1,5 +1,5 @@
 <template>
-  <div class="mew6-component--module-balance">
+  <div class="module-balance">
     <!--
     =====================================================================================
       display if the user has an eth balance > 0
@@ -18,7 +18,7 @@
       :has-full-height="true"
       icon-align="left"
     >
-      <template v-if="network.type.name === 'ETH'" #rightHeaderContainer>
+      <template v-if="false" #rightHeaderContainer>
         <div class="d-flex align-center ml-8 mt-3 mt-sm-0">
           <mew-toggle
             :button-group="chartButtons"
@@ -30,7 +30,7 @@
       </template>
       <template #moduleBody>
         <balance-chart
-          v-if="network.type.name === 'ETH'"
+          v-if="false"
           :data="chartData"
           class="full-width mt-5 pa-md-3"
         />
@@ -99,24 +99,24 @@
 </template>
 
 <script>
-import Loader from './ModuleBalanceLoader';
-import BalanceChart from '@/modules/balance/components/BalanceChart';
-import BalanceEmptyBlock from './components/BalanceEmptyBlock';
-import handlerBalanceHistory from './handlers/handlerBalanceHistory.mixin';
 import { mapGetters, mapState } from 'vuex';
+import BigNumber from 'bignumber.js';
+
 import {
   formatPercentageValue,
   formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
-import BigNumber from 'bignumber.js';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
+
+import handlerBalanceHistory from './handlers/handlerBalanceHistory.mixin';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 export default {
   components: {
-    Loader,
-    BalanceChart,
-    BalanceEmptyBlock
+    Loader: () => import('./ModuleBalanceLoader'),
+    BalanceChart: () => import('@/modules/balance/components/BalanceChart'),
+    BalanceEmptyBlock: () => import('./components/BalanceEmptyBlock')
   },
-  mixins: [handlerBalanceHistory],
+  mixins: [handlerBalanceHistory, handlerAnalytics],
   data() {
     return {
       chartButtons: ['1D', '1W', '1M', '1Y'],
@@ -285,6 +285,7 @@ export default {
       this.$router.push({ name: ROUTES_WALLET.SEND_TX.NAME });
     },
     navigateToSwap() {
+      this.trackSwap('fromDashboardBalanceModule');
       this.$router.push({ name: ROUTES_WALLET.SWAP.NAME });
     }
   }

@@ -10,6 +10,25 @@
         {{ selectedPath.name }}
       </span>
       <span class="path mew-body capitalize">{{ selectedPath.value }}</span>
+      <mew-popup
+        :title="showRemove ? 'Remove path?' : 'Remove all custom paths?'"
+        max-width="336"
+        :show="showRemove || showRemoveAll"
+        :left-btn="{
+          text: 'Cancel',
+          color: 'grey',
+          method: hideRemove
+        }"
+        :right-btn="{
+          text: 'Remove',
+          color: 'error',
+          enabled: true,
+          method: () =>
+            showRemove ? deletePath(selectedRemovePath) : deleteAllPaths()
+        }"
+        hide-close-btn
+      >
+      </mew-popup>
     </template>
     <template #cardContent>
       <div>
@@ -23,6 +42,7 @@
           class="mb-8"
           placeholder="find a path"
           is-compact
+          is-filled
           @input="setSearch"
         />
         <!--
@@ -30,41 +50,59 @@
         Displays the filtered customs paths
         =====================================================================================
         -->
-        <div
-          v-for="(filteredCustomPath, idx) in filteredCustomPaths"
-          :key="filteredCustomPath.name + idx"
-          class="mb-6 d-flex align-center justify-space-between cursor-pointer"
-          @click="setPath(filteredCustomPath)"
-        >
-          <div class="d-flex align-center">
-            <v-img
-              :src="require('@/assets/images/currencies/eth.png')"
-              contain
-              class="mr-2"
-              max-height="24px"
-              max-width="24px"
-            />
-            <span
-              :class="[
-                filteredCustomPath.name === selectedPath.name
-                  ? 'greenPrimary--text'
-                  : 'textDark--text'
-              ]"
-              >{{ filteredCustomPath.name }}</span
-            >
-          </div>
-          <span
-            :class="
-              filteredCustomPath.value === selectedPath.value
-                ? 'greenPrimary--text'
-                : 'path'
-            "
+        <div v-if="!disableCustomPaths">
+          <div
+            v-for="(filteredCustomPath, idx) in filteredCustomPaths"
+            :key="filteredCustomPath.name + idx"
+            class="d-flex"
           >
-            {{ filteredCustomPath.value }}
-          </span>
+            <div
+              class="mb-6 d-flex align-center justify-space-between cursor-pointer flex-grow-1"
+              @click="setPath(filteredCustomPath)"
+            >
+              <div class="d-flex align-center">
+                <v-img
+                  :src="require('@/assets/images/currencies/eth.png')"
+                  contain
+                  class="mr-2"
+                  max-height="24px"
+                  max-width="24px"
+                />
+                <span
+                  :class="[
+                    filteredCustomPath.name === selectedPath.name
+                      ? 'greenPrimary--text'
+                      : 'textDark--text'
+                  ]"
+                  >{{ filteredCustomPath.name }}</span
+                >
+              </div>
+              <span
+                :class="
+                  filteredCustomPath.value === selectedPath.value
+                    ? 'greenPrimary--text'
+                    : 'path'
+                "
+              >
+                {{ filteredCustomPath.value }}
+              </span>
+            </div>
+            <v-btn
+              icon
+              small
+              class="pa-3 mb-7 ml-2"
+              @click="handleRemove(filteredCustomPath)"
+            >
+              <v-icon color="textDark">mdi-close</v-icon>
+            </v-btn>
+          </div>
         </div>
         <v-divider
-          v-if="filteredCustomPaths.length > 0 && filteredPaths.length > 0"
+          v-if="
+            !disableCustomPaths &&
+            filteredCustomPaths.length > 0 &&
+            filteredPaths.length > 0
+          "
           class="mb-6"
         />
         <!--
@@ -105,24 +143,42 @@
             {{ filteredPath.value }}
           </span>
         </div>
-        <!--
-        =====================================================================================
-        Custom Path Fields
-        =====================================================================================
-        -->
+
         <div
-          class="text-right greenPrimary--text cursor-pointer"
-          @click="showCustomField = !showCustomField"
+          v-if="!disableCustomPaths"
+          class="d-flex align-center justify-space-between bottom-buttons pt-4"
         >
-          + Add Path
+          <mew-button
+            btn-style="transparent"
+            btn-size="small"
+            color-theme="textDark"
+            @click.native="toggleCustomField(true)"
+          >
+            Add Path
+            <v-icon>mdi-menu-down</v-icon>
+          </mew-button>
+
+          <mew-button
+            v-if="filteredCustomPaths.length > 0"
+            btn-style="transparent"
+            btn-size="small"
+            color-theme="redPrimary"
+            @click.native="showRemoveAll = true"
+          >
+            Remove all custom
+          </mew-button>
         </div>
-        <div v-if="showCustomField" class="mt-4">
+
+        <div :class="showCustomField ? 'open' : ''" class="custom-field">
           <mew-input
+            ref="aliasInput"
+            class="mt-4"
             label="Alias"
             placeholder="my custom path"
             @input="setCustomAlias"
           />
           <mew-input
+            ref="pathInput"
             label="Path"
             placeholder="m/44’/1’/0’/0"
             @input="setCustomPath"
@@ -133,7 +189,7 @@
                 has-full-width
                 btn-style="outline"
                 title="Cancel"
-                @click.native="showCustomField = !showCustomField"
+                @click.native="toggleCustomField"
               />
             </v-col>
             <v-col class="pl-1" cols="6">
@@ -145,6 +201,7 @@
             </v-col>
           </v-row>
         </div>
+        <div id="bottomList"></div>
       </div>
     </template>
   </mew-dropdown>
@@ -168,6 +225,13 @@ export default {
           value: "m/44'/60'/0'/0"
         };
       }
+    },
+    /**
+     * disables custom derivation path
+     */
+    disableCustomPaths: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -175,7 +239,10 @@ export default {
       showCustomField: false,
       searchValue: '',
       customAlias: '',
-      customPath: ''
+      customPath: '',
+      showRemove: false,
+      showRemoveAll: false,
+      selectedRemovePath: ''
     };
   },
   computed: {
@@ -185,11 +252,14 @@ export default {
      * Custom filtered paths based on search
      */
     filteredCustomPaths() {
+      if (this.disableCustomPaths) return [];
       return this.paths.filter(path => {
         if (this.searchValue) {
           return (
-            path.name.toLowerCase().includes(this.searchValue.toLowerCase()) ||
-            path.value.toLowerCase().includes(this.searchValue.toLowerCase())
+            path.name
+              ?.toLowerCase()
+              .includes(this.searchValue?.toLowerCase()) ||
+            path.value?.toLowerCase().includes(this.searchValue?.toLowerCase())
           );
         }
         return path;
@@ -200,18 +270,28 @@ export default {
      */
     filteredPaths() {
       return this.passedPaths.filter(path => {
-        if (this.searchValue) {
-          return (
-            path.name.toLowerCase().includes(this.searchValue.toLowerCase()) ||
-            path.value.toLowerCase().includes(this.searchValue.toLowerCase())
-          );
+        if (!this.paths.find(e => e.value === path.value)) {
+          if (this.searchValue) {
+            return (
+              path.name
+                ?.toLowerCase()
+                .includes(this.searchValue?.toLowerCase()) ||
+              path.value
+                ?.toLowerCase()
+                .includes(this.searchValue?.toLowerCase())
+            );
+          }
+          return path;
         }
-        return path;
       });
     }
   },
   methods: {
-    ...mapActions('custom', ['addCustomPath']),
+    ...mapActions('custom', [
+      'addCustomPath',
+      'deleteCustomPath',
+      'deleteAllCustomPaths'
+    ]),
     /**
      * Emits the path value and name back to parent
      * then closes dropdown
@@ -219,6 +299,36 @@ export default {
     setPath(path) {
       this.$emit('setPath', path);
       this.$refs.mewDropdown.close();
+    },
+    hideRemove() {
+      this.showRemove = false;
+      this.showRemoveAll = false;
+    },
+    handleRemove(path) {
+      this.showRemove = true;
+      this.selectedRemovePath = path;
+    },
+    toggleCustomField(scroll = false) {
+      this.showCustomField = !this.showCustomField;
+      if (!this.showCustomField) {
+        this.customPath = '';
+        this.customAlias = '';
+        this.$refs.aliasInput.clear();
+        this.$refs.pathInput.clear();
+      }
+      if (scroll === true)
+        setTimeout(() => {
+          document.getElementById('bottomList').scrollIntoView();
+          this.$refs.aliasInput.$children[0].focus();
+        }, 150);
+    },
+    deletePath(path) {
+      this.deleteCustomPath(path);
+      this.showRemove = false;
+    },
+    deleteAllPaths() {
+      this.deleteAllCustomPaths();
+      this.showRemoveAll = false;
     },
     /**
      * Sets the custom alias value
@@ -246,23 +356,33 @@ export default {
       try {
         const customPath = checkCustomPath(this.customPath);
         if (customPath) {
-          if (this.filteredPaths.some(e => e.value === this.customPath)) {
-            const error = `Custom path already exists: ${
-              this.filteredPaths.find(e => e.value === this.customPath).name
-            }`;
+          const foundPath =
+            this.filteredPaths.find(e => e.value === this.customPath) ||
+            this.filteredCustomPaths.find(e => e.value === this.customPath);
+          if (foundPath) {
+            const error = `Path already exists: ${foundPath.name}`;
             Toast(error, {}, ERROR);
           } else {
-            const newPath = {
-              name: this.customAlias,
-              value: this.customPath
-            };
-            this.addCustomPath(newPath).then(() => {
-              Toast('You have added custom path successfully.', {}, SUCCESS);
-            });
+            if (this.customAlias === '' || this.customAlias === null) {
+              const error = 'Custom alias cannot be empty';
+              Toast(error, {}, ERROR);
+            } else {
+              const newPath = {
+                name: this.customAlias,
+                value: this.customPath
+              };
+              this.addCustomPath(newPath).then(() => {
+                this.customPath = '';
+                this.customAlias = '';
+                this.$refs.aliasInput.clear();
+                this.$refs.pathInput.clear();
+                Toast('Custom derivation path added!', {}, SUCCESS);
+              });
+            }
             this.showCustomField = false;
           }
         } else {
-          Toast('Custom path is not valid', {}, ERROR);
+          Toast('Invalid Derivation path', {}, ERROR);
         }
       } catch (error) {
         Toast(error, {}, ERROR);
@@ -275,5 +395,17 @@ export default {
 <style lang="scss" scoped>
 .path {
   color: rgba(11, 40, 64, 0.5);
+}
+.custom-field {
+  max-height: 0px;
+  transition: max-height 0.3s ease;
+  overflow: hidden;
+
+  &.open {
+    max-height: 400px;
+  }
+}
+.bottom-buttons {
+  border-top: 1px solid var(--v-greyMedium-base) !important;
 }
 </style>

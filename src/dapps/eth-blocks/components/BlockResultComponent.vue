@@ -72,7 +72,10 @@
             </div>
           </div>
         </v-col>
-        <v-col class="d-flex align-center justify-end">
+        <v-col
+          style="max-width: 270px"
+          class="d-flex align-center justify-space-between"
+        >
           <div v-if="isAvailable" class="pr-md-3">
             <div class="mew-heading-4">{{ mintPrice }}</div>
             <div class="mew-heading-4 textLight--text">
@@ -164,15 +167,16 @@
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex';
 import BigNumber from 'bignumber.js';
-import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 import { fromWei } from 'web3-utils';
-import { ETH_BLOCKS_ROUTE } from '../configsRoutes';
 import { some, isEmpty } from 'lodash';
-import BlockQuickViewPopup from './BlockQuickViewPopup';
+
+import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
+import { ETH_BLOCKS_ROUTE } from '../configsRoutes';
+
 export default {
   name: 'BlockResultComponent',
   components: {
-    BlockQuickViewPopup
+    BlockQuickViewPopup: () => import('./BlockQuickViewPopup')
   },
   props: {
     blockHandler: {
@@ -269,7 +273,7 @@ export default {
       return this.isAdded && this.isAvailable ? 'mdi-check' : 'mdi-plus';
     },
     isAdded() {
-      const cart = this.isTestNetwork ? this.cart.RIN : this.cart.ETH;
+      const cart = this.cart.ETH;
       if (this.isReady) {
         const found = some(cart, block => {
           return block === this.blockHandler.blockNumber.toString();
@@ -283,8 +287,7 @@ export default {
     ...mapActions('ethBlocksTxs', [
       'addBlockToCart',
       'addTestBlockToCart',
-      'removeBlockFromCart',
-      'removeTestBlockFromCart'
+      'removeBlockFromCart'
     ]),
     showPanel() {
       this.showRemove = true;
@@ -295,16 +298,12 @@ export default {
     removeBlock() {
       const block = this.blockHandler.blockNumber.toString();
       this.removeMe(block);
-      this.isTestNetwork
-        ? this.removeTestBlockFromCart(block)
-        : this.removeBlockFromCart(block);
+      this.removeBlockFromCart(block);
     },
     addToCart() {
       const block = this.blockHandler.blockNumber.toString();
       if (this.isAvailable && !this.isAdded) {
-        this.isTestNetwork
-          ? this.addTestBlockToCart(block)
-          : this.addBlockToCart(block);
+        this.addBlockToCart(block);
       }
     },
     toggleAddRemoveBlock() {

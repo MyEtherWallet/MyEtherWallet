@@ -133,12 +133,9 @@
                   https://github.com/enkryptcom/enKrypt
                 </a>
                 <br />
-                Chrome Web Store:
-                <a
-                  href="https://chrome.google.com/webstore/detail/enkrypt/kkpllkodjeloidieedojogacfhpaihoh?hl=en"
-                  target="_blank"
-                >
-                  https://chrome.google.com/webstore/detail/enkrypt/kkpllkodjeloidieedojogacfhpaihoh?hl=en
+                Website:
+                <a href="https://www.enkrypt.com" target="_blank">
+                  Enkrypt.com
                 </a>
               </div>
             </div>

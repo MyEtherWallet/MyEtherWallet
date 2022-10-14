@@ -1,12 +1,6 @@
 <template>
-  <v-sheet
-    class="mew-component--aave-amount-form pa-3 pa-md-5 text-center"
-    rounded
-    color="white"
-    elevation="1"
-    max-width="650"
-  >
-    <v-row justify="space-around" dense>
+  <div class="full-width">
+    <v-row justify="space-around" no-gutters dense>
       <v-col cols="12" md="6">
         <mew-module
           color-type="overlayBg"
@@ -15,9 +9,6 @@
           :title="leftSideValues.title"
           :caption="leftSideValues.caption"
           class="text-left height--full"
-          :style="
-            $vuetify.breakpoint.smAndDown ? 'padding-top: 0 !important' : ''
-          "
         />
       </v-col>
       <v-col cols="12" md="6">
@@ -28,29 +19,25 @@
           :title="rightSideValues.title"
           :caption="rightSideValues.caption"
           class="text-left height--full"
-          :style="
-            $vuetify.breakpoint.smAndDown ? 'padding-top: 0 !important' : ''
-          "
         />
       </v-col>
     </v-row>
-    <div class="px-2 px-md-12 mt-5">
+    <div class="mt-5">
       <p class="mew-heading-3 text-left">{{ formText.title }}</p>
       <p class="mew-body pt-1 text-left">
         {{ formText.caption }}
       </p>
     </div>
-    <div class="px-0 px-md-12 mt-5">
-      <v-sheet max-width="300px" class="mx-auto">
-        <mew-input
-          :value="amount"
-          label="Amount"
-          :right-label="selectedToken.token"
-          :hide-clear-btn="true"
-          :rules="[checkIfNumerical]"
-          @input="setAmount"
-        />
-      </v-sheet>
+    <div class="mt-5">
+      <mew-input
+        :value="amount"
+        label="Amount"
+        :right-label="selectedToken.token"
+        :hide-clear-btn="true"
+        :rules="checkIfNumerical"
+        :error-messages="errorMessages"
+        @input="setAmount"
+      />
       <mew-toggle
         v-if="showToggle"
         :button-group="group"
@@ -60,33 +47,39 @@
       />
     </div>
 
-    <div class="mt-12 mb-2">
+    <div class="mt-12 justify-center d-flex">
       <mew-button
         :title="buttonTitle.action"
         color-theme="primary"
         btn-style="background"
         btn-size="xlarge"
-        :disabled="!hasAmount"
+        :disabled="disabled"
         @click.native="emitValues"
       />
-    </div>
-    <div>
       <mew-button
         :title="buttonTitle.cancel"
         color-theme="error"
         btn-style="transparent"
+        class="ml-2"
         btn-size="xlarge"
         @click.native="cancel"
       />
     </div>
-  </v-sheet>
+  </div>
 </template>
 
 <script>
 import BigNumber from 'bignumber.js';
+import { ACTION_TYPES } from '@/dapps/aave-dapp/handlers/helpers';
+import hasValidDecimals from '@/core/helpers/hasValidDecimals';
+
 export default {
   name: 'AaveAmountForm',
   props: {
+    tokenDecimal: {
+      type: Number,
+      default: 18
+    },
     selectedToken: {
       type: Object,
       default: () => {}
@@ -126,6 +119,10 @@ export default {
     tokenBalance: {
       type: String,
       default: '0'
+    },
+    aaveBalance: {
+      type: String,
+      default: '0'
     }
   },
   data() {
@@ -138,11 +135,27 @@ export default {
   computed: {
     hasAmount() {
       return BigNumber(this.amount).gt(0);
+    },
+    checkIfNumerical() {
+      const regex = new RegExp('^-?[0-9]+[.]?[0-9]*$');
+      const test = regex.test(this.amount);
+      return [test || 'Please enter a valid value!'];
+    },
+    errorMessages() {
+      if (!hasValidDecimals(this.amount, this.tokenDecimal))
+        return 'Too many decimal places';
+
+      return '';
+    },
+    disabled() {
+      return !this.hasAmount || this.errorMessages !== '';
     }
   },
   mounted() {
     if (this.showToggle) {
-      this.onToggle('50%');
+      setTimeout(() => {
+        this.onToggle(this.group[1]);
+      }, 100);
     }
   },
   methods: {
@@ -168,12 +181,6 @@ export default {
           this.amount = this.calculatedAmt(1);
       }
     },
-    checkIfNumerical(value) {
-      const regex = new RegExp('^-?[0-9]+.?[0-9]*$');
-      const test = regex.test(value);
-      if (value !== '' && !test) return 'Please enter a valid value!';
-      return test;
-    },
     cancel() {
       this.$emit('cancel');
     },
@@ -181,8 +188,15 @@ export default {
       this.$emit('emitValues', this.amount);
     },
     calculatedAmt(per) {
-      const amt = BigNumber(this.tokenBalance).times(per);
-      return amt.toFixed();
+      let amt =
+        this.buttonTitle.action.toLowerCase() === ACTION_TYPES.withdraw
+          ? this.aaveBalance
+          : this.tokenBalance;
+      if (isNaN(amt)) amt = 0;
+      return BigNumber(amt)
+        .times(per)
+        .decimalPlaces(this.tokenDecimal)
+        .toString();
     }
   }
 };

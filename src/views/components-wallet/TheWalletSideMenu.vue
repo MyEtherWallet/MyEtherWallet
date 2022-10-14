@@ -9,6 +9,22 @@
       color="#07385F"
     >
       <template #prepend>
+        <mew-overlay
+          :footer="footer"
+          :show-overlay="isOpenNetworkOverlay || !validNetwork"
+          :title="
+            validNetwork
+              ? 'Select Network'
+              : 'Current network is not supported. Select a network below.'
+          "
+          content-size="large"
+          :close="validNetwork ? closeNetworkOverlay : null"
+        >
+          <network-switch
+            :filter-types="filterNetworks"
+            :is-swap-page="isSwapPage"
+          />
+        </mew-overlay>
         <div class="pa-5 pb-3">
           <div class="mt-2 mb-4 d-flex align-center justify-space-between">
             <!-- ================================================================================== -->
@@ -44,7 +60,7 @@
               active-class="remove-select-state"
               @click="openMoonpay"
             >
-              <div class="text-center mx-auto my-2">
+              <div class="text-center mx-auto my-2" @click="trackBuySellFunc">
                 <img
                   src="@/assets/images/icons/menu/icon-menu-buy-sell.svg"
                   alt="Buy or Sell"
@@ -57,7 +73,7 @@
             <v-divider vertical class="mx-3"></v-divider>
 
             <v-list-item
-              class="px-0"
+              class="px-0 SendTransaction"
               :to="{ name: ROUTES_WALLET.SEND_TX.NAME }"
             >
               <div class="text-center mx-auto my-2">
@@ -74,8 +90,9 @@
 
             <v-list-item
               :class="[!hasSwap ? 'opacity--30 pointer-event--none' : '']"
-              class="px-0"
+              class="px-0 SwapButton"
               :to="{ name: ROUTES_WALLET.SWAP.NAME }"
+              @click="trackToSwap"
             >
               <div class="text-center mx-auto my-2">
                 <img
@@ -253,8 +270,7 @@
 </template>
 
 <script>
-import AppBtnMenu from '@/core/components/AppBtnMenu';
-import ModuleNotifications from '@/modules/notifications/ModuleNotifications';
+import { mapActions, mapGetters, mapState } from 'vuex';
 import send from '@/assets/images/icons/icon-send-enable.svg';
 import dashboard from '@/assets/images/icons/icon-dashboard-enable.svg';
 import nft from '@/assets/images/icons/icon-nft.svg';
@@ -263,26 +279,28 @@ import contract from '@/assets/images/icons/icon-contract-enable.svg';
 import message from '@/assets/images/icons/icon-message-enable.svg';
 import settings from '@/assets/images/icons/icon-setting-enable.svg';
 import logout from '@/assets/images/icons/icon-logout-enable.svg';
-import BalanceCard from '@/modules/balance/ModuleBalanceCard';
-import ModuleSettings from '@/modules/settings/ModuleSettings';
 import { EventBus } from '@/core/plugins/eventBus';
-import { mapActions, mapGetters, mapState } from 'vuex';
 import { ETH, BSC, MATIC } from '@/utils/networks/types';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import dappsMeta from '@/dapps/metainfo-dapps';
 import { MOONPAY_EVENT } from '@/modules/moon-pay/helpers';
+import isNew from '@/core/helpers/isNew.js';
 
 export default {
   components: {
-    AppBtnMenu,
-    BalanceCard,
-    ModuleSettings,
-    ModuleNotifications
+    AppBtnMenu: () => import('@/core/components/AppBtnMenu'),
+    BalanceCard: () => import('@/modules/balance/ModuleBalanceCard'),
+    ModuleSettings: () => import('@/modules/settings/ModuleSettings'),
+    ModuleNotifications: () =>
+      import('@/modules/notifications/ModuleNotifications'),
+    NetworkSwitch: () =>
+      import('@/modules/network/components/NetworkSwitch.vue')
   },
   mixins: [handlerAnalytics],
   data() {
     return {
+      isOpenNetworkOverlay: false,
       navOpen: null,
       version: VERSION,
       onSettings: false,
@@ -291,22 +309,40 @@ export default {
         [ROUTES_WALLET.SWAP.NAME]: [ETH, BSC, MATIC],
         [ROUTES_WALLET.NFT_MANAGER.NAME]: [ETH]
       },
-      ROUTES_WALLET: ROUTES_WALLET
+      ROUTES_WALLET: ROUTES_WALLET,
+      footer: {
+        text: 'Need help?',
+        linkTitle: 'Contact support',
+        link: 'mailto:support@myetherwallet.com'
+      }
     };
   },
   computed: {
     ...mapGetters('global', ['network', 'isEthNetwork', 'hasSwap']),
     ...mapState('wallet', ['instance', 'isOfflineApp']),
-    ...mapState('global', ['online']),
+    ...mapState('global', ['online', 'validNetwork']),
+    ...mapState('popups', ['consentToTrack']),
+    /**
+     * IMPORTANT TO DO:
+     * @returns {boolean}
+     */
+    filterNetworks() {
+      if (this.isHardware) {
+        return [];
+      }
+      return [];
+    },
+    /**
+     * Property returns whether or not you are on the swap page
+     * @returns {boolean}
+     */
+    isSwapPage() {
+      return this.$route.name === 'Swap';
+    },
     sectionOne() {
       if (this.online) {
         const hasNew = Object.values(dappsMeta).filter(item => {
-          const dateToday = new Date();
-          const millisecondsInDay = 1000 * 60 * 60 * 24;
-          const releaseDate = new Date(item.release);
-          const daysFromRelease =
-            (dateToday.getTime() - releaseDate.getTime()) / millisecondsInDay;
-          if (Math.ceil(daysFromRelease) <= 21) {
+          if (isNew(item.release)) {
             return item;
           }
         });
@@ -404,6 +440,12 @@ export default {
     // If no menu item is selected on load, redirect user to Dashboard
     if (!this.isOfflineApp) {
       this.redirectToDashboard();
+    } else {
+      this.footer = {
+        text: 'Need help? Email us at support@myetherwallet.com',
+        linkTitle: '',
+        link: ''
+      };
     }
 
     if (this.$route.name == ROUTES_WALLET.SETTINGS.NAME) {
@@ -412,9 +454,24 @@ export default {
     EventBus.$on('openSettings', () => {
       this.openSettings();
     });
+    EventBus.$on('openNetwork', () => {
+      this.openNetwork();
+    });
   },
   methods: {
     ...mapActions('wallet', ['removeWallet']),
+    trackToSwap() {
+      this.trackSwap('fromSideMenu');
+    },
+    trackBuySellFunc() {
+      this.trackBuySell('buySellHome');
+    },
+    closeNetworkOverlay() {
+      if (this.validNetwork) {
+        this.$router.go(-1);
+        this.isOpenNetworkOverlay = false;
+      }
+    },
     shouldShow(route) {
       if (this.routeNetworks[route.name]) {
         for (const net of this.routeNetworks[route.name]) {
@@ -423,6 +480,9 @@ export default {
         return false;
       }
       return true;
+    },
+    openNetwork() {
+      this.isOpenNetworkOverlay = true;
     },
     openMoonpay() {
       EventBus.$emit(MOONPAY_EVENT);
@@ -434,8 +494,9 @@ export default {
       this.onSettings = true;
     },
     closeSettings() {
+      if (this.$router.currentRoute.name === ROUTES_WALLET.SETTINGS.NAME)
+        this.$router.go(-1);
       this.onSettings = false;
-      this.$router.go(-1);
     },
     onLogout() {
       this.showLogoutPopup = false;

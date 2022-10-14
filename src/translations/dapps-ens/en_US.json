@@ -65,7 +65,7 @@
   "transfer-domain": "Transfer Domain",
   "release-deed": "Return Deed",
   "hang-on": "Hang on tight!",
-  "hang-on-committing": "Please do not close your browser or exit this Dapp, we are creating a commitment for your domain. Timer will start once your transaction is confirmed",
+  "hang-on-committing": "Please do not close your browser or exit this Dapp. We are creating a commitment for your domain. Timer will start once your transaction is confirmed",
   "finalize-registration": "We are finalizing the registration for ",
   "register-progress": "Registration in progress for",
   "domain-old": "{domain} is still in the old registrar!",
@@ -150,7 +150,7 @@
     "manage-txt": "Manage Text Records",
     "upload-site": "Upload Website",
     "return-funds": "Return funds",
-    "expire-at": "Expire at {date}",
+    "expire-on": "Expires on {date}",
     "add-owned-domain": "Add an owned domain",
     "registrant": "Registrant",
     "controller": "Controller",
@@ -160,7 +160,6 @@
   "claim-tokens": "Claim Tokens",
   "claim-token-title": "Claim",
   "claim-token-desc": "Claim your ENS tokens",
-
   "delegator": {
     "title": "Delegator",
     "addr": "Delegator Address",

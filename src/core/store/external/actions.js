@@ -36,6 +36,9 @@ const setLastPath = function ({ commit }, val) {
 const setCoinGeckoTokens = function ({ commit }, params) {
   commit('SET_COIN_GECKO_TOKENS', params);
 };
+const setNetworkTokens = function ({ commit }, params) {
+  commit('SET_NETWORK_TOKENS', params);
+};
 const setTokenAndEthBalance = function ({
   rootGetters,
   getters,
@@ -113,7 +116,7 @@ const setTokenAndEthBalance = function ({
           promises.push(
             getTokenInfo(t.contract, rootState.wallet.web3).then(info => {
               if (info) {
-                rootGetters['global/network'].type.tokens.push({
+                rootState.external.networkTokens.set({
                   name: info.name,
                   symbol: info.symbol,
                   decimals: info.decimals,
@@ -176,5 +179,6 @@ export default {
   setLastPath,
   setCurrency,
   setCoinGeckoTokens,
-  setTokenAndEthBalance
+  setTokenAndEthBalance,
+  setNetworkTokens
 };

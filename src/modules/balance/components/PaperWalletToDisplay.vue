@@ -100,7 +100,7 @@
 
     <div class="text-center py-4">
       <img
-        src="@/assets/images/backgrounds/bg-spaceman.png"
+        src="@/assets/images/backgrounds/bg-spaceman.jpg"
         alt="Spaceman"
         width="200"
       />

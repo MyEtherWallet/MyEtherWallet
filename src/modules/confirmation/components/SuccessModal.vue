@@ -5,6 +5,7 @@
       :title="successTitle"
       :close="resetSuccess"
       :close-only="true"
+      :has-close-button="hasCloseButton"
       width="480"
       @close="resetSuccess"
     >
@@ -45,9 +46,9 @@
               <a
                 rel="noopener noreferrer"
                 target="_blank"
-                :href="links.etherscan"
+                :href="links.explorer"
                 class="d-flex justify-center justify-sm-start"
-                >View on Etherscan
+                >View on {{ explorerText }}
                 <v-icon color="primary" small>mdi-launch</v-icon></a
               >
             </v-col>
@@ -74,11 +75,10 @@
 </template>
 
 <script>
-import AppModal from '@/core/components/AppModal';
 import { EventBus } from '@/core/plugins/eventBus';
 export default {
   name: 'SuccessModal',
-  components: { AppModal },
+  components: { AppModal: () => import('@/core/components/AppModal') },
   props: {
     showSuccessModal: {
       type: Boolean,
@@ -111,6 +111,10 @@ export default {
     showSuccessSwap: {
       type: Boolean,
       default: false
+    },
+    hasCloseButton: {
+      type: Boolean,
+      default: true
     }
   },
   computed: {
@@ -119,6 +123,9 @@ export default {
      */
     successLottie() {
       return this.showSuccessSwap ? 'swap' : 'checkmark';
+    },
+    explorerText() {
+      return this.network.type.blockExplorer;
     }
   },
   methods: {

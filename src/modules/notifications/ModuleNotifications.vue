@@ -77,9 +77,6 @@
           <h3 class="break-hash">{{ address }}</h3>
         </div>
       </v-sheet>
-      <!-- <div class="text-center py-6">
-        <v-pagination v-model="page" :length="6"></v-pagination>
-      </div> -->
     </mew-overlay>
   </div>
 </template>
@@ -90,14 +87,14 @@ import Notification, {
   NOTIFICATION_TYPES,
   NOTIFICATION_STATUS
 } from './handlers/handlerNotification';
-import handlerNotification from './handlers/handlerNotification.mixin';
-import handlerSwap from '@/modules/swap/handlers/handlerSwap';
 
 import formatNotification from './helpers/formatNotification';
 import formatNonChainNotification from './helpers/formatNonChainNotification';
 import { EventBus } from '@/core/plugins/eventBus.js';
+
+import handlerNotification from './handlers/handlerNotification.mixin';
+import handlerSwap from '@/modules/swap/handlers/handlerSwap';
 import NonChainNotification from './handlers/nonChainNotification';
-// import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 
 export default {
   name: 'ModuleNotifications',
@@ -158,7 +155,7 @@ export default {
       if (!this.loading) {
         return this.ethTransfersIncoming
           .reduce((arr, notification) => {
-            if (notification.to.toLowerCase() === address) {
+            if (notification.to?.toLowerCase() === address) {
               notification.type = NOTIFICATION_TYPES.IN;
               if (notification.status) notification.read = true;
               else notification.read = false;

@@ -59,7 +59,7 @@
           </div>
           <div class="d-flex justify-space-between pb-4">
             <div>
-              <div class="mew-body">Network Fee</div>
+              <div class="mew-body">Transaction Fee</div>
               <div
                 class="mew-body greenPrimary--text cursor--pointer"
                 @click="openSettings"
@@ -101,25 +101,24 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex';
+import { mapGetters, mapState, mapActions } from 'vuex';
+import BigNumber from 'bignumber.js';
+import { fromWei, toWei, toBN } from 'web3-utils';
+
 import abi from '../handlers/helpers/multicall.js';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import handlerBlock from '../handlers/handlerBlock';
-import BlockResultComponent from '../components/BlockResultComponent';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
-import BigNumber from 'bignumber.js';
-import { fromWei, toWei, toBN } from 'web3-utils';
-import { mapActions } from 'vuex';
 import { EventBus } from '@/core/plugins/eventBus';
+
 export default {
   name: 'ModuleEthBlockBatchMinting',
   components: {
-    BlockResultComponent
+    BlockResultComponent: () => import('../components/BlockResultComponent')
   },
   data() {
     return {
       blocks: [],
-      //localBlocks: [],
       blockCache: {},
       isLoading: true,
       gasLimit: '21000',
@@ -185,15 +184,15 @@ export default {
       return value;
     },
     blockCount() {
-      const cart = this.isTestNetwork ? this.cart.RIN : this.cart.ETH;
+      const cart = this.cart.ETH;
       return cart.length;
     },
     pluralizeBlockCount() {
-      const cart = this.isTestNetwork ? this.cart.RIN : this.cart.ETH;
+      const cart = this.cart.ETH;
       return cart.length > 1 ? 'Blocks' : 'Block';
     },
     isCartEmpty() {
-      const cart = this.isTestNetwork ? this.cart.RIN : this.cart.ETH;
+      const cart = this.cart.ETH;
       return cart.length >= 1 ? false : true;
     },
     hasEnoughEth() {
@@ -234,7 +233,7 @@ export default {
     async fetchBlocks() {
       this.isLoading = true;
       const newResultArray = [];
-      const cart = this.isTestNetwork ? this.cart.RIN : this.cart.ETH;
+      const cart = this.cart.ETH;
       this.totalResult = cart.filter(item => {
         if (!item.hasOwner) return item;
       }).length;
@@ -377,7 +376,7 @@ export default {
           value: this.totalMintValue
         })
         .on('transactionHash', () => {
-          const network = this.isTestNetwork ? 'RIN' : 'ETH';
+          const network = 'ETH';
           this.emptyCart(network);
           this.isLoading = false;
         })

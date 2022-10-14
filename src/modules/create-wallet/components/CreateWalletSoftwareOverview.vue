@@ -88,8 +88,8 @@
 </template>
 
 <script>
+import { mapGetters, mapState } from 'vuex';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
-import { mapGetters } from 'vuex';
 export default {
   name: 'CreateWalletSoftwareOverview',
   data: () => ({
@@ -100,10 +100,13 @@ export default {
     }
   }),
   computed: {
-    ...mapGetters('article', ['getArticle'])
+    ...mapGetters('article', ['getArticle']),
+    ...mapState('wallet', ['isOfflineApp'])
   },
   mounted() {
-    this.linkToLearnMore.url = this.getArticle('not-rec-when-access-wallet');
+    if (this.isOfflineApp) this.linkToLearnMore = {};
+    else
+      this.linkToLearnMore.url = this.getArticle('not-rec-when-access-wallet');
   },
   methods: {
     /**

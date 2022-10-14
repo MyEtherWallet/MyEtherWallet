@@ -10,19 +10,19 @@ export default {
     return {
       extensionLinks: {
         chrome: {
-          link: 'https://chrome.google.com/webstore',
+          link: 'https://chrome.google.com/webstore/detail/enkrypt/kkpllkodjeloidieedojogacfhpaihoh',
           img: require('@/assets/images/icons/icon-chrome.svg')
         },
         firefox: {
-          link: 'https://chrome.google.com/webstore',
+          link: 'https://chrome.google.com/webstore/detail/enkrypt/kkpllkodjeloidieedojogacfhpaihoh',
           img: require('@/assets/images/icons/icon-firefox.svg')
         },
         opera: {
-          link: 'https://chrome.google.com/webstore',
+          link: 'https://addons.opera.com/en/extensions/details/enkrypt/',
           img: require('@/assets/images/icons/icon-opera.svg')
         },
         default: {
-          link: 'https://chrome.google.com/webstore',
+          link: 'https://chrome.google.com/webstore/detail/enkrypt/kkpllkodjeloidieedojogacfhpaihoh',
           img: require('@/assets/images/icons/icon-chrome.svg')
         }
       }
@@ -53,16 +53,19 @@ export default {
       return this.extensionLinks[this.browser].link;
     },
     isMobile() {
-      return this.$vuetify.breakpoint.smAndDown;
+      return this.$vuetify.breakpoint.mdAndDown;
     }
   },
   methods: {
     openEnkrypt() {
       // eslint-disable-next-line
-      window.open(
-        this.isMobile ? 'https://enkrypt.com' : this.browserLink,
-        '_blank'
-      );
+       /*
+       window.open(
+         this.isMobile ? 'https://www.enkrypt.com' : this.browserLink,
+         '_blank'
+       );
+       */
+      window.open('https://www.enkrypt.com', '_blank');
     },
     openMewWallet() {
       if (this.isMobile) {
@@ -79,12 +82,12 @@ export default {
         }
       } else {
         // eslint-disable-next-line
-        window.open('https://www.mewwallet.com/', '_blank');
+         window.open('https://www.mewwallet.com/', '_blank');
       }
     },
     openHelpCenter() {
       // eslint-disable-next-line
-      window.open('https://help.myetherwallet.com/en/', '_blank');
+       window.open('https://www.enkrypt.com', '_blank');
     }
   }
 };

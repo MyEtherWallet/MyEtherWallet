@@ -392,7 +392,7 @@ export default {
           {
             label: 'Enkrypt',
             class: 'FooterCXTool',
-            link: 'https://chrome.google.com/webstore/detail/enkrypt/kkpllkodjeloidieedojogacfhpaihoh?hl=en'
+            link: 'https://www.enkrypt.com'
           },
           {
             label: 'Verify message',

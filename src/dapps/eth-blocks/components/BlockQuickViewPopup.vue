@@ -16,22 +16,11 @@
           {{ description }}
         </div>
 
-        <div class="d-flex align-center justify-end mt-5">
-          <mew-button
-            btn-size="large"
-            btn-style="transparent"
-            title="Go to block details"
-            color-theme="primary"
-            @click.native="navToBlock"
-          />
-          <mew-button
-            btn-size="large"
-            btn-style="background"
-            title="Close"
-            color-theme="primary"
-            class="ml-1"
-            @click.native="close"
-          />
+        <div
+          class="primary--text font-weight-medium cursor--pointer mt-3"
+          @click="navToBlock"
+        >
+          View Block details
         </div>
       </template>
     </app-modal>
@@ -39,12 +28,12 @@
 </template>
 
 <script>
-import AppModal from '@/core/components/AppModal';
 import { isEmpty } from 'lodash';
+
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 export default {
   name: 'DateSelectorPopup',
-  components: { AppModal },
+  components: { AppModal: () => import('@/core/components/AppModal') },
   props: {
     showBlock: {
       type: Boolean,

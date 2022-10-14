@@ -1,5 +1,9 @@
 <template>
-  <mew6-white-sheet v-if="isEthNetwork" :sideinfo="!mobile">
+  <mew6-white-sheet
+    v-if="isEthNetwork"
+    class="module-swap-rates"
+    :sideinfo="!mobile"
+  >
     <div class="px-5 px-lg-7 py-5">
       <div class="d-flex align-center justify-space-between">
         <span class="mew-heading-2">{{ $t('common.swap') }}</span>
@@ -23,27 +27,25 @@
             1 {{ data.fromT.symbol }} / {{ data.rate }} {{ data.toT.symbol }}
           </div>
           <div class="d-flex align-center">
-            <img
-              width="22"
-              height="22"
-              src="https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ETH-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.svg"
-              alt="currency-icon"
-            />
+            <mew-token-container
+              size="small"
+              class="pa-1"
+              img="https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ETH-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.svg"
+            ></mew-token-container>
             <img
               width="18"
               class="mx-2"
               src="@/assets/images/icons/icon-swap-arrow-grey.png"
               alt="swap-icon"
             />
-            <img
-              width="22"
-              :src="
+            <mew-token-container
+              size="small"
+              :img="
                 require('@/assets/images/currencies/' +
                   data.toT.symbol.toLowerCase() +
                   '.png')
               "
-              alt="eth-icon"
-            />
+            ></mew-token-container>
           </div>
         </v-sheet>
       </div>
@@ -69,12 +71,14 @@
 </template>
 
 <script>
-import handlerSwap from '@/modules/swap/handlers/handlerSwap';
 import { mapState, mapGetters } from 'vuex';
+import { toWei } from 'web3-utils';
+
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-import { toWei } from 'web3-utils';
+import handlerSwap from '@/modules/swap/handlers/handlerSwap';
 
 const STATIC_PAIRS = [
   {
@@ -231,7 +235,9 @@ export default {
         toToken: data.toT.contract,
         amount: '1'
       };
-      this.trackSwapRate(data.fromT.symbol + ' to ' + data.toT.symbol);
+      this.trackSwapRate(
+        `fromSwapTokenPairs ${data.fromT.symbol} to ${data.toT.symbol}`
+      );
       this.navigateToSwap(obj);
     },
     navigateToSwap(query) {

@@ -1,21 +1,5 @@
 <template>
   <div class="mew-component--side-info-network">
-    <mew-overlay
-      :footer="{
-        text: 'Need help?',
-        linkTitle: 'Contact support',
-        link: 'mailto:support@myetherwallet.com'
-      }"
-      :show-overlay="isOpenNetworkOverlay"
-      title="Select Network"
-      content-size="large"
-      :close="closeNetworkOverlay"
-    >
-      <network-switch
-        :filter-types="filterNetworks"
-        :is-swap-page="isSwapPage"
-      />
-    </mew-overlay>
     <mew6-white-sheet
       :sideinfo="!mobile"
       class="px-5 px-lg-7 py-5 d-flex justify-space-between"
@@ -39,20 +23,20 @@
           <div>Last Block: {{ lastBlock }}</div>
         </div>
       </div>
-      <v-img :src="icon" :max-height="65" :max-width="65" contain />
+      <mew-token-container size="65px" :img="icon"></mew-token-container>
     </mew6-white-sheet>
   </div>
 </template>
 
 <script>
-import NetworkSwitch from './components/NetworkSwitch';
 import { mapGetters, mapState } from 'vuex';
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
+
 import WALLET_TYPES from '../access-wallet/common/walletTypes';
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
+import { EventBus } from '@/core/plugins/eventBus';
 export default {
   name: 'ModuleNetwork',
-  components: { NetworkSwitch },
   beforeRouteLeave(to, from, next) {
     if (to.name == ROUTES_HOME.ACCESS_WALLET.NAME) {
       next({ name: ROUTES_WALLET.DASHBOARD.NAME });
@@ -67,12 +51,11 @@ export default {
     }
   },
   data() {
-    return {
-      isOpenNetworkOverlay: false
-    };
+    return {};
   },
   computed: {
     ...mapState('wallet', ['blockNumber', 'identifier', 'isHardware']),
+    ...mapState('global', ['validNetwork']),
     ...mapGetters('global', ['network']),
     type() {
       return this.network.type.currencyName;
@@ -87,24 +70,13 @@ export default {
       return this.network.type.icon;
     },
     show() {
-      return this.identifier !== WALLET_TYPES.WEB3_WALLET;
-    },
-    /**
-     * IMPORTANT TO DO:
-     * @returns {boolean}
-     */
-    filterNetworks() {
-      if (this.isHardware) {
-        return [];
-      }
-      return [];
-    },
-    /**
-     * Property returns whether or not you are on the swap page
-     * @returns {boolean}
-     */
-    isSwapPage() {
-      return this.$route.name === 'Swap';
+      let metamask = false;
+      if (window.ethereum)
+        metamask =
+          window.ethereum.isMetaMask &&
+          !window.ethereum.hasOwnProperty('isMewWallet') &&
+          !window.ethereum.hasOwnProperty('isTrust');
+      return this.identifier !== WALLET_TYPES.WEB3_WALLET || metamask;
     }
   },
   mounted() {
@@ -115,11 +87,7 @@ export default {
   methods: {
     openNetworkOverlay() {
       this.$router.push({ name: ROUTES_WALLET.NETWORK.NAME });
-      this.isOpenNetworkOverlay = true;
-    },
-    closeNetworkOverlay() {
-      this.$router.go(-1);
-      this.isOpenNetworkOverlay = false;
+      EventBus.$emit('openNetwork');
     }
   }
 };

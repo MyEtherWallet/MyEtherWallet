@@ -18,7 +18,7 @@
           <div>
             <div
               v-if="!d.isAccessible"
-              class="badge mew-label disabledPrimary--text d-block text--center mt-3"
+              class="badge mew-label disabledPrimary--text d-block text--center mt-3 pb-5 pl-2"
             >
               Coming soon
             </div>
@@ -76,10 +76,10 @@ export default {
         label: vm.$t('home.features.dapps.safesend'),
         icon: require('@/assets/images/icons/icon-dapp-lock.png')
       },
-
       {
         label: vm.$t('home.features.dapps.aave'),
-        icon: require('@/assets/images/icons/icon-dapp-aave.png')
+        icon: require('@/assets/images/icons/icon-dapp-aave.png'),
+        isAccessible: true
       },
       {
         label: vm.$t('home.features.dapps.golem-migrator'),
@@ -114,7 +114,7 @@ $greyBackground: var(--v-greyLight-base);
   padding: 3px;
   border-radius: 4px;
   height: 20px;
-  width: 83px;
+  width: 86px;
 }
 .message {
   background-color: $greyBackground;

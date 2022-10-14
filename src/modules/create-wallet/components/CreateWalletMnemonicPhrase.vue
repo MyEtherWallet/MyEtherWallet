@@ -207,8 +207,6 @@
 </template>
 
 <script>
-import mnemonicPhraseTable from '@/components/MnemonicPhraseTable';
-import phraseBlock from '@/components/PhraseBlock';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
@@ -217,8 +215,8 @@ import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 export default {
   name: 'CreateWalletMnemonicPhrase',
   components: {
-    mnemonicPhraseTable,
-    phraseBlock
+    mnemonicPhraseTable: () => import('@/components/MnemonicPhraseTable'),
+    phraseBlock: () => import('@/components/PhraseBlock')
   },
   mixins: [handlerAnalytics],
   props: {
@@ -270,7 +268,9 @@ export default {
       return this.phrase.length === this.phraseSize;
     },
     extraWordMatch() {
-      return this.extraWord === this.extraWordVerification;
+      return this.extraWord
+        ? this.extraWord === this.extraWordVerification
+        : true;
     },
     stepTwoText() {
       return this.extraWord === ''
@@ -355,6 +355,7 @@ export default {
      */
     createAnotherWallet() {
       this.extraWord = '';
+      this.extraWordVerification = '';
       this.updateStep(1);
     }
   }

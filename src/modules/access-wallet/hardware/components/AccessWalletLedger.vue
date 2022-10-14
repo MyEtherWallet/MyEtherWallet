@@ -7,6 +7,7 @@
         <access-wallet-derivation-path
           :selected-path="selectedPath"
           :passed-paths="paths"
+          :disable-custom-paths="true"
           class="path-box"
           @setPath="setPath"
         />
@@ -17,10 +18,6 @@
         <p class="para">
           Choose <b>Ethereum</b> on your device and connect with one of the
           methods below.
-          <!-- <a
-            href="https://winaero.com/enable-or-disable-bluetooth-device-permissions-in-google-chrome/"
-            ><b class="ble-article-link"><u>Here's Why</u></b>
-          </a> -->
         </p>
         <v-img
           :src="
@@ -71,12 +68,10 @@
   </div>
 </template>
 <script>
-import AccessWalletDerivationPath from './AccessWalletDerivationPath.vue';
-
 export default {
   name: 'AccessWalletLedger',
   components: {
-    AccessWalletDerivationPath
+    AccessWalletDerivationPath: () => import('./AccessWalletDerivationPath.vue')
   },
   props: {
     ledgerApps: {

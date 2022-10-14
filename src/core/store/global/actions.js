@@ -1,3 +1,4 @@
+import matchNetwork from '@/core/helpers/matchNetwork';
 import { toBNSafe } from '@/core/helpers/numberFormatHelper';
 
 const setOnlineStatus = function ({ commit, dispatch }, val) {
@@ -36,9 +37,22 @@ const setGasPrice = function ({ commit }, gasPrice) {
 const setGasPriceType = function ({ commit }, type) {
   commit('SET_GAS_PRICE_TYPE', type);
 };
-const setNetwork = function ({ commit, dispatch }, networkObj) {
-  commit('SET_NETWORK', networkObj);
-  dispatch('swap/resetPrefetch', null, { root: true });
+const setNetwork = async function (
+  { commit, dispatch },
+  { network, walletType }
+) {
+  const chainID = network?.type?.chainID;
+  const matched = await matchNetwork(chainID, walletType);
+  if (matched) {
+    commit('SET_NETWORK', network);
+    dispatch('swap/resetPrefetch', null, { root: true });
+    dispatch('wallet/setAccountBalance', '0', { root: true });
+    return;
+  }
+  throw new Error('Network not found');
+};
+const setValidNetwork = function ({ commit }, valid) {
+  commit('SET_VALID_NETWORK', valid);
 };
 const addLocalContract = function ({ commit }, localContract) {
   commit('ADD_LOCAL_CONTRACT', localContract);
@@ -60,6 +74,7 @@ export default {
   setOnlineStatus,
   setLocale,
   setPreferredCurrency,
+  setValidNetwork,
   setNetwork,
   setGasPrice,
   setGasPriceType,

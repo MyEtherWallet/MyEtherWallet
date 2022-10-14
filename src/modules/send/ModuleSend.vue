@@ -38,9 +38,9 @@
             />
             <mew-input
               label="Amount"
-              placeholder="0"
               :value="amount"
               type="number"
+              placeholder="0"
               :persistent-hint="true"
               :error-messages="amountErrorMessage"
               :max-btn-obj="{
@@ -49,6 +49,8 @@
                 method: setEntireBal
               }"
               :buy-more-str="buyMoreStr"
+              class="AmountInput"
+              @keydown.native="preventCharE($event)"
               @buyMore="openMoonpay"
               @input="val => setAmount(val, false)"
             />
@@ -72,7 +74,11 @@
         =====================================================================================
         -->
         <v-col cols="12" class="pt-4 pb-2">
-          <module-address-book ref="addressInput" @setAddress="setAddress" />
+          <module-address-book
+            ref="addressInput"
+            class="AddressInput"
+            @setAddress="setAddress"
+          />
         </v-col>
         <!--
       =====================================================================================
@@ -166,6 +172,7 @@
             :has-full-width="false"
             btn-size="xlarge"
             :disabled="isDisabledNextBtn"
+            class="SendButton"
             @click.native="send()"
           />
         </div>
@@ -188,26 +195,26 @@ import { fromWei, isHexStrict } from 'web3-utils';
 import { debounce, isEmpty, isNumber } from 'lodash';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
-import SendTransaction from '@/modules/send/handlers/handlerSend';
+
 import { ETH } from '@/utils/networks/types';
 import { Toast, ERROR, WARNING } from '@/modules/toast/handler/handlerToast';
-import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
-import SendLowBalanceNotice from './components/SendLowBalanceNotice.vue';
-import AppButtonBalance from '@/core/components/AppButtonBalance';
-import AppTransactionFee from '@/core/components/AppTransactionFee.vue';
+
 import {
   formatIntegerToString,
   toBNSafe
 } from '@/core/helpers/numberFormatHelper';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
-import { toBase } from '@/core/helpers/unit';
+import { fromBase, toBase } from '@/core/helpers/unit';
+
+import SendTransaction from '@/modules/send/handlers/handlerSend';
+
 export default {
   components: {
-    ModuleAddressBook,
-    SendLowBalanceNotice,
-    AppButtonBalance,
-    AppTransactionFee
+    ModuleAddressBook: () => import('@/modules/address-book/ModuleAddressBook'),
+    SendLowBalanceNotice: () => import('./components/SendLowBalanceNotice.vue'),
+    AppButtonBalance: () => import('@/core/components/AppButtonBalance'),
+    AppTransactionFee: () => import('@/core/components/AppTransactionFee.vue')
   },
   mixins: [buyMore],
   props: {
@@ -265,7 +272,7 @@ export default {
       'getFiatValue'
     ]),
     ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
-    ...mapGetters('custom', ['hasCustom', 'customTokens']),
+    ...mapGetters('custom', ['hasCustom', 'customTokens', 'hiddenTokens']),
     isFromNetworkCurrency() {
       return this.selectedCurrency?.symbol === this.currencyName;
     },
@@ -339,13 +346,24 @@ export default {
      */
     tokens() {
       // no ref copy
-      const tokensList = this.tokensList.slice();
+      const tokensList = this.tokensList.slice().filter(t => {
+        return !t.isHidden;
+      });
+      const customTokens = this.customTokens.reduce((arr, item) => {
+        // Check if token is in hiddenTokens
+        const isHidden = this.hiddenTokens.find(token => {
+          return item.contract == token.address;
+        });
+        item.decimals = BigNumber(item.decimals).toNumber();
+        if (!isHidden) arr.push(item);
+        return arr;
+      }, []);
       const imgs = tokensList.map(item => {
         item.totalBalance = this.getFiatValue(item.usdBalancef);
         item.tokenBalance = item.balancef;
         item.price = this.getFiatValue(item.pricef);
         item.subtext = item.name;
-        item.value = item.name;
+        item.value = item.contract;
         item.name = item.symbol;
         return item.img;
       });
@@ -371,19 +389,19 @@ export default {
         },
         ...tokensList
       ];
-      if (this.hasCustom) {
+      if (customTokens.length > 0) {
         return returnedArray.concat([
           {
             header: 'Custom Tokens'
           },
-          ...this.customTokens
+          ...customTokens
         ]);
       }
       return returnedArray;
     },
     /* Property returns either gas estimmation error or amount error*/
     amountErrorMessage() {
-      return this.gasEstimationError !== ''
+      return this.gasEstimationError !== '' && this.sendTx?.hasEnoughBalance()
         ? this.gasEstimationError
         : this.amountError;
     },
@@ -456,6 +474,11 @@ export default {
     txFeeETH() {
       return fromWei(this.txFee);
     },
+    currencyDecimals() {
+      return this.selectedCurrency?.decimals
+        ? this.selectedCurrency.decimals
+        : 18;
+    },
     totalCost() {
       if (
         !SendTransaction.helpers.hasValidDecimals(
@@ -464,7 +487,7 @@ export default {
         )
       )
         return '0';
-      const amountToWei = toBase(this.amount, this.selectedCurrency?.decimals);
+      const amountToWei = toBase(this.amount, this.currencyDecimals);
       return this.isFromNetworkCurrency
         ? BigNumber(this.txFee).plus(amountToWei).toString()
         : this.txFee;
@@ -484,10 +507,7 @@ export default {
       return this.isValidAmount && this.isValidGasLimit;
     },
     getCalculatedAmount() {
-      const amount = new BigNumber(this.amount ? this.amount : 0)
-        .times(new BigNumber(10).pow(this.selectedCurrency.decimals))
-        .toFixed(0);
-      return toBNSafe(amount);
+      return toBase(this.amount ? this.amount : 0, this.currencyDecimals);
     },
     allValidInputs() {
       if (this.sendTx && this.sendTx.currency) {
@@ -513,6 +533,14 @@ export default {
         return !this.sendTx.hasEnoughBalance();
       }
       return true;
+    },
+    isValidForGas() {
+      return (
+        this.sendTx &&
+        this.sendTx.currency &&
+        this.isValidAmount &&
+        this.isValidAddress
+      );
     }
   },
   watch: {
@@ -552,7 +580,8 @@ export default {
       handler: function (newVal) {
         if (this.sendTx) {
           this.sendTx.setCurrency(newVal);
-          this.setAmountError(this.amount);
+          if (this.isValidForGas) this.debounceEstimateGas();
+          this.debounceAmountError(this.amount);
           this.gasLimit = this.defaultGasLimit;
         }
         this.data = '0x';
@@ -579,12 +608,7 @@ export default {
       this.debounceAmountError('0');
     },
     txFeeETH(newVal) {
-      if (this.selectedMax) {
-        const total = BigNumber(newVal).plus(this.amount);
-        if (total.gt(this.balanceInETH)) {
-          this.setEntireBal();
-        }
-      }
+      if (!isEmpty(this.selectedCurrency)) this.localGasPriceWatcher(newVal);
     }
   },
   mounted() {
@@ -602,12 +626,29 @@ export default {
       this.setAmountError(value);
     }, 1000);
     this.debounceEstimateGas = debounce(() => {
-      if (this.allValidInputs) {
+      if (this.isValidForGas) {
         this.estimateAndSetGas();
       }
     }, 500);
   },
   methods: {
+    localGasPriceWatcher(newVal) {
+      const total = BigNumber(newVal).plus(this.amount);
+      const amt = toBase(this.amount, this.selectedCurrency?.decimals);
+      const balance = toBNSafe(this.selectedCurrency.balance);
+
+      if (
+        (this.selectedMax &&
+          this.selectedCurrency &&
+          this.selectedCurrency.contract === MAIN_TOKEN_ADDRESS &&
+          total.gt(this.balanceInETH)) ||
+        (this.selectedCurrency &&
+          this.selectedCurrency.contract !== MAIN_TOKEN_ADDRESS &&
+          balance.lt(amt))
+      ) {
+        this.setEntireBal();
+      }
+    },
     verifyHexFormat() {
       this.$refs.dataInput._data.inputValue = this.data;
       if (!this.data || isEmpty(this.data)) {
@@ -667,7 +708,7 @@ export default {
           )
         ) {
           this.amountError = 'Invalid decimal points';
-        } else if (value && this.sendTx && this.sendTx.currency) {
+        } else if (this.sendTx && this.sendTx.currency) {
           this.amountError = this.sendTx.hasEnoughBalance()
             ? ''
             : 'Not enough balance to send!';
@@ -757,19 +798,15 @@ export default {
     },
     convertToDisplay(amount, decimals) {
       const amt = toBNSafe(amount).toString();
-      return decimals
-        ? BigNumber(amt).div(BigNumber(10).pow(decimals)).toString()
-        : amt;
+      return decimals ? fromBase(amt, decimals).toString() : amt;
     },
     setEntireBal() {
       if (
         isEmpty(this.selectedCurrency) ||
         this.selectedCurrency.contract === MAIN_TOKEN_ADDRESS
       ) {
-        this.setAmount(
-          BigNumber(this.balanceInETH).minus(this.txFeeETH).toFixed(),
-          true
-        );
+        const amt = BigNumber(this.balanceInETH).minus(this.txFeeETH);
+        this.setAmount(amt.lt(0) ? '0' : amt.toFixed(), true);
       } else {
         this.setAmount(
           this.convertToDisplay(
@@ -780,10 +817,11 @@ export default {
         );
       }
     },
-    setAmount(value, max) {
-      this.amount = value;
+    setAmount: debounce(function (val, max) {
+      const value = val ? val : 0;
+      this.amount = BigNumber(value).toFixed();
       this.selectedMax = max;
-    },
+    }, 500),
     setGasLimit(value) {
       this.gasLimit = value;
     },
@@ -794,6 +832,9 @@ export default {
     handleLocalGasPrice(e) {
       this.localGasPrice = e;
       this.sendTx.setLocalGasPrice(e);
+    },
+    preventCharE(e) {
+      if (e.key === 'e') e.preventDefault();
     }
   }
 };

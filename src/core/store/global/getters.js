@@ -32,20 +32,22 @@ const network = function (state) {
   }
   return network;
 };
-const gasPriceByType = (state, getters) => type => {
-  if (!getters.isEIP1559SupportedNetwork) {
-    return getGasBasedOnType(state.baseGasPrice, type);
-  }
-  const priorityFee = getPriorityFeeBasedOnType(
-    toBN(state.eip1559.maxPriorityFeePerGas),
-    type
-  );
-  const baseFee = getBaseFeeBasedOnType(
-    toBN(state.eip1559.baseFeePerGas),
-    type
-  );
-  return baseFee.add(priorityFee).toString();
-};
+const gasPriceByType =
+  (state, getters) =>
+  (type = 'economy') => {
+    if (!getters.isEIP1559SupportedNetwork) {
+      return getGasBasedOnType(state.baseGasPrice, type);
+    }
+    const priorityFee = getPriorityFeeBasedOnType(
+      toBN(state.eip1559.maxPriorityFeePerGas),
+      type
+    );
+    const baseFee = getBaseFeeBasedOnType(
+      toBN(state.eip1559.baseFeePerGas),
+      type
+    );
+    return baseFee.add(priorityFee).toString();
+  };
 const gasPrice = function (state, getters) {
   if (!getters.isEIP1559SupportedNetwork) {
     return getGasBasedOnType(state.baseGasPrice, state.gasPriceType);
@@ -68,7 +70,7 @@ const localContracts = function (state, getters) {
 
 const hasSwap = function (state, getters, rootState) {
   const name = getters.network.type.name;
-  const device = rootState.wallet.instance.identifier;
+  const device = rootState.wallet.instance?.identifier;
 
   if (device === WALLET_TYPES.COOL_WALLET_S) return false;
   return name === ETH.name || name === BSC.name || name === MATIC.name;

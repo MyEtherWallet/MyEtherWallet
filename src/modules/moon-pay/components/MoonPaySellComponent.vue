@@ -6,7 +6,7 @@
     <mew-select
       label="Currency"
       :items="currencyItems"
-      :value="actualSelectedCurrency"
+      :value="selectedCurrency"
       :disabled="loading"
       is-custom
       @input="setCurrency"
@@ -27,6 +27,7 @@
         :error-messages="errorMessages"
         :persistent-hint="hasPersistentHint"
         :hint="persistentHintMessage"
+        @keydown.native="preventCharE($event)"
       />
     </div>
     <div v-else class="position--relative mt-9">
@@ -39,10 +40,14 @@
         :error-messages="errorMessages"
         :persistent-hint="hasPersistentHint"
         :hint="persistentHintMessage"
+        @keydown.native="preventCharE($event)"
       />
     </div>
     <div class="pt-8 pb-13">
-      <div class="d-flex align-center justify-space-between mb-2">
+      <div
+        v-if="inWallet"
+        class="d-flex align-center justify-space-between mb-2"
+      >
         <div class="mew-body textDark--text font-weight-bold">
           Estimated Network Fee
         </div>
@@ -61,11 +66,12 @@
     <!-- ============================================================== -->
     <div v-if="!inWallet" class="mt-0">
       <div class="mew-heading-3 textDark--text mb-5">Refund address</div>
-      <mew-input
-        v-model="toAddress"
-        :rules="[isValidToAddress]"
+      <module-address-book
+        ref="addressInput"
         label="Enter Crypto Address"
-        :error-messages="addressErrorMessages"
+        :enable-save-address="false"
+        :is-home-page="true"
+        @setAddress="setAddress"
       />
     </div>
     <!-- ============================================================== -->
@@ -85,24 +91,31 @@
 
 <script>
 import MultiCoinValidator from 'multicoin-address-validator';
-import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
-import ButtonBalance from '@/core/components/AppButtonBalance';
-import { mapGetters, mapState } from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 import { isEmpty, debounce, isNumber } from 'lodash';
-import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import BigNumber from 'bignumber.js';
-import handlerSend from '@/modules/send/handlers/handlerSend.js';
 import { fromWei } from 'web3-utils';
+import Web3 from 'web3';
+
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
+import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
+import handlerSend from '@/modules/send/handlers/handlerSend.js';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common.js';
 import abi from '@/modules/balance/handlers/abiERC20.js';
 import nodes from '@/utils/networks';
-import Web3 from 'web3';
-import { toBNSafe } from '@/core/helpers/numberFormatHelper';
+import { toBNSafe, formatFiatValue } from '@/core/helpers/numberFormatHelper';
 import { toBase } from '@/core/helpers/unit';
 import { sellContracts } from './tokenList';
+import handlerWallet from '@/core/mixins/handlerWallet.mixin';
+import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook.vue';
+
 export default {
   name: 'ModuleSellEth',
-  components: { ButtonBalance },
+  components: {
+    ButtonBalance: () => import('@/core/components/AppButtonBalance'),
+    ModuleAddressBook
+  },
+  mixins: [handlerWallet],
   props: {
     orderHandler: {
       type: Object,
@@ -142,12 +155,12 @@ export default {
   computed: {
     ...mapState('wallet', ['address', 'instance']),
     ...mapState('global', ['gasPriceType']),
-    ...mapGetters('wallet', ['balanceInETH']),
+    ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
     ...mapGetters('global', ['isEthNetwork', 'network', 'gasPriceByType']),
     ...mapGetters('external', ['contractToToken']),
     persistentHintMessage() {
       return this.hasPersistentHint
-        ? `Max adjusted to leave sufficient ${this.actualSelectedCurrency.symbol} for network fee`
+        ? `Max adjusted to leave sufficient ${this.selectedCurrency.symbol} for network fee`
         : '';
     },
     maxButton() {
@@ -161,24 +174,33 @@ export default {
           }
         : {};
     },
-    actualSelectedCurrency() {
-      const isInPreselected = this.preselectedCurrencies.some(item => {
-        return (
-          item.symbol === this.selectedCurrency.symbol &&
-          item.contract === this.selectedCurrency.contract
-        );
-      });
-      if (isInPreselected) {
-        return this.selectedCurrency;
-      }
-
-      return this.preselectedCurrencies[0];
-    },
     preselectedCurrencies() {
+      if (this.inWallet) {
+        return sellContracts.reduce((arr, item) => {
+          const inList = this.tokensList.find(t => {
+            if (t.contract.toLowerCase() === item.toLowerCase()) return t;
+          });
+          if (inList) {
+            inList.price = formatFiatValue(inList ? inList.price : '0').value;
+            arr.push(inList);
+            return arr;
+          }
+
+          const token = this.contractToToken(item);
+          if (token) {
+            token.price = formatFiatValue(token ? token.price : '0').value;
+            arr.push(token);
+          }
+          return arr;
+        }, []);
+      }
       const arr = new Array();
       for (const contract of sellContracts) {
         const token = this.contractToToken(contract);
-        if (token) arr.push(token);
+        if (token) {
+          token.price = formatFiatValue(token ? token.price : '0').value;
+          arr.push(token);
+        }
       }
       return arr;
     },
@@ -203,11 +225,11 @@ export default {
       return returnedArray;
     },
     name() {
-      return this.actualSelectedCurrency.symbol !== 'ETH' &&
-        this.actualSelectedCurrency.symbol !== 'USDC' &&
-        this.actualSelectedCurrency.symbol !== 'USDT'
+      return this.selectedCurrency.symbol !== 'ETH' &&
+        this.selectedCurrency.symbol !== 'USDC' &&
+        this.selectedCurrency.symbol !== 'USDT'
         ? 'ETH'
-        : this.actualSelectedCurrency.symbol;
+        : this.selectedCurrency.symbol;
     },
     disableSell() {
       return (
@@ -252,7 +274,7 @@ export default {
       return `${BigNumber(this.txFee).decimalPlaces(4)} ETH`;
     },
     errorMessages() {
-      const symbol = this.actualSelectedCurrency?.symbol
+      const symbol = this.selectedCurrency?.symbol
         ? this.name
         : this.network.type.currencyName;
       const amount = BigNumber(this.amount);
@@ -299,18 +321,12 @@ export default {
         this.amount &&
         !handlerSend.helpers.hasValidDecimals(
           this.amount,
-          this.actualSelectedCurrency.decimals
+          this.selectedCurrency.decimals
         )
       ) {
-        return `Invalid decimals! Max decimals for selected currency is ${this.actualSelectedCurrency.decimals}`;
+        return `Invalid decimals! Max decimals for selected currency is ${this.selectedCurrency.decimals}`;
       }
 
-      return '';
-    },
-    addressErrorMessages() {
-      if (!this.actualValidAddress && !isEmpty(this.toAddress)) {
-        return 'Invalid Address';
-      }
       return '';
     },
     nonMainnetMetamask() {
@@ -325,7 +341,7 @@ export default {
       if (!this.amount) {
         return false;
       }
-      if (!isNumber(this.actualSelectedCurrency?.decimals)) {
+      if (!isNumber(this.selectedCurrency?.decimals)) {
         return false;
       }
       /** amount is negative */
@@ -335,7 +351,7 @@ export default {
       /** return amount has valid decimals */
       return handlerSend.helpers.hasValidDecimals(
         this.amount,
-        this.actualSelectedCurrency.decimals
+        this.selectedCurrency.decimals
       );
     },
     getCalculatedAmount() {
@@ -357,7 +373,7 @@ export default {
       try {
         const bal = toBase(
           this.selectedBalance,
-          this.actualSelectedCurrency.decimals
+          this.selectedCurrency.decimals
         );
         return toBNSafe(bal).gte(this.getAmountBN);
       } catch (e) {
@@ -373,14 +389,14 @@ export default {
     }
   },
   watch: {
-    actualSelectedCurrency: {
+    selectedCurrency: {
       handler: function (newVal) {
         this.maxBalance = '0';
         this.hasPersistentHint = false;
         this.selectedBalance = '0';
         if (
           !isEmpty(this.sendHandler) &&
-          this.actualSelectedCurrency.hasOwnProperty('name')
+          this.selectedCurrency.hasOwnProperty('name')
         ) {
           this.sendHandler.setCurrency(newVal);
         }
@@ -400,12 +416,6 @@ export default {
     gasLimit(val) {
       this.sendHandler.setGasLimit(val);
     },
-    toAddress(val) {
-      this.validToAddress = this.isValidToAddress(val);
-      if (this.inWallet || !this.actualValidAddress) return;
-      this.sendHandler.setFrom(val);
-      this.fetchSellInfo();
-    },
     orderHandler: {
       handler: function () {
         this.sendHandler = new handlerSend();
@@ -416,11 +426,22 @@ export default {
     }
   },
   mounted() {
+    if (!this.inWallet) this.$refs.addressInput.$refs.addressSelect.clear();
     this.sendHandler = new handlerSend();
     this.fetchSellInfo();
     this.locGasPrice = this.gasPriceByType(this.gasPriceType);
   },
   methods: {
+    ...mapActions('external', ['setCoinGeckoTokens']),
+    setAddress(newVal, isValid, data) {
+      if (data.type === 'RESOLVED' && !data.value.includes('.'))
+        this.toAddress = data.value;
+      else this.toAddress = newVal;
+      this.validToAddress = isValid;
+      if (!this.validToAddress) return;
+      this.sendHandler.setFrom(this.toAddress);
+      this.fetchSellInfo();
+    },
     getEthBalance() {
       if (!this.actualValidAddress) return;
       const web3Instance = new Web3(nodes.ETH[0].url);
@@ -434,7 +455,7 @@ export default {
       const web3Instance = new Web3(nodes.ETH[0].url);
       const contract = new web3Instance.eth.Contract(
         abi,
-        this.actualSelectedCurrency.contract
+        this.selectedCurrency.contract
       );
       contract.methods
         .balanceOf(this.actualAddress)
@@ -442,7 +463,7 @@ export default {
         .then(res => {
           this.fetchingBalance = false;
           this.selectedBalance = BigNumber(res)
-            .div(BigNumber(10).pow(this.actualSelectedCurrency.decimals))
+            .div(BigNumber(10).pow(this.selectedCurrency.decimals))
             .toString();
         });
     },
@@ -464,8 +485,8 @@ export default {
           .times(
             BigNumber(10).pow(
               this.selectedCurrency?.decimals
-                ? 18
-                : this.selectedCurrency.decimals
+                ? this.selectedCurrency.decimals
+                : 18
             )
           )
           .toString();
@@ -494,8 +515,8 @@ export default {
         this.amount = BigNumber(bal)
           .div(
             BigNumber(10).pow(
-              this.actualSelectedCurrency.hasOwnProperty('name')
-                ? this.actualSelectedCurrency.decimals
+              this.selectedCurrency.hasOwnProperty('name')
+                ? this.selectedCurrency.decimals
                 : 18
             )
           )
@@ -524,14 +545,14 @@ export default {
     fetchSellInfo() {
       if (this.actualValidAddress) {
         this.fetchingBalance = true;
-        if (this.actualSelectedCurrency.contract === MAIN_TOKEN_ADDRESS) {
+        if (this.selectedCurrency.contract === MAIN_TOKEN_ADDRESS) {
           this.getEthBalance();
         } else {
           this.getTokenBalance();
         }
         if (this.hasEnoughAssets) {
           this.sendHandler.setFrom(this.actualAddress);
-          this.sendHandler.setCurrency(this.actualSelectedCurrency);
+          this.sendHandler.setCurrency(this.selectedCurrency);
           this.sendHandler.setValue(this.getCalculatedAmount);
           // eslint-disable-next-line
           this.sendHandler.setTo(ETH_DONATION_ADDRESS, 'TYPED');
@@ -563,6 +584,9 @@ export default {
     },
     isValidToAddress(address) {
       return MultiCoinValidator.validate(address, this.selectedCurrency.symbol);
+    },
+    preventCharE(e) {
+      if (e.key === 'e') e.preventDefault();
     }
   }
 };

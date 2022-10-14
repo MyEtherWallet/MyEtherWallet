@@ -10,6 +10,7 @@
         <mew-select
           :items="mergedContracts"
           label="Contract Name"
+          class="ContractSelect"
           normal-dropdown
           @input="selectedContract"
         />
@@ -18,6 +19,8 @@
           label="Contract Address"
           placeholder=" "
           class="mr-3 flex-grow-1"
+          :persistent-hint="nametag.length > 0"
+          :hint="nametag"
         />
 
         <v-textarea
@@ -28,22 +31,20 @@
           label="ABI/JSON Interface"
         ></v-textarea>
 
-        <div class="text-center mt-3">
-          <mew-button
-            title="Interact"
-            :disabled="!canInteract"
-            :has-full-width="false"
-            btn-size="xlarge"
-            @click.native="showInteract"
-          />
-        </div>
-        <div class="text-center mt-4">
+        <div class="text-right">
           <mew-button
             title="Clear all"
             :has-full-width="false"
-            btn-size="small"
-            btn-style="transparent"
+            btn-style="light"
+            class="mr-4"
             @click.native="resetDefaults"
+          />
+          <mew-button
+            title="Interact"
+            class="InteractButton"
+            :disabled="!canInteract"
+            :has-full-width="false"
+            @click.native="showInteract"
           />
         </div>
       </div>
@@ -67,7 +68,7 @@
         <mew-select
           label="Function"
           :items="methods"
-          class="mb-1"
+          class="mb-1 FunctionSelect"
           normal-dropdown
           @input="methodSelect"
         />
@@ -123,6 +124,7 @@
             :title="isViewFunction ? 'Call' : 'Write'"
             :has-full-width="false"
             btn-size="xlarge"
+            class="CallFunctionButton"
             :disabled="canProceed"
             @click.native="readWrite"
           />
@@ -152,6 +154,9 @@
 import Vue from 'vue';
 import { mapState, mapGetters } from 'vuex';
 import { toBN, toWei } from 'web3-utils';
+import { isString, throttle } from 'lodash';
+import { getAddressInfo } from '@kleros/address-tags-sdk';
+
 import { isAddress } from '@/core/helpers/addressUtils';
 import { stringToArray } from '@/core/helpers/common';
 import {
@@ -161,7 +166,6 @@ import {
   isContractArgValid
 } from './handlers/common';
 import { ERROR, Toast } from '../toast/handler/handlerToast';
-import { isString } from 'lodash';
 export default {
   name: 'ModuleContractInteract',
   data() {
@@ -177,7 +181,9 @@ export default {
         outputs: []
       },
       outputValues: [],
-      ethPayable: '0'
+      ethPayable: '0',
+      nametag: '',
+      networkContracts: []
     };
   },
   computed: {
@@ -218,7 +224,7 @@ export default {
         { text: 'Select a Contract', selectLabel: true, divider: true }
       ].concat(
         checkContract(this.localContracts),
-        checkContract(this.network.type.contracts)
+        checkContract(this.networkContracts)
       );
     },
     methods() {
@@ -248,7 +254,31 @@ export default {
       return outputsWithValues.length > 0;
     }
   },
+  watch: {
+    contractAddress(newVal) {
+      this.nametag = '';
+      if (!newVal) {
+        this.contractAddress = '';
+      }
+      if (newVal && isAddress(newVal.toLowerCase())) {
+        this.resolveAddress();
+      }
+    },
+    web3: {
+      handler: function () {
+        this.generateNetworkContracts();
+      }
+    }
+  },
+  mounted() {
+    this.generateNetworkContracts();
+  },
   methods: {
+    generateNetworkContracts() {
+      this.network.type.contracts.then(contracts => {
+        this.networkContracts = contracts;
+      });
+    },
     resetDefaults() {
       this.currentContract = null;
       this.abi = [];
@@ -367,7 +397,22 @@ export default {
     },
     getType(type) {
       return getInputType(type);
-    }
+    },
+    /**
+     * Resolves address and @returns name
+     */
+    resolveAddress: throttle(async function () {
+      try {
+        await getAddressInfo(
+          this.contractAddress,
+          'https://ipfs.kleros.io'
+        ).then(data => {
+          this.nametag = data?.publicNameTag || '';
+        });
+      } catch (e) {
+        this.nametag = '';
+      }
+    }, 300)
   }
 };
 </script>

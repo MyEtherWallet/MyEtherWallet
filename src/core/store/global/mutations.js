@@ -33,8 +33,10 @@ const SET_PREFERRED_CURRENCY = function (state, currency) {
 const SET_GAS_PRICE = function (state, val) {
   state.baseGasPrice = val;
 };
-
-const SET_NETWORK = function (state, networkObj) {
+const SET_VALID_NETWORK = function (state, valid) {
+  state.validNetwork = valid;
+};
+const SET_NETWORK = async function (state, networkObj) {
   const _netObj = Object.assign({}, networkObj);
   _netObj.type = {
     name: networkObj.type.name
@@ -67,6 +69,7 @@ export default {
   SET_LOCALE,
   SET_PREFERRED_CURRENCY,
   SET_GAS_PRICE,
+  SET_VALID_NETWORK,
   SET_NETWORK,
   INIT_STORE,
   SET_GAS_PRICE_TYPE,

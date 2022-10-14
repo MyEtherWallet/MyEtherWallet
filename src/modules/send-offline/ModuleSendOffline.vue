@@ -27,6 +27,7 @@
             <div class="position--relative">
               <mew-input
                 v-model="amount"
+                class="SendOfflineAmountInput"
                 label="Amount"
                 placeholder="0"
                 :error-messages="amountErrors"
@@ -40,12 +41,17 @@
         =====================================================================================
         -->
           <v-col cols="12" class="pt-4 pb-2">
-            <module-address-book ref="addressInput" @setAddress="setAddress" />
+            <module-address-book
+              ref="addressInput"
+              class="SendOfflineAddressBook"
+              @setAddress="setAddress"
+            />
           </v-col>
 
           <v-col cols="12">
             <mew-input
               v-model="localNonce"
+              class="SendOfflineNonceInput"
               :label="$t('sendTx.nonce')"
               placeholder="0"
               type="number"
@@ -58,13 +64,14 @@
               label="Data"
               placeholder="0x..."
               :error-messages="dataErrors"
-              class="mb-8"
+              class="mb-8 SendOFflineDataInput"
               :disabled="disableData"
             />
           </v-col>
           <v-col cols="12">
             <mew-input
               v-model="gasLimit"
+              class="SendOfflineGasLimitInput"
               :label="$t('common.gas.limit')"
               :error-messages="gasLimitErrors"
               type="number"
@@ -73,6 +80,7 @@
           <v-col cols="12">
             <mew-input
               v-model="gasPrice"
+              class="SendOfflineGasPriceInput"
               label="Gas Price (in wei)"
               :error-messages="gasPriceErrors"
               type="number"
@@ -84,23 +92,25 @@
           <div class="text-center">
             <mew-button
               title="Generate Transaction"
+              class="SendOfflineGenerateTransactionButton"
               :has-full-width="false"
               btn-size="xlarge"
               :disabled="isDisabledNextBtn"
               @click.native="generateTx"
             />
           </div>
-          <div class="text-center mt-4">
-            <div class="d-flex justify-center">
+          <div class="text-center">
+            <div class="d-flex flex-column justify-center">
               <input
                 ref="upload"
+                class="SendOfflineUploadInput"
                 type="file"
-                style="display: none"
+                style="opacity: 0"
                 accept="json"
                 @change="upload"
               />
               <mew-button
-                class="mt-2 display--block mx-auto"
+                class="mt-2 display--block mx-auto SendOfflineUploadJsonButton"
                 title="Upload JSON file"
                 btn-size="small"
                 btn-style="transparent"
@@ -127,6 +137,7 @@
       <div v-if="signedTransaction" style="width: 100%" class="text-center">
         <mew-text-area
           ref="signedTxInput"
+          class="SendOfflineSignedTxResultInput"
           style="width: 100%"
           label="Signed Transaction"
           readonly
@@ -162,18 +173,19 @@
 <script>
 import clipboardCopy from 'clipboard-copy';
 import { toBN, isHexStrict, toWei, hexToNumberString } from 'web3-utils';
-import { mapGetters, mapState } from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
-import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
-import sanitizeHex from '@/core/helpers/sanitizeHex';
 import Web3 from 'web3';
 import { isValidAddress } from 'ethereumjs-util';
-import { isEmpty } from 'lodash';
-import { Toast } from '../toast/handler/handlerToast';
+import { debounce, isEmpty } from 'lodash';
+import * as nodes from '@/utils/networks/nodes';
+
+import sanitizeHex from '@/core/helpers/sanitizeHex';
+import { ERROR, SUCCESS, Toast } from '../toast/handler/handlerToast';
 import { toBNSafe } from '@/core/helpers/numberFormatHelper';
 export default {
   components: {
-    ModuleAddressBook
+    ModuleAddressBook: () => import('@/modules/address-book/ModuleAddressBook')
   },
   data() {
     return {
@@ -194,7 +206,10 @@ export default {
       raw: null,
       signedTransaction: null,
       jsonFileName: '',
-      jsonFile: null
+      jsonFile: null,
+      tokens: [],
+      nodes: nodes,
+      chainID: 1
     };
   },
   computed: {
@@ -205,9 +220,6 @@ export default {
         symbol: this.network.type.currencyName,
         name: this.network.type.name
       };
-    },
-    tokens() {
-      return [this.networkToken].concat(this.network.type.tokens);
     },
     isDisabledNextBtn() {
       return (
@@ -266,7 +278,7 @@ export default {
       return '';
     },
     disableData() {
-      return this.selectedCurrency.symbol !== this.network.type.currencyName;
+      return this.selectedCurrency?.symbol !== this.network.type.currencyName;
     },
     validAddress() {
       return this.toAddress !== '' && isValidAddress(this.toAddress);
@@ -301,12 +313,25 @@ export default {
       if (this.canGenerate) {
         this.generateData();
       }
+    },
+    network() {
+      this.selectedCurrency = this.networkToken;
+      this.generateTokens();
     }
   },
   mounted() {
     this.selectedCurrency = this.networkToken;
+    this.generateTokens();
   },
   methods: {
+    ...mapActions('wallet', ['setWeb3Instance']),
+    ...mapActions('global', ['setNetwork']),
+    generateTokens() {
+      const networkToken = [this.networkToken];
+      this.network.type.tokens.then(tokens => {
+        this.tokens = networkToken.concat(tokens);
+      });
+    },
     generateData() {
       const web3 = new Web3(this.network.url);
       const jsonInterface = [
@@ -368,12 +393,14 @@ export default {
           if (file.nonce) {
             self.localNonce = hexToNumberString(file.nonce);
             self.gasPrice = hexToNumberString(file.gasPrice);
+            self.chainID = hexToNumberString(file.chainID);
+            self.setNetworkDebounced(self.chainID);
             self.$refs.upload.value = '';
             return;
           }
-          Toast('Malformed File', '', 'error');
+          Toast('Malformed File', {}, 'error');
         } catch {
-          Toast('Incorrect File Type', '', 'error');
+          Toast('Incorrect File Type', {}, 'error');
         }
       };
       if (files[0]) reader.readAsBinaryString(files[0]);
@@ -403,7 +430,29 @@ export default {
       window.scrollTo(0, 0);
       this.clear();
       this.isSignedTxOpen = true;
-    }
+    },
+    /**
+     * Debounce network switch from user input
+     * @return {void}
+     */
+    setNetworkDebounced: debounce(function (value) {
+      const found = Object.values(this.nodes).filter(item => {
+        if (item.type.chainID == value) {
+          return item;
+        }
+      });
+      this.setNetwork({
+        network: found[0],
+        walletType: this.instance?.identifier || ''
+      })
+        .then(() => {
+          this.setWeb3Instance();
+          Toast(`Switched network to: ${found[0].type.name}`, {}, SUCCESS);
+        })
+        .catch(e => {
+          Toast(e, {}, ERROR);
+        });
+    }, 1000)
   }
 };
 </script>

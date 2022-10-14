@@ -9,32 +9,30 @@
       :network="network"
       :links="links"
       :success-body-text="successBodyText"
+      :has-close-button="false"
     />
     <cross-chain-confirmation
       :show-cross-chain-modal="showCrossChainModal"
       :tx-obj="tx"
       :title="title"
-      :reset="reset"
-      :sent-btc="resolver"
+      :reset="rejectTransaction"
+      :sent-btc="sendCrossChain"
     />
     <app-modal
       :show="showTxOverlay"
       :title="title !== '' ? title : 'Confirmation'"
-      :close="reset"
+      :close="rejectTransaction"
       :btn-action="btnAction"
       :btn-enabled="disableBtn"
       :btn-text="toNonEth ? 'Proceed with swap' : 'Confirm & Send'"
       :scrollable="true"
       :anchored="true"
       width="650"
-      @close="reset"
+      @close="rejectTransaction"
     >
       <template #dialogBody>
         <v-card-text ref="scrollableContent" class="py-0 px-4 px-md-0">
-          <div
-            v-if="toNonEth"
-            class="px-4 py-6 pr-6 textBlack2--text border-radius--5px mb-5"
-          >
+          <div class="px-4 py-6 pr-6 textBlack2--text border-radius--5px mb-5">
             <b>Please double check everything.</b> MEW team will not be able to
             reverse your transaction once its submitted. You will still be
             charged gas fee even if the transaction fails.
@@ -76,19 +74,30 @@
             :to-currency="swapInfo.toType"
             :to-address="swapInfo.to"
           />
-          <!-- Warning Sheet -->
+
+          <!-- Ledger Warning Sheet -->
           <div
-            class="px-4 py-6 pr-6 warning textMedium--text border-radius--5px mb-5"
+            v-if="isOnLedger"
+            class="ledger-warning d-flex justify-space-between px-4 py-6 border-radius--5px mb-5"
           >
-            <b>Make sure all the information is correct.</b> Cancelling or
-            reversing a transaction cannot be guaranteed. You will still be
-            charged gas fee even if transaction fails.
-            <a
-              :href="getArticle('my-txn-failed-charged')"
-              target="_blank"
-              rel="noopener noreferrer"
-              >Learn more.</a
-            >
+            <div>
+              <v-img
+                :src="
+                  require('@/assets/images/icons/hardware-wallets/Ledger-Nano-X-Label-Icon.svg')
+                "
+                alt="Ledger Wallet"
+                max-width="11em"
+                max-height="2.5em"
+                contain
+                class="ml-15"
+              />
+            </div>
+            <span class="textBlack2--text ml-2">
+              <b>Using Ledger?</b> Consider turning off 'debug data' before
+              proceeding. Additional steps associated with the 'debug
+              <br />
+              feature' on Ledger may be required to approve this transaction.
+            </span>
           </div>
           <!-- transaction details -->
           <confirm-with-wallet
@@ -222,11 +231,7 @@
     =====================================================================================
     -->
     <mew-overlay
-      :footer="{
-        text: 'Need help?',
-        linkTitle: 'Contact support',
-        link: 'mailto:support@myetherwallet.com'
-      }"
+      :footer="footer"
       :show-overlay="showSignOverlay"
       :title="title ? title : 'Message'"
       :close="reset"
@@ -242,18 +247,6 @@
 </template>
 
 <script>
-import AppScrollBlock from '@/core/components/AppScrollBlock';
-import AppModal from '@/core/components/AppModal';
-import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
-import EventNames from '@/utils/web3-provider/events.js';
-import ConfirmationMesssage from './components/ConfirmationMessage';
-import ConfirmationSwapTransactionDetails from './components/ConfirmationSwapTransactionDetails';
-import ConfirmationSendTransactionDetails from './components/ConfirmationSendTransactionDetails';
-import ConfirmWithWallet from './components/ConfirmWithWallet';
-import CrossChainConfirmation from './components/CrossChainConfirmation';
-
-import SuccessModal from './components/SuccessModal';
-
 import {
   fromWei,
   hexToNumberString,
@@ -265,31 +258,43 @@ import {
 import { isEmpty, isArray, cloneDeep } from 'lodash';
 import { mapState, mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
+import * as locStore from 'store';
+
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
+import EventNames from '@/utils/web3-provider/events.js';
+
 import { Toast, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import parseTokenData from './handlers/parseTokenData';
 import { EventBus } from '@/core/plugins/eventBus';
 import { setEvents } from '@/utils/web3-provider/methods/utils';
-import * as locStore from 'store';
 import { sanitizeHex } from '@/modules/access-wallet/common/helpers';
 import dataToAction from './handlers/dataToAction';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
+import errorHandler from './handlers/errorHandler';
 
 export default {
   name: 'ModuleConfirmation',
   components: {
-    AppScrollBlock,
-    ConfirmationMesssage,
-    AppModal,
-    ConfirmationSwapTransactionDetails,
-    ConfirmationSendTransactionDetails,
-    ConfirmWithWallet,
-    SuccessModal,
-    CrossChainConfirmation
+    AppScrollBlock: () => import('@/core/components/AppScrollBlock'),
+    ConfirmationMesssage: () => import('./components/ConfirmationMessage'),
+    AppModal: () => import('@/core/components/AppModal'),
+    ConfirmationSwapTransactionDetails: () =>
+      import('./components/ConfirmationSwapTransactionDetails'),
+    ConfirmationSendTransactionDetails: () =>
+      import('./components/ConfirmationSendTransactionDetails'),
+    ConfirmWithWallet: () => import('./components/ConfirmWithWallet'),
+    SuccessModal: () => import('./components/SuccessModal'),
+    CrossChainConfirmation: () => import('./components/CrossChainConfirmation')
   },
   mixins: [handlerAnalytics],
   data() {
     return {
+      footer: {
+        text: 'Need help?',
+        linkTitle: 'Contact support',
+        link: 'mailto:support@myetherwallet.com'
+      },
       showTxOverlay: false,
       showSignOverlay: false,
       showSuccessModal: false,
@@ -309,7 +314,7 @@ export default {
       signing: false,
       links: {
         ethvm: '',
-        etherscan: ''
+        explorer: ''
       },
       error: '',
       panel: [],
@@ -322,7 +327,8 @@ export default {
       'web3',
       'address',
       'identifier',
-      'isHardware'
+      'isHardware',
+      'isOfflineApp'
     ]),
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network', 'getFiatValue']),
@@ -346,6 +352,9 @@ export default {
         this.identifier === WALLET_TYPES.MEW_CONNECT ||
         this.identifier === WALLET_TYPES.WALLET_LINK
       );
+    },
+    isOnLedger() {
+      return this.tx.data !== '0x' && this.identifier === WALLET_TYPES.LEDGER;
     },
     isNotSoftware() {
       return this.isHardware || this.isWeb3Wallet || this.isOtherWallet;
@@ -596,7 +605,34 @@ export default {
       };
     });
   },
+  beforeDestroy() {
+    EventBus.$off(EventNames.SHOW_TX_CONFIRM_MODAL);
+    EventBus.$off(EventNames.SHOW_SWAP_TX_MODAL);
+    EventBus.$off(EventNames.SHOW_MSG_CONFIRM_MODAL);
+    EventBus.$off(EventNames.SHOW_CROSS_CHAIN_MODAL);
+  },
+  mounted() {
+    if (this.isOfflineApp) {
+      this.footer = {
+        text: 'Need help? Email us at support@myetherwallet.com',
+        linkTitle: '',
+        link: ''
+      };
+    }
+  },
   methods: {
+    rejectTransaction() {
+      if (this.isSwap) this.trackSwap('swapRejected');
+      this.resolver({ rejected: true });
+      this.reset();
+    },
+    sendCrossChain(bool) {
+      this.trackSwap('swapSendCrossChain');
+      this.resolver(bool);
+    },
+    swapFailed() {
+      this.trackSwap('swapFailed');
+    },
     dataToAction(data) {
       return dataToAction(data);
     },
@@ -635,8 +671,8 @@ export default {
       this.toDetails = {};
       this.signing = false;
       this.links = {
-        etherscan: '',
-        ethvm: ''
+        ethvm: '',
+        explorer: ''
       };
       this.error = '';
     },
@@ -674,25 +710,29 @@ export default {
         );
         _tx.gasLimit = _tx.gas;
         setEvents(promiEvent, _tx, this.$store.dispatch);
-        promiEvent.once('transactionHash', hash => {
-          const storeKey = sha3(
-            `${this.network.type.name}-${this.address.toLowerCase()}`
-          );
-          const localStoredObj = locStore.get(storeKey);
-          locStore.set(storeKey, {
-            nonce: sanitizeHex(
-              new BigNumber(localStoredObj.nonce).plus(1).toString(16)
-            ),
-            timestamp: localStoredObj.timestamp
-          });
-          if (idx + 1 === _arr.length) {
-            if (this.isSwap) {
-              this.showSuccessSwap = true;
+        promiEvent
+          .once('transactionHash', hash => {
+            const storeKey = sha3(
+              `${this.network.type.name}-${this.address.toLowerCase()}`
+            );
+            const localStoredObj = locStore.get(storeKey);
+            locStore.set(storeKey, {
+              nonce: sanitizeHex(
+                new BigNumber(localStoredObj.nonce).plus(1).toString(16)
+              ),
+              timestamp: localStoredObj.timestamp
+            });
+            if (idx + 1 === _arr.length) {
+              if (this.isSwap) {
+                this.showSuccessSwap = true;
+              }
+              this.reset();
+              this.showSuccess(hash);
             }
-            this.reset();
-            this.showSuccess(hash);
-          }
-        });
+          })
+          .catch(() => {
+            if (this.isSwap) this.swapFailed();
+          });
         return promiEvent;
       });
       this.resolver(promises);
@@ -710,6 +750,9 @@ export default {
       this.showSuccess(hash);
     },
     showSuccess(param) {
+      if (this.isSwap) {
+        this.trackSwap('swapTransactionSuccessfullySent');
+      }
       if (isArray(param)) {
         const lastHash = param[param.length - 1].tx.hash;
         this.links.ethvm = this.network.type.isEthVMSupported.supported
@@ -718,7 +761,7 @@ export default {
               lastHash
             )
           : '';
-        this.links.etherscan = this.network.type.blockExplorerTX.replace(
+        this.links.explorer = this.network.type.blockExplorerTX.replace(
           '[[txHash]]',
           lastHash
         );
@@ -732,7 +775,7 @@ export default {
             param
           )
         : '';
-      this.links.etherscan = this.network.type.blockExplorerTX.replace(
+      this.links.explorer = this.network.type.blockExplorerTX.replace(
         '[[txHash]]',
         param
       );
@@ -751,8 +794,9 @@ export default {
             this.showSuccess(res);
           })
           .catch(e => {
+            if (this.isSwap) this.swapFailed();
             this.signedTxObject = {};
-            this.error = e.message;
+            this.error = errorHandler(e);
             this.signing = false;
           });
         this.resolver(event);
@@ -766,8 +810,9 @@ export default {
             }
           })
           .catch(e => {
+            if (this.isSwap) this.swapFailed();
             this.signedTxObject = {};
-            this.error = e.message;
+            this.error = errorHandler(e);
             this.signing = false;
             this.instance.errorHandler(e.message);
           });
@@ -809,13 +854,14 @@ export default {
                 });
               })
               .catch(e => {
+                if (this.isSwap) this.swapFailed();
                 this.instance.errorHandler(e.message);
               });
           }
           this.signedTxArray = signed;
           if (this.isWeb3Wallet) this.resolver(batchTxEvents);
         } catch (err) {
-          this.error = err.message ? err.message : err;
+          this.error = errorHandler(err);
           this.signedTxArray = [];
           return;
         }
@@ -825,6 +871,9 @@ export default {
       }
     },
     btnAction() {
+      if (this.isSwap) {
+        this.trackSwap('swapTransactionSend');
+      }
       if (!this.isWeb3Wallet) {
         if (
           (this.signedTxArray.length === 0 ||
@@ -938,5 +987,8 @@ $borderPanels: 1px solid var(--v-greyLight-base) !important;
 }
 .expansion-panel-border-bottom {
   border-bottom: $borderPanels;
+}
+.ledger-warning {
+  border: 1px solid #d7dae3;
 }
 </style>

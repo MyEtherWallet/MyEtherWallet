@@ -70,9 +70,9 @@
 </template>
 <script>
 import { mapActions, mapState } from 'vuex';
+import moment from 'moment';
 
 import enkryptMarketing from '@/core/mixins/enkryptMarketing.mixin';
-import moment from 'moment';
 export default {
   mixins: [enkryptMarketing],
   computed: {
@@ -104,9 +104,9 @@ export default {
     checkIfShouldShow() {
       if (
         !this.enkryptWalletPopup &&
-        moment(this.enkryptWalletPopupClosed).diff(new Date(), 'days') >= 7 &&
+        moment(new Date()).diff(this.enkryptWalletPopupClosed, 'days') >= 7 &&
         (this.enkryptWalletSnackbarClosed > 0 ||
-          moment(this.enkryptWalletSnackbarClosed).diff(new Date(), 'days') >=
+          moment(new Date()).diff(this.enkryptWalletSnackbarClosed, 'days') >=
             7) &&
         this.enkryptWalletSnackbarCounter <= 3
       ) {

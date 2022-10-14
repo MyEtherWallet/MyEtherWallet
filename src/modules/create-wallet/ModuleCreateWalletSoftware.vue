@@ -6,11 +6,7 @@
     =====================================================================================
     -->
     <mew-overlay
-      :footer="{
-        text: 'Need help?',
-        linkTitle: 'Contact support',
-        link: 'mailto:support@myetherwallet.com'
-      }"
+      :footer="footer"
       :show-overlay="open"
       :title="typeTitle"
       :close="close"
@@ -49,19 +45,19 @@
 </template>
 
 <script>
-import CreateWalletSoftwareOverview from './components/CreateWalletSoftwareOverview';
-import CreateWalletKeystore from './components/CreateWalletKeystore';
-import CreateWalletMnemonicPhrase from './components/CreateWalletMnemonicPhrase';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import handlerCreateWallet from './handlers/handlerCreateWallet';
+import { mapState } from 'vuex';
 
 export default {
   name: 'ModuleCreateWalletSoftware',
   components: {
-    CreateWalletSoftwareOverview,
-    CreateWalletKeystore,
-    CreateWalletMnemonicPhrase
+    CreateWalletSoftwareOverview: () =>
+      import('./components/CreateWalletSoftwareOverview'),
+    CreateWalletKeystore: () => import('./components/CreateWalletKeystore'),
+    CreateWalletMnemonicPhrase: () =>
+      import('./components/CreateWalletMnemonicPhrase')
   },
   props: {
     open: {
@@ -81,9 +77,15 @@ export default {
   },
   data: () => ({
     types: WALLET_TYPES,
-    walletHandler: {}
+    walletHandler: {},
+    footer: {
+      text: 'Need help?',
+      linkTitle: 'Contact support',
+      link: 'mailto:support@myetherwallet.com'
+    }
   }),
   computed: {
+    ...mapState('wallet', ['isOfflineApp']),
     isOverview() {
       return (
         this.walletType !== this.types.MNEMONIC &&
@@ -108,6 +110,13 @@ export default {
     }
   },
   mounted() {
+    if (this.isOfflineApp) {
+      this.footer = {
+        text: 'Need help? Email us at support@myetherwallet.com',
+        linkTitle: '',
+        link: ''
+      };
+    }
     this.walletHandler = new handlerCreateWallet();
   },
   destroyed() {

@@ -1,5 +1,5 @@
 <template>
-  <div class="component--wallet-card">
+  <div class="component--wallet-card theBalanceCard">
     <div class="mew-card drop-shadow">
       <img
         :src="'https://mewcard.mewapi.io/?address=' + address"
@@ -9,7 +9,7 @@
     </div>
     <div class="info-container pl-8 pr-5 py-4 text-shadow">
       <div class="d-flex flex-row justify-space-between align-start">
-        <div>
+        <div class="balanceMenu">
           <!--
           =====================================================================================
             Address
@@ -34,7 +34,10 @@
                 <v-icon color="textDark" class="mr-3">mdi-refresh</v-icon>
                 <v-list-item-title> Refresh Balance</v-list-item-title>
               </v-list-item>
-              <v-list-item class="cursor-pointer" @click="openPaperWallet">
+              <v-list-item
+                class="cursor-pointer openThePaperWallet"
+                @click="openPaperWallet"
+              >
                 <v-icon color="textDark" class="mr-3">mdi-printer</v-icon>
                 <v-list-item-title>View paper wallet</v-list-item-title>
               </v-list-item>
@@ -167,6 +170,7 @@
     <balance-address-paper-wallet
       :open="showPaperWallet"
       :close="closePaperWallet"
+      :is-offline-app="isOfflineApp"
       @close="closePaperWallet"
     />
     <app-modal
@@ -183,13 +187,13 @@
       v-if="showHardware"
       :open="showChangeAddress"
       :close="closeChangeAddress"
-      :switch-address="!!instance.path"
+      :switch-address="instancePath"
     />
     <module-access-wallet-software
       v-else
       :open="showChangeAddress"
       :close="closeChangeAddress"
-      :switch-address="!!instance.path"
+      :switch-address="instancePath"
       :wallet-type="identifier"
     />
 
@@ -237,25 +241,24 @@ import { mapGetters, mapActions, mapState } from 'vuex';
 import clipboardCopy from 'clipboard-copy';
 import { isEmpty } from 'lodash';
 
-import AppModal from '@/core/components/AppModal';
-import AppAddrQr from '@/core/components/AppAddrQr';
-import BalanceAddressPaperWallet from './components/BalanceAddressPaperWallet';
 import { Toast, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
-import ModuleAccessWalletHardware from '@/modules/access-wallet/ModuleAccessWalletHardware';
-import ModuleAccessWalletSoftware from '@/modules/access-wallet/ModuleAccessWalletSoftware';
+
 import wallets from './handlers/config';
 import WALLET_TYPES from '../access-wallet/common/walletTypes';
 import NameResolver from '@/modules/name-resolver/index';
 
 export default {
   components: {
-    BalanceAddressPaperWallet,
-    AppModal,
-    AppAddrQr,
-    ModuleAccessWalletHardware,
-    ModuleAccessWalletSoftware
+    AppModal: () => import('@/core/components/AppModal'),
+    AppAddrQr: () => import('@/core/components/AppAddrQr'),
+    BalanceAddressPaperWallet: () =>
+      import('./components/BalanceAddressPaperWallet'),
+    ModuleAccessWalletHardware: () =>
+      import('@/modules/access-wallet/ModuleAccessWalletHardware'),
+    ModuleAccessWalletSoftware: () =>
+      import('@/modules/access-wallet/ModuleAccessWalletSoftware')
   },
   props: {
     sidemenuStatus: {
@@ -288,6 +291,12 @@ export default {
     ...mapGetters('wallet', ['tokensList', 'balanceInETH']),
     ...mapState('wallet', ['web3']),
     /**
+     * verifies whether instance exists before giving path
+     */
+    instancePath() {
+      return this.instance && this.instance.path ? true : false;
+    },
+    /**
      * show default title
      * unless resolved name isn't false
      * returns @string
@@ -302,14 +311,14 @@ export default {
      * returns @String
      */
     verifyAddressTitle() {
-      return `This wallet is accessed with ${this.instance.meta.name}`;
+      return `This wallet is accessed with ${this.walletName}`;
     },
     /**
      * verify address body
      * returns @String
      */
     verifyAddressBody() {
-      return `To verify, check the address on your ${this.instance.meta.name} device & make sure it is the same address as the one shown below.`;
+      return `To verify, check the address on your ${this.walletName} device & make sure it is the same address as the one shown below.`;
     },
     /**
      * Shows hardware access or software access

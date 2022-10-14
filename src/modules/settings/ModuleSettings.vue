@@ -22,7 +22,6 @@
             :buttons="gasButtons"
             :selected="gasPriceType"
             :set-selected="setSelected"
-            :total-gas-limit="gasPrice"
             :global="true"
             :from-settings="true"
           />
@@ -79,25 +78,23 @@
 </template>
 
 <script>
-import SettingsImportConfig from './components/SettingsImportConfig';
-import SettingsExportConfig from './components/SettingsExportConfig';
-import SettingsGasPrice from './components/SettingsGasPrice';
-import SettingsLocaleConfig from './components/SettingsLocaleConfig.vue';
-import AddressBookAddEdit from '@/modules/address-book/components/AddressBookAddEdit';
-import handlerSettings from './handler/handlerSettings';
 import { mapState } from 'vuex';
-import gasPriceMixin from './handler/gasPriceMixin';
+
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
+
+import handlerSettings from './handler/handlerSettings';
+import gasPriceMixin from './handler/gasPriceMixin';
 const modes = ['add', 'edit'];
 
 export default {
   name: 'ModuleSettings',
   components: {
-    SettingsImportConfig,
-    SettingsExportConfig,
-    SettingsGasPrice,
-    AddressBookAddEdit,
-    SettingsLocaleConfig
+    SettingsImportConfig: () => import('./components/SettingsImportConfig'),
+    SettingsExportConfig: () => import('./components/SettingsExportConfig'),
+    SettingsGasPrice: () => import('./components/SettingsGasPrice'),
+    AddressBookAddEdit: () =>
+      import('@/modules/address-book/components/AddressBookAddEdit'),
+    SettingsLocaleConfig: () => import('./components/SettingsLocaleConfig.vue')
   },
   mixins: [gasPriceMixin],
   beforeRouteLeave(to, from, next) {
