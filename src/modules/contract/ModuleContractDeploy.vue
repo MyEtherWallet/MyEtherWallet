@@ -11,6 +11,7 @@
           v-model="byteCode"
           outlined
           label="Bytecode"
+          class="BytecodeInput"
           placeholder=" "
           :rules="[
             value => {
@@ -23,6 +24,7 @@
           outlined
           name="input-7-4"
           label="ABI/JSON Interface"
+          class="ABIInput"
           value=""
           placeholder=" "
           :rules="[
@@ -34,6 +36,7 @@
         <mew-input
           v-model="contractName"
           label="Contract name"
+          class="ContractName"
           placeholder=" "
         />
         <div v-show="constructorInputs.length">
@@ -92,6 +95,7 @@
           />
           <mew-button
             title="Sign Transaction"
+            class="SignTransactionButton"
             :has-full-width="false"
             :disabled="!canDeploy"
             @click.native="deploy"

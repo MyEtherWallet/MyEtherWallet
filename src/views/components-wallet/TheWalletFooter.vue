@@ -15,12 +15,14 @@
           <div class="mb-0 text-center text-md-left">
             {{ $t('footer.copyright', { year: new Date().getFullYear() }) }}
             <a
+              v-if="!isOfflineApp"
               class="textDark--text text-decoration--none"
               href="https://www.coingecko.com/en"
               target="_blank"
             >
               {{ $t('footer.coingecko') }}
             </a>
+            <span v-else>{{ $t('footer.coingecko') }}</span>
           </div>
         </v-col>
         <v-col
@@ -35,6 +37,7 @@
             class="d-flex align-center justify-center justify-md-end textDark--text"
           >
             <a
+              v-if="!isOfflineApp"
               class="black--text"
               href="https://help.myetherwallet.com/en/"
               target="_blank"
@@ -64,6 +67,12 @@
 export default {
   name: 'TheWalletFooter',
   components: {},
+  props: {
+    isOfflineApp: {
+      type: Boolean,
+      default: false
+    }
+  },
   data: () => ({
     onLanguage: null,
     languages: [
