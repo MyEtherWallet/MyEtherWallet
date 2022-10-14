@@ -70,7 +70,7 @@
     =====================================================================================
     -->
       <template #tabContent2>
-        <v-sheet class="px-3 py-8 py-md-13">
+        <v-sheet max-width="700px" class="px-3 py-8 py-md-13 mx-auto">
           <div class="d-flex align-center justify-space-between mb-7">
             <span class="mew-heading-2 font-weight-bold">
               {{ $t('ens.my-domains') }}
@@ -90,7 +90,10 @@
             >
               <div
                 :key="idx"
-                :class="[domain.expired ? 'expired' : 'available', 'ma-3 px-5']"
+                :class="[
+                  domain.expired ? 'expired' : 'available',
+                  'ma-3 px-2 px-sm-5'
+                ]"
               >
                 <v-row class="subheader-container">
                   <v-col cols="12" md="6" class="d-flex align-center">
@@ -153,14 +156,14 @@
                 </v-row>
 
                 <div
-                  class="d-flex align-center justify-space-between pb-5 pt-8 px-7"
+                  class="d-flex align-center justify-space-between pb-5 pt-8 px-sm-7"
                 >
                   <span class="mew-heading-3">
                     {{ $t('ens.manage-domains.what-to-do') }}
                   </span>
                 </div>
                 <v-divider class="mx-7"></v-divider>
-                <v-row class="pa-7">
+                <v-row class="pa-2 pa-sm-7">
                   <v-col
                     v-for="(option, key) in manageDomainOptions"
                     v-show="!domain.expired || key === 1"
