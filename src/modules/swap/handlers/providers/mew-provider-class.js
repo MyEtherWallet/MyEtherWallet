@@ -152,7 +152,7 @@ class MEWPClass {
               hashes: [hash]
             });
           })
-          .catch(reject);
+          .catch(e => reject(e));
       });
     }
     const txs = [];
