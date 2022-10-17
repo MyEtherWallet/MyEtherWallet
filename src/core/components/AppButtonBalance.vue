@@ -16,7 +16,7 @@
       <div v-if="!text" class="greenPrimary--text mew-body BalanceLabel">
         Balance: {{ balanceFormatted.value }}
       </div>
-      <div else class="primary--text mew-body">
+      <div else class="primary--text mew-body line-height--initial">
         {{ text }}
       </div>
       <mew-tooltip
