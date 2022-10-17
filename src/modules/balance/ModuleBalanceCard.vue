@@ -317,10 +317,7 @@ export default {
      * returns @String
      */
     verifyAddressBody() {
-      return `To verify, check the address on your ${this.instanceName} device & make sure it is the same address as the one shown below.`;
-    },
-    instanceName() {
-      return this.instance.meta.name ? this.instance.meta.name : '';
+      return `To verify, check the address on your ${this.walletName} device & make sure it is the same address as the one shown below.`;
     },
     /**
      * Shows hardware access or software access
