@@ -1,10 +1,6 @@
 <template>
   <mew-overlay
-    :footer="{
-      text: 'Need help?',
-      linkTitle: 'Contact support',
-      link: 'mailto:support@myetherwallet.com'
-    }"
+    :footer="footer"
     color-type="white"
     :show-overlay="isOverlayOpen"
     title="My paper wallet"
@@ -17,7 +13,7 @@
           Printable paper wallet content
           ===============================================
           -->
-    <div ref="printContainer" class="printable-wallet">
+    <div ref="printContainer" class="printable-wallet-content">
       <paper-wallet-to-print />
     </div>
 
@@ -26,10 +22,15 @@
           Paper wallet to show
           ===============================================
           -->
-    <paper-wallet-to-display />
+    <paper-wallet-to-display class="printable-wallet-display" />
 
     <div class="d-flex justify-center mt-12">
-      <mew-button title="Print" btn-size="xlarge" @click.native="print" />
+      <mew-button
+        class="printButton"
+        title="Print"
+        btn-size="xlarge"
+        @click.native="print"
+      />
     </div>
   </mew-overlay>
 </template>
@@ -53,7 +54,20 @@ export default {
         return {};
       },
       type: Function
+    },
+    isOfflineApp: {
+      default: false,
+      type: Boolean
     }
+  },
+  data() {
+    return {
+      footer: {
+        text: 'Need help?',
+        linkTitle: 'Contact support',
+        link: 'mailto:support@myetherwallet.com'
+      }
+    };
   },
   computed: {
     isOverlayOpen() {
@@ -65,6 +79,15 @@ export default {
       if (val === false) {
         this.$emit('close');
       }
+    }
+  },
+  mounted() {
+    if (this.isOfflineApp) {
+      this.footer = {
+        text: 'Need help? Email us at support@myetherwallet.com',
+        linkTitle: '',
+        link: ''
+      };
     }
   },
   methods: {

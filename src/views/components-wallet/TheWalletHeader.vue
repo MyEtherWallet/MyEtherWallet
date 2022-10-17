@@ -16,7 +16,7 @@
           'd-flex align-center justify-space-between'
         ]"
       >
-        <div v-if="!promoOver" class="d-flex align-center">
+        <div v-if="!promoOver && !isOfflineApp" class="d-flex align-center">
           <div class="party-popper-container ml-2 mr-3 d-flex pa-3">
             <img
               src="@/assets/images/icons/icon-party-popper.png"
@@ -56,13 +56,15 @@
             </div>
           </div>
         </div>
-        <div v-else class="d-flex align-center">
+        <div v-else-if="promoOver && !isOfflineApp" class="eth-banner d-flex">
           <div class="mr-5">
-            <v-icon color="black"> mdi-bank </v-icon>
+            <mew6-white-sheet class="pa-3">
+              <v-icon color="black"> mdi-bank </v-icon>
+            </mew6-white-sheet>
           </div>
           <div class="d-flex flex-column align-start">
             <span class="mew-body font-weight-bold textDark--text"
-              >You can now Buy crypto with low fees</span
+              >You can now buy crypto with low fees</span
             >
             <span
               :class="[
@@ -73,24 +75,15 @@
                   : 'py-2',
                 'mew-body textMedium--text'
               ]"
-              >Enjoy 0.7% fee when you select ‘Bank account’ as payment
-              method.</span
-            >
-            <mew-button
-              title="Buy crypto"
-              btn-size="medium"
-              class="d-md-none d-lg-none d-xl-none"
-              @click.native="buyCryptoNow"
-            />
+              >Enjoy 0.9% fee when you select ‘Bank account’ as payment method.
+              <span
+                class="greenPrimary--text font-weight-bold cursor--pointer"
+                @click="buyCryptoNow"
+                >Buy crypto now.</span
+              >
+            </span>
           </div>
         </div>
-        <!-- Hide this button when screen is smaller -->
-        <mew-button
-          title="Buy crypto now"
-          btn-size="medium"
-          class="d-none d-md-inline-flex d-lg-inline-flex d-xl-inline-flex"
-          @click.native="buyCryptoNow"
-        />
       </v-col>
       <v-col
         v-if="
@@ -112,7 +105,7 @@
 <script>
 import moment from 'moment';
 import { mapState } from 'vuex';
-
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { MOONPAY_EVENT, MOONPAY_OFFER_END } from '@/modules/moon-pay/helpers';
 import { EventBus } from '@/core/plugins/eventBus';
 export default {
@@ -120,8 +113,9 @@ export default {
     notificationOverlay: () =>
       import('@/modules/notifications/ModuleNotifications')
   },
+  mixins: [handlerAnalytics],
   computed: {
-    ...mapState('wallet', ['identifier']),
+    ...mapState('wallet', ['identifier', 'isOfflineApp']),
     ...mapState('global', ['online']),
     daysLeft() {
       const eventDate = moment(MOONPAY_OFFER_END);
@@ -143,6 +137,7 @@ export default {
   },
   methods: {
     buyCryptoNow() {
+      this.trackBuySell('buySellBuyCryptoNow');
       EventBus.$emit(MOONPAY_EVENT);
     }
   }
@@ -181,5 +176,9 @@ a {
 
 .set-fixed-height {
   height: 52px;
+}
+
+.eth-banner {
+  margin-left: -15px;
 }
 </style>

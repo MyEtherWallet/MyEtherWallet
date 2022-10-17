@@ -44,14 +44,11 @@
       :has-indicator="true"
     >
       <template #moduleBody>
-        <mew-stepper :items="stepperItems" :on-step="currentStep"></mew-stepper>
-
-        <h5
-          v-if="$vuetify.breakpoint.mdAndDown"
-          class="text-center font-weight-medium"
-        >
-          {{ stepperItems[currentStep - 1].name }}
-        </h5>
+        <mew-stepper
+          :compact="$vuetify.breakpoint.smAndDown"
+          :items="stepperItems"
+          :on-step="currentStep"
+        ></mew-stepper>
 
         <div v-if="currentStep === 1">
           <v-sheet color="transparent" max-width="600px" class="mx-auto py-10">
@@ -297,9 +294,8 @@ export default {
     ]
   }),
   computed: {
-    ...mapState('wallet', ['web3']),
+    ...mapState('wallet', ['web3', 'address']),
     ...mapState('addressBook', ['addressBookStore']),
-    ...mapState('wallet', ['address']),
     ...mapGetters('global', ['network']),
     addresses() {
       return this.isHomePage
@@ -398,7 +394,8 @@ export default {
       return {
         data: {
           nonce,
-          gasPrice
+          gasPrice,
+          chainID
         },
         details: {
           address: this.fromAddress,
@@ -451,7 +448,8 @@ export default {
       let { data } = await this.data();
       data = {
         nonce: toHex(data.nonce),
-        gasPrice: toHex(data.gasPrice)
+        gasPrice: toHex(data.gasPrice),
+        chainID: toHex(data.chainID)
       };
       const blob = new Blob([JSON.stringify(data)], { type: 'mime' });
       this.fileLink = window.URL.createObjectURL(blob);

@@ -27,6 +27,7 @@
         :error-messages="errorMessages"
         :persistent-hint="hasPersistentHint"
         :hint="persistentHintMessage"
+        @keydown.native="preventCharE($event)"
       />
     </div>
     <div v-else class="position--relative mt-9">
@@ -39,6 +40,7 @@
         :error-messages="errorMessages"
         :persistent-hint="hasPersistentHint"
         :hint="persistentHintMessage"
+        @keydown.native="preventCharE($event)"
       />
     </div>
     <div class="pt-8 pb-13">
@@ -64,11 +66,12 @@
     <!-- ============================================================== -->
     <div v-if="!inWallet" class="mt-0">
       <div class="mew-heading-3 textDark--text mb-5">Refund address</div>
-      <mew-input
-        v-model="toAddress"
-        :rules="[isValidToAddress]"
+      <module-address-book
+        ref="addressInput"
         label="Enter Crypto Address"
-        :error-messages="addressErrorMessages"
+        :enable-save-address="false"
+        :is-home-page="true"
+        @setAddress="setAddress"
       />
     </div>
     <!-- ============================================================== -->
@@ -104,11 +107,13 @@ import { toBNSafe, formatFiatValue } from '@/core/helpers/numberFormatHelper';
 import { toBase } from '@/core/helpers/unit';
 import { sellContracts } from './tokenList';
 import handlerWallet from '@/core/mixins/handlerWallet.mixin';
+import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook.vue';
 
 export default {
   name: 'ModuleSellEth',
   components: {
-    ButtonBalance: () => import('@/core/components/AppButtonBalance')
+    ButtonBalance: () => import('@/core/components/AppButtonBalance'),
+    ModuleAddressBook
   },
   mixins: [handlerWallet],
   props: {
@@ -324,12 +329,6 @@ export default {
 
       return '';
     },
-    addressErrorMessages() {
-      if (!this.actualValidAddress && !isEmpty(this.toAddress)) {
-        return 'Invalid Address';
-      }
-      return '';
-    },
     nonMainnetMetamask() {
       return (
         this.instance &&
@@ -417,12 +416,6 @@ export default {
     gasLimit(val) {
       this.sendHandler.setGasLimit(val);
     },
-    toAddress(val) {
-      this.validToAddress = this.isValidToAddress(val);
-      if (this.inWallet || !this.actualValidAddress) return;
-      this.sendHandler.setFrom(val);
-      this.fetchSellInfo();
-    },
     orderHandler: {
       handler: function () {
         this.sendHandler = new handlerSend();
@@ -433,12 +426,22 @@ export default {
     }
   },
   mounted() {
+    if (!this.inWallet) this.$refs.addressInput.$refs.addressSelect.clear();
     this.sendHandler = new handlerSend();
     this.fetchSellInfo();
     this.locGasPrice = this.gasPriceByType(this.gasPriceType);
   },
   methods: {
     ...mapActions('external', ['setCoinGeckoTokens']),
+    setAddress(newVal, isValid, data) {
+      if (data.type === 'RESOLVED' && !data.value.includes('.'))
+        this.toAddress = data.value;
+      else this.toAddress = newVal;
+      this.validToAddress = isValid;
+      if (!this.validToAddress) return;
+      this.sendHandler.setFrom(this.toAddress);
+      this.fetchSellInfo();
+    },
     getEthBalance() {
       if (!this.actualValidAddress) return;
       const web3Instance = new Web3(nodes.ETH[0].url);
@@ -581,6 +584,9 @@ export default {
     },
     isValidToAddress(address) {
       return MultiCoinValidator.validate(address, this.selectedCurrency.symbol);
+    },
+    preventCharE(e) {
+      if (e.key === 'e') e.preventDefault();
     }
   }
 };

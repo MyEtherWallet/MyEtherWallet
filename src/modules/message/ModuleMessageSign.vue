@@ -20,7 +20,11 @@
             class="mr-4"
             @click.native="clearAll"
           />
-          <mew-button title="Sign" @click.native="signMessage" />
+          <mew-button
+            title="Sign"
+            :disabled="disableSignBtn"
+            @click.native="signMessage"
+          />
         </div>
       </div>
     </template>
@@ -32,7 +36,7 @@ import { mapState } from 'vuex';
 
 import SignAndVerifyMessage from '@/modules/message/handlers';
 export default {
-  name: 'ModuleMessageVerify',
+  name: 'ModuleMessageSign',
   data() {
     return {
       title: 'Sign Message',
@@ -42,7 +46,10 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['instance'])
+    ...mapState('wallet', ['instance']),
+    disableSignBtn() {
+      return this.message === '';
+    }
   },
   mounted() {
     this.signAndVerify = new SignAndVerifyMessage();
@@ -54,7 +61,7 @@ export default {
           this.instance.errorHandler(e.message);
         });
       } catch (e) {
-        this.instance.errorHandler(e.message);
+        this.instance.errorHandler(e.hasOwnProperty('message') ? e.message : e);
       }
     },
     clearAll() {

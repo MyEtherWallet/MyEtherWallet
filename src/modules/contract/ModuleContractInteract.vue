@@ -10,6 +10,7 @@
         <mew-select
           :items="mergedContracts"
           label="Contract Name"
+          class="ContractSelect"
           normal-dropdown
           @input="selectedContract"
         />
@@ -40,6 +41,7 @@
           />
           <mew-button
             title="Interact"
+            class="InteractButton"
             :disabled="!canInteract"
             :has-full-width="false"
             @click.native="showInteract"
@@ -66,7 +68,7 @@
         <mew-select
           label="Function"
           :items="methods"
-          class="mb-1"
+          class="mb-1 FunctionSelect"
           normal-dropdown
           @input="methodSelect"
         />
@@ -122,6 +124,7 @@
             :title="isViewFunction ? 'Call' : 'Write'"
             :has-full-width="false"
             btn-size="xlarge"
+            class="CallFunctionButton"
             :disabled="canProceed"
             @click.native="readWrite"
           />
@@ -256,9 +259,8 @@ export default {
       this.nametag = '';
       if (!newVal) {
         this.contractAddress = '';
-        return;
       }
-      if (isAddress(newVal.toLowerCase())) {
+      if (newVal && isAddress(newVal.toLowerCase())) {
         this.resolveAddress();
       }
     },

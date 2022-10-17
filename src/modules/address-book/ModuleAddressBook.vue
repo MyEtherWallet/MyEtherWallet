@@ -7,6 +7,7 @@
       :copy-tooltip="$t('common.copy')"
       :save-tooltip="$t('common.save')"
       :enable-save-address="enableSave"
+      :show-save="enableSave"
       :label="addrLabel"
       :items="addressBookWithMyAddress"
       :placeholder="$t('sendTx.enter-addr')"
@@ -19,11 +20,7 @@
     />
     <!-- add and edit the address book -->
     <mew-overlay
-      :footer="{
-        text: 'Need help?',
-        linkTitle: 'Contact support',
-        link: 'mailto:support@myetherwallet.com'
-      }"
+      :footer="footer"
       :title="$t('interface.address-book.add-addr')"
       :show-overlay="addMode"
       :close="toggleOverlay"
@@ -42,9 +39,11 @@
 import { mapGetters, mapState } from 'vuex';
 import { isObject, throttle } from 'lodash';
 import WAValidator from 'multicoin-address-validator';
+import { getAddressInfo } from '@kleros/address-tags-sdk';
+
 import { isAddress, toChecksumAddress } from '@/core/helpers/addressUtils';
 import NameResolver from '@/modules/name-resolver/index';
-import { getAddressInfo } from '@kleros/address-tags-sdk';
+import { ERROR, Toast } from '../toast/handler/handlerToast';
 
 const USER_INPUT_TYPES = {
   typed: 'TYPED',
@@ -90,14 +89,25 @@ export default {
       nameResolver: null,
       isValidAddress: false,
       loadedAddressValidation: false,
-      nametag: ''
+      nametag: '',
+      footer: {
+        text: 'Need help?',
+        linkTitle: 'Contact support',
+        link: 'mailto:support@myetherwallet.com'
+      }
     };
   },
 
   computed: {
     ...mapState('addressBook', ['addressBookStore']),
     ...mapGetters('global', ['network']),
-    ...mapState('wallet', ['web3', 'address', 'isOfflineApp']),
+    ...mapState('wallet', [
+      'web3',
+      'address',
+      'isOfflineApp',
+      'identifier',
+      'instance'
+    ]),
     errorMessages() {
       if (!this.isValidAddress && this.loadedAddressValidation) {
         return this.$t('interface.address-book.validations.invalid-address');
@@ -117,7 +127,14 @@ export default {
               resolverAddr: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
             }
           ]
-        : this.address
+        : this.myAddressBook;
+    },
+    myAddressBook() {
+      if (!this.isHomePage && !this.identifier)
+        this.instance.errorHandler(
+          new Error('Wallet has no identifier! Please refresh the page')
+        );
+      return this.address
         ? [
             {
               address: toChecksumAddress(this.address),
@@ -125,13 +142,15 @@ export default {
               resolverAddr: ''
             }
           ].concat(this.addressBookStore)
-        : [
+        : // If address is undefined set to MEW Donations
+          [
             {
-              address: toChecksumAddress(this.address),
-              nickname: 'My Address',
-              resolverAddr: ''
+              address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
+              currency: 'ETH',
+              nickname: 'MEW Donations',
+              resolverAddr: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
             }
-          ];
+          ].concat(this.addressBookStore);
     },
     enableSave() {
       return this.isHomePage
@@ -170,6 +189,13 @@ export default {
     }
   },
   mounted() {
+    if (this.isOfflineApp) {
+      this.footer = {
+        text: 'Need help? Email us at support@myetherwallet.com',
+        linkTitle: '',
+        link: ''
+      };
+    }
     if (this.network.type.ens && this.web3.currentProvider)
       this.nameResolver = new NameResolver(this.network, this.web3);
     if (this.isHomePage) {
@@ -208,18 +234,23 @@ export default {
           /**
            * Checks if the address is valid
            */
-          const isAddValid = this.isValidAddressFunc(this.inputAddr);
-          if (isAddValid instanceof Promise) {
-            const validation = await isAddValid;
-            this.isValidAddress = validation;
-          } else {
-            this.isValidAddress = isAddValid;
+          try {
+            const isAddValid = this.isValidAddressFunc(this.inputAddr);
+            if (isAddValid instanceof Promise) {
+              const validation = await isAddValid;
+              this.isValidAddress = validation;
+            } else {
+              this.isValidAddress = isAddValid;
+            }
+          } catch (e) {
+            this.isValidAddress = false;
           }
           this.loadedAddressValidation = !this.isValidAddress ? false : true;
           /**
-           * Resolve address with ENS/US/Kleros
+           * Resolve address with ENS/Unstoppable/Kleros
            */
-          if (this.isValidAddress && !this.isOfflineApp) this.resolveAddress();
+          if (this.isValidAddress && !this.isOfflineApp)
+            await this.resolveAddress();
 
           /**
            * @emits setAddress
@@ -229,7 +260,7 @@ export default {
             value: isObject(typeVal) ? typeVal.nickname : typeVal
           });
           if (!this.isValidAddress) {
-            this.resolveName();
+            await this.resolveName();
           }
         } else {
           const currencyExists = WAValidator.findCurrency(
@@ -302,22 +333,26 @@ export default {
      */
     resolveAddress: throttle(async function () {
       if (this.nameResolver) {
-        const reverseName = await this.nameResolver.resolveAddress(
-          this.inputAddr
-        );
-        if (reverseName && !reverseName.name) {
-          try {
-            await getAddressInfo(
-              toChecksumAddress(this.inputAddr),
-              'https://ipfs.kleros.io'
-            ).then(data => {
-              this.nametag = data?.publicNameTag || '';
-            });
-          } catch (e) {
-            this.nametag = '';
+        try {
+          const reverseName = await this.nameResolver.resolveAddress(
+            this.inputAddr
+          );
+          if (reverseName && !reverseName.name) {
+            try {
+              await getAddressInfo(
+                toChecksumAddress(this.inputAddr),
+                'https://ipfs.kleros.io'
+              ).then(data => {
+                this.nametag = data?.publicNameTag || '';
+              });
+            } catch (e) {
+              this.nametag = '';
+            }
           }
+          this.resolvedAddr = reverseName?.name ? reverseName.name : '';
+        } catch (e) {
+          Toast(e, {}, ERROR);
         }
-        this.resolvedAddr = reverseName?.name ? reverseName.name : '';
       }
     }, 300),
     /**

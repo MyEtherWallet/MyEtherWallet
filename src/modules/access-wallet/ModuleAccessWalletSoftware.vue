@@ -5,11 +5,7 @@
   =====================================================================================
   -->
   <mew-overlay
-    :footer="{
-      text: 'Need help?',
-      linkTitle: 'Contact support',
-      link: 'mailto:support@myetherwallet.com'
-    }"
+    :footer="footer"
     content-size="large"
     :show-overlay="open"
     :title="title"
@@ -176,7 +172,12 @@ export default {
           }
         }
       ],
-      accessHandler: {}
+      accessHandler: {},
+      footer: {
+        text: 'Need help?',
+        linkTitle: 'Contact support',
+        link: 'mailto:support@myetherwallet.com'
+      }
     };
   },
 
@@ -219,7 +220,15 @@ export default {
    */
   mounted() {
     this.accessHandler = new handlerAccessWalletSoftware();
-    this.warningSheetObj.url = this.getArticle('using-mew-offline');
+    if (this.isOfflineApp) {
+      this.footer = {
+        text: 'Need help? Email us at support@myetherwallet.com',
+        linkTitle: '',
+        link: ''
+      };
+      this.warningSheetObj = {};
+    } else
+      this.warningSheetObj.url = this.getArticle('not-rec-when-access-wallet');
   },
   destroyed() {
     this.accessHandler = {};

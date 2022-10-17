@@ -53,7 +53,7 @@ export default {
       return this.getAllEthBlocksTxs.length > 0;
     },
     identifyNetwork() {
-      return this.isTestNetwork ? this.cart.RIN : this.cart.ETH;
+      return this.cart.ETH;
     },
     tabs() {
       return [
