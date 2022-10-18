@@ -124,7 +124,11 @@ export default {
         const token = this.contractToToken(MAIN_TOKEN_ADDRESS);
         token.value = token.symbol;
         return token;
-      } else if (isEmpty(this.selectedCurrency) || !this.supportedBuy) {
+      } else if (
+        isEmpty(this.selectedCurrency) ||
+        !this.supportedBuy ||
+        (this.activeTab === 1 && !this.supportedSell)
+      ) {
         return {
           decimals: 18,
           img: 'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ETH-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.svg',
@@ -143,6 +147,13 @@ export default {
         this.network.type.name === 'ETH' ||
         this.network.type.name === 'BSC' ||
         this.network.type.name === 'MATIC'
+      );
+    },
+    supportedSell() {
+      return (
+        this.selectedCurrency.symbol === 'ETH' ||
+        this.selectedCurrency.symbol === 'USDT' ||
+        this.selectedCurrency.symbol === 'USDC'
       );
     },
     leftBtn() {
@@ -184,6 +195,7 @@ export default {
     ...mapActions('global', ['setNetwork']),
     ...mapActions('external', ['setNetworkTokens']),
     onTab(val) {
+      this.selectedCurrency = {};
       this.selectedCurrency = this.defaultCurrency;
       if (val === 1 || (val === 0 && (!this.supportedBuy || !this.inWallet))) {
         if (this.network.type.chainID !== 1) {
