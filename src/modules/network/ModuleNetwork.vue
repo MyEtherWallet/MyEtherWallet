@@ -86,7 +86,6 @@ export default {
   },
   methods: {
     openNetworkOverlay() {
-      this.$router.push({ name: ROUTES_WALLET.NETWORK.NAME });
       EventBus.$emit('openNetwork');
     }
   }
