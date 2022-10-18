@@ -524,7 +524,7 @@ export default {
       this.fetchData = {};
       this.fetchGasPrice();
       this.orderHandler
-        .getSupportedFiatToBuy(this.selectedCurrency.symbol)
+        .getSupportedFiatToBuy(this.selectedCurrency?.symbol)
         .then(res => {
           this.orderHandler.getFiatRatesForBuy().then(res => {
             this.currencyRates = cloneDeep(res);
