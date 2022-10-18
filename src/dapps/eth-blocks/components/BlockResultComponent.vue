@@ -273,7 +273,7 @@ export default {
       return this.isAdded && this.isAvailable ? 'mdi-check' : 'mdi-plus';
     },
     isAdded() {
-      const cart = this.isTestNetwork ? this.cart.RIN : this.cart.ETH;
+      const cart = this.cart.ETH;
       if (this.isReady) {
         const found = some(cart, block => {
           return block === this.blockHandler.blockNumber.toString();
@@ -287,8 +287,7 @@ export default {
     ...mapActions('ethBlocksTxs', [
       'addBlockToCart',
       'addTestBlockToCart',
-      'removeBlockFromCart',
-      'removeTestBlockFromCart'
+      'removeBlockFromCart'
     ]),
     showPanel() {
       this.showRemove = true;
@@ -299,16 +298,12 @@ export default {
     removeBlock() {
       const block = this.blockHandler.blockNumber.toString();
       this.removeMe(block);
-      this.isTestNetwork
-        ? this.removeTestBlockFromCart(block)
-        : this.removeBlockFromCart(block);
+      this.removeBlockFromCart(block);
     },
     addToCart() {
       const block = this.blockHandler.blockNumber.toString();
       if (this.isAvailable && !this.isAdded) {
-        this.isTestNetwork
-          ? this.addTestBlockToCart(block)
-          : this.addBlockToCart(block);
+        this.addBlockToCart(block);
       }
     },
     toggleAddRemoveBlock() {

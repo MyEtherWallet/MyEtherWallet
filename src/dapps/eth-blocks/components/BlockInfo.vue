@@ -538,7 +538,7 @@ export default {
       return estimate;
     },
     isAdded() {
-      const network = this.isTestNetwork ? this.cart.RIN : this.cart.ETH;
+      const network = this.cart.ETH;
       return some(network, block => {
         return block === this.blockNumber;
       });

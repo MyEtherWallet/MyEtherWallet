@@ -22,7 +22,7 @@
     <div class="text-center">
       <mew-checkbox
         v-model="acceptTerms"
-        label="To access my wallet, I accept "
+        :label="label"
         :link="link"
         class="justify-center PrivateKeyTerms"
       />
@@ -51,6 +51,7 @@ import {
   getBufferFromHex,
   sanitizeHex
 } from '../../../access-wallet/common/helpers';
+import { mapState } from 'vuex';
 export default {
   name: 'AccessWalletPrivateKey',
   props: {
@@ -65,6 +66,7 @@ export default {
     return {
       privateKey: '',
       acceptTerms: false,
+      label: 'To access my wallet, I accept ',
       link: {
         title: 'Terms',
         url: 'https://www.myetherwallet.com/terms-of-service'
@@ -72,6 +74,7 @@ export default {
     };
   },
   computed: {
+    ...mapState('wallet', ['isOfflineApp']),
     /**
      * Property that controls Access Wallet button
      * Button is enabled when terms were accepted and
@@ -108,6 +111,12 @@ export default {
         value => !!value || 'Required',
         value => isPrivateKey(value) || 'This is not a real private Key'
       ];
+    }
+  },
+  mounted() {
+    if (this.isOfflineApp) {
+      this.link = {};
+      this.label = 'To access my wallet, I accept Terms';
     }
   },
   methods: {
