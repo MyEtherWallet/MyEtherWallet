@@ -1,6 +1,6 @@
 <template>
   <div class="default-header expandHeader">
-    <v-container class="pl-4 pr-4 d-flex align-center pt-8">
+    <v-container class="pl-4 pb-7 pr-4 d-flex align-center pt-8">
       <v-row align="center" no-gutters>
         <v-col class="d-md-none" cols="2" md="4">
           <the-default-mobile-navigation class="ml-n2" />
