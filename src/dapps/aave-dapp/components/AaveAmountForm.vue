@@ -134,7 +134,10 @@ export default {
   },
   computed: {
     hasAmount() {
-      return BigNumber(this.amount).gt(0);
+      return (
+        BigNumber(this.amount).gt(0) &&
+        BigNumber(this.amount).lte(this.actualTokenBalance)
+      );
     },
     checkIfNumerical() {
       const regex = new RegExp('^-?[0-9]+[.]?[0-9]*$');
@@ -149,6 +152,11 @@ export default {
     },
     disabled() {
       return !this.hasAmount || this.errorMessages !== '';
+    },
+    actualTokenBalance() {
+      return this.buttonTitle.action.toLowerCase() === ACTION_TYPES.withdraw
+        ? this.aaveBalance
+        : this.tokenBalance;
     }
   },
   mounted() {
@@ -188,10 +196,7 @@ export default {
       this.$emit('emitValues', this.amount);
     },
     calculatedAmt(per) {
-      let amt =
-        this.buttonTitle.action.toLowerCase() === ACTION_TYPES.withdraw
-          ? this.aaveBalance
-          : this.tokenBalance;
+      let amt = this.actualTokenBalance;
       if (isNaN(amt)) amt = 0;
       return BigNumber(amt)
         .times(per)
