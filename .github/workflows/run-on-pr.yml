@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - develop
+      - staging
 
 jobs:
   run-on-pr:

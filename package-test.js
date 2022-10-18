@@ -74,7 +74,7 @@ const EXCEPTIONS = [
   'uuid',
   'web3-eth-contract',
   'is-ipfs',
-  '@actions/github'
+  'axios'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

@@ -319,18 +319,18 @@ export default {
               ? this.network.type.name
               : '';
             this.networkLoading = false;
-            if (!this.isOffline) {
-              const provider =
-                this.identifier === WALLET_TYPES.WEB3_WALLET
-                  ? this.setWeb3Instance(window.ethereum)
-                  : this.setWeb3Instance();
+            const provider =
+              this.identifier === WALLET_TYPES.WEB3_WALLET
+                ? this.setWeb3Instance(window.ethereum)
+                : this.setWeb3Instance();
+            if (!this.isOfflineApp) {
               provider.then(() => {
                 this.setTokenAndEthBalance();
               });
-              Toast(`Switched network to: ${found[0].type.name}`, {}, SUCCESS);
-              this.trackNetworkSwitch(found[0].type.name);
-              this.$emit('newNetwork');
             }
+            Toast(`Switched network to: ${found[0].type.name}`, {}, SUCCESS);
+            this.trackNetworkSwitch(found[0].type.name);
+            this.$emit('newNetwork');
           }
         })
         .catch(e => {
