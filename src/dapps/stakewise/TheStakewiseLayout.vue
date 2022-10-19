@@ -72,12 +72,6 @@ export default {
         this.activeTab = this.tabs[0].id;
       }
     },
-    web3() {
-      clearInterval(this.fetchInterval);
-      if (this.isSupported) {
-        this.setup();
-      }
-    },
     network() {
       clearInterval(this.fetchInterval);
       if (this.isSupported) {
