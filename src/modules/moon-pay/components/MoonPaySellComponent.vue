@@ -543,7 +543,7 @@ export default {
         });
     },
     fetchSellInfo() {
-      if (this.actualValidAddress) {
+      if (this.actualValidAddress && this.selectedCurrency.contract) {
         this.fetchingBalance = true;
         if (this.selectedCurrency.contract === MAIN_TOKEN_ADDRESS) {
           this.getEthBalance();
