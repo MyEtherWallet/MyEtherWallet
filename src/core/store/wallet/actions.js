@@ -19,11 +19,9 @@ const removeWallet = function ({ commit, state }) {
   commit('REMOVE_WALLET');
 };
 
-const setWallet = function ({ commit, dispatch, state }, params) {
+const setWallet = function ({ commit, dispatch }, params) {
   commit('SET_WALLET', params[0]);
-  if (!state.isOfflineApp) {
-    dispatch('setWeb3Instance', params[1]);
-  }
+  dispatch('setWeb3Instance', params[1]);
 };
 const setTokens = function ({ commit }, params) {
   commit('SET_TOKENS', params);

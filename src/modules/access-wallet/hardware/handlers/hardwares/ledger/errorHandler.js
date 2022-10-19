@@ -84,7 +84,9 @@ const WARNINGS = {
   'Ledger device: Incorrect length (0x6700)':
     'Wrong or No app selected in Ledger Device',
   "Failed to execute 'transferIn' on 'USBDevice': A transfer error has occurred.":
-    'Please confirm app on Ledger device to continue'
+    'Please confirm app on Ledger device to continue',
+  'Wrong App or No App':
+    'Please make sure you selected an app in the Ledger device'
 };
 const SUCCESS = {
   'App has switched. Please retry again':

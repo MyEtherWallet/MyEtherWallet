@@ -57,6 +57,8 @@ class ledgerWallet {
     const ledgerApp = store.getters['wallet/getLedgerApp'];
     try {
       this.openedApp = (await getAppAndVersion(this.transport)).name;
+      if (bluetooth && this.openedApp !== ledgerApp.name)
+        throw new Error('Wrong App or No App');
       if (this.openedApp !== 'BOLOS' && this.openedApp !== ledgerApp.name) {
         await attemptToQuitApp(this.transport, this.openedApp);
       }
@@ -65,14 +67,13 @@ class ledgerWallet {
         await openApp(this.transport, appNames[ledgerApp.value]).then(() => {
           return new Promise(resolve => {
             setTimeout(async () => {
-              this.transport = bluetooth
-                ? await getLedgerXTransport(this.transport.device)
-                : await getLedgerTransport(6000);
+              if (!bluetooth) {
+                this.transport = await getLedgerTransport();
+              }
               resolve();
-            }, 250);
+            }, 2500);
           });
         });
-        console.log('gets past openApp');
       }
     } catch (er) {
       if (this.openedApp === undefined) {
@@ -222,19 +223,15 @@ const isWebUsbSupported = async () => {
   return isSupported && platform.name !== 'Opera';
 };
 
-const getLedgerTransport = async (timeout = 3000) => {
+const getLedgerTransport = async () => {
+  let transport;
   const support = await isWebUsbSupported();
   if (support) {
-    return webUsbTransport.openConnected().then(res => {
-      if (!res) {
-        console.log('b');
-        return webUsbTransport.create(timeout);
-      }
-      console.log('c');
-      return res;
-    });
+    transport = await webUsbTransport.create();
+  } else {
+    throw new Error('WebUsb not supported.  Please try a different browser.');
   }
-  throw new Error('WebUsb not supported.  Please try a different browser.');
+  return transport;
 };
 
 const isWebBLESupported = async () => {
@@ -242,13 +239,11 @@ const isWebBLESupported = async () => {
   return isSupported && platform.name !== 'Opera';
 };
 
-const getLedgerXTransport = async (device = null) => {
+const getLedgerXTransport = async () => {
   let transport;
   const support = await isWebBLESupported();
   if (support) {
-    transport = device
-      ? await TransportWebBLE.open(device)
-      : await TransportWebBLE.create();
+    transport = await TransportWebBLE.create();
     transport.on('disconnect', () => {
       transport = null;
       EventBus.$emit('bleDisconnect');
@@ -263,40 +258,6 @@ const getLedgerXTransport = async (device = null) => {
   }
   return transport;
 };
-
-// const connectToApp = async (transport, ledgerApp) => {
-//   getDeviceInfo(transport)
-//     .then(() => {
-//       openApp(transport, appNames[ledgerApp.value])
-//         .then(() => true)
-//         .catch(() => {
-//           throw new Error(
-//             `Please make sure you have ${
-//               appNames[ledgerApp.value]
-//             } App installed on your Ledger`
-//           );
-//         });
-//     })
-//     .catch(e => {
-//       if (e.message === 'DeviceOnDashboardExpected') {
-//         getAppAndVersion(transport).then(appInfo => {
-//           if (appInfo.name !== appNames[ledgerApp.value]) {
-//             attemptToQuitApp(transport, appInfo.name);
-//             openApp(transport, appNames[ledgerApp.value])
-//               .then(() => true)
-//               .catch(() => {
-//                 throw new Error(
-//                   `Please make sure you have ${
-//                     appNames[ledgerApp.value]
-//                   } App installed on your Ledger`
-//                 );
-//               });
-//           }
-//         });
-//       }
-//       throw e;
-//     });
-// };
 
 const getRootPubKey = async (_ledger, _path) => {
   const pubObj = await _ledger.getAddress(_path, false, true);

@@ -12,6 +12,7 @@
         <access-wallet-derivation-path
           :selected-path="selectedPath"
           :passed-paths="paths"
+          :disable-custom-paths="true"
           class="path-box"
           @setPath="setPath"
         />

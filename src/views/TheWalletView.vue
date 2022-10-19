@@ -9,7 +9,7 @@
         <router-view />
       </v-container>
     </v-main>
-    <the-wallet-footer />
+    <the-wallet-footer :is-offline-app="isOfflineApp" />
     <enkrypt-promo-snackbar v-if="!isOfflineApp" />
   </div>
 </template>
@@ -108,7 +108,7 @@ export default {
   },
   beforeDestroy() {
     if (this.online && !this.isOfflineApp) this.web3.eth.clearSubscriptions();
-    if (window.ethereum) {
+    if (window.ethereum && window.ethereum.removeListener instanceof Function) {
       if (this.findAndSetNetwork instanceof Function)
         window.ethereum.removeListener('chainChanged', this.findAndSetNetwork);
       if (this.setWeb3Account instanceof Function)
