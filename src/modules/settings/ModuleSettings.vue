@@ -10,6 +10,7 @@
     :back="editMode || addMode ? back : null"
     content-size="xlarge"
     :close="close"
+    class="py-10"
   >
     <mew-expand-panel
       v-if="!editMode && !addMode"
