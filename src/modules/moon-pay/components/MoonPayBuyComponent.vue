@@ -9,7 +9,7 @@
         label="Currency"
         :items="currencyItems"
         :value="selectedCurrency"
-        :disabled="loading"
+        :disabled="disableCurrencySelect"
         :error-messages="currencyErrorMessages"
         is-custom
         @input="setCurrency"
@@ -151,7 +151,8 @@ export default {
       gasPrice: '0',
       web3Connections: {},
       simplexQuote: {},
-      showMoonpay: true
+      showMoonpay: true,
+      disableCurrencySelect: true
     };
   },
   computed: {
@@ -418,7 +419,7 @@ export default {
           this.selectedCurrency = oldVal;
           return;
         }
-        if (!isEqual(newVal, oldVal)) {
+        if (!isEqual(newVal, oldVal) && this.amountErrorMessages === '') {
           this.fetchCurrencyData();
         }
         this.$emit('selectedCurrency', this.selectedCurrency);
@@ -521,6 +522,7 @@ export default {
     },
     fetchCurrencyData() {
       this.loading = true;
+      this.disableCurrencySelect = true;
       this.fetchData = {};
       this.fetchGasPrice();
       this.orderHandler
@@ -529,6 +531,7 @@ export default {
           this.orderHandler.getFiatRatesForBuy().then(res => {
             this.currencyRates = cloneDeep(res);
             this.loading = false;
+            this.disableCurrencySelect = false;
           });
           this.fetchedData = Object.assign({}, res);
         })
@@ -548,6 +551,7 @@ export default {
       )
         return;
       this.loading = true;
+      this.disableCurrencySelect = true;
       this.simplexQuote = {};
       this.orderHandler
         .getSimplexQuote(
@@ -559,6 +563,7 @@ export default {
         .then(res => {
           this.simplexQuote = Object.assign({}, res);
           this.loading = false;
+          this.disableCurrencySelect = false;
           this.$emit('simplexQuote', this.simplexQuote);
           this.compareQuotes();
         })
