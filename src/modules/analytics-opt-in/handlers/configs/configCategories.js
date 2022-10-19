@@ -8,8 +8,10 @@ export default {
   gasSwitch: 'gasSwitch',
   swap: 'swapFlow',
   dapp: 'dapp',
-  swapRates: 'swapRates',
+  swapTokenPair: 'swapTokenPair',
+  swapToken: 'swapToken',
   globalError: 'globalError',
   enkrypt: 'enkrypt',
-  mewwallet: 'mewwallet'
+  mewwallet: 'mewwallet',
+  buySell: 'buySell'
 };

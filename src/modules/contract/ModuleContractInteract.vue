@@ -10,6 +10,7 @@
         <mew-select
           :items="mergedContracts"
           label="Contract Name"
+          class="ContractSelect"
           normal-dropdown
           @input="selectedContract"
         />
@@ -40,6 +41,7 @@
           />
           <mew-button
             title="Interact"
+            class="InteractButton"
             :disabled="!canInteract"
             :has-full-width="false"
             @click.native="showInteract"
@@ -66,7 +68,7 @@
         <mew-select
           label="Function"
           :items="methods"
-          class="mb-1"
+          class="mb-1 FunctionSelect"
           normal-dropdown
           @input="methodSelect"
         />
@@ -122,6 +124,7 @@
             :title="isViewFunction ? 'Call' : 'Write'"
             :has-full-width="false"
             btn-size="xlarge"
+            class="CallFunctionButton"
             :disabled="canProceed"
             @click.native="readWrite"
           />
@@ -151,7 +154,8 @@
 import Vue from 'vue';
 import { mapState, mapGetters } from 'vuex';
 import { toBN, toWei } from 'web3-utils';
-import { isString } from 'lodash';
+import { isString, throttle } from 'lodash';
+import { getAddressInfo } from '@kleros/address-tags-sdk';
 
 import { isAddress } from '@/core/helpers/addressUtils';
 import { stringToArray } from '@/core/helpers/common';
@@ -255,7 +259,9 @@ export default {
       this.nametag = '';
       if (!newVal) {
         this.contractAddress = '';
-        return;
+      }
+      if (newVal && isAddress(newVal.toLowerCase())) {
+        this.resolveAddress();
       }
     },
     web3: {
@@ -391,7 +397,22 @@ export default {
     },
     getType(type) {
       return getInputType(type);
-    }
+    },
+    /**
+     * Resolves address and @returns name
+     */
+    resolveAddress: throttle(async function () {
+      try {
+        await getAddressInfo(
+          this.contractAddress,
+          'https://ipfs.kleros.io'
+        ).then(data => {
+          this.nametag = data?.publicNameTag || '';
+        });
+      } catch (e) {
+        this.nametag = '';
+      }
+    }, 300)
   }
 };
 </script>
