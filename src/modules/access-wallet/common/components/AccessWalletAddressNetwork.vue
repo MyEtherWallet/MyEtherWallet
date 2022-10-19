@@ -403,7 +403,6 @@ export default {
         return item.address === this.selectedAddress;
       });
       if (wallet) {
-        wallet.account.isHardware = true;
         return wallet.account;
       }
       return null;
