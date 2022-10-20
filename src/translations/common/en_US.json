@@ -7,7 +7,7 @@
   "next": "Next",
   "copy": "Copy",
   "copied": "Copied",
-  "confirm-add": "Confirm & Add",
+  "confirm-add": "Confirm and add",
   "clear": "Clear",
   "cancel": "Cancel",
   "close": "Close",
@@ -16,7 +16,6 @@
     "eth": "ETH"
   },
   "support-email": "support@myetherwallet.com",
-
   "updates": {
     "new": "New update downloaded! Please refresh your browser to receive the most updated version",
     "update-found": "New update found! Downloading...",
