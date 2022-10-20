@@ -23,6 +23,7 @@
           <v-col cols="12" sm="12" lg="6" md="6">
             <v-time-picker
               v-model="time"
+              :max="currentTime"
               format="ampm"
               color="#05C0A5"
               full-width
@@ -88,6 +89,12 @@ export default {
     },
     currentDate() {
       return new Date().toISOString();
+    },
+    /*
+     * Get current time behind 10 minutes
+     */
+    currentTime() {
+      return moment().subtract(10, 'minutes').format('HH:mm');
     }
   },
   methods: {
