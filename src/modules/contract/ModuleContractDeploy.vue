@@ -1,101 +1,46 @@
 <template>
-  <mew-module
-    class="d-flex flex-grow-1 pt-6"
-    :has-elevation="true"
-    :has-indicator="true"
-    title="Deploy contract"
-  >
+  <mew-module class="d-flex flex-grow-1 pt-6" :has-elevation="true" :has-indicator="true" title="Deploy contract">
     <template #moduleBody>
       <div>
-        <v-textarea
-          v-model="byteCode"
-          outlined
-          label="Bytecode"
-          placeholder=" "
-          :rules="[
-            value => {
-              return isValidByteCodeInput(value);
-            }
-          ]"
-        />
-        <v-textarea
-          v-model="abiInterface"
-          outlined
-          name="input-7-4"
-          label="ABI/JSON Interface"
-          value=""
-          placeholder=" "
-          :rules="[
+        <v-textarea v-model="byteCode" outlined label="Bytecode" class="BytecodeInput" placeholder=" " :rules="[
+          value => {
+            return isValidByteCodeInput(value);
+          }
+        ]" />
+        <v-textarea v-model="abiInterface" outlined name="input-7-4" label="ABI/JSON Interface" class="ABIInput"
+          value="" placeholder=" " :rules="[
             value => {
               return isValidABI(value);
             }
-          ]"
-        ></v-textarea>
-        <mew-input
-          v-model="contractName"
-          label="Contract name"
-          placeholder=" "
-        />
+          ]"></v-textarea>
+        <mew-input v-model="contractName" label="Contract name" class="ContractName" placeholder=" " />
         <div v-show="constructorInputs.length">
           <div class="mb-10">Constructor Inputs</div>
-          <div
-            v-for="(input, idx) in constructorInputs"
-            :key="input.name + idx"
-            class="input-item-container"
-          >
-            <mew-input
-              v-if="getType(input.type).type !== 'radio'"
-              v-model="input.value"
-              :label="`${input.name} (${input.type})`"
-              class="non-bool-input"
-              :rules="[
+          <div v-for="(input, idx) in constructorInputs" :key="input.name + idx" class="input-item-container">
+            <mew-input v-if="getType(input.type).type !== 'radio'" v-model="input.value"
+              :label="`${input.name} (${input.type})`" class="non-bool-input" :rules="[
                 value => {
                   return isValidInput(value, getType(input.type).solidityType);
                 }
-              ]"
-              @input="valueInput(idx, $event)"
-            />
-            <div
-              v-if="getType(input.type).type === 'radio'"
-              class="bool-input-container"
-            >
+              ]" @input="valueInput(idx, $event)" />
+            <div v-if="getType(input.type).type === 'radio'" class="bool-input-container">
               <div class="bool-items">
-                <mew-checkbox
-                  v-model="input.value"
-                  :value="true"
-                  :label="`${input.name} (${input.type})`"
-                  type="radio"
-                  checked
-                />
+                <mew-checkbox v-model="input.value" :value="true" :label="`${input.name} (${input.type})`" type="radio"
+                  checked />
               </div>
             </div>
           </div>
-          <mew-input
-            v-if="isContructorPayable"
-            v-model="ethAmount"
-            :rules="[
-              value => {
-                return isETHValue(value);
-              }
-            ]"
-            :label="`value (ETH)`"
-            class="non-bool-input"
-          />
+          <mew-input v-if="isContructorPayable" v-model="ethAmount" :rules="[
+            value => {
+              return isETHValue(value);
+            }
+          ]" :label="`value (ETH)`" class="non-bool-input" />
         </div>
         <div class="text-right">
-          <mew-button
-            btn-style="light"
-            title="Clear all"
-            :has-full-width="false"
-            class="mr-4"
-            @click.native="resetDefaults()"
-          />
-          <mew-button
-            title="Sign transaction"
-            :has-full-width="false"
-            :disabled="!canDeploy"
-            @click.native="deploy"
-          />
+          <mew-button btn-style="light" title="Clear all" :has-full-width="false" class="mr-4"
+            @click.native="resetDefaults()" />
+          <mew-button title="Sign Transaction" class="SignTransactionButton" :has-full-width="false"
+            :disabled="!canDeploy" @click.native="deploy" />
         </div>
       </div>
     </template>

@@ -93,6 +93,9 @@ export default {
       }
     });
   },
+  beforeDestroy() {
+    EventBus.$off(MOONPAY_EVENT);
+  },
   methods: {
     ...mapActions('global', ['setOnlineStatus']),
     ...mapActions('external', ['setCurrency']),

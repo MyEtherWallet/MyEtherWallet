@@ -123,7 +123,15 @@ export default {
      */
     trackSwapRate(action) {
       if (this.$matomo && action && this.consentToTrack) {
-        this.$matomo.trackEvent(categories.swapRates, action);
+        this.$matomo.trackEvent(categories.swapTokenPair, action);
+      }
+    },
+    /**
+     * Tracks which swap rate user clicks
+     */
+    trackSwapToken(action) {
+      if (this.$matomo && action && this.consentToTrack) {
+        this.$matomo.trackEvent(categories.swapToken, action);
       }
     },
     /**

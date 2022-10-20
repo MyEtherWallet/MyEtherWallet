@@ -8,6 +8,7 @@
     <v-container class="px-3 my-12">
       <mew-tabs
         :is-vertical="$vuetify.breakpoint.smAndDown ? false : true"
+        :compact="$vuetify.breakpoint.smAndDown"
         :items="items"
         :active-tab="activeTab"
         show-arrows

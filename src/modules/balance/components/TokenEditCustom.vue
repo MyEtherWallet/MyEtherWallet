@@ -32,7 +32,7 @@
         />
       </div>
 
-      <the-table v-if="!isMobile" flat divider full-width>
+      <app-table v-if="!isMobile" flat divider full-width>
         <table>
           <thead>
             <tr class="text-uppercase">
@@ -84,7 +84,7 @@
             </tr>
           </tbody>
         </table>
-      </the-table>
+      </app-table>
 
       <div v-else class="mt-6">
         <div
@@ -130,14 +130,14 @@
 </template>
 
 <script>
-import TheTable from '@/components/TheTable';
+import AppTable from '@/core/components/AppTable';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import { mapActions, mapGetters } from 'vuex';
 import { cloneDeep } from 'lodash';
 
 export default {
   components: {
-    TheTable
+    AppTable
   },
   props: {
     open: {

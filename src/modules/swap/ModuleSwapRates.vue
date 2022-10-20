@@ -235,7 +235,9 @@ export default {
         toToken: data.toT.contract,
         amount: '1'
       };
-      this.trackSwapRate(data.fromT.symbol + ' to ' + data.toT.symbol);
+      this.trackSwapRate(
+        `fromSwapTokenPairs ${data.fromT.symbol} to ${data.toT.symbol}`
+      );
       this.navigateToSwap(obj);
     },
     navigateToSwap(query) {

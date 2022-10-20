@@ -9,7 +9,7 @@
         label="Currency"
         :items="currencyItems"
         :value="selectedCurrency"
-        :disabled="loading"
+        :disabled="disableCurrencySelect"
         :error-messages="currencyErrorMessages"
         is-custom
         @input="setCurrency"
@@ -26,6 +26,7 @@
           type="number"
           :error-messages="amountErrorMessages"
           class="mr-2"
+          @keydown.native="preventCharE($event)"
         />
         <mew-select
           v-model="selectedFiat"
@@ -41,7 +42,7 @@
             {{ cryptoToFiat }}
             <span class="mew-heading-3 pl-1">{{ selectedCryptoName }}</span>
             <div class="mr-1 textDark--text">&nbsp;≈ {{ plusFeeF }}</div>
-            <mew-tooltip style="height: 23px">
+            <mew-tooltip style="height: 21px">
               <template #contentSlot>
                 <div>
                   {{ includesFeeText }}
@@ -150,7 +151,8 @@ export default {
       gasPrice: '0',
       web3Connections: {},
       simplexQuote: {},
-      showMoonpay: true
+      showMoonpay: true,
+      disableCurrencySelect: true
     };
   },
   computed: {
@@ -417,7 +419,7 @@ export default {
           this.selectedCurrency = oldVal;
           return;
         }
-        if (!isEqual(newVal, oldVal)) {
+        if (!isEqual(newVal, oldVal) && this.amountErrorMessages === '') {
           this.fetchCurrencyData();
         }
         this.$emit('selectedCurrency', this.selectedCurrency);
@@ -477,7 +479,7 @@ export default {
     }
   },
   mounted() {
-    if (!this.inWallet) this.$refs.addressInput.$refs.addressSelect.clear();
+    if (!this.inWallet) this.$refs.addressInput.$refs?.addressSelect.clear();
     this.fetchCurrencyData();
   },
   methods: {
@@ -520,6 +522,7 @@ export default {
     },
     fetchCurrencyData() {
       this.loading = true;
+      this.disableCurrencySelect = true;
       this.fetchData = {};
       this.fetchGasPrice();
       this.orderHandler
@@ -528,6 +531,7 @@ export default {
           this.orderHandler.getFiatRatesForBuy().then(res => {
             this.currencyRates = cloneDeep(res);
             this.loading = false;
+            this.disableCurrencySelect = false;
           });
           this.fetchedData = Object.assign({}, res);
         })
@@ -547,6 +551,7 @@ export default {
       )
         return;
       this.loading = true;
+      this.disableCurrencySelect = true;
       this.simplexQuote = {};
       this.orderHandler
         .getSimplexQuote(
@@ -558,6 +563,7 @@ export default {
         .then(res => {
           this.simplexQuote = Object.assign({}, res);
           this.loading = false;
+          this.disableCurrencySelect = false;
           this.$emit('simplexQuote', this.simplexQuote);
           this.compareQuotes();
         })
@@ -592,6 +598,9 @@ export default {
         this.selectedCurrency,
         this.selectedFiat
       ]);
+    },
+    preventCharE(e) {
+      if (e.key === 'e') e.preventDefault();
     }
   }
 };
