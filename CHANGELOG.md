@@ -41,6 +41,7 @@
 * fix tooltip alignment [#4281](https://github.com/MyEtherWallet/MyEtherWallet/pull/4281)
 * Fix double confirmation when swapping on mnemonic [#4289](https://github.com/MyEtherWallet/MyEtherWallet/pull/4289)
 * Buy popup cant select crypto when amount invalid [#4293](https://github.com/MyEtherWallet/MyEtherWallet/pull/4293)
+* fix sentry moonpay suppurted fiat symbol type error [#4296](https://github.com/MyEtherWallet/MyEtherWallet/pull/4296)
 * Sentry issue currencyName is undefined in AddressBook [#4301](https://github.com/MyEtherWallet/MyEtherWallet/pull/4301)
 
 ### Release v6.6.8
