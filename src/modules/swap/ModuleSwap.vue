@@ -972,13 +972,6 @@ export default {
       },
       deep: true,
       immediate: false
-    },
-    localGasPrice: {
-      handler: function () {
-        this.setMaxAmount();
-      },
-      deep: true,
-      immediate: true
     }
   },
   beforeMount() {
@@ -1338,7 +1331,7 @@ export default {
       this.setTokenInValue(this.tokenInValue);
     },
     triggerSetTokenInValue: debounce(function (val) {
-      this.setTokenInValue(val);
+      this.hideReloadFetch(val);
     }, 500),
     setTokenInValue(value) {
       /**
@@ -1407,6 +1400,107 @@ export default {
       ) {
         this.isLoadingProviders = true;
         this.showAnimation = true;
+        this.cachedAmount = this.tokenInValue;
+        this.swapper
+          .getAllQuotes({
+            fromT: this.fromTokenType,
+            toT: this.toTokenType,
+            fromAmount: new BigNumber(this.tokenInValue).times(
+              new BigNumber(10).pow(new BigNumber(this.fromTokenType.decimals))
+            )
+          })
+          .then(quotes => {
+            if (this.tokenInValue === this.cachedAmount) {
+              this.selectedProvider = {};
+              if (quotes.length) {
+                this.lastSetToken = quotes[0].amount;
+                this.availableQuotes = quotes.reduce((arr, q) => {
+                  if (quotes.length === 1 || BigNumber(q.amount).gt(0)) {
+                    q.rate = new BigNumber(q.amount)
+                      .dividedBy(new BigNumber(this.tokenInValue))
+                      .toString();
+                    q.isSelected = false;
+                    arr.push(q);
+                  }
+                  return arr;
+                }, []);
+                this.tokenOutValue = quotes[0].amount;
+              }
+              this.step = 1;
+              this.isLoadingProviders = false;
+            } else {
+              this.isLoadingProviders = false;
+            }
+          });
+      }
+    },
+    hideReloadFetch(value) {
+      /**
+       * Ensure that both pairs have been set
+       * before calling the providers
+       */
+      this.belowMinError = false;
+      if (this.isLoading || this.initialLoad) return;
+      const val = value ? value : 0;
+      this.tokenInValue = BigNumber(val).toFixed();
+      // Check if (in amount) is larger than (available balance)
+      if (
+        !this.isFromNonChain &&
+        (this.availableBalance.lt(new BigNumber(this.tokenInValue)) ||
+          !this.hasMinEth)
+      ) {
+        this.step = 0;
+        return;
+      }
+
+      if (isEmpty(this.fromTokenType)) {
+        Toast('From token cannot be empty!', {}, ERROR);
+        return;
+      }
+
+      if (
+        !Swapper.helpers.hasValidDecimals(
+          this.tokenInValue,
+          this.fromTokenType.decimals
+        )
+      ) {
+        return;
+      }
+      this.tokenOutValue = '0';
+      this.availableQuotes.forEach(q => {
+        if (q) {
+          q.isSelected = false;
+        }
+      });
+      this.availableQuotes = [];
+      this.allTrades = [];
+      this.step = 0;
+
+      if (
+        this.isFromNonChain &&
+        (this.refundAddress === '' || !this.isValidRefundAddr)
+      )
+        return;
+      if (this.showToAddress && !this.addressValue?.isValid) return;
+      if (
+        !isEmpty(this.toTokenType) &&
+        this.toTokenType.hasOwnProperty('isEth') &&
+        !this.toTokenType.isEth &&
+        (isEmpty(this.addressValue) ||
+          (!isEmpty(this.addressValue) && !this.addressValue.isValid))
+      ) {
+        return;
+      }
+      if (
+        !BigNumber(value).isNaN() &&
+        BigNumber(value).gt(0) &&
+        !isEmpty(this.fromTokenType) &&
+        !isEmpty(this.toTokenType) &&
+        !isEmpty(this.fromTokenType?.symbol) &&
+        !isEmpty(this.toTokenType?.symbol)
+      ) {
+        this.isLoadingProviders = false;
+        this.showAnimation = false;
         this.cachedAmount = this.tokenInValue;
         this.swapper
           .getAllQuotes({
