@@ -739,7 +739,7 @@ export default {
         });
         return totalGas.toString();
       }
-      return '0';
+      return '60000';
     },
     /**
      * check whether the to token is in ETH chain or not
@@ -972,6 +972,13 @@ export default {
       },
       deep: true,
       immediate: false
+    },
+    localGasPrice: {
+      handler: function () {
+        this.setMaxAmount();
+      },
+      deep: true,
+      immediate: true
     }
   },
   beforeMount() {

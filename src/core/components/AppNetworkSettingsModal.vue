@@ -70,20 +70,20 @@ export default {
      * emit gas when modal
      * opens in case of difference
      */
-    gasPriceModal(newVal) {
-      if (newVal) {
-        this.$emit('onLocalGasPrice', this.gasPriceByType(this.gasPriceType));
-      }
-    },
+    // gasPriceModal(newVal) {
+    //   if (newVal) {
+    //     this.$emit('onLocalGasPrice', this.gasPriceByType(this.gasPriceType));
+    //   }
+    // }
     /**
      * only emit new gas price
      * when modal is open
      */
-    gasPrice() {
-      if (this.gasPriceModal) {
-        this.$emit('onLocalGasPrice', this.gasPriceByType(this.gasPriceType));
-      }
-    }
+    // gasPrice() {
+    //   if (this.gasPriceModal) {
+    //     this.$emit('onLocalGasPrice', this.gasPriceByType(this.gasPriceType));
+    //   }
+    // }
   },
   methods: {
     /**
