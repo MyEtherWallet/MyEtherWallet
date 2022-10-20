@@ -94,7 +94,10 @@ export default {
      * Get current time behind 10 minutes
      */
     currentTime() {
-      return moment().subtract(10, 'minutes').format('HH:mm');
+      const today = moment().format('YYYY-MM-DD');
+      return today === this.date
+        ? moment().subtract(10, 'minutes').format('HH:mm')
+        : undefined;
     }
   },
   methods: {
