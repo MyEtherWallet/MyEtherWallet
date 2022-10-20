@@ -61,7 +61,6 @@
           <!-- Icon -->
           <!-- ===================================================================================== -->
           <mew-token-container :img="network.icon" size="24px" />
-
           <!-- ===================================================================================== -->
           <!-- Symbol/Name -->
           <!-- ===================================================================================== -->
@@ -368,5 +367,10 @@ $borderNetwork: 1px solid #ececec;
 
 .network-border-last {
   border-radius: 0px 0px 4px 4px;
+}
+
+.mint-me-color {
+  filter: brightness(0) saturate(100%) invert(90%) sepia(3%) saturate(5171%)
+    hue-rotate(348deg) brightness(92%) contrast(63%);
 }
 </style>
