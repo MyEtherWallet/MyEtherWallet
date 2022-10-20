@@ -207,7 +207,8 @@
     <access-wallet-address-network
       v-if="step > walletInitialized"
       :back="null"
-      :hide-custom-paths="onKeepkey || onLedger"
+      :hide-path-selection="onKeepkey || onLedger"
+      :disable-custom-paths="onLedger"
       :handler-wallet="hwWalletInstance"
       :selected-path="selectedPath"
       :paths="paths"
@@ -414,9 +415,9 @@ export default {
       //     title: 'Using a KeepKey Hardware wallet with MEW',
       //     url: 'https://kb.myetherwallet.com/en/hardware-wallets/using-keepkey-with-mew/'
       //   };
-      // } else if (this.onCoolWallet) {
+      // } else if (this.onCoolWalletS) {
       //   return {
-      //     title: 'Using a CoolWallet Hardware Wallet with MEW',
+      //     title: 'Using a CoolWallet S Hardware Wallet with MEW',
       //     url: 'https://kb.myetherwallet.com/en/hardware-wallets/using-coolwallet-with-mew/'
       //   };
       // }
@@ -619,6 +620,9 @@ export default {
     } catch (e) {
       Toast(e, {}, ERROR);
     }
+  },
+  beforeDestroy() {
+    EventBus.$off('bleDisconnect');
   },
   methods: {
     ...mapActions('wallet', ['setWallet', 'setLedgerBluetooth']),
