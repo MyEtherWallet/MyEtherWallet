@@ -229,6 +229,9 @@ export default {
       _this.checkAndSetNotificationStatus(notification);
     });
   },
+  beforeDestroy() {
+    EventBus.$off('openNotifications');
+  },
   methods: {
     ...mapActions('notifications', ['updateNotification']),
     /**

@@ -88,16 +88,7 @@ class WalletConnectWallet {
             .catch(reject);
         });
       };
-      this.walletConnect
-        .createSession()
-        .then(() => {
-          const uri = this.walletConnect.uri;
-          // eslint-disable-next-line security/detect-non-literal-fs-filename
-          this.walletConnect._qrcodeModal.open(uri, () => {
-            reject(new Error('QR Code Modal closed'));
-          });
-        })
-        .catch(reject);
+      this.walletConnect.createSession();
       this.walletConnect.on('connect', (error, payload) => {
         if (error) {
           return reject(error);

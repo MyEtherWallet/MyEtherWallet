@@ -52,13 +52,7 @@
         </div>
       </template>
       <template #moduleBody>
-        <div class="my-8">
-          <mew-table
-            :has-color="false"
-            :table-headers="tableHeaders"
-            :table-data="tokensData"
-          />
-        </div>
+        <balance-table class="mb-4" :table-data="tokensData" />
       </template>
     </mew-module>
     <mew-table
@@ -106,15 +100,16 @@
   </div>
 </template>
 <script>
+import BalanceTable from './components/BalanceTable';
 import { mapGetters, mapState } from 'vuex';
 import { uniqWith, isEqual } from 'lodash';
-
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { currencyToNumber } from '@/core/helpers/localization';
-
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+
 export default {
   components: {
+    BalanceTable,
     BalanceEmptyBlock: () => import('./components/BalanceEmptyBlock'),
     TokenAddCustom: () => import('./components/TokenAddCustom'),
     TokenEditCustom: () => import('./components/TokenEditCustom'),
