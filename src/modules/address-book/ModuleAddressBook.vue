@@ -218,7 +218,7 @@ export default {
       if (typeof value === 'string') {
         if (
           this.currency.toLowerCase() ===
-          this.network.type.currencyName.toLowerCase()
+          this.network.type.currencyName?.toLowerCase()
         ) {
           /**
            * Checks if user typed or selected an address from dropdown
