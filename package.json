@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "6.6.8",
+  "version": "6.6.9",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build": "npm run update && vue-cli-service build",
@@ -25,7 +25,6 @@
     "lint:styles": "prettier --write 'src/**/*.{scss,css}' && stylelint 'src/**/*.{scss,css}' --fix",
     "lint:tests": "eslint --fix tests/",
     "preinstall": "find node_modules -name \".git\" -exec rm -rf {} \\; || true && bash ./scripts/checklockconflicts.sh && npx npm-force-resolutions",
-    "prepare": "husky install",
     "start": "npm run update:mainlists && npm run dev",
     "start:history": "npm run update:mainlists && ROUTER_MODE=history npm run dev",
     "start:offline": "npm run update:mainlists && ROUTER_MODE=hash BUILD=offline npm run dev",
@@ -40,6 +39,10 @@
     "@aave/math-utils": "1.7.0",
     "@aave/protocol-js": "4.3.0",
     "@actions/github": "5.1.1",
+    "@coolwallet/bsc": "1.1.5",
+    "@coolwallet/core": "1.1.12",
+    "@coolwallet/eth": "1.1.8",
+    "@coolwallet/transport-web-ble": "1.1.3",
     "@coolwallets/eth": "0.2.0-beta.1",
     "@coolwallets/transport-web-ble": "0.1.0",
     "@coolwallets/wallet": "0.2.0-beta.1",

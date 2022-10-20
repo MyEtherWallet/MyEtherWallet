@@ -1,5 +1,9 @@
 <template>
-  <div class="table-component" :class="containerClass" :style="containerStyle">
+  <div
+    class="core-components--app-table"
+    :class="containerClass"
+    :style="containerStyle"
+  >
     <div v-if="title" class="font-weight-bold mt-6 ml-5 mb-10">{{ title }}</div>
     <slot />
     <div v-if="loading" class="skeleton-loader-container">
@@ -12,7 +16,7 @@
 
 <script>
 export default {
-  name: 'TableComponent',
+  name: 'AppTable',
   components: {},
   props: {
     fullWidth: {
@@ -27,6 +31,10 @@ export default {
       type: Boolean,
       default: false
     },
+    mobileBackground: {
+      type: Boolean,
+      default: false
+    },
     loading: {
       type: Boolean,
       default: false
@@ -36,6 +44,18 @@ export default {
       default: 1
     },
     borderAround: {
+      type: Boolean,
+      default: false
+    },
+    borderTopBottom: {
+      type: Boolean,
+      default: false
+    },
+    borderTop: {
+      type: Boolean,
+      default: false
+    },
+    borderBottom: {
       type: Boolean,
       default: false
     },
@@ -62,6 +82,10 @@ export default {
     roundCorner: {
       type: Boolean,
       default: false
+    },
+    noTablePadding: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -78,12 +102,17 @@ export default {
         this.hoverEffect ? 'hover-effect' : '',
         this.background ? 'alteranting-background' : '',
         this.borderAround ? 'border-around' : '',
+        this.borderTopBottom ? 'border-top-bottom' : '',
+        this.borderTop ? 'border-top' : '',
+        this.borderBottom ? 'border-bottom' : '',
         this.roundCorner ? 'round-corner' : '',
         this.loading ? 'loading' : '',
         this.flat ? '' : 'box-shadow',
         this.divider ? 'divider' : '',
         this.paddingAround ? 'padding-around' : '',
-        this.paddingSide ? 'padding-side' : ''
+        this.paddingSide ? 'padding-side' : '',
+        this.mobileBackground ? 'mobile-background' : '',
+        this.noTablePadding ? 'no-table-padding' : ''
       ];
     }
   }
@@ -91,7 +120,7 @@ export default {
 </script>
 
 <style lang="scss">
-.table-component {
+.core-components--app-table {
   // Force style Vuetify skeleton loader
   .v-skeleton-loader__heading {
     width: 100%;
@@ -110,7 +139,7 @@ export default {
 }
 
 // Default styles
-.table-component {
+.core-components--app-table {
   --bg-color: #f4f7fe;
   --hover-color: #eaeffb;
   --border-color: #e0e5f2;
@@ -137,6 +166,16 @@ export default {
 }
 .border-around {
   border: 1px solid var(--border-color);
+}
+.border-top-bottom {
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+}
+.border-top {
+  border-top: 1px solid var(--border-color);
+}
+.border-bottom {
+  border-bottom: 1px solid var(--border-color);
 }
 .hover-effect {
   tbody {
@@ -165,14 +204,30 @@ export default {
   }
 }
 .padding-around {
-  padding: 10px 15px 15px 15px;
+  padding: 15px 15px 15px 15px;
 }
 
 .padding-side {
-  padding: 0px 15px;
+  padding: 0px 10px;
 }
 .round-corner {
   border-radius: 8px;
   overflow: hidden;
+}
+.mobile-background {
+  background-color: var(--v-blueLight-base);
+}
+.no-table-padding {
+  table {
+    td {
+      padding: 0 !important;
+    }
+    td:first-child {
+      padding-left: 15px !important;
+    }
+    td:last-child {
+      padding-right: 15px !important;
+    }
+  }
 }
 </style>

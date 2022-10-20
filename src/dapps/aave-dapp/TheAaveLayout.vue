@@ -526,6 +526,14 @@ export default {
     EventBus.$on('withdrawToken', this.openWithdrawOverlay);
     EventBus.$on('collateralChange', this.openCollateralOverlay);
   },
+  beforeDestroy() {
+    EventBus.$off('selectedBorrow');
+    EventBus.$off('repayBorrowing');
+    EventBus.$off('changeAprType');
+    EventBus.$off('selectedDeposit');
+    EventBus.$off('withdrawToken');
+    EventBus.$off('collateralChange');
+  },
   methods: {
     toggleDepositOverlay(boolean) {
       if (!boolean) {
