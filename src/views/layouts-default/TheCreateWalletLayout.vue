@@ -50,6 +50,7 @@
           <mew-button
             has-full-width
             class="mb-5 py-6"
+            :class="btn.class"
             style="height: initial; min-height: 157px"
             :color-theme="btn.color"
             :btn-style="btn.style === 'outline' ? 'outline' : ''"
@@ -157,6 +158,7 @@ export default {
               recommended: true,
               icon: require('@/assets/images/icons/icon-enkrypt-block.svg'),
               alt: 'Enkrypt',
+              class: '',
               fn: () => {
                 this.openEnkrypt();
               }
@@ -171,6 +173,7 @@ export default {
               recommended: true,
               icon: require('@/assets/images/icons/icon-mew-wallet.png'),
               alt: 'MEW wallet',
+              class: '',
               fn: () => {
                 this.openMewWallet();
               }
@@ -185,6 +188,7 @@ export default {
               recommended: true,
               icon: require('@/assets/images/icons/icon-hardware-wallet.png'),
               alt: 'Hardware Wallets',
+              class: '',
               fn: () => {
                 this.$router.push({
                   name: ROUTES_HOME.BUY_HARDWARE_WALLET.NAME
@@ -200,6 +204,7 @@ export default {
                 'Software methods like Keystore File and Mnemonic Phrase should only be used in offline settings by experienced users',
               official: false,
               recommended: false,
+              class: 'CreateSoftwareWallet',
               fn: () => {
                 this.openSoftwareModule();
               }

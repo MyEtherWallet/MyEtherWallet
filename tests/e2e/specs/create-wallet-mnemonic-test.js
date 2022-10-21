@@ -29,14 +29,12 @@ module.exports = {
     browser
       .url('https://localhost:8080')
       .waitForElementVisible('#app')
-
-      // remove popups
-      .click(css, '#app')
-      .click(css, '#app')
-
-      // remove footer
-      .click(css, '.HideWalletBanner')
-
+      // close enkrypt popup
+      .waitForElementVisible('css selector', '.the-enkrypt-popup')
+      .click('css selector', '.the-enkrypt-popup > button')
+      // click out overlay
+      .waitForElementVisible('css selector', '.v-overlay')
+      .click('css selector', '.v-overlay')
       // create a new wallet
       .waitForElementVisible(css, '.HomeCreateWallet')
       .click(css, '#app')
@@ -79,9 +77,9 @@ module.exports = {
           const [firstWord, secondWord, thirdWord] = options;
 
           browser
-            .elementIdClick(firstWord[firstIndex].ELEMENT)
-            .elementIdClick(secondWord[secondIndex].ELEMENT)
-            .elementIdClick(thirdWord[thirdIndex].ELEMENT);
+            .elementIdClick(Object.keys(firstWord[firstIndex])[0])
+            .elementIdClick(Object.keys(secondWord[secondIndex])[0])
+            .elementIdClick(Object.keys(thirdWord[thirdIndex])[0]);
         });
 
         browser.pause(1000).click(css, '.CreateMnemonicVerify');
