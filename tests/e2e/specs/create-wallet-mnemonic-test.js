@@ -72,14 +72,14 @@ module.exports = {
         const secondIndex = findIndex(second) - 1;
         const thirdIndex = findIndex(third) - 1;
 
-        browser.elements(css, '.Options', r => {
+        browser.findElements(css, '.Options', r => {
           const options = chunk(r.value, 3);
           const [firstWord, secondWord, thirdWord] = options;
 
           browser
-            .elementIdClick(Object.keys(firstWord[firstIndex])[0])
-            .elementIdClick(Object.keys(secondWord[secondIndex])[0])
-            .elementIdClick(Object.keys(thirdWord[thirdIndex])[0]);
+            .elementIdClick(firstWord[firstIndex].getId())
+            .elementIdClick(secondWord[secondIndex].getId())
+            .elementIdClick(thirdWord[thirdIndex].getId());
         });
 
         browser.pause(1000).click(css, '.CreateMnemonicVerify');
@@ -89,8 +89,7 @@ module.exports = {
     browser
       .waitForElementVisible(css, '.CreateMnemonicAccessWallet')
       .click(css, '.CreateMnemonicAccessWallet')
-      .assert.urlContains('dashboard')
-      .moveTo(null, 500, 0)
-      .mouseButtonClick();
+      .assert.urlContains('wallet/access')
+      .end();
   }
 };
