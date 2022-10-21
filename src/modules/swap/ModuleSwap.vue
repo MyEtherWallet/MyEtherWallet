@@ -707,7 +707,7 @@ export default {
       }
       return returnableTokens.concat([
         {
-          header: 'Other Tokens'
+          header: 'All'
         },
         ...validFromTokens
       ]);

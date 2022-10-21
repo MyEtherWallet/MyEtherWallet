@@ -62,6 +62,7 @@
           <v-row class="align-stretch">
             <v-col cols="12">
               <mew-input
+                ref="passwordInput"
                 v-model="password"
                 label="Enter Password"
                 placeholder="Enter my keystore password"
@@ -184,6 +185,8 @@ export default {
      */
     backStepOne() {
       this.step = 1;
+      this.password = '';
+      this.$refs.passwordInput.clear();
     }
   }
 };
