@@ -5,7 +5,7 @@
         v-model="currentSlide"
         height="100%"
         hide-delimiters
-        show-arrows-on-hover
+        :show-arrows="false"
         cycle
       >
         <v-carousel-item>
