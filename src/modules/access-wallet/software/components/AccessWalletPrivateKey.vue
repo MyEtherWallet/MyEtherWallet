@@ -12,7 +12,7 @@
       label="Private Key"
       placeholder="Enter your Private Key"
       :rules="privKeyRulles"
-      type="password"
+      hide-value
     />
     <!--
     =====================================================================================
@@ -43,9 +43,9 @@
 </template>
 
 <script>
+import MewInput from '@/components/MewInput/MewInput.vue';
 import { isValidPrivate } from 'ethereumjs-util';
 import { isString } from 'lodash';
-
 import { isPrivateKey } from '../handlers/helpers';
 import {
   getBufferFromHex,
@@ -54,6 +54,9 @@ import {
 import { mapState } from 'vuex';
 export default {
   name: 'AccessWalletPrivateKey',
+  components: {
+    MewInput: MewInput
+  },
   props: {
     handlerAccessWallet: {
       type: Object,
