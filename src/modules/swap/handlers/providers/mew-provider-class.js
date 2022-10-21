@@ -48,21 +48,12 @@ class MEWPClass {
     return Promise.resolve(isAddress(address));
   }
   getMinMaxAmount({ fromT }) {
-    // If decimals are 0 then min and max will be 1
-    let decimals = fromT.decimals;
-    if (fromT.decimals === 0) {
-      const circulatingSupply = new BigNumber(fromT.market_cap)
-        .dividedToIntegerBy(new BigNumber(fromT.pricef.replace('$', '')))
-        .toString();
-      // Set amount of digits to decimal amount
-      decimals = circulatingSupply.length - 1;
-    }
     return Promise.resolve({
       minFrom: new BigNumber(1)
         .dividedBy(new BigNumber(10).pow(fromT.decimals))
         .toFixed(),
       maxFrom: new BigNumber(1)
-        .multipliedBy(new BigNumber(10).pow(decimals))
+        .multipliedBy(new BigNumber(10).pow(18))
         .toFixed()
     });
   }

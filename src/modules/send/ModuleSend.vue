@@ -475,7 +475,7 @@ export default {
       return fromWei(this.txFee);
     },
     currencyDecimals() {
-      return this.selectedCurrency?.hasOwnProperty('decimals')
+      return this.selectedCurrency?.decimals
         ? this.selectedCurrency.decimals
         : 18;
     },
