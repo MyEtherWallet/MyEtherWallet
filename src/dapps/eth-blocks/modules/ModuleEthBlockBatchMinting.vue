@@ -88,7 +88,7 @@
             </div>
           </div>
           <mew-button
-            :title="hasEnoughEth ? 'Proceed to minting' : 'Not enough Eth'"
+            :title="hasEnoughEth ? 'Proceed to minting' : 'Not enough ETH'"
             has-full-width
             :disabled="!hasEnoughEth || isLoading || isCartEmpty"
             :loading="isLoading"

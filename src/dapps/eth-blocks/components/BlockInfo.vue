@@ -109,7 +109,7 @@
       >
         <mew-button
           v-if="!isPending"
-          :title="isAdded ? 'Added to Batch' : 'Add to Batch'"
+          :title="isAdded ? 'Added to Batch' : 'Add to batch'"
           :disabled="isAdded"
           btn-style="outline"
           has-full-width
@@ -119,7 +119,7 @@
           v-else
           disabled
           btn-style="outline"
-          :title="isAdded ? 'Added to Batch' : 'Add to Batch'"
+          :title="isAdded ? 'Added to Batch' : 'Add to batch'"
           has-full-width
         />
       </v-col>
