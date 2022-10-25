@@ -419,7 +419,7 @@ export default {
           this.selectedCurrency = oldVal;
           return;
         }
-        if (!isEqual(newVal, oldVal) && this.amountErrorMessages === '') {
+        if (!isEqual(newVal, oldVal)) {
           this.fetchCurrencyData();
         }
         this.$emit('selectedCurrency', this.selectedCurrency);
@@ -547,7 +547,8 @@ export default {
         isEmpty(this.amount) ||
         this.min.gt(this.amount) ||
         isNaN(this.amount) ||
-        this.maxVal.lt(this.amount)
+        this.maxVal.lt(this.amount) ||
+        this.amountErrorMessages !== ''
       )
         return;
       this.loading = true;
