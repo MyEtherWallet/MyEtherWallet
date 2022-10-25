@@ -32,7 +32,10 @@
               </div>
             </td>
             <td class="mew-label">
-              {{ td.price }} <span class="textLight--text">/ token</span>
+              {{ td.price }}
+              <span v-if="td.price !== ''" class="textLight--text"
+                >/ token</span
+              >
             </td>
             <td class="mew-label">{{ td.cap }}</td>
             <td>
@@ -40,7 +43,10 @@
                 <div class="mew-label greenPrimary--text">{{ td.change }}%</div>
                 <v-icon small color="greenPrimary"> mdi-arrow-up-thick </v-icon>
               </div>
-              <div v-else class="d-flex align-center">
+              <div
+                v-else-if="td.change !== '' && td.status === '-'"
+                class="d-flex align-center"
+              >
                 <div class="mew-label redPrimary--text">{{ td.change }}%</div>
                 <v-icon small color="redPrimary"> mdi-arrow-down-thick </v-icon>
               </div>
