@@ -386,6 +386,7 @@ export default {
     },
     closeNftSend() {
       this.onNftSend = false;
+      this.toAddress = '';
       this.$router.push({ name: ROUTES_WALLET.NFT_MANAGER.NAME });
     },
     async sendTx() {
