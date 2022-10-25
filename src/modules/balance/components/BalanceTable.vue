@@ -104,11 +104,15 @@
         <div class="mew-label font-weight-bold">24H</div>
         <div class="mew-label">
           <div class="d-flex align-center">
-            <div class="mew-label">{{ td.change }}%</div>
+            <div class="mew-label">{{ td.change ? `${td.change}%` : '' }}</div>
             <v-icon v-if="td.status == '+'" small color="greenPrimary">
               mdi-arrow-up-thick
             </v-icon>
-            <v-icon v-else small color="redPrimary">
+            <v-icon
+              v-else-if="td.change !== '' && td.status === '-'"
+              small
+              color="redPrimary"
+            >
               mdi-arrow-down-thick
             </v-icon>
           </div>
