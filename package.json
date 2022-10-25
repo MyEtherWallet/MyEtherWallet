@@ -5,7 +5,7 @@
   "scripts": {
     "build": "npm run update && vue-cli-service build",
     "test:unit": "vue-cli-service test:unit --logHeapUsage",
-    "test:e2e": "vue-cli-service test:e2e --skiptags offline",
+    "test:e2e": "E2E=true vue-cli-service test:e2e --skiptags offline",
     "test:e2e-offline": "BUILD=offline vue-cli-service test:e2e --tag offline",
     "lint": "npm run lint:code && npm run lint:md",
     "apollo": "apollo",

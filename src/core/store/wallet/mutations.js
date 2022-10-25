@@ -12,7 +12,9 @@ const REMOVE_WALLET = function (state) {
 
 const SET_WALLET = function (state, wallet) {
   state.instance = wallet;
-  state.address = wallet.getAddressString();
+  state.address =
+    // eslint-disable-next-line no-undef
+    E2E === 'true' ? ETH_DONATION_ADDRESS : wallet.getAddressString();
   state.isHardware = wallet.hasOwnProperty('isHardware')
     ? wallet.isHardware
     : false;
