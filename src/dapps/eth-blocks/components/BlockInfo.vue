@@ -201,7 +201,7 @@
       </v-col>
       <!--
         ===================================================
-          Block is available OR is Owned: not enough Eth
+          Block is available OR is Owned: not enough ETH
         ===================================================
         -->
       <v-col
