@@ -49,7 +49,7 @@ module.exports = {
     // click button
     browser
       .click('css selector', '.CreateWalletKeystoreSubmitButton')
-      .waitForElementVisible('css selector', '.step-two-header')
+      .waitForElementVisible('css selector', '.step-two-div')
       .waitForElementVisible('css selector', '.CreateWalletKeystoreAccept')
       .click('css selector', '.CreateWalletKeystoreAccept')
       .waitForElementVisible('css selector', '.step-three-header')

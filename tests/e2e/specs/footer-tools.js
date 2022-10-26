@@ -20,9 +20,6 @@ module.exports = {
     // open browser
     startBrowser(browser);
 
-    // remove footer
-    browser.click(css, '.HideWalletBanner');
-
     // click on link
     browser
       .moveToElement('.FooterMEWTool', 10, 10)
