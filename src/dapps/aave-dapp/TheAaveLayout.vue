@@ -296,7 +296,6 @@ import AaveCollateralOverlay from './components/overlays/AaveCollateralOverlay';
 import AaveRepayOverlay from './components/overlays/AaveRepayOverlay';
 import AaveWithdrawOverlay from './components/overlays/AaveWithdrawOverlay';
 import AaveSetAprOverlay from './components/overlays/AaveSetAprOverlay';
-import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.jpg';
 import { AAVE_TABLE_TITLE } from '@/dapps/aave-dapp/handlers/helpers';
 import AaveTable from './components/AaveTable';
 import handlerAave from './handlers/handlerAave.mixin';
@@ -353,7 +352,6 @@ export default {
       showRepayOverlay: false,
       showAprTypeOverlay: false,
       activeTab: 0,
-      BG: BG,
       topBanner: {
         title: 'AAVE',
         subtext:
