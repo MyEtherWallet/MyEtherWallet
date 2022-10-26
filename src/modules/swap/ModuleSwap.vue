@@ -120,7 +120,7 @@
               Address Book
             =====================================================================================
             -->
-          <div class="mt-8">
+          <div class="mt-8 AddressBookDiv">
             <module-address-book
               v-if="isFromNonChain"
               ref="refundAddressInput"
@@ -264,7 +264,10 @@
                 class="mt-10 mt-sm-16"
                 @onLocalGasPrice="handleLocalGasPrice"
               />
-              <div v-if="showNextButton" class="text-center mt-10 mt-sm-15">
+              <div
+                v-if="showNextButton"
+                class="text-center mt-10 mt-sm-15 NextButtonDiv"
+              >
                 <mew-button
                   title="Next"
                   :has-full-width="true"
