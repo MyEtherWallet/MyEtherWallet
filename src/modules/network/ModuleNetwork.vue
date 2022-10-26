@@ -83,7 +83,7 @@ export default {
     this.openNetworkOverlayOnLoad();
   },
   methods: {
-    // wait for 1 sec until event bus is ready
+    // set to wait for 1 sec until event bus is ready
     openNetworkOverlayOnLoad() {
       setTimeout(() => {
         this.$route.name == ROUTES_WALLET.NETWORK.NAME
