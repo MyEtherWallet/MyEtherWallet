@@ -1,11 +1,14 @@
 <template>
   <div class="mew-component--aave">
     <the-wrapper-dapp
-      :has-exit-btn="true"
-      :banner-img="BG"
+      :is-new-header="true"
+      :dapp-img="headerImg"
       :banner-text="topBanner"
       :tab-items="tabs"
       :active-tab="activeTab"
+      external-contents
+      :on-tab="tabChanged"
+      :valid-networks="validNetworks"
     >
       <template #tabContent1>
         <v-sheet
@@ -285,7 +288,7 @@
 <script>
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
-
+import { SUPPORTED_NETWORKS } from './handlers/supportedNetworks';
 import TheWrapperDapp from '@/core/components/TheWrapperDapp';
 import AaveBorrowOverlay from './components/overlays/AaveBorrowOverlay';
 import AaveDepositOverlay from './components/overlays/AaveDepositOverlay';
@@ -340,6 +343,8 @@ export default {
   mixins: [handlerAave],
   data() {
     return {
+      validNetworks: SUPPORTED_NETWORKS,
+      headerImg: require('@/assets/images/icons/dapps/icon-dapp-aave.svg'),
       showDepositOverlay: false,
       tokenSelected: {},
       showBorrowOverlay: false,
@@ -535,6 +540,9 @@ export default {
     EventBus.$off('collateralChange');
   },
   methods: {
+    tabChanged(tab) {
+      this.activeTab = tab;
+    },
     toggleDepositOverlay(boolean) {
       if (!boolean) {
         this.tokenSelected = {};
