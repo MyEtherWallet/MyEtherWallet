@@ -52,8 +52,10 @@ module.exports = [
   'wss://www.walletlink.org:443',
   'https://api.wallet.coinbase.com:443',
   'https://registry.walletconnect.org:443',
+  'https://registry.walletconnect.com:443',
   'https://cdn.live.ledger.com:443',
   'https://registry.walletconnect.org:443/data/wallets.json',
+  'https://registry.walletconnect.com:433/api/v2/wallets',
   'wss://*.bridge.walletconnect.org:443',
   'https://buy-staging.moonpay.com:443',
   // Dapps
