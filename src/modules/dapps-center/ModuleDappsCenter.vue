@@ -1,9 +1,7 @@
 <template>
-  <!--
-    =====================================================================================
-      Dapp Center Module
-    =====================================================================================
-    -->
+  <!-- ===================================================================================== -->
+  <!-- Dapp Center Module -->
+  <!-- ===================================================================================== -->
   <the-wrapper-dapp
     :banner-img="bannerImage"
     :banner-text="bannerText"
@@ -43,7 +41,14 @@
                 <div class="body-2 mt-1 textLight--text">{{ dapp.tag }}</div>
               </div>
               <div class="d-none d-sm-flex align-center pl-5">
-                <mew-icon :icon-name="dapp.rightIcon" :img-height="80" />
+                <img
+                  :src="
+                    require(`@/assets/images/icons/dapps/icon-dapp-${dapp.rightIcon.toLowerCase()}.svg`)
+                  "
+                  :alt="dapp.title"
+                  height="80"
+                  width="80"
+                />
               </div>
             </div>
           </mew-button>
@@ -70,7 +75,6 @@
 
 <script>
 import { mapGetters } from 'vuex';
-
 import bannerImage from '@/assets/images/backgrounds/bg-dapps-center.jpg';
 import dappsMeta from '@/dapps/metainfo-dapps';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
