@@ -119,7 +119,7 @@ export default {
         logoText: 'BitBox02',
         walletImg: require('@/assets/images/hardware-wallets/bitbox.png'),
         priceNote: 'Starting from',
-        currency: '€',
+        currency: '$',
         price: '119.00',
         note: 'The most trusted hardware wallet in the world. Get yours today!',
         link: 'https://shiftcrypto.ch/'
