@@ -52,12 +52,6 @@
                         class="mr-2"
                       />
                       <div>
-                        <div
-                          v-if="acc.nickname"
-                          class="font-weight-bold mew-label"
-                        >
-                          {{ acc.nickname }}
-                        </div>
                         <div class="d-flex align-center">
                           <mew-transform-hash
                             style="
