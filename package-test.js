@@ -77,7 +77,9 @@ const EXCEPTIONS = [
   'axios',
   // update after release
   '@ledgerhq/live-common',
-  '@ledgerhq/hw-app-eth'
+  '@ledgerhq/hw-app-eth',
+  'ethers',
+  'geckodriver'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
