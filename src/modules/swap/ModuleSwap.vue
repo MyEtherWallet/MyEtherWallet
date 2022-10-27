@@ -36,6 +36,7 @@
                   label="Amount"
                   placeholder="0"
                   type="number"
+                  class="FromAmountInput"
                   :value="tokenInValue"
                   :persistent-hint="true"
                   :error-messages="amountErrorMessage"
@@ -62,7 +63,7 @@
                 <div class="d-flex align-center justify-center pb-sm-10">
                   <mew-icon-button
                     mdi-icon="swap-horizontal"
-                    class="pa-2 d-flex align-center justify-center"
+                    class="pa-2 d-flex align-center justify-center SwitchTokens"
                     color-theme="basic"
                     btn-style="light"
                     :disabled="!enableTokenSwitch"
@@ -77,6 +78,7 @@
                   :is-custom="true"
                   :loading="isLoading"
                   label="To"
+                  class="ToTokenSelect"
                   @input="setToToken"
                 />
                 <mew-input
@@ -122,6 +124,7 @@
             <module-address-book
               v-if="isFromNonChain"
               ref="refundAddressInput"
+              class="FromAddressInput"
               :label="nativeLabel"
               :is-valid-address-func="isValidRefundAddress"
               @setAddress="setRefundAddr"
@@ -129,6 +132,7 @@
             <module-address-book
               v-show="showToAddress"
               ref="toAddressInput"
+              class="ToAddressInput"
               :is-valid-address-func="isValidToAddress"
               :label="toAddressLabel"
               @setAddress="setToAddress"
@@ -257,6 +261,7 @@
                 :total-gas-limit="totalGasLimit"
                 :not-enough-eth="notEnoughEth"
                 :from-eth="isFromTokenMain"
+                is-swap
                 class="mt-10 mt-sm-16"
                 @onLocalGasPrice="handleLocalGasPrice"
               />
@@ -266,6 +271,7 @@
                   :has-full-width="true"
                   :disabled="disableNext"
                   btn-size="xlarge"
+                  class="NextButton"
                   style="max-width: 240px"
                   @click.native="showConfirm()"
                 />
@@ -290,7 +296,14 @@
 
 <script>
 import { toBN, fromWei, toWei, isAddress } from 'web3-utils';
-import { debounce, isEmpty, clone, isUndefined, isObject } from 'lodash';
+import {
+  debounce,
+  isEmpty,
+  clone,
+  isUndefined,
+  isObject,
+  isNumber
+} from 'lodash';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import xss from 'xss';
 import MultiCoinValidator from 'multicoin-address-validator';
@@ -702,7 +715,7 @@ export default {
       }
       return returnableTokens.concat([
         {
-          header: 'Other Tokens'
+          header: 'All'
         },
         ...validFromTokens
       ]);
@@ -928,6 +941,13 @@ export default {
         this.trackSwap('switchProviders');
       }
       if (isEmpty(p)) this.selectedProviderId = undefined;
+    },
+    selectedProviderId(newVal) {
+      if (isNumber(newVal)) {
+        this.trackSwap(
+          `swapProvider: ${newVal + 1}/${this.availableQuotes.length}`
+        );
+      }
     },
     defaults: {
       handler: function () {
@@ -1437,10 +1457,15 @@ export default {
           q.isSelected = true;
           this.tokenOutValue = q.amount;
           this.getTrade(idx);
-          if (!clicked) this.selectedProvider = q;
-          else
+          if (!clicked) {
+            this.selectedProvider = q;
+            this.trackSwap(
+              `swapProvider: ${idx + 1}/ ${this.availableQuotes.length}`
+            );
+          } else {
             this.selectedProvider =
               q.amount !== this.selectedProvider.amount ? q : {};
+          }
         }
       });
     },
@@ -1638,7 +1663,7 @@ export default {
             main
           );
           this.addNotification(new NonChainNotification(notif)).then(() => {
-            const currency = this.fromTokenType.symbol;
+            const currency = this.toTokenType?.symbol;
             Toast(
               `Swap initiated, you should receive ${currency} in 1-3 hours. You will be notified when it's completed`,
               {},

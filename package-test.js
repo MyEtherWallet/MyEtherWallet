@@ -74,7 +74,12 @@ const EXCEPTIONS = [
   'uuid',
   'web3-eth-contract',
   'is-ipfs',
-  '@actions/github'
+  'axios',
+  // update after release
+  '@ledgerhq/live-common',
+  '@ledgerhq/hw-app-eth',
+  'ethers',
+  'geckodriver'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

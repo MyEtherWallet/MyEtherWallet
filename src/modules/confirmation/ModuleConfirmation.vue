@@ -32,10 +32,7 @@
     >
       <template #dialogBody>
         <v-card-text ref="scrollableContent" class="py-0 px-4 px-md-0">
-          <div
-            v-if="toNonEth"
-            class="px-4 py-6 pr-6 textBlack2--text border-radius--5px mb-5"
-          >
+          <div class="px-4 py-6 pr-6 textBlack2--text border-radius--5px mb-5">
             <b>Please double check everything.</b> MEW team will not be able to
             reverse your transaction once its submitted. You will still be
             charged gas fee even if the transaction fails.
@@ -77,18 +74,7 @@
             :to-currency="swapInfo.toType"
             :to-address="swapInfo.to"
           />
-          <!-- Warning Sheet -->
-          <div class="px-4 py-6 pr-6 textBlack2--text border-radius--5px mb-5">
-            <b>Make sure all the information is correct.</b> Cancelling or
-            reversing a transaction cannot be guaranteed. You will still be
-            charged gas fee even if transaction fails.
-            <a
-              :href="getArticle('my-txn-failed-charged')"
-              target="_blank"
-              rel="noopener noreferrer"
-              >Learn more.</a
-            >
-          </div>
+
           <!-- Ledger Warning Sheet -->
           <div
             v-if="isOnLedger"
@@ -110,7 +96,7 @@
               <b>Using Ledger?</b> Consider turning off 'debug data' before
               proceeding. Additional steps associated with the 'debug
               <br />
-              feature'on Ledger may be required to approve this transaction.
+              feature' on Ledger may be required to approve this transaction.
             </span>
           </div>
           <!-- transaction details -->
@@ -245,11 +231,7 @@
     =====================================================================================
     -->
     <mew-overlay
-      :footer="{
-        text: 'Need help?',
-        linkTitle: 'Contact support',
-        link: 'mailto:support@myetherwallet.com'
-      }"
+      :footer="footer"
       :show-overlay="showSignOverlay"
       :title="title ? title : 'Message'"
       :close="reset"
@@ -308,6 +290,11 @@ export default {
   mixins: [handlerAnalytics],
   data() {
     return {
+      footer: {
+        text: 'Need help?',
+        linkTitle: 'Contact support',
+        link: 'mailto:support@myetherwallet.com'
+      },
       showTxOverlay: false,
       showSignOverlay: false,
       showSuccessModal: false,
@@ -340,7 +327,8 @@ export default {
       'web3',
       'address',
       'identifier',
-      'isHardware'
+      'isHardware',
+      'isOfflineApp'
     ]),
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network', 'getFiatValue']),
@@ -622,6 +610,15 @@ export default {
     EventBus.$off(EventNames.SHOW_SWAP_TX_MODAL);
     EventBus.$off(EventNames.SHOW_MSG_CONFIRM_MODAL);
     EventBus.$off(EventNames.SHOW_CROSS_CHAIN_MODAL);
+  },
+  mounted() {
+    if (this.isOfflineApp) {
+      this.footer = {
+        text: 'Need help? Email us at support@myetherwallet.com',
+        linkTitle: '',
+        link: ''
+      };
+    }
   },
   methods: {
     rejectTransaction() {

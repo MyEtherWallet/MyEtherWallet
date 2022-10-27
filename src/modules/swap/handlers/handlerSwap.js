@@ -47,7 +47,7 @@ class Swap {
             return -1;
           });
         return {
-          fromTokens: sorted.filter(t => {
+          fromTokens: sorted?.filter(t => {
             if (!t || !t.contract) return false;
             return t;
           }),
