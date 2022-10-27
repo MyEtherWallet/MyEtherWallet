@@ -32,22 +32,37 @@
               </div>
             </td>
             <td class="mew-label">
-              {{ td.price }} <span class="textLight--text">/ token</span>
+              <div v-if="td.price">
+                {{ td.price }}
+                <span style="font-size: 11px" class="textLight--text"
+                  >/ token</span
+                >
+              </div>
             </td>
             <td class="mew-label">{{ td.cap }}</td>
             <td>
-              <div v-if="td.status == '+'" class="d-flex align-center">
-                <div class="mew-label greenPrimary--text">{{ td.change }}%</div>
-                <v-icon small color="greenPrimary"> mdi-arrow-up-thick </v-icon>
-              </div>
-              <div v-else class="d-flex align-center">
-                <div class="mew-label redPrimary--text">{{ td.change }}%</div>
-                <v-icon small color="redPrimary"> mdi-arrow-down-thick </v-icon>
+              <div v-if="td.change">
+                <div v-if="td.status == '+'" class="d-flex align-center">
+                  <div class="mew-label greenPrimary--text">
+                    {{ td.change }}%
+                  </div>
+                  <v-icon small color="greenPrimary">
+                    mdi-arrow-up-thick
+                  </v-icon>
+                </div>
+                <div v-else class="d-flex align-center">
+                  <div class="mew-label redPrimary--text">{{ td.change }}%</div>
+                  <v-icon small color="redPrimary">
+                    mdi-arrow-down-thick
+                  </v-icon>
+                </div>
               </div>
             </td>
             <td class="mew-label">
-              <div class="mew-label mb-n1">{{ td.balance[0] }}</div>
-              <div style="font-size: 10px">{{ td.balance[1] }}</div>
+              <div class="mew-label">{{ td.balance[0] }}</div>
+              <div style="font-size: 11px" class="textLight--text">
+                {{ td.balance[1] }}
+              </div>
             </td>
             <td>
               <template v-if="td.callToAction">
