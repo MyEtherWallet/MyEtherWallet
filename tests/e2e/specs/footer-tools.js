@@ -84,10 +84,14 @@ module.exports = {
     browser.assert.urlContains('verify');
 
     // input message
-    browser.click(css, '.VerifyInput').keys(verifySignature);
+    browser
+      .click(css, '.VerifyInput')
+      .sendKeys(css, 'textarea:focus', verifySignature);
 
     // click button
-    browser.click(css, '.VerifyButton');
+    browser.ensure
+      .elementIsEnabled('.VerifyButton')
+      .click(css, '.VerifyButton');
 
     // check if message is viewable
     browser.waitForElementVisible(css, '.VerifyMessage');

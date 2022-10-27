@@ -40,6 +40,7 @@
         <mew-button
           :disabled="!message"
           title="Verify"
+          class="VerifyButton"
           @click.native="verifyMessage"
         />
       </div>
