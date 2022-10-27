@@ -72,7 +72,7 @@ export default {
         this.activeTab = this.tabs[0].id;
       }
     },
-    web3() {
+    network() {
       clearInterval(this.fetchInterval);
       if (this.isSupported) {
         this.setup();

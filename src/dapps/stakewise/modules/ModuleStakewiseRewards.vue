@@ -146,7 +146,7 @@
               title="Compound Rewards"
               btn-size="xlarge"
               :loading="loading"
-              :disabled="!isValid"
+              :disabled="!isValid && !agreeToTerms"
               @click.native="showConfirm"
             />
           </div>
@@ -302,7 +302,7 @@ export default {
       return (
         BigNumber(this.compoundAmount).gt(0) &&
         this.hasEnoughBalance &&
-        this.agreeToTerms &&
+        !this.agreeToTerms &&
         this.errorMessages === '' &&
         this.isEthNetwork
       );
