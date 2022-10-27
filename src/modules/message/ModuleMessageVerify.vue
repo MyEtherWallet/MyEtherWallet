@@ -29,6 +29,7 @@
       </div>
 
       <div
+        class="ButtonDiv"
         :class="['text-right', signResult || verificationError ? 'pt-3' : '']"
       >
         <mew-button
@@ -40,6 +41,7 @@
         <mew-button
           :disabled="!message"
           title="Verify"
+          class="VerifyButton"
           @click.native="verifyMessage"
         />
       </div>
