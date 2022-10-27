@@ -29,7 +29,6 @@
       </div>
 
       <div
-        class="ButtonDiv"
         :class="['text-right', signResult || verificationError ? 'pt-3' : '']"
       >
         <mew-button

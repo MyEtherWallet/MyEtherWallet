@@ -81,18 +81,16 @@ module.exports = {
       .click(css, '.FooterVerifyTool');
 
     // check if url is correct
-    browser.assert.urlContains('verify');
-
-    // input message
-    browser.click(css, '.VerifyInput').keys(verifySignature);
-
-    // show button div
-    browser.waitForElementVisible(css, '.ButtonDiv');
+    browser.assert
+      .urlContains('verify')
+      .waitForElementVisible(css, '.VerifyInput')
+      .click(css, '.VerifyInput')
+      .sendKeys(css, 'textarea:focus', verifySignature);
 
     // ensure verify button is enabled and clicked
-    browser.ensure
+    browser
       .waitForElementVisible(css, '.VerifyButton')
-      .elementIsEnabled('.VerifyButton')
+      .ensure.elementIsEnabled('.NextButton')
       .click(css, '.VerifyButton');
 
     // check if message is viewable

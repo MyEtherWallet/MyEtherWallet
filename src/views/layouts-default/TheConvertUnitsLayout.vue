@@ -11,7 +11,7 @@
             :has-filter="false"
             :items="items"
             :value="selectedLeft"
-            class="mb-2"
+            class="mb-2 CurrencyRightSelect"
             normal-dropdown
             @input="updateCurrencyLeft"
           />
@@ -19,6 +19,7 @@
             :value="valueLeft"
             type="number"
             label="Amount"
+            class="CurrencyLeftInput"
             @input="updateAmountLeft"
           />
         </v-col>
