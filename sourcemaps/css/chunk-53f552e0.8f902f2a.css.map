@@ -1,1 +1,0 @@
-{"version":3,"sources":["webpack:///./src/modules/balance/components/BalanceAddressPaperWallet.vue?59ae"],"names":[],"mappings":"AAAA,mCAAmC,eAAe,YAAY,aAAa,W","file":"css/chunk-53f552e0.8f902f2a.css","sourcesContent":[".printable-wallet[data-v-694dd364]{position:fixed;top:-3000px;left:-3000px;z-index:-1}"],"sourceRoot":""}
