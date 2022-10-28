@@ -146,7 +146,7 @@
               title="Compound Rewards"
               btn-size="xlarge"
               :loading="loading"
-              :disabled="!isValid"
+              :disabled="!isValid && !agreeToTerms"
               @click.native="showConfirm"
             />
           </div>
