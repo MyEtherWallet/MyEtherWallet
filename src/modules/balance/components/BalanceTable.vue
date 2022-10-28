@@ -82,7 +82,7 @@
       <v-pagination
         v-if="pageLength"
         v-model="page"
-        class="mt-6"
+        class="mt-4"
         :length="pageLength"
       ></v-pagination>
     </div>
