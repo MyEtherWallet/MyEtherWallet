@@ -3,7 +3,7 @@
     <!-- ============================================================== -->
     <!-- Currency Select -->
     <!-- ============================================================== -->
-    <div class="mb-2">
+    <!-- <div class="mb-2">
       <div class="mew-heading-3 textDark--text mb-5">Select currency</div>
       <mew-select
         label="Currency"
@@ -14,18 +14,18 @@
         is-custom
         @input="setCurrency"
       />
-    </div>
+    </div> -->
 
     <div class="mb-11">
-      <div class="mew-heading-3 textDark--text mb-5">
+      <div class="mew-heading-3 textDark--text mb-2">
         How much do you want to spend?
       </div>
       <div class="d-flex align-center">
         <mew-input
           v-model="amount"
           type="number"
-          :error-messages="amountErrorMessages"
           class="mr-2"
+          :error-messages="amountErrorMessages"
           @keydown.native="preventCharE($event)"
         />
         <mew-select
@@ -35,8 +35,26 @@
           class="selectedFiat"
         />
       </div>
+      <div class="mew-heading-3 textDark--text mb-2">You will get</div>
+      <div class="d-flex align-center">
+        <mew-input
+          v-model="cryptoToFiat"
+          type="number"
+          class="mr-2"
+          :error-messages="currencyErrorMessages"
+          @keydown.native="preventCharE($event)"
+        />
+        <div
+          class="networkSelectContainer mb-7 d-flex align-center justify-space-between"
+          @click="openSelectNetwork"
+        >
+          <mew-token-container :img="selectedCurrency.img" class="ml-4" />
+          <span class="basic--text">{{ selectedCurrency.symbol }}</span>
+          <v-icon dense color="black" class="mr-4">mdi-chevron-down</v-icon>
+        </div>
+      </div>
       <div class="mb-2">You will get</div>
-      <div v-if="!loading" class="mb-1">
+      <!-- <div v-if="!loading" class="mb-1">
         <div class="d-flex mb-1 align-center justify-space-between">
           <div class="d-flex align-center mew-heading-3 textDark--text">
             {{ cryptoToFiat }}
@@ -60,11 +78,11 @@
           </div>
         </div>
         <div class="d-flex align-center"></div>
-      </div>
+      </div> -->
 
-      <div v-else class="mb-1">
+      <!-- <div v-else class="mb-1">
         <v-skeleton-loader max-width="200px" type="heading" />
-      </div>
+      </div> -->
       <div v-if="!inWallet" class="mt-5">
         <div class="mew-heading-3 textDark--text mb-5">
           Where should we send your crypto?
@@ -89,6 +107,14 @@
         @click.native="buy"
       />
     </div>
+    <div class="netWorkSelectDiv">
+      <module-network-select
+        :currency-items="currencyItems"
+        :selected-currency="selectedCurrency"
+        :set-currency="setCurrency"
+        :fetched-networks="fetchedNetworks"
+      />
+    </div>
   </div>
 </template>
 
@@ -111,10 +137,11 @@ import { buyContracts } from './tokenList';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook.vue';
+import ModuleNetworkSelect from '@/modules/moon-pay/components/MoonPayNetworkSelectorComponent.vue';
 
 export default {
   name: 'ModuleBuyEth',
-  components: { ModuleAddressBook },
+  components: { ModuleAddressBook, ModuleNetworkSelect },
   props: {
     orderHandler: {
       type: Object,
@@ -152,11 +179,14 @@ export default {
       web3Connections: {},
       simplexQuote: {},
       showMoonpay: true,
-      disableCurrencySelect: true
+      disableCurrencySelect: true,
+      isSelectNetworkOpen: false,
+      fetchedNetworks: {}
+      // selectedNetwork: {}
     };
   },
   computed: {
-    ...mapGetters('global', ['network', 'getFiatValue']),
+    ...mapGetters('global', ['network', 'getFiatValue', 'Networks']),
     ...mapState('wallet', ['web3', 'address']),
     ...mapState('external', ['currencyRate', 'coinGeckoTokens']),
     ...mapGetters('external', ['contractToToken']),
@@ -336,6 +366,10 @@ export default {
         },
         ...tokensListWPrice
       ];
+      const returnedArrayForSelectNetwork = [...tokensListWPrice];
+      if (this.isSelectNetworkOpen) {
+        return returnedArrayForSelectNetwork;
+      }
       return returnedArray;
     },
     hasData() {
@@ -481,6 +515,7 @@ export default {
   mounted() {
     if (!this.inWallet) this.$refs.addressInput.$refs?.addressSelect.clear();
     this.fetchCurrencyData();
+    this.fetchNetworks();
   },
   methods: {
     ...mapActions('global', ['setNetwork']),
@@ -489,6 +524,18 @@ export default {
         this.toAddress = data.value;
       else this.toAddress = newVal;
       this.validToAddress = isValid;
+    },
+    fetchNetworks() {
+      const networksObj = Object.values(this.Networks);
+      const networkList = networksObj.map(network => {
+        return {
+          img: network[0].type?.icon,
+          name: network[0].type?.name_long
+        };
+      });
+      const returnedArray = [...networkList];
+      this.fetchedNetworks = returnedArray;
+      return this.fetchedNetworks;
     },
     async fetchGasPrice() {
       const supportedNodes = {
@@ -517,8 +564,11 @@ export default {
       const hideMoonpay = this.isLT(moonpayMax, this.amount);
       this.$emit('hideMoonpay', hideMoonpay);
     },
-    setCurrency(e) {
-      this.selectedCurrency = e;
+    openSelectNetwork() {
+      this.isSelectNetworkOpen = true;
+    },
+    setCurrency(currency) {
+      this.selectedCurrency = currency;
     },
     fetchCurrencyData() {
       this.loading = true;
@@ -647,4 +697,26 @@ export default {
 .selectedFiat {
   max-width: 120px;
 }
+.networkSelectContainer {
+  width: 120px;
+  height: 62px;
+  border: 1px solid var(--v-greyMedium-base);
+  border-radius: 10px;
+  // border-top-right-radius: 10px;
+  // border-bottom-right-radius: 10px;
+  // border-top-left-radius: 0px;
+  // border-bottom-left-radius: 0px;
+}
+.networkSelectContainer:hover {
+  cursor: pointer;
+  border: 1px solid #0b1a40;
+}
+.selectedCurrency {
+  max-width: 120px;
+}
+
+// .netWorkSelectDiv {
+//   border: 1px solid green;
+//   position: absolute;
+// }
 </style>
