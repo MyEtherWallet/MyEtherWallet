@@ -81,6 +81,10 @@ export default {
       this.openHardwarePassword = true;
     });
   },
+  beforeDestroy() {
+    EventBus.$off(ISSUE_MODAL);
+    EventBus.$off(OPEN_HARDWARE_PASSWORD);
+  },
   methods: {
     reset() {
       this.deviceInfo = {};

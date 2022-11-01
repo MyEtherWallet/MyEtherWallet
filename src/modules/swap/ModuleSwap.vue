@@ -261,6 +261,7 @@
                 :total-gas-limit="totalGasLimit"
                 :not-enough-eth="notEnoughEth"
                 :from-eth="isFromTokenMain"
+                is-swap
                 class="mt-10 mt-sm-16"
                 @onLocalGasPrice="handleLocalGasPrice"
               />
@@ -295,7 +296,14 @@
 
 <script>
 import { toBN, fromWei, toWei, isAddress } from 'web3-utils';
-import { debounce, isEmpty, clone, isUndefined, isObject } from 'lodash';
+import {
+  debounce,
+  isEmpty,
+  clone,
+  isUndefined,
+  isObject,
+  isNumber
+} from 'lodash';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import xss from 'xss';
 import MultiCoinValidator from 'multicoin-address-validator';
@@ -707,7 +715,7 @@ export default {
       }
       return returnableTokens.concat([
         {
-          header: 'Other Tokens'
+          header: 'All'
         },
         ...validFromTokens
       ]);
@@ -933,6 +941,13 @@ export default {
         this.trackSwap('switchProviders');
       }
       if (isEmpty(p)) this.selectedProviderId = undefined;
+    },
+    selectedProviderId(newVal) {
+      if (isNumber(newVal)) {
+        this.trackSwap(
+          `swapProvider: ${newVal + 1}/${this.availableQuotes.length}`
+        );
+      }
     },
     defaults: {
       handler: function () {
@@ -1442,10 +1457,15 @@ export default {
           q.isSelected = true;
           this.tokenOutValue = q.amount;
           this.getTrade(idx);
-          if (!clicked) this.selectedProvider = q;
-          else
+          if (!clicked) {
+            this.selectedProvider = q;
+            this.trackSwap(
+              `swapProvider: ${idx + 1}/ ${this.availableQuotes.length}`
+            );
+          } else {
             this.selectedProvider =
               q.amount !== this.selectedProvider.amount ? q : {};
+          }
         }
       });
     },
