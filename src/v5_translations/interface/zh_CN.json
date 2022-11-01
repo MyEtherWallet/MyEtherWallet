@@ -95,7 +95,7 @@
     "title": "Manage Contact Addresses",
     "add-up-to": "You can add up to 10 contact addresses.",
     "nickname": "Nickname",
-    "remove-addr": "Remove Address",
+    "remove-addr": "Remove address",
     "add-addr": "Add address to contact book",
     "cannot-add": "Cannot add without an address",
     "successfully-added": "Successfully added to the address book",
