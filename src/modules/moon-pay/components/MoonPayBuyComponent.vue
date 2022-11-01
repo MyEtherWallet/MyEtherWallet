@@ -109,6 +109,7 @@
     </div>
     <div class="netWorkSelectDiv">
       <module-network-select
+        :current-network="fetchedNetworks[1]"
         :currency-items="currencyItems"
         :selected-currency="selectedCurrency"
         :set-currency="setCurrency"

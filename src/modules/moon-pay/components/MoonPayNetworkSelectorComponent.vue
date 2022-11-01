@@ -9,6 +9,7 @@
         <div class="mew-heading-2 textDark--text mt-1">Select Token</div>
       </div>
       <mew-select
+        v-model="selectedNetwork"
         class="mt-1"
         label="Network"
         is-custom
@@ -51,6 +52,12 @@ export default {
   name: 'ModuleNetworkSelect',
   components: {},
   props: {
+    currentNetwork: {
+      type: Object,
+      default: () => {
+        return {};
+      }
+    },
     currencyItems: {
       type: Array,
       default: () => []
@@ -68,6 +75,11 @@ export default {
       default: () => {}
     }
   },
+  data: () => {
+    return {
+      selectedNetwork: {}
+    };
+  },
   // data() {
   //   return {
   //     defaultNetwork: {
@@ -79,7 +91,12 @@ export default {
   //   };
   // },
   computed: {},
-  mounted() {},
+  watch: {
+    currentNetwork(newVal) {
+      this.$emit('networkChanged', newVal);
+      this.selectedNetwork = newVal;
+    }
+  },
   method: {}
 };
 </script>
