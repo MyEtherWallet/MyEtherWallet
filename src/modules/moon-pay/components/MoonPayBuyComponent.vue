@@ -38,7 +38,7 @@
       <div class="mew-heading-3 textDark--text mb-2">You will get</div>
       <div class="d-flex align-center">
         <mew-input
-          v-model="cryptoToFiat"
+          :value="cryptoToFiat"
           type="number"
           class="mr-2"
           :error-messages="currencyErrorMessages"
@@ -53,7 +53,7 @@
           <v-icon dense color="black" class="mr-4">mdi-chevron-down</v-icon>
         </div>
       </div>
-      <div class="mb-2">You will get</div>
+      <!-- <div class="mb-2">You will get</div> -->
       <!-- <div v-if="!loading" class="mb-1">
         <div class="d-flex mb-1 align-center justify-space-between">
           <div class="d-flex align-center mew-heading-3 textDark--text">
@@ -84,7 +84,7 @@
         <v-skeleton-loader max-width="200px" type="heading" />
       </div> -->
       <div v-if="!inWallet" class="mt-5">
-        <div class="mew-heading-3 textDark--text mb-5">
+        <div class="mew-heading-3 textDark--text mb-2">
           Where should we send your crypto?
         </div>
         <module-address-book
@@ -113,6 +113,7 @@
         :selected-currency="selectedCurrency"
         :set-currency="setCurrency"
         :fetched-networks="fetchedNetworks"
+        @newNetwork="setNewNetwork"
       />
     </div>
   </div>
@@ -126,7 +127,7 @@ import BigNumber from 'bignumber.js';
 import Web3 from 'web3';
 import { fromWei, toBN } from 'web3-utils';
 
-import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
+import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 import nodeList from '@/utils/networks';
 import {
   formatFloatingPointValue,
@@ -138,6 +139,8 @@ import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook.vue';
 import ModuleNetworkSelect from '@/modules/moon-pay/components/MoonPayNetworkSelectorComponent.vue';
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
+import * as nodes from '@/utils/networks/nodes';
 
 export default {
   name: 'ModuleBuyEth',
@@ -181,16 +184,23 @@ export default {
       showMoonpay: true,
       disableCurrencySelect: true,
       isSelectNetworkOpen: false,
-      fetchedNetworks: {}
-      // selectedNetwork: {}
+      fetchedNetworks: {},
+      nodes: nodes
     };
   },
   computed: {
     ...mapGetters('global', ['network', 'getFiatValue', 'Networks']),
-    ...mapState('wallet', ['web3', 'address']),
+    ...mapState('wallet', [
+      'web3',
+      'address',
+      'identifier',
+      'instance',
+      'isOfflineApp'
+    ]),
     ...mapState('external', ['currencyRate', 'coinGeckoTokens']),
     ...mapGetters('external', ['contractToToken']),
     ...mapGetters('wallet', ['tokensList']),
+    ...mapState('global', ['validNetwork']),
     includesFeeText() {
       return `Includes ${this.percentFee} fee (${
         formatFiatValue(this.minFee, this.currencyConfig).value
@@ -438,6 +448,13 @@ export default {
     }
   },
   watch: {
+    cryptoToFiat: {
+      handler: function (newVal, oldVal) {
+        if (newVal !== oldVal) {
+          this.$emit('input', newVal);
+        }
+      }
+    },
     selectedCurrency: {
       handler: function (newVal, oldVal) {
         const supportedCoins = {
@@ -530,10 +547,18 @@ export default {
       const networkList = networksObj.map(network => {
         return {
           img: network[0].type?.icon,
-          name: network[0].type?.name_long
+          name: network[0].type?.name_long,
+          symbol: network[0].type?.name
         };
       });
-      const returnedArray = [...networkList];
+      const returnedArray = [
+        {
+          img: this.network.type.icon,
+          name: this.network.type.name_long,
+          symbol: this.network.type.name
+        },
+        ...networkList
+      ];
       this.fetchedNetworks = returnedArray;
       return this.fetchedNetworks;
     },
@@ -569,6 +594,39 @@ export default {
     },
     setCurrency(currency) {
       this.selectedCurrency = currency;
+    },
+    setNewNetwork(network) {
+      const found = Object.values(this.nodes).filter(item => {
+        if (item.type.name === network.symbol) {
+          return item;
+        }
+      });
+      this.setNetwork({
+        network: found[0],
+        walletType: this.instance?.identifier || ''
+      })
+        .then(() => {
+          if (this.isWallet) {
+            this.networkSelected = this.validNetwork
+              ? this.network[0].type.name
+              : '';
+            const provider =
+              this.identifier === WALLET_TYPES.WEB3_WALLET
+                ? this.setWeb3Instance(window.ethereum)
+                : this.setWeb3Instance();
+            if (!this.isOfflineApp) {
+              provider.then(() => {
+                this.setTokenAndEthBalance();
+              });
+            }
+            Toast(`Switched network to: ${network.type.name}`, {}, SUCCESS);
+            this.trackNetworkSwitch(network.type.name);
+            this.$emit('newNetwork');
+          }
+        })
+        .catch(e => {
+          Toast(e, {}, ERROR);
+        });
     },
     fetchCurrencyData() {
       this.loading = true;

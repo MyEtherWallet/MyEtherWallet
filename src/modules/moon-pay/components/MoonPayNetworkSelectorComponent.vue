@@ -9,10 +9,11 @@
         <div class="mew-heading-2 textDark--text mt-1">Select Token</div>
       </div>
       <mew-select
-        class="mt-1"
-        label="Network"
-        is-custom
+        v-model="selectedNetwork"
         :items="fetchedNetworks"
+        label="Select Network"
+        class="mt-1"
+        is-custom
       />
       <mew-search
         placeholder="Search"
@@ -59,28 +60,32 @@ export default {
       type: Array,
       default: () => []
     },
-    // selectedCurrency: {
-    //   type: Object,
-    //   default: () => {}
-    // },
     setCurrency: {
       type: Function,
       default: () => {}
     }
   },
-  // data() {
-  //   return {
-  //     defaultNetwork: {
-  //       name: 'Ethereum Mainnet',
-  //       value: 'ETH',
-  //       // eslint-disable-next-line
-  //       img: require(`@/assets/images/currencies/eth.png`)
-  //     }
-  //   };
-  // },
+  data() {
+    return {
+      selectedNetwork: this.fetchedNetworks
+    };
+  },
   computed: {},
-  mounted() {},
-  method: {}
+  watch: {
+    selectedNetwork: {
+      handler: function (newVal) {
+        if (newVal) {
+          this.selectedNetwork = newVal;
+          this.callSetNetwork(this.selectedNetwork);
+        }
+      }
+    }
+  },
+  methods: {
+    callSetNetwork(network) {
+      this.$emit('newNetwork', network);
+    }
+  }
 };
 </script>
 
