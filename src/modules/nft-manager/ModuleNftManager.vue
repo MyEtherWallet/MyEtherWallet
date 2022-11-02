@@ -397,6 +397,7 @@ export default {
             .then(response => {
               this.updateValues();
               this.enoughFunds = true;
+              this.toAddress = '';
               this.closeNftSend();
               Toast(
                 'Cheers! Your transaction was mined. Check it in ',
