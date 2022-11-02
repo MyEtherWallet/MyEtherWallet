@@ -139,7 +139,7 @@ export default {
         },
         buttonTitle: {
           action: 'Repay',
-          cancel: 'Cancel Repay'
+          cancel: 'Cancel repay'
         }
       };
     }

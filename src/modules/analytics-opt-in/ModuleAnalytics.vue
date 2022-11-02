@@ -16,6 +16,7 @@
           : 'matomo-analytics-dialog ma-0'
       "
       scrollable
+      @click:outside="onClick(false, true)"
     >
       <v-card>
         <!--
@@ -212,8 +213,9 @@ export default {
      * Sets the tracking consent and
      * then never displays the dialog again
      */
-    onClick(val) {
-      this.setTrackingConsent(val).then(this.NEVER_SHOW_TRACKING);
+    onClick(val, showAgain) {
+      const prom = this.setTrackingConsent(val);
+      if (!showAgain) prom.then(this.NEVER_SHOW_TRACKING);
     }
   }
 };

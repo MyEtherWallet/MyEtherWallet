@@ -213,6 +213,10 @@ export default {
     totalGasLimit: {
       type: String,
       default: '0'
+    },
+    isSwap: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -253,11 +257,19 @@ export default {
     gasPriceModal() {
       clearInterval(this.interval);
       this.interval = this.setGasPriceInterval();
+    },
+    gasPriceType(newVal) {
+      if (this.isSwap) {
+        this.trackSwap(`swapGasSwitch: ${newVal}`);
+      }
     }
   },
   mounted() {
     // update gasprice every 2 minutes
     this.interval = this.setGasPriceInterval();
+    if (this.isSwap) {
+      this.trackSwap(`swapGasSwitch: ${this.gasPriceType}`);
+    }
   },
   methods: {
     ...mapActions('global', ['updateGasPrice']),

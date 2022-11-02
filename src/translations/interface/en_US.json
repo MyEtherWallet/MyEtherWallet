@@ -30,7 +30,7 @@
     "add-addr": "Add a contact address",
     "address": "Address",
     "update": "Update",
-    "remove-addr": "Remove Address",
+    "remove-addr": "Remove address",
     "validations": {
       "invalid-address": "Invalid Address",
       "nickname-length": "Nickname cannot be longer than 20 chars",

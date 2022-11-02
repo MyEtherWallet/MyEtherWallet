@@ -8,7 +8,7 @@
         show-arrows-on-hover
         cycle
       >
-        <v-carousel-item>
+        <v-carousel-item :ripple="false">
           <a @click="openEnkrypt">
             <img
               class="slide-img"
@@ -17,7 +17,7 @@
             />
           </a>
         </v-carousel-item>
-        <v-carousel-item>
+        <v-carousel-item :ripple="false">
           <a @click="openMewWallet">
             <img
               class="slide-img"
@@ -26,7 +26,10 @@
             />
           </a>
         </v-carousel-item>
-        <v-carousel-item :to="{ name: ROUTES_HOME.BUY_HARDWARE_WALLET.NAME }">
+        <v-carousel-item
+          :ripple="false"
+          :to="{ name: ROUTES_HOME.BUY_HARDWARE_WALLET.NAME }"
+        >
           <img
             class="slide-img"
             src="@/assets/images/slides/slide3.jpg"
