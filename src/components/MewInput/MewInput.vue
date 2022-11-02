@@ -334,6 +334,7 @@ export default {
         this.showPassword = !this.showPassword;
       }
     },
+    // eslint-disable-next-line
     clear(val) {
       this.inputValue = val ? val : '';
     }
