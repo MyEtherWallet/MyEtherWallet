@@ -858,6 +858,7 @@ export default {
      */
     setSelectedApp(e) {
       this.selectedLedgerApp = e;
+      this.selectedPath = this.paths[0];
     }
   }
 };

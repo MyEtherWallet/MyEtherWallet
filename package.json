@@ -80,7 +80,7 @@
     "clipboard-copy": "4.0.1",
     "crypto": "1.0.1",
     "ethereum-block-by-date": "1.4.6",
-    "ethers": "5.7.1",
+    "ethers": "5.7.2",
     "graphql": "15.5.3",
     "graphql-tag": "2.12.6",
     "highcharts": "10.2.1",
