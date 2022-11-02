@@ -130,7 +130,7 @@ export default {
         : this.myAddressBook;
     },
     myAddressBook() {
-      if (!this.isHomePage && !this.identifier)
+      if (!this.isHomePage && !this.identifier && this.instance)
         this.instance.errorHandler(
           new Error('Wallet has no identifier! Please refresh the page')
         );
