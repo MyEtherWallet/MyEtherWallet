@@ -60,7 +60,11 @@ class ledgerWallet {
       if (bluetooth && this.openedApp !== ledgerApp.name)
         throw new Error('Wrong App or No App');
       if (this.openedApp !== 'BOLOS' && this.openedApp !== ledgerApp.name) {
-        await attemptToQuitApp(this.transport, this.openedApp);
+        attemptToQuitApp(this.transport, this.openedApp);
+        await delay(3000);
+        if (!bluetooth) {
+          this.transport = await getLedgerTransport();
+        }
       }
       if (this.openedApp !== ledgerApp.name) {
         Toast('Confirm selection on ledger', undefined, WARNING);
@@ -85,6 +89,7 @@ class ledgerWallet {
         throw new Error(`missing app ${ledgerApp.value}`);
       } else throw new Error(er);
     }
+    console.log(this.transport, 'aaaaaa');
     this.ledger = new Ledger(this.transport);
     if (!this.isHardened) {
       const rootPub = await getRootPubKey(this.ledger, this.basePath);
@@ -257,6 +262,10 @@ const getLedgerXTransport = async () => {
     );
   }
   return transport;
+};
+
+const delay = delayInms => {
+  return new Promise(resolve => setTimeout(resolve, delayInms));
 };
 
 const getRootPubKey = async (_ledger, _path) => {

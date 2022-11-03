@@ -143,7 +143,7 @@
             />
             <mew-button
               class="mt-8"
-              title="Compound Rewards"
+              title="Compound rewards"
               btn-size="xlarge"
               :loading="loading"
               :disabled="!isValid"

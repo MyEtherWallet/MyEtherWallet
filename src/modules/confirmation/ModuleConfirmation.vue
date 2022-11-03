@@ -220,7 +220,10 @@
             <a href="https://changelly.com/aml-kyc" target="_blank">
               Changelly AML/KYC
             </a>
-            and <router-link :to="termRoute">Terms of Service</router-link>
+            and
+            <router-link :to="termRoute" target="_blank"
+              >Terms of Service</router-link
+            >
           </div>
         </v-card-text>
       </template>
@@ -318,7 +321,7 @@ export default {
       },
       error: '',
       panel: [],
-      termRoute: ROUTES_HOME.TERMS_OF_SERVICE.NAME
+      termRoute: `/${ROUTES_HOME.TERMS_OF_SERVICE.PATH}`
     };
   },
   computed: {
@@ -814,7 +817,8 @@ export default {
             this.signedTxObject = {};
             this.error = errorHandler(e);
             this.signing = false;
-            this.instance.errorHandler(e.message);
+            const toastError = errorHandler(e, true);
+            if (toastError) this.instance.errorHandler(toastError);
           });
       }
     },

@@ -28,7 +28,7 @@
   "confirmation": {
     "title": "Confirmation",
     "detail-info": "Detail Information",
-    "button": "Confirm and Send"
+    "button": "Confirm and send"
   },
   "generate-tx": "Generate Transaction",
   "generate-info": "Generate Information",

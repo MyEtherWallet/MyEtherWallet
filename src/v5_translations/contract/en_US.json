@@ -9,7 +9,7 @@
   "read-write": "Read / Write Contract",
   "read": "Read",
   "write": "Write",
-  "sign-tx": "Sign Transaction",
+  "sign-tx": "Sign transaction",
   "constructor": "Constructor",
   "value-in-eth": "Value in ETH",
   "result": "Result",

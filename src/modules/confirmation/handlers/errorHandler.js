@@ -4,14 +4,16 @@ const errors = {
     'Current network is busy. Please try again with a higher priority.',
   'nonce too low': 'Nonce too low.',
   "reading 'message'": undefined,
-  falsy: undefined
+  falsy: undefined,
+  Popup: 'Transaction cancelled'
 };
+const toastErrors = { Popup: undefined };
 /**
  * @param {Object | String} err
  * @returns {String | undefined} Error Message
  */
-const handleError = err => {
-  const errorValues = Object.keys(errors);
+const handleError = (err, toast = false) => {
+  const errorValues = Object.keys(toast ? toastErrors : errors);
   const message =
     err && err.message
       ? isObject(err.message)
@@ -20,7 +22,11 @@ const handleError = err => {
       : err;
   if (!message) return '';
   const foundError = errorValues.find(item => message.includes(item));
-  return foundError ? errors[foundError] : message;
+  return foundError
+    ? toast
+      ? toastErrors[foundError]
+      : errors[foundError]
+    : message;
 };
 
 export default handleError;

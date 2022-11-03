@@ -74,10 +74,7 @@ const EXCEPTIONS = [
   'uuid',
   'web3-eth-contract',
   'is-ipfs',
-  'axios',
-  // update after release
-  '@ledgerhq/live-common',
-  '@ledgerhq/hw-app-eth'
+  'axios'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
