@@ -89,7 +89,6 @@ class ledgerWallet {
         throw new Error(`missing app ${ledgerApp.value}`);
       } else throw new Error(er);
     }
-    console.log(this.transport, 'aaaaaa');
     this.ledger = new Ledger(this.transport);
     if (!this.isHardened) {
       const rootPub = await getRootPubKey(this.ledger, this.basePath);
