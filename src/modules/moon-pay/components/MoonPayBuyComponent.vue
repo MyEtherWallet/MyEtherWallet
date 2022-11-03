@@ -108,13 +108,20 @@
       />
     </div>
     <div class="netWorkSelectDiv">
-      <module-network-select
-        :currency-items="currencyItems"
-        :selected-currency="selectedCurrency"
-        :set-currency="setCurrency"
-        :fetched-networks="fetchedNetworks"
-        @newNetwork="setNewNetwork"
-      />
+      <v-dialog
+        v-model="networkSelectDialogOpen"
+        content-class="white pa-4"
+        max-width="400px"
+      >
+        <module-network-select
+          :currency-items="currencyItems"
+          :selected-currency="selectedCurrency"
+          :set-currency="setCurrency"
+          :fetched-networks="fetchedNetworks"
+          @newNetwork="setNewNetwork"
+          @close="networkSelectDialogOpen = false"
+        />
+      </v-dialog>
     </div>
   </div>
 </template>
@@ -165,6 +172,7 @@ export default {
   },
   data() {
     return {
+      networkSelectDialogOpen: false,
       selectedCurrency: this.defaultCurrency,
       loading: true,
       selectedFiat: {
@@ -591,6 +599,7 @@ export default {
     },
     openSelectNetwork() {
       this.isSelectNetworkOpen = true;
+      this.networkSelectDialogOpen = true;
     },
     setCurrency(currency) {
       this.selectedCurrency = currency;
