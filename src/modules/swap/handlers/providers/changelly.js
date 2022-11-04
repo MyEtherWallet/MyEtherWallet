@@ -5,7 +5,7 @@ import erc20Abi from '../abi/erc20';
 import Configs from '../configs/providersConfigs';
 import { toBN, toHex, toWei } from 'web3-utils';
 import Web3Contract from 'web3-eth-contract';
-import { ETH, GOERLI } from '@/utils/networks/types';
+import { ETH } from '@/utils/networks/types';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { EventBus } from '@/core/plugins/eventBus';
 import EventNames from '@/utils/web3-provider/events.js';
@@ -16,7 +16,7 @@ class Changelly {
   constructor(web3, chain) {
     this.web3 = web3;
     this.provider = 'changelly';
-    this.supportednetworks = [ETH.name, GOERLI.name];
+    this.supportednetworks = [ETH.name];
     this.chain = chain;
   }
   isSupportedNetwork(chain) {
