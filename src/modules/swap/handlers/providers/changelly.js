@@ -5,7 +5,7 @@ import erc20Abi from '../abi/erc20';
 import Configs from '../configs/providersConfigs';
 import { toBN, toHex, toWei } from 'web3-utils';
 import Web3Contract from 'web3-eth-contract';
-import { ETH } from '@/utils/networks/types';
+import { ETH, GOERLI } from '@/utils/networks/types';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { EventBus } from '@/core/plugins/eventBus';
 import EventNames from '@/utils/web3-provider/events.js';
@@ -16,7 +16,7 @@ class Changelly {
   constructor(web3, chain) {
     this.web3 = web3;
     this.provider = 'changelly';
-    this.supportednetworks = [ETH.name];
+    this.supportednetworks = [ETH.name, GOERLI.name];
     this.chain = chain;
   }
   isSupportedNetwork(chain) {
@@ -120,6 +120,7 @@ class Changelly {
   }
 
   getQuote({ fromT, toT, fromAmount }) {
+    console.log('getQuote in changelly triggered');
     const fromAmountBN = new BigNumber(fromAmount);
     const queryAmount = fromAmountBN.div(
       new BigNumber(10).pow(new BigNumber(fromT.decimals))
@@ -128,6 +129,7 @@ class Changelly {
       if (!minmax || (minmax && (!minmax.minFrom || !minmax.maxFrom))) {
         return [];
       }
+      console.log('before axios call in changelly triggered');
       return axios
         .post(
           `${HOST_URL}`,

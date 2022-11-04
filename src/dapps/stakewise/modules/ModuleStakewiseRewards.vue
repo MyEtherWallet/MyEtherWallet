@@ -146,7 +146,7 @@
               title="Compound Rewards"
               btn-size="xlarge"
               :loading="loading"
-              :disabled="!isValid && !agreeToTerms"
+              :disabled="!isValid"
               @click.native="showConfirm"
             />
           </div>
@@ -242,6 +242,7 @@ export default {
     ...mapGetters('global', [
       'network',
       'isEthNetwork',
+      'isTestNetwork',
       'gasPriceByType',
       'getFiatValue'
     ]),
@@ -304,7 +305,7 @@ export default {
         this.hasEnoughBalance &&
         this.agreeToTerms &&
         this.errorMessages === '' &&
-        this.isEthNetwork
+        (this.isEthNetwork || this.isTestNetwork)
       );
     },
     txFee() {

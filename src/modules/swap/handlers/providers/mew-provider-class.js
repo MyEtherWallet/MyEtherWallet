@@ -85,7 +85,7 @@ class MEWPClass {
           );
           return quotes.map(q => {
             return {
-              exchange: q.exchange,
+              exchange: q,
               provider: this.provider,
               amount: new BigNumber(q.amount).toFixed(),
               minFrom: minmax?.minFrom ? minmax.minFrom : 0,
