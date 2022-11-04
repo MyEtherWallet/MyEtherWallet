@@ -369,7 +369,7 @@ export default {
     ledgerApp: {},
     selectedPath: {
       name: 'Ethereum',
-      value: "m/44'/60'/0'/0"
+      value: "m/44'/60'/0'"
     },
     walletType: '',
     selectedLedgerApp: {},
