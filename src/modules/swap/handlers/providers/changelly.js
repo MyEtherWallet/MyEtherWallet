@@ -120,7 +120,6 @@ class Changelly {
   }
 
   getQuote({ fromT, toT, fromAmount }) {
-    console.log('getQuote in changelly triggered');
     const fromAmountBN = new BigNumber(fromAmount);
     const queryAmount = fromAmountBN.div(
       new BigNumber(10).pow(new BigNumber(fromT.decimals))
@@ -129,7 +128,6 @@ class Changelly {
       if (!minmax || (minmax && (!minmax.minFrom || !minmax.maxFrom))) {
         return [];
       }
-      console.log('before axios call in changelly triggered');
       return axios
         .post(
           `${HOST_URL}`,
