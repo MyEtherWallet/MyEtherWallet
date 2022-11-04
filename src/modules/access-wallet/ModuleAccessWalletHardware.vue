@@ -182,7 +182,6 @@
         :selected-path="selectedPath"
         :set-path="setPath"
         @setBluetoothLedgerUnlock="setBluetoothLedgerUnlock"
-        @ledgerApp="setSelectedApp"
       />
 
       <!--
@@ -386,6 +385,7 @@ export default {
   }),
   computed: {
     ...mapGetters('global', ['Networks', 'network']),
+    ...mapGetters('wallet', ['getLedgerApp']),
     ...mapState('wallet', ['identifier', 'ledgerBLE']),
     walletInitialized() {
       return this.wallets[this.walletType]
@@ -396,9 +396,9 @@ export default {
      * Returns the correct network icon
      */
     icon() {
-      if (this.selectedLedgerApp !== null) {
+      if (this.getLedgerApp !== null) {
         const found = appPaths.find(item => {
-          return item.network.name_long === this.selectedLedgerApp.name;
+          return item.network.name_long === this.getLedgerApp.name;
         });
         return found ? found.network.icon : appPaths[0].network.icon;
       }
@@ -501,9 +501,9 @@ export default {
     paths() {
       const newArr = [];
       if (this.walletType === WALLET_TYPES.LEDGER) {
-        if (this.selectedLedgerApp !== null) {
+        if (this.getLedgerApp !== null) {
           const found = appPaths.find(item => {
-            return item.network.name_long === this.selectedLedgerApp.name;
+            return item.network.name_long === this.getLedgerApp.name;
           });
           const path = found ? found.paths : appPaths[0].paths;
           return path.map(item => {
@@ -625,7 +625,11 @@ export default {
     EventBus.$off('bleDisconnect');
   },
   methods: {
-    ...mapActions('wallet', ['setWallet', 'setLedgerBluetooth']),
+    ...mapActions('wallet', [
+      'setWallet',
+      'setLedgerBluetooth',
+      'setLedgerApp'
+    ]),
     /**
      * Resets the Data
      */
@@ -633,7 +637,7 @@ export default {
       this.step = 1;
       this.hwWalletInstance = {};
       this.selectedPath = this.paths[0];
-      this.selectedLedgerApp = this.ledgerApps[0];
+      //this.setLedgerApp(this.ledgerApps[0]);
       this.password = '';
       this.walletType = '';
       this.ledgerConnected = false;
@@ -742,7 +746,7 @@ export default {
           : this.selectedPath
         : this.paths[0].value;
       this.wallets[this.walletType]
-        .create(path, this.ledgerBluetooth, this.selectedLedgerApp)
+        .create(path, this.ledgerBluetooth, this.getLedgerApp)
         .then(_hwWallet => {
           try {
             this.loaded = true;
@@ -852,13 +856,6 @@ export default {
     setPassword(str) {
       this.password = str;
       this.passwordError = false;
-    },
-    /**
-     * Sets selected app for Ledger
-     */
-    setSelectedApp(e) {
-      this.selectedLedgerApp = e;
-      this.selectedPath = this.paths[0];
     }
   }
 };
