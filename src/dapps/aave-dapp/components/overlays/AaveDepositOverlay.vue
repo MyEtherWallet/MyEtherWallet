@@ -165,7 +165,7 @@ export default {
         },
         buttonTitle: {
           action: 'Deposit',
-          cancel: 'Cancel Deposit'
+          cancel: 'Cancel deposit'
         }
       };
     }

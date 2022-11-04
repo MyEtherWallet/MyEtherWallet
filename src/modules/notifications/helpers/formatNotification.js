@@ -8,11 +8,12 @@ import {
  * Formatted notification for mew-notification component
  */
 const formatNotification = (obj, network) => {
+  const explorer = network.type.blockExplorerTX;
   const newObj = {
     txHash: {
       value: obj.hash ? obj.hash : '',
       string: 'Transaction Hash',
-      link: `${network.type.blockExplorerTX.replace('[[txHash]]', obj.hash)}`
+      link: `${explorer ? explorer.replace('[[txHash]]', obj.hash) : ''}`
     },
     gasPrice: {
       value: `${formatIntegerToString(fromWei(obj.gasPrice, 'gwei'))} Gwei`,

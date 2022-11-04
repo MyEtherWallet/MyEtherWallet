@@ -130,7 +130,7 @@ export default {
         },
         buttonTitle: {
           action: 'Borrow',
-          cancel: 'Cancel Borrow'
+          cancel: 'Cancel borrow'
         },
         amountInUSD: amountUSD
       };
