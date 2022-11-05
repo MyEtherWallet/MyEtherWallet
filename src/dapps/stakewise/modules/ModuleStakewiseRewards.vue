@@ -471,36 +471,43 @@ export default {
           this.setupTrade(trade);
         }
       } catch (err) {
-        this.loading = false;
         Toast(err, {}, ERROR);
       }
     },
     async showConfirm() {
       this.trackDapp('stakewiseRewardsShowConfirm');
       try {
-        this.loading = true;
-        await this.getTrade(this.hasReth, this.hasSeth, 'reth');
-        this.confirmInfo = {
-          from: this.hasReth.contract,
-          to: this.hasSeth.contract,
-          fromType: this.hasReth.symbol,
-          toType: this.hasSeth.symbol,
-          fromImg: this.hasReth.img,
-          toImg: this.hasSeth.img,
-          fromVal: this.rethBalance,
-          toVal: this.rethBalance,
-          fromUsdVal: BigNumber(this.hasReth.price ? this.hasReth.price : 0)
-            .times(this.rethBalance)
-            .toFixed(),
-          toUsdVal: BigNumber(this.hasSeth.price ? this.hasSeth.price : 0)
-            .times(this.rethBalance)
-            .toFixed(),
-          validUntil: new Date().getTime() + 10 * 60 * 1000,
-          selectedProvider: this.selectedProvider,
-          txFee: this.txFee,
-          gasPriceType: this.gasPriceType
-        };
-        this.executeTrade();
+        if (this.network.type.name === 'GOERLI') {
+          Toast(
+            `Swap not supported for Stakewise on ${this.network.type.name}`,
+            {},
+            ERROR
+          );
+        } else {
+          this.loading = true;
+          await this.getTrade(this.hasReth, this.hasSeth, 'reth');
+          this.confirmInfo = {
+            from: this.hasReth.contract,
+            to: this.hasSeth.contract,
+            fromType: this.hasReth.symbol,
+            toType: this.hasSeth.symbol,
+            fromImg: this.hasReth.img,
+            toImg: this.hasSeth.img,
+            fromVal: this.rethBalance,
+            toVal: this.rethBalance,
+            fromUsdVal: BigNumber(this.hasReth.price ? this.hasReth.price : 0)
+              .times(this.rethBalance)
+              .toFixed(),
+            toUsdVal: BigNumber(this.hasSeth.price ? this.hasSeth.price : 0)
+              .times(this.rethBalance)
+              .toFixed(),
+            validUntil: new Date().getTime() + 10 * 60 * 1000,
+            selectedProvider: this.selectedProvider,
+            txFee: this.txFee,
+            gasPriceType: this.gasPriceType
+          };
+          this.executeTrade();
+        }
       } catch (err) {
         this.loading = false;
         Toast(err.message, {}, ERROR);

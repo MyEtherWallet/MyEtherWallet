@@ -76,6 +76,8 @@ import { mapGetters, mapState } from 'vuex';
 
 import { STAKEWISE_ROUTES } from '@/dapps/stakewise/configsRoutes';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
+import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
+
 export default {
   name: 'ModuleSideRewards',
   components: {},
@@ -150,7 +152,10 @@ export default {
   },
   methods: {
     executeSwap() {
-      this.$emit('redeem-to-eth', 'reth', this.rethBalance);
+      if (this.isEthNetwork) {
+        Toast('Swap not supported for Stakewise', {}, ERROR);
+      }
+      // this.$emit('redeem-to-eth', 'reth', this.rethBalance);
     },
     changeRoute() {
       return new Promise(resolve => {

@@ -146,6 +146,8 @@ import sEthAbi from '@/dapps/stakewise/handlers/abi/stakedEthToken.js';
 import { STAKEWISE_ROUTES } from '../configsRoutes';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
+import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
+
 export default {
   name: 'ModuleSideStaking',
   components: {},
@@ -278,7 +280,10 @@ export default {
       'setStakeBalance'
     ]),
     executeSwap() {
-      this.$emit('redeem-to-eth', 'seth', this.sethBalance);
+      if (this.isEthNetwork) {
+        Toast('Swap not supported for Stakewise', {}, ERROR);
+      }
+      // this.$emit('redeem-to-eth', 'seth', this.sethBalance);
     },
     fetchBalance() {
       const contract = new this.web3.eth.Contract(sEthAbi, this.seth2Contract);
