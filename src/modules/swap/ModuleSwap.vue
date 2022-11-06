@@ -747,7 +747,7 @@ export default {
         });
         return totalGas.toString();
       }
-      return '60000';
+      return '50000';
     },
     /**
      * check whether the to token is in ETH chain or not
@@ -1233,6 +1233,9 @@ export default {
           : '0'
         : this.availableBalance.toFixed();
     },
+    setTempAmount() {
+      return new BigNumber(this.availableBalance).multipliedBy(0.1);
+    },
     /**
      * Gets the default from token
      */
@@ -1455,10 +1458,13 @@ export default {
        * Ensure that both pairs have been set
        * before calling the providers
        */
+
+      const tempAmount = this.setTempAmount().toString();
       this.belowMinError = false;
       if (this.isLoading || this.initialLoad) return;
       const val = value ? value : 0;
       this.tokenInValue = BigNumber(val).toFixed();
+
       // Check if (in amount) is larger than (available balance)
       if (
         !this.isFromNonChain &&
@@ -1507,6 +1513,17 @@ export default {
       ) {
         return;
       }
+
+      const quotes = this.swapper.getAllQuotes({
+        fromT: this.fromTokenType,
+        toT: this.toTokenType,
+        fromAmount: new BigNumber(tempAmount).times(
+          new BigNumber(10).pow(new BigNumber(this.fromTokenType.decimals))
+        )
+      });
+
+      if (!quotes) return;
+
       if (
         !BigNumber(value).isNaN() &&
         BigNumber(value).gt(0) &&
@@ -1515,8 +1532,8 @@ export default {
         !isEmpty(this.fromTokenType?.symbol) &&
         !isEmpty(this.toTokenType?.symbol)
       ) {
-        this.isLoadingProviders = false;
-        this.showAnimation = false;
+        this.isLoadingProviders = true;
+        this.showAnimation = true;
         this.cachedAmount = this.tokenInValue;
         this.swapper
           .getAllQuotes({
