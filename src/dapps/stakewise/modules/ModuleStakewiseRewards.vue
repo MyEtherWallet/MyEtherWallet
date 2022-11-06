@@ -477,9 +477,9 @@ export default {
     async showConfirm() {
       this.trackDapp('stakewiseRewardsShowConfirm');
       try {
-        if (this.network.type.name === 'GOERLI') {
+        if (this.isTestNetwork) {
           Toast(
-            `Swap not supported for Stakewise on ${this.network.type.name}`,
+            `Swap not supported on Stakewise for the ${this.network.type.name} network`,
             {},
             ERROR
           );

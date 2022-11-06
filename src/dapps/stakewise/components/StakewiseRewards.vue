@@ -95,6 +95,11 @@ export default {
       default: false
     }
   },
+  data() {
+    return {
+      attemptingToSwap: true
+    };
+  },
   computed: {
     ...mapGetters('wallet', ['tokensList']),
     ...mapGetters('global', ['isEthNetwork', 'network', 'getFiatValue']),
@@ -152,8 +157,8 @@ export default {
   },
   methods: {
     executeSwap() {
-      if (this.isEthNetwork) {
-        Toast('Swap not supported for Stakewise', {}, ERROR);
+      if (this.attemptingToSwap) {
+        Toast('Swap not supported on Stakewise', {}, ERROR);
       }
       // this.$emit('redeem-to-eth', 'reth', this.rethBalance);
     },
