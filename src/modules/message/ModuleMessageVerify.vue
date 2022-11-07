@@ -33,7 +33,7 @@
       >
         <mew-button
           btn-style="light"
-          title="Clear All"
+          title="Clear all"
           class="mr-4"
           @click.native="clearAll"
         />
