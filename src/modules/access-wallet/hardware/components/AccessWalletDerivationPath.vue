@@ -154,7 +154,7 @@
             color-theme="textDark"
             @click.native="toggleCustomField(true)"
           >
-            Add Path
+            Add path
             <v-icon>mdi-menu-down</v-icon>
           </mew-button>
 
@@ -195,7 +195,7 @@
             <v-col class="pl-1" cols="6">
               <mew-button
                 has-full-width
-                title="Add Path"
+                title="Add path"
                 @click.native="saveCustomPath"
               />
             </v-col>

@@ -8,7 +8,7 @@
       <!-- Toggle: Main/Test/All -->
       <!-- ===================================================================================== -->
       <div
-        class="align-center align-sm-end justify-center pr-sm-3 pb-sm-3 order-sm-2"
+        class="align-center align-sm-end justify-center pr-sm-3 pb-sm-3 order-sm-2 mt-10 mt-sm-0"
       >
         <v-btn-toggle
           v-model="toggleType"

@@ -109,7 +109,7 @@
       >
         <mew-button
           v-if="!isPending"
-          :title="isAdded ? 'Added to Batch' : 'Add to Batch'"
+          :title="isAdded ? 'Added to Batch' : 'Add to batch'"
           :disabled="isAdded"
           btn-style="outline"
           has-full-width
@@ -119,7 +119,7 @@
           v-else
           disabled
           btn-style="outline"
-          :title="isAdded ? 'Added to Batch' : 'Add to Batch'"
+          :title="isAdded ? 'Added to Batch' : 'Add to batch'"
           has-full-width
         />
       </v-col>
@@ -194,16 +194,14 @@
           v-if="!isPending"
           has-full-width
           :btn-link="raribleLink"
+          title="Sell on OpenSea"
           @click.native="trackToRarible"
         >
-          <v-row class="align-center justify-center">
-            <div>Sell on OpenSea</div>
-          </v-row>
         </mew-button>
       </v-col>
       <!--
         ===================================================
-          Block is available OR is Owned: not enough Eth
+          Block is available OR is Owned: not enough ETH
         ===================================================
         -->
       <v-col

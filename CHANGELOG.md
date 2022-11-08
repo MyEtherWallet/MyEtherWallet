@@ -16,6 +16,7 @@
 ### feat
 
 * cool wallet pro [#3589](https://github.com/MyEtherWallet/MyEtherWallet/pull/3589)
+* add tx broadcaster [#4319](https://github.com/MyEtherWallet/MyEtherWallet/pull/4319)
 
 ### fix
 

@@ -57,7 +57,9 @@ export const knownErrors = {
   'Returned error: gas required exceeds allowance':
     'Your gas limit is too low. Please increase your gas limit and try again.',
   'nonce too low':
-    'You may have multiple transactions still pending, please reject them and try again'
+    'You may have multiple transactions still pending, please reject them and try again',
+  'Session currently connected':
+    'Session currently connected. Please try again.'
 };
 
 const handleError = err => {
