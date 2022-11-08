@@ -14,6 +14,7 @@
             <v-date-picker
               v-model="date"
               :allowed-dates="allowedDates"
+              :max="currentDate"
               min="2015-07-30"
               color="#05C0A5"
               full-width
@@ -22,6 +23,7 @@
           <v-col cols="12" sm="12" lg="6" md="6">
             <v-time-picker
               v-model="time"
+              :max="currentTime"
               format="ampm"
               color="#05C0A5"
               full-width
@@ -84,6 +86,18 @@ export default {
   computed: {
     disableNext() {
       return this.time && this.date;
+    },
+    currentDate() {
+      return new Date().toISOString();
+    },
+    /*
+     * Get current time behind 10 minutes
+     */
+    currentTime() {
+      const today = moment().format('YYYY-MM-DD');
+      return today === this.date
+        ? moment().subtract(10, 'minutes').format('HH:mm')
+        : undefined;
     }
   },
   methods: {

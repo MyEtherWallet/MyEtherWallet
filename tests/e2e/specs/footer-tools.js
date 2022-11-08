@@ -87,10 +87,14 @@ module.exports = {
       .click(css, '.VerifyInput')
       .sendKeys(css, 'textarea:focus', verifySignature);
 
-    // ensure verify button is enabled and clicked
+    // input message
     browser
-      .waitForElementVisible(css, '.VerifyButton')
-      .ensure.elementIsEnabled('.NextButton')
+      .click(css, '.VerifyInput')
+      .sendKeys(css, 'textarea:focus', verifySignature);
+
+    // click button
+    browser.ensure
+      .elementIsEnabled('.VerifyButton')
       .click(css, '.VerifyButton');
 
     // check if message is viewable

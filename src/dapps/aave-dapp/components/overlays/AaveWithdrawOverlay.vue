@@ -139,7 +139,7 @@ export default {
         },
         buttonTitle: {
           action: 'Withdraw',
-          cancel: 'Cancel Withdraw'
+          cancel: 'Cancel withdraw'
         },
         depositedBalance: hasDeposit?.underlyingBalance || '0',
         decimals: hasDeposit?.reserve?.decimals || 18
