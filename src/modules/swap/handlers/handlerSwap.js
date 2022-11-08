@@ -106,10 +106,9 @@ class Swap {
         return p.executeTrade(tradeInfo, confirmInfo);
   }
   getMinMaxAmount(tradeInfo) {
-    for (const p of this.providers) {
+    for (const p of this.providers)
       if (p.provider === tradeInfo.provider)
         return p.getMinMaxAmount(tradeInfo);
-    }
   }
   getStatus(statusObj) {
     for (const p of this.providers) {

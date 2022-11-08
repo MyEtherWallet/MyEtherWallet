@@ -97,7 +97,7 @@ export default {
   },
   data() {
     return {
-      attemptingToSwap: true
+      attemptingToSwap: false
     };
   },
   computed: {
@@ -157,8 +157,11 @@ export default {
   },
   methods: {
     executeSwap() {
-      if (this.attemptingToSwap) {
-        Toast('Swap not supported on Stakewise', {}, ERROR);
+      if (this.isEthNetwork) {
+        this.attemptingToSwap = true;
+        if (this.attemptingToSwap) {
+          Toast('Swap not supported on Stakewise', {}, ERROR);
+        }
       }
       // this.$emit('redeem-to-eth', 'reth', this.rethBalance);
     },

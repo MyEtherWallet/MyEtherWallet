@@ -169,7 +169,7 @@ export default {
   data() {
     return {
       intervals: {},
-      attemptingToSwap: true
+      attemptingToSwap: false
     };
   },
   computed: {
@@ -281,8 +281,11 @@ export default {
       'setStakeBalance'
     ]),
     executeSwap() {
-      if (this.attemptingToSwap) {
-        Toast('Swap not supported on Stakewise', {}, ERROR);
+      if (this.isEthNetwork) {
+        this.attemptingToSwap = true;
+        if (this.attemptingToSwap) {
+          Toast('Swap not supported on Stakewise', {}, ERROR);
+        }
       }
       // this.$emit('redeem-to-eth', 'seth', this.sethBalance);
     },
