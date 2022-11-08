@@ -1,3 +1,32 @@
+### devop
+
+* * devop landing page enkrypt bottom padding [#4302](https://github.com/MyEtherWallet/MyEtherWallet/pull/4302)
+* * devop dapp button too wide fix [#4308](https://github.com/MyEtherWallet/MyEtherWallet/pull/4308)
+* * devop wallet carousel animation remove arrows [#4315](https://github.com/MyEtherWallet/MyEtherWallet/pull/4315)
+* add matomo event for user exit [#4332](https://github.com/MyEtherWallet/MyEtherWallet/pull/4332)
+* add more matomo tracking [#4339](https://github.com/MyEtherWallet/MyEtherWallet/pull/4339)
+
+### feat
+
+* ledger prompt [#4233](https://github.com/MyEtherWallet/MyEtherWallet/pull/4233)
+
+### fix
+
+* * added toast errorhandler, removed popup error [#4239](https://github.com/MyEtherWallet/MyEtherWallet/pull/4239)
+* * fix button titles to give uniform button look [#4273](https://github.com/MyEtherWallet/MyEtherWallet/pull/4273)
+* ToS link on confirmation pop up [#4284](https://github.com/MyEtherWallet/MyEtherWallet/pull/4284)
+* Offline helper sends transaction when signer doesnt match selected address [#4287](https://github.com/MyEtherWallet/MyEtherWallet/pull/4287)
+* Fix ETH Blocks max year selection [#4290](https://github.com/MyEtherWallet/MyEtherWallet/pull/4290)
+* Fix buy/sell selection empty when searching [#4295](https://github.com/MyEtherWallet/MyEtherWallet/pull/4295)
+* Fix Aave deposit max amount to token balance [#4297](https://github.com/MyEtherWallet/MyEtherWallet/pull/4297)
+* * fix privacy policy header padding [#4300](https://github.com/MyEtherWallet/MyEtherWallet/pull/4300)
+* * fix select network button overlapping issue [#4304](https://github.com/MyEtherWallet/MyEtherWallet/pull/4304)
+* Sentry Error ContractNoAddressDefinedError on sell pop up [#4306](https://github.com/MyEtherWallet/MyEtherWallet/pull/4306)
+* Sentry Error blockExplorerTX is undefined (formatNotification) [#4307](https://github.com/MyEtherWallet/MyEtherWallet/pull/4307)
+* * fix broken paperwallet layout [#4314](https://github.com/MyEtherWallet/MyEtherWallet/pull/4314)
+* * Update path when switching Ledger app [#4318](https://github.com/MyEtherWallet/MyEtherWallet/pull/4318)
+* * Bug where Ledger Live address would show on first connect [#4327](https://github.com/MyEtherWallet/MyEtherWallet/pull/4327)
+
 ### Release v6.6.9
 
 ### devop
