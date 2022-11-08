@@ -1,94 +1,97 @@
 <template>
   <div class="modules-balance-table">
-    <div v-if="!isMobile">
-      <app-table background full-width flat border-bottom class="mt-4 mb-4">
-        <table>
-          <thead>
-            <tr>
-              <td>TOKEN</td>
-              <td>PRICE</td>
-              <td>MARKET CAP</td>
-              <td>24H</td>
-              <td>BALANCE</td>
-              <td></td>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(td, dataKey) in tableDataPaginated" :key="dataKey">
-              <td>
-                <div class="d-flex align-center mew-label">
-                  <mew-token-container
-                    :img="td.tokenImg"
-                    size="20px"
-                    class="mr-2"
-                  />
-                  {{ td.token }}
-                </div>
-              </td>
-              <td class="mew-label">
-                <div v-if="td.price">
-                  {{ td.price }}
-                  <span style="font-size: 11px" class="textLight--text"
-                    >/ token</span
-                  >
-                </div>
-              </td>
-              <td class="mew-label">{{ td.cap }}</td>
-              <td>
-                <div v-if="td.change">
-                  <div v-if="td.status == '+'" class="d-flex align-center">
-                    <div class="mew-label greenPrimary--text">
-                      {{ td.change }}%
-                    </div>
-                    <v-icon small color="greenPrimary">
-                      mdi-arrow-up-thick
-                    </v-icon>
-                  </div>
-                  <div v-else class="d-flex align-center">
-                    <div class="mew-label redPrimary--text">
-                      {{ td.change }}%
-                    </div>
-                    <v-icon small color="redPrimary">
-                      mdi-arrow-down-thick
-                    </v-icon>
-                  </div>
-                </div>
-              </td>
-              <td class="mew-label">
-                <div class="mew-label">{{ td.balance[0] }}</div>
-                <div style="font-size: 11px" class="textLight--text">
-                  {{ td.balance[1] }}
-                </div>
-              </td>
-              <td>
-                <template v-if="td.callToAction">
-                  <v-btn
-                    v-for="(button, idx) in td.callToAction"
-                    :key="idx"
-                    small
-                    depressed
-                    outlined
-                    color="greenPrimary"
-                    @click="button.method(td)"
-                  >
-                    {{ button.title }}
-                  </v-btn>
-                </template>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </app-table>
-      <v-pagination
-        v-if="pageLength"
-        v-model="page"
-        class="mt-6"
-        :length="pageLength"
-      ></v-pagination>
-    </div>
-
+    <!-- ==================================================================== -->
+    <!-- Desktop table -->
+    <!-- ==================================================================== -->
     <app-table
-      v-for="(td, dataKey) in tableData"
+      v-if="!isMobile"
+      background
+      full-width
+      flat
+      border-bottom
+      class="mt-4 mb-4"
+    >
+      <table>
+        <thead>
+          <tr>
+            <td>TOKEN</td>
+            <td>PRICE</td>
+            <td>MARKET CAP</td>
+            <td>24H</td>
+            <td>BALANCE</td>
+            <td></td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(td, dataKey) in tableDataPaginated" :key="dataKey">
+            <td>
+              <div class="d-flex align-center mew-label">
+                <mew-token-container
+                  :img="td.tokenImg"
+                  size="20px"
+                  class="mr-2"
+                />
+                {{ td.token }}
+              </div>
+            </td>
+            <td class="mew-label">
+              <div v-if="td.price">
+                {{ td.price }}
+                <span style="font-size: 11px" class="textLight--text"
+                  >/ token</span
+                >
+              </div>
+            </td>
+            <td class="mew-label">{{ td.cap }}</td>
+            <td>
+              <div v-if="td.change">
+                <div v-if="td.status == '+'" class="d-flex align-center">
+                  <div class="mew-label greenPrimary--text">
+                    {{ td.change }}%
+                  </div>
+                  <v-icon small color="greenPrimary">
+                    mdi-arrow-up-thick
+                  </v-icon>
+                </div>
+                <div v-else class="d-flex align-center">
+                  <div class="mew-label redPrimary--text">{{ td.change }}%</div>
+                  <v-icon small color="redPrimary">
+                    mdi-arrow-down-thick
+                  </v-icon>
+                </div>
+              </div>
+            </td>
+            <td class="mew-label">
+              <div class="mew-label">{{ td.balance[0] }}</div>
+              <div style="font-size: 11px" class="textLight--text">
+                {{ td.balance[1] }}
+              </div>
+            </td>
+            <td>
+              <template v-if="td.callToAction">
+                <v-btn
+                  v-for="(button, idx) in td.callToAction"
+                  :key="idx"
+                  small
+                  depressed
+                  outlined
+                  color="greenPrimary"
+                  @click="button.method(td)"
+                >
+                  {{ button.title }}
+                </v-btn>
+              </template>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </app-table>
+
+    <!-- ==================================================================== -->
+    <!-- Mobile table -->
+    <!-- ==================================================================== -->
+    <app-table
+      v-for="(td, dataKey) in tableDataPaginated"
       v-else
       :key="dataKey"
       class="mx-4 mt-2"
@@ -118,11 +121,15 @@
         <div class="mew-label font-weight-bold">24H</div>
         <div class="mew-label">
           <div class="d-flex align-center">
-            <div class="mew-label">{{ td.change }}%</div>
+            <div class="mew-label">{{ td.change ? `${td.change}%` : '' }}</div>
             <v-icon v-if="td.status == '+'" small color="greenPrimary">
               mdi-arrow-up-thick
             </v-icon>
-            <v-icon v-else small color="redPrimary">
+            <v-icon
+              v-else-if="td.change !== '' && td.status === '-'"
+              small
+              color="redPrimary"
+            >
               mdi-arrow-down-thick
             </v-icon>
           </div>
@@ -152,6 +159,16 @@
         </template>
       </div>
     </app-table>
+
+    <!-- ==================================================================== -->
+    <!-- Pagination for both desktop and mobile -->
+    <!-- ==================================================================== -->
+    <v-pagination
+      v-if="pageLength"
+      v-model="page"
+      class="mt-6"
+      :length="pageLength"
+    ></v-pagination>
   </div>
 </template>
 
@@ -159,7 +176,7 @@
 import AppTable from '@/core/components/AppTable';
 
 export default {
-  name: 'BalanceTable',
+  name: 'ModulesBalanceTable',
   components: { AppTable },
   props: {
     tableData: {

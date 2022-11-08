@@ -96,10 +96,11 @@ const contractToToken =
     }
     contractAddress = contractAddress.toLowerCase();
     let tokenId = platformList[contractAddress];
+    let cgToken;
     if (contractAddress === MAIN_TOKEN_ADDRESS) {
       tokenId = rootGetters['global/network'].type.coingeckoID;
-      const networkType = rootGetters['global/network'].type;
       cgToken = getters.getCoinGeckoTokenById(tokenId);
+      const networkType = rootGetters['global/network'].type;
       return Object.assign(cgToken, {
         name: networkType.currencyName,
         symbol: networkType.currencyName,
@@ -110,7 +111,6 @@ const contractToToken =
         decimals: 18
       });
     }
-    let cgToken;
     cgToken = getters.getCoinGeckoTokenById(tokenId);
     const networkToken = state.networkTokens.get(contractAddress);
 

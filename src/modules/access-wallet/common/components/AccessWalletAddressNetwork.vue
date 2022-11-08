@@ -52,12 +52,6 @@
                         class="mr-2"
                       />
                       <div>
-                        <div
-                          v-if="acc.nickname"
-                          class="font-weight-bold mew-label"
-                        >
-                          {{ acc.nickname }}
-                        </div>
                         <div class="d-flex align-center">
                           <mew-transform-hash
                             style="
@@ -134,7 +128,7 @@
                 btn-size="small"
                 icon-align="left"
                 btn-style="transparent"
-                :disabled="currentIdx === 0"
+                :disabled="currentIdx === 0 || addressPage === 1"
                 @click.native="previousAddressSet"
               />
               <mew-button
@@ -328,7 +322,7 @@ export default {
     ...mapState('addressBook', ['addressBookStore']),
     ...mapState('wallet', ['isOfflineApp']),
     buttonDisabled() {
-      return !this.acceptTerms && this.selectedAddress === '';
+      return !this.acceptTerms || this.selectedAddress === '';
     },
     web3() {
       return new Web3(this.network.url);
@@ -409,6 +403,13 @@ export default {
     },
     isMobile() {
       return this.$vuetify.breakpoint.smAndDown;
+    },
+    blockExplorer() {
+      const networkType = this.network.type;
+      const blockExplorer = networkType.isEthVMSupported?.supported
+        ? networkType.isEthVMSupported.blockExplorerAddr
+        : networkType.blockExplorerAddr;
+      return blockExplorer;
     }
   },
   watch: {
@@ -570,7 +571,7 @@ export default {
       }
     },
     getExplorerLink(addr) {
-      return this.network.type.blockExplorerAddr.replace('[[address]]', addr);
+      return this.blockExplorer.replace('[[address]]', addr);
     }
   }
 };
