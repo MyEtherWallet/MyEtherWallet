@@ -29,14 +29,12 @@ module.exports = {
     browser
       .url('https://localhost:8080')
       .waitForElementVisible('#app')
-
-      // remove popups
-      .click(css, '#app')
-      .click(css, '#app')
-
-      // remove footer
-      .click(css, '.HideWalletBanner')
-
+      // close enkrypt popup
+      .waitForElementVisible('css selector', '.the-enkrypt-popup')
+      .click('css selector', '.the-enkrypt-popup > button')
+      // click out overlay
+      .waitForElementVisible('css selector', '.v-overlay')
+      .click('css selector', '.v-overlay')
       // create a new wallet
       .waitForElementVisible(css, '.HomeCreateWallet')
       .click(css, '#app')
@@ -74,14 +72,14 @@ module.exports = {
         const secondIndex = findIndex(second) - 1;
         const thirdIndex = findIndex(third) - 1;
 
-        browser.elements(css, '.Options', r => {
+        browser.findElements(css, '.Options', r => {
           const options = chunk(r.value, 3);
           const [firstWord, secondWord, thirdWord] = options;
 
           browser
-            .elementIdClick(firstWord[firstIndex].ELEMENT)
-            .elementIdClick(secondWord[secondIndex].ELEMENT)
-            .elementIdClick(thirdWord[thirdIndex].ELEMENT);
+            .elementIdClick(firstWord[firstIndex].getId())
+            .elementIdClick(secondWord[secondIndex].getId())
+            .elementIdClick(thirdWord[thirdIndex].getId());
         });
 
         browser.pause(1000).click(css, '.CreateMnemonicVerify');
@@ -91,8 +89,7 @@ module.exports = {
     browser
       .waitForElementVisible(css, '.CreateMnemonicAccessWallet')
       .click(css, '.CreateMnemonicAccessWallet')
-      .assert.urlContains('dashboard')
-      .moveTo(null, 500, 0)
-      .mouseButtonClick();
+      .assert.urlContains('wallet/access')
+      .end();
   }
 };

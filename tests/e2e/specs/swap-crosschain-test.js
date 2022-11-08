@@ -62,12 +62,13 @@ module.exports = {
 
     // input address
     browser
+      .waitForElementVisible(css, '.AddressBookDiv')
       .click(css, '.FromAddressInput')
       .sendKeys(css, 'input:focus', address);
 
     // click swap when enabled
     browser
-      .waitForElementVisible(css, '.NextButton')
+      .waitForElementVisible(css, '.NextButtonDiv')
       .ensure.elementIsEnabled('.NextButton')
       .click(css, '.NextButton');
   }

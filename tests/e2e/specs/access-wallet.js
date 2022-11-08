@@ -11,18 +11,17 @@ module.exports = {
   'Access Private Wallet test': async browser => {
     // open browser
     startBrowser(browser);
+    browser.maximizeWindow();
+
     browser
       .waitForElementVisible(css, '.HomeAccessWallet')
       .click(css, '.HomeAccessWallet');
 
-    // remove footer
-    browser.click(css, '.HideWalletBanner');
-
     // select software type wallet
     browser
-      .moveToElement('.AccessSoftwareWallet', 10, 10)
-      .waitForElementVisible('.AccessSoftwareWallet', 500)
-      .click(css, '.AccessSoftwareWallet')
+      .moveToElement('.AccessWalletSoftwareButton', 10, 10)
+      .waitForElementVisible('.AccessWalletSoftwareButton', 500)
+      .click(css, '.AccessWalletSoftwareButton')
       .assert.urlContains('/software');
 
     // select private key
@@ -35,15 +34,13 @@ module.exports = {
       .urlContains('private-key')
       .waitForElementVisible(css, '.PrivateKeyInput')
       .click(css, '.PrivateKeyInput')
-      .keys(privKey)
+      .sendKeys(css, '.v-text-field__slot > input', privKey)
       .click(css, '.PrivateKeyTerms > div')
       .click(css, '.PrivateKeyAccess')
       .assert.urlContains('dashboard');
 
     // open balance card
     browser
-      .moveTo(null, 500, 0)
-      .mouseButtonClick()
       .waitForElementVisible(css, '.BalanceCardQR')
       .click(css, '.BalanceCardQR');
 

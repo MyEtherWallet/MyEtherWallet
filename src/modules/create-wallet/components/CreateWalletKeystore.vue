@@ -81,25 +81,31 @@
       =====================================================================================
       -->
     <template v-if="step === 2" #stepperContent2>
-      <div class="subtitle-1 font-weight-bold grey--text step-two-header">
+      <div class="subtitle-1 font-weight-bold grey--text step-two-div">
         STEP 2.
       </div>
-      <div class="headline font-weight-bold">Download keystore file</div>
-      <div class="mb-5">
+      <div class="headline font-weight-bold step-two-div">
+        Download keystore file
+      </div>
+      <div class="mb-5 step-two-div">
         Important things to know before downloading your keystore file.
       </div>
-      <v-row class="align-stretch">
+      <v-row class="align-stretch step-two-div">
         <v-col v-for="(d, key) in warningData" :key="key" cols="12" sm="4">
-          <div class="pa-6 border-container">
-            <div class="d-flex justify-center py-3">
+          <div class="pa-6 border-container step-two-div">
+            <div class="d-flex justify-center py-3 step-two-div">
               <mew-icon :icon-name="d.icon" :img-height="70" />
             </div>
-            <h5 class="font-weight-bold mt-1 mb-2">{{ d.title }}</h5>
+            <h5 class="font-weight-bold mt-1 mb-2">
+              {{ d.title }}
+            </h5>
             <div>{{ d.description }}</div>
           </div>
         </v-col>
       </v-row>
-      <div class="d-flex flex-column flex-md-row justify-center mt-6">
+      <div
+        class="d-flex flex-column flex-md-row justify-center mt-6 step-two-div"
+      >
         <mew-button
           title="Back"
           btn-style="outline"

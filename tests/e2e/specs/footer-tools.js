@@ -15,13 +15,19 @@ const testPW = '1234password';
 module.exports = {
   before: function (browser) {
     browser.globals.waitForConditionTimeout = 15000;
+    browser.captureBrowserConsoleLogs(event => {
+      console.log(
+        event.type,
+        event.timestamp,
+        event.args[0].value,
+        event.args[1]?.value ? event.args[1].value : event.args[1]
+      );
+    });
   },
   'MEW Wallet Link test': async browser => {
     // open browser
     startBrowser(browser);
-
-    // remove footer
-    browser.click(css, '.HideWalletBanner');
+    browser.maximizeWindow();
 
     // click on link
     browser
@@ -31,14 +37,21 @@ module.exports = {
     // switch to new tab
     const window = await browser.windowHandles();
     browser.closeWindow();
-    browser.switchWindow(window.value[1]);
+    browser.switchWindow(window[1]);
 
     // check url
     browser.assert.urlContains('mewwallet');
   },
-  'MEW CX Link test': async browser => {
+  'Enkrypt Link test': async browser => {
     // open browser
-    startBrowser(browser);
+    browser
+      .url('https://localhost:8080')
+      .waitForElementVisible('#app')
+      .assert.title('MyEtherWallet | MEW')
+      // click out overlay
+      .waitForElementVisible('css selector', '.v-overlay')
+      .click('css selector', '.v-overlay');
+    browser.maximizeWindow();
 
     // click on link
     browser.moveToElement('.FooterCXTool', 10, 10).click(css, '.FooterCXTool');
@@ -46,14 +59,21 @@ module.exports = {
     // switch to new tab
     const window = await browser.windowHandles();
     browser.closeWindow();
-    browser.switchWindow(window.value[1]);
+    browser.switchWindow(window[1]);
 
     // check url
-    browser.assert.urlContains('mew-cx');
+    browser.assert.urlContains('enkrypt');
   },
   'Verify Message test': async browser => {
     // open browser
-    startBrowser(browser);
+    browser
+      .url('https://localhost:8080')
+      .waitForElementVisible('#app')
+      .assert.title('MyEtherWallet | MEW')
+      // click out overlay
+      .waitForElementVisible('css selector', '.v-overlay')
+      .click('css selector', '.v-overlay');
+    browser.maximizeWindow();
 
     // click on link
     browser
@@ -61,20 +81,35 @@ module.exports = {
       .click(css, '.FooterVerifyTool');
 
     // check if url is correct
-    browser.assert.urlContains('verify');
+    browser.assert
+      .urlContains('verify')
+      .waitForElementVisible(css, '.VerifyInput')
+      .click(css, '.VerifyInput')
+      .sendKeys(css, 'textarea:focus', verifySignature);
 
     // input message
-    browser.click(css, '.VerifyInput').keys(verifySignature);
+    browser
+      .click(css, '.VerifyInput')
+      .sendKeys(css, 'textarea:focus', verifySignature);
 
     // click button
-    browser.click(css, '.VerifyButton');
+    browser.ensure
+      .elementIsEnabled('.VerifyButton')
+      .click(css, '.VerifyButton');
 
     // check if message is viewable
     browser.waitForElementVisible(css, '.VerifyMessage');
   },
   'Convert Unit test': async browser => {
     // open browser
-    startBrowser(browser);
+    browser
+      .url('https://localhost:8080')
+      .waitForElementVisible('#app')
+      .assert.title('MyEtherWallet | MEW')
+      // click out overlay
+      .waitForElementVisible('css selector', '.v-overlay')
+      .click('css selector', '.v-overlay');
+    browser.maximizeWindow();
 
     // click on link
     browser
@@ -103,7 +138,14 @@ module.exports = {
   },
   'Generate Keystore test': async browser => {
     // open browser
-    startBrowser(browser);
+    browser
+      .url('https://localhost:8080')
+      .waitForElementVisible('#app')
+      .assert.title('MyEtherWallet | MEW')
+      // click out overlay
+      .waitForElementVisible('css selector', '.v-overlay')
+      .click('css selector', '.v-overlay');
+    browser.maximizeWindow();
 
     // click on link
     browser
@@ -126,11 +168,18 @@ module.exports = {
     browser.click(css, '.KeystoreConfirm');
 
     // check if download is enabled
-    browser.expect.element('.KeystoreDownloadFile').to.be.enabled;
+    browser.ensure.elementIsEnabled('.KeystoreDownloadFile');
   },
   'Send Offline Helper test': async browser => {
     // open browser
-    startBrowser(browser);
+    browser
+      .url('https://localhost:8080')
+      .waitForElementVisible('#app')
+      .assert.title('MyEtherWallet | MEW')
+      // click out overlay
+      .waitForElementVisible('css selector', '.v-overlay')
+      .click('css selector', '.v-overlay');
+    browser.maximizeWindow();
 
     // click on link
     browser
