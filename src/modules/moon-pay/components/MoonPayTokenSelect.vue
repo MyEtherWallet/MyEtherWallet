@@ -8,20 +8,22 @@
   >
     <div class="py-8">
       <div class="px-5 d-flex align-center">
-        <v-btn icon @click="close">
+        <v-btn icon @click.native="close">
           <v-icon color="textDark">mdi-arrow-left</v-icon>
         </v-btn>
         <div class="ml-4 mew-heading-2 textDark--text">Select Token</div>
       </div>
       <div class="px-8 mt-8">
         <mew-select
-          label="Network"
-          :items="currencyItems"
-          :value="selectedCurrency"
+          v-model="selectedNetwork"
+          :items="fetchedNetworks"
+          label="Select Network"
+          class="mt-1"
           is-custom
         />
         <v-text-field
-          class="mt-n3"
+          v-model="search"
+          class="mt-3"
           outlined
           label="Search tokens"
           prepend-inner-icon="mdi-magnify"
@@ -36,6 +38,7 @@
               text
               dpressed
               class="d-flex align-center py-6"
+              @click.native="setCurrency(token)"
             >
               <mew-token-container size="30px" :img="token.img" />
               <div class="mew-heading-3 textDark--text ml-4">
@@ -52,16 +55,22 @@
 </template>
 
 <script>
+// import get from 'lodash/get';
+
 export default {
-  name: 'ModuleBuyEth',
+  name: 'MoonpayTokenSelect',
   props: {
     currencyItems: {
       type: Array,
       default: () => []
     },
-    selectedCurrency: {
-      type: Object,
+    setCurrency: {
+      type: Function,
       default: () => {}
+    },
+    fetchedNetworks: {
+      type: Array,
+      default: () => []
     },
     open: {
       type: Boolean,
@@ -69,9 +78,56 @@ export default {
     }
   },
   data() {
-    return {};
+    return {
+      selectedNetwork: this.fetchedNetworks
+      // selectItems: [],
+      // search: ''
+    };
+  },
+  computed: {},
+  watch: {
+    selectedNetwork: {
+      handler: function (newVal, oldVal) {
+        if (newVal !== oldVal) {
+          this.selectedNetwork = newVal;
+          this.callSetNetwork(this.selectedNetwork);
+        }
+      }
+    }
+    // search: {
+    //   handler: function (newVal, oldVal) {
+    //     if (newVal !== oldVal) {
+    //       this.selectItems = this.items;
+    //     } else {
+    //       const foundItems = this.items.reduce((foundTokens, item) => {
+    //         const searchValue = String(newVal).toLowerCase();
+    //         const value = String(get(item, 'value', '')).toLowerCase();
+    //         const name = String(get(item, 'name', '')).toLowerCase();
+    //         const subtext = String(get(item, 'subtext', '')).toLowerCase();
+    //         if (
+    //           name === searchValue ||
+    //           subtext === searchValue ||
+    //           value === searchValue
+    //         ) {
+    //           foundTokens.unshift(item);
+    //         } else if (
+    //           name.includes(searchValue) ||
+    //           subtext.includes(searchValue) ||
+    //           value.includes(searchValue)
+    //         ) {
+    //           foundTokens.push(item);
+    //         }
+    //         return foundTokens;
+    //       }, []);
+    //       this.selectItems = foundItems;
+    //     }
+    //   }
+    // }
   },
   methods: {
+    callSetNetwork(network) {
+      this.$emit('newNetwork', network);
+    },
     close() {
       this.$emit('close');
     }
