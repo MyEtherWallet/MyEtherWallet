@@ -1,72 +1,130 @@
 <template>
   <div class="pt-10 px-8">
     <!-- ============================================================== -->
-    <!-- Currency select -->
+    <!-- Selling amount -->
     <!-- ============================================================== -->
-    <mew-select
-      ref="selectedCurrency"
-      label="Currency"
-      :items="currencyItems"
-      :value="selectedCurrency"
-      :disabled="loading"
-      is-custom
-      @input="setCurrency"
-    />
+    <div class="mt-2">
+      <div class="d-flex align-center justify-space-between mb-2">
+        <div class="font-weight-medium textDark--text">
+          How much do you want to sell?
+        </div>
+        <div class="primary--text font-weight-medium">Balance: 0.0001</div>
+      </div>
+      <div class="d-flex align-start">
+        <mew-input
+          :value="cryptoToFiat"
+          hide-clear-btn
+          class="no-right-border"
+          type="number"
+          :error-messages="currencyErrorMessages"
+          @keydown.native="preventCharE($event)"
+        />
+        <div
+          class="d-flex align-center token-select-button"
+          @click="openTokenSelect = true"
+        >
+          <mew-token-container :img="selectedCurrency.img" size="28px" />
+          <div class="basic--text" style="margin-left: 8px">
+            {{ selectedCurrency.name }}
+          </div>
+          <v-icon class="ml-auto" size="20px" color="titlePrimary">
+            mdi-chevron-down
+          </v-icon>
+        </div>
+      </div>
+    </div>
 
-    <!-- ============================================================== -->
-    <!-- Amount -->
-    <!-- ============================================================== -->
-    <div v-if="inWallet" class="position--relative mt-9">
-      <button-balance :balance="selectedBalance" :loading="fetchingBalance" />
-      <mew-input
-        v-model="amount"
-        type="number"
-        label="Amount"
-        placeholder="Enter amount to sell"
-        :max-btn-obj="maxButton"
-        :disabled="loading"
-        :error-messages="errorMessages"
-        :persistent-hint="hasPersistentHint"
-        :hint="persistentHintMessage"
-        @keydown.native="preventCharE($event)"
-      />
-    </div>
-    <div v-else class="position--relative mt-9">
-      <mew-input
-        v-model="amount"
-        type="number"
-        label="Amount"
-        placeholder="Enter amount to sell"
-        :disabled="loading"
-        :error-messages="errorMessages"
-        :persistent-hint="hasPersistentHint"
-        :hint="persistentHintMessage"
-        @keydown.native="preventCharE($event)"
-      />
-    </div>
-    <div class="pt-8 pb-13">
-      <div
-        v-if="inWallet"
-        class="d-flex align-center justify-space-between mb-2"
-      >
-        <div class="mew-body textDark--text font-weight-bold">
-          Estimated Network Fee
-        </div>
-        <div v-if="!estimatingFees" class="mew-body textDark--text">
-          ~{{ txFeeInEth }}
-        </div>
-        <v-skeleton-loader v-else type="text" width="150px" />
-      </div>
-      <div class="mew-body textMedium--text">
-        After submitting your sell order, you will have to send your crypto to
-        Moonpay. Remember to have enough ETH for the Send Network Fee.
+    <div class="mt-4">
+      <div class="font-weight-medium textDark--text mb-2">You will get</div>
+      <div class="d-flex align-start">
+        <mew-input
+          v-model="amount"
+          hide-clear-btn
+          class="no-right-border"
+          type="number"
+          :error-messages="amountErrorMessages"
+          @keydown.native="preventCharE($event)"
+        />
+        <mew-select
+          v-model="selectedFiat"
+          :items="fiatCurrencyItems"
+          is-custom
+          class="selectedFiat no-left-border mb-5"
+        />
       </div>
     </div>
+
+    <!-- =================================================================================================== -->
+    <!-- =================================================================================================== -->
+    <!-- =================================================================================================== -->
+    <div v-show="false">
+      <mew-select
+        ref="selectedCurrency"
+        label="Currency"
+        :items="currencyItems"
+        :value="selectedCurrency"
+        :disabled="loading"
+        is-custom
+        @input="setCurrency"
+      />
+
+      <!-- ============================================================== -->
+      <!-- Amount -->
+      <!-- ============================================================== -->
+      <div v-if="inWallet" class="position--relative mt-9">
+        <button-balance :balance="selectedBalance" :loading="fetchingBalance" />
+        <mew-input
+          v-model="amount"
+          type="number"
+          label="Amount"
+          placeholder="Enter amount to sell"
+          :max-btn-obj="maxButton"
+          :disabled="loading"
+          :error-messages="errorMessages"
+          :persistent-hint="hasPersistentHint"
+          :hint="persistentHintMessage"
+          @keydown.native="preventCharE($event)"
+        />
+      </div>
+      <div v-else class="position--relative mt-9">
+        <mew-input
+          v-model="amount"
+          type="number"
+          label="Amount"
+          placeholder="Enter amount to sell"
+          :disabled="loading"
+          :error-messages="errorMessages"
+          :persistent-hint="hasPersistentHint"
+          :hint="persistentHintMessage"
+          @keydown.native="preventCharE($event)"
+        />
+      </div>
+      <div class="pt-8 pb-13">
+        <div
+          v-if="inWallet"
+          class="d-flex align-center justify-space-between mb-2"
+        >
+          <div class="mew-body textDark--text font-weight-bold">
+            Estimated Network Fee
+          </div>
+          <div v-if="!estimatingFees" class="mew-body textDark--text">
+            ~{{ txFeeInEth }}
+          </div>
+          <v-skeleton-loader v-else type="text" width="150px" />
+        </div>
+      </div>
+    </div>
+    <!-- =================================================================================================== -->
+    <!-- =================================================================================================== -->
+    <!-- =================================================================================================== -->
+
     <!-- ============================================================== -->
     <!-- Refund address -->
     <!-- ============================================================== -->
     <div v-if="!inWallet" class="mt-0">
-      <div class="mew-heading-3 textDark--text mb-5">Refund address</div>
+      <div class="font-weight-medium textDark--text mb-2">
+        What wallet are you sending your crypto from?
+      </div>
       <module-address-book
         ref="addressInput"
         label="Enter Crypto Address"
@@ -74,6 +132,19 @@
         :is-home-page="true"
         @setAddress="setAddress"
       />
+    </div>
+
+    <div class="mew-body textMedium--text">
+      After submitting your sell order, you will have to send your crypto to
+      Moonpay. Make sure to have enough currency in your wallet to cover network
+      transaction fees.
+    </div>
+
+    <div
+      class="textMedium--text mt-3 mb-6 d-flex align-center justify-space-between"
+    >
+      <div>Network Fee</div>
+      <div>~0.0003 ETH</div>
     </div>
     <!-- ============================================================== -->
     <!-- Sell button -->
@@ -86,6 +157,19 @@
       :disabled="disableSell"
       :is-valid-address-func="isValidToAddress"
       @click.native="sell"
+    />
+
+    <!-- ============================================================== -->
+    <!-- Token select popup -->
+    <!-- ============================================================== -->
+    <moonpay-token-select
+      :open="openTokenSelect"
+      :currency-items="currencyItems"
+      :selected-currency="selectedCurrency"
+      :set-currency="setCurrency"
+      :fetched-networks="fetchedNetworks"
+      @newNetwork="setNewNetwork"
+      @close="openTokenSelect = false"
     />
   </div>
 </template>
@@ -109,12 +193,14 @@ import { toBase } from '@/core/helpers/unit';
 import { sellContracts } from './tokenList';
 import handlerWallet from '@/core/mixins/handlerWallet.mixin';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook.vue';
+import MoonpayTokenSelect from '@/modules/moon-pay/components/MoonPayTokenSelect.vue';
 
 export default {
   name: 'ModuleSellEth',
   components: {
     ButtonBalance: () => import('@/core/components/AppButtonBalance'),
-    ModuleAddressBook
+    ModuleAddressBook,
+    MoonpayTokenSelect
   },
   mixins: [handlerWallet],
   props: {
@@ -150,7 +236,8 @@ export default {
       maxBalance: '0',
       selectedBalance: '0',
       toAddress: '',
-      validToAddress: false
+      validToAddress: false,
+      openTokenSelect: false
     };
   },
   computed: {
@@ -612,4 +699,18 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.token-select-button {
+  height: 62px;
+  border: 1px solid var(--v-inputBorder-base);
+  border-radius: 0 8px 8px 0;
+  width: 120px;
+  padding: 0 11px 0 14px;
+  line-height: initial;
+  user-select: none;
+  cursor: pointer;
+  &:hover {
+    border: 1px solid var(--v-greyPrimary-base);
+  }
+}
+</style>

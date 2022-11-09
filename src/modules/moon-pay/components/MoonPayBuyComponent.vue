@@ -8,7 +8,7 @@
         <div class="font-weight-medium textDark--text mb-2">
           How much do you want to spend?
         </div>
-        <div class="d-flex align-center">
+        <div class="d-flex align-start">
           <mew-input
             v-model="amount"
             hide-clear-btn
@@ -757,6 +757,7 @@ export default {
   width: 120px;
   padding: 0 11px 0 14px;
   line-height: initial;
+  user-select: none;
   cursor: pointer;
   &:hover {
     border: 1px solid var(--v-greyPrimary-base);
