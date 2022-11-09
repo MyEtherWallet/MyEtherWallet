@@ -28,7 +28,7 @@
 
       <div class="mt-2">
         <div class="font-weight-medium textDark--text mb-2">You will get</div>
-        <div class="d-flex align-center">
+        <div class="d-flex align-start">
           <mew-input
             :value="cryptoToFiat"
             hide-clear-btn
@@ -37,16 +37,18 @@
             :error-messages="amountErrorMessages"
             @keydown.native="preventCharE($event)"
           />
-          <mew-select
-            ref="selectedCurrency"
-            :items="currencyItems"
-            :value="selectedCurrency"
-            :disabled="disableCurrencySelect"
-            :error-messages="currencyErrorMessages"
-            is-custom
-            class="no-left-border"
-            @click.native="openTokenSelect = true"
-          />
+          <div
+            class="d-flex align-center token-select-button"
+            @click="openTokenSelect = true"
+          >
+            <mew-token-container :img="selectedCurrency.img" size="28px" />
+            <div class="basic--text" style="margin-left: 8px">
+              {{ selectedCurrency.name }}
+            </div>
+            <v-icon class="ml-auto" size="20px" color="titlePrimary">
+              mdi-chevron-down
+            </v-icon>
+          </div>
         </div>
       </div>
 
@@ -287,12 +289,6 @@ export default {
         return `Amount can't be above provider's maximum: ${
           formatFiatValue(this.maxVal.toFixed(), this.currencyConfig).value
         } ${this.selectedFiatName}`;
-      }
-      return '';
-    },
-    currencyErrorMessages() {
-      if (!this.supportedBuy) {
-        return 'Please switch your network to the Ethereum Mainnet on Metamask.';
       }
       return '';
     },
@@ -738,6 +734,18 @@ export default {
 }
 .selectedFiat {
   max-width: 120px;
+}
+.token-select-button {
+  height: 62px;
+  border: 1px solid var(--v-inputBorder-base);
+  border-radius: 0 8px 8px 0;
+  width: 120px;
+  padding: 0 11px 0 14px;
+  line-height: initial;
+  cursor: pointer;
+  &:hover {
+    border: 1px solid var(--v-greyPrimary-base);
+  }
 }
 </style>
 
