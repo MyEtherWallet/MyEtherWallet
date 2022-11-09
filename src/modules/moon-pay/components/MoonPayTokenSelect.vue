@@ -22,7 +22,6 @@
           is-custom
         />
         <v-text-field
-          v-model="search"
           class="mt-3"
           outlined
           label="Search tokens"
