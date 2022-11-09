@@ -210,7 +210,7 @@ export default {
             this.setNetwork({ network: defaultNetwork }).then(() => {
               this.setWeb3Instance();
               this.activeTab = val;
-              Toast(`Switched network to: ETH`, {}, SUCCESS);
+              Toast(`Switched network back to: ETH`, {}, SUCCESS);
             });
           }
         }
@@ -232,6 +232,7 @@ export default {
       this.activeTab = 0;
       this.step = 0;
       this.onlySimplex = false;
+      this.onTab(0);
       this.$emit('close', false);
     },
     setSelectedCurrency(e) {

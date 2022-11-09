@@ -21,14 +21,14 @@
             v-model="selectedFiat"
             :items="fiatCurrencyItems"
             is-custom
-            class="selectedFiat no-left-border"
+            class="selectedFiat no-left-border mb-5"
           />
         </div>
       </div>
 
       <div class="mt-2">
         <div class="font-weight-medium textDark--text mb-2">You will get</div>
-        <div class="d-flex align-center">
+        <div class="d-flex align-start">
           <mew-input
             :value="cryptoToFiat"
             hide-clear-btn
@@ -37,19 +37,22 @@
             :error-messages="currencyErrorMessages"
             @keydown.native="preventCharE($event)"
           />
-          <mew-select
-            ref="selectedCurrency"
-            :items="currencyItems"
-            :value="selectedCurrency"
-            :disabled="disableCurrencySelect"
-            is-custom
-            class="no-left-border"
-            @click.native="openTokenSelect = true"
-          />
+          <div
+            class="d-flex align-center token-select-button"
+            @click="openTokenSelect = true"
+          >
+            <mew-token-container :img="selectedCurrency.img" size="28px" />
+            <div class="basic--text" style="margin-left: 8px">
+              {{ selectedCurrency.name }}
+            </div>
+            <v-icon class="ml-auto" size="20px" color="titlePrimary">
+              mdi-chevron-down
+            </v-icon>
+          </div>
         </div>
       </div>
 
-      <div class="mt-2">
+      <div v-if="!inWallet" class="mt-2">
         <div class="font-weight-medium textDark--text mb-2">
           Where should we send your crypto?
         </div>
@@ -84,7 +87,6 @@
       :selected-currency="selectedCurrency"
       :set-currency="setCurrency"
       :fetched-networks="fetchedNetworks"
-      :new-currency-selected="newCurrencySelected"
       @newNetwork="setNewNetwork"
       @close="openTokenSelect = false"
     />
@@ -159,13 +161,19 @@ export default {
       simplexQuote: {},
       showMoonpay: true,
       disableCurrencySelect: true,
-      openTokenSelect: false,
-      newCurrencySelected: false
+      openTokenSelect: false
     };
   },
   computed: {
     ...mapGetters('global', ['network', 'getFiatValue', 'Networks']),
-    ...mapState('wallet', ['web3', 'address']),
+    ...mapState('wallet', [
+      'web3',
+      'address',
+      'identifier',
+      'instance',
+      'isOfflineApp',
+      'setWeb3Instance'
+    ]),
     ...mapState('external', ['currencyRate', 'coinGeckoTokens']),
     ...mapState('global', ['validNetwork']),
     ...mapGetters('external', ['contractToToken']),
@@ -290,8 +298,11 @@ export default {
       return '';
     },
     currencyErrorMessages() {
-      if (!this.supportedBuy) {
-        return 'Please switch your network to the Ethereum Mainnet on Metamask.';
+      if (
+        (!this.supportedBuy && !this.inWallet) ||
+        (!this.supportedBuy && this.inWallet)
+      ) {
+        return 'Please switch network back to the Ethereum Mainnet.';
       }
       return '';
     },
@@ -496,23 +507,23 @@ export default {
   },
   mounted() {
     // Watch for currency menu isActive
-    const selectedCurrencyRef = this.$refs.selectedCurrency;
-    const menuRef = selectedCurrencyRef.$children[0].$refs.menu;
-    this.$watch(
-      () => {
-        return menuRef.isActive;
-      },
-      val => {
-        // If menu is closed make sure search is cleared
-        if (!val) {
-          if (
-            selectedCurrencyRef.search !== '' ||
-            selectedCurrencyRef.selectItems.length === 0
-          )
-            selectedCurrencyRef.search = '';
-        }
-      }
-    );
+    // const selectedCurrencyRef = this.$refs.selectedCurrency;
+    // const menuRef = selectedCurrencyRef.$children[0].$refs.menu;
+    // this.$watch(
+    //   () => {
+    //     return menuRef.isActive;
+    //   },
+    //   val => {
+    //     // If menu is closed make sure search is cleared
+    //     if (!val) {
+    //       if (
+    //         selectedCurrencyRef.search !== '' ||
+    //         selectedCurrencyRef.selectItems.length === 0
+    //       )
+    //         selectedCurrencyRef.search = '';
+    //     }
+    //   }
+    // );
 
     if (!this.inWallet) this.$refs.addressInput.$refs?.addressSelect.clear();
     this.fetchCurrencyData();
@@ -544,7 +555,6 @@ export default {
         ...networkList
       ];
       this.fetchedNetworks = returnedArray;
-      this.loading = false;
       return this.fetchedNetworks;
     },
     async fetchGasPrice() {
@@ -738,6 +748,19 @@ export default {
 }
 .selectedFiat {
   max-width: 120px;
+  height: 62px;
+}
+.token-select-button {
+  height: 62px;
+  border: 1px solid var(--v-inputBorder-base);
+  border-radius: 0 8px 8px 0;
+  width: 120px;
+  padding: 0 11px 0 14px;
+  line-height: initial;
+  cursor: pointer;
+  &:hover {
+    border: 1px solid var(--v-greyPrimary-base);
+  }
 }
 </style>
 
