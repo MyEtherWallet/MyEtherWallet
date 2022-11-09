@@ -38,7 +38,7 @@ const GLOBAL_ERRORS = {
     'Invalid argument. Please verify that the argument provided is correct',
   'execution reverted':
     'Something went wrong with the transaction: execution reverted',
-  'User rejected action!': 'User rejected action!'
+  'User rejected action': 'User rejected action!'
 };
 
 const GLOBAL_WARNING = {
