@@ -606,7 +606,7 @@ export default {
           this.trackDapp('ensTransferred');
         })
         .catch(err => {
-          this.instance.errorHandler(err);
+          this.instance.errorHandler(err.message ? err.message : err);
         });
       this.closeManage();
     },
@@ -642,7 +642,7 @@ export default {
           this.trackDapp('ensDomainRenew');
         })
         .catch(err => {
-          this.instance.errorHandler(err);
+          this.instance.errorHandler(err.message ? err.message : err);
         });
       this.closeManage();
     },
@@ -651,7 +651,7 @@ export default {
         .setMulticoin(coin)
         .then(this.getDomains)
         .catch(err => {
-          this.instance.errorHandler(err);
+          this.instance.errorHandler(err.message ? err.message : err);
         });
       this.closeManage();
     },
@@ -660,7 +660,7 @@ export default {
         .setTxtRecord(records)
         .then(this.getDomains)
         .catch(err => {
-          this.instance.errorHandler(err);
+          this.instance.errorHandler(err.message ? err.message : err);
         });
       this.closeManage();
     },
@@ -678,7 +678,7 @@ export default {
           this.closeManage();
         })
         .catch(err => {
-          this.instance.errorHandler(err);
+          this.instance.errorHandler(err.message ? err.message : err);
         });
     },
     setIpfs(hash) {
@@ -690,7 +690,7 @@ export default {
           this.trackDapp('ensSetIpfs');
         })
         .catch(err => {
-          this.instance.errorHandler(err);
+          this.instance.errorHandler(err.message ? err.message : err);
         });
       this.closeManage();
     },
@@ -745,7 +745,7 @@ export default {
         })
         .on('error', err => {
           this.loadingReg = false;
-          this.instance.errorHandler(err);
+          this.instance.errorHandler(err.message ? err.message : err);
         });
     },
     commit() {
