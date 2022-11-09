@@ -34,7 +34,7 @@
             hide-clear-btn
             class="no-right-border"
             type="number"
-            :error-messages="amountErrorMessages"
+            :error-messages="currencyErrorMessages"
             @keydown.native="preventCharE($event)"
           />
           <mew-select
@@ -42,7 +42,6 @@
             :items="currencyItems"
             :value="selectedCurrency"
             :disabled="disableCurrencySelect"
-            :error-messages="currencyErrorMessages"
             is-custom
             class="no-left-border"
             @click.native="openTokenSelect = true"
@@ -545,6 +544,7 @@ export default {
         ...networkList
       ];
       this.fetchedNetworks = returnedArray;
+      this.loading = false;
       return this.fetchedNetworks;
     },
     async fetchGasPrice() {
