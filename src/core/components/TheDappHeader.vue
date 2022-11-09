@@ -94,6 +94,6 @@ export default {
   height: 88px;
 }
 .router-link {
-  width: 100px;
+  display: inline-block;
 }
 </style>
