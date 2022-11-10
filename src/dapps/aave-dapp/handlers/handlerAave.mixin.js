@@ -269,7 +269,7 @@ export default {
           txs = [resetApproveData, approveData, txData];
         }
         const gasLimits = await estimateGasList(this.network.type.name, txs);
-        this.sendTxns([approveData, txData], gasLimits);
+        this.sendTxns(txs, gasLimits);
       } catch (e) {
         throw new Error(e);
       }
