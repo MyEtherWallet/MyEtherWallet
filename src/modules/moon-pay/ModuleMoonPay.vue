@@ -43,8 +43,13 @@
               :close="close"
               :tab="activeTab"
               :in-wallet="inWallet"
+              :supported-sell="supportedSell"
               :default-currency="defaultCurrency"
               @selectedCurrency="setSelectedCurrency"
+              @openProviders="openProviders"
+              @selectedFiat="setSelectedFiat"
+              @hideMoonpay="hideMoonpay"
+              @toAddress="setToAddress"
             />
           </template>
         </mew-tabs>

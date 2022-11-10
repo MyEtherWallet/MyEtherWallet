@@ -177,7 +177,7 @@ export default {
     ...mapState('external', ['currencyRate', 'coinGeckoTokens']),
     ...mapState('global', ['validNetwork']),
     ...mapGetters('external', ['contractToToken']),
-    ...mapGetters('wallet', ['tokensList']),
+    ...mapGetters('wallet', ['tokensList', 'balanceInETH']),
     includesFeeText() {
       return `Includes ${this.percentFee} fee (${
         formatFiatValue(this.minFee, this.currencyConfig).value
