@@ -12,7 +12,8 @@
     content-size="xlarge"
   >
     <aave-amount-form
-      v-if="step === 0"
+      v-if="open"
+      v-show="step === 0"
       :selected-token="preSelectedToken"
       :show-toggle="aaveRepayForm.showToggle"
       :left-side-values="aaveRepayForm.leftSideValues"
@@ -31,7 +32,8 @@
         =====================================================================================
         -->
     <aave-summary
-      v-if="step === 1"
+      v-if="open"
+      v-show="step === 1"
       :selected-token="preSelectedToken"
       :amount="amount"
       :action-type="repayTitle"
