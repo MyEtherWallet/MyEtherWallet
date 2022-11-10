@@ -2,24 +2,9 @@ const config = require('./defaultConfig');
 if (JSON.parse(config.env_vars.FULL_SOURCEMAPS) === 'false')
   config.sourceMapsConfig.exclude = /vendors.*.*/;
 
-const webpackConfig = config.webpackConfig;
-webpackConfig.module = {
-  rules: [
-    {
-      test: /.m?js$/,
-      exclude: /node_modules/,
-      use: {
-        loader: 'babel-loader',
-        options: {
-          presets: ['@babel/preset-env']
-        }
-      }
-    }
-  ]
-};
 const exportObj = {
   publicPath: process.env.ROUTER_MODE === 'history' ? '/' : './',
-  configureWebpack: webpackConfig,
+  configureWebpack: config.webpackConfig,
   lintOnSave: process.env.NODE_ENV === 'production' ? 'error' : true,
   integrity: process.env.WEBPACK_INTEGRITY === 'false' ? false : true,
   pwa: {
@@ -38,6 +23,13 @@ const exportObj = {
       .test(/\.graphql$/)
       .use('graphql-tag/loader')
       .loader('graphql-tag/loader')
+      .end();
+
+    config.module
+      .rule('transpile-walletconnect')
+      .test(/node_modules\/@walletconnect\/.*\.js$/)
+      .use('babel')
+      .loader('babel-loader')
       .end();
   }
 };

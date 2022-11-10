@@ -24,7 +24,7 @@ import { MOONPAY_EVENT } from '@/modules/moon-pay/helpers';
 import { EventBus } from '@/core/plugins/eventBus';
 import handlerAnalyticsMixin from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin.js';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
-import * as SignClient from '@walletconnect/sign-client';
+import { SignClient } from '@walletconnect/sign-client';
 export default {
   name: 'App',
   components: {

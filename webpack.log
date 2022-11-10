@@ -1,0 +1,1718 @@
+{
+  mode: 'development',
+  context: '/home/kvhnuke/Github/MyEtherWallet',
+  node: {
+    setImmediate: false,
+    process: true,
+    dgram: 'empty',
+    fs: 'empty',
+    net: 'empty',
+    tls: 'empty',
+    child_process: 'empty'
+  },
+  output: {
+    path: '/home/kvhnuke/Github/MyEtherWallet/dist',
+    filename: '[name].[hash].js',
+    publicPath: '',
+    chunkFilename: 'js/[name].js'
+  },
+  resolve: {
+    alias: {
+      '@': '/home/kvhnuke/Github/MyEtherWallet/src',
+      vue$: 'vue/dist/vue.runtime.esm.js'
+    },
+    extensions: [
+      '.mjs',
+      '.js',
+      '.jsx',
+      '.vue',
+      '.json',
+      '.wasm'
+    ],
+    modules: [
+      'node_modules',
+      '/home/kvhnuke/Github/MyEtherWallet/node_modules',
+      '/home/kvhnuke/Github/MyEtherWallet/node_modules/@vue/cli-service/node_modules'
+    ],
+    plugins: [
+      {
+        apply: function nothing() {
+          // ¯\_(ツ)_/¯
+        },
+        makePlugin: function () { /* omitted long function */ },
+        moduleLoader: function () { /* omitted long function */ },
+        topLevelLoader: {
+          apply: function nothing() {
+            // ¯\_(ツ)_/¯
+          }
+        },
+        bind: function () { /* omitted long function */ },
+        tsLoaderOptions: function () { /* omitted long function */ },
+        forkTsCheckerOptions: function () { /* omitted long function */ }
+      }
+    ]
+  },
+  resolveLoader: {
+    modules: [
+      '/home/kvhnuke/Github/MyEtherWallet/node_modules/@vue/cli-plugin-babel/node_modules',
+      'node_modules',
+      '/home/kvhnuke/Github/MyEtherWallet/node_modules',
+      '/home/kvhnuke/Github/MyEtherWallet/node_modules/@vue/cli-service/node_modules'
+    ],
+    plugins: [
+      {
+        apply: function nothing() {
+          // ¯\_(ツ)_/¯
+        }
+      }
+    ]
+  },
+  module: {
+    noParse: /^(vue|vue-router|vuex|vuex-router-sync)$/,
+    rules: [
+      /* config.module.rule('mjs') */
+      {
+        test: /\.mjs$/,
+        type: 'javascript/auto',
+        include: [
+          /node_modules/
+        ]
+      },
+      /* config.module.rule('vue') */
+      {
+        test: /\.vue$/,
+        use: [
+          {
+            loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/cache-loader/dist/cjs.js',
+            options: {
+              cacheDirectory: '/home/kvhnuke/Github/MyEtherWallet/node_modules/.cache/vue-loader',
+              cacheIdentifier: '14eedd30'
+            }
+          },
+          {
+            loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/vue-loader/lib/index.js',
+            options: {
+              compilerOptions: {
+                whitespace: 'condense'
+              },
+              cacheDirectory: '/home/kvhnuke/Github/MyEtherWallet/node_modules/.cache/vue-loader',
+              cacheIdentifier: '14eedd30',
+              transformAssetUrls: {
+                'v-app-bar': 'src',
+                'v-carousel-item': [
+                  'src',
+                  'lazy-src'
+                ],
+                'v-img': [
+                  'src',
+                  'lazy-src'
+                ],
+                'v-navigation-drawer': 'src',
+                'v-parallax': 'src',
+                'v-toolbar': 'src'
+              }
+            }
+          }
+        ]
+      },
+      /* config.module.rule('images') */
+      {
+        test: /\.(png|jpe?g|gif|webp)(\?.*)?$/,
+        use: [
+          {
+            loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/url-loader/dist/cjs.js',
+            options: {
+              limit: 4096,
+              fallback: {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/file-loader/dist/cjs.js',
+                options: {
+                  name: 'img/[name].[hash:8].[ext]'
+                }
+              }
+            }
+          }
+        ]
+      },
+      /* config.module.rule('svg') */
+      {
+        test: /\.(svg)(\?.*)?$/,
+        use: [
+          {
+            loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/file-loader/dist/cjs.js',
+            options: {
+              name: 'img/[name].[hash:8].[ext]'
+            }
+          }
+        ]
+      },
+      /* config.module.rule('media') */
+      {
+        test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
+        use: [
+          {
+            loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/url-loader/dist/cjs.js',
+            options: {
+              limit: 4096,
+              fallback: {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/file-loader/dist/cjs.js',
+                options: {
+                  name: 'media/[name].[hash:8].[ext]'
+                }
+              }
+            }
+          }
+        ]
+      },
+      /* config.module.rule('fonts') */
+      {
+        test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/i,
+        use: [
+          {
+            loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/url-loader/dist/cjs.js',
+            options: {
+              limit: 4096,
+              fallback: {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/file-loader/dist/cjs.js',
+                options: {
+                  name: 'fonts/[name].[hash:8].[ext]'
+                }
+              }
+            }
+          }
+        ]
+      },
+      /* config.module.rule('pug') */
+      {
+        test: /\.pug$/,
+        oneOf: [
+          /* config.module.rule('pug').rule('pug-vue') */
+          {
+            resourceQuery: /vue/,
+            use: [
+              {
+                loader: 'pug-plain-loader'
+              }
+            ]
+          },
+          /* config.module.rule('pug').rule('pug-template') */
+          {
+            use: [
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/raw-loader/dist/cjs.js'
+              },
+              {
+                loader: 'pug-plain-loader'
+              }
+            ]
+          }
+        ]
+      },
+      /* config.module.rule('css') */
+      {
+        test: /\.css$/,
+        oneOf: [
+          /* config.module.rule('css').rule('vue-modules') */
+          {
+            resourceQuery: /module/,
+            use: [
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/vue-style-loader/index.js',
+                options: {
+                  sourceMap: false,
+                  shadowMode: false
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/css-loader/dist/cjs.js',
+                options: {
+                  sourceMap: false,
+                  importLoaders: 2,
+                  modules: {
+                    localIdentName: '[name]_[local]_[hash:base64:5]'
+                  }
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/postcss-loader/src/index.js',
+                options: {
+                  sourceMap: false
+                }
+              }
+            ]
+          },
+          /* config.module.rule('css').rule('vue') */
+          {
+            resourceQuery: /\?vue/,
+            use: [
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/vue-style-loader/index.js',
+                options: {
+                  sourceMap: false,
+                  shadowMode: false
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/css-loader/dist/cjs.js',
+                options: {
+                  sourceMap: false,
+                  importLoaders: 2
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/postcss-loader/src/index.js',
+                options: {
+                  sourceMap: false
+                }
+              }
+            ]
+          },
+          /* config.module.rule('css').rule('normal-modules') */
+          {
+            test: /\.module\.\w+$/,
+            use: [
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/vue-style-loader/index.js',
+                options: {
+                  sourceMap: false,
+                  shadowMode: false
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/css-loader/dist/cjs.js',
+                options: {
+                  sourceMap: false,
+                  importLoaders: 2,
+                  modules: {
+                    localIdentName: '[name]_[local]_[hash:base64:5]'
+                  }
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/postcss-loader/src/index.js',
+                options: {
+                  sourceMap: false
+                }
+              }
+            ]
+          },
+          /* config.module.rule('css').rule('normal') */
+          {
+            use: [
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/vue-style-loader/index.js',
+                options: {
+                  sourceMap: false,
+                  shadowMode: false
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/css-loader/dist/cjs.js',
+                options: {
+                  sourceMap: false,
+                  importLoaders: 2
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/postcss-loader/src/index.js',
+                options: {
+                  sourceMap: false
+                }
+              }
+            ]
+          }
+        ]
+      },
+      /* config.module.rule('postcss') */
+      {
+        test: /\.p(ost)?css$/,
+        oneOf: [
+          /* config.module.rule('postcss').rule('vue-modules') */
+          {
+            resourceQuery: /module/,
+            use: [
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/vue-style-loader/index.js',
+                options: {
+                  sourceMap: false,
+                  shadowMode: false
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/css-loader/dist/cjs.js',
+                options: {
+                  sourceMap: false,
+                  importLoaders: 2,
+                  modules: {
+                    localIdentName: '[name]_[local]_[hash:base64:5]'
+                  }
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/postcss-loader/src/index.js',
+                options: {
+                  sourceMap: false
+                }
+              }
+            ]
+          },
+          /* config.module.rule('postcss').rule('vue') */
+          {
+            resourceQuery: /\?vue/,
+            use: [
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/vue-style-loader/index.js',
+                options: {
+                  sourceMap: false,
+                  shadowMode: false
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/css-loader/dist/cjs.js',
+                options: {
+                  sourceMap: false,
+                  importLoaders: 2
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/postcss-loader/src/index.js',
+                options: {
+                  sourceMap: false
+                }
+              }
+            ]
+          },
+          /* config.module.rule('postcss').rule('normal-modules') */
+          {
+            test: /\.module\.\w+$/,
+            use: [
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/vue-style-loader/index.js',
+                options: {
+                  sourceMap: false,
+                  shadowMode: false
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/css-loader/dist/cjs.js',
+                options: {
+                  sourceMap: false,
+                  importLoaders: 2,
+                  modules: {
+                    localIdentName: '[name]_[local]_[hash:base64:5]'
+                  }
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/postcss-loader/src/index.js',
+                options: {
+                  sourceMap: false
+                }
+              }
+            ]
+          },
+          /* config.module.rule('postcss').rule('normal') */
+          {
+            use: [
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/vue-style-loader/index.js',
+                options: {
+                  sourceMap: false,
+                  shadowMode: false
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/css-loader/dist/cjs.js',
+                options: {
+                  sourceMap: false,
+                  importLoaders: 2
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/postcss-loader/src/index.js',
+                options: {
+                  sourceMap: false
+                }
+              }
+            ]
+          }
+        ]
+      },
+      /* config.module.rule('scss') */
+      {
+        test: /\.scss$/,
+        oneOf: [
+          /* config.module.rule('scss').rule('vue-modules') */
+          {
+            resourceQuery: /module/,
+            use: [
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/vue-style-loader/index.js',
+                options: {
+                  sourceMap: false,
+                  shadowMode: false
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/css-loader/dist/cjs.js',
+                options: {
+                  sourceMap: false,
+                  importLoaders: 2,
+                  modules: {
+                    localIdentName: '[name]_[local]_[hash:base64:5]'
+                  }
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/postcss-loader/src/index.js',
+                options: {
+                  sourceMap: false
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/sass-loader/dist/cjs.js',
+                options: {
+                  sourceMap: false,
+                  implementation: {
+                    render: function () {
+                      return _call(f, Array.prototype.slice.apply(arguments));
+                    },
+                    renderSync: function () {
+                      return _call(f, Array.prototype.slice.apply(arguments));
+                    },
+                    info: 'dart-sass\t1.34.1\t(Sass Compiler)\t[Dart]\ndart2js\t2.13.1\t(Dart Compiler)\t[Dart]',
+                    types: {
+                      Boolean: function () {
+                        return _call(f, Array.prototype.slice.apply(arguments));
+                      },
+                      Color: function () {
+                        return _call(f, this, Array.prototype.slice.apply(arguments));
+                      },
+                      List: function () {
+                        return _call(f, this, Array.prototype.slice.apply(arguments));
+                      },
+                      Map: function () {
+                        return _call(f, this, Array.prototype.slice.apply(arguments));
+                      },
+                      Null: function () {
+                        return _call(f, Array.prototype.slice.apply(arguments));
+                      },
+                      Number: function () {
+                        return _call(f, this, Array.prototype.slice.apply(arguments));
+                      },
+                      String: function () {
+                        return _call(f, this, Array.prototype.slice.apply(arguments));
+                      },
+                      Error: function Error() { [native code] }
+                    },
+                    NULL: {
+                      toString: function () {
+                        return _call(f, Array.prototype.slice.apply(arguments));
+                      }
+                    },
+                    TRUE: {
+                      value: true
+                    },
+                    FALSE: {
+                      value: false
+                    },
+                    cli_pkg_main_0_: function () {
+                      return _call(f, Array.prototype.slice.apply(arguments));
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          /* config.module.rule('scss').rule('vue') */
+          {
+            resourceQuery: /\?vue/,
+            use: [
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/vue-style-loader/index.js',
+                options: {
+                  sourceMap: false,
+                  shadowMode: false
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/css-loader/dist/cjs.js',
+                options: {
+                  sourceMap: false,
+                  importLoaders: 2
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/postcss-loader/src/index.js',
+                options: {
+                  sourceMap: false
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/sass-loader/dist/cjs.js',
+                options: {
+                  sourceMap: false,
+                  implementation: {
+                    render: function () {
+                      return _call(f, Array.prototype.slice.apply(arguments));
+                    },
+                    renderSync: function () {
+                      return _call(f, Array.prototype.slice.apply(arguments));
+                    },
+                    info: 'dart-sass\t1.34.1\t(Sass Compiler)\t[Dart]\ndart2js\t2.13.1\t(Dart Compiler)\t[Dart]',
+                    types: {
+                      Boolean: function () {
+                        return _call(f, Array.prototype.slice.apply(arguments));
+                      },
+                      Color: function () {
+                        return _call(f, this, Array.prototype.slice.apply(arguments));
+                      },
+                      List: function () {
+                        return _call(f, this, Array.prototype.slice.apply(arguments));
+                      },
+                      Map: function () {
+                        return _call(f, this, Array.prototype.slice.apply(arguments));
+                      },
+                      Null: function () {
+                        return _call(f, Array.prototype.slice.apply(arguments));
+                      },
+                      Number: function () {
+                        return _call(f, this, Array.prototype.slice.apply(arguments));
+                      },
+                      String: function () {
+                        return _call(f, this, Array.prototype.slice.apply(arguments));
+                      },
+                      Error: function Error() { [native code] }
+                    },
+                    NULL: {
+                      toString: function () {
+                        return _call(f, Array.prototype.slice.apply(arguments));
+                      }
+                    },
+                    TRUE: {
+                      value: true
+                    },
+                    FALSE: {
+                      value: false
+                    },
+                    cli_pkg_main_0_: function () {
+                      return _call(f, Array.prototype.slice.apply(arguments));
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          /* config.module.rule('scss').rule('normal-modules') */
+          {
+            test: /\.module\.\w+$/,
+            use: [
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/vue-style-loader/index.js',
+                options: {
+                  sourceMap: false,
+                  shadowMode: false
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/css-loader/dist/cjs.js',
+                options: {
+                  sourceMap: false,
+                  importLoaders: 2,
+                  modules: {
+                    localIdentName: '[name]_[local]_[hash:base64:5]'
+                  }
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/postcss-loader/src/index.js',
+                options: {
+                  sourceMap: false
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/sass-loader/dist/cjs.js',
+                options: {
+                  sourceMap: false,
+                  implementation: {
+                    render: function () {
+                      return _call(f, Array.prototype.slice.apply(arguments));
+                    },
+                    renderSync: function () {
+                      return _call(f, Array.prototype.slice.apply(arguments));
+                    },
+                    info: 'dart-sass\t1.34.1\t(Sass Compiler)\t[Dart]\ndart2js\t2.13.1\t(Dart Compiler)\t[Dart]',
+                    types: {
+                      Boolean: function () {
+                        return _call(f, Array.prototype.slice.apply(arguments));
+                      },
+                      Color: function () {
+                        return _call(f, this, Array.prototype.slice.apply(arguments));
+                      },
+                      List: function () {
+                        return _call(f, this, Array.prototype.slice.apply(arguments));
+                      },
+                      Map: function () {
+                        return _call(f, this, Array.prototype.slice.apply(arguments));
+                      },
+                      Null: function () {
+                        return _call(f, Array.prototype.slice.apply(arguments));
+                      },
+                      Number: function () {
+                        return _call(f, this, Array.prototype.slice.apply(arguments));
+                      },
+                      String: function () {
+                        return _call(f, this, Array.prototype.slice.apply(arguments));
+                      },
+                      Error: function Error() { [native code] }
+                    },
+                    NULL: {
+                      toString: function () {
+                        return _call(f, Array.prototype.slice.apply(arguments));
+                      }
+                    },
+                    TRUE: {
+                      value: true
+                    },
+                    FALSE: {
+                      value: false
+                    },
+                    cli_pkg_main_0_: function () {
+                      return _call(f, Array.prototype.slice.apply(arguments));
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          /* config.module.rule('scss').rule('normal') */
+          {
+            use: [
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/vue-style-loader/index.js',
+                options: {
+                  sourceMap: false,
+                  shadowMode: false
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/css-loader/dist/cjs.js',
+                options: {
+                  sourceMap: false,
+                  importLoaders: 2
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/postcss-loader/src/index.js',
+                options: {
+                  sourceMap: false
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/sass-loader/dist/cjs.js',
+                options: {
+                  sourceMap: false,
+                  implementation: {
+                    render: function () {
+                      return _call(f, Array.prototype.slice.apply(arguments));
+                    },
+                    renderSync: function () {
+                      return _call(f, Array.prototype.slice.apply(arguments));
+                    },
+                    info: 'dart-sass\t1.34.1\t(Sass Compiler)\t[Dart]\ndart2js\t2.13.1\t(Dart Compiler)\t[Dart]',
+                    types: {
+                      Boolean: function () {
+                        return _call(f, Array.prototype.slice.apply(arguments));
+                      },
+                      Color: function () {
+                        return _call(f, this, Array.prototype.slice.apply(arguments));
+                      },
+                      List: function () {
+                        return _call(f, this, Array.prototype.slice.apply(arguments));
+                      },
+                      Map: function () {
+                        return _call(f, this, Array.prototype.slice.apply(arguments));
+                      },
+                      Null: function () {
+                        return _call(f, Array.prototype.slice.apply(arguments));
+                      },
+                      Number: function () {
+                        return _call(f, this, Array.prototype.slice.apply(arguments));
+                      },
+                      String: function () {
+                        return _call(f, this, Array.prototype.slice.apply(arguments));
+                      },
+                      Error: function Error() { [native code] }
+                    },
+                    NULL: {
+                      toString: function () {
+                        return _call(f, Array.prototype.slice.apply(arguments));
+                      }
+                    },
+                    TRUE: {
+                      value: true
+                    },
+                    FALSE: {
+                      value: false
+                    },
+                    cli_pkg_main_0_: function () {
+                      return _call(f, Array.prototype.slice.apply(arguments));
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      /* config.module.rule('sass') */
+      {
+        test: /\.sass$/,
+        oneOf: [
+          /* config.module.rule('sass').rule('vue-modules') */
+          {
+            resourceQuery: /module/,
+            use: [
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/vue-style-loader/index.js',
+                options: {
+                  sourceMap: false,
+                  shadowMode: false
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/css-loader/dist/cjs.js',
+                options: {
+                  sourceMap: false,
+                  importLoaders: 2,
+                  modules: {
+                    localIdentName: '[name]_[local]_[hash:base64:5]'
+                  }
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/postcss-loader/src/index.js',
+                options: {
+                  sourceMap: false
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/sass-loader/dist/cjs.js',
+                options: {
+                  sourceMap: false,
+                  implementation: {
+                    render: function () {
+                      return _call(f, Array.prototype.slice.apply(arguments));
+                    },
+                    renderSync: function () {
+                      return _call(f, Array.prototype.slice.apply(arguments));
+                    },
+                    info: 'dart-sass\t1.34.1\t(Sass Compiler)\t[Dart]\ndart2js\t2.13.1\t(Dart Compiler)\t[Dart]',
+                    types: {
+                      Boolean: function () {
+                        return _call(f, Array.prototype.slice.apply(arguments));
+                      },
+                      Color: function () {
+                        return _call(f, this, Array.prototype.slice.apply(arguments));
+                      },
+                      List: function () {
+                        return _call(f, this, Array.prototype.slice.apply(arguments));
+                      },
+                      Map: function () {
+                        return _call(f, this, Array.prototype.slice.apply(arguments));
+                      },
+                      Null: function () {
+                        return _call(f, Array.prototype.slice.apply(arguments));
+                      },
+                      Number: function () {
+                        return _call(f, this, Array.prototype.slice.apply(arguments));
+                      },
+                      String: function () {
+                        return _call(f, this, Array.prototype.slice.apply(arguments));
+                      },
+                      Error: function Error() { [native code] }
+                    },
+                    NULL: {
+                      toString: function () {
+                        return _call(f, Array.prototype.slice.apply(arguments));
+                      }
+                    },
+                    TRUE: {
+                      value: true
+                    },
+                    FALSE: {
+                      value: false
+                    },
+                    cli_pkg_main_0_: function () {
+                      return _call(f, Array.prototype.slice.apply(arguments));
+                    }
+                  },
+                  sassOptions: {
+                    indentedSyntax: true
+                  }
+                }
+              }
+            ]
+          },
+          /* config.module.rule('sass').rule('vue') */
+          {
+            resourceQuery: /\?vue/,
+            use: [
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/vue-style-loader/index.js',
+                options: {
+                  sourceMap: false,
+                  shadowMode: false
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/css-loader/dist/cjs.js',
+                options: {
+                  sourceMap: false,
+                  importLoaders: 2
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/postcss-loader/src/index.js',
+                options: {
+                  sourceMap: false
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/sass-loader/dist/cjs.js',
+                options: {
+                  sourceMap: false,
+                  implementation: {
+                    render: function () {
+                      return _call(f, Array.prototype.slice.apply(arguments));
+                    },
+                    renderSync: function () {
+                      return _call(f, Array.prototype.slice.apply(arguments));
+                    },
+                    info: 'dart-sass\t1.34.1\t(Sass Compiler)\t[Dart]\ndart2js\t2.13.1\t(Dart Compiler)\t[Dart]',
+                    types: {
+                      Boolean: function () {
+                        return _call(f, Array.prototype.slice.apply(arguments));
+                      },
+                      Color: function () {
+                        return _call(f, this, Array.prototype.slice.apply(arguments));
+                      },
+                      List: function () {
+                        return _call(f, this, Array.prototype.slice.apply(arguments));
+                      },
+                      Map: function () {
+                        return _call(f, this, Array.prototype.slice.apply(arguments));
+                      },
+                      Null: function () {
+                        return _call(f, Array.prototype.slice.apply(arguments));
+                      },
+                      Number: function () {
+                        return _call(f, this, Array.prototype.slice.apply(arguments));
+                      },
+                      String: function () {
+                        return _call(f, this, Array.prototype.slice.apply(arguments));
+                      },
+                      Error: function Error() { [native code] }
+                    },
+                    NULL: {
+                      toString: function () {
+                        return _call(f, Array.prototype.slice.apply(arguments));
+                      }
+                    },
+                    TRUE: {
+                      value: true
+                    },
+                    FALSE: {
+                      value: false
+                    },
+                    cli_pkg_main_0_: function () {
+                      return _call(f, Array.prototype.slice.apply(arguments));
+                    }
+                  },
+                  sassOptions: {
+                    indentedSyntax: true
+                  }
+                }
+              }
+            ]
+          },
+          /* config.module.rule('sass').rule('normal-modules') */
+          {
+            test: /\.module\.\w+$/,
+            use: [
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/vue-style-loader/index.js',
+                options: {
+                  sourceMap: false,
+                  shadowMode: false
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/css-loader/dist/cjs.js',
+                options: {
+                  sourceMap: false,
+                  importLoaders: 2,
+                  modules: {
+                    localIdentName: '[name]_[local]_[hash:base64:5]'
+                  }
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/postcss-loader/src/index.js',
+                options: {
+                  sourceMap: false
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/sass-loader/dist/cjs.js',
+                options: {
+                  sourceMap: false,
+                  implementation: {
+                    render: function () {
+                      return _call(f, Array.prototype.slice.apply(arguments));
+                    },
+                    renderSync: function () {
+                      return _call(f, Array.prototype.slice.apply(arguments));
+                    },
+                    info: 'dart-sass\t1.34.1\t(Sass Compiler)\t[Dart]\ndart2js\t2.13.1\t(Dart Compiler)\t[Dart]',
+                    types: {
+                      Boolean: function () {
+                        return _call(f, Array.prototype.slice.apply(arguments));
+                      },
+                      Color: function () {
+                        return _call(f, this, Array.prototype.slice.apply(arguments));
+                      },
+                      List: function () {
+                        return _call(f, this, Array.prototype.slice.apply(arguments));
+                      },
+                      Map: function () {
+                        return _call(f, this, Array.prototype.slice.apply(arguments));
+                      },
+                      Null: function () {
+                        return _call(f, Array.prototype.slice.apply(arguments));
+                      },
+                      Number: function () {
+                        return _call(f, this, Array.prototype.slice.apply(arguments));
+                      },
+                      String: function () {
+                        return _call(f, this, Array.prototype.slice.apply(arguments));
+                      },
+                      Error: function Error() { [native code] }
+                    },
+                    NULL: {
+                      toString: function () {
+                        return _call(f, Array.prototype.slice.apply(arguments));
+                      }
+                    },
+                    TRUE: {
+                      value: true
+                    },
+                    FALSE: {
+                      value: false
+                    },
+                    cli_pkg_main_0_: function () {
+                      return _call(f, Array.prototype.slice.apply(arguments));
+                    }
+                  },
+                  sassOptions: {
+                    indentedSyntax: true
+                  }
+                }
+              }
+            ]
+          },
+          /* config.module.rule('sass').rule('normal') */
+          {
+            use: [
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/vue-style-loader/index.js',
+                options: {
+                  sourceMap: false,
+                  shadowMode: false
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/css-loader/dist/cjs.js',
+                options: {
+                  sourceMap: false,
+                  importLoaders: 2
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/postcss-loader/src/index.js',
+                options: {
+                  sourceMap: false
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/sass-loader/dist/cjs.js',
+                options: {
+                  sourceMap: false,
+                  implementation: {
+                    render: function () {
+                      return _call(f, Array.prototype.slice.apply(arguments));
+                    },
+                    renderSync: function () {
+                      return _call(f, Array.prototype.slice.apply(arguments));
+                    },
+                    info: 'dart-sass\t1.34.1\t(Sass Compiler)\t[Dart]\ndart2js\t2.13.1\t(Dart Compiler)\t[Dart]',
+                    types: {
+                      Boolean: function () {
+                        return _call(f, Array.prototype.slice.apply(arguments));
+                      },
+                      Color: function () {
+                        return _call(f, this, Array.prototype.slice.apply(arguments));
+                      },
+                      List: function () {
+                        return _call(f, this, Array.prototype.slice.apply(arguments));
+                      },
+                      Map: function () {
+                        return _call(f, this, Array.prototype.slice.apply(arguments));
+                      },
+                      Null: function () {
+                        return _call(f, Array.prototype.slice.apply(arguments));
+                      },
+                      Number: function () {
+                        return _call(f, this, Array.prototype.slice.apply(arguments));
+                      },
+                      String: function () {
+                        return _call(f, this, Array.prototype.slice.apply(arguments));
+                      },
+                      Error: function Error() { [native code] }
+                    },
+                    NULL: {
+                      toString: function () {
+                        return _call(f, Array.prototype.slice.apply(arguments));
+                      }
+                    },
+                    TRUE: {
+                      value: true
+                    },
+                    FALSE: {
+                      value: false
+                    },
+                    cli_pkg_main_0_: function () {
+                      return _call(f, Array.prototype.slice.apply(arguments));
+                    }
+                  },
+                  sassOptions: {
+                    indentedSyntax: true
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      /* config.module.rule('less') */
+      {
+        test: /\.less$/,
+        oneOf: [
+          /* config.module.rule('less').rule('vue-modules') */
+          {
+            resourceQuery: /module/,
+            use: [
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/vue-style-loader/index.js',
+                options: {
+                  sourceMap: false,
+                  shadowMode: false
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/css-loader/dist/cjs.js',
+                options: {
+                  sourceMap: false,
+                  importLoaders: 2,
+                  modules: {
+                    localIdentName: '[name]_[local]_[hash:base64:5]'
+                  }
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/postcss-loader/src/index.js',
+                options: {
+                  sourceMap: false
+                }
+              },
+              {
+                loader: 'less-loader',
+                options: {
+                  sourceMap: false
+                }
+              }
+            ]
+          },
+          /* config.module.rule('less').rule('vue') */
+          {
+            resourceQuery: /\?vue/,
+            use: [
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/vue-style-loader/index.js',
+                options: {
+                  sourceMap: false,
+                  shadowMode: false
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/css-loader/dist/cjs.js',
+                options: {
+                  sourceMap: false,
+                  importLoaders: 2
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/postcss-loader/src/index.js',
+                options: {
+                  sourceMap: false
+                }
+              },
+              {
+                loader: 'less-loader',
+                options: {
+                  sourceMap: false
+                }
+              }
+            ]
+          },
+          /* config.module.rule('less').rule('normal-modules') */
+          {
+            test: /\.module\.\w+$/,
+            use: [
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/vue-style-loader/index.js',
+                options: {
+                  sourceMap: false,
+                  shadowMode: false
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/css-loader/dist/cjs.js',
+                options: {
+                  sourceMap: false,
+                  importLoaders: 2,
+                  modules: {
+                    localIdentName: '[name]_[local]_[hash:base64:5]'
+                  }
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/postcss-loader/src/index.js',
+                options: {
+                  sourceMap: false
+                }
+              },
+              {
+                loader: 'less-loader',
+                options: {
+                  sourceMap: false
+                }
+              }
+            ]
+          },
+          /* config.module.rule('less').rule('normal') */
+          {
+            use: [
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/vue-style-loader/index.js',
+                options: {
+                  sourceMap: false,
+                  shadowMode: false
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/css-loader/dist/cjs.js',
+                options: {
+                  sourceMap: false,
+                  importLoaders: 2
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/postcss-loader/src/index.js',
+                options: {
+                  sourceMap: false
+                }
+              },
+              {
+                loader: 'less-loader',
+                options: {
+                  sourceMap: false
+                }
+              }
+            ]
+          }
+        ]
+      },
+      /* config.module.rule('stylus') */
+      {
+        test: /\.styl(us)?$/,
+        oneOf: [
+          /* config.module.rule('stylus').rule('vue-modules') */
+          {
+            resourceQuery: /module/,
+            use: [
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/vue-style-loader/index.js',
+                options: {
+                  sourceMap: false,
+                  shadowMode: false
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/css-loader/dist/cjs.js',
+                options: {
+                  sourceMap: false,
+                  importLoaders: 2,
+                  modules: {
+                    localIdentName: '[name]_[local]_[hash:base64:5]'
+                  }
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/postcss-loader/src/index.js',
+                options: {
+                  sourceMap: false
+                }
+              },
+              {
+                loader: 'stylus-loader',
+                options: {
+                  sourceMap: false,
+                  preferPathResolver: 'webpack'
+                }
+              }
+            ]
+          },
+          /* config.module.rule('stylus').rule('vue') */
+          {
+            resourceQuery: /\?vue/,
+            use: [
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/vue-style-loader/index.js',
+                options: {
+                  sourceMap: false,
+                  shadowMode: false
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/css-loader/dist/cjs.js',
+                options: {
+                  sourceMap: false,
+                  importLoaders: 2
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/postcss-loader/src/index.js',
+                options: {
+                  sourceMap: false
+                }
+              },
+              {
+                loader: 'stylus-loader',
+                options: {
+                  sourceMap: false,
+                  preferPathResolver: 'webpack'
+                }
+              }
+            ]
+          },
+          /* config.module.rule('stylus').rule('normal-modules') */
+          {
+            test: /\.module\.\w+$/,
+            use: [
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/vue-style-loader/index.js',
+                options: {
+                  sourceMap: false,
+                  shadowMode: false
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/css-loader/dist/cjs.js',
+                options: {
+                  sourceMap: false,
+                  importLoaders: 2,
+                  modules: {
+                    localIdentName: '[name]_[local]_[hash:base64:5]'
+                  }
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/postcss-loader/src/index.js',
+                options: {
+                  sourceMap: false
+                }
+              },
+              {
+                loader: 'stylus-loader',
+                options: {
+                  sourceMap: false,
+                  preferPathResolver: 'webpack'
+                }
+              }
+            ]
+          },
+          /* config.module.rule('stylus').rule('normal') */
+          {
+            use: [
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/vue-style-loader/index.js',
+                options: {
+                  sourceMap: false,
+                  shadowMode: false
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/css-loader/dist/cjs.js',
+                options: {
+                  sourceMap: false,
+                  importLoaders: 2
+                }
+              },
+              {
+                loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/postcss-loader/src/index.js',
+                options: {
+                  sourceMap: false
+                }
+              },
+              {
+                loader: 'stylus-loader',
+                options: {
+                  sourceMap: false,
+                  preferPathResolver: 'webpack'
+                }
+              }
+            ]
+          }
+        ]
+      },
+      /* config.module.rule('js') */
+      {
+        test: /\.m?jsx?$/,
+        exclude: [
+          function () { /* omitted long function */ }
+        ],
+        use: [
+          {
+            loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/cache-loader/dist/cjs.js',
+            options: {
+              cacheDirectory: '/home/kvhnuke/Github/MyEtherWallet/node_modules/.cache/babel-loader',
+              cacheIdentifier: '431da3f4'
+            }
+          },
+          {
+            loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/babel-loader/lib/index.js'
+          }
+        ]
+      },
+      /* config.module.rule('eslint') */
+      {
+        enforce: 'pre',
+        test: /\.(vue|(j|t)sx?)$/,
+        exclude: [
+          /node_modules/,
+          '/home/kvhnuke/Github/MyEtherWallet/node_modules/@vue/cli-service/lib'
+        ],
+        use: [
+          {
+            loader: '/home/kvhnuke/Github/MyEtherWallet/node_modules/eslint-loader/index.js',
+            options: {
+              extensions: [
+                '.js',
+                '.jsx',
+                '.vue'
+              ],
+              cache: true,
+              cacheIdentifier: '67055adc',
+              emitWarning: true,
+              emitError: false,
+              eslintPath: '/home/kvhnuke/Github/MyEtherWallet/node_modules/eslint',
+              formatter: undefined
+            }
+          }
+        ]
+      },
+      /* config.module.rule('graphql') */
+      {
+        test: /\.graphql$/,
+        use: [
+          {
+            loader: 'graphql-tag/loader'
+          }
+        ]
+      },
+      /* config.module.rule('compile') */
+      {
+        test: /node_modules\/@walletconnect\/.*\.js$/,
+        use: [
+          {
+            loader: 'babel-loader'
+          }
+        ]
+      }
+    ]
+  },
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        vendors: {
+          name: 'chunk-vendors',
+          test: /[\\/]node_modules[\\/]/,
+          priority: -10,
+          chunks: 'initial'
+        },
+        common: {
+          name: 'chunk-common',
+          minChunks: 2,
+          priority: -20,
+          chunks: 'initial',
+          reuseExistingChunk: true
+        }
+      },
+      minSize: 1000000,
+      maxSize: 5242880
+    },
+    minimizer: [
+      {
+        options: {
+          test: /\.m?js(\?.*)?$/i,
+          chunkFilter: () => true,
+          warningsFilter: () => true,
+          extractComments: false,
+          sourceMap: true,
+          cache: true,
+          cacheKeys: defaultCacheKeys => defaultCacheKeys,
+          parallel: true,
+          include: undefined,
+          exclude: undefined,
+          minify: undefined,
+          terserOptions: {
+            output: {
+              comments: /^\**!|@preserve|@license|@cc_on/i
+            },
+            compress: {
+              arrows: false,
+              collapse_vars: false,
+              comparisons: false,
+              computed_props: false,
+              hoist_funs: false,
+              hoist_props: false,
+              hoist_vars: false,
+              inline: false,
+              loops: false,
+              negate_iife: false,
+              properties: false,
+              reduce_funcs: false,
+              reduce_vars: false,
+              switches: false,
+              toplevel: false,
+              typeofs: false,
+              booleans: true,
+              if_return: true,
+              sequences: true,
+              unused: true,
+              conditionals: true,
+              dead_code: true,
+              evaluate: true
+            },
+            mangle: {
+              safari10: true
+            }
+          }
+        }
+      }
+    ]
+  },
+  plugins: [
+    /* config.plugin('vue-loader') */
+    new VueLoaderPlugin(),
+    /* config.plugin('define') */
+    new DefinePlugin(
+      {
+        'process.env': {
+          NODE_ENV: '"development"',
+          VUE_APP_PRIV_KEY: '"0xe76d383dbb8fae79009e6d3d73920784a81b5fe204f25383081fd55a2ca8d78d"',
+          BASE_URL: '""'
+        }
+      }
+    ),
+    /* config.plugin('case-sensitive-paths') */
+    new CaseSensitivePathsPlugin(),
+    /* config.plugin('friendly-errors') */
+    new FriendlyErrorsWebpackPlugin(
+      {
+        additionalTransformers: [
+          function () { /* omitted long function */ }
+        ],
+        additionalFormatters: [
+          function () { /* omitted long function */ }
+        ]
+      }
+    ),
+    /* config.plugin('html') */
+    new HtmlWebpackPlugin(
+      {
+        title: 'myetherwallet',
+        templateParameters: function () { /* omitted long function */ },
+        template: '/home/kvhnuke/Github/MyEtherWallet/public/index.html'
+      }
+    ),
+    /* config.plugin('pwa') */
+    new HtmlPwaPlugin(
+      {
+        name: 'MyEtherWallet',
+        workboxOptions: {
+          importWorkboxFrom: 'local',
+          skipWaiting: true,
+          clientsClaim: true,
+          navigateFallback: '/index.html'
+        },
+        manifestOptions: {
+          name: 'MEW',
+          short_name: 'MEW',
+          icons: [
+            {
+              src: './icons/android-chrome-192x192.png',
+              sizes: '192x192',
+              type: 'image/png'
+            },
+            {
+              src: './icons/android-chrome-512x512.png',
+              sizes: '512x512',
+              type: 'image/png'
+            }
+          ],
+          start_url: './',
+          display: 'standalone',
+          background_color: '#000000',
+          theme_color: '#0B2840'
+        }
+      }
+    ),
+    /* config.plugin('preload') */
+    new PreloadPlugin(
+      {
+        rel: 'preload',
+        include: 'initial',
+        fileBlacklist: [
+          /\.map$/,
+          /hot-update\.js$/
+        ]
+      }
+    ),
+    /* config.plugin('prefetch') */
+    new PreloadPlugin(
+      {
+        rel: 'prefetch',
+        include: 'asyncChunks'
+      }
+    ),
+    /* config.plugin('cors') */
+    new CorsPlugin(
+      {
+        crossorigin: undefined,
+        integrity: true,
+        publicPath: ''
+      }
+    ),
+    /* config.plugin('copy') */
+    new CopyPlugin(
+      [
+        {
+          from: '/home/kvhnuke/Github/MyEtherWallet/public',
+          to: '/home/kvhnuke/Github/MyEtherWallet/dist',
+          toType: 'dir',
+          ignore: [
+            '.DS_Store',
+            {
+              glob: 'index.html',
+              matchBase: false
+            }
+          ]
+        }
+      ]
+    ),
+    {
+      sourceMapFilename: 'sourcemaps/[file].map',
+      sourceMappingURLComment: '\n//# sourceMappingURL=[url]',
+      moduleFilenameTemplate: 'webpack://[namespace]/[resourcePath]',
+      fallbackModuleFilenameTemplate: 'webpack://[namespace]/[resourcePath]?[hash]',
+      namespace: '',
+      options: {
+        filename: 'sourcemaps/[file].map',
+        exclude: /vendors.*.*/
+      }
+    },
+    {
+      resourceRegExp: /^any-promise$/,
+      newResource: 'bluebird'
+    },
+    {
+      options: {
+        disable: true,
+        maxConcurrency: 8,
+        imageminOptions: {
+          plugins: [
+            function () { /* omitted long function */ },
+            function () { /* omitted long function */ },
+            function () { /* omitted long function */ },
+            function () { /* omitted long function */ },
+            function () { /* omitted long function */ },
+            function () { /* omitted long function */ }
+          ]
+        },
+        testFunction: function () { /* omitted long function */ },
+        externalImages: {
+          context: '.',
+          sources: [],
+          destination: '.',
+          fileName: null
+        },
+        cacheFolder: null
+      }
+    },
+    {
+      patterns: [
+        {
+          from: 'security.txt',
+          to: '.well-known/security.txt'
+        },
+        {
+          from: 'public',
+          transform: function () { /* omitted long function */ }
+        }
+      ],
+      options: {}
+    },
+    {
+      definitions: {
+        VERSION: '"6.6.9"',
+        ROUTER_MODE: '"hash"',
+        NODE_ENV: '"development"',
+        BTC_DONATION_ADDRESS: '"1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9"',
+        ETH_DONATION_ADDRESS: '"0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D"',
+        FULL_SOURCEMAPS: '"false"',
+        BUILD: '"web"'
+      }
+    }
+  ],
+  entry: {
+    app: [
+      './src/main.js'
+    ]
+  },
+  devtool: false,
+  devServer: {
+    https: true,
+    host: 'localhost',
+    hotOnly: true,
+    port: 8080,
+    headers: {
+      'Strict-Transport-Security': 'max-age=63072000; includeSubdomains; preload',
+      'Content-Security-Policy': 'font-src \'self\' data: js.intercomcdn.com:443; media-src js.intercomcdn.com:443 \'self\'; default-src \'self\' blob:; frame-src \'self\' www.walletlink.org:443 connect.trezor.io:443 intercom-sheets.com:443; img-src \'self\' downloads.intercomcdn.com:443  gifs.intercomcdn.com:443 js.intercomcdn.com:443 images.ctfassets.net static.intercomassets.com:443 nft.mewapi.io:443 mewcard.mewapi.io:443 img.mewapi.io:443 app.lokalise.com:443 data: blob: ; script-src \'unsafe-eval\' \'unsafe-inline\' blob: https:; style-src \'self\' \'unsafe-inline\' https:; object-src \'none\'; connect-src https://localhost:8080 wss://localhost:8080 https://swap.mewapi.io:443 wss://connect.mewapi.io:443 wss://connect2.mewapi.io:443 http://localhost:8178 ws://127.0.0.1:8178 https://o382951.ingest.sentry.io:443 https://estimategas.mewapi.io:443/eth https://estimategas.mewapi.io:443/bsc https://estimategas.mewapi.io:443/matic https://estimategas.mewapi.io:443/goerli https://api.ethvm.com:443 wss://apiws.ethvm.com:443 https://api-v2.ethvm.dev:443 wss://apiws-v2.ethvm.dev:443 https://nft.mewapi.io:443 https://qa.mewwallet.dev:443 https://mainnet.mewwallet.dev:443 https://staging.mewwallet.dev:443 https://development.mewwallet.dev:443 https://tokenbalance.mewapi.io:443 https://requestcache.mewapi.io:443 data: https://app.lokalise.com:443 https://myetherwallet.matomo.cloud:443 https://raw.githubusercontent.com:443/MyEtherWallet/dynamic-data/main/team.json https://raw.githubusercontent.com:443/MyEtherWallet/dynamic-data/main/careers.json https://raw.githubusercontent.com:443/MyEtherWallet/dynamic-data/main/articles.json https://formspree.io:443/f/mqjndkkx https://broadcast.mewapi.io:443 https://nodes.mewapi.io:443 wss://nodes.mewapi.io:443 wss://rpc.gochain.io:443/ws wss://mewws.blocksscan.io:443/ws wss://www.ethercluster.com:443 wss://node1.mintme.com:443/ws wss://wss.api.moonriver.moonbeam.network:443 wss://wss.api.moonbeam.network:443 api-iam.intercom.io:443 https://api.zilliqa.com:443 https://widget.intercom.io:443 https://api-iam.intercom.io:443 https://js.intercomcdn.com:443 wss://nexus-websocket-a.intercom.io:443 https://js.intercomcdn.com:443 https://uploads.intercomcdn.com:443 wss://bridge.walletconnect.org:443 wss://www.walletlink.org:443 https://api.wallet.coinbase.com:443 https://registry.walletconnect.org:443 https://registry.walletconnect.com:443 https://cdn.live.ledger.com:443 https://registry.walletconnect.org:443/data/wallets.json https://registry.walletconnect.com:433/api/v2/wallets wss://*.bridge.walletconnect.org:443 https://buy-staging.moonpay.com:443 https://staked.mewapi.io:443 https://stakedtest.mewapi.io:443 https://ethblocksapi.mewapi.io:443 https://unstoppabledomains.com:443 wss://api.thegraph.com/subgraphs/name/aave/ https://api.thegraph.com:443/subgraphs/name/aave/ https://protocol-api.aave.com:443 https://api.thegraph.com:443/subgraphs/name/ensdomains/ https://s3.us-west-2.amazonaws.com:443/mew-ipfs-bucket https://assets.coingecko.com https://api.stakewise.io:443 https://api.stakewise.io:443/pool-stats https://api.thegraph.com:443/subgraphs/name/kleros/curate https://api.thegraph.com:443/subgraphs/name/eccentricexit/curate-xdai-ii https://ipfs.kleros.io:443 https://eth-mainnet.alchemyapi.io:443 https://polygon-mainnet.g.alchemy.com:443 https://unstoppabledomains.g.alchemy.com:443 https://metadata.unstoppabledomains.com:443;',
+      'X-Content-Type-Options': 'nosniff',
+      'X-Frame-Options': 'DENY',
+      'X-XSS-Protection': '1; mode=block',
+      'Referrer-Policy': 'same-origin'
+    }
+  }
+}
