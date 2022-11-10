@@ -157,14 +157,12 @@
     <!-- ==================================================================== -->
     <!-- Pagination for both desktop and mobile -->
     <!-- ==================================================================== -->
-    <!--
     <v-pagination
-      v-if="pageLength"
+      v-if="pageLength && false"
       v-model="page"
       class="mt-6"
       :length="pageLength"
     ></v-pagination>
-    -->
   </div>
 </template>
 
