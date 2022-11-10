@@ -263,7 +263,7 @@ export default {
         );
         txData.from = user;
 
-        if (BigNumber(allowance).gt(amount)) {
+        if (toBN(allowance).gt(amount)) {
           txs = [txData];
         } else {
           txs = [resetApproveData, approveData, txData];
@@ -332,7 +332,7 @@ export default {
         );
         data.from = user;
 
-        if (BigNumber(allowance).gt(amount)) {
+        if (toBN(allowance).gt(amount)) {
           txs = [data];
         } else {
           txs = [resetApproveData, approveData, data];
