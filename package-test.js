@@ -78,7 +78,9 @@ const EXCEPTIONS = [
   // update after release
   'highcharts',
   '@commitlint/config-conventional',
-  'commitlint'
+  'commitlint',
+  '@ledgerhq/hw-app-eth',
+  '@ledgerhq/live-common'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
