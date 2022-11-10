@@ -7,7 +7,7 @@
   <mew-overlay
     :show-overlay="open"
     title="Repay"
-    :close="close"
+    :close="handleCancel"
     class="mew-component--aave-repay-overlay"
     content-size="xlarge"
   >

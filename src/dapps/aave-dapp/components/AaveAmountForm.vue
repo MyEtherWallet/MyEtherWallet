@@ -170,12 +170,20 @@ export default {
   },
   mounted() {
     if (this.showToggle) {
-      setTimeout(() => {
-        this.onToggle(this.group[1]);
-      }, 100);
+      this.delayedToggle();
+    }
+  },
+  updated() {
+    if (this.showToggle) {
+      this.delayedToggle();
     }
   },
   methods: {
+    delayedToggle() {
+      setTimeout(() => {
+        this.onToggle(this.group[1]);
+      }, 100);
+    },
     setAmount(e) {
       this.amount = e;
     },
