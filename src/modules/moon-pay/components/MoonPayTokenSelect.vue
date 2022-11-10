@@ -1,11 +1,5 @@
 <template>
-  <!-- ============================================================== -->
-  <!-- Token select popup -->
-  <!-- ============================================================== -->
-  <div
-    class="currency-select white moon-pay-token-select"
-    :class="open ? 'open' : ''"
-  >
+  <div class="white moon-pay-token-select" :class="open ? 'open' : ''">
     <div class="py-8">
       <div class="px-5 d-flex align-center">
         <v-btn icon @click.native="close">
@@ -33,11 +27,14 @@
           <div v-for="token in currencyItems" :key="token.name">
             <v-btn
               v-if="token.name"
+              :class="
+                token.name == selectedCurrency.name ? 'selected-button' : ''
+              "
               width="100%"
               text
               dpressed
               class="d-flex align-center py-6"
-              @click.native="setCurrency(token)"
+              @click.native="tokenSelected(token)"
             >
               <mew-token-container size="30px" :img="token.img" />
               <div class="mew-heading-3 textDark--text ml-4">
@@ -55,6 +52,11 @@
 
 <script>
 // import get from 'lodash/get';
+import { mapActions } from 'vuex';
+import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
+import { mapGetters } from 'vuex';
+import * as nodes from '@/utils/networks/nodes';
 
 export default {
   name: 'MoonpayTokenSelect',
@@ -63,13 +65,13 @@ export default {
       type: Array,
       default: () => []
     },
+    selectedCurrency: {
+      type: Object,
+      default: () => {}
+    },
     setCurrency: {
       type: Function,
       default: () => {}
-    },
-    fetchedNetworks: {
-      type: Array,
-      default: () => []
     },
     open: {
       type: Boolean,
@@ -78,21 +80,23 @@ export default {
   },
   data() {
     return {
-      selectedNetwork: this.fetchedNetworks
+      nodes: nodes,
+      fetchedNetworks: [],
+      selectedNetwork: {}
       // selectItems: [],
       // search: ''
     };
   },
-  computed: {},
+  computed: {
+    ...mapGetters('global', ['network', 'Networks'])
+  },
   watch: {
-    selectedNetwork: {
-      handler: function (newVal, oldVal) {
-        if (newVal !== oldVal) {
-          this.selectedNetwork = newVal;
-          this.callSetNetwork(this.selectedNetwork);
-        }
+    selectedNetwork() {
+      if (this.selectedNetwork) {
+        this.setNewNetwork(this.selectedNetwork);
       }
     }
+
     // search: {
     //   handler: function (newVal, oldVal) {
     //     if (newVal !== oldVal) {
@@ -123,9 +127,66 @@ export default {
     //   }
     // }
   },
+  mounted() {
+    this.fetchNetworks();
+  },
   methods: {
-    callSetNetwork(network) {
-      this.$emit('newNetwork', network);
+    ...mapActions('global', ['setNetwork']),
+    fetchNetworks() {
+      const networksObj = Object.values(this.Networks);
+      const networkList = networksObj.map(network => {
+        return {
+          img: network[0].type?.icon,
+          name: network[0].type?.name_long,
+          symbol: network[0].type?.name
+        };
+      });
+      const returnedArray = [
+        {
+          img: this.network.type.icon,
+          name: this.network.type.name_long,
+          symbol: this.network.type.name
+        },
+        ...networkList
+      ];
+      this.fetchedNetworks = returnedArray;
+    },
+    setNewNetwork(network) {
+      const found = Object.values(this.nodes).filter(item => {
+        if (item.type.name === network.symbol) {
+          return item;
+        }
+      });
+      this.setNetwork({
+        network: found[0],
+        walletType: this.instance?.identifier || ''
+      })
+        .then(() => {
+          if (this.isWallet) {
+            this.networkSelected = this.validNetwork
+              ? this.network[0].type.name
+              : '';
+            const provider =
+              this.identifier === WALLET_TYPES.WEB3_WALLET
+                ? this.setWeb3Instance(window.ethereum)
+                : this.setWeb3Instance();
+            if (!this.isOfflineApp) {
+              provider.then(() => {
+                this.setTokenAndEthBalance();
+              });
+            }
+            Toast(`Switched network to: ${network.type.name}`, {}, SUCCESS);
+            this.trackNetworkSwitch(network.type.name);
+            this.$emit('newNetwork');
+          }
+        })
+        .catch(e => {
+          Toast(e, {}, ERROR);
+        });
+    },
+    tokenSelected(token) {
+      this.setCurrency(token);
+      this.close();
     },
     close() {
       this.$emit('close');
@@ -148,5 +209,8 @@ export default {
   &.open {
     height: 100%;
   }
+}
+.selected-button {
+  background-color: var(--v-greyMedium-base);
 }
 </style>

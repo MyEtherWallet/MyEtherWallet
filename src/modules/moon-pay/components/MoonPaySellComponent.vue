@@ -1,24 +1,47 @@
 <template>
-  <div class="pt-10 px-8">
-    <!-- ============================================================== -->
-    <!-- Selling amount -->
-    <!-- ============================================================== -->
+  <div class="pt-10 px-8 moonpay-sell-component">
+    <!-- ========================================================================= -->
+    <!-- Selling amount in crypto -->
+    <!-- ========================================================================= -->
     <div class="mt-2">
-      <div class="d-flex align-center justify-space-between mb-2">
+      <div class="mb-2 d-flex align-center justify-space-between">
         <div class="font-weight-medium textDark--text">
           How much do you want to sell?
         </div>
-        <div v-if="inWallet" class="primary--text font-weight-medium">
-          Balance: {{ walletChainBalance }}
-        </div>
+        <button-balance
+          style="position: relative; top: 0; right: 0"
+          :balance="balance"
+          :loading="!showBalance"
+        />
       </div>
+
       <div class="d-flex align-start">
         <mew-input
-          :value="amount"
+          v-if="inWallet"
+          v-model="amount"
           hide-clear-btn
           class="no-right-border"
           type="number"
+          placeholder="Enter amount to sell"
+          :max-btn-obj="maxButton"
+          :disabled="loading"
           :error-messages="errorMessages"
+          :persistent-hint="hasPersistentHint"
+          :hint="persistentHintMessage"
+          @keydown.native="preventCharE($event)"
+        />
+        <mew-input
+          v-else
+          v-model="amount"
+          hide-clear-btn
+          class="no-right-border"
+          type="number"
+          placeholder="Enter amount to sell"
+          :max-btn-obj="maxButton"
+          :disabled="loading"
+          :error-messages="errorMessages"
+          :persistent-hint="hasPersistentHint"
+          :hint="persistentHintMessage"
           @keydown.native="preventCharE($event)"
         />
         <div
@@ -36,93 +59,44 @@
       </div>
     </div>
 
-    <div class="mt-4">
+    <!-- ========================================================================= -->
+    <!-- Receiving amount in fiat -->
+    <!-- ========================================================================= -->
+    <div class="mt-2">
       <div class="font-weight-medium textDark--text mb-2">You will get</div>
       <div class="d-flex align-start">
-        <mew-input
-          :value="cryptoToFiat"
-          hide-clear-btn
-          class="no-right-border"
-          type="number"
-          :error-messages="currencyErrorMessages"
-          @keydown.native="preventCharE($event)"
-        />
+        <mew-input hide-clear-btn type="number" class="no-right-border" />
         <mew-select
           v-model="selectedFiat"
+          style="max-width: 135px"
           :items="fiatCurrencyItems"
           is-custom
-          class="selectedFiat no-left-border mb-5"
+          class="selectedFiat no-left-border"
         />
       </div>
     </div>
 
-    <!-- =================================================================================================== -->
-    <!-- =================================================================================================== -->
-    <!-- =================================================================================================== -->
-    <div v-show="false">
-      <mew-select
-        ref="selectedCurrency"
-        label="Currency"
-        :items="currencyItems"
-        :value="selectedCurrency"
-        :disabled="loading"
-        is-custom
-      />
-
-      <!-- ============================================================== -->
-      <!-- Amount -->
-      <!-- ============================================================== -->
-      <div v-if="inWallet" class="position--relative mt-9">
-        <button-balance :balance="selectedBalance" :loading="fetchingBalance" />
-        <mew-input
-          :value="amount"
-          type="number"
-          label="Amount"
-          placeholder="Enter amount to sell"
-          :max-btn-obj="maxButton"
-          :disabled="loading"
-          :error-messages="errorMessages"
-          :persistent-hint="hasPersistentHint"
-          :hint="persistentHintMessage"
-          @keydown.native="preventCharE($event)"
-        />
-      </div>
-      <div v-else class="position--relative mt-9">
-        <mew-input
-          :value="amount"
-          type="number"
-          label="Amount"
-          placeholder="Enter amount to sell"
-          :disabled="loading"
-          :error-messages="errorMessages"
-          :persistent-hint="hasPersistentHint"
-          :hint="persistentHintMessage"
-          @keydown.native="preventCharE($event)"
-        />
-      </div>
-      <div class="pt-8 pb-13">
-        <div
-          v-if="inWallet"
-          class="d-flex align-center justify-space-between mb-2"
-        >
-          <div class="mew-body textDark--text font-weight-bold">
-            Estimating Network Fee
-          </div>
-          <div v-if="!estimatingFees" class="mew-body textDark--text">
-            ~{{ txFeeInEth }}
-          </div>
-          <v-skeleton-loader v-else type="text" width="150px" />
-        </div>
-      </div>
-    </div>
-    <!-- =================================================================================================== -->
-    <!-- =================================================================================================== -->
-    <!-- =================================================================================================== -->
+    <!-- ======================================================================================== -->
+    <!-- Currency Select -->
+    <!-- HIDDEN FOR NOW! HIDDEN FOR NOW! HIDDEN FOR NOW! HIDDEN FOR NOW! HIDDEN FOR NOW! -->
+    <!-- HIDDEN FOR NOW! HIDDEN FOR NOW! HIDDEN FOR NOW! HIDDEN FOR NOW! HIDDEN FOR NOW! -->
+    <!-- HIDDEN FOR NOW! HIDDEN FOR NOW! HIDDEN FOR NOW! HIDDEN FOR NOW! HIDDEN FOR NOW! -->
+    <!-- ======================================================================================== -->
+    <mew-select
+      v-show="false"
+      ref="selectedCurrency"
+      label="Currency"
+      :items="currencyItems"
+      :value="selectedCurrency"
+      :disabled="loading"
+      is-custom
+      @input="setCurrency"
+    />
 
     <!-- ============================================================== -->
     <!-- Refund address -->
     <!-- ============================================================== -->
-    <div v-if="!inWallet" class="mt-0">
+    <div v-if="!inWallet" class="mt-2">
       <div class="font-weight-medium textDark--text mb-2">
         What wallet are you sending your crypto from?
       </div>
@@ -135,18 +109,25 @@
       />
     </div>
 
-    <div class="mew-body textMedium--text">
-      After submitting your sell order, you will have to send your crypto to
-      Moonpay. Make sure to have enough currency in your wallet to cover network
-      transaction fees.
+    <div class="pt-2 pb-10">
+      <div class="mew-body textMedium--text">
+        After submitting your sell order, you will have to send your crypto to
+        Moonpay. Make sure to have enough currency in your wallet to cover
+        network transaction fees.
+      </div>
+
+      <div
+        v-if="inWallet"
+        class="d-flex align-center justify-space-between mt-4"
+      >
+        <div class="mew-body textMedium--text">Estimated Network Fee</div>
+        <div v-if="!estimatingFees" class="mew-body textMedium--text">
+          ~{{ txFeeInEth }}
+        </div>
+        <v-skeleton-loader v-else type="text" width="150px" />
+      </div>
     </div>
 
-    <div
-      class="textMedium--text mt-3 mb-6 d-flex align-center justify-space-between"
-    >
-      <div>Network Fee</div>
-      <div>{{ networkFeeText }}</div>
-    </div>
     <!-- ============================================================== -->
     <!-- Sell button -->
     <!-- ============================================================== -->
@@ -160,16 +141,14 @@
       @click.native="sell"
     />
 
-    <!-- ============================================================== -->
+    <!-- ========================================================================= -->
     <!-- Token select popup -->
-    <!-- ============================================================== -->
+    <!-- ========================================================================= -->
     <moonpay-token-select
       :open="openTokenSelect"
       :currency-items="currencyItems"
       :selected-currency="selectedCurrency"
       :set-currency="setCurrency"
-      :fetched-networks="fetchedNetworks"
-      @newNetwork="setNewNetwork"
       @close="openTokenSelect = false"
     />
   </div>
@@ -178,29 +157,23 @@
 <script>
 import MultiCoinValidator from 'multicoin-address-validator';
 import { mapActions, mapGetters, mapState } from 'vuex';
-import { isEmpty, debounce, isNumber, isEqual, cloneDeep } from 'lodash';
+import { isEmpty, debounce, isNumber } from 'lodash';
 import BigNumber from 'bignumber.js';
 import { fromWei } from 'web3-utils';
 import Web3 from 'web3';
-
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
-import { ERROR, Toast, SUCCESS } from '@/modules/toast/handler/handlerToast';
+import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import handlerSend from '@/modules/send/handlers/handlerSend.js';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common.js';
 import abi from '@/modules/balance/handlers/abiERC20.js';
-import * as nodes from '@/utils/networks/nodes';
-import nodeList from '@/utils/networks';
-import {
-  toBNSafe,
-  formatFiatValue,
-  formatFloatingPointValue
-} from '@/core/helpers/numberFormatHelper';
+import nodes from '@/utils/networks';
+import { toBNSafe, formatFiatValue } from '@/core/helpers/numberFormatHelper';
 import { toBase } from '@/core/helpers/unit';
 import { sellContracts } from './tokenList';
-import { getCurrency } from '@/modules/settings/components/currencyList';
 import handlerWallet from '@/core/mixins/handlerWallet.mixin';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook.vue';
 import MoonpayTokenSelect from '@/modules/moon-pay/components/MoonPayTokenSelect.vue';
+import { getCurrency } from '@/modules/settings/components/currencyList';
 
 export default {
   name: 'ModuleSellEth',
@@ -226,29 +199,25 @@ export default {
     defaultCurrency: {
       type: Object,
       default: () => {}
-    },
-    supportedSell: {
-      type: Boolean,
-      default: false
     }
   },
   data() {
     return {
-      selectedCurrency: this.defaultCurrency,
-      loading: true,
-      nodes: nodes,
+      balance: '0',
+      showBalance: true,
       selectedFiat: {
         name: 'USD',
         value: 'USD',
         // eslint-disable-next-line
         img: require(`@/assets/images/currencies/USD.svg`)
       },
+      openTokenSelect: false,
+      selectedCurrency: this.defaultCurrency,
       amount: '0',
       fetchedData: {},
       locGasPrice: '0',
       sendHandler: {},
-      web3Connections: {},
-      fetchedNetworks: {},
+      loading: true,
       hasPersistentHint: false,
       fetchingBalance: true,
       gasLimit: 21000,
@@ -256,94 +225,15 @@ export default {
       maxBalance: '0',
       selectedBalance: '0',
       toAddress: '',
-      disableCurrencySelect: true,
-      validToAddress: false,
-      openTokenSelect: false
+      validToAddress: false
     };
   },
   computed: {
-    ...mapGetters('global', [
-      'network',
-      'getFiatValue',
-      'Networks',
-      'gasPriceByType'
-    ]),
-    ...mapState('wallet', [
-      'web3',
-      'address',
-      'identifier',
-      'instance',
-      'isOfflineApp',
-      'setWeb3Instance'
-    ]),
-    ...mapState('external', ['currencyRate', 'coinGeckoTokens']),
-    ...mapState('global', ['validNetwork']),
+    ...mapState('wallet', ['address', 'instance']),
+    ...mapState('global', ['gasPriceType']),
+    ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
+    ...mapGetters('global', ['isEthNetwork', 'network', 'gasPriceByType']),
     ...mapGetters('external', ['contractToToken']),
-    ...mapGetters('wallet', ['tokensList', 'balanceInETH']),
-    cryptoToFiat() {
-      return this.moonpayCryptoAmount;
-    },
-    moonpayCryptoAmount() {
-      return formatFloatingPointValue(
-        BigNumber(this.plusFee).div(this.priceOb?.price).toString()
-      ).value;
-    },
-    walletChainBalance() {
-      return `${formatFloatingPointValue(this.balanceInETH).value}`;
-    },
-    // networkFee() {
-    //   return fromWei(BigNumber(this.gasPrice).times(21000).toString());
-    // },
-    priceOb() {
-      return !isEmpty(this.fetchedData)
-        ? this.fetchedData.prices?.find(
-            item => item.fiat_currency === this.selectedFiatName
-          )
-        : { crypto_currency: 'ETH', fiat_currency: 'USD', price: '3379.08322' };
-    },
-    networkFeeToFiat() {
-      return BigNumber(this.networkFee).times(this.priceOb?.price).toString();
-    },
-    networkFeeText() {
-      return `${this.selectedCurrency.symbol} ~${
-        formatFiatValue(this.networkFeeToFiat, this.currencyConfig).value
-      }`;
-    },
-    currencyConfig() {
-      const fiat = this.selectedFiat.value;
-      const rate = this.currencyRate[fiat];
-      const currency = fiat;
-      return { rate, currency };
-    },
-    // fiatMultiplier() {
-    //   if (this.hasData) {
-    //     const selectedCurrencyPrice = this.fetchedData[0].conversion_rates.find(
-    //       item => item.fiat_currency === this.selectedFiatName
-    //     );
-    //     return selectedCurrencyPrice
-    //       ? BigNumber(selectedCurrencyPrice.exchange_rate)
-    //       : toBN(1);
-    //   }
-    //   return toBN(1);
-    // },
-    selectedFiatName() {
-      return this.selectedFiat.name;
-    },
-    minFee() {
-      return BigNumber(4.43).times(this.fiatMultiplier).toString();
-    },
-    plusFee() {
-      const fee = this.isEUR
-        ? BigNumber(BigNumber(0.7).div(100)).times(this.amount)
-        : BigNumber(BigNumber(3.25).div(100)).times(this.amount);
-      const withFee = fee.gt(this.minFee)
-        ? BigNumber(this.amount).minus(fee)
-        : BigNumber(this.amount).minus(fee).minus(this.minFee);
-      return withFee.minus(this.networkFeeToFiat).toString();
-    },
-    isEUR() {
-      return this.selectedFiatName === 'EUR' || this.selectedFiatName === 'GBP';
-    },
     fiatCurrencyItems() {
       const arrItems = this.hasData
         ? this.fetchedData[0].fiat_currencies.filter(item => item !== 'RUB')
@@ -366,55 +256,53 @@ export default {
           }
         : {};
     },
-    tokens() {
+    preselectedCurrencies() {
       if (this.inWallet) {
         return sellContracts.reduce((arr, item) => {
           const inList = this.tokensList.find(t => {
             if (t.contract.toLowerCase() === item.toLowerCase()) return t;
           });
           if (inList) {
+            inList.price = formatFiatValue(inList ? inList.price : '0').value;
             arr.push(inList);
             return arr;
           }
+
           const token = this.contractToToken(item);
-          if (token) arr.push(token);
+          if (token) {
+            token.price = formatFiatValue(token ? token.price : '0').value;
+            arr.push(token);
+          }
           return arr;
         }, []);
       }
       const arr = new Array();
       for (const contract of sellContracts) {
         const token = this.contractToToken(contract);
-        if (token) arr.push(token);
+        if (token) {
+          token.price = formatFiatValue(token ? token.price : '0').value;
+          arr.push(token);
+        }
       }
       return arr;
     },
     currencyItems() {
-      if (!this.supportedSell) return;
-      const tokensListWPrice =
-        this.currencyRates?.length > 0
-          ? this.tokens.map(token => {
-              const priceRate = this.currencyRates?.find(rate => {
-                return rate.crypto_currency === token.symbol;
-              });
-              const actualPrice = priceRate?.quotes.find(quote => {
-                return quote.fiat_currency === this.selectedFiatName;
-              });
-              token.price = formatFiatValue(
-                actualPrice ? actualPrice.price : '0',
-                this.currencyConfig
-              ).value;
-              token.value = token.name;
-              token.name = token.symbol;
-              return token;
-            })
-          : this.tokens;
+      const tokensList = this.preselectedCurrencies;
+      const imgs = tokensList.map(item => {
+        item.value = item.name;
+        item.name = item.symbol;
+        return item.img;
+      });
+
       const returnedArray = [
         {
           text: 'Select Token',
+          imgs: imgs.splice(0, 3),
+          total: `${tokensList.length}`,
           divider: true,
           selectLabel: true
         },
-        ...tokensListWPrice
+        ...tokensList
       ];
       return returnedArray;
     },
@@ -432,8 +320,7 @@ export default {
         BigNumber(this.amount).eq(0) ||
         this.loading ||
         this.errorMessages !== '' ||
-        !this.actualValidAddress ||
-        !this.supportedSell
+        !this.actualValidAddress
       );
     },
     min() {
@@ -468,34 +355,6 @@ export default {
     txFeeInEth() {
       return `${BigNumber(this.txFee).decimalPlaces(4)} ETH`;
     },
-    currencyErrorMessages() {
-      if (
-        (!this.supportedSell && !this.inWallet) ||
-        (!this.supportedSell && this.inWallet)
-      ) {
-        return 'Please switch network back to the Ethereum Mainnet.';
-      }
-      return '';
-    },
-    // amountErrorMessages() {
-    //   if (BigNumber(this.amount).isNaN() || BigNumber(this.amount).eq(0)) {
-    //     return 'Amount required';
-    //   }
-    //   if (BigNumber(this.amount).lt(0)) {
-    //     return `Amount can't be negative`;
-    //   }
-    //   if (this.min.gt(this.amount)) {
-    //     return `Amount can't be below provider's minimum: ${
-    //       formatFiatValue(this.min.toFixed(), this.currencyConfig).value
-    //     } ${this.selectedFiatName}`;
-    //   }
-    //   if (this.maxVal.lt(this.amount)) {
-    //     return `Amount can't be above provider's maximum: ${
-    //       formatFiatValue(this.maxVal.toFixed(), this.currencyConfig).value
-    //     } ${this.selectedFiatName}`;
-    //   }
-    //   return '';
-    // },
     errorMessages() {
       const symbol = this.selectedCurrency?.symbol
         ? this.name
@@ -612,58 +471,18 @@ export default {
     }
   },
   watch: {
-    cryptoToFiat: {
-      handler: function (newVal, oldVal) {
-        if (newVal !== oldVal) {
-          this.$emit('input', newVal);
-        }
-      }
-    },
     selectedCurrency: {
-      handler: function (newVal, oldVal) {
+      handler: function (newVal) {
         this.maxBalance = '0';
         this.hasPersistentHint = false;
         this.selectedBalance = '0';
-        const supportedCoins = {
-          ETH: 'ETH',
-          BNB: 'BNB',
-          MATIC: 'MATIC'
-        };
-        if (
-          !newVal ||
-          (newVal?.contract?.toLowerCase() === MAIN_TOKEN_ADDRESS &&
-            !supportedCoins[newVal.symbol])
-        ) {
-          this.selectedCurrency = oldVal;
-          return;
-        }
-        if (!isEqual(newVal, oldVal)) {
-          this.fetchCurrencyData();
-        }
         if (
           !isEmpty(this.sendHandler) &&
           this.selectedCurrency.hasOwnProperty('name')
         ) {
           this.sendHandler.setCurrency(newVal);
         }
-        this.$emit('selectedCurrency', this.selectedCurrency);
         this.fetchSellInfo();
-      },
-      deep: true
-    },
-    selectedFiat: {
-      handler: function (newVal, oldVal) {
-        if (!isEqual(newVal, oldVal)) {
-          this.amount = newVal.name != 'JPY' ? '300' : '30000';
-          this.$emit('selectedFiat', newVal);
-        }
-      },
-      deep: true
-    },
-    network: {
-      handler: function () {
-        this.selectedCurrency = {};
-        this.selectedCurrency = this.defaultCurrency;
       },
       deep: true
     },
@@ -690,129 +509,31 @@ export default {
   },
   mounted() {
     // Watch for currency menu isActive
-    // const selectedCurrencyRef = this.$refs.selectedCurrency;
-    // const menuRef = selectedCurrencyRef.$children[0].$refs.menu;
-    // this.$watch(
-    //   () => {
-    //     return menuRef.isActive;
-    //   },
-    //   val => {
-    //     // If menu is closed make sure search is cleared
-    //     if (!val) {
-    //       if (
-    //         selectedCurrencyRef.search !== '' ||
-    //         selectedCurrencyRef.selectItems.length === 0
-    //       )
-    //         selectedCurrencyRef.search = '';
-    //     }
-    //   }
-    // );
+    const selectedCurrencyRef = this.$refs.selectedCurrency;
+    const menuRef = selectedCurrencyRef.$children[0].$refs.menu;
+    this.$watch(
+      () => {
+        return menuRef.isActive;
+      },
+      val => {
+        // If menu is closed make sure search is cleared
+        if (!val) {
+          if (
+            selectedCurrencyRef.search !== '' ||
+            selectedCurrencyRef.selectItems.length === 0
+          )
+            selectedCurrencyRef.search = '';
+        }
+      }
+    );
 
-    if (!this.inWallet) this.$refs?.addressInput.$refs?.addressSelect.clear();
+    if (!this.inWallet) this.$refs.addressInput.$refs.addressSelect.clear();
     this.sendHandler = new handlerSend();
-    this.locGasPrice = this.gasPriceByType(this.gasPriceType);
     this.fetchSellInfo();
-    this.fetchCurrencyData();
-    this.fetchNetworks();
+    this.locGasPrice = this.gasPriceByType(this.gasPriceType);
   },
   methods: {
     ...mapActions('external', ['setCoinGeckoTokens']),
-    ...mapActions('global', ['setNetwork']),
-    fetchNetworks() {
-      const networksObj = Object.values(this.Networks);
-      const networkList = networksObj.map(network => {
-        return {
-          img: network[0].type?.icon,
-          name: network[0].type?.name_long,
-          symbol: network[0].type?.name
-        };
-      });
-      const returnedArray = [
-        {
-          img: this.network.type.icon,
-          name: this.network.type.name_long,
-          symbol: this.network.type.name
-        },
-        ...networkList
-      ];
-      this.fetchedNetworks = returnedArray;
-      return this.fetchedNetworks;
-    },
-    setCurrency(currency) {
-      this.amount = '0';
-      this.selectedCurrency = currency;
-      this.openTokenSelect = false;
-    },
-    setNewNetwork(network) {
-      const found = Object.values(this.nodes).filter(item => {
-        if (item.type.name === network.symbol) {
-          return item;
-        }
-      });
-      this.setNetwork({
-        network: found[0],
-        walletType: this.instance?.identifier || ''
-      })
-        .then(() => {
-          if (this.isWallet) {
-            this.networkSelected = this.validNetwork
-              ? this.network[0].type.name
-              : '';
-            const provider =
-              this.identifier === WALLET_TYPES.WEB3_WALLET
-                ? this.setWeb3Instance(window.ethereum)
-                : this.setWeb3Instance();
-            if (!this.isOfflineApp) {
-              provider.then(() => {
-                this.setTokenAndEthBalance();
-              });
-            }
-            Toast(`Switched network to: ${network.type.name}`, {}, SUCCESS);
-            this.trackNetworkSwitch(network.type.name);
-            this.$emit('newNetwork');
-          }
-        })
-        .catch(e => {
-          Toast(e, {}, ERROR);
-        });
-    },
-    fetchCurrencyData() {
-      this.loading = true;
-      this.disableCurrencySelect = true;
-      this.fetchData = {};
-      this.fetchGasPrice();
-      this.orderHandler
-        .getSupportedFiatToSell(this.selectedCurrency?.symbol)
-        .then(res => {
-          this.fetchedData = Object.assign({}, res);
-          // this.orderHandler.getFiatRatesForBuy().then(res => {
-          this.currencyRates = cloneDeep(res);
-          //   this.loading = false;
-          //   this.disableCurrencySelect = false;
-          // });
-          this.loading = false;
-          this.disableCurrencySelect = false;
-        })
-        .catch(e => {
-          Toast(e, {}, ERROR);
-        });
-    },
-    async fetchGasPrice() {
-      const supportedNodes = {
-        ETH: 'ETH',
-        BNB: 'BSC',
-        MATIC: 'MATIC'
-      };
-      const nodeType = !supportedNodes[this.selectedCurrency?.symbol]
-        ? 'ETH'
-        : supportedNodes[this.selectedCurrency.symbol];
-      const node = nodeList[nodeType];
-      if (!this.web3Connections[nodeType]) {
-        const web3 = new Web3(node[0].url);
-        this.web3Connections[nodeType] = web3;
-      }
-      this.gasPrice = await this.web3Connections[nodeType].eth.getGasPrice();
-    },
     setAddress(newVal, isValid, data) {
       if (data.type === 'RESOLVED' && !data.value.includes('.'))
         this.toAddress = data.value;
@@ -824,16 +545,7 @@ export default {
     },
     getEthBalance() {
       if (!this.actualValidAddress) return;
-      const supportedNodes = {
-        ETH: 'ETH',
-        BNB: 'BSC',
-        MATIC: 'MATIC'
-      };
-      const nodeType = !supportedNodes[this.selectedCurrency?.symbol]
-        ? 'ETH'
-        : supportedNodes[this.selectedCurrency.symbol];
-      const node = nodeList[nodeType];
-      const web3Instance = new Web3(node[0].url);
+      const web3Instance = new Web3(nodes.ETH[0].url);
       web3Instance.eth.getBalance(this.actualAddress).then(res => {
         this.fetchingBalance = false;
         this.selectedBalance = fromWei(res);
@@ -894,6 +606,10 @@ export default {
         }
       }
     }, 500),
+    setCurrency(e) {
+      this.amount = '0';
+      this.selectedCurrency = e;
+    },
     setMax() {
       const bal = this.sendHandler.getEntireBal();
       if (bal) {
@@ -979,16 +695,32 @@ export default {
 
 <style lang="scss" scoped>
 .token-select-button {
-  height: 62px;
+  height: 56px;
   border: 1px solid var(--v-inputBorder-base);
   border-radius: 0 8px 8px 0;
-  width: 120px;
+  width: 135px;
   padding: 0 11px 0 14px;
   line-height: initial;
   user-select: none;
   cursor: pointer;
   &:hover {
     border: 1px solid var(--v-greyPrimary-base);
+  }
+}
+</style>
+<style lang="scss">
+.moonpay-sell-component {
+  .v-input__slot {
+    height: 47px !important;
+  }
+
+  .no-right-border {
+    fieldset {
+      border-radius: 8px 0 0 8px !important;
+    }
+  }
+  .no-left-border fieldset {
+    border-radius: 0 8px 8px 0 !important;
   }
 }
 </style>

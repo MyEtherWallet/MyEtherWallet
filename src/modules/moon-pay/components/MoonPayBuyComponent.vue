@@ -1,93 +1,137 @@
 <template>
-  <div>
-    <div class="py-8 px-8">
-      <!-- ============================================================== -->
-      <!-- Buying amount -->
-      <!-- ============================================================== -->
-      <div class="mt-4">
-        <div class="font-weight-medium textDark--text mb-2">
-          How much do you want to spend?
-        </div>
-        <div class="d-flex align-start">
-          <mew-input
-            v-model="amount"
-            hide-clear-btn
-            class="no-right-border"
-            type="number"
-            :error-messages="amountErrorMessages"
-            @keydown.native="preventCharE($event)"
-          />
-          <mew-select
-            v-model="selectedFiat"
-            :items="fiatCurrencyItems"
-            is-custom
-            class="selectedFiat no-left-border mb-5"
-          />
-        </div>
+  <div class="py-8 px-8 moonpay-buy-component">
+    <!-- ========================================================================= -->
+    <!-- Sending amount in fiat -->
+    <!-- ========================================================================= -->
+    <div class="mt-4">
+      <div class="font-weight-medium textDark--text mb-2">
+        How much do you want to spend?
       </div>
-
-      <div class="mt-2">
-        <div class="font-weight-medium textDark--text mb-2">You will get</div>
-        <div class="d-flex align-start">
-          <mew-input
-            :value="cryptoToFiat"
-            hide-clear-btn
-            class="no-right-border"
-            type="number"
-            :error-messages="currencyErrorMessages"
-            @keydown.native="preventCharE($event)"
-          />
-          <div
-            class="d-flex align-center token-select-button"
-            @click="openTokenSelect = true"
-          >
-            <mew-token-container :img="selectedCurrency.img" size="28px" />
-            <div class="basic--text" style="margin-left: 8px">
-              {{ selectedCurrency.name }}
-            </div>
-            <v-icon class="ml-auto" size="20px" color="titlePrimary">
-              mdi-chevron-down
-            </v-icon>
-          </div>
-        </div>
-      </div>
-
-      <div v-if="!inWallet" class="mt-2">
-        <div class="font-weight-medium textDark--text mb-2">
-          Where should we send your crypto?
-        </div>
-        <module-address-book
-          ref="addressInput"
-          label="Enter Crypto Address"
-          :currency="selectedCryptoName"
-          :enable-save-address="false"
-          :is-home-page="true"
-          @setAddress="setAddress"
+      <div class="d-flex align-start">
+        <mew-input
+          v-model="amount"
+          hide-clear-btn
+          type="number"
+          :error-messages="amountErrorMessages"
+          class="no-right-border"
+          @keydown.native="preventCharE($event)"
         />
-      </div>
-
-      <div class="mb-1">
-        <mew-button
-          btn-size="xlarge"
-          has-full-width
-          :disabled="disableBuy"
-          :title="buyBtnTitle"
-          :is-valid-address-func="isValidToAddress"
-          @click.native="buy"
+        <mew-select
+          v-model="selectedFiat"
+          style="max-width: 135px"
+          :items="fiatCurrencyItems"
+          is-custom
+          class="selectedFiat no-left-border"
         />
       </div>
     </div>
 
-    <!-- ============================================================== -->
+    <!-- ========================================================================= -->
+    <!-- Receiving amount in crypto -->
+    <!-- ========================================================================= -->
+    <div class="mt-2">
+      <div class="d-flex align-center mb-2">
+        <div class="font-weight-medium textDark--text mr-1">You will get</div>
+        <mew-tooltip style="height: 21px">
+          <template #contentSlot>
+            <div>
+              {{ includesFeeText }}
+              <br />
+              <br />
+              {{ networkFeeText }}
+              <br />
+              <br />
+              {{ dailyLimit }}
+              <br />
+              {{ monthlyLimit }}
+            </div>
+          </template>
+        </mew-tooltip>
+      </div>
+      <div class="d-flex align-start">
+        <mew-input
+          is-read-only
+          :value="
+            !loading
+              ? `${cryptoToFiat} ${selectedCryptoName} ≈ ${plusFeeF} `
+              : 'Loading...'
+          "
+          hide-clear-btn
+          class="no-right-border"
+        />
+        <div
+          class="d-flex align-center token-select-button"
+          @click="openTokenSelect = true"
+        >
+          <mew-token-container :img="selectedCurrency.img" size="28px" />
+          <div class="basic--text" style="margin-left: 8px">
+            {{ selectedCurrency.name }}
+          </div>
+          <v-icon class="ml-auto" size="20px" color="titlePrimary">
+            mdi-chevron-down
+          </v-icon>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================================================================================== -->
+    <!-- Currency Select -->
+    <!-- HIDDEN FOR NOW! HIDDEN FOR NOW! HIDDEN FOR NOW! HIDDEN FOR NOW! HIDDEN FOR NOW! -->
+    <!-- HIDDEN FOR NOW! HIDDEN FOR NOW! HIDDEN FOR NOW! HIDDEN FOR NOW! HIDDEN FOR NOW! -->
+    <!-- HIDDEN FOR NOW! HIDDEN FOR NOW! HIDDEN FOR NOW! HIDDEN FOR NOW! HIDDEN FOR NOW! -->
+    <!-- ======================================================================================== -->
+    <div v-show="false" class="mt-2">
+      <div class="font-weight-medium textDark--text mb-2">Select currency</div>
+      <mew-select
+        ref="selectedCurrency"
+        label="Currency"
+        :items="currencyItems"
+        :value="selectedCurrency"
+        :disabled="disableCurrencySelect"
+        :error-messages="currencyErrorMessages"
+        is-custom
+        @input="setCurrency"
+      />
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- Receiver's address -->
+    <!-- ========================================================================= -->
+    <div v-if="!inWallet" class="mt-2">
+      <div class="font-weight-medium textDark--text mb-2">
+        Where should we send your crypto?
+      </div>
+      <module-address-book
+        ref="addressInput"
+        label="Enter Crypto Address"
+        :currency="selectedCryptoName"
+        :enable-save-address="false"
+        :is-home-page="true"
+        @setAddress="setAddress"
+      />
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- BUY NEW button -->
+    <!-- ========================================================================= -->
+    <mew-button
+      class="mt-2"
+      btn-size="xlarge"
+      has-full-width
+      :disabled="disableBuy"
+      :title="buyBtnTitle"
+      :is-valid-address-func="isValidToAddress"
+      @click.native="buy"
+    />
+
+    <!-- ========================================================================= -->
     <!-- Token select popup -->
-    <!-- ============================================================== -->
+    <!-- ========================================================================= -->
     <moonpay-token-select
       :open="openTokenSelect"
       :currency-items="currencyItems"
       :selected-currency="selectedCurrency"
       :set-currency="setCurrency"
-      :fetched-networks="fetchedNetworks"
-      @newNetwork="setNewNetwork"
       @close="openTokenSelect = false"
     />
   </div>
@@ -96,12 +140,11 @@
 <script>
 import MultiCoinValidator from 'multicoin-address-validator';
 import { isEmpty, cloneDeep, isEqual } from 'lodash';
-import { mapGetters, mapActions, mapState } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import Web3 from 'web3';
 import { fromWei, toBN } from 'web3-utils';
-
-import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
+import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import nodeList from '@/utils/networks';
 import {
   formatFloatingPointValue,
@@ -110,18 +153,12 @@ import {
 import { getCurrency } from '@/modules/settings/components/currencyList';
 import { buyContracts } from './tokenList';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
-import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
-import * as nodes from '@/utils/networks/nodes';
-
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook.vue';
 import MoonpayTokenSelect from '@/modules/moon-pay/components/MoonPayTokenSelect.vue';
 
 export default {
   name: 'ModuleBuyEth',
-  components: {
-    ModuleAddressBook,
-    MoonpayTokenSelect
-  },
+  components: { ModuleAddressBook, MoonpayTokenSelect },
   props: {
     orderHandler: {
       type: Object,
@@ -142,6 +179,7 @@ export default {
   },
   data() {
     return {
+      openTokenSelect: false,
       selectedCurrency: this.defaultCurrency,
       loading: true,
       selectedFiat: {
@@ -150,8 +188,7 @@ export default {
         // eslint-disable-next-line
         img: require(`@/assets/images/currencies/USD.svg`)
       },
-      fetchedNetworks: {},
-      nodes: nodes,
+      fetchedData: {},
       currencyRates: [],
       amount: '300',
       toAddress: '',
@@ -160,24 +197,15 @@ export default {
       web3Connections: {},
       simplexQuote: {},
       showMoonpay: true,
-      disableCurrencySelect: true,
-      openTokenSelect: false
+      disableCurrencySelect: true
     };
   },
   computed: {
-    ...mapGetters('global', ['network', 'getFiatValue', 'Networks']),
-    ...mapState('wallet', [
-      'web3',
-      'address',
-      'identifier',
-      'instance',
-      'isOfflineApp',
-      'setWeb3Instance'
-    ]),
+    ...mapGetters('global', ['network', 'getFiatValue']),
+    ...mapState('wallet', ['web3', 'address']),
     ...mapState('external', ['currencyRate', 'coinGeckoTokens']),
-    ...mapState('global', ['validNetwork']),
     ...mapGetters('external', ['contractToToken']),
-    ...mapGetters('wallet', ['tokensList', 'balanceInETH']),
+    ...mapGetters('wallet', ['tokensList']),
     includesFeeText() {
       return `Includes ${this.percentFee} fee (${
         formatFiatValue(this.minFee, this.currencyConfig).value
@@ -298,11 +326,8 @@ export default {
       return '';
     },
     currencyErrorMessages() {
-      if (
-        (!this.supportedBuy && !this.inWallet) ||
-        (!this.supportedBuy && this.inWallet)
-      ) {
-        return 'Please switch network back to the Ethereum Mainnet.';
+      if (!this.supportedBuy) {
+        return 'Please switch your network to the Ethereum Mainnet on Metamask.';
       }
       return '';
     },
@@ -424,13 +449,6 @@ export default {
     }
   },
   watch: {
-    cryptoToFiat: {
-      handler: function (newVal, oldVal) {
-        if (newVal !== oldVal) {
-          this.$emit('input', newVal);
-        }
-      }
-    },
     selectedCurrency: {
       handler: function (newVal, oldVal) {
         const supportedCoins = {
@@ -507,55 +525,33 @@ export default {
   },
   mounted() {
     // Watch for currency menu isActive
-    // const selectedCurrencyRef = this.$refs.selectedCurrency;
-    // const menuRef = selectedCurrencyRef.$children[0].$refs.menu;
-    // this.$watch(
-    //   () => {
-    //     return menuRef.isActive;
-    //   },
-    //   val => {
-    //     // If menu is closed make sure search is cleared
-    //     if (!val) {
-    //       if (
-    //         selectedCurrencyRef.search !== '' ||
-    //         selectedCurrencyRef.selectItems.length === 0
-    //       )
-    //         selectedCurrencyRef.search = '';
-    //     }
-    //   }
-    // );
+    const selectedCurrencyRef = this.$refs.selectedCurrency;
+    const menuRef = selectedCurrencyRef.$children[0].$refs.menu;
+    this.$watch(
+      () => {
+        return menuRef.isActive;
+      },
+      val => {
+        // If menu is closed make sure search is cleared
+        if (!val) {
+          if (
+            selectedCurrencyRef.search !== '' ||
+            selectedCurrencyRef.selectItems.length === 0
+          )
+            selectedCurrencyRef.search = '';
+        }
+      }
+    );
 
     if (!this.inWallet) this.$refs.addressInput.$refs?.addressSelect.clear();
     this.fetchCurrencyData();
-    this.fetchNetworks();
   },
   methods: {
-    ...mapActions('global', ['setNetwork']),
     setAddress(newVal, isValid, data) {
       if (data.type === 'RESOLVED' && !data.value.includes('.'))
         this.toAddress = data.value;
       else this.toAddress = newVal;
       this.validToAddress = isValid;
-    },
-    fetchNetworks() {
-      const networksObj = Object.values(this.Networks);
-      const networkList = networksObj.map(network => {
-        return {
-          img: network[0].type?.icon,
-          name: network[0].type?.name_long,
-          symbol: network[0].type?.name
-        };
-      });
-      const returnedArray = [
-        {
-          img: this.network.type.icon,
-          name: this.network.type.name_long,
-          symbol: this.network.type.name
-        },
-        ...networkList
-      ];
-      this.fetchedNetworks = returnedArray;
-      return this.fetchedNetworks;
     },
     async fetchGasPrice() {
       const supportedNodes = {
@@ -584,42 +580,8 @@ export default {
       const hideMoonpay = this.isLT(moonpayMax, this.amount);
       this.$emit('hideMoonpay', hideMoonpay);
     },
-    setCurrency(currency) {
-      this.selectedCurrency = currency;
-      this.openTokenSelect = false;
-    },
-    setNewNetwork(network) {
-      const found = Object.values(this.nodes).filter(item => {
-        if (item.type.name === network.symbol) {
-          return item;
-        }
-      });
-      this.setNetwork({
-        network: found[0],
-        walletType: this.instance?.identifier || ''
-      })
-        .then(() => {
-          if (this.isWallet) {
-            this.networkSelected = this.validNetwork
-              ? this.network[0].type.name
-              : '';
-            const provider =
-              this.identifier === WALLET_TYPES.WEB3_WALLET
-                ? this.setWeb3Instance(window.ethereum)
-                : this.setWeb3Instance();
-            if (!this.isOfflineApp) {
-              provider.then(() => {
-                this.setTokenAndEthBalance();
-              });
-            }
-            Toast(`Switched network to: ${network.type.name}`, {}, SUCCESS);
-            this.trackNetworkSwitch(network.type.name);
-            this.$emit('newNetwork');
-          }
-        })
-        .catch(e => {
-          Toast(e, {}, ERROR);
-        });
+    setCurrency(e) {
+      this.selectedCurrency = e;
     },
     fetchCurrencyData() {
       this.loading = true;
@@ -746,15 +708,11 @@ export default {
   top: 18px;
   right: 20px;
 }
-.selectedFiat {
-  max-width: 120px;
-  height: 62px;
-}
 .token-select-button {
-  height: 62px;
+  height: 56px;
   border: 1px solid var(--v-inputBorder-base);
   border-radius: 0 8px 8px 0;
-  width: 120px;
+  width: 135px;
   padding: 0 11px 0 14px;
   line-height: initial;
   user-select: none;
@@ -764,14 +722,19 @@ export default {
   }
 }
 </style>
-
 <style lang="scss">
-.no-right-border {
-  fieldset {
-    border-radius: 8px 0 0 8px !important;
+.moonpay-buy-component {
+  .v-input__slot {
+    height: 47px !important;
   }
-}
-.no-left-border fieldset {
-  border-radius: 0 8px 8px 0 !important;
+
+  .no-right-border {
+    fieldset {
+      border-radius: 8px 0 0 8px !important;
+    }
+  }
+  .no-left-border fieldset {
+    border-radius: 0 8px 8px 0 !important;
+  }
 }
 </style>

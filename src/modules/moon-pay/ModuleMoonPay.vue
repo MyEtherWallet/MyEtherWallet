@@ -43,13 +43,8 @@
               :close="close"
               :tab="activeTab"
               :in-wallet="inWallet"
-              :supported-sell="supportedSell"
               :default-currency="defaultCurrency"
               @selectedCurrency="setSelectedCurrency"
-              @openProviders="openProviders"
-              @selectedFiat="setSelectedFiat"
-              @hideMoonpay="hideMoonpay"
-              @toAddress="setToAddress"
             />
           </template>
         </mew-tabs>
@@ -76,10 +71,12 @@
 <script>
 import { mapGetters, mapState, mapActions } from 'vuex';
 import { isEmpty } from 'lodash';
+
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import nodes from '@/utils/networks';
 import { SUCCESS, Toast } from '../toast/handler/handlerToast';
+
 import handler from './handlers/handlerOrder';
 
 export default {
@@ -215,7 +212,7 @@ export default {
             this.setNetwork({ network: defaultNetwork }).then(() => {
               this.setWeb3Instance();
               this.activeTab = val;
-              Toast(`Switched network back to: ETH`, {}, SUCCESS);
+              Toast(`Switched network to: ETH`, {}, SUCCESS);
             });
           }
         }
@@ -237,7 +234,6 @@ export default {
       this.activeTab = 0;
       this.step = 0;
       this.onlySimplex = false;
-      this.onTab(0);
       this.$emit('close', false);
     },
     setSelectedCurrency(e) {
