@@ -8,20 +8,16 @@
     :close="close"
     @closeOverlay="close"
   >
-    <!--
-          ===============================================
-          Printable paper wallet content
-          ===============================================
-          -->
-    <div ref="printContainer" class="printable-wallet-content">
+    <!-- =============================================== -->
+    <!-- Printable paper wallet content -->
+    <!-- =============================================== -->
+    <div ref="printContainer" class="printable-wallet printable-wallet-content">
       <paper-wallet-to-print />
     </div>
 
-    <!--
-          ===============================================
-          Paper wallet to show
-          ===============================================
-          -->
+    <!-- =============================================== -->
+    <!-- Paper wallet to show -->
+    <!-- =============================================== -->
     <paper-wallet-to-display class="printable-wallet-display" />
 
     <div class="d-flex justify-center mt-12">
@@ -38,7 +34,6 @@
 <script>
 import printJS from 'print-js';
 import html2canvas from 'html2canvas';
-
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 
 export default {
