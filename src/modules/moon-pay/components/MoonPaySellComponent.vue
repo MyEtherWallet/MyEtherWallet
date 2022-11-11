@@ -9,6 +9,7 @@
           How much do you want to sell?
         </div>
         <button-balance
+          v-if="!loading && inWallet"
           style="position: relative; top: 0; right: 0"
           :balance="balance"
           :loading="!showBalance"
@@ -65,7 +66,13 @@
     <div class="mt-2">
       <div class="font-weight-medium textDark--text mb-2">You will get</div>
       <div class="d-flex align-start">
-        <mew-input hide-clear-btn type="number" class="no-right-border" />
+        <mew-input
+          is-read-only
+          :value="cryptoToFiat"
+          hide-clear-btn
+          type="number"
+          class="no-right-border"
+        />
         <mew-select
           v-model="selectedFiat"
           style="max-width: 135px"
@@ -157,9 +164,9 @@
 <script>
 import MultiCoinValidator from 'multicoin-address-validator';
 import { mapActions, mapGetters, mapState } from 'vuex';
-import { isEmpty, debounce, isNumber } from 'lodash';
+import { isEmpty, debounce, isNumber, isEqual } from 'lodash';
 import BigNumber from 'bignumber.js';
-import { fromWei } from 'web3-utils';
+import { fromWei, toBN } from 'web3-utils';
 import Web3 from 'web3';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
@@ -167,7 +174,10 @@ import handlerSend from '@/modules/send/handlers/handlerSend.js';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common.js';
 import abi from '@/modules/balance/handlers/abiERC20.js';
 import nodes from '@/utils/networks';
-import { toBNSafe, formatFiatValue } from '@/core/helpers/numberFormatHelper';
+import {
+  formatFloatingPointValue,
+  formatFiatValue
+} from '@/core/helpers/numberFormatHelper';
 import { toBase } from '@/core/helpers/unit';
 import { sellContracts } from './tokenList';
 import handlerWallet from '@/core/mixins/handlerWallet.mixin';
@@ -203,7 +213,6 @@ export default {
   },
   data() {
     return {
-      balance: '0',
       showBalance: true,
       selectedFiat: {
         name: 'USD',
@@ -224,19 +233,24 @@ export default {
       estimatingFees: true,
       maxBalance: '0',
       selectedBalance: '0',
+      gasPrice: '0',
       toAddress: '',
-      validToAddress: false
+      validToAddress: false,
+      currencyRates: []
     };
   },
   computed: {
     ...mapState('wallet', ['address', 'instance']),
     ...mapState('global', ['gasPriceType']),
-    ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
+    ...mapGetters('wallet', ['balanceInETH', 'balanceInWei', 'tokensList']),
     ...mapGetters('global', ['isEthNetwork', 'network', 'gasPriceByType']),
     ...mapGetters('external', ['contractToToken']),
+    balance() {
+      return `${formatFloatingPointValue(this.balanceInETH).value}`;
+    },
     fiatCurrencyItems() {
       const arrItems = this.hasData
-        ? this.fetchedData[0].fiat_currencies.filter(item => item !== 'RUB')
+        ? this.fetchedData.fiat_currencies.filter(item => item !== 'RUB')
         : ['USD'];
       return getCurrency(arrItems);
     },
@@ -256,6 +270,12 @@ export default {
           }
         : {};
     },
+    currencyConfig() {
+      const fiat = this.selectedFiat.value;
+      const rate = this.currencyRates[fiat];
+      const currency = fiat;
+      return { rate, currency };
+    },
     preselectedCurrencies() {
       if (this.inWallet) {
         return sellContracts.reduce((arr, item) => {
@@ -270,7 +290,10 @@ export default {
 
           const token = this.contractToToken(item);
           if (token) {
-            token.price = formatFiatValue(token ? token.price : '0').value;
+            token.price = formatFiatValue(
+              token ? token.price : '0',
+              this.currencyConfig
+            ).value;
             arr.push(token);
           }
           return arr;
@@ -440,16 +463,16 @@ export default {
       const amount = new BigNumber(this.amount ? this.amount : 0)
         .times(new BigNumber(10).pow(this.selectedCurrency.decimals))
         .toFixed(0);
-      return toBNSafe(amount);
+      return toBN(amount);
     },
     getAmountBN() {
       // Duplicate of getCalculatedAmount
-      if (!this.isValidAmount) return toBNSafe(0);
+      if (!this.isValidAmount) return toBN(0);
       const amount = toBase(
         this.amount ? this.amount : 0,
         this.selectedCurrency.decimals
       );
-      return toBNSafe(amount);
+      return toBN(amount);
     },
     hasEnoughAssets() {
       try {
@@ -457,7 +480,7 @@ export default {
           this.selectedBalance,
           this.selectedCurrency.decimals
         );
-        return toBNSafe(bal).gte(this.getAmountBN);
+        return toBN(bal).gte(this.getAmountBN);
       } catch (e) {
         Toast(e, {}, ERROR);
         return false;
@@ -468,6 +491,59 @@ export default {
     },
     actualValidAddress() {
       return this.inWallet ? true : this.validToAddress;
+    },
+    hasData() {
+      return !isEmpty(this.fetchedData);
+    },
+    cryptoToFiat() {
+      return this.cryptoAmount;
+    },
+    cryptoAmount() {
+      return formatFloatingPointValue(
+        BigNumber(this.plusFee).div(this.priceOb.price).toString()
+      ).value;
+    },
+    selectedFiatName() {
+      return this.selectedFiat.name;
+    },
+    priceOb() {
+      return !isEmpty(this.fetchedData)
+        ? this.fetchedData.prices.find(
+            item => item.fiat_currency === this.selectedFiatName
+          )
+        : { crypto_currency: 'ETH', fiat_currency: 'USD', price: '3379.08322' };
+    },
+    networkFee() {
+      return fromWei(BigNumber(this.gasPrice).times(21000).toString());
+    },
+    networkFeeToFiat() {
+      return BigNumber(this.networkFee).times(this.priceOb.price).toString();
+    },
+    minFee() {
+      return BigNumber(4.43).times(this.fiatMultiplier).toString();
+    },
+    plusFee() {
+      const fee = this.isEUR
+        ? BigNumber(BigNumber(0.7).div(100)).times(this.amount)
+        : BigNumber(BigNumber(3.25).div(100)).times(this.amount);
+      const withFee = fee.gt(this.minFee)
+        ? BigNumber(this.amount).minus(fee)
+        : BigNumber(this.amount).minus(fee).minus(this.minFee);
+      return withFee.minus(this.networkFeeToFiat).toString();
+    },
+    isEUR() {
+      return this.selectedFiatName === 'EUR' || this.selectedFiatName === 'GBP';
+    },
+    fiatMultiplier() {
+      if (this.hasData) {
+        const selectedCurrencyPrice = this.fetchedData.conversion_rates.find(
+          item => item.fiat_currency === this.selectedFiatName
+        );
+        return selectedCurrencyPrice
+          ? BigNumber(selectedCurrencyPrice.exchange_rate)
+          : toBN(1);
+      }
+      return toBN(1);
     }
   },
   watch: {
@@ -483,6 +559,15 @@ export default {
           this.sendHandler.setCurrency(newVal);
         }
         this.fetchSellInfo();
+      },
+      deep: true
+    },
+    selectedFiat: {
+      handler: function (newVal, oldVal) {
+        if (!isEqual(newVal, oldVal)) {
+          this.amount = newVal.name != 'JPY' ? '300' : '30000';
+          this.$emit('selectedFiat', newVal);
+        }
       },
       deep: true
     },
