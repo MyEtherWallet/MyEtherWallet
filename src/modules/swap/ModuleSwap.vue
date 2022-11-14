@@ -998,6 +998,7 @@ export default {
     if (this.coinGeckoTokens.size > 0) {
       this.resetSwapState();
     }
+    this.trackSwap('swapPageView');
   },
   methods: {
     ...mapActions('notifications', ['addNotification']),

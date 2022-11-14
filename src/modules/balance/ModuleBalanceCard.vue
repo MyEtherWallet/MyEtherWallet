@@ -327,7 +327,7 @@ export default {
     showHardware() {
       return (
         !isEmpty(this.instance) &&
-        this.instance.path &&
+        this.instance?.path &&
         this.identifier !== WALLET_TYPES.MNEMONIC
       );
     },

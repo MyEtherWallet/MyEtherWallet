@@ -267,7 +267,7 @@
         </v-col>
         <!--
         ===================================================
-          Block is available OR is Owned: not enough Eth
+          Block is available OR is Owned: not enough ETH
         ===================================================
         -->
         <v-col
@@ -549,7 +549,7 @@ export default {
      */
     notEnoughMessage() {
       const text = this.isOwned ? 'transfer' : 'mint';
-      return `Not enough ${this.network.type.name} to ${text}. `;
+      return `Not enough ${this.network.type.name.toUpperCase()} to ${text}. `;
     },
     estimatedFeesTooltip() {
       const formattedTotal = formatFloatingPointValue(

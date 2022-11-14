@@ -6,6 +6,7 @@ const state = {
   identifier: '',
   isHardware: false,
   ledgerBLE: false,
+  ledgerApp: {},
   instance: null,
   isOfflineApp: false,
   web3: {},

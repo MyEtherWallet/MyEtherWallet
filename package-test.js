@@ -76,10 +76,11 @@ const EXCEPTIONS = [
   'is-ipfs',
   'axios',
   // update after release
-  '@ledgerhq/live-common',
+  'highcharts',
+  '@commitlint/config-conventional',
+  'commitlint',
   '@ledgerhq/hw-app-eth',
-  'ethers',
-  'geckodriver'
+  '@ledgerhq/live-common'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
