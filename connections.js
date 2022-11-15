@@ -79,5 +79,5 @@ module.exports = [
   'https://polygon-mainnet.g.alchemy.com:443', // Unstoppable domains
   'https://unstoppabledomains.g.alchemy.com:443', // Unstoppable domains
   'https://metadata.unstoppabledomains.com:443', // Unstoppable domains
-  'https://partners.mewapi.io/'
+  'https://partners.mewapi.io:443'
 ];
