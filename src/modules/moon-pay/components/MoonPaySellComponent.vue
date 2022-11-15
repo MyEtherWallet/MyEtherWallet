@@ -1,5 +1,5 @@
 <template>
-  <div class="pt-10 px-8 moonpay-sell-component">
+  <div class="pa-8 moonpay-sell-component">
     <!-- ========================================================================= -->
     <!-- Selling amount in crypto -->
     <!-- ========================================================================= -->
@@ -139,7 +139,6 @@
     <!-- Sell button -->
     <!-- ============================================================== -->
     <mew-button
-      class="mb-6"
       title="SELL WITH MOONPAY"
       btn-size="xlarge"
       has-full-width

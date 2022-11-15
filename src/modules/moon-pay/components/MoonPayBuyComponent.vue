@@ -3,7 +3,7 @@
     <!-- ========================================================================= -->
     <!-- Sending amount in fiat -->
     <!-- ========================================================================= -->
-    <div class="mt-4">
+    <div class="mt-2">
       <div class="font-weight-medium textDark--text mb-2">
         How much do you want to spend?
       </div>

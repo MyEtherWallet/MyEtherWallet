@@ -16,7 +16,7 @@
           is-custom
         />
         <v-text-field
-          class="mt-3"
+          class="mt-n2"
           outlined
           label="Search tokens"
           prepend-inner-icon="mdi-magnify"
@@ -211,6 +211,6 @@ export default {
   }
 }
 .selected-button {
-  background-color: var(--v-greyMedium-base);
+  background-color: var(--v-greyLight-base);
 }
 </style>
