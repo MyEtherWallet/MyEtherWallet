@@ -17,7 +17,7 @@
         />
         <v-text-field
           v-model="searchValue"
-          class="mt-n2"
+          class="mt-2"
           outlined
           label="Search"
           prepend-inner-icon="mdi-magnify"
@@ -110,36 +110,6 @@ export default {
         this.setNewNetwork(this.selectedNetwork);
       }
     }
-
-    // search: {
-    //   handler: function (newVal, oldVal) {
-    //     if (newVal !== oldVal) {
-    //       this.selectItems = this.items;
-    //     } else {
-    //       const foundItems = this.items.reduce((foundTokens, item) => {
-    //         const searchValue = String(newVal).toLowerCase();
-    //         const value = String(get(item, 'value', '')).toLowerCase();
-    //         const name = String(get(item, 'name', '')).toLowerCase();
-    //         const subtext = String(get(item, 'subtext', '')).toLowerCase();
-    //         if (
-    //           name === searchValue ||
-    //           subtext === searchValue ||
-    //           value === searchValue
-    //         ) {
-    //           foundTokens.unshift(item);
-    //         } else if (
-    //           name.includes(searchValue) ||
-    //           subtext.includes(searchValue) ||
-    //           value.includes(searchValue)
-    //         ) {
-    //           foundTokens.push(item);
-    //         }
-    //         return foundTokens;
-    //       }, []);
-    //       this.selectItems = foundItems;
-    //     }
-    //   }
-    // }
   },
   mounted() {
     this.fetchNetworks();

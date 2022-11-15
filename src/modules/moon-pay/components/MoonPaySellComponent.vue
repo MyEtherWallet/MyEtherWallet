@@ -512,38 +512,6 @@ export default {
           )
         : { crypto_currency: 'ETH', fiat_currency: 'USD', price: '3379.08322' };
     }
-    // networkFee() {
-    //   return fromWei(BigNumber(this.gasPrice).times(21000).toString());
-    // },
-    // networkFeeToFiat() {
-    //   return BigNumber(this.networkFee).times(this.priceOb.price).toString();
-    // },
-    // minFee() {
-    //   return BigNumber(4.43).times(this.fiatMultiplier).toString();
-    // },
-    // plusFee() {
-    //   const fee = this.isEUR
-    //     ? BigNumber(BigNumber(0.7).div(100)).times(this.amount)
-    //     : BigNumber(BigNumber(3.25).div(100)).times(this.amount);
-    //   const withFee = fee.gt(this.minFee)
-    //     ? BigNumber(this.amount).minus(fee)
-    //     : BigNumber(this.amount).minus(fee).minus(this.minFee);
-    //   return withFee.minus(this.networkFeeToFiat).toString();
-    // // },
-    // isEUR() {
-    //   return this.selectedFiatName === 'EUR' || this.selectedFiatName === 'GBP';
-    // },
-    // fiatMultiplier() {
-    //   if (this.hasData) {
-    //     const selectedCurrencyPrice = this.fetchedData.conversion_rates.find(
-    //       item => item.fiat_currency === this.selectedFiatName
-    //     );
-    //     return selectedCurrencyPrice
-    //       ? BigNumber(selectedCurrencyPrice.exchange_rate)
-    //       : toBN(1);
-    //   }
-    //   return toBN(1);
-    // }
   },
   watch: {
     selectedCurrency: {
