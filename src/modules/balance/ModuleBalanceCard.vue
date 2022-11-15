@@ -167,7 +167,7 @@
       Wallet card modals
     =====================================================================================
     -->
-    <balance-address-paper-wallet
+    <module-paper-wallet
       :open="showPaperWallet"
       :close="closePaperWallet"
       :is-offline-app="isOfflineApp"
@@ -253,8 +253,7 @@ export default {
   components: {
     AppModal: () => import('@/core/components/AppModal'),
     AppAddrQr: () => import('@/core/components/AppAddrQr'),
-    BalanceAddressPaperWallet: () =>
-      import('./components/BalanceAddressPaperWallet'),
+    ModulePaperWallet: () => import('./ModulePaperWallet'),
     ModuleAccessWalletHardware: () =>
       import('@/modules/access-wallet/ModuleAccessWalletHardware'),
     ModuleAccessWalletSoftware: () =>
