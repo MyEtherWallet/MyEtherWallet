@@ -11,20 +11,21 @@
         <mew-select
           v-model="selectedNetwork"
           :items="fetchedNetworks"
-          label="Select Network"
+          label="Network"
           class="mt-1"
           is-custom
         />
         <v-text-field
+          v-model="searchValue"
           class="mt-n2"
           outlined
-          label="Search tokens"
+          label="Search"
           prepend-inner-icon="mdi-magnify"
           hide-details
         ></v-text-field>
 
         <div class="mt-5">
-          <div v-for="token in currencyItems" :key="token.name">
+          <div v-for="token in searchedCurrencyItems" :key="token.name">
             <v-btn
               v-if="token.name"
               :class="
@@ -80,6 +81,7 @@ export default {
   },
   data() {
     return {
+      searchValue: '',
       nodes: nodes,
       fetchedNetworks: [],
       selectedNetwork: {}
@@ -88,7 +90,19 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('global', ['network', 'Networks'])
+    ...mapGetters('global', ['network', 'Networks']),
+    searchedCurrencyItems() {
+      const currencyItems = this.currencyItems.slice();
+      currencyItems.shift();
+
+      if (this.searchValue) {
+        const found = currencyItems.filter(element =>
+          element.name.toLowerCase().includes(this.searchValue.toLowerCase())
+        );
+        return found;
+      }
+      return this.currencyItems;
+    }
   },
   watch: {
     selectedNetwork() {
