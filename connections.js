@@ -22,6 +22,7 @@ module.exports = [
   'https://development.mewwallet.dev:443',
   'https://tokenbalance.mewapi.io:443',
   'https://requestcache.mewapi.io:443',
+  'https://partners.mewapi.io:443',
   'data:',
   'https://app.lokalise.com:443',
   'https://myetherwallet.matomo.cloud:443',
@@ -78,6 +79,5 @@ module.exports = [
   'https://eth-mainnet.alchemyapi.io:443', // Unstoppable domains
   'https://polygon-mainnet.g.alchemy.com:443', // Unstoppable domains
   'https://unstoppabledomains.g.alchemy.com:443', // Unstoppable domains
-  'https://metadata.unstoppabledomains.com:443', // Unstoppable domains
-  'https://partners.mewapi.io:443'
+  'https://metadata.unstoppabledomains.com:443' // Unstoppable domains
 ];
