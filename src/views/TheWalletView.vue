@@ -19,7 +19,7 @@ import { mapActions, mapState, mapGetters } from 'vuex';
 import { toBN } from 'web3-utils';
 import Web3 from 'web3';
 import moment from 'moment';
-import { debounce } from 'lodash';
+import { debounce, isEqual } from 'lodash';
 import handlerWallet from '@/core/mixins/handlerWallet.mixin';
 import nodeList from '@/utils/networks';
 import {
@@ -86,16 +86,16 @@ export default {
     },
     network() {
       if (this.online && !this.isOfflineApp) {
-        this.setup();
         this.web3.eth.clearSubscriptions();
       }
     },
     web3() {
       if (this.online && !this.isOfflineApp) this.setup();
     },
-    coinGeckoTokens() {
-      console.log('3');
-      this.setTokenAndEthBalance();
+    coinGeckoTokens(newVal, oldVal) {
+      if (!isEqual(newVal, oldVal)) {
+        this.setTokenAndEthBalance();
+      }
     }
   },
   mounted() {
@@ -148,7 +148,6 @@ export default {
     },
     setTokensAndBalance() {
       if (this.coinGeckoTokens?.get) {
-        console.log('2');
         this.setTokenAndEthBalance();
       } else {
         this.setTokens([]);
@@ -218,7 +217,6 @@ export default {
                 walletType: this.instance.identifier
               });
               this.setValidNetwork(true);
-              console.log('1');
               await this.setTokenAndEthBalance();
               this.trackNetworkSwitch(foundNetwork[0].type.name);
               this.$emit('newNetwork');
