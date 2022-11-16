@@ -29,7 +29,9 @@ const AUDIT_EXCEPTIONS = [
   'protobufjs',
   'lodash',
   'elliptic',
-  'minimatch'
+  'minimatch',
+  // fix after release
+  'loader-utils'
 ];
 const execute = (command, callback) => {
   exec(
