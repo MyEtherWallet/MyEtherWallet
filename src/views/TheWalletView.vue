@@ -87,14 +87,12 @@ export default {
     network() {
       if (this.online && !this.isOfflineApp) {
         this.web3.eth.clearSubscriptions();
+        this.setup();
       }
     },
-    web3() {
-      if (this.online && !this.isOfflineApp) this.setup();
-    },
     coinGeckoTokens(newVal, oldVal) {
-      if (!isEqual(newVal, oldVal)) {
-        this.setTokenAndEthBalance();
+      if (!isEqual(newVal, oldVal) && oldVal.size > 0) {
+        this.setTokensAndBalance();
       }
     }
   },
@@ -217,7 +215,6 @@ export default {
                 walletType: this.instance.identifier
               });
               this.setValidNetwork(true);
-              await this.setTokenAndEthBalance();
               this.trackNetworkSwitch(foundNetwork[0].type.name);
               this.$emit('newNetwork');
               Toast(
