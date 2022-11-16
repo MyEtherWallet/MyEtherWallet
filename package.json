@@ -222,10 +222,11 @@
     "ejs": "3.1.7",
     "parse-url": "6.0.1",
     "parse-path": "5.0.0",
-    "@openzeppelin/contracts": "4.7.1",
+    "@openzeppelin/contracts": "4.7.3",
     "terser": "4.8.1",
     "minimatch": "3.0.5",
-    "loader-utils": "1.4.2"
+    "loader-utils": "1.4.2",
+    "lodash": "4.17.21"
   },
   "license": "MIT",
   "repository": "https://github.com/myetherwallet/myetherwallet"
