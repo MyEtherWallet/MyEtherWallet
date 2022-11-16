@@ -79,11 +79,9 @@ export default {
     }
   },
   watch: {
-    address(newVal) {
-      if (!newVal) {
+    address() {
+      if (!this.address) {
         this.$router.push({ name: ROUTES_HOME.HOME.NAME });
-      } else {
-        this.setTokensAndBalance();
       }
     },
     network() {
@@ -104,6 +102,7 @@ export default {
   mounted() {
     if (this.online && !this.isOfflineApp) {
       this.setup();
+      this.setTokensAndBalance();
       if (this.identifier === WALLET_TYPES.WEB3_WALLET) {
         this.web3Listeners();
       }
