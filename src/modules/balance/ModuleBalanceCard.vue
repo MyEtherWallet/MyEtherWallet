@@ -245,6 +245,7 @@ import { Toast, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 
+import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import wallets from './handlers/config';
 import WALLET_TYPES from '../access-wallet/common/walletTypes';
 import NameResolver from '@/modules/name-resolver/index';
@@ -516,6 +517,7 @@ export default {
      * to close the modal
      */
     closePaperWallet() {
+      if (this.showPaperWallet) this.$router.go(-1);
       this.showPaperWallet = false;
     },
     /**
@@ -523,6 +525,9 @@ export default {
      * to open the modal
      */
     openPaperWallet() {
+      this.$router.push({
+        name: ROUTES_WALLET.PRINT.NAME
+      });
       this.showPaperWallet = true;
     },
     /**
