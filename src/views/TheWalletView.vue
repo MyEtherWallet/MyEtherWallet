@@ -79,19 +79,24 @@ export default {
     }
   },
   watch: {
-    address() {
-      if (!this.address) {
+    address(newVal) {
+      if (!newVal) {
         this.$router.push({ name: ROUTES_HOME.HOME.NAME });
+      } else {
+        this.setTokensAndBalance();
       }
     },
     network() {
       if (this.online && !this.isOfflineApp) {
         this.web3.eth.clearSubscriptions();
         this.setup();
+        if (this.identifier !== WALLET_TYPES.WEB3_WALLET) {
+          this.setTokensAndBalance();
+        }
       }
     },
     coinGeckoTokens(newVal, oldVal) {
-      if (!isEqual(newVal, oldVal) && oldVal.size > 0) {
+      if (!isEqual(newVal, oldVal)) {
         this.setTokensAndBalance();
       }
     }
@@ -125,7 +130,6 @@ export default {
     ...mapActions('external', ['setTokenAndEthBalance', 'setNetworkTokens']),
     setup() {
       this.processNetworkTokens();
-      this.setTokensAndBalance();
       this.subscribeToBlockNumber();
     },
     async checkNetwork() {
@@ -213,6 +217,8 @@ export default {
               await this.setNetwork({
                 network: foundNetwork[0],
                 walletType: this.instance.identifier
+              }).then(() => {
+                this.setTokensAndBalance();
               });
               this.setValidNetwork(true);
               this.trackNetworkSwitch(foundNetwork[0].type.name);
