@@ -17,6 +17,7 @@
       :title="title"
       :reset="rejectTransaction"
       :sent-btc="sendCrossChain"
+      @close="rejectTransaction"
     />
     <app-modal
       :show="showTxOverlay"
@@ -625,16 +626,13 @@ export default {
   },
   methods: {
     rejectTransaction() {
-      if (this.isSwap) this.trackSwap('swapRejected');
+      if (this.isSwap) this.trackSwap('swapTxCancelled');
       this.resolver({ rejected: true });
       this.reset();
     },
     sendCrossChain(bool) {
       this.trackSwap('swapSendCrossChain');
       this.resolver(bool);
-    },
-    swapFailed() {
-      this.trackSwap('swapFailed');
     },
     dataToAction(data) {
       return dataToAction(data);
@@ -714,6 +712,16 @@ export default {
         _tx.gasLimit = _tx.gas;
         setEvents(promiEvent, _tx, this.$store.dispatch);
         promiEvent
+          .once('sent', () => {
+            if (this.isSwap) {
+              this.trackSwap('swapTxBroadcasted');
+            }
+          })
+          .once('receipt', () => {
+            if (this.isSwap) {
+              this.trackSwap('swapTxReceivedReceipt');
+            }
+          })
           .once('transactionHash', hash => {
             const storeKey = sha3(
               `${this.network.type.name}-${this.address.toLowerCase()}`
@@ -734,7 +742,7 @@ export default {
             }
           })
           .catch(() => {
-            if (this.isSwap) this.swapFailed();
+            if (this.isSwap) this.trackSwap('swapTxFailed');
           });
         return promiEvent;
       });
@@ -792,12 +800,23 @@ export default {
       if (this.isWeb3Wallet) {
         const event = this.instance.signTransaction(this.tx);
         event
+          .once('sent', () => {
+            this.trackSwap('swapTxBroadcasted');
+          })
           .on('transactionHash', res => {
             this.showTxOverlay = false;
             this.showSuccess(res);
           })
+          .once('receipt', () => {
+            this.trackSwap('swapTxReceivedReceipt');
+          })
+          .once('error', () => {
+            this.trackSwap('swapTxFailed');
+          })
           .catch(e => {
-            if (this.isSwap) this.swapFailed();
+            if (this.isSwap) {
+              this.trackSwap('swapRejected');
+            }
             this.signedTxObject = {};
             this.error = errorHandler(e);
             this.signing = false;
@@ -813,7 +832,7 @@ export default {
             }
           })
           .catch(e => {
-            if (this.isSwap) this.swapFailed();
+            if (this.isSwap) this.trackSwap('swapRejected');
             this.signedTxObject = {};
             this.error = errorHandler(e);
             this.signing = false;
@@ -858,13 +877,14 @@ export default {
                 });
               })
               .catch(e => {
-                if (this.isSwap) this.swapFailed();
+                if (this.isSwap) this.trackSwap('swapTxFailed');
                 this.instance.errorHandler(e.message);
               });
           }
           this.signedTxArray = signed;
           if (this.isWeb3Wallet) this.resolver(batchTxEvents);
         } catch (err) {
+          if (this.isSwap) this.trackSwap('swapTxFailed');
           this.error = errorHandler(err);
           this.signedTxArray = [];
           return;

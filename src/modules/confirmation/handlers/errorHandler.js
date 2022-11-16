@@ -10,7 +10,7 @@ const errors = {
 const toastErrors = { Popup: undefined };
 /**
  * @param {Object | String} err
- * @returns {String} Error Message
+ * @returns {String | undefined} Error Message
  */
 const handleError = (err, toast = false) => {
   const errorValues = Object.keys(toast ? toastErrors : errors);
