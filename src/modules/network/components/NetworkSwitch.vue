@@ -332,6 +332,7 @@ export default {
                 : this.setWeb3Instance();
             if (!this.isOfflineApp) {
               provider.then(() => {
+                console.log('4');
                 this.setTokenAndEthBalance();
               });
             }

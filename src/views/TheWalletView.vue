@@ -94,6 +94,7 @@ export default {
       if (this.online && !this.isOfflineApp) this.setup();
     },
     coinGeckoTokens() {
+      console.log('3');
       this.setTokenAndEthBalance();
     }
   },
@@ -147,6 +148,7 @@ export default {
     },
     setTokensAndBalance() {
       if (this.coinGeckoTokens?.get) {
+        console.log('2');
         this.setTokenAndEthBalance();
       } else {
         this.setTokens([]);
@@ -216,6 +218,7 @@ export default {
                 walletType: this.instance.identifier
               });
               this.setValidNetwork(true);
+              console.log('1');
               await this.setTokenAndEthBalance();
               this.trackNetworkSwitch(foundNetwork[0].type.name);
               this.$emit('newNetwork');
