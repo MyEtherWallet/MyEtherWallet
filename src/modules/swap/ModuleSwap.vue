@@ -261,6 +261,7 @@
                 :total-gas-limit="totalGasLimit"
                 :not-enough-eth="notEnoughEth"
                 :from-eth="isFromTokenMain"
+                is-swap
                 class="mt-10 mt-sm-16"
                 @onLocalGasPrice="handleLocalGasPrice"
               />
@@ -295,7 +296,14 @@
 
 <script>
 import { toBN, fromWei, toWei, isAddress } from 'web3-utils';
-import { debounce, isEmpty, clone, isUndefined, isObject } from 'lodash';
+import {
+  debounce,
+  isEmpty,
+  clone,
+  isUndefined,
+  isObject,
+  isNumber
+} from 'lodash';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import xss from 'xss';
 import MultiCoinValidator from 'multicoin-address-validator';
@@ -504,12 +512,12 @@ export default {
           new BigNumber(this.tokenInValue).lt(this.selectedProvider.minFrom)
         ) {
           msg = 'The minimum requirement for this provider is';
-          subError = `${this.selectedProvider.minFrom} ${this.fromTokenType.symbol}`;
+          subError = `${this.selectedProvider.minFrom} ${this.fromTokenType?.symbol}`;
         } else if (
           new BigNumber(this.tokenInValue).gt(this.selectedProvider.maxFrom)
         ) {
           msg = 'The maximum requirement for this provider is';
-          subError = `${this.selectedProvider.maxFrom} ${this.fromTokenType.symbol}`;
+          subError = `${this.selectedProvider.maxFrom} ${this.fromTokenType?.symbol}`;
         } else if (this.availableQuotes.length === 0) {
           msg =
             'No providers found for this token pair. Select a different token pair or try again later.';
@@ -806,11 +814,15 @@ export default {
             token.contract.toLowerCase() ===
             this.fromTokenType.contract.toLowerCase()
         );
+        const tokenBalance =
+          !isEmpty(hasBalance) &&
+          !isEmpty(hasBalance.balance) &&
+          hasBalance.hasOwnProperty('decimals')
+            ? this.getTokenBalance(hasBalance.balance, hasBalance.decimals)
+            : new BigNumber(0);
         return this.isFromTokenMain
           ? this.getTokenBalance(this.balanceInWei, 18)
-          : hasBalance && hasBalance.balance && hasBalance.decimals
-          ? this.getTokenBalance(hasBalance.balance, hasBalance.decimals)
-          : new BigNumber(0);
+          : tokenBalance;
       }
 
       return new BigNumber(0);
@@ -829,7 +841,6 @@ export default {
     amountErrorMessage() {
       if (!this.initialLoad && !this.isLoading && this.fromTokenType?.name) {
         /* Balance is <= 0*/
-
         if (this.availableBalance.lte(0)) {
           return this.isFromTokenMain
             ? this.errorMsgs.amountEthIsTooLow
@@ -934,6 +945,13 @@ export default {
       }
       if (isEmpty(p)) this.selectedProviderId = undefined;
     },
+    selectedProviderId(newVal) {
+      if (isNumber(newVal)) {
+        this.trackSwap(
+          `swapProvider: ${newVal + 1}/${this.availableQuotes.length}`
+        );
+      }
+    },
     defaults: {
       handler: function () {
         this.setDefaults();
@@ -983,6 +1001,7 @@ export default {
     if (this.coinGeckoTokens.size > 0) {
       this.resetSwapState();
     }
+    this.trackSwap('swapPageView');
   },
   methods: {
     ...mapActions('notifications', ['addNotification']),
@@ -1442,10 +1461,15 @@ export default {
           q.isSelected = true;
           this.tokenOutValue = q.amount;
           this.getTrade(idx);
-          if (!clicked) this.selectedProvider = q;
-          else
+          if (!clicked) {
+            this.selectedProvider = q;
+            this.trackSwap(
+              `swapProvider: ${idx + 1}/ ${this.availableQuotes.length}`
+            );
+          } else {
             this.selectedProvider =
               q.amount !== this.selectedProvider.amount ? q : {};
+          }
         }
       });
     },
