@@ -98,7 +98,6 @@ export default {
     },
     coinGeckoTokens(newVal, oldVal) {
       if (!isEqual(newVal, oldVal)) {
-        console.log('a');
         this.setTokensAndBalance();
       }
     }
@@ -106,7 +105,6 @@ export default {
   mounted() {
     if (this.online && !this.isOfflineApp) {
       this.setup();
-      console.log('b');
       this.setTokensAndBalance();
       if (this.identifier === WALLET_TYPES.WEB3_WALLET) {
         this.web3Listeners();
