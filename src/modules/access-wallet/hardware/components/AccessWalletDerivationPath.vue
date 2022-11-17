@@ -262,7 +262,7 @@ export default {
             path.value?.toLowerCase().includes(this.searchValue?.toLowerCase())
           );
         }
-        return path;
+        return path.name?.toLowerCase() || path.value?.toLowerCase().trim();
       });
     },
     /**
@@ -359,7 +359,7 @@ export default {
           const foundPath =
             this.filteredPaths.find(e => e.value === this.customPath) ||
             this.filteredCustomPaths.find(e => e.value === this.customPath);
-          if (foundPath) {
+          if (foundPath || !foundPath) {
             const error = `Path already exists: ${foundPath.name}`;
             Toast(error, {}, ERROR);
           } else {
@@ -385,7 +385,14 @@ export default {
           Toast('Invalid Derivation path', {}, ERROR);
         }
       } catch (error) {
-        Toast(error, {}, ERROR);
+        const foundPath =
+          this.filteredPaths.find(e => e.value === this.customPath) ||
+          this.filteredCustomPaths.find(e => e.value === this.customPath);
+        if (!foundPath) {
+          Toast(`Path already exists!`, {}, ERROR);
+        } else {
+          Toast(error, {}, ERROR);
+        }
       }
     }
   }
