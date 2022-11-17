@@ -6,6 +6,7 @@
     <div class="mb-2">
       <div class="mew-heading-3 textDark--text mb-5">Select currency</div>
       <mew-select
+        ref="selectedCurrency"
         label="Currency"
         :items="currencyItems"
         :value="selectedCurrency"
@@ -419,7 +420,7 @@ export default {
           this.selectedCurrency = oldVal;
           return;
         }
-        if (!isEqual(newVal, oldVal) && this.amountErrorMessages === '') {
+        if (!isEqual(newVal, oldVal)) {
           this.fetchCurrencyData();
         }
         this.$emit('selectedCurrency', this.selectedCurrency);
@@ -479,6 +480,25 @@ export default {
     }
   },
   mounted() {
+    // Watch for currency menu isActive
+    const selectedCurrencyRef = this.$refs.selectedCurrency;
+    const menuRef = selectedCurrencyRef.$children[0].$refs.menu;
+    this.$watch(
+      () => {
+        return menuRef.isActive;
+      },
+      val => {
+        // If menu is closed make sure search is cleared
+        if (!val) {
+          if (
+            selectedCurrencyRef.search !== '' ||
+            selectedCurrencyRef.selectItems.length === 0
+          )
+            selectedCurrencyRef.search = '';
+        }
+      }
+    );
+
     if (!this.inWallet) this.$refs.addressInput.$refs?.addressSelect.clear();
     this.fetchCurrencyData();
   },
@@ -547,7 +567,8 @@ export default {
         isEmpty(this.amount) ||
         this.min.gt(this.amount) ||
         isNaN(this.amount) ||
-        this.maxVal.lt(this.amount)
+        this.maxVal.lt(this.amount) ||
+        this.amountErrorMessages !== ''
       )
         return;
       this.loading = true;
