@@ -224,7 +224,8 @@
     "parse-path": "5.0.0",
     "@openzeppelin/contracts": "4.7.1",
     "terser": "4.8.1",
-    "minimatch": "3.0.5"
+    "minimatch": "3.0.5",
+    "loader-utils": "2.0.4"
   },
   "license": "MIT",
   "repository": "https://github.com/myetherwallet/myetherwallet"
