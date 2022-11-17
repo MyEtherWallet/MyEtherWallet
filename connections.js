@@ -22,6 +22,7 @@ module.exports = [
   'https://development.mewwallet.dev:443',
   'https://tokenbalance.mewapi.io:443',
   'https://requestcache.mewapi.io:443',
+  'https://partners.mewapi.io:443',
   'data:',
   'https://app.lokalise.com:443',
   'https://myetherwallet.matomo.cloud:443',

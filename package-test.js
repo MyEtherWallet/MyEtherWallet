@@ -80,7 +80,9 @@ const EXCEPTIONS = [
   '@commitlint/config-conventional',
   'commitlint',
   '@ledgerhq/hw-app-eth',
-  '@ledgerhq/live-common'
+  '@ledgerhq/live-common',
+  'babel-jest',
+  'stylelint-config-prettier'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
