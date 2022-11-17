@@ -11,6 +11,7 @@
         <mew-select
           v-model="selectedNetwork"
           :items="fetchedNetworks"
+          filter-placeholder="Select Network"
           label="Network"
           class="mt-1"
           is-custom
@@ -52,7 +53,6 @@
 </template>
 
 <script>
-// import get from 'lodash/get';
 import { mapActions } from 'vuex';
 import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
@@ -117,8 +117,16 @@ export default {
   methods: {
     ...mapActions('global', ['setNetwork']),
     fetchNetworks() {
-      const networksObj = Object.values(this.Networks);
-      const networkList = networksObj.map(network => {
+      const networkList = Object.values(this.Networks).filter(network => {
+        if (
+          network[0].type.name === 'ETH' ||
+          network[0].type.name === 'MATIC' ||
+          network[0].type.name === 'BSC'
+        ) {
+          return network;
+        }
+      });
+      const mappedList = networkList.map(network => {
         return {
           img: network[0].type?.icon,
           name: network[0].type?.name_long,
@@ -131,7 +139,7 @@ export default {
           name: this.network.type.name_long,
           symbol: this.network.type.name
         },
-        ...networkList
+        ...mappedList
       ];
       this.fetchedNetworks = returnedArray;
     },

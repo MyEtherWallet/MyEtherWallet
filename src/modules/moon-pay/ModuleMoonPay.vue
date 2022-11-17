@@ -75,7 +75,7 @@ import { isEmpty } from 'lodash';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import nodes from '@/utils/networks';
-import { SUCCESS, Toast } from '../toast/handler/handlerToast';
+// import { SUCCESS, Toast } from '../toast/handler/handlerToast';
 
 import handler from './handlers/handlerOrder';
 
@@ -131,16 +131,7 @@ export default {
         !this.supportedBuy ||
         (this.activeTab === 1 && !this.supportedSell)
       ) {
-        return {
-          decimals: 18,
-          img: 'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ETH-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.svg',
-          name: 'ETH',
-          subtext: 'Ethereum',
-          value: 'ETH',
-          symbol: 'ETH',
-          network: 'ETH',
-          contract: MAIN_TOKEN_ADDRESS
-        };
+        return this.selectedCurrency;
       }
       return this.selectedCurrency;
     },
@@ -199,26 +190,36 @@ export default {
     onTab(val) {
       this.selectedCurrency = {};
       this.selectedCurrency = this.defaultCurrency;
-      if (val === 1 || (val === 0 && (!this.supportedBuy || !this.inWallet))) {
-        if (this.network.type.chainID !== 1) {
-          const defaultNetwork = this.nodes['ETH'].find(item => {
-            return item.service === 'myetherwallet.com-ws';
-          });
-          if (
-            !this.instance ||
-            (this.instance &&
-              this.instance.identifier !== WALLET_TYPES.WEB3_WALLET)
-          ) {
-            this.setNetwork({ network: defaultNetwork }).then(() => {
-              this.setWeb3Instance();
-              this.activeTab = val;
-              Toast(`Switched network to: ETH`, {}, SUCCESS);
-            });
-          }
-        }
+      this.activeTab = val;
+      if (!this.inWallet) {
+        this.setNetwork({ network: this.network }).then(() => {
+          this.setWeb3Instance();
+          this.activeTab = val;
+          // Toast(`Switched network to: ${this.network.type.name}`, {}, SUCCESS);
+        });
       } else {
         this.activeTab = val;
       }
+      // if (val === 1 || (val === 0 && (!this.supportedBuy || !this.inWallet))) {
+      //   if (this.network.type.chainID !== 1) {
+      //     const defaultNetwork = this.nodes['ETH'].find(item => {
+      //       return item.service === 'myetherwallet.com-ws';
+      //     });
+      //     if (
+      //       !this.instance ||
+      //       (this.instance &&
+      //         this.instance.identifier !== WALLET_TYPES.WEB3_WALLET)
+      //     ) {
+      //       this.setNetwork({ network: defaultNetwork }).then(() => {
+      //         this.setWeb3Instance();
+      //         this.activeTab = val;
+      //         Toast(`Switched network to: ETH`, {}, SUCCESS);
+      //       });
+      //     }
+      //   }
+      // } else {
+      //   this.activeTab = val;
+      // }
     },
     async setTokens() {
       if (!this.inWallet) {
@@ -231,6 +232,22 @@ export default {
       }
     },
     close() {
+      if (!this.inWallet) {
+        if (this.network.type.chainID !== 1) {
+          const defaultNetwork = this.nodes['ETH'].find(item => {
+            return item.service === 'myetherwallet.com-ws';
+          });
+          if (
+            !this.instance ||
+            (this.instance &&
+              this.instance.identifier !== WALLET_TYPES.WEB3_WALLET)
+          ) {
+            this.setNetwork({ network: defaultNetwork }).then(() => {
+              this.setWeb3Instance();
+            });
+          }
+        }
+      }
       this.activeTab = 0;
       this.step = 0;
       this.onlySimplex = false;
