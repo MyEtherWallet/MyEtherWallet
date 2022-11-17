@@ -31,6 +31,14 @@ export default {
       }
     },
     {
+      path: ROUTES_WALLET.PRINT.PATH,
+      name: ROUTES_WALLET.PRINT.NAME,
+      component: () => import('@/modules/balance/ModulePaperWallet'),
+      meta: {
+        noAuth: false
+      }
+    },
+    {
       path: ROUTES_WALLET.SEND_TX.PATH,
       name: ROUTES_WALLET.SEND_TX.NAME,
       component: () =>
