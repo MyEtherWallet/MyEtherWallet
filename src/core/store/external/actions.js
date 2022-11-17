@@ -53,7 +53,6 @@ const setTokenAndEthBalance = function ({
     network.type.name === ETH.name ||
     network.type.name === MATIC.name;
   const address = rootState.wallet.address;
-  const TOKEN_BALANCE_API = 'https://tokenbalance.mewapi.io';
 
   const _getTokenBalance = (balance, decimals) => {
     let n = new BigNumber(balance);
@@ -100,13 +99,21 @@ const setTokenAndEthBalance = function ({
     return;
   }
   let mainTokenBalance = toBN('0');
-  fetch(
-    `${TOKEN_BALANCE_API}/${network.type.name.toLowerCase()}?address=${address}`
-  )
+  const TOKEN_BALANCE_API =
+    network.type.name === MATIC.name
+      ? `https://partners.mewapi.io/balances/matic/${address}`
+      : `https://tokenbalance.mewapi.io/${network.type.name.toLowerCase()}?address=${address}`;
+  fetch(TOKEN_BALANCE_API)
     .then(res => res.json())
     .then(res => res.result)
     .then(preTokens => {
       const hasPreTokens = preTokens ? preTokens : [];
+      if (!hasPreTokens.length) {
+        hasPreTokens.push({
+          contract: MAIN_TOKEN_ADDRESS,
+          balance: '0x0'
+        });
+      }
       const promises = [];
 
       hasPreTokens.forEach(t => {
