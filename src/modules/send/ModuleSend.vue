@@ -574,6 +574,7 @@ export default {
         this.sendTx.setValue(this.getCalculatedAmount);
       }
       this.amountError = '';
+      if (this.isValidForGas) this.debounceEstimateGas();
       this.debounceAmountError(newVal);
     },
     selectedCurrency: {
