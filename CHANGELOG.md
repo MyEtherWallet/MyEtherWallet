@@ -1,3 +1,7 @@
+### Release v6.6.10-hotfix.1
+
+* update matic api endpoint [#4353](https://github.com/MyEtherWallet/MyEtherWallet/pull/4353)
+
 ### Release v6.6.10
 
 ### devop
