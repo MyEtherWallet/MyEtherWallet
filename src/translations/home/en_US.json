@@ -73,7 +73,7 @@
     "description": "ETH Blocks is an NFT series representing mined Ethereum blocks and their properties. Whether it's a special block number, the block of your first transaction, or a block that contains a transaction with a special message. Own a part of history with ETH Blocks by MEW.",
     "btn-text": "Access your wallet to Mint"
   },
-  "community-title": "Join MEW Community", 
+  "community-title": "Join MEW Community",
   "about-mew": {
     "heading": "Easy and secure access to the Ethereum Blockchain",
     "subheading": "Why MEW",
@@ -98,7 +98,7 @@
   "mewtopia-block": {
     "title": "New to crypto? Explore MEWtopia!",
     "text": "Learn how to get the most out of Ethereum with our free library of resources!",
-    "button-text": "Get Started",
+    "button-text": "Get started",
     "mobile": {
       "title-one": "New to crypto?",
       "title-two": "Explore MEWtopia!"

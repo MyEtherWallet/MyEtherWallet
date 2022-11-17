@@ -22,6 +22,7 @@ module.exports = [
   'https://development.mewwallet.dev:443',
   'https://tokenbalance.mewapi.io:443',
   'https://requestcache.mewapi.io:443',
+  'https://partners.mewapi.io:443',
   'data:',
   'https://app.lokalise.com:443',
   'https://myetherwallet.matomo.cloud:443',
@@ -29,6 +30,7 @@ module.exports = [
   'https://raw.githubusercontent.com:443/MyEtherWallet/dynamic-data/main/careers.json',
   'https://raw.githubusercontent.com:443/MyEtherWallet/dynamic-data/main/articles.json',
   'https://formspree.io:443/f/mqjndkkx',
+  'https://broadcast.mewapi.io:443',
   // nodes
   'https://nodes.mewapi.io:443',
   'wss://nodes.mewapi.io:443',
@@ -52,8 +54,10 @@ module.exports = [
   'wss://www.walletlink.org:443',
   'https://api.wallet.coinbase.com:443',
   'https://registry.walletconnect.org:443',
+  'https://registry.walletconnect.com:443',
   'https://cdn.live.ledger.com:443',
   'https://registry.walletconnect.org:443/data/wallets.json',
+  'https://registry.walletconnect.com:433/api/v2/wallets',
   'wss://*.bridge.walletconnect.org:443',
   'https://buy-staging.moonpay.com:443',
   // Dapps

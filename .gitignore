@@ -5,6 +5,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 /tests/unit/coverage/
+/tests/e2e/reports
 selenium-debug.log
 /tests/e2e/reports/
 /download_folder
