@@ -90,7 +90,8 @@ export default {
     SettingsGasPrice: () => import('./components/SettingsGasPrice'),
     AddressBookAddEdit: () =>
       import('@/modules/address-book/components/AddressBookAddEdit'),
-    SettingsLocaleConfig: () => import('./components/SettingsLocaleConfig.vue')
+    SettingsLocaleConfig: () => import('./components/SettingsLocaleConfig.vue'),
+    MewOverlay: () => import('@/components/MewOverlay')
   },
   mixins: [gasPriceMixin],
   beforeRouteLeave(to, from, next) {
