@@ -311,7 +311,7 @@ export default {
   data() {
     return {
       validNetworks: SUPPORTED_NETWORKS,
-      headerImg: require('@/assets/images/icons/icon-ens-manager-white-bg.svg'),
+      headerImg: require('@/assets/images/icons/dapps/icon-dapp-ensmanager.svg'),
       header: {
         title: this.$t('ens.title'),
         subtext: this.$t('ens.dapp-desc')

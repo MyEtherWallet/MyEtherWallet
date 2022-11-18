@@ -1,5 +1,5 @@
 <template>
-  <div class="full-width">
+  <div class="full-width pt-6">
     <h3 class="mb-6">Enter your private key</h3>
     <!--
     =====================================================================================

@@ -386,6 +386,7 @@ export default {
     },
     closeNftSend() {
       this.onNftSend = false;
+      this.toAddress = '';
       this.$router.push({ name: ROUTES_WALLET.NFT_MANAGER.NAME });
     },
     async sendTx() {
@@ -396,6 +397,7 @@ export default {
             .then(response => {
               this.updateValues();
               this.enoughFunds = true;
+              this.toAddress = '';
               this.closeNftSend();
               Toast(
                 'Cheers! Your transaction was mined. Check it in ',
