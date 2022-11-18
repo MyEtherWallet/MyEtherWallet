@@ -168,13 +168,13 @@ export default {
     ...mapGetters('wallet', ['tokensList']),
     ...mapGetters('external', ['contractToToken']),
     ...mapGetters('custom', ['customTokens']),
-    ...mapGetters('global', ['getFiatValue']),
+    ...mapGetters('global', ['getFiatValue', 'network']),
     /**
      * @returns token data to display on form
      */
     tokenDataToDisplay() {
       return [
-        { name: 'Contract', value: this.contractAddress },
+        { name: 'Contract', value: this.actualContractAddress },
         { name: 'Icon', value: this.token.img },
         { name: 'Name', value: this.token.name },
         { name: 'Symbol', value: this.token.symbol }
@@ -187,8 +187,8 @@ export default {
     isDisabled() {
       return (
         this.loading ||
-        (this.step === 1 && !this.contractAddress) ||
-        (this.step === 1 && !isAddress(this.contractAddress)) ||
+        (this.step === 1 && !this.actualContractAddress) ||
+        (this.step === 1 && !isAddress(this.actualContractAddress)) ||
         (this.step === 2 &&
           (this.symbolLengthTooLong.length > 0 ||
             this.nameLengthTooLong.length > 0 ||
@@ -207,6 +207,11 @@ export default {
      */
     hasSymbol() {
       return this.tokenDataToDisplay[3].value || this.customSymbol;
+    },
+    actualContractAddress() {
+      return this.contractAddress && this.network.type.name === 'XDC'
+        ? this.contractAddress.replace('xdc', '0x')
+        : this.contractAddress;
     }
   },
   methods: {
@@ -306,7 +311,7 @@ export default {
       }
       this.token.name = !this.token.name ? this.customName : this.token.name;
       this.token.symbol = this.customSymbol || this.token.symbol;
-      this.token.contract = this.contractAddress;
+      this.token.contract = this.actualContractAddress;
       this.setCustomToken(this.token);
       Toast(
         'The token ' + this.token.name + ' was added to your token list!',
@@ -328,10 +333,10 @@ export default {
      * otherwise it will throw toast error
      */
     async checkIfValidAddress() {
-      const codeHash = await this.web3.eth.getCode(this.contractAddress);
+      const codeHash = await this.web3.eth.getCode(this.actualContractAddress);
       if (
-        this.contractAddress &&
-        isAddress(this.contractAddress) &&
+        this.actualContractAddress &&
+        isAddress(this.actualContractAddress) &&
         codeHash !== '0x'
       ) {
         this.checkIfTokenExistsAlready();
@@ -350,7 +355,8 @@ export default {
       let foundToken = false;
       this.customTokens.concat(this.tokensList).find(token => {
         if (
-          this.contractAddress.toLowerCase() === token.contract?.toLowerCase()
+          this.actualContractAddress.toLowerCase() ===
+          token.contract?.toLowerCase()
         ) {
           foundToken = true;
         }
@@ -374,9 +380,9 @@ export default {
     async findTokenInfo() {
       const contract = new this.web3.eth.Contract(
         abiERC20,
-        this.contractAddress
+        this.actualContractAddress
       );
-      this.token = this.contractToToken(this.contractAddress) || {};
+      this.token = this.contractToToken(this.actualContractAddress) || {};
       try {
         const balance = await contract.methods.balanceOf(this.address).call(),
           decimals = await contract.methods.decimals().call();
@@ -393,15 +399,15 @@ export default {
           this.token.name = await contract.methods.name().call();
           this.token.symbol = await contract.methods.symbol().call();
           this.token.usdBalancef = '0.00';
-          this.token.contract = this.contractAddress;
+          this.token.contract = this.actualContractAddress;
         }
-        this.token.decimals = +decimals;
+        this.token.decimals = parseInt(decimals);
         this.token.balance = balance;
         this.token.balancef = this.getTokenBalance(balance, decimals).value;
         this.loading = false;
         this.step = 2;
       } catch {
-        this.token.contract = this.contractAddress;
+        this.token.contract = this.actualContractAddress;
         this.token.balancef = '0';
         this.token.usdBalancef = '0.00';
         this.loading = false;
