@@ -96,12 +96,15 @@
       -->
       <div
         v-if="!isOfflineApp"
-        :class="[
-          { 'ml-n5': !isTestNetwork },
-          'mew-subtitle text-shadow white--text mt-5 mb-4'
-        ]"
+        :class="[{ 'ml-n5': !isTestNetwork }, 'mt-5 mb-4']"
       >
-        {{ totalWalletBalance }}
+        <v-skeleton-loader
+          v-if="fetchBalanceLoading"
+          type="heading"
+        ></v-skeleton-loader>
+        <div v-else class="mew-subtitle text-shadow white--text">
+          {{ totalWalletBalance }}
+        </div>
         <span v-if="isTestNetwork" style="padding-left: 2px; font-size: 14px">{{
           network.type.currencyName
         }}</span>
@@ -289,7 +292,7 @@ export default {
     ...mapGetters('external', ['totalTokenFiatValue']),
     ...mapGetters('global', ['network', 'isTestNetwork', 'getFiatValue']),
     ...mapGetters('wallet', ['tokensList', 'balanceInETH']),
-    ...mapState('wallet', ['web3']),
+    ...mapState('wallet', ['web3', 'balance']),
     /**
      * verifies whether instance exists before giving path
      */
@@ -401,6 +404,14 @@ export default {
      */
     walletChainBalance() {
       return `${formatFloatingPointValue(this.balanceInETH).value}`;
+    },
+    fetchBalanceLoading() {
+      if (this.balance.toString() === '0') {
+        return false;
+      }
+      return (
+        this.totalWalletBalance === '$0.00' && this.balance.toString() !== '0'
+      );
     },
     /**
      * @returns {string} first 6 letters in the address
