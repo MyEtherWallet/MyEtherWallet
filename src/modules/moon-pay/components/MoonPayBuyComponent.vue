@@ -6,10 +6,11 @@
     <div class="mb-2">
       <div class="mew-heading-3 textDark--text mb-5">Select currency</div>
       <mew-select
+        ref="selectedCurrency"
         label="Currency"
         :items="currencyItems"
         :value="selectedCurrency"
-        :disabled="loading"
+        :disabled="disableCurrencySelect"
         :error-messages="currencyErrorMessages"
         is-custom
         @input="setCurrency"
@@ -151,7 +152,8 @@ export default {
       gasPrice: '0',
       web3Connections: {},
       simplexQuote: {},
-      showMoonpay: true
+      showMoonpay: true,
+      disableCurrencySelect: true
     };
   },
   computed: {
@@ -478,7 +480,26 @@ export default {
     }
   },
   mounted() {
-    if (!this.inWallet) this.$refs.addressInput.$refs.addressSelect.clear();
+    // Watch for currency menu isActive
+    const selectedCurrencyRef = this.$refs.selectedCurrency;
+    const menuRef = selectedCurrencyRef.$children[0].$refs.menu;
+    this.$watch(
+      () => {
+        return menuRef.isActive;
+      },
+      val => {
+        // If menu is closed make sure search is cleared
+        if (!val) {
+          if (
+            selectedCurrencyRef.search !== '' ||
+            selectedCurrencyRef.selectItems.length === 0
+          )
+            selectedCurrencyRef.search = '';
+        }
+      }
+    );
+
+    if (!this.inWallet) this.$refs.addressInput.$refs?.addressSelect.clear();
     this.fetchCurrencyData();
   },
   methods: {
@@ -521,14 +542,16 @@ export default {
     },
     fetchCurrencyData() {
       this.loading = true;
+      this.disableCurrencySelect = true;
       this.fetchData = {};
       this.fetchGasPrice();
       this.orderHandler
-        .getSupportedFiatToBuy(this.selectedCurrency.symbol)
+        .getSupportedFiatToBuy(this.selectedCurrency?.symbol)
         .then(res => {
           this.orderHandler.getFiatRatesForBuy().then(res => {
             this.currencyRates = cloneDeep(res);
             this.loading = false;
+            this.disableCurrencySelect = false;
           });
           this.fetchedData = Object.assign({}, res);
         })
@@ -544,10 +567,12 @@ export default {
         isEmpty(this.amount) ||
         this.min.gt(this.amount) ||
         isNaN(this.amount) ||
-        this.maxVal.lt(this.amount)
+        this.maxVal.lt(this.amount) ||
+        this.amountErrorMessages !== ''
       )
         return;
       this.loading = true;
+      this.disableCurrencySelect = true;
       this.simplexQuote = {};
       this.orderHandler
         .getSimplexQuote(
@@ -559,6 +584,7 @@ export default {
         .then(res => {
           this.simplexQuote = Object.assign({}, res);
           this.loading = false;
+          this.disableCurrencySelect = false;
           this.$emit('simplexQuote', this.simplexQuote);
           this.compareQuotes();
         })

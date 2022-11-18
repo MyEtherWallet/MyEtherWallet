@@ -130,7 +130,7 @@ export default {
         : this.myAddressBook;
     },
     myAddressBook() {
-      if (!this.isHomePage && !this.identifier)
+      if (!this.isHomePage && !this.identifier && this.instance)
         this.instance.errorHandler(
           new Error('Wallet has no identifier! Please refresh the page')
         );
@@ -218,7 +218,7 @@ export default {
       if (typeof value === 'string') {
         if (
           this.currency.toLowerCase() ===
-          this.network.type.currencyName.toLowerCase()
+          this.network.type.currencyName?.toLowerCase()
         ) {
           /**
            * Checks if user typed or selected an address from dropdown

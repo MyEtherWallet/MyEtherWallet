@@ -120,11 +120,17 @@ export default {
     },
     defaultCurrency() {
       if (isEmpty(this.selectedCurrency) && this.supportedBuy) {
-        if (this.inWallet) return this.tokensList[0];
+        if (this.inWallet) {
+          return this.tokensList[0];
+        }
         const token = this.contractToToken(MAIN_TOKEN_ADDRESS);
         token.value = token.symbol;
         return token;
-      } else if (isEmpty(this.selectedCurrency) || !this.supportedBuy) {
+      } else if (
+        isEmpty(this.selectedCurrency) ||
+        !this.supportedBuy ||
+        (this.activeTab === 1 && !this.supportedSell)
+      ) {
         return {
           decimals: 18,
           img: 'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ETH-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.svg',
@@ -143,6 +149,13 @@ export default {
         this.network.type.name === 'ETH' ||
         this.network.type.name === 'BSC' ||
         this.network.type.name === 'MATIC'
+      );
+    },
+    supportedSell() {
+      return (
+        this.selectedCurrency.symbol === 'ETH' ||
+        this.selectedCurrency.symbol === 'USDT' ||
+        this.selectedCurrency.symbol === 'USDC'
       );
     },
     leftBtn() {
@@ -184,6 +197,7 @@ export default {
     ...mapActions('global', ['setNetwork']),
     ...mapActions('external', ['setNetworkTokens']),
     onTab(val) {
+      this.selectedCurrency = {};
       this.selectedCurrency = this.defaultCurrency;
       if (val === 1 || (val === 0 && (!this.supportedBuy || !this.inWallet))) {
         if (this.network.type.chainID !== 1) {
@@ -206,23 +220,14 @@ export default {
         this.activeTab = val;
       }
     },
-    setTokens() {
+    async setTokens() {
       if (!this.inWallet) {
         const tokenMap = new Map();
-        const tokens = this.network.type.tokens;
-        if (tokens instanceof Promise) {
-          tokens.then(tokens => {
-            tokens.forEach(token => {
-              tokenMap.set(token.address.toLowerCase(), token);
-            });
-            this.setNetworkTokens(tokenMap);
-          });
-        } else {
-          this.network.type.tokens.forEach(token => {
-            tokenMap.set(token.address.toLowerCase(), token);
-          });
-          this.setNetworkTokens(tokenMap);
-        }
+        const tokens = await this.network.type.tokens;
+        tokens.forEach(token => {
+          tokenMap.set(token.address.toLowerCase(), token);
+        });
+        this.setNetworkTokens(tokenMap);
       }
     },
     close() {

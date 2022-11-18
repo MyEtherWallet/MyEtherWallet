@@ -22,6 +22,8 @@ import {
 } from '@/modules/toast/handler/handlerToast';
 import { MOONPAY_EVENT } from '@/modules/moon-pay/helpers';
 import { EventBus } from '@/core/plugins/eventBus';
+import handlerAnalyticsMixin from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin.js';
+import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 export default {
   name: 'App',
   components: {
@@ -31,6 +33,7 @@ export default {
     ModuleAnalytics: () => import('@/modules/analytics-opt-in/ModuleAnalytics'),
     ModuleMoonPay: () => import('@/modules/moon-pay/ModuleMoonPay')
   },
+  mixins: [handlerAnalyticsMixin],
   data() {
     return {
       moonPayOpen: false
@@ -58,6 +61,15 @@ export default {
     });
   },
   mounted() {
+    EventBus.$on('swapTxBroadcasted', () => {
+      this.trackSwap('swapTxBroadcasted');
+    });
+    EventBus.$on('swapTxReceivedReceipt', () => {
+      this.trackSwap('swapTxReceivedReceipt');
+    });
+    EventBus.$on('swapTxFailed', () => {
+      this.trackSwap('swapTxFailed');
+    });
     EventBus.$on(MOONPAY_EVENT, () => {
       this.openBuy();
     });
@@ -85,6 +97,12 @@ export default {
         this.setMigrated(true);
       });
     }
+
+    window.onbeforeunload = () => {
+      if (this.$route.name === ROUTES_WALLET.SWAP.NAME) {
+        this.trackSwap('swapUserExit');
+      }
+    };
     const _self = this;
     // Close modal with 'esc' key
     document.addEventListener('keydown', e => {
@@ -92,6 +110,9 @@ export default {
         _self.moonPayOpen = false;
       }
     });
+  },
+  beforeDestroy() {
+    EventBus.$off(MOONPAY_EVENT);
   },
   methods: {
     ...mapActions('global', ['setOnlineStatus']),

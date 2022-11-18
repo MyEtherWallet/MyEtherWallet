@@ -458,6 +458,10 @@ export default {
       this.openNetwork();
     });
   },
+  beforeDestroy() {
+    EventBus.$off('openSettings');
+    EventBus.$off('openNetwork');
+  },
   methods: {
     ...mapActions('wallet', ['removeWallet']),
     trackToSwap() {

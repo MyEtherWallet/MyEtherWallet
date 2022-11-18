@@ -94,7 +94,7 @@
             @click.native="resetDefaults()"
           />
           <mew-button
-            title="Sign Transaction"
+            title="Sign transaction"
             class="SignTransactionButton"
             :has-full-width="false"
             :disabled="!canDeploy"
