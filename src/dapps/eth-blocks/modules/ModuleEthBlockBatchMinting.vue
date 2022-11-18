@@ -88,7 +88,7 @@
             </div>
           </div>
           <mew-button
-            :title="hasEnoughEth ? 'Proceed to Minting' : 'Not Enough Eth'"
+            :title="hasEnoughEth ? 'Proceed to minting' : 'Not enough ETH'"
             has-full-width
             :disabled="!hasEnoughEth || isLoading || isCartEmpty"
             :loading="isLoading"
@@ -184,15 +184,15 @@ export default {
       return value;
     },
     blockCount() {
-      const cart = this.isTestNetwork ? this.cart.RIN : this.cart.ETH;
+      const cart = this.cart.ETH;
       return cart.length;
     },
     pluralizeBlockCount() {
-      const cart = this.isTestNetwork ? this.cart.RIN : this.cart.ETH;
+      const cart = this.cart.ETH;
       return cart.length > 1 ? 'Blocks' : 'Block';
     },
     isCartEmpty() {
-      const cart = this.isTestNetwork ? this.cart.RIN : this.cart.ETH;
+      const cart = this.cart.ETH;
       return cart.length >= 1 ? false : true;
     },
     hasEnoughEth() {
@@ -233,7 +233,7 @@ export default {
     async fetchBlocks() {
       this.isLoading = true;
       const newResultArray = [];
-      const cart = this.isTestNetwork ? this.cart.RIN : this.cart.ETH;
+      const cart = this.cart.ETH;
       this.totalResult = cart.filter(item => {
         if (!item.hasOwner) return item;
       }).length;
@@ -376,7 +376,7 @@ export default {
           value: this.totalMintValue
         })
         .on('transactionHash', () => {
-          const network = this.isTestNetwork ? 'RIN' : 'ETH';
+          const network = 'ETH';
           this.emptyCart(network);
           this.isLoading = false;
         })

@@ -6,10 +6,11 @@
     <div class="mb-2">
       <div class="mew-heading-3 textDark--text mb-5">Select currency</div>
       <mew-select
+        ref="selectedCurrency"
         label="Currency"
         :items="currencyItems"
         :value="selectedCurrency"
-        :disabled="loading"
+        :disabled="disableCurrencySelect"
         :error-messages="currencyErrorMessages"
         is-custom
         @input="setCurrency"
@@ -26,6 +27,7 @@
           type="number"
           :error-messages="amountErrorMessages"
           class="mr-2"
+          @keydown.native="preventCharE($event)"
         />
         <mew-select
           v-model="selectedFiat"
@@ -41,7 +43,7 @@
             {{ cryptoToFiat }}
             <span class="mew-heading-3 pl-1">{{ selectedCryptoName }}</span>
             <div class="mr-1 textDark--text">&nbsp;≈ {{ plusFeeF }}</div>
-            <mew-tooltip style="height: 23px">
+            <mew-tooltip style="height: 21px">
               <template #contentSlot>
                 <div>
                   {{ includesFeeText }}
@@ -68,7 +70,7 @@
         <div class="mew-heading-3 textDark--text mb-5">
           Where should we send your crypto?
         </div>
-        <ModuleAddressBook
+        <module-address-book
           ref="addressInput"
           label="Enter Crypto Address"
           :currency="selectedCryptoName"
@@ -108,7 +110,8 @@ import {
 import { getCurrency } from '@/modules/settings/components/currencyList';
 import { buyContracts } from './tokenList';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
-import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
+
+import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook.vue';
 
 export default {
   name: 'ModuleBuyEth',
@@ -139,7 +142,7 @@ export default {
         name: 'USD',
         value: 'USD',
         // eslint-disable-next-line
-                img: require(`@/assets/images/currencies/USD.svg`)
+        img: require(`@/assets/images/currencies/USD.svg`)
       },
       fetchedData: {},
       currencyRates: [],
@@ -149,7 +152,8 @@ export default {
       gasPrice: '0',
       web3Connections: {},
       simplexQuote: {},
-      showMoonpay: true
+      showMoonpay: true,
+      disableCurrencySelect: true
     };
   },
   computed: {
@@ -409,8 +413,9 @@ export default {
           MATIC: 'MATIC'
         };
         if (
-          newVal.contract.toLowerCase() === MAIN_TOKEN_ADDRESS &&
-          !supportedCoins[newVal.symbol]
+          !newVal ||
+          (newVal?.contract?.toLowerCase() === MAIN_TOKEN_ADDRESS &&
+            !supportedCoins[newVal.symbol])
         ) {
           this.selectedCurrency = oldVal;
           return;
@@ -475,7 +480,26 @@ export default {
     }
   },
   mounted() {
-    this.$refs.addressInput.$refs.addressSelect.clear();
+    // Watch for currency menu isActive
+    const selectedCurrencyRef = this.$refs.selectedCurrency;
+    const menuRef = selectedCurrencyRef.$children[0].$refs.menu;
+    this.$watch(
+      () => {
+        return menuRef.isActive;
+      },
+      val => {
+        // If menu is closed make sure search is cleared
+        if (!val) {
+          if (
+            selectedCurrencyRef.search !== '' ||
+            selectedCurrencyRef.selectItems.length === 0
+          )
+            selectedCurrencyRef.search = '';
+        }
+      }
+    );
+
+    if (!this.inWallet) this.$refs.addressInput.$refs?.addressSelect.clear();
     this.fetchCurrencyData();
   },
   methods: {
@@ -518,14 +542,16 @@ export default {
     },
     fetchCurrencyData() {
       this.loading = true;
+      this.disableCurrencySelect = true;
       this.fetchData = {};
       this.fetchGasPrice();
       this.orderHandler
-        .getSupportedFiatToBuy(this.selectedCurrency.symbol)
+        .getSupportedFiatToBuy(this.selectedCurrency?.symbol)
         .then(res => {
           this.orderHandler.getFiatRatesForBuy().then(res => {
             this.currencyRates = cloneDeep(res);
             this.loading = false;
+            this.disableCurrencySelect = false;
           });
           this.fetchedData = Object.assign({}, res);
         })
@@ -541,10 +567,12 @@ export default {
         isEmpty(this.amount) ||
         this.min.gt(this.amount) ||
         isNaN(this.amount) ||
-        this.maxVal.lt(this.amount)
+        this.maxVal.lt(this.amount) ||
+        this.amountErrorMessages !== ''
       )
         return;
       this.loading = true;
+      this.disableCurrencySelect = true;
       this.simplexQuote = {};
       this.orderHandler
         .getSimplexQuote(
@@ -556,6 +584,7 @@ export default {
         .then(res => {
           this.simplexQuote = Object.assign({}, res);
           this.loading = false;
+          this.disableCurrencySelect = false;
           this.$emit('simplexQuote', this.simplexQuote);
           this.compareQuotes();
         })
@@ -590,6 +619,9 @@ export default {
         this.selectedCurrency,
         this.selectedFiat
       ]);
+    },
+    preventCharE(e) {
+      if (e.key === 'e') e.preventDefault();
     }
   }
 };

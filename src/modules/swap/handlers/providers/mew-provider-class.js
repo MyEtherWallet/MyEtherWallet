@@ -53,7 +53,7 @@ class MEWPClass {
         .dividedBy(new BigNumber(10).pow(fromT.decimals))
         .toFixed(),
       maxFrom: new BigNumber(1)
-        .multipliedBy(new BigNumber(10).pow(fromT.decimals))
+        .multipliedBy(new BigNumber(10).pow(18))
         .toFixed()
     });
   }
@@ -88,8 +88,8 @@ class MEWPClass {
               exchange: q.exchange,
               provider: this.provider,
               amount: new BigNumber(q.amount).toFixed(),
-              minFrom: minmax.minFrom,
-              maxFrom: minmax.maxFrom
+              minFrom: minmax?.minFrom ? minmax.minFrom : 0,
+              maxFrom: minmax?.maxFrom ? minmax.maxFrom : 0
             };
           });
         })
@@ -152,7 +152,7 @@ class MEWPClass {
               hashes: [hash]
             });
           })
-          .catch(reject);
+          .catch(e => reject(e));
       });
     }
     const txs = [];

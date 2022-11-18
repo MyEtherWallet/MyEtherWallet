@@ -182,7 +182,6 @@
         :selected-path="selectedPath"
         :set-path="setPath"
         @setBluetoothLedgerUnlock="setBluetoothLedgerUnlock"
-        @ledgerApp="setSelectedApp"
       />
 
       <!--
@@ -207,7 +206,8 @@
     <access-wallet-address-network
       v-if="step > walletInitialized"
       :back="null"
-      :hide-custom-paths="onKeepkey || onLedger"
+      :hide-path-selection="onKeepkey || onLedger"
+      :disable-custom-paths="onLedger"
       :handler-wallet="hwWalletInstance"
       :selected-path="selectedPath"
       :paths="paths"
@@ -276,117 +276,116 @@ export default {
       default: false
     }
   },
-  data() {
-    return {
-      buttons: [
-        {
-          label: 'Ledger',
-          icon: require('@/assets/images/icons/hardware-wallets/Ledger-Nano-X-Label-Icon.svg'),
-          type: WALLET_TYPES.LEDGER
-        },
-        {
-          label: 'Trezor',
-          icon: require('@/assets/images/icons/hardware-wallets/icon-trezor.svg'),
-          type: WALLET_TYPES.TREZOR
-        },
-        {
-          label: 'KeepKey',
-          icon: require('@/assets/images/icons/hardware-wallets/icon-keepkey.svg'),
-          type: WALLET_TYPES.KEEPKEY
-        },
-        {
-          label: 'BitBox02',
-          icon: require('@/assets/images/icons/hardware-wallets/icon-bitbox.svg'),
-          type: WALLET_TYPES.BITBOX2
-        },
-        {
-          label: 'CoolWallet',
-          icon: require('@/assets/images/icons/hardware-wallets/icon-coolwallet.svg'),
-          type: WALLET_TYPES.COOL_WALLET,
-          bluetooth: true
-        }
-      ],
-      enableBluetooth: [
-        {
-          title: 'Chrome',
-          direction: [
-            {
-              title: 'Enable experimental flags',
-              steps: [
-                'chrome://flags/#enable-web-bluetooth',
-                'chrome://flags/#enable-web-bluetooth-new-permissions-backend',
-                'chrome://flags/#enable-experimental-web-platform-features'
-              ]
-            },
-            {
-              title: 'Official browser directions',
-              steps: [
-                {
-                  link: 'https://support.google.com/chrome/answer/6362090?hl=en&co=GENIE.Platform%3DDesktop'
-                }
-              ]
-            }
-          ]
-        },
-        {
-          title: 'Opera',
-          direction: [
-            {
-              title: 'Enable experimental flags',
-              steps: [
-                'opera://flags/#enable-web-bluetooth-new-permissions-backend',
-                'opera://flags/#enable-experimental-web-platform-features'
-              ]
-            }
-          ]
-        },
-        {
-          title: 'Edge',
-          direction: [
-            {
-              title: 'Official browser directions',
-              steps: [
-                {
-                  link: 'https://support.microsoft.com/en-us/microsoft-edge/connect-a-website-to-a-bluetooth-or-usb-device-in-microsoft-edge-107ba8a4-60aa-0fd3-2d26-afd63d0964f4'
-                }
-              ]
-            }
-          ]
-        }
-      ],
-      bluetooth: false,
-      bluetoothModal: false,
-      supportedBrowsers: ['Chrome', 'Edge', 'Opera'],
-      ledgerApps: appPaths.map(item => {
-        return {
-          name: item.network.name_long,
-          value: item.network.name,
-          img: item.network.icon
-        };
-      }),
-      wallets: wallets,
-      step: 1,
-      hwWalletInstance: {},
-      ledgerApp: {},
-      selectedPath: {
-        name: 'Ethereum',
-        value: "m/44'/60'/0'/0"
+  data: () => ({
+    buttons: [
+      {
+        label: 'Ledger',
+        icon: require('@/assets/images/icons/hardware-wallets/Ledger-Nano-X-Label-Icon.svg'),
+        type: WALLET_TYPES.LEDGER
       },
-      walletType: '',
-      selectedLedgerApp: {},
-      password: '',
-      loaded: false,
-      ledgerConnected: false,
-      callback: () => {},
-      unwatch: () => {},
-      passwordError: false,
-      transport: null,
-      address: '',
-      ledgerBluetooth: false
-    };
-  },
+      {
+        label: 'Trezor',
+        icon: require('@/assets/images/icons/hardware-wallets/icon-trezor.svg'),
+        type: WALLET_TYPES.TREZOR
+      },
+      {
+        label: 'KeepKey',
+        icon: require('@/assets/images/icons/hardware-wallets/icon-keepkey.svg'),
+        type: WALLET_TYPES.KEEPKEY
+      },
+      {
+        label: 'BitBox02',
+        icon: require('@/assets/images/icons/hardware-wallets/icon-bitbox.svg'),
+        type: WALLET_TYPES.BITBOX2
+      },
+      {
+        label: 'CoolWallet',
+        icon: require('@/assets/images/icons/hardware-wallets/icon-coolwallet.svg'),
+        type: WALLET_TYPES.COOL_WALLET,
+        bluetooth: true
+      }
+    ],
+    enableBluetooth: [
+      {
+        title: 'Chrome',
+        direction: [
+          {
+            title: 'Enable experimental flags',
+            steps: [
+              'chrome://flags/#enable-web-bluetooth',
+              'chrome://flags/#enable-web-bluetooth-new-permissions-backend',
+              'chrome://flags/#enable-experimental-web-platform-features'
+            ]
+          },
+          {
+            title: 'Official browser directions',
+            steps: [
+              {
+                link: 'https://support.google.com/chrome/answer/6362090?hl=en&co=GENIE.Platform%3DDesktop'
+              }
+            ]
+          }
+        ]
+      },
+      {
+        title: 'Opera',
+        direction: [
+          {
+            title: 'Enable experimental flags',
+            steps: [
+              'opera://flags/#enable-web-bluetooth-new-permissions-backend',
+              'opera://flags/#enable-experimental-web-platform-features'
+            ]
+          }
+        ]
+      },
+      {
+        title: 'Edge',
+        direction: [
+          {
+            title: 'Official browser directions',
+            steps: [
+              {
+                link: 'https://support.microsoft.com/en-us/microsoft-edge/connect-a-website-to-a-bluetooth-or-usb-device-in-microsoft-edge-107ba8a4-60aa-0fd3-2d26-afd63d0964f4'
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    bluetooth: false,
+    bluetoothModal: false,
+    supportedBrowsers: ['Chrome', 'Edge', 'Opera'],
+    ledgerApps: appPaths.map(item => {
+      return {
+        name: item.network.name_long,
+        value: item.network.name,
+        img: item.network.icon
+      };
+    }),
+    wallets: wallets,
+    step: 1,
+    hwWalletInstance: {},
+    ledgerApp: {},
+    selectedPath: {
+      name: 'Ethereum',
+      value: "m/44'/60'/0'"
+    },
+    walletType: '',
+    selectedLedgerApp: {},
+    password: '',
+    loaded: false,
+    ledgerConnected: false,
+    callback: () => {},
+    unwatch: () => {},
+    passwordError: false,
+    transport: null,
+    address: '',
+    ledgerBluetooth: false
+  }),
   computed: {
     ...mapGetters('global', ['Networks', 'network']),
+    ...mapGetters('wallet', ['getLedgerApp']),
     ...mapState('wallet', ['identifier', 'ledgerBLE']),
     walletInitialized() {
       return this.wallets[this.walletType]
@@ -397,9 +396,9 @@ export default {
      * Returns the correct network icon
      */
     icon() {
-      if (this.selectedLedgerApp !== null) {
+      if (this.getLedgerApp !== null) {
         const found = appPaths.find(item => {
-          return item.network.name_long === this.selectedLedgerApp.name;
+          return item.network.name_long === this.getLedgerApp.name;
         });
         return found ? found.network.icon : appPaths[0].network.icon;
       }
@@ -416,9 +415,9 @@ export default {
       //     title: 'Using a KeepKey Hardware wallet with MEW',
       //     url: 'https://kb.myetherwallet.com/en/hardware-wallets/using-keepkey-with-mew/'
       //   };
-      // } else if (this.onCoolWallet) {
+      // } else if (this.onCoolWalletS) {
       //   return {
-      //     title: 'Using a CoolWallet Hardware Wallet with MEW',
+      //     title: 'Using a CoolWallet S Hardware Wallet with MEW',
       //     url: 'https://kb.myetherwallet.com/en/hardware-wallets/using-coolwallet-with-mew/'
       //   };
       // }
@@ -502,9 +501,9 @@ export default {
     paths() {
       const newArr = [];
       if (this.walletType === WALLET_TYPES.LEDGER) {
-        if (this.selectedLedgerApp !== null) {
+        if (this.getLedgerApp !== null) {
           const found = appPaths.find(item => {
-            return item.network.name_long === this.selectedLedgerApp.name;
+            return item.network.name_long === this.getLedgerApp.name;
           });
           const path = found ? found.paths : appPaths[0].paths;
           return path.map(item => {
@@ -540,7 +539,7 @@ export default {
      */
     title() {
       if (this.switchAddress) return 'Switch Address';
-      if (this.step > this.walletInitalzed) {
+      if (this.step > this.walletInitialized) {
         return 'Select Network and Address';
       } else if (this.step === 1) {
         return 'Select a hardware wallet';
@@ -622,8 +621,15 @@ export default {
       Toast(e, {}, ERROR);
     }
   },
+  beforeDestroy() {
+    EventBus.$off('bleDisconnect');
+  },
   methods: {
-    ...mapActions('wallet', ['setWallet', 'setLedgerBluetooth']),
+    ...mapActions('wallet', [
+      'setWallet',
+      'setLedgerBluetooth',
+      'setLedgerApp'
+    ]),
     /**
      * Resets the Data
      */
@@ -631,7 +637,7 @@ export default {
       this.step = 1;
       this.hwWalletInstance = {};
       this.selectedPath = this.paths[0];
-      this.selectedLedgerApp = this.ledgerApps[0];
+      //this.setLedgerApp(this.ledgerApps[0]);
       this.password = '';
       this.walletType = '';
       this.ledgerConnected = false;
@@ -695,8 +701,6 @@ export default {
     nextStep() {
       if (this.walletType) {
         this.step++;
-        if (this.walletType === WALLET_TYPES.LEDGER)
-          this.selectedPath = this.paths[0];
         if (this.step === this.walletInitialized) {
           if (this.onCoolWallet || this.onBitbox2) return;
           this[`${this.walletType}Unlock`]();
@@ -742,12 +746,12 @@ export default {
           : this.selectedPath
         : this.paths[0].value;
       this.wallets[this.walletType]
-        .create(path, this.ledgerBluetooth, this.selectedLedgerApp)
+        .create(path, this.ledgerBluetooth, this.getLedgerApp)
         .then(_hwWallet => {
           try {
             this.loaded = true;
             if (this.onLedgerX || this.onLedger) this.nextStep();
-            if ((this.onTrezor || this.onKeepkey) && this.step == 2)
+            if ((this.onTrezor || this.onKeepkey) && this.step === 2)
               this.step++;
             if (this.onBitbox2) {
               this.hwWalletInstance = _hwWallet;
@@ -852,12 +856,6 @@ export default {
     setPassword(str) {
       this.password = str;
       this.passwordError = false;
-    },
-    /**
-     * Sets selected app for Ledger
-     */
-    setSelectedApp(e) {
-      this.selectedLedgerApp = e;
     }
   }
 };

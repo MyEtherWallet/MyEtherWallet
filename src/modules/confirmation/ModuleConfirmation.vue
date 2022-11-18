@@ -17,6 +17,7 @@
       :title="title"
       :reset="rejectTransaction"
       :sent-btc="sendCrossChain"
+      @close="rejectTransaction"
     />
     <app-modal
       :show="showTxOverlay"
@@ -32,10 +33,7 @@
     >
       <template #dialogBody>
         <v-card-text ref="scrollableContent" class="py-0 px-4 px-md-0">
-          <div
-            v-if="toNonEth"
-            class="px-4 py-6 pr-6 textBlack2--text border-radius--5px mb-5"
-          >
+          <div class="px-4 py-6 pr-6 textBlack2--text border-radius--5px mb-5">
             <b>Please double check everything.</b> MEW team will not be able to
             reverse your transaction once its submitted. You will still be
             charged gas fee even if the transaction fails.
@@ -77,18 +75,7 @@
             :to-currency="swapInfo.toType"
             :to-address="swapInfo.to"
           />
-          <!-- Warning Sheet -->
-          <div class="px-4 py-6 pr-6 textBlack2--text border-radius--5px mb-5">
-            <b>Make sure all the information is correct.</b> Cancelling or
-            reversing a transaction cannot be guaranteed. You will still be
-            charged gas fee even if transaction fails.
-            <a
-              :href="getArticle('my-txn-failed-charged')"
-              target="_blank"
-              rel="noopener noreferrer"
-              >Learn more.</a
-            >
-          </div>
+
           <!-- Ledger Warning Sheet -->
           <div
             v-if="isOnLedger"
@@ -110,7 +97,7 @@
               <b>Using Ledger?</b> Consider turning off 'debug data' before
               proceeding. Additional steps associated with the 'debug
               <br />
-              feature'on Ledger may be required to approve this transaction.
+              feature' on Ledger may be required to approve this transaction.
             </span>
           </div>
           <!-- transaction details -->
@@ -234,7 +221,10 @@
             <a href="https://changelly.com/aml-kyc" target="_blank">
               Changelly AML/KYC
             </a>
-            and <router-link :to="termRoute">Terms of Service</router-link>
+            and
+            <router-link :to="termRoute" target="_blank"
+              >Terms of Service</router-link
+            >
           </div>
         </v-card-text>
       </template>
@@ -245,11 +235,7 @@
     =====================================================================================
     -->
     <mew-overlay
-      :footer="{
-        text: 'Need help?',
-        linkTitle: 'Contact support',
-        link: 'mailto:support@myetherwallet.com'
-      }"
+      :footer="footer"
       :show-overlay="showSignOverlay"
       :title="title ? title : 'Message'"
       :close="reset"
@@ -308,6 +294,11 @@ export default {
   mixins: [handlerAnalytics],
   data() {
     return {
+      footer: {
+        text: 'Need help?',
+        linkTitle: 'Contact support',
+        link: 'mailto:support@myetherwallet.com'
+      },
       showTxOverlay: false,
       showSignOverlay: false,
       showSuccessModal: false,
@@ -331,7 +322,7 @@ export default {
       },
       error: '',
       panel: [],
-      termRoute: ROUTES_HOME.TERMS_OF_SERVICE.NAME
+      termRoute: `/${ROUTES_HOME.TERMS_OF_SERVICE.PATH}`
     };
   },
   computed: {
@@ -340,7 +331,8 @@ export default {
       'web3',
       'address',
       'identifier',
-      'isHardware'
+      'isHardware',
+      'isOfflineApp'
     ]),
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network', 'getFiatValue']),
@@ -617,8 +609,24 @@ export default {
       };
     });
   },
+  beforeDestroy() {
+    EventBus.$off(EventNames.SHOW_TX_CONFIRM_MODAL);
+    EventBus.$off(EventNames.SHOW_SWAP_TX_MODAL);
+    EventBus.$off(EventNames.SHOW_MSG_CONFIRM_MODAL);
+    EventBus.$off(EventNames.SHOW_CROSS_CHAIN_MODAL);
+  },
+  mounted() {
+    if (this.isOfflineApp) {
+      this.footer = {
+        text: 'Need help? Email us at support@myetherwallet.com',
+        linkTitle: '',
+        link: ''
+      };
+    }
+  },
   methods: {
     rejectTransaction() {
+      if (this.isSwap) this.trackSwap('swapTxCancelled');
       this.resolver({ rejected: true });
       this.reset();
     },
@@ -703,25 +711,39 @@ export default {
         );
         _tx.gasLimit = _tx.gas;
         setEvents(promiEvent, _tx, this.$store.dispatch);
-        promiEvent.once('transactionHash', hash => {
-          const storeKey = sha3(
-            `${this.network.type.name}-${this.address.toLowerCase()}`
-          );
-          const localStoredObj = locStore.get(storeKey);
-          locStore.set(storeKey, {
-            nonce: sanitizeHex(
-              new BigNumber(localStoredObj.nonce).plus(1).toString(16)
-            ),
-            timestamp: localStoredObj.timestamp
-          });
-          if (idx + 1 === _arr.length) {
+        promiEvent
+          .once('sent', () => {
             if (this.isSwap) {
-              this.showSuccessSwap = true;
+              this.trackSwap('swapTxBroadcasted');
             }
-            this.reset();
-            this.showSuccess(hash);
-          }
-        });
+          })
+          .once('receipt', () => {
+            if (this.isSwap) {
+              this.trackSwap('swapTxReceivedReceipt');
+            }
+          })
+          .once('transactionHash', hash => {
+            const storeKey = sha3(
+              `${this.network.type.name}-${this.address.toLowerCase()}`
+            );
+            const localStoredObj = locStore.get(storeKey);
+            locStore.set(storeKey, {
+              nonce: sanitizeHex(
+                new BigNumber(localStoredObj.nonce).plus(1).toString(16)
+              ),
+              timestamp: localStoredObj.timestamp
+            });
+            if (idx + 1 === _arr.length) {
+              if (this.isSwap) {
+                this.showSuccessSwap = true;
+              }
+              this.reset();
+              this.showSuccess(hash);
+            }
+          })
+          .catch(() => {
+            if (this.isSwap) this.trackSwap('swapTxFailed');
+          });
         return promiEvent;
       });
       this.resolver(promises);
@@ -740,7 +762,6 @@ export default {
     },
     showSuccess(param) {
       if (this.isSwap) {
-        this.trackSwap('successModal');
         this.trackSwap('swapTransactionSuccessfullySent');
       }
       if (isArray(param)) {
@@ -779,11 +800,23 @@ export default {
       if (this.isWeb3Wallet) {
         const event = this.instance.signTransaction(this.tx);
         event
+          .once('sent', () => {
+            this.trackSwap('swapTxBroadcasted');
+          })
           .on('transactionHash', res => {
             this.showTxOverlay = false;
             this.showSuccess(res);
           })
+          .once('receipt', () => {
+            this.trackSwap('swapTxReceivedReceipt');
+          })
+          .once('error', () => {
+            this.trackSwap('swapTxFailed');
+          })
           .catch(e => {
+            if (this.isSwap) {
+              this.trackSwap('swapRejected');
+            }
             this.signedTxObject = {};
             this.error = errorHandler(e);
             this.signing = false;
@@ -799,10 +832,12 @@ export default {
             }
           })
           .catch(e => {
+            if (this.isSwap) this.trackSwap('swapRejected');
             this.signedTxObject = {};
             this.error = errorHandler(e);
             this.signing = false;
-            this.instance.errorHandler(e.message);
+            const toastError = errorHandler(e, true);
+            if (toastError) this.instance.errorHandler(toastError);
           });
       }
     },
@@ -842,12 +877,14 @@ export default {
                 });
               })
               .catch(e => {
+                if (this.isSwap) this.trackSwap('swapTxFailed');
                 this.instance.errorHandler(e.message);
               });
           }
           this.signedTxArray = signed;
           if (this.isWeb3Wallet) this.resolver(batchTxEvents);
         } catch (err) {
+          if (this.isSwap) this.trackSwap('swapTxFailed');
           this.error = errorHandler(err);
           this.signedTxArray = [];
           return;

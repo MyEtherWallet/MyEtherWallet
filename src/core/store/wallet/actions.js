@@ -19,11 +19,9 @@ const removeWallet = function ({ commit, state }) {
   commit('REMOVE_WALLET');
 };
 
-const setWallet = function ({ commit, dispatch, state }, params) {
+const setWallet = function ({ commit, dispatch }, params) {
   commit('SET_WALLET', params[0]);
-  if (!state.isOfflineApp) {
-    dispatch('setWeb3Instance', params[1]);
-  }
+  dispatch('setWeb3Instance', params[1]);
 };
 const setTokens = function ({ commit }, params) {
   commit('SET_TOKENS', params);
@@ -123,6 +121,10 @@ const setOfflineApp = function ({ commit }, val) {
   commit('SET_OFFLINE_APP', val);
 };
 
+const setLedgerApp = function ({ commit }, val) {
+  commit('SET_LEDGER_APP', val);
+};
+
 export default {
   removeWallet,
   setWallet,
@@ -132,5 +134,6 @@ export default {
   setBlockNumber,
   setOwnedDomains,
   setTokens,
-  setOfflineApp
+  setOfflineApp,
+  setLedgerApp
 };

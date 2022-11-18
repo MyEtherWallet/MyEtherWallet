@@ -9,7 +9,7 @@
         <router-view />
       </v-container>
     </v-main>
-    <the-wallet-footer />
+    <the-wallet-footer :is-offline-app="isOfflineApp" />
     <enkrypt-promo-snackbar v-if="!isOfflineApp" />
   </div>
 </template>
@@ -19,7 +19,7 @@ import { mapActions, mapState, mapGetters } from 'vuex';
 import { toBN } from 'web3-utils';
 import Web3 from 'web3';
 import moment from 'moment';
-
+import { debounce, isEqual } from 'lodash';
 import handlerWallet from '@/core/mixins/handlerWallet.mixin';
 import nodeList from '@/utils/networks';
 import {
@@ -79,27 +79,33 @@ export default {
     }
   },
   watch: {
-    address() {
-      if (!this.address) {
+    address(newVal) {
+      if (!newVal) {
         this.$router.push({ name: ROUTES_HOME.HOME.NAME });
+      } else {
+        this.setup();
+        this.setTokensAndBalance();
       }
     },
     network() {
       if (this.online && !this.isOfflineApp) {
-        this.setup();
         this.web3.eth.clearSubscriptions();
+        this.setup();
+        if (this.identifier !== WALLET_TYPES.WEB3_WALLET) {
+          this.setTokensAndBalance();
+        }
       }
     },
-    web3() {
-      if (this.online && !this.isOfflineApp) this.setup();
-    },
-    coinGeckoTokens() {
-      this.setTokenAndEthBalance();
+    coinGeckoTokens(newVal, oldVal) {
+      if (!isEqual(newVal, oldVal)) {
+        this.setTokensAndBalance();
+      }
     }
   },
   mounted() {
     if (this.online && !this.isOfflineApp) {
       this.setup();
+      this.setTokensAndBalance();
       if (this.identifier === WALLET_TYPES.WEB3_WALLET) {
         this.web3Listeners();
       }
@@ -107,15 +113,13 @@ export default {
     }
   },
   beforeDestroy() {
-    if (window.ethereum) {
+    if (this.online && !this.isOfflineApp) this.web3.eth.clearSubscriptions();
+    if (window.ethereum && window.ethereum.removeListener instanceof Function) {
       if (this.findAndSetNetwork instanceof Function)
         window.ethereum.removeListener('chainChanged', this.findAndSetNetwork);
       if (this.setWeb3Account instanceof Function)
         window.ethereum.removeListener('accountsChanged', this.setWeb3Account);
     }
-  },
-  destroyed() {
-    if (this.online && !this.isOfflineApp) this.web3.eth.clearSubscriptions();
   },
   methods: {
     ...mapActions('wallet', ['setBlockNumber', 'setTokens', 'setWallet']),
@@ -128,7 +132,6 @@ export default {
     ...mapActions('external', ['setTokenAndEthBalance', 'setNetworkTokens']),
     setup() {
       this.processNetworkTokens();
-      this.setTokensAndBalance();
       this.subscribeToBlockNumber();
     },
     async checkNetwork() {
@@ -162,7 +165,7 @@ export default {
       }
       this.updateGasPrice();
     },
-    subscribeToBlockNumber() {
+    subscribeToBlockNumber: debounce(function () {
       this.web3.eth.getBlockNumber().then(bNumber => {
         this.setBlockNumber(bNumber);
         this.web3.eth.getBlock(bNumber).then(block => {
@@ -179,7 +182,7 @@ export default {
             })
             .on('error', err => {
               Toast(
-                err.message === 'Load failed'
+                err && err.message === 'Load failed'
                   ? 'eth_subscribe is not supported. Please make sure your provider supports eth_subscribe'
                   : 'Network Subscription Error: Please wait a few seconds before continuing.',
                 {},
@@ -188,7 +191,7 @@ export default {
             });
         });
       });
-    },
+    }, 500),
     /**
      * Checks Metamask chainID on load, switches current network if it doesn't match
      * and setup listeners for metamask changes
@@ -216,9 +219,10 @@ export default {
               await this.setNetwork({
                 network: foundNetwork[0],
                 walletType: this.instance.identifier
+              }).then(() => {
+                this.setTokensAndBalance();
               });
               this.setValidNetwork(true);
-              await this.setTokenAndEthBalance();
               this.trackNetworkSwitch(foundNetwork[0].type.name);
               this.$emit('newNetwork');
               Toast(

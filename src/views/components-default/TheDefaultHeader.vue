@@ -1,6 +1,6 @@
 <template>
   <div class="default-header expandHeader">
-    <v-container class="pl-4 pr-4 d-flex align-center pt-8">
+    <v-container class="pl-4 pb-7 pr-4 d-flex align-center pt-8">
       <v-row align="center" no-gutters>
         <v-col class="d-md-none" cols="2" md="4">
           <the-default-mobile-navigation class="ml-n2" />
@@ -30,12 +30,14 @@
                 @goToPage="routeTo"
               />
             </div>
-            <a
-              class="white--text text-decoration--none menu-item"
-              @click="openMoonpay"
-            >
-              {{ $t('header.buy-eth') }}
-            </a>
+            <div @click="trackBuySellLanding">
+              <a
+                class="white--text text-decoration--none menu-item"
+                @click="openMoonpay"
+              >
+                {{ $t('header.buy-eth') }}
+              </a>
+            </div>
           </div>
         </v-col>
         <v-col cols="2" md="4" class="d-flex justify-end">
@@ -52,11 +54,12 @@ import TheDefaultMobileNavigation from './TheDefaultMobileNavigation';
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { mapGetters, mapActions } from 'vuex';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 export default {
   name: 'TheDefaultHeader',
   components: { mewTools, TheDefaultMobileNavigation },
-  mixins: [buyMore],
+  mixins: [buyMore, handlerAnalytics],
   data: () => ({
     menuObj: {
       name: 'Wallet actions',
@@ -123,6 +126,9 @@ export default {
     ...mapActions('external', ['setNetworkTokens']),
     routeTo(route) {
       this.$router.push(route);
+    },
+    trackBuySellLanding() {
+      this.trackBuySell('buySellLanding');
     }
   }
 };

@@ -8,7 +8,7 @@
       <!-- Toggle: Main/Test/All -->
       <!-- ===================================================================================== -->
       <div
-        class="align-center align-sm-end justify-center pr-sm-3 pb-sm-3 order-sm-2"
+        class="align-center align-sm-end justify-center pr-sm-3 pb-sm-3 order-sm-2 mt-10 mt-sm-0"
       >
         <v-btn-toggle
           v-model="toggleType"
@@ -60,15 +60,7 @@
           <!-- ===================================================================================== -->
           <!-- Icon -->
           <!-- ===================================================================================== -->
-          <v-img
-            :class="network.name === 'MINTME' ? 'mint-me-color' : ''"
-            :src="network.icon"
-            :lazy-src="require('@/assets/images/currencies/icon-eth-grey.svg')"
-            contain
-            max-height="24px"
-            max-width="24px"
-          />
-
+          <mew-token-container :img="network.icon" size="24px" />
           <!-- ===================================================================================== -->
           <!-- Symbol/Name -->
           <!-- ===================================================================================== -->
@@ -326,18 +318,12 @@ export default {
               ? this.network.type.name
               : '';
             this.networkLoading = false;
-            if (!this.isOffline) {
-              const provider =
-                this.identifier === WALLET_TYPES.WEB3_WALLET
-                  ? this.setWeb3Instance(window.ethereum)
-                  : this.setWeb3Instance();
-              provider.then(() => {
-                this.setTokenAndEthBalance();
-              });
-              Toast(`Switched network to: ${found[0].type.name}`, {}, SUCCESS);
-              this.trackNetworkSwitch(found[0].type.name);
-              this.$emit('newNetwork');
-            }
+            this.identifier === WALLET_TYPES.WEB3_WALLET
+              ? this.setWeb3Instance(window.ethereum)
+              : this.setWeb3Instance();
+            Toast(`Switched network to: ${found[0].type.name}`, {}, SUCCESS);
+            this.trackNetworkSwitch(found[0].type.name);
+            this.$emit('newNetwork');
           }
         })
         .catch(e => {
@@ -376,6 +362,7 @@ $borderNetwork: 1px solid #ececec;
 .network-border-last {
   border-radius: 0px 0px 4px 4px;
 }
+
 .mint-me-color {
   filter: brightness(0) saturate(100%) invert(90%) sepia(3%) saturate(5171%)
     hue-rotate(348deg) brightness(92%) contrast(63%);

@@ -1,11 +1,14 @@
 <template>
   <div class="mew-component--aave">
     <the-wrapper-dapp
-      :has-exit-btn="true"
-      :banner-img="BG"
+      :is-new-header="true"
+      :dapp-img="headerImg"
       :banner-text="topBanner"
       :tab-items="tabs"
       :active-tab="activeTab"
+      external-contents
+      :on-tab="tabChanged"
+      :valid-networks="validNetworks"
     >
       <template #tabContent1>
         <v-sheet
@@ -266,13 +269,11 @@
       :open="showWithdrawOverlay"
       :close="closeWithdrawOverlay"
       :pre-selected-token="tokenSelected"
-      @onConfirm="onWithdraw"
     />
     <aave-repay-overlay
       :open="showRepayOverlay"
       :close="closeRepayOverlay"
       :pre-selected-token="tokenSelected"
-      @onConfirm="onRepay"
     />
     <aave-set-apr-overlay
       :open="showAprTypeOverlay"
@@ -287,7 +288,7 @@
 <script>
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
-
+import { SUPPORTED_NETWORKS } from './handlers/supportedNetworks';
 import TheWrapperDapp from '@/core/components/TheWrapperDapp';
 import AaveBorrowOverlay from './components/overlays/AaveBorrowOverlay';
 import AaveDepositOverlay from './components/overlays/AaveDepositOverlay';
@@ -295,7 +296,6 @@ import AaveCollateralOverlay from './components/overlays/AaveCollateralOverlay';
 import AaveRepayOverlay from './components/overlays/AaveRepayOverlay';
 import AaveWithdrawOverlay from './components/overlays/AaveWithdrawOverlay';
 import AaveSetAprOverlay from './components/overlays/AaveSetAprOverlay';
-import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.jpg';
 import { AAVE_TABLE_TITLE } from '@/dapps/aave-dapp/handlers/helpers';
 import AaveTable from './components/AaveTable';
 import handlerAave from './handlers/handlerAave.mixin';
@@ -342,6 +342,8 @@ export default {
   mixins: [handlerAave],
   data() {
     return {
+      validNetworks: SUPPORTED_NETWORKS,
+      headerImg: require('@/assets/images/icons/dapps/icon-dapp-aave.svg'),
       showDepositOverlay: false,
       tokenSelected: {},
       showBorrowOverlay: false,
@@ -350,7 +352,6 @@ export default {
       showRepayOverlay: false,
       showAprTypeOverlay: false,
       activeTab: 0,
-      BG: BG,
       topBanner: {
         title: 'AAVE',
         subtext:
@@ -515,6 +516,9 @@ export default {
     },
     showBorrowOverlay(newVal) {
       if (!newVal) this.tokenSelected = {};
+    },
+    activeTab() {
+      this.tokenSelected = {};
     }
   },
   mounted() {
@@ -525,7 +529,18 @@ export default {
     EventBus.$on('withdrawToken', this.openWithdrawOverlay);
     EventBus.$on('collateralChange', this.openCollateralOverlay);
   },
+  beforeDestroy() {
+    EventBus.$off('selectedBorrow');
+    EventBus.$off('repayBorrowing');
+    EventBus.$off('changeAprType');
+    EventBus.$off('selectedDeposit');
+    EventBus.$off('withdrawToken');
+    EventBus.$off('collateralChange');
+  },
   methods: {
+    tabChanged(tab) {
+      this.activeTab = tab;
+    },
     toggleDepositOverlay(boolean) {
       if (!boolean) {
         this.tokenSelected = {};

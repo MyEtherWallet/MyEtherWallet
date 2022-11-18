@@ -1,7 +1,17 @@
 import Ledger from '@ledgerhq/hw-app-eth';
+
 import { byContractAddressAndChainId } from '@ledgerhq/hw-app-eth/erc20';
 import { Transaction, FeeMarketEIP1559Transaction } from '@ethereumjs/tx';
 import webUsbTransport from '@ledgerhq/hw-transport-webusb';
+
+import openApp from '@ledgerhq/live-common/lib/hw/openApp';
+import getAppAndVersion from '@ledgerhq/live-common/lib/hw/getAppAndVersion';
+import attemptToQuitApp from '@ledgerhq/live-common/lib/hw/attemptToQuitApp';
+import Vue from 'vue';
+import { rlp } from 'ethereumjs-util';
+import TransportWebBLE from '@ledgerhq/hw-transport-web-ble';
+
+import { appNames } from './config';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import bip44Paths from '@/modules/access-wallet/hardware/handlers/bip44';
 import HDWalletInterface from '@/modules/access-wallet/common/HDWalletInterface';
@@ -18,11 +28,9 @@ import {
 } from '@/modules/access-wallet/common/helpers';
 import toBuffer from '@/core/helpers/toBuffer';
 import errorHandler from './errorHandler';
-import Vue from 'vue';
 import ledger from '@/assets/images/icons/wallets/ledger.svg';
-import { rlp } from 'ethereumjs-util';
-import TransportWebBLE from '@ledgerhq/hw-transport-web-ble';
 import { EventBus } from '@/core/plugins/eventBus.js';
+import { Toast, WARNING } from '@/modules/toast/handler/handlerToast';
 
 const NEED_PASSWORD = false;
 
@@ -46,9 +54,42 @@ class ledgerWallet {
     this.transport = bluetooth
       ? await getLedgerXTransport()
       : await getLedgerTransport();
-
+    const ledgerApp = store.getters['wallet/getLedgerApp'];
+    try {
+      this.openedApp = (await getAppAndVersion(this.transport)).name;
+      if (bluetooth && this.openedApp !== ledgerApp.name)
+        throw new Error('Wrong App or No App');
+      if (this.openedApp !== 'BOLOS' && this.openedApp !== ledgerApp.name) {
+        attemptToQuitApp(this.transport, this.openedApp);
+        await delay(3000);
+        if (!bluetooth) {
+          this.transport = await getLedgerTransport();
+        }
+      }
+      if (this.openedApp !== ledgerApp.name) {
+        Toast('Confirm selection on ledger', undefined, WARNING);
+        await openApp(this.transport, appNames[ledgerApp.value]).then(() => {
+          return new Promise(resolve => {
+            setTimeout(async () => {
+              if (!bluetooth) {
+                this.transport = await getLedgerTransport();
+              }
+              resolve();
+            }, 2500);
+          });
+        });
+      }
+    } catch (er) {
+      if (this.openedApp === undefined) {
+        if (er.message.includes('transferOut'))
+          throw new Error(`App has switched. Please retry again.`);
+      } else if (er.message.includes('App switch')) {
+        throw new Error(`App has switched. Please retry again.`);
+      } else if (this.openedApp !== appNames[ledgerApp.value]) {
+        throw new Error(`missing app ${ledgerApp.value}`);
+      } else throw new Error(er);
+    }
     this.ledger = new Ledger(this.transport);
-
     if (!this.isHardened) {
       const rootPub = await getRootPubKey(this.ledger, this.basePath);
       this.hdKey = new HDKey();
@@ -220,6 +261,10 @@ const getLedgerXTransport = async () => {
     );
   }
   return transport;
+};
+
+const delay = delayInms => {
+  return new Promise(resolve => setTimeout(resolve, delayInms));
 };
 
 const getRootPubKey = async (_ledger, _path) => {

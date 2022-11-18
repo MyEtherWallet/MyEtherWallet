@@ -1,4 +1,4 @@
-import { Hardfork, Common } from '@ethereumjs/common';
+import Common, { Hardfork } from '@ethereumjs/common';
 
 const commonGenerator = network => {
   return Common.custom({

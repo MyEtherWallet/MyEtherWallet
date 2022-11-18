@@ -143,7 +143,7 @@
             />
             <mew-button
               class="mt-8"
-              title="Compound Rewards"
+              title="Compound rewards"
               btn-size="xlarge"
               :loading="loading"
               :disabled="!isValid"
@@ -318,6 +318,9 @@ export default {
       return BigNumber(this.compoundAmount).gt(this.rethBalance);
     },
     errorMessages() {
+      if (!this.isEthNetwork) {
+        return 'Compunding rewards are not supported on non ETH network!';
+      }
       if (BigNumber(this.compoundAmount).eq(0)) {
         return '';
       }

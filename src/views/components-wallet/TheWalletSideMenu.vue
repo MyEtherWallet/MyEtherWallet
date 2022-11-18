@@ -10,11 +10,7 @@
     >
       <template #prepend>
         <mew-overlay
-          :footer="{
-            text: 'Need help?',
-            linkTitle: 'Contact support',
-            link: 'mailto:support@myetherwallet.com'
-          }"
+          :footer="footer"
           :show-overlay="isOpenNetworkOverlay || !validNetwork"
           :title="
             validNetwork
@@ -64,7 +60,7 @@
               active-class="remove-select-state"
               @click="openMoonpay"
             >
-              <div class="text-center mx-auto my-2">
+              <div class="text-center mx-auto my-2" @click="trackBuySellFunc">
                 <img
                   src="@/assets/images/icons/menu/icon-menu-buy-sell.svg"
                   alt="Buy or Sell"
@@ -77,7 +73,7 @@
             <v-divider vertical class="mx-3"></v-divider>
 
             <v-list-item
-              class="px-0"
+              class="px-0 SendTransaction"
               :to="{ name: ROUTES_WALLET.SEND_TX.NAME }"
             >
               <div class="text-center mx-auto my-2">
@@ -94,7 +90,7 @@
 
             <v-list-item
               :class="[!hasSwap ? 'opacity--30 pointer-event--none' : '']"
-              class="px-0"
+              class="px-0 SwapButton"
               :to="{ name: ROUTES_WALLET.SWAP.NAME }"
               @click="trackToSwap"
             >
@@ -313,13 +309,19 @@ export default {
         [ROUTES_WALLET.SWAP.NAME]: [ETH, BSC, MATIC],
         [ROUTES_WALLET.NFT_MANAGER.NAME]: [ETH]
       },
-      ROUTES_WALLET: ROUTES_WALLET
+      ROUTES_WALLET: ROUTES_WALLET,
+      footer: {
+        text: 'Need help?',
+        linkTitle: 'Contact support',
+        link: 'mailto:support@myetherwallet.com'
+      }
     };
   },
   computed: {
     ...mapGetters('global', ['network', 'isEthNetwork', 'hasSwap']),
     ...mapState('wallet', ['instance', 'isOfflineApp']),
     ...mapState('global', ['online', 'validNetwork']),
+    ...mapState('popups', ['consentToTrack']),
     /**
      * IMPORTANT TO DO:
      * @returns {boolean}
@@ -438,6 +440,12 @@ export default {
     // If no menu item is selected on load, redirect user to Dashboard
     if (!this.isOfflineApp) {
       this.redirectToDashboard();
+    } else {
+      this.footer = {
+        text: 'Need help? Email us at support@myetherwallet.com',
+        linkTitle: '',
+        link: ''
+      };
     }
 
     if (this.$route.name == ROUTES_WALLET.SETTINGS.NAME) {
@@ -450,10 +458,17 @@ export default {
       this.openNetwork();
     });
   },
+  beforeDestroy() {
+    EventBus.$off('openSettings');
+    EventBus.$off('openNetwork');
+  },
   methods: {
     ...mapActions('wallet', ['removeWallet']),
     trackToSwap() {
-      this.trackSwap('swapPageView');
+      this.trackSwap('fromSideMenu');
+    },
+    trackBuySellFunc() {
+      this.trackBuySell('buySellHome');
     },
     closeNetworkOverlay() {
       if (this.validNetwork) {

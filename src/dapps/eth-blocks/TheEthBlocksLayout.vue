@@ -18,7 +18,6 @@
 
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex';
-
 import { ETH_BLOCKS_ROUTE } from './configsRoutes';
 import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
 
@@ -34,7 +33,7 @@ export default {
         subtext: 'Mint generative art NFTs of Ethereum blocks. '
       },
       activeTab: 0,
-      headerImg: require('@/assets/images/icons/icon-dapp-eth-blocks.svg'),
+      headerImg: require('@/assets/images/icons/dapps/icon-dapp-ethblocks.svg'),
       validNetworks: SUPPORTED_NETWORKS,
       checkPendingInterval: false
     };
@@ -53,7 +52,7 @@ export default {
       return this.getAllEthBlocksTxs.length > 0;
     },
     identifyNetwork() {
-      return this.isTestNetwork ? this.cart.RIN : this.cart.ETH;
+      return this.cart.ETH;
     },
     tabs() {
       return [

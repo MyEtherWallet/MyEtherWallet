@@ -12,6 +12,7 @@
     />
     <mew-module
       v-if="hasTokens && !dense"
+      has-elevation
       subtitle="My Tokens Value"
       :has-body-padding="false"
       :title="totalTokensValue"
@@ -52,13 +53,7 @@
         </div>
       </template>
       <template #moduleBody>
-        <div class="my-8">
-          <mew-table
-            :has-color="false"
-            :table-headers="tableHeaders"
-            :table-data="tokensData"
-          />
-        </div>
+        <balance-table class="mb-4" :table-data="tokensData" />
       </template>
     </mew-module>
     <mew-table
@@ -106,15 +101,16 @@
   </div>
 </template>
 <script>
+import BalanceTable from './components/BalanceTable';
 import { mapGetters, mapState } from 'vuex';
 import { uniqWith, isEqual } from 'lodash';
-
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { currencyToNumber } from '@/core/helpers/localization';
-
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+
 export default {
   components: {
+    BalanceTable,
     BalanceEmptyBlock: () => import('./components/BalanceEmptyBlock'),
     TokenAddCustom: () => import('./components/TokenAddCustom'),
     TokenEditCustom: () => import('./components/TokenEditCustom'),
@@ -143,7 +139,7 @@ export default {
           text: 'Price',
           value: 'price',
           sortable: false,
-          width: '20%'
+          width: '15%'
         },
         {
           text: 'Market Cap',
@@ -152,10 +148,22 @@ export default {
           width: '20%'
         },
         {
+          text: '24H',
+          value: 'change',
+          sortable: false,
+          width: '20%'
+        },
+        {
+          text: 'Balance',
+          value: 'balance',
+          sortable: false,
+          width: '20%'
+        },
+        {
           text: '',
           value: 'callToAction',
           sortable: false,
-          width: '15%'
+          width: '10%'
         }
       ],
       items: [

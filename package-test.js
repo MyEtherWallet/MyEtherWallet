@@ -48,6 +48,7 @@ const EXCEPTIONS = [
   'vue-i18n',
   'vue',
   '@vue/cli-plugin-e2e-nightwatch',
+  '@kleros/address-tags-sdk',
   // breaking
   '@shapeshiftoss/hdwallet-core',
   '@shapeshiftoss/hdwallet-keepkey-webusb',
@@ -71,7 +72,9 @@ const EXCEPTIONS = [
   '@ledgerhq/hw-transport-web-ble',
   '@ledgerhq/hw-transport-webusb',
   'uuid',
-  'web3-eth-contract'
+  'web3-eth-contract',
+  'is-ipfs',
+  'axios'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

@@ -71,6 +71,7 @@
 <script>
 import BigNumber from 'bignumber.js';
 import { ACTION_TYPES } from '@/dapps/aave-dapp/handlers/helpers';
+import { isEmpty } from 'lodash';
 import hasValidDecimals from '@/core/helpers/hasValidDecimals';
 
 export default {
@@ -134,28 +135,44 @@ export default {
   },
   computed: {
     hasAmount() {
-      return BigNumber(this.amount).gt(0);
+      return (
+        BigNumber(this.amount).gt(0) &&
+        BigNumber(this.amount).lte(this.actualTokenBalance)
+      );
     },
     checkIfNumerical() {
-      const regex = new RegExp('^-?[0-9]+[.]?[0-9]*$');
+      const regex = new RegExp('^-?\\d+[.]?\\d*$');
       const test = regex.test(this.amount);
       return [test || 'Please enter a valid value!'];
     },
     errorMessages() {
+      if (isEmpty(this.amount)) return 'Amount is required!';
+      if (BigNumber(this.actualTokenBalance).lte(0))
+        return 'Not enough token balance';
       if (!hasValidDecimals(this.amount, this.tokenDecimal))
         return 'Too many decimal places';
-
+      if (BigNumber(this.amount).isNegative())
+        return 'Amount cannot be negative';
+      if (BigNumber(this.amount).lte(0))
+        return 'Please enter an amount greater than 0';
+      if (BigNumber(this.amount).gt(this.actualTokenBalance))
+        return 'Amount exceeds available balance';
       return '';
     },
     disabled() {
       return !this.hasAmount || this.errorMessages !== '';
+    },
+    actualTokenBalance() {
+      return this.buttonTitle.action.toLowerCase() === ACTION_TYPES.withdraw
+        ? this.aaveBalance
+        : this.tokenBalance;
     }
   },
   mounted() {
     if (this.showToggle) {
       setTimeout(() => {
         this.onToggle(this.group[1]);
-      }, 0);
+      }, 100);
     }
   },
   methods: {
@@ -188,10 +205,8 @@ export default {
       this.$emit('emitValues', this.amount);
     },
     calculatedAmt(per) {
-      const amt =
-        this.buttonTitle.action.toLowerCase() === ACTION_TYPES.withdraw
-          ? this.aaveBalance
-          : this.tokenBalance;
+      let amt = this.actualTokenBalance;
+      if (isNaN(amt)) amt = 0;
       return BigNumber(amt)
         .times(per)
         .decimalPlaces(this.tokenDecimal)

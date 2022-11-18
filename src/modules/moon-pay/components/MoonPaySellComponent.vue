@@ -4,6 +4,7 @@
     <!-- Currency select -->
     <!-- ============================================================== -->
     <mew-select
+      ref="selectedCurrency"
       label="Currency"
       :items="currencyItems"
       :value="selectedCurrency"
@@ -27,6 +28,7 @@
         :error-messages="errorMessages"
         :persistent-hint="hasPersistentHint"
         :hint="persistentHintMessage"
+        @keydown.native="preventCharE($event)"
       />
     </div>
     <div v-else class="position--relative mt-9">
@@ -39,6 +41,7 @@
         :error-messages="errorMessages"
         :persistent-hint="hasPersistentHint"
         :hint="persistentHintMessage"
+        @keydown.native="preventCharE($event)"
       />
     </div>
     <div class="pt-8 pb-13">
@@ -64,7 +67,7 @@
     <!-- ============================================================== -->
     <div v-if="!inWallet" class="mt-0">
       <div class="mew-heading-3 textDark--text mb-5">Refund address</div>
-      <ModuleAddressBook
+      <module-address-book
         ref="addressInput"
         label="Enter Crypto Address"
         :enable-save-address="false"
@@ -424,7 +427,26 @@ export default {
     }
   },
   mounted() {
-    this.$refs.addressInput.$refs.addressSelect.clear();
+    // Watch for currency menu isActive
+    const selectedCurrencyRef = this.$refs.selectedCurrency;
+    const menuRef = selectedCurrencyRef.$children[0].$refs.menu;
+    this.$watch(
+      () => {
+        return menuRef.isActive;
+      },
+      val => {
+        // If menu is closed make sure search is cleared
+        if (!val) {
+          if (
+            selectedCurrencyRef.search !== '' ||
+            selectedCurrencyRef.selectItems.length === 0
+          )
+            selectedCurrencyRef.search = '';
+        }
+      }
+    );
+
+    if (!this.inWallet) this.$refs.addressInput.$refs.addressSelect.clear();
     this.sendHandler = new handlerSend();
     this.fetchSellInfo();
     this.locGasPrice = this.gasPriceByType(this.gasPriceType);
@@ -541,7 +563,7 @@ export default {
         });
     },
     fetchSellInfo() {
-      if (this.actualValidAddress) {
+      if (this.actualValidAddress && this.selectedCurrency.contract) {
         this.fetchingBalance = true;
         if (this.selectedCurrency.contract === MAIN_TOKEN_ADDRESS) {
           this.getEthBalance();
@@ -582,6 +604,9 @@ export default {
     },
     isValidToAddress(address) {
       return MultiCoinValidator.validate(address, this.selectedCurrency.symbol);
+    },
+    preventCharE(e) {
+      if (e.key === 'e') e.preventDefault();
     }
   }
 };

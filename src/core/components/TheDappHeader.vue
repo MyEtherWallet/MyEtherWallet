@@ -31,15 +31,17 @@
           Link to Dapp Center
         ====================================
         -->
-        <router-link
-          :to="{ name: ROUTE_DAPP_CENTER.NAME }"
-          class="blue500--text"
-        >
-          <v-row class="align-center" no-gutters>
-            <v-icon class="blue500--text" size="20"> mdi-chevron-left</v-icon>
-            <div>{{ $t('common.dapps') }}</div>
-          </v-row>
-        </router-link>
+        <div class="router-link">
+          <router-link
+            :to="{ name: ROUTE_DAPP_CENTER.NAME }"
+            class="blue500--text"
+          >
+            <v-row class="align-center" no-gutters>
+              <v-icon class="blue500--text" size="20"> mdi-chevron-left</v-icon>
+              <div>{{ $t('common.dapps') }}</div>
+            </v-row>
+          </router-link>
+        </div>
         <!--
         ===================================
           Link to Dapp Name
@@ -86,9 +88,11 @@ export default {
 <style lang="scss" scoped>
 .dapp-icon {
   background-color: white;
-  border: 1px solid #d7dae3;
   border-radius: 12px;
   width: 88px;
   height: 88px;
+}
+.router-link {
+  display: inline-block;
 }
 </style>
