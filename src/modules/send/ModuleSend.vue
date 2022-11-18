@@ -195,10 +195,10 @@ import { fromWei, isHexStrict } from 'web3-utils';
 import { debounce, isEmpty, isNumber } from 'lodash';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
-
+import { EventBus } from '@/core/plugins/eventBus';
+import EventNames from '@/utils/web3-provider/events.js';
 import { ETH } from '@/utils/networks/types';
 import { Toast, ERROR, WARNING } from '@/modules/toast/handler/handlerToast';
-
 import {
   formatIntegerToString,
   toBNSafe
@@ -206,7 +206,7 @@ import {
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 import { fromBase, toBase } from '@/core/helpers/unit';
-
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import SendTransaction from '@/modules/send/handlers/handlerSend';
 
 export default {
@@ -277,6 +277,11 @@ export default {
       return this.selectedCurrency?.symbol === this.currencyName;
     },
     isDisabledNextBtn() {
+      if (this.instance.identifier === WALLET_TYPES.LEDGER) {
+        EventBus.$on(EventNames.SHOW_TX_CONFIRM_MODAL, () => {
+          return true;
+        });
+      }
       return (
         this.feeError !== '' ||
         !this.isValidGasLimit ||
