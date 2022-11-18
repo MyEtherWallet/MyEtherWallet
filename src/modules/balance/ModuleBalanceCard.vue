@@ -241,7 +241,7 @@ import { mapGetters, mapActions, mapState } from 'vuex';
 import clipboardCopy from 'clipboard-copy';
 import { isEmpty } from 'lodash';
 
-import { Toast, SUCCESS } from '@/modules/toast/handler/handlerToast';
+import { Toast, SUCCESS, ERROR } from '@/modules/toast/handler/handlerToast';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 
@@ -476,10 +476,16 @@ export default {
     viewAddressOnDevice() {
       this.showVerify = true;
       if (this.canDisplayAddress) {
-        this.instance.displayAddress().then(() => {
-          this.showVerify = false;
-          Toast('Address verified!', {}, SUCCESS);
-        });
+        this.instance
+          .displayAddress()
+          .then(() => {
+            this.showVerify = false;
+            Toast('Address verified!', {}, SUCCESS);
+          })
+          .catch(e => {
+            this.showVerify = false;
+            Toast(e.message, {}, ERROR);
+          });
       }
     },
     /**
