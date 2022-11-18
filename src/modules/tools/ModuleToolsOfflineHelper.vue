@@ -97,7 +97,9 @@
                 </div>
               </template>
             </mew-expand-panel>
-            <div class="d-block d-lg-flex justify-center mt-2 text-center">
+            <div
+              class="d-block d-lg-flex justify-center mt-2 text-center DownloadButtonDiv"
+            >
               <mew-button
                 class="mx-1 mb-3"
                 title="Back"
@@ -115,7 +117,7 @@
             </div>
             <mew-button
               v-if="detailLength"
-              class="mt-2 display--block mx-auto DownloadButton"
+              class="mt-2 display--block mx-auto NextButton2"
               title="Export JSON file"
               btn-size="small"
               btn-style="transparent"

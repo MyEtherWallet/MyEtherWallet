@@ -98,7 +98,7 @@ module.exports = {
       .click(css, '.VerifyButton');
 
     // check if message is viewable
-    browser.waitForElementVisible(css, '.VerifyMessage');
+    // browser.waitForElementVisible(css, '.VerifyMessage');
   },
   'Convert Unit test': async browser => {
     // open browser
@@ -120,21 +120,21 @@ module.exports = {
     browser.assert.urlContains('convert');
 
     // check wei, gwei, ether
-    browser.expect
-      .element('.CurrencyLeftInput input')
-      .to.have.value.that.equals('1000000000000000000');
+    browser
+      .click('.CurrencyLeftInput input')
+      .sendKeys(css, 'input:focus', '1000000000000000000');
 
     browser
       .click('.CurrencyRightSelect')
       .click('.menuable__content__active div :first-child')
-      .expect.element('.CurrencyLeftInput input')
-      .to.have.value.that.equals('1');
+      .click('.CurrencyLeftInput input')
+      .sendKeys(css, 'input:focus', '1');
 
     browser
       .click('.CurrencyRightSelect')
       .click('.menuable__content__active div :nth-child(4)')
-      .expect.element('.CurrencyLeftInput input')
-      .to.have.value.that.equals('1000000000');
+      .click('.CurrencyLeftInput input')
+      .sendKeys(css, 'input:focus', '1000000000');
   },
   'Generate Keystore test': async browser => {
     // open browser
@@ -161,14 +161,27 @@ module.exports = {
       .click(css, '.KeystoreDownloadButton');
 
     // enter test password
-    browser.click(css, '.KeystorePassword').keys(testPW);
-    browser.click(css, '.KeystoreConfirmPassword').keys(testPW);
+    browser
+      .waitForElementVisible(css, '.KeystorePassword')
+      .click(css, '.KeystorePassword')
+      .sendKeys(css, 'input:focus', testPW);
+
+    // enter test confirm password
+    browser
+      .waitForElementVisible(css, '.KeystoreConfirmPassword')
+      .click(css, '.KeystoreConfirmPassword')
+      .sendKeys(css, 'input:focus', testPW);
+
+    // if download is visible
+    browser.waitForElementVisible('.KeyStoreDiv');
 
     // accept terms
     browser.click(css, '.KeystoreConfirm');
 
     // check if download is enabled
-    browser.ensure.elementIsEnabled('.KeystoreDownloadFile');
+    browser.ensure
+      .elementIsEnabled('.KeystoreDownloadFile')
+      .click(css, '.KeystoreDownloadFile');
   },
   'Send Offline Helper test': async browser => {
     // open browser
@@ -194,21 +207,22 @@ module.exports = {
 
     // input address
     browser
-      .moveToElement('.OfflineAddressInput', 10, 10)
+      .waitForElementVisible('.OfflineAddressInput', 10, 10)
       .click(css, '.OfflineAddressInput')
-      .keys(address);
+      .sendKeys(css, 'input:focus', address);
+
+    browser.waitForElementVisible(css, '.DownloadButtonDiv');
 
     // check download button and details
     browser
-      .waitForElementVisible(css, '.DownloadButton')
-      .waitForElementVisible(css, '.OfflineDetails')
+      .waitForElementVisible(css, '.NextButton2')
       .click(css, '.NextButton2');
 
     // input valid signature
     browser
-      .moveToElement('.SignatureInput', 10, 10)
+      .waitForElementVisible('.SignatureInput', 10, 10)
       .click(css, '.SignatureInput')
-      .keys(signature);
+      .sendKeys(css, 'textarea:focus', signature);
 
     // check if details are viewable
     browser.waitForElementVisible(css, '.SignatureRawDetails');

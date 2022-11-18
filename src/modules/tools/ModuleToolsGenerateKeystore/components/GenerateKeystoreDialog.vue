@@ -31,7 +31,7 @@
           label="Confirm password"
         />
 
-        <div class="mt-1 greyLight terms-container pa-5">
+        <div class="mt-1 greyLight terms-container pa-5 KeyStoreDiv">
           <mew-checkbox
             v-model="userTermsAgreed"
             class-name="textMedium--text KeystoreConfirm"
