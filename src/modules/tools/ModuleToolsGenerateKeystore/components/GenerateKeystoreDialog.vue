@@ -23,6 +23,7 @@
           :rules="[value => !!value || 'Required']"
           label="New password"
         />
+
         <mew-input
           v-model="confirmPassword"
           :error-messages="confirmPasswordErrMessages"
@@ -38,6 +39,7 @@
             :label="userTermsLabel"
           ></mew-checkbox>
         </div>
+
         <mew-button
           icon-type="mdi"
           icon-align="left"
@@ -47,7 +49,7 @@
           btn-size="xlarge"
           :disabled="
             !password ||
-            confirmPassword === '' ||
+            !confirmPassword ||
             confirmPasswordErrMessages !== '' ||
             passwordErrMessages !== '' ||
             !userTermsAgreed
