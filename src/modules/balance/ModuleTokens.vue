@@ -12,6 +12,7 @@
     />
     <mew-module
       v-if="hasTokens && !dense"
+      has-elevation
       subtitle="My Tokens Value"
       :has-body-padding="false"
       :title="totalTokensValue"
