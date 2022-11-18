@@ -16,7 +16,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(td, dataKey) in tableDataPaginated" :key="dataKey">
+          <tr v-for="(td, dataKey) in tableData" :key="dataKey">
             <td>
               <div class="d-flex align-center">
                 <mew-token-container
