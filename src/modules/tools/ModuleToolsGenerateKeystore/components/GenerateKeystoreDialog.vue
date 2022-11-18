@@ -120,6 +120,9 @@ export default {
      * emits the value back to step two generate
      */
     onCreatePassword(newVal) {
+      this.password = '';
+      this.confirmPassword = '';
+      this.userTermsAgreed = false;
       this.$emit('onDialogStateChange', newVal);
     }
   },
