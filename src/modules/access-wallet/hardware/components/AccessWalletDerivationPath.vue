@@ -1,217 +1,224 @@
 <template>
-  <!--
-=====================================================================================
- Derivation Path Component - Access Wallet 
-=====================================================================================
--->
-  <mew-dropdown ref="mewDropdown" popup-title="Select a derivation path">
-    <template #activatorBtnText>
-      <span class="textDark--text mew-body capitalize">
-        {{ selectedPath.name }}
-      </span>
-      <span class="path mew-body capitalize">{{ selectedPath.value }}</span>
-      <mew-popup
-        :title="showRemove ? 'Remove path?' : 'Remove all custom paths?'"
-        max-width="336"
-        :show="showRemove || showRemoveAll"
-        :left-btn="{
-          text: 'Cancel',
-          color: 'grey',
-          method: hideRemove
-        }"
-        :right-btn="{
-          text: 'Remove',
-          color: 'error',
-          enabled: true,
-          method: () =>
-            showRemove ? deletePath(selectedRemovePath) : deleteAllPaths()
-        }"
-        hide-close-btn
-      >
-      </mew-popup>
+  <!-- ===================================================================================== -->
+  <!-- Derivation Path Component - Access Wallet -->
+  <!-- ===================================================================================== -->
+
+  <mew-menu-popup v-model="showDerivationPath" right>
+    <template #activator>
+      <v-btn depressed>
+        <div class="d-flex align-center">
+          <div class="textDark--text mew-body capitalize mr-2">
+            {{ selectedPath.name }}
+          </div>
+          <div class="path mew-body capitalize">
+            {{ selectedPath.value }}
+          </div>
+        </div>
+      </v-btn>
     </template>
-    <template #cardContent>
-      <div>
-        <!--
-        =====================================================================================
-        Search Component to search paths
-        =====================================================================================
-        -->
-        <mew-search
-          :value="searchValue"
-          class="mb-8"
-          placeholder="find a path"
-          is-compact
-          is-filled
-          @input="setSearch"
-        />
-        <!--
-        =====================================================================================
-        Displays the filtered customs paths
-        =====================================================================================
-        -->
-        <div v-if="!disableCustomPaths">
+
+    <mew-popup
+      :title="showRemove ? 'Remove path?' : 'Remove all custom paths?'"
+      max-width="336"
+      :show="showRemove || showRemoveAll"
+      :left-btn="{
+        text: 'Cancel',
+        color: 'grey',
+        method: hideRemove
+      }"
+      :right-btn="{
+        text: 'Remove',
+        color: 'error',
+        enabled: true,
+        method: () =>
+          showRemove ? deletePath(selectedRemovePath) : deleteAllPaths()
+      }"
+      hide-close-btn
+    >
+    </mew-popup>
+
+    <div style="width: 350px" class="pa-6 text-left">
+      <div class="mew-heading-2 mb-4">Select a derivation path</div>
+
+      <!-- ===================================================================================== -->
+      <!-- Search Component to search paths -->
+      <!-- ===================================================================================== -->
+      <mew-search
+        :value="searchValue"
+        class="mb-8"
+        placeholder="find a path"
+        is-compact
+        is-filled
+        @input="setSearch"
+      />
+
+      <!-- ===================================================================================== -->
+      <!-- Displays the filtered customs paths -->
+      <!-- ===================================================================================== -->
+      <div v-if="!disableCustomPaths">
+        <div
+          v-for="(filteredCustomPath, idx) in filteredCustomPaths"
+          :key="filteredCustomPath.name + idx"
+          class="d-flex"
+        >
           <div
-            v-for="(filteredCustomPath, idx) in filteredCustomPaths"
-            :key="filteredCustomPath.name + idx"
-            class="d-flex"
+            class="mb-6 d-flex align-center justify-space-between cursor-pointer flex-grow-1"
+            @click="setPath(filteredCustomPath)"
           >
-            <div
-              class="mb-6 d-flex align-center justify-space-between cursor-pointer flex-grow-1"
-              @click="setPath(filteredCustomPath)"
-            >
-              <div class="d-flex align-center">
-                <v-img
-                  :src="require('@/assets/images/currencies/eth.png')"
-                  contain
-                  class="mr-2"
-                  max-height="24px"
-                  max-width="24px"
-                />
-                <span
-                  :class="[
-                    filteredCustomPath.name === selectedPath.name
-                      ? 'greenPrimary--text'
-                      : 'textDark--text'
-                  ]"
-                  >{{ filteredCustomPath.name }}</span
-                >
-              </div>
+            <div class="d-flex align-center">
+              <v-img
+                :src="require('@/assets/images/currencies/eth.png')"
+                contain
+                class="mr-2"
+                max-height="24px"
+                max-width="24px"
+              />
               <span
-                :class="
-                  filteredCustomPath.value === selectedPath.value
+                :class="[
+                  filteredCustomPath.name === selectedPath.name
                     ? 'greenPrimary--text'
-                    : 'path'
-                "
+                    : 'textDark--text'
+                ]"
+                >{{ filteredCustomPath.name }}</span
               >
-                {{ filteredCustomPath.value }}
-              </span>
             </div>
-            <v-btn
-              icon
-              small
-              class="pa-3 mb-7 ml-2"
-              @click="handleRemove(filteredCustomPath)"
-            >
-              <v-icon color="textDark">mdi-close</v-icon>
-            </v-btn>
-          </div>
-        </div>
-        <v-divider
-          v-if="
-            !disableCustomPaths &&
-            filteredCustomPaths.length > 0 &&
-            filteredPaths.length > 0
-          "
-          class="mb-6"
-        />
-        <!--
-        =====================================================================================
-        Displays the filtered paths
-        =====================================================================================
-        -->
-        <div
-          v-for="(filteredPath, idx) in filteredPaths"
-          :key="filteredPath.name + idx"
-          class="mb-7 d-flex align-center justify-space-between cursor-pointer"
-          @click="setPath(filteredPath)"
-        >
-          <div class="d-flex align-center">
-            <v-img
-              :src="require('@/assets/images/currencies/eth.png')"
-              contain
-              class="mr-2"
-              max-height="24px"
-              max-width="24px"
-            />
             <span
-              :class="[
-                filteredPath.name === selectedPath.name
+              :class="
+                filteredCustomPath.value === selectedPath.value
                   ? 'greenPrimary--text'
-                  : 'textDark--text'
-              ]"
-              >{{ filteredPath.name }}</span
+                  : 'path'
+              "
             >
+              {{ filteredCustomPath.value }}
+            </span>
           </div>
-          <span
-            :class="
-              filteredPath.value === selectedPath.value
-                ? 'greenPrimary--text'
-                : 'path'
-            "
+          <v-btn
+            icon
+            small
+            class="pa-3 mb-7 ml-2"
+            @click="handleRemove(filteredCustomPath)"
           >
-            {{ filteredPath.value }}
-          </span>
+            <v-icon color="textDark">mdi-close</v-icon>
+          </v-btn>
         </div>
-
-        <div
-          v-if="!disableCustomPaths"
-          class="d-flex align-center justify-space-between bottom-buttons pt-4"
-        >
-          <mew-button
-            btn-style="transparent"
-            btn-size="small"
-            color-theme="textDark"
-            @click.native="toggleCustomField(true)"
-          >
-            Add path
-            <v-icon>mdi-menu-down</v-icon>
-          </mew-button>
-
-          <mew-button
-            v-if="filteredCustomPaths.length > 0"
-            btn-style="transparent"
-            btn-size="small"
-            color-theme="redPrimary"
-            @click.native="showRemoveAll = true"
-          >
-            Remove all custom
-          </mew-button>
-        </div>
-
-        <div :class="showCustomField ? 'open' : ''" class="custom-field">
-          <mew-input
-            ref="aliasInput"
-            class="mt-4"
-            label="Alias"
-            placeholder="my custom path"
-            @input="setCustomAlias"
-          />
-          <mew-input
-            ref="pathInput"
-            label="Path"
-            placeholder="m/44’/1’/0’/0"
-            @input="setCustomPath"
-          />
-          <v-row no-gutters class="d-flex align-center">
-            <v-col class="pr-1" cols="6">
-              <mew-button
-                has-full-width
-                btn-style="outline"
-                title="Cancel"
-                @click.native="toggleCustomField"
-              />
-            </v-col>
-            <v-col class="pl-1" cols="6">
-              <mew-button
-                has-full-width
-                title="Add path"
-                @click.native="saveCustomPath"
-              />
-            </v-col>
-          </v-row>
-        </div>
-        <div id="bottomList"></div>
       </div>
-    </template>
-  </mew-dropdown>
+      <v-divider
+        v-if="
+          !disableCustomPaths &&
+          filteredCustomPaths.length > 0 &&
+          filteredPaths.length > 0
+        "
+        class="mb-6"
+      />
+
+      <!-- ===================================================================================== -->
+      <!-- Displays the filtered paths -->
+      <!-- ===================================================================================== -->
+      <div
+        v-for="(filteredPath, idx) in filteredPaths"
+        :key="filteredPath.name + idx"
+        class="mb-7 d-flex align-center justify-space-between cursor-pointer"
+        @click="setPath(filteredPath)"
+      >
+        <div class="d-flex align-center">
+          <v-img
+            :src="require('@/assets/images/currencies/eth.png')"
+            contain
+            class="mr-2"
+            max-height="24px"
+            max-width="24px"
+          />
+          <span
+            :class="[
+              filteredPath.name === selectedPath.name
+                ? 'greenPrimary--text'
+                : 'textDark--text'
+            ]"
+            >{{ filteredPath.name }}</span
+          >
+        </div>
+        <span
+          :class="
+            filteredPath.value === selectedPath.value
+              ? 'greenPrimary--text'
+              : 'path'
+          "
+        >
+          {{ filteredPath.value }}
+        </span>
+      </div>
+
+      <div
+        v-if="!disableCustomPaths"
+        class="d-flex align-center justify-space-between bottom-buttons pt-4"
+      >
+        <mew-button
+          btn-style="transparent"
+          btn-size="small"
+          color-theme="textDark"
+          @click.native="toggleCustomField(true)"
+        >
+          Add path
+          <v-icon>mdi-menu-down</v-icon>
+        </mew-button>
+
+        <mew-button
+          v-if="filteredCustomPaths.length > 0"
+          btn-style="transparent"
+          btn-size="small"
+          color-theme="redPrimary"
+          @click.native="showRemoveAll = true"
+        >
+          Remove all custom
+        </mew-button>
+      </div>
+
+      <div :class="showCustomField ? 'open' : ''" class="custom-field">
+        <mew-input
+          ref="aliasInput"
+          class="mt-4"
+          label="Alias"
+          placeholder="my custom path"
+          @input="setCustomAlias"
+        />
+        <mew-input
+          ref="pathInput"
+          label="Path"
+          placeholder="m/44’/1’/0’/0"
+          @input="setCustomPath"
+        />
+        <v-row no-gutters class="d-flex align-center">
+          <v-col class="pr-1" cols="6">
+            <mew-button
+              has-full-width
+              btn-style="outline"
+              title="Cancel"
+              @click.native="toggleCustomField"
+            />
+          </v-col>
+          <v-col class="pl-1" cols="6">
+            <mew-button
+              has-full-width
+              title="Add path"
+              @click.native="saveCustomPath"
+            />
+          </v-col>
+        </v-row>
+      </div>
+      <div id="bottomList"></div>
+    </div>
+  </mew-menu-popup>
 </template>
 
 <script>
+import MewMenuPopup from '@/components/mew-menu-popup/MewMenuPopup.vue';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import { checkCustomPath } from '@/modules/access-wallet/software/handlers/pathHelper';
 import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
 export default {
+  components: {
+    MewMenuPopup
+  },
   props: {
     passedPaths: {
       type: Array,
@@ -236,6 +243,7 @@ export default {
   },
   data() {
     return {
+      showDerivationPath: false,
       showCustomField: false,
       searchValue: '',
       customAlias: '',
@@ -298,7 +306,7 @@ export default {
      */
     setPath(path) {
       this.$emit('setPath', path);
-      this.$refs.mewDropdown.close();
+      this.showDerivationPath = false;
     },
     hideRemove() {
       this.showRemove = false;
