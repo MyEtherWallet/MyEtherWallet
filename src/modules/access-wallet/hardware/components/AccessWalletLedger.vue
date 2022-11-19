@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="subtitle-1 font-weight-bold mb-2">Connecting to:</div>
-    <div class="d-flex align-start">
+    <div class="d-flex align-start mb-2">
       <mew-select
         :value="ledgerApp"
         :items="ledgerApps"
