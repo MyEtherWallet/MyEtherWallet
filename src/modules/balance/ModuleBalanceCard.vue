@@ -430,6 +430,12 @@ export default {
     web3() {
       this.setupNameResolver();
     },
+    /**
+     * run setup for name resolver when network changes
+     */
+    network() {
+      this.setupNameResolver();
+    },
     sidemenuStatus() {
       /**
        * At side menu closes, close paper wallet
