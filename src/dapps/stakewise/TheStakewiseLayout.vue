@@ -48,7 +48,7 @@ export default {
           id: 1
         }
       ],
-      headerImg: require('@/dapps/stakewise/assets/icon-stakewise-purple.svg'),
+      headerImg: require('@/assets/images/icons/dapps/icon-dapp-stakewise.svg'),
       validNetworks: SUPPORTED_NETWORKS,
       stakewiseHandler: {},
       fetchInterval: null

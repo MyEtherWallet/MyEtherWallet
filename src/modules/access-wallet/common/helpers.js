@@ -94,7 +94,7 @@ const getSignTransactionObject = tx => {
         ? bufferToHex(tx.maxPriorityFeePerGas)
         : null,
       gas: tx.gasLimit ? bufferToHex(tx.gasLimit) : bufferToHex(tx.gas),
-      to: bufferToHex(tx.to),
+      to: tx.to ? bufferToHex(tx.to) : '',
       value: bufferToHex(tx.value),
       input: bufferToHex(tx.data),
       v: bufferToHex(tx.v),

@@ -19,7 +19,7 @@ import { mapActions, mapState, mapGetters } from 'vuex';
 import { toBN } from 'web3-utils';
 import Web3 from 'web3';
 import moment from 'moment';
-import { debounce } from 'lodash';
+import { debounce, isEqual } from 'lodash';
 import handlerWallet from '@/core/mixins/handlerWallet.mixin';
 import nodeList from '@/utils/networks';
 import {
@@ -79,27 +79,33 @@ export default {
     }
   },
   watch: {
-    address() {
-      if (!this.address) {
+    address(newVal) {
+      if (!newVal) {
         this.$router.push({ name: ROUTES_HOME.HOME.NAME });
+      } else {
+        this.setup();
+        this.setTokensAndBalance();
       }
     },
     network() {
       if (this.online && !this.isOfflineApp) {
-        this.setup();
         this.web3.eth.clearSubscriptions();
+        this.setup();
+        if (this.identifier !== WALLET_TYPES.WEB3_WALLET) {
+          this.setTokensAndBalance();
+        }
       }
     },
-    web3() {
-      if (this.online && !this.isOfflineApp) this.setup();
-    },
-    coinGeckoTokens() {
-      this.setTokenAndEthBalance();
+    coinGeckoTokens(newVal, oldVal) {
+      if (!isEqual(newVal, oldVal)) {
+        this.setTokensAndBalance();
+      }
     }
   },
   mounted() {
     if (this.online && !this.isOfflineApp) {
       this.setup();
+      this.setTokensAndBalance();
       if (this.identifier === WALLET_TYPES.WEB3_WALLET) {
         this.web3Listeners();
       }
@@ -126,7 +132,6 @@ export default {
     ...mapActions('external', ['setTokenAndEthBalance', 'setNetworkTokens']),
     setup() {
       this.processNetworkTokens();
-      this.setTokensAndBalance();
       this.subscribeToBlockNumber();
     },
     async checkNetwork() {
@@ -214,9 +219,10 @@ export default {
               await this.setNetwork({
                 network: foundNetwork[0],
                 walletType: this.instance.identifier
+              }).then(() => {
+                this.setTokensAndBalance();
               });
               this.setValidNetwork(true);
-              await this.setTokenAndEthBalance();
               this.trackNetworkSwitch(foundNetwork[0].type.name);
               this.$emit('newNetwork');
               Toast(

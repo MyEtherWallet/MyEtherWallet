@@ -53,7 +53,7 @@ class MEWPClass {
         .dividedBy(new BigNumber(10).pow(fromT.decimals))
         .toFixed(),
       maxFrom: new BigNumber(1)
-        .multipliedBy(new BigNumber(10).pow(fromT.decimals))
+        .multipliedBy(new BigNumber(10).pow(18))
         .toFixed()
     });
   }
