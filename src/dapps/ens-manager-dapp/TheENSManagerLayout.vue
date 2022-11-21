@@ -824,7 +824,7 @@ export default {
     },
 
     getRentPrice(duration) {
-      this.durationPick = duration;
+      this.durationPick = duration.toString();
       const handler = this.onManage
         ? this.manageDomainHandler
         : this.nameHandler;
