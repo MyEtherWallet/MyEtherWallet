@@ -72,10 +72,7 @@
 import { mapGetters, mapState, mapActions } from 'vuex';
 import { isEmpty } from 'lodash';
 
-// import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
-// import nodes from '@/utils/networks';
-// import { SUCCESS, Toast } from '../toast/handler/handlerToast';
 
 import handler from './handlers/handlerOrder';
 
@@ -190,15 +187,14 @@ export default {
       this.selectedCurrency = {};
       this.selectedCurrency = this.defaultCurrency;
       this.activeTab = val;
-      if (!this.inWallet) {
-        this.setNetwork({ network: this.network }).then(() => {
-          this.setWeb3Instance();
-          this.activeTab = val;
-          // Toast(`Switched network to: ${this.network.type.name}`, {}, SUCCESS);
-        });
-      } else {
-        this.activeTab = val;
-      }
+      // if (!this.inWallet) {
+      //   this.setNetwork({ network: this.network }).then(() => {
+      //     this.setWeb3Instance();
+      //     this.activeTab = val;
+      //   });
+      // } else {
+      // }
+      this.activeTab = val;
     },
     async setTokens() {
       if (!this.inWallet) {

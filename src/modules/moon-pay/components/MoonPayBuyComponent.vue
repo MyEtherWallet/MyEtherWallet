@@ -74,26 +74,6 @@
       </div>
     </div>
 
-    <!-- ======================================================================================== -->
-    <!-- Currency Select -->
-    <!-- HIDDEN FOR NOW! HIDDEN FOR NOW! HIDDEN FOR NOW! HIDDEN FOR NOW! HIDDEN FOR NOW! -->
-    <!-- HIDDEN FOR NOW! HIDDEN FOR NOW! HIDDEN FOR NOW! HIDDEN FOR NOW! HIDDEN FOR NOW! -->
-    <!-- HIDDEN FOR NOW! HIDDEN FOR NOW! HIDDEN FOR NOW! HIDDEN FOR NOW! HIDDEN FOR NOW! -->
-    <!-- ======================================================================================== -->
-    <div v-show="false" class="mt-2">
-      <div class="font-weight-medium textDark--text mb-2">Select currency</div>
-      <mew-select
-        ref="selectedCurrency"
-        label="Currency"
-        :items="currencyItems"
-        :value="selectedCurrency"
-        :disabled="disableCurrencySelect"
-        :error-messages="currencyErrorMessages"
-        is-custom
-        @input="setCurrency"
-      />
-    </div>
-
     <!-- ========================================================================= -->
     <!-- Receiver's address -->
     <!-- ========================================================================= -->
@@ -322,12 +302,6 @@ export default {
         return `Amount can't be above provider's maximum: ${
           formatFiatValue(this.maxVal.toFixed(), this.currencyConfig).value
         } ${this.selectedFiatName}`;
-      }
-      return '';
-    },
-    currencyErrorMessages() {
-      if (!this.supportedBuy) {
-        return 'Please switch your network to the Ethereum Mainnet on Metamask.';
       }
       return '';
     },

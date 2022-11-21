@@ -39,7 +39,7 @@ const SET_VALID_NETWORK = function (state, valid) {
 const SET_NETWORK = async function (state, networkObj) {
   const _netObj = Object.assign({}, networkObj);
   _netObj.type = {
-    name: networkObj.type?.name
+    name: networkObj.type.name
   };
   state.currentNetwork = _netObj;
 };

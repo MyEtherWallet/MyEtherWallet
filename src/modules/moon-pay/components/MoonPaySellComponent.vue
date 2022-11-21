@@ -83,23 +83,6 @@
       </div>
     </div>
 
-    <!-- ======================================================================================== -->
-    <!-- Currency Select -->
-    <!-- HIDDEN FOR NOW! HIDDEN FOR NOW! HIDDEN FOR NOW! HIDDEN FOR NOW! HIDDEN FOR NOW! -->
-    <!-- HIDDEN FOR NOW! HIDDEN FOR NOW! HIDDEN FOR NOW! HIDDEN FOR NOW! HIDDEN FOR NOW! -->
-    <!-- HIDDEN FOR NOW! HIDDEN FOR NOW! HIDDEN FOR NOW! HIDDEN FOR NOW! HIDDEN FOR NOW! -->
-    <!-- ======================================================================================== -->
-    <mew-select
-      v-show="false"
-      ref="selectedCurrency"
-      label="Currency"
-      :items="currencyItems"
-      :value="selectedCurrency"
-      :disabled="loading"
-      is-custom
-      @input="setCurrency"
-    />
-
     <!-- ============================================================== -->
     <!-- Refund address -->
     <!-- ============================================================== -->
@@ -232,7 +215,6 @@ export default {
       estimatingFees: true,
       maxBalance: '0',
       selectedBalance: '0',
-      // gasPrice: '0',
       toAddress: '',
       validToAddress: false,
       currencyRates: []
