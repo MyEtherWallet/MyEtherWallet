@@ -62,6 +62,15 @@ export default {
     });
   },
   mounted() {
+    EventBus.$on('swapTxBroadcasted', () => {
+      this.trackSwap('swapTxBroadcasted');
+    });
+    EventBus.$on('swapTxReceivedReceipt', () => {
+      this.trackSwap('swapTxReceivedReceipt');
+    });
+    EventBus.$on('swapTxFailed', () => {
+      this.trackSwap('swapTxFailed');
+    });
     EventBus.$on(MOONPAY_EVENT, () => {
       this.openBuy();
     });
