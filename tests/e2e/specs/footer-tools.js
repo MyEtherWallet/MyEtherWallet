@@ -15,14 +15,6 @@ const testPW = '1234password';
 module.exports = {
   before: function (browser) {
     browser.globals.waitForConditionTimeout = 15000;
-    browser.captureBrowserConsoleLogs(event => {
-      console.log(
-        event.type,
-        event.timestamp,
-        event.args[0].value,
-        event.args[1]?.value ? event.args[1].value : event.args[1]
-      );
-    });
   },
   'MEW Wallet Link test': async browser => {
     // open browser
@@ -116,21 +108,21 @@ module.exports = {
     browser.assert.urlContains('convert');
 
     // check wei, gwei, ether
-    browser.expect
-      .element('.CurrencyLeftInput input')
-      .to.have.value.that.equals('1000000000000000000');
+    browser
+      .click('.CurrencyLeftInput input')
+      .assert.valueEquals('input:focus', '1000000000000000000');
 
     browser
       .click('.CurrencyRightSelect')
       .click('.menuable__content__active div :first-child')
-      .expect.element('.CurrencyLeftInput input')
-      .to.have.value.that.equals('1');
+      .click('.CurrencyLeftInput input')
+      .assert.valueEquals('input:focus', '1');
 
     browser
       .click('.CurrencyRightSelect')
       .click('.menuable__content__active div :nth-child(4)')
-      .expect.element('.CurrencyLeftInput input')
-      .to.have.value.that.equals('1000000000');
+      .click('.CurrencyLeftInput input')
+      .assert.valueEquals('input:focus', '1000000000');
   },
   'Generate Keystore test': async browser => {
     // open browser
@@ -157,8 +149,12 @@ module.exports = {
       .click(css, '.KeystoreDownloadButton');
 
     // enter test password
-    browser.click(css, '.KeystorePassword').keys(testPW);
-    browser.click(css, '.KeystoreConfirmPassword').keys(testPW);
+    browser
+      .click(css, '.KeystorePassword')
+      .sendKeys(css, 'input:focus', testPW);
+    browser
+      .click(css, '.KeystoreConfirmPassword')
+      .sendKeys(css, 'input:focus', testPW);
 
     // accept terms
     browser.click(css, '.KeystoreConfirm');
@@ -192,7 +188,7 @@ module.exports = {
     browser
       .moveToElement('.OfflineAddressInput', 10, 10)
       .click(css, '.OfflineAddressInput')
-      .keys(address);
+      .sendKeys(css, 'input:focus', address);
 
     // check download button and details
     browser
@@ -204,7 +200,7 @@ module.exports = {
     browser
       .moveToElement('.SignatureInput', 10, 10)
       .click(css, '.SignatureInput')
-      .keys(signature);
+      .sendKeys(css, 'textarea:focus', signature);
 
     // check if details are viewable
     browser.waitForElementVisible(css, '.SignatureRawDetails');
