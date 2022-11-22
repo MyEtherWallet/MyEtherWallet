@@ -230,6 +230,7 @@ import wallets from '@/modules/access-wallet/hardware/handlers/configs/configWal
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { EventBus } from '@/core/plugins/eventBus.js';
+import { ethereum as ethereumPath } from '@/modules/access-wallet/hardware/handlers/configs/configPaths.js';
 
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
@@ -368,8 +369,8 @@ export default {
     hwWalletInstance: {},
     ledgerApp: {},
     selectedPath: {
-      name: 'Ethereum',
-      value: "m/44'/60'/0'/0"
+      name: ethereumPath.label,
+      value: ethereumPath.path
     },
     walletType: '',
     selectedLedgerApp: {},
