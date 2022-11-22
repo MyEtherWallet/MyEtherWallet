@@ -45,20 +45,19 @@ module.exports = {
     // click swap button
     browser.waitForElementVisible(css, '.SwapButton').click(css, '.SwapButton');
 
-    // input from amount
+    // select to token
     browser.assert
       .urlContains('swap')
       .waitForElementVisible(css, '.BalanceLabel', 15000)
-      .click(css, '.FromAmountInput')
-      .sendKeys(css, 'input:focus', amount);
-
-    // select to token
-    browser
+      .pause(10000)
       .click(css, '.ToTokenSelect')
       .waitForElementVisible(css, '.mew-select-search')
       .click(css, '.mew-select-search')
       .sendKeys(css, 'input:focus', ercToken)
       .click(css, `img[alt=${ercToken}]`);
+
+    // input from amount
+    browser.click(css, '.FromAmountInput').sendKeys(css, 'input:focus', amount);
 
     // click swap when enabled
     browser
