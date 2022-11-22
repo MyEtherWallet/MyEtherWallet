@@ -48,6 +48,7 @@
           class="d-block mx-auto mt-8 KeystoreDownloadFile"
           btn-size="xlarge"
           :disabled="
+            password !== confirmPassword ||
             !password ||
             !confirmPassword ||
             confirmPasswordErrMessages !== '' ||
