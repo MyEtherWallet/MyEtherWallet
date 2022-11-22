@@ -212,6 +212,7 @@ import { mapGetters, mapState, mapActions } from 'vuex';
 import { checkCustomPath } from '@/modules/access-wallet/software/handlers/pathHelper';
 import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import { ethereum as ethereumPath } from '@/modules/access-wallet/hardware/handlers/configs/configPaths.js';
+import { isEmpty } from 'lodash';
 export default {
   props: {
     passedPaths: {
@@ -356,44 +357,37 @@ export default {
     saveCustomPath() {
       try {
         const customPath = checkCustomPath(this.customPath);
-        if (customPath) {
-          const foundPath =
-            this.filteredPaths.find(e => e.value === this.customPath) ||
-            this.filteredCustomPaths.find(e => e.value === this.customPath);
-          if (foundPath) {
-            const error = `Path already exists: ${foundPath.name}`;
-            Toast(error, {}, ERROR);
-          } else {
-            if (this.customAlias === '' || this.customAlias === null) {
-              const error = 'Custom alias cannot be empty';
-              Toast(error, {}, ERROR);
-            } else {
-              const newPath = {
-                name: this.customAlias,
-                value: this.customPath
-              };
-              this.addCustomPath(newPath).then(() => {
-                this.customPath = '';
-                this.customAlias = '';
-                this.$refs.aliasInput.clear();
-                this.$refs.pathInput.clear();
-                Toast('Custom derivation path added!', {}, SUCCESS);
-              });
-            }
-            this.showCustomField = false;
-          }
-        } else {
+        if (!customPath) {
           Toast('Invalid Derivation path', {}, ERROR);
+          return;
         }
-      } catch (error) {
+        if (isEmpty(this.customAlias)) {
+          const error = 'Custom alias cannot be empty';
+          Toast(error, {}, ERROR);
+          return;
+        }
         const foundPath =
           this.filteredPaths.find(e => e.value === this.customPath) ||
           this.filteredCustomPaths.find(e => e.value === this.customPath);
-        if (!foundPath) {
-          Toast(`Path already exists!`, {}, ERROR);
-        } else {
+        if (foundPath) {
+          const error = `Path already exists: ${foundPath.name}`;
           Toast(error, {}, ERROR);
+          return;
         }
+        const newPath = {
+          name: this.customAlias,
+          value: this.customPath
+        };
+        this.addCustomPath(newPath).then(() => {
+          this.customPath = '';
+          this.customAlias = '';
+          this.$refs.aliasInput.clear();
+          this.$refs.pathInput.clear();
+          Toast('Custom derivation path added!', {}, SUCCESS);
+        });
+        this.showCustomField = false;
+      } catch (error) {
+        Toast(error, {}, ERROR);
       }
     }
   }
