@@ -107,22 +107,6 @@
                 >
                   https://github.com/MyEtherWallet/MEWconnect-iOS
                 </a>
-                <br />
-                iOS store:
-                <a
-                  href="https://apps.apple.com/us/app/mewconnect/id1391097156"
-                  target="_blank"
-                >
-                  https://apps.apple.com/us/app/mewconnect/id1391097156
-                </a>
-                <br />
-                Android:
-                <a
-                  href="https://play.google.com/store/apps/details?id=com.myetherwallet.mewconnect"
-                  target="_blank"
-                >
-                  https://play.google.com/store/apps/details?id=com.myetherwallet.mewconnect
-                </a>
               </div>
             </div>
             <div class="mt-3">

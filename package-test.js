@@ -74,15 +74,7 @@ const EXCEPTIONS = [
   'uuid',
   'web3-eth-contract',
   'is-ipfs',
-  'axios',
-  // update after release
-  'highcharts',
-  '@commitlint/config-conventional',
-  'commitlint',
-  '@ledgerhq/hw-app-eth',
-  '@ledgerhq/live-common',
-  'babel-jest',
-  'stylelint-config-prettier'
+  'axios'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
