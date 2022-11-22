@@ -14,11 +14,10 @@ module.exports = {
         chromeOptions: {
           w3c: false,
           args: [
-            'window-size=1980,1080',
             // take these out on local
-            'headless',
-            'no-sandbox',
-            'disable-gpu'
+            '--headless',
+            '--no-sandbox',
+            '--disable-gpu'
           ],
           prefs: {
             download: {
