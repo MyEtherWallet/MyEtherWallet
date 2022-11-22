@@ -369,7 +369,7 @@ export default {
     ledgerApp: {},
     selectedPath: {
       name: 'Ethereum',
-      value: "m/44'/60'/0'"
+      value: "m/44'/60'/0'/0"
     },
     walletType: '',
     selectedLedgerApp: {},
@@ -701,6 +701,7 @@ export default {
     nextStep() {
       if (this.walletType) {
         this.step++;
+        if (this.step === 2) this.selectedPath = this.paths[0];
         if (this.step === this.walletInitialized) {
           if (this.onCoolWallet || this.onBitbox2) return;
           this[`${this.walletType}Unlock`]();
