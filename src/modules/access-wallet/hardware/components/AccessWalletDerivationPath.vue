@@ -363,16 +363,14 @@ export default {
           this.filteredPaths.find(e => e.value === this.customPath) ||
           this.filteredCustomPaths.find(e => e.value === this.customPath);
         if (foundPath) {
-          const error = `Path already exists: ${foundPath.name}`;
-          Toast(error, {}, ERROR);
+          Toast(`Path already exists: ${foundPath.name}`, {}, ERROR);
           return;
         }
         const foundName =
           this.filteredPaths.find(e => e.name === this.customAlias) ||
           this.filteredCustomPaths.find(e => e.name === this.customAlias);
         if (foundName) {
-          const error = `Path name already exists: ${foundName.name}`;
-          Toast(error, {}, ERROR);
+          Toast(`Path name already exists: ${foundName.name}`, {}, ERROR);
           return;
         }
         const newPath = {
