@@ -99,6 +99,7 @@ export default {
     ...mapActions('wallet', ['setWallet']),
     openWalletConnect() {
       try {
+        console.log('here?');
         WalletConnectWallet()
           .then(_newWallet => {
             this.setWallet([_newWallet]).then(() => {
@@ -107,6 +108,7 @@ export default {
             });
           })
           .catch(e => {
+            console.log(e);
             WalletConnectWallet.errorHandler(e);
           });
       } catch (e) {

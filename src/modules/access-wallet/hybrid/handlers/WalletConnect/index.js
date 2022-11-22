@@ -1,5 +1,6 @@
-import WalletConnect from '@walletconnect/client';
-import WalletConnectQRCodeModal from '@walletconnect/qrcode-modal';
+// import WalletConnect from '@walletconnect/client';
+import { SignClient } from '@walletconnect/sign-client';
+import QRCodeModal from '@walletconnect/qrcode-modal';
 import store from '@/core/store';
 import { Transaction } from '@ethereumjs/tx';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
@@ -12,35 +13,32 @@ import commonGenerator from '@/core/helpers/commonGenerator';
 import toBuffer from '@/core/helpers/toBuffer';
 import HybridWalletInterface from '../walletInterface';
 import PromiEvent from 'web3-core-promievent';
-
-const BRIDGE_URL = 'https://bridge.walletconnect.org';
+const PROJECT_ID = '72299ce67c7d5c879dd8da2df1a6875b';
 const IS_HARDWARE = false;
 import walletconnect from '@/assets/images/icons/wallets/walletconnect.svg';
 class WalletConnectWallet {
-  constructor() {
+  constructor(topic, signClient) {
     this.identifier = WALLET_TYPES.WALLET_CONNECT;
     this.isHardware = IS_HARDWARE;
-    const walletConnect = new WalletConnect({
-      bridge: BRIDGE_URL,
-      qrcodeModal: WalletConnectQRCodeModal
-    });
+    this.topic = topic;
+    this.signClient = signClient;
 
-    if (
-      walletConnect &&
-      walletConnect.connected &&
-      walletConnect._sessionStorage
-    ) {
-      walletConnect._sessionStorage.removeSession();
-      walletConnect.killSession(); // remove any leftover connections
-    }
-    this.walletConnect = walletConnect;
-    this.walletConnect.on('disconnect', () => {
+    // if (
+    //   walletConnect &&
+    //   walletConnect.connected &&
+    //   walletConnect._sessionStorage
+    // ) {
+    //   walletConnect._sessionStorage.removeSession();
+    //   walletConnect.killSession(); // remove any leftover connections
+    // }
+    // this.walletConnect = walletConnect;
+    this.signClient.on('session_delete', () => {
       store.dispatch('wallet/removeWallet');
     });
 
-    this.walletConnect.disconnect = () => {
-      this.walletConnect.killSession();
-    };
+    // this.walletConnect.disconnect = () => {
+    //   this.walletConnect.killSession();
+    // };
     this.meta = {
       name: 'Wallet Connect',
       img: {
@@ -50,7 +48,8 @@ class WalletConnectWallet {
     };
   }
   init() {
-    return new Promise((resolve, reject) => {
+    // eslint-disable-next-line
+    return new Promise(async (resolve, reject) => {
       const txSigner = tx => {
         const from = tx.from;
         tx = new Transaction(tx, {
@@ -88,31 +87,72 @@ class WalletConnectWallet {
             .catch(reject);
         });
       };
-      this.walletConnect.createSession();
-      this.walletConnect.on('connect', (error, payload) => {
-        if (error) {
-          return reject(error);
+      const { uri, approval } = await this.signClient.connect({
+        pairingTopic: this.topic,
+        requiredNamespaces: {
+          eip155: {
+            methods: [
+              'eth_sendTransaction',
+              'eth_signTransaction',
+              'eth_sign',
+              'personal_sign'
+            ],
+            chains: ['eip155:1'],
+            events: ['accountsChanged']
+          }
         }
-        this.walletConnect._qrcodeModal.close();
-        const { accounts } = payload.params[0];
-        resolve(
-          new HybridWalletInterface(
-            sanitizeHex(accounts[0]),
-            this.isHardware,
-            this.identifier,
-            txSigner,
-            msgSigner,
-            this.walletConnect,
-            errorHandler,
-            this.meta
-          )
-        );
       });
+
+      if (uri) {
+        QRCodeModal.open(uri);
+      }
+      console.log('huh?', approval);
+      const session = await approval();
+      console.log('do you get here AAAA', session);
+      // this.walletConnect.createSession();
+      // this.walletConnect.on('connect', (error, payload) => {
+      //   if (error) {
+      //     return reject(error);
+      //   }
+      //   this.walletConnect._qrcodeModal.close();
+      //   const { accounts } = payload.params[0];
+      //   resolve(
+      //     new HybridWalletInterface(
+      //       sanitizeHex(accounts[0]),
+      //       this.isHardware,
+      //       this.identifier,
+      //       txSigner,
+      //       msgSigner,
+      //       this.walletConnect,
+      //       errorHandler,
+      //       this.meta
+      //     )
+      //   );
+      // });
     });
   }
 }
 const createWallet = async () => {
-  const walletConnectWallet = new WalletConnectWallet();
+  const signClient = await SignClient.init({
+    projectId: PROJECT_ID,
+    metadata: {
+      name: 'MyEtherWallet Inc',
+      description:
+        'MyEtherWallet (MEW) is a free, open-source, client-side interface for generating Ethereum wallets & more. Interact with the Ethereum blockchain easily & securely.',
+      url: '#'
+    }
+  });
+  signClient.on('session_event', ({ event }) => {
+    console.log(event, 'sesh event');
+  });
+  signClient.on('session_update', ({ event }) => {
+    console.log(event, 'sesh update');
+  });
+  signClient.on('session_delete', ({ event }) => {
+    console.log(event, 'sesh delete');
+  });
+  const { topic } = await signClient.core.pairing.create();
+  const walletConnectWallet = new WalletConnectWallet(topic, signClient);
   const _tWallet = await walletConnectWallet.init();
   return _tWallet;
 };
