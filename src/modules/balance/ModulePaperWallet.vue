@@ -39,8 +39,8 @@ import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 export default {
   name: 'BalanceAddressPaperWallet',
   components: {
-    PaperWalletToPrint: () => import('./PaperWalletToPrint'),
-    PaperWalletToDisplay: () => import('./PaperWalletToDisplay')
+    PaperWalletToPrint: () => import('./components/PaperWalletToPrint'),
+    PaperWalletToDisplay: () => import('./components/PaperWalletToDisplay')
   },
   props: {
     open: { default: false, type: Boolean },

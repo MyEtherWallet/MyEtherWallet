@@ -16,6 +16,7 @@
       v-if="!editMode && !addMode"
       :panel-items="panelItems"
       :idx-to-expand="idxToExpand"
+      class="mt-6"
     >
       <template #panelBody1>
         <div class="px-5">

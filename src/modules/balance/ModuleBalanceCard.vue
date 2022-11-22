@@ -167,7 +167,7 @@
       Wallet card modals
     =====================================================================================
     -->
-    <balance-address-paper-wallet
+    <module-paper-wallet
       :open="showPaperWallet"
       :close="closePaperWallet"
       :is-offline-app="isOfflineApp"
@@ -241,10 +241,11 @@ import { mapGetters, mapActions, mapState } from 'vuex';
 import clipboardCopy from 'clipboard-copy';
 import { isEmpty } from 'lodash';
 
-import { Toast, SUCCESS } from '@/modules/toast/handler/handlerToast';
+import { Toast, SUCCESS, ERROR } from '@/modules/toast/handler/handlerToast';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 
+import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import wallets from './handlers/config';
 import WALLET_TYPES from '../access-wallet/common/walletTypes';
 import NameResolver from '@/modules/name-resolver/index';
@@ -253,8 +254,7 @@ export default {
   components: {
     AppModal: () => import('@/core/components/AppModal'),
     AppAddrQr: () => import('@/core/components/AppAddrQr'),
-    BalanceAddressPaperWallet: () =>
-      import('./components/BalanceAddressPaperWallet'),
+    ModulePaperWallet: () => import('./ModulePaperWallet'),
     ModuleAccessWalletHardware: () =>
       import('@/modules/access-wallet/ModuleAccessWalletHardware'),
     ModuleAccessWalletSoftware: () =>
@@ -476,10 +476,16 @@ export default {
     viewAddressOnDevice() {
       this.showVerify = true;
       if (this.canDisplayAddress) {
-        this.instance.displayAddress().then(() => {
-          this.showVerify = false;
-          Toast('Address verified!', {}, SUCCESS);
-        });
+        this.instance
+          .displayAddress()
+          .then(() => {
+            this.showVerify = false;
+            Toast('Address verified!', {}, SUCCESS);
+          })
+          .catch(e => {
+            this.showVerify = false;
+            Toast(e.message, {}, ERROR);
+          });
       }
     },
     /**
@@ -517,6 +523,7 @@ export default {
      * to close the modal
      */
     closePaperWallet() {
+      if (this.showPaperWallet) this.$router.go(-1);
       this.showPaperWallet = false;
     },
     /**
@@ -524,6 +531,9 @@ export default {
      * to open the modal
      */
     openPaperWallet() {
+      this.$router.push({
+        name: ROUTES_WALLET.PRINT.NAME
+      });
       this.showPaperWallet = true;
     },
     /**
