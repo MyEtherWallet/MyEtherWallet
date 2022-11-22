@@ -211,6 +211,7 @@
 import { mapGetters, mapState, mapActions } from 'vuex';
 import { checkCustomPath } from '@/modules/access-wallet/software/handlers/pathHelper';
 import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
+import { ethereum as ethereumPath } from '@/modules/access-wallet/hardware/handlers/configs/configPaths.js';
 export default {
   props: {
     passedPaths: {
@@ -221,8 +222,8 @@ export default {
       type: Object,
       default: () => {
         return {
-          name: 'Ethereum',
-          value: "m/44'/60'/0'/0"
+          name: ethereumPath.label,
+          value: ethereumPath.path
         };
       }
     },
@@ -359,7 +360,7 @@ export default {
           const foundPath =
             this.filteredPaths.find(e => e.value === this.customPath) ||
             this.filteredCustomPaths.find(e => e.value === this.customPath);
-          if (foundPath || !foundPath) {
+          if (foundPath) {
             const error = `Path already exists: ${foundPath.name}`;
             Toast(error, {}, ERROR);
           } else {
