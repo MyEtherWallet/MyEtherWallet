@@ -21,10 +21,11 @@
 import { mapState, mapGetters } from 'vuex';
 import formatNotification from '@/modules/notifications/helpers/formatNotification';
 import formatNonChainNotification from '@/modules/notifications/helpers/formatNonChainNotification';
+import MewNotification from '@/components/MewNotification/MewNotification';
 
 export default {
   name: 'ModuleTransferHistory',
-  components: {},
+  components: { MewNotification },
   props: {
     isSwap: {
       type: Boolean,
