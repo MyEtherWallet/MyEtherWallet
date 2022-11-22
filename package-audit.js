@@ -17,7 +17,8 @@ const AUDIT_EXCEPTIONS = [
   'semver-regex',
   'scss-tokenizer',
   'codecov', // no package found
-  'loader-utils'
+  'loader-utils',
+  'engine.io'
 ];
 const execute = (command, callback) => {
   exec(
