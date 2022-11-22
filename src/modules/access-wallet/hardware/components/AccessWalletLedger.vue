@@ -116,6 +116,11 @@ export default {
       return this.getLedgerApp;
     }
   },
+  watch: {
+    ledgerApp() {
+      this.setPath(this.paths[0]);
+    }
+  },
   methods: {
     ...mapActions('wallet', ['setLedgerApp']),
     ledgerUnlockBle() {
