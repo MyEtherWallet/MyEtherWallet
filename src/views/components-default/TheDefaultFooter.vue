@@ -172,7 +172,12 @@
             <v-container>
               <v-sheet color="transparent" max-width="500px" class="mx-auto">
                 <ul>
-                  <li v-for="(md, mdkey) in mf.data" :key="mdkey">
+                  <li
+                    v-for="(md, mdkey) in mf.data"
+                    :key="mdkey"
+                    class="d-flex align-center"
+                  >
+                    <v-icon>mdi-menu-right</v-icon>
                     <router-link
                       v-if="md.routerLink"
                       :to="{ name: md.routerLink, query: md.query }"
