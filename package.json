@@ -196,7 +196,7 @@
     "npm": ">= 6.0.0"
   },
   "resolutions": {
-    "engine.io": "4.1.2",
+    "engine.io": "6.2.1",
     "glob-parent": "5.1.2",
     "follow-redirects": "1.15.2",
     "handlebars": "4.7.7",
