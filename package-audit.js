@@ -16,21 +16,8 @@ const AUDIT_EXCEPTIONS = [
   'nth-check',
   'semver-regex',
   'scss-tokenizer',
-  // no package found
-  'codecov',
-  'glob-parent',
-  'socket.io-parser',
-  'xmlhttprequest-ssl',
-  'node-forge',
-  'engine.io',
-  'parse-path',
-  '@openzeppelin/contracts',
-  'terser',
-  'protobufjs',
-  'lodash',
-  'elliptic',
-  'minimatch',
-  'loader-utils'
+  'codecov', // no package found
+  'loader-utils' // breaks building
 ];
 const execute = (command, callback) => {
   exec(

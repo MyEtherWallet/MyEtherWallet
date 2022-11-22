@@ -20,7 +20,7 @@
       Mobile Connection Protocol Buttons
     =====================================================================================
     -->
-    <div style="max-width: 650px; width: 100%" class="mx-auto mb-n5">
+    <div style="max-width: 650px; width: 100%" class="mx-auto mb-n5 pt-5">
       <div v-for="(btn, key) in buttons" :key="key">
         <mew-button
           has-full-width

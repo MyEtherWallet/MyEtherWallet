@@ -543,22 +543,24 @@ export default {
   mounted() {
     // Watch for currency menu isActive
     const selectedCurrencyRef = this.$refs.selectedCurrency;
-    const menuRef = selectedCurrencyRef.$children[0].$refs.menu;
-    this.$watch(
-      () => {
-        return menuRef.isActive;
-      },
-      val => {
-        // If menu is closed make sure search is cleared
-        if (!val) {
-          if (
-            selectedCurrencyRef.search !== '' ||
-            selectedCurrencyRef.selectItems.length === 0
-          )
-            selectedCurrencyRef.search = '';
+    if (selectedCurrencyRef) {
+      const menuRef = selectedCurrencyRef.$children[0].$refs.menu;
+      this.$watch(
+        () => {
+          return menuRef.isActive;
+        },
+        val => {
+          // If menu is closed make sure search is cleared
+          if (!val) {
+            if (
+              selectedCurrencyRef.search !== '' ||
+              selectedCurrencyRef.selectItems.length === 0
+            )
+              selectedCurrencyRef.search = '';
+          }
         }
-      }
-    );
+      );
+    }
 
     if (!this.inWallet) this.$refs.addressInput.$refs.addressSelect.clear();
     this.sendHandler = new handlerSend();

@@ -512,12 +512,12 @@ export default {
           new BigNumber(this.tokenInValue).lt(this.selectedProvider.minFrom)
         ) {
           msg = 'The minimum requirement for this provider is';
-          subError = `${this.selectedProvider.minFrom} ${this.fromTokenType.symbol}`;
+          subError = `${this.selectedProvider.minFrom} ${this.fromTokenType?.symbol}`;
         } else if (
           new BigNumber(this.tokenInValue).gt(this.selectedProvider.maxFrom)
         ) {
           msg = 'The maximum requirement for this provider is';
-          subError = `${this.selectedProvider.maxFrom} ${this.fromTokenType.symbol}`;
+          subError = `${this.selectedProvider.maxFrom} ${this.fromTokenType?.symbol}`;
         } else if (this.availableQuotes.length === 0) {
           msg =
             'No providers found for this token pair. Select a different token pair or try again later.';
@@ -814,11 +814,15 @@ export default {
             token.contract.toLowerCase() ===
             this.fromTokenType.contract.toLowerCase()
         );
+        const tokenBalance =
+          !isEmpty(hasBalance) &&
+          !isEmpty(hasBalance.balance) &&
+          hasBalance.hasOwnProperty('decimals')
+            ? this.getTokenBalance(hasBalance.balance, hasBalance.decimals)
+            : new BigNumber(0);
         return this.isFromTokenMain
           ? this.getTokenBalance(this.balanceInWei, 18)
-          : hasBalance && hasBalance.balance && hasBalance.decimals
-          ? this.getTokenBalance(hasBalance.balance, hasBalance.decimals)
-          : new BigNumber(0);
+          : tokenBalance;
       }
 
       return new BigNumber(0);
@@ -837,7 +841,6 @@ export default {
     amountErrorMessage() {
       if (!this.initialLoad && !this.isLoading && this.fromTokenType?.name) {
         /* Balance is <= 0*/
-
         if (this.availableBalance.lte(0)) {
           return this.isFromTokenMain
             ? this.errorMsgs.amountEthIsTooLow

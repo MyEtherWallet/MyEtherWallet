@@ -36,6 +36,7 @@ const ROUTES_WALLET = {
   NETWORK: { NAME: 'Network', PATH: 'network' },
   NFT_MANAGER: { NAME: 'NFTManager', PATH: 'nft' },
   NFT_MANAGER_SEND: { NAME: 'NftManagerSend', PATH: 'send-your-nft' },
+  PRINT: { NAME: 'PrintPaperWallet', PATH: 'print-wallet' },
   SEND_TX: { NAME: 'SendTX', PATH: 'send-tx' },
   SEND_TX_OFFLINE: { NAME: 'SendTXOffline', PATH: 'send-tx-offline' },
   SETTINGS: { NAME: 'Settings', PATH: 'settings' },

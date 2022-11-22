@@ -73,7 +73,7 @@ import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
 import { isEmpty } from 'lodash';
-
+const fromAmount = '1000000000000000000';
 const STATIC_PAIRS = [
   {
     toT: {
@@ -85,7 +85,7 @@ const STATIC_PAIRS = [
       contract: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
       decimals: 18
     },
-    fromAmount: '100000000000000000'
+    fromAmount: fromAmount
   },
   {
     fromT: {
@@ -98,7 +98,7 @@ const STATIC_PAIRS = [
       contract: '0xdac17f958d2ee523a2206206994597c13d831ec7',
       decimals: 6
     },
-    fromAmount: '100000000000000000'
+    fromAmount: fromAmount
   },
   {
     fromT: {
@@ -111,7 +111,7 @@ const STATIC_PAIRS = [
       contract: '0xdd974d5c2e2928dea5f71b9825b8b646686bd200',
       toT: 18
     },
-    fromAmount: '100000000000000000'
+    fromAmount: fromAmount
   },
   {
     fromT: {
@@ -124,7 +124,7 @@ const STATIC_PAIRS = [
       contract: '0x6b175474e89094c44da98b954eedeac495271d0f',
       decimals: 18
     },
-    fromAmount: '100000000000000000'
+    fromAmount: fromAmount
   },
   {
     fromT: {
@@ -137,7 +137,7 @@ const STATIC_PAIRS = [
       contract: '0x514910771af9ca656af840dff83e8264ecf986ca',
       decimals: 18
     },
-    fromAmount: '100000000000000000'
+    fromAmount: fromAmount
   },
   {
     fromT: {
@@ -150,7 +150,7 @@ const STATIC_PAIRS = [
       contract: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
       decimals: 6
     },
-    fromAmount: '100000000000000000'
+    fromAmount: fromAmount
   }
 ];
 export default {
