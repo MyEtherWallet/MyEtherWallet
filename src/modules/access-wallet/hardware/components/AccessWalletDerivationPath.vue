@@ -257,14 +257,12 @@ export default {
       if (this.disableCustomPaths) return [];
       return this.paths.filter(path => {
         if (this.searchValue) {
-          return (
-            path.name
-              ?.toLowerCase()
-              .includes(this.searchValue?.toLowerCase()) ||
-            path.value?.toLowerCase().includes(this.searchValue?.toLowerCase())
-          );
+          const pathName = path.name.toLowerCase();
+          const pathVal = path.value.toLowerCase();
+          const searchVal = this.searchValue.trim().toLowerCase();
+          return pathName.includes(searchVal) || pathVal.includes(searchVal);
         }
-        return path.name?.toLowerCase() || path.value?.toLowerCase().trim();
+        return path;
       });
     },
     /**
@@ -274,14 +272,10 @@ export default {
       return this.passedPaths.filter(path => {
         if (!this.paths.find(e => e.value === path.value)) {
           if (this.searchValue) {
-            return (
-              path.name
-                ?.toLowerCase()
-                .includes(this.searchValue?.toLowerCase()) ||
-              path.value
-                ?.toLowerCase()
-                .includes(this.searchValue?.toLowerCase())
-            );
+            const pathName = path.name.toLowerCase();
+            const pathVal = path.value.toLowerCase();
+            const searchVal = this.searchValue.trim().toLowerCase();
+            return pathName.includes(searchVal) || pathVal.includes(searchVal);
           }
           return path;
         }
@@ -336,13 +330,13 @@ export default {
      * Sets the custom alias value
      */
     setCustomAlias(val) {
-      this.customAlias = val;
+      this.customAlias = val.trim();
     },
     /**
      * Sets the custom path value
      */
     setCustomPath(val) {
-      this.customPath = val;
+      this.customPath = val.trim();
     },
     /**
      * Method sets searchValue on mew-search input event
@@ -362,8 +356,7 @@ export default {
           return;
         }
         if (isEmpty(this.customAlias)) {
-          const error = 'Custom alias cannot be empty';
-          Toast(error, {}, ERROR);
+          Toast('Custom alias cannot be empty', {}, ERROR);
           return;
         }
         const foundPath =
@@ -371,6 +364,14 @@ export default {
           this.filteredCustomPaths.find(e => e.value === this.customPath);
         if (foundPath) {
           const error = `Path already exists: ${foundPath.name}`;
+          Toast(error, {}, ERROR);
+          return;
+        }
+        const foundName =
+          this.filteredPaths.find(e => e.name === this.customAlias) ||
+          this.filteredCustomPaths.find(e => e.name === this.customAlias);
+        if (foundName) {
+          const error = `Path name already exists: ${foundName.name}`;
           Toast(error, {}, ERROR);
           return;
         }
