@@ -206,7 +206,7 @@ export default {
      * checks if there is symbol name
      */
     hasSymbol() {
-      return this.tokenDataToDisplay[3].value || this.customSymbol;
+      return this.customSymbol;
     }
   },
   methods: {
