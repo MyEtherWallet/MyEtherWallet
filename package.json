@@ -131,7 +131,7 @@
     "bc-vault-js": "2.1.1",
     "bignumber.js": "9.1.0",
     "bip39": "3.0.4",
-    "chromedriver": "107.0.0",
+    "chromedriver": "104.0.0",
     "codecov": "3.8.3",
     "commitlint": "17.2.0",
     "copy-webpack-plugin": "6.3.2",
