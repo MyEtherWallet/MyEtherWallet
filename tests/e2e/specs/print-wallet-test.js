@@ -45,15 +45,13 @@ module.exports = {
       .click(css, '.balanceMenu');
 
     // open paper wallet
-    browser.execute(function () {
-      document
-        .querySelector('.openThePaperWallet')
-        .click(css, '.openThePaperWallet');
-    });
+    browser
+      .waitForElementVisible(css, '.openThePaperWallet')
+      .click(css, '.openThePaperWallet');
 
     // execute print function
-    browser.execute(function () {
-      document.querySelector('.printButton').click(css, '.printButton');
-    });
+    browser
+      .waitForElementVisible(css, '.printButton')
+      .click(css, '.printButton');
   }
 };

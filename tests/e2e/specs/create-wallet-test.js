@@ -9,17 +9,20 @@ module.exports = {
   },
   'create wallet tests': browser => {
     // start browser
-    startBrowser(browser)
-      // actual test starts here
-      // wait and find create wallet button
+    startBrowser(browser);
+    browser.maximizeWindow();
+
+    // actual test starts here
+    // wait and find create wallet button
+    browser
       .waitForElementVisible('css selector', '.HomeCreateWallet')
       .click('css selector', '.HomeCreateWallet')
 
       // successfully navigated to create wallet
       .assert.urlContains('/wallet/create')
-      .waitForElementVisible('css selector', '.CreateWalletSoftware');
+      .waitForElementVisible('css selector', '.CreateSoftwareWallet');
     browser.execute(function () {
-      document.querySelector('.CreateWalletSoftware').click();
+      document.querySelector('.CreateSoftwareWallet').click();
     });
     // select and fill in password
     browser.assert
