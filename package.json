@@ -145,6 +145,7 @@
     "ethereumjs-util": "7.1.5",
     "ethereumjs-wallet": "1.0.2",
     "fibers": "5.0.3",
+    "follow-redirects": "1.15.2",
     "geckodriver": "3.2.0",
     "hdkey": "2.0.1",
     "html2canvas": "1.4.1",
