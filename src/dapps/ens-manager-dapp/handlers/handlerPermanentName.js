@@ -40,7 +40,14 @@ export default class PermanentNameModule extends ENSManagerInterface {
   register(duration, balance) {
     return this._registerWithDuration(duration, balance);
   }
-
+  async getNameReverseData(domain) {
+    try {
+      //console.log(await this.ensInstance.setReverseRecord);
+      return await this.ensInstance.setReverseRecord(domain);
+    } catch (e) {
+      Toast(e, {}, ERROR);
+    }
+  }
   async setNameReverseRecord(domain) {
     try {
       return this.ensInstance.setReverseRecord(domain);

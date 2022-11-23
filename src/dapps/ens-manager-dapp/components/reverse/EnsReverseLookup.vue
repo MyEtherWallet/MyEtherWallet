@@ -32,6 +32,7 @@
           title="Register"
           class="set-button"
           btn-size="xlarge"
+          :disabled="activeRegister"
           @click.native="setReverseRecord(selectedDomain)"
         />
       </div>
@@ -109,6 +110,10 @@ export default {
     ...mapState('wallet', ['balance', 'web3', 'instance']),
     domainListItems() {
       return this.ensLookupResults || [];
+    },
+    activeRegister() {
+      // get transaction fee
+      return this.balance > 1000000;
     }
   },
   watch: {
@@ -168,6 +173,9 @@ export default {
     },
     async setReverseRecord(chosenDomain) {
       try {
+        // console.log(
+        //   await this.permHandler.getNameReverseData(chosenDomain.name)
+        // );
         const reverseRecord = await this.permHandler.setNameReverseRecord(
           chosenDomain.name
         );
