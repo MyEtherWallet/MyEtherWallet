@@ -121,10 +121,12 @@ class TrezorWallet {
       return getBufferFromHex(result.payload.signature);
     };
     const displayAddress = async () => {
-      await Trezor.ethereumGetAddress({
-        path: this.basePath + '/' + idx,
+      const path = this.basePath + '/' + idx;
+      const result = await Trezor.ethereumGetAddress({
+        path: path,
         showOnTrezor: true
       });
+      if (!result.success) throw new Error(result.payload.error);
     };
     return new HDWalletInterface(
       this.basePath + '/' + idx,
