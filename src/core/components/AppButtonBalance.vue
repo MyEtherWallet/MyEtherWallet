@@ -21,7 +21,7 @@
       </div>
       <mew-tooltip
         v-if="balanceFormatted.tooltipText"
-        class="pl-1"
+        class="pl-1 BalanceTooltip"
         style="height: 21px"
         :text="balanceFormatted.tooltipText"
       />

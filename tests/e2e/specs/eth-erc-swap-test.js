@@ -49,7 +49,8 @@ module.exports = {
     browser.assert
       .urlContains('swap')
       .waitForElementVisible(css, '.BalanceLabel', 15000)
-      .pause(10000)
+      .waitForElementVisible(css, '.BalanceTooltip', 15000)
+      .pause(5000)
       .click(css, '.ToTokenSelect')
       .waitForElementVisible(css, '.mew-select-search')
       .click(css, '.mew-select-search')
