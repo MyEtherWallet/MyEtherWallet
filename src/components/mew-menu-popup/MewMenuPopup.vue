@@ -49,7 +49,6 @@
     <!-- ================================================================== -->
     <div style="position: relative">
       <div
-        id="unique-id--mew-menu-popup--content"
         ref="content"
         class="mew-menu-popup-content content-fade-base"
         :class="show ? '' : 'content-fade-out'"
@@ -233,6 +232,8 @@ export default {
 // content container
 // ======================================================================
 .mew-menu-popup-content {
+  max-height: 400px;
+  overflow-y: auto;
   background-color: white;
   border-radius: 4px;
   overflow: hidden;
