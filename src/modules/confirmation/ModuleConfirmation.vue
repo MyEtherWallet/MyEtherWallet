@@ -197,6 +197,7 @@
                     no-gutters
                   >
                     <v-col
+                      v-if="txVal.value !== ''"
                       cols="12"
                       md="3"
                       class="d-flex d-sm-block ma-0 greyPrimary--text"
@@ -204,7 +205,7 @@
                       {{ txVal.title }}
                     </v-col>
 
-                    <v-col cols="12" md="9">
+                    <v-col v-if="txVal.value !== ''" cols="12" md="9">
                       <app-scroll-block>
                         <div class="data-values text-md-right">
                           {{ txVal.value }}
