@@ -138,6 +138,7 @@
       :currency-items="currencyItems"
       :selected-currency="selectedCurrency"
       :set-currency="setCurrency"
+      :in-wallet="inWallet"
       @close="openTokenSelect = false"
     />
   </div>
@@ -221,7 +222,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['address', 'instance']),
+    ...mapState('wallet', ['address', 'instance', 'web3']),
     ...mapState('global', ['gasPriceType']),
     ...mapGetters('wallet', ['balanceInETH', 'balanceInWei', 'tokensList']),
     ...mapGetters('global', ['isEthNetwork', 'network', 'gasPriceByType']),
@@ -496,6 +497,9 @@ export default {
     }
   },
   watch: {
+    toAddress() {
+      this.amount = '0';
+    },
     selectedCurrency: {
       handler: function (newVal) {
         this.maxBalance = '0';
@@ -559,7 +563,9 @@ export default {
     },
     getEthBalance() {
       if (!this.actualValidAddress) return;
-      const web3Instance = new Web3(nodes.ETH[0].url);
+      const web3Instance = this.inWallet
+        ? this.web3
+        : new Web3(nodes.ETH[0].url);
       web3Instance.eth.getBalance(this.actualAddress).then(res => {
         this.fetchingBalance = false;
         this.selectedBalance = fromWei(res);
@@ -567,7 +573,9 @@ export default {
     },
     getTokenBalance() {
       if (!this.actualValidAddress) return;
-      const web3Instance = new Web3(nodes.ETH[0].url);
+      const web3Instance = this.inWallet
+        ? this.web3
+        : new Web3(nodes.ETH[0].url);
       const contract = new web3Instance.eth.Contract(
         abi,
         this.selectedCurrency.contract
@@ -625,19 +633,28 @@ export default {
       this.selectedCurrency = e;
     },
     setMax() {
-      const bal = this.sendHandler.getEntireBal();
-      if (bal) {
-        this.amount = BigNumber(bal)
-          .div(
-            BigNumber(10).pow(
-              this.selectedCurrency.hasOwnProperty('name')
-                ? this.selectedCurrency.decimals
-                : 18
+      if (
+        this.selectedCurrency.contract !== MAIN_TOKEN_ADDRESS ||
+        this.inWallet
+      ) {
+        const bal = this.sendHandler.getEntireBal();
+        if (bal) {
+          this.amount = BigNumber(bal)
+            .div(
+              BigNumber(10).pow(
+                this.selectedCurrency.hasOwnProperty('name')
+                  ? this.selectedCurrency.decimals
+                  : 18
+              )
             )
-          )
-          .toString();
+            .toString();
+        } else {
+          this.amount = this.selectedBalance;
+        }
       } else {
-        this.amount = this.selectedBalance;
+        this.amount = BigNumber(this.selectedBalance)
+          .minus(this.txFee)
+          .toString();
       }
       this.maxBalance = this.amount;
       this.hasPersistentHint = true;

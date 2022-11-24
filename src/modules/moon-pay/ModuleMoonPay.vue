@@ -180,20 +180,10 @@ export default {
     }
   },
   methods: {
-    ...mapActions('wallet', ['setWeb3Instance']),
-    ...mapActions('global', ['setNetwork']),
     ...mapActions('external', ['setNetworkTokens']),
     onTab(val) {
       this.selectedCurrency = {};
       this.selectedCurrency = this.defaultCurrency;
-      this.activeTab = val;
-      // if (!this.inWallet) {
-      //   this.setNetwork({ network: this.network }).then(() => {
-      //     this.setWeb3Instance();
-      //     this.activeTab = val;
-      //   });
-      // } else {
-      // }
       this.activeTab = val;
     },
     async setTokens() {

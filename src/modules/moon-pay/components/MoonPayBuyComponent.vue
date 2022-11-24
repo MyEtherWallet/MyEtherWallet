@@ -112,6 +112,7 @@
       :currency-items="currencyItems"
       :selected-currency="selectedCurrency"
       :set-currency="setCurrency"
+      :in-wallet="inWallet"
       @close="openTokenSelect = false"
     />
   </div>

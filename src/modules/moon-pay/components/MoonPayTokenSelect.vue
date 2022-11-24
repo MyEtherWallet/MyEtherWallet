@@ -53,10 +53,11 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
+import { isEmpty } from 'lodash';
+
 import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
-import { mapGetters } from 'vuex';
 import * as nodes from '@/utils/networks/nodes';
 
 export default {
@@ -85,8 +86,6 @@ export default {
       nodes: nodes,
       fetchedNetworks: [],
       selectedNetwork: {}
-      // selectItems: [],
-      // search: ''
     };
   },
   computed: {
@@ -105,9 +104,10 @@ export default {
     }
   },
   watch: {
-    selectedNetwork() {
-      if (this.selectedNetwork) {
-        this.setNewNetwork(this.selectedNetwork);
+    selectedNetwork(newVal, oldVal) {
+      // actual check whether the value was changed or just initially set
+      if (newVal && !isEmpty(newVal) && oldVal && !isEmpty(oldVal)) {
+        this.setNewNetwork(newVal);
       }
     }
   },
