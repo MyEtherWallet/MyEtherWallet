@@ -653,7 +653,7 @@ export default {
       const nonce = raw.nonce;
       this.dialog = true;
       this.txLoading = true;
-      if (BigNumber(actualNonce).gte(nonce)) {
+      if (BigNumber(actualNonce).gt(nonce)) {
         this.dialogAlert = 'Nonce too low!';
         this.txLoading = false;
         return;
