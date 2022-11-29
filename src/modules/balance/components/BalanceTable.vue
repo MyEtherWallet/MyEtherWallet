@@ -1,9 +1,9 @@
 <template>
-  <div class="modules-balance-table">
-    <!-- ==================================================================== -->
-    <!-- Desktop table -->
-    <!-- ==================================================================== -->
-    <app-table v-if="!isMobile" full-width flat border-bottom class="mt-4 mb-4">
+  <!-- <div class="modules-balance-table"> -->
+  <!-- ==================================================================== -->
+  <!-- Desktop table -->
+  <!-- ==================================================================== -->
+  <!-- <app-table v-if="!isMobile" full-width flat border-bottom class="mt-4 mb-4">
       <table>
         <thead>
           <tr>
@@ -79,12 +79,12 @@
           </tr>
         </tbody>
       </table>
-    </app-table>
+    </app-table> -->
 
-    <!-- ==================================================================== -->
-    <!-- Mobile table -->
-    <!-- ==================================================================== -->
-    <app-table
+  <!-- ==================================================================== -->
+  <!-- Mobile table -->
+  <!-- ==================================================================== -->
+  <!-- <app-table
       v-for="(td, dataKey) in tableDataPaginated"
       v-else
       :key="dataKey"
@@ -152,26 +152,32 @@
           </v-btn>
         </template>
       </div>
-    </app-table>
+    </app-table> -->
 
-    <!-- ==================================================================== -->
-    <!-- Pagination for both desktop and mobile -->
-    <!-- ==================================================================== -->
-    <v-pagination
+  <!-- ==================================================================== -->
+  <!-- Pagination for both desktop and mobile -->
+  <!-- ==================================================================== -->
+  <!-- <v-pagination
       v-if="pageLength && false"
       v-model="page"
       class="mt-6"
       :length="pageLength"
-    ></v-pagination>
-  </div>
+    ></v-pagination> -->
+  <!-- </div> -->
+  <MewLightTable
+    :is-mobile="isMobile"
+    :table-data="tableData"
+    :table-headers="tableHeaders"
+  />
 </template>
 
 <script>
-import AppTable from '@/core/components/AppTable';
+// import AppTable from '@/core/components/AppTable';
+import MewLightTable from '@/components/MewLightTable/MewLightTable.vue';
 
 export default {
   name: 'ModulesBalanceTable',
-  components: { AppTable },
+  components: { MewLightTable },
   props: {
     tableData: {
       type: Array,
@@ -182,40 +188,41 @@ export default {
   },
   data() {
     return {
-      page: 1,
-      itemsPerPage: 10
+      // page: 1,
+      // itemsPerPage: 10,
+      tableHeaders: ['TOKEN', 'PRICE', 'MARKET CAP', '24H', 'BALANCE', '']
     };
   },
   computed: {
     isMobile() {
       return this.$vuetify.breakpoint.mdAndDown;
-    },
-    pageLength() {
-      return Math.ceil(this.tableData.length / this.itemsPerPage);
-    },
-    tableDataPaginated() {
-      return this.paginate(this.tableData, this.itemsPerPage, this.page);
     }
+    // pageLength() {
+    //   return Math.ceil(this.tableData.length / this.itemsPerPage);
+    // },
+    // tableDataPaginated() {
+    //   return this.paginate(this.tableData, this.itemsPerPage, this.page);
+    // }
   },
   methods: {
-    paginate(array, pageSize, pageNumber) {
-      return array.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
-    }
+    // paginate(array, pageSize, pageNumber) {
+    //   return array.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
+    // }
   }
 };
 </script>
 
 <style lang="scss">
-.modules-balance-table {
-  .v-pagination__item--active {
-    box-shadow: none !important;
-    background-color: var(--v-textDark-base) !important;
-  }
-  .v-pagination__navigation {
-    box-shadow: none !important;
-  }
-  .v-pagination__item {
-    box-shadow: none !important;
-  }
-}
+// .modules-balance-table {
+//   .v-pagination__item--active {
+//     box-shadow: none !important;
+//     background-color: var(--v-textDark-base) !important;
+//   }
+//   .v-pagination__navigation {
+//     box-shadow: none !important;
+//   }
+//   .v-pagination__item {
+//     box-shadow: none !important;
+//   }
+// }
 </style>
