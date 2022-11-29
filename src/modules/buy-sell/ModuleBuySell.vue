@@ -49,7 +49,7 @@
           </template>
         </mew-tabs>
       </div>
-      <MoonPayBuyProviderComponent
+      <BuyProviderComponent
         v-if="step === 1"
         :order-handler="orderHandler"
         :close="close"
@@ -79,10 +79,9 @@ import handler from './handlers/handlerOrder';
 export default {
   name: 'MoonPay',
   components: {
-    BuyEthComponent: () => import('./components/MoonPayBuyComponent'),
-    SellEthComponent: () => import('./components/MoonPaySellComponent'),
-    MoonPayBuyProviderComponent: () =>
-      import('./components/MoonPayBuyProviderComponent.vue')
+    BuyEthComponent: () => import('./components/BuyComponent'),
+    SellEthComponent: () => import('./components/SellComponent'),
+    BuyProviderComponent: () => import('./components/BuyProviderComponent.vue')
   },
   props: {
     open: {

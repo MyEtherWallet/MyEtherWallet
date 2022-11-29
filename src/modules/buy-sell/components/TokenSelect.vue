@@ -25,7 +25,7 @@
           hide-details
         ></v-text-field>
 
-        <div class="mt-5">
+        <div v-if="searchedCurrencyItems.length > 0" class="mt-5">
           <div v-for="token in searchedCurrencyItems" :key="token.name">
             <v-btn
               v-if="token.name"
@@ -47,6 +47,7 @@
             </v-btn>
           </div>
         </div>
+        <div v-else class="mt-5 mew-heading-4 ml-4">No tokens found</div>
       </div>
     </div>
   </div>
