@@ -136,10 +136,10 @@ export default {
       'network',
       'isTestNetwork',
       'gasPrice',
-      'gasPriceType',
       'gasPriceByType',
       'getFiatValue'
     ]),
+    ...mapState('global', ['gasPriceType']),
     ...mapGetters('external', ['fiatValue']),
     totalAvailable() {
       return this.blocks.filter(item => {
@@ -323,6 +323,10 @@ export default {
                   ? 1
                   : 0;
               });
+              if (this.blocks.length === 0) {
+                this.isLoading = false;
+                return;
+              }
               this.batchMintData = this.blocks.map(item => {
                 return item.mintData.data;
               });

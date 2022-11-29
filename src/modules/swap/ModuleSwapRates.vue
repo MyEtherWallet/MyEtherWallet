@@ -1,10 +1,6 @@
 <template>
-  <mew6-white-sheet
-    v-if="isEthNetwork"
-    class="module-swap-rates"
-    :sideinfo="!mobile"
-  >
-    <div class="px-5 px-lg-7 py-5">
+  <mew6-white-sheet v-if="isEthNetwork" :sideinfo="!mobile">
+    <div class="module-swap-rates px-5 px-lg-7 py-5">
       <div class="d-flex align-center justify-space-between">
         <span class="mew-heading-2">{{ $t('common.swap') }}</span>
         <mew-button
@@ -30,7 +26,7 @@
             <mew-token-container
               size="small"
               class="pa-1"
-              img="https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ETH-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.svg"
+              :img="ethIcon"
             ></mew-token-container>
             <img
               width="18"
@@ -71,12 +67,11 @@
 </template>
 
 <script>
+import ethIcon from '@/assets/images/networks/eth.svg';
 import { mapState, mapGetters } from 'vuex';
 import { toWei } from 'web3-utils';
-
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
-
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import handlerSwap from '@/modules/swap/handlers/handlerSwap';
 
@@ -171,6 +166,7 @@ export default {
   },
   data() {
     return {
+      ethIcon: ethIcon,
       swapHandler: null,
       swapData: null,
       loading: true,
