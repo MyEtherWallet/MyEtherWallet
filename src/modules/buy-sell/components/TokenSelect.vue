@@ -62,7 +62,7 @@ import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import * as nodes from '@/utils/networks/nodes';
 
 export default {
-  name: 'MoonpayTokenSelect',
+  name: 'BuySellTokenSelect',
   props: {
     currencyItems: {
       type: Array,
