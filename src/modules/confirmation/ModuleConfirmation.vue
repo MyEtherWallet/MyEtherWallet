@@ -433,6 +433,9 @@ export default {
     disableBtn() {
       if (this.error !== '') return true;
       if (!this.signing) return true;
+      if (this.isBatch && this.identifier === WALLET_TYPES.LEDGER) {
+        return false;
+      }
       return this.txSigned;
     },
     txSigned() {
@@ -741,8 +744,17 @@ export default {
               this.showSuccess(hash);
             }
           })
-          .catch(() => {
-            if (this.isSwap) this.trackSwap('swapTxFailed');
+          .catch(err => {
+            if (this.isSwap) {
+              if (
+                err.message ===
+                'MetaMask Tx Signature: User denied transaction signature.'
+              ) {
+                this.trackSwap('swapTxCancelled');
+              } else {
+                this.trackSwap('swapTxFailed');
+              }
+            }
           });
         return promiEvent;
       });
@@ -808,14 +820,18 @@ export default {
             this.showSuccess(res);
           })
           .once('receipt', () => {
-            this.trackSwap('swapTxReceivedReceipt');
-          })
-          .once('error', () => {
-            this.trackSwap('swapTxFailed');
+            if (this.isSwap) this.trackSwap('swapTxReceivedReceipt');
           })
           .catch(e => {
             if (this.isSwap) {
-              this.trackSwap('swapRejected');
+              if (
+                e.message ===
+                'MetaMask Tx Signature: User denied transaction signature.'
+              ) {
+                this.trackSwap('swapTxCancelled');
+              } else {
+                this.trackSwap('swapTxFailed');
+              }
             }
             this.signedTxObject = {};
             this.error = errorHandler(e);
@@ -832,7 +848,7 @@ export default {
             }
           })
           .catch(e => {
-            if (this.isSwap) this.trackSwap('swapRejected');
+            if (this.isSwap) this.trackSwap('swapTxCancelled');
             this.signedTxObject = {};
             this.error = errorHandler(e);
             this.signing = false;
@@ -877,7 +893,15 @@ export default {
                 });
               })
               .catch(e => {
-                if (this.isSwap) this.trackSwap('swapTxFailed');
+                if (
+                  e.message ===
+                  'MetaMask Tx Signature: User denied transaction signature.'
+                ) {
+                  this.trackSwap('swapTxCancelled');
+                } else {
+                  this.trackSwap('swapTxFailed');
+                }
+                this.signing = false;
                 this.instance.errorHandler(e.message);
               });
           }
