@@ -165,7 +165,7 @@ import { toBase } from '@/core/helpers/unit';
 import { sellContracts } from './tokenList';
 import handlerWallet from '@/core/mixins/handlerWallet.mixin';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook.vue';
-import MoonpayTokenSelect from '@/modules/moon-pay/components/MoonPayTokenSelect.vue';
+import MoonpayTokenSelect from '@/modules/buy-sell/components/MoonPayTokenSelect.vue';
 import { getCurrency } from '@/modules/settings/components/currencyList';
 
 export default {

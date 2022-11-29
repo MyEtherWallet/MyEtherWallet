@@ -20,7 +20,7 @@ import {
   SUCCESS,
   INFO
 } from '@/modules/toast/handler/handlerToast';
-import { MOONPAY_EVENT } from '@/modules/moon-pay/helpers';
+import { MOONPAY_EVENT } from '@/modules/buy-sell/helpers';
 import { EventBus } from '@/core/plugins/eventBus';
 import handlerAnalyticsMixin from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin.js';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
@@ -31,7 +31,7 @@ export default {
     ModuleGlobalModals: () =>
       import('@/modules/global-modals/ModuleGlobalModals'),
     ModuleAnalytics: () => import('@/modules/analytics-opt-in/ModuleAnalytics'),
-    ModuleMoonPay: () => import('@/modules/moon-pay/ModuleMoonPay')
+    ModuleBuySell: () => import('@/modules/buy-sell/ModuleBuySell')
   },
   mixins: [handlerAnalyticsMixin],
   data() {

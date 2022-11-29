@@ -135,7 +135,7 @@ import { getCurrency } from '@/modules/settings/components/currencyList';
 import { buyContracts } from './tokenList';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook.vue';
-import MoonpayTokenSelect from '@/modules/moon-pay/components/MoonPayTokenSelect.vue';
+import MoonpayTokenSelect from '@/modules/buy-sell/components/MoonPayTokenSelect.vue';
 
 export default {
   name: 'ModuleBuyEth',
