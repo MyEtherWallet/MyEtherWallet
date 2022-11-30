@@ -11,6 +11,12 @@
     </v-main>
     <the-wallet-footer :is-offline-app="isOfflineApp" />
     <enkrypt-promo-snackbar v-if="!isOfflineApp" />
+    <module-paper-wallet
+      :open="showPaperWallet"
+      :close="closePaperWallet"
+      :is-offline-app="isOfflineApp"
+      @close="closePaperWallet"
+    />
   </div>
 </template>
 
@@ -32,8 +38,10 @@ import { Web3Wallet } from '@/modules/access-wallet/common';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import matchNetwork from '@/core/helpers/matchNetwork';
+import { EventBus } from '@/core/plugins/eventBus';
 
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
+import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 
 export default {
   components: {
@@ -45,9 +53,15 @@ export default {
     EnkryptPromoSnackbar: () =>
       import('@/views/components-wallet/EnkryptPromoSnackbar'),
     TheEnkryptPopup: () =>
-      import('@/views/components-default/TheEnkryptPopup.vue')
+      import('@/views/components-default/TheEnkryptPopup.vue'),
+    ModulePaperWallet: () => import('@/modules/balance/ModulePaperWallet.vue')
   },
   mixins: [handlerWallet, handlerAnalytics],
+  data() {
+    return {
+      showPaperWallet: false
+    };
+  },
   computed: {
     ...mapState('wallet', [
       'address',
@@ -103,6 +117,12 @@ export default {
     }
   },
   mounted() {
+    EventBus.$on('openPaperWallet', () => {
+      this.showPaperWallet = true;
+      this.$router.push({
+        name: ROUTES_WALLET.PRINT.NAME
+      });
+    });
     if (this.online && !this.isOfflineApp) {
       this.setup();
       this.setTokensAndBalance();
@@ -113,6 +133,7 @@ export default {
     }
   },
   beforeDestroy() {
+    EventBus.$off('openPaperWallet');
     if (this.online && !this.isOfflineApp) this.web3.eth.clearSubscriptions();
     if (window.ethereum && window.ethereum.removeListener instanceof Function) {
       if (this.findAndSetNetwork instanceof Function)
@@ -130,6 +151,14 @@ export default {
       'setValidNetwork'
     ]),
     ...mapActions('external', ['setTokenAndEthBalance', 'setNetworkTokens']),
+    /**
+     * set showPaperWallet to false
+     * to close the modal
+     */
+    closePaperWallet() {
+      if (this.showPaperWallet) this.$router.go(-1);
+      this.showPaperWallet = false;
+    },
     setup() {
       this.processNetworkTokens();
       this.subscribeToBlockNumber();
