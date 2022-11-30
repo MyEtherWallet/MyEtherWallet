@@ -133,7 +133,7 @@
     <!-- ========================================================================= -->
     <!-- Token select popup -->
     <!-- ========================================================================= -->
-    <moonpay-token-select
+    <buy-sell-token-select
       :open="openTokenSelect"
       :currency-items="currencyItems"
       :selected-currency="selectedCurrency"
@@ -151,6 +151,7 @@ import { isEmpty, debounce, isNumber, isEqual } from 'lodash';
 import BigNumber from 'bignumber.js';
 import { fromWei, toBN } from 'web3-utils';
 import Web3 from 'web3';
+
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import handlerSend from '@/modules/send/handlers/handlerSend.js';
@@ -165,7 +166,7 @@ import { toBase } from '@/core/helpers/unit';
 import { sellContracts } from './tokenList';
 import handlerWallet from '@/core/mixins/handlerWallet.mixin';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook.vue';
-import BuySellTokenSelect from '@/modules/buy-sell/components/BuySellTokenSelect.vue';
+import BuySellTokenSelect from '@/modules/buy-sell/components/TokenSelect.vue';
 import { getCurrency } from '@/modules/settings/components/currencyList';
 
 export default {

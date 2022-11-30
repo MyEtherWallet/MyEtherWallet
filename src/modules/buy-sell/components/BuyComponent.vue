@@ -107,7 +107,7 @@
     <!-- ========================================================================= -->
     <!-- Token select popup -->
     <!-- ========================================================================= -->
-    <moonpay-token-select
+    <buy-sell-token-select
       :open="openTokenSelect"
       :currency-items="currencyItems"
       :selected-currency="selectedCurrency"
@@ -135,7 +135,7 @@ import { getCurrency } from '@/modules/settings/components/currencyList';
 import { buyContracts } from './tokenList';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook.vue';
-import BuySellTokenSelect from '@/modules/buy-sell/components/BuySellTokenSelect.vue';
+import BuySellTokenSelect from '@/modules/buy-sell/components/TokenSelect.vue';
 
 export default {
   name: 'ModuleBuyEth',

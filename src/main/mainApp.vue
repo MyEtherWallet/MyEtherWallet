@@ -4,7 +4,7 @@
     <module-toast />
     <module-global-modals />
     <module-analytics />
-    <module-moon-pay :open="moonPayOpen" @close="moonPayOpen = false" />
+    <module-buy-sell :open="buySellOpen" @close="buySellOpen = false" />
   </v-app>
 </template>
 
@@ -36,7 +36,7 @@ export default {
   mixins: [handlerAnalyticsMixin],
   data() {
     return {
-      moonPayOpen: false
+      buySellOpen: false
     };
   },
   computed: {
@@ -107,7 +107,7 @@ export default {
     // Close modal with 'esc' key
     document.addEventListener('keydown', e => {
       if (e.keyCode === 27) {
-        _self.moonPayOpen = false;
+        _self.buySellOpen = false;
       }
     });
   },
@@ -120,7 +120,7 @@ export default {
     ...mapActions('addressBook', ['setMigrated', 'setAddressBook']),
     ...mapActions('article', ['updateArticles']),
     openBuy() {
-      this.moonPayOpen = true;
+      this.buySellOpen = true;
     },
     logMessage() {
       /* eslint-disable no-console */
