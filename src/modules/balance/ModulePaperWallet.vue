@@ -12,13 +12,16 @@
     <!-- Printable paper wallet content -->
     <!-- =============================================== -->
     <div ref="printContainer" class="printable-wallet printable-wallet-content">
-      <paper-wallet-to-print />
+      <paper-wallet-to-print v-if="isOverlayOpen" />
     </div>
 
     <!-- =============================================== -->
     <!-- Paper wallet to show -->
     <!-- =============================================== -->
-    <paper-wallet-to-display class="printable-wallet-display" />
+    <paper-wallet-to-display
+      v-if="isOverlayOpen"
+      class="printable-wallet-display"
+    />
 
     <div class="d-flex justify-center mt-12">
       <mew-button
