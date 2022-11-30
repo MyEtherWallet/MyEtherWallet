@@ -165,11 +165,13 @@ export default class Notification {
       this.status.toLowerCase() === NOTIFICATION_STATUS.PENDING ||
       this.status.toLowerCase() === NOTIFICATION_STATUS.SUBMITTED
     ) {
+      console.log('checking tx status');
       const _this = this;
       const debouncedInterval = debounce(function () {
         const stat = swapper.getStatus(_this.swapObj);
         if (stat && isObject(stat) && isFunction(stat.then)) {
           stat.then(function (res) {
+            console.log('tx status: ', res);
             if (res) {
               const formattedStatus = res.toLowerCase();
               _this.status =
@@ -182,6 +184,7 @@ export default class Notification {
             }
           });
         }
+        console.log(_this.status);
         if (_this.status.toLowerCase() !== NOTIFICATION_STATUS.PENDING) {
           _this.read = false;
           vuexStore.dispatch('notifications/updateNotification', _this);
