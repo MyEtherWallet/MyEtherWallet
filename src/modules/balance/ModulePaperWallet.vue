@@ -12,16 +12,13 @@
     <!-- Printable paper wallet content -->
     <!-- =============================================== -->
     <div ref="printContainer" class="printable-wallet printable-wallet-content">
-      <paper-wallet-to-print v-if="isOverlayOpen" />
+      <paper-wallet-to-print v-if="instance" />
     </div>
 
     <!-- =============================================== -->
     <!-- Paper wallet to show -->
     <!-- =============================================== -->
-    <paper-wallet-to-display
-      v-if="isOverlayOpen"
-      class="printable-wallet-display"
-    />
+    <paper-wallet-to-display v-if="instance" class="printable-wallet-display" />
 
     <div class="d-flex justify-center mt-12">
       <mew-button
@@ -37,6 +34,8 @@
 <script>
 import printJS from 'print-js';
 import html2canvas from 'html2canvas';
+import { mapState } from 'vuex';
+
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 
 export default {
@@ -68,6 +67,7 @@ export default {
     };
   },
   computed: {
+    ...mapState('wallet', ['instance']),
     isOverlayOpen() {
       return this.open;
     }
