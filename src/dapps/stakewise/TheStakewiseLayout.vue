@@ -57,15 +57,17 @@ export default {
           id: 0
         }
       ];
-      return this.isEthNetwork
-        ? arr.push({
-            name: 'Compound Rewards',
-            route: {
-              name: STAKEWISE_ROUTES.REWARDS.NAME
-            },
-            id: 1
-          })
-        : arr;
+
+      if (this.isEthNetwork) {
+        arr.push({
+          name: 'Compound Rewards',
+          route: {
+            name: STAKEWISE_ROUTES.REWARDS.NAME
+          },
+          id: 1
+        });
+      }
+      return arr;
     }
   },
   watch: {
