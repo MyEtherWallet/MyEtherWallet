@@ -104,6 +104,7 @@
         <v-skeleton-loader
           v-if="loadingWalletInfo"
           type="heading"
+          class="theme-dark-heading"
         ></v-skeleton-loader>
         <div v-else class="mew-subtitle text-shadow white--text">
           {{ totalWalletBalance }}
@@ -714,5 +715,15 @@ export default {
 .verify-popup-border {
   border: 1px solid var(--v-greenMedium-base);
   border-radius: 4px;
+}
+
+.theme-dark-heading {
+  background-color: rgba(0, 0, 0, 0);
+  border-radius: 12px;
+  height: 24px;
+  width: 100%;
+}
+.theme-dark-heading .v-skeleton-loader__bone::before {
+  background-color: rgba(0, 0, 0, 0.2);
 }
 </style>
