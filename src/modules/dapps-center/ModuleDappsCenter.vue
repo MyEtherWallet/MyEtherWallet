@@ -19,6 +19,7 @@
               display: flex;
               align-items: start;
               padding-top: 33px;
+              box-shadow: 0 0 15px var(--v-greyMedium-base) !important;
             "
             has-full-width
             @click.native="routeTo(dappName(dapp))"
@@ -98,7 +99,7 @@ export default {
     return {
       bannerImage: bannerImage,
       bannerText: {
-        title: 'Explore MEW DApps'
+        title: 'Explore New DApps'
       }
     };
   },
