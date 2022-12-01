@@ -23,5 +23,6 @@ export default {
   },
   gasPriceMultiplier: 1,
   canBuy: true,
-  coingeckoID: 'binancecoin'
+  coingeckoID: 'binancecoin',
+  balanceApi: 'https://tokenbalance.mewapi.io/bsc?address='
 };

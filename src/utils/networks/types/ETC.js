@@ -26,5 +26,6 @@ export default {
   },
   gasPriceMultiplier: 1,
   canBuy: false,
-  coingeckoID: 'ethereum-classic'
+  coingeckoID: 'ethereum-classic',
+  balanceApi: ''
 };
