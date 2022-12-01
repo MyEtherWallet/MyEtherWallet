@@ -722,12 +722,12 @@ export default {
               this.trackSwap('swapTxBroadcasted');
             }
           })
-          .on('receipt', () => {
+          .once('receipt', () => {
             if (this.isSwap) {
               this.trackSwap('swapTxReceivedReceipt');
             }
           })
-          .once('transactionHash', hash => {
+          .on('transactionHash', hash => {
             const storeKey = sha3(
               `${this.network.type.name}-${this.address.toLowerCase()}`
             );
@@ -818,14 +818,14 @@ export default {
           .once('sent', () => {
             this.trackSwap('swapTxBroadcasted');
           })
-          .once('transactionHash', res => {
+          .on('transactionHash', res => {
             if (this.isSwap) {
               this.trackSwap('swapTransactionSuccessfullySent');
             }
             this.showTxOverlay = false;
             this.showSuccess(res);
           })
-          .on('receipt', () => {
+          .once('receipt', () => {
             if (this.isSwap) {
               this.trackSwap('swapTxReceivedReceipt');
             }
@@ -893,14 +893,14 @@ export default {
             const event = this.instance.signTransaction(objClone);
             batchTxEvents.push(event);
             event
-              .once('transactionHash', res => {
+              .on('transactionHash', res => {
                 signed.push({
                   tx: {
                     hash: res
                   }
                 });
               })
-              .on('receipt', () => {
+              .once('receipt', () => {
                 if (this.isSwap) {
                   this.trackSwap('swapTxReceivedReceipt');
                 }
