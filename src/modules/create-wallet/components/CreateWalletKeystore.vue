@@ -12,7 +12,9 @@
       <!-- ===================================================================================== -->
       <mew-input
         v-model="password"
-        hint="Password must be 8 or more characters"
+        :hint="
+          password.length < 8 ? 'Password must be 8 or more characters' : ''
+        "
         label="Password"
         placeholder="Enter Password"
         :has-clear-btn="true"
@@ -32,6 +34,7 @@
         class="flex-grow-1 CreateWalletKeystoreConfirmPWInput"
         :rules="passwordConfirmRulles"
         type="password"
+        :error-messages="errorPasswordConfirmation"
       />
 
       <!-- ===================================================================================== -->
@@ -224,16 +227,27 @@ export default {
       password: '',
       cofirmPassword: '',
       passwordRulles: [
-        value => !isEmpty(value) || 'Required',
+        value =>
+          !isEmpty(value) || this.password === this.cofirmPassword
+            ? ''
+            : 'Required',
         value => value?.length >= 8 || 'Password is less than 8 characters'
       ],
-
       walletFile: '',
       name: '',
       isGeneratingKeystore: false
     };
   },
   computed: {
+    errorPasswordConfirmation() {
+      if (
+        this.password !== this.cofirmPassword &&
+        this.cofirmPassword.length > 0
+      ) {
+        return 'Passwords do not match';
+      }
+      return '';
+    },
     enableCreateButton() {
       return (
         !isEmpty(this.password) &&
