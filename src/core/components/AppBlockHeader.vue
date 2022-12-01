@@ -6,8 +6,9 @@
       :style="{ backgroundImage: `url(${bannerImg})` }"
     >
       <v-row>
-        <v-col v-if="!noBackBtn" cols="12" md="3">
+        <v-col cols="12" md="3">
           <span
+            v-if="!noBackBtn"
             class="textLight--text mew-heading-3 font-weight-medium cursor-pointer pa-1"
             @click="closeBanner"
           >
@@ -17,9 +18,9 @@
         </v-col>
         <v-col
           cols="12"
-          :md="noBackBtn ? '4' : '6'"
+          md="6"
           class="py-6 d-flex align-center justify-center"
-          style="min-height: 210px"
+          style="min-height: 150px"
         >
           <div>
             <div
