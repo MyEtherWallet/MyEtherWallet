@@ -595,7 +595,9 @@ export default {
     filter: grayscale(0);
   }
 
-  .v-list-item--active.v-list-item:not(.v-list-group__header).remove-select-state {
+  .v-list-item--active.v-list-item:not(
+      .v-list-group__header
+    ).remove-select-state {
     background-color: transparent !important;
 
     &:hover {
