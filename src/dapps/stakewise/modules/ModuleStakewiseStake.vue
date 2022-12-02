@@ -420,6 +420,7 @@ export default {
   methods: {
     ...mapActions('stakewise', ['addToPendingTxs', 'addToPendingTxsGoerli']),
     ...mapActions('notifications', ['addNotification']),
+    ...mapActions('global', ['updateGasPrice']),
     setAmount: debounce(function (val) {
       const value = val ? val : 0;
       this.stakeAmount = BigNumber(value).toFixed();
@@ -432,7 +433,9 @@ export default {
       );
     },
     setGasPrice() {
-      this.locGasPrice = this.gasPriceByType(this.gasPriceType);
+      this.updateGasPrice().then(() => {
+        this.locGasPrice = this.gasPriceByType(this.gasPriceType);
+      });
     },
     setGasLimit() {
       this.estimateGasError = false;

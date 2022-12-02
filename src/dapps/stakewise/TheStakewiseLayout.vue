@@ -90,7 +90,6 @@ export default {
       clearInterval(this.fetchInterval);
       if (this.isSupported) {
         this.setup();
-        if (this.web3ChainMatch) this.updateGasPrice();
       }
     }
   },
@@ -113,7 +112,6 @@ export default {
       'setRewardBalance',
       'setStakeBalance'
     ]),
-    ...mapActions('global', ['updateGasPrice']),
     setup() {
       this.stakewiseHandler = new handler(this.web3, this.isEthNetwork);
       this.collectiveFetch();
