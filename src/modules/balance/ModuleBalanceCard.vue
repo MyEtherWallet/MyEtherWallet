@@ -102,7 +102,7 @@
         ]"
       >
         <v-skeleton-loader
-          v-if="!loadingWalletInfo"
+          v-if="loadingWalletInfo"
           type="heading"
           class="theme-dark-heading"
         ></v-skeleton-loader>
@@ -125,11 +125,7 @@
             Total Wallet chain balance: prensent if not Test network
           =====================================================================================
           -->
-          <v-skeleton-loader
-            v-if="!loadingWalletInfo"
-            type="text"
-            width="100"
-          />
+          <v-skeleton-loader v-if="loadingWalletInfo" type="text" width="100" />
           <div
             v-else-if="!isTestNetwork"
             class="info-container--text-chain-balance"
@@ -141,11 +137,7 @@
             Total Tokens: present if tokens found
           =====================================================================================
           -->
-          <v-skeleton-loader
-            v-if="!loadingWalletInfo"
-            type="text"
-            width="100"
-          />
+          <v-skeleton-loader v-if="loadingWalletInfo" type="text" width="100" />
           <div v-else-if="nonChainTokensCount > 0" class="info-container--text">
             and {{ nonChainTokensCount }} Tokens
           </div>
