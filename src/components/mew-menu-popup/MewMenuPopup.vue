@@ -233,10 +233,10 @@ export default {
 // ======================================================================
 .mew-menu-popup-content {
   max-height: 400px;
-  overflow-y: auto;
   background-color: white;
   border-radius: 4px;
   overflow: hidden;
+  overflow-y: auto !important;
   box-shadow: 0 5px 5px -3px rgb(13 41 66 / 20%),
     0 8px 10px 1px rgb(13 41 66 / 14%), 0 3px 14px 2px rgb(13 41 66 / 12%);
   position: absolute;
