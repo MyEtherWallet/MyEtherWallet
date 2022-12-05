@@ -21,7 +21,6 @@ import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
 import { toBNSafe } from '@/core/helpers/numberFormatHelper';
 
 import handler from './handlers/stakewiseHandler';
-import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 
 export default {
   name: 'TheStakewiseLayout',
@@ -63,13 +62,6 @@ export default {
         return item.name === this.network.type.name;
       });
       return !!isSupported;
-    },
-    web3ChainMatch() {
-      const currentProvider = this.web3.eth.currentProvider;
-      return !(
-        this.identifier === WALLET_TYPES.WEB3_WALLET &&
-        this.network.type.chainID !== parseInt(currentProvider.chainId)
-      );
     }
   },
   watch: {
@@ -120,7 +112,6 @@ export default {
       }, 14000);
     },
     collectiveFetch() {
-      if (!this.web3ChainMatch) return;
       Promise.all([
         this.stakewiseHandler.getEthPool(),
         this.stakewiseHandler.getStakingFee(),
