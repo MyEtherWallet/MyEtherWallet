@@ -1,1 +1,0 @@
-{"version":3,"sources":["webpack:///./src/dapps/staked-dapp/TheStakedLayout.vue?c687"],"names":[],"mappings":"AAAA,sCAAsC,4CAA4C,4CAA4C,qB","file":"css/dapp-staked~f71cff67.31f629c3.css","sourcesContent":[".staked-tab-inactive[data-v-85de2f6e]{background-color:rgba(0,0,0,.24) !important}.staked-tab-active[data-v-85de2f6e]::before{opacity:0 !important}"],"sourceRoot":""}
