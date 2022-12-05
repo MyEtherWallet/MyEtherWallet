@@ -34,20 +34,6 @@ export default {
         subtext: 'Stake any amount of ETH and begin earning rewards.'
       },
       activeTab: 0,
-      tabs: [
-        {
-          name: 'Stake ETH',
-          route: { name: STAKEWISE_ROUTES.CORE.NAME },
-          id: 0
-        },
-        {
-          name: 'Compound Rewards',
-          route: {
-            name: STAKEWISE_ROUTES.REWARDS.NAME
-          },
-          id: 1
-        }
-      ],
       headerImg: require('@/assets/images/icons/dapps/icon-dapp-stakewise.svg'),
       validNetworks: SUPPORTED_NETWORKS,
       stakewiseHandler: {},
@@ -62,6 +48,26 @@ export default {
         return item.name === this.network.type.name;
       });
       return !!isSupported;
+    },
+    tabs() {
+      const arr = [
+        {
+          name: 'Stake ETH',
+          route: { name: STAKEWISE_ROUTES.CORE.NAME },
+          id: 0
+        }
+      ];
+
+      if (this.isEthNetwork) {
+        arr.push({
+          name: 'Compound Rewards',
+          route: {
+            name: STAKEWISE_ROUTES.REWARDS.NAME
+          },
+          id: 1
+        });
+      }
+      return arr;
     }
   },
   watch: {
