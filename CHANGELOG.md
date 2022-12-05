@@ -31,6 +31,7 @@
 * add tooltip to show full address on settings address table [#4368](https://github.com/MyEtherWallet/MyEtherWallet/pull/4368)
 * Fix 'Address verified' message displaying without verifying on Trezor [#4371](https://github.com/MyEtherWallet/MyEtherWallet/pull/4371)
 * Fix cannot read properties 'mintData' on ETH Blocks [#4372](https://github.com/MyEtherWallet/MyEtherWallet/pull/4372)
+* fix for matomo events for metamask and ledger ui interaction [#4385](https://github.com/MyEtherWallet/MyEtherWallet/pull/4385)
 
 ### Release v6.6.10-hotfix.1
 

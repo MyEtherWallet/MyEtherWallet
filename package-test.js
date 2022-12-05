@@ -79,7 +79,9 @@ const EXCEPTIONS = [
   '@coolwallet/core',
   '@commitlint/config-conventional',
   'commitlint',
-  'prettier'
+  'prettier',
+  'highcharts',
+  'lottie-web'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
