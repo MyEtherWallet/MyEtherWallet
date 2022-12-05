@@ -184,6 +184,7 @@
           @redeem-to-eth="redeemToEth"
         />
         <stakewise-rewards
+          v-if="isEthNetwork"
           compound-rewards
           :tx-fee="txFee"
           @set-max="setMax"
