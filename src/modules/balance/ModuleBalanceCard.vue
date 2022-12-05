@@ -167,12 +167,6 @@
       Wallet card modals
     =====================================================================================
     -->
-    <module-paper-wallet
-      :open="showPaperWallet"
-      :close="closePaperWallet"
-      :is-offline-app="isOfflineApp"
-      @close="closePaperWallet"
-    />
     <app-modal
       :show="openQR"
       :close="closeQR"
@@ -245,16 +239,15 @@ import { Toast, SUCCESS, ERROR } from '@/modules/toast/handler/handlerToast';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 
-import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import wallets from './handlers/config';
 import WALLET_TYPES from '../access-wallet/common/walletTypes';
 import NameResolver from '@/modules/name-resolver/index';
+import { EventBus } from '@/core/plugins/eventBus';
 
 export default {
   components: {
     AppModal: () => import('@/core/components/AppModal'),
     AppAddrQr: () => import('@/core/components/AppAddrQr'),
-    ModulePaperWallet: () => import('./ModulePaperWallet'),
     ModuleAccessWalletHardware: () =>
       import('@/modules/access-wallet/ModuleAccessWalletHardware'),
     ModuleAccessWalletSoftware: () =>
@@ -269,7 +262,6 @@ export default {
   data() {
     return {
       showChangeAddress: false,
-      showPaperWallet: false,
       openQR: false,
       showLogout: false,
       showVerify: false,
@@ -519,22 +511,11 @@ export default {
       this.showChangeAddress = true;
     },
     /**
-     * set showPaperWallet to false
-     * to close the modal
-     */
-    closePaperWallet() {
-      if (this.showPaperWallet) this.$router.go(-1);
-      this.showPaperWallet = false;
-    },
-    /**
      * sets showPaperWallet to true
      * to open the modal
      */
     openPaperWallet() {
-      this.$router.push({
-        name: ROUTES_WALLET.PRINT.NAME
-      });
-      this.showPaperWallet = true;
+      EventBus.$emit('openPaperWallet');
     },
     /**
      * Copies address

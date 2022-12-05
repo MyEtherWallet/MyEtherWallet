@@ -370,6 +370,10 @@ export default {
         return 'Please switch your network to the Ethereum Mainnet on Metamask.';
       }
 
+      if (BigNumber(this.selectedBalance).eq(0) && this.actualValidAddress) {
+        return `Address provided has no ${this.selectedCurrency.symbol}`;
+      }
+
       if (amount.isNaN() || amount.eq(0)) {
         return 'Amount required';
       }
