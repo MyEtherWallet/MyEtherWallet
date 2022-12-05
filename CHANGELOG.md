@@ -1,3 +1,7 @@
+### ui
+
+* Fix DApp titles and add box shadows to DApp buttons [#4393](https://github.com/MyEtherWallet/MyEtherWallet/pull/4393)
+
 ### Release v6.6.11
 
 ### ui
