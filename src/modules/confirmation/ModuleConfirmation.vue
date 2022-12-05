@@ -726,6 +726,10 @@ export default {
             }
           })
           .once('transactionHash', hash => {
+            if (!this.address) {
+              this.instance.errorHandler('Address cannot be null!');
+              return;
+            }
             const storeKey = sha3(
               `${this.network.type.name}-${this.address.toLowerCase()}`
             );
