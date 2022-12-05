@@ -25,5 +25,6 @@ export default {
     websocket: null
   },
   coingeckID: 'xdc-network',
-  gasPriceMultiplier: 1
+  gasPriceMultiplier: 1,
+  balanceApi: ''
 };
