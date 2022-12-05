@@ -1,3 +1,7 @@
+### Release v6.6.11-hotfix.1
+
+* offline nonce issue [#4387](https://github.com/MyEtherWallet/MyEtherWallet/pull/4387)
+
 ### Release v6.6.11
 
 ### ui
