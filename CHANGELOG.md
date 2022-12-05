@@ -2,6 +2,7 @@
 
 ### ui
 
+* Fix DApp titles and add box shadows to DApp buttons [#4393](https://github.com/MyEtherWallet/MyEtherWallet/pull/4393)
 * Disable upload button when input is empty [#4336](https://github.com/MyEtherWallet/MyEtherWallet/pull/4336)
 
 ### devop
