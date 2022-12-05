@@ -101,12 +101,12 @@ export default async ({ payload, store, requestManager }, res, next) => {
           setEvents(_promiObj, _tx, store.dispatch);
           _promiObj
             .once('sent', () => {
-              if (event === EventNames.SHOW_SWAP_TX_MODAL) {
+              if (confirmInfo) {
                 EventBus.$emit('swapTxBroadcasted');
               }
             })
             .once('receipt', () => {
-              if (event === EventNames.SHOW_SWAP_TX_MODAL) {
+              if (confirmInfo) {
                 EventBus.$emit('swapTxReceivedReceipt');
               }
             })
@@ -133,7 +133,7 @@ export default async ({ payload, store, requestManager }, res, next) => {
               res(null, toPayload(payload.id, hash));
             })
             .on('error', err => {
-              if (event === EventNames.SHOW_SWAP_TX_MODAL) {
+              if (confirmInfo) {
                 EventBus.$emit('swapTxFailed');
               }
               res(err);

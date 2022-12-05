@@ -574,12 +574,15 @@ export default {
         this.sendTx.setValue(this.getCalculatedAmount);
       }
       this.amountError = '';
+      if (this.isValidForGas) this.debounceEstimateGas();
       this.debounceAmountError(newVal);
     },
     selectedCurrency: {
       handler: function (newVal) {
         if (this.sendTx) {
           this.sendTx.setCurrency(newVal);
+          this.gasEstimationIsReady = false;
+          this.gasEstimationError = '';
           if (this.isValidForGas) this.debounceEstimateGas();
           this.debounceAmountError(this.amount);
           this.gasLimit = this.defaultGasLimit;
@@ -625,11 +628,15 @@ export default {
     this.debounceAmountError = debounce(value => {
       this.setAmountError(value);
     }, 1000);
-    this.debounceEstimateGas = debounce(() => {
-      if (this.isValidForGas) {
-        this.estimateAndSetGas();
-      }
-    }, 500);
+    this.debounceEstimateGas = debounce(
+      () => {
+        if (this.isValidForGas) {
+          this.estimateAndSetGas();
+        }
+      },
+      500,
+      { leading: true, trailing: false }
+    );
   },
   methods: {
     localGasPriceWatcher(newVal) {
@@ -750,6 +757,12 @@ export default {
     },
     estimateAndSetGas() {
       this.gasEstimationIsReady = false;
+      if (this.selectedCurrency.contract !== this.sendTx.currency.contract) {
+        this.sendTx.setCurrency(this.selectedCurrency);
+      }
+      if (this.sendTx.TX.to === '0x') {
+        this.sendTx.setTo(this.toAddress, this.userInputType);
+      }
       this.sendTx
         .estimateGas()
         .then(res => {
