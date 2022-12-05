@@ -55,7 +55,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['web3', 'address', 'identifier']),
+    ...mapState('wallet', ['web3', 'address']),
     ...mapGetters('global', ['isEthNetwork', 'network']),
     isSupported() {
       const isSupported = this.validNetworks.find(item => {
