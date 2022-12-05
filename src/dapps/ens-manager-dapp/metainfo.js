@@ -1,7 +1,7 @@
 import { ENS_MANAGER_ROUTE, ensRouterGuard } from './configsRoutes';
 import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
 export default {
-  title: 'ENS manager',
+  title: 'ENS Manager',
   subtitle: 'Migrate or register ENS domain / subdomain',
   tag: '#Property',
   rightIconType: 'mew',
