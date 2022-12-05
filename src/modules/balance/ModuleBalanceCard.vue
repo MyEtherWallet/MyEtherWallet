@@ -167,12 +167,6 @@
       Wallet card modals
     =====================================================================================
     -->
-    <balance-address-paper-wallet
-      :open="showPaperWallet"
-      :close="closePaperWallet"
-      :is-offline-app="isOfflineApp"
-      @close="closePaperWallet"
-    />
     <app-modal
       :show="openQR"
       :close="closeQR"
@@ -241,20 +235,19 @@ import { mapGetters, mapActions, mapState } from 'vuex';
 import clipboardCopy from 'clipboard-copy';
 import { isEmpty } from 'lodash';
 
-import { Toast, SUCCESS } from '@/modules/toast/handler/handlerToast';
+import { Toast, SUCCESS, ERROR } from '@/modules/toast/handler/handlerToast';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 
 import wallets from './handlers/config';
 import WALLET_TYPES from '../access-wallet/common/walletTypes';
 import NameResolver from '@/modules/name-resolver/index';
+import { EventBus } from '@/core/plugins/eventBus';
 
 export default {
   components: {
     AppModal: () => import('@/core/components/AppModal'),
     AppAddrQr: () => import('@/core/components/AppAddrQr'),
-    BalanceAddressPaperWallet: () =>
-      import('./components/BalanceAddressPaperWallet'),
     ModuleAccessWalletHardware: () =>
       import('@/modules/access-wallet/ModuleAccessWalletHardware'),
     ModuleAccessWalletSoftware: () =>
@@ -269,7 +262,6 @@ export default {
   data() {
     return {
       showChangeAddress: false,
-      showPaperWallet: false,
       openQR: false,
       showLogout: false,
       showVerify: false,
@@ -476,10 +468,16 @@ export default {
     viewAddressOnDevice() {
       this.showVerify = true;
       if (this.canDisplayAddress) {
-        this.instance.displayAddress().then(() => {
-          this.showVerify = false;
-          Toast('Address verified!', {}, SUCCESS);
-        });
+        this.instance
+          .displayAddress()
+          .then(() => {
+            this.showVerify = false;
+            Toast('Address verified!', {}, SUCCESS);
+          })
+          .catch(e => {
+            this.showVerify = false;
+            Toast(e.message, {}, ERROR);
+          });
       }
     },
     /**
@@ -513,18 +511,11 @@ export default {
       this.showChangeAddress = true;
     },
     /**
-     * set showPaperWallet to false
-     * to close the modal
-     */
-    closePaperWallet() {
-      this.showPaperWallet = false;
-    },
-    /**
      * sets showPaperWallet to true
      * to open the modal
      */
     openPaperWallet() {
-      this.showPaperWallet = true;
+      EventBus.$emit('openPaperWallet');
     },
     /**
      * Copies address

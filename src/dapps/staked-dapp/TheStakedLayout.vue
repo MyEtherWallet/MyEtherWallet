@@ -6,7 +6,7 @@
     -->
   <the-wrapper-dapp
     :is-new-header="true"
-    :dapp-img="iconColorfulETH"
+    :dapp-img="headerImg"
     :banner-text="header"
     :tab-items="tabs"
     :active-tab="activeTab"
@@ -142,10 +142,8 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex';
-
 import { SUPPORTED_NETWORKS } from './handlers/supportedNetworks';
 import { STAKED_ROUTE } from './configsRoutes';
-import iconColorfulETH from '@/assets/images/icons/icon-dapp-eth.svg';
 import {
   formatPercentageValue,
   formatFloatingPointValue
@@ -162,7 +160,7 @@ export default {
   data() {
     return {
       validNetworks: SUPPORTED_NETWORKS,
-      iconColorfulETH: iconColorfulETH,
+      headerImg: require('@/assets/images/icons/dapps/icon-dapp-stake.svg'),
       amount: 0,
       header: {
         title: 'Ethereum 2.0 staking',

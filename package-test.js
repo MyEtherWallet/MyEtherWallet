@@ -76,13 +76,12 @@ const EXCEPTIONS = [
   'is-ipfs',
   'axios',
   // update after release
-  'highcharts',
+  '@coolwallet/core',
   '@commitlint/config-conventional',
   'commitlint',
-  '@ledgerhq/hw-app-eth',
-  '@ledgerhq/live-common',
-  'babel-jest',
-  'stylelint-config-prettier'
+  'prettier',
+  'highcharts',
+  'lottie-web'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

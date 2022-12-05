@@ -20,7 +20,7 @@
     <div
       v-if="walletType === types.OVERVIEW"
       style="max-width: 650px; width: 100%"
-      class="mx-auto"
+      class="mx-auto pt-5"
     >
       <div v-for="(btn, key) in buttons" :key="key" class="mb-5">
         <mew-button
