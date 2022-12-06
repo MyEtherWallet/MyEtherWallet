@@ -32,6 +32,7 @@
           title="Register"
           class="set-button"
           btn-size="xlarge"
+          :loading="selectedDomain.loading"
           :disabled="activeRegister"
           @click.native="setReverseRecord(selectedDomain)"
         />
@@ -67,6 +68,7 @@ import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import PermanentNameModule from '../../handlers/handlerPermanentName';
 import errorHandler from '@/modules/confirmation/handlers/errorHandler.js';
 import metainfo from '../../metainfo.js';
+import { toBNSafe } from '@/core/helpers/numberFormatHelper';
 export default {
   name: 'EnsReverseLookup',
   props: {
@@ -91,7 +93,7 @@ export default {
     return {
       ensLookupResults: null,
       hasDomains: false,
-      selectedDomain: {},
+      selectedDomain: { loading: false },
       selectedDomainAddr: '',
       permHandler: {},
       hasReverseRecordNames: false,
@@ -109,11 +111,25 @@ export default {
     ...mapState('global', ['gasPriceType']),
     ...mapState('wallet', ['balance', 'web3', 'instance']),
     domainListItems() {
-      return this.ensLookupResults || [];
+      return (
+        this.ensLookupResults?.map(i => {
+          i.loading = true;
+          i.fee = toBNSafe(0);
+          try {
+            // get fee here
+          } catch {
+            i.loading = false;
+            return i;
+          }
+          //i.loading = false;
+          return i;
+        }) || []
+      );
     },
     activeRegister() {
-      // get transaction fee
-      return this.balance > 1000000;
+      return (
+        this.balance > this.selectedDomain.fee && this.selectedDomain.fee !== 0
+      );
     }
   },
   watch: {
