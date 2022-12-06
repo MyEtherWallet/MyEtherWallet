@@ -15,12 +15,12 @@
           @click.native="openNetworkOverlay"
         >
           <div
-            class="d-flex align-center justify-space-between"
+            class="d-flex align-center justify-space-between text-transform--none text-decoration--none"
             style="width: 100%"
           >
             <div class="text-left">
               <div class="mew-heading-3 mb-2">{{ fullName }}</div>
-              <div>Last Block: {{ lastBlock }}</div>
+              <div class="textMedium--text">Last Block: {{ lastBlock }}</div>
             </div>
             <mew-token-container size="55px" :img="icon"></mew-token-container>
           </div>
