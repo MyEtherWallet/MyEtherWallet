@@ -22,10 +22,12 @@
           has-body-content
           :has-buttons="false"
           :left-btn="leftBtn"
+          hide-close-btn
         >
           <network-switch
             :filter-types="filterNetworks"
             :is-swap-page="isSwapPage"
+            @newNetwork="closeNetworkOverlay"
           />
         </mew-popup>
         <div class="pa-5 pb-3">
@@ -465,6 +467,9 @@ export default {
       this.openSettings();
     });
     EventBus.$on('openNetwork', () => {
+      if (this.$route.name == ROUTES_WALLET.SWAP.NAME) {
+        this.trackSwap('switchingNetworkOnSwap');
+      }
       this.openNetwork();
     });
   },
@@ -482,7 +487,6 @@ export default {
     },
     closeNetworkOverlay() {
       if (this.validNetwork) {
-        // this.$router.go(-1);
         this.isOpenNetworkOverlay = false;
       }
     },
