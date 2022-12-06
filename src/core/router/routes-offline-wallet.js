@@ -13,14 +13,14 @@ export default {
         noAuth: false
       }
     },
-    {
-      path: ROUTES_WALLET.NETWORK.PATH,
-      name: ROUTES_WALLET.NETWORK.NAME,
-      component: () => import('@/modules/network/ModuleNetwork'),
-      meta: {
-        noAuth: false
-      }
-    },
+    // {
+    //   path: ROUTES_WALLET.NETWORK.PATH,
+    //   name: ROUTES_WALLET.NETWORK.NAME,
+    //   component: () => import('@/modules/network/ModuleNetwork'),
+    //   meta: {
+    //     noAuth: false
+    //   }
+    // },
     {
       path: ROUTES_WALLET.SEND_TX_OFFLINE.PATH,
       name: ROUTES_WALLET.SEND_TX_OFFLINE.NAME,

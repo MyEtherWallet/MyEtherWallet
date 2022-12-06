@@ -88,19 +88,18 @@ export default {
     }
   },
   mounted() {
-    this.openNetworkOverlayOnLoad();
+    // this.openNetworkOverlayOnLoad();
   },
   methods: {
     // set to wait for 1 sec until event bus is ready
-    openNetworkOverlayOnLoad() {
-      setTimeout(() => {
-        this.$route.name == ROUTES_WALLET.NETWORK.NAME
-          ? this.openNetworkOverlay()
-          : '';
-      }, 1000);
-    },
+    // openNetworkOverlayOnLoad() {
+    //   setTimeout(() => {
+    //     this.$route.name == ROUTES_WALLET.NETWORK.NAME
+    //       ? this.openNetworkOverlay()
+    //       : '';
+    //   }, 1000);
+    // },
     openNetworkOverlay() {
-      // this.$router.push({ name: ROUTES_WALLET.NETWORK.NAME });
       EventBus.$emit('openNetwork');
     }
   }

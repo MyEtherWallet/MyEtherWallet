@@ -35,13 +35,7 @@ export default {
   },
   mixins: [handlerAnalytics],
   beforeRouteLeave(to, from, next) {
-    if (to.name === ROUTES_WALLET.NETWORK.NAME) {
-      this.trackSwap('switchingNetworkOnSwap');
-    }
-    if (
-      to.name !== ROUTES_WALLET.NETWORK.NAME &&
-      to.name !== ROUTES_WALLET.SWAP.NAME
-    ) {
+    if (to.name !== ROUTES_WALLET.SWAP.NAME) {
       this.trackSwap('leavingSwapTo: ' + to.name);
     }
     next();
