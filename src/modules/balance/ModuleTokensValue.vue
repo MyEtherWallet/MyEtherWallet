@@ -2,32 +2,36 @@
   <div class="module-tokens-value">
     <mew6-white-sheet class="px-5 px-lg-7 py-5 d-flex justify-space-between">
       <v-row no-gutters>
-        <v-col cols="12">
+        <v-col cols="11">
           <div class="mew-heading-2 mb-3">{{ tokenTitle }}</div>
         </v-col>
-        <v-col cols="12">
-          <div v-if="!initialLoad" class="mew-heading-3">
-            {{ totalTokenValues }}
-          </div>
-          <v-skeleton-loader
-            v-else
-            v-bind="attrs"
-            type="image"
-            height="100px"
-          ></v-skeleton-loader>
+        <v-col cols="1" @click="toggleDropdown">
+          <v-icon style="color: black">{{ chevronIcon }}</v-icon>
         </v-col>
-        <v-col v-if="showTokens" cols="12" class="mt-3">
-          <v-row justify="start">
-            <v-col v-for="(img, idx) in tokenImages" :key="idx + img" cols="2">
+        <v-col v-if="showTokens && dropdown" cols="12" class="mt-3">
+          <v-row v-for="(token, idx) in tokens" :key="idx" justify="start">
+            <v-col cols="2">
               <mew-token-container
                 size="medium"
-                :img="img"
+                :img="token.img"
+                class="token-shadow"
               ></mew-token-container>
             </v-col>
-            <v-col v-if="tokensList.length > 1" cols="2">
-              <div class="circled-total" @click="handleTokensPopup">
+            <v-col cols="6" class="mt-2 token-balance"
+              >{{ token.balancef }} {{ token.symbol }}</v-col
+            >
+            <v-col cols="4" align="right" class="token-value mt-2">
+              {{ token.usdBalancef }}
+            </v-col>
+          </v-row>
+          <v-row justify="start">
+            <v-col v-if="tokensList.length > 1" cols="9">
+              <div class="more-tokens">
                 {{ getText }}
               </div>
+            </v-col>
+            <v-col v-if="tokensList.length > 1" cols="3">
+              <div class="tokens-link" @click="handleTokensPopup">See all</div>
             </v-col>
           </v-row>
         </v-col>
@@ -61,46 +65,51 @@ export default {
     AppModal: () => import('@/core/components/AppModal'),
     ModuleTokens: () => import('@/modules/balance/ModuleTokens')
   },
-  data: () => ({ showPopup: false }),
+  data: () => ({ showPopup: false, dropdown: true }),
   computed: {
     ...mapGetters('wallet', ['tokensList']),
     ...mapState('wallet', ['initialLoad']),
     ...mapGetters('external', ['totalTokenFiatValue']),
     ...mapGetters('global', ['getFiatValue']),
     tokenTitle() {
-      return `My Token${this.tokensList.length > 1 ? 's' : ''} Value`;
+      return `My Token${this.tokensList.length > 1 ? 's' : ''}`;
     },
     totalTokenValues() {
       return this.getFiatValue(this.totalTokenFiatValue);
     },
-    tokenImages() {
-      return this.tokensList
+    tokens() {
+      const tokens = this.tokensList
         .reduce((arr, token) => {
-          if (token.img) {
-            arr.push(token.img);
+          if (token) {
+            arr.push(token);
           }
           return arr;
         }, [])
         .slice(0, 5);
+      return tokens;
     },
     moreTokensCount() {
-      return this.tokensList.length - this.tokenImages.length;
+      return this.tokensList.length - this.tokens.length;
     },
     showTokens() {
       return this.tokensList.length > 0 && !this.initialLoad;
     },
     getText() {
       if (this.showTokens) {
-        return this.moreTokensCount > 0 && this.moreTokensCount < 1000
-          ? `+${this.moreTokensCount}`
-          : 'more';
+        return `+${this.moreTokensCount} tokens`;
       }
       return '';
+    },
+    chevronIcon() {
+      return this.dropdown ? 'mdi-chevron-up' : 'mdi-chevron-down';
     }
   },
   methods: {
     handleTokensPopup() {
       this.showPopup = !this.showPopup;
+    },
+    toggleDropdown() {
+      this.dropdown = !this.dropdown;
     }
   }
 };
@@ -119,5 +128,55 @@ export default {
 }
 .circled-total:hover {
   background-color: var(--v-greyLight-base);
+}
+.token-shadow {
+  box-shadow: inset 0px 0px 0px 1px #ffffff;
+  filter: drop-shadow(0px 4px 10px rgba(24, 43, 75, 0.1));
+  border-radius: 100px;
+}
+.tokens-link {
+  width: 50px;
+  height: 24px;
+
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0.25px;
+  cursor: pointer;
+
+  color: #05c0a5;
+}
+.more-tokens {
+  width: 82px;
+  height: 24px;
+
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0.25px;
+
+  color: #081d34;
+}
+.token-balance {
+  width: 84px;
+  height: 20px;
+
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.25px;
+
+  color: #081d34;
+}
+.token-value {
+  width: 54px;
+  height: 20px;
+
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.25px;
+
+  color: #081d34;
 }
 </style>
