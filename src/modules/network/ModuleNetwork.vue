@@ -100,7 +100,7 @@ export default {
       }, 1000);
     },
     openNetworkOverlay() {
-      this.$router.push({ name: ROUTES_WALLET.NETWORK.NAME });
+      // this.$router.push({ name: ROUTES_WALLET.NETWORK.NAME });
       EventBus.$emit('openNetwork');
     }
   }
