@@ -272,7 +272,6 @@ export default {
               Toast("Current wallet's network is unsupported", {}, ERROR);
             }
           } catch (er) {
-            console.log(er);
             Toast('There was an error switching networks', {}, ERROR);
           }
         } else {
