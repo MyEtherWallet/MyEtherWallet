@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container class="the-wallet-header">
     <v-row class="d-flex align-center py-2 pb-md-4 pb-lg-2 px-1">
       <v-col
         cols="12"
@@ -17,7 +17,10 @@
         ]"
       >
         <div v-if="!promoOver && !isOfflineApp" class="d-flex align-center">
-          <div class="party-popper-container ml-2 mr-3 d-flex pa-3">
+          <div
+            class="party-popper-container ml-2 mr-3 d-flex pa-3"
+            style="filter: invert(1)"
+          >
             <img
               src="@/assets/images/icons/icon-party-popper.png"
               width="20px"
@@ -59,7 +62,7 @@
         <div v-else-if="promoOver && !isOfflineApp" class="eth-banner d-flex">
           <div class="mr-5">
             <mew6-white-sheet class="pa-3">
-              <v-icon color="black"> mdi-bank </v-icon>
+              <v-icon color="blackBg"> mdi-bank </v-icon>
             </mew6-white-sheet>
           </div>
           <div class="d-flex flex-column align-start">
@@ -159,7 +162,7 @@ a {
 }
 
 .party-popper-container {
-  background-color: var(--v-whiteBackground-base);
+  background-color: var(--v-whiteBg-base);
   box-shadow: 0px 5px 30px rgba(166, 173, 201, 0.22),
     0px 5px 5px rgba(154, 160, 185, 0.05);
   border-radius: 100px;

@@ -3,7 +3,7 @@
     :max-width="maxWidth"
     :min-width="minWidth"
     :width="fullWidth ? '100%' : ''"
-    color="white"
+    color="whiteBg"
     class="mew-component--white-sheet border-radius--10px"
     :class="[
       sideinfo ? 'sideinfo' : '',

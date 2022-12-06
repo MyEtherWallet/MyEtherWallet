@@ -260,7 +260,7 @@ export default {
   box-shadow: 0 0 15px var(--v-greyMedium-base) !important;
 }
 .wallet-main {
-  background-color: var(--v-greyLight-base);
+  background-color: var(--v-walletBg-base);
   height: 100%;
 }
 </style>

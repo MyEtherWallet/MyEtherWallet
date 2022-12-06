@@ -1,6 +1,7 @@
 <template>
   <v-footer
-    color="white"
+    :color1="$vuetify.theme.dark ? 'asphalt900' : 'white'"
+    color="whiteBg"
     app
     inset
     absolute

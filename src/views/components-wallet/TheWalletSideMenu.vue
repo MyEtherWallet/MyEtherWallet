@@ -205,19 +205,32 @@
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <div v-if="online" class="mt-3 px-8">
-          <div class="matomo-tracking-switch">
-            <v-switch
-              dark
-              :input-value="consentToTrack"
-              inset
-              :label="`Data Tracking is ${consentToTrack ? 'On' : 'Off'}`"
-              color="white"
-              off-icon="mdi-alert-circle"
-              @change="setConsent"
-            />
-          </div>
-          <div class="d-flex align-center justify-space-between">
+
+        <div v-if="online" class="px-8">
+          <v-switch
+            v-model="$vuetify.theme.dark"
+            class="tracking-switch"
+            hide-details
+            dark
+            inset
+            :label="`Dark theme is ${$vuetify.theme.dark ? 'On' : 'Off'}`"
+            color="white"
+            off-icon="mdi-alert-circle"
+          />
+
+          <v-switch
+            class="tracking-switch"
+            hide-details
+            dark
+            :input-value="consentToTrack"
+            inset
+            :label="`Data Tracking is ${consentToTrack ? 'On' : 'Off'}`"
+            color="white"
+            off-icon="mdi-alert-circle"
+            @change="setConsent"
+          />
+
+          <div class="d-flex align-center justify-space-between mt-4">
             <!-- <theme-switch /> -->
             <a
               :href="`https://github.com/MyEtherWallet/MyEtherWallet/releases/tag/v${version}`"
@@ -672,7 +685,7 @@ export default {
       background: transparent;
     }
   }
-  .matomo-tracking-switch {
+  .tracking-switch {
     .v-label {
       color: var(--v-white-base);
     }
