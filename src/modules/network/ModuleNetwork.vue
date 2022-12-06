@@ -1,33 +1,30 @@
 <template>
   <div class="mew-component--side-info-network">
-    <mew6-white-sheet
-      :sideinfo="!mobile"
-      class="px-5 px-lg-7 py-5 d-flex justify-space-between"
-    >
-      <div>
-        <div class="d-flex align-center">
-          <span class="mew-heading-2 mr-2">{{ $t('common.network') }}</span>
-          <div>
-            <v-btn
-              v-if="show"
-              depressed
-              color="greyLight"
-              class="title-button"
-              min-width="294px"
-              min-height="68px"
-              @click.native="openNetworkOverlay"
-            >
-              <div>
-                <div class="mew-heading-3 mb-1">{{ fullName }}</div>
-                <div>Last Block: {{ lastBlock }}</div>
-              </div>
-              <mew-token-container
-                size="65px"
-                :img="icon"
-              ></mew-token-container>
-            </v-btn>
+    <mew6-white-sheet :sideinfo="!mobile" class="py-5">
+      <div class="px-5 px-lg-7 mew-heading-2 mb-2">
+        {{ $t('common.network') }}
+      </div>
+      <div class="px-3">
+        <v-btn
+          v-if="show"
+          depressed
+          color="white"
+          class="title-button"
+          width="100%"
+          height="70px"
+          @click.native="openNetworkOverlay"
+        >
+          <div
+            class="d-flex align-center justify-space-between"
+            style="width: 100%"
+          >
+            <div class="text-left">
+              <div class="mew-heading-3 mb-2">{{ fullName }}</div>
+              <div>Last Block: {{ lastBlock }}</div>
+            </div>
+            <mew-token-container size="55px" :img="icon"></mew-token-container>
           </div>
-        </div>
+        </v-btn>
       </div>
     </mew6-white-sheet>
   </div>
