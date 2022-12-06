@@ -7,23 +7,28 @@
       <div>
         <div class="d-flex align-center">
           <span class="mew-heading-2 mr-2">{{ $t('common.network') }}</span>
-          <v-btn
-            v-if="show"
-            depressed
-            color="greyLight"
-            class="title-button"
-            @click.native="openNetworkOverlay"
-          >
-            <v-icon>mdi-chevron-right</v-icon>
-          </v-btn>
-        </div>
-
-        <div class="mt-4">
-          <div class="mb-1">{{ type }} - {{ fullName }}</div>
-          <div>Last Block: {{ lastBlock }}</div>
+          <div>
+            <v-btn
+              v-if="show"
+              depressed
+              color="greyLight"
+              class="title-button"
+              min-width="294px"
+              min-height="68px"
+              @click.native="openNetworkOverlay"
+            >
+              <div>
+                <div class="mew-heading-3 mb-1">{{ fullName }}</div>
+                <div>Last Block: {{ lastBlock }}</div>
+              </div>
+              <mew-token-container
+                size="65px"
+                :img="icon"
+              ></mew-token-container>
+            </v-btn>
+          </div>
         </div>
       </div>
-      <mew-token-container size="65px" :img="icon"></mew-token-container>
     </mew6-white-sheet>
   </div>
 </template>
@@ -57,9 +62,9 @@ export default {
     ...mapState('wallet', ['blockNumber', 'identifier', 'isHardware']),
     ...mapState('global', ['validNetwork']),
     ...mapGetters('global', ['network']),
-    type() {
-      return this.network.type.currencyName;
-    },
+    // type() {
+    //   return this.network.type.currencyName;
+    // },
     fullName() {
       return this.network.type.name_long;
     },
@@ -105,10 +110,12 @@ export default {
 <style lang="scss">
 .mew-component--side-info-network {
   .title-button {
-    height: 28px !important;
-    min-width: 28px !important;
-    padding: 0 !important;
-    border-radius: 5px;
+    padding: 8px 16px;
+
+    width: 294px;
+    height: 68px;
+
+    border-radius: 8px;
   }
 }
 </style>
