@@ -699,15 +699,16 @@ export default {
       tx.network = this.network.type.name;
     },
     async sendBatchTransaction() {
+      const _this = this;
       const web3 = this.web3;
       const _method = 'sendSignedTransaction';
       const _arr = this.signedTxArray;
       const promises = _arr.map((tx, idx) => {
         const _tx = tx.tx;
-        _tx.from = this.address;
+        _tx.from = _this.address;
         const _rawTx = tx.rawTransaction;
         const promiEvent = web3.eth[_method](_rawTx);
-        _tx.network = this.network.type.name;
+        _tx.network = _this.network.type.name;
         _tx.gasPrice = isHex(_tx.gasPrice)
           ? hexToNumberString(_tx.gasPrice)
           : _tx.gasPrice;
@@ -715,25 +716,21 @@ export default {
           BigNumber(_tx.gasPrice).times(_tx.gas).toString()
         );
         _tx.gasLimit = _tx.gas;
-        setEvents(promiEvent, _tx, this.$store.dispatch);
+        setEvents(promiEvent, _tx, _this.$store.dispatch);
         promiEvent
           .once('sent', () => {
-            if (this.isSwap) {
-              this.trackSwap('swapTxBroadcasted');
+            if (_this.isSwap) {
+              _this.trackSwap('swapTxBroadcasted');
             }
           })
           .once('receipt', () => {
-            if (this.isSwap) {
-              this.trackSwap('swapTxReceivedReceipt');
+            if (_this.isSwap) {
+              _this.trackSwap('swapTxReceivedReceipt');
             }
           })
           .on('transactionHash', hash => {
-            if (!this.address) {
-              this.instance.errorHandler('Address cannot be null!');
-              return;
-            }
             const storeKey = sha3(
-              `${this.network.type.name}-${this.address.toLowerCase()}`
+              `${_this.network.type.name}-${_this.address.toLowerCase()}`
             );
             const localStoredObj = locStore.get(storeKey);
             locStore.set(storeKey, {
@@ -743,23 +740,23 @@ export default {
               timestamp: localStoredObj.timestamp
             });
             if (idx + 1 === _arr.length) {
-              if (this.isSwap) {
-                this.showSuccessSwap = true;
-                this.trackSwap('swapTransactionSuccessfullySent');
+              if (_this.isSwap) {
+                _this.showSuccessSwap = true;
+                _this.trackSwap('swapTransactionSuccessfullySent');
               }
-              this.reset();
-              this.showSuccess(hash);
+              _this.reset();
+              _this.showSuccess(hash);
             }
           })
           .catch(err => {
-            if (this.isSwap) {
+            if (_this.isSwap) {
               if (
                 err.message ===
                 'MetaMask Tx Signature: User denied transaction signature.'
               ) {
-                this.trackSwap('swapTxCancelled');
+                _this.trackSwap('swapTxCancelled');
               } else {
-                this.trackSwap('swapTxFailed');
+                _this.trackSwap('swapTxFailed');
               }
             }
           });
