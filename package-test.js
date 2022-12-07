@@ -77,6 +77,7 @@ const EXCEPTIONS = [
   'axios',
   // update after release
   '@coolwallet/core',
+  '@coolwallet/eth',
   '@commitlint/config-conventional',
   'commitlint',
   'prettier',
