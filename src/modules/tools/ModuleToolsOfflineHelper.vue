@@ -219,7 +219,7 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex';
-import { isAddress, fromWei, toHex } from 'web3-utils';
+import { isAddress, fromWei, toHex, toBN } from 'web3-utils';
 import { Transaction } from 'ethereumjs-tx';
 import { BigNumber } from 'bignumber.js';
 import { toChecksumAddress } from 'ethereumjs-util';
@@ -653,7 +653,7 @@ export default {
       const nonce = raw.nonce;
       this.dialog = true;
       this.txLoading = true;
-      if (BigNumber(actualNonce).gt(nonce)) {
+      if (toBN(actualNonce).gt(toBN(nonce))) {
         this.dialogAlert = 'Nonce too low!';
         this.txLoading = false;
         return;

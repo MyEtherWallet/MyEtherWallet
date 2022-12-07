@@ -479,11 +479,13 @@ export default {
     - if user is onManage it will run getDomain to refresh domains
     */
     address(newVal) {
-      this.ensManager.address = newVal;
-      if (this.onRegister) {
-        this.closeRegister();
+      if (newVal) {
+        this.ensManager.address = newVal;
+        if (this.onRegister) {
+          this.closeRegister();
+        }
+        this.getDomains();
       }
-      this.getDomains();
     },
     /*
     - watches for network change
