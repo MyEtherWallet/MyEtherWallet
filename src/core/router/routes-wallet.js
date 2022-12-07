@@ -67,14 +67,6 @@ export default {
         noAuth: false
       }
     },
-    // {
-    //   path: ROUTES_WALLET.NETWORK.PATH,
-    //   name: ROUTES_WALLET.NETWORK.NAME,
-    //   component: () => import('@/modules/network/ModuleNetwork'),
-    //   meta: {
-    //     noAuth: false
-    //   }
-    // },
     {
       path: ROUTES_WALLET.SWAP.PATH,
       name: ROUTES_WALLET.SWAP.NAME,
