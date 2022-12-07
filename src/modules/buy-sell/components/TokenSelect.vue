@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 import { isEmpty } from 'lodash';
 
 import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
@@ -95,6 +95,7 @@ export default {
   },
   computed: {
     ...mapGetters('global', ['network', 'Networks']),
+    ...mapState('wallet', ['instance', 'identifier']),
     searchedCurrencyItems() {
       const currencyItems = this.currencyItems.slice();
       currencyItems.shift();
@@ -121,6 +122,8 @@ export default {
   },
   methods: {
     ...mapActions('global', ['setNetwork']),
+    ...mapActions('external', ['setTokenAndEthBalance']),
+    ...mapActions('wallet', ['setWeb3Instance']),
     fetchNetworks() {
       const networkList = Object.values(this.Networks).filter(network => {
         if (
