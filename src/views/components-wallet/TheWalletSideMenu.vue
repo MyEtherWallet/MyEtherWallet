@@ -448,6 +448,13 @@ export default {
         : { name: ROUTES_WALLET.DASHBOARD.NAME };
     }
   },
+  watch: {
+    isOpenNetworkOverlay(newVal) {
+      if (newVal && this.$route.name == ROUTES_WALLET.SWAP.NAME) {
+        this.trackSwap('switchingNetworkOnSwap');
+      }
+    }
+  },
   mounted() {
     // If no menu item is selected on load, redirect user to Dashboard
     if (!this.isOfflineApp) {
@@ -467,9 +474,6 @@ export default {
       this.openSettings();
     });
     EventBus.$on('openNetwork', () => {
-      if (this.$route.name == ROUTES_WALLET.SWAP.NAME) {
-        this.trackSwap('switchingNetworkOnSwap');
-      }
       this.openNetwork();
     });
   },
