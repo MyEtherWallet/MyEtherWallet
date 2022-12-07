@@ -79,6 +79,10 @@ export default {
     open: {
       type: Boolean,
       default: false
+    },
+    inWallet: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -155,7 +159,7 @@ export default {
         walletType: this.instance?.identifier || ''
       })
         .then(() => {
-          if (this.isWallet) {
+          if (this.inWallet) {
             this.networkSelected = this.validNetwork
               ? this.network[0].type.name
               : '';
