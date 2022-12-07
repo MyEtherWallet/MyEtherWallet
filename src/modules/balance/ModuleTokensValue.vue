@@ -25,8 +25,8 @@
             </v-col>
           </v-row>
           <v-row justify="start">
-            <v-col v-if="tokensList.length > 1" cols="9">
-              <div class="more-tokens">
+            <v-col cols="9">
+              <div v-if="tokensList.length > 5" class="more-tokens">
                 {{ getText }}
               </div>
             </v-col>
