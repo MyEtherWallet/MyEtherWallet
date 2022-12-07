@@ -18,6 +18,7 @@
           active-color="greenPrimary"
           has-underline
           class="pt-3"
+          :class="addTokenPadding ? 'top-container' : ''"
           @onTab="onTab"
         >
           <template #tabContent1>
@@ -35,6 +36,7 @@
               @simplexQuote="setSimplexQuote"
               @toAddress="setToAddress"
               @success="buySuccess"
+              @openTokenSelect="checkTokenPadding"
             />
           </template>
           <template #tabContent2>
@@ -100,7 +102,8 @@ export default {
       buyObj: {},
       step: 0,
       simplexQuote: {},
-      toAddress: ''
+      toAddress: '',
+      addTokenPadding: false
     };
   },
   computed: {
@@ -239,9 +242,18 @@ export default {
       this.openProviders(items[3]);
       this.setSelectedCurrency(items[4]);
       this.setSelectedFiat(items[5]);
+    },
+    checkTokenPadding(isOpen) {
+      if (this.inWallet) {
+        this.addTokenPadding = isOpen;
+      } else this.addTokenPadding = false;
     }
   }
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.top-container {
+  min-height: 540px;
+}
+</style>

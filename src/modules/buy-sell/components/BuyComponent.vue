@@ -496,6 +496,9 @@ export default {
       handler: function () {
         this.fetchCurrencyData();
       }
+    },
+    openTokenSelect() {
+      this.$emit('openTokenSelect', this.openTokenSelect);
     }
   },
   mounted() {
