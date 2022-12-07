@@ -26,7 +26,7 @@
         ></v-text-field>
 
         <div v-if="searchedCurrencyItems.length > 0" class="mt-5">
-          <div v-for="token in searchedCurrencyItems" :key="token.name">
+          <div v-for="(token, idx) in searchedCurrencyItems" :key="idx">
             <v-btn
               v-if="token.name"
               :class="
@@ -60,9 +60,11 @@ import { isEmpty } from 'lodash';
 import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import * as nodes from '@/utils/networks/nodes';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 export default {
   name: 'BuySellTokenSelect',
+  mixins: [handlerAnalytics],
   props: {
     currencyItems: {
       type: Array,
@@ -97,12 +99,15 @@ export default {
     ...mapGetters('global', ['network', 'Networks']),
     ...mapState('wallet', ['instance', 'identifier']),
     searchedCurrencyItems() {
-      const currencyItems = this.currencyItems.slice();
-      currencyItems.shift();
-
       if (this.searchValue) {
-        const found = currencyItems.filter(element =>
-          element.name.toLowerCase().includes(this.searchValue.toLowerCase())
+        const found = this.currencyItems.filter(
+          element =>
+            element.name
+              .toLowerCase()
+              .includes(this.searchValue.toLowerCase()) ||
+            element.subtext
+              .toLowerCase()
+              .includes(this.searchValue.toLowerCase())
         );
         return found;
       }
@@ -157,15 +162,14 @@ export default {
           return item;
         }
       });
+      const validNetwork = !isEmpty(found);
       this.setNetwork({
         network: found[0],
         walletType: this.instance?.identifier || ''
       })
         .then(() => {
           if (this.inWallet) {
-            this.networkSelected = this.validNetwork
-              ? this.network[0].type.name
-              : '';
+            this.networkSelected = validNetwork ? this.network.type.name : '';
             const provider =
               this.identifier === WALLET_TYPES.WEB3_WALLET
                 ? this.setWeb3Instance(window.ethereum)
@@ -175,8 +179,8 @@ export default {
                 this.setTokenAndEthBalance();
               });
             }
-            Toast(`Switched network to: ${network.type.name}`, {}, SUCCESS);
-            this.trackNetworkSwitch(network.type.name);
+            Toast(`Switched network to: ${network.name}`, {}, SUCCESS);
+            this.trackNetworkSwitch(network.name);
             this.$emit('newNetwork');
           }
         })

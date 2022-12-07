@@ -348,14 +348,7 @@ export default {
               return token;
             })
           : this.tokens;
-      const returnedArray = [
-        {
-          text: 'Select Token',
-          divider: true,
-          selectLabel: true
-        },
-        ...tokensListWPrice
-      ];
+      const returnedArray = [...tokensListWPrice];
       return returnedArray;
     },
     hasData() {
