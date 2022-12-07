@@ -74,14 +74,7 @@ const EXCEPTIONS = [
   'uuid',
   'web3-eth-contract',
   'is-ipfs',
-  'axios',
-  // update after release
-  '@coolwallet/core',
-  '@commitlint/config-conventional',
-  'commitlint',
-  'prettier',
-  'highcharts',
-  'lottie-web'
+  'axios'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

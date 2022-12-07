@@ -34,5 +34,6 @@ export default {
   },
   gasPriceMultiplier: 1,
   canBuy: false,
-  coingeckoID: null
+  coingeckoID: null,
+  balanceApi: ''
 };

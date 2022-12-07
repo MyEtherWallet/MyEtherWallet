@@ -25,7 +25,6 @@
             :on-toggle-btn-idx="activeButton"
             @onBtnClick="onToggle"
           />
-          <!-- not sure what this button is for, commented out for now -->
         </div>
       </template>
       <template #moduleBody>
