@@ -226,29 +226,16 @@ export default {
       if (this.nftApiResponse.length > 0) {
         // Organize contracts by address
         return this.nftApiResponse.reduce((arr, item) => {
-          let ownerOb = item.owners.find(
-            owner =>
-              owner.owner_address.toLowerCase() === this.address.toLowerCase()
-          );
-          // Check if owner object is undefined
-          if (!ownerOb) {
-            this.nft
-              .getNftById(item.contract_address, item.token_id)
-              .then(res => {
-                ownerOb = res.json();
-              });
+          const nftAmount = item.queried_wallet_balances[0].quantity;
+          const inList = arr.find(i => i.contract === item.contract_address);
+          if (inList) {
+            inList.count += nftAmount;
           } else {
-            console.log('ownerOb', ownerOb);
-            const inList = arr.find(i => i.contract === item.contract_address);
-            if (inList) {
-              inList.count += ownerOb.quantity;
-            } else {
-              arr.push({
-                contract: item.contract_address,
-                count: ownerOb.quantity,
-                name: item.contract.name
-              });
-            }
+            arr.push({
+              contract: item.contract_address,
+              count: nftAmount,
+              name: item.contract.name
+            });
           }
           return arr;
         }, []);
