@@ -23,5 +23,6 @@ export default {
     websocket: null
   },
   gasPriceMultiplier: 1,
-  coingeckoID: 'webchain'
+  coingeckoID: 'webchain',
+  balanceApi: ''
 };

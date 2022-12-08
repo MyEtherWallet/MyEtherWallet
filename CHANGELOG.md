@@ -1,3 +1,83 @@
+### Release v6.6.11-hotfix.2
+
+* update privacy policy [#4415](https://github.com/MyEtherWallet/MyEtherWallet/pull/4415)
+
+### Release v6.6.11-hotfix.1
+
+* offline nonce issue [#4387](https://github.com/MyEtherWallet/MyEtherWallet/pull/4387)
+* metamask issue [#4410](https://github.com/MyEtherWallet/MyEtherWallet/pull/4410)
+
+### Release v6.6.11
+
+### ui
+
+* Fix DApp titles and add box shadows to DApp buttons [#4393](https://github.com/MyEtherWallet/MyEtherWallet/pull/4393)
+* Disable upload button when input is empty [#4336](https://github.com/MyEtherWallet/MyEtherWallet/pull/4336)
+
+### devop
+
+* replace network icons with mew-token-container [#4246](https://github.com/MyEtherWallet/MyEtherWallet/pull/4246)
+* update dapps icons, update AAVE header [#4324](https://github.com/MyEtherWallet/MyEtherWallet/pull/4324)
+* add path for print wallet [#4354](https://github.com/MyEtherWallet/MyEtherWallet/pull/4354)
+* Add hash build on releases [#4355](https://github.com/MyEtherWallet/MyEtherWallet/pull/4355)
+
+### fix
+
+* fix dapp button capitalization [#4225](https://github.com/MyEtherWallet/MyEtherWallet/pull/4225)
+* swap rate > replace large eth icon to right size icon [#4236](https://github.com/MyEtherWallet/MyEtherWallet/pull/4236)
+* Dont own token error when token's decimals are 0 [#4294](https://github.com/MyEtherWallet/MyEtherWallet/pull/4294)
+* fix history notification overlap [#4298](https://github.com/MyEtherWallet/MyEtherWallet/pull/4298)
+* replace default list icon with arrow icon [#4309](https://github.com/MyEtherWallet/MyEtherWallet/pull/4309)
+* adjust top padding for mobile overlays [#4312](https://github.com/MyEtherWallet/MyEtherWallet/pull/4312)
+* fix nft send button active with no address input [#4322](https://github.com/MyEtherWallet/MyEtherWallet/pull/4322)
+* fix select network shows broken layout revert [#4325](https://github.com/MyEtherWallet/MyEtherWallet/pull/4325)
+* fix bitbox price euro to usd [#4326](https://github.com/MyEtherWallet/MyEtherWallet/pull/4326)
+* Remove MEWconnect app store links from security policy [#4328](https://github.com/MyEtherWallet/MyEtherWallet/pull/4328)
+* fix dashboard table text, fix table page buttons [#4333](https://github.com/MyEtherWallet/MyEtherWallet/pull/4333)
+* Fix USDT value 0 on landing page [#4338](https://github.com/MyEtherWallet/MyEtherWallet/pull/4338)
+* disabled compounding on stakewise [#4344](https://github.com/MyEtherWallet/MyEtherWallet/pull/4344)
+* fix missing box shadow for dashboard taken balance block [#4348](https://github.com/MyEtherWallet/MyEtherWallet/pull/4348)
+* fix XDC network [#4361](https://github.com/MyEtherWallet/MyEtherWallet/pull/4361)
+* add tooltip to show full address on settings address table [#4368](https://github.com/MyEtherWallet/MyEtherWallet/pull/4368)
+* Fix 'Address verified' message displaying without verifying on Trezor [#4371](https://github.com/MyEtherWallet/MyEtherWallet/pull/4371)
+* Fix cannot read properties 'mintData' on ETH Blocks [#4372](https://github.com/MyEtherWallet/MyEtherWallet/pull/4372)
+* fix for matomo events for metamask and ledger ui interaction [#4385](https://github.com/MyEtherWallet/MyEtherWallet/pull/4385)
+
+### Release v6.6.10-hotfix.1
+
+* update matic api endpoint [#4353](https://github.com/MyEtherWallet/MyEtherWallet/pull/4353)
+
+### Release v6.6.10
+
+### devop
+
+* devop landing page enkrypt bottom padding [#4302](https://github.com/MyEtherWallet/MyEtherWallet/pull/4302)
+* devop dapp button too wide fix [#4308](https://github.com/MyEtherWallet/MyEtherWallet/pull/4308)
+* devop wallet carousel animation remove arrows [#4315](https://github.com/MyEtherWallet/MyEtherWallet/pull/4315)
+* add matomo event for user exit [#4332](https://github.com/MyEtherWallet/MyEtherWallet/pull/4332)
+* add more matomo tracking [#4339](https://github.com/MyEtherWallet/MyEtherWallet/pull/4339)
+
+### feat
+
+* ledger prompt [#4233](https://github.com/MyEtherWallet/MyEtherWallet/pull/4233)
+
+### fix
+
+* added toast errorhandler, removed popup error [#4239](https://github.com/MyEtherWallet/MyEtherWallet/pull/4239)
+* fix button titles to give uniform button look [#4273](https://github.com/MyEtherWallet/MyEtherWallet/pull/4273)
+* ToS link on confirmation pop up [#4284](https://github.com/MyEtherWallet/MyEtherWallet/pull/4284)
+* Offline helper sends transaction when signer doesnt match selected address [#4287](https://github.com/MyEtherWallet/MyEtherWallet/pull/4287)
+* Fix ETH Blocks max year selection [#4290](https://github.com/MyEtherWallet/MyEtherWallet/pull/4290)
+* Fix buy/sell selection empty when searching [#4295](https://github.com/MyEtherWallet/MyEtherWallet/pull/4295)
+* Fix Aave deposit max amount to token balance [#4297](https://github.com/MyEtherWallet/MyEtherWallet/pull/4297)
+* fix privacy policy header padding [#4300](https://github.com/MyEtherWallet/MyEtherWallet/pull/4300)
+* fix select network button overlapping issue [#4304](https://github.com/MyEtherWallet/MyEtherWallet/pull/4304)
+* Sentry Error ContractNoAddressDefinedError on sell pop up [#4306](https://github.com/MyEtherWallet/MyEtherWallet/pull/4306)
+* Sentry Error blockExplorerTX is undefined (formatNotification) [#4307](https://github.com/MyEtherWallet/MyEtherWallet/pull/4307)
+* fix broken paperwallet layout [#4314](https://github.com/MyEtherWallet/MyEtherWallet/pull/4314)
+* Update path when switching Ledger app [#4318](https://github.com/MyEtherWallet/MyEtherWallet/pull/4318)
+* Bug where Ledger Live address would show on first connect [#4327](https://github.com/MyEtherWallet/MyEtherWallet/pull/4327)
+
 ### Release v6.6.9
 
 ### devop

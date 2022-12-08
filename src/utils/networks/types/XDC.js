@@ -2,7 +2,7 @@ import xdc from '@/assets/images/networks/xdc.svg';
 
 export default {
   name: 'XDC',
-  name_long: 'XDC.Network',
+  name_long: 'XDC Network',
   homePage: 'https://xinfin.org/',
   blockExplorer: 'Blockscan',
   blockExplorerTX: 'https://xdc.blocksscan.io/tx/[[txHash]]',
@@ -25,5 +25,6 @@ export default {
     websocket: null
   },
   coingeckID: 'xdc-network',
-  gasPriceMultiplier: 1
+  gasPriceMultiplier: 1,
+  balanceApi: ''
 };

@@ -206,7 +206,7 @@ export default {
      * checks if there is symbol name
      */
     hasSymbol() {
-      return this.tokenDataToDisplay[3].value || this.customSymbol;
+      return this.customSymbol;
     }
   },
   methods: {
@@ -395,7 +395,7 @@ export default {
           this.token.usdBalancef = '0.00';
           this.token.contract = this.contractAddress;
         }
-        this.token.decimals = +decimals;
+        this.token.decimals = parseInt(decimals);
         this.token.balance = balance;
         this.token.balancef = this.getTokenBalance(balance, decimals).value;
         this.loading = false;

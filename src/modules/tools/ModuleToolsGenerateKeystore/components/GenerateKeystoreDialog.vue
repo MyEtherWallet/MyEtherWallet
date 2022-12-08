@@ -23,6 +23,7 @@
           :rules="[value => !!value || 'Required']"
           label="New password"
         />
+
         <mew-input
           v-model="confirmPassword"
           :error-messages="confirmPasswordErrMessages"
@@ -38,6 +39,7 @@
             :label="userTermsLabel"
           ></mew-checkbox>
         </div>
+
         <mew-button
           icon-type="mdi"
           icon-align="left"
@@ -46,8 +48,9 @@
           class="d-block mx-auto mt-8 KeystoreDownloadFile"
           btn-size="xlarge"
           :disabled="
+            password !== confirmPassword ||
             !password ||
-            confirmPassword === '' ||
+            !confirmPassword ||
             confirmPasswordErrMessages !== '' ||
             passwordErrMessages !== '' ||
             !userTermsAgreed
@@ -118,6 +121,9 @@ export default {
      * emits the value back to step two generate
      */
     onCreatePassword(newVal) {
+      this.password = '';
+      this.confirmPassword = '';
+      this.userTermsAgreed = false;
       this.$emit('onDialogStateChange', newVal);
     }
   },

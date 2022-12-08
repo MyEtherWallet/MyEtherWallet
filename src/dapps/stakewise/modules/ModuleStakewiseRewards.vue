@@ -163,6 +163,7 @@
           @redeem-to-eth="redeemToEth"
         />
         <stakewise-rewards
+          v-if="isEthNetwork"
           :tx-fee="txFee"
           @set-max="setMax"
           @scroll="scroll"
@@ -174,12 +175,12 @@
 </template>
 
 <script>
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import BigNumber from 'bignumber.js';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import { find, clone, isEmpty, debounce } from 'lodash';
 import { fromWei } from 'web3-utils';
 
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { EventBus } from '@/core/plugins/eventBus';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import Notification, {
@@ -318,6 +319,9 @@ export default {
       return BigNumber(this.compoundAmount).gt(this.rethBalance);
     },
     errorMessages() {
+      if (!this.isEthNetwork) {
+        return 'Compunding rewards are not supported on non ETH network!';
+      }
       if (BigNumber(this.compoundAmount).eq(0)) {
         return '';
       }

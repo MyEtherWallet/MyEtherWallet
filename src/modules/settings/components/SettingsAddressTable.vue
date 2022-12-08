@@ -31,7 +31,18 @@
                   width="20px"
                   :address="td.address"
                 />
-                <mew-transform-hash :hash="td.address" class="mr-2 mew-label" />
+                <mew-tooltip
+                  :text="td.address"
+                  hide-icon
+                  class="address-container"
+                >
+                  <template #contentSlot>
+                    <mew-transform-hash
+                      :hash="td.address"
+                      class="mr-2 mew-label"
+                    />
+                  </template>
+                </mew-tooltip>
                 <app-copy-btn :copy-value="td.address">
                   <v-btn x-small icon color="greenPrimary">
                     <img
@@ -210,4 +221,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.address-container {
+  max-width: 210px;
+}
+</style>

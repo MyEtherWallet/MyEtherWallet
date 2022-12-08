@@ -305,6 +305,7 @@ export default {
       showSuccessSwap: false,
       showCrossChainModal: false,
       toNonEth: false,
+      isSwap: false,
       tx: {},
       resolver: () => {},
       title: '',
@@ -433,6 +434,9 @@ export default {
     disableBtn() {
       if (this.error !== '') return true;
       if (!this.signing) return true;
+      if (this.isBatch && this.identifier === WALLET_TYPES.LEDGER) {
+        return false;
+      }
       return this.txSigned;
     },
     txSigned() {
@@ -440,14 +444,6 @@ export default {
         ? this.signedTxArray.length > 0 &&
             this.signedTxArray.length === this.unsignedTxArr.length
         : !isEmpty(this.signedTxObject);
-    },
-    isSwap() {
-      return (
-        !isEmpty(this.swapInfo) ||
-        (!isEmpty(this.tx) &&
-          this.tx.hasOwnProperty('fromTokenType') &&
-          !this.tx.fromTokenType.isEth)
-      );
     },
     isBatch() {
       return this.unsignedTxArr.length > 0;
@@ -498,6 +494,9 @@ export default {
           newVal.length !== 0 &&
           newVal.length === this.unsignedTxArr.length
         ) {
+          if (this.isSwap) {
+            this.trackSwap('swapTransactionSuccessfullySent');
+          }
           this.showTxOverlay = false;
           this.showSuccess(newVal);
         }
@@ -521,6 +520,7 @@ export default {
       _self.resolver = resolver;
       _self.showTxOverlay = true;
       _self.tx.transactionFee = this.txFee;
+      _self.isSwap = false; // reset isSwap
       tx[0].transactionFee = this.txFee;
       if (tx.length > 1) {
         _self.toDetails = tx[1];
@@ -541,6 +541,7 @@ export default {
       _self.showTxOverlay = true;
       _self.title = 'Verify Swap';
       _self.toNonEth = !_self.swapInfo.toTokenType.isEth;
+      _self.isSwap = true;
       if (!_self.isHardware && _self.identifier !== WALLET_TYPES.WEB3_WALLET) {
         await _self.signTx();
       }
@@ -558,6 +559,9 @@ export default {
         if (arr[0].hasOwnProperty('confirmInfo')) {
           _self.swapInfo = arr[0].confirmInfo;
           _self.title = 'Verify Swap';
+          _self.isSwap = true; // reset isSwap
+        } else {
+          _self.isSwap = false; // reset isSwap
         }
         _self.unsignedTxArr = arr;
         if (!resolver) _self.resolver = () => {};
@@ -571,6 +575,7 @@ export default {
     );
     EventBus.$on(EventNames.SHOW_MSG_CONFIRM_MODAL, (msg, resolver) => {
       _self.title = 'Message Signed';
+      _self.isSwap = false; // reset isSwap
       _self.instance
         .signMessage(msg)
         .then(res => {
@@ -694,15 +699,16 @@ export default {
       tx.network = this.network.type.name;
     },
     async sendBatchTransaction() {
+      const _this = this;
       const web3 = this.web3;
       const _method = 'sendSignedTransaction';
       const _arr = this.signedTxArray;
       const promises = _arr.map((tx, idx) => {
         const _tx = tx.tx;
-        _tx.from = this.address;
+        _tx.from = _this.address;
         const _rawTx = tx.rawTransaction;
         const promiEvent = web3.eth[_method](_rawTx);
-        _tx.network = this.network.type.name;
+        _tx.network = _this.network.type.name;
         _tx.gasPrice = isHex(_tx.gasPrice)
           ? hexToNumberString(_tx.gasPrice)
           : _tx.gasPrice;
@@ -710,21 +716,21 @@ export default {
           BigNumber(_tx.gasPrice).times(_tx.gas).toString()
         );
         _tx.gasLimit = _tx.gas;
-        setEvents(promiEvent, _tx, this.$store.dispatch);
+        setEvents(promiEvent, _tx, _this.$store.dispatch);
         promiEvent
           .once('sent', () => {
-            if (this.isSwap) {
-              this.trackSwap('swapTxBroadcasted');
+            if (_this.isSwap) {
+              _this.trackSwap('swapTxBroadcasted');
             }
           })
           .once('receipt', () => {
-            if (this.isSwap) {
-              this.trackSwap('swapTxReceivedReceipt');
+            if (_this.isSwap) {
+              _this.trackSwap('swapTxReceivedReceipt');
             }
           })
-          .once('transactionHash', hash => {
+          .on('transactionHash', hash => {
             const storeKey = sha3(
-              `${this.network.type.name}-${this.address.toLowerCase()}`
+              `${_this.network.type.name}-${_this.address.toLowerCase()}`
             );
             const localStoredObj = locStore.get(storeKey);
             locStore.set(storeKey, {
@@ -734,15 +740,25 @@ export default {
               timestamp: localStoredObj.timestamp
             });
             if (idx + 1 === _arr.length) {
-              if (this.isSwap) {
-                this.showSuccessSwap = true;
+              if (_this.isSwap) {
+                _this.showSuccessSwap = true;
+                _this.trackSwap('swapTransactionSuccessfullySent');
               }
-              this.reset();
-              this.showSuccess(hash);
+              _this.reset();
+              _this.showSuccess(hash);
             }
           })
-          .catch(() => {
-            if (this.isSwap) this.trackSwap('swapTxFailed');
+          .catch(err => {
+            if (_this.isSwap) {
+              if (
+                err.message ===
+                'MetaMask Tx Signature: User denied transaction signature.'
+              ) {
+                _this.trackSwap('swapTxCancelled');
+              } else {
+                _this.trackSwap('swapTxFailed');
+              }
+            }
           });
         return promiEvent;
       });
@@ -757,13 +773,13 @@ export default {
       if (this.tx.data && this.tx.data.includes('0x33aaf6f2')) {
         this.trackDapp('ethBlocksMinted');
       }
+      if (this.isSwap) {
+        this.trackSwap('swapTransactionSuccessfullySent');
+      }
       this.reset();
       this.showSuccess(hash);
     },
     showSuccess(param) {
-      if (this.isSwap) {
-        this.trackSwap('swapTransactionSuccessfullySent');
-      }
       if (isArray(param)) {
         const lastHash = param[param.length - 1].tx.hash;
         this.links.ethvm = this.network.type.isEthVMSupported.supported
@@ -804,18 +820,27 @@ export default {
             this.trackSwap('swapTxBroadcasted');
           })
           .on('transactionHash', res => {
+            if (this.isSwap) {
+              this.trackSwap('swapTransactionSuccessfullySent');
+            }
             this.showTxOverlay = false;
             this.showSuccess(res);
           })
           .once('receipt', () => {
-            this.trackSwap('swapTxReceivedReceipt');
-          })
-          .once('error', () => {
-            this.trackSwap('swapTxFailed');
+            if (this.isSwap) {
+              this.trackSwap('swapTxReceivedReceipt');
+            }
           })
           .catch(e => {
             if (this.isSwap) {
-              this.trackSwap('swapRejected');
+              if (
+                e.message ===
+                'MetaMask Tx Signature: User denied transaction signature.'
+              ) {
+                this.trackSwap('swapTxCancelled');
+              } else {
+                this.trackSwap('swapTxFailed');
+              }
             }
             this.signedTxObject = {};
             this.error = errorHandler(e);
@@ -832,7 +857,7 @@ export default {
             }
           })
           .catch(e => {
-            if (this.isSwap) this.trackSwap('swapRejected');
+            if (this.isSwap) this.trackSwap('swapTxCancelled');
             this.signedTxObject = {};
             this.error = errorHandler(e);
             this.signing = false;
@@ -876,8 +901,21 @@ export default {
                   }
                 });
               })
+              .once('receipt', () => {
+                if (this.isSwap) {
+                  this.trackSwap('swapTxReceivedReceipt');
+                }
+              })
               .catch(e => {
-                if (this.isSwap) this.trackSwap('swapTxFailed');
+                if (
+                  e.message ===
+                  'MetaMask Tx Signature: User denied transaction signature.'
+                ) {
+                  this.trackSwap('swapTxCancelled');
+                } else {
+                  this.trackSwap('swapTxFailed');
+                }
+                this.signing = false;
                 this.instance.errorHandler(e.message);
               });
           }
