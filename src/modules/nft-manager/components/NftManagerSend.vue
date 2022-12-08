@@ -15,12 +15,7 @@
       />
     </div>
     <span class="mew-heading-2">Send Your NFT </span>
-    <img
-      height="150"
-      :src="nft.image ? nft.image : getImageUrl(nft)"
-      alt="nft image"
-      @error="onImgErr"
-    />
+    <img height="150" :src="nft.image" alt="nft image" @error="onImgErr" />
     <div class="mb-4 mt-2">{{ nft.name }}</div>
     <module-address-book @setAddress="setAddress" />
     <span
@@ -57,12 +52,6 @@ export default {
         return {};
       },
       type: Object
-    },
-    getImageUrl: {
-      default: () => {
-        return;
-      },
-      type: Function
     },
     send: {
       default: () => {

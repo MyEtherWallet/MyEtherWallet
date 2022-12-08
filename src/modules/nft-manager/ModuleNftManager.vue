@@ -71,7 +71,7 @@
                 <h5 class="font-weight-bold">
                   {{ selectedContract.name }}
                 </h5>
-                <div>Total: {{ selectedContract.count }}</div>
+                <div>Total: {{ selectedContract.total }}</div>
               </div>
               <div v-if="displayedTokens && displayedTokens.length === 0">
                 Loading ...
@@ -90,7 +90,6 @@
                   <nft-manager-details
                     :loading="loadingTokens"
                     :on-click="openNftSend"
-                    :get-image-url="getImageUrl"
                     :token="token"
                   />
                 </div>
@@ -125,7 +124,6 @@
         <nft-manager-send
           v-if="onNftSend"
           :close="closeNftSend"
-          :get-image-url="getImageUrl"
           :nft="selectedNft"
           :nft-category="selectedContract.name"
           :send="sendTx"
@@ -229,11 +227,13 @@ export default {
           const nftAmount = item.queried_wallet_balances[0].quantity;
           const inList = arr.find(i => i.contract === item.contract_address);
           if (inList) {
-            inList.count += nftAmount;
+            inList.count++;
+            inList.total += nftAmount;
           } else {
             arr.push({
               contract: item.contract_address,
-              count: nftAmount,
+              count: 1,
+              total: nftAmount,
               name: item.contract.name || item.collection.name
             });
           }
@@ -299,7 +299,6 @@ export default {
       this.loadingTokens = true;
       this.onNftSend = false;
       this.$router.push({ name: ROUTES_WALLET.NFT_MANAGER.NAME });
-      console.log('supportedNetwork', this.supportedNetwork);
       if (this.supportedNetwork) {
         this.setUpNFT();
       } else {
@@ -358,13 +357,10 @@ export default {
       this.getNfts();
       this.localGasPrice = this.gasPriceByType(this.gasPriceType);
       this.hasMinEth();
-      console.log('done with setup');
     },
     getNfts() {
       this.nft.getNfts().then(res => {
-        console.log('res', res);
         this.nftApiResponse = res;
-        console.log('nftApiResponse', this.nftApiResponse);
         this.loadingContracts = false;
         setTimeout(() => {
           this.loadingTokens = false;
@@ -383,15 +379,9 @@ export default {
         this.showBalanceError = true;
       }
     },
-    getImageUrl(token) {
-      return this.nft.getImageUrl(token.contract, token.token_id);
-    },
     onTab(val) {
       this.activeTab = val;
-      console.log('activeTab', val);
-      console.log('contracts', this.contracts);
       this.selectedContract = this.contracts[val];
-      console.log('selectedContract', this.selectedContract);
       this.selectedContractHash = this.contracts[val].contract;
       this.nft.goToFirstPage();
     },
