@@ -6,4 +6,17 @@ const configs = {
   api: 'https://mainnet.mewwallet.dev'
 };
 
+const API = 'https://partners.mewapi.io/nfts';
+
+export const chains = {
+  1: `${API}/owners?chains=ethereum&wallet_addresses=`,
+  137: `${API}/owners?chains=polygon&wallet_addresses=`,
+  56: `${API}/owners?chains=bsc&wallet_addresses=`
+};
+export const getByTokenID = {
+  1: `${API}/ethereum`,
+  137: `${API}/polygon`,
+  56: `${API}/bsc`
+};
+
 export default configs;

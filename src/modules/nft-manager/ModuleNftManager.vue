@@ -152,7 +152,7 @@ import {
 import getService from '@/core/helpers/getService';
 
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
-import { ETH } from '@/utils/networks/types';
+import { ETH, BSC, MATIC } from '@/utils/networks/types';
 import { toBNSafe } from '@/core/helpers/numberFormatHelper';
 
 import NFT from './handlers/handlerNftManager';
@@ -202,22 +202,15 @@ export default {
     },
     tokens() {
       if (this.nftApiResponse.length > 0) {
-        const contract = this.nftApiResponse.find(item => {
+        const contract = this.nftApiResponse.filter(item => {
           return (
             item.contract_address.toLowerCase() ===
-            this.selectedContract.contract
+            this.selectedContract.contract.toLowerCase()
           );
         });
         if (contract) {
-          return contract.assets.map(item => {
-            const getImage =
-              item.urls.length > 0
-                ? item.urls.find(obj => {
-                    if (obj.type === 'IMAGE') return obj;
-                  })
-                : '';
-
-            const url = getImage ? getImage.url : '';
+          return contract.map(item => {
+            const url = item.image_url ? item.image_url : '';
             return {
               image: `https://img.mewapi.io/?image=${url}`,
               name: item.name,
@@ -231,13 +224,34 @@ export default {
     },
     contracts() {
       if (this.nftApiResponse.length > 0) {
-        return this.nftApiResponse.map(item => {
-          return {
-            contract: item.contract_address,
-            count: item.assets.length,
-            name: item.contract_name
-          };
-        });
+        // Organize contracts by address
+        return this.nftApiResponse.reduce((arr, item) => {
+          let ownerOb = item.owners.find(
+            owner =>
+              owner.owner_address.toLowerCase() === this.address.toLowerCase()
+          );
+          // Check if owner object is undefined
+          if (!ownerOb) {
+            this.nft
+              .getNftById(item.contract_address, item.token_id)
+              .then(res => {
+                ownerOb = res.json();
+              });
+          } else {
+            console.log('ownerOb', ownerOb);
+            const inList = arr.find(i => i.contract === item.contract_address);
+            if (inList) {
+              inList.count += ownerOb.quantity;
+            } else {
+              arr.push({
+                contract: item.contract_address,
+                count: ownerOb.quantity,
+                name: item.contract.name
+              });
+            }
+          }
+          return arr;
+        }, []);
       }
       return [];
     },
@@ -275,6 +289,18 @@ export default {
      */
     isValid() {
       return this.nft.isValidAddress(this.toAddress) && this.enoughFunds;
+    },
+    /**
+     * Check if network is supported
+     */
+    supportedNetwork() {
+      return this.supportedNetworks.includes(this.network.type.name);
+    },
+    /**
+     * List of supported networks
+     */
+    supportedNetworks() {
+      return [ETH.name, MATIC.name, BSC.name];
     }
   },
   watch: {
@@ -286,7 +312,8 @@ export default {
       this.loadingTokens = true;
       this.onNftSend = false;
       this.$router.push({ name: ROUTES_WALLET.NFT_MANAGER.NAME });
-      if (this.network.type.name === ETH.name) {
+      console.log('supportedNetwork', this.supportedNetwork);
+      if (this.supportedNetwork) {
         this.setUpNFT();
       } else {
         Toast(
@@ -343,10 +370,13 @@ export default {
       this.getNfts();
       this.localGasPrice = this.gasPriceByType(this.gasPriceType);
       this.hasMinEth();
+      console.log('done with setup');
     },
     getNfts() {
       this.nft.getNfts().then(res => {
-        this.nftApiResponse = res;
+        console.log('res', res);
+        this.nftApiResponse = res.result.nfts;
+        console.log('nftApiResponse', this.nftApiResponse);
         this.loadingContracts = false;
         setTimeout(() => {
           this.loadingTokens = false;
@@ -370,7 +400,10 @@ export default {
     },
     onTab(val) {
       this.activeTab = val;
+      console.log('activeTab', val);
+      console.log('contracts', this.contracts);
       this.selectedContract = this.contracts[val];
+      console.log('selectedContract', this.selectedContract);
       this.selectedContractHash = this.contracts[val].contract;
       this.nft.goToFirstPage();
     },
