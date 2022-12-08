@@ -97,12 +97,10 @@ export default {
       const newObj = {};
       Object.keys(this.setRecords)
         .filter(item => {
-          // Filters out empty values and unchanged values
-          if (
-            this.setRecords[item] !== '' &&
-            this.textRecords[item] !== this.setRecords[item]
-          )
-            return item;
+          // Make sure text record is not null
+          if (!this.setRecords[item]) this.setRecords[item] = '';
+          // Filters out unchanged values
+          if (this.textRecords[item] !== this.setRecords[item]) return item;
         })
         .forEach(item => {
           newObj[item] = this.setRecords[item];

@@ -1,5 +1,4 @@
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
-import { ETH, BSC, MATIC } from '@/utils/networks/types';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import BigNumber from 'bignumber.js';
 import {
@@ -49,10 +48,7 @@ const setTokenAndEthBalance = function ({
 }) {
   commit('wallet/SET_LOADING_WALLET_INFO', true, { root: true });
   const network = rootGetters['global/network'];
-  const isTokenBalanceApiSupported =
-    network.type.name === BSC.name ||
-    network.type.name === ETH.name ||
-    network.type.name === MATIC.name;
+  const isTokenBalanceApiSupported = network.type.balanceApi !== '';
   const address = rootState.wallet.address;
 
   const _getTokenBalance = (balance, decimals) => {
@@ -118,10 +114,7 @@ const setTokenAndEthBalance = function ({
     return;
   }
   let mainTokenBalance = toBN('0');
-  const TOKEN_BALANCE_API =
-    network.type.name === MATIC.name
-      ? `https://partners.mewapi.io/balances/matic/${address}`
-      : `https://tokenbalance.mewapi.io/${network.type.name.toLowerCase()}?address=${address}`;
+  const TOKEN_BALANCE_API = network.type.balanceApi + address;
   fetch(TOKEN_BALANCE_API)
     .then(res => res.json())
     .then(res => res.result)
