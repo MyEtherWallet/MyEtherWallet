@@ -1,5 +1,5 @@
 <template>
-  <div class="py-8 px-8">
+  <div class="py-8 px-8 moonpay-buy-component">
     <!-- ============================================================== -->
     <!-- Currency Select -->
     <!-- ============================================================== -->
@@ -17,11 +17,11 @@
       />
     </div>
 
-    <div class="mb-11">
+    <div class="mb-11 mt-8">
       <div class="mew-heading-3 textDark--text mb-5">
         How much do you want to spend?
       </div>
-      <div class="d-flex align-center">
+      <div class="d-flex align-start">
         <mew-input
           v-model="amount"
           type="number"
@@ -667,5 +667,13 @@ export default {
 }
 .selectedFiat {
   max-width: 120px;
+}
+</style>
+
+<style lang="scss">
+.moonpay-buy-component {
+  .v-input__slot {
+    height: 62px !important;
+  }
 }
 </style>
