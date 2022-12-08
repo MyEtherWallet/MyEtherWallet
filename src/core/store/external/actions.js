@@ -73,9 +73,13 @@ const setTokenAndEthBalance = function ({
     }
     if (
       rootState.wallet.identifier !== WALLET_TYPES.WEB3_WALLET &&
-      network.url !== rootState.wallet.web3.currentProvider.connection.url
-    )
-      dispatch('wallet/setWeb3Instance', undefined, { root: true });
+      currentProvider.connection
+    ) {
+      const currentProviderUrl = currentProvider.connection.url;
+      if (network.url !== currentProviderUrl) {
+        dispatch('wallet/setWeb3Instance', undefined, { root: true });
+      }
+    }
     rootState.wallet.web3.eth.getBalance(address).then(res => {
       const token = getters.contractToToken(MAIN_TOKEN_ADDRESS);
       const denominator = new BigNumber(10).pow(token.decimals);

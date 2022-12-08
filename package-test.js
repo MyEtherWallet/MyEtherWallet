@@ -75,7 +75,7 @@ const EXCEPTIONS = [
   'web3-eth-contract',
   'is-ipfs',
   'axios',
-  '@coolwallet/eth'
+  'prettier' // creates more warnings
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
