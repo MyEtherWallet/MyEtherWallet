@@ -363,7 +363,7 @@ export default {
     getNfts() {
       this.nft.getNfts().then(res => {
         console.log('res', res);
-        this.nftApiResponse = res.result.nfts;
+        this.nftApiResponse = res;
         console.log('nftApiResponse', this.nftApiResponse);
         this.loadingContracts = false;
         setTimeout(() => {
