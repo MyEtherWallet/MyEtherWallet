@@ -13,10 +13,5 @@ export const chains = {
   137: `${API}/owners?chains=polygon&queried_wallet_balances=1&wallet_addresses=`,
   56: `${API}/owners?chains=bsc&queried_wallet_balances=1&wallet_addresses=`
 };
-export const getByTokenID = {
-  1: `${API}/ethereum`,
-  137: `${API}/polygon`,
-  56: `${API}/bsc`
-};
 
 export default configs;

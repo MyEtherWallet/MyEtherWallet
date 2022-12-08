@@ -1,5 +1,5 @@
 import utils from 'web3-utils';
-import configs, { chains, getByTokenID } from './config/configNft';
+import configs, { chains } from './config/configNft';
 import ABI from './abi/abiNft';
 import BigNumber from 'bignumber.js';
 
@@ -27,22 +27,6 @@ export default class NFT {
         nftResults = nftResults.concat(result.nfts);
       }
       return nftResults;
-    } catch (e) {
-      throw new Error(e);
-    }
-  }
-
-  /**
-   * retrieves an NFT by Token ID
-   * returns {Object}
-   */
-  async getNftById(contractAddress, tokenId) {
-    try {
-      return await fetch(
-        `${
-          getByTokenID[this.network.type.chainID]
-        }/${contractAddress}/${tokenId}`
-      ).then(res => res.json());
     } catch (e) {
       throw new Error(e);
     }
