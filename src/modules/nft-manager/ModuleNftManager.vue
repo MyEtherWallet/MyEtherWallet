@@ -195,7 +195,12 @@ export default {
      */
     tabs() {
       return this.contracts.map(item => {
-        return { name: `${item.name} (${item.count})` };
+        let tabName = `${item.name} (${item.count})`;
+        if (tabName.length > 25) {
+          tabName = item.name.substring(0, 20);
+          tabName += `... (${item.count})`;
+        }
+        return { name: tabName };
       });
     },
     tokens() {
@@ -211,7 +216,7 @@ export default {
             const url = item.image_url ? item.image_url : '';
             return {
               image: `https://img.mewapi.io/?image=${url}`,
-              name: item.name,
+              name: item.name || item.token_id,
               token_id: item.token_id,
               contract: contract.contract_address
             };
