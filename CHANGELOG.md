@@ -1,6 +1,6 @@
 ### Release v6.6.11-hotfix.2
 
-* update privacy policy [#4412](https://github.com/MyEtherWallet/MyEtherWallet/pull/4412)
+* update privacy policy [#4415](https://github.com/MyEtherWallet/MyEtherWallet/pull/4415)
 
 ### Release v6.6.11-hotfix.1
 
