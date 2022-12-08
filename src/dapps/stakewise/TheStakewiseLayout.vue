@@ -77,6 +77,12 @@ export default {
       if (this.isSupported) {
         this.setup();
       }
+    },
+    network() {
+      clearInterval(this.fetchInterval);
+      if (this.isSupported) {
+        this.setup();
+      }
     }
   },
   mounted() {
