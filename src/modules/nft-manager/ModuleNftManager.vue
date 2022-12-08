@@ -307,12 +307,14 @@ export default {
       if (this.supportedNetwork) {
         this.setUpNFT();
       } else {
-        Toast(
-          `NFT Manager not supported in network: ${this.network.type.name}`,
-          {},
-          WARNING
-        );
-        this.nftApiResponse = [];
+        setTimeout(() => {
+          Toast(
+            `NFT Manager not supported in network: ${this.network.type.name}`,
+            {},
+            WARNING
+          );
+          this.nftApiResponse = [];
+        }, 1000);
       }
     },
     address() {
