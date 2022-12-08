@@ -215,6 +215,8 @@ import MewMenuPopup from '@/components/mew-menu-popup/MewMenuPopup.vue';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import { checkCustomPath } from '@/modules/access-wallet/software/handlers/pathHelper';
 import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
+import { ethereum as ethereumPath } from '@/modules/access-wallet/hardware/handlers/configs/configPaths.js';
+import { isEmpty } from 'lodash';
 export default {
   components: {
     MewMenuPopup
@@ -228,8 +230,8 @@ export default {
       type: Object,
       default: () => {
         return {
-          name: 'Ethereum',
-          value: "m/44'/60'/0'/0"
+          name: ethereumPath.label,
+          value: ethereumPath.path
         };
       }
     },
@@ -263,12 +265,10 @@ export default {
       if (this.disableCustomPaths) return [];
       return this.paths.filter(path => {
         if (this.searchValue) {
-          return (
-            path.name
-              ?.toLowerCase()
-              .includes(this.searchValue?.toLowerCase()) ||
-            path.value?.toLowerCase().includes(this.searchValue?.toLowerCase())
-          );
+          const pathName = path.name.toLowerCase();
+          const pathVal = path.value.toLowerCase();
+          const searchVal = this.searchValue.trim().toLowerCase();
+          return pathName.includes(searchVal) || pathVal.includes(searchVal);
         }
         return path;
       });
@@ -280,14 +280,10 @@ export default {
       return this.passedPaths.filter(path => {
         if (!this.paths.find(e => e.value === path.value)) {
           if (this.searchValue) {
-            return (
-              path.name
-                ?.toLowerCase()
-                .includes(this.searchValue?.toLowerCase()) ||
-              path.value
-                ?.toLowerCase()
-                .includes(this.searchValue?.toLowerCase())
-            );
+            const pathName = path.name.toLowerCase();
+            const pathVal = path.value.toLowerCase();
+            const searchVal = this.searchValue.trim().toLowerCase();
+            return pathName.includes(searchVal) || pathVal.includes(searchVal);
           }
           return path;
         }
@@ -342,13 +338,13 @@ export default {
      * Sets the custom alias value
      */
     setCustomAlias(val) {
-      this.customAlias = val;
+      this.customAlias = val.trim();
     },
     /**
      * Sets the custom path value
      */
     setCustomPath(val) {
-      this.customPath = val;
+      this.customPath = val.trim();
     },
     /**
      * Method sets searchValue on mew-search input event
@@ -363,35 +359,40 @@ export default {
     saveCustomPath() {
       try {
         const customPath = checkCustomPath(this.customPath);
-        if (customPath) {
-          const foundPath =
-            this.filteredPaths.find(e => e.value === this.customPath) ||
-            this.filteredCustomPaths.find(e => e.value === this.customPath);
-          if (foundPath) {
-            const error = `Path already exists: ${foundPath.name}`;
-            Toast(error, {}, ERROR);
-          } else {
-            if (this.customAlias === '' || this.customAlias === null) {
-              const error = 'Custom alias cannot be empty';
-              Toast(error, {}, ERROR);
-            } else {
-              const newPath = {
-                name: this.customAlias,
-                value: this.customPath
-              };
-              this.addCustomPath(newPath).then(() => {
-                this.customPath = '';
-                this.customAlias = '';
-                this.$refs.aliasInput.clear();
-                this.$refs.pathInput.clear();
-                Toast('Custom derivation path added!', {}, SUCCESS);
-              });
-            }
-            this.showCustomField = false;
-          }
-        } else {
+        if (!customPath) {
           Toast('Invalid Derivation path', {}, ERROR);
+          return;
         }
+        if (isEmpty(this.customAlias)) {
+          Toast('Custom alias cannot be empty', {}, ERROR);
+          return;
+        }
+        const foundPath =
+          this.filteredPaths.find(e => e.value === this.customPath) ||
+          this.filteredCustomPaths.find(e => e.value === this.customPath);
+        if (foundPath) {
+          Toast(`Path already exists: ${foundPath.name}`, {}, ERROR);
+          return;
+        }
+        const foundName =
+          this.filteredPaths.find(e => e.name === this.customAlias) ||
+          this.filteredCustomPaths.find(e => e.name === this.customAlias);
+        if (foundName) {
+          Toast(`Path name already exists: ${foundName.name}`, {}, ERROR);
+          return;
+        }
+        const newPath = {
+          name: this.customAlias,
+          value: this.customPath
+        };
+        this.addCustomPath(newPath).then(() => {
+          this.customPath = '';
+          this.customAlias = '';
+          this.$refs.aliasInput.clear();
+          this.$refs.pathInput.clear();
+          Toast('Custom derivation path added!', {}, SUCCESS);
+        });
+        this.showCustomField = false;
       } catch (error) {
         Toast(error, {}, ERROR);
       }

@@ -113,6 +113,9 @@ export default {
   },
   beforeDestroy() {
     EventBus.$off(MOONPAY_EVENT);
+    EventBus.$off('swapTxBroadcasted');
+    EventBus.$off('swapTxReceivedReceipt');
+    EventBus.$off('swapTxFailed');
   },
   methods: {
     ...mapActions('global', ['setOnlineStatus']),
