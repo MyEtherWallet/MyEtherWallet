@@ -9,6 +9,7 @@ import {
 } from '@/core/helpers/numberFormatHelper';
 import { toBN } from 'web3-utils';
 import getTokenInfo from '@/core/helpers/tokenInfo';
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 
 const setCurrency = async function ({ commit }, val) {
   fetch('https://mainnet.mewwallet.dev/v2/prices/exchange-rates')
@@ -65,6 +66,24 @@ const setTokenAndEthBalance = function ({
     return n;
   };
   if (!isTokenBalanceApiSupported) {
+    const currentProvider = rootState.wallet.web3.eth.currentProvider;
+    // Prevent the 'Invalid return values' error
+    // when accessing new network on MetaMask
+    if (
+      rootState.wallet.identifier === WALLET_TYPES.WEB3_WALLET &&
+      network.type.chainID !== parseInt(currentProvider.chainId)
+    ) {
+      return;
+    }
+    if (
+      rootState.wallet.identifier !== WALLET_TYPES.WEB3_WALLET &&
+      currentProvider.connection
+    ) {
+      const currentProviderUrl = currentProvider.connection.url;
+      if (network.url !== currentProviderUrl) {
+        dispatch('wallet/setWeb3Instance', undefined, { root: true });
+      }
+    }
     rootState.wallet.web3.eth.getBalance(address).then(res => {
       const token = getters.contractToToken(MAIN_TOKEN_ADDRESS);
       const denominator = new BigNumber(10).pow(token.decimals);
