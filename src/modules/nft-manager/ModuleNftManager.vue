@@ -234,7 +234,7 @@ export default {
             arr.push({
               contract: item.contract_address,
               count: nftAmount,
-              name: item.contract.name
+              name: item.contract.name || item.collection.name
             });
           }
           return arr;
@@ -345,6 +345,7 @@ export default {
   },
   methods: {
     setUpNFT() {
+      if (!this.supportedNetwork) return;
       /**
        * Init NFT Handler
        */
