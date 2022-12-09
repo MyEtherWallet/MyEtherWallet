@@ -1,8 +1,8 @@
 import axios from 'axios';
 import BigNumber from 'bignumber.js';
-const HOST_URL = 'https://mainnet.mewwallet.dev/v3';
+const HOST_URL = 'https://mainnet.mewwallet.dev/v4';
 const GET_LIST = '/swap/list';
-const GET_QUOTE = '/swap/quote';
+// const GET_QUOTE = '/swap/rate';
 const GET_TRADE = '/swap/trade';
 const REQUEST_CACHER = 'https://requestcache.mewapi.io/?url=';
 import { isAddress } from 'web3-utils';
@@ -20,25 +20,30 @@ class MEWPClass {
     return this.supportednetworks.includes(chain);
   }
   getSupportedTokens() {
+    const formatTokens = tokens =>
+      tokens?.map(d => {
+        const token = {
+          contract: d.contract_address.toLowerCase(),
+          isEth: true,
+          decimals: parseInt(d.decimals),
+          img:
+            d.icon && d.icon !== ''
+              ? `https://img.mewapi.io/?image=${d.icon}`
+              : ETH.icon,
+          name: d.name ? d.name : d.symbol,
+          symbol: d.symbol,
+          type: 'ERC20'
+        };
+        return token;
+      });
     return axios
       .get(`${REQUEST_CACHER}${HOST_URL}${GET_LIST}?chain=${this.chain}`)
       .then(response => {
         const data = response.data;
-        return data.map(d => {
-          const token = {
-            contract: d.contract_address.toLowerCase(),
-            isEth: true,
-            decimals: parseInt(d.decimals),
-            img:
-              d.image && d.image !== ''
-                ? `https://img.mewapi.io/?image=${d.image}`
-                : ETH.icon,
-            name: d.name ? d.name : d.symbol,
-            symbol: d.symbol,
-            type: 'ERC20'
-          };
-          return token;
-        });
+        return {
+          featured: formatTokens(data?.featured),
+          tokens: formatTokens(data?.tokens)
+        };
       })
       .catch(err => {
         Toast(err, {}, ERROR);
@@ -57,50 +62,7 @@ class MEWPClass {
         .toFixed()
     });
   }
-  getQuote({ fromT, toT, fromAmount }) {
-    const fromAddress = fromT.contract;
-    const toAddress = toT.contract;
-    if (!isAddress(fromAddress) || !isAddress(toAddress))
-      return Promise.resolve([]);
-    const fromAmountBN = new BigNumber(fromAmount);
-    const queryAmount = fromAmountBN.div(
-      new BigNumber(10).pow(new BigNumber(fromT.decimals))
-    );
-    return this.getMinMaxAmount({ fromT, toT }).then(minmax => {
-      return axios
-        .get(`${HOST_URL}${GET_QUOTE}`, {
-          params: {
-            fromContractAddress: fromAddress,
-            toContractAddress: toAddress,
-            amount: queryAmount.toFixed(fromT.decimals),
-            chain: this.chain,
-            excludeDexes: Object.values(MEWPClass.supportedDexes)
-              .filter(dex => dex !== this.provider)
-              .join(',')
-          }
-        })
-        .then(response => {
-          const quotes = response.data.quotes.filter(
-            q => q.dex === this.provider
-          );
-          return quotes.map(q => {
-            return {
-              exchange: q.exchange,
-              provider: this.provider,
-              amount: new BigNumber(q.amount).toFixed(),
-              minFrom: minmax?.minFrom ? minmax.minFrom : 0,
-              maxFrom: minmax?.maxFrom ? minmax.maxFrom : 0
-            };
-          });
-        })
-        .catch(e => {
-          if (e.response?.data?.msg === 'No matching swap pairs found')
-            return [];
-          return e;
-        });
-    });
-  }
-  getTrade({ fromAddress, toAddress, quote, fromT, toT, fromAmount }) {
+  getTrade({ fromAddress, fromT, toT, fromAmount }) {
     const contactFromAddress = fromT.contract;
     const contractToAddress = toT.contract;
     const fromAmountBN = new BigNumber(fromAmount);
@@ -111,9 +73,6 @@ class MEWPClass {
       .get(`${HOST_URL}${GET_TRADE}`, {
         params: {
           address: fromAddress,
-          recipient: toAddress,
-          dex: this.provider,
-          exchange: quote.exchange,
           platform: 'web',
           fromContractAddress: contactFromAddress,
           toContractAddress: contractToAddress,
@@ -122,12 +81,11 @@ class MEWPClass {
         }
       })
       .then(response => {
-        return {
-          provider: this.provider,
-          transactions: response.data.transactions
-        };
+        return response.data;
       })
       .catch(err => {
+        if (err.response.data.msg?.includes('quote'))
+          return { featured: [], tokens: [] };
         Toast(err, {}, ERROR);
       });
   }
