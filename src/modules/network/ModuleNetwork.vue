@@ -59,9 +59,6 @@ export default {
     ...mapState('wallet', ['blockNumber', 'identifier', 'isHardware']),
     ...mapState('global', ['validNetwork']),
     ...mapGetters('global', ['network']),
-    // type() {
-    //   return this.network.type.currencyName;
-    // },
     fullName() {
       return this.network.type.name_long;
     },
@@ -84,18 +81,7 @@ export default {
       );
     }
   },
-  mounted() {
-    // this.openNetworkOverlayOnLoad();
-  },
   methods: {
-    // set to wait for 1 sec until event bus is ready
-    // openNetworkOverlayOnLoad() {
-    //   setTimeout(() => {
-    //     this.$route.name == ROUTES_WALLET.NETWORK.NAME
-    //       ? this.openNetworkOverlay()
-    //       : '';
-    //   }, 1000);
-    // },
     openNetworkOverlay() {
       EventBus.$emit('openNetwork');
     }
