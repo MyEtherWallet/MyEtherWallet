@@ -145,6 +145,11 @@ h6 {
   border-radius: 5px !important;
 }
 
+/* ========== Box shadow ========== */
+.bs-wallet-block {
+  box-shadow: 0 12px 17px var(--v-bsWalletBlock-base) !important;
+}
+
 /* ========== Other ========== */
 .overflow--hidden {
   overflow: hidden !important;

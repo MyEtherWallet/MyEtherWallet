@@ -16,6 +16,7 @@
       subtitle="My Tokens Value"
       :has-body-padding="false"
       :title="totalTokensValue"
+      class="bgWalletBlock"
     >
       <template #rightHeaderContainer>
         <div>

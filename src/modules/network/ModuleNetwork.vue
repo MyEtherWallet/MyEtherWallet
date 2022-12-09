@@ -6,7 +6,9 @@
     >
       <div>
         <div class="d-flex align-center">
-          <span class="mew-heading-2 mr-2">{{ $t('common.network') }}</span>
+          <span class="textDark--text mew-heading-2 mr-2">
+            {{ $t('common.network') }}
+          </span>
           <v-btn
             v-if="show"
             depressed

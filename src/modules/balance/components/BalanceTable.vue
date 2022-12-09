@@ -3,7 +3,7 @@
     <!-- ==================================================================== -->
     <!-- Desktop table -->
     <!-- ==================================================================== -->
-    <app-table v-if="!isMobile" full-width flat border-bottom class="mt-4 mb-4">
+    <app-table v-if="!isMobile" full-width flat class="mt-4 mb-4">
       <table>
         <thead>
           <tr>

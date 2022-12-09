@@ -1,6 +1,6 @@
 <template>
   <mew-module
-    class="d-flex flex-grow-1 pt-6"
+    class="d-flex flex-grow-1 pt-6 bgWalletBlock"
     title="Send"
     :has-elevation="true"
     :has-indicator="true"

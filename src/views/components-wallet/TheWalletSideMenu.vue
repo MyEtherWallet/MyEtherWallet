@@ -6,7 +6,7 @@
       class="wallet-sidemenu"
       width="300"
       :dark="$vuetify.theme.dark"
-      color="#07385F"
+      color="bgSideMenu"
     >
       <template #prepend>
         <mew-overlay

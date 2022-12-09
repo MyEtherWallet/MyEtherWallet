@@ -66,9 +66,9 @@
             </mew6-white-sheet>
           </div>
           <div class="d-flex flex-column align-start">
-            <span class="mew-body font-weight-bold textDark--text"
-              >You can now buy crypto with low fees</span
-            >
+            <span class="mew-body font-weight-bold textDark--text">
+              You can now buy crypto with low fees
+            </span>
             <span
               :class="[
                 $vuetify.breakpoint.md ||

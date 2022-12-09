@@ -1,3 +1,21 @@
+const baseColors = {
+  // Asphalt
+  asphalt5: '#1c2136',
+  asphalt10: '#2E3046',
+  asphalt25: '#33364B',
+  asphalt50: '#393D50',
+  asphalt75: '#3F4356',
+  asphalt100: '#4A4E5F',
+  asphalt200: '#565B6C',
+  asphalt300: '#666C7B',
+  asphalt400: '#7B8290',
+  asphalt500: '#8F97A3 ',
+  asphalt600: '#A3ACB8',
+  asphalt700: '#BBC0CB',
+  asphalt800: '#D2D6DD',
+  asphalt900: '#FFFFFF'
+};
+
 export default {
   icons: {
     iconfont: 'mdi'
@@ -8,6 +26,15 @@ export default {
     },
     themes: {
       light: {
+        // Backgrounds
+        bgSideMenu: '#07385f',
+        bgWallet: '#F2F4FA',
+        bgWalletBlock: '#FFFFFF',
+        bgOverlay: '#F2FAFA',
+        bgGrey: '#F8F9FB',
+        bgBlack: '#000000',
+        // Box shadow
+        boxShadow: '#ececec',
         // Text
         textDark: '#1F242F',
         textMedium: '#626978',
@@ -16,24 +43,6 @@ export default {
         greyPrimary: '#626978',
         greyMedium: '#E4E7ED',
         greyLight: '#F9FAFE',
-        // Asphalt
-        asphalt10: '#F9FAFE',
-        asphalt25: '#F5F7FB',
-        asphalt50: '#EDF0F5',
-        asphalt75: '#E4E7ED',
-        asphalt100: '#DADEE5',
-        asphalt200: '#CACFD7',
-        asphalt300: '#B7BCC7',
-        asphalt400: '#9BA1AE',
-        asphalt500: '#777E8C',
-        asphalt600: '#626978',
-        asphalt700: '#474D5B',
-        asphalt800: '#333945',
-        asphalt900: '#1F242F',
-        // Backgrounds
-        walletBg: '#F2F4FA',
-        overlayBg: '#F2FAFA',
-        greyBg: '#F8F9FB',
         // Whites
         alwaysWhite: '#FFFFFF',
         whiteBg: '#FFFFFF',
@@ -54,14 +63,14 @@ export default {
         orangePrimary: '#F5A623',
         orangeMedium: '#FBDBA7',
         orangeLight: '#FEF4E5',
-        // Black
-        blackBg: '#000000',
         // Disabled
         disabledPrimary: '#CECECE',
         disabledMedium: '#E0E0E0',
         disabledLight: '#F6F6F6 ',
         // Buttons
         buttonGrayLight: '#F2F4FA',
+        // Border
+        borderTable: '#EAEAEA',
         // =========================================================
         // =========================================================
         // new colors
@@ -108,7 +117,6 @@ export default {
         white: '#fff',
         black: '#000',
         mewBg: '#fff',
-        boxShadow: '#ececec',
         expandHeader: '#184f90',
         primary: '#05c0a5',
         blue500: '#5a78f0',
@@ -136,32 +144,23 @@ export default {
         surface: '#192133' // name from figma. not sure if its correct
       },
       dark: {
+        // Backgrounds
+        bgSideMenu: '#292B42',
+        bgWallet: '#1c2136',
+        bgWalletBlock: '#292B42',
+        bgOverlay: '#292B42',
+        bgGrey: '#F8F9FB',
+        bgBlack: '#000000',
+        //Box shadow
+        boxShadow: '#3c3c3c',
         // Text
-        textDark: '#1F242F',
+        textDark: '#FFFFFF',
         textMedium: '#626978',
         textLight: '#9BA1AE',
         // Grey
         greyPrimary: '#626978',
         greyMedium: '#E4E7ED',
         greyLight: '#F9FAFE',
-        // Asphalt
-        asphalt10: '#F9FAFE',
-        asphalt25: '#F5F7FB',
-        asphalt50: '#EDF0F5',
-        asphalt75: '#E4E7ED',
-        asphalt100: '#DADEE5',
-        asphalt200: '#CACFD7',
-        asphalt300: '#B7BCC7',
-        asphalt400: '#9BA1AE',
-        asphalt500: '#777E8C',
-        asphalt600: '#626978',
-        asphalt700: '#474D5B',
-        asphalt800: '#333945',
-        asphalt900: '#1F242F',
-        // Backgrounds
-        walletBg: '#000000',
-        overlayBg: '#000000',
-        greyBg: '#000000',
         // Whites
         alwaysWhite: '#FFFFFF',
         whiteBg: '#151518',
@@ -186,10 +185,10 @@ export default {
         disabledPrimary: '#606670',
         disabledMedium: '#383F4A',
         disabledLight: '#242D3E ',
-        // Black
-        blackBg: '#FFFFFF',
         // Buttons
-        buttonGrayLight: '#000000',
+        buttonGrayLight: baseColors.asphalt5,
+        // Border
+        borderTable: baseColors.asphalt700,
         // =========================================================
         // =========================================================
         // new colors
@@ -235,7 +234,6 @@ export default {
         white: '#fff',
         mewBg: '#151a29',
         black: '#000',
-        boxShadow: '#3c3c3c',
         expandHeader: '#184f90',
         titlePrimary: '#95aed8',
         titleSecondary: '#4E5A6E',
