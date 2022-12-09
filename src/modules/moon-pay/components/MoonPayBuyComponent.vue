@@ -246,7 +246,7 @@ export default {
       return this.isEUR ? '0.7%' : '3.25%';
     },
     selectedCryptoName() {
-      return this.selectedCurrency.symbol;
+      return this.selectedCurrency?.symbol ? this.selectedCurrency.symbol : '';
     },
     isEUR() {
       return this.selectedFiatName === 'EUR' || this.selectedFiatName === 'GBP';
