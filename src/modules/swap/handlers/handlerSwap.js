@@ -1,6 +1,6 @@
 import { OneInch, ZEROX, ParaSwap, Changelly } from './providers';
-import BigNumber from 'bignumber.js';
-import Configs from './configs/providersConfigs';
+// import BigNumber from 'bignumber.js';
+// import Configs from './configs/providersConfigs';
 import hasValidDecimals from '@/core/helpers/hasValidDecimals.js';
 import { isObject } from 'lodash';
 
@@ -17,22 +17,24 @@ class Swap {
   getAllTokens() {
     const allTokens = {};
     const DOGE_ADDRESS = '0x4206931337dc273a630d328dA6441786BfaD668f';
+    const notDoge = address =>
+      address?.toLowerCase() !== DOGE_ADDRESS.toLowerCase();
+
     return this.providers[0].getSupportedTokens().then(baseList => {
-      if (baseList && baseList.length > 0)
-        baseList.forEach(t => {
-          if (t.contract?.toLowerCase() !== DOGE_ADDRESS.toLowerCase())
-            allTokens[t.contract] = t;
+      if (baseList?.tokens && baseList?.tokens.length > 0)
+        // Add tokens to TokenList
+        baseList?.tokens.forEach(t => {
+          if (notDoge(t.contract)) allTokens[t.contract] = t;
         });
+      //Get tokens From changelly
       return Promise.all(
         this.providers.slice(3).map(p => {
           if (!p.isSupportedNetwork(this.chain)) return Promise.resolve();
           return p.getSupportedTokens().then(tokens => {
             if (tokens && tokens.length > 0) {
               tokens.forEach(t => {
-                if (
-                  t.contract?.toLowerCase() !== DOGE_ADDRESS.toLowerCase() &&
-                  !allTokens[t.contract]
-                ) {
+                // ignore doge and existing tokens
+                if (notDoge(t.contract) && !allTokens[t.contract]) {
                   allTokens[t.contract] = t;
                 }
               });
@@ -51,41 +53,43 @@ class Swap {
             if (!t || !t.contract) return false;
             return t;
           }),
-          toTokens: sorted
+          toTokens: sorted,
+          featured: baseList.featured
         };
       });
     });
   }
-  getAllQuotes({ fromT, toT, fromAmount }) {
-    let allQuotes = [];
-    return Promise.all(
-      this.providers.map(p => {
-        if (!p.isSupportedNetwork(this.chain)) return Promise.resolve();
-        return p.getQuote({ fromT, toT, fromAmount }).then(quotes => {
-          allQuotes = allQuotes.concat(quotes);
-        });
-      })
-    ).then(() => {
-      allQuotes.sort((q1, q2) => {
-        if (new BigNumber(q1.amount).gt(new BigNumber(q2.amount))) return -1;
-        return 1;
-      });
-      return allQuotes.map(q => {
-        if (Configs.exchangeInfo[q.exchange]) {
-          q.exchangeInfo = Configs.exchangeInfo[q.exchange];
-        } else {
-          q.exchangeInfo = Configs.exchangeInfo.default;
-          q.exchangeInfo.name = q.exchange;
-        }
-        return q;
-      });
-    });
+  getAllQuotes({ fromT, toT, fromAmount, fromAddress }) {
+    //let allQuotes = [];
+    return this.providers[0].getTrade({ fromT, toT, fromAmount, fromAddress });
+    // return Promise.all(
+    //   this.providers.map(p => {
+    //     if (!p.isSupportedNetwork(this.chain)) return Promise.resolve();
+    //     return p.getQuote({ fromT, toT, fromAmount }).then(quotes => {
+    //       allQuotes = allQuotes.concat(quotes);
+    //     });
+    //   })
+    // ).then(() => {
+    //   allQuotes.sort((q1, q2) => {
+    //     if (new BigNumber(q1.amount).gt(new BigNumber(q2.amount))) return -1;
+    //     return 1;
+    //   });
+    //   return allQuotes.map(q => {
+    //     if (Configs.exchangeInfo[q.exchange]) {
+    //       q.exchangeInfo = Configs.exchangeInfo[q.exchange];
+    //     } else {
+    //       q.exchangeInfo = Configs.exchangeInfo.default;
+    //       q.exchangeInfo.name = q.exchange;
+    //     }
+    //     return q;
+    //   });
+    // });
   }
   getQuotesForSet(arr) {
     const quotes = [];
     const provider = this.providers[3];
     for (let i = 0; i < arr.length; i++) {
-      quotes.push(provider.getQuote(arr[i]));
+      quotes.push(provider.getTrade(arr[i]));
     }
     return Promise.all(quotes);
   }
