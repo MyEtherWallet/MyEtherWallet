@@ -23,6 +23,7 @@
           :has-buttons="false"
           :left-btn="leftBtn"
           hide-close-btn
+          :large-title="validNetwork"
         >
           <network-switch
             :filter-types="filterNetworks"
