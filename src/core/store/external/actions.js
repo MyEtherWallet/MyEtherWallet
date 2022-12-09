@@ -6,7 +6,7 @@ import {
   formatFloatingPointValue,
   formatIntegerValue
 } from '@/core/helpers/numberFormatHelper';
-import { toBN } from 'web3-utils';
+import { toBN, toChecksumAddress } from 'web3-utils';
 import getTokenInfo from '@/core/helpers/tokenInfo';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 
@@ -49,7 +49,7 @@ const setTokenAndEthBalance = function ({
   commit('wallet/SET_LOADING_WALLET_INFO', true, { root: true });
   const network = rootGetters['global/network'];
   const isTokenBalanceApiSupported = network.type.balanceApi !== '';
-  const address = rootState.wallet.address;
+  const address = toChecksumAddress(rootState.wallet.address);
 
   const _getTokenBalance = (balance, decimals) => {
     let n = new BigNumber(balance);
