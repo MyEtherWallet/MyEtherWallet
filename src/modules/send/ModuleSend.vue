@@ -117,14 +117,14 @@
                 <div
                   class="pa-5 warning greyPrimary--text border-radius--5px mb-8"
                 >
-                  <div class="d-flex font-weight-bold mb-2">
-                    <v-icon class="greyPrimary--text mew-body mr-1">
+                  <div class="d-flex font-weight-bold mb-2 textDark--text">
+                    <v-icon class="textDark--text mew-body mr-1">
                       mdi-alert-outline</v-icon
                     >For advanced users only
                   </div>
-                  <div>
-                    Please don’t edit these fields unless you are an expert user
-                    & know what you’re doing. Entering the wrong information
+                  <div class="textDark--text">
+                    Please don't edit these fields unless you are an expert user
+                    & know what you're doing. Entering the wrong information
                     could result in your transaction failing or getting stuck.
                   </div>
                 </div>

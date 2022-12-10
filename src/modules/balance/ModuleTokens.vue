@@ -35,7 +35,7 @@
                 icon
                 v-on="on"
               >
-                <v-icon medium color="basic">mdi-dots-vertical</v-icon>
+                <v-icon medium color="textDark">mdi-dots-vertical</v-icon>
               </v-btn>
             </template>
             <v-list>

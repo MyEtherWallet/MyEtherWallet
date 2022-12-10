@@ -42,7 +42,7 @@ export default {
         // Grey
         greyPrimary: '#626978',
         greyMedium: '#E4E7ED',
-        greyLight: '#F9FAFE',
+        greyLight: '#f2f4fa',
         // Whites
         alwaysWhite: '#FFFFFF',
         whiteBg: '#FFFFFF',
@@ -69,7 +69,10 @@ export default {
         disabledLight: '#F6F6F6 ',
         // Buttons
         buttonGrayLight: '#F2F4FA',
+        // Inputs
+        inputPrimary: '#FFFFFF',
         // Border
+        borderInput: '#e0e0e0',
         borderTable: '#EAEAEA',
         // =========================================================
         // =========================================================
@@ -155,7 +158,7 @@ export default {
         boxShadow: '#3c3c3c',
         // Text
         textDark: '#FFFFFF',
-        textMedium: '#626978',
+        textMedium: '#A5B0C7',
         textLight: '#9BA1AE',
         // Grey
         greyPrimary: '#626978',
@@ -187,7 +190,10 @@ export default {
         disabledLight: '#242D3E ',
         // Buttons
         buttonGrayLight: baseColors.asphalt5,
+        // Inputs
+        inputPrimary: baseColors.asphalt5,
         // Border
+        borderInput: '#667f9b',
         borderTable: baseColors.asphalt700,
         // =========================================================
         // =========================================================
@@ -242,7 +248,7 @@ export default {
         textSecondaryModule: '#95aed8',
         primary: '#05c0a5',
         blue500: '#5c79f0',
-        basic: '#151A29',
+        basic: '#FFFFFF',
         success: '#2cc479',
         error: {
           base: '#ff445b',
