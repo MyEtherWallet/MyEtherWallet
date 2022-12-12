@@ -28,7 +28,7 @@
               :tab="activeTab"
               :default-currency="defaultCurrency"
               :in-wallet="inWallet"
-              :supported-buy="supportedBuy"
+              :supported-buy="supportedNetwork"
               @selectedCurrency="setSelectedCurrency"
               @openProviders="openProviders"
               @selectedFiat="setSelectedFiat"
@@ -117,34 +117,23 @@ export default {
       );
     },
     defaultCurrency() {
-      if (isEmpty(this.selectedCurrency) && this.supportedBuy) {
+      if (isEmpty(this.selectedCurrency) && this.supportedNetwork) {
         if (this.inWallet) {
           return this.tokensList[0];
         }
         const token = this.contractToToken(MAIN_TOKEN_ADDRESS);
         token.value = token.symbol;
         return token;
-      } else if (
-        isEmpty(this.selectedCurrency) ||
-        !this.supportedBuy ||
-        (this.activeTab === 1 && !this.supportedSell)
-      ) {
+      } else if (isEmpty(this.selectedCurrency) || !this.supportedNetwork) {
         return this.selectedCurrency;
       }
       return this.selectedCurrency;
     },
-    supportedBuy() {
+    supportedNetwork() {
       return (
         this.network.type.name === 'ETH' ||
         this.network.type.name === 'BSC' ||
         this.network.type.name === 'MATIC'
-      );
-    },
-    supportedSell() {
-      return (
-        this.selectedCurrency.symbol === 'ETH' ||
-        this.selectedCurrency.symbol === 'USDT' ||
-        this.selectedCurrency.symbol === 'USDC'
       );
     },
     leftBtn() {
