@@ -1,3 +1,7 @@
+### Release v6.6.11-hotfix.2
+
+* update privacy policy [#4415](https://github.com/MyEtherWallet/MyEtherWallet/pull/4415)
+
 ### Release v6.6.11-hotfix.1
 
 * offline nonce issue [#4387](https://github.com/MyEtherWallet/MyEtherWallet/pull/4387)
