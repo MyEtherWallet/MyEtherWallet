@@ -16,7 +16,7 @@
         :id="$data[`${b.title}Disabled`] ? 'disabled' : ''"
         :key="key"
         class="mb-2 d-flex align-center justify-space-between group-button"
-        :class="[actualGasType === b.title ? 'active' : '']"
+        :class="[gasPriceType === b.title ? 'active' : '']"
         @click.stop="
           () => {
             setSelected(b.title);
@@ -155,10 +155,6 @@ export default {
     costInEth: {
       type: String,
       default: '0'
-    },
-    selectedGasType: {
-      type: String,
-      default: gasPriceTypes.ECONOMY
     }
   },
   data() {
@@ -211,9 +207,6 @@ export default {
       });
 
       return counter < 3;
-    },
-    actualGasType() {
-      return this.fromSettings ? this.gasPriceType : this.selectedGasType;
     }
   },
   watch: {
@@ -238,15 +231,15 @@ export default {
   },
   mounted() {
     this.recalculate();
-    this.previousSelected = this.actualGasType;
+    this.previousSelected = this.gasPriceType;
   },
   methods: {
     setGasType() {
       if (this.notEnoughEth && !this.fromSettings) {
-        if (this.actualGasType == 'regular') {
+        if (this.gasPriceType == 'regular') {
           this.regularDisabled = true;
           this.fastDisabled = true;
-        } else if (this.actualGasType == 'fast') {
+        } else if (this.gasPriceType == 'fast') {
           this.fastDisabled = true;
         } else {
           this.economyDisabled = true;
@@ -255,7 +248,7 @@ export default {
         }
         this.setSelected(this.previousSelected);
         if (!this.notEnoughEth) {
-          this.previousSelected = this.actualGasType;
+          this.previousSelected = this.gasPriceType;
         }
       }
     },
@@ -277,7 +270,7 @@ export default {
     },
     recalculate() {
       const amount = BigNumber(this.costInEth).minus(
-        this[`${this.actualGasType}InEth`]
+        this[`${this.gasPriceType}InEth`]
       );
       Object.values(this.gasPriceTypes).forEach(item => {
         const withFee = BigNumber(amount).plus(this[`${item}InEth`]);

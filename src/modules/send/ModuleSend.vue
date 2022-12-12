@@ -258,8 +258,7 @@ export default {
       gasEstimationError: '',
       gasEstimationIsReady: false,
       localGasPrice: '0',
-      selectedMax: false,
-      prevGasPrice: '0'
+      selectedMax: false
     };
   },
   computed: {
@@ -522,9 +521,7 @@ export default {
     },
     actualGasPrice() {
       if (toBNSafe(this.localGasPrice).eqn(0)) {
-        return toBNSafe(
-          toBNSafe(this.prevGasPrice).eqn(0) ? this.gasPrice : this.prevGasPrice
-        );
+        return toBNSafe(this.gasPrice);
       }
       return toBNSafe(this.localGasPrice);
     },
@@ -622,7 +619,6 @@ export default {
     this.gasLimit = this.prefilledGasLimit;
     this.selectedCurrency = this.tokensList[0];
     this.sendTx.setCurrency(this.selectedCurrency);
-    this.prevGasPrice = this.actualGasPrice;
     this.sendTx.setLocalGasPrice(this.actualGasPrice);
   },
   created() {
@@ -691,7 +687,7 @@ export default {
       this.setSendTransaction();
       this.gasLimit = this.prefilledGasLimit;
       this.sendTx.setCurrency(this.selectedCurrency);
-      this.handleLocalGasPrice(this.prevGasPrice);
+      this.handleLocalGasPrice(this.gasPrice);
     },
     /**
      * Method sets gas limit to default when Advanced closed , ONLY IF gasLimit was invalid
@@ -708,26 +704,26 @@ export default {
      * @param value {string}
      */
     setAmountError(value) {
-      if (!value) {
-        this.amountError = 'Required';
-        return;
-      }
-      if (BigNumber(value).lt(0)) {
-        this.amountError = "Amount can't be negative!";
-      } else if (
-        this.selectedCurrency?.decimals &&
-        !SendTransaction.helpers.hasValidDecimals(
-          value,
-          this.selectedCurrency.decimals
-        )
-      ) {
-        this.amountError = 'Invalid decimal points';
-      } else if (this.sendTx && this.sendTx.currency) {
-        this.amountError = this.sendTx.hasEnoughBalance()
-          ? ''
-          : 'Not enough balance to send!';
+      if (value) {
+        if (BigNumber(value).lt(0)) {
+          this.amountError = "Amount can't be negative!";
+        } else if (
+          this.selectedCurrency?.decimals &&
+          !SendTransaction.helpers.hasValidDecimals(
+            value,
+            this.selectedCurrency.decimals
+          )
+        ) {
+          this.amountError = 'Invalid decimal points';
+        } else if (this.sendTx && this.sendTx.currency) {
+          this.amountError = this.sendTx.hasEnoughBalance()
+            ? ''
+            : 'Not enough balance to send!';
+        } else {
+          this.amountError = '';
+        }
       } else {
-        this.amountError = '';
+        this.amountError = 'Required';
       }
     },
     /**
@@ -736,18 +732,18 @@ export default {
      * @param value {string}
      */
     setGasLimitError(value) {
-      if (!value) {
+      if (value) {
+        if (BigNumber(value).lte(0))
+          this.gasLimitError = 'Gas limit must be greater than 0';
+        else if (BigNumber(value).dp() > 0)
+          this.gasLimitError = 'Gas limit can not have decimal points';
+        else if (toBNSafe(value).lt(toBNSafe(this.defaultGasLimit)))
+          this.gasLimitError = 'Amount too low. Transaction will fail';
+        else {
+          this.gasLimitError = '';
+        }
+      } else {
         this.gasLimitError = 'Required';
-        return;
-      }
-      if (BigNumber(value).lte(0))
-        this.gasLimitError = 'Gas limit must be greater than 0';
-      else if (BigNumber(value).dp() > 0)
-        this.gasLimitError = 'Gas limit can not have decimal points';
-      else if (toBNSafe(value).lt(toBNSafe(this.defaultGasLimit)))
-        this.gasLimitError = 'Amount too low. Transaction will fail';
-      else {
-        this.gasLimitError = '';
       }
     },
     setAddress(addr, isValidAddress, userInputType) {
@@ -848,7 +844,6 @@ export default {
     },
     handleLocalGasPrice(e) {
       this.localGasPrice = e;
-      this.prevGasPrice = e;
       this.sendTx.setLocalGasPrice(e);
     },
     preventCharE(e) {

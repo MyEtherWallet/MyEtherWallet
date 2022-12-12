@@ -16,7 +16,6 @@
       :not-enough-eth="notEnoughEth"
       :total-gas-limit="totalGasLimit"
       :close-dialog="closeDialog"
-      :selected-gas-type="selectedGasType"
       :from-settings="false"
     />
   </app-simple-dialog>
@@ -27,7 +26,6 @@ import AppSimpleDialog from './AppSimpleDialog';
 import gasPriceMixin from '@/modules/settings/handler/gasPriceMixin';
 import SettingsGasPrice from '@/modules/settings/components/SettingsGasPrice';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-import { gasPriceTypes } from '../helpers/gasPriceHelper';
 export default {
   components: {
     AppSimpleDialog,
@@ -62,16 +60,10 @@ export default {
     totalGasLimit: {
       type: String,
       default: '0'
-    },
-    saveGasType: {
-      type: Boolean,
-      default: true
     }
   },
   data() {
-    return {
-      selectedGasType: gasPriceTypes.ECONOMY
-    };
+    return {};
   },
   watch: {
     /**
@@ -80,10 +72,7 @@ export default {
      */
     gasPriceModal(newVal) {
       if (newVal) {
-        this.$emit(
-          'onLocalGasPrice',
-          this.gasPriceByType(this.selectedGasType)
-        );
+        this.$emit('onLocalGasPrice', this.gasPriceByType(this.gasPriceType));
       }
     },
     /**
@@ -92,25 +81,17 @@ export default {
      */
     gasPrice() {
       if (this.gasPriceModal) {
-        this.$emit(
-          'onLocalGasPrice',
-          this.gasPriceByType(this.selectedGasType)
-        );
+        this.$emit('onLocalGasPrice', this.gasPriceByType(this.gasPriceType));
       }
     }
-  },
-  mounted() {
-    this.selectedGasType = this.gasPriceType;
   },
   methods: {
     /**
      * emit selected gas
      */
     setGas(value) {
-      this.selectedGasType = value;
-      const gasPrice = this.gasPriceByType(value);
-      this.$emit('onLocalGasPrice', gasPrice);
-      if (this.saveGasType) this.setSelected(value);
+      this.$emit('onLocalGasPrice', this.gasPriceByType(value));
+      this.setSelected(value);
       this.trackGasSwitch(
         `type:${this.gasPriceType}, gas:${this.txFeeFormatted}`
       );

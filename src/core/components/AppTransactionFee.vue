@@ -46,7 +46,6 @@
       :tx-fee-formatted="txFeeFormatted"
       :tx-fee-usd="feeInUsd"
       :total-gas-limit="totalGasLimit"
-      :save-gas-type="false"
       @onLocalGasPrice="handleLocalGasPrice"
       @close="closeGasPrice"
     />
