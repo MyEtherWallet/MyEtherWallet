@@ -297,6 +297,7 @@ import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 import { ENS_MANAGER_ROUTE } from './configsRoutes';
 import normalise from '@/core/helpers/normalise';
 import stripQuery from '@/core/helpers/stripQuery.js';
+import { clone } from 'lodash';
 
 export default {
   name: 'ENSManagerLayout',
@@ -401,7 +402,7 @@ export default {
         { name: this.$t('ens.manage-domain') }
       ],
       */
-      myDomains: []
+      myDomains: [],
       /*,
       ensBannerImg: ensBannerImg,
       bannerText: {
@@ -409,6 +410,7 @@ export default {
         subtext: this.$t('ens.dapp-desc')
       }
       */
+      oldTxtRecords: {}
     };
   },
   computed: {
@@ -570,6 +572,7 @@ export default {
       this.onManage = true;
       this.manageType = type;
       this.manageDomainHandler = this.myDomains[idx];
+      this.oldTxtRecords = clone(this.myDomains[idx].txtRecords);
     },
     getDomains() {
       this.ensManager
@@ -662,6 +665,7 @@ export default {
         .setTxtRecord(records)
         .then(this.getDomains)
         .catch(err => {
+          this.manageDomainHandler.txtRecords = this.oldTxtRecords;
           this.instance.errorHandler(err.message ? err.message : err);
         });
       this.closeManage();

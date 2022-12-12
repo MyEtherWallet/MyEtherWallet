@@ -76,7 +76,10 @@ export default {
           window.ethereum.isMetaMask &&
           !window.ethereum.hasOwnProperty('isMewWallet') &&
           !window.ethereum.hasOwnProperty('isTrust');
-      return this.identifier !== WALLET_TYPES.WEB3_WALLET || metamask;
+      return (
+        this.identifier !== WALLET_TYPES.WALLET_CONNECT &&
+        (this.identifier !== WALLET_TYPES.WEB3_WALLET || metamask)
+      );
     }
   },
   mounted() {
