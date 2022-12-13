@@ -86,7 +86,8 @@ const EXCEPTIONS = [
   '@ensdomains/address-encoder',
   '@formatjs/intl-numberformat',
   '@myetherwallet/mew-components',
-  'bignumber.js'
+  'bignumber.js',
+  'trezor-connect'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
