@@ -102,7 +102,7 @@ class Swap {
     const quotes = [];
     const provider = this.providers[3];
     for (let i = 0; i < arr.length; i++) {
-      quotes.push(provider.getTrade(arr[i]));
+      quotes.push(provider.getQuote(arr[i]));
     }
     return Promise.all(quotes);
   }
