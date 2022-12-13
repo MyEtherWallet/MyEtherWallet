@@ -9,10 +9,10 @@
           How much do you want to sell?
         </div>
         <button-balance
-          v-if="!loading && inWallet"
+          v-if="!loading && !fetchingBalance"
           style="position: relative; top: 0; right: 0"
           :balance="balance"
-          :loading="!showBalance"
+          :loading="loading"
         />
       </div>
 
@@ -68,7 +68,7 @@
       <div class="d-flex align-start">
         <mew-input
           is-read-only
-          :value="cryptoToFiat"
+          :value="cryptoAmount"
           hide-clear-btn
           type="number"
           class="no-right-border"
@@ -157,7 +157,6 @@ import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import handlerSend from '@/modules/send/handlers/handlerSend.js';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common.js';
 import abi from '@/modules/balance/handlers/abiERC20.js';
-import nodes from '@/utils/networks';
 import {
   formatFloatingPointValue,
   formatFiatValue
@@ -197,7 +196,6 @@ export default {
   },
   data() {
     return {
-      showBalance: true,
       selectedFiat: {
         name: 'USD',
         value: 'USD',
@@ -229,7 +227,7 @@ export default {
     ...mapGetters('global', ['isEthNetwork', 'network', 'gasPriceByType']),
     ...mapGetters('external', ['contractToToken']),
     balance() {
-      return `${formatFloatingPointValue(this.balanceInETH).value}`;
+      return `${formatFloatingPointValue(this.selectedBalance).value}`;
     },
     fiatCurrencyItems() {
       const arrItems = this.hasData
@@ -312,12 +310,16 @@ export default {
       ];
       return returnedArray;
     },
+    supportedCurrency() {
+      return ['ETH', 'USDT', 'USDC', 'MATIC', 'BNB'];
+    },
+    supportedNetworks() {
+      return ['ETH', 'MATIC', 'BSC'];
+    },
     name() {
-      return this.selectedCurrency.symbol !== 'ETH' &&
-        this.selectedCurrency.symbol !== 'USDC' &&
-        this.selectedCurrency.symbol !== 'USDT'
-        ? 'ETH'
-        : this.selectedCurrency.symbol;
+      return this.supportedCurrency.includes(this.selectedCurrency.symbol)
+        ? this.selectedCurrency.symbol
+        : this.network.type.currencyName;
     },
     disableSell() {
       return (
@@ -359,7 +361,9 @@ export default {
       );
     },
     txFeeInEth() {
-      return `${BigNumber(this.txFee).decimalPlaces(4)} ETH`;
+      return `${BigNumber(this.txFee).decimalPlaces(4)} ${
+        this.network.type.currencyName
+      }`;
     },
     errorMessages() {
       const symbol = this.selectedCurrency?.symbol
@@ -482,13 +486,8 @@ export default {
     hasData() {
       return !isEmpty(this.fetchedData);
     },
-    cryptoToFiat() {
-      return this.cryptoAmount;
-    },
     cryptoAmount() {
-      return formatFloatingPointValue(
-        BigNumber(this.amount).times(this.priceOb.price).toString()
-      ).value;
+      return BigNumber(this.amount).times(this.priceOb.price).toString();
     },
     selectedFiatName() {
       return this.selectedFiat.name;
@@ -547,6 +546,19 @@ export default {
         this.locGasPrice = this.gasPriceByType(this.gasPriceType);
       },
       deep: true
+    },
+    network() {
+      this.maxBalance = '0';
+      this.hasPersistentHint = false;
+      this.selectedBalance = '0';
+      this.amount = '0';
+      this.selectedCurrency = {};
+      this.selectedCurrency = this.defaultCurrency;
+      if (this.supportedNetworks.includes(this.network.type.name)) {
+        this.sendHandler = new handlerSend();
+        this.fetchSellInfo();
+        this.locGasPrice = this.gasPriceByType(this.gasPriceType);
+      }
     }
   },
   mounted() {
@@ -570,7 +582,7 @@ export default {
       if (!this.actualValidAddress) return;
       const web3Instance = this.inWallet
         ? this.web3
-        : new Web3(nodes.ETH[0].url);
+        : new Web3(this.network.url);
       web3Instance.eth.getBalance(this.actualAddress).then(res => {
         this.fetchingBalance = false;
         this.selectedBalance = fromWei(res);
@@ -580,7 +592,7 @@ export default {
       if (!this.actualValidAddress) return;
       const web3Instance = this.inWallet
         ? this.web3
-        : new Web3(nodes.ETH[0].url);
+        : new Web3(this.network.url);
       const contract = new web3Instance.eth.Contract(
         abi,
         this.selectedCurrency.contract
