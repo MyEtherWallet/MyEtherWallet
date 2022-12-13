@@ -1,6 +1,6 @@
 import { OneInch, ZEROX, ParaSwap, Changelly } from './providers';
-// import BigNumber from 'bignumber.js';
-// import Configs from './configs/providersConfigs';
+import BigNumber from 'bignumber.js';
+import Configs from './configs/providersConfigs';
 import hasValidDecimals from '@/core/helpers/hasValidDecimals.js';
 import { isObject } from 'lodash';
 
@@ -59,31 +59,44 @@ class Swap {
       });
     });
   }
+  // Receive All Quotes and trades for mew,
+  // Changelly must be retrieved individually
   getAllQuotes({ fromT, toT, fromAmount, fromAddress }) {
-    //let allQuotes = [];
-    return this.providers[0].getTrade({ fromT, toT, fromAmount, fromAddress });
-    // return Promise.all(
-    //   this.providers.map(p => {
-    //     if (!p.isSupportedNetwork(this.chain)) return Promise.resolve();
-    //     return p.getQuote({ fromT, toT, fromAmount }).then(quotes => {
-    //       allQuotes = allQuotes.concat(quotes);
-    //     });
-    //   })
-    // ).then(() => {
-    //   allQuotes.sort((q1, q2) => {
-    //     if (new BigNumber(q1.amount).gt(new BigNumber(q2.amount))) return -1;
-    //     return 1;
-    //   });
-    //   return allQuotes.map(q => {
-    //     if (Configs.exchangeInfo[q.exchange]) {
-    //       q.exchangeInfo = Configs.exchangeInfo[q.exchange];
-    //     } else {
-    //       q.exchangeInfo = Configs.exchangeInfo.default;
-    //       q.exchangeInfo.name = q.exchange;
-    //     }
-    //     return q;
-    //   });
-    // });
+    let allQuotes = [];
+    const providers = [this.providers[0], this.providers[3]];
+
+    return Promise.all(
+      providers.map((p, i) => {
+        if (!p.isSupportedNetwork(this.chain)) return Promise.resolve();
+        return i === 0
+          ? p.getTrade({ fromT, toT, fromAmount, fromAddress }).then(quotes => {
+              allQuotes = allQuotes.concat(quotes);
+            })
+          : p.getQuote({ fromT, toT, fromAmount }).then(quotes => {
+              allQuotes = allQuotes.concat(quotes);
+            });
+      })
+    ).then(() => {
+      allQuotes.sort((q1, q2) => {
+        // Distinguishes between changelly amount and mew
+        const amount1 = q1.amount ? q1.amount : q1.minimum;
+        const amount2 = q2.amount ? q2.amount : q2.minimum;
+        if (new BigNumber(amount1).gt(new BigNumber(amount2))) return -1;
+        return 1;
+      });
+
+      // Set Provider information
+      return allQuotes.map(q => {
+        const provider = q.exchange || q.provider.toLowerCase();
+        if (Configs.exchangeInfo[provider]) {
+          q.exchangeInfo = Configs.exchangeInfo[provider];
+        } else {
+          q.exchangeInfo = Configs.exchangeInfo.default;
+          q.exchangeInfo.name = provider;
+        }
+        return q;
+      });
+    });
   }
   getQuotesForSet(arr) {
     const quotes = [];
@@ -93,10 +106,12 @@ class Swap {
     }
     return Promise.all(quotes);
   }
+
+  // Get trade only for Changelly
+  // Other trades can be received through getAllQuotes
   getTrade(tradeInfo) {
-    for (const p of this.providers) {
-      if (p.provider === tradeInfo.provider) return p.getTrade(tradeInfo);
-    }
+    if (tradeInfo.provider === 'changelly')
+      return this.providers[3].getTrade(tradeInfo);
   }
   isValidToAddress(addressInfo) {
     for (const p of this.providers) {

@@ -316,7 +316,6 @@ import Notification, {
 import NonChainNotification from '@/modules/notifications/handlers/nonChainNotification';
 import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
-import { TRENDING_LIST } from './handlers/configs/configTrendingTokens';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 import Swapper from './handlers/handlerSwap';
@@ -565,7 +564,7 @@ export default {
         : !isAddress(this.fromTokenType?.contract);
     },
     /**
-     * Returns correct balance to be dispalyed above From Selection field
+     * Returns correct balance to be displayed above From Selection field
      */
     displayBalance() {
       return this.availableBalance.toString();
@@ -1051,12 +1050,12 @@ export default {
      * to swap to
      */
     trendingTokens() {
-      if (!TRENDING_LIST[this.network.type.name]) return [];
-      return TRENDING_LIST[this.network.type.name]
-        .map(token => {
-          return localContractToToken[token.contract];
-        })
-        .filter(token => token);
+      if (this.isLoading) return [];
+      return this.availableTokens.featured.reduce((arr, token) => {
+        if (token && localContractToToken[token.contract])
+          arr.push(localContractToToken[token.contract]);
+        return arr;
+      }, []);
     },
     setupTokenInfo(tokens) {
       tokens.forEach(token => {
@@ -1292,7 +1291,7 @@ export default {
     processTokens(tokens, storeTokens) {
       this.setupTokenInfo(tokens.fromTokens);
       this.setupTokenInfo(tokens.toTokens);
-      this.setupTokenInfo(TRENDING_LIST[this.network.type.name]);
+      this.setupTokenInfo(tokens.featured);
       this.availableTokens = tokens;
       this.setDefaults();
       if (isUndefined(storeTokens)) {
@@ -1426,24 +1425,31 @@ export default {
             toT: this.toTokenType,
             fromAmount: new BigNumber(this.tokenInValue).times(
               new BigNumber(10).pow(new BigNumber(this.fromTokenType.decimals))
-            )
+            ),
+            fromAddress: this.address
           })
-          .then(quotes => {
+          .then(providers => {
             if (this.tokenInValue === this.cachedAmount) {
               this.selectedProvider = {};
-              if (quotes.length) {
-                this.lastSetToken = quotes[0].amount;
-                this.availableQuotes = quotes.reduce((arr, q) => {
-                  if (quotes.length === 1 || BigNumber(q.amount).gt(0)) {
-                    q.rate = new BigNumber(q.amount)
+              if (providers.length) {
+                this.lastSetToken =
+                  providers[0]?.transactions?.[0].value || providers[0].amount;
+                this.availableQuotes = providers.reduce((arr, p) => {
+                  if (
+                    providers.length === 1 ||
+                    BigNumber(p.transactions?.[0].value).gt(0)
+                  ) {
+                    p.amount = p.minimum || p.amount;
+                    p.rate = new BigNumber(p.amount)
                       .dividedBy(new BigNumber(this.tokenInValue))
                       .toString();
-                    q.isSelected = false;
-                    arr.push(q);
+                    p.isSelected = false;
+                    arr.push(p);
                   }
                   return arr;
                 }, []);
-                this.tokenOutValue = quotes[0].amount;
+                this.tokenOutValue =
+                  providers[0].transactions?.[0].value || providers[0].amount;
               }
               this.step = 1;
               this.isLoadingProviders = false;
@@ -1459,7 +1465,7 @@ export default {
         if (_idx === idx) {
           this.selectedProviderId = _idx;
           q.isSelected = true;
-          this.tokenOutValue = q.amount;
+          this.tokenOutValue = q.to_amount;
           this.getTrade(idx);
           if (!clicked) {
             this.selectedProvider = q;
@@ -1528,7 +1534,7 @@ export default {
           }
         });
       } else {
-        this.setupTrade(trade);
+        this.setupTrade(this.availableQuotes[this.selectedProviderId]);
       }
     },
     setupTrade(trade) {
