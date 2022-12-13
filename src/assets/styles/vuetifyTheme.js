@@ -69,6 +69,7 @@ export default {
         disabledLight: '#F6F6F6 ',
         // Buttons
         buttonGrayLight: '#F2F4FA',
+        buttonGrayDark: '#626978',
         // Inputs
         inputPrimary: '#FFFFFF',
         // Border
@@ -190,8 +191,9 @@ export default {
         disabledLight: '#242D3E ',
         // Buttons
         buttonGrayLight: baseColors.asphalt5,
+        buttonGrayDark: '#FFFFFF',
         // Inputs
-        inputPrimary: baseColors.asphalt5,
+        inputPrimary: '#292B42',
         // Border
         borderInput: '#667f9b',
         borderTable: baseColors.asphalt700,
@@ -256,7 +258,7 @@ export default {
           lighten2: '#e96071'
         },
         warning: {
-          base: '#0f1320',
+          base: baseColors.asphalt5,
           darken1: '#f5a623'
         },
         disabled: '#1f2b42',
