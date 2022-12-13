@@ -2,7 +2,6 @@ import axios from 'axios';
 import BigNumber from 'bignumber.js';
 const HOST_URL = 'https://mainnet.mewwallet.dev/v4';
 const GET_LIST = '/swap/list';
-// const GET_QUOTE = '/swap/rate';
 const GET_TRADE = '/swap/trade';
 const REQUEST_CACHER = 'https://requestcache.mewapi.io/?url=';
 import { isAddress } from 'web3-utils';
@@ -83,10 +82,8 @@ class MEWPClass {
       .then(response => {
         return response.data;
       })
-      .catch(err => {
-        if (err.response.data.msg?.includes('quote'))
-          return { featured: [], tokens: [] };
-        Toast(err, {}, ERROR);
+      .catch(() => {
+        return [];
       });
   }
   async executeTrade(tradeObj, confirmInfo) {
