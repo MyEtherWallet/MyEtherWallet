@@ -70,7 +70,6 @@ export default async ({ payload, store, requestManager }, res, next) => {
         store.state.wallet.identifier === WALLET_TYPES.WEB3_WALLET ||
         store.state.wallet.identifier === WALLET_TYPES.WALLET_CONNECT
       ) {
-        console.log(_tx);
         EventBus.$emit(event, params, _promiObj => {
           if (_promiObj.rejected) {
             res(new Error('User rejected action'));
