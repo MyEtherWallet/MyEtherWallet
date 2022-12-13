@@ -119,7 +119,6 @@ export default {
       'setStakeBalance'
     ]),
     setup() {
-      console.log(this.isEthNetwork);
       this.stakewiseHandler = new handler(this.web3, this.isEthNetwork);
       this.collectiveFetch();
       this.fetchInterval = setInterval(() => {
