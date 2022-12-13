@@ -16,9 +16,12 @@ const setPreferredCurrency = function ({ commit }, val) {
 const updateGasPrice = function ({ rootState, dispatch, getters, state }) {
   const web3 = rootState.wallet.web3;
   const { gasPriceMultiplier } = getters.network.type;
+  console.log('gasPriceMultiplier', gasPriceMultiplier);
+  console.log('isEIP1559SupportedNetwork', getters.isEIP1559SupportedNetwork);
   if (!getters.isEIP1559SupportedNetwork) {
     return web3.eth.getGasPrice().then(res => {
       const modifiedGasPrice = toBNSafe(res).muln(gasPriceMultiplier);
+      console.log('modifiedGasPrice', modifiedGasPrice.toString());
       return dispatch('setGasPrice', modifiedGasPrice.toString());
     });
   }
@@ -27,6 +30,10 @@ const updateGasPrice = function ({ rootState, dispatch, getters, state }) {
     const priorityFee = toBNSafe(modGas).sub(
       toBNSafe(state.eip1559.baseFeePerGas)
     );
+    console.log('baseFeePerGas', state.eip1559.baseFeePerGas.toString());
+    console.log('gasPrice', gasPrice);
+    console.log('modGas', modGas.toString());
+    console.log('priorityFee', priorityFee.toString());
     return dispatch('setMaxPriorityFeePerGas', priorityFee);
   });
 };

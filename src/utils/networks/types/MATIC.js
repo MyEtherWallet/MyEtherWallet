@@ -21,7 +21,7 @@ export default {
     url: null,
     websocket: null
   },
-  gasPriceMultiplier: 1.7,
+  gasPriceMultiplier: 2.2,
   canBuy: true,
   coingeckoID: 'matic-network',
   balanceApi: 'https://partners.mewapi.io/balances/matic/'
