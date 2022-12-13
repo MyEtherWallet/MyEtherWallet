@@ -40,7 +40,7 @@ export default class NFT {
   /**
    * Send NFT
    */
-  send(to, token) {
+  send(to, token, gasPrice = undefined) {
     let raw;
     this.contract = new this.web3.eth.Contract(token.erc721 ? ABI : ERC1155ABI);
     if (token.contract.includes(configs.cryptoKittiesContract)) {
@@ -51,12 +51,12 @@ export default class NFT {
       raw = this.safeTransferFromRarible(to, token, 1);
     }
     raw.from = this.address;
+    if (gasPrice !== undefined) raw.gasPrice = gasPrice;
     return this.web3.eth.sendTransaction(raw);
   }
   /**
    * Get Gas Fees
    */
-
   async getGasFees(to, token) {
     let raw;
     this.contract = new this.web3.eth.Contract(token.erc721 ? ABI : ERC1155ABI);
@@ -68,7 +68,6 @@ export default class NFT {
       raw = this.safeTransferFromRarible(to, token, 1);
     }
     raw.from = this.address;
-    console.log('raw (gasFees)', raw);
     const gasEst = this.web3.eth.estimateGas(raw);
     return gasEst;
   }

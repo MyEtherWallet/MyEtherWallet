@@ -205,7 +205,6 @@ export default {
     },
     tokens() {
       if (this.nftApiResponse.length > 0) {
-        console.log('nftApiResponse', this.nftApiResponse);
         const contract = this.nftApiResponse.filter(item => {
           return (
             item.contract_address.toLowerCase() ===
@@ -334,6 +333,7 @@ export default {
     async toAddress(newVal) {
       if (isAddress(newVal)) {
         const gasTypeFee = this.gasPriceByType(this.gasPriceType);
+        this.localGasPrice = gasTypeFee;
         const gasFees = await this.nft.getGasFees(newVal, this.selectedNft);
         const gasFeesToBN = toBNSafe(gasFees).mul(toBNSafe(gasTypeFee));
         this.gasFees = gasFeesToBN.toString();
@@ -412,8 +412,11 @@ export default {
     async sendTx() {
       if (this.isValid) {
         try {
+          let gasPrice = undefined;
+          if (this.network.type.name === 'MATIC')
+            gasPrice = `0x${toBN(this.localGasPrice).toString('hex')}`;
           this.nft
-            .send(this.toAddress, this.selectedNft)
+            .send(this.toAddress, this.selectedNft, gasPrice)
             .then(response => {
               this.updateValues();
               this.enoughFunds = true;
