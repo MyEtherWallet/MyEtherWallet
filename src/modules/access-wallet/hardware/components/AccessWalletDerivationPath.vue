@@ -209,10 +209,11 @@
 
 <script>
 import { mapGetters, mapState, mapActions } from 'vuex';
+import { isEmpty } from 'lodash';
+
 import { checkCustomPath } from '@/modules/access-wallet/software/handlers/pathHelper';
 import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import { ethereum as ethereumPath } from '@/modules/access-wallet/hardware/handlers/configs/configPaths.js';
-import { isEmpty } from 'lodash';
 export default {
   props: {
     passedPaths: {

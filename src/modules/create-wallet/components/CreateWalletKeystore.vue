@@ -19,7 +19,7 @@
         placeholder="Enter Password"
         :has-clear-btn="true"
         class="flex-grow-1 mb-2 CreateWalletKeystorePasswordInput"
-        :rules="passwordRulles"
+        :error-messages="passwordMessages"
         type="password"
       />
 
@@ -32,7 +32,6 @@
         label="Confirm Password"
         placeholder="Confirm password"
         class="flex-grow-1 CreateWalletKeystoreConfirmPWInput"
-        :rules="passwordConfirmRulles"
         type="password"
         :error-messages="errorPasswordConfirmation"
       />
@@ -226,13 +225,6 @@ export default {
       ],
       password: '',
       cofirmPassword: '',
-      passwordRulles: [
-        value =>
-          !isEmpty(value) || this.password === this.cofirmPassword
-            ? ''
-            : 'Required',
-        value => value?.length >= 8 || 'Password is less than 8 characters'
-      ],
       walletFile: '',
       name: '',
       isGeneratingKeystore: false
@@ -248,18 +240,17 @@ export default {
       }
       return '';
     },
+    passwordMessages() {
+      if (isEmpty(this.password)) return 'Required';
+      if (this.password.length < 8) return 'Password is less than 8 characters';
+      return '';
+    },
     enableCreateButton() {
       return (
         !isEmpty(this.password) &&
         this.cofirmPassword === this.password &&
         this.password.length >= 8
       );
-    },
-    passwordConfirmRulles() {
-      return [
-        value => !!value || 'Required',
-        value => value === this.password || 'Passwords do not match'
-      ];
     }
   },
   methods: {

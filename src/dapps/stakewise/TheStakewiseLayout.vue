@@ -19,6 +19,7 @@ import { fromWei } from 'web3-utils';
 import { STAKEWISE_ROUTES } from './configsRoutes';
 import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
 import { toBNSafe } from '@/core/helpers/numberFormatHelper';
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 
 import handler from './handlers/stakewiseHandler';
 
@@ -41,7 +42,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['web3', 'address']),
+    ...mapState('wallet', ['web3', 'address', 'identifier']),
     ...mapGetters('global', ['isEthNetwork', 'network']),
     isSupported() {
       const isSupported = this.validNetworks.find(item => {
@@ -79,15 +80,21 @@ export default {
       }
     },
     web3() {
-      clearInterval(this.fetchInterval);
-      if (this.isSupported) {
-        this.setup();
+      if (this.identifier === WALLET_TYPES.WEB3_WALLET) {
+        clearInterval(this.fetchInterval);
+        if (this.isSupported) {
+          this.stakewiseHandler = {};
+          this.setup();
+        }
       }
     },
     network() {
-      clearInterval(this.fetchInterval);
-      if (this.isSupported) {
-        this.setup();
+      if (this.identifier !== WALLET_TYPES.WEB3_WALLET) {
+        clearInterval(this.fetchInterval);
+        if (this.isSupported) {
+          this.stakewiseHandler = {};
+          this.setup();
+        }
       }
     }
   },
@@ -96,6 +103,7 @@ export default {
       this.activeTab = this.tabs[1].id;
     }
     if (this.isSupported) {
+      this.stakewiseHandler = {};
       this.setup();
     }
   },
@@ -111,6 +119,7 @@ export default {
       'setStakeBalance'
     ]),
     setup() {
+      console.log(this.isEthNetwork);
       this.stakewiseHandler = new handler(this.web3, this.isEthNetwork);
       this.collectiveFetch();
       this.fetchInterval = setInterval(() => {

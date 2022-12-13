@@ -70,15 +70,15 @@ export default {
       return this.network.type.icon;
     },
     show() {
-      let metamask = false;
+      let switchNetworkWeb3Supported = false;
       if (window.ethereum)
-        metamask =
-          window.ethereum.isMetaMask &&
-          !window.ethereum.hasOwnProperty('isMewWallet') &&
+        switchNetworkWeb3Supported =
+          (window.ethereum.isMetaMask || window.ethereum.isMEWwallet) &&
           !window.ethereum.hasOwnProperty('isTrust');
       return (
         this.identifier !== WALLET_TYPES.WALLET_CONNECT &&
-        (this.identifier !== WALLET_TYPES.WEB3_WALLET || metamask)
+        (this.identifier !== WALLET_TYPES.WEB3_WALLET ||
+          switchNetworkWeb3Supported)
       );
     }
   },
