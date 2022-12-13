@@ -1,6 +1,7 @@
 import utils from 'web3-utils';
 import configs, { chains } from './config/configNft';
 import ABI from './abi/abiNft';
+import ERC1155ABI from './abi/abiERC1155';
 import BigNumber from 'bignumber.js';
 
 export default class NFT {
@@ -42,10 +43,16 @@ export default class NFT {
   send(to, token) {
     let raw;
     this.contract = new this.web3.eth.Contract(ABI);
+    this.contractRarible = new this.web3.eth.Contract(
+      ERC1155ABI,
+      token.contract
+    );
     if (token.contract.includes(configs.cryptoKittiesContract)) {
       raw = this.cryptoKittiesTransfer(to, token);
-    } else {
+    } else if (token.erc721) {
       raw = this.safeTransferFrom(to, token);
+    } else {
+      raw = this.safeTransferFromRarible(to, token, 1);
     }
     raw.from = this.address;
     return this.web3.eth.sendTransaction(raw);
@@ -57,13 +64,22 @@ export default class NFT {
   async getGasFees(to, token) {
     let raw;
     this.contract = new this.web3.eth.Contract(ABI);
-    if (token.contract.includes(configs.cryptoKittiesContract)) {
+    this.contractRarible = new this.web3.eth.Contract(
+      ERC1155ABI,
+      token.contract
+    );
+    console.log('token (gasFees)', token);
+    console.log('contractRarible (gasFees)', this.contractRarible);
+    if (token.contract.toLowerCase().includes(configs.cryptoKittiesContract)) {
       raw = this.cryptoKittiesTransfer(to, token);
-    } else {
+    } else if (token.erc721) {
       raw = this.safeTransferFrom(to, token);
+    } else {
+      raw = this.safeTransferFromRarible(to, token, 1);
     }
     raw.from = this.address;
     const gasEst = this.web3.eth.estimateGas(raw);
+    console.log('gasEst', gasEst);
     return gasEst;
   }
 
@@ -72,6 +88,22 @@ export default class NFT {
       to: token.contract,
       data: this.contract.methods
         .safeTransferFrom(this.address, to, token.token_id)
+        .encodeABI()
+    };
+  }
+  /**
+   * Sends a Rarible/ERC-1155 NFT
+   * @param {string} to Address to send to
+   * @param {object} token NFT to send
+   * @param {number} amount Number of NFTs to send from collection
+   * @param {string} data (Optional) data input
+   * @returns Raw transaction object
+   */
+  safeTransferFromRarible(to, token, amount, data = '0x0') {
+    return {
+      to: token.contract,
+      data: this.contractRarible.methods
+        .safeTransferFrom(this.address, to, token.token_id, amount, data)
         .encodeABI()
     };
   }

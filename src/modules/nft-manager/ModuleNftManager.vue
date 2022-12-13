@@ -205,6 +205,7 @@ export default {
     },
     tokens() {
       if (this.nftApiResponse.length > 0) {
+        console.log('nftApiResponse', this.nftApiResponse);
         const contract = this.nftApiResponse.filter(item => {
           return (
             item.contract_address.toLowerCase() ===
@@ -218,7 +219,8 @@ export default {
               image: `https://img.mewapi.io/?image=${url}`,
               name: item.name || item.token_id,
               token_id: item.token_id,
-              contract: contract.contract_address
+              contract: item.contract_address,
+              erc721: item.owners.length === 1
             };
           });
         }
@@ -332,6 +334,7 @@ export default {
     async toAddress(newVal) {
       if (isAddress(newVal)) {
         const gasTypeFee = this.gasPriceByType(this.gasPriceType);
+        console.log('selectedNft', this.selectedNft);
         const gasFees = await this.nft.getGasFees(newVal, this.selectedNft);
         const gasFeesToBN = toBNSafe(gasFees).mul(toBNSafe(gasTypeFee));
         this.gasFees = gasFeesToBN.toString();
