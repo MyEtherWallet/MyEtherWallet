@@ -82,7 +82,12 @@ const EXCEPTIONS = [
   'commitlint',
   'prettier',
   'highcharts',
-  'lottie-web'
+  'lottie-web',
+  '@ensdomains/address-encoder',
+  '@formatjs/intl-numberformat',
+  '@myetherwallet/mew-components',
+  'bignumber.js',
+  'trezor-connect'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
