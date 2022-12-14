@@ -234,7 +234,7 @@ export default {
     errorPasswordConfirmation() {
       if (
         this.password !== this.cofirmPassword &&
-        this.cofirmPassword.length > 0
+        this.cofirmPassword?.length > 0
       ) {
         return 'Passwords do not match';
       }
@@ -242,14 +242,15 @@ export default {
     },
     passwordMessages() {
       if (isEmpty(this.password)) return 'Required';
-      if (this.password.length < 8) return 'Password is less than 8 characters';
+      if (this.password?.length < 8)
+        return 'Password is less than 8 characters';
       return '';
     },
     enableCreateButton() {
       return (
         !isEmpty(this.password) &&
         this.cofirmPassword === this.password &&
-        this.password.length >= 8
+        this.password?.length >= 8
       );
     }
   },
