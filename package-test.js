@@ -80,7 +80,10 @@ const EXCEPTIONS = [
   '@formatjs/intl-numberformat',
   '@myetherwallet/mew-components',
   'bignumber.js',
-  'trezor-connect'
+  'trezor-connect',
+  '@ledgerhq/hw-app-eth',
+  '@ledgerhq/live-common',
+  'prettier'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
