@@ -49,6 +49,7 @@ const ROUTES_WALLET = {
   STAKED_4: { NAME: 'Staked4', PATH: 'staked-4' },
   STAKEWISE: { NAME: 'Stakewise', PATH: 'stakewise' },
   SWAP: { NAME: 'Swap', PATH: 'swap' },
+  BRIDGE: { NAME: 'Bridge', PATH: 'bridge' },
   UNSTOPPABLE: { NAME: 'Unstoppable', PATH: 'unstoppable' },
   VERIFY_MESSAGE: { NAME: 'VerifyMessage', PATH: 'verify' }
 };
