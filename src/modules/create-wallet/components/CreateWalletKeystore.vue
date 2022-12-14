@@ -13,7 +13,9 @@
       <mew-input
         v-model="password"
         :hint="
-          password.length < 8 ? 'Password must be 8 or more characters' : ''
+          password && password.length < 8
+            ? 'Password must be 8 or more characters'
+            : ''
         "
         label="Password"
         placeholder="Enter Password"
