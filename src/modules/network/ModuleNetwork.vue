@@ -73,8 +73,11 @@ export default {
       let switchNetworkWeb3Supported = false;
       if (window.ethereum)
         switchNetworkWeb3Supported =
-          (window.ethereum.isMetaMask || window.ethereum.isMEWwallet) &&
-          !window.ethereum.hasOwnProperty('isTrust');
+          (window.ethereum.isMetaMask ||
+            window.ethereum.isMEWwallet ||
+            window.ethereum.isMewWallet) &&
+          (!window.ethereum.hasOwnProperty('isTrust') ||
+            !window.ethereum.isTrust);
       return (
         this.identifier !== WALLET_TYPES.WALLET_CONNECT &&
         (this.identifier !== WALLET_TYPES.WEB3_WALLET ||
