@@ -71,13 +71,18 @@ export default {
     },
     show() {
       let switchNetworkWeb3Supported = false;
-      if (window.ethereum)
-        switchNetworkWeb3Supported =
-          (window.ethereum.isMetaMask ||
-            window.ethereum.isMEWwallet ||
-            window.ethereum.isMewWallet) &&
-          (!window.ethereum.hasOwnProperty('isTrust') ||
-            !window.ethereum.isTrust);
+      if (window.ethereum) {
+        const isMetaMask =
+          window.ethereum.isMetaMask &&
+          !window.ethereum.hasOwnProperty('isTrust') &&
+          !window.ethereum.hasOwnProperty('isMEWwallet');
+        const isMEWwallet =
+          window.ethereum.isMetaMask &&
+          window.ethereum.isMEWwallet &&
+          window.ethereum.isTrust;
+        switchNetworkWeb3Supported = isMetaMask || isMEWwallet;
+      }
+
       return (
         this.identifier !== WALLET_TYPES.WALLET_CONNECT &&
         (this.identifier !== WALLET_TYPES.WEB3_WALLET ||
