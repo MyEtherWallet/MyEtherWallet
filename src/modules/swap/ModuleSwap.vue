@@ -1710,8 +1710,7 @@ export default {
 
 <style lang="scss" scoped>
 .input-swap-container {
-  box-shadow: 0px 4px 4px rgb(11 40 64 / 4%), 0px 2px 10px rgb(11 40 64 / 6%),
-    0px 3px 16px rgb(11 40 64 / 4%);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 17%) !important;
   border-radius: 10px;
 }
 

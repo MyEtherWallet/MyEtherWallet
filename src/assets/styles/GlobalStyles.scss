@@ -189,6 +189,10 @@ h6 {
   }
 }
 
+.v-text-field .v-input__slot {
+  background: var(--v-inputPrimary-base) !important;
+}
+
 /* ========= Convert SVG to white ========= */
 .make-white-svg {
   filter: brightness(10);

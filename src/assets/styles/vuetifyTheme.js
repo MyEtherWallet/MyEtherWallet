@@ -36,6 +36,7 @@ export default {
         // Box shadow
         boxShadow: '#ececec',
         // Text
+        textAlwaysDark: '#1F242F',
         textDark: '#1F242F',
         textMedium: '#626978',
         textLight: '#9BA1AE',
@@ -123,7 +124,7 @@ export default {
         mewBg: '#fff',
         expandHeader: '#184f90',
         primary: '#05c0a5',
-        blue500: '#5a78f0',
+        blue500: '#6e9fc9',
         basic: '#0b1a40',
         success: '#2cc479',
         error: {
@@ -158,6 +159,7 @@ export default {
         //Box shadow
         boxShadow: '#3c3c3c',
         // Text
+        textAlwaysDark: '#1F242F',
         textDark: '#FFFFFF',
         textMedium: '#A5B0C7',
         textLight: '#9BA1AE',
@@ -249,7 +251,7 @@ export default {
         textPrimaryModule: '#95aed8',
         textSecondaryModule: '#95aed8',
         primary: '#05c0a5',
-        blue500: '#5c79f0',
+        blue500: '#72cce9',
         basic: '#FFFFFF',
         success: '#2cc479',
         error: {

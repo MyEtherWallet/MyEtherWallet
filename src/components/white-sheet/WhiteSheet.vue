@@ -29,6 +29,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.box-shadow {
+  //box-shadow: 0 0 15px var(--v-greyMedium-base) !important;
+  box-shadow: 0 12px 17px rgba(21, 29, 63, 0.03) !important;
+}
 .sideinfo {
   width: 100%;
 }
