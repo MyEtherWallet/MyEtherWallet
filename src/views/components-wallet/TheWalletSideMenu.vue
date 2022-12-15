@@ -89,7 +89,7 @@
 
       <v-divider class="my-1 mx-6" />
 
-      <v-list dense>
+      <v-list v-if="!isOfflineApp" dense>
         <template v-for="(item, idx) in sectionTwo">
           <v-list-item
             v-if="shouldShow(item.route)"
@@ -114,7 +114,7 @@
 
       <v-divider v-if="!isOfflineApp" class="my-1 mx-6" />
 
-      <v-list dense>
+      <v-list v-if="!isOfflineApp" dense>
         <v-list-item-group>
           <template v-for="(item, idx) in sectionThree">
             <!-- Sub-menu items -->
