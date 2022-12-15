@@ -9,7 +9,12 @@
           <v-icon style="color: black">{{ chevronIcon }}</v-icon>
         </v-col>
         <v-col v-if="showTokens && dropdown" cols="12" class="mt-3">
-          <v-row v-for="(token, idx) in tokens" :key="idx" justify="start">
+          <v-row
+            v-for="(token, idx) in tokens"
+            :key="idx"
+            justify="start"
+            style="max-height: 48px"
+          >
             <v-col cols="2">
               <mew-token-container
                 size="medium"
@@ -25,13 +30,13 @@
             </v-col>
           </v-row>
           <v-row justify="start">
-            <v-col cols="9">
-              <div v-if="tokensList.length > 5" class="more-tokens">
+            <v-col cols="7">
+              <div class="more-tokens">
                 {{ getText }}
               </div>
             </v-col>
-            <v-col v-if="tokensList.length > 1" cols="3">
-              <div class="tokens-link" @click="handleTokensPopup">See all</div>
+            <v-col align="right" cols="5">
+              <div class="tokens-link" @click="checkLink">{{ linkText }}</div>
             </v-col>
           </v-row>
         </v-col>
@@ -57,7 +62,10 @@
 </template>
 
 <script>
+import { EventBus } from '@/core/plugins/eventBus';
 import { mapGetters, mapState } from 'vuex';
+import { toBN } from 'web3-utils';
+import { MOONPAY_EVENT } from '../moon-pay/helpers';
 
 export default {
   name: 'ModuleTokensValue',
@@ -72,7 +80,7 @@ export default {
     ...mapGetters('external', ['totalTokenFiatValue']),
     ...mapGetters('global', ['getFiatValue']),
     tokenTitle() {
-      return `My Token${this.tokensList.length > 1 ? 's' : ''}`;
+      return `My Token${this.tokenCount > 1 ? 's' : ''}`;
     },
     totalTokenValues() {
       return this.getFiatValue(this.totalTokenFiatValue);
@@ -80,7 +88,7 @@ export default {
     tokens() {
       const tokens = this.tokensList
         .reduce((arr, token) => {
-          if (token) {
+          if (token && token.balance.gt(toBN(0))) {
             arr.push(token);
           }
           return arr;
@@ -89,19 +97,35 @@ export default {
       return tokens;
     },
     moreTokensCount() {
-      return this.tokensList.length - this.tokens.length;
+      return this.tokenCount - this.tokens.length;
     },
     showTokens() {
-      return this.tokensList.length > 0 && !this.initialLoad;
+      return !this.initialLoad;
     },
     getText() {
       if (this.showTokens) {
-        return `+${this.moreTokensCount} tokens`;
+        return `${
+          this.moreTokensCount > 0
+            ? `+${this.moreTokensCount}`
+            : this.tokenCount
+        } tokens`;
       }
       return '';
     },
     chevronIcon() {
       return this.dropdown ? 'mdi-chevron-up' : 'mdi-chevron-down';
+    },
+    linkText() {
+      return this.tokenCount > 0 ? 'See all' : 'Buy Crypto';
+    },
+    tokenCount() {
+      if (
+        this.tokensList.length > 0 &&
+        this.tokensList[0].balance.eq(toBN(0))
+      ) {
+        return this.tokensList.length - 1;
+      }
+      return this.tokensList.length;
     }
   },
   methods: {
@@ -110,6 +134,13 @@ export default {
     },
     toggleDropdown() {
       this.dropdown = !this.dropdown;
+    },
+    checkLink() {
+      if (this.tokenCount > 0) this.handleTokensPopup();
+      else this.openMoonpay();
+    },
+    openMoonpay() {
+      EventBus.$emit(MOONPAY_EVENT);
     }
   }
 };
@@ -130,12 +161,13 @@ export default {
   background-color: var(--v-greyLight-base);
 }
 .token-shadow {
+  box-sizing: border-box;
   box-shadow: inset 0px 0px 0px 1px #ffffff;
   filter: drop-shadow(0px 4px 10px rgba(24, 43, 75, 0.1));
   border-radius: 100px;
 }
 .tokens-link {
-  width: 50px;
+  width: 81px;
   height: 24px;
 
   font-weight: 500;
