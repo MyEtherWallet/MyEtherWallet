@@ -78,7 +78,6 @@ const EXCEPTIONS = [
   // update after release
   '@ensdomains/address-encoder',
   '@formatjs/intl-numberformat',
-  '@myetherwallet/mew-components',
   'bignumber.js',
   'trezor-connect',
   '@ledgerhq/hw-app-eth',
