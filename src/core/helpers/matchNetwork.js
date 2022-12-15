@@ -20,8 +20,7 @@ export default async (chainID, walletType, options = { toast: true }) => {
     ethereum.isMetaMask &&
     !ethereum.hasOwnProperty('isTrust') &&
     !ethereum.hasOwnProperty('isMEWwallet');
-  const isMEWwallet =
-    ethereum && ethereum.isMetaMask && ethereum.isMEWwallet && ethereum.isTrust;
+  const isMEWwallet = ethereum && ethereum.isMetaMask && ethereum.isMEWwallet;
   if (walletType === wallets.WEB3_WALLET && (isMetaMask || isMEWwallet)) {
     try {
       if (chainID) {
