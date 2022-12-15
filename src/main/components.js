@@ -10,6 +10,8 @@ import MewSearch from '@/components/MewSearch/MewSearch.vue';
 import MewAlert from '@/components/MewAlert/MewAlert.vue';
 import MewPopup from '@/components/MewPopup/MewPopup.vue';
 import MewButton from '@/components/MewButton/MewButton.vue';
+import MewSheet from '@/components/MewSheet/MewSheet.vue';
+import MewModule from '@/components/MewModule/MewModule.vue';
 
 Object.keys(mewComponents).forEach(name => {
   Vue.component(name, mewComponents[name]);
@@ -24,3 +26,5 @@ Vue.component('MewSearch', MewSearch);
 Vue.component('MewAlert', MewAlert);
 Vue.component('MewPopup', MewPopup);
 Vue.component('MewButton', MewButton);
+Vue.component('MewSheet', MewSheet);
+Vue.component('MewModule', MewModule);

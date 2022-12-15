@@ -17,7 +17,7 @@
           <!-- ======================================================================================= -->
           <div ref="input" class="d-flex align-center text-center">
             <div
-              class="border-radius--8px backgroundGrey flex-grow-1 pa-5 d-flex flex-column align-center"
+              class="border-radius--8px bgWalletBlockDark flex-grow-1 pa-5 d-flex flex-column align-center"
               style="width: 30%"
             >
               <div
@@ -34,7 +34,7 @@
               <v-icon color="greenPrimary">mdi-arrow-right</v-icon>
             </div>
             <div
-              class="border-radius--8px backgroundGrey flex-grow-1 pa-5 d-flex flex-column align-center"
+              class="border-radius--8px bgWalletBlockDark flex-grow-1 pa-5 d-flex flex-column align-center"
               style="width: 30%"
             >
               <div
@@ -651,11 +651,11 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--v-greyLight-base) !important;
+  border: 1px solid var(--v-borderInput-base) !important;
   border-radius: 50% !important;
   width: 52px;
   height: 52px;
-  background-color: var(--v-whiteBackground-base);
+  background-color: var(--v-alwaysWhite-base);
 
   img {
     height: 30px;

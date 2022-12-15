@@ -2,6 +2,7 @@
   <div>
     <v-sheet
       class="addressBlock d-flex justify-space-between align-center mb-7"
+      color="transparent"
     >
       <mew-blockie :address="address" />
       <span class="font-weight-heavy pr-15">{{ address }}</span>

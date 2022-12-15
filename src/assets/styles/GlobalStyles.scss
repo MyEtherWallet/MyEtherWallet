@@ -147,7 +147,10 @@ h6 {
 
 /* ========== Box shadow ========== */
 .bs-wallet-block {
-  box-shadow: 0 12px 17px var(--v-bsWalletBlock-base) !important;
+  box-shadow: 0 12px 17px #151d3f08 !important;
+}
+.bs-small {
+  box-shadow: 0px 1.6px 6px #00000045 !important;
 }
 
 /* ========== Other ========== */
@@ -187,10 +190,6 @@ h6 {
   &.r90 {
     transform: rotate(90deg);
   }
-}
-
-.v-text-field .v-input__slot {
-  background: var(--v-inputPrimary-base) !important;
 }
 
 /* ========= Convert SVG to white ========= */

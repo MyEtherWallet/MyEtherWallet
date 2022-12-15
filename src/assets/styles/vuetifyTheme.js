@@ -30,6 +30,7 @@ export default {
         bgSideMenu: '#07385f',
         bgWallet: '#F2F4FA',
         bgWalletBlock: '#FFFFFF',
+        bgWalletBlockDark: '#F2F4FA',
         bgOverlay: '#F2FAFA',
         bgGrey: '#F8F9FB',
         bgBlack: '#000000',
@@ -153,6 +154,7 @@ export default {
         bgSideMenu: '#292B42',
         bgWallet: '#1c2136',
         bgWalletBlock: '#292B42',
+        bgWalletBlockDark: '#1c2136',
         bgOverlay: '#292B42',
         bgGrey: '#F8F9FB',
         bgBlack: '#000000',
@@ -165,7 +167,7 @@ export default {
         textLight: '#9BA1AE',
         // Grey
         greyPrimary: '#626978',
-        greyMedium: '#E4E7ED',
+        greyMedium: '#566075',
         greyLight: '#F9FAFE',
         // Whites
         alwaysWhite: '#FFFFFF',

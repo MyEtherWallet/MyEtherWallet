@@ -70,7 +70,7 @@
     <v-tabs
       v-if="tabItems.length > 0 && isNewHeader"
       :value="activeTab"
-      background-color="backgroundGrey"
+      background-color="bgWalletBlockDark"
       color="blue500"
       height="46"
       class="tab-container"

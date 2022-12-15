@@ -5,6 +5,7 @@
   =====================================================================================
   -->
   <v-alert
+    class="mew-alert mb-0 bs-small"
     :class="[alertClasses, hideAlertIcon ? 'pl-7' : 'pl-4', 'py-3 pr-5']"
     colored-border
     :color="alertColor"
@@ -187,7 +188,7 @@ export default {
      * @returns specific mew alert classes. Used for styling.
      */
     alertClasses() {
-      const classes = ['mew-alert mb-0'];
+      const classes = [];
       if (this.hasWhiteBackground) {
         classes.push('white');
       }
@@ -215,7 +216,6 @@ export default {
   */
 .mew-alert {
   border-radius: 8px;
-  box-shadow: 0px 1.6px 6px rgba(90, 103, 138, 0.6) !important;
   .close-btn {
     height: auto;
     width: auto;

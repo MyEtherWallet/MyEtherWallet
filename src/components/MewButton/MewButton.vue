@@ -204,7 +204,7 @@ export default {
 
       // PRIMARY COLORS
       if (this.isPrimaryTheme && this.isLight) {
-        return 'backgroundOverlay';
+        return 'buttonGrayLight';
       }
 
       if (this.isPrimaryTheme) {

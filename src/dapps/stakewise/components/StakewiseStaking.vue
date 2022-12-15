@@ -335,11 +335,11 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--v-greyLight-base) !important;
+  border: 1px solid var(--v-borderInput-base) !important;
   border-radius: 50% !important;
   width: 32px;
   height: 32px;
-  background-color: var(--v-whiteBackground-base);
+  background-color: var(--v-alwaysWhite-base);
 
   img {
     height: 28px;
