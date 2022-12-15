@@ -181,24 +181,11 @@
           </v-list-item-content>
         </v-list-item>
         <div v-if="online" class="mt-3 px-8">
-          <div
-            class="matomo-tracking-switch d-flex align-center justify-space-between"
-          >
-            <v-switch
-              dark
-              :input-value="consentToTrack"
-              inset
-              dense
-              :label="`Data Tracking ${consentToTrack ? 'On' : 'Off'}`"
-              color="white"
-              off-icon="mdi-alert-circle"
-              @change="setConsent"
-            />
+          <div class="d-flex align-center justify-space-between">
             <a
               :href="`https://github.com/MyEtherWallet/MyEtherWallet/releases/tag/v${version}`"
               target="_blank"
               class="label-text"
-              style="max-width: 60px"
               >v{{ version }}</a
             >
           </div>
@@ -607,6 +594,9 @@ export default {
     box-shadow: 0 0 0 0 rgba(204, 169, 44, 0);
   }
 }
+.label-text {
+  color: rgba(255, 255, 255, 0.5);
+}
 </style>
 
 <style lang="scss">
@@ -714,14 +704,6 @@ export default {
     }
     &::-webkit-scrollbar-corner {
       background: transparent;
-    }
-  }
-  .matomo-tracking-switch {
-    .v-label {
-      color: rgba(255, 255, 255, 0.6);
-    }
-    .label-text {
-      color: rgba(255, 255, 255, 0.5);
     }
   }
 
