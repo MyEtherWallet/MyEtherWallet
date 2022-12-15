@@ -197,7 +197,7 @@
             <a
               :href="`https://github.com/MyEtherWallet/MyEtherWallet/releases/tag/v${version}`"
               target="_blank"
-              class="greyPrimary--text"
+              class="label-text"
               style="max-width: 60px"
               >v{{ version }}</a
             >
@@ -718,7 +718,10 @@ export default {
   }
   .matomo-tracking-switch {
     .v-label {
-      color: var(--v-white-base);
+      color: rgba(255, 255, 255, 0.6);
+    }
+    .label-text {
+      color: rgba(255, 255, 255, 0.5);
     }
   }
 
