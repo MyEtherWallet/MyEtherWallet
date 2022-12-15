@@ -26,6 +26,10 @@
 * Sentry Report: Cannot read properties of null at ModuleConfirmation [#4404](https://github.com/MyEtherWallet/MyEtherWallet/pull/4404)
 * staging fixes [#4424](https://github.com/MyEtherWallet/MyEtherWallet/pull/4424)
 
+### Release v6.6.11-hotfix.3
+
+* update privacy policy [#4422](https://github.com/MyEtherWallet/MyEtherWallet/pull/4422)
+
 ### Release v6.6.11-hotfix.2
 
 * update privacy policy [#4415](https://github.com/MyEtherWallet/MyEtherWallet/pull/4415)
