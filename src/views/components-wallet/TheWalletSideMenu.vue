@@ -205,6 +205,16 @@
         </div>
       </v-list>
     </v-navigation-drawer>
+    <app-modal
+      :show="openQR"
+      :close="closeQR"
+      :has-buttons="false"
+      width="408px"
+    >
+      <template #dialogBody>
+        <app-addr-qr />
+      </template>
+    </app-modal>
     <mew-popup
       max-width="400px"
       hide-close-btn
@@ -269,6 +279,8 @@ import isNew from '@/core/helpers/isNew.js';
 
 export default {
   components: {
+    AppModal: () => import('@/core/components/AppModal'),
+    AppAddrQr: () => import('@/core/components/AppAddrQr'),
     AppBtnMenu: () => import('@/core/components/AppBtnMenu'),
     BalanceCard: () => import('@/modules/balance/ModuleBalanceCard'),
     ModuleSettings: () => import('@/modules/settings/ModuleSettings'),
@@ -283,6 +295,7 @@ export default {
       isOpenNetworkOverlay: false,
       navOpen: null,
       version: VERSION,
+      openQR: false,
       onSettings: false,
       showLogoutPopup: false,
       routeNetworks: {
@@ -379,7 +392,9 @@ export default {
           {
             title: this.$t('interface.menu.receive'),
             icon: receive,
-            fn: this.toggleLogout
+            fn: () => {
+              this.openQR = true;
+            }
           },
           {
             title: this.$t('interface.menu.buy-sell'),
@@ -544,6 +559,13 @@ export default {
       for (const c of children) {
         if (this.$route.name == c.route.name) return true;
       }
+    },
+    /**
+     * set openQR to false
+     * to close the modal
+     */
+    closeQR() {
+      this.openQR = false;
     }
   }
 };
