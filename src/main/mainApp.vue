@@ -20,7 +20,7 @@ import {
   SUCCESS,
   INFO
 } from '@/modules/toast/handler/handlerToast';
-import { MOONPAY_EVENT } from '@/modules/buy-sell/helpers';
+import { BUYSELL_EVENT } from '@/modules/buy-sell/helpers';
 import { EventBus } from '@/core/plugins/eventBus';
 import handlerAnalyticsMixin from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin.js';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
@@ -70,7 +70,7 @@ export default {
     EventBus.$on('swapTxFailed', () => {
       this.trackSwap('swapTxFailed');
     });
-    EventBus.$on(MOONPAY_EVENT, () => {
+    EventBus.$on(BUYSELL_EVENT, () => {
       this.openBuy();
     });
     this.footerHideIntercom();
@@ -112,7 +112,7 @@ export default {
     });
   },
   beforeDestroy() {
-    EventBus.$off(MOONPAY_EVENT);
+    EventBus.$off(BUYSELL_EVENT);
     EventBus.$off('swapTxBroadcasted');
     EventBus.$off('swapTxReceivedReceipt');
     EventBus.$off('swapTxFailed');

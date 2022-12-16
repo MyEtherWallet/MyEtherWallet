@@ -51,7 +51,7 @@
               :buy-more-str="buyMoreStr"
               class="AmountInput"
               @keydown.native="preventCharE($event)"
-              @buyMore="openMoonpay"
+              @buyMore="openBuySell"
               @input="val => setAmount(val, false)"
             />
           </div>

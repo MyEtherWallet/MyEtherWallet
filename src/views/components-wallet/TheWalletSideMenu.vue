@@ -58,7 +58,7 @@
             <v-list-item
               class="px-0"
               active-class="remove-select-state"
-              @click="openMoonpay"
+              @click="openBuySell"
             >
               <div class="text-center mx-auto my-2" @click="trackBuySellFunc">
                 <img
@@ -284,7 +284,7 @@ import { ETH, BSC, MATIC } from '@/utils/networks/types';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import dappsMeta from '@/dapps/metainfo-dapps';
-import { MOONPAY_EVENT } from '@/modules/buy-sell/helpers';
+import { BUYSELL_EVENT } from '@/modules/buy-sell/helpers';
 import isNew from '@/core/helpers/isNew.js';
 
 export default {
@@ -488,8 +488,8 @@ export default {
     openNetwork() {
       this.isOpenNetworkOverlay = true;
     },
-    openMoonpay() {
-      EventBus.$emit(MOONPAY_EVENT);
+    openBuySell() {
+      EventBus.$emit(BUYSELL_EVENT);
     },
     openNavigation() {
       this.navOpen = true;

@@ -27,7 +27,7 @@
       v-if="!enoughFunds && showBalanceError"
       class="redPrimary--text px-6 py-0 py-sm-3 mb-3 mb-sm-0"
       >You do not have enough ETH to send.
-      <a target="_blank" class="link" @click="openMoonpay">
+      <a target="_blank" class="link" @click="openBuySell">
         <u>Buy More Eth</u>
       </a>
     </span>

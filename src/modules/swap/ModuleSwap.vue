@@ -50,7 +50,7 @@
                       : null
                   "
                   :max-btn-obj="maxBtn"
-                  @buyMore="openMoonpay"
+                  @buyMore="openBuySell"
                   @keydown.native="preventCharE($event)"
                   @input="val => triggerSetTokenInValue(val, false)"
               /></v-col>
@@ -110,7 +110,7 @@
                 :title="`Buy ${network.type.currencyName}`"
                 class="ma-1"
                 :has-full-width="$vuetify.breakpoint.xsOnly"
-                @click.native="openMoonpay"
+                @click.native="openBuySell"
               />
             </div>
           </app-user-msg-block>

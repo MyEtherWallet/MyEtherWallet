@@ -70,7 +70,7 @@
               :value="stakeAmount"
               :error-messages="errorMessages"
               :buy-more-str="buyMoreStr"
-              @buyMore="openMoonpay"
+              @buyMore="openBuySell"
               @input="setAmount"
             />
           </div>
