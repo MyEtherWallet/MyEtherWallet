@@ -67,12 +67,11 @@
     -->
     <div v-if="online" class="mt-3 px-8">
       <div class="matomo-tracking-switch">
-        <span>Data Sharing</span>
         <v-switch
-          dark
+          v-model="dataSharingOn"
+          :label="`Data Sharing is ${dataSharingOn ? 'on' : 'off'}`"
           :input-value="consentToTrack"
           inset
-          dense
           color="greenPrimary"
           off-icon="mdi-alert-circle"
           @change="setConsent"
@@ -126,6 +125,7 @@ export default {
   },
   data() {
     return {
+      dataSharingOn: false,
       settingsHandler: null,
       idxToExpand: null,
       editMode: false,
@@ -186,6 +186,7 @@ export default {
     this.settingsHandler = new handlerSettings();
   },
   methods: {
+    setConsent() {},
     getAddressBookTableData() {
       this.tableData = [];
       this.addressBookStore.forEach((item, idx) => {

@@ -153,12 +153,14 @@
             fab
             depressed
             @click="openQR = true"
-            ><img
+          >
+            <img
               class="info-container--icon"
               height="18px"
               src="@/assets/images/icons/icon-qr-code.svg"
               alt="qr-code"
-          /></v-btn>
+            />
+          </v-btn>
           <!--
           =====================================================================================
             Copy Button
@@ -604,9 +606,6 @@ export default {
   }
 }
 
-.v-btn::before {
-  background-color: transparent;
-}
 .info-container {
   background-color: rgba(0, 0, 0, 0.08);
   border-radius: 16px;
