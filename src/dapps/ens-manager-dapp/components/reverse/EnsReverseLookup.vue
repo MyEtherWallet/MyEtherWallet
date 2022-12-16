@@ -33,7 +33,7 @@
           class="set-button"
           btn-size="xlarge"
           :loading="selectedDomain.loading"
-          :disabled="activeRegister"
+          :disabled="disableRegister"
           @click.native="setReverseRecord(selectedDomain)"
         />
       </div>
@@ -93,7 +93,7 @@ export default {
     return {
       ensLookupResults: null,
       hasDomains: false,
-      selectedDomain: { loading: false },
+      selectedDomain: { loading: false, fee: toBNSafe(0) },
       selectedDomainAddr: '',
       permHandler: {},
       hasReverseRecordNames: false,
@@ -116,24 +116,30 @@ export default {
           i.loading = true;
           i.fee = toBNSafe(0);
           try {
-            // get fee here
+            this.permHandler.getNameReverseData(i.value).then(gas => {
+              i.fee = toBNSafe(gas);
+            });
           } catch {
             i.loading = false;
             return i;
           }
-          //i.loading = false;
+          i.loading = false;
           return i;
         }) || []
       );
     },
-    activeRegister() {
+    disableRegister() {
       return (
-        this.balance > this.selectedDomain.fee && this.selectedDomain.fee !== 0
+        toBNSafe(this.balance).lt(this.selectedDomain.fee) ||
+        !this.selectedDomain.value
       );
     }
   },
   watch: {
     network() {
+      if (this.checkNetwork()) this.setup();
+    },
+    address() {
       if (this.checkNetwork()) this.setup();
     }
   },
@@ -162,6 +168,7 @@ export default {
         ens,
         this.durationPick
       );
+      this.selectedDomain = { loading: false, fee: toBNSafe(0) };
       this.getReverseRecordNames();
     },
     async fetchDomains() {
