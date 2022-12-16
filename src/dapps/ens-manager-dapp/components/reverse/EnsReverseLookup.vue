@@ -25,6 +25,7 @@
           :value="selectedDomain"
           filter-placeholder="Search for Domain"
           :items="domainListItems"
+          :error-messages="selectedDomain.error"
           @input="setDomain"
         >
         </mew-select>
@@ -33,7 +34,7 @@
           class="set-button"
           btn-size="xlarge"
           :loading="selectedDomain.loading"
-          :disabled="disableRegister"
+          :disabled="disableRegister || selectedDomain.error.length"
           @click.native="setReverseRecord(selectedDomain)"
         />
       </div>
@@ -115,11 +116,18 @@ export default {
         this.ensLookupResults?.map(i => {
           i.loading = true;
           i.fee = toBNSafe(0);
+          i.error = '';
           try {
             this.permHandler.getNameReverseData(i.value).then(gas => {
               i.fee = toBNSafe(gas);
+              console.log(this.network.type);
+              if (toBNSafe(this.balance).lt(i.fee)) {
+                i.error = `Insufficient amount of ${this.network.type.currencyName}`;
+              }
             });
           } catch {
+            i.error =
+              'An error occurred while retrieving the domain information';
             i.loading = false;
             return i;
           }
@@ -196,9 +204,6 @@ export default {
     },
     async setReverseRecord(chosenDomain) {
       try {
-        // console.log(
-        //   await this.permHandler.getNameReverseData(chosenDomain.name)
-        // );
         const reverseRecord = await this.permHandler.setNameReverseRecord(
           chosenDomain.name
         );
