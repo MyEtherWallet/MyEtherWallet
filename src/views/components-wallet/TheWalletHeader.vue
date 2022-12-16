@@ -98,7 +98,10 @@
         class="ml-auto d-flex align-center justify-end"
       >
         <div class="align-center d-none d-lg-block">
-          <notification-overlay v-if="online" />
+          <notification-overlay
+            v-if="online"
+            :invert-icon="$vuetify.theme.dark"
+          />
         </div>
       </v-col>
     </v-row>

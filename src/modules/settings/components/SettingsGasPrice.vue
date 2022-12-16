@@ -28,7 +28,10 @@
             class="mr-1 ml-n1 text-center"
             style="width: 40px; line-height: 0"
           >
-            <v-icon v-if="b.title === gasPriceTypes.ECONOMY" color="textDark">
+            <v-icon
+              v-if="b.title === gasPriceTypes.ECONOMY"
+              color="textAlwaysDark"
+            >
               mdi-check
             </v-icon>
             <img
@@ -51,7 +54,7 @@
             />
           </div>
           <div>
-            <div class="mew-heading-3 font-weight-regular">
+            <div class="mew-heading-3 font-weight-regular textAlwaysDark--text">
               {{ b.priority }}
             </div>
             <div v-if="!fromSettings" class="prices d-flex">
@@ -290,6 +293,7 @@ export default {
   user-select: none;
   width: 100%;
   border: 1px solid var(--v-greyLight-base);
+  background-color: white;
   &#disabled {
     filter: grayscale(1);
     opacity: 0.25 !important;

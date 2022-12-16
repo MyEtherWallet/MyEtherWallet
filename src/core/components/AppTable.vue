@@ -188,7 +188,8 @@ export default {
 .alteranting-background {
   tbody {
     tr:nth-child(odd) {
-      background-color: var(--bg-color);
+      //background-color: var(--bg-color);
+      background-color: var(--v-tableBg-base);
     }
   }
 }

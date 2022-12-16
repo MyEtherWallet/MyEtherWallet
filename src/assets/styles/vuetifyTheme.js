@@ -70,6 +70,7 @@ export default {
         disabledMedium: '#E0E0E0',
         disabledLight: '#F6F6F6 ',
         // Buttons
+        buttonWhite: '#FFFFFF',
         buttonGrayLight: '#F2F4FA',
         buttonGrayDark: '#626978',
         // Inputs
@@ -77,6 +78,8 @@ export default {
         // Border
         borderInput: '#e0e0e0',
         borderTable: '#EAEAEA',
+        // Table
+        tableBg: '#f4f7fe',
         // =========================================================
         // =========================================================
         // new colors
@@ -194,6 +197,7 @@ export default {
         disabledMedium: '#383F4A',
         disabledLight: '#242D3E ',
         // Buttons
+        buttonWhite: '#1c2136',
         buttonGrayLight: baseColors.asphalt5,
         buttonGrayDark: '#FFFFFF',
         // Inputs
@@ -201,6 +205,8 @@ export default {
         // Border
         borderInput: '#667f9b',
         borderTable: baseColors.asphalt700,
+        // Table
+        tableBg: '#1c2136',
         // =========================================================
         // =========================================================
         // new colors
