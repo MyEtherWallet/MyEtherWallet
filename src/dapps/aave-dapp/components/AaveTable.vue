@@ -189,15 +189,12 @@ export default {
            * Case: Aave Borrow Table used in Overlay
            */
           case AAVE_TABLE_TITLE.borrow:
-            list = list
-              .filter(item => {
-                return item.variableBorrowAPY > 0;
-              })
-              .map(item => {
+            list = list.reduce((arr, item) => {
+              if (item.borrowingEnabled) {
                 const available = formatFloatingPointValue(
                   this.userBorrowPower(item)
                 ).value;
-                return {
+                arr.push({
                   token: item.symbol,
                   available: available, // need to double check this
                   stableApy: item.stableBorrowRateEnabled
@@ -213,8 +210,10 @@ export default {
                   callToAction: [
                     { ...AAVE_TABLE_BUTTON.borrow, disabled: available <= 0 }
                   ]
-                };
-              });
+                });
+              }
+              return arr;
+            }, []);
             break;
           /**
            * Case: Aave Existing Deposits Table
