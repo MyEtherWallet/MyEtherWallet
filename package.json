@@ -172,7 +172,7 @@
     "stylelint": "14.8.2",
     "stylelint-config-prettier": "9.0.4",
     "stylelint-config-standard": "25.0.0",
-    "trezor-connect": "8.2.11",
+    "trezor-connect": "8.2.12",
     "u2f-api": "1.2.1",
     "uglify-es": "3.3.9",
     "uuid": "9.0.0",
