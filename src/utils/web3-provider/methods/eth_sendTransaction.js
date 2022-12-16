@@ -60,6 +60,7 @@ export default async ({ payload, store, requestManager }, res, next) => {
   tx.from = tx.from ? tx.from : store.state.wallet.address;
   getSanitizedTx(tx)
     .then(_tx => {
+      console.log('_tx', _tx);
       const event = confirmInfo
         ? EventNames.SHOW_SWAP_TX_MODAL
         : EventNames.SHOW_TX_CONFIRM_MODAL;
@@ -71,6 +72,7 @@ export default async ({ payload, store, requestManager }, res, next) => {
         store.state.wallet.identifier === WALLET_TYPES.WALLET_CONNECT
       ) {
         EventBus.$emit(event, params, _promiObj => {
+          console.log('_promiObj', _promiObj);
           if (_promiObj.rejected) {
             res(new Error('User rejected action'));
             return;

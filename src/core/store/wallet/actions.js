@@ -65,6 +65,7 @@ const setWeb3Instance = function (
   web3Instance.eth.transactionConfirmationBlocks = 1;
   web3Instance['mew'] = {};
   web3Instance['mew'].sendBatchTransactions = arr => {
+    console.log('arr', arr);
     // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve, reject) => {
       const nonce = await (arr[0].nonce === undefined
@@ -92,8 +93,9 @@ const setWeb3Instance = function (
           arr[i].gasPrice === undefined ? gasPrice : arr[i].gasPrice;
         arr[i] = formatters.inputCallFormatter(arr[i]);
       }
-
+      console.log('arr (after)', arr);
       const batchSignCallback = promises => {
+        console.log('promises', promises);
         if (promises && promises.rejected)
           reject(new Error('User rejected transaction'));
         resolve(promises);
