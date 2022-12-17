@@ -235,6 +235,20 @@ export default {
      */
     async onDeposit({ amount, reserve, referralCode, user }) {
       try {
+        let txs = [];
+        const allowance = await this.formatAllowanceData(
+          reserve,
+          user,
+          this.poolContract.address
+        );
+
+        const resetApproveData = await this.formatApprovalData(
+          reserve,
+          user,
+          this.poolContract.address,
+          0
+        );
+
         const approveData = await this.formatApprovalData(
           reserve,
           user,
@@ -248,11 +262,14 @@ export default {
           referralCode
         );
         txData.from = user;
-        const gasLimits = await estimateGasList(this.network.type.name, [
-          approveData,
-          txData
-        ]);
-        this.sendTxns([approveData, txData], gasLimits);
+
+        if (toBN(allowance).gt(amount)) {
+          txs = [txData];
+        } else {
+          txs = [resetApproveData, approveData, txData];
+        }
+        const gasLimits = await estimateGasList(this.network.type.name, txs);
+        this.sendTxns(txs, gasLimits);
       } catch (e) {
         throw new Error(e);
       }
@@ -287,11 +304,25 @@ export default {
      */
     async onRepay({ amount, reserve, interestRateMode, user }) {
       try {
+        let txs = [];
+        const allowance = await this.formatAllowanceData(
+          reserve,
+          user,
+          this.poolContract.address
+        );
+
         const approveData = await this.formatApprovalData(
           reserve,
           user,
           this.poolContract.address,
           amount
+        );
+
+        const resetApproveData = await this.formatApprovalData(
+          reserve,
+          user,
+          this.poolContract.address,
+          0
         );
         const data = await this.poolContract.populateTransaction.repay(
           reserve,
@@ -300,11 +331,14 @@ export default {
           user
         );
         data.from = user;
-        const gasLimits = await estimateGasList(this.network.type.name, [
-          approveData,
-          data
-        ]);
-        this.sendTxns([approveData, data], gasLimits);
+
+        if (toBN(allowance).gt(amount)) {
+          txs = [data];
+        } else {
+          txs = [resetApproveData, approveData, data];
+        }
+        const gasLimits = await estimateGasList(this.network.type.name, txs);
+        this.sendTxns(txs, gasLimits);
       } catch (e) {
         throw new Error(e);
       }
@@ -378,6 +412,35 @@ export default {
         );
         approveData.from = user;
         return approveData;
+      } catch (e) {
+        throw new Error(e);
+      }
+    },
+    /**
+     * format transaction data for token allowance
+     *
+     * @param tokenAddress The ethereum address of the token needing approval
+     * @param user The ethereum address that owns the asset
+     * @param spender The ethereum address that will spend the asset
+     */
+    async formatAllowanceData(tokenAddress, user, spender) {
+      try {
+        const ABI = [
+          {
+            constant: true,
+            inputs: [
+              { name: '_owner', type: 'address' },
+              { name: '_spender', type: 'address' }
+            ],
+            name: 'allowance',
+            outputs: [{ name: 'remaining', type: 'uint256' }],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function'
+          }
+        ];
+        const token = new this.web3.eth.Contract(ABI, tokenAddress);
+        return token.methods.allowance(user, spender).call();
       } catch (e) {
         throw new Error(e);
       }
