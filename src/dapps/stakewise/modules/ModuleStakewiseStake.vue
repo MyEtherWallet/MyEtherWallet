@@ -410,6 +410,7 @@ export default {
     },
     isEthNetwork() {
       this.setup();
+      this.setGasPrice();
     }
   },
   mounted() {
@@ -420,6 +421,7 @@ export default {
   methods: {
     ...mapActions('stakewise', ['addToPendingTxs', 'addToPendingTxsGoerli']),
     ...mapActions('notifications', ['addNotification']),
+    ...mapActions('global', ['updateGasPrice']),
     setAmount: debounce(function (val) {
       const value = val ? val : 0;
       this.stakeAmount = BigNumber(value).toFixed();
@@ -430,6 +432,11 @@ export default {
         this.isEthNetwork,
         this.address
       );
+    },
+    setGasPrice() {
+      this.updateGasPrice().then(() => {
+        this.locGasPrice = this.gasPriceByType(this.gasPriceType);
+      });
     },
     setGasLimit() {
       this.estimateGasError = false;
@@ -467,7 +474,7 @@ export default {
             // reset stakewise
             this.setAmount(0);
             this.stakeAmount = '0';
-            this.locGasPrice = '0';
+            this.locGasPrice = this.gasPriceByType(this.gasPriceType);
             this.gasLimit = '21000';
             this.agreeToTerms = false;
             this.estimateGasError = false;
@@ -568,7 +575,7 @@ export default {
           .then(() => {
             this.setAmount(0);
             this.compoundAmount = '0';
-            this.locGasPrice = '0';
+            this.locGasPrice = this.gasPriceByType(this.gasPriceType);
             this.gasLimit = '21000';
             this.agreeToTerms = false;
           })

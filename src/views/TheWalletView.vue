@@ -104,7 +104,9 @@ export default {
     network() {
       if (this.online && !this.isOfflineApp) {
         this.web3.eth.clearSubscriptions();
-        this.setWeb3Instance();
+        this.identifier === WALLET_TYPES.WEB3_WALLET
+          ? this.setWeb3Instance(window.ethereum)
+          : this.setWeb3Instance();
         this.setup();
         if (this.identifier !== WALLET_TYPES.WEB3_WALLET) {
           this.setTokensAndBalance();
@@ -254,9 +256,9 @@ export default {
               await this.setNetwork({
                 network: foundNetwork[0],
                 walletType: this.instance.identifier
-              }).then(() => {
-                this.setWeb3Instance().then(this.setTokensAndBalance);
               });
+              await this.setWeb3Instance(window.ethereum);
+              this.setTokensAndBalance();
               this.setValidNetwork(true);
               this.trackNetworkSwitch(foundNetwork[0].type.name);
               this.$emit('newNetwork');
