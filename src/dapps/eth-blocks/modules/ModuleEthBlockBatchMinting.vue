@@ -94,6 +94,19 @@
             :loading="isLoading"
             @click.native="mintBlocks"
           />
+
+          <!-- =================================================== -->
+          <!-- Block is available OR is Owned: not enough ETH -->
+          <!-- =================================================== -->
+          <div
+            v-if="!hasEnoughEth"
+            class="d-flex align-center justify-end mt-4"
+          >
+            <div class="error--text mew-label mr-2">{{ notEnoughMessage }}</div>
+            <a class="mew-label font-weight-medium" @click="openMoonpay">
+              Buy more {{ network.type.name }}.
+            </a>
+          </div>
         </div>
       </v-col>
     </v-row>
@@ -104,7 +117,7 @@
 import { mapGetters, mapState, mapActions } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { fromWei, toWei, toBN } from 'web3-utils';
-
+import buyMore from '@/core/mixins/buyMore.mixin.js';
 import abi from '../handlers/helpers/multicall.js';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import handlerBlock from '../handlers/handlerBlock';
@@ -116,6 +129,7 @@ export default {
   components: {
     BlockResultComponent: () => import('../components/BlockResultComponent')
   },
+  mixins: [buyMore],
   data() {
     return {
       blocks: [],
@@ -141,6 +155,9 @@ export default {
     ]),
     ...mapState('global', ['gasPriceType']),
     ...mapGetters('external', ['fiatValue']),
+    notEnoughMessage() {
+      return `Not enough ${this.network.type.name} to mint. `;
+    },
     totalAvailable() {
       return this.blocks.filter(item => {
         if (!item.hasOwner) {

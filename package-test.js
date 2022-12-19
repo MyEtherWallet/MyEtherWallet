@@ -76,18 +76,14 @@ const EXCEPTIONS = [
   'is-ipfs',
   'axios',
   // update after release
-  '@coolwallet/core',
-  '@coolwallet/eth',
-  '@commitlint/config-conventional',
-  'commitlint',
-  'prettier',
-  'highcharts',
-  'lottie-web',
   '@ensdomains/address-encoder',
   '@formatjs/intl-numberformat',
-  '@myetherwallet/mew-components',
   'bignumber.js',
-  'trezor-connect'
+  'trezor-connect',
+  '@ledgerhq/hw-app-eth',
+  '@ledgerhq/live-common',
+  'prettier',
+  '@mdi/font'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

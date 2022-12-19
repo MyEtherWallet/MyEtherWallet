@@ -1,47 +1,46 @@
 <template>
   <mew-stepper :items="items" :on-step="step" class="mx-md-0">
-    <!--
-      =====================================================================================
-        Step 1: Create Password
-      =====================================================================================
-      -->
+    <!-- ===================================================================================== -->
+    <!-- Step 1: Create Password -->
+    <!-- ===================================================================================== -->
     <template v-if="step === 1" #stepperContent1>
       <div class="subtitle-1 font-weight-bold grey--text">STEP 1.</div>
       <div class="headline font-weight-bold mb-5">Create password</div>
-      <!--
-          =====================================================================================
-            Enter Password
-          =====================================================================================
-          -->
+
+      <!-- ===================================================================================== -->
+      <!-- Enter Password -->
+      <!-- ===================================================================================== -->
       <mew-input
         v-model="password"
-        hint="Password must be 8 or more characters"
+        :hint="
+          password && password.length < 8
+            ? 'Password must be 8 or more characters'
+            : ''
+        "
         label="Password"
         placeholder="Enter Password"
         :has-clear-btn="true"
         class="flex-grow-1 mb-2 CreateWalletKeystorePasswordInput"
-        :rules="passwordRulles"
+        :error-messages="passwordMessages"
         type="password"
       />
-      <!--
-          =====================================================================================
-            Confirm Password
-          =====================================================================================
-          -->
+
+      <!-- ===================================================================================== -->
+      <!-- Confirm Password -->
+      <!-- ===================================================================================== -->
       <mew-input
         v-model="cofirmPassword"
         hint=""
         label="Confirm Password"
         placeholder="Confirm password"
         class="flex-grow-1 CreateWalletKeystoreConfirmPWInput"
-        :rules="passwordConfirmRulles"
         type="password"
+        :error-messages="errorPasswordConfirmation"
       />
-      <!--
-          =====================================================================================
-            Creat Wallet Button
-          =====================================================================================
-          -->
+
+      <!-- ===================================================================================== -->
+      <!-- Creat Wallet Button -->
+      <!-- ===================================================================================== -->
       <div v-if="!isGeneratingKeystore" class="d-flex justify-center">
         <mew-button
           class="CreateWalletKeystoreSubmitButton"
@@ -52,34 +51,31 @@
           @click.native="createWallet"
         />
       </div>
-      <!--
-          =====================================================================================
-            Loading State: isGeneratingKeystore = true
-          =====================================================================================
-          -->
-      <v-row v-else justify="center" align="center">
+
+      <!-- ===================================================================================== -->
+      <!-- Loading State: isGeneratingKeystore = true -->
+      <!-- ===================================================================================== -->
+      <v-row v-else justify="center" align="center" class="mt-1 mb-7">
         <v-progress-circular
           indeterminate
           color="greenPrimary"
         ></v-progress-circular>
         <p class="mb-0 mx-3">Sit tight while we are encrypting your wallet</p>
       </v-row>
-      <!--
-        =====================================================================================
-          Warning Block
-        =====================================================================================
-        -->
+
+      <!-- ===================================================================================== -->
+      <!-- Warning Block -->
+      <!-- ===================================================================================== -->
       <mew-warning-sheet
         class="mt-4 mb-0"
         title="NOT RECOMMENDED"
         description="This information is sensitive, and these options should only be used in offline settings by experienced crypto users. You will need your keystore file + password to access your wallet. Please save them in a secure location. We CAN NOT retrieve or reset your keystore/password if you lose them."
       />
     </template>
-    <!--
-      =====================================================================================
-        Step 2: Download Keystore
-      =====================================================================================
-      -->
+
+    <!-- ===================================================================================== -->
+    <!-- Step 2: Download Keystore -->
+    <!-- ===================================================================================== -->
     <template v-if="step === 2" #stepperContent2>
       <div class="subtitle-1 font-weight-bold grey--text step-two-header">
         STEP 2.
@@ -128,11 +124,10 @@
         description="This information is sensitive, and these options should only be used in offline settings by experienced crypto users. You will need your keystore file + password to access your wallet. Please save them in a secure location. We CAN NOT retrieve or reset your keystore/password if you lose them."
       />
     </template>
-    <!--
-      =====================================================================================
-        Step 3: Done
-      =====================================================================================
-      -->
+
+    <!-- ===================================================================================== -->
+    <!-- Step 3: Done -->
+    <!-- ===================================================================================== -->
     <template v-if="step === 3" #stepperContent3>
       <div class="d-flex align-center">
         <div>
@@ -232,29 +227,33 @@ export default {
       ],
       password: '',
       cofirmPassword: '',
-      passwordRulles: [
-        value => !isEmpty(value) || 'Required',
-        value => value?.length >= 8 || 'Password is less than 8 characters'
-      ],
-
       walletFile: '',
       name: '',
       isGeneratingKeystore: false
     };
   },
   computed: {
+    errorPasswordConfirmation() {
+      if (
+        this.password !== this.cofirmPassword &&
+        this.cofirmPassword?.length > 0
+      ) {
+        return 'Passwords do not match';
+      }
+      return '';
+    },
+    passwordMessages() {
+      if (isEmpty(this.password)) return 'Required';
+      if (this.password?.length < 8)
+        return 'Password is less than 8 characters';
+      return '';
+    },
     enableCreateButton() {
       return (
         !isEmpty(this.password) &&
         this.cofirmPassword === this.password &&
-        this.password.length >= 8
+        this.password?.length >= 8
       );
-    },
-    passwordConfirmRulles() {
-      return [
-        value => !!value || 'Required',
-        value => value === this.password || 'Passwords do not match'
-      ];
     }
   },
   methods: {
@@ -267,6 +266,9 @@ export default {
           this.walletFile = res.blobUrl;
           this.updateStep(2);
           this.isGeneratingKeystore = false;
+          // Reset password value
+          this.password = '';
+          this.cofirmPassword = '';
         })
         .catch(e => {
           Toast(e, {}, ERROR);
