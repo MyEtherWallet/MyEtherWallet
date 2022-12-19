@@ -101,10 +101,19 @@
           'mew-subtitle text-shadow white--text mt-5 mb-4'
         ]"
       >
-        {{ totalWalletBalance }}
-        <span v-if="isTestNetwork" style="padding-left: 2px; font-size: 14px">{{
-          network.type.currencyName
-        }}</span>
+        <v-skeleton-loader
+          v-if="loadingWalletInfo"
+          type="heading"
+          class="theme-dark-heading"
+        ></v-skeleton-loader>
+        <div v-else class="mew-subtitle text-shadow white--text">
+          {{ totalWalletBalance }}
+          <span
+            v-if="isTestNetwork"
+            style="padding-left: 2px; font-size: 14px"
+            >{{ network.type.currencyName }}</span
+          >
+        </div>
       </div>
       <div
         class="d-flex justify-space-between align-center"
@@ -116,7 +125,11 @@
             Total Wallet chain balance: prensent if not Test network
           =====================================================================================
           -->
-          <div v-if="!isTestNetwork" class="info-container--text-chain-balance">
+          <v-skeleton-loader v-if="loadingWalletInfo" type="text" width="100" />
+          <div
+            v-else-if="!isTestNetwork"
+            class="info-container--text-chain-balance"
+          >
             {{ walletChainBalance }} {{ network.type.currencyName }}
           </div>
           <!--
@@ -124,7 +137,8 @@
             Total Tokens: present if tokens found
           =====================================================================================
           -->
-          <div v-if="nonChainTokensCount > 0" class="info-container--text">
+          <v-skeleton-loader v-if="loadingWalletInfo" type="text" width="100" />
+          <div v-else-if="nonChainTokensCount > 0" class="info-container--text">
             and {{ nonChainTokensCount }} Tokens
           </div>
         </div>
@@ -276,7 +290,8 @@ export default {
       'instance',
       'identifier',
       'isHardware',
-      'isOfflineApp'
+      'isOfflineApp',
+      'loadingWalletInfo'
     ]),
     ...mapGetters('external', ['totalTokenFiatValue']),
     ...mapGetters('global', ['network', 'isTestNetwork', 'getFiatValue']),
@@ -681,5 +696,24 @@ export default {
 .verify-popup-border {
   border: 1px solid var(--v-greenMedium-base);
   border-radius: 4px;
+}
+
+.theme-dark-heading {
+  background-color: rgba(0, 0, 0, 0);
+  border-radius: 12px;
+  height: 24px;
+  width: 100%;
+}
+.theme-dark-heading .v-skeleton-loader__bone::before {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+</style>
+
+<style lang="scss">
+// Skeleton loader custom color
+.component--wallet-card {
+  .v-skeleton-loader__bone {
+    background: rgba(0, 0, 0, 0.3) !important;
+  }
 }
 </style>
