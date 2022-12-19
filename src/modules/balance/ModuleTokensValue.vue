@@ -80,7 +80,7 @@ export default {
     ...mapGetters('external', ['totalTokenFiatValue']),
     ...mapGetters('global', ['getFiatValue']),
     tokenTitle() {
-      return `My Token${this.tokenCount > 1 ? 's' : ''}`;
+      return `My Token${this.tokenCount !== 1 ? 's' : ''}`;
     },
     totalTokenValues() {
       return this.getFiatValue(this.totalTokenFiatValue);
@@ -104,11 +104,13 @@ export default {
     },
     getText() {
       if (this.showTokens) {
+        const count =
+          this.moreTokensCount > 0 ? this.moreTokensCount : this.tokenCount;
         return `${
           this.moreTokensCount > 0
             ? `+${this.moreTokensCount}`
             : this.tokenCount
-        } tokens`;
+        } token${count !== 1 ? 's' : ''}`;
       }
       return '';
     },
