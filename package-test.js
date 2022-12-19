@@ -82,7 +82,8 @@ const EXCEPTIONS = [
   'trezor-connect',
   '@ledgerhq/hw-app-eth',
   '@ledgerhq/live-common',
-  'prettier'
+  'prettier',
+  '@mdi/font'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
