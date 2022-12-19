@@ -178,7 +178,8 @@ export default {
       web3Connections: {},
       simplexQuote: {},
       showMoonpay: true,
-      disableCurrencySelect: true
+      disableCurrencySelect: true,
+      localCryptoAmount: '0'
     };
   },
   computed: {
@@ -442,7 +443,14 @@ export default {
     selectedFiat: {
       handler: function (newVal, oldVal) {
         if (!isEqual(newVal, oldVal)) {
-          this.amount = newVal.name != 'JPY' ? '300' : '30000';
+          const token = this.currencyItems.find(
+            item => item.name === this.selectedCryptoName
+          );
+          const price = token.price.substring(1).replace(',', '');
+          this.amount = BigNumber(this.localCryptoAmount)
+            .multipliedBy(price)
+            .toString();
+          this.localCryptoAmount = BigNumber(this.amount).div(price).toString();
           this.$emit('selectedFiat', newVal);
         }
       },
@@ -475,6 +483,9 @@ export default {
         } else {
           this.loading = false;
           this.getSimplexQuote();
+          this.localCryptoAmount = BigNumber(this.amount)
+            .div(this.priceOb.price)
+            .toString();
         }
       }
     },
@@ -549,6 +560,9 @@ export default {
             this.disableCurrencySelect = false;
           });
           this.fetchedData = Object.assign({}, res);
+          this.localCryptoAmount = BigNumber(this.amount)
+            .div(this.priceOb.price)
+            .toString();
         })
         .catch(e => {
           Toast(e, {}, ERROR);
