@@ -327,9 +327,11 @@ export default {
         this.showPassword = !this.showPassword;
       }
     },
+    /*eslint-disable */
     clear(val) {
       this.inputValue = val ? val : '';
     },
+    /*eslint-enable */
     preventCharE(e) {
       if (this.type === 'number' && e.key === 'e') e.preventDefault();
     }
