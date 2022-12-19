@@ -75,7 +75,15 @@ const EXCEPTIONS = [
   'web3-eth-contract',
   'is-ipfs',
   'axios',
-  'prettier' // creates more warnings
+  // update after release
+  '@ensdomains/address-encoder',
+  '@formatjs/intl-numberformat',
+  'bignumber.js',
+  'trezor-connect',
+  '@ledgerhq/hw-app-eth',
+  '@ledgerhq/live-common',
+  'prettier',
+  '@mdi/font'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

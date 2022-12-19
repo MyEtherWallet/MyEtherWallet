@@ -214,6 +214,62 @@
                 {{ parent.$t('termsOfService.third-party-title-p') }}
               </p>
             </div>
+            <div class="content">
+              <h3>
+                {{ parent.$t('termsOfService.subscription-plans-title') }}
+              </h3>
+
+              <p>
+                {{ parent.$t('termsOfService.subscription-plans-p1') }}
+              </p>
+              <p>
+                {{ parent.$t('termsOfService.subscription-plans-p2') }}
+              </p>
+              <p>
+                {{ parent.$t('termsOfService.subscription-plans-p3') }}
+              </p>
+              <p>
+                {{ parent.$t('termsOfService.subscription-plans-p4') }}
+              </p>
+
+              <p>
+                {{ parent.$t('termsOfService.subscription-free-trial-title') }}
+              </p>
+              <p>
+                {{
+                  parent.$t('termsOfService.subscription-free-trial-title-p1')
+                }}
+              </p>
+              <p>
+                {{
+                  parent.$t('termsOfService.subscription-free-trial-title-p2')
+                }}
+              </p>
+              <p>
+                {{
+                  parent.$t('termsOfService.subscription-free-trial-title-p3')
+                }}
+              </p>
+              <p>
+                {{ parent.$t('termsOfService.subscription-fee-changes-title') }}
+              </p>
+              <p>
+                {{
+                  parent.$t('termsOfService.subscription-fee-changes-title-p1')
+                }}
+              </p>
+              <p>
+                {{
+                  parent.$t('termsOfService.subscription-fee-changes-title-p2')
+                }}
+              </p>
+              <p>
+                {{ parent.$t('termsOfService.subscription-refund-title') }}
+              </p>
+              <p>
+                {{ parent.$t('termsOfService.subscription-refund-title-p1') }}
+              </p>
+            </div>
 
             <div class="content">
               <h3>{{ parent.$t('termsOfService.disclaimer-title') }}</h3>
