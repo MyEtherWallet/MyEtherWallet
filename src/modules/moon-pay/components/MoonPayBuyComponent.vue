@@ -567,7 +567,7 @@ export default {
         isEmpty(this.amount) ||
         this.min.gt(this.amount) ||
         isNaN(this.amount) ||
-        this.maxVal.lt(this.amount) ||
+        this.max.simplex.lt(this.amount) ||
         this.amountErrorMessages !== ''
       )
         return;
