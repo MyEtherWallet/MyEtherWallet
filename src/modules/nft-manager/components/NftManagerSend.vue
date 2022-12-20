@@ -41,7 +41,7 @@
 <script>
 import nftPlaceholder from '@/assets/images/icons/icon-nft-placeholder.png';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
-import { mapState } from 'vuex';
+import { mapGetters } from 'vuex';
 export default {
   components: {
     ModuleAddressBook: () => import('@/modules/address-book/ModuleAddressBook')
@@ -95,7 +95,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('global', ['network']),
+    ...mapGetters('global', ['network']),
     backTxt() {
       return 'Back to ' + this.nftCategory;
     },
