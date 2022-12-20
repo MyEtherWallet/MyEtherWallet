@@ -9,9 +9,9 @@
       color="#07385F"
     >
       <template #prepend>
-        <mew-overlay
+        <mew-popup
           :footer="footer"
-          :show-overlay="isOpenNetworkOverlay || !validNetwork"
+          :show="isOpenNetworkOverlay || !validNetwork"
           :title="
             validNetwork
               ? 'Select Network'
@@ -19,12 +19,18 @@
           "
           content-size="large"
           :close="validNetwork ? closeNetworkOverlay : null"
+          has-body-content
+          :has-buttons="false"
+          :left-btn="leftBtn"
+          hide-close-btn
+          :large-title="validNetwork"
         >
           <network-switch
             :filter-types="filterNetworks"
             :is-swap-page="isSwapPage"
+            @newNetwork="closeNetworkOverlay"
           />
-        </mew-overlay>
+        </mew-popup>
         <div class="pa-5 pb-3">
           <div class="mt-2 mb-4 d-flex align-center justify-space-between">
             <!-- ================================================================================== -->
@@ -322,6 +328,13 @@ export default {
     ...mapState('wallet', ['instance', 'isOfflineApp']),
     ...mapState('global', ['online', 'validNetwork']),
     ...mapState('popups', ['consentToTrack']),
+    leftBtn() {
+      return {
+        title: '',
+        color: 'primary',
+        method: this.validNetwork ? this.closeNetworkOverlay : null
+      };
+    },
     /**
      * IMPORTANT TO DO:
      * @returns {boolean}
@@ -436,6 +449,13 @@ export default {
         : { name: ROUTES_WALLET.DASHBOARD.NAME };
     }
   },
+  watch: {
+    isOpenNetworkOverlay(newVal) {
+      if (newVal && this.$route.name == ROUTES_WALLET.SWAP.NAME) {
+        this.trackSwap('switchingNetworkOnSwap');
+      }
+    }
+  },
   mounted() {
     // If no menu item is selected on load, redirect user to Dashboard
     if (!this.isOfflineApp) {
@@ -472,7 +492,6 @@ export default {
     },
     closeNetworkOverlay() {
       if (this.validNetwork) {
-        this.$router.go(-1);
         this.isOpenNetworkOverlay = false;
       }
     },
