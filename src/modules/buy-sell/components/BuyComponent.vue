@@ -704,3 +704,11 @@ export default {
   }
 }
 </style>
+
+<style lang="scss">
+.moonpay-buy-component {
+  .v-input__slot {
+    height: 62px !important;
+  }
+}
+</style>

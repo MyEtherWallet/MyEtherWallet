@@ -2,6 +2,7 @@
   <div class="mew-menu-popup">
     <div
       id="unique-id--mew-menu-popup--activator"
+      ref="activator"
       class="mew-menu-popup-activator"
       @click.stop="toggleMenu"
     >
@@ -9,7 +10,7 @@
       <!-- Activator button by prop -->
       <!-- ================================================================== -->
       <v-btn
-        id="unique-id--mew-menu-popup--activator-button"
+        v-if="btnTitle"
         class="px-3"
         :icon="icon"
         :color="color"
@@ -38,7 +39,6 @@
       <!-- Top arrow for content window -->
       <!-- ================================================================== -->
       <div
-        id="unique-id--mew-menu-popup--top-arrow"
         class="top-arrow content-fade-base"
         :class="show ? '' : 'content-fade-out'"
       />
@@ -49,7 +49,7 @@
     <!-- ================================================================== -->
     <div style="position: relative">
       <div
-        id="unique-id--mew-menu-popup--content"
+        ref="content"
         class="mew-menu-popup-content content-fade-base"
         :class="show ? '' : 'content-fade-out'"
         :style="contentWindowStyle"
@@ -63,6 +63,10 @@
 <script>
 export default {
   props: {
+    value: {
+      type: Boolean,
+      default: false
+    },
     icon: {
       type: Boolean,
       default: false
@@ -106,15 +110,17 @@ export default {
   },
   data() {
     return {
-      show: false
+      show: this.value
     };
   },
   computed: {
     activatorEl() {
-      return document.querySelector('#unique-id--mew-menu-popup--activator');
+      //return document.querySelector('#unique-id--mew-menu-popup--activator');
+      return this.$refs.activator;
     },
     contentEl() {
-      return document.querySelector('#unique-id--mew-menu-popup--content');
+      //return document.querySelector('#unique-id--mew-menu-popup--content');
+      return this.$refs.content;
     },
     btnTitleStyle() {
       return `
@@ -143,6 +149,11 @@ export default {
       `;
     }
   },
+  watch: {
+    value(val) {
+      this.show = val;
+    }
+  },
   methods: {
     toggleMenu() {
       this.show = !this.show;
@@ -151,6 +162,8 @@ export default {
       } else {
         window.removeEventListener('click', this.detactOutsideClick);
       }
+
+      this.$emit('input', this.show);
     },
     // =============================================================================
     // Whenever outside of menu content window is clicked, close the menu
@@ -194,6 +207,7 @@ export default {
   display: inline-block;
   cursor: pointer;
   user-select: none;
+  position: relative;
 }
 
 // ======================================================================
@@ -218,9 +232,11 @@ export default {
 // content container
 // ======================================================================
 .mew-menu-popup-content {
+  max-height: 400px;
   background-color: white;
   border-radius: 4px;
   overflow: hidden;
+  overflow-y: auto !important;
   box-shadow: 0 5px 5px -3px rgb(13 41 66 / 20%),
     0 8px 10px 1px rgb(13 41 66 / 14%), 0 3px 14px 2px rgb(13 41 66 / 12%);
   position: absolute;
