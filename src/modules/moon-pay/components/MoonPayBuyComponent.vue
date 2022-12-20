@@ -32,6 +32,7 @@
         <mew-select
           v-model="selectedFiat"
           :items="fiatCurrencyItems"
+          style="margin-top: -24px"
           is-custom
           class="selectedFiat"
         />
