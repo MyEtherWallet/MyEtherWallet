@@ -449,7 +449,7 @@ export default {
           const price = token.price.substring(1).replace(',', '');
           this.amount = BigNumber(this.localCryptoAmount)
             .multipliedBy(price)
-            .toString();
+            .toFixed(2);
           this.localCryptoAmount = BigNumber(this.amount).div(price).toString();
           this.$emit('selectedFiat', newVal);
         }
