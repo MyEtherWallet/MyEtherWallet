@@ -71,6 +71,7 @@ const EXCEPTIONS = [
   'node-sass',
   '@ledgerhq/hw-transport-web-ble',
   '@ledgerhq/hw-transport-webusb',
+  '@ledgerhq/hw-app-eth',
   'uuid',
   'web3-eth-contract',
   'is-ipfs',
