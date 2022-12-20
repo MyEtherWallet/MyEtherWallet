@@ -471,7 +471,7 @@ export default {
     },
     amount: {
       handler: function (newVal) {
-        const simplexMax = this.max.simplex;
+        const simplexMax = this.max.simplex.multipliedBy(this.fiatMultiplier);
         this.checkMoonPayMax();
         if (
           simplexMax.lt(newVal) ||
