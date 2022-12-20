@@ -149,7 +149,7 @@
                   <a
                     v-if="network.type.canBuy"
                     class="text-decoration--underline"
-                    @click="openMoonpay"
+                    @click="openBuySell"
                   >
                     Buy more {{ network.type.name }}
                   </a>

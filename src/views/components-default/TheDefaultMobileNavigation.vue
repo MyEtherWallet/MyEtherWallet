@@ -81,7 +81,7 @@
           </v-list-group>
         </template>
         <v-list-item>
-          <v-list-item-content @click="openMoonpay">
+          <v-list-item-content @click="openBuySell">
             <div class="mew-heading-3 font-weight-medium textDark--text">
               Buy ETH
             </div>
