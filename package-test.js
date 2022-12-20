@@ -71,11 +71,13 @@ const EXCEPTIONS = [
   'node-sass',
   '@ledgerhq/hw-transport-web-ble',
   '@ledgerhq/hw-transport-webusb',
+  '@ledgerhq/hw-app-eth',
   'uuid',
   'web3-eth-contract',
   'is-ipfs',
   'axios',
-  'prettier' // creates more warnings
+  'prettier', // creates more warnings
+  '@ledgerhq/hw-app-eth'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
