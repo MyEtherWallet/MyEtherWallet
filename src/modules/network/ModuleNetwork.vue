@@ -83,9 +83,8 @@ export default {
       }
 
       return (
-        this.identifier !== WALLET_TYPES.WALLET_CONNECT &&
-        (this.identifier !== WALLET_TYPES.WEB3_WALLET ||
-          switchNetworkWeb3Supported)
+        this.identifier !== WALLET_TYPES.WEB3_WALLET ||
+        switchNetworkWeb3Supported
       );
     }
   },
