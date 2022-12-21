@@ -1,8 +1,93 @@
 <template>
   <div class="mew-component--swap">
-    <app-wallet-block title="Swap"> </app-wallet-block>
+    <div v-if="isAvailable">
+      <app-wallet-block title="Swap">
+        <div v-if="!isLoading && fromTokenType">
+          <!-- =============================================================== -->
+          <!-- You Give -->
+          <!-- =============================================================== -->
+          <app-border-container selected class="give-block">
+            <div class="monospace input-block-title textMedium--text">
+              YOU GIVE
+            </div>
+            <div class="d-flex align-center">
+              <mew-button
+                btn-style="transparent"
+                color-theme="basic"
+                style="padding: 0 10px !important; margin-left: -10px"
+              >
+                <mew-token-container size="25px" :img="fromTokenType.img" />
+                <div class="mew-heading-1 ml-3 font-weight-bold textDark--text">
+                  {{ fromTokenType.symbol }}
+                </div>
+                <v-icon color="textDark">mdi-menu-down</v-icon>
+              </mew-button>
+              <v-spacer />
+              <v-text-field
+                v-model="tokenInValue"
+                class="swap-input"
+                placeholder="Enter amount"
+                solo
+                flat
+                hide-details
+              />
+            </div>
+            <div
+              v-if="!isLoading"
+              class="d-flex align-center justify-space-between"
+            >
+              <div class="textMedium--text">
+                Max: {{ fromTokenType.tokenBalance }}
+              </div>
+              <div class="textMedium--text">≈$0</div>
+            </div>
+          </app-border-container>
 
-    <mew6-white-sheet v-show="false">
+          <div class="d-flex align-center justify-center py-2">
+            <v-icon color="textDark" size="30px">mdi-swap-vertical</v-icon>
+          </div>
+
+          <!-- =============================================================== -->
+          <!-- You Receive -->
+          <!-- =============================================================== -->
+          <app-border-container class="give-block">
+            <div class="monospace input-block-title textMedium--text">
+              YOU RECEIVE
+            </div>
+            <div class="d-flex align-center">
+              <mew-button
+                btn-style="transparent"
+                color-theme="basic"
+                style="padding: 0 10px !important; margin-left: -10px"
+              >
+                <div class="mew-heading-1 font-weight-bold textDark--text">
+                  Select Token
+                </div>
+                <v-icon color="textDark">mdi-menu-down</v-icon>
+              </mew-button>
+              <v-spacer />
+              <v-text-field
+                v-model="tokenInValue"
+                readonly
+                class="swap-input read-only"
+                placeholder="Enter amount"
+                solo
+                flat
+                hide-details
+              />
+            </div>
+            <div class="d-flex align-center justify-space-between">
+              <div class="textMedium--text">Balance: 0</div>
+              <div class="textMedium--text">≈$0</div>
+            </div>
+          </app-border-container>
+        </div>
+
+        <swap-loader v-else />
+      </app-wallet-block>
+    </div>
+
+    <mew6-white-sheet>
       <mew-module
         :has-elevation="true"
         :has-indicator="true"
@@ -327,6 +412,8 @@ let localContractToToken = {};
 export default {
   name: 'ModuleSwap',
   components: {
+    SwapLoader: () => import('@/modules/swap/components/SwapLoader'),
+    AppBorderContainer: () => import('@/core/components/AppBorderContainer'),
     AppWalletBlock: () => import('@/core/components/AppWalletBlock'),
     AppButtonBalance: () => import('@/core/components/AppButtonBalance'),
     AppUserMsgBlock: () => import('@/core/components/AppUserMsgBlock'),
@@ -1748,6 +1835,30 @@ export default {
 .swap-not-available {
   @media (min-width: 960px) {
     min-height: 45vh;
+  }
+}
+
+.read-only {
+  pointer-events: none;
+}
+
+.input-block-title {
+  letter-spacing: 2px;
+  font-size: 12px;
+}
+</style>
+
+<style lang="scss">
+.mew-component--swap {
+  .swap-input {
+    max-width: 200px;
+    .v-input__slot {
+      padding: 0 !important;
+    }
+    input {
+      font-size: 24px !important;
+      text-align: right !important;
+    }
   }
 }
 </style>
