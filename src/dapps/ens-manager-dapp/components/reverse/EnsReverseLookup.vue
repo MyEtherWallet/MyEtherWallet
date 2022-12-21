@@ -120,7 +120,6 @@ export default {
           try {
             this.permHandler.getNameReverseData(i.value).then(gas => {
               i.fee = toBNSafe(gas);
-              console.log(this.network.type);
               if (toBNSafe(this.balance).lt(i.fee)) {
                 i.error = `Insufficient amount of ${this.network.type.currencyName}`;
               }
