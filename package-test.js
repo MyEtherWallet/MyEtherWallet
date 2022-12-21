@@ -84,7 +84,8 @@ const EXCEPTIONS = [
   '@ledgerhq/live-common',
   'prettier',
   '@mdi/font',
-  '@myetherwallet/mew-components'
+  '@myetherwallet/mew-components',
+  '@coolwallet/eth'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
