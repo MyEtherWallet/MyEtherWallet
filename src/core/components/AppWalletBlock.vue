@@ -1,6 +1,6 @@
 <template>
   <div class="app-wallet-block mx-auto">
-    <mew6-white-sheet class="px-13 py-8">
+    <mew6-white-sheet class="px-13 pt-8 pb-15">
       <h2 class="mb-8">{{ title }}</h2>
       <slot></slot>
     </mew6-white-sheet>
