@@ -63,6 +63,7 @@ export default {
             this.message = '';
           })
           .catch(e => {
+            this.message = '';
             this.instance.errorHandler(e.message);
           });
       } catch (e) {
