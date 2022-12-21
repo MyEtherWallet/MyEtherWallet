@@ -18,7 +18,6 @@ export default class PermanentNameModule extends ENSManagerInterface {
     super(name, address, network, web3, ens);
     this.$store = vuexStore;
     Object.assign(this, mapState('global', ['gasPriceType']));
-    //Object.assign(this, mapState('wallet', ['web3']));
     Object.assign(this, mapGetters('global', ['gasPriceByType']));
     this.expiryTime = expiry;
     this.secretPhrase = '';

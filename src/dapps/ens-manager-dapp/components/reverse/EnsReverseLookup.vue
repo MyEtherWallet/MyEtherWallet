@@ -148,6 +148,9 @@ export default {
     },
     address() {
       if (this.checkNetwork()) this.setup();
+    },
+    web3() {
+      if (this.checkNetwork()) this.setup();
     }
   },
   async mounted() {
