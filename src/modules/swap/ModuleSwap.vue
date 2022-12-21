@@ -93,7 +93,7 @@
     <!-- =============================================================================================================== -->
     <!-- =============================================================================================================== -->
 
-    <mew6-white-sheet v-show="false">
+    <mew6-white-sheet>
       <mew-module
         :has-elevation="true"
         :has-indicator="true"
@@ -106,83 +106,86 @@
               From / Amount to Swap / To / Amount to Recieve
             =====================================================================================
             -->
-          <v-row class="align-start justify-space-between mt-4">
-            <v-col cols="12" sm="5" class="pb-0 pb-sm-3 pr-sm-0">
-              <div class="position--relative">
-                <app-button-balance
-                  v-show="!isFromNonChain"
-                  :loading="isLoading"
-                  :balance="displayBalance"
-                />
+          <div class="input-swap-container pt-7 pb-3 px-5">
+            <v-row class="align-start justify-space-between mt-4">
+              <v-col cols="12" sm="5" class="pb-0 pb-sm-3 pr-sm-0">
+                <div class="position--relative">
+                  <app-button-balance
+                    v-show="!isFromNonChain"
+                    :loading="isLoading"
+                    :balance="displayBalance"
+                  />
+                  <mew-select
+                    :value="fromTokenType"
+                    label="From"
+                    :items="actualFromTokens"
+                    :is-custom="true"
+                    :loading="isLoading"
+                    @input="setFromToken"
+                  />
+                </div>
+                <mew-input
+                  ref="amountInput"
+                  label="Amount"
+                  placeholder="0"
+                  type="number"
+                  class="FromAmountInput mt-2"
+                  :value="tokenInValue"
+                  :persistent-hint="true"
+                  :error-messages="amountErrorMessage"
+                  :disabled="initialLoad"
+                  :buy-more-str="
+                    amountErrorMessage === errorMsgs.amountExceedsEthBalance ||
+                    amountErrorMessage === errorMsgs.amountEthIsTooLow
+                      ? network.type.canBuy
+                        ? 'Buy more.'
+                        : ''
+                      : null
+                  "
+                  :max-btn-obj="maxBtn"
+                  @buyMore="openBuySell"
+                  @keydown.native="preventCharE($event)"
+                  @input="val => triggerSetTokenInValue(val, false)"
+              /></v-col>
+              <v-col
+                cols="12"
+                align-self="center"
+                sm="2"
+                class="px-6 py-0 py-sm-3 mb-3 mb-sm-0"
+              >
+                <div class="d-flex align-center justify-center pb-sm-10">
+                  <mew-icon-button
+                    mdi-icon="swap-horizontal"
+                    class="pa-2 d-flex align-center justify-center SwitchTokens"
+                    color-theme="basic"
+                    btn-style="light"
+                    :disabled="!enableTokenSwitch"
+                    @click.native="switchTokens"
+                  />
+                </div>
+              </v-col>
+              <v-col cols="12" sm="5" class="pb-0 pb-sm-3 pl-sm-0">
                 <mew-select
-                  :value="fromTokenType"
-                  label="From"
-                  :items="actualFromTokens"
+                  :value="toTokenType"
+                  :items="actualToTokens"
                   :is-custom="true"
                   :loading="isLoading"
-                  @input="setFromToken"
+                  label="To"
+                  class="ToTokenSelect"
+                  @input="setToToken"
                 />
-              </div>
-              <mew-input
-                ref="amountInput"
-                label="Amount"
-                placeholder="0"
-                type="number"
-                class="FromAmountInput"
-                :value="tokenInValue"
-                :persistent-hint="true"
-                :error-messages="amountErrorMessage"
-                :disabled="initialLoad"
-                :buy-more-str="
-                  amountErrorMessage === errorMsgs.amountExceedsEthBalance ||
-                  amountErrorMessage === errorMsgs.amountEthIsTooLow
-                    ? network.type.canBuy
-                      ? 'Buy more.'
-                      : ''
-                    : null
-                "
-                :max-btn-obj="maxBtn"
-                @buyMore="openMoonpay"
-                @keydown.native="preventCharE($event)"
-                @input="val => triggerSetTokenInValue(val, false)"
-            /></v-col>
-            <v-col
-              cols="12"
-              align-self="center"
-              sm="2"
-              class="px-6 py-0 py-sm-3 mb-3 mb-sm-0"
-            >
-              <div class="d-flex align-center justify-center pb-sm-10">
-                <mew-icon-button
-                  mdi-icon="swap-horizontal"
-                  class="pa-2 d-flex align-center justify-center SwitchTokens"
-                  color-theme="basic"
-                  btn-style="light"
-                  :disabled="!enableTokenSwitch"
-                  @click.native="switchTokens"
+                <mew-input
+                  label="Amount"
+                  placeholder="0"
+                  type="number"
+                  :hide-clear-btn="true"
+                  :value="tokenOutValue"
+                  is-read-only
+                  class="mt-2"
                 />
-              </div>
-            </v-col>
-            <v-col cols="12" sm="5" class="pb-0 pb-sm-3 pl-sm-0">
-              <mew-select
-                :value="toTokenType"
-                :items="actualToTokens"
-                :is-custom="true"
-                :loading="isLoading"
-                label="To"
-                class="ToTokenSelect"
-                @input="setToToken"
-              />
-              <mew-input
-                label="Amount"
-                placeholder="0"
-                type="number"
-                :hide-clear-btn="true"
-                :value="tokenOutValue"
-                is-read-only
-              />
-            </v-col>
-          </v-row>
+              </v-col>
+            </v-row>
+          </div>
 
           <!--
           =====================================================================================
@@ -201,7 +204,7 @@
                 :title="`Buy ${network.type.currencyName}`"
                 class="ma-1"
                 :has-full-width="$vuetify.breakpoint.xsOnly"
-                @click.native="openMoonpay"
+                @click.native="openBuySell"
               />
             </div>
           </app-user-msg-block>
