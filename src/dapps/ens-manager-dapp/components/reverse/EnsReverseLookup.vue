@@ -34,7 +34,7 @@
           class="set-button"
           btn-size="xlarge"
           :loading="selectedDomain.loading"
-          :disabled="disableRegister || selectedDomain.error.length"
+          :disabled="disableRegister"
           @click.native="setReverseRecord(selectedDomain)"
         />
       </div>
@@ -94,7 +94,7 @@ export default {
     return {
       ensLookupResults: null,
       hasDomains: false,
-      selectedDomain: { loading: false, fee: toBNSafe(0) },
+      selectedDomain: { loading: false, fee: toBNSafe(0), error: '' },
       selectedDomainAddr: '',
       permHandler: {},
       hasReverseRecordNames: false,
@@ -138,7 +138,8 @@ export default {
     disableRegister() {
       return (
         toBNSafe(this.balance).lt(this.selectedDomain.fee) ||
-        !this.selectedDomain.value
+        !this.selectedDomain.value ||
+        this.selectedDomain.error.length > 0
       );
     }
   },
@@ -178,7 +179,7 @@ export default {
         ens,
         this.durationPick
       );
-      this.selectedDomain = { loading: false, fee: toBNSafe(0) };
+      this.selectedDomain = { loading: false, fee: toBNSafe(0), error: '' };
       this.getReverseRecordNames();
     },
     async fetchDomains() {
