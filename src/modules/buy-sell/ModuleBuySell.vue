@@ -5,7 +5,7 @@
       :has-buttons="false"
       :has-title="false"
       :has-padding="false"
-      max-width="540"
+      max-width="450"
       :left-btn="leftBtn"
       scrollable
       has-body-content
@@ -18,6 +18,7 @@
           active-color="greenPrimary"
           has-underline
           class="pt-3"
+          :class="addTokenPadding ? 'top-container' : ''"
           @onTab="onTab"
         >
           <template #tabContent1>
@@ -27,7 +28,7 @@
               :tab="activeTab"
               :default-currency="defaultCurrency"
               :in-wallet="inWallet"
-              :supported-buy="supportedBuy"
+              :supported-buy="supportedNetwork"
               @selectedCurrency="setSelectedCurrency"
               @openProviders="openProviders"
               @selectedFiat="setSelectedFiat"
@@ -35,6 +36,7 @@
               @simplexQuote="setSimplexQuote"
               @toAddress="setToAddress"
               @success="buySuccess"
+              @openTokenSelect="checkTokenPadding"
             />
           </template>
           <template #tabContent2>
@@ -49,7 +51,7 @@
           </template>
         </mew-tabs>
       </div>
-      <MoonPayBuyProviderComponent
+      <BuyProviderComponent
         v-if="step === 1"
         :order-handler="orderHandler"
         :close="close"
@@ -72,20 +74,16 @@
 import { mapGetters, mapState, mapActions } from 'vuex';
 import { isEmpty } from 'lodash';
 
-import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
-import nodes from '@/utils/networks';
-import { SUCCESS, Toast } from '../toast/handler/handlerToast';
 
 import handler from './handlers/handlerOrder';
 
 export default {
   name: 'MoonPay',
   components: {
-    BuyEthComponent: () => import('./components/MoonPayBuyComponent'),
-    SellEthComponent: () => import('./components/MoonPaySellComponent'),
-    MoonPayBuyProviderComponent: () =>
-      import('./components/MoonPayBuyProviderComponent.vue')
+    BuyEthComponent: () => import('./components/BuyComponent'),
+    SellEthComponent: () => import('./components/SellComponent'),
+    BuyProviderComponent: () => import('./components/BuyProviderComponent.vue')
   },
   props: {
     open: {
@@ -100,12 +98,12 @@ export default {
       orderHandler: {},
       selectedCurrency: {},
       selectedFiat: {},
-      nodes: nodes,
       onlySimplex: false,
       buyObj: {},
       step: 0,
       simplexQuote: {},
-      toAddress: ''
+      toAddress: '',
+      addTokenPadding: false
     };
   },
   computed: {
@@ -119,43 +117,23 @@ export default {
       );
     },
     defaultCurrency() {
-      if (isEmpty(this.selectedCurrency) && this.supportedBuy) {
+      if (isEmpty(this.selectedCurrency) && this.supportedNetwork) {
         if (this.inWallet) {
           return this.tokensList[0];
         }
         const token = this.contractToToken(MAIN_TOKEN_ADDRESS);
         token.value = token.symbol;
         return token;
-      } else if (
-        isEmpty(this.selectedCurrency) ||
-        !this.supportedBuy ||
-        (this.activeTab === 1 && !this.supportedSell)
-      ) {
-        return {
-          decimals: 18,
-          img: 'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ETH-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.svg',
-          name: 'ETH',
-          subtext: 'Ethereum',
-          value: 'ETH',
-          symbol: 'ETH',
-          network: 'ETH',
-          contract: MAIN_TOKEN_ADDRESS
-        };
+      } else if (isEmpty(this.selectedCurrency) || !this.supportedNetwork) {
+        return this.selectedCurrency;
       }
       return this.selectedCurrency;
     },
-    supportedBuy() {
+    supportedNetwork() {
       return (
         this.network.type.name === 'ETH' ||
         this.network.type.name === 'BSC' ||
         this.network.type.name === 'MATIC'
-      );
-    },
-    supportedSell() {
-      return (
-        this.selectedCurrency.symbol === 'ETH' ||
-        this.selectedCurrency.symbol === 'USDT' ||
-        this.selectedCurrency.symbol === 'USDC'
       );
     },
     leftBtn() {
@@ -193,32 +171,11 @@ export default {
     }
   },
   methods: {
-    ...mapActions('wallet', ['setWeb3Instance']),
-    ...mapActions('global', ['setNetwork']),
     ...mapActions('external', ['setNetworkTokens']),
     onTab(val) {
       this.selectedCurrency = {};
       this.selectedCurrency = this.defaultCurrency;
-      if (val === 1 || (val === 0 && (!this.supportedBuy || !this.inWallet))) {
-        if (this.network.type.chainID !== 1) {
-          const defaultNetwork = this.nodes['ETH'].find(item => {
-            return item.service === 'myetherwallet.com-ws';
-          });
-          if (
-            !this.instance ||
-            (this.instance &&
-              this.instance.identifier !== WALLET_TYPES.WEB3_WALLET)
-          ) {
-            this.setNetwork({ network: defaultNetwork }).then(() => {
-              this.setWeb3Instance();
-              this.activeTab = val;
-              Toast(`Switched network to: ETH`, {}, SUCCESS);
-            });
-          }
-        }
-      } else {
-        this.activeTab = val;
-      }
+      this.activeTab = val;
     },
     async setTokens() {
       if (!this.inWallet) {
@@ -274,9 +231,18 @@ export default {
       this.openProviders(items[3]);
       this.setSelectedCurrency(items[4]);
       this.setSelectedFiat(items[5]);
+    },
+    checkTokenPadding(isOpen) {
+      if (this.inWallet) {
+        this.addTokenPadding = isOpen;
+      } else this.addTokenPadding = false;
     }
   }
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.top-container {
+  min-height: 540px;
+}
+</style>

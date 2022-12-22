@@ -70,7 +70,7 @@
               :value="stakeAmount"
               :error-messages="errorMessages"
               :buy-more-str="buyMoreStr"
-              @buyMore="openMoonpay"
+              @buyMore="openBuySell"
               @input="setAmount"
             />
           </div>
@@ -408,7 +408,7 @@ export default {
     address() {
       this.setup();
     },
-    isEthNetwork() {
+    web3() {
       this.setup();
       this.setGasPrice();
     }
@@ -427,6 +427,8 @@ export default {
       this.stakeAmount = BigNumber(value).toFixed();
     }, 500),
     setup() {
+      this.stakeAmount = '0';
+      this.stakeHandler = {};
       this.stakeHandler = new stakeHandler(
         this.web3,
         this.isEthNetwork,

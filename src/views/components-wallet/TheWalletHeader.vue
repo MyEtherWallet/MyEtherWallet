@@ -112,7 +112,7 @@
 import moment from 'moment';
 import { mapState } from 'vuex';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-import { MOONPAY_EVENT, MOONPAY_OFFER_END } from '@/modules/moon-pay/helpers';
+import { BUYSELL_EVENT, MOONPAY_OFFER_END } from '@/modules/buy-sell/helpers';
 import { EventBus } from '@/core/plugins/eventBus';
 export default {
   components: {
@@ -144,7 +144,7 @@ export default {
   methods: {
     buyCryptoNow() {
       this.trackBuySell('buySellBuyCryptoNow');
-      EventBus.$emit(MOONPAY_EVENT);
+      EventBus.$emit(BUYSELL_EVENT);
     }
   }
 };
