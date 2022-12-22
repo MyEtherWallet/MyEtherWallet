@@ -154,7 +154,10 @@
             depressed
             color="white"
             @click="openQR = true"
-            ><v-icon class="info-container--icon" size="18px"
+            ><v-icon
+              class="info-container--icon"
+              size="18px"
+              color="textAlwaysDark"
               >mdi-qrcode</v-icon
             ></v-btn
           >
@@ -169,9 +172,9 @@
             fab
             color="white"
             @click="copyAddress"
-            ><v-icon class="info-container--icon" small
-              >mdi-content-copy</v-icon
-            ></v-btn
+            ><v-icon class="info-container--icon" small color="textAlwaysDark">
+              mdi-content-copy
+            </v-icon></v-btn
           >
         </div>
       </div>

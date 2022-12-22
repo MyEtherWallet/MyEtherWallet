@@ -4,7 +4,7 @@
       Module Nft Manager
     =====================================================================================
     -->
-  <div>
+  <div class="module-nft-manager">
     <mew-module
       class="text-center d-flex justify-end flex-grow-1 pt-6 mr-3"
       :has-elevation="true"
@@ -17,10 +17,12 @@
       Loading
     =====================================================================================
     -->
-        <v-skeleton-loader
-          v-if="loadingContracts && !hasNoTokens"
-          type="table-heading,list-item-avatar-three-line, list-item-avatar-three-line, list-item-avatar-three-line"
-        />
+        <div class="loader bgWalletBlockDark">
+          <v-skeleton-loader
+            v-if="loadingContracts && !hasNoTokens"
+            type="table-heading,list-item-avatar-three-line, list-item-avatar-three-line, list-item-avatar-three-line"
+          />
+        </div>
         <!--
     =====================================================================================
     Display if no nfts owned
@@ -34,7 +36,7 @@
             hasNoTokens
           "
           flat
-          color="selectorBg lighten-1"
+          color="bgWalletBlockDark"
           class="d-flex align-center px-5 py-4"
           min-height="94px"
         >
@@ -446,7 +448,13 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped></style>
+
 <style lang="scss">
+.module-nft-manager .loader .v-skeleton-loader__bone {
+  background: transparent !important;
+}
 .nft-pagination {
   .v-pagination__navigation,
   .v-pagination__item {
