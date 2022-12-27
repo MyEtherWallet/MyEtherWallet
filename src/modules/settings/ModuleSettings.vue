@@ -141,7 +141,7 @@ export default {
     panelItems() {
       return [
         {
-          name: 'Default transaction priority',
+          name: 'Transaction priority',
           toggleTitle: this.setPriority(this.gasPriceType)
         },
         {

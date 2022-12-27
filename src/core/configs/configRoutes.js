@@ -33,7 +33,6 @@ const ROUTES_WALLET = {
   ENS_2: { NAME: 'ENS2', PATH: 'ens-2' },
   ENS_3: { NAME: 'ENS3', PATH: 'ens-3' },
   INTERACT_WITH_CONTRACT: { NAME: 'InteractWithContract', PATH: 'interact' },
-  NETWORK: { NAME: 'Network', PATH: 'network' },
   NFT_MANAGER: { NAME: 'NFTManager', PATH: 'nft' },
   NFT_MANAGER_SEND: { NAME: 'NftManagerSend', PATH: 'send-your-nft' },
   PRINT: { NAME: 'PrintPaperWallet', PATH: 'print-wallet' },

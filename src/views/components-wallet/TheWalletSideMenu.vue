@@ -9,9 +9,9 @@
       color="#07385F"
     >
       <template #prepend>
-        <mew-overlay
+        <mew-popup
           :footer="footer"
-          :show-overlay="isOpenNetworkOverlay || !validNetwork"
+          :show="isOpenNetworkOverlay || !validNetwork"
           :title="
             validNetwork
               ? 'Select Network'
@@ -19,12 +19,18 @@
           "
           content-size="large"
           :close="validNetwork ? closeNetworkOverlay : null"
+          has-body-content
+          :has-buttons="false"
+          :left-btn="leftBtn"
+          hide-close-btn
+          :large-title="validNetwork"
         >
           <network-switch
             :filter-types="filterNetworks"
             :is-swap-page="isSwapPage"
+            @newNetwork="closeNetworkOverlay"
           />
-        </mew-overlay>
+        </mew-popup>
         <div class="pa-5 pb-3">
           <div class="mt-2 mb-4 d-flex align-center justify-space-between">
             <!-- ================================================================================== -->
@@ -246,7 +252,7 @@
 import { mapActions, mapGetters, mapState } from 'vuex';
 import send from '@/assets/images/icons/icon-send.svg';
 import portfolio from '@/assets/images/icons/icon-portfolio-enable.svg';
-import bridge from '@/assets/images/icons/icon-bridge-enable.svg';
+// import bridge from '@/assets/images/icons/icon-bridge-enable.svg';
 import nft from '@/assets/images/icons/icon-nft.svg';
 import swap from '@/assets/images/icons/icon-swap-enable.svg';
 import receive from '@/assets/images/icons/icon-arrow-down-right.svg';
@@ -261,7 +267,7 @@ import { ETH, BSC, MATIC } from '@/utils/networks/types';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import dappsMeta from '@/dapps/metainfo-dapps';
-import { MOONPAY_EVENT } from '@/modules/moon-pay/helpers';
+import { BUYSELL_EVENT } from '@/modules/buy-sell/helpers';
 import isNew from '@/core/helpers/isNew.js';
 
 export default {
@@ -301,6 +307,13 @@ export default {
     ...mapState('wallet', ['instance', 'isOfflineApp']),
     ...mapState('global', ['online', 'validNetwork']),
     ...mapState('popups', ['consentToTrack']),
+    leftBtn() {
+      return {
+        title: '',
+        color: 'primary',
+        method: this.validNetwork ? this.closeNetworkOverlay : null
+      };
+    },
     /**
      * IMPORTANT TO DO:
      * @returns {boolean}
@@ -366,11 +379,11 @@ export default {
             route: { name: ROUTES_WALLET.SWAP.NAME },
             fn: this.trackToSwap
           },
-          {
-            title: this.$t('interface.menu.bridge'),
-            icon: bridge,
-            route: { name: ROUTES_WALLET.BRIDGE.NAME }
-          },
+          // {
+          //   title: this.$t('interface.menu.bridge'),
+          //   icon: bridge,
+          //   route: { name: ROUTES_WALLET.BRIDGE.NAME }
+          // },
           {
             title: this.$t('interface.menu.send'),
             icon: send,
@@ -386,7 +399,7 @@ export default {
           {
             title: this.$t('interface.menu.buy-sell'),
             icon: buy,
-            fn: this.openMoonpay
+            fn: this.openBuySell
           }
         ];
       }
@@ -457,6 +470,13 @@ export default {
         : { name: ROUTES_WALLET.DASHBOARD.NAME };
     }
   },
+  watch: {
+    isOpenNetworkOverlay(newVal) {
+      if (newVal && this.$route.name == ROUTES_WALLET.SWAP.NAME) {
+        this.trackSwap('switchingNetworkOnSwap');
+      }
+    }
+  },
   mounted() {
     // If no menu item is selected on load, redirect user to Dashboard
     if (!this.isOfflineApp) {
@@ -493,7 +513,6 @@ export default {
     },
     closeNetworkOverlay() {
       if (this.validNetwork) {
-        this.$router.go(-1);
         this.isOpenNetworkOverlay = false;
       }
     },
@@ -509,8 +528,8 @@ export default {
     openNetwork() {
       this.isOpenNetworkOverlay = true;
     },
-    openMoonpay() {
-      EventBus.$emit(MOONPAY_EVENT);
+    openBuySell() {
+      EventBus.$emit(BUYSELL_EVENT);
       this.trackBuySellFunc();
     },
     openNavigation() {

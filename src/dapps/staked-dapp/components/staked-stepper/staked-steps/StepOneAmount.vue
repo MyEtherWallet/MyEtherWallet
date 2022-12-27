@@ -27,7 +27,7 @@
           filter-placeholder="Search for Amount"
           is-custom
           outlined
-          @buyMore="openMoonpay"
+          @buyMore="openBuySell"
           @input="setAmount"
         />
         <!--
