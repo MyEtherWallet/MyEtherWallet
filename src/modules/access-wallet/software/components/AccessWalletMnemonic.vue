@@ -269,6 +269,7 @@ export default {
       deep: true,
       handler: function (newval) {
         if (newval && !isEmpty(newval) && !isEmpty(newval[1])) {
+          this.checkPhrase(newval);
           const splitVal = newval[1].split(' ');
           if (splitVal.length === 12 || splitVal.length === 24) {
             this.length = splitVal.length;
@@ -358,6 +359,15 @@ export default {
       } else {
         Toast('Something went wrong in mnemonic wallet access', {}, SENTRY);
       }
+    },
+    checkPhrase(val) {
+      const testObj = {};
+      let changed = false;
+      Object.values(val).forEach((item, idx) => {
+        if (!isEmpty(item)) testObj[idx + 1] = item.toLowerCase();
+        else changed = true;
+      });
+      if (changed) this.phrase = testObj;
     }
   }
 };
