@@ -251,7 +251,7 @@
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex';
 import send from '@/assets/images/icons/icon-send.svg';
-import portfolio from '@/assets/images/icons/icon-portfolio-enable.svg';
+import portfolio from '@/assets/images/icons/icon-dashboard-enable.svg';
 // import bridge from '@/assets/images/icons/icon-bridge-enable.svg';
 import nft from '@/assets/images/icons/icon-nft.svg';
 import swap from '@/assets/images/icons/icon-swap-enable.svg';
