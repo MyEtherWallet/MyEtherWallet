@@ -96,26 +96,36 @@
       <v-divider class="my-1 mx-6" />
 
       <v-list v-if="!isOfflineApp" dense>
-        <template v-for="(item, idx) in sectionTwo">
-          <v-list-item
-            v-if="shouldShow(item.route)"
-            :key="item + idx"
-            :to="item.route"
-            @click="item.fn ? item.fn() : () => {}"
-          >
-            <v-list-item-icon class="mx-3">
-              <img width="24" height="24" :src="item.icon" :alt="item.title" />
-            </v-list-item-icon>
+        <v-list-item-group>
+          <template v-for="(item, idx) in sectionTwo">
+            <v-list-item
+              v-if="shouldShow(item.route)"
+              :key="item + idx"
+              :style="
+                item.button ? 'background-color: transparent !important;' : ''
+              "
+              :to="item.route"
+              @click="item.fn ? item.fn() : () => {}"
+            >
+              <v-list-item-icon class="mx-3">
+                <img
+                  width="24"
+                  height="24"
+                  :src="item.icon"
+                  :alt="item.title"
+                />
+              </v-list-item-icon>
 
-            <v-list-item-content>
-              <v-list-item-title
-                class="white--text mew-body font-weight-regular"
-              >
-                {{ item.title }}
-              </v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </template>
+              <v-list-item-content>
+                <v-list-item-title
+                  class="white--text mew-body font-weight-regular"
+                >
+                  {{ item.title }}
+                </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </template>
+        </v-list-item-group>
       </v-list>
 
       <v-divider v-if="!isOfflineApp" class="my-1 mx-6" />
@@ -394,12 +404,14 @@ export default {
             icon: receive,
             fn: () => {
               this.openQR = true;
-            }
+            },
+            button: true
           },
           {
             title: this.$t('interface.menu.buy-sell'),
             icon: buy,
-            fn: this.openBuySell
+            fn: this.openBuySell,
+            button: true
           }
         ];
       }
