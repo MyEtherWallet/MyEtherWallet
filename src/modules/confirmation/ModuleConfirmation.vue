@@ -122,6 +122,7 @@
                 'expansion-panel-border-bottom':
                   transactions.length > 1 && i !== transactions.length - 1
               }"
+              class="bgWalletBlockDark"
               @click="scrollToElement(i)"
             >
               <v-expansion-panel-header
@@ -1037,8 +1038,8 @@ export default {
 <style lang="scss" scoped>
 $borderPanels: 1px solid var(--v-greyLight-base) !important;
 .expansion-border {
-  border: $borderPanels;
-  border-radius: 8px;
+  //  border: $borderPanels;
+  //  border-radius: 8px;
 }
 
 .data-values {
@@ -1048,7 +1049,7 @@ $borderPanels: 1px solid var(--v-greyLight-base) !important;
   height: 60px;
 }
 .expansion-panel-border-bottom {
-  border-bottom: $borderPanels;
+  //  border-bottom: $borderPanels;
 }
 .ledger-warning {
   border: 1px solid #d7dae3;

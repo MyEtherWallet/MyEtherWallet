@@ -8,7 +8,7 @@
     :persistent="isPersistent"
     @click:outside="handleClickOutside"
   >
-    <v-card v-if="scrollable" color="white" class="py-0 px-0 px-md-0">
+    <v-card v-if="scrollable" color="bgWalletBlock" class="py-0 px-0 px-md-0">
       <!--
       =====================================================================================
         Dialog Header
