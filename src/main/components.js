@@ -13,6 +13,7 @@ import MewButton from '@/components/MewButton/MewButton.vue';
 import MewSheet from '@/components/MewSheet/MewSheet.vue';
 import MewModule from '@/components/MewModule/MewModule.vue';
 import MewOverlay from '@/components/MewOverlay/MewOverlay.vue';
+import MewTabs from '@/components/MewTabs/MewTabs.vue';
 
 Object.keys(mewComponents).forEach(name => {
   Vue.component(name, mewComponents[name]);
@@ -30,3 +31,4 @@ Vue.component('MewButton', MewButton);
 Vue.component('MewSheet', MewSheet);
 Vue.component('MewModule', MewModule);
 Vue.component('MewOverlay', MewOverlay);
+Vue.component('MewTabs', MewTabs);
