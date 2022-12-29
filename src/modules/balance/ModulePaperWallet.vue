@@ -33,10 +33,12 @@
 
 <script>
 import printJS from 'print-js';
-import html2canvas from 'html2canvas';
+// import html2canvas from 'html2canvas';
 import { mapState } from 'vuex';
+import domtoimage from 'dom-to-image';
 
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+import { isEmpty } from 'lodash';
 
 export default {
   name: 'BalanceAddressPaperWallet',
@@ -92,15 +94,32 @@ export default {
     async print() {
       try {
         const element = this.$refs.printContainer;
-        const screen = await html2canvas(element, {
-          async: true,
-          logging: false
-        }).then(canvas => {
-          return canvas;
-        });
-        if (screen && screen.toDataURL !== '') {
+        console.log('element', element);
+        // const node = new DOMParser().parseFromString(
+        //   element,
+        //   'text/html'
+        // ).firstElementChild;
+        // console.log('node', node);
+        // const screen1 = await html2canvas(element, {
+        //   async: true,
+        //   logging: false
+        // }).then(canvas => {
+        //   return canvas;
+        // });
+        // console.log('screen1', screen1);
+        // console.log('screen1 dataURL', screen1.toDataURL('image/png'));
+        const screen = await domtoimage
+          .toPng(element)
+          .then(dataUrl => {
+            return dataUrl;
+          })
+          .catch(function (error) {
+            console.error('Error when converting dom to image!', error);
+          });
+        if (!isEmpty(screen)) {
+          console.log('screen', screen);
           printJS({
-            printable: screen.toDataURL('image/png'),
+            printable: screen,
             type: 'image',
             onError: () => {
               Toast(this.$t('errorsGlobal.print-support-error'), ERROR);
