@@ -262,8 +262,7 @@ export default {
           referralCode
         );
         txData.from = user;
-
-        if (toBN(allowance).gt(amount)) {
+        if (toBN(allowance).gt(toBN(amount))) {
           txs = [txData];
         } else {
           txs = [resetApproveData, approveData, txData];
@@ -332,7 +331,7 @@ export default {
         );
         data.from = user;
 
-        if (toBN(allowance).gt(amount)) {
+        if (toBN(allowance).gt(toBN(amount))) {
           txs = [data];
         } else {
           txs = [resetApproveData, approveData, data];

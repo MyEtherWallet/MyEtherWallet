@@ -32,6 +32,7 @@
         <mew-select
           v-model="selectedFiat"
           :items="fiatCurrencyItems"
+          style="margin-top: -24px"
           is-custom
           class="selectedFiat"
         />
@@ -567,7 +568,7 @@ export default {
         isEmpty(this.amount) ||
         this.min.gt(this.amount) ||
         isNaN(this.amount) ||
-        this.maxVal.lt(this.amount) ||
+        this.max.simplex.lt(this.amount) ||
         this.amountErrorMessages !== ''
       )
         return;
