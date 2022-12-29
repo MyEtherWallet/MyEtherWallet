@@ -1,107 +1,130 @@
 <template>
-  <div class="py-8 px-8">
-    <!-- ============================================================== -->
-    <!-- Currency Select -->
-    <!-- ============================================================== -->
-    <div class="mb-2">
-      <div class="mew-heading-3 textDark--text mb-5">Select currency</div>
-      <mew-select
-        ref="selectedCurrency"
-        label="Currency"
-        :items="currencyItems"
-        :value="selectedCurrency"
-        :disabled="disableCurrencySelect"
-        :error-messages="currencyErrorMessages"
-        is-custom
-        @input="setCurrency"
-      />
-    </div>
-
-    <div class="mb-11">
-      <div class="mew-heading-3 textDark--text mb-5">
+  <div class="py-8 px-8 moonpay-buy-component">
+    <!-- ========================================================================= -->
+    <!-- Sending amount in fiat -->
+    <!-- ========================================================================= -->
+    <div class="mt-2">
+      <div class="font-weight-medium textDark--text mb-2">
         How much do you want to spend?
       </div>
-      <div class="d-flex align-center">
+      <div class="d-flex align-start">
         <mew-input
           v-model="amount"
+          hide-clear-btn
           type="number"
           :error-messages="amountErrorMessages"
-          class="mr-2"
+          class="no-right-border"
           @keydown.native="preventCharE($event)"
         />
         <mew-select
           v-model="selectedFiat"
+          style="max-width: 135px; margin-top: -24px"
           :items="fiatCurrencyItems"
-          style="margin-top: -24px"
           is-custom
-          class="selectedFiat"
-        />
-      </div>
-      <div class="mb-2">You will get</div>
-      <div v-if="!loading" class="mb-1">
-        <div class="d-flex mb-1 align-center justify-space-between">
-          <div class="d-flex align-center mew-heading-3 textDark--text">
-            {{ cryptoToFiat }}
-            <span class="mew-heading-3 pl-1">{{ selectedCryptoName }}</span>
-            <div class="mr-1 textDark--text">&nbsp;≈ {{ plusFeeF }}</div>
-            <mew-tooltip style="height: 21px">
-              <template #contentSlot>
-                <div>
-                  {{ includesFeeText }}
-                  <br />
-                  <br />
-                  {{ networkFeeText }}
-                  <br />
-                  <br />
-                  {{ dailyLimit }}
-                  <br />
-                  {{ monthlyLimit }}
-                </div>
-              </template>
-            </mew-tooltip>
-          </div>
-        </div>
-        <div class="d-flex align-center"></div>
-      </div>
-
-      <div v-else class="mb-1">
-        <v-skeleton-loader max-width="200px" type="heading" />
-      </div>
-      <div v-if="!inWallet" class="mt-5">
-        <div class="mew-heading-3 textDark--text mb-5">
-          Where should we send your crypto?
-        </div>
-        <module-address-book
-          ref="addressInput"
-          label="Enter Crypto Address"
-          :currency="selectedCryptoName"
-          :enable-save-address="false"
-          :is-home-page="true"
-          @setAddress="setAddress"
+          class="selectedFiat no-left-border"
         />
       </div>
     </div>
-    <div class="mb-1">
-      <mew-button
-        btn-size="xlarge"
-        has-full-width
-        :disabled="disableBuy"
-        :title="buyBtnTitle"
-        :is-valid-address-func="isValidToAddress"
-        @click.native="buy"
+
+    <!-- ========================================================================= -->
+    <!-- Receiving amount in crypto -->
+    <!-- ========================================================================= -->
+    <div class="mt-2">
+      <div class="d-flex align-center mb-2">
+        <div class="font-weight-medium textDark--text mr-1">You will get</div>
+        <mew-tooltip style="height: 21px">
+          <template #contentSlot>
+            <div>
+              {{ includesFeeText }}
+              <br />
+              <br />
+              {{ networkFeeText }}
+              <br />
+              <br />
+              {{ dailyLimit }}
+              <br />
+              {{ monthlyLimit }}
+            </div>
+          </template>
+        </mew-tooltip>
+      </div>
+      <div class="d-flex align-start">
+        <mew-input
+          is-read-only
+          :value="
+            !loading
+              ? `${cryptoToFiat} ${selectedCryptoName} ≈ ${plusFeeF} `
+              : 'Loading...'
+          "
+          hide-clear-btn
+          class="no-right-border"
+        />
+        <div
+          class="d-flex align-center token-select-button"
+          @click="openTokenSelect = true"
+        >
+          <mew-token-container :img="selectedCurrency.img" size="28px" />
+          <div class="basic--text" style="margin-left: 8px">
+            {{ selectedCurrency.name }}
+          </div>
+          <v-icon class="ml-auto" size="20px" color="titlePrimary">
+            mdi-chevron-down
+          </v-icon>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- Receiver's address -->
+    <!-- ========================================================================= -->
+    <div v-if="!inWallet" class="mt-2">
+      <div class="font-weight-medium textDark--text mb-2">
+        Where should we send your crypto?
+      </div>
+      <module-address-book
+        ref="addressInput"
+        label="Enter Crypto Address"
+        :currency="selectedCryptoName"
+        :enable-save-address="false"
+        :is-home-page="true"
+        @setAddress="setAddress"
       />
     </div>
+
+    <!-- ========================================================================= -->
+    <!-- BUY NEW button -->
+    <!-- ========================================================================= -->
+    <mew-button
+      class="mt-2"
+      btn-size="xlarge"
+      has-full-width
+      :disabled="disableBuy"
+      :title="buyBtnTitle"
+      :is-valid-address-func="isValidToAddress"
+      @click.native="buy"
+    />
+
+    <!-- ========================================================================= -->
+    <!-- Token select popup -->
+    <!-- ========================================================================= -->
+    <buy-sell-token-select
+      :open="openTokenSelect"
+      :currency-items="currencyItems"
+      :selected-currency="selectedCurrency"
+      :set-currency="setCurrency"
+      :in-wallet="inWallet"
+      @close="openTokenSelect = false"
+    />
   </div>
 </template>
 
 <script>
 import MultiCoinValidator from 'multicoin-address-validator';
 import { isEmpty, cloneDeep, isEqual } from 'lodash';
-import { mapGetters, mapActions, mapState } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import Web3 from 'web3';
 import { fromWei, toBN } from 'web3-utils';
-
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import nodeList from '@/utils/networks';
 import {
@@ -111,12 +134,12 @@ import {
 import { getCurrency } from '@/modules/settings/components/currencyList';
 import { buyContracts } from './tokenList';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
-
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook.vue';
+import BuySellTokenSelect from '@/modules/buy-sell/components/TokenSelect.vue';
 
 export default {
   name: 'ModuleBuyEth',
-  components: { ModuleAddressBook },
+  components: { ModuleAddressBook, BuySellTokenSelect },
   props: {
     orderHandler: {
       type: Object,
@@ -137,6 +160,7 @@ export default {
   },
   data() {
     return {
+      openTokenSelect: false,
       selectedCurrency: this.defaultCurrency,
       loading: true,
       selectedFiat: {
@@ -154,7 +178,8 @@ export default {
       web3Connections: {},
       simplexQuote: {},
       showMoonpay: true,
-      disableCurrencySelect: true
+      disableCurrencySelect: true,
+      localCryptoAmount: '0'
     };
   },
   computed: {
@@ -282,12 +307,6 @@ export default {
       }
       return '';
     },
-    currencyErrorMessages() {
-      if (!this.supportedBuy) {
-        return 'Please switch your network to the Ethereum Mainnet on Metamask.';
-      }
-      return '';
-    },
     tokens() {
       if (this.inWallet) {
         return buyContracts.reduce((arr, item) => {
@@ -330,14 +349,7 @@ export default {
               return token;
             })
           : this.tokens;
-      const returnedArray = [
-        {
-          text: 'Select Token',
-          divider: true,
-          selectLabel: true
-        },
-        ...tokensListWPrice
-      ];
+      const returnedArray = [...tokensListWPrice];
       return returnedArray;
     },
     hasData() {
@@ -431,7 +443,14 @@ export default {
     selectedFiat: {
       handler: function (newVal, oldVal) {
         if (!isEqual(newVal, oldVal)) {
-          this.amount = newVal.name != 'JPY' ? '300' : '30000';
+          const token = this.currencyItems.find(
+            item => item.name === this.selectedCryptoName
+          );
+          const price = token.price.substring(1).replace(',', '');
+          this.amount = BigNumber(this.localCryptoAmount)
+            .multipliedBy(price)
+            .toFixed(2);
+          this.localCryptoAmount = BigNumber(this.amount).div(price).toString();
           this.$emit('selectedFiat', newVal);
         }
       },
@@ -452,7 +471,7 @@ export default {
     },
     amount: {
       handler: function (newVal) {
-        const simplexMax = this.max.simplex;
+        const simplexMax = this.max.simplex.multipliedBy(this.fiatMultiplier);
         this.checkMoonPayMax();
         if (
           simplexMax.lt(newVal) ||
@@ -464,6 +483,9 @@ export default {
         } else {
           this.loading = false;
           this.getSimplexQuote();
+          this.localCryptoAmount = BigNumber(this.amount)
+            .div(this.priceOb.price)
+            .toString();
         }
       }
     },
@@ -478,33 +500,16 @@ export default {
       handler: function () {
         this.fetchCurrencyData();
       }
+    },
+    openTokenSelect() {
+      this.$emit('openTokenSelect', this.openTokenSelect);
     }
   },
   mounted() {
-    // Watch for currency menu isActive
-    const selectedCurrencyRef = this.$refs.selectedCurrency;
-    const menuRef = selectedCurrencyRef.$children[0].$refs.menu;
-    this.$watch(
-      () => {
-        return menuRef.isActive;
-      },
-      val => {
-        // If menu is closed make sure search is cleared
-        if (!val) {
-          if (
-            selectedCurrencyRef.search !== '' ||
-            selectedCurrencyRef.selectItems.length === 0
-          )
-            selectedCurrencyRef.search = '';
-        }
-      }
-    );
-
     if (!this.inWallet) this.$refs.addressInput.$refs?.addressSelect.clear();
     this.fetchCurrencyData();
   },
   methods: {
-    ...mapActions('global', ['setNetwork']),
     setAddress(newVal, isValid, data) {
       if (data.type === 'RESOLVED' && !data.value.includes('.'))
         this.toAddress = data.value;
@@ -555,6 +560,9 @@ export default {
             this.disableCurrencySelect = false;
           });
           this.fetchedData = Object.assign({}, res);
+          this.localCryptoAmount = BigNumber(this.amount)
+            .div(this.priceOb.price)
+            .toString();
         })
         .catch(e => {
           Toast(e, {}, ERROR);
@@ -666,7 +674,41 @@ export default {
   top: 18px;
   right: 20px;
 }
-.selectedFiat {
-  max-width: 120px;
+.token-select-button {
+  height: 56px;
+  border: 1px solid var(--v-inputBorder-base);
+  border-radius: 0 8px 8px 0;
+  width: 135px;
+  padding: 0 11px 0 14px;
+  line-height: initial;
+  user-select: none;
+  cursor: pointer;
+  &:hover {
+    border: 1px solid var(--v-greyPrimary-base);
+  }
+}
+</style>
+<style lang="scss">
+.moonpay-buy-component {
+  .v-input__slot {
+    height: 47px !important;
+  }
+
+  .no-right-border {
+    fieldset {
+      border-radius: 8px 0 0 8px !important;
+    }
+  }
+  .no-left-border fieldset {
+    border-radius: 0 8px 8px 0 !important;
+  }
+}
+</style>
+
+<style lang="scss">
+.moonpay-buy-component {
+  .v-input__slot {
+    height: 62px !important;
+  }
 }
 </style>

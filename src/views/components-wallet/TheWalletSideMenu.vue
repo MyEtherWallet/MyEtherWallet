@@ -9,9 +9,9 @@
       color="#07385F"
     >
       <template #prepend>
-        <mew-overlay
+        <mew-popup
           :footer="footer"
-          :show-overlay="isOpenNetworkOverlay || !validNetwork"
+          :show="isOpenNetworkOverlay || !validNetwork"
           :title="
             validNetwork
               ? 'Select Network'
@@ -19,12 +19,18 @@
           "
           content-size="large"
           :close="validNetwork ? closeNetworkOverlay : null"
+          has-body-content
+          :has-buttons="false"
+          :left-btn="leftBtn"
+          hide-close-btn
+          :large-title="validNetwork"
         >
           <network-switch
             :filter-types="filterNetworks"
             :is-swap-page="isSwapPage"
+            @newNetwork="closeNetworkOverlay"
           />
-        </mew-overlay>
+        </mew-popup>
         <div class="pa-5 pb-3">
           <div class="mt-2 mb-4 d-flex align-center justify-space-between">
             <!-- ================================================================================== -->
@@ -58,7 +64,7 @@
             <v-list-item
               class="px-0"
               active-class="remove-select-state"
-              @click="openMoonpay"
+              @click="openBuySell"
             >
               <div class="text-center mx-auto my-2" @click="trackBuySellFunc">
                 <img
@@ -284,7 +290,7 @@ import { ETH, BSC, MATIC } from '@/utils/networks/types';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import dappsMeta from '@/dapps/metainfo-dapps';
-import { MOONPAY_EVENT } from '@/modules/moon-pay/helpers';
+import { BUYSELL_EVENT } from '@/modules/buy-sell/helpers';
 import isNew from '@/core/helpers/isNew.js';
 
 export default {
@@ -322,6 +328,13 @@ export default {
     ...mapState('wallet', ['instance', 'isOfflineApp']),
     ...mapState('global', ['online', 'validNetwork']),
     ...mapState('popups', ['consentToTrack']),
+    leftBtn() {
+      return {
+        title: '',
+        color: 'primary',
+        method: this.validNetwork ? this.closeNetworkOverlay : null
+      };
+    },
     /**
      * IMPORTANT TO DO:
      * @returns {boolean}
@@ -436,6 +449,13 @@ export default {
         : { name: ROUTES_WALLET.DASHBOARD.NAME };
     }
   },
+  watch: {
+    isOpenNetworkOverlay(newVal) {
+      if (newVal && this.$route.name == ROUTES_WALLET.SWAP.NAME) {
+        this.trackSwap('switchingNetworkOnSwap');
+      }
+    }
+  },
   mounted() {
     // If no menu item is selected on load, redirect user to Dashboard
     if (!this.isOfflineApp) {
@@ -472,7 +492,6 @@ export default {
     },
     closeNetworkOverlay() {
       if (this.validNetwork) {
-        this.$router.go(-1);
         this.isOpenNetworkOverlay = false;
       }
     },
@@ -488,8 +507,8 @@ export default {
     openNetwork() {
       this.isOpenNetworkOverlay = true;
     },
-    openMoonpay() {
-      EventBus.$emit(MOONPAY_EVENT);
+    openBuySell() {
+      EventBus.$emit(BUYSELL_EVENT);
     },
     openNavigation() {
       this.navOpen = true;

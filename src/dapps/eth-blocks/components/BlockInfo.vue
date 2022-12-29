@@ -209,7 +209,7 @@
               rel="noopener noreferrer"
               target="_blank"
               class="mew-label font-weight-medium buy-more-link"
-              @click="openMoonpay"
+              @click="openBuySell"
             >
               Buy more {{ network.type.name }}.
 
