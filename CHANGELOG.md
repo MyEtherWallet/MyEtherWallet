@@ -1,3 +1,57 @@
+### Release v6.6.12-hotfix.2
+
+### ui
+
+* fix scrolling issue where it freezes page [#4444](https://github.com/MyEtherWallet/MyEtherWallet/pull/4444)
+
+### Release v6.6.12-hotfix.1
+
+### ui
+
+* Fix buy ETH fiat selection alignment [#4433](https://github.com/MyEtherWallet/MyEtherWallet/pull/4433)
+* fix scrolling issue where it freezes page [#4385](https://github.com/MyEtherWallet/MyEtherWallet/pull/4385)
+
+### Release v6.6.12
+
+### ui
+
+* loading state to balance card [#4384](https://github.com/MyEtherWallet/MyEtherWallet/pull/4384)
+
+### devop
+
+* update dashboard placeholder [#4367](https://github.com/MyEtherWallet/MyEtherWallet/pull/4367)
+* Update network types to use the balance api [#4396](https://github.com/MyEtherWallet/MyEtherWallet/pull/4396)
+
+### fix
+
+* fix aave approval flow [#4347](https://github.com/MyEtherWallet/MyEtherWallet/pull/4347)
+* Fix inconsistent error message when sending over limit [#4356](https://github.com/MyEtherWallet/MyEtherWallet/pull/4356)
+* fix custom path not supported [#4358](https://github.com/MyEtherWallet/MyEtherWallet/pull/4358)
+* Fix not fetching XRC20 token data [#4364](https://github.com/MyEtherWallet/MyEtherWallet/pull/4364)
+* Fix clicking 'view address on Ledger' twice throws error [#4370](https://github.com/MyEtherWallet/MyEtherWallet/pull/4370)
+* Fix password confirmation for downloading keystore file [#4373](https://github.com/MyEtherWallet/MyEtherWallet/pull/4373)
+* Generate keystore file: reset password when user click back button to go back to step 2 [#4379](https://github.com/MyEtherWallet/MyEtherWallet/pull/4379)
+* fix eth block layout [#4380](https://github.com/MyEtherWallet/MyEtherWallet/pull/4380)
+* fix logout issue with walletconnect, disbale network switching [#4383](https://github.com/MyEtherWallet/MyEtherWallet/pull/4383)
+* fix offline nonce too low [#4387](https://github.com/MyEtherWallet/MyEtherWallet/pull/4387)
+* Fix ENS text records saving after cancelling txn [#4388](https://github.com/MyEtherWallet/MyEtherWallet/pull/4388)
+* Fix stakewise not able to stake twice [#4399](https://github.com/MyEtherWallet/MyEtherWallet/pull/4399)
+* Sentry Report: Cannot read properties of null at ModuleConfirmation [#4404](https://github.com/MyEtherWallet/MyEtherWallet/pull/4404)
+* staging fixes [#4424](https://github.com/MyEtherWallet/MyEtherWallet/pull/4424)
+
+### Release v6.6.11-hotfix.3
+
+* update privacy policy [#4422](https://github.com/MyEtherWallet/MyEtherWallet/pull/4422)
+
+### Release v6.6.11-hotfix.2
+
+* update privacy policy [#4415](https://github.com/MyEtherWallet/MyEtherWallet/pull/4415)
+
+### Release v6.6.11-hotfix.1
+
+* offline nonce issue [#4387](https://github.com/MyEtherWallet/MyEtherWallet/pull/4387)
+* metamask issue [#4410](https://github.com/MyEtherWallet/MyEtherWallet/pull/4410)
+
 ### Release v6.6.11
 
 ### ui

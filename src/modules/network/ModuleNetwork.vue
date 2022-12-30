@@ -70,13 +70,24 @@ export default {
       return this.network.type.icon;
     },
     show() {
-      let metamask = false;
-      if (window.ethereum)
-        metamask =
+      let switchNetworkWeb3Supported = false;
+      if (window.ethereum) {
+        const isMetaMask =
           window.ethereum.isMetaMask &&
-          !window.ethereum.hasOwnProperty('isMewWallet') &&
-          !window.ethereum.hasOwnProperty('isTrust');
-      return this.identifier !== WALLET_TYPES.WEB3_WALLET || metamask;
+          !window.ethereum.hasOwnProperty('isTrust') &&
+          !window.ethereum.hasOwnProperty('isMEWwallet');
+        const isMEWwallet =
+          window.ethereum.isMetaMask &&
+          window.ethereum.isMEWwallet &&
+          window.ethereum.isTrust;
+        switchNetworkWeb3Supported = isMetaMask || isMEWwallet;
+      }
+
+      return (
+        this.identifier !== WALLET_TYPES.WALLET_CONNECT &&
+        (this.identifier !== WALLET_TYPES.WEB3_WALLET ||
+          switchNetworkWeb3Supported)
+      );
     }
   },
   mounted() {
