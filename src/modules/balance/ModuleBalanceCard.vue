@@ -29,7 +29,7 @@
                 </v-icon>
               </div>
             </template>
-            <v-list width="232px">
+            <v-list width="232px" class="bgWalletBlock">
               <v-list-item class="cursor-pointer" @click="refresh">
                 <v-icon color="textDark" class="mr-3">mdi-refresh</v-icon>
                 <v-list-item-title> Refresh Balance</v-list-item-title>
