@@ -8,5 +8,18 @@ import MINTME from './MINTME';
 import XDC from './XDC';
 import MOONBEAM from './MOONBEAM';
 import MOONRIVER from './MOONRIVER';
+import ROOTSTOCK from './ROOTSTOCK';
 
-export { ETH, GOERLI, ETC, BSC, MATIC, GO, MINTME, XDC, MOONBEAM, MOONRIVER };
+export {
+  ETH,
+  GOERLI,
+  ETC,
+  BSC,
+  MATIC,
+  GO,
+  MINTME,
+  XDC,
+  MOONBEAM,
+  MOONRIVER,
+  ROOTSTOCK
+};
