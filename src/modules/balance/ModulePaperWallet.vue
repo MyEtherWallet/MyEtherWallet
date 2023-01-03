@@ -11,7 +11,11 @@
     <!-- =============================================== -->
     <!-- Printable paper wallet content -->
     <!-- =============================================== -->
-    <div ref="printContainer" class="printable-wallet printable-wallet-content">
+    <div
+      id="printContainer"
+      ref="printContainer"
+      class="printable-wallet printable-wallet-content"
+    >
       <paper-wallet-to-print v-if="instance" />
     </div>
 
@@ -93,13 +97,8 @@ export default {
   methods: {
     async print() {
       try {
-        const element = this.$refs.printContainer;
+        const element = this.$refs.printContainer.cloneNode(true);
         console.log('element', element);
-        // const node = new DOMParser().parseFromString(
-        //   element,
-        //   'text/html'
-        // ).firstElementChild;
-        // console.log('node', node);
         // const screen1 = await html2canvas(element, {
         //   async: true,
         //   logging: false
