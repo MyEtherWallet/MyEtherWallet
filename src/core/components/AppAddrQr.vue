@@ -74,6 +74,7 @@ export default {
     ...mapState('wallet', ['address']),
     ...mapGetters('global', ['network']),
     getChecksumAddressString() {
+      if (!this.address) return '';
       return toChecksumAddress(this.address);
     }
   },

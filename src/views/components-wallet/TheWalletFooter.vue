@@ -1,7 +1,6 @@
 <template>
   <v-footer
-    :color1="$vuetify.theme.dark ? 'asphalt900' : 'white'"
-    color="whiteBg"
+    color="bgWalletBlock"
     app
     inset
     absolute
@@ -39,7 +38,7 @@
           >
             <a
               v-if="!isOfflineApp"
-              class="black--text"
+              class="textDark--text"
               href="https://help.myetherwallet.com/en/"
               target="_blank"
               >Help Center</a

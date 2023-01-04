@@ -152,15 +152,15 @@
             class="info-container--action-btn mr-2 px-0 BalanceCardQR"
             fab
             depressed
-            color="white"
             @click="openQR = true"
-            ><v-icon
-              class="info-container--icon"
-              size="18px"
-              color="textAlwaysDark"
-              >mdi-qrcode</v-icon
-            ></v-btn
           >
+            <img
+              class="info-container--icon"
+              height="18px"
+              src="@/assets/images/icons/icon-qr-code.svg"
+              alt="qr-code"
+            />
+          </v-btn>
           <!--
           =====================================================================================
             Copy Button
@@ -170,9 +170,8 @@
             class="info-container--action-btn px-0"
             depressed
             fab
-            color="white"
             @click="copyAddress"
-            ><v-icon class="info-container--icon" small color="textAlwaysDark">
+            ><v-icon class="info-container--icon" small color="white">
               mdi-content-copy
             </v-icon></v-btn
           >
@@ -607,9 +606,6 @@ export default {
   }
 }
 
-.v-btn::before {
-  background-color: transparent;
-}
 .info-container {
   background-color: rgba(0, 0, 0, 0.08);
   border-radius: 16px;
@@ -640,11 +636,14 @@ export default {
   }
 
   .info-container--action-btn {
-    opacity: 0.6;
     border-radius: 10px !important;
     height: 32px !important;
     width: 32px !important;
     font-size: 16px !important;
+    background: rgba(0, 0, 0, 0.06);
+    backdrop-filter: blur(10px);
+    letter-spacing: 0.03em;
+    color: white;
   }
 
   .info-container--action- {
@@ -661,9 +660,9 @@ export default {
   .info-container--action-:hover {
     opacity: 1;
   }
-  .info-container--icon:hover {
-    color: var(--v-greenPrimary-base) !important;
-  }
+  // .info-container--icon:hover {
+  //   color: var(--v-greenPrimary-base) !important;
+  // }
 }
 
 .text-shadow {
