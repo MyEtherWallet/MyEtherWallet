@@ -225,7 +225,8 @@
     "@openzeppelin/contracts": "4.7.3",
     "terser": "4.8.1",
     "minimatch": "3.0.5",
-    "lodash": "4.17.21"
+    "lodash": "4.17.21",
+    "json5": "2.2.2"
   },
   "license": "MIT",
   "repository": "https://github.com/myetherwallet/myetherwallet"
