@@ -120,7 +120,14 @@ const setTokenAndEthBalance = function ({
     .then(res => res.result)
     .then(preTokens => {
       const hasPreTokens = preTokens ? preTokens : [];
-      if (!hasPreTokens.length) {
+      const includedUserBalance = hasPreTokens.filter(item => {
+        if (
+          item.contract.toLowerCase() ===
+          '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+        )
+          return item;
+      });
+      if (!hasPreTokens.length || !includedUserBalance.length) {
         hasPreTokens.push({
           contract: MAIN_TOKEN_ADDRESS,
           balance: '0x0'
