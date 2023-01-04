@@ -228,10 +228,10 @@ export default {
     },
     /**
      * Property validates whether or not all words has been entered
-     * @return booelan
+     * @return boolean
      */
     isValidMnemonic() {
-      return Object.keys(this.phrase).length === this.length;
+      return this.phraseToLength.length === this.length;
     },
 
     /*------------------------------------
@@ -242,7 +242,7 @@ export default {
      * Is used in unlock wallet method
      */
     parsedPhrase() {
-      return Object.values(this.phrase).join(' ').toLowerCase();
+      return this.phraseToLength.join(' ').toLowerCase();
     },
     /**
      * Property returns default Paths + Custom paths, used in Select Path component
@@ -262,6 +262,11 @@ export default {
           return newObj;
         })
         .concat(this.paths);
+    },
+    phraseToLength() {
+      const phrase = Object.values(this.phrase);
+      if (phrase.length > this.length) phrase.length = this.length;
+      return phrase;
     }
   },
   watch: {
@@ -360,6 +365,9 @@ export default {
         Toast('Something went wrong in mnemonic wallet access', {}, SENTRY);
       }
     },
+    /**
+     * Remove empty words from the phrase
+     */
     checkPhrase(val) {
       const testObj = {};
       let changed = false;
