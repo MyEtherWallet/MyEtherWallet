@@ -28,7 +28,7 @@
         class="d-flex align-center flex-column flex-md-row flex-lg-row flex-xl-row justify-space-between pa-3 full-width"
       >
         <span :class="$vuetify.breakpoint.smAndDown ? 'mb-1' : ''"
-          >#{{ token.name }}</span
+          >#{{ getTokenNameOrId(token) }}</span
         >
         <mew-button
           :has-full-width="false"
@@ -71,6 +71,11 @@ export default {
   methods: {
     onImgErr(e) {
       e.target.src = this.nftPlaceholder;
+    },
+    getTokenNameOrId(token) {
+      let name = token.name || token.token_id;
+      if (name.length > 25) name = name.substring(0, 25).concat(['...']);
+      return name;
     }
   }
 };

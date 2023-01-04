@@ -304,7 +304,8 @@ export default {
       this.loadingContracts = true;
       this.loadingTokens = true;
       this.onNftSend = false;
-      this.$router.push({ name: ROUTES_WALLET.NFT_MANAGER.NAME });
+      if (this.address)
+        this.$router.push({ name: ROUTES_WALLET.NFT_MANAGER.NAME });
       if (this.supportedNetwork) {
         this.setUpNFT();
       } else {
@@ -322,7 +323,8 @@ export default {
       this.loadingContracts = true;
       this.loadingTokens = true;
       this.onNftSend = false;
-      this.$router.push({ name: ROUTES_WALLET.NFT_MANAGER.NAME });
+      if (this.address)
+        this.$router.push({ name: ROUTES_WALLET.NFT_MANAGER.NAME });
       this.setUpNFT();
     },
     contracts(newVal) {
