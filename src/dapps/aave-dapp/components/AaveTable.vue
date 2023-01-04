@@ -62,6 +62,7 @@ import {
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import handlerAave from '../handlers/handlerAave.mixin';
 import { EventBus } from '@/core/plugins/eventBus';
+import { isBN, toBN } from 'web3-utils';
 
 export default {
   name: 'AaveTable',
@@ -220,9 +221,18 @@ export default {
            */
           case AAVE_TABLE_TITLE.balance_deposit:
             list = list.map(item => {
+              const depositButton = Object.assign(
+                {},
+                AAVE_TABLE_BUTTON.deposit
+              );
               AAVE_TABLE_BUTTON.withdraw.method = this.onWithdrawClick;
-              AAVE_TABLE_BUTTON.deposit.method = this.onDepositClick;
+              depositButton.method = this.onDepositClick;
               const enableToggle = item.reserve.usageAsCollateralEnabled;
+              const tokenBalance = item.reserve.tokenBalance;
+              const enableDeposit = isBN(tokenBalance)
+                ? tokenBalance.gt(toBN(0))
+                : tokenBalance > 0;
+              depositButton.disabled = !enableDeposit;
               return {
                 token: item.reserve.symbol,
                 tokenImg: `${item.reserve.icon}`,
@@ -242,10 +252,7 @@ export default {
                       value: item.usageAsCollateralEnabledOnUser
                     }
                   : null,
-                callToAction: [
-                  AAVE_TABLE_BUTTON.deposit,
-                  AAVE_TABLE_BUTTON.withdraw
-                ]
+                callToAction: [depositButton, AAVE_TABLE_BUTTON.withdraw]
               };
             });
             break;
