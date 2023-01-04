@@ -24,7 +24,7 @@
           :has-full-width="false"
           title="Buy ETH with a credit card"
           btn-size="xlarge"
-          @click.native="openMoonpay"
+          @click.native="openBuySell"
         />
         <div class="d-flex align-center mt-5">
           <div>We accept credit card</div>

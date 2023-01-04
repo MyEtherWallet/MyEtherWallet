@@ -1,6 +1,7 @@
 import utils from 'web3-utils';
-import configs from './config/configNft';
+import configs, { chains } from './config/configNft';
 import ABI from './abi/abiNft';
+import ERC1155ABI from './abi/abiERC1155';
 import BigNumber from 'bignumber.js';
 
 export default class NFT {
@@ -17,9 +18,16 @@ export default class NFT {
    */
   async getNfts() {
     try {
-      return await fetch(
-        `${configs.api}/v3/nfts/account?address=${this.address}`
-      ).then(res => res.json());
+      let { result } = await fetch(
+        `${chains[this.network.type.chainID]}${this.address}`
+      ).then(response => response.json());
+      let nftResults = result.nfts;
+      while (result.next) {
+        const res = await fetch(result.next).then(response => response.json());
+        result = res.result;
+        nftResults = nftResults.concat(result.nfts);
+      }
+      return nftResults;
     } catch (e) {
       throw new Error(e);
     }
@@ -32,28 +40,32 @@ export default class NFT {
   /**
    * Send NFT
    */
-  send(to, token) {
+  send(to, token, gasPrice = undefined) {
     let raw;
-    this.contract = new this.web3.eth.Contract(ABI);
+    this.contract = new this.web3.eth.Contract(token.erc721 ? ABI : ERC1155ABI);
     if (token.contract.includes(configs.cryptoKittiesContract)) {
       raw = this.cryptoKittiesTransfer(to, token);
-    } else {
+    } else if (token.erc721) {
       raw = this.safeTransferFrom(to, token);
+    } else {
+      raw = this.safeTransferFromRarible(to, token, 1);
     }
     raw.from = this.address;
+    if (gasPrice !== undefined) raw.gasPrice = gasPrice;
     return this.web3.eth.sendTransaction(raw);
   }
   /**
    * Get Gas Fees
    */
-
   async getGasFees(to, token) {
     let raw;
-    this.contract = new this.web3.eth.Contract(ABI);
-    if (token.contract.includes(configs.cryptoKittiesContract)) {
+    this.contract = new this.web3.eth.Contract(token.erc721 ? ABI : ERC1155ABI);
+    if (token.contract.toLowerCase().includes(configs.cryptoKittiesContract)) {
       raw = this.cryptoKittiesTransfer(to, token);
-    } else {
+    } else if (token.erc721) {
       raw = this.safeTransferFrom(to, token);
+    } else {
+      raw = this.safeTransferFromRarible(to, token, 1);
     }
     raw.from = this.address;
     const gasEst = this.web3.eth.estimateGas(raw);
@@ -65,6 +77,22 @@ export default class NFT {
       to: token.contract,
       data: this.contract.methods
         .safeTransferFrom(this.address, to, token.token_id)
+        .encodeABI()
+    };
+  }
+  /**
+   * Sends a Rarible/ERC-1155 NFT
+   * @param {string} to Address to send to
+   * @param {object} token NFT to send
+   * @param {number} amount Number of NFTs to send from collection
+   * @param {string} data (Optional) data input
+   * @returns Raw transaction object
+   */
+  safeTransferFromRarible(to, token, amount, data = '0x') {
+    return {
+      to: token.contract,
+      data: this.contract.methods
+        .safeTransferFrom(this.address, to, token.token_id, amount, data)
         .encodeABI()
     };
   }
@@ -107,17 +135,5 @@ export default class NFT {
 
   goToFirstPage() {
     this.currentPage = 1;
-  }
-
-  /**
-   * Get Nft Image
-   */
-
-  getImageUrl(contract, tokenId) {
-    const nftUrl = `${configs.url}/getImage`;
-    if (tokenId && tokenId.slice(0, 2) === '0x') {
-      tokenId = tokenId.slice(2);
-    }
-    return `${nftUrl}?contract=${contract}&tokenId=${tokenId}`;
   }
 }

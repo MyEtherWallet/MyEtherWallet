@@ -23,12 +23,7 @@
   =====================================================================================
   -->
     <div v-if="!loading" class="d-flex align-center full-width">
-      <img
-        height="100"
-        :src="token.image ? token.image : getImageUrl(token)"
-        alt="nft token"
-        @error="onImgErr"
-      />
+      <img height="100" :src="token.image" alt="nft token" @error="onImgErr" />
       <div
         class="d-flex align-center flex-column flex-md-row flex-lg-row flex-xl-row justify-space-between pa-3 full-width"
       >
@@ -60,12 +55,6 @@ export default {
         return {};
       },
       type: Object
-    },
-    getImageUrl: {
-      default: () => {
-        return;
-      },
-      type: Function
     },
     onClick: {
       default: () => {
