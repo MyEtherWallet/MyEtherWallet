@@ -6,6 +6,16 @@
           <!-- =============================================================== -->
           <!-- You Give -->
           <!-- =============================================================== -->
+          <mew-token-selector-interface
+            title="YOU GIVE"
+            left-text="Max: 1.0001"
+            right-text="≈$0"
+            selected
+            :token="fromTokenType"
+            placeholder="Enter amount"
+            :loading="isLoading"
+          />
+
           <app-border-container selected class="give-block">
             <div class="monospace input-block-title textMedium--text">
               YOU GIVE
@@ -50,6 +60,16 @@
           <!-- =============================================================== -->
           <!-- You Receive -->
           <!-- =============================================================== -->
+          <mew-token-selector-interface
+            title="YOU RECEIVE"
+            left-text="Balance: 0"
+            right-text="≈$0"
+            read-only
+            btn-text="Select Token"
+            value="1023"
+            :loading="isLoading"
+          />
+
           <app-border-container class="give-block">
             <div class="monospace input-block-title textMedium--text">
               YOU RECEIVE
@@ -421,6 +441,7 @@ let localContractToToken = {};
 export default {
   name: 'ModuleSwap',
   components: {
+    MewTokenSelectorInterface: () => import('./MewTokenSelectorInterface'),
     SwapLoader: () => import('@/modules/swap/components/SwapLoader'),
     AppBorderContainer: () => import('@/core/components/AppBorderContainer'),
     AppWalletBlock: () => import('@/core/components/AppWalletBlock'),
