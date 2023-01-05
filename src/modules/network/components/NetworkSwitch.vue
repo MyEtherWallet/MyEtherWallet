@@ -145,7 +145,8 @@ export default {
           this.filterTypes.length > 0
             ? [...this.filterTypes]
             : Object.keys(types);
-        unsorted.splice(unsorted.indexOf('ETH'), 1);
+        const EthIdx = unsorted.indexOf('ETH');
+        if (EthIdx !== -1) unsorted.splice(EthIdx, 1);
         unsorted.sort();
         const test = unsorted.filter(item => {
           return types[item].isTestNetwork;
@@ -154,7 +155,7 @@ export default {
           return !types[item].isTestNetwork;
         });
         const sorted = main.concat(test);
-        sorted.unshift('ETH');
+        if (EthIdx !== -1) sorted.unshift('ETH');
         return sorted;
       }
       return [];
@@ -230,7 +231,7 @@ export default {
   watch: {
     networkSelected(value) {
       if (!value) return;
-      if (this.isBridgeSelect) {
+      if (this.isBridgeSelect && value !== this.network.type.name) {
         this.$emit('selectedNetwork', value);
       } else if (value !== this.network.type.name || !this.validNetwork) {
         this.networkLoading = true;
