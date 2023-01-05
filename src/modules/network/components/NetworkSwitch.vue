@@ -115,6 +115,10 @@ export default {
     isSwapPage: {
       type: Boolean,
       default: false
+    },
+    isBridgeSelect: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -225,7 +229,10 @@ export default {
   },
   watch: {
     networkSelected(value) {
-      if (value && (value !== this.network.type.name || !this.validNetwork)) {
+      if (!value) return;
+      if (this.isBridgeSelect) {
+        this.$emit('selectedNetwork', value);
+      } else if (value !== this.network.type.name || !this.validNetwork) {
         this.networkLoading = true;
         this.setNetworkDebounced(value);
       }
