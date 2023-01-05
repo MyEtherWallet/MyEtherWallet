@@ -284,7 +284,7 @@
               <a
                 v-if="!isTestNetwork && network.type.canBuy"
                 class="mew-label font-weight-medium buy-more-link"
-                @click="openMoonpay"
+                @click="openBuySell"
               >
                 Buy more {{ network.type.name }}.
 

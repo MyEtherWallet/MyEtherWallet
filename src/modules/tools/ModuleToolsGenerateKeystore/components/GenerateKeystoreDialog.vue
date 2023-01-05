@@ -29,6 +29,7 @@
           :error-messages="confirmPasswordErrMessages"
           type="password"
           class="mt-2 KeystoreConfirmPassword"
+          :rules="[value => !!value || 'Required']"
           label="Confirm password"
         />
 
