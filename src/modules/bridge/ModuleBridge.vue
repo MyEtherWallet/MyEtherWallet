@@ -15,13 +15,14 @@
             :close="closeNetworkOverlay"
             has-body-content
             :has-buttons="false"
-            :left-btn="closeNetworkOverlay"
+            :left-btn="leftBtn"
             hide-close-btn
             :large-title="true"
           >
             <network-switch
+              :filter-types="filterNetworks"
               :is-bridge-select="true"
-              @selectedNetwork="closeNetworkOverlay"
+              @selectedNetwork="setSelectedNetwork"
             />
           </mew-popup>
           <!--
@@ -36,13 +37,16 @@
                 :src="networkImage"
                 class="network-icon mr-2"
               />
-              <div style="height: 32px">
+              <div class="mr-4" style="height: 32px">
                 <div class="network-select-label">From</div>
                 <div class="network-label">{{ network.type.name_long }}</div>
               </div>
               <v-icon class="expand-button">mdi-chevron-down</v-icon>
             </div>
-            <div class="d-flex ma-2">
+            <div
+              class="d-flex ma-2 cursor-pointer switch-button"
+              @click="switchNetworks"
+            >
               <img
                 :src="switchNetworkIcon"
                 alt="switch-icon"
@@ -51,7 +55,7 @@
               />
             </div>
             <div
-              class="network-selection pa-3"
+              class="network-selection pa-3 to-network"
               @click="openNetworkOverlay(true)"
             >
               <img
@@ -60,7 +64,7 @@
                 :src="selectedNetwork.icon"
                 class="network-icon mr-2"
               />
-              <div style="height: 32px">
+              <div class="mr-4" style="height: 32px">
                 <div class="network-select-label">To</div>
                 <div class="network-label">{{ selectedNetwork.name_long }}</div>
               </div>
@@ -259,7 +263,7 @@ import {
   isEmpty,
   clone,
   // isUndefined,
-  // isObject,
+  isObject,
   isNumber
 } from 'lodash';
 import { mapGetters, mapState, mapActions } from 'vuex';
@@ -280,6 +284,7 @@ import buyMore from '@/core/mixins/buyMore.mixin.js';
 // import Swapper from './handlers/handlerSwap';
 import handleError from '../confirmation/handlers/errorHandler';
 import { EventBus } from '@/core/plugins/eventBus';
+import * as types from '@/utils/networks/types';
 
 const MIN_GAS_LIMIT = 800000;
 let localContractToToken = {};
@@ -413,6 +418,20 @@ export default {
     },
     switchNetworkIcon() {
       return require('@/assets/images/icons/icon-swap-new.svg');
+    },
+    leftBtn() {
+      return {
+        title: '',
+        color: 'primary',
+        method: this.closeNetworkOverlay
+      };
+    },
+    filterNetworks() {
+      let filteredNetworks = Object.keys(types);
+      filteredNetworks = filteredNetworks.filter(item => {
+        return item !== this.network.type.name;
+      });
+      return filteredNetworks;
     },
     /**
      * @returns an object
@@ -980,6 +999,7 @@ export default {
       this.mainTokenDetails = this.contractToToken(MAIN_TOKEN_ADDRESS);
       localContractToToken = {};
       localContractToToken[MAIN_TOKEN_ADDRESS] = this.mainTokenDetails;
+      this.selectedNetwork = { name_long: 'Select Network' };
       this.setupBridge();
     },
     checkMultiChainToken(item) {
@@ -1696,11 +1716,22 @@ export default {
     //   if (e.key === 'e') e.preventDefault();
     // }
     openNetworkOverlay(isBridgeSelect) {
-      if (isBridgeSelect) this.isOpenNetworkOverlay = true;
+      if (!isObject(isBridgeSelect) && isBridgeSelect)
+        this.isOpenNetworkOverlay = true;
       else EventBus.$emit('openNetwork');
     },
     closeNetworkOverlay() {
       this.isOpenNetworkOverlay = false;
+    },
+    setSelectedNetwork(network) {
+      const found = Object.keys(types).find(item => item === network);
+      const foundNetwork = types[found];
+      this.selectedNetwork = foundNetwork;
+      this.closeNetworkOverlay();
+    },
+    switchNetworks() {
+      // TODO: Switch the networks
+      console.log('switching networks');
     }
   }
 };
@@ -1751,6 +1782,10 @@ export default {
   cursor: pointer;
 }
 
+.network-selection.to-network {
+  border: 2px solid var(--v-greenPrimary-base);
+}
+
 .network-select-label {
   font-style: normal;
   font-weight: 500;
@@ -1789,5 +1824,10 @@ export default {
   justify-content: center;
   // flex-direction: column;
   // gap: 2px;
+}
+
+.switch-button > img:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 20%;
 }
 </style>
