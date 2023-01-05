@@ -303,7 +303,7 @@ export default {
       showLogoutPopup: false,
       routeNetworks: {
         [ROUTES_WALLET.SWAP.NAME]: [ETH, BSC, MATIC],
-        [ROUTES_WALLET.NFT_MANAGER.NAME]: [ETH]
+        [ROUTES_WALLET.NFT_MANAGER.NAME]: [ETH, BSC, MATIC]
       },
       footer: {
         text: 'Need help?',
