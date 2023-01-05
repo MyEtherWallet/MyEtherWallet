@@ -71,11 +71,44 @@
               <v-icon class="expand-button">mdi-chevron-down</v-icon>
             </div>
           </div>
+
           <!--
             =====================================================================================
               From / Amount to Swap / To / Amount to Recieve
             =====================================================================================
             -->
+          <div class="d-flex token-container to">
+            <div class="token-label">You Give</div>
+            <div class="token-row">
+              <div class="token-name">Token</div>
+              <img
+                class="dropdown-arrow"
+                alt="dropdown-arrow"
+                :src="dropdownArrowIcon"
+              />
+              <div class="token-amount">0</div>
+            </div>
+            <div class="balance-row">
+              <div class="balance-text">Max: 0</div>
+              <div class="balance-value">$0</div>
+            </div>
+          </div>
+          <div class="d-flex token-container from">
+            <div class="token-label">You Recieve</div>
+            <div class="token-row">
+              <div class="token-name">Token</div>
+              <img
+                class="dropdown-arrow"
+                alt="dropdown-arrow"
+                :src="dropdownArrowIcon"
+              />
+              <div class="token-amount">0</div>
+            </div>
+            <div class="balance-row">
+              <div class="balance-text">Balance: 0</div>
+              <div class="balance-value">$0</div>
+            </div>
+          </div>
           <!-- <div class="input-swap-container pt-7 pb-3 px-5">
             <v-row class="align-start justify-space-between mt-4">
               <v-col cols="12" sm="5" class="pb-0 pb-sm-3 pr-sm-0">
@@ -432,6 +465,9 @@ export default {
         return item !== this.network.type.name;
       });
       return filteredNetworks;
+    },
+    dropdownArrowIcon() {
+      return require('@/assets/images/icons/icon-arrow-dropdown.svg');
     },
     /**
      * @returns an object
@@ -1829,5 +1865,86 @@ export default {
 .switch-button > img:hover {
   background-color: rgba(0, 0, 0, 0.1);
   border-radius: 20%;
+}
+
+.token-container {
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  padding: 15px;
+
+  width: 436px;
+  height: 112px;
+
+  border: 1px solid #d7dde7;
+  justify-self: center;
+}
+
+.token-container.to {
+  border-radius: 12px 12px 0 0;
+}
+
+.token-container.from {
+  border-top: none;
+  border-radius: 0 0 12px 12px;
+}
+
+.token-label {
+  display: flex;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 12px;
+
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+
+  color: #7b818e;
+}
+
+.token-name {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 32px;
+
+  color: #b9bdc7;
+}
+
+.balance-text {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+
+  color: #7b818e;
+}
+
+.token-amount {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 32px;
+
+  color: #b9bdc7;
+}
+
+.balance-value {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+
+  color: #9ba1ae;
+}
+
+.token-row {
+  width: 100%;
+}
+
+.balance-row {
+  width: auto;
 }
 </style>
