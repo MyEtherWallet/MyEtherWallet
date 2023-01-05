@@ -8,15 +8,17 @@
           <!-- =============================================================== -->
           <mew-token-selector-interface
             title="YOU GIVE"
-            left-text="Max: 1.0001"
+            :left-text="maxMsg"
             right-text="≈$0"
             selected
             :token="fromTokenType"
             placeholder="Enter amount"
             :loading="isLoading"
+            :value="tokenInValue"
+            :input="val => triggerSetTokenInValue(val, false)"
           />
 
-          <app-border-container selected class="give-block">
+          <!-- <app-border-container selected class="give-block">
             <div class="monospace input-block-title textMedium--text">
               YOU GIVE
             </div>
@@ -51,7 +53,7 @@
               </div>
               <div class="textMedium--text">≈$0</div>
             </div>
-          </app-border-container>
+          </app-border-container> -->
 
           <div class="d-flex align-center justify-center py-2">
             <v-icon color="textDark" size="30px">mdi-swap-vertical</v-icon>
@@ -62,15 +64,15 @@
           <!-- =============================================================== -->
           <mew-token-selector-interface
             title="YOU RECEIVE"
-            left-text="Balance: 0"
-            right-text="≈$0"
-            read-only
+            :left-text="availableBalanceTo"
+            :right-text="fiatBalanceTo"
+            :token="toTokenType"
             btn-text="Select Token"
             value="1023"
             :loading="isLoading"
           />
 
-          <app-border-container class="give-block">
+          <!-- <app-border-container class="give-block">
             <div class="monospace input-block-title textMedium--text">
               YOU RECEIVE
             </div>
@@ -100,7 +102,7 @@
               <div class="textMedium--text">Balance: 0</div>
               <div class="textMedium--text">≈$0</div>
             </div>
-          </app-border-container>
+          </app-border-container> -->
         </div>
 
         <swap-loader v-else />
@@ -576,6 +578,19 @@ export default {
             method: this.setMaxAmount
           };
     },
+    maxMsg() {
+      return `Max: ${this.maxAmount}`;
+    },
+    maxAmount() {
+      const max = new BigNumber(this.availableBalance).minus(
+        fromWei(toBN(this.localGasPrice).muln(MIN_GAS_LIMIT))
+      );
+      return this.isFromTokenMain
+        ? max.gt(0)
+          ? max.toFixed()
+          : '0'
+        : this.availableBalance.toFixed();
+    },
     /**
      *Returns errors messages based on network
      */
@@ -941,8 +956,19 @@ export default {
           ? this.getTokenBalance(this.balanceInWei, 18)
           : tokenBalance;
       }
-
       return new BigNumber(0);
+    },
+    availableBalanceFrom() {
+      return this.getAvailableBalance(true);
+    },
+    availableBalanceTo() {
+      return `Balance: ${this.getAvailableBalance().balance}`;
+    },
+    fiatBalanceFrom() {
+      return `≈ ${this.getFiatValue(this.fromTokenType.usdBalancef)}`;
+    },
+    fiatBalanceTo() {
+      return `≈ ${this.getAvailableBalance().fiat}`;
     },
     /**
      * Determines whether or not to show swap fee panel
@@ -1811,6 +1837,23 @@ export default {
           this.addNotification(new Notification(notif)).then(this.clear);
         }
       });
+    },
+    getAvailableBalance(from) {
+      const token = from ? this.fromTokenType : this.toTokenType;
+      if (!this.initialLoad && token?.name) {
+        const hasBalance = this.tokensList.find(
+          t => t.contract.toLowerCase() === token.contract.toLowerCase()
+        );
+        console.log(hasBalance)
+        const tokenBalance =
+          !isEmpty(hasBalance) &&
+          !isEmpty(hasBalance.balance) &&
+          hasBalance.hasOwnProperty('decimals')
+            ? this.getTokenBalance(hasBalance.balance, hasBalance.decimals)
+            : new BigNumber(0);
+        return { balance: tokenBalance, fiat: hasBalance.usdBalancef };
+      }
+      return { balance: new BigNumber(0), fiat: this.getFiatValue('0') };
     },
     checkFeeBalance() {
       this.feeError = '';
