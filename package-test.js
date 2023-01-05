@@ -77,7 +77,8 @@ const EXCEPTIONS = [
   'is-ipfs',
   'axios',
   'prettier', // creates more warnings
-  '@ledgerhq/hw-app-eth'
+  '@ledgerhq/hw-app-eth', // issue with imports
+  '@ledgerhq/live-common' // issue with imports
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
