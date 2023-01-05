@@ -41,6 +41,7 @@
             class="swap-input"
             :placeholder="placeholder"
             :readonly="readOnly"
+            @input="input"
             solo
             flat
             hide-details
@@ -103,6 +104,10 @@ export default {
     },
     token: {
       type: Object,
+      default: () => {}
+    },
+    input: {
+      type: Function,
       default: () => {}
     },
     btnText: {
