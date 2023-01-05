@@ -164,7 +164,15 @@ export default {
                   : this.tokensList.find(balance => {
                       if (item.symbol === balance.symbol) return balance;
                     });
-              const userBalance = findBalance ? findBalance.balancef : 0;
+
+              const decimals = findBalance
+                ? new BigNumber(10).pow(findBalance.decimals)
+                : 0;
+              const userBalance = findBalance
+                ? new BigNumber(findBalance.balance)
+                    .dividedBy(decimals)
+                    .toFixed()
+                : 0;
               const depositObj = Object.assign({}, AAVE_TABLE_BUTTON.deposit);
               depositObj.disabled = new BigNumber(userBalance).lte(0);
 

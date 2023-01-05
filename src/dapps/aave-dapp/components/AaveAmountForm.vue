@@ -218,7 +218,7 @@ export default {
       return BigNumber(amt)
         .times(per)
         .decimalPlaces(this.tokenDecimal)
-        .toString();
+        .toFixed();
     }
   }
 };
