@@ -139,9 +139,9 @@ export default {
     },
     checkLink() {
       if (this.tokenCount > 0) this.handleTokensPopup();
-      else this.openMoonpay();
+      else this.openBuySell();
     },
-    openMoonpay() {
+    openBuySell() {
       EventBus.$emit(BUYSELL_EVENT);
     }
   }
