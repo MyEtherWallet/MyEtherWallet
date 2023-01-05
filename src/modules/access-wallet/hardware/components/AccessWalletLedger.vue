@@ -1,22 +1,20 @@
 <template>
   <div>
     <div class="subtitle-1 font-weight-bold mb-2">Connecting to:</div>
-    <div class="d-flex align-center justify-center">
+    <div class="d-flex align-start mb-2">
       <mew-select
         :value="ledgerApp"
         :items="ledgerApps"
         :is-custom="true"
+        class="mr-4"
         @input="handleApp"
       />
-      <div class="pathBox text-right pb-8 pl-5">
-        <access-wallet-derivation-path
-          :selected-path="selectedPath"
-          :passed-paths="paths"
-          :disable-custom-paths="true"
-          class="path-box"
-          @setPath="setPath"
-        />
-      </div>
+      <access-wallet-derivation-path
+        :selected-path="selectedPath"
+        :passed-paths="paths"
+        :disable-custom-paths="true"
+        @setPath="setPath"
+      />
     </div>
     <div class="sheet d-flex align-center justify-center">
       <div class="d-flex align-center justify-center pb-8 pt-15 pt-md-18">
@@ -140,9 +138,6 @@ export default {
   padding: 20px;
   margin-bottom: 30px;
   width: 100%;
-}
-.path-box {
-  height: 150px;
 }
 .buttonTitle {
   color: #1eb19b;

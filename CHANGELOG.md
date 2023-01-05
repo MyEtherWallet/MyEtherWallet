@@ -1,9 +1,14 @@
+### Release v6.6.12-hotfix.2
+
 ### ui
 
-* * Fix buy ETH fiat selection alignment [#4433](https://github.com/MyEtherWallet/MyEtherWallet/pull/4433)
+* fix scrolling issue where it freezes page [#4444](https://github.com/MyEtherWallet/MyEtherWallet/pull/4444)
 
 ### Release v6.6.12-hotfix.1
 
+### ui
+
+* Fix buy ETH fiat selection alignment [#4433](https://github.com/MyEtherWallet/MyEtherWallet/pull/4433)
 * fix scrolling issue where it freezes page [#4385](https://github.com/MyEtherWallet/MyEtherWallet/pull/4385)
 
 ### Release v6.6.12

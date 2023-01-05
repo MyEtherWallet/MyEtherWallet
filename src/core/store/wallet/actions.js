@@ -92,11 +92,16 @@ const setWeb3Instance = function (
           arr[i].gasPrice === undefined ? gasPrice : arr[i].gasPrice;
         arr[i] = formatters.inputCallFormatter(arr[i]);
       }
-
       const batchSignCallback = promises => {
         if (promises && promises.rejected)
           reject(new Error('User rejected transaction'));
-        resolve(promises);
+        if (state.identifier === WALLET_TYPES.WEB3_WALLET) {
+          Promise.all(promises)
+            .then(values => {
+              resolve(values);
+            })
+            .catch(e => reject(e));
+        } else resolve(promises);
       };
       EventBus.$emit(
         EventNames.SHOW_BATCH_TX_MODAL,

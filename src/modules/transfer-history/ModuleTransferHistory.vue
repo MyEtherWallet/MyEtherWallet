@@ -1,10 +1,13 @@
 <template>
   <mew6-white-sheet class="px-5 px-lg-7 py-5 justify-space-between">
     <v-row dense>
-      <v-col cols="12">
+      <v-col cols="11">
         <div class="mew-heading-2 mb-3">{{ actualTitle }}</div>
       </v-col>
-      <v-col cols="12" class="px-0">
+      <v-col cols="1" align="right" @click="toggleDropdown">
+        <v-icon color="black">{{ chevronIcon }}</v-icon>
+      </v-col>
+      <v-col v-if="dropdown" cols="12" class="px-0">
         <div v-for="(data, key) in actualNotifications" :key="key" class="mb-2">
           <mew-notification
             :show-indicator="false"
@@ -33,7 +36,7 @@ export default {
     }
   },
   data() {
-    return {};
+    return { dropdown: true };
   },
   computed: {
     ...mapState('wallet', ['web3', 'address']),
@@ -66,12 +69,18 @@ export default {
     },
     actualTitle() {
       return this.isSwap ? `Swap History` : `Tx History`;
+    },
+    chevronIcon() {
+      return this.dropdown ? 'mdi-chevron-up' : 'mdi-chevron-down';
     }
   },
   mounted() {},
   methods: {
     sortByDate(a, b) {
       return new Date(b.date) - new Date(a.date);
+    },
+    toggleDropdown() {
+      this.dropdown = !this.dropdown;
     }
   }
 };
