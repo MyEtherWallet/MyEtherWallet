@@ -18,7 +18,7 @@
         />
         <mew-select
           v-model="selectedFiat"
-          style="max-width: 135px"
+          style="max-width: 135px; margin-top: -24px"
           :items="fiatCurrencyItems"
           is-custom
           class="selectedFiat no-left-border"
@@ -272,7 +272,7 @@ export default {
       return this.isEUR ? '0.7%' : '3.25%';
     },
     selectedCryptoName() {
-      return this.selectedCurrency.symbol;
+      return this.selectedCurrency?.symbol ? this.selectedCurrency.symbol : '';
     },
     isEUR() {
       return this.selectedFiatName === 'EUR' || this.selectedFiatName === 'GBP';
@@ -576,7 +576,7 @@ export default {
         isEmpty(this.amount) ||
         this.min.gt(this.amount) ||
         isNaN(this.amount) ||
-        this.maxVal.lt(this.amount) ||
+        this.max.simplex.lt(this.amount) ||
         this.amountErrorMessages !== ''
       )
         return;

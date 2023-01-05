@@ -23,17 +23,12 @@
   =====================================================================================
   -->
     <div v-if="!loading" class="d-flex align-center full-width">
-      <img
-        height="100"
-        :src="token.image ? token.image : getImageUrl(token)"
-        alt="nft token"
-        @error="onImgErr"
-      />
+      <img height="100" :src="token.image" alt="nft token" @error="onImgErr" />
       <div
         class="d-flex align-center flex-column flex-md-row flex-lg-row flex-xl-row justify-space-between pa-3 full-width"
       >
         <span :class="$vuetify.breakpoint.smAndDown ? 'mb-1' : ''"
-          >#{{ token.name }}</span
+          >#{{ getTokenNameOrId(token) }}</span
         >
         <mew-button
           :has-full-width="false"
@@ -61,12 +56,6 @@ export default {
       },
       type: Object
     },
-    getImageUrl: {
-      default: () => {
-        return;
-      },
-      type: Function
-    },
     onClick: {
       default: () => {
         return;
@@ -82,6 +71,11 @@ export default {
   methods: {
     onImgErr(e) {
       e.target.src = this.nftPlaceholder;
+    },
+    getTokenNameOrId(token) {
+      let name = token.name || token.token_id;
+      if (name.length > 25) name = name.substring(0, 25).concat(['...']);
+      return name;
     }
   }
 };
