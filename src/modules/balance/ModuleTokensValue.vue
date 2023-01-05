@@ -65,7 +65,7 @@
 import { EventBus } from '@/core/plugins/eventBus';
 import { mapGetters, mapState } from 'vuex';
 import { toBN } from 'web3-utils';
-import { MOONPAY_EVENT } from '../buy-sell/helpers';
+import { BUYSELL_EVENT } from '../buy-sell/helpers';
 
 export default {
   name: 'ModuleTokensValue',
@@ -142,7 +142,7 @@ export default {
       else this.openMoonpay();
     },
     openMoonpay() {
-      EventBus.$emit(MOONPAY_EVENT);
+      EventBus.$emit(BUYSELL_EVENT);
     }
   }
 };
