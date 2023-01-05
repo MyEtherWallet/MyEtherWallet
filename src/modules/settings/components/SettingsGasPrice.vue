@@ -107,7 +107,7 @@
     <div class="mt-4 d-flex flex-column align-center">
       <div v-if="!fromSettings && showGetMoreEth" class="mt-3">
         <span class="secondary--text">Can't increase priority? </span>
-        <a v-if="network.type.canBuy" @click="openMoonpay">
+        <a v-if="network.type.canBuy" @click="openBuySell">
           Buy more {{ network.type.currencyName }}
         </a>
       </div>

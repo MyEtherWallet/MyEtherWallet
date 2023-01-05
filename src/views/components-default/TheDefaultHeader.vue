@@ -33,7 +33,7 @@
             <div @click="trackBuySellLanding">
               <a
                 class="white--text text-decoration--none menu-item"
-                @click="openMoonpay"
+                @click="openBuySell"
               >
                 {{ $t('header.buy-eth') }}
               </a>

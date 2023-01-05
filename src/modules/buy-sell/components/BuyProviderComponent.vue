@@ -14,7 +14,7 @@
     <div v-if="!hideMoonpay" class="section-block pa-5 mb-6">
       <img
         class="provider-logo"
-        src="@/modules/moon-pay/assets/moonpay-logo.svg"
+        src="@/modules/buy-sell/assets/moonpay-logo.svg"
         height="18"
       />
       <div class="mb-3">

@@ -36,7 +36,7 @@
                   label="Amount"
                   placeholder="0"
                   type="number"
-                  class="FromAmountInput"
+                  class="FromAmountInput mt-2"
                   :value="tokenInValue"
                   :persistent-hint="true"
                   :error-messages="amountErrorMessage"
@@ -50,7 +50,7 @@
                       : null
                   "
                   :max-btn-obj="maxBtn"
-                  @buyMore="openMoonpay"
+                  @buyMore="openBuySell"
                   @keydown.native="preventCharE($event)"
                   @input="val => triggerSetTokenInValue(val, false)"
               /></v-col>
@@ -88,6 +88,7 @@
                   :hide-clear-btn="true"
                   :value="tokenOutValue"
                   is-read-only
+                  class="mt-2"
                 />
               </v-col>
             </v-row>
@@ -110,7 +111,7 @@
                 :title="`Buy ${network.type.currencyName}`"
                 class="ma-1"
                 :has-full-width="$vuetify.breakpoint.xsOnly"
-                @click.native="openMoonpay"
+                @click.native="openBuySell"
               />
             </div>
           </app-user-msg-block>
