@@ -390,11 +390,13 @@ export default {
   },
   methods: {
     ...mapActions('notifications', ['addNotification']),
-    setAmount: debounce(function (val) {
+    setAmount: debounce(async function (val) {
       const value = val ? val : 0;
       this.compoundAmount = BigNumber(value).toFixed();
       this.stakeHandler._setAmount(BigNumber(value).toFixed());
-      this.getQuote(this.hasReth, this.hasSeth, this.compoundAmount);
+      this.loading = true;
+      await this.getQuote(this.hasReth, this.hasSeth, this.compoundAmount);
+      this.loading = false;
     }, 500),
     setup() {
       this.stakeHandler = new stakeHandler(
@@ -410,6 +412,8 @@ export default {
     },
     setupTrade(trade) {
       if (trade instanceof Error || !trade) {
+        this.currentTrade = this.availableQuotes[0];
+        this.currentTrade.gasPrice = this.gasPrice;
         return;
       }
       this.currentTrade = trade;
@@ -430,11 +434,12 @@ export default {
             toT: to,
             fromAmount: new BigNumber(balance).times(
               new BigNumber(10).pow(new BigNumber(from.decimals))
-            )
+            ),
+            fromAddress: this.address
           })
           .then(quotes => {
             this.availableQuotes = quotes.map(q => {
-              q.rate = new BigNumber(q.amount)
+              q.rate = new BigNumber(q.minimum)
                 .dividedBy(new BigNumber(balance))
                 .toFixed();
               this.selectedProvider = q;
