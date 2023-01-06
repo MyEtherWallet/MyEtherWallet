@@ -675,7 +675,7 @@ export default {
   right: 20px;
 }
 .token-select-button {
-  height: 56px;
+  height: 62px;
   border: 1px solid var(--v-inputBorder-base);
   border-radius: 0 8px 8px 0;
   width: 135px;
