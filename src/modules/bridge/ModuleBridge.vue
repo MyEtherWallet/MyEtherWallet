@@ -99,7 +99,7 @@
             <div class="token-label">You Recieve</div>
             <div class="token-row">
               <div class="d-flex cursor-pointer">
-                <div class="token-name">Token</div>
+                <div class="token-name">{{ toTokenName }}</div>
                 <img
                   class="dropdown-arrow"
                   alt="dropdown-arrow"
@@ -266,6 +266,7 @@
               />
               <div class="text-center mt-10 mt-sm-15">
                 <mew-button
+                  v-if="showNextButton"
                   title="Proceed"
                   :has-full-width="true"
                   :disabled="disableNext"
@@ -324,6 +325,21 @@ import * as types from '@/utils/networks/types';
 
 const MIN_GAS_LIMIT = 800000;
 let localContractToToken = {};
+// Hardcoded for now
+const wrappedTokens = {
+  ETH: {
+    MATIC: '0x7d1afa7b718fb893db30a3abc0cfc608aacfebb0',
+    BNB: '0xb8c77482e45f1f44de1745f52c74426c631bdd52'
+  },
+  BSC: {
+    ETH: '0x2170ed0880ac9a755fd29b2688956bd959f933f8',
+    MATIC: '0xcc42724c6683b7e57334c4e856f4c9965ed682bd'
+  },
+  MATIC: {
+    ETH: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
+    BNB: ''
+  }
+};
 export default {
   name: 'ModuleBridge',
   components: {
@@ -949,7 +965,11 @@ export default {
     },
     fromTokenName() {
       if (!this.fromTokenType) return 'Token';
-      return `${this.fromTokenType.symbol} - ${this.fromTokenType.subtext}`;
+      return `${this.fromTokenType.symbol}`;
+    },
+    toTokenName() {
+      if (!this.toTokenType) return 'Token';
+      return `${this.toTokenType.symbol}`;
     }
   },
   watch: {
@@ -1025,6 +1045,16 @@ export default {
       },
       deep: true,
       immediate: false
+    },
+    selectedNetwork(newVal) {
+      console.log('selectedNetwork', newVal);
+      if (newVal && newVal.name_long !== 'Select Network') {
+        // TODO: Set to token type to selected network's
+        // contractToToken(wrappedTokens[this.selectedNetwork.name][this.network.type.name])
+        this.toTokenType = Object.assign({}, this.fromTokenType);
+        this.toTokenType.symbol = `W${this.toTokenType.symbol}`;
+        console.log('wrappedTokens', wrappedTokens);
+      }
     }
   },
   beforeMount() {
@@ -1045,6 +1075,7 @@ export default {
       this.mainTokenDetails = this.contractToToken(MAIN_TOKEN_ADDRESS);
       localContractToToken = {};
       localContractToToken[MAIN_TOKEN_ADDRESS] = this.mainTokenDetails;
+      this.toTokenType = undefined;
       this.selectedNetwork = { name_long: 'Select Network' };
       this.setupBridge();
     },
@@ -1082,18 +1113,6 @@ export default {
       this.isValidRefundAddr = valid;
       this.setTokenInValue(this.tokenInValue);
     },
-    /**
-     * @returns all trending tokens
-     * to swap to
-     */
-    // trendingTokens() {
-    //   if (!TRENDING_LIST[this.network.type.name]) return [];
-    //   return TRENDING_LIST[this.network.type.name]
-    //     .map(token => {
-    //       return localContractToToken[token.contract];
-    //     })
-    //     .filter(token => token);
-    // },
     // setupTokenInfo(tokens) {
     //   tokens.forEach(token => {
     //     if (localContractToToken[token.contract]) return;
@@ -1179,8 +1198,7 @@ export default {
         //   this.isLoading = false;
         // }
 
-        this.fromTokenType = this.contractToToken(MAIN_TOKEN_ADDRESS);
-        console.log('fromTokenType', this.fromTokenType);
+        this.fromTokenType = this.mainTokenDetails;
         this.isLoading = false;
         this.localGasPrice = this.gasPriceByType(this.gasPriceType);
       }
