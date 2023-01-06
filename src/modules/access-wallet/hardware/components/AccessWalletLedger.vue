@@ -13,6 +13,7 @@
         :selected-path="selectedPath"
         :passed-paths="paths"
         :disable-custom-paths="true"
+        class="derivation-path"
         @setPath="setPath"
       />
     </div>
@@ -190,5 +191,8 @@ export default {
 }
 .selected {
   border: 2px solid #1eb19b;
+}
+.derivation-path {
+  align-self: center;
 }
 </style>
