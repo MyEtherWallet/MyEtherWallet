@@ -6,13 +6,14 @@
         :value="ledgerApp"
         :items="ledgerApps"
         :is-custom="true"
-        class="mr-4"
+        class="mr-4 network-selection"
         @input="handleApp"
       />
       <access-wallet-derivation-path
         :selected-path="selectedPath"
         :passed-paths="paths"
         :disable-custom-paths="true"
+        class="derivation-path"
         @setPath="setPath"
       />
     </div>
@@ -190,5 +191,12 @@ export default {
 }
 .selected {
   border: 2px solid #1eb19b;
+}
+.derivation-path {
+  margin-left: auto;
+  align-self: center;
+}
+.network-selection {
+  max-width: 342px;
 }
 </style>
