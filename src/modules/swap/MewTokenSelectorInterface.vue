@@ -13,6 +13,7 @@
             btn-style="transparent"
             color-theme="basic"
             style="padding: 0 10px !important; margin-left: -10px"
+            @click.native="clicked"
           >
             <!-- ========================================= -->
             <!-- Token detail button -->
@@ -37,6 +38,7 @@
           </mew-button>
           <v-spacer />
           <v-text-field
+            v-model="inputValue"
             :value="value"
             class="swap-input"
             :placeholder="placeholder"
@@ -44,6 +46,7 @@
             solo
             flat
             hide-details
+            @keydown="valueChanged"
           />
         </div>
         <div class="d-flex align-center justify-space-between">
@@ -53,7 +56,7 @@
       </template>
 
       <!-- ============================================================================= -->
-      <!-- Skeleton loader for loading -->
+      <!-- Skeleton loader -->
       <!-- ============================================================================= -->
       <template v-else>
         <v-skeleton-loader
@@ -137,11 +140,28 @@ export default {
       type: Boolean,
       default: false
     }
+  },
+  data() {
+    return {
+      inputValue: ''
+    };
+  },
+  methods: {
+    clicked() {
+      this.$emit('clicked', true);
+    },
+    valueChanged() {
+      this.$emit('changed', this.inputValue);
+    }
   }
 };
 </script>
 
 <style lang="scss" scoped>
+.input-block-title {
+  letter-spacing: 2px;
+  font-size: 12px;
+}
 .border-container {
   padding: 15px 17px;
   border-radius: 12px;
@@ -149,6 +169,21 @@ export default {
   transition: border 0.15s ease;
   &.selected {
     border: 2px solid var(--v-greenPrimary-base);
+  }
+}
+</style>
+
+<style lang="scss">
+.token-selector-interface {
+  .swap-input {
+    max-width: 200px;
+    .v-input__slot {
+      padding: 0 !important;
+    }
+    input {
+      font-size: 24px !important;
+      text-align: right !important;
+    }
   }
 }
 </style>
