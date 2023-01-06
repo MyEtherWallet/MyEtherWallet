@@ -1,5 +1,48 @@
 <template>
   <div class="mew-component--swap">
+    <div v-if="isAvailable">
+      <app-wallet-block title="Swap">
+        <!-- =============================================================== -->
+        <!-- You Give -->
+        <!-- =============================================================== -->
+        <mew-token-selector-interface
+          title="YOU GIVE"
+          left-text="Max: 1.0001"
+          right-text="≈$0"
+          selected
+          :token="fromTokenType"
+          placeholder="Enter amount"
+          :loading="isLoading"
+          @clicked="giveClicked"
+          @changed="giveChanged"
+        />
+
+        <div class="d-flex align-center justify-center py-2">
+          <v-icon color="textDark" size="30px">mdi-swap-vertical</v-icon>
+        </div>
+
+        <!-- =============================================================== -->
+        <!-- You Receive -->
+        <!-- =============================================================== -->
+        <mew-token-selector-interface
+          title="YOU RECEIVE"
+          left-text="Balance: 0"
+          right-text="≈$0"
+          read-only
+          btn-text="Select Token"
+          value="1023"
+          :loading="isLoading"
+          @clicked="receiveClicked"
+        />
+      </app-wallet-block>
+    </div>
+
+    <!-- =============================================================================================================== -->
+    <!-- =============================================================================================================== -->
+    <!-- =============================================================================================================== -->
+    <!-- =============================================================================================================== -->
+    <!-- =============================================================================================================== -->
+
     <mew6-white-sheet>
       <mew-module
         :has-elevation="true"
@@ -328,6 +371,8 @@ let localContractToToken = {};
 export default {
   name: 'ModuleSwap',
   components: {
+    MewTokenSelectorInterface: () => import('./MewTokenSelectorInterface'),
+    AppWalletBlock: () => import('@/core/components/AppWalletBlock'),
     AppButtonBalance: () => import('@/core/components/AppButtonBalance'),
     AppUserMsgBlock: () => import('@/core/components/AppUserMsgBlock'),
     ModuleAddressBook: () => import('@/modules/address-book/ModuleAddressBook'),
@@ -1012,6 +1057,9 @@ export default {
   methods: {
     ...mapActions('notifications', ['addNotification']),
     ...mapActions('swap', ['setSwapTokens']),
+    giveClicked() {},
+    receiveClicked() {},
+    giveChanged() {},
     resetSwapState() {
       this.mainTokenDetails = this.contractToToken(MAIN_TOKEN_ADDRESS);
       localContractToToken = {};
