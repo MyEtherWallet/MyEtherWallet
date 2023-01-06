@@ -4,7 +4,6 @@
       <module-bridge
         :is-available="hasSwap"
         :from-token="fromToken"
-        :to-token="toToken"
         :amount="amount"
       />
     </template>
@@ -21,7 +20,7 @@
 import { mapGetters } from 'vuex';
 
 const ETH_TOKEN = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
-const DAI_TOKEN = '0x6b175474e89094c44da98b954eedeac495271d0f'; // Set to wrapped ETH on MATIC
+// const DAI_TOKEN = '0x6b175474e89094c44da98b954eedeac495271d0f';
 
 export default {
   components: {
@@ -35,10 +34,6 @@ export default {
     fromToken: {
       type: String,
       default: ETH_TOKEN
-    },
-    toToken: {
-      type: String,
-      default: DAI_TOKEN
     },
     amount: {
       type: String,
