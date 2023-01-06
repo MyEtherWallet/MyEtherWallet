@@ -4,7 +4,7 @@
       <!-- ===================================================================================== -->
       <!-- Search Data -->
       <!-- ===================================================================================== -->
-      <v-col cols="12" sm="7" class="order-sm-1">
+      <v-col cols="12" class="order-sm-1 full-width">
         <mew-search
           placeholder="Search"
           :value="searchInput"
@@ -19,14 +19,13 @@
     <app-user-msg-block
       v-if="showEmptySearch"
       :message="emptySearchMes"
-      :is-alert="isSwapPage"
       class="mt-5"
     />
 
     <!-- ===================================================================================== -->
     <!-- Networks -->
     <!-- ===================================================================================== -->
-    <v-radio-group v-model="networkSelected">
+    <v-radio-group v-model="tokenSelected">
       <v-container
         v-for="(token, i) in tokensList"
         :key="token.name"
@@ -56,7 +55,7 @@
           <!-- ===================================================================================== -->
           <!-- Radio -->
           <!-- ===================================================================================== -->
-          <v-radio :value="network.name" :class="['py-2 mb-0']"> </v-radio>
+          <v-radio :value="token.name" :class="['py-2 mb-0']"> </v-radio>
         </v-row>
       </v-container>
     </v-radio-group>
@@ -97,25 +96,20 @@ export default {
      * @returns {string[]}
      */
     typeNames() {
-      if (this.hasNetworks) {
-        const unsorted =
-          this.filterTypes.length > 0
-            ? [...this.filterTypes]
-            : Object.keys(types);
-        const EthIdx = unsorted.indexOf('ETH');
-        if (EthIdx !== -1) unsorted.splice(EthIdx, 1);
-        unsorted.sort();
-        const test = unsorted.filter(item => {
-          return types[item].isTestNetwork;
-        });
-        const main = unsorted.filter(item => {
-          return !types[item].isTestNetwork;
-        });
-        const sorted = main.concat(test);
-        if (EthIdx !== -1) sorted.unshift('ETH');
-        return sorted;
-      }
-      return [];
+      const unsorted =
+        this.tokensList.length > 0 ? [...this.tokensList] : Object.keys(types);
+      const EthIdx = unsorted.indexOf('ETH');
+      if (EthIdx !== -1) unsorted.splice(EthIdx, 1);
+      unsorted.sort();
+      const test = unsorted.filter(item => {
+        return types[item].isTestNetwork;
+      });
+      const main = unsorted.filter(item => {
+        return !types[item].isTestNetwork;
+      });
+      const sorted = main.concat(test);
+      if (EthIdx !== -1) sorted.unshift('ETH');
+      return sorted;
     },
     /**
      * Property returns filter networks list based on search input and toggle  type
@@ -126,24 +120,16 @@ export default {
       this.typeNames.forEach(item => {
         allNetworks.push(types[item]);
       });
-      if (this.isSwapPage || this.isBridgePage) {
-        allNetworks = allNetworks.filter(
-          item =>
-            item.name === types.ETH.name ||
-            item.name === types.BSC.name ||
-            item.name === types.MATIC.name
-        );
-      }
+      allNetworks = allNetworks.filter(
+        item =>
+          item.name === types.ETH.name ||
+          item.name === types.BSC.name ||
+          item.name === types.MATIC.name
+      );
       if (this.searchInput && this.searchInput !== '') {
         return allNetworks.filter(item =>
           this.hasString(item.name, item.name_long)
         );
-      }
-      if (this.toggleType === 0) {
-        return allNetworks.filter(item => !item.isTestNetwork);
-      }
-      if (this.toggleType === 1) {
-        return allNetworks.filter(item => item.isTestNetwork);
       }
       return allNetworks;
     },
@@ -163,35 +149,15 @@ export default {
      * @returns {object}
      */
     emptySearchMes() {
-      if (this.isSwapPage && this.typeNames.length === 0) {
-        return {
-          title: 'Swap is not supported on your device',
-          subtitle: ''
-        };
-      }
-      if (this.isBridgePage && this.typeNames.length === 0) {
-        return {
-          title: 'Bridge is not supported on your device',
-          subtitle: ''
-        };
-      }
       if (this.typeNames.length === 0) {
         return {
-          title: 'Changing a network is not supported on your device',
+          title: 'This token is not supported on the bridge',
           subtitle: ''
         };
       }
       return {
-        title:
-          this.isSwapPage || this.isBridgePage
-            ? `${
-                this.isSwapPage ? 'Swap' : 'Bridge'
-              } is only available on these networks`
-            : '',
-        subtitle:
-          this.isSwapPage || this.isBridgePage
-            ? 'Select different feature to see all networks.'
-            : 'We do not have a network with this name.'
+        title: '',
+        subtitle: 'We do not have a network with this name.'
       };
     }
   },
@@ -205,17 +171,16 @@ export default {
        * Set current network to prevent undefined tokenSelected value
        */
       if (this.networks.length > 0) {
-        this.tokenSelected = this.networkSelectedBefore;
+        // this.tokenSelected = this.networkSelectedBefore;
       }
 
       if (newVal != oldVal && (!oldVal || oldVal === '')) {
-        this.toggleType = 2;
+        // this.toggleType = 2;
       }
     }
   },
   mounted() {
-    this.networkSelected = this.validNetwork ? this.network.type.name : '';
-    this.networkSelectedBefore = this.networkSelected;
+    this.tokenSelected = this.validNetwork ? this.network.type.name : '';
   },
   methods: {
     ...mapActions('wallet', ['setWeb3Instance']),

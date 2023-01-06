@@ -178,13 +178,12 @@
           -->
           <mew-popup
             :show="isOpenTokenSelect"
-            title="Select Token"
+            title="Select Token To Give"
             content-size="large"
             :close="closeTokenOverlay"
             has-body-content
             :has-buttons="false"
             :left-btn="tokenSelectLeftBtn"
-            hide-close-btn
             :large-title="true"
           >
             <token-select :token-list="filterNetworks" />
@@ -397,6 +396,16 @@ export default {
       });
       return filteredNetworks;
     },
+    // filterTokens() {
+    //   let filteredNetworks = Object.keys(types);
+    //   filteredNetworks = filteredNetworks.filter(item => {
+    //     return (
+    //       item !== this.network.type.name &&
+    //       (item === 'ETH' || item === 'BSC' || item === 'MATIC')
+    //     );
+    //   });
+    //   return filteredNetworks;
+    // },
     dropdownArrowIcon() {
       return require('@/assets/images/icons/icon-arrow-dropdown.svg');
     },
