@@ -88,7 +88,7 @@
     "hmac-drbg": "1.0.1",
     "keccak256": "1.0.6",
     "lodash": "4.17.21",
-    "lottie-web": "5.10.0",
+    "lottie-web": "5.10.1",
     "minimalistic-crypto-utils": "1.0.1",
     "moment": "2.29.4",
     "node-polyfill-webpack-plugin": "2.0.1",
