@@ -28,6 +28,7 @@
           <network-switch
             :filter-types="filterNetworks"
             :is-swap-page="isSwapPage"
+            :is-bridge-page="isBridgePage"
             @newNetwork="closeNetworkOverlay"
           />
         </mew-popup>
@@ -303,6 +304,7 @@ export default {
       showLogoutPopup: false,
       routeNetworks: {
         [ROUTES_WALLET.SWAP.NAME]: [ETH, BSC, MATIC],
+        [ROUTES_WALLET.BRIDGE.NAME]: [ETH, BSC, MATIC],
         [ROUTES_WALLET.NFT_MANAGER.NAME]: [ETH, BSC, MATIC]
       },
       footer: {
@@ -340,6 +342,13 @@ export default {
      */
     isSwapPage() {
       return this.$route.name === 'Swap';
+    },
+    /**
+     * Property returns whether or not you are on the bridge page
+     * @returns {boolean}
+     */
+    isBridgePage() {
+      return this.$route.name === 'Bridge';
     },
     sectionOne() {
       if (this.online) {

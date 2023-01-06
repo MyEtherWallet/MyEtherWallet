@@ -77,15 +77,17 @@
               From / Amount to Swap / To / Amount to Recieve
             =====================================================================================
             -->
-          <div class="d-flex token-container to">
+          <div class="d-flex token-container to mt-10">
             <div class="token-label">You Give</div>
             <div class="token-row">
-              <div class="token-name">Token</div>
-              <img
-                class="dropdown-arrow"
-                alt="dropdown-arrow"
-                :src="dropdownArrowIcon"
-              />
+              <div class="d-flex cursor-pointer">
+                <div class="token-name">{{ fromTokenName }}</div>
+                <img
+                  class="dropdown-arrow"
+                  alt="dropdown-arrow"
+                  :src="dropdownArrowIcon"
+                />
+              </div>
               <div class="token-amount">0</div>
             </div>
             <div class="balance-row">
@@ -96,12 +98,14 @@
           <div class="d-flex token-container from">
             <div class="token-label">You Recieve</div>
             <div class="token-row">
-              <div class="token-name">Token</div>
-              <img
-                class="dropdown-arrow"
-                alt="dropdown-arrow"
-                :src="dropdownArrowIcon"
-              />
+              <div class="d-flex cursor-pointer">
+                <div class="token-name">Token</div>
+                <img
+                  class="dropdown-arrow"
+                  alt="dropdown-arrow"
+                  :src="dropdownArrowIcon"
+                />
+              </div>
               <div class="token-amount">0</div>
             </div>
             <div class="balance-row">
@@ -242,7 +246,7 @@
               /> -->
               <!--
                   =====================================================================================
-                  Swap Fee
+                  Bridge Fee
                   =====================================================================================
                 -->
               <app-transaction-fee
@@ -260,14 +264,13 @@
                 class="mt-10 mt-sm-16"
                 @onLocalGasPrice="handleLocalGasPrice"
               />
-              <div v-if="showNextButton" class="text-center mt-10 mt-sm-15">
+              <div class="text-center mt-10 mt-sm-15">
                 <mew-button
-                  title="Next"
+                  title="Proceed"
                   :has-full-width="true"
                   :disabled="disableNext"
                   btn-size="xlarge"
                   class="NextButton"
-                  style="max-width: 240px"
                   @click.native="showConfirm()"
                 />
               </div>
@@ -462,7 +465,10 @@ export default {
     filterNetworks() {
       let filteredNetworks = Object.keys(types);
       filteredNetworks = filteredNetworks.filter(item => {
-        return item !== this.network.type.name;
+        return (
+          item !== this.network.type.name &&
+          (item === 'ETH' || item === 'BSC' || item === 'MATIC')
+        );
       });
       return filteredNetworks;
     },
@@ -940,6 +946,10 @@ export default {
     },
     networkAndWeb3() {
       return this.network, this.web3;
+    },
+    fromTokenName() {
+      if (!this.fromTokenType) return 'Token';
+      return `${this.fromTokenType.symbol} - ${this.fromTokenType.subtext}`;
     }
   },
   watch: {
@@ -1169,6 +1179,8 @@ export default {
         //   this.isLoading = false;
         // }
 
+        this.fromTokenType = this.contractToToken(MAIN_TOKEN_ADDRESS);
+        console.log('fromTokenType', this.fromTokenType);
         this.isLoading = false;
         this.localGasPrice = this.gasPriceByType(this.gasPriceType);
       }
@@ -1875,7 +1887,7 @@ export default {
   align-items: flex-start;
   padding: 15px;
 
-  width: 436px;
+  width: 100%;
   height: 112px;
 
   border: 1px solid #d7dde7;
@@ -1929,6 +1941,7 @@ export default {
   line-height: 32px;
 
   color: #b9bdc7;
+  margin-left: auto;
 }
 
 .balance-value {
@@ -1938,15 +1951,19 @@ export default {
   line-height: 20px;
 
   color: #9ba1ae;
+
+  margin-left: auto;
 }
 
 .token-row {
   display: flex;
   align-self: center;
+  margin-left: -55px;
 }
 
 .balance-row {
   display: flex;
   align-self: flex-end;
+  margin-left: -55px;
 }
 </style>
