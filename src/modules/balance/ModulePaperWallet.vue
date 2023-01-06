@@ -11,11 +11,7 @@
     <!-- =============================================== -->
     <!-- Printable paper wallet content -->
     <!-- =============================================== -->
-    <div
-      id="printContainer"
-      ref="printContainer"
-      class="printable-wallet printable-wallet-content"
-    >
+    <div ref="printContainer" class="printable-wallet printable-wallet-content">
       <paper-wallet-to-print v-if="instance" />
     </div>
 
@@ -36,13 +32,7 @@
 </template>
 
 <script>
-import printJS from 'print-js';
-// import html2canvas from 'html2canvas';
 import { mapState } from 'vuex';
-import domtoimage from 'dom-to-image';
-
-import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
-import { isEmpty } from 'lodash';
 
 export default {
   name: 'BalanceAddressPaperWallet',
@@ -96,50 +86,31 @@ export default {
   },
   methods: {
     async print() {
-      try {
-        const element = this.$refs.printContainer.cloneNode(true);
-        console.log('element', element);
-        // const screen1 = await html2canvas(element, {
-        //   async: true,
-        //   logging: false
-        // }).then(canvas => {
-        //   return canvas;
-        // });
-        // console.log('screen1', screen1);
-        // console.log('screen1 dataURL', screen1.toDataURL('image/png'));
-        const screen = await domtoimage
-          .toPng(element)
-          .then(dataUrl => {
-            return dataUrl;
-          })
-          .catch(function (error) {
-            console.error('Error when converting dom to image!', error);
-          });
-        if (!isEmpty(screen)) {
-          console.log('screen', screen);
-          printJS({
-            printable: screen,
-            type: 'image',
-            onError: () => {
-              Toast(this.$t('errorsGlobal.print-support-error'), ERROR);
-            }
-          });
-        } else {
-          Toast(this.$t('errorsGlobal.print-support-error'), ERROR);
-        }
-      } catch (e) {
-        Toast(e, ERROR);
-      }
+      window.print();
     }
   }
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .printable-wallet {
   position: fixed;
   top: -3000px;
   left: -3000px;
   z-index: -1;
+}
+@media print {
+  .printable-wallet-display {
+    display: none;
+  }
+  .printable-wallet {
+    background-color: rgb(241, 15, 15);
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
+  }
 }
 </style>
