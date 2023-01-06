@@ -83,7 +83,7 @@
             </v-row>
             <v-row class="align-start justify-space-between">
               <div class="token-row">
-                <div class="d-flex cursor-pointer">
+                <div class="d-flex cursor-pointer" @click="openTokenOverlay">
                   <div class="token-name">{{ fromTokenName }}</div>
                   <img
                     class="dropdown-arrow"
@@ -105,7 +105,7 @@
           <div class="d-flex token-container from">
             <div class="token-label">You Recieve</div>
             <div class="token-row">
-              <div class="d-flex cursor-pointer">
+              <div class="d-flex cursor-pointer" @click="openTokenOverlay">
                 <div class="token-name">{{ toTokenName }}</div>
                 <img
                   class="dropdown-arrow"
@@ -137,17 +137,12 @@
             />
           </div>
 
-          <!--
-            =====================================================================================
-             Providers List
-            =====================================================================================
-            -->
           <div v-if="hasMinEth">
             <!--
-                  =====================================================================================
-                  Bridge Fee
-                  =====================================================================================
-                -->
+              =====================================================================================
+              Bridge Fee
+              =====================================================================================
+            -->
             <app-transaction-fee
               v-if="showNetworkFee"
               :is-from-chain="!isFromNonChain"
@@ -175,6 +170,25 @@
               />
             </div>
           </div>
+
+          <!--
+          =====================================================================================
+            Token Select
+          =====================================================================================
+          -->
+          <mew-popup
+            :show="isOpenTokenSelect"
+            title="Select Token"
+            content-size="large"
+            :close="closeTokenOverlay"
+            has-body-content
+            :has-buttons="false"
+            :left-btn="tokenSelectLeftBtn"
+            hide-close-btn
+            :large-title="true"
+          >
+            <token-select :token-list="filterNetworks" />
+          </mew-popup>
         </template>
         <!--
           =====================================================================================
@@ -238,11 +252,12 @@ export default {
   name: 'ModuleBridge',
   components: {
     // AppButtonBalance: () => import('@/core/components/AppButtonBalance'),
-    // AppUserMsgBlock: () => import('@/core/components/AppUserMsgBlock'),
+    AppUserMsgBlock: () => import('@/core/components/AppUserMsgBlock'),
     ModuleAddressBook: () => import('@/modules/address-book/ModuleAddressBook'),
     AppTransactionFee: () => import('@/core/components/AppTransactionFee.vue'),
     NetworkSwitch: () =>
-      import('@/modules/network/components/NetworkSwitch.vue')
+      import('@/modules/network/components/NetworkSwitch.vue'),
+    TokenSelect: () => import('./components/TokenSelect.vue')
   },
   mixins: [handlerAnalytics, buyMore],
   props: {
@@ -304,7 +319,8 @@ export default {
       mainTokenDetails: {},
       cachedAmount: '0',
       selectedProviderId: undefined,
-      isOpenNetworkOverlay: false
+      isOpenNetworkOverlay: false,
+      isOpenTokenSelect: false
     };
   },
   computed: {
@@ -362,6 +378,13 @@ export default {
         title: '',
         color: 'primary',
         method: this.closeNetworkOverlay
+      };
+    },
+    tokenSelectLeftBtn() {
+      return {
+        title: '',
+        color: 'primary',
+        method: this.closeTokenOverlay
       };
     },
     filterNetworks() {
@@ -1168,6 +1191,12 @@ export default {
     },
     closeNetworkOverlay() {
       this.isOpenNetworkOverlay = false;
+    },
+    openTokenOverlay() {
+      this.isOpenTokenSelect = true;
+    },
+    closeTokenOverlay() {
+      this.isOpenTokenSelect = false;
     },
     setSelectedNetwork(network) {
       const found = Object.keys(types).find(item => item === network);

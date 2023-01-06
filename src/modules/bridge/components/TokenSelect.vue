@@ -1,0 +1,265 @@
+<template>
+  <div class="module-network-switch full-width">
+    <v-row class="align-end justify-center justify-sm-space-between pa-0">
+      <!-- ===================================================================================== -->
+      <!-- Search Data -->
+      <!-- ===================================================================================== -->
+      <v-col cols="12" sm="7" class="order-sm-1">
+        <mew-search
+          placeholder="Search"
+          :value="searchInput"
+          @input="setSearch"
+        />
+      </v-col>
+    </v-row>
+
+    <!-- ===================================================================================== -->
+    <!-- Empty Search Message -->
+    <!-- ===================================================================================== -->
+    <app-user-msg-block
+      v-if="showEmptySearch"
+      :message="emptySearchMes"
+      :is-alert="isSwapPage"
+      class="mt-5"
+    />
+
+    <!-- ===================================================================================== -->
+    <!-- Networks -->
+    <!-- ===================================================================================== -->
+    <v-radio-group v-model="networkSelected">
+      <v-container
+        v-for="(token, i) in tokensList"
+        :key="token.name"
+        :class="[
+          { 'network-border-first': i === 0 },
+          { 'network-border-last': i + 1 === tokensList.length },
+          'py-4 px-5 network-border'
+        ]"
+      >
+        <v-row class="pa-0 mew-body align-center justify-start">
+          <!-- ===================================================================================== -->
+          <!-- Icon -->
+          <!-- ===================================================================================== -->
+          <mew-token-container :img="token.icon" size="24px" />
+          <!-- ===================================================================================== -->
+          <!-- Symbol/Name -->
+          <!-- ===================================================================================== -->
+          <div class="textDark--text Capitalize pl-3">
+            {{ token.name }}
+          </div>
+          <div class="px-2 textLight--text">-</div>
+          <div class="textLight--text">
+            {{ token.subtext }}
+          </div>
+          <v-spacer />
+
+          <!-- ===================================================================================== -->
+          <!-- Radio -->
+          <!-- ===================================================================================== -->
+          <v-radio :value="network.name" :class="['py-2 mb-0']"> </v-radio>
+        </v-row>
+      </v-container>
+    </v-radio-group>
+  </div>
+</template>
+
+<script>
+import { mapActions, mapGetters, mapState } from 'vuex';
+
+import * as types from '@/utils/networks/types';
+
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+
+export default {
+  name: 'TokenSelect',
+  components: {
+    AppUserMsgBlock: () => import('@/core/components/AppUserMsgBlock')
+  },
+  mixins: [handlerAnalytics],
+  props: {
+    tokensList: {
+      type: Array,
+      default: () => []
+    }
+  },
+  data() {
+    return {
+      tokenSelected: null,
+      searchInput: ''
+    };
+  },
+  computed: {
+    ...mapGetters('global', ['network']),
+    ...mapState('global', ['validNetwork']),
+    ...mapState('wallet', ['identifier', 'instance', 'isOfflineApp']),
+    /**
+     * Property returns sorted network names alphabetically in this order: ETH, main and then test networks
+     * @returns {string[]}
+     */
+    typeNames() {
+      if (this.hasNetworks) {
+        const unsorted =
+          this.filterTypes.length > 0
+            ? [...this.filterTypes]
+            : Object.keys(types);
+        const EthIdx = unsorted.indexOf('ETH');
+        if (EthIdx !== -1) unsorted.splice(EthIdx, 1);
+        unsorted.sort();
+        const test = unsorted.filter(item => {
+          return types[item].isTestNetwork;
+        });
+        const main = unsorted.filter(item => {
+          return !types[item].isTestNetwork;
+        });
+        const sorted = main.concat(test);
+        if (EthIdx !== -1) sorted.unshift('ETH');
+        return sorted;
+      }
+      return [];
+    },
+    /**
+     * Property returns filter networks list based on search input and toggle  type
+     * @returns {object[]}
+     */
+    networks() {
+      let allNetworks = [];
+      this.typeNames.forEach(item => {
+        allNetworks.push(types[item]);
+      });
+      if (this.isSwapPage || this.isBridgePage) {
+        allNetworks = allNetworks.filter(
+          item =>
+            item.name === types.ETH.name ||
+            item.name === types.BSC.name ||
+            item.name === types.MATIC.name
+        );
+      }
+      if (this.searchInput && this.searchInput !== '') {
+        return allNetworks.filter(item =>
+          this.hasString(item.name, item.name_long)
+        );
+      }
+      if (this.toggleType === 0) {
+        return allNetworks.filter(item => !item.isTestNetwork);
+      }
+      if (this.toggleType === 1) {
+        return allNetworks.filter(item => item.isTestNetwork);
+      }
+      return allNetworks;
+    },
+    /**
+     * Property shows invalid search if user included input and networks length is 0
+     * @returns {boolean}
+     */
+    showEmptySearch() {
+      return (
+        this.searchInput &&
+        this.searchInput !== '' &&
+        this.networks.length === 0
+      );
+    },
+    /**
+     * Property shows search input string
+     * @returns {object}
+     */
+    emptySearchMes() {
+      if (this.isSwapPage && this.typeNames.length === 0) {
+        return {
+          title: 'Swap is not supported on your device',
+          subtitle: ''
+        };
+      }
+      if (this.isBridgePage && this.typeNames.length === 0) {
+        return {
+          title: 'Bridge is not supported on your device',
+          subtitle: ''
+        };
+      }
+      if (this.typeNames.length === 0) {
+        return {
+          title: 'Changing a network is not supported on your device',
+          subtitle: ''
+        };
+      }
+      return {
+        title:
+          this.isSwapPage || this.isBridgePage
+            ? `${
+                this.isSwapPage ? 'Swap' : 'Bridge'
+              } is only available on these networks`
+            : '',
+        subtitle:
+          this.isSwapPage || this.isBridgePage
+            ? 'Select different feature to see all networks.'
+            : 'We do not have a network with this name.'
+      };
+    }
+  },
+  watch: {
+    tokenSelected(value) {
+      if (!value) return;
+      this.$emit('selectedToken', value);
+    },
+    searchInput(newVal, oldVal) {
+      /**
+       * Set current network to prevent undefined tokenSelected value
+       */
+      if (this.networks.length > 0) {
+        this.tokenSelected = this.networkSelectedBefore;
+      }
+
+      if (newVal != oldVal && (!oldVal || oldVal === '')) {
+        this.toggleType = 2;
+      }
+    }
+  },
+  mounted() {
+    this.networkSelected = this.validNetwork ? this.network.type.name : '';
+    this.networkSelectedBefore = this.networkSelected;
+  },
+  methods: {
+    ...mapActions('wallet', ['setWeb3Instance']),
+    ...mapActions('global', ['setNetwork']),
+    /**
+     * Method checks whether symbol or name has searchInput substring
+     * @returns {boolean}
+     */
+    hasString(symbol, name) {
+      return (
+        symbol.toLowerCase().includes(this.searchInput.toLowerCase()) ||
+        name.toLowerCase().includes(this.searchInput.toLowerCase())
+      );
+    },
+    /**
+     * Method sets SearchInout on mew-search input event
+     * @returns {boolean}
+     */
+    setSearch(newVal) {
+      this.searchInput = newVal;
+    }
+  }
+};
+</script>
+
+<style lang="scss" scoped>
+$borderNetwork: 1px solid #ececec;
+.network-border {
+  border-bottom: $borderNetwork;
+  border-right: $borderNetwork;
+  border-left: $borderNetwork;
+}
+
+.network-border-first {
+  border-top: $borderNetwork;
+  border-radius: 4px 4px 0px 0px;
+}
+
+.network-border-last {
+  border-radius: 0px 0px 4px 4px;
+}
+
+.mint-me-color {
+  filter: brightness(0) saturate(100%) invert(90%) sepia(3%) saturate(5171%)
+    hue-rotate(348deg) brightness(92%) contrast(63%);
+}
+</style>
