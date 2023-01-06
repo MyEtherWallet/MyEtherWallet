@@ -18,7 +18,7 @@
           v-model="contractAddress"
           label="Contract Address"
           placeholder=" "
-          class="mr-3 flex-grow-1"
+          class="mr-3 flex-grow-1 full-width"
           :persistent-hint="nametag.length > 0"
           :hint="nametag"
         />

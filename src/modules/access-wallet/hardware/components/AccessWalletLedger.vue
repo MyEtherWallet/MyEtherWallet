@@ -194,6 +194,7 @@ export default {
 }
 .derivation-path {
   margin-left: auto;
+  align-self: center;
 }
 .network-selection {
   max-width: 342px;
