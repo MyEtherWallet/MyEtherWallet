@@ -99,10 +99,14 @@ class WalletConnectWallet {
         });
 
         if (foundNode) {
-          store.dispatch('global/setNetwork', {
-            network: foundNode,
-            walletType: this.identifier
-          });
+          store
+            .dispatch('global/setNetwork', {
+              network: foundNode,
+              walletType: this.identifier
+            })
+            .then(() => {
+              store.dispatch('wallet/setWeb3Instance');
+            });
         }
         resolve(
           new HybridWalletInterface(
