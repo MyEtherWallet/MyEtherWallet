@@ -46,9 +46,9 @@ export default class PermanentNameModule extends ENSManagerInterface {
       const contract = new this.web3.eth.Contract(ReverseRegistrar.abi);
       contract._address = ReverseRegistrar.address;
       const tx = {
-        to: this.address,
-        data: contract.methods.setName(domain).encodeABI(),
-        value: '0x'
+        to: ReverseRegistrar.address,
+        from: this.address,
+        data: contract.methods.setName(domain).encodeABI()
       };
       return await this.web3.eth.estimateGas(tx);
     } catch (e) {

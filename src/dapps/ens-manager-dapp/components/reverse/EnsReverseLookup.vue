@@ -118,8 +118,8 @@ export default {
           i.fee = toBNSafe(0);
           i.error = '';
           try {
-            this.permHandler.getNameReverseData(i.value).then(gas => {
-              i.fee = toBNSafe(gas);
+            this.permHandler.getNameReverseData(i.name).then(gas => {
+              i.fee = toBNSafe(gas * this.gasPrice);
               if (toBNSafe(this.balance).lt(i.fee)) {
                 i.error = `Insufficient amount of ${this.network.type.currencyName}`;
               }
