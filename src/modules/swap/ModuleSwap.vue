@@ -372,6 +372,8 @@ export default {
   name: 'ModuleSwap',
   components: {
     MewTokenSelectorInterface: () => import('./MewTokenSelectorInterface'),
+    SwapLoader: () => import('@/modules/swap/components/SwapLoader'),
+    AppBorderContainer: () => import('@/core/components/AppBorderContainer'),
     AppWalletBlock: () => import('@/core/components/AppWalletBlock'),
     AppButtonBalance: () => import('@/core/components/AppButtonBalance'),
     AppUserMsgBlock: () => import('@/core/components/AppUserMsgBlock'),
@@ -1052,15 +1054,9 @@ export default {
   methods: {
     ...mapActions('notifications', ['addNotification']),
     ...mapActions('swap', ['setSwapTokens']),
-    giveClicked() {
-      console.log('give clicked');
-    },
-    receiveClicked() {
-      console.log('receive clicked');
-    },
-    giveChanged(val) {
-      console.log(val);
-    },
+    giveClicked() {},
+    receiveClicked() {},
+    giveChanged() {},
     resetSwapState() {
       this.mainTokenDetails = this.contractToToken(MAIN_TOKEN_ADDRESS);
       localContractToToken = {};
