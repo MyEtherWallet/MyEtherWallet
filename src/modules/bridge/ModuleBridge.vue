@@ -1941,10 +1941,12 @@ export default {
 }
 
 .token-row {
-  width: 100%;
+  display: flex;
+  align-self: center;
 }
 
 .balance-row {
-  width: auto;
+  display: flex;
+  align-self: flex-end;
 }
 </style>
