@@ -72,11 +72,53 @@
             </div>
           </div>
 
+          <!-- ======================================================================================================================= -->
+          <!-- ======================================================================================================================= -->
+          <!-- ======================================================================================================================= -->
+          <!-- Token selector interface -->
+          <!-- ======================================================================================================================= -->
+          <!-- ======================================================================================================================= -->
+          <!-- ======================================================================================================================= -->
+          <div class="position--relative mt-10">
+            <mew-token-selector-interface
+              flat-bottom
+              style="margin-bottom: -1px"
+              title="YOU GIVE"
+              left-text="Max: 1.0001"
+              right-text="≈$0"
+              :token="fromTokenType"
+              placeholder="Enter amount"
+              :loading="isLoading"
+              @clicked="giveClicked"
+              @changed="giveChanged"
+            />
+            <v-icon class="circle-arrow">mdi-arrow-down </v-icon>
+            <mew-token-selector-interface
+              flat-top
+              title="YOU RECEIVE"
+              left-text="Balance: 0"
+              right-text="≈$0"
+              read-only
+              btn-text="Select Token"
+              value="1023"
+              :loading="isLoading"
+              @clicked="receiveClicked"
+            />
+          </div>
+          <!-- ======================================================================================================================= -->
+          <!-- ======================================================================================================================= -->
+          <!-- ======================================================================================================================= -->
+          <!-- Token selector interface -->
+          <!-- ======================================================================================================================= -->
+          <!-- ======================================================================================================================= -->
+          <!-- ======================================================================================================================= -->
+
           <!--
             =====================================================================================
               From / Amount to Bridge / To / Amount to Recieve
             =====================================================================================
             -->
+
           <div class="d-flex token-container to mt-10">
             <v-row class="align-start justify-space-between">
               <div class="token-label pa-3">You Give</div>
@@ -237,6 +279,8 @@ const wrappedTokens = {
 export default {
   name: 'ModuleBridge',
   components: {
+    MewTokenSelectorInterface: () =>
+      import('@/components/MewTokenSelectorInterface.vue'),
     // AppButtonBalance: () => import('@/core/components/AppButtonBalance'),
     // AppUserMsgBlock: () => import('@/core/components/AppUserMsgBlock'),
     ModuleAddressBook: () => import('@/modules/address-book/ModuleAddressBook'),
@@ -1364,5 +1408,16 @@ export default {
   display: flex;
   align-self: flex-end;
   // margin-left: -55px;
+}
+
+.circle-arrow {
+  border: 1px solid #e3e9ed;
+  border-radius: 50%;
+  padding: 7px;
+  position: absolute;
+  top: calc(50% + -20px);
+  left: calc(50% + -20px);
+  margin: 0;
+  background-color: white;
 }
 </style>
