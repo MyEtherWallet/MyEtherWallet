@@ -53,11 +53,17 @@
             solo
             flat
             hide-details
-            @keydown="valueChanged"
+            @input="valueChanged"
           />
         </div>
         <div class="d-flex align-center justify-space-between">
-          <div class="textMedium--text">{{ leftText }}</div>
+          <div
+            class="textMedium--text"
+            :class="leftText.includes('Max') ? 'cursor-pointer' : ''"
+            @click="leftText.includes('Max') ? setMaxAmount() : null"
+          >
+            {{ leftText }}
+          </div>
           <div class="textMedium--text">{{ rightText }}</div>
         </div>
       </template>
@@ -154,12 +160,21 @@ export default {
     flatBottom: {
       type: Boolean,
       default: false
+    },
+    setMaxAmount: {
+      type: Function,
+      default: () => {}
     }
   },
   data() {
     return {
       inputValue: ''
     };
+  },
+  watch: {
+    value(newVal) {
+      this.inputValue = newVal;
+    }
   },
   methods: {
     clicked() {

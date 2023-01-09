@@ -86,22 +86,24 @@
               style="margin-bottom: -1px"
               title="YOU GIVE"
               :left-text="`Max: ${displayBalance}`"
-              right-text="≈$0"
+              :right-text="`≈${displayAmountPrice}`"
               :token="fromTokenType"
               placeholder="Enter amount"
               :loading="isLoading"
+              :set-max-amount="setMaxAmount"
+              :value="tokenInValue"
               @clicked="openTokenOverlay"
-              @changed="giveChanged"
+              @changed="setAmount"
             />
             <v-icon class="circle-arrow">mdi-arrow-down </v-icon>
             <mew-token-selector-interface
               flat-top
               title="YOU RECEIVE"
-              left-text="Balance: 0"
-              right-text="≈$0"
+              :left-text="`Balance: 0`"
+              :right-text="`≈${displayAmountPrice}`"
               read-only
               :btn-text="toTokenType ? toTokenType.name : 'Select Token'"
-              value="1023"
+              :value="tokenOutValue"
               :loading="isLoading"
               @clicked="openTokenOverlay"
             />
@@ -182,7 +184,7 @@
 </template>
 
 <script>
-import { toBN, toWei } from 'web3-utils';
+import { fromWei, toBN, toWei } from 'web3-utils';
 import {
   // debounce,
   isEmpty,
@@ -205,6 +207,7 @@ import buyMore from '@/core/mixins/buyMore.mixin.js';
 import handleError from '../confirmation/handlers/errorHandler';
 import { EventBus } from '@/core/plugins/eventBus';
 import * as types from '@/utils/networks/types';
+import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 
 const MIN_GAS_LIMIT = 800000;
 let localContractToToken = {};
@@ -285,7 +288,7 @@ export default {
         fromToken: this.fromToken
       },
       isLoadingProviders: false,
-      showAnimation: false,
+      // showAnimation: false,
       checkLoading: true,
       addressValue: {},
       selectedProvider: {},
@@ -482,10 +485,19 @@ export default {
     //   );
     // },
     /**
-     * Returns correct balance to be dispalyed above From Selection field
+     * Returns correct balance to be displayed below From Selection field
      */
     displayBalance() {
       return this.availableBalance.toString();
+    },
+    /**
+     * Returns correct price to be displayed below From Amount field
+     */
+    displayAmountPrice() {
+      const price = new BigNumber(this.fromTokenType.price).multipliedBy(
+        this.tokenInValue
+      );
+      return formatFiatValue(price).value;
     },
     txFee() {
       return toBN(this.totalGasLimit).mul(toBN(this.localGasPrice)).toString();
@@ -555,10 +567,6 @@ export default {
       } catch (e) {
         return true;
       }
-    },
-    showToAddress() {
-      if (typeof this.toTokenType?.isEth === 'undefined') return false;
-      return !this.toTokenType?.isEth;
     },
     /**
      * @returns BigNumber of the available balance for the From Token
@@ -815,41 +823,23 @@ export default {
       this.isValidRefundAddr = false;
       this.setupBridge();
     },
-    // resetAddressValues({ clearRefund = true, clearTo = true }) {
-    //   if (clearTo)
-    //     if (this.$refs.toAddressInput) {
-    //       this.$refs.toAddressInput.clear();
-    //     }
-    //   this.selectedProvider = {};
-    // },
     /**
      * Set the max available amount to swap from
      */
-    // setMaxAmount() {
-    //   this.trackSwap('setMaxValue');
-    //   const availableBalanceMinusGas = new BigNumber(
-    //     this.availableBalance
-    //   ).minus(fromWei(toBN(this.localGasPrice).muln(MIN_GAS_LIMIT)));
-    //   this.tokenInValue = this.isFromTokenMain
-    //     ? availableBalanceMinusGas.gt(0)
-    //       ? availableBalanceMinusGas.toFixed()
-    //       : '0'
-    //     : this.availableBalance.toFixed();
-    // },
+    setMaxAmount() {
+      // this.trackSwap('setMaxValue');
+      const availableBalanceMinusGas = new BigNumber(
+        this.availableBalance
+      ).minus(fromWei(toBN(this.localGasPrice).muln(MIN_GAS_LIMIT)));
+      this.tokenInValue = availableBalanceMinusGas.gt(0)
+        ? availableBalanceMinusGas.toFixed()
+        : '0';
+      this.tokenOutValue = this.tokenInValue;
+    },
     /**
      * Gets the default from token
      */
     getDefaultFromToken() {
-      // const findToken = this.actualFromTokens.find(item => {
-      //   if (item.contract === this.defaults.fromToken) return item;
-      // });
-      // if (
-      //   this.defaults.fromToken === MAIN_TOKEN_ADDRESS &&
-      //   new BigNumber(this.balanceInETH).gt(0)
-      // ) {
-      //   return findToken;
-      // }
-      // return findToken ? findToken : this.actualFromTokens[0];
       return this.mainTokenDetails;
     },
     // getDefaultToToken() {
@@ -896,49 +886,6 @@ export default {
         this.setTokenInValue(this.tokenInValue);
       }, 500);
     },
-    // setFromToken(value) {
-    //   if (
-    //     value === undefined ||
-    //     (!value?.hasOwnProperty('isEth') &&
-    //       value?.contract?.toLowerCase() !== MAIN_TOKEN_ADDRESS)
-    //   ) {
-    //     const foundToken = this.actualFromTokens.filter(item => {
-    //       if (
-    //         item?.contract &&
-    //         item?.contract?.toLowerCase() === value?.contract?.toLowerCase()
-    //       )
-    //         return item;
-    //     });
-    //     value =
-    //       foundToken.length > 0 ? foundToken[0] : this.actualFromTokens[0];
-    //   }
-    //   this.fromTokenType = value;
-    //   this.resetAddressValues({ clearTo: false });
-    //   this.$nextTick(() => {
-    //     if (value && value.name) {
-    //       this.trackSwapToken('from: ' + value.name);
-    //     }
-    //     this.setTokenInValue(this.tokenInValue);
-    //   });
-    // },
-    // setToToken(value) {
-    //   if (!value?.hasOwnProperty('isEth')) {
-    //     const foundToken = this.actualToTokens.filter(item => {
-    //       if (
-    //         item?.contract &&
-    //         item?.contract?.toLowerCase() === value?.contract?.toLowerCase()
-    //       )
-    //         return item;
-    //     });
-    //     value = foundToken[0];
-    //   }
-    //   this.toTokenType = value;
-    //   this.resetAddressValues({ clearRefund: false });
-    //   if (value && value.name) {
-    //     this.trackSwapToken('to: ' + value.name);
-    //   }
-    //   this.setTokenInValue(this.tokenInValue);
-    // },
     // triggerSetTokenInValue: debounce(function (val) {
     //   this.setTokenInValue(val);
     // }, 500),
@@ -967,7 +914,7 @@ export default {
 
       // TODO: Check decimal count in tokenInValue
 
-      this.tokenOutValue = '0';
+      this.tokenOutValue = this.tokenInValue;
       this.availableQuotes.forEach(q => {
         if (q) {
           q.isSelected = false;
@@ -977,17 +924,6 @@ export default {
       this.allTrades = [];
       this.step = 0;
 
-      if (this.refundAddress === '' || !this.isValidRefundAddr) return;
-      if (this.showToAddress && !this.addressValue?.isValid) return;
-      if (
-        !isEmpty(this.toTokenType) &&
-        this.toTokenType.hasOwnProperty('isEth') &&
-        !this.toTokenType.isEth &&
-        (isEmpty(this.addressValue) ||
-          (!isEmpty(this.addressValue) && !this.addressValue.isValid))
-      ) {
-        return;
-      }
       if (
         !BigNumber(value).isNaN() &&
         BigNumber(value).gt(0) &&
@@ -996,40 +932,42 @@ export default {
         !isEmpty(this.fromTokenType?.symbol) &&
         !isEmpty(this.toTokenType?.symbol)
       ) {
-        this.isLoadingProviders = true;
-        this.showAnimation = true;
+        // this.isLoadingProviders = true;
+        // this.showAnimation = true;
         this.cachedAmount = this.tokenInValue;
-        this.swapper
-          .getAllQuotes({
-            fromT: this.fromTokenType,
-            toT: this.toTokenType,
-            fromAmount: new BigNumber(this.tokenInValue).times(
-              new BigNumber(10).pow(new BigNumber(this.fromTokenType.decimals))
-            )
-          })
-          .then(quotes => {
-            if (this.tokenInValue === this.cachedAmount) {
-              this.selectedProvider = {};
-              if (quotes.length) {
-                this.lastSetToken = quotes[0].amount;
-                this.availableQuotes = quotes.reduce((arr, q) => {
-                  if (quotes.length === 1 || BigNumber(q.amount).gt(0)) {
-                    q.rate = new BigNumber(q.amount)
-                      .dividedBy(new BigNumber(this.tokenInValue))
-                      .toString();
-                    q.isSelected = false;
-                    arr.push(q);
-                  }
-                  return arr;
-                }, []);
-                this.tokenOutValue = quotes[0].amount;
-              }
-              this.step = 1;
-              this.isLoadingProviders = false;
-            } else {
-              this.isLoadingProviders = false;
-            }
-          });
+        // TODO: get rates for wrapped tokens
+
+        // this.swapper
+        //   .getAllQuotes({
+        //     fromT: this.fromTokenType,
+        //     toT: this.toTokenType,
+        //     fromAmount: new BigNumber(this.tokenInValue).times(
+        //       new BigNumber(10).pow(new BigNumber(this.fromTokenType.decimals))
+        //     )
+        //   })
+        //   .then(quotes => {
+        //     if (this.tokenInValue === this.cachedAmount) {
+        //       this.selectedProvider = {};
+        //       if (quotes.length) {
+        //         this.lastSetToken = quotes[0].amount;
+        //         this.availableQuotes = quotes.reduce((arr, q) => {
+        //           if (quotes.length === 1 || BigNumber(q.amount).gt(0)) {
+        //             q.rate = new BigNumber(q.amount)
+        //               .dividedBy(new BigNumber(this.tokenInValue))
+        //               .toString();
+        //             q.isSelected = false;
+        //             arr.push(q);
+        //           }
+        //           return arr;
+        //         }, []);
+        //         this.tokenOutValue = quotes[0].amount;
+        //       }
+        //       this.step = 1;
+        //       this.isLoadingProviders = false;
+        //     } else {
+        //       this.isLoadingProviders = false;
+        //     }
+        //   });
       }
     },
     showConfirm() {
@@ -1153,8 +1091,9 @@ export default {
       // networks are set
       console.log('switching networks');
     },
-    giveChanged(val) {
-      console.log('giveChanged', val);
+    setAmount(val) {
+      this.tokenInValue = val;
+      this.tokenOutValue = this.tokenInValue;
     }
   }
 };
