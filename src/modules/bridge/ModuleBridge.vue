@@ -44,8 +44,17 @@
               </div>
               <v-icon class="expand-button">mdi-chevron-down</v-icon>
             </div>
-            <div
-              class="d-flex ma-2 cursor-pointer switch-button"
+            <v-btn
+              class="d-flex ma-2 switch-button cursor-pointer"
+              x-small
+              rounded
+              depressed
+              min-height="36px"
+              min-width="36px"
+              max-height="36px"
+              max-width="36px"
+              bottom
+              :disabled="!enableNetworkSwitch"
               @click="switchNetworks"
             >
               <img
@@ -54,7 +63,7 @@
                 height="24"
                 class="align-self-center"
               />
-            </div>
+            </v-btn>
             <div
               class="network-selection pa-3 to-network"
               @click="openNetworkOverlay(true)"
@@ -474,16 +483,22 @@ export default {
       };
     },
     /**
-     * checks whether both token fields are empty
+     * checks whether both network fields are empty
      */
-    // enableTokenSwitch() {
-    //   return (
-    //     !this.isLoading &&
-    //     ((!isEmpty(this.fromTokenType) &&
-    //       !isEmpty(this.fromTokenType?.symbol)) ||
-    //       (!isEmpty(this.toTokenType) && !isEmpty(this.toTokenType?.symbol)))
-    //   );
-    // },
+    enableNetworkSwitch() {
+      if (this.selectedNetwork.name_long === 'Select Network') return false;
+      // Check if mainnet coin is available on selected network
+      const availableNetworks =
+        wrappedTokens[this.selectedNetwork.currencyName];
+      const found = Object.keys(availableNetworks).find(
+        item => item === this.network.type.name
+      );
+      return (
+        !this.isLoading &&
+        !isEmpty(this.selectedNetwork?.currencyName) &&
+        !isEmpty(found)
+      );
+    },
     /**
      * Returns correct balance to be displayed below From Selection field
      */
@@ -766,6 +781,8 @@ export default {
   methods: {
     ...mapActions('notifications', ['addNotification']),
     ...mapActions('swap', ['setSwapTokens']),
+    ...mapActions('wallet', ['setWeb3Instance']),
+    ...mapActions('global', ['setNetwork']),
     resetBridgeState() {
       this.mainTokenDetails = this.contractToToken(MAIN_TOKEN_ADDRESS);
       localContractToToken = {};
@@ -1087,8 +1104,8 @@ export default {
       this.closeNetworkOverlay();
     },
     switchNetworks() {
-      // TODO: Switch the networks when both
-      // networks are set
+      // TODO: Switch the networks when both networks are set
+      // this.setNetwork({}).then(() => {this.setWeb3Instance()})
       console.log('switching networks');
     },
     setAmount(val) {

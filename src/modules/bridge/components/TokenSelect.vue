@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 
 import * as types from '@/utils/networks/types';
 
@@ -95,7 +95,7 @@ export default {
      * Property returns sorted network names alphabetically in this order: ETH, main and then test networks
      * @returns {string[]}
      */
-    typeNames() {
+    sortedTokens() {
       const unsorted = this.tokensList.length > 0 ? [...this.tokensList] : [];
       const EthIdx = unsorted.indexOf('ETH');
       if (EthIdx !== -1) unsorted.splice(EthIdx, 1);
@@ -109,7 +109,7 @@ export default {
      */
     tokens() {
       let allNetworks = [];
-      this.typeNames.forEach(item => {
+      this.sortedTokens.forEach(item => {
         allNetworks.push(types[item]);
       });
       allNetworks = allNetworks.filter(
@@ -139,7 +139,7 @@ export default {
      * @returns {object}
      */
     emptySearchMes() {
-      if (this.typeNames.length === 0) {
+      if (this.sortedTokens.length === 0) {
         return {
           title: 'This token is not supported on the bridge',
           subtitle: ''
@@ -173,8 +173,6 @@ export default {
     this.tokenSelected = this.validNetwork ? this.network.type.name : '';
   },
   methods: {
-    ...mapActions('wallet', ['setWeb3Instance']),
-    ...mapActions('global', ['setNetwork']),
     /**
      * Method checks whether symbol or name has searchInput substring
      * @returns {boolean}
