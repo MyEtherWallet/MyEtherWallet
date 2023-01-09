@@ -1,7 +1,7 @@
 <template>
   <div class="module-tokens-value">
     <mew6-white-sheet class="px-5 px-lg-7 py-5 d-flex justify-space-between">
-      <v-row no-gutters>
+      <v-row dense>
         <v-col cols="11">
           <div class="mew-heading-2 mb-3">{{ tokenTitle }}</div>
         </v-col>
