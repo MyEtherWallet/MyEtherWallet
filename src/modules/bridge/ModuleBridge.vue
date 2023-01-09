@@ -163,7 +163,7 @@
             :left-btn="tokenSelectLeftBtn"
             :large-title="true"
           >
-            <token-select :token-list="filterNetworks" />
+            <token-select :tokens-list="filterTokens" />
           </mew-popup>
         </template>
         <!--
@@ -364,28 +364,26 @@ export default {
       };
     },
     filterNetworks() {
+      // Only use mainnet coin for bridge for now
       let filteredNetworks = Object.keys(types);
+      const availableNetworks = wrappedTokens[this.network.type.currencyName];
+      console.log('availableNetworks', availableNetworks);
       filteredNetworks = filteredNetworks.filter(item => {
-        const availableNetworks = wrappedTokens[this.network.type.currencyName];
-        console.log('availableNetworks', availableNetworks);
         return (
           item !== this.network.type.name &&
-          Object.keys(availableNetworks).includes(item) &&
-          (item === 'ETH' || item === 'BSC' || item === 'MATIC')
+          Object.keys(availableNetworks).includes(item)
         );
       });
       return filteredNetworks;
     },
-    // filterTokens() {
-    //   let filteredNetworks = Object.keys(types);
-    //   filteredNetworks = filteredNetworks.filter(item => {
-    //     return (
-    //       item !== this.network.type.name &&
-    //       (item === 'ETH' || item === 'BSC' || item === 'MATIC')
-    //     );
-    //   });
-    //   return filteredNetworks;
-    // },
+    filterTokens() {
+      let filteredTokens = this.tokensList;
+      filteredTokens = filteredTokens.filter(item => {
+        return item.symbol === this.network.type.currencyName;
+      });
+      console.log('filteredTokens', filteredTokens);
+      return filteredTokens;
+    },
     /**
      * @returns an object
      * if native token, return empty
@@ -737,7 +735,7 @@ export default {
         const tokens = wrappedTokens[this.network.type.currencyName];
         console.log('tokens', tokens);
         console.log('fromTokenType', this.fromTokenType);
-        // contractToToken(wrappedTokens[this.selectedNetwork.name][this.network.type.name])
+        // contractToToken(wrappedTokens[this.network.type.name][this.selectedNetwork.name])
         this.toTokenType = Object.assign({}, this.fromTokenType);
         this.toTokenType.symbol = `W${this.toTokenType.symbol}`;
         this.toTokenType.name = this.toTokenType.symbol;

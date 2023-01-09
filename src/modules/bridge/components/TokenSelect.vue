@@ -27,7 +27,7 @@
     <!-- ===================================================================================== -->
     <v-radio-group v-model="tokenSelected">
       <v-container
-        v-for="(token, i) in tokens"
+        v-for="(token, i) in tokensList"
         :key="token.name"
         :class="[
           { 'network-border-first': i === 0 },
@@ -39,7 +39,7 @@
           <!-- ===================================================================================== -->
           <!-- Icon -->
           <!-- ===================================================================================== -->
-          <mew-token-container :img="token.icon" size="24px" />
+          <mew-token-container :img="token.img" size="24px" />
           <!-- ===================================================================================== -->
           <!-- Symbol/Name -->
           <!-- ===================================================================================== -->
@@ -96,20 +96,12 @@ export default {
      * @returns {string[]}
      */
     typeNames() {
-      const unsorted =
-        this.tokensList.length > 0 ? [...this.tokensList] : Object.keys(types);
+      const unsorted = this.tokensList.length > 0 ? [...this.tokensList] : [];
       const EthIdx = unsorted.indexOf('ETH');
       if (EthIdx !== -1) unsorted.splice(EthIdx, 1);
       unsorted.sort();
-      const test = unsorted.filter(item => {
-        return types[item].isTestNetwork;
-      });
-      const main = unsorted.filter(item => {
-        return !types[item].isTestNetwork;
-      });
-      const sorted = main.concat(test);
-      if (EthIdx !== -1) sorted.unshift('ETH');
-      return sorted;
+      if (EthIdx !== -1) unsorted.unshift('ETH');
+      return unsorted;
     },
     /**
      * Property returns filter networks list based on search input and toggle  type
