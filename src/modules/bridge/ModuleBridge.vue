@@ -22,6 +22,7 @@
             <network-switch
               :filter-types="filterNetworks"
               :is-bridge-select="true"
+              :is-bridge-page="true"
               @selectedNetwork="setSelectedNetwork"
             />
           </mew-popup>
@@ -84,12 +85,12 @@
               flat-bottom
               style="margin-bottom: -1px"
               title="YOU GIVE"
-              left-text="Max: 1.0001"
+              :left-text="`Max: ${displayBalance}`"
               right-text="≈$0"
               :token="fromTokenType"
               placeholder="Enter amount"
               :loading="isLoading"
-              @clicked="giveClicked"
+              @clicked="openTokenOverlay"
               @changed="giveChanged"
             />
             <v-icon class="circle-arrow">mdi-arrow-down </v-icon>
@@ -99,10 +100,10 @@
               left-text="Balance: 0"
               right-text="≈$0"
               read-only
-              btn-text="Select Token"
+              :btn-text="toTokenType ? toTokenType.name : 'Select Token'"
               value="1023"
               :loading="isLoading"
-              @clicked="receiveClicked"
+              @clicked="openTokenOverlay"
             />
           </div>
           <!-- ======================================================================================================================= -->
@@ -112,72 +113,6 @@
           <!-- ======================================================================================================================= -->
           <!-- ======================================================================================================================= -->
           <!-- ======================================================================================================================= -->
-
-          <!--
-            =====================================================================================
-              From / Amount to Bridge / To / Amount to Recieve
-            =====================================================================================
-            -->
-
-          <div class="d-flex token-container to mt-10">
-            <v-row class="align-start justify-space-between">
-              <div class="token-label pa-3">You Give</div>
-            </v-row>
-            <v-row class="align-start justify-space-between">
-              <div class="token-row">
-                <div class="d-flex cursor-pointer" @click="openTokenOverlay">
-                  <div class="token-name">{{ fromTokenName }}</div>
-                  <img
-                    class="dropdown-arrow"
-                    alt="dropdown-arrow"
-                    :src="dropdownArrowIcon"
-                  />
-                </div>
-                <div class="token-amount">0</div>
-              </div>
-            </v-row>
-            <v-row class="align-start justify-space-between">
-              <div class="balance-row">
-                <div class="balance-text">Max: 0</div>
-                <div class="balance-value">$0</div>
-              </div>
-            </v-row>
-          </div>
-
-          <div class="d-flex token-container from">
-            <div class="token-label">You Recieve</div>
-            <div class="token-row">
-              <div class="d-flex cursor-pointer" @click="openTokenOverlay">
-                <div class="token-name">{{ toTokenName }}</div>
-                <img
-                  class="dropdown-arrow"
-                  alt="dropdown-arrow"
-                  :src="dropdownArrowIcon"
-                />
-              </div>
-              <div class="token-amount">0</div>
-            </div>
-            <div class="balance-row">
-              <div class="balance-text">Balance: 0</div>
-              <div class="balance-value">$0</div>
-            </div>
-          </div>
-
-          <!--
-            =====================================================================================
-              Address Book
-            =====================================================================================
-            -->
-          <div class="mt-8">
-            <module-address-book
-              v-show="showToAddress"
-              ref="toAddressInput"
-              class="ToAddressInput"
-              :is-valid-address-func="isValidToAddress"
-              :label="toAddressLabel"
-              @setAddress="setToAddress"
-            />
-          </div>
 
           <div v-if="hasMinEth">
             <!--
@@ -257,7 +192,6 @@ import {
   isNumber
 } from 'lodash';
 import { mapGetters, mapState, mapActions } from 'vuex';
-import MultiCoinValidator from 'multicoin-address-validator';
 import BigNumber from 'bignumber.js';
 
 import Notification, {
@@ -274,19 +208,18 @@ import * as types from '@/utils/networks/types';
 
 const MIN_GAS_LIMIT = 800000;
 let localContractToToken = {};
-// Hardcoded for now
+// WrappedToken: { Network: ContractAddress }
 const wrappedTokens = {
   ETH: {
-    MATIC: '0x7d1afa7b718fb893db30a3abc0cfc608aacfebb0',
-    BNB: '0xb8c77482e45f1f44de1745f52c74426c631bdd52'
+    MATIC: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
+    BSC: '0x2170ed0880ac9a755fd29b2688956bd959f933f8'
   },
-  BSC: {
-    ETH: '0x2170ed0880ac9a755fd29b2688956bd959f933f8',
-    MATIC: '0xcc42724c6683b7e57334c4e856f4c9965ed682bd'
+  BNB: {
+    ETH: '0xb8c77482e45f1f44de1745f52c74426c631bdd52'
   },
   MATIC: {
-    ETH: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
-    BNB: ''
+    ETH: '0x7d1afa7b718fb893db30a3abc0cfc608aacfebb0',
+    BSC: '0xcc42724c6683b7e57334c4e856f4c9965ed682bd'
   }
 };
 export default {
@@ -433,8 +366,11 @@ export default {
     filterNetworks() {
       let filteredNetworks = Object.keys(types);
       filteredNetworks = filteredNetworks.filter(item => {
+        const availableNetworks = wrappedTokens[this.network.type.currencyName];
+        console.log('availableNetworks', availableNetworks);
         return (
           item !== this.network.type.name &&
+          Object.keys(availableNetworks).includes(item) &&
           (item === 'ETH' || item === 'BSC' || item === 'MATIC')
         );
       });
@@ -450,9 +386,6 @@ export default {
     //   });
     //   return filteredNetworks;
     // },
-    dropdownArrowIcon() {
-      return require('@/assets/images/icons/icon-arrow-dropdown.svg');
-    },
     /**
      * @returns an object
      * if native token, return empty
@@ -553,9 +486,9 @@ export default {
     /**
      * Returns correct balance to be dispalyed above From Selection field
      */
-    // displayBalance() {
-    //   return this.availableBalance.toString();
-    // },
+    displayBalance() {
+      return this.availableBalance.toString();
+    },
     txFee() {
       return toBN(this.totalGasLimit).mul(toBN(this.localGasPrice)).toString();
     },
@@ -724,25 +657,8 @@ export default {
     hasSelectedProvider() {
       return !isEmpty(this.selectedProvider);
     },
-    toAddressLabel() {
-      const name =
-        !isEmpty(this.toTokenType) && this.toTokenType.hasOwnProperty('name')
-          ? this.toTokenType.name
-          : 'ETH';
-      return `To ${name} address`;
-    },
     networkAndWeb3() {
       return this.network, this.web3;
-    },
-    fromTokenName() {
-      console.log('fromTokenType', this.fromTokenType);
-      if (!this.fromTokenType) return 'Token';
-      return `${this.fromTokenType.symbol}`;
-    },
-    toTokenName() {
-      console.log('toTokenType', this.toTokenType);
-      if (!this.toTokenType) return 'Token';
-      return `${this.toTokenType.symbol}`;
     }
   },
   watch: {
@@ -818,9 +734,17 @@ export default {
       console.log('selectedNetwork', newVal);
       if (newVal && newVal.name_long !== 'Select Network') {
         // TODO: Set to token type to selected network's
+        const tokens = wrappedTokens[this.network.type.currencyName];
+        console.log('tokens', tokens);
+        console.log('fromTokenType', this.fromTokenType);
         // contractToToken(wrappedTokens[this.selectedNetwork.name][this.network.type.name])
         this.toTokenType = Object.assign({}, this.fromTokenType);
         this.toTokenType.symbol = `W${this.toTokenType.symbol}`;
+        this.toTokenType.name = this.toTokenType.symbol;
+        this.toTokenType.subtext = `Wrapped ${this.toTokenType.subtext}`;
+        this.toTokenType.value = this.toTokenType.subtext;
+        this.toTokenType.contract = tokens[this.selectedNetwork.name];
+        console.log('toTokenType', this.toTokenType);
         console.log('wrappedTokens', wrappedTokens);
       }
     }
@@ -843,16 +767,6 @@ export default {
       this.toTokenType = undefined;
       this.selectedNetwork = { name_long: 'Select Network' };
       this.setupBridge();
-    },
-    /**
-     * Handles emitted values from module-address-book
-     */
-    setToAddress(value, isValid) {
-      this.addressValue = {
-        value,
-        isValid
-      };
-      this.setTokenInValue(this.tokenInValue);
     },
     setupBridge() {
       if (this.isAvailable) {
@@ -1149,27 +1063,6 @@ export default {
       };
       this.confirmInfo = obj;
     },
-    isValidToAddress(address) {
-      if (this.availableQuotes.length > 0) {
-        return this.swapper.isValidToAddress({
-          provider: this.availableQuotes[0].provider,
-          toT: this.toTokenType,
-          address
-        });
-      }
-      if (this.toTokenType.isEth) {
-        return MultiCoinValidator.validate(address, 'Ethereum');
-      }
-      try {
-        return MultiCoinValidator.validate(address, this.toTokenType.name);
-      } catch (e) {
-        return this.swapper.isValidToAddress({
-          provider: 'changelly',
-          toT: this.toTokenType,
-          address
-        });
-      }
-    },
     executeTrade() {
       const currentTradeCopy = clone(this.currentTrade);
       this.swapper
@@ -1261,6 +1154,9 @@ export default {
       // TODO: Switch the networks when both
       // networks are set
       console.log('switching networks');
+    },
+    giveChanged(val) {
+      console.log('giveChanged', val);
     }
   }
 };

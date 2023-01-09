@@ -23,11 +23,11 @@
     />
 
     <!-- ===================================================================================== -->
-    <!-- Networks -->
+    <!-- Tokens -->
     <!-- ===================================================================================== -->
     <v-radio-group v-model="tokenSelected">
       <v-container
-        v-for="(token, i) in tokensList"
+        v-for="(token, i) in tokens"
         :key="token.name"
         :class="[
           { 'network-border-first': i === 0 },
@@ -115,7 +115,7 @@ export default {
      * Property returns filter networks list based on search input and toggle  type
      * @returns {object[]}
      */
-    networks() {
+    tokens() {
       let allNetworks = [];
       this.typeNames.forEach(item => {
         allNetworks.push(types[item]);
@@ -139,9 +139,7 @@ export default {
      */
     showEmptySearch() {
       return (
-        this.searchInput &&
-        this.searchInput !== '' &&
-        this.networks.length === 0
+        this.searchInput && this.searchInput !== '' && this.tokens.length === 0
       );
     },
     /**
@@ -170,7 +168,7 @@ export default {
       /**
        * Set current network to prevent undefined tokenSelected value
        */
-      if (this.networks.length > 0) {
+      if (this.tokens.length > 0) {
         // this.tokenSelected = this.networkSelectedBefore;
       }
 
