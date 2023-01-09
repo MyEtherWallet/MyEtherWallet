@@ -27,7 +27,8 @@
       <div
         class="d-flex align-center flex-column flex-md-row flex-lg-row flex-xl-row justify-space-between pa-3 full-width"
       >
-        <span :class="$vuetify.breakpoint.smAndDown ? 'mb-1' : ''"
+        <span
+          :class="[$vuetify.breakpoint.smAndDown ? 'mb-1' : '', 'nft-name-id']"
           >#{{ getTokenNameOrId(token) }}</span
         >
         <mew-button
@@ -73,13 +74,20 @@ export default {
       e.target.src = this.nftPlaceholder;
     },
     getTokenNameOrId(token) {
+      const maxLength = 15;
       let name = token.name || token.token_id;
-      if (name.length > 25) name = name.substring(0, 25).concat(['...']);
+      if (name.length > maxLength)
+        name = name.substring(0, maxLength).concat(['...']);
       return name;
     }
   }
 };
 </script>
+<style lang="scss" scoped>
+.nft-name-id {
+  max-width: 175px;
+}
+</style>
 <style lang="scss">
 .nft-manager-details-loader {
   .v-skeleton-loader__list-item-avatar {
