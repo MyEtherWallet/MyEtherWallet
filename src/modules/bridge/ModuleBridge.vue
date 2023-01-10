@@ -101,7 +101,7 @@
               :loading="isLoading"
               :set-max-amount="setMaxAmount"
               :value="tokenInValue"
-              @clicked="openTokenOverlay"
+              @clicked="openTokenOverlay(false)"
               @changed="setAmount"
             />
             <v-icon class="circle-arrow">mdi-arrow-down </v-icon>
@@ -114,7 +114,7 @@
               :btn-text="toTokenText"
               :value="tokenOutValue"
               :loading="isLoading"
-              @clicked="openTokenOverlay"
+              @clicked="openTokenOverlay(true)"
             />
           </div>
           <!-- ======================================================================================================================= -->
@@ -166,7 +166,7 @@
           -->
           <mew-popup
             :show="isOpenTokenSelect"
-            title="Select Token To Give"
+            :title="tokenSelectTitle"
             content-size="large"
             :close="closeTokenOverlay"
             has-body-content
@@ -311,7 +311,8 @@ export default {
       selectedProviderId: undefined,
       isOpenNetworkOverlay: false,
       isOpenTokenSelect: false,
-      networkSelectedBefore: null
+      networkSelectedBefore: null,
+      receiveTokenSelectOpen: false
     };
   },
   computed: {
@@ -342,7 +343,6 @@ export default {
       'contractToToken',
       'getCoinGeckoTokenById'
     ]),
-    ...mapGetters('article', ['getArticle']),
     /**
      * @returns a boolean
      * based on how the bridge state is
@@ -383,6 +383,11 @@ export default {
         color: 'primary',
         method: this.closeTokenOverlay
       };
+    },
+    tokenSelectTitle() {
+      return `Select token to ${
+        this.receiveTokenSelectOpen ? 'receive' : 'give'
+      }`;
     },
     filterNetworks() {
       // Only use mainnet coin for bridge for now
@@ -1107,11 +1112,13 @@ export default {
     closeNetworkOverlay() {
       this.isOpenNetworkOverlay = false;
     },
-    openTokenOverlay() {
+    openTokenOverlay(isReceive) {
+      this.receiveTokenSelectOpen = isReceive;
       this.isOpenTokenSelect = true;
     },
     closeTokenOverlay() {
       this.isOpenTokenSelect = false;
+      this.receiveTokenSelectOpen = false;
     },
     setSelectedNetwork(network) {
       const found = Object.keys(types).find(item => item === network);
@@ -1120,9 +1127,6 @@ export default {
       this.closeNetworkOverlay();
     },
     switchNetworks() {
-      // TODO: Switch the networks when both networks are set
-      // this.setNetwork({}).then(() => {this.setWeb3Instance()})
-      console.log('switching networks');
       const found = Object.values(nodes).filter(item => {
         if (item.type.name === this.selectedNetwork.name) {
           return item;
