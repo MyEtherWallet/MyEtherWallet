@@ -266,6 +266,8 @@ export default {
               const available = formatFloatingPointValue(
                 this.userBorrowPower(reserve)
               ).value;
+              const borrowObj = Object.assign({}, AAVE_TABLE_BUTTON.borrow);
+              borrowObj.disabled = !item.borrowingEnabled || available <= 0;
               return {
                 token: item.reserve.symbol,
                 tokenImg: `${item.reserve.icon}`,
@@ -295,10 +297,7 @@ export default {
                       disabled: false
                     }
                   : null,
-                callToAction: [
-                  { ...AAVE_TABLE_BUTTON.borrow, disabled: available <= 0 },
-                  AAVE_TABLE_BUTTON.repay
-                ]
+                callToAction: [borrowObj, AAVE_TABLE_BUTTON.repay]
               };
             });
             break;
