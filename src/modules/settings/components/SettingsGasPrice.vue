@@ -28,26 +28,26 @@
             class="mr-1 ml-n1 text-center"
             style="width: 40px; line-height: 0"
           >
-            <v-icon
-              v-if="b.title === gasPriceTypes.ECONOMY"
-              color="textAlwaysDark"
-            >
+            <v-icon v-if="b.title === gasPriceTypes.ECONOMY" color="textDark">
               mdi-check
             </v-icon>
             <img
               v-if="b.title === gasPriceTypes.REGULAR"
+              :class="isDark ? 'dark-icon' : ''"
               src="@/assets/images/icons/icon-arrow-up.svg"
               alt="arrow up"
               height="15"
             />
             <img
               v-if="b.title === gasPriceTypes.FAST"
+              :class="isDark ? 'dark-icon' : ''"
               src="@/assets/images/icons/icon-arrow-up.svg"
               alt="arrow up"
               height="15"
             />
             <img
               v-if="b.title === gasPriceTypes.FAST"
+              :class="isDark ? 'dark-icon' : ''"
               src="@/assets/images/icons/icon-arrow-up.svg"
               alt="arrow up"
               height="15"
@@ -210,6 +210,9 @@ export default {
       });
 
       return counter < 3;
+    },
+    isDark() {
+      return this.$vuetify.theme.dark;
     }
   },
   watch: {
@@ -310,5 +313,8 @@ export default {
 .prices {
   white-space: nowrap;
   font-size: 14px;
+}
+.dark-icon {
+  filter: invert(1);
 }
 </style>

@@ -64,7 +64,7 @@
                   <mew-icon-button
                     mdi-icon="swap-horizontal"
                     class="pa-2 d-flex align-center justify-center SwitchTokens buttonGrayLight"
-                    color-theme="basic"
+                    color-theme="textDark"
                     btn-style="light"
                     :disabled="!enableTokenSwitch"
                     @click.native="switchTokens"
