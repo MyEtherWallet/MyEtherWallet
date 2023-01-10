@@ -111,7 +111,7 @@
               :left-text="`Balance: 0`"
               :right-text="`≈${displayAmountPrice}`"
               read-only
-              :btn-text="toTokenType ? toTokenType.name : 'Select Token'"
+              :btn-text="toTokenText"
               :value="tokenOutValue"
               :loading="isLoading"
               @clicked="openTokenOverlay"
@@ -209,14 +209,16 @@ import Notification, {
   NOTIFICATION_TYPES,
   NOTIFICATION_STATUS
 } from '@/modules/notifications/handlers/handlerNotification';
-import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 import handleError from '../confirmation/handlers/errorHandler';
 import { EventBus } from '@/core/plugins/eventBus';
 import * as types from '@/utils/networks/types';
+import * as nodes from '@/utils/networks/nodes';
 import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 
 const MIN_GAS_LIMIT = 800000;
 let localContractToToken = {};
@@ -308,13 +310,20 @@ export default {
       cachedAmount: '0',
       selectedProviderId: undefined,
       isOpenNetworkOverlay: false,
-      isOpenTokenSelect: false
+      isOpenTokenSelect: false,
+      networkSelectedBefore: null
     };
   },
   computed: {
     ...mapState('swap', ['prefetched', 'swapTokens']),
-    ...mapState('wallet', ['web3', 'address', 'balance', 'identifier']),
-    ...mapState('global', ['gasPriceType']),
+    ...mapState('wallet', [
+      'web3',
+      'address',
+      'balance',
+      'identifier',
+      'instance'
+    ]),
+    ...mapState('global', ['gasPriceType', 'validNetwork']),
     ...mapState('external', ['coinGeckoTokens']),
     ...mapGetters('global', [
       'network',
@@ -395,6 +404,11 @@ export default {
       });
       console.log('filteredTokens', filteredTokens);
       return filteredTokens;
+    },
+    toTokenText() {
+      return !isEmpty(this.toTokenType)
+        ? this.toTokenType.name
+        : 'Select Token';
     },
     /**
      * @returns an object
@@ -787,8 +801,10 @@ export default {
       this.mainTokenDetails = this.contractToToken(MAIN_TOKEN_ADDRESS);
       localContractToToken = {};
       localContractToToken[MAIN_TOKEN_ADDRESS] = this.mainTokenDetails;
-      this.toTokenType = undefined;
-      this.selectedNetwork = { name_long: 'Select Network' };
+      console.log('networkSelectedBefore', this.networkSelectedBefore);
+      this.selectedNetwork = this.networkSelectedBefore
+        ? this.networkSelectedBefore.type
+        : { name_long: 'Select Network' };
       this.setupBridge();
     },
     setupBridge() {
@@ -1107,6 +1123,36 @@ export default {
       // TODO: Switch the networks when both networks are set
       // this.setNetwork({}).then(() => {this.setWeb3Instance()})
       console.log('switching networks');
+      const found = Object.values(nodes).filter(item => {
+        if (item.type.name === this.selectedNetwork.name) {
+          return item;
+        }
+      });
+      this.networkSelectedBefore = this.network;
+      console.log('networkSelectedBefore', this.networkSelectedBefore);
+      console.log('found', found);
+
+      this.setNetwork({
+        network: found[0],
+        walletType: this.instance?.identifier || ''
+      })
+        .then(() => {
+          const provider =
+            this.identifier === WALLET_TYPES.WEB3_WALLET
+              ? this.setWeb3Instance(window.ethereum)
+              : this.setWeb3Instance();
+          provider.then(() => {
+            Toast(
+              `Switched network to: ${this.network.type.name}`,
+              {},
+              SUCCESS
+            );
+            this.trackNetworkSwitch(this.network.type.name);
+          });
+        })
+        .catch(e => {
+          Toast(e, {}, ERROR);
+        });
     },
     setAmount(val) {
       this.tokenInValue = val;
