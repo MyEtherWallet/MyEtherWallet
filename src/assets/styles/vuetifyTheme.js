@@ -73,6 +73,8 @@ export default {
         buttonWhite: '#FFFFFF',
         buttonGrayLight: '#F2F4FA',
         buttonGrayDark: '#626978',
+        buttonToggleDark: '#1F242F',
+        buttonBorder: '#d1d1d1',
         // Inputs
         inputPrimary: '#FFFFFF',
         // Border
@@ -200,6 +202,8 @@ export default {
         buttonWhite: '#1c2136',
         buttonGrayLight: baseColors.asphalt5,
         buttonGrayDark: '#FFFFFF',
+        buttonToggleDark: '#1F242F',
+        buttonBorder: '#4d4f7d',
         // Inputs
         inputPrimary: '#292B42',
         // Border

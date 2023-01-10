@@ -22,7 +22,7 @@
         <v-btn-toggle
           v-model="toggleType"
           mandatory
-          active-class="textDark white--text"
+          active-class="buttonToggleDark white--text"
         >
           <v-btn small>All</v-btn>
           <v-btn small>Stable</v-btn>
