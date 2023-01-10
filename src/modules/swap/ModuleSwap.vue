@@ -101,7 +101,7 @@
           -->
           <app-user-msg-block
             v-if="!hasMinEth"
-            class="mt-sm-5"
+            class="mt-5"
             :message="msg.lowBalance"
           >
             <div class="mt-3 mx-n1">
