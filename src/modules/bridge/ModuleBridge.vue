@@ -111,7 +111,8 @@
               :left-text="`Balance: 0`"
               :right-text="`≈${displayAmountPrice}`"
               read-only
-              :btn-text="toTokenText"
+              btn-text="Select Token"
+              :token="toToken"
               :value="tokenOutValue"
               :loading="isLoading"
               @clicked="openTokenOverlay(true)"
@@ -209,21 +210,6 @@
               @selectedToken="closeTokenOverlay"
             />
           </simple-dialog>
-
-          <!--
-          <mew-popup
-            :show="isOpenTokenSelect"
-            :title="tokenSelectTitle"
-            content-size="large"
-            :close="closeTokenOverlay"
-            has-body-content
-            :has-buttons="false"
-            :left-btn="tokenSelectLeftBtn"
-            :large-title="true"
-          >
-            <token-select :tokens-list="filterTokens" />
-          </mew-popup>
-          -->
         </template>
         <!--
           =====================================================================================
@@ -449,17 +435,31 @@ export default {
       return filteredNetworks;
     },
     filterTokens() {
-      let filteredTokens = this.tokensList;
-      filteredTokens = filteredTokens.filter(item => {
-        return item.symbol === this.network.type.currencyName;
-      });
+      const filteredTokens = this.tokensList.reduce((arr, item) => {
+        const newObj = Object.assign({}, item);
+        if (item.symbol === this.network.type.currencyName) {
+          if (this.receiveTokenSelectOpen) {
+            const tokens = wrappedTokens[this.network.type.currencyName];
+            newObj.symbol = `W${item.symbol}`;
+            newObj.name = newObj.symbol;
+            newObj.subtext = `Wrapped ${item.subtext}`;
+            newObj.value = newObj.subtext;
+            newObj.contract = tokens[this.selectedNetwork.name];
+          }
+          arr.push(newObj);
+        }
+        return arr;
+      }, []);
       return filteredTokens;
     },
-    toTokenText() {
-      return !isEmpty(this.toTokenType)
-        ? this.toTokenType.name
-        : 'Select Token';
+    toToken() {
+      return !isEmpty(this.toTokenType) ? this.toTokenType : null;
     },
+    // toTokenText() {
+    //   return !isEmpty(this.toTokenType)
+    //     ? this.toTokenType.name
+    //     : 'Select Token';
+    // },
     /**
      * @returns an object
      * if native token, return empty
@@ -814,6 +814,7 @@ export default {
       immediate: false
     },
     selectedNetwork(newVal) {
+      console.log('selectedNetwork', newVal);
       if (newVal && newVal.name_long !== 'Select Network') {
         const tokens = wrappedTokens[this.network.type.currencyName];
         this.toTokenType = Object.assign({}, this.fromTokenType);
@@ -826,8 +827,6 @@ export default {
     }
   },
   mounted() {
-    // multi value watcher to clear
-    // refund address and to address
     if (this.coinGeckoTokens.size > 0) {
       this.resetBridgeState();
     }
@@ -1116,7 +1115,11 @@ export default {
     },
     closeTokenOverlay() {
       this.isOpenTokenSelect = false;
-      this.receiveTokenSelectOpen = false;
+      if (this.receiveTokenSelectOpen) {
+        setTimeout(() => {
+          this.receiveTokenSelectOpen = false;
+        }, 100);
+      }
     },
     setSelectedNetwork(network) {
       const found = Object.keys(types).find(item => item === network);
