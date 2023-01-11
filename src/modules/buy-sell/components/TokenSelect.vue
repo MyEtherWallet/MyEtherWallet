@@ -127,6 +127,9 @@ export default {
       if (newVal && !isEmpty(newVal) && oldVal && !isEmpty(oldVal)) {
         this.setNewNetwork(newVal);
       }
+    },
+    open() {
+      this.searchValue = '';
     }
   },
   mounted() {
