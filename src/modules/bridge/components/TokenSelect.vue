@@ -28,7 +28,7 @@
     <!-- ===================================================================================== -->
     <div>
       <div
-        v-for="token in tokensList"
+        v-for="token in tokens"
         :key="token.name"
         class="d-flex align-center token-button"
         @click="tokenBtnClicked(token.name)"
@@ -73,7 +73,6 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex';
-import * as types from '@/utils/networks/types';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 export default {
@@ -103,41 +102,31 @@ export default {
     ...mapState('global', ['validNetwork']),
     ...mapState('wallet', ['identifier', 'instance', 'isOfflineApp']),
     /**
-     * Property returns sorted network names alphabetically in this order: ETH, main and then test networks
+     * Property returns sorted token names by fiat value
      * @returns {string[]}
      */
     sortedTokens() {
-      const unsorted = this.tokensList.length > 0 ? [...this.tokensList] : [];
-      const EthIdx = unsorted.indexOf('ETH');
-      if (EthIdx !== -1) unsorted.splice(EthIdx, 1);
-      unsorted.sort();
-      if (EthIdx !== -1) unsorted.unshift('ETH');
-      return unsorted;
+      const sorted = this.tokensList.length > 0 ? [...this.tokensList] : [];
+      sorted.sort(
+        (a, b) => parseFloat(b.usdBalance) - parseFloat(a.usdBalance)
+      );
+      return sorted;
     },
     /**
-     * Property returns filter networks list based on search input and toggle  type
+     * Property returns filter tokens list based on search input
      * @returns {object[]}
      */
     tokens() {
-      let allNetworks = [];
-      this.sortedTokens.forEach(item => {
-        allNetworks.push(types[item]);
-      });
-      allNetworks = allNetworks.filter(
-        item =>
-          item.name === types.ETH.name ||
-          item.name === types.BSC.name ||
-          item.name === types.MATIC.name
-      );
+      const allTokens = [...this.tokensList];
       if (this.searchInput && this.searchInput !== '') {
-        return allNetworks.filter(item =>
-          this.hasString(item.name, item.name_long)
+        return allTokens.filter(item =>
+          this.hasString(item.symbol, item.subtext)
         );
       }
-      return allNetworks;
+      return allTokens;
     },
     /**
-     * Property shows invalid search if user included input and networks length is 0
+     * Property shows invalid search if user included input and token length is 0
      * @returns {boolean}
      */
     showEmptySearch() {
@@ -158,7 +147,7 @@ export default {
       }
       return {
         title: '',
-        subtitle: 'We do not have a network with this name.'
+        subtitle: 'We do not have a token with this name.'
       };
     }
   },
@@ -169,7 +158,7 @@ export default {
     },
     searchInput(newVal, oldVal) {
       /**
-       * Set current network to prevent undefined tokenSelected value
+       * Set current token to prevent undefined tokenSelected value
        */
       if (this.tokens.length > 0) {
         // this.tokenSelected = this.networkSelectedBefore;
