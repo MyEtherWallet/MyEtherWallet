@@ -45,7 +45,7 @@
               <v-icon class="expand-button">mdi-chevron-down</v-icon>
             </div>
             <v-btn
-              class="d-flex ma-2 switch-button cursor-pointer"
+              class="d-flex my-2 mx-1 switch-button cursor-pointer"
               x-small
               rounded
               depressed
@@ -126,14 +126,22 @@
           <!-- ======================================================================================================================= -->
 
           <div v-if="hasMinEth">
+            <v-slide-y-transition v-if="showAnimation" hide-on-leave group>
+              <swap-provider-mentions
+                key="showAnimation"
+                :is-loading="isLoadingProviders"
+                :check-loading="checkLoading"
+                @showProviders="showProviders"
+              />
+            </v-slide-y-transition>
+            <div v-else key="showAnimation1"></div>
             <!--
               =====================================================================================
               Bridge Fee
               =====================================================================================
             -->
             <app-transaction-fee
-              v-if="showNetworkFee"
-              :is-from-chain="!isFromNonChain"
+              v-if="showNetworkFee && false"
               :show-fee="showBridgeFee"
               :getting-fee="loadingFee"
               :error="feeError"
@@ -141,11 +149,36 @@
               :tx-fee="txFee"
               :total-gas-limit="totalGasLimit"
               :not-enough-eth="notEnoughEth"
-              :from-eth="isFromTokenMain"
               is-swap
               class="mt-10 mt-sm-16"
               @onLocalGasPrice="handleLocalGasPrice"
             />
+
+            <div class="d-flex pa-3">
+              <span class="fee-label">Rate</span>
+              <div class="ml-auto cursor-pointer">
+                <span class="dropdown-label"
+                  >{{ totalCostFormatted }}
+                  {{ network.type.currencyName }}</span
+                >
+                <v-icon class="ml-2" size="24px" color="black"
+                  >mdi-menu-down</v-icon
+                >
+              </div>
+            </div>
+            <div class="d-flex pa-3">
+              <span class="fee-label">Network fee</span>
+              <v-icon class="ml-2" size="12px">mdi-information-outline</v-icon>
+              <div class="ml-auto cursor-pointer">
+                <span class="dropdown-label"
+                  >{{ txFee }} {{ network.type.currencyName }}</span
+                >
+                <v-icon class="ml-2" size="24px" color="black"
+                  >mdi-menu-down</v-icon
+                >
+              </div>
+            </div>
+
             <div class="text-center mt-10 mt-sm-15">
               <mew-button
                 v-if="showNextButton"
@@ -241,12 +274,13 @@ export default {
   components: {
     MewTokenSelectorInterface: () =>
       import('@/components/MewTokenSelectorInterface.vue'),
-    // AppButtonBalance: () => import('@/core/components/AppButtonBalance'),
     AppUserMsgBlock: () => import('@/core/components/AppUserMsgBlock'),
     ModuleAddressBook: () => import('@/modules/address-book/ModuleAddressBook'),
     AppTransactionFee: () => import('@/core/components/AppTransactionFee.vue'),
     NetworkSwitch: () =>
       import('@/modules/network/components/NetworkSwitch.vue'),
+    SwapProviderMentions: () =>
+      import('@/modules/swap/components/SwapProviderMentions.vue'),
     TokenSelect: () => import('./components/TokenSelect.vue')
   },
   mixins: [handlerAnalytics, buyMore],
@@ -299,7 +333,7 @@ export default {
         fromToken: this.fromToken
       },
       isLoadingProviders: false,
-      // showAnimation: false,
+      showAnimation: false,
       checkLoading: true,
       addressValue: {},
       selectedProvider: {},
@@ -348,18 +382,22 @@ export default {
      * based on how the bridge state is
      */
     showNetworkFee() {
-      return this.showNextButton;
+      console.log('showNextButton', this.showNextButton);
+      console.log('providersErrorMsg', this.providersErrorMsg);
+      return true;
+      // return this.showNextButton;
     },
     /**
      * @returns a boolean
      * based on how the bridge state is
      */
     showNextButton() {
-      return (
-        this.step > 0 &&
-        this.providersErrorMsg.subtitle === '' &&
-        !this.isLoadingProviders
-      );
+      return true;
+      // return (
+      //   this.step > 0 &&
+      //   this.providersErrorMsg.subtitle === '' &&
+      //   !this.isLoadingProviders
+      // );
     },
     networkImage() {
       return this.network.type.icon;
@@ -393,7 +431,6 @@ export default {
       // Only use mainnet coin for bridge for now
       let filteredNetworks = Object.keys(types);
       const availableNetworks = wrappedTokens[this.network.type.currencyName];
-      console.log('availableNetworks', availableNetworks);
       filteredNetworks = filteredNetworks.filter(item => {
         return (
           item !== this.network.type.name &&
@@ -407,7 +444,6 @@ export default {
       filteredTokens = filteredTokens.filter(item => {
         return item.symbol === this.network.type.currencyName;
       });
-      console.log('filteredTokens', filteredTokens);
       return filteredTokens;
     },
     toTokenText() {
@@ -537,9 +573,13 @@ export default {
       return toBN(this.totalGasLimit).mul(toBN(this.localGasPrice)).toString();
     },
     totalCost() {
-      const amount = this.isFromTokenMain ? this.tokenInValue : '0';
+      const amount = this.tokenInValue || '0';
       const amountWei = toWei(amount);
-      return BigNumber(this.txFee).plus(amountWei).toString();
+      return new BigNumber(this.txFee).plus(amountWei).toString();
+    },
+    totalCostFormatted() {
+      const amount = this.tokenInValue || '0';
+      return new BigNumber(this.txFee).plus(amount).toFixed();
     },
     totalGasLimit() {
       if (this.currentTrade) {
@@ -578,13 +618,6 @@ export default {
      * @returns{boolean}
      */
     hasMinEth() {
-      if (
-        !isEmpty(this.fromTokenType) &&
-        this.fromTokenType.hasOwnProperty('isEth') &&
-        !this.fromTokenType.isEth
-      ) {
-        return true;
-      }
       return toBN(this.balanceInWei).gte(
         toBN(this.localGasPrice).muln(MIN_GAS_LIMIT)
       );
@@ -630,7 +663,8 @@ export default {
      * Fee is shown if provider was selected and no errors are passed
      */
     showBridgeFee() {
-      return this.step >= 2 && this.availableBalance.gt(0);
+      return this.availableBalance.gt(0);
+      // return this.step >= 2 && this.availableBalance.gt(0);
     },
     /**
      * Method validates input for the From token amount against user input
@@ -771,21 +805,14 @@ export default {
       immediate: false
     },
     selectedNetwork(newVal) {
-      console.log('selectedNetwork', newVal);
       if (newVal && newVal.name_long !== 'Select Network') {
-        // TODO: Set to token type to selected network's
         const tokens = wrappedTokens[this.network.type.currencyName];
-        console.log('tokens', tokens);
-        console.log('fromTokenType', this.fromTokenType);
-        // contractToToken(wrappedTokens[this.network.type.name][this.selectedNetwork.name])
         this.toTokenType = Object.assign({}, this.fromTokenType);
         this.toTokenType.symbol = `W${this.toTokenType.symbol}`;
         this.toTokenType.name = this.toTokenType.symbol;
         this.toTokenType.subtext = `Wrapped ${this.toTokenType.subtext}`;
         this.toTokenType.value = this.toTokenType.subtext;
         this.toTokenType.contract = tokens[this.selectedNetwork.name];
-        console.log('toTokenType', this.toTokenType);
-        console.log('wrappedTokens', wrappedTokens);
       }
     }
   },
@@ -806,7 +833,6 @@ export default {
       this.mainTokenDetails = this.contractToToken(MAIN_TOKEN_ADDRESS);
       localContractToToken = {};
       localContractToToken[MAIN_TOKEN_ADDRESS] = this.mainTokenDetails;
-      console.log('networkSelectedBefore', this.networkSelectedBefore);
       this.selectedNetwork = this.networkSelectedBefore
         ? this.networkSelectedBefore.type
         : { name_long: 'Select Network' };
@@ -880,43 +906,6 @@ export default {
     getDefaultFromToken() {
       return this.mainTokenDetails;
     },
-    // getDefaultToToken() {
-    //   const findToken = this.actualToTokens.find(item => {
-    //     if (item.contract === this.defaults.toToken) return item;
-    //   });
-    //   if (
-    //     this.defaults.toToken === MAIN_TOKEN_ADDRESS &&
-    //     new BigNumber(this.balanceInETH).gt(0)
-    //   ) {
-    //     return this.mainTokenDetails;
-    //   }
-    //   return findToken ? findToken : this.actualToTokens[0];
-    // },
-    // switchTokens() {
-    //   this.trackSwap('switchTokens');
-    //   const fromToken = this.fromTokenType;
-    //   const toToken = this.toTokenType || this.actualToTokens[0];
-    //   const tokenOutValue = this.tokenOutValue;
-    //   this.fromTokenType = {};
-    //   this.toTokenType = {};
-    //   this.tokenOutValue = '0';
-    //   const toTokenFromTokenList = this.actualFromTokens.find(item => {
-    //     if (item && item.contract === toToken?.contract) return item;
-    //   });
-    //   this.setFromToken(toTokenFromTokenList ? toTokenFromTokenList : toToken);
-    //   this.setToToken(fromToken);
-    //   this.setTokenInValue(tokenOutValue);
-    // },
-    // processTokens(tokens, storeTokens) {
-    //   this.setupTokenInfo(tokens.fromTokens);
-    //   this.setupTokenInfo(tokens.toTokens);
-    //   this.setupTokenInfo(TRENDING_LIST[this.network.type.name]);
-    //   this.availableTokens = tokens;
-    //   this.setDefaults();
-    //   if (isUndefined(storeTokens)) {
-    //     this.setSwapTokens(tokens);
-    //   }
-    // },
     setDefaults() {
       setTimeout(() => {
         this.fromTokenType = this.getDefaultFromToken();
@@ -1133,8 +1122,6 @@ export default {
         }
       });
       this.networkSelectedBefore = this.network;
-      console.log('networkSelectedBefore', this.networkSelectedBefore);
-      console.log('found', found);
 
       this.setNetwork({
         network: found[0],
@@ -1161,6 +1148,15 @@ export default {
     setAmount(val) {
       this.tokenInValue = val;
       this.tokenOutValue = this.tokenInValue;
+      this.showAnimation = true;
+      setTimeout(() => {
+        this.showAnimation = false;
+      }, 2000);
+    },
+    showProviders(val) {
+      if (!this.isLoadingProviders && val) {
+        this.showAnimation = false;
+      }
     }
   }
 };
@@ -1190,10 +1186,8 @@ export default {
 
 .network-icon {
   box-sizing: border-box;
-
   width: 32px;
   height: 32px;
-
   border: 1px solid #d7dae3;
   border-radius: 8px;
 }
@@ -1203,12 +1197,12 @@ export default {
   border: 1px solid #d7dde7;
   box-sizing: border-box;
   border-radius: 12px;
-
   display: flex;
   flex-direction: row;
   align-items: flex-start;
   padding: 0px;
   cursor: pointer;
+  width: stretch;
 }
 
 .network-selection.to-network {
@@ -1220,10 +1214,8 @@ export default {
   font-weight: 500;
   font-size: 10px;
   line-height: 12px;
-
   letter-spacing: 1.5px;
   text-transform: uppercase;
-
   color: #7b818e;
 }
 
@@ -1232,17 +1224,15 @@ export default {
   font-weight: 400;
   font-size: 16px;
   line-height: 24px;
-
   display: flex;
   letter-spacing: 0.03em;
-
   color: #000000;
+  width: max-content;
 }
 
 .expand-button {
   width: 24px;
   height: 24px;
-
   margin-left: auto;
   color: rgba(0, 0, 0, 0.8);
   align-self: center;
@@ -1251,101 +1241,11 @@ export default {
 .network-container {
   align-content: stretch;
   justify-content: center;
-  // flex-direction: column;
-  // gap: 2px;
 }
 
 .switch-button > img:hover {
   background-color: rgba(0, 0, 0, 0.1);
   border-radius: 20%;
-}
-
-.token-container {
-  box-sizing: border-box;
-
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  padding: 15px;
-
-  width: 100%;
-  height: 112px;
-
-  border: 1px solid #d7dde7;
-  justify-self: center;
-}
-
-.token-container.to {
-  border-radius: 12px 12px 0 0;
-}
-
-.token-container.from {
-  border-top: none;
-  border-radius: 0 0 12px 12px;
-}
-
-.token-label {
-  display: flex;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 10px;
-  line-height: 12px;
-
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-
-  color: #7b818e;
-}
-
-.token-name {
-  font-style: normal;
-  font-weight: 500;
-  font-size: 24px;
-  line-height: 32px;
-
-  color: #b9bdc7;
-}
-
-.balance-text {
-  font-style: normal;
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 20px;
-
-  color: #7b818e;
-}
-
-.token-amount {
-  font-style: normal;
-  font-weight: 500;
-  font-size: 24px;
-  line-height: 32px;
-
-  color: #b9bdc7;
-  margin-left: auto;
-}
-
-.balance-value {
-  font-style: normal;
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 20px;
-
-  color: #9ba1ae;
-
-  margin-left: auto;
-}
-
-.token-row {
-  display: flex;
-  // align-self: center;
-  // margin-left: -55px;
-}
-
-.balance-row {
-  display: flex;
-  align-self: flex-end;
-  // margin-left: -55px;
 }
 
 .circle-arrow {
@@ -1357,5 +1257,20 @@ export default {
   left: calc(50% + -20px);
   margin: 0;
   background-color: white;
+}
+
+.fee-label {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0.1px;
+  color: #081d34;
+}
+
+.dropdown-label {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  color: #081d34;
 }
 </style>
