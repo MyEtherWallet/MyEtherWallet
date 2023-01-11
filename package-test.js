@@ -81,7 +81,8 @@ const EXCEPTIONS = [
   '@ledgerhq/live-common', // issue with imports
   // fix after release
   'lottie-web',
-  'patch-package'
+  'patch-package',
+  '@commitlint/config-conventional'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
