@@ -59,8 +59,8 @@
         <div class="d-flex align-center justify-space-between">
           <div
             class="textMedium--text"
-            :class="leftText.includes('Max') ? 'cursor-pointer' : ''"
-            @click="leftText.includes('Max') ? setMaxAmount() : null"
+            :class="setMaxAmount ? 'cursor-pointer' : ''"
+            @click="setMaxAmount ? setMaxAmount() : null"
           >
             {{ leftText }}
           </div>
@@ -163,7 +163,7 @@ export default {
     },
     setMaxAmount: {
       type: Function,
-      default: () => {}
+      default: null
     }
   },
   data() {
