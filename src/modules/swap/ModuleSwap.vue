@@ -9,54 +9,26 @@
           <mew-token-selector-interface
             title="YOU GIVE"
             :left-text="maxMsg"
+            :max-button="setMaxAmount"
             right-text="≈$0"
+            :error="amountErrorMessage"
             selected
             :token="fromTokenType"
+            :tokens="actualFromTokens"
             placeholder="Enter amount"
             :loading="isLoading"
             :value="tokenInValue"
             :input="val => triggerSetTokenInValue(val, false)"
+            popup-title="Select token to swap"
           />
-
-          <!-- <app-border-container selected class="give-block">
-            <div class="monospace input-block-title textMedium--text">
-              YOU GIVE
-            </div>
-            <div class="d-flex align-center">
-              <mew-button
-                btn-style="transparent"
-                color-theme="basic"
-                style="padding: 0 10px !important; margin-left: -10px"
-              >
-                <mew-token-container size="25px" :img="fromTokenType.img" />
-                <div class="mew-heading-1 ml-3 font-weight-bold textDark--text">
-                  {{ fromTokenType.symbol }}
-                </div>
-                <v-icon color="textDark">mdi-menu-down</v-icon>
-              </mew-button>
-              <v-spacer />
-              <v-text-field
-                v-model="tokenInValue"
-                class="swap-input"
-                placeholder="Enter amount"
-                solo
-                flat
-                hide-details
-              />
-            </div>
-            <div
-              v-if="!isLoading"
-              class="d-flex align-center justify-space-between"
-            >
-              <div class="textMedium--text">
-                Max: {{ fromTokenType.tokenBalance }}
-              </div>
-              <div class="textMedium--text">≈$0</div>
-            </div>
-          </app-border-container> -->
-
           <div class="d-flex align-center justify-center py-2">
-            <v-icon color="textDark" size="30px">mdi-swap-vertical</v-icon>
+            <v-icon
+              color="textDark"
+              size="30px"
+              :disabled="!enableTokenSwitch"
+              @click.native="switchTokens"
+              >mdi-swap-vertical</v-icon
+            >
           </div>
 
           <!-- =============================================================== -->
@@ -67,46 +39,198 @@
             :left-text="availableBalanceTo"
             :right-text="fiatBalanceTo"
             :token="toTokenType"
+            :tokens="actualToTokens"
             btn-text="Select Token"
-            value="1023"
+            :value="tokenOutValue"
             :loading="isLoading"
+            read-only
           />
-
-          <!-- <app-border-container class="give-block">
-            <div class="monospace input-block-title textMedium--text">
-              YOU RECEIVE
-            </div>
-            <div class="d-flex align-center">
-              <mew-button
-                btn-style="transparent"
-                color-theme="basic"
-                style="padding: 0 10px !important; margin-left: -10px"
-              >
-                <div class="mew-heading-1 font-weight-bold textDark--text">
-                  Select Token
-                </div>
-                <v-icon color="textDark">mdi-menu-down</v-icon>
-              </mew-button>
-              <v-spacer />
-              <v-text-field
-                v-model="tokenInValue"
-                readonly
-                class="swap-input read-only"
-                placeholder="Enter amount"
-                solo
-                flat
-                hide-details
-              />
-            </div>
-            <div class="d-flex align-center justify-space-between">
-              <div class="textMedium--text">Balance: 0</div>
-              <div class="textMedium--text">≈$0</div>
-            </div>
-          </app-border-container> -->
         </div>
 
         <swap-loader v-else />
       </app-wallet-block>
+
+      <!--
+          =====================================================================================
+            User Message Block: store your Bitcoin on Ethereum
+          =====================================================================================
+          -->
+      <app-user-msg-block
+        v-if="!hasMinEth"
+        class="mt-sm-5"
+        :message="msg.lowBalance"
+      >
+        <div class="mt-3 mx-n1">
+          <mew-button
+            btn-size="small"
+            btn-style="outline"
+            :title="`Buy ${network.type.currencyName}`"
+            class="ma-1"
+            :has-full-width="$vuetify.breakpoint.xsOnly"
+            @click.native="openBuySell"
+          />
+        </div>
+      </app-user-msg-block>
+
+      <!--
+            =====================================================================================
+              Address Book
+            =====================================================================================
+            -->
+      <div class="mt-8">
+        <module-address-book
+          v-if="isFromNonChain"
+          ref="refundAddressInput"
+          class="FromAddressInput"
+          :label="nativeLabel"
+          :is-valid-address-func="isValidRefundAddress"
+          @setAddress="setRefundAddr"
+        />
+        <module-address-book
+          v-show="showToAddress"
+          ref="toAddressInput"
+          class="ToAddressInput"
+          :is-valid-address-func="isValidToAddress"
+          :label="toAddressLabel"
+          @setAddress="setToAddress"
+        />
+      </div>
+
+      <!--
+          =====================================================================================
+            User Message Block: store your Bitcoin on Ethereum
+          =====================================================================================
+          -->
+      <app-user-msg-block
+        v-if="
+          toTokenType &&
+          toTokenType.value &&
+          toTokenType.value.toLowerCase() == 'bitcoin' &&
+          isEthNetwork
+        "
+        class="mt-sm-5"
+        :message="msg.storeBitcoin"
+      >
+        <div class="border-top mt-3">
+          <v-expansion-panels flat class="expansion-panels--remove-paddings">
+            <v-expansion-panel>
+              <v-expansion-panel-header
+                color="greyLight"
+                class="textLight--text"
+              >
+                How can I get wrapped Bitcoin?
+              </v-expansion-panel-header>
+              <v-expansion-panel-content color="greyLight" class="pa-0">
+                <div class="textLight--text mb-2">
+                  When you swap to Bitcoin, it is moved to the Bitcoin
+                  blockchain, & requires a Bitcoin wallet. In order to keep
+                  Bitcoin in MyEtherWallet, you can swap to wrapped Bitcoin
+                  instead. Wrapped Bitcoin is an Ethereum token, with a value
+                  approximately equal to 1 BTC. Wrapped Bitcoins can be stored
+                  in MEW, and can be used as any other Ethereum asset: you can
+                  swap it to other tokens, use it as collateral in DeFi apps,
+                  etc. There are multiple kinds of wrapped Bitcoins, but they
+                  roughly do the same thing.
+                  <a
+                    :href="getArticle('mv-btc-to-eth-mew-swap')"
+                    target="_blank"
+                  >
+                    Learn more about Wrapped Bitcoin.
+                  </a>
+                </div>
+                <v-row class="mt-6">
+                  <v-col cols="12" md="4">
+                    <mew-button
+                      btn-size="small"
+                      btn-style="outline"
+                      title="Swap to renBTC"
+                      :has-full-width="true"
+                      @click.native="swapTo('renBTC')"
+                    />
+                  </v-col>
+                  <v-col cols="12" md="4">
+                    <mew-button
+                      btn-size="small"
+                      btn-style="outline"
+                      title="Swap to wBTC"
+                      :has-full-width="true"
+                      @click.native="swapTo('wBTC')"
+                    />
+                  </v-col>
+                  <v-col cols="12" md="4">
+                    <mew-button
+                      btn-size="small"
+                      btn-style="outline"
+                      title="Swap to PBTC"
+                      :has-full-width="true"
+                      @click.native="swapTo('PBTC')"
+                    />
+                  </v-col>
+                </v-row>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+          </v-expansion-panels>
+        </div>
+      </app-user-msg-block>
+      <!--
+            =====================================================================================
+             Providers List
+            =====================================================================================
+            -->
+      <div v-if="hasMinEth">
+        <v-slide-y-transition v-if="showAnimation" hide-on-leave group>
+          <swap-provider-mentions
+            key="showAnimation"
+            :is-loading="isLoadingProviders"
+            :check-loading="checkLoading"
+            @showProviders="showProviders"
+          />
+        </v-slide-y-transition>
+        <div v-else key="showAnimation1">
+          <swap-providers-list
+            :step="step"
+            :available-quotes="availableQuotes"
+            :set-provider="setProvider"
+            :to-token-symbol="toTokenType ? toTokenType.symbol : ''"
+            :to-token-icon="toTokenType ? toTokenType.img : ''"
+            :is-loading="isLoadingProviders"
+            :providers-error="providersErrorMsg"
+            :class="isFromNonChain ? '' : 'mt-7'"
+            :selected-provider-id="selectedProviderId"
+          />
+          <!--
+                  =====================================================================================
+                  Swap Fee
+                  =====================================================================================
+                -->
+          <app-transaction-fee
+            v-if="showNetworkFee"
+            :is-from-chain="!isFromNonChain"
+            :show-fee="showSwapFee"
+            :getting-fee="loadingFee"
+            :error="feeError"
+            :total-cost="totalCost"
+            :tx-fee="txFee"
+            :total-gas-limit="totalGasLimit"
+            :not-enough-eth="notEnoughEth"
+            :from-eth="isFromTokenMain"
+            is-swap
+            class="mt-10 mt-sm-16"
+            @onLocalGasPrice="handleLocalGasPrice"
+          />
+          <div v-if="showNextButton" class="text-center mt-10 mt-sm-15">
+            <mew-button
+              title="Next"
+              :has-full-width="true"
+              :disabled="disableNext"
+              btn-size="xlarge"
+              class="NextButton"
+              style="max-width: 240px"
+              @click.native="showConfirm()"
+            />
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- =============================================================================================================== -->
@@ -128,7 +252,7 @@
               From / Amount to Swap / To / Amount to Recieve
             =====================================================================================
             -->
-          <div class="input-swap-container pt-7 pb-3 px-5">
+          <!-- <div class="input-swap-container pt-7 pb-3 px-5">
             <v-row class="align-start justify-space-between mt-4">
               <v-col cols="12" sm="5" class="pb-0 pb-sm-3 pr-sm-0">
                 <div class="position--relative">
@@ -207,193 +331,7 @@
                 />
               </v-col>
             </v-row>
-          </div>
-
-          <!--
-          =====================================================================================
-            User Message Block: store your Bitcoin on Ethereum
-          =====================================================================================
-          -->
-          <app-user-msg-block
-            v-if="!hasMinEth"
-            class="mt-sm-5"
-            :message="msg.lowBalance"
-          >
-            <div class="mt-3 mx-n1">
-              <mew-button
-                btn-size="small"
-                btn-style="outline"
-                :title="`Buy ${network.type.currencyName}`"
-                class="ma-1"
-                :has-full-width="$vuetify.breakpoint.xsOnly"
-                @click.native="openBuySell"
-              />
-            </div>
-          </app-user-msg-block>
-
-          <!--
-            =====================================================================================
-              Address Book
-            =====================================================================================
-            -->
-          <div class="mt-8">
-            <module-address-book
-              v-if="isFromNonChain"
-              ref="refundAddressInput"
-              class="FromAddressInput"
-              :label="nativeLabel"
-              :is-valid-address-func="isValidRefundAddress"
-              @setAddress="setRefundAddr"
-            />
-            <module-address-book
-              v-show="showToAddress"
-              ref="toAddressInput"
-              class="ToAddressInput"
-              :is-valid-address-func="isValidToAddress"
-              :label="toAddressLabel"
-              @setAddress="setToAddress"
-            />
-          </div>
-
-          <!--
-          =====================================================================================
-            User Message Block: store your Bitcoin on Ethereum
-          =====================================================================================
-          -->
-          <app-user-msg-block
-            v-if="
-              toTokenType &&
-              toTokenType.value &&
-              toTokenType.value.toLowerCase() == 'bitcoin' &&
-              isEthNetwork
-            "
-            class="mt-sm-5"
-            :message="msg.storeBitcoin"
-          >
-            <div class="border-top mt-3">
-              <v-expansion-panels
-                flat
-                class="expansion-panels--remove-paddings"
-              >
-                <v-expansion-panel>
-                  <v-expansion-panel-header
-                    color="greyLight"
-                    class="textLight--text"
-                  >
-                    How can I get wrapped Bitcoin?
-                  </v-expansion-panel-header>
-                  <v-expansion-panel-content color="greyLight" class="pa-0">
-                    <div class="textLight--text mb-2">
-                      When you swap to Bitcoin, it is moved to the Bitcoin
-                      blockchain, & requires a Bitcoin wallet. In order to keep
-                      Bitcoin in MyEtherWallet, you can swap to wrapped Bitcoin
-                      instead. Wrapped Bitcoin is an Ethereum token, with a
-                      value approximately equal to 1 BTC. Wrapped Bitcoins can
-                      be stored in MEW, and can be used as any other Ethereum
-                      asset: you can swap it to other tokens, use it as
-                      collateral in DeFi apps, etc. There are multiple kinds of
-                      wrapped Bitcoins, but they roughly do the same thing.
-                      <a
-                        :href="getArticle('mv-btc-to-eth-mew-swap')"
-                        target="_blank"
-                      >
-                        Learn more about Wrapped Bitcoin.
-                      </a>
-                    </div>
-                    <v-row class="mt-6">
-                      <v-col cols="12" md="4">
-                        <mew-button
-                          btn-size="small"
-                          btn-style="outline"
-                          title="Swap to renBTC"
-                          :has-full-width="true"
-                          @click.native="swapTo('renBTC')"
-                        />
-                      </v-col>
-                      <v-col cols="12" md="4">
-                        <mew-button
-                          btn-size="small"
-                          btn-style="outline"
-                          title="Swap to wBTC"
-                          :has-full-width="true"
-                          @click.native="swapTo('wBTC')"
-                        />
-                      </v-col>
-                      <v-col cols="12" md="4">
-                        <mew-button
-                          btn-size="small"
-                          btn-style="outline"
-                          title="Swap to PBTC"
-                          :has-full-width="true"
-                          @click.native="swapTo('PBTC')"
-                        />
-                      </v-col>
-                    </v-row>
-                  </v-expansion-panel-content>
-                </v-expansion-panel>
-              </v-expansion-panels>
-            </div>
-          </app-user-msg-block>
-
-          <!--
-            =====================================================================================
-             Providers List
-            =====================================================================================
-            -->
-          <div v-if="hasMinEth">
-            <v-slide-y-transition v-if="showAnimation" hide-on-leave group>
-              <swap-provider-mentions
-                key="showAnimation"
-                :is-loading="isLoadingProviders"
-                :check-loading="checkLoading"
-                @showProviders="showProviders"
-              />
-            </v-slide-y-transition>
-            <div v-else key="showAnimation1">
-              <swap-providers-list
-                :step="step"
-                :available-quotes="availableQuotes"
-                :set-provider="setProvider"
-                :to-token-symbol="toTokenType ? toTokenType.symbol : ''"
-                :to-token-icon="toTokenType ? toTokenType.img : ''"
-                :is-loading="isLoadingProviders"
-                :providers-error="providersErrorMsg"
-                :class="isFromNonChain ? '' : 'mt-7'"
-                :selected-provider-id="selectedProviderId"
-              />
-              <!--
-                  =====================================================================================
-                  Swap Fee
-                  =====================================================================================
-                -->
-              <app-transaction-fee
-                v-if="showNetworkFee"
-                :is-from-chain="!isFromNonChain"
-                :show-fee="showSwapFee"
-                :getting-fee="loadingFee"
-                :error="feeError"
-                :total-cost="totalCost"
-                :tx-fee="txFee"
-                :total-gas-limit="totalGasLimit"
-                :not-enough-eth="notEnoughEth"
-                :from-eth="isFromTokenMain"
-                is-swap
-                class="mt-10 mt-sm-16"
-                @onLocalGasPrice="handleLocalGasPrice"
-              />
-              <div v-if="showNextButton" class="text-center mt-10 mt-sm-15">
-                <mew-button
-                  title="Next"
-                  :has-full-width="true"
-                  :disabled="disableNext"
-                  btn-size="xlarge"
-                  class="NextButton"
-                  style="max-width: 240px"
-                  @click.native="showConfirm()"
-                />
-              </div>
-            </div>
-          </div>
+          </div> -->
         </template>
         <!--
           =====================================================================================
@@ -579,7 +517,7 @@ export default {
           };
     },
     maxMsg() {
-      return `Max: ${this.maxAmount}`;
+      return `Max: ${new BigNumber(this.maxAmount).toFixed(6)}`;
     },
     maxAmount() {
       const max = new BigNumber(this.availableBalance).minus(
@@ -735,15 +673,7 @@ export default {
         }
         return arr;
       }, []);
-      let returnableTokens = [
-        {
-          text: 'Select Token',
-          imgs: this.getPlaceholderImgs(),
-          total: `${this.toTokens.length}`,
-          divider: true,
-          selectLabel: true
-        }
-      ];
+      let returnableTokens = [];
       if (filteredTrendingTokens.length) {
         returnableTokens = returnableTokens.concat([
           {
@@ -822,16 +752,6 @@ export default {
       }, []);
       tradebleWalletTokens = this.formatTokensForSelect(tradebleWalletTokens);
       let returnableTokens = [
-        {
-          text: 'Select Token',
-          imgs: this.getPlaceholderImgs(true),
-          total:
-            this.tokensList.length > 0
-              ? this.tokensList.length
-              : `${this.toTokens.length}`,
-          divider: true,
-          selectLabel: true
-        },
         {
           header: 'My Wallet'
         },
@@ -1129,7 +1049,9 @@ export default {
     },
     toTokenType: {
       handler: function (newVal) {
-        this.toTokenType = newVal;
+        console.log(newVal);
+        console.log(newVal?.header ? {} : newVal);
+        this.toTokenType = newVal?.header ? undefined : newVal;
       },
       deep: true,
       immediate: false
@@ -1844,14 +1766,17 @@ export default {
         const hasBalance = this.tokensList.find(
           t => t.contract.toLowerCase() === token.contract.toLowerCase()
         );
-        console.log(hasBalance)
         const tokenBalance =
           !isEmpty(hasBalance) &&
           !isEmpty(hasBalance.balance) &&
           hasBalance.hasOwnProperty('decimals')
             ? this.getTokenBalance(hasBalance.balance, hasBalance.decimals)
             : new BigNumber(0);
-        return { balance: tokenBalance, fiat: hasBalance.usdBalancef };
+        return {
+          balance: tokenBalance,
+          fiat:
+            this.getFiatValue(hasBalance?.usdBalancef) || this.getFiatValue('0')
+        };
       }
       return { balance: new BigNumber(0), fiat: this.getFiatValue('0') };
     },

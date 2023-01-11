@@ -1,6 +1,6 @@
 <template>
   <div class="token-selector-interface">
-    <div class="border-container" :class="selected ? 'selected' : ''">
+    <div class="border-container" :class="border">
       <!-- ============================================================================= -->
       <!-- Token selector interface -->
       <!-- ============================================================================= -->
@@ -13,6 +13,7 @@
             btn-style="transparent"
             color-theme="basic"
             style="padding: 0 10px !important; margin-left: -10px"
+            @click.native="handleShow"
           >
             <!-- ========================================= -->
             <!-- Token detail button -->
@@ -41,16 +42,44 @@
             class="swap-input"
             :placeholder="placeholder"
             :readonly="readOnly"
-            @input="input"
             solo
             flat
             hide-details
+            @input="input"
           />
         </div>
         <div class="d-flex align-center justify-space-between">
-          <div class="textMedium--text">{{ leftText }}</div>
-          <div class="textMedium--text">{{ rightText }}</div>
+          <div class="textMedium--text" @click="maxButton">{{ leftText }}</div>
+          <div :class="!error ? 'textMedium--text':'error--text'">{{ error || rightText }}</div>
         </div>
+        <v-dialog :value="show" width="440" @click:outside="handleShow">
+          <v-sheet class="pa-3">
+            <div class="mew-heading-1 mt-2 mb-5">{{popupTitle}}</div>
+            <v-text-field prepend-inner-icon="mdi-magnify" filled placeholder="Search" :value="query" @keydown="setQuery"/>
+            <div v-for="token,i in tokens" :key="i" class="mb-3">
+              <div v-if="token.header" class="mew-heading-3 text mb-2">{{token.header}}</div>
+                <div v-else :key="token.contract" class="d-flex align-center pt-2 pb-2">
+                  <mew-token-container size="medium" class="mr-3" :img="token.img"/>
+                  <div class="flex-column">
+                    <div>
+                      {{token.symbol}}
+                    </div>
+                    <div>
+                      {{token.subtext}}
+                    </div>
+                  </div>
+                  <div class="flex-column ml-auto mr-3 mb-auto text-right">
+                    <div>
+                      {{token.price}}
+                    </div>
+                    <div>
+                      {{token.balancef}}
+                    </div>
+                  </div>
+                </div>
+            </div>
+          </v-sheet>
+    </v-dialog>
       </template>
 
       <!-- ============================================================================= -->
@@ -91,6 +120,11 @@
       </template>
     </div>
   </div>
+    <!-- =============================================================================================================== -->
+    <!-- =============================================================================================================== -->
+    <!-- =============================================================================================================== -->
+    <!-- =============================================================================================================== -->
+    <!-- =============================================================================================================== -->
 </template>
 
 <script>
@@ -106,11 +140,31 @@ export default {
       type: Object,
       default: () => {}
     },
+    tokens:{
+      type:Array,
+      default: ()=>[]
+    },
     input: {
       type: Function,
       default: () => {}
     },
+    tokenSelect:{
+      type:Function,
+      default:()=>{}
+    },
+    swap:{
+      type:Function,
+      default:()=>{}
+    },
     btnText: {
+      type: String,
+      default: ''
+    },
+    popupTitle:{
+      type:String,
+      default:''
+    },
+    error: {
       type: String,
       default: ''
     },
@@ -125,6 +179,10 @@ export default {
     leftText: {
       type: String,
       default: ''
+    },
+    maxButton:{
+      type:Function,
+      default:()=>{}
     },
     rightText: {
       type: String,
@@ -142,6 +200,32 @@ export default {
       type: Boolean,
       default: false
     }
+  },
+  data(){
+    return{
+      show:false,
+      query:''
+    }
+  },
+  computed:{
+    border(){
+      return this.error?'errorBorder':this.selected?'selected':''
+    },
+    tokenResults(){
+      return this.query ? this.tokens.filter(t=>{
+        if (t.header) return;
+        const reg = RegExp(this.query,'gi')
+        return  t.name?.search(reg) || t.subtext?.search(reg);
+      }): this.tokens
+    }
+  },
+  methods:{
+    handleShow(){
+      this.show = !this.show
+    },
+    setQuery(e){
+      this.query = e.target.value
+    }
   }
 };
 </script>
@@ -154,6 +238,9 @@ export default {
   transition: border 0.15s ease;
   &.selected {
     border: 2px solid var(--v-greenPrimary-base);
+  };
+  &.errorBorder {
+    border: 2px solid var(--v-redPrimary-base);
   }
 }
 </style>
