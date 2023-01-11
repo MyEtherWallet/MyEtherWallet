@@ -70,7 +70,7 @@ export default {
         link: 'https://app.1inch.io/'
       },
       {
-        img: require('@/assets/images/partners/buitl-w-rivet-light-bg.svg'),
+        img: require('@/assets/images/partners/buitl-w-rivet-v2.svg'),
         link: 'https://rivet.cloud/'
       }
     ]
