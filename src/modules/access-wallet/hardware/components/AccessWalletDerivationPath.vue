@@ -339,13 +339,13 @@ export default {
      * Sets the custom alias value
      */
     setCustomAlias(val) {
-      this.customAlias = val.trim();
+      this.customAlias = val?.trim() || '';
     },
     /**
      * Sets the custom path value
      */
     setCustomPath(val) {
-      this.customPath = val.trim();
+      this.customPath = val?.trim() || '';
     },
     /**
      * Method sets searchValue on mew-search input event
