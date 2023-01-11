@@ -64,7 +64,12 @@
           >
             {{ leftText }}
           </div>
-          <div class="textMedium--text">{{ rightText }}</div>
+          <div
+            class="textMedium--text"
+            :class="[amountErrorMessage !== '' ? 'redPrimary--text' : '']"
+          >
+            {{ amountErrorMessage !== '' ? amountErrorMessage : rightText }}
+          </div>
         </div>
       </template>
 
@@ -164,6 +169,10 @@ export default {
     setMaxAmount: {
       type: Function,
       default: null
+    },
+    amountErrorMessage: {
+      type: String,
+      default: ''
     }
   },
   data() {
