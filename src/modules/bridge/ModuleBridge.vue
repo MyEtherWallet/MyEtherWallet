@@ -197,6 +197,20 @@
             Token Select
           =====================================================================================
           -->
+          <simple-dialog
+            :is-open="isOpenTokenSelect"
+            max-width="600px"
+            :title="tokenSelectTitle"
+            @close="closeTokenOverlay"
+          >
+            <token-select
+              :title="receiveTokenSelectOpen ? '' : 'MY TOKENS'"
+              :tokens-list="filterTokens"
+              @selectedToken="closeTokenOverlay"
+            />
+          </simple-dialog>
+
+          <!--
           <mew-popup
             :show="isOpenTokenSelect"
             :title="tokenSelectTitle"
@@ -209,6 +223,7 @@
           >
             <token-select :tokens-list="filterTokens" />
           </mew-popup>
+          -->
         </template>
         <!--
           =====================================================================================
@@ -272,6 +287,7 @@ const wrappedTokens = {
 export default {
   name: 'ModuleBridge',
   components: {
+    SimpleDialog: () => import('@/core/components/AppSimpleDialog'),
     MewTokenSelectorInterface: () =>
       import('@/components/MewTokenSelectorInterface.vue'),
     AppUserMsgBlock: () => import('@/core/components/AppUserMsgBlock'),
@@ -413,13 +429,6 @@ export default {
         title: '',
         color: 'primary',
         method: this.closeNetworkOverlay
-      };
-    },
-    tokenSelectLeftBtn() {
-      return {
-        title: '',
-        color: 'primary',
-        method: this.closeTokenOverlay
       };
     },
     tokenSelectTitle() {

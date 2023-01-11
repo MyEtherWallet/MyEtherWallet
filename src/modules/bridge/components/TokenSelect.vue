@@ -1,17 +1,16 @@
 <template>
-  <div class="module-network-switch full-width">
-    <v-row class="align-end justify-center justify-sm-space-between pa-0">
-      <!-- ===================================================================================== -->
-      <!-- Search Data -->
-      <!-- ===================================================================================== -->
-      <v-col cols="12" class="order-sm-1 full-width">
-        <mew-search
-          placeholder="Search"
-          :value="searchInput"
-          @input="setSearch"
-        />
-      </v-col>
-    </v-row>
+  <div class="module-bridge-token-select full-width">
+    <!-- ===================================================================================== -->
+    <!-- Search Data -->
+    <!-- ===================================================================================== -->
+    <v-text-field
+      v-model="searchInput"
+      color="greenPrimary"
+      outlined
+      prepend-inner-icon="mdi-magnify"
+      placeholder="Search"
+      @change="setSearch"
+    />
 
     <!-- ===================================================================================== -->
     <!-- Empty Search Message -->
@@ -22,51 +21,59 @@
       class="mt-5"
     />
 
+    <div v-if="title" class="mew-label mb-2 textMedium--text">{{ title }}</div>
+
     <!-- ===================================================================================== -->
-    <!-- Tokens -->
+    <!-- Token Buttons -->
     <!-- ===================================================================================== -->
-    <v-radio-group v-model="tokenSelected">
-      <v-container
-        v-for="(token, i) in tokensList"
+    <div>
+      <div
+        v-for="token in tokensList"
         :key="token.name"
-        :class="[
-          { 'network-border-first': i === 0 },
-          { 'network-border-last': i + 1 === tokensList.length },
-          'py-4 px-5 network-border'
-        ]"
+        class="d-flex align-center token-button"
+        @click="tokenBtnClicked(token.name)"
       >
-        <v-row class="pa-0 mew-body align-center justify-start">
-          <!-- ===================================================================================== -->
-          <!-- Icon -->
-          <!-- ===================================================================================== -->
-          <mew-token-container :img="token.img" size="24px" />
-          <!-- ===================================================================================== -->
-          <!-- Symbol/Name -->
-          <!-- ===================================================================================== -->
-          <div class="textDark--text Capitalize pl-3">
+        <!-- ================================================= -->
+        <!-- Icon -->
+        <!-- ================================================= -->
+        <mew-token-container :img="token.img" size="34px" />
+
+        <!-- ================================================= -->
+        <!-- Symbol/Name -->
+        <!-- ================================================= -->
+        <div class="ml-3">
+          <div class="textDark--text mew-heading-3" style="margin-bottom: -1px">
             {{ token.name }}
           </div>
-          <div class="px-2 textLight--text">-</div>
-          <div class="textLight--text">
+          <div class="textLight--text mew-body font-weight-normal">
             {{ token.subtext }}
           </div>
-          <v-spacer />
+        </div>
 
-          <!-- ===================================================================================== -->
-          <!-- Radio -->
-          <!-- ===================================================================================== -->
-          <v-radio :value="token.name" :class="['py-2 mb-0']"> </v-radio>
-        </v-row>
-      </v-container>
-    </v-radio-group>
+        <!-- ================================================= -->
+        <!-- Spacer -->
+        <!-- ================================================= -->
+        <v-spacer />
+
+        <!-- ================================================= -->
+        <!-- Balance -->
+        <!-- ================================================= -->
+        <div class="text-right">
+          <div class="textDark--text mew-heading-3 font-weight-medium">
+            {{ token.usdBalancef }}
+          </div>
+          <div class="textLight--text mew-body font-weight-normal">
+            {{ token.balancef }}
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapState } from 'vuex';
-
 import * as types from '@/utils/networks/types';
-
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 export default {
@@ -79,6 +86,10 @@ export default {
     tokensList: {
       type: Array,
       default: () => []
+    },
+    title: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -188,7 +199,12 @@ export default {
      * @returns {boolean}
      */
     setSearch(newVal) {
-      this.searchInput = newVal;
+      console.log(newVal);
+      //this.searchInput = newVal;
+    },
+    tokenBtnClicked(token) {
+      this.tokenSelected = token;
+      this.$emit('selectedToken', token);
     }
   }
 };
@@ -201,18 +217,35 @@ $borderNetwork: 1px solid #ececec;
   border-right: $borderNetwork;
   border-left: $borderNetwork;
 }
-
 .network-border-first {
   border-top: $borderNetwork;
   border-radius: 4px 4px 0px 0px;
 }
-
 .network-border-last {
   border-radius: 0px 0px 4px 4px;
 }
-
 .mint-me-color {
   filter: brightness(0) saturate(100%) invert(90%) sepia(3%) saturate(5171%)
     hue-rotate(348deg) brightness(92%) contrast(63%);
+}
+.token-button {
+  border-radius: 5px;
+  padding: 12px 15px;
+  margin: 0 -15px;
+  user-select: none;
+  &:hover {
+    //background-color: var(--v-greyLight-base);
+    background-color: #f5f7fb;
+    cursor: pointer;
+  }
+}
+</style>
+
+<style lang="scss">
+.module-bridge-token-select {
+  .v-input__slot {
+    border-radius: 10px !important;
+    background-color: var(--v-backgroundGrey-base) !important;
+  }
 }
 </style>
