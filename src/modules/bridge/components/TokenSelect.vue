@@ -9,7 +9,6 @@
       outlined
       prepend-inner-icon="mdi-magnify"
       placeholder="Search"
-      @change="setSearch"
     />
 
     <!-- ===================================================================================== -->
@@ -182,14 +181,6 @@ export default {
         symbol.toLowerCase().includes(this.searchInput.toLowerCase()) ||
         name.toLowerCase().includes(this.searchInput.toLowerCase())
       );
-    },
-    /**
-     * Method sets SearchInout on mew-search input event
-     * @returns {boolean}
-     */
-    setSearch(newVal) {
-      console.log(newVal);
-      //this.searchInput = newVal;
     },
     tokenBtnClicked(token) {
       this.tokenSelected = token;
