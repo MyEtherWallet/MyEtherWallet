@@ -8,6 +8,7 @@
     <template #moduleBody>
       <div>
         <mew-select
+          v-model="currentContract"
           :items="mergedContracts"
           label="Contract Name"
           class="ContractSelect"
