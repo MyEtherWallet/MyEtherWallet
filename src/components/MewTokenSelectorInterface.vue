@@ -20,6 +20,7 @@
             btn-style="transparent"
             color-theme="basic"
             style="padding: 0 10px !important; margin-left: -10px"
+            :disabled="btnDisabled"
             @click.native="clicked"
           >
             <!-- ========================================= -->
@@ -173,6 +174,10 @@ export default {
     amountErrorMessage: {
       type: String,
       default: ''
+    },
+    btnDisabled: {
+      type: Boolean,
+      default: false
     }
   },
   data() {

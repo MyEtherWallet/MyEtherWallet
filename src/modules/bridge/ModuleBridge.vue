@@ -101,6 +101,7 @@
               :loading="isLoading"
               :set-max-amount="setMaxAmount"
               :value="tokenInValue"
+              :amount-error-message="amountErrorMessage"
               @clicked="openTokenOverlay(false)"
               @changed="setAmount"
             />
@@ -109,12 +110,13 @@
               flat-top
               title="YOU RECEIVE"
               :left-text="`Balance: 0`"
-              :right-text="`≈${displayAmountPrice}`"
+              :right-text="`≈${displayQuoteAmountPrice}`"
               read-only
               btn-text="Select Token"
               :token="toToken"
               :value="tokenOutValue"
               :loading="isLoading"
+              :btn-disabled="disableToTokenSelect"
               @clicked="openTokenOverlay(true)"
             />
           </div>
@@ -126,7 +128,7 @@
           <!-- ======================================================================================================================= -->
           <!-- ======================================================================================================================= -->
 
-          <div v-if="hasMinEth">
+          <div v-if="hasMinEth && showNetworkFee">
             <v-slide-y-transition v-if="showAnimation" hide-on-leave group>
               <swap-provider-mentions
                 key="showAnimation"
@@ -135,62 +137,94 @@
                 @showProviders="showProviders"
               />
             </v-slide-y-transition>
-            <div v-else key="showAnimation1"></div>
+            <div v-else key="showAnimation1">
+              <div class="d-flex pa-3">
+                <span class="fee-label">Rate</span>
+                <div class="ml-auto cursor-pointer" @click="openProvidersList">
+                  <span class="dropdown-label"
+                    >{{ totalCostFormatted }}
+                    {{ network.type.currencyName }}</span
+                  >
+                  <v-icon class="ml-2" size="24px" color="black"
+                    >mdi-menu-down</v-icon
+                  >
+                </div>
+              </div>
+              <div class="d-flex pa-3">
+                <span class="fee-label">Network fee</span>
+                <v-icon class="ml-2" size="12px"
+                  >mdi-information-outline</v-icon
+                >
+                <div class="ml-auto cursor-pointer" @click="openGasPrice">
+                  <span class="dropdown-label"
+                    >{{ txFee }} {{ network.type.currencyName }}</span
+                  >
+                  <v-icon class="ml-2" size="24px" color="black"
+                    >mdi-menu-down</v-icon
+                  >
+                </div>
+              </div>
+
+              <div class="text-center mt-10 mt-sm-15">
+                <mew-button
+                  v-if="showNextButton"
+                  title="Proceed"
+                  :has-full-width="true"
+                  :disabled="disableNext"
+                  btn-size="xlarge"
+                  class="NextButton"
+                  @click.native="showConfirm()"
+                />
+              </div>
+            </div>
             <!--
               =====================================================================================
               Bridge Fee
               =====================================================================================
             -->
-            <app-transaction-fee
-              v-if="showNetworkFee && false"
-              :show-fee="showBridgeFee"
-              :getting-fee="loadingFee"
-              :error="feeError"
-              :total-cost="totalCost"
-              :tx-fee="txFee"
-              :total-gas-limit="totalGasLimit"
-              :not-enough-eth="notEnoughEth"
-              is-swap
-              class="mt-10 mt-sm-16"
-              @onLocalGasPrice="handleLocalGasPrice"
-            />
-
-            <div class="d-flex pa-3">
-              <span class="fee-label">Rate</span>
-              <div class="ml-auto cursor-pointer">
-                <span class="dropdown-label"
-                  >{{ totalCostFormatted }}
-                  {{ network.type.currencyName }}</span
-                >
-                <v-icon class="ml-2" size="24px" color="black"
-                  >mdi-menu-down</v-icon
-                >
-              </div>
-            </div>
-            <div class="d-flex pa-3">
-              <span class="fee-label">Network fee</span>
-              <v-icon class="ml-2" size="12px">mdi-information-outline</v-icon>
-              <div class="ml-auto cursor-pointer">
-                <span class="dropdown-label"
-                  >{{ txFee }} {{ network.type.currencyName }}</span
-                >
-                <v-icon class="ml-2" size="24px" color="black"
-                  >mdi-menu-down</v-icon
-                >
-              </div>
-            </div>
-
-            <div class="text-center mt-10 mt-sm-15">
-              <mew-button
-                v-if="showNextButton"
-                title="Proceed"
-                :has-full-width="true"
-                :disabled="disableNext"
-                btn-size="xlarge"
-                class="NextButton"
-                @click.native="showConfirm()"
+            <simple-dialog
+              :is-open="gasPriceModal"
+              width="420"
+              title="Select transaction fee"
+              @close="closeGasPrice"
+            >
+              <settings-gas-price
+                :is-swap="true"
+                :buttons="gasButtons"
+                :set-selected="setGas"
+                :gas-price="gasPrice"
+                :cost-in-eth="totalCost"
+                :tx-fee-formatted="txFeeFormatted"
+                :tx-fee-usd="feeInUsd"
+                :not-enough-eth="notEnoughEth"
+                :total-gas-limit="totalGasLimit"
+                :close-dialog="closeGasPrice"
+                :from-settings="false"
               />
-            </div>
+            </simple-dialog>
+
+            <!--
+              =====================================================================================
+              Provider Rates
+              =====================================================================================
+            -->
+            <simple-dialog
+              :is-open="showProviderRates"
+              width="420"
+              title="Select rate"
+              @close="closeProvidersList"
+            >
+              <providers-list
+                :step="step"
+                :available-quotes="availableQuotes"
+                :set-provider="setProvider"
+                :to-token-symbol="toToken ? toToken.symbol : ''"
+                :to-token-icon="toToken ? toToken.img : ''"
+                :is-loading="isLoadingProviders"
+                :providers-error="providersErrorMsg"
+                :selected-provider-id="selectedProviderId"
+              />
+            </simple-dialog>
           </div>
 
           <!--
@@ -231,7 +265,7 @@ import { fromWei, toBN, toWei } from 'web3-utils';
 import {
   // debounce,
   isEmpty,
-  clone,
+  // clone,
   // isUndefined,
   isObject,
   isNumber
@@ -239,20 +273,24 @@ import {
 import { mapGetters, mapState, mapActions } from 'vuex';
 import BigNumber from 'bignumber.js';
 
-import Notification, {
-  NOTIFICATION_TYPES,
-  NOTIFICATION_STATUS
-} from '@/modules/notifications/handlers/handlerNotification';
+// import Notification, {
+//   NOTIFICATION_TYPES,
+//   NOTIFICATION_STATUS
+// } from '@/modules/notifications/handlers/handlerNotification';
 import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
-import handleError from '../confirmation/handlers/errorHandler';
+// import handleError from '../confirmation/handlers/errorHandler';
 import { EventBus } from '@/core/plugins/eventBus';
 import * as types from '@/utils/networks/types';
 import * as nodes from '@/utils/networks/nodes';
-import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
+import {
+  formatFiatValue,
+  formatFloatingPointValue
+} from '@/core/helpers/numberFormatHelper';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
+import gasPriceMixin from '@/modules/settings/handler/gasPriceMixin';
 
 const MIN_GAS_LIMIT = 800000;
 let localContractToToken = {};
@@ -283,9 +321,14 @@ export default {
       import('@/modules/network/components/NetworkSwitch.vue'),
     SwapProviderMentions: () =>
       import('@/modules/swap/components/SwapProviderMentions.vue'),
-    TokenSelect: () => import('./components/TokenSelect.vue')
+    TokenSelect: () => import('./components/TokenSelect.vue'),
+    ProvidersList: () => import('./components/ProvidersList.vue'),
+    AppNetworkSettingsModal: () =>
+      import('@/core/components/AppNetworkSettingsModal.vue'),
+    SettingsGasPrice: () =>
+      import('@/modules/settings/components/SettingsGasPrice')
   },
-  mixins: [handlerAnalytics, buyMore],
+  mixins: [handlerAnalytics, buyMore, gasPriceMixin],
   props: {
     fromToken: {
       type: String,
@@ -324,7 +367,6 @@ export default {
       fromTokenType: {},
       tokenInValue: this.amount || '0',
       tokenOutValue: '0',
-      availableTokens: { toTokens: [], fromTokens: [] },
       availableQuotes: [],
       currentTrade: null,
       allTrades: [],
@@ -339,8 +381,6 @@ export default {
       checkLoading: true,
       addressValue: {},
       selectedProvider: {},
-      refundAddress: '',
-      isValidRefundAddr: false,
       localGasPrice: '0',
       mainTokenDetails: {},
       cachedAmount: '0',
@@ -348,7 +388,9 @@ export default {
       isOpenNetworkOverlay: false,
       isOpenTokenSelect: false,
       networkSelectedBefore: null,
-      receiveTokenSelectOpen: false
+      receiveTokenSelectOpen: false,
+      gasPriceModal: false,
+      showProviderRates: false
     };
   },
   computed: {
@@ -360,7 +402,11 @@ export default {
       'identifier',
       'instance'
     ]),
-    ...mapState('global', ['gasPriceType', 'validNetwork']),
+    ...mapState('global', [
+      'gasPriceType',
+      'validNetwork',
+      'preferredCurrency'
+    ]),
     ...mapState('external', ['coinGeckoTokens']),
     ...mapGetters('global', [
       'network',
@@ -384,9 +430,11 @@ export default {
      * based on how the bridge state is
      */
     showNetworkFee() {
-      console.log('showNextButton', this.showNextButton);
-      console.log('providersErrorMsg', this.providersErrorMsg);
-      return true;
+      return (
+        this.selectedNetwork?.name &&
+        !isEmpty(this.tokenInValue) &&
+        this.tokenInValue !== '0'
+      );
       // return this.showNextButton;
     },
     /**
@@ -509,12 +557,7 @@ export default {
       if (this.fromTokenType?.isEth) {
         return disableSet;
       }
-      return (
-        disableSet ||
-        (!this.refundAddress &&
-          !this.isValidRefundAddr &&
-          this.actualTrade?.length === 0)
-      );
+      return disableSet || this.actualTrade?.length === 0;
     },
     providersErrorMsg() {
       let msg = '';
@@ -578,8 +621,33 @@ export default {
       );
       return formatFiatValue(price).value;
     },
+    /**
+     * Returns correct price to be displayed below From Amount field
+     */
+    displayQuoteAmountPrice() {
+      const price = new BigNumber(this.fromTokenType.price).multipliedBy(
+        this.tokenOutValue
+      );
+      return formatFiatValue(price).value;
+    },
+    disableToTokenSelect() {
+      return this.selectedNetwork.name_long === 'Select Network';
+    },
     txFee() {
       return toBN(this.totalGasLimit).mul(toBN(this.localGasPrice)).toString();
+    },
+    txFeeInEth() {
+      return fromWei(this.txFee);
+    },
+    txFeeFormatted() {
+      return formatFloatingPointValue(this.txFeeInEth).value;
+    },
+    feeInUsd() {
+      const value = formatFiatValue(
+        new BigNumber(this.txFeeInEth).times(this.fiatValue).toFixed(2),
+        { currency: this.preferredCurrency }
+      ).value;
+      return value;
     },
     totalCost() {
       const amount = this.tokenInValue || '0';
@@ -671,10 +739,10 @@ export default {
      * Determines whether or not to show swap fee panel
      * Fee is shown if provider was selected and no errors are passed
      */
-    showBridgeFee() {
-      return this.availableBalance.gt(0);
-      // return this.step >= 2 && this.availableBalance.gt(0);
-    },
+    // showBridgeFee() {
+    //   return this.availableBalance.gt(0);
+    //   // return this.step >= 2 && this.availableBalance.gt(0);
+    // },
     /**
      * Method validates input for the From token amount against user input
      * Used to show error messages for the amount input component
@@ -683,13 +751,7 @@ export default {
       if (!this.initialLoad && !this.isLoading && this.fromTokenType?.name) {
         /* Balance is <= 0*/
         if (this.availableBalance.lte(0)) {
-          return this.isFromTokenMain
-            ? this.errorMsgs.amountEthIsTooLow
-            : this.tokensList.length > 0
-            ? this.errorMsgs.doNotOwnToken
-            : new BigNumber(this.tokenInValue).lt(0)
-            ? this.errorMsgs.amountLessThan0
-            : '';
+          return this.errorMsgs.amountEthIsTooLow;
         }
 
         // TODO: Check if provided amount exceeds valid decimals
@@ -711,12 +773,12 @@ export default {
             return this.errorMsgs.amountExceedsEthBalance;
           }
           /*ERC20 Only: Amount entered > Balance  */
-          if (
-            !this.isFromTokenMain &&
-            this.availableBalance.lt(new BigNumber(this.tokenInValue))
-          ) {
-            return `Amount exceeds your ${this.fromTokenType.symbol} balance.`;
-          }
+          // if (
+          //   !this.isFromTokenMain &&
+          //   this.availableBalance.lt(new BigNumber(this.tokenInValue))
+          // ) {
+          //   return `Amount exceeds your ${this.fromTokenType.symbol} balance.`;
+          // }
           /* Changelly Errors: */
 
           if (
@@ -814,7 +876,6 @@ export default {
       immediate: false
     },
     selectedNetwork(newVal) {
-      console.log('selectedNetwork', newVal);
       if (newVal && newVal.name_long !== 'Select Network') {
         const tokens = wrappedTokens[this.network.type.currencyName];
         this.toTokenType = Object.assign({}, this.fromTokenType);
@@ -823,6 +884,24 @@ export default {
         this.toTokenType.subtext = `Wrapped ${this.toTokenType.subtext}`;
         this.toTokenType.value = this.toTokenType.subtext;
         this.toTokenType.contract = tokens[this.selectedNetwork.name];
+      } else this.toTokenType = {};
+    },
+    /**
+     * emit gas when modal
+     * opens in case of difference
+     */
+    gasPriceModal(newVal) {
+      if (newVal) {
+        this.handleLocalGasPrice(this.gasPriceByType(this.gasPriceType));
+      }
+    },
+    /**
+     * only emit new gas price
+     * when modal is open
+     */
+    gasPrice() {
+      if (this.gasPriceModal) {
+        this.handleLocalGasPrice(this.gasPriceByType(this.gasPriceType));
       }
     }
   },
@@ -836,11 +915,16 @@ export default {
     ...mapActions('notifications', ['addNotification']),
     ...mapActions('swap', ['setSwapTokens']),
     ...mapActions('wallet', ['setWeb3Instance']),
-    ...mapActions('global', ['setNetwork']),
+    ...mapActions('global', ['setNetwork', 'updateGasPrice']),
     resetBridgeState() {
       this.mainTokenDetails = this.contractToToken(MAIN_TOKEN_ADDRESS);
       localContractToToken = {};
       localContractToToken[MAIN_TOKEN_ADDRESS] = this.mainTokenDetails;
+      if (
+        this.networkSelectedBefore &&
+        this.network.type.name === this.networkSelectedBefore.type.name
+      )
+        this.networkSelectedBefore = null;
       this.selectedNetwork = this.networkSelectedBefore
         ? this.networkSelectedBefore.type
         : { name_long: 'Select Network' };
@@ -855,46 +939,43 @@ export default {
       }
     },
     // reset values after executing transaction
-    clear() {
-      this.step = 0;
-      this.confirmInfo = {
-        to: '',
-        from: '',
-        fromImg: '',
-        toImg: '',
-        fromType: '',
-        toType: '',
-        validUntil: 0,
-        selectedProvider: '',
-        txFee: '',
-        actualTrade: {}
-      };
+    // clear() {
+    //   this.step = 0;
+    //   this.confirmInfo = {
+    //     to: '',
+    //     from: '',
+    //     fromImg: '',
+    //     toImg: '',
+    //     fromType: '',
+    //     toType: '',
+    //     validUntil: 0,
+    //     selectedProvider: '',
+    //     txFee: '',
+    //     actualTrade: {}
+    //   };
 
-      this.toTokenType = {};
-      this.fromTokenType = {};
-      this.tokenInValue = '0';
-      this.tokenOutValue = '0';
-      this.availableTokens = { toTokens: [], fromTokens: [] };
-      this.availableQuotes = [];
-      this.currentTrade = null;
-      this.allTrades = [];
-      this.isLoading = false;
-      this.loadingFee = false;
-      this.feeError = '';
-      this.selectedProviderId = undefined;
-      this.defaults = {
-        fromToken: this.fromToken
-      };
-      this.isLoadingProviders = false;
-      this.checkLoading = true;
-      this.addressValue = {};
-      this.selectedProvider = {};
-      this.localGasPrice = '0';
-      if (this.$refs.amountInput) this.$refs.amountInput.clear();
-      this.refundAddress = '';
-      this.isValidRefundAddr = false;
-      this.setupBridge();
-    },
+    //   this.toTokenType = {};
+    //   this.fromTokenType = {};
+    //   this.tokenInValue = '0';
+    //   this.tokenOutValue = '0';
+    //   this.availableQuotes = [];
+    //   this.currentTrade = null;
+    //   this.allTrades = [];
+    //   this.isLoading = false;
+    //   this.loadingFee = false;
+    //   this.feeError = '';
+    //   this.selectedProviderId = undefined;
+    //   this.defaults = {
+    //     fromToken: this.fromToken
+    //   };
+    //   this.isLoadingProviders = false;
+    //   this.checkLoading = true;
+    //   this.addressValue = {};
+    //   this.selectedProvider = {};
+    //   this.localGasPrice = '0';
+    //   if (this.$refs.amountInput) this.$refs.amountInput.clear();
+    //   this.setupBridge();
+    // },
     /**
      * Set the max available amount to swap from
      */
@@ -906,7 +987,7 @@ export default {
       this.tokenInValue = availableBalanceMinusGas.gt(0)
         ? availableBalanceMinusGas.toFixed()
         : '0';
-      this.tokenOutValue = this.tokenInValue;
+      this.setTokenOutValue();
     },
     /**
      * Gets the default from token
@@ -932,7 +1013,7 @@ export default {
       this.belowMinError = false;
       if (this.isLoading || this.initialLoad) return;
       const val = value ? value : 0;
-      this.tokenInValue = BigNumber(val).toFixed();
+      this.tokenInValue = new BigNumber(val).toFixed();
       // Check if (in amount) is larger than (available balance)
       if (
         this.availableBalance.lt(new BigNumber(this.tokenInValue)) ||
@@ -949,7 +1030,7 @@ export default {
 
       // TODO: Check decimal count in tokenInValue
 
-      this.tokenOutValue = this.tokenInValue;
+      this.setTokenOutValue(); // Change to quoted amount
       this.availableQuotes.forEach(q => {
         if (q) {
           q.isSelected = false;
@@ -971,42 +1052,10 @@ export default {
         // this.showAnimation = true;
         this.cachedAmount = this.tokenInValue;
         // TODO: get rates for wrapped tokens
-
-        // this.swapper
-        //   .getAllQuotes({
-        //     fromT: this.fromTokenType,
-        //     toT: this.toTokenType,
-        //     fromAmount: new BigNumber(this.tokenInValue).times(
-        //       new BigNumber(10).pow(new BigNumber(this.fromTokenType.decimals))
-        //     )
-        //   })
-        //   .then(quotes => {
-        //     if (this.tokenInValue === this.cachedAmount) {
-        //       this.selectedProvider = {};
-        //       if (quotes.length) {
-        //         this.lastSetToken = quotes[0].amount;
-        //         this.availableQuotes = quotes.reduce((arr, q) => {
-        //           if (quotes.length === 1 || BigNumber(q.amount).gt(0)) {
-        //             q.rate = new BigNumber(q.amount)
-        //               .dividedBy(new BigNumber(this.tokenInValue))
-        //               .toString();
-        //             q.isSelected = false;
-        //             arr.push(q);
-        //           }
-        //           return arr;
-        //         }, []);
-        //         this.tokenOutValue = quotes[0].amount;
-        //       }
-        //       this.step = 1;
-        //       this.isLoadingProviders = false;
-        //     } else {
-        //       this.isLoadingProviders = false;
-        //     }
-        //   });
       }
     },
     showConfirm() {
-      this.trackSwap('showConfirm');
+      // this.trackSwap('showConfirm');
       this.setConfirmInfo();
       this.executeTrade();
     },
@@ -1035,68 +1084,77 @@ export default {
       this.confirmInfo = obj;
     },
     executeTrade() {
-      const currentTradeCopy = clone(this.currentTrade);
-      this.swapper
-        .executeTrade(this.currentTrade, this.confirmInfo)
-        .then(res => {
-          this.swapNotificationFormatter(res, currentTradeCopy);
-        })
-        .catch(err => {
-          if (err && err.statusObj?.hashes?.length > 0) {
-            err.statusObj.hashes.forEach(item => {
-              const error = handleError(item);
-              if (error) Toast(error, {}, ERROR);
-            });
-            return;
-          }
-          const error = handleError(err);
-          if (error) Toast(err && err.message ? err.message : err, {}, ERROR);
-        });
+      // const currentTradeCopy = clone(this.currentTrade);
+      // this.swapper
+      //   .executeTrade(this.currentTrade, this.confirmInfo)
+      //   .then(res => {
+      //     this.swapNotificationFormatter(res, currentTradeCopy);
+      //   })
+      //   .catch(err => {
+      //     if (err && err.statusObj?.hashes?.length > 0) {
+      //       err.statusObj.hashes.forEach(item => {
+      //         const error = handleError(item);
+      //         if (error) Toast(error, {}, ERROR);
+      //       });
+      //       return;
+      //     }
+      //     const error = handleError(err);
+      //     if (error) Toast(err && err.message ? err.message : err, {}, ERROR);
+      //   });
     },
     getTokenBalance(balance, decimals) {
       return new BigNumber(balance.toString()).div(
         new BigNumber(10).pow(decimals)
       );
     },
-    swapNotificationFormatter(obj, currentTrade) {
-      obj.hashes.forEach((hash, idx) => {
-        const main = {
-          from: this.address,
-          type: NOTIFICATION_TYPES.SWAP,
-          network: this.network.type?.name,
-          status: NOTIFICATION_STATUS.PENDING,
-          fromTxData: {
-            currency: this.confirmInfo.fromType,
-            amount: this.confirmInfo.fromVal,
-            icon: this.confirmInfo.fromImg
-          },
-          toTxData: {
-            currency: this.confirmInfo.toType,
-            amount: this.confirmInfo.toVal,
-            icon: this.confirmInfo.toImg,
-            to: this.confirmInfo.to
-          }
-        };
+    // swapNotificationFormatter(obj, currentTrade) {
+    //   obj.hashes.forEach((hash, idx) => {
+    //     const main = {
+    //       from: this.address,
+    //       type: NOTIFICATION_TYPES.SWAP,
+    //       network: this.network.type?.name,
+    //       status: NOTIFICATION_STATUS.PENDING,
+    //       fromTxData: {
+    //         currency: this.confirmInfo.fromType,
+    //         amount: this.confirmInfo.fromVal,
+    //         icon: this.confirmInfo.fromImg
+    //       },
+    //       toTxData: {
+    //         currency: this.confirmInfo.toType,
+    //         amount: this.confirmInfo.toVal,
+    //         icon: this.confirmInfo.toImg,
+    //         to: this.confirmInfo.to
+    //       }
+    //     };
 
-        const notif = Object.assign(
-          {
-            hash,
-            swapObj: obj
-          },
-          main,
-          currentTrade.transactions[idx]
-        );
-        this.addNotification(new Notification(notif)).then(this.clear);
-      });
-    },
+    //     const notif = Object.assign(
+    //       {
+    //         hash,
+    //         swapObj: obj
+    //       },
+    //       main,
+    //       currentTrade.transactions[idx]
+    //     );
+    //     this.addNotification(new Notification(notif)).then(this.clear);
+    //   });
+    // },
     checkFeeBalance() {
       this.feeError = '';
       if (this.notEnoughEth) {
         this.feeError = `Not enough ${this.network.type.currencyName} to pay for transaction fee.`;
       }
     },
+    setGas(value) {
+      this.handleLocalGasPrice(this.gasPriceByType(value));
+      this.setSelected(value);
+      this.trackGasSwitch(
+        `type:${this.gasPriceType}, gas:${this.txFeeFormatted}`
+      );
+      this.closeGasPrice();
+    },
     handleLocalGasPrice(e) {
       this.localGasPrice = e;
+      // this.closeGasPrice();
     },
     // preventCharE(e) {
     //   if (e.key === 'e') e.preventDefault();
@@ -1113,13 +1171,62 @@ export default {
       this.receiveTokenSelectOpen = isReceive;
       this.isOpenTokenSelect = true;
     },
-    closeTokenOverlay() {
+    closeTokenOverlay(tokenName) {
       this.isOpenTokenSelect = false;
+      console.log('selectedToken', tokenName);
       if (this.receiveTokenSelectOpen) {
+        // TODO: Match selected token to available token
         setTimeout(() => {
           this.receiveTokenSelectOpen = false;
         }, 100);
       }
+    },
+    openGasPrice() {
+      this.updateGasPrice().then(() => {
+        this.gasPriceModal = true;
+      });
+    },
+    closeGasPrice() {
+      this.gasPriceModal = false;
+    },
+    openProvidersList() {
+      // Testing purposes
+      this.step = 2;
+      this.availableQuotes = [
+        {
+          amount: this.tokenInValue,
+          exchange: 'one_inch',
+          exchangeInfo: {
+            description: '',
+            img: '',
+            name: 'One Inch'
+          },
+          isSelected: true,
+          maxFrom: '1000000000000000000',
+          minFrom: '0.000000000000000001',
+          provider: 'ONE_INCH',
+          rate: '1'
+        },
+        {
+          amount: this.tokenInValue,
+          exchange: 'paraswap',
+          exchangeInfo: {
+            description: '',
+            img: '',
+            name: 'paraswap'
+          },
+          isSelected: false,
+          maxFrom: '1000000000000000000',
+          minFrom: '0.000000000000000001',
+          provider: 'PARASWAP',
+          rate: '0.97500000000000008168'
+        }
+      ];
+      this.showProviderRates = true;
+    },
+    closeProvidersList() {
+      this.showProviderRates = false;
+      // this.step = 0;
     },
     setSelectedNetwork(network) {
       const found = Object.keys(types).find(item => item === network);
@@ -1159,16 +1266,40 @@ export default {
     },
     setAmount(val) {
       this.tokenInValue = val;
-      this.tokenOutValue = this.tokenInValue;
+      this.setTokenOutValue();
       this.showAnimation = true;
       setTimeout(() => {
         this.showAnimation = false;
       }, 2000);
     },
+    setTokenOutValue() {
+      // Change to best quote value
+      this.tokenOutValue = this.selectedNetwork?.name ? this.tokenInValue : '';
+    },
     showProviders(val) {
       if (!this.isLoadingProviders && val) {
         this.showAnimation = false;
       }
+    },
+    setProvider(idx, clicked) {
+      this.belowMinError = false;
+      this.availableQuotes.forEach((q, _idx) => {
+        if (_idx === idx) {
+          this.selectedProviderId = _idx;
+          q.isSelected = true;
+          this.tokenOutValue = q.amount;
+          // this.getTrade(idx);
+          if (!clicked) {
+            this.selectedProvider = q;
+            this.trackSwap(
+              `swapProvider: ${idx + 1}/ ${this.availableQuotes.length}`
+            );
+          } else {
+            this.selectedProvider =
+              q.amount !== this.selectedProvider.amount ? q : {};
+          }
+        }
+      });
     }
   }
 };
