@@ -102,10 +102,10 @@
         height="40"
         width="40"
         depressed
-        color="greyLight"
+        color="buttonGrayLight"
         @click="maxBtnObj.method"
       >
-        {{ maxBtnObj.title }}
+        <span class="textDark--text">{{ maxBtnObj.title }}</span>
       </v-btn>
     </template>
   </v-text-field>

@@ -123,7 +123,7 @@
         <!-- ===================================================================================== -->
         <!-- Footer -->
         <!-- ===================================================================================== -->
-        <v-row justify="center" class="ma-0 py-8 footer-text">
+        <v-row justify="center" class="ma-0 py-8 textMedium--text">
           {{ footer.text }}
           <a
             v-if="footer && footer.linkTitle && footer.link"
