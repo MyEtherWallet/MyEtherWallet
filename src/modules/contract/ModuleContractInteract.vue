@@ -68,7 +68,7 @@
         <mew-select
           label="Function"
           :items="methods"
-          class="mb-1 FunctionSelect"
+          class="mt-4 mt-lg-0 mb-1 FunctionSelect"
           normal-dropdown
           @input="methodSelect"
         />
