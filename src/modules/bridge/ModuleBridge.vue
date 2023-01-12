@@ -1,263 +1,239 @@
 <template>
-  <div class="mew-component--bridge">
-    <mew6-white-sheet>
-      <mew-module
-        :has-elevation="true"
-        class="d-flex flex-grow-1"
-        title="Bridge"
-        title-size="mew-heading-1"
+  <mew6-white-sheet
+    class="mew-component--bridge px-15 py-10 mx-auto"
+    style="max-width: 600px"
+  >
+    <h2 class="mb-8">Bridge</h2>
+    <template v-if="isAvailable">
+      <mew-popup
+        :show="isOpenNetworkOverlay"
+        title="Select Network"
+        content-size="large"
+        :close="closeNetworkOverlay"
+        has-body-content
+        :has-buttons="false"
+        :left-btn="leftBtn"
+        hide-close-btn
+        :large-title="true"
       >
-        <template v-if="isAvailable" #moduleBody>
-          <mew-popup
-            :show="isOpenNetworkOverlay"
-            title="Select Network"
-            content-size="large"
-            :close="closeNetworkOverlay"
-            has-body-content
-            :has-buttons="false"
-            :left-btn="leftBtn"
-            hide-close-btn
-            :large-title="true"
-          >
-            <network-switch
-              :filter-types="filterNetworks"
-              :is-bridge-select="true"
-              :is-bridge-page="true"
-              @selectedNetwork="setSelectedNetwork"
-            />
-          </mew-popup>
-          <!--
-            =====================================================================================
-              From Network / To Network selection
-            =====================================================================================
-            -->
-          <div class="d-flex network-container">
-            <div class="network-selection pa-3" @click="openNetworkOverlay">
-              <img
-                :alt="`${networkName}-icon`"
-                :src="networkImage"
-                class="network-icon mr-2"
-              />
-              <div class="mr-4" style="height: 32px">
-                <div class="network-select-label">From</div>
-                <div class="network-label">{{ network.type.name_long }}</div>
-              </div>
-              <v-icon class="expand-button">mdi-chevron-down</v-icon>
+        <network-switch
+          :filter-types="filterNetworks"
+          :is-bridge-select="true"
+          :is-bridge-page="true"
+          @selectedNetwork="setSelectedNetwork"
+        />
+      </mew-popup>
+
+      <!-- ===================================================================================== -->
+      <!-- From Network / To Network selection -->
+      <!-- ===================================================================================== -->
+      <div class="d-flex align-center network-container">
+        <div class="network-selection pa-3" @click="openNetworkOverlay">
+          <img
+            :alt="`${networkName}-icon`"
+            :src="networkImage"
+            class="network-icon mr-2"
+          />
+          <div class="mr-4" style="height: 32px">
+            <div class="network-select-label">From</div>
+            <div class="network-label">{{ network.type.name_long }}</div>
+          </div>
+          <v-icon class="expand-button">mdi-chevron-down</v-icon>
+        </div>
+
+        <v-btn
+          style="background-color: transparent !important"
+          class="d-flex my-2 mx-1 switch-button cursor-pointer"
+          x-small
+          depressed
+          min-height="36px"
+          min-width="36px"
+          max-height="36px"
+          max-width="36px"
+          bottom
+          :disabled="!enableNetworkSwitch"
+          @click="switchNetworks"
+        >
+          <img
+            :src="switchNetworkIcon"
+            alt="switch-icon"
+            height="24"
+            class="align-self-center"
+          />
+        </v-btn>
+
+        <div
+          class="network-selection pa-3 to-network"
+          @click="openNetworkOverlay(true)"
+        >
+          <img
+            v-if="selectedNetwork.icon"
+            :alt="`${selectedNetwork.name}-icon`"
+            :src="selectedNetwork.icon"
+            class="network-icon mr-2"
+          />
+          <div class="mr-4" style="height: 32px">
+            <div class="network-select-label">To</div>
+            <div class="network-label">{{ selectedNetwork.name_long }}</div>
+          </div>
+          <v-icon class="expand-button">mdi-chevron-down</v-icon>
+        </div>
+      </div>
+
+      <!-- ======================================================================================================================= -->
+      <!-- Token selector interface -->
+      <!-- ======================================================================================================================= -->
+      <div class="position--relative mt-10">
+        <mew-token-selector-interface
+          flat-bottom
+          style="margin-bottom: -1px"
+          title="YOU GIVE"
+          :left-text="`Max: ${displayBalance}`"
+          :right-text="`≈${displayAmountPrice}`"
+          :token="fromTokenType"
+          placeholder="Enter amount"
+          :loading="isLoading"
+          :set-max-amount="setMaxAmount"
+          :value="tokenInValue"
+          :amount-error-message="amountErrorMessage"
+          @clicked="openTokenOverlay(false)"
+          @changed="setAmount"
+        />
+        <v-icon class="circle-arrow">mdi-arrow-down </v-icon>
+        <mew-token-selector-interface
+          flat-top
+          title="YOU RECEIVE"
+          :left-text="`Balance: 0`"
+          :right-text="`≈${displayQuoteAmountPrice}`"
+          read-only
+          btn-text="Select Token"
+          :token="toToken"
+          :value="tokenOutValue"
+          :loading="isLoading"
+          :btn-disabled="disableToTokenSelect"
+          @clicked="openTokenOverlay(true)"
+        />
+      </div>
+
+      <div v-if="hasMinEth && showNetworkFee">
+        <v-slide-y-transition v-if="showAnimation" hide-on-leave group>
+          <swap-provider-mentions
+            key="showAnimation"
+            :is-loading="isLoadingProviders"
+            :check-loading="checkLoading"
+            @showProviders="showProviders"
+          />
+        </v-slide-y-transition>
+        <div v-else key="showAnimation1">
+          <div class="d-flex pa-3">
+            <span class="fee-label">Rate</span>
+            <div class="ml-auto cursor-pointer" @click="openProvidersList">
+              <span class="dropdown-label"
+                >{{ totalCostFormatted }} {{ network.type.currencyName }}</span
+              >
+              <v-icon class="ml-2" size="24px" color="black"
+                >mdi-menu-down</v-icon
+              >
             </div>
-            <v-btn
-              class="d-flex my-2 mx-1 switch-button cursor-pointer"
-              x-small
-              rounded
-              depressed
-              min-height="36px"
-              min-width="36px"
-              max-height="36px"
-              max-width="36px"
-              bottom
-              :disabled="!enableNetworkSwitch"
-              @click="switchNetworks"
-            >
-              <img
-                :src="switchNetworkIcon"
-                alt="switch-icon"
-                height="24"
-                class="align-self-center"
-              />
-            </v-btn>
-            <div
-              class="network-selection pa-3 to-network"
-              @click="openNetworkOverlay(true)"
-            >
-              <img
-                v-if="selectedNetwork.icon"
-                :alt="`${selectedNetwork.name}-icon`"
-                :src="selectedNetwork.icon"
-                class="network-icon mr-2"
-              />
-              <div class="mr-4" style="height: 32px">
-                <div class="network-select-label">To</div>
-                <div class="network-label">{{ selectedNetwork.name_long }}</div>
-              </div>
-              <v-icon class="expand-button">mdi-chevron-down</v-icon>
+          </div>
+          <div class="d-flex pa-3">
+            <span class="fee-label">Network fee</span>
+            <v-icon class="ml-2" size="12px">mdi-information-outline</v-icon>
+            <div class="ml-auto cursor-pointer" @click="openGasPrice">
+              <span class="dropdown-label"
+                >{{ txFee }} {{ network.type.currencyName }}</span
+              >
+              <v-icon class="ml-2" size="24px" color="black"
+                >mdi-menu-down</v-icon
+              >
             </div>
           </div>
 
-          <!-- ======================================================================================================================= -->
-          <!-- ======================================================================================================================= -->
-          <!-- ======================================================================================================================= -->
-          <!-- Token selector interface -->
-          <!-- ======================================================================================================================= -->
-          <!-- ======================================================================================================================= -->
-          <!-- ======================================================================================================================= -->
-          <div class="position--relative mt-10">
-            <mew-token-selector-interface
-              flat-bottom
-              style="margin-bottom: -1px"
-              title="YOU GIVE"
-              :left-text="`Max: ${displayBalance}`"
-              :right-text="`≈${displayAmountPrice}`"
-              :token="fromTokenType"
-              placeholder="Enter amount"
-              :loading="isLoading"
-              :set-max-amount="setMaxAmount"
-              :value="tokenInValue"
-              :amount-error-message="amountErrorMessage"
-              @clicked="openTokenOverlay(false)"
-              @changed="setAmount"
-            />
-            <v-icon class="circle-arrow">mdi-arrow-down </v-icon>
-            <mew-token-selector-interface
-              flat-top
-              title="YOU RECEIVE"
-              :left-text="`Balance: 0`"
-              :right-text="`≈${displayQuoteAmountPrice}`"
-              read-only
-              btn-text="Select Token"
-              :token="toToken"
-              :value="tokenOutValue"
-              :loading="isLoading"
-              :btn-disabled="disableToTokenSelect"
-              @clicked="openTokenOverlay(true)"
+          <div class="text-center mt-10 mt-sm-15">
+            <mew-button
+              v-if="showNextButton"
+              title="Proceed"
+              :has-full-width="true"
+              :disabled="disableNext"
+              btn-size="xlarge"
+              class="NextButton"
+              @click.native="showConfirm()"
             />
           </div>
-          <!-- ======================================================================================================================= -->
-          <!-- ======================================================================================================================= -->
-          <!-- ======================================================================================================================= -->
-          <!-- Token selector interface -->
-          <!-- ======================================================================================================================= -->
-          <!-- ======================================================================================================================= -->
-          <!-- ======================================================================================================================= -->
+        </div>
 
-          <div v-if="hasMinEth && showNetworkFee">
-            <v-slide-y-transition v-if="showAnimation" hide-on-leave group>
-              <swap-provider-mentions
-                key="showAnimation"
-                :is-loading="isLoadingProviders"
-                :check-loading="checkLoading"
-                @showProviders="showProviders"
-              />
-            </v-slide-y-transition>
-            <div v-else key="showAnimation1">
-              <div class="d-flex pa-3">
-                <span class="fee-label">Rate</span>
-                <div class="ml-auto cursor-pointer" @click="openProvidersList">
-                  <span class="dropdown-label"
-                    >{{ totalCostFormatted }}
-                    {{ network.type.currencyName }}</span
-                  >
-                  <v-icon class="ml-2" size="24px" color="black"
-                    >mdi-menu-down</v-icon
-                  >
-                </div>
-              </div>
-              <div class="d-flex pa-3">
-                <span class="fee-label">Network fee</span>
-                <v-icon class="ml-2" size="12px"
-                  >mdi-information-outline</v-icon
-                >
-                <div class="ml-auto cursor-pointer" @click="openGasPrice">
-                  <span class="dropdown-label"
-                    >{{ txFee }} {{ network.type.currencyName }}</span
-                  >
-                  <v-icon class="ml-2" size="24px" color="black"
-                    >mdi-menu-down</v-icon
-                  >
-                </div>
-              </div>
+        <!-- ===================================================================================== -->
+        <!-- Bridge Fee -->
+        <!-- ===================================================================================== -->
+        <simple-dialog
+          :is-open="gasPriceModal"
+          width="420"
+          title="Select transaction fee"
+          @close="closeGasPrice"
+        >
+          <settings-gas-price
+            :is-swap="true"
+            :buttons="gasButtons"
+            :set-selected="setGas"
+            :gas-price="gasPrice"
+            :cost-in-eth="totalCost"
+            :tx-fee-formatted="txFeeFormatted"
+            :tx-fee-usd="feeInUsd"
+            :not-enough-eth="notEnoughEth"
+            :total-gas-limit="totalGasLimit"
+            :close-dialog="closeGasPrice"
+            :from-settings="false"
+          />
+        </simple-dialog>
 
-              <div class="text-center mt-10 mt-sm-15">
-                <mew-button
-                  v-if="showNextButton"
-                  title="Proceed"
-                  :has-full-width="true"
-                  :disabled="disableNext"
-                  btn-size="xlarge"
-                  class="NextButton"
-                  @click.native="showConfirm()"
-                />
-              </div>
-            </div>
-            <!--
-              =====================================================================================
-              Bridge Fee
-              =====================================================================================
-            -->
-            <simple-dialog
-              :is-open="gasPriceModal"
-              width="420"
-              title="Select transaction fee"
-              @close="closeGasPrice"
-            >
-              <settings-gas-price
-                :is-swap="true"
-                :buttons="gasButtons"
-                :set-selected="setGas"
-                :gas-price="gasPrice"
-                :cost-in-eth="totalCost"
-                :tx-fee-formatted="txFeeFormatted"
-                :tx-fee-usd="feeInUsd"
-                :not-enough-eth="notEnoughEth"
-                :total-gas-limit="totalGasLimit"
-                :close-dialog="closeGasPrice"
-                :from-settings="false"
-              />
-            </simple-dialog>
+        <!-- ===================================================================================== -->
+        <!-- Provider Rates -->
+        <!-- ===================================================================================== -->
+        <simple-dialog
+          :is-open="showProviderRates"
+          width="420"
+          title="Select rate"
+          @close="closeProvidersList"
+        >
+          <providers-list
+            :step="step"
+            :available-quotes="availableQuotes"
+            :set-provider="setProvider"
+            :to-token-symbol="toToken ? toToken.symbol : ''"
+            :to-token-icon="toToken ? toToken.img : ''"
+            :is-loading="isLoadingProviders"
+            :providers-error="providersErrorMsg"
+            :selected-provider-id="selectedProviderId"
+          />
+        </simple-dialog>
+      </div>
 
-            <!--
-              =====================================================================================
-              Provider Rates
-              =====================================================================================
-            -->
-            <simple-dialog
-              :is-open="showProviderRates"
-              width="420"
-              title="Select rate"
-              @close="closeProvidersList"
-            >
-              <providers-list
-                :step="step"
-                :available-quotes="availableQuotes"
-                :set-provider="setProvider"
-                :to-token-symbol="toToken ? toToken.symbol : ''"
-                :to-token-icon="toToken ? toToken.img : ''"
-                :is-loading="isLoadingProviders"
-                :providers-error="providersErrorMsg"
-                :selected-provider-id="selectedProviderId"
-              />
-            </simple-dialog>
-          </div>
+      <!-- ===================================================================================== -->
+      <!-- Token Select -->
+      <!-- ===================================================================================== -->
+      <simple-dialog
+        :is-open="isOpenTokenSelect"
+        max-width="600px"
+        :title="tokenSelectTitle"
+        @close="closeTokenOverlay"
+      >
+        <token-select
+          :title="receiveTokenSelectOpen ? '' : 'MY TOKENS'"
+          :tokens-list="filterTokens"
+          @selectedToken="closeTokenOverlay"
+        />
+      </simple-dialog>
+    </template>
 
-          <!--
-          =====================================================================================
-            Token Select
-          =====================================================================================
-          -->
-          <simple-dialog
-            :is-open="isOpenTokenSelect"
-            max-width="600px"
-            :title="tokenSelectTitle"
-            @close="closeTokenOverlay"
-          >
-            <token-select
-              :title="receiveTokenSelectOpen ? '' : 'MY TOKENS'"
-              :tokens-list="filterTokens"
-              @selectedToken="closeTokenOverlay"
-            />
-          </simple-dialog>
-        </template>
-        <!--
-          =====================================================================================
-           Message is BRIDGE NOT Available
-          =====================================================================================
-        -->
-        <template v-else #moduleBody>
-          <div class="bridge-not-available">
-            <app-user-msg-block :message="bridgeNotAvailableMes" />
-          </div>
-        </template>
-      </mew-module>
-    </mew6-white-sheet>
-  </div>
+    <!-- ===================================================================================== -->
+    <!-- Message is BRIDGE NOT Available -->
+    <!-- ===================================================================================== -->
+    <template v-else>
+      <div class="bridge-not-available">
+        <app-user-msg-block :message="bridgeNotAvailableMes" />
+      </div>
+    </template>
+  </mew6-white-sheet>
 </template>
 
 <script>
