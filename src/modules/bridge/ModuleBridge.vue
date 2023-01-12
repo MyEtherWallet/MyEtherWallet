@@ -1,7 +1,7 @@
 <template>
   <mew6-white-sheet
-    class="mew-component--bridge px-15 py-10 mx-auto"
-    style="max-width: 600px"
+    class="mew-component--bridge px-5 py-5 px-md-15 py-md-10 mx-auto"
+    :style="!isMobile ? 'max-width: 600px' : ''"
   >
     <h2 class="mb-8">Bridge</h2>
     <template v-if="isAvailable">
@@ -27,23 +27,30 @@
       <!-- ===================================================================================== -->
       <!-- From Network / To Network selection -->
       <!-- ===================================================================================== -->
-      <div class="d-flex align-center network-container">
+      <div
+        class="d-flex align-center justify-center flex-column flex-sm-row network-container"
+      >
         <div class="network-selection pa-3" @click="openNetworkOverlay">
           <img
             :alt="`${networkName}-icon`"
             :src="networkImage"
             class="network-icon mr-2"
           />
-          <div class="mr-4" style="height: 32px">
+          <div style="height: 32px">
             <div class="network-select-label">From</div>
-            <div class="network-label">{{ network.type.name_long }}</div>
+            <div
+              class="network-label"
+              :class="!isMobile ? 'text-ellipsis' : 'text-ellipsis-mobile'"
+            >
+              {{ network.type.name_long }}
+            </div>
           </div>
           <v-icon class="expand-button">mdi-chevron-down</v-icon>
         </div>
 
         <v-btn
           style="background-color: transparent !important"
-          class="d-flex my-2 mx-1 switch-button cursor-pointer"
+          class="d-flex my-2 mx-2 switch-button cursor-pointer"
           x-small
           depressed
           min-height="36px"
@@ -54,12 +61,8 @@
           :disabled="!enableNetworkSwitch"
           @click="switchNetworks"
         >
-          <img
-            :src="switchNetworkIcon"
-            alt="switch-icon"
-            height="24"
-            class="align-self-center"
-          />
+          <v-icon v-if="!isMobile" color="textDark">mdi-swap-horizontal</v-icon>
+          <v-icon v-else color="textDark">mdi-swap-vertical</v-icon>
         </v-btn>
 
         <div
@@ -72,9 +75,14 @@
             :src="selectedNetwork.icon"
             class="network-icon mr-2"
           />
-          <div class="mr-4" style="height: 32px">
+          <div style="height: 32px">
             <div class="network-select-label">To</div>
-            <div class="network-label">{{ selectedNetwork.name_long }}</div>
+            <div
+              class="network-label"
+              :class="!isMobile ? 'text-ellipsis' : 'text-ellipsis-mobile'"
+            >
+              {{ selectedNetwork.name_long }}
+            </div>
           </div>
           <v-icon class="expand-button">mdi-chevron-down</v-icon>
         </div>
@@ -401,6 +409,9 @@ export default {
       'contractToToken',
       'getCoinGeckoTokenById'
     ]),
+    isMobile() {
+      return this.$vuetify.breakpoint.smAndDown;
+    },
     /**
      * @returns a boolean
      * based on how the bridge state is
@@ -1315,7 +1326,8 @@ export default {
 
 .network-selection {
   background: #ffffff;
-  border: 1px solid #d7dde7;
+  border: 1px solid transparent;
+  outline: 1px solid #d7dde7;
   box-sizing: border-box;
   border-radius: 12px;
   display: flex;
@@ -1324,10 +1336,11 @@ export default {
   padding: 0px;
   cursor: pointer;
   width: stretch;
-}
 
-.network-selection.to-network {
-  border: 2px solid var(--v-greenPrimary-base);
+  &:hover {
+    border: 1px solid var(--v-greenPrimary-base);
+    outline: 1px solid var(--v-greenPrimary-base);
+  }
 }
 
 .network-select-label {
@@ -1349,6 +1362,20 @@ export default {
   letter-spacing: 0.03em;
   color: #000000;
   width: max-content;
+  &.text-ellipsis {
+    display: inline-block;
+    max-width: 125px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  &.text-ellipsis-mobile {
+    display: inline-block;
+    max-width: 125px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 
 .expand-button {
