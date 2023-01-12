@@ -57,12 +57,18 @@
         <!-- ================================================= -->
         <!-- Balance -->
         <!-- ================================================= -->
-        <div class="text-right">
+        <div v-if="showTokenBalance" class="text-right">
           <div class="textDark--text mew-heading-3 font-weight-medium">
             {{ token.usdBalancef }}
           </div>
           <div class="textLight--text mew-body font-weight-normal">
             {{ token.balancef }}
+          </div>
+        </div>
+
+        <div v-else class="text-right">
+          <div class="textDark--text mew-heading-3 font-weight-medium">
+            {{ token.pricef }}
           </div>
         </div>
       </div>
@@ -88,6 +94,10 @@ export default {
     title: {
       type: String,
       default: ''
+    },
+    showTokenBalance: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
