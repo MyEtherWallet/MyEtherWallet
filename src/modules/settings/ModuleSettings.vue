@@ -85,7 +85,7 @@
     -->
     <address-book-add-edit
       v-if="addMode || editMode"
-      class="mt-3 mt-lg-0"
+      class="mt-4 mt-lg-0"
       :item="itemToEdit"
       :mode="onMode"
       @back="back"
