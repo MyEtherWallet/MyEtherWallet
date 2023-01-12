@@ -610,7 +610,7 @@ export default {
      * Returns correct balance to be displayed below From Selection field
      */
     displayBalance() {
-      return this.availableBalance.toString();
+      return formatFloatingPointValue(this.availableBalance.toString()).value;
     },
     /**
      * Returns correct price to be displayed below From Amount field
@@ -656,7 +656,9 @@ export default {
     },
     totalCostFormatted() {
       const amount = this.tokenInValue || '0';
-      return new BigNumber(this.txFee).plus(amount).toFixed();
+      return formatFloatingPointValue(
+        new BigNumber(this.txFee).plus(amount).toFixed()
+      ).value;
     },
     totalGasLimit() {
       if (this.currentTrade) {
