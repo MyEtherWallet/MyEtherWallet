@@ -4,7 +4,7 @@ export default {
   name: 'XDC',
   name_long: 'XDC Network',
   homePage: 'https://xinfin.org/',
-  blockExplorer: 'Blockscan',
+  blockExplorer: 'BlocksScan',
   blockExplorerTX: 'https://xdc.blocksscan.io/tx/[[txHash]]',
   blockExplorerAddr: 'https://xdc.blocksscan.io/addr/[[address]]',
   chainID: 50,
@@ -24,7 +24,7 @@ export default {
     blockExplorerAddr: '',
     websocket: null
   },
-  coingeckID: 'xdc-network',
+  coingeckoID: 'xdce-crowd-sale',
   gasPriceMultiplier: 1,
   balanceApi: ''
 };

@@ -1,6 +1,6 @@
 <template>
   <mew-module
-    class="d-flex flex-grow-1 pt-6"
+    class="d-flex flex-grow-1 pt-6 module-send"
     title="Send"
     :has-elevation="true"
     :has-indicator="true"
@@ -21,6 +21,7 @@
             />
             <mew-select
               ref="mewSelect"
+              style="height: 62px"
               label="Token"
               :items="tokens"
               :is-custom="true"
@@ -51,7 +52,7 @@
               :buy-more-str="buyMoreStr"
               class="AmountInput"
               @keydown.native="preventCharE($event)"
-              @buyMore="openMoonpay"
+              @buyMore="openBuySell"
               @input="val => setAmount(val, false)"
             />
           </div>
@@ -856,5 +857,11 @@ export default {
   top: -15px;
   position: absolute;
   right: 15px;
+}
+</style>
+
+<style lang="scss">
+.module-send .mew-input .v-input__slot {
+  height: 56px !important;
 }
 </style>

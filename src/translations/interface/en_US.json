@@ -9,7 +9,7 @@
     "my-main-account": "My Main Account"
   },
   "menu": {
-    "dashboard": "Dashboard",
+    "portfolio": "Portfolio",
     "nft": "NFT Manager",
     "contract": "Contract",
     "interact-contract": "Interact with Contract",
@@ -17,7 +17,12 @@
     "deploy": "Deploy Contract",
     "sign-message": "Sign Message",
     "verify-message": "Verify Message",
-    "dapps": "DApps",
+    "apps": "Apps",
+    "send": "Send",
+    "receive": "Receive",
+    "bridge": "Bridge",
+    "swap": "Swap",
+    "buy-sell": "Buy / Sell",
     "logout": "Are you sure you want to log out?"
   },
   "address-book": {
