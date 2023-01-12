@@ -1,3 +1,37 @@
+### Release v6.6.13
+
+### ui
+
+* * Close Transaction Fee dialog after selecting a priority [#4425](https://github.com/MyEtherWallet/MyEtherWallet/pull/4425)
+* * Create new side menu [#4426](https://github.com/MyEtherWallet/MyEtherWallet/pull/4426)
+* buy/sell module alignment [#4465](https://github.com/MyEtherWallet/MyEtherWallet/pull/4465)
+
+### devop
+
+* * update buy eth pop up hand off [#4335](https://github.com/MyEtherWallet/MyEtherWallet/pull/4335)
+* * Update network selection module to be a popup [#4408](https://github.com/MyEtherWallet/MyEtherWallet/pull/4408)
+* * Update Token's Value Module [#4411](https://github.com/MyEtherWallet/MyEtherWallet/pull/4411)
+* * Update notification txn link to use EthVM when supported [#4418](https://github.com/MyEtherWallet/MyEtherWallet/pull/4418)
+
+### feat
+
+* * Update NFT manager to support MATIC and BSC [#4412](https://github.com/MyEtherWallet/MyEtherWallet/pull/4412)
+* * Allow tx history in swap and send to be collapsable [#4436](https://github.com/MyEtherWallet/MyEtherWallet/pull/4436)
+
+### fix
+
+* * fix derivation path popup position bug [#4375](https://github.com/MyEtherWallet/MyEtherWallet/pull/4375)
+* Remove 'Default' from 'Default priority settings' header [#4389](https://github.com/MyEtherWallet/MyEtherWallet/pull/4389)
+* * Add margins between inputs on Swap page [#4395](https://github.com/MyEtherWallet/MyEtherWallet/pull/4395)
+* * fix input height on send page [#4397](https://github.com/MyEtherWallet/MyEtherWallet/pull/4397)
+* * fix moonpay input size and alignment [#4413](https://github.com/MyEtherWallet/MyEtherWallet/pull/4413)
+* * Sentry Report: undefined 'symbol' in MoonPayBuyComponent [#4419](https://github.com/MyEtherWallet/MyEtherWallet/pull/4419)
+* * Fix tokens available to borrow on Aave [#4427](https://github.com/MyEtherWallet/MyEtherWallet/pull/4427)
+* * Fix BlocksScan explorer spelling [#4428](https://github.com/MyEtherWallet/MyEtherWallet/pull/4428)
+* Fix Aave success toast on MetaMask [#4429](https://github.com/MyEtherWallet/MyEtherWallet/pull/4429)
+* * Fix NFTs without display names [#4434](https://github.com/MyEtherWallet/MyEtherWallet/pull/4434)
+* * Fix log out while on NFT page [#4449](https://github.com/MyEtherWallet/MyEtherWallet/pull/4449)
+
 ### Release v6.6.12-hotfix.2
 
 ### ui
