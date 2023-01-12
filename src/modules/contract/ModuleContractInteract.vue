@@ -132,14 +132,14 @@
 
         <v-divider v-if="hasOutputs" class="mt-9 mb-8" />
 
-        <div v-if="hasOutputs">
+        <div v-if="hasOutputs" style="display: contents">
           <div class="mew-heading-2">Results</div>
           <div
             v-for="(output, idx) in selectedMethod.outputs"
             :key="output.name + idx"
             class="d-flex align-center justify-space-between my-4"
           >
-            <div class="text-capitalize">
+            <div class="text-capitalize mr-2">
               {{ output.name !== '' ? output.name : selectedMethod.name }}
             </div>
             <div class="font-weight-medium">{{ output.value }}</div>
