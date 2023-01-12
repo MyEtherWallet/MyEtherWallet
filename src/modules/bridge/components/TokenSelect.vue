@@ -169,7 +169,7 @@ export default {
     }
   },
   mounted() {
-    this.tokenSelected = this.validNetwork ? this.network.type.name : '';
+    //this.tokenSelected = this.validNetwork ? this.network.type.name : '';
   },
   methods: {
     /**
