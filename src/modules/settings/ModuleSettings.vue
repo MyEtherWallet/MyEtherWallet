@@ -65,7 +65,7 @@
       Consent to Data Sharing slider
     =====================================================================================
     -->
-    <div v-if="online" class="mt-3 px-8">
+    <div v-if="online && !addMode && !editMode" class="mt-3 px-8">
       <div class="matomo-tracking-switch">
         <v-switch
           v-model="dataSharingOn"
@@ -85,6 +85,7 @@
     -->
     <address-book-add-edit
       v-if="addMode || editMode"
+      class="mt-3 mt-lg-0"
       :item="itemToEdit"
       :mode="onMode"
       @back="back"
