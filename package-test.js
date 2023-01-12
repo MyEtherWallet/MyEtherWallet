@@ -80,7 +80,9 @@ const EXCEPTIONS = [
   '@ledgerhq/hw-app-eth', // issue with imports
   '@ledgerhq/live-common', // issue with imports
   // fix after release
-  'lottie-web'
+  'lottie-web',
+  'patch-package',
+  '@commitlint/config-conventional'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

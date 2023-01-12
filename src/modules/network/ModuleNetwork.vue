@@ -22,7 +22,9 @@
               <div class="mew-heading-3 mb-2">{{ fullName }}</div>
               <div class="textMedium--text">Last Block: {{ lastBlock }}</div>
             </div>
-            <mew-token-container size="55px" :img="icon"></mew-token-container>
+            <div class="custom-token-container pa-2">
+              <img width="100%" :src="icon" />
+            </div>
           </div>
         </v-btn>
       </div>
@@ -97,6 +99,14 @@ export default {
 };
 </script>
 
+<style lang="scss" scoped>
+.custom-token-container {
+  border: 2px solid #edf0f5;
+  border-radius: 12px;
+  width: 52px;
+  height: 52px;
+}
+</style>
 <style lang="scss">
 .mew-component--side-info-network {
   .title-button {
@@ -106,6 +116,12 @@ export default {
     height: 68px;
 
     border-radius: 8px;
+
+    &:hover {
+      .custom-token-container {
+        background-color: white;
+      }
+    }
   }
 }
 </style>

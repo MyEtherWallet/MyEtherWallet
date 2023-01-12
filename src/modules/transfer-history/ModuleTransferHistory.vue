@@ -13,6 +13,7 @@
             :show-indicator="false"
             :notification="data.notification"
             class="px-0"
+            @click.native="markNotificationAsRead(data)"
           />
         </div>
       </v-col>
@@ -21,10 +22,11 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex';
+import { mapState, mapGetters, mapActions } from 'vuex';
 import formatNotification from '@/modules/notifications/helpers/formatNotification';
 import formatNonChainNotification from '@/modules/notifications/helpers/formatNonChainNotification';
 import MewNotification from '@/components/MewNotification/MewNotification';
+import { NOTIFICATION_TYPES } from '@/modules/notifications/handlers/handlerNotification.js';
 
 export default {
   name: 'ModuleTransferHistory',
@@ -76,6 +78,22 @@ export default {
   },
   mounted() {},
   methods: {
+    ...mapActions('notifications', ['updateNotification']),
+    markNotificationAsRead(notification) {
+      if (!notification.read) {
+        notification.markAsRead().then(() => {
+          const type = notification.type.toLowerCase();
+          if (
+            type === NOTIFICATION_TYPES.OUT ||
+            type === NOTIFICATION_TYPES.SWAP
+          ) {
+            this.updateNotification(notification);
+          } else {
+            notification.read = true;
+          }
+        });
+      }
+    },
     sortByDate(a, b) {
       return new Date(b.date) - new Date(a.date);
     },
