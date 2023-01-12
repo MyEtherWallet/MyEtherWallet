@@ -228,6 +228,7 @@
         <token-select
           :title="receiveTokenSelectOpen ? '' : 'MY TOKENS'"
           :tokens-list="filterTokens"
+          :show-token-balance="!receiveTokenSelectOpen"
           @selectedToken="closeTokenOverlay"
         />
       </simple-dialog>
@@ -441,9 +442,6 @@ export default {
     },
     networkName() {
       return this.network.type.name;
-    },
-    switchNetworkIcon() {
-      return require('@/assets/images/icons/icon-swap-new.svg');
     },
     leftBtn() {
       return {
@@ -866,13 +864,7 @@ export default {
     },
     selectedNetwork(newVal) {
       if (newVal && newVal.name_long !== 'Select Network') {
-        const tokens = wrappedTokens[this.network.type.currencyName];
-        this.toTokenType = Object.assign({}, this.fromTokenType);
-        this.toTokenType.symbol = `W${this.toTokenType.symbol}`;
-        this.toTokenType.name = this.toTokenType.symbol;
-        this.toTokenType.subtext = `Wrapped ${this.toTokenType.subtext}`;
-        this.toTokenType.value = this.toTokenType.subtext;
-        this.toTokenType.contract = tokens[this.selectedNetwork.name];
+        this.setToToken();
       } else this.toTokenType = {};
     },
     /**
@@ -923,8 +915,28 @@ export default {
       if (this.isAvailable) {
         this.isLoading = !this.prefetched;
         this.fromTokenType = this.mainTokenDetails;
+        this.setToToken();
         this.isLoading = false;
         this.localGasPrice = this.gasPriceByType(this.gasPriceType);
+      }
+    },
+    setToToken(tokenName) {
+      if (!tokenName) {
+        const tokens = wrappedTokens[this.network.type.currencyName];
+        this.toTokenType = Object.assign({}, this.fromTokenType);
+        this.toTokenType.symbol = `W${this.toTokenType.symbol}`;
+        this.toTokenType.name = this.toTokenType.symbol;
+        this.toTokenType.subtext = `Wrapped ${this.toTokenType.subtext}`;
+        this.toTokenType.value = this.toTokenType.subtext;
+        this.toTokenType.contract = tokens[this.selectedNetwork.name];
+      } else {
+        const realSymbol = tokenName.substring(1);
+        console.log('realSymbol', realSymbol);
+        const foundToken = this.tokensList.find(
+          item => item.symbol === realSymbol
+        );
+        console.log('foundToken', foundToken);
+        // this.toTokenType = foundToken;
       }
     },
     // reset values after executing transaction
@@ -1163,6 +1175,7 @@ export default {
     closeTokenOverlay(tokenName) {
       this.isOpenTokenSelect = false;
       console.log('selectedToken', tokenName);
+      this.setToToken(tokenName);
       if (this.receiveTokenSelectOpen) {
         // TODO: Match selected token to available token
         setTimeout(() => {
@@ -1280,9 +1293,9 @@ export default {
           // this.getTrade(idx);
           if (!clicked) {
             this.selectedProvider = q;
-            this.trackSwap(
-              `swapProvider: ${idx + 1}/ ${this.availableQuotes.length}`
-            );
+            // this.trackSwap(
+            //   `swapProvider: ${idx + 1}/ ${this.availableQuotes.length}`
+            // );
           } else {
             this.selectedProvider =
               q.amount !== this.selectedProvider.amount ? q : {};
