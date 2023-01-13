@@ -1,11 +1,7 @@
 <template>
   <the-wrapper-wallet :total-left-col-items="1" :total-right-col-items="2">
     <template #leftColItem1>
-      <module-bridge
-        :is-available="hasSwap"
-        :from-token="fromToken"
-        :amount="amount"
-      />
+      <module-bridge :is-available="hasSwap" :amount="amount" />
     </template>
     <template #rightColItem1>
       <module-tokens-value />
@@ -19,9 +15,6 @@
 <script>
 import { mapGetters } from 'vuex';
 
-const ETH_TOKEN = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
-// const DAI_TOKEN = '0x6b175474e89094c44da98b954eedeac495271d0f';
-
 export default {
   components: {
     TheWrapperWallet: () => import('@/core/components/TheWrapperWallet'),
@@ -31,10 +24,6 @@ export default {
       import('@/modules/transfer-history/ModuleTransferHistory')
   },
   props: {
-    fromToken: {
-      type: String,
-      default: ETH_TOKEN
-    },
     amount: {
       type: String,
       default: ''

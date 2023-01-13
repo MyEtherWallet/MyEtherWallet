@@ -11,23 +11,16 @@
       placeholder="Search"
     />
 
-    <!-- ===================================================================================== -->
-    <!-- Empty Search Message -->
-    <!-- ===================================================================================== -->
-    <app-user-msg-block
-      v-if="showEmptySearch"
-      :message="emptySearchMes"
-      class="mt-5"
-    />
-
-    <div v-if="title" class="mew-label mb-2 textMedium--text">{{ title }}</div>
+    <div v-if="title" class="mew-label mb-2 textMedium--text">
+      {{ title }}
+    </div>
 
     <!-- ===================================================================================== -->
     <!-- Token Buttons -->
     <!-- ===================================================================================== -->
     <div>
       <div
-        v-for="token in tokens"
+        v-for="token in sortedTokens"
         :key="token.name"
         class="d-flex align-center token-button"
         @click="tokenBtnClicked(token.name)"
@@ -73,6 +66,15 @@
         </div>
       </div>
     </div>
+
+    <!-- ===================================================================================== -->
+    <!-- Empty Search Message -->
+    <!-- ===================================================================================== -->
+    <app-user-msg-block
+      v-if="showEmptySearch"
+      :message="emptySearchMes"
+      class="mt-5"
+    />
   </div>
 </template>
 
@@ -108,14 +110,13 @@ export default {
   },
   computed: {
     ...mapGetters('global', ['network']),
-    ...mapState('global', ['validNetwork']),
     ...mapState('wallet', ['identifier', 'instance', 'isOfflineApp']),
     /**
      * Property returns sorted token names by fiat value
      * @returns {string[]}
      */
     sortedTokens() {
-      const sorted = this.tokensList.length > 0 ? [...this.tokensList] : [];
+      const sorted = this.tokens.length > 0 ? [...this.tokens] : [];
       sorted.sort(
         (a, b) => parseFloat(b.usdBalance) - parseFloat(a.usdBalance)
       );
@@ -148,12 +149,6 @@ export default {
      * @returns {object}
      */
     emptySearchMes() {
-      if (this.sortedTokens.length === 0) {
-        return {
-          title: 'This token is not supported on the bridge',
-          subtitle: ''
-        };
-      }
       return {
         title: '',
         subtitle: 'We do not have a token with this name.'
@@ -164,22 +159,7 @@ export default {
     tokenSelected(value) {
       if (!value) return;
       this.$emit('selectedToken', value);
-    },
-    searchInput(newVal, oldVal) {
-      /**
-       * Set current token to prevent undefined tokenSelected value
-       */
-      if (this.tokens.length > 0) {
-        // this.tokenSelected = this.networkSelectedBefore;
-      }
-
-      if (newVal != oldVal && (!oldVal || oldVal === '')) {
-        // this.toggleType = 2;
-      }
     }
-  },
-  mounted() {
-    //this.tokenSelected = this.validNetwork ? this.network.type.name : '';
   },
   methods: {
     /**
