@@ -197,7 +197,7 @@
         <!-- ===================================================================================== -->
         <simple-dialog
           :is-open="showProviderRates"
-          width="420"
+          max-width="380"
           title="Select rate"
           @close="closeProvidersList"
         >
