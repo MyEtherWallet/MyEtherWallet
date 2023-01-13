@@ -18,7 +18,7 @@
         v-if="signResult"
         class="walletBg pa-3 VerifyMessage d-flex flex-wrap"
       >
-        <span class="Signer mr-1">
+        <span class="signer mr-1">
           {{ signer }}
         </span>
         <span v-if="didSign" class="font-weight-medium">
@@ -115,7 +115,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.Signer {
+.signer {
   overflow-wrap: anywhere;
 }
 </style>
