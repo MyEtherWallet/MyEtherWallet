@@ -491,21 +491,6 @@ export default {
     //     : 'Select Token';
     // },
     /**
-     * @returns an object
-     * if native token, return empty
-     */
-    // maxBtn() {
-    //   return this.availableBalance.isZero()
-    //     ? {}
-    //     : {
-    //         title: 'Max',
-    //         disabled:
-    //           !this.hasMinEth &&
-    //           this.amountErrorMessage === this.errorMsgs.amountEthIsTooLow,
-    //         method: this.setMaxAmount
-    //       };
-    // },
-    /**
      *Returns errors messages based on network
      */
     errorMsgs() {
@@ -976,7 +961,7 @@ export default {
       this.tokenInValue = availableBalanceMinusGas.gt(0)
         ? availableBalanceMinusGas.toFixed()
         : '0';
-      this.setTokenOutValue();
+      this.doQuoteTesting();
     },
     /**
      * Gets the default from token
