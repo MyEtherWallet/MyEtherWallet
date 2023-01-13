@@ -13,6 +13,7 @@
         :selected-path="selectedPath"
         :passed-paths="paths"
         :disable-custom-paths="true"
+        :is-mobile="isMobile"
         class="derivation-path ml-0 ml-sm-auto"
         @setPath="setPath"
       />
@@ -38,7 +39,8 @@
       </div>
     </div>
     <div
-      class="d-flex justify-space-between justify-center text-center mt-5 flex-wrap"
+      :class="[!isMobile ? 'justify-space-between' : '']"
+      class="d-flex justify-center text-center mt-5 flex-wrap"
     >
       <div class="section-block" @click="ledgerUnlockBle">
         <v-img
@@ -117,6 +119,9 @@ export default {
     ...mapGetters('wallet', ['getLedgerApp', 'initialLoad']),
     ledgerApp() {
       return this.getLedgerApp;
+    },
+    isMobile() {
+      return this.$vuetify.breakpoint.width < 576;
     }
   },
   watch: {
