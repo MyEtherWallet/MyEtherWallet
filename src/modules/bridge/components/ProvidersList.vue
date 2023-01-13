@@ -1,10 +1,8 @@
 <template>
-  <div class="modules--swap--components--swap-providers-list my-5">
-    <!--
-      =====================================================================================
-        Provider Rate Row
-      =====================================================================================
-      -->
+  <div class="bridge-providers-list">
+    <!-- ===================================================================================== -->
+    <!-- Provider Rate Row -->
+    <!-- ===================================================================================== -->
     <v-item-group
       v-if="step >= 1 && toTokenSymbol && !hasProviderError"
       :value="0"
@@ -17,79 +15,30 @@
           class="mb-1"
         >
           <v-item v-slot="{ active, toggle }" :ref="`card${idx}`">
-            <v-container
-              :class="[
-                active ? 'rate-active' : '',
-                'd-flex align-center rate py-0 px-1'
-              ]"
+            <div
+              :class="[active ? 'rate-active' : '']"
+              class="d-flex align-center rate py-0 px-4"
               @click="
                 toggle();
                 setProvider(idx, true);
               "
             >
-              <v-row no-gutters class="align-center justify-start">
-                <!--
-                  =====================================================================================
-                    Token Image, Rate & Best Rate Chip
-                    xs = 10 / total = 10
-                    md = 7 / total = 7
-                  =====================================================================================
-                  -->
-                <v-col cols="10" sm="7">
-                  <v-container class="pa-2">
-                    <v-row
-                      class="align-center justify-start pl-5 pr-1 py-3 py-sm-4"
-                    >
-                      <!--
-                      =====================================================================================
-                        Token Icon
-                      =====================================================================================
-                      -->
-                      <mew-token-container size="small" :img="toTokenIcon" />
-                      <!--
-                        =====================================================================================
-                          Rate
-                        =====================================================================================
-                        -->
-                      <div
-                        class="d-block d-sm-flex mx-2 mx-sm-4 align-center justify-start"
-                      >
-                        <div
-                          v-if="bestRate !== null && bestRate === quote.rate"
-                          class="greenPrimary--text font-weight-medium mew-label order-sm-12 pl-sm-2"
-                        >
-                          Best Rate
-                        </div>
-                        <div
-                          class="d-flex order-sm-1 justify-start align-center"
-                        >
-                          <div class="mb-0 mew-heading-3 font-weight-medium">
-                            {{ quote.amount }} {{ toTokenSymbol }}
-                          </div>
-                          <mew-tooltip
-                            v-if="quote.amount && quote.amount !== ''"
-                            class="pl-1"
-                            :text="quote.tooltip"
-                          />
-                        </div>
-                      </div>
-                    </v-row>
-                  </v-container>
-                </v-col>
-                <!--
-                  =====================================================================================
-                    Provider Image & Checkbox
-                    xs = 2 / total = 12
-                    sm = 5 / total = 12
-                  =====================================================================================
-                  -->
-                <v-col cols="2" sm="5">
-                  <v-row class="align-center justify-end pr-3">
-                    <mew-checkbox :value="active" />
-                  </v-row>
-                </v-col>
-              </v-row>
-            </v-container>
+              <mew-token-container
+                class="mr-3"
+                size="small"
+                :img="toTokenIcon"
+              />
+              <div class="mew-heading-3 font-weight-medium">
+                {{ quote.amount }} {{ toTokenSymbol }}
+              </div>
+              <v-spacer />
+              <div
+                v-if="bestRate !== null && bestRate === quote.rate"
+                class="greenPrimary white--text font-weight-bold mew-label best-tag"
+              >
+                BEST
+              </div>
+            </div>
           </v-item>
         </v-col>
       </v-row>
@@ -111,9 +60,7 @@
       >
       <v-icon v-show="showMore" small color="greenPrimary">mdi-arrow-up</v-icon>
     </div>
-    <div>
-      <span>Offer includes a 3% MEW fee</span>
-    </div>
+    <div class="mt-7">Offer includes a 3% MEW fee</div>
     <!--
       =====================================================================================
         Providers Message
@@ -306,13 +253,22 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.rate-active {
-  border: 1px solid var(--v-greenPrimary-base) !important;
-  background-color: var(--v-greyLight-base) !important;
-}
 .rate {
+  margin-top: 6px;
   min-height: 60px;
   border-radius: 8px;
-  border: 1px solid var(--v-greyLight-base);
+  border: 1px solid transparent;
+  outline: 1px solid var(--v-greyMedium-base);
+  cursor: pointer;
+  user-select: none;
+  &.rate-active {
+    border: 1px solid var(--v-greenPrimary-base) !important;
+    outline: 1px solid var(--v-greenPrimary-base) !important;
+    background-color: var(--v-greyLight-base) !important;
+  }
+}
+.best-tag {
+  border-radius: 8px;
+  padding: 5px 10px;
 }
 </style>
