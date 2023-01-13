@@ -54,6 +54,7 @@
             solo
             flat
             hide-details
+            @keydown="preventCharE"
             @input="valueChanged"
           />
         </div>
@@ -196,6 +197,9 @@ export default {
     },
     valueChanged() {
       this.$emit('changed', this.inputValue);
+    },
+    preventCharE(e) {
+      if (e.key === 'e') e.preventDefault();
     }
   }
 };
