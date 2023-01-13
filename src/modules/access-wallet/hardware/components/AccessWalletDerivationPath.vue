@@ -246,6 +246,10 @@ export default {
     disableCustomPaths: {
       type: Boolean,
       default: false
+    },
+    isMobile: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -293,9 +297,6 @@ export default {
           return path;
         }
       });
-    },
-    isMobile() {
-      return this.$vuetify.breakpoint.width < 576;
     }
   },
   methods: {
