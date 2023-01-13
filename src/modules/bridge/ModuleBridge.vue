@@ -137,7 +137,7 @@
             <span class="fee-label">Rate</span>
             <div class="ml-auto cursor-pointer" @click="openProvidersList">
               <span class="dropdown-label"
-                >{{ totalCostFormatted }} {{ network.type.currencyName }}</span
+                >{{ rateValue }} {{ network.type.currencyName }}</span
               >
               <v-icon class="ml-2" size="24px" color="black"
                 >mdi-menu-down</v-icon
@@ -148,9 +148,7 @@
             <span class="fee-label">Network fee</span>
             <v-icon class="ml-2" size="12px">mdi-information-outline</v-icon>
             <div class="ml-auto cursor-pointer" @click="openGasPrice">
-              <span class="dropdown-label"
-                >{{ txFee }} {{ network.type.currencyName }}</span
-              >
+              <span class="dropdown-label">{{ feeInUsd }}</span>
               <v-icon class="ml-2" size="24px" color="black"
                 >mdi-menu-down</v-icon
               >
@@ -184,7 +182,7 @@
             :buttons="gasButtons"
             :set-selected="setGas"
             :gas-price="gasPrice"
-            :cost-in-eth="totalCost"
+            :cost-in-eth="totalCostInEth"
             :tx-fee-formatted="txFeeFormatted"
             :tx-fee-usd="feeInUsd"
             :not-enough-eth="notEnoughEth"
@@ -311,7 +309,7 @@ export default {
     AppNetworkSettingsModal: () =>
       import('@/core/components/AppNetworkSettingsModal.vue'),
     SettingsGasPrice: () =>
-      import('@/modules/settings/components/SettingsGasPrice')
+      import('@/modules/settings/components/SettingsGasPrice.vue')
   },
   mixins: [handlerAnalytics, buyMore, gasPriceMixin],
   props: {
@@ -364,7 +362,6 @@ export default {
       isLoadingProviders: false,
       showAnimation: false,
       checkLoading: true,
-      addressValue: {},
       selectedProvider: {},
       localGasPrice: '0',
       mainTokenDetails: {},
@@ -639,11 +636,14 @@ export default {
       const amountWei = toWei(amount);
       return new BigNumber(this.txFee).plus(amountWei).toString();
     },
-    totalCostFormatted() {
+    // totalCostFormatted() {
+    //   console.log('availableQuotes', this.availableQuotes);
+    //   console.log('selectedProviderId', this.selectedProviderId);
+    //   return formatFloatingPointValue(this.totalCostInEth).value;
+    // },
+    totalCostInEth() {
       const amount = this.tokenInValue || '0';
-      return formatFloatingPointValue(
-        new BigNumber(this.txFee).plus(amount).toFixed()
-      ).value;
+      return new BigNumber(this.txFeeInEth).plus(amount).toFixed();
     },
     totalGasLimit() {
       if (this.currentTrade) {
@@ -653,29 +653,12 @@ export default {
         });
         return totalGas.toString();
       }
-      return '0';
+      // For testing
+      return `${MIN_GAS_LIMIT}`;
+      // return '0';
     },
-    /**
-     * check whether the to token is in ETH chain or not
-     * also checks if the userAddress is not empty
-     *
-     * @returns {String} - Ethereum Address
-     */
-    toAddress() {
-      if (!this.toTokenType?.isEth) {
-        if (!isEmpty(this.addressValue)) {
-          return this.addressValue.isValid
-            ? this.addressValue.value
-            : this.address;
-        }
-        return this.address;
-      }
-
-      if (this.toTokenType?.contract === MAIN_TOKEN_ADDRESS) {
-        return this.address;
-      }
-      if (this.toTokenType?.isEth) return this.address;
-      return this.address;
+    rateValue() {
+      return formatFloatingPointValue(this.tokenOutValue).value;
     },
     /**
      * Checks whether or not the user has a minimum eth balance to bridge:
@@ -804,6 +787,7 @@ export default {
     },
     tokenInValue() {
       this.feeError = '';
+      this.setTokenOutValue();
       // this.trackSwap('tokenFromValueChanged');
     },
     gasPriceType() {
@@ -826,6 +810,7 @@ export default {
         // this.trackSwap(
         //   `swapProvider: ${newVal + 1}/${this.availableQuotes.length}`
         // );
+        this.setTokenOutValue();
       }
     },
     defaults: {
@@ -868,7 +853,7 @@ export default {
       } else this.toTokenType = {};
     },
     /**
-     * emit gas when modal
+     * set gas when modal
      * opens in case of difference
      */
     gasPriceModal(newVal) {
@@ -877,7 +862,7 @@ export default {
       }
     },
     /**
-     * only emit new gas price
+     * only set new gas price
      * when modal is open
      */
     gasPrice() {
@@ -906,6 +891,7 @@ export default {
         this.network.type.name === this.networkSelectedBefore.type.name
       )
         this.networkSelectedBefore = null;
+
       this.selectedNetwork = this.networkSelectedBefore
         ? this.networkSelectedBefore.type
         : { name_long: 'Select Network' };
@@ -936,8 +922,10 @@ export default {
           item => item.symbol === realSymbol
         );
         console.log('foundToken', foundToken);
+        // TODO: set the wrapped token
         // this.toTokenType = foundToken;
       }
+      if (new BigNumber(this.tokenInValue || 0).gt(0)) this.doQuoteTesting();
     },
     // reset values after executing transaction
     // clear() {
@@ -1175,9 +1163,9 @@ export default {
     closeTokenOverlay(tokenName) {
       this.isOpenTokenSelect = false;
       console.log('selectedToken', tokenName);
-      this.setToToken(tokenName);
       if (this.receiveTokenSelectOpen) {
         // TODO: Match selected token to available token
+        this.setToToken(tokenName);
         setTimeout(() => {
           this.receiveTokenSelectOpen = false;
         }, 100);
@@ -1192,38 +1180,6 @@ export default {
       this.gasPriceModal = false;
     },
     openProvidersList() {
-      // Testing purposes
-      this.step = 2;
-      this.availableQuotes = [
-        {
-          amount: this.tokenInValue,
-          exchange: 'one_inch',
-          exchangeInfo: {
-            description: '',
-            img: '',
-            name: 'One Inch'
-          },
-          isSelected: true,
-          maxFrom: '1000000000000000000',
-          minFrom: '0.000000000000000001',
-          provider: 'ONE_INCH',
-          rate: '1'
-        },
-        {
-          amount: this.tokenInValue,
-          exchange: 'paraswap',
-          exchangeInfo: {
-            description: '',
-            img: '',
-            name: 'paraswap'
-          },
-          isSelected: false,
-          maxFrom: '1000000000000000000',
-          minFrom: '0.000000000000000001',
-          provider: 'PARASWAP',
-          rate: '0.97500000000000008168'
-        }
-      ];
       this.showProviderRates = true;
     },
     closeProvidersList() {
@@ -1268,15 +1224,66 @@ export default {
     },
     setAmount(val) {
       this.tokenInValue = val;
-      this.setTokenOutValue();
-      this.showAnimation = true;
-      setTimeout(() => {
-        this.showAnimation = false;
-      }, 2000);
+      this.doQuoteTesting();
+    },
+    doQuoteTesting() {
+      if (this.selectedNetwork?.name) {
+        this.showAnimation = true;
+        setTimeout(() => {
+          // Testing purposes
+          this.step = 2;
+          let amount = new BigNumber(this.tokenInValue);
+          if (amount.isNaN()) amount = new BigNumber('0');
+          this.availableQuotes = [
+            {
+              amount: amount.toFixed(),
+              exchange: 'one_inch',
+              exchangeInfo: {
+                description: '',
+                img: '',
+                name: 'One Inch'
+              },
+              isSelected: true,
+              maxFrom: '1000000000000000000',
+              minFrom: '0.000000000000000001',
+              provider: 'ONE_INCH',
+              rate: '1'
+            },
+            {
+              amount: amount.toFixed(),
+              exchange: 'paraswap',
+              exchangeInfo: {
+                description: '',
+                img: '',
+                name: 'paraswap'
+              },
+              isSelected: false,
+              maxFrom: '1000000000000000000',
+              minFrom: '0.000000000000000001',
+              provider: 'PARASWAP',
+              rate: '0.97500000000000008168'
+            }
+          ];
+          // Set amount to correct rate amount
+          this.availableQuotes.map(item => {
+            item.amount = this.calculateAmount(item.amount, item.rate);
+          });
+          this.setTokenOutValue();
+          this.showAnimation = false;
+          // Testing end
+        }, 2000);
+      } else this.step = 0;
     },
     setTokenOutValue() {
       // Change to best quote value
-      this.tokenOutValue = this.selectedNetwork?.name ? this.tokenInValue : '';
+      const selectedId = this.selectedProviderId ? this.selectedProviderId : 0;
+      let amount = this.tokenInValue !== '' ? this.tokenInValue : '0';
+      if (this.availableQuotes.length > 0) {
+        const quote = this.availableQuotes[selectedId];
+        amount = this.calculateAmount(this.tokenInValue, quote.rate);
+      }
+      if (amount === '0') amount = '';
+      this.tokenOutValue = this.selectedNetwork?.name ? amount : '';
     },
     showProviders(val) {
       if (!this.isLoadingProviders && val) {
@@ -1302,6 +1309,14 @@ export default {
           }
         }
       });
+    },
+    /**
+     * Calculate the amount received from rate
+     * @param {*} amount Amount of token in Eth
+     * @param {*} rate Rate of exchange
+     */
+    calculateAmount(amount, rate) {
+      return new BigNumber(amount).multipliedBy(rate).toFixed();
     }
   }
 };
