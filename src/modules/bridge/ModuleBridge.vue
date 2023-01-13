@@ -885,14 +885,7 @@ export default {
         this.toTokenType.value = this.toTokenType.subtext;
         this.toTokenType.contract = tokens[this.selectedNetwork.name];
       } else {
-        const realSymbol = tokenName.substring(1);
-        console.log('realSymbol', realSymbol);
-        const foundToken = this.tokensList.find(
-          item => item.symbol === realSymbol
-        );
-        console.log('foundToken', foundToken);
         // TODO: set the wrapped token
-        // this.toTokenType = foundToken;
       }
       if (new BigNumber(this.tokenInValue || 0).gt(0)) this.doQuoteTesting();
     },
@@ -945,13 +938,17 @@ export default {
     },
     closeTokenOverlay(tokenName) {
       this.isOpenTokenSelect = false;
-      console.log('selectedToken', tokenName);
+      // Match selected token to available token
       if (this.receiveTokenSelectOpen) {
-        // TODO: Match selected token to available token
         this.setToToken(tokenName);
         setTimeout(() => {
           this.receiveTokenSelectOpen = false;
         }, 100);
+      } else {
+        const foundToken = this.tokensList.find(
+          item => item.symbol === tokenName
+        );
+        this.fromTokenType = foundToken || this.mainTokenDetails;
       }
     },
     openGasPrice() {
