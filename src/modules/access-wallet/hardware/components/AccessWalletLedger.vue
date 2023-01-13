@@ -1,24 +1,26 @@
 <template>
   <div>
     <div class="subtitle-1 font-weight-bold mb-2">Connecting to:</div>
-    <div class="d-flex align-start mb-2">
+    <div class="d-flex align-start mb-2 flex-wrap">
       <mew-select
         :value="ledgerApp"
         :items="ledgerApps"
         :is-custom="true"
-        class="mr-4 network-selection"
+        class="mr-0 mr-sm-4 network-selection"
         @input="handleApp"
       />
       <access-wallet-derivation-path
         :selected-path="selectedPath"
         :passed-paths="paths"
         :disable-custom-paths="true"
-        class="derivation-path"
+        class="derivation-path ml-0 ml-sm-auto"
         @setPath="setPath"
       />
     </div>
     <div class="sheet d-flex align-center justify-center">
-      <div class="d-flex align-center justify-center pb-8 pt-15 pt-md-18">
+      <div
+        class="d-flex align-center justify-center pb-8 pt-15 pt-md-18 flex-wrap"
+      >
         <p class="para">
           Choose <b>Ethereum</b> on your device and connect with one of the
           methods below.
@@ -35,7 +37,9 @@
         />
       </div>
     </div>
-    <div class="d-flex justify-space-between justify-center text-center mt-5">
+    <div
+      class="d-flex justify-space-between justify-center text-center mt-5 flex-wrap"
+    >
       <div class="section-block" @click="ledgerUnlockBle">
         <v-img
           src="@/assets/images/hardware-wallets/Bluetooth.svg"
@@ -193,10 +197,16 @@ export default {
   border: 2px solid #1eb19b;
 }
 .derivation-path {
-  margin-left: auto;
   align-self: center;
 }
 .network-selection {
   max-width: 342px;
+}
+
+@media (max-width: 576px) {
+  .network-selection {
+    width: stretch;
+    max-width: 100%;
+  }
 }
 </style>

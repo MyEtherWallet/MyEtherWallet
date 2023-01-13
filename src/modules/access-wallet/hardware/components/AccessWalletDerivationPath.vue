@@ -3,7 +3,11 @@
   <!-- Derivation Path Component - Access Wallet -->
   <!-- ===================================================================================== -->
 
-  <mew-menu-popup v-model="showDerivationPath" right>
+  <mew-menu-popup
+    v-model="showDerivationPath"
+    :right="!isMobile"
+    :left="isMobile"
+  >
     <template #activator>
       <v-btn depressed>
         <div class="d-flex align-center">
@@ -289,6 +293,9 @@ export default {
           return path;
         }
       });
+    },
+    isMobile() {
+      return this.$vuetify.breakpoint.width < 576;
     }
   },
   methods: {
