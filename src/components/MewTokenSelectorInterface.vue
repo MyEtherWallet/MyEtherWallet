@@ -51,6 +51,7 @@
             class="swap-input"
             :placeholder="placeholder"
             :readonly="readOnly"
+            type="number"
             solo
             flat
             hide-details
