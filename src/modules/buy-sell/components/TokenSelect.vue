@@ -14,6 +14,7 @@
           filter-placeholder="Select Network"
           label="Network"
           class="mt-1"
+          has-filter
           is-custom
         />
         <v-text-field
@@ -143,18 +144,11 @@ export default {
         return {
           img: network[0].type?.icon,
           name: network[0].type?.name_long,
-          symbol: network[0].type?.name
+          symbol: network[0].type?.name,
+          value: network[0].type?.name
         };
       });
-      const returnedArray = [
-        {
-          img: this.network.type.icon,
-          name: this.network.type.name_long,
-          symbol: this.network.type.name
-        },
-        ...mappedList
-      ];
-      this.fetchedNetworks = returnedArray;
+      this.fetchedNetworks = mappedList;
     },
     setNewNetwork(network) {
       const found = Object.values(this.nodes).filter(item => {
