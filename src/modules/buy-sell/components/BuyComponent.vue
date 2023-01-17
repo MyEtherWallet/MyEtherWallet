@@ -18,7 +18,7 @@
         />
         <mew-select
           v-model="selectedFiat"
-          style="max-width: 135px; margin-top: -24px"
+          style="max-width: 135px"
           :items="fiatCurrencyItems"
           is-custom
           class="selectedFiat no-left-border"
