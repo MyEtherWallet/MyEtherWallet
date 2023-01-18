@@ -208,7 +208,10 @@ export default {
                   tokenImg: `${item.icon}`,
                   address: item.aToken.id,
                   callToAction: [
-                    { ...AAVE_TABLE_BUTTON.borrow, disabled: available <= 0 }
+                    {
+                      ...AAVE_TABLE_BUTTON.borrow,
+                      disabled: new BigNumber(available).lte(0)
+                    }
                   ]
                 });
               }
@@ -266,6 +269,9 @@ export default {
               const available = formatFloatingPointValue(
                 this.userBorrowPower(reserve)
               ).value;
+              const borrowObj = Object.assign({}, AAVE_TABLE_BUTTON.borrow);
+              borrowObj.disabled =
+                !reserve.borrowingEnabled || new BigNumber(available).lte(0);
               return {
                 token: item.reserve.symbol,
                 tokenImg: `${item.reserve.icon}`,
@@ -295,10 +301,7 @@ export default {
                       disabled: false
                     }
                   : null,
-                callToAction: [
-                  { ...AAVE_TABLE_BUTTON.borrow, disabled: available <= 0 },
-                  AAVE_TABLE_BUTTON.repay
-                ]
+                callToAction: [borrowObj, AAVE_TABLE_BUTTON.repay]
               };
             });
             break;
