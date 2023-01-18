@@ -38,6 +38,14 @@ export default {
       meta: {
         noAuth: false
       }
+    },
+    {
+      path: ROUTES_WALLET.PRINT.PATH,
+      name: ROUTES_WALLET.PRINT.NAME,
+      component: () => import('@/modules/balance/ModulePaperWallet'),
+      meta: {
+        noAuth: false
+      }
     }
   ]
 };
