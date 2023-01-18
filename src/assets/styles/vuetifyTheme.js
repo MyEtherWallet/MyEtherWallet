@@ -72,6 +72,7 @@ export default {
         // Buttons
         buttonWhite: '#FFFFFF',
         buttonGrayLight: '#F2F4FA',
+        buttonGrayLightSelected: '#c8ccd3',
         buttonGrayDark: '#626978',
         buttonToggleDark: '#1F242F',
         buttonBorder: '#d1d1d1',
@@ -201,6 +202,7 @@ export default {
         // Buttons
         buttonWhite: '#1c2136',
         buttonGrayLight: baseColors.asphalt5,
+        buttonGrayLightSelected: '#3e485c',
         buttonGrayDark: '#FFFFFF',
         buttonToggleDark: '#1F242F',
         buttonBorder: '#4d4f7d',
