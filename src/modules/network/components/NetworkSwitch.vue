@@ -1,7 +1,7 @@
 <template>
   <div class="module-network-switch full-width">
     <v-row
-      v-if="!isSwapPage && hasNetworks"
+      v-if="!isSwapPage && !isBridgePage && hasNetworks"
       class="align-end justify-center justify-sm-space-between pa-0"
     >
       <!-- ===================================================================================== -->
@@ -115,6 +115,14 @@ export default {
     isSwapPage: {
       type: Boolean,
       default: false
+    },
+    isBridgePage: {
+      type: Boolean,
+      default: false
+    },
+    isBridgeSelect: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -141,7 +149,8 @@ export default {
           this.filterTypes.length > 0
             ? [...this.filterTypes]
             : Object.keys(types);
-        unsorted.splice(unsorted.indexOf('ETH'), 1);
+        const EthIdx = unsorted.indexOf('ETH');
+        if (EthIdx !== -1) unsorted.splice(EthIdx, 1);
         unsorted.sort();
         const test = unsorted.filter(item => {
           return types[item].isTestNetwork;
@@ -150,7 +159,7 @@ export default {
           return !types[item].isTestNetwork;
         });
         const sorted = main.concat(test);
-        sorted.unshift('ETH');
+        if (EthIdx !== -1) sorted.unshift('ETH');
         return sorted;
       }
       return [];
@@ -164,7 +173,7 @@ export default {
       this.typeNames.forEach(item => {
         allNetworks.push(types[item]);
       });
-      if (this.isSwapPage) {
+      if (this.isSwapPage || this.isBridgePage) {
         allNetworks = allNetworks.filter(
           item =>
             item.name === types.ETH.name ||
@@ -207,6 +216,12 @@ export default {
           subtitle: ''
         };
       }
+      if (this.isBridgePage && this.typeNames.length === 0) {
+        return {
+          title: 'Bridge is not supported on your device',
+          subtitle: ''
+        };
+      }
       if (this.typeNames.length === 0) {
         return {
           title: 'Changing a network is not supported on your device',
@@ -214,18 +229,25 @@ export default {
         };
       }
       return {
-        title: this.isSwapPage
-          ? 'Swap is only available on these networks'
-          : '',
-        subtitle: this.isSwapPage
-          ? 'Select different feature to see all networks.'
-          : 'We do not have a network with this name.'
+        title:
+          this.isSwapPage || this.isBridgePage
+            ? `${
+                this.isSwapPage ? 'Swap' : 'Bridge'
+              } is only available on these networks`
+            : '',
+        subtitle:
+          this.isSwapPage || this.isBridgePage
+            ? 'Select different feature to see all networks.'
+            : 'We do not have a network with this name.'
       };
     }
   },
   watch: {
     networkSelected(value) {
-      if (value && (value !== this.network.type.name || !this.validNetwork)) {
+      if (!value) return;
+      if (this.isBridgeSelect && value !== this.network.type.name) {
+        this.$emit('selectedNetwork', value);
+      } else if (value !== this.network.type.name || !this.validNetwork) {
         this.networkLoading = true;
         this.setNetworkDebounced(value);
       }

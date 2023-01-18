@@ -78,6 +78,14 @@ export default {
       }
     },
     {
+      path: ROUTES_WALLET.BRIDGE.PATH,
+      name: ROUTES_WALLET.BRIDGE.NAME,
+      component: () => import('@/views/layouts-wallet/TheBridgeLayout'),
+      meta: {
+        noAuth: false
+      }
+    },
+    {
       path: ROUTES_WALLET.DAPPS.PATH,
       component: () => import('@/views/layouts-wallet/TheDappCenterLayout.vue'),
       children: DappRoutes,

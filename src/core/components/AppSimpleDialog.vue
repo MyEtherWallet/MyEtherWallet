@@ -1,25 +1,20 @@
 <template>
-  <!--
-  ==================================================================
-  Use (:value=""), (@close="")
-  or (v-model="") to control dialog
-  ==================================================================
-  -->
   <v-dialog
-    v-model="isDialogOpen"
+    :value="isOpen"
     content-class="whitePopup"
     :width="width"
     :max-width="maxWidth"
     :fullscreen="$vuetify.breakpoint.smAndDown"
+    @click:outside="closeDialog"
   >
     <div
       v-if="!noPadding"
-      :class="$vuetify.breakpoint.smAndDown ? 'pa-3' : 'pa-8 pt-5'"
+      :class="$vuetify.breakpoint.smAndDown ? 'pa-3' : 'px-8 py-8'"
     >
       <div
         v-if="!noTitle"
         :class="[
-          title ? 'mb-7' : '',
+          title ? 'mb-5' : '',
           'd-flex align-start justify-space-between'
         ]"
       >
@@ -38,7 +33,7 @@
         fab
         color="transparent"
         depressed
-        @click="isDialogOpen = false"
+        @click="closeDialog"
       >
         <v-icon color="white">mdi-close</v-icon>
       </v-btn>
@@ -49,12 +44,8 @@
 
 <script>
 export default {
-  name: 'AppDialog',
+  name: 'AppSimpleDialog',
   props: {
-    value: {
-      type: Boolean,
-      default: false
-    },
     isOpen: {
       type: Boolean,
       default: false
@@ -81,53 +72,10 @@ export default {
     }
   },
   data() {
-    return { isDialogOpen: false };
-  },
-  watch: {
-    // "value" for model
-    value(newVal) {
-      // Open when dialog is already closed to prevent Infinite Loop
-      if (newVal === true && this.isDialogOpen === false) {
-        this.isDialogOpen = true;
-      }
-      // Close when dialog is already open to prevent Infinite Loop
-      if (newVal === false && this.isDialogOpen === true) {
-        this.isDialogOpen = false;
-      }
-    },
-    // Same as "value", but more user friendly option name
-    isOpen(newVal) {
-      // Open when dialog is already closed to prevent Infinite Loop
-      if (newVal === true && this.isDialogOpen === false) {
-        this.isDialogOpen = true;
-      }
-      // Close when dialog is already open to prevent Infinite Loop
-      if (newVal === false && this.isDialogOpen === true) {
-        this.isDialogOpen = false;
-      }
-    },
-    isDialogOpen(val) {
-      if (val === false && this.value === true) {
-        this.closeDialog();
-      }
-    }
-  },
-  mounted() {
-    // Apply initial v-model value
-    if (this.value) this.isDialogOpen = this.value;
-
-    // Apply initial isOpen value
-    if (this.isOpen) this.isDialogOpen = this.isOpen;
+    return {};
   },
   methods: {
     closeDialog() {
-      // Close the dialog
-      this.isDialogOpen = false;
-
-      // Emit v-model
-      this.$emit('input', false);
-
-      // Emit @close event
       this.$emit('close');
     }
   }

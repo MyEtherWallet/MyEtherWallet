@@ -46,6 +46,7 @@
           @keydown.native="preventCharE($event)"
         />
         <div
+          style="max-width: 135px"
           class="d-flex align-center token-select-button"
           @click="openTokenSelect = true"
         >

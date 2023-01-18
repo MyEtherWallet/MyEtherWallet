@@ -28,6 +28,7 @@
           <network-switch
             :filter-types="filterNetworks"
             :is-swap-page="isSwapPage"
+            :is-bridge-page="isBridgePage"
             @newNetwork="closeNetworkOverlay"
           />
         </mew-popup>
@@ -262,7 +263,7 @@
 import { mapActions, mapGetters, mapState } from 'vuex';
 import send from '@/assets/images/icons/icon-send.svg';
 import portfolio from '@/assets/images/icons/icon-dashboard-enable.svg';
-// import bridge from '@/assets/images/icons/icon-bridge-enable.svg';
+import bridge from '@/assets/images/icons/icon-bridge-enable.svg';
 import nft from '@/assets/images/icons/icon-nft.svg';
 import swap from '@/assets/images/icons/icon-swap-enable.svg';
 import receive from '@/assets/images/icons/icon-arrow-down-right.svg';
@@ -303,6 +304,7 @@ export default {
       showLogoutPopup: false,
       routeNetworks: {
         [ROUTES_WALLET.SWAP.NAME]: [ETH, BSC, MATIC],
+        [ROUTES_WALLET.BRIDGE.NAME]: [ETH, BSC, MATIC],
         [ROUTES_WALLET.NFT_MANAGER.NAME]: [ETH, BSC, MATIC]
       },
       footer: {
@@ -340,6 +342,13 @@ export default {
      */
     isSwapPage() {
       return this.$route.name === 'Swap';
+    },
+    /**
+     * Property returns whether or not you are on the bridge page
+     * @returns {boolean}
+     */
+    isBridgePage() {
+      return this.$route.name === 'Bridge';
     },
     sectionOne() {
       if (this.online) {
@@ -389,11 +398,11 @@ export default {
             route: { name: ROUTES_WALLET.SWAP.NAME },
             fn: this.trackToSwap
           },
-          // {
-          //   title: this.$t('interface.menu.bridge'),
-          //   icon: bridge,
-          //   route: { name: ROUTES_WALLET.BRIDGE.NAME }
-          // },
+          {
+            title: this.$t('interface.menu.bridge'),
+            icon: bridge,
+            route: { name: ROUTES_WALLET.BRIDGE.NAME }
+          },
           {
             title: this.$t('interface.menu.send'),
             icon: send,
