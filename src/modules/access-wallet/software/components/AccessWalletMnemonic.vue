@@ -334,6 +334,7 @@ export default {
     clearFields() {
       this.phrase = {};
       this.length = 12;
+      this.extraWord = '';
     },
     /**
      * reset component
