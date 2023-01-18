@@ -100,7 +100,7 @@ export default {
       return hasBalance
         ? BigNumber(hasBalance.balancef)
             .decimalPlaces(hasBalance.decimals)
-            .toString()
+            .toFixed()
         : '0';
     },
     amountUSD() {
