@@ -201,6 +201,7 @@ const setTokenAndEthBalance = function ({
     })
     .catch(e => Toast(e.message, {}, ERROR));
 };
+
 export default {
   setLastPath,
   setCurrency,
