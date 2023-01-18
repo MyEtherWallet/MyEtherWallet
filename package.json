@@ -137,7 +137,7 @@
     "copy-webpack-plugin": "6.3.2",
     "eslint": "7.32.0",
     "eslint-plugin-prettier": "4.2.1",
-    "eslint-plugin-security": "1.5.0",
+    "eslint-plugin-security": "1.6.0",
     "eslint-plugin-vue": "9.0.1",
     "eth-ens-namehash": "2.0.8",
     "ethereumjs-common": "1.5.2",
