@@ -57,7 +57,7 @@ Vue.use(Vuex);
 Vue.config.productionTip = false;
 
 // Lazy Loader
-Vue.use(VueLazyLoad);
+Vue.use(VueLazyLoad, { lazyComponent: true });
 
 new Vue({
   el: '#app',

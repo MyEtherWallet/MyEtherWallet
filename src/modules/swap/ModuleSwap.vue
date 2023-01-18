@@ -48,6 +48,61 @@
         </div>
 
         <swap-loader v-else />
+        <!--
+            =====================================================================================
+             Providers List
+            =====================================================================================
+            -->
+        <div v-if="hasMinEth">
+          <v-slide-y-transition v-if="showAnimation" hide-on-leave group>
+            <swap-provider-mentions
+              key="showAnimation"
+              :is-loading="isLoadingProviders"
+              :check-loading="checkLoading"
+              @showProviders="showProviders"
+            />
+          </v-slide-y-transition>
+          <div v-else key="showAnimation1">
+            <swap-providers-list
+              :step="step"
+              :available-quotes="availableQuotes"
+              :set-provider="setProvider"
+              :to-token-symbol="toTokenType ? toTokenType.symbol : ''"
+              :to-token-icon="toTokenType ? toTokenType.img : ''"
+              :is-loading="isLoadingProviders"
+              :providers-error="providersErrorMsg"
+              :class="isFromNonChain ? '' : 'mt-7'"
+              :selected-provider-id="selectedProviderId"
+            />
+            <!--
+                  =====================================================================================
+                  Swap Fee
+                  =====================================================================================
+                -->
+            <swap-fee
+              v-if="showNetworkFee"
+              :is-from-chain="!isFromNonChain"
+              :show-fee="showSwapFee"
+              :getting-fee="loadingFee"
+              :error="feeError"
+              :total-cost="totalCost"
+              :tx-fee="txFee"
+              :total-gas-limit="totalGasLimit"
+              :not-enough-eth="notEnoughEth"
+              :from-eth="isFromTokenMain"
+              is-swap
+              class="mb-3"
+            />
+            <mew-button
+              title="Proceed"
+              :has-full-width="true"
+              :disabled="disableNext"
+              btn-size="xlarge"
+              class="NextButton"
+              @click.native="showConfirm()"
+            />
+          </div>
+        </div>
       </app-wallet-block>
 
       <!--
@@ -172,65 +227,6 @@
           </v-expansion-panels>
         </div>
       </app-user-msg-block>
-      <!--
-            =====================================================================================
-             Providers List
-            =====================================================================================
-            -->
-      <div v-if="hasMinEth">
-        <v-slide-y-transition v-if="showAnimation" hide-on-leave group>
-          <swap-provider-mentions
-            key="showAnimation"
-            :is-loading="isLoadingProviders"
-            :check-loading="checkLoading"
-            @showProviders="showProviders"
-          />
-        </v-slide-y-transition>
-        <div v-else key="showAnimation1">
-          <swap-providers-list
-            :step="step"
-            :available-quotes="availableQuotes"
-            :set-provider="setProvider"
-            :to-token-symbol="toTokenType ? toTokenType.symbol : ''"
-            :to-token-icon="toTokenType ? toTokenType.img : ''"
-            :is-loading="isLoadingProviders"
-            :providers-error="providersErrorMsg"
-            :class="isFromNonChain ? '' : 'mt-7'"
-            :selected-provider-id="selectedProviderId"
-          />
-          <!--
-                  =====================================================================================
-                  Swap Fee
-                  =====================================================================================
-                -->
-          <app-transaction-fee
-            v-if="showNetworkFee"
-            :is-from-chain="!isFromNonChain"
-            :show-fee="showSwapFee"
-            :getting-fee="loadingFee"
-            :error="feeError"
-            :total-cost="totalCost"
-            :tx-fee="txFee"
-            :total-gas-limit="totalGasLimit"
-            :not-enough-eth="notEnoughEth"
-            :from-eth="isFromTokenMain"
-            is-swap
-            class="mt-10 mt-sm-16"
-            @onLocalGasPrice="handleLocalGasPrice"
-          />
-          <div v-if="showNextButton" class="text-center mt-10 mt-sm-15">
-            <mew-button
-              title="Next"
-              :has-full-width="true"
-              :disabled="disableNext"
-              btn-size="xlarge"
-              class="NextButton"
-              style="max-width: 240px"
-              @click.native="showConfirm()"
-            />
-          </div>
-        </div>
-      </div>
     </div>
 
     <!-- =============================================================================================================== -->
@@ -332,6 +328,15 @@
               </v-col>
             </v-row>
           </div> -->
+          <mew-select
+            :value="toTokenType"
+            :items="actualToTokens"
+            :is-custom="true"
+            :loading="isLoading"
+            label="To"
+            class="ToTokenSelect"
+            @input="setToToken"
+          />
         </template>
         <!--
           =====================================================================================
@@ -374,7 +379,6 @@ import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalyti
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 import Swapper from './handlers/handlerSwap';
 import handleError from '../confirmation/handlers/errorHandler';
-
 const MIN_GAS_LIMIT = 800000;
 let localContractToToken = {};
 export default {
@@ -389,7 +393,8 @@ export default {
     ModuleAddressBook: () => import('@/modules/address-book/ModuleAddressBook'),
     SwapProvidersList: () => import('./components/SwapProvidersList.vue'),
     SwapProviderMentions: () => import('./components/SwapProviderMentions.vue'),
-    AppTransactionFee: () => import('@/core/components/AppTransactionFee.vue')
+    AppTransactionFee: () => import('@/core/components/AppTransactionFee.vue'),
+    SwapFee: () => import('./components/SwapFee.vue')
   },
   mixins: [handlerAnalytics, buyMore],
   props: {
@@ -1049,8 +1054,6 @@ export default {
     },
     toTokenType: {
       handler: function (newVal) {
-        console.log(newVal);
-        console.log(newVal?.header ? {} : newVal);
         this.toTokenType = newVal?.header ? undefined : newVal;
       },
       deep: true,
@@ -1514,8 +1517,8 @@ export default {
                   }
                   return arr;
                 }, []);
-                this.tokenOutValue =
-                  providers[0].transactions?.[0].value || providers[0].amount;
+                console.log(providers[0]);
+                this.tokenOutValue = providers[0].amount;
               }
               this.step = 1;
               this.isLoadingProviders = false;

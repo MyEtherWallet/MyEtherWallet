@@ -5,98 +5,119 @@
       Provider Rate Row
     =====================================================================================
     -->
-    <v-item-group
-      v-if="step >= 1 && toTokenSymbol && !hasProviderError"
-      :value="0"
-    >
-      <v-row no-gutters>
-        <div v-if="providersList.length > 0" class="mew-heading-3 mb-5 pl-4">
-          Select rate
-        </div>
-        <v-col
-          v-for="(quote, idx) in providersList"
-          :key="`quote-${idx}`"
-          cols="12"
-          class="mb-1"
-        >
-          <v-item v-slot="{ active, toggle }" :ref="`card${idx}`">
-            <v-container
-              :class="[
-                active ? 'rate-active' : '',
-                'd-flex align-center rate py-0 px-1'
-              ]"
-              @click="
-                toggle();
-                setProvider(idx, true);
-              "
+    <v-dialog v-model="show" max-width="300px">
+      <v-sheet class="pa-3">
+        <v-item-group v-if="canShow" :value="0">
+          <v-row no-gutters>
+            <v-col>
+              <div
+                v-if="providersList.length > 0"
+                class="mew-heading-3 mb-5 pl-4"
+              >
+                Select rate
+              </div>
+            </v-col>
+            <v-col class="text-right">
+              <v-icon @click="handleShow">mdi-close</v-icon></v-col
             >
-              <v-row no-gutters class="align-center justify-start">
-                <!--
+            <v-col
+              v-for="(quote, idx) in providersList"
+              :key="`quote-${idx}`"
+              cols="12"
+              class="mb-1"
+            >
+              <v-item v-slot="{ active, toggle }" :ref="`card${idx}`">
+                <v-container
+                  :class="[
+                    active ? 'rate-active' : '',
+                    'd-flex align-center rate py-0 px-1'
+                  ]"
+                  @click="
+                    toggle();
+                    setProvider(idx, true);
+                  "
+                >
+                  <v-row no-gutters class="align-center justify-start">
+                    <!--
                 =====================================================================================
                   Token Image, Rate & Best Rate Chip
                   xs = 10 / total = 10
                   md = 7 / total = 7
                 =====================================================================================
                 -->
-                <v-col cols="10" sm="7">
-                  <v-container class="pa-2">
-                    <v-row
-                      class="align-center justify-start pl-5 pr-1 py-3 py-sm-4"
-                    >
-                      <!--
+                    <v-col>
+                      <v-container class="pa-2">
+                        <v-row
+                          class="align-center justify-start pl-5 pr-1 py-3 py-sm-4"
+                        >
+                          <!--
                     =====================================================================================
                       Token Icon
                     =====================================================================================
                     -->
-                      <mew-token-container size="small" :img="toTokenIcon" />
-                      <!--
+                          <mew-token-container
+                            size="small"
+                            :img="toTokenIcon"
+                          />
+                          <!--
                       =====================================================================================
                         Rate
                       =====================================================================================
                       -->
-                      <div
-                        class="d-block d-sm-flex mx-2 mx-sm-4 align-center justify-start"
-                      >
-                        <div
-                          v-if="bestRate !== null && bestRate === quote.rate"
-                          class="greenPrimary--text font-weight-medium mew-label order-sm-12 pl-sm-2"
-                        >
-                          Best Rate
-                        </div>
-                        <div
-                          class="d-flex order-sm-1 justify-start align-center"
-                        >
-                          <div class="mb-0 mew-heading-3 font-weight-medium">
-                            {{ quote.amount }} {{ toTokenSymbol }}
+                          <div
+                            class="d-block d-sm-flex mx-2 mx-sm-4 align-center justify-start"
+                          >
+                            <div
+                              class="d-flex order-sm-1 justify-start align-center"
+                            >
+                              <div
+                                class="mb-0 mew-heading-3 font-weight-medium"
+                              >
+                                {{ quote.amount }} {{ toTokenSymbol }}
+                              </div>
+                              <!-- <mew-tooltip
+                              v-if="quote.amount && quote.amount !== ''"
+                              class="pl-1"
+                              :text="quote.tooltip"
+                            /> -->
+                            </div>
                           </div>
-                          <mew-tooltip
-                            v-if="quote.amount && quote.amount !== ''"
-                            class="pl-1"
-                            :text="quote.tooltip"
-                          />
-                        </div>
-                      </div>
-                    </v-row>
-                  </v-container>
-                </v-col>
-                <!--
+                        </v-row>
+                      </v-container>
+                    </v-col>
+                    <!--
                 =====================================================================================
                   Provider Image & Checkbox
                   xs = 2 / total = 12
                   sm = 5 / total = 12
                 =====================================================================================
                 -->
-                <v-col cols="2" sm="5">
-                  <v-row class="align-center justify-end pr-3">
-                    <mew-checkbox :value="active" />
+                    <v-col cols="2" md="auto">
+                      <div
+                        v-if="bestRate !== null && bestRate === quote.rate"
+                        class="white--text font-weight-bold primary pa-1 pl-3 pr-3 rounded ml-auto text-right"
+                      >
+                        BEST
+                      </div></v-col
+                    >
                   </v-row>
-                </v-col>
-              </v-row>
-            </v-container>
-          </v-item>
-        </v-col>
-      </v-row>
-    </v-item-group>
+                </v-container>
+              </v-item>
+            </v-col>
+          </v-row>
+        </v-item-group>
+        <div class="mt-3 textMedium--text">Offer includes a 3% MEW Fee</div>
+      </v-sheet>
+    </v-dialog>
+    <v-row v-if="canShow" no-gutters>
+      <v-col> Rate </v-col>
+      <v-col md="auto">
+        <div class="text-right rate-button" @click="handleShow">
+          {{ providerLabel }}
+          <v-icon>mdi-chevron-down</v-icon>
+        </div>
+      </v-col>
+    </v-row>
 
     <!--
     =====================================================================================
@@ -175,10 +196,14 @@ export default {
   },
   data() {
     return {
-      showMore: false
+      showMore: false,
+      show: false
     };
   },
   computed: {
+    canShow() {
+      return this.toTokenSymbol && !this.hasProviderError && this.step >= 1;
+    },
     /**
      * @Returns Boolean
      * checks whether there's errors
@@ -228,6 +253,15 @@ export default {
         if (returnedList) return returnedList;
       }
       return [];
+    },
+    providerLabel() {
+      const label =
+        this.selectedProviderId !== undefined
+          ? this.providersList[this.selectedProviderId].amount
+          : 'Select Provider';
+      const symbol =
+        this.selectedProviderId !== undefined ? this.toTokenSymbol : '';
+      return `${label} ${symbol}`;
     },
     /**
      * Property returns number of providers that was sliced on the ui
@@ -301,6 +335,11 @@ export default {
         }, 100);
       }
     }
+  },
+  methods: {
+    handleShow() {
+      this.show = !this.show;
+    }
   }
 };
 </script>
@@ -314,5 +353,8 @@ export default {
   min-height: 60px;
   border-radius: 8px;
   border: 1px solid var(--v-greyLight-base);
+}
+.rate-button {
+  cursor: pointer;
 }
 </style>
