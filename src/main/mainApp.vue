@@ -78,6 +78,7 @@ export default {
     this.setOnlineStatus(window.navigator.onLine);
     if (window.navigator.onLine) {
       this.setCurrency(this.preferredCurrency);
+      this.setMarketInfo();
       this.updateArticles({
         timestamp: this.timestamp,
         articleList: this.articleList
@@ -90,6 +91,7 @@ export default {
     window.addEventListener('online', () => {
       this.setOnlineStatus(true);
       this.setCurrency(this.preferredCurrency);
+      this.setMarketInfo();
     });
     if (!this.isMigrated) {
       // this.addressBook is the old one that resides in custom store
@@ -119,7 +121,7 @@ export default {
   },
   methods: {
     ...mapActions('global', ['setOnlineStatus']),
-    ...mapActions('external', ['setCurrency']),
+    ...mapActions('external', ['setCurrency', 'setMarketInfo']),
     ...mapActions('addressBook', ['setMigrated', 'setAddressBook']),
     ...mapActions('article', ['updateArticles']),
     openBuy() {
