@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "6.6.12-hotfix.2",
+  "version": "6.6.13",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build": "npm run update && vue-cli-service build",
@@ -108,7 +108,7 @@
     "walletlink": "2.5.0"
   },
   "devDependencies": {
-    "@commitlint/config-conventional": "17.3.0",
+    "@commitlint/config-conventional": "17.4.0",
     "@ledgerhq/hw-app-eth": "6.30.0",
     "@ledgerhq/hw-transport-web-ble": "6.27.1",
     "@ledgerhq/hw-transport-webusb": "6.27.1",
@@ -146,7 +146,6 @@
     "ethereumjs-wallet": "1.0.2",
     "geckodriver": "3.2.0",
     "hdkey": "2.0.1",
-    "html2canvas": "1.4.1",
     "husky": "5.0.9",
     "imagemin-mozjpeg": "9.0.0",
     "imagemin-webp": "7.0.0",
@@ -160,7 +159,6 @@
     "postcss-import": "12.0.1",
     "postcss-url": "8.0.0",
     "prettier": "2.8.0",
-    "print-js": "1.6.0",
     "protobufjs": "7.1.2",
     "raw-loader": "4.0.2",
     "remark-cli": "10.0.0",

@@ -39,7 +39,7 @@
               @openTokenSelect="checkTokenPadding"
             />
           </template>
-          <template #tabContent2>
+          <template v-if="sellSupported" #tabContent2>
             <sell-eth-component
               :order-handler="orderHandler"
               :close="close"
@@ -74,6 +74,7 @@
 import { mapGetters, mapState, mapActions } from 'vuex';
 import { isEmpty } from 'lodash';
 
+import { ETH } from '@/utils/networks/types';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 
 import handler from './handlers/handlerOrder';
@@ -111,6 +112,9 @@ export default {
     ...mapGetters('wallet', ['tokensList']),
     ...mapGetters('global', ['network']),
     ...mapGetters('external', ['contractToToken']),
+    sellSupported() {
+      return this.network.type.name === ETH.name;
+    },
     inWallet() {
       return (
         this.$route.fullPath.includes('/wallet') && !this.$route.meta.noAuth
@@ -142,14 +146,17 @@ export default {
       };
     },
     tabItems() {
-      return [
-        {
-          name: `Buy`
-        },
-        {
-          name: `Sell`
-        }
-      ];
+      if (this.sellSupported) {
+        return [
+          {
+            name: `Buy`
+          },
+          {
+            name: `Sell`
+          }
+        ];
+      }
+      return [{ name: 'Buy' }];
     }
   },
   watch: {

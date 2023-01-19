@@ -7,7 +7,7 @@
       <div class="font-weight-medium textDark--text mb-2">
         How much do you want to spend?
       </div>
-      <div class="d-flex align-start">
+      <div class="d-flex align-center">
         <mew-input
           v-model="amount"
           hide-clear-btn
@@ -691,7 +691,7 @@ export default {
 <style lang="scss">
 .moonpay-buy-component {
   .v-input__slot {
-    height: 47px !important;
+    height: 62px !important;
   }
 
   .no-right-border {
@@ -701,14 +701,6 @@ export default {
   }
   .no-left-border fieldset {
     border-radius: 0 8px 8px 0 !important;
-  }
-}
-</style>
-
-<style lang="scss">
-.moonpay-buy-component {
-  .v-input__slot {
-    height: 62px !important;
   }
 }
 </style>
