@@ -26,6 +26,6 @@ export default {
   },
   gasPriceMultiplier: 1,
   canBuy: false,
-  coingeckID: 'gochain',
+  coingeckoID: 'gochain',
   balanceApi: ''
 };

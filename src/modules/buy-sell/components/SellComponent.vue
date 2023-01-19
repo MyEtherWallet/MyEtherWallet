@@ -139,6 +139,7 @@
       :selected-currency="selectedCurrency"
       :set-currency="setCurrency"
       :in-wallet="inWallet"
+      is-sell
       @close="openTokenSelect = false"
     />
   </div>
@@ -669,9 +670,9 @@ export default {
           this.amount = this.selectedBalance;
         }
       } else {
-        this.amount = BigNumber(this.selectedBalance)
-          .minus(this.txFee)
-          .toString();
+        this.amount = BigNumber(this.max).lt(this.selectedBalance)
+          ? this.max.toString()
+          : BigNumber(this.selectedBalance).minus(this.txFee).toString();
       }
       this.maxBalance = this.amount;
       this.hasPersistentHint = true;
