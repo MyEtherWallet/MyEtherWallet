@@ -93,14 +93,16 @@ const networkTokenUSDMarket = function (
 ) {
   const cgid = rootGetters['global/network'].type.coingeckoID;
   if (cgid) {
-    const token = state.coinGeckoTokens.get(cgid);
-    if (token)
-      return {
-        value: token.current_price,
-        symbol: '$',
-        name: 'USD',
-        price_change_percentage_24h: token.price_change_percentage_24h
-      };
+    getters.getMarketData([cgid]).then(val => {
+      const token = val;
+      if (token)
+        return {
+          value: token.current_price,
+          symbol: '$',
+          name: 'USD',
+          price_change_percentage_24h: token.price_change_percentage_24h
+        };
+    });
   }
   return {
     value: 0,
@@ -109,8 +111,9 @@ const networkTokenUSDMarket = function (
     price_change_percentage_24h: 0
   };
 };
-const getCoinGeckoTokenById = state => cgid => {
-  const cgToken = state.coinGeckoTokens.get(cgid);
+const getCoinGeckoTokenById = (state, getters) => async cgid => {
+  const cgToken = await getters.getMarketData([cgid]).then(item => item[0]);
+  console.log('cgToken', cgToken);
   return {
     name: cgToken ? cgToken.symbol.toUpperCase() : '',
     symbol: cgToken ? cgToken.symbol.toUpperCase() : '',
@@ -143,30 +146,37 @@ const contractToToken =
     let cgToken;
     if (contractAddress === MAIN_TOKEN_ADDRESS) {
       tokenId = rootGetters['global/network'].type.coingeckoID;
-      cgToken = getters.getCoinGeckoTokenById(tokenId);
-      const networkType = rootGetters['global/network'].type;
-      return Object.assign(cgToken, {
-        name: networkType.currencyName,
-        symbol: networkType.currencyName,
-        subtext: networkType.name_long,
-        value: networkType.name_long,
-        contract: MAIN_TOKEN_ADDRESS,
-        img: cgToken.img !== '' ? cgToken.img : networkType.icon,
-        decimals: 18
+      getters.getCoinGeckoTokenById(tokenId).then(token => {
+        cgToken = token;
+        console.log('cgToken contractToToken', cgToken);
+        const networkType = rootGetters['global/network'].type;
+        return Object.assign(cgToken, {
+          name: networkType.currencyName,
+          symbol: networkType.currencyName,
+          subtext: networkType.name_long,
+          value: networkType.name_long,
+          contract: MAIN_TOKEN_ADDRESS,
+          img: cgToken.img !== '' ? cgToken.img : networkType.icon,
+          decimals: 18
+        });
       });
     }
-    cgToken = getters.getCoinGeckoTokenById(tokenId);
-    const networkToken = state.networkTokens.get(contractAddress);
+    getters.getCoinGeckoTokenById(tokenId).then(token => {
+      cgToken = token;
+      console.log('cgToken contractToToken (network)', cgToken);
+      const networkToken = state.networkTokens.get(contractAddress);
+      console.log('networkToken', networkToken);
 
-    if (!networkToken) return null;
-    return Object.assign(cgToken, {
-      name: networkToken.name,
-      symbol: networkToken.symbol,
-      subtext: networkToken.name,
-      value: networkToken.name,
-      contract: networkToken.address,
-      img: networkToken.icon_png ? networkToken.icon_png : '',
-      decimals: networkToken.decimals
+      if (!networkToken) return null;
+      return Object.assign(cgToken, {
+        name: networkToken.name,
+        symbol: networkToken.symbol,
+        subtext: networkToken.name,
+        value: networkToken.name,
+        contract: networkToken.address,
+        img: networkToken.icon_png ? networkToken.icon_png : '',
+        decimals: networkToken.decimals
+      });
     });
   };
 
