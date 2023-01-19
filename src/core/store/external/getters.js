@@ -93,7 +93,7 @@ const networkTokenUSDMarket = function (
 ) {
   const cgid = rootGetters['global/network'].type.coingeckoID;
   if (cgid) {
-    getters.getMarketData([cgid]).then(val => {
+    return getters.getMarketData([cgid]).then(val => {
       const token = val;
       if (token)
         return {
@@ -111,9 +111,21 @@ const networkTokenUSDMarket = function (
     price_change_percentage_24h: 0
   };
 };
-const getCoinGeckoTokenById = (state, getters) => cgid => {
-  getters.getMarketData([cgid]).then(tokens => {
-    const cgToken = tokens[0];
+const getCoinGeckoTokenById =
+  (state, getters, rootState, rootGetters) => async cgid => {
+    const cgToken = await getters
+      .getMarketData([cgid])
+      .then(tokens => tokens[0]);
+    const tokenData = Object.values(getters.getAllTokens()).find(
+      item => item.id === cgid
+    );
+    const currentNetwork = rootGetters['global/network'].type;
+    const networkName = currentNetwork.name_long
+      .toLowerCase()
+      .split(' ')
+      .join('-');
+    console.log('networkName', networkName);
+    console.log('tokenData', tokenData);
     console.log('cgToken', cgToken);
     return {
       name: cgToken ? cgToken.symbol.toUpperCase() : '',
@@ -131,15 +143,18 @@ const getCoinGeckoTokenById = (state, getters) => cgid => {
           ? formatPercentageValue(cgToken.price_change_percentage_24h).value
           : '0',
       price: cgToken ? cgToken.current_price : '0',
-      pricef: cgToken ? formatFiatValue(cgToken.current_price).value : '0'
+      pricef: cgToken ? formatFiatValue(cgToken.current_price).value : '0',
+      contract:
+        currentNetwork.coingeckoID === cgid
+          ? MAIN_TOKEN_ADDRESS
+          : tokenData.platforms[networkName]
     };
-  });
-};
+  };
 /**
  * Get Token info including market data if exists
  */
 const contractToToken =
-  (state, getters, rootState, rootGetters) => contractAddress => {
+  (state, getters, rootState, rootGetters) => async contractAddress => {
     if (!contractAddress) {
       return null;
     }
@@ -148,7 +163,7 @@ const contractToToken =
     let cgToken;
     if (contractAddress === MAIN_TOKEN_ADDRESS) {
       tokenId = rootGetters['global/network'].type.coingeckoID;
-      cgToken = getters.getCoinGeckoTokenById(tokenId);
+      cgToken = await getters.getCoinGeckoTokenById(tokenId);
       console.log('cgToken contractToToken', cgToken);
       const networkType = rootGetters['global/network'].type;
       return Object.assign(cgToken, {
@@ -156,12 +171,12 @@ const contractToToken =
         symbol: networkType.currencyName,
         subtext: networkType.name_long,
         value: networkType.name_long,
-        contract: MAIN_TOKEN_ADDRESS,
+        // contract: MAIN_TOKEN_ADDRESS,
         img: cgToken.img !== '' ? cgToken.img : networkType.icon,
         decimals: 18
       });
     }
-    cgToken = getters.getCoinGeckoTokenById(tokenId);
+    cgToken = await getters.getCoinGeckoTokenById(tokenId);
     console.log('cgToken contractToToken (network)', cgToken);
     const networkToken = state.networkTokens.get(contractAddress);
     console.log('networkToken', networkToken);
@@ -172,7 +187,7 @@ const contractToToken =
       symbol: networkToken.symbol,
       subtext: networkToken.name,
       value: networkToken.name,
-      contract: networkToken.address,
+      // contract: networkToken.address,
       img: networkToken.icon_png ? networkToken.icon_png : '',
       decimals: networkToken.decimals
     });
