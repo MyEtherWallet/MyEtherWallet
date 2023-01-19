@@ -1,11 +1,11 @@
 <template>
   <div class="module-tokens-value">
     <mew6-white-sheet class="px-5 px-lg-7 py-5 d-flex justify-space-between">
-      <v-row no-gutters>
+      <v-row dense>
         <v-col cols="11">
           <div class="mew-heading-2 mb-3">{{ tokenTitle }}</div>
         </v-col>
-        <v-col cols="1" @click="toggleDropdown">
+        <v-col cols="1" align="right" @click="toggleDropdown">
           <v-icon style="color: black">{{ chevronIcon }}</v-icon>
         </v-col>
         <v-col v-if="showTokens && dropdown" cols="12" class="mt-3">
@@ -65,7 +65,7 @@
 import { EventBus } from '@/core/plugins/eventBus';
 import { mapGetters, mapState } from 'vuex';
 import { toBN } from 'web3-utils';
-import { MOONPAY_EVENT } from '../buy-sell/helpers';
+import { BUYSELL_EVENT } from '../buy-sell/helpers';
 
 export default {
   name: 'ModuleTokensValue',
@@ -139,10 +139,10 @@ export default {
     },
     checkLink() {
       if (this.tokenCount > 0) this.handleTokensPopup();
-      else this.openMoonpay();
+      else this.openBuySell();
     },
-    openMoonpay() {
-      EventBus.$emit(MOONPAY_EVENT);
+    openBuySell() {
+      EventBus.$emit(BUYSELL_EVENT);
     }
   }
 };

@@ -27,9 +27,13 @@
       <div
         class="d-flex align-center flex-column flex-md-row flex-lg-row flex-xl-row justify-space-between pa-3 full-width"
       >
-        <span :class="$vuetify.breakpoint.smAndDown ? 'mb-1' : ''"
-          >#{{ getTokenNameOrId(token) }}</span
-        >
+        <div class="nft-name pr-2">
+          <span
+            v-if="token"
+            :class="$vuetify.breakpoint.smAndDown ? 'mb-1' : ''"
+            >#{{ token.name || token.token_id }}</span
+          >
+        </div>
         <mew-button
           :has-full-width="false"
           btn-style="outline"
@@ -71,15 +75,18 @@ export default {
   methods: {
     onImgErr(e) {
       e.target.src = this.nftPlaceholder;
-    },
-    getTokenNameOrId(token) {
-      let name = token.name || token.token_id;
-      if (name.length > 25) name = name.substring(0, 25).concat(['...']);
-      return name;
     }
   }
 };
 </script>
+<style lang="scss" scoped>
+.nft-name {
+  max-width: 110px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+</style>
 <style lang="scss">
 .nft-manager-details-loader {
   .v-skeleton-loader__list-item-avatar {

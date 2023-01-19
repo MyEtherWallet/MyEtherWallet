@@ -455,7 +455,8 @@ export default {
       localGasPrice: '0',
       mainTokenDetails: {},
       cachedAmount: '0',
-      selectedProviderId: undefined
+      selectedProviderId: undefined,
+      abortSetTokenValue: false
     };
   },
   computed: {
@@ -1060,10 +1061,14 @@ export default {
       immediate: false
     }
   },
+  beforeDestroy() {
+    this.abortSetTokenValue = true;
+  },
   beforeMount() {
     this.setTokenFromURL();
   },
   mounted() {
+    this.abortSetTokenValue = false;
     // multi value watcher to clear
     // refund address and to address
     if (this.coinGeckoTokens.size > 0) {
@@ -1421,6 +1426,8 @@ export default {
       this.setTokenInValue(val);
     }, 500),
     setTokenInValue(value) {
+      // Abort set token in value
+      if (this.abortSetTokenValue) return;
       /**
        * Ensure that both pairs have been set
        * before calling the providers
@@ -1438,7 +1445,6 @@ export default {
         this.step = 0;
         return;
       }
-
       if (isEmpty(this.fromTokenType)) {
         Toast('From token cannot be empty!', {}, ERROR);
         return;

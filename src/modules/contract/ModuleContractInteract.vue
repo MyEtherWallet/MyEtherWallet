@@ -8,6 +8,7 @@
     <template #moduleBody>
       <div>
         <mew-select
+          v-model="currentContract"
           :items="mergedContracts"
           label="Contract Name"
           class="ContractSelect"
@@ -18,7 +19,7 @@
           v-model="contractAddress"
           label="Contract Address"
           placeholder=" "
-          class="mr-3 flex-grow-1"
+          class="mr-3 flex-grow-1 full-width"
           :persistent-hint="nametag.length > 0"
           :hint="nametag"
         />
@@ -132,14 +133,14 @@
 
         <v-divider v-if="hasOutputs" class="mt-9 mb-8" />
 
-        <div v-if="hasOutputs">
+        <div v-if="hasOutputs" style="display: contents">
           <div class="mew-heading-2">Results</div>
           <div
             v-for="(output, idx) in selectedMethod.outputs"
             :key="output.name + idx"
             class="d-flex align-center justify-space-between my-4"
           >
-            <div class="text-capitalize">
+            <div class="text-capitalize mr-2">
               {{ output.name !== '' ? output.name : selectedMethod.name }}
             </div>
             <div class="font-weight-medium">{{ output.value }}</div>
