@@ -9,9 +9,13 @@ import {
 import { toBN } from 'web3-utils';
 import getTokenInfo from '@/core/helpers/tokenInfo';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
+const FIAT_EXCHANGE_RATE_ENDPOINT =
+  'https://mainnet.mewwallet.dev/v2/prices/exchange-rates';
+const COINGECKO_ENDPOINT = 'https://api.coingecko.com/api/v3/';
+const REFRESH_DELAY = 1000 * 60 * 5;
 
 const setCurrency = async function ({ commit }, val) {
-  fetch('https://mainnet.mewwallet.dev/v2/prices/exchange-rates')
+  fetch(`${FIAT_EXCHANGE_RATE_ENDPOINT}`)
     .then(res => res.json())
     .then(rates => {
       const currentRate = rates
@@ -202,10 +206,57 @@ const setTokenAndEthBalance = function ({
     .catch(e => Toast(e.message, {}, ERROR));
 };
 
+// Enkrypt functions
+const setMarketInfo = async function ({ commit, getters }) {
+  const lastTimestamp = getters.getLastTimestamp;
+  if (lastTimestamp && lastTimestamp >= new Date().getTime() - REFRESH_DELAY)
+    return;
+  const allCoins = await fetch(
+    `${COINGECKO_ENDPOINT}coins/list?include_platform=true`
+  )
+    .then(res => res.json())
+    .then(json => {
+      const allTokens = json;
+      const tokens = {};
+      allTokens.forEach(token => {
+        tokens[token.id] = token;
+      });
+      return tokens;
+    });
+  setAllTokens({ commit }, allCoins);
+  const fiatMarketData = await fetch(`${FIAT_EXCHANGE_RATE_ENDPOINT}`)
+    .then(res => res.json())
+    .then(json => {
+      const topMarkets = json;
+      const tokens = {};
+      topMarkets.forEach(token => {
+        tokens[token.fiat_currency] = token;
+      });
+      return tokens;
+    });
+  setFiatExchangeRates({ commit }, fiatMarketData);
+  setLastTimestamp({ commit }, new Date().getTime());
+};
+
+const setAllTokens = function ({ commit }, tokens) {
+  commit('SET_ALL_TOKENS', tokens);
+};
+
+const setLastTimestamp = function ({ commit }, timestamp) {
+  commit('SET_LAST_TIMESTAMP', timestamp);
+};
+const setFiatExchangeRates = function ({ commit }, tokens) {
+  commit('SET_FIAT_EXCHANGE_RATES', tokens);
+};
+
 export default {
   setLastPath,
   setCurrency,
   setCoinGeckoTokens,
   setTokenAndEthBalance,
-  setNetworkTokens
+  setNetworkTokens,
+  setMarketInfo,
+  setAllTokens,
+  setLastTimestamp,
+  setFiatExchangeRates
 };

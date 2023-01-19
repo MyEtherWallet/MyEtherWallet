@@ -6,11 +6,50 @@ import {
   formatIntegerValue
 } from '@/core/helpers/numberFormatHelper';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
-// import { keccak256 } from 'web3-utils';
-// const STORAGE_TTL = 1000 * 60 * 60 * 24;
-// const TIMESTAMP = 'timestamp';
-// const COINGECKO_ENDPOINT = 'https://api.coingecko.com/api/v3/';
-// const REFRESH_DELAY = 1000 * 60 * 5;
+import { keccak256 } from 'web3-utils';
+const COINGECKO_ENDPOINT = 'https://api.coingecko.com/api/v3/';
+const REFRESH_DELAY = 1000 * 60 * 5;
+const STORAGE_TTL = 1000 * 60 * 60 * 24;
+/**
+ * Fetch data and save it to cache
+ * @param {object} options Options object { url: string }
+ * @param {number} ttl The time to live for fetched data
+ * @returns Fetched or cached data
+ */
+const cacheFetch = async function (
+  { state, getters },
+  options,
+  ttl = STORAGE_TTL
+) {
+  const storagetimestamp = state.lastTimestamp;
+  if (
+    storagetimestamp &&
+    storagetimestamp + STORAGE_TTL < new Date().getTime()
+  ) {
+    state.cache = {};
+    state.timestamp = new Date().getTime();
+  } else if (!storagetimestamp) {
+    state.timestamp = new Date().getTime();
+  }
+
+  // return cached data
+  const hash = keccak256(options.url);
+  const cached = getters.getCache(hash);
+  if (cached && cached.timestamp + ttl > new Date().getTime()) {
+    return JSON.parse(cached.data);
+  }
+  return fetch(options.url)
+    .then(res => res.json())
+    .then(json => {
+      const store = {
+        timestamp: new Date().getTime(),
+        data: JSON.stringify(json)
+      };
+      state.cache[hash] = store;
+      return json;
+    });
+};
+
 /**
  * Get Eth Fiat value
  */
@@ -131,50 +170,59 @@ const contractToToken =
     });
   };
 
-const getLastTimestamp = state => async () => {
+// Enkrypt functions
+const getLastTimestamp = function (state) {
   const timestamp = state.lastTimestamp;
-  if (timestamp) return timestamp.timestamp;
+  if (timestamp) return timestamp;
   return null;
 };
 
-const getTokenValue =
-  (state, rootGetters, getters, rootState, commit) =>
-  async (tokenBalance, coingeckoID, fiatSymbol) => {
-    await commit('external/setMarketInfo');
-    const balanceBN = new BigNumber(tokenBalance);
-    const market = (await getters.getMarketData([coingeckoID]))[0];
-    const fiat = await getters.getFiatValue(fiatSymbol);
-    if (market && fiat) {
-      return balanceBN
-        .multipliedBy(market.current_price)
-        .multipliedBy(fiat.exchange_rate)
-        .toFixed(2);
-    }
-    return '0';
+/**
+ * Get Token value in fiat currency
+ * @param {string} tokenBalance Amount of token balance
+ * @param {string} coingeckoID Coingecko ID of token
+ * @param {string} fiatSymbol Symbol of the fiat currency
+ * @returns Token's fiat value as a string
+ */
+const getTokenValue = async (tokenBalance, coingeckoID, fiatSymbol) => {
+  // setMarketInfo before calling
+  const balanceBN = new BigNumber(tokenBalance);
+  const market = (await getMarketData([coingeckoID]))[0];
+  const fiat = await getFiatValue(fiatSymbol);
+  if (market && fiat) {
+    return balanceBN
+      .multipliedBy(market.current_price)
+      .multipliedBy(fiat.exchange_rate)
+      .toFixed(2);
+  }
+  return '0';
+};
+
+const getTokenPrice =
+  (state, getters) =>
+  async (coingeckoID, currency = 'usd') => {
+    const urlParams = new URLSearchParams();
+    urlParams.append('ids', coingeckoID);
+    urlParams.append('vs_currencies', currency);
+
+    return await cacheFetch(
+      { state, getters },
+      {
+        url: `${COINGECKO_ENDPOINT}simple/price?include_market_cap=false&include_24hr_vol=false&include_24hr_change=false&include_last_updated_at=false&${urlParams.toString()}`
+      },
+      REFRESH_DELAY
+    ).then(json => {
+      if (json[coingeckoID] && json[coingeckoID][currency] !== undefined) {
+        return json[coingeckoID][currency].toString();
+      }
+      return null;
+    });
   };
 
-// const getTokenPrice = async (coingeckoID, currency = 'usd') => {
-//   const urlParams = new URLSearchParams();
-//   urlParams.append('ids', coingeckoID);
-//   urlParams.append('vs_currencies', currency);
-
-//   return cacheFetch(
-//     {
-//       url: `${COINGECKO_ENDPOINT}simple/price?include_market_cap=false&include_24hr_vol=false&include_24hr_change=false&include_last_updated_at=false&${urlParams.toString()}`
-//     },
-//     REFRESH_DELAY
-//   ).then(json => {
-//     if (json[coingeckoID] && json[coingeckoID][currency] !== undefined) {
-//       return json[coingeckoID][currency].toString();
-//     }
-//     return null;
-//   });
-// };
-
 const getMarketInfoByContracts =
-  (state, getters, commit) => async (contracts, platformId) => {
-    await commit('external/setMarketInfo');
-    const allTokens = Object.values(platformList);
+  (state, getters) => async (contracts, platformId) => {
+    // setMarketInfo before calling
+    const allTokens = Object.values(await getAllTokens());
     const requested = {};
     const contractTokenMap = {};
     contracts.forEach(add => (contractTokenMap[add] = null));
@@ -203,29 +251,38 @@ const getMarketInfoByContracts =
     return requested;
   };
 
-// const getMarketData = async coingeckoIDs => {
-//   return await cacheFetch(
-//     {
-//       url: `${COINGECKO_ENDPOINT}coins/markets?vs_currency=usd&order=market_cap_desc&price_change_percentage=7d&per_page=250&page=1&sparkline=true&ids=${coingeckoIDs.join(
-//         ','
-//       )}`
-//     },
-//     REFRESH_DELAY
-//   ).then(json => {
-//     const markets = json;
-//     const retMarkets = [];
-//     coingeckoIDs.forEach(id => {
-//       retMarkets.push(markets.find(m => m.id === id) || null);
-//     });
-//     return retMarkets;
-//   });
-// };
+const getMarketData = (state, getters) => async coingeckoIDs => {
+  return await cacheFetch(
+    { state, getters },
+    {
+      url: `${COINGECKO_ENDPOINT}coins/markets?vs_currency=usd&order=market_cap_desc&price_change_percentage=7d&per_page=250&page=1&sparkline=true&ids=${coingeckoIDs.join(
+        ','
+      )}`
+    },
+    REFRESH_DELAY
+  ).then(json => {
+    const markets = json;
+    const retMarkets = [];
+    coingeckoIDs.forEach(id => {
+      retMarkets.push(markets.find(m => m.id === id) || null);
+    });
+    return retMarkets;
+  });
+};
 
-const getFiatValue = (state, getters, commit) => async symbol => {
-  await commit('external/setMarketInfo');
+const getFiatValue = state => async symbol => {
+  // setMarketInfo before calling
   const allFiatData = state.fiatInfo;
   if (allFiatData[symbol]) return allFiatData[symbol];
   return null;
+};
+
+const getAllTokens = state => () => {
+  return state.allTokens;
+};
+
+const getCache = state => hash => {
+  return state.cache[hash];
 };
 
 export default {
@@ -237,8 +294,11 @@ export default {
   getCoinGeckoTokenById,
   getLastTimestamp,
   getFiatValue,
-  // getTokenPrice,
+  getTokenPrice,
   getTokenValue,
-  getMarketInfoByContracts
-  // getMarketData
+  getMarketInfoByContracts,
+  getMarketData,
+  getCache,
+  getAllTokens,
+  cacheFetch
 };

@@ -4,7 +4,10 @@ const state = {
   currencyRate: {},
   coinGeckoTokens: new Map(), //map of {coingeckoId: coingeckotokeninfo}
   networkTokens: new Map(), //map of {contract: token}
-  lastTimestamp: null
+  lastTimestamp: null,
+  cache: {},
+  allTokens: {},
+  fiatInfo: {}
 };
 
 export default state;
