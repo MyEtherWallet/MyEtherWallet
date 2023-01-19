@@ -292,24 +292,11 @@ export default {
       return arr;
     },
     currencyItems() {
-      const tokensList = this.preselectedCurrencies;
-      const imgs = tokensList.map(item => {
-        item.value = item.name;
-        item.name = item.symbol;
-        return item.img;
+      const tokensList = this.preselectedCurrencies.map(token => {
+        token.name = token.symbol;
+        return token;
       });
-
-      const returnedArray = [
-        {
-          text: 'Select Token',
-          imgs: imgs.splice(0, 3),
-          total: `${tokensList.length}`,
-          divider: true,
-          selectLabel: true
-        },
-        ...tokensList
-      ];
-      return returnedArray;
+      return tokensList;
     },
     supportedCurrency() {
       return ['ETH', 'USDT', 'USDC', 'MATIC', 'BNB'];
