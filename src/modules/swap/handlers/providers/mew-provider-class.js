@@ -128,6 +128,9 @@ class MEWPClass {
         };
       })
       .catch(err => {
+        if (err.message === 'Request failed with status code 404') {
+          return err;
+        }
         Toast(err, {}, ERROR);
       });
   }

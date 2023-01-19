@@ -119,6 +119,7 @@
               title="Export JSON file"
               btn-size="small"
               btn-style="transparent"
+              style="max-width: 130px"
               :btn-link="fileLink"
               :download="exportFileName"
             />

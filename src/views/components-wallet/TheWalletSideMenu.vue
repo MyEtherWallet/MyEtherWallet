@@ -494,6 +494,10 @@ export default {
       if (newVal && this.$route.name == ROUTES_WALLET.SWAP.NAME) {
         this.trackSwap('switchingNetworkOnSwap');
       }
+    },
+    navOpen(newVal) {
+      if (this.isOpenNetworkOverlay && !newVal)
+        this.isOpenNetworkOverlay = false;
     }
   },
   mounted() {
