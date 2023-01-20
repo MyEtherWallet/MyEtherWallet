@@ -24,6 +24,7 @@ import { BUYSELL_EVENT } from '@/modules/buy-sell/helpers';
 import { EventBus } from '@/core/plugins/eventBus';
 import handlerAnalyticsMixin from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin.js';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
+import { setMarketInfo } from '@/core/helpers/marketData';
 export default {
   name: 'App',
   components: {
@@ -78,6 +79,7 @@ export default {
     this.setOnlineStatus(window.navigator.onLine);
     if (window.navigator.onLine) {
       this.setCurrency(this.preferredCurrency);
+      setMarketInfo();
       this.updateArticles({
         timestamp: this.timestamp,
         articleList: this.articleList
@@ -90,6 +92,7 @@ export default {
     window.addEventListener('online', () => {
       this.setOnlineStatus(true);
       this.setCurrency(this.preferredCurrency);
+      setMarketInfo();
     });
     if (!this.isMigrated) {
       // this.addressBook is the old one that resides in custom store

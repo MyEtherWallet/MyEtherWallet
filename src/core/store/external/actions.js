@@ -9,9 +9,11 @@ import {
 import { toBN } from 'web3-utils';
 import getTokenInfo from '@/core/helpers/tokenInfo';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
+const FIAT_EXCHANGE_RATE_ENDPOINT =
+  'https://mainnet.mewwallet.dev/v2/prices/exchange-rates';
 
 const setCurrency = async function ({ commit }, val) {
-  fetch('https://mainnet.mewwallet.dev/v2/prices/exchange-rates')
+  fetch(`${FIAT_EXCHANGE_RATE_ENDPOINT}`)
     .then(res => res.json())
     .then(rates => {
       const currentRate = rates
@@ -201,6 +203,7 @@ const setTokenAndEthBalance = function ({
     })
     .catch(e => Toast(e.message, {}, ERROR));
 };
+
 export default {
   setLastPath,
   setCurrency,
