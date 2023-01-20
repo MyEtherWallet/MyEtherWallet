@@ -15,9 +15,9 @@ const cacheFetch = async function (options, ttl = STORAGE_TTL) {
     storagetimestamp + STORAGE_TTL < new Date().getTime()
   ) {
     state.cache = {};
-    state.timestamp = new Date().getTime();
+    state.lastTimestamp = new Date().getTime();
   } else if (!storagetimestamp) {
-    state.timestamp = new Date().getTime();
+    state.lastTimestamp = new Date().getTime();
   }
 
   // return cached data
