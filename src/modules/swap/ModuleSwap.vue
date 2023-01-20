@@ -10,7 +10,7 @@
             title="YOU GIVE"
             :left-text="maxMsg"
             :max-button="setMaxAmount"
-            right-text="≈$0"
+            right-text="≈ $0"
             :error="amountErrorMessage"
             selected
             :token="fromTokenType"
@@ -23,6 +23,7 @@
           />
           <div class="d-flex align-center justify-center py-2">
             <v-icon
+              class="pointer"
               color="textDark"
               size="30px"
               :disabled="!enableTokenSwitch"
@@ -30,7 +31,6 @@
               >mdi-swap-vertical</v-icon
             >
           </div>
-
           <!-- =============================================================== -->
           <!-- You Receive -->
           <!-- =============================================================== -->
@@ -91,14 +91,13 @@
               :not-enough-eth="notEnoughEth"
               :from-eth="isFromTokenMain"
               is-swap
-              class="mb-3"
             />
             <mew-button
               title="Proceed"
               :has-full-width="true"
               :disabled="disableNext"
               btn-size="xlarge"
-              class="NextButton"
+              class="NextButton mt-7"
               @click.native="showConfirm()"
             />
           </div>
@@ -228,12 +227,6 @@
         </div>
       </app-user-msg-block>
     </div>
-
-    <!-- =============================================================================================================== -->
-    <!-- =============================================================================================================== -->
-    <!-- =============================================================================================================== -->
-    <!-- =============================================================================================================== -->
-    <!-- =============================================================================================================== -->
 
     <mew6-white-sheet>
       <mew-module
@@ -1507,8 +1500,7 @@ export default {
             if (this.tokenInValue === this.cachedAmount) {
               this.selectedProvider = {};
               if (providers.length) {
-                this.lastSetToken =
-                  providers[0]?.transactions?.[0].value || providers[0].amount;
+                this.lastSetToken = providers[0].amount;
                 this.availableQuotes = providers.reduce((arr, p) => {
                   if (
                     providers.length === 1 ||
@@ -1523,10 +1515,10 @@ export default {
                   }
                   return arr;
                 }, []);
-                console.log(providers[0]);
                 this.tokenOutValue = providers[0].amount;
+                this.step = 2;
+                this.setProvider(0, true);
               }
-              this.step = 1;
               this.isLoadingProviders = false;
             } else {
               this.isLoadingProviders = false;
@@ -1873,5 +1865,8 @@ export default {
       text-align: right !important;
     }
   }
+}
+.pointer {
+  cursor: pointer;
 }
 </style>

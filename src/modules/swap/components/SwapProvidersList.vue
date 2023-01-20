@@ -7,7 +7,7 @@
     -->
     <v-dialog v-model="show" max-width="300px">
       <v-sheet class="pa-3">
-        <v-item-group v-if="canShow" :value="0">
+        <v-item-group v-if="canShow" :value="selectedProviderId">
           <v-row no-gutters>
             <v-col>
               <div
@@ -239,7 +239,7 @@ export default {
         const returnedList = list.reduce((arr, item) => {
           if (item) {
             const formatted = formatFloatingPointValue(item.rate * 100);
-            const formattedAmt = formatFloatingPointValue(item.amount);
+            const formattedAmt = formatFloatingPointValue(item.to_amount);
             arr.push({
               rate: formatted.value,
               amount: formattedAmt.value,
