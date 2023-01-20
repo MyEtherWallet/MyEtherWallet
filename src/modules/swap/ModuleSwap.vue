@@ -91,6 +91,7 @@
               :not-enough-eth="notEnoughEth"
               :from-eth="isFromTokenMain"
               is-swap
+              @onLocalGasPrice="handleLocalGasPrice"
             />
             <mew-button
               title="Proceed"
@@ -783,6 +784,9 @@ export default {
       }, []);
     },
     txFee() {
+      console.log(
+        toBN(this.totalGasLimit).mul(toBN(this.localGasPrice)).toString()
+      );
       return toBN(this.totalGasLimit).mul(toBN(this.localGasPrice)).toString();
     },
     totalCost() {

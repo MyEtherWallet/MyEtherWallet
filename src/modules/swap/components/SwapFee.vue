@@ -38,19 +38,28 @@ import { mapGetters, mapActions, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 //import { estimatedTime } from '@/core/helpers/gasPriceHelper';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import AppNetworkSettingsModal from '@/core/components/AppNetworkSettingsModal.vue';
+import AppFeeNote from '@/core/components/AppFeeNote.vue';
 export default {
   name: 'SwapFee',
   components: {
-    AppNetworkSettingsModal: () =>
-      import('@/core/components/AppNetworkSettingsModal.vue'),
-    AppFeeNote: () => import('@/core/components/AppFeeNote.vue')
+    AppNetworkSettingsModal,
+    AppFeeNote
   },
   mixins: [handlerAnalytics],
   props: {
-    // error: {
-    //   type: String,
-    //   default: ''
-    // },
+    showFee: {
+      type: Boolean,
+      default: false
+    },
+    gettingFee: {
+      type: Boolean,
+      default: false
+    },
+    error: {
+      type: String,
+      default: ''
+    },
     txFee: {
       type: String,
       default: '0'
@@ -60,6 +69,10 @@ export default {
       default: '0'
     },
     notEnoughEth: {
+      type: Boolean,
+      default: false
+    },
+    fromEth: {
       type: Boolean,
       default: false
     },
@@ -140,6 +153,7 @@ export default {
       });
     },
     handleLocalGasPrice(val) {
+      console.log(val);
       this.$emit('onLocalGasPrice', val);
     },
     showHighNote() {
