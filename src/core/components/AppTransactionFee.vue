@@ -141,7 +141,6 @@ import BigNumber from 'bignumber.js';
 import { fromWei } from 'web3-utils';
 
 import AppNetworkSettingsModal from './AppNetworkSettingsModal.vue';
-import AppModal from '@/core/components/AppModal.vue';
 import {
   formatFiatValue,
   formatFloatingPointValue
@@ -153,7 +152,7 @@ import buyMore from '@/core/mixins/buyMore.mixin.js';
 import AppFeeNote from './AppFeeNote.vue';
 export default {
   name: 'AppTransactionFee',
-  components: { AppNetworkSettingsModal, AppModal, AppFeeNote },
+  components: { AppNetworkSettingsModal, AppFeeNote },
   mixins: [buyMore, handlerAnalytics],
   props: {
     showFee: {
