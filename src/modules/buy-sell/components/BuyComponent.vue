@@ -7,7 +7,7 @@
       <div class="font-weight-medium textDark--text mb-2">
         How much do you want to spend?
       </div>
-      <div class="d-flex align-start">
+      <div class="d-flex align-center">
         <mew-input
           v-model="amount"
           hide-clear-btn
@@ -18,7 +18,7 @@
         />
         <mew-select
           v-model="selectedFiat"
-          style="max-width: 135px"
+          style="max-width: 135px; margin-top: -30px"
           :items="fiatCurrencyItems"
           is-custom
           class="selectedFiat no-left-border"
@@ -272,7 +272,7 @@ export default {
       return this.isEUR ? '0.7%' : '3.25%';
     },
     selectedCryptoName() {
-      return this.selectedCurrency.symbol;
+      return this.selectedCurrency?.symbol ? this.selectedCurrency.symbol : '';
     },
     isEUR() {
       return this.selectedFiatName === 'EUR' || this.selectedFiatName === 'GBP';
@@ -576,7 +576,7 @@ export default {
         isEmpty(this.amount) ||
         this.min.gt(this.amount) ||
         isNaN(this.amount) ||
-        this.maxVal.lt(this.amount) ||
+        this.max.simplex.lt(this.amount) ||
         this.amountErrorMessages !== ''
       )
         return;
@@ -675,7 +675,7 @@ export default {
   right: 20px;
 }
 .token-select-button {
-  height: 56px;
+  height: 62px;
   border: 1px solid var(--v-inputBorder-base);
   border-radius: 0 8px 8px 0;
   width: 135px;
@@ -691,7 +691,7 @@ export default {
 <style lang="scss">
 .moonpay-buy-component {
   .v-input__slot {
-    height: 47px !important;
+    height: 62px !important;
   }
 
   .no-right-border {
@@ -701,14 +701,6 @@ export default {
   }
   .no-left-border fieldset {
     border-radius: 0 8px 8px 0 !important;
-  }
-}
-</style>
-
-<style lang="scss">
-.moonpay-buy-component {
-  .v-input__slot {
-    height: 62px !important;
   }
 }
 </style>

@@ -313,7 +313,7 @@ export default {
     title() {
       return this.resolvedName
         ? this.resolvedName
-        : 'My Personal Account'.toUpperCase();
+        : 'Portfolio Value'.toUpperCase();
     },
     /**
      * verify address title

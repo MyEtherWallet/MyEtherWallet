@@ -317,7 +317,7 @@ export default {
       showLogoutPopup: false,
       routeNetworks: {
         [ROUTES_WALLET.SWAP.NAME]: [ETH, BSC, MATIC],
-        [ROUTES_WALLET.NFT_MANAGER.NAME]: [ETH]
+        [ROUTES_WALLET.NFT_MANAGER.NAME]: [ETH, BSC, MATIC]
       },
       footer: {
         text: 'Need help?',
@@ -396,7 +396,7 @@ export default {
     },
     sectionTwo() {
       if (this.online) {
-        return [
+        const sectionTwo = [
           {
             title: this.$t('interface.menu.swap'),
             icon: swap,
@@ -420,14 +420,21 @@ export default {
               this.openQR = true;
             },
             button: true
-          },
-          {
+          }
+        ];
+        if (
+          this.network.type.name === ETH.name ||
+          this.network.type.name === BSC.name ||
+          this.network.type.name === MATIC.name
+        ) {
+          sectionTwo.push({
             title: this.$t('interface.menu.buy-sell'),
             icon: buy,
             fn: this.openBuySell,
             button: true
-          }
-        ];
+          });
+        }
+        return sectionTwo;
       }
       return [];
     },
@@ -501,6 +508,10 @@ export default {
       if (newVal && this.$route.name == ROUTES_WALLET.SWAP.NAME) {
         this.trackSwap('switchingNetworkOnSwap');
       }
+    },
+    navOpen(newVal) {
+      if (this.isOpenNetworkOverlay && !newVal)
+        this.isOpenNetworkOverlay = false;
     }
   },
   mounted() {

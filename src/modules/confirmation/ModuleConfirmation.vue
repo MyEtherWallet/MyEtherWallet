@@ -35,7 +35,7 @@
         <v-card-text ref="scrollableContent" class="py-0 px-4 px-md-0">
           <div class="px-4 py-6 pr-6 textBlack2--text border-radius--5px mb-5">
             <b>Please double check everything.</b> MEW team will not be able to
-            reverse your transaction once its submitted. You will still be
+            reverse your transaction once it's submitted. You will still be
             charged gas fee even if the transaction fails.
             <a
               :href="getArticle('my-txn-failed-charged')"
@@ -95,9 +95,8 @@
             </div>
             <span class="textBlack2--text ml-2">
               <b>Using Ledger?</b> Consider turning off 'debug data' before
-              proceeding. Additional steps associated with the 'debug
-              <br />
-              feature' on Ledger may be required to approve this transaction.
+              proceeding. Additional steps associated with the 'debug feature'
+              on Ledger may be required to approve this transaction.
             </span>
           </div>
           <!-- transaction details -->

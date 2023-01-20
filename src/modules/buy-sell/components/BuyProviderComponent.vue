@@ -163,7 +163,7 @@
 
 <script>
 import MultiCoinValidator from 'multicoin-address-validator';
-import { mapGetters, mapActions, mapState } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import { LOCALE } from '../helpers';
@@ -246,7 +246,6 @@ export default {
     }
   },
   methods: {
-    ...mapActions('global', ['setNetwork']),
     isValidToAddress(address) {
       return MultiCoinValidator.validate(address, this.selectedCurrency.symbol);
     },

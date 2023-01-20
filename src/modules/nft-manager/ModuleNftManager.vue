@@ -73,7 +73,7 @@
                 <h5 class="font-weight-bold">
                   {{ selectedContract.name }}
                 </h5>
-                <div>Total: {{ selectedContract.count }}</div>
+                <div>Total: {{ selectedContract.total }}</div>
               </div>
               <div v-if="displayedTokens && displayedTokens.length === 0">
                 Loading ...
@@ -92,7 +92,6 @@
                   <nft-manager-details
                     :loading="loadingTokens"
                     :on-click="openNftSend"
-                    :get-image-url="getImageUrl"
                     :token="token"
                   />
                 </div>
@@ -127,7 +126,6 @@
         <nft-manager-send
           v-if="onNftSend"
           :close="closeNftSend"
-          :get-image-url="getImageUrl"
           :nft="selectedNft"
           :nft-category="selectedContract.name"
           :send="sendTx"
@@ -154,7 +152,7 @@ import {
 import getService from '@/core/helpers/getService';
 
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
-import { ETH } from '@/utils/networks/types';
+import { ETH, BSC, MATIC } from '@/utils/networks/types';
 import { toBNSafe } from '@/core/helpers/numberFormatHelper';
 
 import NFT from './handlers/handlerNftManager';
@@ -199,32 +197,31 @@ export default {
      */
     tabs() {
       return this.contracts.map(item => {
-        return { name: `${item.name} (${item.count})` };
+        let tabName = `${item.name} (${item.count})`;
+        if (tabName.length > 25) {
+          tabName = item.name.substring(0, 20);
+          tabName += `... (${item.count})`;
+        }
+        return { name: tabName };
       });
     },
     tokens() {
       if (this.nftApiResponse.length > 0) {
-        const contract = this.nftApiResponse.find(item => {
+        const contract = this.nftApiResponse.filter(item => {
           return (
             item.contract_address.toLowerCase() ===
-            this.selectedContract.contract
+            this.selectedContract.contract.toLowerCase()
           );
         });
         if (contract) {
-          return contract.assets.map(item => {
-            const getImage =
-              item.urls.length > 0
-                ? item.urls.find(obj => {
-                    if (obj.type === 'IMAGE') return obj;
-                  })
-                : '';
-
-            const url = getImage ? getImage.url : '';
+          return contract.map(item => {
+            const url = item.image_url ? item.image_url : '';
             return {
               image: `https://img.mewapi.io/?image=${url}`,
-              name: item.name,
+              name: item.name || item.token_id,
               token_id: item.token_id,
-              contract: contract.contract_address
+              contract: item.contract_address,
+              erc721: item.contract.type === 'ERC721'
             };
           });
         }
@@ -233,13 +230,23 @@ export default {
     },
     contracts() {
       if (this.nftApiResponse.length > 0) {
-        return this.nftApiResponse.map(item => {
-          return {
-            contract: item.contract_address,
-            count: item.assets.length,
-            name: item.contract_name
-          };
-        });
+        // Organize contracts by address
+        return this.nftApiResponse.reduce((arr, item) => {
+          const nftAmount = item.queried_wallet_balances[0].quantity;
+          const inList = arr.find(i => i.contract === item.contract_address);
+          if (inList) {
+            inList.count++;
+            inList.total += nftAmount;
+          } else {
+            arr.push({
+              contract: item.contract_address,
+              count: 1,
+              total: nftAmount,
+              name: item.contract.name || item.collection.name
+            });
+          }
+          return arr;
+        }, []);
       }
       return [];
     },
@@ -277,6 +284,18 @@ export default {
      */
     isValid() {
       return this.nft.isValidAddress(this.toAddress) && this.enoughFunds;
+    },
+    /**
+     * Check if network is supported
+     */
+    supportedNetwork() {
+      return this.supportedNetworks.includes(this.network.type.name);
+    },
+    /**
+     * List of supported networks
+     */
+    supportedNetworks() {
+      return [ETH.name, MATIC.name, BSC.name];
     }
   },
   watch: {
@@ -287,23 +306,27 @@ export default {
       this.loadingContracts = true;
       this.loadingTokens = true;
       this.onNftSend = false;
-      this.$router.push({ name: ROUTES_WALLET.NFT_MANAGER.NAME });
-      if (this.network.type.name === ETH.name) {
+      if (this.address)
+        this.$router.push({ name: ROUTES_WALLET.NFT_MANAGER.NAME });
+      if (this.supportedNetwork) {
         this.setUpNFT();
       } else {
-        Toast(
-          `NFT Manager not supported in network: ${this.network.type.name}`,
-          {},
-          WARNING
-        );
-        this.nftApiResponse = [];
+        setTimeout(() => {
+          Toast(
+            `NFT Manager not supported in network: ${this.network.type.name}`,
+            {},
+            WARNING
+          );
+          this.nftApiResponse = [];
+        }, 1000);
       }
     },
     address() {
       this.loadingContracts = true;
       this.loadingTokens = true;
       this.onNftSend = false;
-      this.$router.push({ name: ROUTES_WALLET.NFT_MANAGER.NAME });
+      if (this.address)
+        this.$router.push({ name: ROUTES_WALLET.NFT_MANAGER.NAME });
       this.setUpNFT();
     },
     contracts(newVal) {
@@ -314,6 +337,7 @@ export default {
     async toAddress(newVal) {
       if (isAddress(newVal)) {
         const gasTypeFee = this.gasPriceByType(this.gasPriceType);
+        this.localGasPrice = gasTypeFee;
         const gasFees = await this.nft.getGasFees(newVal, this.selectedNft);
         const gasFeesToBN = toBNSafe(gasFees).mul(toBNSafe(gasTypeFee));
         this.gasFees = gasFeesToBN.toString();
@@ -333,6 +357,7 @@ export default {
   },
   methods: {
     setUpNFT() {
+      if (!this.supportedNetwork) return;
       /**
        * Init NFT Handler
        */
@@ -367,9 +392,6 @@ export default {
         this.showBalanceError = true;
       }
     },
-    getImageUrl(token) {
-      return this.nft.getImageUrl(token.contract, token.token_id);
-    },
     onTab(val) {
       this.activeTab = val;
       this.selectedContract = this.contracts[val];
@@ -394,8 +416,11 @@ export default {
     async sendTx() {
       if (this.isValid) {
         try {
+          let gasPrice = undefined;
+          if (this.network.type.name === 'MATIC')
+            gasPrice = `0x${toBN(this.localGasPrice).toString('hex')}`;
           this.nft
-            .send(this.toAddress, this.selectedNft)
+            .send(this.toAddress, this.selectedNft, gasPrice)
             .then(response => {
               this.updateValues();
               this.enoughFunds = true;
