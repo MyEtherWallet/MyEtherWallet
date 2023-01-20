@@ -68,6 +68,10 @@ const setBaseFeePerGas = function ({ commit }, valBN) {
   commit('SET_BASE_FEE_PER_GAS', valBN);
 };
 
+const setDarkMode = function ({ commit }, val) {
+  commit('SET_DARK_MODE', val);
+};
+
 export default {
   updateGasPrice,
   setOnlineStatus,
@@ -80,5 +84,6 @@ export default {
   setImportedState,
   addLocalContract,
   setMaxPriorityFeePerGas,
-  setBaseFeePerGas
+  setBaseFeePerGas,
+  setDarkMode
 };

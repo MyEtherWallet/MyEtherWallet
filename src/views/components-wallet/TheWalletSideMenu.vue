@@ -199,12 +199,12 @@
 
         <div class="mt-3 px-8">
           <v-switch
-            v-model="$vuetify.theme.dark"
+            v-model="darkMode"
             class="tracking-switch"
             hide-details
             dark
             inset
-            :label="`Dark theme is ${$vuetify.theme.dark ? 'On' : 'Off'}`"
+            :label="`Dark theme is ${darkMode ? 'On' : 'Off'}`"
             color="white"
             off-icon="mdi-alert-circle"
           />
@@ -323,7 +323,8 @@ export default {
         text: 'Need help?',
         linkTitle: 'Contact support',
         link: 'mailto:support@myetherwallet.com'
-      }
+      },
+      darkMode: false
     };
   },
   computed: {
@@ -504,6 +505,10 @@ export default {
     }
   },
   watch: {
+    darkMode(val) {
+      this.setDarkMode(val);
+      this.$vuetify.theme.dark = val;
+    },
     isOpenNetworkOverlay(newVal) {
       if (newVal && this.$route.name == ROUTES_WALLET.SWAP.NAME) {
         this.trackSwap('switchingNetworkOnSwap');
@@ -542,6 +547,7 @@ export default {
   },
   methods: {
     ...mapActions('wallet', ['removeWallet']),
+    ...mapActions('global', ['setDarkMode']),
     trackToSwap() {
       this.trackSwap('fromSideMenu');
     },

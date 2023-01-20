@@ -42,7 +42,7 @@ export default {
   computed: {
     ...mapState('custom', ['addressBook']),
     ...mapState('addressBook', ['isMigrated']),
-    ...mapState('global', ['preferredCurrency']),
+    ...mapState('global', ['preferredCurrency', 'darkMode']),
     ...mapState('article', ['timestamp']),
     ...mapGetters('article', ['articleList'])
   },
@@ -50,6 +50,7 @@ export default {
     const succMsg = this.$t('common.updates.new');
     const updateMsg = this.$t('common.updates.update-found');
     const errMsg = this.$t('common.updates.update-error');
+    this.$vuetify.theme.dark = this.darkMode;
     window.addEventListener(PWA_EVENTS.PWA_UPDATED, () => {
       Toast(succMsg, {}, SUCCESS);
     });
