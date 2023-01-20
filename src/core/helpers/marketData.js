@@ -156,6 +156,7 @@ export const setMarketInfo = async function () {
       return tokens;
     });
   setFiatExchangeRates(fiatMarketData);
+  separateNetworkTokens();
   setLastTimestamp(new Date().getTime());
 };
 
@@ -172,6 +173,61 @@ export const setFiatExchangeRates = function (tokens) {
   const state = getState();
   state.fiatInfo = tokens;
 };
+
+export const setNetworkTokens = function (tokens) {
+  const state = getState();
+  state.networkTokens = tokens;
+};
+
+async function separateNetworkTokens() {
+  const currentNetwork = store.getters['global/network'].type;
+  const networkName = currentNetwork.name_long
+    .toLowerCase()
+    .split(' ')
+    .join('-');
+  const unformattedNetworkTokens = new Map();
+  Object.values(getAllTokens()).forEach(token => {
+    if (token.platforms.hasOwnProperty(networkName))
+      unformattedNetworkTokens.set(token.id, token);
+  });
+  console.log('unformattedNetworkTokens', unformattedNetworkTokens);
+  const formattedNetworkTokens = new Map();
+
+  // Iterate through the network tokens and
+  // get the market data 500 tokens at a time
+  const tokenIds = [currentNetwork.coingeckoID];
+  unformattedNetworkTokens.forEach(item => {
+    tokenIds.push(item.id);
+  });
+  console.log('tokenIds', tokenIds);
+  console.log('tokenIds length', tokenIds.length);
+  // Number of passes required to format all tokens
+  const MAX_TOKENS_PER_PASS = 250;
+  const passes = parseInt(tokenIds.length / MAX_TOKENS_PER_PASS) + 1;
+  for (let i = 0; i < passes; i++) {
+    const start = i * MAX_TOKENS_PER_PASS;
+    const end = i !== passes - 1 ? (i + 1) * MAX_TOKENS_PER_PASS : undefined;
+    const tokenIdsSlice = tokenIds.slice(start, end);
+    setTimeout(async () => {
+      const cgTokens = await getMarketData(tokenIdsSlice);
+      console.log('cgTokens', cgTokens);
+      cgTokens.forEach((value, idx) => {
+        console.log('cgtoken value', idx, value);
+        const tokenData = unformattedNetworkTokens.get(value.id);
+        console.log('tokenData', tokenData);
+        formattedNetworkTokens.set(
+          tokenData.platforms[networkName],
+          Object.assign(
+            { contract: tokenData.platforms[networkName] },
+            value,
+            tokenData
+          )
+        );
+      });
+      console.log('formattedNetworkTokens', formattedNetworkTokens);
+    }, 500);
+  }
+}
 
 /**
  * Get a Coingecko data for a token by ID
@@ -265,7 +321,7 @@ export const contractToToken = async contractAddress => {
 };
 
 // Format users tokensList
-// const formatCoinGeckoTokens = async tokens => {
+// const formatCoinGeckoTokens = async tokenIds => {
 //   // Number of passes required to format all tokens
 //   const MAX_TOKENS_PER_PASS = 250;
 //   const passes = tokens.length / MAX_TOKENS_PER_PASS + 1;
