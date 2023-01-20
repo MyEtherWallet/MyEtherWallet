@@ -1,8 +1,8 @@
 <template>
-  <v-sheet color="greyLight" class="border-radius--5px">
+  <v-sheet :color="color" class="border-radius--5px">
     <div v-if="isAlert" class="pa-5">
       <div v-if="message.title !== ''" class="d-flex align-center mb-2">
-        <v-icon color="textDark" class="mr-1 ml-n1">
+        <v-icon v-if="!disableIcon" color="textDark" class="mr-1 ml-n1">
           mdi-alert-circle-outline
         </v-icon>
         <div class="textDark--text font-weight-bold">
@@ -40,6 +40,13 @@ export default {
     containerPadding: {
       type: String,
       default: 'pa-4'
+    },
+    color: {
+      type: String,
+      default: 'greyLight'
+    },
+    disableIcon: {
+      type: Boolean
     }
   },
   data: () => ({})

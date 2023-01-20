@@ -103,29 +103,43 @@
             />
           </div>
         </div>
-      </app-wallet-block>
-
-      <!--
+        <!--
           =====================================================================================
             User Message Block: store your Bitcoin on Ethereum
           =====================================================================================
           -->
-      <app-user-msg-block
-        v-if="!hasMinEth"
-        class="mt-sm-5"
-        :message="msg.lowBalance"
-      >
-        <div class="mt-3 mx-n1">
-          <mew-button
-            btn-size="small"
-            btn-style="outline"
-            :title="`Buy ${network.type.currencyName}`"
-            class="ma-1"
-            :has-full-width="$vuetify.breakpoint.xsOnly"
-            @click.native="openBuySell"
-          />
-        </div>
-      </app-user-msg-block>
+        <app-user-msg-block
+          v-if="!hasMinEth"
+          class="mt-sm-5"
+          color="#eef3fd"
+          disable-icon
+          :message="msg.lowBalance"
+        >
+          <div class="mt-3 mx-n1">
+            <mew-button
+              btn-size="large"
+              class="ma-1 font-weight-bold"
+              color-theme="#4B83E8"
+              has-full-width
+              @click.native="openBuySell"
+            >
+              <v-icon class="pr-1"> mdi-credit-card-outline </v-icon>
+              Buy more {{ network.type.currencyName }}
+            </mew-button>
+            <div class="d-flex justify-center">
+              <div class="blue--text mt-3 mb-3 pointer" @click="goToSend">
+                <v-icon class="pr-1" color="blue">
+                  mdi-arrow-collapse-down
+                </v-icon>
+                <span>
+                  Receive {{ network.type.currencyName }} from a different
+                  account
+                </span>
+              </div>
+            </div>
+          </div>
+        </app-user-msg-block>
+      </app-wallet-block>
 
       <!--
             =====================================================================================
@@ -1820,6 +1834,9 @@ export default {
     },
     preventCharE(e) {
       if (e.key === 'e') e.preventDefault();
+    },
+    goToSend() {
+      this.$router.push('/wallet/send-tx');
     }
   }
 };
