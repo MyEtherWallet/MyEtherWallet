@@ -88,7 +88,22 @@ export default {
   mixins: [handlerAnalytics],
   data() {
     return {
-      ROUTES_PRIVACY_POLICY: ROUTES_HOME.PRIVACY_POLICY.NAME
+      ROUTES_PRIVACY_POLICY: ROUTES_HOME.PRIVACY_POLICY.NAME,
+      whatWeCollect: [
+        {
+          yes: true,
+          text: 'We will only collect basic usage data like event clicks and page-views'
+        },
+        { yes: true, text: 'You can opt-in and out anytime' },
+        {
+          yes: false,
+          text: 'We will never collect your full IP address or exact location'
+        },
+        {
+          yes: false,
+          text: 'We cannot access any personal data: No private keys, nor passwords'
+        }
+      ]
     };
   },
   methods: {
