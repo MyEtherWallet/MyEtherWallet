@@ -1,11 +1,24 @@
 import BigNumber from 'bignumber.js';
+import platformList from '@/_generated/platformlist.json';
 import store from '@/core/store';
 import cacheFetch from './cacheFetch';
+import {
+  formatFiatValue,
+  formatPercentageValue,
+  formatIntegerValue
+} from '@/core/helpers/numberFormatHelper';
+import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
+const FIAT_EXCHANGE_RATE_ENDPOINT =
+  'https://mainnet.mewwallet.dev/v2/prices/exchange-rates';
 const COINGECKO_ENDPOINT = 'https://api.coingecko.com/api/v3/';
 const REFRESH_DELAY = 1000 * 60 * 5;
 
+function getState() {
+  return store.state.external;
+}
+
 export const getLastTimestamp = function () {
-  const state = store.state.external;
+  const state = getState();
   const timestamp = state.lastTimestamp;
   if (timestamp) return timestamp;
   return null;
@@ -19,7 +32,7 @@ export const getLastTimestamp = function () {
  * @returns Token's fiat value as a string
  */
 export const getTokenValue = async (tokenBalance, coingeckoID, fiatSymbol) => {
-  // setMarketInfo before calling
+  await setMarketInfo();
   const balanceBN = new BigNumber(tokenBalance);
   const market = (await getMarketData([coingeckoID]))[0];
   const fiat = await getFiatValue(fiatSymbol);
@@ -51,7 +64,7 @@ export const getTokenPrice = async (coingeckoID, currency = 'usd') => {
 };
 
 export const getMarketInfoByContracts = async (contracts, platformId) => {
-  // setMarketInfo before calling
+  await setMarketInfo();
   const allTokens = Object.values(await getAllTokens());
   const requested = {};
   const contractTokenMap = {};
@@ -100,19 +113,189 @@ export const getMarketData = async coingeckoIDs => {
 };
 
 export const getFiatValue = async symbol => {
-  // setMarketInfo before calling
-  const state = store.state.external;
-  const allFiatData = state.fiatInfo;
+  await setMarketInfo();
+  const allFiatData = getState().fiatInfo;
   if (allFiatData[symbol]) return allFiatData[symbol];
   return null;
 };
 
 export const getAllTokens = () => {
-  const state = store.state.external;
-  return state.allTokens;
+  return getState().allTokens;
 };
 
 export const getCache = hash => {
-  const state = store.state.external;
-  return state.cache[hash];
+  return getState().cache[hash];
 };
+
+export const setMarketInfo = async function () {
+  const lastTimestamp = getLastTimestamp();
+  if (lastTimestamp && lastTimestamp >= new Date().getTime() - REFRESH_DELAY)
+    return;
+  const allCoins = await fetch(
+    `${COINGECKO_ENDPOINT}coins/list?include_platform=true`
+  )
+    .then(res => res.json())
+    .then(json => {
+      const allTokens = json;
+      const tokens = {};
+      allTokens.forEach(token => {
+        tokens[token.id] = token;
+      });
+      // Format tokens to contain contract and platforms?
+      return tokens;
+    });
+  setAllTokens(allCoins);
+  const fiatMarketData = await fetch(`${FIAT_EXCHANGE_RATE_ENDPOINT}`)
+    .then(res => res.json())
+    .then(json => {
+      const topMarkets = json;
+      const tokens = {};
+      topMarkets.forEach(token => {
+        tokens[token.fiat_currency] = token;
+      });
+      return tokens;
+    });
+  setFiatExchangeRates(fiatMarketData);
+  setLastTimestamp(new Date().getTime());
+};
+
+export const setAllTokens = function (tokens) {
+  const state = getState();
+  state.allTokens = tokens;
+};
+
+export const setLastTimestamp = function (timestamp) {
+  const state = getState();
+  state.lastTimestamp = timestamp;
+};
+export const setFiatExchangeRates = function (tokens) {
+  const state = getState();
+  state.fiatInfo = tokens;
+};
+
+/**
+ * Get a Coingecko data for a token by ID
+ * @param {string} cgid Coingecko ID of token
+ * @returns Coingecko token object
+ */
+export const getCoinGeckoTokenById = async cgid => {
+  const cgToken = await getMarketData([cgid]).then(tokens => tokens[0]);
+  const tokenData = getAllTokens()[cgid];
+  const currentNetwork = store.getters['global/network'].type;
+  const networkName = currentNetwork.name_long
+    .toLowerCase()
+    .split(' ')
+    .join('-');
+  console.log('networkName', networkName);
+  console.log('tokenData', tokenData);
+  console.log('cgToken', cgToken);
+  return {
+    name: cgToken ? cgToken.symbol.toUpperCase() : '',
+    symbol: cgToken ? cgToken.symbol.toUpperCase() : '',
+    subtext: cgToken ? cgToken.name : '',
+    value: cgToken ? cgToken.name : '',
+    img: cgToken ? `https://img.mewapi.io/?image=${cgToken.image}` : '',
+    market_cap: cgToken ? cgToken.market_cap : '0',
+    market_capf: cgToken ? formatIntegerValue(cgToken.market_cap).value : '0',
+    price_change_percentage_24h: cgToken
+      ? cgToken.price_change_percentage_24h
+      : '0',
+    price_change_percentage_24hf:
+      cgToken && cgToken.price_change_percentage_24h
+        ? formatPercentageValue(cgToken.price_change_percentage_24h).value
+        : '0',
+    price: cgToken ? cgToken.current_price : '0',
+    pricef: cgToken ? formatFiatValue(cgToken.current_price).value : '0',
+    contract:
+      currentNetwork.coingeckoID === cgid
+        ? MAIN_TOKEN_ADDRESS
+        : tokenData.platforms[networkName],
+    platforms: tokenData.platforms
+  };
+};
+
+/**
+ * Get Token info including market data if exists
+ */
+export const contractToToken = async contractAddress => {
+  if (!contractAddress) {
+    return null;
+  }
+  const rootGetters = store.getters;
+  const state = getState();
+  contractAddress = contractAddress.toLowerCase();
+  let tokenId = platformList[contractAddress];
+  const tokenData = getAllTokens()[tokenId]; // Object: {platforms, id, name, symbol}
+  console.log('tokenData', tokenData);
+  let cgToken;
+  if (contractAddress === MAIN_TOKEN_ADDRESS) {
+    tokenId = rootGetters['global/network'].type.coingeckoID;
+    return await getCoinGeckoTokenById(tokenId).then(token => {
+      cgToken = token;
+      console.log('cgToken contractToToken', cgToken);
+      const networkType = rootGetters['global/network'].type;
+      return Object.assign(cgToken, {
+        name: networkType.currencyName,
+        symbol: networkType.currencyName,
+        subtext: networkType.name_long,
+        value: networkType.name_long,
+        // contract: MAIN_TOKEN_ADDRESS,
+        img: cgToken.img !== '' ? cgToken.img : networkType.icon,
+        decimals: 18
+      });
+    });
+  }
+  return await getCoinGeckoTokenById(tokenId).then(token => {
+    cgToken = token;
+    console.log('cgToken contractToToken (network)', cgToken);
+    const networkToken = state.networkTokens.get(contractAddress);
+    console.log('networkToken', networkToken);
+
+    if (!networkToken) return null;
+    return Object.assign(cgToken, {
+      name: networkToken.name,
+      symbol: networkToken.symbol,
+      subtext: networkToken.name,
+      value: networkToken.name,
+      // contract: networkToken.address,
+      img: networkToken.icon_png ? networkToken.icon_png : '',
+      decimals: networkToken.decimals
+    });
+  });
+};
+
+// const formatCoinGeckoTokens = async tokens => {
+//   const passes = tokens.length / 500;
+//   const cgToken = await getMarketData([token.id]).then(tokens => tokens[0]);
+//   const currentNetwork = store.getters.global.network.type;
+//   const networkName = currentNetwork.name_long
+//     .toLowerCase()
+//     .split(' ')
+//     .join('-');
+//   console.log('networkName', networkName);
+//   console.log('token', token);
+//   console.log('cgToken', cgToken);
+//   return {
+//     name: cgToken ? cgToken.symbol.toUpperCase() : '',
+//     symbol: cgToken ? cgToken.symbol.toUpperCase() : '',
+//     subtext: cgToken ? cgToken.name : '',
+//     value: cgToken ? cgToken.name : '',
+//     img: cgToken ? `https://img.mewapi.io/?image=${cgToken.image}` : '',
+//     market_cap: cgToken ? cgToken.market_cap : '0',
+//     market_capf: cgToken ? formatIntegerValue(cgToken.market_cap).value : '0',
+//     price_change_percentage_24h: cgToken
+//       ? cgToken.price_change_percentage_24h
+//       : '0',
+//     price_change_percentage_24hf:
+//       cgToken && cgToken.price_change_percentage_24h
+//         ? formatPercentageValue(cgToken.price_change_percentage_24h).value
+//         : '0',
+//     price: cgToken ? cgToken.current_price : '0',
+//     pricef: cgToken ? formatFiatValue(cgToken.current_price).value : '0',
+//     contract:
+//       currentNetwork.coingeckoID === token.id
+//         ? MAIN_TOKEN_ADDRESS
+//         : token.platforms[networkName],
+//     platforms: token.platforms
+//   };
+// };
