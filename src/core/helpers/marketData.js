@@ -264,8 +264,15 @@ export const contractToToken = async contractAddress => {
   });
 };
 
+// Format users tokensList
 // const formatCoinGeckoTokens = async tokens => {
-//   const passes = tokens.length / 500;
+//   // Number of passes required to format all tokens
+//   const MAX_TOKENS_PER_PASS = 250;
+//   const passes = tokens.length / MAX_TOKENS_PER_PASS + 1;
+//   const remainder = tokens.length % MAX_TOKENS_PER_PASS;
+//   for (let i = 0; i < passes; i++) {
+//     for ()
+//   }
 //   const cgToken = await getMarketData([token.id]).then(tokens => tokens[0]);
 //   const currentNetwork = store.getters.global.network.type;
 //   const networkName = currentNetwork.name_long
