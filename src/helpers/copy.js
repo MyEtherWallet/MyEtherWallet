@@ -4,4 +4,4 @@ function copyValue(value) {
   });
 }
 
-export default copyValue; 
+export default copyValue;
