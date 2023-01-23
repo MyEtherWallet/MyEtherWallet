@@ -70,7 +70,12 @@ export default {
       'isOfflineApp',
       'instance'
     ]),
-    ...mapState('global', ['online', 'gasPriceType', 'baseGasPrice']),
+    ...mapState('global', [
+      'online',
+      'gasPriceType',
+      'baseGasPrice',
+      'darkMode'
+    ]),
     ...mapState('external', ['coinGeckoTokens']),
     ...mapState('popups', [
       'enkryptWalletPopup',
@@ -120,6 +125,7 @@ export default {
     }
   },
   mounted() {
+    this.$vuetify.theme.dark = this.darkMode;
     EventBus.$on('openPaperWallet', () => {
       this.showPaperWallet = true;
       this.$router.push({

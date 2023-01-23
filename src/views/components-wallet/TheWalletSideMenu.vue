@@ -199,12 +199,12 @@
 
         <div class="mt-3 px-8">
           <v-switch
-            v-model="darkMode"
+            v-model="locDarkMode"
             class="tracking-switch"
             hide-details
             dark
             inset
-            :label="`Dark theme is ${darkMode ? 'On' : 'Off'}`"
+            :label="`Dark theme is ${locDarkMode ? 'On' : 'Off'}`"
             color="white"
             off-icon="mdi-alert-circle"
           />
@@ -308,6 +308,7 @@ export default {
   },
   mixins: [handlerAnalytics],
   data() {
+    const locDarkMode = this.$vuetify.theme.dark;
     return {
       isOpenNetworkOverlay: false,
       navOpen: null,
@@ -324,11 +325,11 @@ export default {
         linkTitle: 'Contact support',
         link: 'mailto:support@myetherwallet.com'
       },
-      darkMode: false
+      locDarkMode: locDarkMode
     };
   },
   computed: {
-    ...mapGetters('global', ['network', 'isEthNetwork', 'hasSwap']),
+    ...mapGetters('global', ['network', 'isEthNetwork', 'hasSwap', 'darkMode']),
     ...mapState('wallet', ['instance', 'isOfflineApp']),
     ...mapState('global', ['online', 'validNetwork']),
     ...mapState('popups', ['consentToTrack']),
@@ -505,7 +506,10 @@ export default {
     }
   },
   watch: {
-    darkMode(val) {
+    '$vuetify.theme.dark': function (val) {
+      this.locDarkMode = val;
+    },
+    locDarkMode(val) {
       this.setDarkMode(val);
       this.$vuetify.theme.dark = val;
     },
@@ -588,6 +592,7 @@ export default {
     },
     onLogout() {
       this.showLogoutPopup = false;
+      this.$vuetify.theme.dark = false;
       this.removeWallet();
     },
     toggleLogout() {
