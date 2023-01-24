@@ -1,8 +1,8 @@
 <template>
   <app-simple-dialog
     :value="gasPriceModal"
-    width="420"
-    title="Select transaction fee"
+    :width="width"
+    :title="title"
     @close="handleClose"
   >
     <settings-gas-price
@@ -33,6 +33,14 @@ export default {
   },
   mixins: [gasPriceMixin, handlerAnalytics],
   props: {
+    title: {
+      type: String,
+      default: 'Select transaction fee'
+    },
+    width: {
+      type: String,
+      default: '420'
+    },
     gasPriceModal: {
       type: Boolean,
       default: false

@@ -1,6 +1,7 @@
 <template>
   <div>
     <app-network-settings-modal
+      title="Transaction Fee"
       :close="closeGasPrice"
       :gas-price-modal="gasPriceModal"
       :not-enough-eth="notEnoughEth"

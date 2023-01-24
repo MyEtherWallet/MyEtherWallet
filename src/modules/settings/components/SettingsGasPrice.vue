@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="textMedium--text mb-5">
+    <div v-if="fromSettings" class="textMedium--text mb-5">
       This fee is charged by the Ethereum network and fluctuates depending on
       network traffic. MEW does not profit from this fee.
     </div>
@@ -59,44 +59,42 @@
                 v-if="b.title === gasPriceTypes.ECONOMY"
                 class="secondary--text mr-2"
               >
-                {{ economyInEth }} {{ currencyName }}
+                {{ economyInEth }}
               </div>
               <div
                 v-if="b.title === gasPriceTypes.REGULAR"
                 class="secondary--text mr-2"
               >
-                {{ regularInEth }} {{ currencyName }}
+                {{ regularInEth }}
               </div>
               <div
                 v-if="b.title === gasPriceTypes.FAST"
                 class="secondary--text mr-2"
               >
-                {{ fastInEth }} {{ currencyName }}
-              </div>
-              <div
-                v-if="b.title === gasPriceTypes.ECONOMY"
-                class="textLight--text"
-              >
-                {{ economyInUsd }}
-              </div>
-              <div
-                v-if="b.title === gasPriceTypes.REGULAR"
-                class="textLight--text"
-              >
-                {{ regularInUsd }}
-              </div>
-              <div
-                v-if="b.title === gasPriceTypes.FAST"
-                class="textLight--text"
-              >
-                {{ fastInUsd }}
+                {{ fastInEth }}
               </div>
             </div>
           </div>
         </div>
-
+        <div v-if="!fromSettings" class="d-flex align-center">
+          <div
+            v-if="b.title === gasPriceTypes.ECONOMY"
+            class="greenPrimary--text"
+          >
+            {{ economyInUsd }}
+          </div>
+          <div
+            v-if="b.title === gasPriceTypes.REGULAR"
+            class="greenPrimary--text"
+          >
+            {{ regularInUsd }}
+          </div>
+          <div v-if="b.title === gasPriceTypes.FAST" class="greenPrimary--text">
+            {{ fastInUsd }}
+          </div>
+        </div>
         <!-- Show Priority Time-->
-        <div class="d-flex align-center">
+        <div v-else class="d-flex align-center">
           <v-icon class="mr-1" color="greenPrimary" small
             >mdi-clock-outline</v-icon
           >
@@ -111,6 +109,10 @@
           Buy more {{ network.type.currencyName }}
         </a>
       </div>
+    </div>
+    <div v-if="!fromSettings" class="textMedium--text mt-5">
+      This fee is charged by the Ethereum network and fluctuates depending on
+      network traffic. MEW does not profit from this fee.
     </div>
   </div>
 </template>
