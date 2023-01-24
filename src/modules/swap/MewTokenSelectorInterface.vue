@@ -289,8 +289,8 @@ export default {
   &.errorBorder {
     border: 2px solid var(--v-redPrimary-base);
   }
-  .pointer {
-    cursor: pointer;
-  }
+}
+.pointer {
+  cursor: pointer;
 }
 </style>
