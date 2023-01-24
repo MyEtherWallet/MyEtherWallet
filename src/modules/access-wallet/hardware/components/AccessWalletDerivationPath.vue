@@ -339,13 +339,15 @@ export default {
      * Sets the custom alias value
      */
     setCustomAlias(val) {
-      this.customAlias = val.trim();
+      if (val) this.customAlias = val.trim();
+      else this.customAlias = '';
     },
     /**
      * Sets the custom path value
      */
     setCustomPath(val) {
-      this.customPath = val.trim();
+      if (val) this.customPath = val.trim();
+      else this.customPath = '';
     },
     /**
      * Method sets searchValue on mew-search input event
