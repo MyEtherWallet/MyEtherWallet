@@ -81,7 +81,8 @@ const EXCEPTIONS = [
   '@ledgerhq/live-common', // issue with imports
   '@commitlint/config-conventional',
   'commitlint',
-  'eslint-plugin-security'
+  'eslint-plugin-security',
+  '@ensdomains/ens-contracts'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
