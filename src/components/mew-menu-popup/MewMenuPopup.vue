@@ -174,8 +174,8 @@ export default {
         !(
           targetEl == this.contentEl ||
           targetEl == this.activatorEl ||
-          this.contentEl.contains(targetEl) ||
-          this.activatorEl.contains(targetEl)
+          (this.contentEl && this.contentEl.contains(targetEl)) ||
+          (this.activatorEl && this.activatorEl.contains(targetEl))
         )
       ) {
         this.show = false;
