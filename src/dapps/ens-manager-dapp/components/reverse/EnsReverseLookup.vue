@@ -98,7 +98,8 @@ export default {
       selectedDomainAddr: '',
       permHandler: {},
       hasReverseRecordNames: false,
-      reverseRecordNames: ''
+      reverseRecordNames: '',
+      domainListItems: []
     };
   },
   computed: {
@@ -111,34 +112,11 @@ export default {
     ...mapGetters('external', ['fiatValue']),
     ...mapState('global', ['gasPriceType']),
     ...mapState('wallet', ['balance', 'web3', 'instance']),
-    domainListItems() {
-      return (
-        this.ensLookupResults?.map(i => {
-          i.loading = true;
-          i.fee = toBNSafe(0);
-          i.error = '';
-          try {
-            this.permHandler.getNameReverseData(i.name).then(gas => {
-              i.fee = toBNSafe(gas * this.gasPrice);
-              if (toBNSafe(this.balance).lt(i.fee)) {
-                i.error = `Insufficient amount of ${this.network.type.currencyName}`;
-              }
-            });
-          } catch {
-            i.error =
-              'An error occurred while retrieving the domain information';
-            i.loading = false;
-            return i;
-          }
-          i.loading = false;
-          return i;
-        }) || []
-      );
-    },
     disableRegister() {
+      if (!this.selectedDomain.loading) return true;
       return (
-        toBNSafe(this.balance).lt(this.selectedDomain.fee) ||
-        !this.selectedDomain.value ||
+        (!this.selectedDomain.value &&
+          toBNSafe(this.balance).lt(this.selectedDomain.fee)) ||
         this.selectedDomain.error.length > 0
       );
     }
@@ -158,6 +136,28 @@ export default {
     if (this.checkNetwork()) await this.setup();
   },
   methods: {
+    async setDomainListItems() {
+      const array = [];
+      this.ensLookupResults?.forEach(async i => {
+        i.loading = true;
+        i.fee = toBNSafe(0);
+        i.error = '';
+        try {
+          const gas = await this.permHandler.getNameReverseData(i.name);
+          i.fee = toBNSafe(gas * this.gasPrice);
+          if (toBNSafe(this.balance).lt(i.fee)) {
+            i.error = `Insufficient amount of ${this.network.type.currencyName}`;
+          }
+        } catch {
+          i.error = 'An error occurred while retrieving the domain information';
+          i.loading = false;
+          return array.push(i);
+        }
+        i.loading = false;
+        return array.push(i);
+      }) || [];
+      this.domainListItems = array;
+    },
     checkNetwork() {
       return metainfo.networks.find(
         item => item.chainID === this.network.type.chainID
@@ -180,6 +180,7 @@ export default {
         this.durationPick
       );
       this.selectedDomain = { loading: false, fee: toBNSafe(0), error: '' };
+      await this.setDomainListItems();
       this.getReverseRecordNames();
     },
     async fetchDomains() {
