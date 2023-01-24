@@ -125,8 +125,8 @@ export default {
     network() {
       if (this.checkNetwork()) this.setup();
     },
-    address() {
-      if (this.checkNetwork()) this.setup();
+    address(addr) {
+      if (this.checkNetwork() && addr) this.setup();
     },
     web3() {
       if (this.checkNetwork()) this.setup();
