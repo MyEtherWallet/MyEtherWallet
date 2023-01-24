@@ -20,8 +20,20 @@
         ></v-col
       >
       <v-col md="auto">
-        <div class="fee-button" @click="openGasPriceModal">
-          {{ feeInUsd }} <v-icon>mdi-chevron-down</v-icon>
+        <div>
+          <span
+            v-if="!error && !gettingFee"
+            class="fee-button"
+            @click="openGasPriceModal"
+          >
+            {{ feeInUsd }} <v-icon>mdi-chevron-down</v-icon>
+          </span>
+          <span v-else-if="gettingFee">
+            Getting Fee <v-icon>mdi-alert-circle-outline</v-icon>
+          </span>
+          <span v-else class="error--text">
+            {{ error }} <v-icon color="error">mdi-alert-circle-outline</v-icon>
+          </span>
         </div>
       </v-col>
     </v-row>
@@ -36,7 +48,6 @@ import {
 } from '@/core/helpers/numberFormatHelper';
 import { mapGetters, mapActions, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
-//import { estimatedTime } from '@/core/helpers/gasPriceHelper';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import AppNetworkSettingsModal from '@/core/components/AppNetworkSettingsModal.vue';
 import AppFeeNote from '@/core/components/AppFeeNote.vue';
@@ -48,10 +59,6 @@ export default {
   },
   mixins: [handlerAnalytics],
   props: {
-    showFee: {
-      type: Boolean,
-      default: false
-    },
     gettingFee: {
       type: Boolean,
       default: false
@@ -69,10 +76,6 @@ export default {
       default: '0'
     },
     notEnoughEth: {
-      type: Boolean,
-      default: false
-    },
-    fromEth: {
       type: Boolean,
       default: false
     },
@@ -102,9 +105,6 @@ export default {
     txFeeFormatted() {
       return formatFloatingPointValue(this.txFeeInEth).value;
     },
-    // actualCostFormatted() {
-    //   return formatFloatingPointValue(this.costInEth).value;
-    // },
     feeInUsd() {
       const value = formatFiatValue(
         BigNumber(this.txFeeInEth).times(this.fiatValue).toFixed(2),
@@ -112,12 +112,6 @@ export default {
       ).value;
       return value;
     }
-    // hasError() {
-    //   return this.error !== '';
-    // },
-    // timeWillTake() {
-    //   return estimatedTime(this.gasPriceType);
-    // }
   },
   watch: {
     gasPriceModal() {

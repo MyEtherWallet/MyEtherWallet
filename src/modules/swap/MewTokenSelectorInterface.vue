@@ -64,42 +64,41 @@
               filled
               placeholder="Search"
               :value="query"
-              @keydown="setQuery"
+              @input="setQuery"
             />
-            <div class="token-container">
+            <div class="token-container" @scroll="handleScroll">
               <div v-for="(t, i) in tokenResults" :key="i" class="mb-3">
-                <v-lazy :options="{ threshold: 0.5 }">
-                  <div v-if="t.header" class="mew-heading-3 text mb-2">
-                    {{ t.header }}
-                  </div>
-                  <div
-                    v-else
-                    :key="t.contract"
-                    class="d-flex align-center pt-2 pb-2"
-                  >
-                    <mew-token-container
-                      size="medium"
-                      class="mr-3"
-                      :img="t.img"
-                    />
-                    <div class="flex-column">
-                      <div>
-                        {{ t.symbol }}
-                      </div>
-                      <div>
-                        {{ t.subtext }}
-                      </div>
+                <div v-if="t.header" class="mew-heading-3 text mb-2">
+                  {{ t.header }}
+                </div>
+                <div
+                  v-else
+                  :key="t.contract"
+                  class="d-flex align-center pt-2 pb-2 pointer"
+                  @click="handleToken(t)"
+                >
+                  <mew-token-container
+                    size="medium"
+                    class="mr-3"
+                    :img="t.img"
+                  />
+                  <div class="flex-column">
+                    <div>
+                      {{ t.symbol }}
                     </div>
-                    <div class="flex-column ml-auto mr-3 mb-auto text-right">
-                      <div>
-                        {{ t.price }}
-                      </div>
-                      <div>
-                        {{ t.balancef }}
-                      </div>
+                    <div>
+                      {{ t.subtext }}
                     </div>
                   </div>
-                </v-lazy>
+                  <div class="flex-column ml-auto mr-3 mb-auto text-right">
+                    <div>
+                      {{ t.price }}
+                    </div>
+                    <div>
+                      {{ t.balancef }}
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </v-sheet>
@@ -171,10 +170,6 @@ export default {
       type: Function,
       default: () => {}
     },
-    swap: {
-      type: Function,
-      default: () => {}
-    },
     btnText: {
       type: String,
       default: ''
@@ -223,7 +218,8 @@ export default {
   data() {
     return {
       show: false,
-      query: ''
+      query: '',
+      page: 1
     };
   },
   computed: {
@@ -232,20 +228,45 @@ export default {
     },
     tokenResults() {
       return this.query
-        ? this.tokens.filter(t => {
-            if (t.header) return;
-            const reg = RegExp(this.query, 'gi');
-            return t.name?.search(reg) || t.subtext?.search(reg);
-          })
-        : this.tokens;
+        ? this.tokens
+            .filter(t => {
+              if (t.header) return;
+              const reg = RegExp(this.query, 'gi');
+              return (
+                t.name?.search(reg) >= 0 ||
+                t.subtext?.search(reg) >= 0 ||
+                t.symbol?.search(reg) >= 0
+              );
+            })
+            .slice(0, this.page * 20)
+        : this.tokens.slice(0, this.page * 20);
     }
   },
   methods: {
     handleShow() {
       this.show = !this.show;
     },
-    setQuery(e) {
-      this.query = e.target.value;
+    setQuery(val) {
+      this.page = 1;
+      this.query = val;
+    },
+    handleScroll(e) {
+      const { target } = e;
+      if (
+        Math.ceil(target.scrollTop) >=
+        target.scrollHeight - target.offsetHeight
+      ) {
+        this.page++;
+      }
+    },
+    handleToken(t) {
+      this.tokenSelect(t);
+      this.reset();
+    },
+    reset() {
+      this.page = 1;
+      this.show = false;
+      this.query = '';
     }
   }
 };
