@@ -22,8 +22,10 @@
               <div class="mew-heading-3 mb-2">{{ fullName }}</div>
               <div class="textMedium--text">Last Block: {{ lastBlock }}</div>
             </div>
-            <div class="custom-token-container pa-2">
-              <img width="100%" :src="icon" />
+            <div
+              class="custom-token-container d-flex align-center justify-center"
+            >
+              <img width="40px" :src="icon" />
             </div>
           </div>
         </v-btn>
@@ -104,16 +106,16 @@ export default {
   border-radius: 12px;
   width: 52px;
   height: 52px;
+  background-color: white;
 }
 </style>
+
 <style lang="scss">
 .mew-component--side-info-network {
   .title-button {
     padding: 8px 16px;
-
     width: 294px;
     height: 68px;
-
     border-radius: 8px;
 
     &:hover {

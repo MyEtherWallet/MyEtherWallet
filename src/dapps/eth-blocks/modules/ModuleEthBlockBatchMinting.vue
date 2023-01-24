@@ -28,7 +28,6 @@
             title="No Eth Blocks added to batch minting!"
             description='To mint blocks in batches, find a block and click on "Add to Batch"'
             theme="info"
-            has-white-background
             hide-close-icon
           />
         </div>

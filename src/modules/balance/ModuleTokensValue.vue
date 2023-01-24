@@ -6,7 +6,7 @@
           <div class="mew-heading-2 mb-3">{{ tokenTitle }}</div>
         </v-col>
         <v-col cols="1" align="right" @click="toggleDropdown">
-          <v-icon style="color: black">{{ chevronIcon }}</v-icon>
+          <v-icon color="textDark">{{ chevronIcon }}</v-icon>
         </v-col>
         <v-col v-if="showTokens && dropdown" cols="12" class="mt-3">
           <v-row
@@ -22,16 +22,20 @@
                 class="token-shadow"
               ></mew-token-container>
             </v-col>
-            <v-col cols="6" class="mt-2 token-balance"
+            <v-col cols="6" class="mt-2 token-balance textDark--text"
               >{{ token.balancef }} {{ token.symbol }}</v-col
             >
-            <v-col cols="4" align="right" class="token-value mt-2">
+            <v-col
+              cols="4"
+              align="right"
+              class="token-value mt-2 textDark--text"
+            >
               {{ token.usdBalancef }}
             </v-col>
           </v-row>
           <v-row justify="start">
             <v-col cols="7">
-              <div class="more-tokens">
+              <div class="more-tokens textDark--text">
                 {{ getText }}
               </div>
             </v-col>
