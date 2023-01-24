@@ -70,7 +70,7 @@
         <mew-button
           btn-size="medium"
           class="flex-grow-1"
-          @click="onClick(false)"
+          @click.native="onClick(false)"
         >
           Accept
         </mew-button>
@@ -114,7 +114,9 @@ export default {
      */
     onClick(val, showAgain) {
       const prom = this.setTrackingConsent(val);
-      if (!showAgain) prom.then(this.NEVER_SHOW_TRACKING);
+      if (!showAgain) {
+        prom.then(this.NEVER_SHOW_TRACKING);
+      }
     }
   }
 };
