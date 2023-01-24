@@ -239,7 +239,9 @@ export default {
         const returnedList = list.reduce((arr, item) => {
           if (item) {
             const formatted = formatFloatingPointValue(item.rate * 100);
-            const formattedAmt = formatFloatingPointValue(item.to_amount);
+            const formattedAmt = formatFloatingPointValue(
+              item.to_amount || item.amount
+            );
             arr.push({
               rate: formatted.value,
               amount: formattedAmt.value,
