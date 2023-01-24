@@ -31,7 +31,7 @@ export default {
   computed: {
     ...mapState('popups', ['enkryptLandingPopup']),
     browser() {
-      const browser = platform.name.toLowerCase();
+      const browser = platform.name?.toLowerCase() || '';
       if (
         browser !== 'chrome' &&
         browser !== 'firefox' &&
