@@ -11,7 +11,7 @@
             :left-text="maxMsg"
             :max-button="setMaxAmount"
             :token-select="setFromToken"
-            right-text="≈ $0"
+            :right-text="fiatBalanceFrom"
             :error="amountErrorMessage"
             selected
             :token="fromTokenType"
@@ -58,7 +58,12 @@
                 <span>What is your refund address?</span>
               </v-col>
               <v-col md="auto">
-                <span>What is this?</span>
+                <mew-tooltip
+                  hide-icon
+                  max-width="240px"
+                  text="The refund address is the wallet you are swapping from. If there is an issue with the swap, your coins will be returned to that address."
+                />
+                <span class="cta pointer"> What is this? </span>
               </v-col>
             </v-row>
             <v-row v-if="isFromNonChain">
@@ -801,7 +806,11 @@ export default {
       return `Balance: ${this.getAvailableBalance().balance}`;
     },
     fiatBalanceFrom() {
-      return `≈ ${this.getFiatValue(this.fromTokenType.usdBalancef)}`;
+      const x = new BigNumber(this.fromTokenType.usdBalance).times(
+        new BigNumber(this.maxAmount)
+      );
+      const balance = x.div(new BigNumber(this.fromTokenType.tokenBalance));
+      return `≈ ${this.getFiatValue(balance)}`;
     },
     fiatBalanceTo() {
       return `≈ ${this.getAvailableBalance().fiat}`;
@@ -1760,6 +1769,9 @@ export default {
 }
 .pointer {
   cursor: pointer;
+}
+.cta {
+  color: #4b83e8;
 }
 </style>
 
