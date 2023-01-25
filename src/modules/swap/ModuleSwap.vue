@@ -148,42 +148,6 @@
           =====================================================================================
           -->
           <app-user-msg-block
-            v-if="!hasMinEth"
-            class="mt-sm-5"
-            color="#eef3fd"
-            disable-icon
-            :message="msg.lowBalance"
-          >
-            <div class="mt-3 mx-n1">
-              <mew-button
-                btn-size="large"
-                class="ma-1 font-weight-bold"
-                color-theme="#4B83E8"
-                has-full-width
-                @click.native="openBuySell"
-              >
-                <v-icon class="pr-1"> mdi-credit-card-outline </v-icon>
-                Buy more {{ network.type.currencyName }}
-              </mew-button>
-              <div class="d-flex justify-center">
-                <div class="blue--text mt-3 mb-3 pointer" @click="goToSend">
-                  <v-icon class="pr-1" color="blue">
-                    mdi-arrow-collapse-down
-                  </v-icon>
-                  <span>
-                    Receive {{ network.type.currencyName }} from a different
-                    account
-                  </span>
-                </div>
-              </div>
-            </div>
-          </app-user-msg-block>
-          <!--
-          =====================================================================================
-            User Message Block: store your Bitcoin on Ethereum
-          =====================================================================================
-          -->
-          <app-user-msg-block
             v-if="
               toTokenType &&
               toTokenType.value &&
@@ -267,6 +231,37 @@
             @click.native="showConfirm()"
           />
         </div>
+        <app-user-msg-block
+          v-if="!hasMinEth"
+          class="mt-sm-5"
+          color="#eef3fd"
+          disable-icon
+          :message="msg.lowBalance"
+        >
+          <div class="mt-3 mx-n1">
+            <mew-button
+              btn-size="large"
+              class="ma-1 font-weight-bold"
+              color-theme="#4B83E8"
+              has-full-width
+              @click.native="openBuySell"
+            >
+              <v-icon class="pr-1"> mdi-credit-card-outline </v-icon>
+              Buy more {{ network.type.currencyName }}
+            </mew-button>
+            <div class="d-flex justify-center">
+              <div class="blue--text mt-3 mb-3 pointer" @click="openQr">
+                <v-icon class="pr-1" color="blue">
+                  mdi-arrow-collapse-down
+                </v-icon>
+                <span>
+                  Receive {{ network.type.currencyName }} from a different
+                  account
+                </span>
+              </div>
+            </div>
+          </div>
+        </app-user-msg-block>
       </app-wallet-block>
     </div>
     <!--
@@ -308,6 +303,7 @@ import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalyti
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 import Swapper from './handlers/handlerSwap';
 import handleError from '../confirmation/handlers/errorHandler';
+import { EventBus } from '@/core/plugins/eventBus';
 const MIN_GAS_LIMIT = 800000;
 let localContractToToken = {};
 export default {
@@ -1721,8 +1717,8 @@ export default {
     handleLocalGasPrice(e) {
       this.localGasPrice = e;
     },
-    goToSend() {
-      this.$router.push('/wallet/send-tx');
+    openQr() {
+      EventBus.$emit('openQrCode');
     }
   }
 };

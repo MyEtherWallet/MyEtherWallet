@@ -521,6 +521,9 @@ export default {
     EventBus.$on('openNetwork', () => {
       this.openNetwork();
     });
+    EventBus.$on('openQrCode', () => {
+      this.openQR = true;
+    });
   },
   beforeDestroy() {
     EventBus.$off('openSettings');
