@@ -26,6 +26,7 @@
           filter-placeholder="Search for Domain"
           :items="domainListItems"
           :error-messages="selectedDomain.error"
+          class="domain-dropdown"
           @input="setDomain"
         >
         </mew-select>
@@ -246,5 +247,13 @@ export default {
 <style lang="scss" scoped>
 .set-button {
   margin-left: 10px;
+}
+</style>
+
+<style lang="scss">
+.domain-dropdown {
+  .v-input__slot {
+    height: 62px;
+  }
 }
 </style>
