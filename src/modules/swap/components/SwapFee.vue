@@ -148,7 +148,6 @@ export default {
       });
     },
     handleLocalGasPrice(val) {
-      console.log(val);
       this.$emit('onLocalGasPrice', val);
     },
     showHighNote() {

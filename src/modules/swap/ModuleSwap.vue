@@ -556,12 +556,6 @@ export default {
         : !isAddress(this.fromTokenType?.contract);
     },
     /**
-     * Returns correct balance to be displayed above From Selection field
-     */
-    displayBalance() {
-      return this.availableBalance.toString();
-    },
-    /**
      * @returns object of all the token data
      * to swap to
      */
@@ -798,9 +792,6 @@ export default {
           : tokenBalance;
       }
       return new BigNumber(0);
-    },
-    availableBalanceFrom() {
-      return this.getAvailableBalance(true);
     },
     availableBalanceTo() {
       return `Balance: ${this.getAvailableBalance().balance}`;
