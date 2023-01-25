@@ -40,19 +40,10 @@
     =====================================================================================
     -->
     <v-col cols="12" md="4" class="pa-2 pa-md-3">
-      <v-row class="ma-n2 ma-md-n3">
-        <v-col cols="12" class="pa-2 pa-md-3 d-none d-md-block">
-          <module-network />
-        </v-col>
-        <v-col
-          v-for="n in totalRightColItems"
-          :key="n"
-          cols="12"
-          class="pa-2 pa-md-3 pb-0"
-        >
-          <slot :name="`rightColItem${n}`" />
-        </v-col>
-      </v-row>
+      <module-network class="d-none d-md-block mb-2" />
+      <div v-for="n in totalRightColItems" :key="n">
+        <slot :name="`rightColItem${n}`" />
+      </div>
     </v-col>
   </v-row>
 </template>

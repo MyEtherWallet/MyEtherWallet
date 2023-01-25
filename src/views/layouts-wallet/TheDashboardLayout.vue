@@ -7,7 +7,7 @@
       <module-tokens />
     </template>
     <template #rightColItem1>
-      <module-swap-rates />
+      <the-draggable-items />
     </template>
     <template #rightColItem2>
       <app-carousel />
@@ -18,10 +18,11 @@
 <script>
 export default {
   components: {
+    TheDraggableItems: () => import('@/views/layouts-wallet/TheDraggableItems'),
     AppCarousel: () => import('@/core/components/AppCarousel'),
     ModuleBalance: () => import('@/modules/balance/ModuleBalance'),
-    ModuleTokens: () => import('@/modules/balance/ModuleTokens'),
-    ModuleSwapRates: () => import('@/modules/swap/ModuleSwapRates'),
+    ModuleTransferHistory: () =>
+      import('@/modules/transfer-history/ModuleTransferHistory'),
     TheWrapperWallet: () => import('@/core/components/TheWrapperWallet')
   }
 };
