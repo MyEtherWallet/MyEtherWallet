@@ -773,7 +773,7 @@ export default {
                   this.nextStep();
                 })
                 .catch(e => {
-                  this.wallets[this.walletType].create.errorHandler(e);
+                  this.wallets[this.walletType]?.create.errorHandler(e);
                   if (e.message === 'Error: Pairing rejected') {
                     this.reset();
                   }
