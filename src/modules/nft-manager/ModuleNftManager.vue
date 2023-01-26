@@ -24,6 +24,12 @@
         >
         </mew-tabs>
       </div>
+      <no-nft-owned
+        v-if="
+          (!loadingContracts && contracts.length === 0 && tabs.length === 0) ||
+          hasNoTokens
+        "
+      />
     </mew6-white-sheet>
 
     <!--
