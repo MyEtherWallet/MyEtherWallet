@@ -1,0 +1,1 @@
+.printable-wallet{position:fixed;top:-3000px;left:-3000px;z-index:-1}@media print{.printable-wallet-display{display:none}.printable-wallet{background-color:#f10f0f;height:100%;width:100%;position:fixed;top:0;left:0;z-index:1}}
