@@ -42,15 +42,16 @@
               <div>{{ item.text }}</div>
             </div>
             <div class="text-center">
-              <router-link
-                :to="{ name: ROUTES_PRIVACY_POLICY }"
+              <a
+                href="https://www.myetherwallet.com/privacy-policy"
+                target="_blank"
                 class="greenPrimary--text"
               >
                 View our full tracking policy
                 <v-icon size="15px" color="greenPrimary" class="ml-1">
                   mdi-open-in-new
                 </v-icon>
-              </router-link>
+              </a>
             </div>
           </v-expansion-panel-content>
         </v-expansion-panel>
