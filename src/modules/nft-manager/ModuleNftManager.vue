@@ -53,22 +53,14 @@
     Display if no nfts owned
     =====================================================================================
     -->
-        <v-card
+        <no-nft-owned
           v-if="
             (!loadingContracts &&
               contracts.length === 0 &&
               tabs.length === 0) ||
             hasNoTokens
           "
-          flat
-          color="selectorBg lighten-1"
-          class="d-flex align-center px-5 py-4"
-          min-height="94px"
-        >
-          <v-card-text class="text-center"
-            >{{ $t('nftManager.none-owned') }}
-          </v-card-text>
-        </v-card>
+        />
         <!--
     =====================================================================================
       Display owned nft tokens
@@ -187,7 +179,8 @@ const MIN_GAS_LIMIT = 21000;
 export default {
   components: {
     NftManagerDetails: () => import('./components/NftManagerDetails'),
-    NftManagerSend: () => import('./components/NftManagerSend')
+    NftManagerSend: () => import('./components/NftManagerSend'),
+    NoNftOwned: () => import('./components/NoNftOwned.vue')
   },
   data() {
     return {
