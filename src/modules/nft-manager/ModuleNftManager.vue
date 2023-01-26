@@ -44,12 +44,17 @@
             >Learn more</a
           >
         </div>
-        <div class="d-flex mt-7 mx-auto" style="max-width: 360px; gap: 8px">
+        <div
+          class="d-flex mt-10 mx-auto button-div"
+          style="max-width: 360px; gap: 8px"
+        >
           <div>
-            <mew-button title="Get a domain" has-full-width></mew-button>
+            <img :src="unstoppableIcon" alt="unstoppable" class="mb-3" />
+            <mew-button title="Get a domain" has-full-width />
           </div>
           <div class="ml-auto">
-            <mew-button title="Get a domain" has-full-width></mew-button>
+            <img :src="ensIcon" alt="ens" class="mb-3" />
+            <mew-button title="Get a domain" has-full-width />
           </div>
         </div>
       </div>
@@ -360,6 +365,12 @@ export default {
     },
     noDomainsIcon() {
       return require('@/assets/images/icons/phone-what-is-your-addr.png');
+    },
+    unstoppableIcon() {
+      return require('@/assets/images/icons/icon-unstoppable.svg');
+    },
+    ensIcon() {
+      return require('@/assets/images/icons/icon-ens.svg');
     }
   },
   watch: {
@@ -555,6 +566,13 @@ export default {
 .mew-component--nft {
   box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.04);
   border-radius: 12px;
+}
+
+.button-div {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.3px;
 }
 </style>
 
