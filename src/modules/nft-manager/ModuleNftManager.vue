@@ -5,10 +5,37 @@
     =====================================================================================
     -->
   <div>
+    <mew6-white-sheet
+      class="mew-component--nft pa-8 px-md-8 py-md-10 mx-auto"
+      :style="!isMobile ? 'max-width: 692px' : ''"
+    >
+      <div :class="!isMobile ? 'd-flex' : ''">
+        <span class="mb-8 mew-heading-1" style="letter-spacing: 0.3px">
+          NFT Manager
+        </span>
+        <mew-tabs
+          :class="!isMobile ? 'ml-auto' : ''"
+          :style="isMobile ? 'margin-left: -3.5rem' : ''"
+          active-color="greenPrimary"
+          :items="tabNames"
+          :active-tab="activeTab"
+          is-small
+          @onTab="setTab"
+        >
+        </mew-tabs>
+      </div>
+    </mew6-white-sheet>
+
+    <!--
+    =====================================================================================
+      Old Module Nft Manager
+    =====================================================================================
+    -->
     <mew-module
+      v-if="false"
       class="text-center d-flex justify-end flex-grow-1 pt-6 mr-3"
       :has-elevation="true"
-      :has-indicator="true"
+      :has-indicator="false"
       title="NFT Manager"
     >
       <template #moduleBody>
@@ -54,7 +81,7 @@
           :items="tabs"
           :is-vertical="$vuetify.breakpoint.mdAndUp"
           :has-underline="$vuetify.breakpoint.smAndDown"
-          :active-tab="activeTab"
+          :active-tab="nftTab"
           @onTab="onTab"
         >
           <template
@@ -165,7 +192,7 @@ export default {
   data() {
     return {
       nft: {},
-      activeTab: 0,
+      nftTab: 0,
       onNftSend: false,
       hasNoTokens: false,
       selectedNft: {},
@@ -177,7 +204,8 @@ export default {
       localGasPrice: '0',
       loadingContracts: true,
       loadingTokens: true,
-      nftApiResponse: []
+      nftApiResponse: [],
+      activeTab: 0
     };
   },
   computed: {
@@ -202,6 +230,16 @@ export default {
         }
         return { name: tabName };
       });
+    },
+    tabNames() {
+      return [
+        {
+          name: 'All NFTs'
+        },
+        {
+          name: 'My Domains'
+        }
+      ];
     },
     tokens() {
       if (this.nftApiResponse.length > 0) {
@@ -294,6 +332,9 @@ export default {
      */
     supportedNetworks() {
       return [ETH.name, MATIC.name, BSC.name];
+    },
+    isMobile() {
+      return this.$vuetify.breakpoint.smAndDown;
     }
   },
   watch: {
@@ -391,7 +432,7 @@ export default {
       }
     },
     onTab(val) {
-      this.activeTab = val;
+      this.nftTab = val;
       this.selectedContract = this.contracts[val];
       this.selectedContractHash = this.contracts[val].contract;
       this.nft.goToFirstPage();
@@ -467,6 +508,13 @@ export default {
      */
     setPage(number) {
       this.nft.setCurrentPage(number);
+    },
+    /**
+     * Set All NFTs/Domains tab
+     * @param {Number} val Tab number
+     */
+    setTab(val) {
+      this.activeTab = val;
     }
   }
 };
@@ -477,5 +525,10 @@ export default {
   .v-pagination__item {
     box-shadow: none;
   }
+}
+
+.mew-component--nft {
+  box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.04);
+  border-radius: 12px;
 }
 </style>
