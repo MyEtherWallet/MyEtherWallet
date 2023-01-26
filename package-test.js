@@ -82,7 +82,8 @@ const EXCEPTIONS = [
   '@commitlint/config-conventional',
   'commitlint',
   'eslint-plugin-security',
-  '@ensdomains/ens-contracts'
+  '@ensdomains/ens-contracts',
+  'hdkey'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
