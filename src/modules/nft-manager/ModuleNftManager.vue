@@ -30,33 +30,8 @@
           hasNoTokens
         "
       />
-      <div v-if="activeTab === 1" class="text-center justify-center mt-12">
-        <img :src="noDomainsIcon" alt="no-domains" />
-        <div class="mt-7 mx-auto" style="max-width: 360px">
-          <h1 class="title-header">You have no domains</h1>
-          <p class="pa-1 mt-3 mb-1 text-muted">
-            A domain is a custom user name that you can assign to your wallet
-            address
-          </p>
-          <a
-            href="https://www.mewtopia.com/domain-names-on-ethereum-blockchain/"
-            class="learn-link"
-            >Learn more</a
-          >
-        </div>
-        <div
-          class="d-flex mt-10 mx-auto button-div"
-          style="max-width: 360px; gap: 8px"
-        >
-          <div>
-            <img :src="unstoppableIcon" alt="unstoppable" class="mb-3" />
-            <mew-button title="Get a domain" has-full-width />
-          </div>
-          <div class="ml-auto">
-            <img :src="ensIcon" alt="ens" class="mb-3" />
-            <mew-button title="Get a domain" has-full-width />
-          </div>
-        </div>
+      <div v-if="activeTab === 1">
+        <no-domains-owned />
       </div>
     </mew6-white-sheet>
 
@@ -214,7 +189,8 @@ export default {
   components: {
     NftManagerDetails: () => import('./components/NftManagerDetails'),
     NftManagerSend: () => import('./components/NftManagerSend'),
-    NoNftOwned: () => import('./components/NoNftOwned.vue')
+    NoNftOwned: () => import('./components/NoNftOwned.vue'),
+    NoDomainsOwned: () => import('./components/NoDomainsOwned.vue')
   },
   data() {
     return {
@@ -362,15 +338,6 @@ export default {
     },
     isMobile() {
       return this.$vuetify.breakpoint.smAndDown;
-    },
-    noDomainsIcon() {
-      return require('@/assets/images/icons/phone-what-is-your-addr.png');
-    },
-    unstoppableIcon() {
-      return require('@/assets/images/icons/icon-unstoppable.svg');
-    },
-    ensIcon() {
-      return require('@/assets/images/icons/icon-ens.svg');
     }
   },
   watch: {
@@ -566,38 +533,5 @@ export default {
 .mew-component--nft {
   box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.04);
   border-radius: 12px;
-}
-
-.button-div {
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 20px;
-  letter-spacing: 0.3px;
-}
-</style>
-
-<style lang="scss" scoped>
-.title-header {
-  font-size: 32px;
-  line-height: 28px;
-  letter-spacing: 0px;
-}
-
-.text-muted {
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 20px;
-  letter-spacing: 0.25px;
-  color: #1f242f;
-  opacity: 0.6;
-}
-
-.learn-link {
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 20px;
-  letter-spacing: 0.3px;
-  text-decoration-line: underline;
-  color: #4b83e8;
 }
 </style>
