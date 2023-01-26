@@ -24,14 +24,63 @@
         >
         </mew-tabs>
       </div>
-      <no-nft-owned
-        v-if="
-          (!loadingContracts && contracts.length === 0 && tabs.length === 0) ||
-          hasNoTokens
-        "
-      />
+      <div v-if="activeTab === 0">
+        <no-nft-owned
+          v-if="
+            (!loadingContracts &&
+              contracts.length === 0 &&
+              tabs.length === 0) ||
+            hasNoTokens
+          "
+        />
+      </div>
       <div v-if="activeTab === 1">
-        <no-domains-owned />
+        <no-domains-owned v-if="domains.length === 0" />
+        <div v-for="(domain, idx) in domains" :key="idx">
+          <div class="d-flex mt-8" style="align-items: center">
+            <img
+              :src="getIcon(domain.name)"
+              :alt="domain.name.split(' ')[0]"
+              height="32px"
+              width="32px"
+              class="rounded-circle"
+            />
+            <span class="mew-heading-2 ml-3" style="letter-spacing: 0.3px">{{
+              domain.name
+            }}</span>
+          </div>
+          <!--
+          =====================================================================================
+            Display all owned domains by collection
+          =====================================================================================
+          -->
+          <div class="mb-3 mt-4 d-flex flex-wrap" style="gap: 8px">
+            <div
+              v-for="(token, tokenIdx) in getTokensByCollection(
+                domain.contract
+              )"
+              :key="tokenIdx"
+            >
+              <img
+                :src="token.image"
+                :alt="token.name"
+                style="border-radius: 12px"
+                width="150px"
+                height="150px"
+              />
+              <!--
+              =====================================================================================
+                Nft Token Card Details
+              =====================================================================================
+              -->
+              <!-- <nft-manager-details
+                :loading="loadingTokens"
+                :on-click="openNftSend"
+                :token="token"
+              /> -->
+            </div>
+          </div>
+        </div>
       </div>
     </mew6-white-sheet>
 
@@ -49,19 +98,19 @@
     >
       <template #moduleBody>
         <!--
-    =====================================================================================
-      Loading
-    =====================================================================================
-    -->
+        =====================================================================================
+          Loading
+        =====================================================================================
+        -->
         <v-skeleton-loader
           v-if="loadingContracts && !hasNoTokens"
           type="table-heading,list-item-avatar-three-line, list-item-avatar-three-line, list-item-avatar-three-line"
         />
         <!--
-    =====================================================================================
-    Display if no nfts owned
-    =====================================================================================
-    -->
+        =====================================================================================
+        Display if no nfts owned
+        =====================================================================================
+        -->
         <no-nft-owned
           v-if="
             (!loadingContracts &&
@@ -71,10 +120,10 @@
           "
         />
         <!--
-    =====================================================================================
-      Display owned nft tokens
-    =====================================================================================
-    -->
+        =====================================================================================
+          Display owned nft tokens
+        =====================================================================================
+        -->
         <mew-tabs
           v-if="
             !loadingContracts && !onNftSend && tabs.length > 0 && !hasNoTokens
@@ -91,10 +140,10 @@
           >
             <div :key="idx" class="ml-5">
               <!--
-    =====================================================================================
-      Display all owned tokens by nft
-    =====================================================================================
-    -->
+              =====================================================================================
+                Display all owned tokens by nft
+              =====================================================================================
+              -->
               <div class="d-flex justify-space-between mt-3 mb-5">
                 <h5 class="font-weight-bold">
                   {{ selectedContract.name }}
@@ -111,10 +160,10 @@
                   class="mb-3"
                 >
                   <!--
-    =====================================================================================
-      Nft Token Card Details
-    =====================================================================================
-    -->
+                  =====================================================================================
+                    Nft Token Card Details
+                  =====================================================================================
+                  -->
                   <nft-manager-details
                     :loading="loadingTokens"
                     :on-click="openNftSend"
@@ -122,10 +171,10 @@
                   />
                 </div>
                 <!--
-    =====================================================================================
-      Displays pagination if there are more than > 9 tokens
-    =====================================================================================
-    -->
+                =====================================================================================
+                  Displays pagination if there are more than > 9 tokens
+                =====================================================================================
+                -->
                 <div
                   v-if="hasPages"
                   class="px-4 mt-3 d-flex align-center justify-end"
@@ -145,10 +194,10 @@
           </template>
         </mew-tabs>
         <!--
-    =====================================================================================
-      Display send token page
-    =====================================================================================
-    -->
+        =====================================================================================
+          Display send token page
+        =====================================================================================
+        -->
         <nft-manager-send
           v-if="onNftSend"
           :close="closeNftSend"
@@ -184,6 +233,8 @@ import { toBNSafe } from '@/core/helpers/numberFormatHelper';
 import NFT from './handlers/handlerNftManager';
 
 const MIN_GAS_LIMIT = 21000;
+const UNS = 'Unstoppable Domains';
+const ENS = 'ENS: Ethereum Name Service';
 
 export default {
   components: {
@@ -267,6 +318,9 @@ export default {
       }
       return [];
     },
+    /**
+     * Get all NFTs organized by contract
+     */
     contracts() {
       if (this.nftApiResponse.length > 0) {
         // Organize contracts by address
@@ -288,6 +342,20 @@ export default {
         }, []);
       }
       return [];
+    },
+    /**
+     * Get all domains from UNS/ENS
+     */
+    domains() {
+      const domains = this.contracts.filter(item => {
+        const collectionName = item.name.toLowerCase();
+        if (
+          collectionName === UNS.toLowerCase() ||
+          collectionName === ENS.toLowerCase()
+        )
+          return item;
+      });
+      return domains;
     },
     /**
      * Pagination
@@ -518,6 +586,40 @@ export default {
      */
     setTab(val) {
       this.activeTab = val;
+    },
+    getIcon(iconName) {
+      const name = iconName.toLowerCase();
+      if (name === UNS.toLowerCase())
+        return require('@/assets/images/icons/icon-unstoppable-domains.png');
+      if (name === ENS.toLowerCase())
+        return require('@/assets/images/icons/icon-ens-domains.png');
+      return '';
+    },
+    getTokensByCollection(contractAddress) {
+      if (this.nftApiResponse.length > 0) {
+        const contract = this.nftApiResponse.filter(item => {
+          return (
+            item.contract_address.toLowerCase() ===
+            contractAddress.toLowerCase()
+          );
+        });
+        if (contract) {
+          return contract.map(item => {
+            const url =
+              item.image_url ||
+              `${item.extra_metadata?.metadata_original_url}image` ||
+              '';
+            return {
+              image: `https://img.mewapi.io/?image=${url}`,
+              name: item.name || item.token_id,
+              token_id: item.token_id,
+              contract: item.contract_address,
+              erc721: item.contract.type === 'ERC721'
+            };
+          });
+        }
+      }
+      return [];
     }
   }
 };
@@ -535,3 +637,5 @@ export default {
   border-radius: 12px;
 }
 </style>
+
+<style lang="scss" scoped></style>
