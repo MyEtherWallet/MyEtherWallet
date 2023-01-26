@@ -115,10 +115,11 @@
             </div>
             <mew-button
               v-if="detailLength"
-              class="mt-2 display--block mx-auto DownloadButton"
+              class="mt-2 d-flex align-center justify-center mx-auto DownloadButton"
               title="Export JSON file"
               btn-size="small"
               btn-style="transparent"
+              style="max-width: 130px"
               :btn-link="fileLink"
               :download="exportFileName"
             />

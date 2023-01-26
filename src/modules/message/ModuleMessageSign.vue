@@ -57,9 +57,15 @@ export default {
   methods: {
     signMessage() {
       try {
-        this.signAndVerify.signMessage(this.message).catch(e => {
-          this.instance.errorHandler(e.message);
-        });
+        this.signAndVerify
+          .signMessage(this.message)
+          .then(() => {
+            this.message = '';
+          })
+          .catch(e => {
+            this.message = '';
+            this.instance.errorHandler(e.message);
+          });
       } catch (e) {
         this.instance.errorHandler(e.hasOwnProperty('message') ? e.message : e);
       }

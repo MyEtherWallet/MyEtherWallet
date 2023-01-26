@@ -25,6 +25,7 @@
           :value="selectedDomain"
           filter-placeholder="Search for Domain"
           :items="domainListItems"
+          :error-messages="selectedDomain.error"
           @input="setDomain"
         >
         </mew-select>
@@ -32,6 +33,8 @@
           title="Register"
           class="set-button"
           btn-size="xlarge"
+          :loading="selectedDomain.loading"
+          :disabled="disableRegister"
           @click.native="setReverseRecord(selectedDomain)"
         />
       </div>
@@ -66,6 +69,7 @@ import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import PermanentNameModule from '../../handlers/handlerPermanentName';
 import errorHandler from '@/modules/confirmation/handlers/errorHandler.js';
 import metainfo from '../../metainfo.js';
+import { toBNSafe } from '@/core/helpers/numberFormatHelper';
 export default {
   name: 'EnsReverseLookup',
   props: {
@@ -90,11 +94,12 @@ export default {
     return {
       ensLookupResults: null,
       hasDomains: false,
-      selectedDomain: {},
+      selectedDomain: { loading: false, fee: toBNSafe(0), error: '' },
       selectedDomainAddr: '',
       permHandler: {},
       hasReverseRecordNames: false,
-      reverseRecordNames: ''
+      reverseRecordNames: '',
+      domainListItems: []
     };
   },
   computed: {
@@ -107,12 +112,23 @@ export default {
     ...mapGetters('external', ['fiatValue']),
     ...mapState('global', ['gasPriceType']),
     ...mapState('wallet', ['balance', 'web3', 'instance']),
-    domainListItems() {
-      return this.ensLookupResults || [];
+    disableRegister() {
+      if (!this.selectedDomain.loading) return true;
+      return (
+        (!this.selectedDomain.value &&
+          toBNSafe(this.balance).lt(this.selectedDomain.fee)) ||
+        this.selectedDomain.error.length > 0
+      );
     }
   },
   watch: {
     network() {
+      if (this.checkNetwork()) this.setup();
+    },
+    address(addr) {
+      if (this.checkNetwork() && addr) this.setup();
+    },
+    web3() {
       if (this.checkNetwork()) this.setup();
     }
   },
@@ -120,6 +136,28 @@ export default {
     if (this.checkNetwork()) await this.setup();
   },
   methods: {
+    async setDomainListItems() {
+      const array = [];
+      this.ensLookupResults?.forEach(async i => {
+        i.loading = true;
+        i.fee = toBNSafe(0);
+        i.error = '';
+        try {
+          const gas = await this.permHandler.getNameReverseData(i.name);
+          i.fee = toBNSafe(gas * this.gasPrice);
+          if (toBNSafe(this.balance).lt(i.fee)) {
+            i.error = `Insufficient amount of ${this.network.type.currencyName}`;
+          }
+        } catch {
+          i.error = 'An error occurred while retrieving the domain information';
+          i.loading = false;
+          return array.push(i);
+        }
+        i.loading = false;
+        return array.push(i);
+      }) || [];
+      this.domainListItems = array;
+    },
     checkNetwork() {
       return metainfo.networks.find(
         item => item.chainID === this.network.type.chainID
@@ -141,6 +179,8 @@ export default {
         ens,
         this.durationPick
       );
+      this.selectedDomain = { loading: false, fee: toBNSafe(0), error: '' };
+      await this.setDomainListItems();
       this.getReverseRecordNames();
     },
     async fetchDomains() {
