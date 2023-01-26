@@ -83,13 +83,11 @@
 <script>
 import { mapMutations } from 'vuex';
 import handlerAnalytics from './handlers/handlerAnalytics.mixin';
-import { ROUTES_HOME } from '@/core/configs/configRoutes';
 
 export default {
   mixins: [handlerAnalytics],
   data() {
     return {
-      ROUTES_PRIVACY_POLICY: ROUTES_HOME.PRIVACY_POLICY.NAME,
       whatWeCollect: [
         {
           yes: true,
