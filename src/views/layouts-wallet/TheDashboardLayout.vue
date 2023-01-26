@@ -21,6 +21,7 @@ export default {
     TheDraggableItems: () => import('@/views/layouts-wallet/TheDraggableItems'),
     AppCarousel: () => import('@/core/components/AppCarousel'),
     ModuleBalance: () => import('@/modules/balance/ModuleBalance'),
+    ModuleTokens: () => import('@/modules/balance/ModuleTokens'),
     ModuleTransferHistory: () =>
       import('@/modules/transfer-history/ModuleTransferHistory'),
     TheWrapperWallet: () => import('@/core/components/TheWrapperWallet')

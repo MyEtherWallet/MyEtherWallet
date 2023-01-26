@@ -1,8 +1,8 @@
 <template>
   <mew6-white-sheet v-if="isEthNetwork" :sideinfo="!mobile">
-    <div class="module-swap-rates px-5 px-lg-7 py-5">
+    <div class="module-swap-rates px-7 py-5 pt-4">
       <div class="d-flex align-center justify-space-between">
-        <span class="mew-heading-2">{{ $t('common.swap') }}</span>
+        <span class="mew-heading-2 ml-7">{{ $t('common.swap') }}</span>
         <mew-button
           btn-style="transparent"
           button-size="small"

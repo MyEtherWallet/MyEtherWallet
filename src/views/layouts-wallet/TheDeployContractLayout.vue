@@ -4,7 +4,7 @@
       <module-contract-deploy />
     </template>
     <template #rightColItem1>
-      <module-swap-rates />
+      <the-draggable-items />
     </template>
   </the-wrapper-wallet>
 </template>
@@ -13,6 +13,7 @@
 export default {
   name: 'TheDeployContractLayout',
   components: {
+    TheDraggableItems: () => import('@/views/layouts-wallet/TheDraggableItems'),
     TheWrapperWallet: () => import('@/core/components/TheWrapperWallet'),
     ModuleSwapRates: () => import('@/modules/swap/ModuleSwapRates'),
     ModuleContractDeploy: () =>
