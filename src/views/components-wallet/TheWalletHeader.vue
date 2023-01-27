@@ -1,6 +1,42 @@
 <template>
   <v-container>
-    <v-row class="d-flex align-center py-2 pb-md-4 pb-lg-2 px-1">
+    <div class="d-flex align-center justify-end py-2">
+      <mew-simple-btn
+        theme="outlinedGray"
+        class="mr-2"
+        height="40px"
+        right-icon="mdi-chevron-down"
+      >
+        <mew-token-container class="mr-2" size="18px" :img="networkIcon" />
+        Ethereum
+      </mew-simple-btn>
+
+      <mew-simple-btn
+        theme="outlinedGray"
+        class="mr-2"
+        height="40px"
+        right-icon="mdi-chevron-down"
+      >
+        <mew-blockie :address="address" width="20px" height="20px" />
+        <mew-dot class="ml-n1 mr-2">3</mew-dot>
+        My account
+      </mew-simple-btn>
+
+      <mew-simple-btn
+        theme="purple"
+        class="mr-2"
+        height="40px"
+        left-icon="mdi-download"
+      >
+        Buy Crypto
+      </mew-simple-btn>
+
+      <v-btn depressed fab small>
+        <v-icon color="textDark"> mdi-dots-horizontal </v-icon>
+      </v-btn>
+    </div>
+
+    <v-row v-if="false" class="d-flex align-center py-2 pb-md-4 pb-lg-2 px-1">
       <v-col
         cols="12"
         md="8"
@@ -104,7 +140,7 @@
 
 <script>
 import moment from 'moment';
-import { mapState } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { BUYSELL_EVENT, MOONPAY_OFFER_END } from '@/modules/buy-sell/helpers';
 import { EventBus } from '@/core/plugins/eventBus';
@@ -115,8 +151,12 @@ export default {
   },
   mixins: [handlerAnalytics],
   computed: {
-    ...mapState('wallet', ['identifier', 'isOfflineApp']),
+    ...mapState('wallet', ['address', 'identifier', 'isOfflineApp']),
     ...mapState('global', ['online']),
+    ...mapGetters('global', ['network']),
+    networkIcon() {
+      return this.network.type.icon;
+    },
     daysLeft() {
       const eventDate = moment(MOONPAY_OFFER_END);
       const todaysDate = moment();
