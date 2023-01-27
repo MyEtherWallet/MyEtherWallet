@@ -34,7 +34,12 @@
           "
         />
       </div>
-      <div v-if="activeTab === 1">
+      <!--
+      =====================================================================================
+        Domain Names Tab
+      =====================================================================================
+      -->
+      <div v-else-if="activeTab === 1">
         <no-domains-owned v-if="domains.length === 0" />
         <div v-for="(domain, idx) in domains" :key="idx">
           <div class="d-flex mt-8" style="align-items: center">
@@ -67,22 +72,87 @@
                 style="border-radius: 12px"
                 width="150px"
                 height="150px"
+                class="cursor-pointer"
+                @click="openTokenDetails(token)"
               />
-              <!--
-              =====================================================================================
-                Nft Token Card Details
-              =====================================================================================
-              -->
-              <!-- <nft-manager-details
-                :loading="loadingTokens"
-                :on-click="openNftSend"
-                :token="token"
-              /> -->
             </div>
           </div>
         </div>
       </div>
     </mew6-white-sheet>
+
+    <!--
+    =====================================================================================
+      Nft Token Card Details
+    =====================================================================================
+    -->
+    <app-simple-dialog
+      v-if="openDetails"
+      :value="openDetails"
+      no-title
+      max-width="648px"
+      @close="openDetails = false"
+    >
+      <div class="d-flex">
+        <img
+          :src="selectedNft.image"
+          :alt="selectedNft.name"
+          width="184px"
+          height="184px"
+          class="mr-7"
+          style="border-radius: 12px"
+        />
+        <div class="full-width">
+          <div class="d-flex full-width height-min-content">
+            <div>
+              <div class="mew-heading-2 height-min-content">
+                {{ selectedNftName }}
+              </div>
+              <div class="muted-label height-min-content mt-7">Floor Price</div>
+              <div class="mew-heading-4 font-weight-medium">
+                {{ selectedNft.floor_price.fiat_value }}
+              </div>
+            </div>
+            <div class="d-flex full-width">
+              <div class="ml-auto">
+                <div class="d-flex">
+                  <v-btn
+                    class="ml-auto"
+                    color="textDark"
+                    icon
+                    @click="openDetails = false"
+                  >
+                    <v-icon>mdi-close</v-icon>
+                  </v-btn>
+                </div>
+                <div class="mt-9">
+                  <a
+                    :href="selectedNft.marketplace.nft_url"
+                    target="_blank"
+                    class="d-flex text-center justify-center textDark--text font-weight-medium"
+                    style="gap: 8px"
+                  >
+                    <img
+                      :src="raribleIcon"
+                      alt="Rarible"
+                      width="20px"
+                      height="20px"
+                    />
+                    View on OpenSea
+                    <v-icon size="18px" color="black">mdi-launch</v-icon>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- NFT Description -->
+          <div class="mt-4" style="letter-spacing: 0.36px">
+            {{ selectedNft.description }}
+          </div>
+        </div>
+      </div>
+      <!-- Favorite / Share / Send Buttons -->
+    </app-simple-dialog>
 
     <!--
     =====================================================================================
@@ -228,9 +298,10 @@ import getService from '@/core/helpers/getService';
 
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { ETH, BSC, MATIC } from '@/utils/networks/types';
-import { toBNSafe } from '@/core/helpers/numberFormatHelper';
+import { formatFiatValue, toBNSafe } from '@/core/helpers/numberFormatHelper';
 
 import NFT from './handlers/handlerNftManager';
+import { BigNumber } from 'bignumber.js';
 
 const MIN_GAS_LIMIT = 21000;
 const UNS = 'Unstoppable Domains';
@@ -241,7 +312,8 @@ export default {
     NftManagerDetails: () => import('./components/NftManagerDetails'),
     NftManagerSend: () => import('./components/NftManagerSend'),
     NoNftOwned: () => import('./components/NoNftOwned.vue'),
-    NoDomainsOwned: () => import('./components/NoDomainsOwned.vue')
+    NoDomainsOwned: () => import('./components/NoDomainsOwned.vue'),
+    AppSimpleDialog: () => import('@/core/components/AppSimpleDialog.vue')
   },
   data() {
     return {
@@ -259,13 +331,15 @@ export default {
       loadingContracts: true,
       loadingTokens: true,
       nftApiResponse: [],
-      activeTab: 0
+      activeTab: 0,
+      openDetails: false
     };
   },
   computed: {
     ...mapState('wallet', ['balance', 'web3', 'address']),
     ...mapState('global', ['network', 'gasPriceType']),
     ...mapGetters('wallet', ['balanceInETH', 'balanceInWei']),
+    ...mapGetters('external', ['networkTokenUSDMarket']),
     ...mapGetters('global', [
       'isEthNetwork',
       'network',
@@ -406,7 +480,20 @@ export default {
     },
     isMobile() {
       return this.$vuetify.breakpoint.smAndDown;
+    },
+    selectedNftName() {
+      const nameStart = this.selectedNft.name.substring(0, 17);
+      return this.selectedNft.name.length > 20
+        ? `${nameStart}...`
+        : this.selectedNft.name;
+    },
+    raribleIcon() {
+      return require('@/assets/images/icons/icon-rarible.svg');
     }
+    // raribleLink() {
+    //   // Doesnt work for all NFTs
+    //   return `https://rarible.com/token/${this.selectedNft.contract}:${this.selectedNft.token_id}?tab=overview`;
+    // }
   },
   watch: {
     balanceInWei() {
@@ -604,22 +691,48 @@ export default {
           );
         });
         if (contract) {
+          console.log('contract', contract);
           return contract.map(item => {
             const url =
               item.image_url ||
               `${item.extra_metadata?.metadata_original_url}image` ||
               '';
+            const floorPriceObj = item.collection.floor_prices[0];
+            const marketPlace = item.collection.marketplace_pages[0];
+            const mainTokenPrice = this.networkTokenUSDMarket.value;
+            const tokenFiatValue = formatFiatValue(
+              new BigNumber(mainTokenPrice)
+                .multipliedBy(floorPriceObj.value)
+                .toFixed()
+            ).value;
             return {
               image: `https://img.mewapi.io/?image=${url}`,
               name: item.name || item.token_id,
+              description: item.description || item.collection.description,
               token_id: item.token_id,
               contract: item.contract_address,
-              erc721: item.contract.type === 'ERC721'
+              erc721: item.contract.type === 'ERC721',
+              floor_price: {
+                token: floorPriceObj.payment_token.symbol,
+                value: floorPriceObj.value,
+                marketplace_name: floorPriceObj.marketplace_name,
+                fiat_value: tokenFiatValue
+              },
+              marketplace: {
+                nft_url: marketPlace.nft_url,
+                marketplace_name: marketPlace.marketplace_name,
+                collection_url: marketPlace.collection_url
+              }
             };
           });
         }
       }
       return [];
+    },
+    openTokenDetails(token) {
+      console.log('token', token);
+      this.selectedNft = token;
+      this.openDetails = true;
     }
   }
 };
@@ -638,4 +751,17 @@ export default {
 }
 </style>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.height-min-content {
+  height: min-content;
+}
+
+.muted-label {
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 20px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #7b818e;
+}
+</style>
