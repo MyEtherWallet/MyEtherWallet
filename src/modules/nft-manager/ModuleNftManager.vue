@@ -10,12 +10,9 @@
       :style="!isMobile ? 'max-width: 692px' : ''"
     >
       <div :class="!isMobile ? 'd-flex' : ''">
-        <span class="mb-8 mew-heading-1" style="letter-spacing: 0.3px">
-          NFT Manager
-        </span>
         <mew-tabs
-          :class="!isMobile ? 'ml-auto' : ''"
-          :style="isMobile ? 'margin-left: -3.5rem' : ''"
+          :class="!isMobile ? 'mr-auto' : ''"
+          style="margin-left: -3.5rem"
           active-color="greenPrimary"
           :items="tabNames"
           :active-tab="activeTab"
@@ -23,6 +20,23 @@
           @onTab="setTab"
         >
         </mew-tabs>
+        <v-text-field
+          :class="!isMobile ? 'ml-auto mt-1' : 'mt-4'"
+          :style="!isMobile ? 'max-width: 219px' : ''"
+          class="search-bar"
+          placeholder="Search collection..."
+          height="40"
+          dense
+          rounded
+          filled
+          light
+        >
+          <template #prepend-inner
+            ><v-icon color="#9BA1AE" style="margin-left: -10px"
+              >mdi-magnify</v-icon
+            ></template
+          >
+        </v-text-field>
       </div>
       <div v-if="activeTab === 0">
         <no-nft-owned
@@ -152,6 +166,14 @@
         </div>
       </div>
       <!-- Favorite / Share / Send Buttons -->
+
+      <!-- Floating Left / Right Buttons -->
+      <div class="floating-button" style="left: 20%">
+        <v-icon>mdi-chevron-left</v-icon>
+      </div>
+      <div class="floating-button" style="right: 20%">
+        <v-icon>mdi-chevron-right</v-icon>
+      </div>
     </app-simple-dialog>
 
     <!--
@@ -305,7 +327,7 @@ import { BigNumber } from 'bignumber.js';
 
 const MIN_GAS_LIMIT = 21000;
 const UNS = 'Unstoppable Domains';
-const ENS = 'ENS: Ethereum Name Service';
+const ENS = 'Ethereum Name Service';
 
 export default {
   components: {
@@ -331,6 +353,7 @@ export default {
       loadingContracts: true,
       loadingTokens: true,
       nftApiResponse: [],
+      nftCollections: [],
       activeTab: 0,
       openDetails: false
     };
@@ -396,7 +419,8 @@ export default {
      * Get all NFTs organized by contract
      */
     contracts() {
-      if (this.nftApiResponse.length > 0) {
+      console.log('nftApiResponse', this.nftApiResponse);
+      if (this.nftApiResponse && this.nftApiResponse.length > 0) {
         // Organize contracts by address
         return this.nftApiResponse.reduce((arr, item) => {
           const nftAmount = item.queried_wallet_balances[0].quantity;
@@ -421,11 +445,12 @@ export default {
      * Get all domains from UNS/ENS
      */
     domains() {
+      console.log('contracts', this.contracts);
       const domains = this.contracts.filter(item => {
         const collectionName = item.name.toLowerCase();
         if (
           collectionName === UNS.toLowerCase() ||
-          collectionName === ENS.toLowerCase()
+          collectionName.includes(ENS.toLowerCase())
         )
           return item;
       });
@@ -564,19 +589,51 @@ export default {
         web3: this.web3
       });
 
-      this.getNfts();
+      // this.getNfts();
+      this.getCollections();
       this.localGasPrice = this.gasPriceByType(this.gasPriceType);
       this.hasMinEth();
     },
-    getNfts() {
-      this.nft.getNfts().then(res => {
-        this.nftApiResponse = res;
-        this.loadingContracts = false;
-        setTimeout(() => {
-          this.loadingTokens = false;
-        }, 500);
+    // getNfts() {
+    //   this.nft.getNfts().then(res => {
+    //     this.nftApiResponse = res;
+    //     this.loadingContracts = false;
+    //     setTimeout(() => {
+    //       this.loadingTokens = false;
+    //     }, 500);
+    //   });
+    // },
+    getCollections() {
+      this.nft.getCollections().then(res => {
+        this.nftCollections = res;
+        console.log('getCollections', res);
+        // Get the NFTs (up to 50) of the first 5 collections
+        let count = 0;
+        this.nftCollections.slice(0, 5).map(item => {
+          this.nft.getNFTsInCollection(item.id, true).then(res => {
+            this.nftApiResponse = this.nftApiResponse.concat(res);
+            if (count >= 4) {
+              this.loadingContracts = false;
+              setTimeout(() => {
+                this.loadingTokens = false;
+              }, 500);
+            }
+            count++;
+          });
+        });
       });
     },
+    // getNftsInCollection(contract_address, firstPageOnly = false) {
+    //   this.nft
+    //     .getNFTsInCollection(contract_address, firstPageOnly)
+    //     .then(res => {
+    //       this.nftApiResponse = res;
+    //       this.loadingContracts = false;
+    //       setTimeout(() => {
+    //         this.loadingTokens = false;
+    //       }, 500);
+    //     });
+    // },
     hasMinEth() {
       const currentGasPrice = this.localGasPrice;
       if (
@@ -652,7 +709,8 @@ export default {
       if (this.tokens.length === 0 && this.contracts.length === 1) {
         this.hasNoTokens = true;
       }
-      this.getNfts();
+      this.getCollections();
+      // this.getNfts();
     },
     setAddress(address) {
       if (typeof address === 'object' && !!address) {
@@ -678,7 +736,7 @@ export default {
       const name = iconName.toLowerCase();
       if (name === UNS.toLowerCase())
         return require('@/assets/images/icons/icon-unstoppable-domains.png');
-      if (name === ENS.toLowerCase())
+      if (name.includes(ENS.toLowerCase()))
         return require('@/assets/images/icons/icon-ens-domains.png');
       return '';
     },
@@ -749,6 +807,14 @@ export default {
   box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.04);
   border-radius: 12px;
 }
+
+.search-bar input {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0.3px;
+  color: #9ba1ae;
+}
 </style>
 
 <style lang="scss" scoped>
@@ -763,5 +829,21 @@ export default {
   letter-spacing: 1.5px;
   text-transform: uppercase;
   color: #7b818e;
+}
+
+.floating-button {
+  padding: 12px;
+  gap: 10px;
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0px 0.4px 3px rgba(0, 0, 0, 0.08), 0px 5px 16px rgba(0, 0, 0, 0.1);
+  border-radius: 100px;
+  position: absolute;
+  top: 50%;
+  cursor: pointer;
+}
+.floating-button:hover {
+  background: rgba(255, 255, 255, 1);
 }
 </style>
