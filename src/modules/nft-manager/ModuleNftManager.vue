@@ -67,6 +67,10 @@
             <span class="mew-heading-2 ml-3" style="letter-spacing: 0.3px">{{
               domain.name
             }}</span>
+            <span class="amount-label ml-auto d-flex"
+              >{{ domain.total
+              }}<v-icon color="black">mdi-chevron-up</v-icon></span
+            >
           </div>
           <!--
           =====================================================================================
@@ -423,17 +427,19 @@ export default {
       if (this.nftApiResponse && this.nftApiResponse.length > 0) {
         // Organize contracts by address
         return this.nftApiResponse.reduce((arr, item) => {
-          const nftAmount = item.queried_wallet_balances[0].quantity;
           const inList = arr.find(i => i.contract === item.contract_address);
           if (inList) {
             inList.count++;
-            inList.total += nftAmount;
           } else {
+            const { distinct_nfts_owned } = this.nftCollections.find(
+              collection => collection.id === item.collection.collection_id
+            );
             arr.push({
               contract: item.contract_address,
               count: 1,
-              total: nftAmount,
-              name: item.contract.name || item.collection.name
+              total: distinct_nfts_owned,
+              name: item.contract.name || item.collection.name,
+              collection_id: item.collection.collection_id
             });
           }
           return arr;
@@ -454,6 +460,7 @@ export default {
         )
           return item;
       });
+      console.log('domains', domains);
       return domains;
     },
     /**
@@ -845,5 +852,13 @@ export default {
 }
 .floating-button:hover {
   background: rgba(255, 255, 255, 1);
+}
+
+.amount-label {
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 24px;
+  letter-spacing: 0.3px;
+  color: #b9bdc7;
 }
 </style>
