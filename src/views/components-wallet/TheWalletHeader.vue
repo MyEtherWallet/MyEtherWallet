@@ -31,7 +31,7 @@
         Buy Crypto
       </mew-simple-btn>
 
-      <v-btn depressed fab small>
+      <v-btn depressed fab small color="transparent" dark>
         <v-icon color="textDark"> mdi-dots-horizontal </v-icon>
       </v-btn>
     </div>
