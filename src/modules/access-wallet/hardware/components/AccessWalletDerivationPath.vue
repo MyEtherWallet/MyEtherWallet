@@ -3,7 +3,11 @@
   <!-- Derivation Path Component - Access Wallet -->
   <!-- ===================================================================================== -->
 
-  <mew-menu-popup v-model="showDerivationPath" right>
+  <mew-menu-popup
+    v-model="showDerivationPath"
+    :right="!isMobile"
+    :left="isMobile"
+  >
     <template #activator>
       <v-btn depressed>
         <div class="d-flex align-center">
@@ -240,6 +244,10 @@ export default {
      * disables custom derivation path
      */
     disableCustomPaths: {
+      type: Boolean,
+      default: false
+    },
+    isMobile: {
       type: Boolean,
       default: false
     }
