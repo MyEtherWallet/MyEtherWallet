@@ -154,8 +154,8 @@ import getService from '@/core/helpers/getService';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { ETH, BSC, MATIC } from '@/utils/networks/types';
 import { toBNSafe } from '@/core/helpers/numberFormatHelper';
-
 import NFT from './handlers/handlerNftManager';
+import handleError from '@/modules/confirmation/handlers/errorHandler.js';
 
 const MIN_GAS_LIMIT = 21000;
 
@@ -440,7 +440,8 @@ export default {
               );
             })
             .catch(e => {
-              Toast(e.message, {}, ERROR);
+              const error = handleError(e.message);
+              if (error) Toast(error, {}, ERROR);
             });
         } catch (e) {
           Toast(e.message, {}, WARNING);
