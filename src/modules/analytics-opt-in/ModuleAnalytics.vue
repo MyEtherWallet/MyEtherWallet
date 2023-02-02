@@ -63,7 +63,7 @@
           class="flex-grow-1"
           color-theme="text-dark"
           btn-style="light"
-          @click.native="onClick(true)"
+          @click.native="onClick(false)"
         >
           Decline
         </mew-button>
@@ -71,7 +71,7 @@
         <mew-button
           btn-size="medium"
           class="flex-grow-1"
-          @click.native="onClick(false)"
+          @click.native="onClick(true)"
         >
           Accept
         </mew-button>
