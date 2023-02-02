@@ -112,10 +112,9 @@ export default {
           return item;
         }
       });
+      const decimals = BigNumber(10).pow(hasBalance.decimals);
       return hasBalance
-        ? BigNumber(hasBalance.balancef)
-            .decimalPlaces(hasBalance.decimals)
-            .toString()
+        ? BigNumber(hasBalance.balance).dividedBy(decimals).toFixed()
         : '0';
     },
     amountUSD() {

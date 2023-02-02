@@ -3,7 +3,11 @@
   <!-- Derivation Path Component - Access Wallet -->
   <!-- ===================================================================================== -->
 
-  <mew-menu-popup v-model="showDerivationPath" right>
+  <mew-menu-popup
+    v-model="showDerivationPath"
+    :right="!isMobile"
+    :left="isMobile"
+  >
     <template #activator>
       <v-btn depressed>
         <div class="d-flex align-center">
@@ -242,6 +246,10 @@ export default {
     disableCustomPaths: {
       type: Boolean,
       default: false
+    },
+    isMobile: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -339,13 +347,13 @@ export default {
      * Sets the custom alias value
      */
     setCustomAlias(val) {
-      this.customAlias = val.trim();
+      this.customAlias = val?.trim() || '';
     },
     /**
      * Sets the custom path value
      */
     setCustomPath(val) {
-      this.customPath = val.trim();
+      this.customPath = val?.trim() || '';
     },
     /**
      * Method sets searchValue on mew-search input event
