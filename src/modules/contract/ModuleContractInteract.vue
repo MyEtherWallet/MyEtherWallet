@@ -234,7 +234,7 @@ export default {
           if (
             item.type !== 'constructor' &&
             item.type !== 'event' &&
-            item.type !== 'Fallback'
+            item.type !== 'fallback'
           ) {
             return item;
           }
