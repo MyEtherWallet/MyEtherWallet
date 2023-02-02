@@ -14,6 +14,7 @@
           type="number"
           :error-messages="amountErrorMessages"
           class="no-right-border"
+          style="max-height: 92px; max-width: 251px"
           @keydown.native="preventCharE($event)"
         />
         <mew-select

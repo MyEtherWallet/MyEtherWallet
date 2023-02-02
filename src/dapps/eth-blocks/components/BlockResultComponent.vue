@@ -131,7 +131,7 @@
             v-if="showRemove"
             class="d-flex align-center justify-space-between remove-container"
           >
-            <div class="font-weight-bold">Remove?</div>
+            <v-spacer />
             <div class="d-flex">
               <mew-button
                 title="Keep"
@@ -343,7 +343,6 @@ export default {
   position: absolute;
   width: 100%;
   height: 100%;
-  background-color: #fff;
 }
 .block-container {
   position: relative;

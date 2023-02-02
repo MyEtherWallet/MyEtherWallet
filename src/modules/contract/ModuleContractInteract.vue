@@ -69,7 +69,7 @@
         <mew-select
           label="Function"
           :items="methods"
-          class="mb-1 FunctionSelect"
+          class="mt-4 mt-lg-0 mb-1 FunctionSelect"
           normal-dropdown
           @input="methodSelect"
         />
@@ -234,7 +234,7 @@ export default {
           if (
             item.type !== 'constructor' &&
             item.type !== 'event' &&
-            item.type !== 'Fallback'
+            item.type !== 'fallback'
           ) {
             return item;
           }
