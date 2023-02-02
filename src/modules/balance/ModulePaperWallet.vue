@@ -32,11 +32,7 @@
 </template>
 
 <script>
-import printJS from 'print-js';
-import html2canvas from 'html2canvas';
 import { mapState } from 'vuex';
-
-import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 
 export default {
   name: 'BalanceAddressPaperWallet',
@@ -90,38 +86,31 @@ export default {
   },
   methods: {
     async print() {
-      try {
-        const element = this.$refs.printContainer;
-        const screen = await html2canvas(element, {
-          async: true,
-          logging: false
-        }).then(canvas => {
-          return canvas;
-        });
-        if (screen && screen.toDataURL !== '') {
-          printJS({
-            printable: screen.toDataURL('image/png'),
-            type: 'image',
-            onError: () => {
-              Toast(this.$t('errorsGlobal.print-support-error'), ERROR);
-            }
-          });
-        } else {
-          Toast(this.$t('errorsGlobal.print-support-error'), ERROR);
-        }
-      } catch (e) {
-        Toast(e, ERROR);
-      }
+      window.print();
     }
   }
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .printable-wallet {
   position: fixed;
   top: -3000px;
   left: -3000px;
   z-index: -1;
+}
+@media print {
+  .printable-wallet-display {
+    display: none;
+  }
+  .printable-wallet {
+    background-color: rgb(241, 15, 15);
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
+  }
 }
 </style>

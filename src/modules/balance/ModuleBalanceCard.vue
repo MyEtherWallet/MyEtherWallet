@@ -29,7 +29,7 @@
                 </v-icon>
               </div>
             </template>
-            <v-list width="232px">
+            <v-list width="232px" class="bgWalletBlock">
               <v-list-item class="cursor-pointer" @click="refresh">
                 <v-icon color="textDark" class="mr-3">mdi-refresh</v-icon>
                 <v-list-item-title> Refresh Balance</v-list-item-title>
@@ -171,9 +171,9 @@
             depressed
             fab
             @click="copyAddress"
-            ><v-icon class="info-container--icon" small
-              >mdi-content-copy</v-icon
-            ></v-btn
+            ><v-icon class="info-container--icon" small color="white">
+              mdi-content-copy
+            </v-icon></v-btn
           >
         </div>
       </div>
@@ -313,7 +313,7 @@ export default {
     title() {
       return this.resolvedName
         ? this.resolvedName
-        : 'My Personal Account'.toUpperCase();
+        : 'Portfolio Value'.toUpperCase();
     },
     /**
      * verify address title

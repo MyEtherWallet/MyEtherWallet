@@ -1,0 +1,1 @@
+* apply dark theme

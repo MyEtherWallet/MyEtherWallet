@@ -1,5 +1,5 @@
 <template>
-  <div class="white moon-pay-token-select" :class="open ? 'open' : ''">
+  <div class="bgWalletBlock moon-pay-token-select" :class="open ? 'open' : ''">
     <div class="py-8">
       <div class="px-5 d-flex align-center">
         <v-btn icon @click.native="close">
@@ -14,6 +14,7 @@
           filter-placeholder="Select Network"
           label="Network"
           class="mt-1"
+          has-filter
           is-custom
         />
         <v-text-field
@@ -29,6 +30,7 @@
           <div v-for="(token, idx) in searchedCurrencyItems" :key="idx">
             <v-btn
               v-if="token.name"
+              color="buttonGrayLight"
               :class="
                 token.name == selectedCurrency.name ? 'selected-button' : ''
               "
@@ -42,7 +44,7 @@
               <div class="mew-heading-3 textDark--text ml-4">
                 {{ token.name }}
               </div>
-              <div class="textDark--text ml-3">- {{ token.subtext }}</div>
+              <div class="textDark--text ml-1">- {{ token.subtext }}</div>
               <div class="textDark--text ml-auto">{{ token.price }}</div>
             </v-btn>
           </div>
@@ -85,6 +87,10 @@ export default {
     inWallet: {
       type: Boolean,
       default: false
+    },
+    isSell: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -100,15 +106,16 @@ export default {
     ...mapState('wallet', ['instance', 'identifier']),
     searchedCurrencyItems() {
       if (this.searchValue) {
-        const found = this.currencyItems.filter(
-          element =>
+        const found = this.currencyItems.filter(element => {
+          return (
             element.name
               .toLowerCase()
               .includes(this.searchValue.toLowerCase()) ||
             element.subtext
               .toLowerCase()
               .includes(this.searchValue.toLowerCase())
-        );
+          );
+        });
         return found;
       }
       return this.currencyItems;
@@ -120,6 +127,9 @@ export default {
       if (newVal && !isEmpty(newVal) && oldVal && !isEmpty(oldVal)) {
         this.setNewNetwork(newVal);
       }
+    },
+    open() {
+      this.searchValue = '';
     }
   },
   mounted() {
@@ -131,34 +141,32 @@ export default {
     ...mapActions('wallet', ['setWeb3Instance']),
     fetchNetworks() {
       const networkList = Object.values(this.Networks).filter(network => {
-        if (
-          network[0].type.name === 'ETH' ||
-          network[0].type.name === 'MATIC' ||
-          network[0].type.name === 'BSC'
-        ) {
-          return network;
+        if (this.isSell) {
+          if (network[0].type.name === 'ETH') {
+            return network;
+          }
+        } else {
+          if (
+            network[0].type.name === 'ETH' ||
+            network[0].type.name === 'MATIC' ||
+            network[0].type.name === 'BSC'
+          ) {
+            return network;
+          }
         }
       });
-      const mappedList = networkList.map(network => {
+      this.fetchedNetworks = networkList.map(network => {
         return {
           img: network[0].type?.icon,
           name: network[0].type?.name_long,
-          symbol: network[0].type?.name
+          value: network[0].type?.name,
+          subtext: network[0].type?.currencyName
         };
       });
-      const returnedArray = [
-        {
-          img: this.network.type.icon,
-          name: this.network.type.name_long,
-          symbol: this.network.type.name
-        },
-        ...mappedList
-      ];
-      this.fetchedNetworks = returnedArray;
     },
     setNewNetwork(network) {
       const found = Object.values(this.nodes).filter(item => {
-        if (item.type.name === network.symbol) {
+        if (item.type.name === network.value) {
           return item;
         }
       });
@@ -215,6 +223,6 @@ export default {
   }
 }
 .selected-button {
-  background-color: var(--v-greyLight-base);
+  background-color: var(--v-buttonGrayLightSelected-base);
 }
 </style>

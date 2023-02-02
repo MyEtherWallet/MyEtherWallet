@@ -148,12 +148,13 @@ export default {
     border-collapse: collapse;
     width: 100%;
     thead {
-      border-bottom: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--v-borderTable-base);
       font-size: 12px;
       color: #76848b;
       font-weight: 500;
     }
     td {
+      color: var(--v-textLight-color);
       height: 58px;
       padding: 0px 20px;
     }
@@ -175,7 +176,7 @@ export default {
   border-top: 1px solid var(--border-color);
 }
 .border-bottom {
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--v-borderTable-base);
 }
 .hover-effect {
   tbody {
@@ -187,7 +188,8 @@ export default {
 .alteranting-background {
   tbody {
     tr:nth-child(odd) {
-      background-color: var(--bg-color);
+      //background-color: var(--bg-color);
+      background-color: var(--v-tableBg-base);
     }
   }
 }

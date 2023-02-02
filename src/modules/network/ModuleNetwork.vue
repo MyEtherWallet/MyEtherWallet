@@ -1,14 +1,14 @@
 <template>
   <div class="mew-component--side-info-network">
     <mew6-white-sheet :sideinfo="!mobile" class="py-5">
-      <div class="px-5 px-lg-7 mew-heading-2 mb-2">
+      <div class="textDark--text px-5 px-lg-7 mew-heading-2 mb-2">
         {{ $t('common.network') }}
       </div>
       <div class="px-3">
         <v-btn
           v-if="show"
           depressed
-          color="white"
+          color="buttonGrayLight"
           class="title-button"
           width="100%"
           height="70px"
@@ -22,7 +22,11 @@
               <div class="mew-heading-3 mb-2">{{ fullName }}</div>
               <div class="textMedium--text">Last Block: {{ lastBlock }}</div>
             </div>
-            <mew-token-container size="55px" :img="icon"></mew-token-container>
+            <div
+              class="custom-token-container d-flex align-center justify-center"
+            >
+              <img width="40px" :src="icon" />
+            </div>
           </div>
         </v-btn>
       </div>
@@ -33,10 +37,10 @@
 <script>
 import { mapGetters, mapState } from 'vuex';
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
-
 import WALLET_TYPES from '../access-wallet/common/walletTypes';
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { EventBus } from '@/core/plugins/eventBus';
+
 export default {
   name: 'ModuleNetwork',
   beforeRouteLeave(to, from, next) {
@@ -96,15 +100,29 @@ export default {
 };
 </script>
 
+<style lang="scss" scoped>
+.custom-token-container {
+  border: 2px solid #edf0f5;
+  border-radius: 12px;
+  width: 52px;
+  height: 52px;
+  background-color: white;
+}
+</style>
+
 <style lang="scss">
 .mew-component--side-info-network {
   .title-button {
     padding: 8px 16px;
-
     width: 294px;
     height: 68px;
-
     border-radius: 8px;
+
+    &:hover {
+      .custom-token-container {
+        background-color: white;
+      }
+    }
   }
 }
 </style>

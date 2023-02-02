@@ -24,6 +24,7 @@
           class="no-right-border"
           type="number"
           placeholder="Enter amount to sell"
+          style="max-width: 251px; max-height: 86px"
           :max-btn-obj="maxButton"
           :disabled="loading"
           :error-messages="errorMessages"
@@ -38,6 +39,7 @@
           class="no-right-border"
           type="number"
           placeholder="Enter amount to sell"
+          style="max-width: 251px; max-height: 86px"
           :max-btn-obj="maxButton"
           :disabled="loading"
           :error-messages="errorMessages"
@@ -139,6 +141,7 @@
       :selected-currency="selectedCurrency"
       :set-currency="setCurrency"
       :in-wallet="inWallet"
+      is-sell
       @close="openTokenSelect = false"
     />
   </div>
@@ -291,24 +294,11 @@ export default {
       return arr;
     },
     currencyItems() {
-      const tokensList = this.preselectedCurrencies;
-      const imgs = tokensList.map(item => {
-        item.value = item.name;
-        item.name = item.symbol;
-        return item.img;
+      const tokensList = this.preselectedCurrencies.map(token => {
+        token.name = token.symbol;
+        return token;
       });
-
-      const returnedArray = [
-        {
-          text: 'Select Token',
-          imgs: imgs.splice(0, 3),
-          total: `${tokensList.length}`,
-          divider: true,
-          selectLabel: true
-        },
-        ...tokensList
-      ];
-      return returnedArray;
+      return tokensList;
     },
     supportedCurrency() {
       return ['ETH', 'USDT', 'USDC', 'MATIC', 'BNB'];
@@ -669,9 +659,9 @@ export default {
           this.amount = this.selectedBalance;
         }
       } else {
-        this.amount = BigNumber(this.selectedBalance)
-          .minus(this.txFee)
-          .toString();
+        this.amount = BigNumber(this.max).lt(this.selectedBalance)
+          ? this.max.toString()
+          : BigNumber(this.selectedBalance).minus(this.txFee).toString();
       }
       this.maxBalance = this.amount;
       this.hasPersistentHint = true;

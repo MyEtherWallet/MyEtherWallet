@@ -26,6 +26,6 @@ export default {
   },
   gasPriceMultiplier: 1,
   canBuy: false,
-  coingeckID: 'moonriver',
+  coingeckoID: 'moonriver',
   balanceApi: 'https://partners.mewapi.io/balances/moonriver/'
 };

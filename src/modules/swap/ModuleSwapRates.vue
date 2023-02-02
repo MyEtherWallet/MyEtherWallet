@@ -1,6 +1,10 @@
 <template>
-  <mew6-white-sheet v-if="isEthNetwork" :sideinfo="!mobile">
-    <div class="module-swap-rates px-5 px-lg-7 py-5">
+  <mew6-white-sheet
+    v-if="isEthNetwork"
+    class="module-swap-rates"
+    :sideinfo="!mobile"
+  >
+    <div class="px-5 px-lg-7 py-5">
       <div class="d-flex align-center justify-space-between">
         <span class="mew-heading-2">{{ $t('common.swap') }}</span>
         <mew-button
@@ -15,7 +19,7 @@
       <div v-for="(data, key) in swapData" :key="key">
         <v-sheet
           v-if="data.rate"
-          color="greyLight"
+          color="buttonGrayLight"
           class="d-flex align-center justify-space-between border-radius--5px mt-1 py-3 px-4 cursor"
           @click="goToSwap(data)"
         >
