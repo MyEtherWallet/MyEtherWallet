@@ -17,6 +17,7 @@ export default {
       import('@/modules/global-modals/ModuleGlobalModals')
   },
   mounted() {
+    this.$vuetify.theme.dark = false;
     this.setOnlineStatus(false);
     this.setOfflineApp(true);
   },

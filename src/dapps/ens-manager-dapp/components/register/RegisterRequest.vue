@@ -3,7 +3,10 @@
     <div v-if="loading" class="d-flex align-center justify-center">
       <v-progress-circular indeterminate color="greenPrimary" />
     </div>
-    <div v-if="!loading" class="d-flex align-center pa-6 greyLight rounded">
+    <div
+      v-if="!loading"
+      class="d-flex align-center pa-6 bgWalletBlockDark rounded"
+    >
       <v-icon size="80" color="greenPrimary" class="mr-3">
         mdi-check-circle-outline
       </v-icon>

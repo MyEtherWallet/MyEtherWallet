@@ -3,13 +3,12 @@
     :max-width="maxWidth"
     :min-width="minWidth"
     :width="fullWidth ? '100%' : ''"
-    color="white"
+    color="bgWalletBlock"
     class="mew-component--white-sheet border-radius--10px"
     :class="[
       sideinfo ? 'sideinfo' : '',
       overflowHidden ? 'overflow--hidden' : '',
-      $vuetify.theme.dark && !noShadow ? 'box-shadow-dark' : '',
-      !$vuetify.theme.dark && !noShadow ? 'box-shadow-light' : ''
+      noShadow ? '' : 'bs-wallet-block'
     ]"
   >
     <slot />
@@ -32,14 +31,5 @@ export default {
 <style lang="scss" scoped>
 .sideinfo {
   width: 100%;
-}
-</style>
-
-<style lang="scss">
-.mew-component--white-sheet.box-shadow-light {
-  box-shadow: 0 12px 17px rgba(21, 29, 63, 0.03) !important;
-}
-.mew-component--white-sheet.box-shadow-dark {
-  box-shadow: 0 0 15px #3c3c3c !important;
 }
 </style>

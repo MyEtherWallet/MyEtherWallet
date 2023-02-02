@@ -4,7 +4,7 @@
     <!-- Add Custom Token Overlay -->
     <!-- ===================================================================================== -->
     <v-dialog :value="open" max-width="330" @click:outside="reset">
-      <div class="white pa-7">
+      <div class="bgWalletBlock pa-7">
         <div v-if="step === 1" class="full-width">
           <div class="mew-heading-2 mb-10">Add custom token</div>
           <mew-input
