@@ -1,1 +1,0 @@
-catch error 404
