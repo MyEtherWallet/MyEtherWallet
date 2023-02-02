@@ -1,5 +1,5 @@
 <template>
-  <div class="white moon-pay-token-select" :class="open ? 'open' : ''">
+  <div class="bgWalletBlock moon-pay-token-select" :class="open ? 'open' : ''">
     <div class="py-8">
       <div class="px-5 d-flex align-center">
         <v-btn icon @click.native="close">
@@ -29,6 +29,7 @@
           <div v-for="(token, idx) in searchedCurrencyItems" :key="idx">
             <v-btn
               v-if="token.name"
+              color="buttonGrayLight"
               :class="
                 token.name == selectedCurrency.name ? 'selected-button' : ''
               "
@@ -233,6 +234,6 @@ export default {
   }
 }
 .selected-button {
-  background-color: var(--v-greyLight-base);
+  background-color: var(--v-buttonGrayLightSelected-base);
 }
 </style>

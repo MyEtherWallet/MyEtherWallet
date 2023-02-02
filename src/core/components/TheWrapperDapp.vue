@@ -1,16 +1,12 @@
 <template>
-  <!--
-  =====================================================================================
-    DAPP WRAPPER:
-  =====================================================================================
-  -->
+  <!-- ===================================================================================== -->
+  <!-- DAPP WRAPPER: -->
+  <!-- ===================================================================================== -->
   <mew6-white-sheet class="mt-5 the-wrapper-dapp">
-    <!--
-    =====================================================================================
-      Mew Banner - props: bannerText, bannerImg
-      TODO: Add block header to mew banner component
-    =====================================================================================
-    -->
+    <!-- ===================================================================================== -->
+    <!-- Mew Banner - props: bannerText, bannerImg -->
+    <!-- TODO: Add block header to mew banner component -->
+    <!-- ===================================================================================== -->
     <block-header
       v-if="!isNewHeader"
       :text-obj="bannerTextObj"
@@ -27,11 +23,10 @@
         <slot name="HeaderRight" />
       </template>
     </block-header>
-    <!--
-    =====================================================================================
-     NER DAPP HEADER:
-    =====================================================================================
-    -->
+
+    <!-- ===================================================================================== -->
+    <!-- NER DAPP HEADER: -->
+    <!-- ===================================================================================== -->
     <the-dapp-header
       v-else
       :dapp-name="bannerText.title"
@@ -39,13 +34,11 @@
       :dapp-img="dappImg"
     />
 
-    <!--
-    =====================================================================================
-      Mew Tabs - props: tabItems, activeTab; takes in a slot for each
-      tab content (tabContent + tab number )
-      TODO: remove hideDefaultTabHeader prop and refactor
-    =====================================================================================
-    -->
+    <!-- ===================================================================================== -->
+    <!-- Mew Tabs - props: tabItems, activeTab; takes in a slot for each -->
+    <!-- tab content (tabContent + tab number ) -->
+    <!-- TODO: remove hideDefaultTabHeader prop and refactor -->
+    <!-- ===================================================================================== -->
     <mew-tabs
       v-if="tabItems.length > 0 && !isNewHeader"
       :class="[
@@ -68,17 +61,16 @@
         <slot :name="'tabContent' + (idx + 1)" />
       </template>
     </mew-tabs>
-    <!--
-    =====================================================================================
-      NEW menu Tabs - props: tabItems, activeTab; takes in a slot for each
-      tab content (tabContent + tab number )
-      TODO: remove hideDefaultTabHeader prop and refactor
-    =====================================================================================
-    -->
+
+    <!-- ===================================================================================== -->
+    <!-- NEW menu Tabs - props: tabItems, activeTab; takes in a slot for each -->
+    <!-- tab content (tabContent + tab number ) -->
+    <!-- TODO: remove hideDefaultTabHeader prop and refactor -->
+    <!-- ===================================================================================== -->
     <v-tabs
       v-if="tabItems.length > 0 && isNewHeader"
       :value="activeTab"
-      background-color="backgroundGrey"
+      background-color="bgWalletBlockDark"
       color="blue500"
       height="46"
       class="tab-container"
@@ -110,11 +102,10 @@
         </div>
       </v-tab>
     </v-tabs>
-    <!--
-    =====================================================================================
-     NEW ROUTER VIEW: FOR is NEW HEADER (specify in dapp metaInfo)
-    =====================================================================================
-    -->
+
+    <!-- ===================================================================================== -->
+    <!-- NEW ROUTER VIEW: FOR is NEW HEADER (specify in dapp metaInfo) -->
+    <!-- ===================================================================================== -->
     <slot
       v-if="activeTab === 0 && externalContents && isValidNetwork"
       name="tabContent1"
@@ -147,11 +138,10 @@
         :description="networkAlertText"
       />
     </div>
-    <!--
-    =====================================================================================
-     Slot: content, used to place body content if not using tabs.
-    =====================================================================================
-    -->
+
+    <!-- ===================================================================================== -->
+    <!-- Slot: content, used to place body content if not using tabs. -->
+    <!-- ===================================================================================== -->
     <div v-if="tabItems.length === 0" class="pt-8 px-3 pa-md-8">
       <slot name="content" />
     </div>

@@ -1,10 +1,12 @@
 import url from 'url';
 import web3 from 'web3';
+import { formatters } from 'web3-core-helpers';
+
 import MEWProvider from '@/utils/web3-provider';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
-import { formatters } from 'web3-core-helpers';
 import EventNames from '@/utils/web3-provider/events';
 import { EventBus } from '@/core/plugins/eventBus';
+
 const removeWallet = function ({ commit, state }) {
   if (
     state.identifier === WALLET_TYPES.WALLET_CONNECT ||
