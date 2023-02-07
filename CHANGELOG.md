@@ -1,3 +1,30 @@
+### ui
+
+* * Fix Inconsistent menu item on web/mobile [#4472](https://github.com/MyEtherWallet/MyEtherWallet/pull/4472)
+* * Fix inconsistent partner's icon height [#4475](https://github.com/MyEtherWallet/MyEtherWallet/pull/4475)
+* * Add and edit contact address padding increased on mobile and tablet view [#4482](https://github.com/MyEtherWallet/MyEtherWallet/pull/4482)
+* * Add padding on Interact with contract page on mobile and tablet [#4483](https://github.com/MyEtherWallet/MyEtherWallet/pull/4483)
+* * Fix Enkrypt typo on landing page [#4485](https://github.com/MyEtherWallet/MyEtherWallet/pull/4485)
+* * Add padding to top of hardware access mobile view [#4486](https://github.com/MyEtherWallet/MyEtherWallet/pull/4486)
+* Mobile view for Ledger was not displaying properly [#4488](https://github.com/MyEtherWallet/MyEtherWallet/pull/4488)
+* Fix Buy ETH alignment on invalid amount input [#4510](https://github.com/MyEtherWallet/MyEtherWallet/pull/4510)
+
+### devop
+
+* * apply dark theme [#4409](https://github.com/MyEtherWallet/MyEtherWallet/pull/4409)
+* * Disable Aave deposit button if token balance is 0 [#4459](https://github.com/MyEtherWallet/MyEtherWallet/pull/4459)
+* * update analytics [#4497](https://github.com/MyEtherWallet/MyEtherWallet/pull/4497)
+* sync develop [#4515](https://github.com/MyEtherWallet/MyEtherWallet/pull/4515)
+
+### fix
+
+* * Fix mobile links on landing page [#4474](https://github.com/MyEtherWallet/MyEtherWallet/pull/4474)
+* * Removed unusable fallback [#4478](https://github.com/MyEtherWallet/MyEtherWallet/pull/4478)
+* * Added error handler to nft manager [#4479](https://github.com/MyEtherWallet/MyEtherWallet/pull/4479)
+* * Fixed errors on clear [#4480](https://github.com/MyEtherWallet/MyEtherWallet/pull/4480)
+* Fix buy-sell network search [#4491](https://github.com/MyEtherWallet/MyEtherWallet/pull/4491)
+* * fix about us layout issues [#4499](https://github.com/MyEtherWallet/MyEtherWallet/pull/4499)
+
 ### Release v6.6.14
 
 ### ui
