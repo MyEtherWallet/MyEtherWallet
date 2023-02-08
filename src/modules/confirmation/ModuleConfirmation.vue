@@ -718,12 +718,12 @@ export default {
         setEvents(promiEvent, _tx, _this.$store.dispatch);
         promiEvent
           .once('sent', () => {
-            if (_this.isSwap) {
+            if (_this.isSwap && idx + 1 === _arr.length) {
               _this.trackSwap('swapTxBroadcasted');
             }
           })
           .once('receipt', () => {
-            if (_this.isSwap) {
+            if (_this.isSwap && idx + 1 === _arr.length) {
               _this.trackSwap('swapTxReceivedReceipt');
             }
           })

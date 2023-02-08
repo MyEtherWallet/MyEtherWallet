@@ -928,7 +928,6 @@ export default {
     },
     tokenInValue() {
       this.feeError = '';
-      console.log(this.clearingSwap);
       if (!this.clearingSwap) {
         this.trackSwap('tokenFromValueChanged');
       }
@@ -1679,7 +1678,6 @@ export default {
               {},
               SUCCESS
             );
-            console.log('AAAAAA');
             this.clear();
           });
         } else {
@@ -1691,7 +1689,6 @@ export default {
             main,
             currentTrade.transactions[idx]
           );
-          console.log('BBBBBBB');
           this.addNotification(new Notification(notif)).then(this.clear);
         }
       });
