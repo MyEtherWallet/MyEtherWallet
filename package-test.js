@@ -81,7 +81,11 @@ const EXCEPTIONS = [
   '@ledgerhq/live-common', // issue with imports
   '@commitlint/config-conventional',
   '@ensdomains/ens-contracts',
-  'imagemin-webp'
+  'imagemin-webp',
+  'lottie-web',
+  'highcharts',
+  'commitlint',
+  'hdkey'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
