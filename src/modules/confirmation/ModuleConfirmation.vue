@@ -816,7 +816,9 @@ export default {
         const event = this.instance.signTransaction(this.tx);
         event
           .once('sent', () => {
-            this.trackSwap('swapTxBroadcasted');
+            if (this.isSwap) {
+              this.trackSwap('swapTxBroadcasted');
+            }
           })
           .on('transactionHash', res => {
             if (this.isSwap) {
