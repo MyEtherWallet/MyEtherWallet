@@ -335,19 +335,28 @@ export default {
       }
     },
     async toAddress(newVal) {
+      console.log(newVal);
       if (isAddress(newVal)) {
-        const gasTypeFee = this.gasPriceByType(this.gasPriceType);
-        this.localGasPrice = gasTypeFee;
-        const gasFees = await this.nft.getGasFees(newVal, this.selectedNft);
-        const gasFeesToBN = toBNSafe(gasFees).mul(toBNSafe(gasTypeFee));
-        this.gasFees = gasFeesToBN.toString();
-        if (gasFeesToBN.gte(toBN(this.balanceInWei))) {
-          //gasFeesToBN vs current balance
-          this.enoughFunds = false;
-          this.showBalanceError = true;
-        } else {
-          this.enoughFunds = true;
-          this.showBalanceError = false;
+        try {
+          const gasTypeFee = this.gasPriceByType(this.gasPriceType);
+          this.localGasPrice = gasTypeFee;
+          const gasFees = await this.nft.getGasFees(newVal, this.selectedNft);
+          const gasFeesToBN = toBNSafe(gasFees).mul(toBNSafe(gasTypeFee));
+          this.gasFees = gasFeesToBN.toString();
+          if (gasFeesToBN.gte(toBN(this.balanceInWei))) {
+            //gasFeesToBN vs current balance
+            this.enoughFunds = false;
+            this.showBalanceError = true;
+          } else {
+            this.enoughFunds = true;
+            this.showBalanceError = false;
+          }
+        } catch (e) {
+          Toast(
+            `Can't send NFT! Please double check if everything is correct`,
+            {},
+            ERROR
+          );
         }
       }
     }

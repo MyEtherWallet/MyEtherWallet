@@ -215,7 +215,6 @@
 </template>
 
 <script>
-import MewMenuPopup from '@/components/mew-menu-popup/MewMenuPopup.vue';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import { isEmpty } from 'lodash';
 
@@ -223,9 +222,6 @@ import { checkCustomPath } from '@/modules/access-wallet/software/handlers/pathH
 import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import { ethereum as ethereumPath } from '@/modules/access-wallet/hardware/handlers/configs/configPaths.js';
 export default {
-  components: {
-    MewMenuPopup
-  },
   props: {
     passedPaths: {
       type: Array,
