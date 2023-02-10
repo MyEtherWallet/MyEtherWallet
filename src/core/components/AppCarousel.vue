@@ -9,7 +9,7 @@
         cycle
       >
         <v-carousel-item :ripple="false">
-          <a @click="openEnkrypt">
+          <a rel="dofollow" @click="openEnkrypt">
             <img
               class="slide-img"
               src="@/assets/images/slides/slide1.jpg"
