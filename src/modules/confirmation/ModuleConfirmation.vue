@@ -748,7 +748,7 @@ export default {
             }
           })
           .catch(err => {
-            if (_this.isSwap) {
+            if (_this.isSwap && idx + 1 === _arr.length) {
               if (
                 err.message ===
                 'MetaMask Tx Signature: User denied transaction signature.'

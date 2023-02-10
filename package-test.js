@@ -85,7 +85,8 @@ const EXCEPTIONS = [
   'lottie-web',
   'highcharts',
   'commitlint',
-  'hdkey'
+  'hdkey',
+  'eslint-plugin-security'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
