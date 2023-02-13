@@ -19,7 +19,8 @@ const AUDIT_EXCEPTIONS = [
   'codecov', // no package found
   'loader-utils', // breaks building
   'json5',
-  'http-cache-semantics'
+  'http-cache-semantics',
+  'cacheable-request'
 ];
 const execute = (command, callback) => {
   exec(
