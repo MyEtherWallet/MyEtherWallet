@@ -18,7 +18,8 @@ const AUDIT_EXCEPTIONS = [
   'scss-tokenizer',
   'codecov', // no package found
   'loader-utils', // breaks building
-  'json5'
+  'json5',
+  'http-cache-semantics'
 ];
 const execute = (command, callback) => {
   exec(
