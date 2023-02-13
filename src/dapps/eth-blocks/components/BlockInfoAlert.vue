@@ -128,12 +128,7 @@
         </v-col>
       </v-row>
     </div>
-    <mew-alert
-      :theme="alertTheme"
-      has-white-background
-      hide-alert-icon
-      hide-close-icon
-    >
+    <mew-alert :theme="alertTheme" hide-alert-icon hide-close-icon>
       <v-row class="align-center justify-start" no-gutters>
         <!--
         ===================================================

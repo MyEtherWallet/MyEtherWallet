@@ -64,10 +64,7 @@
 </template>
 
 <script>
-import MewMenuPopup from '@/components/mew-menu-popup/MewMenuPopup';
-
 export default {
-  components: { MewMenuPopup },
   data() {
     return {
       sections: [

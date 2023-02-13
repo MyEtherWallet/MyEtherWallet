@@ -208,7 +208,10 @@ export default {
     ...mapGetters('global', ['swapLink']),
     menu() {
       return [
-        { label: 'How it works', to: { name: ROUTES_HOME.HOW_IT_WORKS.NAME } },
+        {
+          label: this.$t('header.what-is-mew'),
+          to: { name: ROUTES_HOME.HOW_IT_WORKS.NAME }
+        },
         {
           label: 'Popular actions',
           sub: [
