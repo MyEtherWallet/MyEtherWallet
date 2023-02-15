@@ -256,7 +256,8 @@ import {
   hexToNumber,
   toWei,
   sha3,
-  isHex
+  isHex,
+  toHex
 } from 'web3-utils';
 import { isEmpty, isArray, cloneDeep } from 'lodash';
 import { mapState, mapGetters } from 'vuex';
@@ -717,14 +718,12 @@ export default {
         _tx.gasLimit = _tx.gas;
         setEvents(promiEvent, _tx, _this.$store.dispatch);
         promiEvent
-          .once('sent', () => {
+          .once('receipt', receipt => {
             if (_this.isSwap && idx + 1 === _arr.length) {
-              _this.trackSwap('swapTxBroadcasted');
-            }
-          })
-          .once('receipt', () => {
-            if (_this.isSwap && idx + 1 === _arr.length) {
-              _this.trackSwap('swapTxReceivedReceipt');
+              const hash = receipt.transactionHash;
+              _this.trackSwap(
+                `swapTxReceivedReceipt hash ${hash}, network: ${this.network.type.name}`
+              );
             }
           })
           .on('transactionHash', hash => {
@@ -741,7 +740,9 @@ export default {
             if (idx + 1 === _arr.length) {
               if (_this.isSwap) {
                 _this.showSuccessSwap = true;
-                _this.trackSwap('swapTransactionSuccessfullySent');
+                _this.trackSwap(
+                  `swapTxBroadcasted hash ${hash}, network: ${this.network.type.name}`
+                );
               }
               _this.reset();
               _this.showSuccess(hash);
@@ -755,7 +756,7 @@ export default {
               ) {
                 _this.trackSwap('swapTxCancelled');
               } else {
-                _this.trackSwap('swapTxFailed');
+                _this.emitSwapTxFail(err);
               }
             }
           });
@@ -771,9 +772,6 @@ export default {
       }
       if (this.tx.data && this.tx.data.includes('0x33aaf6f2')) {
         this.trackDapp('ethBlocksMinted');
-      }
-      if (this.isSwap) {
-        this.trackSwap('swapTransactionSuccessfullySent');
       }
       this.reset();
       this.showSuccess(hash);
@@ -792,6 +790,11 @@ export default {
           lastHash
         );
         this.showSuccessModal = true;
+        if (this.isSwap) {
+          this.trackSwap(
+            `swapTransactionSuccessfullySent hash: ${lastHash}, network: ${this.network.type.name}`
+          );
+        }
         return;
       }
 
@@ -806,6 +809,11 @@ export default {
         param
       );
       this.showSuccessModal = true;
+      if (this.isSwap) {
+        this.trackSwap(
+          `swapTransactionSuccessfullySent hash: ${param}, network: ${this.network.type.name}`
+        );
+      }
     },
     async signTx() {
       this.error = '';
@@ -813,23 +821,24 @@ export default {
         this.signing = true;
       }
       if (this.isWeb3Wallet) {
-        const event = this.instance.signTransaction(this.tx);
+        const newObj = Object.assign({}, this.tx, { gasLimit: toHex(50000) });
+        const event = this.instance.signTransaction(newObj);
         event
-          .once('sent', () => {
-            if (this.isSwap) {
-              this.trackSwap('swapTxBroadcasted');
-            }
-          })
           .on('transactionHash', res => {
             if (this.isSwap) {
-              this.trackSwap('swapTransactionSuccessfullySent');
+              this.trackSwap(
+                `swapTxBroadcasted hash ${res}, network: ${this.network.type.name}`
+              );
             }
             this.showTxOverlay = false;
             this.showSuccess(res);
           })
-          .once('receipt', () => {
+          .once('receipt', receipt => {
             if (this.isSwap) {
-              this.trackSwap('swapTxReceivedReceipt');
+              const hash = receipt.transactionHash;
+              this.trackSwap(
+                `swapTxReceivedReceipt hash ${hash}, network: ${this.network.type.name}`
+              );
             }
           })
           .catch(e => {
@@ -840,7 +849,7 @@ export default {
               ) {
                 this.trackSwap('swapTxCancelled');
               } else {
-                this.trackSwap('swapTxFailed');
+                this.emitSwapTxFail(e);
               }
             }
             this.signedTxObject = {};
@@ -892,7 +901,7 @@ export default {
               this.btnAction();
             }
           } else {
-            const event = this.instance.signTransaction(objClone);
+            const event = await this.instance.signTransaction(objClone);
             batchTxEvents.push(event);
             event
               .on('transactionHash', res => {
@@ -902,19 +911,24 @@ export default {
                   }
                 });
               })
-              .once('receipt', () => {
-                if (this.isSwap) {
-                  this.trackSwap('swapTxReceivedReceipt');
+              .once('receipt', receipt => {
+                if (this.isSwap && i + 1 === this.unsignedTxArr.length) {
+                  const hash = receipt.transactionHash;
+                  this.trackSwap(
+                    `swapTxReceivedReceipt hash ${hash}, network: ${this.network.type.name}`
+                  );
                 }
               })
               .catch(e => {
-                if (
-                  e.message ===
-                  'MetaMask Tx Signature: User denied transaction signature.'
-                ) {
-                  this.trackSwap('swapTxCancelled');
-                } else {
-                  this.trackSwap('swapTxFailed');
+                if (this.isSwap) {
+                  if (
+                    e.message ===
+                    'MetaMask Tx Signature: User denied transaction signature.'
+                  ) {
+                    this.trackSwap('swapTxCancelled');
+                  } else if (i + 1 === this.unsignedTxArr.length) {
+                    this.emitSwapTxFail(e);
+                  }
                 }
                 this.signing = false;
                 this.instance.errorHandler(e.message);
@@ -923,7 +937,9 @@ export default {
           this.signedTxArray = signed;
           if (this.isWeb3Wallet) this.resolver(batchTxEvents);
         } catch (err) {
-          if (this.isSwap) this.trackSwap('swapTxFailed');
+          if (this.isSwap) {
+            this.emitSwapTxFail(err);
+          }
           this.error = errorHandler(err);
           this.signedTxArray = [];
           return;
@@ -932,6 +948,16 @@ export default {
       if (!this.isWeb3Wallet && !this.isHardware && !this.isOtherWallet) {
         this.signing = false;
       }
+    },
+    emitSwapTxFail(err) {
+      const receipt =
+        err.hasOwnProperty('receipt') &&
+        err.receipt.hasOwnProperty('transactionHash')
+          ? err.receipt.transactionHash
+          : '0x';
+      this.trackSwap(
+        `swapTxFailed hash ${receipt}, network: ${this.network.type.name}`
+      );
     },
     btnAction() {
       if (this.isSwap) {

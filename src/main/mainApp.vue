@@ -44,7 +44,8 @@ export default {
     ...mapState('addressBook', ['isMigrated']),
     ...mapState('global', ['preferredCurrency']),
     ...mapState('article', ['timestamp']),
-    ...mapGetters('article', ['articleList'])
+    ...mapGetters('article', ['articleList']),
+    ...mapGetters('global', ['network'])
   },
   created() {
     const succMsg = this.$t('common.updates.new');
@@ -61,14 +62,21 @@ export default {
     });
   },
   mounted() {
-    EventBus.$on('swapTxBroadcasted', () => {
-      this.trackSwap('swapTxBroadcasted');
+    EventBus.$on('swapTxBroadcasted', hash => {
+      this.trackSwap(
+        `swapTxBroadcasted hash ${hash}, network: ${this.network.type.name}`
+      );
     });
-    EventBus.$on('swapTxReceivedReceipt', () => {
-      this.trackSwap('swapTxReceivedReceipt');
+    EventBus.$on('swapTxReceivedReceipt', hash => {
+      this.trackSwap(
+        `swapTxReceivedReceipt hash ${hash}, network: ${this.network.type.name}`
+      );
     });
-    EventBus.$on('swapTxFailed', () => {
-      this.trackSwap('swapTxFailed');
+    EventBus.$on('swapTxFailed', hash => {
+      const passedHash = hash === '0x' ? 'no hash' : hash;
+      this.trackSwap(
+        `swapTxFailed hash ${passedHash}, network: ${this.network.type.name}`
+      );
     });
     EventBus.$on(BUYSELL_EVENT, () => {
       this.openBuy();
