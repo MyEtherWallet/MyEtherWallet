@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="d-flex flex-column greyLight pa-6 rounded">
+    <div class="d-flex flex-column bgWalletBlockDark pa-6 rounded">
       <div class="d-flex justify-space-between">
         <span>{{ $t('ens.register.domain-name') }}:</span>
         <span class="font-weight-medium">{{ name }}</span>

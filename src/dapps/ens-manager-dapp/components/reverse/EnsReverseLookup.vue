@@ -2,6 +2,7 @@
   <div>
     <v-sheet
       class="addressBlock d-flex justify-space-between align-center mb-7"
+      color="transparent"
     >
       <mew-blockie :address="address" />
       <span class="font-weight-heavy pr-15">{{ address }}</span>
@@ -43,19 +44,6 @@
       <div class="mew-heading-2 mb-2">Reverse Names:</div>
       <div class="d-flex justify-space-between">
         {{ reverseRecordNames }}
-        <!-- <mew-select
-          :value="selectedDomain"
-          filter-placeholder="Search for Domain"
-          :items="domainListItems"
-          @input="setDomain"
-        >
-        </mew-select> -->
-        <!-- <mew-button
-          title="Register"
-          class="set-button"
-          btn-size="xlarge"
-          @click.native="setReverseRecord(selectedDomain)"
-        /> -->
       </div>
     </div>
   </div>
@@ -113,7 +101,11 @@ export default {
     ...mapState('global', ['gasPriceType']),
     ...mapState('wallet', ['balance', 'web3', 'instance']),
     disableRegister() {
-      if (!this.selectedDomain.loading) return true;
+      if (
+        !this.selectedDomain.hasOwnProperty('address') ||
+        !this.selectedDomain.hasOwnProperty('name')
+      )
+        return true;
       return (
         (!this.selectedDomain.value &&
           toBNSafe(this.balance).lt(this.selectedDomain.fee)) ||

@@ -6,7 +6,7 @@
       class="wallet-sidemenu"
       width="300"
       :dark="$vuetify.theme.dark"
-      color="#07385F"
+      color="bgSideMenu"
     >
       <template #prepend>
         <mew-popup
@@ -194,6 +194,20 @@
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+
+        <div class="mt-3 px-8">
+          <v-switch
+            v-model="locDarkMode"
+            class="tracking-switch"
+            hide-details
+            dark
+            inset
+            :label="`Dark theme is ${locDarkMode ? 'On' : 'Off'}`"
+            color="white"
+            off-icon="mdi-alert-circle"
+          />
+        </div>
+
         <div v-if="online" class="mt-3 px-8">
           <div class="d-flex align-center justify-space-between">
             <a
@@ -292,6 +306,7 @@ export default {
   },
   mixins: [handlerAnalytics],
   data() {
+    const locDarkMode = this.$vuetify.theme.dark;
     return {
       isOpenNetworkOverlay: false,
       navOpen: null,
@@ -307,11 +322,12 @@ export default {
         text: 'Need help?',
         linkTitle: 'Contact support',
         link: 'mailto:support@myetherwallet.com'
-      }
+      },
+      locDarkMode: locDarkMode
     };
   },
   computed: {
-    ...mapGetters('global', ['network', 'isEthNetwork', 'hasSwap']),
+    ...mapGetters('global', ['network', 'isEthNetwork', 'hasSwap', 'darkMode']),
     ...mapState('wallet', ['instance', 'isOfflineApp']),
     ...mapState('global', ['online', 'validNetwork']),
     ...mapState('popups', ['consentToTrack']),
@@ -488,6 +504,13 @@ export default {
     }
   },
   watch: {
+    '$vuetify.theme.dark': function (val) {
+      this.locDarkMode = val;
+    },
+    locDarkMode(val) {
+      this.setDarkMode(val);
+      this.$vuetify.theme.dark = val;
+    },
     isOpenNetworkOverlay(newVal) {
       if (newVal && this.$route.name == ROUTES_WALLET.SWAP.NAME) {
         this.trackSwap('switchingNetworkOnSwap');
@@ -526,6 +549,7 @@ export default {
   },
   methods: {
     ...mapActions('wallet', ['removeWallet']),
+    ...mapActions('global', ['setDarkMode']),
     trackToSwap() {
       this.trackSwap('fromSideMenu');
     },
@@ -566,6 +590,7 @@ export default {
     },
     onLogout() {
       this.showLogoutPopup = false;
+      this.$vuetify.theme.dark = false;
       this.removeWallet();
     },
     toggleLogout() {
@@ -751,7 +776,11 @@ export default {
       background: transparent;
     }
   }
-
+  .tracking-switch {
+    .v-label {
+      color: var(--v-white-base);
+    }
+  }
   .opacity--30 {
     opacity: 30% !important;
   }

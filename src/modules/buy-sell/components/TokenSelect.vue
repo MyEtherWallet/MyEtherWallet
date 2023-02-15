@@ -1,5 +1,5 @@
 <template>
-  <div class="white moon-pay-token-select" :class="open ? 'open' : ''">
+  <div class="bgWalletBlock moon-pay-token-select" :class="open ? 'open' : ''">
     <div class="py-8">
       <div class="px-5 d-flex align-center">
         <v-btn icon @click.native="close">
@@ -14,6 +14,7 @@
           filter-placeholder="Select Network"
           label="Network"
           class="mt-1"
+          has-filter
           is-custom
         />
         <v-text-field
@@ -29,6 +30,7 @@
           <div v-for="(token, idx) in searchedCurrencyItems" :key="idx">
             <v-btn
               v-if="token.name"
+              color="buttonGrayLight"
               :class="
                 token.name == selectedCurrency.name ? 'selected-button' : ''
               "
@@ -104,18 +106,16 @@ export default {
     ...mapState('wallet', ['instance', 'identifier']),
     searchedCurrencyItems() {
       if (this.searchValue) {
-        const found = this.currencyItems
-          .slice(1, this.currencyItems.length)
-          .filter(element => {
-            return (
-              element.name
-                .toLowerCase()
-                .includes(this.searchValue.toLowerCase()) ||
-              element.subtext
-                .toLowerCase()
-                .includes(this.searchValue.toLowerCase())
-            );
-          });
+        const found = this.currencyItems.filter(element => {
+          return (
+            element.name
+              .toLowerCase()
+              .includes(this.searchValue.toLowerCase()) ||
+            element.subtext
+              .toLowerCase()
+              .includes(this.searchValue.toLowerCase())
+          );
+        });
         return found;
       }
       return this.currencyItems;
@@ -155,7 +155,7 @@ export default {
           }
         }
       });
-      const mappedList = networkList.map(network => {
+      this.fetchedNetworks = networkList.map(network => {
         return {
           img: network[0].type?.icon,
           name: network[0].type?.name_long,
@@ -163,16 +163,6 @@ export default {
           subtext: network[0].type?.currencyName
         };
       });
-      const returnedArray = [
-        {
-          img: this.network.type.icon,
-          name: this.network.type.name_long,
-          value: this.network.type.name,
-          subtext: this.network.type.currencyName
-        },
-        ...mappedList
-      ];
-      this.fetchedNetworks = returnedArray;
     },
     setNewNetwork(network) {
       const found = Object.values(this.nodes).filter(item => {
@@ -233,6 +223,6 @@ export default {
   }
 }
 .selected-button {
-  background-color: var(--v-greyLight-base);
+  background-color: var(--v-buttonGrayLightSelected-base);
 }
 </style>

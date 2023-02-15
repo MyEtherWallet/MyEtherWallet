@@ -77,7 +77,6 @@
             title="You do not have any ETH Blocks"
             description="If you recently minted or purchased an ETH Block, please wait until the transaction has been minted and come back. If you haven’t minted one, what are you waiting for? Mint a block!"
             theme="info"
-            has-white-background
             hide-close-icon
           />
         </v-col>

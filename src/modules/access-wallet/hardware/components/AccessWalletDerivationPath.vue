@@ -3,7 +3,11 @@
   <!-- Derivation Path Component - Access Wallet -->
   <!-- ===================================================================================== -->
 
-  <mew-menu-popup v-model="showDerivationPath" right>
+  <mew-menu-popup
+    v-model="showDerivationPath"
+    :right="!isMobile"
+    :left="isMobile"
+  >
     <template #activator>
       <v-btn depressed>
         <div class="d-flex align-center">
@@ -211,7 +215,6 @@
 </template>
 
 <script>
-import MewMenuPopup from '@/components/mew-menu-popup/MewMenuPopup.vue';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import { isEmpty } from 'lodash';
 
@@ -219,9 +222,6 @@ import { checkCustomPath } from '@/modules/access-wallet/software/handlers/pathH
 import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import { ethereum as ethereumPath } from '@/modules/access-wallet/hardware/handlers/configs/configPaths.js';
 export default {
-  components: {
-    MewMenuPopup
-  },
   props: {
     passedPaths: {
       type: Array,
@@ -240,6 +240,10 @@ export default {
      * disables custom derivation path
      */
     disableCustomPaths: {
+      type: Boolean,
+      default: false
+    },
+    isMobile: {
       type: Boolean,
       default: false
     }
@@ -339,13 +343,13 @@ export default {
      * Sets the custom alias value
      */
     setCustomAlias(val) {
-      this.customAlias = val.trim();
+      this.customAlias = val?.trim() || '';
     },
     /**
      * Sets the custom path value
      */
     setCustomPath(val) {
-      this.customPath = val.trim();
+      this.customPath = val?.trim() || '';
     },
     /**
      * Method sets searchValue on mew-search input event

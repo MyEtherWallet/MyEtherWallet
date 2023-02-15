@@ -17,6 +17,7 @@
       :has-elevation="true"
       :has-full-height="true"
       icon-align="left"
+      class="bgWalletBlock"
     >
       <template v-if="false" #rightHeaderContainer>
         <div class="d-flex align-center ml-8 mt-3 mt-sm-0">
