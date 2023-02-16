@@ -496,7 +496,11 @@ export default {
           newVal.length === this.unsignedTxArr.length
         ) {
           if (this.isSwap) {
-            this.trackSwap('swapTransactionSuccessfullySent');
+            this.trackSwap(
+              'swapTransactionSuccessfullySent',
+              newVal[newVal.length - 1],
+              this.network.type.name
+            );
           }
           this.showTxOverlay = false;
           this.showSuccess(newVal);
@@ -723,7 +727,9 @@ export default {
             if (_this.isSwap && idx + 1 === _arr.length) {
               const hash = receipt.transactionHash;
               _this.trackSwap(
-                `swapTxReceivedReceipt hash ${hash}, network: ${this.network.type.name}`
+                'swapTxReceivedReceipt',
+                hash,
+                this.network.type.name
               );
             }
           })
@@ -742,7 +748,9 @@ export default {
               if (_this.isSwap) {
                 _this.showSuccessSwap = true;
                 _this.trackSwap(
-                  `swapTxBroadcasted hash ${hash}, network: ${this.network.type.name}`
+                  'swapTxBroadcasted',
+                  hash,
+                  this.network.type.name
                 );
               }
               _this.reset();
@@ -793,7 +801,9 @@ export default {
         this.showSuccessModal = true;
         if (this.isSwap) {
           this.trackSwap(
-            `swapTransactionSuccessfullySent hash: ${lastHash}, network: ${this.network.type.name}`
+            'swapTransactionSuccessfullySent',
+            lastHash,
+            this.network.type.name
           );
         }
         return;
@@ -812,7 +822,9 @@ export default {
       this.showSuccessModal = true;
       if (this.isSwap) {
         this.trackSwap(
-          `swapTransactionSuccessfullySent hash: ${param}, network: ${this.network.type.name}`
+          'swapTransactionSuccessfullySent',
+          param,
+          this.network.type.name
         );
       }
     },
@@ -827,9 +839,7 @@ export default {
         event
           .on('transactionHash', res => {
             if (this.isSwap) {
-              this.trackSwap(
-                `swapTxBroadcasted hash ${res}, network: ${this.network.type.name}`
-              );
+              this.trackSwap('swapTxBroadcasted', res, this.network.type.name);
             }
             this.showTxOverlay = false;
             this.showSuccess(res);
@@ -838,7 +848,9 @@ export default {
             if (this.isSwap) {
               const hash = receipt.transactionHash;
               this.trackSwap(
-                `swapTxReceivedReceipt hash ${hash}, network: ${this.network.type.name}`
+                'swapTxReceivedReceipt',
+                hash,
+                this.network.type.name
               );
             }
           })
@@ -902,7 +914,7 @@ export default {
               this.btnAction();
             }
           } else {
-            const event = await this.instance.signTransaction(objClone);
+            const event = this.instance.signTransaction(objClone);
             batchTxEvents.push(event);
             event
               .on('transactionHash', res => {
@@ -916,7 +928,9 @@ export default {
                 if (this.isSwap && i + 1 === this.unsignedTxArr.length) {
                   const hash = receipt.transactionHash;
                   this.trackSwap(
-                    `swapTxReceivedReceipt hash ${hash}, network: ${this.network.type.name}`
+                    'swapTxReceivedReceipt',
+                    hash,
+                    this.network.type.name
                   );
                 }
               })
@@ -956,9 +970,7 @@ export default {
         err.receipt.hasOwnProperty('transactionHash')
           ? err.receipt.transactionHash
           : '0x';
-      this.trackSwap(
-        `swapTxFailed hash ${receipt}, network: ${this.network.type.name}`
-      );
+      this.trackSwap('swapTxFailed', receipt, this.network.type.name);
     },
     btnAction() {
       if (this.isSwap) {

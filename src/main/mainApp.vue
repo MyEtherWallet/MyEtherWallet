@@ -64,20 +64,14 @@ export default {
   },
   mounted() {
     EventBus.$on('swapTxBroadcasted', hash => {
-      this.trackSwap(
-        `swapTxBroadcasted hash ${hash}, network: ${this.network.type.name}`
-      );
+      this.trackSwap('swapTxBroadcasted', hash, this.network.type.name);
     });
     EventBus.$on('swapTxReceivedReceipt', hash => {
-      this.trackSwap(
-        `swapTxReceivedReceipt hash ${hash}, network: ${this.network.type.name}`
-      );
+      this.trackSwap('swapTxReceivedReceipt', hash, this.network.type.name);
     });
     EventBus.$on('swapTxFailed', hash => {
       const passedHash = hash === '0x' ? 'no hash' : hash;
-      this.trackSwap(
-        `swapTxFailed hash ${passedHash}, network: ${this.network.type.name}`
-      );
+      this.trackSwap('swapTxFailed', passedHash, this.network.type.name);
     });
     EventBus.$on(BUYSELL_EVENT, () => {
       this.openBuy();
