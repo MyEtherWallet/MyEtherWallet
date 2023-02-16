@@ -297,7 +297,6 @@ export default {
   width: 100%;
   border: 1px solid var(--v-buttonBorder-base);
   background-color: var(--v-buttonGrayLight-base);
-  opacity: 0.5;
   &.active {
     border: 2px solid #05c0a5;
     opacity: 1 !important;
@@ -306,6 +305,11 @@ export default {
     opacity: 1 !important;
     background-color: var(--v-buttonGrayLight-base);
   }
+}
+
+#disabled {
+  opacity: 0.5;
+  pointer-events: none;
 }
 .buy-eth:hover {
   cursor: pointer;
