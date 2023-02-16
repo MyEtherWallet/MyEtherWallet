@@ -319,7 +319,6 @@ export default {
       return newObj;
     },
     toggleAddCustomToken(val) {
-      console.log('gets here?');
       this.openAddCustomToken = val ? val : !this.openAddCustomToken;
     },
     toggleRemoveCustomToken() {
