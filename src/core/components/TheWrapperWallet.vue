@@ -39,7 +39,32 @@
       Right Col - secondary modules, Network is present on top on md-xl
     =====================================================================================
     -->
-    <v-col cols="12" md="4" class="pa-2 pa-md-3">
+    <v-col
+      v-if="!hasDraggable || totalRightColItems === 1"
+      cols="12"
+      md="4"
+      class="pa-2 pa-md-3"
+    >
+      <v-row class="ma-n2 ma-md-n3">
+        <v-col cols="12" class="pa-2 pa-md-3 d-none d-md-block">
+          <module-network />
+        </v-col>
+        <v-col
+          v-for="n in totalRightColItems"
+          :key="n"
+          cols="12"
+          class="pa-2 pa-md-3 pb-0"
+        >
+          <slot :name="`rightColItem${n}`" />
+        </v-col>
+      </v-row>
+    </v-col>
+    <v-col
+      v-if="totalRightColItems === 2 && hasDraggable"
+      cols="12"
+      md="4"
+      class="pa-2 pa-md-3"
+    >
       <module-network class="d-none d-md-block mb-2" />
       <draggable
         v-bind="dragOptions"
@@ -83,15 +108,19 @@ export default {
     totalRightColItems: {
       type: Number,
       default: 1
+    },
+    hasDraggable: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
-    const newArr = [];
-    for (let i = 0; i < this.totalRightColItems - 1; i++) {
-      newArr.push(i + 1);
+    const arr = [];
+    for (let i = 0; i < this.totalRightColItems; i++) {
+      arr.push(i + 1);
     }
     return {
-      draggableItems: newArr
+      draggableItems: arr
     };
   },
   computed: {
@@ -102,6 +131,16 @@ export default {
         disabled: false,
         ghostClass: 'ghost'
       };
+    }
+  },
+  watch: {
+    totalRightColItems() {
+      this.draggableItems = [];
+      const arr = [];
+      for (let i = 0; i < this.totalRightColItems; i++) {
+        arr.push(i + 1);
+      }
+      this.draggableItems = arr;
     }
   }
 };
