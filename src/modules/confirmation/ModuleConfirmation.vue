@@ -257,8 +257,7 @@ import {
   hexToNumber,
   toWei,
   sha3,
-  isHex,
-  toHex
+  isHex
 } from 'web3-utils';
 import { isEmpty, isArray, cloneDeep } from 'lodash';
 import { mapState, mapGetters } from 'vuex';
@@ -834,8 +833,7 @@ export default {
         this.signing = true;
       }
       if (this.isWeb3Wallet) {
-        const newObj = Object.assign({}, this.tx, { gasLimit: toHex(50000) });
-        const event = this.instance.signTransaction(newObj);
+        const event = this.instance.signTransaction(this.tx);
         event
           .on('transactionHash', res => {
             if (this.isSwap) {
