@@ -86,7 +86,8 @@ const EXCEPTIONS = [
   'highcharts',
   'commitlint',
   'hdkey',
-  'eslint-plugin-security'
+  'eslint-plugin-security',
+  'protobufjs'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
