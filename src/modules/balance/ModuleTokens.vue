@@ -68,7 +68,12 @@
       display if the user has no tokens
     =====================================================================================
     -->
-    <balance-empty-block v-if="emptyWallet" is-tokens :is-eth="isEthNetwork" />
+    <balance-empty-block
+      v-if="emptyWallet"
+      is-tokens
+      :is-eth="isEthNetwork"
+      @openAddCustomToken="() => toggleAddCustomToken(true)"
+    />
     <!--
     =====================================================================================
       add Custom Token form
@@ -313,8 +318,9 @@ export default {
       }
       return newObj;
     },
-    toggleAddCustomToken() {
-      this.openAddCustomToken = !this.openAddCustomToken;
+    toggleAddCustomToken(val) {
+      console.log('gets here?');
+      this.openAddCustomToken = val ? val : !this.openAddCustomToken;
     },
     toggleRemoveCustomToken() {
       this.openRemoveCustomToken = !this.openRemoveCustomToken;
