@@ -41,19 +41,39 @@
     -->
     <v-col cols="12" md="4" class="pa-2 pa-md-3">
       <module-network class="d-none d-md-block mb-2" />
-      <div v-for="n in totalRightColItems" :key="n">
-        <slot :name="`rightColItem${n}`" />
-      </div>
+      <draggable
+        v-bind="dragOptions"
+        v-model="draggableItems"
+        handle=".handle"
+        @start="drag = true"
+        @end="drag = false"
+      >
+        <transition-group>
+          <div
+            v-for="n in draggableItems"
+            :key="n"
+            class="position--relative mb-2"
+          >
+            <slot :name="`rightColItem${n}`" />
+            <v-icon class="handle" color="#d6d6d6" size="23px">
+              mdi-drag-horizontal-variant
+            </v-icon>
+          </div>
+        </transition-group>
+      </draggable>
     </v-col>
   </v-row>
 </template>
 
 <script>
 import ModuleNetwork from '@/modules/network/ModuleNetwork';
+import draggable from 'vuedraggable';
+
 export default {
   name: 'TheWrapperWallet',
   components: {
-    ModuleNetwork
+    ModuleNetwork,
+    draggable
   },
   props: {
     totalLeftColItems: {
@@ -64,6 +84,47 @@ export default {
       type: Number,
       default: 1
     }
+  },
+  data() {
+    const newArr = [];
+    for (let i = 0; i < this.totalRightColItems - 1; i++) {
+      newArr.push(i + 1);
+    }
+    return {
+      draggableItems: newArr
+    };
+  },
+  computed: {
+    dragOptions() {
+      return {
+        animation: 200,
+        group: 'description',
+        disabled: false,
+        ghostClass: 'ghost'
+      };
+    }
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.button {
+  margin-top: 35px;
+}
+.flip-list-move {
+  transition: transform 0.5s;
+}
+.no-move {
+  transition: transform 0s;
+}
+.ghost {
+  opacity: 0.5;
+  background: #c8ebfb;
+}
+.handle {
+  cursor: move;
+  position: absolute;
+  left: 24px;
+  top: 28px;
+}
+</style>

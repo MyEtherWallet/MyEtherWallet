@@ -4,7 +4,7 @@
       <module-contract-interact />
     </template>
     <template #rightColItem1>
-      <the-draggable-items />
+      <module-swap-rates />
     </template>
   </the-wrapper-wallet>
 </template>
@@ -13,7 +13,6 @@
 export default {
   name: 'InteracContractLayout',
   components: {
-    TheDraggableItems: () => import('@/views/layouts-wallet/TheDraggableItems'),
     TheWrapperWallet: () => import('@/core/components/TheWrapperWallet'),
     ModuleSwapRates: () => import('@/modules/swap/ModuleSwapRates'),
     ModuleContractInteract: () =>

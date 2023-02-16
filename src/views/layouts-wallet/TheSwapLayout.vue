@@ -9,7 +9,7 @@
       />
     </template>
     <template #rightColItem1>
-      <the-draggable-items :is-swap="true" />
+      <module-tokens-value />
     </template>
     <template v-if="hasHistory && hasSwap" #rightColItem2>
       <module-transfer-history :is-swap="true" />
@@ -25,7 +25,6 @@ const DAI_TOKEN = '0x6b175474e89094c44da98b954eedeac495271d0f';
 
 export default {
   components: {
-    TheDraggableItems: () => import('@/views/layouts-wallet/TheDraggableItems'),
     TheWrapperWallet: () => import('@/core/components/TheWrapperWallet'),
     ModuleSwap: () => import('@/modules/swap/ModuleSwap'),
     ModuleTokensValue: () => import('@/modules/balance/ModuleTokensValue'),
