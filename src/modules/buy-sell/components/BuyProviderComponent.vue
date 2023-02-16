@@ -77,7 +77,7 @@
         <mew-button
           btn-size="large"
           btn-style="light"
-          color-theme="basic"
+          color-theme="buttonGrayLight"
           has-full-width
           :is-valid-address-func="isValidToAddress"
           :title="moonpayBtnTitle"
@@ -151,7 +151,7 @@
         <mew-button
           btn-size="large"
           btn-style="light"
-          color-theme="basic"
+          color-theme="buttonGrayLight"
           has-full-width
           :title="simplexBtnTitle"
           @click.native="openSimplex"

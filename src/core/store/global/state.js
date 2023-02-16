@@ -26,7 +26,8 @@ const state = {
     baseFeePerGas: '0',
     maxPriorityFeePerGas: '0'
   },
-  testing: false
+  testing: false,
+  darkMode: false
 };
 state.currentNetwork.type = {
   name: state.currentNetwork.type.name

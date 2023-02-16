@@ -88,14 +88,16 @@ export default {
     },
     animateMewCard() {
       const el = document.querySelector('.mew-card');
-      el.style.opacity = 0;
-      anime({
-        targets: el,
-        opacity: 1,
-        delay: 1300,
-        duration: 500,
-        easing: 'easeInOutQuad'
-      });
+      if (el) {
+        el.style.opacity = 0;
+        anime({
+          targets: el,
+          opacity: 1,
+          delay: 1300,
+          duration: 500,
+          easing: 'easeInOutQuad'
+        });
+      }
     }
   }
 };

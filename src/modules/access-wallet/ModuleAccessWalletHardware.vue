@@ -127,7 +127,7 @@
               Step 2: Start Access to Selected Hardware Wallet
             =====================================================================================
             -->
-    <div v-if="step <= walletInitialized" class="full-width">
+    <div v-if="step <= walletInitialized" class="full-width mt-4 mt-lg-0">
       <!--
         =====================================================================================
           Bitbox2
@@ -773,7 +773,7 @@ export default {
                   this.nextStep();
                 })
                 .catch(e => {
-                  this.wallets[this.walletType].create.errorHandler(e);
+                  this.wallets[this.walletType]?.create.errorHandler(e);
                   if (e.message === 'Error: Pairing rejected') {
                     this.reset();
                   }

@@ -90,10 +90,6 @@
             class="d-flex align-end block-box-shadow mx-auto mb-6"
             :title="$t('home.about-mew.card-one.title')"
             :desc="$t('home.about-mew.card-one.text')"
-            :link="{
-              title: 'Learn more',
-              url: 'www.myetherwallet.com'
-            }"
             :icon="require('@/assets/images/icons/icon-faces-mew.svg')"
           />
 
@@ -101,20 +97,12 @@
             class="full-height mx-auto mb-6"
             :title="$t('home.about-mew.card-two.title')"
             :desc="$t('home.about-mew.card-two.text')"
-            :link="{
-              title: 'Learn more',
-              url: 'www.myetherwallet.com'
-            }"
           />
 
           <mew-info-card
             class="full-height mx-auto mb-6"
             :title="$t('home.about-mew.card-three.title')"
             :desc="$t('home.about-mew.card-three.text')"
-            :link="{
-              title: 'Learn more',
-              url: 'www.myetherwallet.com'
-            }"
           />
 
           <mew-info-card
@@ -123,7 +111,7 @@
             :desc="$t('home.about-mew.card-four.text')"
             :link="{
               title: $t('home.about-mew.card-four.link'),
-              url: 'www.myetherwallet.com'
+              url: 'https://www.mewwallet.com/'
             }"
           >
             <template #titleIconContainer>

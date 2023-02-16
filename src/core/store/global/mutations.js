@@ -64,6 +64,10 @@ const SET_MAX_PRIORITY_FEE_PER_GAS = function (state, maxPriorityFeePerGasBN) {
   state.eip1559.maxPriorityFeePerGas = maxPriorityFeePerGasBN.toString();
 };
 
+const SET_DARK_MODE = function (state, val) {
+  state.darkMode = val;
+};
+
 export default {
   SET_ONLINE_STATUS,
   SET_LOCALE,
@@ -76,5 +80,6 @@ export default {
   SET_IMPORTED_STATE,
   ADD_LOCAL_CONTRACT,
   SET_BASE_FEE_PER_GAS,
-  SET_MAX_PRIORITY_FEE_PER_GAS
+  SET_MAX_PRIORITY_FEE_PER_GAS,
+  SET_DARK_MODE
 };

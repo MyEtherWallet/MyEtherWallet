@@ -33,25 +33,28 @@
             </v-icon>
             <img
               v-if="b.title === gasPriceTypes.REGULAR"
+              :class="isDark ? 'dark-icon' : ''"
               src="@/assets/images/icons/icon-arrow-up.svg"
               alt="arrow up"
               height="15"
             />
             <img
               v-if="b.title === gasPriceTypes.FAST"
+              :class="isDark ? 'dark-icon' : ''"
               src="@/assets/images/icons/icon-arrow-up.svg"
               alt="arrow up"
               height="15"
             />
             <img
               v-if="b.title === gasPriceTypes.FAST"
+              :class="isDark ? 'dark-icon' : ''"
               src="@/assets/images/icons/icon-arrow-up.svg"
               alt="arrow up"
               height="15"
             />
           </div>
           <div>
-            <div class="mew-heading-3 font-weight-regular">
+            <div class="mew-heading-3 font-weight-regular textDark--text">
               {{ b.priority }}
             </div>
             <div v-if="!fromSettings" class="prices d-flex">
@@ -207,6 +210,9 @@ export default {
       });
 
       return counter < 3;
+    },
+    isDark() {
+      return this.$vuetify.theme.dark;
     }
   },
   watch: {
@@ -289,23 +295,16 @@ export default {
   cursor: pointer;
   user-select: none;
   width: 100%;
-  border: 1px solid var(--v-greyLight-base);
-  &#disabled {
-    filter: grayscale(1);
-    opacity: 0.25 !important;
-    pointer-events: none;
-    border: 1px solid #eaedf7;
-  }
-  &:hover {
-    background-color: #e9eff4;
-  }
+  border: 1px solid var(--v-buttonBorder-base);
+  background-color: var(--v-buttonGrayLight-base);
+  opacity: 0.5;
   &.active {
     border: 2px solid #05c0a5;
-    opacity: 1;
-    &:hover {
-      opacity: 1;
-      background-color: #d5edef;
-    }
+    opacity: 1 !important;
+  }
+  &:hover {
+    opacity: 1 !important;
+    background-color: var(--v-buttonGrayLight-base);
   }
 }
 .buy-eth:hover {
@@ -314,5 +313,8 @@ export default {
 .prices {
   white-space: nowrap;
   font-size: 14px;
+}
+.dark-icon {
+  filter: invert(1);
 }
 </style>
