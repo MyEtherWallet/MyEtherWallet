@@ -87,7 +87,8 @@ const EXCEPTIONS = [
   'commitlint',
   'hdkey',
   'eslint-plugin-security',
-  'protobufjs'
+  'protobufjs',
+  'stylelint-config-prettier'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
