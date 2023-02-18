@@ -912,19 +912,17 @@ export default {
               this.btnAction();
             }
           } else {
-            const event = this.instance.signTransaction(objClone);
-            batchTxEvents.push(event);
-            event
-              .on('transactionHash', res => {
+            await this.instance
+              .signTransaction(objClone)
+              .then(event => {
+                const hash = event.transactionHash;
                 signed.push({
                   tx: {
-                    hash: res
+                    hash: hash
                   }
                 });
-              })
-              .once('receipt', receipt => {
+                batchTxEvents.push(event);
                 if (this.isSwap && i + 1 === this.unsignedTxArr.length) {
-                  const hash = receipt.transactionHash;
                   this.trackSwap(
                     'swapTxReceivedReceipt',
                     hash,
@@ -939,16 +937,17 @@ export default {
                     'MetaMask Tx Signature: User denied transaction signature.'
                   ) {
                     this.trackSwap('swapTxCancelled');
+                    throw new Error(e.message);
                   } else if (i + 1 === this.unsignedTxArr.length) {
                     this.emitSwapTxFail(e);
                   }
                 }
                 this.signing = false;
                 this.instance.errorHandler(e.message);
+                throw new Error(e.message);
               });
           }
           this.signedTxArray = signed;
-          if (this.isWeb3Wallet) this.resolver(batchTxEvents);
         } catch (err) {
           if (this.isSwap) {
             this.emitSwapTxFail(err);
@@ -961,6 +960,7 @@ export default {
       if (!this.isWeb3Wallet && !this.isHardware && !this.isOtherWallet) {
         this.signing = false;
       }
+      if (this.isWeb3Wallet) this.resolver(batchTxEvents);
     },
     emitSwapTxFail(err) {
       const receipt =
