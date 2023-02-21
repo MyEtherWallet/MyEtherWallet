@@ -74,6 +74,7 @@
           <module-address-book
             ref="addressInput"
             class="AddressInput"
+            :currency="currencyName"
             @setAddress="setAddress"
           />
         </v-col>

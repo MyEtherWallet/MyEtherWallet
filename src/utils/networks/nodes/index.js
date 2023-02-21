@@ -8,6 +8,7 @@ import mintmemewws from './mintme-mew-ws';
 import xdcnetwork from './xdcnetwork-ws';
 import moonbeam from './moonbeam-ws';
 import moonriver from './moonriver-ws';
+import rootstock from './rootstock-ws';
 
 export {
   etcethereumclassiccooperativeparityws,
@@ -19,5 +20,6 @@ export {
   mintmemewws,
   xdcnetwork,
   moonbeam,
-  moonriver
+  moonriver,
+  rootstock
 };
