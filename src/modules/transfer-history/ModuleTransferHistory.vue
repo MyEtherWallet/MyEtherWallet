@@ -2,7 +2,9 @@
   <mew6-white-sheet class="px-5 px-lg-7 py-5 justify-space-between">
     <v-row dense>
       <v-col cols="11">
-        <div class="mew-heading-2 mb-3">{{ actualTitle }}</div>
+        <div :class="[draggable ? 'ml-7' : '', 'mew-heading-2 mb-3']">
+          {{ actualTitle }}
+        </div>
       </v-col>
       <v-col cols="1" align="right" @click="toggleDropdown">
         <v-icon color="black">{{ chevronIcon }}</v-icon>
@@ -31,6 +33,10 @@ export default {
   name: 'ModuleTransferHistory',
   props: {
     isSwap: {
+      type: Boolean,
+      default: false
+    },
+    draggable: {
       type: Boolean,
       default: false
     }

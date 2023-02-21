@@ -1,5 +1,9 @@
 <template>
-  <the-wrapper-wallet :total-left-col-items="2" :total-right-col-items="2">
+  <the-wrapper-wallet
+    :total-left-col-items="2"
+    :has-draggable="false"
+    :total-right-col-items="2"
+  >
     <template #leftColItem1>
       <module-balance />
     </template>
