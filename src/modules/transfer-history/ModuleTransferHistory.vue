@@ -68,7 +68,7 @@ export default {
         : this.parsedSwapNotifications;
     },
     actualTitle() {
-      return this.isSwap ? `Swap History` : `Tx History`;
+      return this.isSwap ? `Swap History` : `Send History`;
     },
     chevronIcon() {
       return this.dropdown ? 'mdi-chevron-up' : 'mdi-chevron-down';
