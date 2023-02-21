@@ -109,11 +109,11 @@ const ledgerLiveEthereumClassic = {
 };
 const rskMainnet = {
   path: "m/44'/137'/0'/0",
-  label: 'RSK Mainnet'
+  label: 'Rootstock Mainnet'
 };
 const rskTestnet = {
   path: "m/44'/37310'/0'/0",
-  label: 'RSK Testnet'
+  label: 'Rootstock Testnet'
 };
 const keepkeyEthereum = {
   path: "m/44'/60'",
