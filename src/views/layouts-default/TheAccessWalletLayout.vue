@@ -365,6 +365,7 @@ export default {
           }
         } catch (e) {
           if (
+            e instanceof Error &&
             e.message === 'Already processing eth_requestAccounts. Please wait.'
           )
             Toast(
