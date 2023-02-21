@@ -25,7 +25,7 @@ export default {
   },
   watch: {
     data(val) {
-      if (val !== '') {
+      if (val && val !== '') {
         this.generateQRCode();
       }
     }
