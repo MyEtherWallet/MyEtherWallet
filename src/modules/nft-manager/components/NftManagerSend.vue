@@ -16,7 +16,7 @@
     </div>
     <span class="mew-heading-2">Send Your NFT </span>
     <img height="150" :src="nft.image" alt="nft image" @error="onImgErr" />
-    <div class="mb-4 mt-2">{{ nft.name }}</div>
+    <div class="mb-4 mt-2">{{ nft.name | concatName }}</div>
     <module-address-book @setAddress="setAddress" />
     <span
       v-if="!enoughFunds && showBalanceError"
@@ -45,6 +45,16 @@ import { mapGetters } from 'vuex';
 export default {
   components: {
     ModuleAddressBook: () => import('@/modules/address-book/ModuleAddressBook')
+  },
+  filters: {
+    concatName(val) {
+      // should probably be moved globablly
+      if (val.length < 11) return val;
+      return `${val.substring(0, 11)}...${val.substring(
+        val.length - 4,
+        val.length
+      )}`;
+    }
   },
   mixins: [buyMore],
   props: {
