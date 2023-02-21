@@ -1,9 +1,5 @@
 <template>
-  <mew6-white-sheet
-    v-if="isEthNetwork"
-    class="module-swap-rates"
-    :sideinfo="!mobile"
-  >
+  <mew6-white-sheet v-if="isEthNetwork" :sideinfo="!mobile">
     <div class="px-5 px-lg-7 py-5">
       <div class="d-flex align-center justify-space-between">
         <span class="mew-heading-2">{{ $t('common.swap') }}</span>
