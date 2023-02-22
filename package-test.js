@@ -88,7 +88,8 @@ const EXCEPTIONS = [
   'hdkey',
   'eslint-plugin-security',
   'protobufjs',
-  'stylelint-config-prettier'
+  'stylelint-config-prettier',
+  'webpack-bundle-analyzer'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
