@@ -40,7 +40,7 @@ module.exports = [
   'wss://node1.mintme.com:443/ws',
   'wss://wss.api.moonriver.moonbeam.network:443',
   'wss://wss.api.moonbeam.network:443',
-  'wss://public-node.rsk.co/websocket',
+  'wss://public-node.rsk.co:443/websocket',
   // intercom stuff
   'api-iam.intercom.io:443',
   'https://api.zilliqa.com:443',
