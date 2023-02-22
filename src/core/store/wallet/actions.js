@@ -131,6 +131,9 @@ const setOfflineApp = function ({ commit }, val) {
 const setLedgerApp = function ({ commit }, val) {
   commit('SET_LEDGER_APP', val);
 };
+const setSwapRates = function ({ commit }, val) {
+  commit('SET_SWAP_RATES', val);
+};
 
 export default {
   removeWallet,
@@ -142,5 +145,6 @@ export default {
   setOwnedDomains,
   setTokens,
   setOfflineApp,
-  setLedgerApp
+  setLedgerApp,
+  setSwapRates
 };
