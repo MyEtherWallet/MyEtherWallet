@@ -361,7 +361,7 @@ export default {
           if (this.path !== '') {
             this.$router.push({ path: this.path });
           } else {
-            this.$router.push({ name: ROUTES_WALLET.WALLETS.NAME });
+            this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
           }
         } catch (e) {
           if (

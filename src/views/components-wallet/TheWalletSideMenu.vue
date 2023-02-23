@@ -101,10 +101,8 @@
             <v-list-item
               v-if="shouldShow(item.route)"
               :key="item + idx"
-              :style="
-                item.button ? 'background-color: transparent !important;' : ''
-              "
               :to="item.route"
+              :active-class="item.route ? '' : 'remove-active-class'"
               @click="item.fn ? item.fn() : () => {}"
             >
               <v-list-item-icon class="mx-3">
@@ -421,7 +419,7 @@ export default {
             fn: () => {
               this.openQR = true;
             },
-            button: true
+            route: undefined
           }
         ];
         if (
@@ -433,7 +431,7 @@ export default {
             title: this.$t('interface.menu.buy-sell'),
             icon: buy,
             fn: this.openBuySell,
-            button: true
+            route: undefined
           });
         }
         return sectionTwo;
@@ -602,7 +600,7 @@ export default {
     /* If no menu item is selected on load, redirect user to Dashboard     */
     /* =================================================================== */
     redirectToDashboard() {
-      if (this.$route.name == ROUTES_WALLET.WALLETS.NAME) {
+      if (this.$route.name === ROUTES_WALLET.WALLETS.NAME) {
         this.$router.push(this.offlineModeRoute);
       }
     },
@@ -733,6 +731,11 @@ export default {
   }
   .v-list-item--active.v-list-item:not(.v-list-group__header) {
     background-color: rgba(255, 255, 255, 0.1) !important;
+  }
+  .v-list-item--active.v-list-item:not(
+      .v-list-group__header
+    ).remove-active-class {
+    background-color: transparent !important;
   }
   .v-list-item--active::before {
     opacity: 0 !important;

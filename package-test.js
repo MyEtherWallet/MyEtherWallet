@@ -82,7 +82,15 @@ const EXCEPTIONS = [
   '@commitlint/config-conventional',
   '@ensdomains/ens-contracts',
   'imagemin-webp',
-  'eslint-plugin-security'
+  'lottie-web',
+  'highcharts',
+  'commitlint',
+  'hdkey',
+  'eslint-plugin-security',
+  'protobufjs',
+  'stylelint-config-prettier',
+  'webpack-bundle-analyzer',
+  'babel-jest'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
