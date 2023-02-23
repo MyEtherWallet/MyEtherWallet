@@ -95,6 +95,9 @@ const setWeb3Instance = function (
         arr[i] = formatters.inputCallFormatter(arr[i]);
       }
       const batchSignCallback = promises => {
+        if (promises instanceof Error) {
+          reject(promises);
+        }
         if (promises && promises.rejected)
           reject(new Error('User rejected transaction'));
         if (state.identifier === WALLET_TYPES.WEB3_WALLET) {
