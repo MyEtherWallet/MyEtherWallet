@@ -174,6 +174,10 @@ class MEWPClass {
       this.web3.mew
         .sendBatchTransactions(txs)
         .then(promises => {
+          // reject promise for web3 wallets
+          if (promises instanceof Error) {
+            reject(promises);
+          }
           promises.forEach(p => {
             /**
              * changes to how enkrypt handles transaction necessitates

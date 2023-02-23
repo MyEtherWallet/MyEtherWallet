@@ -1627,6 +1627,14 @@ export default {
           this.swapNotificationFormatter(res, currentTradeCopy);
         })
         .catch(err => {
+          if (
+            err.message ===
+            'Batch transaction rejected in between transactions!'
+          ) {
+            Toast(err && err.message ? err.message : err, {}, ERROR);
+            this.clear();
+            return;
+          }
           if (err && err.statusObj?.hashes?.length > 0) {
             err.statusObj.hashes.forEach(item => {
               const error = handleError(item);
