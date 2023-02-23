@@ -959,7 +959,7 @@ export default {
           }
           this.error = errorHandler(err);
           this.signedTxArray = [];
-          if (this.rejectedError(err.message)) {
+          if (this.rejectedError(err.message) && signed.length > 0) {
             this.resolver(
               new Error('Batch transaction rejected in between transactions!')
             );
@@ -972,6 +972,7 @@ export default {
           if (signed.length > 0) {
             this.reset();
           }
+          return;
         }
       }
       if (!this.isWeb3Wallet && !this.isHardware && !this.isOtherWallet) {
