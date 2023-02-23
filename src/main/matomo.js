@@ -8,7 +8,7 @@ Vue.use(VueMatomo, {
   router: router,
   enableLinkTracking: true,
   requireConsent: true,
-  trackInitialView: true,
+  trackInitialView: false,
   disableCookies: true,
   enableHeartBeatTimer: true,
   heartBeatTimerInterval: 15,
