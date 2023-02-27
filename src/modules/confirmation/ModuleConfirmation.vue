@@ -256,22 +256,21 @@ import {
   hexToNumberString,
   hexToNumber,
   toWei,
-  sha3,
   isHex
 } from 'web3-utils';
 import { isEmpty, isArray, cloneDeep } from 'lodash';
 import { mapState, mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
-import * as locStore from 'store';
 
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import EventNames from '@/utils/web3-provider/events.js';
 
+import nonceHelper from '@/core/helpers/nonceHelper.js';
+import rejectedError from '@/core/helpers/rejectedError.js';
 import { Toast, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import parseTokenData from './handlers/parseTokenData';
 import { EventBus } from '@/core/plugins/eventBus';
 import { setEvents } from '@/utils/web3-provider/methods/utils';
-import { sanitizeHex } from '@/modules/access-wallet/common/helpers';
 import dataToAction from './handlers/dataToAction';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
@@ -735,16 +734,7 @@ export default {
             }
           })
           .on('transactionHash', hash => {
-            const storeKey = sha3(
-              `${_this.network.type.name}-${_this.address.toLowerCase()}`
-            );
-            const localStoredObj = locStore.get(storeKey);
-            locStore.set(storeKey, {
-              nonce: sanitizeHex(
-                new BigNumber(localStoredObj.nonce).plus(1).toString(16)
-              ),
-              timestamp: localStoredObj.timestamp
-            });
+            nonceHelper(_this.address.toLowerCase(), _this.network.type.name);
             if (idx + 1 === _arr.length) {
               if (_this.isSwap) {
                 _this.showSuccessSwap = true;
@@ -760,7 +750,7 @@ export default {
           })
           .catch(err => {
             if (_this.isSwap && idx + 1 === _arr.length) {
-              if (this.rejectedError(err.message)) {
+              if (rejectedError(err.message)) {
                 _this.trackSwap('swapTxCancelled');
               } else {
                 _this.emitSwapTxFail(err);
@@ -853,7 +843,7 @@ export default {
           })
           .catch(e => {
             if (this.isSwap) {
-              if (this.rejectedError(e.message)) {
+              if (rejectedError(e.message)) {
                 this.trackSwap('swapTxCancelled');
               } else {
                 this.emitSwapTxFail(e);
@@ -878,8 +868,6 @@ export default {
             this.signedTxObject = {};
             this.error = errorHandler(e);
             this.signing = false;
-            const toastError = errorHandler(e, true);
-            if (toastError) this.instance.errorHandler(toastError);
           });
       }
     },
@@ -918,16 +906,8 @@ export default {
                   }
                 });
                 batchTxEvents.push(event);
-                const storeKey = sha3(
-                  `${this.network.type.name}-${this.address.toLowerCase()}`
-                );
-                const localStoredObj = locStore.get(storeKey);
-                locStore.set(storeKey, {
-                  nonce: sanitizeHex(
-                    new BigNumber(localStoredObj.nonce).plus(1).toString(16)
-                  ),
-                  timestamp: localStoredObj.timestamp
-                });
+
+                nonceHelper(this.address.toLowerCase(), this.network.type.name);
                 if (this.isSwap && i + 1 === this.unsignedTxArr.length) {
                   this.trackSwap(
                     'swapTxReceivedReceipt',
@@ -938,7 +918,7 @@ export default {
               })
               .catch(e => {
                 if (this.isSwap) {
-                  if (this.rejectedError(e.message)) {
+                  if (rejectedError(e.message)) {
                     this.trackSwap('swapTxCancelled');
                     throw new Error(e.message);
                   }
@@ -948,7 +928,6 @@ export default {
                   }
                 }
                 this.signing = false;
-                this.instance.errorHandler(e.message);
                 throw new Error(e.message);
               });
           }
@@ -959,7 +938,7 @@ export default {
           }
           this.error = errorHandler(err);
           this.signedTxArray = [];
-          if (this.rejectedError(err.message) && signed.length > 0) {
+          if (rejectedError(err.message) && signed.length > 0) {
             this.resolver(
               new Error('Batch transaction rejected in between transactions!')
             );
@@ -979,12 +958,6 @@ export default {
         this.signing = false;
       }
       if (this.isWeb3Wallet) this.resolver(batchTxEvents);
-    },
-    rejectedError(msg) {
-      return (
-        msg === 'MetaMask Tx Signature: User denied transaction signature.' ||
-        msg === 'User Rejected Request: The user rejected the request.'
-      );
     },
     emitSwapTxFail(err) {
       const receipt =

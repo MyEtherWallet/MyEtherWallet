@@ -1,10 +1,11 @@
 import { formatters } from 'web3-core-helpers';
+import { clone } from 'lodash';
+
 import Notification, {
   NOTIFICATION_TYPES,
   NOTIFICATION_STATUS
 } from '@/modules/notifications/handlers/handlerNotification';
-import { clone } from 'lodash';
-import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+
 const getSanitizedTx = tx => {
   return new Promise((resolve, reject) => {
     if (!tx.gas && !tx.gasLimit && !tx.chainId)
@@ -69,10 +70,6 @@ const setEvents = (promiObj, tx, dispatch) => {
     })
     .on('error', err => {
       if (!isExempt) {
-        if (!newTxObj.hash) {
-          Toast(err, {}, ERROR);
-          return;
-        }
         newTxObj.status = NOTIFICATION_STATUS.FAILED;
         newTxObj.errMessage = err.message;
         if (!newTxObj.hasOwnProperty('hash')) {

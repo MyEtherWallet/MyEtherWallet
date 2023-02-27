@@ -21,6 +21,8 @@ const GLOBAL_ERRORS = {
     'errorsGlobal.insufficient-funds-for-transfer',
   'Promise was rejected with a falsy value':
     'errorsGlobal.promise-rejected-with-falsy-value',
+  'Promise was rejected with a falsy value ':
+    'errorsGlobal.promise-rejected-with-falsy-value',
   'The operation is insecure.': 'errorsGlobal.the-operation-is-insecure',
   "CONNECTION ERROR: Couldn't connect to node on WS.":
     'errorsGlobal.connection-error-couldnt-connect-to-WS',
@@ -37,15 +39,14 @@ const GLOBAL_ERRORS = {
   'invalid argument':
     'Invalid argument. Please verify that the argument provided is correct',
   'execution reverted':
-    'Something went wrong with the transaction: execution reverted',
-  'User rejected action': 'User rejected action!',
-  'User Rejected Request: The user rejected the request.':
-    'User rejected action!'
+    'Something went wrong with the transaction: execution reverted'
 };
 
 const GLOBAL_WARNING = {
   'ENS is not supported on network private':
-    'errorsGlobal.ens-not-supported-on-network-private'
+    'errorsGlobal.ens-not-supported-on-network-private',
+  'Connection is closed ()':
+    'Connection issue! Please refresh your browser and try again!'
 };
 const foundGlobalError = text => {
   const errorValues = Object.keys(GLOBAL_ERRORS);

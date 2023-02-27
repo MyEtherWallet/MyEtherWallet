@@ -315,13 +315,11 @@ import Notification, {
   NOTIFICATION_STATUS
 } from '@/modules/notifications/handlers/handlerNotification';
 import NonChainNotification from '@/modules/notifications/handlers/nonChainNotification';
-import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import { TRENDING_LIST } from './handlers/configs/configTrendingTokens';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 import Swapper from './handlers/handlerSwap';
-import handleError from '../confirmation/handlers/errorHandler';
 
 const MIN_GAS_LIMIT = 800000;
 let localContractToToken = {};
@@ -401,7 +399,13 @@ export default {
   },
   computed: {
     ...mapState('swap', ['prefetched', 'swapTokens']),
-    ...mapState('wallet', ['web3', 'address', 'balance', 'identifier']),
+    ...mapState('wallet', [
+      'web3',
+      'address',
+      'balance',
+      'identifier',
+      'instance'
+    ]),
     ...mapState('global', ['gasPriceType']),
     ...mapState('external', ['coinGeckoTokens']),
     ...mapGetters('global', [
@@ -1375,7 +1379,7 @@ export default {
         return;
       }
       if (isEmpty(this.fromTokenType)) {
-        Toast('From token cannot be empty!', {}, ERROR);
+        this.instance.errorHandler('From token cannot be empty!');
         return;
       }
 
@@ -1631,19 +1635,17 @@ export default {
             err.message ===
             'Batch transaction rejected in between transactions!'
           ) {
-            Toast(err && err.message ? err.message : err, {}, ERROR);
+            this.instance.errorHandler(err);
             this.clear();
             return;
           }
           if (err && err.statusObj?.hashes?.length > 0) {
             err.statusObj.hashes.forEach(item => {
-              const error = handleError(item);
-              if (error) Toast(error, {}, ERROR);
+              this.instance.errorHandler(item);
             });
             return;
           }
-          const error = handleError(err);
-          if (error) Toast(err && err.message ? err.message : err, {}, ERROR);
+          this.instance.errorHandler(err);
         });
     },
     getTokenBalance(balance, decimals) {
@@ -1681,10 +1683,8 @@ export default {
           );
           this.addNotification(new NonChainNotification(notif)).then(() => {
             const currency = this.toTokenType?.symbol;
-            Toast(
-              `Swap initiated, you should receive ${currency} in 1-3 hours. You will be notified when it's completed`,
-              {},
-              SUCCESS
+            this.instance.errorHander(
+              `Swap initiated, you should receive ${currency} in 1-3 hours. You will be notified when it's completed`
             );
             this.clear();
           });

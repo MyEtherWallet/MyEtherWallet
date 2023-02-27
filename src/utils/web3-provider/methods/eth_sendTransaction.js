@@ -1,14 +1,32 @@
-import utils from 'web3-utils';
+import BigNumber from 'bignumber.js';
+
 import EthCalls from '../web3Calls';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import EventNames from '../events';
 import { toPayload } from '../jsonrpc';
-import * as locStore from 'store';
 import { getSanitizedTx, setEvents } from './utils';
-import BigNumber from 'bignumber.js';
-import sanitizeHex from '@/core/helpers/sanitizeHex';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import { EventBus } from '@/core/plugins/eventBus';
+
+import rejectedError from '@/core/helpers/rejectedError.js';
+import nonceHelper from '@/core/helpers/nonceHelper.js';
+
+const resolveReject = (err, resolver) => {
+  if (rejectedError(err.message)) {
+    resolver(new Error('User rejected action'));
+  } else {
+    resolver(err);
+  }
+};
+
+const emitErrorWithReceipt = err => {
+  const receipt =
+    err.hasOwnProperty('receipt') &&
+    err.receipt.hasOwnProperty('transactionHash')
+      ? err.receipt.transactionHash
+      : '0x';
+  EventBus.$emit('swapTxFailed', receipt);
+};
 
 export default async ({ payload, store, requestManager }, res, next) => {
   if (payload.method !== 'eth_sendTransaction') return next();
@@ -79,28 +97,20 @@ export default async ({ payload, store, requestManager }, res, next) => {
           _promiObj
             .once('transactionHash', hash => {
               if (store.state.wallet.instance !== null) {
-                const isTesting = locStore.get('mew-testing');
-                if (!isTesting) {
-                  const storeKey = utils.sha3(
-                    `${
-                      store.getters['global/network'].type.name
-                    }-${store.state.wallet.instance
-                      .getChecksumAddressString()
-                      .toLowerCase()}`
-                  );
-                  const localStoredObj = locStore.get(storeKey);
-                  locStore.set(storeKey, {
-                    nonce: sanitizeHex(
-                      BigNumber(localStoredObj.nonce).plus(1).toString(16)
-                    ),
-                    timestamp: localStoredObj.timestamp
-                  });
-                }
+                nonceHelper(
+                  store.state.wallet.instance
+                    .getChecksumAddressString()
+                    .toLowerCase(),
+                  store.getters['global/network'].type.name
+                );
               }
               res(null, toPayload(payload.id, hash));
             })
             .on('error', err => {
-              res(err);
+              if (confirmInfo) {
+                emitErrorWithReceipt(err);
+              }
+              resolveReject(err, res);
             });
         });
       } else {
@@ -129,23 +139,12 @@ export default async ({ payload, store, requestManager }, res, next) => {
             })
             .once('transactionHash', hash => {
               if (store.state.wallet.instance !== null) {
-                const isTesting = locStore.get('mew-testing');
-                if (!isTesting) {
-                  const storeKey = utils.sha3(
-                    `${
-                      store.getters['global/network'].type.name
-                    }-${store.state.wallet.instance
-                      .getChecksumAddressString()
-                      .toLowerCase()}`
-                  );
-                  const localStoredObj = locStore.get(storeKey);
-                  locStore.set(storeKey, {
-                    nonce: sanitizeHex(
-                      BigNumber(localStoredObj.nonce).plus(1).toString(16)
-                    ),
-                    timestamp: localStoredObj.timestamp
-                  });
-                }
+                nonceHelper(
+                  store.state.wallet.instance
+                    .getChecksumAddressString()
+                    .toLowerCase(),
+                  store.getters['global/network'].type.name
+                );
               }
               if (confirmInfo) {
                 EventBus.$emit('swapTxBroadcasted', hash);
@@ -154,25 +153,17 @@ export default async ({ payload, store, requestManager }, res, next) => {
             })
             .on('error', err => {
               if (confirmInfo) {
-                const receipt =
-                  err.hasOwnProperty('receipt') &&
-                  err.receipt.hasOwnProperty('transactionHash')
-                    ? err.receipt.transactionHash
-                    : '0x';
-                EventBus.$emit('swapTxFailed', receipt);
+                emitErrorWithReceipt(err);
               }
-              res(err);
+              resolveReject(err, res);
             });
         });
       }
     })
     .catch(e => {
       if (confirmInfo) {
-        const receipt = e.hasOwnProperty('receipt')
-          ? e.receipt.transactionHash
-          : '0x';
-        EventBus.$emit('swapTxFailed', receipt);
+        emitErrorWithReceipt(e);
       }
-      res(e);
+      resolveReject(e, res);
     });
 };
