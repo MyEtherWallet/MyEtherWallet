@@ -776,7 +776,6 @@ export default {
           this.clear();
         })
         .catch(error => {
-          console.log(error.message);
           this.instance.errorHandler(error.message);
           this.clear();
         });
