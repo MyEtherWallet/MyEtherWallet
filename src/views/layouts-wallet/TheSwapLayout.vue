@@ -1,5 +1,9 @@
 <template>
-  <the-wrapper-wallet :total-left-col-items="1" :total-right-col-items="2">
+  <the-wrapper-wallet
+    :total-left-col-items="1"
+    has-draggable
+    :total-right-col-items="totalRightColumns"
+  >
     <template #leftColItem1>
       <module-swap
         :is-available="hasSwap"
@@ -9,10 +13,10 @@
       />
     </template>
     <template #rightColItem1>
-      <module-tokens-value />
+      <module-tokens-value :draggable="hasHistory" />
     </template>
     <template v-if="hasHistory && hasSwap" #rightColItem2>
-      <module-transfer-history :is-swap="true" />
+      <module-transfer-history draggable :is-swap="true" />
     </template>
   </the-wrapper-wallet>
 </template>
@@ -50,6 +54,9 @@ export default {
     ...mapGetters('notifications', ['swapNotifications']),
     hasHistory() {
       return this.swapNotifications && this.swapNotifications.length > 0;
+    },
+    totalRightColumns() {
+      return this.hasHistory && this.hasSwap ? 2 : 1;
     }
   }
 };

@@ -3,7 +3,9 @@
     <mew6-white-sheet class="px-5 px-lg-7 py-5 d-flex justify-space-between">
       <v-row dense>
         <v-col cols="11">
-          <div class="mew-heading-2 mb-3">{{ tokenTitle }}</div>
+          <div :class="[draggable ? 'ml-7' : '', 'mew-heading-2 mb-3']">
+            {{ tokenTitle }}
+          </div>
         </v-col>
         <v-col cols="1" align="right" @click="toggleDropdown">
           <v-icon color="textDark">{{ chevronIcon }}</v-icon>
@@ -76,6 +78,12 @@ export default {
   components: {
     AppModal: () => import('@/core/components/AppModal'),
     ModuleTokens: () => import('@/modules/balance/ModuleTokens')
+  },
+  props: {
+    draggable: {
+      type: Boolean,
+      default: false
+    }
   },
   data: () => ({ showPopup: false, dropdown: true }),
   computed: {
@@ -185,7 +193,6 @@ export default {
   color: #05c0a5;
 }
 .more-tokens {
-  width: 82px;
   height: 24px;
 
   font-weight: 400;

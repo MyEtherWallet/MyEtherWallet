@@ -1,3 +1,9 @@
+### Release v6.6.15-hotfix.1
+
+### fix
+
+* fix component scroll, landing tracking, multiple loading, swap tracking [#4526](https://github.com/MyEtherWallet/MyEtherWallet/pull/4526)
+
 ### Release v6.6.15
 
 ### ui
