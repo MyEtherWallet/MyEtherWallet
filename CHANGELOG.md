@@ -1,3 +1,39 @@
+### ui
+
+* * Fix padding on swap page mobile view [#4473](https://github.com/MyEtherWallet/MyEtherWallet/pull/4473)
+* * Fixed address clipping [#4481](https://github.com/MyEtherWallet/MyEtherWallet/pull/4481)
+* Overlapping 'To address' on Cross-chain swap confirmation [#4508](https://github.com/MyEtherWallet/MyEtherWallet/pull/4508)
+* ENS Reverse Lookup height doesn't align with 'Register' button [#4511](https://github.com/MyEtherWallet/MyEtherWallet/pull/4511)
+* change tx history to send history [#4520](https://github.com/MyEtherWallet/MyEtherWallet/pull/4520)
+* fix notification drop down [#4521](https://github.com/MyEtherWallet/MyEtherWallet/pull/4521)
+* team page capitalization [#4522](https://github.com/MyEtherWallet/MyEtherWallet/pull/4522)
+* mnemonic path stuck, carers header [#4524](https://github.com/MyEtherWallet/MyEtherWallet/pull/4524)
+
+### devop
+
+* * Add Rootstock integration\* Add Rootstock ledger config
+* Rename RSK label to Rootstock
+* Rootstock name resolution
+  [#4446](https://github.com/MyEtherWallet/MyEtherWallet/pull/4446)
+* remove unused package [#4519](https://github.com/MyEtherWallet/MyEtherWallet/pull/4519)
+* format connections changes [#4533](https://github.com/MyEtherWallet/MyEtherWallet/pull/4533)
+* sync develop with hotfix [#4535](https://github.com/MyEtherWallet/MyEtherWallet/pull/4535)
+
+### feat
+
+* * add draggable wallet blocks [#4509](https://github.com/MyEtherWallet/MyEtherWallet/pull/4509)
+* allow empty wallet to add custom tokens [#4531](https://github.com/MyEtherWallet/MyEtherWallet/pull/4531)
+
+### sentry
+
+* Add check if object is not null (evaluating 't.style') [#4496](https://github.com/MyEtherWallet/MyEtherWallet/pull/4496)
+* Null is not an object (evaluating 'e.trim') at setCustomAlias [#4501](https://github.com/MyEtherWallet/MyEtherWallet/pull/4501)
+* Undefined error message on TheAccessWalletLayout [#4502](https://github.com/MyEtherWallet/MyEtherWallet/pull/4502)
+* Cannot read property 'toLowerCase' of null at enkryptMarketing [#4503](https://github.com/MyEtherWallet/MyEtherWallet/pull/4503)
+* Cannot read properties of undefined (reading 'contains') at MewMenuPopup [#4505](https://github.com/MyEtherWallet/MyEtherWallet/pull/4505)
+* Cannot read properties of null (reading 'length') at QRcode [#4506](https://github.com/MyEtherWallet/MyEtherWallet/pull/4506)
+* Cannot read properties of null (reading 'substring') at handlerOrder [#4507](https://github.com/MyEtherWallet/MyEtherWallet/pull/4507)
+
 ### Release v6.6.15-hotfix.1
 
 ### fix
