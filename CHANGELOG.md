@@ -1,7 +1,9 @@
+### Release v6.6.16
+
 ### ui
 
-* * Fix padding on swap page mobile view [#4473](https://github.com/MyEtherWallet/MyEtherWallet/pull/4473)
-* * Fixed address clipping [#4481](https://github.com/MyEtherWallet/MyEtherWallet/pull/4481)
+* Fix padding on swap page mobile view [#4473](https://github.com/MyEtherWallet/MyEtherWallet/pull/4473)
+* Fixed address clipping [#4481](https://github.com/MyEtherWallet/MyEtherWallet/pull/4481)
 * Overlapping 'To address' on Cross-chain swap confirmation [#4508](https://github.com/MyEtherWallet/MyEtherWallet/pull/4508)
 * ENS Reverse Lookup height doesn't align with 'Register' button [#4511](https://github.com/MyEtherWallet/MyEtherWallet/pull/4511)
 * change tx history to send history [#4520](https://github.com/MyEtherWallet/MyEtherWallet/pull/4520)
@@ -11,7 +13,7 @@
 
 ### devop
 
-* * Add Rootstock integration\* Add Rootstock ledger config
+* Add Rootstock integration\* Add Rootstock ledger config
 * Rename RSK label to Rootstock
 * Rootstock name resolution
   [#4446](https://github.com/MyEtherWallet/MyEtherWallet/pull/4446)
@@ -21,7 +23,7 @@
 
 ### feat
 
-* * add draggable wallet blocks [#4509](https://github.com/MyEtherWallet/MyEtherWallet/pull/4509)
+* add draggable wallet blocks [#4509](https://github.com/MyEtherWallet/MyEtherWallet/pull/4509)
 * allow empty wallet to add custom tokens [#4531](https://github.com/MyEtherWallet/MyEtherWallet/pull/4531)
 
 ### sentry
