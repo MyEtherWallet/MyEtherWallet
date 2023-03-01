@@ -13,7 +13,7 @@
 
 ### devop
 
-* Add Rootstock integration\* Add Rootstock ledger config
+* Add Rootstock integration, Add Rootstock ledger config
 * Rename RSK label to Rootstock
 * Rootstock name resolution
   [#4446](https://github.com/MyEtherWallet/MyEtherWallet/pull/4446)
