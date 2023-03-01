@@ -33,7 +33,7 @@ const toChecksumAddress = address => {
   const chainId = store.getters['global/network'].type.chainID;
   // Use EIP-1191 Address Checksum if its Rootstock network
   if (chainId === ROOTSTOCK.chainID) {
-    toChecksumAddr(address, chainId);
+    return toChecksumAddr(address, chainId);
   }
 
   return web3.utils.toChecksumAddress(address);
