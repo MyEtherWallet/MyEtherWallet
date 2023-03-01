@@ -62,6 +62,7 @@ module.exports = [
   'wss://*.bridge.walletconnect.org:443',
   'https://buy-staging.moonpay.com:443',
   // Dapps
+  'https://public-node.rsk.co', // Rootstock
   'https://staked.mewapi.io:443', // staked
   'https://stakedtest.mewapi.io:443', // staked
   'https://ethblocksapi.mewapi.io:443', // Eth Blocks
