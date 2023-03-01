@@ -78,7 +78,8 @@ const EXCEPTIONS = [
   'axios',
   'prettier', // creates more warnings
   '@ledgerhq/hw-app-eth', // issue with imports
-  '@ledgerhq/live-common' // issue with imports
+  '@ledgerhq/live-common', // issue with imports
+  'stylelint-config-prettier' // throws an error when committing
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
