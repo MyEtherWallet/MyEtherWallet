@@ -84,7 +84,8 @@ const EXCEPTIONS = [
   '@ensdomains/address-encoder',
   '@formatjs/intl-numberformat',
   'commitlint',
-  '@commitlint/config-conventional'
+  '@commitlint/config-conventional',
+  'ethers'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
