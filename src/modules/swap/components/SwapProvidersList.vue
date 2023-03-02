@@ -349,12 +349,12 @@ export default {
 <style lang="scss" scoped>
 .rate-active {
   border: 1px solid var(--v-greenPrimary-base) !important;
-  background-color: var(--v-greyLight-base) !important;
+  background-color: var(--v-buttonGrayLight-base) !important;
 }
 .rate {
   min-height: 60px;
   border-radius: 8px;
-  border: 1px solid var(--v-greyLight-base);
+  border: 1px solid var(--v-borderInput-base);
 }
 .rate-button {
   cursor: pointer;

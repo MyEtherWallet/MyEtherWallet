@@ -75,17 +75,11 @@ const EXCEPTIONS = [
   'web3-eth-contract',
   'is-ipfs',
   'axios',
-  // update after release
-  '@ensdomains/address-encoder',
-  '@formatjs/intl-numberformat',
-  'bignumber.js',
-  'trezor-connect',
-  '@ledgerhq/hw-app-eth',
-  '@ledgerhq/live-common',
-  'prettier',
-  '@mdi/font',
-  '@myetherwallet/mew-components',
-  '@coolwallet/eth'
+  'prettier', // creates more warnings
+  '@ledgerhq/hw-app-eth', // issue with imports
+  '@ledgerhq/live-common', // issue with imports
+  'stylelint-config-prettier', // throws an error when committing
+  'ethers' // look into this
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

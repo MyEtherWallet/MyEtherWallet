@@ -1,13 +1,17 @@
 <template>
-  <the-wrapper-wallet :total-left-col-items="1" :total-right-col-items="2">
+  <the-wrapper-wallet
+    :total-left-col-items="1"
+    has-draggable
+    :total-right-col-items="totalRightColItems"
+  >
     <template #leftColItem1>
       <module-send />
     </template>
     <template #rightColItem1>
-      <module-tokens-value />
+      <module-tokens-value :draggable="hasHistory" />
     </template>
     <template v-if="hasHistory" #rightColItem2>
-      <module-transfer-history />
+      <module-transfer-history draggable />
     </template>
   </the-wrapper-wallet>
 </template>
@@ -27,6 +31,9 @@ export default {
     ...mapGetters('notifications', ['txNotifications']),
     hasHistory() {
       return this.txNotifications && this.txNotifications.length > 0;
+    },
+    totalRightColItems() {
+      return this.hasHistory ? 2 : 1;
     }
   }
 };

@@ -69,6 +69,7 @@ import clipboardCopy from 'clipboard-copy';
 import { Toast, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import { mapState, mapGetters } from 'vuex';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
+import { isObject } from 'lodash';
 export default {
   computed: {
     ...mapState('wallet', ['address']),
@@ -88,6 +89,7 @@ export default {
     },
     animateMewCard() {
       const el = document.querySelector('.mew-card');
+      if (!el || !isObject(el?.style)) return;
       el.style.opacity = 0;
       anime({
         targets: el,

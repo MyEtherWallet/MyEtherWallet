@@ -15,7 +15,7 @@
           <!-- ======================================================================================= -->
           <div ref="input" class="d-flex align-center text-center">
             <div
-              class="border-radius--8px backgroundGrey flex-grow-1 pa-5 d-flex flex-column align-center"
+              class="border-radius--8px bgWalletBlockDark flex-grow-1 pa-5 d-flex flex-column align-center"
               style="width: 30%"
             >
               <div
@@ -35,7 +35,7 @@
               <v-icon color="greenPrimary">mdi-arrow-right</v-icon>
             </div>
             <div
-              class="border-radius--8px backgroundGrey flex-grow-1 pa-5 d-flex flex-column align-center"
+              class="border-radius--8px bgWalletBlockDark flex-grow-1 pa-5 d-flex flex-column align-center"
               style="width: 30%"
             >
               <div

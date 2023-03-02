@@ -43,7 +43,7 @@ export default {
     },
     color: {
       type: String,
-      default: 'greyLight'
+      default: 'buttonGrayLight'
     },
     disableIcon: {
       type: Boolean

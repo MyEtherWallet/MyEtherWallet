@@ -1,3 +1,71 @@
+### Release v6.6.15-hotfix.1
+
+### fix
+
+* fix component scroll, landing tracking, multiple loading, swap tracking [#4526](https://github.com/MyEtherWallet/MyEtherWallet/pull/4526)
+
+### Release v6.6.15
+
+### ui
+
+* Fix Inconsistent menu item on web/mobile [#4472](https://github.com/MyEtherWallet/MyEtherWallet/pull/4472)
+* Fix inconsistent partner's icon height [#4475](https://github.com/MyEtherWallet/MyEtherWallet/pull/4475)
+* Add and edit contact address padding increased on mobile and tablet view [#4482](https://github.com/MyEtherWallet/MyEtherWallet/pull/4482)
+* Add padding on Interact with contract page on mobile and tablet [#4483](https://github.com/MyEtherWallet/MyEtherWallet/pull/4483)
+* Fix Enkrypt typo on landing page [#4485](https://github.com/MyEtherWallet/MyEtherWallet/pull/4485)
+* Add padding to top of hardware access mobile view [#4486](https://github.com/MyEtherWallet/MyEtherWallet/pull/4486)
+* Mobile view for Ledger was not displaying properly [#4488](https://github.com/MyEtherWallet/MyEtherWallet/pull/4488)
+* Fix Buy ETH alignment on invalid amount input [#4510](https://github.com/MyEtherWallet/MyEtherWallet/pull/4510)
+
+### devop
+
+* apply dark theme [#4409](https://github.com/MyEtherWallet/MyEtherWallet/pull/4409)
+* Disable Aave deposit button if token balance is 0 [#4459](https://github.com/MyEtherWallet/MyEtherWallet/pull/4459)
+* update analytics [#4497](https://github.com/MyEtherWallet/MyEtherWallet/pull/4497)
+* sync develop [#4515](https://github.com/MyEtherWallet/MyEtherWallet/pull/4515)
+
+### fix
+
+* Fix mobile links on landing page [#4474](https://github.com/MyEtherWallet/MyEtherWallet/pull/4474)
+* Removed unusable fallback [#4478](https://github.com/MyEtherWallet/MyEtherWallet/pull/4478)
+* Added error handler to nft manager [#4479](https://github.com/MyEtherWallet/MyEtherWallet/pull/4479)
+* Fixed errors on clear [#4480](https://github.com/MyEtherWallet/MyEtherWallet/pull/4480)
+* Fix buy-sell network search [#4491](https://github.com/MyEtherWallet/MyEtherWallet/pull/4491)
+* fix about us layout issues [#4499](https://github.com/MyEtherWallet/MyEtherWallet/pull/4499)
+
+### Release v6.6.14
+
+### ui
+
+* Export json button on Offline Helper is too wide [#4432](https://github.com/MyEtherWallet/MyEtherWallet/pull/4432)
+* Fix txn confirmation module spelling [#4437](https://github.com/MyEtherWallet/MyEtherWallet/pull/4437)
+* Fix Ledger 'Connecting to' dropdown inconsistent width size [#4456](https://github.com/MyEtherWallet/MyEtherWallet/pull/4456)
+* Adjust Ledger derivation path alignment [#4457](https://github.com/MyEtherWallet/MyEtherWallet/pull/4457)
+* Align contract interaction inputs [#4460](https://github.com/MyEtherWallet/MyEtherWallet/pull/4460)
+* Contract interaction Results were not displayed correctly [#4484](https://github.com/MyEtherWallet/MyEtherWallet/pull/4484)
+
+### devop
+
+* Set Web3 Instance after setting networkFix network selection not displayed on WalletConnect
+  [#4445](https://github.com/MyEtherWallet/MyEtherWallet/pull/4445)
+* return error for provider issue [#4489](https://github.com/MyEtherWallet/MyEtherWallet/pull/4489)
+* catch error 404 [#4490](https://github.com/MyEtherWallet/MyEtherWallet/pull/4490)
+
+### fix
+
+* Ens Register button is now disabled when it does not have sufficient funds [#4430](https://github.com/MyEtherWallet/MyEtherWallet/pull/4430)
+* Clear message field after signing [#4440](https://github.com/MyEtherWallet/MyEtherWallet/pull/4440)
+* Fix empty 'From' token error when changing from swap page quickly [#4441](https://github.com/MyEtherWallet/MyEtherWallet/pull/4441)
+* Fix version link in footer in mobile view [#4443](https://github.com/MyEtherWallet/MyEtherWallet/pull/4443)
+* Fix offline paper wallet [#4446](https://github.com/MyEtherWallet/MyEtherWallet/pull/4446)
+* Fix unable to open network module after minimizing window [#4450](https://github.com/MyEtherWallet/MyEtherWallet/pull/4450)
+* Fix Next button not activating when toggling between 12/24 words on Mnemonic phrase access [#4451](https://github.com/MyEtherWallet/MyEtherWallet/pull/4451)
+* Fix buy crypto selection button margins [#4452](https://github.com/MyEtherWallet/MyEtherWallet/pull/4452)
+* Fix simplex spelling on landing page [#4458](https://github.com/MyEtherWallet/MyEtherWallet/pull/4458)
+* Fix 'Clear' button does not clear extra word [#4469](https://github.com/MyEtherWallet/MyEtherWallet/pull/4469)
+* Fix broken image in Intercom popup [#4470](https://github.com/MyEtherWallet/MyEtherWallet/pull/4470)
+* Fixed contract name not clearing [#4477](https://github.com/MyEtherWallet/MyEtherWallet/pull/4477)
+
 ### Release v6.6.13
 
 ### ui

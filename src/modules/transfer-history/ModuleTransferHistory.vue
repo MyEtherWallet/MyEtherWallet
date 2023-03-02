@@ -2,7 +2,9 @@
   <mew6-white-sheet class="px-5 px-lg-7 py-5 justify-space-between">
     <v-row dense>
       <v-col cols="11">
-        <div class="mew-heading-2 mb-3">{{ actualTitle }}</div>
+        <div :class="[draggable ? 'ml-7' : '', 'mew-heading-2 mb-3']">
+          {{ actualTitle }}
+        </div>
       </v-col>
       <v-col cols="1" align="right" @click="toggleDropdown">
         <v-icon color="black">{{ chevronIcon }}</v-icon>
@@ -25,14 +27,16 @@
 import { mapState, mapGetters, mapActions } from 'vuex';
 import formatNotification from '@/modules/notifications/helpers/formatNotification';
 import formatNonChainNotification from '@/modules/notifications/helpers/formatNonChainNotification';
-import MewNotification from '@/components/MewNotification/MewNotification';
 import { NOTIFICATION_TYPES } from '@/modules/notifications/handlers/handlerNotification.js';
 
 export default {
   name: 'ModuleTransferHistory',
-  components: { MewNotification },
   props: {
     isSwap: {
+      type: Boolean,
+      default: false
+    },
+    draggable: {
       type: Boolean,
       default: false
     }
@@ -70,7 +74,7 @@ export default {
         : this.parsedSwapNotifications;
     },
     actualTitle() {
-      return this.isSwap ? `Swap History` : `Tx History`;
+      return this.isSwap ? `Swap History` : `Send History`;
     },
     chevronIcon() {
       return this.dropdown ? 'mdi-chevron-up' : 'mdi-chevron-down';

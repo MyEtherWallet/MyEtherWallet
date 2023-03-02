@@ -381,7 +381,8 @@ export default {
       mainTokenDetails: {},
       cachedAmount: '0',
       selectedProviderId: undefined,
-      abortSetTokenValue: false
+      abortSetTokenValue: false,
+      clearingSwap: false
     };
   },
   computed: {
@@ -888,22 +889,21 @@ export default {
           : 'ETH';
       return `To ${name} address`;
     },
-    networkAndWeb3() {
-      return this.network, this.web3;
+    multipleWatcher() {
+      return this.network, this.web3, this.tokensList, this.coinGeckoTokens;
     }
   },
   watch: {
-    tokensList() {
-      this.resetSwapState();
-    },
-    coinGeckoTokens(newVal) {
-      if (newVal.size > 0) {
+    multipleWatcher: {
+      handler: function () {
         this.resetSwapState();
       }
     },
     tokenInValue() {
       this.feeError = '';
-      this.trackSwap('tokenFromValueChanged');
+      if (!this.clearingSwap) {
+        this.trackSwap('tokenFromValueChanged');
+      }
     },
     gasPriceType() {
       if (this.currentTrade) this.currentTrade.gasPrice = this.localGasPrice;
@@ -915,13 +915,13 @@ export default {
       immediate: true
     },
     selectedProvider(p, oldVal) {
-      if (!isEmpty(oldVal)) {
+      if (!isEmpty(oldVal) && !this.clearingSwap) {
         this.trackSwap('switchProviders');
       }
       if (isEmpty(p)) this.selectedProviderId = undefined;
     },
     selectedProviderId(newVal) {
-      if (isNumber(newVal)) {
+      if (isNumber(newVal) && !this.clearingSwap) {
         this.trackSwap(
           `swapProvider: ${newVal + 1}/${this.availableQuotes.length}`
         );
@@ -940,16 +940,6 @@ export default {
     '$route.query': {
       handler: function () {
         this.setTokenFromURL();
-      }
-    },
-    networkAndWeb3: {
-      handler: function () {
-        this.resetSwapState();
-      }
-    },
-    web3: {
-      handler: function () {
-        this.resetSwapState();
       }
     },
     fromTokenType: {
@@ -1101,7 +1091,9 @@ export default {
       const findToken = this.toTokens.find(
         item => item.symbol.toLowerCase() === to.toLowerCase()
       );
-      this.trackSwap('stayOnEth: ' + to);
+      if (!this.clearingSwap) {
+        this.trackSwap('stayOnEth: ' + to);
+      }
       this.toTokenType = findToken;
     },
     setupSwap() {
@@ -1127,6 +1119,7 @@ export default {
     },
     // reset values after executing transaction
     clear() {
+      this.clearingSwap = true;
       this.step = 0;
       this.confirmInfo = {
         to: '',
@@ -1143,7 +1136,7 @@ export default {
 
       this.swapper = null;
       this.toTokenType = {};
-      this.fromTokenType = {};
+      this.fromTokenType = this.getDefaultFromToken();
       this.tokenInValue = '0';
       this.tokenOutValue = '0';
       this.availableTokens = { toTokens: [], fromTokens: [] };
@@ -1214,6 +1207,7 @@ export default {
           ? availableBalanceMinusGas.toFixed()
           : '0'
         : this.availableBalance.toFixed();
+      this.setTokenInValue(this.tokenInValue);
     },
     /**
      * Gets the default from token
@@ -1244,7 +1238,9 @@ export default {
     },
 
     switchTokens() {
-      this.trackSwap('switchTokens');
+      if (!this.clearingSwap) {
+        this.trackSwap('switchTokens');
+      }
       const fromToken = this.fromTokenType;
       const toToken = this.toTokenType || this.actualToTokens[0];
       const tokenOutValue = this.tokenOutValue;
@@ -1273,6 +1269,7 @@ export default {
         this.fromTokenType = this.getDefaultFromToken();
         this.toTokenType = this.getDefaultToToken();
         this.setTokenInValue(this.tokenInValue);
+        this.clearingSwap = false;
       }, 500);
     },
     setFromToken(value) {
@@ -1294,7 +1291,7 @@ export default {
       this.fromTokenType = value;
       this.resetAddressValues({ clearTo: false });
       this.$nextTick(() => {
-        if (value && value.name) {
+        if (value && value.name && !this.clearingSwap) {
           this.trackSwapToken('from: ' + value.name);
         }
         this.setTokenInValue(this.tokenInValue);
@@ -1439,9 +1436,11 @@ export default {
           this.getTrade(idx);
           if (!clicked) {
             this.selectedProvider = q;
-            this.trackSwap(
-              `swapProvider: ${idx + 1}/ ${this.availableQuotes.length}`
-            );
+            if (!this.clearingSwap) {
+              this.trackSwap(
+                `swapProvider: ${idx + 1}/ ${this.availableQuotes.length}`
+              );
+            }
           } else {
             this.selectedProvider =
               q.amount !== this.selectedProvider.amount ? q : {};
@@ -1598,6 +1597,14 @@ export default {
           this.swapNotificationFormatter(res, currentTradeCopy);
         })
         .catch(err => {
+          if (
+            err.message ===
+            'Batch transaction rejected in between transactions!'
+          ) {
+            Toast(err && err.message ? err.message : err, {}, ERROR);
+            this.clear();
+            return;
+          }
           if (err && err.statusObj?.hashes?.length > 0) {
             err.statusObj.hashes.forEach(item => {
               const error = handleError(item);

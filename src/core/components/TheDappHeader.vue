@@ -87,7 +87,6 @@ export default {
 
 <style lang="scss" scoped>
 .dapp-icon {
-  background-color: white;
   border-radius: 12px;
   width: 88px;
   height: 88px;
