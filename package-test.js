@@ -85,7 +85,8 @@ const EXCEPTIONS = [
   '@formatjs/intl-numberformat',
   'commitlint',
   '@commitlint/config-conventional',
-  'ethers'
+  'ethers',
+  'bip39'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
