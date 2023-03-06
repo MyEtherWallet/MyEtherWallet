@@ -9,7 +9,7 @@ const baseColors = {
   asphalt200: '#565B6C',
   asphalt300: '#666C7B',
   asphalt400: '#7B8290',
-  asphalt500: '#8F97A3 ',
+  asphalt500: '#8F97A3',
   asphalt600: '#A3ACB8',
   asphalt700: '#BBC0CB',
   asphalt800: '#D2D6DD',
@@ -68,7 +68,7 @@ export default {
         // Disabled
         disabledPrimary: '#CECECE',
         disabledMedium: '#E0E0E0',
-        disabledLight: '#F6F6F6 ',
+        disabledLight: '#F6F6F6',
         // Buttons
         buttonWhite: '#FFFFFF',
         buttonGrayLight: '#F2F4FA',
@@ -178,7 +178,7 @@ export default {
         // Whites
         alwaysWhite: '#FFFFFF',
         whiteBg: '#151518',
-        popupBg: '#1B1C25 ',
+        popupBg: '#1B1C25',
         // Blue
         bluePrimary: '#6292EB',
         blueMedium: '#355288',
@@ -198,7 +198,7 @@ export default {
         // Disabled
         disabledPrimary: '#606670',
         disabledMedium: '#383F4A',
-        disabledLight: '#242D3E ',
+        disabledLight: '#242D3E',
         // Buttons
         buttonWhite: '#1c2136',
         buttonGrayLight: baseColors.asphalt5,
