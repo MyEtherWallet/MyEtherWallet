@@ -36,8 +36,16 @@
     >
       <template #rightColItem0>
         <div class="mew-body d-flex justify-end">
-          <mew-blockie :address="toAddress" width="20px" height="20px" />
-          <span class="searchText--text ml-2">{{ toAddress }}</span>
+          <mew-tooltip hide-icon :text="toAddress">
+            <template #activatorSlot="{ on, attrs }">
+              <div class="d-flex">
+                <mew-blockie :address="toAddress" width="20px" height="20px" />
+                <span v-bind="attrs" class="searchText--text ml-2" v-on="on">{{
+                  toAddressShortened
+                }}</span>
+              </div>
+            </template>
+          </mew-tooltip>
         </div>
       </template>
       <template #rightColItem1>
@@ -182,6 +190,17 @@ export default {
           usd: this.getFiatValue(this.toUsd)
         }
       ];
+    },
+    toAddressStart() {
+      return this.toAddress.substring(0, 20);
+    },
+    toAddressEnd() {
+      return this.toAddress.substring(this.toAddress.length - 4);
+    },
+    toAddressShortened() {
+      return this.toAddress.length > 30
+        ? `${this.toAddressStart}... ${this.toAddressEnd}`
+        : this.toAddress;
     }
   }
 };

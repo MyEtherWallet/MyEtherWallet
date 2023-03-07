@@ -14,8 +14,13 @@
         :value="message"
       ></v-textarea>
 
-      <div v-if="signResult" class="walletBg pa-3 VerifyMessage">
-        {{ signer }}
+      <div
+        v-if="signResult"
+        class="walletBg pa-3 VerifyMessage d-flex flex-wrap"
+      >
+        <span class="signer mr-1">
+          {{ signer }}
+        </span>
         <span v-if="didSign" class="font-weight-medium">
           did sign the message
         </span>
@@ -109,4 +114,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.signer {
+  overflow-wrap: anywhere;
+}
+</style>
