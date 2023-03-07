@@ -193,7 +193,6 @@ export default {
   color: #05c0a5;
 }
 .more-tokens {
-  width: 82px;
   height: 24px;
 
   font-weight: 400;

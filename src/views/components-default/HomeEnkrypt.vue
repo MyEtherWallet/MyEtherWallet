@@ -42,7 +42,8 @@
                 color-theme="#7E44F2"
                 style="border-radius: 100px !important"
                 btn-size="large"
-                @click.native="openEnkrypt"
+                btn-link="https://www.enkrypt.com"
+                rel="dofollow"
               >
                 <img
                   :src="browserLogo"

@@ -51,7 +51,8 @@
               color-theme="white"
               btn-size="large"
               style="border-radius: 40px !important"
-              @click.native="openEnkrypt"
+              btn-link="https://www.enkrypt.com"
+              rel="dofollow"
             >
               <img class="mr-3 browser-icons" :src="browserLogo" />
               Get the Enkrypt Extension
@@ -130,7 +131,8 @@
               color-theme="white"
               btn-size="large"
               style="border-radius: 40px !important"
-              @click.native="openEnkrypt"
+              btn-link="https://www.enkrypt.com"
+              rel="dofollow"
             >
               <img class="mr-3 browser-icons" :src="browserLogo" />
               Get the Enkrypt Extension

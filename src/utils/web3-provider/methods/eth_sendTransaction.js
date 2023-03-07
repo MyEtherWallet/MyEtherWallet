@@ -119,14 +119,12 @@ export default async ({ payload, store, requestManager }, res, next) => {
           );
           setEvents(_promiObj, _tx, store.dispatch);
           _promiObj
-            .once('sent', () => {
+            .once('receipt', receipt => {
               if (confirmInfo) {
-                EventBus.$emit('swapTxBroadcasted');
-              }
-            })
-            .once('receipt', () => {
-              if (confirmInfo) {
-                EventBus.$emit('swapTxReceivedReceipt');
+                EventBus.$emit(
+                  'swapTxReceivedReceipt',
+                  receipt.transactionHash
+                );
               }
             })
             .once('transactionHash', hash => {
@@ -149,11 +147,19 @@ export default async ({ payload, store, requestManager }, res, next) => {
                   });
                 }
               }
+              if (confirmInfo) {
+                EventBus.$emit('swapTxBroadcasted', hash);
+              }
               res(null, toPayload(payload.id, hash));
             })
             .on('error', err => {
               if (confirmInfo) {
-                EventBus.$emit('swapTxFailed');
+                const receipt =
+                  err.hasOwnProperty('receipt') &&
+                  err.receipt.hasOwnProperty('transactionHash')
+                    ? err.receipt.transactionHash
+                    : '0x';
+                EventBus.$emit('swapTxFailed', receipt);
               }
               res(err);
             });
@@ -162,7 +168,10 @@ export default async ({ payload, store, requestManager }, res, next) => {
     })
     .catch(e => {
       if (confirmInfo) {
-        EventBus.$emit('swapTxFailed');
+        const receipt = e.hasOwnProperty('receipt')
+          ? e.receipt.transactionHash
+          : '0x';
+        EventBus.$emit('swapTxFailed', receipt);
       }
       res(e);
     });
