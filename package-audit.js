@@ -20,7 +20,9 @@ const AUDIT_EXCEPTIONS = [
   'loader-utils', // breaks building
   'json5',
   'http-cache-semantics',
-  'cacheable-request'
+  'cacheable-request',
+  // look into updating after release
+  'dns-packet'
 ];
 const execute = (command, callback) => {
   exec(
