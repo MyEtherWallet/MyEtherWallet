@@ -77,19 +77,7 @@ const EXCEPTIONS = [
   'axios',
   'prettier', // creates more warnings
   '@ledgerhq/hw-app-eth', // issue with imports
-  '@ledgerhq/live-common', // issue with imports
-  'stylelint-config-prettier', // throws an error when committing
-<<<<<<< HEAD
-  'ethers' // look into this
-=======
-  '@coolwallet/eth',
-  '@ensdomains/address-encoder',
-  '@formatjs/intl-numberformat',
-  'commitlint',
-  '@commitlint/config-conventional',
-  'ethers',
-  'bip39'
->>>>>>> b90b7e77068a49a50d608121f295c4c0a700ec61
+  '@ledgerhq/live-common' // issue with imports
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
