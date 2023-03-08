@@ -114,17 +114,12 @@
 </template>
 
 <script>
-import { mapActions, mapState, mapGetters } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 import Web3 from 'web3';
 
-import {
-  Toast,
-  ERROR,
-  WARNING,
-  SENTRY
-} from '@/modules/toast/handler/handlerToast';
+import { Toast, ERROR, WARNING } from '@/modules/toast/handler/handlerToast';
 import { ACCESS_VALID_OVERLAYS } from '@/core/router/helpers';
-import { Web3Wallet, MewConnectWallet } from '@/modules/access-wallet/common';
+import { Web3Wallet } from '@/modules/access-wallet/common';
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
@@ -165,11 +160,6 @@ export default {
   computed: {
     ...mapState('external', ['path']),
     ...mapState('wallet', ['isOfflineApp']),
-
-    /**
-     * Used in the creation of a MEWconnect instance
-     **/
-    ...mapGetters('global', ['network']),
     /**
      * Opens up software module overlay. Returns true if overlay prop from route is ACCESS_VALID_OVERLAYS.SOFTWARE
      * @return - boolean
@@ -212,19 +202,6 @@ export default {
             alt: 'Enkrypt',
             fn: () => {
               this.checkEnkrypt();
-            }
-          },
-          /* MEW wallet Button */
-          {
-            color: 'white',
-            title: 'MEW wallet app',
-            subtitle: 'Connect MEW Wallet app to MEW web',
-            official: true,
-            recommended: true,
-            icon: require('@/assets/images/icons/icon-mew-wallet.png'),
-            alt: 'MEW wallet',
-            fn: () => {
-              this.openMEWconnect();
             }
           },
           /* Browser extension */
@@ -378,21 +355,6 @@ export default {
       } else {
         Toast('No web3 wallet found!', {}, WARNING);
       }
-    },
-    /** Opens a modal to initiate a connection with a MEW mobile app.
-     * Subsequently, this method creates an instance of MEWconnect with signTransaction and signMessage methods.
-     */
-    openMEWconnect() {
-      MewConnectWallet()
-        .then(_newWallet => {
-          this.setWallet([_newWallet]).then(() => {
-            this.trackAccessWallet(WALLET_TYPES.MEW_WALLET);
-            this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
-          });
-        })
-        .catch(e => {
-          Toast(e.message, {}, SENTRY);
-        });
     }
   }
 };

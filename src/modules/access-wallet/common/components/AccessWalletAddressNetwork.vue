@@ -197,7 +197,7 @@ import { mapGetters, mapState } from 'vuex';
 import { isEmpty, isEqual } from 'underscore';
 import ENS from '@ensdomains/ensjs';
 import Web3 from 'web3';
-import { isValidAddress } from 'ethereumjs-utils';
+import { isValidAddress } from 'ethereumjs-util';
 
 const MAX_ADDRESSES = 5;
 
