@@ -117,7 +117,14 @@
 import { mapActions, mapState } from 'vuex';
 import Web3 from 'web3';
 
-import { Toast, ERROR, WARNING } from '@/modules/toast/handler/handlerToast';
+import { WalletConnectWallet } from '@/modules/access-wallet/hybrid/handlers';
+
+import {
+  Toast,
+  ERROR,
+  WARNING,
+  SENTRY
+} from '@/modules/toast/handler/handlerToast';
 import { ACCESS_VALID_OVERLAYS } from '@/core/router/helpers';
 import { Web3Wallet } from '@/modules/access-wallet/common';
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
@@ -202,6 +209,19 @@ export default {
             alt: 'Enkrypt',
             fn: () => {
               this.checkEnkrypt();
+            }
+          },
+          /* MEW wallet Button */
+          {
+            color: 'white',
+            title: 'MEW wallet app',
+            subtitle: 'Connect MEW Wallet app to MEW web',
+            official: true,
+            recommended: true,
+            icon: require('@/assets/images/icons/icon-mew-wallet.png'),
+            alt: 'MEW wallet',
+            fn: () => {
+              this.openMEWconnect();
             }
           },
           /* Browser extension */
@@ -290,6 +310,22 @@ export default {
         });
       } catch (e) {
         Toast(e, {}, ERROR);
+      }
+    },
+    openMEWconnect() {
+      try {
+        WalletConnectWallet()
+          .then(_newWallet => {
+            this.setWallet([_newWallet]).then(() => {
+              this.trackAccessWallet(WALLET_TYPES.WALLET_CONNECT);
+              this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
+            });
+          })
+          .catch(e => {
+            WalletConnectWallet.errorHandler(e);
+          });
+      } catch (e) {
+        Toast(e.message, {}, SENTRY);
       }
     },
     /**
