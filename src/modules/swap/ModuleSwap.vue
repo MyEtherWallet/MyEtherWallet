@@ -1399,6 +1399,7 @@ export default {
             fromAddress: this.address
           })
           .then(providers => {
+            this.step = 1;
             if (this.tokenInValue === this.cachedAmount) {
               this.selectedProvider = {};
               if (providers.length) {
@@ -1418,7 +1419,7 @@ export default {
                   return arr;
                 }, []);
                 this.tokenOutValue = providers[0].amount;
-                this.step = 1;
+
                 this.setProvider(0, true);
               }
               this.isLoadingProviders = false;

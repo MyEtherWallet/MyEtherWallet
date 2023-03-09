@@ -141,7 +141,7 @@
     =====================================================================================
     -->
     <app-user-msg-block
-      v-if="hasProviderError && !isLoading"
+      v-if="step > 0 && hasProviderError && !isLoading"
       :message="providersError"
       :is-alert="false"
       container-padding="pa-4 py-6"
