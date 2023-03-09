@@ -11,7 +11,7 @@
         <button-balance
           v-if="!loading && !fetchingBalance"
           style="position: relative; top: 0; right: 0"
-          :balance="balance"
+          :balance="selectedBalance"
           :loading="loading"
         />
       </div>
@@ -229,9 +229,6 @@ export default {
     ...mapGetters('wallet', ['balanceInETH', 'balanceInWei', 'tokensList']),
     ...mapGetters('global', ['isEthNetwork', 'network', 'gasPriceByType']),
     ...mapGetters('external', ['contractToToken']),
-    balance() {
-      return `${formatFloatingPointValue(this.selectedBalance).value}`;
-    },
     fiatCurrencyItems() {
       const arrItems = this.hasData
         ? this.fetchedData.fiat_currencies.filter(item => item !== 'RUB')
