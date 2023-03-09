@@ -162,6 +162,10 @@ export default {
       type: Array,
       default: () => []
     },
+    searchTokens: {
+      type: Array,
+      default: () => []
+    },
     input: {
       type: Function,
       default: () => {}
@@ -228,7 +232,7 @@ export default {
     },
     tokenResults() {
       return this.query
-        ? this.tokens
+        ? this.searchTokens
             .filter(t => {
               if (t.header) return;
               const reg = RegExp(this.query, 'gi');

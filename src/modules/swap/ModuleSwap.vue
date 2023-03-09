@@ -16,6 +16,7 @@
             selected
             :token="fromTokenType"
             :tokens="actualFromTokens"
+            :search-tokens="fromTokens"
             placeholder="Enter amount"
             :loading="isLoading"
             :value="tokenInValue"
@@ -42,6 +43,7 @@
             :token-select="setToToken"
             :token="toTokenType"
             :tokens="actualToTokens"
+            :search-tokens="toTokens"
             btn-text="Select Token"
             :value="tokenOutValue || 0"
             :loading="isLoading"
@@ -1416,7 +1418,7 @@ export default {
                   return arr;
                 }, []);
                 this.tokenOutValue = providers[0].amount;
-                this.step = 2;
+                this.step = 1;
                 this.setProvider(0, true);
               }
               this.isLoadingProviders = false;
@@ -1772,7 +1774,7 @@ export default {
 <style lang="scss">
 .mew-component--swap {
   .swap-input {
-    max-width: 200px;
+    max-width: 300px;
     .v-input__slot {
       padding: 0 !important;
     }

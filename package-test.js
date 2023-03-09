@@ -77,7 +77,8 @@ const EXCEPTIONS = [
   'axios',
   'prettier', // creates more warnings
   '@ledgerhq/hw-app-eth', // issue with imports
-  '@ledgerhq/live-common' // issue with imports
+  '@ledgerhq/live-common', // issue with imports
+  'bip39' // breaks
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
