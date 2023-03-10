@@ -295,10 +295,6 @@ export default {
   methods: {
     ...mapActions('wallet', ['setWallet']),
     /**
-     * Used to set the MEWconnect instance as the wallet
-     **/
-    ...mapActions('wallet', ['setWallet']),
-    /**
      * Pushes route to empty Access wallet with no props
      * Consequently closing any open overlay
      * @type - must be one of the VALID_OVERLAYS
