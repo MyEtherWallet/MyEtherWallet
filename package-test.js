@@ -86,7 +86,8 @@ const EXCEPTIONS = [
   'commitlint',
   '@commitlint/config-conventional',
   'ethers',
-  'bip39'
+  'bip39',
+  '@ensdomains/ens-contracts'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
