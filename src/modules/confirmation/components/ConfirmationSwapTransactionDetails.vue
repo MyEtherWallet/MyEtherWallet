@@ -58,7 +58,7 @@
       <template #rightColItem2>
         <div class="mew-body">
           {{ convertedFees.value }}
-          <span class="searchText--text">{{ convertedFees.unit }}</span>
+          <span class="searchText--text">{{ toCurrency }}</span>
           ~{{ txFeeUSD }}
         </div>
       </template>
