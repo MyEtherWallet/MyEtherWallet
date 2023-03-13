@@ -13,8 +13,13 @@ const removeWallet = function ({ commit, state }) {
     state.identifier === WALLET_TYPES.WALLET_LINK
   ) {
     const connection = state.instance.getConnection();
-    if (connection && connection.disconnect) {
-      connection.disconnect();
+    if (connection) {
+      if (connection.disconnect) {
+        connection.disconnect();
+      }
+      if (connection.killSession) {
+        connection.killSession();
+      }
     }
   }
   commit('REMOVE_WALLET');
