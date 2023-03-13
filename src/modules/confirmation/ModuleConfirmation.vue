@@ -761,7 +761,7 @@ export default {
           .catch(err => {
             if (_this.isSwap && idx + 1 === _arr.length) {
               if (this.rejectedError(err.message)) {
-                _this.trackSwap('swapTxCancelled');
+                _this.trackSwap('swapTxRejected');
               } else {
                 _this.emitSwapTxFail(err);
               }
@@ -854,7 +854,7 @@ export default {
           .catch(e => {
             if (this.isSwap) {
               if (this.rejectedError(e.message)) {
-                this.trackSwap('swapTxCancelled');
+                this.trackSwap('swapTxRejected');
               } else {
                 this.emitSwapTxFail(e);
               }
@@ -939,7 +939,7 @@ export default {
               .catch(e => {
                 if (this.isSwap) {
                   if (this.rejectedError(e.message)) {
-                    this.trackSwap('swapTxCancelled');
+                    this.trackSwap('swapTxRejected');
                     throw new Error(e.message);
                   }
 
