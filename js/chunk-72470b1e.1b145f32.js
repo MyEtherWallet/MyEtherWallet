@@ -1,2 +1,0 @@
-(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["chunk-72470b1e"],{a7da:function(n,t,e){"use strict";e.r(t);var c=function(){var n=this,t=n.$createElement,c=n._self._c||t;return c("v-btn",{attrs:{icon:"","x-large":""}},[c("img",{attrs:{src:e("fd9c"),height:"40"}})])},r=[],s={name:"AppBtnMenu",props:{}},a=s,u=e("2877"),i=Object(u["a"])(a,c,r,!1,null,null,null);t["default"]=i.exports},fd9c:function(n,t,e){n.exports=e.p+"img/icon-menu.959d2406.svg"}}]);
-//# sourceMappingURL=../sourcemaps/js/chunk-72470b1e.1b145f32.js.map
