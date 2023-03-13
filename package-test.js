@@ -79,7 +79,8 @@ const EXCEPTIONS = [
   'prettier', // creates more warnings
   '@ledgerhq/hw-app-eth', // issue with imports
   '@ledgerhq/live-common', // issue with imports
-  'bip39' // breaks
+  'bip39', // breaks
+  'babel-jest'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
