@@ -1,12 +1,12 @@
-name: add to staging [v6]
+name: add to develop [v6]
 
 on:
   push:
     branches:
-      - staging
+      - develop
 
 jobs:
-  staging-build:
+  develop-build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -31,7 +31,7 @@ jobs:
       - name: build
         run: docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:history"
 
-      - name: add to staging
+      - name: add to develop
         env:
           AWS_DEFAULT_REGION: ${{secrets.AWS_DEFAULT_REGION}}
           AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
