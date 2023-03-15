@@ -65,7 +65,7 @@
     "@unstoppabledomains/resolution": "8.3.3",
     "@walletconnect/client": "1.8.0",
     "@walletconnect/qrcode-modal": "1.8.0",
-    "@walletconnect/sign-client": "2.4.10",
+    "@walletconnect/sign-client": "2.1.14",
     "@web3modal/standalone": "2.2.0",
     "animejs": "3.2.1",
     "apollo-cache-inmemory": "1.6.6",

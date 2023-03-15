@@ -31,6 +31,12 @@ const exportObj = {
       .use('babel')
       .loader('babel-loader')
       .end();
+    config.module
+      .rule('transpile-web3modal')
+      .test(/node_modules\/@web3modal\/.*\.js$/)
+      .use('babel')
+      .loader('babel-loader')
+      .end();
   }
 };
 

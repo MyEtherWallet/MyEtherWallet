@@ -17,13 +17,13 @@ import commonGenerator from '@/core/helpers/commonGenerator';
 import toBuffer from '@/core/helpers/toBuffer';
 import walletconnect from '@/assets/images/icons/wallets/walletconnect.svg';
 
-const PROJECT_ID = '72299ce67c7d5c879dd8da2df1a6875b';
+const projectId = '72299ce67c7d5c879dd8da2df1a6875b';
 const IS_HARDWARE = false;
 class WalletConnectWallet {
-  constructor(topic, signClient) {
+  constructor(signClient) {
     this.identifier = WALLET_TYPES.WALLET_CONNECT;
     this.isHardware = IS_HARDWARE;
-    this.topic = topic;
+    // this.topic = topic;
     this.signClient = signClient;
 
     // if (
@@ -50,10 +50,6 @@ class WalletConnectWallet {
   init() {
     // eslint-disable-next-line
     return new Promise(async (resolve, reject) => {
-      const modal = new Web3Modal({
-        projectId: PROJECT_ID,
-        standaloneChains: ['eip155:1']
-      });
       const txSigner = tx => {
         const from = tx.from;
         tx = new Transaction(tx, {
@@ -91,28 +87,39 @@ class WalletConnectWallet {
             .catch(reject);
         });
       };
-      const { uri, approval } = await this.signClient.connect({
-        pairingTopic: this.topic,
-        requiredNamespaces: {
-          eip155: {
-            methods: [
-              'eth_sendTransaction',
-              'eth_signTransaction',
-              'eth_sign',
-              'personal_sign'
-            ],
-            chains: ['eip155:1'],
-            events: ['accountsChanged']
+      console.log('lmao');
+      try {
+        const { uri, approval } = await this.signClient.connect({
+          requiredNamespaces: {
+            eip155: {
+              methods: [
+                'eth_sendTransaction',
+                'eth_signTransaction',
+                'eth_sign',
+                'personal_sign'
+              ],
+              chains: ['eip155:1'],
+              events: ['accountsChanged']
+            }
           }
-        }
-      });
+        });
+        console.log('create web3 modal');
+        const modal = new Web3Modal({
+          walletConnectVersion: 2,
+          projectId,
+          standaloneChains: ['eip155:1']
+        });
 
-      if (uri) {
-        modal.openModal(uri);
-        console.log('huh?', approval);
-        const session = await approval();
-        console.log('do you get here AAAA', session);
-        modal.closeModal();
+        console.log('use uri');
+
+        if (uri) {
+          modal.openModal({ uri, standaloneChains: ['eip155:1'] });
+          const session = await approval();
+          console.log(session, 'hakdog');
+          modal.closeModal();
+        }
+      } catch (e) {
+        console.log(e);
       }
       // this.walletConnect.createSession();
       // this.walletConnect.on('connect', (error, payload) => {
@@ -139,12 +146,11 @@ class WalletConnectWallet {
 }
 const createWallet = async () => {
   const signClient = await SignClient.init({
-    projectId: PROJECT_ID,
+    projectId,
     metadata: {
       name: 'MyEtherWallet Inc',
       description:
-        'MyEtherWallet (MEW) is a free, open-source, client-side interface for generating Ethereum wallets & more. Interact with the Ethereum blockchain easily & securely.',
-      url: '#'
+        'MyEtherWallet (MEW) is a free, open-source, client-side interface for generating Ethereum wallets & more. Interact with the Ethereum blockchain easily & securely.'
     }
   });
   signClient.on('session_event', ({ event }) => {
@@ -156,8 +162,8 @@ const createWallet = async () => {
   signClient.on('session_delete', ({ event }) => {
     console.log(event, 'sesh delete');
   });
-  const { topic } = await signClient.core.pairing.create();
-  const walletConnectWallet = new WalletConnectWallet(topic, signClient);
+  // const { topic } = await signClient.core.pairing.create();
+  const walletConnectWallet = new WalletConnectWallet(signClient);
   const _tWallet = await walletConnectWallet.init();
   return _tWallet;
 };
