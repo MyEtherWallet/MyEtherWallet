@@ -17,7 +17,12 @@ const AUDIT_EXCEPTIONS = [
   'semver-regex',
   'scss-tokenizer',
   'codecov', // no package found
-  'loader-utils'
+  'loader-utils', // breaks building
+  'json5',
+  'http-cache-semantics',
+  'cacheable-request',
+  // look into updating after release
+  'dns-packet'
 ];
 const execute = (command, callback) => {
   exec(

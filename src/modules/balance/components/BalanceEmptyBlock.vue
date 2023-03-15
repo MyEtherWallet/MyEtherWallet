@@ -24,7 +24,7 @@
           :has-full-width="false"
           title="Buy ETH with a credit card"
           btn-size="xlarge"
-          @click.native="openMoonpay"
+          @click.native="openBuySell"
         />
         <div class="d-flex align-center mt-5">
           <div>We accept credit card</div>
@@ -61,10 +61,19 @@
         v-if="isEth"
         class="ml-auto ml-n3"
         :has-full-width="false"
-        :title="'+ ' + 'Buy ERC20 tokens'"
+        title="+ Buy ERC20 tokens"
         btn-size="xsmall"
         btn-style="transparent"
         @click.native="navigateToSwap"
+      />
+      <br />
+      <mew-button
+        class="ml-auto ml-n3"
+        :has-full-width="false"
+        title="+ Add a custom token"
+        btn-size="xsmall"
+        btn-style="transparent"
+        @click.native="openCustomTokens"
       />
     </div>
   </mew6-white-sheet>
@@ -97,6 +106,13 @@ export default {
      */
     navigateToSwap() {
       this.$router.push({ name: ROUTES_WALLET.SWAP.NAME });
+    },
+    /**
+     * method that emits event to open
+     * custom token modal
+     */
+    openCustomTokens() {
+      this.$emit('openAddCustomToken');
     }
   }
 };

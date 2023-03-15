@@ -98,7 +98,9 @@ import axios from 'axios';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 export default {
   name: 'TheCareersLayout',
-  TheLayoutHeader: () => import('../components-default/TheLayoutHeader'),
+  components: {
+    TheLayoutHeader: () => import('../components-default/TheLayoutHeader')
+  },
   data() {
     return {
       loadingCareers: true,

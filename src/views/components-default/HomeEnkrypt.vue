@@ -25,7 +25,7 @@
             Introducing MEW’s multichain wallet extension
           </div>
           <div class="text-subtitle mb-md-10" style="color: #60666d">
-            Easily access all you favorite apps across Ethereum and Polkadot
+            Easily access all your favorite apps across Ethereum and Polkadot
             chains, buy crypto, swap tokens, and manage your NFTs. Welcome to
             the multichain future.
           </div>
@@ -42,7 +42,8 @@
                 color-theme="#7E44F2"
                 style="border-radius: 100px !important"
                 btn-size="large"
-                @click.native="openEnkrypt"
+                btn-link="https://www.enkrypt.com"
+                rel="dofollow"
               >
                 <img
                   :src="browserLogo"

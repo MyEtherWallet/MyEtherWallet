@@ -71,10 +71,11 @@ const ERRORS = {
     'Please make sure app is installed and opened on Ledger device',
   'Authentication canceled.': 'Authentication canceled',
   'missing app ETH': 'Make sure you have Ethereum app opened',
+  'missing app Rootstock': 'Make sure you have Rootstock app opened',
   'missing app GO': 'Make sure you have GoChain app opened',
   'missing app ETC': 'Make sure you have Ethereum Classic app opened',
   'missing app ROP': 'Make sure you have Ropsten app opened',
-  'missing app XDC': 'Make sure you have XDC.Network app opened'
+  'missing app XDC': 'Make sure you have XDC Network app opened'
 };
 const WARNINGS = {
   'Ledger device: Condition of use not satisfied (denied by the user?) (0x6985)':

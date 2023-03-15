@@ -80,8 +80,14 @@ export default {
           return item;
         }
       });
-      let balance = hasBalance ? hasBalance.balancef : '0';
-      balance = balance > this.totalBorrow ? this.totalBorrow : balance;
+      let balance = hasBalance ? hasBalance.balance.toString() : '0';
+      const decimals = new BigNumber(10).pow(this.tokenDecimals);
+      const totalBorrowed = new BigNumber(this.totalBorrow).multipliedBy(
+        decimals
+      );
+      balance = totalBorrowed.lt(balance)
+        ? this.totalBorrow.toString()
+        : new BigNumber(balance).div(decimals).toFixed();
       return balance;
     },
     tokenDecimals() {

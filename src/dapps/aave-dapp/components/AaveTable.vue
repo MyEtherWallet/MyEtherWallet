@@ -22,7 +22,7 @@
         <v-btn-toggle
           v-model="toggleType"
           mandatory
-          active-class="textDark white--text"
+          active-class="buttonToggleDark white--text"
         >
           <v-btn small>All</v-btn>
           <v-btn small>Stable</v-btn>
@@ -62,6 +62,7 @@ import {
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import handlerAave from '../handlers/handlerAave.mixin';
 import { EventBus } from '@/core/plugins/eventBus';
+import { isBN, toBN } from 'web3-utils';
 
 export default {
   name: 'AaveTable',
@@ -163,9 +164,17 @@ export default {
                   : this.tokensList.find(balance => {
                       if (item.symbol === balance.symbol) return balance;
                     });
-              const userBalance = findBalance ? findBalance.balancef : 0;
+
+              const decimals = findBalance
+                ? new BigNumber(10).pow(findBalance.decimals)
+                : 0;
+              const userBalance = findBalance
+                ? new BigNumber(findBalance.balance)
+                    .dividedBy(decimals)
+                    .toFixed()
+                : 0;
               const depositObj = Object.assign({}, AAVE_TABLE_BUTTON.deposit);
-              depositObj.disabled = BigNumber(userBalance).lte(0);
+              depositObj.disabled = new BigNumber(userBalance).lte(0);
 
               AAVE_TABLE_BUTTON.swap.method = this.onSwapClick;
               return {
@@ -189,15 +198,12 @@ export default {
            * Case: Aave Borrow Table used in Overlay
            */
           case AAVE_TABLE_TITLE.borrow:
-            list = list
-              .filter(item => {
-                return item.variableBorrowAPY > 0;
-              })
-              .map(item => {
+            list = list.reduce((arr, item) => {
+              if (item.borrowingEnabled) {
                 const available = formatFloatingPointValue(
                   this.userBorrowPower(item)
                 ).value;
-                return {
+                arr.push({
                   token: item.symbol,
                   available: available, // need to double check this
                   stableApy: item.stableBorrowRateEnabled
@@ -211,19 +217,33 @@ export default {
                   tokenImg: `${item.icon}`,
                   address: item.aToken.id,
                   callToAction: [
-                    { ...AAVE_TABLE_BUTTON.borrow, disabled: available <= 0 }
+                    {
+                      ...AAVE_TABLE_BUTTON.borrow,
+                      disabled: new BigNumber(available).lte(0)
+                    }
                   ]
-                };
-              });
+                });
+              }
+              return arr;
+            }, []);
             break;
           /**
            * Case: Aave Existing Deposits Table
            */
           case AAVE_TABLE_TITLE.balance_deposit:
             list = list.map(item => {
+              const depositButton = Object.assign(
+                {},
+                AAVE_TABLE_BUTTON.deposit
+              );
               AAVE_TABLE_BUTTON.withdraw.method = this.onWithdrawClick;
-              AAVE_TABLE_BUTTON.deposit.method = this.onDepositClick;
+              depositButton.method = this.onDepositClick;
               const enableToggle = item.reserve.usageAsCollateralEnabled;
+              const tokenBalance = item.reserve.tokenBalance;
+              const enableDeposit = isBN(tokenBalance)
+                ? tokenBalance.gt(toBN(0))
+                : tokenBalance > 0;
+              depositButton.disabled = !enableDeposit;
               return {
                 token: item.reserve.symbol,
                 tokenImg: `${item.reserve.icon}`,
@@ -243,10 +263,7 @@ export default {
                       value: item.usageAsCollateralEnabledOnUser
                     }
                   : null,
-                callToAction: [
-                  AAVE_TABLE_BUTTON.deposit,
-                  AAVE_TABLE_BUTTON.withdraw
-                ]
+                callToAction: [depositButton, AAVE_TABLE_BUTTON.withdraw]
               };
             });
             break;
@@ -267,6 +284,9 @@ export default {
               const available = formatFloatingPointValue(
                 this.userBorrowPower(reserve)
               ).value;
+              const borrowObj = Object.assign({}, AAVE_TABLE_BUTTON.borrow);
+              borrowObj.disabled =
+                !reserve.borrowingEnabled || new BigNumber(available).lte(0);
               return {
                 token: item.reserve.symbol,
                 tokenImg: `${item.reserve.icon}`,
@@ -296,10 +316,7 @@ export default {
                       disabled: false
                     }
                   : null,
-                callToAction: [
-                  { ...AAVE_TABLE_BUTTON.borrow, disabled: available <= 0 },
-                  AAVE_TABLE_BUTTON.repay
-                ]
+                callToAction: [borrowObj, AAVE_TABLE_BUTTON.repay]
               };
             });
             break;

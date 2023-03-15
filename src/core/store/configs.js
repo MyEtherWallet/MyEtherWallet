@@ -10,7 +10,7 @@ export default {
     ...dappStoreConfigs.LOCAL_STORAGE_KEYS
   },
   VERSION: {
-    global: '1.0.8',
+    global: '1.0.9',
     popups: '1.0.0',
     notifications: '1.0.4',
     custom: '1.0.4',

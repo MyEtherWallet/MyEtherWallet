@@ -1,8 +1,12 @@
 // import WalletConnect from '@walletconnect/client';
 import { SignClient } from '@walletconnect/sign-client';
 import QRCodeModal from '@walletconnect/qrcode-modal';
-import store from '@/core/store';
 import { Transaction } from '@ethereumjs/tx';
+import PromiEvent from 'web3-core-promievent';
+
+import * as nodes from '@/utils/networks/nodes';
+import HybridWalletInterface from '../walletInterface';
+import store from '@/core/store';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import {
   sanitizeHex,
@@ -11,11 +15,10 @@ import {
 import errorHandler from './errorHandler';
 import commonGenerator from '@/core/helpers/commonGenerator';
 import toBuffer from '@/core/helpers/toBuffer';
-import HybridWalletInterface from '../walletInterface';
-import PromiEvent from 'web3-core-promievent';
+import walletconnect from '@/assets/images/icons/wallets/walletconnect.svg';
+
 const PROJECT_ID = '72299ce67c7d5c879dd8da2df1a6875b';
 const IS_HARDWARE = false;
-import walletconnect from '@/assets/images/icons/wallets/walletconnect.svg';
 class WalletConnectWallet {
   constructor(topic, signClient) {
     this.identifier = WALLET_TYPES.WALLET_CONNECT;
@@ -36,9 +39,6 @@ class WalletConnectWallet {
       store.dispatch('wallet/removeWallet');
     });
 
-    // this.walletConnect.disconnect = () => {
-    //   this.walletConnect.killSession();
-    // };
     this.meta = {
       name: 'Wallet Connect',
       img: {

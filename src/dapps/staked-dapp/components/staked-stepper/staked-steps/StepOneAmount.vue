@@ -27,7 +27,7 @@
           filter-placeholder="Search for Amount"
           is-custom
           outlined
-          @buyMore="openMoonpay"
+          @buyMore="openBuySell"
           @input="setAmount"
         />
         <!--
@@ -35,7 +35,7 @@
     Staking APR and fee
     ===================================================
     -->
-        <div class="pt-6">
+        <div class="mt-12">
           <v-row>
             <v-col
               cols="6"
@@ -103,7 +103,9 @@
     User information
     ===================================================
     -->
-      <div class="greyLight px-6 px-sm-12 py-8 mt-2 border-radius--10px">
+      <div
+        class="bgWalletBlockDark px-6 px-sm-12 py-8 mt-6 border-radius--10px"
+      >
         <ul class="user-info textMedium--text">
           <li>Your ETH is staked with our partner Staked.us</li>
           <li>Staked.us will create and maintain Eth2 validators for you</li>

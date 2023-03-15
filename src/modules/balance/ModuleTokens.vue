@@ -16,6 +16,7 @@
       subtitle="My Tokens Value"
       :has-body-padding="false"
       :title="totalTokensValue"
+      class="bgWalletBlock"
     >
       <template #rightHeaderContainer>
         <div>
@@ -34,7 +35,7 @@
                 icon
                 v-on="on"
               >
-                <v-icon medium color="basic">mdi-dots-vertical</v-icon>
+                <v-icon medium color="textDark">mdi-dots-vertical</v-icon>
               </v-btn>
             </template>
             <v-list>
@@ -67,7 +68,12 @@
       display if the user has no tokens
     =====================================================================================
     -->
-    <balance-empty-block v-if="emptyWallet" is-tokens :is-eth="isEthNetwork" />
+    <balance-empty-block
+      v-if="emptyWallet"
+      is-tokens
+      :is-eth="isEthNetwork"
+      @openAddCustomToken="() => toggleAddCustomToken(true)"
+    />
     <!--
     =====================================================================================
       add Custom Token form
@@ -101,9 +107,11 @@
   </div>
 </template>
 <script>
-import BalanceTable from './components/BalanceTable';
 import { mapGetters, mapState } from 'vuex';
 import { uniqWith, isEqual } from 'lodash';
+import BigNumber from 'bignumber.js';
+
+import BalanceTable from './components/BalanceTable';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { currencyToNumber } from '@/core/helpers/localization';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
@@ -235,9 +243,14 @@ export default {
         }),
         isEqual
       );
-      const tokenList = uniqueTokens.map(item => {
-        return this.formatValues(item);
-      });
+      const tokenList = uniqueTokens
+        .filter(item => {
+          if (item && item.balance && BigNumber(item.balance).gt(0))
+            return item;
+        })
+        .map(item => {
+          return this.formatValues(item);
+        });
       tokenList.sort((a, b) => b.usdBalance - a.usdBalance);
       return customTokens.concat(tokenList);
     },
@@ -305,8 +318,8 @@ export default {
       }
       return newObj;
     },
-    toggleAddCustomToken() {
-      this.openAddCustomToken = !this.openAddCustomToken;
+    toggleAddCustomToken(val) {
+      this.openAddCustomToken = val ? val : !this.openAddCustomToken;
     },
     toggleRemoveCustomToken() {
       this.openRemoveCustomToken = !this.openRemoveCustomToken;

@@ -75,6 +75,7 @@ export default {
         'sharing-personal-info-paragraph-2',
         'sharing-personal-info-subtitle',
         'sharing-personal-info-paragraph-3',
+        'sharing-personal-info-paragraph-4',
         'links-to-other-sites',
         'links-to-other-sites-paragraph',
         'mew-commitment',

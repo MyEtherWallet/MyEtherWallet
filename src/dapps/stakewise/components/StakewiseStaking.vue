@@ -127,7 +127,7 @@
     <!-- ======================================================================================= -->
     <div v-if="enoughToCoverRedeem" class="mt-4 greyPrimary--text">
       You do not have enough ETH to cover transaction fee.
-      <a rel="noopener noreferrer" @click="openMoonpay"> Buy more ETH</a>
+      <a rel="noopener noreferrer" @click="openBuySell"> Buy more ETH</a>
     </div>
   </div>
 </template>
@@ -335,11 +335,11 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--v-greyLight-base) !important;
+  border: 1px solid var(--v-borderInput-base) !important;
   border-radius: 50% !important;
   width: 32px;
   height: 32px;
-  background-color: var(--v-whiteBackground-base);
+  background-color: var(--v-alwaysWhite-base);
 
   img {
     height: 28px;

@@ -115,10 +115,11 @@
             </div>
             <mew-button
               v-if="detailLength"
-              class="mt-2 display--block mx-auto DownloadButton"
+              class="mt-2 d-flex align-center justify-center mx-auto DownloadButton"
               title="Export JSON file"
               btn-size="small"
               btn-style="transparent"
+              style="max-width: 130px"
               :btn-link="fileLink"
               :download="exportFileName"
             />
@@ -219,7 +220,7 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex';
-import { isAddress, fromWei, toHex } from 'web3-utils';
+import { isAddress, fromWei, toHex, toBN } from 'web3-utils';
 import { Transaction } from 'ethereumjs-tx';
 import { BigNumber } from 'bignumber.js';
 import { toChecksumAddress } from 'ethereumjs-util';
@@ -653,7 +654,7 @@ export default {
       const nonce = raw.nonce;
       this.dialog = true;
       this.txLoading = true;
-      if (BigNumber(actualNonce).gte(nonce)) {
+      if (toBN(actualNonce).gt(toBN(nonce))) {
         this.dialogAlert = 'Nonce too low!';
         this.txLoading = false;
         return;

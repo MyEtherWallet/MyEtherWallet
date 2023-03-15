@@ -46,7 +46,6 @@ const setNetwork = async function (
   if (matched) {
     commit('SET_NETWORK', network);
     dispatch('swap/resetPrefetch', null, { root: true });
-    dispatch('wallet/setAccountBalance', '0', { root: true });
     return;
   }
   throw new Error('Network not found');
@@ -69,6 +68,10 @@ const setBaseFeePerGas = function ({ commit }, valBN) {
   commit('SET_BASE_FEE_PER_GAS', valBN);
 };
 
+const setDarkMode = function ({ commit }, val) {
+  commit('SET_DARK_MODE', val);
+};
+
 export default {
   updateGasPrice,
   setOnlineStatus,
@@ -81,5 +84,6 @@ export default {
   setImportedState,
   addLocalContract,
   setMaxPriorityFeePerGas,
-  setBaseFeePerGas
+  setBaseFeePerGas,
+  setDarkMode
 };

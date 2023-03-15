@@ -58,7 +58,12 @@
         </v-sheet>
         <div v-if="hasNotification" class="d-flex align-center justify-end">
           <v-sheet color="transparent" max-width="150px">
-            <mew-select :items="items" normal-dropdown @input="setSelected" />
+            <mew-select
+              :items="items"
+              :has-filter="false"
+              normal-dropdown
+              @input="setSelected"
+            />
           </v-sheet>
         </div>
         <div
@@ -220,6 +225,16 @@ export default {
       return this.allNotifications.length > 0;
     }
   },
+  watch: {
+    currentNotifications: {
+      handler: function (newVal) {
+        newVal.forEach(notification => {
+          this.checkAndSetNotificationStatus(notification);
+        });
+      },
+      deep: true
+    }
+  },
   mounted() {
     const _this = this;
     EventBus.$on('openNotifications', () => {
@@ -262,15 +277,13 @@ export default {
       if (notification.status) {
         if (
           type === NOTIFICATION_TYPES.SWAP &&
-          notification.status.toLowerCase() ===
-            NOTIFICATION_STATUS.PENDING.toLowerCase()
+          notification.status.toLowerCase() === NOTIFICATION_STATUS.PENDING
         ) {
           notification.checkSwapStatus(this.swapper);
         }
         if (
           type === NOTIFICATION_TYPES.OUT &&
-          notification.status.toLowerCase() ===
-            NOTIFICATION_STATUS.PENDING.toLowerCase()
+          notification.status.toLowerCase() === NOTIFICATION_STATUS.PENDING
         ) {
           this.web3.eth
             .getTransactionReceipt(notification.hash)

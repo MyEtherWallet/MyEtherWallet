@@ -29,7 +29,7 @@
                 </v-icon>
               </div>
             </template>
-            <v-list width="232px">
+            <v-list width="232px" class="bgWalletBlock">
               <v-list-item class="cursor-pointer" @click="refresh">
                 <v-icon color="textDark" class="mr-3">mdi-refresh</v-icon>
                 <v-list-item-title> Refresh Balance</v-list-item-title>
@@ -101,10 +101,19 @@
           'mew-subtitle text-shadow white--text mt-5 mb-4'
         ]"
       >
-        {{ totalWalletBalance }}
-        <span v-if="isTestNetwork" style="padding-left: 2px; font-size: 14px">{{
-          network.type.currencyName
-        }}</span>
+        <v-skeleton-loader
+          v-if="loadingWalletInfo"
+          type="heading"
+          class="theme-dark-heading"
+        ></v-skeleton-loader>
+        <div v-else class="mew-subtitle text-shadow white--text">
+          {{ totalWalletBalance }}
+          <span
+            v-if="isTestNetwork"
+            style="padding-left: 2px; font-size: 14px"
+            >{{ network.type.currencyName }}</span
+          >
+        </div>
       </div>
       <div
         class="d-flex justify-space-between align-center"
@@ -116,7 +125,11 @@
             Total Wallet chain balance: prensent if not Test network
           =====================================================================================
           -->
-          <div v-if="!isTestNetwork" class="info-container--text-chain-balance">
+          <v-skeleton-loader v-if="loadingWalletInfo" type="text" width="100" />
+          <div
+            v-else-if="!isTestNetwork"
+            class="info-container--text-chain-balance"
+          >
             {{ walletChainBalance }} {{ network.type.currencyName }}
           </div>
           <!--
@@ -124,7 +137,8 @@
             Total Tokens: present if tokens found
           =====================================================================================
           -->
-          <div v-if="nonChainTokensCount > 0" class="info-container--text">
+          <v-skeleton-loader v-if="loadingWalletInfo" type="text" width="100" />
+          <div v-else-if="nonChainTokensCount > 0" class="info-container--text">
             and {{ nonChainTokensCount }} Tokens
           </div>
         </div>
@@ -138,12 +152,15 @@
             class="info-container--action-btn mr-2 px-0 BalanceCardQR"
             fab
             depressed
-            color="white"
             @click="openQR = true"
-            ><v-icon class="info-container--icon" size="18px"
-              >mdi-qrcode</v-icon
-            ></v-btn
           >
+            <img
+              class="info-container--icon"
+              height="18px"
+              src="@/assets/images/icons/icon-qr-code.svg"
+              alt="qr-code"
+            />
+          </v-btn>
           <!--
           =====================================================================================
             Copy Button
@@ -153,11 +170,10 @@
             class="info-container--action-btn px-0"
             depressed
             fab
-            color="white"
             @click="copyAddress"
-            ><v-icon class="info-container--icon" small
-              >mdi-content-copy</v-icon
-            ></v-btn
+            ><v-icon class="info-container--icon" small color="white">
+              mdi-content-copy
+            </v-icon></v-btn
           >
         </div>
       </div>
@@ -167,12 +183,6 @@
       Wallet card modals
     =====================================================================================
     -->
-    <module-paper-wallet
-      :open="showPaperWallet"
-      :close="closePaperWallet"
-      :is-offline-app="isOfflineApp"
-      @close="closePaperWallet"
-    />
     <app-modal
       :show="openQR"
       :close="closeQR"
@@ -241,20 +251,19 @@ import { mapGetters, mapActions, mapState } from 'vuex';
 import clipboardCopy from 'clipboard-copy';
 import { isEmpty } from 'lodash';
 
-import { Toast, SUCCESS } from '@/modules/toast/handler/handlerToast';
+import { Toast, SUCCESS, ERROR } from '@/modules/toast/handler/handlerToast';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 
-import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import wallets from './handlers/config';
 import WALLET_TYPES from '../access-wallet/common/walletTypes';
 import NameResolver from '@/modules/name-resolver/index';
+import { EventBus } from '@/core/plugins/eventBus';
 
 export default {
   components: {
     AppModal: () => import('@/core/components/AppModal'),
     AppAddrQr: () => import('@/core/components/AppAddrQr'),
-    ModulePaperWallet: () => import('./ModulePaperWallet'),
     ModuleAccessWalletHardware: () =>
       import('@/modules/access-wallet/ModuleAccessWalletHardware'),
     ModuleAccessWalletSoftware: () =>
@@ -269,7 +278,6 @@ export default {
   data() {
     return {
       showChangeAddress: false,
-      showPaperWallet: false,
       openQR: false,
       showLogout: false,
       showVerify: false,
@@ -284,7 +292,8 @@ export default {
       'instance',
       'identifier',
       'isHardware',
-      'isOfflineApp'
+      'isOfflineApp',
+      'loadingWalletInfo'
     ]),
     ...mapGetters('external', ['totalTokenFiatValue']),
     ...mapGetters('global', ['network', 'isTestNetwork', 'getFiatValue']),
@@ -304,7 +313,7 @@ export default {
     title() {
       return this.resolvedName
         ? this.resolvedName
-        : 'My Personal Account'.toUpperCase();
+        : 'Portfolio Value'.toUpperCase();
     },
     /**
      * verify address title
@@ -476,10 +485,16 @@ export default {
     viewAddressOnDevice() {
       this.showVerify = true;
       if (this.canDisplayAddress) {
-        this.instance.displayAddress().then(() => {
-          this.showVerify = false;
-          Toast('Address verified!', {}, SUCCESS);
-        });
+        this.instance
+          .displayAddress()
+          .then(() => {
+            this.showVerify = false;
+            Toast('Address verified!', {}, SUCCESS);
+          })
+          .catch(e => {
+            this.showVerify = false;
+            Toast(e.message, {}, ERROR);
+          });
       }
     },
     /**
@@ -513,22 +528,11 @@ export default {
       this.showChangeAddress = true;
     },
     /**
-     * set showPaperWallet to false
-     * to close the modal
-     */
-    closePaperWallet() {
-      if (this.showPaperWallet) this.$router.go(-1);
-      this.showPaperWallet = false;
-    },
-    /**
      * sets showPaperWallet to true
      * to open the modal
      */
     openPaperWallet() {
-      this.$router.push({
-        name: ROUTES_WALLET.PRINT.NAME
-      });
-      this.showPaperWallet = true;
+      EventBus.$emit('openPaperWallet');
     },
     /**
      * Copies address
@@ -602,9 +606,6 @@ export default {
   }
 }
 
-.v-btn::before {
-  background-color: transparent;
-}
 .info-container {
   background-color: rgba(0, 0, 0, 0.08);
   border-radius: 16px;
@@ -635,11 +636,14 @@ export default {
   }
 
   .info-container--action-btn {
-    opacity: 0.6;
     border-radius: 10px !important;
     height: 32px !important;
     width: 32px !important;
     font-size: 16px !important;
+    background: rgba(0, 0, 0, 0.06);
+    backdrop-filter: blur(10px);
+    letter-spacing: 0.03em;
+    color: white;
   }
 
   .info-container--action- {
@@ -656,9 +660,9 @@ export default {
   .info-container--action-:hover {
     opacity: 1;
   }
-  .info-container--icon:hover {
-    color: var(--v-greenPrimary-base) !important;
-  }
+  // .info-container--icon:hover {
+  //   color: var(--v-greenPrimary-base) !important;
+  // }
 }
 
 .text-shadow {
@@ -694,5 +698,24 @@ export default {
 .verify-popup-border {
   border: 1px solid var(--v-greenMedium-base);
   border-radius: 4px;
+}
+
+.theme-dark-heading {
+  background-color: rgba(0, 0, 0, 0);
+  border-radius: 12px;
+  height: 24px;
+  width: 100%;
+}
+.theme-dark-heading .v-skeleton-loader__bone::before {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+</style>
+
+<style lang="scss">
+// Skeleton loader custom color
+.component--wallet-card {
+  .v-skeleton-loader__bone {
+    background: rgba(0, 0, 0, 0.3) !important;
+  }
 }
 </style>

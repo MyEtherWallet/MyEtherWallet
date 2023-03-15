@@ -13,7 +13,7 @@
         <v-btn-toggle
           v-model="toggleType"
           mandatory
-          active-class="textDark white--text alig-end"
+          active-class="buttonToggleDark white--text alig-end"
         >
           <v-btn small>Main</v-btn>
           <v-btn small>Test</v-btn>
@@ -278,7 +278,6 @@ export default {
   methods: {
     ...mapActions('wallet', ['setWeb3Instance']),
     ...mapActions('global', ['setNetwork']),
-    ...mapActions('external', ['setTokenAndEthBalance']),
     /**
      * Method checks whether symbol or name has searchInput substring
      * @returns {boolean}
@@ -318,12 +317,15 @@ export default {
               ? this.network.type.name
               : '';
             this.networkLoading = false;
-            this.identifier === WALLET_TYPES.WEB3_WALLET
-              ? this.setWeb3Instance(window.ethereum)
-              : this.setWeb3Instance();
-            Toast(`Switched network to: ${found[0].type.name}`, {}, SUCCESS);
-            this.trackNetworkSwitch(found[0].type.name);
-            this.$emit('newNetwork');
+            const setNetworkCall =
+              this.identifier === WALLET_TYPES.WEB3_WALLET
+                ? this.setWeb3Instance(window.ethereum)
+                : this.setWeb3Instance();
+            setNetworkCall.then(() => {
+              Toast(`Switched network to: ${found[0].type.name}`, {}, SUCCESS);
+              this.trackNetworkSwitch(found[0].type.name);
+              this.$emit('newNetwork');
+            });
           }
         })
         .catch(e => {

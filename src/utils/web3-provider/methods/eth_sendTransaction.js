@@ -78,39 +78,6 @@ export default async ({ payload, store, requestManager }, res, next) => {
           setEvents(_promiObj, _tx, store.dispatch);
           _promiObj
             .once('transactionHash', hash => {
-              res(null, toPayload(payload.id, hash));
-            })
-            .on('error', err => {
-              res(err);
-            });
-        });
-      } else {
-        /**
-         * confirmInfo is @Boolean
-         * Checks whether confirmInfo is true
-         * if true, assume transaction is a swap
-         */
-        EventBus.$emit(event, params, _response => {
-          if (_response.rejected) {
-            res(new Error('User rejected action'));
-            return;
-          }
-          const _promiObj = store.state.wallet.web3.eth.sendSignedTransaction(
-            _response.rawTransaction
-          );
-          setEvents(_promiObj, _tx, store.dispatch);
-          _promiObj
-            .once('sent', () => {
-              if (event === EventNames.SHOW_SWAP_TX_MODAL) {
-                EventBus.$emit('swapTxBroadcasted');
-              }
-            })
-            .once('receipt', () => {
-              if (event === EventNames.SHOW_SWAP_TX_MODAL) {
-                EventBus.$emit('swapTxReceivedReceipt');
-              }
-            })
-            .once('transactionHash', hash => {
               if (store.state.wallet.instance !== null) {
                 const isTesting = locStore.get('mew-testing');
                 if (!isTesting) {
@@ -133,8 +100,66 @@ export default async ({ payload, store, requestManager }, res, next) => {
               res(null, toPayload(payload.id, hash));
             })
             .on('error', err => {
-              if (event === EventNames.SHOW_SWAP_TX_MODAL) {
-                EventBus.$emit('swapTxFailed');
+              res(err);
+            });
+        });
+      } else {
+        /**
+         * confirmInfo is @Boolean
+         * Checks whether confirmInfo is true
+         * if true, assume transaction is a swap
+         */
+        EventBus.$emit(event, params, _response => {
+          if (_response.rejected) {
+            res(new Error('User rejected action'));
+            return;
+          }
+          const _promiObj = store.state.wallet.web3.eth.sendSignedTransaction(
+            _response.rawTransaction
+          );
+          setEvents(_promiObj, _tx, store.dispatch);
+          _promiObj
+            .once('receipt', receipt => {
+              if (confirmInfo) {
+                EventBus.$emit(
+                  'swapTxReceivedReceipt',
+                  receipt.transactionHash
+                );
+              }
+            })
+            .once('transactionHash', hash => {
+              if (store.state.wallet.instance !== null) {
+                const isTesting = locStore.get('mew-testing');
+                if (!isTesting) {
+                  const storeKey = utils.sha3(
+                    `${
+                      store.getters['global/network'].type.name
+                    }-${store.state.wallet.instance
+                      .getChecksumAddressString()
+                      .toLowerCase()}`
+                  );
+                  const localStoredObj = locStore.get(storeKey);
+                  locStore.set(storeKey, {
+                    nonce: sanitizeHex(
+                      BigNumber(localStoredObj.nonce).plus(1).toString(16)
+                    ),
+                    timestamp: localStoredObj.timestamp
+                  });
+                }
+              }
+              if (confirmInfo) {
+                EventBus.$emit('swapTxBroadcasted', hash);
+              }
+              res(null, toPayload(payload.id, hash));
+            })
+            .on('error', err => {
+              if (confirmInfo) {
+                const receipt =
+                  err.hasOwnProperty('receipt') &&
+                  err.receipt.hasOwnProperty('transactionHash')
+                    ? err.receipt.transactionHash
+                    : '0x';
+                EventBus.$emit('swapTxFailed', receipt);
               }
               res(err);
             });
@@ -143,7 +168,10 @@ export default async ({ payload, store, requestManager }, res, next) => {
     })
     .catch(e => {
       if (confirmInfo) {
-        EventBus.$emit('swapTxFailed');
+        const receipt = e.hasOwnProperty('receipt')
+          ? e.receipt.transactionHash
+          : '0x';
+        EventBus.$emit('swapTxFailed', receipt);
       }
       res(e);
     });

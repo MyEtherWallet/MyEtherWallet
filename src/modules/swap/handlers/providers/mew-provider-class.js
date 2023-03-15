@@ -128,6 +128,9 @@ class MEWPClass {
         };
       })
       .catch(err => {
+        if (err.message === 'Request failed with status code 404') {
+          return err;
+        }
         Toast(err, {}, ERROR);
       });
   }
@@ -171,28 +174,48 @@ class MEWPClass {
       this.web3.mew
         .sendBatchTransactions(txs)
         .then(promises => {
+          // reject promise for web3 wallets
+          if (promises instanceof Error) {
+            reject(promises);
+          }
           promises.forEach(p => {
-            p.on('transactionHash', hash => {
-              hashes.push(hash);
+            /**
+             * changes to how enkrypt handles transaction necessitates
+             * receiving an array of object resolve
+             */
+            if (typeof p === 'object' && p instanceof Promise) {
+              p.on('transactionHash', hash => {
+                hashes.push(hash);
+                counter++;
+                if (counter === promises.length)
+                  resolve({
+                    provider: this.provider,
+                    hashes,
+                    statusObj: { hashes }
+                  });
+              });
+
+              p.on('error', err => {
+                hashes.push(err);
+                counter++;
+                if (counter === promises.length)
+                  reject({
+                    provider: this.provider,
+                    hashes,
+                    statusObj: { hashes }
+                  });
+              });
+            } else {
+              hashes.push(p.transactionHash);
               counter++;
-              if (counter === promises.length)
+              if (counter === promises.length) {
                 resolve({
                   provider: this.provider,
                   hashes,
                   statusObj: { hashes }
                 });
-            });
-
-            p.on('error', err => {
-              hashes.push(err);
-              counter++;
-              if (counter === promises.length)
-                reject({
-                  provider: this.provider,
-                  hashes,
-                  statusObj: { hashes }
-                });
-            });
+              }
+            }
           });
         })
         .catch(reject);

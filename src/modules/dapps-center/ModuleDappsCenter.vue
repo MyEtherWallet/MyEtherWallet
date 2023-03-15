@@ -12,7 +12,7 @@
       <v-row>
         <v-col v-for="(dapp, key) in dapps" :key="key" cols="12" sm="6" md="4">
           <mew-button
-            color-theme="primary"
+            color-theme="buttonGrayLight"
             btn-style="light"
             style="
               height: 173px;
@@ -85,20 +85,18 @@ import bannerImage from '@/assets/images/backgrounds/bg-dapps-center.jpg';
 import dappsMeta from '@/dapps/metainfo-dapps';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import isNew from '@/core/helpers/isNew.js';
-import MewButton from '@/components/MewButton/MewButton';
 
 export default {
   components: {
     TheWrapperDapp: () => import('@/core/components/TheWrapperDapp'),
-    AppUserMsgBlock: () => import('@/core/components/AppUserMsgBlock'),
-    MewButton
+    AppUserMsgBlock: () => import('@/core/components/AppUserMsgBlock')
   },
   mixins: [handlerAnalytics],
   data() {
     return {
       bannerImage: bannerImage,
       bannerText: {
-        title: 'Explore MEW DApps'
+        title: 'Explore New DApps'
       }
     };
   },
