@@ -10,12 +10,16 @@ import { EventBus } from '@/core/plugins/eventBus';
 const removeWallet = function ({ commit, state }) {
   if (
     state.identifier === WALLET_TYPES.WALLET_CONNECT ||
-    state.identifier === WALLET_TYPES.WALLET_LINK ||
-    state.identifier === WALLET_TYPES.MEW_CONNECT
+    state.identifier === WALLET_TYPES.WALLET_LINK
   ) {
     const connection = state.instance.getConnection();
-    if (connection && connection.disconnect) {
-      connection.disconnect();
+    if (connection) {
+      if (connection.disconnect) {
+        connection.disconnect();
+      }
+      if (connection.killSession) {
+        connection.killSession();
+      }
     }
   }
   commit('REMOVE_WALLET');
