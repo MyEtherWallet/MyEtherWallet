@@ -1,6 +1,6 @@
 // import WalletConnect from '@walletconnect/client';
-import { SignClient } from '@walletconnect/sign-client';
-import QRCodeModal from '@walletconnect/qrcode-modal';
+import SignClient from '@walletconnect/sign-client';
+import { Web3Modal } from '@web3modal/standalone';
 import { Transaction } from '@ethereumjs/tx';
 import PromiEvent from 'web3-core-promievent';
 
@@ -50,6 +50,10 @@ class WalletConnectWallet {
   init() {
     // eslint-disable-next-line
     return new Promise(async (resolve, reject) => {
+      const modal = new Web3Modal({
+        projectId: PROJECT_ID,
+        standaloneChains: ['eip155:1']
+      });
       const txSigner = tx => {
         const from = tx.from;
         tx = new Transaction(tx, {
@@ -104,11 +108,12 @@ class WalletConnectWallet {
       });
 
       if (uri) {
-        QRCodeModal.open(uri);
+        modal.openModal(uri);
+        console.log('huh?', approval);
+        const session = await approval();
+        console.log('do you get here AAAA', session);
+        modal.closeModal();
       }
-      console.log('huh?', approval);
-      const session = await approval();
-      console.log('do you get here AAAA', session);
       // this.walletConnect.createSession();
       // this.walletConnect.on('connect', (error, payload) => {
       //   if (error) {
