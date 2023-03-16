@@ -170,7 +170,9 @@ export default {
       return this.network.type.icon;
     },
     buttonText() {
-      return !this.hasEnoughBalance ? 'Not enough funds' : 'Next: Eth2 address';
+      return !this.hasEnoughBalance
+        ? 'Not enough funds'
+        : 'Next: Execution Address';
     },
     /**
      * Current APR Formatted

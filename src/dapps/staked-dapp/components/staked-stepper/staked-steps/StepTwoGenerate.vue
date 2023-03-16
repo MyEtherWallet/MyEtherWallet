@@ -7,17 +7,17 @@
   <div>
     <div class="mx-auto mb-3" style="max-width: 550px">
       <div class="mew-heading-2 py-8 text-center">
-        Here is your new Eth2 Address
+        <!-- Here is your new Eth2 Address -->
       </div>
-      <div
+      <!-- <div
         class="skip-container d-flex flex-column flex-sm-row rounded align-center justify-space-between greyLight px-5 py-4"
-      >
-        <!--
+      > -->
+      <!--
       ===================================================
       Already have Eth2 Address
       ===================================================
       -->
-        <div class="mb-2 mb-sm-0">Already have Eth2 address?</div>
+      <!-- <div class="mb-2 mb-sm-0">Already have Eth2 address?</div>
         <div
           class="d-flex align-center greenPrimary--text cursor-pointer"
           @click="onContinue(true)"
@@ -30,40 +30,44 @@
             alt="right arrow"
           />
         </div>
-      </div>
+      </div> -->
 
       <border-block class="mt-4 pa-3 pa-sm-5">
         <!--
-    ===================================================
-   Eth2 Address
-    ===================================================
-    -->
+        ===================================================
+        Eth2 Address
+        ===================================================
+        -->
         <div class="overlayBg rounded pa-5">
-          <div class="mew-heading-3 mb-3">Your Eth2 Address</div>
-          <div class="break-word mew-address">
-            {{ eth2Address }}
-          </div>
+          <div class="mew-heading-3 mb-3">Your Executor Address</div>
+          <module-address-book
+            ref="addressInput"
+            class="AddressInput"
+            :preselect-curr-wallet-adr="true"
+            :currency="currencyName"
+            @setAddress="setAddress"
+          />
         </div>
         <!--
-    ===================================================
-    Recovery phrase
-    ===================================================
-    -->
-        <div class="mt-8">
+        ===================================================
+        Recovery phrase
+        ===================================================
+        -->
+        <!-- <div class="mt-8">
           <div class="mew-heading-3 mb-5 pl-md-5">
             1. Write down your recovery phrase
           </div>
           <border-block class="px-3 px-sm-7 py-4">
             <mnemonic-phrase-table :data="mnemonic" />
           </border-block>
-        </div>
+        </div> -->
         <!--
-    ===================================================
-    Keystore
-    ===================================================
-    -->
+        ===================================================
+        Keystore
+        ===================================================
+        -->
 
-        <div class="mt-10">
+        <!-- <div class="mt-10">
           <div class="mew-heading-3 mb-5 pl-md-5">
             2. Download your keystore file
           </div>
@@ -110,7 +114,7 @@
             class="mt-4 mb-1"
             :description="keystoreFileWarning"
           />
-        </div>
+        </div> -->
       </border-block>
       <!--
     ======================================================
@@ -133,7 +137,7 @@
           btn-size="xlarge"
           class="d-block ma-2"
           :title="buttonText"
-          :disabled="!downloadedKeystore"
+          :disabled="!isValidAddress"
           @click.native="onContinue(false)"
         />
       </div>
@@ -153,6 +157,7 @@
 </template>
 
 <script>
+import { mapGetters, mapState } from 'vuex';
 import KeyStore, { verifyKeystore } from '@myetherwallet/eth2-keystore';
 
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
@@ -163,13 +168,15 @@ export default {
     BorderBlock: () => import('@/components/BorderBlock'),
     StakedCreatePasswordDialog: () =>
       import('../StakedCreatePasswordDialog.vue'),
-    MnemonicPhraseTable: () => import('@/components/MnemonicPhraseTable')
+    MnemonicPhraseTable: () => import('@/components/MnemonicPhraseTable'),
+    ModuleAddressBook: () => import('@/modules/address-book/ModuleAddressBook')
   },
   data() {
     return {
       ks: {},
       mnemonic: [],
       eth2Address: '',
+      isValidAddress: false,
       downloadedKeystore: false,
       downloadingKeystore: false,
       keystoreFileWarning:
@@ -181,10 +188,15 @@ export default {
     };
   },
   computed: {
+    ...mapState('wallet', ['address']),
+    ...mapGetters('global', ['network']),
+    currencyName() {
+      return this.network.type.currencyName;
+    },
     buttonText() {
       return this.downloadedKeystore
         ? 'Next: upload your keystore file'
-        : 'Continue after downloading keystore file';
+        : 'Review & stake';
     }
   },
   mounted() {
@@ -197,12 +209,16 @@ export default {
     this.createMnemonic();
   },
   methods: {
+    setAddress(addr, isValidAddress) {
+      this.eth2Address = addr;
+      this.isValidAddress = isValidAddress;
+    },
     /**
      * Create Eth2 Address
      */
     async createAddress() {
-      const address = await this.ks.getPublicKey(0, false);
-      this.eth2Address = address.toString('hex');
+      this.eth2Address = this.address;
+      this.validAddress = false;
     },
     /**
      * Create Mnemonic

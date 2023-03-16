@@ -31,20 +31,20 @@
     Step 3: Upload Keystore file
     ===================================================
     -->
-      <template v-if="onStep === 3" #stepperContent3>
+      <!-- <template v-if="onStep === 3" #stepperContent3>
         <step-three-upload
           :skipped="skipped"
           :address="address"
           @onContinue="nextStep"
           @back="back"
         />
-      </template>
+      </template> -->
       <!--
     ===================================================
     Step 4: Review & Stake
     ===================================================
     -->
-      <template v-if="onStep === 4" #stepperContent4>
+      <template v-if="onStep === 3" #stepperContent3>
         <step-four-review
           :amount="amount"
           :eth2-address="address"
@@ -93,14 +93,10 @@ export default {
         },
         {
           step: 2,
-          name: 'Generate Eth2 address'
+          name: 'Provide address'
         },
         {
           step: 3,
-          name: 'Upload keystore file'
-        },
-        {
-          step: 4,
           name: 'Review & stake'
         }
       ],
