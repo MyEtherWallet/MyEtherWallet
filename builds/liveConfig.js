@@ -24,6 +24,18 @@ const exportObj = {
       .use('graphql-tag/loader')
       .loader('graphql-tag/loader')
       .end();
+    config.module
+      .rule('transpile-chainsafe')
+      .test(/node_modules\/@myetherwallet\/eth2-keystore\/.*\.js$/)
+      .use('babel')
+      .loader('babel-loader')
+      .end();
+    config.module
+      .rule('transpile-chainsafe')
+      .test(/node_modules\/@chainsafe\/.*\.js$/)
+      .use('babel')
+      .loader('babel-loader')
+      .end();
   }
 };
 

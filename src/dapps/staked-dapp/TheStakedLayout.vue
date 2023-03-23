@@ -149,13 +149,15 @@ import {
   formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
 
+import StakedStatus from './components/StakedStatus';
+
 import handlerStaked from './handlers/handlerStaked';
 export default {
   name: 'TheStakedLayout',
   components: {
     TheWrapperDapp: () => import('@/core/components/TheWrapperDapp'),
     StakedStepper: () => import('./components/staked-stepper/StakedStepper'),
-    StakedStatus: () => import('./components/StakedStatus')
+    'staked-status': StakedStatus
   },
   data() {
     return {

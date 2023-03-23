@@ -55,7 +55,7 @@
     "@kleros/address-tags-sdk": "github:MyEtherWallet/address-tags-sdk",
     "@lokalise/node-api": "8.0.1",
     "@mathieustan/vue-intercom": "0.0.9",
-    "@myetherwallet/eth2-keystore": "0.2.3",
+    "@myetherwallet/eth2-keystore": "0.3.0",
     "@myetherwallet/mew-components": "1.4.5",
     "@myetherwallet/mewconnect-web-client": "2.2.0-beta.18",
     "@sentry/browser": "7.28.1",
