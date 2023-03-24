@@ -408,7 +408,10 @@
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import moment from 'moment';
-// import { keystoreToBLSExecution } from '@myetherwallet/eth2-keystore';
+import {
+  keystoreToBLSExecution,
+  mnemonicToBLSExecution
+} from '@myetherwallet/eth2-keystore';
 
 import configNetworkTypes from '@/dapps/staked-dapp/handlers/configNetworkTypes';
 import {
@@ -786,13 +789,23 @@ export default {
             selectedNetwork
           );
         }
-        console.log(selectedNetwork);
-        // console.log(this.blsExecution);
         this.nextStep();
       } catch (err) {
-        console.log(err);
-        this.errorMsg = err.message;
+        Toast(err, {}, ERROR);
+        this.reset();
       }
+    },
+    reset() {
+      this.openWithdrawalModal = false;
+      this.selectedValidator = null;
+      this.step = 1;
+      this.executionAddress = '';
+      this.isValidAddress = false;
+      this.selectedRecoveryType = '';
+      this.file = {};
+      this.password = '';
+      this.blsExecution = '';
+      this.phrase = {};
     },
     /**
      * sets selected wallet
@@ -865,9 +878,7 @@ export default {
      * Close modal and clear selected validator
      */
     closeModal() {
-      this.openWithdrawalModal = false;
-      this.selectedValidator = null;
-      this.step = 1;
+      this.reset();
     },
     /**
      * @returns BigNumber
