@@ -756,6 +756,10 @@ export default {
     }
   },
   methods: {
+    setWithdrawalAddress() {
+      // eslint-disable-next-line
+      console.log(this.blsExecution);
+    },
     checkPhrase(val) {
       const testObj = {};
       let changed = false;
