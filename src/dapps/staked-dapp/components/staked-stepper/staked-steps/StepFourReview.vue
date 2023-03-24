@@ -260,8 +260,8 @@ export default {
         },
         {
           img: iconColorfulETH,
-          subtitle: 'Your Withdrawal Address',
-          title: 'Ethereum 2.0',
+          subtitle: 'Ethereum',
+          title: 'Your withdrawal address',
           desc: this.eth2Address,
           isAddress: true
         }

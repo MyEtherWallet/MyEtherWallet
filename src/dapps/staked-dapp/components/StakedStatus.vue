@@ -172,7 +172,12 @@
         No Validators: 
         ===================================================
       -->
-      <div v-if="validators.length === 0 && justStakedValidator.length === 0">
+      <div
+        v-if="
+          (validators.length === 0 && justStakedValidator.length === 0) ||
+          (allPendingValidators.length === 0 && activeValidators.length === 0)
+        "
+      >
         You are currently not staking any eth.
       </div>
       <!--
