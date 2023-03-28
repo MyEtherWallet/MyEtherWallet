@@ -108,7 +108,6 @@ import {
 } from '@/core/helpers/numberFormatHelper';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 
-import handlerBalanceHistory from './handlers/handlerBalanceHistory.mixin';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 export default {
   components: {
@@ -116,7 +115,7 @@ export default {
     BalanceChart: () => import('@/modules/balance/components/BalanceChart'),
     BalanceEmptyBlock: () => import('./components/BalanceEmptyBlock')
   },
-  mixins: [handlerBalanceHistory, handlerAnalytics],
+  mixins: [handlerAnalytics],
   data() {
     return {
       chartButtons: ['1D', '1W', '1M', '1Y'],
