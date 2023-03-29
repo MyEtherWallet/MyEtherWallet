@@ -59,7 +59,10 @@ export const knownErrors = {
   'nonce too low':
     'You may have multiple transactions still pending, please reject them and try again',
   'Session currently connected':
-    'Session currently connected. Please try again.'
+    'Session currently connected. Please try again.',
+  'Error: Missing or invalid topic field': '',
+  'Uncaught (in promise) Error: Missing or invalid topic field': '',
+  'Missing or invalid topic field': ''
 };
 
 const handleError = err => {

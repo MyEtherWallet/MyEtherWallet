@@ -10,6 +10,8 @@ const ERRORS = {
     'walletconnectError-issue-accessing-walletconnect-please-clear-cache',
   'No error message': 'walletconnectError-no-error-message'
 };
-const WARNINGS = {};
+const WARNINGS = {
+  Rejected: 'Transaction rejected by user'
+};
 
 export default WalletErrorHandler(ERRORS, WARNINGS);

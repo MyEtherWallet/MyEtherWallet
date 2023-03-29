@@ -54,6 +54,10 @@ const SET_LEDGER_APP = function (state, ledgerApp) {
   state.ledgerApp = ledgerApp;
 };
 
+const SET_SWAP_RATES = function (state, swapRates) {
+  state.swapRates = swapRates;
+};
+
 export default {
   REMOVE_WALLET,
   SET_WALLET,
@@ -65,5 +69,6 @@ export default {
   SET_TOKENS,
   SET_LOADING_WALLET_INFO,
   SET_OFFLINE_APP,
-  SET_LEDGER_APP
+  SET_LEDGER_APP,
+  SET_SWAP_RATES
 };
