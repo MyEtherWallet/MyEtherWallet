@@ -79,7 +79,7 @@ const EXCEPTIONS = [
   'prettier', // creates more warnings
   '@ledgerhq/hw-app-eth', // issue with imports
   '@ledgerhq/live-common', // issue with imports
-  'bip39',
+  'bip39', // breaks
   '@myetherwallet/eth2-keystore'
 ];
 const CUSTOM_DIST = {
