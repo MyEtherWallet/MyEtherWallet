@@ -11,7 +11,7 @@
         <button-balance
           v-if="!loading && !fetchingBalance"
           style="position: relative; top: 0; right: 0"
-          :balance="balance"
+          :balance="selectedBalance"
           :loading="loading"
         />
       </div>
@@ -160,10 +160,7 @@ import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import handlerSend from '@/modules/send/handlers/handlerSend.js';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common.js';
 import abi from '@/modules/balance/handlers/abiERC20.js';
-import {
-  formatFloatingPointValue,
-  formatFiatValue
-} from '@/core/helpers/numberFormatHelper';
+import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 import { toBase } from '@/core/helpers/unit';
 import { sellContracts } from './tokenList';
 import handlerWallet from '@/core/mixins/handlerWallet.mixin';
@@ -229,9 +226,6 @@ export default {
     ...mapGetters('wallet', ['balanceInETH', 'balanceInWei', 'tokensList']),
     ...mapGetters('global', ['isEthNetwork', 'network', 'gasPriceByType']),
     ...mapGetters('external', ['contractToToken']),
-    balance() {
-      return `${formatFloatingPointValue(this.selectedBalance).value}`;
-    },
     fiatCurrencyItems() {
       const arrItems = this.hasData
         ? this.fetchedData.fiat_currencies.filter(item => item !== 'RUB')

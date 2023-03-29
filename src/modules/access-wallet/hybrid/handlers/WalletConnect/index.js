@@ -27,12 +27,9 @@ class WalletConnectWallet {
       qrcodeModal: WalletConnectQRCodeModal
     });
 
-    if (
-      walletConnect &&
-      walletConnect.connected &&
-      walletConnect._sessionStorage
-    ) {
-      walletConnect._sessionStorage.removeSession();
+    if (walletConnect && walletConnect.connected) {
+      if (walletConnect._sessionStorage)
+        walletConnect._sessionStorage.removeSession();
       walletConnect.killSession(); // remove any leftover connections
     }
     this.walletConnect = walletConnect;

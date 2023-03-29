@@ -1,3 +1,8 @@
+### Release v6.6.16-hotfix.1
+
+* matomo changes [#4556](https://github.com/MyEtherWallet/MyEtherWallet/pull/4556)
+* remove mew connect [#4552](https://github.com/MyEtherWallet/MyEtherWallet/pull/4552)
+
 ### Release v6.6.16
 
 ### ui
