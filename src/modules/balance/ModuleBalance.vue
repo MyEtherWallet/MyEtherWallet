@@ -5,10 +5,10 @@
       display if the user has an eth balance > 0
     =====================================================================================
     -->
-    <loader v-if="loading" />
+    <loader v-if="loadingWalletInfo" />
 
     <mew-module
-      v-if="hasBalance && !loading"
+      v-if="hasBalance && !loadingWalletInfo"
       :subtitle="subtitle"
       :title="title"
       :has-body-padding="false"
@@ -91,7 +91,7 @@
     =====================================================================================
     -->
     <balance-empty-block
-      v-if="!hasBalance && !loading"
+      v-if="!hasBalance && !loadingWalletInfo"
       :network-type="network.type.currencyName"
       :is-eth="isEthNetwork"
     />
@@ -122,12 +122,11 @@ export default {
       chartData: [],
       timeString: '',
       scale: '',
-      activeButton: 0,
-      loading: true
+      activeButton: 0
     };
   },
   computed: {
-    ...mapState('wallet', ['address']),
+    ...mapState('wallet', ['address', 'loadingWalletInfo']),
     ...mapGetters('global', ['network', 'hasSwap', 'getFiatValue']),
     ...mapGetters('wallet', ['balanceInETH', 'balanceInWei']),
     ...mapGetters('external', [
@@ -229,14 +228,12 @@ export default {
           if (count >= 3) {
             this.onToggle(this.chartButtons[count]);
             this.activeButton = count;
-            this.loading = false;
             // a single point basically looks the same as an empty chart
           } else if (this.chartData.length <= 1) {
             count++;
             checker();
           } else {
             this.activeButton = count;
-            this.loading = false;
           }
         }, 1000);
       };
