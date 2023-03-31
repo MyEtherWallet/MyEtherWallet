@@ -1,6 +1,6 @@
 import op from '@/assets/images/networks/op.svg';
 export default {
-  name: 'Optiomism',
+  name: 'OP',
   name_long: 'Optimism',
   homePage: 'https://www.optimism.io/',
   blockExplorer: 'etherscan',

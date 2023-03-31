@@ -1,20 +1,20 @@
-import bsc from '@/assets/images/networks/bsc.svg';
+import aurora from '@/assets/images/networks/aurora.png';
 export default {
-  name: 'Optiomism',
-  name_long: 'Optimism',
-  homePage: 'https://www.optimism.io/',
-  blockExplorer: 'etherscan',
-  blockExplorerTX: 'https://optimistic.etherscan.io/tx/[[txHash]]',
-  blockExplorerAddr: 'https://optimistic.etherscan.io/address/[[address]]',
-  chainID: 10,
-  tokens: import('@/_generated/tokens/tokens-op.json').then(
+  name: 'AURORA',
+  name_long: 'Aurora',
+  homePage: 'https://www.klaytn.foundation/',
+  blockExplorer: 'aurora',
+  blockExplorerTX: 'https://explorer.aurora.dev/tx/[[txHash]]',
+  blockExplorerAddr: 'https://explorer.aurora.dev/address/[[address]]',
+  chainID: 1313161554,
+  tokens: import('@/_generated/tokens/tokens-aurora.json').then(
     module => module.default
   ),
-  contracts: import('@/_generated/contracts/contract-abi-op.json').then(
+  contracts: import('@/_generated/contracts/contract-abi-aurora.json').then(
     module => module.default
   ),
-  icon: bsc,
-  currencyName: 'BNB',
+  icon: aurora,
+  currencyName: 'ETH',
   isTestNetwork: false,
   isEthVMSupported: {
     supported: false,
@@ -22,7 +22,7 @@ export default {
     websocket: null
   },
   gasPriceMultiplier: 1,
-  canBuy: true,
-  coingeckoID: 'binancecoin',
-  balanceApi: 'https://tokenbalance.mewapi.io/bsc?address='
+  canBuy: false,
+  coingeckoID: 'ethereum',
+  balanceApi: 'https://partners.mewapi.io/balances/aurora/'
 };
