@@ -256,7 +256,6 @@ export default {
               return;
             }
             if (this.path !== '') {
-              console.log(this.path, 'huh?');
               this.$router.push({ path: this.path });
             } else {
               const name = this.isOfflineApp
