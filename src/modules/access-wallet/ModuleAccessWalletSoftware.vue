@@ -256,9 +256,13 @@ export default {
               return;
             }
             if (this.path !== '') {
+              console.log(this.path, 'huh?');
               this.$router.push({ path: this.path });
             } else {
-              this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
+              const name = this.isOfflineApp
+                ? ROUTES_WALLET.WALLETS.NAME
+                : ROUTES_WALLET.DASHBOARD.NAME;
+              this.$router.push({ name: name });
             }
             this.trackAccessWallet(this.type);
           })
