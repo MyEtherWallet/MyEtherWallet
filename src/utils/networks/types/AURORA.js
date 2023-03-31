@@ -1,16 +1,16 @@
 import bsc from '@/assets/images/networks/bsc.svg';
 export default {
-  name: 'BSC',
-  name_long: 'Binance Smart Chain',
-  homePage: 'https://www.binance.org/en/smartChain',
-  blockExplorer: 'BscScan',
-  blockExplorerTX: 'https://bscscan.com/tx/[[txHash]]',
-  blockExplorerAddr: 'https://bscscan.com/address/[[address]]',
-  chainID: 56,
-  tokens: import('@/_generated/tokens/tokens-bsc.json').then(
+  name: 'Optiomism',
+  name_long: 'Optimism',
+  homePage: 'https://www.optimism.io/',
+  blockExplorer: 'etherscan',
+  blockExplorerTX: 'https://optimistic.etherscan.io/tx/[[txHash]]',
+  blockExplorerAddr: 'https://optimistic.etherscan.io/address/[[address]]',
+  chainID: 10,
+  tokens: import('@/_generated/tokens/tokens-op.json').then(
     module => module.default
   ),
-  contracts: import('@/_generated/contracts/contract-abi-bsc.json').then(
+  contracts: import('@/_generated/contracts/contract-abi-op.json').then(
     module => module.default
   ),
   icon: bsc,
