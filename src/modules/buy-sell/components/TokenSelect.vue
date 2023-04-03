@@ -187,10 +187,12 @@ export default {
                 this.setTokenAndEthBalance();
               });
             }
-            Toast(`Switched network to: ${network.name}`, {}, SUCCESS);
-            this.trackNetworkSwitch(network.name);
-            this.$emit('newNetwork');
+          } else {
+            this.setWeb3Instance();
           }
+          Toast(`Switched network to: ${network.name}`, {}, SUCCESS);
+          this.trackNetworkSwitch(network.name);
+          this.$emit('newNetwork');
         })
         .catch(e => {
           Toast(e, {}, ERROR);

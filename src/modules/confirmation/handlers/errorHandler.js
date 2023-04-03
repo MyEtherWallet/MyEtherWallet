@@ -5,7 +5,8 @@ const errors = {
   'nonce too low': 'Nonce too low.',
   "reading 'message'": undefined,
   falsy: undefined,
-  Popup: 'Transaction cancelled'
+  Popup: 'Transaction cancelled',
+  Rejected: 'Transaction rejected by user'
 };
 const toastErrors = { Popup: undefined };
 /**
