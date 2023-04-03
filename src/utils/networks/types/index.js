@@ -9,6 +9,12 @@ import XDC from './XDC';
 import MOONBEAM from './MOONBEAM';
 import MOONRIVER from './MOONRIVER';
 import ROOTSTOCK from './ROOTSTOCK';
+import AURORA from './AURORA';
+// import AVAX from './AVAX';
+import FTM from './FTM';
+import GNO from './GNO';
+import KLAY from './KLAY';
+import OP from './OP';
 
 export {
   ETH,
@@ -21,5 +27,11 @@ export {
   XDC,
   MOONBEAM,
   MOONRIVER,
-  ROOTSTOCK
+  ROOTSTOCK,
+  AURORA,
+  // AVAX,
+  FTM,
+  GNO,
+  KLAY,
+  OP
 };
