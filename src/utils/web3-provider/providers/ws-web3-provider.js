@@ -12,7 +12,6 @@ Ws = function (url, protocols) {
 };
 _btoa = btoa;
 parseURL = function (url) {
-  console.log('what is here?', url);
   return new URL(url);
 };
 const WebsocketProvider = function WebsocketProvider(url, options) {

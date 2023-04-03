@@ -15,7 +15,6 @@ class MEWProvider {
       } else if (/^http(s)?:\/\//i.test(host)) {
         throw new Error('Not supported network type');
       } else if (/^ws(s)?:\/\//i.test(host)) {
-        console.log('hello?', host);
         return new WSProvider(host, options);
       } else if (host) {
         throw new Error('Can\'t autodetect provider for "' + host + '"');

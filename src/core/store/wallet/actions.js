@@ -55,7 +55,6 @@ const setWeb3Instance = function (
       ? ':' + rootState.global.currentNetwork.port
       : ''
   }${hostUrl.pathname ? hostUrl.pathname : ''}`;
-  console.log(hostUrl.pathname, 'huh?');
   rootState.global.currentNetwork.username !== '' &&
   rootState.global.currentNetwork.password !== ''
     ? (options['headers'] = {
