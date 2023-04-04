@@ -48,47 +48,24 @@
           @click.native="onContinue(false)"
         />
       </div>
-
-      <!--
-    ======================================================
-    Create password + download keystore dialog
-    ======================================================
-    -->
-      <staked-create-password-dialog
-        :opened="onCreatePassword"
-        @generate="generateKeystore"
-        @onDialogStateChange="onDialogStateChange"
-      />
     </div>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapState } from 'vuex';
-import KeyStore, { verifyKeystore } from '@myetherwallet/eth2-keystore';
-
-import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
-import { createBlob } from '@/modules/create-wallet/handlers/helpers';
 
 export default {
   components: {
     BorderBlock: () => import('@/components/BorderBlock'),
-    StakedCreatePasswordDialog: () =>
-      import('../StakedCreatePasswordDialog.vue'),
     MnemonicPhraseTable: () => import('@/components/MnemonicPhraseTable'),
     ModuleAddressBook: () => import('@/modules/address-book/ModuleAddressBook')
   },
   data() {
     return {
-      ks: {},
-      mnemonic: [],
       eth2Address: '',
       isValidAddress: false,
       downloadedKeystore: false,
-      downloadingKeystore: false,
-      keystoreJson: '',
-      keystoreName: '',
-      onCreatePassword: false,
       link: {}
     };
   },
@@ -109,7 +86,6 @@ export default {
      * Create Keystore handler
      * then create address, mnemonic
      */
-    this.ks = new KeyStore();
     this.createAddress();
     this.createMnemonic();
   },
@@ -124,53 +100,6 @@ export default {
     async createAddress() {
       this.eth2Address = this.address;
       this.validAddress = false;
-    },
-    /**
-     * Create Mnemonic
-     */
-    async createMnemonic() {
-      const mnemonic = await this.ks.getMnemonic();
-      this.mnemonic = mnemonic.split(' ');
-    },
-    /**
-     * Gets triggered by emit from StakedCreatePasswordDialog
-     * stores the state of the dialog (opened or closed)
-     */
-    onDialogStateChange(newVal) {
-      this.onCreatePassword = newVal;
-    },
-    /**
-     * Generate keystore json
-     */
-    async generateKeystore(pw) {
-      const password = pw;
-      this.downloadingKeystore = true;
-      this.onCreatePassword = false;
-      const toWithdrawalKeystore = await this.ks.toWithdrawalKeystore(password);
-      this.keystoreJson = createBlob(toWithdrawalKeystore, 'mime');
-      this.keystoreName =
-        'keystore-' +
-        toWithdrawalKeystore.path.split('/').join('_') +
-        '-' +
-        Date.now() +
-        '.json';
-      this.downloadKeystore();
-      /**
-       * Verify keystore
-       */
-      await verifyKeystore(toWithdrawalKeystore, password).catch(error => {
-        Toast(error, {}, ERROR);
-      });
-    },
-    /**
-     * Download keystore file
-     */
-    downloadKeystore() {
-      this.link = document.createElement('a');
-      this.link.href = this.keystoreJson;
-      this.link.download = this.keystoreName;
-      this.link.click();
-      this.downloadedKeystore = true;
     },
     /**
      * Emits back to go to previous step
