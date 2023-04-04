@@ -383,7 +383,7 @@
               <mew-button
                 class="mt-1"
                 title="Add withdrawal address"
-                :disabled="false"
+                :disabled="active.withdrawal_credentials_are_eth1Address"
                 btn-size="medium"
                 @click.native="
                   () => {
@@ -733,7 +733,7 @@ export default {
       return this.selectedRecoveryType === SOFTWARE_WALLET_TYPES.MNEMONIC;
     },
     validPassword() {
-      return this.password === '' || this.password.length < 7;
+      return this.password !== '' && this.password.length > 7;
     }
   },
   watch: {
