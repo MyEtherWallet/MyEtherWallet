@@ -733,7 +733,7 @@ export default {
       return this.selectedRecoveryType === SOFTWARE_WALLET_TYPES.MNEMONIC;
     },
     validPassword() {
-      return this.password === '' || this.password.length < 7;
+      return this.password.length > 3;
     }
   },
   watch: {
@@ -757,7 +757,21 @@ export default {
   },
   methods: {
     setWithdrawalAddress() {
-      // eslint-disable-next-line
+      fetch('', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify([this.blsExecution])
+      })
+        .then(res => res.json())
+        .then(response => {
+          if (response.message) {
+            //response.message is the error message
+          } else {
+            //succesful
+          }
+        });
       console.log(this.blsExecution);
     },
     checkPhrase(val) {
