@@ -383,7 +383,7 @@
               <mew-button
                 class="mt-1"
                 title="Add withdrawal address"
-                :disabled="false"
+                :disabled="active.withdrawal_credentials_are_eth1Address"
                 btn-size="medium"
                 @click.native="
                   () => {

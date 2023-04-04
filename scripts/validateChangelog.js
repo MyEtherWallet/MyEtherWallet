@@ -20,7 +20,9 @@ function main() {
     const type = item.split('-')[0];
     if (!ACCEPTABLE_ENTRIES.includes(type))
       throw new Error(
-        'Invalid changelog type, valid types:' + ACCEPTABLE_ENTRIES.join(',')
+        `Invalid changelog type, valid types: ${ACCEPTABLE_ENTRIES.join(',')}
+        file: ${item}
+        `
       );
     const prNumber = item.split('-')[1].replace('.md', '');
     if (prNumber === pullId) idFound = true;
