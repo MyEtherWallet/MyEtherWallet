@@ -87,7 +87,6 @@ export default {
      * then create address, mnemonic
      */
     this.createAddress();
-    this.createMnemonic();
   },
   methods: {
     setAddress(addr, isValidAddress) {

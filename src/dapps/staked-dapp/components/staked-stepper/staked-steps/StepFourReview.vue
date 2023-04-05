@@ -180,7 +180,7 @@
           :has-full-width="$vuetify.breakpoint.smAndDown"
           btn-size="xlarge"
           class="d-block ma-2"
-          title="Stake 32 ETH"
+          :title="buttonTitle"
           :disabled="!readyToStake"
           @click.native="onReadyToStake"
         >
@@ -238,7 +238,9 @@ export default {
     ...mapGetters('global', ['network', 'getFiatValue']),
     ...mapState('wallet', ['web3']),
     ...mapGetters('global', ['gasPrice', 'network']),
-
+    buttonTitle() {
+      return `Stake ${this.amount} ETH`;
+    },
     /**
      * Returns current network eth icon
      * @return string

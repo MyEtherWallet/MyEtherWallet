@@ -141,6 +141,7 @@
             v-if="step != 2"
             :title="nextButton.title"
             :disabled="nextButton.disabled"
+            :loading="loadingButton"
             btn-size="xlarge"
             @click.native="
               () => {
@@ -425,7 +426,7 @@ import {
 } from '@/core/helpers/numberFormatHelper';
 import { STATUS_TYPES } from '@/dapps/staked-dapp/handlers/handlerStaked';
 import { GOERLI } from '@/utils/networks/types';
-import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import { SOFTWARE_WALLET_TYPES } from '@/modules/access-wallet/software/handlers/helpers.js';
 
 import iconETHNavy from '@/assets/images/currencies/eth-dark-navy.svg';
@@ -473,7 +474,8 @@ export default {
       password: '',
       blsExecution: '',
       phrase: {},
-      length: 24
+      length: 24,
+      loadingButton: false
     };
   },
   computed: {
@@ -497,7 +499,7 @@ export default {
       if (this.step === 3) {
         if (this.isKeystore) {
           return Object.assign({}, obj, {
-            disabled: !this.validPassword,
+            disabled: this.loadingButton || !this.validPassword,
             fn: this.validateUserInputs
           });
         }
@@ -767,12 +769,12 @@ export default {
         .then(res => res.json())
         .then(response => {
           if (response.message) {
-            //response.message is the error message
+            Toast(response.message, {}, ERROR);
           } else {
-            //succesful
+            Toast('Successfully set withdrawal address!', {}, SUCCESS);
           }
+          this.reset();
         });
-      console.log(this.blsExecution);
     },
     checkPhrase(val) {
       const testObj = {};
@@ -788,6 +790,7 @@ export default {
      * and checks if valid
      */
     async validateUserInputs() {
+      this.loadingButton = true;
       try {
         this.validating = true;
         const selectedNetwork =
@@ -812,17 +815,22 @@ export default {
             selectedNetwork
           );
         }
+        this.loadingButton = false;
         this.nextStep();
       } catch (err) {
+        this.loadingButton = false;
         Toast(err, {}, ERROR);
         this.reset();
       }
     },
     reset() {
+      if (this.$refs.addressInput) {
+        this.$refs.addressInput.clear();
+      }
       this.openWithdrawalModal = false;
       this.selectedValidator = null;
       this.step = 1;
-      this.executionAddress = '';
+      this.executionAddress = this.address;
       this.isValidAddress = false;
       this.selectedRecoveryType = '';
       this.file = {};
