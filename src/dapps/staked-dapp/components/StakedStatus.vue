@@ -16,7 +16,9 @@
       <div>
         <!-- Step 1: Ask user for execution address -->
         <div v-if="step === 1" class="text-center">
-          <div class="mew-heading-3 mb-3 text-left">Your Execution Address</div>
+          <div class="mew-heading-3 mb-3 text-left">
+            Your Withdrawal Address
+          </div>
           <module-address-book
             ref="addressInput"
             class="AddressInput"
@@ -114,13 +116,13 @@
         <div v-if="step === 4" class="mb-2">
           <mew-sheet class="pa-4">
             <div class="mew-heading-3 black--text">
-              Setting address: {{ executionAddress }} as withdrawal address.
+              Setting address: {{ executionAddress }} as the withdrawal address.
             </div>
           </mew-sheet>
           <mew-warning-sheet
             class="mt-4 mb-0"
             title="Please verify"
-            description="Withdrawal address can only be set once. Please make sure you are setting the correct address"
+            description="The withdrawal address can only be set once. Please make sure you are setting the correct address."
           />
         </div>
         <!-- Next and Back Buttons -->
