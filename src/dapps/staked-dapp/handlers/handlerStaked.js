@@ -161,7 +161,7 @@ export default class Staked {
         this.endpoint + '/v2/provision',
         {
           address: this.address,
-          withdrawalKey: params.eth2Address,
+          eth1Address: params.eth2Address,
           validatorsCount: params.count
         },
         {

@@ -13,7 +13,7 @@
         ===================================================
         -->
         <div class="overlayBg rounded pa-5">
-          <div class="mew-heading-3 mb-3">Your Executor Address</div>
+          <div class="mew-heading-3 mb-3">Your deposit address</div>
           <module-address-book
             ref="addressInput"
             class="AddressInput"
