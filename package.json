@@ -119,7 +119,7 @@
     "@vue/cli-plugin-e2e-nightwatch": "5.0.6",
     "@vue/cli-plugin-eslint": "4.5.15",
     "@vue/cli-plugin-pwa": "4.5.15",
-    "@vue/cli-plugin-unit-jest": "4.5.15",
+    "@vue/cli-plugin-unit-jest": "5.0.8",
     "@vue/cli-service": "4.5.15",
     "@vue/eslint-config-prettier": "6.0.0",
     "@vue/test-utils": "1.3.0",
