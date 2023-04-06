@@ -2,7 +2,7 @@ import aurora from '@/assets/images/networks/aurora.png';
 export default {
   name: 'AURORA',
   name_long: 'Aurora',
-  homePage: 'https://www.klaytn.foundation/',
+  homePage: 'https://aurora.dev/',
   blockExplorer: 'aurora',
   blockExplorerTX: 'https://explorer.aurora.dev/tx/[[txHash]]',
   blockExplorerAddr: 'https://explorer.aurora.dev/address/[[address]]',

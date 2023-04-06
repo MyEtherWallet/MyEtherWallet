@@ -10,6 +10,7 @@ import MOONBEAM from './MOONBEAM';
 import MOONRIVER from './MOONRIVER';
 import ROOTSTOCK from './ROOTSTOCK';
 import AURORA from './AURORA';
+import ARB from './ARB';
 // import AVAX from './AVAX';
 import FTM from './FTM';
 import GNO from './GNO';
@@ -29,6 +30,7 @@ export {
   MOONRIVER,
   ROOTSTOCK,
   AURORA,
+  ARB,
   // AVAX,
   FTM,
   GNO,
