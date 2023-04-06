@@ -93,11 +93,11 @@ export default {
         },
         {
           step: 2,
-          name: 'Provide address'
+          name: 'Provide Address'
         },
         {
           step: 3,
-          name: 'Review & stake'
+          name: 'Review & Stake'
         }
       ],
       skipped: false,
