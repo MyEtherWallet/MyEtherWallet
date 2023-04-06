@@ -79,16 +79,10 @@ const EXCEPTIONS = [
   'prettier', // creates more warnings
   '@ledgerhq/hw-app-eth', // issue with imports
   '@ledgerhq/live-common', // issue with imports
-  'stylelint-config-prettier', // throws an error when committing
-  '@coolwallet/eth',
-  '@ensdomains/address-encoder',
-  '@formatjs/intl-numberformat',
-  'commitlint',
-  '@commitlint/config-conventional',
+  'bip39', // breaks
+  '@myetherwallet/eth2-keystore',
   'ethers',
-  'bip39',
-  '@ensdomains/ens-contracts',
-  'babel-jest'
+  'commitlint'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

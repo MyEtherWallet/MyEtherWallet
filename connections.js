@@ -41,6 +41,11 @@ module.exports = [
   'wss://wss.api.moonriver.moonbeam.network:443',
   'wss://wss.api.moonbeam.network:443',
   'wss://public-node.rsk.co:443/websocket',
+  'wss://mainnet.aurora.dev:443',
+  'wss://api.avax.network:443/ext/bc/C/ws',
+  'wss://rpc.gnosischain.com:443/wss',
+  'wss://public-node-api.klaytnapi.com:443/v1/cypress/ws',
+  'wss://wsapi.fantom.network:443/',
   // intercom stuff
   'api-iam.intercom.io:443',
   'https://api.zilliqa.com:443',
@@ -62,6 +67,7 @@ module.exports = [
   'wss://*.bridge.walletconnect.org:443',
   'https://buy-staging.moonpay.com:443',
   // Dapps
+  'https://public-node.rsk.co', // Rootstock
   'https://staked.mewapi.io:443', // staked
   'https://stakedtest.mewapi.io:443', // staked
   'https://ethblocksapi.mewapi.io:443', // Eth Blocks
