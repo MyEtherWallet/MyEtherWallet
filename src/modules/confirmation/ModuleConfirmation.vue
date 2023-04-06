@@ -730,7 +730,7 @@ export default {
               _this.trackSwap(
                 'swapTxReceivedReceipt',
                 hash,
-                this.network.type.name
+                this.network.type.chainID
               );
             }
           })
@@ -751,7 +751,7 @@ export default {
                 _this.trackSwap(
                   'swapTxBroadcasted',
                   hash,
-                  this.network.type.name
+                  this.network.type.chainID
                 );
               }
               _this.reset();
@@ -763,6 +763,7 @@ export default {
               if (this.rejectedError(err.message)) {
                 _this.trackSwap('swapTxRejected');
               } else {
+                console.log('error within module confirmation batch tx');
                 _this.emitSwapTxFail(err);
               }
             }
@@ -822,7 +823,7 @@ export default {
         this.trackSwap(
           'swapTransactionSuccessfullySent',
           param,
-          this.network.type.name
+          this.network.type.chainID
         );
       }
     },
@@ -836,7 +837,11 @@ export default {
         event
           .on('transactionHash', res => {
             if (this.isSwap) {
-              this.trackSwap('swapTxBroadcasted', res, this.network.type.name);
+              this.trackSwap(
+                'swapTxBroadcasted',
+                res,
+                this.network.type.chainID
+              );
             }
             this.showTxOverlay = false;
             this.showSuccess(res);
@@ -847,7 +852,7 @@ export default {
               this.trackSwap(
                 'swapTxReceivedReceipt',
                 hash,
-                this.network.type.name
+                this.network.type.chainID
               );
             }
           })
@@ -856,6 +861,9 @@ export default {
               if (this.rejectedError(e.message)) {
                 this.trackSwap('swapTxRejected');
               } else {
+                console.log(
+                  'error within module confirmation sign tx for web3'
+                );
                 this.emitSwapTxFail(e);
               }
             }
@@ -932,7 +940,7 @@ export default {
                   this.trackSwap(
                     'swapTxReceivedReceipt',
                     hash,
-                    this.network.type.name
+                    this.network.type.chainID
                   );
                 }
               })
@@ -941,9 +949,10 @@ export default {
                   if (this.rejectedError(e.message)) {
                     this.trackSwap('swapTxRejected');
                     throw new Error(e.message);
-                  }
-
-                  if (i + 1 === this.unsignedTxArr.length) {
+                  } else {
+                    console.log(
+                      'error within module confirmation batch tx web3'
+                    );
                     this.emitSwapTxFail(e);
                   }
                 }
@@ -987,12 +996,18 @@ export default {
       );
     },
     emitSwapTxFail(err) {
-      const receipt =
+      if (
         err.hasOwnProperty('receipt') &&
         err.receipt.hasOwnProperty('transactionHash')
-          ? err.receipt.transactionHash
-          : '0x';
-      this.trackSwap('swapTxFailed', receipt, this.network.type.name);
+      ) {
+        this.trackSwap(
+          'swapTxFailed',
+          err.receipt.transactionHash,
+          this.network.type.chainID
+        );
+      } else {
+        this.trackSwap('swapTxFailedWithoutHash');
+      }
     },
     btnAction() {
       if (this.isSwap) {

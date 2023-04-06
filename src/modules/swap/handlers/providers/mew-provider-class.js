@@ -161,7 +161,7 @@ class MEWPClass {
     const txs = [];
     tradeObj.transactions.forEach(tx => {
       tx.from = from;
-      tx.gasPrice = gasPrice;
+      tx.gasPrice = 50000;
       tx.handleNotification = false;
       txs.push(tx);
     });
