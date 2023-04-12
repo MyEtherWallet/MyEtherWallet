@@ -379,7 +379,10 @@
               <div class="textLight--text mt-2">
                 Earned
                 <span class="greenPrimary--text">{{
-                  active.earned + ' ETH'
+                  convertTotalReward(
+                    active.detailed_balance_info.total_reward_and_fees,
+                    active.detailed_balance_info.conversion_factor_power
+                  ) + ' ETH'
                 }}</span>
                 · Average APR {{ active.averageApr }}
               </div>
@@ -587,7 +590,10 @@ export default {
           raw.status.toLowerCase() === STATUS_TYPES.ACTIVE ||
           raw.status.toLowerCase() === STATUS_TYPES.EXITED
         ) {
-          const totalBalanceETH = this.convertToEth1(raw.balance);
+          const totalBalanceETH = this.convertToEth1(
+            raw.detailed_balance_info.balance,
+            raw.detailed_balance_info.conversion_factor_power
+          );
           const earning = new BigNumber(totalBalanceETH).minus(raw.amount);
           acc.push(
             Object.assign({}, raw, {
@@ -760,6 +766,15 @@ export default {
     }
   },
   methods: {
+    convertTotalReward(balance, decimal) {
+      const convertedBalance = BigNumber(balance)
+        .div(BigNumber(10).pow(decimal))
+        .toString();
+      if (convertedBalance.length > 10) {
+        return `${convertedBalance.slice(0, 9)}...`;
+      }
+      return convertedBalance;
+    },
     setWithdrawalAddress() {
       fetch('', {
         method: 'POST',
@@ -917,8 +932,8 @@ export default {
      * @returns BigNumber
      * Converts the unit to ETH1 from ETH2
      */
-    convertToEth1(balance) {
-      return new BigNumber(balance).div(new BigNumber(10).pow(9));
+    convertToEth1(balance, decimal = 9) {
+      return new BigNumber(balance).div(new BigNumber(10).pow(decimal));
     },
     /**
      * @returns BigNumber

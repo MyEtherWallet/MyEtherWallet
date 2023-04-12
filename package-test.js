@@ -80,8 +80,14 @@ const EXCEPTIONS = [
   '@ledgerhq/hw-app-eth', // issue with imports
   '@ledgerhq/live-common', // issue with imports
   'bip39', // breaks
+<<<<<<< HEAD
   'ethers',
   '@myetherwallet/eth2-keystore'
+=======
+  '@myetherwallet/eth2-keystore',
+  'ethers',
+  'commitlint'
+>>>>>>> ae61ec1f912f0bf7d7e7b312c44c8afe41db17fb
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
