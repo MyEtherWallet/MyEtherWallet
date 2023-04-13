@@ -82,7 +82,10 @@ const EXCEPTIONS = [
   'bip39', // breaks
   '@myetherwallet/eth2-keystore',
   'ethers',
-  'commitlint'
+  'commitlint',
+  '@sentry/browser',
+  '@sentry/tracing',
+  '@sentry/vue'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
