@@ -10,6 +10,7 @@ import moonbeam from './moonbeam-ws';
 import moonriver from './moonriver-ws';
 import rootstock from './rootstock-ws';
 import aurora from './aurora-ws';
+import arb from './arb-mew-ws';
 // import avalanche from './avalanche-ws';
 import fantom from './fantom-ws';
 import gnosis from './gnosis-ws';
@@ -29,6 +30,7 @@ export {
   moonriver,
   rootstock,
   aurora,
+  arb,
   // avalanche,
   fantom,
   gnosis,

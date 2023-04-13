@@ -9,6 +9,9 @@
   >
     <template #content>
       <div class="mew-heading-1 px-4 mb-4">MEW DApps</div>
+      <div class="warning-container mb-2 font-weight-bold">
+        Staked withdrawals will come out on the 17th!
+      </div>
       <v-row>
         <v-col v-for="(dapp, key) in dapps" :key="key" cols="12" sm="6" md="4">
           <mew-button
@@ -128,3 +131,14 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+.warning-container {
+  padding: 10px;
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid #f5a623;
+  color: #f5a623;
+  background-color: #fef4e5;
+}
+</style>
