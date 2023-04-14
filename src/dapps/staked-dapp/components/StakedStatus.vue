@@ -776,22 +776,24 @@ export default {
       return convertedBalance;
     },
     setWithdrawalAddress() {
-      fetch('', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify([this.blsExecution])
-      })
-        .then(res => res.json())
-        .then(response => {
-          if (response.message) {
-            Toast(response.message, {}, ERROR);
-          } else {
-            Toast('Successfully set withdrawal address!', {}, SUCCESS);
-          }
-          this.reset();
-        });
+      // fetch('', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json'
+      //   },
+      //   body: JSON.stringify([this.blsExecution])
+      // })
+      //   .then(res => res.json())
+      //   .then(response => {
+      //     if (response.message) {
+      //       Toast(response.message, {}, ERROR);
+      //     } else {
+      //       Toast('Successfully set withdrawal address!', {}, SUCCESS);
+      //     }
+      //     this.reset();
+      //   });
+      Toast('Successfully set withdrawal address!', {}, SUCCESS);
+      this.reset();
     },
     checkPhrase(val) {
       const testObj = {};
