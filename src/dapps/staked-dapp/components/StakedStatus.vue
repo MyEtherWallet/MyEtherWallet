@@ -778,24 +778,36 @@ export default {
       return convertedBalance;
     },
     setWithdrawalAddress() {
-      // fetch('', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json'
-      //   },
-      //   body: JSON.stringify([this.blsExecution])
-      // })
-      //   .then(res => res.json())
-      //   .then(response => {
-      //     if (response.message) {
-      //       Toast(response.message, {}, ERROR);
-      //     } else {
-      //       Toast('Successfully set withdrawal address!', {}, SUCCESS);
-      //     }
-      //     this.reset();
-      //   });
-      Toast('Successfully set withdrawal address!', {}, SUCCESS);
-      this.reset();
+      // const selectedNetwork =
+      //     this.network.type.name === 'ETH' ? 'mainnet' : 'goerli';
+
+      const submitSubDomain =
+        this.network.type.name === 'ETH' ? 'mainnet' : 'staging';
+      const submitEndpoint = `https://${submitSubDomain}.mewwallet.dev/v2/stake/upgrade`;
+      this.blsExecution.message.validator_index = parseInt(
+        this.blsExecution.message.validator_index
+      );
+      fetch(submitEndpoint, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          signed: [this.blsExecution]
+        })
+      })
+        .then(res => {
+          if (res.ok) {
+            Toast('Successfully set withdrawal address!', {}, SUCCESS);
+            return;
+          }
+          res.json().then(jsonres => {
+            Toast(jsonres.error ? jsonres.error : jsonres.msg, {}, ERROR);
+          });
+        })
+        .finally(() => {
+          this.reset();
+        });
     },
     checkPhrase(val) {
       const testObj = {};
