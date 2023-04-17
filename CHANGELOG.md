@@ -1,3 +1,13 @@
+### Release v6.6.17-hotfix.1
+
+### devop
+
+* sync develop [#4572](https://github.com/MyEtherWallet/MyEtherWallet/pull/4572)
+
+### fix
+
+* enrkypt network switch [#4573](https://github.com/MyEtherWallet/MyEtherWallet/pull/4573)
+
 ### Release v6.6.17
 
 ### devop
