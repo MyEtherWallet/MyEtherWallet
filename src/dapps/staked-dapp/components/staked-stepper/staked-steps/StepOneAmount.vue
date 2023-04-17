@@ -109,7 +109,7 @@
         <ul class="user-info textMedium--text">
           <li>Your ETH is staked with our partner Staked.us</li>
           <li>Staked.us will create and maintain Eth2 validators for you</li>
-          <li>Earn up to 21% annualized rewards</li>
+          <li>Earn up to 6% annualized rewards</li>
         </ul>
       </div>
       <!--
