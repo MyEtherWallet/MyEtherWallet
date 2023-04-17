@@ -394,7 +394,11 @@
               </div>
               <mew-button
                 class="mt-1"
-                title="Add withdrawal address"
+                :title="
+                  !active.withdrawal_set
+                    ? 'Set withdrawal address'
+                    : 'Already set'
+                "
                 :disabled="active.withdrawal_set"
                 btn-size="medium"
                 @click.native="
