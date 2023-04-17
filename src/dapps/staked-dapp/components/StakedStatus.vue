@@ -411,7 +411,7 @@
               class="font-weight-medium"
               :href="active.url"
               target="_blank"
-              >View Eth2 address
+              >View validator
               <v-icon color="greenPrimary" size="14">mdi-open-in-new</v-icon></a
             >
           </div>
@@ -608,10 +608,9 @@ export default {
           const earning = new BigNumber(totalBalanceETH).minus(raw.amount);
           acc.push(
             Object.assign({}, raw, {
-              url:
-                configNetworkTypes.network[this.network.type.name].url +
-                '0x' +
-                raw.address,
+              url: `${configNetworkTypes.network[this.network.type.name].url}${
+                raw.validator_index
+              }`,
               earned: formatFloatingPointValue(earning).value,
               totalBalanceETH: formatFloatingPointValue(totalBalanceETH).value,
               totalBalanceFiat: this.getFiatValue(
