@@ -389,7 +389,8 @@
                     active.detailed_balance_info.conversion_factor_power
                   ) + ' ETH'
                 }}</span>
-                · Average APR {{ active.averageApr }}
+                <br />
+                Average APR {{ active.averageApr }}
               </div>
               <mew-button
                 class="mt-1"
@@ -612,11 +613,7 @@ export default {
                 new BigNumber(totalBalanceETH).times(this.fiatValue)
               ),
               averageApr: formatPercentageValue(
-                this.getAverageApr(
-                  raw.activation_timestamp,
-                  earning,
-                  raw.amount
-                )
+                this.getAverageApr(raw.created, earning, raw.amount)
               ).value
             })
           );
@@ -950,11 +947,11 @@ export default {
       const now = moment.utc();
       const activated = moment.utc(activationTime);
       const daysActive = now.diff(activated, 'days');
-      const percentIncrease = new BigNumber(earning).div(amountStaked);
+      const percentIncrease = BigNumber(earning).div(amountStaked);
       const percentIncreasePerDay =
         BigNumber(percentIncrease).dividedBy(daysActive);
-      const apr = percentIncreasePerDay * 365;
-      return new BigNumber(apr).times(100);
+      const apr = percentIncreasePerDay.times(365);
+      return new BigNumber(apr);
     },
     /**
      * Sets the idx container to expand
