@@ -134,6 +134,7 @@
           :validators="validators"
           :loading="loadingValidators"
           :amount="amount"
+          :refetch-validators="refetchValidators"
         />
       </v-sheet>
     </template>
@@ -328,6 +329,12 @@ export default {
     sendTransaction(amountETH) {
       this.handlerStaked.sendTransaction();
       this.amount = amountETH;
+    },
+    /**
+     * refetch validators
+     */
+    refetchValidators() {
+      this.handlerStaked.getValidators();
     }
   }
 };

@@ -125,7 +125,7 @@
             </div>
           </mew-sheet>
           <mew-warning-sheet
-            class="mt-4 mb-0"
+            class="my-4"
             title="Please verify"
             description="The withdrawal address can only be set once. Please make sure you are setting the correct address."
           />
@@ -395,7 +395,7 @@
               <mew-button
                 class="mt-1"
                 title="Add withdrawal address"
-                :disabled="active.withdrawal_credentials_are_eth1Address"
+                :disabled="active.withdrawal_set"
                 btn-size="medium"
                 @click.native="
                   () => {
@@ -422,7 +422,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex';
+import { mapGetters, mapState, mapActions } from 'vuex';
 import BigNumber from 'bignumber.js';
 import moment from 'moment';
 import {
@@ -468,6 +468,10 @@ export default {
     amount: {
       type: Number,
       default: 0
+    },
+    refetchValidators: {
+      type: Function,
+      default: () => {}
     }
   },
   data() {
@@ -493,6 +497,7 @@ export default {
     ...mapState('wallet', ['address']),
     ...mapState('global', ['preferredCurrency']),
     ...mapState('external', ['currencyRate']),
+    ...mapState('stakedStore', ['validatorIndex']),
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network', 'getFiatValue']),
     nextButton() {
@@ -523,7 +528,7 @@ export default {
       if (this.step === 4) {
         return Object.assign({}, obj, {
           title: 'Set withdrawal address',
-          disabled: false,
+          disabled: this.loadingButton,
           fn: this.setWithdrawalAddress
         });
       }
@@ -614,7 +619,10 @@ export default {
               ),
               averageApr: formatPercentageValue(
                 this.getAverageApr(raw.created, earning, raw.amount)
-              ).value
+              ).value,
+              withdrawal_set:
+                this.findValidatorIndex(raw.validator_index) ||
+                raw.withdrawal_credentials_are_eth1Address
             })
           );
         }
@@ -768,6 +776,11 @@ export default {
     }
   },
   methods: {
+    ...mapActions('stakedStore', ['addValidatorIndex']),
+    findValidatorIndex(idx) {
+      const findIdx = !!this.validatorIndex.find(item => idx === item);
+      return !!findIdx;
+    },
     convertTotalReward(balance, decimal) {
       const convertedBalance = BigNumber(balance)
         .div(BigNumber(10).pow(decimal))
@@ -778,15 +791,13 @@ export default {
       return convertedBalance;
     },
     setWithdrawalAddress() {
-      // const selectedNetwork =
-      //     this.network.type.name === 'ETH' ? 'mainnet' : 'goerli';
-
       const submitSubDomain =
         this.network.type.name === 'ETH' ? 'mainnet' : 'staging';
       const submitEndpoint = `https://${submitSubDomain}.mewwallet.dev/v2/stake/upgrade`;
       this.blsExecution.message.validator_index = parseInt(
         this.blsExecution.message.validator_index
       );
+      this.loadingButton = true;
       fetch(submitEndpoint, {
         method: 'PUT',
         headers: {
@@ -798,6 +809,7 @@ export default {
       })
         .then(res => {
           if (res.ok) {
+            this.addValidatorIndex(this.selectedValidator.validator_index);
             Toast('Successfully set withdrawal address!', {}, SUCCESS);
             return;
           }
@@ -870,6 +882,8 @@ export default {
       this.password = '';
       this.blsExecution = '';
       this.phrase = {};
+      this.loadingButton = false;
+      this.refetchValidators();
     },
     /**
      * sets selected wallet
