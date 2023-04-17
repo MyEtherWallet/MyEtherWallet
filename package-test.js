@@ -82,7 +82,8 @@ const EXCEPTIONS = [
   'bip39', // breaks
   '@myetherwallet/eth2-keystore',
   'ethers',
-  'commitlint'
+  'commitlint',
+  'lottie-web'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

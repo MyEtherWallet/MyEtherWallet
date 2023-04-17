@@ -16,6 +16,11 @@
       <div>
         <!-- Step 1: Ask user for execution address -->
         <div v-if="step === 1" class="text-center">
+          <mew-warning-sheet
+            class="mb-5"
+            title=""
+            description="The withdrawal address can only be set once and can never be changed. Please make sure the withdrawal address you are setting is a non-custodial wallet to which you have full access with a recovery phrase or private key. Do NOT use an exchange address or a smart contract wallet."
+          />
           <div class="mew-heading-3 mb-3 text-left">
             Your Withdrawal Address
           </div>
