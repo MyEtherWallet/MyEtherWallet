@@ -821,7 +821,7 @@ export default {
             this.file,
             this.password,
             this.executionAddress,
-            this.selectedValidator.id,
+            this.selectedValidator.validator_index,
             `0x${this.selectedValidator.decoded.withdrawal_credentials}`,
             selectedNetwork
           );
@@ -831,7 +831,7 @@ export default {
               mnemonic: this.parsedPhrase
             },
             this.executionAddress,
-            this.selectedValidator.id,
+            this.selectedValidator.validator_index,
             `0x${this.selectedValidator.decoded.withdrawal_credentials}`,
             selectedNetwork
           );
