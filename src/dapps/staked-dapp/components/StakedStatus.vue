@@ -979,7 +979,7 @@ export default {
       const percentIncrease = BigNumber(earning).div(amountStaked);
       const percentIncreasePerDay =
         BigNumber(percentIncrease).dividedBy(daysActive);
-      const apr = percentIncreasePerDay.times(365);
+      const apr = percentIncreasePerDay.times(365).times(100);
       return new BigNumber(apr);
     },
     /**
