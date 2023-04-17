@@ -441,7 +441,12 @@ import {
 } from '@/core/helpers/numberFormatHelper';
 import { STATUS_TYPES } from '@/dapps/staked-dapp/handlers/handlerStaked';
 import { GOERLI } from '@/utils/networks/types';
-import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
+import {
+  Toast,
+  ERROR,
+  SUCCESS,
+  WARNING
+} from '@/modules/toast/handler/handlerToast';
 import { SOFTWARE_WALLET_TYPES } from '@/modules/access-wallet/software/handlers/helpers.js';
 
 import iconETHNavy from '@/assets/images/currencies/eth-dark-navy.svg';
@@ -817,8 +822,21 @@ export default {
             Toast('Successfully set withdrawal address!', {}, SUCCESS);
             return;
           }
-          res.json().then(jsonres => {
-            Toast(jsonres.error ? jsonres.error : jsonres.msg, {}, ERROR);
+          return res.json().then(jsonres => {
+            if (
+              JSON.stringify(jsonres).includes(
+                'withdrawal credential prefix is not a BLS prefix'
+              )
+            ) {
+              this.addValidatorIndex(this.selectedValidator.validator_index);
+              Toast(
+                'Withdrawal credentials are already set for this validator',
+                {},
+                WARNING
+              );
+            } else {
+              Toast(jsonres.error ? jsonres.error : jsonres.msg, {}, ERROR);
+            }
           });
         })
         .finally(() => {
