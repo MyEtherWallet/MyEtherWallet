@@ -2,7 +2,7 @@ import State from './state';
 import Mutations from './mutations';
 import Actions from './actions';
 
-const ethBlocksTxs = {
+const stakedStore = {
   namespaced: true,
   state: State,
   mutations: Mutations,
@@ -10,4 +10,4 @@ const ethBlocksTxs = {
   strict: false
 };
 
-export default ethBlocksTxs;
+export default stakedStore;

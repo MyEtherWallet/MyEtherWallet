@@ -2,9 +2,9 @@ import localStore from 'store';
 import Configs from './configs';
 
 const INIT_STORE = function (state) {
-  if (localStore.get(Configs.LOCAL_STORAGE_KEYS.ethBlocksTxs)) {
-    const savedStore = localStore.get(Configs.LOCAL_STORAGE_KEYS.ethBlocksTxs);
-    if (savedStore.stateVersion === Configs.VERSION.ethBlocksTxs) {
+  if (localStore.get(Configs.LOCAL_STORAGE_KEYS.stakedStore)) {
+    const savedStore = localStore.get(Configs.LOCAL_STORAGE_KEYS.stakedStore);
+    if (savedStore.stateVersion === Configs.VERSION.stakedStore) {
       Object.assign(state, savedStore);
     }
   }
