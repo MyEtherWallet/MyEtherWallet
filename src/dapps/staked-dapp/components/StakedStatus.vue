@@ -944,6 +944,9 @@ export default {
      * Gets the average apr for a specific validator
      */
     getAverageApr(activationTime, earning, amountStaked) {
+      if (earning.lte(0)) {
+        return BigNumber(0);
+      }
       const now = moment.utc();
       const activated = moment.utc(activationTime);
       const daysActive = now.diff(activated, 'days');
