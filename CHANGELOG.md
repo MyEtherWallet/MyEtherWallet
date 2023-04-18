@@ -2,7 +2,7 @@
 
 ### fix
 
-* fix offline build for releases []()
+* fix offline build for releases [#4584](https://github.com/MyEtherWallet/MyEtherWallet/pull/4584)
 
 ### Release v6.7.0
 
