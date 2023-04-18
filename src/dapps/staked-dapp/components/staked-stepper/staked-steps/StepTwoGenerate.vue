@@ -13,12 +13,18 @@
         ===================================================
         -->
         <div class="overlayBg rounded pa-5">
-          <div class="mew-heading-3 mb-3">Your deposit address</div>
+          <mew-warning-sheet
+            class="mb-5"
+            title=""
+            description="The withdrawal address can only be set once and can never be changed. Please make sure the withdrawal address you are setting is a non-custodial wallet to which you have full access with a recovery phrase or private key. Do NOT use an exchange address or a smart contract wallet."
+          />
+          <div class="mew-heading-3 mb-3">Your withdrawal address</div>
           <module-address-book
             ref="addressInput"
             class="AddressInput"
             :preselect-curr-wallet-adr="true"
             :currency="currencyName"
+            label="Address"
             @setAddress="setAddress"
           />
         </div>
