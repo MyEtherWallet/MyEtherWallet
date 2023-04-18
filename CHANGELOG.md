@@ -1,3 +1,11 @@
+### devop
+
+* sync develop to main and staging [#4578](https://github.com/MyEtherWallet/MyEtherWallet/pull/4578)
+
+### feat
+
+* staked changes [#4559](https://github.com/MyEtherWallet/MyEtherWallet/pull/4559)
+
 ### Release v6.6.17-hotfix.1
 
 ### devop
