@@ -25,7 +25,7 @@ const exportObj = {
       .loader('graphql-tag/loader')
       .end();
     config.module
-      .rule('transpile-chainsafe')
+      .rule('transpile-eth2-keystore')
       .test(/node_modules\/@myetherwallet\/eth2-keystore\/.*\.js$/)
       .use('babel')
       .loader('babel-loader')
