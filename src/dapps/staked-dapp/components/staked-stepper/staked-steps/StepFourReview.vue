@@ -67,13 +67,6 @@
     -->
       <div class="mt-11 mt-sm-10 pa-5 greyLight">
         <mew-checkbox
-          v-model="firstCondition"
-          dense
-          class="mb-4"
-          class-name="textMedium--text"
-          label="I understand that Staking is currently a one-way-street and won't be able to get my fund back until an unknown date in the future when transfers are enabled in Eth2."
-        />
-        <mew-checkbox
           v-model="secondCondition"
           dense
           class-name="textMedium--text"
@@ -124,7 +117,7 @@
             btn-size="xlarge"
             class="mt-3"
             title="Prepare for staking"
-            :disabled="!firstCondition || !secondCondition || !thirdCondition"
+            :disabled="!secondCondition || !thirdCondition"
             @click.native="prepareToStake"
           ></mew-button>
         </div>
@@ -180,7 +173,7 @@
           :has-full-width="$vuetify.breakpoint.smAndDown"
           btn-size="xlarge"
           class="d-block ma-2"
-          title="Stake 32 ETH"
+          :title="buttonTitle"
           :disabled="!readyToStake"
           @click.native="onReadyToStake"
         >
@@ -221,7 +214,6 @@ export default {
   },
   data() {
     return {
-      firstCondition: false,
       secondCondition: false,
       thirdCondition: false,
       readyToStake: false,
@@ -238,7 +230,9 @@ export default {
     ...mapGetters('global', ['network', 'getFiatValue']),
     ...mapState('wallet', ['web3']),
     ...mapGetters('global', ['gasPrice', 'network']),
-
+    buttonTitle() {
+      return `Stake ${this.amount} ETH`;
+    },
     /**
      * Returns current network eth icon
      * @return string
@@ -260,8 +254,8 @@ export default {
         },
         {
           img: iconColorfulETH,
-          subtitle: 'Your Withdrawal Address',
-          title: 'Ethereum 2.0',
+          subtitle: 'Ethereum',
+          title: 'Your withdrawal address',
           desc: this.eth2Address,
           isAddress: true
         }

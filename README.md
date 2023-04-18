@@ -11,7 +11,6 @@ MyEtherWallet is a doorway to the Ethereum blockchain, allowing users to manage 
 
 !["MyEtherWallet Logo](./src/assets/images/backgrounds/bg-homepage-spaceman.svg "MyEtherWallet")
 
-
 ## Philosophy
 
 * <b>Empower the people</b>: Give people the ability to interact with the Ethereum blockchain easily, without having to run a full node.
