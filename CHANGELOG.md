@@ -1,3 +1,5 @@
+### Release v6.7.0
+
 ### devop
 
 * sync develop to main and staging [#4578](https://github.com/MyEtherWallet/MyEtherWallet/pull/4578)
