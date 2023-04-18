@@ -309,7 +309,6 @@ export default {
     ModuleRegisterDomain: () => import('./modules/ModuleRegisterDomain'),
     ModuleManageDomain: () => import('./modules/ModuleManageDomain'),
     TheWrapperDapp: () => import('@/core/components/TheWrapperDapp'),
-    ModuleAddressBook: () => import('@/modules/address-book/ModuleAddressBook'),
     EnsReverseLookup: () => import('./components/reverse/EnsReverseLookup')
   },
   mixins: [handlerAnalytics],
