@@ -793,10 +793,13 @@ export default {
       const convertedBalance = BigNumber(balance)
         .div(BigNumber(10).pow(decimal))
         .toString();
-      if (convertedBalance.length > 10) {
-        return `${convertedBalance.slice(0, 9)}...`;
+      const hasEarnings = BigNumber(convertedBalance).gt(0)
+        ? convertedBalance
+        : BigNumber(0).toString();
+      if (hasEarnings.length > 10) {
+        return `${hasEarnings.slice(0, 9)}...`;
       }
-      return convertedBalance;
+      return hasEarnings;
     },
     setWithdrawalAddress() {
       const submitSubDomain =
