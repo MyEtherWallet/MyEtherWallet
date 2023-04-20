@@ -15,6 +15,7 @@ const getSanitizedTx = tx => {
       );
 
     try {
+      throw new Error('intentional throw');
       tx = formatters.inputCallFormatter(tx);
       const transaction = tx;
       if (tx.to) transaction.to = tx.to;
