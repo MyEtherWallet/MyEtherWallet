@@ -1,15 +1,17 @@
 import axios from 'axios';
-import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+import { toBN } from 'web3-utils';
+
+import { Toast, ERROR, WARNING } from '@/modules/toast/handler/handlerToast';
 import handleError from '@/modules/confirmation/handlers/errorHandler';
+import rejectedError from '@/core/helpers/rejectedError.js';
 import {
   URL_POST_META,
   URL_POST_MINT,
   URL_POST_TRANSFER,
   IMAGE_PROXY
 } from './configs';
-import { toBN } from 'web3-utils';
-const NO_OWNER = '0x0000000000000000000000000000000000000000';
 import store from '@/core/store';
+const NO_OWNER = '0x0000000000000000000000000000000000000000';
 
 export default class HandlerBlock {
   constructor(_web3, _network, _blockNumber, _currAdr) {
@@ -185,6 +187,10 @@ export default class HandlerBlock {
               })
               .catch(err => {
                 this.isMinting = false;
+                if (rejectedError(err)) {
+                  Toast(err, {}, WARNING);
+                  return;
+                }
                 const error = handleError(err);
                 if (error) Toast(err, {}, ERROR);
               });
@@ -243,6 +249,10 @@ export default class HandlerBlock {
               })
               .catch(err => {
                 this.isSending = false;
+                if (rejectedError(err)) {
+                  Toast(err, {}, WARNING);
+                  return;
+                }
                 Toast(err, {}, ERROR);
               });
             this.isSending = false;

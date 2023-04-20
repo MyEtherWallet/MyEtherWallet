@@ -1,3 +1,98 @@
+### Release v6.7.0-hotfix.1
+
+### fix
+
+* fix offline build for releases [#4584](https://github.com/MyEtherWallet/MyEtherWallet/pull/4584)
+
+### Release v6.7.0
+
+### devop
+
+* sync develop to main and staging [#4578](https://github.com/MyEtherWallet/MyEtherWallet/pull/4578)
+
+### feat
+
+* staked changes [#4559](https://github.com/MyEtherWallet/MyEtherWallet/pull/4559)
+
+### Release v6.6.17-hotfix.1
+
+### devop
+
+* sync develop [#4572](https://github.com/MyEtherWallet/MyEtherWallet/pull/4572)
+
+### fix
+
+* enrkypt network switch [#4573](https://github.com/MyEtherWallet/MyEtherWallet/pull/4573)
+
+### Release v6.6.17
+
+### devop
+
+* hide refresh on offline build [#4523](https://github.com/MyEtherWallet/MyEtherWallet/pull/4523)
+* sync staging [#4549](https://github.com/MyEtherWallet/MyEtherWallet/pull/4549)
+* update package [#4551](https://github.com/MyEtherWallet/MyEtherWallet/pull/4551)
+* remove mew connect [#4552](https://github.com/MyEtherWallet/MyEtherWallet/pull/4552)
+* remove timeseries calls [#4561](https://github.com/MyEtherWallet/MyEtherWallet/pull/4561)
+* pull changes from other prs [#4565](https://github.com/MyEtherWallet/MyEtherWallet/pull/4565)
+* add new nodes [#4566](https://github.com/MyEtherWallet/MyEtherWallet/pull/4566)
+
+### feat
+
+* * add rns minting dapp [#4542](https://github.com/MyEtherWallet/MyEtherWallet/pull/4542)
+* custom paths for recovery ledger apps [#4546](https://github.com/MyEtherWallet/MyEtherWallet/pull/4546)
+
+### fix
+
+* only load once and on change [#4534](https://github.com/MyEtherWallet/MyEtherWallet/pull/4534)
+* remove collapsible tokens [#4545](https://github.com/MyEtherWallet/MyEtherWallet/pull/4545)
+* fix out of sync web3 instances outside wallet [#4553](https://github.com/MyEtherWallet/MyEtherWallet/pull/4553)
+* fix balance format [#4554](https://github.com/MyEtherWallet/MyEtherWallet/pull/4554)
+* fix offline build [#4564](https://github.com/MyEtherWallet/MyEtherWallet/pull/4564)
+* fix build [#4567](https://github.com/MyEtherWallet/MyEtherWallet/pull/4567)
+
+### Release v6.6.16-hotfix.1
+
+* matomo changes [#4556](https://github.com/MyEtherWallet/MyEtherWallet/pull/4556)
+* remove mew connect [#4552](https://github.com/MyEtherWallet/MyEtherWallet/pull/4552)
+
+### Release v6.6.16
+
+### ui
+
+* Fix padding on swap page mobile view [#4473](https://github.com/MyEtherWallet/MyEtherWallet/pull/4473)
+* Fixed address clipping [#4481](https://github.com/MyEtherWallet/MyEtherWallet/pull/4481)
+* Overlapping 'To address' on Cross-chain swap confirmation [#4508](https://github.com/MyEtherWallet/MyEtherWallet/pull/4508)
+* ENS Reverse Lookup height doesn't align with 'Register' button [#4511](https://github.com/MyEtherWallet/MyEtherWallet/pull/4511)
+* change tx history to send history [#4520](https://github.com/MyEtherWallet/MyEtherWallet/pull/4520)
+* fix notification drop down [#4521](https://github.com/MyEtherWallet/MyEtherWallet/pull/4521)
+* team page capitalization [#4522](https://github.com/MyEtherWallet/MyEtherWallet/pull/4522)
+* mnemonic path stuck, carers header [#4524](https://github.com/MyEtherWallet/MyEtherWallet/pull/4524)
+
+### devop
+
+* Add Rootstock integration, Add Rootstock ledger config
+* Rename RSK label to Rootstock
+* Rootstock name resolution
+  [#4446](https://github.com/MyEtherWallet/MyEtherWallet/pull/4446)
+* remove unused package [#4519](https://github.com/MyEtherWallet/MyEtherWallet/pull/4519)
+* format connections changes [#4533](https://github.com/MyEtherWallet/MyEtherWallet/pull/4533)
+* sync develop with hotfix [#4535](https://github.com/MyEtherWallet/MyEtherWallet/pull/4535)
+
+### feat
+
+* add draggable wallet blocks [#4509](https://github.com/MyEtherWallet/MyEtherWallet/pull/4509)
+* allow empty wallet to add custom tokens [#4531](https://github.com/MyEtherWallet/MyEtherWallet/pull/4531)
+
+### sentry
+
+* Add check if object is not null (evaluating 't.style') [#4496](https://github.com/MyEtherWallet/MyEtherWallet/pull/4496)
+* Null is not an object (evaluating 'e.trim') at setCustomAlias [#4501](https://github.com/MyEtherWallet/MyEtherWallet/pull/4501)
+* Undefined error message on TheAccessWalletLayout [#4502](https://github.com/MyEtherWallet/MyEtherWallet/pull/4502)
+* Cannot read property 'toLowerCase' of null at enkryptMarketing [#4503](https://github.com/MyEtherWallet/MyEtherWallet/pull/4503)
+* Cannot read properties of undefined (reading 'contains') at MewMenuPopup [#4505](https://github.com/MyEtherWallet/MyEtherWallet/pull/4505)
+* Cannot read properties of null (reading 'length') at QRcode [#4506](https://github.com/MyEtherWallet/MyEtherWallet/pull/4506)
+* Cannot read properties of null (reading 'substring') at handlerOrder [#4507](https://github.com/MyEtherWallet/MyEtherWallet/pull/4507)
+
 ### Release v6.6.15-hotfix.1
 
 ### fix

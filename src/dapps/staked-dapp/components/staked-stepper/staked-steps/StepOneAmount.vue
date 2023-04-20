@@ -109,11 +109,7 @@
         <ul class="user-info textMedium--text">
           <li>Your ETH is staked with our partner Staked.us</li>
           <li>Staked.us will create and maintain Eth2 validators for you</li>
-          <li>Earn up to 21% Annualized rewards</li>
-          <li class="orangePrimary--text">
-            You can neither spend nor transfer your Eth2 funds until an unknown
-            date in the future when transfers are enabled on the Eth2 chain
-          </li>
+          <li>Earn up to 6% annualized rewards</li>
         </ul>
       </div>
       <!--
@@ -170,7 +166,9 @@ export default {
       return this.network.type.icon;
     },
     buttonText() {
-      return !this.hasEnoughBalance ? 'Not enough funds' : 'Next: Eth2 address';
+      return !this.hasEnoughBalance
+        ? 'Not enough funds'
+        : 'Next: Withdrawal Address';
     },
     /**
      * Current APR Formatted

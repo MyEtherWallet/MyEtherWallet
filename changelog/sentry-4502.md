@@ -1,1 +1,0 @@
-Undefined error message on TheAccessWalletLayout

@@ -5,6 +5,160 @@
     ===================================================
     -->
   <div class="staked-status-container mx-auto">
+    <mew-popup
+      max-width="690px"
+      :show="openWithdrawalModal"
+      :has-buttons="false"
+      :has-body-content="true"
+      :title="modalTitle"
+      :left-btn="leftBtn"
+    >
+      <div>
+        <!-- Step 1: Ask user for execution address -->
+        <div v-if="step === 1" class="text-center">
+          <mew-warning-sheet
+            class="mb-5"
+            title=""
+            description="The withdrawal address can only be set once and can never be changed. Please make sure the withdrawal address you are setting is a non-custodial wallet to which you have full access with a recovery phrase or private key. Do NOT use an exchange address or a smart contract wallet."
+          />
+          <div class="mew-heading-3 mb-3 text-left">
+            Your Withdrawal Address
+          </div>
+          <module-address-book
+            ref="addressInput"
+            class="AddressInput"
+            label="Address"
+            :preselect-curr-wallet-adr="true"
+            :currency="currencyName"
+            @setAddress="setAddress"
+          />
+        </div>
+        <!-- Step 2: Ask user for wallet type -->
+        <div v-if="step === 2" class="text-center">
+          <div v-for="(btn, key) in buttons" :key="key" class="mb-5">
+            <mew-button
+              :class="btn.class"
+              has-full-width
+              color-theme="greyMedium"
+              btn-style="outline"
+              style="height: 160px"
+              @click.native="btn.fn"
+            >
+              <div
+                class="text-left d-flex align-center justify-space-between px-2"
+                style="width: 100%"
+              >
+                <div class="mew-heading-2 textDark--text">
+                  {{ btn.label }}
+                </div>
+                <img
+                  width="80"
+                  class="mr-4 d-none d-sm-block"
+                  :src="btn.icon"
+                />
+              </div>
+            </mew-button>
+          </div>
+          <input
+            ref="jsonInput"
+            type="file"
+            name="file"
+            style="display: none"
+            @change="uploadFile"
+          />
+        </div>
+        <!-- Step 3: Ask user for wallet inputs -->
+        <div v-if="step === 3" class="text-center">
+          <!--
+          ===================================================
+          Keystore
+          ===================================================
+          -->
+          <div v-if="isKeystore">
+            <mew-input
+              ref="passwordInput"
+              v-model="password"
+              label="Enter Password"
+              placeholder="Enter my keystore password"
+              type="password"
+            />
+          </div>
+          <!--
+          ===================================================
+          Mnemonic
+          ===================================================
+          -->
+          <div v-if="isMnemonic">
+            <!--
+          =====================================================================================
+            Enter Phrase Block
+          =====================================================================================
+          -->
+            <phrase-block class="mb-8">
+              <v-row>
+                <v-col
+                  v-for="n in length"
+                  :key="`mnemonicInput${n}`"
+                  cols="6"
+                  lg="3"
+                  md="3"
+                  sm="4"
+                >
+                  <v-text-field
+                    :ref="`mnemonicInput${n}`"
+                    v-model="phrase[n]"
+                    :name="`mnemonicInput${n}`"
+                    :label="`${n}.`"
+                    autocomplete="off"
+                    :autofocus="n === 1"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+            </phrase-block>
+          </div>
+        </div>
+        <!-- Step 4: Warning -->
+        <div v-if="step === 4" class="mb-2">
+          <mew-sheet class="pa-4">
+            <div class="mew-heading-3 black--text">
+              Setting address: {{ executionAddress }} as the withdrawal address.
+            </div>
+          </mew-sheet>
+          <mew-warning-sheet
+            class="my-4"
+            title="Please verify"
+            description="The withdrawal address can only be set once. Please make sure you are setting the correct address."
+          />
+        </div>
+        <!-- Next and Back Buttons -->
+        <div class="mb-2 text-center d-flex align-center justify-center">
+          <mew-button
+            v-if="step > 1"
+            class="mr-2"
+            title="Back"
+            btn-style="outline"
+            btn-size="xlarge"
+            @click.native="
+              () => {
+                back();
+              }
+            "
+          />
+          <mew-button
+            v-if="step != 2"
+            :title="nextButton.title"
+            :disabled="nextButton.disabled"
+            :loading="loadingButton"
+            btn-size="xlarge"
+            @click.native="
+              () => {
+                nextButton.fn();
+              }
+            "
+          />
+        </div>
+      </div>
+    </mew-popup>
     <!--
     ===================================================
     Loading
@@ -22,18 +176,23 @@
     </div>
     <div v-if="!loading">
       <!--
-    ===================================================
-    No Validators: 
-    ===================================================
-    -->
-      <div v-if="validators.length === 0 && justStakedValidator.length === 0">
+        ===================================================
+        No Validators: 
+        ===================================================
+      -->
+      <div
+        v-if="
+          (validators.length === 0 && justStakedValidator.length === 0) ||
+          (allPendingValidators.length === 0 && activeValidators.length === 0)
+        "
+      >
         You are currently not staking any eth.
       </div>
       <!--
-    ===================================================
-    Pending Validators
-    ===================================================
-    -->
+        ===================================================
+        Pending Validators
+        ===================================================
+        -->
       <div v-if="allPendingValidators.length > 0" class="pb-8">
         <span class="mew-heading-3">Pending</span>
         <div
@@ -42,10 +201,10 @@
           class="mt-4 d-flex flex-column align-center cursor-pointer justify-space-between"
         >
           <!--
-    ===================================================
-    Pending Validators (Header)
-    ===================================================
-    -->
+          ===================================================
+          Pending Validators (Header)
+          ===================================================
+          -->
           <div
             :class="[
               'rounded-t-lg header-container greyLight pa-5 full-width d-flex flex-row align-center justify-space-between',
@@ -77,20 +236,20 @@
             </div>
           </div>
           <!--
-    ===================================================
-    Pending Validators (Details Expanded)
-    ===================================================
-    -->
+          ===================================================
+          Pending Validators (Details Expanded)
+          ===================================================
+          -->
           <div
             v-if="isExpanded(idx)"
             class="border-container rounded-b-lg full-width pa-5"
           >
             <div class="mt-5 mb-8 font-weight-bold">More Info</div>
             <!--
-    ===================================================
-    Pending Status (Created - Processing)
-    ===================================================
-    -->
+            ===================================================
+            Pending Status (Created - Processing)
+            ===================================================
+            -->
             <div
               v-if="pending.status.toLowerCase() === STATUS_TYPES.CREATED"
               class="d-flex"
@@ -107,10 +266,10 @@
               }}</span>
             </div>
             <!--
-    ===================================================
-    Pending Status (Deposited)
-    ===================================================
-    -->
+            ===================================================
+            Pending Status (Deposited)
+            ===================================================
+            -->
             <div
               v-if="
                 pending.status.toLowerCase() === STATUS_TYPES.DEPOSITED ||
@@ -225,20 +384,41 @@
               <div class="textLight--text mt-2">
                 Earned
                 <span class="greenPrimary--text">{{
-                  active.earned + ' ETH'
+                  convertTotalReward(
+                    active.detailed_balance_info.total_reward_and_fees,
+                    active.detailed_balance_info.conversion_factor_power
+                  ) + ' ETH'
                 }}</span>
-                · Average APR {{ active.averageApr }}
+                <br />
+                Average APR {{ active.averageApr }}
               </div>
+              <mew-button
+                class="mt-1"
+                :title="
+                  !active.withdrawal_set
+                    ? 'Set withdrawal address'
+                    : 'Already set'
+                "
+                :disabled="active.withdrawal_set"
+                btn-size="medium"
+                @click.native="
+                  () => {
+                    openModal(active);
+                  }
+                "
+              />
             </div>
           </div>
-          <a
-            rel="noopener noreferrer"
-            class="font-weight-medium"
-            :href="active.url"
-            target="_blank"
-            >View Eth2 address
-            <v-icon color="greenPrimary" size="14">mdi-open-in-new</v-icon></a
-          >
+          <div>
+            <a
+              rel="noopener noreferrer"
+              class="font-weight-medium"
+              :href="active.url"
+              target="_blank"
+              >View validator
+              <v-icon color="greenPrimary" size="14">mdi-open-in-new</v-icon></a
+            >
+          </div>
         </div>
       </div>
     </div>
@@ -246,9 +426,13 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex';
+import { mapGetters, mapState, mapActions } from 'vuex';
 import BigNumber from 'bignumber.js';
 import moment from 'moment';
+import {
+  keystoreToBLSExecution,
+  mnemonicToBLSExecution
+} from '@myetherwallet/eth2-keystore';
 
 import configNetworkTypes from '@/dapps/staked-dapp/handlers/configNetworkTypes';
 import {
@@ -257,10 +441,22 @@ import {
 } from '@/core/helpers/numberFormatHelper';
 import { STATUS_TYPES } from '@/dapps/staked-dapp/handlers/handlerStaked';
 import { GOERLI } from '@/utils/networks/types';
+import {
+  Toast,
+  ERROR,
+  SUCCESS,
+  WARNING
+} from '@/modules/toast/handler/handlerToast';
+import { SOFTWARE_WALLET_TYPES } from '@/modules/access-wallet/software/handlers/helpers.js';
 
 import iconETHNavy from '@/assets/images/currencies/eth-dark-navy.svg';
+import { isEmpty } from 'lodash';
 
 export default {
+  components: {
+    phraseBlock: () => import('@/components/PhraseBlock'),
+    ModuleAddressBook: () => import('@/modules/address-book/ModuleAddressBook')
+  },
   props: {
     validators: {
       type: Array,
@@ -281,21 +477,115 @@ export default {
     amount: {
       type: Number,
       default: 0
+    },
+    refetchValidators: {
+      type: Function,
+      default: () => {}
     }
   },
   data() {
     return {
       iconETHNavy: iconETHNavy,
       expanded: 0,
-      STATUS_TYPES: STATUS_TYPES
+      STATUS_TYPES: STATUS_TYPES,
+      openWithdrawalModal: false,
+      selectedValidator: null,
+      step: 1,
+      executionAddress: '',
+      isValidAddress: false,
+      selectedRecoveryType: '',
+      file: {},
+      password: '',
+      blsExecution: '',
+      phrase: {},
+      length: 24,
+      loadingButton: false
     };
   },
   computed: {
     ...mapState('wallet', ['address']),
     ...mapState('global', ['preferredCurrency']),
     ...mapState('external', ['currencyRate']),
+    ...mapState('stakedStore', ['validatorIndex']),
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network', 'getFiatValue']),
+    nextButton() {
+      const obj = {
+        title: 'Next',
+        disabled: false,
+        fn: this.nextStep
+      };
+      if (this.step === 1) {
+        return Object.assign({}, obj, {
+          disabled: !this.isValidAddress && this.executionAddress !== '',
+          fn: this.nextStep
+        });
+      }
+      if (this.step === 3) {
+        if (this.isKeystore) {
+          return Object.assign({}, obj, {
+            disabled: this.loadingButton || !this.validPassword,
+            fn: this.validateUserInputs
+          });
+        }
+
+        return Object.assign({}, obj, {
+          disabled: !this.isValidMnemonic,
+          fn: this.validateUserInputs
+        });
+      }
+      if (this.step === 4) {
+        return Object.assign({}, obj, {
+          title: 'Set withdrawal address',
+          disabled: this.loadingButton,
+          fn: this.setWithdrawalAddress
+        });
+      }
+
+      return obj;
+    },
+    phraseToLength() {
+      const phrase = Object.values(this.phrase);
+      if (phrase.length > this.length) phrase.length = this.length;
+      return phrase;
+    },
+    isValidMnemonic() {
+      return this.phraseToLength.length === this.length;
+    },
+    parsedPhrase() {
+      return this.phraseToLength.join(' ').toLowerCase();
+    },
+    /**
+     * @returns array
+     * returns button configs
+     */
+    buttons() {
+      return [
+        /* Keystore Button */
+        {
+          label: 'Keystore',
+          icon: require('@/assets/images/icons/icon-keystore-file.svg'),
+          fn: () => {
+            this.userSelectFile();
+          }
+        },
+        /* Mnemonic */
+        {
+          label: 'Mnemonic Phrase',
+          icon: require('@/assets/images/icons/icon-mnemonic.svg'),
+          fn: () => {
+            this.setType(SOFTWARE_WALLET_TYPES.MNEMONIC);
+          }
+        }
+      ];
+    },
+    /**
+     * @returns string
+     * returns currency name from current selected network
+     */
+    currencyName() {
+      return this.network.type.currencyName;
+    },
     /**
      * @returns array
      * Returns all the raw objects in all the validators
@@ -320,22 +610,29 @@ export default {
           raw.status.toLowerCase() === STATUS_TYPES.ACTIVE ||
           raw.status.toLowerCase() === STATUS_TYPES.EXITED
         ) {
-          const totalBalanceETH = this.convertToEth1(raw.balance);
+          const totalBalanceETH = this.convertToEth1(
+            raw.detailed_balance_info.balance,
+            raw.detailed_balance_info.conversion_factor_power
+          );
           const earning = new BigNumber(totalBalanceETH).minus(raw.amount);
-          acc.push({
-            url:
-              configNetworkTypes.network[this.network.type.name].url +
-              '0x' +
-              raw.address,
-            earned: formatFloatingPointValue(earning).value,
-            totalBalanceETH: formatFloatingPointValue(totalBalanceETH).value,
-            totalBalanceFiat: this.getFiatValue(
-              new BigNumber(totalBalanceETH).times(this.fiatValue)
-            ),
-            averageApr: formatPercentageValue(
-              this.getAverageApr(raw.activation_timestamp, earning, raw.amount)
-            ).value
-          });
+          acc.push(
+            Object.assign({}, raw, {
+              url: `${configNetworkTypes.network[this.network.type.name].url}${
+                raw.validator_index
+              }`,
+              earned: formatFloatingPointValue(earning).value,
+              totalBalanceETH: formatFloatingPointValue(totalBalanceETH).value,
+              totalBalanceFiat: this.getFiatValue(
+                new BigNumber(totalBalanceETH).times(this.fiatValue)
+              ),
+              averageApr: formatPercentageValue(
+                this.getAverageApr(raw.created, earning, raw.amount)
+              ).value,
+              withdrawal_set:
+                this.findValidatorIndex(raw.validator_index) ||
+                raw.withdrawal_credentials_are_eth1Address
+            })
+          );
         }
         return acc;
       }, []);
@@ -419,29 +716,295 @@ export default {
      */
     allPendingValidators() {
       return this.justStakedValidator.concat(this.pendingValidators);
+    },
+    /**
+     * @returns object
+     * Returns the left button config for
+     * mew popup
+     */
+    leftBtn() {
+      return {
+        text: 'Cancel',
+        color: 'basic',
+        method: this.closeModal
+      };
+    },
+    /**
+     * @returns string
+     * Returns title based on current step
+     */
+    modalTitle() {
+      return this.step === 1
+        ? 'Provide withdrawal address'
+        : this.step === 2
+        ? 'Choose recovery method'
+        : this.step === 3 && this.isKeystore
+        ? 'Enter Keystore Password'
+        : this.step === 3 && this.isMnemonic
+        ? 'Enter Mnemonic Phrase'
+        : this.step === 4
+        ? 'Verify details'
+        : '';
+    },
+    /**
+     * @returns boolean
+     * returns whether selected recovery is keystore
+     */
+    isKeystore() {
+      return this.selectedRecoveryType === SOFTWARE_WALLET_TYPES.KEYSTORE;
+    },
+    /**
+     * @returns boolean
+     * returns whether selected recovery is keystore
+     */
+    isMnemonic() {
+      return this.selectedRecoveryType === SOFTWARE_WALLET_TYPES.MNEMONIC;
+    },
+    validPassword() {
+      return this.password.length > 3;
+    }
+  },
+  watch: {
+    phrase: {
+      deep: true,
+      handler: function (newval) {
+        if (newval && !isEmpty(newval) && !isEmpty(newval[1])) {
+          this.checkPhrase(newval);
+          const splitVal = newval[1].split(' ');
+          if (splitVal.length === 12 || splitVal.length === 24) {
+            this.length = splitVal.length;
+            const newObj = {};
+            splitVal.forEach((item, idx) => {
+              newObj[idx + 1] = item.toLowerCase();
+            });
+            this.phrase = newObj;
+          }
+        }
+      }
     }
   },
   methods: {
+    ...mapActions('stakedStore', ['addValidatorIndex']),
+    findValidatorIndex(idx) {
+      const findIdx = !!this.validatorIndex.find(item => idx === item);
+      return !!findIdx;
+    },
+    convertTotalReward(balance, decimal) {
+      const convertedBalance = BigNumber(balance)
+        .div(BigNumber(10).pow(decimal))
+        .toString();
+      const hasEarnings = BigNumber(convertedBalance).gt(0)
+        ? convertedBalance
+        : BigNumber(0).toString();
+      if (hasEarnings.length > 10) {
+        return `${hasEarnings.slice(0, 9)}...`;
+      }
+      return hasEarnings;
+    },
+    setWithdrawalAddress() {
+      const submitSubDomain =
+        this.network.type.name === 'ETH' ? 'mainnet' : 'staging';
+      const submitEndpoint = `https://${submitSubDomain}.mewwallet.dev/v2/stake/upgrade`;
+      this.blsExecution.message.validator_index = parseInt(
+        this.blsExecution.message.validator_index
+      );
+      this.loadingButton = true;
+      fetch(submitEndpoint, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          signed: [this.blsExecution]
+        })
+      })
+        .then(res => {
+          if (res.ok) {
+            this.addValidatorIndex(this.selectedValidator.validator_index);
+            Toast('Successfully set withdrawal address!', {}, SUCCESS);
+            return;
+          }
+          return res.json().then(jsonres => {
+            if (
+              JSON.stringify(jsonres).includes(
+                'withdrawal credential prefix is not a BLS prefix'
+              )
+            ) {
+              this.addValidatorIndex(this.selectedValidator.validator_index);
+              Toast(
+                'Withdrawal credentials are already set for this validator',
+                {},
+                WARNING
+              );
+            } else {
+              Toast(jsonres.error ? jsonres.error : jsonres.msg, {}, ERROR);
+            }
+          });
+        })
+        .finally(() => {
+          this.reset();
+        });
+    },
+    checkPhrase(val) {
+      const testObj = {};
+      let changed = false;
+      Object.values(val).forEach((item, idx) => {
+        if (!isEmpty(item)) testObj[idx + 1] = item.toLowerCase();
+        else changed = true;
+      });
+      if (changed) this.phrase = testObj;
+    },
+    /**
+     * takes the keystore inputs
+     * and checks if valid
+     */
+    async validateUserInputs() {
+      this.loadingButton = true;
+      try {
+        this.validating = true;
+        const selectedNetwork =
+          this.network.type.name === 'ETH' ? 'mainnet' : 'goerli';
+        if (this.isKeystore) {
+          this.blsExecution = await keystoreToBLSExecution(
+            this.file,
+            this.password,
+            this.executionAddress,
+            this.selectedValidator.validator_index,
+            `0x${this.selectedValidator.decoded.withdrawal_credentials}`,
+            selectedNetwork
+          );
+        } else {
+          this.blsExecution = await mnemonicToBLSExecution(
+            {
+              mnemonic: this.parsedPhrase
+            },
+            this.executionAddress,
+            this.selectedValidator.validator_index,
+            `0x${this.selectedValidator.decoded.withdrawal_credentials}`,
+            selectedNetwork
+          );
+        }
+        this.loadingButton = false;
+        this.nextStep();
+      } catch (err) {
+        this.loadingButton = false;
+        Toast(err, {}, ERROR);
+        this.reset();
+      }
+    },
+    reset() {
+      if (this.$refs.addressInput) {
+        this.$refs.addressInput.clear();
+      }
+      this.openWithdrawalModal = false;
+      this.selectedValidator = null;
+      this.step = 1;
+      this.executionAddress = this.address;
+      this.isValidAddress = false;
+      this.selectedRecoveryType = '';
+      this.file = {};
+      this.password = '';
+      this.blsExecution = '';
+      this.phrase = {};
+      this.loadingButton = false;
+      this.refetchValidators();
+    },
+    /**
+     * sets selected wallet
+     */
+    setType(type) {
+      this.selectedRecoveryType = type;
+      this.nextStep();
+    },
+    /**
+     * upload keystore
+     */
+    uploadFile(e) {
+      const reader = new FileReader();
+      reader.onloadend = evt => {
+        try {
+          this.file = JSON.parse(evt.target.result);
+          this.setType(SOFTWARE_WALLET_TYPES.KEYSTORE);
+        } catch (err) {
+          Toast(err.message, {}, ERROR);
+        }
+      };
+      reader.readAsBinaryString(e.target.files[0]);
+    },
+    userSelectFile() {
+      const jsonInput = this.$refs.jsonInput;
+      jsonInput.value = '';
+      jsonInput.click();
+    },
+    /**
+     * Increments stepper
+     */
+    nextStep() {
+      this.step += 1;
+    },
+    /**
+     * Increments stepper
+     */
+    back() {
+      const jsonInput = this.$refs.jsonInput;
+      switch (this.step) {
+        case 2:
+          this.selectedRecoveryType = '';
+          jsonInput.value = '';
+          break;
+        case 3:
+          this.password = '';
+          this.phrase = {};
+          this.file = {};
+          break;
+        default:
+          break;
+      }
+      this.step -= 1;
+    },
+    /**
+     * Sets address passed from addressbook
+     */
+    setAddress(addr, isValidAddress) {
+      this.executionAddress = addr;
+      this.isValidAddress = isValidAddress;
+    },
+    /**
+     * Open modal and set selected validator
+     */
+    openModal(validator) {
+      this.selectedValidator = validator;
+      this.openWithdrawalModal = true;
+    },
+    /**
+     * Close modal and clear selected validator
+     */
+    closeModal() {
+      this.reset();
+    },
     /**
      * @returns BigNumber
      * Converts the unit to ETH1 from ETH2
      */
-    convertToEth1(balance) {
-      return new BigNumber(balance).div(new BigNumber(10).pow(9));
+    convertToEth1(balance, decimal = 9) {
+      return new BigNumber(balance).div(new BigNumber(10).pow(decimal));
     },
     /**
      * @returns BigNumber
      * Gets the average apr for a specific validator
      */
     getAverageApr(activationTime, earning, amountStaked) {
+      if (earning.lte(0)) {
+        return BigNumber(0);
+      }
       const now = moment.utc();
       const activated = moment.utc(activationTime);
       const daysActive = now.diff(activated, 'days');
-      const percentIncrease = new BigNumber(earning).div(amountStaked);
+      const percentIncrease = BigNumber(earning).div(amountStaked);
       const percentIncreasePerDay =
         BigNumber(percentIncrease).dividedBy(daysActive);
-      const apr = percentIncreasePerDay * 365;
-      return new BigNumber(apr).times(100);
+      const apr = percentIncreasePerDay.times(365).times(100);
+      return new BigNumber(apr);
     },
     /**
      * Sets the idx container to expand

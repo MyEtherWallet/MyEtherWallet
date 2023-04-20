@@ -79,11 +79,10 @@ const EXCEPTIONS = [
   'prettier', // creates more warnings
   '@ledgerhq/hw-app-eth', // issue with imports
   '@ledgerhq/live-common', // issue with imports
-  '@coolwallet/eth',
-  '@ensdomains/address-encoder',
-  '@formatjs/intl-numberformat',
-  '@commitlint/config-conventional',
-  'commitlint'
+  'bip39', // breaks
+  'ethers',
+  'commitlint',
+  'lottie-web'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

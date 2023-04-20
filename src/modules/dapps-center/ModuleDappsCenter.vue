@@ -9,6 +9,10 @@
   >
     <template #content>
       <div class="mew-heading-1 px-4 mb-4">MEW DApps</div>
+      <div class="warning-container mb-2 font-weight-bold">
+        Withdrawals of staking rewards are now available for Staked.us users!
+        Full stake withdrawals coming soon.
+      </div>
       <v-row>
         <v-col v-for="(dapp, key) in dapps" :key="key" cols="12" sm="6" md="4">
           <mew-button
@@ -128,3 +132,14 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+.warning-container {
+  padding: 10px;
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid #05c0a5;
+  color: #05c0a5;
+  background-color: #ebfaf8;
+}
+</style>
