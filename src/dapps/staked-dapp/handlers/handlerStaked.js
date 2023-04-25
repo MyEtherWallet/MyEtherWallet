@@ -158,7 +158,6 @@ export default class Staked {
         }
       })
       .then(resp => {
-        this.myValidators = resp.data;
         this.myETHTotalStaked = resp.data.reduce((total, val) => {
           const raw = val.raw[0];
           const balanceETH =
@@ -167,7 +166,6 @@ export default class Staked {
               : 0;
           return new BigNumber(total).plus(balanceETH);
         }, 0);
-        // this.loadingValidators = false;
         this.getExitableValidators(resp.data);
       })
       .catch(err => {
