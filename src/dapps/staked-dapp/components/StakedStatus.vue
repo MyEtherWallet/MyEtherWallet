@@ -392,21 +392,35 @@
                 <br />
                 Average APR {{ active.averageApr }}
               </div>
-              <mew-button
-                class="mt-1"
-                :title="
-                  !active.withdrawal_set
-                    ? 'Set withdrawal address'
-                    : 'Already set'
-                "
-                :disabled="active.withdrawal_set"
-                btn-size="medium"
-                @click.native="
-                  () => {
-                    openModal(active);
-                  }
-                "
-              />
+              <div class="mt-1 d-flex">
+                <mew-button
+                  class="mr-1"
+                  :title="
+                    !active.withdrawal_set
+                      ? 'Set withdrawal address'
+                      : 'Already set'
+                  "
+                  :disabled="active.withdrawal_set"
+                  btn-size="medium"
+                  @click.native="
+                    () => {
+                      openWithdrawal(active);
+                    }
+                  "
+                />
+                <mew-button
+                  title="
+                    Exit stake
+                  "
+                  :disabled="!active.can_exit"
+                  btn-size="medium"
+                  @click.native="
+                    () => {
+                      openWithdrawal(active);
+                    }
+                  "
+                />
+              </div>
             </div>
           </div>
           <div>
@@ -972,7 +986,7 @@ export default {
     /**
      * Open modal and set selected validator
      */
-    openModal(validator) {
+    openWithdrawal(validator) {
       this.selectedValidator = validator;
       this.openWithdrawalModal = true;
     },

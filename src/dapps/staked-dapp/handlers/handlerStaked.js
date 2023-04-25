@@ -1,9 +1,10 @@
 import axios from 'axios';
 import BigNumber from 'bignumber.js';
+import { toBN } from 'web3-utils';
+
 import configNetworkTypes from './configNetworkTypes';
 import calculateEth2Rewards from './helpers';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
-import { toBN } from 'web3-utils';
 import handleError from '@/modules/confirmation/handlers/errorHandler';
 
 /**
@@ -114,6 +115,37 @@ export default class Staked {
       });
   }
   /**
+   * Get validators that can be exited by current address
+   * have to be fetched separately due to validators
+   * that was assigned to a different address
+   */
+  getExitableValidators(data) {
+    this.loadingValidators = true;
+    return axios
+      .get(`${this.endpoint}/history?withdrawalCredentials=${this.address}`, {
+        header: { 'Content-Type': 'application/json' }
+      })
+      .then(res => {
+        const filteredExitable = data.reduce((acc, activeValidator) => {
+          const foundValidator = res.data.find(
+            exitValidator =>
+              exitValidator.raw[0].validator_key ===
+              activeValidator.raw[0].validator_key
+          );
+          if (!foundValidator) {
+            activeValidator.raw[0]['can_exit'] =
+              activeValidator.raw[0].withdrawal_credentials_are_eth1Address;
+          } else {
+            activeValidator.raw[0]['can_exit'] = false;
+          }
+          acc.push(activeValidator);
+          return acc;
+        }, []);
+        this.myValidators = filteredExitable;
+        this.loadingValidators = false;
+      });
+  }
+  /**
    * Get clients validators
    * and get clients total staked
    */
@@ -135,7 +167,8 @@ export default class Staked {
               : 0;
           return new BigNumber(total).plus(balanceETH);
         }, 0);
-        this.loadingValidators = false;
+        // this.loadingValidators = false;
+        this.getExitableValidators(resp.data);
       })
       .catch(err => {
         this.loadingValidators = false;
