@@ -82,7 +82,9 @@ const EXCEPTIONS = [
   'bip39', // breaks
   'ethers',
   'commitlint',
-  'lottie-web'
+  'lottie-web',
+  'ethereum-block-by-date',
+  '@commitlint/config-conventional'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
