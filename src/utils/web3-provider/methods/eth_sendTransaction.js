@@ -45,11 +45,11 @@ export default async ({ payload, store, requestManager }, res, next) => {
           store.state.wallet.instance.getAddressString()
         )
       : tx.nonce;
-    // if (tx.gasLimit) {
-    //   tx.gas = tx.gasLimit;
-    // }
-    tx.gas = 50000;
-    tx.gasLimit = 50000;
+    if (tx.gasLimit) {
+      tx.gas = tx.gasLimit;
+    }
+    tx.gas = !tx.gas ? await ethCalls.estimateGas(localTx) : tx.gas;
+    tx.gasLimit = tx.gas;
   } catch (e) {
     res(e);
     return;
@@ -156,7 +156,6 @@ export default async ({ payload, store, requestManager }, res, next) => {
             })
             .on('error', err => {
               if (confirmInfo) {
-                console.log('errored within web3');
                 EventBus.$emit('swapTxFailed', txHash);
               }
               res(err);
@@ -166,7 +165,6 @@ export default async ({ payload, store, requestManager }, res, next) => {
     })
     .catch(e => {
       if (confirmInfo) {
-        console.log('error within web3, catch');
         EventBus.$emit('swapTxNotBroadcastedFailed');
       }
       res(e);

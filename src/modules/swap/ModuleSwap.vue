@@ -323,7 +323,7 @@ import buyMore from '@/core/mixins/buyMore.mixin.js';
 import Swapper from './handlers/handlerSwap';
 import handleError from '../confirmation/handlers/errorHandler';
 
-const MIN_GAS_LIMIT = 100000;
+const MIN_GAS_LIMIT = 800000;
 let localContractToToken = {};
 export default {
   name: 'ModuleSwap',

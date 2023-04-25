@@ -763,7 +763,6 @@ export default {
               if (this.rejectedError(err.message)) {
                 _this.trackSwap('swapTxRejected');
               } else {
-                console.log('error within module confirmation batch tx');
                 _this.emitSwapTxFail(err);
               }
             }
@@ -861,9 +860,6 @@ export default {
               if (this.rejectedError(e.message)) {
                 this.trackSwap('swapTxRejected');
               } else {
-                console.log(
-                  'error within module confirmation sign tx for web3'
-                );
                 this.emitSwapTxFail(e);
               }
             }
@@ -950,9 +946,6 @@ export default {
                     this.trackSwap('swapTxRejected');
                     throw new Error(e.message);
                   } else {
-                    console.log(
-                      'error within module confirmation batch tx web3'
-                    );
                     this.emitSwapTxFail(e);
                   }
                 }
@@ -996,18 +989,8 @@ export default {
       );
     },
     emitSwapTxFail(err) {
-      if (
-        err.hasOwnProperty('receipt') &&
-        err.receipt.hasOwnProperty('transactionHash')
-      ) {
-        this.trackSwap(
-          'swapTxFailed',
-          err.receipt.transactionHash,
-          this.network.type.chainID
-        );
-      } else {
-        this.trackSwap('swapTxFailedWithoutHash');
-      }
+      const hash = err?.receipt?.transactionHash;
+      this.trackSwap('swapTxFailed', hash, this.network.type.chainID);
     },
     btnAction() {
       if (this.isSwap) {
