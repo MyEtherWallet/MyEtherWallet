@@ -14,7 +14,7 @@ const exportObj = {
       skipWaiting: true,
       clientsClaim: true,
       navigateFallback: '/index.html',
-      navigateFallbackDenylist: [/^\/pages/]
+      navigateFallbackBlacklist: [/^\/pages/]
     }
   },
   chainWebpack: config => {
