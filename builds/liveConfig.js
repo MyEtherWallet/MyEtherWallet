@@ -13,7 +13,8 @@ const exportObj = {
       importWorkboxFrom: 'local',
       skipWaiting: true,
       clientsClaim: true,
-      navigateFallback: '/index.html'
+      navigateFallback: '/index.html',
+      navigateFallbackBlacklist: [/^\/pages/]
     }
   },
   chainWebpack: config => {
