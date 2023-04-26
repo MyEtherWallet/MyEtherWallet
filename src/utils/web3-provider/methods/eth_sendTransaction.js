@@ -109,6 +109,7 @@ export default async ({ payload, store, requestManager }, res, next) => {
          * Checks whether confirmInfo is true
          * if true, assume transaction is a swap
          */
+        let txHash;
         EventBus.$emit(event, params, _response => {
           if (_response.rejected) {
             res(new Error('User rejected action'));
@@ -128,6 +129,7 @@ export default async ({ payload, store, requestManager }, res, next) => {
               }
             })
             .once('transactionHash', hash => {
+              txHash = hash;
               if (store.state.wallet.instance !== null) {
                 const isTesting = locStore.get('mew-testing');
                 if (!isTesting) {
@@ -154,12 +156,7 @@ export default async ({ payload, store, requestManager }, res, next) => {
             })
             .on('error', err => {
               if (confirmInfo) {
-                const receipt =
-                  err.hasOwnProperty('receipt') &&
-                  err.receipt.hasOwnProperty('transactionHash')
-                    ? err.receipt.transactionHash
-                    : '0x';
-                EventBus.$emit('swapTxFailed', receipt);
+                EventBus.$emit('swapTxFailed', txHash);
               }
               res(err);
             });
@@ -168,10 +165,7 @@ export default async ({ payload, store, requestManager }, res, next) => {
     })
     .catch(e => {
       if (confirmInfo) {
-        const receipt = e.hasOwnProperty('receipt')
-          ? e.receipt.transactionHash
-          : '0x';
-        EventBus.$emit('swapTxFailed', receipt);
+        EventBus.$emit('swapTxNotBroadcastedFailed');
       }
       res(e);
     });
