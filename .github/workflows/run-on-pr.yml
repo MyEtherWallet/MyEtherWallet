@@ -36,7 +36,7 @@ jobs:
       - name: add to codecov
         run: |
           git config --global --add safe.directory '*'
-          ci_env='-e GITHUB_ACTION -e GITHUB_REF -e GITHUB_HEAD_REF -e GITHUB_SHA -e GITHUB_REPOSITORY -e GITHUB_RUN_ID'
+          ci_env=`bash <(curl -s https://codecov.io/env)`
           docker run $ci_env --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run codecov"
 
       - name: upload to codecov
