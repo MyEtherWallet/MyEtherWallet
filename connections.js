@@ -86,5 +86,6 @@ module.exports = [
   'https://eth-mainnet.alchemyapi.io:443', // Unstoppable domains
   'https://polygon-mainnet.g.alchemy.com:443', // Unstoppable domains
   'https://unstoppabledomains.g.alchemy.com:443', // Unstoppable domains
-  'https://metadata.unstoppabledomains.com:443' // Unstoppable domains
+  'https://metadata.unstoppabledomains.com:443', // Unstoppable domains
+  'https://mew-seo-pages.pages.dev:443' //pages
 ];

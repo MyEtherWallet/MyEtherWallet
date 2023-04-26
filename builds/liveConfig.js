@@ -13,7 +13,8 @@ const exportObj = {
       importWorkboxFrom: 'local',
       skipWaiting: true,
       clientsClaim: true,
-      navigateFallback: '/index.html'
+      navigateFallback: '/index.html',
+      navigateFallbackBlacklist: [/^\/pages/]
     }
   },
   chainWebpack: config => {
@@ -25,7 +26,7 @@ const exportObj = {
       .loader('graphql-tag/loader')
       .end();
     config.module
-      .rule('transpile-chainsafe')
+      .rule('transpile-eth2-keystore')
       .test(/node_modules\/@myetherwallet\/eth2-keystore\/.*\.js$/)
       .use('babel')
       .loader('babel-loader')

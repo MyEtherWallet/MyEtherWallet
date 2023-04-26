@@ -216,7 +216,8 @@ export default {
         const [name, domain] = this.name.split('.');
 
         if (domain !== 'rsk') {
-          this.searchError = 'Domain not supported on this network';
+          this.searchError =
+            'Only .rsk names are supported. Please make sure to include ".rsk".';
           return;
         }
 
@@ -284,7 +285,7 @@ export default {
         label,
         address,
         this.regSecret,
-        BigNumber.from(duration),
+        BigNumber(duration),
         this.domainPrice
       );
 

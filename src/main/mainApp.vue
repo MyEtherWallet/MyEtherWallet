@@ -64,14 +64,17 @@ export default {
   },
   mounted() {
     EventBus.$on('swapTxBroadcasted', hash => {
-      this.trackSwap('swapTxBroadcasted', hash, this.network.type.name);
+      this.trackSwap('swapTxBroadcasted', hash, this.network.type.chainID);
     });
     EventBus.$on('swapTxReceivedReceipt', hash => {
-      this.trackSwap('swapTxReceivedReceipt', hash, this.network.type.name);
+      this.trackSwap('swapTxReceivedReceipt', hash, this.network.type.chainID);
     });
     EventBus.$on('swapTxFailed', hash => {
       const passedHash = hash === '0x' ? 'no hash' : hash;
-      this.trackSwap('swapTxFailed', passedHash, this.network.type.name);
+      this.trackSwap('swapTxFailed', passedHash, this.network.type.chainID);
+    });
+    EventBus.$on('swapTxNotBroadcastedFailed', () => {
+      this.trackSwap('swapTxNotBroadcastedFailed');
     });
     EventBus.$on(BUYSELL_EVENT, () => {
       this.openBuy();
@@ -119,6 +122,7 @@ export default {
     EventBus.$off('swapTxBroadcasted');
     EventBus.$off('swapTxReceivedReceipt');
     EventBus.$off('swapTxFailed');
+    EventBus.$off('swapTxNotBroadcastedFailed');
   },
   methods: {
     ...mapActions('global', ['setOnlineStatus']),
