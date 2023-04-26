@@ -84,7 +84,8 @@ const EXCEPTIONS = [
   'commitlint',
   'lottie-web',
   'ethereum-block-by-date',
-  '@commitlint/config-conventional'
+  '@commitlint/config-conventional',
+  '@formatjs/intl-numberformat'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
