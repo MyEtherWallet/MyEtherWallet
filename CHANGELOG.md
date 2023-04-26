@@ -1,3 +1,10 @@
+### Release v6.7.0-hotfix.2
+
+### devop
+
+* sync develop [#4585](https://github.com/MyEtherWallet/MyEtherWallet/pull/4585)
+* seo token pages [#4591](https://github.com/MyEtherWallet/MyEtherWallet/pull/4591)
+
 ### Release v6.7.0-hotfix.1
 
 ### fix
