@@ -20,16 +20,16 @@
             is-block
           >
             <template #tabContent1>
-              <home-features-send class="mt-16 mb-10" />
+              <home-features-tokens class="mt-16 mb-10" />
             </template>
             <template #tabContent2>
-              <home-features-swap class="mt-16 mb-10" />
+              <home-features-send class="mt-16 mb-10" />
             </template>
             <template #tabContent3>
-              <home-features-dapps class="mt-16 mb-10" />
+              <home-features-swap class="mt-16 mb-10" />
             </template>
             <template #tabContent4>
-              <home-features-tokens class="mt-16 mb-10" />
+              <home-features-dapps class="mt-16 mb-10" />
             </template>
           </mew-tabs>
         </v-container>
@@ -80,6 +80,10 @@ export default {
     mobileTab: null,
     mobileItems: [
       {
+        tab: 'Tokens',
+        img: require('@/assets/images/snippets/mobile/mobile-features-tokens.svg')
+      },
+      {
         tab: 'ETH',
         img: require('@/assets/images/snippets/mobile/mobile-features-send.svg')
       },
@@ -90,13 +94,12 @@ export default {
       {
         tab: 'DApps',
         img: require('@/assets/images/snippets/mobile/mobile-features-dapps.svg')
-      },
-      {
-        tab: 'Tokens',
-        img: require('@/assets/images/snippets/mobile/mobile-features-tokens.svg')
       }
     ],
     mewTabs: [
+      {
+        name: 'Tokens'
+      },
       {
         name: 'ETH'
       },
@@ -105,9 +108,6 @@ export default {
       },
       {
         name: 'DApps'
-      },
-      {
-        name: 'Tokens'
       }
     ]
   })

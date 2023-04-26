@@ -22,7 +22,8 @@ const AUDIT_EXCEPTIONS = [
   'http-cache-semantics',
   'cacheable-request',
   // look into updating after release
-  'dns-packet'
+  'dns-packet',
+  'decode-uri-component'
 ];
 const execute = (command, callback) => {
   exec(

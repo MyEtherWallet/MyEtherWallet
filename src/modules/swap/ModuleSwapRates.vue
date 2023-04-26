@@ -12,7 +12,7 @@
       </div>
     </div>
     <div v-if="!loading && !error && hasSwapRates" class="pa-3">
-      <div v-for="(data, key) in swapData" :key="key">
+      <div v-for="(data, key) in swapRates" :key="key">
         <v-sheet
           v-if="data.rate"
           color="buttonGrayLight"
@@ -68,7 +68,7 @@
 
 <script>
 import ethIcon from '@/assets/images/networks/eth.svg';
-import { mapState, mapGetters } from 'vuex';
+import { mapState, mapGetters, mapActions } from 'vuex';
 import { toWei } from 'web3-utils';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
@@ -168,20 +168,19 @@ export default {
     return {
       ethIcon: ethIcon,
       swapHandler: null,
-      swapData: null,
       loading: true,
       error: false
     };
   },
   computed: {
-    ...mapState('wallet', ['web3']),
+    ...mapState('wallet', ['web3', 'swapRates']),
     ...mapGetters('global', ['isEthNetwork', 'network']),
     showTokenIssue() {
       return (this.error || !this.hasSwapRates) && !this.loading;
     },
     hasSwapRates() {
-      if (this.swapData) {
-        return this.swapData.some(item => {
+      if (this.swapRates) {
+        return this.swapRates.some(item => {
           return item.rate;
         });
       }
@@ -197,26 +196,30 @@ export default {
     this.setSwapHandler(this.web3, this.network.type.name);
   },
   methods: {
+    ...mapActions('wallet', ['setSwapRates']),
     setSwapHandler(val) {
       if (!this.isEthNetwork) return;
       this.swapHandler = new handlerSwap(val, this.network.type.name);
+      this.loading = this.swapRates.length === 0;
+      if (this.swapRates.length !== 0) return;
       this.fetchRates();
     },
     fetchRates() {
       try {
-        this.swapData = null;
         this.loading = true;
         this.swapHandler.getQuotesForSet(STATIC_PAIRS).then(res => {
-          this.swapData = STATIC_PAIRS.map((itm, idx) => {
-            itm['rate'] =
-              res[idx] &&
-              res[idx].length !== 0 &&
-              res[idx][0] &&
-              res[idx][0]?.amount
-                ? formatFloatingPointValue(res[idx][0]?.amount).value
-                : false;
-            return itm;
-          });
+          this.setSwapRates(
+            STATIC_PAIRS.map((itm, idx) => {
+              itm['rate'] =
+                res[idx] &&
+                res[idx].length !== 0 &&
+                res[idx][0] &&
+                res[idx][0]?.amount
+                  ? formatFloatingPointValue(res[idx][0]?.amount).value
+                  : false;
+              return itm;
+            })
+          );
           this.loading = false;
         });
       } catch (e) {

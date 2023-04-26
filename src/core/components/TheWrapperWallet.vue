@@ -164,6 +164,6 @@ export default {
   cursor: move;
   position: absolute;
   left: 24px;
-  top: 28px;
+  top: 24px;
 }
 </style>

@@ -1,3 +1,60 @@
+### Release v6.7.0-hotfix.1
+
+### fix
+
+* fix offline build for releases [#4584](https://github.com/MyEtherWallet/MyEtherWallet/pull/4584)
+
+### Release v6.7.0
+
+### devop
+
+* sync develop to main and staging [#4578](https://github.com/MyEtherWallet/MyEtherWallet/pull/4578)
+
+### feat
+
+* staked changes [#4559](https://github.com/MyEtherWallet/MyEtherWallet/pull/4559)
+
+### Release v6.6.17-hotfix.1
+
+### devop
+
+* sync develop [#4572](https://github.com/MyEtherWallet/MyEtherWallet/pull/4572)
+
+### fix
+
+* enrkypt network switch [#4573](https://github.com/MyEtherWallet/MyEtherWallet/pull/4573)
+
+### Release v6.6.17
+
+### devop
+
+* hide refresh on offline build [#4523](https://github.com/MyEtherWallet/MyEtherWallet/pull/4523)
+* sync staging [#4549](https://github.com/MyEtherWallet/MyEtherWallet/pull/4549)
+* update package [#4551](https://github.com/MyEtherWallet/MyEtherWallet/pull/4551)
+* remove mew connect [#4552](https://github.com/MyEtherWallet/MyEtherWallet/pull/4552)
+* remove timeseries calls [#4561](https://github.com/MyEtherWallet/MyEtherWallet/pull/4561)
+* pull changes from other prs [#4565](https://github.com/MyEtherWallet/MyEtherWallet/pull/4565)
+* add new nodes [#4566](https://github.com/MyEtherWallet/MyEtherWallet/pull/4566)
+
+### feat
+
+* * add rns minting dapp [#4542](https://github.com/MyEtherWallet/MyEtherWallet/pull/4542)
+* custom paths for recovery ledger apps [#4546](https://github.com/MyEtherWallet/MyEtherWallet/pull/4546)
+
+### fix
+
+* only load once and on change [#4534](https://github.com/MyEtherWallet/MyEtherWallet/pull/4534)
+* remove collapsible tokens [#4545](https://github.com/MyEtherWallet/MyEtherWallet/pull/4545)
+* fix out of sync web3 instances outside wallet [#4553](https://github.com/MyEtherWallet/MyEtherWallet/pull/4553)
+* fix balance format [#4554](https://github.com/MyEtherWallet/MyEtherWallet/pull/4554)
+* fix offline build [#4564](https://github.com/MyEtherWallet/MyEtherWallet/pull/4564)
+* fix build [#4567](https://github.com/MyEtherWallet/MyEtherWallet/pull/4567)
+
+### Release v6.6.16-hotfix.1
+
+* matomo changes [#4556](https://github.com/MyEtherWallet/MyEtherWallet/pull/4556)
+* remove mew connect [#4552](https://github.com/MyEtherWallet/MyEtherWallet/pull/4552)
+
 ### Release v6.6.16
 
 ### ui
