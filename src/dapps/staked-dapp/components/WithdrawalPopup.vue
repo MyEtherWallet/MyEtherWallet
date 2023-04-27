@@ -186,8 +186,8 @@ export default {
       default: false
     },
     selectedValidator: {
-      type: [null, Object],
-      default: null
+      type: Object,
+      default: () => {}
     }
   },
   data() {

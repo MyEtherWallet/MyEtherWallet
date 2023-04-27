@@ -6,8 +6,13 @@
     -->
   <div class="staked-status-container mx-auto">
     <withdrawal-popup
-      :reset="reset"
+      :reset="closeWithdrawal"
       :open-withdrawal-modal="openWithdrawalModal"
+      :selected-validator="selectedValidator"
+    />
+    <exit-popup
+      :close-modal="closeExit"
+      :open-exit-modal="openExitModal"
       :selected-validator="selectedValidator"
     />
     <!--
@@ -267,7 +272,7 @@
                   btn-size="medium"
                   @click.native="
                     () => {
-                      openWithdrawal(active);
+                      openExit(active);
                     }
                   "
                 />
@@ -307,7 +312,8 @@ import iconETHNavy from '@/assets/images/currencies/eth-dark-navy.svg';
 
 export default {
   components: {
-    WithdrawalPopup: () => import('./WithdrawalPopup')
+    WithdrawalPopup: () => import('./WithdrawalPopup'),
+    ExitPopup: () => import('./ExitPopup')
   },
   props: {
     validators: {
@@ -341,7 +347,8 @@ export default {
       expanded: 0,
       STATUS_TYPES: STATUS_TYPES,
       openWithdrawalModal: false,
-      selectedValidator: null
+      openExitModal: false,
+      selectedValidator: {}
     };
   },
   computed: {
@@ -501,9 +508,16 @@ export default {
       return hasEarnings;
     },
     reset() {
-      this.openWithdrawalModal = false;
-      this.selectedValidator = null;
+      this.selectedValidator = {};
       this.refetchValidators();
+    },
+    closeWithdrawal() {
+      this.openWithdrawalModal = false;
+      this.reset();
+    },
+    closeExit() {
+      this.openExitModal = false;
+      this.reset();
     },
     /**
      * Open modal and set selected validator
@@ -511,6 +525,13 @@ export default {
     openWithdrawal(validator) {
       this.selectedValidator = validator;
       this.openWithdrawalModal = true;
+    },
+    /**
+     * Open modal and set selected validator
+     */
+    openExit(validator) {
+      this.selectedValidator = validator;
+      this.openExitModal = true;
     },
     /**
      * @returns BigNumber
