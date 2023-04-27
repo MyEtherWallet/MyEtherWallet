@@ -129,10 +129,10 @@ export default class Staked {
         const filteredExitable = data.reduce((acc, activeValidator) => {
           const foundValidator = res.data.find(
             exitValidator =>
-              exitValidator.raw[0].validator_key ===
-              activeValidator.raw[0].validator_key
+              exitValidator.raw[0].decoded.pubkey ===
+              activeValidator.raw[0].decoded.pubkey
           );
-          if (!foundValidator) {
+          if (foundValidator) {
             activeValidator.raw[0]['can_exit'] =
               activeValidator.raw[0].withdrawal_credentials_are_eth1Address;
           } else {
