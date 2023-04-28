@@ -20,7 +20,7 @@
       <div class="pb-5">
         <div class="mew-caption">
           Sign message requesting Staked.us to exit your validator(s) from the
-          network:z
+          network:
         </div>
         <code>
           {{ message }}
@@ -33,12 +33,17 @@
               v-if="loadingSign"
               indeterminate
               color="primary"
+              size="32"
+              width="2"
             />
-            <div
+            <v-icon
               v-if="!loadingSign"
-              v-lottie="successLottie"
-              class="lottie-size"
-            />
+              size="24"
+              color="greenPrimary"
+              class="pa-1"
+            >
+              mdi-checkbox-marked-circle
+            </v-icon>
           </div>
           <div>
             {{ loadingSign ? 'Signing message' : 'Message signed' }}
@@ -50,8 +55,17 @@
               v-if="loadingStakedCall"
               indeterminate
               color="primary"
+              size="32"
+              width="2"
             />
-            <div v-if="!loadingStakedCall" v-lottie="successLottie" />
+            <v-icon
+              v-if="!loadingStakedCall"
+              size="24"
+              color="greenPrimary"
+              class="pa-1"
+            >
+              mdi-checkbox-marked-circle
+            </v-icon>
           </div>
           <div>
             {{
@@ -59,14 +73,32 @@
             }}
           </div>
         </div>
+        <div v-if="!loadingSign && !loadingStakedCall" class="mt-3">
+          Successfully started exit & withdrawal process! Please check
+          <a
+            :href="`${validatorUrl}${selectedValidator.validator_index}`"
+            target="_blank"
+            rel="noopener noreferrer"
+            >#{{ selectedValidator.validator_index }}</a
+          >
+          for up to date status.
+        </div>
       </div>
       <div class="mb-2 text-center d-flex align-center justify-center">
         <mew-button
-          title="Sign and Exit"
+          v-if="loadingSign && loadingStakedCall"
+          :title="btnTitle"
           btn-size="xlarge"
           :loading="loadingButton"
           :disabled="loadingButton"
-          @click.native="signAndExit"
+          @click.native="btnMethod"
+        />
+        <mew-button
+          v-else
+          :title="btnTitle"
+          btn-size="xlarge"
+          :disabled="loadingSign || loadingStakedCall"
+          @click.native="btnMethod"
         />
       </div>
     </div>
@@ -75,8 +107,9 @@
 
 <script>
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
-import { mapState } from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 import { toHex } from 'web3-utils';
+import networkConfig from '../handlers/configNetworkTypes';
 export default {
   props: {
     openExitModal: {
@@ -101,8 +134,9 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['instance', 'address']),
-    successLottie() {
-      return 'checkmark';
+    ...mapGetters('global', ['network']),
+    validatorUrl() {
+      return networkConfig.network[this.network.type.name].url;
     },
     /**
      * returns the challenge to be signed by the user
@@ -128,11 +162,33 @@ export default {
       return {
         text: 'Cancel',
         color: 'basic',
-        method: this.closeModal
+        method: this.modalClose
       };
+    },
+    btnMethod() {
+      if (this.loadingSign && this.loadingStakedCall) {
+        return this.signAndExit;
+      }
+      return this.modalClose;
+    },
+    btnTitle() {
+      if (this.loadingSign && this.loadingStakedCall) {
+        return 'Sign & Exit';
+      }
+      return 'Close';
     }
   },
   methods: {
+    ...mapActions('stakedStore', ['addWithdrawalIndex']),
+    modalClose() {
+      this.localReset();
+      this.closeModal();
+    },
+    localReset() {
+      this.loadingButton = false;
+      this.loadingSign = true;
+      this.loadingStakedCall = true;
+    },
     async signAndExit() {
       this.loadingButton = true;
       try {
@@ -141,13 +197,39 @@ export default {
           this.address
         );
         this.loadingSign = false;
-        const packedChallenge = toHex(
-          '\u0019Ethereum Signed Message:\n' +
-            signature.length.toString() +
-            signature
-        );
+        // const challenge = toHex(
+        //   '\u0019Ethereum Signed Message:\n' +
+        //     signature.length.toString() +
+        //     signature
+        // );
+        const headerDomain =
+          this.network.type.name === 'ETH' ? 'mainnet' : 'staging';
+        const submitEndpoint = `https://${headerDomain}.mewwallet.dev/v2/stake/exit`;
+        fetch(submitEndpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            key: this.address,
+            challenge: this.message,
+            signature: signature.toString('hex')
+          })
+        }).then(res => {
+          if (res.ok) {
+            this.loadingStakedCall = false;
+            this.addWithdrawalIndex(this.selectedValidator.validator_index);
+            return;
+          }
+          res.json().then(jsonres => {
+            Toast(jsonres.error ? jsonres.error : jsonres.msg, {}, ERROR);
+            this.localReset();
+          });
+        });
+        // this.loadingButton = false;
       } catch (e) {
         Toast(e, {}, ERROR);
+        this.localReset();
       }
     }
   }
@@ -159,9 +241,8 @@ export default {
   border: 1px solid var(--v-greenPrimary-base);
   border-radius: 5px;
 }
-
-.lottie-size {
-  width: 32px;
-  height: 32px;
+.success-container {
+  @extend .loaders-container;
+  background-color: #f2fafa;
 }
 </style>

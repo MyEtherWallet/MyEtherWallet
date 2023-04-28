@@ -16,7 +16,14 @@ const ADD_VALIDATOR_INDEX = function (state, validatorId) {
   state.validatorIndex = newArray;
 };
 
+const ADD_WITHDRAWAL_INDEX = function (state, validatorId) {
+  const newArray = state.withdrawalValidatorIndex.slice(); // no ref copy
+  newArray.push(validatorId);
+  state.withdrawalValidatorIndex = newArray;
+};
+
 export default {
   INIT_STORE,
-  ADD_VALIDATOR_INDEX
+  ADD_VALIDATOR_INDEX,
+  ADD_WITHDRAWAL_INDEX
 };
