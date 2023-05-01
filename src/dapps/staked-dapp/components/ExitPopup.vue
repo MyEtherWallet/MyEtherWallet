@@ -8,6 +8,17 @@
     :left-btn="leftBtn"
   >
     <div>
+      <div class="mb-5 mew-heading-4 text-center pa-4 success-container">
+        You are exiting validator
+        <a
+          :href="selectedValidator.url"
+          target="_blank"
+          rel="noopener noreferrer"
+          >#{{ selectedValidator.validator_index }}</a
+        >
+        and will receive {{ selectedValidator.totalBalanceETH }} ETH to
+        <b>{{ withdrawalAddress }}</b>
+      </div>
       <div class="mew-body mb-5">
         Your validator will be terminated and your staked ETH will be withdrawn.
         After this is completed, you will no longer be earning staking rewards
@@ -26,7 +37,7 @@
           {{ message }}
         </code>
       </div>
-      <div v-if="loadingButton" class="pb-5">
+      <div v-if="loadingButton || exitFinished" class="pb-5">
         <div class="d-flex align-center pa-2 mb-2 loaders-container">
           <div class="mr-2">
             <v-progress-circular
@@ -106,9 +117,10 @@
 </template>
 
 <script>
-import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import { mapActions, mapGetters, mapState } from 'vuex';
-import { toHex } from 'web3-utils';
+import { isEmpty } from 'lodash';
+
+import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import networkConfig from '../handlers/configNetworkTypes';
 export default {
   props: {
@@ -129,7 +141,8 @@ export default {
     return {
       loadingButton: false,
       loadingSign: true,
-      loadingStakedCall: true
+      loadingStakedCall: true,
+      exitFinished: false
     };
   },
   computed: {
@@ -142,16 +155,11 @@ export default {
      * returns the challenge to be signed by the user
      */
     message() {
-      return JSON.stringify(
-        {
-          intentToExit:
-            'I am signing this message and requesting that Staked exit the following validators from the network',
-          validatorIndexes: [this.selectedValidator.validator_index],
-          address: this.address
-        },
-        null,
-        2
-      );
+      return JSON.stringify({
+        intentToExit:
+          'I am signing this message and requesting that Staked exit the following validators from the network',
+        validatorIndexes: [this.selectedValidator.validator_index]
+      });
     },
     /**
      * @returns object
@@ -176,6 +184,14 @@ export default {
         return 'Sign & Exit';
       }
       return 'Close';
+    },
+    withdrawalAddress() {
+      return isEmpty(this.selectedValidator)
+        ? '0x'
+        : `0x${this.selectedValidator.withdrawal_credentials.substring(
+            24,
+            this.selectedValidator.withdrawal_credentials.length
+          )}`;
     }
   },
   methods: {
@@ -188,6 +204,7 @@ export default {
       this.loadingButton = false;
       this.loadingSign = true;
       this.loadingStakedCall = true;
+      this.exitFinished = false;
     },
     async signAndExit() {
       this.loadingButton = true;
@@ -196,28 +213,32 @@ export default {
           this.message,
           this.address
         );
+        const parsedSignature = signature.toString('hex');
         this.loadingSign = false;
-        // const challenge = toHex(
-        //   '\u0019Ethereum Signed Message:\n' +
-        //     signature.length.toString() +
-        //     signature
-        // );
+        const challenge = Buffer.from(
+          '\u{19}Ethereum Signed Message:\n' +
+            this.message.length.toString() +
+            this.message
+        ).toString('hex');
+
         const headerDomain =
           this.network.type.name === 'ETH' ? 'mainnet' : 'staging';
         const submitEndpoint = `https://${headerDomain}.mewwallet.dev/v2/stake/exit`;
-        fetch(submitEndpoint, {
+        await fetch(submitEndpoint, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            key: this.address,
-            challenge: this.message,
-            signature: signature.toString('hex')
+            address: this.address,
+            challenge: challenge.toString('hex'),
+            signature: parsedSignature
           })
         }).then(res => {
           if (res.ok) {
             this.loadingStakedCall = false;
+            this.loadingButton = false;
+            this.exitFinished = true;
             this.addWithdrawalIndex(this.selectedValidator.validator_index);
             return;
           }
@@ -226,7 +247,6 @@ export default {
             this.localReset();
           });
         });
-        // this.loadingButton = false;
       } catch (e) {
         Toast(e, {}, ERROR);
         this.localReset();

@@ -355,7 +355,7 @@ export default {
     ...mapState('wallet', ['address']),
     ...mapState('global', ['preferredCurrency']),
     ...mapState('external', ['currencyRate']),
-    ...mapState('stakedStore', ['validatorIndex']),
+    ...mapState('stakedStore', ['validatorIndex', 'withdrawalValidatorIndex']),
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network', 'getFiatValue']),
     /**
@@ -402,7 +402,10 @@ export default {
               ).value,
               withdrawal_set:
                 this.findValidatorIndex(raw.validator_index) ||
-                raw.withdrawal_credentials_are_eth1Address
+                raw.withdrawal_credentials_are_eth1Address,
+              can_exit:
+                this.findWithdrawalValidator(raw.validator_index) ||
+                raw.can_exit
             })
           );
         }
@@ -493,6 +496,12 @@ export default {
   methods: {
     findValidatorIndex(idx) {
       const findIdx = !!this.validatorIndex.find(item => idx === item);
+      return !!findIdx;
+    },
+    findWithdrawalValidator(idx) {
+      const findIdx = !!this.withdrawalValidatorIndex.find(
+        item => idx === item
+      );
       return !!findIdx;
     },
     convertTotalReward(balance, decimal) {
