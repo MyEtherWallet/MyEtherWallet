@@ -42,6 +42,8 @@ import { EventBus } from '@/core/plugins/eventBus';
 
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
+import HybridWalletInterface from '@/modules/access-wallet/hybrid/handlers/walletInterface';
+import sanitizeHex from '@/core/helpers/sanitizeHex';
 
 export default {
   components: {
@@ -139,6 +141,27 @@ export default {
         this.web3Listeners();
       }
       this.checkNetwork();
+    }
+
+    if (this.instance.identifier === 'walletConnect') {
+      this.instance.connection.on('wc_sessionUpdate', console.log);
+      this.instance.connection.on('session_update', (e, evt) => {
+        if (
+          evt.params[0].accounts[0].toLowerCase() !== this.address.toLowerCase()
+        ) {
+          const newWallet = new HybridWalletInterface(
+            sanitizeHex(evt.params[0].accounts[0]),
+            this.instance.isHardware,
+            this.instance.identifier,
+            this.instance.txSigner,
+            this.instance.msgSigner,
+            this.instance.connection,
+            this.instance.errorHandler,
+            this.instance.meta
+          );
+          this.setWallet([newWallet]);
+        }
+      });
     }
   },
   beforeDestroy() {
