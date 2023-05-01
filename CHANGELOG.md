@@ -1,3 +1,7 @@
+### devop
+
+* remove staging env [#4557](https://github.com/MyEtherWallet/MyEtherWallet/pull/4557)
+
 ### Release v6.7.0-hotfix.2
 
 ### devop
