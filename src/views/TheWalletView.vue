@@ -144,7 +144,6 @@ export default {
     }
 
     if (this.instance.identifier === 'walletConnect') {
-      this.instance.connection.on('wc_sessionUpdate', console.log);
       this.instance.connection.on('session_update', (e, evt) => {
         if (
           evt.params[0].accounts[0].toLowerCase() !== this.address.toLowerCase()
