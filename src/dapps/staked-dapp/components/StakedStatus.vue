@@ -39,7 +39,9 @@
       <div
         v-if="
           (validators.length === 0 && justStakedValidator.length === 0) ||
-          (allPendingValidators.length === 0 && activeValidators.length === 0)
+          (allPendingValidators.length === 0 &&
+            activeValidators.length === 0 &&
+            exitedValidators.length === 0)
         "
       >
         You are currently not staking any eth.
@@ -291,6 +293,80 @@
           </div>
         </div>
       </div>
+      <!--
+    ===================================================
+    Exited Validators
+    ===================================================
+    -->
+      <div v-if="exitedValidators.length > 0">
+        <span class="mew-heading-3">Exited</span>
+        <div
+          v-for="(active, idx) in exitedValidators"
+          :key="active + idx"
+          class="border-container rounded-lg pa-5 mt-4 d-flex justify-space-between"
+        >
+          <div class="left-container d-flex">
+            <img :src="iconETHNavy" height="26" alt="ethereum" />
+            <div class="left-container-details ml-3">
+              <div class="mew-heading-2">
+                Validator #{{ active.validator_index }}
+              </div>
+              <div class="font-weight-medium mt-1">
+                {{
+                  active.status.toLowerCase() === 'active'
+                    ? 'Exited, in queue for withdrawal'
+                    : 'Exited and withdrawn'
+                }}
+              </div>
+              <div class="textLight--text mt-2">
+                Earned
+                <span class="greenPrimary--text"> -- ETH </span>
+                <br />
+                Average APR ---
+              </div>
+              <div class="mt-1 d-flex">
+                <mew-button
+                  class="mr-1"
+                  :title="
+                    !active.withdrawal_set
+                      ? 'Set withdrawal address'
+                      : 'Already set'
+                  "
+                  :disabled="active.withdrawal_set"
+                  btn-size="medium"
+                  @click.native="
+                    () => {
+                      openWithdrawal(active);
+                    }
+                  "
+                />
+                <mew-button
+                  title="
+                    Exit stake
+                  "
+                  :disabled="true"
+                  btn-size="medium"
+                  @click.native="
+                    () => {
+                      openExit(active);
+                    }
+                  "
+                />
+              </div>
+            </div>
+          </div>
+          <div>
+            <a
+              rel="noopener noreferrer"
+              class="font-weight-medium"
+              :href="active.url"
+              target="_blank"
+              >View validator
+              <v-icon color="greenPrimary" size="14">mdi-open-in-new</v-icon></a
+            >
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -374,9 +450,56 @@ export default {
     /**
      * @returns array
      * Returns all the active validators with correct info
-     * includes status: ACTIVE, EXITED
+     * includes status: ACTIVE
      */
     activeValidators() {
+      return this.validatorsRaw.reduce((acc, raw) => {
+        if (raw.status.toLowerCase() === STATUS_TYPES.ACTIVE) {
+          const totalBalanceETH = this.convertToEth1(
+            raw.detailed_balance_info.balance,
+            raw.detailed_balance_info.conversion_factor_power
+          );
+          const earning = new BigNumber(totalBalanceETH).minus(raw.amount);
+          const withdrawn = this.findWithdrawalValidator(
+            raw.validator_index,
+            false
+          );
+          if (withdrawn) {
+            acc.push(
+              Object.assign({}, raw, {
+                url: `${
+                  configNetworkTypes.network[this.network.type.name].url
+                }${raw.validator_index}`,
+                earned: formatFloatingPointValue(earning).value,
+                totalBalanceETH:
+                  formatFloatingPointValue(totalBalanceETH).value,
+                totalBalanceFiat: this.getFiatValue(
+                  new BigNumber(totalBalanceETH).times(this.fiatValue)
+                ),
+                averageApr: formatPercentageValue(
+                  this.getAverageApr(raw.created, earning, raw.amount)
+                ).value,
+                withdrawal_set:
+                  this.findValidatorIndex(raw.validator_index) ||
+                  raw.withdrawal_credentials_are_eth1Address,
+                can_exit: this.findWithdrawalValidator(
+                  raw.validator_index,
+                  raw.can_exit
+                )
+              })
+            );
+          }
+        }
+        return acc;
+      }, []);
+    },
+    /**
+     * @returns array
+     * Returns all the active validators with correct info
+     * includes status: ACTIVE, EXITED
+     * currently includes active but is possibly exited
+     */
+    exitedValidators() {
       return this.validatorsRaw.reduce((acc, raw) => {
         if (
           raw.status.toLowerCase() === STATUS_TYPES.ACTIVE ||
@@ -387,28 +510,30 @@ export default {
             raw.detailed_balance_info.conversion_factor_power
           );
           const earning = new BigNumber(totalBalanceETH).minus(raw.amount);
-          acc.push(
-            Object.assign({}, raw, {
-              url: `${configNetworkTypes.network[this.network.type.name].url}${
-                raw.validator_index
-              }`,
-              earned: formatFloatingPointValue(earning).value,
-              totalBalanceETH: formatFloatingPointValue(totalBalanceETH).value,
-              totalBalanceFiat: this.getFiatValue(
-                new BigNumber(totalBalanceETH).times(this.fiatValue)
-              ),
-              averageApr: formatPercentageValue(
-                this.getAverageApr(raw.created, earning, raw.amount)
-              ).value,
-              withdrawal_set:
-                this.findValidatorIndex(raw.validator_index) ||
-                raw.withdrawal_credentials_are_eth1Address,
-              can_exit: this.findWithdrawalValidator(
-                raw.validator_index,
-                raw.can_exit
-              )
-            })
+          const withdrawn = this.findWithdrawalValidator(
+            raw.validator_index,
+            false
           );
+          if (!withdrawn || raw.status.toLowerCase() === STATUS_TYPES.EXITED) {
+            acc.push(
+              Object.assign({}, raw, {
+                url: `${
+                  configNetworkTypes.network[this.network.type.name].url
+                }${raw.validator_index}`,
+                earned: formatFloatingPointValue(earning).value,
+                totalBalanceETH:
+                  formatFloatingPointValue(totalBalanceETH).value,
+                totalBalanceFiat: this.getFiatValue(
+                  new BigNumber(totalBalanceETH).times(this.fiatValue)
+                ),
+                averageApr: formatPercentageValue(
+                  this.getAverageApr(raw.created, earning, raw.amount)
+                ).value,
+                withdrawal_set: true,
+                can_exit: false
+              })
+            );
+          }
         }
         return acc;
       }, []);
@@ -499,6 +624,14 @@ export default {
       const findIdx = !!this.validatorIndex.find(item => idx === item);
       return !!findIdx;
     },
+    /**
+     *
+     * @param {*} idx
+     * @param {*} canExit
+     * @returns Boolean
+     *
+     * checks withdrawal validator address in the local store
+     */
     findWithdrawalValidator(idx, canExit) {
       const findIdx = !!this.withdrawalValidatorIndex.find(
         item => idx === item
