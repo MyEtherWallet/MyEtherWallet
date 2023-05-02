@@ -126,22 +126,41 @@ export default class Staked {
         header: { 'Content-Type': 'application/json' }
       })
       .then(res => {
-        const filteredExitable = data.reduce((acc, activeValidator) => {
-          const foundValidator = res.data.find(
-            exitValidator =>
-              exitValidator.raw[0].decoded.pubkey ===
-              activeValidator.raw[0].decoded.pubkey
-          );
-          if (foundValidator) {
-            activeValidator.raw[0]['can_exit'] =
-              activeValidator.raw[0].withdrawal_credentials_are_eth1Address;
-          } else {
-            activeValidator.raw[0]['can_exit'] = false;
-          }
-          acc.push(activeValidator);
-          return acc;
-        }, []);
+        let filteredExitable = [];
+        // validators and withdrawal credentials found
+        if (data.length > 0) {
+          filteredExitable = data.reduce((acc, activeValidator) => {
+            const foundValidator = res.data.find(
+              exitValidator =>
+                exitValidator.raw[0].decoded.pubkey ===
+                activeValidator.raw[0].decoded.pubkey
+            );
+            if (foundValidator) {
+              activeValidator.raw[0]['can_exit'] =
+                activeValidator.raw[0].withdrawal_credentials_are_eth1Address;
+            } else {
+              activeValidator.raw[0]['can_exit'] = false;
+            }
+            acc.push(activeValidator);
+            return acc;
+          }, []);
+        } else {
+          // no validators found but has withdrawal credentials
+          filteredExitable = res.data.map(item => {
+            item.raw[0]['can_exit'] =
+              item.raw[0].withdrawal_credentials_are_eth1Address;
+            return Object.assign({}, item);
+          });
+        }
         this.myValidators = filteredExitable;
+        this.loadingValidators = false;
+      })
+      .catch(() => {
+        // no withdrawal credentials found
+        this.myValidators = data.map(item => {
+          item.raw[0]['can_exit'] = false;
+          return Object.assign({}, item);
+        });
         this.loadingValidators = false;
       });
   }
@@ -166,18 +185,21 @@ export default class Staked {
               : 0;
           return new BigNumber(total).plus(balanceETH);
         }, 0);
+        // check withdrawals
         this.getExitableValidators(resp.data);
       })
       .catch(err => {
-        this.loadingValidators = false;
-        this.myValidators = [];
         if (
           err.response &&
           err.response.status === 404 &&
           err.response.data.msg === 'No matching history found'
         ) {
+          // try to see if withdrawals are set
+          this.getExitableValidators([]);
           return;
         }
+        this.loadingValidators = false;
+        this.myValidators = [];
         Toast(err, {}, ERROR);
       });
   }

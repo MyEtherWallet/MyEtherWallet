@@ -12,13 +12,19 @@ const INIT_STORE = function (state) {
 
 const ADD_VALIDATOR_INDEX = function (state, validatorId) {
   const newArray = state.validatorIndex.slice(); // no ref copy
-  newArray.push(validatorId);
+  const found = newArray.find(item => item === validatorId);
+  if (!found) {
+    newArray.push(validatorId);
+  }
   state.validatorIndex = newArray;
 };
 
 const ADD_WITHDRAWAL_INDEX = function (state, validatorId) {
   const newArray = state.withdrawalValidatorIndex.slice(); // no ref copy
-  newArray.push(validatorId);
+  const found = newArray.find(item => item === validatorId);
+  if (!found) {
+    newArray.push(validatorId);
+  }
   state.withdrawalValidatorIndex = newArray;
 };
 

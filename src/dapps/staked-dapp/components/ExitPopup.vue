@@ -119,6 +119,7 @@
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex';
 import { isEmpty } from 'lodash';
+import { toHex } from 'web3-utils';
 
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import networkConfig from '../handlers/configNetworkTypes';
@@ -158,7 +159,8 @@ export default {
       return JSON.stringify({
         intentToExit:
           'I am signing this message and requesting that Staked exit the following validators from the network',
-        validatorIndexes: [this.selectedValidator.validator_index]
+        validatorIndexes: [this.selectedValidator.validator_index],
+        address: this.address
       });
     },
     /**
@@ -195,7 +197,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('stakedStore', ['addWithdrawalIndex']),
+    ...mapActions('stakedStore', ['addWithdrawalValidatorIndex']),
     modalClose() {
       this.localReset();
       this.closeModal();
@@ -213,7 +215,7 @@ export default {
           this.message,
           this.address
         );
-        const parsedSignature = signature.toString('hex');
+        const parsedSignature = toHex(signature);
         this.loadingSign = false;
         const challenge = Buffer.from(
           '\u{19}Ethereum Signed Message:\n' +
@@ -239,7 +241,9 @@ export default {
             this.loadingStakedCall = false;
             this.loadingButton = false;
             this.exitFinished = true;
-            this.addWithdrawalIndex(this.selectedValidator.validator_index);
+            this.addWithdrawalValidatorIndex(
+              this.selectedValidator.validator_index
+            );
             return;
           }
           res.json().then(jsonres => {

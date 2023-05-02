@@ -403,9 +403,10 @@ export default {
               withdrawal_set:
                 this.findValidatorIndex(raw.validator_index) ||
                 raw.withdrawal_credentials_are_eth1Address,
-              can_exit:
-                this.findWithdrawalValidator(raw.validator_index) ||
+              can_exit: this.findWithdrawalValidator(
+                raw.validator_index,
                 raw.can_exit
+              )
             })
           );
         }
@@ -498,11 +499,14 @@ export default {
       const findIdx = !!this.validatorIndex.find(item => idx === item);
       return !!findIdx;
     },
-    findWithdrawalValidator(idx) {
+    findWithdrawalValidator(idx, canExit) {
       const findIdx = !!this.withdrawalValidatorIndex.find(
         item => idx === item
       );
-      return !!findIdx;
+      if (findIdx) {
+        return !findIdx;
+      }
+      return canExit;
     },
     convertTotalReward(balance, decimal) {
       const convertedBalance = BigNumber(balance)
