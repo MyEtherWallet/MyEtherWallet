@@ -144,9 +144,17 @@ export default {
     }
 
     if (this.instance.identifier === 'walletConnect') {
+      if (this.network.type.chainID !== this.instance.connection._chainId) {
+        this.instance.connection.updateSession({
+          chanId: this.network.type.chainID,
+          accounts: this.instance.connection._accounts[0]
+        });
+      }
       this.instance.connection.on('session_update', (e, evt) => {
         if (
-          evt.params[0].accounts[0].toLowerCase() !== this.address.toLowerCase()
+          evt.params[0].accounts[0].toLowerCase() !==
+            this.address.toLowerCase() &&
+          evt.params[0].accounts[0].toLowerCase() !== '0'
         ) {
           const newWallet = new HybridWalletInterface(
             sanitizeHex(evt.params[0].accounts[0]),
