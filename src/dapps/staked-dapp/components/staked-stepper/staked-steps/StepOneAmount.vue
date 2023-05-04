@@ -150,7 +150,7 @@ export default {
   data() {
     return {
       toolTipFee:
-        '0.312% is covering staking until transfers are enabled on Eth2. Once transfers are enabled, you will have a choice to either continue staking your ETH for an additional fee, or withdraw your ETH and earned rewards and stop staking.',
+        'In order to provide uninterrupted, reliable staking service and maintain your validators, Staked.us and MEW retain 13% of your rewards as a service fee. APR figures shown here already account for this fee. In addition, MEW will charge a one-time staking fee of 0.1 ETH for each 32 ETH you stake.',
       amount: 0,
       selectedItem: {}
     };

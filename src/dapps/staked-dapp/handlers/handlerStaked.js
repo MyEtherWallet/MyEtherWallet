@@ -129,21 +129,17 @@ export default class Staked {
         let filteredExitable = [];
         // validators and withdrawal credentials found
         if (data.length > 0) {
-          filteredExitable = data.reduce((acc, activeValidator) => {
-            const foundValidator = res.data.find(
+          const filteredArray = data.filter(currValidator => {
+            const foundInWithdrawal = res.data.find(
               exitValidator =>
                 exitValidator.raw[0].decoded.pubkey ===
-                activeValidator.raw[0].decoded.pubkey
+                currValidator.raw[0].decoded.pubkey
             );
-            if (foundValidator) {
-              activeValidator.raw[0]['can_exit'] =
-                activeValidator.raw[0].withdrawal_credentials_are_eth1Address;
-            } else {
-              activeValidator.raw[0]['can_exit'] = false;
-            }
-            acc.push(activeValidator);
-            return acc;
-          }, []);
+
+            if (!foundInWithdrawal) return true;
+          });
+
+          filteredExitable = filteredArray.concat(res.data);
         } else {
           // no validators found but has withdrawal credentials
           filteredExitable = res.data.map(item => {
