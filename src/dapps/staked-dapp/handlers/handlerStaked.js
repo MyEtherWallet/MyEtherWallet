@@ -139,7 +139,14 @@ export default class Staked {
             if (!foundInWithdrawal) return true;
           });
 
-          filteredExitable = filteredArray.concat(res.data);
+          /**
+           * combines validators (filtered for duplicates) and
+           * the response from withdrawalCredentials
+           */
+          filteredExitable = filteredArray.concat(res.data).map(validator => {
+            validator.raw[0]['can_exit'] =
+              validator.raw[0].withdrawal_credentials_are_eth1Address;
+          });
         } else {
           // no validators found but has withdrawal credentials
           filteredExitable = res.data.map(item => {
