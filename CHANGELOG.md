@@ -1,3 +1,7 @@
+### fix
+
+* fix staked exit status [#4601](https://github.com/MyEtherWallet/MyEtherWallet/pull/4601)
+
 ### Release v6.7.1
 
 ### devop
