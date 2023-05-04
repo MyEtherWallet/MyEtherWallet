@@ -129,21 +129,40 @@ export default class Staked {
         let filteredExitable = [];
         // validators and withdrawal credentials found
         if (data.length > 0) {
-          filteredExitable = data.reduce((acc, activeValidator) => {
-            const foundValidator = res.data.find(
-              exitValidator =>
-                exitValidator.raw[0].decoded.pubkey ===
-                activeValidator.raw[0].decoded.pubkey
-            );
-            if (foundValidator) {
-              activeValidator.raw[0]['can_exit'] =
-                activeValidator.raw[0].withdrawal_credentials_are_eth1Address;
-            } else {
-              activeValidator.raw[0]['can_exit'] = false;
-            }
-            acc.push(activeValidator);
-            return acc;
-          }, []);
+          /**
+           * remove current validators that are
+           * not returned in the withdrawalCredentials call
+           *
+           * set can_exit to false
+           */
+          const filteredArray = data
+            .filter(currValidator => {
+              const foundInWithdrawal = res.data.find(
+                exitValidator =>
+                  exitValidator.raw[0].decoded.pubkey ===
+                  currValidator.raw[0].decoded.pubkey
+              );
+
+              if (!foundInWithdrawal) return true;
+            })
+            .map(item => {
+              item.raw[0]['can_exit'] = false;
+              return Object.assign({}, item);
+            });
+
+          /**
+           * set 'can_exit' key with value based on if
+           * withdrawal_credentials_are_eth1Address is true
+           * for all exitable validators
+           */
+          const exitableValidators = res.data.map(validator => {
+            validator.raw[0]['can_exit'] =
+              validator.raw[0].withdrawal_credentials_are_eth1Address;
+
+            return Object.assign({}, validator);
+          });
+
+          filteredExitable = filteredArray.concat(exitableValidators);
         } else {
           // no validators found but has withdrawal credentials
           filteredExitable = res.data.map(item => {
