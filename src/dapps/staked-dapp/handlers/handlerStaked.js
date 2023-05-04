@@ -142,10 +142,15 @@ export default class Staked {
           /**
            * combines validators (filtered for duplicates) and
            * the response from withdrawalCredentials
+           *
+           * adds 'can_exi't key with value based on if
+           * withdrawal_credentials_are_eth1Address is true
            */
           filteredExitable = filteredArray.concat(res.data).map(validator => {
             validator.raw[0]['can_exit'] =
               validator.raw[0].withdrawal_credentials_are_eth1Address;
+
+            return Object.assign({}, validator);
           });
         } else {
           // no validators found but has withdrawal credentials
