@@ -34,6 +34,7 @@
         <v-carousel-item
           :ripple="false"
           :to="{ name: ROUTES_HOME.BUY_HARDWARE_WALLET.NAME }"
+          target="_blank"
         >
           <img
             class="slide-img"

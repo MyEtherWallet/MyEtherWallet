@@ -57,9 +57,7 @@
               <div class="staking-fee">Staking Fee</div>
               <mew-tooltip class="ml-1" :text="toolTipFee" max-width="320px" />
             </v-col>
-            <v-col cols="6" md="6" class="py-1 text-right">
-              0.75% <span class="textLight--text">0.3 ETH min</span>
-            </v-col>
+            <v-col cols="6" md="6" class="py-1 text-right"> 0.312% </v-col>
           </v-row>
         </div>
 
@@ -152,7 +150,7 @@ export default {
   data() {
     return {
       toolTipFee:
-        '0.75% staking fee (or 0.3 ETH, whichever is higher) is covering staking until transfers are enabled on Eth2. Once transfers are enabled, you will have a choice to either continue staking your ETH for an additional fee, or withdraw your ETH and earned rewards and stop staking.',
+        '0.312% is covering staking until transfers are enabled on Eth2. Once transfers are enabled, you will have a choice to either continue staking your ETH for an additional fee, or withdraw your ETH and earned rewards and stop staking.',
       amount: 0,
       selectedItem: {}
     };
