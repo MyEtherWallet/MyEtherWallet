@@ -5,160 +5,16 @@
     ===================================================
     -->
   <div class="staked-status-container mx-auto">
-    <mew-popup
-      max-width="690px"
-      :show="openWithdrawalModal"
-      :has-buttons="false"
-      :has-body-content="true"
-      :title="modalTitle"
-      :left-btn="leftBtn"
-    >
-      <div>
-        <!-- Step 1: Ask user for execution address -->
-        <div v-if="step === 1" class="text-center">
-          <mew-warning-sheet
-            class="mb-5"
-            title=""
-            description="The withdrawal address can only be set once and can never be changed. Please make sure the withdrawal address you are setting is a non-custodial wallet to which you have full access with a recovery phrase or private key. Do NOT use an exchange address or a smart contract wallet."
-          />
-          <div class="mew-heading-3 mb-3 text-left">
-            Your Withdrawal Address
-          </div>
-          <module-address-book
-            ref="addressInput"
-            class="AddressInput"
-            label="Address"
-            :preselect-curr-wallet-adr="true"
-            :currency="currencyName"
-            @setAddress="setAddress"
-          />
-        </div>
-        <!-- Step 2: Ask user for wallet type -->
-        <div v-if="step === 2" class="text-center">
-          <div v-for="(btn, key) in buttons" :key="key" class="mb-5">
-            <mew-button
-              :class="btn.class"
-              has-full-width
-              color-theme="greyMedium"
-              btn-style="outline"
-              style="height: 160px"
-              @click.native="btn.fn"
-            >
-              <div
-                class="text-left d-flex align-center justify-space-between px-2"
-                style="width: 100%"
-              >
-                <div class="mew-heading-2 textDark--text">
-                  {{ btn.label }}
-                </div>
-                <img
-                  width="80"
-                  class="mr-4 d-none d-sm-block"
-                  :src="btn.icon"
-                />
-              </div>
-            </mew-button>
-          </div>
-          <input
-            ref="jsonInput"
-            type="file"
-            name="file"
-            style="display: none"
-            @change="uploadFile"
-          />
-        </div>
-        <!-- Step 3: Ask user for wallet inputs -->
-        <div v-if="step === 3" class="text-center">
-          <!--
-          ===================================================
-          Keystore
-          ===================================================
-          -->
-          <div v-if="isKeystore">
-            <mew-input
-              ref="passwordInput"
-              v-model="password"
-              label="Enter Password"
-              placeholder="Enter my keystore password"
-              type="password"
-            />
-          </div>
-          <!--
-          ===================================================
-          Mnemonic
-          ===================================================
-          -->
-          <div v-if="isMnemonic">
-            <!--
-          =====================================================================================
-            Enter Phrase Block
-          =====================================================================================
-          -->
-            <phrase-block class="mb-8">
-              <v-row>
-                <v-col
-                  v-for="n in length"
-                  :key="`mnemonicInput${n}`"
-                  cols="6"
-                  lg="3"
-                  md="3"
-                  sm="4"
-                >
-                  <v-text-field
-                    :ref="`mnemonicInput${n}`"
-                    v-model="phrase[n]"
-                    :name="`mnemonicInput${n}`"
-                    :label="`${n}.`"
-                    autocomplete="off"
-                    :autofocus="n === 1"
-                  ></v-text-field>
-                </v-col>
-              </v-row>
-            </phrase-block>
-          </div>
-        </div>
-        <!-- Step 4: Warning -->
-        <div v-if="step === 4" class="mb-2">
-          <mew-sheet class="pa-4">
-            <div class="mew-heading-3 black--text">
-              Setting address: {{ executionAddress }} as the withdrawal address.
-            </div>
-          </mew-sheet>
-          <mew-warning-sheet
-            class="my-4"
-            title="Please verify"
-            description="The withdrawal address can only be set once. Please make sure you are setting the correct address."
-          />
-        </div>
-        <!-- Next and Back Buttons -->
-        <div class="mb-2 text-center d-flex align-center justify-center">
-          <mew-button
-            v-if="step > 1"
-            class="mr-2"
-            title="Back"
-            btn-style="outline"
-            btn-size="xlarge"
-            @click.native="
-              () => {
-                back();
-              }
-            "
-          />
-          <mew-button
-            v-if="step != 2"
-            :title="nextButton.title"
-            :disabled="nextButton.disabled"
-            :loading="loadingButton"
-            btn-size="xlarge"
-            @click.native="
-              () => {
-                nextButton.fn();
-              }
-            "
-          />
-        </div>
-      </div>
-    </mew-popup>
+    <withdrawal-popup
+      :reset="closeWithdrawal"
+      :open-withdrawal-modal="openWithdrawalModal"
+      :selected-validator="selectedValidator"
+    />
+    <exit-popup
+      :close-modal="closeExit"
+      :open-exit-modal="openExitModal"
+      :selected-validator="selectedValidator"
+    />
     <!--
     ===================================================
     Loading
@@ -183,7 +39,9 @@
       <div
         v-if="
           (validators.length === 0 && justStakedValidator.length === 0) ||
-          (allPendingValidators.length === 0 && activeValidators.length === 0)
+          (allPendingValidators.length === 0 &&
+            activeValidators.length === 0 &&
+            exitedValidators.length === 0)
         "
       >
         You are currently not staking any eth.
@@ -392,21 +250,109 @@
                 <br />
                 Average APR {{ active.averageApr }}
               </div>
-              <mew-button
-                class="mt-1"
-                :title="
-                  !active.withdrawal_set
-                    ? 'Set withdrawal address'
-                    : 'Already set'
-                "
-                :disabled="active.withdrawal_set"
-                btn-size="medium"
-                @click.native="
-                  () => {
-                    openModal(active);
-                  }
-                "
-              />
+              <div class="mt-1 d-flex">
+                <mew-button
+                  class="mr-1"
+                  :title="
+                    !active.withdrawal_set
+                      ? 'Set withdrawal address'
+                      : 'Already set'
+                  "
+                  :disabled="active.withdrawal_set"
+                  btn-size="medium"
+                  @click.native="
+                    () => {
+                      openWithdrawal(active);
+                    }
+                  "
+                />
+                <mew-button
+                  title="
+                    Exit stake
+                  "
+                  :disabled="!active.can_exit"
+                  btn-size="medium"
+                  @click.native="
+                    () => {
+                      openExit(active);
+                    }
+                  "
+                />
+              </div>
+            </div>
+          </div>
+          <div>
+            <a
+              rel="noopener noreferrer"
+              class="font-weight-medium"
+              :href="active.url"
+              target="_blank"
+              >View validator
+              <v-icon color="greenPrimary" size="14">mdi-open-in-new</v-icon></a
+            >
+          </div>
+        </div>
+      </div>
+      <!--
+    ===================================================
+    Exited Validators
+    ===================================================
+    -->
+      <div v-if="exitedValidators.length > 0">
+        <span class="mew-heading-3">Exited</span>
+        <div
+          v-for="(active, idx) in exitedValidators"
+          :key="active + idx"
+          class="border-container rounded-lg pa-5 mt-4 d-flex justify-space-between"
+        >
+          <div class="left-container d-flex">
+            <img :src="iconETHNavy" height="26" alt="ethereum" />
+            <div class="left-container-details ml-3">
+              <div class="mew-heading-2">
+                Validator #{{ active.validator_index }}
+              </div>
+              <div class="font-weight-medium mt-1">
+                {{
+                  active.status.toLowerCase() === 'active'
+                    ? 'Exited, in queue for withdrawal'
+                    : 'Exited and withdrawn'
+                }}
+              </div>
+              <div class="textLight--text mt-2">
+                Earned
+                <span class="greenPrimary--text"> -- ETH </span>
+                <br />
+                Average APR ---
+              </div>
+              <div class="mt-1 d-flex">
+                <mew-button
+                  class="mr-1"
+                  :title="
+                    !active.withdrawal_set
+                      ? 'Set withdrawal address'
+                      : 'Already set'
+                  "
+                  :disabled="active.withdrawal_set"
+                  btn-size="medium"
+                  @click.native="
+                    () => {
+                      openWithdrawal(active);
+                    }
+                  "
+                />
+                <mew-button
+                  title="
+                    Exit stake
+                  "
+                  :disabled="true"
+                  btn-size="medium"
+                  @click.native="
+                    () => {
+                      openExit(active);
+                    }
+                  "
+                />
+              </div>
             </div>
           </div>
           <div>
@@ -426,13 +372,9 @@
 </template>
 
 <script>
-import { mapGetters, mapState, mapActions } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import moment from 'moment';
-import {
-  keystoreToBLSExecution,
-  mnemonicToBLSExecution
-} from '@myetherwallet/eth2-keystore';
 
 import configNetworkTypes from '@/dapps/staked-dapp/handlers/configNetworkTypes';
 import {
@@ -441,21 +383,13 @@ import {
 } from '@/core/helpers/numberFormatHelper';
 import { STATUS_TYPES } from '@/dapps/staked-dapp/handlers/handlerStaked';
 import { GOERLI } from '@/utils/networks/types';
-import {
-  Toast,
-  ERROR,
-  SUCCESS,
-  WARNING
-} from '@/modules/toast/handler/handlerToast';
-import { SOFTWARE_WALLET_TYPES } from '@/modules/access-wallet/software/handlers/helpers.js';
 
 import iconETHNavy from '@/assets/images/currencies/eth-dark-navy.svg';
-import { isEmpty } from 'lodash';
 
 export default {
   components: {
-    phraseBlock: () => import('@/components/PhraseBlock'),
-    ModuleAddressBook: () => import('@/modules/address-book/ModuleAddressBook')
+    WithdrawalPopup: () => import('./WithdrawalPopup'),
+    ExitPopup: () => import('./ExitPopup')
   },
   props: {
     validators: {
@@ -489,103 +423,17 @@ export default {
       expanded: 0,
       STATUS_TYPES: STATUS_TYPES,
       openWithdrawalModal: false,
-      selectedValidator: null,
-      step: 1,
-      executionAddress: '',
-      isValidAddress: false,
-      selectedRecoveryType: '',
-      file: {},
-      password: '',
-      blsExecution: '',
-      phrase: {},
-      length: 24,
-      loadingButton: false
+      openExitModal: false,
+      selectedValidator: {}
     };
   },
   computed: {
     ...mapState('wallet', ['address']),
     ...mapState('global', ['preferredCurrency']),
     ...mapState('external', ['currencyRate']),
-    ...mapState('stakedStore', ['validatorIndex']),
+    ...mapState('stakedStore', ['validatorIndex', 'withdrawalValidatorIndex']),
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network', 'getFiatValue']),
-    nextButton() {
-      const obj = {
-        title: 'Next',
-        disabled: false,
-        fn: this.nextStep
-      };
-      if (this.step === 1) {
-        return Object.assign({}, obj, {
-          disabled: !this.isValidAddress && this.executionAddress !== '',
-          fn: this.nextStep
-        });
-      }
-      if (this.step === 3) {
-        if (this.isKeystore) {
-          return Object.assign({}, obj, {
-            disabled: this.loadingButton || !this.validPassword,
-            fn: this.validateUserInputs
-          });
-        }
-
-        return Object.assign({}, obj, {
-          disabled: !this.isValidMnemonic,
-          fn: this.validateUserInputs
-        });
-      }
-      if (this.step === 4) {
-        return Object.assign({}, obj, {
-          title: 'Set withdrawal address',
-          disabled: this.loadingButton,
-          fn: this.setWithdrawalAddress
-        });
-      }
-
-      return obj;
-    },
-    phraseToLength() {
-      const phrase = Object.values(this.phrase);
-      if (phrase.length > this.length) phrase.length = this.length;
-      return phrase;
-    },
-    isValidMnemonic() {
-      return this.phraseToLength.length === this.length;
-    },
-    parsedPhrase() {
-      return this.phraseToLength.join(' ').toLowerCase();
-    },
-    /**
-     * @returns array
-     * returns button configs
-     */
-    buttons() {
-      return [
-        /* Keystore Button */
-        {
-          label: 'Keystore',
-          icon: require('@/assets/images/icons/icon-keystore-file.svg'),
-          fn: () => {
-            this.userSelectFile();
-          }
-        },
-        /* Mnemonic */
-        {
-          label: 'Mnemonic Phrase',
-          icon: require('@/assets/images/icons/icon-mnemonic.svg'),
-          fn: () => {
-            this.setType(SOFTWARE_WALLET_TYPES.MNEMONIC);
-          }
-        }
-      ];
-    },
-    /**
-     * @returns string
-     * returns currency name from current selected network
-     */
-    currencyName() {
-      return this.network.type.currencyName;
-    },
     /**
      * @returns array
      * Returns all the raw objects in all the validators
@@ -602,9 +450,56 @@ export default {
     /**
      * @returns array
      * Returns all the active validators with correct info
-     * includes status: ACTIVE, EXITED
+     * includes status: ACTIVE
      */
     activeValidators() {
+      return this.validatorsRaw.reduce((acc, raw) => {
+        if (raw.status.toLowerCase() === STATUS_TYPES.ACTIVE) {
+          const totalBalanceETH = this.convertToEth1(
+            raw.detailed_balance_info.balance,
+            raw.detailed_balance_info.conversion_factor_power
+          );
+          const earning = new BigNumber(totalBalanceETH).minus(raw.amount);
+          const withdrawn = this.findWithdrawalValidator(
+            raw.validator_index,
+            false
+          );
+          if (!withdrawn) {
+            acc.push(
+              Object.assign({}, raw, {
+                url: `${
+                  configNetworkTypes.network[this.network.type.name].url
+                }${raw.validator_index}`,
+                earned: formatFloatingPointValue(earning).value,
+                totalBalanceETH:
+                  formatFloatingPointValue(totalBalanceETH).value,
+                totalBalanceFiat: this.getFiatValue(
+                  new BigNumber(totalBalanceETH).times(this.fiatValue)
+                ),
+                averageApr: formatPercentageValue(
+                  this.getAverageApr(raw.created, earning, raw.amount)
+                ).value,
+                withdrawal_set:
+                  this.findValidatorIndex(raw.validator_index) ||
+                  raw.withdrawal_credentials_are_eth1Address,
+                can_exit: this.findWithdrawalValidator(
+                  raw.validator_index,
+                  raw.can_exit
+                )
+              })
+            );
+          }
+        }
+        return acc;
+      }, []);
+    },
+    /**
+     * @returns array
+     * Returns all the active validators with correct info
+     * includes status: ACTIVE, EXITED
+     * currently includes active but is possibly exited
+     */
+    exitedValidators() {
       return this.validatorsRaw.reduce((acc, raw) => {
         if (
           raw.status.toLowerCase() === STATUS_TYPES.ACTIVE ||
@@ -615,24 +510,30 @@ export default {
             raw.detailed_balance_info.conversion_factor_power
           );
           const earning = new BigNumber(totalBalanceETH).minus(raw.amount);
-          acc.push(
-            Object.assign({}, raw, {
-              url: `${configNetworkTypes.network[this.network.type.name].url}${
-                raw.validator_index
-              }`,
-              earned: formatFloatingPointValue(earning).value,
-              totalBalanceETH: formatFloatingPointValue(totalBalanceETH).value,
-              totalBalanceFiat: this.getFiatValue(
-                new BigNumber(totalBalanceETH).times(this.fiatValue)
-              ),
-              averageApr: formatPercentageValue(
-                this.getAverageApr(raw.created, earning, raw.amount)
-              ).value,
-              withdrawal_set:
-                this.findValidatorIndex(raw.validator_index) ||
-                raw.withdrawal_credentials_are_eth1Address
-            })
+          const withdrawn = this.findWithdrawalValidator(
+            raw.validator_index,
+            true
           );
+          if (!withdrawn || raw.status.toLowerCase() === STATUS_TYPES.EXITED) {
+            acc.push(
+              Object.assign({}, raw, {
+                url: `${
+                  configNetworkTypes.network[this.network.type.name].url
+                }${raw.validator_index}`,
+                earned: formatFloatingPointValue(earning).value,
+                totalBalanceETH:
+                  formatFloatingPointValue(totalBalanceETH).value,
+                totalBalanceFiat: this.getFiatValue(
+                  new BigNumber(totalBalanceETH).times(this.fiatValue)
+                ),
+                averageApr: formatPercentageValue(
+                  this.getAverageApr(raw.created, earning, raw.amount)
+                ).value,
+                withdrawal_set: true,
+                can_exit: false
+              })
+            );
+          }
         }
         return acc;
       }, []);
@@ -716,78 +617,29 @@ export default {
      */
     allPendingValidators() {
       return this.justStakedValidator.concat(this.pendingValidators);
-    },
-    /**
-     * @returns object
-     * Returns the left button config for
-     * mew popup
-     */
-    leftBtn() {
-      return {
-        text: 'Cancel',
-        color: 'basic',
-        method: this.closeModal
-      };
-    },
-    /**
-     * @returns string
-     * Returns title based on current step
-     */
-    modalTitle() {
-      return this.step === 1
-        ? 'Provide withdrawal address'
-        : this.step === 2
-        ? 'Choose recovery method'
-        : this.step === 3 && this.isKeystore
-        ? 'Enter Keystore Password'
-        : this.step === 3 && this.isMnemonic
-        ? 'Enter Mnemonic Phrase'
-        : this.step === 4
-        ? 'Verify details'
-        : '';
-    },
-    /**
-     * @returns boolean
-     * returns whether selected recovery is keystore
-     */
-    isKeystore() {
-      return this.selectedRecoveryType === SOFTWARE_WALLET_TYPES.KEYSTORE;
-    },
-    /**
-     * @returns boolean
-     * returns whether selected recovery is keystore
-     */
-    isMnemonic() {
-      return this.selectedRecoveryType === SOFTWARE_WALLET_TYPES.MNEMONIC;
-    },
-    validPassword() {
-      return this.password.length > 3;
-    }
-  },
-  watch: {
-    phrase: {
-      deep: true,
-      handler: function (newval) {
-        if (newval && !isEmpty(newval) && !isEmpty(newval[1])) {
-          this.checkPhrase(newval);
-          const splitVal = newval[1].split(' ');
-          if (splitVal.length === 12 || splitVal.length === 24) {
-            this.length = splitVal.length;
-            const newObj = {};
-            splitVal.forEach((item, idx) => {
-              newObj[idx + 1] = item.toLowerCase();
-            });
-            this.phrase = newObj;
-          }
-        }
-      }
     }
   },
   methods: {
-    ...mapActions('stakedStore', ['addValidatorIndex']),
     findValidatorIndex(idx) {
       const findIdx = !!this.validatorIndex.find(item => idx === item);
       return !!findIdx;
+    },
+    /**
+     *
+     * @param {*} idx
+     * @param {*} canExit
+     * @returns Boolean
+     *
+     * checks withdrawal validator address in the local store
+     */
+    findWithdrawalValidator(idx, canExit) {
+      const findIdx = !!this.withdrawalValidatorIndex.find(
+        item => idx === item
+      );
+      if (findIdx) {
+        return !findIdx;
+      }
+      return canExit;
     },
     convertTotalReward(balance, decimal) {
       const convertedBalance = BigNumber(balance)
@@ -801,186 +653,31 @@ export default {
       }
       return hasEarnings;
     },
-    setWithdrawalAddress() {
-      const submitSubDomain =
-        this.network.type.name === 'ETH' ? 'mainnet' : 'staging';
-      const submitEndpoint = `https://${submitSubDomain}.mewwallet.dev/v2/stake/upgrade`;
-      this.blsExecution.message.validator_index = parseInt(
-        this.blsExecution.message.validator_index
-      );
-      this.loadingButton = true;
-      fetch(submitEndpoint, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          signed: [this.blsExecution]
-        })
-      })
-        .then(res => {
-          if (res.ok) {
-            this.addValidatorIndex(this.selectedValidator.validator_index);
-            Toast('Successfully set withdrawal address!', {}, SUCCESS);
-            return;
-          }
-          return res.json().then(jsonres => {
-            if (
-              JSON.stringify(jsonres).includes(
-                'withdrawal credential prefix is not a BLS prefix'
-              )
-            ) {
-              this.addValidatorIndex(this.selectedValidator.validator_index);
-              Toast(
-                'Withdrawal credentials are already set for this validator',
-                {},
-                WARNING
-              );
-            } else {
-              Toast(jsonres.error ? jsonres.error : jsonres.msg, {}, ERROR);
-            }
-          });
-        })
-        .finally(() => {
-          this.reset();
-        });
-    },
-    checkPhrase(val) {
-      const testObj = {};
-      let changed = false;
-      Object.values(val).forEach((item, idx) => {
-        if (!isEmpty(item)) testObj[idx + 1] = item.toLowerCase();
-        else changed = true;
-      });
-      if (changed) this.phrase = testObj;
-    },
-    /**
-     * takes the keystore inputs
-     * and checks if valid
-     */
-    async validateUserInputs() {
-      this.loadingButton = true;
-      try {
-        this.validating = true;
-        const selectedNetwork =
-          this.network.type.name === 'ETH' ? 'mainnet' : 'goerli';
-        if (this.isKeystore) {
-          this.blsExecution = await keystoreToBLSExecution(
-            this.file,
-            this.password,
-            this.executionAddress,
-            this.selectedValidator.validator_index,
-            `0x${this.selectedValidator.decoded.withdrawal_credentials}`,
-            selectedNetwork
-          );
-        } else {
-          this.blsExecution = await mnemonicToBLSExecution(
-            {
-              mnemonic: this.parsedPhrase
-            },
-            this.executionAddress,
-            this.selectedValidator.validator_index,
-            `0x${this.selectedValidator.decoded.withdrawal_credentials}`,
-            selectedNetwork
-          );
-        }
-        this.loadingButton = false;
-        this.nextStep();
-      } catch (err) {
-        this.loadingButton = false;
-        Toast(err, {}, ERROR);
-        this.reset();
-      }
-    },
     reset() {
-      if (this.$refs.addressInput) {
-        this.$refs.addressInput.clear();
-      }
-      this.openWithdrawalModal = false;
-      this.selectedValidator = null;
-      this.step = 1;
-      this.executionAddress = this.address;
-      this.isValidAddress = false;
-      this.selectedRecoveryType = '';
-      this.file = {};
-      this.password = '';
-      this.blsExecution = '';
-      this.phrase = {};
-      this.loadingButton = false;
+      this.selectedValidator = {};
       this.refetchValidators();
     },
-    /**
-     * sets selected wallet
-     */
-    setType(type) {
-      this.selectedRecoveryType = type;
-      this.nextStep();
+    closeWithdrawal() {
+      this.openWithdrawalModal = false;
+      this.reset();
     },
-    /**
-     * upload keystore
-     */
-    uploadFile(e) {
-      const reader = new FileReader();
-      reader.onloadend = evt => {
-        try {
-          this.file = JSON.parse(evt.target.result);
-          this.setType(SOFTWARE_WALLET_TYPES.KEYSTORE);
-        } catch (err) {
-          Toast(err.message, {}, ERROR);
-        }
-      };
-      reader.readAsBinaryString(e.target.files[0]);
-    },
-    userSelectFile() {
-      const jsonInput = this.$refs.jsonInput;
-      jsonInput.value = '';
-      jsonInput.click();
-    },
-    /**
-     * Increments stepper
-     */
-    nextStep() {
-      this.step += 1;
-    },
-    /**
-     * Increments stepper
-     */
-    back() {
-      const jsonInput = this.$refs.jsonInput;
-      switch (this.step) {
-        case 2:
-          this.selectedRecoveryType = '';
-          jsonInput.value = '';
-          break;
-        case 3:
-          this.password = '';
-          this.phrase = {};
-          this.file = {};
-          break;
-        default:
-          break;
-      }
-      this.step -= 1;
-    },
-    /**
-     * Sets address passed from addressbook
-     */
-    setAddress(addr, isValidAddress) {
-      this.executionAddress = addr;
-      this.isValidAddress = isValidAddress;
+    closeExit() {
+      this.openExitModal = false;
+      this.reset();
     },
     /**
      * Open modal and set selected validator
      */
-    openModal(validator) {
+    openWithdrawal(validator) {
       this.selectedValidator = validator;
       this.openWithdrawalModal = true;
     },
     /**
-     * Close modal and clear selected validator
+     * Open modal and set selected validator
      */
-    closeModal() {
-      this.reset();
+    openExit(validator) {
+      this.selectedValidator = validator;
+      this.openExitModal = true;
     },
     /**
      * @returns BigNumber

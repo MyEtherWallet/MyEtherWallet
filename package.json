@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "6.7.0-hotfix.2",
+  "version": "6.7.1",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build": "npm run update && vue-cli-service build",
@@ -51,7 +51,7 @@
     "@ensdomains/ensjs": "2.1.0",
     "@ethereumjs/common": "2.6.5",
     "@ethereumjs/tx": "3.5.2",
-    "@formatjs/intl-numberformat": "8.3.5",
+    "@formatjs/intl-numberformat": "8.4.1",
     "@kleros/address-tags-sdk": "github:MyEtherWallet/address-tags-sdk",
     "@lokalise/node-api": "8.0.1",
     "@mathieustan/vue-intercom": "0.0.9",
@@ -78,7 +78,7 @@
     "buffer": "6.0.3",
     "clipboard-copy": "4.0.1",
     "crypto": "1.0.1",
-    "ethereum-block-by-date": "1.4.6",
+    "ethereum-block-by-date": "1.4.7",
     "ethers": "5.7.2",
     "graphql": "15.5.3",
     "graphql-tag": "2.12.6",
@@ -87,7 +87,7 @@
     "hmac-drbg": "1.0.1",
     "keccak256": "1.0.6",
     "lodash": "4.17.21",
-    "lottie-web": "5.10.2",
+    "lottie-web": "5.11.0",
     "minimalistic-crypto-utils": "1.0.1",
     "moment": "2.29.4",
     "node-polyfill-webpack-plugin": "2.0.1",
@@ -108,7 +108,7 @@
     "walletlink": "2.5.0"
   },
   "devDependencies": {
-    "@commitlint/config-conventional": "17.4.4",
+    "@commitlint/config-conventional": "17.6.1",
     "@ledgerhq/hw-app-eth": "6.30.0",
     "@ledgerhq/hw-transport-web-ble": "6.27.1",
     "@ledgerhq/hw-transport-webusb": "6.27.1",
@@ -133,7 +133,7 @@
     "bip39": "3.0.4",
     "chromedriver": "104.0.0",
     "codecov": "3.8.3",
-    "commitlint": "17.5.1",
+    "commitlint": "17.6.1",
     "copy-webpack-plugin": "6.3.2",
     "eslint": "7.32.0",
     "eslint-plugin-prettier": "4.2.1",

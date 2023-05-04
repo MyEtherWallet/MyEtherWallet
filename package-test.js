@@ -81,11 +81,8 @@ const EXCEPTIONS = [
   '@ledgerhq/live-common', // issue with imports
   'bip39', // breaks
   'ethers',
-  'commitlint',
-  'lottie-web',
-  'ethereum-block-by-date',
-  '@commitlint/config-conventional',
-  '@formatjs/intl-numberformat'
+  'patch-package',
+  'highcharts'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

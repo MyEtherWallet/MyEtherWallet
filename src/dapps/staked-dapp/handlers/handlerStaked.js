@@ -1,9 +1,10 @@
 import axios from 'axios';
 import BigNumber from 'bignumber.js';
+import { toBN } from 'web3-utils';
+
 import configNetworkTypes from './configNetworkTypes';
 import calculateEth2Rewards from './helpers';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
-import { toBN } from 'web3-utils';
 import handleError from '@/modules/confirmation/handlers/errorHandler';
 
 /**
@@ -114,6 +115,75 @@ export default class Staked {
       });
   }
   /**
+   * Get validators that can be exited by current address
+   * have to be fetched separately due to validators
+   * that was assigned to a different address
+   */
+  getExitableValidators(data) {
+    this.loadingValidators = true;
+    return axios
+      .get(`${this.endpoint}/history?withdrawalCredentials=${this.address}`, {
+        header: { 'Content-Type': 'application/json' }
+      })
+      .then(res => {
+        let filteredExitable = [];
+        // validators and withdrawal credentials found
+        if (data.length > 0) {
+          /**
+           * remove current validators that are
+           * not returned in the withdrawalCredentials call
+           *
+           * set can_exit to false
+           */
+          const filteredArray = data
+            .filter(currValidator => {
+              const foundInWithdrawal = res.data.find(
+                exitValidator =>
+                  exitValidator.raw[0].decoded.pubkey ===
+                  currValidator.raw[0].decoded.pubkey
+              );
+
+              if (!foundInWithdrawal) return true;
+            })
+            .map(item => {
+              item.raw[0]['can_exit'] = false;
+              return Object.assign({}, item);
+            });
+
+          /**
+           * set 'can_exit' key with value based on if
+           * withdrawal_credentials_are_eth1Address is true
+           * for all exitable validators
+           */
+          const exitableValidators = res.data.map(validator => {
+            validator.raw[0]['can_exit'] =
+              validator.raw[0].withdrawal_credentials_are_eth1Address;
+
+            return Object.assign({}, validator);
+          });
+
+          filteredExitable = filteredArray.concat(exitableValidators);
+        } else {
+          // no validators found but has withdrawal credentials
+          filteredExitable = res.data.map(item => {
+            item.raw[0]['can_exit'] =
+              item.raw[0].withdrawal_credentials_are_eth1Address;
+            return Object.assign({}, item);
+          });
+        }
+        this.myValidators = filteredExitable;
+        this.loadingValidators = false;
+      })
+      .catch(() => {
+        // no withdrawal credentials found
+        this.myValidators = data.map(item => {
+          item.raw[0]['can_exit'] = false;
+          return Object.assign({}, item);
+        });
+        this.loadingValidators = false;
+      });
+  }
+  /**
    * Get clients validators
    * and get clients total staked
    */
@@ -126,7 +196,6 @@ export default class Staked {
         }
       })
       .then(resp => {
-        this.myValidators = resp.data;
         this.myETHTotalStaked = resp.data.reduce((total, val) => {
           const raw = val.raw[0];
           const balanceETH =
@@ -135,18 +204,21 @@ export default class Staked {
               : 0;
           return new BigNumber(total).plus(balanceETH);
         }, 0);
-        this.loadingValidators = false;
+        // check withdrawals
+        this.getExitableValidators(resp.data);
       })
       .catch(err => {
-        this.loadingValidators = false;
-        this.myValidators = [];
         if (
           err.response &&
           err.response.status === 404 &&
           err.response.data.msg === 'No matching history found'
         ) {
+          // try to see if withdrawals are set
+          this.getExitableValidators([]);
           return;
         }
+        this.loadingValidators = false;
+        this.myValidators = [];
         Toast(err, {}, ERROR);
       });
   }
