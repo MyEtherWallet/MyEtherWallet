@@ -1,4 +1,4 @@
-import { ethers, Wallet, BigNumber, Contract, utils, constants } from 'ethers';
+import { ethers, BigNumber, Contract, utils, constants } from 'ethers';
 import { RSKRegistrar } from './helpers/rskRegistrar';
 
 // Reverse Lookup
@@ -22,8 +22,7 @@ const fifsAddrRegistrarAddress = '0xd9c79ced86ecf49f5e4a973594634c83197c35ab';
 const rifTokenAddress = '0x2acc95758f8b5f583470ba265eb685a8f45fc9d5';
 
 export default class RNSManager {
-  constructor(wallet, provider) {
-    const signer = new Wallet(wallet.privateKey, provider);
+  constructor(signer) {
     const rskRegistrar = new RSKRegistrar(
       rskOwnerAddress,
       fifsAddrRegistrarAddress,

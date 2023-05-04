@@ -1,6 +1,18 @@
+### Release v6.7.1
+
 ### devop
 
 * remove staging env [#4557](https://github.com/MyEtherWallet/MyEtherWallet/pull/4557)
+
+### feat
+
+* listen to wallet connect and switch address [#4597](https://github.com/MyEtherWallet/MyEtherWallet/pull/4597)
+* add exit stake [#4598](https://github.com/MyEtherWallet/MyEtherWallet/pull/4598)
+
+### fix
+
+* fix web3 provider to derive signer in rns manager dapp [#4588](https://github.com/MyEtherWallet/MyEtherWallet/pull/4588)
+* new tab for hardware wallet ad [#4589](https://github.com/MyEtherWallet/MyEtherWallet/pull/4589)
 
 ### Release v6.7.0-hotfix.2
 
