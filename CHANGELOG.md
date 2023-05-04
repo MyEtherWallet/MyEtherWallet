@@ -1,3 +1,7 @@
+### Release v6.7.1-hotfix.1
+
+* remove coming soon banner for stake exit [#4602](https://github.com/MyEtherWallet/MyEtherWallet/pull/4602)
+
 ### Release v6.7.1
 
 ### devop
