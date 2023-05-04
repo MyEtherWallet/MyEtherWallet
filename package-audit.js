@@ -24,7 +24,8 @@ const AUDIT_EXCEPTIONS = [
   // look into updating after release
   'dns-packet',
   'decode-uri-component',
-  '@openzeppelin/contracts'
+  '@openzeppelin/contracts',
+  'engine.io'
 ];
 const execute = (command, callback) => {
   exec(
