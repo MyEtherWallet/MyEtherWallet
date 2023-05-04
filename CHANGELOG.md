@@ -1,7 +1,3 @@
-### fix
-
-* fix staked exit status [#4601](https://github.com/MyEtherWallet/MyEtherWallet/pull/4601)
-
 ### Release v6.7.1
 
 ### devop
@@ -15,6 +11,7 @@
 
 ### fix
 
+* fix staked exit status [#4601](https://github.com/MyEtherWallet/MyEtherWallet/pull/4601)
 * fix web3 provider to derive signer in rns manager dapp [#4588](https://github.com/MyEtherWallet/MyEtherWallet/pull/4588)
 * new tab for hardware wallet ad [#4589](https://github.com/MyEtherWallet/MyEtherWallet/pull/4589)
 
