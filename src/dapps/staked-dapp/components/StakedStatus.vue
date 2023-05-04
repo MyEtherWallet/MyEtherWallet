@@ -464,7 +464,7 @@ export default {
             raw.validator_index,
             false
           );
-          if (withdrawn) {
+          if (!withdrawn) {
             acc.push(
               Object.assign({}, raw, {
                 url: `${
@@ -512,7 +512,7 @@ export default {
           const earning = new BigNumber(totalBalanceETH).minus(raw.amount);
           const withdrawn = this.findWithdrawalValidator(
             raw.validator_index,
-            false
+            true
           );
           if (!withdrawn || raw.status.toLowerCase() === STATUS_TYPES.EXITED) {
             acc.push(
