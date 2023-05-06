@@ -313,7 +313,8 @@
               </div>
               <div class="font-weight-medium mt-1">
                 {{
-                  active.status.toLowerCase() === 'active'
+                  active.status.toLowerCase() === 'active' ||
+                  active.status.toLowerCase() === 'exiting'
                     ? 'Exited, in queue for withdrawal'
                     : 'Exited and withdrawn'
                 }}
@@ -503,7 +504,8 @@ export default {
       return this.validatorsRaw.reduce((acc, raw) => {
         if (
           raw.status.toLowerCase() === STATUS_TYPES.ACTIVE ||
-          raw.status.toLowerCase() === STATUS_TYPES.EXITED
+          raw.status.toLowerCase() === STATUS_TYPES.EXITED ||
+          raw.status.toLowerCase() === STATUS_TYPES.EXITING
         ) {
           const totalBalanceETH = this.convertToEth1(
             raw.detailed_balance_info.balance,
@@ -514,7 +516,11 @@ export default {
             raw.validator_index,
             true
           );
-          if (!withdrawn || raw.status.toLowerCase() === STATUS_TYPES.EXITED) {
+          if (
+            !withdrawn ||
+            raw.status.toLowerCase() === STATUS_TYPES.EXITED ||
+            raw.status.toLowerCase() === STATUS_TYPES.EXITING
+          ) {
             acc.push(
               Object.assign({}, raw, {
                 url: `${
