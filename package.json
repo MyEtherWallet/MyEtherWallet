@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "v6.7.1-hotfix.2",
+  "version": "6.7.1-hotfix.2",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build": "npm run update && vue-cli-service build",
