@@ -313,8 +313,8 @@
               </div>
               <div class="font-weight-medium mt-1">
                 {{
-                  active.status.toLowerCase() === 'active' ||
-                  active.status.toLowerCase() === 'exiting'
+                  active.status.toLowerCase() === STATUS_TYPES.ACTIVE ||
+                  active.status.toLowerCase() === STATUS_TYPES.EXITING
                     ? 'Exited, in queue for withdrawal'
                     : 'Exited and withdrawn'
                 }}
