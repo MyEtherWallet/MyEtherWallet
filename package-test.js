@@ -80,9 +80,8 @@ const EXCEPTIONS = [
   '@ledgerhq/hw-app-eth', // issue with imports
   '@ledgerhq/live-common', // issue with imports
   'bip39', // breaks
-  'ethers',
-  'patch-package',
-  'highcharts'
+  'ethers', // major update
+  'patch-package' // major update
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
