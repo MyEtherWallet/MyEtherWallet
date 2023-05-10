@@ -956,9 +956,6 @@ export default {
           }
           this.signedTxArray = signed;
         } catch (err) {
-          if (this.isSwap) {
-            this.emitSwapTxFail(err);
-          }
           this.error = errorHandler(err);
           this.signedTxArray = [];
           if (this.rejectedError(err.message) && signed.length > 0) {
