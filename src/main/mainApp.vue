@@ -71,7 +71,7 @@ export default {
     });
     EventBus.$on('swapTxFailed', hash => {
       const passedHash = hash === '0x' ? 'no hash' : hash;
-      this.trackSwap('swapTxFailed', passedHash, this.network.type.chainID);
+      this.trackSwap('swapTxFailedV2', passedHash, this.network.type.chainID);
     });
     EventBus.$on('swapTxNotBroadcastedFailed', () => {
       this.trackSwap('swapTxNotBroadcastedFailed');

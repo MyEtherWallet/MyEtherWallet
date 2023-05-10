@@ -156,7 +156,7 @@ export default async ({ payload, store, requestManager }, res, next) => {
             })
             .on('error', err => {
               if (confirmInfo) {
-                EventBus.$emit('swapTxFailedV2', txHash);
+                EventBus.$emit('swapTxFailed', txHash);
               }
               res(err);
             });
