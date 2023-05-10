@@ -990,7 +990,7 @@ export default {
     },
     emitSwapTxFail(err) {
       const hash = err?.receipt?.transactionHash;
-      this.trackSwap('swapTxFailed', hash, this.network.type.chainID);
+      this.trackSwap('swapTxFailedV2', hash, this.network.type.chainID);
     },
     btnAction() {
       if (this.isSwap) {
