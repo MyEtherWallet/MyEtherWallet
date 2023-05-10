@@ -128,6 +128,7 @@ export default {
   },
   mounted() {
     this.$vuetify.theme.dark = this.darkMode;
+    this.trackUserVersion(VERSION);
     EventBus.$on('openPaperWallet', () => {
       this.showPaperWallet = true;
       this.$router.push({

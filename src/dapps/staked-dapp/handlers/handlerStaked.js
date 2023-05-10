@@ -57,7 +57,8 @@ const STATUS_TYPES = {
   CREATED: 'created',
   DEPOSITED: 'deposited',
   FAILED: 'failed',
-  EXITED: 'exited'
+  EXITED: 'exited',
+  EXITING: 'exiting'
 };
 
 export { ABI_GET_FEES, STATUS_TYPES };
@@ -131,24 +132,43 @@ export default class Staked {
         if (data.length > 0) {
           /**
            * remove current validators that are
-           * not returned in the withdrawalCredentials call
+           * returned in the withdrawalCredentials call
            *
            * set can_exit to false
            */
-          const filteredArray = data
-            .filter(currValidator => {
-              const foundInWithdrawal = res.data.find(
-                exitValidator =>
-                  exitValidator.raw[0].decoded.pubkey ===
-                  currValidator.raw[0].decoded.pubkey
-              );
+          const filteredArray = data.reduce((arr, item) => {
+            /**
+             * updates current item's raw
+             * removing validators found in withdrawalCredentials call
+             */
+            const newRaw = item.raw.filter(rawItem => {
+              let found;
+              // loop through response
+              res.data.forEach(wItem => {
+                /**
+                 * check if current rawItem
+                 * matches any of the withdrawal raw items
+                 * set found to true and exit;
+                 */
+                wItem.raw.forEach(wRawItem => {
+                  if (wRawItem.decoded.pubkey === rawItem.decoded.pubkey) {
+                    found = true;
+                    return; // exit forEach 2
+                  }
 
-              if (!foundInWithdrawal) return true;
-            })
-            .map(item => {
-              item.raw[0]['can_exit'] = false;
-              return Object.assign({}, item);
+                  if (found) return; // exit forEach 1
+                });
+              });
+
+              if (!found) {
+                rawItem['can_exit'] = false;
+              }
+              return !found;
             });
+            item.raw = newRaw;
+            arr.push(item);
+            return arr;
+          }, []);
 
           /**
            * set 'can_exit' key with value based on if
@@ -156,8 +176,11 @@ export default class Staked {
            * for all exitable validators
            */
           const exitableValidators = res.data.map(validator => {
-            validator.raw[0]['can_exit'] =
-              validator.raw[0].withdrawal_credentials_are_eth1Address;
+            const newRaw = validator.raw.map(item => {
+              item['can_exit'] = item.withdrawal_credentials_are_eth1Address;
+              return item;
+            });
+            validator.raw = newRaw;
 
             return Object.assign({}, validator);
           });
@@ -165,10 +188,14 @@ export default class Staked {
           filteredExitable = filteredArray.concat(exitableValidators);
         } else {
           // no validators found but has withdrawal credentials
-          filteredExitable = res.data.map(item => {
-            item.raw[0]['can_exit'] =
-              item.raw[0].withdrawal_credentials_are_eth1Address;
-            return Object.assign({}, item);
+          filteredExitable = res.data.map(validator => {
+            const newRaw = validator.raw.map(item => {
+              item['can_exit'] = item.withdrawal_credentials_are_eth1Address;
+              return item;
+            });
+            validator.raw = newRaw;
+
+            return Object.assign({}, validator);
           });
         }
         this.myValidators = filteredExitable;
@@ -177,7 +204,12 @@ export default class Staked {
       .catch(() => {
         // no withdrawal credentials found
         this.myValidators = data.map(item => {
-          item.raw[0]['can_exit'] = false;
+          const newRaw = item.raw.map(item => {
+            item['can_exit'] = false;
+            return item;
+          });
+          item.raw = newRaw;
+
           return Object.assign({}, item);
         });
         this.loadingValidators = false;
