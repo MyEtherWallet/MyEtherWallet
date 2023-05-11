@@ -1,0 +1,1 @@
+update rns manager dapp icon
