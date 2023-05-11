@@ -39,6 +39,14 @@ export default {
       }
     },
     /**
+     * Tracks users version
+     */
+    trackUserVersion(action) {
+      if (this.$matomo && action && this.consentToTrack) {
+        this.$matomo.trackEvent(categories.mewVersion, action);
+      }
+    },
+    /**
      * Tracks when user lands on create wallet
      * also tracks what type of wallet user creates
      * (depends on the action being passed in)
