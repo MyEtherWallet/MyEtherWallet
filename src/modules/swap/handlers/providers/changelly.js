@@ -4,6 +4,8 @@ import { v4 as uuidv4 } from 'uuid';
 import erc20Abi from '../abi/erc20';
 import Configs from '../configs/providersConfigs';
 import { toBN, toHex, toWei } from 'web3-utils';
+import { isValidAddress } from 'ethereumjs-util';
+
 import Web3Contract from 'web3-eth-contract';
 import { ETH } from '@/utils/networks/types';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
@@ -242,7 +244,7 @@ class Changelly {
             txObj.data = erc20contract.methods
               .transfer(response.data.result.payinAddress, amountBN)
               .encodeABI();
-            txObj.to = toT.contract;
+            txObj.to = fromT.contract;
           }
           return this.web3.eth.estimateGas(txObj).then(gas => {
             txObj.gas = gas;
@@ -266,9 +268,14 @@ class Changelly {
     const from = await this.web3.eth.getCoinbase();
     const gasPrice = tradeObj.gasPrice ? tradeObj.gasPrice : null;
     return new Promise((resolve, reject) => {
+      /**
+       * directly send mainnet currency and
+       * erc 20 for swap
+       */
       if (
         confirmInfo.fromTokenType.symbol === ETH.currencyName ||
-        confirmInfo.fromTokenType.isEth
+        confirmInfo.fromTokenType.isEth ||
+        isValidAddress(confirmInfo.fromTokenType.contract)
       ) {
         this.web3.eth
           .sendTransaction(
