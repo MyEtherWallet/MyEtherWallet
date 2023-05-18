@@ -1,19 +1,25 @@
 import url from 'url';
 import web3 from 'web3';
+import { formatters } from 'web3-core-helpers';
+
 import MEWProvider from '@/utils/web3-provider';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
-import { formatters } from 'web3-core-helpers';
 import EventNames from '@/utils/web3-provider/events';
 import { EventBus } from '@/core/plugins/eventBus';
+
 const removeWallet = function ({ commit, state }) {
   if (
     state.identifier === WALLET_TYPES.WALLET_CONNECT ||
-    state.identifier === WALLET_TYPES.WALLET_LINK ||
-    state.identifier === WALLET_TYPES.MEW_CONNECT
+    state.identifier === WALLET_TYPES.WALLET_LINK
   ) {
     const connection = state.instance.getConnection();
-    if (connection && connection.disconnect) {
-      connection.disconnect();
+    if (connection) {
+      if (connection.disconnect) {
+        connection.disconnect();
+      }
+      if (connection.killSession) {
+        connection.killSession();
+      }
     }
   }
   commit('REMOVE_WALLET');
@@ -48,7 +54,7 @@ const setWeb3Instance = function (
     rootState.global.currentNetwork.port
       ? ':' + rootState.global.currentNetwork.port
       : ''
-  }${hostUrl.pathname}`;
+  }${hostUrl.pathname ? hostUrl.pathname : ''}`;
   rootState.global.currentNetwork.username !== '' &&
   rootState.global.currentNetwork.password !== ''
     ? (options['headers'] = {
@@ -93,6 +99,9 @@ const setWeb3Instance = function (
         arr[i] = formatters.inputCallFormatter(arr[i]);
       }
       const batchSignCallback = promises => {
+        if (promises instanceof Error) {
+          reject(promises);
+        }
         if (promises && promises.rejected)
           reject(new Error('User rejected transaction'));
         if (state.identifier === WALLET_TYPES.WEB3_WALLET) {
@@ -129,6 +138,9 @@ const setOfflineApp = function ({ commit }, val) {
 const setLedgerApp = function ({ commit }, val) {
   commit('SET_LEDGER_APP', val);
 };
+const setSwapRates = function ({ commit }, val) {
+  commit('SET_SWAP_RATES', val);
+};
 
 export default {
   removeWallet,
@@ -140,5 +152,6 @@ export default {
   setOwnedDomains,
   setTokens,
   setOfflineApp,
-  setLedgerApp
+  setLedgerApp,
+  setSwapRates
 };

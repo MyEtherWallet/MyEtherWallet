@@ -40,10 +40,12 @@
       />
 
       <div style="max-width: 400px">
-        <div class="mew-heading-1 font-weight-black text-uppercase mb-2">
+        <div
+          class="mew-heading-1 font-weight-black text-uppercase textAlwaysDark--text mb-2"
+        >
           My address icon
         </div>
-        <div>
+        <div class="textAlwaysDark--text">
           Always look for the icon when sending to this wallet. And please keep
           your paper wallet at a
           <span class="text-uppercase redPrimary--text font-weight-medium">
@@ -58,10 +60,14 @@
     <v-container>
       <v-row class="align-center">
         <v-col cols="9">
-          <div class="mew-heading-1 font-weight-black text-uppercase">
+          <div
+            class="mew-heading-1 font-weight-black textAlwaysDark--text text-uppercase"
+          >
             My wallet address
           </div>
-          <div class="mew-heading-3 mew-address font-weight-bold mt-4">
+          <div
+            class="mew-heading-3 textAlwaysDark--text mew-address font-weight-bold mt-4"
+          >
             {{ getChecksumAddressString }}
           </div>
         </v-col>
@@ -83,7 +89,7 @@
             KEEP YOUR PRIVATE KEY IN SAFE PLACE!
           </div>
           <div
-            class="mew-heading-3 mew-address font-weight-bold word-break--break-all mt-4"
+            class="mew-heading-3 mew-address textAlwaysDark--text font-weight-bold word-break--break-all mt-4"
           >
             {{ key }}
           </div>

@@ -4,4 +4,5 @@ import ens from './ens-manager-dapp/metainfo';
 import staked from './staked-dapp/metainfo';
 import stakewise from './stakewise/metainfo';
 import unstoppable from './unstoppable-domains-dapp/metainfo';
-export default { ethBlocks, aave, ens, staked, stakewise, unstoppable };
+import rns from './rns-manager-dapp/metainfo';
+export default { ethBlocks, aave, ens, staked, stakewise, unstoppable, rns };

@@ -13,7 +13,7 @@ export default {
   path: ROUTES_WALLET.STAKED.PATH,
   networks: SUPPORTED_NETWORKS,
   layout,
-  release: '07/09/2021',
+  release: '05/4/2023',
   meta: {
     noAuth: false
   },

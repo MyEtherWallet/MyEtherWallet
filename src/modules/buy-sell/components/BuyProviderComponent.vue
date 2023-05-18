@@ -77,7 +77,7 @@
         <mew-button
           btn-size="large"
           btn-style="light"
-          color-theme="basic"
+          color-theme="buttonGrayLight"
           has-full-width
           :is-valid-address-func="isValidToAddress"
           :title="moonpayBtnTitle"
@@ -151,7 +151,7 @@
         <mew-button
           btn-size="large"
           btn-style="light"
-          color-theme="basic"
+          color-theme="buttonGrayLight"
           has-full-width
           :title="simplexBtnTitle"
           @click.native="openSimplex"
@@ -167,6 +167,7 @@ import { mapGetters, mapState } from 'vuex';
 
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import { LOCALE } from '../helpers';
+import { isEmpty } from 'lodash';
 export default {
   name: 'ModuleBuyEthProvider',
   props: {
@@ -250,6 +251,7 @@ export default {
       return MultiCoinValidator.validate(address, this.selectedCurrency.symbol);
     },
     openSimplex() {
+      if (!this.validToAddress()) return;
       this.orderHandler
         .simplexBuy(
           this.selectedCryptoName,
@@ -281,6 +283,7 @@ export default {
       this.fetchData = {};
     },
     buy() {
+      if (!this.validToAddress()) return;
       this.orderHandler
         .buy(
           this.selectedCryptoName,
@@ -299,6 +302,14 @@ export default {
           this.close();
           this.$emit('reset');
         });
+    },
+    validToAddress() {
+      if (isEmpty(this.actualAddress)) {
+        Toast('To address cannot be empty!', {}, ERROR);
+        this.$emit('close');
+        return false;
+      }
+      return true;
     }
   }
 };

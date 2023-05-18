@@ -115,7 +115,7 @@
             </div>
             <mew-button
               v-if="detailLength"
-              class="mt-2 display--block mx-auto DownloadButton"
+              class="mt-2 d-flex align-center justify-center mx-auto DownloadButton"
               title="Export JSON file"
               btn-size="small"
               btn-style="transparent"
@@ -390,12 +390,13 @@ export default {
     async txData() {
       const { eth } = this.web3;
       const chainID = await eth.getChainId();
-      const gasPrice = await eth.getGasPrice();
+      const fetchedGasPrice = await eth.getGasPrice();
+      const gasPrice = fromWei(fetchedGasPrice, 'gwei');
       const nonce = await eth.getTransactionCount(this.fromAddress);
       return {
         data: {
           nonce,
-          gasPrice,
+          fetchedGasPrice,
           chainID
         },
         details: {
@@ -436,7 +437,7 @@ export default {
         },
         {
           title: 'Gas Price',
-          value: details.gasPrice
+          value: `${details.gasPrice} gwei`
         }
       ];
       this.exportFile();
@@ -449,7 +450,7 @@ export default {
       let { data } = await this.txData();
       data = {
         nonce: toHex(data.nonce),
-        gasPrice: toHex(data.gasPrice),
+        gasPrice: toHex(data.fetchedGasPrice),
         chainID: toHex(data.chainID)
       };
       const blob = new Blob([JSON.stringify(data)], { type: 'mime' });
@@ -508,7 +509,7 @@ export default {
         const basicDetails = {
           from: txFrom,
           nonce: this.gtr(txValues.nonce),
-          gasPrice: fromWei(this.gtr(txValues.gasPrice)),
+          gasPrice: this.gtr(txValues.gasPrice),
           gasLimit: this.gtr(txValues.gasLimit),
           to: txValues.to,
           value: fromWei(this.gtr(txValues.value), 'ether'),

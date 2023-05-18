@@ -7,7 +7,7 @@ on:
 
 jobs:
   offline-build:
-    if: github.ref == 'staging'
+    if: github.ref == 'develop'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

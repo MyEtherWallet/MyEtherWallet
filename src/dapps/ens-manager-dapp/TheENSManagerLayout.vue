@@ -70,7 +70,11 @@
     =====================================================================================
     -->
       <template #tabContent2>
-        <v-sheet max-width="700px" class="px-3 py-8 py-md-13 mx-auto">
+        <v-sheet
+          max-width="700px"
+          class="px-3 py-8 py-md-13 mx-auto"
+          color="transparent"
+        >
           <div class="d-flex align-center justify-space-between mb-7">
             <span class="mew-heading-2 font-weight-bold">
               {{ $t('ens.my-domains') }}
@@ -305,7 +309,6 @@ export default {
     ModuleRegisterDomain: () => import('./modules/ModuleRegisterDomain'),
     ModuleManageDomain: () => import('./modules/ModuleManageDomain'),
     TheWrapperDapp: () => import('@/core/components/TheWrapperDapp'),
-    ModuleAddressBook: () => import('@/modules/address-book/ModuleAddressBook'),
     EnsReverseLookup: () => import('./components/reverse/EnsReverseLookup')
   },
   mixins: [handlerAnalytics],

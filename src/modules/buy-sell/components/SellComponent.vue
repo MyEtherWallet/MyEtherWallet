@@ -11,7 +11,7 @@
         <button-balance
           v-if="!loading && !fetchingBalance"
           style="position: relative; top: 0; right: 0"
-          :balance="balance"
+          :balance="selectedBalance"
           :loading="loading"
         />
       </div>
@@ -24,6 +24,7 @@
           class="no-right-border"
           type="number"
           placeholder="Enter amount to sell"
+          style="max-width: 251px; max-height: 86px"
           :max-btn-obj="maxButton"
           :disabled="loading"
           :error-messages="errorMessages"
@@ -38,6 +39,7 @@
           class="no-right-border"
           type="number"
           placeholder="Enter amount to sell"
+          style="max-width: 251px; max-height: 86px"
           :max-btn-obj="maxButton"
           :disabled="loading"
           :error-messages="errorMessages"
@@ -158,10 +160,7 @@ import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import handlerSend from '@/modules/send/handlers/handlerSend.js';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common.js';
 import abi from '@/modules/balance/handlers/abiERC20.js';
-import {
-  formatFloatingPointValue,
-  formatFiatValue
-} from '@/core/helpers/numberFormatHelper';
+import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 import { toBase } from '@/core/helpers/unit';
 import { sellContracts } from './tokenList';
 import handlerWallet from '@/core/mixins/handlerWallet.mixin';
@@ -227,9 +226,6 @@ export default {
     ...mapGetters('wallet', ['balanceInETH', 'balanceInWei', 'tokensList']),
     ...mapGetters('global', ['isEthNetwork', 'network', 'gasPriceByType']),
     ...mapGetters('external', ['contractToToken']),
-    balance() {
-      return `${formatFloatingPointValue(this.selectedBalance).value}`;
-    },
     fiatCurrencyItems() {
       const arrItems = this.hasData
         ? this.fetchedData.fiat_currencies.filter(item => item !== 'RUB')
@@ -292,24 +288,11 @@ export default {
       return arr;
     },
     currencyItems() {
-      const tokensList = this.preselectedCurrencies;
-      const imgs = tokensList.map(item => {
-        item.value = item.name;
-        item.name = item.symbol;
-        return item.img;
+      const tokensList = this.preselectedCurrencies.map(token => {
+        token.name = token.symbol;
+        return token;
       });
-
-      const returnedArray = [
-        {
-          text: 'Select Token',
-          imgs: imgs.splice(0, 3),
-          total: `${tokensList.length}`,
-          divider: true,
-          selectLabel: true
-        },
-        ...tokensList
-      ];
-      return returnedArray;
+      return tokensList;
     },
     supportedCurrency() {
       return ['ETH', 'USDT', 'USDC', 'MATIC', 'BNB'];

@@ -64,10 +64,7 @@
 </template>
 
 <script>
-import MewMenuPopup from '@/components/mew-menu-popup/MewMenuPopup';
-
 export default {
-  components: { MewMenuPopup },
   data() {
     return {
       sections: [
@@ -111,7 +108,7 @@ export default {
             {
               label: 'EthVM',
               description: 'Blockchain explorer',
-              img: require('@/assets/images/icons/icon-ethvm.svg'),
+              img: require('@/assets/images/icons/icon-ethvm-dark.svg'),
               link: 'https://www.ethvm.com/'
             },
             {

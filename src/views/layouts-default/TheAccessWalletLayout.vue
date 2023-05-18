@@ -114,8 +114,10 @@
 </template>
 
 <script>
-import { mapActions, mapState, mapGetters } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 import Web3 from 'web3';
+
+import { WalletConnectWallet } from '@/modules/access-wallet/hybrid/handlers';
 
 import {
   Toast,
@@ -124,7 +126,7 @@ import {
   SENTRY
 } from '@/modules/toast/handler/handlerToast';
 import { ACCESS_VALID_OVERLAYS } from '@/core/router/helpers';
-import { Web3Wallet, MewConnectWallet } from '@/modules/access-wallet/common';
+import { Web3Wallet } from '@/modules/access-wallet/common';
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
@@ -165,11 +167,6 @@ export default {
   computed: {
     ...mapState('external', ['path']),
     ...mapState('wallet', ['isOfflineApp']),
-
-    /**
-     * Used in the creation of a MEWconnect instance
-     **/
-    ...mapGetters('global', ['network']),
     /**
      * Opens up software module overlay. Returns true if overlay prop from route is ACCESS_VALID_OVERLAYS.SOFTWARE
      * @return - boolean
@@ -298,10 +295,6 @@ export default {
   methods: {
     ...mapActions('wallet', ['setWallet']),
     /**
-     * Used to set the MEWconnect instance as the wallet
-     **/
-    ...mapActions('wallet', ['setWallet']),
-    /**
      * Pushes route to empty Access wallet with no props
      * Consequently closing any open overlay
      * @type - must be one of the VALID_OVERLAYS
@@ -313,6 +306,22 @@ export default {
         });
       } catch (e) {
         Toast(e, {}, ERROR);
+      }
+    },
+    openMEWconnect() {
+      try {
+        WalletConnectWallet()
+          .then(_newWallet => {
+            this.setWallet([_newWallet]).then(() => {
+              this.trackAccessWallet(WALLET_TYPES.WALLET_CONNECT);
+              this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
+            });
+          })
+          .catch(e => {
+            WalletConnectWallet.errorHandler(e);
+          });
+      } catch (e) {
+        Toast(e.message, {}, SENTRY);
       }
     },
     /**
@@ -361,10 +370,11 @@ export default {
           if (this.path !== '') {
             this.$router.push({ path: this.path });
           } else {
-            this.$router.push({ name: ROUTES_WALLET.WALLETS.NAME });
+            this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
           }
         } catch (e) {
           if (
+            e instanceof Error &&
             e.message === 'Already processing eth_requestAccounts. Please wait.'
           )
             Toast(
@@ -377,21 +387,6 @@ export default {
       } else {
         Toast('No web3 wallet found!', {}, WARNING);
       }
-    },
-    /** Opens a modal to initiate a connection with a MEW mobile app.
-     * Subsequently, this method creates an instance of MEWconnect with signTransaction and signMessage methods.
-     */
-    openMEWconnect() {
-      MewConnectWallet()
-        .then(_newWallet => {
-          this.setWallet([_newWallet]).then(() => {
-            this.trackAccessWallet(WALLET_TYPES.MEW_WALLET);
-            this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
-          });
-        })
-        .catch(e => {
-          Toast(e.message, {}, SENTRY);
-        });
     }
   }
 };

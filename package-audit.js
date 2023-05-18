@@ -18,7 +18,14 @@ const AUDIT_EXCEPTIONS = [
   'scss-tokenizer',
   'codecov', // no package found
   'loader-utils', // breaks building
-  'json5'
+  'json5',
+  'http-cache-semantics',
+  'cacheable-request',
+  // look into updating after release
+  'dns-packet',
+  'decode-uri-component',
+  '@openzeppelin/contracts',
+  'engine.io'
 ];
 const execute = (command, callback) => {
   exec(

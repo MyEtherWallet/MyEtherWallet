@@ -1,3 +1,4 @@
 import ETH from './ETH.js';
 import GOERLI from './GOERLI';
-export { ETH, GOERLI };
+import ROOTSTOCK from './ROOTSTOCK';
+export { ETH, GOERLI, ROOTSTOCK };

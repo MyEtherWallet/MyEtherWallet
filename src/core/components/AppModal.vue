@@ -8,7 +8,7 @@
     :persistent="isPersistent"
     @click:outside="handleClickOutside"
   >
-    <v-card v-if="scrollable" color="white" class="py-0 px-0 px-md-0">
+    <v-card v-if="scrollable" color="bgWalletBlock" class="py-0 px-0 px-md-0">
       <!--
       =====================================================================================
         Dialog Header
@@ -109,7 +109,7 @@
         </v-row>
       </v-card-actions>
     </v-card>
-    <v-sheet v-else class="py-6 px-5 px-8 position--relative">
+    <v-sheet v-else class="py-6 px-5 px-8 position--relative bgWalletBlock">
       <v-btn v-if="hasCloseButton" icon class="header-close-icon">
         <v-icon size="x-large" color="grey cursor--pointer" @click="close">
           mdi-close

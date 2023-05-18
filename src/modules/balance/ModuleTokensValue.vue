@@ -2,13 +2,12 @@
   <div class="module-tokens-value">
     <mew6-white-sheet class="px-5 px-lg-7 py-5 d-flex justify-space-between">
       <v-row dense>
-        <v-col cols="11">
-          <div class="mew-heading-2 mb-3">{{ tokenTitle }}</div>
+        <v-col cols="12">
+          <div :class="[draggable ? 'ml-7' : '', 'mew-heading-2 mb-3']">
+            {{ tokenTitle }}
+          </div>
         </v-col>
-        <v-col cols="1" align="right" @click="toggleDropdown">
-          <v-icon style="color: black">{{ chevronIcon }}</v-icon>
-        </v-col>
-        <v-col v-if="showTokens && dropdown" cols="12" class="mt-3">
+        <v-col v-if="showTokens" cols="12" class="mt-3">
           <v-row
             v-for="(token, idx) in tokens"
             :key="idx"
@@ -22,16 +21,20 @@
                 class="token-shadow"
               ></mew-token-container>
             </v-col>
-            <v-col cols="6" class="mt-2 token-balance"
+            <v-col cols="6" class="mt-2 token-balance textDark--text"
               >{{ token.balancef }} {{ token.symbol }}</v-col
             >
-            <v-col cols="4" align="right" class="token-value mt-2">
+            <v-col
+              cols="4"
+              align="right"
+              class="token-value mt-2 textDark--text"
+            >
               {{ token.usdBalancef }}
             </v-col>
           </v-row>
           <v-row justify="start">
             <v-col cols="7">
-              <div class="more-tokens">
+              <div class="more-tokens textDark--text">
                 {{ getText }}
               </div>
             </v-col>
@@ -52,7 +55,7 @@
       @close="handleTokensPopup"
     >
       <template #dialogBody>
-        <div class="mew-heading-3 mb-3 black--text px-4">
+        <div class="mew-heading-3 mb-3 textDark--text px-4">
           Total Value: {{ totalTokenValues }}
         </div>
         <module-tokens class="pa-0" dense @trade="handleTokensPopup" />
@@ -73,7 +76,13 @@ export default {
     AppModal: () => import('@/core/components/AppModal'),
     ModuleTokens: () => import('@/modules/balance/ModuleTokens')
   },
-  data: () => ({ showPopup: false, dropdown: true }),
+  props: {
+    draggable: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data: () => ({ showPopup: false }),
   computed: {
     ...mapGetters('wallet', ['tokensList']),
     ...mapState('wallet', ['initialLoad']),
@@ -114,9 +123,6 @@ export default {
       }
       return '';
     },
-    chevronIcon() {
-      return this.dropdown ? 'mdi-chevron-up' : 'mdi-chevron-down';
-    },
     linkText() {
       return this.tokenCount > 0 ? 'See all' : 'Buy Crypto';
     },
@@ -133,9 +139,6 @@ export default {
   methods: {
     handleTokensPopup() {
       this.showPopup = !this.showPopup;
-    },
-    toggleDropdown() {
-      this.dropdown = !this.dropdown;
     },
     checkLink() {
       if (this.tokenCount > 0) this.handleTokensPopup();
@@ -181,7 +184,6 @@ export default {
   color: #05c0a5;
 }
 .more-tokens {
-  width: 82px;
   height: 24px;
 
   font-weight: 400;

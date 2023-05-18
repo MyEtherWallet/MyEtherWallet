@@ -44,12 +44,14 @@ export default {
     ...mapState('addressBook', ['isMigrated']),
     ...mapState('global', ['preferredCurrency']),
     ...mapState('article', ['timestamp']),
-    ...mapGetters('article', ['articleList'])
+    ...mapGetters('article', ['articleList']),
+    ...mapGetters('global', ['network'])
   },
   created() {
     const succMsg = this.$t('common.updates.new');
     const updateMsg = this.$t('common.updates.update-found');
     const errMsg = this.$t('common.updates.update-error');
+    this.$vuetify.theme.dark = false;
     window.addEventListener(PWA_EVENTS.PWA_UPDATED, () => {
       Toast(succMsg, {}, SUCCESS);
     });
@@ -61,14 +63,18 @@ export default {
     });
   },
   mounted() {
-    EventBus.$on('swapTxBroadcasted', () => {
-      this.trackSwap('swapTxBroadcasted');
+    EventBus.$on('swapTxBroadcasted', hash => {
+      this.trackSwap('swapTxBroadcasted', hash, this.network.type.chainID);
     });
-    EventBus.$on('swapTxReceivedReceipt', () => {
-      this.trackSwap('swapTxReceivedReceipt');
+    EventBus.$on('swapTxReceivedReceipt', hash => {
+      this.trackSwap('swapTxReceivedReceipt', hash, this.network.type.chainID);
     });
-    EventBus.$on('swapTxFailed', () => {
-      this.trackSwap('swapTxFailed');
+    EventBus.$on('swapTxFailed', hash => {
+      const passedHash = hash === '0x' ? 'no hash' : hash;
+      this.trackSwap('swapTxFailedV2', passedHash, this.network.type.chainID);
+    });
+    EventBus.$on('swapTxNotBroadcastedFailed', () => {
+      this.trackSwap('swapTxNotBroadcastedFailed');
     });
     EventBus.$on(BUYSELL_EVENT, () => {
       this.openBuy();
@@ -116,6 +122,7 @@ export default {
     EventBus.$off('swapTxBroadcasted');
     EventBus.$off('swapTxReceivedReceipt');
     EventBus.$off('swapTxFailed');
+    EventBus.$off('swapTxNotBroadcastedFailed');
   },
   methods: {
     ...mapActions('global', ['setOnlineStatus']),

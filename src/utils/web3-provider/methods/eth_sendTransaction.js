@@ -109,6 +109,7 @@ export default async ({ payload, store, requestManager }, res, next) => {
          * Checks whether confirmInfo is true
          * if true, assume transaction is a swap
          */
+        let txHash;
         EventBus.$emit(event, params, _response => {
           if (_response.rejected) {
             res(new Error('User rejected action'));
@@ -119,17 +120,16 @@ export default async ({ payload, store, requestManager }, res, next) => {
           );
           setEvents(_promiObj, _tx, store.dispatch);
           _promiObj
-            .once('sent', () => {
+            .once('receipt', receipt => {
               if (confirmInfo) {
-                EventBus.$emit('swapTxBroadcasted');
-              }
-            })
-            .once('receipt', () => {
-              if (confirmInfo) {
-                EventBus.$emit('swapTxReceivedReceipt');
+                EventBus.$emit(
+                  'swapTxReceivedReceipt',
+                  receipt.transactionHash
+                );
               }
             })
             .once('transactionHash', hash => {
+              txHash = hash;
               if (store.state.wallet.instance !== null) {
                 const isTesting = locStore.get('mew-testing');
                 if (!isTesting) {
@@ -149,11 +149,14 @@ export default async ({ payload, store, requestManager }, res, next) => {
                   });
                 }
               }
+              if (confirmInfo) {
+                EventBus.$emit('swapTxBroadcasted', hash);
+              }
               res(null, toPayload(payload.id, hash));
             })
             .on('error', err => {
               if (confirmInfo) {
-                EventBus.$emit('swapTxFailed');
+                EventBus.$emit('swapTxFailed', txHash);
               }
               res(err);
             });
@@ -162,7 +165,7 @@ export default async ({ payload, store, requestManager }, res, next) => {
     })
     .catch(e => {
       if (confirmInfo) {
-        EventBus.$emit('swapTxFailed');
+        EventBus.$emit('swapTxNotBroadcastedFailed');
       }
       res(e);
     });

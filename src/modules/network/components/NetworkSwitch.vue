@@ -13,7 +13,7 @@
         <v-btn-toggle
           v-model="toggleType"
           mandatory
-          active-class="textDark white--text alig-end"
+          active-class="buttonToggleDark white--text alig-end"
         >
           <v-btn small>Main</v-btn>
           <v-btn small>Test</v-btn>
@@ -46,7 +46,10 @@
     <!-- ===================================================================================== -->
     <!-- Networks -->
     <!-- ===================================================================================== -->
-    <v-radio-group v-model="networkSelected">
+    <v-radio-group
+      v-model="networkSelected"
+      :class="networks.length > 10 ? 'network-container' : ''"
+    >
       <v-container
         v-for="(network, i) in networks"
         :key="network.name"
@@ -350,6 +353,13 @@ export default {
 
 <style lang="scss" scoped>
 $borderNetwork: 1px solid #ececec;
+
+.network-container {
+  max-height: 500px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
 .network-border {
   border-bottom: $borderNetwork;
   border-right: $borderNetwork;

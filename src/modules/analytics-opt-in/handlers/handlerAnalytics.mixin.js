@@ -39,6 +39,14 @@ export default {
       }
     },
     /**
+     * Tracks users version
+     */
+    trackUserVersion(action) {
+      if (this.$matomo && action && this.consentToTrack) {
+        this.$matomo.trackEvent(categories.mewVersion, action);
+      }
+    },
+    /**
      * Tracks when user lands on create wallet
      * also tracks what type of wallet user creates
      * (depends on the action being passed in)
@@ -138,9 +146,13 @@ export default {
      * Tracks what user selects to swap from
      * and swap to
      */
-    trackSwap(action) {
+    trackSwap(action, key, value) {
       if (this.$matomo && action && this.consentToTrack) {
-        this.$matomo.trackEvent(categories.swap, action);
+        if (key && value) {
+          this.$matomo.trackEvent(categories.swap, action, key, value);
+        } else {
+          this.$matomo.trackEvent(categories.swap, action);
+        }
       }
     },
     /**

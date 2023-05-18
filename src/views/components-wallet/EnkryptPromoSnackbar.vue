@@ -52,7 +52,8 @@
             class="extension-btn"
             style="border-radius: 40px !important"
             color-theme="#7E44F2"
-            @click.native="openEnkrypt"
+            btn-link="https://www.enkrypt.com"
+            rel="dofollow"
           >
             <img
               class="mr-3"

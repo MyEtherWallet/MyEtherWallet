@@ -9,7 +9,12 @@
         cycle
       >
         <v-carousel-item :ripple="false">
-          <a @click="openEnkrypt">
+          <a
+            rel="dofollow"
+            href="https://www.enkrypt.com"
+            target="_blank"
+            @click="openEnkrypt"
+          >
             <img
               class="slide-img"
               src="@/assets/images/slides/slide1.jpg"
@@ -29,6 +34,7 @@
         <v-carousel-item
           :ripple="false"
           :to="{ name: ROUTES_HOME.BUY_HARDWARE_WALLET.NAME }"
+          target="_blank"
         >
           <img
             class="slide-img"
@@ -71,8 +77,6 @@ export default {
     },
     openEnkrypt() {
       this.trackEnkryptInstall();
-      // eslint-disable-next-line
-      window.open(this.browserLink, '_blank');
     }
   }
 };

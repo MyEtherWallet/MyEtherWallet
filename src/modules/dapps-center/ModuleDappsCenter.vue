@@ -12,14 +12,13 @@
       <v-row>
         <v-col v-for="(dapp, key) in dapps" :key="key" cols="12" sm="6" md="4">
           <mew-button
-            color-theme="primary"
+            color-theme="buttonGrayLight"
             btn-style="light"
             style="
               height: 173px;
               display: flex;
               align-items: start;
               padding-top: 33px;
-              box-shadow: 0 0 15px var(--v-greyMedium-base) !important;
             "
             has-full-width
             @click.native="routeTo(dappName(dapp))"
@@ -129,3 +128,14 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+.warning-container {
+  padding: 10px;
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid #05c0a5;
+  color: #05c0a5;
+  background-color: #ebfaf8;
+}
+</style>
