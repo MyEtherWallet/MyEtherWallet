@@ -1226,9 +1226,27 @@ export default {
      */
     setMaxAmount() {
       this.trackSwap('setMaxValue');
-      const availableBalanceMinusGas = new BigNumber(
-        this.availableBalance
-      ).minus(fromWei(toBN(this.localGasPrice).muln(MIN_GAS_LIMIT)));
+      let availableBalanceMinusGas;
+      if (
+        !isEmpty(this.toTokenType) &&
+        this.toTokenType.hasOwnProperty('symbol') &&
+        this.isFromTokenMain
+      ) {
+        this.swapper
+          .getAllQuotes({
+            fromT: this.fromTokenType,
+            toT: this.toTokenType,
+            fromAmount: new BigNumber(0.1).times(
+              new BigNumber(10).pow(new BigNumber(this.fromTokenType.decimals))
+            )
+          })
+          .then(quotes => {
+            console.log(quotes);
+          });
+      }
+      availableBalanceMinusGas = new BigNumber(this.availableBalance).minus(
+        fromWei(toBN(this.localGasPrice).muln(MIN_GAS_LIMIT))
+      );
       this.tokenInValue = this.isFromTokenMain
         ? availableBalanceMinusGas.gt(0)
           ? availableBalanceMinusGas.toFixed()
