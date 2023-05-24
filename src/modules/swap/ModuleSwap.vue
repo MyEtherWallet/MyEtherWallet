@@ -1228,7 +1228,6 @@ export default {
      * Set the max available amount to swap from
      */
     setMaxAmount() {
-      this.setTokenInValue('0');
       this.maxLoading = true;
       this.trackSwap('setMaxValue');
       if (
