@@ -396,7 +396,8 @@ export default {
       cachedAmount: '0',
       selectedProviderId: undefined,
       abortSetTokenValue: false,
-      clearingSwap: false
+      clearingSwap: false,
+      maxLoading: false
     };
   },
   computed: {
@@ -459,7 +460,8 @@ export default {
             disabled:
               !this.hasMinEth &&
               this.amountErrorMessage === this.errorMsgs.amountEthIsTooLow,
-            method: this.setMaxAmount
+            method: this.setMaxAmount,
+            loading: this.maxLoading
           };
     },
     /**
@@ -1185,6 +1187,7 @@ export default {
       if (this.$refs.amountInput) this.$refs.amountInput.clear();
       this.refundAddress = '';
       this.isValidRefundAddr = false;
+      this.maxLoading = false;
       this.setupSwap();
     },
     formatTokensForSelect(tokens) {
@@ -1225,33 +1228,69 @@ export default {
      * Set the max available amount to swap from
      */
     setMaxAmount() {
+      this.setTokenInValue('0');
+      this.maxLoading = true;
       this.trackSwap('setMaxValue');
-      let availableBalanceMinusGas;
       if (
         !isEmpty(this.toTokenType) &&
         this.toTokenType.hasOwnProperty('symbol') &&
         this.isFromTokenMain
       ) {
+        const initialValue = this.availableBalance;
         this.swapper
           .getAllQuotes({
             fromT: this.fromTokenType,
             toT: this.toTokenType,
-            fromAmount: new BigNumber(0.1).times(
+            fromAmount: new BigNumber(initialValue).times(
               new BigNumber(10).pow(new BigNumber(this.fromTokenType.decimals))
             )
           })
           .then(quotes => {
-            console.log(quotes);
+            const highest = quotes.sort(
+              (a, b) =>
+                BigNumber(b.amount).toNumber() - BigNumber(a.amount).toNumber()
+            );
+            const swapObj = {
+              fromAddress: this.address,
+              toAddress: this.toAddress,
+              provider: highest[0].provider,
+              fromT: this.fromTokenType,
+              toT: this.toTokenType,
+              quote: highest[0],
+              fromAmount: new BigNumber(initialValue).times(
+                new BigNumber(10).pow(
+                  new BigNumber(this.fromTokenType.decimals)
+                )
+              )
+            };
+            this.swapper.getTrade(swapObj).then(res => {
+              res['gasPrice'] = this.localGasPrice;
+              let parsedGasLimit = BigNumber(0);
+              res.transactions.forEach(tx => {
+                parsedGasLimit = parsedGasLimit.plus(tx.gas);
+              });
+              const tokenInValue = new BigNumber(this.availableBalance)
+                .minus(
+                  fromWei(
+                    toBN(this.localGasPrice).muln(parsedGasLimit.toNumber())
+                  )
+                )
+                .toFixed();
+              this.setTokenInValue(tokenInValue);
+              this.maxLoading = false;
+            });
           });
+        return;
       }
-      availableBalanceMinusGas = new BigNumber(this.availableBalance).minus(
-        fromWei(toBN(this.localGasPrice).muln(MIN_GAS_LIMIT))
-      );
+      const availableBalanceMinusGas = new BigNumber(
+        this.availableBalance
+      ).minus(fromWei(toBN(this.localGasPrice).muln(MIN_GAS_LIMIT)));
       this.tokenInValue = this.isFromTokenMain
         ? availableBalanceMinusGas.gt(0)
           ? availableBalanceMinusGas.toFixed()
           : '0'
         : this.availableBalance.toFixed();
+      this.maxLoading = false;
     },
     /**
      * Gets the default from token
@@ -1569,7 +1608,6 @@ export default {
       this.currentTrade = trade;
       this.currentTrade.gasPrice = this.localGasPrice;
       if (!this.isFromNonChain) {
-        this.currentTrade.gasPrice = this.localGasPrice;
         this.checkFeeBalance();
       }
     },
