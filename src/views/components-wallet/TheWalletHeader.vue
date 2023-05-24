@@ -59,7 +59,10 @@
             </div>
           </div>
         </div>
-        <div v-else-if="promoOver && !isOfflineApp" class="eth-banner d-flex">
+        <div
+          v-else-if="promoOver && !isOfflineApp && network.type.canBuy"
+          class="eth-banner d-flex"
+        >
           <div class="mr-5">
             <mew6-white-sheet class="pa-3">
               <v-icon color="blackBg"> mdi-bank </v-icon>
@@ -110,7 +113,7 @@
 
 <script>
 import moment from 'moment';
-import { mapState } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { BUYSELL_EVENT, MOONPAY_OFFER_END } from '@/modules/buy-sell/helpers';
 import { EventBus } from '@/core/plugins/eventBus';
@@ -123,6 +126,7 @@ export default {
   computed: {
     ...mapState('wallet', ['identifier', 'isOfflineApp']),
     ...mapState('global', ['online']),
+    ...mapGetters('global', ['network']),
     daysLeft() {
       const eventDate = moment(MOONPAY_OFFER_END);
       const todaysDate = moment();
