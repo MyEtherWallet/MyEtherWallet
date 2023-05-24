@@ -45,7 +45,8 @@ export default {
     ...mapState('global', ['preferredCurrency']),
     ...mapState('article', ['timestamp']),
     ...mapGetters('article', ['articleList']),
-    ...mapGetters('global', ['network'])
+    ...mapGetters('global', ['network']),
+    ...mapState('popups', ['surveyPopup', 'neverShowSurveyPopup'])
   },
   created() {
     const succMsg = this.$t('common.updates.new');
@@ -60,6 +61,23 @@ export default {
     });
     window.addEventListener(PWA_EVENTS.PWA_UPDATE_FOUND, () => {
       Toast(updateMsg, {}, INFO);
+    });
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden && !this.surveyPopup && !this.neverShowSurveyPopup) {
+        this.showSurveyPopup();
+      }
+    });
+    window.addEventListener('mouseout', e => {
+      if (
+        (e.clientY <= 0 ||
+          e.clientX <= 0 ||
+          e.clientX >= window.innerWidth ||
+          e.clientY >= window.innerHeight) &&
+        !this.surveyPopup &&
+        !this.neverShowSurveyPopup
+      ) {
+        this.showSurveyPopup();
+      }
     });
   },
   mounted() {
@@ -123,12 +141,16 @@ export default {
     EventBus.$off('swapTxReceivedReceipt');
     EventBus.$off('swapTxFailed');
     EventBus.$off('swapTxNotBroadcastedFailed');
+    document.removeEventListener('visibilitychange');
+    window.removeEventListener('mouseout');
   },
   methods: {
     ...mapActions('global', ['setOnlineStatus']),
     ...mapActions('external', ['setCurrency']),
     ...mapActions('addressBook', ['setMigrated', 'setAddressBook']),
     ...mapActions('article', ['updateArticles']),
+    ...mapActions('article', ['updateArticles']),
+    ...mapActions('popups', ['showSurveyPopup']),
     openBuy() {
       this.buySellOpen = true;
     },

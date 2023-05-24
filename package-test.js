@@ -82,7 +82,7 @@ const EXCEPTIONS = [
   'bip39', // breaks
   'ethers', // major update
   'patch-package', // major update
-  'highcharts'
+  'highcharts' // major update
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

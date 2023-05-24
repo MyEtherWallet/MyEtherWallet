@@ -45,6 +45,19 @@ const showEnkryptWalletSnackbar = function ({ commit }) {
 const closeEnkryptWalletSnackbar = function ({ commit }) {
   commit('CLOSE_WALLET_ENKRYPT_SNACKBAR');
 };
+
+const showSurveyPopup = function ({ commit }) {
+  commit('SHOW_SURVEY_POPUP');
+};
+
+const neverShowSurveyPopup = function ({ commit }) {
+  commit('NEVER_SHOW_SURVEY_POPUP');
+};
+
+const neverShowSurveyBanner = function ({ commit }) {
+  commit('NEVER_SHOW_SURVEY_BANNER');
+};
+
 export default {
   setTrackingConsent,
   setTracking,
@@ -52,5 +65,8 @@ export default {
   neverShowEnkryptLandingPage,
   neverShowEnkryptWalletPage,
   showEnkryptWalletSnackbar,
-  closeEnkryptWalletSnackbar
+  closeEnkryptWalletSnackbar,
+  showSurveyPopup,
+  neverShowSurveyPopup,
+  neverShowSurveyBanner
 };
