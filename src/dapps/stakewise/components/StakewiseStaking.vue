@@ -200,9 +200,7 @@ export default {
       return true;
     },
     linkUrl() {
-      return this.ethvmSupport
-        ? this.network.type.isEthVMSupported.blockExplorerTX
-        : this.network.type.blockExplorerTX;
+      return this.network.type.blockExplorerTX;
     },
     hasPending() {
       const txList = this.isEthNetwork

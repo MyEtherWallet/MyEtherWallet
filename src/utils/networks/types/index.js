@@ -11,7 +11,7 @@ import MOONRIVER from './MOONRIVER';
 import ROOTSTOCK from './ROOTSTOCK';
 import AURORA from './AURORA';
 import ARB from './ARB';
-// import AVAX from './AVAX';
+import SEPOLIA from './SEPOLIA';
 import FTM from './FTM';
 import GNO from './GNO';
 import KLAY from './KLAY';
@@ -31,7 +31,7 @@ export {
   ROOTSTOCK,
   AURORA,
   ARB,
-  // AVAX,
+  SEPOLIA,
   FTM,
   GNO,
   KLAY,
