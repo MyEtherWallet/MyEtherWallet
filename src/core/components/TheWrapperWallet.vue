@@ -60,7 +60,7 @@
       </v-row>
     </v-col>
     <v-col
-      v-if="totalRightColItems === 2 && hasDraggable"
+      v-if="totalRightColItems >= 2 && hasDraggable"
       cols="12"
       md="4"
       class="pa-2 pa-md-3"

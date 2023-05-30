@@ -3,8 +3,8 @@
     <v-row class="d-flex align-center py-2 pb-md-4 pb-lg-2 px-1">
       <v-col
         cols="12"
-        md="8"
-        lg="8"
+        md="6"
+        lg="6"
         no-gutters
         dense
         :class="[
@@ -69,7 +69,10 @@
             </mew6-white-sheet>
           </div>
           <div class="d-flex flex-column align-start">
-            <span class="mew-body font-weight-bold textDark--text">
+            <span
+              class="font-weight-bold textDark--text"
+              style="font-size: 0.95rem"
+            >
               You can now buy crypto with low fees
             </span>
             <span
@@ -91,13 +94,33 @@
           </div>
         </div>
       </v-col>
+      <v-col cols="5" class="d-flex justify-space-between">
+        <div
+          class="prototype-background d-flex align-center justify-center white--text"
+        >
+          <v-icon color="white" size="medium" class="mr-1"> mdi-circle </v-icon>
+          <span> Your message here </span>
+        </div>
+        <div
+          class="prototype-background d-flex align-center justify-center white--text"
+        >
+          <v-icon color="white" size="medium" class="mr-1"> mdi-circle </v-icon>
+          <span> Your message here </span>
+        </div>
+        <div
+          class="prototype-background d-flex align-center justify-center white--text"
+        >
+          <v-icon color="white" size="medium" class="mr-1"> mdi-circle </v-icon>
+          <span> Your message here </span>
+        </div>
+      </v-col>
       <v-col
         v-if="
           $vuetify.breakpoint.md ||
           $vuetify.breakpoint.lg ||
           $vuetify.breakpoint.xl
         "
-        cols="4"
+        cols="1"
         class="ml-auto d-flex align-center justify-end"
       >
         <div class="align-center d-none d-lg-block">
@@ -190,5 +213,45 @@ a {
 
 .eth-banner {
   margin-left: -15px;
+}
+
+.prototype-background {
+  span {
+    font-size: 9px;
+  }
+
+  border-radius: 8px;
+  height: 40px;
+  width: 130px;
+  background: -webkit-linear-gradient(
+    273deg,
+    rgb(197, 73, 255) 0%,
+    rgb(150, 74, 255) 81%,
+    rgb(138, 74, 255) 100%
+  );
+  background: -o-linear-gradient(
+    273deg,
+    rgb(197, 73, 255) 0%,
+    rgb(150, 74, 255) 81%,
+    rgb(138, 74, 255) 100%
+  );
+  background: -ms-linear-gradient(
+    273deg,
+    rgb(197, 73, 255) 0%,
+    rgb(150, 74, 255) 81%,
+    rgb(138, 74, 255) 100%
+  );
+  background: -moz-linear-gradient(
+    273deg,
+    rgb(197, 73, 255) 0%,
+    rgb(150, 74, 255) 81%,
+    rgb(138, 74, 255) 100%
+  );
+  background: linear-gradient(
+    177deg,
+    rgb(197, 73, 255) 0%,
+    rgb(150, 74, 255) 81%,
+    rgb(138, 74, 255) 100%
+  );
 }
 </style>
