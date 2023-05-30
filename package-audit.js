@@ -25,7 +25,8 @@ const AUDIT_EXCEPTIONS = [
   'dns-packet',
   'decode-uri-component',
   '@openzeppelin/contracts',
-  'engine.io'
+  'engine.io',
+  'socket.io-parser'
 ];
 const execute = (command, callback) => {
   exec(

@@ -406,9 +406,7 @@ export default {
     },
     blockExplorer() {
       const networkType = this.network.type;
-      const blockExplorer = networkType.isEthVMSupported?.supported
-        ? networkType.isEthVMSupported.blockExplorerAddr
-        : networkType.blockExplorerAddr;
+      const blockExplorer = networkType.blockExplorerAddr;
       return blockExplorer;
     }
   },
