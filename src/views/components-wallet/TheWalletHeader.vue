@@ -94,21 +94,26 @@
           </div>
         </div>
       </v-col>
-      <v-col cols="5" class="d-flex justify-space-between">
+      <v-col
+        cols="12"
+        md="6"
+        lg="5"
+        class="d-flex justify-space-between flex-wrap flex-md-nowrap"
+      >
         <div
-          class="prototype-background d-flex align-center justify-center white--text"
+          class="prototype-background mb-3 d-flex align-center justify-center white--text"
         >
           <v-icon color="white" size="medium" class="mr-1"> mdi-circle </v-icon>
           <span> Your message here </span>
         </div>
         <div
-          class="prototype-background d-flex align-center justify-center white--text"
+          class="prototype-background mb-3 d-flex align-center justify-center white--text"
         >
           <v-icon color="white" size="medium" class="mr-1"> mdi-circle </v-icon>
           <span> Your message here </span>
         </div>
         <div
-          class="prototype-background d-flex align-center justify-center white--text"
+          class="prototype-background mb-3 d-flex align-center justify-center white--text"
         >
           <v-icon color="white" size="medium" class="mr-1"> mdi-circle </v-icon>
           <span> Your message here </span>
@@ -223,35 +228,5 @@ a {
   border-radius: 8px;
   height: 40px;
   width: 130px;
-  background: -webkit-linear-gradient(
-    273deg,
-    rgb(197, 73, 255) 0%,
-    rgb(150, 74, 255) 81%,
-    rgb(138, 74, 255) 100%
-  );
-  background: -o-linear-gradient(
-    273deg,
-    rgb(197, 73, 255) 0%,
-    rgb(150, 74, 255) 81%,
-    rgb(138, 74, 255) 100%
-  );
-  background: -ms-linear-gradient(
-    273deg,
-    rgb(197, 73, 255) 0%,
-    rgb(150, 74, 255) 81%,
-    rgb(138, 74, 255) 100%
-  );
-  background: -moz-linear-gradient(
-    273deg,
-    rgb(197, 73, 255) 0%,
-    rgb(150, 74, 255) 81%,
-    rgb(138, 74, 255) 100%
-  );
-  background: linear-gradient(
-    177deg,
-    rgb(197, 73, 255) 0%,
-    rgb(150, 74, 255) 81%,
-    rgb(138, 74, 255) 100%
-  );
 }
 </style>

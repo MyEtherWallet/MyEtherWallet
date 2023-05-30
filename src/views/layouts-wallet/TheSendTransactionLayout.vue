@@ -2,10 +2,12 @@
   <the-wrapper-wallet
     :total-left-col-items="1"
     has-draggable
+    has-ads
     :total-right-col-items="totalRightColItems"
   >
     <template #leftColItem1>
       <module-send />
+      <prototype-layout-component class="my-4" />
     </template>
     <template #rightColItem1>
       <module-tokens-value :draggable="hasHistory" />
@@ -21,6 +23,8 @@ import { mapGetters } from 'vuex';
 
 export default {
   components: {
+    PrototypeLayoutComponent: () =>
+      import('@/core/components/PrototypeLayoutComponent.vue'),
     ModuleSend: () => import('@/modules/send/ModuleSend'),
     TheWrapperWallet: () => import('@/core/components/TheWrapperWallet'),
     ModuleTokensValue: () => import('@/modules/balance/ModuleTokensValue'),

@@ -1,5 +1,5 @@
 <template>
-  <the-wrapper-wallet>
+  <the-wrapper-wallet has-ads>
     <template #leftColItem1>
       <module-nft-manager />
     </template>
