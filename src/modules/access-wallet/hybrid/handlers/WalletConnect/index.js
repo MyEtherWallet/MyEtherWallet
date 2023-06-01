@@ -59,7 +59,7 @@ class WalletConnectWallet {
         txJSON.from = from;
         const prom = PromiEvent(false);
         this.client
-          .request({ method: 'eth_signTransaction', params: [txJSON] })
+          .request({ method: 'eth_sendTransaction', params: [txJSON] })
           .then(hash => {
             prom.eventEmitter.emit('transactionHash', hash);
             store.state.wallet.web3.eth.sendTransaction.method._confirmTransaction(
@@ -71,23 +71,9 @@ class WalletConnectWallet {
           .catch(err => {
             prom.reject(err);
           });
-        // this.client
-        //   .sendTransaction(txJSON)
-        //   .then(hash => {
-        //     prom.eventEmitter.emit('transactionHash', hash);
-        //     store.state.wallet.web3.eth.sendTransaction.method._confirmTransaction(
-        //       prom,
-        //       hash,
-        //       { params: [txJSON] }
-        //     );
-        //   })
-        //   .catch(err => {
-        //     prom.reject(err);
-        //   });
         return prom.eventEmitter;
       };
       const msgSigner = msg => {
-        console.log(this.client);
         return new Promise((resolve, reject) => {
           const msgParams = [
             sanitizeHex(this.client.accounts[0]),
