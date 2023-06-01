@@ -1,7 +1,7 @@
 import WalletErrorHandler from '@/modules/access-wallet/common/WalletErrorHandler';
 
 const ERRORS = {
-  'User canceled': 'walletconnectError-user-cancelled-the-action',
+  'User cancelled': 'User rejected action!',
   'QR Code Modal closed': 'walletconnectError-qr-code-popup-closed',
   'Call Request Rejected': 'walletconnectError-request-rejected',
   'Session currently connected':

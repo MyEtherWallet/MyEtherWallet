@@ -1,10 +1,8 @@
 // import WalletConnect from '@walletconnect/client';
 import { EthereumProvider } from '@walletconnect/ethereum-provider';
-import { Web3Modal } from '@web3modal/standalone';
 import { Transaction } from '@ethereumjs/tx';
 import PromiEvent from 'web3-core-promievent';
 
-import * as nodes from '@/utils/networks/nodes';
 import HybridWalletInterface from '../walletInterface';
 import store from '@/core/store';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
@@ -23,18 +21,7 @@ class WalletConnectWallet {
   constructor(signClient) {
     this.identifier = WALLET_TYPES.WALLET_CONNECT;
     this.isHardware = IS_HARDWARE;
-    // this.topic = topic;
     this.client = signClient;
-
-    // if (
-    //   walletConnect &&
-    //   walletConnect.connected &&
-    //   walletConnect._sessionStorage
-    // ) {
-    //   walletConnect._sessionStorage.removeSession();
-    //   walletConnect.killSession(); // remove any leftover connections
-    // }
-    // this.client = walletConnect;
     this.client.on('session_delete', () => {
       store.dispatch('wallet/removeWallet');
     });
@@ -69,7 +56,11 @@ class WalletConnectWallet {
             );
           })
           .catch(err => {
-            prom.reject(err);
+            prom.reject(
+              err.message === '' && err.code === 0
+                ? prom.reject('User cancelled')
+                : err
+            );
           });
         return prom.eventEmitter;
       };
@@ -85,8 +76,11 @@ class WalletConnectWallet {
               resolve(getBufferFromHex(sanitizeHex(result)));
             })
             .catch(err => {
-              console.log(err);
-              reject(err);
+              reject(
+                err.message === '' && err.code === 0
+                  ? reject('User cancelled')
+                  : err
+              );
             });
         });
       };
@@ -110,12 +104,7 @@ const createWallet = async () => {
     projectId,
     showQrModal: true,
     chains: [1, 137],
-    methods: [
-      'eth_sendTransaction',
-      'eth_signTransaction',
-      'eth_sign',
-      'personal_sign'
-    ],
+    methods: ['eth_sendTransaction', 'eth_sign'],
     events: ['chainChanged', 'accountsChanged'],
     metadata: {
       name: 'MyEtherWallet Inc',
@@ -126,15 +115,6 @@ const createWallet = async () => {
     }
   });
   await signClient.connect();
-  // console.log(huh);
-  // console.log('created instance', signClient);
-  // signClient.on('session_event', ({ event }) => {
-  //   console.log(event, 'sesh event');
-  // });
-  // signClient.on('session_update', ({ event }) => {
-  //   console.log(event, 'sesh update');
-  // });
-  // const { topic } = await signClient.core.pairing.create();
   const walletConnectWallet = new WalletConnectWallet(signClient);
   const _tWallet = await walletConnectWallet.init();
   return _tWallet;
