@@ -245,8 +245,6 @@ export default {
       import('./hardware/components/AccessWalletTrezor.vue'),
     AccessWalletLedger: () =>
       import('./hardware/components/AccessWalletLedger.vue'),
-    AccessWalletLedgerX: () =>
-      import('./hardware/components/AccessWalletLedgerX.vue'),
     AccessWalletAddressNetwork: () =>
       import(
         '@/modules/access-wallet/common/components/AccessWalletAddressNetwork'

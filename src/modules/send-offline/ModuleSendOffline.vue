@@ -81,7 +81,7 @@
             <mew-input
               v-model="gasPrice"
               class="SendOfflineGasPriceInput"
-              label="Gas Price (in wei)"
+              label="Gas Price (in gwei)"
               :error-messages="gasPriceErrors"
               type="number"
             />
@@ -172,7 +172,13 @@
 
 <script>
 import clipboardCopy from 'clipboard-copy';
-import { toBN, isHexStrict, toWei, hexToNumberString } from 'web3-utils';
+import {
+  toBN,
+  isHexStrict,
+  toWei,
+  hexToNumberString,
+  fromWei
+} from 'web3-utils';
 import { mapActions, mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import Web3 from 'web3';
@@ -391,8 +397,9 @@ export default {
         try {
           const file = JSON.parse(result);
           if (file.nonce) {
+            const uploadedGasPrice = hexToNumberString(file.gasPrice);
             self.localNonce = hexToNumberString(file.nonce);
-            self.gasPrice = hexToNumberString(file.gasPrice);
+            self.gasPrice = fromWei(uploadedGasPrice, 'gwei');
             self.chainID = hexToNumberString(file.chainID);
             self.setNetworkDebounced(self.chainID);
             self.$refs.upload.value = '';
@@ -412,7 +419,9 @@ export default {
       const raw = {
         nonce: sanitizeHex(toBNSafe(this.localNonce).toString(16)),
         gasLimit: sanitizeHex(toBNSafe(this.gasLimit).toString(16)),
-        gasPrice: sanitizeHex(toBNSafe(this.gasPrice).toString(16)),
+        gasPrice: sanitizeHex(
+          toWei(toBNSafe(this.gasPrice), 'gwei').toString(16)
+        ),
         to: isToken
           ? this.selectedCurrency.address
           : this.toAddress.toLowerCase().trim(),

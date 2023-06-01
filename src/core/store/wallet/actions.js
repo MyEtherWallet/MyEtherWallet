@@ -54,7 +54,7 @@ const setWeb3Instance = function (
     rootState.global.currentNetwork.port
       ? ':' + rootState.global.currentNetwork.port
       : ''
-  }${hostUrl.pathname}`;
+  }${hostUrl.pathname ? hostUrl.pathname : ''}`;
   rootState.global.currentNetwork.username !== '' &&
   rootState.global.currentNetwork.password !== ''
     ? (options['headers'] = {
@@ -138,6 +138,9 @@ const setOfflineApp = function ({ commit }, val) {
 const setLedgerApp = function ({ commit }, val) {
   commit('SET_LEDGER_APP', val);
 };
+const setSwapRates = function ({ commit }, val) {
+  commit('SET_SWAP_RATES', val);
+};
 
 export default {
   removeWallet,
@@ -149,5 +152,6 @@ export default {
   setOwnedDomains,
   setTokens,
   setOfflineApp,
-  setLedgerApp
+  setLedgerApp,
+  setSwapRates
 };

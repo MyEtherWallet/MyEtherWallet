@@ -128,3 +128,14 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+.warning-container {
+  padding: 10px;
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid #05c0a5;
+  color: #05c0a5;
+  background-color: #ebfaf8;
+}
+</style>

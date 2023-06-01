@@ -145,8 +145,8 @@ export default {
         try {
           this.file = JSON.parse(evt.target.result);
           this.step = 2;
-        } catch (e) {
-          Toast(e.message, {}, ERROR);
+        } catch (err) {
+          Toast(err.message, {}, ERROR);
         }
       };
       reader.readAsBinaryString(e.target.files[0]);

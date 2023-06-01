@@ -57,9 +57,7 @@
               <div class="staking-fee">Staking Fee</div>
               <mew-tooltip class="ml-1" :text="toolTipFee" max-width="320px" />
             </v-col>
-            <v-col cols="6" md="6" class="py-1 text-right">
-              0.75% <span class="textLight--text">0.3 ETH min</span>
-            </v-col>
+            <v-col cols="6" md="6" class="py-1 text-right"> 0.312% </v-col>
           </v-row>
         </div>
 
@@ -109,11 +107,7 @@
         <ul class="user-info textMedium--text">
           <li>Your ETH is staked with our partner Staked.us</li>
           <li>Staked.us will create and maintain Eth2 validators for you</li>
-          <li>Earn up to 21% Annualized rewards</li>
-          <li class="orangePrimary--text">
-            You can neither spend nor transfer your Eth2 funds until an unknown
-            date in the future when transfers are enabled on the Eth2 chain
-          </li>
+          <li>Earn up to 6% annualized rewards</li>
         </ul>
       </div>
       <!--
@@ -156,7 +150,7 @@ export default {
   data() {
     return {
       toolTipFee:
-        '0.75% staking fee (or 0.3 ETH, whichever is higher) is covering staking until transfers are enabled on Eth2. Once transfers are enabled, you will have a choice to either continue staking your ETH for an additional fee, or withdraw your ETH and earned rewards and stop staking.',
+        'In order to provide uninterrupted, reliable staking service and maintain your validators, Staked.us and MEW retain 13% of your rewards as a service fee. APR figures shown here already account for this fee. In addition, MEW will charge a one-time staking fee of 0.1 ETH for each 32 ETH you stake.',
       amount: 0,
       selectedItem: {}
     };
@@ -170,7 +164,9 @@ export default {
       return this.network.type.icon;
     },
     buttonText() {
-      return !this.hasEnoughBalance ? 'Not enough funds' : 'Next: Eth2 address';
+      return !this.hasEnoughBalance
+        ? 'Not enough funds'
+        : 'Next: Withdrawal Address';
     },
     /**
      * Current APR Formatted

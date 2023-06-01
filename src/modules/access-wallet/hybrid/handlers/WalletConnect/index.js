@@ -1,5 +1,5 @@
 // import WalletConnect from '@walletconnect/client';
-import SignClient from '@walletconnect/sign-client';
+import { EthereumProvider } from '@walletconnect/ethereum-provider';
 import { Web3Modal } from '@web3modal/standalone';
 import { Transaction } from '@ethereumjs/tx';
 import PromiEvent from 'web3-core-promievent';
@@ -24,7 +24,7 @@ class WalletConnectWallet {
     this.identifier = WALLET_TYPES.WALLET_CONNECT;
     this.isHardware = IS_HARDWARE;
     // this.topic = topic;
-    this.signClient = signClient;
+    this.client = signClient;
 
     // if (
     //   walletConnect &&
@@ -34,8 +34,8 @@ class WalletConnectWallet {
     //   walletConnect._sessionStorage.removeSession();
     //   walletConnect.killSession(); // remove any leftover connections
     // }
-    // this.walletConnect = walletConnect;
-    this.signClient.on('session_delete', () => {
+    // this.client = walletConnect;
+    this.client.on('session_delete', () => {
       store.dispatch('wallet/removeWallet');
     });
 
@@ -58,8 +58,8 @@ class WalletConnectWallet {
         const txJSON = tx.toJSON();
         txJSON.from = from;
         const prom = PromiEvent(false);
-        this.walletConnect
-          .sendTransaction(txJSON)
+        this.client
+          .request({ method: 'eth_signTransaction', params: [txJSON] })
           .then(hash => {
             prom.eventEmitter.emit('transactionHash', hash);
             store.state.wallet.web3.eth.sendTransaction.method._confirmTransaction(
@@ -71,97 +71,83 @@ class WalletConnectWallet {
           .catch(err => {
             prom.reject(err);
           });
+        // this.client
+        //   .sendTransaction(txJSON)
+        //   .then(hash => {
+        //     prom.eventEmitter.emit('transactionHash', hash);
+        //     store.state.wallet.web3.eth.sendTransaction.method._confirmTransaction(
+        //       prom,
+        //       hash,
+        //       { params: [txJSON] }
+        //     );
+        //   })
+        //   .catch(err => {
+        //     prom.reject(err);
+        //   });
         return prom.eventEmitter;
       };
       const msgSigner = msg => {
+        console.log(this.client);
         return new Promise((resolve, reject) => {
           const msgParams = [
-            '0x' + toBuffer(msg).toString('hex'),
-            sanitizeHex(this.walletConnect.accounts[0])
+            sanitizeHex(this.client.accounts[0]),
+            '0x' + toBuffer(msg).toString('hex')
           ];
-          this.walletConnect
-            .signPersonalMessage(msgParams)
+          this.client
+            .request({ method: 'eth_sign', params: msgParams })
             .then(result => {
               resolve(getBufferFromHex(sanitizeHex(result)));
             })
-            .catch(reject);
+            .catch(err => {
+              console.log(err);
+              reject(err);
+            });
         });
       };
-      console.log('lmao');
-      try {
-        const { uri, approval } = await this.signClient.connect({
-          requiredNamespaces: {
-            eip155: {
-              methods: [
-                'eth_sendTransaction',
-                'eth_signTransaction',
-                'eth_sign',
-                'personal_sign'
-              ],
-              chains: ['eip155:1'],
-              events: ['accountsChanged']
-            }
-          }
-        });
-        console.log('create web3 modal');
-        const modal = new Web3Modal({
-          walletConnectVersion: 2,
-          projectId,
-          standaloneChains: ['eip155:1']
-        });
-
-        console.log('use uri');
-
-        if (uri) {
-          modal.openModal({ uri, standaloneChains: ['eip155:1'] });
-          const session = await approval();
-          console.log(session, 'hakdog');
-          modal.closeModal();
-        }
-      } catch (e) {
-        console.log(e);
-      }
-      // this.walletConnect.createSession();
-      // this.walletConnect.on('connect', (error, payload) => {
-      //   if (error) {
-      //     return reject(error);
-      //   }
-      //   this.walletConnect._qrcodeModal.close();
-      //   const { accounts } = payload.params[0];
-      //   resolve(
-      //     new HybridWalletInterface(
-      //       sanitizeHex(accounts[0]),
-      //       this.isHardware,
-      //       this.identifier,
-      //       txSigner,
-      //       msgSigner,
-      //       this.walletConnect,
-      //       errorHandler,
-      //       this.meta
-      //     )
-      //   );
-      // });
+      resolve(
+        new HybridWalletInterface(
+          sanitizeHex(this.client.accounts[0]),
+          this.isHardware,
+          this.identifier,
+          txSigner,
+          msgSigner,
+          this.client,
+          errorHandler,
+          this.meta
+        )
+      );
     });
   }
 }
 const createWallet = async () => {
-  const signClient = await SignClient.init({
+  const signClient = await EthereumProvider.init({
     projectId,
+    showQrModal: true,
+    chains: [1, 137],
+    methods: [
+      'eth_sendTransaction',
+      'eth_signTransaction',
+      'eth_sign',
+      'personal_sign'
+    ],
+    events: ['chainChanged', 'accountsChanged'],
     metadata: {
       name: 'MyEtherWallet Inc',
       description:
-        'MyEtherWallet (MEW) is a free, open-source, client-side interface for generating Ethereum wallets & more. Interact with the Ethereum blockchain easily & securely.'
+        'MyEtherWallet (MEW) is a free, open-source, client-side interface for generating Ethereum wallets & more. Interact with the Ethereum blockchain easily & securely.',
+      url: 'https://myetherwallet.com',
+      icons: ['https://www.myetherwallet.com/logo-mew.png']
     }
   });
-  signClient.on('session_event', ({ event }) => {
-    console.log(event, 'sesh event');
-  });
-  signClient.on('session_update', ({ event }) => {
-    console.log(event, 'sesh update');
-  });
-  signClient.on('session_delete', ({ event }) => {
-    console.log(event, 'sesh delete');
-  });
+  await signClient.connect();
+  // console.log(huh);
+  // console.log('created instance', signClient);
+  // signClient.on('session_event', ({ event }) => {
+  //   console.log(event, 'sesh event');
+  // });
+  // signClient.on('session_update', ({ event }) => {
+  //   console.log(event, 'sesh update');
+  // });
   // const { topic } = await signClient.core.pairing.create();
   const walletConnectWallet = new WalletConnectWallet(signClient);
   const _tWallet = await walletConnectWallet.init();
