@@ -9,10 +9,12 @@
     <div class="mt-10">
       <v-row>
         <v-col v-for="(t, k) in tokens" :key="k" cols="12" lg="4" sm="6">
-          <div class="d-flex align-center">
-            <img :src="t.icon" :alt="t.label" height="20" class="mr-2" />
-            <div>{{ t.label }}</div>
-          </div>
+          <a :href="t.link">
+            <div class="d-flex align-center no-link-colors">
+              <img :src="t.icon" :alt="t.label" height="20" class="mr-2" />
+              <div>{{ t.label }}</div>
+            </div>
+          </a>
         </v-col>
       </v-row>
       <mew-button
@@ -29,7 +31,7 @@
 
 <script>
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
-
+import { knuthShuffle } from '@/modules/create-wallet/handlers/helpers';
 export default {
   name: 'HomeFeaturesTokens',
   components: {},
@@ -97,8 +99,27 @@ export default {
       }
     ],
     ROUTES_HOME: ROUTES_HOME
-  })
+  }),
+  created() {
+    fetch(`https://mew-seo-pages.pages.dev/best-wallet-for.json`)
+      .then(res => res.json())
+      .then(json => {
+        const tokenData = json.map(token => {
+          return {
+            label: `${token.name} (${token.symbol.toUpperCase()})`,
+            icon: `https://img.mewapi.io/?image=${token.icon}`,
+            link: `https://www.myetherwallet.com/pages${token.path}`
+          };
+        });
+        this.tokens = knuthShuffle(tokenData).slice(0, 15);
+      })
+      .catch(() => {});
+  }
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.no-link-colors {
+  color: #1f242f;
+}
+</style>

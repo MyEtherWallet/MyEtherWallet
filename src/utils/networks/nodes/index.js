@@ -11,7 +11,7 @@ import moonriver from './moonriver-ws';
 import rootstock from './rootstock-ws';
 import aurora from './aurora-ws';
 import arb from './arb-mew-ws';
-// import avalanche from './avalanche-ws';
+import sepolia from './sepolia-mew-ws';
 import fantom from './fantom-ws';
 import gnosis from './gnosis-ws';
 import klaytn from './klaytn-ws';
@@ -31,7 +31,7 @@ export {
   rootstock,
   aurora,
   arb,
-  // avalanche,
+  sepolia,
   fantom,
   gnosis,
   klaytn,

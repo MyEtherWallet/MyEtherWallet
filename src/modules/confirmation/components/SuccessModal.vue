@@ -52,21 +52,6 @@
                 <v-icon color="primary" small>mdi-launch</v-icon></a
               >
             </v-col>
-            <v-col
-              v-if="network.type.isEthVMSupported.supported"
-              cols="12"
-              sm="auto"
-              class="pb-2"
-            >
-              <a
-                rel="noopener noreferrer"
-                target="_blank"
-                :href="links.ethvm"
-                class="d-flex justify-center"
-                >View on EthVM
-                <v-icon color="primary" small>mdi-launch</v-icon></a
-              >
-            </v-col>
           </v-row>
         </div>
       </template>

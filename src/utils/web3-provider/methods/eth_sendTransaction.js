@@ -119,6 +119,7 @@ export default async ({ payload, store, requestManager }, res, next) => {
          * Checks whether confirmInfo is true
          * if true, assume transaction is a swap
          */
+        let txHash;
         EventBus.$emit(event, params, _response => {
           if (_response.rejected) {
             res(new Error('User rejected action'));
@@ -138,6 +139,7 @@ export default async ({ payload, store, requestManager }, res, next) => {
               }
             })
             .once('transactionHash', hash => {
+              txHash = hash;
               if (store.state.wallet.instance !== null) {
                 nonceHelper(
                   store.state.wallet.instance
@@ -154,6 +156,7 @@ export default async ({ payload, store, requestManager }, res, next) => {
             .on('error', err => {
               if (confirmInfo) {
                 emitErrorWithReceipt(err);
+                EventBus.$emit('swapTxFailed', txHash);
               }
               resolveReject(err, res);
             });
@@ -163,6 +166,7 @@ export default async ({ payload, store, requestManager }, res, next) => {
     .catch(e => {
       if (confirmInfo) {
         emitErrorWithReceipt(e);
+        EventBus.$emit('swapTxNotBroadcastedFailed');
       }
       resolveReject(e, res);
     });
