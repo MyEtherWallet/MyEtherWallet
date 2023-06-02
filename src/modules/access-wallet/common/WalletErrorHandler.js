@@ -44,14 +44,13 @@ const WalletErrorHandler = (errors, warnings, successes = []) => {
       return message.includes(item);
     });
     if (foundError) {
-      Toast(Vue.$i18n.t(errors[foundError]), {}, ERROR);
+      return Toast(Vue.$i18n.t(errors[foundError]), {}, ERROR);
     } else if (foundWarning) {
-      Toast(Vue.$i18n.t(warnings[foundWarning]), {}, WARNING);
+      return Toast(Vue.$i18n.t(warnings[foundWarning]), {}, WARNING);
     } else if (foundSuccess) {
-      Toast(Vue.$i18n.t(successes[foundSuccess]), {}, SUCCESS);
-    } else {
-      Toast(err, {}, SENTRY);
+      return Toast(Vue.$i18n.t(successes[foundSuccess]), {}, SUCCESS);
     }
+    return Toast(err, {}, SENTRY);
   };
 };
 export default WalletErrorHandler;

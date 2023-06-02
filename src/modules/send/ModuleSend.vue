@@ -193,7 +193,7 @@ import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 
 import { ETH } from '@/utils/networks/types';
-import { Toast, ERROR, WARNING } from '@/modules/toast/handler/handlerToast';
+import { Toast, WARNING } from '@/modules/toast/handler/handlerToast';
 
 import {
   formatIntegerToString,
@@ -776,10 +776,8 @@ export default {
           this.clear();
         })
         .catch(error => {
+          this.instance.errorHandler(error.message);
           this.clear();
-          if (!this.instance) {
-            Toast(error, {}, ERROR);
-          }
         });
     },
     prefillForm() {
