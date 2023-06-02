@@ -318,7 +318,6 @@ export default {
             });
           })
           .catch(e => {
-            console.log(e);
             WalletConnectWallet.errorHandler(e);
           });
       } catch (e) {
