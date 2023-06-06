@@ -201,10 +201,15 @@ const setTokenAndEthBalance = function ({
     })
     .catch(e => Toast(e.message, {}, ERROR));
 };
+
+const storeEIP6963Wallet = function ({ commit }, params) {
+  commit('STORE_EIP6369_WALLET', params);
+};
 export default {
   setLastPath,
   setCurrency,
   setCoinGeckoTokens,
   setTokenAndEthBalance,
-  setNetworkTokens
+  setNetworkTokens,
+  storeEIP6963Wallet
 };

@@ -53,6 +53,8 @@ export default {
     const updateMsg = this.$t('common.updates.update-found');
     const errMsg = this.$t('common.updates.update-error');
     this.$vuetify.theme.dark = false;
+
+    // pwa listeners
     window.addEventListener(PWA_EVENTS.PWA_UPDATED, () => {
       Toast(succMsg, {}, SUCCESS);
     });
@@ -62,11 +64,14 @@ export default {
     window.addEventListener(PWA_EVENTS.PWA_UPDATE_FOUND, () => {
       Toast(updateMsg, {}, INFO);
     });
+
+    // popup listeners
     document.addEventListener('visibilitychange', () => {
       if (document.hidden && !this.surveyPopup && !this.neverShowSurveyPopup) {
         this.showSurveyPopup();
       }
     });
+
     window.addEventListener('mouseout', e => {
       if (
         (e.clientY <= 0 ||
@@ -81,6 +86,10 @@ export default {
     });
   },
   mounted() {
+    // epi6963 listener
+    window.addEventListener('eip6963:announceProvider', e => {
+      this.storeEIP6963Wallet(e.detail);
+    });
     EventBus.$on('swapTxBroadcasted', hash => {
       this.trackSwap('swapTxBroadcasted', hash, this.network.type.chainID);
     });
@@ -143,6 +152,7 @@ export default {
     EventBus.$off('swapTxNotBroadcastedFailed');
     document.removeEventListener('visibilitychange');
     window.removeEventListener('mouseout');
+    window.removeEventListener('eip6963:announceProvider');
   },
   methods: {
     ...mapActions('global', ['setOnlineStatus']),
@@ -151,6 +161,7 @@ export default {
     ...mapActions('article', ['updateArticles']),
     ...mapActions('article', ['updateArticles']),
     ...mapActions('popups', ['showSurveyPopup']),
+    ...mapActions('external', ['storeEIP6963Wallet']),
     openBuy() {
       this.buySellOpen = true;
     },
