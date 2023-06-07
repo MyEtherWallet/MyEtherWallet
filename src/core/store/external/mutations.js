@@ -14,7 +14,7 @@ const SET_NETWORK_TOKENS = function (state, tokens) {
 const STORE_EIP6369_WALLET = function (state, detail) {
   const newArr = state.eip6963Providers;
   const findInArr = newArr.findIndex(item => {
-    return detail.info.uuid === item.info.uuid;
+    return detail.info.name.toLowerCase() === item.info.name.toLowerCase();
   });
   if (findInArr >= 0) {
     newArr[findInArr] = detail;

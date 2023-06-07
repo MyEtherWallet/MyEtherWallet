@@ -120,7 +120,7 @@
                 </div>
                 <div
                   v-if="eip6963Providers.length > 1"
-                  class="d-flex align-center justify-start"
+                  class="d-flex align-center justify-start mini-button-container"
                 >
                   <div
                     v-for="item in eip6963Providers"
@@ -133,11 +133,12 @@
                     "
                   >
                     <img
+                      v-if="item.info.icon"
                       :src="item.info.icon"
                       :alt="`${item.info.name}-picture`"
                       width="25px"
                     />
-                    <span>{{ item.info.name }}</span>
+                    <span class="pl-1">{{ item.info.name }}</span>
                   </div>
                 </div>
               </div>
@@ -499,5 +500,12 @@ export default {
 .mini-buttons {
   border: 1px solid var(--v-greenPrimary-base);
   border-radius: 4px;
+  width: 110px;
+  height: 45px;
+}
+
+.mini-button-container {
+  width: 100%;
+  overflow-x: auto;
 }
 </style>
