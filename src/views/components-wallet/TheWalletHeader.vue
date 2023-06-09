@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container class="the-wallet-header">
     <v-row class="d-flex align-center py-2 pb-md-4 pb-lg-2 px-1">
       <v-col
         cols="12"
@@ -17,7 +17,10 @@
         ]"
       >
         <div v-if="!promoOver && !isOfflineApp" class="d-flex align-center">
-          <div class="party-popper-container ml-2 mr-3 d-flex pa-3">
+          <div
+            class="party-popper-container ml-2 mr-3 d-flex pa-3"
+            style="filter: invert(1)"
+          >
             <img
               src="@/assets/images/icons/icon-party-popper.png"
               width="20px"
@@ -56,16 +59,19 @@
             </div>
           </div>
         </div>
-        <div v-else-if="promoOver && !isOfflineApp" class="eth-banner d-flex">
+        <div
+          v-else-if="promoOver && !isOfflineApp && network.type.canBuy"
+          class="eth-banner d-flex"
+        >
           <div class="mr-5">
             <mew6-white-sheet class="pa-3">
-              <v-icon color="black"> mdi-bank </v-icon>
+              <v-icon color="blackBg"> mdi-bank </v-icon>
             </mew6-white-sheet>
           </div>
           <div class="d-flex flex-column align-start">
-            <span class="mew-body font-weight-bold textDark--text"
-              >You can now buy crypto with low fees</span
-            >
+            <span class="mew-body font-weight-bold textDark--text">
+              You can now buy crypto with low fees
+            </span>
             <span
               :class="[
                 $vuetify.breakpoint.md ||
@@ -95,7 +101,10 @@
         class="ml-auto d-flex align-center justify-end"
       >
         <div class="align-center d-none d-lg-block">
-          <notification-overlay v-if="online" />
+          <notification-overlay
+            v-if="online"
+            :invert-icon="$vuetify.theme.dark"
+          />
         </div>
       </v-col>
     </v-row>
@@ -104,9 +113,9 @@
 
 <script>
 import moment from 'moment';
-import { mapState } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-import { MOONPAY_EVENT, MOONPAY_OFFER_END } from '@/modules/moon-pay/helpers';
+import { BUYSELL_EVENT, MOONPAY_OFFER_END } from '@/modules/buy-sell/helpers';
 import { EventBus } from '@/core/plugins/eventBus';
 export default {
   components: {
@@ -117,6 +126,7 @@ export default {
   computed: {
     ...mapState('wallet', ['identifier', 'isOfflineApp']),
     ...mapState('global', ['online']),
+    ...mapGetters('global', ['network']),
     daysLeft() {
       const eventDate = moment(MOONPAY_OFFER_END);
       const todaysDate = moment();
@@ -138,7 +148,7 @@ export default {
   methods: {
     buyCryptoNow() {
       this.trackBuySell('buySellBuyCryptoNow');
-      EventBus.$emit(MOONPAY_EVENT);
+      EventBus.$emit(BUYSELL_EVENT);
     }
   }
 };
@@ -159,7 +169,7 @@ a {
 }
 
 .party-popper-container {
-  background-color: var(--v-whiteBackground-base);
+  background-color: var(--v-whiteBg-base);
   box-shadow: 0px 5px 30px rgba(166, 173, 201, 0.22),
     0px 5px 5px rgba(154, 160, 185, 0.05);
   border-radius: 100px;

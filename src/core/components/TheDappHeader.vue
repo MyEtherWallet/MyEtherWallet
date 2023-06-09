@@ -87,13 +87,11 @@ export default {
 
 <style lang="scss" scoped>
 .dapp-icon {
-  background-color: white;
-  border: 1px solid #d7dae3;
   border-radius: 12px;
   width: 88px;
   height: 88px;
 }
 .router-link {
-  width: 100px;
+  display: inline-block;
 }
 </style>

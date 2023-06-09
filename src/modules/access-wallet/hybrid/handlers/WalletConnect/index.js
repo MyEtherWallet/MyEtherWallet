@@ -1,7 +1,10 @@
 import WalletConnect from '@walletconnect/client';
 import WalletConnectQRCodeModal from '@walletconnect/qrcode-modal';
-import store from '@/core/store';
+import PromiEvent from 'web3-core-promievent';
 import { Transaction } from '@ethereumjs/tx';
+
+import * as nodes from '@/utils/networks/nodes';
+import store from '@/core/store';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import {
   sanitizeHex,
@@ -11,7 +14,6 @@ import errorHandler from './errorHandler';
 import commonGenerator from '@/core/helpers/commonGenerator';
 import toBuffer from '@/core/helpers/toBuffer';
 import HybridWalletInterface from '../walletInterface';
-import PromiEvent from 'web3-core-promievent';
 
 const BRIDGE_URL = 'https://bridge.walletconnect.org';
 const IS_HARDWARE = false;
@@ -25,12 +27,9 @@ class WalletConnectWallet {
       qrcodeModal: WalletConnectQRCodeModal
     });
 
-    if (
-      walletConnect &&
-      walletConnect.connected &&
-      walletConnect._sessionStorage
-    ) {
-      walletConnect._sessionStorage.removeSession();
+    if (walletConnect && walletConnect.connected) {
+      if (walletConnect._sessionStorage)
+        walletConnect._sessionStorage.removeSession();
       walletConnect.killSession(); // remove any leftover connections
     }
     this.walletConnect = walletConnect;
@@ -38,9 +37,6 @@ class WalletConnectWallet {
       store.dispatch('wallet/removeWallet');
     });
 
-    this.walletConnect.disconnect = () => {
-      this.walletConnect.killSession();
-    };
     this.meta = {
       name: 'Wallet Connect',
       img: {
@@ -94,7 +90,21 @@ class WalletConnectWallet {
           return reject(error);
         }
         this.walletConnect._qrcodeModal.close();
-        const { accounts } = payload.params[0];
+        const { accounts, chainId } = payload.params[0];
+        const foundNode = Object.values(nodes).find(item => {
+          if (item.type.chainID === parseInt(chainId)) return item;
+        });
+
+        if (foundNode) {
+          store
+            .dispatch('global/setNetwork', {
+              network: foundNode,
+              walletType: this.identifier
+            })
+            .then(() => {
+              store.dispatch('wallet/setWeb3Instance');
+            });
+        }
         resolve(
           new HybridWalletInterface(
             sanitizeHex(accounts[0]),

@@ -5,7 +5,11 @@
     Used in Mint.
   ===================================================
   -->
-  <v-sheet min-height="148" class="d-flex align-content-center">
+  <v-sheet
+    color="transparent"
+    min-height="148"
+    class="d-flex align-content-center eth-block-block-loading"
+  >
     <v-progress-circular
       indeterminate
       color="primary"

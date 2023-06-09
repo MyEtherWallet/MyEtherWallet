@@ -145,6 +145,14 @@ h6 {
   border-radius: 5px !important;
 }
 
+/* ========== Box shadow ========== */
+.bs-wallet-block {
+  box-shadow: 0 12px 17px #151d3f08 !important;
+}
+.bs-small {
+  box-shadow: 0px 1.6px 6px #00000045 !important;
+}
+
 /* ========== Other ========== */
 .overflow--hidden {
   overflow: hidden !important;
@@ -223,4 +231,8 @@ input[type=number] {
   background-color: #c8c8c8;
   border-radius: 10px;
   border: 2px solid #f4f4f4;
+}
+
+.v-dialog {
+  border-radius: 12px !important;
 }

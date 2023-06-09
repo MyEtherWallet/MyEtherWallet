@@ -1,0 +1,70 @@
+{
+  "title": "RNS Minting",
+  "dapp-desc": "Register RNS domain",
+  "search-domain": "Search for a domain name",
+  "search-domain-desc": "Search for a domain name. Once you have registered one, you can tell your friends to send RBTC to \"_____.rsk\", instead of your public address (0x.....).",
+  "error": {
+    "permanent-not-available": "RNS Permanent registrar is not available yet, please try again later",
+    "domain-tld-not-supported": "Domain TLD {parsedTld} is not supported in this node!",
+    "something-went-wrong": "Something went wrong! Please try again.",
+    "dns-sec-not-found": "DNSSEC NOT FOUND!",
+    "balance-too-low": "Balance too low!",
+    "not-enough-funds-to-register": "Not enough funds to register domain!"
+  },
+  "warning": {
+    "not-enough-char": "Domain name is less than 3 characters.",
+    "invalid-symbol": "Invalid symbols on domain"
+  },
+  "toast": {
+    "success-register": "Successfully Registered!",
+    "unavailable": "Manage RNS is currently unavailable",
+    "success": "Success!"
+  },
+  "check-domain": "Check Domain",
+  "update": "Update",
+  "ph": {
+    "three-char": "Please enter at least 3 Characters"
+  },
+  "ens-manager": {
+    "title": "RNS Manager",
+    "description": "Manage your RNS names or transfer it to someone else"
+  },
+  "fetching": "Fetching names...",
+  "no-names-found": "No RNS name found for account {address}!",
+  "renew": "Renew",
+  "manage": "Manage",
+  "my-domains": "My Domains",
+  "manage-domain": "View Domain",
+  "register-domain": "Register Domain",
+  "is-available": "Cheers! This domain is available.",
+  "domain-taken": "Domain has been taken",
+  "hang-on": "Hang on tight!",
+  "hang-on-committing": "Please do not close your browser or exit this Dapp. We are creating a commitment for your domain. Timer will start once your transaction is confirmed",
+  "finalize-registration": "We are finalizing the registration for ",
+  "register-progress": "Registration in progress for",
+  "commit": {
+    "is-available": "Congratulations! {domain} is available!",
+    "register-domain": "Do you want to register {domain}?",
+    "how-many-years": "How many years do you want to keep the name?",
+    "year": " 1 year | {duration} years",
+    "no-balance": "You have no balance to send a Tx"
+  },
+  "already-owned": "{domain} is already owned.",
+  "request": {
+    "request-registr": "Request registration",
+    "select-duration": "Select Duration",
+    "estimated-price": "Estimated Price",
+    "currency": {
+      "rif": "RIF"
+    },
+    "about-domain": "Once you have a domain name, you can tell your friends to send RBTC or RIF to your domain name instead of your address."
+  },
+  "register": {
+    "domain-name": "Domain Name",
+    "term": "Term",
+    "name": "Register",
+    "create-commitment": "Create commitment",
+    "complete-reg": "Complete Registration",
+    "complete-reg-desc": "Please click 'Register' and follow the prompts to complete a final transaction and complete your domain registration."
+  }
+}

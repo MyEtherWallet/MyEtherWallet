@@ -33,7 +33,7 @@
             <div @click="trackBuySellLanding">
               <a
                 class="white--text text-decoration--none menu-item"
-                @click="openMoonpay"
+                @click="openBuySell"
               >
                 {{ $t('header.buy-eth') }}
               </a>
@@ -114,6 +114,7 @@ export default {
     ...mapGetters('global', ['swapLink', 'network'])
   },
   mounted() {
+    if (!this.network) return;
     this.network.type.tokens.then(res => {
       const tokenMap = new Map();
       res.forEach(item => {

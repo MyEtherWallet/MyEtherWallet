@@ -172,7 +172,12 @@
             <v-container>
               <v-sheet color="transparent" max-width="500px" class="mx-auto">
                 <ul>
-                  <li v-for="(md, mdkey) in mf.data" :key="mdkey">
+                  <li
+                    v-for="(md, mdkey) in mf.data"
+                    :key="mdkey"
+                    class="d-flex align-center"
+                  >
+                    <v-icon>mdi-menu-right</v-icon>
                     <router-link
                       v-if="md.routerLink"
                       :to="{ name: md.routerLink, query: md.query }"
@@ -287,7 +292,7 @@
           <v-sheet color="transparent" max-width="500px" class="mx-auto">
             <div class="d-flex align-center justify-space-between">
               <a
-                :ref="`https://github.com/MyEtherWallet/MyEtherWallet/releases/tag/v${version}`"
+                :href="`https://github.com/MyEtherWallet/MyEtherWallet/releases/tag/v${version}`"
                 target="_blank"
                 class="cyan--text text--lighten-3 ma-0"
                 >v{{ version }}</a

@@ -247,18 +247,18 @@ export default {
           }
           this.loadedAddressValidation = !this.isValidAddress ? false : true;
           /**
-           * Resolve address with ENS/Unstoppable/Kleros
-           */
-          if (this.isValidAddress && !this.isOfflineApp)
-            await this.resolveAddress();
-
-          /**
            * @emits setAddress
            */
           this.$emit('setAddress', value, this.isValidAddress, {
             type: inputType,
             value: isObject(typeVal) ? typeVal.nickname : typeVal
           });
+          /**
+           * Resolve address with ENS/Unstoppable/Kleros
+           */
+          if (this.isValidAddress && !this.isOfflineApp)
+            await this.resolveAddress();
+
           if (!this.isValidAddress) {
             await this.resolveName();
           }

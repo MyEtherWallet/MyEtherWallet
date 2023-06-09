@@ -27,6 +27,7 @@ import convertUnits from './other/convert-units/en_US';
 import verifyMessage from './other/verify-message/en_US';
 import sendTx from './send-tx/en_US';
 import ens from './dapps-ens/en_US';
+import rns from './dapps-rns/en_US';
 import unstoppable from './dapps-unstoppable/en_US';
 import subDomain from './dapps-sub-domain/en_US';
 import scheduleTx from './dapps-schedule-tx/en_US';
@@ -67,6 +68,7 @@ const en_US = {
   verifyMessage: verifyMessage,
   sendTx: sendTx,
   ens: ens,
+  rns: rns,
   unstoppable: unstoppable,
   subDomain: subDomain,
   scheduleTx: scheduleTx,

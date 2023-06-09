@@ -21,7 +21,7 @@
     }
   },
   "access-my-wallet": {
-    "title": "Access My Wallet",
+    "title": "Access my wallet",
     "subtitle-one": "Please select a method to access your wallet.",
     "subtitle-two": "Don't have a wallet?"
   },
@@ -33,7 +33,7 @@
     },
     "swap": {
       "heading": "Swap with MEW",
-      "title": "Swap fiat to ETH, ETH to BTC, and ETH to ERC20 tokens via integrated partners 1inch, DEX AG, Changelly, Bity, and Simplexs."
+      "title": "Swap fiat to ETH, ETH to BTC, and ETH to ERC20 tokens via integrated partners 1inch, DEX AG, Changelly, Bity, and Simplex."
     },
     "dapps": {
       "text": "MEW team is working hard to update the DApps Center. Cant’s wait?",

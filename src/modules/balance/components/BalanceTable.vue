@@ -1,13 +1,9 @@
 <template>
-  <div>
-    <app-table
-      v-if="!isMobile"
-      background
-      full-width
-      flat
-      border-bottom
-      class="mt-4 mb-4"
-    >
+  <div class="modules-balance-table">
+    <!-- ==================================================================== -->
+    <!-- Desktop table -->
+    <!-- ==================================================================== -->
+    <app-table v-if="!isMobile" full-width flat class="mt-4 mb-4">
       <table>
         <thead>
           <tr>
@@ -22,50 +18,62 @@
         <tbody>
           <tr v-for="(td, dataKey) in tableData" :key="dataKey">
             <td>
-              <div class="d-flex align-center mew-label">
+              <div class="d-flex align-center">
                 <mew-token-container
                   :img="td.tokenImg"
-                  size="20px"
+                  size="22px"
                   class="mr-2"
                 />
                 {{ td.token }}
               </div>
             </td>
-            <td class="mew-label">
-              {{ td.price }}
-              <span v-if="td.price !== ''" class="textLight--text"
-                >/ token</span
-              >
-            </td>
-            <td class="mew-label">{{ td.cap }}</td>
             <td>
-              <div v-if="td.status == '+'" class="d-flex align-center">
-                <div class="mew-label greenPrimary--text">{{ td.change }}%</div>
-                <v-icon small color="greenPrimary"> mdi-arrow-up-thick </v-icon>
-              </div>
-              <div
-                v-else-if="td.change !== '' && td.status === '-'"
-                class="d-flex align-center"
-              >
-                <div class="mew-label redPrimary--text">{{ td.change }}%</div>
-                <v-icon small color="redPrimary"> mdi-arrow-down-thick </v-icon>
+              <div v-if="td.price">
+                {{ td.price }}
+                <span style="font-size: 12px" class="textLight--text"
+                  >/ token</span
+                >
               </div>
             </td>
-            <td class="mew-label">
-              <div class="mew-label mb-n1">{{ td.balance[0] }}</div>
-              <div style="font-size: 10px">{{ td.balance[1] }}</div>
+            <td>{{ td.cap }}</td>
+            <td>
+              <div v-if="td.change">
+                <div v-if="td.status == '+'" class="d-flex align-center">
+                  <div class="greenPrimary--text">{{ td.change }}%</div>
+                  <v-icon small color="greenPrimary">
+                    mdi-arrow-up-thick
+                  </v-icon>
+                </div>
+                <div v-else class="d-flex align-center">
+                  <div class="redPrimary--text">{{ td.change }}%</div>
+                  <v-icon small color="redPrimary">
+                    mdi-arrow-down-thick
+                  </v-icon>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div>{{ td.balance[0] }}</div>
+              <div
+                style="font-size: 12px; margin-top: -2px"
+                class="textLight--text"
+              >
+                {{ td.balance[1] }}
+              </div>
             </td>
             <td>
               <template v-if="td.callToAction">
-                <mew-button
+                <v-btn
                   v-for="(button, idx) in td.callToAction"
                   :key="idx"
-                  btn-style="outline"
-                  btn-size="small"
-                  @click.native="button.method(td)"
+                  small
+                  depressed
+                  outlined
+                  color="greenPrimary"
+                  @click="button.method(td)"
                 >
                   {{ button.title }}
-                </mew-button>
+                </v-btn>
               </template>
             </td>
           </tr>
@@ -73,8 +81,11 @@
       </table>
     </app-table>
 
+    <!-- ==================================================================== -->
+    <!-- Mobile table -->
+    <!-- ==================================================================== -->
     <app-table
-      v-for="(td, dataKey) in tableData"
+      v-for="(td, dataKey) in tableDataPaginated"
       v-else
       :key="dataKey"
       class="mx-4 mt-2"
@@ -142,6 +153,16 @@
         </template>
       </div>
     </app-table>
+
+    <!-- ==================================================================== -->
+    <!-- Pagination for both desktop and mobile -->
+    <!-- ==================================================================== -->
+    <v-pagination
+      v-if="pageLength && false"
+      v-model="page"
+      class="mt-6"
+      :length="pageLength"
+    ></v-pagination>
   </div>
 </template>
 
@@ -149,7 +170,7 @@
 import AppTable from '@/core/components/AppTable';
 
 export default {
-  name: 'BalanceTable',
+  name: 'ModulesBalanceTable',
   components: { AppTable },
   props: {
     tableData: {
@@ -160,15 +181,41 @@ export default {
     }
   },
   data() {
-    return {};
+    return {
+      page: 1,
+      itemsPerPage: 10
+    };
   },
   computed: {
     isMobile() {
       return this.$vuetify.breakpoint.mdAndDown;
+    },
+    pageLength() {
+      return Math.ceil(this.tableData.length / this.itemsPerPage);
+    },
+    tableDataPaginated() {
+      return this.paginate(this.tableData, this.itemsPerPage, this.page);
     }
   },
-  methods: {}
+  methods: {
+    paginate(array, pageSize, pageNumber) {
+      return array.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
+    }
+  }
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss">
+.modules-balance-table {
+  .v-pagination__item--active {
+    box-shadow: none !important;
+    background-color: var(--v-textDark-base) !important;
+  }
+  .v-pagination__navigation {
+    box-shadow: none !important;
+  }
+  .v-pagination__item {
+    box-shadow: none !important;
+  }
+}
+</style>

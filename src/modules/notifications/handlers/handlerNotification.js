@@ -161,6 +161,7 @@ export default class Notification {
    * Check swap status
    */
   checkSwapStatus(swapper) {
+    let swapResolver;
     if (
       this.status.toLowerCase() === NOTIFICATION_STATUS.PENDING ||
       this.status.toLowerCase() === NOTIFICATION_STATUS.SUBMITTED
@@ -188,7 +189,7 @@ export default class Notification {
           clearInterval(swapResolver);
         }
       }, 1000);
-      const swapResolver = setInterval(debouncedInterval, 10000);
+      swapResolver = setInterval(debouncedInterval, 10000);
     }
   }
 

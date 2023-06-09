@@ -1,11 +1,14 @@
 <template>
   <div class="mew-component--aave">
     <the-wrapper-dapp
-      :has-exit-btn="true"
-      :banner-img="BG"
+      :is-new-header="true"
+      :dapp-img="headerImg"
       :banner-text="topBanner"
       :tab-items="tabs"
       :active-tab="activeTab"
+      external-contents
+      :on-tab="tabChanged"
+      :valid-networks="validNetworks"
     >
       <template #tabContent1>
         <v-sheet
@@ -27,7 +30,7 @@
           </div>
           <v-row class="mb-1 mt-2" dense>
             <v-col cols="12" md="6">
-              <div class="greyLight pa-5 border-radius--5px">
+              <div class="bgWalletBlockDark pa-5 border-radius--5px">
                 <h5 class="mb-2 font-weight-bold">Aggregated Balance</h5>
                 <h3 v-if="!isLoadingData" class="">
                   {{ totalLiquidity.usd }}
@@ -68,7 +71,7 @@
             </v-col>
             <v-col cols="12" md="6">
               <div
-                class="greyLight pa-5 border-radius--5px height-100 d-flex flex-column"
+                class="bgWalletBlockDark pa-5 border-radius--5px height-100 d-flex flex-column"
               >
                 <div class="d-flex aling-center">
                   <h5 class="font-weight-bold mr-auto">Earnings</h5>
@@ -127,7 +130,7 @@
 
           <v-row class="mb-1 mt-2" dense>
             <v-col cols="12" md="6">
-              <div class="greyLight pa-5 border-radius--5px">
+              <div class="bgWalletBlockDark pa-5 border-radius--5px">
                 <h5 class="mb-2 font-weight-bold">You Borrowed</h5>
                 <h3 v-if="!isLoadingData">{{ totalBorrow.usd }}</h3>
                 <v-skeleton-loader
@@ -165,7 +168,7 @@
               </div>
             </v-col>
             <v-col cols="12" md="6">
-              <div class="greyLight pa-5 border-radius--5px">
+              <div class="bgWalletBlockDark pa-5 border-radius--5px">
                 <h5 class="mb-2 font-weight-bold">Your Collateral</h5>
                 <h3 v-if="!isLoadingData">{{ totalCollateral.usd }}</h3>
                 <v-skeleton-loader
@@ -204,7 +207,7 @@
             </v-col>
 
             <v-col cols="12" class="pt-md-2">
-              <div class="greyLight pa-5 loan-value-container">
+              <div class="bgWalletBlockDark pa-5 loan-value-container">
                 <v-row align="center">
                   <v-col cols="9">
                     <span class="mew-heading-3">Loan to Value</span>
@@ -285,7 +288,7 @@
 <script>
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
-
+import { SUPPORTED_NETWORKS } from './handlers/supportedNetworks';
 import TheWrapperDapp from '@/core/components/TheWrapperDapp';
 import AaveBorrowOverlay from './components/overlays/AaveBorrowOverlay';
 import AaveDepositOverlay from './components/overlays/AaveDepositOverlay';
@@ -293,7 +296,6 @@ import AaveCollateralOverlay from './components/overlays/AaveCollateralOverlay';
 import AaveRepayOverlay from './components/overlays/AaveRepayOverlay';
 import AaveWithdrawOverlay from './components/overlays/AaveWithdrawOverlay';
 import AaveSetAprOverlay from './components/overlays/AaveSetAprOverlay';
-import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.jpg';
 import { AAVE_TABLE_TITLE } from '@/dapps/aave-dapp/handlers/helpers';
 import AaveTable from './components/AaveTable';
 import handlerAave from './handlers/handlerAave.mixin';
@@ -340,6 +342,8 @@ export default {
   mixins: [handlerAave],
   data() {
     return {
+      validNetworks: SUPPORTED_NETWORKS,
+      headerImg: require('@/assets/images/icons/dapps/icon-dapp-aave.svg'),
       showDepositOverlay: false,
       tokenSelected: {},
       showBorrowOverlay: false,
@@ -348,7 +352,6 @@ export default {
       showRepayOverlay: false,
       showAprTypeOverlay: false,
       activeTab: 0,
-      BG: BG,
       topBanner: {
         title: 'AAVE',
         subtext:
@@ -535,6 +538,9 @@ export default {
     EventBus.$off('collateralChange');
   },
   methods: {
+    tabChanged(tab) {
+      this.activeTab = tab;
+    },
     toggleDepositOverlay(boolean) {
       if (!boolean) {
         this.tokenSelected = {};

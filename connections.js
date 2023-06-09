@@ -22,6 +22,7 @@ module.exports = [
   'https://development.mewwallet.dev:443',
   'https://tokenbalance.mewapi.io:443',
   'https://requestcache.mewapi.io:443',
+  'https://partners.mewapi.io:443',
   'data:',
   'https://app.lokalise.com:443',
   'https://myetherwallet.matomo.cloud:443',
@@ -39,6 +40,12 @@ module.exports = [
   'wss://node1.mintme.com:443/ws',
   'wss://wss.api.moonriver.moonbeam.network:443',
   'wss://wss.api.moonbeam.network:443',
+  'wss://public-node.rsk.co:443/websocket',
+  'wss://mainnet.aurora.dev:443',
+  'wss://api.avax.network:443/ext/bc/C/ws',
+  'wss://rpc.gnosischain.com:443/wss',
+  'wss://public-node-api.klaytnapi.com:443/v1/cypress/ws',
+  'wss://wsapi.fantom.network:443/',
   // intercom stuff
   'api-iam.intercom.io:443',
   'https://api.zilliqa.com:443',
@@ -60,6 +67,7 @@ module.exports = [
   'wss://*.bridge.walletconnect.org:443',
   'https://buy-staging.moonpay.com:443',
   // Dapps
+  'https://public-node.rsk.co', // Rootstock
   'https://staked.mewapi.io:443', // staked
   'https://stakedtest.mewapi.io:443', // staked
   'https://ethblocksapi.mewapi.io:443', // Eth Blocks
@@ -78,5 +86,6 @@ module.exports = [
   'https://eth-mainnet.alchemyapi.io:443', // Unstoppable domains
   'https://polygon-mainnet.g.alchemy.com:443', // Unstoppable domains
   'https://unstoppabledomains.g.alchemy.com:443', // Unstoppable domains
-  'https://metadata.unstoppabledomains.com:443' // Unstoppable domains
+  'https://metadata.unstoppabledomains.com:443', // Unstoppable domains
+  'https://mew-seo-pages.pages.dev:443' //pages
 ];

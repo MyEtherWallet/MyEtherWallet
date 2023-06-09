@@ -95,6 +95,7 @@ export default {
       this.trackGasSwitch(
         `type:${this.gasPriceType}, gas:${this.txFeeFormatted}`
       );
+      this.closeDialog();
     },
     closeDialog() {
       this.close();

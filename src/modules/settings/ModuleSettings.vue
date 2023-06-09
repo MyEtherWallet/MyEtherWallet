@@ -16,6 +16,7 @@
       v-if="!editMode && !addMode"
       :panel-items="panelItems"
       :idx-to-expand="idxToExpand"
+      class="mt-6"
     >
       <template #panelBody1>
         <div class="px-5">
@@ -60,12 +61,31 @@
       </template> -->
     </mew-expand-panel>
     <!--
-  =====================================================================================
-    Add / Edit Address Book overlay
-  =====================================================================================
-  -->
+    =====================================================================================
+      Consent to Data Sharing slider
+    =====================================================================================
+    -->
+    <div v-if="online && !addMode && !editMode" class="mt-3 px-8">
+      <div class="matomo-tracking-switch">
+        <v-switch
+          v-model="dataSharingOn"
+          :label="`Data Sharing is ${dataSharingOn ? 'on' : 'off'}`"
+          :input-value="consentToTrack"
+          inset
+          color="greenPrimary"
+          off-icon="mdi-alert-circle"
+          @change="setConsent"
+        />
+      </div>
+    </div>
+    <!--
+    =====================================================================================
+      Add / Edit Address Book overlay
+    =====================================================================================
+    -->
     <address-book-add-edit
       v-if="addMode || editMode"
+      class="mt-4 mt-lg-0"
       :item="itemToEdit"
       :mode="onMode"
       @back="back"
@@ -79,6 +99,7 @@ import { mapState } from 'vuex';
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
 import handlerSettings from './handler/handlerSettings';
 import gasPriceMixin from './handler/gasPriceMixin';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 const modes = ['add', 'edit'];
 
 export default {
@@ -92,7 +113,7 @@ export default {
       import('@/modules/address-book/components/AddressBookAddEdit'),
     SettingsLocaleConfig: () => import('./components/SettingsLocaleConfig.vue')
   },
-  mixins: [gasPriceMixin],
+  mixins: [gasPriceMixin, handlerAnalytics],
   beforeRouteLeave(to, from, next) {
     if (to.name == ROUTES_HOME.ACCESS_WALLET.NAME) {
       next({ name: ROUTES_WALLET.DASHBOARD.NAME });
@@ -105,6 +126,7 @@ export default {
   },
   data() {
     return {
+      dataSharingOn: false,
       settingsHandler: null,
       idxToExpand: null,
       editMode: false,
@@ -115,10 +137,12 @@ export default {
   },
   computed: {
     ...mapState('addressBook', ['addressBookStore']),
+    ...mapState('global', ['online']),
+    ...mapState('popups', ['consentToTrack']),
     panelItems() {
       return [
         {
-          name: 'Default transaction priority',
+          name: 'Transaction priority',
           toggleTitle: this.setPriority(this.gasPriceType)
         },
         {
@@ -163,6 +187,7 @@ export default {
     this.settingsHandler = new handlerSettings();
   },
   methods: {
+    setConsent() {},
     getAddressBookTableData() {
       this.tableData = [];
       this.addressBookStore.forEach((item, idx) => {
@@ -216,3 +241,11 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+.matomo-tracking-switch {
+  .v-label {
+    color: rgba(255, 255, 255, 0.6);
+  }
+}
+</style>

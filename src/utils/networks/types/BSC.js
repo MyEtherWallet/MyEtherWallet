@@ -10,7 +10,7 @@ export default {
   tokens: import('@/_generated/tokens/tokens-bsc.json').then(
     module => module.default
   ),
-  contracts: import('@/_generated/contracts/contract-abi-etc.json').then(
+  contracts: import('@/_generated/contracts/contract-abi-bsc.json').then(
     module => module.default
   ),
   icon: bsc,
@@ -23,5 +23,6 @@ export default {
   },
   gasPriceMultiplier: 1,
   canBuy: true,
-  coingeckoID: 'binancecoin'
+  coingeckoID: 'binancecoin',
+  balanceApi: 'https://tokenbalance.mewapi.io/bsc?address='
 };

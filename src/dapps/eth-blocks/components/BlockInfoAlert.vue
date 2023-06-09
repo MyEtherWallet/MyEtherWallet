@@ -128,12 +128,7 @@
         </v-col>
       </v-row>
     </div>
-    <mew-alert
-      :theme="alertTheme"
-      has-white-background
-      hide-alert-icon
-      hide-close-icon
-    >
+    <mew-alert :theme="alertTheme" hide-alert-icon hide-close-icon>
       <v-row class="align-center justify-start" no-gutters>
         <!--
         ===================================================
@@ -284,7 +279,7 @@
               <a
                 v-if="!isTestNetwork && network.type.canBuy"
                 class="mew-label font-weight-medium buy-more-link"
-                @click="openMoonpay"
+                @click="openBuySell"
               >
                 Buy more {{ network.type.name }}.
 

@@ -33,9 +33,9 @@ const ROUTES_WALLET = {
   ENS_2: { NAME: 'ENS2', PATH: 'ens-2' },
   ENS_3: { NAME: 'ENS3', PATH: 'ens-3' },
   INTERACT_WITH_CONTRACT: { NAME: 'InteractWithContract', PATH: 'interact' },
-  NETWORK: { NAME: 'Network', PATH: 'network' },
   NFT_MANAGER: { NAME: 'NFTManager', PATH: 'nft' },
   NFT_MANAGER_SEND: { NAME: 'NftManagerSend', PATH: 'send-your-nft' },
+  PRINT: { NAME: 'PrintPaperWallet', PATH: 'print-wallet' },
   SEND_TX: { NAME: 'SendTX', PATH: 'send-tx' },
   SEND_TX_OFFLINE: { NAME: 'SendTXOffline', PATH: 'send-tx-offline' },
   SETTINGS: { NAME: 'Settings', PATH: 'settings' },
@@ -48,6 +48,7 @@ const ROUTES_WALLET = {
   STAKED_4: { NAME: 'Staked4', PATH: 'staked-4' },
   STAKEWISE: { NAME: 'Stakewise', PATH: 'stakewise' },
   SWAP: { NAME: 'Swap', PATH: 'swap' },
+  BRIDGE: { NAME: 'Bridge', PATH: 'bridge' },
   UNSTOPPABLE: { NAME: 'Unstoppable', PATH: 'unstoppable' },
   VERIFY_MESSAGE: { NAME: 'VerifyMessage', PATH: 'verify' }
 };

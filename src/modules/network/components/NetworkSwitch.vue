@@ -13,7 +13,7 @@
         <v-btn-toggle
           v-model="toggleType"
           mandatory
-          active-class="textDark white--text alig-end"
+          active-class="buttonToggleDark white--text alig-end"
         >
           <v-btn small>Main</v-btn>
           <v-btn small>Test</v-btn>
@@ -46,7 +46,10 @@
     <!-- ===================================================================================== -->
     <!-- Networks -->
     <!-- ===================================================================================== -->
-    <v-radio-group v-model="networkSelected">
+    <v-radio-group
+      v-model="networkSelected"
+      :class="networks.length > 10 ? 'network-container' : ''"
+    >
       <v-container
         v-for="(network, i) in networks"
         :key="network.name"
@@ -60,15 +63,7 @@
           <!-- ===================================================================================== -->
           <!-- Icon -->
           <!-- ===================================================================================== -->
-          <v-img
-            :class="network.name === 'MINTME' ? 'mint-me-color' : ''"
-            :src="network.icon"
-            :lazy-src="require('@/assets/images/currencies/icon-eth-grey.svg')"
-            contain
-            max-height="24px"
-            max-width="24px"
-          />
-
+          <mew-token-container :img="network.icon" size="24px" />
           <!-- ===================================================================================== -->
           <!-- Symbol/Name -->
           <!-- ===================================================================================== -->
@@ -286,7 +281,6 @@ export default {
   methods: {
     ...mapActions('wallet', ['setWeb3Instance']),
     ...mapActions('global', ['setNetwork']),
-    ...mapActions('external', ['setTokenAndEthBalance']),
     /**
      * Method checks whether symbol or name has searchInput substring
      * @returns {boolean}
@@ -326,18 +320,15 @@ export default {
               ? this.network.type.name
               : '';
             this.networkLoading = false;
-            const provider =
+            const setNetworkCall =
               this.identifier === WALLET_TYPES.WEB3_WALLET
                 ? this.setWeb3Instance(window.ethereum)
                 : this.setWeb3Instance();
-            if (!this.isOfflineApp) {
-              provider.then(() => {
-                this.setTokenAndEthBalance();
-              });
-            }
-            Toast(`Switched network to: ${found[0].type.name}`, {}, SUCCESS);
-            this.trackNetworkSwitch(found[0].type.name);
-            this.$emit('newNetwork');
+            setNetworkCall.then(() => {
+              Toast(`Switched network to: ${found[0].type.name}`, {}, SUCCESS);
+              this.trackNetworkSwitch(found[0].type.name);
+              this.$emit('newNetwork');
+            });
           }
         })
         .catch(e => {
@@ -362,6 +353,13 @@ export default {
 
 <style lang="scss" scoped>
 $borderNetwork: 1px solid #ececec;
+
+.network-container {
+  max-height: 500px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
 .network-border {
   border-bottom: $borderNetwork;
   border-right: $borderNetwork;
@@ -376,6 +374,7 @@ $borderNetwork: 1px solid #ececec;
 .network-border-last {
   border-radius: 0px 0px 4px 4px;
 }
+
 .mint-me-color {
   filter: brightness(0) saturate(100%) invert(90%) sepia(3%) saturate(5171%)
     hue-rotate(348deg) brightness(92%) contrast(63%);

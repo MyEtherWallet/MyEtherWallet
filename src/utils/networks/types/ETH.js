@@ -5,9 +5,9 @@ export default {
   name: 'ETH',
   name_long: 'Ethereum',
   homePage: 'https://ethereum.org',
-  blockExplorer: 'Etherscan',
-  blockExplorerTX: 'https://etherscan.io/tx/[[txHash]]',
-  blockExplorerAddr: 'https://etherscan.io/address/[[address]]',
+  blockExplorer: 'ethVM',
+  blockExplorerTX: 'https://ethvm.com/tx/[[txHash]]',
+  blockExplorerAddr: 'https://ethvm.com/address/[[address]]',
   chainID: 1,
   tokens: import('@/_generated/tokens/tokens-eth.json').then(
     module => module.default
@@ -34,5 +34,6 @@ export default {
   },
   gasPriceMultiplier: 1,
   canBuy: true,
-  coingeckoID: 'ethereum'
+  coingeckoID: 'ethereum',
+  balanceApi: 'https://tokenbalance.mewapi.io/eth?address='
 };

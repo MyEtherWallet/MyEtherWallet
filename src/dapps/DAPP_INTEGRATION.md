@@ -104,13 +104,13 @@ Note: Great example file structure can be found in `/eth-blocks` dapp.
 
    ##### TheWrapperDapp `Props`
 
-   | Name            | Type                                                                                                                 | Description                                                                                                                                                                                                                                                                  |
-   | --------------- | -------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-   | `bannerImage`   | `string`                                                                                                             | Provides Banner Image to the dapp wrapper. default = `@/assets/images/backgrounds/bg-dapps-center.png`                                                                                                                                                                       |
-   | `bannerText`    | <pre>Object = { <br> title: i18n // string, <br> subtext: i18n // string <br>} </pre>                                | Provides Banner title and subtext. <br> Example: <br> <pre> <br> bannerText = { <br> title: this.$t('ens.title'), <br> subtext: this.$t('ens.dapp-desc') <br>} </pre>                                                                                                      |
+   | Name            | Type                                                                                                                  | Description                                                                                                                                                                                                                                                                 |
+   | --------------- | --------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+   | `bannerImage`   | `string`                                                                                                              | Provides Banner Image to the dapp wrapper. default = `@/assets/images/backgrounds/bg-dapps-center.png`                                                                                                                                                                      |
+   | `bannerText`    | <pre>Object = { <br> title: i18n // string, <br> subtext: i18n // string <br>} </pre>                                 | Provides Banner title and subtext. <br> Example: <br> <pre> <br> bannerText = { <br> title: this.$t('ens.title'), <br> subtext: this.$t('ens.dapp-desc') <br>} </pre>                                                                                                       |
    | `tabItems`      | <pre>Object Array = \[{ <br> name: i18n // string, <br> route: { name: tabName //string }, <br> id: 1 //number <br>}] | Provides dapp menu text. Use this prop to display the menu for the dapp or leave it undefined, in that way a menu will not be present. <br> Example: <br> <pre> <br> tabItems = \[ <br> { name: this.$t('ens.title') }, <br> { name: this.$t('ens.dapp-desc') }<br>] </pre> |
-   | `activeTab`     | `number`                                                                                                             | Controls active dapp menu tab. Leave it `undefined` if `tabItems` is `undefined`. <br> default = `0`                                                                                                                                                                         |
-   | `validNetworks` | `Object Array`                                                                                                       | Networks that the dapp is accessible on. <br> All network objects can be found here: `src/utils/networks/types`                                                                                                                                                              |
+   | `activeTab`     | `number`                                                                                                              | Controls active dapp menu tab. Leave it `undefined` if `tabItems` is `undefined`. <br> default = `0`                                                                                                                                                                        |
+   | `validNetworks` | `Object Array`                                                                                                        | Networks that the dapp is accessible on. <br> All network objects can be found here: `src/utils/networks/types`                                                                                                                                                             |
 
 <br>
 
@@ -268,7 +268,7 @@ const routerGuards = (to, from, next) => {
 };
 
 export default {
-  path: 'some-dapp/:props? ',
+  path: 'some-dapp/:props?',
   name: 'Amazing Unicorn Dancing',
   component: TheSomeDappLayout,
   props: dappProps,

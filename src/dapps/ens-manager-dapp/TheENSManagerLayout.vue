@@ -70,7 +70,11 @@
     =====================================================================================
     -->
       <template #tabContent2>
-        <v-sheet max-width="700px" class="px-3 py-8 py-md-13 mx-auto">
+        <v-sheet
+          max-width="700px"
+          class="px-3 py-8 py-md-13 mx-auto"
+          color="transparent"
+        >
           <div class="d-flex align-center justify-space-between mb-7">
             <span class="mew-heading-2 font-weight-bold">
               {{ $t('ens.my-domains') }}
@@ -297,6 +301,7 @@ import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 import { ENS_MANAGER_ROUTE } from './configsRoutes';
 import normalise from '@/core/helpers/normalise';
 import stripQuery from '@/core/helpers/stripQuery.js';
+import { clone } from 'lodash';
 
 export default {
   name: 'ENSManagerLayout',
@@ -304,14 +309,13 @@ export default {
     ModuleRegisterDomain: () => import('./modules/ModuleRegisterDomain'),
     ModuleManageDomain: () => import('./modules/ModuleManageDomain'),
     TheWrapperDapp: () => import('@/core/components/TheWrapperDapp'),
-    ModuleAddressBook: () => import('@/modules/address-book/ModuleAddressBook'),
     EnsReverseLookup: () => import('./components/reverse/EnsReverseLookup')
   },
   mixins: [handlerAnalytics],
   data() {
     return {
       validNetworks: SUPPORTED_NETWORKS,
-      headerImg: require('@/assets/images/icons/icon-ens-manager-white-bg.svg'),
+      headerImg: require('@/assets/images/icons/dapps/icon-dapp-ensmanager.svg'),
       header: {
         title: this.$t('ens.title'),
         subtext: this.$t('ens.dapp-desc')
@@ -401,7 +405,7 @@ export default {
         { name: this.$t('ens.manage-domain') }
       ],
       */
-      myDomains: []
+      myDomains: [],
       /*,
       ensBannerImg: ensBannerImg,
       bannerText: {
@@ -409,6 +413,7 @@ export default {
         subtext: this.$t('ens.dapp-desc')
       }
       */
+      oldTxtRecords: {}
     };
   },
   computed: {
@@ -479,11 +484,13 @@ export default {
     - if user is onManage it will run getDomain to refresh domains
     */
     address(newVal) {
-      this.ensManager.address = newVal;
-      if (this.onRegister) {
-        this.closeRegister();
+      if (newVal) {
+        this.ensManager.address = newVal;
+        if (this.onRegister) {
+          this.closeRegister();
+        }
+        this.getDomains();
       }
-      this.getDomains();
     },
     /*
     - watches for network change
@@ -568,6 +575,7 @@ export default {
       this.onManage = true;
       this.manageType = type;
       this.manageDomainHandler = this.myDomains[idx];
+      this.oldTxtRecords = clone(this.myDomains[idx].txtRecords);
     },
     getDomains() {
       this.ensManager
@@ -606,7 +614,7 @@ export default {
           this.trackDapp('ensTransferred');
         })
         .catch(err => {
-          this.instance.errorHandler(err);
+          this.instance.errorHandler(err.message ? err.message : err);
         });
       this.closeManage();
     },
@@ -642,7 +650,7 @@ export default {
           this.trackDapp('ensDomainRenew');
         })
         .catch(err => {
-          this.instance.errorHandler(err);
+          this.instance.errorHandler(err.message ? err.message : err);
         });
       this.closeManage();
     },
@@ -651,7 +659,7 @@ export default {
         .setMulticoin(coin)
         .then(this.getDomains)
         .catch(err => {
-          this.instance.errorHandler(err);
+          this.instance.errorHandler(err.message ? err.message : err);
         });
       this.closeManage();
     },
@@ -660,7 +668,8 @@ export default {
         .setTxtRecord(records)
         .then(this.getDomains)
         .catch(err => {
-          this.instance.errorHandler(err);
+          this.manageDomainHandler.txtRecords = this.oldTxtRecords;
+          this.instance.errorHandler(err.message ? err.message : err);
         });
       this.closeManage();
     },
@@ -678,7 +687,7 @@ export default {
           this.closeManage();
         })
         .catch(err => {
-          this.instance.errorHandler(err);
+          this.instance.errorHandler(err.message ? err.message : err);
         });
     },
     setIpfs(hash) {
@@ -690,7 +699,7 @@ export default {
           this.trackDapp('ensSetIpfs');
         })
         .catch(err => {
-          this.instance.errorHandler(err);
+          this.instance.errorHandler(err.message ? err.message : err);
         });
       this.closeManage();
     },
@@ -745,7 +754,7 @@ export default {
         })
         .on('error', err => {
           this.loadingReg = false;
-          this.instance.errorHandler(err);
+          this.instance.errorHandler(err.message ? err.message : err);
         });
     },
     commit() {

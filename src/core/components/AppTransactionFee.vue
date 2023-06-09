@@ -82,7 +82,7 @@
         <div class="d-flex align-center justify-space-between flex-wrap mb-2">
           <div class="d-flex align-center flex-wrap flex-grow-1">
             <v-btn
-              color="greyLight"
+              color="buttonGrayLight"
               depressed
               class="text-transform--initial"
               :disabled="error !== ''"
@@ -143,7 +143,7 @@
             class="ml-2"
           >
             {{ error }}
-            <a v-if="notEnoughEth && network.type.canBuy" @click="openMoonpay">
+            <a v-if="notEnoughEth && network.type.canBuy" @click="openBuySell">
               Buy more {{ network.type.currencyName }}
             </a>
           </div>

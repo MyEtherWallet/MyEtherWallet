@@ -1,9 +1,7 @@
 <template>
-  <!--
-    =====================================================================================
-      Dapp Center Module
-    =====================================================================================
-    -->
+  <!-- ===================================================================================== -->
+  <!-- Dapp Center Module -->
+  <!-- ===================================================================================== -->
   <the-wrapper-dapp
     :banner-img="bannerImage"
     :banner-text="bannerText"
@@ -12,38 +10,58 @@
     <template #content>
       <div class="mew-heading-1 px-4 mb-4">MEW DApps</div>
       <v-row>
-        <v-col v-for="(dapp, key) in dapps" :key="key" cols="12" sm="6">
+        <v-col
+          v-for="(dapp, key) in dapps"
+          :key="key"
+          cols="12"
+          sm="6"
+          md="5"
+          lg="4"
+        >
           <mew-button
-            color-theme="primary"
+            color-theme="buttonGrayLight"
             btn-style="light"
-            style="height: 160px"
+            style="
+              height: 173px;
+              display: flex;
+              align-items: start;
+              padding-top: 33px;
+            "
             has-full-width
             @click.native="routeTo(dappName(dapp))"
           >
             <div
-              class="px-2 text-left d-flex align-center justify-space-between"
+              class="px-2 d-flex align-start"
               :class="
                 dapp.style === 'outline' ? 'white--text' : 'textDark--text'
               "
               style="width: 100%"
             >
-              <div>
+              <img
+                :src="
+                  require(`@/assets/images/icons/dapps/icon-dapp-${dapp.rightIcon.toLowerCase()}.svg`)
+                "
+                :alt="dapp.title"
+                height="60"
+                width="60"
+              />
+              <div class="ml-7">
                 <div class="mb-2 d-flex align-center justify-start flex-row">
-                  <div class="mew-heading-3">{{ dapp.title }}</div>
+                  <div class="mew-heading-2">{{ dapp.title }}</div>
                   <v-icon
                     v-if="checkIfNew(dapp.release)"
                     size="24"
                     class="ml-1 redPrimary--text"
-                    >mdi-new-box</v-icon
                   >
+                    mdi-new-box
+                  </v-icon>
                 </div>
-                <div class="break-word">
+                <div class="text-left break-word" style="line-height: 19px">
                   {{ dapp.subtitle }}
                 </div>
-                <div class="body-2 mt-1 textLight--text">{{ dapp.tag }}</div>
-              </div>
-              <div class="d-none d-sm-flex align-center pl-5">
-                <mew-icon :icon-name="dapp.rightIcon" :img-height="80" />
+                <div class="body-2 mt-1 textLight--text text-left">
+                  {{ dapp.tag }}
+                </div>
               </div>
             </div>
           </mew-button>
@@ -70,7 +88,6 @@
 
 <script>
 import { mapGetters } from 'vuex';
-
 import bannerImage from '@/assets/images/backgrounds/bg-dapps-center.jpg';
 import dappsMeta from '@/dapps/metainfo-dapps';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
@@ -86,7 +103,7 @@ export default {
     return {
       bannerImage: bannerImage,
       bannerText: {
-        title: 'Explore MEW DApps'
+        title: 'Explore New DApps'
       }
     };
   },
@@ -118,3 +135,14 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+.warning-container {
+  padding: 10px;
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid #05c0a5;
+  color: #05c0a5;
+  background-color: #ebfaf8;
+}
+</style>

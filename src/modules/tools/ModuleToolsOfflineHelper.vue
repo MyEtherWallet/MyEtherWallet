@@ -115,10 +115,11 @@
             </div>
             <mew-button
               v-if="detailLength"
-              class="mt-2 display--block mx-auto DownloadButton"
+              class="mt-2 d-flex align-center justify-center mx-auto DownloadButton"
               title="Export JSON file"
               btn-size="small"
               btn-style="transparent"
+              style="max-width: 130px"
               :btn-link="fileLink"
               :download="exportFileName"
             />
@@ -219,7 +220,7 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex';
-import { isAddress, fromWei, toHex } from 'web3-utils';
+import { isAddress, fromWei, toHex, toBN } from 'web3-utils';
 import { Transaction } from 'ethereumjs-tx';
 import { BigNumber } from 'bignumber.js';
 import { toChecksumAddress } from 'ethereumjs-util';
@@ -386,15 +387,16 @@ export default {
      * @returns {object} data - used for exporting to json,
      * details - details to be displayed to the user
      **********************************************************/
-    async data() {
+    async txData() {
       const { eth } = this.web3;
       const chainID = await eth.getChainId();
-      const gasPrice = await eth.getGasPrice();
+      const fetchedGasPrice = await eth.getGasPrice();
+      const gasPrice = fromWei(fetchedGasPrice, 'gwei');
       const nonce = await eth.getTransactionCount(this.fromAddress);
       return {
         data: {
           nonce,
-          gasPrice,
+          fetchedGasPrice,
           chainID
         },
         details: {
@@ -413,7 +415,7 @@ export default {
      *************************************************************/
     async setDetails(val) {
       if (val) return (this.details = val);
-      const { details } = await this.data();
+      const { details } = await this.txData();
       this.details = [
         {
           title: 'Sender',
@@ -435,7 +437,7 @@ export default {
         },
         {
           title: 'Gas Price',
-          value: details.gasPrice
+          value: `${details.gasPrice} gwei`
         }
       ];
       this.exportFile();
@@ -445,10 +447,10 @@ export default {
      * exports data to json
      ************************/
     async exportFile() {
-      let { data } = await this.data();
+      let { data } = await this.txData();
       data = {
         nonce: toHex(data.nonce),
-        gasPrice: toHex(data.gasPrice),
+        gasPrice: toHex(data.fetchedGasPrice),
         chainID: toHex(data.chainID)
       };
       const blob = new Blob([JSON.stringify(data)], { type: 'mime' });
@@ -494,7 +496,7 @@ export default {
      * - raw: raw data
      * - details: detailed data (includes more fields)
      ***********************************************************************************/
-    rawData() {
+    rawTxData() {
       try {
         const tx = new Transaction(this.getRawTransaction, {
           common: commonGenerator(this.network)
@@ -507,7 +509,7 @@ export default {
         const basicDetails = {
           from: txFrom,
           nonce: this.gtr(txValues.nonce),
-          gasPrice: fromWei(this.gtr(txValues.gasPrice)),
+          gasPrice: this.gtr(txValues.gasPrice),
           gasLimit: this.gtr(txValues.gasLimit),
           to: txValues.to,
           value: fromWei(this.gtr(txValues.value), 'ether'),
@@ -552,7 +554,7 @@ export default {
      **********************************************************/
     async setRawTransaction(val) {
       if (val) return (this.rawTransaction = val);
-      const { raw, fee } = this.rawData();
+      const { raw, fee } = this.rawTxData();
       if (raw) {
         this.rawTransaction = JSON.stringify(raw, null, 3);
         const { eth } = this.web3;
@@ -584,7 +586,7 @@ export default {
      **********************************************************/
     setRawDetails(val) {
       if (val) return (this.transactionDetails = val);
-      const { details } = this.rawData();
+      const { details } = this.rawTxData();
       if (details)
         this.transactionDetails = [
           {
@@ -646,10 +648,18 @@ export default {
       };
       if (files[0]) reader.readAsBinaryString(files[0]);
     },
-    sendTx() {
+    async sendTx() {
       const { eth } = this.web3;
+      const actualNonce = await eth.getTransactionCount(this.fromAddress);
+      const { raw } = await this.rawTxData();
+      const nonce = raw.nonce;
       this.dialog = true;
       this.txLoading = true;
+      if (toBN(actualNonce).gt(toBN(nonce))) {
+        this.dialogAlert = 'Nonce too low!';
+        this.txLoading = false;
+        return;
+      }
       eth
         .sendSignedTransaction(this.getRawTransaction)
         .once('transactionHash', hash => {

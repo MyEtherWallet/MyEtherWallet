@@ -197,7 +197,7 @@ import { mapGetters, mapState } from 'vuex';
 import { isEmpty, isEqual } from 'underscore';
 import ENS from '@ensdomains/ensjs';
 import Web3 from 'web3';
-import { isValidAddress } from 'ethereumjs-utils';
+import { isValidAddress } from 'ethereumjs-util';
 
 const MAX_ADDRESSES = 5;
 
@@ -406,9 +406,7 @@ export default {
     },
     blockExplorer() {
       const networkType = this.network.type;
-      const blockExplorer = networkType.isEthVMSupported?.supported
-        ? networkType.isEthVMSupported.blockExplorerAddr
-        : networkType.blockExplorerAddr;
+      const blockExplorer = networkType.blockExplorerAddr;
       return blockExplorer;
     }
   },

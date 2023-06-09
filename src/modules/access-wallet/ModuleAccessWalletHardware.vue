@@ -127,7 +127,7 @@
               Step 2: Start Access to Selected Hardware Wallet
             =====================================================================================
             -->
-    <div v-if="step <= walletInitialized" class="full-width">
+    <div v-if="step <= walletInitialized" class="full-width mt-4 mt-lg-0">
       <!--
         =====================================================================================
           Bitbox2
@@ -230,6 +230,7 @@ import wallets from '@/modules/access-wallet/hardware/handlers/configs/configWal
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { EventBus } from '@/core/plugins/eventBus.js';
+import { ethereum as ethereumPath } from '@/modules/access-wallet/hardware/handlers/configs/configPaths.js';
 
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
@@ -244,8 +245,6 @@ export default {
       import('./hardware/components/AccessWalletTrezor.vue'),
     AccessWalletLedger: () =>
       import('./hardware/components/AccessWalletLedger.vue'),
-    AccessWalletLedgerX: () =>
-      import('./hardware/components/AccessWalletLedgerX.vue'),
     AccessWalletAddressNetwork: () =>
       import(
         '@/modules/access-wallet/common/components/AccessWalletAddressNetwork'
@@ -368,8 +367,8 @@ export default {
     hwWalletInstance: {},
     ledgerApp: {},
     selectedPath: {
-      name: 'Ethereum',
-      value: "m/44'/60'/0'"
+      name: ethereumPath.label,
+      value: ethereumPath.path
     },
     walletType: '',
     selectedLedgerApp: {},
@@ -701,6 +700,11 @@ export default {
     nextStep() {
       if (this.walletType) {
         this.step++;
+        if (
+          this.step === 2 &&
+          (this.onTrezor || this.onLedger || this.onLedgerX)
+        )
+          this.selectedPath = this.paths[0];
         if (this.step === this.walletInitialized) {
           if (this.onCoolWallet || this.onBitbox2) return;
           this[`${this.walletType}Unlock`]();
@@ -767,7 +771,7 @@ export default {
                   this.nextStep();
                 })
                 .catch(e => {
-                  this.wallets[this.walletType].create.errorHandler(e);
+                  this.wallets[this.walletType]?.create.errorHandler(e);
                   if (e.message === 'Error: Pairing rejected') {
                     this.reset();
                   }

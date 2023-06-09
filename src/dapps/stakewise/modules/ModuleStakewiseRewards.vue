@@ -15,7 +15,7 @@
           <!-- ======================================================================================= -->
           <div ref="input" class="d-flex align-center text-center">
             <div
-              class="border-radius--8px backgroundGrey flex-grow-1 pa-5 d-flex flex-column align-center"
+              class="border-radius--8px bgWalletBlockDark flex-grow-1 pa-5 d-flex flex-column align-center"
               style="width: 30%"
             >
               <div
@@ -35,7 +35,7 @@
               <v-icon color="greenPrimary">mdi-arrow-right</v-icon>
             </div>
             <div
-              class="border-radius--8px backgroundGrey flex-grow-1 pa-5 d-flex flex-column align-center"
+              class="border-radius--8px bgWalletBlockDark flex-grow-1 pa-5 d-flex flex-column align-center"
               style="width: 30%"
             >
               <div
@@ -163,6 +163,7 @@
           @redeem-to-eth="redeemToEth"
         />
         <stakewise-rewards
+          v-if="isEthNetwork"
           :tx-fee="txFee"
           @set-max="setMax"
           @scroll="scroll"
@@ -174,12 +175,12 @@
 </template>
 
 <script>
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import BigNumber from 'bignumber.js';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import { find, clone, isEmpty, debounce } from 'lodash';
 import { fromWei } from 'web3-utils';
 
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { EventBus } from '@/core/plugins/eventBus';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import Notification, {
@@ -318,6 +319,9 @@ export default {
       return BigNumber(this.compoundAmount).gt(this.rethBalance);
     },
     errorMessages() {
+      if (!this.isEthNetwork) {
+        return 'Compunding rewards are not supported on non ETH network!';
+      }
       if (BigNumber(this.compoundAmount).eq(0)) {
         return '';
       }

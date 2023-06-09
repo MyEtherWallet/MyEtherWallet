@@ -168,14 +168,22 @@ export default {
         : this.tokenBalance;
     }
   },
-  mounted() {
-    if (this.showToggle) {
-      setTimeout(() => {
-        this.onToggle(this.group[1]);
-      }, 100);
+  watch: {
+    selectedToken() {
+      this.setToggle();
     }
   },
+  mounted() {
+    this.setToggle();
+  },
   methods: {
+    setToggle() {
+      if (this.showToggle) {
+        setTimeout(() => {
+          this.onToggle(this.group[1]);
+        }, 100);
+      }
+    },
     setAmount(e) {
       this.amount = e;
     },
@@ -210,7 +218,7 @@ export default {
       return BigNumber(amt)
         .times(per)
         .decimalPlaces(this.tokenDecimal)
-        .toString();
+        .toFixed();
     }
   }
 };

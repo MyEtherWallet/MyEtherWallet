@@ -12,9 +12,7 @@
       the safest manner possible. Security is our first priority and obligation
       and we always appreciate the valuable contributions! If you have any
       information regarding security vulnerabilities on the
-      <strong>
-        MyEtherWallet website, MEW wallet App, MEWconnect App and MEW CX
-      </strong>
+      <strong> MyEtherWallet website, MEW wallet App, and Enkrypt </strong>
       report it to
       <a href="mailto:bugbounty@myetherwallet.com">
         bugbounty@myetherwallet.com
@@ -34,9 +32,8 @@
       </div>
       <ul class="pl-5">
         <li>MEW wallet App (Beta version Included)</li>
-        <li>MEWconnect App (Beta version Included)</li>
         <li>Current live version of MyEtherWallet . com</li>
-        <li>MEW CX</li>
+        <li>Enkrypt</li>
       </ul>
     </div>
     <p>
@@ -87,42 +84,6 @@
                     >
                   </li>
                 </ul>
-              </div>
-            </div>
-            <div class="mt-3">
-              <strong>MEWconnect App</strong>
-              <div class="pl-5">
-                Code base Android:
-                <a
-                  href="https://github.com/MyEtherWallet/MEWconnect-Android"
-                  target="_blank"
-                >
-                  https://github.com/MyEtherWallet/MEWconnect-Android
-                </a>
-                <br />
-                Code base iOS:
-                <a
-                  href="https://github.com/MyEtherWallet/MEWconnect-iOS"
-                  target="_blank"
-                >
-                  https://github.com/MyEtherWallet/MEWconnect-iOS
-                </a>
-                <br />
-                iOS store:
-                <a
-                  href="https://apps.apple.com/us/app/mewconnect/id1391097156"
-                  target="_blank"
-                >
-                  https://apps.apple.com/us/app/mewconnect/id1391097156
-                </a>
-                <br />
-                Android:
-                <a
-                  href="https://play.google.com/store/apps/details?id=com.myetherwallet.mewconnect"
-                  target="_blank"
-                >
-                  https://play.google.com/store/apps/details?id=com.myetherwallet.mewconnect
-                </a>
               </div>
             </div>
             <div class="mt-3">
@@ -260,7 +221,7 @@
               These includes bugs with sufficient severity and not limited to:
             </div>
             <div class="mb-2">
-              <strong>MyEtherWallet Website and MEW CX:</strong>
+              <strong>MyEtherWallet Website and Enkrypt:</strong>
             </div>
             <ul class="mb-3 px-5">
               <li>Clickjacking</li>
@@ -271,7 +232,7 @@
               <li>Accessing users private keys and personal data</li>
             </ul>
             <div class="mb-2">
-              <strong>MEW wallet and MEWconnect apps:</strong>
+              <strong>MEW wallet:</strong>
             </div>
             <ul class="px-5">
               <li>Injection, Manipulation of account balance</li>
@@ -297,7 +258,7 @@
               following issues are considered out of scope:
             </div>
             <div class="mb-2">
-              <strong>MyEtherWallet Website and MEW CX</strong>
+              <strong>MyEtherWallet Website and Enkrypt</strong>
             </div>
             <ul class="px-5">
               <li>Clickjacking on pages with no sensitive information.</li>
@@ -348,7 +309,7 @@
           </td>
         </tr>
         <tr>
-          <td class="pa-5">MEW wallet and MEWconnect Mobile App</td>
+          <td class="pa-5">MEW wallet</td>
           <td class="pa-5">
             <div>
               <ul class="px-5">

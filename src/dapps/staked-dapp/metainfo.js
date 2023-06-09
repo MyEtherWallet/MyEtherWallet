@@ -4,7 +4,7 @@ const layout = () =>
   import(/* webpackChunkName: "dapp-staked" */ './TheStakedLayout');
 import { stakedRouterGuard } from '@/core/router/helpers';
 export default {
-  title: 'Stake on Eth2',
+  title: 'Stake on ETH 2.0',
   subtitle: 'Stake your ETH on Ethereum 2.0 and watch your rewards grow',
   tag: '#DeFi',
   rightIconType: 'mew',
@@ -13,7 +13,7 @@ export default {
   path: ROUTES_WALLET.STAKED.PATH,
   networks: SUPPORTED_NETWORKS,
   layout,
-  release: '07/09/2021',
+  release: '05/4/2023',
   meta: {
     noAuth: false
   },

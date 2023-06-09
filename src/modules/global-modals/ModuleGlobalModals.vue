@@ -70,7 +70,7 @@ export default {
   },
   created() {
     EventBus.$on(ISSUE_MODAL, (errors, callback) => {
-      this.trackNetworkSwitch(errors);
+      this.trackGlobalError('sentry');
       this.errors = errors;
       this.callback = callback;
       this.openError = true;

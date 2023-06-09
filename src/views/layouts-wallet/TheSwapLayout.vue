@@ -1,5 +1,9 @@
 <template>
-  <the-wrapper-wallet :total-left-col-items="1" :total-right-col-items="2">
+  <the-wrapper-wallet
+    :total-left-col-items="1"
+    has-draggable
+    :total-right-col-items="totalRightColumns"
+  >
     <template #leftColItem1>
       <module-swap
         :is-available="hasSwap"
@@ -9,18 +13,16 @@
       />
     </template>
     <template #rightColItem1>
-      <module-tokens-value />
+      <module-tokens-value :draggable="hasHistory" />
     </template>
     <template v-if="hasHistory && hasSwap" #rightColItem2>
-      <module-transfer-history :is-swap="true" />
+      <module-transfer-history draggable :is-swap="true" />
     </template>
   </the-wrapper-wallet>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
-import { ROUTES_WALLET } from '@/core/configs/configRoutes';
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 const ETH_TOKEN = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
 const DAI_TOKEN = '0x6b175474e89094c44da98b954eedeac495271d0f';
@@ -32,19 +34,6 @@ export default {
     ModuleTokensValue: () => import('@/modules/balance/ModuleTokensValue'),
     ModuleTransferHistory: () =>
       import('@/modules/transfer-history/ModuleTransferHistory')
-  },
-  mixins: [handlerAnalytics],
-  beforeRouteLeave(to, from, next) {
-    if (to.name === ROUTES_WALLET.NETWORK.NAME) {
-      this.trackSwap('switchingNetworkOnSwap');
-    }
-    if (
-      to.name !== ROUTES_WALLET.NETWORK.NAME &&
-      to.name !== ROUTES_WALLET.SWAP.NAME
-    ) {
-      this.trackSwap('leavingSwapTo: ' + to.name);
-    }
-    next();
   },
   props: {
     fromToken: {
@@ -65,6 +54,9 @@ export default {
     ...mapGetters('notifications', ['swapNotifications']),
     hasHistory() {
       return this.swapNotifications && this.swapNotifications.length > 0;
+    },
+    totalRightColumns() {
+      return this.hasHistory && this.hasSwap ? 2 : 1;
     }
   }
 };

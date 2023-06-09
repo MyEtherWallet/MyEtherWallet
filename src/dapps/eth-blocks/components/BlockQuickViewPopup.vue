@@ -8,11 +8,11 @@
       :close="close"
     >
       <template #dialogBody>
-        <h2 class="black--text">{{ blockNumber }}</h2>
+        <h2 class="textDark--text">{{ blockNumber }}</h2>
         <div class="d-flex flex-column align-center justify-end py-5">
           <img :src="img" width="300" height="300" />
         </div>
-        <div>
+        <div class="textDark--text">
           {{ description }}
         </div>
 

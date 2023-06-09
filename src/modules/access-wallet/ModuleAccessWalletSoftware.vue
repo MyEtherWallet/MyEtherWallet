@@ -20,7 +20,7 @@
     <div
       v-if="walletType === types.OVERVIEW"
       style="max-width: 650px; width: 100%"
-      class="mx-auto"
+      class="mx-auto pt-5"
     >
       <div v-for="(btn, key) in buttons" :key="key" class="mb-5">
         <mew-button
@@ -258,7 +258,10 @@ export default {
             if (this.path !== '') {
               this.$router.push({ path: this.path });
             } else {
-              this.$router.push({ name: ROUTES_WALLET.WALLETS.NAME });
+              const name = this.isOfflineApp
+                ? ROUTES_WALLET.WALLETS.NAME
+                : ROUTES_WALLET.DASHBOARD.NAME;
+              this.$router.push({ name: name });
             }
             this.trackAccessWallet(this.type);
           })

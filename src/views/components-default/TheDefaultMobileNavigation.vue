@@ -81,7 +81,7 @@
           </v-list-group>
         </template>
         <v-list-item>
-          <v-list-item-content @click="openMoonpay">
+          <v-list-item-content @click="openBuySell">
             <div class="mew-heading-3 font-weight-medium textDark--text">
               Buy ETH
             </div>
@@ -208,7 +208,10 @@ export default {
     ...mapGetters('global', ['swapLink']),
     menu() {
       return [
-        { label: 'How it works', to: { name: ROUTES_HOME.HOW_IT_WORKS.NAME } },
+        {
+          label: this.$t('header.what-is-mew'),
+          to: { name: ROUTES_HOME.HOW_IT_WORKS.NAME }
+        },
         {
           label: 'Popular actions',
           sub: [

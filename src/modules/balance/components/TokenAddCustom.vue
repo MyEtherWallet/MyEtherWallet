@@ -4,7 +4,7 @@
     <!-- Add Custom Token Overlay -->
     <!-- ===================================================================================== -->
     <v-dialog :value="open" max-width="330" @click:outside="reset">
-      <div class="white pa-7">
+      <div class="bgWalletBlock pa-7">
         <div v-if="step === 1" class="full-width">
           <div class="mew-heading-2 mb-10">Add custom token</div>
           <mew-input
@@ -206,7 +206,7 @@ export default {
      * checks if there is symbol name
      */
     hasSymbol() {
-      return this.tokenDataToDisplay[3].value || this.customSymbol;
+      return this.customSymbol;
     }
   },
   methods: {
@@ -395,7 +395,7 @@ export default {
           this.token.usdBalancef = '0.00';
           this.token.contract = this.contractAddress;
         }
-        this.token.decimals = +decimals;
+        this.token.decimals = parseInt(decimals);
         this.token.balance = balance;
         this.token.balancef = this.getTokenBalance(balance, decimals).value;
         this.loading = false;

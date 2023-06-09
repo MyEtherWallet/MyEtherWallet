@@ -1,5 +1,4 @@
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
-import { ETH, BSC, MATIC } from '@/utils/networks/types';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import BigNumber from 'bignumber.js';
 import {
@@ -9,6 +8,7 @@ import {
 } from '@/core/helpers/numberFormatHelper';
 import { toBN } from 'web3-utils';
 import getTokenInfo from '@/core/helpers/tokenInfo';
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 
 const setCurrency = async function ({ commit }, val) {
   fetch('https://mainnet.mewwallet.dev/v2/prices/exchange-rates')
@@ -48,12 +48,8 @@ const setTokenAndEthBalance = function ({
 }) {
   commit('wallet/SET_LOADING_WALLET_INFO', true, { root: true });
   const network = rootGetters['global/network'];
-  const isTokenBalanceApiSupported =
-    network.type.name === BSC.name ||
-    network.type.name === ETH.name ||
-    network.type.name === MATIC.name;
+  const isTokenBalanceApiSupported = network.type.balanceApi !== '';
   const address = rootState.wallet.address;
-  const TOKEN_BALANCE_API = 'https://tokenbalance.mewapi.io';
 
   const _getTokenBalance = (balance, decimals) => {
     let n = new BigNumber(balance);
@@ -66,6 +62,24 @@ const setTokenAndEthBalance = function ({
     return n;
   };
   if (!isTokenBalanceApiSupported) {
+    const currentProvider = rootState.wallet.web3.eth.currentProvider;
+    // Prevent the 'Invalid return values' error
+    // when accessing new network on MetaMask
+    if (
+      rootState.wallet.identifier === WALLET_TYPES.WEB3_WALLET &&
+      network.type.chainID !== parseInt(currentProvider.chainId)
+    ) {
+      return;
+    }
+    if (
+      rootState.wallet.identifier !== WALLET_TYPES.WEB3_WALLET &&
+      currentProvider.connection
+    ) {
+      const currentProviderUrl = currentProvider.connection.url;
+      if (network.url !== currentProviderUrl) {
+        dispatch('wallet/setWeb3Instance', undefined, { root: true });
+      }
+    }
     rootState.wallet.web3.eth.getBalance(address).then(res => {
       const token = getters.contractToToken(MAIN_TOKEN_ADDRESS);
       const denominator = new BigNumber(10).pow(token.decimals);
@@ -100,13 +114,25 @@ const setTokenAndEthBalance = function ({
     return;
   }
   let mainTokenBalance = toBN('0');
-  fetch(
-    `${TOKEN_BALANCE_API}/${network.type.name.toLowerCase()}?address=${address}`
-  )
+  const TOKEN_BALANCE_API = network.type.balanceApi + address;
+  fetch(TOKEN_BALANCE_API)
     .then(res => res.json())
     .then(res => res.result)
     .then(preTokens => {
       const hasPreTokens = preTokens ? preTokens : [];
+      const includedUserBalance = hasPreTokens.filter(item => {
+        if (
+          item.contract.toLowerCase() ===
+          '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+        )
+          return item;
+      });
+      if (!hasPreTokens.length || !includedUserBalance.length) {
+        hasPreTokens.push({
+          contract: MAIN_TOKEN_ADDRESS,
+          balance: '0x0'
+        });
+      }
       const promises = [];
 
       hasPreTokens.forEach(t => {

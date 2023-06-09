@@ -71,10 +71,18 @@ const EXCEPTIONS = [
   'node-sass',
   '@ledgerhq/hw-transport-web-ble',
   '@ledgerhq/hw-transport-webusb',
+  '@ledgerhq/hw-app-eth',
   'uuid',
   'web3-eth-contract',
   'is-ipfs',
-  'axios'
+  'axios',
+  'prettier', // creates more warnings
+  '@ledgerhq/hw-app-eth', // issue with imports
+  '@ledgerhq/live-common', // issue with imports
+  'bip39', // breaks
+  'ethers', // major update
+  'patch-package', // major update
+  'highcharts' // major update
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
