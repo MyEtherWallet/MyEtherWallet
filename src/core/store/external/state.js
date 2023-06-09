@@ -3,7 +3,8 @@ const state = {
   path: '',
   currencyRate: {},
   coinGeckoTokens: new Map(), //map of {coingeckoId: coingeckotokeninfo}
-  networkTokens: new Map() //map of {contract: token}
+  networkTokens: new Map(), //map of {contract: token}
+  eip6963Providers: []
 };
 
 export default state;
