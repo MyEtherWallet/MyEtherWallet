@@ -278,7 +278,7 @@ export default {
             icon: require('@/assets/images/icons/icon-mew-wallet.png'),
             alt: 'MEW wallet',
             fn: () => {
-              this.openMEWconnect();
+              this.openMEWwallet();
             }
           },
           /* Browser extension */
@@ -373,7 +373,7 @@ export default {
         Toast(e, {}, ERROR);
       }
     },
-    openMEWconnect() {
+    openMEWwallet() {
       try {
         WalletConnectWallet()
           .then(_newWallet => {
