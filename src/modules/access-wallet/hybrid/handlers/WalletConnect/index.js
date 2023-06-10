@@ -114,7 +114,10 @@ const createWallet = async () => {
       icons: ['https://www.myetherwallet.com/logo-mew.png']
     }
   });
-  await signClient.connect();
+  await signClient.connect().catch(e => {
+    throw e;
+  });
+
   const walletConnectWallet = new WalletConnectWallet(signClient);
   const _tWallet = await walletConnectWallet.init();
   return _tWallet;

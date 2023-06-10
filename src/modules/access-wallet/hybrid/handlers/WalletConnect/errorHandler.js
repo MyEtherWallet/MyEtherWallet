@@ -8,7 +8,8 @@ const ERRORS = {
     'walletconnectError-session-currently-connected',
   "Cannot read property 'setItem' of null":
     'walletconnectError-issue-accessing-walletconnect-please-clear-cache',
-  'No error message': 'walletconnectError-no-error-message'
+  'No error message': 'walletconnectError-no-error-message',
+  'Connection request reset. Please try again.': 'User closed modal'
 };
 const WARNINGS = {
   Rejected: 'Transaction rejected by user'
