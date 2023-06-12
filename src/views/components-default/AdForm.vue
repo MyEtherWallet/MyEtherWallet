@@ -13,7 +13,9 @@
           class="d-inline d-md-none ad-form-img"
         />
       </div>
-      <div class="text-center mew-title font-weight-regular expandHeader--text">
+      <div
+        class="text-center mew-title font-weight-regular expandHeader--text title-anchor-ad-mew"
+      >
         Are you ready to <br />
         advertise with us?
       </div>
@@ -28,19 +30,48 @@
           class="d-none d-md-inline"
         />
         <form class="ad-form">
-          <input placeholder="NAME" class="mb-5" required />
-          <input placeholder="COMPANY NAME" class="mb-5" required />
-          <input placeholder="COMPANY WEBSITE" class="mb-5" />
-          <input placeholder="CONTACT NUMBER" class="mb-5" required />
-          <input placeholder="EMAIL" class="mb-5" required />
-          <textarea placeholder="MESSAGE" class="mb-5" />
+          <input
+            v-model="formInfo['name']"
+            placeholder="NAME"
+            class="mb-5"
+            required
+          />
+          <input
+            v-model="formInfo['companyName']"
+            placeholder="COMPANY NAME"
+            class="mb-5"
+            required
+          />
+          <input
+            v-model="formInfo['companyWebsite']"
+            placeholder="COMPANY WEBSITE"
+            class="mb-5"
+          />
+          <input
+            v-model="formInfo['contactNumber']"
+            placeholder="CONTACT NUMBER"
+            class="mb-5"
+            required
+          />
+          <input
+            v-model="formInfo['email']"
+            placeholder="EMAIL"
+            class="mb-5"
+            required
+          />
+          <textarea
+            v-model="formInfo['message']"
+            placeholder="MESSAGE"
+            class="mb-5"
+          />
           <div class="d-flex align-center justify-center">
             <mew-button
               btn-style="background"
               color-theme="primary"
               btn-size="xlarge"
               title="SUBMIT"
-              type="submit"
+              :disabled="!validForm"
+              @click.native="submitForm"
             />
           </div>
         </form>
@@ -48,6 +79,94 @@
     </div>
   </div>
 </template>
+<script>
+import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
+import normalise from '@/core/helpers/normalise';
+export default {
+  data() {
+    return {
+      formInfo: {
+        name: '',
+        companyName: '',
+        companyWebsite: '',
+        contactNumber: '',
+        email: '',
+        message: ''
+      }
+    };
+  },
+  computed: {
+    validForm() {
+      return (
+        this.formInfo['name'] !== '' &&
+        this.formInfo['companyName'] !== '' &&
+        this.formInfo['contactNumber'] !== '' &&
+        this.formInfo['email'] !== '' &&
+        this.isEmail(this.formInfo['email'])
+      );
+    }
+  },
+  methods: {
+    isEmail(input) {
+      if (!input || input === '') return false;
+      const atIndex = input.indexOf('@');
+      const emailRegex =
+        /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      try {
+        const parsedEmailName = normalise(input.substr(0, atIndex));
+        const parsedEmailHost = normalise(
+          input.substr(atIndex + 1, input.length)
+        );
+        return emailRegex.test(
+          `${parsedEmailName}@${parsedEmailHost}`.toLowerCase()
+        );
+      } catch (e) {
+        return emailRegex.test(input);
+      }
+    },
+    submitForm() {
+      const form = new FormData();
+      for (const key in this.formInfo) {
+        form.append(key, this.formInfo[key]);
+      }
+
+      fetch('https://formspree.io/f/xbjenjql', {
+        method: 'POST',
+        body: form,
+        headers: {
+          Accept: 'application/json'
+        }
+      })
+        .then(response => {
+          if (response.ok) {
+            Toast(
+              'Your information has been submitted. Thank you for reaching out, you will receive our response within several business days.',
+              {},
+              SUCCESS
+            );
+            this.clear();
+          }
+        })
+        .catch(() => {
+          Toast(
+            'Something went wrong while submitting your information. Please try again later.',
+            {},
+            ERROR
+          );
+          this.clear();
+        });
+    },
+    clear() {
+      this.formInfo['name'] = '';
+      this.formInfo['companyName'] = '';
+      this.formInfo['companyWebsite'] = '';
+      this.formInfo['contactNumber'] = '';
+      this.formInfo['email'] = '';
+      this.formInfo['message'] = '';
+    }
+  }
+};
+</script>
 
 <style lang="scss" scoped>
 .ad-form-container {

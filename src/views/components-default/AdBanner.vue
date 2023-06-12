@@ -2,9 +2,7 @@
   <div class="mew-component--advertise-with-us">
     <div class="desktop-content d-none d-lg-block expandHeader elevation-2">
       <v-container class="banner-content-container pt-10">
-        <div
-          class="mew-title font-weight-regular white--text title-anchor-ad-mew"
-        >
+        <div class="mew-title font-weight-regular white--text">
           Get your brand in front of tens of thousands <br />
           of MyEtherWallet users.
         </div>
@@ -82,8 +80,8 @@ export default {
   components: {},
   methods: {
     scrollToForm() {
-      const element = document.getElementsByClassName('ad-form-component');
-      window.scrollTo();
+      const element = document.getElementsByClassName('title-anchor-ad-mew');
+      window.scrollTo(0, element[0].offsetTop);
     }
   }
 };
