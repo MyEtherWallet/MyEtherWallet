@@ -81,7 +81,7 @@
 </template>
 <script>
 import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
-import normalise from '@/core/helpers/normalise';
+import isEmail from '@/core/helpers/isEmail.js';
 export default {
   data() {
     return {
@@ -102,28 +102,11 @@ export default {
         this.formInfo['companyName'] !== '' &&
         this.formInfo['contactNumber'] !== '' &&
         this.formInfo['email'] !== '' &&
-        this.isEmail(this.formInfo['email'])
+        isEmail(this.formInfo['email'])
       );
     }
   },
   methods: {
-    isEmail(input) {
-      if (!input || input === '') return false;
-      const atIndex = input.indexOf('@');
-      const emailRegex =
-        /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      try {
-        const parsedEmailName = normalise(input.substr(0, atIndex));
-        const parsedEmailHost = normalise(
-          input.substr(atIndex + 1, input.length)
-        );
-        return emailRegex.test(
-          `${parsedEmailName}@${parsedEmailHost}`.toLowerCase()
-        );
-      } catch (e) {
-        return emailRegex.test(input);
-      }
-    },
     submitForm() {
       const form = new FormData();
       for (const key in this.formInfo) {
