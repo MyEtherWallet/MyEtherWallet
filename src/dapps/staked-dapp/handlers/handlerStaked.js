@@ -1,9 +1,7 @@
 import axios from 'axios';
 import BigNumber from 'bignumber.js';
-import { toBN } from 'web3-utils';
 
 import configNetworkTypes from './configNetworkTypes';
-import calculateEth2Rewards from './helpers';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import handleError from '@/modules/confirmation/handlers/errorHandler';
 
@@ -11,21 +9,6 @@ import handleError from '@/modules/confirmation/handlers/errorHandler';
  * ABI to get fees
  * from batch contract
  */
-const ABI_GET_VALIDATORS = [
-  {
-    inputs: [],
-    name: 'get_deposit_count',
-    outputs: [
-      {
-        internalType: 'bytes',
-        name: '',
-        type: 'bytes'
-      }
-    ],
-    stateMutability: 'view',
-    type: 'function'
-  }
-];
 const ABI_GET_FEES = [
   {
     inputs: [
