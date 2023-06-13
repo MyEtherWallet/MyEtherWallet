@@ -28,6 +28,7 @@ import { BUYSELL_EVENT } from '@/modules/buy-sell/helpers';
 import { EventBus } from '@/core/plugins/eventBus';
 import handlerAnalyticsMixin from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin.js';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
+import { SignClient } from '@walletconnect/sign-client';
 export default {
   name: 'App',
   components: {
@@ -130,6 +131,17 @@ export default {
       this.updateArticles({
         timestamp: this.timestamp,
         articleList: this.articleList
+      });
+
+      SignClient.init({
+        projectId: '72299ce67c7d5c879dd8da2df1a6875b',
+        metadata: {
+          name: 'MyEtherWallet Inc',
+          description:
+            'MyEtherWallet (MEW) is a free, open-source, client-side interface for generating Ethereum wallets & more. Interact with the Ethereum blockchain easily & securely.'
+        }
+      }).then(res => {
+        window.signClient = res;
       });
     }
     // Window events to watch out if the online status changes

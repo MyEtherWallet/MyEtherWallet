@@ -148,22 +148,25 @@ export default {
     }
 
     if (this.instance.identifier === 'walletConnect') {
-      this.instance.connection.on('session_update', (e, evt) => {
-        if (
-          evt.params[0].accounts[0].toLowerCase() !== this.address.toLowerCase()
-        ) {
-          const newWallet = new HybridWalletInterface(
-            sanitizeHex(evt.params[0].accounts[0]),
-            this.instance.isHardware,
-            this.instance.identifier,
-            this.instance.txSigner,
-            this.instance.msgSigner,
-            this.instance.connection,
-            this.instance.errorHandler,
-            this.instance.meta
-          );
-          this.setWallet([newWallet]);
-        }
+      this.instance.connection.on('session_update', () => {
+        this.instance.connection.sendAsync(
+          { method: 'eth_requestAccounts' },
+          (err, res) => {
+            if (res[0].toLowerCase() !== this.address.toLowerCase()) {
+              const newWallet = new HybridWalletInterface(
+                sanitizeHex(res[0]),
+                this.instance.isHardware,
+                this.instance.identifier,
+                this.instance.txSigner,
+                this.instance.msgSigner,
+                this.instance.connection,
+                this.instance.errorHandler,
+                this.instance.meta
+              );
+              this.setWallet([newWallet]);
+            }
+          }
+        );
       });
     }
   },

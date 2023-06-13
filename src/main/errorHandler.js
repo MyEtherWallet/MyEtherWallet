@@ -62,7 +62,9 @@ export const knownErrors = {
     'Session currently connected. Please try again.',
   'Error: Missing or invalid topic field': '',
   'Uncaught (in promise) Error: Missing or invalid topic field': '',
-  'Missing or invalid topic field': ''
+  'Missing or invalid topic field': '',
+  'Cannot convert undefined or null to object': '',
+  'No matching key. pairing: undefined': ''
 };
 
 const handleError = err => {
