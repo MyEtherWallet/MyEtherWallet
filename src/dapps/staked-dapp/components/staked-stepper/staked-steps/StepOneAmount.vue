@@ -220,30 +220,18 @@ export default {
      */
     depositForecast() {
       /**
-       * 3 Months Forecast
-       */
-      const threeMonthsEarning = this.getEarnings(3);
-      /**
-       * 1 year forecast
+       * 1 year Forecast
        */
       const oneYearEarnings = this.getEarnings(12);
       /**
-       * 2 year forecast
+       * 2 years forecast
        */
       const twoYearEarnings = this.getEarnings(24);
+      /**
+       * 3 years forecast
+       */
+      const threeYearEarnings = this.getEarnings(36);
       return [
-        {
-          duration: 'In 3 months',
-          balanceFiat: this.getFiatValue(
-            new BigNumber(this.amount)
-              .plus(threeMonthsEarning)
-              .times(this.fiatValue)
-          ),
-          balanceETH: formatFloatingPointValue(
-            new BigNumber(this.amount).plus(threeMonthsEarning)
-          ).value,
-          earningsETH: formatFloatingPointValue(threeMonthsEarning).value
-        },
         {
           duration: 'In 1 year',
           balanceFiat: this.getFiatValue(
@@ -267,6 +255,18 @@ export default {
             new BigNumber(this.amount).plus(twoYearEarnings)
           ).value,
           earningsETH: formatFloatingPointValue(twoYearEarnings).value
+        },
+        {
+          duration: 'In 3 years',
+          balanceFiat: this.getFiatValue(
+            new BigNumber(this.amount)
+              .plus(threeYearEarnings)
+              .times(this.fiatValue)
+          ),
+          balanceETH: formatFloatingPointValue(
+            new BigNumber(this.amount).plus(threeYearEarnings)
+          ).value,
+          earningsETH: formatFloatingPointValue(threeYearEarnings).value
         }
       ];
     }
@@ -280,7 +280,12 @@ export default {
         .dividedBy(100) // 12*100
         .times(months / 12)
         .toFixed();
-      return new BigNumber(this.amount).times(apr).toFixed();
+      const yieldFees = BigNumber(apr).times(0.13);
+      const stakeYields = new BigNumber(this.amount).times(
+        BigNumber(apr).minus(yieldFees)
+      );
+
+      return stakeYields.toFixed();
     },
     /**
      * Emits onContinue to go to next step
