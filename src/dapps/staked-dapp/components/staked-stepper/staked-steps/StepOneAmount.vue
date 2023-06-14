@@ -57,7 +57,9 @@
               <div class="staking-fee">Staking Fee</div>
               <mew-tooltip class="ml-1" :text="toolTipFee" max-width="320px" />
             </v-col>
-            <v-col cols="6" md="6" class="py-1 text-right"> 0.312% </v-col>
+            <v-col cols="6" md="6" class="py-1 text-right">
+              {{ stakingFee }} ETH
+            </v-col>
           </v-row>
         </div>
 
@@ -160,6 +162,10 @@ export default {
     ...mapGetters('wallet', ['balanceInETH']),
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network', 'getFiatValue']),
+    stakingFee() {
+      const val = BigNumber(this.amount).div(32);
+      return BigNumber(val).times(0.1).toFixed();
+    },
     networkImg() {
       return this.network.type.icon;
     },
