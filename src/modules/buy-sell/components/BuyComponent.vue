@@ -413,7 +413,9 @@ export default {
     },
     hideSimplex() {
       return (
-        this.selectedCryptoName === 'USDC' || this.selectedCryptoName === 'USDT'
+        this.selectedCryptoName === 'USDC' ||
+        this.selectedCryptoName === 'USDT' ||
+        this.selectedCryptoName === 'DAI'
       );
     }
   },
