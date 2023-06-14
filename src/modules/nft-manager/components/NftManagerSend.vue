@@ -29,7 +29,7 @@
     <mew-button
       class="mt-1 mb-3"
       :has-full-width="false"
-      :disabled="disabled || !enoughFunds"
+      :disabled="!enoughFunds || disabled"
       title="Send"
       btn-size="large"
       color-theme="primary"
