@@ -15,6 +15,7 @@ module.exports = {
   ],
   coverageDirectory: '<rootDir>/tests/unit/coverage',
   moduleFileExtensions: ['js', 'jsx', 'json', 'vue', 'node', 'svg'],
+  detectOpenHandles: true,
   reporters: ['default', 'jest-skipped-reporter'],
   transform: {
     '^.+\\.vue$': 'vue-jest',
