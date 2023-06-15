@@ -111,7 +111,7 @@ const createWallet = async () => {
       description:
         'MyEtherWallet (MEW) is a free, open-source, client-side interface for generating Ethereum wallets & more. Interact with the Ethereum blockchain easily & securely.',
       url: 'https://myetherwallet.com',
-      icons: ['https://www.myetherwallet.com/logo-mew.png']
+      icons: ['https://www.myetherwallet.com/favicon.png']
     }
   });
   await signClient.connect().catch(e => {

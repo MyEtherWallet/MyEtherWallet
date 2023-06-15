@@ -1,3 +1,21 @@
+### v6.7.4
+
+### ui
+
+* fix dapp ui overflow on smaller screens [#4627](https://github.com/MyEtherWallet/MyEtherWallet/pull/4627)
+
+### devop
+
+* update walletconnect [#4626](https://github.com/MyEtherWallet/MyEtherWallet/pull/4626)
+* remove mew connect, replace mew cx with enkrypt [#4629](https://github.com/MyEtherWallet/MyEtherWallet/pull/4629)
+* fix tab favicon on safari [#4631](https://github.com/MyEtherWallet/MyEtherWallet/pull/4631)
+* update buy tokens to match ccswap [#4634](https://github.com/MyEtherWallet/MyEtherWallet/pull/4634)
+
+### fix
+
+* better max calculation when to token has been set [#4622](https://github.com/MyEtherWallet/MyEtherWallet/pull/4622)
+* pull apr and change forecast to match mew wallet [#4633](https://github.com/MyEtherWallet/MyEtherWallet/pull/4633)
+
 ### Release v6.7.3
 
 ### devop

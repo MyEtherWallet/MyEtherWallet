@@ -13,10 +13,6 @@ import { mapActions, mapGetters, mapState } from 'vuex';
 import '@formatjs/intl-numberformat/polyfill';
 import '@formatjs/intl-numberformat/locale-data/en';
 
-import {
-  getInjectedName,
-  getInjectedIcon
-} from '@/core/helpers/detectProvider.js';
 import { PWA_EVENTS } from '@/core/helpers/common';
 import {
   Toast,
@@ -28,7 +24,6 @@ import { BUYSELL_EVENT } from '@/modules/buy-sell/helpers';
 import { EventBus } from '@/core/plugins/eventBus';
 import handlerAnalyticsMixin from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin.js';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
-import { SignClient } from '@walletconnect/sign-client';
 export default {
   name: 'App',
   components: {
@@ -91,22 +86,6 @@ export default {
     });
   },
   mounted() {
-    // manually add web3 wallet detected
-    if (window.ethereum) {
-      const name = getInjectedName(window.ethereum);
-      const info = {
-        walletId: 'com.detected.injectedwallet',
-        uuid: '',
-        name: name,
-        icon: getInjectedIcon(name)
-      };
-      const provider = window.ethereum;
-      this.storeEIP6963Wallet({ info, provider });
-    }
-    // epi6963 listener
-    window.addEventListener('eip6963:announceProvider', e => {
-      this.storeEIP6963Wallet(e.detail);
-    });
     EventBus.$on('swapTxBroadcasted', hash => {
       this.trackSwap('swapTxBroadcasted', hash, this.network.type.chainID);
     });
@@ -131,17 +110,6 @@ export default {
       this.updateArticles({
         timestamp: this.timestamp,
         articleList: this.articleList
-      });
-
-      SignClient.init({
-        projectId: '72299ce67c7d5c879dd8da2df1a6875b',
-        metadata: {
-          name: 'MyEtherWallet Inc',
-          description:
-            'MyEtherWallet (MEW) is a free, open-source, client-side interface for generating Ethereum wallets & more. Interact with the Ethereum blockchain easily & securely.'
-        }
-      }).then(res => {
-        window.signClient = res;
       });
     }
     // Window events to watch out if the online status changes
@@ -180,7 +148,6 @@ export default {
     EventBus.$off('swapTxNotBroadcastedFailed');
     document.removeEventListener('visibilitychange');
     window.removeEventListener('mouseout');
-    window.removeEventListener('eip6963:announceProvider');
   },
   methods: {
     ...mapActions('global', ['setOnlineStatus']),
@@ -189,7 +156,6 @@ export default {
     ...mapActions('article', ['updateArticles']),
     ...mapActions('article', ['updateArticles']),
     ...mapActions('popups', ['showSurveyPopup']),
-    ...mapActions('external', ['storeEIP6963Wallet']),
     openBuy() {
       this.buySellOpen = true;
     },

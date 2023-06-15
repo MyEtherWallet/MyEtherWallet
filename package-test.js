@@ -83,7 +83,8 @@ const EXCEPTIONS = [
   'ethers', // major update
   'patch-package', // major update
   'highcharts', // major update
-  'geckodriver'
+  'geckodriver',
+  '@ensdomains/ens-contracts' // breaks current ENS integration
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
