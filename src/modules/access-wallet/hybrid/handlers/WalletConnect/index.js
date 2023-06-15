@@ -104,21 +104,7 @@ const createWallet = async () => {
     projectId,
     showQrModal: true,
     chains: [1, 137],
-    methods: [
-      'eth_sendTransaction',
-      'eth_sign',
-      'eth_getBalance',
-      'eth_call',
-      'eth_chainId',
-      'eth_gasPrice',
-      'eth_subscribe',
-      'eth_getBlockByNumber',
-      'eth_blockNumber',
-      'net_version',
-      'eth_accounts',
-      'eth_coinbase',
-      'eth_unsubscribe'
-    ],
+    methods: ['eth_sendTransaction', 'eth_sign'],
     events: ['chainChanged', 'accountsChanged'],
     metadata: {
       name: 'MyEtherWallet Inc',
