@@ -1,3 +1,5 @@
+### v6.7.4
+
 ### ui
 
 * fix dapp ui overflow on smaller screens [#4627](https://github.com/MyEtherWallet/MyEtherWallet/pull/4627)
