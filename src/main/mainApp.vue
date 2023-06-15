@@ -13,10 +13,6 @@ import { mapActions, mapGetters, mapState } from 'vuex';
 import '@formatjs/intl-numberformat/polyfill';
 import '@formatjs/intl-numberformat/locale-data/en';
 
-import {
-  getInjectedName,
-  getInjectedIcon
-} from '@/core/helpers/detectProvider.js';
 import { PWA_EVENTS } from '@/core/helpers/common';
 import {
   Toast,
@@ -91,22 +87,6 @@ export default {
     });
   },
   mounted() {
-    // manually add web3 wallet detected
-    if (window.ethereum) {
-      const name = getInjectedName(window.ethereum);
-      const info = {
-        walletId: 'com.detected.injectedwallet',
-        uuid: '',
-        name: name,
-        icon: getInjectedIcon(name)
-      };
-      const provider = window.ethereum;
-      this.storeEIP6963Wallet({ info, provider });
-    }
-    // epi6963 listener
-    window.addEventListener('eip6963:announceProvider', e => {
-      this.storeEIP6963Wallet(e.detail);
-    });
     EventBus.$on('swapTxBroadcasted', hash => {
       this.trackSwap('swapTxBroadcasted', hash, this.network.type.chainID);
     });
@@ -180,7 +160,6 @@ export default {
     EventBus.$off('swapTxNotBroadcastedFailed');
     document.removeEventListener('visibilitychange');
     window.removeEventListener('mouseout');
-    window.removeEventListener('eip6963:announceProvider');
   },
   methods: {
     ...mapActions('global', ['setOnlineStatus']),
@@ -189,7 +168,6 @@ export default {
     ...mapActions('article', ['updateArticles']),
     ...mapActions('article', ['updateArticles']),
     ...mapActions('popups', ['showSurveyPopup']),
-    ...mapActions('external', ['storeEIP6963Wallet']),
     openBuy() {
       this.buySellOpen = true;
     },

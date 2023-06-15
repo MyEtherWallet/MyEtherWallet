@@ -11,10 +11,6 @@
 * fix tab favicon on safari [#4631](https://github.com/MyEtherWallet/MyEtherWallet/pull/4631)
 * update buy tokens to match ccswap [#4634](https://github.com/MyEtherWallet/MyEtherWallet/pull/4634)
 
-### feat
-
-* add eip6963 support [#4628](https://github.com/MyEtherWallet/MyEtherWallet/pull/4628)
-
 ### fix
 
 * better max calculation when to token has been set [#4622](https://github.com/MyEtherWallet/MyEtherWallet/pull/4622)
