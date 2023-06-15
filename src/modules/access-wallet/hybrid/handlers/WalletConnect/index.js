@@ -1,4 +1,3 @@
-// import WalletConnect from '@walletconnect/client';
 import { EthereumProvider } from '@walletconnect/ethereum-provider';
 import { Transaction } from '@ethereumjs/tx';
 import PromiEvent from 'web3-core-promievent';
