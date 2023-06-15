@@ -124,7 +124,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
       const rentPrice = await this.registrarControllerContract.methods
         .rentPrice(this.parsedHostName, this.getActualDuration(duration))
         .call();
-      return rentPrice[0];
+      return rentPrice;
     }
   }
   async totalRenewCost(duration) {
