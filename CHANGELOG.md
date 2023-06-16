@@ -1,3 +1,10 @@
+### Release v6.7.4
+
+### devop
+
+* minor cleanup for wallet connect and revert ens manager changes [#4637](https://github.com/MyEtherWallet/MyEtherWallet/pull/4637)
+* add back on connect listener [#4640](https://github.com/MyEtherWallet/MyEtherWallet/pull/4640)
+
 ### v6.7.4
 
 ### ui
