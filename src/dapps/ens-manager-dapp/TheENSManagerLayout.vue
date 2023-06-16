@@ -839,7 +839,7 @@ export default {
         : this.nameHandler;
       return handler.getRentPrice(this.durationPick).then(resp => {
         if (resp) {
-          const ethValue = fromWei(BigNumber(resp).toString());
+          const ethValue = fromWei(resp);
           return {
             wei: resp,
             eth: ethValue,
