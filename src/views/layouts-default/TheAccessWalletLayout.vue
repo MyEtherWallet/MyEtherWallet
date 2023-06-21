@@ -29,7 +29,7 @@
             class="chip-official d-flex align-center"
             :class="isMobile ? 'note-position-mobile' : 'note-position'"
           >
-            <v-icon color="whiteAlways" size="15px" class="mr-1">
+            <v-icon color="whiteAlways" length="15px" class="mr-1">
               mdi-shield-check
             </v-icon>
             <div
@@ -42,7 +42,7 @@
             v-if="!btn.recommended"
             class="orangePrimary--text mew-label note-position d-flex align-center"
           >
-            <v-icon color="orangePrimary" size="18px" class="mr-1">
+            <v-icon color="orangePrimary" length="18px" class="mr-1">
               mdi-shield-alert
             </v-icon>
             NOT RECOMMENDED
@@ -221,7 +221,7 @@ export default {
             icon: require('@/assets/images/icons/icon-mew-wallet.png'),
             alt: 'MEW wallet',
             fn: () => {
-              this.openMEWconnect();
+              this.openMEWwallet();
             }
           },
           /* Browser extension */
@@ -308,7 +308,7 @@ export default {
         Toast(e, {}, ERROR);
       }
     },
-    openMEWconnect() {
+    openMEWwallet() {
       try {
         WalletConnectWallet()
           .then(_newWallet => {
@@ -358,14 +358,15 @@ export default {
     /**
      * Checks and open web3 wallet
      */
-    async openWeb3Wallet() {
-      if (window.ethereum) {
-        const web3 = new Web3(window.ethereum);
+    async openWeb3Wallet(provider) {
+      if (provider || window.ethereum) {
+        const providedProvider = provider || window.ethereum;
+        const web3 = new Web3(providedProvider);
         try {
-          await window.ethereum.enable();
+          await providedProvider.enable();
           const acc = await web3.eth.requestAccounts();
           const wallet = new Web3Wallet(acc[0]);
-          this.setWallet([wallet, window.ethereum]);
+          this.setWallet([wallet, providedProvider]);
           this.trackAccessWallet(WALLET_TYPES.WEB3_WALLET);
           if (this.path !== '') {
             this.$router.push({ path: this.path });

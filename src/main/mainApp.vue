@@ -53,6 +53,8 @@ export default {
     const updateMsg = this.$t('common.updates.update-found');
     const errMsg = this.$t('common.updates.update-error');
     this.$vuetify.theme.dark = false;
+
+    // pwa listeners
     window.addEventListener(PWA_EVENTS.PWA_UPDATED, () => {
       Toast(succMsg, {}, SUCCESS);
     });
@@ -62,11 +64,14 @@ export default {
     window.addEventListener(PWA_EVENTS.PWA_UPDATE_FOUND, () => {
       Toast(updateMsg, {}, INFO);
     });
+
+    // popup listeners
     document.addEventListener('visibilitychange', () => {
       if (document.hidden && !this.surveyPopup && !this.neverShowSurveyPopup) {
         this.showSurveyPopup();
       }
     });
+
     window.addEventListener('mouseout', e => {
       if (
         (e.clientY <= 0 ||

@@ -57,7 +57,9 @@
               <div class="staking-fee">Staking Fee</div>
               <mew-tooltip class="ml-1" :text="toolTipFee" max-width="320px" />
             </v-col>
-            <v-col cols="6" md="6" class="py-1 text-right"> 0.312% </v-col>
+            <v-col cols="6" md="6" class="py-1 text-right">
+              {{ stakingFee }} ETH
+            </v-col>
           </v-row>
         </div>
 
@@ -160,6 +162,10 @@ export default {
     ...mapGetters('wallet', ['balanceInETH']),
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network', 'getFiatValue']),
+    stakingFee() {
+      const val = BigNumber(this.amount).div(32);
+      return BigNumber(val).times(0.1).toFixed();
+    },
     networkImg() {
       return this.network.type.icon;
     },
@@ -220,30 +226,18 @@ export default {
      */
     depositForecast() {
       /**
-       * 3 Months Forecast
-       */
-      const threeMonthsEarning = this.getEarnings(3);
-      /**
-       * 1 year forecast
+       * 1 year Forecast
        */
       const oneYearEarnings = this.getEarnings(12);
       /**
-       * 2 year forecast
+       * 2 years forecast
        */
       const twoYearEarnings = this.getEarnings(24);
+      /**
+       * 3 years forecast
+       */
+      const threeYearEarnings = this.getEarnings(36);
       return [
-        {
-          duration: 'In 3 months',
-          balanceFiat: this.getFiatValue(
-            new BigNumber(this.amount)
-              .plus(threeMonthsEarning)
-              .times(this.fiatValue)
-          ),
-          balanceETH: formatFloatingPointValue(
-            new BigNumber(this.amount).plus(threeMonthsEarning)
-          ).value,
-          earningsETH: formatFloatingPointValue(threeMonthsEarning).value
-        },
         {
           duration: 'In 1 year',
           balanceFiat: this.getFiatValue(
@@ -267,6 +261,18 @@ export default {
             new BigNumber(this.amount).plus(twoYearEarnings)
           ).value,
           earningsETH: formatFloatingPointValue(twoYearEarnings).value
+        },
+        {
+          duration: 'In 3 years',
+          balanceFiat: this.getFiatValue(
+            new BigNumber(this.amount)
+              .plus(threeYearEarnings)
+              .times(this.fiatValue)
+          ),
+          balanceETH: formatFloatingPointValue(
+            new BigNumber(this.amount).plus(threeYearEarnings)
+          ).value,
+          earningsETH: formatFloatingPointValue(threeYearEarnings).value
         }
       ];
     }
@@ -280,7 +286,12 @@ export default {
         .dividedBy(100) // 12*100
         .times(months / 12)
         .toFixed();
-      return new BigNumber(this.amount).times(apr).toFixed();
+      const yieldFees = BigNumber(apr).times(0.13);
+      const stakeYields = new BigNumber(this.amount).times(
+        BigNumber(apr).minus(yieldFees)
+      );
+
+      return stakeYields.toFixed();
     },
     /**
      * Emits onContinue to go to next step

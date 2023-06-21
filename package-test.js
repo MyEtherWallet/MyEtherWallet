@@ -82,7 +82,11 @@ const EXCEPTIONS = [
   'bip39', // breaks
   'ethers', // major update
   'patch-package', // major update
-  'highcharts' // major update
+  'highcharts', // major update
+  'geckodriver',
+  '@ensdomains/ens-contracts', // breaks current ENS integration
+  '@formatjs/intl-numberformat',
+  'lottie-web'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

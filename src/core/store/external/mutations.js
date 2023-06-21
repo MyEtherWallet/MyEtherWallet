@@ -10,6 +10,7 @@ const SET_COIN_GECKO_TOKENS = function (state, tokens) {
 const SET_NETWORK_TOKENS = function (state, tokens) {
   state.networkTokens = tokens;
 };
+
 export default {
   SET_LAST_PATH,
   SET_CURRENCY_RATE,
