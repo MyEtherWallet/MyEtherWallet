@@ -78,4 +78,43 @@ const webpackConfig = {
   }
 };
 
-module.exports = { webpackConfig, sourceMapsConfig, env_vars };
+const transpilers = config => {
+  // GraphQL Loader
+  config.module
+    .rule('graphql')
+    .test(/\.graphql$/)
+    .use('graphql-tag/loader')
+    .loader('graphql-tag/loader')
+    .end();
+  config.module
+    .rule('transpile-walletconnect')
+    .test(/node_modules\/@walletconnect\/.*\.js$/)
+    .use('babel')
+    .loader('babel-loader')
+    .end();
+  config.module
+    .rule('transpile-eth2-keystore')
+    .test(/node_modules\/@myetherwallet\/eth2-keystore\/.*\.js$/)
+    .use('babel')
+    .loader('babel-loader')
+    .end();
+  config.module
+    .rule('transpile-web3modal')
+    .test(/node_modules\/@web3modal\/.*\.js$/)
+    .use('babel')
+    .loader('babel-loader')
+    .end();
+  config.module
+    .rule('transpile-chainsafe')
+    .test(/node_modules\/@chainsafe\/.*\.js$/)
+    .use('babel')
+    .loader('babel-loader')
+    .end();
+  config.module
+    .rule('transpile-shapeshift-dependency')
+    .test(/node_modules\/eip-712\/.*\.js$/)
+    .use('babel')
+    .loader('babel-loader')
+    .end();
+};
+module.exports = { webpackConfig, sourceMapsConfig, env_vars, transpilers };

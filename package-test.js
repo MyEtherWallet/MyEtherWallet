@@ -49,9 +49,6 @@ const EXCEPTIONS = [
   'vue',
   '@vue/cli-plugin-e2e-nightwatch',
   '@kleros/address-tags-sdk',
-  // breaking
-  '@shapeshiftoss/hdwallet-core',
-  '@shapeshiftoss/hdwallet-keepkey-webusb',
   'package-json',
   'codecov',
   'node-polyfill-webpack-plugin',
@@ -85,8 +82,10 @@ const EXCEPTIONS = [
   'highcharts', // major update
   'geckodriver',
   '@ensdomains/ens-contracts', // breaks current ENS integration
+  // look into these after release
   '@formatjs/intl-numberformat',
-  'lottie-web'
+  'lottie-web',
+  '@walletconnect/ethereum-provider'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
