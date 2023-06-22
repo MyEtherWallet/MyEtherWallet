@@ -1,3 +1,9 @@
+### Release v6.7.4-hotfix.1
+
+### fix
+
+* fix offline build on release [#4646](https://github.com/MyEtherWallet/MyEtherWallet/pull/4646)
+
 ### v6.7.4
 
 ### ui
