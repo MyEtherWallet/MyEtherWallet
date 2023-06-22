@@ -85,8 +85,10 @@ const EXCEPTIONS = [
   'highcharts', // major update
   'geckodriver',
   '@ensdomains/ens-contracts', // breaks current ENS integration
+  // look into these after release
   '@formatjs/intl-numberformat',
-  'lottie-web'
+  'lottie-web',
+  '@walletconnect/ethereum-provider'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
