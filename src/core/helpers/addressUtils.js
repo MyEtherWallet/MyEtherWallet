@@ -1,6 +1,6 @@
 import web3 from 'web3';
 import store from '@/core/store';
-import { ROOTSTOCK } from '@/utils/networks/types';
+import { ROOTSTOCK, XDC } from '@/utils/networks/types';
 import {
   toChecksumAddress as toChecksumAddr,
   isValidChecksumAddress
@@ -34,6 +34,10 @@ const toChecksumAddress = address => {
   // Use EIP-1191 Address Checksum if its Rootstock network
   if (chainId === ROOTSTOCK.chainID) {
     return toChecksumAddr(address, chainId);
+  }
+
+  if (chainId === XDC.chainID) {
+    return web3.utils.toChecksumAddress(address.replace('xdc', '0x'));
   }
 
   return web3.utils.toChecksumAddress(address);

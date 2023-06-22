@@ -12,6 +12,7 @@ Ws = function (url, protocols) {
 };
 _btoa = btoa;
 parseURL = function (url) {
+  console.log(url);
   return new URL(url);
 };
 const WebsocketProvider = function WebsocketProvider(url, options) {
@@ -45,6 +46,7 @@ const WebsocketProvider = function WebsocketProvider(url, options) {
   this.connection.onmessage = function (e) {
     const data = typeof e.data === 'string' ? e.data : '';
     _this._parseResponse(data).forEach(function (result) {
+      console.log(result);
       let id = null;
       if (isArray(result)) {
         result.forEach(function (load) {
