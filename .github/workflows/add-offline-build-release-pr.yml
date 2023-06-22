@@ -1,4 +1,4 @@
-name: add to codecov [v6]
+name: add offline build [v6]
 
 on:
   pull_request:
