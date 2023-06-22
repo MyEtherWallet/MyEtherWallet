@@ -49,9 +49,6 @@ const EXCEPTIONS = [
   'vue',
   '@vue/cli-plugin-e2e-nightwatch',
   '@kleros/address-tags-sdk',
-  // breaking
-  '@shapeshiftoss/hdwallet-core',
-  '@shapeshiftoss/hdwallet-keepkey-webusb',
   'package-json',
   'codecov',
   'node-polyfill-webpack-plugin',

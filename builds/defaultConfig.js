@@ -86,7 +86,6 @@ const transpilers = config => {
     .use('graphql-tag/loader')
     .loader('graphql-tag/loader')
     .end();
-
   config.module
     .rule('transpile-walletconnect')
     .test(/node_modules\/@walletconnect\/.*\.js$/)
@@ -108,6 +107,12 @@ const transpilers = config => {
   config.module
     .rule('transpile-chainsafe')
     .test(/node_modules\/@chainsafe\/.*\.js$/)
+    .use('babel')
+    .loader('babel-loader')
+    .end();
+  config.module
+    .rule('transpile-shapeshift-dependency')
+    .test(/node_modules\/eip-712\/.*\.js$/)
     .use('babel')
     .loader('babel-loader')
     .end();
