@@ -3,6 +3,7 @@
 import { Toast, SENTRY } from '@/modules/toast/handler/handlerToast';
 const errors = require('web3-core-helpers').errors;
 import { isArray, isFunction } from 'lodash';
+import { parseXDCValues } from './xdc-parser';
 let Ws = null;
 let _btoa = null;
 let parseURL = null;
@@ -177,9 +178,12 @@ WebsocketProvider.prototype.on = function (type, callback) {
 
   switch (type) {
     case 'message':
-      this.notificationCallbacks.push(resp =>
-        callback({ data: resp.params, type: resp.method })
-      );
+      this.notificationCallbacks.push(resp => {
+        callback({
+          data: parseXDCValues(resp, resp.params),
+          type: resp.method
+        });
+      });
       break;
 
     case 'data':
