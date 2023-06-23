@@ -2,7 +2,7 @@
 
 import { Toast, SENTRY } from '@/modules/toast/handler/handlerToast';
 const errors = require('web3-core-helpers').errors;
-import { isArray, isFunction } from 'lodash';
+import { isArray, isFunction, isString } from 'lodash';
 let Ws = null;
 let _btoa = null;
 let parseURL = null;
@@ -12,7 +12,6 @@ Ws = function (url, protocols) {
 };
 _btoa = btoa;
 parseURL = function (url) {
-  console.log(url);
   return new URL(url);
 };
 const WebsocketProvider = function WebsocketProvider(url, options) {
@@ -46,7 +45,6 @@ const WebsocketProvider = function WebsocketProvider(url, options) {
   this.connection.onmessage = function (e) {
     const data = typeof e.data === 'string' ? e.data : '';
     _this._parseResponse(data).forEach(function (result) {
-      console.log(result);
       let id = null;
       if (isArray(result)) {
         result.forEach(function (load) {
@@ -61,6 +59,20 @@ const WebsocketProvider = function WebsocketProvider(url, options) {
         result.method &&
         result.method.indexOf('_subscription') !== -1
       ) {
+        // parse xdc values to 0x
+        if (result.params) {
+          const newRes = Object.keys(result.params.result).reduce(
+            (obj, item) => {
+              if (isString(result.params.result[item])) {
+                obj[item] = result.params.result[item].replace('xdc', '0x');
+              }
+              obj[item] = result.params.result[item];
+              return obj;
+            },
+            {}
+          );
+          result['params'] = newRes;
+        }
         _this.notificationCallbacks.forEach(function (callback) {
           if (isFunction(callback)) callback(result);
         });

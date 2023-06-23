@@ -1,6 +1,10 @@
 import Method from 'web3-core-method';
 import utils from 'web3-utils';
 import { formatters } from 'web3-core-helpers';
+
+const outputBigNumberFormatter = function (number) {
+  return utils.toBN(number).toString(10);
+};
 class Web3Calls {
   constructor(requestManager) {
     const ethereumCalls = [
@@ -33,6 +37,42 @@ class Web3Calls {
         name: 'getBlockByNumber',
         call: 'eth_getBlockByNumber',
         params: 2,
+        // copied from https://github.com/web3/web3.js/blob/1.x/packages/web3-core-helpers/src/formatters.js
+        outputFormatter: function (block, hexFormat) {
+          if (!hexFormat) {
+            // transform to number
+            block.gasLimit = utils.hexToNumber(block.gasLimit);
+            block.gasUsed = utils.hexToNumber(block.gasUsed);
+            block.size = utils.hexToNumber(block.size);
+            block.timestamp = utils.hexToNumber(block.timestamp);
+            if (block.number !== null)
+              block.number = utils.hexToNumber(block.number);
+          }
+
+          if (block.difficulty)
+            block.difficulty = outputBigNumberFormatter(block.difficulty);
+          if (block.totalDifficulty)
+            block.totalDifficulty = outputBigNumberFormatter(
+              block.totalDifficulty
+            );
+
+          if (Array.isArray(block.transactions)) {
+            block.transactions.forEach(function (item) {
+              if (!(typeof item === 'string'))
+                return formatters.outputTransactionFormatter(item, hexFormat);
+            });
+          }
+
+          if (block.miner)
+            block.miner = utils.toChecksumAddress(
+              block.miner.replace('xdc', '0x')
+            );
+
+          if (block.baseFeePerGas)
+            block.baseFeePerGas = utils.hexToNumber(block.baseFeePerGas);
+
+          return block;
+        },
         requestManager
       }),
       new Method({

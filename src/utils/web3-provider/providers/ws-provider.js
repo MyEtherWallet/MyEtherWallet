@@ -13,6 +13,7 @@ import {
   ethAccounts,
   ethCoinbase,
   ethGetTransactionCount,
+  ethGetBlockByNumber,
   netVersion
 } from '../methods';
 const MAX_RETRIES = 10;
@@ -85,6 +86,7 @@ class WSProvider {
       middleware.use(ethSign);
       middleware.use(ethAccounts);
       middleware.use(ethGetTransactionCount);
+      middleware.use(ethGetBlockByNumber);
       middleware.use(ethCoinbase);
       middleware.use(netVersion);
       middleware.run(req, callback).then(() => {
