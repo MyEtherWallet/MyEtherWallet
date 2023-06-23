@@ -285,16 +285,19 @@ export default {
           type === NOTIFICATION_TYPES.OUT &&
           notification.status.toLowerCase() === NOTIFICATION_STATUS.PENDING
         ) {
-          this.web3.eth
-            .getTransactionReceipt(notification.hash)
-            .then(receipt => {
-              if (receipt) {
-                notification.status = receipt.status
-                  ? NOTIFICATION_STATUS.SUCCESS
-                  : NOTIFICATION_STATUS.FAILED;
-                this.updateNotification(notification);
-              }
-            });
+          const timeout = setInterval(() => {
+            this.web3.eth
+              .getTransactionReceipt(notification.hash)
+              .then(receipt => {
+                if (receipt) {
+                  notification.status = receipt.status
+                    ? NOTIFICATION_STATUS.SUCCESS
+                    : NOTIFICATION_STATUS.FAILED;
+                  this.updateNotification(notification);
+                  clearInterval(timeout);
+                }
+              });
+          }, 10000);
         }
       }
     },

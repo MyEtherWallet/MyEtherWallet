@@ -1,6 +1,8 @@
 'use strict';
 
+import VuexStore from '@/core/store';
 import { Toast, SENTRY } from '@/modules/toast/handler/handlerToast';
+import { XDC } from '@/utils/networks/types';
 const errors = require('web3-core-helpers').errors;
 import { isArray, isFunction, isString } from 'lodash';
 let Ws = null;
@@ -59,12 +61,20 @@ const WebsocketProvider = function WebsocketProvider(url, options) {
         result.method &&
         result.method.indexOf('_subscription') !== -1
       ) {
-        // parse xdc values to 0x
-        if (result.params) {
+        /**
+         * formats xdc responses to hex
+         */
+        const chainID = VuexStore.getters['global/network']
+          ? VuexStore.getters['global/network'].type.chainID
+          : 1;
+        if (chainID === XDC.chainID && result.params) {
           const newRes = Object.keys(result.params.result).reduce(
             (obj, item) => {
-              if (isString(result.params.result[item])) {
-                obj[item] = result.params.result[item].replace('xdc', '0x');
+              if (
+                isString(result.params.result[item]) &&
+                result.params.result[item].substring(0, 3) === 'xdc'
+              ) {
+                obj[item] = `0x${result.params.result[item].substring(3)}`;
               }
               obj[item] = result.params.result[item];
               return obj;
@@ -74,7 +84,9 @@ const WebsocketProvider = function WebsocketProvider(url, options) {
           result['params'] = newRes;
         }
         _this.notificationCallbacks.forEach(function (callback) {
-          if (isFunction(callback)) callback(result);
+          if (isFunction(callback)) {
+            callback(result);
+          }
         });
       } else if (_this.responseCallbacks[id]) {
         _this.responseCallbacks[id](null, result);
