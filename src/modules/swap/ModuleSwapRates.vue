@@ -59,7 +59,7 @@
     >
       <v-progress-circular indeterminate />
       <h3 class="ma-3">Having issues loading tokens.</h3>
-      <h5 class="mb-2 cursor--pointe greenPrimary--text" @click="fetchRates">
+      <h5 class="mb-2 cursor--pointer greenPrimary--text" @click="fetchRates">
         Try again?
       </h5>
     </div>
