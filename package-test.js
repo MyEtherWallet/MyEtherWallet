@@ -81,6 +81,8 @@ const EXCEPTIONS = [
   'highcharts', // major update
   'geckodriver',
   '@ensdomains/ens-contracts', // breaks current ENS integration
+  '@shapeshiftoss/hdwallet-core',
+  '@shapeshiftoss/hdwallet-keepkey-webusb',
   // look into these after release
   '@formatjs/intl-numberformat',
   'lottie-web',
