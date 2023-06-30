@@ -190,8 +190,6 @@
     "npm": ">= 6.0.0"
   },
   "resolutions": {
-    "ethereumjs-abi": "0.6.8",
-    "@ledgerhq/compressjs": "git+https://github.com/LedgerHQ/compressjs.git",
     "engine.io": "6.2.1",
     "glob-parent": "5.1.2",
     "follow-redirects": "1.15.2",
