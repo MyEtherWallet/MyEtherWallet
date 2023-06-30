@@ -24,7 +24,7 @@
     "lint:md": "remark . -o",
     "lint:styles": "prettier --write 'src/**/*.{scss,css}' && stylelint 'src/**/*.{scss,css}' --fix",
     "lint:tests": "eslint --fix tests/",
-    "preinstall": "bash ./scripts/checklockconflicts.sh && npx npm-force-resolutions && find node_modules -name \".git\" -exec rm -rf {} \\;",
+    "preinstall": "bash ./scripts/checklockconflicts.sh && npx npm-force-resolutions && find node_modules -name \".git\" -exec rm -rf {} \\; || true",
     "start": "npm run update:mainlists && npm run dev",
     "start:history": "npm run update:mainlists && ROUTER_MODE=history npm run dev",
     "start:offline": "npm run update:mainlists && ROUTER_MODE=hash BUILD=offline npm run dev",
