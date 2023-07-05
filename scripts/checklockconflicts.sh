@@ -1,4 +1,4 @@
-if [ -f ../package-lock.json ]; then
+if [ -f ./package-lock.json ]; then
     if grep -Fxq "<<<<<<< HEAD" package-lock.json
     then
         echo "Conflict found! Fixing...."
