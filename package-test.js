@@ -93,7 +93,8 @@ const EXCEPTIONS = [
   '@sentry/vue',
   '@commitlint/config-conventional',
   'commitlint',
-  'protobufjs'
+  'protobufjs',
+  '@keepkey/device-protocol'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
