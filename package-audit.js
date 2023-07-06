@@ -27,7 +27,8 @@ const AUDIT_EXCEPTIONS = [
   '@openzeppelin/contracts',
   'engine.io',
   'socket.io-parser',
-  'fast-xml-parser'
+  'fast-xml-parser',
+  '@grpc/grpc-js'
 ];
 const execute = (command, callback) => {
   exec(

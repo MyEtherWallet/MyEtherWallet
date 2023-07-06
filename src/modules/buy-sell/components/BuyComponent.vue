@@ -377,24 +377,23 @@ export default {
     },
     max() {
       if (this.hasData) {
-        const moonpayMax = this.fetchedData[0]?.limits.find(
+        const dataToArray = Object.values(this.fetchedData);
+        const moonPay = dataToArray.find(item => item.name === 'MOONPAY');
+        const simplex = dataToArray.find(item => item.name === 'SIMPLEX');
+        const moonpayMax = moonPay?.limits.find(
           item => item.fiat_currency === this.selectedFiatName
         );
-        const simplexMax = this.fetchedData[1]?.limits.find(
+        const simplexMax = simplex?.limits.find(
           item => item.fiat_currency === this.selectedFiatName
         );
         return {
-          moonpay: moonpayMax
-            ? BigNumber(moonpayMax.limit.max)
-            : BigNumber(12000),
-          simplex: simplexMax
-            ? BigNumber(simplexMax.limit.max)
-            : BigNumber(12000)
+          moonpay: moonpayMax ? BigNumber(moonpayMax.limit.max) : BigNumber(0),
+          simplex: simplexMax ? BigNumber(simplexMax.limit.max) : BigNumber(0)
         };
       }
       return {
-        moonpay: BigNumber(12000),
-        simplex: BigNumber(12000)
+        moonpay: BigNumber(0),
+        simplex: BigNumber(0)
       };
     },
     maxVal() {
@@ -414,7 +413,9 @@ export default {
     },
     hideSimplex() {
       return (
-        this.selectedCryptoName === 'USDC' || this.selectedCryptoName === 'USDT'
+        this.selectedCryptoName === 'USDC' ||
+        this.selectedCryptoName === 'USDT' ||
+        this.selectedCryptoName === 'DAI'
       );
     }
   },

@@ -49,9 +49,6 @@ const EXCEPTIONS = [
   'vue',
   '@vue/cli-plugin-e2e-nightwatch',
   '@kleros/address-tags-sdk',
-  // breaking
-  '@shapeshiftoss/hdwallet-core',
-  '@shapeshiftoss/hdwallet-keepkey-webusb',
   'package-json',
   'codecov',
   'node-polyfill-webpack-plugin',
@@ -77,13 +74,27 @@ const EXCEPTIONS = [
   'is-ipfs',
   'axios',
   'prettier', // creates more warnings
-  '@ledgerhq/hw-app-eth', // issue with imports
   '@ledgerhq/live-common', // issue with imports
   'bip39', // breaks
   'ethers', // major update
   'patch-package', // major update
   'highcharts', // major update
-  'geckodriver'
+  'geckodriver',
+  '@ensdomains/ens-contracts', // breaks current ENS integration
+  '@shapeshiftoss/hdwallet-core',
+  '@shapeshiftoss/hdwallet-keepkey-webusb',
+  // look into these after release
+  '@formatjs/intl-numberformat',
+  'lottie-web',
+  '@coolwallet/eth',
+  '@walletconnect/ethereum-provider',
+  '@sentry/browser',
+  '@sentry/tracing',
+  '@sentry/vue',
+  '@commitlint/config-conventional',
+  'commitlint',
+  'protobufjs',
+  '@keepkey/device-protocol'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
