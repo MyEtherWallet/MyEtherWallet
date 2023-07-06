@@ -5,7 +5,7 @@ export default class UNS {
   constructor(network, web3) {
     const networkname = 'mainnet';
     const polyname = 'polygon-mainnet';
-    const polyprovider = new Web3('wss://nodes.mewapi.io/ws/matic');
+    const polyprovider = new Web3('https://nodes.mewapi.io/rpc/matic');
     const resolution = new Resolution({
       sourceConfig: {
         uns: {
