@@ -110,6 +110,22 @@ const transpilers = config => {
     .use('babel')
     .loader('babel-loader')
     .end();
+  config.module
+    .rule('transpile-ledger')
+    .test(/node_modules\/@ledgerhq\/.*\.js$/)
+    .use('babel')
+    .loader('babel-loader')
+    .end();
+  config.module
+    .rule('resolve-alias')
+    .test(/node_modules\/@ledgerhq\/.*\.js$/)
+    .resolve.alias.set('@ledgerhq/devices', '@ledgerhq/devices/lib-es')
+    .set('@ledgerhq/cryptoassets', '@ledgerhq/cryptoassets/lib-es')
+    .set(
+      '@ledgerhq/domain-service/signers',
+      '@ledgerhq/domain-service/lib-es/signers'
+    )
+    .end();
 };
 
 module.exports = { webpackConfig, sourceMapsConfig, env_vars, transpilers };
