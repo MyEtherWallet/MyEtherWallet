@@ -6,7 +6,8 @@ const nameResolver = new NameResolver(
     type: {
       ens: {
         registry: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e'
-      }
+      },
+      unstoppableRPC: 'https://nodes.mewapi.io/rpc/eth'
     },
     url: 'https://nodes.mewapi.io/rpc/eth',
     port: 443
