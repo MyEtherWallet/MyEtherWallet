@@ -24,7 +24,7 @@ export default class NameResolver {
     name = normalise(name);
     let address = await this.ens.resolveName(name);
     if (address === ZERO_ADDRESS) {
-      address = (await this.uns.resolveName(name)) || '';
+      address = await this.uns.resolveName(name);
     }
     if (this.network.type.chainID === ROOTSTOCK.chainID) {
       address = toChecksumAddress(address);
@@ -39,7 +39,7 @@ export default class NameResolver {
     if (isAddress(address) && address !== ZERO_ADDRESS) {
       const resolvedName = await this.ens.resolveAddress(address);
       if (!resolvedName.name) {
-        resolvedName.name = (await this.uns.resolveAddress(address)) || '';
+        resolvedName.name = await this.uns.resolveAddress(address);
       }
       return resolvedName;
     }
