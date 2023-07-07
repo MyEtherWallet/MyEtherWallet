@@ -63,7 +63,7 @@
     "@sentry/vue": "7.54.0",
     "@shapeshiftoss/hdwallet-core": "1.22.0",
     "@shapeshiftoss/hdwallet-keepkey-webusb": "1.22.0",
-    "@unstoppabledomains/resolution": "8.3.3",
+    "@unstoppabledomains/resolution": "9.0.0",
     "@walletconnect/ethereum-provider": "2.7.7",
     "@web3modal/standalone": "2.4.3",
     "animejs": "3.2.1",

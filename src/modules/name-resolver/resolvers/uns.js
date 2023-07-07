@@ -2,7 +2,7 @@ import Resolution from '@unstoppabledomains/resolution';
 import { toChecksumAddress } from 'web3-utils';
 import Web3 from 'web3';
 export default class UNS {
-  constructor(network, web3) {
+  constructor(network) {
     const networkname = 'mainnet';
     const polyname = 'polygon-mainnet';
     const polyprovider = new Web3('https://nodes.mewapi.io/rpc/matic');
@@ -12,7 +12,7 @@ export default class UNS {
           locations: {
             Layer1: {
               network: networkname,
-              url: web3.currentProvider.host
+              url: network.type.unstoppableRPC
             },
             Layer2: {
               network: polyname,
