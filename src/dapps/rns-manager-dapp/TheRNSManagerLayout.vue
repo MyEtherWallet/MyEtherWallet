@@ -205,18 +205,20 @@ export default {
   },
   methods: {
     setup() {
-      const provider = new ethers.providers.Web3Provider(
+      const ethersProvider = new ethers.providers.Web3Provider(
         this.web3.currentProvider
       );
-      this.nameHandler = new RNSManager(this.instance, provider);
-      this.reverseHandler = new ReverseRegister(this.instance, provider);
+      const ethersSigner = ethersProvider.getSigner();
+      this.nameHandler = new RNSManager(ethersSigner);
+      this.reverseHandler = new ReverseRegister(ethersSigner);
     },
     async findDomain() {
       try {
         const [name, domain] = this.name.split('.');
 
         if (domain !== 'rsk') {
-          this.searchError = 'Domain not supported on this network';
+          this.searchError =
+            'Only .rsk names are supported. Please make sure to include ".rsk".';
           return;
         }
 

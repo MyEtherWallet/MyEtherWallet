@@ -1,3 +1,87 @@
+### v6.7.4
+
+### ui
+
+* fix dapp ui overflow on smaller screens [#4627](https://github.com/MyEtherWallet/MyEtherWallet/pull/4627)
+
+### devop
+
+* minor cleanup for wallet connect and revert ens manager changes [#4637](https://github.com/MyEtherWallet/MyEtherWallet/pull/4637)
+* add back on connect listener [#4640](https://github.com/MyEtherWallet/MyEtherWallet/pull/4640)
+* update walletconnect [#4626](https://github.com/MyEtherWallet/MyEtherWallet/pull/4626)
+* remove mew connect, replace mew cx with enkrypt [#4629](https://github.com/MyEtherWallet/MyEtherWallet/pull/4629)
+* fix tab favicon on safari [#4631](https://github.com/MyEtherWallet/MyEtherWallet/pull/4631)
+* update buy tokens to match ccswap [#4634](https://github.com/MyEtherWallet/MyEtherWallet/pull/4634)
+
+### fix
+
+* better max calculation when to token has been set [#4622](https://github.com/MyEtherWallet/MyEtherWallet/pull/4622)
+* pull apr and change forecast to match mew wallet [#4633](https://github.com/MyEtherWallet/MyEtherWallet/pull/4633)
+* exclude packages [#4642](https://github.com/MyEtherWallet/MyEtherWallet/pull/4642)
+
+### Release v6.7.3
+
+### devop
+
+* * adjust token table tool button location [#4513](https://github.com/MyEtherWallet/MyEtherWallet/pull/4513)
+* use ethvm blockexplorrer, add sepolia [#4614](https://github.com/MyEtherWallet/MyEtherWallet/pull/4614)
+* sync develop with main [#4621](https://github.com/MyEtherWallet/MyEtherWallet/pull/4621)
+
+### feat
+
+* add survey popup and banner [#4617](https://github.com/MyEtherWallet/MyEtherWallet/pull/4617)
+
+### fix
+
+* fixes issue when swapping erc20 to cross chain [#4613](https://github.com/MyEtherWallet/MyEtherWallet/pull/4613)
+* fix 422 error when clicking 'buy now' by hiding header when network is unsupported [#4618](https://github.com/MyEtherWallet/MyEtherWallet/pull/4618)
+
+### Release v6.7.2
+
+### devop
+
+* sync develop [#4605](https://github.com/MyEtherWallet/MyEtherWallet/pull/4605)
+* fix matomo labels [#4609](https://github.com/MyEtherWallet/MyEtherWallet/pull/4609)
+* fix manifest path and add changelog [#4610](https://github.com/MyEtherWallet/MyEtherWallet/pull/4610)
+* update rns manager dapp icon [#4611](https://github.com/MyEtherWallet/MyEtherWallet/pull/4611)
+
+### fix
+
+* move icons tto expected folder [#4606](https://github.com/MyEtherWallet/MyEtherWallet/pull/4606)
+* fix icon pathing [#4612](https://github.com/MyEtherWallet/MyEtherWallet/pull/4612)
+
+### Release v6.7.1-hotfix.2
+
+* fix filter for multiple created validators [#4603](https://github.com/MyEtherWallet/MyEtherWallet/pull/4603)
+
+### Release v6.7.1-hotfix.1
+
+* remove coming soon banner for stake exit [#4602](https://github.com/MyEtherWallet/MyEtherWallet/pull/4602)
+
+### Release v6.7.1
+
+### devop
+
+* remove staging env [#4557](https://github.com/MyEtherWallet/MyEtherWallet/pull/4557)
+
+### feat
+
+* listen to wallet connect and switch address [#4597](https://github.com/MyEtherWallet/MyEtherWallet/pull/4597)
+* add exit stake [#4598](https://github.com/MyEtherWallet/MyEtherWallet/pull/4598)
+
+### fix
+
+* fix staked exit status [#4601](https://github.com/MyEtherWallet/MyEtherWallet/pull/4601)
+* fix web3 provider to derive signer in rns manager dapp [#4588](https://github.com/MyEtherWallet/MyEtherWallet/pull/4588)
+* new tab for hardware wallet ad [#4589](https://github.com/MyEtherWallet/MyEtherWallet/pull/4589)
+
+### Release v6.7.0-hotfix.2
+
+### devop
+
+* sync develop [#4585](https://github.com/MyEtherWallet/MyEtherWallet/pull/4585)
+* seo token pages [#4591](https://github.com/MyEtherWallet/MyEtherWallet/pull/4591)
+
 ### Release v6.7.0-hotfix.1
 
 ### fix

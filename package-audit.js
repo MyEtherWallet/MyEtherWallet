@@ -23,7 +23,11 @@ const AUDIT_EXCEPTIONS = [
   'cacheable-request',
   // look into updating after release
   'dns-packet',
-  'decode-uri-component'
+  'decode-uri-component',
+  '@openzeppelin/contracts',
+  'engine.io',
+  'socket.io-parser',
+  'fast-xml-parser'
 ];
 const execute = (command, callback) => {
   exec(

@@ -1,4 +1,4 @@
-import { Contract, Wallet } from 'ethers';
+import { Contract } from 'ethers';
 
 const RNS_REGISTRY_ADDRESS = '0xd25c3f94a743b93ecffecbe691beea51c3c2d9d1';
 const REVERSE_REGISTER_ABI = [
@@ -7,8 +7,7 @@ const REVERSE_REGISTER_ABI = [
 ];
 
 export default class ReverseRegistrar {
-  constructor(wallet, provider) {
-    const signer = new Wallet(wallet.privateKey, provider);
+  constructor(signer) {
     const reverseRegisterContract = new Contract(
       RNS_REGISTRY_ADDRESS,
       REVERSE_REGISTER_ABI,
