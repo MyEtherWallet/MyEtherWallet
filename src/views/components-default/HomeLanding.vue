@@ -51,7 +51,7 @@
               color-theme="white"
               btn-size="large"
               style="border-radius: 40px !important"
-              btn-link="https://www.enkrypt.com"
+              :btn-link="browserLink"
               rel="dofollow"
             >
               <img class="mr-3 browser-icons" :src="browserLogo" />
