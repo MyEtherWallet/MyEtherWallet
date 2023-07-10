@@ -51,40 +51,4 @@ a {
   word-wrap: break-word;
   word-break: break-all;
 }
-ul {
-  li {
-    &::before {
-      content: '- ';
-    }
-  }
-}
-
-.main-table {
-  border: 1px solid var(--v-black-base);
-  border-collapse: collapse;
-  tr {
-    border-bottom: 1px solid var(--v-black-base);
-  }
-}
-.sub-table {
-  border-collapse: collapse;
-  tr {
-    border: 1px solid black;
-    td {
-      border-right: 1px solid black;
-    }
-  }
-}
-@media (max-width: 600px) {
-  .main-table {
-    tbody > tr {
-      > td {
-        display: block;
-        &:first-child {
-          font-size: 25px;
-        }
-      }
-    }
-  }
-}
 </style>
