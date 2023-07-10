@@ -1,4 +1,4 @@
-name: add to codecov [v6]
+name: add offline build [v6]
 
 on:
   pull_request:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   offline-build:
-    if: github.ref == 'develop'
+    if: github.head_ref == 'develop'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

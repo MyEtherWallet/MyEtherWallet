@@ -48,7 +48,6 @@
             NOT RECOMMENDED
           </div>
           <mew-button
-            v-if="btn.useBtn"
             has-full-width
             :class="[
               btn.title === 'Software'
@@ -90,60 +89,6 @@
               </div>
             </div>
           </mew-button>
-          <div v-else class="non-button-container mb-5 py-6">
-            <div class="width--full d-flex align-center text-left">
-              <img
-                v-if="btn.icon && !isMobile"
-                class="ml-5 mr-6"
-                :src="btn.icon"
-                :alt="btn.alt"
-                style="height: 70px"
-              />
-              <div class="px-3">
-                <div class="d-flex align-center">
-                  <img
-                    v-if="btn.icon && isMobile"
-                    class="mr-4"
-                    :src="btn.icon"
-                    :alt="btn.alt"
-                    style="height: 40px"
-                  />
-
-                  <div class="mew-heading-2 break-word letter-spacing--initial">
-                    {{ btn.title }}
-                  </div>
-                </div>
-                <div
-                  class="mew-heading-4 reset-subtitle break-word letter-spacing--initial text-transform--none mt-2 mb-2"
-                >
-                  {{ btn.subtitle }}
-                </div>
-                <div
-                  v-if="eip6963Providers.length > 1"
-                  class="d-flex align-center justify-start mini-button-container"
-                >
-                  <div
-                    v-for="item in eip6963Providers"
-                    :key="item.info.uuid"
-                    class="mr-2 px-1 py-2 d-flex align-center cursor--pointer mini-buttons"
-                    @click="
-                      () => {
-                        openWeb3Wallet(item.provider);
-                      }
-                    "
-                  >
-                    <img
-                      v-if="item.info.icon"
-                      :src="item.info.icon"
-                      :alt="`${item.info.name}-picture`"
-                      width="25px"
-                    />
-                    <span class="pl-1">{{ item.info.name }}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
 
@@ -220,7 +165,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('external', ['path', 'eip6963Providers']),
+    ...mapState('external', ['path']),
     ...mapState('wallet', ['isOfflineApp']),
     /**
      * Opens up software module overlay. Returns true if overlay prop from route is ACCESS_VALID_OVERLAYS.SOFTWARE
@@ -260,7 +205,6 @@ export default {
             subtitle: 'Connect with Enkrypt browser extension',
             official: true,
             recommended: true,
-            useBtn: true,
             icon: require('@/assets/images/icons/icon-enkrypt-block.svg'),
             alt: 'Enkrypt',
             fn: () => {
@@ -274,7 +218,6 @@ export default {
             subtitle: 'Connect MEW Wallet app to MEW web',
             official: true,
             recommended: true,
-            useBtn: true,
             icon: require('@/assets/images/icons/icon-mew-wallet.png'),
             alt: 'MEW wallet',
             fn: () => {
@@ -288,7 +231,6 @@ export default {
             subtitle: 'Use your Web3 wallet with MEW',
             official: false,
             recommended: true,
-            useBtn: this.eip6963Providers.length <= 1,
             icon: require('@/assets/images/icons/icon-extensions.png'),
             alt: 'Hardware Wallets',
             fn: () => {
@@ -302,7 +244,6 @@ export default {
             subtitle: 'WalletConnect, WalletLink',
             official: false,
             recommended: true,
-            useBtn: true,
             icon: require('@/assets/images/icons/icon-mobile-apps.png'),
             alt: 'Hardware Wallets',
             fn: () => {
@@ -316,7 +257,6 @@ export default {
             subtitle: 'Ledger, Trezor, KeepKey, Cool Wallet, Bitbox02',
             official: false,
             recommended: true,
-            useBtn: true,
             icon: require('@/assets/images/icons/icon-hardware-wallet.png'),
             alt: 'Hardware Wallets',
             fn: () => {
@@ -330,7 +270,6 @@ export default {
             title: 'Software',
             subtitle: 'Keystore File, Mnemonic Phrase, and Private Key',
             official: false,
-            useBtn: true,
             recommended: false,
             fn: () => {
               this.openOverlay(ACCESS_VALID_OVERLAYS.SOFTWARE);
@@ -342,7 +281,6 @@ export default {
         {
           color: 'white',
           title: 'Software',
-          useBtn: true,
           subtitle: 'Keystore files, Mnemonic phrase, Private key',
           fn: () => {
             this.openOverlay(ACCESS_VALID_OVERLAYS.SOFTWARE);
@@ -353,9 +291,6 @@ export default {
     isMobile() {
       return this.$vuetify.breakpoint.smAndDown;
     }
-  },
-  mounted() {
-    window.dispatchEvent(new Event('eip6963:requestProvider'));
   },
   methods: {
     ...mapActions('wallet', ['setWallet']),
@@ -483,29 +418,5 @@ export default {
   right: 0px;
   padding: 4px 8px;
   border-radius: 0px 10px 0 7px;
-}
-.non-button-container {
-  background-color: white;
-  border-radius: 10px;
-  padding: 24px 20px;
-  letter-spacing: 0.5px;
-  text-transform: none;
-  width: 100%;
-  height: initial;
-  min-height: 157px;
-  align-items: center;
-  display: flex;
-}
-
-.mini-buttons {
-  border: 1px solid var(--v-greenPrimary-base);
-  border-radius: 4px;
-  width: 110px;
-  height: 45px;
-}
-
-.mini-button-container {
-  width: 100%;
-  overflow-x: auto;
 }
 </style>

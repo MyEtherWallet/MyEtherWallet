@@ -64,7 +64,7 @@ export const knownErrors = {
   'Uncaught (in promise) Error: Missing or invalid topic field': '',
   'Missing or invalid topic field': '',
   'Cannot convert undefined or null to object': '',
-  'No matching key. pairing: undefined': ''
+  'No matching key. pairing': ''
 };
 
 const handleError = err => {

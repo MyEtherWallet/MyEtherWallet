@@ -1,10 +1,10 @@
-// import WalletConnect from '@walletconnect/client';
 import { EthereumProvider } from '@walletconnect/ethereum-provider';
 import { Transaction } from '@ethereumjs/tx';
 import PromiEvent from 'web3-core-promievent';
 
 import HybridWalletInterface from '../walletInterface';
 import store from '@/core/store';
+import * as nodes from '@/utils/networks/nodes';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import {
   sanitizeHex,
@@ -100,10 +100,18 @@ class WalletConnectWallet {
   }
 }
 const createWallet = async () => {
+  const allChainIds = Object.values(nodes)
+    .map(item => {
+      if (item.type.chainID !== 1) {
+        return item.type.chainID;
+      }
+    })
+    .filter(item => !!item);
   const signClient = await EthereumProvider.init({
     projectId,
     showQrModal: true,
-    chains: [1, 137],
+    chains: [1],
+    optionalChains: allChainIds,
     methods: ['eth_sendTransaction', 'eth_sign'],
     events: ['chainChanged', 'accountsChanged'],
     metadata: {
@@ -111,7 +119,27 @@ const createWallet = async () => {
       description:
         'MyEtherWallet (MEW) is a free, open-source, client-side interface for generating Ethereum wallets & more. Interact with the Ethereum blockchain easily & securely.',
       url: 'https://myetherwallet.com',
-      icons: ['https://www.myetherwallet.com/logo-mew.png']
+      icons: ['https://www.myetherwallet.com/favicon.png']
+    }
+  });
+  if (signClient.connected) {
+    signClient.disconnect();
+  }
+
+  signClient.on('connect', evt => {
+    const { chainId } = evt;
+    const foundNode = Object.values(nodes).find(item => {
+      if (item.type.chainID === parseInt(chainId)) return item;
+    });
+    if (foundNode) {
+      store
+        .dispatch('global/setNetwork', {
+          network: foundNode,
+          walletType: WALLET_TYPES.WALLET_CONNECT
+        })
+        .then(() => {
+          store.dispatch('wallet/setWeb3Instance');
+        });
     }
   });
   await signClient.connect().catch(e => {

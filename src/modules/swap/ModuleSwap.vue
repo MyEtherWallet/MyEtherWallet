@@ -322,6 +322,7 @@ import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalyti
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 import Swapper from './handlers/handlerSwap';
 import handleError from '../confirmation/handlers/errorHandler';
+import { toBase } from '@/core/helpers/unit';
 
 const MIN_GAS_LIMIT = 800000;
 let localContractToToken = {};
@@ -1235,14 +1236,15 @@ export default {
         this.toTokenType.hasOwnProperty('symbol') &&
         this.isFromTokenMain
       ) {
-        const initialValue = this.availableBalance;
+        const fromAmount = toBase(
+          this.availableBalance,
+          this.fromTokenType.decimals
+        );
         this.swapper
           .getAllQuotes({
             fromT: this.fromTokenType,
             toT: this.toTokenType,
-            fromAmount: new BigNumber(initialValue).times(
-              new BigNumber(10).pow(new BigNumber(this.fromTokenType.decimals))
-            )
+            fromAmount: fromAmount
           })
           .then(quotes => {
             const highest = quotes.sort(
@@ -1256,11 +1258,7 @@ export default {
               fromT: this.fromTokenType,
               toT: this.toTokenType,
               quote: highest[0],
-              fromAmount: new BigNumber(initialValue).times(
-                new BigNumber(10).pow(
-                  new BigNumber(this.fromTokenType.decimals)
-                )
-              )
+              fromAmount: fromAmount
             };
             this.swapper.getTrade(swapObj).then(res => {
               res['gasPrice'] = this.localGasPrice;
