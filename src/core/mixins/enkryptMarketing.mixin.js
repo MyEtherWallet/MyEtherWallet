@@ -59,12 +59,6 @@ export default {
   methods: {
     openEnkrypt() {
       // eslint-disable-next-line
-      /*
-       window.open(
-         this.isMobile ? 'https://www.enkrypt.com' : this.browserLink,
-         '_blank'
-       );
-       */
       window.open('https://www.enkrypt.com', '_blank');
     },
     openMewWallet() {
