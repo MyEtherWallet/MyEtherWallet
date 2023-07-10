@@ -28,7 +28,8 @@ const AUDIT_EXCEPTIONS = [
   'engine.io',
   'socket.io-parser',
   'fast-xml-parser',
-  '@grpc/grpc-js'
+  '@grpc/grpc-js',
+  'is_js'
 ];
 const execute = (command, callback) => {
   exec(
