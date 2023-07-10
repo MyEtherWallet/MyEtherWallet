@@ -11,9 +11,38 @@ import { ETH } from '@/utils/networks/types';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { EventBus } from '@/core/plugins/eventBus';
 import EventNames from '@/utils/web3-provider/events.js';
+import { fromBase } from '@/core/helpers/unit';
 
-const HOST_URL = 'https://swap.mewapi.io/changelly';
-const REQUEST_CACHER = 'https://requestcache.mewapi.io/?url=';
+const HOST_URL = 'https://partners.mewapi.io/changelly-v2';
+
+const headers = {
+  headers: {
+    'Accept-Language': 'en-US,en;q=0.9',
+    'Content-Type': 'application/json'
+  }
+};
+
+const CHANGELLY_METHODS = {
+  validateAddress: 'validateAddress',
+  getFixRate: 'getFixRate',
+  getFixRateForAmount: 'getFixRateForAmount',
+  createFixTransaction: 'createFixTransaction',
+  getStatus: 'getStatus'
+};
+
+const changellyCallConstructor = (id, method, params) => {
+  return axios.post(
+    `${HOST_URL}`,
+    {
+      id: id,
+      jsonrpc: '2.0',
+      method: method,
+      params: params
+    },
+    headers
+  );
+};
+
 class Changelly {
   constructor(web3, chain) {
     this.web3 = web3;
@@ -25,20 +54,10 @@ class Changelly {
     return this.supportednetworks.includes(chain);
   }
   getSupportedTokens() {
-    return axios
-      .post(
-        `${REQUEST_CACHER}${HOST_URL}`,
-        {
-          id: '1',
-          jsonrpc: '2.0',
-          method: 'getCurrenciesFull',
-          params: {}
-        },
-        { headers: { 'Accept-Language': 'en-US,en;q=0.9' } }
-      )
+    return changellyCallConstructor('1', 'getCurrenciesFull', {})
       .then(response => {
-        if (response.error) {
-          Toast(response.error, {}, ERROR);
+        if (response.data.error) {
+          Toast(response.data.error, {}, ERROR);
           return;
         }
         const data = response.data.result.filter(d => d.fixRateEnabled);
@@ -63,23 +82,17 @@ class Changelly {
   }
   isValidToAddress({ toT, address }) {
     const type = toT.symbol.toLowerCase();
-    return axios
-      .post(
-        `${HOST_URL}`,
-        {
-          id: uuidv4(),
-          jsonrpc: '2.0',
-          method: 'validateAddress',
-          params: {
-            currency: type,
-            address: address
-          }
-        },
-        { headers: { 'Accept-Language': 'en-US,en;q=0.9' } }
-      )
+    return changellyCallConstructor(
+      uuidv4(),
+      CHANGELLY_METHODS.validateAddress,
+      {
+        currency: type,
+        address: address
+      }
+    )
       .then(response => {
-        if (response.error) {
-          Toast(response.error, {}, ERROR);
+        if (response.data.error) {
+          Toast(response.data.error, {}, ERROR);
           return;
         }
         return response.data.result.result;
@@ -89,25 +102,15 @@ class Changelly {
       });
   }
   getMinMaxAmount({ fromT, toT }) {
-    return axios
-      .post(
-        `${HOST_URL}`,
-        {
-          id: uuidv4(),
-          jsonrpc: '2.0',
-          method: 'getFixRate',
-          params: [
-            {
-              from: fromT.symbol.toLowerCase(),
-              to: toT.symbol.toLowerCase()
-            }
-          ]
-        },
-        { headers: { 'Accept-Language': 'en-US,en;q=0.9' } }
-      )
+    return changellyCallConstructor(uuidv4(), CHANGELLY_METHODS.getFixRate, [
+      {
+        from: fromT.symbol.toLowerCase(),
+        to: toT.symbol.toLowerCase()
+      }
+    ])
       .then(response => {
-        if (response.error) {
-          Toast(response.error, {}, ERROR);
+        if (response.data.error) {
+          Toast(response.data.error, {}, ERROR);
           return;
         }
         const result = response?.data?.result[0];
@@ -122,35 +125,29 @@ class Changelly {
   }
 
   getQuote({ fromT, toT, fromAmount }) {
-    const fromAmountBN = new BigNumber(fromAmount);
-    const queryAmount = fromAmountBN.div(
-      new BigNumber(10).pow(new BigNumber(fromT.decimals))
-    );
+    const queryAmount = fromBase(fromAmount, fromT.decimals);
     return this.getMinMaxAmount({ fromT, toT }).then(minmax => {
       if (!minmax || (minmax && (!minmax.minFrom || !minmax.maxFrom))) {
         return [];
       }
-      return axios
-        .post(
-          `${HOST_URL}`,
+      if (BigNumber(queryAmount).lt(minmax.minFrom)) {
+        return [];
+      }
+      return changellyCallConstructor(
+        uuidv4,
+        CHANGELLY_METHODS.getFixRateForAmount,
+        [
           {
-            id: uuidv4(),
-            jsonrpc: '2.0',
-            method: 'getFixRateForAmount',
-            params: [
-              {
-                from: fromT.symbol.toLowerCase(),
-                to: toT.symbol.toLowerCase(),
-                amountFrom: queryAmount.toString()
-              }
-            ]
-          },
-          { headers: { 'Accept-Language': 'en-US,en;q=0.9' } }
-        )
+            from: fromT.symbol.toLowerCase(),
+            to: toT.symbol.toLowerCase(),
+            amountFrom: fromBase(fromAmount, fromT.decimals)
+          }
+        ]
+      )
         .then(response => {
-          if (response.error) {
-            Toast(response.error, {}, ERROR);
-            return;
+          if (response.data.error) {
+            Toast(response.data.error, {}, ERROR);
+            return [{}];
           }
           return [
             {
@@ -188,27 +185,21 @@ class Changelly {
       new BigNumber(10).pow(new BigNumber(fromT.decimals))
     );
     const providedRefundAddress = refundAddress ? refundAddress : fromAddress;
-    return axios
-      .post(
-        `${HOST_URL}`,
-        {
-          id: uuidv4(),
-          jsonrpc: '2.0',
-          method: 'createFixTransaction',
-          params: {
-            from: fromT.symbol.toLowerCase(),
-            to: toT.symbol.toLowerCase(),
-            refundAddress: providedRefundAddress,
-            address: toAddress,
-            amountFrom: queryAmount.toString(),
-            rateId: quote.rateId
-          }
-        },
-        { headers: { 'Accept-Language': 'en-US,en;q=0.9' } }
-      )
+    return changellyCallConstructor(
+      uuidv4(),
+      CHANGELLY_METHODS.createFixTransaction,
+      {
+        from: fromT.symbol.toLowerCase(),
+        to: toT.symbol.toLowerCase(),
+        refundAddress: providedRefundAddress,
+        address: toAddress,
+        amountFrom: queryAmount.toString(),
+        rateId: quote.rateId
+      }
+    )
       .then(async response => {
-        if (response.error) {
-          Toast(response.error, {}, ERROR);
+        if (response.data.error) {
+          Toast(response.data.error, {}, ERROR);
           return;
         }
         if (Array.isArray(response.data.result)) {
@@ -318,19 +309,9 @@ class Changelly {
   }
   getStatus(statusObj) {
     statusObj = statusObj.statusObj;
-    return axios
-      .post(
-        `${HOST_URL}`,
-        {
-          id: uuidv4(),
-          jsonrpc: '2.0',
-          method: 'getStatus',
-          params: {
-            id: statusObj.id
-          }
-        },
-        { headers: { 'Accept-Language': 'en-US,en;q=0.9' } }
-      )
+    return changellyCallConstructor(uuidv4(), CHANGELLY_METHODS.getStatus, {
+      id: statusObj.id
+    })
       .then(async response => {
         const pendingStatuses = [
           'confirming',
@@ -339,8 +320,8 @@ class Changelly {
           'waiting',
           'new'
         ];
-        if (response.error) {
-          Toast(response.error, {}, ERROR);
+        if (response.data.error) {
+          Toast(response.data.error, {}, ERROR);
           return;
         }
         const completedStatuses = ['finished'];
