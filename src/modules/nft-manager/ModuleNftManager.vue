@@ -351,6 +351,8 @@ export default {
             this.showBalanceError = false;
           }
         } catch (e) {
+          this.enoughFunds = false;
+          this.showBalanceError = false;
           Toast(
             `Can't send NFT! Please double check if everything is correct`,
             {},
