@@ -10,14 +10,29 @@
       community. We are devoted to protecting our users private information and
       providing them an opportunity to interact with the Ethereum blockchain in
       the safest manner possible. Security is our first priority and obligation
-      and we always appreciate the valuable contributions! If you have any
-      information regarding security vulnerabilities on the
-      <strong> MyEtherWallet website, MEW wallet App, and Enkrypt </strong>
-      report it to
-      <a href="mailto:bugbounty@myetherwallet.com">
-        bugbounty@myetherwallet.com
-      </a>
-      according to our guidelines (jump to reporting rules)!
+      and we always appreciate the valuable contributions!
+    </p>
+    <p>Our current bug bounty programs are available on HackenProof.</p>
+
+    <p>
+      Program details for the current live version of MyEtherWallet web and MEW
+      wallet app:
+      <a
+        href="https://hackenproof.com/myetherwallet/myetherwallet"
+        target="_blank"
+        rel="noopener noreferrer"
+        >https://hackenproof.com/myetherwallet/myetherwallet</a
+      >
+    </p>
+
+    <p>
+      Program details for our Enkrypt multichain browser wallet:
+      <a
+        href="https://hackenproof.com/myetherwallet/enkrypt-wallet"
+        target="_blank"
+        rel="noopener noreferrer"
+        >https://hackenproof.com/myetherwallet/enkrypt-wallet</a
+      >
     </p>
     <p>
       Any vulnerabilities submitted under this policy will be used for the
