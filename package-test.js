@@ -87,13 +87,12 @@ const EXCEPTIONS = [
   '@formatjs/intl-numberformat',
   'lottie-web',
   '@coolwallet/eth',
-  '@walletconnect/ethereum-provider',
+  '@coolwallet/core',
   '@sentry/browser',
   '@sentry/tracing',
   '@sentry/vue',
   '@commitlint/config-conventional',
   'commitlint',
-  'protobufjs',
   '@keepkey/device-protocol'
 ];
 const CUSTOM_DIST = {
