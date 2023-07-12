@@ -59,7 +59,11 @@
             placeholder="EMAIL"
             :rules="[requiredRule, emailRule]"
           />
-          <textarea v-model="formInfo['message']" placeholder="MESSAGE" />
+          <textarea
+            v-model="formInfo['message']"
+            placeholder="MESSAGE"
+            class="mb-5"
+          />
           <div class="d-flex align-center justify-center">
             <mew-button
               btn-style="background"
