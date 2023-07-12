@@ -180,10 +180,7 @@ class Changelly {
     fromAmount,
     refundAddress
   }) {
-    const fromAmountBN = new BigNumber(fromAmount);
-    const queryAmount = fromAmountBN.div(
-      new BigNumber(10).pow(new BigNumber(fromT.decimals))
-    );
+    const queryAmount = fromBase(fromAmount, fromT.decimals);
     const providedRefundAddress = refundAddress ? refundAddress : fromAddress;
     return changellyCallConstructor(
       uuidv4(),
@@ -224,12 +221,10 @@ class Changelly {
               toBN(toWei(response.data.result.amountExpectedFrom, 'ether'))
             );
           } else {
-            let amountBN = new BigNumber(
-              response.data.result.amountExpectedFrom
+            let amountBN = fromBase(
+              response.data.result.amountExpectedFrom,
+              fromT.decimals
             );
-            amountBN = amountBN
-              .times(new BigNumber(10).pow(new BigNumber(fromT.decimals)))
-              .toFixed(0);
             amountBN = toBN(amountBN);
             const erc20contract = new Web3Contract(erc20Abi);
             txObj.data = erc20contract.methods

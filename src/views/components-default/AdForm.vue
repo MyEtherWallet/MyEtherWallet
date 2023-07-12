@@ -30,40 +30,36 @@
           class="d-none d-md-inline"
         />
         <form class="ad-form">
-          <input
+          <v-text-field
             v-model="formInfo['name']"
+            outlined
             placeholder="NAME"
-            class="mb-5"
-            required
+            :rules="[requiredRule]"
           />
-          <input
+          <v-text-field
             v-model="formInfo['companyName']"
+            outlined
             placeholder="COMPANY NAME"
-            class="mb-5"
-            required
+            :rules="[requiredRule]"
           />
-          <input
+          <v-text-field
             v-model="formInfo['companyWebsite']"
+            outlined
             placeholder="COMPANY WEBSITE"
-            class="mb-5"
           />
-          <input
+          <v-text-field
             v-model="formInfo['contactNumber']"
+            outlined
             placeholder="CONTACT NUMBER"
-            class="mb-5"
-            required
+            :rules="[requiredRule]"
           />
-          <input
+          <v-text-field
             v-model="formInfo['email']"
+            outlined
             placeholder="EMAIL"
-            class="mb-5"
-            required
+            :rules="[requiredRule, emailRule]"
           />
-          <textarea
-            v-model="formInfo['message']"
-            placeholder="MESSAGE"
-            class="mb-5"
-          />
+          <textarea v-model="formInfo['message']" placeholder="MESSAGE" />
           <div class="d-flex align-center justify-center">
             <mew-button
               btn-style="background"
@@ -107,6 +103,12 @@ export default {
     }
   },
   methods: {
+    requiredRule(value) {
+      return !!value || 'Required';
+    },
+    emailRule(value) {
+      return isEmail(value) || 'Invalid e-mail';
+    },
     submitForm() {
       const form = new FormData();
       for (const key in this.formInfo) {
@@ -173,6 +175,7 @@ export default {
     position: absolute;
     top: -8vw;
     right: 12vw;
+    z-index: 2;
 
     @media screen and (max-width: 960px) {
       top: -8vw;
@@ -184,7 +187,7 @@ export default {
     max-width: 500px;
     width: 100%;
 
-    input,
+    .v-input__slot,
     textarea {
       width: 100%;
       background: #fcfcfb;
@@ -196,6 +199,18 @@ export default {
     textarea {
       min-height: 80px;
     }
+  }
+}
+</style>
+
+<style lang="scss">
+.ad-form {
+  .v-input__slot {
+    width: 100%;
+    background: #fcfcfb !important;
+    border-radius: 4px;
+    border: 0.347165px solid #b6b6b6;
+    padding: 14px;
   }
 }
 </style>
