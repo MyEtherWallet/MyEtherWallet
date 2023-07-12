@@ -87,6 +87,7 @@ const EXCEPTIONS = [
   '@formatjs/intl-numberformat',
   'lottie-web',
   '@coolwallet/eth',
+  '@coolwallet/core',
   '@walletconnect/ethereum-provider',
   '@sentry/browser',
   '@sentry/tracing',
