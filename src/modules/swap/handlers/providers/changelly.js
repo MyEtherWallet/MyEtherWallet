@@ -130,7 +130,16 @@ class Changelly {
         return [];
       }
       if (BigNumber(queryAmount).lt(minmax.minFrom)) {
-        return [];
+        return [
+          {
+            exchange: this.provider,
+            provider: this.provider,
+            amount: '0',
+            rateId: '0',
+            minFrom: minmax.minFrom,
+            maxFrom: minmax.maxFrom
+          }
+        ];
       }
       return changellyCallConstructor(
         uuidv4,
@@ -139,7 +148,7 @@ class Changelly {
           {
             from: fromT.symbol.toLowerCase(),
             to: toT.symbol.toLowerCase(),
-            amountFrom: fromBase(fromAmount, fromT.decimals)
+            amountFrom: queryAmount
           }
         ]
       )

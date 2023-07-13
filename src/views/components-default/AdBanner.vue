@@ -98,7 +98,7 @@ export default {
   background-image: url(~@/assets/images/backgrounds/bg-ad-with-us.png);
   background-size: cover;
   background-position: 100% bottom;
-  box-shadow: 0px 25px 30px 0px #a6adc938;
+  box-shadow: 0px 30px 25px 0px #a6adc938;
 
   .banner-content-container {
     height: 800px;
@@ -110,7 +110,7 @@ export default {
   background-position: bottom center;
   background-size: auto;
   padding: 0 0 15rem 0;
-  box-shadow: 0px 25px 30px 0px #a6adc938;
+  box-shadow: 0px 30px 25px 0px #a6adc938;
 }
 
 .work-together-container {
