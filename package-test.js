@@ -95,7 +95,8 @@ const EXCEPTIONS = [
   '@commitlint/config-conventional',
   'commitlint',
   'protobufjs',
-  '@keepkey/device-protocol'
+  '@keepkey/device-protocol',
+  'babel-jest'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
