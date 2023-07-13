@@ -3,15 +3,15 @@
     <v-row>
       <v-col cols="12" class="pb-5">
         <div class="d-flex flex-column flex-md-row align-center justify-center">
-          <div class="py-6 px-3 ma-5 ad-component">
+          <div class="py-6 pl-6 ma-5 ad-component">
             <div class="mew-subtitle">3 million</div>
             <div>Monthly active MyEtherWallet users</div>
           </div>
-          <div class="py-6 px-3 ma-5 ad-component">
+          <div class="py-6 pl-6 ma-5 ad-component">
             <div class="mew-subtitle">Original ETH users</div>
             <div>Our users date back to 2015, the launch of Ethereum</div>
           </div>
-          <div class="py-6 px-3 ma-5 ad-component">
+          <div class="py-6 pl-6 ma-5 ad-component">
             <div class="mew-subtitle">26,000</div>
             <div>Daily crypto veteran users</div>
           </div>
