@@ -110,8 +110,7 @@ class Changelly {
     ])
       .then(response => {
         if (response.data.error) {
-          Toast(response.data.error, {}, ERROR);
-          return;
+          return { minFrom: 0, maxFrom: 0 };
         }
         const result = response?.data?.result[0];
         return {
@@ -131,7 +130,16 @@ class Changelly {
         return [];
       }
       if (BigNumber(queryAmount).lt(minmax.minFrom)) {
-        return [];
+        return [
+          {
+            exchange: this.provider,
+            provider: this.provider,
+            amount: '0',
+            rateId: '0',
+            minFrom: minmax.minFrom,
+            maxFrom: minmax.maxFrom
+          }
+        ];
       }
       return changellyCallConstructor(
         uuidv4,
@@ -140,13 +148,12 @@ class Changelly {
           {
             from: fromT.symbol.toLowerCase(),
             to: toT.symbol.toLowerCase(),
-            amountFrom: fromBase(fromAmount, fromT.decimals)
+            amountFrom: queryAmount
           }
         ]
       )
         .then(response => {
           if (response.data.error) {
-            Toast(response.data.error, {}, ERROR);
             return [{}];
           }
           return [
@@ -180,10 +187,7 @@ class Changelly {
     fromAmount,
     refundAddress
   }) {
-    const fromAmountBN = new BigNumber(fromAmount);
-    const queryAmount = fromAmountBN.div(
-      new BigNumber(10).pow(new BigNumber(fromT.decimals))
-    );
+    const queryAmount = fromBase(fromAmount, fromT.decimals);
     const providedRefundAddress = refundAddress ? refundAddress : fromAddress;
     return changellyCallConstructor(
       uuidv4(),
@@ -224,12 +228,10 @@ class Changelly {
               toBN(toWei(response.data.result.amountExpectedFrom, 'ether'))
             );
           } else {
-            let amountBN = new BigNumber(
-              response.data.result.amountExpectedFrom
+            let amountBN = fromBase(
+              response.data.result.amountExpectedFrom,
+              fromT.decimals
             );
-            amountBN = amountBN
-              .times(new BigNumber(10).pow(new BigNumber(fromT.decimals)))
-              .toFixed(0);
             amountBN = toBN(amountBN);
             const erc20contract = new Web3Contract(erc20Abi);
             txObj.data = erc20contract.methods

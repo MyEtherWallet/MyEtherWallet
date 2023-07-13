@@ -87,6 +87,7 @@ const EXCEPTIONS = [
   '@formatjs/intl-numberformat',
   'lottie-web',
   '@coolwallet/eth',
+  '@coolwallet/core',
   '@walletconnect/ethereum-provider',
   '@sentry/browser',
   '@sentry/tracing',
@@ -94,7 +95,8 @@ const EXCEPTIONS = [
   '@commitlint/config-conventional',
   'commitlint',
   'protobufjs',
-  '@keepkey/device-protocol'
+  '@keepkey/device-protocol',
+  'babel-jest'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
