@@ -33,7 +33,7 @@
             alt="mew spaceman"
             class="d-none d-md-inline"
           />
-          <form class="ad-form">
+          <form class="ad-form px-3">
             <v-text-field
               v-model="formInfo['name']"
               outlined
