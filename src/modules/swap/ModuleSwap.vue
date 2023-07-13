@@ -1233,6 +1233,7 @@ export default {
       this.trackSwap('setMaxValue');
       if (
         !isEmpty(this.toTokenType) &&
+        !this.showToAddress && // to token is within network
         this.toTokenType.hasOwnProperty('symbol') &&
         this.isFromTokenMain
       ) {
@@ -1260,25 +1261,37 @@ export default {
               quote: highest[0],
               fromAmount: fromAmount
             };
-            this.swapper.getTrade(swapObj).then(res => {
-              res['gasPrice'] = this.localGasPrice;
-              let parsedGasLimit = BigNumber(0);
-              res.transactions.forEach(tx => {
-                parsedGasLimit = parsedGasLimit.plus(tx.gas);
-              });
-              const tokenInValue = new BigNumber(this.availableBalance)
-                .minus(
-                  fromWei(
-                    toBN(this.localGasPrice).muln(parsedGasLimit.toNumber())
+            this.swapper
+              .getTrade(swapObj)
+              .then(res => {
+                res['gasPrice'] = this.localGasPrice;
+                let parsedGasLimit = BigNumber(0);
+                res.transactions
+                  .forEach(tx => {
+                    parsedGasLimit = parsedGasLimit.plus(tx.gas);
+                  })
+                  .catch(() => {
+                    this.setMaxWithoutEstimate();
+                  });
+                const tokenInValue = new BigNumber(this.availableBalance)
+                  .minus(
+                    fromWei(
+                      toBN(this.localGasPrice).muln(parsedGasLimit.toNumber())
+                    )
                   )
-                )
-                .toFixed();
-              this.setTokenInValue(tokenInValue);
-              this.maxLoading = false;
-            });
+                  .toFixed();
+                this.setTokenInValue(tokenInValue);
+                this.maxLoading = false;
+              })
+              .catch(() => {
+                this.setMaxWithoutEstimate();
+              });
           });
         return;
       }
+      this.setMaxWithoutEstimate();
+    },
+    setMaxWithoutEstimate() {
       const availableBalanceMinusGas = new BigNumber(
         this.availableBalance
       ).minus(fromWei(toBN(this.localGasPrice).muln(MIN_GAS_LIMIT)));

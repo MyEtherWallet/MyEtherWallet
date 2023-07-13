@@ -110,8 +110,7 @@ class Changelly {
     ])
       .then(response => {
         if (response.data.error) {
-          Toast(response.data.error, {}, ERROR);
-          return;
+          return { minFrom: 0, maxFrom: 0 };
         }
         const result = response?.data?.result[0];
         return {
@@ -146,7 +145,6 @@ class Changelly {
       )
         .then(response => {
           if (response.data.error) {
-            Toast(response.data.error, {}, ERROR);
             return [{}];
           }
           return [
