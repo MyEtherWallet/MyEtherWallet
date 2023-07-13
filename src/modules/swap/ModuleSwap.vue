@@ -1279,12 +1279,14 @@ export default {
         }
         return;
       }
-      this.setMaxWithoutEstimate();
+      this.setMaxWithoutEstimate(
+        !this.toTokenType.isEth ? 21000 : MIN_GAS_LIMIT
+      );
     },
-    setMaxWithoutEstimate() {
+    setMaxWithoutEstimate(gasLimit) {
       const availableBalanceMinusGas = new BigNumber(
         this.availableBalance
-      ).minus(fromWei(toBN(this.localGasPrice).muln(MIN_GAS_LIMIT)));
+      ).minus(fromWei(toBN(this.localGasPrice).muln(gasLimit)));
       this.tokenInValue = this.isFromTokenMain
         ? availableBalanceMinusGas.gt(0)
           ? availableBalanceMinusGas.toFixed()
