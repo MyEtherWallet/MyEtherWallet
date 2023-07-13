@@ -12,6 +12,7 @@ import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { EventBus } from '@/core/plugins/eventBus';
 import EventNames from '@/utils/web3-provider/events.js';
 import { fromBase } from '@/core/helpers/unit';
+import { isArray } from 'lodash';
 
 const HOST_URL = 'https://partners.mewapi.io/changelly-v2';
 
@@ -153,7 +154,10 @@ class Changelly {
         ]
       )
         .then(response => {
-          if (response.data.error) {
+          const newResponse = isArray(response.data.result)
+            ? response.data.result[0]
+            : response.data.result;
+          if (response.error || !response.result || !newResponse) {
             return [{}];
           }
           return [
@@ -161,15 +165,12 @@ class Changelly {
               exchange: this.provider,
               provider: this.provider,
               amount:
-                response.data.result[0].result === 0
+                newResponse.result === 0
                   ? '0'
-                  : BigNumber(response.data.result[0].amountTo)
-                      .minus(response.data.result[0].networkFee)
+                  : BigNumber(newResponse.amountTo)
+                      .minus(newResponse.networkFee)
                       .toString(),
-              rateId:
-                response.data.result[0].result === 0
-                  ? ''
-                  : response.data.result[0].id,
+              rateId: newResponse.result === 0 ? '' : newResponse.id,
               minFrom: minmax?.minFrom ? minmax.minFrom : 0,
               maxFrom: minmax?.maxFrom ? minmax.maxFrom : 0
             }
