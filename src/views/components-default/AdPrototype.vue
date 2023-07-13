@@ -28,7 +28,7 @@
           oldest and most savvy users.
         </div>
       </v-col>
-      <v-col cols="12" md="10" offset-md="2" class="d-flex justify-center">
+      <v-col cols="12" md="10" offset-md="2" class="d-flex justify-center px-5">
         <img
           src="@/assets/images/backgrounds/ad-prototype.png"
           width="100%"
