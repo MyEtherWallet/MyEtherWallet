@@ -163,7 +163,9 @@ class Changelly {
               amount:
                 response.data.result[0].result === 0
                   ? '0'
-                  : response.data.result[0].amountTo,
+                  : BigNumber(response.data.result[0].amountTo)
+                      .minus(response.data.result[0].networkFee)
+                      .toString(),
               rateId:
                 response.data.result[0].result === 0
                   ? ''
