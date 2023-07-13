@@ -115,6 +115,6 @@ export default {
 
 .work-together-container {
   border: 1px solid white;
-  border-radius: 5px;
+  border-radius: 15px;
 }
 </style>
