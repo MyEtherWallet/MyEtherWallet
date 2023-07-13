@@ -157,7 +157,7 @@ class Changelly {
           const newResponse = isArray(response.data.result)
             ? response.data.result[0]
             : response.data.result;
-          if (response.error || !response.result || !newResponse) {
+          if (response.error || !newResponse.result || !newResponse.id) {
             return [{}];
           }
           return [
