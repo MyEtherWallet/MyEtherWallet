@@ -83,21 +83,7 @@ const EXCEPTIONS = [
   '@ensdomains/ens-contracts', // breaks current ENS integration
   '@shapeshiftoss/hdwallet-core',
   '@shapeshiftoss/hdwallet-keepkey-webusb',
-  // look into these after release
-  '@formatjs/intl-numberformat',
-  'lottie-web',
-  '@coolwallet/eth',
-  '@coolwallet/core',
-  '@walletconnect/ethereum-provider',
-  '@sentry/browser',
-  '@sentry/tracing',
-  '@sentry/vue',
-  '@commitlint/config-conventional',
-  'commitlint',
-  'protobufjs',
-  '@keepkey/device-protocol',
-  'babel-jest',
-  'eslint-plugin-prettier'
+  'eslint-plugin-prettier' // breaks
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
