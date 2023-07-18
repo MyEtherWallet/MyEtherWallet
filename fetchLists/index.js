@@ -33,15 +33,15 @@ const getFormattedList = async (url, network) => {
 
 const fetchOneInchLists = async () => {
   const ethTokens = await getFormattedList(
-    'https://api.1inch.exchange/v3.0/1/tokens',
+    'https://api.1inch.io/v5.0/1/tokens',
     'eth'
   );
   const bscTokens = await getFormattedList(
-    'https://api.1inch.exchange/v3.0/56/tokens',
+    'https://api.1inch.io/v5.0/56/tokens',
     'bsc'
   );
   const maticTokens = await getFormattedList(
-    'https://api.1inch.exchange/v3.0/137/tokens',
+    'https://api.1inch.io/v5.0/137/tokens',
     'matic'
   );
   return {

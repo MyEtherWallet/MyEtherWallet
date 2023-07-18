@@ -1,3 +1,25 @@
+### Release v6.7.5
+
+### devop
+
+* add validations [#4666](https://github.com/MyEtherWallet/MyEtherWallet/pull/4666)
+* add networkfee deduction to changelly amountTo response [#4669](https://github.com/MyEtherWallet/MyEtherWallet/pull/4669)
+* handle xdc address [#4654](https://github.com/MyEtherWallet/MyEtherWallet/pull/4654)
+* replace changelly api [#4655](https://github.com/MyEtherWallet/MyEtherWallet/pull/4655)
+* update wallet connect and mewwallet redirect [#4658](https://github.com/MyEtherWallet/MyEtherWallet/pull/4658)
+* update security policy for hacken [#4662](https://github.com/MyEtherWallet/MyEtherWallet/pull/4662)
+
+### feat
+
+* finish ad with us page [#4632](https://github.com/MyEtherWallet/MyEtherWallet/pull/4632)
+
+### fix
+
+* fix nft send button when balance is too low [#4636](https://github.com/MyEtherWallet/MyEtherWallet/pull/4636)
+* fix ledger token signing [#4668](https://github.com/MyEtherWallet/MyEtherWallet/pull/4668)
+* fix offline build [#4653](https://github.com/MyEtherWallet/MyEtherWallet/pull/4653)
+* fix unstoppable error [#4659](https://github.com/MyEtherWallet/MyEtherWallet/pull/4659)
+
 ### v6.7.4
 
 ### ui
