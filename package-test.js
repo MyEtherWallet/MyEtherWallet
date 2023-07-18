@@ -96,7 +96,8 @@ const EXCEPTIONS = [
   'commitlint',
   'protobufjs',
   '@keepkey/device-protocol',
-  'babel-jest'
+  'babel-jest',
+  'eslint-plugin-prettier'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
