@@ -282,6 +282,7 @@ export default {
         const networkId = await window.ethereum?.request({
           method: 'eth_chainId'
         });
+
         const foundNetwork = Object.values(nodeList).find(item => {
           if (toBN(networkId).eq(toBN(item[0].type.chainID))) return item;
         });
