@@ -452,22 +452,6 @@ export default {
         : this.availableBalance.toFixed();
     },
     /**
-     * @returns an object
-     * if native token, return empty
-     */
-    maxBtn() {
-      return this.isFromNonChain || this.availableBalance.isZero()
-        ? {}
-        : {
-            title: 'Max',
-            disabled:
-              !this.hasMinEth &&
-              this.amountErrorMessage === this.errorMsgs.amountEthIsTooLow,
-            method: this.setMaxAmount,
-            loading: this.maxLoading
-          };
-    },
-    /**
      *Returns errors messages based on network
      */
     errorMsgs() {
@@ -1273,7 +1257,8 @@ export default {
       this.setMaxWithoutEstimate();
     },
     setMaxWithoutEstimate() {
-      const gasLimit = !this.toTokenType.isEth ? 21000 : MIN_GAS_LIMIT;
+      const gasLimit =
+        this.toTokenType && !this.toTokenType.isEth ? 21000 : MIN_GAS_LIMIT;
       const availableBalanceMinusGas = new BigNumber(
         this.availableBalance
       ).minus(fromWei(toBN(this.localGasPrice).muln(gasLimit)));
