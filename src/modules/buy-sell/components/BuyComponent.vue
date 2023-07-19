@@ -290,7 +290,6 @@ export default {
       return 'BUY NOW';
     },
     amountErrorMessages() {
-      console.log(this.maxVal.toString(), this.amount);
       if (BigNumber(this.amount).isNaN() || BigNumber(this.amount).eq(0)) {
         return 'Amount required';
       }
