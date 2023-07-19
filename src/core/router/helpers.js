@@ -1,6 +1,6 @@
 import xss from 'xss';
 import { SOFTWARE_WALLET_TYPES } from '@/modules/access-wallet/software/handlers/helpers';
-import { ROUTES_WALLET } from '../configs/configRoutes';
+import { ROUTES_HOME, ROUTES_WALLET } from '../configs/configRoutes';
 
 const ACCESS_VALID_OVERLAYS = {
   HARDWARE: 'hardware',
@@ -129,6 +129,7 @@ const swapRouterGuard = (to, from, next) => {
 };
 
 const stakedRouterGuard = (to, from, next) => {
+  console.log(to.name, from.name);
   if (
     // STAKED => STAKED 1
     from.name == ROUTES_WALLET.STAKED.NAME &&
@@ -152,6 +153,8 @@ const stakedRouterGuard = (to, from, next) => {
     from.name == ROUTES_WALLET.STAKED_3.NAME &&
     to.name == ROUTES_WALLET.STAKED_4.NAME
   ) {
+    next();
+  } else if (!from.name || from.name === ROUTES_HOME.ACCESS_WALLET.NAME) {
     next();
   }
 };
