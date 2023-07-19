@@ -129,7 +129,6 @@ const swapRouterGuard = (to, from, next) => {
 };
 
 const stakedRouterGuard = (to, from, next) => {
-  console.log(to.name, from.name);
   if (
     // STAKED => STAKED 1
     from.name == ROUTES_WALLET.STAKED.NAME &&
