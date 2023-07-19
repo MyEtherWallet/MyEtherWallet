@@ -371,19 +371,26 @@ export default {
       {
         title: 'MEW',
         data: [
-          { label: 'About us', routerLink: 'AboutPage' },
-          { label: 'Careers', routerLink: 'Careers' },
-          { label: 'How it works', routerLink: 'HowItWorks' },
-          { label: 'Team', routerLink: 'TeamPage' },
+          { label: 'About us', routerLink: ROUTES_HOME.ABOUT_PAGE.NAME },
+          { label: 'Careers', routerLink: ROUTES_HOME.JOBS.NAME },
+          { label: 'How it works', routerLink: ROUTES_HOME.HOW_IT_WORKS.NAME },
+          { label: 'Team', routerLink: ROUTES_HOME.TEAM_PAGE.NAME },
           { label: 'Help center', link: 'https://help.myetherwallet.com/en/' },
           {
             label: 'Customer support',
             link: 'mailto:support@myetherwallet.com'
           },
           { label: 'MEWtopia', link: 'https://www.mewtopia.com/' },
-          { label: 'Press Kit', routerLink: 'PressKit' },
-          { label: 'Security Policy', routerLink: 'SecurityPolicy' },
-          { label: 'Submit DApp', routerLink: 'DappSubmission' }
+          { label: 'Press Kit', routerLink: ROUTES_HOME.PRESS_KIT.NAME },
+          {
+            label: 'Security Policy',
+            routerLink: ROUTES_HOME.SECURITY_POLICY.NAME
+          },
+          {
+            label: 'Submit DApp',
+            routerLink: ROUTES_HOME.DAPP_SUBMISSION.NAME
+          }
+          // { label: 'Advertise With Us', routerLink: ROUTES_HOME.ADVERTISE.NAME }
         ]
       },
       {
@@ -423,18 +430,6 @@ export default {
             routerLink: 'Tools',
             query: { tool: 'offline' }
           }
-          /*
-          ,{
-            label: 'Transaction status',
-            routerLink: 'SendTX'
-          },
-          {
-            label: 'Watch only address',
-            routerLink: 'Tools',
-            query: { tool: 'watch' }
-          },
-          { label: 'Submit Dapp', routerLink: 'Home' },
-          */
         ]
       }
     ],
@@ -450,26 +445,6 @@ export default {
         value: 'ru_RU',
         flag: require('@/assets/images/flags/russia.png')
       }
-      //   {
-      //     name: 'Germany',
-      //     value: 'ge',
-      //     flag: require('@/assets/images/flags/germany.png')
-      //   },
-      //   {
-      //     name: 'Chinese',
-      //     value: 'ch',
-      //     flag: require('@/assets/images/flags/china.png')
-      //   },
-      //   {
-      //     name: 'Korean',
-      //     value: 'kr',
-      //     flag: require('@/assets/images/flags/korea.png')
-      //   },
-      //   {
-      //     name: 'Japanese',
-      //     value: 'jp',
-      //     flag: require('@/assets/images/flags/japan.png')
-      //   }
     ],
     socialIcons: [
       {

@@ -12,7 +12,7 @@
       <access-wallet-derivation-path
         :selected-path="selectedPath"
         :passed-paths="paths"
-        :disable-custom-paths="true"
+        :disable-custom-paths="!isRecovery"
         :is-mobile="isMobile"
         class="derivation-path ml-0 ml-sm-auto"
         @setPath="setPath"
@@ -117,6 +117,9 @@ export default {
   },
   computed: {
     ...mapGetters('wallet', ['getLedgerApp', 'initialLoad']),
+    isRecovery() {
+      return this.ledgerApp?.value?.includes('Recovery');
+    },
     ledgerApp() {
       return this.getLedgerApp;
     },

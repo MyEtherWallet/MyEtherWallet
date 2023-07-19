@@ -1,10 +1,10 @@
-import WalletConnect from '@walletconnect/client';
-import WalletConnectQRCodeModal from '@walletconnect/qrcode-modal';
-import PromiEvent from 'web3-core-promievent';
+import { EthereumProvider } from '@walletconnect/ethereum-provider';
 import { Transaction } from '@ethereumjs/tx';
+import PromiEvent from 'web3-core-promievent';
 
-import * as nodes from '@/utils/networks/nodes';
+import HybridWalletInterface from '../walletInterface';
 import store from '@/core/store';
+import * as nodes from '@/utils/networks/nodes';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import {
   sanitizeHex,
@@ -13,30 +13,16 @@ import {
 import errorHandler from './errorHandler';
 import commonGenerator from '@/core/helpers/commonGenerator';
 import toBuffer from '@/core/helpers/toBuffer';
-import HybridWalletInterface from '../walletInterface';
-
-const BRIDGE_URL = 'https://bridge.walletconnect.org';
-const IS_HARDWARE = false;
 import walletconnect from '@/assets/images/icons/wallets/walletconnect.svg';
+
+const projectId = '72299ce67c7d5c879dd8da2df1a6875b';
+const IS_HARDWARE = false;
 class WalletConnectWallet {
-  constructor() {
+  constructor(signClient) {
     this.identifier = WALLET_TYPES.WALLET_CONNECT;
     this.isHardware = IS_HARDWARE;
-    const walletConnect = new WalletConnect({
-      bridge: BRIDGE_URL,
-      qrcodeModal: WalletConnectQRCodeModal
-    });
-
-    if (
-      walletConnect &&
-      walletConnect.connected &&
-      walletConnect._sessionStorage
-    ) {
-      walletConnect._sessionStorage.removeSession();
-      walletConnect.killSession(); // remove any leftover connections
-    }
-    this.walletConnect = walletConnect;
-    this.walletConnect.on('disconnect', () => {
+    this.client = signClient;
+    this.client.on('session_delete', () => {
       store.dispatch('wallet/removeWallet');
     });
 
@@ -49,7 +35,8 @@ class WalletConnectWallet {
     };
   }
   init() {
-    return new Promise((resolve, reject) => {
+    // eslint-disable-next-line
+    return new Promise(async (resolve, reject) => {
       const txSigner = tx => {
         const from = tx.from;
         tx = new Transaction(tx, {
@@ -58,8 +45,8 @@ class WalletConnectWallet {
         const txJSON = tx.toJSON();
         txJSON.from = from;
         const prom = PromiEvent(false);
-        this.walletConnect
-          .sendTransaction(txJSON)
+        this.client
+          .request({ method: 'eth_sendTransaction', params: [txJSON] })
           .then(hash => {
             prom.eventEmitter.emit('transactionHash', hash);
             store.state.wallet.web3.eth.sendTransaction.method._confirmTransaction(
@@ -69,63 +56,97 @@ class WalletConnectWallet {
             );
           })
           .catch(err => {
-            prom.reject(err);
+            prom.reject(
+              err.message === '' && err.code === 0
+                ? prom.reject('User cancelled')
+                : err
+            );
           });
         return prom.eventEmitter;
       };
       const msgSigner = msg => {
         return new Promise((resolve, reject) => {
           const msgParams = [
-            '0x' + toBuffer(msg).toString('hex'),
-            sanitizeHex(this.walletConnect.accounts[0])
+            sanitizeHex(store.state.wallet.address),
+            '0x' + toBuffer(msg).toString('hex')
           ];
-          this.walletConnect
-            .signPersonalMessage(msgParams)
+          this.client
+            .request({ method: 'eth_sign', params: msgParams })
             .then(result => {
               resolve(getBufferFromHex(sanitizeHex(result)));
             })
-            .catch(reject);
+            .catch(err => {
+              reject(
+                err.message === '' && err.code === 0
+                  ? reject('User cancelled')
+                  : err
+              );
+            });
         });
       };
-      this.walletConnect.createSession();
-      this.walletConnect.on('connect', (error, payload) => {
-        if (error) {
-          return reject(error);
-        }
-        this.walletConnect._qrcodeModal.close();
-        const { accounts, chainId } = payload.params[0];
-        const foundNode = Object.values(nodes).find(item => {
-          if (item.type.chainID === parseInt(chainId)) return item;
-        });
-
-        if (foundNode) {
-          store
-            .dispatch('global/setNetwork', {
-              network: foundNode,
-              walletType: this.identifier
-            })
-            .then(() => {
-              store.dispatch('wallet/setWeb3Instance');
-            });
-        }
-        resolve(
-          new HybridWalletInterface(
-            sanitizeHex(accounts[0]),
-            this.isHardware,
-            this.identifier,
-            txSigner,
-            msgSigner,
-            this.walletConnect,
-            errorHandler,
-            this.meta
-          )
-        );
-      });
+      resolve(
+        new HybridWalletInterface(
+          sanitizeHex(this.client.accounts[0]),
+          this.isHardware,
+          this.identifier,
+          txSigner,
+          msgSigner,
+          this.client,
+          errorHandler,
+          this.meta
+        )
+      );
     });
   }
 }
 const createWallet = async () => {
-  const walletConnectWallet = new WalletConnectWallet();
+  const allChainIds = Object.values(nodes)
+    .map(item => {
+      if (item.type.chainID !== 1) {
+        return item.type.chainID;
+      }
+    })
+    .filter(item => !!item);
+  const signClient = await EthereumProvider.init({
+    projectId,
+    showQrModal: true,
+    chains: [1],
+    optionalChains: allChainIds,
+    methods: ['eth_sendTransaction', 'eth_sign'],
+    events: ['chainChanged', 'accountsChanged'],
+    metadata: {
+      name: 'MyEtherWallet Inc',
+      description:
+        'MyEtherWallet (MEW) is a free, open-source, client-side interface for generating Ethereum wallets & more. Interact with the Ethereum blockchain easily & securely.',
+      url: 'https://myetherwallet.com',
+      icons: ['https://www.myetherwallet.com/favicon.png']
+    }
+  });
+  if (signClient.connected) {
+    signClient.disconnect();
+  }
+
+  signClient.on('connect', evt => {
+    const { chainId } = evt;
+    const foundNode = Object.values(nodes).find(item => {
+      if (item.type.chainID === parseInt(chainId)) return item;
+    });
+    if (foundNode) {
+      store
+        .dispatch('global/setNetwork', {
+          network: foundNode,
+          walletType: WALLET_TYPES.WALLET_CONNECT
+        })
+        .then(() => {
+          store.dispatch('wallet/setWeb3Instance');
+        });
+    }
+  });
+  await signClient.connect().catch(e => {
+    throw e;
+  });
+
+  const walletConnectWallet = new WalletConnectWallet(signClient);
   const _tWallet = await walletConnectWallet.init();
   return _tWallet;
 };

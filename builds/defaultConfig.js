@@ -25,7 +25,7 @@ const webpackConfig = {
       'Strict-Transport-Security':
         'max-age=63072000; includeSubdomains; preload',
       'Content-Security-Policy':
-        "font-src 'self' data: js.intercomcdn.com:443; media-src js.intercomcdn.com:443 'self'; default-src 'self' blob:; frame-src 'self' www.walletlink.org:443 connect.trezor.io:443 intercom-sheets.com:443; img-src 'self' downloads.intercomcdn.com:443  www.mewtopia.com:443 gifs.intercomcdn.com:443 js.intercomcdn.com:443 images.ctfassets.net static.intercomassets.com:443 nft.mewapi.io:443 mewcard.mewapi.io:443 img.mewapi.io:443 app.lokalise.com:443 data: blob: ; script-src 'unsafe-eval' 'unsafe-inline' blob: https:; style-src 'self' 'unsafe-inline' https:; object-src 'none'; connect-src " +
+        "font-src 'self' data: js.intercomcdn.com:443; media-src js.intercomcdn.com:443 'self'; default-src 'self' blob:; frame-src 'self' verify.walletconnect.com:443 www.walletlink.org:443 connect.trezor.io:443 intercom-sheets.com:443; img-src 'self' downloads.intercomcdn.com:443 www.mewtopia.com:443 gifs.intercomcdn.com:443 js.intercomcdn.com:443 images.ctfassets.net static.intercomassets.com:443 nft.mewapi.io:443 mewcard.mewapi.io:443 img.mewapi.io:443 app.lokalise.com:443 explorer-api.walletconnect.com:443 data: blob: ; script-src 'unsafe-eval' 'unsafe-inline' blob: https:; style-src 'self' 'unsafe-inline' https:; object-src 'none'; connect-src " +
         allowedConnections.join(' ') +
         ';',
       'X-Content-Type-Options': 'nosniff',
@@ -78,4 +78,54 @@ const webpackConfig = {
   }
 };
 
-module.exports = { webpackConfig, sourceMapsConfig, env_vars };
+const transpilers = config => {
+  // GraphQL Loader
+  config.module
+    .rule('graphql')
+    .test(/\.graphql$/)
+    .use('graphql-tag/loader')
+    .loader('graphql-tag/loader')
+    .end();
+  config.module
+    .rule('transpile-walletconnect')
+    .test(/node_modules\/@walletconnect\/.*\.js$/)
+    .use('babel')
+    .loader('babel-loader')
+    .end();
+  config.module
+    .rule('transpile-eth2-keystore')
+    .test(/node_modules\/@myetherwallet\/eth2-keystore\/.*\.js$/)
+    .use('babel')
+    .loader('babel-loader')
+    .end();
+  config.module
+    .rule('transpile-web3modal')
+    .test(/node_modules\/@web3modal\/.*\.js$/)
+    .use('babel')
+    .loader('babel-loader')
+    .end();
+  config.module
+    .rule('transpile-chainsafe')
+    .test(/node_modules\/@chainsafe\/.*\.js$/)
+    .use('babel')
+    .loader('babel-loader')
+    .end();
+  config.module
+    .rule('transpile-ledger')
+    .test(/node_modules\/@ledgerhq\/.*\.js$/)
+    .use('babel')
+    .loader('babel-loader')
+    .end();
+  config.module
+    .rule('resolve-alias')
+    .test(/node_modules\/@ledgerhq\/.*\.js$/)
+    .resolve.alias.set('@ledgerhq/devices', '@ledgerhq/devices/lib-es')
+    .set('@ledgerhq/cryptoassets', '@ledgerhq/cryptoassets/lib-es')
+    .set(
+      '@ledgerhq/domain-service/signers',
+      '@ledgerhq/domain-service/lib-es/signers'
+    )
+    .end();
+};
+
+module.exports = { webpackConfig, sourceMapsConfig, env_vars, transpilers };

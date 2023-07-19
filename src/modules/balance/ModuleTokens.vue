@@ -28,7 +28,7 @@
           >
             <template #activator="{ on, attrs }">
               <v-btn
-                class="ma-2"
+                class="mr-n6"
                 v-bind="attrs"
                 rounded
                 color="basic"
@@ -341,6 +341,8 @@ export default {
     text-overflow: ellipsis;
     overflow: hidden;
   }
+
+  overflow: hidden;
 }
 .module-tokens-edit-menu {
   border: none !important;

@@ -7,6 +7,7 @@
         <module-confirmation v-if="address" />
         <the-enkrypt-popup v-if="!isOfflineApp" :show="walletEnkryptPopup" />
         <router-view />
+        <survey-banner :show="!neverShowSurveyBanner" />
       </v-container>
     </v-main>
     <the-wallet-footer :is-offline-app="isOfflineApp" />
@@ -42,6 +43,8 @@ import { EventBus } from '@/core/plugins/eventBus';
 
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
+import HybridWalletInterface from '@/modules/access-wallet/hybrid/handlers/walletInterface';
+import sanitizeHex from '@/core/helpers/sanitizeHex';
 
 export default {
   components: {
@@ -54,7 +57,8 @@ export default {
       import('@/views/components-wallet/EnkryptPromoSnackbar'),
     TheEnkryptPopup: () =>
       import('@/views/components-default/TheEnkryptPopup.vue'),
-    ModulePaperWallet: () => import('@/modules/balance/ModulePaperWallet.vue')
+    ModulePaperWallet: () => import('@/modules/balance/ModulePaperWallet.vue'),
+    SurveyBanner: () => import('@/views/components-wallet/SurveyBanner.vue')
   },
   mixins: [handlerWallet, handlerAnalytics],
   data() {
@@ -80,7 +84,8 @@ export default {
     ...mapState('popups', [
       'enkryptWalletPopup',
       'enkryptLandingPopup',
-      'enkryptLandingPopupClosed'
+      'enkryptLandingPopupClosed',
+      'neverShowSurveyBanner'
     ]),
     ...mapGetters('global', [
       'network',
@@ -126,6 +131,7 @@ export default {
   },
   mounted() {
     this.$vuetify.theme.dark = this.darkMode;
+    this.trackUserVersion(VERSION);
     EventBus.$on('openPaperWallet', () => {
       this.showPaperWallet = true;
       this.$router.push({
@@ -139,6 +145,29 @@ export default {
         this.web3Listeners();
       }
       this.checkNetwork();
+    }
+
+    if (this.instance.identifier === 'walletConnect') {
+      this.instance.connection.on('session_update', () => {
+        this.instance.connection.sendAsync(
+          { method: 'eth_requestAccounts' },
+          (err, res) => {
+            if (res[0].toLowerCase() !== this.address.toLowerCase()) {
+              const newWallet = new HybridWalletInterface(
+                sanitizeHex(res[0]),
+                this.instance.isHardware,
+                this.instance.identifier,
+                this.instance.txSigner,
+                this.instance.msgSigner,
+                this.instance.connection,
+                this.instance.errorHandler,
+                this.instance.meta
+              );
+              this.setWallet([newWallet]);
+            }
+          }
+        );
+      });
     }
   },
   beforeDestroy() {

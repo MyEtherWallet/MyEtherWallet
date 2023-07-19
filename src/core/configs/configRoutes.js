@@ -3,6 +3,7 @@ const ROUTES_HOME = {
   //A-Z
   ACCESS_WALLET: { NAME: 'AccessWallet', PATH: 'wallet/access/:overlay?' },
   ABOUT_PAGE: { NAME: 'AboutPage', PATH: 'about' },
+  ADVERTISE: { NAME: 'AdvertiseWithUsPage', PATH: 'advertise-with-us' },
   BUY_HARDWARE_WALLET: { NAME: 'BuyHardwareWallet', PATH: 'buy-hardware' },
   CREATE_WALLET: { NAME: 'CreateWallet', PATH: 'wallet/create/:overlay?' },
   CONVERT_UNITS: { NAME: 'ConvertUnits', PATH: 'convert-units' },

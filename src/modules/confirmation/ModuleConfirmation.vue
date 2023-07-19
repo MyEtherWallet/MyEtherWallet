@@ -318,7 +318,6 @@ export default {
       toDetails: {},
       signing: false,
       links: {
-        ethvm: '',
         explorer: ''
       },
       error: '',
@@ -683,7 +682,6 @@ export default {
       this.toDetails = {};
       this.signing = false;
       this.links = {
-        ethvm: '',
         explorer: ''
       };
       this.error = '';
@@ -730,7 +728,7 @@ export default {
               _this.trackSwap(
                 'swapTxReceivedReceipt',
                 hash,
-                this.network.type.name
+                this.network.type.chainID
               );
             }
           })
@@ -751,7 +749,7 @@ export default {
                 _this.trackSwap(
                   'swapTxBroadcasted',
                   hash,
-                  this.network.type.name
+                  this.network.type.chainID
                 );
               }
               _this.reset();
@@ -761,7 +759,7 @@ export default {
           .catch(err => {
             if (_this.isSwap && idx + 1 === _arr.length) {
               if (this.rejectedError(err.message)) {
-                _this.trackSwap('swapTxCancelled');
+                _this.trackSwap('swapTxRejected');
               } else {
                 _this.emitSwapTxFail(err);
               }
@@ -786,12 +784,6 @@ export default {
     showSuccess(param) {
       if (isArray(param)) {
         const lastHash = param[param.length - 1].tx.hash;
-        this.links.ethvm = this.network.type.isEthVMSupported.supported
-          ? this.network.type.isEthVMSupported.blockExplorerTX.replace(
-              '[[txHash]]',
-              lastHash
-            )
-          : '';
         this.links.explorer = this.network.type.blockExplorerTX.replace(
           '[[txHash]]',
           lastHash
@@ -807,12 +799,6 @@ export default {
         return;
       }
 
-      this.links.ethvm = this.network.type.isEthVMSupported.supported
-        ? this.network.type.isEthVMSupported.blockExplorerTX.replace(
-            '[[txHash]]',
-            param
-          )
-        : '';
       this.links.explorer = this.network.type.blockExplorerTX.replace(
         '[[txHash]]',
         param
@@ -822,7 +808,7 @@ export default {
         this.trackSwap(
           'swapTransactionSuccessfullySent',
           param,
-          this.network.type.name
+          this.network.type.chainID
         );
       }
     },
@@ -836,7 +822,11 @@ export default {
         event
           .on('transactionHash', res => {
             if (this.isSwap) {
-              this.trackSwap('swapTxBroadcasted', res, this.network.type.name);
+              this.trackSwap(
+                'swapTxBroadcasted',
+                res,
+                this.network.type.chainID
+              );
             }
             this.showTxOverlay = false;
             this.showSuccess(res);
@@ -847,14 +837,14 @@ export default {
               this.trackSwap(
                 'swapTxReceivedReceipt',
                 hash,
-                this.network.type.name
+                this.network.type.chainID
               );
             }
           })
           .catch(e => {
             if (this.isSwap) {
               if (this.rejectedError(e.message)) {
-                this.trackSwap('swapTxCancelled');
+                this.trackSwap('swapTxRejected');
               } else {
                 this.emitSwapTxFail(e);
               }
@@ -932,18 +922,16 @@ export default {
                   this.trackSwap(
                     'swapTxReceivedReceipt',
                     hash,
-                    this.network.type.name
+                    this.network.type.chainID
                   );
                 }
               })
               .catch(e => {
                 if (this.isSwap) {
                   if (this.rejectedError(e.message)) {
-                    this.trackSwap('swapTxCancelled');
+                    this.trackSwap('swapTxRejected');
                     throw new Error(e.message);
-                  }
-
-                  if (i + 1 === this.unsignedTxArr.length) {
+                  } else {
                     this.emitSwapTxFail(e);
                   }
                 }
@@ -954,7 +942,7 @@ export default {
           }
           this.signedTxArray = signed;
         } catch (err) {
-          if (this.isSwap) {
+          if (this.isSwap && !this.isWeb3Wallet) {
             this.emitSwapTxFail(err);
           }
           this.error = errorHandler(err);
@@ -987,12 +975,8 @@ export default {
       );
     },
     emitSwapTxFail(err) {
-      const receipt =
-        err.hasOwnProperty('receipt') &&
-        err.receipt.hasOwnProperty('transactionHash')
-          ? err.receipt.transactionHash
-          : '0x';
-      this.trackSwap('swapTxFailed', receipt, this.network.type.name);
+      const hash = err?.receipt?.transactionHash;
+      this.trackSwap('swapTxFailedV2', hash, this.network.type.chainID);
     },
     btnAction() {
       if (this.isSwap) {

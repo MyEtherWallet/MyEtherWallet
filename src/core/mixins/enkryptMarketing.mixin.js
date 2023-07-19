@@ -59,35 +59,18 @@ export default {
   methods: {
     openEnkrypt() {
       // eslint-disable-next-line
-       /*
-       window.open(
-         this.isMobile ? 'https://www.enkrypt.com' : this.browserLink,
-         '_blank'
-       );
-       */
       window.open('https://www.enkrypt.com', '_blank');
     },
     openMewWallet() {
-      if (this.isMobile) {
-        const userAgent =
-          navigator.userAgent || navigator.vendor || window.opera;
-        const isAndroid = /android/i.test(userAgent);
-        const isApple = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
-
-        if (isAndroid) {
-          window.location.href =
-            'https://play.google.com/store/apps/details?id=com.myetherwallet.mewwallet';
-        } else if (isApple) {
-          window.location.href = 'https://itunes.apple.com/app/id1464614025';
-        }
-      } else {
-        // eslint-disable-next-line
-         window.open('https://www.mewwallet.com/', '_blank');
-      }
+      // eslint-disable-next-line
+      window.open(
+        'https://download.mewwallet.com/?source=mew_web_create',
+        '_blank'
+      );
     },
     openHelpCenter() {
       // eslint-disable-next-line
-       window.open('https://www.enkrypt.com', '_blank');
+      window.open('https://www.enkrypt.com', '_blank');
     }
   }
 };

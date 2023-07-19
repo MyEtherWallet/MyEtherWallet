@@ -14,6 +14,13 @@ const appList = [
     paths: [ledgerEthereum, ledgerLiveEthereum]
   },
   {
+    network: Object.assign({}, ETH, {
+      name: 'Eth Recovery',
+      name_long: 'Eth Recovery'
+    }),
+    paths: [ledgerEthereum, ledgerLiveEthereum]
+  },
+  {
     network: ETC,
     paths: [ledgerEthereumClassic, ledgerLiveEthereumClassic]
   },

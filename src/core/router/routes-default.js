@@ -119,6 +119,15 @@ export default {
         noAuth: true
       }
     },
+    // {
+    //   path: ROUTES_HOME.ADVERTISE.PATH,
+    //   name: ROUTES_HOME.ADVERTISE.NAME,
+    //   component: () =>
+    //     import('@/views/layouts-default/TheAdvertiseWithUsLayout'),
+    //   meta: {
+    //     noAuth: true
+    //   }
+    // },
     {
       path: ROUTES_HOME.QR_CODE.PATH,
       name: ROUTES_HOME.QR_CODE.NAME,

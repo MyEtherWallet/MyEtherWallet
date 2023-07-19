@@ -1,4 +1,4 @@
-name: add to codecov [v6]
+name: add offline build [v6]
 
 on:
   pull_request:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   offline-build:
-    if: github.ref == 'staging'
+    if: github.head_ref == 'develop'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -34,7 +34,6 @@ jobs:
         run: docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:offline"
 
       - name: generate zip for offline build
-        if: contains(github.ref, 'offline')
         env:
           AWS_DEFAULT_REGION: ${{secrets.AWS_DEFAULT_REGION}}
           AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}

@@ -252,10 +252,7 @@ export default {
     },
     explorerAddr(addr) {
       const networkType = this.network.type;
-      const EthVMSupported = networkType.isEthVMSupported;
-      const explorer = EthVMSupported.supported
-        ? EthVMSupported.blockExplorerAddr
-        : networkType.blockExplorerAddr;
+      const explorer = networkType.blockExplorerAddr;
       return explorer.replace('[[address]]', addr);
     }
   }
