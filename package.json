@@ -79,6 +79,7 @@
     "bitbox02-api": "0.15.0",
     "buffer": "6.0.3",
     "clipboard-copy": "4.0.1",
+    "compression-webpack-plugin": "6.1.1",
     "crypto": "1.0.1",
     "ethereum-block-by-date": "1.4.7",
     "ethers": "5.7.2",

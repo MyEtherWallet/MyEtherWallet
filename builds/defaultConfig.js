@@ -1,6 +1,7 @@
 const imageminMozjpeg = require('imagemin-mozjpeg');
 const ImageminPlugin = require('imagemin-webpack-plugin').default;
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const CompressionPlugin = require('compression-webpack-plugin');
 const webpack = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const UglifyJS = require('uglify-es');
@@ -52,6 +53,7 @@ const webpackConfig = {
         })
       ]
     }),
+    new webpack.DefinePlugin(env_vars),
     new CopyWebpackPlugin({
       patterns: [
         { from: 'security.txt', to: '.well-known/security.txt' },
@@ -65,7 +67,7 @@ const webpackConfig = {
         }
       ]
     }),
-    new webpack.DefinePlugin(env_vars)
+    new CompressionPlugin()
   ],
   optimization: {
     splitChunks: {
@@ -126,6 +128,20 @@ const transpilers = config => {
       '@ledgerhq/domain-service/lib-es/signers'
     )
     .end();
+
+  // minify
+  config.optimization.minimizer('terser').tap(args => {
+    const opts = args[0];
+
+    opts.terserOptions.mangle = {
+      ...opts.terserOptions.mangle,
+      properties: {
+        regex: /_$/ // mangle property names that end with "_"
+      }
+    };
+
+    return args;
+  });
 };
 
 module.exports = { webpackConfig, sourceMapsConfig, env_vars, transpilers };
