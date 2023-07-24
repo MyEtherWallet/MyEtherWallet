@@ -63,7 +63,8 @@ export default {
   mixins: [handlerWallet, handlerAnalytics],
   data() {
     return {
-      showPaperWallet: false
+      showPaperWallet: false,
+      manualBlockSubscription: null
     };
   },
   computed: {
@@ -238,6 +239,7 @@ export default {
       this.updateGasPrice();
     },
     subscribeToBlockNumber: debounce(function () {
+      clearInterval(this.manualBlockSubscription);
       this.web3.eth.getBlockNumber().then(bNumber => {
         this.setBlockNumber(bNumber);
         this.web3.eth.getBlock(bNumber).then(block => {
@@ -253,8 +255,18 @@ export default {
               this.setBlockNumber(res.number);
             })
             .on('error', err => {
+              const message = err.message ? err.message : err;
+              if (
+                message ===
+                  'The method eth_subscribe does not exist/is not available' ||
+                (message.includes('but is disabled for Https') &&
+                  message.includes('eth_subscribe found for the url'))
+              ) {
+                return this.manualBlockSub();
+              }
+
               Toast(
-                err && err.message === 'Load failed'
+                err && message === 'Load failed'
                   ? 'eth_subscribe is not supported. Please make sure your provider supports eth_subscribe'
                   : 'Network Subscription Error: Please wait a few seconds before continuing.',
                 {},
@@ -273,6 +285,23 @@ export default {
         window.ethereum.on('chainChanged', this.findAndSetNetwork);
         window.ethereum.on('accountsChanged', this.setWeb3Account);
       }
+    },
+    /**
+     * sets an interval that will query the block number
+     * functioning similarly to eth_subscribe newHeads
+     */
+    manualBlockSub() {
+      const _this = this;
+      this.manualBlockSubscription = setInterval(() => {
+        _this.web3.eth.getBlockNumber().then(bNumber => {
+          _this.setBlockNumber(bNumber);
+          _this.web3.eth.getBlock(bNumber).then(block => {
+            if (block) {
+              _this.checkAndSetBaseFee(block.baseFeePerGas);
+            }
+          });
+        });
+      }, 14000);
     },
     async findAndSetNetwork() {
       if (
