@@ -59,6 +59,7 @@
     "@mathieustan/vue-intercom": "0.0.9",
     "@myetherwallet/eth2-keystore": "0.3.1",
     "@myetherwallet/mew-components": "1.4.7",
+    "@open-wc/webpack-import-meta-loader": "^0.4.7",
     "@sentry/browser": "7.54.0",
     "@sentry/tracing": "7.54.0",
     "@sentry/vue": "7.54.0",

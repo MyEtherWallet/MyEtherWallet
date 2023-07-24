@@ -7,6 +7,7 @@ const exportObj = {
   lintOnSave: process.env.NODE_ENV === 'production' ? 'error' : true,
   integrity: process.env.WEBPACK_INTEGRITY === 'false' ? false : true,
   productionSourceMap: true,
+  transpileDependencies: config.transpileDependencies,
   chainWebpack: config.transpilers
 };
 

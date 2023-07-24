@@ -93,12 +93,6 @@ const transpilers = config => {
     .loader('babel-loader')
     .end();
   config.module
-    .rule('transpile-eth2-keystore')
-    .test(/node_modules\/@myetherwallet\/eth2-keystore\/.*\.js$/)
-    .use('babel')
-    .loader('babel-loader')
-    .end();
-  config.module
     .rule('transpile-web3modal')
     .test(/node_modules\/@web3modal\/.*\.js$/)
     .use('babel')
@@ -107,6 +101,24 @@ const transpilers = config => {
   config.module
     .rule('transpile-chainsafe')
     .test(/node_modules\/@chainsafe\/.*\.js$/)
+    .use('babel')
+    .loader('babel-loader')
+    .end();
+  config.module
+    .rule('transpile-polkadot-meta')
+    .test(/node_modules\/@polkadot\/.*\/packageInfo.js$/)
+    .use('@open-wc/webpack-import-meta-loader')
+    .loader('@open-wc/webpack-import-meta-loader')
+    .end();
+  config.module
+    .rule('transpile-polkadot')
+    .test(/node_modules\/@polkadot\/.*\.js$/)
+    .use('babel')
+    .loader('babel-loader')
+    .end();
+  config.module
+    .rule('transpile-noble')
+    .test(/node_modules\/@noble\/.*\.js$/)
     .use('babel')
     .loader('babel-loader')
     .end();
@@ -128,4 +140,23 @@ const transpilers = config => {
     .end();
 };
 
-module.exports = { webpackConfig, sourceMapsConfig, env_vars, transpilers };
+const transpileDependencies = [
+  '@myetherwallet/eth2-keystore',
+  '@enkryptcom/swap',
+  'web3-eth',
+  'web3-core',
+  'web3-net',
+  'web3-eth-personal',
+  'web3-eth-accounts',
+  'web3-eth-ens',
+  'micro-ftch',
+  '@ethereumjs/util'
+];
+
+module.exports = {
+  webpackConfig,
+  sourceMapsConfig,
+  env_vars,
+  transpilers,
+  transpileDependencies
+};

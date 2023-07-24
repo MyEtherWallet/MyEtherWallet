@@ -1,10 +1,12 @@
+import Swap from '@enkryptcom/swap';
 import { OneInch, ZEROX, ParaSwap, Changelly } from './providers';
 import BigNumber from 'bignumber.js';
 import Configs from './configs/providersConfigs';
 import hasValidDecimals from '@/core/helpers/hasValidDecimals.js';
 import { isObject } from 'lodash';
 
-class Swap {
+const WalletIdentifier = 'mew';
+class MEWSwap {
   constructor(web3, chain) {
     this.providers = [
       new OneInch(web3, chain),
@@ -13,6 +15,12 @@ class Swap {
       new Changelly(web3, chain)
     ];
     this.chain = chain;
+    this.swapper = new Swap(
+      chain,
+      web3,
+      { infiniteApproval: true },
+      WalletIdentifier
+    );
   }
   getAllTokens() {
     const allTokens = {};
@@ -138,8 +146,8 @@ class Swap {
   }
 }
 
-Swap.helpers = {
+MEWSwap.helpers = {
   hasValidDecimals
 };
 
-export default Swap;
+export default MEWSwap;
