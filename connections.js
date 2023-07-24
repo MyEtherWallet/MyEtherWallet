@@ -77,6 +77,8 @@ module.exports = [
   'https://buy-staging.moonpay.com:443',
   // Dapps
   'https://public-node.rsk.co', // Rootstock
+  'https://eiqxqk2yzamq64zayk7zjsz6rq0hywyn.lambda-url.us-east-1.on.aws/', // Flyover
+  'https://lps.flyover.rif.technology', // Flyover
   'https://staked.mewapi.io:443', // staked
   'https://stakedtest.mewapi.io:443', // staked
   'https://ethblocksapi.mewapi.io:443', // Eth Blocks
