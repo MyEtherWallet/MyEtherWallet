@@ -37,8 +37,6 @@
           />
           <swap-token-selector-interface
             title="YOU RECEIVE"
-            :left-text="availableBalanceTo"
-            :right-text="fiatBalanceTo"
             :token-select="setToToken"
             :token="toTokenType"
             :tokens="actualToTokens"
@@ -1150,7 +1148,6 @@ export default {
       return findToken ? findToken : this.actualToTokens[0];
     },
     processTokens(tokens, storeTokens) {
-      // this.setupTokenInfo(tokens.fromTokens);
       this.setupTokenInfo(tokens.toTokens);
       this.setupTokenInfo(tokens.featured);
       this.availableTokens = tokens;

@@ -49,10 +49,13 @@
           />
         </div>
         <div class="d-flex align-center justify-space-between">
-          <div class="textMedium--text pointer" @click="maxButton">
+          <div
+            class="textMedium--text cursor--pointer holder"
+            @click="maxButton"
+          >
             {{ leftText }}
           </div>
-          <div :class="!error ? 'textMedium--text' : 'error--text'">
+          <div :class="[!error ? 'textMedium--text' : 'error--text', 'holder']">
             {{ error || rightText }}
           </div>
         </div>
@@ -74,7 +77,7 @@
                 <div
                   v-else
                   :key="t.contract"
-                  class="d-flex align-center pt-2 pb-2 pointer"
+                  class="d-flex align-center pt-2 pb-2 cursor--pointer"
                   @click="handleToken(t)"
                 >
                   <mew-token-container
@@ -90,7 +93,9 @@
                       {{ t.subtext }}
                     </div>
                   </div>
-                  <div class="flex-column ml-auto mr-3 mb-auto text-right">
+                  <div
+                    class="d-flex flex-column ml-auto mr-3 mb-auto text-right align-center justify-center"
+                  >
                     <div>
                       {{ t.price }}
                     </div>
@@ -294,7 +299,8 @@ export default {
     border: 2px solid var(--v-redPrimary-base);
   }
 }
-.pointer {
-  cursor: pointer;
+
+.holder {
+  height: 14px;
 }
 </style>
