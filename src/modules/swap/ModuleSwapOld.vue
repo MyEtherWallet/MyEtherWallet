@@ -6,7 +6,7 @@
           <!-- =============================================================== -->
           <!-- You Give -->
           <!-- =============================================================== -->
-          <swap-token-selector-interface
+          <mew-token-selector-interface
             title="YOU GIVE"
             :left-text="maxMsg"
             :max-button="setMaxAmount"
@@ -29,13 +29,7 @@
           <!-- =============================================================== -->
           <!-- You Receive -->
           <!-- =============================================================== -->
-          <swap-network-selector
-            :selected-network="selectedNetwork"
-            :networks="supportedNetworks"
-            class="mb-2"
-            @selectedNetwork="setSwapSelectedNetwork"
-          />
-          <swap-token-selector-interface
+          <mew-token-selector-interface
             title="YOU RECEIVE"
             :left-text="availableBalanceTo"
             :right-text="fiatBalanceTo"
@@ -48,7 +42,36 @@
             :loading="isLoading"
             read-only
           />
+          <!--
+            =====================================================================================
+              Address Book
+            =====================================================================================
+        -->
           <div class="mt-8">
+            <v-row v-if="isFromNonChain">
+              <v-col>
+                <span>What is your refund address?</span>
+              </v-col>
+              <v-col md="auto">
+                <mew-tooltip
+                  hide-icon
+                  max-width="240px"
+                  text="The refund address is the wallet you are swapping from. If there is an issue with the swap, your coins will be returned to that address."
+                />
+                <span class="cta pointer"> What is this? </span>
+              </v-col>
+            </v-row>
+            <v-row v-if="isFromNonChain">
+              <v-col class="pb-0">
+                <module-address-book
+                  ref="refundAddressInput"
+                  class="FromAddressInput"
+                  :label="nativeLabel"
+                  :is-valid-address-func="isValidRefundAddress"
+                  @setAddress="setRefundAddr"
+                />
+              </v-col>
+            </v-row>
             <v-row v-if="showToAddress">
               <v-col>
                 <span>Where should we send your crypto?</span>
@@ -283,10 +306,8 @@ let localContractToToken = {};
 export default {
   name: 'ModuleSwap',
   components: {
+    MewTokenSelectorInterface: () => import('./MewTokenSelectorInterface'),
     SwapLoader: () => import('@/modules/swap/components/SwapLoader'),
-    SwapTokenSelectorInterface: () =>
-      import('./components/SwapTokenSelectorInterface'),
-    SwapNetworkSelector: () => import('./components/SwapNetworkSelector'),
     AppBorderContainer: () => import('@/core/components/AppBorderContainer'),
     AppWalletBlock: () => import('@/core/components/AppWalletBlock'),
     AppButtonBalance: () => import('@/core/components/AppButtonBalance'),
@@ -317,9 +338,7 @@ export default {
     return {
       step: 0,
       selectedNetwork: supportedNetworks[1],
-      supportedNetworks: supportedNetworks.filter(item => {
-        if (item.id) return item;
-      }),
+      supportedNetworks: supportedNetworks,
       confirmInfo: {
         to: '',
         from: '',
@@ -352,6 +371,7 @@ export default {
       addressValue: {},
       selectedProvider: {},
       refundAddress: '',
+      isValidRefundAddr: false,
       localGasPrice: '0',
       mainTokenDetails: {},
       cachedAmount: '0',
@@ -390,6 +410,13 @@ export default {
         subtitle:
           'Please select ETH, BNB or MATIC networks to use this feature.'
       };
+    },
+    /**
+     * @returns string
+     * is used as a label for module-address-book
+     */
+    nativeLabel() {
+      return `Your ${this.fromTokenType?.name} refund address`;
     },
     /**
      * @returns a boolean
@@ -462,7 +489,10 @@ export default {
         return disableSet;
       }
       return (
-        disableSet || (!this.refundAddress && this.actualTrade?.length === 0)
+        disableSet ||
+        (!this.refundAddress &&
+          !this.isValidRefundAddr &&
+          this.actualTrade?.length === 0)
       );
     },
     providersErrorMsg() {
@@ -896,8 +926,14 @@ export default {
       localContractToToken[MAIN_TOKEN_ADDRESS] = this.mainTokenDetails;
       this.setupSwap();
     },
-    setSwapSelectedNetwork(network) {
-      this.selectedNetwork = network;
+    /**
+     * Handles emitted values from
+     * module-address-book
+     */
+    setRefundAddr(address, valid) {
+      this.refundAddress = address;
+      this.isValidRefundAddr = valid;
+      this.setTokenInValue(this.tokenInValue);
     },
     /**
      * @returns all trending tokens
@@ -1041,6 +1077,7 @@ export default {
       this.localGasPrice = '0';
       if (this.$refs.amountInput) this.$refs.amountInput.clear();
       this.refundAddress = '';
+      this.isValidRefundAddr = false;
       this.maxLoading = false;
       this.setupSwap();
     },
@@ -1282,6 +1319,11 @@ export default {
       this.availableQuotes = [];
       this.allTrades = [];
       this.step = 0;
+      if (
+        this.isFromNonChain &&
+        (this.refundAddress === '' || !this.isValidRefundAddr)
+      )
+        return;
       if (this.showToAddress && !this.addressValue?.isValid) return;
       if (
         !isEmpty(this.toTokenType) &&
@@ -1363,6 +1405,13 @@ export default {
       });
     },
     getTrade(idx) {
+      if (this.isFromNonChain && !this.isValidRefundAddr) {
+        return;
+      }
+      if (this.isFromNonChain && !this.isValidRefundAddr) {
+        return;
+      }
+
       if (this.availableQuotes.length === 0) {
         return;
       }
@@ -1482,6 +1531,17 @@ export default {
         return this.swapper.isValidToAddress({
           provider: 'changelly',
           toT: this.toTokenType,
+          address
+        });
+      }
+    },
+    isValidRefundAddress(address) {
+      try {
+        return MultiCoinValidator.validate(address, this.fromTokenType.name);
+      } catch (e) {
+        return this.swapper.isValidToAddress({
+          provider: 'changelly',
+          toT: this.fromTokenType,
           address
         });
       }
