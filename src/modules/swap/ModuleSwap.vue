@@ -18,20 +18,13 @@
             :tokens="actualFromTokens"
             :search-tokens="fromTokens"
             placeholder="Enter amount"
-            :loading="isLoading"
+            :loading="isLoading || maxLoading"
             :value="tokenInValue"
             :input="val => triggerSetTokenInValue(val, false)"
             popup-title="Select token to swap"
           />
           <div class="d-flex align-center justify-center py-2">
-            <v-icon
-              class="pointer"
-              color="textDark"
-              size="30px"
-              :disabled="!enableTokenSwitch"
-              @click.native="switchTokens"
-              >mdi-swap-vertical</v-icon
-            >
+            <v-icon color="textDark" size="30px">mdi-swap-vertical</v-icon>
           </div>
           <!-- =============================================================== -->
           <!-- You Receive -->
@@ -341,13 +334,11 @@ export default {
     }
   },
   data() {
+    const supportedNetworks = Swapper.helpers.getSupportedNetworks();
     return {
-      swapNotAvailableMes: {
-        title: `Swap is not available on this network`,
-        subtitle:
-          'Please select ETH, BNB or MATIC networks to use this feature.'
-      },
       step: 0,
+      selectedNetwork: supportedNetworks[1],
+      supportedNetworks: supportedNetworks,
       confirmInfo: {
         to: '',
         from: '',
@@ -413,6 +404,13 @@ export default {
       'getCoinGeckoTokenById'
     ]),
     ...mapGetters('article', ['getArticle']),
+    swapNotAvailableMes() {
+      return {
+        title: `Swap is not available on this network`,
+        subtitle:
+          'Please select ETH, BNB or MATIC networks to use this feature.'
+      };
+    },
     /**
      * @returns string
      * is used as a label for module-address-book
@@ -528,17 +526,6 @@ export default {
       };
     },
     /**
-     * checks whether both token fields are empty
-     */
-    enableTokenSwitch() {
-      return (
-        !this.isLoading &&
-        ((!isEmpty(this.fromTokenType) &&
-          !isEmpty(this.fromTokenType?.symbol)) ||
-          (!isEmpty(this.toTokenType) && !isEmpty(this.toTokenType?.symbol)))
-      );
-    },
-    /**
      * Checks whether selected from token is
      * the network's currency
      */
@@ -575,21 +562,6 @@ export default {
         return token.contract !== this.fromTokenType?.contract;
       });
       filteredTrendingTokens = this.formatTokenPrice(filteredTrendingTokens);
-      const nonChainTokens = validToTokens.reduce((arr, item) => {
-        if (
-          item.hasOwnProperty('isEth') &&
-          !item.isEth &&
-          item.name &&
-          item.symbol &&
-          item.subtext &&
-          item.symbol !== this.network.type.currencyName
-        ) {
-          delete item['tokenBalance'];
-          delete item['totalBalance'];
-          arr.push(item);
-        }
-        return arr;
-      }, []);
       let returnableTokens = [];
       if (filteredTrendingTokens.length) {
         returnableTokens = returnableTokens.concat([
@@ -597,14 +569,6 @@ export default {
             header: 'Trending'
           },
           ...filteredTrendingTokens
-        ]);
-      }
-      if (nonChainTokens.length > 0) {
-        returnableTokens = returnableTokens.concat([
-          {
-            header: 'Cross-Chain Tokens'
-          },
-          ...nonChainTokens
         ]);
       }
       returnableTokens = returnableTokens.concat([
@@ -651,37 +615,13 @@ export default {
           }
         });
       }
-      const nonChainTokens = this.fromTokens.reduce((arr, item) => {
-        if (
-          item.hasOwnProperty('isEth') &&
-          !item.isEth &&
-          item.name &&
-          item.symbol &&
-          item.subtext &&
-          item.symbol !== this.network.type.currencyName
-        ) {
-          delete item['tokenBalance'];
-          delete item['totalBalance'];
-          item = this.checkMultiChainToken(item);
-          arr.push(item);
-        }
-        return arr;
-      }, []);
       tradebleWalletTokens = this.formatTokensForSelect(tradebleWalletTokens);
-      let returnableTokens = [
+      const returnableTokens = [
         {
           header: 'My Wallet'
         },
         ...tradebleWalletTokens
       ];
-      if (nonChainTokens.length > 0) {
-        returnableTokens = returnableTokens.concat([
-          {
-            header: 'Cross-Chain Tokens'
-          },
-          ...nonChainTokens
-        ]);
-      }
       return returnableTokens.concat([
         {
           header: 'All'
@@ -986,31 +926,6 @@ export default {
       localContractToToken[MAIN_TOKEN_ADDRESS] = this.mainTokenDetails;
       this.setupSwap();
     },
-    checkMultiChainToken(item) {
-      const multiChainTokens = ['USDT', 'SRM', 'DOGE']; // Hardcoding for now
-      const name = item.name;
-      if (
-        name.includes('SOL') ||
-        name.includes('OMNI') ||
-        name.includes('DOGE')
-      ) {
-        for (let i = 0; i < multiChainTokens.length; i++) {
-          const token = multiChainTokens[i];
-          if (name.includes(token)) {
-            const networks = {
-              OMNI: 'Omni',
-              SOL: 'Solana',
-              DOGE: 'Dogecoin'
-            };
-            const contractNetwork =
-              networks[name !== 'DOGE' ? name.replace(token, '') : name];
-            item.subtext = `${token} - ${contractNetwork}`;
-            break;
-          }
-        }
-      }
-      return item;
-    },
     /**
      * Handles emitted values from
      * module-address-book
@@ -1058,7 +973,7 @@ export default {
           const name = foundToken.name || foundToken.subtext;
           foundToken.contract = token.contract;
           foundToken.price = this.getFiatValue(foundToken.pricef);
-          foundToken.isEth = token.isEth;
+          foundToken.isEth = true;
           foundToken.name = token.symbol || foundToken.symbol;
           foundToken.value = foundToken.contract;
           foundToken.subtext = name;
@@ -1220,7 +1135,8 @@ export default {
           const quotes = await this.swapper.getAllQuotes({
             fromT: this.fromTokenType,
             toT: this.toTokenType,
-            fromAmount: fromAmount
+            fromAmount: fromAmount,
+            fromAddress: this.address
           });
           const highest = quotes.sort(
             (a, b) =>
@@ -1296,24 +1212,6 @@ export default {
         return this.mainTokenDetails;
       }
       return findToken ? findToken : this.actualToTokens[0];
-    },
-
-    switchTokens() {
-      if (!this.clearingSwap) {
-        this.trackSwap('switchTokens');
-      }
-      const fromToken = this.fromTokenType;
-      const toToken = this.toTokenType || this.actualToTokens[0];
-      const tokenOutValue = this.tokenOutValue;
-      this.fromTokenType = {};
-      this.toTokenType = {};
-      this.tokenOutValue = '0';
-      const toTokenFromTokenList = this.actualFromTokens.find(item => {
-        if (item && item.contract === toToken?.contract) return item;
-      });
-      this.setFromToken(toTokenFromTokenList ? toTokenFromTokenList : toToken);
-      this.setToToken(fromToken);
-      this.setTokenInValue(tokenOutValue);
     },
     processTokens(tokens, storeTokens) {
       this.setupTokenInfo(tokens.fromTokens);
@@ -1421,7 +1319,6 @@ export default {
       this.availableQuotes = [];
       this.allTrades = [];
       this.step = 0;
-
       if (
         this.isFromNonChain &&
         (this.refundAddress === '' || !this.isValidRefundAddr)
@@ -1430,7 +1327,6 @@ export default {
       if (this.showToAddress && !this.addressValue?.isValid) return;
       if (
         !isEmpty(this.toTokenType) &&
-        this.toTokenType.hasOwnProperty('isEth') &&
         !this.toTokenType.isEth &&
         (isEmpty(this.addressValue) ||
           (!isEmpty(this.addressValue) && !this.addressValue.isValid))
@@ -1448,7 +1344,6 @@ export default {
         this.isLoadingProviders = true;
         this.showAnimation = true;
         this.cachedAmount = this.tokenInValue;
-
         this.swapper
           .getAllQuotes({
             fromT: this.fromTokenType,

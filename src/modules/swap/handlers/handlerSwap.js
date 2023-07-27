@@ -1,9 +1,8 @@
-import Swap from '@enkryptcom/swap';
+import Swap, { getSupportedNetworks } from '@enkryptcom/swap';
 import { OneInch, ZEROX, ParaSwap, Changelly } from './providers';
 import BigNumber from 'bignumber.js';
 import Configs from './configs/providersConfigs';
 import hasValidDecimals from '@/core/helpers/hasValidDecimals.js';
-import { isObject } from 'lodash';
 
 const WalletIdentifier = 'mew';
 class MEWSwap {
@@ -15,64 +14,42 @@ class MEWSwap {
       new Changelly(web3, chain)
     ];
     this.chain = chain;
-    this.swapper = new Swap(
-      chain,
-      web3,
-      { infiniteApproval: true },
-      WalletIdentifier
-    );
-  }
-  getAllTokens() {
-    const allTokens = {};
-    const DOGE_ADDRESS = '0x4206931337dc273a630d328dA6441786BfaD668f';
-    const notDoge = address =>
-      address?.toLowerCase() !== DOGE_ADDRESS.toLowerCase();
-
-    return this.providers[0].getSupportedTokens().then(baseList => {
-      if (baseList?.tokens && baseList?.tokens.length > 0)
-        // Add tokens to TokenList
-        baseList?.tokens.forEach(t => {
-          if (notDoge(t.contract)) allTokens[t.contract] = t;
-        });
-      //Get tokens From changelly
-      return Promise.all(
-        this.providers.slice(3).map(p => {
-          if (!p.isSupportedNetwork(this.chain)) return Promise.resolve();
-          return p.getSupportedTokens().then(tokens => {
-            if (tokens && tokens.length > 0) {
-              tokens.forEach(t => {
-                // ignore doge and existing tokens
-                if (notDoge(t.contract) && !allTokens[t.contract]) {
-                  allTokens[t.contract] = t;
-                }
-              });
-            }
-          });
-        })
-      ).then(() => {
-        const sorted = Object.values(allTokens)
-          .filter(t => isObject(t))
-          .sort((a, b) => {
-            if (a.name > b.name) return 1;
-            return -1;
-          });
-        return {
-          fromTokens: sorted?.filter(t => {
-            if (!t || !t.contract) return false;
-            return t;
-          }),
-          toTokens: sorted,
-          featured: baseList.featured
-        };
-      });
+    this.swapper = new Swap({
+      network: chain,
+      walletIdentifier: WalletIdentifier,
+      api: web3,
+      evmOptions: {
+        infiniteApproval: false
+      }
     });
+  }
+  async getAllTokens() {
+    await this.swapper.initPromise;
+    const toTokens = this.swapper.getToTokens();
+    const fromTokens = this.swapper.getFromTokens();
+    const trending =
+      toTokens.trending[this.chain].length > 0
+        ? toTokens.trending[this.chain]
+        : [];
+    const allTokens = {
+      fromTokens: fromTokens.all.map(item =>
+        Object.assign({}, { contract: item.address }, item)
+      ),
+      toTokens: toTokens.all[this.chain].map(item =>
+        Object.assign({}, { contract: item.address }, item)
+      ),
+      featured: trending.map(item =>
+        Object.assign({}, { contract: item.address }, item)
+      )
+    };
+    return allTokens;
   }
   // Receive All Quotes and trades for mew,
   // Changelly must be retrieved individually
-  getAllQuotes({ fromT, toT, fromAmount, fromAddress }) {
+  async getAllQuotes({ fromT, toT, fromAmount, fromAddress }) {
+    console.log(fromT, toT, fromAmount, fromAddress);
     let allQuotes = [];
     const providers = [this.providers[0], this.providers[3]];
-
     return Promise.all(
       providers.map((p, i) => {
         if (!p.isSupportedNetwork(this.chain)) return Promise.resolve();
@@ -94,7 +71,7 @@ class MEWSwap {
       });
 
       // Set Provider information
-      return allQuotes.map(q => {
+      const quotesWProvider = allQuotes.map(q => {
         const provider = q.exchange || q.provider.toLowerCase();
         if (Configs.exchangeInfo[provider]) {
           q.exchangeInfo = Configs.exchangeInfo[provider];
@@ -104,6 +81,8 @@ class MEWSwap {
         }
         return q;
       });
+      // console.log(quotesWProvider, newQuotes);
+      return quotesWProvider;
     });
   }
   getQuotesForSet(arr) {
@@ -147,7 +126,8 @@ class MEWSwap {
 }
 
 MEWSwap.helpers = {
-  hasValidDecimals
+  hasValidDecimals,
+  getSupportedNetworks
 };
 
 export default MEWSwap;
