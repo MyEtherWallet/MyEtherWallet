@@ -336,7 +336,7 @@ export default {
       fromTokenType: {},
       tokenInValue: this.amount || '0',
       tokenOutValue: '0',
-      availableTokens: { toTokens: [], fromTokens: [] },
+      availableTokens: { toTokens: [], fromTokens: [], featured: [] },
       availableQuotes: [],
       currentTrade: null,
       allTrades: [],
@@ -365,7 +365,6 @@ export default {
     ...mapState('swap', ['prefetched', 'swapTokens']),
     ...mapState('wallet', ['web3', 'address', 'balance', 'identifier']),
     ...mapState('global', ['gasPriceType']),
-    ...mapState('external', ['coinGeckoTokens']),
     ...mapGetters('global', [
       'network',
       'isEthNetwork',
@@ -520,13 +519,16 @@ export default {
      */
     actualToTokens() {
       if (this.isLoading) return [];
-      let validToTokens = this.toTokens.filter(item => {
-        if (
-          item.contract.toLowerCase() !==
-          this.fromTokenType?.contract?.toLowerCase()
-        )
-          return item;
-      });
+      let validToTokens =
+        this.network.type.name === this.selectedNetwork.id
+          ? this.toTokens.filter(item => {
+              if (
+                item.contract.toLowerCase() !==
+                this.fromTokenType?.contract?.toLowerCase()
+              )
+                return item;
+            })
+          : this.toTokens;
       validToTokens = this.formatTokenPrice(validToTokens);
       let filteredTrendingTokens = this.trendingTokens().filter(token => {
         return token.contract !== this.fromTokenType?.contract;
@@ -592,12 +594,7 @@ export default {
         },
         ...tradebleWalletTokens
       ];
-      return returnableTokens.concat([
-        {
-          header: 'All'
-        },
-        ...validFromTokens
-      ]);
+      return returnableTokens;
     },
     /**
      * @returns object of other tokens
@@ -655,11 +652,7 @@ export default {
      * @returns{boolean}
      */
     hasMinEth() {
-      if (
-        !isEmpty(this.fromTokenType) &&
-        this.fromTokenType.hasOwnProperty('isEth') &&
-        !this.fromTokenType.isEth
-      ) {
+      if (!isEmpty(this.fromTokenType)) {
         return true;
       }
       return toBN(this.balanceInWei).gte(
@@ -805,10 +798,24 @@ export default {
       return `To ${name} address`;
     },
     multipleWatcher() {
-      return this.network, this.web3, this.tokensList, this.coinGeckoTokens;
+      return this.network, this.web3, this.tokensList;
     }
   },
   watch: {
+    selectedNetwork: {
+      handler: function (val) {
+        this.isLoading = true;
+        this.swapper
+          .getAllTokens(val.id)
+          .then(tokens => {
+            this.processTokens(tokens);
+          })
+          .then(() => {
+            this.isLoading = false;
+          });
+      },
+      deep: true
+    },
     multipleWatcher: {
       handler: function () {
         this.resetSwapState();
@@ -880,12 +887,8 @@ export default {
   },
   mounted() {
     this.abortSetTokenValue = false;
-    // multi value watcher to clear
-    // refund address and to address
-    if (this.coinGeckoTokens.size > 0) {
-      this.resetSwapState();
-    }
     this.trackSwap('swapPageView');
+    this.resetSwapState();
   },
   methods: {
     ...mapActions('notifications', ['addNotification']),
@@ -913,42 +916,12 @@ export default {
     },
     setupTokenInfo(tokens) {
       tokens.forEach(token => {
-        if (localContractToToken[token.contract]) return;
-        if (
-          token.isEth === false &&
-          (token.contract?.toLowerCase() === '0xeth' ||
-            token.contract?.toLowerCase().includes('matic') ||
-            token.contract?.toLowerCase().includes('bnb'))
-        )
-          return;
-        if (token.cgid) {
-          const foundToken = this.getCoinGeckoTokenById(token.cgid);
-          foundToken.price = this.getFiatValue(foundToken.pricef);
-          const name = foundToken.name;
-          foundToken.name = token.symbol;
-          foundToken.value = foundToken.contract;
-          foundToken.subtext = name;
-          foundToken.symbol = token.symbol || foundToken.symbol;
-          this.setToLocaContractToToken(Object.assign({}, token, foundToken));
-          return;
-        }
-        const foundToken = this.contractToToken(token.contract);
-        if (foundToken) {
-          const name = foundToken.name || foundToken.subtext;
-          foundToken.contract = token.contract;
-          foundToken.price = this.getFiatValue(foundToken.pricef);
-          foundToken.isEth = true;
-          foundToken.name = token.symbol || foundToken.symbol;
-          foundToken.value = foundToken.contract;
-          foundToken.subtext = name;
-          this.setToLocaContractToToken(foundToken);
-          return;
-        }
-        token.price = '';
+        token.pricef = this.getFiatValue(token.price);
+        token.value = token.address;
+        token.contract = token.address;
         token.subtext = token.name;
-        token.value = token.contract;
-        token.name = token.symbol || token.subtext;
-        this.setToLocaContractToToken(token);
+        token.img = `https://img.mewapi.io/?image=${token.logoURI}`;
+        this.setToLocaContractToToken(Object.assign({}, token));
       });
     },
     /**
@@ -972,7 +945,7 @@ export default {
       this.setTokenInValue(this.tokenInValue);
     },
     swapTo(to) {
-      const findToken = this.toTokens.find(
+      const findToken = this.availableTokens.toTokens.find(
         item => item.symbol.toLowerCase() === to.toLowerCase()
       );
       if (!this.clearingSwap) {
@@ -986,7 +959,7 @@ export default {
         this.swapper = new Swapper(this.web3, this.network.type.name);
         if (!this.prefetched) {
           this.swapper
-            .getAllTokens()
+            .getAllTokens(this.selectedNetwork.id)
             .then(tokens => {
               this.processTokens(tokens);
             })
@@ -1177,7 +1150,7 @@ export default {
       return findToken ? findToken : this.actualToTokens[0];
     },
     processTokens(tokens, storeTokens) {
-      this.setupTokenInfo(tokens.fromTokens);
+      // this.setupTokenInfo(tokens.fromTokens);
       this.setupTokenInfo(tokens.toTokens);
       this.setupTokenInfo(tokens.featured);
       this.availableTokens = tokens;

@@ -23,19 +23,19 @@ class MEWSwap {
       }
     });
   }
-  async getAllTokens() {
+  async getAllTokens(chain = 'ETH') {
     await this.swapper.initPromise;
     const toTokens = this.swapper.getToTokens();
     const fromTokens = this.swapper.getFromTokens();
     const trending =
-      toTokens.trending[this.chain].length > 0
-        ? toTokens.trending[this.chain]
+      toTokens.trending[chain] && toTokens.trending[chain].length > 0
+        ? toTokens.trending[chain]
         : [];
     const allTokens = {
       fromTokens: fromTokens.all.map(item =>
         Object.assign({}, { contract: item.address }, item)
       ),
-      toTokens: toTokens.all[this.chain].map(item =>
+      toTokens: toTokens.all[chain].map(item =>
         Object.assign({}, { contract: item.address }, item)
       ),
       featured: trending.map(item =>
@@ -47,7 +47,6 @@ class MEWSwap {
   // Receive All Quotes and trades for mew,
   // Changelly must be retrieved individually
   async getAllQuotes({ fromT, toT, fromAmount, fromAddress }) {
-    console.log(fromT, toT, fromAmount, fromAddress);
     let allQuotes = [];
     const providers = [this.providers[0], this.providers[3]];
     return Promise.all(
