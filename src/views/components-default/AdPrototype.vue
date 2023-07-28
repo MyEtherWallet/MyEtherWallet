@@ -1,7 +1,7 @@
 <template>
-  <div class="px-3 py-10 prototype-container">
-    <v-row>
-      <v-col cols="12" class="pb-5">
+  <div class="px-sm-3 py-10 prototype-container">
+    <v-row no-gutters>
+      <!-- <v-col cols="12" class="pb-5">
         <div class="d-flex flex-column flex-md-row align-center justify-center">
           <div class="py-6 pl-6 ma-5 ad-component">
             <div class="mew-subtitle">3 million</div>
@@ -16,19 +16,26 @@
             <div>Daily crypto veteran users</div>
           </div>
         </div>
-      </v-col>
-      <v-col cols="12" class="pb-10 d-flex align-center justify-center">
+      </v-col> -->
+      <v-col
+        cols="12"
+        class="pb-sm-16 mb-sm-10 d-flex align-center justify-center"
+      >
         <div
           :class="[
             $vuetify.breakpoint.mdAndDown ? 'mew-subtitle' : 'mew-title',
-            'font-weight-regular text-center'
+            'font-weight-regular text-center pb-5 pb-sm-10'
           ]"
         >
-          Get in front of some of Ethereum's <br class="d-none d-md-inline" />
-          oldest and most savvy users.
+          Ad opportunities <br class="d-md-none" />
+          with MEW web
         </div>
       </v-col>
-      <v-col cols="12" md="10" offset-md="2" class="d-flex justify-center px-5">
+      <v-col
+        cols="12"
+        md="12"
+        class="d-flex justify-center px-sm-5 pb-12 pb-sm-16 mb-sm-10"
+      >
         <img
           src="@/assets/images/backgrounds/ad-prototype.png"
           width="100%"
@@ -37,7 +44,7 @@
       </v-col>
       <v-col
         cols="12"
-        class="d-flex flex-column flex-md-row align-center justify-center pt-10"
+        class="d-flex flex-column flex-md-row align-center justify-center py-sm-10 pb-12 pb-sm-16 mb-sm-10"
       >
         <div class="ad-prototype-buttons ma-5 px-3 py-6">
           <div class="mb-3 text-center font-weight-bold">Small Buttons</div>
@@ -76,6 +83,51 @@
           </ul>
         </div>
       </v-col>
+      <v-col cols="12" class="pt-10 pb-2 d-flex align-center justify-center">
+        <div
+          :class="[
+            $vuetify.breakpoint.mdAndDown ? 'mew-subtitle' : 'mew-title',
+            'font-weight-regular text-center pb-5 pb-sm-10'
+          ]"
+        >
+          Ad opportunities with <br class="d-md-none" />
+          MEW mobile app
+        </div>
+      </v-col>
+      <v-col
+        cols="12"
+        md="12"
+        class="d-flex justify-center px-16 px-sm-5 pb-12 pb-sm-16 mb-sm-10"
+      >
+        <img
+          src="@/assets/images/backgrounds/ad-mew-wallet.png"
+          width="100%"
+          class="ad-prototype-img"
+        />
+      </v-col>
+      <v-col cols="12" class="pb-3 d-flex align-center justify-center">
+        <div
+          :class="[
+            $vuetify.breakpoint.mdAndDown ? 'mew-subtitle' : 'mew-title',
+            'font-weight-regular text-center pb-5 pb-sm-10'
+          ]"
+        >
+          Ad opportunities with <br class="d-md-none" />
+          MEW's block explorer:<br class="d-md-none" />
+          EthVM
+        </div>
+      </v-col>
+      <v-col
+        cols="12"
+        md="12"
+        class="d-flex justify-center px-sm-5 pb-16 mb-16"
+      >
+        <img
+          src="@/assets/images/backgrounds/ad-ethvm.png"
+          width="100%"
+          class="ad-prototype-img"
+        />
+      </v-col>
     </v-row>
   </div>
 </template>
@@ -100,14 +152,6 @@
     width: 330px;
   }
 }
-@media screen and (max-width: 959px) {
-  .prototype-container {
-    background-image: url(~@/assets/images/backgrounds/wave.png);
-    background-size: 150%;
-    background-position: 100% bottom;
-  }
-}
-
 .ad-prototype-img {
   max-width: 900px;
 }
