@@ -1,4 +1,7 @@
-import Swap, { getSupportedNetworks } from '@enkryptcom/swap';
+import Swap, {
+  getSupportedNetworks,
+  isSupportedNetwork
+} from '@enkryptcom/swap';
 import { OneInch, ZEROX, ParaSwap, Changelly } from './providers';
 import BigNumber from 'bignumber.js';
 import Configs from './configs/providersConfigs';
@@ -47,7 +50,63 @@ class MEWSwap {
   // Receive All Quotes and trades for mew,
   // Changelly must be retrieved individually
   async getAllQuotes({ fromT, toT, fromAmount, fromAddress }) {
+    const newFrom = Object.assign({}, fromT, {
+      address: fromT.contract,
+      logoURI: fromT.img,
+      type: 'evm'
+    });
     let allQuotes = [];
+    if (!isSupportedNetwork(this.chain)) return [];
+    const newQuotes = await this.swapper.getQuotes({
+      fromAddress: fromAddress,
+      toAddress: fromAddress,
+      amount: BigNumber(fromAmount),
+      fromToken: newFrom,
+      toToken: toT
+    });
+    /**
+     * QuoteResponse {
+     *  fromTokenAmount: BN,
+     *  minMax: MinMaxType,
+     *  provider: String,
+     *  quote: QuoteType,
+     *  toTokenAmount: BN,
+     *  totalGasLimit: Number
+     * }
+     *
+     * MinMaxType {
+     *  maximumFrom: BN,
+     *  maximumTo: BN,
+     *  minimumFrom: BN,
+     *  minimumTo: BN
+     * }
+     *
+     * QuoteType {
+     *  meta: Meta,
+     *  options: QuoteOptions,
+     *  provider: String
+     * }
+     *
+     * Meta {
+     *  infiniteApproval: Boolean,
+     *  walletIdentifier: String
+     * }
+     *
+     * QuoteOptions {
+     *  amount: BN,
+     *  fromAddress: String,
+     *  fromToken: TokenType,
+     *  toAddress: String,
+     *  toToken: TokenType
+     * }
+     *
+     */
+    return Promise.all(
+      newQuotes.map(async item => {
+        const swap = await this.swapper.getSwap(item.quote);
+      })
+    );
+    const newSwap = await this.swapper.getSwap(newQuotes[0].quote);
     const providers = [this.providers[0], this.providers[3]];
     return Promise.all(
       providers.map((p, i) => {
@@ -80,7 +139,7 @@ class MEWSwap {
         }
         return q;
       });
-      // console.log(quotesWProvider, newQuotes);
+      console.log(quotesWProvider, newSwap);
       return quotesWProvider;
     });
   }

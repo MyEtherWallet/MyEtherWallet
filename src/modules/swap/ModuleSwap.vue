@@ -630,7 +630,7 @@ export default {
      * @returns {String} - Ethereum Address
      */
     toAddress() {
-      if (!this.toTokenType?.isEth) {
+      if (this.selectedNetwork.type !== 'evm') {
         if (!isEmpty(this.addressValue)) {
           return this.addressValue.isValid
             ? this.addressValue.value
@@ -642,7 +642,7 @@ export default {
       if (this.toTokenType?.contract === MAIN_TOKEN_ADDRESS) {
         return this.address;
       }
-      if (this.toTokenType?.isEth) return this.address;
+      if (this.selectedNetwork.type === 'evm') return this.address;
       return this.address;
     },
     /**
@@ -671,8 +671,7 @@ export default {
       }
     },
     showToAddress() {
-      if (typeof this.toTokenType?.isEth === 'undefined') return false;
-      return !this.toTokenType?.isEth;
+      return this.selectedNetwork.type !== 'evm';
     },
     /**
      * @returns BigNumber of the available balance for the From Token
@@ -1221,7 +1220,6 @@ export default {
       if (this.isLoading || this.initialLoad) return;
       const val = value ? value : 0;
       this.tokenInValue = BigNumber(val).toFixed();
-      // Check if (in amount) is larger than (available balance)
       if (
         !this.isFromNonChain &&
         (this.availableBalance.lt(new BigNumber(this.tokenInValue)) ||
@@ -1244,18 +1242,25 @@ export default {
         return;
       }
       this.tokenOutValue = '0';
+
+      /**
+       * unselect quotes
+       */
       this.availableQuotes.forEach(q => {
         if (q) {
           q.isSelected = false;
         }
       });
+      /**
+       * reset quotes, trades, and step
+       */
       this.availableQuotes = [];
       this.allTrades = [];
       this.step = 0;
       if (this.showToAddress && !this.addressValue?.isValid) return;
       if (
         !isEmpty(this.toTokenType) &&
-        !this.toTokenType.isEth &&
+        this.showToAddress &&
         (isEmpty(this.addressValue) ||
           (!isEmpty(this.addressValue) && !this.addressValue.isValid))
       ) {

@@ -7,6 +7,7 @@ module.exports = [
   'wss://connect2.mewapi.io:443',
   'http://localhost:8178',
   'ws://127.0.0.1:8178',
+  'https://api.1inch.io:443',
   'https://o382951.ingest.sentry.io:443',
   'https://estimategas.mewapi.io:443/eth',
   'https://estimategas.mewapi.io:443/bsc',
