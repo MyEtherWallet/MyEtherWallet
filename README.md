@@ -73,7 +73,7 @@ If you find a bug, or want a new feature added, please submit it on the [Github 
 EACCESS issue can be resolved by running: `sudo chown -R $(whoami) ~/.npm`
 For other issues, try the steps shown here: <https://github.com/MyEtherWallet/MyEtherWallet/issues/1182#issuecomment-506342875> by @tomwalton78
 
-P.S if you want Intercom to be enabled locally, create a `.env` file and add `INTERCOM={yourIntercomKey}` otherwise Intercom will be disabled.
+P.S if you want Intercom to be enabled locally, create a `.env` file and add `INTERCOM_ID={yourIntercomKey}` otherwise Intercom will be disabled.
 
 ## Integrations
 

@@ -10,5 +10,5 @@ module.exports = {
   ),
   FULL_SOURCEMAPS: JSON.stringify(process.env.FULL_SOURCEMAPS || 'false'),
   BUILD: JSON.stringify(process.env.BUILD || 'web'),
-  INTERCOM: JSON.stringify(process.env.INTERCOM || '')
+  INTERCOM_ID: JSON.stringify(process.env.INTERCOM_ID || '')
 };
