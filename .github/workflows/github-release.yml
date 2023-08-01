@@ -45,10 +45,13 @@ jobs:
           tar xvf ssh-keys.tar
           gpg --allow-secret-key-import --import mew-sign.gpg
           mkdir release
+          
+      - name: create .env
+       run: |
+          touch .env
+          echo INTERCOM_ID=${{secrets.INTERCOM_ID}} >> .env
 
       - name: build
-        env:
-          INTERCOM_ID: ${{secrets.INTERCOM_ID}}
         run: |
           docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build"
           cd dist && zip -r ../release/MyEtherWallet-${{ steps.get_release_tag.outputs.VERSION }}.zip * && cd ..

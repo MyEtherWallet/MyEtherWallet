@@ -34,10 +34,13 @@ jobs:
 
       - name: npm install
         run: docker run --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" mew-build-container /bin/bash -c "npm install"
+        
+      - name: create .env
+       run: |
+          touch .env
+          echo INTERCOM_ID=${{secrets.INTERCOM_ID}} >> .env
 
       - name: build
-        env:
-          INTERCOM_ID: ${{secrets.INTERCOM_ID}}
         run: docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:hash"
 
       - name: deploy to gh-pages
