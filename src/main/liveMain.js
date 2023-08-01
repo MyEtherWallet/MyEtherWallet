@@ -47,8 +47,11 @@ Vue.directive('lottie', LottieAnimation);
 // Filters
 Vue.filter('lokalise', lokalise);
 
-// eslint-disable-next-line
-Vue.use(VueIntercom, { appId: 'ja20qe25' });
+/* eslint-disable */
+if (INTERCOM) {
+  Vue.use(VueIntercom, { appId: INTERCOM });
+}
+/* eslint-enable */
 Vue.use(VueSocialSharing);
 
 //Router
