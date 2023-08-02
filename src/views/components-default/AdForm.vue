@@ -43,7 +43,7 @@
               btn-size="xlarge"
               title="CONTACT ADVERTISING TEAM"
               class="margin-0-auto"
-              btn-link="mailto:@vincem@myetherwallet.com"
+              btn-link="mailto:@info@myetherwallet.com"
             />
           </v-col>
         </v-row>

@@ -19,12 +19,12 @@
       </v-col> -->
       <v-col
         cols="12"
-        class="pb-sm-16 mb-sm-10 d-flex align-center justify-center"
+        class="pb-md-16 mb-md-10 d-flex align-center justify-center"
       >
         <div
           :class="[
             $vuetify.breakpoint.mdAndDown ? 'mew-subtitle' : 'mew-title',
-            'font-weight-regular text-center pb-5 pb-sm-10'
+            'font-weight-regular text-center pb-5 pb-lg-10'
           ]"
         >
           Ad opportunities <br class="d-md-none" />
@@ -42,7 +42,7 @@
           class="ad-prototype-img"
         />
       </v-col>
-      <v-col
+      <!-- <v-col
         cols="12"
         class="d-flex flex-column flex-md-row align-center justify-center py-sm-10 pb-12 pb-sm-16 mb-sm-10"
       >
@@ -82,12 +82,12 @@
             </li>
           </ul>
         </div>
-      </v-col>
+      </v-col> -->
       <v-col cols="12" class="pt-10 pb-2 d-flex align-center justify-center">
         <div
           :class="[
             $vuetify.breakpoint.mdAndDown ? 'mew-subtitle' : 'mew-title',
-            'font-weight-regular text-center pb-5 pb-sm-10'
+            'font-weight-regular text-center pb-5 pb-md-10'
           ]"
         >
           Ad opportunities with <br class="d-md-none" />
@@ -102,14 +102,14 @@
         <img
           src="@/assets/images/backgrounds/ad-mew-wallet.png"
           width="100%"
-          class="ad-prototype-img"
+          class="ad-mew-wallet-img"
         />
       </v-col>
       <v-col cols="12" class="pb-3 d-flex align-center justify-center">
         <div
           :class="[
             $vuetify.breakpoint.mdAndDown ? 'mew-subtitle' : 'mew-title',
-            'font-weight-regular text-center pb-5 pb-sm-10'
+            'font-weight-regular text-center pb-5 pb-md-10'
           ]"
         >
           Ad opportunities with <br class="d-md-none" />
@@ -160,5 +160,9 @@
   width: 330px;
   height: 460px;
   @extend %default-shadow-and-border;
+}
+
+.ad-mew-wallet-img {
+  max-width: 600px;
 }
 </style>

@@ -1,14 +1,14 @@
 <template>
-  <div class="mew-component--advertise-with-us pb-sm-15">
+  <div class="mew-component--advertise-with-us pb-md-15">
     <div class="desktop-content d-none d-lg-block expandHeader">
       <v-container class="banner-content-container pt-10">
         <div
           :class="[
             $vuetify.breakpoint.mdAndDown ? 'mew-subtitle' : 'mew-title',
-            'font-weight-regular white--text'
+            'font-weight-regular white--text mb-11'
           ]"
         >
-          Advertise With MEW
+          Advertise with MEW
         </div>
         <v-row class="pl-12">
           <v-col cols="4" class="pt-12 d-flex align-start">
@@ -25,7 +25,7 @@
                 color-theme="primary"
                 btn-size="xlarge"
                 title="Contact Us"
-                @click.native="scrollToForm"
+                btn-link="mailto:@info@myetherwallet.com"
               />
             </div>
           </v-col>
@@ -46,11 +46,11 @@
           Advertise With MEW
         </div>
         <v-row no-gutters>
-          <v-col cols="12" class="pt-4">
+          <v-col cols="12" class="pt-4 text-center">
             <img
               src="@/assets/images/backgrounds/mew-orbit.png"
               alt="mew orbit"
-              max-width="400px"
+              class="orbit-img"
               width="100%"
             />
           </v-col>
@@ -68,7 +68,7 @@
                 color-theme="primary"
                 btn-size="xlarge"
                 title="Contact Us"
-                @click.native="scrollToForm"
+                btn-link="mailto:@info@myetherwallet.com"
               />
             </div>
           </v-col>
@@ -80,14 +80,7 @@
 
 <script>
 export default {
-  name: 'AdvertiseBanner',
-  components: {},
-  methods: {
-    scrollToForm() {
-      const element = document.getElementsByClassName('title-anchor-ad-mew');
-      window.scrollTo(0, element[0].offsetTop - 300);
-    }
-  }
+  name: 'AdvertiseBanner'
 };
 </script>
 
@@ -109,7 +102,11 @@ export default {
 }
 
 .work-together-container {
-  border: 1px solid white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 15px;
+}
+
+.orbit-img {
+  max-width: 500px;
 }
 </style>
