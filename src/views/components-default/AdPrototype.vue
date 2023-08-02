@@ -1,22 +1,6 @@
 <template>
   <div class="px-sm-3 py-10 prototype-container">
     <v-row no-gutters>
-      <!-- <v-col cols="12" class="pb-5">
-        <div class="d-flex flex-column flex-md-row align-center justify-center">
-          <div class="py-6 pl-6 ma-5 ad-component">
-            <div class="mew-subtitle">3 million</div>
-            <div>Monthly active MyEtherWallet users</div>
-          </div>
-          <div class="py-6 pl-6 ma-5 ad-component">
-            <div class="mew-subtitle">Original ETH users</div>
-            <div>Our users date back to 2015, the launch of Ethereum</div>
-          </div>
-          <div class="py-6 pl-6 ma-5 ad-component">
-            <div class="mew-subtitle">26,000</div>
-            <div>Daily crypto veteran users</div>
-          </div>
-        </div>
-      </v-col> -->
       <v-col
         cols="12"
         class="pb-md-16 mb-md-10 d-flex align-center justify-center"
@@ -42,47 +26,6 @@
           class="ad-prototype-img"
         />
       </v-col>
-      <!-- <v-col
-        cols="12"
-        class="d-flex flex-column flex-md-row align-center justify-center py-sm-10 pb-12 pb-sm-16 mb-sm-10"
-      >
-        <div class="ad-prototype-buttons ma-5 px-3 py-6">
-          <div class="mb-3 text-center font-weight-bold">Small Buttons</div>
-          <ul>
-            <li>Target users through natively integrated CTA buttons.</li>
-            <li class="mt-5">Top of page placement on all pages.</li>
-            <li class="mt-5">
-              Displays more information on your brand on hover, and opens your
-              URL in a new page on click.
-            </li>
-          </ul>
-        </div>
-        <div class="ad-prototype-buttons ma-5 px-3 py-6">
-          <div class="mb-3 text-center font-weight-bold">Square Banners</div>
-          <ul>
-            <li>Your custom asset for the advertising campaign.</li>
-            <li class="mt-5">Above the fold placement on all pages.</li>
-            <li class="mt-5">Responsive design for mobile and desktop.</li>
-            <li class="mt-5">
-              Displays more information on your brand on hover, and opens your
-              URL in a new page on click.
-            </li>
-            <li class="mt-5">Not present on Apps Pages.</li>
-          </ul>
-        </div>
-        <div class="ad-prototype-buttons ma-5 px-3 py-6">
-          <div class="mb-3 text-center font-weight-bold">Rectangle Banners</div>
-          <ul>
-            <li>Your custom asset for the biggest splash on the website.</li>
-            <li class="mt-5">Image anchors each page.</li>
-            <li class="mt-5">Responsive design for mobile and desktop.</li>
-            <li class="mt-5">
-              Displays more information on your brand on hover, and opens your
-              URL in a new page on click.
-            </li>
-          </ul>
-        </div>
-      </v-col> -->
       <v-col cols="12" class="pt-10 pb-2 d-flex align-center justify-center">
         <div
           :class="[
