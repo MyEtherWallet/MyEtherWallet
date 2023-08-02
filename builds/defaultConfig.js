@@ -1,7 +1,6 @@
 const imageminMozjpeg = require('imagemin-mozjpeg');
 const ImageminPlugin = require('imagemin-webpack-plugin').default;
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-const CompressionPlugin = require('compression-webpack-plugin');
 const webpack = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const UglifyJS = require('uglify-es');
@@ -33,7 +32,8 @@ const webpackConfig = {
       'X-Frame-Options': 'DENY',
       'X-XSS-Protection': '1; mode=block',
       'Referrer-Policy': 'same-origin'
-    }
+    },
+    compress: true
   },
   plugins: [
     new webpack.SourceMapDevToolPlugin(sourceMapsConfig),
@@ -66,14 +66,20 @@ const webpackConfig = {
           }
         }
       ]
-    }),
-    new CompressionPlugin()
+    })
   ],
   optimization: {
     splitChunks: {
       minSize: 1000000,
       maxSize: 5242880
-    }
+    },
+    chunkIds: 'size',
+    concatenateModules: true,
+    mergeDuplicateChunks: true,
+    minimize: true,
+    moduleIds: 'size',
+    removeAvailableModules: true,
+    removeEmptyChunks: true
   },
   output: {
     filename: '[name].[hash].js'
