@@ -46,6 +46,7 @@ import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import HybridWalletInterface from '@/modules/access-wallet/hybrid/handlers/walletInterface';
 import sanitizeHex from '@/core/helpers/sanitizeHex';
+const INTERVAL = 14000;
 
 export default {
   components: {
@@ -187,6 +188,7 @@ export default {
       if (this.setWeb3Account instanceof Function)
         window.ethereum.removeListener('accountsChanged', this.setWeb3Account);
     }
+    clearInterval(this.manualBlockSubscription);
   },
   methods: {
     ...mapActions('wallet', [
@@ -308,7 +310,7 @@ export default {
             }
           });
         });
-      }, 14000);
+      }, INTERVAL);
     },
     async findAndSetNetwork() {
       if (
