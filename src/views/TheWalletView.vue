@@ -8,7 +8,6 @@
         <the-enkrypt-popup v-if="!isOfflineApp" :show="walletEnkryptPopup" />
         <router-view />
         <survey-banner :show="!neverShowSurveyBanner" />
-        <div class="coinzilla mt-5" data-zone="C-5186467cdba0c51c392"></div>
       </v-container>
     </v-main>
     <the-wallet-footer :is-offline-app="isOfflineApp" />
@@ -133,12 +132,6 @@ export default {
     }
   },
   mounted() {
-    const adConfig2 = {
-      zone: '5186467cdba0c51c392',
-      width: '728',
-      height: '90'
-    };
-    window.coinzilla_display.push(adConfig2);
     this.$vuetify.theme.dark = this.darkMode;
     this.trackUserVersion(VERSION);
     EventBus.$on('openPaperWallet', () => {

@@ -32,6 +32,9 @@
         >
           <slot :name="`leftColItem${n}`" />
         </v-col>
+        <v-col cols="12" class="d-flex align-center justify-center">
+          <div class="coinzilla" data-zone="C-5186467cdba0c51c392"></div>
+        </v-col>
       </v-row>
     </v-col>
     <!--
@@ -49,7 +52,10 @@
         <v-col cols="12" class="pa-2 pa-md-3 d-none d-md-block">
           <module-network />
         </v-col>
-        <v-col cols="12" class="pa-2 pa-md-3 d-none d-md-block">
+        <v-col
+          cols="12"
+          class="pa-2 pa-md-3 d-none d-md-flex align-center justify-center"
+        >
           <div class="coinzilla" data-zone="C-4136467cdba0bdc8324"></div>
         </v-col>
         <v-col
@@ -69,7 +75,9 @@
       class="pa-2 pa-md-3"
     >
       <module-network class="d-none d-md-block mb-2" />
-      <div class="coinzilla" data-zone="C-4136467cdba0bdc8324"></div>
+      <div class="d-none d-md-flex align-center justify-center mb-2">
+        <div class="coinzilla" data-zone="C-4136467cdba0bdc8324"></div>
+      </div>
       <draggable
         v-bind="dragOptions"
         v-model="draggableItems"
@@ -153,7 +161,13 @@ export default {
       width: '300',
       height: '250'
     };
+    const adConfig2 = {
+      zone: '5186467cdba0c51c392',
+      width: '728',
+      height: '90'
+    };
     window.coinzilla_display.push(adConfig1);
+    window.coinzilla_display.push(adConfig2);
   }
 };
 </script>
