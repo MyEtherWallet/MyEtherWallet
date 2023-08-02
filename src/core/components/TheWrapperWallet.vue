@@ -49,6 +49,9 @@
         <v-col cols="12" class="pa-2 pa-md-3 d-none d-md-block">
           <module-network />
         </v-col>
+        <v-col cols="12" class="pa-2 pa-md-3 d-none d-md-block">
+          <div class="coinzilla" data-zone="C-4136467cdba0bdc8324"></div>
+        </v-col>
         <v-col
           v-for="n in totalRightColItems"
           :key="n"
@@ -66,6 +69,7 @@
       class="pa-2 pa-md-3"
     >
       <module-network class="d-none d-md-block mb-2" />
+      <div class="coinzilla" data-zone="C-4136467cdba0bdc8324"></div>
       <draggable
         v-bind="dragOptions"
         v-model="draggableItems"
@@ -113,6 +117,14 @@ export default {
       type: Boolean,
       default: false
     }
+  },
+  created() {
+    const adConfig1 = {
+      zone: '4136467cdba0bdc8324',
+      width: '300',
+      height: '250'
+    };
+    window.coinzilla_display.push(adConfig1);
   },
   data() {
     const arr = [];
