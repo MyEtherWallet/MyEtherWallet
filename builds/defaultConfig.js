@@ -53,7 +53,6 @@ const webpackConfig = {
         })
       ]
     }),
-    new webpack.DefinePlugin(env_vars),
     new CopyWebpackPlugin({
       patterns: [
         { from: 'security.txt', to: '.well-known/security.txt' },
@@ -66,7 +65,8 @@ const webpackConfig = {
           }
         }
       ]
-    })
+    }),
+    new webpack.DefinePlugin(env_vars)
   ],
   optimization: {
     splitChunks: {
@@ -136,18 +136,18 @@ const transpilers = config => {
     .end();
 
   // minify
-  config.optimization.minimizer('terser').tap(args => {
-    const opts = args[0];
+  // config.optimization.minimizer('terser').tap(args => {
+  //   const opts = args[0];
 
-    opts.terserOptions.mangle = {
-      ...opts.terserOptions.mangle,
-      properties: {
-        regex: /_$/ // mangle property names that end with "_"
-      }
-    };
+  //   opts.terserOptions.mangle = {
+  //     ...opts.terserOptions.mangle,
+  //     properties: {
+  //       regex: /_$/ // mangle property names that end with "_"
+  //     }
+  //   };
 
-    return args;
-  });
+  //   return args;
+  // });
 };
 
 module.exports = { webpackConfig, sourceMapsConfig, env_vars, transpilers };
