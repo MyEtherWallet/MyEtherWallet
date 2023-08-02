@@ -118,14 +118,6 @@ export default {
       default: false
     }
   },
-  created() {
-    const adConfig1 = {
-      zone: '4136467cdba0bdc8324',
-      width: '300',
-      height: '250'
-    };
-    window.coinzilla_display.push(adConfig1);
-  },
   data() {
     const arr = [];
     for (let i = 0; i < this.totalRightColItems; i++) {
@@ -154,6 +146,14 @@ export default {
       }
       this.draggableItems = arr;
     }
+  },
+  created() {
+    const adConfig1 = {
+      zone: '4136467cdba0bdc8324',
+      width: '300',
+      height: '250'
+    };
+    window.coinzilla_display.push(adConfig1);
   }
 };
 </script>
