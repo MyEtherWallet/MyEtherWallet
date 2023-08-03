@@ -83,7 +83,8 @@ const EXCEPTIONS = [
   '@ensdomains/ens-contracts', // breaks current ENS integration
   '@shapeshiftoss/hdwallet-core',
   '@shapeshiftoss/hdwallet-keepkey-webusb',
-  'eslint-plugin-prettier' // breaks
+  'eslint-plugin-prettier', // breaks
+  'compression-webpack-plugin'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

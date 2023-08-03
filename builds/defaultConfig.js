@@ -32,8 +32,7 @@ const webpackConfig = {
       'X-Frame-Options': 'DENY',
       'X-XSS-Protection': '1; mode=block',
       'Referrer-Policy': 'same-origin'
-    },
-    compress: true
+    }
   },
   plugins: [
     new webpack.SourceMapDevToolPlugin(sourceMapsConfig),
