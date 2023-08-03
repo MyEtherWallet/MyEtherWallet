@@ -134,19 +134,11 @@ const transpilers = config => {
     )
     .end();
 
-  // minify
-  // config.optimization.minimizer('terser').tap(args => {
-  //   const opts = args[0];
-
-  //   opts.terserOptions.mangle = {
-  //     ...opts.terserOptions.mangle,
-  //     properties: {
-  //       regex: /_$/ // mangle property names that end with "_"
-  //     }
-  //   };
-
-  //   return args;
-  // });
+  if (process.env.NODE_ENV === 'production') {
+    // remove prefetch for build
+    config.plugins.delete('prefetch');
+    config.plugins.delete('preload');
+  }
 };
 
 module.exports = { webpackConfig, sourceMapsConfig, env_vars, transpilers };
