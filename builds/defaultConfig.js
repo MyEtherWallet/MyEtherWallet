@@ -137,6 +137,7 @@ const transpilers = config => {
     )
     .end();
 
+  // disable if statement if testing optimization locally
   if (process.env.NODE_ENV === 'production') {
     // remove prefetch for build
     config.plugins.delete('prefetch');
