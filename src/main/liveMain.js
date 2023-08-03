@@ -70,11 +70,6 @@ new Vue({
   apolloProvider,
   vuetify,
   beforeCreate() {
-    const userId = this.$route.query.intercomid
-      ? this.$route.query.intercomid
-      : uuidv4();
-    this.$intercom.boot({ user_id: userId });
-
     if (locStore.get('mew-testing') === undefined) {
       locStore.set('mew-testing', false);
     }
@@ -86,6 +81,12 @@ new Vue({
     this.$store.commit('popups/INIT_STORE');
     dappStoreBeforeCreate(this.$store);
     this.$store.dispatch('popups/setTracking');
+  },
+  mounted() {
+    const userId = this.$route.query.intercomid
+      ? this.$route.query.intercomid
+      : uuidv4();
+    setTimeout(this.$intercom.boot({ user_id: userId }), 5000);
   },
   render: h => h(app)
 });

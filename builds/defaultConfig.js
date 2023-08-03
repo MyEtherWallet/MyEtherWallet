@@ -3,6 +3,7 @@ const ImageminPlugin = require('imagemin-webpack-plugin').default;
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const webpack = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const CompressionWebpackPlugin = require('compression-webpack-plugin');
 const UglifyJS = require('uglify-es');
 const env_vars = require('../ENV_VARS');
 const allowedConnections = require('../connections');
@@ -33,6 +34,7 @@ const webpackConfig = {
       'X-XSS-Protection': '1; mode=block',
       'Referrer-Policy': 'same-origin'
     }
+    // compress: true // enable when testing local optimization
   },
   plugins: [
     new webpack.SourceMapDevToolPlugin(sourceMapsConfig),
@@ -65,7 +67,8 @@ const webpackConfig = {
         }
       ]
     }),
-    new webpack.DefinePlugin(env_vars)
+    new webpack.DefinePlugin(env_vars),
+    new CompressionWebpackPlugin()
   ],
   optimization: {
     splitChunks: {
@@ -134,11 +137,11 @@ const transpilers = config => {
     )
     .end();
 
-  if (process.env.NODE_ENV === 'production') {
-    // remove prefetch for build
-    config.plugins.delete('prefetch');
-    config.plugins.delete('preload');
-  }
+  // if (process.env.NODE_ENV === 'production') {
+  //   // remove prefetch for build
+  config.plugins.delete('prefetch');
+  config.plugins.delete('preload');
+  // }
 };
 
 module.exports = { webpackConfig, sourceMapsConfig, env_vars, transpilers };
