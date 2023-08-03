@@ -137,11 +137,11 @@ const transpilers = config => {
     )
     .end();
 
-  // if (process.env.NODE_ENV === 'production') {
-  //   // remove prefetch for build
-  config.plugins.delete('prefetch');
-  config.plugins.delete('preload');
-  // }
+  if (process.env.NODE_ENV === 'production') {
+    // remove prefetch for build
+    config.plugins.delete('prefetch');
+    config.plugins.delete('preload');
+  }
 };
 
 module.exports = { webpackConfig, sourceMapsConfig, env_vars, transpilers };
