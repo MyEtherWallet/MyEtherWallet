@@ -86,7 +86,9 @@ new Vue({
     const userId = this.$route.query.intercomid
       ? this.$route.query.intercomid
       : uuidv4();
-    setTimeout(this.$intercom.boot({ user_id: userId }), 5000);
+    setTimeout(() => {
+      this.$intercom.boot({ user_id: userId });
+    }, 10000);
   },
   render: h => h(app)
 });
