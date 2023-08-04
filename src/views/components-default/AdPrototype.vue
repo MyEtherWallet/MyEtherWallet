@@ -57,7 +57,7 @@
         >
           Ad opportunities with <br class="d-md-none" />
           MEW's block explorer:<br class="d-md-none" />
-          EthVM
+          ethVM
         </div>
       </v-col>
       <v-col
