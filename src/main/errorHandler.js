@@ -64,7 +64,8 @@ export const knownErrors = {
   'Uncaught (in promise) Error: Missing or invalid topic field': '',
   'Missing or invalid topic field': '',
   'Cannot convert undefined or null to object': '',
-  'No matching key. pairing': ''
+  'No matching key. pairing': '',
+  'ResizeObserver loop limit exceeded': ''
 };
 
 const handleError = err => {
