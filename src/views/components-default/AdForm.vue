@@ -1,82 +1,88 @@
 <template>
-  <div class="ad-form-component">
-    <img
-      src="@/assets/images/backgrounds/wave.png"
-      width="100%"
-      class="ad-img"
-    />
-    <div class="ad-form-container pb-15">
-      <div class="text-center">
-        <img
-          src="@/assets/images/backgrounds/mew-spaceman.png"
-          alt="mew spaceman"
-          class="d-inline d-md-none ad-form-img"
-        />
-      </div>
-      <div
-        class="text-center mew-title font-weight-regular expandHeader--text title-anchor-ad-mew"
-      >
-        Are you ready to <br />
-        advertise with us?
-      </div>
-      <div class="expandHeader--text d-flex justify-center mb-5">
-        Send us a message and our team will contact you to <br />
-        discuss options and answer any questions you have.
-      </div>
-      <div class="d-flex align-center justify-center ad-form-holder">
-        <img
-          src="@/assets/images/backgrounds/mew-spaceman.png"
-          alt="mew spaceman"
-          class="d-none d-md-inline"
-        />
-        <form class="ad-form">
-          <input
-            v-model="formInfo['name']"
-            placeholder="NAME"
-            class="mb-5"
-            required
+  <div class="px-3">
+    <v-row class="ad-form-component">
+      <img
+        src="@/assets/images/backgrounds/wave.png"
+        width="100%"
+        class="ad-img d-none d-md-inline"
+      />
+      <v-col col="12" class="ad-form-container pb-15">
+        <div class="text-center">
+          <img
+            src="@/assets/images/backgrounds/mew-spaceman.png"
+            alt="mew spaceman"
+            class="d-inline d-md-none ad-form-img"
           />
-          <input
-            v-model="formInfo['companyName']"
-            placeholder="COMPANY NAME"
-            class="mb-5"
-            required
+        </div>
+        <div
+          :class="[
+            $vuetify.breakpoint.mdAndDown ? 'mew-subtitle' : 'mew-title',
+            'text-center  font-weight-regular expandHeader--text title-anchor-ad-mew'
+          ]"
+        >
+          Are you ready to <br />
+          advertise with us?
+        </div>
+        <div class="expandHeader--text d-flex justify-center mb-5">
+          Send us a message and our team will contact you to <br />
+          discuss options and answer any questions you have.
+        </div>
+        <div class="d-flex align-center justify-center ad-form-holder">
+          <img
+            src="@/assets/images/backgrounds/mew-spaceman.png"
+            alt="mew spaceman"
+            class="d-none d-md-inline"
           />
-          <input
-            v-model="formInfo['companyWebsite']"
-            placeholder="COMPANY WEBSITE"
-            class="mb-5"
-          />
-          <input
-            v-model="formInfo['contactNumber']"
-            placeholder="CONTACT NUMBER"
-            class="mb-5"
-            required
-          />
-          <input
-            v-model="formInfo['email']"
-            placeholder="EMAIL"
-            class="mb-5"
-            required
-          />
-          <textarea
-            v-model="formInfo['message']"
-            placeholder="MESSAGE"
-            class="mb-5"
-          />
-          <div class="d-flex align-center justify-center">
-            <mew-button
-              btn-style="background"
-              color-theme="primary"
-              btn-size="xlarge"
-              title="SUBMIT"
-              :disabled="!validForm"
-              @click.native="submitForm"
+          <form class="ad-form px-3">
+            <v-text-field
+              v-model="formInfo['name']"
+              outlined
+              placeholder="NAME"
+              :rules="[requiredRule]"
             />
-          </div>
-        </form>
-      </div>
-    </div>
+            <v-text-field
+              v-model="formInfo['companyName']"
+              outlined
+              placeholder="COMPANY NAME"
+              :rules="[requiredRule]"
+            />
+            <v-text-field
+              v-model="formInfo['companyWebsite']"
+              outlined
+              placeholder="COMPANY WEBSITE"
+            />
+            <v-text-field
+              v-model="formInfo['contactNumber']"
+              outlined
+              placeholder="CONTACT NUMBER"
+              :rules="[requiredRule]"
+            />
+            <v-text-field
+              v-model="formInfo['email']"
+              outlined
+              placeholder="EMAIL"
+              :rules="[requiredRule, emailRule]"
+            />
+            <v-textarea
+              v-model="formInfo['message']"
+              outlined
+              placeholder="MESSAGE"
+              class="mb-5"
+            />
+            <div class="d-flex align-center justify-center">
+              <mew-button
+                btn-style="background"
+                color-theme="primary"
+                btn-size="xlarge"
+                title="SUBMIT"
+                :disabled="!validForm"
+                @click.native="submitForm"
+              />
+            </div>
+          </form>
+        </div>
+      </v-col>
+    </v-row>
   </div>
 </template>
 <script>
@@ -107,6 +113,12 @@ export default {
     }
   },
   methods: {
+    requiredRule(value) {
+      return !!value || 'Required';
+    },
+    emailRule(value) {
+      return isEmail(value) || 'Invalid e-mail';
+    },
     submitForm() {
       const form = new FormData();
       for (const key in this.formInfo) {
@@ -173,6 +185,7 @@ export default {
     position: absolute;
     top: -8vw;
     right: 12vw;
+    z-index: 2;
 
     @media screen and (max-width: 960px) {
       top: -8vw;
@@ -184,7 +197,7 @@ export default {
     max-width: 500px;
     width: 100%;
 
-    input,
+    .v-input__slot,
     textarea {
       width: 100%;
       background: #fcfcfb;
@@ -196,6 +209,17 @@ export default {
     textarea {
       min-height: 80px;
     }
+  }
+}
+</style>
+
+<style lang="scss">
+.ad-form {
+  .v-input__slot {
+    width: 100%;
+    background: #fcfcfb !important;
+    border-radius: 4px;
+    padding: 14px;
   }
 }
 </style>

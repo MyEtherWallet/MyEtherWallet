@@ -12,6 +12,7 @@ import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { EventBus } from '@/core/plugins/eventBus';
 import EventNames from '@/utils/web3-provider/events.js';
 import { fromBase } from '@/core/helpers/unit';
+import { isArray } from 'lodash';
 
 const HOST_URL = 'https://partners.mewapi.io/changelly-v2';
 
@@ -110,8 +111,7 @@ class Changelly {
     ])
       .then(response => {
         if (response.data.error) {
-          Toast(response.data.error, {}, ERROR);
-          return;
+          return { minFrom: 0, maxFrom: 0 };
         }
         const result = response?.data?.result[0];
         return {
@@ -131,7 +131,16 @@ class Changelly {
         return [];
       }
       if (BigNumber(queryAmount).lt(minmax.minFrom)) {
-        return [];
+        return [
+          {
+            exchange: this.provider,
+            provider: this.provider,
+            amount: '0',
+            rateId: '0',
+            minFrom: minmax.minFrom,
+            maxFrom: minmax.maxFrom
+          }
+        ];
       }
       return changellyCallConstructor(
         uuidv4,
@@ -140,13 +149,15 @@ class Changelly {
           {
             from: fromT.symbol.toLowerCase(),
             to: toT.symbol.toLowerCase(),
-            amountFrom: fromBase(fromAmount, fromT.decimals)
+            amountFrom: queryAmount
           }
         ]
       )
         .then(response => {
-          if (response.data.error) {
-            Toast(response.data.error, {}, ERROR);
+          const newResponse = isArray(response.data.result)
+            ? response.data.result[0]
+            : response.data.result;
+          if (response.error || !newResponse.result || !newResponse.id) {
             return [{}];
           }
           return [
@@ -154,13 +165,12 @@ class Changelly {
               exchange: this.provider,
               provider: this.provider,
               amount:
-                response.data.result[0].result === 0
+                newResponse.result === 0
                   ? '0'
-                  : response.data.result[0].amountTo,
-              rateId:
-                response.data.result[0].result === 0
-                  ? ''
-                  : response.data.result[0].id,
+                  : BigNumber(newResponse.amountTo)
+                      .minus(newResponse.networkFee)
+                      .toString(),
+              rateId: newResponse.result === 0 ? '' : newResponse.id,
               minFrom: minmax?.minFrom ? minmax.minFrom : 0,
               maxFrom: minmax?.maxFrom ? minmax.maxFrom : 0
             }

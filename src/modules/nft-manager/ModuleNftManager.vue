@@ -335,7 +335,7 @@ export default {
       }
     },
     async toAddress(newVal) {
-      if (isAddress(newVal)) {
+      if (isAddress(newVal) && this.enoughFunds) {
         try {
           const gasTypeFee = this.gasPriceByType(this.gasPriceType);
           this.localGasPrice = gasTypeFee;
