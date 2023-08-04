@@ -9,13 +9,17 @@ export default {
   data() {
     return {
       extensionLinks: {
-        chrome: {
-          link: 'https://chrome.google.com/webstore/detail/enkrypt/kkpllkodjeloidieedojogacfhpaihoh',
-          img: require('@/assets/images/icons/icon-chrome.svg')
+        'microsoft edge': {
+          link: 'https://microsoftedge.microsoft.com/addons/detail/enkrypt-ethereum-polkad/gfenajajnjjmmdojhdjmnngomkhlnfjl',
+          img: require('@/assets/images/icons/icon-edge.svg')
         },
         firefox: {
-          link: 'https://chrome.google.com/webstore/detail/enkrypt/kkpllkodjeloidieedojogacfhpaihoh',
+          link: 'https://addons.mozilla.org/en-US/firefox/addon/enkrypt/',
           img: require('@/assets/images/icons/icon-firefox.svg')
+        },
+        safari: {
+          link: 'https://apps.apple.com/app/enkrypt-web3-wallet/id1640164309',
+          img: require('@/assets/images/icons/icon-safari.svg')
         },
         opera: {
           link: 'https://addons.opera.com/en/extensions/details/enkrypt/',
@@ -32,11 +36,7 @@ export default {
     ...mapState('popups', ['enkryptLandingPopup']),
     browser() {
       const browser = platform.name?.toLowerCase() || '';
-      if (
-        browser !== 'chrome' &&
-        browser !== 'firefox' &&
-        browser !== 'opera'
-      ) {
+      if (!this.extensionLinks[browser]) {
         return 'default';
       }
       return browser;
@@ -59,7 +59,10 @@ export default {
   methods: {
     openEnkrypt() {
       // eslint-disable-next-line
-      window.open('https://www.enkrypt.com', '_blank');
+      window.open(
+        this.isMobile ? 'https://www.enkrypt.com' : this.browserLink,
+        '_blank'
+      );
     },
     openMewWallet() {
       // eslint-disable-next-line
