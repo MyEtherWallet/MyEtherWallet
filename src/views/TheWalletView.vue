@@ -113,7 +113,7 @@ export default {
         this.setTokensAndBalance();
       }
     },
-    network() {
+    network(newVal, oldVal) {
       if (this.online && !this.isOfflineApp) {
         this.web3.eth.clearSubscriptions();
         this.identifier === WALLET_TYPES.WEB3_WALLET
@@ -122,6 +122,35 @@ export default {
         this.setup();
         if (this.identifier !== WALLET_TYPES.WEB3_WALLET) {
           this.setTokensAndBalance();
+        }
+
+        if (
+          (this.identifier === WALLET_TYPES.WALLET_CONNECT ||
+            this.identifier === WALLET_TYPES.MEW_WALLET) &&
+          newVal.type.chainID !== this.instance.connection.chainId
+        ) {
+          this.instance.connection.sendAsync(
+            {
+              method: 'wallet_switchEthereumChain',
+              params: newVal.type.chainID.toString(16)
+            },
+            err => {
+              if (err) {
+                Toast(
+                  'Selected network may not be supported by wallet',
+                  {},
+                  WARNING
+                );
+                this.setNetwork({
+                  network: oldVal,
+                  walletType: this.identifier
+                });
+                this.instance.connection.switchEthereumChain(
+                  oldVal.type.chainID
+                );
+              }
+            }
+          );
         }
       }
     },
@@ -149,7 +178,10 @@ export default {
       this.checkNetwork();
     }
 
-    if (this.instance.identifier === 'walletConnect') {
+    if (
+      this.identifier === WALLET_TYPES.WALLET_CONNECT ||
+      this.identifier === WALLET_TYPES.MEW_WALLET
+    ) {
       this.instance.connection.on('session_update', () => {
         this.instance.connection.sendAsync(
           { method: 'eth_requestAccounts' },
@@ -158,7 +190,7 @@ export default {
               const newWallet = new HybridWalletInterface(
                 sanitizeHex(res[0]),
                 this.instance.isHardware,
-                this.instance.identifier,
+                this.identifier,
                 this.instance.txSigner,
                 this.instance.msgSigner,
                 this.instance.connection,
@@ -197,6 +229,7 @@ export default {
       'setValidNetwork'
     ]),
     ...mapActions('external', ['setTokenAndEthBalance', 'setNetworkTokens']),
+
     /**
      * set showPaperWallet to false
      * to close the modal
@@ -306,10 +339,7 @@ export default {
       }, INTERVAL);
     },
     async findAndSetNetwork() {
-      if (
-        window.ethereum &&
-        this.instance.identifier === WALLET_TYPES.WEB3_WALLET
-      ) {
+      if (window.ethereum && this.identifier === WALLET_TYPES.WEB3_WALLET) {
         const networkId = await window.ethereum?.request({
           method: 'eth_chainId'
         });
@@ -322,7 +352,7 @@ export default {
             if (foundNetwork) {
               await this.setNetwork({
                 network: foundNetwork[0],
-                walletType: this.instance.identifier
+                walletType: this.identifier
               });
               await this.setWeb3Instance(window.ethereum);
               this.setTokensAndBalance();
