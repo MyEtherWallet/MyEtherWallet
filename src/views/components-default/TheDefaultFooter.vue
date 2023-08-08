@@ -390,7 +390,14 @@ export default {
             label: 'Submit DApp',
             routerLink: ROUTES_HOME.DAPP_SUBMISSION.NAME
           },
-          { label: 'Advertise With Us', routerLink: ROUTES_HOME.ADVERTISE.NAME }
+          {
+            label: 'Advertise With Us',
+            routerLink: ROUTES_HOME.ADVERTISE.NAME
+          },
+          {
+            label: 'Bug Bounty',
+            link: 'https://hackenproof.com/myetherwallet/myetherwallet'
+          }
         ]
       },
       {
