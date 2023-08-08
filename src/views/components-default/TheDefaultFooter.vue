@@ -89,10 +89,20 @@
                   {{ $t('footer.privacy') }}
                 </router-link>
               </div>
-              <div class="px-6">
+              <div class="px-6 border-right">
                 <router-link :to="{ name: ROUTES_HOME.TERMS_OF_SERVICE.NAME }">
                   {{ $t('footer.tos') }}
                 </router-link>
+              </div>
+              <div class="px-6">
+                <a
+                  class="color--inherit"
+                  href="https://hackenproof.com/myetherwallet/myetherwallet"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Bug Bounty
+                </a>
               </div>
             </div>
           </div>
@@ -293,12 +303,12 @@
                   Privacy
                 </router-link>
               </div>
-              <div class="px-4 px-lg-6">
+              <div class="px-4 px-lg-6 border-right">
                 <router-link :to="{ name: ROUTES_HOME.TERMS_OF_SERVICE.NAME }">
                   Terms
                 </router-link>
               </div>
-              <div class="px-4 px-lg-6 border-right">
+              <div class="px-4 px-lg-6">
                 <a
                   class="color--inherit"
                   href="https://hackenproof.com/myetherwallet/myetherwallet"
