@@ -1,6 +1,7 @@
 module.exports = [
   'https://www.myetherwallet.com:443',
   'https://v6.mewbuilds.com:443',
+  'https://develop.mewbuilds.com:443',
   'https://localhost:8080',
   'wss://localhost:8080',
   'https://swap.mewapi.io:443',
