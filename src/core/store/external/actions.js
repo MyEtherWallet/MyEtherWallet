@@ -9,6 +9,7 @@ import {
 import { toBN } from 'web3-utils';
 import getTokenInfo from '@/core/helpers/tokenInfo';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
+import { fromBase } from '../../helpers/unit';
 
 const setCurrency = async function ({ commit }, val) {
   fetch('https://mainnet.mewwallet.dev/v2/prices/exchange-rates')
@@ -163,11 +164,8 @@ const setTokenAndEthBalance = function ({
         if (t.contract === MAIN_TOKEN_ADDRESS) {
           mainTokenBalance = toBN(t.balance);
         }
-        const denominator = new BigNumber(10).pow(token.decimals);
-        const usdBalance = new BigNumber(t.balance)
-          .div(denominator)
-          .times(token.price)
-          .toString();
+        const base = fromBase(t.balance, token.decimals);
+        const usdBalance = new BigNumber(base).times(token.price).toString();
         formattedList.push(
           Object.assign(
             {
