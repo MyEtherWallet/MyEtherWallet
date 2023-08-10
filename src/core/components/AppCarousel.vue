@@ -11,7 +11,7 @@
         <v-carousel-item :ripple="false">
           <a
             rel="dofollow"
-            href="https://www.enkrypt.com"
+            :href="browserLink"
             target="_blank"
             @click="openEnkrypt"
           >
@@ -34,6 +34,7 @@
         <v-carousel-item
           :ripple="false"
           :to="{ name: ROUTES_HOME.BUY_HARDWARE_WALLET.NAME }"
+          target="_blank"
         >
           <img
             class="slide-img"

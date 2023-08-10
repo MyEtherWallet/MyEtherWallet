@@ -50,6 +50,19 @@
       href="<%= BASE_URL %>favicon.png"
       as="image"
     />
+    <link
+      rel="icon"
+      type="image/png"
+      href="<%= BASE_URL %>favicon.png"
+      as="image"
+    />
+    <!-- favicon for safari -->
+    <link
+      rel="mask-icon"
+      type="image/png"
+      href="<%= BASE_URL %>favicon.png"
+      as="image"
+    />
     <title>MyEtherWallet | MEW</title>
     <script type="application/ld+json">
       {
@@ -66,7 +79,7 @@
             "contactType": "customer service"
           }
         ],
-        "logo": "https://www.myetherwallet.com/images/icons/logo-mew.png",
+        "logo": "https://www.myetherwallet.com/logo-mew.png",
         "description": "MyEtherWallet.com is a free, open-source, client-side interface for generating Ethereum wallets &amp; more. Interact with the Ethereum blockchain easily &amp; securely.",
         "sameAs": [
           "https://www.myetherwallet.com/",
@@ -144,6 +157,11 @@
           console.log(event.detail);
         });
       }
+    </script>
+    <script async src="https://coinzillatag.com/lib/display.js">
+    </script>
+    <script>
+      window.coinzilla_display = window.coinzilla_display || [];
     </script>
   </body>
 </html>

@@ -100,7 +100,6 @@ import * as types from '@/utils/networks/types';
 import { Toast, SUCCESS, ERROR } from '@/modules/toast/handler/handlerToast';
 
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-import matchNetwork from '@/core/helpers/matchNetwork';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 
 export default {
@@ -228,7 +227,7 @@ export default {
   },
   watch: {
     networkSelected(value) {
-      if (value && (value !== this.network.type.name || !this.validNetwork)) {
+      if (!!value && (value !== this.network.type.name || !this.validNetwork)) {
         this.networkLoading = true;
         this.setNetworkDebounced(value);
       }
@@ -246,17 +245,7 @@ export default {
       }
     },
     validNetwork(val) {
-      if (!val) this.networkSelected = null;
-      else this.networkSelected = this.network.type.name;
-    },
-    async network() {
-      this.networkLoading = true;
-      const matched = await matchNetwork(
-        this.network.type.chainID,
-        this.identifier
-      );
-      if (matched) this.networkSelected = this.network.type.name;
-      this.networkLoading = false;
+      this.networkSelected = val ? this.network.type.name : null;
     },
     /**
      * Set networkSelected on toggle change, if network is in the list
@@ -280,7 +269,8 @@ export default {
   },
   methods: {
     ...mapActions('wallet', ['setWeb3Instance']),
-    ...mapActions('global', ['setNetwork']),
+    ...mapActions('global', ['setNetwork', 'setValidNetwork']),
+    ...mapActions('external', ['setTokenAndEthBalance']),
     /**
      * Method checks whether symbol or name has searchInput substring
      * @returns {boolean}
@@ -310,6 +300,7 @@ export default {
           return item;
         }
       });
+      this.setValidNetwork(true);
       this.setNetwork({
         network: found[0],
         walletType: this.instance?.identifier || ''
@@ -327,11 +318,13 @@ export default {
             setNetworkCall.then(() => {
               Toast(`Switched network to: ${found[0].type.name}`, {}, SUCCESS);
               this.trackNetworkSwitch(found[0].type.name);
+              this.setTokenAndEthBalance();
               this.$emit('newNetwork');
             });
           }
         })
         .catch(e => {
+          this.setValidNetwork(false);
           this.networkSelected = this.validNetwork
             ? this.network.type.name
             : '';

@@ -1,3 +1,130 @@
+### Release v6.7.6
+
+### devop
+
+* exclude packages [#4670](https://github.com/MyEtherWallet/MyEtherWallet/pull/4670)
+* pull main, sync develop [#4672](https://github.com/MyEtherWallet/MyEtherWallet/pull/4672)
+* add myetherwallet to connections [#4677](https://github.com/MyEtherWallet/MyEtherWallet/pull/4677)
+* add back advert page with some updates [#4680](https://github.com/MyEtherWallet/MyEtherWallet/pull/4680)
+* move Intercom appId to ENV variable [#4682](https://github.com/MyEtherWallet/MyEtherWallet/pull/4682)
+* move bug bounty [#4691](https://github.com/MyEtherWallet/MyEtherWallet/pull/4691)
+* update readme [#4693](https://github.com/MyEtherWallet/MyEtherWallet/pull/4693)
+* update connections [#4694](https://github.com/MyEtherWallet/MyEtherWallet/pull/4694)
+
+### feat
+
+* redirect enkrypt to actual download sites [#4664](https://github.com/MyEtherWallet/MyEtherWallet/pull/4664)
+
+### fix
+
+* fix metamask infinite loop [#4674](https://github.com/MyEtherWallet/MyEtherWallet/pull/4674)
+* fix buy error [#4675](https://github.com/MyEtherWallet/MyEtherWallet/pull/4675)
+* fix routing issue on staked [#4676](https://github.com/MyEtherWallet/MyEtherWallet/pull/4676)
+* fix: add manual subscription when web3 provider isn't wss [#4679](https://github.com/MyEtherWallet/MyEtherWallet/pull/4679)
+* fix downloadable file hash [#4689](https://github.com/MyEtherWallet/MyEtherWallet/pull/4689)
+* fix gnosis balance issue [#4690](https://github.com/MyEtherWallet/MyEtherWallet/pull/4690)
+* fix bug bounty outside wallet [#4692](https://github.com/MyEtherWallet/MyEtherWallet/pull/4692)
+* fix service worker not requesting live index file [#4695](https://github.com/MyEtherWallet/MyEtherWallet/pull/4695)
+
+### Release v6.7.5
+
+### devop
+
+* add validations [#4666](https://github.com/MyEtherWallet/MyEtherWallet/pull/4666)
+* add networkfee deduction to changelly amountTo response [#4669](https://github.com/MyEtherWallet/MyEtherWallet/pull/4669)
+* handle xdc address [#4654](https://github.com/MyEtherWallet/MyEtherWallet/pull/4654)
+* replace changelly api [#4655](https://github.com/MyEtherWallet/MyEtherWallet/pull/4655)
+* update wallet connect and mewwallet redirect [#4658](https://github.com/MyEtherWallet/MyEtherWallet/pull/4658)
+* update security policy for hacken [#4662](https://github.com/MyEtherWallet/MyEtherWallet/pull/4662)
+
+### feat
+
+* finish ad with us page [#4632](https://github.com/MyEtherWallet/MyEtherWallet/pull/4632)
+
+### fix
+
+* fix nft send button when balance is too low [#4636](https://github.com/MyEtherWallet/MyEtherWallet/pull/4636)
+* fix ledger token signing [#4668](https://github.com/MyEtherWallet/MyEtherWallet/pull/4668)
+* fix offline build [#4653](https://github.com/MyEtherWallet/MyEtherWallet/pull/4653)
+* fix unstoppable error [#4659](https://github.com/MyEtherWallet/MyEtherWallet/pull/4659)
+
+### Release v6.7.4
+
+### ui
+
+* fix dapp ui overflow on smaller screens [#4627](https://github.com/MyEtherWallet/MyEtherWallet/pull/4627)
+
+### devop
+
+* minor cleanup for wallet connect and revert ens manager changes [#4637](https://github.com/MyEtherWallet/MyEtherWallet/pull/4637)
+* add back on connect listener [#4640](https://github.com/MyEtherWallet/MyEtherWallet/pull/4640)
+* update walletconnect [#4626](https://github.com/MyEtherWallet/MyEtherWallet/pull/4626)
+* remove mew connect, replace mew cx with enkrypt [#4629](https://github.com/MyEtherWallet/MyEtherWallet/pull/4629)
+* fix tab favicon on safari [#4631](https://github.com/MyEtherWallet/MyEtherWallet/pull/4631)
+* update buy tokens to match ccswap [#4634](https://github.com/MyEtherWallet/MyEtherWallet/pull/4634)
+
+### fix
+
+* better max calculation when to token has been set [#4622](https://github.com/MyEtherWallet/MyEtherWallet/pull/4622)
+* pull apr and change forecast to match mew wallet [#4633](https://github.com/MyEtherWallet/MyEtherWallet/pull/4633)
+* exclude packages [#4642](https://github.com/MyEtherWallet/MyEtherWallet/pull/4642)
+
+### Release v6.7.3
+
+### devop
+
+* * adjust token table tool button location [#4513](https://github.com/MyEtherWallet/MyEtherWallet/pull/4513)
+* use ethvm blockexplorrer, add sepolia [#4614](https://github.com/MyEtherWallet/MyEtherWallet/pull/4614)
+* sync develop with main [#4621](https://github.com/MyEtherWallet/MyEtherWallet/pull/4621)
+
+### feat
+
+* add survey popup and banner [#4617](https://github.com/MyEtherWallet/MyEtherWallet/pull/4617)
+
+### fix
+
+* fixes issue when swapping erc20 to cross chain [#4613](https://github.com/MyEtherWallet/MyEtherWallet/pull/4613)
+* fix 422 error when clicking 'buy now' by hiding header when network is unsupported [#4618](https://github.com/MyEtherWallet/MyEtherWallet/pull/4618)
+
+### Release v6.7.2
+
+### devop
+
+* sync develop [#4605](https://github.com/MyEtherWallet/MyEtherWallet/pull/4605)
+* fix matomo labels [#4609](https://github.com/MyEtherWallet/MyEtherWallet/pull/4609)
+* fix manifest path and add changelog [#4610](https://github.com/MyEtherWallet/MyEtherWallet/pull/4610)
+* update rns manager dapp icon [#4611](https://github.com/MyEtherWallet/MyEtherWallet/pull/4611)
+
+### fix
+
+* move icons tto expected folder [#4606](https://github.com/MyEtherWallet/MyEtherWallet/pull/4606)
+* fix icon pathing [#4612](https://github.com/MyEtherWallet/MyEtherWallet/pull/4612)
+
+### Release v6.7.1-hotfix.2
+
+* fix filter for multiple created validators [#4603](https://github.com/MyEtherWallet/MyEtherWallet/pull/4603)
+
+### Release v6.7.1-hotfix.1
+
+* remove coming soon banner for stake exit [#4602](https://github.com/MyEtherWallet/MyEtherWallet/pull/4602)
+
+### Release v6.7.1
+
+### devop
+
+* remove staging env [#4557](https://github.com/MyEtherWallet/MyEtherWallet/pull/4557)
+
+### feat
+
+* listen to wallet connect and switch address [#4597](https://github.com/MyEtherWallet/MyEtherWallet/pull/4597)
+* add exit stake [#4598](https://github.com/MyEtherWallet/MyEtherWallet/pull/4598)
+
+### fix
+
+* fix staked exit status [#4601](https://github.com/MyEtherWallet/MyEtherWallet/pull/4601)
+* fix web3 provider to derive signer in rns manager dapp [#4588](https://github.com/MyEtherWallet/MyEtherWallet/pull/4588)
+* new tab for hardware wallet ad [#4589](https://github.com/MyEtherWallet/MyEtherWallet/pull/4589)
+
 ### Release v6.7.0-hotfix.2
 
 ### devop

@@ -318,7 +318,6 @@ export default {
       toDetails: {},
       signing: false,
       links: {
-        ethvm: '',
         explorer: ''
       },
       error: '',
@@ -683,7 +682,6 @@ export default {
       this.toDetails = {};
       this.signing = false;
       this.links = {
-        ethvm: '',
         explorer: ''
       };
       this.error = '';
@@ -786,12 +784,6 @@ export default {
     showSuccess(param) {
       if (isArray(param)) {
         const lastHash = param[param.length - 1].tx.hash;
-        this.links.ethvm = this.network.type.isEthVMSupported.supported
-          ? this.network.type.isEthVMSupported.blockExplorerTX.replace(
-              '[[txHash]]',
-              lastHash
-            )
-          : '';
         this.links.explorer = this.network.type.blockExplorerTX.replace(
           '[[txHash]]',
           lastHash
@@ -807,12 +799,6 @@ export default {
         return;
       }
 
-      this.links.ethvm = this.network.type.isEthVMSupported.supported
-        ? this.network.type.isEthVMSupported.blockExplorerTX.replace(
-            '[[txHash]]',
-            param
-          )
-        : '';
       this.links.explorer = this.network.type.blockExplorerTX.replace(
         '[[txHash]]',
         param
@@ -956,7 +942,7 @@ export default {
           }
           this.signedTxArray = signed;
         } catch (err) {
-          if (this.isSwap) {
+          if (this.isSwap && !this.isWeb3Wallet) {
             this.emitSwapTxFail(err);
           }
           this.error = errorHandler(err);
@@ -990,7 +976,7 @@ export default {
     },
     emitSwapTxFail(err) {
       const hash = err?.receipt?.transactionHash;
-      this.trackSwap('swapTxFailed', hash, this.network.type.chainID);
+      this.trackSwap('swapTxFailedV2', hash, this.network.type.chainID);
     },
     btnAction() {
       if (this.isSwap) {

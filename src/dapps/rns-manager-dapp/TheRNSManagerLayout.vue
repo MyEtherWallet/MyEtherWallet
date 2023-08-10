@@ -205,11 +205,12 @@ export default {
   },
   methods: {
     setup() {
-      const provider = new ethers.providers.Web3Provider(
+      const ethersProvider = new ethers.providers.Web3Provider(
         this.web3.currentProvider
       );
-      this.nameHandler = new RNSManager(this.instance, provider);
-      this.reverseHandler = new ReverseRegister(this.instance, provider);
+      const ethersSigner = ethersProvider.getSigner();
+      this.nameHandler = new RNSManager(ethersSigner);
+      this.reverseHandler = new ReverseRegister(ethersSigner);
     },
     async findDomain() {
       try {
@@ -285,7 +286,7 @@ export default {
         label,
         address,
         this.regSecret,
-        BigNumber(duration),
+        BigNumber.from(duration),
         this.domainPrice
       );
 
