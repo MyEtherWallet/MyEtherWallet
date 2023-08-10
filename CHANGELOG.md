@@ -1,3 +1,5 @@
+### Release v6.7.6
+
 ### devop
 
 * exclude packages [#4670](https://github.com/MyEtherWallet/MyEtherWallet/pull/4670)
@@ -7,6 +9,7 @@
 * move Intercom appId to ENV variable [#4682](https://github.com/MyEtherWallet/MyEtherWallet/pull/4682)
 * move bug bounty [#4691](https://github.com/MyEtherWallet/MyEtherWallet/pull/4691)
 * update readme [#4693](https://github.com/MyEtherWallet/MyEtherWallet/pull/4693)
+* update connections [#4694](https://github.com/MyEtherWallet/MyEtherWallet/pull/4694)
 
 ### feat
 
@@ -21,6 +24,7 @@
 * fix downloadable file hash [#4689](https://github.com/MyEtherWallet/MyEtherWallet/pull/4689)
 * fix gnosis balance issue [#4690](https://github.com/MyEtherWallet/MyEtherWallet/pull/4690)
 * fix bug bounty outside wallet [#4692](https://github.com/MyEtherWallet/MyEtherWallet/pull/4692)
+* fix service worker not requesting live index file [#4695](https://github.com/MyEtherWallet/MyEtherWallet/pull/4695)
 
 ### Release v6.7.5
 
@@ -44,7 +48,7 @@
 * fix offline build [#4653](https://github.com/MyEtherWallet/MyEtherWallet/pull/4653)
 * fix unstoppable error [#4659](https://github.com/MyEtherWallet/MyEtherWallet/pull/4659)
 
-### v6.7.4
+### Release v6.7.4
 
 ### ui
 
