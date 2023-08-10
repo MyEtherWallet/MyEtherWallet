@@ -9,7 +9,7 @@ export default class NameResolver {
     this.network = network;
     this.web3 = web3;
     this.ens = new ENS(this.network, this.web3);
-    this.uns = new UNS(this.network, this.web3);
+    this.uns = new UNS();
   }
   isValidName(name) {
     const splitName = name.split('.');

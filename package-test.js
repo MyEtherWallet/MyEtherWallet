@@ -74,7 +74,6 @@ const EXCEPTIONS = [
   'is-ipfs',
   'axios',
   'prettier', // creates more warnings
-  '@ledgerhq/hw-app-eth', // issue with imports
   '@ledgerhq/live-common', // issue with imports
   'bip39', // breaks
   'ethers', // major update
@@ -82,10 +81,9 @@ const EXCEPTIONS = [
   'highcharts', // major update
   'geckodriver',
   '@ensdomains/ens-contracts', // breaks current ENS integration
-  // look into these after release
-  '@formatjs/intl-numberformat',
-  'lottie-web',
-  '@walletconnect/ethereum-provider'
+  '@shapeshiftoss/hdwallet-core',
+  '@shapeshiftoss/hdwallet-keepkey-webusb',
+  'eslint-plugin-prettier' // breaks
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

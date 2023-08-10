@@ -45,6 +45,7 @@ import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import HybridWalletInterface from '@/modules/access-wallet/hybrid/handlers/walletInterface';
 import sanitizeHex from '@/core/helpers/sanitizeHex';
+const INTERVAL = 14000;
 
 export default {
   components: {
@@ -63,7 +64,8 @@ export default {
   mixins: [handlerWallet, handlerAnalytics],
   data() {
     return {
-      showPaperWallet: false
+      showPaperWallet: false,
+      manualBlockSubscription: null
     };
   },
   computed: {
@@ -179,6 +181,7 @@ export default {
       if (this.setWeb3Account instanceof Function)
         window.ethereum.removeListener('accountsChanged', this.setWeb3Account);
     }
+    clearInterval(this.manualBlockSubscription);
   },
   methods: {
     ...mapActions('wallet', [
@@ -238,6 +241,7 @@ export default {
       this.updateGasPrice();
     },
     subscribeToBlockNumber: debounce(function () {
+      clearInterval(this.manualBlockSubscription);
       this.web3.eth.getBlockNumber().then(bNumber => {
         this.setBlockNumber(bNumber);
         this.web3.eth.getBlock(bNumber).then(block => {
@@ -253,8 +257,18 @@ export default {
               this.setBlockNumber(res.number);
             })
             .on('error', err => {
+              const message = err.message ? err.message : err;
+              if (
+                message ===
+                  'The method eth_subscribe does not exist/is not available' ||
+                (message.includes('but is disabled for Https') &&
+                  message.includes('eth_subscribe found for the url'))
+              ) {
+                return this.manualBlockSub();
+              }
+
               Toast(
-                err && err.message === 'Load failed'
+                err && message === 'Load failed'
                   ? 'eth_subscribe is not supported. Please make sure your provider supports eth_subscribe'
                   : 'Network Subscription Error: Please wait a few seconds before continuing.',
                 {},
@@ -274,6 +288,23 @@ export default {
         window.ethereum.on('accountsChanged', this.setWeb3Account);
       }
     },
+    /**
+     * sets an interval that will query the block number
+     * functioning similarly to eth_subscribe newHeads
+     */
+    manualBlockSub() {
+      const _this = this;
+      this.manualBlockSubscription = setInterval(() => {
+        _this.web3.eth.getBlockNumber().then(bNumber => {
+          _this.setBlockNumber(bNumber);
+          _this.web3.eth.getBlock(bNumber).then(block => {
+            if (block) {
+              _this.checkAndSetBaseFee(block.baseFeePerGas);
+            }
+          });
+        });
+      }, INTERVAL);
+    },
     async findAndSetNetwork() {
       if (
         window.ethereum &&
@@ -282,6 +313,7 @@ export default {
         const networkId = await window.ethereum?.request({
           method: 'eth_chainId'
         });
+
         const foundNetwork = Object.values(nodeList).find(item => {
           if (toBN(networkId).eq(toBN(item[0].type.chainID))) return item;
         });
