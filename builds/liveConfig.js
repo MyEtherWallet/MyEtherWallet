@@ -13,8 +13,13 @@ const exportObj = {
       importWorkboxFrom: 'local',
       skipWaiting: true,
       clientsClaim: true,
-      navigateFallback: '/index.html',
-      navigateFallbackBlacklist: [/^\/pages/]
+      exclude: [/index\.html$/],
+      runtimeCaching: [
+        {
+          urlPattern: /index\.html$/,
+          handler: 'NetworkFirst'
+        }
+      ]
     },
     iconPaths: {
       faviconSVG: 'icons/favicon.svg',
