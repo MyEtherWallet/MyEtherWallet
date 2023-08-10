@@ -74,7 +74,15 @@ const webpackConfig = {
     splitChunks: {
       minSize: 1000000,
       maxSize: 5242880
-    },
+    }
+  },
+  output: {
+    filename: '[name].[hash].js'
+  }
+};
+
+if (process.env.NODE_ENV === 'production') {
+  webpackConfig.optimization = Object.assign({}, webpackConfig.optimization, {
     chunkIds: 'size',
     concatenateModules: true,
     mergeDuplicateChunks: true,
@@ -82,11 +90,8 @@ const webpackConfig = {
     moduleIds: 'size',
     removeAvailableModules: true,
     removeEmptyChunks: true
-  },
-  output: {
-    filename: '[name].[hash].js'
-  }
-};
+  });
+}
 
 const transpilers = config => {
   // GraphQL Loader
