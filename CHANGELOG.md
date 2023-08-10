@@ -1,3 +1,7 @@
+### fix
+
+* fix swap issue, revert workbox changes [#4696](https://github.com/MyEtherWallet/MyEtherWallet/pull/4696)
+
 ### Release v6.7.6
 
 ### devop
