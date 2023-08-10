@@ -21,7 +21,7 @@ const webpackConfig = {
     https: true,
     host: 'localhost',
     hotOnly: true,
-    port: 3000,
+    port: 8080,
     headers: {
       'Strict-Transport-Security':
         'max-age=63072000; includeSubdomains; preload',
@@ -33,8 +33,8 @@ const webpackConfig = {
       'X-Frame-Options': 'DENY',
       'X-XSS-Protection': '1; mode=block',
       'Referrer-Policy': 'same-origin'
-    }
-    // compress: true // enable when testing local optimization
+    },
+    compress: true // enable when testing local optimization
   },
   plugins: [
     new webpack.SourceMapDevToolPlugin(sourceMapsConfig),
@@ -81,17 +81,18 @@ const webpackConfig = {
   }
 };
 
-if (process.env.NODE_ENV === 'production') {
-  webpackConfig.optimization = Object.assign({}, webpackConfig.optimization, {
-    chunkIds: 'size',
-    concatenateModules: true,
-    mergeDuplicateChunks: true,
-    minimize: true,
-    moduleIds: 'size',
-    removeAvailableModules: true,
-    removeEmptyChunks: true
-  });
-}
+webpackConfig.optimization = Object.assign({}, webpackConfig.optimization, {
+  chunkIds: 'size',
+  concatenateModules: true,
+  mergeDuplicateChunks: true,
+  minimize: true,
+  moduleIds: 'size',
+  removeAvailableModules: true,
+  removeEmptyChunks: true,
+  usedExports: true
+});
+// if (process.env.NODE_ENV === 'production') {
+// }
 
 const transpilers = config => {
   // GraphQL Loader
@@ -143,11 +144,11 @@ const transpilers = config => {
     .end();
 
   // disable if statement if testing optimization locally
-  if (process.env.NODE_ENV === 'production') {
-    // remove prefetch for build
-    config.plugins.delete('prefetch');
-    config.plugins.delete('preload');
-  }
+  // if (process.env.NODE_ENV === 'production') {
+  // remove prefetch for build
+  config.plugins.delete('prefetch');
+  config.plugins.delete('preload');
+  // }
 };
 
 module.exports = { webpackConfig, sourceMapsConfig, env_vars, transpilers };
