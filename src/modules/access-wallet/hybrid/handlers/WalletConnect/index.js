@@ -16,7 +16,8 @@ import toBuffer from '@/core/helpers/toBuffer';
 import walletconnect from '@/assets/images/icons/wallets/walletconnect.svg';
 import { BSC, ETH, MATIC } from '@/utils/networks/types';
 
-const projectId = '72299ce67c7d5c879dd8da2df1a6875b';
+// eslint-disable-next-line
+const projectId = WALLET_CONNECT_PROJECT_ID;
 const IS_HARDWARE = false;
 class WalletConnectWallet {
   constructor(signClient, identifier) {
