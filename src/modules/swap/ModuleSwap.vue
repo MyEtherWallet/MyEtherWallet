@@ -1557,6 +1557,9 @@ export default {
       if (!this.allTrades[idx]) {
         this.loadingFee = true;
       }
+      if (BigNumber(this.availableQuotes[idx].rate).lte(0)) {
+        return;
+      }
       const swapObj = {
         fromAddress: this.address,
         toAddress: this.toAddress,
