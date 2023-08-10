@@ -1557,6 +1557,7 @@ export default {
       if (!this.allTrades[idx]) {
         this.loadingFee = true;
       }
+      // don't fetch trade for 0 rate quote
       if (BigNumber(this.availableQuotes[idx].rate).lte(0)) {
         return;
       }

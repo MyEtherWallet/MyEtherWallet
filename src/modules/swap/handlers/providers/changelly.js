@@ -154,6 +154,7 @@ class Changelly {
         ]
       )
         .then(response => {
+          // return formatted response and let ui handle error
           if (response.error || !response.result || !response.id) {
             return [
               {
