@@ -226,6 +226,14 @@ export default {
     }
   },
   watch: {
+    network: {
+      handler: function (newVal, oldVal) {
+        if (newVal.type.name !== oldVal.type.name) {
+          this.networkSelected = newVal.type.name;
+        }
+      },
+      deep: true
+    },
     networkSelected(value) {
       if (!!value && (value !== this.network.type.name || !this.validNetwork)) {
         this.networkLoading = true;

@@ -50,6 +50,7 @@ jobs:
         run: |
           touch .env
           echo INTERCOM_ID=${{secrets.INTERCOM_ID}} >> .env
+          echo WALLET_CONNECT_PROJECT_ID=${{secrets.WALLET_CONNECT_PROJECT_ID}} >> .env
 
       - name: build
         run: |

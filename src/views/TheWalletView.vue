@@ -132,9 +132,10 @@ export default {
           this.instance.connection.sendAsync(
             {
               method: 'wallet_switchEthereumChain',
-              params: newVal.type.chainID.toString(16)
+              params: [{ chainId: newVal.type.chainID.toString(16) }]
             },
             err => {
+              console.log(err);
               if (err) {
                 Toast(
                   'Selected network may not be supported by wallet',
