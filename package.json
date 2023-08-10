@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "6.7.5",
+  "version": "6.7.6",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build": "npm run update && vue-cli-service build",
@@ -13,6 +13,7 @@
     "apollo:codegen": "npm run apollo:schema && apollo client:codegen src/apollo/global/globalTypes.json --target=json",
     "apollo:schema": "apollo service:download src/apollo/schemas/api.json",
     "build:hash": "ROUTER_MODE=hash npm run build",
+    "build:nohash": "WEBPACK_INTEGRITY=false npm run build:hash",
     "build:history": "ROUTER_MODE=history npm run build",
     "build:history:sourcemaps": "ROUTER_MODE=history FULL_SOURCEMAPS=true npm run build",
     "build:offline": "WEBPACK_INTEGRITY=false BUILD=offline npm run build:hash",

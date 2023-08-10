@@ -18,6 +18,7 @@
                   v-if="d.link"
                   :href="d.link"
                   target="_blank"
+                  rel="noopener noreferrer"
                   :class="d.class"
                 >
                   {{ d.label }}
@@ -33,7 +34,8 @@
             <a
               class="color--inherit d-flex align-center mb-3"
               target="_blank"
-              :href="`https://etherscan.io/address/${ethDonationAddress}`"
+              rel="noopener noreferrer"
+              :href="`https://ethvm.com/address/${ethDonationAddress}`"
             >
               <mew-icon
                 icon-name="eth"
@@ -51,6 +53,7 @@
             <a
               class="color--inherit d-flex align-center"
               target="_blank"
+              rel="noopener noreferrer"
               :href="`https://blockchain.info/address/${btcDonationAddress}`"
             >
               <mew-icon
@@ -75,6 +78,7 @@
                 <a
                   class="color--inherit"
                   href="mailto:support@myetherwallet.com"
+                  rel="noopener noreferrer"
                   target="_blank"
                 >
                   {{ $t('footer.feedback') }}
@@ -85,10 +89,20 @@
                   {{ $t('footer.privacy') }}
                 </router-link>
               </div>
-              <div class="px-6">
+              <div class="px-6 border-right">
                 <router-link :to="{ name: ROUTES_HOME.TERMS_OF_SERVICE.NAME }">
                   {{ $t('footer.tos') }}
                 </router-link>
+              </div>
+              <div class="px-6">
+                <a
+                  class="color--inherit"
+                  href="https://hackenproof.com/myetherwallet/myetherwallet"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Bug Bounty
+                </a>
               </div>
             </div>
           </div>
@@ -108,6 +122,7 @@
               :key="key"
               :href="i.link"
               target="_blank"
+              rel="noopener noreferrer"
               class="ml-4"
             >
               <mew-icon v-if="i.icon" :img-height="20" :icon-name="i.icon" />
@@ -128,6 +143,7 @@
               :href="`https://github.com/MyEtherWallet/MyEtherWallet/releases/tag/v${version}`"
               target="_blank"
               class="cyan--text text--lighten-3 ma-0"
+              rel="noopener noreferrer"
               >v{{ version }}</a
             >
             <v-spacer />
@@ -137,6 +153,7 @@
                 class="cyan--text text--lighten-3"
                 href="https://www.coingecko.com/en"
                 target="_blank"
+                rel="noopener noreferrer"
                 >{{ $t('footer.coingecko') }}</a
               >.
             </p>
@@ -184,7 +201,12 @@
                     >
                       {{ md.label }}
                     </router-link>
-                    <a v-if="md.link" :href="md.link" target="_blank">
+                    <a
+                      v-if="md.link"
+                      :href="md.link"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       {{ md.label }}
                     </a>
                   </li>
@@ -204,6 +226,7 @@
             <p>{{ $t('footer.donation.text') }}</p>
             <a
               class="color--inherit d-flex align-center mb-1"
+              rel="noopener noreferrer"
               target="_blank"
               :href="`https://etherscan.io/address/${ethDonationAddress}`"
             >
@@ -222,6 +245,7 @@
             </a>
             <a
               class="color--inherit d-flex align-center"
+              rel="noopener noreferrer"
               target="_blank"
               :href="`https://blockchain.info/address/${btcDonationAddress}`"
             >
@@ -249,6 +273,7 @@
               :href="i.link"
               target="_blank"
               style="height: 23px"
+              rel="noopener noreferrer"
               class="px-4 my-5"
             >
               <mew-icon v-if="i.icon" :img-height="23" :icon-name="i.icon" />
@@ -267,6 +292,7 @@
                 <a
                   class="color--inherit"
                   href="mailto:support@myetherwallet.com"
+                  rel="noopener noreferrer"
                   target="_blank"
                 >
                   {{ $t('footer.feedback') }}
@@ -277,10 +303,20 @@
                   Privacy
                 </router-link>
               </div>
-              <div class="px-4 px-lg-6">
+              <div class="px-4 px-lg-6 border-right">
                 <router-link :to="{ name: ROUTES_HOME.TERMS_OF_SERVICE.NAME }">
                   Terms
                 </router-link>
+              </div>
+              <div class="px-4 px-lg-6">
+                <a
+                  class="color--inherit"
+                  href="https://hackenproof.com/myetherwallet/myetherwallet"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Bug Bounty
+                </a>
               </div>
             </div>
           </div>
@@ -293,6 +329,7 @@
             <div class="d-flex align-center justify-space-between">
               <a
                 :href="`https://github.com/MyEtherWallet/MyEtherWallet/releases/tag/v${version}`"
+                rel="noopener noreferrer"
                 target="_blank"
                 class="cyan--text text--lighten-3 ma-0"
                 >v{{ version }}</a
@@ -317,6 +354,7 @@
                   class="cyan--text text--lighten-3"
                   href="https://www.coingecko.com/en"
                   target="_blank"
+                  rel="noopener noreferrer"
                   >{{ $t('footer.coingecko') }}</a
                 >.
               </p>
@@ -389,8 +427,11 @@ export default {
           {
             label: 'Submit DApp',
             routerLink: ROUTES_HOME.DAPP_SUBMISSION.NAME
+          },
+          {
+            label: 'Advertise With Us',
+            routerLink: ROUTES_HOME.ADVERTISE.NAME
           }
-          // { label: 'Advertise With Us', routerLink: ROUTES_HOME.ADVERTISE.NAME }
         ]
       },
       {

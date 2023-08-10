@@ -1,1 +1,0 @@
-add myetherwallet to connections

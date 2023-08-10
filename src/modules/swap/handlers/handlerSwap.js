@@ -62,7 +62,7 @@ class Swap {
       this.providers.map(p => {
         if (!p.isSupportedNetwork(this.chain)) return Promise.resolve();
         return p.getQuote({ fromT, toT, fromAmount }).then(quotes => {
-          allQuotes = allQuotes.concat(quotes);
+          if (quotes) allQuotes = allQuotes.concat(quotes);
         });
       })
     ).then(() => {
