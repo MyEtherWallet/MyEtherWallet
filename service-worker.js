@@ -15,7 +15,7 @@ importScripts("workbox-v4.3.1/workbox-sw.js");
 workbox.setConfig({modulePathPrefix: "workbox-v4.3.1"});
 
 importScripts(
-  "precache-manifest.fd8dd620878525e2451c617066b7de14.js"
+  "precache-manifest.d02594e32079e56b96fecc9c03a51d0b.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "myetherwallet"});
@@ -31,8 +31,3 @@ workbox.core.clientsClaim();
  */
 self.__precacheManifest = [].concat(self.__precacheManifest || []);
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
-
-workbox.routing.registerNavigationRoute(workbox.precaching.getCacheKeyForURL("/index.html"), {
-  
-  blacklist: [/^\/pages/],
-});
