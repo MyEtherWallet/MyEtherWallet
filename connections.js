@@ -1,4 +1,8 @@
 module.exports = [
+  'https://www.myetherwallet.com:443',
+  'https://v6.mewbuilds.com:443',
+  'https://develop.mewbuilds.com:443',
+  'https://staging.mewbuilds.com:443',
   'https://localhost:8080',
   'wss://localhost:8080',
   'https://swap.mewapi.io:443',
@@ -90,5 +94,7 @@ module.exports = [
   'https://metadata.unstoppabledomains.com:443', // Unstoppable domains
   'wss://relay.walletconnect.com:443', // walletconnect2
   'https://explorer-api.walletconnect.com:443', // web3modal
-  'https://mew-seo-pages.pages.dev:443' //pages
+  'https://mew-seo-pages.pages.dev:443', //pages
+  'https://coinzillatag.com:443/lib/display.js',
+  'https://request-global.czilladx.com:443'
 ];

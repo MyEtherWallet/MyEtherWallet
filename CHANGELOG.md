@@ -1,3 +1,31 @@
+### Release v6.7.6
+
+### devop
+
+* exclude packages [#4670](https://github.com/MyEtherWallet/MyEtherWallet/pull/4670)
+* pull main, sync develop [#4672](https://github.com/MyEtherWallet/MyEtherWallet/pull/4672)
+* add myetherwallet to connections [#4677](https://github.com/MyEtherWallet/MyEtherWallet/pull/4677)
+* add back advert page with some updates [#4680](https://github.com/MyEtherWallet/MyEtherWallet/pull/4680)
+* move Intercom appId to ENV variable [#4682](https://github.com/MyEtherWallet/MyEtherWallet/pull/4682)
+* move bug bounty [#4691](https://github.com/MyEtherWallet/MyEtherWallet/pull/4691)
+* update readme [#4693](https://github.com/MyEtherWallet/MyEtherWallet/pull/4693)
+* update connections [#4694](https://github.com/MyEtherWallet/MyEtherWallet/pull/4694)
+
+### feat
+
+* redirect enkrypt to actual download sites [#4664](https://github.com/MyEtherWallet/MyEtherWallet/pull/4664)
+
+### fix
+
+* fix metamask infinite loop [#4674](https://github.com/MyEtherWallet/MyEtherWallet/pull/4674)
+* fix buy error [#4675](https://github.com/MyEtherWallet/MyEtherWallet/pull/4675)
+* fix routing issue on staked [#4676](https://github.com/MyEtherWallet/MyEtherWallet/pull/4676)
+* fix: add manual subscription when web3 provider isn't wss [#4679](https://github.com/MyEtherWallet/MyEtherWallet/pull/4679)
+* fix downloadable file hash [#4689](https://github.com/MyEtherWallet/MyEtherWallet/pull/4689)
+* fix gnosis balance issue [#4690](https://github.com/MyEtherWallet/MyEtherWallet/pull/4690)
+* fix bug bounty outside wallet [#4692](https://github.com/MyEtherWallet/MyEtherWallet/pull/4692)
+* fix service worker not requesting live index file [#4695](https://github.com/MyEtherWallet/MyEtherWallet/pull/4695)
+
 ### Release v6.7.5
 
 ### devop
@@ -20,7 +48,7 @@
 * fix offline build [#4653](https://github.com/MyEtherWallet/MyEtherWallet/pull/4653)
 * fix unstoppable error [#4659](https://github.com/MyEtherWallet/MyEtherWallet/pull/4659)
 
-### v6.7.4
+### Release v6.7.4
 
 ### ui
 

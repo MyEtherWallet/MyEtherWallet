@@ -301,7 +301,7 @@ export default {
           formatFiatValue(this.min.toFixed(), this.currencyConfig).value
         } ${this.selectedFiatName}`;
       }
-      if (this.maxVal.lt(this.amount)) {
+      if (this.maxVal.gt(0) && this.maxVal.lt(this.amount)) {
         return `Amount can't be above provider's maximum: ${
           formatFiatValue(this.maxVal.toFixed(), this.currencyConfig).value
         } ${this.selectedFiatName}`;
