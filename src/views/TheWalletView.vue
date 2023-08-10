@@ -149,7 +149,10 @@ export default {
       this.checkNetwork();
     }
 
-    if (this.instance.identifier === 'walletConnect') {
+    if (
+      this.instance.identifier === WALLET_TYPES.WALLET_CONNECT ||
+      this.instance.identifier === WALLET_TYPES.MEW_WALLET
+    ) {
       this.instance.connection.on('session_update', () => {
         this.instance.connection.sendAsync(
           { method: 'eth_requestAccounts' },

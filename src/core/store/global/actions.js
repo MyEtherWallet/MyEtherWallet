@@ -1,5 +1,6 @@
 import matchNetwork from '@/core/helpers/matchNetwork';
 import { toBNSafe } from '@/core/helpers/numberFormatHelper';
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 
 const setOnlineStatus = function ({ commit, dispatch }, val) {
   if (val) dispatch('wallet/setWeb3Instance', null, { root: true });
@@ -38,7 +39,7 @@ const setGasPriceType = function ({ commit }, type) {
   commit('SET_GAS_PRICE_TYPE', type);
 };
 const setNetwork = async function (
-  { commit, dispatch },
+  { commit, dispatch, rootState },
   { network, walletType }
 ) {
   const chainID = network?.type?.chainID;
@@ -46,6 +47,14 @@ const setNetwork = async function (
   if (matched) {
     commit('SET_NETWORK', network);
     dispatch('swap/resetPrefetch', null, { root: true });
+    const instance = rootState.wallet.instance;
+    const identifier = rootState.wallet.identifier;
+    if (identifier === WALLET_TYPES.WALLET_CONNECT) {
+      instance.connection.updateSession({
+        chainId: chainID,
+        accounts: instance.connection._accounts[0]
+      });
+    }
     return;
   }
   throw new Error('Network not found');
