@@ -141,13 +141,18 @@ export default {
                   {},
                   WARNING
                 );
-                this.setNetwork({
-                  network: oldVal,
-                  walletType: this.identifier
-                });
                 this.instance.connection.switchEthereumChain(
                   oldVal.type.chainID
                 );
+
+                setTimeout(() => {
+                  this.setNetwork({
+                    network: oldVal,
+                    walletType: this.identifier
+                  }).then(() => {
+                    this.setWeb3Instance();
+                  });
+                }, 1000);
               }
             }
           );
