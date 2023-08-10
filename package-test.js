@@ -84,7 +84,8 @@ const EXCEPTIONS = [
   '@shapeshiftoss/hdwallet-core',
   '@shapeshiftoss/hdwallet-keepkey-webusb',
   'eslint-plugin-prettier', // breaks
-  'compression-webpack-plugin'
+  'compression-webpack-plugin',
+  'ethereum-block-by-date'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
