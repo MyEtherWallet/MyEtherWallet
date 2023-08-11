@@ -48,12 +48,12 @@ jobs:
 
       - name: build
         run: |
-          docker run --rm -v --env INTERCOM_ID=${{secrets.INTERCOM_ID}} WALLET_CONNECT_PROJECT_ID=${{secrets.WALLET_CONNECT_PROJECT_ID}} `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build"
+          docker run --rm -v --env "INTERCOM_ID=${{secrets.INTERCOM_ID}} WALLET_CONNECT_PROJECT_ID=${{secrets.WALLET_CONNECT_PROJECT_ID}}" `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build"
           cd dist && zip -r ../release/MyEtherWallet-${{ steps.get_release_tag.outputs.VERSION }}.zip * && cd ..
 
       - name: build hash
         run: |
-          docker run --rm -v --env INTERCOM_ID=${{secrets.INTERCOM_ID}} WALLET_CONNECT_PROJECT_ID=${{secrets.WALLET_CONNECT_PROJECT_ID}} `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:nohash"
+          docker run --rm -v --env "INTERCOM_ID=${{secrets.INTERCOM_ID}} WALLET_CONNECT_PROJECT_ID=${{secrets.WALLET_CONNECT_PROJECT_ID}}" `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:nohash"
           cd dist && zip -r ../release/MyEtherWallet-${{ steps.get_release_tag.outputs.VERSION }}-Hash.zip * && cd ..
 
       - name: build offline
