@@ -68,7 +68,8 @@ export default async ({ payload, store, requestManager }, res, next) => {
         : [_tx, toDetails, currency];
       if (
         store.state.wallet.identifier === WALLET_TYPES.WEB3_WALLET ||
-        store.state.wallet.identifier === WALLET_TYPES.WALLET_CONNECT
+        store.state.wallet.identifier === WALLET_TYPES.WALLET_CONNECT ||
+        store.state.wallet.identifier === WALLET_TYPES.MEW_WALLET
       ) {
         EventBus.$emit(event, params, _promiObj => {
           if (_promiObj.rejected) {
