@@ -154,8 +154,13 @@ class Changelly {
         ]
       )
         .then(response => {
+          const newResponse = response.data
+            ? isArray(response.data.result)
+              ? response.data.result[0]
+              : response.data.result
+            : null;
           // return formatted response and let ui handle error
-          if (response.error || !response.result || !response.id) {
+          if (response.error || !newResponse || !newResponse.id) {
             return [
               {
                 exchange: this.provider,
@@ -167,9 +172,6 @@ class Changelly {
               }
             ];
           }
-          const newResponse = isArray(response.data.result)
-            ? response.data.result[0]
-            : response.data.result;
           return [
             {
               exchange: this.provider,
