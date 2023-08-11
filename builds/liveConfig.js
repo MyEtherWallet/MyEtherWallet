@@ -13,7 +13,7 @@ const exportObj = {
       importWorkboxFrom: 'local',
       skipWaiting: true,
       clientsClaim: true,
-      exclude: [/index\.html$/]
+      exclude: [/index\.html$/, /\.map$/]
     },
     iconPaths: {
       faviconSVG: 'icons/favicon.svg',
