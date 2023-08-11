@@ -29,7 +29,7 @@ jobs:
         run: docker run --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" mew-build-container /bin/bash -c "npm install"
 
       - name: build
-        run: docker run --rm -v --env "INTERCOM_ID=${{secrets.INTERCOM_ID}} WALLET_CONNECT_PROJECT_ID=${{secrets.WALLET_CONNECT_PROJECT_ID}}" `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:history"
+        run: docker run --rm -v -e "INTERCOM_ID=${{secrets.INTERCOM_ID}} WALLET_CONNECT_PROJECT_ID=${{secrets.WALLET_CONNECT_PROJECT_ID}}" `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:history"
 
       - name: add to develop
         env:
