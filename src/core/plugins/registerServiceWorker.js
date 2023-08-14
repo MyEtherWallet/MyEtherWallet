@@ -27,9 +27,6 @@ const cleanupOldServiceWorkers = () => {
 
 const scope = { scope: '/' };
 
-if (process.env.SCOPE_HASH === 'true') {
-  scope.scope = './';
-}
 if (process.env.NODE_ENV === 'production') {
   cleanupOldServiceWorkers().then(() => {
     register(`${process.env.BASE_URL}service-worker.js`, {
