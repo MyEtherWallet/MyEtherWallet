@@ -348,7 +348,8 @@ export default {
     isWeb3Wallet() {
       return (
         this.identifier === WALLET_TYPES.WEB3_WALLET ||
-        this.identifier === WALLET_TYPES.WALLET_CONNECT
+        this.identifier === WALLET_TYPES.WALLET_CONNECT ||
+        this.identifier === WALLET_TYPES.MEW_WALLET
       );
     },
     isOtherWallet() {
