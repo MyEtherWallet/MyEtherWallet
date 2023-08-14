@@ -68,14 +68,11 @@ const webpackConfig = {
       ]
     }),
     new webpack.DefinePlugin(env_vars),
-    new CompressionWebpackPlugin()
+    new CompressionWebpackPlugin(),
+    new webpack.optimize.MinChunkSizePlugin({
+      minChunkSize: 1000000
+    })
   ],
-  optimization: {
-    splitChunks: {
-      minSize: 1000000,
-      maxSize: 5242880
-    }
-  },
   output: {
     filename: '[name].[hash].js'
   }
