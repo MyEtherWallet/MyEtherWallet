@@ -25,12 +25,10 @@ const cleanupOldServiceWorkers = () => {
     });
 };
 
-const scope = { scope: '/' };
-
 if (process.env.NODE_ENV === 'production') {
   cleanupOldServiceWorkers().then(() => {
     register(`${process.env.BASE_URL}service-worker.js`, {
-      registrationOptions: scope,
+      registrationOptions: { scope: '/' },
       updatefound() {
         if (window)
           window.dispatchEvent(new Event(PWA_EVENTS.PWA_UPDATE_FOUND));
