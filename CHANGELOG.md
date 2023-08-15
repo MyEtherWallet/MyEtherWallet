@@ -1,4 +1,6 @@
-### Release v6.7.7
+### Release v6.7.6-hotfix.2
+
+* fix walletconnect not showing after click [#4705](https://github.com/MyEtherWallet/MyEtherWallet/pull/4705)
 
 ### devop
 

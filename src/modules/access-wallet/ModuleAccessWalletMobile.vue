@@ -14,6 +14,7 @@
     title="Access Wallet with Mobile Apps"
     content-size="large"
     :close="close"
+    class="mew-access-mobile"
   >
     <!--
     =====================================================================================
@@ -132,5 +133,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped></style>
