@@ -1282,7 +1282,8 @@ export default {
       this.setMaxWithoutEstimate();
     },
     setMaxWithoutEstimate() {
-      const gasLimit = !this.toTokenType.isEth ? 21000 : MIN_GAS_LIMIT;
+      const gasLimit =
+        this.toTokenType && !this.toTokenType.isEth ? 21000 : MIN_GAS_LIMIT;
       const availableBalanceMinusGas = new BigNumber(
         this.availableBalance
       ).minus(fromWei(toBN(this.localGasPrice).muln(gasLimit)));
@@ -1556,6 +1557,10 @@ export default {
         return this.setupTrade(this.allTrades[idx]);
       if (!this.allTrades[idx]) {
         this.loadingFee = true;
+      }
+      // don't fetch trade for 0 rate quote
+      if (BigNumber(this.availableQuotes[idx].rate).lte(0)) {
+        return;
       }
       const swapObj = {
         fromAddress: this.address,
