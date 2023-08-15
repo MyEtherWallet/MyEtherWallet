@@ -1,3 +1,11 @@
+### devop
+
+* remove bsc for mew wallet [#4703](https://github.com/MyEtherWallet/MyEtherWallet/pull/4703)
+
+### fix
+
+* walletconnect modal z-index [#4705](https://github.com/MyEtherWallet/MyEtherWallet/pull/4705)
+
 ### Release v6.7.6-hotfix.2
 
 * fix walletconnect not showing after click [#4705](https://github.com/MyEtherWallet/MyEtherWallet/pull/4705)
