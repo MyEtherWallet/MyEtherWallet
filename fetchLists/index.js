@@ -94,7 +94,7 @@ const fetchContracts = async () => {
           })
           .catch(err => console.log(err));
         if (contractsCollection !== undefined) {
-          console.log('Writing contract for: ' + contractFile.name);
+          console.log('Writing contract for the network: ' + contractFile.name);
           fs.writeFileSync(
             `${configs.CONTRACTS_PATH}/contract-abi-${contractFile.name}.json`,
             JSON.stringify(contractsCollection)
@@ -164,7 +164,7 @@ const fetchMasterFile = async () => {
         }
         const networks = Object.keys(networkTokens);
         for (const network of networks) {
-          console.log('Writing tokens for: ' + network);
+          console.log('Writing tokens for the network: ' + network);
           fs.writeFileSync(
             `${configs.TOKENS_PATH}/tokens-${network}.json`,
             JSON.stringify(Object.values(networkTokens[network]))
