@@ -1,3 +1,7 @@
+### devop
+
+* remove extra changes [#4706](https://github.com/MyEtherWallet/MyEtherWallet/pull/4706)
+
 ### Release v6.7.6-hotfix.2
 
 ### devop
