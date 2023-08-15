@@ -2,7 +2,18 @@
 
 * fix walletconnect not showing after click [#4705](https://github.com/MyEtherWallet/MyEtherWallet/pull/4705)
 
+### devop
+
+* add config changes [#4702](https://github.com/MyEtherWallet/MyEtherWallet/pull/4702)
+
+### fix
+
+* fix wallet connect chain switch [#4688](https://github.com/MyEtherWallet/MyEtherWallet/pull/4688)
+* fix swap issue, revert workbox changes [#4696](https://github.com/MyEtherWallet/MyEtherWallet/pull/4696)
+
 ### Release v6.7.6-hotfix.1
+
+### fix
 
 * fix swap and remove chunks on pwa [#4700](https://github.com/MyEtherWallet/MyEtherWallet/pull/4700)
 
