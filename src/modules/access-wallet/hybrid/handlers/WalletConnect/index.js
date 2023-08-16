@@ -14,12 +14,14 @@ import errorHandler from './errorHandler';
 import commonGenerator from '@/core/helpers/commonGenerator';
 import toBuffer from '@/core/helpers/toBuffer';
 import walletconnect from '@/assets/images/icons/wallets/walletconnect.svg';
+import { BSC, ETH, MATIC } from '@/utils/networks/types';
 
-const projectId = '72299ce67c7d5c879dd8da2df1a6875b';
+// eslint-disable-next-line
+const projectId = WALLET_CONNECT_PROJECT_ID;
 const IS_HARDWARE = false;
 class WalletConnectWallet {
-  constructor(signClient) {
-    this.identifier = WALLET_TYPES.WALLET_CONNECT;
+  constructor(signClient, identifier) {
+    this.identifier = identifier;
     this.isHardware = IS_HARDWARE;
     this.client = signClient;
     this.client.on('session_delete', () => {
@@ -36,7 +38,7 @@ class WalletConnectWallet {
   }
   init() {
     // eslint-disable-next-line
-    return new Promise(async (resolve, reject) => {
+    return new Promise(async resolve => {
       const txSigner = tx => {
         const from = tx.from;
         tx = new Transaction(tx, {
@@ -99,18 +101,21 @@ class WalletConnectWallet {
     });
   }
 }
-const createWallet = async () => {
-  const allChainIds = Object.values(nodes)
-    .map(item => {
-      if (item.type.chainID !== 1) {
-        return item.type.chainID;
-      }
-    })
-    .filter(item => !!item);
+const createWallet = async (identifier = WALLET_TYPES.WALLET_CONNECT) => {
+  const allChainIds =
+    identifier === WALLET_TYPES.WALLET_CONNECT
+      ? Object.values(nodes)
+          .map(item => {
+            if (item.type.chainID !== 1) {
+              return item.type.chainID;
+            }
+          })
+          .filter(item => !!item)
+      : [BSC.chainID, MATIC.chainID];
   const signClient = await EthereumProvider.init({
     projectId,
     showQrModal: true,
-    chains: [1],
+    chains: [ETH.chainID],
     optionalChains: allChainIds,
     methods: ['eth_sendTransaction', 'eth_sign'],
     events: ['chainChanged', 'accountsChanged'],
@@ -120,6 +125,11 @@ const createWallet = async () => {
         'MyEtherWallet (MEW) is a free, open-source, client-side interface for generating Ethereum wallets & more. Interact with the Ethereum blockchain easily & securely.',
       url: 'https://myetherwallet.com',
       icons: ['https://www.myetherwallet.com/favicon.png']
+    },
+    qrModalOptions: {
+      themeVariables: {
+        '--wcm-z-index': 300
+      }
     }
   });
   if (signClient.connected) {
@@ -135,7 +145,7 @@ const createWallet = async () => {
       store
         .dispatch('global/setNetwork', {
           network: foundNode,
-          walletType: WALLET_TYPES.WALLET_CONNECT
+          walletType: identifier
         })
         .then(() => {
           store.dispatch('wallet/setWeb3Instance');
@@ -146,7 +156,7 @@ const createWallet = async () => {
     throw e;
   });
 
-  const walletConnectWallet = new WalletConnectWallet(signClient);
+  const walletConnectWallet = new WalletConnectWallet(signClient, identifier);
   const _tWallet = await walletConnectWallet.init();
   return _tWallet;
 };

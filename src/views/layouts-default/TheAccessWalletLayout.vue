@@ -310,10 +310,10 @@ export default {
     },
     openMEWwallet() {
       try {
-        WalletConnectWallet()
+        WalletConnectWallet(WALLET_TYPES.MEW_WALLET)
           .then(_newWallet => {
             this.setWallet([_newWallet]).then(() => {
-              this.trackAccessWallet(WALLET_TYPES.WALLET_CONNECT);
+              this.trackAccessWallet(WALLET_TYPES.MEW_WALLET);
               this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
             });
           })

@@ -174,6 +174,11 @@ export default {
             item.name === types.MATIC.name
         );
       }
+      if (this.identifier === WALLET_TYPES.MEW_WALLET) {
+        allNetworks = allNetworks.filter(
+          item => item.name === types.ETH.name || item.name === types.MATIC.name
+        );
+      }
       if (this.searchInput && this.searchInput !== '') {
         return allNetworks.filter(item =>
           this.hasString(item.name, item.name_long)
@@ -226,6 +231,14 @@ export default {
     }
   },
   watch: {
+    network: {
+      handler: function (newVal, oldVal) {
+        if (newVal.type.name !== oldVal.type.name) {
+          this.networkSelected = newVal.type.name;
+        }
+      },
+      deep: true
+    },
     networkSelected(value) {
       if (!!value && (value !== this.network.type.name || !this.validNetwork)) {
         this.networkLoading = true;
