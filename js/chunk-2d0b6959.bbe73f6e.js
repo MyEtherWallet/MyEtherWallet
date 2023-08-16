@@ -1,2 +1,0 @@
-(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["chunk-2d0b6959"],{"1e7f":function(a){a.exports=JSON.parse('[{"network":"go","symbol":"FAST","name":"Fast.Finance","decimals":18,"contract_address":"0x67bbb47f6942486184f08a671155fcfa6cad8d71","icon":"","icon_png":"","website":"https://fast.finance/","address":"0x67bbb47f6942486184f08a671155fcfa6cad8d71"}]')}}]);
-//# sourceMappingURL=../sourcemaps/js/chunk-2d0b6959.bbe73f6e.js.map
