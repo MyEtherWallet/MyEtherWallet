@@ -460,12 +460,6 @@ export default {
             query: { tool: 'convert' }
           },
           {
-            label: 'Generate keystore file',
-            class: 'FooterKeystoreTool',
-            routerLink: 'Tools',
-            query: { tool: 'keystore' }
-          },
-          {
             label: 'Send Offline Helper',
             class: 'FooterOfflineTool',
             routerLink: 'Tools',
