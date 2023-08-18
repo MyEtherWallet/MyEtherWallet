@@ -62,7 +62,7 @@ router.afterEach(to => {
   const ogDesc = document.querySelector('head meta[property="og:description"]');
   const title = document.querySelector('head title');
   const ogTitle = document.querySelector('head meta[property="og:title"]');
-  console.log(desc, ogDesc, title, ogTitle);
+
   if (to.meta) {
     title.textContent = to.meta.hasOwnProperty('title')
       ? to.meta.title
