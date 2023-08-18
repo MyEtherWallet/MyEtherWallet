@@ -14,6 +14,9 @@ export default {
   layout,
   release: '09/01/2022',
   meta: {
-    noAuth: false
+    noAuth: false,
+    title: 'Borrow And Lend With Aave on MyEtherWallet',
+    description:
+      'Earn interest on supplying and borrowing crypto assets using Aave. Earn crypto rewards.'
   }
 };

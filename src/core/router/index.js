@@ -54,5 +54,36 @@ router.beforeResolve((to, from, next) => {
     }
   }
 });
+router.afterEach(to => {
+  const defaultTitle = 'MyEtherWallet | The Best Crypto Wallet For Web3';
+  const defaultDescription =
+    'Trusted by millions of users, MyEtherWallet is the first and best open source Ethereum wallet. Create a secure crypto wallet, buy, sell, stake and swap.';
+  const desc = document.querySelector('head meta[name="description"]');
+  const ogDesc = document.querySelector('head meta[property="og:description"]');
+  const title = document.querySelector('head title');
+  const ogTitle = document.querySelector('head meta[property="og:title"]');
+  console.log(desc, ogDesc, title, ogTitle);
+  if (to.meta) {
+    title.textContent = to.meta.hasOwnProperty('title')
+      ? to.meta.title
+      : defaultTitle;
+    ogTitle.setAttribute(
+      'content',
+      to.meta.hasOwnProperty('title') ? to.meta.title : defaultTitle
+    );
+    desc.setAttribute(
+      'content',
+      to.meta.hasOwnProperty('description')
+        ? to.meta.description
+        : defaultDescription
+    );
+    ogDesc.setAttribute(
+      'content',
+      to.meta.hasOwnProperty('description')
+        ? to.meta.description
+        : defaultDescription
+    );
+  }
+});
 
 export default router;
