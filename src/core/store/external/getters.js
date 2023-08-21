@@ -111,9 +111,10 @@ const contractToToken =
         decimals: 18
       });
     }
+
     cgToken = getters.getCoinGeckoTokenById(tokenId);
     const networkToken = state.networkTokens.get(contractAddress);
-
+    console.log(cgToken, networkToken, contractAddress, state.networkTokens);
     if (!networkToken) return null;
     return Object.assign(cgToken, {
       name: networkToken.name,
