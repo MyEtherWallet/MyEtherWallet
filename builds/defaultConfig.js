@@ -78,18 +78,18 @@ const webpackConfig = {
   }
 };
 
-webpackConfig.optimization = Object.assign({}, webpackConfig.optimization, {
-  chunkIds: 'size',
-  concatenateModules: true,
-  mergeDuplicateChunks: true,
-  minimize: true,
-  moduleIds: 'size',
-  removeAvailableModules: true,
-  removeEmptyChunks: true,
-  usedExports: true
-});
-// if (process.env.NODE_ENV === 'production') {
-// }
+if (process.env.NODE_ENV === 'production') {
+  webpackConfig.optimization = Object.assign({}, webpackConfig.optimization, {
+    chunkIds: 'size',
+    concatenateModules: true,
+    mergeDuplicateChunks: true,
+    minimize: true,
+    moduleIds: 'size',
+    removeAvailableModules: true,
+    removeEmptyChunks: true,
+    usedExports: true
+  });
+}
 
 const transpilers = config => {
   // GraphQL Loader
@@ -141,11 +141,11 @@ const transpilers = config => {
     .end();
 
   // disable if statement if testing optimization locally
-  // if (process.env.NODE_ENV === 'production') {
-  // remove prefetch for build
-  config.plugins.delete('prefetch');
-  config.plugins.delete('preload');
-  // }
+  if (process.env.NODE_ENV === 'production') {
+    // remove prefetch for build
+    config.plugins.delete('prefetch');
+    config.plugins.delete('preload');
+  }
 };
 
 module.exports = { webpackConfig, sourceMapsConfig, env_vars, transpilers };

@@ -24,6 +24,7 @@ const cleanupOldServiceWorkers = () => {
       await promiseChain;
     });
 };
+
 if (process.env.NODE_ENV === 'production') {
   cleanupOldServiceWorkers().then(() => {
     register(`${process.env.BASE_URL}service-worker.js`, {
