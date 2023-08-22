@@ -78,7 +78,7 @@
           src="@/assets/images/backgrounds/bg-home-spaceman-and-dog.svg"
           alt="Spaceman and his dog"
           height="500"
-          rel="preload"
+          fetchpriority="high"
         />
       </v-container>
     </div>
