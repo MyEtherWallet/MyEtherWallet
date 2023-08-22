@@ -2,7 +2,6 @@
   "name": "myetherwallet",
   "version": "6.7.6-hotfix.2",
   "description": "Client side ethereum wallet",
-  "sideEffects": false,
   "scripts": {
     "build": "npm run update && vue-cli-service build",
     "test:unit": "vue-cli-service test:unit --logHeapUsage",
