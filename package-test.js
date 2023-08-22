@@ -85,7 +85,8 @@ const EXCEPTIONS = [
   '@shapeshiftoss/hdwallet-keepkey-webusb',
   'eslint-plugin-prettier', // breaks
   'compression-webpack-plugin',
-  'ethereum-block-by-date'
+  'ethereum-block-by-date',
+  '@mathieustan/vue-intercom'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
