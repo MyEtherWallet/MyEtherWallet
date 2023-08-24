@@ -178,7 +178,6 @@ const setTokenAndEthBalance = function ({
           )
         );
       });
-      console.log(formattedList);
       formattedList.sort(function (x, y) {
         return x.contract == MAIN_TOKEN_ADDRESS
           ? -1
