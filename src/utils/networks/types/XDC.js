@@ -8,9 +8,6 @@ export default {
   blockExplorerTX: 'https://xdc.blocksscan.io/tx/[[txHash]]',
   blockExplorerAddr: 'https://xdc.blocksscan.io/addr/[[address]]',
   chainID: 50,
-  tokens: import('@/_generated/tokens/tokens-etc.json').then(
-    val => val.default
-  ),
   contracts: import('@/_generated/contracts/contract-abi-etc.json').then(
     val => val.default
   ),

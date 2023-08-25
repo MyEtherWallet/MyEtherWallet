@@ -7,10 +7,7 @@ export default {
   blockExplorerTX: 'https://arbiscan.io/tx/[[txHash]]',
   blockExplorerAddr: 'https://arbiscan.io/address/[[address]]',
   chainID: 42161,
-  tokens: import('@/_generated/tokens/tokens-arb.json').then(
-    module => module.default
-  ),
-  contracts: import('@/_generated/contracts/contract-abi-arb.json').then(
+  contracts: import('@/_generated/contracts/contract-abi-eth.json').then(
     module => module.default
   ),
   icon: arbitrum,

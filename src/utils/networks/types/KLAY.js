@@ -7,9 +7,6 @@ export default {
   blockExplorerTX: 'https://scope.klaytn.com/tx/[[txHash]]',
   blockExplorerAddr: 'https://scope.klaytn.com/account/[[address]]',
   chainID: 8217,
-  tokens: import('@/_generated/tokens/tokens-klay.json').then(
-    module => module.default
-  ),
   contracts: import('@/_generated/contracts/contract-abi-klay.json').then(
     module => module.default
   ),

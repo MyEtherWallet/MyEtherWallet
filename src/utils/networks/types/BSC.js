@@ -7,9 +7,6 @@ export default {
   blockExplorerTX: 'https://bscscan.com/tx/[[txHash]]',
   blockExplorerAddr: 'https://bscscan.com/address/[[address]]',
   chainID: 56,
-  tokens: import('@/_generated/tokens/tokens-bsc.json').then(
-    module => module.default
-  ),
   contracts: import('@/_generated/contracts/contract-abi-bsc.json').then(
     module => module.default
   ),

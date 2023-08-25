@@ -7,9 +7,6 @@ export default {
   blockExplorerTX: 'https://polygonscan.com/tx/[[txHash]]',
   blockExplorerAddr: 'https://polygonscan.com/address/[[address]]',
   chainID: 137,
-  tokens: import('@/_generated/tokens/tokens-matic.json').then(
-    val => val.default
-  ),
   contracts: import('@/_generated/contracts/contract-abi-etc.json').then(
     val => val.default
   ),
