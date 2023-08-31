@@ -137,7 +137,7 @@
     "bip39": "3.0.4",
     "chromedriver": "104.0.0",
     "codecov": "3.8.3",
-    "commitlint": "17.7.0",
+    "commitlint": "17.7.1",
     "copy-webpack-plugin": "6.3.2",
     "eslint": "7.32.0",
     "eslint-plugin-prettier": "4.2.1",
