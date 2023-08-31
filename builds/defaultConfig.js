@@ -1,10 +1,9 @@
-const imageminMozjpeg = require('imagemin-mozjpeg');
-const ImageminPlugin = require('imagemin-webpack-plugin').default;
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 const webpack = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CompressionWebpackPlugin = require('compression-webpack-plugin');
-const UglifyJS = require('uglify-es');
+const UglifyJS = require('uglify-js');
 const env_vars = require('../ENV_VARS');
 const allowedConnections = require('../connections');
 
@@ -14,13 +13,10 @@ const sourceMapsConfig = {
 
 const webpackConfig = {
   devtool: false,
-  node: {
-    process: true
-  },
   devServer: {
-    https: true,
+    // https: true,
     host: 'localhost',
-    hotOnly: true,
+    hot: 'only',
     port: 8080,
     headers: {
       'Strict-Transport-Security':
@@ -33,27 +29,27 @@ const webpackConfig = {
       'X-Frame-Options': 'DENY',
       'X-XSS-Protection': '1; mode=block',
       'Referrer-Policy': 'same-origin'
-    },
-    compress: true // enable when testing local optimization
+    }
   },
   plugins: [
+    new NodePolyfillPlugin(),
     new webpack.SourceMapDevToolPlugin(sourceMapsConfig),
     new webpack.NormalModuleReplacementPlugin(/^any-promise$/, 'bluebird'),
     // new BundleAnalyzerPlugin(),
-    new ImageminPlugin({
-      disable: process.env.NODE_ENV !== 'production',
-      test: /\.(jpe?g|png|gif|svg)$/i,
-      pngquant: {
-        quality: '100'
-      },
-      plugins: [
-        imageminMozjpeg({
-          quality: 100,
-          progressive: true,
-          chunks: 'all'
-        })
-      ]
-    }),
+    // new ImageminPlugin({
+    //   disable: process.env.NODE_ENV !== 'production',
+    //   test: /\.(jpe?g|png|gif|svg)$/i,
+    //   pngquant: {
+    //     quality: '100'
+    //   },
+    //   plugins: [
+    //     imageminMozjpeg({
+    //       quality: 100,
+    //       progressive: true,
+    //       chunks: 'all'
+    //     })
+    //   ]
+    // }),
     new CopyWebpackPlugin({
       patterns: [
         { from: 'security.txt', to: '.well-known/security.txt' },

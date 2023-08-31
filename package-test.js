@@ -65,7 +65,6 @@ const EXCEPTIONS = [
   'vue-template-compiler',
   '@aave/contract-helpers',
   '@aave/math-utils',
-  'node-sass',
   '@ledgerhq/hw-transport-web-ble',
   '@ledgerhq/hw-transport-webusb',
   '@ledgerhq/hw-app-eth',
