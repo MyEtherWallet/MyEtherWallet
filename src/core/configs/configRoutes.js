@@ -17,10 +17,7 @@ const ROUTES_HOME = {
   SECURITY_POLICY: { NAME: 'SecurityPolicy', PATH: 'security-policy' },
   TEAM_PAGE: { NAME: 'TeamPage', PATH: 'team' },
   TERMS_OF_SERVICE: { NAME: 'TermsOfService', PATH: 'terms-of-service' },
-  TOOLS: { NAME: 'Tools', PATH: 'tools' },
-  TOOLS_KEYSTORE: { NAME: 'ToolsKeystore', PATH: 'tools-keystore' },
-  TOOLS_KEYSTORE_1: { NAME: 'ToolsKeystore1', PATH: 'tools-keystore-1' },
-  TOOLS_KEYSTORE_2: { NAME: 'ToolsKeystore2', PATH: 'tools-keystore-2' }
+  TOOLS: { NAME: 'Tools', PATH: 'tools' }
 };
 const ROUTES_WALLET = {
   WALLETS: { NAME: 'Wallets', PATH: '' },

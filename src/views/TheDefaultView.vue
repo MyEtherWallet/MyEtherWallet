@@ -6,10 +6,6 @@
     </v-main>
     <the-default-footer />
     <the-enkrypt-popup v-if="!isOfflineApp" :show="enkryptLandingPopup" />
-    <the-survey-popup
-      v-if="!isOfflineApp"
-      :show="surveyPopup && !neverShowSurveyPopup"
-    />
   </div>
 </template>
 
@@ -21,15 +17,10 @@ export default {
   components: {
     TheDefaultHeader: () => import('./components-default/TheDefaultHeader'),
     TheDefaultFooter: () => import('./components-default/TheDefaultFooter'),
-    TheEnkryptPopup: () => import('./components-default/TheEnkryptPopup'),
-    TheSurveyPopup: () => import('./components-default/TheSurveyPopup')
+    TheEnkryptPopup: () => import('./components-default/TheEnkryptPopup')
   },
   computed: {
-    ...mapState('popups', [
-      'enkryptLandingPopup',
-      'surveyPopup',
-      'neverShowSurveyPopup'
-    ]),
+    ...mapState('popups', ['enkryptLandingPopup']),
     ...mapState('wallet', ['isOfflineApp'])
   }
 };

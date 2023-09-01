@@ -7,7 +7,6 @@
         <module-confirmation v-if="address" />
         <the-enkrypt-popup v-if="!isOfflineApp" :show="walletEnkryptPopup" />
         <router-view />
-        <survey-banner :show="!neverShowSurveyBanner" />
       </v-container>
     </v-main>
     <the-wallet-footer :is-offline-app="isOfflineApp" />
@@ -58,8 +57,7 @@ export default {
       import('@/views/components-wallet/EnkryptPromoSnackbar'),
     TheEnkryptPopup: () =>
       import('@/views/components-default/TheEnkryptPopup.vue'),
-    ModulePaperWallet: () => import('@/modules/balance/ModulePaperWallet.vue'),
-    SurveyBanner: () => import('@/views/components-wallet/SurveyBanner.vue')
+    ModulePaperWallet: () => import('@/modules/balance/ModulePaperWallet.vue')
   },
   mixins: [handlerWallet, handlerAnalytics],
   data() {
@@ -86,8 +84,7 @@ export default {
     ...mapState('popups', [
       'enkryptWalletPopup',
       'enkryptLandingPopup',
-      'enkryptLandingPopupClosed',
-      'neverShowSurveyBanner'
+      'enkryptLandingPopupClosed'
     ]),
     ...mapGetters('global', [
       'network',
