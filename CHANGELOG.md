@@ -1,3 +1,15 @@
+### devop
+
+* remove eth2 keystore [#4708](https://github.com/MyEtherWallet/MyEtherWallet/pull/4708)
+* add network switching on dapps [#4711](https://github.com/MyEtherWallet/MyEtherWallet/pull/4711)
+* network switch dapps [#4712](https://github.com/MyEtherWallet/MyEtherWallet/pull/4712)
+* ad paid advertisement [#4714](https://github.com/MyEtherWallet/MyEtherWallet/pull/4714)
+* remove survey, rename bsc [#4715](https://github.com/MyEtherWallet/MyEtherWallet/pull/4715)
+
+### fix
+
+* [#4710](https://github.com/MyEtherWallet/MyEtherWallet/pull/4710)
+
 ### Release v6.7.6-hotfix.2
 
 ### devop
