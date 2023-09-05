@@ -11,7 +11,7 @@
 
 ### fix
 
-* [#4710](https://github.com/MyEtherWallet/MyEtherWallet/pull/4710)
+* reverse lookup [#4710](https://github.com/MyEtherWallet/MyEtherWallet/pull/4710)
 
 ### Release v6.7.6-hotfix.2
 
