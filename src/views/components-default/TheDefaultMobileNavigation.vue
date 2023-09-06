@@ -245,10 +245,6 @@ export default {
               to: { name: ROUTES_HOME.TOOLS.NAME, query: { tool: 'convert' } }
             },
             {
-              label: 'Generate Keystore file',
-              to: { name: ROUTES_HOME.TOOLS.NAME, query: { tool: 'keystore' } }
-            },
-            {
               label: 'Send Offline Helper',
               to: { name: ROUTES_HOME.TOOLS.NAME, query: { tool: 'offline' } }
             }
