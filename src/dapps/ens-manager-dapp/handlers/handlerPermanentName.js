@@ -43,14 +43,13 @@ export default class PermanentNameModule extends ENSManagerInterface {
   }
   async getNameReverseData(domain) {
     try {
-      const contract = new this.web3.eth.Contract(ReverseRegistrar.abi);
-      contract._address = ReverseRegistrar.address;
-      const tx = {
-        to: ReverseRegistrar.address,
-        from: this.address,
-        data: contract.methods.setName(domain).encodeABI()
-      };
-      return await this.web3.eth.estimateGas(tx);
+      const contract = new this.web3.eth.Contract(
+        ReverseRegistrar.abi,
+        ReverseRegistrar.address
+      );
+      return await contract.methods
+        .setName(domain)
+        .estimateGas({ from: this.address });
     } catch (e) {
       Toast(e, {}, ERROR);
     }

@@ -45,8 +45,7 @@ export default {
     ...mapState('global', ['preferredCurrency']),
     ...mapState('article', ['timestamp']),
     ...mapGetters('article', ['articleList']),
-    ...mapGetters('global', ['network']),
-    ...mapState('popups', ['surveyPopup', 'neverShowSurveyPopup'])
+    ...mapGetters('global', ['network'])
   },
   created() {
     const succMsg = this.$t('common.updates.new');
@@ -63,26 +62,6 @@ export default {
     });
     window.addEventListener(PWA_EVENTS.PWA_UPDATE_FOUND, () => {
       Toast(updateMsg, {}, INFO);
-    });
-
-    // popup listeners
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden && !this.surveyPopup && !this.neverShowSurveyPopup) {
-        this.showSurveyPopup();
-      }
-    });
-
-    window.addEventListener('mouseout', e => {
-      if (
-        (e.clientY <= 0 ||
-          e.clientX <= 0 ||
-          e.clientX >= window.innerWidth ||
-          e.clientY >= window.innerHeight) &&
-        !this.surveyPopup &&
-        !this.neverShowSurveyPopup
-      ) {
-        this.showSurveyPopup();
-      }
     });
   },
   mounted() {
