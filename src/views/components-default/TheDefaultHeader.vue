@@ -114,14 +114,14 @@ export default {
     ...mapGetters('global', ['swapLink', 'network'])
   },
   mounted() {
-    if (!this.network) return;
-    this.network.type.tokens.then(res => {
-      const tokenMap = new Map();
-      res.forEach(item => {
-        tokenMap.set(item.address.toLowerCase(), item);
-      });
-      this.setNetworkTokens(tokenMap);
-    });
+    // if (!this.network) return;
+    // this.network.type.tokens.then(res => {
+    //   const tokenMap = new Map();
+    //   res.forEach(item => {
+    //     tokenMap.set(item.address.toLowerCase(), item);
+    //   });
+    //   this.setNetworkTokens(tokenMap);
+    // });
   },
   methods: {
     ...mapActions('external', ['setNetworkTokens']),

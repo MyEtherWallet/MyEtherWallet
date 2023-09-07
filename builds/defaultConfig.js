@@ -1,9 +1,9 @@
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 const webpack = require('webpack');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CompressionWebpackPlugin = require('compression-webpack-plugin');
-const UglifyJS = require('uglify-js');
+const PrerendererWebpackPlugin = require('@prerenderer/webpack-plugin');
+
 const env_vars = require('../ENV_VARS');
 const allowedConnections = require('../connections');
 
@@ -14,7 +14,7 @@ const sourceMapsConfig = {
 const webpackConfig = {
   devtool: false,
   devServer: {
-    // https: true,
+    https: true,
     host: 'localhost',
     hot: 'only',
     port: 8080,
@@ -35,6 +35,9 @@ const webpackConfig = {
     new NodePolyfillPlugin(),
     new webpack.SourceMapDevToolPlugin(sourceMapsConfig),
     new webpack.NormalModuleReplacementPlugin(/^any-promise$/, 'bluebird'),
+    new PrerendererWebpackPlugin({
+      routes: ['/']
+    }),
     // new BundleAnalyzerPlugin(),
     // new ImageminPlugin({
     //   disable: process.env.NODE_ENV !== 'production',
@@ -50,19 +53,19 @@ const webpackConfig = {
     //     })
     //   ]
     // }),
-    new CopyWebpackPlugin({
-      patterns: [
-        { from: 'security.txt', to: '.well-known/security.txt' },
-        {
-          from: 'public',
-          transform: function (content, filePath) {
-            if (filePath.split('.').pop() === ('js' || 'JS'))
-              return UglifyJS.minify(content.toString()).code;
-            return content;
-          }
-        }
-      ]
-    }),
+    // new CopyWebpackPlugin({
+    //   patterns: [
+    //     { from: 'security.txt', to: '.well-known/security.txt' },
+    //     {
+    //       from: 'public',
+    //       transform: function (content, filePath) {
+    //         if (filePath.split('.').pop() === ('js' || 'JS'))
+    //           return UglifyJS.minify(content.toString()).code;
+    //         return content;
+    //       }
+    //     }
+    //   ]
+    // }),
     new webpack.DefinePlugin(env_vars),
     new CompressionWebpackPlugin(),
     new webpack.optimize.MinChunkSizePlugin({
@@ -70,7 +73,7 @@ const webpackConfig = {
     })
   ],
   output: {
-    filename: '[name].[hash].js'
+    filename: '[name].[chunkhash].js'
   }
 };
 
@@ -119,22 +122,22 @@ const transpilers = config => {
     .use('babel')
     .loader('babel-loader')
     .end();
-  config.module
-    .rule('transpile-ledger')
-    .test(/node_modules\/@ledgerhq\/.*\.js$/)
-    .use('babel')
-    .loader('babel-loader')
-    .end();
-  config.module
-    .rule('resolve-alias')
-    .test(/node_modules\/@ledgerhq\/.*\.js$/)
-    .resolve.alias.set('@ledgerhq/devices', '@ledgerhq/devices/lib-es')
-    .set('@ledgerhq/cryptoassets', '@ledgerhq/cryptoassets/lib-es')
-    .set(
-      '@ledgerhq/domain-service/signers',
-      '@ledgerhq/domain-service/lib-es/signers'
-    )
-    .end();
+  // config.module
+  //   .rule('transpile-ledger')
+  //   .test(/node_modules\/@ledgerhq\/.*\.js$/)
+  //   .use('babel')
+  //   .loader('babel-loader')
+  //   .end();
+  // config.module
+  //   .rule('resolve-alias')
+  //   .test(/node_modules\/@ledgerhq\/.*\.js$/)
+  //   .resolve.alias.set('@ledgerhq/devices', '@ledgerhq/devices/lib-es')
+  //   .set('@ledgerhq/cryptoassets', '@ledgerhq/cryptoassets/lib-es')
+  //   .set(
+  //     '@ledgerhq/domain-service/signers',
+  //     '@ledgerhq/domain-service/lib-es/signers'
+  //   )
+  //   .end();
 
   // disable if statement if testing optimization locally
   if (process.env.NODE_ENV === 'production') {

@@ -20,15 +20,15 @@ jobs:
           cache-name: cache-node-modules
         with:
           path: node_modules
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{steps.node-version.outputs.NODE_VERSION}}-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{steps.node-version.outputs.NODE_VERSION}}-${{ hashFiles('**/yarn-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-${{steps.node-version.outputs.NODE_VERSION}}-
 
-      - name: npm install
-        run: docker run --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" mew-build-container /bin/bash -c "npm install"
+      - name: yarn install
+        run: docker run --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" mew-build-container /bin/bash -c "yarn"
 
       - name: build
-        run: docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:offline"
+        run: docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "yarn build:offline"
 
       - name: generate zip for offline build
         if: contains(github.ref, 'offline')
