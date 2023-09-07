@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "6.7.6-hotfix.2",
+  "version": "6.7.7",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build": "npm run update && vue-cli-service build",
@@ -186,7 +186,7 @@
     "web3-eth-contract": "1.5.0",
     "web3-utils": "1.5.0",
     "webpack": "4.44.2",
-    "webpack-bundle-analyzer": "4.9.0",
+    "webpack-bundle-analyzer": "4.9.1",
     "xss": "1.0.14"
   },
   "engines": {
