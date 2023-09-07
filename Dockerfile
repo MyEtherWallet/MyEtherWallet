@@ -3,7 +3,7 @@ RUN apt update
 RUN apt install nasm -y
 ENV HOME /home
 ENV NODE_OPTIONS --max-old-space-size=8192
-RUN brew install yarn
+RUN npm install -g yarn
 RUN node -v && yarn -v
 COPY package*.json ./
 COPY package-audit.js ./
