@@ -15,33 +15,66 @@ export default {
   layout,
   release: '05/4/2023',
   meta: {
-    noAuth: false
+    noAuth: false,
+    title: 'Stake Your Ethereum | Full Validator Staking | MyEtherWallet',
+    description:
+      'Earn rewards on your Ethereum with Staking. Help secure the Ethereum network and earn crypto.'
   },
   children: [
     {
       path: ROUTES_WALLET.STAKED_STATUS.PATH,
       name: ROUTES_WALLET.STAKED_STATUS.NAME,
-      beforeEnter: stakedRouterGuard
+      beforeEnter: stakedRouterGuard,
+      meta: {
+        noAuth: false,
+        title: 'Stake Your Ethereum | Full Validator Staking | MyEtherWallet',
+        description:
+          'Earn rewards on your Ethereum with Staking. Help secure the Ethereum network and earn crypto.'
+      }
     },
     {
       path: ROUTES_WALLET.STAKED_1.PATH,
       name: ROUTES_WALLET.STAKED_1.NAME,
-      beforeEnter: stakedRouterGuard
+      beforeEnter: stakedRouterGuard,
+      meta: {
+        noAuth: false,
+        title: 'Stake Your Ethereum | Full Validator Staking | MyEtherWallet',
+        description:
+          'Earn rewards on your Ethereum with Staking. Help secure the Ethereum network and earn crypto.'
+      }
     },
     {
       path: ROUTES_WALLET.STAKED_2.PATH,
       name: ROUTES_WALLET.STAKED_2.NAME,
-      beforeEnter: stakedRouterGuard
+      beforeEnter: stakedRouterGuard,
+      meta: {
+        noAuth: false,
+        title: 'Stake Your Ethereum | Full Validator Staking | MyEtherWallet',
+        description:
+          'Earn rewards on your Ethereum with Staking. Help secure the Ethereum network and earn crypto.'
+      }
     },
     {
       path: ROUTES_WALLET.STAKED_3.PATH,
       name: ROUTES_WALLET.STAKED_3.NAME,
-      beforeEnter: stakedRouterGuard
+      beforeEnter: stakedRouterGuard,
+      meta: {
+        noAuth: false,
+        title: 'Stake Your Ethereum | Full Validator Staking | MyEtherWallet',
+        description:
+          'Earn rewards on your Ethereum with Staking. Help secure the Ethereum network and earn crypto.'
+      }
     },
     {
       path: ROUTES_WALLET.STAKED_4.PATH,
       name: ROUTES_WALLET.STAKED_4.NAME,
-      beforeEnter: stakedRouterGuard
+      beforeEnter: stakedRouterGuard,
+      meta: {
+        noAuth: false,
+        title: 'Stake Your Ethereum | Full Validator Staking | MyEtherWallet',
+        description:
+          'Earn rewards on your Ethereum with Staking. Help secure the Ethereum network and earn crypto.'
+      }
     }
   ]
 };

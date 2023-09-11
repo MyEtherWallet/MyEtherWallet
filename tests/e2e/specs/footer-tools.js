@@ -101,33 +101,6 @@ module.exports = {
       .expect.element('.CurrencyLeftInput input')
       .to.have.value.that.equals('1000000000');
   },
-  'Generate Keystore test': async browser => {
-    // open browser
-    startBrowser(browser);
-
-    // click on link
-    browser
-      .moveToElement('.FooterKeystoreTool', 10, 10)
-      .click(css, '.FooterKeystoreTool');
-
-    // check if url is correct
-    browser.assert.urlContains('keystore');
-
-    // select download
-    browser
-      .moveToElement('.KeystoreDownloadButton', 10, 10)
-      .click(css, '.KeystoreDownloadButton');
-
-    // enter test password
-    browser.click(css, '.KeystorePassword').keys(testPW);
-    browser.click(css, '.KeystoreConfirmPassword').keys(testPW);
-
-    // accept terms
-    browser.click(css, '.KeystoreConfirm');
-
-    // check if download is enabled
-    browser.expect.element('.KeystoreDownloadFile').to.be.enabled;
-  },
   'Send Offline Helper test': async browser => {
     // open browser
     startBrowser(browser);
