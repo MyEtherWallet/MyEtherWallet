@@ -119,7 +119,6 @@ const contractToToken =
     //   return null;
     // }
     if (!cgToken.name && !cgToken.symbol) return null;
-    console.log(getters.getCoinGeckoTokenById(tokenId), contractAddress);
     return Object.assign(cgToken, {
       subtext: cgToken.name,
       value: cgToken.name,

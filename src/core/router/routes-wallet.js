@@ -149,7 +149,7 @@ export default {
       component: () => import('@/views/layouts-wallet/TheVerifyMessageLayout'),
       meta: {
         noAuth: false,
-        title: 'Verify Message',
+        title: 'Verify A Signed Message With a Crypto Wallet | MyEtherWallet',
         description:
           'Confirm a signed message with your crypto wallet. Access this feature using MyEtherWallet.'
       }

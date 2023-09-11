@@ -4632,7 +4632,7 @@
   optionalDependencies:
     http-proxy-middleware "^2.0.6"
 
-"@prerenderer/renderer-puppeteer@^1.2.2":
+"@prerenderer/renderer-puppeteer@1.2.2", "@prerenderer/renderer-puppeteer@^1.2.2":
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/@prerenderer/renderer-puppeteer/-/renderer-puppeteer-1.2.2.tgz#38576000fb782dc47e1324f96ef1ec21412c0610"
   integrity sha512-tTdhhxrm7sgZC4i6hrDuOwFN3JVLiotgk2NmaLlJbEO+HVgpPbDLPGITNAlNRXlTYHaaHTd11Sdwh1eZoStOMQ==
@@ -4641,7 +4641,7 @@
     promise-limit "^2.7.0"
     schema-utils "^4.0.0"
 
-"@prerenderer/webpack-plugin@^5.3.6":
+"@prerenderer/webpack-plugin@5.3.6":
   version "5.3.6"
   resolved "https://registry.yarnpkg.com/@prerenderer/webpack-plugin/-/webpack-plugin-5.3.6.tgz#ec2a40d4591e45f816815806aedd6a012a720254"
   integrity sha512-U5Q2bmXe7IdRX3HGmttOp5AJ6Ci1TJjC8y5IYYK3wxTTsPQTb5Up+pG26JP94Tz0yZx3+iRkuWwpdZBrnkSf0w==
@@ -21131,7 +21131,7 @@ puppeteer-core@21.1.1:
     devtools-protocol "0.0.1159816"
     ws "8.13.0"
 
-puppeteer@^21.1.1:
+puppeteer@21.1.1:
   version "21.1.1"
   resolved "https://registry.yarnpkg.com/puppeteer/-/puppeteer-21.1.1.tgz#48f895dc89f1a8874a0cefcfb05a22f979e6f9a8"
   integrity sha512-2TLntjGA4qLrI9/8N0UK/5OoZJ2Ue7QgphN2SD+RsaHiha12AEiVyMGsB+i6LY1IoPAtEgYIjblQ7lw3kWDNRw==
