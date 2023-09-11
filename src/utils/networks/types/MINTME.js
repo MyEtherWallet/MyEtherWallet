@@ -8,9 +8,6 @@ export default {
   blockExplorerTX: 'https://www.mintme.com/explorer/tx/[[txHash]]',
   blockExplorerAddr: 'https://www.mintme.com/explorer/addr/[[address]]',
   chainID: 24734,
-  tokens: import('@/_generated/tokens/tokens-mintme.json').then(
-    val => val.default
-  ),
   contracts: import('@/_generated/contracts/contract-abi-mintme.json').then(
     val => val.default
   ),

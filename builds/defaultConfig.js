@@ -1,9 +1,9 @@
-const imageminMozjpeg = require('imagemin-mozjpeg');
-const ImageminPlugin = require('imagemin-webpack-plugin').default;
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 const webpack = require('webpack');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const UglifyJS = require('uglify-es');
+const CompressionWebpackPlugin = require('compression-webpack-plugin');
+const PrerendererWebpackPlugin = require('@prerenderer/webpack-plugin');
+
 const env_vars = require('../ENV_VARS');
 const allowedConnections = require('../connections');
 
@@ -11,15 +11,64 @@ const sourceMapsConfig = {
   filename: 'sourcemaps/[file].map'
 };
 
+const plugins = [
+  new NodePolyfillPlugin(),
+  new webpack.SourceMapDevToolPlugin(sourceMapsConfig),
+  new webpack.NormalModuleReplacementPlugin(/^any-promise$/, 'bluebird'),
+  // new BundleAnalyzerPlugin(),
+  // new ImageminPlugin({
+  //   disable: process.env.NODE_ENV !== 'production',
+  //   test: /\.(jpe?g|png|gif|svg)$/i,
+  //   pngquant: {
+  //     quality: '100'
+  //   },
+  //   plugins: [
+  //     imageminMozjpeg({
+  //       quality: 100,
+  //       progressive: true,
+  //       chunks: 'all'
+  //     })
+  //   ]
+  // }),
+  // new CopyWebpackPlugin({
+  //   patterns: [
+  //     { from: 'security.txt', to: '.well-known/security.txt' },
+  //     {
+  //       from: 'public',
+  //       transform: function (content, filePath) {
+  //         if (filePath.split('.').pop() === ('js' || 'JS'))
+  //           return UglifyJS.minify(content.toString()).code;
+  //         return content;
+  //       }
+  //     }
+  //   ]
+  // }),
+  new webpack.DefinePlugin(env_vars),
+  new CompressionWebpackPlugin(),
+  new webpack.optimize.MinChunkSizePlugin({
+    minChunkSize: 1000000
+  })
+];
+
+if (process.env.NODE_ENV === 'production') {
+  plugins.push(
+    new PrerendererWebpackPlugin({
+      routes: ['/'],
+      rendererOptions: {
+        skipThirdPartyRequests: true,
+        renderAfterElementExists: '#app',
+        timeout: 10000
+      }
+    })
+  );
+}
+
 const webpackConfig = {
   devtool: false,
-  node: {
-    process: true
-  },
   devServer: {
     https: true,
     host: 'localhost',
-    hotOnly: true,
+    hot: 'only',
     port: 8080,
     headers: {
       'Strict-Transport-Security':
@@ -34,46 +83,24 @@ const webpackConfig = {
       'Referrer-Policy': 'same-origin'
     }
   },
-  plugins: [
-    new webpack.SourceMapDevToolPlugin(sourceMapsConfig),
-    new webpack.NormalModuleReplacementPlugin(/^any-promise$/, 'bluebird'),
-    // new BundleAnalyzerPlugin(),
-    new ImageminPlugin({
-      disable: process.env.NODE_ENV !== 'production',
-      test: /\.(jpe?g|png|gif|svg)$/i,
-      pngquant: {
-        quality: '100'
-      },
-      plugins: [
-        imageminMozjpeg({
-          quality: 100,
-          progressive: true,
-          chunks: 'all'
-        })
-      ]
-    }),
-    new CopyWebpackPlugin({
-      patterns: [
-        { from: 'security.txt', to: '.well-known/security.txt' },
-        {
-          from: 'public',
-          transform: function (content, filePath) {
-            if (filePath.split('.').pop() === ('js' || 'JS'))
-              return UglifyJS.minify(content.toString()).code;
-            return content;
-          }
-        }
-      ]
-    }),
-    new webpack.DefinePlugin(env_vars),
-    new webpack.optimize.MinChunkSizePlugin({
-      minChunkSize: 1000000
-    })
-  ],
+  plugins: plugins,
   output: {
-    filename: '[name].[hash].js'
+    filename: '[name].[chunkhash].js'
   }
 };
+
+if (process.env.NODE_ENV === 'production') {
+  webpackConfig.optimization = Object.assign({}, webpackConfig.optimization, {
+    chunkIds: 'size',
+    concatenateModules: true,
+    mergeDuplicateChunks: true,
+    minimize: true,
+    moduleIds: 'size',
+    removeAvailableModules: true,
+    removeEmptyChunks: true,
+    usedExports: true
+  });
+}
 
 const transpilers = config => {
   // GraphQL Loader
@@ -107,22 +134,29 @@ const transpilers = config => {
     .use('babel')
     .loader('babel-loader')
     .end();
-  config.module
-    .rule('transpile-ledger')
-    .test(/node_modules\/@ledgerhq\/.*\.js$/)
-    .use('babel')
-    .loader('babel-loader')
-    .end();
-  config.module
-    .rule('resolve-alias')
-    .test(/node_modules\/@ledgerhq\/.*\.js$/)
-    .resolve.alias.set('@ledgerhq/devices', '@ledgerhq/devices/lib-es')
-    .set('@ledgerhq/cryptoassets', '@ledgerhq/cryptoassets/lib-es')
-    .set(
-      '@ledgerhq/domain-service/signers',
-      '@ledgerhq/domain-service/lib-es/signers'
-    )
-    .end();
+  // config.module
+  //   .rule('transpile-ledger')
+  //   .test(/node_modules\/@ledgerhq\/.*\.js$/)
+  //   .use('babel')
+  //   .loader('babel-loader')
+  //   .end();
+  // config.module
+  //   .rule('resolve-alias')
+  //   .test(/node_modules\/@ledgerhq\/.*\.js$/)
+  //   .resolve.alias.set('@ledgerhq/devices', '@ledgerhq/devices/lib-es')
+  //   .set('@ledgerhq/cryptoassets', '@ledgerhq/cryptoassets/lib-es')
+  //   .set(
+  //     '@ledgerhq/domain-service/signers',
+  //     '@ledgerhq/domain-service/lib-es/signers'
+  //   )
+  //   .end();
+
+  // disable if statement if testing optimization locally
+  if (process.env.NODE_ENV === 'production') {
+    // remove prefetch for build
+    config.plugins.delete('prefetch');
+    config.plugins.delete('preload');
+  }
 };
 
 module.exports = { webpackConfig, sourceMapsConfig, env_vars, transpilers };

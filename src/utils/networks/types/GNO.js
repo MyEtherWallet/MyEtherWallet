@@ -7,9 +7,6 @@ export default {
   blockExplorerTX: 'https://gnosisscan.io/tx/[[txHash]]',
   blockExplorerAddr: 'https://gnosisscan.io/address/[[address]]',
   chainID: 100,
-  tokens: import('@/_generated/tokens/tokens-gno.json').then(
-    module => module.default
-  ),
   contracts: import('@/_generated/contracts/contract-abi-gno.json').then(
     module => module.default
   ),

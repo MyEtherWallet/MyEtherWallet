@@ -23,7 +23,7 @@ export default {
       result({ data }) {
         this.tokensData = new Map();
         if (data && data.getLatestPrices) {
-          data.getLatestPrices.forEach(token => {
+          data.getLatestPrices.forEach(async token => {
             this.tokensData.set(token.id, token);
           });
           this.setCoinGeckoTokens(this.tokensData);

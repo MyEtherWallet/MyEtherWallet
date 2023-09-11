@@ -111,18 +111,19 @@ const contractToToken =
         decimals: 18
       });
     }
-    cgToken = getters.getCoinGeckoTokenById(tokenId);
-    const networkToken = state.networkTokens.get(contractAddress);
 
-    if (!networkToken) return null;
+    cgToken = getters.getCoinGeckoTokenById(tokenId);
+    // console.log(state.networkTokens, contractAddress.toLowerCase());
+    // const networkToken = state.networkTokens.get(contractAddress.toLowerCase());
+    // if (!networkToken) {
+    //   return null;
+    // }
+    if (!cgToken.name && !cgToken.symbol) return null;
     return Object.assign(cgToken, {
-      name: networkToken.name,
-      symbol: networkToken.symbol,
-      subtext: networkToken.name,
-      value: networkToken.name,
-      contract: networkToken.address,
-      img: networkToken.icon_png ? networkToken.icon_png : '',
-      decimals: networkToken.decimals
+      subtext: cgToken.name,
+      value: cgToken.name,
+      contract: contractAddress,
+      decimals: 18
     });
   };
 

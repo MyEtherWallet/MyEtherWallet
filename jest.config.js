@@ -42,7 +42,8 @@ module.exports = {
     '**/__tests__/*.(js | jsx | ts | tsx)',
     '**/tests/*.spec.js'
   ],
-  testEnvironmentOptions: {},
-  testURL: 'https://localhost:8080',
+  testEnvironmentOptions: {
+    url: 'https://localhost:8080'
+  },
   setupFilesAfterEnv: ['<rootDir>/tests/unit/__mocks__/mocks.js']
 };

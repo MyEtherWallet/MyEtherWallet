@@ -9,9 +9,6 @@ export default {
   blockExplorerTX: 'https://ethvm.com/tx/[[txHash]]',
   blockExplorerAddr: 'https://ethvm.com/address/[[address]]',
   chainID: 1,
-  tokens: import('@/_generated/tokens/tokens-eth.json').then(
-    module => module.default
-  ),
   contracts: import('@/_generated/contracts/contract-abi-eth.json').then(
     module => module.default
   ),
