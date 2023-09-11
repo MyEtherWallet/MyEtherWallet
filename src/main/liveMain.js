@@ -73,6 +73,14 @@ new Vue({
     if (locStore.get('mew-testing') === undefined) {
       locStore.set('mew-testing', false);
     }
+
+    const userId = this.$route.query.intercomid
+      ? this.$route.query.intercomid
+      : uuidv4();
+    const _this = this;
+    setTimeout(() => {
+      _this.$intercom.boot({ user_id: userId });
+    }, 10000);
     this.$store.commit('custom/INIT_STORE');
     this.$store.commit('global/INIT_STORE');
     this.$store.commit('notifications/INIT_STORE');
@@ -81,14 +89,6 @@ new Vue({
     this.$store.commit('popups/INIT_STORE');
     dappStoreBeforeCreate(this.$store);
     this.$store.dispatch('popups/setTracking');
-  },
-  mounted() {
-    const userId = this.$route.query.intercomid
-      ? this.$route.query.intercomid
-      : uuidv4();
-    setTimeout(() => {
-      this.$intercom.boot({ user_id: userId });
-    }, 10000);
   },
   render: h => h(app)
 });

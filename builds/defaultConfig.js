@@ -11,6 +11,58 @@ const sourceMapsConfig = {
   filename: 'sourcemaps/[file].map'
 };
 
+const plugins = [
+  new NodePolyfillPlugin(),
+  new webpack.SourceMapDevToolPlugin(sourceMapsConfig),
+  new webpack.NormalModuleReplacementPlugin(/^any-promise$/, 'bluebird'),
+  // new BundleAnalyzerPlugin(),
+  // new ImageminPlugin({
+  //   disable: process.env.NODE_ENV !== 'production',
+  //   test: /\.(jpe?g|png|gif|svg)$/i,
+  //   pngquant: {
+  //     quality: '100'
+  //   },
+  //   plugins: [
+  //     imageminMozjpeg({
+  //       quality: 100,
+  //       progressive: true,
+  //       chunks: 'all'
+  //     })
+  //   ]
+  // }),
+  // new CopyWebpackPlugin({
+  //   patterns: [
+  //     { from: 'security.txt', to: '.well-known/security.txt' },
+  //     {
+  //       from: 'public',
+  //       transform: function (content, filePath) {
+  //         if (filePath.split('.').pop() === ('js' || 'JS'))
+  //           return UglifyJS.minify(content.toString()).code;
+  //         return content;
+  //       }
+  //     }
+  //   ]
+  // }),
+  new webpack.DefinePlugin(env_vars),
+  new CompressionWebpackPlugin(),
+  new webpack.optimize.MinChunkSizePlugin({
+    minChunkSize: 1000000
+  })
+];
+
+if (process.env.NODE_ENV === 'production') {
+  plugins.push(
+    new PrerendererWebpackPlugin({
+      routes: ['/'],
+      rendererOptions: {
+        skipThirdPartyRequests: true,
+        renderAfterElementExists: '#app',
+        timeout: 10000
+      }
+    })
+  );
+}
+
 const webpackConfig = {
   devtool: false,
   devServer: {
@@ -31,47 +83,7 @@ const webpackConfig = {
       'Referrer-Policy': 'same-origin'
     }
   },
-  plugins: [
-    new NodePolyfillPlugin(),
-    new webpack.SourceMapDevToolPlugin(sourceMapsConfig),
-    new webpack.NormalModuleReplacementPlugin(/^any-promise$/, 'bluebird'),
-    new PrerendererWebpackPlugin({
-      routes: ['/']
-    }),
-    // new BundleAnalyzerPlugin(),
-    // new ImageminPlugin({
-    //   disable: process.env.NODE_ENV !== 'production',
-    //   test: /\.(jpe?g|png|gif|svg)$/i,
-    //   pngquant: {
-    //     quality: '100'
-    //   },
-    //   plugins: [
-    //     imageminMozjpeg({
-    //       quality: 100,
-    //       progressive: true,
-    //       chunks: 'all'
-    //     })
-    //   ]
-    // }),
-    // new CopyWebpackPlugin({
-    //   patterns: [
-    //     { from: 'security.txt', to: '.well-known/security.txt' },
-    //     {
-    //       from: 'public',
-    //       transform: function (content, filePath) {
-    //         if (filePath.split('.').pop() === ('js' || 'JS'))
-    //           return UglifyJS.minify(content.toString()).code;
-    //         return content;
-    //       }
-    //     }
-    //   ]
-    // }),
-    new webpack.DefinePlugin(env_vars),
-    new CompressionWebpackPlugin(),
-    new webpack.optimize.MinChunkSizePlugin({
-      minChunkSize: 1000000
-    })
-  ],
+  plugins: plugins,
   output: {
     filename: '[name].[chunkhash].js'
   }
