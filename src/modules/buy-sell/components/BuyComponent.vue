@@ -583,10 +583,11 @@ export default {
         isEmpty(this.amount) ||
         this.min.gt(this.amount) ||
         isNaN(this.amount) ||
-        this.max.simplex.lt(this.amount) ||
+        (this.max.simplex.gt(0) && this.max.simplex.lt(this.amount)) ||
         this.amountErrorMessages !== ''
-      )
+      ) {
         return;
+      }
       this.loading = true;
       this.disableCurrencySelect = true;
       this.simplexQuote = {};
