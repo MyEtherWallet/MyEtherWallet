@@ -113,17 +113,28 @@ const contractToToken =
     }
     cgToken = getters.getCoinGeckoTokenById(tokenId);
     const networkToken = state.networkTokens.get(contractAddress);
+    const name = networkToken ? networkToken.name : cgToken.name;
+    const symbol = networkToken ? networkToken.symbol : cgToken.symbol;
+    const img = networkToken
+      ? networkToken.icon_png
+        ? networkToken.icon_png
+        : ''
+      : cgToken.img;
+    const address = networkToken ? networkToken.address : contractAddress;
+    const networkTokenObj = {
+      name: name,
+      symbol: symbol,
+      subtext: name,
+      value: name,
+      contract: address,
+      img: img
+    };
 
-    if (!networkToken) return null;
-    return Object.assign(cgToken, {
-      name: networkToken.name,
-      symbol: networkToken.symbol,
-      subtext: networkToken.name,
-      value: networkToken.name,
-      contract: networkToken.address,
-      img: networkToken.icon_png ? networkToken.icon_png : '',
-      decimals: networkToken.decimals
-    });
+    if (networkToken && networkToken.decimals) {
+      networkTokenObj['decimals'] = networkToken.decimals;
+    }
+
+    return Object.assign(cgToken, networkTokenObj);
   };
 
 export default {
