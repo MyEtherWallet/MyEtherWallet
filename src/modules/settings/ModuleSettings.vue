@@ -187,7 +187,6 @@ export default {
     this.settingsHandler = new handlerSettings();
   },
   methods: {
-    setConsent() {},
     getAddressBookTableData() {
       this.tableData = [];
       this.addressBookStore.forEach((item, idx) => {

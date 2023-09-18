@@ -28,6 +28,7 @@ export default {
      * Sets the consent to track on wallet page
      */
     setConsent() {
+      this.$amplitude.setOptOut(!this.consentToTrack);
       this.setTrackingConsent(!this.consentToTrack);
     },
     /**
@@ -147,11 +148,23 @@ export default {
      * and swap to
      */
     trackSwap(action, key, value) {
+      const amplitudeTrackable = {
+        swapTxBroadcasted: true,
+        swapTxReceivedReceipt: true,
+        swapTxFailedV2: true,
+        swapTxNotBroadcastedFailed: true
+      };
+      const valObj = {};
       if (this.$matomo && action && this.consentToTrack) {
+        if (amplitudeTrackable[action]) {
+          valObj[key] = value;
+
+          this.$matomo.trackEvent(categories.swap, { extra: valObj });
+        }
         if (key && value) {
-          this.$matomo.trackEvent(categories.swap, action, key, value);
+          this.$amplitude.track(categories.swap, action, key, value);
         } else {
-          this.$matomo.trackEvent(categories.swap, action);
+          this.$amplitude.track(categories.swap, action);
         }
       }
     },
