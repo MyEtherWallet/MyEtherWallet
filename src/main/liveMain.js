@@ -9,7 +9,7 @@ import './matomo';
 import Vue from 'vue';
 import Router from 'vue-router';
 import { v4 as uuidv4 } from 'uuid';
-import { toHex, padRight } from 'web3-utils';
+import * as nameHashPckg from 'eth-ens-namehash';
 
 import VueIntercom from '@mathieustan/vue-intercom';
 import VueSocialSharing from 'vue-social-sharing';
@@ -63,11 +63,14 @@ Vue.config.productionTip = false;
 
 // setup amplitude
 // fake generative 32 hex character
-amplitude.init(padRight(toHex(VERSION), 32).replace('0x', ''), {
+amplitude.init(nameHashPckg.hash(VERSION), {
   instanceName:
     process.env.NODE_ENV === 'production' ? 'mew-web-prod' : 'mew-web-dev',
   optOut: true, // should be true on live or localStorage value,
-  // serverUrl: 'https://analytics-development.mewwallet.dev/record',
+  serverUrl:
+    process.env.NODE_ENV === 'production'
+      ? 'https://analytics-web.mewwallet.dev/record'
+      : 'https://analytics-web-development.mewwallet.dev/record',
   appVersion: VERSION,
   trackingOptions: {
     ipAddress: false
