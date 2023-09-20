@@ -1,3 +1,7 @@
+### devop
+
+* fetch balance for when api returns blank api [#4720](https://github.com/MyEtherWallet/MyEtherWallet/pull/4720)
+
 ### Release v6.7.7
 
 ### devop
