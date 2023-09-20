@@ -149,22 +149,27 @@ export default {
      */
     trackSwap(action, key, value) {
       const amplitudeTrackable = {
-        swapTxBroadcasted: true,
-        swapTxReceivedReceipt: true,
-        swapTxFailedV2: true,
-        swapTxNotBroadcastedFailed: true
+        swapTxBroadcasted: 'broadcasted',
+        swapTxReceivedReceipt: 'receipt',
+        swapTxFailedV2: 'failed',
+        swapTxNotBroadcastedFailed: 'failed_broadcast',
+        swapTransactionSuccessfullySent: 'success',
+        swapTransactionSend: 'sending'
       };
       const valObj = {};
-      if (this.$matomo && action && this.consentToTrack) {
-        if (amplitudeTrackable[action]) {
-          valObj[key] = value;
+      if (this.consentToTrack && amplitudeTrackable[action]) {
+        valObj[key] = value;
 
-          this.$matomo.trackEvent(categories.swap, { extra: valObj });
-        }
+        this.$amplitude.track(categories.swap, {
+          swap_transaction: amplitudeTrackable[action]
+        });
+      }
+
+      if (this.$matomo && action && this.consentToTrack) {
         if (key && value) {
-          this.$amplitude.track(categories.swap, action, key, value);
+          this.$matomo.trackEvent(categories.swap, action, key, value);
         } else {
-          this.$amplitude.track(categories.swap, action);
+          this.$matomo.trackEvent(categories.swap, action);
         }
       }
     },

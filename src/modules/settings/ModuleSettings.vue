@@ -68,8 +68,7 @@
     <div v-if="online && !addMode && !editMode" class="mt-3 px-8">
       <div class="matomo-tracking-switch">
         <v-switch
-          v-model="dataSharingOn"
-          :label="`Data Sharing is ${dataSharingOn ? 'on' : 'off'}`"
+          :label="`Data Sharing is ${consentToTrack ? 'on' : 'off'}`"
           :input-value="consentToTrack"
           inset
           color="greenPrimary"
@@ -126,7 +125,6 @@ export default {
   },
   data() {
     return {
-      dataSharingOn: false,
       settingsHandler: null,
       idxToExpand: null,
       editMode: false,
