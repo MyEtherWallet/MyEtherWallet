@@ -156,7 +156,6 @@ export default {
         swapTransactionSuccessfullySent: 'success',
         swapTransactionSend: 'sending'
       };
-      console.log(action);
       if (this.consentToTrack && amplitudeTrackable[action]) {
         const eventProperties = {
           swap_transaction: amplitudeTrackable[action]
