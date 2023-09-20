@@ -26,7 +26,10 @@ const AUDIT_EXCEPTIONS = [
   'decode-uri-component',
   '@openzeppelin/contracts',
   'engine.io',
-  'socket.io-parser'
+  'socket.io-parser',
+  'fast-xml-parser',
+  '@grpc/grpc-js',
+  'is_js'
 ];
 const execute = (command, callback) => {
   exec(

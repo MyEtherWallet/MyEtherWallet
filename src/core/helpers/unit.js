@@ -49,6 +49,14 @@ const numberToString = arg => {
   );
 };
 
+/**
+ * wei -> eth
+ * @param {*} weiInput
+ * @param {*} decimals
+ * @param {*} optionsInput
+ * @returns String
+ */
+
 const fromBase = (weiInput, decimals, optionsInput) => {
   let wei = toBN(weiInput);
   const negative = wei.lt(zero);
@@ -83,7 +91,12 @@ const fromBase = (weiInput, decimals, optionsInput) => {
 
   return value;
 };
-
+/**
+ * eth -> wei
+ * @param {*} etherInput
+ * @param {*} decimals
+ * @returns String wei
+ */
 const toBase = (etherInput, decimals) => {
   let ether = numberToString(etherInput);
   const base = getValueOfUnit(decimals);

@@ -32,6 +32,13 @@
         >
           <slot :name="`leftColItem${n}`" />
         </v-col>
+        <v-col
+          cols="12"
+          class="d-none d-md-flex align-center justify-center flex-column"
+        >
+          <div class="coinzilla" data-zone="C-5186467cdba0c51c392"></div>
+          <div class="paid-ad">Paid Advertisement</div>
+        </v-col>
       </v-row>
     </v-col>
     <!--
@@ -46,9 +53,16 @@
       class="pa-2 pa-md-3"
     >
       <v-row class="ma-n2 ma-md-n3">
-        <v-col cols="12" class="pa-2 pa-md-3 d-none d-md-block">
+        <v-col cols="12" class="pa-2 pt-4 pa-md-3 d-none d-md-block">
           <module-network />
-          <prototype-column v-if="hasAds" class="mt-4" />
+          <!-- <prototype-column v-if="hasAds" class="mt-4" /> -->
+        </v-col>
+        <v-col
+          cols="12"
+          class="pa-2 pa-md-3 d-flex align-center justify-center flex-column"
+        >
+          <div class="coinzilla" data-zone="C-4136467cdba0bdc8324"></div>
+          <div class="paid-ad">Paid Advertisement</div>
         </v-col>
         <v-col
           v-for="n in totalRightColItems"
@@ -59,9 +73,9 @@
         >
           <slot :name="`rightColItem${n}`" />
         </v-col>
-        <v-col cols="12">
+        <!-- <v-col cols="12">
           <prototype-full-message v-if="hasAds" />
-        </v-col>
+        </v-col> -->
       </v-row>
     </v-col>
     <v-col
@@ -71,7 +85,12 @@
       class="pa-2 pa-md-3"
     >
       <module-network class="d-none d-md-block mb-2" />
-      <prototype-column v-if="hasAds" class="mb-2" />
+      <div
+        class="d-flex align-center justify-center flex-column pa-2 pb-4 pa-md-3 pb-md-5"
+      >
+        <div class="coinzilla" data-zone="C-4136467cdba0bdc8324"></div>
+        <div class="paid-ad">Paid Advertisement</div>
+      </div>
       <draggable
         v-bind="dragOptions"
         v-model="draggableItems"
@@ -92,7 +111,7 @@
           </div>
         </transition-group>
       </draggable>
-      <prototype-full-message v-if="hasAds" />
+      <!-- <prototype-full-message v-if="hasAds" /> -->
     </v-col>
   </v-row>
 </template>
@@ -112,10 +131,10 @@ export default {
     PrototypeColumn
   },
   props: {
-    hasAds: {
-      type: Boolean,
-      deafuault: false
-    },
+    // hasAds: {
+    //   type: Boolean,
+    //   deafuault: false
+    // },
     totalLeftColItems: {
       type: Number,
       default: 1
@@ -157,6 +176,20 @@ export default {
       }
       this.draggableItems = arr;
     }
+  },
+  created() {
+    const adConfig1 = {
+      zone: '4136467cdba0bdc8324',
+      width: '300',
+      height: '250'
+    };
+    const adConfig2 = {
+      zone: '5186467cdba0c51c392',
+      width: '728',
+      height: '90'
+    };
+    window.coinzilla_display.push(adConfig1);
+    window.coinzilla_display.push(adConfig2);
   }
 };
 </script>
@@ -180,5 +213,12 @@ export default {
   position: absolute;
   left: 24px;
   top: 24px;
+}
+
+.paid-ad {
+  width: 100%;
+  text-align: right;
+  padding: 10px 40px 0;
+  font-size: 8px;
 }
 </style>

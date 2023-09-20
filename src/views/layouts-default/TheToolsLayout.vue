@@ -21,12 +21,9 @@
           <module-tools-convert />
         </template>
         <template #tabItemContent3>
-          <module-tools-generate-keystore />
-        </template>
-        <template #tabItemContent4>
           <module-tools-offline-helper :is-home-page="true" />
         </template>
-        <template #tabItemContent5>
+        <template #tabItemContent4>
           <module-tools-watch-only />
         </template>
       </mew-tabs>
@@ -45,10 +42,6 @@ export default {
     AppGetStarted: () => import('@/core/components/AppGetStarted'),
     ModuleToolsWatchOnly: () => import('@/modules/tools/ModuleToolsWatchOnly'),
     ModuleToolsConvert: () => import('@/modules/tools/ModuleToolsConvert'),
-    ModuleToolsGenerateKeystore: () =>
-      import(
-        '@/modules/tools/ModuleToolsGenerateKeystore/ModuleToolsGenerateKeystore'
-      ),
     ModuleToolsOfflineHelper: () =>
       import('@/modules/tools/ModuleToolsOfflineHelper'),
     ModuleMessageVerify: () => import('@/modules/message/ModuleMessageVerify')
@@ -66,19 +59,9 @@ export default {
         val: 'convert'
       },
       {
-        name: 'Generate Keystore file',
-        val: 'keystore'
-      },
-      {
         name: 'Send Offline Helper',
         val: 'offline'
       }
-      /*
-      {
-        name: 'Watch only address',
-        val: 'watch'
-      }
-      */
     ]
   }),
   watch: {

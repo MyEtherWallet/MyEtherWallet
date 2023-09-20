@@ -7,7 +7,6 @@
         <module-confirmation v-if="address" />
         <the-enkrypt-popup v-if="!isOfflineApp" :show="walletEnkryptPopup" />
         <router-view />
-        <survey-banner :show="!neverShowSurveyBanner" />
       </v-container>
     </v-main>
     <the-wallet-footer :is-offline-app="isOfflineApp" />
@@ -45,6 +44,7 @@ import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import HybridWalletInterface from '@/modules/access-wallet/hybrid/handlers/walletInterface';
 import sanitizeHex from '@/core/helpers/sanitizeHex';
+const INTERVAL = 14000;
 
 export default {
   components: {
@@ -57,13 +57,13 @@ export default {
       import('@/views/components-wallet/EnkryptPromoSnackbar'),
     TheEnkryptPopup: () =>
       import('@/views/components-default/TheEnkryptPopup.vue'),
-    ModulePaperWallet: () => import('@/modules/balance/ModulePaperWallet.vue'),
-    SurveyBanner: () => import('@/views/components-wallet/SurveyBanner.vue')
+    ModulePaperWallet: () => import('@/modules/balance/ModulePaperWallet.vue')
   },
   mixins: [handlerWallet, handlerAnalytics],
   data() {
     return {
-      showPaperWallet: false
+      showPaperWallet: false,
+      manualBlockSubscription: null
     };
   },
   computed: {
@@ -84,8 +84,7 @@ export default {
     ...mapState('popups', [
       'enkryptWalletPopup',
       'enkryptLandingPopup',
-      'enkryptLandingPopupClosed',
-      'neverShowSurveyBanner'
+      'enkryptLandingPopupClosed'
     ]),
     ...mapGetters('global', [
       'network',
@@ -111,7 +110,7 @@ export default {
         this.setTokensAndBalance();
       }
     },
-    network() {
+    network(newVal, oldVal) {
       if (this.online && !this.isOfflineApp) {
         this.web3.eth.clearSubscriptions();
         this.identifier === WALLET_TYPES.WEB3_WALLET
@@ -120,6 +119,40 @@ export default {
         this.setup();
         if (this.identifier !== WALLET_TYPES.WEB3_WALLET) {
           this.setTokensAndBalance();
+        }
+
+        if (
+          (this.identifier === WALLET_TYPES.WALLET_CONNECT ||
+            this.identifier === WALLET_TYPES.MEW_WALLET) &&
+          newVal.type.chainID !== this.instance.connection.chainId
+        ) {
+          this.instance.connection.sendAsync(
+            {
+              method: 'wallet_switchEthereumChain',
+              params: [{ chainId: newVal.type.chainID.toString(16) }]
+            },
+            err => {
+              if (err) {
+                Toast(
+                  'Selected network may not be supported by wallet',
+                  {},
+                  WARNING
+                );
+                this.instance.connection.switchEthereumChain(
+                  oldVal.type.chainID
+                );
+
+                setTimeout(() => {
+                  this.setNetwork({
+                    network: oldVal,
+                    walletType: this.identifier
+                  }).then(() => {
+                    this.setWeb3Instance();
+                  });
+                }, 1000);
+              }
+            }
+          );
         }
       }
     },
@@ -147,23 +180,29 @@ export default {
       this.checkNetwork();
     }
 
-    if (this.instance.identifier === 'walletConnect') {
-      this.instance.connection.on('session_update', (e, evt) => {
-        if (
-          evt.params[0].accounts[0].toLowerCase() !== this.address.toLowerCase()
-        ) {
-          const newWallet = new HybridWalletInterface(
-            sanitizeHex(evt.params[0].accounts[0]),
-            this.instance.isHardware,
-            this.instance.identifier,
-            this.instance.txSigner,
-            this.instance.msgSigner,
-            this.instance.connection,
-            this.instance.errorHandler,
-            this.instance.meta
-          );
-          this.setWallet([newWallet]);
-        }
+    if (
+      this.identifier === WALLET_TYPES.WALLET_CONNECT ||
+      this.identifier === WALLET_TYPES.MEW_WALLET
+    ) {
+      this.instance.connection.on('session_update', () => {
+        this.instance.connection.sendAsync(
+          { method: 'eth_requestAccounts' },
+          (err, res) => {
+            if (res[0].toLowerCase() !== this.address.toLowerCase()) {
+              const newWallet = new HybridWalletInterface(
+                sanitizeHex(res[0]),
+                this.instance.isHardware,
+                this.identifier,
+                this.instance.txSigner,
+                this.instance.msgSigner,
+                this.instance.connection,
+                this.instance.errorHandler,
+                this.instance.meta
+              );
+              this.setWallet([newWallet]);
+            }
+          }
+        );
       });
     }
   },
@@ -176,6 +215,7 @@ export default {
       if (this.setWeb3Account instanceof Function)
         window.ethereum.removeListener('accountsChanged', this.setWeb3Account);
     }
+    clearInterval(this.manualBlockSubscription);
   },
   methods: {
     ...mapActions('wallet', [
@@ -191,6 +231,7 @@ export default {
       'setValidNetwork'
     ]),
     ...mapActions('external', ['setTokenAndEthBalance', 'setNetworkTokens']),
+
     /**
      * set showPaperWallet to false
      * to close the modal
@@ -235,6 +276,7 @@ export default {
       this.updateGasPrice();
     },
     subscribeToBlockNumber: debounce(function () {
+      clearInterval(this.manualBlockSubscription);
       this.web3.eth.getBlockNumber().then(bNumber => {
         this.setBlockNumber(bNumber);
         this.web3.eth.getBlock(bNumber).then(block => {
@@ -250,8 +292,18 @@ export default {
               this.setBlockNumber(res.number);
             })
             .on('error', err => {
+              const message = err.message ? err.message : err;
+              if (
+                message ===
+                  'The method eth_subscribe does not exist/is not available' ||
+                (message.includes('but is disabled for Https') &&
+                  message.includes('eth_subscribe found for the url'))
+              ) {
+                return this.manualBlockSub();
+              }
+
               Toast(
-                err && err.message === 'Load failed'
+                err && message === 'Load failed'
                   ? 'eth_subscribe is not supported. Please make sure your provider supports eth_subscribe'
                   : 'Network Subscription Error: Please wait a few seconds before continuing.',
                 {},
@@ -271,14 +323,29 @@ export default {
         window.ethereum.on('accountsChanged', this.setWeb3Account);
       }
     },
+    /**
+     * sets an interval that will query the block number
+     * functioning similarly to eth_subscribe newHeads
+     */
+    manualBlockSub() {
+      const _this = this;
+      this.manualBlockSubscription = setInterval(() => {
+        _this.web3.eth.getBlockNumber().then(bNumber => {
+          _this.setBlockNumber(bNumber);
+          _this.web3.eth.getBlock(bNumber).then(block => {
+            if (block) {
+              _this.checkAndSetBaseFee(block.baseFeePerGas);
+            }
+          });
+        });
+      }, INTERVAL);
+    },
     async findAndSetNetwork() {
-      if (
-        window.ethereum &&
-        this.instance.identifier === WALLET_TYPES.WEB3_WALLET
-      ) {
+      if (window.ethereum && this.identifier === WALLET_TYPES.WEB3_WALLET) {
         const networkId = await window.ethereum?.request({
           method: 'eth_chainId'
         });
+
         const foundNetwork = Object.values(nodeList).find(item => {
           if (toBN(networkId).eq(toBN(item[0].type.chainID))) return item;
         });
@@ -287,7 +354,7 @@ export default {
             if (foundNetwork) {
               await this.setNetwork({
                 network: foundNetwork[0],
-                walletType: this.instance.identifier
+                walletType: this.identifier
               });
               await this.setWeb3Instance(window.ethereum);
               this.setTokensAndBalance();

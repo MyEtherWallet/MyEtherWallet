@@ -1,4 +1,8 @@
 module.exports = [
+  'https://www.myetherwallet.com:443',
+  'https://v6.mewbuilds.com:443',
+  'https://develop.mewbuilds.com:443',
+  'https://staging.mewbuilds.com:443',
   'https://localhost:8080',
   'wss://localhost:8080',
   'https://swap.mewapi.io:443',
@@ -30,12 +34,13 @@ module.exports = [
   'https://raw.githubusercontent.com:443/MyEtherWallet/dynamic-data/main/careers.json',
   'https://raw.githubusercontent.com:443/MyEtherWallet/dynamic-data/main/articles.json',
   'https://formspree.io:443/f/mqjndkkx',
+  'https://formspree.io:443/f/xbjenjql',
   'https://broadcast.mewapi.io:443',
   // nodes
   'https://nodes.mewapi.io:443',
   'wss://nodes.mewapi.io:443',
   'wss://rpc.gochain.io:443/ws',
-  'wss://mewws.blocksscan.io:443/ws',
+  'wss://ws1.xinfin.network:443',
   'wss://www.ethercluster.com:443',
   'wss://node1.mintme.com:443/ws',
   'wss://wss.api.moonriver.moonbeam.network:443',
@@ -87,5 +92,9 @@ module.exports = [
   'https://polygon-mainnet.g.alchemy.com:443', // Unstoppable domains
   'https://unstoppabledomains.g.alchemy.com:443', // Unstoppable domains
   'https://metadata.unstoppabledomains.com:443', // Unstoppable domains
-  'https://mew-seo-pages.pages.dev:443' //pages
+  'wss://relay.walletconnect.com:443', // walletconnect2
+  'https://explorer-api.walletconnect.com:443', // web3modal
+  'https://mew-seo-pages.pages.dev:443', //pages
+  'https://coinzillatag.com:443/lib/display.js',
+  'https://request-global.czilladx.com:443'
 ];

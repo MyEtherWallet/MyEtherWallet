@@ -12,7 +12,7 @@
         :to-token="toToken"
         :amount="amount"
       />
-      <prototype-layout-component class="my-4" />
+      <!-- <prototype-layout-component class="my-4" /> -->
     </template>
     <template #rightColItem1>
       <module-tokens-value :draggable="hasHistory" />
@@ -31,8 +31,8 @@ const DAI_TOKEN = '0x6b175474e89094c44da98b954eedeac495271d0f';
 
 export default {
   components: {
-    PrototypeLayoutComponent: () =>
-      import('@/core/components/PrototypeLayoutComponent.vue'),
+    // PrototypeLayoutComponent: () =>
+    //   import('@/core/components/PrototypeLayoutComponent.vue'),
     TheWrapperWallet: () => import('@/core/components/TheWrapperWallet'),
     ModuleSwap: () => import('@/modules/swap/ModuleSwap'),
     ModuleTokensValue: () => import('@/modules/balance/ModuleTokensValue'),

@@ -2,81 +2,87 @@
   <!-- ===================================================================================== -->
   <!-- Dapp Center Module -->
   <!-- ===================================================================================== -->
-  <the-wrapper-dapp
-    :banner-img="bannerImage"
-    :banner-text="bannerText"
-    no-back-btn
+  <the-wrapper-wallet
+    :total-left-col-items="1"
+    :has-draggable="false"
+    :total-right-col-items="1"
   >
-    <template #content>
-      <div class="mew-heading-1 px-4 mb-4">MEW DApps</div>
-      <v-row>
-        <v-col v-for="(dapp, key) in dapps" :key="key" cols="12" sm="6" md="4">
-          <mew-button
-            color-theme="buttonGrayLight"
-            btn-style="light"
-            style="
-              height: 173px;
-              display: flex;
-              align-items: start;
-              padding-top: 33px;
-            "
-            has-full-width
-            @click.native="routeTo(dappName(dapp))"
-          >
-            <div
-              class="px-2 d-flex align-start"
-              :class="
-                dapp.style === 'outline' ? 'white--text' : 'textDark--text'
-              "
-              style="width: 100%"
-            >
-              <img
-                :src="
-                  require(`@/assets/images/icons/dapps/icon-dapp-${dapp.rightIcon.toLowerCase()}.svg`)
-                "
-                :alt="dapp.title"
-                height="60"
-                width="60"
+    <template #leftColItem1>
+      <the-wrapper-dapp
+        :banner-img="bannerImage"
+        :banner-text="bannerText"
+        no-back-btn
+      >
+        <template #content>
+          <div class="mew-heading-1 px-4 mb-4">MEW DApps</div>
+          <v-row>
+            <v-col v-for="(dapp, key) in dapps" :key="key" cols="12" lg="6">
+              <mew-button
+                color-theme="buttonGrayLight"
+                btn-style="light"
+                style="height: 173px"
+                class="d-flex align-start pt-7"
+                has-full-width
+                @click.native="routeTo(dappName(dapp))"
+              >
+                <div
+                  class="px-2 d-flex align-start"
+                  :class="
+                    dapp.style === 'outline' ? 'white--text' : 'textDark--text'
+                  "
+                  style="width: 100%"
+                >
+                  <img
+                    :src="
+                      require(`@/assets/images/icons/dapps/icon-dapp-${dapp.rightIcon.toLowerCase()}.svg`)
+                    "
+                    :alt="dapp.title"
+                    height="60"
+                    width="60"
+                  />
+                  <div class="ml-5">
+                    <div
+                      class="mb-2 d-flex align-center justify-start flex-row"
+                    >
+                      <div class="mew-heading-2">{{ dapp.title }}</div>
+                      <v-icon
+                        v-if="checkIfNew(dapp.release)"
+                        size="24"
+                        class="ml-1 redPrimary--text"
+                      >
+                        mdi-new-box
+                      </v-icon>
+                    </div>
+                    <div class="text-left break-word" style="line-height: 19px">
+                      {{ dapp.subtitle }}
+                    </div>
+                    <div class="body-2 mt-1 textLight--text text-left">
+                      {{ dapp.tag }}
+                    </div>
+                  </div>
+                </div>
+              </mew-button>
+            </v-col>
+          </v-row>
+          <v-row v-if="!dapps.length">
+            <v-col cols="12" class="swap-not-available">
+              <mew-alert
+                theme="warning"
+                hide-close-icon
+                title="DApps are are not supported on this network"
+                description="Please select a different network."
               />
-              <div class="ml-7">
-                <div class="mb-2 d-flex align-center justify-start flex-row">
-                  <div class="mew-heading-2">{{ dapp.title }}</div>
-                  <v-icon
-                    v-if="checkIfNew(dapp.release)"
-                    size="24"
-                    class="ml-1 redPrimary--text"
-                  >
-                    mdi-new-box
-                  </v-icon>
-                </div>
-                <div class="text-left break-word" style="line-height: 19px">
-                  {{ dapp.subtitle }}
-                </div>
-                <div class="body-2 mt-1 textLight--text text-left">
-                  {{ dapp.tag }}
-                </div>
-              </div>
-            </div>
-          </mew-button>
-        </v-col>
-      </v-row>
-      <v-row v-if="!dapps.length">
-        <v-col cols="12" class="swap-not-available">
-          <mew-alert
-            theme="warning"
-            hide-close-icon
-            title="DApps are are not supported on this network"
-            description="Please select a different network."
-          />
-        </v-col>
-      </v-row>
+            </v-col>
+          </v-row>
+        </template>
+        <template #moduleBody>
+          <div class="swap-not-available">
+            <app-user-msg-block message="" />
+          </div>
+        </template>
+      </the-wrapper-dapp>
     </template>
-    <template #moduleBody>
-      <div class="swap-not-available">
-        <app-user-msg-block message="" />
-      </div>
-    </template>
-  </the-wrapper-dapp>
+  </the-wrapper-wallet>
 </template>
 
 <script>
@@ -89,7 +95,8 @@ import isNew from '@/core/helpers/isNew.js';
 export default {
   components: {
     TheWrapperDapp: () => import('@/core/components/TheWrapperDapp'),
-    AppUserMsgBlock: () => import('@/core/components/AppUserMsgBlock')
+    AppUserMsgBlock: () => import('@/core/components/AppUserMsgBlock'),
+    TheWrapperWallet: () => import('@/core/components/TheWrapperWallet')
   },
   mixins: [handlerAnalytics],
   data() {

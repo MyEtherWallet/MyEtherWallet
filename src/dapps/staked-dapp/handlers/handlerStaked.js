@@ -1,9 +1,7 @@
 import axios from 'axios';
 import BigNumber from 'bignumber.js';
-import { toBN } from 'web3-utils';
 
 import configNetworkTypes from './configNetworkTypes';
-import calculateEth2Rewards from './helpers';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import handleError from '@/modules/confirmation/handlers/errorHandler';
 
@@ -11,21 +9,6 @@ import handleError from '@/modules/confirmation/handlers/errorHandler';
  * ABI to get fees
  * from batch contract
  */
-const ABI_GET_VALIDATORS = [
-  {
-    inputs: [],
-    name: 'get_deposit_count',
-    outputs: [
-      {
-        internalType: 'bytes',
-        name: '',
-        type: 'bytes'
-      }
-    ],
-    stateMutability: 'view',
-    type: 'function'
-  }
-];
 const ABI_GET_FEES = [
   {
     inputs: [
@@ -91,28 +74,11 @@ export default class Staked {
    * Get the total staked and current APR
    */
   getTotalStakedAndAPR() {
-    this.eth2ContractAddress =
-      configNetworkTypes.network[this.network.type.name].depositAddress;
-    const depositContract = new this.web3.eth.Contract(
-      ABI_GET_VALIDATORS,
-      this.eth2ContractAddress
-    );
-    depositContract.methods
-      .get_deposit_count()
-      .call()
-      .then(lebytes => {
-        const numValidators = toBN(
-          '0x' + Buffer.from(lebytes.substr(2), 'hex').reverse().toString('hex')
-        );
-        this.totalStaked = numValidators.muln(32).toString();
-        this.apr = new BigNumber(
-          calculateEth2Rewards({ totalAtStake: this.totalStaked })
-        )
-          .times(100)
-          .toFixed();
-      })
-      .catch(err => {
-        Toast(err, {}, ERROR);
+    fetch(`${this.endpoint}/info`)
+      .then(res => res.json())
+      .then(res => {
+        this.apr = BigNumber(res.apr).times(100).toString();
+        this.totalStaked = res.total_staked;
       });
   }
   /**

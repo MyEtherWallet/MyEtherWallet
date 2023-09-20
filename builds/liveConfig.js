@@ -10,11 +10,12 @@ const exportObj = {
   pwa: {
     name: 'MyEtherWallet',
     workboxOptions: {
+      cacheId: `myetherwallet-${JSON.parse(config.env_vars.VERSION)}`,
       importWorkboxFrom: 'local',
       skipWaiting: true,
       clientsClaim: true,
-      navigateFallback: '/index.html',
-      navigateFallbackBlacklist: [/^\/pages/]
+      cleanupOutdatedCaches: true,
+      exclude: [/index\.html$/, /\.map$/]
     },
     iconPaths: {
       faviconSVG: 'icons/favicon.svg',
@@ -25,27 +26,7 @@ const exportObj = {
       msTileImage: 'icons/msapplication-icon-144x144.png'
     }
   },
-  chainWebpack: config => {
-    // GraphQL Loader
-    config.module
-      .rule('graphql')
-      .test(/\.graphql$/)
-      .use('graphql-tag/loader')
-      .loader('graphql-tag/loader')
-      .end();
-    config.module
-      .rule('transpile-eth2-keystore')
-      .test(/node_modules\/@myetherwallet\/eth2-keystore\/.*\.js$/)
-      .use('babel')
-      .loader('babel-loader')
-      .end();
-    config.module
-      .rule('transpile-chainsafe')
-      .test(/node_modules\/@chainsafe\/.*\.js$/)
-      .use('babel')
-      .loader('babel-loader')
-      .end();
-  }
+  chainWebpack: config.transpilers
 };
 
 module.exports = exportObj;
