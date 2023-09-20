@@ -167,6 +167,7 @@ import handlerWallet from '@/core/mixins/handlerWallet.mixin';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook.vue';
 import BuySellTokenSelect from '@/modules/buy-sell/components/TokenSelect.vue';
 import { getCurrency } from '@/modules/settings/components/currencyList';
+import { ETH, BSC, MATIC } from '@/utils/networks/types';
 
 export default {
   name: 'ModuleSellEth',
@@ -298,7 +299,7 @@ export default {
       return ['ETH', 'USDT', 'USDC', 'MATIC', 'BNB'];
     },
     supportedNetworks() {
-      return ['ETH', 'MATIC', 'BSC'];
+      return [ETH.name, BSC.name, MATIC.name];
     },
     name() {
       return this.supportedCurrency.includes(this.selectedCurrency.symbol)
@@ -413,7 +414,7 @@ export default {
       return (
         this.instance &&
         this.instance.identifier === WALLET_TYPES.WEB3_WALLET &&
-        this.network?.type.name !== 'ETH'
+        this.network?.type.name !== ETH.name
       );
     },
     isValidAmount() {
