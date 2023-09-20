@@ -156,13 +156,18 @@ export default {
         swapTransactionSuccessfullySent: 'success',
         swapTransactionSend: 'sending'
       };
-      const valObj = {};
+      console.log(action);
       if (this.consentToTrack && amplitudeTrackable[action]) {
-        valObj[key] = value;
-
-        this.$amplitude.track(categories.swap, {
+        const eventProperties = {
           swap_transaction: amplitudeTrackable[action]
-        });
+        };
+
+        if (key && value) {
+          eventProperties['transaction_hash'] = key;
+          eventProperties['network_id'] = value;
+        }
+
+        this.$amplitude.track(categories.swap, eventProperties);
       }
 
       if (this.$matomo && action && this.consentToTrack) {
