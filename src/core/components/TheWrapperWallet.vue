@@ -114,16 +114,12 @@
 <script>
 import draggable from 'vuedraggable';
 import ModuleNetwork from '@/modules/network/ModuleNetwork';
-import PrototypeFullMessage from './PrototypeFullMessage.vue';
-import PrototypeColumn from './PrototypeColumn.vue';
 
 export default {
   name: 'TheWrapperWallet',
   components: {
     ModuleNetwork,
-    draggable,
-    PrototypeFullMessage,
-    PrototypeColumn
+    draggable
   },
   props: {
     totalLeftColItems: {
