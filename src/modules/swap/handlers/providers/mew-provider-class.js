@@ -15,7 +15,6 @@ class MEWPClass {
     this.provider = providerName;
     this.supportednetworks = supportednetworks;
 
-    // Pass BSC for api
     this.chain = chain;
   }
   isSupportedNetwork(chain) {
