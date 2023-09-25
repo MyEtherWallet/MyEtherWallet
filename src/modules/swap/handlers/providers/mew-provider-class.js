@@ -7,7 +7,7 @@ const GET_TRADE = '/swap/trade';
 const REQUEST_CACHER = 'https://requestcache.mewapi.io/?url=';
 import { isAddress } from 'web3-utils';
 import Configs from '../configs/providersConfigs';
-import { ETH, BSC } from '@/utils/networks/types';
+import { ETH } from '@/utils/networks/types';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 class MEWPClass {
   constructor(providerName, web3, supportednetworks, chain) {
@@ -16,7 +16,7 @@ class MEWPClass {
     this.supportednetworks = supportednetworks;
 
     // Pass BSC for api
-    this.chain = chain === BSC.name ? 'BSC' : chain;
+    this.chain = chain;
   }
   isSupportedNetwork(chain) {
     return this.supportednetworks.includes(chain);
