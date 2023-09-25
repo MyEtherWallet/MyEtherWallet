@@ -11,7 +11,7 @@ const verifySignature = `{
   "version": "3",
   "signer": "MEW"
 }`;
-const testPW = '1234password';
+
 module.exports = {
   before: function (browser) {
     browser.globals.waitForConditionTimeout = 15000;

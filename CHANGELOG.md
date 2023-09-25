@@ -1,3 +1,16 @@
+### Release v6.7.7-hotfix.1
+
+### devop
+
+* add identifier to api calls [#4719](https://github.com/MyEtherWallet/MyEtherWallet/pull/4719)
+* fetch balance for when api returns blank api [#4720](https://github.com/MyEtherWallet/MyEtherWallet/pull/4720)
+
+### fix
+
+* fix bnb swap and buy [#4722](https://github.com/MyEtherWallet/MyEtherWallet/pull/4722)
+* buy/sell on bnb [#4723](https://github.com/MyEtherWallet/MyEtherWallet/pull/4723)
+* rsk custom tokens [#4726](https://github.com/MyEtherWallet/MyEtherWallet/pull/4726)
+
 ### Release v6.7.7
 
 ### devop
