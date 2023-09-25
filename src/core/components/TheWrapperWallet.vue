@@ -55,7 +55,6 @@
       <v-row class="ma-n2 ma-md-n3">
         <v-col cols="12" class="pa-2 pt-4 pa-md-3 d-none d-md-block">
           <module-network />
-          <!-- <prototype-column v-if="hasAds" class="mt-4" /> -->
         </v-col>
         <v-col
           cols="12"
@@ -73,9 +72,6 @@
         >
           <slot :name="`rightColItem${n}`" />
         </v-col>
-        <!-- <v-col cols="12">
-          <prototype-full-message v-if="hasAds" />
-        </v-col> -->
       </v-row>
     </v-col>
     <v-col
@@ -111,7 +107,6 @@
           </div>
         </transition-group>
       </draggable>
-      <!-- <prototype-full-message v-if="hasAds" /> -->
     </v-col>
   </v-row>
 </template>
@@ -131,10 +126,6 @@ export default {
     PrototypeColumn
   },
   props: {
-    // hasAds: {
-    //   type: Boolean,
-    //   deafuault: false
-    // },
     totalLeftColItems: {
       type: Number,
       default: 1
