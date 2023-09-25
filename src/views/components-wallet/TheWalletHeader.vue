@@ -94,14 +94,6 @@
           </div>
         </div>
       </v-col>
-      <!-- <v-col
-        v-if="hasAds && ads.length > 1"
-        cols="12"
-        md="6"
-        lg="5"
-        class="d-flex justify-end flex-wrap flex-md-nowrap"
-      >
-      </v-col> -->
       <v-col
         v-if="
           $vuetify.breakpoint.md ||
@@ -120,18 +112,6 @@
         >
           <span> Advertise With Us </span>
         </a>
-        <!-- <div
-          v-for="(ad, idx) in ads"
-          class="prototype-background d-flex align-center justify-center white--text mr-3 cursor--pointer"
-          :key="ad.buttonIcon + `${idx}`"
-        >
-          <img
-            :src="`https://img.mewapi.io/?image=${ad.buttonIcon}`"
-            height="25"
-            width="25"
-          />
-          <span> {{ ad.buttonTitle }} </span>
-        </div> -->
         <div v-if="hasAds" class="d-flex justify-space-between">
           <v-menu
             v-for="(ad, idx) in ads"
@@ -150,7 +130,6 @@
                 v-bind="attrs"
                 v-on="on"
               >
-                <!-- <v-icon color="white" size="medium" class="mr-1"> mdi-circle </v-icon> -->
                 <img
                   :src="`https://img.mewapi.io/?image=${ad.buttonIcon}`"
                   height="40"
@@ -227,8 +206,7 @@ export default {
     async setHeaderAds() {
       const res = await fetch('https://partners.mewapi.io/ads-web');
       const ads = await res.json();
-      // this.ads = ads;
-      console.log(ads);
+      this.ads = ads;
     },
     buyCryptoNow() {
       this.trackBuySell('buySellBuyCryptoNow');
