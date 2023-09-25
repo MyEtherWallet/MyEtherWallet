@@ -117,7 +117,10 @@ const setTokenAndEthBalance = function ({
     return;
   }
   let mainTokenBalance = toBN('0');
-  const TOKEN_BALANCE_API = `${network.type.balanceApi}${address}&type=internal&platform=web`;
+  const isQuery = network.type.balanceApi.includes('partners.mewapi')
+    ? '?'
+    : '&';
+  const TOKEN_BALANCE_API = `${network.type.balanceApi}${address}${isQuery}type=internal&platform=web`;
   fetch(TOKEN_BALANCE_API)
     .then(res => res.json())
     .then(res => res.result)
