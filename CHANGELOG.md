@@ -1,8 +1,8 @@
+### Release v6.7.7-hotfix.1
+
 ### chore
 
 * run lint [#4729](https://github.com/MyEtherWallet/MyEtherWallet/pull/4729)
-
-### Release v6.7.7-hotfix.1
 
 ### devop
 
