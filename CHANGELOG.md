@@ -1,5 +1,9 @@
 ### Release v6.7.7-hotfix.1
 
+### ui
+
+* ad placement [#4624](https://github.com/MyEtherWallet/MyEtherWallet/pull/4624)
+
 ### chore
 
 * run lint [#4729](https://github.com/MyEtherWallet/MyEtherWallet/pull/4729)
