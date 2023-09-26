@@ -1,3 +1,11 @@
+### ui
+
+* ad placement [#4624](https://github.com/MyEtherWallet/MyEtherWallet/pull/4624)
+
+### devop
+
+* add changelog [#4725](https://github.com/MyEtherWallet/MyEtherWallet/pull/4725)
+
 ### Release v6.7.7-hotfix.1
 
 ### chore
