@@ -9,9 +9,11 @@ import './matomo';
 import Vue from 'vue';
 import Router from 'vue-router';
 import { v4 as uuidv4 } from 'uuid';
+import * as nameHashPckg from 'eth-ens-namehash';
 
 import VueIntercom from '@mathieustan/vue-intercom';
 import VueSocialSharing from 'vue-social-sharing';
+import * as amplitude from '@amplitude/analytics-browser';
 
 /**Dapps Store */
 import { dappStoreBeforeCreate } from '../dapps/dappsStore';
@@ -59,6 +61,25 @@ Vue.use(Router);
 Vue.use(Vuex);
 Vue.config.productionTip = false;
 
+// setup amplitude
+// fake generative 32 hex character
+amplitude.init(nameHashPckg.hash(VERSION), {
+  instanceName:
+    process.env.NODE_ENV === 'production' ? 'mew-web-prod' : 'mew-web-dev',
+  optOut: true, // should be true on live or localStorage value,
+  serverUrl:
+    process.env.NODE_ENV === 'production'
+      ? 'https://analytics-web.mewwallet.dev/record'
+      : 'https://analytics-web-development.mewwallet.dev/record',
+  appVersion: VERSION,
+  trackingOptions: {
+    ipAddress: false
+  },
+  identityStorage: 'none',
+  logLevel: amplitude.Types.LogLevel.None
+});
+Vue.prototype.$amplitude = amplitude;
+
 // Lazy Loader
 Vue.use(VueLazyLoad);
 
@@ -86,6 +107,8 @@ new Vue({
     this.$store.commit('popups/INIT_STORE');
     dappStoreBeforeCreate(this.$store);
     this.$store.dispatch('popups/setTracking');
+
+    this.$amplitude.setOptOut(!this.$store.state.popups.consentToTrack);
   },
   render: h => h(app)
 });

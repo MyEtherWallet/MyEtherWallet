@@ -172,6 +172,7 @@ export default {
     return { ROUTES_HOME: ROUTES_HOME };
   },
   mounted() {
+    this.$amplitude.track('Landing Page');
     setTimeout(() => {
       this.trackLandingPage();
     }, 1000);
