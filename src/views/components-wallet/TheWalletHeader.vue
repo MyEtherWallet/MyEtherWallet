@@ -3,8 +3,8 @@
     <v-row class="d-flex align-center py-2 pb-md-4 pb-lg-2 px-1">
       <v-col
         cols="12"
-        md="8"
-        lg="8"
+        :md="hasAds && ads.length > 1 ? '6' : '8'"
+        :lg="hasAds && ads.length > 1 ? '6' : '8'"
         no-gutters
         dense
         :class="[
@@ -69,7 +69,10 @@
             </mew6-white-sheet>
           </div>
           <div class="d-flex flex-column align-start">
-            <span class="mew-body font-weight-bold textDark--text">
+            <span
+              class="font-weight-bold textDark--text"
+              style="font-size: 0.95rem"
+            >
               You can now buy crypto with low fees
             </span>
             <span
@@ -97,9 +100,52 @@
           $vuetify.breakpoint.lg ||
           $vuetify.breakpoint.xl
         "
-        cols="4"
+        :cols="ads.length > 1 ? '6' : '4'"
         class="ml-auto d-flex align-center justify-end"
       >
+        <a
+          v-if="!hasAds"
+          class="prototype-background d-flex align-center justify-center white--text mr-3"
+          href="https://www.myetherwallet.com/advertise-with-us"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span> Advertise With Us </span>
+        </a>
+        <div v-if="hasAds" class="d-flex justify-space-between">
+          <v-menu
+            v-for="(ad, idx) in ads"
+            :key="ad.buttonIcon + `${idx}`"
+            open-on-hover
+            :close-on-content-click="true"
+            close-dealy="500"
+            offset-y
+            nudge-top="-10"
+            nudge-left="200"
+            content-class="img-holder"
+          >
+            <template #activator="{ on, attrs }">
+              <div
+                class="prototype-background d-flex align-center justify-center white--text mr-3 cursor--pointer"
+                v-bind="attrs"
+                v-on="on"
+              >
+                <img
+                  :src="`https://img.mewapi.io/?image=${ad.buttonIcon}`"
+                  height="40"
+                  width="40"
+                />
+                <span> {{ ad.buttonTitle }} </span>
+              </div>
+            </template>
+            <a :href="ad.popoverLink" target="_blank">
+              <img
+                :src="`https://img.mewapi.io/?image=${ad.popoverImg}`"
+                width="300"
+              />
+            </a>
+          </v-menu>
+        </div>
         <div class="align-center d-none d-lg-block">
           <notification-overlay
             v-if="online"
@@ -123,6 +169,11 @@ export default {
       import('@/modules/notifications/ModuleNotifications')
   },
   mixins: [handlerAnalytics],
+  data() {
+    return {
+      ads: []
+    };
+  },
   computed: {
     ...mapState('wallet', ['identifier', 'isOfflineApp']),
     ...mapState('global', ['online']),
@@ -143,9 +194,20 @@ export default {
     },
     promoOver() {
       return moment(moment()).isAfter(MOONPAY_OFFER_END);
+    },
+    hasAds() {
+      return this.ads.length > 0;
     }
   },
+  mounted() {
+    this.setHeaderAds();
+  },
   methods: {
+    async setHeaderAds() {
+      const res = await fetch('https://partners.mewapi.io/ads-web');
+      const ads = await res.json();
+      this.ads = ads;
+    },
     buyCryptoNow() {
       this.trackBuySell('buySellBuyCryptoNow');
       EventBus.$emit(BUYSELL_EVENT);
@@ -190,5 +252,17 @@ a {
 
 .eth-banner {
   margin-left: -15px;
+}
+
+.prototype-background {
+  border-radius: 12px;
+  height: 48px;
+  min-width: 130px;
+}
+
+.img-holder {
+  background-color: white;
+  border: 1px #99a1b3 solid;
+  border-radius: 12px;
 }
 </style>
