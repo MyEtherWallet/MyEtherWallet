@@ -5,7 +5,9 @@
     :total-right-col-items="2"
   >
     <template #leftColItem1>
-      <module-balance />
+      <div>
+        <module-balance />
+      </div>
     </template>
     <template #leftColItem2>
       <module-tokens />
