@@ -118,7 +118,7 @@
             :key="ad.buttonIcon + `${idx}`"
             open-on-hover
             :close-on-content-click="true"
-            close-dealy="500"
+            close-delay="500"
             offset-y
             nudge-top="-10"
             nudge-left="200"
