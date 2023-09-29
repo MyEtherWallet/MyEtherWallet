@@ -3,8 +3,8 @@
     <v-row class="d-flex align-center py-2 pb-md-4 pb-lg-2 px-1">
       <v-col
         cols="12"
-        :md="hasAds && ads.length > 1 ? '6' : '8'"
-        :lg="hasAds && ads.length > 1 ? '6' : '8'"
+        :md="hasAds ? '6' : '8'"
+        :lg="hasAds ? '6' : '8'"
         no-gutters
         dense
         :class="[
@@ -85,6 +85,7 @@
                 'mew-body textMedium--text'
               ]"
               >Enjoy 0.9% fee when you select ‘Bank account’ as payment method.
+              <br v-if="ads.length > 0" />
               <span
                 class="greenPrimary--text font-weight-bold cursor--pointer"
                 @click="buyCryptoNow"
@@ -100,25 +101,16 @@
           $vuetify.breakpoint.lg ||
           $vuetify.breakpoint.xl
         "
-        :cols="ads.length > 1 ? '6' : '4'"
+        :cols="ads.length >= 1 ? '6' : '4'"
         class="ml-auto d-flex align-center justify-end"
       >
-        <a
-          v-if="!hasAds"
-          class="prototype-background d-flex align-center justify-center white--text mr-3"
-          href="https://www.myetherwallet.com/advertise-with-us"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <span> Advertise With Us </span>
-        </a>
         <div v-if="hasAds" class="d-flex justify-space-between">
           <v-menu
             v-for="(ad, idx) in ads"
             :key="ad.buttonIcon + `${idx}`"
             open-on-hover
             :close-on-content-click="true"
-            close-dealy="500"
+            close-delay="500"
             offset-y
             nudge-top="-10"
             nudge-left="200"
@@ -126,8 +118,9 @@
           >
             <template #activator="{ on, attrs }">
               <div
-                class="prototype-background d-flex align-center justify-center white--text mr-3 cursor--pointer"
+                class="d-flex align-center justify-center white--text mr-3 cursor--pointer ad-button-template"
                 v-bind="attrs"
+                :style="ad.buttonGradient"
                 v-on="on"
               >
                 <img
@@ -135,7 +128,7 @@
                   height="40"
                   width="40"
                 />
-                <span> {{ ad.buttonTitle }} </span>
+                <span :style="ad.titleColor"> {{ ad.buttonTitle }} </span>
               </div>
             </template>
             <a :href="ad.popoverLink" target="_blank">
@@ -146,6 +139,15 @@
             </a>
           </v-menu>
         </div>
+        <a
+          v-if="ads.length < 3"
+          class="ad-button-template prototype-background d-flex align-center justify-center white--text mr-3"
+          href="https://www.myetherwallet.com/advertise-with-us"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span> Advertise With Us </span>
+        </a>
         <div class="align-center d-none d-lg-block">
           <notification-overlay
             v-if="online"
@@ -254,10 +256,15 @@ a {
   margin-left: -15px;
 }
 
-.prototype-background {
+.ad-button-template {
   border-radius: 12px;
   height: 48px;
   min-width: 130px;
+  padding: 0 15px;
+
+  img {
+    padding: 7px;
+  }
 }
 
 .img-holder {
