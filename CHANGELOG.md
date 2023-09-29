@@ -1,3 +1,9 @@
+### Release v6.7.7-hotfix.2
+
+### ui
+
+* update close delay [#4732](https://github.com/MyEtherWallet/MyEtherWallet/pull/4732)
+
 ### Release v6.7.7-hotfix.1
 
 ### ui
