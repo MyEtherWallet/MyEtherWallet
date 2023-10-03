@@ -52,16 +52,48 @@ const setTokenAndEthBalance = function ({
   const isTokenBalanceApiSupported = network.type.balanceApi !== '';
   const address = rootState.wallet.address;
 
-  const _getTokenBalance = (balance, decimals) => {
+  const _formatBalance = (balance, decimals) => {
     let n = new BigNumber(balance);
     if (decimals) {
-      n = n.div(new BigNumber(10).pow(decimals));
-      n = formatFloatingPointValue(n);
+      n = formatFloatingPointValue(fromBase(n, decimals));
     } else {
       n = formatIntegerValue(n);
     }
     return n;
   };
+
+  const _getBalance = () => {
+    rootState.wallet.web3.eth.getBalance(address).then(res => {
+      const token = getters.contractToToken(MAIN_TOKEN_ADDRESS);
+      const usdBalance = new BigNumber(fromBase(res, token.decimals))
+        .times(token.price)
+        .toString();
+      dispatch(
+        'wallet/setTokens',
+        [
+          Object.assign(
+            {
+              balance: res,
+              balancef: _formatBalance(res, token.decimals).value,
+              usdBalance: usdBalance,
+              usdBalancef: formatFiatValue(usdBalance).value
+            },
+            token
+          )
+        ],
+        { root: true }
+      )
+        .then(() =>
+          dispatch('wallet/setAccountBalance', toBN(res), { root: true })
+        )
+        .then(() => {
+          // dispatch can't be blank
+          dispatch('custom/updateCustomTokenBalances', false, { root: true });
+          commit('wallet/SET_LOADING_WALLET_INFO', false, { root: true });
+        });
+    });
+  };
+
   if (!isTokenBalanceApiSupported) {
     const currentProvider = rootState.wallet.web3.eth.currentProvider;
     // Prevent the 'Invalid return values' error
@@ -81,46 +113,23 @@ const setTokenAndEthBalance = function ({
         dispatch('wallet/setWeb3Instance', undefined, { root: true });
       }
     }
-    rootState.wallet.web3.eth.getBalance(address).then(res => {
-      const token = getters.contractToToken(MAIN_TOKEN_ADDRESS);
-      const denominator = new BigNumber(10).pow(token.decimals);
-      const usdBalance = new BigNumber(res)
-        .div(denominator)
-        .times(token.price)
-        .toString();
-      dispatch(
-        'wallet/setTokens',
-        [
-          Object.assign(
-            {
-              balance: res,
-              balancef: _getTokenBalance(res, token.decimals).value,
-              usdBalance: usdBalance,
-              usdBalancef: formatFiatValue(usdBalance).value
-            },
-            token
-          )
-        ],
-        { root: true }
-      )
-        .then(() =>
-          dispatch('wallet/setAccountBalance', toBN(res), { root: true })
-        )
-        .then(() => {
-          // dispatch can't be blank
-          dispatch('custom/updateCustomTokenBalances', false, { root: true });
-          commit('wallet/SET_LOADING_WALLET_INFO', false, { root: true });
-        });
-    });
+    _getBalance();
     return;
   }
   let mainTokenBalance = toBN('0');
-  const TOKEN_BALANCE_API = network.type.balanceApi + address;
+  const isQuery = network.type.balanceApi.includes('partners.mewapi')
+    ? '?'
+    : '&';
+  const TOKEN_BALANCE_API = `${network.type.balanceApi}${address}${isQuery}type=internal&platform=web`;
   fetch(TOKEN_BALANCE_API)
     .then(res => res.json())
     .then(res => res.result)
     .then(preTokens => {
       const hasPreTokens = preTokens ? preTokens : [];
+      if (hasPreTokens.length === 0) {
+        _getBalance();
+        return [];
+      }
       const includedUserBalance = hasPreTokens.filter(item => {
         if (
           item.contract.toLowerCase() ===
@@ -172,7 +181,7 @@ const setTokenAndEthBalance = function ({
             Object.assign(
               {
                 balance: t.balance,
-                balancef: _getTokenBalance(t.balance, decimal).value,
+                balancef: _formatBalance(t.balance, token.decimals).value,
                 usdBalance: usdBalance,
                 usdBalancef: formatFiatValue(usdBalance).value
               },

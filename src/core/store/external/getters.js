@@ -115,11 +115,11 @@ const contractToToken =
     const networkToken = state.networkTokens.get(contractAddress);
     const name = networkToken ? networkToken.name : cgToken.name;
     const symbol = networkToken ? networkToken.symbol : cgToken.symbol;
-    const img = networkToken
-      ? networkToken.icon_png
-        ? networkToken.icon_png
-        : ''
-      : cgToken.img;
+    const img = cgToken.img
+      ? cgToken.img
+      : networkToken
+      ? networkToken.icon
+      : '';
     const address = networkToken ? networkToken.address : contractAddress;
     const networkTokenObj = {
       name: name,

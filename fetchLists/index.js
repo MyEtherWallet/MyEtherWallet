@@ -190,10 +190,14 @@ const fetchPlatformCoinList = async () => {
     .then(res => res.json())
     .then(l => {
       const idmap = {};
+      const knownCorrections = {
+        '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2': 'weth'
+      };
       l.forEach(t => {
         const vals = Object.values(t.platforms);
         vals.forEach(val => {
-          if (val) idmap[val] = t.id;
+          if (val)
+            idmap[val] = knownCorrections[val] ? knownCorrections[val] : t.id;
         });
       });
       return idmap;
