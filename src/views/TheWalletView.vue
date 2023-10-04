@@ -108,6 +108,7 @@ export default {
       } else {
         this.setup();
         this.setTokensAndBalance();
+        console.log('b');
       }
     },
     network(newVal, oldVal) {
@@ -119,6 +120,7 @@ export default {
         this.setup();
         if (this.identifier !== WALLET_TYPES.WEB3_WALLET) {
           this.setTokensAndBalance();
+          console.log('c');
         }
 
         if (
@@ -157,8 +159,9 @@ export default {
       }
     },
     coinGeckoTokens(newVal, oldVal) {
-      if (!isEqual(newVal, oldVal)) {
+      if (!isEqual(newVal, oldVal) && oldVal.size > 0) {
         this.setTokensAndBalance();
+        console.log('d');
       }
     }
   },
@@ -358,6 +361,7 @@ export default {
               });
               await this.setWeb3Instance(window.ethereum);
               this.setTokensAndBalance();
+              console.log('a');
               this.setValidNetwork(true);
               this.trackNetworkSwitch(foundNetwork[0].type.name);
               this.$emit('newNetwork');
