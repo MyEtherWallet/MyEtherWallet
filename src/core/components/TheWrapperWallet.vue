@@ -65,6 +65,7 @@
         </v-col>
         <v-col
           v-for="n in totalRightColItems"
+          v-show="totalRightColItems > 1"
           :key="n"
           cols="12"
           class="pa-2 pa-md-3 pb-0"
@@ -74,7 +75,7 @@
       </v-row>
     </v-col>
     <v-col
-      v-if="totalRightColItems === 2 && hasDraggable"
+      v-if="totalRightColItems >= 2 && hasDraggable"
       cols="12"
       md="4"
       class="pa-2 pa-md-3"
@@ -111,8 +112,8 @@
 </template>
 
 <script>
-import ModuleNetwork from '@/modules/network/ModuleNetwork';
 import draggable from 'vuedraggable';
+import ModuleNetwork from '@/modules/network/ModuleNetwork';
 
 export default {
   name: 'TheWrapperWallet',

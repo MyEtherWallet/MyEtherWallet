@@ -124,7 +124,7 @@ const estimateGasList = (network, txs) => {
     const supportedNetworks = {
       ETH: 'https://estimategas.mewapi.io/eth',
       GOERLI: 'https://estimategas.mewapi.io/goerli',
-      BSC: 'https://estimategas.mewapi.io/bsc',
+      BNB: 'https://estimategas.mewapi.io/bsc',
       MATIC: 'https://estimategas.mewapi.io/matic'
     };
     const url = supportedNetworks[network];
