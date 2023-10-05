@@ -166,17 +166,12 @@ export default {
       this.typeNames.forEach(item => {
         allNetworks.push(types[item]);
       });
-      if (this.isSwapPage) {
+      if (this.isSwapPage || this.identifier === WALLET_TYPES.MEW_WALLET) {
         allNetworks = allNetworks.filter(
           item =>
             item.name === types.ETH.name ||
             item.name === types.BSC.name ||
             item.name === types.MATIC.name
-        );
-      }
-      if (this.identifier === WALLET_TYPES.MEW_WALLET) {
-        allNetworks = allNetworks.filter(
-          item => item.name === types.ETH.name || item.name === types.MATIC.name
         );
       }
       if (this.searchInput && this.searchInput !== '') {
