@@ -157,7 +157,7 @@ export default {
       }
     },
     coinGeckoTokens(newVal, oldVal) {
-      if (!isEqual(newVal, oldVal)) {
+      if (!isEqual(newVal, oldVal) && oldVal.size > 0) {
         this.setTokensAndBalance();
       }
     }
