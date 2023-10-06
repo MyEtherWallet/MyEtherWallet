@@ -31,6 +31,11 @@ export default {
       this.$amplitude.setOptOut(!this.consentToTrack);
       this.setTrackingConsent(!this.consentToTrack);
     },
+    trackLandingPageAmplitude(event) {
+      this.$amplitude.track(categories.landingPage, {
+        click_event: event
+      });
+    },
     /**
      * Tracks when user lands on landing page
      */
