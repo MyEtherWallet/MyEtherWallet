@@ -595,7 +595,6 @@ a {
 
     .v-expansion-panel-header {
       padding: 25px 0rem !important;
-      //padding: 23px 24px !important;
     }
 
     .v-sheet,
@@ -603,7 +602,6 @@ a {
       box-shadow: none !important;
     }
     .v-expansion-panel-header__icon {
-      //display: none !important;
       position: absolute;
       right: 20px;
       top: 0;

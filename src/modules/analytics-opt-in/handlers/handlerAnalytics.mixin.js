@@ -43,6 +43,17 @@ export default {
       });
     },
     /**
+     *
+     * @param {String} event
+     * tracks all events that happen
+     * inside the create wallet page
+     */
+    trackCreateWalletAmplitude(event) {
+      this.$amplitude.track(categories.createWallet, {
+        click_event: event
+      });
+    },
+    /**
      * Tracks when user lands on landing page
      */
     trackLandingPage() {
