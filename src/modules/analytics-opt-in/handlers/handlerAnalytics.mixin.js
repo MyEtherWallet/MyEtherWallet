@@ -54,6 +54,17 @@ export default {
       });
     },
     /**
+     *
+     * @param {String} event
+     * tracks all events that happen
+     * inside the access wallet page
+     */
+    trackAccessWalletAmplitude(event) {
+      this.$amplitude.track(categories.accessWallet, {
+        click_event: event
+      });
+    },
+    /**
      * Tracks when user lands on landing page
      */
     trackLandingPage() {
@@ -125,8 +136,12 @@ export default {
      * Tracks when user logs out of dashboard
      */
     trackLogout() {
-      if (this.$matomo && this.consentToTrack) {
-        this.$matomo.trackEvent(categories.exitDashboard, 'true');
+      if (this.consentToTrack) {
+        if (this.$matomo) {
+          this.$matomo.trackEvent(categories.exitDashboard, 'true');
+        }
+
+        this.$amplitude.track(categories.exitDashboard);
       }
     },
     /**

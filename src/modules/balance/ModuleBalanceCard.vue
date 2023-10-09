@@ -263,6 +263,7 @@ import wallets from './handlers/config';
 import WALLET_TYPES from '../access-wallet/common/walletTypes';
 import NameResolver from '@/modules/name-resolver/index';
 import { EventBus } from '@/core/plugins/eventBus';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 export default {
   components: {
@@ -273,6 +274,7 @@ export default {
     ModuleAccessWalletSoftware: () =>
       import('@/modules/access-wallet/ModuleAccessWalletSoftware')
   },
+  mixins: [handlerAnalytics],
   props: {
     sidemenuStatus: {
       type: Boolean,
@@ -582,6 +584,7 @@ export default {
      */
     onLogout() {
       this.closeLogout();
+      this.trackLogout();
       this.removeWallet();
     }
   }
