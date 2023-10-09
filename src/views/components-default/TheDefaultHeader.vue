@@ -12,13 +12,14 @@
             src="@/assets/images/icons/logo-mew.svg"
             max-height="36"
             max-width="130"
-            @click="$router.push({ name: ROUTES_HOME.HOME.NAME })"
+            @click="routeToHome"
           />
 
           <div class="d-none d-md-flex">
             <router-link
               class="white--text text-decoration--none menu-item"
               :to="{ name: ROUTES_HOME.HOW_IT_WORKS.NAME }"
+              @click="trackHowItWorks"
             >
               {{ $t('header.what-is-mew') }}
             </router-link>
@@ -121,10 +122,19 @@ export default {
   },
   methods: {
     ...mapActions('external', ['setNetworkTokens']),
+    routeToHome() {
+      this.trackHeaderAmplitude('click_mew_logo');
+      this.$router.push({ name: ROUTES_HOME.HOME.NAME });
+    },
+    trackHowItWorks() {
+      this.trackHeaderAmplitude('click_what_is_mew');
+    },
     routeTo(route) {
+      this.trackHeaderAmplitude(`click_${route.name.toLowerCase()}`);
       this.$router.push(route);
     },
     trackBuySellLanding() {
+      this.trackHeaderAmplitude('click_buy_sell');
       this.trackBuySell('buySellLanding');
     }
   }

@@ -46,6 +46,17 @@ export default {
      *
      * @param {String} event
      * tracks all events that happen
+     * inside the landing page
+     */
+    trackHeaderAmplitude(event) {
+      this.$amplitude.track(categories.header, {
+        click_event: event
+      });
+    },
+    /**
+     *
+     * @param {String} event
+     * tracks all events that happen
      * inside the create wallet page
      */
     trackCreateWalletAmplitude(event) {
