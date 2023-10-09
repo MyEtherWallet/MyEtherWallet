@@ -256,7 +256,6 @@ export default {
               this.close();
               return;
             }
-            console.log('huh?');
             _this.trackAccessWalletAmplitude(
               `click_access_${_this.type
                 .replace('-', '_')
