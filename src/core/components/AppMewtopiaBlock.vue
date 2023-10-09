@@ -20,6 +20,7 @@
             btn-style="outline"
             color-theme="white"
             btn-size="xlarge"
+            @click.native="trackMewtopia"
           />
         </div>
       </v-container>
@@ -47,6 +48,7 @@
             btn-style="outline"
             color-theme="white"
             btn-size="xlarge"
+            @click.native="trackMewtopia"
           />
         </v-sheet>
       </div>
@@ -55,13 +57,19 @@
 </template>
 
 <script>
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 export default {
   name: 'AppMewtopiaBlock',
-  components: {},
+  mixins: [handlerAnalytics],
   data() {
     return {
       backgroundImg: require('@/assets/images/backgrounds/bg-light.jpg')
     };
+  },
+  methods: {
+    trackMewtopia() {
+      this.trackLandingPageAmplitude('click_mewtopia');
+    }
   }
 };
 </script>

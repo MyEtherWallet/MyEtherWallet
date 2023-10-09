@@ -38,6 +38,7 @@
           :href="item.link"
           target="_blank"
           class="d-flex align-center my-9"
+          @click="trackToolLink(item)"
         >
           <img :src="item.img" alt="" height="42" class="mr-5" />
           <div>
@@ -64,7 +65,9 @@
 </template>
 
 <script>
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 export default {
+  mixins: [handlerAnalytics],
   data() {
     return {
       sections: [
@@ -131,6 +134,12 @@ export default {
   computed: {
     isMobile() {
       return this.$vuetify.breakpoint.smAndDown;
+    }
+  },
+  methods: {
+    trackToolLink(val) {
+      const parsedLabel = val.label.replace(' ', '_').toLowerCase();
+      this.trackHeaderAmplitude(`click_tools_${parsedLabel}`);
     }
   }
 };

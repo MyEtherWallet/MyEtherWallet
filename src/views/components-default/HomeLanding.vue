@@ -22,12 +22,7 @@
               :has-full-width="false"
               title="Create a new wallet"
               btn-size="xlarge"
-              @click.native="
-                $router.push({
-                  name: ROUTES_HOME.CREATE_WALLET.NAME,
-                  params: {}
-                })
-              "
+              @click.native="navigateToCreateWallet"
             />
             <mew-button
               class="HomeAccessWallet"
@@ -35,12 +30,7 @@
               btn-style="outline"
               title="Access my wallet"
               btn-size="xlarge"
-              @click.native="
-                $router.push({
-                  name: ROUTES_HOME.ACCESS_WALLET.NAME,
-                  params: {}
-                })
-              "
+              @click.native="navigateToAccessWallet"
             />
           </div>
           <div class="d-flex">
@@ -104,12 +94,7 @@
               :has-full-width="false"
               title="Create a new wallet"
               btn-size="xlarge"
-              @click.native="
-                $router.push({
-                  name: ROUTES_HOME.CREATE_WALLET.NAME,
-                  params: {}
-                })
-              "
+              @click.native="navigateToCreateWallet"
             />
             <mew-button
               class="width--full"
@@ -117,12 +102,7 @@
               btn-style="outline"
               title="Access my wallet"
               btn-size="xlarge"
-              @click.native="
-                $router.push({
-                  name: ROUTES_HOME.ACCESS_WALLET.NAME,
-                  params: {}
-                })
-              "
+              @click.native="navigateToAccessWallet"
             />
             <mew-button
               class="extension-btns chrome-extension text-transform--none mt-5 mb-2"
@@ -133,6 +113,7 @@
               style="border-radius: 40px !important"
               btn-link="https://www.enkrypt.com"
               rel="dofollow"
+              @click.native="trackOpenEnkrypt"
             >
               <img class="mr-3 browser-icons" :src="browserLogo" />
               Get the Enkrypt Extension
@@ -144,7 +125,7 @@
               color-theme="white"
               btn-size="large"
               style="border-radius: 40px !important"
-              @click.native="openMewWallet"
+              @click.native="trackOpenMEWWallet"
             >
               <img
                 class="mr-2 app-icons"
@@ -168,16 +149,35 @@ export default {
   name: 'HomeLanding',
   components: {},
   mixins: [handlerAnalytics, enkryptMarketing],
-  data() {
-    return { ROUTES_HOME: ROUTES_HOME };
-  },
   mounted() {
     this.$amplitude.track('Landing Page');
     setTimeout(() => {
       this.trackLandingPage();
     }, 1000);
   },
-  methods: {}
+  methods: {
+    trackOpenMEWWallet() {
+      this.trackLandingPageAmplitude('click_download_mew_wallet');
+      this.openMewWallet();
+    },
+    trackOpenEnkrypt() {
+      this.trackLandingPageAmplitude('click_enkrypt_install');
+    },
+    navigateToCreateWallet() {
+      this.trackLandingPageAmplitude('click_create_wallet');
+      this.$router.push({
+        name: ROUTES_HOME.CREATE_WALLET.NAME,
+        params: {}
+      });
+    },
+    navigateToAccessWallet() {
+      this.trackLandingPageAmplitude('click_access_wallet');
+      this.$router.push({
+        name: ROUTES_HOME.ACCESS_WALLET.NAME,
+        params: {}
+      });
+    }
+  }
 };
 </script>
 

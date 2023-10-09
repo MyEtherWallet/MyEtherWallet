@@ -82,6 +82,7 @@ export default {
           label: 'WalletConnect',
           icon: require('@/assets/images/icons/icon-wallet-connect.svg'),
           fn: () => {
+            this.trackAccessWalletAmplitude('click_access_wallet_connect');
             this.openWalletConnect();
           }
         },
@@ -89,6 +90,7 @@ export default {
           label: 'WalletLink',
           icon: require('@/assets/images/icons/icon-wallet-link.png'),
           fn: () => {
+            this.trackAccessWalletAmplitude('click_access_wallet_link');
             this.openWalletLink();
           }
         }
@@ -103,6 +105,7 @@ export default {
           .then(_newWallet => {
             this.setWallet([_newWallet]).then(() => {
               this.trackAccessWallet(WALLET_TYPES.WALLET_CONNECT);
+              this.trackAccessWalletAmplitude('access_wallet_success');
               this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
             });
           })
@@ -119,6 +122,7 @@ export default {
           .then(_newWallet => {
             this.setWallet([_newWallet]).then(() => {
               this.trackAccessWallet(WALLET_TYPES.WALLET_LINK);
+              this.trackAccessWalletAmplitude('access_wallet_success');
               this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
             });
           })

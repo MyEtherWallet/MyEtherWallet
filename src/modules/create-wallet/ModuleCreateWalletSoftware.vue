@@ -45,10 +45,12 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import handlerCreateWallet from './handlers/handlerCreateWallet';
-import { mapState } from 'vuex';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 export default {
   name: 'ModuleCreateWalletSoftware',
@@ -59,6 +61,7 @@ export default {
     CreateWalletMnemonicPhrase: () =>
       import('./components/CreateWalletMnemonicPhrase')
   },
+  mixins: [handlerAnalytics],
   props: {
     open: {
       type: Boolean,
@@ -154,6 +157,7 @@ export default {
         this.$router.push({
           query: { type: newType }
         });
+        this.trackCreateWalletAmplitude(`click_create_${newType}`);
       } catch (e) {
         Toast(e, {}, ERROR);
       }

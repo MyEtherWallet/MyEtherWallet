@@ -110,10 +110,12 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
 import enkryptMarketing from '@/core/mixins/enkryptMarketing.mixin';
-import { mapState } from 'vuex';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 export default {
   name: 'TheCreateWalletLayout',
@@ -122,7 +124,7 @@ export default {
       import('@/modules/create-wallet/ModuleCreateWalletSoftware'),
     TheLayoutHeader: () => import('../components-default/TheLayoutHeader')
   },
-  mixins: [enkryptMarketing],
+  mixins: [enkryptMarketing, handlerAnalytics],
   props: {
     showSoftwareModule: {
       type: Boolean
@@ -158,6 +160,7 @@ export default {
               icon: require('@/assets/images/icons/icon-enkrypt-block.svg'),
               alt: 'Enkrypt',
               fn: () => {
+                this.trackCreateWalletAmplitude('click_enkrypt_install');
                 this.openEnkrypt();
               }
             },
@@ -172,6 +175,7 @@ export default {
               icon: require('@/assets/images/icons/icon-mew-wallet.png'),
               alt: 'MEW wallet',
               fn: () => {
+                this.trackCreateWalletAmplitude('click_mew_wallet_install');
                 this.openMewWallet();
               }
             },
@@ -186,6 +190,7 @@ export default {
               icon: require('@/assets/images/icons/icon-hardware-wallet.png'),
               alt: 'Hardware Wallets',
               fn: () => {
+                this.trackCreateWalletAmplitude('click_buy_hardware_wallet');
                 this.$router.push({
                   name: ROUTES_HOME.BUY_HARDWARE_WALLET.NAME
                 });
@@ -201,6 +206,7 @@ export default {
               official: false,
               recommended: false,
               fn: () => {
+                this.trackCreateWalletAmplitude('click_create_software_wallet');
                 this.openSoftwareModule();
               }
             }
@@ -216,6 +222,7 @@ export default {
               official: false,
               recommended: false,
               fn: () => {
+                this.trackCreateWalletAmplitude('click_create_software_wallet');
                 this.openSoftwareModule();
               }
             }
@@ -236,6 +243,7 @@ export default {
     },
     closeSoftwareModule() {
       try {
+        this.trackCreateWalletAmplitude('close_create_software_wallet');
         this.$router.push({
           name: ROUTES_HOME.CREATE_WALLET.NAME
         });
