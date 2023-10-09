@@ -1,5 +1,5 @@
 <template>
-  <mew6-white-sheet v-if="isEthNetwork" :sideinfo="!mobile">
+  <mew6-white-sheet :sideinfo="!mobile">
     <div class="px-5 px-lg-7 py-5">
       <div class="d-flex align-center justify-space-between">
         <span class="mew-heading-2">{{ $t('common.swap') }}</span>
@@ -59,7 +59,7 @@
     >
       <v-progress-circular indeterminate />
       <h3 class="ma-3">Having issues loading tokens.</h3>
-      <h5 class="mb-2 cursor--pointe greenPrimary--text" @click="fetchRates">
+      <h5 class="mb-2 cursor--pointer greenPrimary--text" @click="fetchRates">
         Try again?
       </h5>
     </div>

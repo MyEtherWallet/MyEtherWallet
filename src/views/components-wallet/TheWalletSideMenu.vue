@@ -591,6 +591,7 @@ export default {
     onLogout() {
       this.showLogoutPopup = false;
       this.$vuetify.theme.dark = false;
+      this.trackLogout();
       this.removeWallet();
     },
     toggleLogout() {

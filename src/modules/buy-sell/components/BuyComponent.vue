@@ -137,6 +137,7 @@ import { buyContracts } from './tokenList';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook.vue';
 import BuySellTokenSelect from '@/modules/buy-sell/components/TokenSelect.vue';
+import { ETH, BSC, MATIC } from '@/utils/networks/types';
 
 export default {
   name: 'ModuleBuyEth',
@@ -249,7 +250,11 @@ export default {
         ? this.fetchedData[0].prices.find(
             item => item.fiat_currency === this.selectedFiatName
           )
-        : { crypto_currency: 'ETH', fiat_currency: 'USD', price: '3379.08322' };
+        : {
+            crypto_currency: ETH.name,
+            fiat_currency: 'USD',
+            price: '3379.08322'
+          };
     },
     networkFeeToFiat() {
       return BigNumber(this.networkFee).times(this.priceOb.price).toString();
@@ -301,7 +306,7 @@ export default {
           formatFiatValue(this.min.toFixed(), this.currencyConfig).value
         } ${this.selectedFiatName}`;
       }
-      if (this.maxVal.lt(this.amount)) {
+      if (this.maxVal.gt(0) && this.maxVal.lt(this.amount)) {
         return `Amount can't be above provider's maximum: ${
           formatFiatValue(this.maxVal.toFixed(), this.currencyConfig).value
         } ${this.selectedFiatName}`;
@@ -423,9 +428,9 @@ export default {
     selectedCurrency: {
       handler: function (newVal, oldVal) {
         const supportedCoins = {
-          ETH: 'ETH',
-          BNB: 'BNB',
-          MATIC: 'MATIC'
+          ETH: ETH.name,
+          BNB: BSC.name,
+          MATIC: MATIC.name
         };
         if (
           !newVal ||
@@ -520,12 +525,12 @@ export default {
     },
     async fetchGasPrice() {
       const supportedNodes = {
-        ETH: 'ETH',
-        BNB: 'BSC',
-        MATIC: 'MATIC'
+        ETH: ETH.name,
+        BNB: BSC.name,
+        MATIC: MATIC.name
       };
       const nodeType = !supportedNodes[this.selectedCurrency?.symbol]
-        ? 'ETH'
+        ? ETH.name
         : supportedNodes[this.selectedCurrency.symbol];
       const node = nodeList[nodeType];
       if (!this.web3Connections[nodeType]) {
@@ -578,10 +583,11 @@ export default {
         isEmpty(this.amount) ||
         this.min.gt(this.amount) ||
         isNaN(this.amount) ||
-        this.max.simplex.lt(this.amount) ||
+        (this.max.simplex.gt(0) && this.max.simplex.lt(this.amount)) ||
         this.amountErrorMessages !== ''
-      )
+      ) {
         return;
+      }
       this.loading = true;
       this.disableCurrencySelect = true;
       this.simplexQuote = {};

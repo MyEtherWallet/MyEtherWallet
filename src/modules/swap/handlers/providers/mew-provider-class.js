@@ -14,6 +14,7 @@ class MEWPClass {
     this.web3 = web3;
     this.provider = providerName;
     this.supportednetworks = supportednetworks;
+
     this.chain = chain;
   }
   isSupportedNetwork(chain) {

@@ -21,9 +21,7 @@
         title="Get tokens"
         btn-size="xlarge"
         class="mx-auto mt-12 d-block"
-        @click.native="
-          $router.push({ name: ROUTES_HOME.ACCESS_WALLET.NAME, params: {} })
-        "
+        @click.native="navigateToAccessWallet"
       />
     </div>
   </mew6-white-sheet>
@@ -32,9 +30,10 @@
 <script>
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
 import { knuthShuffle } from '@/modules/create-wallet/handlers/helpers';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 export default {
   name: 'HomeFeaturesTokens',
-  components: {},
+  mixins: [handlerAnalytics],
   data: vm => ({
     tokens: [
       {
@@ -97,8 +96,7 @@ export default {
         label: vm.$t('home.features.tokens.cdai'),
         icon: 'https://img.mewapi.io/?image=https://assets.coingecko.com/coins/images/9281/thumb/cDAI.png'
       }
-    ],
-    ROUTES_HOME: ROUTES_HOME
+    ]
   }),
   created() {
     fetch(`https://mew-seo-pages.pages.dev/best-wallet-for.json`)
@@ -114,6 +112,15 @@ export default {
         this.tokens = knuthShuffle(tokenData).slice(0, 15);
       })
       .catch(() => {});
+  },
+  methods: {
+    navigateToAccessWallet() {
+      this.trackLandingPageAmplitude('click_access_wallet');
+      this.$router.push({
+        name: ROUTES_HOME.ACCESS_WALLET.NAME,
+        params: {}
+      });
+    }
   }
 };
 </script>

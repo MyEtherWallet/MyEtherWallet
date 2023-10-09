@@ -1,4 +1,123 @@
-### v6.7.4
+### Release v6.7.7-hotfix.2
+
+### ui
+
+* update close delay [#4732](https://github.com/MyEtherWallet/MyEtherWallet/pull/4732)
+
+### Release v6.7.7-hotfix.1
+
+### ui
+
+* ad placement [#4624](https://github.com/MyEtherWallet/MyEtherWallet/pull/4624)
+
+### chore
+
+* run lint [#4729](https://github.com/MyEtherWallet/MyEtherWallet/pull/4729)
+
+### devop
+
+* add identifier to api calls [#4719](https://github.com/MyEtherWallet/MyEtherWallet/pull/4719)
+* fetch balance for when api returns blank api [#4720](https://github.com/MyEtherWallet/MyEtherWallet/pull/4720)
+
+### fix
+
+* fix bnb swap and buy [#4722](https://github.com/MyEtherWallet/MyEtherWallet/pull/4722)
+* buy/sell on bnb [#4723](https://github.com/MyEtherWallet/MyEtherWallet/pull/4723)
+* rsk custom tokens [#4726](https://github.com/MyEtherWallet/MyEtherWallet/pull/4726)
+
+### Release v6.7.7
+
+### devop
+
+* remove eth2 keystore [#4708](https://github.com/MyEtherWallet/MyEtherWallet/pull/4708)
+* change titles and description after route [#4709](https://github.com/MyEtherWallet/MyEtherWallet/pull/4709)
+* add network switching on dapps [#4711](https://github.com/MyEtherWallet/MyEtherWallet/pull/4711)
+* network switch dapps [#4712](https://github.com/MyEtherWallet/MyEtherWallet/pull/4712)
+* ad paid advertisement [#4714](https://github.com/MyEtherWallet/MyEtherWallet/pull/4714)
+* remove survey, rename bsc [#4715](https://github.com/MyEtherWallet/MyEtherWallet/pull/4715)
+
+### fix
+
+* reverse lookup [#4710](https://github.com/MyEtherWallet/MyEtherWallet/pull/4710)
+
+### Release v6.7.6-hotfix.2
+
+### devop
+
+* remove extra changes [#4706](https://github.com/MyEtherWallet/MyEtherWallet/pull/4706)
+* remove bsc for mew wallet [#4703](https://github.com/MyEtherWallet/MyEtherWallet/pull/4703)
+
+### fix
+
+* walletconnect modal z-index [#4705](https://github.com/MyEtherWallet/MyEtherWallet/pull/4705)
+* fix walletconnect not showing after click [#4705](https://github.com/MyEtherWallet/MyEtherWallet/pull/4705)
+
+### devop
+
+* add config changes [#4702](https://github.com/MyEtherWallet/MyEtherWallet/pull/4702)
+
+### fix
+
+* fix wallet connect chain switch [#4688](https://github.com/MyEtherWallet/MyEtherWallet/pull/4688)
+* fix swap issue, revert workbox changes [#4696](https://github.com/MyEtherWallet/MyEtherWallet/pull/4696)
+
+### Release v6.7.6-hotfix.1
+
+### fix
+
+* fix swap and remove chunks on pwa [#4700](https://github.com/MyEtherWallet/MyEtherWallet/pull/4700)
+
+### Release v6.7.6
+
+### devop
+
+* exclude packages [#4670](https://github.com/MyEtherWallet/MyEtherWallet/pull/4670)
+* pull main, sync develop [#4672](https://github.com/MyEtherWallet/MyEtherWallet/pull/4672)
+* add myetherwallet to connections [#4677](https://github.com/MyEtherWallet/MyEtherWallet/pull/4677)
+* add back advert page with some updates [#4680](https://github.com/MyEtherWallet/MyEtherWallet/pull/4680)
+* move Intercom appId to ENV variable [#4682](https://github.com/MyEtherWallet/MyEtherWallet/pull/4682)
+* move bug bounty [#4691](https://github.com/MyEtherWallet/MyEtherWallet/pull/4691)
+* update readme [#4693](https://github.com/MyEtherWallet/MyEtherWallet/pull/4693)
+* update connections [#4694](https://github.com/MyEtherWallet/MyEtherWallet/pull/4694)
+
+### feat
+
+* redirect enkrypt to actual download sites [#4664](https://github.com/MyEtherWallet/MyEtherWallet/pull/4664)
+
+### fix
+
+* fix metamask infinite loop [#4674](https://github.com/MyEtherWallet/MyEtherWallet/pull/4674)
+* fix buy error [#4675](https://github.com/MyEtherWallet/MyEtherWallet/pull/4675)
+* fix routing issue on staked [#4676](https://github.com/MyEtherWallet/MyEtherWallet/pull/4676)
+* fix: add manual subscription when web3 provider isn't wss [#4679](https://github.com/MyEtherWallet/MyEtherWallet/pull/4679)
+* fix downloadable file hash [#4689](https://github.com/MyEtherWallet/MyEtherWallet/pull/4689)
+* fix gnosis balance issue [#4690](https://github.com/MyEtherWallet/MyEtherWallet/pull/4690)
+* fix bug bounty outside wallet [#4692](https://github.com/MyEtherWallet/MyEtherWallet/pull/4692)
+* fix service worker not requesting live index file [#4695](https://github.com/MyEtherWallet/MyEtherWallet/pull/4695)
+
+### Release v6.7.5
+
+### devop
+
+* add validations [#4666](https://github.com/MyEtherWallet/MyEtherWallet/pull/4666)
+* add networkfee deduction to changelly amountTo response [#4669](https://github.com/MyEtherWallet/MyEtherWallet/pull/4669)
+* handle xdc address [#4654](https://github.com/MyEtherWallet/MyEtherWallet/pull/4654)
+* replace changelly api [#4655](https://github.com/MyEtherWallet/MyEtherWallet/pull/4655)
+* update wallet connect and mewwallet redirect [#4658](https://github.com/MyEtherWallet/MyEtherWallet/pull/4658)
+* update security policy for hacken [#4662](https://github.com/MyEtherWallet/MyEtherWallet/pull/4662)
+
+### feat
+
+* finish ad with us page [#4632](https://github.com/MyEtherWallet/MyEtherWallet/pull/4632)
+
+### fix
+
+* fix nft send button when balance is too low [#4636](https://github.com/MyEtherWallet/MyEtherWallet/pull/4636)
+* fix ledger token signing [#4668](https://github.com/MyEtherWallet/MyEtherWallet/pull/4668)
+* fix offline build [#4653](https://github.com/MyEtherWallet/MyEtherWallet/pull/4653)
+* fix unstoppable error [#4659](https://github.com/MyEtherWallet/MyEtherWallet/pull/4659)
+
+### Release v6.7.4
 
 ### ui
 
@@ -6,6 +125,8 @@
 
 ### devop
 
+* minor cleanup for wallet connect and revert ens manager changes [#4637](https://github.com/MyEtherWallet/MyEtherWallet/pull/4637)
+* add back on connect listener [#4640](https://github.com/MyEtherWallet/MyEtherWallet/pull/4640)
 * update walletconnect [#4626](https://github.com/MyEtherWallet/MyEtherWallet/pull/4626)
 * remove mew connect, replace mew cx with enkrypt [#4629](https://github.com/MyEtherWallet/MyEtherWallet/pull/4629)
 * fix tab favicon on safari [#4631](https://github.com/MyEtherWallet/MyEtherWallet/pull/4631)
@@ -15,6 +136,7 @@
 
 * better max calculation when to token has been set [#4622](https://github.com/MyEtherWallet/MyEtherWallet/pull/4622)
 * pull apr and change forecast to match mew wallet [#4633](https://github.com/MyEtherWallet/MyEtherWallet/pull/4633)
+* exclude packages [#4642](https://github.com/MyEtherWallet/MyEtherWallet/pull/4642)
 
 ### Release v6.7.3
 

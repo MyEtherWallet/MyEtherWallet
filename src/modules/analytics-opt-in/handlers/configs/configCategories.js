@@ -1,5 +1,7 @@
 export default {
   landingPage: 'landingPage',
+  header: 'headerEvents',
+  footer: 'footerEvents',
   connectionType: 'connectionType',
   createWallet: 'createWallet',
   accessWallet: 'accessWallet',

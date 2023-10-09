@@ -1,7 +1,6 @@
 import WalletErrorHandler from '@/modules/access-wallet/common/WalletErrorHandler';
 
 const ERRORS = {
-  'User cancelled': 'User rejected action!',
   'QR Code Modal closed': 'walletconnectError-qr-code-popup-closed',
   'Call Request Rejected': 'walletconnectError-request-rejected',
   'Session currently connected':
@@ -12,7 +11,11 @@ const ERRORS = {
   'Connection request reset. Please try again.': 'User closed modal'
 };
 const WARNINGS = {
-  Rejected: 'Transaction rejected by user'
+  Rejected: 'Transaction rejected by user',
+  'User disapproved requested chains':
+    'Current WalletConnect integration does not support selected network',
+  'User cancelled': 'User rejected action!',
+  'Failed to decrypt': 'User rejected action!'
 };
 
 export default WalletErrorHandler(ERRORS, WARNINGS);

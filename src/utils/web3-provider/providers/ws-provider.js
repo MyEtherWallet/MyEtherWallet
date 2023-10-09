@@ -15,6 +15,7 @@ import {
   ethGetTransactionCount,
   netVersion
 } from '../methods';
+import { parseXDCValues } from './xdc-parser';
 const MAX_RETRIES = 10;
 class WSProvider {
   constructor(host, options) {
@@ -89,7 +90,11 @@ class WSProvider {
       middleware.use(netVersion);
       middleware.run(req, callback).then(() => {
         this.wsProvider.connection.send(JSON.stringify(payload));
-        this.wsProvider._addResponseCallback(payload, callback);
+        const tempCB = (err, res) => {
+          if (err) return callback(err);
+          callback(err, parseXDCValues(payload, res));
+        };
+        this.wsProvider._addResponseCallback(payload, tempCB);
       });
     };
 

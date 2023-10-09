@@ -322,7 +322,7 @@ import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalyti
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 import Swapper from './handlers/handlerSwap';
 import handleError from '../confirmation/handlers/errorHandler';
-import { toBase } from '@/core/helpers/unit';
+import { fromBase, toBase } from '@/core/helpers/unit';
 
 const MIN_GAS_LIMIT = 800000;
 let localContractToToken = {};
@@ -1228,11 +1228,12 @@ export default {
     /**
      * Set the max available amount to swap from
      */
-    setMaxAmount() {
+    async setMaxAmount() {
       this.maxLoading = true;
       this.trackSwap('setMaxValue');
       if (
         !isEmpty(this.toTokenType) &&
+        this.toTokenType.isEth &&
         this.toTokenType.hasOwnProperty('symbol') &&
         this.isFromTokenMain
       ) {
@@ -1240,48 +1241,52 @@ export default {
           this.availableBalance,
           this.fromTokenType.decimals
         );
-        this.swapper
-          .getAllQuotes({
+        try {
+          const quotes = await this.swapper.getAllQuotes({
             fromT: this.fromTokenType,
             toT: this.toTokenType,
             fromAmount: fromAmount
-          })
-          .then(quotes => {
-            const highest = quotes.sort(
-              (a, b) =>
-                BigNumber(b.amount).toNumber() - BigNumber(a.amount).toNumber()
-            );
-            const swapObj = {
-              fromAddress: this.address,
-              toAddress: this.toAddress,
-              provider: highest[0].provider,
-              fromT: this.fromTokenType,
-              toT: this.toTokenType,
-              quote: highest[0],
-              fromAmount: fromAmount
-            };
-            this.swapper.getTrade(swapObj).then(res => {
-              res['gasPrice'] = this.localGasPrice;
-              let parsedGasLimit = BigNumber(0);
-              res.transactions.forEach(tx => {
-                parsedGasLimit = parsedGasLimit.plus(tx.gas);
-              });
-              const tokenInValue = new BigNumber(this.availableBalance)
-                .minus(
-                  fromWei(
-                    toBN(this.localGasPrice).muln(parsedGasLimit.toNumber())
-                  )
-                )
-                .toFixed();
-              this.setTokenInValue(tokenInValue);
-              this.maxLoading = false;
-            });
           });
+          const highest = quotes.sort(
+            (a, b) =>
+              BigNumber(b.amount).toNumber() - BigNumber(a.amount).toNumber()
+          );
+          const swapObj = {
+            fromAddress: this.address,
+            toAddress: this.toAddress,
+            provider: highest[0].provider,
+            fromT: this.fromTokenType,
+            toT: this.toTokenType,
+            quote: highest[0],
+            fromAmount: fromAmount
+          };
+
+          const trade = await this.swapper.getTrade(swapObj);
+          trade['gasPrice'] = this.localGasPrice;
+          let parsedGasLimit = BigNumber(0);
+          trade.transactions.forEach(tx => {
+            parsedGasLimit = parsedGasLimit.plus(tx.gas);
+          });
+          const tokenInValue = new BigNumber(this.availableBalance)
+            .minus(
+              fromWei(toBN(this.localGasPrice).muln(parsedGasLimit.toNumber()))
+            )
+            .toFixed();
+          this.setTokenInValue(tokenInValue);
+          this.maxLoading = false;
+        } catch (e) {
+          this.setMaxWithoutEstimate();
+        }
         return;
       }
+      this.setMaxWithoutEstimate();
+    },
+    setMaxWithoutEstimate() {
+      const gasLimit =
+        this.toTokenType && !this.toTokenType.isEth ? 21000 : MIN_GAS_LIMIT;
       const availableBalanceMinusGas = new BigNumber(
         this.availableBalance
-      ).minus(fromWei(toBN(this.localGasPrice).muln(MIN_GAS_LIMIT)));
+      ).minus(fromWei(toBN(this.localGasPrice).muln(gasLimit)));
       this.tokenInValue = this.isFromTokenMain
         ? availableBalanceMinusGas.gt(0)
           ? availableBalanceMinusGas.toFixed()
@@ -1477,13 +1482,12 @@ export default {
         this.isLoadingProviders = true;
         this.showAnimation = true;
         this.cachedAmount = this.tokenInValue;
+
         this.swapper
           .getAllQuotes({
             fromT: this.fromTokenType,
             toT: this.toTokenType,
-            fromAmount: new BigNumber(this.tokenInValue).times(
-              new BigNumber(10).pow(new BigNumber(this.fromTokenType.decimals))
-            )
+            fromAmount: toBase(this.tokenInValue, this.fromTokenType.decimals)
           })
           .then(quotes => {
             if (this.tokenInValue === this.cachedAmount) {
@@ -1544,11 +1548,19 @@ export default {
         return;
       }
 
+      if (BigNumber(this.availableQuotes[idx].minFrom).gt(this.tokenInValue)) {
+        return;
+      }
+
       this.feeError = '';
       if (this.allTrades.length > 0 && this.allTrades[idx])
         return this.setupTrade(this.allTrades[idx]);
       if (!this.allTrades[idx]) {
         this.loadingFee = true;
+      }
+      // don't fetch trade for 0 rate quote
+      if (BigNumber(this.availableQuotes[idx].rate).lte(0)) {
+        return;
       }
       const swapObj = {
         fromAddress: this.address,
@@ -1557,9 +1569,7 @@ export default {
         fromT: this.fromTokenType,
         toT: this.toTokenType,
         quote: this.availableQuotes[idx],
-        fromAmount: new BigNumber(this.tokenInValue).times(
-          new BigNumber(10).pow(new BigNumber(this.fromTokenType.decimals))
-        )
+        fromAmount: toBase(this.tokenInValue, this.fromTokenType.decimals)
       };
       if (this.isFromNonChain) {
         swapObj['refundAddress'] = this.refundAddress;
@@ -1700,9 +1710,7 @@ export default {
         });
     },
     getTokenBalance(balance, decimals) {
-      return new BigNumber(balance.toString()).div(
-        new BigNumber(10).pow(decimals)
-      );
+      return new BigNumber(fromBase(balance, decimals));
     },
     swapNotificationFormatter(obj, currentTrade) {
       obj.hashes.forEach((hash, idx) => {

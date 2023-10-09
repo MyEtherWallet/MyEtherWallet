@@ -323,6 +323,7 @@ export default {
       this.handlerCreateWallet
         .validateMnemonic(this.validateMnemonicValues)
         .then(() => {
+          this.trackCreateWalletAmplitude('create_menmonic_success');
           this.trackCreateWallet(WALLET_TYPES.MNEMONIC);
           this.updateStep(3);
         })
@@ -335,6 +336,7 @@ export default {
      * Used in Step 3
      */
     goToAccess() {
+      this.trackCreateWalletAmplitude('create_menmonic_success_go_to_access');
       this.$router.push({ name: ROUTES_HOME.ACCESS_WALLET.NAME });
     },
 
@@ -356,6 +358,9 @@ export default {
     createAnotherWallet() {
       this.extraWord = '';
       this.extraWordVerification = '';
+      this.trackCreateWalletAmplitude(
+        'create_menmonic_success_create_another_wallet'
+      );
       this.updateStep(1);
     }
   }

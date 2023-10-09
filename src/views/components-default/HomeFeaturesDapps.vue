@@ -32,17 +32,6 @@
         </div>
       </v-col>
     </v-row>
-    <div class="message d-flex align-center justify-center px-3 py-5 mt-7">
-      <div class="message--text textMedium--text text-center">
-        {{ $t('home.features.dapps.text') }}
-        <a
-          href="https://v5.myetherwallet.com"
-          target="_blank"
-          class="greenPrimary--text"
-          >{{ $t('home.features.dapps.link-text') }}</a
-        >
-      </div>
-    </div>
   </mew6-white-sheet>
 </template>
 

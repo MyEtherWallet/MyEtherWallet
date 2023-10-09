@@ -81,7 +81,7 @@
           </v-list-group>
         </template>
         <v-list-item>
-          <v-list-item-content @click="openBuySell">
+          <v-list-item-content @click="trackBuySell">
             <div class="mew-heading-3 font-weight-medium textDark--text">
               Buy ETH
             </div>
@@ -98,6 +98,7 @@
               :href="product.link"
               target="_blank"
               class="d-flex align-center mb-5 ml-5"
+              @click="trackToolLink(product)"
             >
               <img
                 width="35"
@@ -118,24 +119,14 @@
           has-full-width
           title="Create a new wallet"
           class="mb-2"
-          @click.native="
-            $router.push({
-              name: ROUTES_HOME.CREATE_WALLET.NAME,
-              params: {}
-            })
-          "
+          @click.native="trackMobileCreate"
         ></mew-button>
         <mew-button
           btn-style="outline"
           btn-size="large"
           has-full-width
           title="Access my wallet"
-          @click.native="
-            $router.push({
-              name: ROUTES_HOME.ACCESS_WALLET.NAME,
-              params: {}
-            })
-          "
+          @click.native="trackMobileAccess"
         ></mew-button>
       </div>
     </v-navigation-drawer>
@@ -143,17 +134,18 @@
 </template>
 
 <script>
-import buyMore from '@/core/mixins/buyMore.mixin.js';
-import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { mapGetters } from 'vuex';
+
+import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
+import buyMore from '@/core/mixins/buyMore.mixin.js';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 export default {
   name: 'MobileMenu',
   components: {
     AppBtnMenu: () => import('@/core/components/AppBtnMenu')
   },
-  mixins: [buyMore],
+  mixins: [buyMore, handlerAnalytics],
   data: () => ({
-    ROUTES_HOME: ROUTES_HOME,
     isOpen: false,
     mewProducts: [
       {
@@ -245,10 +237,6 @@ export default {
               to: { name: ROUTES_HOME.TOOLS.NAME, query: { tool: 'convert' } }
             },
             {
-              label: 'Generate Keystore file',
-              to: { name: ROUTES_HOME.TOOLS.NAME, query: { tool: 'keystore' } }
-            },
-            {
               label: 'Send Offline Helper',
               to: { name: ROUTES_HOME.TOOLS.NAME, query: { tool: 'offline' } }
             }
@@ -259,8 +247,31 @@ export default {
   },
   methods: {
     pushRoute(to) {
+      this.trackHeaderAmplitude(`click_mobile_${to.name.toLowerCase()}`);
       this.$router.push(to).catch(() => true);
       this.isOpen = false;
+    },
+    trackBuySell() {
+      this.trackHeaderAmplitude('click_mobile_buy_sell');
+      this.openBuySell();
+    },
+    trackMobileAccess() {
+      this.trackLandingPageAmplitude('click_access_wallet');
+      this.$router.push({
+        name: ROUTES_HOME.ACCESS_WALLET.NAME,
+        params: {}
+      });
+    },
+    trackMobileCreate() {
+      this.trackLandingPageAmplitude('click_create_wallet');
+      this.$router.push({
+        name: ROUTES_HOME.CREATE_WALLET.NAME,
+        params: {}
+      });
+    },
+    trackToolLink(val) {
+      const parsedLabel = val.label.replace(' ', '_').toLowerCase();
+      this.trackHeaderAmplitude(`click_mobile_tools_${parsedLabel}`);
     }
   }
 };

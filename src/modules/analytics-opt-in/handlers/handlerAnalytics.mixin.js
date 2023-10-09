@@ -28,7 +28,63 @@ export default {
      * Sets the consent to track on wallet page
      */
     setConsent() {
+      this.$amplitude.setOptOut(!this.consentToTrack);
       this.setTrackingConsent(!this.consentToTrack);
+    },
+    /**
+     *
+     * @param {String} event
+     * tracks all events that happen
+     * inside the landing page
+     */
+    trackLandingPageAmplitude(event) {
+      this.$amplitude.track(categories.landingPage, {
+        click_event: event
+      });
+    },
+    /**
+     *
+     * @param {String} event
+     * tracks all events that happen
+     * inside the header
+     */
+    trackHeaderAmplitude(event) {
+      this.$amplitude.track(categories.header, {
+        click_event: event
+      });
+    },
+    /**
+     *
+     * @param {String} event
+     * tracks all events that happen
+     * inside the footer
+     */
+    trackFooterAmplitude(event) {
+      this.$amplitude.track(categories.footer, {
+        click_event: event
+      });
+    },
+    /**
+     *
+     * @param {String} event
+     * tracks all events that happen
+     * inside the create wallet page
+     */
+    trackCreateWalletAmplitude(event) {
+      this.$amplitude.track(categories.createWallet, {
+        click_event: event
+      });
+    },
+    /**
+     *
+     * @param {String} event
+     * tracks all events that happen
+     * inside the access wallet page
+     */
+    trackAccessWalletAmplitude(event) {
+      this.$amplitude.track(categories.accessWallet, {
+        click_event: event
+      });
     },
     /**
      * Tracks when user lands on landing page
@@ -102,8 +158,12 @@ export default {
      * Tracks when user logs out of dashboard
      */
     trackLogout() {
-      if (this.$matomo && this.consentToTrack) {
-        this.$matomo.trackEvent(categories.exitDashboard, 'true');
+      if (this.consentToTrack) {
+        if (this.$matomo) {
+          this.$matomo.trackEvent(categories.exitDashboard, 'true');
+        }
+
+        this.$amplitude.track(categories.exitDashboard);
       }
     },
     /**
@@ -147,6 +207,27 @@ export default {
      * and swap to
      */
     trackSwap(action, key, value) {
+      const amplitudeTrackable = {
+        swapTxBroadcasted: 'broadcasted',
+        swapTxReceivedReceipt: 'receipt',
+        swapTxFailedV2: 'failed',
+        swapTxNotBroadcastedFailed: 'failed_broadcast',
+        swapTransactionSuccessfullySent: 'success',
+        swapTransactionSend: 'sending'
+      };
+      if (this.consentToTrack && amplitudeTrackable[action]) {
+        const eventProperties = {
+          swap_transaction: amplitudeTrackable[action]
+        };
+
+        if (key && value) {
+          eventProperties['transaction_hash'] = key;
+          eventProperties['network_id'] = value;
+        }
+
+        this.$amplitude.track(categories.swap, eventProperties);
+      }
+
       if (this.$matomo && action && this.consentToTrack) {
         if (key && value) {
           this.$matomo.trackEvent(categories.swap, action, key, value);

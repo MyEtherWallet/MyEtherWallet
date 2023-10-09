@@ -63,6 +63,7 @@ import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import * as nodes from '@/utils/networks/nodes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { ETH, BSC, MATIC } from '@/utils/networks/types';
 
 export default {
   name: 'BuySellTokenSelect',
@@ -142,14 +143,14 @@ export default {
     fetchNetworks() {
       const networkList = Object.values(this.Networks).filter(network => {
         if (this.isSell) {
-          if (network[0].type.name === 'ETH') {
+          if (network[0].type.name === ETH.name) {
             return network;
           }
         } else {
           if (
-            network[0].type.name === 'ETH' ||
-            network[0].type.name === 'MATIC' ||
-            network[0].type.name === 'BSC'
+            network[0].type.name === ETH.name ||
+            network[0].type.name === MATIC.name ||
+            network[0].type.name === BSC.name
           ) {
             return network;
           }

@@ -11,6 +11,7 @@
                   v-if="d.routerLink"
                   :to="{ name: d.routerLink, query: d.query }"
                   :class="d.class"
+                  @click="trackFooterLink(d)"
                 >
                   {{ d.label }}
                 </router-link>
@@ -18,7 +19,9 @@
                   v-if="d.link"
                   :href="d.link"
                   target="_blank"
+                  rel="noopener noreferrer"
                   :class="d.class"
+                  @click="trackFooterLink(d)"
                 >
                   {{ d.label }}
                 </a>
@@ -33,7 +36,9 @@
             <a
               class="color--inherit d-flex align-center mb-3"
               target="_blank"
-              :href="`https://etherscan.io/address/${ethDonationAddress}`"
+              rel="noopener noreferrer"
+              :href="`https://ethvm.com/address/${ethDonationAddress}`"
+              @click="trackDonationAddress('ethereum')"
             >
               <mew-icon
                 icon-name="eth"
@@ -51,7 +56,9 @@
             <a
               class="color--inherit d-flex align-center"
               target="_blank"
+              rel="noopener noreferrer"
               :href="`https://blockchain.info/address/${btcDonationAddress}`"
+              @click="trackDonationAddress('bitcoin')"
             >
               <mew-icon
                 icon-name="btc"
@@ -75,20 +82,45 @@
                 <a
                   class="color--inherit"
                   href="mailto:support@myetherwallet.com"
+                  rel="noopener noreferrer"
                   target="_blank"
+                  @click="trackFooterLink({ label: 'feedback' })"
                 >
                   {{ $t('footer.feedback') }}
                 </a>
               </div>
               <div class="px-6 border-right">
-                <router-link :to="{ name: ROUTES_HOME.PRIVACY_POLICY.NAME }">
+                <router-link
+                  :to="{ name: ROUTES_HOME.PRIVACY_POLICY.NAME }"
+                  @click="
+                    trackFooterLink({ label: ROUTES_HOME.PRIVACY_POLICY.NAME })
+                  "
+                >
                   {{ $t('footer.privacy') }}
                 </router-link>
               </div>
-              <div class="px-6">
-                <router-link :to="{ name: ROUTES_HOME.TERMS_OF_SERVICE.NAME }">
+              <div class="px-6 border-right">
+                <router-link
+                  :to="{ name: ROUTES_HOME.TERMS_OF_SERVICE.NAME }"
+                  @click="
+                    trackFooterLink({
+                      label: ROUTES_HOME.TERMS_OF_SERVICE.NAME
+                    })
+                  "
+                >
                   {{ $t('footer.tos') }}
                 </router-link>
+              </div>
+              <div class="px-6">
+                <a
+                  class="color--inherit"
+                  href="https://hackenproof.com/myetherwallet/myetherwallet"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  @click="trackFooterLink({ label: 'bug_bounty' })"
+                >
+                  Bug Bounty
+                </a>
               </div>
             </div>
           </div>
@@ -108,7 +140,9 @@
               :key="key"
               :href="i.link"
               target="_blank"
+              rel="noopener noreferrer"
               class="ml-4"
+              @click="trackFooterLink({ label: i.icon })"
             >
               <mew-icon v-if="i.icon" :img-height="20" :icon-name="i.icon" />
               <img
@@ -128,6 +162,8 @@
               :href="`https://github.com/MyEtherWallet/MyEtherWallet/releases/tag/v${version}`"
               target="_blank"
               class="cyan--text text--lighten-3 ma-0"
+              rel="noopener noreferrer"
+              @click="trackFooterLink({ label: 'github_version' })"
               >v{{ version }}</a
             >
             <v-spacer />
@@ -137,6 +173,8 @@
                 class="cyan--text text--lighten-3"
                 href="https://www.coingecko.com/en"
                 target="_blank"
+                rel="noopener noreferrer"
+                @click="trackFooterLink({ label: 'coingecko' })"
                 >{{ $t('footer.coingecko') }}</a
               >.
             </p>
@@ -181,10 +219,17 @@
                     <router-link
                       v-if="md.routerLink"
                       :to="{ name: md.routerLink, query: md.query }"
+                      @click="trackFooterLink(md)"
                     >
                       {{ md.label }}
                     </router-link>
-                    <a v-if="md.link" :href="md.link" target="_blank">
+                    <a
+                      v-if="md.link"
+                      :href="md.link"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      @click="trackFooterLink(md)"
+                    >
                       {{ md.label }}
                     </a>
                   </li>
@@ -204,8 +249,10 @@
             <p>{{ $t('footer.donation.text') }}</p>
             <a
               class="color--inherit d-flex align-center mb-1"
+              rel="noopener noreferrer"
               target="_blank"
               :href="`https://etherscan.io/address/${ethDonationAddress}`"
+              @click="trackDonationAddress('ethereum')"
             >
               <mew-icon
                 icon-name="eth"
@@ -222,8 +269,10 @@
             </a>
             <a
               class="color--inherit d-flex align-center"
+              rel="noopener noreferrer"
               target="_blank"
               :href="`https://blockchain.info/address/${btcDonationAddress}`"
+              @click="trackDonationAddress('bitcoin')"
             >
               <mew-icon
                 icon-name="btc"
@@ -249,7 +298,9 @@
               :href="i.link"
               target="_blank"
               style="height: 23px"
+              rel="noopener noreferrer"
               class="px-4 my-5"
+              @click="trackFooterLink({ label: i.icon })"
             >
               <mew-icon v-if="i.icon" :img-height="23" :icon-name="i.icon" />
               <img
@@ -267,20 +318,45 @@
                 <a
                   class="color--inherit"
                   href="mailto:support@myetherwallet.com"
+                  rel="noopener noreferrer"
                   target="_blank"
+                  @click="trackFooterLink({ label: 'feedback' })"
                 >
                   {{ $t('footer.feedback') }}
                 </a>
               </div>
               <div class="px-4 px-lg-6 border-right">
-                <router-link :to="{ name: ROUTES_HOME.PRIVACY_POLICY.NAME }">
+                <router-link
+                  :to="{ name: ROUTES_HOME.PRIVACY_POLICY.NAME }"
+                  @click="
+                    trackFooterLink({ label: ROUTES_HOME.PRIVACY_POLICY.NAME })
+                  "
+                >
                   Privacy
                 </router-link>
               </div>
-              <div class="px-4 px-lg-6">
-                <router-link :to="{ name: ROUTES_HOME.TERMS_OF_SERVICE.NAME }">
+              <div class="px-4 px-lg-6 border-right">
+                <router-link
+                  :to="{ name: ROUTES_HOME.TERMS_OF_SERVICE.NAME }"
+                  @click="
+                    trackFooterLink({
+                      label: ROUTES_HOME.TERMS_OF_SERVICE.NAME
+                    })
+                  "
+                >
                   Terms
                 </router-link>
+              </div>
+              <div class="px-4 px-lg-6">
+                <a
+                  class="color--inherit"
+                  href="https://hackenproof.com/myetherwallet/myetherwallet"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  @click="trackFooterLink({ label: 'bug_bounty' })"
+                >
+                  Bug Bounty
+                </a>
               </div>
             </div>
           </div>
@@ -293,8 +369,10 @@
             <div class="d-flex align-center justify-space-between">
               <a
                 :href="`https://github.com/MyEtherWallet/MyEtherWallet/releases/tag/v${version}`"
+                rel="noopener noreferrer"
                 target="_blank"
                 class="cyan--text text--lighten-3 ma-0"
+                @click="trackFooterLink({ label: 'github_version' })"
                 >v{{ version }}</a
               >
               <v-sheet width="150" color="transparent">
@@ -317,6 +395,8 @@
                   class="cyan--text text--lighten-3"
                   href="https://www.coingecko.com/en"
                   target="_blank"
+                  rel="noopener noreferrer"
+                  @click="trackFooterLink({ label: 'coingecko' })"
                   >{{ $t('footer.coingecko') }}</a
                 >.
               </p>
@@ -371,19 +451,29 @@ export default {
       {
         title: 'MEW',
         data: [
-          { label: 'About us', routerLink: 'AboutPage' },
-          { label: 'Careers', routerLink: 'Careers' },
-          { label: 'How it works', routerLink: 'HowItWorks' },
-          { label: 'Team', routerLink: 'TeamPage' },
+          { label: 'About us', routerLink: ROUTES_HOME.ABOUT_PAGE.NAME },
+          { label: 'Careers', routerLink: ROUTES_HOME.JOBS.NAME },
+          { label: 'How it works', routerLink: ROUTES_HOME.HOW_IT_WORKS.NAME },
+          { label: 'Team', routerLink: ROUTES_HOME.TEAM_PAGE.NAME },
           { label: 'Help center', link: 'https://help.myetherwallet.com/en/' },
           {
             label: 'Customer support',
             link: 'mailto:support@myetherwallet.com'
           },
           { label: 'MEWtopia', link: 'https://www.mewtopia.com/' },
-          { label: 'Press Kit', routerLink: 'PressKit' },
-          { label: 'Security Policy', routerLink: 'SecurityPolicy' },
-          { label: 'Submit DApp', routerLink: 'DappSubmission' }
+          { label: 'Press Kit', routerLink: ROUTES_HOME.PRESS_KIT.NAME },
+          {
+            label: 'Security Policy',
+            routerLink: ROUTES_HOME.SECURITY_POLICY.NAME
+          },
+          {
+            label: 'Submit DApp',
+            routerLink: ROUTES_HOME.DAPP_SUBMISSION.NAME
+          },
+          {
+            label: 'Advertise With Us',
+            routerLink: ROUTES_HOME.ADVERTISE.NAME
+          }
         ]
       },
       {
@@ -412,29 +502,11 @@ export default {
             query: { tool: 'convert' }
           },
           {
-            label: 'Generate keystore file',
-            class: 'FooterKeystoreTool',
-            routerLink: 'Tools',
-            query: { tool: 'keystore' }
-          },
-          {
             label: 'Send Offline Helper',
             class: 'FooterOfflineTool',
             routerLink: 'Tools',
             query: { tool: 'offline' }
           }
-          /*
-          ,{
-            label: 'Transaction status',
-            routerLink: 'SendTX'
-          },
-          {
-            label: 'Watch only address',
-            routerLink: 'Tools',
-            query: { tool: 'watch' }
-          },
-          { label: 'Submit Dapp', routerLink: 'Home' },
-          */
         ]
       }
     ],
@@ -450,26 +522,6 @@ export default {
         value: 'ru_RU',
         flag: require('@/assets/images/flags/russia.png')
       }
-      //   {
-      //     name: 'Germany',
-      //     value: 'ge',
-      //     flag: require('@/assets/images/flags/germany.png')
-      //   },
-      //   {
-      //     name: 'Chinese',
-      //     value: 'ch',
-      //     flag: require('@/assets/images/flags/china.png')
-      //   },
-      //   {
-      //     name: 'Korean',
-      //     value: 'kr',
-      //     flag: require('@/assets/images/flags/korea.png')
-      //   },
-      //   {
-      //     name: 'Japanese',
-      //     value: 'jp',
-      //     flag: require('@/assets/images/flags/japan.png')
-      //   }
     ],
     socialIcons: [
       {
@@ -514,6 +566,16 @@ export default {
   watch: {
     select({ value }) {
       loadLanguageAsync(value);
+    }
+  },
+  methods: {
+    trackFooterLink(d) {
+      this.trackFooterAmplitude(
+        `click_footer_${d.label.replace(' ', '_').toLowerCase()}`
+      );
+    },
+    trackDonationAddress(val) {
+      this.trackFooterAmplitude(`click_footer_donation_${val}`);
     }
   }
 };
@@ -585,7 +647,6 @@ a {
 
     .v-expansion-panel-header {
       padding: 25px 0rem !important;
-      //padding: 23px 24px !important;
     }
 
     .v-sheet,
@@ -593,7 +654,6 @@ a {
       box-shadow: none !important;
     }
     .v-expansion-panel-header__icon {
-      //display: none !important;
       position: absolute;
       right: 20px;
       top: 0;

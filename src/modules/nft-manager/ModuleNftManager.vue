@@ -335,7 +335,7 @@ export default {
       }
     },
     async toAddress(newVal) {
-      if (isAddress(newVal)) {
+      if (isAddress(newVal) && this.enoughFunds) {
         try {
           const gasTypeFee = this.gasPriceByType(this.gasPriceType);
           this.localGasPrice = gasTypeFee;
@@ -351,6 +351,8 @@ export default {
             this.showBalanceError = false;
           }
         } catch (e) {
+          this.enoughFunds = false;
+          this.showBalanceError = false;
           Toast(
             `Can't send NFT! Please double check if everything is correct`,
             {},
