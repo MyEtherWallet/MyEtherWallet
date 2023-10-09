@@ -46,10 +46,21 @@ export default {
      *
      * @param {String} event
      * tracks all events that happen
-     * inside the landing page
+     * inside the header
      */
     trackHeaderAmplitude(event) {
       this.$amplitude.track(categories.header, {
+        click_event: event
+      });
+    },
+    /**
+     *
+     * @param {String} event
+     * tracks all events that happen
+     * inside the footer
+     */
+    trackFooterAmplitude(event) {
+      this.$amplitude.track(categories.footer, {
         click_event: event
       });
     },

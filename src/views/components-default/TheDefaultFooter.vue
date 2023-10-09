@@ -11,6 +11,7 @@
                   v-if="d.routerLink"
                   :to="{ name: d.routerLink, query: d.query }"
                   :class="d.class"
+                  @click="trackFooterLink(d)"
                 >
                   {{ d.label }}
                 </router-link>
@@ -20,6 +21,7 @@
                   target="_blank"
                   rel="noopener noreferrer"
                   :class="d.class"
+                  @click="trackFooterLink(d)"
                 >
                   {{ d.label }}
                 </a>
@@ -36,6 +38,7 @@
               target="_blank"
               rel="noopener noreferrer"
               :href="`https://ethvm.com/address/${ethDonationAddress}`"
+              @click="trackDonationAddress('ethereum')"
             >
               <mew-icon
                 icon-name="eth"
@@ -55,6 +58,7 @@
               target="_blank"
               rel="noopener noreferrer"
               :href="`https://blockchain.info/address/${btcDonationAddress}`"
+              @click="trackDonationAddress('bitcoin')"
             >
               <mew-icon
                 icon-name="btc"
@@ -80,17 +84,30 @@
                   href="mailto:support@myetherwallet.com"
                   rel="noopener noreferrer"
                   target="_blank"
+                  @click="trackFooterLink({ label: 'feedback' })"
                 >
                   {{ $t('footer.feedback') }}
                 </a>
               </div>
               <div class="px-6 border-right">
-                <router-link :to="{ name: ROUTES_HOME.PRIVACY_POLICY.NAME }">
+                <router-link
+                  :to="{ name: ROUTES_HOME.PRIVACY_POLICY.NAME }"
+                  @click="
+                    trackFooterLink({ label: ROUTES_HOME.PRIVACY_POLICY.NAME })
+                  "
+                >
                   {{ $t('footer.privacy') }}
                 </router-link>
               </div>
               <div class="px-6 border-right">
-                <router-link :to="{ name: ROUTES_HOME.TERMS_OF_SERVICE.NAME }">
+                <router-link
+                  :to="{ name: ROUTES_HOME.TERMS_OF_SERVICE.NAME }"
+                  @click="
+                    trackFooterLink({
+                      label: ROUTES_HOME.TERMS_OF_SERVICE.NAME
+                    })
+                  "
+                >
                   {{ $t('footer.tos') }}
                 </router-link>
               </div>
@@ -100,6 +117,7 @@
                   href="https://hackenproof.com/myetherwallet/myetherwallet"
                   rel="noopener noreferrer"
                   target="_blank"
+                  @click="trackFooterLink({ label: 'bug_bounty' })"
                 >
                   Bug Bounty
                 </a>
@@ -124,6 +142,7 @@
               target="_blank"
               rel="noopener noreferrer"
               class="ml-4"
+              @click="trackFooterLink({ label: i.icon })"
             >
               <mew-icon v-if="i.icon" :img-height="20" :icon-name="i.icon" />
               <img
@@ -144,6 +163,7 @@
               target="_blank"
               class="cyan--text text--lighten-3 ma-0"
               rel="noopener noreferrer"
+              @click="trackFooterLink({ label: 'github_version' })"
               >v{{ version }}</a
             >
             <v-spacer />
@@ -154,6 +174,7 @@
                 href="https://www.coingecko.com/en"
                 target="_blank"
                 rel="noopener noreferrer"
+                @click="trackFooterLink({ label: 'coingecko' })"
                 >{{ $t('footer.coingecko') }}</a
               >.
             </p>
@@ -198,6 +219,7 @@
                     <router-link
                       v-if="md.routerLink"
                       :to="{ name: md.routerLink, query: md.query }"
+                      @click="trackFooterLink(md)"
                     >
                       {{ md.label }}
                     </router-link>
@@ -206,6 +228,7 @@
                       :href="md.link"
                       target="_blank"
                       rel="noopener noreferrer"
+                      @click="trackFooterLink(md)"
                     >
                       {{ md.label }}
                     </a>
@@ -229,6 +252,7 @@
               rel="noopener noreferrer"
               target="_blank"
               :href="`https://etherscan.io/address/${ethDonationAddress}`"
+              @click="trackDonationAddress('ethereum')"
             >
               <mew-icon
                 icon-name="eth"
@@ -248,6 +272,7 @@
               rel="noopener noreferrer"
               target="_blank"
               :href="`https://blockchain.info/address/${btcDonationAddress}`"
+              @click="trackDonationAddress('bitcoin')"
             >
               <mew-icon
                 icon-name="btc"
@@ -275,6 +300,7 @@
               style="height: 23px"
               rel="noopener noreferrer"
               class="px-4 my-5"
+              @click="trackFooterLink({ label: i.icon })"
             >
               <mew-icon v-if="i.icon" :img-height="23" :icon-name="i.icon" />
               <img
@@ -294,17 +320,30 @@
                   href="mailto:support@myetherwallet.com"
                   rel="noopener noreferrer"
                   target="_blank"
+                  @click="trackFooterLink({ label: 'feedback' })"
                 >
                   {{ $t('footer.feedback') }}
                 </a>
               </div>
               <div class="px-4 px-lg-6 border-right">
-                <router-link :to="{ name: ROUTES_HOME.PRIVACY_POLICY.NAME }">
+                <router-link
+                  :to="{ name: ROUTES_HOME.PRIVACY_POLICY.NAME }"
+                  @click="
+                    trackFooterLink({ label: ROUTES_HOME.PRIVACY_POLICY.NAME })
+                  "
+                >
                   Privacy
                 </router-link>
               </div>
               <div class="px-4 px-lg-6 border-right">
-                <router-link :to="{ name: ROUTES_HOME.TERMS_OF_SERVICE.NAME }">
+                <router-link
+                  :to="{ name: ROUTES_HOME.TERMS_OF_SERVICE.NAME }"
+                  @click="
+                    trackFooterLink({
+                      label: ROUTES_HOME.TERMS_OF_SERVICE.NAME
+                    })
+                  "
+                >
                   Terms
                 </router-link>
               </div>
@@ -314,6 +353,7 @@
                   href="https://hackenproof.com/myetherwallet/myetherwallet"
                   rel="noopener noreferrer"
                   target="_blank"
+                  @click="trackFooterLink({ label: 'bug_bounty' })"
                 >
                   Bug Bounty
                 </a>
@@ -332,6 +372,7 @@
                 rel="noopener noreferrer"
                 target="_blank"
                 class="cyan--text text--lighten-3 ma-0"
+                @click="trackFooterLink({ label: 'github_version' })"
                 >v{{ version }}</a
               >
               <v-sheet width="150" color="transparent">
@@ -355,6 +396,7 @@
                   href="https://www.coingecko.com/en"
                   target="_blank"
                   rel="noopener noreferrer"
+                  @click="trackFooterLink({ label: 'coingecko' })"
                   >{{ $t('footer.coingecko') }}</a
                 >.
               </p>
@@ -524,6 +566,16 @@ export default {
   watch: {
     select({ value }) {
       loadLanguageAsync(value);
+    }
+  },
+  methods: {
+    trackFooterLink(d) {
+      this.trackFooterAmplitude(
+        `click_footer_${d.label.replace(' ', '_').toLowerCase()}`
+      );
+    },
+    trackDonationAddress(val) {
+      this.trackFooterAmplitude(`click_footer_donation_${val}`);
     }
   }
 };
