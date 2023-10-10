@@ -128,6 +128,9 @@
                     class="mr-2 px-1 py-2 d-flex align-center cursor--pointer mini-buttons"
                     @click="
                       () => {
+                        trackAccessWalletAmplitude(
+                          'click_access_browser_extension'
+                        );
                         openWeb3Wallet(item.provider);
                       }
                     "
