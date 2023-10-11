@@ -126,14 +126,7 @@
                     v-for="item in eip6963Providers"
                     :key="item.info.uuid"
                     class="mr-2 px-1 py-2 d-flex align-center cursor--pointer mini-buttons"
-                    @click="
-                      () => {
-                        trackAccessWalletAmplitude(
-                          'click_access_browser_extension'
-                        );
-                        openWeb3Wallet(item.provider);
-                      }
-                    "
+                    @click="openWeb3WithProvider(item)"
                   >
                     <img
                       v-if="item.info.icon"
@@ -389,6 +382,10 @@ export default {
       } catch (e) {
         Toast(e, {}, ERROR);
       }
+    },
+    openWeb3WithProvider(item) {
+      this.trackAccessWalletAmplitude('click_access_browser_extension');
+      this.openWeb3Wallet(item.provider);
     },
     openMEWwallet() {
       try {
