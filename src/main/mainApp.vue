@@ -74,7 +74,7 @@ export default {
     if (window.ethereum) {
       const name = getInjectedName(window.ethereum);
       const info = {
-        walletId: 'com.detected.injectedwallet',
+        rdns: 'com.detected.injectedwallet',
         uuid: uuidv4(),
         name: name,
         icon: getInjectedIcon(name)
