@@ -368,6 +368,10 @@ export default {
   },
   methods: {
     ...mapActions('wallet', ['setWallet']),
+    ...mapActions('external', [
+      'setSelectedEIP6963Info',
+      'setSelectedEIP6963Provider'
+    ]),
     /**
      * Pushes route to empty Access wallet with no props
      * Consequently closing any open overlay
@@ -385,7 +389,7 @@ export default {
     },
     openWeb3WithProvider(item) {
       this.trackAccessWalletAmplitude('click_access_browser_extension');
-      this.openWeb3Wallet(item.provider);
+      this.openWeb3Wallet(item);
     },
     openMEWwallet() {
       try {
@@ -425,6 +429,15 @@ export default {
      * Checks if Enkrypt is available
      */
     checkEnkrypt() {
+      if (this.eip6963Providers.length > 0) {
+        const item = this.eip6963Providers.find(item => {
+          if (item.info.name.toLowerCase() === 'enkrypt') return item;
+        });
+        if (item) {
+          this.openWeb3Wallet(item);
+          return;
+        }
+      }
       if (
         window.ethereum &&
         window.ethereum.isMetaMask &&
@@ -438,9 +451,13 @@ export default {
     /**
      * Checks and open web3 wallet
      */
-    async openWeb3Wallet(provider) {
-      if (provider || window.ethereum) {
-        const providedProvider = provider || window.ethereum;
+    async openWeb3Wallet(item) {
+      if (item || window.ethereum) {
+        if (item) {
+          this.setSelectedEIP6963Info(item.info);
+          this.setSelectedEIP6963Provider(item.provider);
+        }
+        const providedProvider = item ? item.provider : window.ethereum;
         const web3 = new Web3(providedProvider);
         try {
           await providedProvider.enable();

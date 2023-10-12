@@ -17,6 +17,9 @@ const SET_NETWORK_TOKENS = function (state, tokens) {
 const SET_SELECTED_EIP6963_PROVIDER = function (state, provider) {
   state.selectedEIP6963Provider = provider;
 };
+const SET_SELECTED_EIP6963_INFO = function (state, info) {
+  state.selectedEIP6963Info = info;
+};
 
 const STORE_EIP6963_WALLET = function (state, detail) {
   const newArr = state.eip6963Providers;
@@ -39,5 +42,6 @@ export default {
   SET_COIN_GECKO_TOKENS,
   SET_NETWORK_TOKENS,
   SET_SELECTED_EIP6963_PROVIDER,
+  SET_SELECTED_EIP6963_INFO,
   STORE_EIP6963_WALLET
 };

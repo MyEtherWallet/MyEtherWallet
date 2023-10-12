@@ -25,6 +25,7 @@ const removeWallet = function ({ commit, state, dispatch }) {
   }
   commit('REMOVE_WALLET');
   dispatch('external/setSelectedEIP6963Provider', null, { root: true });
+  dispatch('external/setSelectedEIP6963Info', null, { root: true });
 };
 
 const setWallet = function ({ commit, dispatch }, params) {
