@@ -19,7 +19,6 @@ class Web3Wallet extends WalletInterface {
     const provider = isEIP6963
       ? store.state.external.selectedEIP6963Provider
       : window.ethereum;
-    console.log(provider);
     this.web3 = new Web3(new CustomRequestManager(provider));
     const isMetamask = provider?.isMetaMask && !provider?.isEnkrypt;
     const isEnkrypt = provider?.isMetaMask && provider?.isEnkrypt;
