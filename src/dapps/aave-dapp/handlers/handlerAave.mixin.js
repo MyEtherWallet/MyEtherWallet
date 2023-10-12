@@ -136,8 +136,8 @@ export default {
         },
         result({ data }) {
           this.userReserveData = data.userReserves.map(item => {
-            item.reserve['icon'] =
-              this.contractToToken(item.underlyingAsset)?.img || eth;
+            const token = this.contractToToken(item.reserve.underlyingAsset);
+            item.reserve['icon'] = token ? token.img : eth;
             return {
               ...item,
               underlyingAsset: item.reserve.underlyingAsset
