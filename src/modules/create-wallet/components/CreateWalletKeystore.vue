@@ -276,10 +276,12 @@ export default {
     },
     downloadWallet() {
       this.$refs.downloadLink.click();
+      this.trackCreateWalletAmplitude('create_keystore_success');
       this.trackCreateWallet(WALLET_TYPES.KEYSTORE);
       this.updateStep(3);
     },
     goToAccess() {
+      this.trackCreateWalletAmplitude('create_keystore_success_go_to_access');
       this.$router.push({ name: ROUTES_HOME.ACCESS_WALLET.NAME });
     },
     /**
@@ -292,6 +294,9 @@ export default {
       this.step = 1;
       this.password = '';
       this.cofirmPassword = '';
+      this.trackCreateWalletAmplitude(
+        'create_keystore_success_create_another_wallet'
+      );
     }
   }
 };

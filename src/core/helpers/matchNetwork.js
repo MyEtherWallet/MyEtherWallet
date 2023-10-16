@@ -13,19 +13,25 @@ import wallets from '@/modules/access-wallet/common/walletTypes';
  * @param {Boolean} options.toast - Show toast
  * @return {Boolean} returns false if networks do not match, true if they do, or if its not a web3 wallet
  */
-export default async (chainID, walletType, options = { toast: true }) => {
+export default async (
+  chainID,
+  walletType,
+  passedProvider,
+  options = { toast: true }
+) => {
   const { ethereum } = window;
+  const provider = passedProvider || ethereum;
   const isMetaMask =
-    ethereum &&
-    ethereum.isMetaMask &&
-    !ethereum.hasOwnProperty('isTrust') &&
-    !ethereum.hasOwnProperty('isMEWwallet');
-  const isMEWwallet = ethereum && ethereum.isMetaMask && ethereum.isMEWwallet;
+    provider &&
+    provider.isMetaMask &&
+    !provider.hasOwnProperty('isTrust') &&
+    !provider.hasOwnProperty('isMEWwallet');
+  const isMEWwallet = provider && provider.isMetaMask && provider.isMEWwallet;
   if (walletType === wallets.WEB3_WALLET && (isMetaMask || isMEWwallet)) {
     try {
       if (chainID) {
         const data = { chainId: toHex(chainID) };
-        await ethereum.request({
+        await provider.request({
           method: 'wallet_switchEthereumChain',
           params: [data]
         });

@@ -32,6 +32,61 @@ export default {
       this.setTrackingConsent(!this.consentToTrack);
     },
     /**
+     *
+     * @param {String} event
+     * tracks all events that happen
+     * inside the landing page
+     */
+    trackLandingPageAmplitude(event) {
+      this.$amplitude.track(categories.landingPage, {
+        click_event: event
+      });
+    },
+    /**
+     *
+     * @param {String} event
+     * tracks all events that happen
+     * inside the header
+     */
+    trackHeaderAmplitude(event) {
+      this.$amplitude.track(categories.header, {
+        click_event: event
+      });
+    },
+    /**
+     *
+     * @param {String} event
+     * tracks all events that happen
+     * inside the footer
+     */
+    trackFooterAmplitude(event) {
+      this.$amplitude.track(categories.footer, {
+        click_event: event
+      });
+    },
+    /**
+     *
+     * @param {String} event
+     * tracks all events that happen
+     * inside the create wallet page
+     */
+    trackCreateWalletAmplitude(event) {
+      this.$amplitude.track(categories.createWallet, {
+        click_event: event
+      });
+    },
+    /**
+     *
+     * @param {String} event
+     * tracks all events that happen
+     * inside the access wallet page
+     */
+    trackAccessWalletAmplitude(event) {
+      this.$amplitude.track(categories.accessWallet, {
+        click_event: event
+      });
+    },
+    /**
      * Tracks when user lands on landing page
      */
     trackLandingPage() {
@@ -103,8 +158,12 @@ export default {
      * Tracks when user logs out of dashboard
      */
     trackLogout() {
-      if (this.$matomo && this.consentToTrack) {
-        this.$matomo.trackEvent(categories.exitDashboard, 'true');
+      if (this.consentToTrack) {
+        if (this.$matomo) {
+          this.$matomo.trackEvent(categories.exitDashboard, 'true');
+        }
+
+        this.$amplitude.track(categories.exitDashboard);
       }
     },
     /**

@@ -7,7 +7,7 @@ import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import EventNames from '@/utils/web3-provider/events';
 import { EventBus } from '@/core/plugins/eventBus';
 
-const removeWallet = function ({ commit, state }) {
+const removeWallet = function ({ commit, state, dispatch }) {
   if (
     state.identifier === WALLET_TYPES.WALLET_CONNECT ||
     state.identifier === WALLET_TYPES.MEW_WALLET ||
@@ -24,11 +24,14 @@ const removeWallet = function ({ commit, state }) {
     }
   }
   commit('REMOVE_WALLET');
+  dispatch('external/setSelectedEIP6963Provider', null, { root: true });
+  dispatch('external/setSelectedEIP6963Info', null, { root: true });
 };
 
 const setWallet = function ({ commit, dispatch }, params) {
   commit('SET_WALLET', params[0]);
   dispatch('setWeb3Instance', params[1]);
+  dispatch('external/setSelectedEIP6963Provider', params[1], { root: true });
 };
 const setTokens = function ({ commit }, params) {
   commit('SET_TOKENS', params);

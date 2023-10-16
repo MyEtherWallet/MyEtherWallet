@@ -44,6 +44,7 @@
                 btn-size="large"
                 btn-link="https://www.enkrypt.com"
                 rel="dofollow"
+                @click.native="trackEnkrypt"
               >
                 <img
                   :src="browserLogo"
@@ -59,6 +60,7 @@
                 class="text-decoration-underline textSecondary--text ml-5"
                 href="https://www.enkrypt.com"
                 target="_blank"
+                @click="trackEnkryptLearnMore"
                 >Learn more</a
               >
             </div>
@@ -86,10 +88,11 @@
 
 <script>
 import enkryptMarketing from '@/core/mixins/enkryptMarketing.mixin.js';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 export default {
   name: 'HomeEnkrypt',
   components: {},
-  mixins: [enkryptMarketing],
+  mixins: [enkryptMarketing, handlerAnalytics],
   data: () => ({}),
   computed: {
     bgStyle() {
@@ -103,6 +106,14 @@ export default {
         return 'bgXLarge';
       }
       return 'bgSmall';
+    }
+  },
+  methods: {
+    trackEnkrypt() {
+      this.trackLandingPageAmplitude('click_enkrypt_install');
+    },
+    trackEnkryptLearnMore() {
+      this.trackLandingPageAmplitude('click_enkrypt_learn_more');
     }
   }
 };

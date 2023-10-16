@@ -193,7 +193,7 @@ const fetchPlatformCoinList = async () => {
       l.forEach(t => {
         const vals = Object.values(t.platforms);
         vals.forEach(val => {
-          if (val) idmap[val] = t.id;
+          if (val && !idmap[val]) idmap[val] = t.id;
         });
       });
       return idmap;

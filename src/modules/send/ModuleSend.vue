@@ -270,7 +270,7 @@ export default {
     ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
     ...mapGetters('custom', ['hasCustom', 'customTokens', 'hiddenTokens']),
     isFromNetworkCurrency() {
-      return this.selectedCurrency?.symbol === this.currencyName;
+      return this.selectedCurrency?.contract === MAIN_TOKEN_ADDRESS;
     },
     isDisabledNextBtn() {
       return (
@@ -283,7 +283,7 @@ export default {
     },
     buyMoreStr() {
       return this.isEthNetwork &&
-        MAIN_TOKEN_ADDRESS === this.selectedCurrency?.contract &&
+        this.isFromNetworkCurrency &&
         this.amountError === 'Not enough balance to send!'
         ? this.network.type.canBuy
           ? 'Buy more.'
@@ -292,7 +292,7 @@ export default {
     },
     hasEnoughEth() {
       // Check whether user has enough eth to cover tx fee + amount to send
-      if (this.selectedCurrency?.contract === MAIN_TOKEN_ADDRESS) {
+      if (this.isFromNetworkCurrency) {
         return BigNumber(this.amount)
           .plus(this.txFeeETH)
           .lte(this.balanceInETH);
@@ -640,10 +640,10 @@ export default {
       if (
         (this.selectedMax &&
           this.selectedCurrency &&
-          this.selectedCurrency.contract === MAIN_TOKEN_ADDRESS &&
+          this.isFromNetworkCurrency &&
           total.gt(this.balanceInETH)) ||
         (this.selectedCurrency &&
-          this.selectedCurrency.contract !== MAIN_TOKEN_ADDRESS &&
+          !this.isFromNetworkCurrency &&
           balance.lt(amt))
       ) {
         this.setEntireBal();
@@ -804,10 +804,7 @@ export default {
       return decimals ? fromBase(amt, decimals).toString() : amt;
     },
     setEntireBal() {
-      if (
-        isEmpty(this.selectedCurrency) ||
-        this.selectedCurrency.contract === MAIN_TOKEN_ADDRESS
-      ) {
+      if (isEmpty(this.selectedCurrency) || this.isFromNetworkCurrency) {
         const amt = BigNumber(this.balanceInETH).minus(this.txFeeETH);
         this.setAmount(amt.lt(0) ? '0' : amt.toFixed(), true);
       } else {

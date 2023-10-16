@@ -144,7 +144,6 @@ const setTokenAndEthBalance = function ({
         });
       }
       const promises = [];
-
       hasPreTokens.forEach(t => {
         if (!t.contract) return;
         const token = getters.contractToToken(t.contract);
@@ -163,29 +162,34 @@ const setTokenAndEthBalance = function ({
           );
         }
       });
-      return Promise.all(promises).then(() => hasPreTokens);
+      return Promise.all(promises).then(() => {
+        return hasPreTokens;
+      });
     })
     .then(tokens => {
       const formattedList = [];
       tokens.forEach(t => {
         const token = getters.contractToToken(t.contract);
-        if (!token) return;
         if (t.contract === MAIN_TOKEN_ADDRESS) {
           mainTokenBalance = toBN(t.balance);
         }
-        const base = fromBase(t.balance, token.decimals);
-        const usdBalance = new BigNumber(base).times(token.price).toString();
-        formattedList.push(
-          Object.assign(
-            {
-              balance: t.balance,
-              balancef: _formatBalance(t.balance, token.decimals).value,
-              usdBalance: usdBalance,
-              usdBalancef: formatFiatValue(usdBalance).value
-            },
-            token
-          )
-        );
+        if (token.name) {
+          const decimal = token.decimals ? token.decimals : t.decimals;
+          const base = fromBase(t.balance, decimal);
+          const usdBalance = new BigNumber(base).times(token.price).toString();
+          formattedList.push(
+            Object.assign(
+              {
+                balance: t.balance,
+                balancef: _formatBalance(t.balance, token.decimals).value,
+                usdBalance: usdBalance,
+                usdBalancef: formatFiatValue(usdBalance).value
+              },
+              t,
+              token
+            )
+          );
+        }
       });
       formattedList.sort(function (x, y) {
         return x.contract == MAIN_TOKEN_ADDRESS
@@ -209,10 +213,23 @@ const setTokenAndEthBalance = function ({
     .catch(e => Toast(e.message, {}, ERROR));
 };
 
+const storeEIP6963Wallet = function ({ commit }, params) {
+  commit('STORE_EIP6963_WALLET', params);
+};
+const setSelectedEIP6963Provider = function ({ commit }, params) {
+  commit('SET_SELECTED_EIP6963_PROVIDER', params);
+};
+
+const setSelectedEIP6963Info = function ({ commit }, params) {
+  commit('SET_SELECTED_EIP6963_INFO', params);
+};
 export default {
   setLastPath,
   setCurrency,
   setCoinGeckoTokens,
   setTokenAndEthBalance,
-  setNetworkTokens
+  setNetworkTokens,
+  storeEIP6963Wallet,
+  setSelectedEIP6963Info,
+  setSelectedEIP6963Provider
 };

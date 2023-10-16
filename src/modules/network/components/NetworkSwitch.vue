@@ -132,6 +132,7 @@ export default {
   computed: {
     ...mapGetters('global', ['network']),
     ...mapState('global', ['validNetwork']),
+    ...mapState('external', ['selectedEIP6963Provider']),
     ...mapState('wallet', ['identifier', 'instance', 'isOfflineApp']),
     /**
      * Property returns sorted network names alphabetically in this order: ETH, main and then test networks
@@ -166,17 +167,12 @@ export default {
       this.typeNames.forEach(item => {
         allNetworks.push(types[item]);
       });
-      if (this.isSwapPage) {
+      if (this.isSwapPage || this.identifier === WALLET_TYPES.MEW_WALLET) {
         allNetworks = allNetworks.filter(
           item =>
             item.name === types.ETH.name ||
             item.name === types.BSC.name ||
             item.name === types.MATIC.name
-        );
-      }
-      if (this.identifier === WALLET_TYPES.MEW_WALLET) {
-        allNetworks = allNetworks.filter(
-          item => item.name === types.ETH.name || item.name === types.MATIC.name
         );
       }
       if (this.searchInput && this.searchInput !== '') {
@@ -326,7 +322,7 @@ export default {
             this.networkLoading = false;
             const setNetworkCall =
               this.identifier === WALLET_TYPES.WEB3_WALLET
-                ? this.setWeb3Instance(window.ethereum)
+                ? this.setWeb3Instance(this.selectedEIP6963Provider)
                 : this.setWeb3Instance();
             setNetworkCall.then(() => {
               Toast(`Switched network to: ${found[0].type.name}`, {}, SUCCESS);

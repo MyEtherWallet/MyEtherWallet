@@ -105,6 +105,7 @@ export default {
   computed: {
     ...mapGetters('global', ['network', 'Networks']),
     ...mapState('wallet', ['instance', 'identifier']),
+    ...mapState('external', ['selectedEIP6963Provider']),
     searchedCurrencyItems() {
       if (this.searchValue) {
         const found = this.currencyItems.filter(element => {
@@ -181,7 +182,7 @@ export default {
             this.networkSelected = validNetwork ? this.network.type.name : '';
             const provider =
               this.identifier === WALLET_TYPES.WEB3_WALLET
-                ? this.setWeb3Instance(window.ethereum)
+                ? this.setWeb3Instance(this.selectedEIP6963Provider)
                 : this.setWeb3Instance();
             if (!this.isOfflineApp) {
               provider.then(() => {

@@ -249,21 +249,27 @@ export default {
         const wallet = !account
           ? this.accessHandler.getWalletInstance()
           : account;
+        const _this = this;
         this.setWallet([wallet])
           .then(() => {
             if (this.switchAddress) {
               this.close();
               return;
             }
-            if (this.path !== '') {
-              this.$router.push({ path: this.path });
+            _this.trackAccessWalletAmplitude(
+              `click_access_${_this.type
+                .replace('-', '_')
+                .toLowerCase()}_success`
+            );
+            _this.trackAccessWallet(_this.type);
+            if (_this.path !== '') {
+              _this.$router.push({ path: _this.path });
             } else {
-              const name = this.isOfflineApp
+              const name = _this.isOfflineApp
                 ? ROUTES_WALLET.WALLETS.NAME
                 : ROUTES_WALLET.DASHBOARD.NAME;
-              this.$router.push({ name: name });
+              _this.$router.push({ name: name });
             }
-            this.trackAccessWallet(this.type);
           })
           .catch(e => {
             Toast(e, {}, ERROR);
@@ -281,6 +287,7 @@ export default {
     accessBack() {
       if (this.walletType !== SOFTWARE_WALLET_TYPES.OVERVIEW) {
         try {
+          this.trackAccessWalletAmplitude('click_access_back');
           this.$router.push({
             query: { type: SOFTWARE_WALLET_TYPES.OVERVIEW }
           });
@@ -299,6 +306,9 @@ export default {
       if (Object.values(SOFTWARE_WALLET_TYPES).includes(newType)) {
         try {
           this.type = newType;
+          this.trackAccessWalletAmplitude(
+            `click_access_${newType.replace('-', '_').toLowerCase()}`
+          );
           this.$router.push({
             query: { type: newType }
           });

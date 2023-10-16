@@ -1,3 +1,18 @@
+### Release v6.7.8
+
+### devop
+
+* add more amplitude [#4739](https://github.com/MyEtherWallet/MyEtherWallet/pull/4739)
+
+### feat
+
+* eip 6963 support [#4638](https://github.com/MyEtherWallet/MyEtherWallet/pull/4638)
+
+### fix
+
+* allow empty array as array input for contract interactions [#4721](https://github.com/MyEtherWallet/MyEtherWallet/pull/4721)
+* fix tokens on other networks [#4724](https://github.com/MyEtherWallet/MyEtherWallet/pull/4724)
+
 ### Release v6.7.7-hotfix.2
 
 ### ui

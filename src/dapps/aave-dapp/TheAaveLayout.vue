@@ -365,7 +365,7 @@ export default {
     ...mapState('wallet', ['web3']),
     ...mapGetters('wallet', ['tokensList', 'balanceInETH']),
     ...mapGetters('global', ['isEthNetwork', 'getFiatValue']),
-    ...mapGetters('external', ['fiatValue', 'contractToToken']),
+    ...mapGetters('external', ['fiatValue']),
     loanValue() {
       return formatPercentageValue(
         BigNumber(this.userSummary.currentLoanToValue).times(100)

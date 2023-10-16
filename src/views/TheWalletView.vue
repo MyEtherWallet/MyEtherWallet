@@ -80,7 +80,7 @@ export default {
       'baseGasPrice',
       'darkMode'
     ]),
-    ...mapState('external', ['coinGeckoTokens']),
+    ...mapState('external', ['coinGeckoTokens', 'selectedEIP6963Provider']),
     ...mapState('popups', [
       'enkryptWalletPopup',
       'enkryptLandingPopup',
@@ -114,7 +114,7 @@ export default {
       if (this.online && !this.isOfflineApp) {
         this.web3.eth.clearSubscriptions();
         this.identifier === WALLET_TYPES.WEB3_WALLET
-          ? this.setWeb3Instance(window.ethereum)
+          ? this.setWeb3Instance(this.selectedEIP6963Provider)
           : this.setWeb3Instance();
         this.setup();
         if (this.identifier !== WALLET_TYPES.WEB3_WALLET) {
@@ -209,11 +209,12 @@ export default {
   beforeDestroy() {
     EventBus.$off('openPaperWallet');
     if (this.online && !this.isOfflineApp) this.web3.eth.clearSubscriptions();
-    if (window.ethereum && window.ethereum.removeListener instanceof Function) {
+    const provider = this.selectedEIP6963Provider;
+    if (provider && provider.removeListener instanceof Function) {
       if (this.findAndSetNetwork instanceof Function)
-        window.ethereum.removeListener('chainChanged', this.findAndSetNetwork);
+        provider.removeListener('chainChanged', this.findAndSetNetwork);
       if (this.setWeb3Account instanceof Function)
-        window.ethereum.removeListener('accountsChanged', this.setWeb3Account);
+        provider.removeListener('accountsChanged', this.setWeb3Account);
     }
     clearInterval(this.manualBlockSubscription);
   },
@@ -318,9 +319,9 @@ export default {
      * and setup listeners for metamask changes
      */
     web3Listeners() {
-      if (window.ethereum?.on) {
-        window.ethereum.on('chainChanged', this.findAndSetNetwork);
-        window.ethereum.on('accountsChanged', this.setWeb3Account);
+      if (this.selectedEIP6963Provider?.on) {
+        this.selectedEIP6963Provider.on('chainChanged', this.findAndSetNetwork);
+        this.selectedEIP6963Provider.on('accountsChanged', this.setWeb3Account);
       }
     },
     /**
@@ -341,22 +342,25 @@ export default {
       }, INTERVAL);
     },
     async findAndSetNetwork() {
-      if (window.ethereum && this.identifier === WALLET_TYPES.WEB3_WALLET) {
-        const networkId = await window.ethereum?.request({
+      if (
+        this.selectedEIP6963Provider &&
+        this.identifier === WALLET_TYPES.WEB3_WALLET
+      ) {
+        const networkId = await this.selectedEIP6963Provider?.request({
           method: 'eth_chainId'
         });
 
         const foundNetwork = Object.values(nodeList).find(item => {
           if (toBN(networkId).eq(toBN(item[0].type.chainID))) return item;
         });
-        if (window.ethereum.isMetaMask) {
+        if (this.selectedEIP6963Provider) {
           try {
             if (foundNetwork) {
               await this.setNetwork({
                 network: foundNetwork[0],
                 walletType: this.identifier
               });
-              await this.setWeb3Instance(window.ethereum);
+              await this.setWeb3Instance(this.selectedEIP6963Provider);
               this.setTokensAndBalance();
               this.setValidNetwork(true);
               this.trackNetworkSwitch(foundNetwork[0].type.name);
@@ -375,7 +379,7 @@ export default {
           }
         } else {
           Toast(
-            "Can't find matching nodes for selected MetaMask node! MetaMask may not function properly. Please select a supported node",
+            "Can't find matching nodes for selected Web3 Wallet node! Web3 Wallet may not function properly. Please select a supported node",
             {},
             WARNING
           );
@@ -383,9 +387,9 @@ export default {
       }
     },
     setWeb3Account(acc) {
-      const web3 = new Web3(window.ethereum);
+      const web3 = new Web3(this.selectedEIP6963Provider);
       const wallet = new Web3Wallet(acc[0]);
-      this.setWallet([wallet, web3.currentProvider]);
+      this.setWallet([wallet, web3]);
     }
   }
 };
