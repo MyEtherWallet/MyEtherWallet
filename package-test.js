@@ -86,7 +86,9 @@ const EXCEPTIONS = [
   'eslint-plugin-prettier', // breaks
   'ethereum-block-by-date',
   '@mathieustan/vue-intercom', // major version
-  '@coolwallet/core'
+  '@coolwallet/core',
+  '@walletconnect/ethereum-provider',
+  '@mdi/font'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
