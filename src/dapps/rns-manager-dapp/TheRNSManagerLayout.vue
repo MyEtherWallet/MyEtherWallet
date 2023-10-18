@@ -91,7 +91,7 @@
       :not-enough-funds="notEnoughFunds"
       :loading-commit="loadingCommit"
       :loading-reg="loadingReg"
-      :commited="committed"
+      :committed="committed"
       :minimum-age="minimumAge"
       :commit="commit"
       :no-funds-for-reg-fees="noFundsForRegFees"
@@ -320,11 +320,11 @@ export default {
         const intervalId = setInterval(async () => {
           commitmentReady = await canReveal();
           if (commitmentReady) {
-            let id = intervalId;
             if (intervalId && intervalId._id) {
-              id = intervalId._id;
+              intervalId._clearFn(intervalId._id);
+            } else {
+              clearInterval(intervalId);
             }
-            clearInterval(id);
             this.loadingCommit = false;
             this.committed = true;
             this.waitingForReg = false;
