@@ -65,7 +65,8 @@ export const knownErrors = {
   'Missing or invalid topic field': '',
   'Cannot convert undefined or null to object': '',
   'No matching key. pairing': '',
-  'ResizeObserver loop limit exceeded': ''
+  'ResizeObserver loop limit exceeded': '',
+  'ResizeObserver loop completed with undelivered notifications.': ''
 };
 
 const handleError = err => {

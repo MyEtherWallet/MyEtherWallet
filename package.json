@@ -119,7 +119,7 @@
     "@ledgerhq/hw-transport-web-ble": "6.27.16",
     "@ledgerhq/hw-transport-webusb": "6.27.16",
     "@ledgerhq/live-common": "27.7.0",
-    "@mdi/font": "7.2.96",
+    "@mdi/font": "7.3.67",
     "@vue/babel-preset-app": "4.5.15",
     "@vue/cli-plugin-babel": "4.5.15",
     "@vue/cli-plugin-e2e-nightwatch": "5.0.6",

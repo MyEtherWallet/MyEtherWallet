@@ -289,7 +289,6 @@ export default {
         BigNumber.from(duration),
         this.domainPrice
       );
-
       await registerTx.wait();
       await this.reverseHandler.setReverseRecord(this.name, this.address);
       this.loadingReg = false;
@@ -321,7 +320,7 @@ export default {
           commitmentReady = await canReveal();
           if (commitmentReady) {
             if (intervalId && intervalId._id) {
-              intervalId._clearFn(intervalId._id);
+              clearInterval(intervalId._id);
             } else {
               clearInterval(intervalId);
             }
