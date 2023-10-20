@@ -7,9 +7,6 @@ export default {
   blockExplorerTX: 'https://optimistic.etherscan.io/tx/[[txHash]]',
   blockExplorerAddr: 'https://optimistic.etherscan.io/address/[[address]]',
   chainID: 10,
-  tokens: import('@/_generated/tokens/tokens-op.json').then(
-    module => module.default
-  ),
   contracts: import('@/_generated/contracts/contract-abi-op.json').then(
     module => module.default
   ),

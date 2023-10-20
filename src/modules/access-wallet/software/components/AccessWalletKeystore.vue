@@ -169,12 +169,14 @@ export default {
       this.handlerAccessWallet
         .unlockKeystoreWallet(this.file, this.password)
         .then(res => {
+          console.log('gets here');
           if (res) {
             this.$emit('unlock');
             this.isUnlockingKeystore = false;
           }
         })
         .catch(e => {
+          console.log(e);
           this.isUnlockingKeystore = false;
           Toast(e.message, {}, ERROR);
         });

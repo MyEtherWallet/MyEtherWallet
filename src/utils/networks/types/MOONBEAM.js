@@ -8,9 +8,6 @@ export default {
   blockExplorerTX: 'https://moonscan.io/tx/[[txHash]]',
   blockExplorerAddr: 'https://moonscan.io/addr/[[address]]',
   chainID: 1284,
-  tokens: import('@/_generated/tokens/tokens-moonbeam.json').then(
-    val => val.default
-  ),
   contracts: import('@/_generated/contracts/contract-abi-moonbeam.json').then(
     val => val.default
   ),

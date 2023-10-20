@@ -7,9 +7,6 @@ export default {
   blockExplorerTX: 'https://ftmscan.com/tx/[[txHash]]',
   blockExplorerAddr: 'https://ftmscan.com/address/[[address]]',
   chainID: 250,
-  tokens: import('@/_generated/tokens/tokens-ftm.json').then(
-    module => module.default
-  ),
   contracts: import('@/_generated/contracts/contract-abi-ftm.json').then(
     module => module.default
   ),

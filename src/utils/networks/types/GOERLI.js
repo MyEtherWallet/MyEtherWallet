@@ -9,9 +9,6 @@ export default {
   blockExplorerTX: 'https://goerli.etherscan.io/tx/[[txHash]]',
   blockExplorerAddr: 'https://goerli.etherscan.io/address/[[address]]',
   chainID: 5,
-  tokens: import('@/_generated/tokens/tokens-goerli.json').then(
-    val => val.default
-  ),
   contracts: import('@/_generated/contracts/contract-abi-goerli.json').then(
     val => val.default
   ),

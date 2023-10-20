@@ -7,9 +7,6 @@ export default {
   blockExplorerTX: 'https://explorer.aurora.dev/tx/[[txHash]]',
   blockExplorerAddr: 'https://explorer.aurora.dev/address/[[address]]',
   chainID: 1313161554,
-  tokens: import('@/_generated/tokens/tokens-aurora.json').then(
-    module => module.default
-  ),
   contracts: import('@/_generated/contracts/contract-abi-aurora.json').then(
     module => module.default
   ),

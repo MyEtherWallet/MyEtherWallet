@@ -7,9 +7,6 @@ export default {
   blockExplorerTX: 'https://arbiscan.io/tx/[[txHash]]',
   blockExplorerAddr: 'https://arbiscan.io/address/[[address]]',
   chainID: 42161,
-  tokens: import('@/_generated/tokens/tokens-eth.json').then(
-    module => module.default
-  ),
   contracts: import('@/_generated/contracts/contract-abi-eth.json').then(
     module => module.default
   ),

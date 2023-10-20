@@ -242,7 +242,6 @@ export default {
       this.showPaperWallet = false;
     },
     setup() {
-      this.processNetworkTokens();
       this.subscribeToBlockNumber();
     },
     async checkNetwork() {
@@ -251,15 +250,6 @@ export default {
         this.identifier
       );
       this.setValidNetwork(matched);
-    },
-    processNetworkTokens() {
-      this.network.type.tokens.then(res => {
-        const tokenMap = new Map();
-        res.forEach(item => {
-          tokenMap.set(item.address.toLowerCase(), item);
-        });
-        this.setNetworkTokens(tokenMap);
-      });
     },
     setTokensAndBalance() {
       if (this.coinGeckoTokens?.get) {

@@ -91,14 +91,17 @@ new Vue({
   apolloProvider,
   vuetify,
   beforeCreate() {
-    const userId = this.$route.query.intercomid
-      ? this.$route.query.intercomid
-      : uuidv4();
-    this.$intercom.boot({ user_id: userId });
-
     if (locStore.get('mew-testing') === undefined) {
       locStore.set('mew-testing', false);
     }
+
+    const userId = this.$route.query.intercomid
+      ? this.$route.query.intercomid
+      : uuidv4();
+    const _this = this;
+    setTimeout(() => {
+      _this.$intercom.boot({ user_id: userId });
+    }, 10000);
     this.$store.commit('custom/INIT_STORE');
     this.$store.commit('global/INIT_STORE');
     this.$store.commit('notifications/INIT_STORE');
