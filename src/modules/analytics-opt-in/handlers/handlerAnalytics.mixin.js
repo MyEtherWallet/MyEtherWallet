@@ -73,6 +73,32 @@ export default {
      *
      * @param {String} event
      * tracks all events that happen
+     * inside the dashboard
+     */
+    trackDashboardAmplitude(event, prop) {
+      if (!isEmpty(prop)) {
+        this.$amplitude.track(`${categories.dashboard}${event}`, prop);
+        return;
+      }
+      this.$amplitude.track(`${categories.dashboard}${event}`);
+    },
+    /**
+     *
+     * @param {String} event
+     * tracks all events that happen
+     * inside the swap
+     */
+    trackSwapAmplitude(event, prop) {
+      if (!isEmpty(prop)) {
+        this.$amplitude.track(`${categories.swapAmplitude}${event}`, prop);
+        return;
+      }
+      this.$amplitude.track(`${categories.swapAmplitude}${event}`);
+    },
+    /**
+     *
+     * @param {String} event
+     * tracks all events that happen
      * inside the create wallet page
      */
     trackCreateWalletAmplitude(event) {

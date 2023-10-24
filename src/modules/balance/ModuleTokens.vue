@@ -302,6 +302,7 @@ export default {
                 amount: item.balancef
               };
               this.trackSwap('fromDashboardTokensTable');
+              this.trackDashboardAmplitude('SwapMyTokensValue');
               this.$router
                 .push({
                   name: ROUTES_WALLET.SWAP.NAME,
