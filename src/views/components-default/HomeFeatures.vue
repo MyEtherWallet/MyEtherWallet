@@ -117,18 +117,14 @@ export default {
   }),
   watch: {
     mobileTab(newVal) {
-      this.trackLandingPageAmplitude(
-        `click_features_${this.mobileItems[newVal].tab.toLowerCase()}`
-      );
+      this.trackLandingPageAmplitude(this.mobileItems[newVal].tab);
     }
   },
   methods: {
     trackClick(newVal) {
       if (this.mewTabIdx !== newVal) {
         this.mewTabIdx = newVal;
-        this.trackLandingPageAmplitude(
-          `click_features_${this.mewTabs[newVal].name.toLowerCase()}`
-        );
+        this.trackLandingPageAmplitude(this.mewTabs[newVal].name);
       }
     }
   }

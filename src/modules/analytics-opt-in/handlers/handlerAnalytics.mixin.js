@@ -3,6 +3,7 @@
  */
 import { mapState, mapActions } from 'vuex';
 import categories from './configs/configCategories';
+import { isEmpty } from 'lodash';
 
 export default {
   name: 'HandlerAnalytics',
@@ -37,10 +38,12 @@ export default {
      * tracks all events that happen
      * inside the landing page
      */
-    trackLandingPageAmplitude(event) {
-      this.$amplitude.track(categories.landingPage, {
-        click_event: event
-      });
+    trackLandingPageAmplitude(event, prop) {
+      if (!isEmpty(prop)) {
+        this.$amplitude.track(`${categories.landingPage}${event}`, prop);
+        return;
+      }
+      this.$amplitude.track(`${categories.landingPage}${event}`);
     },
     /**
      *
@@ -48,10 +51,12 @@ export default {
      * tracks all events that happen
      * inside the header
      */
-    trackHeaderAmplitude(event) {
-      this.$amplitude.track(categories.header, {
-        click_event: event
-      });
+    trackHeaderAmplitude(event, prop) {
+      if (!isEmpty(prop)) {
+        this.$amplitude.track(`${categories.header}${event}`, prop);
+        return;
+      }
+      this.$amplitude.track(`${categories.header}${event}`);
     },
     /**
      *

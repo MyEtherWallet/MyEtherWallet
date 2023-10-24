@@ -68,7 +68,7 @@ export default {
   },
   methods: {
     trackMewtopia() {
-      this.trackLandingPageAmplitude('click_mewtopia');
+      this.trackLandingPageAmplitude('MewTopia');
     }
   }
 };
