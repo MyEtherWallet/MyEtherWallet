@@ -1,3 +1,7 @@
+### devop
+
+* update amplitude [#4746](https://github.com/MyEtherWallet/MyEtherWallet/pull/4746)
+
 ### Release v6.7.8
 
 ### devop
