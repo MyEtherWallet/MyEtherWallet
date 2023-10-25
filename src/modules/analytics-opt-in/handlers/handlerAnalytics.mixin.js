@@ -39,11 +39,13 @@ export default {
      * inside the landing page
      */
     trackLandingPageAmplitude(event, prop) {
-      if (!isEmpty(prop)) {
-        this.$amplitude.track(`${categories.landingPage}${event}`, prop);
-        return;
+      if (this.consentToTrack) {
+        if (!isEmpty(prop)) {
+          this.$amplitude.track(`${categories.landingPage}${event}`, prop);
+          return;
+        }
+        this.$amplitude.track(`${categories.landingPage}${event}`);
       }
-      this.$amplitude.track(`${categories.landingPage}${event}`);
     },
     /**
      *
@@ -52,11 +54,13 @@ export default {
      * inside the header
      */
     trackHeaderAmplitude(event, prop) {
-      if (!isEmpty(prop)) {
-        this.$amplitude.track(`${categories.header}${event}`, prop);
-        return;
+      if (this.consentToTrack) {
+        if (!isEmpty(prop)) {
+          this.$amplitude.track(`${categories.header}${event}`, prop);
+          return;
+        }
+        this.$amplitude.track(`${categories.header}${event}`);
       }
-      this.$amplitude.track(`${categories.header}${event}`);
     },
     /**
      *
@@ -65,9 +69,11 @@ export default {
      * inside the footer
      */
     trackFooterAmplitude(event) {
-      this.$amplitude.track(categories.footer, {
-        click_event: event
-      });
+      if (this.consentToTrack) {
+        this.$amplitude.track(categories.footer, {
+          click_event: event
+        });
+      }
     },
     /**
      *
@@ -76,11 +82,13 @@ export default {
      * inside the dashboard
      */
     trackDashboardAmplitude(event, prop) {
-      if (!isEmpty(prop)) {
-        this.$amplitude.track(`${categories.dashboard}${event}`, prop);
-        return;
+      if (this.consentToTrack) {
+        if (!isEmpty(prop)) {
+          this.$amplitude.track(`${categories.dashboard}${event}`, prop);
+          return;
+        }
+        this.$amplitude.track(`${categories.dashboard}${event}`);
       }
-      this.$amplitude.track(`${categories.dashboard}${event}`);
     },
     /**
      *
@@ -89,11 +97,13 @@ export default {
      * inside the swap
      */
     trackSwapAmplitude(event, prop) {
-      if (!isEmpty(prop)) {
-        this.$amplitude.track(`${categories.swapAmplitude}${event}`, prop);
-        return;
+      if (this.consentToTrack) {
+        if (!isEmpty(prop)) {
+          this.$amplitude.track(`${categories.swapAmplitude}${event}`, prop);
+          return;
+        }
+        this.$amplitude.track(`${categories.swapAmplitude}${event}`);
       }
-      this.$amplitude.track(`${categories.swapAmplitude}${event}`);
     },
     /**
      *
@@ -102,9 +112,11 @@ export default {
      * inside the create wallet page
      */
     trackCreateWalletAmplitude(event) {
-      this.$amplitude.track(categories.createWallet, {
-        click_event: event
-      });
+      if (this.consentToTrack) {
+        this.$amplitude.track(categories.createWallet, {
+          click_event: event
+        });
+      }
     },
     /**
      *
@@ -113,9 +125,11 @@ export default {
      * inside the access wallet page
      */
     trackAccessWalletAmplitude(event) {
-      this.$amplitude.track(categories.accessWallet, {
-        click_event: event
-      });
+      if (this.consentToTrack) {
+        this.$amplitude.track(categories.accessWallet, {
+          click_event: event
+        });
+      }
     },
     /**
      * Tracks when user lands on landing page
@@ -238,27 +252,6 @@ export default {
      * and swap to
      */
     trackSwap(action, key, value) {
-      const amplitudeTrackable = {
-        swapTxBroadcasted: 'broadcasted',
-        swapTxReceivedReceipt: 'receipt',
-        swapTxFailedV2: 'failed',
-        swapTxNotBroadcastedFailed: 'failed_broadcast',
-        swapTransactionSuccessfullySent: 'success',
-        swapTransactionSend: 'sending'
-      };
-      if (this.consentToTrack && amplitudeTrackable[action]) {
-        const eventProperties = {
-          swap_transaction: amplitudeTrackable[action]
-        };
-
-        if (key && value) {
-          eventProperties['transaction_hash'] = key;
-          eventProperties['network_id'] = value;
-        }
-
-        this.$amplitude.track(categories.swap, eventProperties);
-      }
-
       if (this.$matomo && action && this.consentToTrack) {
         if (key && value) {
           this.$matomo.trackEvent(categories.swap, action, key, value);
