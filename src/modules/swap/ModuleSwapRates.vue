@@ -7,7 +7,7 @@
           btn-style="transparent"
           button-size="small"
           :title="$t('common.more') + '...'"
-          @click.native="() => navigateToSwap()"
+          @click.native="toSwap"
         />
       </div>
     </div>
@@ -228,6 +228,10 @@ export default {
         Toast(e.message, {}, ERROR);
       }
     },
+    toSwap() {
+      this.trackDashboardAmplitude('SwapPairs');
+      this.navigateToSwap();
+    },
     goToSwap(data) {
       const obj = {
         fromToken: data.fromT.contract,
@@ -237,6 +241,9 @@ export default {
       this.trackSwapRate(
         `fromSwapTokenPairs ${data.fromT.symbol} to ${data.toT.symbol}`
       );
+      this.trackDashboardAmplitude('SwapPairs', {
+        TokenPair: `${data.fromT.symbol} to ${data.toT.symbol}`
+      });
       this.navigateToSwap(obj);
     },
     navigateToSwap(query) {

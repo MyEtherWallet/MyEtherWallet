@@ -247,23 +247,23 @@ export default {
   },
   methods: {
     pushRoute(to) {
-      this.trackHeaderAmplitude(`click_mobile_${to.name.toLowerCase()}`);
+      this.trackHeaderAmplitude(to.name);
       this.$router.push(to).catch(() => true);
       this.isOpen = false;
     },
     trackBuySell() {
-      this.trackHeaderAmplitude('click_mobile_buy_sell');
+      this.trackHeaderAmplitude('BuyETH');
       this.openBuySell();
     },
     trackMobileAccess() {
-      this.trackLandingPageAmplitude('click_access_wallet');
+      this.trackLandingPageAmplitude('AccessWallet');
       this.$router.push({
         name: ROUTES_HOME.ACCESS_WALLET.NAME,
         params: {}
       });
     },
     trackMobileCreate() {
-      this.trackLandingPageAmplitude('click_create_wallet');
+      this.trackLandingPageAmplitude('CreateWallet');
       this.$router.push({
         name: ROUTES_HOME.CREATE_WALLET.NAME,
         params: {}

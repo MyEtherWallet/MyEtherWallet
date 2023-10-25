@@ -157,21 +157,21 @@ export default {
   },
   methods: {
     trackOpenMEWWallet() {
-      this.trackLandingPageAmplitude('click_download_mew_wallet');
+      this.trackLandingPageAmplitude('AppleStore');
       this.openMewWallet();
     },
     trackOpenEnkrypt() {
-      this.trackLandingPageAmplitude('click_enkrypt_install');
+      this.trackLandingPageAmplitude('GoogleStore');
     },
     navigateToCreateWallet() {
-      this.trackLandingPageAmplitude('click_create_wallet');
+      this.trackLandingPageAmplitude('CreateWallet');
       this.$router.push({
         name: ROUTES_HOME.CREATE_WALLET.NAME,
         params: {}
       });
     },
     navigateToAccessWallet() {
-      this.trackLandingPageAmplitude('click_access_wallet');
+      this.trackLandingPageAmplitude('AccessWallet');
       this.$router.push({
         name: ROUTES_HOME.ACCESS_WALLET.NAME,
         params: {}

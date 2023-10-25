@@ -139,7 +139,7 @@ export default {
   methods: {
     trackToolLink(val) {
       const parsedLabel = val.label.replace(' ', '_').toLowerCase();
-      this.trackHeaderAmplitude(`click_tools_${parsedLabel}`);
+      this.trackHeaderAmplitude('MEWProducts', { name: parsedLabel });
     }
   }
 };
