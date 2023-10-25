@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "6.7.8",
+  "version": "6.7.9",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build": "npm run update && vue-cli-service build",
@@ -43,7 +43,7 @@
     "@amplitude/analytics-browser": "2.3.2",
     "@coolwallet/bsc": "1.1.7",
     "@coolwallet/core": "1.1.18",
-    "@coolwallet/eth": "1.1.20",
+    "@coolwallet/eth": "1.1.21",
     "@coolwallet/transport-web-ble": "1.1.3",
     "@coolwallets/eth": "0.2.0-beta.1",
     "@coolwallets/transport-web-ble": "0.1.0",
