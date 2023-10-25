@@ -27,7 +27,11 @@
               : 'header-close-icon-mobile'
           "
         >
-          <v-icon size="x-large" color="grey cursor--pointer" @click="close">
+          <v-icon
+            size="x-large"
+            color="grey cursor--pointer"
+            @click="() => close('XOut')"
+          >
             mdi-close
           </v-icon>
         </v-btn>
@@ -156,7 +160,7 @@
             btn-size="xlarge"
             title="Cancel"
             :has-full-width="$vuetify.breakpoint.xs"
-            @click.native="close"
+            @click.native="() => close('SwapCancel')"
           />
         </v-col>
         <v-col
@@ -180,7 +184,7 @@
             btn-size="xlarge"
             title="Close"
             :has-full-width="true"
-            @click.native="close"
+            @click.native="() => close('SwapCancel')"
           />
         </v-col>
       </v-row>
@@ -265,8 +269,7 @@ export default {
   },
   methods: {
     handleClickOutside() {
-      //this.$emit('close');
-      this.close();
+      this.close('ClickOutside');
     }
   }
 };

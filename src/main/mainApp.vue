@@ -87,17 +87,24 @@ export default {
       this.storeEIP6963Wallet(e.detail);
     });
     EventBus.$on('swapTxBroadcasted', hash => {
-      this.trackSwap('swapTxBroadcasted', hash, this.network.type.chainID);
+      const id = this.network.type.chainID;
+      this.trackSwap('swapTxBroadcasted', hash, id);
+      this.trackSwapAmplitude('Broadcasted', { hash: hash, network: id });
     });
     EventBus.$on('swapTxReceivedReceipt', hash => {
-      this.trackSwap('swapTxReceivedReceipt', hash, this.network.type.chainID);
+      const id = this.network.type.chainID;
+      this.trackSwap('swapTxReceivedReceipt', hash, id);
+      this.trackSwapAmplitude('Receipt', { hash: hash, network: id });
     });
     EventBus.$on('swapTxFailed', hash => {
+      const id = this.network.type.chainID;
       const passedHash = hash === '0x' ? 'no hash' : hash;
-      this.trackSwap('swapTxFailedV2', passedHash, this.network.type.chainID);
+      this.trackSwap('swapTxFailedV2', passedHash, id);
+      this.trackSwapAmplitude('Failed', { hash: passedHash, network: id });
     });
     EventBus.$on('swapTxNotBroadcastedFailed', () => {
       this.trackSwap('swapTxNotBroadcastedFailed');
+      this.trackSwapAmplitude('NotBroadcasted');
     });
     EventBus.$on(BUYSELL_EVENT, () => {
       this.openBuy();

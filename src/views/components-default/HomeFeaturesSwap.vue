@@ -214,7 +214,7 @@ export default {
       if (query) {
         obj['query'] = query;
       }
-      this.trackLandingPageAmplitude('click_features_swap');
+      this.trackLandingPageAmplitude('SwapClicked');
       if (this.$route.name === ROUTES_WALLET.SWAP.NAME) {
         // this will allow vue to update query param
         // within the swap page when user clicks on the pairs again

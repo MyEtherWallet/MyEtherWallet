@@ -110,10 +110,10 @@ export default {
   },
   methods: {
     trackEnkrypt() {
-      this.trackLandingPageAmplitude('click_enkrypt_install');
+      this.trackLandingPageAmplitude('GoogleStore2');
     },
     trackEnkryptLearnMore() {
-      this.trackLandingPageAmplitude('click_enkrypt_learn_more');
+      this.trackLandingPageAmplitude('EnkryptLearnMore');
     }
   }
 };

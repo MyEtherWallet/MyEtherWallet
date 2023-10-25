@@ -123,18 +123,18 @@ export default {
   methods: {
     ...mapActions('external', ['setNetworkTokens']),
     routeToHome() {
-      this.trackHeaderAmplitude('click_mew_logo');
+      this.trackHeaderAmplitude('Logo');
       this.$router.push({ name: ROUTES_HOME.HOME.NAME });
     },
     trackHowItWorks() {
-      this.trackHeaderAmplitude('click_what_is_mew');
+      this.trackHeaderAmplitude('WhatIsMEW');
     },
     routeTo(route) {
-      this.trackHeaderAmplitude(`click_${route.name.toLowerCase()}`);
+      this.trackHeaderAmplitude(`WalletActions`, route);
       this.$router.push(route);
     },
     trackBuySellLanding() {
-      this.trackHeaderAmplitude('click_buy_sell');
+      this.trackHeaderAmplitude('BuyETH');
       this.trackBuySell('buySellLanding');
     }
   }

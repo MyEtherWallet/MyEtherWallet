@@ -94,7 +94,9 @@ export default {
   }),
   methods: {
     trackPartner(obj) {
-      this.trackLandingPageAmplitude(`click_partner_${obj.name}`);
+      this.trackLandingPageAmplitude('Partners', {
+        name: obj.name
+      });
     }
   }
 };
