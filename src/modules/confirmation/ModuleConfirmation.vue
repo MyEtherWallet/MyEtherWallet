@@ -524,6 +524,7 @@ export default {
       this.showTxOverlay = true;
       this.tx.transactionFee = this.txFee;
       this.isSwap = false; // reset isSwap
+      this.error = '';
       tx[0].transactionFee = this.txFee;
       if (tx.length > 1) {
         this.toDetails = tx[1];
@@ -543,6 +544,7 @@ export default {
       this.resolver = resolver;
       this.showTxOverlay = true;
       this.title = 'Verify Swap';
+      this.error = '';
       this.toNonEth = !this.swapInfo.toTokenType.isEth;
       this.isSwap = true;
       if (!this.isHardware && this.identifier !== WALLET_TYPES.WEB3_WALLET) {
@@ -559,6 +561,7 @@ export default {
       EventNames.SHOW_BATCH_TX_MODAL,
       async (arr, resolver, isHardware) => {
         this.isHardwareWallet = isHardware;
+        this.error = '';
         if (arr[0].hasOwnProperty('confirmInfo')) {
           this.swapInfo = arr[0].confirmInfo;
           this.title = 'Verify Swap';
@@ -579,6 +582,7 @@ export default {
     EventBus.$on(EventNames.SHOW_MSG_CONFIRM_MODAL, (msg, resolver) => {
       this.title = 'Message Signed';
       this.isSwap = false; // reset isSwap
+      this.error = '';
       this.instance
         .signMessage(msg)
         .then(res => {
@@ -610,6 +614,7 @@ export default {
     EventBus.$on(EventNames.SHOW_CROSS_CHAIN_MODAL, (txObj, resolver) => {
       this.title = `Send ${txObj.fromType}`;
       this.tx = txObj;
+      this.error = '';
       this.showCrossChainModal = true;
       this.resolver = val => {
         resolver(val);
@@ -814,7 +819,6 @@ export default {
       }
     },
     async signTx() {
-      this.error = '';
       if (this.isNotSoftware) {
         this.signing = true;
       }
@@ -875,7 +879,6 @@ export default {
       }
     },
     async signBatchTx() {
-      this.error = '';
       const signed = [];
       const batchTxEvents = [];
       if (this.isNotSoftware) {
