@@ -80,7 +80,9 @@
       md="4"
       class="pa-2 pa-md-3"
     >
-      <module-network class="d-none d-md-block mb-2" />
+      <div class="d-none d-md-block mb-2">
+        <module-network />
+      </div>
       <div
         class="d-flex align-center justify-center flex-column pa-2 pb-4 pa-md-3 pb-md-5"
       >
