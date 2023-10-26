@@ -115,7 +115,7 @@ export default {
   },
   methods: {
     navigateToAccessWallet() {
-      this.trackLandingPageAmplitude('click_access_wallet');
+      this.trackLandingPageAmplitude('GetTokensClicked');
       this.$router.push({
         name: ROUTES_HOME.ACCESS_WALLET.NAME,
         params: {}

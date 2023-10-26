@@ -71,7 +71,7 @@
                 href="https://download.mewwallet.com/?source=mew_web_create"
                 target="_blank"
                 class="mr-1"
-                @click="trackOpenMEWWallet"
+                @click="() => trackOpenMEWWallet('AppleStore2')"
               >
                 <img
                   v-lazy="require('@/assets/images/icons/button-app-store.svg')"
@@ -82,7 +82,7 @@
               <a
                 href="https://download.mewwallet.com/?source=mew_web_create"
                 target="_blank"
-                @click="trackOpenMEWWallet"
+                @click="() => trackOpenMEWWallet('GoogleStore3')"
               >
                 <img
                   v-lazy="
@@ -129,18 +129,18 @@ export default {
     return {};
   },
   methods: {
-    trackOpenMEWWallet() {
-      this.trackLandingPageAmplitude('click_download_mew_wallet');
+    trackOpenMEWWallet(name) {
+      this.trackLandingPageAmplitude(name);
     },
     navigateToCreateWallet() {
-      this.trackLandingPageAmplitude('click_create_wallet');
+      this.trackLandingPageAmplitude('CreateWallet2');
       this.$router.push({
         name: ROUTES_HOME.CREATE_WALLET.NAME,
         params: {}
       });
     },
     navigateToAccessWallet() {
-      this.trackLandingPageAmplitude('click_access_wallet');
+      this.trackLandingPageAmplitude('AccessWallet2');
       this.$router.push({
         name: ROUTES_HOME.ACCESS_WALLET.NAME,
         params: {}

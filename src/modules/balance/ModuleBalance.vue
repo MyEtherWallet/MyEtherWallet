@@ -282,6 +282,7 @@ export default {
     },
     navigateToSwap() {
       this.trackSwap('fromDashboardBalanceModule');
+      this.trackDashboardAmplitude('SwapBalance');
       this.$router.push({ name: ROUTES_WALLET.SWAP.NAME });
     }
   }

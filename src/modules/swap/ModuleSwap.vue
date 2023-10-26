@@ -1388,6 +1388,9 @@ export default {
       this.$nextTick(() => {
         if (value && value.name && !this.clearingSwap) {
           this.trackSwapToken('from: ' + value.name);
+          this.trackSwapAmplitude('FieldInputs', {
+            fromToken: value.name
+          });
         }
         this.setTokenInValue(this.tokenInValue);
       });
@@ -1407,6 +1410,9 @@ export default {
       this.resetAddressValues({ clearRefund: false });
       if (value && value.name) {
         this.trackSwapToken('to: ' + value.name);
+        this.trackSwapAmplitude('FieldInputs', {
+          toToken: value.name
+        });
       }
       this.setTokenInValue(this.tokenInValue);
     },
@@ -1482,7 +1488,9 @@ export default {
         this.isLoadingProviders = true;
         this.showAnimation = true;
         this.cachedAmount = this.tokenInValue;
-
+        this.trackSwapAmplitude('FieldInputs', {
+          FromAmount: toBase(this.tokenInValue, this.fromTokenType.decimals)
+        });
         this.swapper
           .getAllQuotes({
             fromT: this.fromTokenType,
@@ -1525,6 +1533,9 @@ export default {
           if (!clicked) {
             this.selectedProvider = q;
             if (!this.clearingSwap) {
+              this.trackSwapAmplitude('FieldInputs', {
+                SelectRate: q.amount
+              });
               this.trackSwap(
                 `swapProvider: ${idx + 1}/ ${this.availableQuotes.length}`
               );
@@ -1620,6 +1631,7 @@ export default {
     },
     showConfirm() {
       this.trackSwap('showConfirm');
+      this.trackSwapAmplitude('NextClicked');
       this.setConfirmInfo();
       this.executeTrade();
     },
@@ -1794,6 +1806,9 @@ export default {
     },
     handleLocalGasPrice(e) {
       this.localGasPrice = e;
+      this.trackSwapAmplitude('FieldInputs', {
+        TransactionFee: e
+      });
     },
     preventCharE(e) {
       if (e.key === 'e') e.preventDefault();
