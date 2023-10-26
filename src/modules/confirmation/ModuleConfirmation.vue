@@ -499,7 +499,7 @@ export default {
       },
       deep: true,
       immediate: true
-    },
+    }
   },
   created() {
     /**
@@ -522,8 +522,6 @@ export default {
         this.toDetails = tx[1];
         this.sendCurrency = tx[2];
       }
-      if (!this.isHardware && this.identifier !== WALLET_TYPES.WEB3_WALLET)
-        await this.signTx();
     });
     /**
      * receives an @Array
@@ -540,9 +538,6 @@ export default {
       this.toNonEth = !this.swapInfo.toTokenType.isEth;
       this.isSwap = true;
       this.trackSwapAmplitude('VerifyPageShown');
-      if (!this.isHardware && this.identifier !== WALLET_TYPES.WEB3_WALLET) {
-        await this.signTx();
-      }
     });
 
     /**
@@ -566,10 +561,6 @@ export default {
         if (!resolver) this.resolver = () => {};
         this.resolver = resolver;
         this.showTxOverlay = true;
-
-        if (!isHardware && this.identifier !== WALLET_TYPES.WEB3_WALLET) {
-          this.signBatchTx();
-        }
       }
     );
     EventBus.$on(EventNames.SHOW_MSG_CONFIRM_MODAL, (msg, resolver) => {
