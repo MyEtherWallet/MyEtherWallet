@@ -493,16 +493,13 @@ export default {
           newVal.length !== 0 &&
           newVal.length === this.unsignedTxArr.length
         ) {
-          if (this.isSwap) {
-            this.trackSwapTransactionSuccessful(newVal[newVal.length - 1]);
-          }
           this.showTxOverlay = false;
           this.showSuccess(newVal);
         }
       },
       deep: true,
       immediate: true
-    }
+    },
   },
   created() {
     /**
