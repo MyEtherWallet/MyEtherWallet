@@ -67,7 +67,7 @@ export default {
   },
   methods: {
     navigateToEthBlocks() {
-      this.trackLandingPageAmplitude('click_mint_eth_blocks');
+      this.trackLandingPageAmplitude('AccessWalletMint');
       this.$router.push({
         name: ETH_BLOCKS_ROUTE.CORE.NAME
       });

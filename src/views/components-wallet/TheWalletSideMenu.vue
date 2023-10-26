@@ -551,7 +551,7 @@ export default {
     ...mapActions('wallet', ['removeWallet']),
     ...mapActions('global', ['setDarkMode']),
     trackToSwap() {
-      this.trackSwap('fromSideMenu');
+      this.trackDashboardAmplitude('SwapLeftNavigation');
     },
     trackBuySellFunc() {
       this.trackBuySell('buySellHome');
