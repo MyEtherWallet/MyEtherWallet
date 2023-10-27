@@ -85,7 +85,10 @@ const EXCEPTIONS = [
   '@shapeshiftoss/hdwallet-keepkey-webusb',
   'eslint-plugin-prettier', // breaks
   'ethereum-block-by-date',
-  '@mathieustan/vue-intercom' // major version
+  '@mathieustan/vue-intercom', // major version
+  'vue-chartjs',
+  'chart.js',
+  'vue-tippy'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
@@ -134,23 +137,18 @@ const looper = () => {
         const isBehind =
           new Date(latestVersionTime).getTime() <
           new Date().getTime() - SAFE_TIME;
-        const isMewComponentBeta =
-          _name === '@myetherwallet/mew-components' &&
-          latestVersion.includes('-beta');
         if (isBehind) {
-          if (!isMewComponentBeta) {
-            console.error(
-              'ERROR: Update ' +
-                _name +
-                ' from ' +
-                ALL_PACKAGES[_name] +
-                ' to ' +
-                latestVersion +
-                '. Released:',
-              latestVersionTime
-            );
-            updatesFound = true;
-          }
+          console.error(
+            'ERROR: Update ' +
+              _name +
+              ' from ' +
+              ALL_PACKAGES[_name] +
+              ' to ' +
+              latestVersion +
+              '. Released:',
+            latestVersionTime
+          );
+          updatesFound = true;
         }
       }
     })

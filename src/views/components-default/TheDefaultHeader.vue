@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import mewTools from '@/components/mew-tools/MewTools';
+import mewTools from '@/components/MewTools';
 import TheDefaultMobileNavigation from './TheDefaultMobileNavigation';
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { mapGetters, mapActions } from 'vuex';

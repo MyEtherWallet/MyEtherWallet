@@ -116,7 +116,7 @@ export default {
   name: 'ToolsTableContainer',
   components: {
     ToolsTable: () => import('./ToolsTable'),
-    WhiteSheet: () => import('@/components/white-sheet/WhiteSheet')
+    WhiteSheet: () => import('@/components/WhiteSheet')
   },
   data: () => ({ panel: [] }),
   methods: {

@@ -69,7 +69,7 @@ Dapps live in the `src/dapps` folder. All code related to dapps will be located 
 
 * `/modules` folder with `module.vue` files. Module folder is used to group multiple subsystems that have similar functionality and/or reuse the same handlers. `module.vue` file encapsulates a single subsystem’s components (interface) and handlers (logic), mixins, filters, etc defined within a single functionality of a subsystem.
 
-* `/components` folder with pure UI components or simple logic (separate them by module if multiple components are used only a specific module). If you are making a simple component like a button, please refer to our [Mew Components](https://www.npmjs.com/package/@myetherwallet/mew-components) library. It has the majority of the base simple UI components.
+* `/components` folder with pure UI components or simple logic (separate them by module if multiple components are used only a specific module).
 
 * `TheDappLayout.vue` file encapsulates a single dapp (interface) with multiple modules.
 
