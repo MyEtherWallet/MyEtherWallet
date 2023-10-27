@@ -125,9 +125,6 @@ import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalyti
 export default {
   name: 'GetStarted',
   mixins: [handlerAnalytics],
-  data() {
-    return {};
-  },
   methods: {
     trackOpenMEWWallet(name) {
       this.trackLandingPageAmplitude(name);

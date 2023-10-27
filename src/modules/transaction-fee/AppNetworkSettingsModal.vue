@@ -22,14 +22,13 @@
 </template>
 
 <script>
-import AppSimpleDialog from './AppSimpleDialog';
 import gasPriceMixin from '@/modules/settings/handler/gasPriceMixin';
-import SettingsGasPrice from '@/modules/settings/components/SettingsGasPrice';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 export default {
   components: {
-    AppSimpleDialog,
-    SettingsGasPrice
+    AppSimpleDialog: () => import('./AppSimpleDialog'),
+    SettingsGasPrice: () =>
+      import('@/modules/settings/components/SettingsGasPrice')
   },
   mixins: [gasPriceMixin, handlerAnalytics],
   props: {
@@ -61,9 +60,6 @@ export default {
       type: String,
       default: '0'
     }
-  },
-  data() {
-    return {};
   },
   watch: {
     /**

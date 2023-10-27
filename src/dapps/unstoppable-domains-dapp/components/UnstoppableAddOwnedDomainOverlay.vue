@@ -99,9 +99,6 @@
 export default {
   props: {
     open: { default: false, type: Boolean }
-  },
-  data() {
-    return {};
   }
 };
 </script>

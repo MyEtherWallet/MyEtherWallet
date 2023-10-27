@@ -95,7 +95,7 @@
       </div>
     </v-container>
 
-    <app-get-started />
+    <get-started />
   </div>
 </template>
 
@@ -107,7 +107,8 @@ import utils from 'web3-utils';
 export default {
   name: 'TheConvertUnitsLayout',
   components: {
-    TheLayoutHeader: () => import('../components-default/TheLayoutHeader')
+    TheLayoutHeader: () => import('../components-default/TheLayoutHeader'),
+    GetStarted: () => import('../components-default/GetStarted')
   },
   data() {
     return {

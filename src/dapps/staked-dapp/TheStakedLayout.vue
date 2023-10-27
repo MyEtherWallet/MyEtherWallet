@@ -150,15 +150,13 @@ import {
   formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
 
-import StakedStatus from './components/StakedStatus';
-
 import handlerStaked from './handlers/handlerStaked';
 export default {
   name: 'TheStakedLayout',
   components: {
     TheWrapperDapp: () => import('@/dapps/TheWrapperDapp.vue'),
     StakedStepper: () => import('./components/staked-stepper/StakedStepper'),
-    'staked-status': StakedStatus
+    StakedStatus: () => import('./components/StakedStatus')
   },
   data() {
     return {

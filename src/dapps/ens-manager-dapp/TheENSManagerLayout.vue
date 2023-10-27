@@ -290,18 +290,19 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex';
+import { fromWei, toBN, toWei } from 'web3-utils';
+import { clone } from 'lodash';
 import BigNumber from 'bignumber.js';
 import ENS from '@ensdomains/ensjs';
-import { fromWei, toBN, toWei } from 'web3-utils';
+
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin.js';
-import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
 import handlerEnsManager from './handlers/handlerEnsManager';
+import normalise from '@/core/helpers/normalise';
+import stripQuery from '@/core/helpers/stripQuery.js';
+import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
 import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 import { ENS_MANAGER_ROUTE } from './configsRoutes';
-import normalise from '@/core/helpers/normalise';
-import stripQuery from '@/core/helpers/stripQuery.js';
-import { clone } from 'lodash';
 
 export default {
   name: 'ENSManagerLayout',

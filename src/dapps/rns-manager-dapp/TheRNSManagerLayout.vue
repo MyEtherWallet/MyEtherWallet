@@ -107,21 +107,21 @@
 </template>
 <script>
 import { mapGetters, mapState } from 'vuex';
+import { ethers, BigNumber } from 'ethers';
+import { setInterval } from 'timers';
+
 import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
-import TheWrapperDapp from '@/dapps/TheWrapperDapp.vue';
 import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
 import { RNS_MANAGER_ROUTE } from './routes';
 import normalise from '@/core/helpers/normalise';
 import RNSManager from './handlers/handlerRNSManager';
 import ReverseRegister from './handlers/helpers/reverseRegistrar';
-import { ethers, BigNumber } from 'ethers';
-import { setInterval } from 'timers';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin.js';
 
 export default {
   name: 'RNSManagerLayout',
   components: {
-    TheWrapperDapp,
+    TheWrapperDapp: () => import('@/dapps/TheWrapperDapp.vue'),
     ModuleRegisterDomain: () => import('./modules/ModuleRegisterDomain'),
     RnsReverseLookup: () => import('./components/reverse/RnsReverseLookup')
   },

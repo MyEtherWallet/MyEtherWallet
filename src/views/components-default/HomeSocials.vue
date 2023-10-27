@@ -39,7 +39,6 @@
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 export default {
   name: 'HomeSocials',
-
   mixins: [handlerAnalytics],
   data: () => ({
     socials: [

@@ -6,8 +6,7 @@
 
 <script>
 export default {
-  name: 'HoverExpandingBlock',
-  data: () => ({})
+  name: 'HoverExpandingBlock'
 };
 </script>
 

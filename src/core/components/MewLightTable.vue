@@ -19,7 +19,7 @@
 <script>
 export default {
   name: 'AppTable',
-  components: {},
+
   props: {
     fullWidth: {
       type: Boolean,
@@ -89,9 +89,6 @@ export default {
       type: Boolean,
       default: false
     }
-  },
-  data() {
-    return {};
   },
   computed: {
     containerStyle() {

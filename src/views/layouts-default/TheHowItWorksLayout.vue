@@ -13,7 +13,7 @@
     <how-it-works-dapps-center />
     <how-it-works-tokens />
     <how-it-works-more />
-    <app-get-started />
+    <get-started />
   </div>
 </template>
 
@@ -27,7 +27,8 @@ export default {
     HowItWorksDappsCenter: () =>
       import('../components-default/HowItWorksDappsCenter'),
     HowItWorksTokens: () => import('../components-default/HowItWorksTokens'),
-    HowItWorksMore: () => import('../components-default/HowItWorksMore')
+    HowItWorksMore: () => import('../components-default/HowItWorksMore'),
+    GetStarted: () => import('../components-default/GetStarted')
   }
 };
 </script>

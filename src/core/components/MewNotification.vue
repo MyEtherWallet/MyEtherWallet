@@ -182,21 +182,16 @@
 </template>
 
 <script>
-import MewTokenContainer from '@/components/MewTokenContainer.vue';
-import MewBadge from '@/components/MewBadge.vue';
-import MewBlockie from '@/components/MewBlockie.vue';
-import MewTransformHash from '@/components/MewTransformHash.vue';
 import ethTokenPlaceholder from '@/assets/images/icons/eth.svg';
-import MewTooltip from '@/components/MewTooltip.vue';
 
 export default {
   name: 'MewNotification',
   components: {
-    MewTokenContainer,
-    MewBadge,
-    MewBlockie,
-    MewTransformHash,
-    MewTooltip
+    MewTokenContainer: () => import('./MewTokenContainer.vue'),
+    MewBadge: () => import('./MewBadge.vue'),
+    MewBlockie: () => import('./MewBlockie.vue'),
+    MewTransformHash: () => import('./MewTransformHash.vue'),
+    MewTooltip: () => import('./MewTooltip.vue')
   },
   props: {
     /**

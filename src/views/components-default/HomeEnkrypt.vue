@@ -91,9 +91,9 @@ import enkryptMarketing from '@/core/mixins/enkryptMarketing.mixin.js';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 export default {
   name: 'HomeEnkrypt',
-  components: {},
+
   mixins: [enkryptMarketing, handlerAnalytics],
-  data: () => ({}),
+
   computed: {
     bgStyle() {
       if (

@@ -10,14 +10,12 @@
 
 <script>
 export default {
-  components: {},
   props: {
     data: {
       default: () => [],
       type: Array
     }
-  },
-  data: () => ({})
+  }
 };
 </script>
 

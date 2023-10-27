@@ -88,7 +88,7 @@
 </template>
 
 <script>
-import MewIconButton from '@/components/MewIconButton.vue';
+import MewIconButton from './MewIconButton.vue';
 export default {
   name: 'MewSearch',
   components: {

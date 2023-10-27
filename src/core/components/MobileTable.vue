@@ -56,7 +56,6 @@
 
 <script>
 export default {
-  components: {},
   props: {
     button: {
       type: String,
@@ -82,11 +81,7 @@ export default {
       type: Array,
       default: () => []
     }
-  },
-  data() {
-    return {};
-  },
-  methods: {}
+  }
 };
 </script>
 

@@ -8,9 +8,9 @@
     <div class="py-10" />
     <company-community />
     <div class="py-10" />
-    <app-partners-block />
+    <partners-block />
     <div class="py-9" />
-    <app-mewtopia-block />
+    <mewtopia-block />
     <div class="py-1" />
   </div>
 </template>
@@ -22,7 +22,9 @@ export default {
     TheLayoutHeader: () => import('../components-default/TheLayoutHeader'),
     CompanyWhatIsMew: () => import('../components-default/CompanyWhatIsMew'),
     CompanyOurStory: () => import('../components-default/CompanyOurStory'),
-    CompanyCommunity: () => import('../components-default/CompanyCommunity')
+    CompanyCommunity: () => import('../components-default/CompanyCommunity'),
+    MewtopiaBlock: () => import('../components-default/MewtopiaBlock'),
+    PartnersBlock: () => import('../components-default/PartnersBlock')
   }
 };
 </script>

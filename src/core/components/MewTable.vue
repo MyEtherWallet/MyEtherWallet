@@ -242,20 +242,14 @@
 </template>
 
 <script>
-import MewTokenContainer from '@/components/MewTokenContainer.vue';
-import MewBlockie from '@/components/MewBlockie.vue';
-import MewButton from '@/components/MewButton.vue';
-import MewTransformHash from '@/components/MewTransformHash.vue';
-import MewCopy from '@/components/MewCopy.vue';
-
 export default {
   name: 'MewTable',
   components: {
-    MewTokenContainer,
-    MewBlockie,
-    MewButton,
-    MewTransformHash,
-    MewCopy
+    MewTokenContainer: () => import('./MewTokenContainer.vue'),
+    MewBlockie: () => import('./MewBlockie.vue'),
+    MewButton: () => import('./MewButton.vue'),
+    MewTransformHash: () => import('./MewTransformHash.vue'),
+    MewCopy: () => import('./MewCopy.vue')
   },
   props: {
     /**

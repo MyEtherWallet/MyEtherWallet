@@ -104,7 +104,7 @@ export default {
       type: Boolean
     }
   },
-  data: () => ({}),
+
   methods: {
     closeBanner() {
       this.$emit('closeBanner');

@@ -35,12 +35,11 @@
 
 <script>
 import copy from '@/core/helpers/copy.js';
-import MewToast from '@/components/MewToast.vue';
 
 export default {
   name: 'MewCopy',
   components: {
-    MewToast
+    MewToast: () => import('./MewToast.vue')
   },
   props: {
     /**

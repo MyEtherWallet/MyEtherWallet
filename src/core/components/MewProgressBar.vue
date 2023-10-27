@@ -32,9 +32,6 @@ export default {
         return [];
       }
     }
-  },
-  data() {
-    return {};
   }
 };
 </script>

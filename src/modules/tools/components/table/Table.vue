@@ -30,7 +30,7 @@
 export default {
   name: 'TableComponent',
   components: {
-    mobileTable: () => import('@/components/MobileTable')
+    mobileTable: () => import('@/core/components/MobileTable')
   },
   data: () => ({
     mobileTable: [

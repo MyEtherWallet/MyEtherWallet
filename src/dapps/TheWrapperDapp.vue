@@ -149,13 +149,15 @@
 </template>
 
 <script>
-import bannerImage from '@/assets/images/backgrounds/bg-dapps-center.jpg';
-import TheDappBlockHeader from './TheDappBlockHeader';
-import TheDappHeader from './TheDappHeader';
-import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { mapGetters } from 'vuex';
+
+import bannerImage from '@/assets/images/backgrounds/bg-dapps-center.jpg';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 export default {
-  components: { TheDappBlockHeader, TheDappHeader },
+  components: {
+    TheDappBlockHeader: () => import('./TheDappBlockHeader'),
+    TheDappHeader: () => import('./TheDappHeader')
+  },
   props: {
     // OLD
     hasExitBtn: {

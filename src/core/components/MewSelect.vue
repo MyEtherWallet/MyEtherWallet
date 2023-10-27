@@ -209,8 +209,9 @@
   </v-select>
 </template>
 <script>
-import MewTokenContainer from '@/components/MewTokenContainer.vue';
 import get from 'lodash/get';
+
+import MewTokenContainer from './MewTokenContainer.vue';
 
 export default {
   name: 'MewSelect',

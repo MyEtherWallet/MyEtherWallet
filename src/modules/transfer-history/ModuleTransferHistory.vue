@@ -80,7 +80,6 @@ export default {
       return this.dropdown ? 'mdi-chevron-up' : 'mdi-chevron-down';
     }
   },
-  mounted() {},
   methods: {
     ...mapActions('notifications', ['updateNotification']),
     markNotificationAsRead(notification) {

@@ -38,7 +38,6 @@
 <script>
 export default {
   name: 'HomeFeaturesDapps',
-  components: {},
   data: vm => ({
     dapps: [
       {

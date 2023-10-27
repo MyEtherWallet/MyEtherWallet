@@ -29,7 +29,7 @@
 <script>
 export default {
   components: {
-    mobileTable: () => import('@/components/MobileTable')
+    mobileTable: () => import('@/core/components/MobileTable')
   },
   data: () => ({
     mobileTable: [

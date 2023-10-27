@@ -147,7 +147,6 @@ import enkryptMarketing from '@/core/mixins/enkryptMarketing.mixin.js';
 
 export default {
   name: 'HomeLanding',
-  components: {},
   mixins: [handlerAnalytics, enkryptMarketing],
   mounted() {
     this.$amplitude.track('Landing Page');

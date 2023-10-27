@@ -102,10 +102,8 @@
 </template>
 
 <script>
-import MewButton from '@/components/MewButton.vue';
-
 export default {
-  components: { MewButton },
+  components: { MewButton: () => import('./MewButton.vue') },
   props: {
     /**
      * Title of popup.

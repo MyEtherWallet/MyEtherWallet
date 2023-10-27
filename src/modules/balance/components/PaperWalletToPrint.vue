@@ -115,9 +115,6 @@ import { toChecksumAddress } from '@/core/helpers/addressUtils';
 
 export default {
   name: 'BalanceAddressPaperWallet',
-  data() {
-    return {};
-  },
   computed: {
     ...mapState('wallet', ['address', 'instance', 'isHardware']),
     key() {

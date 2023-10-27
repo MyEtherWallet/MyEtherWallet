@@ -124,9 +124,6 @@
 </template>
 
 <script>
-import MewBlockie from '@/components/MewBlockie.vue';
-import MewCopy from '@/components/MewCopy.vue';
-import MewTransformHash from './MewTransformHash.vue';
 const USER_INPUT_TYPES = {
   typed: 'TYPED',
   selected: 'SELECTED'
@@ -134,9 +131,9 @@ const USER_INPUT_TYPES = {
 export default {
   name: 'MewAddressSelect',
   components: {
-    MewBlockie,
-    MewCopy,
-    MewTransformHash
+    MewBlockie: () => import('./MewBlockie.vue'),
+    MewCopy: () => import('./MewCopy.vue'),
+    MewTransformHash: () => import('./MewTransformHash.vue')
   },
   props: {
     /**

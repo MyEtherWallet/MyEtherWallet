@@ -113,16 +113,13 @@
 </template>
 
 <script>
-import MewBlockie from '@/components/MewBlockie.vue';
-import MewTokenContainer from '@/components/MewTokenContainer.vue';
-
 const types = ['password', 'text'];
 
 export default {
   name: 'MewInput',
   components: {
-    MewBlockie,
-    MewTokenContainer
+    MewBlockie: () => import('./MewBlockie.vue'),
+    MewTokenContainer: () => import('./MewTokenContainer.vue')
   },
   props: {
     /**

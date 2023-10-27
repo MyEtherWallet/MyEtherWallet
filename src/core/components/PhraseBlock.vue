@@ -4,14 +4,6 @@
   </div>
 </template>
 
-<script>
-export default {
-  components: {},
-  data: () => ({}),
-  methods: {}
-};
-</script>
-
 <style lang="scss" scoped>
 .phrase-block {
   border: 1px solid var(--v-greenPrimary-base);

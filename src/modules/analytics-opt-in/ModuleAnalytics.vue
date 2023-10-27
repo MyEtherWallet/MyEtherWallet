@@ -82,6 +82,7 @@
 
 <script>
 import { mapMutations } from 'vuex';
+
 import handlerAnalytics from './handlers/handlerAnalytics.mixin';
 
 export default {

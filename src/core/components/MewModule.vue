@@ -105,8 +105,8 @@
 </template>
 
 <script>
-import MewTooltip from '@/components/MewTooltip.vue';
-import MewTokenContainer from '@/components/MewTokenContainer.vue';
+import MewTooltip from './MewTooltip.vue';
+import MewTokenContainer from './MewTokenContainer.vue';
 
 export default {
   name: 'MewModule',

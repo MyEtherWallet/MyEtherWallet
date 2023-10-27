@@ -15,9 +15,7 @@ export default {
   props: {
     items: { default: 1, type: Number },
     currentItem: { default: 1, type: Number }
-  },
-  data: () => ({}),
-  watch: {}
+  }
 };
 </script>
 

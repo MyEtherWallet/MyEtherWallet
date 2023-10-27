@@ -116,11 +116,10 @@
 </template>
 
 <script>
-import MewIcon from '@/components/MewIcon.vue';
 export default {
   name: 'MewSuperButton',
   components: {
-    MewIcon
+    MewIcon: () => import('./MewIcon.vue')
   },
   props: {
     /**

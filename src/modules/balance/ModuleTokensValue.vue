@@ -65,9 +65,10 @@
 </template>
 
 <script>
-import { EventBus } from '@/core/plugins/eventBus';
 import { mapGetters, mapState } from 'vuex';
 import { toBN } from 'web3-utils';
+
+import { EventBus } from '@/core/plugins/eventBus';
 import { BUYSELL_EVENT } from '../buy-sell/helpers';
 
 export default {

@@ -53,15 +53,6 @@
   </white-sheet>
 </template>
 
-<script>
-export default {
-  components: {},
-  data() {
-    return {};
-  }
-};
-</script>
-
 <style lang="scss">
 .mew-component--module-balance-loader .v-skeleton-loader__text {
   margin-bottom: 0px !important;

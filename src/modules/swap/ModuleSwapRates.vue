@@ -156,7 +156,6 @@ const STATIC_PAIRS = [
 ];
 export default {
   name: 'ModuleSwapRates',
-  components: {},
   mixins: [handlerAnalytics],
   props: {
     mobile: {

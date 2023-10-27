@@ -128,9 +128,6 @@ export default {
   mixins: [buyMore],
   props: {
     open: { default: false, type: Boolean }
-  },
-  data() {
-    return {};
   }
 };
 </script>
