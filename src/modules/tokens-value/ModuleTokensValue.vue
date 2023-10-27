@@ -1,5 +1,5 @@
 <template>
-  <mew6-white-sheet class="px-5 px-lg-7 py-5 d-flex justify-space-between">
+  <white-sheet class="px-5 px-lg-7 py-5 d-flex justify-space-between">
     <div>
       <h2 class="pb-3">{{ tokenTitle }}</h2>
       <h2 class="pb-3">$ {{ totalTokenValues }}</h2>
@@ -12,7 +12,7 @@
         </v-col>
       </v-row>
     </div>
-  </mew6-white-sheet>
+  </white-sheet>
 </template>
 
 <script>

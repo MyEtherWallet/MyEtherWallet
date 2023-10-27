@@ -1,6 +1,6 @@
 <template>
   <div class="module-tokens-value">
-    <mew6-white-sheet class="px-5 px-lg-7 py-5 d-flex justify-space-between">
+    <white-sheet class="px-5 px-lg-7 py-5 d-flex justify-space-between">
       <v-row dense>
         <v-col cols="12">
           <div :class="[draggable ? 'ml-7' : '', 'mew-heading-2 mb-3']">
@@ -44,7 +44,7 @@
           </v-row>
         </v-col>
       </v-row>
-    </mew6-white-sheet>
+    </white-sheet>
     <app-modal
       title="My Tokens"
       :close="handleTokensPopup"
@@ -73,7 +73,6 @@ import { BUYSELL_EVENT } from '../buy-sell/helpers';
 export default {
   name: 'ModuleTokensValue',
   components: {
-    AppModal: () => import('@/core/components/AppModal'),
     ModuleTokens: () => import('@/modules/balance/ModuleTokens')
   },
   props: {

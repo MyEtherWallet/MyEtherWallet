@@ -193,7 +193,6 @@ import iconColorfulETH from '@/assets/images/icons/icon-colorful-eth.svg';
 import configNetworkTypes from '@/dapps/staked-dapp/handlers/configNetworkTypes';
 
 export default {
-  components: { BorderBlock: () => import('@/components/BorderBlock') },
   props: {
     amount: {
       type: Number,

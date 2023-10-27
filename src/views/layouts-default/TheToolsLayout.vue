@@ -39,7 +39,6 @@ export default {
   name: 'TheToolsLayout',
   components: {
     TheLayoutHeader: () => import('../components-default/TheLayoutHeader'),
-    AppGetStarted: () => import('@/core/components/AppGetStarted'),
     ModuleToolsWatchOnly: () => import('@/modules/tools/ModuleToolsWatchOnly'),
     ModuleToolsConvert: () => import('@/modules/tools/ModuleToolsConvert'),
     ModuleToolsOfflineHelper: () =>

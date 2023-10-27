@@ -20,8 +20,6 @@ export default {
   name: 'TheCompanyLayout',
   components: {
     TheLayoutHeader: () => import('../components-default/TheLayoutHeader'),
-    AppPartnersBlock: () => import('@/core/components/AppPartnersBlock'),
-    AppMewtopiaBlock: () => import('@/core/components/AppMewtopiaBlock'),
     CompanyWhatIsMew: () => import('../components-default/CompanyWhatIsMew'),
     CompanyOurStory: () => import('../components-default/CompanyOurStory'),
     CompanyCommunity: () => import('../components-default/CompanyCommunity')

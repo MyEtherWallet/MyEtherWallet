@@ -3,7 +3,7 @@
     <template #mewOverlayBody>
       <div>
         <h2 class="text-center mb-10">Buy domain</h2>
-        <mew6-white-sheet>
+        <white-sheet>
           <div class="pa-8">
             <v-sheet
               color="transparent"
@@ -80,14 +80,14 @@
               </div>
             </v-sheet>
           </div>
-        </mew6-white-sheet>
+        </white-sheet>
       </div>
       <div>
         <h2 class="text-center mb-10">Confirmation</h2>
-        <mew6-white-sheet>
+        <white-sheet>
           <transaction-confirmation />
-        </mew6-white-sheet>
-        <mew6-white-sheet>
+        </white-sheet>
+        <white-sheet>
           <div class="pa-8">
             <v-sheet
               color="transparent"
@@ -114,7 +114,7 @@
             </v-sheet>
           </div>
           <div class="py-10"></div>
-        </mew6-white-sheet>
+        </white-sheet>
       </div>
     </template>
   </mew-overlay>

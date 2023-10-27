@@ -1,6 +1,6 @@
 <template>
   <div>
-    <app-table
+    <mew-light-table
       v-if="!isMobile"
       border-around
       round-corner
@@ -90,9 +90,9 @@
           </tr>
         </tbody>
       </table>
-    </app-table>
+    </mew-light-table>
 
-    <app-table
+    <mew-light-table
       v-for="(td, dataKey) in tableData"
       v-else
       :key="dataKey"
@@ -153,17 +153,13 @@
           </div>
         </v-btn>
       </div>
-    </app-table>
+    </mew-light-table>
   </div>
 </template>
 
 <script>
-import AppCopyBtn from '@/core/components/AppCopyBtn';
-import AppTable from '@/core/components/AppTable';
-
 export default {
   name: 'SettingsAddressTable',
-  components: { AppTable, AppCopyBtn },
   props: {
     tableData: {
       type: Array,

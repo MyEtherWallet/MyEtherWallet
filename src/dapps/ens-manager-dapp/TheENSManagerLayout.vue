@@ -308,7 +308,7 @@ export default {
   components: {
     ModuleRegisterDomain: () => import('./modules/ModuleRegisterDomain'),
     ModuleManageDomain: () => import('./modules/ModuleManageDomain'),
-    TheWrapperDapp: () => import('@/core/components/TheWrapperDapp'),
+    TheWrapperDapp: () => import('@/dapps/TheWrapperDapp.vue'),
     EnsReverseLookup: () => import('./components/reverse/EnsReverseLookup')
   },
   mixins: [handlerAnalytics],

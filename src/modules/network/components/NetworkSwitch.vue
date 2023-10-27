@@ -104,9 +104,6 @@ import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 
 export default {
   name: 'NetworkSwitch',
-  components: {
-    AppUserMsgBlock: () => import('@/core/components/AppUserMsgBlock')
-  },
   mixins: [handlerAnalytics],
   props: {
     isWallet: { type: Boolean, default: true },

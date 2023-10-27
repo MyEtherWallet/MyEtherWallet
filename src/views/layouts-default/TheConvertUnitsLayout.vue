@@ -107,8 +107,7 @@ import utils from 'web3-utils';
 export default {
   name: 'TheConvertUnitsLayout',
   components: {
-    TheLayoutHeader: () => import('../components-default/TheLayoutHeader'),
-    AppGetStarted: () => import('@/core/components/AppGetStarted')
+    TheLayoutHeader: () => import('../components-default/TheLayoutHeader')
   },
   data() {
     return {

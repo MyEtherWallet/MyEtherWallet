@@ -289,7 +289,7 @@
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { SUPPORTED_NETWORKS } from './handlers/supportedNetworks';
-import TheWrapperDapp from '@/core/components/TheWrapperDapp';
+import TheWrapperDapp from '@/dapps/TheWrapperDapp.vue';
 import AaveBorrowOverlay from './components/overlays/AaveBorrowOverlay';
 import AaveDepositOverlay from './components/overlays/AaveDepositOverlay';
 import AaveCollateralOverlay from './components/overlays/AaveCollateralOverlay';

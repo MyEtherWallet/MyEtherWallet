@@ -57,10 +57,6 @@
 import { mapGetters } from 'vuex';
 
 export default {
-  components: {
-    AppModal: () => import('@/core/components/AppModal'),
-    AppAddrQr: () => import('@/core/components/AppAddrQr')
-  },
   props: {
     currencyName: {
       type: String,

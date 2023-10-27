@@ -167,8 +167,6 @@ import { mapGetters, mapActions, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { fromWei } from 'web3-utils';
 
-import AppNetworkSettingsModal from './AppNetworkSettingsModal.vue';
-import AppModal from '@/core/components/AppModal.vue';
 import {
   formatFiatValue,
   formatFloatingPointValue
@@ -179,7 +177,9 @@ import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalyti
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 export default {
   name: 'AppTransactionFee',
-  components: { AppNetworkSettingsModal, AppModal },
+  components: {
+    AppNetworkSettingsModal: () => import('./AppNetworkSettingsModal.vue')
+  },
   mixins: [buyMore, handlerAnalytics],
   props: {
     showFee: {

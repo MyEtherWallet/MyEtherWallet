@@ -21,10 +21,7 @@ export default {
     HomeFeatures: () => import('../components-default/HomeFeatures'),
     HomeEthBlocks: () => import('../components-default/HomeEthBlocks'),
     HomeSocials: () => import('../components-default/HomeSocials.vue'),
-    HomeWhyMew: () => import('../components-default/HomeWhyMew'),
-    AppMewtopiaBlock: () => import('@/core/components/AppMewtopiaBlock'),
-    AppGetStarted: () => import('@/core/components/AppGetStarted'),
-    AppPartnersBlock: () => import('@/core/components/AppPartnersBlock')
+    HomeWhyMew: () => import('../components-default/HomeWhyMew')
   }
 };
 </script>

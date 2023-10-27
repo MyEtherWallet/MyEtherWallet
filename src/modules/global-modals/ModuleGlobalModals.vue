@@ -16,7 +16,7 @@
         />
       </template>
     </app-modal>
-    <app-error-msg
+    <error-msg
       :show="openError"
       :close="reset"
       :resolve="send"
@@ -34,10 +34,9 @@ const OPEN_HARDWARE_PASSWORD = 'showHardwarePassword';
 const ISSUE_MODAL = 'issueModal';
 export default {
   components: {
-    AppModal: () => import('@/core/components/AppModal.vue'),
     HardwarePasswordModal: () =>
       import('./components/HardwarePasswordModal.vue'),
-    AppErrorMsg: () => import('@/core/components/AppErrorMsg.vue')
+    ErrorMsg: () => import('./components/ErrorMsg.vue')
   },
   mixins: [handlerAnalytics],
   data() {

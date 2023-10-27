@@ -25,7 +25,7 @@ import handler from './handlers/stakewiseHandler';
 export default {
   name: 'TheStakewiseLayout',
   components: {
-    TheWrapperDapp: () => import('@/core/components/TheWrapperDapp')
+    TheWrapperDapp: () => import('@/dapps/TheWrapperDapp.vue')
   },
   data() {
     return {

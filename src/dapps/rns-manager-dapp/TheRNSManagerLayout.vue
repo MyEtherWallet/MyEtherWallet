@@ -108,7 +108,7 @@
 <script>
 import { mapGetters, mapState } from 'vuex';
 import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
-import TheWrapperDapp from '@/core/components/TheWrapperDapp';
+import TheWrapperDapp from '@/dapps/TheWrapperDapp.vue';
 import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
 import { RNS_MANAGER_ROUTE } from './routes';
 import normalise from '@/core/helpers/normalise';

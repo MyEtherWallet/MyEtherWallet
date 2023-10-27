@@ -2,12 +2,12 @@
   <!-- ===================================================================================== -->
   <!-- DAPP WRAPPER: -->
   <!-- ===================================================================================== -->
-  <mew6-white-sheet class="mt-5 the-wrapper-dapp">
+  <white-sheet class="mt-5 the-wrapper-dapp">
     <!-- ===================================================================================== -->
     <!-- Mew Banner - props: bannerText, bannerImg -->
     <!-- TODO: Add block header to mew banner component -->
     <!-- ===================================================================================== -->
-    <block-header
+    <the-dapp-block-header
       v-if="!isNewHeader"
       :text-obj="bannerTextObj"
       :banner-img="bannerImg"
@@ -22,7 +22,7 @@
       <template #right>
         <slot name="HeaderRight" />
       </template>
-    </block-header>
+    </the-dapp-block-header>
 
     <!-- ===================================================================================== -->
     <!-- NER DAPP HEADER: -->
@@ -145,17 +145,17 @@
     <div v-if="tabItems.length === 0" class="pt-8 px-3 pa-md-8">
       <slot name="content" />
     </div>
-  </mew6-white-sheet>
+  </white-sheet>
 </template>
 
 <script>
 import bannerImage from '@/assets/images/backgrounds/bg-dapps-center.jpg';
-import BlockHeader from '@/core/components/AppBlockHeader';
-import TheDappHeader from '@/core/components/TheDappHeader';
+import TheDappBlockHeader from './TheDappBlockHeader';
+import TheDappHeader from './TheDappHeader';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { mapGetters } from 'vuex';
 export default {
-  components: { BlockHeader, TheDappHeader },
+  components: { TheDappBlockHeader, TheDappHeader },
   props: {
     // OLD
     hasExitBtn: {

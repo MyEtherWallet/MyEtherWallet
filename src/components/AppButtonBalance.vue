@@ -32,7 +32,6 @@
 <script>
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 export default {
-  components: {},
   props: {
     loading: {
       type: Boolean,

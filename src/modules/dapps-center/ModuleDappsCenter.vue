@@ -94,9 +94,8 @@ import isNew from '@/core/helpers/isNew.js';
 
 export default {
   components: {
-    TheWrapperDapp: () => import('@/core/components/TheWrapperDapp'),
-    AppUserMsgBlock: () => import('@/core/components/AppUserMsgBlock'),
-    TheWrapperWallet: () => import('@/core/components/TheWrapperWallet')
+    TheWrapperDapp: () => import('@/dapps/TheWrapperDapp.vue'),
+    TheWrapperWallet: () => import('@/views/components-wallet/TheWrapperWallet')
   },
   mixins: [handlerAnalytics],
   data() {

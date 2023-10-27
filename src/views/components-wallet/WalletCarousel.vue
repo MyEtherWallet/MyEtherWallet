@@ -1,6 +1,6 @@
 <template>
   <div class="mew-component--banner-ads cursor--pointer">
-    <mew6-white-sheet class="overflow--hidden">
+    <white-sheet class="overflow--hidden">
       <v-carousel
         v-model="currentSlide"
         height="100%"
@@ -43,7 +43,7 @@
           />
         </v-carousel-item>
       </v-carousel>
-    </mew6-white-sheet>
+    </white-sheet>
   </div>
 </template>
 

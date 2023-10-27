@@ -22,7 +22,6 @@ export default {
   name: 'TheHowItWorksLayout',
   components: {
     TheLayoutHeader: () => import('../components-default/TheLayoutHeader'),
-    AppGetStarted: () => import('@/core/components/AppGetStarted'),
     HowItWorksSwap: () => import('../components-default/HowItWorksSwap'),
     HowItWorksSend: () => import('../components-default/HowItWorksSend'),
     HowItWorksDappsCenter: () =>

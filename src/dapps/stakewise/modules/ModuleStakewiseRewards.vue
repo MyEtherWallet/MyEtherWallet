@@ -57,7 +57,10 @@
           <!-- Amount to stake -->
           <!-- ======================================================================================= -->
           <div class="position--relative mt-15">
-            <button-balance :loading="loadingBalance" :balance="rethBalance" />
+            <app-button-balance
+              :loading="loadingBalance"
+              :balance="rethBalance"
+            />
             <mew-input
               type="number"
               :max-btn-obj="maxBtnObj"
@@ -207,8 +210,7 @@ export default {
   components: {
     StakewiseApr: () => import('../components/StakewiseApr'),
     StakewiseStaking: () => import('../components/StakewiseStaking'),
-    StakewiseRewards: () => import('../components/StakewiseRewards'),
-    ButtonBalance: () => import('@/core/components/AppButtonBalance')
+    StakewiseRewards: () => import('../components/StakewiseRewards')
   },
   mixins: [handlerAnalytics],
   data() {

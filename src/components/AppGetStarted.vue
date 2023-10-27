@@ -120,7 +120,7 @@
 </template>
 
 <script>
-import { ROUTES_HOME } from '../configs/configRoutes';
+import { ROUTES_HOME } from '@/core/configs/configRoutes.js';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 export default {
   name: 'GetStarted',

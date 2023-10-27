@@ -49,7 +49,7 @@
                 Copy Address
               </div>
               <div v-if="!timerFinished">
-                <qr-code
+                <app-qr-code
                   v-if="!hideQr"
                   :data="payinAddress"
                   :height="160"
@@ -141,7 +141,6 @@ const MINUTES = 20;
 const SECONDS_IN_MINUTES = 60;
 export default {
   name: 'CrossChainModal',
-  components: { AppModal: () => import('@/core/components/AppModal') },
   props: {
     showCrossChainModal: {
       type: Boolean,

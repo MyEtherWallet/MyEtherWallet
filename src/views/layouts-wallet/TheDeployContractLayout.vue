@@ -13,7 +13,8 @@
 export default {
   name: 'TheDeployContractLayout',
   components: {
-    TheWrapperWallet: () => import('@/core/components/TheWrapperWallet'),
+    TheWrapperWallet: () =>
+      import('@/views/components-wallet/TheWrapperWallet'),
     ModuleSwapRates: () => import('@/modules/swap/ModuleSwapRates'),
     ModuleContractDeploy: () =>
       import('@/modules/contract/ModuleContractDeploy')
