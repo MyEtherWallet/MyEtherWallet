@@ -210,7 +210,11 @@ const setTokenAndEthBalance = function ({
         })
       );
     })
-    .catch(e => Toast(e.message, {}, ERROR));
+    .catch(e => {
+      Toast(e.message, {}, ERROR);
+      _getBalance();
+      return [];
+    });
 };
 
 const storeEIP6963Wallet = function ({ commit }, params) {
