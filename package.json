@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "6.7.9",
+  "version": "6.7.9-hotfix.1",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build": "npm run update && vue-cli-service build",
@@ -40,7 +40,7 @@
     "@aave/math-utils": "1.7.0",
     "@aave/protocol-js": "4.3.0",
     "@actions/github": "6.0.0",
-    "@amplitude/analytics-browser": "2.3.2",
+    "@amplitude/analytics-browser": "2.3.3",
     "@coolwallet/bsc": "1.1.7",
     "@coolwallet/core": "1.1.18",
     "@coolwallet/eth": "1.1.21",
