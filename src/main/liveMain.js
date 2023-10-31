@@ -4,7 +4,6 @@ import '@/assets/fonts/Roboto/css/Roboto.css';
 
 import './sentry';
 import './components';
-import './matomo';
 
 import Vue from 'vue';
 import Router from 'vue-router';
