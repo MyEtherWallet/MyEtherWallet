@@ -1,3 +1,9 @@
+### Release v6.7.9-hotfix.1
+
+### devop
+
+* disable matomo [#4754](https://github.com/MyEtherWallet/MyEtherWallet/pull/4754)
+
 ### Release v6.7.9
 
 ### devop
