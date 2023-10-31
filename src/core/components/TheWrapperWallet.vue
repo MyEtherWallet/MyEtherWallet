@@ -65,7 +65,7 @@
         </v-col>
         <v-col
           v-for="n in totalRightColItems"
-          v-show="totalRightColItems > 1"
+          v-show="totalRightColItems >= 1"
           :key="n"
           cols="12"
           class="pa-2 pa-md-3 pb-0"
