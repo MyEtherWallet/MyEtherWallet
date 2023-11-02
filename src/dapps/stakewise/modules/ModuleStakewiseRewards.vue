@@ -516,7 +516,7 @@ export default {
         this.swapper
           .executeTrade(this.currentTrade, this.confirmInfo)
           .then(res => {
-            this.trackDapp('compoundRewards');
+            this.trackDapp('stakewiseCompoundRewards');
             this.swapNotificationFormatter(res, currentTradeCopy);
           })
           .then(() => {
