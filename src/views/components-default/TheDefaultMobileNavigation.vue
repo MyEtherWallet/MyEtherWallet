@@ -81,10 +81,13 @@
           </v-list-group>
         </template>
         <v-list-item>
-          <v-list-item-content @click="buySellTrack">
+          <v-list-item-content @click="trackBuySell">
+            <div class="mew-heading-3 font-weight-medium textDark--text">
+              Buy ETH
+            </div>
           </v-list-item-content>
         </v-list-item>
-              Buy ETH
+        <v-list-item>
           <v-list-item-content>
             <div class="mew-heading-3 font-weight-medium textDark--text mb-6">
               Products
@@ -248,7 +251,7 @@ export default {
       this.$router.push(to).catch(() => true);
       this.isOpen = false;
     },
-    buySellTrack() {
+    trackBuySell() {
       this.trackHeaderAmplitude('BuyETHMobile');
       this.openBuySell();
     },
