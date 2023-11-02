@@ -261,7 +261,6 @@ export default {
                 .replace('-', '_')
                 .toLowerCase()}_success`
             );
-            _this.trackAccessWallet(_this.type);
             if (_this.path !== '') {
               _this.$router.push({ path: _this.path });
             } else {

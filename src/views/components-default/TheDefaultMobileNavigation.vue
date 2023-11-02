@@ -81,7 +81,7 @@
           </v-list-group>
         </template>
         <v-list-item>
-          <v-list-item-content @click="trackBuySell">
+          <v-list-item-content @click="buySellTrack">
             <div class="mew-heading-3 font-weight-medium textDark--text">
               Buy ETH
             </div>
@@ -251,7 +251,7 @@ export default {
       this.$router.push(to).catch(() => true);
       this.isOpen = false;
     },
-    trackBuySell() {
+    buySellTrack() {
       this.trackHeaderAmplitude('BuyETH');
       this.openBuySell();
     },

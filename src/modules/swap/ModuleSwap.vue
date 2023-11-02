@@ -297,14 +297,7 @@
 
 <script>
 import { toBN, fromWei, toWei, isAddress } from 'web3-utils';
-import {
-  debounce,
-  isEmpty,
-  clone,
-  isUndefined,
-  isObject,
-  isNumber
-} from 'lodash';
+import { debounce, isEmpty, clone, isUndefined, isObject } from 'lodash';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import xss from 'xss';
 import MultiCoinValidator from 'multicoin-address-validator';
@@ -931,9 +924,6 @@ export default {
     },
     tokenInValue() {
       this.feeError = '';
-      if (!this.clearingSwap) {
-        this.trackSwap('tokenFromValueChanged');
-      }
     },
     gasPriceType() {
       if (this.currentTrade) this.currentTrade.gasPrice = this.localGasPrice;
@@ -944,18 +934,8 @@ export default {
       },
       immediate: true
     },
-    selectedProvider(p, oldVal) {
-      if (!isEmpty(oldVal) && !this.clearingSwap) {
-        this.trackSwap('switchProviders');
-      }
+    selectedProvider(p) {
       if (isEmpty(p)) this.selectedProviderId = undefined;
-    },
-    selectedProviderId(newVal) {
-      if (isNumber(newVal) && !this.clearingSwap) {
-        this.trackSwap(
-          `swapProvider: ${newVal + 1}/${this.availableQuotes.length}`
-        );
-      }
     },
     defaults: {
       handler: function () {
@@ -1000,7 +980,6 @@ export default {
     if (this.coinGeckoTokens.size > 0) {
       this.resetSwapState();
     }
-    this.trackSwap('swapPageView');
   },
   methods: {
     ...mapActions('notifications', ['addNotification']),
@@ -1121,9 +1100,6 @@ export default {
       const findToken = this.toTokens.find(
         item => item.symbol.toLowerCase() === to.toLowerCase()
       );
-      if (!this.clearingSwap) {
-        this.trackSwap('stayOnEth: ' + to);
-      }
       this.toTokenType = findToken;
     },
     setupSwap() {
@@ -1230,7 +1206,6 @@ export default {
      */
     async setMaxAmount() {
       this.maxLoading = true;
-      this.trackSwap('setMaxValue');
       if (
         !isEmpty(this.toTokenType) &&
         this.toTokenType.isEth &&
@@ -1333,9 +1308,6 @@ export default {
       return [];
     },
     switchTokens() {
-      if (!this.clearingSwap) {
-        this.trackSwap('switchTokens');
-      }
       const fromToken = this.fromTokenType;
       const toToken = this.toTokenType || this.actualToTokens[0];
       const tokenOutValue = this.tokenOutValue;
@@ -1387,7 +1359,6 @@ export default {
       this.resetAddressValues({ clearTo: false });
       this.$nextTick(() => {
         if (value && value.name && !this.clearingSwap) {
-          this.trackSwapToken('from: ' + value.name);
           this.trackSwapAmplitude('FieldInputs', {
             fromToken: value.name
           });
@@ -1409,7 +1380,6 @@ export default {
       this.toTokenType = value;
       this.resetAddressValues({ clearRefund: false });
       if (value && value.name) {
-        this.trackSwapToken('to: ' + value.name);
         this.trackSwapAmplitude('FieldInputs', {
           toToken: value.name
         });
@@ -1536,9 +1506,6 @@ export default {
               this.trackSwapAmplitude('FieldInputs', {
                 SelectRate: q.amount
               });
-              this.trackSwap(
-                `swapProvider: ${idx + 1}/ ${this.availableQuotes.length}`
-              );
             }
           } else {
             this.selectedProvider =
@@ -1630,7 +1597,6 @@ export default {
       }
     },
     showConfirm() {
-      this.trackSwap('showConfirm');
       this.trackSwapAmplitude('NextClicked');
       this.setConfirmInfo();
       this.executeTrade();

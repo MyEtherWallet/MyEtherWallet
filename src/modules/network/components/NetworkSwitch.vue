@@ -326,7 +326,6 @@ export default {
                 : this.setWeb3Instance();
             setNetworkCall.then(() => {
               Toast(`Switched network to: ${found[0].type.name}`, {}, SUCCESS);
-              this.trackNetworkSwitch(found[0].type.name);
               this.setTokenAndEthBalance();
               this.$emit('newNetwork');
             });

@@ -135,7 +135,6 @@ export default {
     },
     trackBuySellLanding() {
       this.trackHeaderAmplitude('BuyETH');
-      this.trackBuySell('buySellLanding');
     }
   }
 };

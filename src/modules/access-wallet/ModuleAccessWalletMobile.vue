@@ -58,7 +58,6 @@ import {
   WalletLinkWallet
 } from '@/modules/access-wallet/hybrid/handlers';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
-import WALLET_TYPES from './common/walletTypes';
 
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
@@ -104,7 +103,6 @@ export default {
         WalletConnectWallet()
           .then(_newWallet => {
             this.setWallet([_newWallet]).then(() => {
-              this.trackAccessWallet(WALLET_TYPES.WALLET_CONNECT);
               this.trackAccessWalletAmplitude('access_wallet_success');
               this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
             });
@@ -121,7 +119,6 @@ export default {
         WalletLinkWallet()
           .then(_newWallet => {
             this.setWallet([_newWallet]).then(() => {
-              this.trackAccessWallet(WALLET_TYPES.WALLET_LINK);
               this.trackAccessWalletAmplitude('access_wallet_success');
               this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
             });

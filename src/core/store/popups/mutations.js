@@ -10,11 +10,6 @@ const INIT_STORE = function (state) {
   }
 };
 const SET_TRACKING_CONSENT = function (state, val) {
-  if (this._vm.$matomo) {
-    this._vm.$matomo.setConsentGiven();
-    this._vm.$matomo.trackEvent('consent', val ? 'true' : 'false');
-    if (!val) this._vm.$matomo.forgetConsentGiven();
-  }
   state.consentToTrack = val;
 };
 

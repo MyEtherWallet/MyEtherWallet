@@ -636,7 +636,6 @@ export default {
   methods: {
     rejectTransaction(value) {
       if (this.isSwap) {
-        this.trackSwap('swapTxCancelled');
         this.trackSwapAmplitude('Cancelled', {
           type: value
         });
@@ -645,7 +644,6 @@ export default {
       this.reset();
     },
     sendCrossChain(bool) {
-      this.trackSwap('swapSendCrossChain');
       this.trackSwapAmplitude('ConfirmClicked');
       this.resolver(bool);
     },
@@ -763,7 +761,6 @@ export default {
             if (_this.isSwap && idx + 1 === _arr.length) {
               if (this.rejectedError(err.message)) {
                 _this.trackSwapAmplitude('Rejected');
-                _this.trackSwap('swapTxRejected');
               } else {
                 _this.emitSwapTxFail(err);
               }
@@ -813,25 +810,18 @@ export default {
         hash: param,
         network: this.network.type.chainID
       });
-      this.trackSwap(
-        'swapTransactionSuccessfullySent',
-        param,
-        this.network.type.chainID
-      );
     },
     trackSwapTransactionReceipt(param) {
       this.trackSwapAmplitude('Receipt', {
         hash: param,
         network: this.network.type.chainID
       });
-      this.trackSwap('swapTxReceivedReceipt', param, this.network.type.chainID);
     },
     trackSwapTransactionBroadcasted(res) {
       this.trackSwapAmplitude('Broadcasted', {
         hash: res,
         network: this.network.type.chainID
       });
-      this.trackSwap('swapTxBroadcasted', res, this.network.type.chainID);
     },
     async signTx() {
       if (this.isNotSoftware) {
@@ -856,7 +846,6 @@ export default {
           .catch(e => {
             if (this.isSwap) {
               if (this.rejectedError(e.message)) {
-                this.trackSwap('swapTxRejected');
                 this.trackSwapAmplitude('Rejected');
               } else {
                 this.emitSwapTxFail(e);
@@ -878,7 +867,6 @@ export default {
           })
           .catch(e => {
             if (this.isSwap) {
-              this.trackSwap('swapTxCancelled');
               this.trackSwapAmplitude('Rejected');
             }
             this.signedTxObject = {};
@@ -940,7 +928,6 @@ export default {
               .catch(e => {
                 if (this.isSwap) {
                   if (this.rejectedError(e.message)) {
-                    this.trackSwap('swapTxRejected');
                     this.trackSwapAmplitude('Rejected');
                     throw new Error(e.message);
                   } else {
@@ -988,7 +975,6 @@ export default {
     },
     emitSwapTxFail(err) {
       const hash = err?.receipt?.transactionHash;
-      this.trackSwap('swapTxFailedV2', hash, this.network.type.chainID);
       this.trackSwapAmplitude('Failed', {
         hash: hash,
         network: this.network.type.chainID
@@ -996,7 +982,6 @@ export default {
     },
     btnAction() {
       if (this.isSwap) {
-        this.trackSwap('swapTransactionSend');
         this.trackSwapAmplitude('ConfirmClicked');
       }
       if (!this.isWeb3Wallet) {
