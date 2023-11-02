@@ -125,7 +125,11 @@
             : $t('rns.register.create-commitment')
         "
         btn-size="xlarge"
-        @click.native="!canRegister ? commit(duration) : register(duration)"
+        @click.native="
+          () => {
+            !canRegister ? commit(duration) : register(duration);
+          }
+        "
       />
     </div>
   </div>
