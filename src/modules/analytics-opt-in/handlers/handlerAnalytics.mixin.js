@@ -30,7 +30,13 @@ export default {
      */
     setConsent() {
       this.$amplitude.setOptOut(!this.consentToTrack);
-      this.setTrackingConsent(!this.consentToTrack);
+      this.setTrackingConsent(!this.consentToTrack).then(() => {
+        if (this.consentSetToTrack) {
+          this.$amplitude.track('UserOptOutTracking');
+        } else {
+          this.$amplitude.track('UserOptInTracking');
+        }
+      });
     },
     /**
      *

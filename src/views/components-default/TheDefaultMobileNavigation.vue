@@ -82,12 +82,9 @@
         </template>
         <v-list-item>
           <v-list-item-content @click="buySellTrack">
-            <div class="mew-heading-3 font-weight-medium textDark--text">
-              Buy ETH
-            </div>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item>
+              Buy ETH
           <v-list-item-content>
             <div class="mew-heading-3 font-weight-medium textDark--text mb-6">
               Products
@@ -247,31 +244,31 @@ export default {
   },
   methods: {
     pushRoute(to) {
-      this.trackHeaderAmplitude(to.name);
+      this.trackHeaderAmplitude(`${to.name}Mobile`);
       this.$router.push(to).catch(() => true);
       this.isOpen = false;
     },
     buySellTrack() {
-      this.trackHeaderAmplitude('BuyETH');
+      this.trackHeaderAmplitude('BuyETHMobile');
       this.openBuySell();
     },
     trackMobileAccess() {
-      this.trackLandingPageAmplitude('AccessWallet');
+      this.trackLandingPageAmplitude('AccessWalletMobile');
       this.$router.push({
         name: ROUTES_HOME.ACCESS_WALLET.NAME,
         params: {}
       });
     },
     trackMobileCreate() {
-      this.trackLandingPageAmplitude('CreateWallet');
+      this.trackLandingPageAmplitude('CreateWalletMobile');
       this.$router.push({
         name: ROUTES_HOME.CREATE_WALLET.NAME,
         params: {}
       });
     },
     trackToolLink(val) {
-      const parsedLabel = val.label.replace(' ', '_').toLowerCase();
-      this.trackHeaderAmplitude(`click_mobile_tools_${parsedLabel}`);
+      const parsedLabel = val.label.replace(' ', '');
+      this.trackHeaderAmplitude(`${parsedLabel}Mobile`);
     }
   }
 };
