@@ -258,13 +258,13 @@ export default {
       this.loadingReg = false;
       this.name = '';
       this.$router.push({ name: RNS_MANAGER_ROUTE.MANAGE.NAME });
-      this.trackDapp('closeRnsRegister');
+      this.trackDapp('rnsCloseRegister');
     },
     setName(name) {
       this.searchError = '';
       try {
         this.name = normalise(name);
-        this.trackDapp('setRnsDomainName');
+        this.trackDapp('rnsSetDomainName');
       } catch (e) {
         this.searchError = e.message.includes('Failed to validate')
           ? 'Invalid name!'

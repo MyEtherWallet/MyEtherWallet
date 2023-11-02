@@ -601,7 +601,7 @@ export default {
     closeManage() {
       this.onManage = false;
       this.settingIpfs = false;
-      this.trackDapp('closeEnsManageTab');
+      this.trackDapp('ensCloseManageTab');
     },
     transfer(address) {
       this.trackDapp('ensDomainTransferEvent');
@@ -706,7 +706,7 @@ export default {
     async findDomain() {
       try {
         this.nameHandler = await this.ensManager.searchName(this.name);
-        this.trackDapp('findEnsDomain');
+        this.trackDapp('ensFindDomain');
       } catch (e) {
         Toast(e, {}, ERROR);
       }
@@ -719,7 +719,7 @@ export default {
       this.name = '';
       this.nameHandler = {};
       this.$router.push({ name: ENS_MANAGER_ROUTE.ENS_MANAGER.NAME });
-      this.trackDapp('closeEnsRegister');
+      this.trackDapp('ensCloseRegister');
     },
     setName(name) {
       this.searchError = '';
@@ -728,7 +728,7 @@ export default {
       }
       try {
         this.name = normalise(name);
-        this.trackDapp('setEnsDomainName');
+        this.trackDapp('ensSetDomainName');
       } catch (e) {
         this.searchError = e.message.includes('Failed to validate')
           ? 'Invalid name!'

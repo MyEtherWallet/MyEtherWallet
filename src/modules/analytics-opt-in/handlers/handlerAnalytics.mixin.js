@@ -30,7 +30,13 @@ export default {
      */
     setConsent() {
       this.$amplitude.setOptOut(!this.consentToTrack);
-      this.setTrackingConsent(!this.consentToTrack);
+      this.setTrackingConsent(!this.consentToTrack).then(() => {
+        if (this.consentSetToTrack) {
+          this.$amplitude.track('UserOptOutTracking');
+        } else {
+          this.$amplitude.track('UserOptInTracking');
+        }
+      });
     },
     /**
      *
@@ -179,8 +185,8 @@ export default {
      * Tracks which dapp user navigates to
      */
     trackDapp(action) {
-      if (this.$matomo && action && this.consentToTrack) {
-        this.$matomo.trackEvent(categories.dapp, action);
+      if (action && this.consentToTrack) {
+        this.$amplitude.track(`${categories.dashboard}${action}`);
       }
     },
     /**
