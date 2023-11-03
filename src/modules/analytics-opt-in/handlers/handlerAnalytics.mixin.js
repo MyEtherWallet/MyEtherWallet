@@ -29,13 +29,16 @@ export default {
      * Sets the consent to track on wallet page
      */
     setConsent() {
-      this.$amplitude.setOptOut(!this.consentToTrack);
+      if (this.consentToTrack) {
+        this.$amplitude.track(`UserOptOutTracking`);
+      }
+
+      const initialValue = this.consentToTrack;
+
       this.setTrackingConsent(!this.consentToTrack).then(() => {
-        if (this.consentSetToTrack) {
-          this.$amplitude.track('UserOptOutTracking');
-        } else {
-          this.$amplitude.track('UserOptInTracking');
-        }
+        this.$amplitude.setOptOut(!this.consentToTrack);
+        if (!initialValue && this.consentToTrack)
+          this.$amplitude.track(`UserOptInTracking`);
       });
     },
     /**
@@ -119,9 +122,18 @@ export default {
      */
     trackCreateWalletAmplitude(event) {
       if (this.consentToTrack) {
-        this.$amplitude.track(categories.createWallet, {
-          click_event: event
-        });
+        this.$amplitude.track(`${categories.createWallet}${event}`);
+      }
+    },
+    /**
+     *
+     * @param {String} event
+     * tracks all events that happen
+     * inside the create wallet page
+     */
+    trackBuyHardwareAmplitude(event) {
+      if (this.consentToTrack) {
+        this.$amplitude.track(`${categories.buyHardware}${event}`);
       }
     },
     /**

@@ -9,7 +9,7 @@
       >
         <v-row>
           <v-col v-for="(b, key) in buttons" :key="key" cols="12" md="6">
-            <a :href="b.link" target="_blank">
+            <a :href="b.link" target="_blank" @click.native="trackBuy(b.name)">
               <mew-button
                 color-theme="basic"
                 btn-style="light"
@@ -81,11 +81,13 @@
 </template>
 
 <script>
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 export default {
   name: 'TheBuyHardwareWalletLayout',
   components: {
     TheLayoutHeader: () => import('../components-default/TheLayoutHeader')
   },
+  mixins: [handlerAnalytics],
   data: () => ({
     buttons: [
       {
@@ -95,7 +97,8 @@ export default {
         currency: '$',
         price: '59.00',
         note: 'Easy to carry everywhere thanks to its USB format.',
-        link: 'https://shop.ledger.com/?r=fa4b'
+        link: 'https://shop.ledger.com/?r=fa4b',
+        name: 'Ledger'
       },
       {
         logoImg: require('@/assets/images/hardware-wallets/logo-trezor.svg'),
@@ -104,7 +107,8 @@ export default {
         currency: '$',
         price: '60.00',
         note: 'The most trusted hardware wallet in the world. Get yours today!',
-        link: 'https://trezor.io/?offer_id=12&aff_id=2029'
+        link: 'https://trezor.io/?offer_id=12&aff_id=2029',
+        name: 'Trezor'
       },
       {
         logoImg: require('@/assets/images/hardware-wallets/logo-keepkey.png'),
@@ -113,7 +117,8 @@ export default {
         currency: '$',
         price: '79.00',
         note: 'The most trusted hardware wallet in the world. Get yours today!',
-        link: 'https://keepkey.myshopify.com/?afmc=pi&utm_campaign=pi&utm_source=leaddyno&utm_medium=affiliate'
+        link: 'https://keepkey.myshopify.com/?afmc=pi&utm_campaign=pi&utm_source=leaddyno&utm_medium=affiliate',
+        name: 'Keepkey'
       },
       {
         logoText: 'BitBox02',
@@ -122,27 +127,28 @@ export default {
         currency: '$',
         price: '143.00',
         note: 'The most trusted hardware wallet in the world. Get yours today!',
-        link: 'https://shiftcrypto.ch/'
+        link: 'https://shiftcrypto.ch/',
+        name: 'BitBox02'
       },
       {
         logoText: 'ETHER.CARDS',
-        //logoImg: require('@/assets/images/hardware-wallets/logo-ethercards.png'),
         walletImg: require('@/assets/images/hardware-wallets/bitmap.png'),
         priceNote: 'Starting from',
         currency: '$',
         price: '645.70',
         note: 'The most trusted hardware wallet in the world. Get yours today!',
-        link: 'https://ether.cards/?utm_source=mew&utm_medium=cpm&utm_campaign=site'
+        link: 'https://ether.cards/?utm_source=mew&utm_medium=cpm&utm_campaign=site',
+        name: 'EtherCards'
       },
       {
         logoText: 'FINNEY',
-        //logoImg: require('@/assets/images/hardware-wallets/logo-trezor.svg'),
         walletImg: require('@/assets/images/hardware-wallets/finney.png'),
         priceNote: 'Starting from',
         currency: '$',
         price: '999.00',
         note: 'The most trusted hardware wallet in the world. Get yours today!',
-        link: 'https://shop.sirinlabs.com/?rfsn=2397639.54fdf&utm_source=refersion&utm_medium=affiliate&utm_campaign=2397639.54fdf'
+        link: 'https://shop.sirinlabs.com/?rfsn=2397639.54fdf&utm_source=refersion&utm_medium=affiliate&utm_campaign=2397639.54fdf',
+        name: 'Finney'
       },
       {
         logoImg: require('@/assets/images/hardware-wallets/logo-billfodl.png'),
@@ -151,20 +157,29 @@ export default {
         currency: '$',
         price: '89.00',
         note: 'Unmatched physical security for your private keys.',
-        link: 'https://privacypros.io/?afmc=2j&utm_campaign=2j&utm_source=leaddyno&utm_medium=affiliate'
+        link: 'https://privacypros.io/?afmc=2j&utm_campaign=2j&utm_source=leaddyno&utm_medium=affiliate',
+        name: 'Billfodl'
       },
       {
         logoText: 'COOL WALLET',
-        // logoImg: require('@/assets/images/icons/hardware-wallets/icon-coolwallet.svg'),
         walletImg: require('@/assets/images/hardware-wallets/CoolwalletMEW_new.png'),
         priceNote: 'Starting from',
         currency: '$',
         price: '99.00',
         note: 'Unmatched physical security for your private keys.',
-        link: 'https://www.coolwallet.io/mew/?ref=myetherwallet1'
+        link: 'https://www.coolwallet.io/mew/?ref=myetherwallet1',
+        name: 'CoolWallet'
       }
     ]
-  })
+  }),
+  mounted() {
+    this.trackBuyHardwareAmplitude('PageShown');
+  },
+  methods: {
+    trackBuy(name) {
+      this.trackBuyHardwareAmplitude(name);
+    }
+  }
 };
 </script>
 
