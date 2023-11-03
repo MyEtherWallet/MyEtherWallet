@@ -10,13 +10,10 @@
             </h1>
             <div align="left" class="mt-5">
               <a
-                :href="
-                  isMobile()
-                    ? 'https://apps.apple.com/app/id1464614025'
-                    : 'https://mewwallet.com'
-                "
+                href="https://download.mewwallet.com/?source=mew_web_create"
                 target="_blank"
                 class="mr-1"
+                @click="trackOpenMEWWallet"
               >
                 <img
                   v-lazy="require('@/assets/images/icons/button-app-store.svg')"
@@ -25,12 +22,9 @@
                 />
               </a>
               <a
-                :href="
-                  isMobile()
-                    ? 'https://play.google.com/store/apps/details?id=com.myetherwallet.mewwallet'
-                    : 'https://mewwallet.com'
-                "
+                href="https://download.mewwallet.com/?source=mew_web_create"
                 target="_blank"
+                @click="trackOpenMEWWallet"
               >
                 <img
                   v-lazy="
@@ -52,18 +46,14 @@
               class="mr-4"
               :title="$t('home.get-started.button-text-one')"
               btn-size="xlarge"
-              @click.native="
-                $router.push({ name: ROUTES_HOME.CREATE_WALLET.NAME })
-              "
+              @click.native="navigateToCreateWallet"
             />
             <mew-button
               color-theme="primary"
               btn-style="outline"
               :title="$t('home.get-started.button-text-two')"
               btn-size="xlarge"
-              @click.native="
-                $router.push({ name: ROUTES_HOME.ACCESS_WALLET.NAME })
-              "
+              @click.native="navigateToAccessWallet"
             />
           </div>
         </div>
@@ -78,13 +68,10 @@
             <h1 class="white--text">{{ $t('home.get-started.heading') }}</h1>
             <div align="left" class="mt-5">
               <a
-                :href="
-                  isMobile()
-                    ? 'https://apps.apple.com/app/id1464614025'
-                    : 'https://mewwallet.com'
-                "
+                href="https://download.mewwallet.com/?source=mew_web_create"
                 target="_blank"
                 class="mr-1"
+                @click="() => trackOpenMEWWallet('AppleStore2')"
               >
                 <img
                   v-lazy="require('@/assets/images/icons/button-app-store.svg')"
@@ -93,12 +80,9 @@
                 />
               </a>
               <a
-                :href="
-                  isMobile()
-                    ? 'https://play.google.com/store/apps/details?id=com.myetherwallet.mewwallet'
-                    : 'https://mewwallet.com'
-                "
+                href="https://download.mewwallet.com/?source=mew_web_create"
                 target="_blank"
+                @click="() => trackOpenMEWWallet('GoogleStore3')"
               >
                 <img
                   v-lazy="
@@ -116,9 +100,7 @@
                 has-full-width
                 :title="$t('home.get-started.button-text-one')"
                 btn-size="xlarge"
-                @click.native="
-                  $router.push({ name: ROUTES_HOME.CREATE_WALLET.NAME })
-                "
+                @click.native="navigateToCreateWallet"
               />
             </v-col>
             <v-col cols="12" sm="6" class="mb-n2">
@@ -127,9 +109,7 @@
                 btn-style="outline"
                 :title="$t('home.get-started.button-text-two')"
                 btn-size="xlarge"
-                @click.native="
-                  $router.push({ name: ROUTES_HOME.ACCESS_WALLET.NAME })
-                "
+                @click.native="navigateToAccessWallet"
               />
             </v-col>
           </v-row>
@@ -141,21 +121,30 @@
 
 <script>
 import { ROUTES_HOME } from '../configs/configRoutes';
-const platform = require('platform');
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 export default {
   name: 'GetStarted',
-  components: {},
+  mixins: [handlerAnalytics],
   data() {
-    return {
-      ROUTES_HOME: ROUTES_HOME
-    };
+    return {};
   },
   methods: {
-    isMobile() {
-      return (
-        platform.os.family.includes('iOS') ||
-        platform.os.family.includes('Android')
-      );
+    trackOpenMEWWallet(name) {
+      this.trackLandingPageAmplitude(name);
+    },
+    navigateToCreateWallet() {
+      this.trackLandingPageAmplitude('CreateWallet2');
+      this.$router.push({
+        name: ROUTES_HOME.CREATE_WALLET.NAME,
+        params: {}
+      });
+    },
+    navigateToAccessWallet() {
+      this.trackLandingPageAmplitude('AccessWallet2');
+      this.$router.push({
+        name: ROUTES_HOME.ACCESS_WALLET.NAME,
+        params: {}
+      });
     }
   }
 };
@@ -163,7 +152,6 @@ export default {
 
 <style lang="scss" scoped>
 .mew-component--app-get-started {
-  //background: linear-gradient(90deg, #24a2ca 0%, #32bfa5 100%);
   background-color: var(--v-expandHeader-base) !important;
 }
 .desktop-content {

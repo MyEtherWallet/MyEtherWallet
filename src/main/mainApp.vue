@@ -4,15 +4,20 @@
     <module-toast />
     <module-global-modals />
     <module-analytics />
-    <module-moon-pay :open="moonPayOpen" @close="moonPayOpen = false" />
+    <module-buy-sell :open="buySellOpen" @close="buySellOpen = false" />
   </v-app>
 </template>
 
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex';
+import { v4 as uuidv4 } from 'uuid';
 import '@formatjs/intl-numberformat/polyfill';
 import '@formatjs/intl-numberformat/locale-data/en';
 
+import {
+  getInjectedName,
+  getInjectedIcon
+} from '@/core/helpers/detectProvider.js';
 import { PWA_EVENTS } from '@/core/helpers/common';
 import {
   Toast,
@@ -20,8 +25,9 @@ import {
   SUCCESS,
   INFO
 } from '@/modules/toast/handler/handlerToast';
-import { MOONPAY_EVENT } from '@/modules/moon-pay/helpers';
+import { BUYSELL_EVENT } from '@/modules/buy-sell/helpers';
 import { EventBus } from '@/core/plugins/eventBus';
+import handlerAnalyticsMixin from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin.js';
 export default {
   name: 'App',
   components: {
@@ -29,11 +35,12 @@ export default {
     ModuleGlobalModals: () =>
       import('@/modules/global-modals/ModuleGlobalModals'),
     ModuleAnalytics: () => import('@/modules/analytics-opt-in/ModuleAnalytics'),
-    ModuleMoonPay: () => import('@/modules/moon-pay/ModuleMoonPay')
+    ModuleBuySell: () => import('@/modules/buy-sell/ModuleBuySell')
   },
+  mixins: [handlerAnalyticsMixin],
   data() {
     return {
-      moonPayOpen: false
+      buySellOpen: false
     };
   },
   computed: {
@@ -41,12 +48,16 @@ export default {
     ...mapState('addressBook', ['isMigrated']),
     ...mapState('global', ['preferredCurrency']),
     ...mapState('article', ['timestamp']),
-    ...mapGetters('article', ['articleList'])
+    ...mapGetters('article', ['articleList']),
+    ...mapGetters('global', ['network'])
   },
   created() {
     const succMsg = this.$t('common.updates.new');
     const updateMsg = this.$t('common.updates.update-found');
     const errMsg = this.$t('common.updates.update-error');
+    this.$vuetify.theme.dark = false;
+
+    // pwa listeners
     window.addEventListener(PWA_EVENTS.PWA_UPDATED, () => {
       Toast(succMsg, {}, SUCCESS);
     });
@@ -58,7 +69,39 @@ export default {
     });
   },
   mounted() {
-    EventBus.$on(MOONPAY_EVENT, () => {
+    // manually add web3 wallet detected
+    if (window.ethereum) {
+      const name = getInjectedName(window.ethereum);
+      const info = {
+        rdns: 'com.detected.injectedwallet',
+        uuid: uuidv4(),
+        name: name,
+        icon: getInjectedIcon(name)
+      };
+      const provider = window.ethereum;
+      this.storeEIP6963Wallet({ info, provider });
+    }
+    // epi6963 listener
+    window.addEventListener('eip6963:announceProvider', e => {
+      this.storeEIP6963Wallet(e.detail);
+    });
+    EventBus.$on('swapTxBroadcasted', hash => {
+      const id = this.network.type.chainID;
+      this.trackSwapAmplitude('Broadcasted', { hash: hash, network: id });
+    });
+    EventBus.$on('swapTxReceivedReceipt', hash => {
+      const id = this.network.type.chainID;
+      this.trackSwapAmplitude('Receipt', { hash: hash, network: id });
+    });
+    EventBus.$on('swapTxFailed', hash => {
+      const id = this.network.type.chainID;
+      const passedHash = hash === '0x' ? 'no hash' : hash;
+      this.trackSwapAmplitude('Failed', { hash: passedHash, network: id });
+    });
+    EventBus.$on('swapTxNotBroadcastedFailed', () => {
+      this.trackSwapAmplitude('NotBroadcasted');
+    });
+    EventBus.$on(BUYSELL_EVENT, () => {
       this.openBuy();
     });
     this.footerHideIntercom();
@@ -85,21 +128,35 @@ export default {
         this.setMigrated(true);
       });
     }
+
     const _self = this;
     // Close modal with 'esc' key
     document.addEventListener('keydown', e => {
       if (e.keyCode === 27) {
-        _self.moonPayOpen = false;
+        _self.buySellOpen = false;
       }
     });
+  },
+  beforeDestroy() {
+    EventBus.$off(BUYSELL_EVENT);
+    EventBus.$off('swapTxBroadcasted');
+    EventBus.$off('swapTxReceivedReceipt');
+    EventBus.$off('swapTxFailed');
+    EventBus.$off('swapTxNotBroadcastedFailed');
+    document.removeEventListener('visibilitychange');
+    window.removeEventListener('mouseout');
+    window.removeEventListener('eip6963:announceProvider');
   },
   methods: {
     ...mapActions('global', ['setOnlineStatus']),
     ...mapActions('external', ['setCurrency']),
     ...mapActions('addressBook', ['setMigrated', 'setAddressBook']),
     ...mapActions('article', ['updateArticles']),
+    ...mapActions('article', ['updateArticles']),
+    ...mapActions('popups', ['showSurveyPopup']),
+    ...mapActions('external', ['storeEIP6963Wallet']),
     openBuy() {
-      this.moonPayOpen = true;
+      this.buySellOpen = true;
     },
     logMessage() {
       /* eslint-disable no-console */

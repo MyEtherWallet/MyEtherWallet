@@ -4,7 +4,7 @@
     <!-- Add Custom Token Overlay -->
     <!-- ===================================================================================== -->
     <v-dialog :value="open" max-width="330" @click:outside="reset">
-      <div class="white pa-7">
+      <div class="bgWalletBlock pa-7">
         <div v-if="step === 1" class="full-width">
           <div class="mew-heading-2 mb-10">Add custom token</div>
           <mew-input
@@ -206,7 +206,7 @@ export default {
      * checks if there is symbol name
      */
     hasSymbol() {
-      return this.tokenDataToDisplay[3].value || this.customSymbol;
+      return this.customSymbol;
     }
   },
   methods: {
@@ -219,8 +219,8 @@ export default {
      */
     setInputValue: debounce(function (value, idx) {
       if (idx == 3) {
-        if (value && value.length > 4) {
-          this.symbolLengthTooLong = 'Symbol cannot exceed 4 characters';
+        if (value && value.length > 8) {
+          this.symbolLengthTooLong = 'Symbol cannot exceed 8 characters';
           return;
         }
         this.symbolLengthTooLong = '';
@@ -277,7 +277,7 @@ export default {
       if (name === this.tokenDataToDisplay[2].name) {
         return 'Enter the token’s name';
       }
-      return 'Enter up to 4 characters';
+      return 'Enter up to 8 characters';
     },
     /**
      * resets data and closes overlay on close button click
@@ -328,7 +328,9 @@ export default {
      * otherwise it will throw toast error
      */
     async checkIfValidAddress() {
-      const codeHash = await this.web3.eth.getCode(this.contractAddress);
+      const codeHash = await this.web3.eth.getCode(
+        this.contractAddress.toLowerCase()
+      );
       if (
         this.contractAddress &&
         isAddress(this.contractAddress) &&
@@ -374,7 +376,7 @@ export default {
     async findTokenInfo() {
       const contract = new this.web3.eth.Contract(
         abiERC20,
-        this.contractAddress
+        this.contractAddress.toLowerCase()
       );
       this.token = this.contractToToken(this.contractAddress) || {};
       try {
@@ -395,7 +397,7 @@ export default {
           this.token.usdBalancef = '0.00';
           this.token.contract = this.contractAddress;
         }
-        this.token.decimals = +decimals;
+        this.token.decimals = parseInt(decimals);
         this.token.balance = balance;
         this.token.balancef = this.getTokenBalance(balance, decimals).value;
         this.loading = false;

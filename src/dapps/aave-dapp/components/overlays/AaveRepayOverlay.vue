@@ -7,12 +7,13 @@
   <mew-overlay
     :show-overlay="open"
     title="Repay"
-    :close="close"
+    :close="handleCancel"
     class="mew-component--aave-repay-overlay"
     content-size="xlarge"
   >
     <aave-amount-form
-      v-if="step === 0"
+      v-if="open"
+      v-show="step === 0"
       :selected-token="preSelectedToken"
       :show-toggle="aaveRepayForm.showToggle"
       :left-side-values="aaveRepayForm.leftSideValues"
@@ -31,7 +32,8 @@
         =====================================================================================
         -->
     <aave-summary
-      v-if="step === 1"
+      v-if="open"
+      v-show="step === 1"
       :selected-token="preSelectedToken"
       :amount="amount"
       :action-type="repayTitle"
@@ -51,6 +53,7 @@ import { INTEREST_TYPES, AAVE_TABLE_TITLE } from '../../handlers/helpers';
 import { toBase } from '@/core/helpers/unit';
 import { MAX_UINT_AMOUNT } from '@aave/protocol-js';
 import BigNumber from 'bignumber.js';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 export default {
   name: 'AaveRepayOverlay',
@@ -58,7 +61,7 @@ export default {
     AaveAmountForm,
     AaveSummary
   },
-  mixins: [handlerAave],
+  mixins: [handlerAave, handlerAnalytics],
   data() {
     return {
       amount: '',
@@ -77,8 +80,14 @@ export default {
           return item;
         }
       });
-      let balance = hasBalance ? hasBalance.balancef : '0';
-      balance = balance > this.totalBorrow ? this.totalBorrow : balance;
+      let balance = hasBalance ? hasBalance.balance.toString() : '0';
+      const decimals = new BigNumber(10).pow(this.tokenDecimals);
+      const totalBorrowed = new BigNumber(this.totalBorrow).multipliedBy(
+        decimals
+      );
+      balance = totalBorrowed.lt(balance)
+        ? this.totalBorrow.toString()
+        : new BigNumber(balance).div(decimals).toFixed();
       return balance;
     },
     tokenDecimals() {
@@ -138,7 +147,7 @@ export default {
         },
         buttonTitle: {
           action: 'Repay',
-          cancel: 'Cancel Repay'
+          cancel: 'Cancel repay'
         }
       };
     }
@@ -157,6 +166,7 @@ export default {
       this.step = 1;
     },
     handleConfirm() {
+      this.trackDapp('aaveRepayEvent');
       const isVariable = this.selectedTokenInUserSummary.variableBorrows > 0;
       const totalBorrow = isVariable
         ? this.selectedTokenInUserSummary.variableBorrows
@@ -173,7 +183,9 @@ export default {
           ? INTEREST_TYPES.variable
           : INTEREST_TYPES.stable
       };
-      this.$emit('onConfirm', param);
+      this.onRepay(param).then(() => {
+        this.trackDapp('aaveRepayDebt');
+      });
       this.handleCancel();
     },
     handleCancel() {

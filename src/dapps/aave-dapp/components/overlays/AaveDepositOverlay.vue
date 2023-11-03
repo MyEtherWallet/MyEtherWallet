@@ -64,11 +64,12 @@ import handlerAave from '../../handlers/handlerAave.mixin';
 import BigNumber from 'bignumber.js';
 import { mapGetters } from 'vuex';
 import { toBase } from '@/core/helpers/unit';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 export default {
   name: 'AaveDepositOverlay',
   components: { AaveTable, AaveSummary, AaveAmountForm },
-  mixins: [handlerAave],
+  mixins: [handlerAave, handlerAnalytics],
   data() {
     return {
       step: 0,
@@ -111,10 +112,9 @@ export default {
           return item;
         }
       });
+      const decimals = BigNumber(10).pow(hasBalance.decimals);
       return hasBalance
-        ? BigNumber(hasBalance.balancef)
-            .decimalPlaces(hasBalance.decimals)
-            .toString()
+        ? BigNumber(hasBalance.balance).dividedBy(decimals).toFixed()
         : '0';
     },
     amountUSD() {
@@ -164,7 +164,7 @@ export default {
         },
         buttonTitle: {
           action: 'Deposit',
-          cancel: 'Cancel Deposit'
+          cancel: 'Cancel deposit'
         }
       };
     }
@@ -181,6 +181,9 @@ export default {
         }
       },
       deep: true
+    },
+    step(val) {
+      if (val === 0) this.selectedToken = {};
     }
   },
   methods: {
@@ -201,6 +204,7 @@ export default {
       this.close(false);
     },
     handleConfirm() {
+      this.trackDapp('aaveDepositEvent');
       const amount = toBase(this.amount, this.selectedTokenDetails.decimals);
       const param = {
         user: this.address,
@@ -208,7 +212,9 @@ export default {
         referralCode: '14',
         reserve: this.selectedTokenDetails.underlyingAsset
       };
-      this.onDeposit(param);
+      this.onDeposit(param).then(() => {
+        this.trackDapp('aaveDepositedCollateral');
+      });
       this.callClose();
     }
   }

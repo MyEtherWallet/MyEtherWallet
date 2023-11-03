@@ -30,14 +30,15 @@ jobs:
         run: docker run --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" mew-build-container /bin/bash -c "npm install"
 
       - name: build
-        run: docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:hash"
+        run: docker run -e INTERCOM_ID="${{secrets.INTERCOM_ID}}" -e WALLET_CONNECT_PROJECT_ID="${{secrets.WALLET_CONNECT_PROJECT_ID}}" --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:hash"
 
       - name: add to codecov
         run: |
-          ci_env='-e GITHUB_ACTION -e GITHUB_REF -e GITHUB_HEAD_REF -e GITHUB_SHA -e GITHUB_REPOSITORY -e GITHUB_RUN_ID'
+          git config --global --add safe.directory '*'
+          ci_env=`bash <(curl -s https://codecov.io/env)`
           docker run $ci_env --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run codecov"
 
       - name: upload to codecov
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v3
         with:
           fail_ci_if_error: true

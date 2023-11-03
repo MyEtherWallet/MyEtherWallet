@@ -6,12 +6,14 @@ const state = {
   identifier: '',
   isHardware: false,
   ledgerBLE: false,
+  ledgerApp: {},
   instance: null,
   isOfflineApp: false,
   web3: {},
   ensDomains: null,
   tokens: [],
-  loadingWalletInfo: true
+  loadingWalletInfo: true,
+  swapRates: []
 };
 
 export default state;

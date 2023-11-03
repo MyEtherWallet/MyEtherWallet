@@ -209,21 +209,22 @@ export default {
       if (!this.isLoading && this.step > 0) {
         const list =
           !this.showMore && this.providersCut > 0
-            ? this.availableQuotes
-                .slice(0, MAX_PROVIDERS)
-                .filter(item => !!item)
-            : this.availableQuotes.filter(item => !!item);
-        const returnedList = list.map(quote => {
-          const formatted = formatFloatingPointValue(quote.rate * 100);
-          const formattedAmt = formatFloatingPointValue(quote.amount);
-          return {
-            rate: formatted.value,
-            amount: formattedAmt.value,
-            tooltip: `${formattedAmt.tooltipText || formattedAmt.value} ${
-              this.toTokenSymbol
-            }`
-          };
-        });
+            ? this.availableQuotes.slice(0, MAX_PROVIDERS)
+            : this.availableQuotes;
+        const returnedList = list.reduce((arr, item) => {
+          if (item) {
+            const formatted = formatFloatingPointValue(item.rate * 100);
+            const formattedAmt = formatFloatingPointValue(item.amount);
+            arr.push({
+              rate: formatted.value,
+              amount: formattedAmt.value,
+              tooltip: `${formattedAmt.tooltipText || formattedAmt.value} ${
+                this.toTokenSymbol
+              }`
+            });
+          }
+          return arr;
+        }, []);
         if (returnedList) return returnedList;
       }
       return [];
@@ -307,11 +308,11 @@ export default {
 <style lang="scss" scoped>
 .rate-active {
   border: 1px solid var(--v-greenPrimary-base) !important;
-  background-color: var(--v-greyLight-base) !important;
+  background-color: var(--v-buttonGrayLight-base) !important;
 }
 .rate {
   min-height: 60px;
   border-radius: 8px;
-  border: 1px solid var(--v-greyLight-base);
+  border: 1px solid var(--v-borderInput-base);
 }
 </style>

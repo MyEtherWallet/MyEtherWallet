@@ -10,7 +10,7 @@ import { mapGetters, mapState } from 'vuex';
 import { toBN, toHex, fromWei, sha3 } from 'web3-utils';
 import { estimateGasList } from '@/core/helpers/gasPriceHelper.js';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
-
+import ReverseRegistrar from '@ensdomains/ens-contracts/deployments/mainnet/ReverseRegistrar.json';
 const bip39 = require('bip39');
 
 export default class PermanentNameModule extends ENSManagerInterface {
@@ -24,6 +24,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
     this.expiration = null;
     this.expired = false;
     this.redeemable = false;
+    this.web3 = web3;
     // Contracts
     this.dnsRegistrarContract = null;
     this.dnsClaim = null;
@@ -40,7 +41,19 @@ export default class PermanentNameModule extends ENSManagerInterface {
   register(duration, balance) {
     return this._registerWithDuration(duration, balance);
   }
-
+  async getNameReverseData(domain) {
+    try {
+      const contract = new this.web3.eth.Contract(
+        ReverseRegistrar.abi,
+        ReverseRegistrar.address
+      );
+      return await contract.methods
+        .setName(domain)
+        .estimateGas({ from: this.address });
+    } catch (e) {
+      Toast(e, {}, ERROR);
+    }
+  }
   async setNameReverseRecord(domain) {
     try {
       return this.ensInstance.setReverseRecord(domain);

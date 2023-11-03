@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="d-flex flex-column greyLight pa-6 rounded">
+    <div class="d-flex flex-column bgWalletBlockDark pa-6 rounded">
       <div class="d-flex justify-space-between">
         <span>{{ $t('ens.register.domain-name') }}:</span>
         <span class="font-weight-medium">{{ name }}</span>
@@ -108,7 +108,7 @@
     <div v-if="notEnoughFunds || noFundsForRegFees">
       <span class="balance-error d-flex mt-5 justify-center align-center">
         Not enough balance:
-        <a target="_blank" class="link" @click="openMoonpay">
+        <a target="_blank" class="link" @click="openBuySell">
           <u>Buy More Eth</u>
         </a>
       </span>

@@ -6,7 +6,7 @@
     -->
   <the-wrapper-dapp
     :is-new-header="true"
-    :dapp-img="iconColorfulETH"
+    :dapp-img="headerImg"
     :banner-text="header"
     :tab-items="tabs"
     :active-tab="activeTab"
@@ -134,6 +134,7 @@
           :validators="validators"
           :loading="loadingValidators"
           :amount="amount"
+          :refetch-validators="refetchValidators"
         />
       </v-sheet>
     </template>
@@ -142,14 +143,14 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex';
-
 import { SUPPORTED_NETWORKS } from './handlers/supportedNetworks';
 import { STAKED_ROUTE } from './configsRoutes';
-import iconColorfulETH from '@/assets/images/icons/icon-dapp-eth.svg';
 import {
   formatPercentageValue,
   formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
+
+import StakedStatus from './components/StakedStatus';
 
 import handlerStaked from './handlers/handlerStaked';
 export default {
@@ -157,12 +158,12 @@ export default {
   components: {
     TheWrapperDapp: () => import('@/core/components/TheWrapperDapp'),
     StakedStepper: () => import('./components/staked-stepper/StakedStepper'),
-    StakedStatus: () => import('./components/StakedStatus')
+    'staked-status': StakedStatus
   },
   data() {
     return {
       validNetworks: SUPPORTED_NETWORKS,
-      iconColorfulETH: iconColorfulETH,
+      headerImg: require('@/assets/images/icons/dapps/icon-dapp-stake.svg'),
       amount: 0,
       header: {
         title: 'Ethereum 2.0 staking',
@@ -328,6 +329,12 @@ export default {
     sendTransaction(amountETH) {
       this.handlerStaked.sendTransaction();
       this.amount = amountETH;
+    },
+    /**
+     * refetch validators
+     */
+    refetchValidators() {
+      this.handlerStaked.getValidators();
     }
   }
 };

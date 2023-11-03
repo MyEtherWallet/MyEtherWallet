@@ -1,5 +1,5 @@
 <template>
-  <v-sheet max-width="600px">
+  <v-sheet color="transparent" max-width="600px">
     <!--
       =====================================================================================
         Values

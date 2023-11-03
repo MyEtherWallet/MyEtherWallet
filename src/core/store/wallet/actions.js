@@ -1,29 +1,37 @@
 import url from 'url';
 import web3 from 'web3';
+import { formatters } from 'web3-core-helpers';
+
 import MEWProvider from '@/utils/web3-provider';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
-import { formatters } from 'web3-core-helpers';
 import EventNames from '@/utils/web3-provider/events';
 import { EventBus } from '@/core/plugins/eventBus';
-const removeWallet = function ({ commit, state }) {
+
+const removeWallet = function ({ commit, state, dispatch }) {
   if (
     state.identifier === WALLET_TYPES.WALLET_CONNECT ||
-    state.identifier === WALLET_TYPES.WALLET_LINK ||
-    state.identifier === WALLET_TYPES.MEW_CONNECT
+    state.identifier === WALLET_TYPES.MEW_WALLET ||
+    state.identifier === WALLET_TYPES.WALLET_LINK
   ) {
     const connection = state.instance.getConnection();
-    if (connection && connection.disconnect) {
-      connection.disconnect();
+    if (connection) {
+      if (connection.disconnect) {
+        connection.disconnect();
+      }
+      if (connection.killSession) {
+        connection.killSession();
+      }
     }
   }
   commit('REMOVE_WALLET');
+  dispatch('external/setSelectedEIP6963Provider', null, { root: true });
+  dispatch('external/setSelectedEIP6963Info', null, { root: true });
 };
 
-const setWallet = function ({ commit, dispatch, state }, params) {
+const setWallet = function ({ commit, dispatch }, params) {
   commit('SET_WALLET', params[0]);
-  if (!state.isOfflineApp) {
-    dispatch('setWeb3Instance', params[1]);
-  }
+  dispatch('setWeb3Instance', params[1]);
+  dispatch('external/setSelectedEIP6963Provider', params[1], { root: true });
 };
 const setTokens = function ({ commit }, params) {
   commit('SET_TOKENS', params);
@@ -50,7 +58,7 @@ const setWeb3Instance = function (
     rootState.global.currentNetwork.port
       ? ':' + rootState.global.currentNetwork.port
       : ''
-  }${hostUrl.pathname}`;
+  }${hostUrl.pathname ? hostUrl.pathname : ''}`;
   rootState.global.currentNetwork.username !== '' &&
   rootState.global.currentNetwork.password !== ''
     ? (options['headers'] = {
@@ -94,11 +102,19 @@ const setWeb3Instance = function (
           arr[i].gasPrice === undefined ? gasPrice : arr[i].gasPrice;
         arr[i] = formatters.inputCallFormatter(arr[i]);
       }
-
       const batchSignCallback = promises => {
+        if (promises instanceof Error) {
+          reject(promises);
+        }
         if (promises && promises.rejected)
           reject(new Error('User rejected transaction'));
-        resolve(promises);
+        if (state.identifier === WALLET_TYPES.WEB3_WALLET) {
+          Promise.all(promises)
+            .then(values => {
+              resolve(values);
+            })
+            .catch(e => reject(e));
+        } else resolve(promises);
       };
       EventBus.$emit(
         EventNames.SHOW_BATCH_TX_MODAL,
@@ -123,6 +139,13 @@ const setOfflineApp = function ({ commit }, val) {
   commit('SET_OFFLINE_APP', val);
 };
 
+const setLedgerApp = function ({ commit }, val) {
+  commit('SET_LEDGER_APP', val);
+};
+const setSwapRates = function ({ commit }, val) {
+  commit('SET_SWAP_RATES', val);
+};
+
 export default {
   removeWallet,
   setWallet,
@@ -132,5 +155,7 @@ export default {
   setBlockNumber,
   setOwnedDomains,
   setTokens,
-  setOfflineApp
+  setOfflineApp,
+  setLedgerApp,
+  setSwapRates
 };

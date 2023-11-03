@@ -1,12 +1,12 @@
-import { ETC, ETH, ROP, GO, XDC } from '@/utils/networks/types';
+import { ETC, ETH, GO, XDC, ROOTSTOCK } from '@/utils/networks/types';
 import {
   ledgerEthereum,
   ledgerLiveEthereum,
   ledgerEthereumClassic,
   ledgerLiveEthereumClassic,
-  ropsten,
   goChain,
-  xdcnetwork
+  xdcnetwork,
+  rskMainnet
 } from '@/modules/access-wallet/hardware/handlers/configs/configPaths';
 const appList = [
   {
@@ -14,12 +14,15 @@ const appList = [
     paths: [ledgerEthereum, ledgerLiveEthereum]
   },
   {
-    network: ETC,
-    paths: [ledgerEthereumClassic, ledgerLiveEthereumClassic]
+    network: Object.assign({}, ETH, {
+      name: 'Eth Recovery',
+      name_long: 'Eth Recovery'
+    }),
+    paths: [ledgerEthereum, ledgerLiveEthereum]
   },
   {
-    network: ROP,
-    paths: [ropsten]
+    network: ETC,
+    paths: [ledgerEthereumClassic, ledgerLiveEthereumClassic]
   },
   {
     network: GO,
@@ -28,6 +31,10 @@ const appList = [
   {
     network: XDC,
     paths: [xdcnetwork]
+  },
+  {
+    network: ROOTSTOCK,
+    paths: [rskMainnet]
   }
 ];
 export default appList;

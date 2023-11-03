@@ -70,7 +70,11 @@
     =====================================================================================
     -->
       <template #tabContent2>
-        <v-sheet class="px-3 py-8 py-md-13">
+        <v-sheet
+          max-width="700px"
+          class="px-3 py-8 py-md-13 mx-auto"
+          color="transparent"
+        >
           <div class="d-flex align-center justify-space-between mb-7">
             <span class="mew-heading-2 font-weight-bold">
               {{ $t('ens.my-domains') }}
@@ -90,7 +94,10 @@
             >
               <div
                 :key="idx"
-                :class="[domain.expired ? 'expired' : 'available', 'ma-3 px-5']"
+                :class="[
+                  domain.expired ? 'expired' : 'available',
+                  'ma-3 px-2 px-sm-5'
+                ]"
               >
                 <v-row class="subheader-container">
                   <v-col cols="12" md="6" class="d-flex align-center">
@@ -153,14 +160,14 @@
                 </v-row>
 
                 <div
-                  class="d-flex align-center justify-space-between pb-5 pt-8 px-7"
+                  class="d-flex align-center justify-space-between pb-5 pt-8 px-sm-7"
                 >
                   <span class="mew-heading-3">
                     {{ $t('ens.manage-domains.what-to-do') }}
                   </span>
                 </div>
                 <v-divider class="mx-7"></v-divider>
-                <v-row class="pa-7">
+                <v-row class="pa-2 pa-sm-7">
                   <v-col
                     v-for="(option, key) in manageDomainOptions"
                     v-show="!domain.expired || key === 1"
@@ -294,6 +301,7 @@ import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 import { ENS_MANAGER_ROUTE } from './configsRoutes';
 import normalise from '@/core/helpers/normalise';
 import stripQuery from '@/core/helpers/stripQuery.js';
+import { clone } from 'lodash';
 
 export default {
   name: 'ENSManagerLayout',
@@ -301,14 +309,13 @@ export default {
     ModuleRegisterDomain: () => import('./modules/ModuleRegisterDomain'),
     ModuleManageDomain: () => import('./modules/ModuleManageDomain'),
     TheWrapperDapp: () => import('@/core/components/TheWrapperDapp'),
-    ModuleAddressBook: () => import('@/modules/address-book/ModuleAddressBook'),
     EnsReverseLookup: () => import('./components/reverse/EnsReverseLookup')
   },
   mixins: [handlerAnalytics],
   data() {
     return {
       validNetworks: SUPPORTED_NETWORKS,
-      headerImg: require('@/assets/images/icons/icon-ens-manager-white-bg.svg'),
+      headerImg: require('@/assets/images/icons/dapps/icon-dapp-ensmanager.svg'),
       header: {
         title: this.$t('ens.title'),
         subtext: this.$t('ens.dapp-desc')
@@ -398,7 +405,7 @@ export default {
         { name: this.$t('ens.manage-domain') }
       ],
       */
-      myDomains: []
+      myDomains: [],
       /*,
       ensBannerImg: ensBannerImg,
       bannerText: {
@@ -406,6 +413,7 @@ export default {
         subtext: this.$t('ens.dapp-desc')
       }
       */
+      oldTxtRecords: {}
     };
   },
   computed: {
@@ -476,11 +484,28 @@ export default {
     - if user is onManage it will run getDomain to refresh domains
     */
     address(newVal) {
-      this.ensManager.address = newVal;
+      if (newVal) {
+        this.ensManager.address = newVal;
+        if (this.onRegister) {
+          this.closeRegister();
+        }
+        this.getDomains();
+      }
+    },
+    /*
+    - watches for network change
+    - updates ensManager with new network
+    - if user is onRegister it will reset and take them back
+    - if user is onManage it will run getDomain to refresh domains
+    */
+    network() {
+      if (this.checkNetwork()) {
+        this.setup();
+        this.getDomains();
+      }
       if (this.onRegister) {
         this.closeRegister();
       }
-      this.getDomains();
     },
     $route() {
       this.detactUrlChangeTab();
@@ -494,23 +519,32 @@ export default {
      * Check url and change tab on load
      */
     this.detactUrlChangeTab();
-
-    const ens = this.network.type.ens
-      ? new ENS({
-          provider: this.web3.eth.currentProvider,
-          ensAddress: this.network.type.ens.registry
-        })
-      : null;
-    this.ensManager = new handlerEnsManager(
-      this.network,
-      this.address,
-      this.web3,
-      ens,
-      this.gasPrice
-    );
-    this.getDomains();
+    if (this.checkNetwork()) {
+      this.setup();
+      this.getDomains();
+    }
   },
   methods: {
+    checkNetwork() {
+      return this.validNetworks.find(
+        item => item.chainID === this.network.type.chainID
+      );
+    },
+    setup() {
+      const ens = this.network.type.ens
+        ? new ENS({
+            provider: this.web3.eth.currentProvider,
+            ensAddress: this.network.type.ens.registry
+          })
+        : null;
+      this.ensManager = new handlerEnsManager(
+        this.network,
+        this.address,
+        this.web3,
+        ens,
+        this.gasPrice
+      );
+    },
     detactUrlChangeTab() {
       const currentRoute = this.$route.name;
       if (currentRoute === ENS_MANAGER_ROUTE.MANAGE.NAME) {
@@ -541,6 +575,7 @@ export default {
       this.onManage = true;
       this.manageType = type;
       this.manageDomainHandler = this.myDomains[idx];
+      this.oldTxtRecords = clone(this.myDomains[idx].txtRecords);
     },
     getDomains() {
       this.ensManager
@@ -566,7 +601,7 @@ export default {
     closeManage() {
       this.onManage = false;
       this.settingIpfs = false;
-      this.trackDapp('closeEnsManageTab');
+      this.trackDapp('ensCloseManageTab');
     },
     transfer(address) {
       this.trackDapp('ensDomainTransferEvent');
@@ -579,7 +614,7 @@ export default {
           this.trackDapp('ensTransferred');
         })
         .catch(err => {
-          this.instance.errorHandler(err);
+          this.instance.errorHandler(err.message ? err.message : err);
         });
       this.closeManage();
     },
@@ -615,7 +650,7 @@ export default {
           this.trackDapp('ensDomainRenew');
         })
         .catch(err => {
-          this.instance.errorHandler(err);
+          this.instance.errorHandler(err.message ? err.message : err);
         });
       this.closeManage();
     },
@@ -624,7 +659,7 @@ export default {
         .setMulticoin(coin)
         .then(this.getDomains)
         .catch(err => {
-          this.instance.errorHandler(err);
+          this.instance.errorHandler(err.message ? err.message : err);
         });
       this.closeManage();
     },
@@ -633,7 +668,8 @@ export default {
         .setTxtRecord(records)
         .then(this.getDomains)
         .catch(err => {
-          this.instance.errorHandler(err);
+          this.manageDomainHandler.txtRecords = this.oldTxtRecords;
+          this.instance.errorHandler(err.message ? err.message : err);
         });
       this.closeManage();
     },
@@ -651,7 +687,7 @@ export default {
           this.closeManage();
         })
         .catch(err => {
-          this.instance.errorHandler(err);
+          this.instance.errorHandler(err.message ? err.message : err);
         });
     },
     setIpfs(hash) {
@@ -663,14 +699,14 @@ export default {
           this.trackDapp('ensSetIpfs');
         })
         .catch(err => {
-          this.instance.errorHandler(err);
+          this.instance.errorHandler(err.message ? err.message : err);
         });
       this.closeManage();
     },
     async findDomain() {
       try {
         this.nameHandler = await this.ensManager.searchName(this.name);
-        this.trackDapp('findEnsDomain');
+        this.trackDapp('ensFindDomain');
       } catch (e) {
         Toast(e, {}, ERROR);
       }
@@ -683,7 +719,7 @@ export default {
       this.name = '';
       this.nameHandler = {};
       this.$router.push({ name: ENS_MANAGER_ROUTE.ENS_MANAGER.NAME });
-      this.trackDapp('closeEnsRegister');
+      this.trackDapp('ensCloseRegister');
     },
     setName(name) {
       this.searchError = '';
@@ -692,7 +728,7 @@ export default {
       }
       try {
         this.name = normalise(name);
-        this.trackDapp('setEnsDomainName');
+        this.trackDapp('ensSetDomainName');
       } catch (e) {
         this.searchError = e.message.includes('Failed to validate')
           ? 'Invalid name!'
@@ -718,7 +754,7 @@ export default {
         })
         .on('error', err => {
           this.loadingReg = false;
-          this.instance.errorHandler(err);
+          this.instance.errorHandler(err.message ? err.message : err);
         });
     },
     commit() {

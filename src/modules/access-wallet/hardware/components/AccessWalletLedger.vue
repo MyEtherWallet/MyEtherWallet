@@ -1,19 +1,27 @@
 <template>
   <div>
     <div class="subtitle-1 font-weight-bold mb-2">Connecting to:</div>
-    <div class="d-flex align-center justify-center">
-      <mew-select v-model="ledgerApp" :items="ledgerApps" :is-custom="true" />
-      <div class="pathBox text-right pb-8 pl-5">
-        <access-wallet-derivation-path
-          :selected-path="selectedPath"
-          :passed-paths="paths"
-          class="path-box"
-          @setPath="setPath"
-        />
-      </div>
+    <div class="d-flex align-start mb-2 flex-wrap">
+      <mew-select
+        :value="ledgerApp"
+        :items="ledgerApps"
+        :is-custom="true"
+        class="mr-0 mr-sm-4 network-selection"
+        @input="handleApp"
+      />
+      <access-wallet-derivation-path
+        :selected-path="selectedPath"
+        :passed-paths="paths"
+        :disable-custom-paths="!isRecovery"
+        :is-mobile="isMobile"
+        class="derivation-path ml-0 ml-sm-auto"
+        @setPath="setPath"
+      />
     </div>
     <div class="sheet d-flex align-center justify-center">
-      <div class="d-flex align-center justify-center pb-8 pt-15 pt-md-18">
+      <div
+        class="d-flex align-center justify-center pb-8 pt-15 pt-md-18 flex-wrap"
+      >
         <p class="para">
           Choose <b>Ethereum</b> on your device and connect with one of the
           methods below.
@@ -30,7 +38,10 @@
         />
       </div>
     </div>
-    <div class="d-flex justify-space-between justify-center text-center mt-5">
+    <div
+      :class="[!isMobile ? 'justify-space-between' : '']"
+      class="d-flex justify-center text-center mt-5 flex-wrap"
+    >
       <div class="section-block" @click="ledgerUnlockBle">
         <v-img
           src="@/assets/images/hardware-wallets/Bluetooth.svg"
@@ -67,6 +78,8 @@
   </div>
 </template>
 <script>
+import { mapActions, mapGetters } from 'vuex';
+
 export default {
   name: 'AccessWalletLedger',
   components: {
@@ -96,24 +109,36 @@ export default {
   },
   data() {
     return {
-      ledgerApp: {},
       article: {
         text: 'See article here for instructions',
         url: 'https://winaero.com/enable-or-disable-bluetooth-device-permissions-in-google-chrome/'
       }
     };
   },
+  computed: {
+    ...mapGetters('wallet', ['getLedgerApp', 'initialLoad']),
+    isRecovery() {
+      return this.ledgerApp?.value?.includes('Recovery');
+    },
+    ledgerApp() {
+      return this.getLedgerApp;
+    },
+    isMobile() {
+      return this.$vuetify.breakpoint.width < 576;
+    }
+  },
   watch: {
-    ledgerApp: {
-      handler: function (newVal) {
-        this.$emit('ledgerApp', newVal);
-      },
-      deep: true
+    ledgerApp() {
+      this.setPath(this.paths[0]);
     }
   },
   methods: {
+    ...mapActions('wallet', ['setLedgerApp']),
     ledgerUnlockBle() {
       this.$emit('setBluetoothLedgerUnlock');
+    },
+    handleApp(e) {
+      this.setLedgerApp(e);
     }
   }
 };
@@ -126,9 +151,6 @@ export default {
   padding: 20px;
   margin-bottom: 30px;
   width: 100%;
-}
-.path-box {
-  height: 150px;
 }
 .buttonTitle {
   color: #1eb19b;
@@ -181,5 +203,18 @@ export default {
 }
 .selected {
   border: 2px solid #1eb19b;
+}
+.derivation-path {
+  align-self: center;
+}
+.network-selection {
+  max-width: 342px;
+}
+
+@media (max-width: 576px) {
+  .network-selection {
+    width: stretch;
+    max-width: 100%;
+  }
 }
 </style>

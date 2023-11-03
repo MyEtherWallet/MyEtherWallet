@@ -28,7 +28,6 @@
             title="No Eth Blocks added to batch minting!"
             description='To mint blocks in batches, find a block and click on "Add to Batch"'
             theme="info"
-            has-white-background
             hide-close-icon
           />
         </div>
@@ -88,12 +87,25 @@
             </div>
           </div>
           <mew-button
-            :title="hasEnoughEth ? 'Proceed to Minting' : 'Not Enough Eth'"
+            :title="hasEnoughEth ? 'Proceed to minting' : 'Not enough ETH'"
             has-full-width
             :disabled="!hasEnoughEth || isLoading || isCartEmpty"
             :loading="isLoading"
             @click.native="mintBlocks"
           />
+
+          <!-- =================================================== -->
+          <!-- Block is available OR is Owned: not enough ETH -->
+          <!-- =================================================== -->
+          <div
+            v-if="!hasEnoughEth"
+            class="d-flex align-center justify-end mt-4"
+          >
+            <div class="error--text mew-label mr-2">{{ notEnoughMessage }}</div>
+            <a class="mew-label font-weight-medium" @click="openBuySell">
+              Buy more {{ network.type.name }}.
+            </a>
+          </div>
         </div>
       </v-col>
     </v-row>
@@ -104,7 +116,7 @@
 import { mapGetters, mapState, mapActions } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { fromWei, toWei, toBN } from 'web3-utils';
-
+import buyMore from '@/core/mixins/buyMore.mixin.js';
 import abi from '../handlers/helpers/multicall.js';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import handlerBlock from '../handlers/handlerBlock';
@@ -116,6 +128,7 @@ export default {
   components: {
     BlockResultComponent: () => import('../components/BlockResultComponent')
   },
+  mixins: [buyMore],
   data() {
     return {
       blocks: [],
@@ -136,11 +149,14 @@ export default {
       'network',
       'isTestNetwork',
       'gasPrice',
-      'gasPriceType',
       'gasPriceByType',
       'getFiatValue'
     ]),
+    ...mapState('global', ['gasPriceType']),
     ...mapGetters('external', ['fiatValue']),
+    notEnoughMessage() {
+      return `Not enough ${this.network.type.name} to mint. `;
+    },
     totalAvailable() {
       return this.blocks.filter(item => {
         if (!item.hasOwner) {
@@ -184,15 +200,15 @@ export default {
       return value;
     },
     blockCount() {
-      const cart = this.isTestNetwork ? this.cart.RIN : this.cart.ETH;
+      const cart = this.cart.ETH;
       return cart.length;
     },
     pluralizeBlockCount() {
-      const cart = this.isTestNetwork ? this.cart.RIN : this.cart.ETH;
+      const cart = this.cart.ETH;
       return cart.length > 1 ? 'Blocks' : 'Block';
     },
     isCartEmpty() {
-      const cart = this.isTestNetwork ? this.cart.RIN : this.cart.ETH;
+      const cart = this.cart.ETH;
       return cart.length >= 1 ? false : true;
     },
     hasEnoughEth() {
@@ -233,7 +249,7 @@ export default {
     async fetchBlocks() {
       this.isLoading = true;
       const newResultArray = [];
-      const cart = this.isTestNetwork ? this.cart.RIN : this.cart.ETH;
+      const cart = this.cart.ETH;
       this.totalResult = cart.filter(item => {
         if (!item.hasOwner) return item;
       }).length;
@@ -323,6 +339,10 @@ export default {
                   ? 1
                   : 0;
               });
+              if (this.blocks.length === 0) {
+                this.isLoading = false;
+                return;
+              }
               this.batchMintData = this.blocks.map(item => {
                 return item.mintData.data;
               });
@@ -376,7 +396,7 @@ export default {
           value: this.totalMintValue
         })
         .on('transactionHash', () => {
-          const network = this.isTestNetwork ? 'RIN' : 'ETH';
+          const network = 'ETH';
           this.emptyCart(network);
           this.isLoading = false;
         })

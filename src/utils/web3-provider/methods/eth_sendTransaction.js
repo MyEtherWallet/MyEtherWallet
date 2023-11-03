@@ -28,7 +28,7 @@ export default async ({ payload, store, requestManager }, res, next) => {
     };
   }
   let currency = store.getters['external/contractToToken'](tx.to);
-  if (!currency)
+  if (!(currency.name && currency.symbol))
     currency = store.getters['external/contractToToken'](MAIN_TOKEN_ADDRESS);
   tx.gasPrice = tx.gasPrice
     ? tx.gasPrice
@@ -68,36 +68,14 @@ export default async ({ payload, store, requestManager }, res, next) => {
         : [_tx, toDetails, currency];
       if (
         store.state.wallet.identifier === WALLET_TYPES.WEB3_WALLET ||
-        store.state.wallet.identifier === WALLET_TYPES.WALLET_CONNECT
+        store.state.wallet.identifier === WALLET_TYPES.WALLET_CONNECT ||
+        store.state.wallet.identifier === WALLET_TYPES.MEW_WALLET
       ) {
         EventBus.$emit(event, params, _promiObj => {
           if (_promiObj.rejected) {
             res(new Error('User rejected action'));
             return;
           }
-          setEvents(_promiObj, _tx, store.dispatch);
-          _promiObj
-            .once('transactionHash', hash => {
-              res(null, toPayload(payload.id, hash));
-            })
-            .on('error', err => {
-              res(err);
-            });
-        });
-      } else {
-        /**
-         * confirmInfo is @Boolean
-         * Checks whether confirmInfo is true
-         * if true, assume transaction is a swap
-         */
-        EventBus.$emit(event, params, _response => {
-          if (_response.rejected) {
-            res(new Error('User rejected action'));
-            return;
-          }
-          const _promiObj = store.state.wallet.web3.eth.sendSignedTransaction(
-            _response.rawTransaction
-          );
           setEvents(_promiObj, _tx, store.dispatch);
           _promiObj
             .once('transactionHash', hash => {
@@ -126,9 +104,70 @@ export default async ({ payload, store, requestManager }, res, next) => {
               res(err);
             });
         });
+      } else {
+        /**
+         * confirmInfo is @Boolean
+         * Checks whether confirmInfo is true
+         * if true, assume transaction is a swap
+         */
+        let txHash;
+        EventBus.$emit(event, params, _response => {
+          if (_response.rejected) {
+            res(new Error('User rejected action'));
+            return;
+          }
+          const _promiObj = store.state.wallet.web3.eth.sendSignedTransaction(
+            _response.rawTransaction
+          );
+          setEvents(_promiObj, _tx, store.dispatch);
+          _promiObj
+            .once('receipt', receipt => {
+              if (confirmInfo) {
+                EventBus.$emit(
+                  'swapTxReceivedReceipt',
+                  receipt.transactionHash
+                );
+              }
+            })
+            .once('transactionHash', hash => {
+              txHash = hash;
+              if (store.state.wallet.instance !== null) {
+                const isTesting = locStore.get('mew-testing');
+                if (!isTesting) {
+                  const storeKey = utils.sha3(
+                    `${
+                      store.getters['global/network'].type.name
+                    }-${store.state.wallet.instance
+                      .getChecksumAddressString()
+                      .toLowerCase()}`
+                  );
+                  const localStoredObj = locStore.get(storeKey);
+                  locStore.set(storeKey, {
+                    nonce: sanitizeHex(
+                      BigNumber(localStoredObj.nonce).plus(1).toString(16)
+                    ),
+                    timestamp: localStoredObj.timestamp
+                  });
+                }
+              }
+              if (confirmInfo) {
+                EventBus.$emit('swapTxBroadcasted', hash);
+              }
+              res(null, toPayload(payload.id, hash));
+            })
+            .on('error', err => {
+              if (confirmInfo) {
+                EventBus.$emit('swapTxFailed', txHash);
+              }
+              res(err);
+            });
+        });
       }
     })
     .catch(e => {
+      if (confirmInfo) {
+        EventBus.$emit('swapTxNotBroadcastedFailed');
+      }
       res(e);
     });
 };

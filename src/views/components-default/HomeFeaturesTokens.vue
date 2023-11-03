@@ -9,19 +9,19 @@
     <div class="mt-10">
       <v-row>
         <v-col v-for="(t, k) in tokens" :key="k" cols="12" lg="4" sm="6">
-          <div class="d-flex align-center">
-            <img :src="t.icon" :alt="t.label" height="20" class="mr-2" />
-            <div>{{ t.label }}</div>
-          </div>
+          <a :href="t.link">
+            <div class="d-flex align-center no-link-colors">
+              <img :src="t.icon" :alt="t.label" height="20" class="mr-2" />
+              <div>{{ t.label }}</div>
+            </div>
+          </a>
         </v-col>
       </v-row>
       <mew-button
         title="Get tokens"
         btn-size="xlarge"
         class="mx-auto mt-12 d-block"
-        @click.native="
-          $router.push({ name: ROUTES_HOME.ACCESS_WALLET.NAME, params: {} })
-        "
+        @click.native="navigateToAccessWallet"
       />
     </div>
   </mew6-white-sheet>
@@ -29,10 +29,11 @@
 
 <script>
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
-
+import { knuthShuffle } from '@/modules/create-wallet/handlers/helpers';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 export default {
   name: 'HomeFeaturesTokens',
-  components: {},
+  mixins: [handlerAnalytics],
   data: vm => ({
     tokens: [
       {
@@ -95,10 +96,37 @@ export default {
         label: vm.$t('home.features.tokens.cdai'),
         icon: 'https://img.mewapi.io/?image=https://assets.coingecko.com/coins/images/9281/thumb/cDAI.png'
       }
-    ],
-    ROUTES_HOME: ROUTES_HOME
-  })
+    ]
+  }),
+  created() {
+    fetch(`https://mew-seo-pages.pages.dev/best-wallet-for.json`)
+      .then(res => res.json())
+      .then(json => {
+        const tokenData = json.map(token => {
+          return {
+            label: `${token.name} (${token.symbol.toUpperCase()})`,
+            icon: `https://img.mewapi.io/?image=${token.icon}`,
+            link: `https://www.myetherwallet.com/pages${token.path}`
+          };
+        });
+        this.tokens = knuthShuffle(tokenData).slice(0, 15);
+      })
+      .catch(() => {});
+  },
+  methods: {
+    navigateToAccessWallet() {
+      this.trackLandingPageAmplitude('GetTokensClicked');
+      this.$router.push({
+        name: ROUTES_HOME.ACCESS_WALLET.NAME,
+        params: {}
+      });
+    }
+  }
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.no-link-colors {
+  color: #1f242f;
+}
+</style>

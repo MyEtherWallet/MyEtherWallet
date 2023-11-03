@@ -14,14 +14,6 @@ export default {
       }
     },
     {
-      path: ROUTES_WALLET.NETWORK.PATH,
-      name: ROUTES_WALLET.NETWORK.NAME,
-      component: () => import('@/modules/network/ModuleNetwork'),
-      meta: {
-        noAuth: false
-      }
-    },
-    {
       path: ROUTES_WALLET.SEND_TX_OFFLINE.PATH,
       name: ROUTES_WALLET.SEND_TX_OFFLINE.NAME,
       component: () =>
@@ -43,6 +35,14 @@ export default {
       path: ROUTES_WALLET.VERIFY_MESSAGE.PATH,
       name: ROUTES_WALLET.VERIFY_MESSAGE.NAME,
       component: () => import('@/views/layouts-wallet/TheVerifyMessageLayout'),
+      meta: {
+        noAuth: false
+      }
+    },
+    {
+      path: ROUTES_WALLET.PRINT.PATH,
+      name: ROUTES_WALLET.PRINT.NAME,
+      component: () => import('@/modules/balance/ModulePaperWallet'),
       meta: {
         noAuth: false
       }

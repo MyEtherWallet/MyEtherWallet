@@ -1,4 +1,4 @@
-import Trezor from 'trezor-connect';
+import Trezor from '@trezor/connect-web';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import bip44Paths from '@/modules/access-wallet/hardware/handlers/bip44';
 import HDWalletInterface from '@/modules/access-wallet/common/HDWalletInterface';
@@ -121,10 +121,12 @@ class TrezorWallet {
       return getBufferFromHex(result.payload.signature);
     };
     const displayAddress = async () => {
-      await Trezor.ethereumGetAddress({
-        path: this.basePath + '/' + idx,
+      const path = this.basePath + '/' + idx;
+      const result = await Trezor.ethereumGetAddress({
+        path: path,
         showOnTrezor: true
       });
+      if (!result.success) throw new Error(result.payload.error);
     };
     return new HDWalletInterface(
       this.basePath + '/' + idx,

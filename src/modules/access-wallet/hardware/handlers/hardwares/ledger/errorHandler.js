@@ -3,7 +3,7 @@ import WalletErrorHandler from '@/modules/access-wallet/common/WalletErrorHandle
 const ERRORS = {
   'UNKNOWN_ERROR (0x6801)': 'ledgerError.unknown-0x6801',
   'UNKNOWN_ERROR (0x6804)': 'ledgerError.unknown-0x6804',
-  'UNKNOWN_ERROR (0x6b0c)': 'ledgerError.unknown-0x6boc',
+  'UNKNOWN_ERROR (0x6b0c)': 'Unlock your device before continuing',
   'UNKNOWN_ERROR (0x650f)':
     'Error: Please refresh and select the Ethereum app on your device before pairing',
   'UNKNOWN_ERROR (0x6a15)': 'ledgerError.unknown-0x6a15',
@@ -69,7 +69,13 @@ const ERRORS = {
   'Ledger device: UNKNOWN_ERROR (0x6807)': 'Device is supported',
   'Please make sure you have':
     'Please make sure app is installed and opened on Ledger device',
-  'Authentication canceled.': 'Authentication canceled'
+  'Authentication canceled.': 'Authentication canceled',
+  'missing app ETH': 'Make sure you have Ethereum app opened',
+  'missing app Rootstock': 'Make sure you have Rootstock app opened',
+  'missing app GO': 'Make sure you have GoChain app opened',
+  'missing app ETC': 'Make sure you have Ethereum Classic app opened',
+  'missing app ROP': 'Make sure you have Ropsten app opened',
+  'missing app XDC': 'Make sure you have XDC Network app opened'
 };
 const WARNINGS = {
   'Ledger device: Condition of use not satisfied (denied by the user?) (0x6985)':
@@ -79,7 +85,12 @@ const WARNINGS = {
   'Ledger device: Incorrect length (0x6700)':
     'Wrong or No app selected in Ledger Device',
   "Failed to execute 'transferIn' on 'USBDevice': A transfer error has occurred.":
-    'Please confirm app on Ledger device to continue'
+    'Please confirm app on Ledger device to continue',
+  'Wrong App or No App':
+    'Please make sure you selected an app in the Ledger device'
 };
-
-export default WalletErrorHandler(ERRORS, WARNINGS);
+const SUCCESS = {
+  'App has switched. Please retry again':
+    'App has switched. Please retry again.'
+};
+export default WalletErrorHandler(ERRORS, WARNINGS, SUCCESS);

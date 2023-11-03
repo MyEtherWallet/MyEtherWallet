@@ -8,8 +8,10 @@
     <template #moduleBody>
       <div>
         <mew-select
+          v-model="currentContract"
           :items="mergedContracts"
           label="Contract Name"
+          class="ContractSelect"
           normal-dropdown
           @input="selectedContract"
         />
@@ -17,7 +19,7 @@
           v-model="contractAddress"
           label="Contract Address"
           placeholder=" "
-          class="mr-3 flex-grow-1"
+          class="mr-3 flex-grow-1 full-width"
           :persistent-hint="nametag.length > 0"
           :hint="nametag"
         />
@@ -40,6 +42,7 @@
           />
           <mew-button
             title="Interact"
+            class="InteractButton"
             :disabled="!canInteract"
             :has-full-width="false"
             @click.native="showInteract"
@@ -66,7 +69,7 @@
         <mew-select
           label="Function"
           :items="methods"
-          class="mb-1"
+          class="mt-4 mt-lg-0 mb-1 FunctionSelect"
           normal-dropdown
           @input="methodSelect"
         />
@@ -122,6 +125,7 @@
             :title="isViewFunction ? 'Call' : 'Write'"
             :has-full-width="false"
             btn-size="xlarge"
+            class="CallFunctionButton"
             :disabled="canProceed"
             @click.native="readWrite"
           />
@@ -129,14 +133,14 @@
 
         <v-divider v-if="hasOutputs" class="mt-9 mb-8" />
 
-        <div v-if="hasOutputs">
+        <div v-if="hasOutputs" style="display: contents">
           <div class="mew-heading-2">Results</div>
           <div
             v-for="(output, idx) in selectedMethod.outputs"
             :key="output.name + idx"
             class="d-flex align-center justify-space-between my-4"
           >
-            <div class="text-capitalize">
+            <div class="text-capitalize mr-2">
               {{ output.name !== '' ? output.name : selectedMethod.name }}
             </div>
             <div class="font-weight-medium">{{ output.value }}</div>
@@ -230,7 +234,7 @@ export default {
           if (
             item.type !== 'constructor' &&
             item.type !== 'event' &&
-            item.type !== 'Fallback'
+            item.type !== 'fallback'
           ) {
             return item;
           }
@@ -256,9 +260,8 @@ export default {
       this.nametag = '';
       if (!newVal) {
         this.contractAddress = '';
-        return;
       }
-      if (isAddress(newVal.toLowerCase())) {
+      if (newVal && isAddress(newVal.toLowerCase())) {
         this.resolveAddress();
       }
     },
@@ -290,9 +293,15 @@ export default {
     readWrite() {
       const params = [];
       for (const _input of this.selectedMethod.inputs) {
-        if (_input.type.includes('[]'))
-          params.push(stringToArray(_input.value));
-        else params.push(_input.value);
+        if (_input.type.includes('[]')) {
+          if (_input.value === '[]') {
+            params.push([]);
+          } else {
+            params.push(stringToArray(_input.value));
+          }
+        } else {
+          params.push(_input.value);
+        }
       }
       const caller = this.currentContract.methods[
         this.selectedMethod.name

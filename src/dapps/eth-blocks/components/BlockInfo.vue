@@ -7,29 +7,26 @@
       overflow: 'hidden'
     }"
   >
-    <v-row class="align-center justify-start" no-gutters>
-      <!--
-        ===================================================
-          ALERT TITLE:
-        ===================================================
-        -->
-      <v-col
-        :style="{ 'background-color': alertBgColor, padding: '12px' }"
-        cols="12"
-        class="d-flex align-center"
-      >
-        <v-icon :class="['mr-2', alertTitleColor]" size="16px">{{
-          alertIcon
-        }}</v-icon>
-        <p :class="['font-weight-bold mb-0', alertTitleColor]">
-          {{ alertTitle }}
-        </p>
-      </v-col>
-      <!--
-        ===================================================
-          Block is Not available: OWNER INFO
-        ===================================================
-        -->
+    <!-- =================================================== -->
+    <!-- ALERT TITLE: -->
+    <!-- =================================================== -->
+    <v-col
+      :style="{ 'background-color': alertBgColor, padding: '12px' }"
+      cols="12"
+      class="d-flex align-center"
+    >
+      <v-icon :class="['mr-2', alertTitleColor]" size="16px">{{
+        alertIcon
+      }}</v-icon>
+      <p :class="['font-weight-bold mb-0', alertTitleColor]">
+        {{ alertTitle }}
+      </p>
+    </v-col>
+
+    <v-row class="align-center justify-start pa-5" no-gutters>
+      <!-- =================================================== -->
+      <!-- Block is Not available: OWNER INFO -->
+      <!-- =================================================== -->
       <v-col
         v-if="isNotAvailable"
         cols="12"
@@ -40,11 +37,10 @@
           {{ ownerFormatted }}
         </a>
       </v-col>
-      <!--
-        ===================================================
-          Block is Not available: Rarible LINK
-        ===================================================
-        -->
+
+      <!-- =================================================== -->
+      <!-- Block is Not available: Rarible LINK -->
+      <!-- =================================================== -->
       <v-col v-if="isNotAvailable" cols="12" class="pa-3 mt-1">
         <a :href="raribleLink" target="_blank" class="d-flex align-center">
           <p class="mb-0">See if it's available on Rarible</p>
@@ -53,13 +49,11 @@
           >
         </a>
       </v-col>
-      <!--
-        ===================================================
-          Block is available: PRICE INFO
-        ===================================================
-        -->
 
-      <v-col v-if="isAvailable" cols="12">
+      <!-- =================================================== -->
+      <!-- Block is available: PRICE INFO -->
+      <!-- =================================================== -->
+      <v-col v-if="isAvailable" cols="12" class="px-2">
         <div class="pa-3 d-flex justify-space-between">
           <div class="text-end">Price</div>
           <div class="d-flex flex-column text-end">
@@ -97,11 +91,9 @@
         </div>
       </v-col>
 
-      <!--
-        ===================================================
-          Block is available: MINT BUTTON
-        ===================================================
-        -->
+      <!-- =================================================== -->
+      <!-- Block is available: MINT BUTTON -->
+      <!-- =================================================== -->
       <v-col
         v-if="isAvailable"
         cols="6"
@@ -109,7 +101,7 @@
       >
         <mew-button
           v-if="!isPending"
-          :title="isAdded ? 'Added to Batch' : 'Add to Batch'"
+          :title="isAdded ? 'Added to Batch' : 'Add to batch'"
           :disabled="isAdded"
           btn-style="outline"
           has-full-width
@@ -119,7 +111,7 @@
           v-else
           disabled
           btn-style="outline"
-          :title="isAdded ? 'Added to Batch' : 'Add to Batch'"
+          :title="isAdded ? 'Added to Batch' : 'Add to batch'"
           has-full-width
         />
       </v-col>
@@ -150,11 +142,10 @@
           </div>
         </mew-button>
       </v-col>
-      <!--
-        ===================================================
-          Block is owned: SEND NFT BUTTON
-        ===================================================
-        -->
+
+      <!-- =================================================== -->
+      <!-- Block is owned: SEND NFT BUTTON -->
+      <!-- =================================================== -->
       <v-col v-if="isOwned" cols="12" sm="6" class="mt-4 pr-sm-2 mb-sm-2 pa-3">
         <mew-button
           v-if="!isPending"
@@ -178,11 +169,10 @@
           </div>
         </mew-button>
       </v-col>
-      <!--
-        ===================================================
-          Block is owned: LIST FOR SALE BUTTON
-        ===================================================
-        -->
+
+      <!-- =================================================== -->
+      <!-- Block is owned: LIST FOR SALE BUTTON -->
+      <!-- =================================================== -->
       <v-col
         v-if="isOwned"
         cols="12"
@@ -194,18 +184,15 @@
           v-if="!isPending"
           has-full-width
           :btn-link="raribleLink"
+          title="Sell on OpenSea"
           @click.native="trackToRarible"
         >
-          <v-row class="align-center justify-center">
-            <div>Sell on OpenSea</div>
-          </v-row>
         </mew-button>
       </v-col>
-      <!--
-        ===================================================
-          Block is available OR is Owned: not enough Eth
-        ===================================================
-        -->
+
+      <!-- =================================================== -->
+      <!-- Block is available OR is Owned: not enough ETH -->
+      <!-- =================================================== -->
       <v-col
         v-if="!hasEnoughEth && (isOwned || isAvailable)"
         cols="12"
@@ -214,7 +201,7 @@
           isOwned ? 'justify-start' : 'justify-end'
         ]"
       >
-        <div class="mb-0 redPrimary--text mew-label d-flex">
+        <div class="mb-0 redPrimary--text mew-label d-flex align-center px-3">
           <span
             >{{ notEnoughMessage }}
             <a
@@ -222,7 +209,7 @@
               rel="noopener noreferrer"
               target="_blank"
               class="mew-label font-weight-medium buy-more-link"
-              @click="openMoonpay"
+              @click="openBuySell"
             >
               Buy more {{ network.type.name }}.
 
@@ -240,11 +227,10 @@
           </span>
         </div>
       </v-col>
-      <!--
-        ===================================================
-          Block is reserved
-        ===================================================
-        -->
+
+      <!-- =================================================== -->
+      <!-- Block is reserved -->
+      <!-- =================================================== -->
       <v-col v-if="isReserved" cols="12" class="d-flex align-center mt-3">
         <p class="textLight--text ml-5">
           Please contact support@myetherwallet.com to inquire about this block.
@@ -538,7 +524,7 @@ export default {
       return estimate;
     },
     isAdded() {
-      const network = this.isTestNetwork ? this.cart.RIN : this.cart.ETH;
+      const network = this.cart.ETH;
       return some(network, block => {
         return block === this.blockNumber;
       });

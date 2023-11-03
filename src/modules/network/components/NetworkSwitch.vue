@@ -8,12 +8,12 @@
       <!-- Toggle: Main/Test/All -->
       <!-- ===================================================================================== -->
       <div
-        class="align-center align-sm-end justify-center pr-sm-3 pb-sm-3 order-sm-2"
+        class="align-center align-sm-end justify-center pr-sm-3 pb-sm-3 order-sm-2 mt-10 mt-sm-0"
       >
         <v-btn-toggle
           v-model="toggleType"
           mandatory
-          active-class="textDark white--text alig-end"
+          active-class="buttonToggleDark white--text alig-end"
         >
           <v-btn small>Main</v-btn>
           <v-btn small>Test</v-btn>
@@ -46,7 +46,10 @@
     <!-- ===================================================================================== -->
     <!-- Networks -->
     <!-- ===================================================================================== -->
-    <v-radio-group v-model="networkSelected">
+    <v-radio-group
+      v-model="networkSelected"
+      :class="networks.length > 10 ? 'network-container' : ''"
+    >
       <v-container
         v-for="(network, i) in networks"
         :key="network.name"
@@ -60,15 +63,7 @@
           <!-- ===================================================================================== -->
           <!-- Icon -->
           <!-- ===================================================================================== -->
-          <v-img
-            :class="network.name === 'MINTME' ? 'mint-me-color' : ''"
-            :src="network.icon"
-            :lazy-src="require('@/assets/images/currencies/icon-eth-grey.svg')"
-            contain
-            max-height="24px"
-            max-width="24px"
-          />
-
+          <mew-token-container :img="network.icon" size="24px" />
           <!-- ===================================================================================== -->
           <!-- Symbol/Name -->
           <!-- ===================================================================================== -->
@@ -105,7 +100,6 @@ import * as types from '@/utils/networks/types';
 import { Toast, SUCCESS, ERROR } from '@/modules/toast/handler/handlerToast';
 
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-import matchNetwork from '@/core/helpers/matchNetwork';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 
 export default {
@@ -138,6 +132,7 @@ export default {
   computed: {
     ...mapGetters('global', ['network']),
     ...mapState('global', ['validNetwork']),
+    ...mapState('external', ['selectedEIP6963Provider']),
     ...mapState('wallet', ['identifier', 'instance', 'isOfflineApp']),
     /**
      * Property returns sorted network names alphabetically in this order: ETH, main and then test networks
@@ -172,7 +167,7 @@ export default {
       this.typeNames.forEach(item => {
         allNetworks.push(types[item]);
       });
-      if (this.isSwapPage) {
+      if (this.isSwapPage || this.identifier === WALLET_TYPES.MEW_WALLET) {
         allNetworks = allNetworks.filter(
           item =>
             item.name === types.ETH.name ||
@@ -232,8 +227,16 @@ export default {
     }
   },
   watch: {
+    network: {
+      handler: function (newVal, oldVal) {
+        if (newVal.type.name !== oldVal.type.name) {
+          this.networkSelected = newVal.type.name;
+        }
+      },
+      deep: true
+    },
     networkSelected(value) {
-      if (value && (value !== this.network.type.name || !this.validNetwork)) {
+      if (!!value && (value !== this.network.type.name || !this.validNetwork)) {
         this.networkLoading = true;
         this.setNetworkDebounced(value);
       }
@@ -251,17 +254,7 @@ export default {
       }
     },
     validNetwork(val) {
-      if (!val) this.networkSelected = null;
-      else this.networkSelected = this.network.type.name;
-    },
-    async network() {
-      this.networkLoading = true;
-      const matched = await matchNetwork(
-        this.network.type.chainID,
-        this.identifier
-      );
-      if (matched) this.networkSelected = this.network.type.name;
-      this.networkLoading = false;
+      this.networkSelected = val ? this.network.type.name : null;
     },
     /**
      * Set networkSelected on toggle change, if network is in the list
@@ -285,7 +278,7 @@ export default {
   },
   methods: {
     ...mapActions('wallet', ['setWeb3Instance']),
-    ...mapActions('global', ['setNetwork']),
+    ...mapActions('global', ['setNetwork', 'setValidNetwork']),
     ...mapActions('external', ['setTokenAndEthBalance']),
     /**
      * Method checks whether symbol or name has searchInput substring
@@ -316,6 +309,7 @@ export default {
           return item;
         }
       });
+      this.setValidNetwork(true);
       this.setNetwork({
         network: found[0],
         walletType: this.instance?.identifier || ''
@@ -326,21 +320,19 @@ export default {
               ? this.network.type.name
               : '';
             this.networkLoading = false;
-            if (!this.isOffline) {
-              const provider =
-                this.identifier === WALLET_TYPES.WEB3_WALLET
-                  ? this.setWeb3Instance(window.ethereum)
-                  : this.setWeb3Instance();
-              provider.then(() => {
-                this.setTokenAndEthBalance();
-              });
+            const setNetworkCall =
+              this.identifier === WALLET_TYPES.WEB3_WALLET
+                ? this.setWeb3Instance(this.selectedEIP6963Provider)
+                : this.setWeb3Instance();
+            setNetworkCall.then(() => {
               Toast(`Switched network to: ${found[0].type.name}`, {}, SUCCESS);
-              this.trackNetworkSwitch(found[0].type.name);
+              this.setTokenAndEthBalance();
               this.$emit('newNetwork');
-            }
+            });
           }
         })
         .catch(e => {
+          this.setValidNetwork(false);
           this.networkSelected = this.validNetwork
             ? this.network.type.name
             : '';
@@ -362,6 +354,13 @@ export default {
 
 <style lang="scss" scoped>
 $borderNetwork: 1px solid #ececec;
+
+.network-container {
+  max-height: 500px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
 .network-border {
   border-bottom: $borderNetwork;
   border-right: $borderNetwork;
@@ -376,6 +375,7 @@ $borderNetwork: 1px solid #ececec;
 .network-border-last {
   border-radius: 0px 0px 4px 4px;
 }
+
 .mint-me-color {
   filter: brightness(0) saturate(100%) invert(90%) sepia(3%) saturate(5171%)
     hue-rotate(348deg) brightness(92%) contrast(63%);

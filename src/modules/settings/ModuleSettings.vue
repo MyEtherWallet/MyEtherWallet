@@ -10,11 +10,13 @@
     :back="editMode || addMode ? back : null"
     content-size="xlarge"
     :close="close"
+    class="py-10"
   >
     <mew-expand-panel
       v-if="!editMode && !addMode"
       :panel-items="panelItems"
       :idx-to-expand="idxToExpand"
+      class="mt-6"
     >
       <template #panelBody1>
         <div class="px-5">
@@ -38,13 +40,8 @@
           <div class="mb-4">
             {{ $t('interface.address-book.add-up-to') }}
           </div>
-          <mew-table
-            :table-headers="tableHeaders"
-            :table-data="tableData"
-            has-color
-            :success-toast="$t('common.copied')"
-            @onClick="onEdit"
-          />
+
+          <settings-address-table :table-data="tableData" @onClick="onEdit" />
 
           <div class="d-flex justify-center mt-5">
             <mew-button
@@ -64,12 +61,30 @@
       </template> -->
     </mew-expand-panel>
     <!--
-  =====================================================================================
-    Add / Edit Address Book overlay
-  =====================================================================================
-  -->
+    =====================================================================================
+      Consent to Data Sharing slider
+    =====================================================================================
+    -->
+    <div v-if="online && !addMode && !editMode" class="mt-3 px-8">
+      <div class="matomo-tracking-switch">
+        <v-switch
+          :label="`Data Sharing is ${consentToTrack ? 'on' : 'off'}`"
+          :input-value="consentToTrack"
+          inset
+          color="greenPrimary"
+          off-icon="mdi-alert-circle"
+          @change="setConsent"
+        />
+      </div>
+    </div>
+    <!--
+    =====================================================================================
+      Add / Edit Address Book overlay
+    =====================================================================================
+    -->
     <address-book-add-edit
       v-if="addMode || editMode"
+      class="mt-4 mt-lg-0"
       :item="itemToEdit"
       :mode="onMode"
       @back="back"
@@ -78,17 +93,18 @@
 </template>
 
 <script>
+import SettingsAddressTable from './components/SettingsAddressTable';
 import { mapState } from 'vuex';
-
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
-
 import handlerSettings from './handler/handlerSettings';
 import gasPriceMixin from './handler/gasPriceMixin';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 const modes = ['add', 'edit'];
 
 export default {
   name: 'ModuleSettings',
   components: {
+    SettingsAddressTable,
     SettingsImportConfig: () => import('./components/SettingsImportConfig'),
     SettingsExportConfig: () => import('./components/SettingsExportConfig'),
     SettingsGasPrice: () => import('./components/SettingsGasPrice'),
@@ -96,7 +112,7 @@ export default {
       import('@/modules/address-book/components/AddressBookAddEdit'),
     SettingsLocaleConfig: () => import('./components/SettingsLocaleConfig.vue')
   },
-  mixins: [gasPriceMixin],
+  mixins: [gasPriceMixin, handlerAnalytics],
   beforeRouteLeave(to, from, next) {
     if (to.name == ROUTES_HOME.ACCESS_WALLET.NAME) {
       next({ name: ROUTES_WALLET.DASHBOARD.NAME });
@@ -114,46 +130,17 @@ export default {
       editMode: false,
       addMode: false,
       itemToEdit: {},
-      tableHeaders: [
-        {
-          text: '#',
-          value: 'number',
-          sortable: false,
-          filterable: false,
-          width: '5%'
-        },
-        {
-          text: 'Address',
-          value: 'address',
-          sortable: false,
-          filterable: false,
-          width: '50%'
-        },
-        {
-          text: 'Nickname',
-          value: 'nickname',
-          sortable: false,
-          filterable: false,
-          containsLink: true,
-          width: '20%'
-        },
-        {
-          text: '',
-          value: 'callToAction',
-          sortable: false,
-          filterable: false,
-          width: '20%'
-        }
-      ],
       tableData: []
     };
   },
   computed: {
     ...mapState('addressBook', ['addressBookStore']),
+    ...mapState('global', ['online']),
+    ...mapState('popups', ['consentToTrack']),
     panelItems() {
       return [
         {
-          name: 'Default transaction priority',
+          name: 'Transaction priority',
           toggleTitle: this.setPriority(this.gasPriceType)
         },
         {
@@ -251,3 +238,11 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+.matomo-tracking-switch {
+  .v-label {
+    color: rgba(255, 255, 255, 0.6);
+  }
+}
+</style>

@@ -81,7 +81,7 @@
             <mew-input
               v-model="gasPrice"
               class="SendOfflineGasPriceInput"
-              label="Gas Price (in wei)"
+              label="Gas Price (in gwei)"
               :error-messages="gasPriceErrors"
               type="number"
             />
@@ -172,15 +172,22 @@
 
 <script>
 import clipboardCopy from 'clipboard-copy';
-import { toBN, isHexStrict, toWei, hexToNumberString } from 'web3-utils';
-import { mapGetters, mapState } from 'vuex';
+import {
+  toBN,
+  isHexStrict,
+  toWei,
+  hexToNumberString,
+  fromWei
+} from 'web3-utils';
+import { mapActions, mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import Web3 from 'web3';
 import { isValidAddress } from 'ethereumjs-util';
-import { isEmpty } from 'lodash';
+import { debounce, isEmpty } from 'lodash';
+import * as nodes from '@/utils/networks/nodes';
 
 import sanitizeHex from '@/core/helpers/sanitizeHex';
-import { Toast } from '../toast/handler/handlerToast';
+import { ERROR, SUCCESS, Toast } from '../toast/handler/handlerToast';
 import { toBNSafe } from '@/core/helpers/numberFormatHelper';
 export default {
   components: {
@@ -206,7 +213,9 @@ export default {
       signedTransaction: null,
       jsonFileName: '',
       jsonFile: null,
-      tokens: []
+      tokens: [],
+      nodes: nodes,
+      chainID: 1
     };
   },
   computed: {
@@ -275,7 +284,7 @@ export default {
       return '';
     },
     disableData() {
-      return this.selectedCurrency.symbol !== this.network.type.currencyName;
+      return this.selectedCurrency?.symbol !== this.network.type.currencyName;
     },
     validAddress() {
       return this.toAddress !== '' && isValidAddress(this.toAddress);
@@ -310,6 +319,10 @@ export default {
       if (this.canGenerate) {
         this.generateData();
       }
+    },
+    network() {
+      this.selectedCurrency = this.networkToken;
+      this.generateTokens();
     }
   },
   mounted() {
@@ -317,6 +330,8 @@ export default {
     this.generateTokens();
   },
   methods: {
+    ...mapActions('wallet', ['setWeb3Instance']),
+    ...mapActions('global', ['setNetwork']),
     generateTokens() {
       const networkToken = [this.networkToken];
       this.network.type.tokens.then(tokens => {
@@ -382,14 +397,17 @@ export default {
         try {
           const file = JSON.parse(result);
           if (file.nonce) {
+            const uploadedGasPrice = hexToNumberString(file.gasPrice);
             self.localNonce = hexToNumberString(file.nonce);
-            self.gasPrice = hexToNumberString(file.gasPrice);
+            self.gasPrice = fromWei(uploadedGasPrice, 'gwei');
+            self.chainID = hexToNumberString(file.chainID);
+            self.setNetworkDebounced(self.chainID);
             self.$refs.upload.value = '';
             return;
           }
-          Toast('Malformed File', '', 'error');
+          Toast('Malformed File', {}, 'error');
         } catch {
-          Toast('Incorrect File Type', '', 'error');
+          Toast('Incorrect File Type', {}, 'error');
         }
       };
       if (files[0]) reader.readAsBinaryString(files[0]);
@@ -401,7 +419,9 @@ export default {
       const raw = {
         nonce: sanitizeHex(toBNSafe(this.localNonce).toString(16)),
         gasLimit: sanitizeHex(toBNSafe(this.gasLimit).toString(16)),
-        gasPrice: sanitizeHex(toBNSafe(this.gasPrice).toString(16)),
+        gasPrice: sanitizeHex(
+          toWei(toBNSafe(this.gasPrice), 'gwei').toString(16)
+        ),
         to: isToken
           ? this.selectedCurrency.address
           : this.toAddress.toLowerCase().trim(),
@@ -419,7 +439,29 @@ export default {
       window.scrollTo(0, 0);
       this.clear();
       this.isSignedTxOpen = true;
-    }
+    },
+    /**
+     * Debounce network switch from user input
+     * @return {void}
+     */
+    setNetworkDebounced: debounce(function (value) {
+      const found = Object.values(this.nodes).filter(item => {
+        if (item.type.chainID == value) {
+          return item;
+        }
+      });
+      this.setNetwork({
+        network: found[0],
+        walletType: this.instance?.identifier || ''
+      })
+        .then(() => {
+          this.setWeb3Instance();
+          Toast(`Switched network to: ${found[0].type.name}`, {}, SUCCESS);
+        })
+        .catch(e => {
+          Toast(e, {}, ERROR);
+        });
+    }, 1000)
   }
 };
 </script>

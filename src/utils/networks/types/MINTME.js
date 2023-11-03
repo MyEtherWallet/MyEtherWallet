@@ -8,10 +8,10 @@ export default {
   blockExplorerTX: 'https://www.mintme.com/explorer/tx/[[txHash]]',
   blockExplorerAddr: 'https://www.mintme.com/explorer/addr/[[address]]',
   chainID: 24734,
-  tokens: import('@/_generated/tokens/tokens-etc.json').then(
+  tokens: import('@/_generated/tokens/tokens-mintme.json').then(
     val => val.default
   ),
-  contracts: import('@/_generated/contracts/contract-abi-etc.json').then(
+  contracts: import('@/_generated/contracts/contract-abi-mintme.json').then(
     val => val.default
   ),
   isTestNetwork: false,
@@ -23,5 +23,6 @@ export default {
     websocket: null
   },
   gasPriceMultiplier: 1,
-  coingeckoID: 'webchain'
+  coingeckoID: 'webchain',
+  balanceApi: ''
 };

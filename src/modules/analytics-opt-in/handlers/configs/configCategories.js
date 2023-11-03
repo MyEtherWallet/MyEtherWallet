@@ -1,5 +1,8 @@
 export default {
-  landingPage: 'landingPage',
+  landingPage: 'LP',
+  header: 'Header',
+  footer: 'Footer',
+  dashboard: 'Dasboard',
   connectionType: 'connectionType',
   createWallet: 'createWallet',
   accessWallet: 'accessWallet',
@@ -7,9 +10,13 @@ export default {
   networkSwitch: 'networkSwitch',
   gasSwitch: 'gasSwitch',
   swap: 'swapFlow',
+  swapAmplitude: 'Swap',
   dapp: 'dapp',
-  swapRates: 'swapRates',
+  swapTokenPair: 'swapTokenPair',
+  swapToken: 'swapToken',
   globalError: 'globalError',
   enkrypt: 'enkrypt',
-  mewwallet: 'mewwallet'
+  mewwallet: 'mewwallet',
+  buySell: 'buySell',
+  mewVersion: 'mewVersion'
 };

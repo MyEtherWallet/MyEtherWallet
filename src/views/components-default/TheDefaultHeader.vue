@@ -1,6 +1,6 @@
 <template>
   <div class="default-header expandHeader">
-    <v-container class="pl-4 pr-4 d-flex align-center pt-8">
+    <v-container class="pl-4 pb-7 pr-4 d-flex align-center pt-8">
       <v-row align="center" no-gutters>
         <v-col class="d-md-none" cols="2" md="4">
           <the-default-mobile-navigation class="ml-n2" />
@@ -12,13 +12,14 @@
             src="@/assets/images/icons/logo-mew.svg"
             max-height="36"
             max-width="130"
-            @click="$router.push({ name: ROUTES_HOME.HOME.NAME })"
+            @click="routeToHome"
           />
 
           <div class="d-none d-md-flex">
             <router-link
               class="white--text text-decoration--none menu-item"
               :to="{ name: ROUTES_HOME.HOW_IT_WORKS.NAME }"
+              @click.native="trackHowItWorks"
             >
               {{ $t('header.what-is-mew') }}
             </router-link>
@@ -30,12 +31,14 @@
                 @goToPage="routeTo"
               />
             </div>
-            <a
-              class="white--text text-decoration--none menu-item"
-              @click="openMoonpay"
-            >
-              {{ $t('header.buy-eth') }}
-            </a>
+            <div @click="trackBuySellLanding">
+              <a
+                class="white--text text-decoration--none menu-item"
+                @click="openBuySell"
+              >
+                {{ $t('header.buy-eth') }}
+              </a>
+            </div>
           </div>
         </v-col>
         <v-col cols="2" md="4" class="d-flex justify-end">
@@ -52,11 +55,12 @@ import TheDefaultMobileNavigation from './TheDefaultMobileNavigation';
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { mapGetters, mapActions } from 'vuex';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 export default {
   name: 'TheDefaultHeader',
   components: { mewTools, TheDefaultMobileNavigation },
-  mixins: [buyMore],
+  mixins: [buyMore, handlerAnalytics],
   data: () => ({
     menuObj: {
       name: 'Wallet actions',
@@ -94,10 +98,6 @@ export default {
               to: { name: ROUTES_HOME.TOOLS.NAME, query: { tool: 'convert' } }
             },
             {
-              title: 'Generate Keystore file',
-              to: { name: ROUTES_HOME.TOOLS.NAME, query: { tool: 'keystore' } }
-            },
-            {
               title: 'Send Offline Helper',
               to: { name: ROUTES_HOME.TOOLS.NAME, query: { tool: 'offline' } }
             }
@@ -111,6 +111,7 @@ export default {
     ...mapGetters('global', ['swapLink', 'network'])
   },
   mounted() {
+    if (!this.network) return;
     this.network.type.tokens.then(res => {
       const tokenMap = new Map();
       res.forEach(item => {
@@ -121,8 +122,19 @@ export default {
   },
   methods: {
     ...mapActions('external', ['setNetworkTokens']),
+    routeToHome() {
+      this.trackHeaderAmplitude('Logo');
+      this.$router.push({ name: ROUTES_HOME.HOME.NAME });
+    },
+    trackHowItWorks() {
+      this.trackHeaderAmplitude('WhatIsMEW');
+    },
     routeTo(route) {
+      this.trackHeaderAmplitude(`WalletActions`, route);
       this.$router.push(route);
+    },
+    trackBuySellLanding() {
+      this.trackHeaderAmplitude('BuyETH');
     }
   }
 };

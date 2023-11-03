@@ -17,7 +17,7 @@
           <!-- ======================================================================================= -->
           <div ref="input" class="d-flex align-center text-center">
             <div
-              class="border-radius--8px backgroundGrey flex-grow-1 pa-5 d-flex flex-column align-center"
+              class="border-radius--8px bgWalletBlockDark flex-grow-1 pa-5 d-flex flex-column align-center"
               style="width: 30%"
             >
               <div
@@ -34,7 +34,7 @@
               <v-icon color="greenPrimary">mdi-arrow-right</v-icon>
             </div>
             <div
-              class="border-radius--8px backgroundGrey flex-grow-1 pa-5 d-flex flex-column align-center"
+              class="border-radius--8px bgWalletBlockDark flex-grow-1 pa-5 d-flex flex-column align-center"
               style="width: 30%"
             >
               <div
@@ -70,7 +70,7 @@
               :value="stakeAmount"
               :error-messages="errorMessages"
               :buy-more-str="buyMoreStr"
-              @buyMore="openMoonpay"
+              @buyMore="openBuySell"
               @input="setAmount"
             />
           </div>
@@ -184,6 +184,7 @@
           @redeem-to-eth="redeemToEth"
         />
         <stakewise-rewards
+          v-if="isEthNetwork"
           compound-rewards
           :tx-fee="txFee"
           @set-max="setMax"
@@ -407,8 +408,9 @@ export default {
     address() {
       this.setup();
     },
-    isEthNetwork() {
+    web3() {
       this.setup();
+      this.setGasPrice();
     }
   },
   mounted() {
@@ -419,16 +421,24 @@ export default {
   methods: {
     ...mapActions('stakewise', ['addToPendingTxs', 'addToPendingTxsGoerli']),
     ...mapActions('notifications', ['addNotification']),
+    ...mapActions('global', ['updateGasPrice']),
     setAmount: debounce(function (val) {
       const value = val ? val : 0;
       this.stakeAmount = BigNumber(value).toFixed();
     }, 500),
     setup() {
+      this.stakeAmount = '0';
+      this.stakeHandler = {};
       this.stakeHandler = new stakeHandler(
         this.web3,
         this.isEthNetwork,
         this.address
       );
+    },
+    setGasPrice() {
+      this.updateGasPrice().then(() => {
+        this.locGasPrice = this.gasPriceByType(this.gasPriceType);
+      });
     },
     setGasLimit() {
       this.estimateGasError = false;
@@ -466,7 +476,7 @@ export default {
             // reset stakewise
             this.setAmount(0);
             this.stakeAmount = '0';
-            this.locGasPrice = '0';
+            this.locGasPrice = this.gasPriceByType(this.gasPriceType);
             this.gasLimit = '21000';
             this.agreeToTerms = false;
             this.estimateGasError = false;
@@ -567,7 +577,7 @@ export default {
           .then(() => {
             this.setAmount(0);
             this.compoundAmount = '0';
-            this.locGasPrice = '0';
+            this.locGasPrice = this.gasPriceByType(this.gasPriceType);
             this.gasLimit = '21000';
             this.agreeToTerms = false;
           })
@@ -650,11 +660,11 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--v-greyLight-base) !important;
+  border: 1px solid var(--v-borderInput-base) !important;
   border-radius: 50% !important;
   width: 52px;
   height: 52px;
-  background-color: var(--v-whiteBackground-base);
+  background-color: var(--v-alwaysWhite-base);
 
   img {
     height: 30px;

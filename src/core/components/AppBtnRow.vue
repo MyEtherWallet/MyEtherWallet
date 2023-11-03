@@ -72,7 +72,7 @@ export default {
     },
     nextDisable: {
       type: Boolean,
-      defualt: false
+      default: false
     }
   }
 };

@@ -26,5 +26,6 @@ export default {
   },
   gasPriceMultiplier: 1,
   canBuy: false,
-  coingeckID: 'moonbeam'
+  coingeckoID: 'moonbeam',
+  balanceApi: 'https://partners.mewapi.io/balances/moonbeam/'
 };

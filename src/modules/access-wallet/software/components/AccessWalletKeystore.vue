@@ -62,6 +62,7 @@
           <v-row class="align-stretch">
             <v-col cols="12">
               <mew-input
+                ref="passwordInput"
                 v-model="password"
                 label="Enter Password"
                 placeholder="Enter my keystore password"
@@ -144,8 +145,8 @@ export default {
         try {
           this.file = JSON.parse(evt.target.result);
           this.step = 2;
-        } catch (e) {
-          Toast(e.message, {}, ERROR);
+        } catch (err) {
+          Toast(err.message, {}, ERROR);
         }
       };
       reader.readAsBinaryString(e.target.files[0]);
@@ -184,6 +185,8 @@ export default {
      */
     backStepOne() {
       this.step = 1;
+      this.password = '';
+      this.$refs.passwordInput.clear();
     }
   }
 };

@@ -6,16 +6,7 @@ const exportObj = {
   configureWebpack: config.webpackConfig,
   lintOnSave: process.env.NODE_ENV === 'production' ? 'error' : true,
   integrity: process.env.WEBPACK_INTEGRITY === 'false' ? false : true,
-  productionSourceMap: true,
-  chainWebpack: config => {
-    // GraphQL Loader
-    config.module
-      .rule('graphql')
-      .test(/\.graphql$/)
-      .use('graphql-tag/loader')
-      .loader('graphql-tag/loader')
-      .end();
-  }
+  chainWebpack: config.transpilers
 };
 
 module.exports = exportObj;

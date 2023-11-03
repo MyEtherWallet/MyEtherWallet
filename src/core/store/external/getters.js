@@ -96,10 +96,11 @@ const contractToToken =
     }
     contractAddress = contractAddress.toLowerCase();
     let tokenId = platformList[contractAddress];
+    let cgToken;
     if (contractAddress === MAIN_TOKEN_ADDRESS) {
       tokenId = rootGetters['global/network'].type.coingeckoID;
-      const networkType = rootGetters['global/network'].type;
       cgToken = getters.getCoinGeckoTokenById(tokenId);
+      const networkType = rootGetters['global/network'].type;
       return Object.assign(cgToken, {
         name: networkType.currencyName,
         symbol: networkType.currencyName,
@@ -110,20 +111,30 @@ const contractToToken =
         decimals: 18
       });
     }
-    let cgToken;
     cgToken = getters.getCoinGeckoTokenById(tokenId);
     const networkToken = state.networkTokens.get(contractAddress);
+    const name = networkToken ? networkToken.name : cgToken.name;
+    const symbol = networkToken ? networkToken.symbol : cgToken.symbol;
+    const img = cgToken.img
+      ? cgToken.img
+      : networkToken
+      ? networkToken.icon
+      : '';
+    const address = networkToken ? networkToken.address : contractAddress;
+    const networkTokenObj = {
+      name: name,
+      symbol: symbol,
+      subtext: name,
+      value: name,
+      contract: address,
+      img: img
+    };
 
-    if (!networkToken) return null;
-    return Object.assign(cgToken, {
-      name: networkToken.name,
-      symbol: networkToken.symbol,
-      subtext: networkToken.name,
-      value: networkToken.name,
-      contract: networkToken.address,
-      img: networkToken.icon_png ? networkToken.icon_png : '',
-      decimals: networkToken.decimals
-    });
+    if (networkToken && networkToken.decimals) {
+      networkTokenObj['decimals'] = networkToken.decimals;
+    }
+
+    return Object.assign(cgToken, networkTokenObj);
   };
 
 export default {

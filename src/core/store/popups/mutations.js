@@ -10,11 +10,6 @@ const INIT_STORE = function (state) {
   }
 };
 const SET_TRACKING_CONSENT = function (state, val) {
-  if (this._vm.$matomo) {
-    this._vm.$matomo.setConsentGiven();
-    this._vm.$matomo.trackEvent('consent', val ? 'true' : 'false');
-    if (!val) this._vm.$matomo.forgetConsentGiven();
-  }
   state.consentToTrack = val;
 };
 
@@ -50,6 +45,21 @@ const CLOSE_WALLET_ENKRYPT_SNACKBAR = function (state) {
   state.enkryptWalletSnackbarClosed = new Date().getTime();
 };
 
+const SHOW_SURVEY_POPUP = function (state) {
+  state.surveyPopup = true;
+};
+
+const NEVER_SHOW_SURVEY_POPUP = function (state) {
+  state.surveyPopup = false;
+  state.neverShowSurveyPopup = true;
+  state.surveyPopupClosed = new Date().getTime();
+};
+
+const NEVER_SHOW_SURVEY_BANNER = function (state) {
+  state.neverShowSurveyBanner = true;
+  state.surveyBannerClosed = new Date().getTime();
+};
+
 export default {
   INIT_STORE,
   SET_TRACKING_CONSENT,
@@ -59,5 +69,8 @@ export default {
   NEVER_SHOW_LANDING_ENKRYPT_POPUP,
   NEVER_SHOW_WALLET_ENKRYPT_POPUP,
   SHOW_WALLET_ENKRYPT_SNACKBAR,
-  CLOSE_WALLET_ENKRYPT_SNACKBAR
+  CLOSE_WALLET_ENKRYPT_SNACKBAR,
+  SHOW_SURVEY_POPUP,
+  NEVER_SHOW_SURVEY_POPUP,
+  NEVER_SHOW_SURVEY_BANNER
 };

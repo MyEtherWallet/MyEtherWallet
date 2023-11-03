@@ -70,7 +70,6 @@ export default {
   },
   created() {
     EventBus.$on(ISSUE_MODAL, (errors, callback) => {
-      this.trackNetworkSwitch(errors);
       this.errors = errors;
       this.callback = callback;
       this.openError = true;
@@ -80,6 +79,10 @@ export default {
       this.deviceInfo = deviceInfo;
       this.openHardwarePassword = true;
     });
+  },
+  beforeDestroy() {
+    EventBus.$off(ISSUE_MODAL);
+    EventBus.$off(OPEN_HARDWARE_PASSWORD);
   },
   methods: {
     reset() {

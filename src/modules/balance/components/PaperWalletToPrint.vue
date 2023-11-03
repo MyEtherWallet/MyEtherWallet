@@ -1,30 +1,34 @@
 <template>
   <div class="mew-component--paper-wallet-content" style="width: 800px">
     <div class="d-flex justify-space-between align-start">
-      <div class="d-flex align-center">
-        <img height="35" src="@/assets/images/icons/logo-mew-dark.png" />
-        <div class="greenPrimary--text">
-          <span class="mx-3">|</span>Paper Wallet
+      <v-col cols="7">
+        <div class="d-flex align-center">
+          <img height="35" src="@/assets/images/icons/logo-mew-dark.png" />
+          <div class="greenPrimary--text">
+            <span class="mx-3">|</span>Paper Wallet
+          </div>
         </div>
-      </div>
-      <div>
-        <div class="d-flex align-center mr-3 mb-2">
-          <img
-            class="mr-2"
-            height="20"
-            src="@/assets/images/icons/icon-support.svg"
-          />
-          <div>support@myetherwallet.com</div>
-        </div>
-        <div class="d-flex align-center mr-3">
-          <img
-            class="mr-2"
-            height="20"
-            src="@/assets/images/icons/icon-support.svg"
-          />
-          <div>https://www.myetherwallet.com</div>
-        </div>
-      </div>
+      </v-col>
+      <v-col cols="5">
+        <div>
+          <div class="d-flex align-center mr-3 mb-2">
+            <img
+              class="mr-2"
+              height="20"
+              src="@/assets/images/icons/icon-support.svg"
+            />
+            <div>support@myetherwallet.com</div>
+          </div>
+          <div class="d-flex align-center mr-3">
+            <img
+              class="mr-2"
+              height="20"
+              src="@/assets/images/icons/icon-support.svg"
+            />
+            <div>https://www.myetherwallet.com</div>
+          </div>
+        </div></v-col
+      >
     </div>
     <div class="mt-12 d-flex align-center">
       <mew-blockie
@@ -36,10 +40,12 @@
       />
 
       <div style="max-width: 400px">
-        <div class="mew-heading-1 font-weight-black text-uppercase mb-2">
+        <div
+          class="mew-heading-1 font-weight-black text-uppercase textAlwaysDark--text mb-2"
+        >
           My address icon
         </div>
-        <div>
+        <div class="textAlwaysDark--text">
           Always look for the icon when sending to this wallet. And please keep
           your paper wallet at a
           <span class="text-uppercase redPrimary--text font-weight-medium">
@@ -53,21 +59,25 @@
 
     <v-container>
       <v-row class="align-center">
-        <v-col cols="8">
-          <div class="mew-heading-1 font-weight-black text-uppercase">
+        <v-col cols="9">
+          <div
+            class="mew-heading-1 font-weight-black textAlwaysDark--text text-uppercase"
+          >
             My wallet address
           </div>
-          <div class="mew-heading-3 mew-address font-weight-bold mt-4">
+          <div
+            class="mew-heading-3 textAlwaysDark--text mew-address font-weight-bold mt-4"
+          >
             {{ getChecksumAddressString }}
           </div>
         </v-col>
-        <v-col cols="auto" class="ml-auto">
+        <v-col cols="3" class="ml-auto">
           <qr-code :data="address" :height="140" :width="140" />
         </v-col>
       </v-row>
 
       <v-row v-if="showPrivateKey">
-        <v-col cols="12" md="8" class="mr-auto">
+        <v-col cols="8" md="6" class="mr-auto">
           <div
             class="mew-heading-1 font-weight-black text-uppercase redPrimary--text"
           >
@@ -79,12 +89,12 @@
             KEEP YOUR PRIVATE KEY IN SAFE PLACE!
           </div>
           <div
-            class="mew-heading-3 mew-address font-weight-bold word-break--break-all mt-4"
+            class="mew-heading-3 mew-address textAlwaysDark--text font-weight-bold word-break--break-all mt-4"
           >
             {{ key }}
           </div>
         </v-col>
-        <v-col cols="auto">
+        <v-col cols="3" class="ml-auto">
           <qr-code :data="key" :height="140" :width="140" :type-number="10" />
         </v-col>
       </v-row>

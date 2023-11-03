@@ -8,24 +8,22 @@
     <v-container class="px-3 my-12">
       <mew-tabs
         :is-vertical="$vuetify.breakpoint.smAndDown ? false : true"
+        :compact="$vuetify.breakpoint.smAndDown"
         :items="items"
         :active-tab="activeTab"
         show-arrows
         @onTab="tabChanged"
       >
         <template #tabItemContent1>
-          <module-message-verify />
+          <module-message-verify ref="verifyMessageModule" />
         </template>
         <template #tabItemContent2>
           <module-tools-convert />
         </template>
         <template #tabItemContent3>
-          <module-tools-generate-keystore />
+          <module-tools-offline-helper :is-home-page="true" />
         </template>
         <template #tabItemContent4>
-          <module-tools-offline-helper :ishomepage="true" />
-        </template>
-        <template #tabItemContent5>
           <module-tools-watch-only />
         </template>
       </mew-tabs>
@@ -44,10 +42,6 @@ export default {
     AppGetStarted: () => import('@/core/components/AppGetStarted'),
     ModuleToolsWatchOnly: () => import('@/modules/tools/ModuleToolsWatchOnly'),
     ModuleToolsConvert: () => import('@/modules/tools/ModuleToolsConvert'),
-    ModuleToolsGenerateKeystore: () =>
-      import(
-        '@/modules/tools/ModuleToolsGenerateKeystore/ModuleToolsGenerateKeystore'
-      ),
     ModuleToolsOfflineHelper: () =>
       import('@/modules/tools/ModuleToolsOfflineHelper'),
     ModuleMessageVerify: () => import('@/modules/message/ModuleMessageVerify')
@@ -65,19 +59,9 @@ export default {
         val: 'convert'
       },
       {
-        name: 'Generate Keystore file',
-        val: 'keystore'
-      },
-      {
         name: 'Send Offline Helper',
         val: 'offline'
       }
-      /*
-      {
-        name: 'Watch only address',
-        val: 'watch'
-      }
-      */
     ]
   }),
   watch: {
@@ -85,6 +69,7 @@ export default {
       this.setCurrentTool();
     },
     currentTool(val) {
+      this.$refs.verifyMessageModule?.clearAll();
       this.$router.push({ name: ROUTES_HOME.TOOLS.NAME, query: { tool: val } });
     }
   },

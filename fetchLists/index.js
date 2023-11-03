@@ -33,15 +33,15 @@ const getFormattedList = async (url, network) => {
 
 const fetchOneInchLists = async () => {
   const ethTokens = await getFormattedList(
-    'https://api.1inch.exchange/v3.0/1/tokens',
+    'https://partners.mewapi.io/oneinch/v5.2/1/tokens',
     'eth'
   );
   const bscTokens = await getFormattedList(
-    'https://api.1inch.exchange/v3.0/56/tokens',
+    'https://partners.mewapi.io/oneinch/v5.2/56/tokens',
     'bsc'
   );
   const maticTokens = await getFormattedList(
-    'https://api.1inch.exchange/v3.0/137/tokens',
+    'https://partners.mewapi.io/oneinch/v5.2/137/tokens',
     'matic'
   );
   return {
@@ -193,7 +193,7 @@ const fetchPlatformCoinList = async () => {
       l.forEach(t => {
         const vals = Object.values(t.platforms);
         vals.forEach(val => {
-          if (val) idmap[val] = t.id;
+          if (val && !idmap[val]) idmap[val] = t.id;
         });
       });
       return idmap;

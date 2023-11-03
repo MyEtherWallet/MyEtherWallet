@@ -14,8 +14,13 @@
         :value="message"
       ></v-textarea>
 
-      <div v-if="signResult" class="walletBg pa-3 VerifyMessage">
-        {{ signer }}
+      <div
+        v-if="signResult"
+        class="walletBg pa-3 VerifyMessage d-flex flex-wrap"
+      >
+        <span class="signer mr-1">
+          {{ signer }}
+        </span>
         <span v-if="didSign" class="font-weight-medium">
           did sign the message
         </span>
@@ -28,10 +33,12 @@
         {{ $t('signMessage.failed') }}
       </div>
 
-      <div class="text-right">
+      <div
+        :class="['text-right', signResult || verificationError ? 'pt-3' : '']"
+      >
         <mew-button
           btn-style="light"
-          title="Clear All"
+          title="Clear all"
           class="mr-4"
           @click.native="clearAll"
         />
@@ -107,4 +114,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.signer {
+  overflow-wrap: anywhere;
+}
+</style>

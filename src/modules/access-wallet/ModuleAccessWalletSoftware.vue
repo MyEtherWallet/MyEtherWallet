@@ -5,11 +5,7 @@
   =====================================================================================
   -->
   <mew-overlay
-    :footer="{
-      text: 'Need help?',
-      linkTitle: 'Contact support',
-      link: 'mailto:support@myetherwallet.com'
-    }"
+    :footer="footer"
     content-size="large"
     :show-overlay="open"
     :title="title"
@@ -24,7 +20,7 @@
     <div
       v-if="walletType === types.OVERVIEW"
       style="max-width: 650px; width: 100%"
-      class="mx-auto"
+      class="mx-auto pt-5"
     >
       <div v-for="(btn, key) in buttons" :key="key" class="mb-5">
         <mew-button
@@ -176,7 +172,12 @@ export default {
           }
         }
       ],
-      accessHandler: {}
+      accessHandler: {},
+      footer: {
+        text: 'Need help?',
+        linkTitle: 'Contact support',
+        link: 'mailto:support@myetherwallet.com'
+      }
     };
   },
 
@@ -219,7 +220,15 @@ export default {
    */
   mounted() {
     this.accessHandler = new handlerAccessWalletSoftware();
-    this.warningSheetObj.url = this.getArticle('using-mew-offline');
+    if (this.isOfflineApp) {
+      this.footer = {
+        text: 'Need help? Email us at support@myetherwallet.com',
+        linkTitle: '',
+        link: ''
+      };
+      this.warningSheetObj = {};
+    } else
+      this.warningSheetObj.url = this.getArticle('not-rec-when-access-wallet');
   },
   destroyed() {
     this.accessHandler = {};
@@ -240,18 +249,26 @@ export default {
         const wallet = !account
           ? this.accessHandler.getWalletInstance()
           : account;
+        const _this = this;
         this.setWallet([wallet])
           .then(() => {
             if (this.switchAddress) {
               this.close();
               return;
             }
-            if (this.path !== '') {
-              this.$router.push({ path: this.path });
+            _this.trackAccessWalletAmplitude(
+              `click_access_${_this.type
+                .replace('-', '_')
+                .toLowerCase()}_success`
+            );
+            if (_this.path !== '') {
+              _this.$router.push({ path: _this.path });
             } else {
-              this.$router.push({ name: ROUTES_WALLET.WALLETS.NAME });
+              const name = _this.isOfflineApp
+                ? ROUTES_WALLET.WALLETS.NAME
+                : ROUTES_WALLET.DASHBOARD.NAME;
+              _this.$router.push({ name: name });
             }
-            this.trackAccessWallet(this.type);
           })
           .catch(e => {
             Toast(e, {}, ERROR);
@@ -269,6 +286,7 @@ export default {
     accessBack() {
       if (this.walletType !== SOFTWARE_WALLET_TYPES.OVERVIEW) {
         try {
+          this.trackAccessWalletAmplitude('click_access_back');
           this.$router.push({
             query: { type: SOFTWARE_WALLET_TYPES.OVERVIEW }
           });
@@ -287,6 +305,9 @@ export default {
       if (Object.values(SOFTWARE_WALLET_TYPES).includes(newType)) {
         try {
           this.type = newType;
+          this.trackAccessWalletAmplitude(
+            `click_access_${newType.replace('-', '_').toLowerCase()}`
+          );
           this.$router.push({
             query: { type: newType }
           });

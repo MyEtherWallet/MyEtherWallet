@@ -38,6 +38,7 @@
           :href="item.link"
           target="_blank"
           class="d-flex align-center my-9"
+          @click="trackToolLink(item)"
         >
           <img :src="item.img" alt="" height="42" class="mr-5" />
           <div>
@@ -64,10 +65,9 @@
 </template>
 
 <script>
-import MewMenuPopup from '@/components/mew-menu-popup/MewMenuPopup';
-
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 export default {
-  components: { MewMenuPopup },
+  mixins: [handlerAnalytics],
   data() {
     return {
       sections: [
@@ -111,7 +111,7 @@ export default {
             {
               label: 'EthVM',
               description: 'Blockchain explorer',
-              img: require('@/assets/images/icons/icon-ethvm.svg'),
+              img: require('@/assets/images/icons/icon-ethvm-dark.svg'),
               link: 'https://www.ethvm.com/'
             },
             {
@@ -134,6 +134,12 @@ export default {
   computed: {
     isMobile() {
       return this.$vuetify.breakpoint.smAndDown;
+    }
+  },
+  methods: {
+    trackToolLink(val) {
+      const parsedLabel = val.label.replace(' ', '_').toLowerCase();
+      this.trackHeaderAmplitude('MEWProducts', { name: parsedLabel });
     }
   }
 };

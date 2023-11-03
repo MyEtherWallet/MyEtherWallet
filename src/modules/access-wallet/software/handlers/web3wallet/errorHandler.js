@@ -2,7 +2,6 @@ import WalletErrorHandler from '@/modules/access-wallet/common/WalletErrorHandle
 const ERRORS = {
   REJECT_TX:
     'Returned error: Error: MetaMask Tx Signature: User denied transaction signature.',
-  'User rejected action!': 'User rejected action!',
   "Can't sign messages from a burner account!":
     "Can't sign messages from a burner account!",
   'MetaMask Tx Signature: User denied transaction signature.':
@@ -15,7 +14,9 @@ const ERRORS = {
   'execution reverted':
     'Something went wrong with the transaction: execution reverted',
   'MetaMask Message Signature: User denied message signature.':
-    'MetaMask Message Signature: User denied message signature.'
+    'MetaMask Message Signature: User denied message signature.',
+  'MetaMask Personal Message Signature: User denied message signature.':
+    'MetaMask Personal Message Signature: User denied message signature.'
 };
 const WARNINGS = {};
 

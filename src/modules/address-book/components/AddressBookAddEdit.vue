@@ -79,24 +79,26 @@
     Address Book - remove address
   =====================================================================================
   -->
-    <div v-if="editMode" class="mt-6 text-center">
-      <div
-        class="redPrimary--text cursor-pointer d-inline-block"
-        @click="remove"
-      >
-        {{ $t('interface.address-book.remove-addr') }}
-      </div>
+    <div v-if="editMode" class="mt-4 text-center">
+      <mew-button
+        :title="$t('interface.address-book.remove-addr')"
+        :has-full-width="false"
+        btn-size="small"
+        btn-style="transparent"
+        @click.native="remove"
+      />
     </div>
   </div>
 </template>
 
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex';
+import { isEmpty, throttle } from 'lodash';
+import { getAddressInfo } from '@kleros/address-tags-sdk';
+
 import NameResolver from '@/modules/name-resolver/index';
 import { toChecksumAddress, isAddress } from '@/core/helpers/addressUtils';
 import { isValidCoinAddress } from '../handlers/handlerMulticoins.js';
-import { isEmpty, throttle } from 'lodash';
-import { getAddressInfo } from '@kleros/address-tags-sdk';
 
 const modes = ['add', 'edit'];
 

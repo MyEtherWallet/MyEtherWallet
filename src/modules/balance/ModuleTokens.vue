@@ -12,9 +12,11 @@
     />
     <mew-module
       v-if="hasTokens && !dense"
+      has-elevation
       subtitle="My Tokens Value"
       :has-body-padding="false"
       :title="totalTokensValue"
+      class="bgWalletBlock"
     >
       <template #rightHeaderContainer>
         <div>
@@ -26,14 +28,14 @@
           >
             <template #activator="{ on, attrs }">
               <v-btn
-                class="ma-2"
+                class="mr-n6"
                 v-bind="attrs"
                 rounded
                 color="basic"
                 icon
                 v-on="on"
               >
-                <v-icon medium color="basic">mdi-dots-vertical</v-icon>
+                <v-icon medium color="textDark">mdi-dots-vertical</v-icon>
               </v-btn>
             </template>
             <v-list>
@@ -52,13 +54,7 @@
         </div>
       </template>
       <template #moduleBody>
-        <div class="my-8">
-          <mew-table
-            :has-color="false"
-            :table-headers="tableHeaders"
-            :table-data="tokensData"
-          />
-        </div>
+        <balance-table class="mb-4" :table-data="tokensData" />
       </template>
     </mew-module>
     <mew-table
@@ -72,7 +68,12 @@
       display if the user has no tokens
     =====================================================================================
     -->
-    <balance-empty-block v-if="emptyWallet" is-tokens :is-eth="isEthNetwork" />
+    <balance-empty-block
+      v-if="emptyWallet"
+      is-tokens
+      :is-eth="isEthNetwork"
+      @openAddCustomToken="() => toggleAddCustomToken(true)"
+    />
     <!--
     =====================================================================================
       add Custom Token form
@@ -108,13 +109,16 @@
 <script>
 import { mapGetters, mapState } from 'vuex';
 import { uniqWith, isEqual } from 'lodash';
+import BigNumber from 'bignumber.js';
 
+import BalanceTable from './components/BalanceTable';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { currencyToNumber } from '@/core/helpers/localization';
-
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+
 export default {
   components: {
+    BalanceTable,
     BalanceEmptyBlock: () => import('./components/BalanceEmptyBlock'),
     TokenAddCustom: () => import('./components/TokenAddCustom'),
     TokenEditCustom: () => import('./components/TokenEditCustom'),
@@ -143,7 +147,7 @@ export default {
           text: 'Price',
           value: 'price',
           sortable: false,
-          width: '20%'
+          width: '15%'
         },
         {
           text: 'Market Cap',
@@ -152,10 +156,22 @@ export default {
           width: '20%'
         },
         {
+          text: '24H',
+          value: 'change',
+          sortable: false,
+          width: '20%'
+        },
+        {
+          text: 'Balance',
+          value: 'balance',
+          sortable: false,
+          width: '20%'
+        },
+        {
           text: '',
           value: 'callToAction',
           sortable: false,
-          width: '15%'
+          width: '10%'
         }
       ],
       items: [
@@ -227,9 +243,14 @@ export default {
         }),
         isEqual
       );
-      const tokenList = uniqueTokens.map(item => {
-        return this.formatValues(item);
-      });
+      const tokenList = uniqueTokens
+        .filter(item => {
+          if (item && item.balance && BigNumber(item.balance).gt(0))
+            return item;
+        })
+        .map(item => {
+          return this.formatValues(item);
+        });
       tokenList.sort((a, b) => b.usdBalance - a.usdBalance);
       return customTokens.concat(tokenList);
     },
@@ -280,7 +301,7 @@ export default {
                 fromToken: item.contract,
                 amount: item.balancef
               };
-              this.trackSwap('fromDashboardTokensTable');
+              this.trackDashboardAmplitude('SwapMyTokensValue');
               this.$router
                 .push({
                   name: ROUTES_WALLET.SWAP.NAME,
@@ -297,8 +318,8 @@ export default {
       }
       return newObj;
     },
-    toggleAddCustomToken() {
-      this.openAddCustomToken = !this.openAddCustomToken;
+    toggleAddCustomToken(val) {
+      this.openAddCustomToken = val ? val : !this.openAddCustomToken;
     },
     toggleRemoveCustomToken() {
       this.openRemoveCustomToken = !this.openRemoveCustomToken;
@@ -320,6 +341,8 @@ export default {
     text-overflow: ellipsis;
     overflow: hidden;
   }
+
+  overflow: hidden;
 }
 .module-tokens-edit-menu {
   border: none !important;

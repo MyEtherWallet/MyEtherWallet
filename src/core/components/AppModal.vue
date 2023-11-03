@@ -8,7 +8,7 @@
     :persistent="isPersistent"
     @click:outside="handleClickOutside"
   >
-    <v-card v-if="scrollable" color="white" class="py-0 px-0 px-md-0">
+    <v-card v-if="scrollable" color="bgWalletBlock" class="py-0 px-0 px-md-0">
       <!--
       =====================================================================================
         Dialog Header
@@ -27,7 +27,11 @@
               : 'header-close-icon-mobile'
           "
         >
-          <v-icon size="x-large" color="grey cursor--pointer" @click="close">
+          <v-icon
+            size="x-large"
+            color="grey cursor--pointer"
+            @click="() => close('XOut')"
+          >
             mdi-close
           </v-icon>
         </v-btn>
@@ -109,7 +113,7 @@
         </v-row>
       </v-card-actions>
     </v-card>
-    <v-sheet v-else class="py-6 px-5 px-8 position--relative">
+    <v-sheet v-else class="py-6 px-5 px-8 position--relative bgWalletBlock">
       <v-btn v-if="hasCloseButton" icon class="header-close-icon">
         <v-icon size="x-large" color="grey cursor--pointer" @click="close">
           mdi-close
@@ -156,7 +160,7 @@
             btn-size="xlarge"
             title="Cancel"
             :has-full-width="$vuetify.breakpoint.xs"
-            @click.native="close"
+            @click.native="() => close('SwapCancel')"
           />
         </v-col>
         <v-col
@@ -180,7 +184,7 @@
             btn-size="xlarge"
             title="Close"
             :has-full-width="true"
-            @click.native="close"
+            @click.native="() => close('SwapCancel')"
           />
         </v-col>
       </v-row>
@@ -265,8 +269,7 @@ export default {
   },
   methods: {
     handleClickOutside() {
-      //this.$emit('close');
-      this.close();
+      this.close('ClickOutside');
     }
   }
 };

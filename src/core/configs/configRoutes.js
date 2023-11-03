@@ -3,6 +3,7 @@ const ROUTES_HOME = {
   //A-Z
   ACCESS_WALLET: { NAME: 'AccessWallet', PATH: 'wallet/access/:overlay?' },
   ABOUT_PAGE: { NAME: 'AboutPage', PATH: 'about' },
+  ADVERTISE: { NAME: 'AdvertiseWithUsPage', PATH: 'advertise-with-us' },
   BUY_HARDWARE_WALLET: { NAME: 'BuyHardwareWallet', PATH: 'buy-hardware' },
   CREATE_WALLET: { NAME: 'CreateWallet', PATH: 'wallet/create/:overlay?' },
   CONVERT_UNITS: { NAME: 'ConvertUnits', PATH: 'convert-units' },
@@ -16,10 +17,7 @@ const ROUTES_HOME = {
   SECURITY_POLICY: { NAME: 'SecurityPolicy', PATH: 'security-policy' },
   TEAM_PAGE: { NAME: 'TeamPage', PATH: 'team' },
   TERMS_OF_SERVICE: { NAME: 'TermsOfService', PATH: 'terms-of-service' },
-  TOOLS: { NAME: 'Tools', PATH: 'tools' },
-  TOOLS_KEYSTORE: { NAME: 'ToolsKeystore', PATH: 'tools-keystore' },
-  TOOLS_KEYSTORE_1: { NAME: 'ToolsKeystore1', PATH: 'tools-keystore-1' },
-  TOOLS_KEYSTORE_2: { NAME: 'ToolsKeystore2', PATH: 'tools-keystore-2' }
+  TOOLS: { NAME: 'Tools', PATH: 'tools' }
 };
 const ROUTES_WALLET = {
   WALLETS: { NAME: 'Wallets', PATH: '' },
@@ -33,9 +31,9 @@ const ROUTES_WALLET = {
   ENS_2: { NAME: 'ENS2', PATH: 'ens-2' },
   ENS_3: { NAME: 'ENS3', PATH: 'ens-3' },
   INTERACT_WITH_CONTRACT: { NAME: 'InteractWithContract', PATH: 'interact' },
-  NETWORK: { NAME: 'Network', PATH: 'network' },
   NFT_MANAGER: { NAME: 'NFTManager', PATH: 'nft' },
   NFT_MANAGER_SEND: { NAME: 'NftManagerSend', PATH: 'send-your-nft' },
+  PRINT: { NAME: 'PrintPaperWallet', PATH: 'print-wallet' },
   SEND_TX: { NAME: 'SendTX', PATH: 'send-tx' },
   SEND_TX_OFFLINE: { NAME: 'SendTXOffline', PATH: 'send-tx-offline' },
   SETTINGS: { NAME: 'Settings', PATH: 'settings' },
@@ -48,6 +46,7 @@ const ROUTES_WALLET = {
   STAKED_4: { NAME: 'Staked4', PATH: 'staked-4' },
   STAKEWISE: { NAME: 'Stakewise', PATH: 'stakewise' },
   SWAP: { NAME: 'Swap', PATH: 'swap' },
+  BRIDGE: { NAME: 'Bridge', PATH: 'bridge' },
   UNSTOPPABLE: { NAME: 'Unstoppable', PATH: 'unstoppable' },
   VERIFY_MESSAGE: { NAME: 'VerifyMessage', PATH: 'verify' }
 };

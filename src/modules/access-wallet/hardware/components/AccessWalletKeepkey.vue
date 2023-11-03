@@ -123,6 +123,9 @@ export default {
       this.pinEnabled = true;
     });
   },
+  beforeDestroy() {
+    EventBus.$off('enablePin');
+  },
   methods: {
     /**
      * emits setPath back to parent in order to unlock wallet correctly

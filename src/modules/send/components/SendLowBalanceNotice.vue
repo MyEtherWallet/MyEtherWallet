@@ -41,7 +41,7 @@
               v-if="isEthNetwork"
               class="mew-body font-weight-medium"
               rel="noopener noreferrer"
-              @click="openMoonpay"
+              @click="openBuySell"
             >
               Buy {{ currencyName }}
             </a>

@@ -1,16 +1,14 @@
 <template>
   <mew-module
-    class="d-flex flex-grow-1 pt-6"
+    class="d-flex flex-grow-1 pt-6 bgWalletBlock module-send"
     title="Send"
     :has-elevation="true"
     :has-indicator="true"
   >
     <template #moduleBody>
-      <!--
-      =====================================================================================
-        Tokens / Amount to Swap / Token Balance
-      =====================================================================================
-      -->
+      <!-- ===================================================================================== -->
+      <!-- Tokens / Amount to Swap / Token Balance -->
+      <!-- ===================================================================================== -->
       <v-row class="mt-5">
         <v-col cols="12" sm="6" class="pr-sm-1 pt-0 pb-0 pb-sm-4">
           <div class="position--relative">
@@ -21,6 +19,7 @@
             />
             <mew-select
               ref="mewSelect"
+              style="height: 62px"
               label="Token"
               :items="tokens"
               :is-custom="true"
@@ -38,9 +37,9 @@
             />
             <mew-input
               label="Amount"
-              placeholder="0"
               :value="amount"
               type="number"
+              placeholder="0"
               :persistent-hint="true"
               :error-messages="amountErrorMessage"
               :max-btn-obj="{
@@ -49,16 +48,17 @@
                 method: setEntireBal
               }"
               :buy-more-str="buyMoreStr"
-              @buyMore="openMoonpay"
+              class="AmountInput"
+              @keydown.native="preventCharE($event)"
+              @buyMore="openBuySell"
               @input="val => setAmount(val, false)"
             />
           </div>
         </v-col>
-        <!--
-        =====================================================================================
-          Low Balance Notice
-        =====================================================================================
-        -->
+
+        <!-- ===================================================================================== -->
+        <!-- Low Balance Notice -->
+        <!-- ===================================================================================== -->
         <v-col v-if="showBalanceNotice" cols="12" class="pt-0 pb-4">
           <send-low-balance-notice
             :address="address"
@@ -66,19 +66,22 @@
             class="pa-3"
           />
         </v-col>
-        <!--
-        =====================================================================================
-          Input Address
-        =====================================================================================
-        -->
+
+        <!-- ===================================================================================== -->
+        <!-- Input Address -->
+        <!-- ===================================================================================== -->
         <v-col cols="12" class="pt-4 pb-2">
-          <module-address-book ref="addressInput" @setAddress="setAddress" />
+          <module-address-book
+            ref="addressInput"
+            class="AddressInput"
+            :currency="currencyName"
+            @setAddress="setAddress"
+          />
         </v-col>
-        <!--
-      =====================================================================================
-        Network Fee (Note: comes with mt-5(20px) mb-8(32px)))
-      =====================================================================================
-      -->
+
+        <!-- ===================================================================================== -->
+        <!-- Network Fee (Note: comes with mt-5(20px) mb-8(32px))) -->
+        <!-- ===================================================================================== -->
         <v-col cols="12" class="py-0 mb-8">
           <app-transaction-fee
             :show-fee="showSelectedBalance"
@@ -93,11 +96,10 @@
             @onLocalGasPrice="handleLocalGasPrice"
           />
         </v-col>
-        <!--
-      =====================================================================================
-        Advanced:
-      =====================================================================================
-      -->
+
+        <!-- ===================================================================================== -->
+        <!-- Advanced: -->
+        <!-- ===================================================================================== -->
         <v-col cols="12" class="py-4">
           <mew-expand-panel
             ref="expandPanel"
@@ -111,14 +113,14 @@
                 <div
                   class="pa-5 warning greyPrimary--text border-radius--5px mb-8"
                 >
-                  <div class="d-flex font-weight-bold mb-2">
-                    <v-icon class="greyPrimary--text mew-body mr-1">
+                  <div class="d-flex font-weight-bold mb-2 textDark--text">
+                    <v-icon class="textDark--text mew-body mr-1">
                       mdi-alert-outline</v-icon
                     >For advanced users only
                   </div>
-                  <div>
-                    Please don’t edit these fields unless you are an expert user
-                    & know what you’re doing. Entering the wrong information
+                  <div class="textDark--text">
+                    Please don't edit these fields unless you are an expert user
+                    & know what you're doing. Entering the wrong information
                     could result in your transaction failing or getting stuck.
                   </div>
                 </div>
@@ -166,6 +168,7 @@
             :has-full-width="false"
             btn-size="xlarge"
             :disabled="isDisabledNextBtn"
+            class="SendButton"
             @click.native="send()"
           />
         </div>
@@ -267,7 +270,7 @@ export default {
     ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
     ...mapGetters('custom', ['hasCustom', 'customTokens', 'hiddenTokens']),
     isFromNetworkCurrency() {
-      return this.selectedCurrency?.symbol === this.currencyName;
+      return this.selectedCurrency?.contract === MAIN_TOKEN_ADDRESS;
     },
     isDisabledNextBtn() {
       return (
@@ -280,7 +283,7 @@ export default {
     },
     buyMoreStr() {
       return this.isEthNetwork &&
-        MAIN_TOKEN_ADDRESS === this.selectedCurrency?.contract &&
+        this.isFromNetworkCurrency &&
         this.amountError === 'Not enough balance to send!'
         ? this.network.type.canBuy
           ? 'Buy more.'
@@ -289,7 +292,7 @@ export default {
     },
     hasEnoughEth() {
       // Check whether user has enough eth to cover tx fee + amount to send
-      if (this.selectedCurrency?.contract === MAIN_TOKEN_ADDRESS) {
+      if (this.isFromNetworkCurrency) {
         return BigNumber(this.amount)
           .plus(this.txFeeETH)
           .lte(this.balanceInETH);
@@ -468,7 +471,7 @@ export default {
       return fromWei(this.txFee);
     },
     currencyDecimals() {
-      return this.selectedCurrency?.decimals
+      return this.selectedCurrency?.hasOwnProperty('decimals')
         ? this.selectedCurrency.decimals
         : 18;
     },
@@ -567,12 +570,16 @@ export default {
         this.sendTx.setValue(this.getCalculatedAmount);
       }
       this.amountError = '';
+      this.gasEstimationError = '';
+      if (this.isValidForGas) this.debounceEstimateGas();
       this.debounceAmountError(newVal);
     },
     selectedCurrency: {
       handler: function (newVal) {
         if (this.sendTx) {
           this.sendTx.setCurrency(newVal);
+          this.gasEstimationIsReady = false;
+          this.gasEstimationError = '';
           if (this.isValidForGas) this.debounceEstimateGas();
           this.debounceAmountError(this.amount);
           this.gasLimit = this.defaultGasLimit;
@@ -633,10 +640,10 @@ export default {
       if (
         (this.selectedMax &&
           this.selectedCurrency &&
-          this.selectedCurrency.contract === MAIN_TOKEN_ADDRESS &&
+          this.isFromNetworkCurrency &&
           total.gt(this.balanceInETH)) ||
         (this.selectedCurrency &&
-          this.selectedCurrency.contract !== MAIN_TOKEN_ADDRESS &&
+          !this.isFromNetworkCurrency &&
           balance.lt(amt))
       ) {
         this.setEntireBal();
@@ -743,6 +750,9 @@ export default {
     },
     estimateAndSetGas() {
       this.gasEstimationIsReady = false;
+      if (this.selectedCurrency.contract !== this.sendTx.currency.contract) {
+        this.sendTx.setCurrency(this.selectedCurrency);
+      }
       this.sendTx
         .estimateGas()
         .then(res => {
@@ -794,10 +804,7 @@ export default {
       return decimals ? fromBase(amt, decimals).toString() : amt;
     },
     setEntireBal() {
-      if (
-        isEmpty(this.selectedCurrency) ||
-        this.selectedCurrency.contract === MAIN_TOKEN_ADDRESS
-      ) {
+      if (isEmpty(this.selectedCurrency) || this.isFromNetworkCurrency) {
         const amt = BigNumber(this.balanceInETH).minus(this.txFeeETH);
         this.setAmount(amt.lt(0) ? '0' : amt.toFixed(), true);
       } else {
@@ -810,10 +817,11 @@ export default {
         );
       }
     },
-    setAmount(value, max) {
-      this.amount = value;
+    setAmount: debounce(function (val, max) {
+      const value = val ? val : 0;
+      this.amount = BigNumber(value).toFixed();
       this.selectedMax = max;
-    },
+    }, 500),
     setGasLimit(value) {
       this.gasLimit = value;
     },
@@ -824,6 +832,9 @@ export default {
     handleLocalGasPrice(e) {
       this.localGasPrice = e;
       this.sendTx.setLocalGasPrice(e);
+    },
+    preventCharE(e) {
+      if (e.key === 'e') e.preventDefault();
     }
   }
 };
@@ -838,5 +849,11 @@ export default {
   top: -15px;
   position: absolute;
   right: 15px;
+}
+</style>
+
+<style lang="scss">
+.module-send .mew-input .v-input__slot {
+  height: 56px !important;
 }
 </style>

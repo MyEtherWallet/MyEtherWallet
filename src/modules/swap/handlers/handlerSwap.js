@@ -16,16 +16,23 @@ class Swap {
   }
   getAllTokens() {
     const allTokens = {};
+    const DOGE_ADDRESS = '0x4206931337dc273a630d328dA6441786BfaD668f';
     return this.providers[0].getSupportedTokens().then(baseList => {
       if (baseList && baseList.length > 0)
-        baseList.forEach(t => (allTokens[t.contract] = t));
+        baseList.forEach(t => {
+          if (t.contract?.toLowerCase() !== DOGE_ADDRESS.toLowerCase())
+            allTokens[t.contract] = t;
+        });
       return Promise.all(
         this.providers.slice(3).map(p => {
           if (!p.isSupportedNetwork(this.chain)) return Promise.resolve();
           return p.getSupportedTokens().then(tokens => {
             if (tokens && tokens.length > 0) {
               tokens.forEach(t => {
-                if (!allTokens[t.contract]) {
+                if (
+                  t.contract?.toLowerCase() !== DOGE_ADDRESS.toLowerCase() &&
+                  !allTokens[t.contract]
+                ) {
                   allTokens[t.contract] = t;
                 }
               });
@@ -40,7 +47,7 @@ class Swap {
             return -1;
           });
         return {
-          fromTokens: sorted.filter(t => {
+          fromTokens: sorted?.filter(t => {
             if (!t || !t.contract) return false;
             return t;
           }),
@@ -55,7 +62,7 @@ class Swap {
       this.providers.map(p => {
         if (!p.isSupportedNetwork(this.chain)) return Promise.resolve();
         return p.getQuote({ fromT, toT, fromAmount }).then(quotes => {
-          allQuotes = allQuotes.concat(quotes);
+          if (quotes) allQuotes = allQuotes.concat(quotes);
         });
       })
     ).then(() => {

@@ -1,7 +1,8 @@
 export const appNames = {
   ETH: 'Ethereum',
   ETC: 'Ethereum Classic',
-  ROP: 'Ropsten',
   GO: 'GoChain',
-  XDC: 'XDC.Network'
+  XDC: 'XDC Network',
+  Rootstock: 'RSK',
+  'Eth Recovery': 'Eth Recovery'
 };

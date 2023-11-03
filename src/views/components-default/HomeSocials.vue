@@ -16,7 +16,7 @@
           sm="2"
           md="1"
         >
-          <a :href="p.link" target="_blank">
+          <a :href="p.link" target="_blank" @click="trackSocialClick(p)">
             <img
               v-lazy="p.img"
               max-height="40px"
@@ -36,9 +36,11 @@
 </template>
 
 <script>
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 export default {
   name: 'HomeSocials',
-  components: {},
+
+  mixins: [handlerAnalytics],
   data: () => ({
     socials: [
       {
@@ -92,6 +94,13 @@ export default {
         label: 'Telegram'
       }
     ]
-  })
+  }),
+  methods: {
+    trackSocialClick(social) {
+      this.trackLandingPageAmplitude(
+        `click_open_${social.label.toLowerCase()}`
+      );
+    }
+  }
 };
 </script>

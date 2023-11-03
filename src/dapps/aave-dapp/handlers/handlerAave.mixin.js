@@ -35,10 +35,8 @@ const REPAY_WITH_COLLATERAL_ADAPTER =
 const SWAP_COLLATERAL_ADAPTER = '0x135896DE8421be2ec868E0b811006171D9df802A';
 const WETH_GATEWAY = '0xcc9a0B7c43DC2a5F023Bb9b738E45B0Ef6B06E04';
 const PRICE_ORACLE = '0xA50ba011c48153De246E5192C8f9258A2ba79Ca9';
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 export default {
   name: 'handlerAave',
-  mixins: [handlerAnalytics],
   props: {
     open: {
       default: false,
@@ -138,8 +136,8 @@ export default {
         },
         result({ data }) {
           this.userReserveData = data.userReserves.map(item => {
-            item.reserve['icon'] =
-              this.contractToToken(item.underlyingAsset)?.img || eth;
+            const token = this.contractToToken(item.reserve.underlyingAsset);
+            item.reserve['icon'] = token ? token.img : eth;
             return {
               ...item,
               underlyingAsset: item.reserve.underlyingAsset
@@ -237,6 +235,20 @@ export default {
      */
     async onDeposit({ amount, reserve, referralCode, user }) {
       try {
+        let txs = [];
+        const allowance = await this.formatAllowanceData(
+          reserve,
+          user,
+          this.poolContract.address
+        );
+
+        const resetApproveData = await this.formatApprovalData(
+          reserve,
+          user,
+          this.poolContract.address,
+          0
+        );
+
         const approveData = await this.formatApprovalData(
           reserve,
           user,
@@ -250,12 +262,13 @@ export default {
           referralCode
         );
         txData.from = user;
-        const gasLimits = await estimateGasList(this.network.type.name, [
-          approveData,
-          txData
-        ]);
-        this.sendTxns([approveData, txData], gasLimits);
-        this.trackDapp('depositCollateral');
+        if (toBN(allowance).gt(toBN(amount))) {
+          txs = [txData];
+        } else {
+          txs = [resetApproveData, approveData, txData];
+        }
+        const gasLimits = await estimateGasList(this.network.type.name, txs);
+        this.sendTxns(txs, gasLimits);
       } catch (e) {
         throw new Error(e);
       }
@@ -276,7 +289,6 @@ export default {
           ...data
         );
         this.formatTxData(txData);
-        this.trackDapp('borrowAssets');
       } catch (e) {
         throw new Error(e);
       }
@@ -291,11 +303,25 @@ export default {
      */
     async onRepay({ amount, reserve, interestRateMode, user }) {
       try {
+        let txs = [];
+        const allowance = await this.formatAllowanceData(
+          reserve,
+          user,
+          this.poolContract.address
+        );
+
         const approveData = await this.formatApprovalData(
           reserve,
           user,
           this.poolContract.address,
           amount
+        );
+
+        const resetApproveData = await this.formatApprovalData(
+          reserve,
+          user,
+          this.poolContract.address,
+          0
         );
         const data = await this.poolContract.populateTransaction.repay(
           reserve,
@@ -304,12 +330,14 @@ export default {
           user
         );
         data.from = user;
-        const gasLimits = await estimateGasList(this.network.type.name, [
-          approveData,
-          data
-        ]);
-        this.sendTxns([approveData, data], gasLimits);
-        this.trackDapp('repayDebt');
+
+        if (toBN(allowance).gt(toBN(amount))) {
+          txs = [data];
+        } else {
+          txs = [resetApproveData, approveData, data];
+        }
+        const gasLimits = await estimateGasList(this.network.type.name, txs);
+        this.sendTxns(txs, gasLimits);
       } catch (e) {
         throw new Error(e);
       }
@@ -333,7 +361,6 @@ export default {
         };
         const callback = [this.resetAprToggle, params];
         this.formatTxData(txData, callback);
-        this.trackDapp('setBorrowRate');
       } catch (e) {
         throw new Error(e);
       }
@@ -356,7 +383,6 @@ export default {
           user
         );
         this.formatTxData(txData);
-        this.trackDapp('withdrawCollateral');
       } catch (e) {
         throw new Error(e);
       }
@@ -390,6 +416,35 @@ export default {
       }
     },
     /**
+     * format transaction data for token allowance
+     *
+     * @param tokenAddress The ethereum address of the token needing approval
+     * @param user The ethereum address that owns the asset
+     * @param spender The ethereum address that will spend the asset
+     */
+    async formatAllowanceData(tokenAddress, user, spender) {
+      try {
+        const ABI = [
+          {
+            constant: true,
+            inputs: [
+              { name: '_owner', type: 'address' },
+              { name: '_spender', type: 'address' }
+            ],
+            name: 'allowance',
+            outputs: [{ name: 'remaining', type: 'uint256' }],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function'
+          }
+        ];
+        const token = new this.web3.eth.Contract(ABI, tokenAddress);
+        return token.methods.allowance(user, spender).call();
+      } catch (e) {
+        throw new Error(e);
+      }
+    },
+    /**
      * Apollo mutation to enable or disable collateral
      * function setUserUseReserveAsCollateral(address asset, bool useAsCollateral)
      * Sets the asset of msg.sender to be used as collateral or not.
@@ -407,7 +462,6 @@ export default {
         };
         const callback = [this.resetCollateralToggle, params];
         this.formatTxData(txData, callback);
-        this.trackDapp('setCollateral');
       } catch (e) {
         throw new Error(e);
       }

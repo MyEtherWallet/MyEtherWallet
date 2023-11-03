@@ -42,12 +42,7 @@
                 $t('home.eth-blocks.btn-text')
                   | lokalise('home.eth-blocks.btn-text')
               "
-              @click.native="
-                $router.push({
-                  name: 'EthBlocks',
-                  params: {}
-                })
-              "
+              @click.native="navigateToEthBlocks"
             ></mew-button>
           </div>
         </v-col>
@@ -59,14 +54,24 @@
 <script>
 import ethBlocksThree from '@/assets/images/icons/eth-blocks-3.jpg';
 import ethBlocksSix from '@/assets/images/icons/eth-blocks-6.jpg';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { ETH_BLOCKS_ROUTE } from '@/dapps/eth-blocks/configsRoutes';
 export default {
   name: 'HomeEthBlocks',
-  components: {},
+  mixins: [handlerAnalytics],
   data() {
     return {
       three: ethBlocksThree,
       six: ethBlocksSix
     };
+  },
+  methods: {
+    navigateToEthBlocks() {
+      this.trackLandingPageAmplitude('AccessWalletMint');
+      this.$router.push({
+        name: ETH_BLOCKS_ROUTE.CORE.NAME
+      });
+    }
   }
 };
 </script>

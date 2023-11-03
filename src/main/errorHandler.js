@@ -55,7 +55,18 @@ export const knownErrors = {
     'Rate limit exceeded. Please try again in about 30 seconds.',
   "execution reverted: it's not your token": 'You do not own this token',
   'Returned error: gas required exceeds allowance':
-    'Your gas limit is too low. Please increase your gas limit and try again.'
+    'Your gas limit is too low. Please increase your gas limit and try again.',
+  'nonce too low':
+    'You may have multiple transactions still pending, please reject them and try again',
+  'Session currently connected':
+    'Session currently connected. Please try again.',
+  'Error: Missing or invalid topic field': '',
+  'Uncaught (in promise) Error: Missing or invalid topic field': '',
+  'Missing or invalid topic field': '',
+  'Cannot convert undefined or null to object': '',
+  'No matching key. pairing': '',
+  'ResizeObserver loop limit exceeded': '',
+  'ResizeObserver loop completed with undelivered notifications.': ''
 };
 
 const handleError = err => {

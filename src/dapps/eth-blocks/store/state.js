@@ -5,8 +5,7 @@ const ethBlocksTxs = {
   ethBlocksTxs: [],
   stateVersion: Configs.VERSION.ethBlocksTxs,
   cart: {
-    ETH: [],
-    RIN: []
+    ETH: []
   }
 };
 
