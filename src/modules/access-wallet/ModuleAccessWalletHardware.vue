@@ -834,7 +834,6 @@ export default {
       try {
         this.setWallet([wallet])
           .then(() => {
-            this.trackAccessWallet(wallet.identifier);
             if (!this.switchAddress) {
               if (wallet.identifier === WALLET_TYPES.LEDGER) {
                 this.setLedgerBluetooth(this.ledgerBluetooth);

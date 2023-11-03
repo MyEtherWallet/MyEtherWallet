@@ -511,11 +511,6 @@ export default {
       this.setDarkMode(val);
       this.$vuetify.theme.dark = val;
     },
-    isOpenNetworkOverlay(newVal) {
-      if (newVal && this.$route.name == ROUTES_WALLET.SWAP.NAME) {
-        this.trackSwap('switchingNetworkOnSwap');
-      }
-    },
     navOpen(newVal) {
       if (this.isOpenNetworkOverlay && !newVal)
         this.isOpenNetworkOverlay = false;
@@ -553,9 +548,6 @@ export default {
     trackToSwap() {
       this.trackDashboardAmplitude('SwapLeftNavigation');
     },
-    trackBuySellFunc() {
-      this.trackBuySell('buySellHome');
-    },
     closeNetworkOverlay() {
       if (this.validNetwork) {
         this.isOpenNetworkOverlay = false;
@@ -575,7 +567,6 @@ export default {
     },
     openBuySell() {
       EventBus.$emit(BUYSELL_EVENT);
-      this.trackBuySellFunc();
     },
     openNavigation() {
       this.navOpen = true;

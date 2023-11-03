@@ -397,7 +397,6 @@ export default {
           .then(_newWallet => {
             this.setWallet([_newWallet]).then(() => {
               this.trackAccessWalletAmplitude('access_wallet_success');
-              this.trackAccessWallet(WALLET_TYPES.MEW_WALLET);
               this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
             });
           })
@@ -465,7 +464,6 @@ export default {
           const wallet = new Web3Wallet(acc[0]);
           this.setWallet([wallet, providedProvider]);
           this.trackAccessWalletAmplitude('access_wallet_success');
-          this.trackAccessWallet(WALLET_TYPES.WEB3_WALLET);
           if (this.path !== '') {
             this.$router.push({ path: this.path });
           } else {

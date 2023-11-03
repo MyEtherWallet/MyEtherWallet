@@ -301,7 +301,6 @@ export default {
                 fromToken: item.contract,
                 amount: item.balancef
               };
-              this.trackSwap('fromDashboardTokensTable');
               this.trackDashboardAmplitude('SwapMyTokensValue');
               this.$router
                 .push({

@@ -164,7 +164,6 @@ export default {
   },
   mounted() {
     this.$vuetify.theme.dark = this.darkMode;
-    this.trackUserVersion(VERSION);
     EventBus.$on('openPaperWallet', () => {
       this.showPaperWallet = true;
       this.$router.push({
@@ -363,7 +362,6 @@ export default {
               await this.setWeb3Instance(this.selectedEIP6963Provider);
               this.setTokensAndBalance();
               this.setValidNetwork(true);
-              this.trackNetworkSwitch(foundNetwork[0].type.name);
               this.$emit('newNetwork');
               Toast(
                 `Switched network to: ${foundNetwork[0].type.name}`,

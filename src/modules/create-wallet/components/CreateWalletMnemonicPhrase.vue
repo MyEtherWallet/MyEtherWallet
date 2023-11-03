@@ -210,7 +210,6 @@
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 
 export default {
   name: 'CreateWalletMnemonicPhrase',
@@ -324,7 +323,6 @@ export default {
         .validateMnemonic(this.validateMnemonicValues)
         .then(() => {
           this.trackCreateWalletAmplitude('create_menmonic_success');
-          this.trackCreateWallet(WALLET_TYPES.MNEMONIC);
           this.updateStep(3);
         })
         .catch(e => {
