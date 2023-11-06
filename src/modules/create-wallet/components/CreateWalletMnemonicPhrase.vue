@@ -71,7 +71,7 @@
             title="I wrote them down"
             btn-size="xlarge"
             :has-full-width="false"
-            @click.native="updateStep(2)"
+            @click.native="trackIWroteThemDown()"
           />
         </div>
         <mew-warning-sheet
@@ -143,7 +143,7 @@
             btn-size="xlarge"
             btn-style="outline"
             class="mx-md-1 my-1"
-            @click.native="updateStep(1)"
+            @click.native="trackBackToStepOne"
           />
           <mew-button
             title="Verify"
@@ -322,7 +322,7 @@ export default {
       this.handlerCreateWallet
         .validateMnemonic(this.validateMnemonicValues)
         .then(() => {
-          this.trackCreateWalletAmplitude('create_menmonic_success');
+          this.trackCreateWalletAmplitude('MnemonicSuccess');
           this.updateStep(3);
         })
         .catch(e => {
@@ -334,8 +334,16 @@ export default {
      * Used in Step 3
      */
     goToAccess() {
-      this.trackCreateWalletAmplitude('create_menmonic_success_go_to_access');
+      this.trackCreateWalletAmplitude('MnemonicSuccessAccessWallet');
       this.$router.push({ name: ROUTES_HOME.ACCESS_WALLET.NAME });
+    },
+    trackIWroteThemDown() {
+      this.trackCreateWalletAmplitude('WroteDownClicked');
+      this.updateStep(2);
+    },
+    trackBackToStepOne() {
+      this.trackCreateWalletAmplitude('MnemonicBackToStepOne');
+      this.updateStep(1);
     },
 
     /**
@@ -356,9 +364,7 @@ export default {
     createAnotherWallet() {
       this.extraWord = '';
       this.extraWordVerification = '';
-      this.trackCreateWalletAmplitude(
-        'create_menmonic_success_create_another_wallet'
-      );
+      this.trackCreateWalletAmplitude('MnemonicSuccessCreateWallet');
       this.updateStep(1);
     }
   }
