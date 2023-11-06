@@ -144,9 +144,7 @@ export default {
      */
     trackAccessWalletAmplitude(event) {
       if (this.consentToTrack) {
-        this.$amplitude.track(categories.accessWallet, {
-          click_event: event
-        });
+        this.$amplitude.track(`${categories.accessWallet}${event}`);
       }
     },
     /**
