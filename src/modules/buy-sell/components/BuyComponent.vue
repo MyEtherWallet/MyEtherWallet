@@ -246,7 +246,7 @@ export default {
       return fromWei(BigNumber(this.gasPrice).times(21000).toString());
     },
     priceOb() {
-      return !isEmpty(this.fetchedData)
+      return !isEmpty(this.fetchedData) && this.fetchedData[0].prices.length > 0
         ? this.fetchedData[0].prices.find(
             item => item.fiat_currency === this.selectedFiatName
           )
@@ -606,7 +606,10 @@ export default {
           this.compareQuotes();
         })
         .catch(e => {
-          Toast(e, {}, ERROR);
+          const error = e.response ? e.response.data.error : e;
+          this.loading = false;
+          this.$emit('simplexQuote', {});
+          Toast(error, {}, ERROR);
         });
     },
     compareQuotes() {
