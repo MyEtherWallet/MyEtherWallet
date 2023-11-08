@@ -173,9 +173,8 @@ const setTokenAndEthBalance = function ({
         if (t.contract === MAIN_TOKEN_ADDRESS) {
           mainTokenBalance = toBN(t.balance);
         }
-        if (token.name) {
-          const decimal = token.decimals ? token.decimals : t.decimals;
-          const base = fromBase(t.balance, decimal);
+        if (token.name && token.hasOwnProperty('decimals')) {
+          const base = fromBase(t.balance, token.decimals);
           const usdBalance = new BigNumber(base).times(token.price).toString();
           formattedList.push(
             Object.assign(
