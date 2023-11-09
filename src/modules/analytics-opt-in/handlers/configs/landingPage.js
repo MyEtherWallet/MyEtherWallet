@@ -15,7 +15,6 @@ export default {
   SWAP_CLICKED: 'SwapClicked',
   GET_TOKENS_CLICKED: 'GetTokensClicked',
   MEW_COMMUNITY: 'MEWCommunity',
-  BUY_ETH_MOBILE: 'BuyETHMobile',
   ACCESS_WALLET_MOBILE: 'AccessWalletMobile',
   CREATE_WALLET_MOBILE: 'CreateWalletMobile'
 };

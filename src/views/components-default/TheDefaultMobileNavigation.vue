@@ -139,7 +139,7 @@ import { mapGetters } from 'vuex';
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-import { LANDING_PAGE } from '@/modules/analytics-opt-in/handlers/configs/events.js';
+import { LANDING_PAGE, HEADER } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 export default {
   name: 'MobileMenu',
   components: {
@@ -253,7 +253,7 @@ export default {
       this.isOpen = false;
     },
     trackBuySell() {
-      this.trackHeaderAmplitude(LANDING_PAGE.BUY_ETH_MOBILE);
+      this.trackHeaderAmplitude(HEADER.BUY_ETH_MOBILE);
       this.openBuySell();
     },
     trackMobileAccess() {

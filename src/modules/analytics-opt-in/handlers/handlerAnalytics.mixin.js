@@ -80,7 +80,7 @@ export default {
     trackFooterAmplitude(event) {
       if (this.consentToTrack) {
         this.$amplitude.track(categories.footer, {
-          click_event: event
+          to: event
         });
       }
     },

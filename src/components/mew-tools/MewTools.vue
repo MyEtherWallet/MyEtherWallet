@@ -66,6 +66,7 @@
 
 <script>
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { HEADER } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 export default {
   mixins: [handlerAnalytics],
   data() {
@@ -139,7 +140,7 @@ export default {
   methods: {
     trackToolLink(val) {
       const parsedLabel = val.label.replace(' ', '_').toLowerCase();
-      this.trackHeaderAmplitude('MEWProducts', { name: parsedLabel });
+      this.trackHeaderAmplitude(HEADER.MEW_PRODUCTS, { name: parsedLabel });
     }
   }
 };
