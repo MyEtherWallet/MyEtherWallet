@@ -30,6 +30,7 @@
 
 <script>
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { LANDING_PAGE } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 export default {
   name: 'AppPartnersBlock',
   mixins: [handlerAnalytics],
@@ -94,7 +95,7 @@ export default {
   }),
   methods: {
     trackPartner(obj) {
-      this.trackLandingPageAmplitude('Partners', {
+      this.trackLandingPageAmplitude(LANDING_PAGE.PARTNERS, {
         name: obj.name
       });
     }

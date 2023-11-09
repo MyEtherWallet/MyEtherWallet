@@ -58,6 +58,7 @@
 
 <script>
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { LANDING_PAGE } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 export default {
   name: 'AppMewtopiaBlock',
   mixins: [handlerAnalytics],
@@ -68,7 +69,7 @@ export default {
   },
   methods: {
     trackMewtopia() {
-      this.trackLandingPageAmplitude('MewTopia');
+      this.trackLandingPageAmplitude(LANDING_PAGE.MEWTOPIA);
     }
   }
 };

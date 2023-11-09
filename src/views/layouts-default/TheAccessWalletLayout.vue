@@ -275,7 +275,7 @@ export default {
             icon: require('@/assets/images/icons/icon-mew-wallet.png'),
             alt: 'MEW wallet',
             fn: () => {
-              this.trackAccessWalletAmplitude('WalletConnectQR');
+              this.trackAccessWalletAmplitude('MEWWallet');
               this.openMEWwallet();
             }
           },

@@ -13,7 +13,7 @@
                 href="https://download.mewwallet.com/?source=mew_web_create"
                 target="_blank"
                 class="mr-1"
-                @click="trackOpenMEWWallet"
+                @click="trackOpenMEWWallet(LANDING_PAGE.APPLE_STORE)"
               >
                 <img
                   v-lazy="require('@/assets/images/icons/button-app-store.svg')"
@@ -24,7 +24,7 @@
               <a
                 href="https://download.mewwallet.com/?source=mew_web_create"
                 target="_blank"
-                @click="trackOpenMEWWallet"
+                @click="trackOpenMEWWallet(LANDING_PAGE.GOOGLE_STORE_2)"
               >
                 <img
                   v-lazy="
@@ -71,7 +71,7 @@
                 href="https://download.mewwallet.com/?source=mew_web_create"
                 target="_blank"
                 class="mr-1"
-                @click="() => trackOpenMEWWallet('AppleStore2')"
+                @click="() => trackOpenMEWWallet(LANDING_PAGE.APPLE_STORE_2)"
               >
                 <img
                   v-lazy="require('@/assets/images/icons/button-app-store.svg')"
@@ -82,7 +82,7 @@
               <a
                 href="https://download.mewwallet.com/?source=mew_web_create"
                 target="_blank"
-                @click="() => trackOpenMEWWallet('GoogleStore3')"
+                @click="() => trackOpenMEWWallet(LANDING_PAGE.GOOGLE_STORE_3)"
               >
                 <img
                   v-lazy="
@@ -122,25 +122,28 @@
 <script>
 import { ROUTES_HOME } from '../configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { LANDING_PAGE } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 export default {
   name: 'GetStarted',
   mixins: [handlerAnalytics],
   data() {
-    return {};
+    return {
+      LANDING_PAGE: LANDING_PAGE
+    };
   },
   methods: {
     trackOpenMEWWallet(name) {
       this.trackLandingPageAmplitude(name);
     },
     navigateToCreateWallet() {
-      this.trackLandingPageAmplitude('CreateWallet2');
+      this.trackLandingPageAmplitude(LANDING_PAGE.CREATE_WALLET_2);
       this.$router.push({
         name: ROUTES_HOME.CREATE_WALLET.NAME,
         params: {}
       });
     },
     navigateToAccessWallet() {
-      this.trackLandingPageAmplitude('AccessWallet2');
+      this.trackLandingPageAmplitude(LANDING_PAGE.ACCESS_WALLET_2);
       this.$router.push({
         name: ROUTES_HOME.ACCESS_WALLET.NAME,
         params: {}
