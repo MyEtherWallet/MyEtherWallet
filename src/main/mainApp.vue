@@ -28,6 +28,8 @@ import {
 import { BUYSELL_EVENT } from '@/modules/buy-sell/helpers';
 import { EventBus } from '@/core/plugins/eventBus';
 import handlerAnalyticsMixin from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin.js';
+import { SWAP } from '@/modules/analytics-opt-in/handlers/configs/events.js';
+
 export default {
   name: 'App',
   components: {
@@ -87,19 +89,19 @@ export default {
     });
     EventBus.$on('swapTxBroadcasted', hash => {
       const id = this.network.type.chainID;
-      this.trackSwapAmplitude('Broadcasted', { hash: hash, network: id });
+      this.trackSwapAmplitude(SWAP.BROADCASTED, { hash: hash, network: id });
     });
     EventBus.$on('swapTxReceivedReceipt', hash => {
       const id = this.network.type.chainID;
-      this.trackSwapAmplitude('Receipt', { hash: hash, network: id });
+      this.trackSwapAmplitude(SWAP.RECEIPT, { hash: hash, network: id });
     });
     EventBus.$on('swapTxFailed', hash => {
       const id = this.network.type.chainID;
       const passedHash = hash === '0x' ? 'no hash' : hash;
-      this.trackSwapAmplitude('Failed', { hash: passedHash, network: id });
+      this.trackSwapAmplitude(SWAP.FAILED, { hash: passedHash, network: id });
     });
     EventBus.$on('swapTxNotBroadcastedFailed', () => {
-      this.trackSwapAmplitude('NotBroadcasted');
+      this.trackSwapAmplitude(SWAP.NOT_BROADCASTED);
     });
     EventBus.$on(BUYSELL_EVENT, () => {
       this.openBuy();

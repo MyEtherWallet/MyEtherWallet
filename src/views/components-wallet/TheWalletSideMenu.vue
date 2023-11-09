@@ -288,6 +288,7 @@ import { EventBus } from '@/core/plugins/eventBus';
 import { ETH, BSC, MATIC } from '@/utils/networks/types';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { DASHBOARD } from '../analytics-opt-in/handlers/configs/events';
 import dappsMeta from '@/dapps/metainfo-dapps';
 import { BUYSELL_EVENT } from '@/modules/buy-sell/helpers';
 import isNew from '@/core/helpers/isNew.js';
@@ -546,7 +547,7 @@ export default {
     ...mapActions('wallet', ['removeWallet']),
     ...mapActions('global', ['setDarkMode']),
     trackToSwap() {
-      this.trackDashboardAmplitude('SwapLeftNavigation');
+      this.trackDashboardAmplitude(DASHBOARD.SWAP_LEFT_NAVIGATION);
     },
     closeNetworkOverlay() {
       if (this.validNetwork) {
