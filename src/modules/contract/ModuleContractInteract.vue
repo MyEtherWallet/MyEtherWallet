@@ -345,9 +345,9 @@ export default {
             Toast(message, {}, ERROR);
           });
       } else {
-        caller
-          .send({ from: this.address })
-          .catch(({ message }) => Toast(message, {}, ERROR));
+        caller.send({ from: this.address }).catch(({ message }) => {
+          Toast(message, {}, ERROR);
+        });
       }
     },
     payableInput(amount) {
