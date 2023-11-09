@@ -1,6 +1,5 @@
 export default {
   APPLE_STORE: 'AppleStore',
-  GOOGLE_STORE: 'Googletore',
   CREATE_WALLET: 'CreateWallet',
   ACCESS_WALLET: 'AccessWallet',
   GOOGLE_STORE_2: 'GoogleStore2',

@@ -82,6 +82,7 @@
 
 <script>
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { COMMON } from '@/modules/analytics-opt-in/handlers/configs/events';
 export default {
   name: 'TheBuyHardwareWalletLayout',
   components: {
@@ -173,7 +174,7 @@ export default {
     ]
   }),
   mounted() {
-    this.trackBuyHardwareAmplitude('PageShown');
+    this.trackBuyHardwareAmplitude(COMMON.PAGE_SHOWN);
   },
   methods: {
     trackBuy(name) {

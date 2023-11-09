@@ -9,7 +9,6 @@ export default {
   CONFIRM_CLICKED: 'ConfirmClicked',
   FIELD_INPUTS: 'FieldInputs',
   NEXT_CLICKED: 'NextClicked',
-  PAGE_SHOWN: 'PageShown',
   INITIAL_MODAL_CLOSED: 'InitialModalClosed',
   SWAP_INITIATED: 'SwapInitiated',
   TRANSACTION_INITIATIED: 'TransactionInitiated'

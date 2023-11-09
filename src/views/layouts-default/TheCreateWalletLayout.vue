@@ -116,6 +116,10 @@ import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
 import enkryptMarketing from '@/core/mixins/enkryptMarketing.mixin';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import {
+  COMMON,
+  CREATE_WALLET
+} from '@/modules/analytics-opt-in/handlers/configs/events.js';
 
 export default {
   name: 'TheCreateWalletLayout',
@@ -143,7 +147,7 @@ export default {
       text: 'Access Wallet',
       routeName: 'AccessWallet',
       func: () => {
-        this.trackCreateWalletAmplitude('NavigateToAccess');
+        this.trackCreateWalletAmplitude(CREATE_WALLET.NAVIGATE_TO_ACCESS);
       }
     }
   }),
@@ -163,7 +167,7 @@ export default {
               icon: require('@/assets/images/icons/icon-enkrypt-block.svg'),
               alt: 'Enkrypt',
               fn: () => {
-                this.trackCreateWalletAmplitude('GoogleStore');
+                this.trackCreateWalletAmplitude(COMMON.GOOGLE_STORE);
                 this.openEnkrypt();
               }
             },
@@ -178,7 +182,7 @@ export default {
               icon: require('@/assets/images/icons/icon-mew-wallet.png'),
               alt: 'MEW wallet',
               fn: () => {
-                this.trackCreateWalletAmplitude('MEWWallet');
+                this.trackCreateWalletAmplitude(COMMON.MEW_WALLET);
                 this.openMewWallet();
               }
             },
@@ -193,7 +197,7 @@ export default {
               icon: require('@/assets/images/icons/icon-hardware-wallet.png'),
               alt: 'Hardware Wallets',
               fn: () => {
-                this.trackCreateWalletAmplitude('BuyHardware');
+                this.trackCreateWalletAmplitude(CREATE_WALLET.BUY_HARDWARE);
                 this.$router.push({
                   name: ROUTES_HOME.BUY_HARDWARE_WALLET.NAME
                 });
@@ -209,7 +213,7 @@ export default {
               official: false,
               recommended: false,
               fn: () => {
-                this.trackCreateWalletAmplitude('SoftwareMethod');
+                this.trackCreateWalletAmplitude(CREATE_WALLET.SOFTWARE_METHOD);
                 this.openSoftwareModule();
               }
             }
@@ -225,7 +229,7 @@ export default {
               official: false,
               recommended: false,
               fn: () => {
-                this.trackCreateWalletAmplitude('SoftwareMethod');
+                this.trackCreateWalletAmplitude(CREATE_WALLET.SOFTWARE_METHOD);
                 this.openSoftwareModule();
               }
             }
@@ -233,7 +237,7 @@ export default {
     }
   },
   mounted() {
-    this.trackCreateWalletAmplitude('PageShown');
+    this.trackCreateWalletAmplitude(COMMON.PAGE_SHOWN);
   },
   methods: {
     openSoftwareModule() {
@@ -249,7 +253,7 @@ export default {
     },
     closeSoftwareModule() {
       try {
-        this.trackCreateWalletAmplitude('CloseSoftware');
+        this.trackCreateWalletAmplitude(CREATE_WALLET.CLOSE_SOFTWARE);
         this.$router.push({
           name: ROUTES_HOME.CREATE_WALLET.NAME
         });

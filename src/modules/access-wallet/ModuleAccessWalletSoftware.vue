@@ -100,6 +100,7 @@ import { ROUTES_WALLET } from '../../core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 import handlerAccessWalletSoftware from './software/handlers/handlerAccessWalletSoftware';
+import { ACCESS_WALLET } from '../analytics-opt-in/handlers/configs/events';
 
 export default {
   name: 'ModuleAccessWalletSoftware',
@@ -252,11 +253,11 @@ export default {
         const _this = this;
         let type = '';
         if (this.type === this.types.KEYSTORE) {
-          type = 'KeystoreConnected';
+          type = ACCESS_WALLET.KEYSTORE_CONNECTED;
         } else if (this.type === this.types.MNEMONIC) {
-          type = 'MnemonicConnected';
+          type = ACCESS_WALLET.MNEMONIC_CONNECTED;
         } else if (this.type === this.types.PRIVATE_KEY) {
-          type = 'PrivateKeyConnected';
+          type = ACCESS_WALLET.PRIVATE_KEY_CONNECTED;
         }
         this.setWallet([wallet])
           .then(() => {
@@ -290,7 +291,7 @@ export default {
     accessBack() {
       if (this.walletType !== SOFTWARE_WALLET_TYPES.OVERVIEW) {
         try {
-          this.trackAccessWalletAmplitude('SoftwareBack');
+          this.trackAccessWalletAmplitude(ACCESS_WALLET.SOFTWARE_BACK);
           this.$router.push({
             query: { type: SOFTWARE_WALLET_TYPES.OVERVIEW }
           });
@@ -311,13 +312,13 @@ export default {
           this.type = newType;
           switch (newType) {
             case SOFTWARE_WALLET_TYPES.KEYSTORE:
-              this.trackAccessWalletAmplitude('KeystoreShown');
+              this.trackAccessWalletAmplitude(ACCESS_WALLET.KEYSTORE_SHOWN);
               break;
             case SOFTWARE_WALLET_TYPES.MNEMONIC:
-              this.trackAccessWalletAmplitude('MnemonicShown');
+              this.trackAccessWalletAmplitude(ACCESS_WALLET.MNEMONIC_SHOWN);
               break;
             case SOFTWARE_WALLET_TYPES.PRIVATE_KEY:
-              this.trackAccessWalletAmplitude('PrivateKeyShown');
+              this.trackAccessWalletAmplitude(ACCESS_WALLET.PRIVATE_KEY_SHOWN);
               break;
             default:
               break;

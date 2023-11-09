@@ -142,7 +142,10 @@
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import enkryptMarketing from '@/core/mixins/enkryptMarketing.mixin.js';
-import { LANDING_PAGE } from '@/modules/analytics-opt-in/handlers/configs/events.js';
+import {
+  COMMON,
+  LANDING_PAGE
+} from '@/modules/analytics-opt-in/handlers/configs/events.js';
 
 export default {
   name: 'HomeLanding',
@@ -159,7 +162,7 @@ export default {
       this.openMewWallet();
     },
     trackOpenEnkrypt() {
-      this.trackLandingPageAmplitude(LANDING_PAGE.GOOGLE_STORE);
+      this.trackLandingPageAmplitude(COMMON.GOOGLE_STORE);
     },
     navigateToCreateWallet() {
       this.trackLandingPageAmplitude(LANDING_PAGE.CREATE_WALLET);
