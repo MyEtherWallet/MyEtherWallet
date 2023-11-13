@@ -293,9 +293,15 @@ export default {
     readWrite() {
       const params = [];
       for (const _input of this.selectedMethod.inputs) {
-        if (_input.type.includes('[]'))
-          params.push(stringToArray(_input.value));
-        else params.push(_input.value);
+        if (_input.type.includes('[]')) {
+          if (_input.value === '[]') {
+            params.push([]);
+          } else {
+            params.push(stringToArray(_input.value));
+          }
+        } else {
+          params.push(_input.value);
+        }
       }
       const caller = this.currentContract.methods[
         this.selectedMethod.name
@@ -339,9 +345,9 @@ export default {
             Toast(message, {}, ERROR);
           });
       } else {
-        caller
-          .send({ from: this.address })
-          .catch(({ message }) => Toast(message, {}, ERROR));
+        caller.send({ from: this.address }).catch(({ message }) => {
+          Toast(message, {}, ERROR);
+        });
       }
     },
     payableInput(amount) {

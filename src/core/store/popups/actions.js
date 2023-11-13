@@ -1,33 +1,9 @@
-const setTrackingConsent = function ({ commit, dispatch }, val) {
+const setTrackingConsent = function ({ commit }, val) {
   commit('SET_TRACKING_CONSENT', val);
-  dispatch('setTracking');
 };
 
 const neverShowEnkryptPromo = function ({ commit }) {
   commit('NEVER_SHOW_ENKRYPT_PROMO');
-};
-
-const setTracking = function ({ state }) {
-  const matomoExists = () => {
-    return new Promise(resolve => {
-      const checkInterval = 50;
-      const timeout = 5000;
-      const waitStart = Date.now();
-      const interval = setInterval(() => {
-        if (this._vm.$matomo) {
-          clearInterval(interval);
-          return resolve();
-        }
-        if (Date.now() >= waitStart + timeout) {
-          clearInterval(interval);
-        }
-      }, checkInterval);
-    });
-  };
-  matomoExists().then(() => {
-    if (state.consentToTrack) this._vm.$matomo.setConsentGiven();
-    else this._vm.$matomo.forgetConsentGiven();
-  });
 };
 
 const neverShowEnkryptLandingPage = function ({ commit }) {
@@ -60,7 +36,6 @@ const neverShowSurveyBanner = function ({ commit }) {
 
 export default {
   setTrackingConsent,
-  setTracking,
   neverShowEnkryptPromo,
   neverShowEnkryptLandingPage,
   neverShowEnkryptWalletPage,

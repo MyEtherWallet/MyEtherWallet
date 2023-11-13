@@ -126,6 +126,7 @@ import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import Web3 from 'web3';
 import { fromWei, toBN } from 'web3-utils';
+
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import nodeList from '@/utils/networks';
 import {
@@ -135,13 +136,16 @@ import {
 import { getCurrency } from '@/modules/settings/components/currencyList';
 import { buyContracts } from './tokenList';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
-import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook.vue';
-import BuySellTokenSelect from '@/modules/buy-sell/components/TokenSelect.vue';
 import { ETH, BSC, MATIC } from '@/utils/networks/types';
+import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook.vue';
 
 export default {
   name: 'ModuleBuyEth',
-  components: { ModuleAddressBook, BuySellTokenSelect },
+  components: {
+    ModuleAddressBook: ModuleAddressBook,
+    BuySellTokenSelect: () =>
+      import('@/modules/buy-sell/components/TokenSelect.vue')
+  },
   props: {
     orderHandler: {
       type: Object,
@@ -246,7 +250,7 @@ export default {
       return fromWei(BigNumber(this.gasPrice).times(21000).toString());
     },
     priceOb() {
-      return !isEmpty(this.fetchedData)
+      return !isEmpty(this.fetchedData) && this.fetchedData[0].prices.length > 0
         ? this.fetchedData[0].prices.find(
             item => item.fiat_currency === this.selectedFiatName
           )
@@ -375,9 +379,10 @@ export default {
       return formatFloatingPointValue(this.simplexQuote.crypto_amount).value;
     },
     fiatCurrencyItems() {
-      const arrItems = this.hasData
-        ? this.fetchedData[0].fiat_currencies.filter(item => item !== 'RUB')
-        : ['USD'];
+      const arrItems =
+        this.hasData && this.fetchedData[0].fiat_currencies.length > 0
+          ? this.fetchedData[0].fiat_currencies.filter(item => item !== 'RUB')
+          : ['USD'];
       return getCurrency(arrItems);
     },
     max() {
@@ -606,7 +611,10 @@ export default {
           this.compareQuotes();
         })
         .catch(e => {
-          Toast(e, {}, ERROR);
+          const error = e.response ? e.response.data.error : e;
+          this.loading = false;
+          this.$emit('simplexQuote', {});
+          Toast(error, {}, ERROR);
         });
     },
     compareQuotes() {

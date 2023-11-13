@@ -5,6 +5,7 @@ export default {
   name: 'Rootstock',
   name_long: 'Rootstock',
   homePage: 'https://rsk.co/',
+  blockExplorer: 'RSK Explorer',
   blockExplorerTX: 'https://explorer.rsk.co/tx/[[txHash]]',
   blockExplorerAddr: 'https://explorer.rsk.co/address/[[address]]',
   chainID: 30,

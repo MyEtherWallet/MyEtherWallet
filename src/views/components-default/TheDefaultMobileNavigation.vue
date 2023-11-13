@@ -139,11 +139,12 @@ import { mapGetters } from 'vuex';
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import {
+  LANDING_PAGE,
+  HEADER
+} from '@/modules/analytics-opt-in/handlers/configs/events.js';
 export default {
   name: 'MobileMenu',
-  components: {
-    AppBtnMenu: () => import('@/core/components/AppBtnMenu')
-  },
   mixins: [buyMore, handlerAnalytics],
   data: () => ({
     isOpen: false,
@@ -247,31 +248,31 @@ export default {
   },
   methods: {
     pushRoute(to) {
-      this.trackHeaderAmplitude(to.name);
+      this.trackHeaderAmplitude(`${to.name}Mobile`);
       this.$router.push(to).catch(() => true);
       this.isOpen = false;
     },
     trackBuySell() {
-      this.trackHeaderAmplitude('BuyETH');
+      this.trackHeaderAmplitude(HEADER.BUY_ETH_MOBILE);
       this.openBuySell();
     },
     trackMobileAccess() {
-      this.trackLandingPageAmplitude('AccessWallet');
+      this.trackLandingPageAmplitude(LANDING_PAGE.ACCESS_WALLET_MOBILE);
       this.$router.push({
         name: ROUTES_HOME.ACCESS_WALLET.NAME,
         params: {}
       });
     },
     trackMobileCreate() {
-      this.trackLandingPageAmplitude('CreateWallet');
+      this.trackLandingPageAmplitude(LANDING_PAGE.CREATE_WALLET_MOBILE);
       this.$router.push({
         name: ROUTES_HOME.CREATE_WALLET.NAME,
         params: {}
       });
     },
     trackToolLink(val) {
-      const parsedLabel = val.label.replace(' ', '_').toLowerCase();
-      this.trackHeaderAmplitude(`click_mobile_tools_${parsedLabel}`);
+      const parsedLabel = val.label.replace(' ', '');
+      this.trackHeaderAmplitude(`${parsedLabel}Mobile`);
     }
   }
 };

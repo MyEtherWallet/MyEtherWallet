@@ -43,9 +43,6 @@ export default {
     toVal: { default: '0', type: String },
     toType: { default: 'ETH', type: String },
     fromType: { default: 'ETH', type: String }
-  },
-  data() {
-    return {};
   }
 };
 </script>

@@ -37,9 +37,9 @@
 
 <script>
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { LANDING_PAGE } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 export default {
   name: 'HomeSocials',
-
   mixins: [handlerAnalytics],
   data: () => ({
     socials: [
@@ -97,9 +97,9 @@ export default {
   }),
   methods: {
     trackSocialClick(social) {
-      this.trackLandingPageAmplitude(
-        `click_open_${social.label.toLowerCase()}`
-      );
+      this.trackLandingPageAmplitude(LANDING_PAGE.MEW_COMMUNITY, {
+        name: social
+      });
     }
   }
 };

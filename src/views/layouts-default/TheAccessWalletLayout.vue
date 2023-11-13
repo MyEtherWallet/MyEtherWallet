@@ -181,6 +181,10 @@ import { Web3Wallet } from '@/modules/access-wallet/common';
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
+import {
+  ACCESS_WALLET,
+  COMMON
+} from '@/modules/analytics-opt-in/handlers/configs/events';
 
 export default {
   name: 'TheAccessWalletLayout',
@@ -260,7 +264,7 @@ export default {
             icon: require('@/assets/images/icons/icon-enkrypt-block.svg'),
             alt: 'Enkrypt',
             fn: () => {
-              this.trackAccessWalletAmplitude('click_access_enkrypt');
+              this.trackAccessWalletAmplitude(ACCESS_WALLET.ENKRYPT);
               this.checkEnkrypt();
             }
           },
@@ -275,7 +279,7 @@ export default {
             icon: require('@/assets/images/icons/icon-mew-wallet.png'),
             alt: 'MEW wallet',
             fn: () => {
-              this.trackAccessWalletAmplitude('click_access_mew_wallet');
+              this.trackAccessWalletAmplitude(COMMON.MEW_WALLET);
               this.openMEWwallet();
             }
           },
@@ -290,7 +294,7 @@ export default {
             icon: require('@/assets/images/icons/icon-extensions.png'),
             alt: 'Hardware Wallets',
             fn: () => {
-              this.trackAccessWalletAmplitude('click_access_browser_extension');
+              this.trackAccessWalletAmplitude(ACCESS_WALLET.BROWSER_EXTENSION);
               this.openWeb3Wallet();
             }
           },
@@ -305,9 +309,7 @@ export default {
             icon: require('@/assets/images/icons/icon-mobile-apps.png'),
             alt: 'Hardware Wallets',
             fn: () => {
-              this.trackAccessWalletAmplitude(
-                'click_access_open_mobile_wallet'
-              );
+              this.trackAccessWalletAmplitude(ACCESS_WALLET.MOBILE_APPS);
               this.openOverlay(ACCESS_VALID_OVERLAYS.MOBILE);
             }
           },
@@ -322,9 +324,7 @@ export default {
             icon: require('@/assets/images/icons/icon-hardware-wallet.png'),
             alt: 'Hardware Wallets',
             fn: () => {
-              this.trackAccessWalletAmplitude(
-                'click_access_open_hardware_wallet'
-              );
+              this.trackAccessWalletAmplitude(ACCESS_WALLET.HARWARE_WALLETS);
               this.openOverlay(ACCESS_VALID_OVERLAYS.HARDWARE);
             }
           },
@@ -338,9 +338,7 @@ export default {
             useBtn: true,
             recommended: false,
             fn: () => {
-              this.trackAccessWalletAmplitude(
-                'click_access_open_software_wallet'
-              );
+              this.trackAccessWalletAmplitude(ACCESS_WALLET.SOFTWARE);
               this.openOverlay(ACCESS_VALID_OVERLAYS.SOFTWARE);
             }
           }
@@ -353,7 +351,7 @@ export default {
           useBtn: true,
           subtitle: 'Keystore files, Mnemonic phrase, Private key',
           fn: () => {
-            this.trackAccessWalletAmplitude('click_access_open_mobile_wallet');
+            this.trackAccessWalletAmplitude(ACCESS_WALLET.SOFTWARE);
             this.openOverlay(ACCESS_VALID_OVERLAYS.SOFTWARE);
           }
         }
@@ -365,6 +363,7 @@ export default {
   },
   mounted() {
     window.dispatchEvent(new Event('eip6963:requestProvider'));
+    this.trackAccessWalletAmplitude(COMMON.PAGE_SHOWN);
   },
   methods: {
     ...mapActions('wallet', ['setWallet']),
@@ -379,7 +378,13 @@ export default {
      */
     close() {
       try {
-        this.trackAccessWalletAmplitude(`close_access_${this.overlay}_wallet`);
+        if (this.showSoftware) {
+          this.trackAccessWalletAmplitude(ACCESS_WALLET.CLOSE_SOFTWARE_ACCESS);
+        } else if (this.showHardware) {
+          this.trackAccessWalletAmplitude(ACCESS_WALLET.CLOSE_HARDWARE_ACCESS);
+        } else if (this.showMobile) {
+          this.trackAccessWalletAmplitude(ACCESS_WALLET.CLOSE_MOBILE_ACCESS);
+        }
         this.$router.push({
           name: ROUTES_HOME.ACCESS_WALLET.NAME
         });
@@ -388,7 +393,7 @@ export default {
       }
     },
     openWeb3WithProvider(item) {
-      this.trackAccessWalletAmplitude('click_access_browser_extension');
+      this.trackAccessWalletAmplitude(ACCESS_WALLET.BROWSER_EXTENSION);
       this.openWeb3Wallet(item);
     },
     openMEWwallet() {
@@ -396,8 +401,9 @@ export default {
         WalletConnectWallet(WALLET_TYPES.MEW_WALLET)
           .then(_newWallet => {
             this.setWallet([_newWallet]).then(() => {
-              this.trackAccessWalletAmplitude('access_wallet_success');
-              this.trackAccessWallet(WALLET_TYPES.MEW_WALLET);
+              this.trackAccessWalletAmplitude(
+                ACCESS_WALLET.ACCESS_WALLET_SUCCESS
+              );
               this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
             });
           })
@@ -464,8 +470,7 @@ export default {
           const acc = await web3.eth.requestAccounts();
           const wallet = new Web3Wallet(acc[0]);
           this.setWallet([wallet, providedProvider]);
-          this.trackAccessWalletAmplitude('access_wallet_success');
-          this.trackAccessWallet(WALLET_TYPES.WEB3_WALLET);
+          this.trackAccessWalletAmplitude(ACCESS_WALLET.ACCESS_WALLET_SUCCESS);
           if (this.path !== '') {
             this.$router.push({ path: this.path });
           } else {

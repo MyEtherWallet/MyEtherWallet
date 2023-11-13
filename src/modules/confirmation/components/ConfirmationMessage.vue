@@ -30,9 +30,6 @@ export default {
       type: Function,
       default: () => {}
     }
-  },
-  data: function () {
-    return {};
   }
 };
 </script>

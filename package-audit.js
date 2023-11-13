@@ -31,6 +31,7 @@ const AUDIT_EXCEPTIONS = [
   '@grpc/grpc-js',
   'is_js',
   'get-func-name',
+  'chart.js',
   'browserify-sign'
 ];
 const execute = (command, callback) => {

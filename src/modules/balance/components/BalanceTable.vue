@@ -3,7 +3,7 @@
     <!-- ==================================================================== -->
     <!-- Desktop table -->
     <!-- ==================================================================== -->
-    <app-table v-if="!isMobile" full-width flat class="mt-4 mb-4">
+    <mew-light-table v-if="!isMobile" full-width flat class="mt-4 mb-4">
       <table>
         <thead>
           <tr>
@@ -79,12 +79,12 @@
           </tr>
         </tbody>
       </table>
-    </app-table>
+    </mew-light-table>
 
     <!-- ==================================================================== -->
     <!-- Mobile table -->
     <!-- ==================================================================== -->
-    <app-table
+    <mew-light-table
       v-for="(td, dataKey) in tableDataPaginated"
       v-else
       :key="dataKey"
@@ -152,7 +152,7 @@
           </v-btn>
         </template>
       </div>
-    </app-table>
+    </mew-light-table>
 
     <!-- ==================================================================== -->
     <!-- Pagination for both desktop and mobile -->
@@ -167,11 +167,8 @@
 </template>
 
 <script>
-import AppTable from '@/core/components/AppTable';
-
 export default {
   name: 'ModulesBalanceTable',
-  components: { AppTable },
   props: {
     tableData: {
       type: Array,

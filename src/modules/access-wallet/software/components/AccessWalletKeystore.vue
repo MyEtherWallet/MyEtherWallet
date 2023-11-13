@@ -105,9 +105,6 @@ import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 
 export default {
   name: 'AccessWalletKeystore',
-  components: {
-    AppBtnRow: () => import('@/core/components/AppBtnRow')
-  },
   props: {
     handlerAccessWallet: {
       type: Object,

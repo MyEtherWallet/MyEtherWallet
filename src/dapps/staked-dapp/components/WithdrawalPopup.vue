@@ -173,7 +173,7 @@ import { isEmpty } from 'lodash';
 
 export default {
   components: {
-    phraseBlock: () => import('@/components/PhraseBlock'),
+    phraseBlock: () => import('@/core/components/PhraseBlock'),
     ModuleAddressBook: () => import('@/modules/address-book/ModuleAddressBook')
   },
   props: {

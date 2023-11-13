@@ -148,7 +148,6 @@ import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 export default {
   name: 'ModuleSideStaking',
-  components: {},
   mixins: [buyMore],
   props: {
     compoundRewards: {

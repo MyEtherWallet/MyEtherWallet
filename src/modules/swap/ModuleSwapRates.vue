@@ -1,5 +1,5 @@
 <template>
-  <mew6-white-sheet :sideinfo="!mobile">
+  <white-sheet :sideinfo="!mobile">
     <div class="px-5 px-lg-7 py-5">
       <div class="d-flex align-center justify-space-between">
         <span class="mew-heading-2">{{ $t('common.swap') }}</span>
@@ -63,7 +63,7 @@
         Try again?
       </h5>
     </div>
-  </mew6-white-sheet>
+  </white-sheet>
 </template>
 
 <script>
@@ -73,6 +73,7 @@ import { toWei } from 'web3-utils';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { DASHBOARD } from '../analytics-opt-in/handlers/configs/events';
 import handlerSwap from '@/modules/swap/handlers/handlerSwap';
 
 const STATIC_PAIRS = [
@@ -156,7 +157,6 @@ const STATIC_PAIRS = [
 ];
 export default {
   name: 'ModuleSwapRates',
-  components: {},
   mixins: [handlerAnalytics],
   props: {
     mobile: {
@@ -229,7 +229,7 @@ export default {
       }
     },
     toSwap() {
-      this.trackDashboardAmplitude('SwapPairs');
+      this.trackDashboardAmplitude(DASHBOARD.SWAP_PAIRS);
       this.navigateToSwap();
     },
     goToSwap(data) {
@@ -238,10 +238,7 @@ export default {
         toToken: data.toT.contract,
         amount: '1'
       };
-      this.trackSwapRate(
-        `fromSwapTokenPairs ${data.fromT.symbol} to ${data.toT.symbol}`
-      );
-      this.trackDashboardAmplitude('SwapPairs', {
+      this.trackDashboardAmplitude(DASHBOARD.SWAP_PAIRS, {
         TokenPair: `${data.fromT.symbol} to ${data.toT.symbol}`
       });
       this.navigateToSwap(obj);

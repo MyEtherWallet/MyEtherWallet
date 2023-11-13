@@ -1,6 +1,6 @@
 <template>
   <div class="mew-component--swap">
-    <mew6-white-sheet>
+    <white-sheet>
       <mew-module
         :has-elevation="true"
         :has-indicator="true"
@@ -251,7 +251,7 @@
                   Swap Fee
                   =====================================================================================
                 -->
-              <app-transaction-fee
+              <transaction-fee
                 v-if="showNetworkFee"
                 :is-from-chain="!isFromNonChain"
                 :show-fee="showSwapFee"
@@ -291,20 +291,13 @@
           </div>
         </template>
       </mew-module>
-    </mew6-white-sheet>
+    </white-sheet>
   </div>
 </template>
 
 <script>
 import { toBN, fromWei, toWei, isAddress } from 'web3-utils';
-import {
-  debounce,
-  isEmpty,
-  clone,
-  isUndefined,
-  isObject,
-  isNumber
-} from 'lodash';
+import { debounce, isEmpty, clone, isUndefined, isObject } from 'lodash';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import xss from 'xss';
 import MultiCoinValidator from 'multicoin-address-validator';
@@ -319,6 +312,7 @@ import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import { TRENDING_LIST } from './handlers/configs/configTrendingTokens';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { SWAP } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 import Swapper from './handlers/handlerSwap';
 import handleError from '../confirmation/handlers/errorHandler';
@@ -329,12 +323,10 @@ let localContractToToken = {};
 export default {
   name: 'ModuleSwap',
   components: {
-    AppButtonBalance: () => import('@/core/components/AppButtonBalance'),
-    AppUserMsgBlock: () => import('@/core/components/AppUserMsgBlock'),
     ModuleAddressBook: () => import('@/modules/address-book/ModuleAddressBook'),
+    TransactionFee: () => import('@/modules/transaction-fee/TransactionFee'),
     SwapProvidersList: () => import('./components/SwapProvidersList.vue'),
-    SwapProviderMentions: () => import('./components/SwapProviderMentions.vue'),
-    AppTransactionFee: () => import('@/core/components/AppTransactionFee.vue')
+    SwapProviderMentions: () => import('./components/SwapProviderMentions.vue')
   },
   mixins: [handlerAnalytics, buyMore],
   props: {
@@ -931,9 +923,6 @@ export default {
     },
     tokenInValue() {
       this.feeError = '';
-      if (!this.clearingSwap) {
-        this.trackSwap('tokenFromValueChanged');
-      }
     },
     gasPriceType() {
       if (this.currentTrade) this.currentTrade.gasPrice = this.localGasPrice;
@@ -944,18 +933,8 @@ export default {
       },
       immediate: true
     },
-    selectedProvider(p, oldVal) {
-      if (!isEmpty(oldVal) && !this.clearingSwap) {
-        this.trackSwap('switchProviders');
-      }
+    selectedProvider(p) {
       if (isEmpty(p)) this.selectedProviderId = undefined;
-    },
-    selectedProviderId(newVal) {
-      if (isNumber(newVal) && !this.clearingSwap) {
-        this.trackSwap(
-          `swapProvider: ${newVal + 1}/${this.availableQuotes.length}`
-        );
-      }
     },
     defaults: {
       handler: function () {
@@ -1000,7 +979,6 @@ export default {
     if (this.coinGeckoTokens.size > 0) {
       this.resetSwapState();
     }
-    this.trackSwap('swapPageView');
   },
   methods: {
     ...mapActions('notifications', ['addNotification']),
@@ -1121,9 +1099,6 @@ export default {
       const findToken = this.toTokens.find(
         item => item.symbol.toLowerCase() === to.toLowerCase()
       );
-      if (!this.clearingSwap) {
-        this.trackSwap('stayOnEth: ' + to);
-      }
       this.toTokenType = findToken;
     },
     setupSwap() {
@@ -1230,7 +1205,6 @@ export default {
      */
     async setMaxAmount() {
       this.maxLoading = true;
-      this.trackSwap('setMaxValue');
       if (
         !isEmpty(this.toTokenType) &&
         this.toTokenType.isEth &&
@@ -1333,9 +1307,6 @@ export default {
       return [];
     },
     switchTokens() {
-      if (!this.clearingSwap) {
-        this.trackSwap('switchTokens');
-      }
       const fromToken = this.fromTokenType;
       const toToken = this.toTokenType || this.actualToTokens[0];
       const tokenOutValue = this.tokenOutValue;
@@ -1387,8 +1358,7 @@ export default {
       this.resetAddressValues({ clearTo: false });
       this.$nextTick(() => {
         if (value && value.name && !this.clearingSwap) {
-          this.trackSwapToken('from: ' + value.name);
-          this.trackSwapAmplitude('FieldInputs', {
+          this.trackSwapAmplitude(SWAP.FIELD_INPUTS, {
             fromToken: value.name
           });
         }
@@ -1409,8 +1379,7 @@ export default {
       this.toTokenType = value;
       this.resetAddressValues({ clearRefund: false });
       if (value && value.name) {
-        this.trackSwapToken('to: ' + value.name);
-        this.trackSwapAmplitude('FieldInputs', {
+        this.trackSwapAmplitude(SWAP.FIELD_INPUTS, {
           toToken: value.name
         });
       }
@@ -1488,7 +1457,7 @@ export default {
         this.isLoadingProviders = true;
         this.showAnimation = true;
         this.cachedAmount = this.tokenInValue;
-        this.trackSwapAmplitude('FieldInputs', {
+        this.trackSwapAmplitude(SWAP.FIELD_INPUTS, {
           FromAmount: toBase(this.tokenInValue, this.fromTokenType.decimals)
         });
         this.swapper
@@ -1533,12 +1502,9 @@ export default {
           if (!clicked) {
             this.selectedProvider = q;
             if (!this.clearingSwap) {
-              this.trackSwapAmplitude('FieldInputs', {
+              this.trackSwapAmplitude(SWAP.FIELD_INPUTS, {
                 SelectRate: q.amount
               });
-              this.trackSwap(
-                `swapProvider: ${idx + 1}/ ${this.availableQuotes.length}`
-              );
             }
           } else {
             this.selectedProvider =
@@ -1630,8 +1596,7 @@ export default {
       }
     },
     showConfirm() {
-      this.trackSwap('showConfirm');
-      this.trackSwapAmplitude('NextClicked');
+      this.trackSwapAmplitude(SWAP.NEXT_CLICKED);
       this.setConfirmInfo();
       this.executeTrade();
     },
@@ -1806,7 +1771,7 @@ export default {
     },
     handleLocalGasPrice(e) {
       this.localGasPrice = e;
-      this.trackSwapAmplitude('FieldInputs', {
+      this.trackSwapAmplitude(SWAP.FIELD_INPUTS, {
         TransactionFee: e
       });
     },

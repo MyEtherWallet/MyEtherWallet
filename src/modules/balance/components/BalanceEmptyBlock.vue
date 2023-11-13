@@ -1,5 +1,5 @@
 <template>
-  <mew6-white-sheet
+  <white-sheet
     :class="[
       isTokens ? 'empty-token-list' : 'empty-network-balance',
       'module-no-balance pa-4 py-7 pa-sm-12'
@@ -76,7 +76,7 @@
         @click.native="openCustomTokens"
       />
     </div>
-  </mew6-white-sheet>
+  </white-sheet>
 </template>
 
 <script>

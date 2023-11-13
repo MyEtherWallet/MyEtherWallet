@@ -42,7 +42,6 @@
               btn-size="large"
               style="border-radius: 40px !important"
               :btn-link="browserLink"
-              rel="dofollow"
             >
               <img class="mr-3 browser-icons" :src="browserLogo" />
               Get the Enkrypt Extension
@@ -112,7 +111,6 @@
               btn-size="large"
               style="border-radius: 40px !important"
               btn-link="https://www.enkrypt.com"
-              rel="dofollow"
               @click.native="trackOpenEnkrypt"
             >
               <img class="mr-3 browser-icons" :src="browserLogo" />
@@ -144,34 +142,36 @@
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import enkryptMarketing from '@/core/mixins/enkryptMarketing.mixin.js';
+import {
+  COMMON,
+  LANDING_PAGE
+} from '@/modules/analytics-opt-in/handlers/configs/events.js';
 
 export default {
   name: 'HomeLanding',
-  components: {},
   mixins: [handlerAnalytics, enkryptMarketing],
   mounted() {
-    this.$amplitude.track('Landing Page');
     setTimeout(() => {
       this.trackLandingPage();
     }, 1000);
   },
   methods: {
     trackOpenMEWWallet() {
-      this.trackLandingPageAmplitude('AppleStore');
+      this.trackLandingPageAmplitude(LANDING_PAGE.APPLE_STORE);
       this.openMewWallet();
     },
     trackOpenEnkrypt() {
-      this.trackLandingPageAmplitude('GoogleStore');
+      this.trackLandingPageAmplitude(COMMON.GOOGLE_STORE);
     },
     navigateToCreateWallet() {
-      this.trackLandingPageAmplitude('CreateWallet');
+      this.trackLandingPageAmplitude(LANDING_PAGE.CREATE_WALLET);
       this.$router.push({
         name: ROUTES_HOME.CREATE_WALLET.NAME,
         params: {}
       });
     },
     navigateToAccessWallet() {
-      this.trackLandingPageAmplitude('AccessWallet');
+      this.trackLandingPageAmplitude(LANDING_PAGE.ACCESS_WALLET);
       this.$router.push({
         name: ROUTES_HOME.ACCESS_WALLET.NAME,
         params: {}
