@@ -55,6 +55,7 @@
 import ethBlocksThree from '@/assets/images/icons/eth-blocks-3.jpg';
 import ethBlocksSix from '@/assets/images/icons/eth-blocks-6.jpg';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { LANDING_PAGE } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 import { ETH_BLOCKS_ROUTE } from '@/dapps/eth-blocks/configsRoutes';
 export default {
   name: 'HomeEthBlocks',
@@ -67,7 +68,7 @@ export default {
   },
   methods: {
     navigateToEthBlocks() {
-      this.trackLandingPageAmplitude('AccessWalletMint');
+      this.trackLandingPageAmplitude(LANDING_PAGE.ACCESS_WALLET_MINT);
       this.$router.push({
         name: ETH_BLOCKS_ROUTE.CORE.NAME
       });

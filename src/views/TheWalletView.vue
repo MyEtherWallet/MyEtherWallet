@@ -23,7 +23,6 @@
 <script>
 import { mapActions, mapState, mapGetters } from 'vuex';
 import { toBN } from 'web3-utils';
-import Web3 from 'web3';
 import moment from 'moment';
 import { debounce, isEqual } from 'lodash';
 import handlerWallet from '@/core/mixins/handlerWallet.mixin';
@@ -385,9 +384,8 @@ export default {
       }
     },
     setWeb3Account(acc) {
-      const web3 = new Web3(this.selectedEIP6963Provider);
       const wallet = new Web3Wallet(acc[0]);
-      this.setWallet([wallet, web3]);
+      this.setWallet([wallet, this.selectedEIP6963Provider]);
     }
   }
 };

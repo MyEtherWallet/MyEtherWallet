@@ -3,7 +3,6 @@ import BigNumber from 'bignumber.js';
 
 export default {
   name: 'HandlerBalanceHistory',
-  ,
   methods: {
     /**
      * Parse Apollo Data into chart format.

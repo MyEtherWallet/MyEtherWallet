@@ -73,6 +73,7 @@ import { toWei } from 'web3-utils';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { DASHBOARD } from '../analytics-opt-in/handlers/configs/events';
 import handlerSwap from '@/modules/swap/handlers/handlerSwap';
 
 const STATIC_PAIRS = [
@@ -228,7 +229,7 @@ export default {
       }
     },
     toSwap() {
-      this.trackDashboardAmplitude('SwapPairs');
+      this.trackDashboardAmplitude(DASHBOARD.SWAP_PAIRS);
       this.navigateToSwap();
     },
     goToSwap(data) {
@@ -237,7 +238,7 @@ export default {
         toToken: data.toT.contract,
         amount: '1'
       };
-      this.trackDashboardAmplitude('SwapPairs', {
+      this.trackDashboardAmplitude(DASHBOARD.SWAP_PAIRS, {
         TokenPair: `${data.fromT.symbol} to ${data.toT.symbol}`
       });
       this.navigateToSwap(obj);

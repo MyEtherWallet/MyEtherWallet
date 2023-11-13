@@ -9,7 +9,7 @@
         cycle
       >
         <v-carousel-item :ripple="false">
-          <a rel="dofollow" :href="browserLink" target="_blank">
+          <a :href="browserLink" target="_blank">
             <img
               class="slide-img"
               src="@/assets/images/slides/slide1.jpg"

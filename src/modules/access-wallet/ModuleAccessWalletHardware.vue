@@ -236,6 +236,7 @@ import { EventBus } from '@/core/plugins/eventBus.js';
 import { ethereum as ethereumPath } from '@/modules/access-wallet/hardware/handlers/configs/configPaths.js';
 
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { ACCESS_WALLET } from '@/modules/analytics-opt-in/handlers/configs/events';
 
 export default {
   name: 'HardwareAccessOverlay',
@@ -370,7 +371,7 @@ export default {
           icon: require('@/assets/images/icons/hardware-wallets/Ledger-Nano-X-Label-Icon.svg'),
           type: WALLET_TYPES.LEDGER,
           fn: () => {
-            this.trackAccessWalletAmplitude('HWLedgerClicked');
+            this.trackAccessWalletAmplitude(ACCESS_WALLET.HW_LEDGER_CLICKED);
           }
         },
         {
@@ -378,7 +379,7 @@ export default {
           icon: require('@/assets/images/icons/hardware-wallets/icon-trezor.svg'),
           type: WALLET_TYPES.TREZOR,
           fn: () => {
-            this.trackAccessWalletAmplitude('HWTrezorClicked');
+            this.trackAccessWalletAmplitude(ACCESS_WALLET.HW_TREZOR_CLICKED);
           }
         },
         {
@@ -386,7 +387,7 @@ export default {
           icon: require('@/assets/images/icons/hardware-wallets/icon-keepkey.svg'),
           type: WALLET_TYPES.KEEPKEY,
           fn: () => {
-            this.trackAccessWalletAmplitude('HWKeepKeyClicked');
+            this.trackAccessWalletAmplitude(ACCESS_WALLET.HW_KEEPKEY_CLICKED);
           }
         },
         {
@@ -394,7 +395,7 @@ export default {
           icon: require('@/assets/images/icons/hardware-wallets/icon-bitbox.svg'),
           type: WALLET_TYPES.BITBOX2,
           fn: () => {
-            this.trackAccessWalletAmplitude('HWBitBox02Clicked');
+            this.trackAccessWalletAmplitude(ACCESS_WALLET.HW_BITBOX02_CLICKED);
           }
         },
         {
@@ -402,7 +403,9 @@ export default {
           icon: require('@/assets/images/icons/hardware-wallets/icon-coolwallet.svg'),
           type: WALLET_TYPES.COOL_WALLET,
           fn: () => {
-            this.trackAccessWalletAmplitude('HWCoolWalletClicked');
+            this.trackAccessWalletAmplitude(
+              ACCESS_WALLET.HW_COOL_WALLET_CLICKED
+            );
           },
           bluetooth: true
         }
@@ -471,7 +474,7 @@ export default {
      */
     onBitbox2() {
       if (this.walletType === WALLET_TYPES.BITBOX2) {
-        this.trackAccessWalletAmplitude('HWBitBox02Shown');
+        this.trackAccessWalletAmplitude(ACCESS_WALLET.HW_BITBOX02_SHOWN);
         return true;
       }
       return false;
@@ -481,7 +484,7 @@ export default {
      */
     onLedger() {
       if (this.walletType === WALLET_TYPES.LEDGER) {
-        this.trackAccessWalletAmplitude('HWLedgerShown');
+        this.trackAccessWalletAmplitude(ACCESS_WALLET.HW_LEDGER_SHOWN);
         return true;
       }
       return false;
@@ -491,7 +494,7 @@ export default {
      */
     onLedgerX() {
       if (this.walletType === WALLET_TYPES.LEDGER) {
-        this.trackAccessWalletAmplitude('HWLedgerShown');
+        this.trackAccessWalletAmplitude(ACCESS_WALLET.HW_LEDGER_SHOWN);
         return true;
       }
       return false;
@@ -504,7 +507,7 @@ export default {
         this.walletType === WALLET_TYPES.COOL_WALLET &&
         isEmpty(this.hwWalletInstance)
       ) {
-        this.trackAccessWalletAmplitude('HWCoolWalletShown');
+        this.trackAccessWalletAmplitude(ACCESS_WALLET.HW_COOL_WALLET_SHOWN);
         return true;
       }
       return false;
@@ -514,7 +517,7 @@ export default {
      */
     onKeepkey() {
       if (this.walletType === WALLET_TYPES.KEEPKEY) {
-        this.trackAccessWalletAmplitude('HWLedgerShown');
+        this.trackAccessWalletAmplitude(ACCESS_WALLET.HW_LEDGER_SHOWN);
         return true;
       }
       return false;
@@ -524,7 +527,7 @@ export default {
      */
     onTrezor() {
       if (this.walletType === WALLET_TYPES.TREZOR) {
-        this.trackAccessWalletAmplitude('HWTrezorShown');
+        this.trackAccessWalletAmplitude(ACCESS_WALLET.HW_TREZOR_SHOWN);
         return true;
       }
       return false;
@@ -876,19 +879,21 @@ export default {
     trackWallet(id) {
       switch (id) {
         case WALLET_TYPES.LEDGER:
-          this.trackAccessWalletAmplitude('HWLedgerConnected');
+          this.trackAccessWalletAmplitude(ACCESS_WALLET.HW_LEDGER_CONNECTED);
           break;
         case WALLET_TYPES.TREZOR:
-          this.trackAccessWalletAmplitude('HWTrezorConnected');
+          this.trackAccessWalletAmplitude(ACCESS_WALLET.HW_TREZOR_CONNECTED);
           break;
         case WALLET_TYPES.COOL_WALLET:
-          this.trackAccessWalletAmplitude('HWCoolWalletConnected');
+          this.trackAccessWalletAmplitude(
+            ACCESS_WALLET.HW_COOL_WALLET_CONNECTED
+          );
           break;
         case WALLET_TYPES.BITBOX2:
-          this.trackAccessWalletAmplitude('HWBitBox02Connected');
+          this.trackAccessWalletAmplitude(ACCESS_WALLET.HW_BITBOX02_CONNECTED);
           break;
         case WALLET_TYPES.KEEPKEY:
-          this.trackAccessWalletAmplitude('HWKeepKeyConnected');
+          this.trackAccessWalletAmplitude(ACCESS_WALLET.HW_KEEPKEY_CONNECTED);
           break;
         default:
           break;

@@ -31,6 +31,7 @@
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
 import { knuthShuffle } from '@/modules/create-wallet/handlers/helpers';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { LANDING_PAGE } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 export default {
   name: 'HomeFeaturesTokens',
   mixins: [handlerAnalytics],
@@ -115,7 +116,7 @@ export default {
   },
   methods: {
     navigateToAccessWallet() {
-      this.trackLandingPageAmplitude('GetTokensClicked');
+      this.trackLandingPageAmplitude(LANDING_PAGE.GET_TOKENS_CLICKED);
       this.$router.push({
         name: ROUTES_HOME.ACCESS_WALLET.NAME,
         params: {}

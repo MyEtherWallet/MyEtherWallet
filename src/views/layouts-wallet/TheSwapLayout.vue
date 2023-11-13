@@ -25,6 +25,7 @@
 import { mapGetters } from 'vuex';
 
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { COMMON } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 
 const ETH_TOKEN = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
 const DAI_TOKEN = '0x6b175474e89094c44da98b954eedeac495271d0f';
@@ -64,7 +65,7 @@ export default {
     }
   },
   mounted() {
-    this.trackSwapAmplitude('PageShown');
+    this.trackSwapAmplitude(COMMON.PAGE_SHOWN);
   }
 };
 </script>

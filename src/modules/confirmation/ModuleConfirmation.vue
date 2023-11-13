@@ -273,6 +273,7 @@ import { setEvents } from '@/utils/web3-provider/methods/utils';
 import { sanitizeHex } from '@/modules/access-wallet/common/helpers';
 import dataToAction from './handlers/dataToAction';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { SWAP } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
 import errorHandler from './handlers/errorHandler';
 
@@ -536,7 +537,7 @@ export default {
       this.error = '';
       this.toNonEth = !this.swapInfo.toTokenType.isEth;
       this.isSwap = true;
-      this.trackSwapAmplitude('VerifyPageShown');
+      this.trackSwapAmplitude(SWAP.VERIFY_PAGE_SHOWN);
     });
 
     /**
@@ -623,7 +624,7 @@ export default {
   methods: {
     rejectTransaction(value) {
       if (this.isSwap) {
-        this.trackSwapAmplitude('Cancelled', {
+        this.trackSwapAmplitude(SWAP.CANCELLED, {
           type: value
         });
       }
@@ -631,7 +632,7 @@ export default {
       this.reset();
     },
     sendCrossChain(bool) {
-      this.trackSwapAmplitude('ConfirmClicked');
+      this.trackSwapAmplitude(SWAP.CONFIRMED_CLICKED);
       this.resolver(bool);
     },
     dataToAction(data) {
@@ -652,8 +653,10 @@ export default {
       }, 500);
     },
     resetSuccess() {
-      this.trackSwapAmplitude('InitialModalClosed', {
-        type: this.showSuccessSwap ? 'SwapInitiated' : 'TransactionInitiated'
+      this.trackSwapAmplitude(SWAP.INITIAL_MODAL_CLOSED, {
+        type: this.showSuccessSwap
+          ? SWAP.SWAP_INITIATED
+          : SWAP.TRANSACTION_INITIATED
       });
       this.showSuccessSwap = false;
       this.reset();
@@ -747,7 +750,7 @@ export default {
           .catch(err => {
             if (_this.isSwap && idx + 1 === _arr.length) {
               if (this.rejectedError(err.message)) {
-                _this.trackSwapAmplitude('Rejected');
+                _this.trackSwapAmplitude(SWAP.REJECTED);
               } else {
                 _this.emitSwapTxFail(err);
               }
@@ -793,19 +796,19 @@ export default {
       }
     },
     trackSwapTransactionSuccessful(param) {
-      this.trackSwapAmplitude('Success', {
+      this.trackSwapAmplitude(SWAP.SUCCESS, {
         hash: param,
         network: this.network.type.chainID
       });
     },
     trackSwapTransactionReceipt(param) {
-      this.trackSwapAmplitude('Receipt', {
+      this.trackSwapAmplitude(SWAP.RECEIPT, {
         hash: param,
         network: this.network.type.chainID
       });
     },
     trackSwapTransactionBroadcasted(res) {
-      this.trackSwapAmplitude('Broadcasted', {
+      this.trackSwapAmplitude(SWAP.BROADCASTED, {
         hash: res,
         network: this.network.type.chainID
       });
@@ -833,7 +836,7 @@ export default {
           .catch(e => {
             if (this.isSwap) {
               if (this.rejectedError(e.message)) {
-                this.trackSwapAmplitude('Rejected');
+                this.trackSwapAmplitude(SWAP.REJECTED);
               } else {
                 this.emitSwapTxFail(e);
               }
@@ -854,7 +857,7 @@ export default {
           })
           .catch(e => {
             if (this.isSwap) {
-              this.trackSwapAmplitude('Rejected');
+              this.trackSwapAmplitude(SWAP.REJECTED);
             }
             this.signedTxObject = {};
             this.error = errorHandler(e);
@@ -915,7 +918,7 @@ export default {
               .catch(e => {
                 if (this.isSwap) {
                   if (this.rejectedError(e.message)) {
-                    this.trackSwapAmplitude('Rejected');
+                    this.trackSwapAmplitude(SWAP.REJECTED);
                     throw new Error(e.message);
                   } else {
                     this.emitSwapTxFail(e);
@@ -962,14 +965,14 @@ export default {
     },
     emitSwapTxFail(err) {
       const hash = err?.receipt?.transactionHash;
-      this.trackSwapAmplitude('Failed', {
+      this.trackSwapAmplitude(SWAP.FAILED, {
         hash: hash,
         network: this.network.type.chainID
       });
     },
     btnAction() {
       if (this.isSwap) {
-        this.trackSwapAmplitude('ConfirmClicked');
+        this.trackSwapAmplitude(SWAP.CONFIRM_CLICKED);
       }
       if (!this.isWeb3Wallet) {
         if (

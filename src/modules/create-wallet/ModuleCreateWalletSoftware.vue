@@ -52,6 +52,7 @@ import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import handlerCreateWallet from './handlers/handlerCreateWallet';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { SOFTWARE_WALLET_TYPES } from '../access-wallet/software/handlers/helpers';
+import { CREATE_WALLET } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 
 export default {
   name: 'ModuleCreateWalletSoftware',
@@ -160,9 +161,9 @@ export default {
         });
         let type = '';
         if (newType === SOFTWARE_WALLET_TYPES.KEYSTORE) {
-          type = 'KeystoreFileClicked';
+          type = CREATE_WALLET.KEYSTORE_FILE_CLICKED;
         } else if (newType === SOFTWARE_WALLET_TYPES.MNEMONIC) {
-          type = 'MnemonicPhraseClicked';
+          type = CREATE_WALLET.MNEMONIC_PHRASE_CLICKED;
         }
         this.trackCreateWalletAmplitude(type);
       } catch (e) {

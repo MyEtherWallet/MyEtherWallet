@@ -142,6 +142,11 @@ export default {
         ? window.open(this.linkObj.url)
         : this.$emit('onClick');
     },
+    // eslint-disable-next-line
+    showToast() {
+      this.showsToast = true;
+      this.setTimer();
+    },
     getLinkClasses() {
       if (
         this.toastTypes.warning === this.toastType.toLowerCase() ||

@@ -312,6 +312,7 @@ import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import { TRENDING_LIST } from './handlers/configs/configTrendingTokens';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { SWAP } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 import Swapper from './handlers/handlerSwap';
 import handleError from '../confirmation/handlers/errorHandler';
@@ -1357,7 +1358,7 @@ export default {
       this.resetAddressValues({ clearTo: false });
       this.$nextTick(() => {
         if (value && value.name && !this.clearingSwap) {
-          this.trackSwapAmplitude('FieldInputs', {
+          this.trackSwapAmplitude(SWAP.FIELD_INPUTS, {
             fromToken: value.name
           });
         }
@@ -1378,7 +1379,7 @@ export default {
       this.toTokenType = value;
       this.resetAddressValues({ clearRefund: false });
       if (value && value.name) {
-        this.trackSwapAmplitude('FieldInputs', {
+        this.trackSwapAmplitude(SWAP.FIELD_INPUTS, {
           toToken: value.name
         });
       }
@@ -1456,7 +1457,7 @@ export default {
         this.isLoadingProviders = true;
         this.showAnimation = true;
         this.cachedAmount = this.tokenInValue;
-        this.trackSwapAmplitude('FieldInputs', {
+        this.trackSwapAmplitude(SWAP.FIELD_INPUTS, {
           FromAmount: toBase(this.tokenInValue, this.fromTokenType.decimals)
         });
         this.swapper
@@ -1501,7 +1502,7 @@ export default {
           if (!clicked) {
             this.selectedProvider = q;
             if (!this.clearingSwap) {
-              this.trackSwapAmplitude('FieldInputs', {
+              this.trackSwapAmplitude(SWAP.FIELD_INPUTS, {
                 SelectRate: q.amount
               });
             }
@@ -1595,7 +1596,7 @@ export default {
       }
     },
     showConfirm() {
-      this.trackSwapAmplitude('NextClicked');
+      this.trackSwapAmplitude(SWAP.NEXT_CLICKED);
       this.setConfirmInfo();
       this.executeTrade();
     },
@@ -1770,7 +1771,7 @@ export default {
     },
     handleLocalGasPrice(e) {
       this.localGasPrice = e;
-      this.trackSwapAmplitude('FieldInputs', {
+      this.trackSwapAmplitude(SWAP.FIELD_INPUTS, {
         TransactionFee: e
       });
     },

@@ -139,6 +139,10 @@ import { mapGetters } from 'vuex';
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import {
+  LANDING_PAGE,
+  HEADER
+} from '@/modules/analytics-opt-in/handlers/configs/events.js';
 export default {
   name: 'MobileMenu',
   mixins: [buyMore, handlerAnalytics],
@@ -249,18 +253,18 @@ export default {
       this.isOpen = false;
     },
     trackBuySell() {
-      this.trackHeaderAmplitude('BuyETHMobile');
+      this.trackHeaderAmplitude(HEADER.BUY_ETH_MOBILE);
       this.openBuySell();
     },
     trackMobileAccess() {
-      this.trackLandingPageAmplitude('AccessWalletMobile');
+      this.trackLandingPageAmplitude(LANDING_PAGE.ACCESS_WALLET_MOBILE);
       this.$router.push({
         name: ROUTES_HOME.ACCESS_WALLET.NAME,
         params: {}
       });
     },
     trackMobileCreate() {
-      this.trackLandingPageAmplitude('CreateWalletMobile');
+      this.trackLandingPageAmplitude(LANDING_PAGE.CREATE_WALLET_MOBILE);
       this.$router.push({
         name: ROUTES_HOME.CREATE_WALLET.NAME,
         params: {}

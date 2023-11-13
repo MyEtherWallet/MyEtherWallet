@@ -43,7 +43,6 @@
                 style="border-radius: 100px !important"
                 btn-size="large"
                 btn-link="https://www.enkrypt.com"
-                rel="dofollow"
                 @click.native="trackEnkrypt"
               >
                 <img
@@ -89,6 +88,7 @@
 <script>
 import enkryptMarketing from '@/core/mixins/enkryptMarketing.mixin.js';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { LANDING_PAGE } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 export default {
   name: 'HomeEnkrypt',
 
@@ -110,10 +110,10 @@ export default {
   },
   methods: {
     trackEnkrypt() {
-      this.trackLandingPageAmplitude('GoogleStore2');
+      this.trackLandingPageAmplitude(LANDING_PAGE.GOOGLE_STORE_2);
     },
     trackEnkryptLearnMore() {
-      this.trackLandingPageAmplitude('EnkryptLearnMore');
+      this.trackLandingPageAmplitude(LANDING_PAGE.ENKRYPT_LEARN_MORE);
     }
   }
 };

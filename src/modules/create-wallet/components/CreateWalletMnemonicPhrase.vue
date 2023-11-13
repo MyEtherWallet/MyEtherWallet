@@ -210,6 +210,7 @@
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { CREATE_WALLET } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 
 export default {
   name: 'CreateWalletMnemonicPhrase',
@@ -322,7 +323,7 @@ export default {
       this.handlerCreateWallet
         .validateMnemonic(this.validateMnemonicValues)
         .then(() => {
-          this.trackCreateWalletAmplitude('MnemonicSuccess');
+          this.trackCreateWalletAmplitude(CREATE_WALLET.MNEMONIC_SUCCESS);
           this.updateStep(3);
         })
         .catch(e => {
@@ -334,15 +335,15 @@ export default {
      * Used in Step 3
      */
     goToAccess() {
-      this.trackCreateWalletAmplitude('MnemonicSuccessAccessWallet');
+      this.trackCreateWalletAmplitude(CREATE_WALLET.MNEMONIC_SUCCESS_ACCESS);
       this.$router.push({ name: ROUTES_HOME.ACCESS_WALLET.NAME });
     },
     trackIWroteThemDown() {
-      this.trackCreateWalletAmplitude('WroteDownClicked');
+      this.trackCreateWalletAmplitude(CREATE_WALLET.MNEMONIC_WROTE_DOWN);
       this.updateStep(2);
     },
     trackBackToStepOne() {
-      this.trackCreateWalletAmplitude('MnemonicBackToStepOne');
+      this.trackCreateWalletAmplitude(CREATE_WALLET.MNEMONIC_BACK);
       this.updateStep(1);
     },
 
@@ -364,7 +365,7 @@ export default {
     createAnotherWallet() {
       this.extraWord = '';
       this.extraWordVerification = '';
-      this.trackCreateWalletAmplitude('MnemonicSuccessCreateWallet');
+      this.trackCreateWalletAmplitude(CREATE_WALLET.MNEMONIC_SUCCESS_CREATE);
       this.updateStep(1);
     }
   }

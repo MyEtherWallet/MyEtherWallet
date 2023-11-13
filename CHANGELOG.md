@@ -1,3 +1,21 @@
+### Release v6.7.10
+
+### devop
+
+* sync develop, fix RNS, catch error [#4743](https://github.com/MyEtherWallet/MyEtherWallet/pull/4743)
+* clean up amplitude [#4749](https://github.com/MyEtherWallet/MyEtherWallet/pull/4749)
+* fix misalign ad and network [#4750](https://github.com/MyEtherWallet/MyEtherWallet/pull/4750)
+* move mew components, remove package [#4752](https://github.com/MyEtherWallet/MyEtherWallet/pull/4752)
+* add amplitude for all dapps [#4758](https://github.com/MyEtherWallet/MyEtherWallet/pull/4758)
+* remove matomo [#4761](https://github.com/MyEtherWallet/MyEtherWallet/pull/4761)
+* add create and access wallet on amplitude [#4763](https://github.com/MyEtherWallet/MyEtherWallet/pull/4763)
+* switch xdc node [#4764](https://github.com/MyEtherWallet/MyEtherWallet/pull/4764)
+
+### fix
+
+* fetch balance and return empty array when balance api fetch fails [#4753](https://github.com/MyEtherWallet/MyEtherWallet/pull/4753)
+* fix contract interaction when passing empty array as value [#4759](https://github.com/MyEtherWallet/MyEtherWallet/pull/4759)
+
 ### Release v6.7.9-hotfix.1
 
 ### devop

@@ -130,7 +130,7 @@ const contractToToken =
       img: img
     };
 
-    if (networkToken && networkToken.decimals) {
+    if (networkToken && networkToken.hasOwnProperty('decimals')) {
       networkTokenObj['decimals'] = networkToken.decimals;
     }
 

@@ -114,6 +114,7 @@ import BigNumber from 'bignumber.js';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { currencyToNumber } from '@/core/helpers/localization';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { DASHBOARD } from '../analytics-opt-in/handlers/configs/events';
 
 export default {
   components: {
@@ -300,7 +301,7 @@ export default {
                 fromToken: item.contract,
                 amount: item.balancef
               };
-              this.trackDashboardAmplitude('SwapMyTokensValue');
+              this.trackDashboardAmplitude(DASHBOARD.SWAP_MY_TOKENS_VALUE);
               this.$router
                 .push({
                   name: ROUTES_WALLET.SWAP.NAME,

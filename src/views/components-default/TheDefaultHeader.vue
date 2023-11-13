@@ -55,6 +55,7 @@ import { mapGetters, mapActions } from 'vuex';
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { HEADER } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 
 export default {
   name: 'TheDefaultHeader',
@@ -125,18 +126,18 @@ export default {
   methods: {
     ...mapActions('external', ['setNetworkTokens']),
     routeToHome() {
-      this.trackHeaderAmplitude('Logo');
+      this.trackHeaderAmplitude(HEADER.LOGO);
       this.$router.push({ name: ROUTES_HOME.HOME.NAME });
     },
     trackHowItWorks() {
-      this.trackHeaderAmplitude('WhatIsMEW');
+      this.trackHeaderAmplitude(HEADER.WHAT_IS_MEW);
     },
     routeTo(route) {
-      this.trackHeaderAmplitude(`WalletActions`, route);
+      this.trackHeaderAmplitude(HEADER.WALLET_ACTIONS, route);
       this.$router.push(route);
     },
     trackBuySellLanding() {
-      this.trackHeaderAmplitude('BuyETH');
+      this.trackHeaderAmplitude(HEADER.BUY_ETH);
     }
   }
 };

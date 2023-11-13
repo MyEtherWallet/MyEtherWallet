@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "6.7.9-hotfix.1",
+  "version": "6.7.10",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build": "npm run update && vue-cli-service build",
@@ -59,9 +59,9 @@
     "@lokalise/node-api": "8.0.1",
     "@mathieustan/vue-intercom": "0.0.9",
     "@myetherwallet/eth2-keystore": "0.3.1",
-    "@sentry/browser": "7.73.0",
-    "@sentry/tracing": "7.73.0",
-    "@sentry/vue": "7.73.0",
+    "@sentry/browser": "7.77.0",
+    "@sentry/tracing": "7.77.0",
+    "@sentry/vue": "7.77.0",
     "@shapeshiftoss/hdwallet-core": "1.22.0",
     "@shapeshiftoss/hdwallet-keepkey-webusb": "1.22.0",
     "@trezor/connect-web": "9.1.5",
