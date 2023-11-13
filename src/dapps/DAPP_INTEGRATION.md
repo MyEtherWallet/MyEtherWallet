@@ -1,6 +1,6 @@
 ### WARNING: V6 and MEWComponents Library are in active development
 
----
+***
 
 ### Project Overview
 
@@ -8,14 +8,14 @@ Decentralized applications (dapps) are integrated through inclusion in the dapps
 
 The best way to start an integration is by creating a fork of MyEtherWallet and using it for your development.
 
----
+***
 
 ### Prerequisites
 
-- Best `Node.js` version to use is `10 >= Node.js <= 12`
-- `npm` version 6 or greater
+* Best `Node.js` version to use is `10 >= Node.js <= 12`
+* `npm` version 6 or greater
 
----
+***
 
 ### How to Start
 
@@ -38,11 +38,11 @@ The best way to start an integration is by creating a fork of MyEtherWallet and 
 
 Note: You can also use the offline version by opening `index.html` from the `dist` folder with your browser.
 
----
+***
 
 ### Most Common Issues
 
-- Can't start due to an update found
+* Can't start due to an update found
 
   `ERROR: Update print-js from 1.0.60 to 1.0.63. Released: 2019-11-15T05:05:52.202Z`
 
@@ -51,13 +51,13 @@ Note: You can also use the offline version by opening `index.html` from the `dis
       $ npm install
       $ npm start
 
-- `EACCESS` issue can be resolved by running:
+* `EACCESS` issue can be resolved by running:
 
   `$ sudo chown -R $(whoami) ~/.npm`
 
 For other issues, try the steps shown [here](https://www.google.com) by **@tomwalton78**.
 
----
+***
 
 ### Directory Structure
 
@@ -65,17 +65,17 @@ Dapps live in the `src/dapps` folder. All code related to dapps will be located 
 
 `/dapps` folder should contain:
 
-- `/handlers` folder with all `.js` files like: handlers files, helpers, and etc. Handler file includes a subsystem logic that does not need a UI interface to invoke the unit test.
+* `/handlers` folder with all `.js` files like: handlers files, helpers, and etc. Handler file includes a subsystem logic that does not need a UI interface to invoke the unit test.
 
-- `/modules` folder with `module.vue` files. Module folder is used to group multiple subsystems that have similar functionality and/or reuse the same handlers. `module.vue` file encapsulates a single subsystem’s components (interface) and handlers (logic), mixins, filters, etc defined within a single functionality of a subsystem.
+* `/modules` folder with `module.vue` files. Module folder is used to group multiple subsystems that have similar functionality and/or reuse the same handlers. `module.vue` file encapsulates a single subsystem’s components (interface) and handlers (logic), mixins, filters, etc defined within a single functionality of a subsystem.
 
-- `/components` folder with pure UI components or simple logic (separate them by module if multiple components are used only a specific module).
+* `/components` folder with pure UI components or simple logic (separate them by module if multiple components are used only a specific module).
 
-- `TheDappLayout.vue` file encapsulates a single dapp (interface) with multiple modules.
+* `TheDappLayout.vue` file encapsulates a single dapp (interface) with multiple modules.
 
 Note: Great example file structure can be found in `/eth-blocks` dapp.
 
----
+***
 
 ### Integration Walkthrough
 
@@ -173,8 +173,8 @@ To start, you can include the following Vue template:
 
 **Other props include:**
 
-- `dappImg` is a small dApp icon that is displayed on top of the menu.
-- `validNetworks` props identifies on which network the dapp is available. If your dapp is only available on Mainnet, you can specify:
+* `dappImg` is a small dApp icon that is displayed on top of the menu.
+* `validNetworks` props identifies on which network the dapp is available. If your dapp is only available on Mainnet, you can specify:
 
 ```javascript
 import { ETH } from '@/utils/networks/types';
@@ -186,7 +186,7 @@ data() {
 }
 ```
 
-- `bannerText` is an object that specifies name and subtext to be displayed above the menu next to the `dappImg`
+* `bannerText` is an object that specifies name and subtext to be displayed above the menu next to the `dappImg`
 
 ```javascript
 data() {
@@ -310,7 +310,7 @@ data() {
 }
 ```
 
----
+***
 
 ### Store Management
 
@@ -398,35 +398,35 @@ this ensures that the store can be initialized with the saved values that is in 
 
 If you have any issue, you can always contact us or you can create an issue in our Github [repository](https://github.com/MyEtherWallet/MyEtherWallet).
 
----
+***
 
 ### Web3
 
-- DApps have access to an integrated `web3` instance which handles all the interactions with a users wallet, and the network. (In essence, you get a ready to go `web3` instance to interact with as you wish).
+* DApps have access to an integrated `web3` instance which handles all the interactions with a users wallet, and the network. (In essence, you get a ready to go `web3` instance to interact with as you wish).
 
 [Web3 Documentation](https://web3js.readthedocs.io/en/v1.3.4/#)
 
----
+***
 
 ### UI Guidelines
 
-- The UI of the dapp must follow MEW style guide. We provide typography styles and colors defined in the style guide. You can find them in the `mew-components` documentation. You can explore our style guide [here](https://myetherwallet.github.io/mew-components/).
-- Majority of the needed base components are already premade in the `mew-components`. You do not have to do any imports. You can directly use the components in the html template.
-- Other components should be done with the help of [Vuetify](https://vuetifyjs.com/en/) framework.
+* The UI of the dapp must follow MEW style guide. We provide typography styles and colors defined in the style guide. You can find them in the `mew-components` documentation. You can explore our style guide [here](https://myetherwallet.github.io/mew-components/).
+* Majority of the needed base components are already premade in the `mew-components`. You do not have to do any imports. You can directly use the components in the html template.
+* Other components should be done with the help of [Vuetify](https://vuetifyjs.com/en/) framework.
 
----
+***
 
 ### Code Style Guide
 
 Pattern Name conventions:
 
-- `.js` files should start with lowercase letter and use camelCase
-- Folder names should start with lowercase letter and use kebab-case
-- `.vue` files should start with capital letter and use PascalCase
+* `.js` files should start with lowercase letter and use camelCase
+* Folder names should start with lowercase letter and use kebab-case
+* `.vue` files should start with capital letter and use PascalCase
 
-_Please refers to the Vue guidelines in the style guide for additional questions_
+*Please refers to the Vue guidelines in the style guide for additional questions*
 
----
+***
 
 ### Translations
 
@@ -434,10 +434,10 @@ Make sure all hard-coded strings are translated.
 
 1. Create a new folder under translations with the correct dapp name.
 2. Add an `en_US.json` file under it.
-3. Then add the correct route under `translations/en_US.js`. Add the right translations to the `dapp_name/en_US.json` file and make sure all translated attributes are using the _kebab-case_.
+3. Then add the correct route under `translations/en_US.js`. Add the right translations to the `dapp_name/en_US.json` file and make sure all translated attributes are using the *kebab-case*.
    Note: We currently have active support for Russian language, and we advise you to provide translations if possible. In that way, they will be consistent with your dapp branding and prevent broken UI due to different string length. Otherwise, our team will compile them some time after the release.
 
----
+***
 
 ### Final Note
 
