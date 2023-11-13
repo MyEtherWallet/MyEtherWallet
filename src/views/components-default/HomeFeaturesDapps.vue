@@ -1,5 +1,5 @@
 <template>
-  <mew6-white-sheet
+  <white-sheet
     class="mew-component--features-dapps px-6 pb-6 pt-5 pt-dm-4 pa-md-10"
     max-width="700px"
   >
@@ -32,13 +32,12 @@
         </div>
       </v-col>
     </v-row>
-  </mew6-white-sheet>
+  </white-sheet>
 </template>
 
 <script>
 export default {
   name: 'HomeFeaturesDapps',
-  components: {},
   data: vm => ({
     dapps: [
       {

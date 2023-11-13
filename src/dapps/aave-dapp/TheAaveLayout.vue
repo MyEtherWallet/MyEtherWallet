@@ -288,16 +288,9 @@
 <script>
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
+
 import { SUPPORTED_NETWORKS } from './handlers/supportedNetworks';
-import TheWrapperDapp from '@/core/components/TheWrapperDapp';
-import AaveBorrowOverlay from './components/overlays/AaveBorrowOverlay';
-import AaveDepositOverlay from './components/overlays/AaveDepositOverlay';
-import AaveCollateralOverlay from './components/overlays/AaveCollateralOverlay';
-import AaveRepayOverlay from './components/overlays/AaveRepayOverlay';
-import AaveWithdrawOverlay from './components/overlays/AaveWithdrawOverlay';
-import AaveSetAprOverlay from './components/overlays/AaveSetAprOverlay';
 import { AAVE_TABLE_TITLE } from '@/dapps/aave-dapp/handlers/helpers';
-import AaveTable from './components/AaveTable';
 import handlerAave from './handlers/handlerAave.mixin';
 import {
   formatPercentageValue,
@@ -330,14 +323,17 @@ const COLORS = {
 export default {
   name: 'AaveLayout',
   components: {
-    TheWrapperDapp,
-    AaveBorrowOverlay,
-    AaveDepositOverlay,
-    AaveTable,
-    AaveCollateralOverlay,
-    AaveRepayOverlay,
-    AaveWithdrawOverlay,
-    AaveSetAprOverlay
+    TheWrapperDapp: () => import('@/dapps/TheWrapperDapp.vue'),
+    AaveBorrowOverlay: () => import('./components/overlays/AaveBorrowOverlay'),
+    AaveDepositOverlay: () =>
+      import('./components/overlays/AaveDepositOverlay'),
+    AaveCollateralOverlay: () =>
+      import('./components/overlays/AaveCollateralOverlay'),
+    AaveRepayOverlay: () => import('./components/overlays/AaveRepayOverlay'),
+    AaveWithdrawOverlay: () =>
+      import('./components/overlays/AaveWithdrawOverlay'),
+    AaveTable: () => import('./components/AaveTable'),
+    AaveSetAprOverlay: () => import('./components/overlays/AaveSetAprOverlay')
   },
   mixins: [handlerAave],
   data() {

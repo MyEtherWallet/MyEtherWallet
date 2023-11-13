@@ -31,7 +31,8 @@ const DAI_TOKEN = '0x6b175474e89094c44da98b954eedeac495271d0f';
 
 export default {
   components: {
-    TheWrapperWallet: () => import('@/core/components/TheWrapperWallet'),
+    TheWrapperWallet: () =>
+      import('@/views/components-wallet/TheWrapperWallet'),
     ModuleSwap: () => import('@/modules/swap/ModuleSwap'),
     ModuleTokensValue: () => import('@/modules/balance/ModuleTokensValue'),
     ModuleTransferHistory: () =>

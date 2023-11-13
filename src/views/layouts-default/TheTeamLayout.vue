@@ -34,8 +34,7 @@ import axios from 'axios';
 export default {
   name: 'TheTeamLayout',
   components: {
-    TheLayoutHeader: () => import('../components-default/TheLayoutHeader'),
-    AppBlockTitle: () => import('@/core/components/AppBlockTitle')
+    TheLayoutHeader: () => import('../components-default/TheLayoutHeader')
   },
   data: vm => ({
     titleData: {

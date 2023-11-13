@@ -10,7 +10,7 @@
 export default {
   components: {
     ModuleSendOffline: () => import('@/modules/send-offline/ModuleSendOffline'),
-    TheWrapperWallet: () => import('@/core/components/TheWrapperWallet')
+    TheWrapperWallet: () => import('@/views/components-wallet/TheWrapperWallet')
   }
 };
 </script>

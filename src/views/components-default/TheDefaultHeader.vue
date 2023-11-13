@@ -50,16 +50,18 @@
 </template>
 
 <script>
-import mewTools from '@/components/mew-tools/MewTools';
-import TheDefaultMobileNavigation from './TheDefaultMobileNavigation';
-import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { mapGetters, mapActions } from 'vuex';
+
+import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 export default {
   name: 'TheDefaultHeader',
-  components: { mewTools, TheDefaultMobileNavigation },
+  components: {
+    MewTools: () => import('@/core/components/MewTools'),
+    TheDefaultMobileNavigation: () => import('./TheDefaultMobileNavigation')
+  },
   mixins: [buyMore, handlerAnalytics],
   data: () => ({
     menuObj: {

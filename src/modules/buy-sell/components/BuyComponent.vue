@@ -126,6 +126,7 @@ import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import Web3 from 'web3';
 import { fromWei, toBN } from 'web3-utils';
+
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import nodeList from '@/utils/networks';
 import {
@@ -135,13 +136,16 @@ import {
 import { getCurrency } from '@/modules/settings/components/currencyList';
 import { buyContracts } from './tokenList';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
-import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook.vue';
-import BuySellTokenSelect from '@/modules/buy-sell/components/TokenSelect.vue';
 import { ETH, BSC, MATIC } from '@/utils/networks/types';
 
 export default {
   name: 'ModuleBuyEth',
-  components: { ModuleAddressBook, BuySellTokenSelect },
+  components: {
+    ModuleAddressBook: () =>
+      import('@/modules/address-book/ModuleAddressBook.vue'),
+    BuySellTokenSelect: () =>
+      import('@/modules/buy-sell/components/TokenSelect.vue')
+  },
   props: {
     orderHandler: {
       type: Object,

@@ -74,7 +74,6 @@
 <script>
 export default {
   name: 'TheWalletFooter',
-  components: {},
   props: {
     isOfflineApp: {
       type: Boolean,

@@ -58,7 +58,6 @@ import { toChecksumAddress } from 'ethereumjs-util';
 import SignAndVerifyMessage from '@/modules/message/handlers';
 export default {
   name: 'ModuleMessageVerify',
-  components: {},
   data() {
     return {
       title: 'Verify Message',
@@ -70,7 +69,6 @@ export default {
       signer: ''
     };
   },
-  computed: {},
   mounted() {
     this.signAndVerify = new SignAndVerifyMessage(this.web3, this.address);
   },

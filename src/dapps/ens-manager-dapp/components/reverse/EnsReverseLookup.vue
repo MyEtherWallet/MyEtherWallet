@@ -54,11 +54,13 @@
 import { isEmpty } from 'lodash';
 import ENS from '@ensdomains/ensjs';
 import { mapGetters, mapState } from 'vuex';
-import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+
 import PermanentNameModule from '../../handlers/handlerPermanentName';
 import NameResolver from '@/modules/name-resolver/index';
 import errorHandler from '@/modules/confirmation/handlers/errorHandler.js';
 import metainfo from '../../metainfo.js';
+
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { toBNSafe } from '@/core/helpers/numberFormatHelper';
 export default {
   name: 'EnsReverseLookup',

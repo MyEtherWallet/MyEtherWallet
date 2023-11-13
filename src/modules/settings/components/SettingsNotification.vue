@@ -3,7 +3,7 @@
     <mew-switch label="Receive the notifications from MEW" />
     <div class="greyLight pa-8 border-radius--5px">
       <div class="mew-heading-3">
-        What’s kind of notification do you want to receive from MEW?
+        What kind of notification do you want to receive from MEW?
       </div>
       <mew-checkbox label="All" />
       <mew-checkbox label="Transaction" />
@@ -11,7 +11,7 @@
     </div>
     <div class="mt-5 greyLight pa-8 border-radius--5px">
       <div class="mew-heading-3">
-        What’s the maximum number of the notification do you want to store
+        What's the maximum number of the notification do you want to store
         within?
       </div>
       <v-radio-group v-model="radioGroup">
@@ -28,7 +28,6 @@
 
 <script>
 export default {
-  components: {},
   data: () => ({ radioGroup: '10' })
 };
 </script>

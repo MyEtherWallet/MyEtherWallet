@@ -155,7 +155,7 @@ import paths from '@/modules/access-wallet/hardware/handlers/bip44';
 export default {
   name: 'AccessMnemonic',
   components: {
-    phraseBlock: () => import('@/components/PhraseBlock'),
+    phraseBlock: () => import('@/core/components/PhraseBlock'),
     AccessWalletAddressNetwork: () =>
       import(
         '@/modules/access-wallet/common/components/AccessWalletAddressNetwork'

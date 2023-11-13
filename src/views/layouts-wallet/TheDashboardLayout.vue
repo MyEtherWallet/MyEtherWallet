@@ -16,7 +16,7 @@
       <module-swap-rates />
     </template>
     <template #[name]>
-      <app-carousel />
+      <wallet-carousel />
     </template>
   </the-wrapper-wallet>
 </template>
@@ -26,11 +26,12 @@ import { mapGetters } from 'vuex';
 
 export default {
   components: {
-    AppCarousel: () => import('@/core/components/AppCarousel'),
+    WalletCarousel: () =>
+      import('@/views/components-wallet/WalletCarousel.vue'),
     ModuleBalance: () => import('@/modules/balance/ModuleBalance'),
     ModuleTokens: () => import('@/modules/balance/ModuleTokens'),
     ModuleSwapRates: () => import('@/modules/swap/ModuleSwapRates'),
-    TheWrapperWallet: () => import('@/core/components/TheWrapperWallet')
+    TheWrapperWallet: () => import('@/views/components-wallet/TheWrapperWallet')
   },
   computed: {
     ...mapGetters('global', ['isEthNetwork']),

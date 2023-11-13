@@ -141,7 +141,6 @@ import {
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 
 export default {
-  components: { BorderBlock: () => import('@/components/BorderBlock') },
   mixins: [buyMore],
   props: {
     currentApr: {

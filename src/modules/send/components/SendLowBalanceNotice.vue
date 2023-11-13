@@ -58,10 +58,6 @@ import { mapGetters } from 'vuex';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 
 export default {
-  components: {
-    AppModal: () => import('@/core/components/AppModal'),
-    AppAddrQr: () => import('@/core/components/AppAddrQr')
-  },
   mixins: [buyMore],
   props: {
     currencyName: {

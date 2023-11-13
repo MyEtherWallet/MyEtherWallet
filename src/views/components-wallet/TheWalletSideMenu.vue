@@ -294,9 +294,6 @@ import isNew from '@/core/helpers/isNew.js';
 
 export default {
   components: {
-    AppModal: () => import('@/core/components/AppModal'),
-    AppAddrQr: () => import('@/core/components/AppAddrQr'),
-    AppBtnMenu: () => import('@/core/components/AppBtnMenu'),
     BalanceCard: () => import('@/modules/balance/ModuleBalanceCard'),
     ModuleSettings: () => import('@/modules/settings/ModuleSettings'),
     ModuleNotifications: () =>

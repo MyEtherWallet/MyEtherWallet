@@ -20,7 +20,7 @@
             />
           </div>
         </v-sheet>
-        <mew6-white-sheet class="pa-3">
+        <white-sheet class="pa-3">
           <div
             class="d-flex align-center justify-space-between informationBlock pa-6 border-radius--10px"
           >
@@ -89,7 +89,7 @@
               </tbody>
             </table>
           </div>
-        </mew6-white-sheet>
+        </white-sheet>
       </div>
     </template>
   </mew-overlay>
@@ -99,9 +99,6 @@
 export default {
   props: {
     open: { default: false, type: Boolean }
-  },
-  data() {
-    return {};
   }
 };
 </script>

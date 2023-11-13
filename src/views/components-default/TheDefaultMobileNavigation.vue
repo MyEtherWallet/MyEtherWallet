@@ -141,9 +141,6 @@ import buyMore from '@/core/mixins/buyMore.mixin.js';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 export default {
   name: 'MobileMenu',
-  components: {
-    AppBtnMenu: () => import('@/core/components/AppBtnMenu')
-  },
   mixins: [buyMore, handlerAnalytics],
   data: () => ({
     isOpen: false,

@@ -214,8 +214,8 @@ import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalyti
 export default {
   name: 'CreateWalletMnemonicPhrase',
   components: {
-    mnemonicPhraseTable: () => import('@/components/MnemonicPhraseTable'),
-    phraseBlock: () => import('@/components/PhraseBlock')
+    mnemonicPhraseTable: () => import('@/core/components/MnemonicPhraseTable'),
+    phraseBlock: () => import('@/core/components/PhraseBlock')
   },
   mixins: [handlerAnalytics],
   props: {

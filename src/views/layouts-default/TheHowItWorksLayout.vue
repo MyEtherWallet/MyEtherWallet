@@ -13,7 +13,7 @@
     <how-it-works-dapps-center />
     <how-it-works-tokens />
     <how-it-works-more />
-    <app-get-started />
+    <get-started />
   </div>
 </template>
 
@@ -22,13 +22,13 @@ export default {
   name: 'TheHowItWorksLayout',
   components: {
     TheLayoutHeader: () => import('../components-default/TheLayoutHeader'),
-    AppGetStarted: () => import('@/core/components/AppGetStarted'),
     HowItWorksSwap: () => import('../components-default/HowItWorksSwap'),
     HowItWorksSend: () => import('../components-default/HowItWorksSend'),
     HowItWorksDappsCenter: () =>
       import('../components-default/HowItWorksDappsCenter'),
     HowItWorksTokens: () => import('../components-default/HowItWorksTokens'),
-    HowItWorksMore: () => import('../components-default/HowItWorksMore')
+    HowItWorksMore: () => import('../components-default/HowItWorksMore'),
+    GetStarted: () => import('../components-default/GetStarted')
   }
 };
 </script>

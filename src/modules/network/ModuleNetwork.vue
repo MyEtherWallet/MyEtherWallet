@@ -1,6 +1,6 @@
 <template>
   <div class="mew-component--side-info-network">
-    <mew6-white-sheet :sideinfo="!mobile" class="py-5">
+    <white-sheet :sideinfo="!mobile" class="py-5">
       <div class="textDark--text px-5 px-lg-7 mew-heading-2 mb-2">
         {{ $t('common.network') }}
       </div>
@@ -30,12 +30,13 @@
           </div>
         </v-btn>
       </div>
-    </mew6-white-sheet>
+    </white-sheet>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapState } from 'vuex';
+
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 import WALLET_TYPES from '../access-wallet/common/walletTypes';
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
@@ -55,9 +56,6 @@ export default {
       type: Boolean,
       default: false
     }
-  },
-  data() {
-    return {};
   },
   computed: {
     ...mapState('wallet', ['blockNumber', 'identifier', 'isHardware']),

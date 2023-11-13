@@ -58,9 +58,6 @@ import Slack from '@/assets/images/icons/icon-slack-dark.svg';
 import Reddit from '@/assets/images/icons/icon-reddit-dark.svg';
 import Github from '@/assets/images/icons/icon-github-dark.svg';
 export default {
-  components: {
-    AppBlockTitle: () => import('@/core/components/AppBlockTitle')
-  },
   data: vm => ({
     icons: [
       {
