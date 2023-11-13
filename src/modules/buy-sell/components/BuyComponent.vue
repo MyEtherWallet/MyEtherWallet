@@ -379,9 +379,10 @@ export default {
       return formatFloatingPointValue(this.simplexQuote.crypto_amount).value;
     },
     fiatCurrencyItems() {
-      const arrItems = this.hasData
-        ? this.fetchedData[0].fiat_currencies.filter(item => item !== 'RUB')
-        : ['USD'];
+      const arrItems =
+        this.hasData && this.fetchedData[0].fiat_currencies.length > 0
+          ? this.fetchedData[0].fiat_currencies.filter(item => item !== 'RUB')
+          : ['USD'];
       return getCurrency(arrItems);
     },
     max() {
@@ -517,7 +518,6 @@ export default {
     }
   },
   mounted() {
-    console.log(this.$refs);
     if (!this.inWallet) this.$refs.addressInput.$refs?.addressSelect.clear();
     this.fetchCurrencyData();
   },
