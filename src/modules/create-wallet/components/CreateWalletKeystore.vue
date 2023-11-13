@@ -176,7 +176,6 @@ import { isEmpty } from 'lodash';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 
 export default {
   name: 'CreateWalletKeystore',
@@ -258,6 +257,7 @@ export default {
   },
   methods: {
     createWallet() {
+      this.trackCreateWalletAmplitude('KeystoreVerification');
       this.isGeneratingKeystore = true;
       this.handlerCreateWallet
         .generateKeystore(this.password)
@@ -276,27 +276,27 @@ export default {
     },
     downloadWallet() {
       this.$refs.downloadLink.click();
-      this.trackCreateWalletAmplitude('create_keystore_success');
-      this.trackCreateWallet(WALLET_TYPES.KEYSTORE);
+      this.trackCreateWalletAmplitude('KeystoreDownload');
       this.updateStep(3);
     },
     goToAccess() {
-      this.trackCreateWalletAmplitude('create_keystore_success_go_to_access');
+      this.trackCreateWalletAmplitude('KeystoreSuccessAccessWallet');
       this.$router.push({ name: ROUTES_HOME.ACCESS_WALLET.NAME });
     },
     /**
      * Update step
      */
     updateStep(step) {
+      if (step === 1) {
+        this.trackCreateWalletAmplitude('KeystoreDownloadBackClicked');
+      }
       this.step = step ? step : 1;
     },
     restart() {
       this.step = 1;
       this.password = '';
       this.cofirmPassword = '';
-      this.trackCreateWalletAmplitude(
-        'create_keystore_success_create_another_wallet'
-      );
+      this.trackCreateWalletAmplitude('KeystoreSuccessCreateWallet');
     }
   }
 };

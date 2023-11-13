@@ -28,7 +28,6 @@ import {
 import { BUYSELL_EVENT } from '@/modules/buy-sell/helpers';
 import { EventBus } from '@/core/plugins/eventBus';
 import handlerAnalyticsMixin from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin.js';
-import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 export default {
   name: 'App',
   components: {
@@ -88,22 +87,18 @@ export default {
     });
     EventBus.$on('swapTxBroadcasted', hash => {
       const id = this.network.type.chainID;
-      this.trackSwap('swapTxBroadcasted', hash, id);
       this.trackSwapAmplitude('Broadcasted', { hash: hash, network: id });
     });
     EventBus.$on('swapTxReceivedReceipt', hash => {
       const id = this.network.type.chainID;
-      this.trackSwap('swapTxReceivedReceipt', hash, id);
       this.trackSwapAmplitude('Receipt', { hash: hash, network: id });
     });
     EventBus.$on('swapTxFailed', hash => {
       const id = this.network.type.chainID;
       const passedHash = hash === '0x' ? 'no hash' : hash;
-      this.trackSwap('swapTxFailedV2', passedHash, id);
       this.trackSwapAmplitude('Failed', { hash: passedHash, network: id });
     });
     EventBus.$on('swapTxNotBroadcastedFailed', () => {
-      this.trackSwap('swapTxNotBroadcastedFailed');
       this.trackSwapAmplitude('NotBroadcasted');
     });
     EventBus.$on(BUYSELL_EVENT, () => {
@@ -134,11 +129,6 @@ export default {
       });
     }
 
-    window.onbeforeunload = () => {
-      if (this.$route.name === ROUTES_WALLET.SWAP.NAME) {
-        this.trackSwap('swapUserExit');
-      }
-    };
     const _self = this;
     // Close modal with 'esc' key
     document.addEventListener('keydown', e => {

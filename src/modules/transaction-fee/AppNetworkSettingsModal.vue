@@ -88,9 +88,6 @@ export default {
     setGas(value) {
       this.$emit('onLocalGasPrice', this.gasPriceByType(value));
       this.setSelected(value);
-      this.trackGasSwitch(
-        `type:${this.gasPriceType}, gas:${this.txFeeFormatted}`
-      );
       this.closeDialog();
     },
     closeDialog() {

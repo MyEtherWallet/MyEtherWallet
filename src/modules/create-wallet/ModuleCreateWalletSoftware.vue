@@ -51,6 +51,7 @@ import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import handlerCreateWallet from './handlers/handlerCreateWallet';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { SOFTWARE_WALLET_TYPES } from '../access-wallet/software/handlers/helpers';
 
 export default {
   name: 'ModuleCreateWalletSoftware',
@@ -157,7 +158,13 @@ export default {
         this.$router.push({
           query: { type: newType }
         });
-        this.trackCreateWalletAmplitude(`click_create_${newType}`);
+        let type = '';
+        if (newType === SOFTWARE_WALLET_TYPES.KEYSTORE) {
+          type = 'KeystoreFileClicked';
+        } else if (newType === SOFTWARE_WALLET_TYPES.MNEMONIC) {
+          type = 'MnemonicPhraseClicked';
+        }
+        this.trackCreateWalletAmplitude(type);
       } catch (e) {
         Toast(e, {}, ERROR);
       }

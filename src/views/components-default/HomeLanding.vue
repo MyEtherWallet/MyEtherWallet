@@ -149,7 +149,6 @@ export default {
   name: 'HomeLanding',
   mixins: [handlerAnalytics, enkryptMarketing],
   mounted() {
-    this.$amplitude.track('Landing Page');
     setTimeout(() => {
       this.trackLandingPage();
     }, 1000);

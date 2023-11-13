@@ -167,7 +167,6 @@ export default {
     install() {
       // eslint-disable-next-line
       window.open(this.browserLink, '_blank');
-      this.trackEnkryptInstall();
       this.close();
     },
     close() {

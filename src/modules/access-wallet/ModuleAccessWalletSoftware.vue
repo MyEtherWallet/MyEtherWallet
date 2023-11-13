@@ -250,18 +250,21 @@ export default {
           ? this.accessHandler.getWalletInstance()
           : account;
         const _this = this;
+        let type = '';
+        if (this.type === this.types.KEYSTORE) {
+          type = 'KeystoreConnected';
+        } else if (this.type === this.types.MNEMONIC) {
+          type = 'MnemonicConnected';
+        } else if (this.type === this.types.PRIVATE_KEY) {
+          type = 'PrivateKeyConnected';
+        }
         this.setWallet([wallet])
           .then(() => {
             if (this.switchAddress) {
               this.close();
               return;
             }
-            _this.trackAccessWalletAmplitude(
-              `click_access_${_this.type
-                .replace('-', '_')
-                .toLowerCase()}_success`
-            );
-            _this.trackAccessWallet(_this.type);
+            _this.trackAccessWalletAmplitude(type);
             if (_this.path !== '') {
               _this.$router.push({ path: _this.path });
             } else {
@@ -287,7 +290,7 @@ export default {
     accessBack() {
       if (this.walletType !== SOFTWARE_WALLET_TYPES.OVERVIEW) {
         try {
-          this.trackAccessWalletAmplitude('click_access_back');
+          this.trackAccessWalletAmplitude('SoftwareBack');
           this.$router.push({
             query: { type: SOFTWARE_WALLET_TYPES.OVERVIEW }
           });
@@ -306,9 +309,19 @@ export default {
       if (Object.values(SOFTWARE_WALLET_TYPES).includes(newType)) {
         try {
           this.type = newType;
-          this.trackAccessWalletAmplitude(
-            `click_access_${newType.replace('-', '_').toLowerCase()}`
-          );
+          switch (newType) {
+            case SOFTWARE_WALLET_TYPES.KEYSTORE:
+              this.trackAccessWalletAmplitude('KeystoreShown');
+              break;
+            case SOFTWARE_WALLET_TYPES.MNEMONIC:
+              this.trackAccessWalletAmplitude('MnemonicShown');
+              break;
+            case SOFTWARE_WALLET_TYPES.PRIVATE_KEY:
+              this.trackAccessWalletAmplitude('PrivateKeyShown');
+              break;
+            default:
+              break;
+          }
           this.$router.push({
             query: { type: newType }
           });

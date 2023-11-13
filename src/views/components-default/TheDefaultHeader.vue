@@ -19,7 +19,7 @@
             <router-link
               class="white--text text-decoration--none menu-item"
               :to="{ name: ROUTES_HOME.HOW_IT_WORKS.NAME }"
-              @click="trackHowItWorks"
+              @click.native="trackHowItWorks"
             >
               {{ $t('header.what-is-mew') }}
             </router-link>
@@ -137,7 +137,6 @@ export default {
     },
     trackBuySellLanding() {
       this.trackHeaderAmplitude('BuyETH');
-      this.trackBuySell('buySellLanding');
     }
   }
 };

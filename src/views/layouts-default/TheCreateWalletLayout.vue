@@ -141,7 +141,10 @@ export default {
     },
     titleRoute: {
       text: 'Access Wallet',
-      routeName: 'AccessWallet'
+      routeName: 'AccessWallet',
+      func: () => {
+        this.trackCreateWalletAmplitude('NavigateToAccess');
+      }
     }
   }),
   computed: {
@@ -160,7 +163,7 @@ export default {
               icon: require('@/assets/images/icons/icon-enkrypt-block.svg'),
               alt: 'Enkrypt',
               fn: () => {
-                this.trackCreateWalletAmplitude('click_enkrypt_install');
+                this.trackCreateWalletAmplitude('GoogleStore');
                 this.openEnkrypt();
               }
             },
@@ -175,7 +178,7 @@ export default {
               icon: require('@/assets/images/icons/icon-mew-wallet.png'),
               alt: 'MEW wallet',
               fn: () => {
-                this.trackCreateWalletAmplitude('click_mew_wallet_install');
+                this.trackCreateWalletAmplitude('MEWWallet');
                 this.openMewWallet();
               }
             },
@@ -190,7 +193,7 @@ export default {
               icon: require('@/assets/images/icons/icon-hardware-wallet.png'),
               alt: 'Hardware Wallets',
               fn: () => {
-                this.trackCreateWalletAmplitude('click_buy_hardware_wallet');
+                this.trackCreateWalletAmplitude('BuyHardware');
                 this.$router.push({
                   name: ROUTES_HOME.BUY_HARDWARE_WALLET.NAME
                 });
@@ -206,7 +209,7 @@ export default {
               official: false,
               recommended: false,
               fn: () => {
-                this.trackCreateWalletAmplitude('click_create_software_wallet');
+                this.trackCreateWalletAmplitude('SoftwareMethod');
                 this.openSoftwareModule();
               }
             }
@@ -222,12 +225,15 @@ export default {
               official: false,
               recommended: false,
               fn: () => {
-                this.trackCreateWalletAmplitude('click_create_software_wallet');
+                this.trackCreateWalletAmplitude('SoftwareMethod');
                 this.openSoftwareModule();
               }
             }
           ];
     }
+  },
+  mounted() {
+    this.trackCreateWalletAmplitude('PageShown');
   },
   methods: {
     openSoftwareModule() {
@@ -243,7 +249,7 @@ export default {
     },
     closeSoftwareModule() {
       try {
-        this.trackCreateWalletAmplitude('close_create_software_wallet');
+        this.trackCreateWalletAmplitude('CloseSoftware');
         this.$router.push({
           name: ROUTES_HOME.CREATE_WALLET.NAME
         });

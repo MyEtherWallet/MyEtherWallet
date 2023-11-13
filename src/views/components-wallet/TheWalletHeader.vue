@@ -211,7 +211,6 @@ export default {
       this.ads = ads;
     },
     buyCryptoNow() {
-      this.trackBuySell('buySellBuyCryptoNow');
       EventBus.$emit(BUYSELL_EVENT);
     }
   }

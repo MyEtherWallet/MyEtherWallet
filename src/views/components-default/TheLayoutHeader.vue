@@ -10,6 +10,7 @@
             v-if="hasLink"
             :to="{ name: routeObj.routeName }"
             class="text-decoration--underline"
+            @click.native="routeObj.func ? routeObj.func : () => {}"
           >
             {{ routeObj.text }}
           </router-link>

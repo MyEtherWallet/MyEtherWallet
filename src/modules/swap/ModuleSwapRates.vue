@@ -237,9 +237,6 @@ export default {
         toToken: data.toT.contract,
         amount: '1'
       };
-      this.trackSwapRate(
-        `fromSwapTokenPairs ${data.fromT.symbol} to ${data.toT.symbol}`
-      );
       this.trackDashboardAmplitude('SwapPairs', {
         TokenPair: `${data.fromT.symbol} to ${data.toT.symbol}`
       });
