@@ -63,7 +63,6 @@
 import { EventBus } from '@/core/plugins/eventBus';
 export default {
   name: 'SuccessModal',
-  components: { AppModal: () => import('@/core/components/AppModal') },
   props: {
     showSuccessModal: {
       type: Boolean,

@@ -34,8 +34,7 @@
 
 <script>
 export default {
-  name: 'ThePageNotFound',
-  components: {}
+  name: 'ThePageNotFound'
 };
 </script>
 

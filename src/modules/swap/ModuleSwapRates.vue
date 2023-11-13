@@ -1,5 +1,5 @@
 <template>
-  <mew6-white-sheet :sideinfo="!mobile">
+  <white-sheet :sideinfo="!mobile">
     <div class="px-5 px-lg-7 py-5">
       <div class="d-flex align-center justify-space-between">
         <span class="mew-heading-2">{{ $t('common.swap') }}</span>
@@ -63,7 +63,7 @@
         Try again?
       </h5>
     </div>
-  </mew6-white-sheet>
+  </white-sheet>
 </template>
 
 <script>
@@ -157,7 +157,6 @@ const STATIC_PAIRS = [
 ];
 export default {
   name: 'ModuleSwapRates',
-  components: {},
   mixins: [handlerAnalytics],
   props: {
     mobile: {

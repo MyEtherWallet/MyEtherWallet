@@ -145,9 +145,6 @@ import {
 } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 export default {
   name: 'MobileMenu',
-  components: {
-    AppBtnMenu: () => import('@/core/components/AppBtnMenu')
-  },
   mixins: [buyMore, handlerAnalytics],
   data: () => ({
     isOpen: false,

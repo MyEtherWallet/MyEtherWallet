@@ -23,7 +23,6 @@
 <script>
 export default {
   name: 'TheLayoutHeader',
-  components: {},
   props: {
     title: { default: '', type: String },
     subtitleLineOne: { default: '', type: String },
@@ -43,7 +42,6 @@ export default {
       type: Object
     },
     hasLink: { default: false, type: Boolean }
-  },
-  computed: {}
+  }
 };
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <mew6-white-sheet
+  <white-sheet
     class="mew-component--features-swap pa-6 pa-md-10"
     max-width="700px"
   >
@@ -61,7 +61,7 @@
         @click.native="() => navigateToSwap()"
       />
     </div>
-  </mew6-white-sheet>
+  </white-sheet>
 </template>
 
 <script>

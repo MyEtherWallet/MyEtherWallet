@@ -111,7 +111,6 @@ import { mapGetters, mapState } from 'vuex';
 import { uniqWith, isEqual } from 'lodash';
 import BigNumber from 'bignumber.js';
 
-import BalanceTable from './components/BalanceTable';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { currencyToNumber } from '@/core/helpers/localization';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
@@ -119,7 +118,7 @@ import { DASHBOARD } from '../analytics-opt-in/handlers/configs/events';
 
 export default {
   components: {
-    BalanceTable,
+    BalanceTable: () => import('./components/BalanceTable'),
     BalanceEmptyBlock: () => import('./components/BalanceEmptyBlock'),
     TokenAddCustom: () => import('./components/TokenAddCustom'),
     TokenEditCustom: () => import('./components/TokenEditCustom'),

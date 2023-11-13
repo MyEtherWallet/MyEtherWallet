@@ -1,5 +1,5 @@
 <template>
-  <mew6-white-sheet class="px-5 px-lg-7 py-5 justify-space-between">
+  <white-sheet class="px-5 px-lg-7 py-5 justify-space-between">
     <v-row dense>
       <v-col cols="11">
         <div :class="[draggable ? 'ml-7' : '', 'mew-heading-2 mb-3']">
@@ -20,7 +20,7 @@
         </div>
       </v-col>
     </v-row>
-  </mew6-white-sheet>
+  </white-sheet>
 </template>
 
 <script>
@@ -80,7 +80,6 @@ export default {
       return this.dropdown ? 'mdi-chevron-up' : 'mdi-chevron-down';
     }
   },
-  mounted() {},
   methods: {
     ...mapActions('notifications', ['updateNotification']),
     markNotificationAsRead(notification) {

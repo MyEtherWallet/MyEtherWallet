@@ -1,6 +1,6 @@
 <template>
   <div class="mew-component--swap">
-    <mew6-white-sheet>
+    <white-sheet>
       <mew-module
         :has-elevation="true"
         :has-indicator="true"
@@ -251,7 +251,7 @@
                   Swap Fee
                   =====================================================================================
                 -->
-              <app-transaction-fee
+              <transaction-fee
                 v-if="showNetworkFee"
                 :is-from-chain="!isFromNonChain"
                 :show-fee="showSwapFee"
@@ -291,7 +291,7 @@
           </div>
         </template>
       </mew-module>
-    </mew6-white-sheet>
+    </white-sheet>
   </div>
 </template>
 
@@ -323,12 +323,10 @@ let localContractToToken = {};
 export default {
   name: 'ModuleSwap',
   components: {
-    AppButtonBalance: () => import('@/core/components/AppButtonBalance'),
-    AppUserMsgBlock: () => import('@/core/components/AppUserMsgBlock'),
     ModuleAddressBook: () => import('@/modules/address-book/ModuleAddressBook'),
+    TransactionFee: () => import('@/modules/transaction-fee/TransactionFee'),
     SwapProvidersList: () => import('./components/SwapProvidersList.vue'),
-    SwapProviderMentions: () => import('./components/SwapProviderMentions.vue'),
-    AppTransactionFee: () => import('@/core/components/AppTransactionFee.vue')
+    SwapProviderMentions: () => import('./components/SwapProviderMentions.vue')
   },
   mixins: [handlerAnalytics, buyMore],
   props: {

@@ -76,13 +76,6 @@
                     | lokalise('howItWorks.swap.info-three.text')
                 }}
               </p>
-              <!-- <div class="d-flex align-center mt-10">
-                <a
-                  href="#"
-                  class="text-decoration--underline white--text font-weight-medium"
-                  >Watch tutorial</a
-                >
-              </div> -->
             </div>
           </div>
         </v-col>
@@ -93,9 +86,6 @@
 
 <script>
 export default {
-  components: {
-    AppBlockTitle: () => import('@/core/components/AppBlockTitle')
-  },
   data: vm => ({
     titleData: {
       textProps: 'white--text',

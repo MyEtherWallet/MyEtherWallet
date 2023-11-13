@@ -24,7 +24,7 @@ import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
 export default {
   name: 'TheEthBlocksLayout',
   components: {
-    TheWrapperDapp: () => import('@/core/components/TheWrapperDapp')
+    TheWrapperDapp: () => import('@/dapps/TheWrapperDapp.vue')
   },
   data() {
     return {

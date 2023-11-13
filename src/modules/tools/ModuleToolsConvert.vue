@@ -114,7 +114,7 @@ import utils from 'web3-utils';
 
 export default {
   name: 'TheConvertUnits',
-  components: {},
+
   data() {
     return {
       title: 'Convert Units',

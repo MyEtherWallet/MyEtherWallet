@@ -40,7 +40,6 @@ import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalyti
 import { LANDING_PAGE } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 export default {
   name: 'HomeSocials',
-
   mixins: [handlerAnalytics],
   data: () => ({
     socials: [

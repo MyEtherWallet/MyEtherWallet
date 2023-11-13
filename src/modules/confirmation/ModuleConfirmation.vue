@@ -204,11 +204,11 @@
                     </v-col>
 
                     <v-col cols="12" md="9">
-                      <app-scroll-block>
+                      <scroll-block>
                         <div class="data-values text-md-right">
                           {{ txVal.value }}
                         </div>
-                      </app-scroll-block>
+                      </scroll-block>
                     </v-col>
                   </v-row>
                 </div>
@@ -280,9 +280,8 @@ import errorHandler from './handlers/errorHandler';
 export default {
   name: 'ModuleConfirmation',
   components: {
-    AppScrollBlock: () => import('@/core/components/AppScrollBlock'),
+    ScrollBlock: () => import('./components/ScrollBlock'),
     ConfirmationMesssage: () => import('./components/ConfirmationMessage'),
-    AppModal: () => import('@/core/components/AppModal'),
     ConfirmationSwapTransactionDetails: () =>
       import('./components/ConfirmationSwapTransactionDetails'),
     ConfirmationSendTransactionDetails: () =>

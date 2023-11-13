@@ -1,5 +1,5 @@
 <template>
-  <mew6-white-sheet
+  <white-sheet
     class="mew-component--features-tokens pa-6 pa-md-10"
     max-width="700px"
   >
@@ -24,7 +24,7 @@
         @click.native="navigateToAccessWallet"
       />
     </div>
-  </mew6-white-sheet>
+  </white-sheet>
 </template>
 
 <script>

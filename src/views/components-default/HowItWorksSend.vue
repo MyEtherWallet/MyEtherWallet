@@ -88,9 +88,6 @@
 
 <script>
 export default {
-  components: {
-    AppBlockTitle: () => import('@/core/components/AppBlockTitle')
-  },
   data: vm => ({
     titleData: {
       textProps: '',

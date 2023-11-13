@@ -149,7 +149,6 @@ import {
 
 export default {
   name: 'HomeLanding',
-  components: {},
   mixins: [handlerAnalytics, enkryptMarketing],
   mounted() {
     setTimeout(() => {
