@@ -137,12 +137,12 @@ import { getCurrency } from '@/modules/settings/components/currencyList';
 import { buyContracts } from './tokenList';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import { ETH, BSC, MATIC } from '@/utils/networks/types';
+import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook.vue';
 
 export default {
   name: 'ModuleBuyEth',
   components: {
-    ModuleAddressBook: () =>
-      import('@/modules/address-book/ModuleAddressBook.vue'),
+    ModuleAddressBook: ModuleAddressBook,
     BuySellTokenSelect: () =>
       import('@/modules/buy-sell/components/TokenSelect.vue')
   },
@@ -517,6 +517,7 @@ export default {
     }
   },
   mounted() {
+    console.log(this.$refs);
     if (!this.inWallet) this.$refs.addressInput.$refs?.addressSelect.clear();
     this.fetchCurrencyData();
   },
