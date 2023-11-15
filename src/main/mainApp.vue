@@ -28,7 +28,8 @@ import {
 import { BUYSELL_EVENT } from '@/modules/buy-sell/helpers';
 import { EventBus } from '@/core/plugins/eventBus';
 import handlerAnalyticsMixin from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin.js';
-import { ROUTES_WALLET } from '@/core/configs/configRoutes';
+import { SWAP } from '@/modules/analytics-opt-in/handlers/configs/events.js';
+
 export default {
   name: 'App',
   components: {
@@ -87,17 +88,20 @@ export default {
       this.storeEIP6963Wallet(e.detail);
     });
     EventBus.$on('swapTxBroadcasted', hash => {
-      this.trackSwap('swapTxBroadcasted', hash, this.network.type.chainID);
+      const id = this.network.type.chainID;
+      this.trackSwapAmplitude(SWAP.BROADCASTED, { hash: hash, network: id });
     });
     EventBus.$on('swapTxReceivedReceipt', hash => {
-      this.trackSwap('swapTxReceivedReceipt', hash, this.network.type.chainID);
+      const id = this.network.type.chainID;
+      this.trackSwapAmplitude(SWAP.RECEIPT, { hash: hash, network: id });
     });
     EventBus.$on('swapTxFailed', hash => {
+      const id = this.network.type.chainID;
       const passedHash = hash === '0x' ? 'no hash' : hash;
-      this.trackSwap('swapTxFailedV2', passedHash, this.network.type.chainID);
+      this.trackSwapAmplitude(SWAP.FAILED, { hash: passedHash, network: id });
     });
     EventBus.$on('swapTxNotBroadcastedFailed', () => {
-      this.trackSwap('swapTxNotBroadcastedFailed');
+      this.trackSwapAmplitude(SWAP.NOT_BROADCASTED);
     });
     EventBus.$on(BUYSELL_EVENT, () => {
       this.openBuy();
@@ -127,11 +131,6 @@ export default {
       });
     }
 
-    window.onbeforeunload = () => {
-      if (this.$route.name === ROUTES_WALLET.SWAP.NAME) {
-        this.trackSwap('swapUserExit');
-      }
-    };
     const _self = this;
     // Close modal with 'esc' key
     document.addEventListener('keydown', e => {
@@ -194,5 +193,5 @@ export default {
 
 <style lang="scss">
 @import '@/assets/styles/GlobalStyles.scss';
-@import '@myetherwallet/mew-components/src/assets/styles/global.scss';
+@import '@/assets/styles/GlobalComponents.scss';
 </style>

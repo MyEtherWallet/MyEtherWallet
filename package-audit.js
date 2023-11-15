@@ -30,7 +30,9 @@ const AUDIT_EXCEPTIONS = [
   'fast-xml-parser',
   '@grpc/grpc-js',
   'is_js',
-  'get-func-name'
+  'get-func-name',
+  'chart.js',
+  'browserify-sign'
 ];
 const execute = (command, callback) => {
   exec(

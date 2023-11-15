@@ -104,9 +104,6 @@ import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 
 export default {
   name: 'NetworkSwitch',
-  components: {
-    AppUserMsgBlock: () => import('@/core/components/AppUserMsgBlock')
-  },
   mixins: [handlerAnalytics],
   props: {
     isWallet: { type: Boolean, default: true },
@@ -326,7 +323,6 @@ export default {
                 : this.setWeb3Instance();
             setNetworkCall.then(() => {
               Toast(`Switched network to: ${found[0].type.name}`, {}, SUCCESS);
-              this.trackNetworkSwitch(found[0].type.name);
               this.setTokenAndEthBalance();
               this.$emit('newNetwork');
             });

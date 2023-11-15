@@ -41,8 +41,7 @@ export default {
       type: String,
       default: 'pa-4'
     }
-  },
-  data: () => ({})
+  }
 };
 </script>
 

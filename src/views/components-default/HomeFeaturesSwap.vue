@@ -1,5 +1,5 @@
 <template>
-  <mew6-white-sheet
+  <white-sheet
     class="mew-component--features-swap pa-6 pa-md-10"
     max-width="700px"
   >
@@ -61,7 +61,7 @@
         @click.native="() => navigateToSwap()"
       />
     </div>
-  </mew6-white-sheet>
+  </white-sheet>
 </template>
 
 <script>
@@ -72,6 +72,7 @@ import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { isEmpty } from 'lodash';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { LANDING_PAGE } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 const fromAmount = '1000000000000000000';
 const STATIC_PAIRS = [
   {
@@ -214,7 +215,7 @@ export default {
       if (query) {
         obj['query'] = query;
       }
-      this.trackLandingPageAmplitude('click_features_swap');
+      this.trackLandingPageAmplitude(LANDING_PAGE.SWAP_CLICKED);
       if (this.$route.name === ROUTES_WALLET.SWAP.NAME) {
         // this will allow vue to update query param
         // within the swap page when user clicks on the pairs again

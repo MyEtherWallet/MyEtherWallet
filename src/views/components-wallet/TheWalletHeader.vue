@@ -64,9 +64,9 @@
           class="eth-banner d-flex"
         >
           <div class="mr-5">
-            <mew6-white-sheet class="pa-3">
+            <white-sheet class="pa-3">
               <v-icon color="blackBg"> mdi-bank </v-icon>
-            </mew6-white-sheet>
+            </white-sheet>
           </div>
           <div class="d-flex flex-column align-start">
             <span
@@ -211,7 +211,6 @@ export default {
       this.ads = ads;
     },
     buyCryptoNow() {
-      this.trackBuySell('buySellBuyCryptoNow');
       EventBus.$emit(BUYSELL_EVENT);
     }
   }

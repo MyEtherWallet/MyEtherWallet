@@ -288,15 +288,13 @@ import { EventBus } from '@/core/plugins/eventBus';
 import { ETH, BSC, MATIC } from '@/utils/networks/types';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { DASHBOARD } from '@/modules/analytics-opt-in/handlers/configs/events';
 import dappsMeta from '@/dapps/metainfo-dapps';
 import { BUYSELL_EVENT } from '@/modules/buy-sell/helpers';
 import isNew from '@/core/helpers/isNew.js';
 
 export default {
   components: {
-    AppModal: () => import('@/core/components/AppModal'),
-    AppAddrQr: () => import('@/core/components/AppAddrQr'),
-    AppBtnMenu: () => import('@/core/components/AppBtnMenu'),
     BalanceCard: () => import('@/modules/balance/ModuleBalanceCard'),
     ModuleSettings: () => import('@/modules/settings/ModuleSettings'),
     ModuleNotifications: () =>
@@ -511,11 +509,6 @@ export default {
       this.setDarkMode(val);
       this.$vuetify.theme.dark = val;
     },
-    isOpenNetworkOverlay(newVal) {
-      if (newVal && this.$route.name == ROUTES_WALLET.SWAP.NAME) {
-        this.trackSwap('switchingNetworkOnSwap');
-      }
-    },
     navOpen(newVal) {
       if (this.isOpenNetworkOverlay && !newVal)
         this.isOpenNetworkOverlay = false;
@@ -551,10 +544,7 @@ export default {
     ...mapActions('wallet', ['removeWallet']),
     ...mapActions('global', ['setDarkMode']),
     trackToSwap() {
-      this.trackSwap('fromSideMenu');
-    },
-    trackBuySellFunc() {
-      this.trackBuySell('buySellHome');
+      this.trackDashboardAmplitude(DASHBOARD.SWAP_LEFT_NAVIGATION);
     },
     closeNetworkOverlay() {
       if (this.validNetwork) {
@@ -575,7 +565,6 @@ export default {
     },
     openBuySell() {
       EventBus.$emit(BUYSELL_EVENT);
-      this.trackBuySellFunc();
     },
     openNavigation() {
       this.navOpen = true;

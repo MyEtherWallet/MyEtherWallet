@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
+    <title>icon\</title>
+    <desc>Created with Sketch.</desc>
+    <g id="icon\" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="makerdao" transform="translate(3.000000, 3.000000)">
+            <path d="M25.8534588,1.47839081 L1.61256433,25.2226703 C-0.294402297,27.0905696 -0.326072713,30.1507031 1.54182657,32.0576698 C1.57179594,32.088266 1.60217064,32.1184624 1.63294263,32.1482511 L26.0035732,55.7401947 C27.8660462,57.5431582 30.8192121,57.5558479 32.6971106,55.7689566 L56.4116075,33.2037184 C58.3454182,31.3636245 58.4213908,28.3042703 56.5812969,26.3704595 C56.574892,26.3637284 56.5684677,26.3570158 56.5620241,26.3503217 L32.7177911,1.57933691 C30.8665754,-0.3438298 27.8068339,-0.402157597 25.8836672,1.44905808 C25.8735551,1.45879174 25.8634856,1.46856938 25.8534588,1.47839081 Z" id="Path-5" fill="#CDF4EE" fill-rule="nonzero"></path>
+            <path d="M13.5333333,26.1 L28.984153,10.6392372" id="Line-3" stroke="#5A78F0" stroke-width="4.5" stroke-linecap="round"></path>
+            <path d="M28.9841525,27.0666667 L44.4666661,10.6392372" id="Line-3" stroke="#5A78F0" stroke-width="4.5" stroke-linecap="round" transform="translate(36.725409, 18.852952) scale(-1, 1) translate(-36.725409, -18.852952) "></path>
+        </g>
+    </g>
+</svg>

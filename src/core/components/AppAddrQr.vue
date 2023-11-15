@@ -43,7 +43,7 @@
       />
       <div class="inner-content pa-3 pa-sm-8 d-flex align-center">
         <div class="white pa-1" style="border-radius: 7px">
-          <qr-code :data="address" :height="132" :width="132" />
+          <app-qr-code :data="address" :height="132" :width="132" />
         </div>
         <div class="pl-3">
           <div

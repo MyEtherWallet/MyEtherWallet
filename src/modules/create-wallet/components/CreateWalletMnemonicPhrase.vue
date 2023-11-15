@@ -71,7 +71,7 @@
             title="I wrote them down"
             btn-size="xlarge"
             :has-full-width="false"
-            @click.native="updateStep(2)"
+            @click.native="trackIWroteThemDown()"
           />
         </div>
         <mew-warning-sheet
@@ -143,7 +143,7 @@
             btn-size="xlarge"
             btn-style="outline"
             class="mx-md-1 my-1"
-            @click.native="updateStep(1)"
+            @click.native="trackBackToStepOne"
           />
           <mew-button
             title="Verify"
@@ -210,13 +210,13 @@
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
+import { CREATE_WALLET } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 
 export default {
   name: 'CreateWalletMnemonicPhrase',
   components: {
-    mnemonicPhraseTable: () => import('@/components/MnemonicPhraseTable'),
-    phraseBlock: () => import('@/components/PhraseBlock')
+    mnemonicPhraseTable: () => import('@/core/components/MnemonicPhraseTable'),
+    phraseBlock: () => import('@/core/components/PhraseBlock')
   },
   mixins: [handlerAnalytics],
   props: {
@@ -323,8 +323,7 @@ export default {
       this.handlerCreateWallet
         .validateMnemonic(this.validateMnemonicValues)
         .then(() => {
-          this.trackCreateWalletAmplitude('create_menmonic_success');
-          this.trackCreateWallet(WALLET_TYPES.MNEMONIC);
+          this.trackCreateWalletAmplitude(CREATE_WALLET.MNEMONIC_SUCCESS);
           this.updateStep(3);
         })
         .catch(e => {
@@ -336,8 +335,16 @@ export default {
      * Used in Step 3
      */
     goToAccess() {
-      this.trackCreateWalletAmplitude('create_menmonic_success_go_to_access');
+      this.trackCreateWalletAmplitude(CREATE_WALLET.MNEMONIC_SUCCESS_ACCESS);
       this.$router.push({ name: ROUTES_HOME.ACCESS_WALLET.NAME });
+    },
+    trackIWroteThemDown() {
+      this.trackCreateWalletAmplitude(CREATE_WALLET.MNEMONIC_WROTE_DOWN);
+      this.updateStep(2);
+    },
+    trackBackToStepOne() {
+      this.trackCreateWalletAmplitude(CREATE_WALLET.MNEMONIC_BACK);
+      this.updateStep(1);
     },
 
     /**
@@ -358,9 +365,7 @@ export default {
     createAnotherWallet() {
       this.extraWord = '';
       this.extraWordVerification = '';
-      this.trackCreateWalletAmplitude(
-        'create_menmonic_success_create_another_wallet'
-      );
+      this.trackCreateWalletAmplitude(CREATE_WALLET.MNEMONIC_SUCCESS_CREATE);
       this.updateStep(1);
     }
   }

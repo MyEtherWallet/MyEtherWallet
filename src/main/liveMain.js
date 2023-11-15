@@ -4,7 +4,6 @@ import '@/assets/fonts/Roboto/css/Roboto.css';
 
 import './sentry';
 import './components';
-import './matomo';
 
 import Vue from 'vue';
 import Router from 'vue-router';
@@ -109,7 +108,6 @@ new Vue({
     this.$store.commit('article/INIT_STORE');
     this.$store.commit('popups/INIT_STORE');
     dappStoreBeforeCreate(this.$store);
-    this.$store.dispatch('popups/setTracking');
 
     this.$amplitude.setOptOut(!this.$store.state.popups.consentToTrack);
   },

@@ -52,9 +52,6 @@ export default {
       default: false
     }
   },
-  data() {
-    return {};
-  },
   computed: {
     leftBtn() {
       return {
@@ -64,7 +61,6 @@ export default {
       };
     }
   },
-  mounted() {},
   methods: {
     emitClose() {
       this.$emit('closeEnkryptMissingSnackbar');

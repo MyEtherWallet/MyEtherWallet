@@ -13,7 +13,8 @@
 export default {
   name: 'InteracContractLayout',
   components: {
-    TheWrapperWallet: () => import('@/core/components/TheWrapperWallet'),
+    TheWrapperWallet: () =>
+      import('@/views/components-wallet/TheWrapperWallet'),
     ModuleSwapRates: () => import('@/modules/swap/ModuleSwapRates'),
     ModuleContractInteract: () =>
       import('@/modules/contract/ModuleContractInteract')

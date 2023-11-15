@@ -23,7 +23,6 @@
 <script>
 import { mapActions, mapState, mapGetters } from 'vuex';
 import { toBN } from 'web3-utils';
-import Web3 from 'web3';
 import moment from 'moment';
 import { debounce, isEqual } from 'lodash';
 import handlerWallet from '@/core/mixins/handlerWallet.mixin';
@@ -164,7 +163,6 @@ export default {
   },
   mounted() {
     this.$vuetify.theme.dark = this.darkMode;
-    this.trackUserVersion(VERSION);
     EventBus.$on('openPaperWallet', () => {
       this.showPaperWallet = true;
       this.$router.push({
@@ -353,7 +351,6 @@ export default {
               await this.setWeb3Instance(this.selectedEIP6963Provider);
               this.setTokensAndBalance();
               this.setValidNetwork(true);
-              this.trackNetworkSwitch(foundNetwork[0].type.name);
               this.$emit('newNetwork');
               Toast(
                 `Switched network to: ${foundNetwork[0].type.name}`,
@@ -377,9 +374,8 @@ export default {
       }
     },
     setWeb3Account(acc) {
-      const web3 = new Web3(this.selectedEIP6963Provider);
       const wallet = new Web3Wallet(acc[0]);
-      this.setWallet([wallet, web3]);
+      this.setWallet([wallet, this.selectedEIP6963Provider]);
     }
   }
 };

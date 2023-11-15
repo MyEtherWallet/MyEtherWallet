@@ -36,8 +36,8 @@
   </div>
 </template>
 <script>
-import iconSurveyBanner from '@/assets/images/icons/icon-survey-banner.svg';
 import { mapActions } from 'vuex';
+import iconSurveyBanner from '@/assets/images/icons/icon-survey-banner.svg';
 export default {
   name: 'SurveytBanner',
   props: {

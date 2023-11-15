@@ -93,7 +93,6 @@
 </template>
 
 <script>
-import SettingsAddressTable from './components/SettingsAddressTable';
 import { mapState } from 'vuex';
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
 import handlerSettings from './handler/handlerSettings';
@@ -104,7 +103,7 @@ const modes = ['add', 'edit'];
 export default {
   name: 'ModuleSettings',
   components: {
-    SettingsAddressTable,
+    SettingsAddressTable: () => import('./components/SettingsAddressTable'),
     SettingsImportConfig: () => import('./components/SettingsImportConfig'),
     SettingsExportConfig: () => import('./components/SettingsExportConfig'),
     SettingsGasPrice: () => import('./components/SettingsGasPrice'),

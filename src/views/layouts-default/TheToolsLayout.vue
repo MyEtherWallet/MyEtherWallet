@@ -28,7 +28,7 @@
         </template>
       </mew-tabs>
     </v-container>
-    <app-get-started />
+    <get-started />
   </div>
 </template>
 
@@ -39,12 +39,12 @@ export default {
   name: 'TheToolsLayout',
   components: {
     TheLayoutHeader: () => import('../components-default/TheLayoutHeader'),
-    AppGetStarted: () => import('@/core/components/AppGetStarted'),
     ModuleToolsWatchOnly: () => import('@/modules/tools/ModuleToolsWatchOnly'),
     ModuleToolsConvert: () => import('@/modules/tools/ModuleToolsConvert'),
     ModuleToolsOfflineHelper: () =>
       import('@/modules/tools/ModuleToolsOfflineHelper'),
-    ModuleMessageVerify: () => import('@/modules/message/ModuleMessageVerify')
+    ModuleMessageVerify: () => import('@/modules/message/ModuleMessageVerify'),
+    GetStarted: () => import('../components-default/GetStarted')
   },
   data: () => ({
     currentTool: '',

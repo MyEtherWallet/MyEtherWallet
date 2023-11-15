@@ -290,25 +290,26 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex';
+import { fromWei, toBN, toWei } from 'web3-utils';
+import { clone } from 'lodash';
 import BigNumber from 'bignumber.js';
 import ENS from '@ensdomains/ensjs';
-import { fromWei, toBN, toWei } from 'web3-utils';
+
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin.js';
-import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
 import handlerEnsManager from './handlers/handlerEnsManager';
+import normalise from '@/core/helpers/normalise';
+import stripQuery from '@/core/helpers/stripQuery.js';
+import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
 import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 import { ENS_MANAGER_ROUTE } from './configsRoutes';
-import normalise from '@/core/helpers/normalise';
-import stripQuery from '@/core/helpers/stripQuery.js';
-import { clone } from 'lodash';
 
 export default {
   name: 'ENSManagerLayout',
   components: {
     ModuleRegisterDomain: () => import('./modules/ModuleRegisterDomain'),
     ModuleManageDomain: () => import('./modules/ModuleManageDomain'),
-    TheWrapperDapp: () => import('@/core/components/TheWrapperDapp'),
+    TheWrapperDapp: () => import('@/dapps/TheWrapperDapp.vue'),
     EnsReverseLookup: () => import('./components/reverse/EnsReverseLookup')
   },
   mixins: [handlerAnalytics],
@@ -601,7 +602,7 @@ export default {
     closeManage() {
       this.onManage = false;
       this.settingIpfs = false;
-      this.trackDapp('closeEnsManageTab');
+      this.trackDapp('ensCloseManageTab');
     },
     transfer(address) {
       this.trackDapp('ensDomainTransferEvent');
@@ -706,7 +707,7 @@ export default {
     async findDomain() {
       try {
         this.nameHandler = await this.ensManager.searchName(this.name);
-        this.trackDapp('findEnsDomain');
+        this.trackDapp('ensFindDomain');
       } catch (e) {
         Toast(e, {}, ERROR);
       }
@@ -719,7 +720,7 @@ export default {
       this.name = '';
       this.nameHandler = {};
       this.$router.push({ name: ENS_MANAGER_ROUTE.ENS_MANAGER.NAME });
-      this.trackDapp('closeEnsRegister');
+      this.trackDapp('ensCloseRegister');
     },
     setName(name) {
       this.searchError = '';
@@ -728,7 +729,7 @@ export default {
       }
       try {
         this.name = normalise(name);
-        this.trackDapp('setEnsDomainName');
+        this.trackDapp('ensSetDomainName');
       } catch (e) {
         this.searchError = e.message.includes('Failed to validate')
           ? 'Invalid name!'

@@ -47,7 +47,6 @@ import { mapGetters } from 'vuex';
 
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 export default {
-  components: {},
   props: {
     getRentPrice: {
       default: function () {

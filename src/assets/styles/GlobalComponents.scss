@@ -1,0 +1,24 @@
+@import "./setup/_fonts.scss";
+
+@import "./basics/_typography.scss";
+@import "./basics/_base.scss";
+@import "./basics/_input.scss";
+@import "./basics/_button.scss";
+
+html,
+body {
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+}
+
+input::placeholder {
+  font-family: 'Roboto', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+}
+
+.mew-address {
+  font-family: 'PT Mono';
+}

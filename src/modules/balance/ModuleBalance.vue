@@ -109,6 +109,7 @@ import {
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { DASHBOARD } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 export default {
   components: {
     Loader: () => import('./ModuleBalanceLoader'),
@@ -281,7 +282,7 @@ export default {
       this.$router.push({ name: ROUTES_WALLET.SEND_TX.NAME });
     },
     navigateToSwap() {
-      this.trackSwap('fromDashboardBalanceModule');
+      this.trackDashboardAmplitude(DASHBOARD.SWAP_BALANCE);
       this.$router.push({ name: ROUTES_WALLET.SWAP.NAME });
     }
   }

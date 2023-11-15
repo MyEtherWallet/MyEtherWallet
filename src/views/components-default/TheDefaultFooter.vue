@@ -570,12 +570,10 @@ export default {
   },
   methods: {
     trackFooterLink(d) {
-      this.trackFooterAmplitude(
-        `click_footer_${d.label.replace(' ', '_').toLowerCase()}`
-      );
+      this.trackFooterAmplitude(d.label.replace(' ', '_').toLowerCase());
     },
     trackDonationAddress(val) {
-      this.trackFooterAmplitude(`click_footer_donation_${val}`);
+      this.trackFooterAmplitude(val);
     }
   }
 };

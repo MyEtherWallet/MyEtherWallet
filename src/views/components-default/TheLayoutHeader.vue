@@ -10,6 +10,7 @@
             v-if="hasLink"
             :to="{ name: routeObj.routeName }"
             class="text-decoration--underline"
+            @click.native="routeObj.func ? routeObj.func : () => {}"
           >
             {{ routeObj.text }}
           </router-link>
@@ -22,7 +23,6 @@
 <script>
 export default {
   name: 'TheLayoutHeader',
-  components: {},
   props: {
     title: { default: '', type: String },
     subtitleLineOne: { default: '', type: String },
@@ -42,7 +42,6 @@ export default {
       type: Object
     },
     hasLink: { default: false, type: Boolean }
-  },
-  computed: {}
+  }
 };
 </script>

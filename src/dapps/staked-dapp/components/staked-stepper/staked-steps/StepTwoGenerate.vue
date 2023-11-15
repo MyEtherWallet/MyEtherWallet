@@ -63,8 +63,6 @@ import { mapGetters, mapState } from 'vuex';
 
 export default {
   components: {
-    BorderBlock: () => import('@/components/BorderBlock'),
-    MnemonicPhraseTable: () => import('@/components/MnemonicPhraseTable'),
     ModuleAddressBook: () => import('@/modules/address-book/ModuleAddressBook')
   },
   data() {

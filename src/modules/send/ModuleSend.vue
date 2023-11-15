@@ -83,7 +83,7 @@
         <!-- Network Fee (Note: comes with mt-5(20px) mb-8(32px))) -->
         <!-- ===================================================================================== -->
         <v-col cols="12" class="py-0 mb-8">
-          <app-transaction-fee
+          <transaction-fee
             :show-fee="showSelectedBalance"
             :getting-fee="!txFeeIsReady"
             :error="feeError"
@@ -208,9 +208,8 @@ import SendTransaction from '@/modules/send/handlers/handlerSend';
 export default {
   components: {
     ModuleAddressBook: () => import('@/modules/address-book/ModuleAddressBook'),
-    SendLowBalanceNotice: () => import('./components/SendLowBalanceNotice.vue'),
-    AppButtonBalance: () => import('@/core/components/AppButtonBalance'),
-    AppTransactionFee: () => import('@/core/components/AppTransactionFee.vue')
+    TransactionFee: () => import('@/modules/transaction-fee/TransactionFee'),
+    SendLowBalanceNotice: () => import('./components/SendLowBalanceNotice.vue')
   },
   mixins: [buyMore],
   props: {

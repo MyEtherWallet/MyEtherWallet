@@ -8,7 +8,7 @@
         <div class="font-weight-medium textDark--text">
           How much do you want to sell?
         </div>
-        <button-balance
+        <app-button-balance
           v-if="!loading && !fetchingBalance"
           style="position: relative; top: 0; right: 0"
           :balance="selectedBalance"
@@ -172,7 +172,6 @@ import { ETH, BSC, MATIC } from '@/utils/networks/types';
 export default {
   name: 'ModuleSellEth',
   components: {
-    ButtonBalance: () => import('@/core/components/AppButtonBalance'),
     ModuleAddressBook,
     BuySellTokenSelect
   },

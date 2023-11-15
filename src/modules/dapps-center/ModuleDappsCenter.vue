@@ -87,6 +87,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
+
 import bannerImage from '@/assets/images/backgrounds/bg-dapps-center.jpg';
 import dappsMeta from '@/dapps/metainfo-dapps';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
@@ -94,9 +95,8 @@ import isNew from '@/core/helpers/isNew.js';
 
 export default {
   components: {
-    TheWrapperDapp: () => import('@/core/components/TheWrapperDapp'),
-    AppUserMsgBlock: () => import('@/core/components/AppUserMsgBlock'),
-    TheWrapperWallet: () => import('@/core/components/TheWrapperWallet')
+    TheWrapperDapp: () => import('@/dapps/TheWrapperDapp.vue'),
+    TheWrapperWallet: () => import('@/views/components-wallet/TheWrapperWallet')
   },
   mixins: [handlerAnalytics],
   data() {

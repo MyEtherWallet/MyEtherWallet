@@ -116,6 +116,7 @@
 import { mapGetters, mapState, mapActions } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { fromWei, toWei, toBN } from 'web3-utils';
+
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 import abi from '../handlers/helpers/multicall.js';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';

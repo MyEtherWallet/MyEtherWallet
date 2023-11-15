@@ -95,7 +95,7 @@
       </div>
     </v-container>
 
-    <app-get-started />
+    <get-started />
   </div>
 </template>
 
@@ -108,7 +108,7 @@ export default {
   name: 'TheConvertUnitsLayout',
   components: {
     TheLayoutHeader: () => import('../components-default/TheLayoutHeader'),
-    AppGetStarted: () => import('@/core/components/AppGetStarted')
+    GetStarted: () => import('../components-default/GetStarted')
   },
   data() {
     return {

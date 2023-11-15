@@ -42,12 +42,9 @@ import { ROUTES_HOME } from '@/core/configs/configRoutes';
 
 export default {
   name: 'ModuleQrCode',
-  components: {},
-  props: {},
   data() {
     return { loadingDots: '' };
   },
-  beforeCreate() {},
   mounted() {
     this.downloadMEWWalletApp();
     this.animateLoadingDots();

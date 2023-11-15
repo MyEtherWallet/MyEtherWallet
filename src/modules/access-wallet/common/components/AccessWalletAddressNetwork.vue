@@ -16,7 +16,7 @@
           -->
       <template #panelBody1>
         <v-radio-group v-model="selectedAddress">
-          <app-table
+          <mew-light-table
             :loader-count="5"
             background
             full-width
@@ -109,7 +109,7 @@
                 </tr>
               </tbody>
             </table>
-          </app-table>
+          </mew-light-table>
         </v-radio-group>
 
         <div>
@@ -184,9 +184,6 @@
   </div>
 </template>
 <script>
-import AppCopyBtn from '@/core/components/AppCopyBtn';
-import AppTable from '@/core/components/AppTable';
-import AppBtnRow from '@/core/components/AppBtnRow';
 import NetworkSwitch from '@/modules/network/components/NetworkSwitch.vue';
 import AccessWalletDerivationPath from '@/modules/access-wallet/hardware/components/AccessWalletDerivationPath.vue';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
@@ -218,9 +215,6 @@ export default {
     }
   },
   components: {
-    AppCopyBtn,
-    AppTable,
-    AppBtnRow,
     NetworkSwitch,
     AccessWalletDerivationPath
   },

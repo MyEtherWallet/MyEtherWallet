@@ -35,9 +35,6 @@ import Message from '@/assets/images/icons/icon-message-mew.svg';
 import BuyEth from '@/assets/images/icons/icon-buy-eth-mew.svg';
 
 export default {
-  components: {
-    AppBlockTitle: () => import('@/core/components/AppBlockTitle')
-  },
   data: function () {
     return {
       titleData: {

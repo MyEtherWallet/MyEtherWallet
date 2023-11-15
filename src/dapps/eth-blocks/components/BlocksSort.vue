@@ -36,7 +36,6 @@ export default {
   components: {
     BlocksDropDown: () => import('./BlocksDropDown.vue')
   },
-  props: {},
   data() {
     return {
       sort: SORT_VALUES,

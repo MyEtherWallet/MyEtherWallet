@@ -1,0 +1,146 @@
+/**
+  * Global Input styles
+  */
+.v-application {
+/**
+  * Dropdown, select menu (for mew-select and mew-address)
+  */
+  .v-select-list {
+    padding: 0;
+  }
+/**
+  * Autocomplete menu styles (mainly used for mew-address)
+  */
+  .v-autocomplete__content.v-menu__content {
+    border-bottom: 1px solid var(--v-dropdownBorder-base);
+    border-left: 1px solid var(--v-dropdownBorder-base);
+    border-radius: 4px;
+    border-right: 1px solid var(--v-dropdownBorder-base);
+    box-shadow: 0px 5px 5px -3px rgb(13 41 66 / 20%), 0px 8px 10px 1px rgb(13 41 66 / 14%), 0px 3px 14px 2px rgb(13 41 66 / 12%);
+  }
+/**
+  * Simple menu select styles (mainly used for mew-menu)
+  */
+  .simple-input.v-text-field>.v-input__control>.v-input__slot:before {
+    border-style: none;
+  }
+
+  .simple-input.v-text-field>.v-input__control>.v-input__slot:after {
+    border-style: none;
+  }
+/**
+  * Text Fieldset Disabled State
+  */
+  .theme--light.v-text-field--outlined:not(.v-input--is-focused).v-input--is-disabled > .v-input__control > .v-input__slot fieldset, .theme--dark.v-text-field--outlined:not(.v-input--is-focused).v-input--is-disabled > .v-input__control > .v-input__slot fieldset { 
+    color: var(--v-inputDisabled-base) !important;
+  }
+/**
+  * Text Field Border Color
+  */
+  .v-text-field--outlined:not(.v-input--is-focused):not(.v-input--has-state) > .v-input__control > .v-input__slot fieldset {
+    color: var(--v-inputBorder-base) !important;
+  }
+
+/**
+  * Text Field Border Hover Color
+  */
+  .v-text-field--outlined:not(.v-input--is-focused):not(.v-input--has-state)>.v-input__control>.v-input__slot:hover > fieldset {
+    border: 1px solid var(--v-greyPrimary-base) !important;
+  }
+
+  /**
+  * This removes the underlying black outline for mew address select, mew text area, mew select 
+  * and mew input
+  */
+  .theme--light {
+    &.address-select, &.mew-input, &.mew-text-area, &.mew-select {
+      &.v-input {
+        color: transparent;
+      }
+    }
+  }
+/**
+  * Dropdown menu content styles (mainly used for mew-select)
+  */
+  .v-menu__content {
+    border: 1px solid var(--v-dropdownBorder-base);
+    box-shadow: 0px 5px 5px -3px rgb(13 41 66 / 20%), 0px 8px 10px 1px rgb(13 41 66 / 14%), 0px 3px 14px 2px rgb(13 41 66 / 12%);
+    .v-select-list {
+    /**
+      * Mew Select Dropdown Menu Header
+      */
+      .v-subheader {
+        align-items: center;
+        background-color: var(--v-selectHeaderBg-base);
+        border: 1px solid var(--v-selectBorder-base);
+        color: var(--v-textSecondary-base);
+        display: flex;
+        height: 32px;
+        padding: 8px 22px 8px 48px;
+      }
+      .v-list-item {
+        border-bottom: 1px solid var(--v-selectBorder-base);
+      }
+    }
+  }
+/**
+  * V-Input class styles
+  */
+  .v-input {
+    input {
+      color: var(--v-textDark-base) !important;
+      font-size: 14px;
+    }
+    &.v-input--is-disabled {
+      input {
+        color: var(--v-inputDisabled-base) !important;
+      }
+    }
+    /**
+    * Input label
+    */
+    .v-label {
+      color: var(--v-textMedium-base);   
+      font-weight: 400;
+      font-size: 1rem;
+      
+      &.v-label--is-disabled {
+        color: var(--v-inputDisabled-base); 
+      }
+    }
+  /**
+    * Input placeholder
+    */
+    input::placeholder {
+      color: var(--v-textLight-base);
+      font-weight: 400;
+    }
+  /**
+    * Input suffix color
+    */
+    .v-text-field__suffix {
+      color: var(--v-searchText-base) !important;
+    }
+  /**
+    * Disabled icon
+    */
+    .disable-icon {
+      filter: grayscale(100%);
+      pointer-events: none;
+    }
+  }
+/**
+  * Blockie placeholder
+  */
+  .blockie-placeholder {
+    height: 25px;
+    width: 25px;
+    border-radius: 50%;
+  }
+/**
+  * Adjust dialog corder border radius
+  */
+  .v-dialog {
+    border-radius: 12px !important;
+  }
+}

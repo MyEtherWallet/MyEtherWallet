@@ -43,7 +43,6 @@
 import { mapGetters } from 'vuex';
 
 export default {
-  components: {},
   props: {
     getRentPrice: {
       default: function () {

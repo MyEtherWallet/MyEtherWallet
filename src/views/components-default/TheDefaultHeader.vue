@@ -19,7 +19,7 @@
             <router-link
               class="white--text text-decoration--none menu-item"
               :to="{ name: ROUTES_HOME.HOW_IT_WORKS.NAME }"
-              @click="trackHowItWorks"
+              @click.native="trackHowItWorks"
             >
               {{ $t('header.what-is-mew') }}
             </router-link>
@@ -50,16 +50,19 @@
 </template>
 
 <script>
-import mewTools from '@/components/mew-tools/MewTools';
-import TheDefaultMobileNavigation from './TheDefaultMobileNavigation';
-import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { mapGetters, mapActions } from 'vuex';
+
+import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { HEADER } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 
 export default {
   name: 'TheDefaultHeader',
-  components: { mewTools, TheDefaultMobileNavigation },
+  components: {
+    MewTools: () => import('@/core/components/MewTools'),
+    TheDefaultMobileNavigation: () => import('./TheDefaultMobileNavigation')
+  },
   mixins: [buyMore, handlerAnalytics],
   data: () => ({
     menuObj: {
@@ -123,19 +126,18 @@ export default {
   methods: {
     ...mapActions('external', ['setNetworkTokens']),
     routeToHome() {
-      this.trackHeaderAmplitude('click_mew_logo');
+      this.trackHeaderAmplitude(HEADER.LOGO);
       this.$router.push({ name: ROUTES_HOME.HOME.NAME });
     },
     trackHowItWorks() {
-      this.trackHeaderAmplitude('click_what_is_mew');
+      this.trackHeaderAmplitude(HEADER.WHAT_IS_MEW);
     },
     routeTo(route) {
-      this.trackHeaderAmplitude(`click_${route.name.toLowerCase()}`);
+      this.trackHeaderAmplitude(HEADER.WALLET_ACTIONS, route);
       this.$router.push(route);
     },
     trackBuySellLanding() {
-      this.trackHeaderAmplitude('click_buy_sell');
-      this.trackBuySell('buySellLanding');
+      this.trackHeaderAmplitude(HEADER.BUY_ETH);
     }
   }
 };

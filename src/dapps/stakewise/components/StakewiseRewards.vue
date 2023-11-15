@@ -78,7 +78,7 @@ import { STAKEWISE_ROUTES } from '@/dapps/stakewise/configsRoutes';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 export default {
   name: 'ModuleSideRewards',
-  components: {},
+
   props: {
     compoundRewards: {
       type: Boolean,
