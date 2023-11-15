@@ -279,7 +279,6 @@ export default {
             icon: require('@/assets/images/icons/icon-mew-wallet.png'),
             alt: 'MEW wallet',
             fn: () => {
-              this.trackAccessWalletAmplitude(COMMON.MEW_WALLET);
               this.openMEWwallet();
             }
           },
@@ -398,19 +397,22 @@ export default {
     },
     openMEWwallet() {
       try {
+        this.trackAccessWalletAmplitude(ACCESS_WALLET.MEW_WALLET_QR_SHOWN);
         WalletConnectWallet(WALLET_TYPES.MEW_WALLET)
           .then(_newWallet => {
             this.setWallet([_newWallet]).then(() => {
               this.trackAccessWalletAmplitude(
-                ACCESS_WALLET.ACCESS_WALLET_SUCCESS
+                ACCESS_WALLET.MEW_WALLET_QR_SUCCESSFUL
               );
               this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
             });
           })
           .catch(e => {
+            this.trackAccessWalletAmplitude(ACCESS_WALLET.MEW_WALLET_QR_FAILED);
             WalletConnectWallet.errorHandler(e);
           });
       } catch (e) {
+        this.trackAccessWalletAmplitude(ACCESS_WALLET.MEW_WALLET_QR_FAILED);
         Toast(e.message, {}, SENTRY);
       }
     },

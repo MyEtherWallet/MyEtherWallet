@@ -82,9 +82,6 @@ export default {
           label: 'WalletConnect',
           icon: require('@/assets/images/icons/icon-wallet-connect.svg'),
           fn: () => {
-            this.trackAccessWalletAmplitude(
-              ACCESS_WALLET.MOBILE_APP_WALLET_CONNECT
-            );
             this.openWalletConnect();
           }
         },
@@ -92,9 +89,6 @@ export default {
           label: 'WalletLink',
           icon: require('@/assets/images/icons/icon-wallet-link.png'),
           fn: () => {
-            this.trackAccessWalletAmplitude(
-              ACCESS_WALLET.MOBILE_APP_WALLET_LINK
-            );
             this.openWalletLink();
           }
         }
