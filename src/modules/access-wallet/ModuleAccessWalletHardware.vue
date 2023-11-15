@@ -517,7 +517,7 @@ export default {
      */
     onKeepkey() {
       if (this.walletType === WALLET_TYPES.KEEPKEY) {
-        this.trackAccessWalletAmplitude(ACCESS_WALLET.HW_LEDGER_SHOWN);
+        this.trackAccessWalletAmplitude(ACCESS_WALLET.HW_KEEPKEY_SHOWN);
         return true;
       }
       return false;

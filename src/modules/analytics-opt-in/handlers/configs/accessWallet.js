@@ -33,6 +33,7 @@ export default {
   HW_LEDGER_SHOWN: 'HWLedgerShown',
   HW_COOL_WALLET_SHOWN: 'HWCoolWalletShown',
   HW_TREZOR_SHOWN: 'HWTrezorShown',
+  HW_KEEPKEY_SHOWN: 'HWKeepKeyShown',
   HW_LEDGER_CONNECTED: 'HWLedgerConnected',
   HW_TREZOR_CONNECTED: 'HWTrezorConnected',
   HW_COOL_WALLET_CONNECTED: 'HWCoolWalletConnected',
