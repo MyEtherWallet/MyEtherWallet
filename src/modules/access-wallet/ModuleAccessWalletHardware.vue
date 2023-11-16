@@ -853,6 +853,7 @@ export default {
           this.step++;
         })
         .catch(e => {
+          console.log(this.wallets[this.walletType]);
           if (this.wallets[this.walletType]) {
             if (
               e.message === 'Wrong Password' &&
@@ -860,6 +861,7 @@ export default {
             ) {
               this.passwordError = true;
             } else {
+              console.log('here?', e.message);
               this.wallets[this.walletType].create.errorHandler(e);
             }
           } else {
