@@ -19,5 +19,6 @@ export default {
   enkrypt: 'enkrypt',
   mewwallet: 'mewwallet',
   buySell: 'buySell',
-  mewVersion: 'mewVersion'
+  mewVersion: 'mewVersion',
+  advertisement: 'MEWAd'
 };
