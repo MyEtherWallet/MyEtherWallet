@@ -1,7 +1,10 @@
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
+const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
 const webpack = require('webpack');
 const CompressionWebpackPlugin = require('compression-webpack-plugin');
+// const CopyWebpackPlugin = require('copy-webpack-plugin');
+// const UglifyJS = require('uglify-js');
 
 const env_vars = require('../ENV_VARS');
 const allowedConnections = require('../connections');
@@ -15,20 +18,6 @@ const plugins = [
   new webpack.SourceMapDevToolPlugin(sourceMapsConfig),
   new webpack.NormalModuleReplacementPlugin(/^any-promise$/, 'bluebird'),
   // new BundleAnalyzerPlugin(),
-  // new ImageminPlugin({
-  //   disable: process.env.NODE_ENV !== 'production',
-  //   test: /\.(jpe?g|png|gif|svg)$/i,
-  //   pngquant: {
-  //     quality: '100'
-  //   },
-  //   plugins: [
-  //     imageminMozjpeg({
-  //       quality: 100,
-  //       progressive: true,
-  //       chunks: 'all'
-  //     })
-  //   ]
-  // }),
   // new CopyWebpackPlugin({
   //   patterns: [
   //     { from: 'security.txt', to: '.well-known/security.txt' },
@@ -69,9 +58,33 @@ const webpackConfig = {
       'Referrer-Policy': 'same-origin'
     }
   },
-  plugins: plugins,
+  module: {
+    rules: [
+      {
+        test: /\.(jpe?g|png|gif|svg)$/i,
+        type: 'asset'
+      }
+    ]
+  },
   output: {
     filename: '[name].[chunkhash].js'
+  },
+  plugins: plugins,
+  optimization: {
+    minimizer: [
+      new ImageMinimizerPlugin({
+        minimizer: {
+          implementation: ImageMinimizerPlugin.imageminMinify,
+          options: {
+            plugins: [
+              ['gifsicle', { interlaced: true }],
+              ['jpegtran', { progressive: true }],
+              ['optipng', { optimizationLevel: 8 }]
+            ]
+          }
+        }
+      })
+    ]
   }
 };
 

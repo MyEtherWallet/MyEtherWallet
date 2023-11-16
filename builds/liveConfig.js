@@ -11,7 +11,7 @@ const exportObj = {
     name: 'MyEtherWallet',
     workboxOptions: {
       cacheId: `myetherwallet-${JSON.parse(config.env_vars.VERSION)}`,
-      importWorkboxFrom: 'local',
+      // importWorkboxFrom: 'local',
       skipWaiting: true,
       clientsClaim: true,
       cleanupOutdatedCaches: true,
