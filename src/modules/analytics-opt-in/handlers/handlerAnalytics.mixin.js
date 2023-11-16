@@ -164,6 +164,14 @@ export default {
       }
     },
     /**
+     * Tracks ad
+     */
+    trackAd(action) {
+      if (action && this.consentToTrack) {
+        this.$amplitude.track(`${categories.advertisement}${action}`);
+      }
+    },
+    /**
      * Tracks when user logs out of dashboard
      */
     trackLogout() {

@@ -1,3 +1,5 @@
+### Release v6.7.10-hotfix.1
+
 ### devop
 
 * update amplitude [#4770](https://github.com/MyEtherWallet/MyEtherWallet/pull/4770)
