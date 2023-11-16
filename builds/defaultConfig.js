@@ -103,6 +103,12 @@ const transpilers = config => {
     .loader('babel-loader')
     .end();
   config.module
+    .rule('transpile-unstorage')
+    .test(/node_modules\/unstorage\/.*\.mjs$/)
+    .use('babel')
+    .loader('babel-loader')
+    .end();
+  config.module
     .rule('transpile-eth2-keystore')
     .test(/node_modules\/@myetherwallet\/eth2-keystore\/.*\.js$/)
     .use('babel')
@@ -126,17 +132,6 @@ const transpilers = config => {
     .use('babel')
     .loader('babel-loader')
     .end();
-  config.module
-    .rule('resolve-alias')
-    .test(/node_modules\/@ledgerhq\/.*\.js$/)
-    .resolve.alias.set('@ledgerhq/devices', '@ledgerhq/devices/lib-es')
-    .set('@ledgerhq/cryptoassets', '@ledgerhq/cryptoassets/lib-es')
-    .set(
-      '@ledgerhq/domain-service/signers',
-      '@ledgerhq/domain-service/lib-es/signers'
-    )
-    .end();
-
   // disable if statement if testing optimization locally
   if (process.env.NODE_ENV === 'production') {
     // remove prefetch for build

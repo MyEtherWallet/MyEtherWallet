@@ -1,3 +1,13 @@
+### Release v6.7.10-hotfix.1
+
+### fix
+
+* fix coolwallet max instance error [#4771](https://github.com/MyEtherWallet/MyEtherWallet/pull/4771)
+
+### devop
+
+* update amplitude [#4770](https://github.com/MyEtherWallet/MyEtherWallet/pull/4770)
+
 ### Release v6.7.10
 
 ### devop

@@ -24,34 +24,39 @@ export default {
     when: 3,
     hasPaths: false,
     requiresPassword: false,
-    title: 'Connect your Ledger'
+    title: 'Connect your Ledger',
+    wallet: WALLET_TYPES.LEDGER
   },
   [WALLET_TYPES.TREZOR]: {
     create: TrezorWallet,
     when: 2,
     hasPaths: true,
     requiresPassword: false,
-    title: 'Connect your Trezor'
+    title: 'Connect your Trezor',
+    wallet: WALLET_TYPES.TREZOR
   },
   [WALLET_TYPES.BITBOX2]: {
     create: BitBox02Wallet,
     when: 2,
     hasPaths: false,
     requiresPassword: false,
-    title: 'Connect your BitBox02'
+    title: 'Connect your BitBox02',
+    wallet: WALLET_TYPES.BITBOX2
   },
   [WALLET_TYPES.KEEPKEY]: {
     create: KeepkeyWallet,
     when: 2,
     hasPaths: true,
     requiresPassword: false,
-    title: 'Connect your KeepKey'
+    title: 'Connect your KeepKey',
+    wallet: WALLET_TYPES.KEEPKEY
   },
   [WALLET_TYPES.COOL_WALLET]: {
     create: CoolWallet,
     when: 2,
     hasPaths: false,
     requiresPassword: true,
-    title: 'Enter pairing password'
+    title: 'Enter pairing password',
+    wallet: WALLET_TYPES.COOL_WALLET
   }
 };

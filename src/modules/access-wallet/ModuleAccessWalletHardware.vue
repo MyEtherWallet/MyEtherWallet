@@ -517,7 +517,7 @@ export default {
      */
     onKeepkey() {
       if (this.walletType === WALLET_TYPES.KEEPKEY) {
-        this.trackAccessWalletAmplitude(ACCESS_WALLET.HW_LEDGER_SHOWN);
+        this.trackAccessWalletAmplitude(ACCESS_WALLET.HW_KEEPKEY_SHOWN);
         return true;
       }
       return false;
@@ -884,7 +884,8 @@ export default {
         case WALLET_TYPES.TREZOR:
           this.trackAccessWalletAmplitude(ACCESS_WALLET.HW_TREZOR_CONNECTED);
           break;
-        case WALLET_TYPES.COOL_WALLET:
+        case WALLET_TYPES.COOL_WALLET_PRO:
+        case WALLET_TYPES.COOL_WALLET_S:
           this.trackAccessWalletAmplitude(
             ACCESS_WALLET.HW_COOL_WALLET_CONNECTED
           );
