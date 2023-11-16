@@ -11,5 +11,8 @@ export default {
   NEXT_CLICKED: 'NextClicked',
   INITIAL_MODAL_CLOSED: 'InitiatedModalClosed',
   SWAP_INITIATED: 'SwapInitiated',
-  TRANSACTION_INITIATIED: 'TransactionInitiated'
+  TRANSACTION_INITIATIED: 'TransactionInitiated',
+  X_OUT: 'XOut',
+  CLICK_OUTSIDE: 'ClickOutside',
+  BUTTON_CANCEL: 'ButtonCancel'
 };
