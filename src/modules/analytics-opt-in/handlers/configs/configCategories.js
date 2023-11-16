@@ -2,7 +2,7 @@ export default {
   landingPage: 'LP',
   header: 'Header',
   footer: 'Footer',
-  dashboard: 'Dasboard',
+  dashboard: 'Dashboard',
   connectionType: 'connectionType',
   createWallet: 'CW',
   accessWallet: 'AW',
