@@ -90,6 +90,12 @@ const transpilers = config => {
     .loader('babel-loader')
     .end();
   config.module
+    .rule('transpile-unstorage')
+    .test(/node_modules\/unstorage\/.*\.mjs$/)
+    .use('babel')
+    .loader('babel-loader')
+    .end();
+  config.module
     .rule('transpile-eth2-keystore')
     .test(/node_modules\/@myetherwallet\/eth2-keystore\/.*\.js$/)
     .use('babel')

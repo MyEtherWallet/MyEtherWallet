@@ -131,7 +131,11 @@
                 <span :style="ad.titleColor"> {{ ad.buttonTitle }} </span>
               </div>
             </template>
-            <a :href="ad.popoverLink" target="_blank">
+            <a
+              :href="ad.popoverLink"
+              target="_blank"
+              @click="buttonTracking(ad.adName)"
+            >
               <img
                 :src="`https://img.mewapi.io/?image=${ad.popoverImg}`"
                 width="300"
@@ -212,6 +216,9 @@ export default {
     },
     buyCryptoNow() {
       EventBus.$emit(BUYSELL_EVENT);
+    },
+    buttonTracking(name) {
+      this.trackAd(name);
     }
   }
 };

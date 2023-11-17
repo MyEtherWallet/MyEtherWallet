@@ -33,6 +33,8 @@ const ERRORS = {
 const WARNINGS = {
   'command info: {"CLA":"80","INS":"1C","P1":"00","P2":"00"}, returnCode: 6A84, message: file full':
     'coolWalletError.max-app-instance',
+  'command info: {"CLA":"80","INS":"10","P2":"00"}, returnCode: 6A84, message: file full':
+    'coolWalletError.max-app-instance',
   'error function: executeAPDU, message: executeAPDU error: NetworkError: GATT Server is disconnected. Cannot perform GATT operations. (Re)connect first with `device.gatt.connect`.':
     'System Paired successfully, Please refresh page and try again!',
   'Max number of App paired. Delete one of the paired app.':

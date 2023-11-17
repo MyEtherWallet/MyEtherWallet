@@ -2,7 +2,7 @@ export default {
   landingPage: 'LP',
   header: 'Header',
   footer: 'Footer',
-  dashboard: 'Dasboard',
+  dashboard: 'Dashboard',
   connectionType: 'connectionType',
   createWallet: 'CW',
   accessWallet: 'AW',
@@ -19,5 +19,6 @@ export default {
   enkrypt: 'enkrypt',
   mewwallet: 'mewwallet',
   buySell: 'buySell',
-  mewVersion: 'mewVersion'
+  mewVersion: 'mewVersion',
+  advertisement: 'MEWAd'
 };

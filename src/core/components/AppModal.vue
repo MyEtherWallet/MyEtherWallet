@@ -30,7 +30,7 @@
           <v-icon
             size="x-large"
             color="grey cursor--pointer"
-            @click="() => close('XOut')"
+            @click="handleClickX"
           >
             mdi-close
           </v-icon>
@@ -160,7 +160,7 @@
             btn-size="xlarge"
             title="Cancel"
             :has-full-width="$vuetify.breakpoint.xs"
-            @click.native="() => close('SwapCancel')"
+            @click.native="handleCloseButton"
           />
         </v-col>
         <v-col
@@ -184,7 +184,7 @@
             btn-size="xlarge"
             title="Close"
             :has-full-width="true"
-            @click.native="() => close('SwapCancel')"
+            @click.native="handleCloseButton"
           />
         </v-col>
       </v-row>
@@ -193,6 +193,7 @@
 </template>
 
 <script>
+import { SWAP } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 export default {
   props: {
     title: {
@@ -269,7 +270,13 @@ export default {
   },
   methods: {
     handleClickOutside() {
-      this.close('ClickOutside');
+      this.close(SWAP.CLICK_OUTSIDE);
+    },
+    handleCloseButton() {
+      this.close(SWAP.BUTTON_CANCEL);
+    },
+    handleClickX() {
+      this.close(SWAP.X_OUT);
     }
   }
 };
