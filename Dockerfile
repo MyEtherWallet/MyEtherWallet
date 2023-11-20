@@ -1,4 +1,4 @@
-FROM node:18.17-alpine
+FROM node:18.17.1-bullseye
 RUN apt update
 RUN apt install nasm -y
 ENV HOME /home
