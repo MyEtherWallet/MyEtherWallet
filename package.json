@@ -162,6 +162,8 @@
     "imagemin-optipng": "8.0.0",
     "is-ipfs": "6.0.2",
     "jest": "29.7.0",
+    "jest-config": "29.7.0",
+    "jest-environment-jsdom": "29.7.0",
     "jest-skipped-reporter": "0.0.5",
     "minizlib": "2.1.2",
     "multicoin-address-validator": "git+https://github.com/MyEtherWallet/multicoin-address-validator.git",

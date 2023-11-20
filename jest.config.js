@@ -42,6 +42,7 @@ module.exports = {
     '**/__tests__/*.(js | jsx | ts | tsx)',
     '**/tests/*.spec.js'
   ],
+  testEnvironment: 'jsdom',
   testEnvironmentOptions: {
     url: 'https://localhost:8080'
   },
