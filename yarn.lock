@@ -21387,10 +21387,10 @@ qjobs@^1.1.4:
   resolved "https://registry.yarnpkg.com/qjobs/-/qjobs-1.2.0.tgz#c45e9c61800bd087ef88d7e256423bdd49e5d071"
   integrity sha512-8YOJEHtxpySA3fFDyCRxA+UUV+fA+rTWnuWvylOK/NCjhY+b4ocCtmu8TtsWb+mYeU+GCHf/S66KZF/AsteKHg==
 
-qrcode-with-logos@1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/qrcode-with-logos/-/qrcode-with-logos-1.0.3.tgz#f40a99759aa3357572e7d1434523eecdafd64029"
-  integrity sha512-I0LkEyHsWpzObpvbj4jc93rj/+57DdshAd3c7xzh9Gms6bJ5A30ApFY0ZCHOVlF4Bqm2d9kFUV9oFCBkHORqOg==
+qrcode-with-logos@1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/qrcode-with-logos/-/qrcode-with-logos-1.0.5.tgz#c4c82866e9f61b86517f6e5a39a09f7fec264754"
+  integrity sha512-ZHynBWdidxv57T5Lw8KBGpM6c/bwrL9buITPOrtX0PaoV0AgKkqHifdO+rKV7jMSiR/EcQWpvHI9ZarZonDq6g==
   dependencies:
     qrcode "^1.4.4"
 
@@ -24983,7 +24983,7 @@ ua-parser-js@^1.0.35:
   resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-1.0.36.tgz#a9ab6b9bd3a8efb90bb0816674b412717b7c428c"
   integrity sha512-znuyCIXzl8ciS3+y3fHJI/2OhQIXbXw9MWC/o3qwyR+RGppjZHrM27CGFSKCJXi2Kctiz537iOu2KnXs1lMQhw==
 
-uglify-js@^3.1.4, uglify-js@^3.17.4:
+uglify-js@3.17.4, uglify-js@^3.1.4:
   version "3.17.4"
   resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.17.4.tgz#61678cf5fa3f5b7eb789bb345df29afb8257c22c"
   integrity sha512-T9q82TJI9e/C1TAxYvfb16xO120tMVFZrGA3f9/P4424DNu6ypK103y0GPFVa17yotwSyZW5iYXgjYHkGrJW/g==
