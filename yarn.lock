@@ -3553,18 +3553,10 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@keepkey/device-protocol@7.12.2":
+"@keepkey/device-protocol@7.12.2", "@keepkey/device-protocol@^7.12.2":
   version "7.12.2"
   resolved "https://registry.yarnpkg.com/@keepkey/device-protocol/-/device-protocol-7.12.2.tgz#9ff4b322af99264b83bbf68cc1cd349f53b32070"
   integrity sha512-U2wGgynZx9euKx9sshLzCeMJ/36+2NH8M/YhnUoCrS1xsjPp5xTCXquLFCFzfEL379yL4g03yu2kT41LKI5Dog==
-  dependencies:
-    google-protobuf "^3.7.0-rc.2"
-    pbjs "^0.0.5"
-
-"@keepkey/device-protocol@7.8.1", "@keepkey/device-protocol@^7.12.2":
-  version "7.8.1"
-  resolved "https://registry.yarnpkg.com/@keepkey/device-protocol/-/device-protocol-7.8.1.tgz#e7b1f90390d8314247f5af4f7975c2824f758d9b"
-  integrity sha512-+QY+ivAIxkfN/U50w979WpdHruU9tPVIRddaAItIcfZVKZxs5aNs8/ciUyso0/47p/rRxJpaEJSKz2K0lEes1w==
   dependencies:
     google-protobuf "^3.7.0-rc.2"
     pbjs "^0.0.5"
