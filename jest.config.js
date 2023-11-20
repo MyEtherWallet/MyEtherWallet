@@ -18,7 +18,7 @@ module.exports = {
   detectOpenHandles: true,
   reporters: ['default', 'jest-skipped-reporter'],
   transform: {
-    '^.+\\.vue$': 'vue-jest',
+    '^.+\\.vue$': '@vue/vue2-jest',
     '.+\\.(css|styl|less|sass|scss|svg|png|jpg|ttf|woff|woff2)$':
       'jest-transform-stub',
     '^.+\\.jsx?$': 'babel-jest'
