@@ -160,7 +160,7 @@ export default {
      */
     trackDapp(action) {
       if (action && this.consentToTrack) {
-        this.$amplitude.track(`${categories.dashboard}${action}`);
+        this.$amplitude.track(`${categories.dapp}${action}`);
       }
     },
     /**

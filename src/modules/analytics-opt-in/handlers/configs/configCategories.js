@@ -12,7 +12,7 @@ export default {
   gasSwitch: 'gasSwitch',
   swap: 'swapFlow',
   swapAmplitude: 'Swap',
-  dapp: 'dapp',
+  dapp: 'Dapp',
   swapTokenPair: 'swapTokenPair',
   swapToken: 'swapToken',
   globalError: 'globalError',
