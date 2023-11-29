@@ -415,6 +415,7 @@ export default {
             title: this.$t('interface.menu.receive'),
             icon: receive,
             fn: () => {
+              this.trackDashboardAmplitude(DASHBOARD.SHOW_RECEIVE_ADDRESS);
               this.openQR = true;
             },
             route: undefined

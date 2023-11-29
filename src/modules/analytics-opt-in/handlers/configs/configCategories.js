@@ -18,7 +18,7 @@ export default {
   globalError: 'globalError',
   enkrypt: 'enkrypt',
   mewwallet: 'mewwallet',
-  buySell: 'buySell',
+  buySell: 'BuySell',
   mewVersion: 'mewVersion',
   advertisement: 'MEWAd'
 };

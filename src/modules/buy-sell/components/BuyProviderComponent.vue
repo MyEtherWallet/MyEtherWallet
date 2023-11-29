@@ -164,12 +164,16 @@
 <script>
 import MultiCoinValidator from 'multicoin-address-validator';
 import { mapGetters, mapState } from 'vuex';
+import { isEmpty } from 'lodash';
 
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import { LOCALE } from '../helpers';
-import { isEmpty } from 'lodash';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { BUY_SELL } from '@/modules/analytics-opt-in/handlers/configs/events';
+
 export default {
   name: 'ModuleBuyEthProvider',
+  mixins: [handlerAnalytics],
   props: {
     orderHandler: {
       type: Object,
@@ -255,6 +259,7 @@ export default {
     },
     openSimplex() {
       if (!this.validToAddress()) return;
+      this.trackBuySell(BUY_SELL.BUY_W_SIMPLEX);
       this.orderHandler
         .simplexBuy(
           this.selectedCryptoName,
@@ -263,11 +268,13 @@ export default {
           this.actualAddress
         )
         .then(() => {
+          this.trackBuySell(BUY_SELL.BUY_W_SIMPLEX_SUCCESS);
           this.reset();
           this.close();
           this.$emit('reset');
         })
         .catch(err => {
+          this.trackBuySell(BUY_SELL.BUY_W_SIMPLEX_FAILED);
           this.reset();
           Toast(err, {}, ERROR);
           this.close();
@@ -287,6 +294,7 @@ export default {
     },
     buy() {
       if (!this.validToAddress()) return;
+      this.trackBuySell(BUY_SELL.BUY_W_MOONPAY);
       this.orderHandler
         .buy(
           this.selectedCryptoName,
@@ -295,11 +303,13 @@ export default {
           this.actualAddress
         )
         .then(() => {
+          this.trackBuySell(BUY_SELL.BUY_W_MOONPAY_SUCCESS);
           this.reset();
           this.close();
           this.$emit('reset');
         })
         .catch(err => {
+          this.trackBuySell(BUY_SELL.BUY_W_MOONPAY_FAILED);
           this.reset();
           Toast(err, {}, ERROR);
           this.close();

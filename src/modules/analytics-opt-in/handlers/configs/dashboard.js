@@ -2,5 +2,6 @@ export default {
   SWAP_BALANCE: 'SwapBalance',
   SWAP_MY_TOKENS_VALUE: 'SwapMyTokensValue',
   SWAP_PAIRS: 'SwapPairs',
-  SWAP_LEFT_NAVIGATION: 'SwapLeftNavigation'
+  SWAP_LEFT_NAVIGATION: 'SwapLeftNavigation',
+  SHOW_RECEIVE_ADDRESS: 'ShowReceiveAddress'
 };

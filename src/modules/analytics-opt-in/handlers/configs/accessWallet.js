@@ -7,7 +7,7 @@ export default {
   CLOSE_SOFTWARE_ACCESS: 'CloseSoftwareAccess',
   CLOSE_HARDWARE_ACCESS: 'CloseHardwareAccess',
   CLOSE_MOBILE_ACCESS: 'CloseMobileAccess',
-  ACCESS_WALLET_SUCCESS: 'AccessWalletSuccess',
+  WEB3_ACCESS_SUCCESS: 'Web3AccessSuccess',
   SOFTWARE_BACK: 'SoftwareBack',
   KEYSTORE_SHOWN: 'KeystoreShown',
   MNEMONIC_SHOWN: 'MnemonicShown',
