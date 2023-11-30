@@ -1,5 +1,5 @@
 <template>
-  <div class="component-container position--relative pb-12 pb-lg-0">
+  <div id="swap" class="component-container position--relative pb-12 pb-lg-0">
     <img
       src="@/assets/images/backgrounds/bg-bubbles.png"
       class="d-none d-lg-block block-background-pattern"

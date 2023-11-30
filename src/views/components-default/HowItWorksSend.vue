@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="nft">
     <div class="py-3 py-md-7" />
     <v-container class="pb-12 pb-lg-0">
       <v-row class="flex-column-reverse flex-lg-row">
