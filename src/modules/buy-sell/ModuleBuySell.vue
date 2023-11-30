@@ -24,7 +24,6 @@
           <template #tabContent1>
             <buy-eth-component
               :order-handler="orderHandler"
-              :close="close"
               :tab="activeTab"
               :default-currency="defaultCurrency"
               :in-wallet="inWallet"
@@ -42,7 +41,6 @@
           <template v-if="sellSupported" #tabContent2>
             <sell-eth-component
               :order-handler="orderHandler"
-              :close="close"
               :tab="activeTab"
               :in-wallet="inWallet"
               :default-currency="defaultCurrency"
@@ -54,7 +52,6 @@
       <BuyProviderComponent
         v-if="step === 1"
         :order-handler="orderHandler"
-        :close="close"
         :in-wallet="inWallet"
         :only-simplex="onlySimplex"
         :selected-currency="selectedCurrency"

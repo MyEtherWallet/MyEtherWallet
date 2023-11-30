@@ -3,7 +3,7 @@ export default {
   BUY_NOW_BUTTON: 'BuyNow',
   BUY_TAB: 'BuyTab',
   SELL_TAB: 'SellTab',
-  BUY_SELL_CLOSED: 'Closed',
+  BUY_SELL_CLOSED: 'CloseModal',
   BUY_INPUT: 'BuyInput',
   SELL_INPUT: 'SellInput',
   BUY_W_SIMPLEX: 'BuyWithSimplex',
