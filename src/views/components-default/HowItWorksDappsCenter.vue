@@ -1,6 +1,6 @@
 <template>
-  <div id="dapps" class="component-container">
-    <div class="py-3 py-md-12" />
+  <div class="component-container">
+    <div id="dapps" class="py-3 py-md-12" />
     <v-container>
       <v-row class="flex-column-reverse flex-lg-row">
         <v-col
