@@ -8,10 +8,10 @@ export default {
   blockExplorerTX: 'https://explorer-test.arthera.net/tx/[[txHash]]',
   blockExplorerAddr: 'https://explorer-test.arthera.net/address/[[address]]',
   chainID: 10243,
-  tokens: import('@/_generated/tokens/tokens-eth.json').then(
+  tokens: import('@/_generated/tokens/tokens-goerli.json').then(
     val => val.default
   ),
-  contracts: import('@/_generated/contracts/contract-abi-eth.json').then(
+  contracts: import('@/_generated/contracts/contract-abi-goerli.json').then(
     val => val.default
   ),
   icon: aa,

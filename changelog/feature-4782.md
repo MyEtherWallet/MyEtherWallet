@@ -1,1 +1,1 @@
-- add Arthera support [#4782](https://github.com/MyEtherWallet/MyEtherWallet/pull/4782)
+add Arthera support [#4782](https://github.com/MyEtherWallet/MyEtherWallet/pull/4782)
