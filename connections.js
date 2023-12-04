@@ -54,6 +54,7 @@ module.exports = [
   'wss://rpc.gnosischain.com:443/wss',
   'wss://public-node-api.klaytnapi.com:443/v1/cypress/ws',
   'wss://wsapi.fantom.network:443/',
+  'wss://ws-test.arthera.net:443/',
   // intercom stuff
   'api-iam.intercom.io:443',
   'https://api.zilliqa.com:443',
