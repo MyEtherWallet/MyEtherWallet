@@ -4,8 +4,13 @@
       <v-col cols="12">
         <mew-warning-sheet
           class="mb-5"
-          title="StakeWise V3 is now live on mainnet"
-          description="Please note that Stakewise V2 deposits are now disabled."
+          title="StakeWise V3 is now live on
+        mainnet"
+          :link-obj="linkObj"
+          :description="` Please note that
+        Stakewise V2 deposits are now disabled. You can redeem your sETH and
+        rETH for ETH in the MEW Stakewise dApp, and then re-stake by using the `"
+          :bottom="false"
         />
       </v-col>
       <v-col
@@ -265,6 +270,10 @@ export default {
         validUntil: 0,
         selectedProvider: '',
         txFee: ''
+      },
+      linkObj: {
+        title: 'Stakewise web app.',
+        url: 'https://app.stakewise.io/'
       }
     };
   },
