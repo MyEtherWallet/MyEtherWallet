@@ -117,7 +117,7 @@
         :btn-style="compoundRewards ? 'background' : 'transparent'"
         btn-size="small"
         class="py-1"
-        :disabled="enoughToCoverRedeem"
+        :disabled="true"
         @click.native="scrollToInput"
       />
     </div>

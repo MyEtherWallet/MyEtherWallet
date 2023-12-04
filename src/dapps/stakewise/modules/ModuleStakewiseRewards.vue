@@ -1,6 +1,13 @@
 <template>
   <div class="dapps-stakewise-rewards pt-8 pb-13 px-3 pa-sm-15">
     <v-row>
+      <v-col cols="12">
+        <mew-warning-sheet
+          class="mb-5"
+          title="StakeWise V3 is now live on mainnet"
+          description="Please note that Stakewise V2 deposits are now disabled."
+        />
+      </v-col>
       <v-col
         :order="$vuetify.breakpoint.smAndDown ? 'last' : ''"
         cols="12"
@@ -69,6 +76,7 @@
               :value="compoundAmount"
               placeholder="Enter amount"
               :error-messages="errorMessages"
+              :disabled="true"
               @input="setAmount"
             />
           </div>
@@ -364,7 +372,7 @@ export default {
     maxBtnObj() {
       return {
         title: 'Max',
-        disabled: BigNumber(this.rethBalance).lte(0),
+        disabled: true,
         method: this.setMax
       };
     }
