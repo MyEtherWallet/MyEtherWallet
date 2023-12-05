@@ -38,7 +38,7 @@ module.exports = [
   'https://raw.githubusercontent.com:443/MyEtherWallet/dynamic-data/main/articles.json',
   'https://formspree.io:443/f/mqjndkkx',
   'https://formspree.io:443/f/xbjenjql',
-  'https://broadcast.mewapi.io:443',
+  'https://broadcast.mewapi.io:443/eth',
   // nodes
   'https://nodes.mewapi.io:443',
   'wss://nodes.mewapi.io:443',
@@ -54,6 +54,7 @@ module.exports = [
   'wss://rpc.gnosischain.com:443/wss',
   'wss://public-node-api.klaytnapi.com:443/v1/cypress/ws',
   'wss://wsapi.fantom.network:443/',
+  'wss://ws-test.arthera.net:443/',
   // intercom stuff
   'api-iam.intercom.io:443',
   'https://api.zilliqa.com:443',

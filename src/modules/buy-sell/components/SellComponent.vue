@@ -168,14 +168,15 @@ import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook.vue';
 import BuySellTokenSelect from '@/modules/buy-sell/components/TokenSelect.vue';
 import { getCurrency } from '@/modules/settings/components/currencyList';
 import { ETH, BSC, MATIC } from '@/utils/networks/types';
-
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { BUY_SELL } from '@/modules/analytics-opt-in/handlers/configs/events';
 export default {
   name: 'ModuleSellEth',
   components: {
     ModuleAddressBook,
     BuySellTokenSelect
   },
-  mixins: [handlerWallet],
+  mixins: [handlerWallet, handlerAnalytics],
   props: {
     orderHandler: {
       type: Object,
@@ -661,14 +662,17 @@ export default {
       this.hasPersistentHint = true;
     },
     sell() {
+      this.trackBuySell(BUY_SELL.SELL_WITH_MOONPAY);
       this.orderHandler
         .sell(this.name, this.amount, this.actualAddress)
         .then(() => {
+          this.trackBuySell(BUY_SELL.SELL_WITH_MOONPAY_SUCCESS);
           this.amount = '0';
           this.close();
           this.selectedCurrency = this.defaultCurrency;
         })
         .catch(err => {
+          this.trackBuySell(BUY_SELL.SELL_WITH_MOONPAY_FAILED);
           Toast(err, {}, ERROR);
           this.amount = '0';
           this.close();

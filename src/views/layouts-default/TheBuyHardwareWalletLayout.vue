@@ -9,7 +9,7 @@
       >
         <v-row>
           <v-col v-for="(b, key) in buttons" :key="key" cols="12" md="6">
-            <a :href="b.link" target="_blank" @click.native="trackBuy(b.name)">
+            <a :href="b.link" target="_blank" @click="trackBuy(b.name)">
               <mew-button
                 color-theme="basic"
                 btn-style="light"

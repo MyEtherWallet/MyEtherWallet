@@ -156,7 +156,7 @@
             class="info-container--action-btn mr-2 px-0 BalanceCardQR"
             fab
             depressed
-            @click="openQR = true"
+            @click="open"
           >
             <img
               class="info-container--icon"
@@ -264,6 +264,7 @@ import WALLET_TYPES from '../access-wallet/common/walletTypes';
 import NameResolver from '@/modules/name-resolver/index';
 import { EventBus } from '@/core/plugins/eventBus';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { DASHBOARD } from '../analytics-opt-in/handlers/configs/events';
 
 export default {
   components: {
@@ -548,6 +549,10 @@ export default {
         {},
         SUCCESS
       );
+    },
+    open() {
+      this.trackDashboardAmplitude(DASHBOARD.SHOW_RECEIVE_ADDRESS);
+      this.openQR = true;
     },
     /**
      * set openQR to false
