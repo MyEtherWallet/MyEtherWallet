@@ -287,6 +287,10 @@ export default {
     isEUR() {
       return this.selectedFiatName === 'EUR' || this.selectedFiatName === 'GBP';
     },
+    isCAD() {
+      console.log(this.selectedFiatName);
+      return this.selectedFiatName === 'CAD';
+    },
     disableBuy() {
       return (
         (!this.inWallet && !this.actualValidAddress) ||
@@ -318,8 +322,10 @@ export default {
       return '';
     },
     tokens() {
+      const filteredContracts = this.isCAD ? [buyContracts[0]] : buyContracts;
+      console.log(filteredContracts);
       if (this.inWallet) {
-        return buyContracts.reduce((arr, item) => {
+        return filteredContracts.reduce((arr, item) => {
           const inList = this.tokensList.find(t => {
             if (t.contract.toLowerCase() === item.toLowerCase()) return t;
           });
@@ -333,7 +339,7 @@ export default {
         }, []);
       }
       const arr = new Array();
-      for (const contract of buyContracts) {
+      for (const contract of filteredContracts) {
         const token = this.contractToToken(contract);
         if (token) arr.push(token);
       }
