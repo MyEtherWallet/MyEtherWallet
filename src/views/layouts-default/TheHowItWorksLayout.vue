@@ -29,6 +29,13 @@ export default {
     HowItWorksTokens: () => import('../components-default/HowItWorksTokens'),
     HowItWorksMore: () => import('../components-default/HowItWorksMore'),
     GetStarted: () => import('../components-default/GetStarted')
+  },
+  updated() {
+    const id = this.$route.hash.replace('#', '');
+    const container = document.getElementById(id);
+    if (container) {
+      container.scrollIntoView();
+    }
   }
 };
 </script>
