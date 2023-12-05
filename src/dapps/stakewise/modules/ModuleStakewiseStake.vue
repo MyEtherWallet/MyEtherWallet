@@ -1,6 +1,18 @@
 <template>
   <div class="dapps-stakewise-stake pt-8 pb-13 px-3 pa-sm-15">
     <v-row>
+      <v-col cols="12">
+        <mew-warning-sheet
+          class="mb-5"
+          title="StakeWise V3 is now live on
+        mainnet"
+          :link-obj="linkObj"
+          :description="` Please note that
+        Stakewise V2 deposits are now disabled. You can redeem your sETH and
+        rETH for ETH in the MEW Stakewise dApp, and then re-stake by using the `"
+          :bottom="false"
+        />
+      </v-col>
       <v-col
         :order="$vuetify.breakpoint.smAndDown ? 'last' : ''"
         cols="12"
@@ -61,7 +73,7 @@
               type="number"
               :max-btn-obj="{
                 title: 'Max',
-                disabled: !hasEnoughBalanceToStake,
+                disabled: true,
                 method: setMax
               }"
               :image="iconEth"
@@ -70,6 +82,7 @@
               :value="stakeAmount"
               :error-messages="errorMessages"
               :buy-more-str="buyMoreStr"
+              :disabled="true"
               @buyMore="openBuySell"
               @input="setAmount"
             />
@@ -257,6 +270,10 @@ export default {
         validUntil: 0,
         selectedProvider: '',
         txFee: ''
+      },
+      linkObj: {
+        title: 'Stakewise web app.',
+        url: 'https://app.stakewise.io/'
       }
     };
   },
@@ -629,6 +646,9 @@ export default {
           to: ETH_Token.contract,
           fromType: eth.symbol,
           toType: ETH_Token.symbol,
+          toTokenType: {
+            isEth: true
+          },
           fromImg: eth.img,
           toImg: ETH_Token.img,
           fromVal: balance,

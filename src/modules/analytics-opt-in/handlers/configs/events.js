@@ -4,6 +4,7 @@ import DASHBOARD from './dashboard';
 import SWAP from './swap';
 import CREATE_WALLET from './createWallet';
 import ACCESS_WALLET from './accessWallet';
+import BUY_SELL from './buySell';
 
 const COMMON = {
   PAGE_SHOWN: 'PageShown',
@@ -18,5 +19,6 @@ export {
   SWAP,
   CREATE_WALLET,
   COMMON,
-  ACCESS_WALLET
+  ACCESS_WALLET,
+  BUY_SELL
 };

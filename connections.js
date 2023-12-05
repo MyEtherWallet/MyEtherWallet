@@ -38,7 +38,7 @@ module.exports = [
   'https://raw.githubusercontent.com:443/MyEtherWallet/dynamic-data/main/articles.json',
   'https://formspree.io:443/f/mqjndkkx',
   'https://formspree.io:443/f/xbjenjql',
-  'https://broadcast.mewapi.io:443',
+  'https://broadcast.mewapi.io:443/eth',
   // nodes
   'https://nodes.mewapi.io:443',
   'wss://nodes.mewapi.io:443',

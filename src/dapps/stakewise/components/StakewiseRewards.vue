@@ -56,7 +56,7 @@
         :btn-style="compoundRewards ? 'transparent' : 'background'"
         btn-size="small"
         class="mew-body"
-        :disabled="!hasBalance || enoughToCoverRedeem"
+        :disabled="true"
         @click.native="scrollToInput"
       />
     </div>
