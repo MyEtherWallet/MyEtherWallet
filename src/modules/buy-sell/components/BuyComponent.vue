@@ -288,7 +288,6 @@ export default {
       return this.selectedFiatName === 'EUR' || this.selectedFiatName === 'GBP';
     },
     isCAD() {
-      console.log(this.selectedFiatName);
       return this.selectedFiatName === 'CAD';
     },
     disableBuy() {
@@ -323,7 +322,6 @@ export default {
     },
     tokens() {
       const filteredContracts = this.isCAD ? [buyContracts[0]] : buyContracts;
-      console.log(filteredContracts);
       if (this.inWallet) {
         return filteredContracts.reduce((arr, item) => {
           const inList = this.tokensList.find(t => {
@@ -461,14 +459,7 @@ export default {
     selectedFiat: {
       handler: function (newVal, oldVal) {
         if (!isEqual(newVal, oldVal)) {
-          const token = this.currencyItems.find(
-            item => item.name === this.selectedCryptoName
-          );
-          const price = token.price.substring(1).replace(',', '');
-          this.amount = BigNumber(this.localCryptoAmount)
-            .multipliedBy(price)
-            .toFixed(2);
-          this.localCryptoAmount = BigNumber(this.amount).div(price).toString();
+          if (newVal.name === 'CAD') this.selectedCurrency = this.tokens[0];
           this.$emit('selectedFiat', newVal);
         }
       },

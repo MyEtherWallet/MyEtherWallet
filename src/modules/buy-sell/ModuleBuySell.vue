@@ -214,6 +214,9 @@ export default {
       this.selectedCurrency = e;
     },
     setSelectedFiat(e) {
+      if (e.name === 'CAD') {
+        this.selectedCurrency = this.defaultCurrency;
+      }
       this.selectedFiat = e;
     },
     openProviders(val) {
