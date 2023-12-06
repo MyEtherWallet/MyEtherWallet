@@ -250,15 +250,25 @@ export default {
       return fromWei(BigNumber(this.gasPrice).times(21000).toString());
     },
     priceOb() {
-      return !isEmpty(this.fetchedData) && this.fetchedData[0].prices.length > 0
-        ? this.fetchedData[0].prices.find(
-            item => item.fiat_currency === this.selectedFiatName
-          )
-        : {
-            crypto_currency: ETH.name,
-            fiat_currency: 'USD',
-            price: '3379.08322'
-          };
+      if (
+        !isEmpty(this.fetchedData) &&
+        (this.fetchedData[0].prices.length > 0 ||
+          this.fetchedData[1].prices.length > 0)
+      ) {
+        const inMoonpay = this.fetchedData[0].prices.find(
+          item => item.fiat_currency === this.selectedFiatName
+        );
+        const inSimplex = this.fetchedData[1].prices.find(
+          item => item.fiat_currency === this.selectedFiatName
+        );
+        return inMoonpay ? inMoonpay : inSimplex;
+      }
+
+      return {
+        crypto_currency: ETH.name,
+        fiat_currency: 'USD',
+        price: '3379.08322'
+      };
     },
     networkFeeToFiat() {
       return BigNumber(this.networkFee).times(this.priceOb.price).toString();
