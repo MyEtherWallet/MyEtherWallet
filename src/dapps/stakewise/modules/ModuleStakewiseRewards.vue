@@ -7,7 +7,7 @@
           title="StakeWise V3 is now live on
         mainnet"
           description="Please note that Stakewise V2 deposits are now
-        disabled. You can redeem your sETH and rETH for ETH in the MEW Stakewise
+        disabled. You can redeem your sETH2 and rETH2 for ETH in the MEW Stakewise
         dApp, and then re-stake by using the Stakewise web app."
           :link-obj="linkObj"
           :bottom="false"

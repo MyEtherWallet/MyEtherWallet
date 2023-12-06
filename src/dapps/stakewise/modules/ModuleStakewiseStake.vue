@@ -8,8 +8,8 @@
         mainnet"
           :link-obj="linkObj"
           :description="` Please note that
-        Stakewise V2 deposits are now disabled. You can redeem your sETH and
-        rETH for ETH in the MEW Stakewise dApp, and then re-stake by using the `"
+        Stakewise V2 deposits are now disabled. You can redeem your sETH2 and
+        rETH2 for ETH in the MEW Stakewise dApp, and then re-stake by using the `"
           :bottom="false"
         />
       </v-col>
