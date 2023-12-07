@@ -8,8 +8,8 @@
         mainnet"
           :link-obj="linkObj"
           :description="` Please note that
-        Stakewise V2 deposits are now disabled. You can redeem your sETH and
-        rETH for ETH in the MEW Stakewise dApp, and then re-stake by using the `"
+        Stakewise V2 deposits are now disabled. You can redeem your sETH2 and
+        rETH2 for ETH in the MEW Stakewise dApp, and then re-stake by using the `"
           :bottom="false"
         />
       </v-col>
@@ -288,7 +288,7 @@ export default {
     ...mapGetters('external', ['fiatValue']),
     ...mapState('stakewise', ['validatorApr']),
     ...mapState('global', ['gasPriceType']),
-    ...mapState('wallet', ['web3', 'address']),
+    ...mapState('wallet', ['web3', 'address', 'instance']),
     ...mapState('stakewise', ['sethBalance', 'rethBalance']),
     currencyName() {
       return this.network.type.currencyName;
@@ -599,11 +599,11 @@ export default {
           })
           .catch(err => {
             this.loading = false;
-            Toast(err.message, {}, ERROR);
+            this.instance.errorHandler(err.message, {}, ERROR);
           });
       } catch (err) {
         this.loading = false;
-        Toast(err.message, {}, ERROR);
+        this.instance.errorHandler(err.message, {}, ERROR);
       }
     },
     swapNotificationFormatter(obj, currentTrade) {
@@ -667,7 +667,7 @@ export default {
         await this.executeTrade();
       } catch (err) {
         this.loading = false;
-        Toast(err.message, {}, ERROR);
+        this.instance.errorHandler(err.message, {}, ERROR);
       }
     }
   }

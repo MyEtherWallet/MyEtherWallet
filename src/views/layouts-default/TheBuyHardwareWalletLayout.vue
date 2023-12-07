@@ -142,16 +142,6 @@ export default {
         name: 'EtherCards'
       },
       {
-        logoText: 'FINNEY',
-        walletImg: require('@/assets/images/hardware-wallets/finney.png'),
-        priceNote: 'Starting from',
-        currency: '$',
-        price: '999.00',
-        note: 'The most trusted hardware wallet in the world. Get yours today!',
-        link: 'https://shop.sirinlabs.com/?rfsn=2397639.54fdf&utm_source=refersion&utm_medium=affiliate&utm_campaign=2397639.54fdf',
-        name: 'Finney'
-      },
-      {
         logoImg: require('@/assets/images/hardware-wallets/logo-billfodl.png'),
         walletImg: require('@/assets/images/hardware-wallets/billfodl.png'),
         priceNote: 'Starting from',

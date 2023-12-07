@@ -250,15 +250,27 @@ export default {
       return fromWei(BigNumber(this.gasPrice).times(21000).toString());
     },
     priceOb() {
-      return !isEmpty(this.fetchedData) && this.fetchedData[0].prices.length > 0
-        ? this.fetchedData[0].prices.find(
+      if (!isEmpty(this.fetchedData)) {
+        if (this.fetchedData[0] && this.fetchedData[0].prices.length > 0) {
+          const inMoonpay = this.fetchedData[0].prices.find(
             item => item.fiat_currency === this.selectedFiatName
-          )
-        : {
-            crypto_currency: ETH.name,
-            fiat_currency: 'USD',
-            price: '3379.08322'
-          };
+          );
+          if (inMoonpay) return inMoonpay;
+        }
+
+        if (this.fetchedData[1] && this.fetchedData[1].prices.length > 0) {
+          const inSimplex = this.fetchedData[1].prices.find(
+            item => item.fiat_currency === this.selectedFiatName
+          );
+          return inSimplex;
+        }
+      }
+
+      return {
+        crypto_currency: ETH.name,
+        fiat_currency: 'USD',
+        price: '3379.08322'
+      };
     },
     networkFeeToFiat() {
       return BigNumber(this.networkFee).times(this.priceOb.price).toString();
@@ -459,7 +471,21 @@ export default {
     selectedFiat: {
       handler: function (newVal, oldVal) {
         if (!isEqual(newVal, oldVal)) {
-          if (newVal.name === 'CAD') this.selectedCurrency = this.tokens[0];
+          if (newVal.name === 'CAD' || newVal.name === 'JPY') {
+            this.selectedCurrency = this.tokens[0];
+            this.$emit('selectedFiat', newVal);
+            return;
+          }
+
+          const token = this.currencyItems.find(
+            item => item.name === this.selectedCryptoName
+          );
+          const price = token.price.substring(1).replace(',', '');
+          this.amount = BigNumber(this.localCryptoAmount)
+            .multipliedBy(price)
+            .toFixed(2);
+          this.localCryptoAmount = BigNumber(this.amount).div(price).toString();
+
           this.$emit('selectedFiat', newVal);
         }
       },

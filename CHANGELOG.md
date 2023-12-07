@@ -1,3 +1,18 @@
+### Release v6.7.11
+
+### feature
+
+* add Arthera support [#4782](https://github.com/MyEtherWallet/MyEtherWallet/pull/4782)
+* clean up and add arthera to connections [#4783](https://github.com/MyEtherWallet/MyEtherWallet/pull/4783)
+* allow users to add own address to addressbook [#4779](https://github.com/MyEtherWallet/MyEtherWallet/pull/4779)
+
+### devop
+
+* amplitude fix [#4779](https://github.com/MyEtherWallet/MyEtherWallet/pull/4779)
+* disable stakewise deposits [#4779](https://github.com/MyEtherWallet/MyEtherWallet/pull/4779)
+* disable stablecoins for CAD [#4779](https://github.com/MyEtherWallet/MyEtherWallet/pull/4779)
+* add anchor tags for landing page [#4781](https://github.com/MyEtherWallet/MyEtherWallet/pull/4781)
+
 ### Release v6.7.10-hotfix.1
 
 ### fix
