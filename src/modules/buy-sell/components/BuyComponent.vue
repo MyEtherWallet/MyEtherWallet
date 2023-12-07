@@ -471,7 +471,21 @@ export default {
     selectedFiat: {
       handler: function (newVal, oldVal) {
         if (!isEqual(newVal, oldVal)) {
-          if (newVal.name === 'CAD') this.selectedCurrency = this.tokens[0];
+          if (newVal.name === 'CAD') {
+            this.selectedCurrency = this.tokens[0];
+            this.$emit('selectedFiat', newVal);
+            return;
+          }
+
+          const token = this.currencyItems.find(
+            item => item.name === this.selectedCryptoName
+          );
+          const price = token.price.substring(1).replace(',', '');
+          this.amount = BigNumber(this.localCryptoAmount)
+            .multipliedBy(price)
+            .toFixed(2);
+          this.localCryptoAmount = BigNumber(this.amount).div(price).toString();
+
           this.$emit('selectedFiat', newVal);
         }
       },

@@ -158,6 +158,10 @@
         />
       </div>
     </div>
+
+    <div v-if="hideSimplex && hideMoonpay" class="section-block pa-5">
+      <div class="d-flex mew-heading-3 textDark--text">No Providers found</div>
+    </div>
   </div>
 </template>
 
