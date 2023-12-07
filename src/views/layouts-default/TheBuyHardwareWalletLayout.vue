@@ -9,7 +9,7 @@
       >
         <v-row>
           <v-col v-for="(b, key) in buttons" :key="key" cols="12" md="6">
-            <a :href="b.link" target="_blank" @click.native="trackBuy(b.name)">
+            <a :href="b.link" target="_blank" @click="trackBuy(b.name)">
               <mew-button
                 color-theme="basic"
                 btn-style="light"
@@ -140,16 +140,6 @@ export default {
         note: 'The most trusted hardware wallet in the world. Get yours today!',
         link: 'https://ether.cards/?utm_source=mew&utm_medium=cpm&utm_campaign=site',
         name: 'EtherCards'
-      },
-      {
-        logoText: 'FINNEY',
-        walletImg: require('@/assets/images/hardware-wallets/finney.png'),
-        priceNote: 'Starting from',
-        currency: '$',
-        price: '999.00',
-        note: 'The most trusted hardware wallet in the world. Get yours today!',
-        link: 'https://shop.sirinlabs.com/?rfsn=2397639.54fdf&utm_source=refersion&utm_medium=affiliate&utm_campaign=2397639.54fdf',
-        name: 'Finney'
       },
       {
         logoImg: require('@/assets/images/hardware-wallets/logo-billfodl.png'),

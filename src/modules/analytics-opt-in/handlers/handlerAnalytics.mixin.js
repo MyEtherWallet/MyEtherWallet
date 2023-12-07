@@ -142,8 +142,12 @@ export default {
      * tracks all events that happen
      * inside the access wallet page
      */
-    trackAccessWalletAmplitude(event) {
+    trackAccessWalletAmplitude(event, prop) {
       if (this.consentToTrack) {
+        if (!isEmpty(prop)) {
+          this.$amplitude.track(`${categories.accessWallet}${event}`, prop);
+          return;
+        }
         this.$amplitude.track(`${categories.accessWallet}${event}`);
       }
     },
@@ -160,7 +164,7 @@ export default {
      */
     trackDapp(action) {
       if (action && this.consentToTrack) {
-        this.$amplitude.track(`${categories.dashboard}${action}`);
+        this.$amplitude.track(`${categories.dapp}${action}`);
       }
     },
     /**
@@ -177,6 +181,18 @@ export default {
     trackLogout() {
       if (this.consentToTrack) {
         this.$amplitude.track(categories.exitDashboard);
+      }
+    },
+    /**
+     * Track Buy/Sell
+     */
+    trackBuySell(action, event = {}) {
+      if (this.consentToTrack) {
+        if (!isEmpty(event)) {
+          this.$amplitude.track(`${categories.buySell}${action}`, event);
+          return;
+        }
+        this.$amplitude.track(`${categories.buySell}${action}`);
       }
     }
   }

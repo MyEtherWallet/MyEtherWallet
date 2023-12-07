@@ -149,6 +149,7 @@
           href="https://www.myetherwallet.com/advertise-with-us"
           target="_blank"
           rel="noopener noreferrer"
+          @click="buttonTracking('AdvertiseWithUs')"
         >
           <span> Advertise With Us </span>
         </a>

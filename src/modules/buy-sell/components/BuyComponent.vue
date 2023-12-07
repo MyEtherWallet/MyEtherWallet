@@ -250,15 +250,27 @@ export default {
       return fromWei(BigNumber(this.gasPrice).times(21000).toString());
     },
     priceOb() {
-      return !isEmpty(this.fetchedData) && this.fetchedData[0].prices.length > 0
-        ? this.fetchedData[0].prices.find(
+      if (!isEmpty(this.fetchedData)) {
+        if (this.fetchedData[0] && this.fetchedData[0].prices.length > 0) {
+          const inMoonpay = this.fetchedData[0].prices.find(
             item => item.fiat_currency === this.selectedFiatName
-          )
-        : {
-            crypto_currency: ETH.name,
-            fiat_currency: 'USD',
-            price: '3379.08322'
-          };
+          );
+          if (inMoonpay) return inMoonpay;
+        }
+
+        if (this.fetchedData[1] && this.fetchedData[1].prices.length > 0) {
+          const inSimplex = this.fetchedData[1].prices.find(
+            item => item.fiat_currency === this.selectedFiatName
+          );
+          return inSimplex;
+        }
+      }
+
+      return {
+        crypto_currency: ETH.name,
+        fiat_currency: 'USD',
+        price: '3379.08322'
+      };
     },
     networkFeeToFiat() {
       return BigNumber(this.networkFee).times(this.priceOb.price).toString();
@@ -286,6 +298,9 @@ export default {
     },
     isEUR() {
       return this.selectedFiatName === 'EUR' || this.selectedFiatName === 'GBP';
+    },
+    isCAD() {
+      return this.selectedFiatName === 'CAD';
     },
     disableBuy() {
       return (
@@ -318,8 +333,9 @@ export default {
       return '';
     },
     tokens() {
+      const filteredContracts = this.isCAD ? [buyContracts[0]] : buyContracts;
       if (this.inWallet) {
-        return buyContracts.reduce((arr, item) => {
+        return filteredContracts.reduce((arr, item) => {
           const inList = this.tokensList.find(t => {
             if (t.contract.toLowerCase() === item.toLowerCase()) return t;
           });
@@ -333,7 +349,7 @@ export default {
         }, []);
       }
       const arr = new Array();
-      for (const contract of buyContracts) {
+      for (const contract of filteredContracts) {
         const token = this.contractToToken(contract);
         if (token) arr.push(token);
       }
@@ -455,6 +471,12 @@ export default {
     selectedFiat: {
       handler: function (newVal, oldVal) {
         if (!isEqual(newVal, oldVal)) {
+          if (newVal.name === 'CAD' || newVal.name === 'JPY') {
+            this.selectedCurrency = this.tokens[0];
+            this.$emit('selectedFiat', newVal);
+            return;
+          }
+
           const token = this.currencyItems.find(
             item => item.name === this.selectedCryptoName
           );
@@ -463,6 +485,7 @@ export default {
             .multipliedBy(price)
             .toFixed(2);
           this.localCryptoAmount = BigNumber(this.amount).div(price).toString();
+
           this.$emit('selectedFiat', newVal);
         }
       },

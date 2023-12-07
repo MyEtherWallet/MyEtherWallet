@@ -435,10 +435,6 @@ export default {
           { label: 'Trezor', link: 'https://trezor.io/' },
           { label: 'KeepKey', link: 'http://lddy.no/a4im' },
           {
-            label: 'Finney',
-            link: 'http://shop.sirinlabs.com/?rfsn=2397639.54fdf&utm_source=refersion&utm_medium=affiliate&utm_campaign=2397639.54fdf'
-          },
-          {
             label: 'CoolWallet',
             link: 'https://www.coolwallet.io/mew/?ref=myetherwallet1'
           },
