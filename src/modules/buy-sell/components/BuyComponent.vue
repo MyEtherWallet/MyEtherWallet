@@ -397,7 +397,9 @@ export default {
     fiatCurrencyItems() {
       const arrItems =
         this.hasData && this.fetchedData[0].fiat_currencies.length > 0
-          ? this.fetchedData[0].fiat_currencies.filter(item => item !== 'RUB')
+          ? this.fetchedData[0].fiat_currencies.filter(
+              item => item !== 'RUB' && item !== 'JPY'
+            )
           : ['USD'];
       return getCurrency(arrItems);
     },
