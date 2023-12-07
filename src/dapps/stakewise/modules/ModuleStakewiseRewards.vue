@@ -266,7 +266,7 @@ export default {
       'getFiatValue'
     ]),
     ...mapGetters('external', ['fiatValue']),
-    ...mapState('wallet', ['web3', 'address']),
+    ...mapState('wallet', ['web3', 'address', 'instance']),
     ...mapState('stakewise', ['rethBalance', 'sethBalance']),
     ...mapState('global', ['gasPriceType']),
     reth2Contract() {
@@ -525,7 +525,7 @@ export default {
         this.executeTrade();
       } catch (err) {
         this.loading = false;
-        Toast(err.message, {}, ERROR);
+        this.instance.errorHandler(err.message, {}, ERROR);
       }
     },
     executeTrade() {
@@ -547,11 +547,11 @@ export default {
           })
           .catch(err => {
             this.loading = false;
-            Toast(err.message, {}, ERROR);
+            this.instance.errorHandler(err.message, {}, ERROR);
           });
       } catch (err) {
         this.loading = false;
-        Toast(err.message, {}, ERROR);
+        this.instance.errorHandler(err.message, {}, ERROR);
       }
     },
     swapNotificationFormatter(obj, currentTrade) {
@@ -594,6 +594,9 @@ export default {
           to: ETH_Token.contract,
           fromType: eth.symbol,
           toType: ETH_Token.symbol,
+          toTokenType: {
+            isEth: true
+          },
           fromImg: eth.img,
           toImg: ETH_Token.img,
           fromVal: balance,
@@ -612,7 +615,7 @@ export default {
         await this.executeTrade();
       } catch (err) {
         this.loading = false;
-        Toast(err.message, {}, ERROR);
+        this.instance.errorHandler(err.message, {}, ERROR);
       }
     },
     openSettings() {

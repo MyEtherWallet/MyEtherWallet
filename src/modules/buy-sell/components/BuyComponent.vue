@@ -397,9 +397,7 @@ export default {
     fiatCurrencyItems() {
       const arrItems =
         this.hasData && this.fetchedData[0].fiat_currencies.length > 0
-          ? this.fetchedData[0].fiat_currencies.filter(
-              item => item !== 'RUB' && item !== 'JPY'
-            )
+          ? this.fetchedData[0].fiat_currencies.filter(item => item !== 'RUB')
           : ['USD'];
       return getCurrency(arrItems);
     },
@@ -473,7 +471,7 @@ export default {
     selectedFiat: {
       handler: function (newVal, oldVal) {
         if (!isEqual(newVal, oldVal)) {
-          if (newVal.name === 'CAD') {
+          if (newVal.name === 'CAD' || newVal.name === 'JPY') {
             this.selectedCurrency = this.tokens[0];
             this.$emit('selectedFiat', newVal);
             return;
