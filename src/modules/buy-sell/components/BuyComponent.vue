@@ -250,18 +250,20 @@ export default {
       return fromWei(BigNumber(this.gasPrice).times(21000).toString());
     },
     priceOb() {
-      if (
-        !isEmpty(this.fetchedData) &&
-        (this.fetchedData[0].prices.length > 0 ||
-          this.fetchedData[1].prices.length > 0)
-      ) {
-        const inMoonpay = this.fetchedData[0].prices.find(
-          item => item.fiat_currency === this.selectedFiatName
-        );
-        const inSimplex = this.fetchedData[1].prices.find(
-          item => item.fiat_currency === this.selectedFiatName
-        );
-        return inMoonpay ? inMoonpay : inSimplex;
+      if (!isEmpty(this.fetchedData)) {
+        if (this.fetchedData[0] && this.fetchedData[0].prices.length > 0) {
+          const inMoonpay = this.fetchedData[0].prices.find(
+            item => item.fiat_currency === this.selectedFiatName
+          );
+          if (inMoonpay) return inMoonpay;
+        }
+
+        if (this.fetchedData[1] && this.fetchedData[1].prices.length > 0) {
+          const inSimplex = this.fetchedData[1].prices.find(
+            item => item.fiat_currency === this.selectedFiatName
+          );
+          return inSimplex;
+        }
       }
 
       return {
