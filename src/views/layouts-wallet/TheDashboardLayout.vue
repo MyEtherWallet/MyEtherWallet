@@ -2,7 +2,7 @@
   <the-wrapper-wallet
     :total-left-col-items="2"
     :has-draggable="false"
-    :total-right-col-items="2"
+    :total-right-col-items="isEthNetwork ? 3 : 2"
   >
     <template #leftColItem1>
       <div>
@@ -13,6 +13,9 @@
       <module-tokens />
     </template>
     <template v-if="isEthNetwork" #rightColItem1>
+      <nft-dashboard />
+    </template>
+    <template v-if="isEthNetwork" #rightColItem2>
       <module-swap-rates />
     </template>
     <template #[name]>
@@ -25,10 +28,12 @@
 import { mapGetters } from 'vuex';
 
 export default {
+  name: 'TheDashboardLayout',
   components: {
     WalletCarousel: () =>
       import('@/views/components-wallet/WalletCarousel.vue'),
     ModuleBalance: () => import('@/modules/balance/ModuleBalance'),
+    NftDashboard: () => import('@/views/components-wallet/NftDashboard'),
     ModuleTokens: () => import('@/modules/balance/ModuleTokens'),
     ModuleSwapRates: () => import('@/modules/swap/ModuleSwapRates'),
     TheWrapperWallet: () => import('@/views/components-wallet/TheWrapperWallet')
@@ -36,7 +41,7 @@ export default {
   computed: {
     ...mapGetters('global', ['isEthNetwork']),
     name() {
-      return !this.isEthNetwork ? 'rightColItem1' : 'rightColItem2';
+      return !this.isEthNetwork ? 'rightColItem2' : 'rightColItem3';
     }
   }
 };
