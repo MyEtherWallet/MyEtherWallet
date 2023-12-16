@@ -141,7 +141,6 @@ export default {
           return item;
         });
         response['rewards'] = rewards;
-        console.log(response);
         this.fetchedData = response;
         this.loading = false;
       })
@@ -151,7 +150,6 @@ export default {
   },
   methods: {
     async mint(id) {
-      console.log(id);
       this.loaders[id] = true;
       const { transaction } = await fetch(
         `https://development.mewwallet.dev/energy/web/purchase?address=${this.address}&reward_id=${id}&season_id=3`
