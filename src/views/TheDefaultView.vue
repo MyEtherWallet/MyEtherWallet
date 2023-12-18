@@ -23,14 +23,14 @@ export default {
     TheDefaultFooter: () => import('./components-default/TheDefaultFooter'),
     TheEnkryptPopup: () => import('./components-default/TheEnkryptPopup')
   },
-  computed: {
-    ...mapState('popups', ['enkryptLandingPopup']),
-    ...mapState('wallet', ['isOfflineApp'])
-  },
   data() {
     return {
       mobileOpen: false
     };
+  },
+  computed: {
+    ...mapState('popups', ['enkryptLandingPopup']),
+    ...mapState('wallet', ['isOfflineApp'])
   },
   methods: {
     handleOpen() {
