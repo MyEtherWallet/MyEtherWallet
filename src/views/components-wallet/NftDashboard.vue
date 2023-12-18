@@ -4,7 +4,7 @@
       <div class="mew-heading-2">MEW exclusive holiday NFTs</div>
       <a
         class="mew-heading-4 d-flex align-center py-2 more-mew-universe"
-        href=""
+        href="https://www.mewtopia.com/join-us-in-the-mew-universe/"
         target="_blank"
       >
         More about MEW universe
@@ -12,11 +12,15 @@
       </a>
       <div
         v-if="loading"
-        class="single-mint-section d-flex align-center justify-space-between my-2"
+        class="single-mint-section d-flex align-center justify-space-between my-2 flex-wrap"
       >
-        <div style="width: 144px">
+        <div class="image-container">
           <div class="nft-image mb-2">
-            <v-skeleton-loader height="144" width="144" type="image" />
+            <v-skeleton-loader
+              :height="imageContainerWidth"
+              :width="imageContainerWidth"
+              type="image"
+            />
           </div>
           <mew-button
             :loading="loading"
@@ -27,9 +31,13 @@
             :class="loading ? '' : 'button-background'"
           />
         </div>
-        <div style="width: 144px">
+        <div class="image-container">
           <div class="nft-image mb-2">
-            <v-skeleton-loader height="144" width="144" type="image" />
+            <v-skeleton-loader
+              :height="imageContainerWidth"
+              :width="imageContainerWidth"
+              type="image"
+            />
           </div>
           <mew-button
             :loading="loading"
@@ -43,12 +51,12 @@
       </div>
       <div
         v-else
-        class="single-mint-section d-flex align-center justify-space-between my-2"
+        class="single-mint-section d-flex align-center justify-space-between my-2 flex-wrap"
       >
         <div
           v-for="item in singlePaidItems"
           :key="item.description + item.title"
-          style="width: 144px"
+          class="image-container"
         >
           <img :src="item.url" :alt="item.title" class="mb-2 nft-image" />
           <mew-button
@@ -127,6 +135,15 @@ export default {
       return !isEmpty(this.fetchedData)
         ? this.fetchedData.rewards.slice(0, 2).reverse()
         : [];
+    },
+    imageContainerWidth() {
+      return this.$vuetify.breakpoint.xsAndDown
+        ? '144px'
+        : this.$vuetify.breakpoint.lgAndUp
+        ? '144px'
+        : this.$vuetify.breakpoint.smAndDown
+        ? '319px'
+        : '276px';
     }
   },
   mounted() {
@@ -165,6 +182,7 @@ export default {
         toBNSafe(transaction.gas).mul(toBNSafe(this.gasPrice))
       );
       if (toBNSafe(transactionFee).gt(toBNSafe(this.balanceInWei))) {
+        this.loaders[id] = false;
         Toast('Not enough balance!', {}, ERROR);
         return;
       }
@@ -193,14 +211,44 @@ export default {
   color: #5a678a;
 }
 
-.nft-image {
-  width: 144px;
-  height: 144px;
-  border: 1px solid rgba(95, 99, 104, 0.1);
-  border-radius: 6px;
-}
-
 .button-background {
   background-color: #f2fafa;
+}
+
+.image-container {
+  width: 144px;
+
+  .nft-image {
+    width: 144px;
+    height: 144px;
+    border: 1px solid rgba(95, 99, 104, 0.1);
+    border-radius: 6px;
+  }
+}
+
+@media all and (max-width: 1264px) {
+  .image-container {
+    width: 276px;
+    margin-top: 10px;
+
+    .nft-image {
+      width: 276px;
+      height: 276px;
+    }
+  }
+}
+
+@media all and (max-width: 960px) {
+  .image-container {
+    max-width: 400px;
+    width: 100%;
+    margin-top: 10px;
+
+    .nft-image {
+      max-width: 400px;
+      width: 100%;
+      height: auto;
+    }
+  }
 }
 </style>
