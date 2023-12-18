@@ -1,5 +1,5 @@
 <template>
-  <div class="header">
+  <div class="header" :style="{ top: `${topOffset}px` }">
     <div class="container">
       <div class="row">
         <div class="col-12">
@@ -7,7 +7,7 @@
             class="header__wrapper d-flex align-items-center justify-content-between js-header"
           >
             <a href="/" class="header__logo">
-              <logo />
+              <logo-component />
             </a>
             <div class="header__menu">
               <a
@@ -145,19 +145,19 @@
 </template>
 
 <script>
-import Logo from '@/assets/images/icons/logo.vue';
+import LogoComponent from '@/assets/images/icons/logo-component.vue';
 import OpenMenu from '@/assets/images/icons/open-menu.vue';
 import ScrollMagic from 'scrollmagic';
 
 export default {
   name: 'TheDefaultHeader',
   components: {
-    Logo,
+    LogoComponent,
     OpenMenu
   },
   data() {
     return {
-      topOffset: 52
+      topOffset: 35
     };
   },
   async mounted() {
@@ -169,13 +169,13 @@ export default {
       triggerHook: 'onLeave'
     })
       .on('progress', e => {
-        this.topOffset = Math.max(0, 52 - 52 * e.progress.toFixed(3));
+        this.topOffset = Math.max(0, 35 - 35 * e.progress.toFixed(3));
       })
       .addTo(controller);
 
     new ScrollMagic.Scene({
       triggerElement: '.js-body',
-      offset: 104,
+      offset: 35,
       triggerHook: 'onLeave'
     })
       .setClassToggle('.js-header', 'fixed')
@@ -193,19 +193,19 @@ export default {
 @import '@/assets/styles/headerStyles/theme.less';
 
 .header {
-  height: 104px;
+  height: 75px;
   position: fixed;
   left: 0;
   top: 0;
   width: 100%;
-  z-index: 1;
+  z-index: 6;
 
   .screen-tablet-header({
     height: 72px;
   });
 
   &__wrapper {
-    height: 104px;
+    height: 75px;
     position: relative;
 
     .screen-tablet-header({
@@ -223,7 +223,7 @@ export default {
       height: 64px;
       position: absolute;
       left: -16px;
-      top: 20px;
+      top: 5px;
       opacity: 0;
       z-index: -1;
       .transition(@property: opacity, @time: 0.3s);
@@ -257,7 +257,7 @@ export default {
       font-weight: 500;
       font-size: 18px;
       line-height: 64px;
-      color: @black;
+      color: @black !important;
       text-decoration: none;
       .transition(@property: color, @time: 0.3s);
       margin-left: 32px;
@@ -329,7 +329,7 @@ export default {
 
       &-link {
         display: block;
-        color: @black;
+        color: @black !important;
         font-variant-numeric: stacked-fractions;
         font-feature-settings: 'case' on;
         font-size: 18px;
@@ -397,7 +397,7 @@ export default {
         }
 
         h6 {
-          color: @black;
+          color: @black !important;
           font-size: 18px;
           font-style: normal;
           font-weight: 700;
@@ -426,8 +426,8 @@ export default {
     text-decoration: none;
     padding: 8px 18px 8px 16px;
     border-radius: 24px;
-    background-color: @black;
-    color: @white;
+    background-color: @black !important;
+    color: @white !important;
     height: 40px;
     font-weight: 500;
     font-size: 18px;

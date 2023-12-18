@@ -1,5 +1,5 @@
 <template>
-  <div class="mew-component--how-it-works">
+  <div class="mew-component--how-it-works pt-16">
     <the-layout-header :title="$t('howItWorks.title')" />
     <div class="py-7" />
     <v-container>

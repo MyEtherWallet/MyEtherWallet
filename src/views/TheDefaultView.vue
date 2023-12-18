@@ -2,6 +2,7 @@
   <div>
     <the-default-header />
     <v-main class="js-body">
+      <new-look-banner />
       <router-view />
     </v-main>
     <the-default-footer />
@@ -16,6 +17,7 @@ export default {
   name: 'TheDefaultView',
   components: {
     TheDefaultHeader: () => import('./components-default/TheDefaultHeader'),
+    NewLookBanner: () => import('./components-default/NewLookBanner'),
     TheDefaultFooter: () => import('./components-default/TheDefaultFooter'),
     TheEnkryptPopup: () => import('./components-default/TheEnkryptPopup')
   },

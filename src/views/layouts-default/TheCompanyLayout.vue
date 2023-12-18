@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="pt-16">
     <the-layout-header :title="$t('aboutUs.title')" />
     <div class="py-9" />
     <company-what-is-mew />

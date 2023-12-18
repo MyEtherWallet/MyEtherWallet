@@ -1,5 +1,5 @@
 <template>
-  <div class="wrap">
+  <div class="wrap pt-16">
     <v-container>
       <div class="page-container">
         <div class="page-title text-center">

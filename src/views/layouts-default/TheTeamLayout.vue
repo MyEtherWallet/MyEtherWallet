@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="pt-16">
     <the-layout-header title="Join us" />
     <div class="py-7" />
     <v-container>

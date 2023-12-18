@@ -1,5 +1,5 @@
 <template>
-  <div class="mew-component--jobs">
+  <div class="mew-component--jobs pt-16">
     <!-- 
     ==========================================================================
     Page header
