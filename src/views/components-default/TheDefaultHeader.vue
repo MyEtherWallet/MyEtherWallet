@@ -157,7 +157,7 @@ export default {
   },
   data() {
     return {
-      topOffset: 35
+      topOffset: 52
     };
   },
   async mounted() {
@@ -169,13 +169,13 @@ export default {
       triggerHook: 'onLeave'
     })
       .on('progress', e => {
-        this.topOffset = Math.max(0, 35 - 35 * e.progress.toFixed(3));
+        this.topOffset = Math.max(0, 52 - 52 * e.progress.toFixed(3));
       })
       .addTo(controller);
 
     new ScrollMagic.Scene({
       triggerElement: '.js-body',
-      offset: 35,
+      offset: 52,
       triggerHook: 'onLeave'
     })
       .setClassToggle('.js-header', 'fixed')
@@ -200,8 +200,19 @@ export default {
   width: 100%;
   z-index: 6;
 
+  .container {
+    .screen-mobile({
+      padding-top: 0 !important;
+    });
+  }
+  .col-12 {
+    .screen-mobile({
+      padding-top: 0 !important;
+    });
+  }
+
   .screen-tablet-header({
-    height: 72px;
+    height: 80px;
   });
 
   &__wrapper {
@@ -209,7 +220,7 @@ export default {
     position: relative;
 
     .screen-tablet-header({
-      height: 72px;
+      height: 80px;
     });
 
     &::after {

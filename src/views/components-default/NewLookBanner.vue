@@ -26,8 +26,20 @@
   left: 0;
   z-index: 3;
 
+  .container {
+    .screen-mobile({
+      padding-top: 0 !important;
+    });
+  }
+  .col-12 {
+    .screen-mobile({
+      padding-top: 0 !important;
+    });
+  }
+
   p {
-    .text7;
+    .text7 !important;
+    font-size: 20px !important;
     color: @white !important;
     margin: 11px 0;
     text-align: center;
@@ -35,10 +47,12 @@
 
     .screen-tablet-min({
             margin: 2px 0;
+            font-size: 16px !important;
         });
 
     a {
       color: @white;
+      text-decoration: underline;
 
       &:hover {
         text-decoration: none;
