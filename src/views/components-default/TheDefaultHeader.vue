@@ -1,150 +1,462 @@
 <template>
-  <div class="default-header expandHeader">
-    <v-container class="pl-4 pb-7 pr-4 d-flex align-center pt-8">
-      <v-row align="center" no-gutters>
-        <v-col class="d-md-none" cols="2" md="4">
-          <the-default-mobile-navigation class="ml-n2" />
-        </v-col>
-        <v-col cols="8" md="8" class="d-flex align-center">
-          <v-img
-            :class="$vuetify.breakpoint.smAndDown ? 'mx-auto' : ''"
-            class="cursor--pointer mr-md-14"
-            src="@/assets/images/icons/logo-mew.svg"
-            max-height="36"
-            max-width="130"
-            @click="routeToHome"
-          />
-
-          <div class="d-none d-md-flex">
-            <router-link
-              class="white--text text-decoration--none menu-item"
-              :to="{ name: ROUTES_HOME.HOW_IT_WORKS.NAME }"
-              @click.native="trackHowItWorks"
-            >
-              {{ $t('header.what-is-mew') }}
-            </router-link>
-            <div class="mx-8">
-              <mew-menu
-                top-arrow
-                activator-text-color="white--text"
-                :list-obj="menuObj"
-                @goToPage="routeTo"
-              />
-            </div>
-            <div @click="trackBuySellLanding">
+  <div class="header">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <div
+            class="header__wrapper d-flex align-items-center justify-content-between js-header"
+          >
+            <a href="/" class="header__logo">
+              <logo />
+            </a>
+            <div class="header__menu">
               <a
-                class="white--text text-decoration--none menu-item"
-                @click="openBuySell"
+                href="https://ccswap.myetherwallet.com/"
+                target="_blank"
+                class="header__menu-link"
+                >Buy Crypto</a
               >
-                {{ $t('header.buy-eth') }}
-              </a>
+              <a
+                href="https://www.myetherwallet.com/how-it-works#swap"
+                class="header__menu-link"
+                >Swap Tokens</a
+              >
+              <!-- <a href="#" class="header__menu-link">Earn</a> -->
+              <div class="header__menu-link header__menu-link--dropdown">
+                More features
+                <div class="header__menu-dropdown">
+                  <div class="header__menu-dropdown-wrap">
+                    <!-- <a href="#" class="header__menu-dropdown-link">Bridge</a> -->
+                    <a
+                      href="https://www.myetherwallet.com/how-it-works#nft"
+                      class="header__menu-dropdown-link"
+                      >NFT</a
+                    >
+                    <!-- <a href="#" class="header__menu-dropdown-link">Networks</a> -->
+                    <a
+                      href="https://www.myetherwallet.com/how-it-works#dapps"
+                      class="header__menu-dropdown-link"
+                      >DApps</a
+                    >
+                  </div>
+                </div>
+              </div>
+              <div class="header__menu-link header__menu-link--dropdown">
+                Resources
+                <div class="header__menu-dropdown">
+                  <div class="header__menu-dropdown-wrap">
+                    <a
+                      href="https://www.mewtopia.com/"
+                      target="_blank"
+                      class="header__menu-dropdown-link"
+                      >MEWtopia</a
+                    >
+                    <a
+                      href="https://help.myetherwallet.com/en/"
+                      target="_blank"
+                      class="header__menu-dropdown-link"
+                      >Help Center</a
+                    >
+                    <a
+                      href="mailto:support@myetherwallet.com"
+                      rel="noopener noreferrer"
+                      target="_blank"
+                      class="header__menu-dropdown-link"
+                      >Customer Support</a
+                    >
+                  </div>
+                </div>
+              </div>
+              <div class="header__menu-link header__menu-link--dropdown">
+                Products
+                <div class="header__menu-dropdown">
+                  <div class="header__menu-dropdown-wrap">
+                    <div class="header__menu-products">
+                      <a
+                        href="https://www.mewwallet.com/"
+                        target="_blank"
+                        class="header__menu-products-item header__menu-products-item--bg"
+                      >
+                        <img src="/src/assets/pic/mewwallet-logo.svg" alt="" />
+                        <div>
+                          <h6>MEW Mobile App</h6>
+                          <p>Mobile wallet</p>
+                        </div>
+                      </a>
+                      <a
+                        href="https://www.myetherwallet.com/wallet/access"
+                        target="_blank"
+                        class="header__menu-products-item header__menu-products-item--bg"
+                      >
+                        <img src="/src/assets/pic/mew-logo.svg" alt="" />
+                        <div>
+                          <h6>MEW Portfolio Manager</h6>
+                          <p>Web portfolio interface</p>
+                        </div>
+                      </a>
+                    </div>
+                    <div class="header__menu-products">
+                      <a
+                        href="https://www.enkrypt.com/"
+                        target="_blank"
+                        class="header__menu-products-item"
+                      >
+                        <img src="/src/assets/pic/enkrypt-logo.png" alt="" />
+                        <div>
+                          <h6>Enkrypt</h6>
+                          <p>Browser extension wallet</p>
+                        </div>
+                      </a>
+                      <a
+                        href="https://www.ethvm.com/"
+                        target="_blank"
+                        class="header__menu-products-item"
+                      >
+                        <img src="/src/assets/pic/ethvm-logo.svg" alt="" />
+                        <div>
+                          <h6>ethVM</h6>
+                          <p>Blockchain explorer</p>
+                        </div>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
+            <a
+              href="https://www.myetherwallet.com/wallet/access"
+              target="_blank"
+              class="header__access-button"
+            >
+              Access my wallet
+            </a>
+            <a
+              href="javascript:void(0)"
+              class="header__mobile-menu-open"
+              @click="openMobileMenu"
+            >
+              <open-menu />
+            </a>
           </div>
-        </v-col>
-        <v-col cols="2" md="4" class="d-flex justify-end">
-          <mew-tools class="ml-auto" />
-        </v-col>
-      </v-row>
-    </v-container>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
-
-import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
-import buyMore from '@/core/mixins/buyMore.mixin.js';
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-import { HEADER } from '@/modules/analytics-opt-in/handlers/configs/events.js';
+import Logo from '@/assets/images/icons/logo.vue';
+import OpenMenu from '@/assets/images/icons/open-menu.vue';
+import ScrollMagic from 'scrollmagic';
 
 export default {
   name: 'TheDefaultHeader',
   components: {
-    MewTools: () => import('@/core/components/MewTools'),
-    TheDefaultMobileNavigation: () => import('./TheDefaultMobileNavigation')
+    Logo,
+    OpenMenu
   },
-  mixins: [buyMore, handlerAnalytics],
-  data: () => ({
-    menuObj: {
-      name: 'Wallet actions',
-      items: [
-        {
-          title: 'Popular actions',
-          items: [
-            {
-              title: 'Send transaction',
-              to: { name: ROUTES_WALLET.SEND_TX.NAME }
-            },
-            {
-              title: 'Explore DApps',
-              to: { name: ROUTES_WALLET.DAPPS.NAME }
-            },
-            {
-              title: 'Swap tokens',
-              to: { name: ROUTES_WALLET.SWAP.NAME }
-            },
-            {
-              title: 'Sign message',
-              to: { name: ROUTES_WALLET.SIGN_MESSAGE.NAME }
-            }
-          ]
-        },
-        {
-          title: 'More actions',
-          items: [
-            {
-              title: 'Verify message',
-              to: { name: ROUTES_HOME.TOOLS.NAME, query: { tool: 'verify' } }
-            },
-            {
-              title: 'Convert Units',
-              to: { name: ROUTES_HOME.TOOLS.NAME, query: { tool: 'convert' } }
-            },
-            {
-              title: 'Send Offline Helper',
-              to: { name: ROUTES_HOME.TOOLS.NAME, query: { tool: 'offline' } }
-            }
-          ]
-        }
-      ]
-    },
-    ROUTES_HOME: ROUTES_HOME
-  }),
-  computed: {
-    ...mapGetters('global', ['swapLink', 'network'])
+  data() {
+    return {
+      topOffset: 52
+    };
   },
-  mounted() {
-    if (!this.network) return;
-    this.network.type.tokens.then(res => {
-      const tokenMap = new Map();
-      res.forEach(item => {
-        tokenMap.set(item.address.toLowerCase(), item);
-      });
-      this.setNetworkTokens(tokenMap);
-    });
+  async mounted() {
+    const controller = new ScrollMagic.Controller();
+
+    new ScrollMagic.Scene({
+      triggerElement: '.js-body',
+      duration: 52,
+      triggerHook: 'onLeave'
+    })
+      .on('progress', e => {
+        this.topOffset = Math.max(0, 52 - 52 * e.progress.toFixed(3));
+      })
+      .addTo(controller);
+
+    new ScrollMagic.Scene({
+      triggerElement: '.js-body',
+      offset: 104,
+      triggerHook: 'onLeave'
+    })
+      .setClassToggle('.js-header', 'fixed')
+      .addTo(controller);
   },
   methods: {
-    ...mapActions('external', ['setNetworkTokens']),
-    routeToHome() {
-      this.trackHeaderAmplitude(HEADER.LOGO);
-      this.$router.push({ name: ROUTES_HOME.HOME.NAME });
-    },
-    trackHowItWorks() {
-      this.trackHeaderAmplitude(HEADER.WHAT_IS_MEW);
-    },
-    routeTo(route) {
-      this.trackHeaderAmplitude(HEADER.WALLET_ACTIONS, route);
-      this.$router.push(route);
-    },
-    trackBuySellLanding() {
-      this.trackHeaderAmplitude(HEADER.BUY_ETH);
+    openMobileMenu() {
+      this.$emit('openMobileMenu');
     }
   }
 };
 </script>
 
-<style lang="scss" scoped>
-.menu-item:hover {
-  font-weight: 500;
+<style lang="less">
+@import '@/assets/styles/headerStyles/theme.less';
+
+.header {
+  height: 104px;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  z-index: 1;
+
+  .screen-tablet-header({
+    height: 72px;
+  });
+
+  &__wrapper {
+    height: 104px;
+    position: relative;
+
+    .screen-tablet-header({
+      height: 72px;
+    });
+
+    &::after {
+      content: '';
+      border-radius: 52px;
+      background: rgba(255, 255, 255, 0.7);
+      box-shadow: 0px 3px 12px -6px rgba(0, 0, 0, 0.32);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      width: calc(~'100% + 32px');
+      height: 64px;
+      position: absolute;
+      left: -16px;
+      top: 20px;
+      opacity: 0;
+      z-index: -1;
+      .transition(@property: opacity, @time: 0.3s);
+
+      .screen-tablet-header({
+        width: calc(~'100% + 40px');
+        height: 72px;
+        left: -20px;
+        top: 0;
+        border-radius: 0;
+      });
+    }
+
+    &.fixed {
+      &::after {
+        opacity: 1;
+      }
+    }
+  }
+
+  &__logo {
+    display: block;
+  }
+
+  &__menu {
+    .screen-tablet-header({
+      display: none;
+    });
+
+    &-link {
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 64px;
+      color: @black;
+      text-decoration: none;
+      .transition(@property: color, @time: 0.3s);
+      margin-left: 32px;
+      display: inline-block;
+      position: relative;
+      cursor: pointer;
+
+      .screen-desktop-min({
+        font-size: 16px;
+        margin-left: 20px; 
+      });
+
+      &:first-child {
+        margin-left: 0;
+      }
+
+      &:hover {
+        color: rgba(0, 0, 0, 0.5);
+      }
+
+      &--dropdown {
+        padding-right: 16px;
+
+        &::after {
+          content: '';
+          width: 11px;
+          height: 7px;
+          background-image: url("data:image/svg+xml,%3csvg width='11' height='7' viewBox='0 0 11 7' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath fill-rule='evenodd' clip-rule='evenodd' d='M0.5 0.308105L4.79094 6.43801H6.10171L10.3926 0.308105H8.43959L5.44632 4.5842L2.45305 0.308105H0.5Z' fill='black'/%3e%3c/svg%3e");
+          position: absolute;
+          right: 0px;
+          top: 50%;
+          margin-top: -3.5px;
+          .transition(@property: opacity, @time: 0.3s);
+        }
+
+        &:hover {
+          .header__menu-dropdown {
+            display: block;
+          }
+
+          &::after {
+            opacity: 0.5;
+          }
+        }
+      }
+    }
+
+    &-dropdown {
+      position: absolute;
+      display: none;
+      padding-top: 2px;
+      opacity: 1;
+      margin-left: -20px;
+      .transition(@property: opacity, @time: 0.3s);
+
+      &.visible {
+        display: block;
+      }
+
+      &-wrap {
+        min-width: 240px;
+        padding: 16px 20px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.7);
+        box-shadow: 0px 8px 16px -6px rgba(0, 0, 0, 0.32);
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+      }
+
+      &-link {
+        display: block;
+        color: @black;
+        font-variant-numeric: stacked-fractions;
+        font-feature-settings: 'case' on;
+        font-size: 18px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+        .transition(@property: opacity, @time: 0.3s);
+        text-decoration: none;
+        margin-bottom: 24px;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        &:hover {
+          opacity: 0.5;
+        }
+
+        .screen-desktop-min({
+          font-size: 16px;
+        });
+      }
+    }
+
+    &-products {
+      padding: 4px 0 4px 0;
+      display: flex;
+      justify-content: space-between;
+      width: 584px;
+
+      .screen-desktop-large({
+        width: 290px;
+        display: block;
+      });
+
+      &-item {
+        width: calc(~'50% - 4px');
+        height: 66px;
+        padding: 8px;
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        .transition(@property: background-color, @time: 0.3s);
+        border-radius: 16px;
+
+        .screen-desktop-large({
+          width: calc(~'100%');
+        });
+
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        img {
+          width: 50px;
+          border-radius: 16px;
+          margin-right: 16px;
+        }
+
+        &--bg {
+          img {
+            background: #fff;
+            box-shadow: 0 1.35px 5.4px 0 rgba(0, 0, 0, 0.1);
+          }
+        }
+
+        h6 {
+          color: @black;
+          font-size: 18px;
+          font-style: normal;
+          font-weight: 700;
+          line-height: normal;
+          margin: 0 0 4px 0;
+
+          .screen-desktop-min({
+            font-size: 16px;
+          });
+        }
+
+        p {
+          color: rgba(0, 0, 0, 0.64);
+          font-size: 14px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: normal;
+          margin: 0;
+        }
+      }
+    }
+  }
+
+  &__access-button {
+    display: block;
+    text-decoration: none;
+    padding: 8px 18px 8px 16px;
+    border-radius: 24px;
+    background-color: @black;
+    color: @white;
+    height: 40px;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 24px;
+    letter-spacing: 0.6px;
+    .transition(@property: opacity, @time: 0.3s);
+
+    &:hover {
+      opacity: 0.5;
+    }
+
+    .screen-tablet-header({
+      display: none;
+    });
+
+    .screen-desktop-min({
+      font-size: 16px;
+    });
+  }
+
+  &__mobile-menu {
+    &-open {
+      display: none;
+      text-decoration: none;
+
+      .screen-tablet-header({
+        display: block;
+      });
+    }
+  }
 }
 </style>

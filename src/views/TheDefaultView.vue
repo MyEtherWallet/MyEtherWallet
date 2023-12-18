@@ -1,7 +1,7 @@
 <template>
   <div>
     <the-default-header />
-    <v-main>
+    <v-main class="js-body">
       <router-view />
     </v-main>
     <the-default-footer />
