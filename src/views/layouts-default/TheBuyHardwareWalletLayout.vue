@@ -1,5 +1,5 @@
 <template>
-  <div class="expandHeader pb-12">
+  <div class="expandHeader pb-12 pt-16">
     <v-container>
       <the-layout-header title="Get a hardware wallet today!" />
       <v-sheet
