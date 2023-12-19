@@ -1,5 +1,5 @@
 <template>
-  <div class="mew-component--dapp-submission pt-16">
+  <div class="mew-component--dapp-submission">
     <the-layout-header
       :title="$t('dappsSubmission.banner-submit.dapp-submission-form')"
     />

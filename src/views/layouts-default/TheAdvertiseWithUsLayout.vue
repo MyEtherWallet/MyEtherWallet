@@ -1,5 +1,5 @@
 <template>
-  <div class="pt-16">
+  <div>
     <ad-banner />
     <ad-prototype />
     <ad-form />

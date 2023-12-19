@@ -1,11 +1,12 @@
 <template>
-  <div class="mew-component--jobs pt-16">
+  <div class="mew-component--jobs">
     <!-- 
     ==========================================================================
     Page header
     ==========================================================================
     -->
     <the-layout-header
+      class="mt-13 pt-16"
       :title="$t('careers.header')"
       :subtitle-line-one="$t('careers.subtitle')"
     />

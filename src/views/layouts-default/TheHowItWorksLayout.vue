@@ -1,6 +1,6 @@
 <template>
-  <div class="mew-component--how-it-works pt-16">
-    <the-layout-header :title="$t('howItWorks.title')" />
+  <div class="mew-component--how-it-works">
+    <the-layout-header :title="$t('howItWorks.title')" class="mt-13 pt-16" />
     <div class="py-7" />
     <v-container>
       <v-sheet color="transparent" max-width="500px" class="mx-auto mb-10">
