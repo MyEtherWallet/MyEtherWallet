@@ -1,3 +1,5 @@
+### Release v6.7.12
+
 ### devop
 
 * remove coinzilla [#4787](https://github.com/MyEtherWallet/MyEtherWallet/pull/4787)
