@@ -156,7 +156,6 @@
 <script>
 import CloseIcon from '@/assets/images/icons/close-icon.vue';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
-  
 export default {
   components: {
     CloseIcon
@@ -175,9 +174,7 @@ export default {
     };
   },
   showAccess() {
-      return this.$route.name === ROUTES_HOME.ACCESS_WALLET.NAME
-        ? 'visibility: hidden'
-        : '';
+    return this.$route.name === ROUTES_HOME.ACCESS_WALLET.NAME ? 'visibility: hidden' : '';
   },
   methods: {
     closeMobileMenu() {
