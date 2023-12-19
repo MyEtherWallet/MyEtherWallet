@@ -173,10 +173,12 @@ export default {
       isProductsOpen: false
     };
   },
-  showAccess() {
-    return this.$route.name === ROUTES_HOME.ACCESS_WALLET.NAME
-      ? 'visibility: hidden'
-      : '';
+  computed: {
+    showAccess() {
+      return this.$route.name === ROUTES_HOME.ACCESS_WALLET.NAME
+        ? 'visibility: hidden'
+        : '';
+    }
   },
   methods: {
     closeMobileMenu() {
