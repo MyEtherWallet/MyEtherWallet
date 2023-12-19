@@ -1,3 +1,8 @@
+### devop
+
+* remove coinzilla [#4787](https://github.com/MyEtherWallet/MyEtherWallet/pull/4787)
+* remove dapp submit [#4789](https://github.com/MyEtherWallet/MyEtherWallet/pull/4789)
+
 ### Release v6.7.11
 
 ### feature
