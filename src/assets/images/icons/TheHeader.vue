@@ -7,7 +7,7 @@
             class="header__wrapper d-flex align-items-center justify-content-between js-header"
           >
             <a href="/" class="header__logo">
-              <logo-component />
+              <logo />
             </a>
             <div class="header__menu">
               <a
@@ -77,10 +77,7 @@
                         target="_blank"
                         class="header__menu-products-item header__menu-products-item--bg"
                       >
-                        <img
-                          src="@/assets/images/icons/mewwallet-logo.svg"
-                          alt=""
-                        />
+                        <img src="/src/assets/pic/mewwallet-logo.svg" alt="" />
                         <div>
                           <h6>MEW Mobile App</h6>
                           <p>Mobile wallet</p>
@@ -91,7 +88,7 @@
                         target="_blank"
                         class="header__menu-products-item header__menu-products-item--bg"
                       >
-                        <img src="@/assets/images/icons/mew-logo.svg" alt="" />
+                        <img src="/src/assets/pic/mew-logo.svg" alt="" />
                         <div>
                           <h6>MEW Portfolio Manager</h6>
                           <p>Web portfolio interface</p>
@@ -104,10 +101,7 @@
                         target="_blank"
                         class="header__menu-products-item"
                       >
-                        <img
-                          src="@/assets/images/icons/enkrypt-logo.png"
-                          alt=""
-                        />
+                        <img src="/src/assets/pic/enkrypt-logo.png" alt="" />
                         <div>
                           <h6>Enkrypt</h6>
                           <p>Browser extension wallet</p>
@@ -118,10 +112,7 @@
                         target="_blank"
                         class="header__menu-products-item"
                       >
-                        <img
-                          src="@/assets/images/icons/ethvm-logo.svg"
-                          alt=""
-                        />
+                        <img src="/src/assets/pic/ethvm-logo.svg" alt="" />
                         <div>
                           <h6>ethVM</h6>
                           <p>Blockchain explorer</p>
@@ -136,7 +127,6 @@
               href="https://www.myetherwallet.com/wallet/access"
               target="_blank"
               class="header__access-button"
-              :style="showAccess"
             >
               Access my wallet
             </a>
@@ -154,96 +144,66 @@
   </div>
 </template>
 
-<script>
-import LogoComponent from '@/assets/images/icons/logo-component.vue';
-import OpenMenu from '@/assets/images/icons/open-menu.vue';
-import ScrollMagic from 'scrollmagic';
-import { ROUTES_HOME } from '@/core/configs/configRoutes';
+<script setup lang="ts">
+import { onMounted, ref } from 'vue';
+import Logo from '#root/assets/icons/common/logo.vue';
+import OpenMenu from '#root/assets/icons/common/open-menu.vue';
 
-export default {
-  name: 'TheDefaultHeader',
-  components: {
-    LogoComponent,
-    OpenMenu
-  },
-  data() {
-    return {
-      topOffset: 52
-    };
-  },
-  computed: {
-    showAccess() {
-      return this.$route.name === ROUTES_HOME.ACCESS_WALLET.NAME
-        ? 'visibility: hidden'
-        : '';
-    },
-    offset() {
-      return this.$vuetify.breakpoint.mdAndDown ? 64 : 52;
-    }
-  },
-  async mounted() {
-    const controller = new ScrollMagic.Controller();
-    this.topOffset = this.offset;
+const topOffset = ref<number>(52);
 
-    new ScrollMagic.Scene({
-      triggerElement: '.js-body',
-      duration: 52,
-      triggerHook: 'onLeave'
-    })
-      .on('progress', e => {
-        this.topOffset = Math.max(
-          0,
-          this.offset - this.offset * e.progress.toFixed(3)
-        );
-      })
-      .addTo(controller);
+const emit = defineEmits<{
+  (e: 'openMobileMenu'): void;
+}>();
 
-    new ScrollMagic.Scene({
-      triggerElement: '.js-body',
-      offset: this.offset,
-      triggerHook: 'onLeave'
-    })
-      .setClassToggle('.js-header', 'fixed')
-      .addTo(controller);
-  },
-  methods: {
-    openMobileMenu() {
-      this.$emit('openMobileMenu');
-    }
-  }
+const openMobileMenu = () => {
+  emit('openMobileMenu');
 };
+
+onMounted(async () => {
+  const ScrollMagic = await import('scrollmagic');
+  const controller = new ScrollMagic.Controller();
+
+  new ScrollMagic.Scene({
+    triggerElement: '.js-body',
+    duration: 52,
+    triggerHook: 'onLeave'
+  })
+    .on('progress', function (e: any) {
+      topOffset.value = Math.max(0, 52 - 52 * e.progress.toFixed(3));
+    })
+    .addTo(controller);
+
+  new ScrollMagic.Scene({
+    triggerElement: '.js-body',
+    offset: 104,
+    triggerHook: 'onLeave'
+  })
+    .setClassToggle('.js-header', 'fixed')
+    .addTo(controller);
+});
 </script>
 
 <style lang="less">
-@import '@/assets/styles/headerStyles/theme.less';
+@import 'src/assets/styles/theme.less';
 
 .header {
-  height: 75px;
+  height: 104px;
   position: fixed;
   left: 0;
   top: 0;
   width: 100%;
-  z-index: 6;
-
-  .container {
-    padding-top: 0 !important;
-  }
-  .col-12 {
-    .screen-mobile({
-      padding-top: 0 !important;
-    });
-  }
+  z-index: 1;
 
   .screen-tablet-header({
-    height: 80px;
+    height: 72px;
   });
 
   &__wrapper {
-    height: 75px;
+    height: 104px;
     position: relative;
 
     .screen-tablet-header({
-      height: 80px;
+      height: 72px;
     });
 
     &::after {
@@ -257,8 +217,8 @@ export default {
       height: 64px;
       position: absolute;
       left: -16px;
-      top: 5px;
-      opacity: 1;
+      top: 20px;
+      opacity: 0;
       z-index: -1;
       .transition(@property: opacity, @time: 0.3s);
 
@@ -291,7 +251,7 @@ export default {
       font-weight: 500;
       font-size: 18px;
       line-height: 64px;
-      color: @black !important;
+      color: @black;
       text-decoration: none;
       .transition(@property: color, @time: 0.3s);
       margin-left: 32px;
@@ -363,7 +323,7 @@ export default {
 
       &-link {
         display: block;
-        color: @black !important;
+        color: @black;
         font-variant-numeric: stacked-fractions;
         font-feature-settings: 'case' on;
         font-size: 18px;
@@ -431,7 +391,7 @@ export default {
         }
 
         h6 {
-          color: @black !important;
+          color: @black;
           font-size: 18px;
           font-style: normal;
           font-weight: 700;
@@ -460,8 +420,8 @@ export default {
     text-decoration: none;
     padding: 8px 18px 8px 16px;
     border-radius: 24px;
-    background-color: @black !important;
-    color: @white !important;
+    background-color: @black;
+    color: @white;
     height: 40px;
     font-weight: 500;
     font-size: 18px;

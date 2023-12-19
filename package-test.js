@@ -88,7 +88,8 @@ const EXCEPTIONS = [
   '@mathieustan/vue-intercom', // major version
   'vue-chartjs',
   'chart.js',
-  'vue-tippy'
+  'vue-tippy',
+  'less-loader' // doesn't support webpack 4
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
