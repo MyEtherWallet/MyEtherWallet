@@ -1,0 +1,40 @@
+@import "./reset.less";
+@import "./font.less";
+@import "./var.less";
+@import "./bootstrap.less";
+// @import "./slick.less";
+// @import "./slick-theme.less";
+@import "./fancybox.less";
+
+body,
+html {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  min-height: 100%;
+  background-color: @background;
+  position: relative;
+  -webkit-overflow-scrolling: touch;
+  overflow-x: hidden;
+  font-family: @font;
+  font-weight: 400;
+  min-width: 320px;
+  zoom: 1;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.wrapper {
+  width: 100%;
+  position: relative;
+  z-index: 1;
+  margin: 0 auto;
+  min-width: 320px;
+  padding-top: 104px;
+
+  .screen-tablet-portaint({
+    padding-top: 72px;
+  });
+}

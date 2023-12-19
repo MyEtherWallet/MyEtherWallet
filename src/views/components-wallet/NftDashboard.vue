@@ -12,7 +12,7 @@
       </a>
       <div
         v-if="loading"
-        class="single-mint-section d-flex align-center justify-space-between my-2 flex-wrap"
+        class="single-mint-section d-flex align-center justify-space-around justify-md-space-between my-2 flex-wrap text-center"
       >
         <div class="image-container">
           <div class="nft-image mb-2">
@@ -51,7 +51,7 @@
       </div>
       <div
         v-else
-        class="single-mint-section d-flex align-center justify-space-between my-2 flex-wrap"
+        class="single-mint-section d-flex align-center justify-space-around justify-md-space-between my-2 flex-wrap text-center"
       >
         <div
           v-for="item in singlePaidItems"

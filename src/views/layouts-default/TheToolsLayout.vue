@@ -3,7 +3,7 @@
     class="mew-component--tools"
     :class="$vuetify.breakpoint.smAndDown ? 'mobile' : 'desktop'"
   >
-    <the-layout-header title="Tools" />
+    <the-layout-header title="Tools" class="pt-16 mt-13" />
 
     <v-container class="px-3 my-12">
       <mew-tabs

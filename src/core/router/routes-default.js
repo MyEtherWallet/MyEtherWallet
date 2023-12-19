@@ -125,18 +125,6 @@ export default {
       }
     },
     {
-      path: ROUTES_HOME.DAPP_SUBMISSION.PATH,
-      name: ROUTES_HOME.DAPP_SUBMISSION.NAME,
-      component: () =>
-        import('@/views/layouts-default/TheDappSubmissionLayout'),
-      meta: {
-        noAuth: true,
-        title: 'Submit a DApp to MyEtherWallet | Feature Your Web3 DApp',
-        description:
-          'Submit your DApp to MyEtherWallet. Have your DApp featured to millions of Web3 users.'
-      }
-    },
-    {
       path: ROUTES_HOME.CONVERT_UNITS.PATH,
       name: ROUTES_HOME.CONVERT_UNITS.NAME,
       component: () => import('@/views/layouts-default/TheConvertUnitsLayout'),
