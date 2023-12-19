@@ -176,10 +176,14 @@ export default {
       return this.$route.name === ROUTES_HOME.ACCESS_WALLET.NAME
         ? 'visibility: hidden'
         : '';
+    },
+    offset() {
+      return this.$vuetify.breakpoint.mdAndDown ? 64 : 52;
     }
   },
   async mounted() {
     const controller = new ScrollMagic.Controller();
+    this.topOffset = this.offset;
 
     new ScrollMagic.Scene({
       triggerElement: '.js-body',
@@ -187,13 +191,16 @@ export default {
       triggerHook: 'onLeave'
     })
       .on('progress', e => {
-        this.topOffset = Math.max(0, 52 - 52 * e.progress.toFixed(3));
+        this.topOffset = Math.max(
+          0,
+          this.offset - this.offset * e.progress.toFixed(3)
+        );
       })
       .addTo(controller);
 
     new ScrollMagic.Scene({
       triggerElement: '.js-body',
-      offset: 52,
+      offset: this.offset,
       triggerHook: 'onLeave'
     })
       .setClassToggle('.js-header', 'fixed')
