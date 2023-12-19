@@ -96,7 +96,7 @@
                   target="_blank"
                   class="mobile-menu__menu-products-item mobile-menu__menu-products-item--bg"
                 >
-                  <img src="/src/assets/pic/mewwallet-logo.svg" alt="" />
+                  <img src="@/assets/images/icons/mewwallet-logo.svg" alt="" />
                   <div>
                     <h6>MEW Mobile App</h6>
                     <p>Mobile wallet</p>
@@ -107,7 +107,7 @@
                   target="_blank"
                   class="mobile-menu__menu-products-item mobile-menu__menu-products-item--bg"
                 >
-                  <img src="/src/assets/pic/mew-logo.svg" alt="" />
+                  <img src="@/assets/images/icons/mew-logo.svg" alt="" />
                   <div>
                     <h6>MEW Portfolio Manager</h6>
                     <p>Web portfolio interface</p>
@@ -120,7 +120,7 @@
                   target="_blank"
                   class="mobile-menu__menu-products-item"
                 >
-                  <img src="/src/assets/pic/enkrypt-logo.png" alt="" />
+                  <img src="@/assets/images/icons/enkrypt-logo.png" alt="" />
                   <div>
                     <h6>Enkrypt</h6>
                     <p>Browser extension wallet</p>
@@ -131,7 +131,7 @@
                   target="_blank"
                   class="mobile-menu__menu-products-item"
                 >
-                  <img src="/src/assets/pic/ethvm-logo.svg" alt="" />
+                  <img src="@/assets/images/icons/ethvm-logo.svg" alt="" />
                   <div>
                     <h6>ethVM</h6>
                     <p>Blockchain explorer</p>
@@ -146,6 +146,7 @@
         href="https://www.myetherwallet.com/wallet/access"
         target="_blank"
         class="mobile-menu__access-button"
+        :style="showAccess"
         >Access my wallet</a
       >
     </div>
@@ -154,6 +155,8 @@
 
 <script>
 import CloseIcon from '@/assets/images/icons/close-icon.vue';
+import { ROUTES_HOME } from '@/core/configs/configRoutes';
+  
 export default {
   components: {
     CloseIcon
@@ -170,6 +173,11 @@ export default {
       isResourcesOpen: false,
       isProductsOpen: false
     };
+  },
+  showAccess() {
+      return this.$route.name === ROUTES_HOME.ACCESS_WALLET.NAME
+        ? 'visibility: hidden'
+        : '';
   },
   methods: {
     closeMobileMenu() {
