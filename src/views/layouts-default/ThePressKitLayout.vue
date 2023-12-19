@@ -1,7 +1,7 @@
 <template>
   <div class="wrap">
     <v-container>
-      <div class="page-container">
+      <div class="page-container pt-16">
         <div class="page-title text-center">
           <h1>{{ $t('footer.press-kit.header') }}</h1>
           <i18n

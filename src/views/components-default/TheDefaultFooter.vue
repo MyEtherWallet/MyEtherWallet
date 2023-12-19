@@ -463,10 +463,6 @@ export default {
             routerLink: ROUTES_HOME.SECURITY_POLICY.NAME
           },
           {
-            label: 'Submit DApp',
-            routerLink: ROUTES_HOME.DAPP_SUBMISSION.NAME
-          },
-          {
             label: 'Advertise With Us',
             routerLink: ROUTES_HOME.ADVERTISE.NAME
           }

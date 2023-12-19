@@ -1,5 +1,5 @@
 <template>
-  <v-container class="py-10 py-md-15 text-center">
+  <v-container class="py-10 py-md-15 text-center pt-16">
     <img
       src="@/assets/images/backgrounds/bg-404.svg"
       alt="404"
