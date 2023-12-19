@@ -145,46 +145,46 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
-import Logo from "#root/assets/icons/common/logo.vue";
-import OpenMenu from "#root/assets/icons/common/open-menu.vue";
+import { onMounted, ref } from 'vue';
+import Logo from '#root/assets/icons/common/logo.vue';
+import OpenMenu from '#root/assets/icons/common/open-menu.vue';
 
 const topOffset = ref<number>(52);
 
 const emit = defineEmits<{
-  (e: "openMobileMenu"): void;
+  (e: 'openMobileMenu'): void;
 }>();
 
 const openMobileMenu = () => {
-  emit("openMobileMenu");
+  emit('openMobileMenu');
 };
 
 onMounted(async () => {
-  const ScrollMagic = await import("scrollmagic");
+  const ScrollMagic = await import('scrollmagic');
   const controller = new ScrollMagic.Controller();
 
   new ScrollMagic.Scene({
-    triggerElement: ".js-body",
+    triggerElement: '.js-body',
     duration: 52,
-    triggerHook: "onLeave",
+    triggerHook: 'onLeave'
   })
-    .on("progress", function (e: any) {
+    .on('progress', function (e: any) {
       topOffset.value = Math.max(0, 52 - 52 * e.progress.toFixed(3));
     })
     .addTo(controller);
 
   new ScrollMagic.Scene({
-    triggerElement: ".js-body",
+    triggerElement: '.js-body',
     offset: 104,
-    triggerHook: "onLeave",
+    triggerHook: 'onLeave'
   })
-    .setClassToggle(".js-header", "fixed")
+    .setClassToggle('.js-header', 'fixed')
     .addTo(controller);
 });
 </script>
 
 <style lang="less">
-@import "src/assets/styles/theme.less";
+@import 'src/assets/styles/theme.less';
 
 .header {
   height: 104px;
@@ -207,13 +207,13 @@ onMounted(async () => {
     });
 
     &::after {
-      content: "";
+      content: '';
       border-radius: 52px;
       background: rgba(255, 255, 255, 0.7);
       box-shadow: 0px 3px 12px -6px rgba(0, 0, 0, 0.32);
       backdrop-filter: blur(25px);
       -webkit-backdrop-filter: blur(25px);
-      width: calc(~"100% + 32px");
+      width: calc(~'100% + 32px');
       height: 64px;
       position: absolute;
       left: -16px;
@@ -223,7 +223,7 @@ onMounted(async () => {
       .transition(@property: opacity, @time: 0.3s);
 
       .screen-tablet-header({
-        width: calc(~"100% + 40px");
+        width: calc(~'100% + 40px');
         height: 72px;
         left: -20px;
         top: 0;
@@ -276,7 +276,7 @@ onMounted(async () => {
         padding-right: 16px;
 
         &::after {
-          content: "";
+          content: '';
           width: 11px;
           height: 7px;
           background-image: url("data:image/svg+xml,%3csvg width='11' height='7' viewBox='0 0 11 7' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath fill-rule='evenodd' clip-rule='evenodd' d='M0.5 0.308105L4.79094 6.43801H6.10171L10.3926 0.308105H8.43959L5.44632 4.5842L2.45305 0.308105H0.5Z' fill='black'/%3e%3c/svg%3e");
@@ -325,7 +325,7 @@ onMounted(async () => {
         display: block;
         color: @black;
         font-variant-numeric: stacked-fractions;
-        font-feature-settings: "case" on;
+        font-feature-settings: 'case' on;
         font-size: 18px;
         font-style: normal;
         font-weight: 500;
@@ -360,7 +360,7 @@ onMounted(async () => {
       });
 
       &-item {
-        width: calc(~"50% - 4px");
+        width: calc(~'50% - 4px');
         height: 66px;
         padding: 8px;
         display: flex;
@@ -370,7 +370,7 @@ onMounted(async () => {
         border-radius: 16px;
 
         .screen-desktop-large({
-          width: calc(~"100%");
+          width: calc(~'100%');
         });
 
         &:hover {

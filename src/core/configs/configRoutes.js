@@ -7,7 +7,6 @@ const ROUTES_HOME = {
   BUY_HARDWARE_WALLET: { NAME: 'BuyHardwareWallet', PATH: 'buy-hardware' },
   CREATE_WALLET: { NAME: 'CreateWallet', PATH: 'wallet/create/:overlay?' },
   CONVERT_UNITS: { NAME: 'ConvertUnits', PATH: 'convert-units' },
-  DAPP_SUBMISSION: { NAME: 'DappSubmission', PATH: 'dapp-submission' },
   HOW_IT_WORKS: { NAME: 'HowItWorks', PATH: 'how-it-works' },
   JOBS: { NAME: 'Careers', PATH: 'careers' },
   PAGE_NOT_FOUND: { NAME: 'PageNotFound', PATH: '*' },

@@ -174,7 +174,9 @@ export default {
     };
   },
   showAccess() {
-    return this.$route.name === ROUTES_HOME.ACCESS_WALLET.NAME ? 'visibility: hidden' : '';
+    return this.$route.name === ROUTES_HOME.ACCESS_WALLET.NAME
+      ? 'visibility: hidden'
+      : '';
   },
   methods: {
     closeMobileMenu() {
