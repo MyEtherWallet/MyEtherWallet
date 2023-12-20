@@ -7,7 +7,13 @@
             class="header__wrapper d-flex align-items-center justify-content-between js-header"
           >
             <a href="/" class="header__logo">
-              <logo-component />
+              <logo-component v-if="showDark" />
+              <img
+                v-else
+                src="@/assets/images/icons/logo-mew.png"
+                width="113px"
+                height="32px"
+              />
             </a>
             <div class="header__menu">
               <a
@@ -179,6 +185,9 @@ export default {
     },
     offset() {
       return this.$vuetify.breakpoint.mdAndDown ? 64 : 52;
+    },
+    showDark() {
+      return this.topOffset !== 52;
     }
   },
   async mounted() {
@@ -214,7 +223,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 @import '@/assets/styles/headerStyles/theme.less';
 
 .header {
@@ -258,7 +267,7 @@ export default {
       position: absolute;
       left: -16px;
       top: 5px;
-      opacity: 1;
+      opacity: 0;
       z-index: -1;
       .transition(@property: opacity, @time: 0.3s);
 

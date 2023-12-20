@@ -197,7 +197,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 @import '@/assets/styles/headerStyles/theme.less';
 
 .mobile-menu {
