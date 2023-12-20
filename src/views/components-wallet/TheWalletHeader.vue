@@ -16,51 +16,8 @@
           'd-flex align-center justify-space-between'
         ]"
       >
-        <div v-if="!promoOver && !isOfflineApp" class="d-flex align-center">
-          <div
-            class="party-popper-container ml-2 mr-3 d-flex pa-3"
-            style="filter: invert(1)"
-          >
-            <img
-              src="@/assets/images/icons/icon-party-popper.png"
-              width="20px"
-              height="20px"
-            />
-          </div>
-          <div
-            class="d-flex flex-column flex-md-row flex-lg-row flex-xl-row align-start align-md-center align-lg-center align-xl-center"
-          >
-            <div class="d-flex">
-              <span class="mr-2 textMedium--text font-weight-bold">
-                Buy & sell crypto with 0% fees
-              </span>
-              <mew-button
-                title="Buy crypto"
-                btn-size="medium"
-                class="d-md-none d-lg-none d-xl-none"
-                @click.native="buyCryptoNow"
-              />
-            </div>
-            <div>
-              <span
-                class="mew-label textMedium--text mr-2 margin-one-off d-none d-md-inline d-lg-inline d-xl-inline"
-                >Promo ends in:</span
-              >
-              <span
-                class="font-weight-medium time-container textMedium--text mew-label mr-1 margin-one-off pa-1"
-              >
-                {{ daysLeft }} {{ dayText }}
-              </span>
-              <span
-                class="font-weight-medium time-container textMedium--text mew-label margin-one-off pa-1"
-              >
-                {{ hoursLeft }} h
-              </span>
-            </div>
-          </div>
-        </div>
         <div
-          v-else-if="promoOver && !isOfflineApp && network.type.canBuy"
+          v-if="!isOfflineApp && network.type.canBuy"
           class="eth-banner d-flex"
         >
           <div class="mr-5">
@@ -165,10 +122,9 @@
 </template>
 
 <script>
-import moment from 'moment';
 import { mapGetters, mapState } from 'vuex';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-import { BUYSELL_EVENT, MOONPAY_OFFER_END } from '@/modules/buy-sell/helpers';
+import { BUYSELL_EVENT } from '@/modules/buy-sell/helpers';
 import { EventBus } from '@/core/plugins/eventBus';
 export default {
   components: {
@@ -185,23 +141,6 @@ export default {
     ...mapState('wallet', ['identifier', 'isOfflineApp']),
     ...mapState('global', ['online']),
     ...mapGetters('global', ['network']),
-    daysLeft() {
-      const eventDate = moment(MOONPAY_OFFER_END);
-      const todaysDate = moment();
-      return eventDate.diff(todaysDate, 'days');
-    },
-    hoursLeft() {
-      const today = moment();
-      const tomorrowsDate = moment().add(1, 'days').startOf('day');
-      const duration = moment.duration(tomorrowsDate.diff(today));
-      return Math.ceil(duration.asHours());
-    },
-    dayText() {
-      return `day${this.daysLeft > 1 ? 's' : ''}`;
-    },
-    promoOver() {
-      return moment(moment()).isAfter(MOONPAY_OFFER_END);
-    },
     hasAds() {
       return this.ads.length > 0;
     }
