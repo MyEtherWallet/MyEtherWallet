@@ -142,7 +142,7 @@ export default {
         : this.$vuetify.breakpoint.lgAndUp
         ? '144px'
         : this.$vuetify.breakpoint.smAndDown
-        ? '319px'
+        ? '250px'
         : '276px';
     }
   },
@@ -240,12 +240,12 @@ export default {
 
 @media all and (max-width: 960px) {
   .image-container {
-    max-width: 400px;
+    max-width: 250px;
     width: 100%;
     margin-top: 10px;
 
     .nft-image {
-      max-width: 400px;
+      max-width: 250px;
       width: 100%;
       height: auto;
     }
