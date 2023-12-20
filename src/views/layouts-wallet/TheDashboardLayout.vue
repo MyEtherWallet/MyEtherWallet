@@ -25,7 +25,6 @@
 import { mapGetters } from 'vuex';
 
 export default {
-  name: 'TheDashboardLayout',
   components: {
     WalletCarousel: () =>
       import('@/views/components-wallet/WalletCarousel.vue'),
@@ -37,7 +36,7 @@ export default {
   computed: {
     ...mapGetters('global', ['isEthNetwork']),
     name() {
-      return !this.isEthNetwork ? 'rightColItem2' : 'rightColItem3';
+      return !this.isEthNetwork ? 'rightColItem1' : 'rightColItem2';
     }
   }
 };
