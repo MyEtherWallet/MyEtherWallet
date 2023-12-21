@@ -15,7 +15,7 @@
   </div>
 </template>
 
-<style lang="less">
+<style lang="less" scoped>
 @import '@/assets/styles/headerStyles/theme.less';
 
 .new-look-banner {

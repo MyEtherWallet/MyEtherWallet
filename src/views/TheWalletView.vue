@@ -103,7 +103,7 @@ export default {
   watch: {
     address(newVal) {
       if (!newVal) {
-        this.$router.push({ name: ROUTES_HOME.HOME.NAME });
+        this.$router.push({ name: ROUTES_HOME.ACCESS_WALLET.NAME });
       } else {
         this.setup();
         this.setTokensAndBalance();
