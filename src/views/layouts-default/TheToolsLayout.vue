@@ -23,9 +23,6 @@
         <template #tabItemContent3>
           <module-tools-offline-helper :is-home-page="true" />
         </template>
-        <template #tabItemContent4>
-          <module-tools-watch-only />
-        </template>
       </mew-tabs>
     </v-container>
     <get-started />
@@ -39,7 +36,6 @@ export default {
   name: 'TheToolsLayout',
   components: {
     TheLayoutHeader: () => import('../components-default/TheLayoutHeader'),
-    ModuleToolsWatchOnly: () => import('@/modules/tools/ModuleToolsWatchOnly'),
     ModuleToolsConvert: () => import('@/modules/tools/ModuleToolsConvert'),
     ModuleToolsOfflineHelper: () =>
       import('@/modules/tools/ModuleToolsOfflineHelper'),
@@ -78,7 +74,7 @@ export default {
   },
   methods: {
     setCurrentTool() {
-      const tools = ['watch', 'convert', 'offline', 'verify', 'keystore'];
+      const tools = ['convert', 'offline', 'verify'];
 
       // Check if tool value from URL is valid
       if (tools.includes(this.$route.query.tool)) {
@@ -94,12 +90,8 @@ export default {
             this.activeTab = 1;
             this.currentTool = 'convert';
             break;
-          case 'keystore':
-            this.activeTab = 2;
-            this.currentTool = 'keystore';
-            break;
           case 'offline':
-            this.activeTab = 3;
+            this.activeTab = 2;
             this.currentTool = 'offline';
             break;
           default:
@@ -122,9 +114,6 @@ export default {
           this.currentTool = 'convert';
           break;
         case 2:
-          this.currentTool = 'keystore';
-          break;
-        case 3:
           this.currentTool = 'offline';
           break;
         default:
