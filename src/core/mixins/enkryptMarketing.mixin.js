@@ -3,7 +3,7 @@
  */
 
 import platform from 'platform';
-import { mapState } from 'vuex';
+
 export default {
   name: 'EnkryptMarketingMixing',
   data() {
@@ -33,7 +33,6 @@ export default {
     };
   },
   computed: {
-    ...mapState('popups', ['enkryptLandingPopup']),
     browser() {
       const browser = platform.name?.toLowerCase() || '';
       if (!this.extensionLinks[browser]) {

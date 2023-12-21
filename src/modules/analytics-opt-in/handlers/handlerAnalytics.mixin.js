@@ -8,18 +8,10 @@ import { isEmpty } from 'lodash';
 export default {
   name: 'HandlerAnalytics',
   computed: {
-    ...mapState('popups', [
-      'consentToTrack',
-      'displayedTrackingPopup',
-      'enkryptLandingPopup',
-      'enkryptLandingPopupClosed'
-    ]),
+    ...mapState('popups', ['consentToTrack']),
     ...mapState('wallet', ['isOfflineApp']),
     shouldDisplayTrackingPopup() {
       if (this.isOfflineApp) return false;
-      if (!this.enkryptLandingPopup) {
-        return this.displayedTrackingPopup;
-      }
       return true;
     }
   },
