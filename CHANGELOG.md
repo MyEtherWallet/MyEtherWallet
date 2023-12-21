@@ -1,3 +1,5 @@
+### Release v6.8.1
+
 ### feature
 
 * add new NFT minting on dashboard, remove coinzilla [#4786](https://github.com/MyEtherWallet/MyEtherWallet/pull/4786)
