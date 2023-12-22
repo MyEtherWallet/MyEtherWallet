@@ -52,6 +52,21 @@ export default {
      *
      * @param {String} event
      * tracks all events that happen
+     * inside the landing page
+     */
+    trackNftModule(event, prop) {
+      if (this.consentToTrack) {
+        if (!isEmpty(prop)) {
+          this.$amplitude.track(`${categories.nftModule}${event}`, prop);
+          return;
+        }
+        this.$amplitude.track(`${categories.nftModule}${event}`);
+      }
+    },
+    /**
+     *
+     * @param {String} event
+     * tracks all events that happen
      * inside the header
      */
     trackHeaderAmplitude(event, prop) {

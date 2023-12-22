@@ -6,6 +6,7 @@
         class="mew-heading-4 d-flex align-center py-2 more-mew-universe"
         href="https://www.mewtopia.com/join-us-in-the-mew-universe/"
         target="_blank"
+        @click="() => trackNftModule('Mewtopia')"
       >
         More about MEW universe
         <v-icon color="#5A678A"> mdi-chevron-right </v-icon>
@@ -97,9 +98,11 @@ import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import { isEmpty } from 'lodash';
 import { fromBase } from '@/core/helpers/unit';
 import { toBNSafe } from '@/core/helpers/numberFormatHelper';
+import handlerAnalyticsMixin from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 export default {
-  name: 'ModuleSwapRates',
+  name: 'NftDashboard',
+  mixins: [handlerAnalyticsMixin],
   props: {
     mobile: {
       type: Boolean,
@@ -147,7 +150,7 @@ export default {
     }
   },
   mounted() {
-    fetch('https://development.mewwallet.dev/energy/web/info')
+    fetch('https://mainnet.mewwallet.dev/energy/web/info')
       .then(res => {
         return res.json();
       })
@@ -167,9 +170,12 @@ export default {
   },
   methods: {
     async mint(id) {
+      this.trackNftModule('Mint', {
+        item: id
+      });
       this.loaders[id] = true;
       const { transaction } = await fetch(
-        `https://development.mewwallet.dev/energy/web/purchase?address=${this.address}&reward_id=${id}&season_id=3`
+        `https://mainnet.mewwallet.dev/energy/web/purchase?address=${this.address}&reward_id=${id}&season_id=3`
       )
         .then(res => res.json())
         .then(res => {
@@ -183,6 +189,9 @@ export default {
       );
       if (toBNSafe(transactionFee).gt(toBNSafe(this.balanceInWei))) {
         this.loaders[id] = false;
+        this.trackNftModule('MintNotEnoughBalance', {
+          item: id
+        });
         Toast('Not enough balance!', {}, ERROR);
         return;
       }
@@ -190,11 +199,17 @@ export default {
       this.web3.eth
         .sendTransaction(transaction)
         .then(() => {
+          this.trackNftModule('MintSuccess', {
+            item: id
+          });
           Toast('Succesfully minted NFT!', {}, SUCCESS);
           this.loaders[id] = false;
         })
         .catch(err => {
           this.loaders[id] = false;
+          this.trackNftModule('MintFailed', {
+            item: id
+          });
           this.instance.errorHandler(err.message ? err.message : err);
         });
     }
