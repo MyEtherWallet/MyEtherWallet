@@ -17,6 +17,9 @@
     <v-col cols="12" class="pa-2 pa-md-3 d-md-none pb-0">
       <module-network />
     </v-col>
+    <v-col v-if="isEthNetwork" cols="12" class="pa-2 pa-md-3 d-md-none pb-0">
+      <nft-dashboard />
+    </v-col>
     <!--
     =====================================================================================
       Left Col - primary modules
@@ -50,6 +53,13 @@
           <module-network />
         </v-col>
         <v-col
+          v-if="isEthNetwork"
+          cols="12"
+          class="pa-2 pt-4 pa-md-3 d-none d-md-block"
+        >
+          <nft-dashboard />
+        </v-col>
+        <v-col
           v-for="n in totalRightColItems"
           v-show="totalRightColItems >= 1"
           :key="n"
@@ -68,6 +78,9 @@
     >
       <div class="d-none d-md-block mb-2">
         <module-network />
+      </div>
+      <div v-if="isEthNetwork" class="d-none d-md-block mb-2">
+        <nft-dashboard />
       </div>
       <draggable
         v-bind="dragOptions"
@@ -94,14 +107,17 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import draggable from 'vuedraggable';
+
 import ModuleNetwork from '@/modules/network/ModuleNetwork';
 
 export default {
   name: 'TheWrapperWallet',
   components: {
     ModuleNetwork,
-    draggable
+    draggable,
+    NftDashboard: () => import('@/views/components-wallet/NftDashboard')
   },
   props: {
     totalLeftColItems: {
@@ -127,6 +143,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters('global', ['isEthNetwork']),
     dragOptions() {
       return {
         animation: 200,

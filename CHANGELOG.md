@@ -1,4 +1,19 @@
-### Release v6.7.12
+### Release v6.8.1
+
+### feature
+
+* add new NFT minting on dashboard, remove coinzilla [#4786](https://github.com/MyEtherWallet/MyEtherWallet/pull/4786)
+
+### devop
+
+* add transparency to header, switch the logo [#4793](https://github.com/MyEtherWallet/MyEtherWallet/pull/4793)
+* change consent to opt in, change language [#4795](https://github.com/MyEtherWallet/MyEtherWallet/pull/4795)
+
+### fix
+
+* fix tools link offline [#4796](https://github.com/MyEtherWallet/MyEtherWallet/pull/4796)
+
+### Release v6.8.0
 
 ### devop
 

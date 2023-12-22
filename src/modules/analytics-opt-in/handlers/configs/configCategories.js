@@ -20,5 +20,6 @@ export default {
   mewwallet: 'mewwallet',
   buySell: 'BuySell',
   mewVersion: 'mewVersion',
-  advertisement: 'MEWAd'
+  advertisement: 'MEWAd',
+  nftModule: 'NftModule'
 };
