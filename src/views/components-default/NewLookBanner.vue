@@ -1,5 +1,5 @@
 <template>
-  <div class="new-look-banner">
+  <div class="new-look-banner d-flex align-center">
     <div class="container">
       <div class="row no-gutters">
         <div class="col-12">
