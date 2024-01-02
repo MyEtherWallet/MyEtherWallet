@@ -21,7 +21,7 @@ jobs:
           TOKEN: ${{secrets.LOKALISE_TOKEN}}
           PROJECT_ID: ${{secrets.PROJECT_ID}}
         run: node ./scripts/createLokaliseBranch.js
-      - uses: tj-actions/changed-files@v9
+      - uses: tj-actions/changed-files@v41
         with: |
           ./src/translations
       - name: Upload changes to lokalise
