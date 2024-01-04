@@ -1,0 +1,1 @@
+- add Arthera Mainnet support [#4804](https://github.com/MyEtherWallet/MyEtherWallet/pull/4804)
