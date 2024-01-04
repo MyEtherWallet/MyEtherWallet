@@ -2,7 +2,6 @@
   <div>
     <the-default-header @openMobileMenu="handleOpen" />
     <v-main class="js-body">
-      <new-look-banner />
       <router-view />
     </v-main>
     <the-default-footer />

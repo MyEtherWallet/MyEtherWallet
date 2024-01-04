@@ -174,7 +174,7 @@ export default {
   },
   data() {
     return {
-      topOffset: 52
+      topOffset: 12
     };
   },
   computed: {
@@ -184,10 +184,10 @@ export default {
         : '';
     },
     offset() {
-      return this.$vuetify.breakpoint.mdAndDown ? 64 : 52;
+      return this.$vuetify.breakpoint.mdAndDown ? 24 : 12;
     },
     showDark() {
-      return this.topOffset !== 52;
+      return this.topOffset !== 12;
     }
   },
   async mounted() {
