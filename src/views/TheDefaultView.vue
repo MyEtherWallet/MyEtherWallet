@@ -6,7 +6,6 @@
       <router-view />
     </v-main>
     <the-default-footer />
-    <the-enkrypt-popup v-if="!isOfflineApp" :show="enkryptLandingPopup" />
     <the-mobile-menu :is-open="mobileOpen" @closeMobileMenu="handleClose" />
   </div>
 </template>
@@ -29,7 +28,6 @@ export default {
     };
   },
   computed: {
-    ...mapState('popups', ['enkryptLandingPopup']),
     ...mapState('wallet', ['isOfflineApp'])
   },
   methods: {

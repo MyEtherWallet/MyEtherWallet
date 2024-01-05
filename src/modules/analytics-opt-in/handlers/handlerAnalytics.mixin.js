@@ -8,18 +8,10 @@ import { isEmpty } from 'lodash';
 export default {
   name: 'HandlerAnalytics',
   computed: {
-    ...mapState('popups', [
-      'consentToTrack',
-      'displayedTrackingPopup',
-      'enkryptLandingPopup',
-      'enkryptLandingPopupClosed'
-    ]),
+    ...mapState('popups', ['consentToTrack']),
     ...mapState('wallet', ['isOfflineApp']),
     shouldDisplayTrackingPopup() {
       if (this.isOfflineApp) return false;
-      if (!this.enkryptLandingPopup) {
-        return this.displayedTrackingPopup;
-      }
       return true;
     }
   },
@@ -54,6 +46,21 @@ export default {
           return;
         }
         this.$amplitude.track(`${categories.landingPage}${event}`);
+      }
+    },
+    /**
+     *
+     * @param {String} event
+     * tracks all events that happen
+     * inside the landing page
+     */
+    trackNftModule(event, prop) {
+      if (this.consentToTrack) {
+        if (!isEmpty(prop)) {
+          this.$amplitude.track(`${categories.nftModule}${event}`, prop);
+          return;
+        }
+        this.$amplitude.track(`${categories.nftModule}${event}`);
       }
     },
     /**
