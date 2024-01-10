@@ -5,4 +5,14 @@ import staked from './staked-dapp/metainfo';
 import stakewise from './stakewise/metainfo';
 import unstoppable from './unstoppable-domains-dapp/metainfo';
 import rns from './rns-manager-dapp/metainfo';
-export default { ethBlocks, aave, ens, staked, stakewise, unstoppable, rns };
+import coinbaseStaking from './coinbase-staking/metainfo';
+export default {
+  ethBlocks,
+  aave,
+  ens,
+  staked,
+  stakewise,
+  unstoppable,
+  rns,
+  coinbaseStaking
+};
