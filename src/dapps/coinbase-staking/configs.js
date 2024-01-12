@@ -1,7 +1,15 @@
 const COINBASE_STAKING_ROUTES = {
   CORE: {
+    NAME: 'Coinbase',
+    PATH: 'coinbase'
+  },
+  STAKE: {
     NAME: 'CoinbaseStaking',
-    PATH: 'coinbase-staking'
+    PATH: 'staking'
+  },
+  UNSTAKE: {
+    NAME: 'CoinbaseUnstaking',
+    PATH: 'unstaking'
   }
 };
 

@@ -9,7 +9,7 @@
       >
         <mew-sheet class="pa-15">
           <div class="mew-heading-2 textDark--text mb-8">
-            Stake ETH with Coinbase Staking
+            Unstake ETH with Coinbase Staking
           </div>
 
           <!-- ======================================================================================= -->
@@ -26,9 +26,12 @@
                 You give
               </div>
               <div class="stake-icon">
-                <img src="@/assets/images/icons/icon-eth-gray.svg" alt="Eth" />
+                <img
+                  src="@/assets/images/icons/icon-eth-gray.svg"
+                  alt="Stakewise"
+                />
               </div>
-              <div class="font-weight-bold mt-2">ETH</div>
+              <div class="font-weight-bold mt-2">MEWcbETH</div>
             </div>
             <div class="px-5">
               <v-icon color="greenPrimary">mdi-arrow-right</v-icon>
@@ -43,12 +46,9 @@
                 You will get
               </div>
               <div class="stake-icon">
-                <img
-                  src="@/assets/images/icons/icon-eth-gray.svg"
-                  alt="Stakewise"
-                />
+                <img src="@/assets/images/icons/icon-eth-gray.svg" alt="Eth" />
               </div>
-              <div class="font-weight-bold mt-2">MEWcbETH</div>
+              <div class="font-weight-bold mt-2">{{ currencyName }}</div>
             </div>
           </div>
 
@@ -65,7 +65,7 @@
                 method: setMax
               }"
               :image="iconEth"
-              label="Amount to stake"
+              label="Amount to unstake"
               placeholder="Enter amount"
               :value="stakeAmount"
               :error-messages="errorMessages"
@@ -110,21 +110,14 @@
           <!-- How stake works -->
           <!-- ======================================================================================= -->
           <div class="mt-6">
-            <div class="font-weight-bold mb-2">How staking works</div>
+            <div class="font-weight-bold mb-2">How unstaking works</div>
             <ul class="textMedium--text">
+              <li class="mb-2">Request amount to be unstaked</li>
               <li class="mb-2">
-                Anyone can deposit any amount of {{ currencyName }} into the
-                Coinbase vault. No minimum required.
+                Wait for the {{ currencyName }} to free up and be ready for
+                claim (Status updates every 1PM UTC)
               </li>
-              <li class="mb-2">
-                For each new deposit into the pool, Coinbase mints an equal
-                amount of MEWcbETH (1 {{ currencyName }} = 1 MEWcbETH).
-              </li>
-              <li class="mb-2">
-                Holders of MEWcbETH automatically earn rewards. Pool refreshes
-                at 1 PM UTC
-              </li>
-              <li>MEWcbETH automatically compounds</li>
+              <li class="mb-2">Claim available stake</li>
             </ul>
 
             <div class="mt-6">
@@ -165,7 +158,7 @@
             />
             <mew-button
               class="mt-8"
-              title="Start staking"
+              title="Unstake"
               btn-size="xlarge"
               :disabled="!isValid"
               @click.native="stake"

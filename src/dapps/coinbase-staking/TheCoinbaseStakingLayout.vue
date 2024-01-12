@@ -34,9 +34,14 @@ export default {
     tabs() {
       return [
         {
-          name: 'Coinbase Staking',
+          name: 'Stake',
           route: { name: COINBASE_STAKING_ROUTES.CORE.NAME },
           id: 0
+        },
+        {
+          name: 'Unstake',
+          route: { name: COINBASE_STAKING_ROUTES.UNSTAKE.NAME },
+          id: 1
         }
       ];
     }
