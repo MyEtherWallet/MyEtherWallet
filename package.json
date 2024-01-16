@@ -64,7 +64,7 @@
     "@sentry/vue": "7.91.0",
     "@shapeshiftoss/hdwallet-core": "1.22.0",
     "@shapeshiftoss/hdwallet-keepkey-webusb": "1.22.0",
-    "@trezor/connect-web": "9.1.7",
+    "@trezor/connect-web": "9.1.8",
     "@unstoppabledomains/resolution": "9.0.0",
     "@walletconnect/ethereum-provider": "2.11.0",
     "@walletconnect/modal": "2.6.2",
@@ -117,7 +117,7 @@
     "walletlink": "2.5.0"
   },
   "devDependencies": {
-    "@commitlint/config-conventional": "18.4.3",
+    "@commitlint/config-conventional": "18.4.4",
     "@ledgerhq/hw-app-eth": "6.33.7",
     "@ledgerhq/hw-transport-web-ble": "6.27.16",
     "@ledgerhq/hw-transport-webusb": "6.27.16",
@@ -142,7 +142,7 @@
     "bip39": "3.0.4",
     "chromedriver": "104.0.0",
     "codecov": "3.8.3",
-    "commitlint": "18.4.3",
+    "commitlint": "18.4.4",
     "copy-webpack-plugin": "6.3.2",
     "eslint": "7.32.0",
     "eslint-plugin-prettier": "4.2.1",
