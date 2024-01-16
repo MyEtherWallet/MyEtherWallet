@@ -46,17 +46,33 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 
 export default {
   name: 'CoinbaseStakingSummary',
   computed: {
     ...mapGetters('global', ['network']),
+    ...mapState('coinbaseStaking', ['lastFetched']),
+    ...mapState('wallet', ['address']),
     currencyName() {
       return this.network.type.currencyName;
+    }
+  },
+  mounted() {
+    if (!this.lastFetched) {
+      const data = {
+        address: this.address,
+        action: 'details',
+        networkId: `${this.network.type.chainID}`
+      };
+      fetch(
+        `http://localhost:3000?address=${this.address}&action=details&networkId=5`
+      )
+        .then(res => res.json())
+        .then(res => {
+          console.log(res);
+        });
     }
   }
 };
 </script>
-
-<style lang="scss" scoped></style>

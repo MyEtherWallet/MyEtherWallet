@@ -112,12 +112,18 @@
           <div class="mt-6">
             <div class="font-weight-bold mb-2">How unstaking works</div>
             <ul class="textMedium--text">
-              <li class="mb-2">Request amount to be unstaked</li>
               <li class="mb-2">
-                Wait for the {{ currencyName }} to free up and be ready for
-                claim (Status updates every 1PM UTC)
+                Request to unstake the desired amount of Total Exitable
+                {{ currencyName }}.
               </li>
-              <li class="mb-2">Claim available stake</li>
+              <li class="mb-2">
+                Wait for the {{ currencyName }} to claim. Status updtes daily at
+                1pm UTC.
+              </li>
+              <li class="mb-2">
+                Claim available {{ currencyName }} to unstake. Unstaked
+                {{ currencyName }} will be deposited to your wallet.
+              </li>
             </ul>
 
             <div class="mt-6">
@@ -153,7 +159,7 @@
       service."
               :link="{
                 title: 'Coinbase terms',
-                url: 'https://stakewise.io/terms-and-conditions/'
+                url: 'https://www.coinbase.com/legal/user_agreement/united_states'
               }"
             />
             <mew-button

@@ -28,7 +28,7 @@
               <div class="stake-icon">
                 <img src="@/assets/images/icons/icon-eth-gray.svg" alt="Eth" />
               </div>
-              <div class="font-weight-bold mt-2">ETH</div>
+              <div class="font-weight-bold mt-2">{{ currencyName }}</div>
             </div>
             <div class="px-5">
               <v-icon color="greenPrimary">mdi-arrow-right</v-icon>
@@ -113,18 +113,21 @@
             <div class="font-weight-bold mb-2">How staking works</div>
             <ul class="textMedium--text">
               <li class="mb-2">
-                Anyone can deposit any amount of {{ currencyName }} into the
-                Coinbase vault. No minimum required.
+                Anyone can stake any amount of {{ currencyName }} with Coinbase
+                Staking. No minimum required.
               </li>
               <li class="mb-2">
                 For each new deposit into the pool, Coinbase mints an equal
-                amount of MEWcbETH (1 {{ currencyName }} = 1 MEWcbETH).
+                amount of MEWcbETH (1 {{ currencyName }} = 1 MEWcbETH)
               </li>
               <li class="mb-2">
-                Holders of MEWcbETH automatically earn rewards. Pool refreshes
-                at 1 PM UTC
+                Holders of MEWcbETH automatically earn rewards.
               </li>
-              <li>MEWcbETH automatically compounds</li>
+              <li>MEWcbETH automatically compounds.</li>
+              <li>
+                Conversion rate of MEWcbETH to {{ currencyName }} and balance of
+                Total Exitable {{ currencyName }} refresh daily at 1pm UTC
+              </li>
             </ul>
 
             <div class="mt-6">
@@ -160,7 +163,7 @@
       service."
               :link="{
                 title: 'Coinbase terms',
-                url: 'https://stakewise.io/terms-and-conditions/'
+                url: 'https://www.coinbase.com/legal/user_agreement/united_states'
               }"
             />
             <mew-button
@@ -219,7 +222,6 @@ export default {
       'getFiatValue'
     ]),
     ...mapGetters('external', ['fiatValue']),
-    ...mapState('stakewise', ['validatorApr']),
     ...mapState('global', ['gasPriceType']),
     ...mapState('wallet', ['web3', 'address']),
     currencyName() {
