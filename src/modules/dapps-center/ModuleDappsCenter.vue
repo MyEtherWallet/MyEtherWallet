@@ -34,7 +34,9 @@
                 >
                   <img
                     :src="
-                      require(`@/assets/images/icons/dapps/icon-dapp-${dapp.rightIcon.toLowerCase()}.svg`)
+                      dapp.rightIconType === 'mew'
+                        ? require(`@/assets/images/icons/dapps/icon-dapp-${dapp.rightIcon.toLowerCase()}.svg`)
+                        : dapp.rightIcon
                     "
                     :alt="dapp.title"
                     height="60"

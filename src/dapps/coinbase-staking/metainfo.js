@@ -3,12 +3,13 @@ const layout = () =>
   import(/* webpackChunkName: "dapp-stakewise" */ './TheCoinbaseStakingLayout');
 import ModuleCoinbaseStaking from './modules/ModuleCoinbaseStaking';
 import ModuleCoinbaseUnstaking from './modules/ModuleCoinbaseUnstaking';
+import icon from '@/assets/images/icons/dapps/icon-dapp-coinbase.png';
 export default {
   title: 'Coinbase Staking',
   subtitle: 'Stake any amount of ETH and begin earning rewards',
   tag: '#DeFi',
   rightIconType: 'img',
-  rightIcon: require('@/assets/images/icons/dapps/icon-dapp-coinbase.png'),
+  rightIcon: icon,
   path: COINBASE_STAKING_ROUTES.CORE.PATH,
   networks: SUPPORTED_NETWORKS,
   layout,

@@ -66,7 +66,7 @@ export default {
         networkId: `${this.network.type.chainID}`
       };
       fetch(
-        `http://localhost:3000?address=${this.address}&action=details&networkId=5`
+        `http://localhost:3000/staking?address=${this.address}&action=details&networkId=5`
       )
         .then(res => res.json())
         .then(res => {
