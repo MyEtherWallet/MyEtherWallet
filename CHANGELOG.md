@@ -1,3 +1,13 @@
+### Release v6.8.1-hotfix.1
+
+### devop
+
+* sync develop [#4805](https://github.com/MyEtherWallet/MyEtherWallet/pull/4805)
+
+### fix
+
+* hide nft dashboard module for now [#4811](https://github.com/MyEtherWallet/MyEtherWallet/pull/4811)
+
 ### Release v6.8.1
 
 ### feature
