@@ -52,15 +52,14 @@
         <v-col cols="12" class="pa-2 pt-4 pa-md-3 d-none d-md-block">
           <module-network />
         </v-col>
-        <v-col
+        <!-- <v-col
           v-if="isEthNetwork"
           cols="12"
           class="pa-2 pt-4 pa-md-3 d-none d-md-block"
-          <!--
         >
           <nft-dashboard />
-        </v-col>
-        -->
+        </v-col> -->
+
         <v-col
           v-for="n in totalRightColItems"
           v-show="totalRightColItems >= 1"
