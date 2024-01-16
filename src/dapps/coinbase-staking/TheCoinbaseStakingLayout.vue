@@ -26,7 +26,7 @@ export default {
         subtext: 'Stake any amount of ETH and begin earning rewards.'
       },
       activeTab: 0,
-      headerImg: require('@/assets/images/icons/dapps/icon-dapp-stakewise.svg'),
+      headerImg: require('@/assets/images/icons/dapps/icon-dapp-coinbase.png'),
       validNetworks: SUPPORTED_NETWORKS
     };
   },
