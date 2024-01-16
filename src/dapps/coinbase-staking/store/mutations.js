@@ -12,6 +12,13 @@ const INIT_STORE = function (state) {
   }
 };
 
+const STORE_FETCHED = function (state, obj) {
+  const date = new Date();
+  state.fetchedDetails = obj;
+  state.lastFetched = date.toUTCString();
+};
+
 export default {
-  INIT_STORE
+  INIT_STORE,
+  STORE_FETCHED
 };

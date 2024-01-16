@@ -117,13 +117,14 @@
                 Staking. No minimum required.
               </li>
               <li class="mb-2">
-                For each new deposit into the pool, Coinbase mints an equal
-                amount of MEWcbETH (1 {{ currencyName }} = 1 MEWcbETH)
+                When you deposit {{ currencyName }} to Coinbase via MEW web, you
+                are issued an equivalent amount of MEWcbETH given the current
+                conversion rate.
               </li>
               <li class="mb-2">
-                Holders of MEWcbETH automatically earn rewards.
+                The conversion rate grows over time, as your stake accumulates
+                rewards and compounds automatically while you hold MEWcbETH.
               </li>
-              <li>MEWcbETH automatically compounds.</li>
               <li>
                 Conversion rate of MEWcbETH to {{ currencyName }} and balance of
                 Total Exitable {{ currencyName }} refresh daily at 1pm UTC
