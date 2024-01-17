@@ -1,10 +1,13 @@
 import Configs from './configs';
 
-const ensManagerStore = {
+const coinbaseStaking = {
   localStore: true,
-  lastFetched: '',
-  fetchedDetails: {},
-  stateVersion: Configs.VERSION.ensManagerStore
+  lastFetched: 0,
+  fetchedDetails: {
+    GOERLI: {},
+    ETH: {}
+  },
+  stateVersion: Configs.VERSION.coinbaseStaking
 };
 
-export default ensManagerStore;
+export default coinbaseStaking;

@@ -61,7 +61,6 @@
               type="number"
               :max-btn-obj="{
                 title: 'Max',
-                disabled: true,
                 method: setMax
               }"
               :image="iconEth"
@@ -70,7 +69,6 @@
               :value="stakeAmount"
               :error-messages="errorMessages"
               :buy-more-str="buyMoreStr"
-              :disabled="true"
               @buyMore="openBuySell"
               @input="setAmount"
             />
@@ -193,11 +191,12 @@ import { debounce } from 'lodash';
 
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
-import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
+import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 import { EventBus } from '@/core/plugins/eventBus';
 import hasValidDecimals from '@/core/helpers/hasValidDecimals';
+import { toBase } from '@/core/helpers/unit';
 
-const MIN_GAS_LIMIT = 150000;
+const MIN_GAS_LIMIT = 400000;
 export default {
   name: 'ModuleCoinbaseUnstaking',
   components: {
@@ -224,7 +223,7 @@ export default {
     ]),
     ...mapGetters('external', ['fiatValue']),
     ...mapState('global', ['gasPriceType']),
-    ...mapState('wallet', ['web3', 'address']),
+    ...mapState('wallet', ['web3', 'address', 'instance']),
     currencyName() {
       return this.network.type.currencyName;
     },
@@ -274,7 +273,7 @@ export default {
       }
       if (
         BigNumber(this.stakeAmount).gt(0) &&
-        hasValidDecimals(BigNumber(this.stakeAmount).toFixed(), 18)
+        !hasValidDecimals(BigNumber(this.stakeAmount).toFixed(), 18)
       ) {
         return 'Invalid decimals. ETH can only have 18 decimals';
       }
@@ -297,6 +296,46 @@ export default {
     this.locGasPrice = this.gasPriceByType(this.gasPriceType);
   },
   methods: {
+    reset() {
+      this.setAmount(0);
+      this.agreeToTerms = false;
+    },
+    async stake() {
+      const { gasLimit, to, data, value } = await fetch(
+        `http://localhost:3000/staking?address=${
+          this.address
+        }&action=stake&networkId=${this.network.type.chainID}&amount=${toBase(
+          this.stakeAmount,
+          18
+        )}`
+      )
+        .then(res => res.json())
+        .catch(e => {
+          Toast(e, {}, ERROR);
+        });
+      const txObj = {
+        gasLimit: gasLimit,
+        to: to,
+        from: this.address,
+        data: data,
+        value: 0
+      };
+      console.log(txObj);
+      this.web3.eth
+        .sendTransaction(txObj)
+        .on('transactionHash', () => {
+          this.reset();
+          Toast(
+            'Successfully staked! Account will reflect once pool refreshes.',
+            {},
+            SUCCESS
+          );
+        })
+        .catch(e => {
+          this.reset();
+          this.instance.errorHandler(e);
+        });
+    },
     setAmount: debounce(function (val) {
       const value = val ? val : 0;
       this.stakeAmount = BigNumber(value).toFixed();
