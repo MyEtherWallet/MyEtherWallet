@@ -2,11 +2,11 @@ import localStore from 'store';
 import Configs from './configs';
 
 const INIT_STORE = function (state) {
-  if (localStore.get(Configs.LOCAL_STORAGE_KEYS.ensManagerStore)) {
+  if (localStore.get(Configs.LOCAL_STORAGE_KEYS.coinbaseStaking)) {
     const savedStore = localStore.get(
-      Configs.LOCAL_STORAGE_KEYS.ensManagerStore
+      Configs.LOCAL_STORAGE_KEYS.coinbaseStaking
     );
-    if (savedStore.stateVersion === Configs.VERSION.ensManagerStore) {
+    if (savedStore.stateVersion === Configs.VERSION.coinbaseStaking) {
       Object.assign(state, savedStore);
     }
   }
@@ -14,7 +14,9 @@ const INIT_STORE = function (state) {
 
 const STORE_FETCHED = function (state, obj) {
   const date = new Date();
-  state.fetchedDetails = obj;
+  const copy = Object.assign(state.fetchedDetails);
+  copy[obj[1]] = obj[0];
+  state.fetchedDetails = copy;
   state.lastFetched = date.getTime();
 };
 

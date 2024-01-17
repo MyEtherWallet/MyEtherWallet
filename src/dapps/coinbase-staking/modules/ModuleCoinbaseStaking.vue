@@ -170,6 +170,7 @@
               title="Start staking"
               btn-size="xlarge"
               :disabled="!isValid"
+              :loading="loading"
               @click.native="stake"
             />
           </div>
@@ -195,6 +196,7 @@ import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 import { EventBus } from '@/core/plugins/eventBus';
 import hasValidDecimals from '@/core/helpers/hasValidDecimals';
 import { toBase } from '@/core/helpers/unit';
+import { API } from '@/dapps/coinbase-staking/configs.js';
 
 const MIN_GAS_LIMIT = 400000;
 export default {
@@ -210,7 +212,8 @@ export default {
       locGasPrice: '0',
       gasLimit: '21000',
       agreeToTerms: false,
-      estimateGasError: false
+      estimateGasError: false,
+      loading: false
     };
   },
   computed: {
@@ -299,15 +302,14 @@ export default {
     reset() {
       this.setAmount(0);
       this.agreeToTerms = false;
+      this.loading = false;
     },
     async stake() {
+      this.loading = true;
       const { gasLimit, to, data, value } = await fetch(
-        `http://localhost:3000/staking?address=${
-          this.address
-        }&action=stake&networkId=${this.network.type.chainID}&amount=${toBase(
-          this.stakeAmount,
-          18
-        )}`
+        `${API}?address=${this.address}&action=stake&networkId=${
+          this.network.type.chainID
+        }&amount=${toBase(this.stakeAmount, 18)}`
       )
         .then(res => res.json())
         .catch(e => {
@@ -318,12 +320,11 @@ export default {
         to: to,
         from: this.address,
         data: data,
-        value: 0
+        value: value
       };
-      console.log(txObj);
       this.web3.eth
         .sendTransaction(txObj)
-        .on('transactionHash', () => {
+        .on('receipt', () => {
           this.reset();
           Toast(
             'Successfully staked! Account will reflect once pool refreshes.',

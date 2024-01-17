@@ -2,7 +2,7 @@ import State from './state';
 import Mutations from './mutations';
 import Actions from './actions';
 
-const ensManagerStore = {
+const coinbaseStaking = {
   namespaced: true,
   state: State,
   mutations: Mutations,
@@ -10,4 +10,4 @@ const ensManagerStore = {
   strict: false
 };
 
-export default ensManagerStore;
+export default coinbaseStaking;

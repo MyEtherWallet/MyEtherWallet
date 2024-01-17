@@ -35,11 +35,18 @@
     </div>
     <div
       v-if="showClaimNow"
-      class="d-flex align-center justify-space-between pt-3"
+      class="d-flex align-center justify-space-between pt-3 pb-2"
     >
       <mew-button title="Claim now" has-full-width btn-size="medium" />
     </div>
-    <div class="d-flex align-center justify-space-between pt-4">
+    <div class="d-flex align-center justify-space-between pt-2">
+      <div class="textLight--text text-uppercase mew-label font-weight-medium">
+        Pending Exit:
+      </div>
+      <div v-if="!loading">{{ stakePendingExit }} MEWcbETH</div>
+      <v-skeleton-loader v-else width="100px" max-height="48px" type="text" />
+    </div>
+    <div class="d-flex align-center justify-space-between pt-2">
       <div class="textLight--text text-uppercase mew-label font-weight-medium">
         Refreshes in:
       </div>
@@ -57,9 +64,10 @@
 <script>
 import { mapGetters, mapState, mapActions } from 'vuex';
 import { isEmpty } from 'lodash';
-import { fromBase } from '@/core/helpers/unit';
 import BigNumber from 'bignumber.js';
 import moment from 'moment';
+import { fromBase } from '@/core/helpers/unit';
+import { API } from '@/dapps/coinbase-staking/configs.js';
 
 const FIVE_MINS = 300000; // 1000 * 60 * 5
 
@@ -100,6 +108,9 @@ export default {
     },
     claimableStake() {
       return this.hasDetails ? this.details.fulfillableShareCount.value : '0';
+    },
+    stakePendingExit() {
+      return this.hasDetails ? this.details.totalSharesPendingExit.value : '0';
     },
     showClaimNow() {
       return BigNumber(this.claimableStake).gt(0);
@@ -167,7 +178,7 @@ export default {
     fetchInfo() {
       this.loading = true;
       fetch(
-        `http://localhost:3000/staking?address=${this.address}&action=details&networkId=${this.network.type.chainID}`
+        `${API}?address=${this.address}&action=details&networkId=${this.network.type.chainID}`
       )
         .then(res => res.json())
         .then(res => {

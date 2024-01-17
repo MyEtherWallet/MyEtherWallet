@@ -16,4 +16,5 @@ const COINBASE_STAKING_ROUTES = {
 import { ETH, GOERLI } from '@/utils/networks/types';
 
 const SUPPORTED_NETWORKS = [ETH, GOERLI];
-export { COINBASE_STAKING_ROUTES, SUPPORTED_NETWORKS };
+const API = 'http://localhost:3000/staking';
+export { COINBASE_STAKING_ROUTES, SUPPORTED_NETWORKS, API };

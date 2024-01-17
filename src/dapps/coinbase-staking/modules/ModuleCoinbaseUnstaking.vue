@@ -56,21 +56,19 @@
           <!-- Amount to stake -->
           <!-- ======================================================================================= -->
           <div class="position--relative mt-15">
-            <app-button-balance :loading="false" :balance="balanceInETH" />
+            <app-button-balance :loading="false" :balance="stakedBalance" />
             <mew-input
               type="number"
               :max-btn-obj="{
                 title: 'Max',
-                disabled: true,
                 method: setMax
               }"
               :image="iconEth"
               label="Amount to unstake"
               placeholder="Enter amount"
-              :value="stakeAmount"
+              :value="unstakeAmount"
               :error-messages="errorMessages"
               :buy-more-str="buyMoreStr"
-              :disabled="true"
               @buyMore="openBuySell"
               @input="setAmount"
             />
@@ -184,15 +182,17 @@ import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalyti
 import { fromWei } from 'web3-utils';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
-import { debounce } from 'lodash';
+import { debounce, isEmpty } from 'lodash';
 
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
-import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
+import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 import { EventBus } from '@/core/plugins/eventBus';
 import hasValidDecimals from '@/core/helpers/hasValidDecimals';
+import { toBase, fromBase } from '@/core/helpers/unit';
+import { API } from '@/dapps/coinbase-staking/configs.js';
 
-const MIN_GAS_LIMIT = 150000;
+const MIN_GAS_LIMIT = 400000;
 export default {
   name: 'ModuleCoinbaseUnstaking',
   components: {
@@ -202,11 +202,12 @@ export default {
   data() {
     return {
       iconEth: require('@/assets/images/icons/icon-eth-gray.svg'),
-      stakeAmount: '0',
+      unstakeAmount: '0',
       locGasPrice: '0',
       gasLimit: '21000',
       agreeToTerms: false,
-      estimateGasError: false
+      estimateGasError: false,
+      loading: false
     };
   },
   computed: {
@@ -218,9 +219,20 @@ export default {
       'getFiatValue'
     ]),
     ...mapGetters('external', ['fiatValue']),
-    ...mapState('stakewise', ['validatorApr']),
     ...mapState('global', ['gasPriceType']),
-    ...mapState('wallet', ['web3', 'address']),
+    ...mapState('wallet', ['web3', 'address', 'instance']),
+    ...mapState('coinbaseStaking', ['fetchedDetails']),
+    details() {
+      return this.fetchedDetails[this.network.type.name];
+    },
+    hasDetails() {
+      return !isEmpty(this.details);
+    },
+    stakedBalance() {
+      return this.hasDetails
+        ? fromBase(this.details.totalExitableEth.value, 18)
+        : 0;
+    },
     currencyName() {
       return this.network.type.currencyName;
     },
@@ -241,22 +253,18 @@ export default {
         : '0';
     },
     hasEnoughBalanceToStake() {
-      return BigNumber(this.ethTotalFee)
-        .plus(this.stakeAmount)
-        .lte(this.balanceInETH);
-    },
-    hasEnoughBalance() {
       return BigNumber(this.ethTotalFee).lte(this.balanceInETH);
     },
     isValid() {
       return (
-        BigNumber(this.stakeAmount).gt(0) &&
+        BigNumber(this.unstakeAmount).gt(0) &&
         this.hasEnoughBalanceToStake &&
-        this.agreeToTerms
+        this.agreeToTerms &&
+        this.errorMessages === ''
       );
     },
     errorMessages() {
-      if (!this.hasEnoughBalanceToStake || !this.hasEnoughBalance) {
+      if (!this.hasEnoughBalanceToStake) {
         return 'Not enough ETH.';
       }
 
@@ -265,12 +273,15 @@ export default {
           ? 'Issue with gas estimation. Please check if you have enough balance!'
           : '';
       }
-      if (BigNumber(this.stakeAmount).lt(0)) {
+      if (BigNumber(this.stakedBalance).lte(0)) {
+        return 'User has no ETH staked.';
+      }
+      if (BigNumber(this.unstakeAmount).lt(0)) {
         return 'Value cannot be negative';
       }
       if (
-        BigNumber(this.stakeAmount).gt(0) &&
-        hasValidDecimals(BigNumber(this.stakeAmount).toFixed(), 18)
+        BigNumber(this.unstakeAmount).gt(0) &&
+        !hasValidDecimals(BigNumber(this.unstakeAmount).toFixed(), 18)
       ) {
         return 'Invalid decimals. ETH can only have 18 decimals';
       }
@@ -293,15 +304,51 @@ export default {
     this.locGasPrice = this.gasPriceByType(this.gasPriceType);
   },
   methods: {
+    reset() {
+      this.setAmount(0);
+      this.agreeToTerms = false;
+      this.loading = false;
+    },
+    async stake() {
+      this.loading = true;
+      const { gasLimit, to, data, value } = await fetch(
+        `${API}?address=${this.address}&action=unstake&networkId=${
+          this.network.type.chainID
+        }&amount=${toBase(this.unstakeAmount, 18)}`
+      )
+        .then(res => res.json())
+        .catch(e => {
+          Toast(e, {}, ERROR);
+        });
+      const txObj = {
+        gasLimit: gasLimit,
+        to: to,
+        from: this.address,
+        data: data,
+        value: value
+      };
+      this.web3.eth
+        .sendTransaction(txObj)
+        .on('receipt', () => {
+          this.reset();
+          Toast(
+            'Successfully staked! Account will reflect once pool refreshes.',
+            {},
+            SUCCESS
+          );
+        })
+        .catch(e => {
+          this.reset();
+          this.instance.errorHandler(e);
+        });
+    },
     setAmount: debounce(function (val) {
       const value = val ? val : 0;
-      this.stakeAmount = BigNumber(value).toFixed();
+      this.unstakeAmount = BigNumber(value).toFixed();
     }, 500),
     setMax() {
       if (this.hasEnoughBalanceToStake) {
-        const max = BigNumber(this.balanceInETH).minus(
-          BigNumber(this.ethTotalFee)
-        );
+        const max = this.stakedBalance;
         this.setAmount(max.toFixed());
       }
     },
