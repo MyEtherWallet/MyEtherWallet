@@ -34,7 +34,7 @@
       <v-skeleton-loader v-else width="100px" max-height="48px" type="text" />
     </div>
     <div
-      v-if="showClaim"
+      v-if="showClaimNow"
       class="d-flex align-center justify-space-between pt-3 pb-2"
     >
       <mew-button
