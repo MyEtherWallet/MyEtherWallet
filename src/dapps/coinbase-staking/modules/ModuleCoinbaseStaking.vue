@@ -306,15 +306,16 @@ export default {
     },
     async stake() {
       this.loading = true;
-      const { gasLimit, to, data, value } = await fetch(
+      const { gasLimit, to, data, value, error } = await fetch(
         `${API}?address=${this.address}&action=stake&networkId=${
           this.network.type.chainID
         }&amount=${toBase(this.stakeAmount, 18)}`
-      )
-        .then(res => res.json())
-        .catch(e => {
-          Toast(e, {}, ERROR);
-        });
+      ).then(res => res.json());
+      if (error) {
+        Toast(error, {}, ERROR);
+        this.loadingClaim = false;
+        return;
+      }
       const txObj = {
         gasLimit: gasLimit,
         to: to,

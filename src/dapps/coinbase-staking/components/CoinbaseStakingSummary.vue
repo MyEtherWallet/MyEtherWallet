@@ -34,10 +34,16 @@
       <v-skeleton-loader v-else width="100px" max-height="48px" type="text" />
     </div>
     <div
-      v-if="showClaimNow"
+      v-if="showClaim"
       class="d-flex align-center justify-space-between pt-3 pb-2"
     >
-      <mew-button title="Claim now" has-full-width btn-size="medium" />
+      <mew-button
+        title="Claim now"
+        has-full-width
+        btn-size="medium"
+        :loading="loadingClaim"
+        @click.native="claim"
+      />
     </div>
     <div class="d-flex align-center justify-space-between pt-2">
       <div class="textLight--text text-uppercase mew-label font-weight-medium">
@@ -66,6 +72,8 @@ import { mapGetters, mapState, mapActions } from 'vuex';
 import { isEmpty } from 'lodash';
 import BigNumber from 'bignumber.js';
 import moment from 'moment';
+
+import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 import { fromBase } from '@/core/helpers/unit';
 import { API } from '@/dapps/coinbase-staking/configs.js';
 
@@ -77,13 +85,14 @@ export default {
     return {
       currentTime: 0,
       timeInterval: null,
-      loading: true
+      loading: true,
+      loadingClaim: false
     };
   },
   computed: {
     ...mapGetters('global', ['network']),
     ...mapState('coinbaseStaking', ['lastFetched', 'fetchedDetails']),
-    ...mapState('wallet', ['address']),
+    ...mapState('wallet', ['address', 'instance', 'web3']),
     currencyName() {
       return this.network.type.currencyName;
     },
@@ -183,7 +192,44 @@ export default {
         .then(res => res.json())
         .then(res => {
           this.loading = false;
+          if (res.error) {
+            Toast(res.error, {}, ERROR);
+            return;
+          }
           this.storeFetched([res, this.network.type.name]);
+        });
+    },
+    async claim() {
+      this.loadingClaim = true;
+      const { gasLimit, to, data, value, error } = await fetch(
+        `${API}?address=${this.address}&action=claim&networkId=${this.network.type.chainID}`
+      ).then(res => res.json());
+
+      if (error) {
+        Toast(error, {}, ERROR);
+        this.loadingClaim = false;
+        return;
+      }
+      const txObj = {
+        gasLimit: gasLimit,
+        to: to,
+        from: this.address,
+        data: data,
+        value: value
+      };
+      this.web3.eth
+        .sendTransaction(txObj)
+        .on('receipt', () => {
+          this.loadingClaim = false;
+          Toast(
+            'Successfully staked! Account will reflect once pool refreshes.',
+            {},
+            SUCCESS
+          );
+        })
+        .catch(e => {
+          this.loadingClaim = false;
+          this.instance.errorHandler(e);
         });
     }
   }
