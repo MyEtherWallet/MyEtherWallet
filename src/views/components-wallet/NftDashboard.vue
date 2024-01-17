@@ -66,8 +66,10 @@
             has-full-width
             :title="`Mint · ${item.pricef} ETH`"
             btn-size="small"
-            :btn-style="loading ? 'outline' : 'transparent'"
-            :class="loading ? '' : 'button-background'"
+            :btn-style="
+              loading ? 'outline' : darkMode ? 'outline' : 'transparent'
+            "
+            :class="loading ? '' : darkMode ? '' : 'button-background'"
             @click.native="mint(item.reward_id)"
           />
         </div>
@@ -78,6 +80,7 @@
           :disabled="loading"
           :title="mintBothText"
           has-full-width
+          :btn-style="darkMode ? 'light' : 'primary'"
           btn-size="large"
           @click.native="mint(mintBothId)"
         />
@@ -122,6 +125,7 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['address', 'web3', 'instance']),
+    ...mapState('global', ['darkMode']),
     ...mapGetters('global', ['gasPrice']),
     ...mapGetters('wallet', ['balanceInWei']),
     mintBothText() {

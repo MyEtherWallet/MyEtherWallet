@@ -17,7 +17,7 @@
     <v-col cols="12" class="pa-2 pa-md-3 d-md-none pb-0">
       <module-network />
     </v-col>
-    <!-- <v-col v-if="isEthNetwork" cols="12" class="pa-2 pa-md-3 d-md-none pb-0">
+    <!-- <v-col v-if="isEthNetwork && !isOfflineApp" cols="12" class="pa-2 pa-md-3 d-md-none pb-0">
       <nft-dashboard />
     </v-col> -->
     <!--
@@ -53,7 +53,7 @@
           <module-network />
         </v-col>
         <!-- <v-col
-          v-if="isEthNetwork"
+          v-if="isEthNetwork && !isOfflineApp"
           cols="12"
           class="pa-2 pt-4 pa-md-3 d-none d-md-block"
         >
@@ -80,7 +80,7 @@
       <div class="d-none d-md-block mb-2">
         <module-network />
       </div>
-      <!-- <div v-if="isEthNetwork" class="d-none d-md-block mb-2">
+      <!-- <div v-if="isEthNetwork && !isOfflineApp" class="d-none d-md-block mb-2">
         <nft-dashboard />
       </div> -->
       <draggable
@@ -108,7 +108,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 import draggable from 'vuedraggable';
 
 import ModuleNetwork from '@/modules/network/ModuleNetwork';
@@ -145,6 +145,7 @@ export default {
   },
   computed: {
     ...mapGetters('global', ['isEthNetwork']),
+    ...mapState('wallet', ['isOfflineApp']),
     dragOptions() {
       return {
         animation: 200,
