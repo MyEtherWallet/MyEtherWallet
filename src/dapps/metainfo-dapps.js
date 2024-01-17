@@ -6,6 +6,7 @@ import stakewise from './stakewise/metainfo';
 import unstoppable from './unstoppable-domains-dapp/metainfo';
 import rns from './rns-manager-dapp/metainfo';
 import coinbaseStaking from './coinbase-staking/metainfo';
+import flyover from './flyover-dapp/metainfo';
 export default {
   ethBlocks,
   aave,
@@ -14,5 +15,6 @@ export default {
   stakewise,
   unstoppable,
   rns,
-  coinbaseStaking
+  coinbaseStaking,
+  flyover
 };
