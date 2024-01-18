@@ -1,11 +1,13 @@
+### Release v6.9.0
+
 ### feature
 
-* * add Arthera Mainnet support [#4804](https://github.com/MyEtherWallet/MyEtherWallet/pull/4804) [#4804](https://github.com/MyEtherWallet/MyEtherWallet/pull/4804)
+* add Arthera Mainnet support [#4804](https://github.com/MyEtherWallet/MyEtherWallet/pull/4804)
 * mainnet arthera [#4809](https://github.com/MyEtherWallet/MyEtherWallet/pull/4809)
+* add flyover dapp for rootstock network [#4678](https://github.com/MyEtherWallet/MyEtherWallet/pull/4678)
 
 ### devop
 
-* add flyover dapp for rootstock network [#4678](https://github.com/MyEtherWallet/MyEtherWallet/pull/4678)
 * fix nft dashboard on dark mode [#4801](https://github.com/MyEtherWallet/MyEtherWallet/pull/4801)
 * remove banner [#4806](https://github.com/MyEtherWallet/MyEtherWallet/pull/4806)
 
