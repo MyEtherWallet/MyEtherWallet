@@ -38,8 +38,11 @@
                 {{ getText }}
               </div>
             </v-col>
-            <v-col align="right" cols="5" v-if="tokenCount === 0 && canBuy">
-              <div class="tokens-link" @click="checkLink">{{ linkText }}</div>
+            <v-col v-if="tokenCount > 0" align="right" cols="5">
+              <div class="tokens-link" @click="checkLink">See All</div>
+            </v-col>
+            <v-col v-if="tokenCount === 0 && canBuy" align="right" cols="5">
+              <div class="tokens-link" @click="checkLink">Buy Crypto</div>
             </v-col>
           </v-row>
         </v-col>
@@ -125,9 +128,6 @@ export default {
         } token${count !== 1 ? 's' : ''}`;
       }
       return '';
-    },
-    linkText() {
-      return this.tokenCount > 0 ? 'See all' : 'Buy Crypto';
     },
     tokenCount() {
       if (
