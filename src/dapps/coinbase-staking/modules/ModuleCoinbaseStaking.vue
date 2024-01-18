@@ -313,7 +313,7 @@ export default {
       ).then(res => res.json());
       if (error) {
         Toast(error, {}, ERROR);
-        this.loadingClaim = false;
+        this.reset();
         return;
       }
       const txObj = {
