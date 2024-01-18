@@ -2,7 +2,10 @@ import Configs from './configs';
 
 const coinbaseStaking = {
   localStore: true,
-  lastFetched: 0,
+  lastFetched: {
+    GOERLI: 0,
+    ETH: 0
+  },
   fetchedDetails: {
     GOERLI: {},
     ETH: {}

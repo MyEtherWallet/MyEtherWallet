@@ -164,8 +164,9 @@
               class="mt-8"
               title="Unstake"
               btn-size="xlarge"
+              :loading="loading"
               :disabled="!isValid"
-              @click.native="stake"
+              @click.native="unstake"
             />
           </div>
         </mew-sheet>
@@ -230,7 +231,7 @@ export default {
     },
     stakedBalance() {
       return this.hasDetails
-        ? fromBase(this.details.totalExitableEth.value, 18)
+        ? fromBase(this.details.integratorShareUnderlyingBalance.value, 18)
         : 0;
     },
     currencyName() {
@@ -309,7 +310,7 @@ export default {
       this.agreeToTerms = false;
       this.loading = false;
     },
-    async stake() {
+    async unstake() {
       this.loading = true;
       const { gasLimit, to, data, value, error } = await fetch(
         `${API}?address=${this.address}&action=unstake&networkId=${
@@ -333,7 +334,7 @@ export default {
         .on('receipt', () => {
           this.reset();
           Toast(
-            'Successfully staked! Account will reflect once pool refreshes.',
+            'Successfully unstaked! Account will reflect once pool refreshes.',
             {},
             SUCCESS
           );

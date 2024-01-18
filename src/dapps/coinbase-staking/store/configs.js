@@ -3,6 +3,6 @@ export default {
     coinbaseStaking: 'coinbase-staking-store'
   },
   VERSION: {
-    coinbaseStaking: '0.0.1'
+    coinbaseStaking: '0.0.2'
   }
 };

@@ -11,26 +11,43 @@
       </div>
     </div>
     <div class="d-flex align-center justify-space-between pt-2">
-      <div class="textLight--text text-uppercase mew-label font-weight-medium">
+      <div
+        class="textLight--text text-uppercase mew-label font-weight-medium set-font"
+      >
         Total stake:
       </div>
-      <div v-if="!loading">
-        {{ stake }} MEWcbETH ({{ stakeInETH }} {{ currencyName }})
+      <div v-if="!loading" class="set-font">{{ stake }} MEWcbETH</div>
+      <v-skeleton-loader v-else width="100px" max-height="48px" type="text" />
+    </div>
+    <div class="d-flex align-center justify-space-between pt-2">
+      <div
+        class="textLight--text text-uppercase mew-label font-weight-medium set-font"
+      >
+        ETH value:
+      </div>
+      <div v-if="!loading" class="set-font">
+        {{ stakeInETH }} {{ currencyName }}
       </div>
       <v-skeleton-loader v-else width="100px" max-height="48px" type="text" />
     </div>
     <div class="d-flex align-center justify-space-between pt-2">
-      <div class="textLight--text text-uppercase mew-label font-weight-medium">
+      <div
+        class="textLight--text text-uppercase mew-label font-weight-medium set-font"
+      >
         Total Exitable {{ currencyName }}:
       </div>
-      <div v-if="!loading">{{ exitableETH }} {{ currencyName }}</div>
+      <div v-if="!loading" class="set-font">
+        {{ exitableETH }} {{ currencyName }}
+      </div>
       <v-skeleton-loader v-else width="100px" max-height="48px" type="text" />
     </div>
     <div class="d-flex align-center justify-space-between pt-2">
-      <div class="textLight--text text-uppercase mew-label font-weight-medium">
+      <div
+        class="textLight--text text-uppercase mew-label font-weight-medium set-font"
+      >
         Claimable Stake:
       </div>
-      <div v-if="!loading">{{ claimableStake }} MEWcbETH</div>
+      <div v-if="!loading" class="set-font">{{ claimableStake }} MEWcbETH</div>
       <v-skeleton-loader v-else width="100px" max-height="48px" type="text" />
     </div>
     <div
@@ -46,21 +63,27 @@
       />
     </div>
     <div class="d-flex align-center justify-space-between pt-2">
-      <div class="textLight--text text-uppercase mew-label font-weight-medium">
+      <div
+        class="textLight--text text-uppercase mew-label font-weight-medium set-font"
+      >
         Pending Exit:
       </div>
-      <div v-if="!loading">{{ stakePendingExit }} MEWcbETH</div>
+      <div v-if="!loading" class="set-font">
+        {{ stakePendingExit }} MEWcbETH
+      </div>
       <v-skeleton-loader v-else width="100px" max-height="48px" type="text" />
     </div>
     <div class="d-flex align-center justify-space-between pt-2">
-      <div class="textLight--text text-uppercase mew-label font-weight-medium">
+      <div
+        class="textLight--text text-uppercase mew-label font-weight-medium set-font"
+      >
         Refreshes in:
       </div>
-      <div v-if="!loading">{{ ticker }}</div>
+      <div v-if="!loading" class="set-font">{{ ticker }}</div>
       <div v-else>-- Hours and -- mins</div>
     </div>
     <div class="d-flex align-center justify-space-between">
-      <div class="greenPrimary--text mew-label font-weight-medium">
+      <div class="greenPrimary--text mew-label font-weight-medium set-font">
         (Refreshes daily at 1PM UTC)
       </div>
     </div>
@@ -93,6 +116,9 @@ export default {
     ...mapGetters('global', ['network']),
     ...mapState('coinbaseStaking', ['lastFetched', 'fetchedDetails']),
     ...mapState('wallet', ['address', 'instance', 'web3']),
+    actualLastFetched() {
+      return this.lastFetched[this.network.type.name];
+    },
     currencyName() {
       return this.network.type.currencyName;
     },
@@ -103,7 +129,9 @@ export default {
       return !isEmpty(this.details);
     },
     stake() {
-      return this.hasDetails ? this.details.integratorShareBalance.value : '0';
+      return this.hasDetails
+        ? fromBase(this.details.integratorShareBalance.value, 18)
+        : '0';
     },
     stakeInETH() {
       return this.hasDetails
@@ -116,17 +144,21 @@ export default {
         : '0';
     },
     claimableStake() {
-      return this.hasDetails ? this.details.fulfillableShareCount.value : '0';
+      return this.hasDetails
+        ? fromBase(this.details.fulfillableShareCount.value, 18)
+        : '0';
     },
     stakePendingExit() {
-      return this.hasDetails ? this.details.totalSharesPendingExit.value : '0';
+      return this.hasDetails
+        ? fromBase(this.details.totalSharesPendingExit.value, 18)
+        : '0';
     },
     showClaimNow() {
       return BigNumber(this.claimableStake).gt(0);
     },
     closestOnePM() {
-      const currentFetched = new Date(this.lastFetched);
-      const nearestFromLastFetched = new Date(this.lastFetched);
+      const currentFetched = new Date(this.actualLastFetched);
+      const nearestFromLastFetched = new Date(this.actualLastFetched);
       nearestFromLastFetched.setUTCHours(13, 0, 0); // set last fetched date to 1PM UTC
       if (nearestFromLastFetched > currentFetched) {
         return nearestFromLastFetched.getTime();
@@ -157,9 +189,9 @@ export default {
      * and if currentTime is after lastFetched1PMUTC, refresh details
      */
     currentTime(newVal) {
-      const currentFetched = new Date(this.lastFetched);
+      const currentFetched = new Date(this.actualLastFetched);
       const currentFetchedOnePMUTC = new Date(
-        new Date(this.lastFetched).setUTCHours(13, 0, 0)
+        new Date(this.actualLastFetched).setUTCHours(13, 0, 0)
       );
       const currentTime = new Date(newVal);
       const fetchedInThePast = currentFetched < currentFetchedOnePMUTC;
@@ -192,8 +224,8 @@ export default {
         .then(res => res.json())
         .then(res => {
           this.loading = false;
-          if (res.error) {
-            Toast(res.error, {}, ERROR);
+          if (res.error || res.message) {
+            Toast(res.error || res.message, {}, ERROR);
             return;
           }
           this.storeFetched([res, this.network.type.name]);
@@ -235,3 +267,9 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.set-font {
+  font-size: 12px !important;
+}
+</style>

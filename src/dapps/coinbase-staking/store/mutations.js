@@ -15,9 +15,11 @@ const INIT_STORE = function (state) {
 const STORE_FETCHED = function (state, obj) {
   const date = new Date();
   const copy = Object.assign(state.fetchedDetails);
+  const lastFetchedCopy = Object.assign(state.lastFetched);
+  lastFetchedCopy[obj[1]] = date.getTime();
   copy[obj[1]] = obj[0];
   state.fetchedDetails = copy;
-  state.lastFetched = date.getTime();
+  state.lastFetched = lastFetchedCopy;
 };
 
 export default {

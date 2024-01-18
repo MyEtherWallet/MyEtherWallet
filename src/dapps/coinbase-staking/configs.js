@@ -16,6 +16,6 @@ const COINBASE_STAKING_ROUTES = {
 import { ETH, GOERLI } from '@/utils/networks/types';
 
 const SUPPORTED_NETWORKS = [ETH, GOERLI];
-const API = 'https://coinbase-staking.mewapi.io';
+const API = 'https://coinbase-staking.mewapi.io/staking';
 
 export { COINBASE_STAKING_ROUTES, SUPPORTED_NETWORKS, API };
