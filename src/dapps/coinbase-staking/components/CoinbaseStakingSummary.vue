@@ -34,7 +34,7 @@
       <div
         class="textLight--text text-uppercase mew-label font-weight-medium set-font"
       >
-        Total Exitable {{ currencyName }}:
+        Exitable {{ currencyName }}:
       </div>
       <div v-if="!loading" class="set-font">
         {{ exitableETH }} {{ currencyName }}

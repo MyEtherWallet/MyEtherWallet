@@ -177,7 +177,7 @@
         </mew-sheet>
       </v-col>
       <v-col cols="12" md="4">
-        <coinbase-staking-summary class="mb-4" />
+        <coinbase-staking-summary refs="summary" class="mb-4" />
       </v-col>
     </v-row>
   </div>
@@ -327,6 +327,7 @@ export default {
         .sendTransaction(txObj)
         .on('receipt', () => {
           this.reset();
+          this.$refs.summary.fetchInfo();
           Toast(
             'Successfully staked! Account will reflect once pool refreshes.',
             {},
