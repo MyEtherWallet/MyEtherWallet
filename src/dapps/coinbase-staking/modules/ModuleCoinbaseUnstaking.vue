@@ -311,6 +311,7 @@ export default {
       this.loading = false;
     },
     async unstake() {
+      window.scrollTo(0, 0);
       this.loading = true;
       const { gasLimit, to, data, value, error } = await fetch(
         `${API}?address=${this.address}&action=unstake&networkId=${
@@ -331,9 +332,9 @@ export default {
       };
       this.web3.eth
         .sendTransaction(txObj)
-        .on('receipt', () => {
+        .then(() => {
           this.reset();
-          this.$refs.summary.fetchInfo();
+          EventBus.$emit('fetchSummary');
           Toast(
             'Successfully unstaked! Account will reflect once pool refreshes.',
             {},
@@ -351,7 +352,7 @@ export default {
     }, 500),
     setMax() {
       if (this.hasEnoughBalanceToStake) {
-        const max = this.stakedBalance;
+        const max = BigNumber(this.stakedBalance);
         this.setAmount(max.toFixed());
       }
     },

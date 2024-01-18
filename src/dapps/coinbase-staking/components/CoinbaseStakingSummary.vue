@@ -87,6 +87,16 @@
         (Refreshes daily at 1PM UTC)
       </div>
     </div>
+    <div class="d-flex align-center justify-space-between pt-2">
+      <mew-button
+        title="Refresh Manually"
+        has-full-width
+        btn-style="outline"
+        btn-size="medium"
+        :loading="loading"
+        @click.native="fetchInfo"
+      />
+    </div>
   </div>
 </template>
 
@@ -99,6 +109,7 @@ import moment from 'moment';
 import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 import { fromBase } from '@/core/helpers/unit';
 import { API } from '@/dapps/coinbase-staking/configs.js';
+import { EventBus } from '@/core/plugins/eventBus';
 
 const FIVE_MINS = 300000; // 1000 * 60 * 5
 
@@ -202,17 +213,16 @@ export default {
     }
   },
   mounted() {
-    if (!this.hasDetails) {
-      this.fetchInfo();
-    } else {
-      this.loading = false;
-    }
-
+    this.fetchInfo();
     this.currentTime = new Date().getTime();
     this.timeInterval = setInterval(() => {
       const time = new Date();
       this.currentTime = time.getTime();
     }, FIVE_MINS);
+    EventBus.$on('fetchSummary', this.fetchInfo);
+  },
+  destroyed() {
+    EventBus.$off('fetchSummary');
   },
   methods: {
     ...mapActions('coinbaseStaking', ['storeFetched']),
@@ -251,8 +261,9 @@ export default {
       };
       this.web3.eth
         .sendTransaction(txObj)
-        .on('receipt', () => {
+        .then(() => {
           this.loadingClaim = false;
+          this.fetchInfo();
           Toast(
             'Successfully staked! Account will reflect once pool refreshes.',
             {},

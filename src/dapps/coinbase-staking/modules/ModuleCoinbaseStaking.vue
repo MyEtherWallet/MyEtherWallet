@@ -305,6 +305,7 @@ export default {
       this.loading = false;
     },
     async stake() {
+      window.scrollTo(0, 0);
       this.loading = true;
       const { gasLimit, to, data, value, error } = await fetch(
         `${API}?address=${this.address}&action=stake&networkId=${
@@ -325,18 +326,18 @@ export default {
       };
       this.web3.eth
         .sendTransaction(txObj)
-        .on('receipt', () => {
-          this.reset();
-          this.$refs.summary.fetchInfo();
+        .then(() => {
           Toast(
             'Successfully staked! Account will reflect once pool refreshes.',
             {},
             SUCCESS
           );
+          this.reset();
+          EventBus.$emit('fetchSummary');
         })
         .catch(e => {
-          this.reset();
           this.instance.errorHandler(e);
+          this.reset();
         });
     },
     setAmount: debounce(function (val) {

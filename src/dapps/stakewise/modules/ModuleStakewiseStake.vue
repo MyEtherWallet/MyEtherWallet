@@ -7,9 +7,7 @@
           title="StakeWise V3 is now live on
         mainnet"
           :link-obj="linkObj"
-          :description="` Please note that
-        Stakewise V2 deposits are now disabled. You can redeem your sETH2 and
-        rETH2 for ETH in the MEW Stakewise dApp, and then re-stake by using the `"
+          description="The The Stakewise integration on MEW is no longer accepting deposits. You can still unstake your ETH by redeeming your sETH2 and rETH2 tokens"
           :bottom="false"
         />
       </v-col>
@@ -184,26 +182,6 @@
             />
           </div>
         </mew-sheet>
-      </v-col>
-      <v-col cols="12" md="4">
-        <stakewise-apr class="mb-4" />
-        <stakewise-staking
-          class="mb-4"
-          compound-rewards
-          :tx-fee="txFee"
-          :has-enough-balance="hasEnoughBalance"
-          @set-max="setMax"
-          @scroll="scroll"
-          @redeem-to-eth="redeemToEth"
-        />
-        <stakewise-rewards
-          v-if="isEthNetwork"
-          compound-rewards
-          :tx-fee="txFee"
-          @set-max="setMax"
-          @scroll="scroll"
-          @redeem-to-eth="redeemToEth"
-        />
       </v-col>
     </v-row>
   </div>
