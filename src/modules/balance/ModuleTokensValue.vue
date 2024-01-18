@@ -38,7 +38,7 @@
                 {{ getText }}
               </div>
             </v-col>
-            <v-col align="right" cols="5">
+            <v-col align="right" cols="5" v-if="tokenCount === 0 && canBuy">
               <div class="tokens-link" @click="checkLink">{{ linkText }}</div>
             </v-col>
           </v-row>
@@ -87,7 +87,10 @@ export default {
     ...mapGetters('wallet', ['tokensList']),
     ...mapState('wallet', ['initialLoad']),
     ...mapGetters('external', ['totalTokenFiatValue']),
-    ...mapGetters('global', ['getFiatValue']),
+    ...mapGetters('global', ['getFiatValue', 'network']),
+    canBuy() {
+      return this.network.type.canBuy;
+    },
     tokenTitle() {
       return `My Token${this.tokenCount !== 1 ? 's' : ''}`;
     },
