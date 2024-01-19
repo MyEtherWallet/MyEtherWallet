@@ -7,7 +7,7 @@
           title="StakeWise V3 is now live on
         mainnet"
           :link-obj="linkObj"
-          description="The The Stakewise integration on MEW is no longer accepting deposits. You can still unstake your ETH by redeeming your sETH2 and rETH2 tokens"
+          description="The Stakewise integration on MEW is no longer accepting deposits. You can still unstake your ETH by redeeming your sETH2 and rETH2 tokens"
           :bottom="false"
         />
       </v-col>
@@ -20,28 +20,22 @@
         <mew-sheet class="pa-15">
           <div class="mew-heading-4 font-weight-bold">
             MEW will no longer be accepting new deposits in the integrated
-            Stakewise app. Unstaking continues to be available, but the
-            Stakewise integration will eventually be removed from MEW. Users who
-            staked with Stakewise via MEW have the following options:
+            Stakewise app. Unstaking continues to be available. Users who staked
+            with Stakewise via MEW have the following options:
           </div>
-
-          <!-- ======================================================================================= -->
-          <!-- Divider -->
-          <!-- ======================================================================================= -->
-          <v-divider class="mt-8" />
-
           <!-- ======================================================================================= -->
           <!-- How stake works -->
           <!-- ======================================================================================= -->
           <div class="mt-6" @click="$vuetify.goTo(target)">
-            <div class="font-weight-bold mb-2">
-              Unstake your ETH from Stakewise in MEW and re-stake via one of our
-              staking partners
-            </div>
             <ul class="textMedium--text">
-              <li class="mb-2">Staked.us for full validators staking.</li>
               <li class="mb-2">
-                Coinbase for staking any amount with no minimum.
+                Unstake your ETH from Stakewise in MEW and re-stake via one of
+                our staking partners - Staked.us, for full validators staking,
+                and (soon) Coinbase, for staking any amount with no minimum.
+              </li>
+              <li class="mb-2">
+                Connect your wallet to the Stakewise web app to view and
+                continue managing your stake there.
               </li>
             </ul>
           </div>
