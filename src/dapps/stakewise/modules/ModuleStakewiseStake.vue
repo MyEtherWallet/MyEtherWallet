@@ -31,7 +31,7 @@
               <li class="mb-2">
                 Unstake your ETH from Stakewise in MEW and re-stake via one of
                 our staking partners - Staked.us, for full validators staking,
-                and (soon) Coinbase, for staking any amount with no minimum.
+                and Coinbase, for staking any amount with no minimum.
               </li>
               <li class="mb-2">
                 Connect your wallet to the Stakewise web app to view and
