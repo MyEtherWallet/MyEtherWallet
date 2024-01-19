@@ -140,29 +140,37 @@ export default {
       return !isEmpty(this.details);
     },
     stake() {
-      return this.hasDetails
-        ? fromBase(this.details.integratorShareBalance.value, 18)
-        : '0';
+      const value = this.hasDetails
+        ? `${fromBase(this.details.integratorShareBalance.value, 18)}...`
+        : '';
+      return value.length > 7 ? value.substr(0, value.length - 4) : value;
     },
     stakeInETH() {
-      return this.hasDetails
-        ? fromBase(this.details.integratorShareUnderlyingBalance.value, 18)
-        : '0';
+      const value = this.hasDetails
+        ? `${fromBase(
+            this.details.integratorShareUnderlyingBalance.value,
+            18
+          )}...`
+        : '';
+      return value.length > 7 ? value.substr(0, value.length - 4) : value;
     },
     exitableETH() {
-      return this.hasDetails
-        ? fromBase(this.details.totalExitableEth.value, 18)
-        : '0';
+      const value = this.hasDetails
+        ? `${fromBase(this.details.totalExitableEth.value, 18)}...`
+        : '';
+      return value.length > 7 ? value.substr(0, value.length - 4) : value;
     },
     claimableStake() {
-      return this.hasDetails
-        ? fromBase(this.details.fulfillableShareCount.value, 18)
-        : '0';
+      const value = this.hasDetails
+        ? `${fromBase(this.details.fulfillableShareCount.value, 18)}...`
+        : '';
+      return value.length > 7 ? value.substr(0, value.length - 4) : value;
     },
     stakePendingExit() {
-      return this.hasDetails
-        ? fromBase(this.details.totalSharesPendingExit.value, 18)
-        : '0';
+      const value = this.hasDetails
+        ? `${fromBase(this.details.totalSharesPendingExit.value, 18)}...`
+        : '';
+      return value.length > 7 ? value.substr(0, value.length - 4) : value;
     },
     showClaimNow() {
       return BigNumber(this.claimableStake).gt(0);
