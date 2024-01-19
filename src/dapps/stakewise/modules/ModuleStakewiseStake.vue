@@ -34,8 +34,11 @@
                 and Coinbase, for staking any amount with no minimum.
               </li>
               <li class="mb-2">
-                Connect your wallet to the Stakewise web app to view and
-                continue managing your stake there.
+                Connect your wallet to the
+                <a href="https://app.stakewise.io/" target="blank"
+                  >Stakewise web app</a
+                >
+                to view and continue managing your stake there.
               </li>
             </ul>
           </div>
