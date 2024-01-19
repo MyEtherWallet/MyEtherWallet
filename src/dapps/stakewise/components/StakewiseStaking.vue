@@ -28,17 +28,6 @@
     </div>
 
     <!-- ======================================================================================= -->
-    <!-- You are not staking user message -->
-    <!-- ======================================================================================= -->
-    <div v-if="!hasStaked && !hasPending" class="mt-4">
-      You are currently not staking any {{ currencyName }}. To earn rewards
-      start staking.
-      <span class="greenPrimary--text cursor--pointer" @click="scrollToInput"
-        >Start staking</span
-      >
-    </div>
-
-    <!-- ======================================================================================= -->
     <!-- Pending -->
     <!-- ======================================================================================= -->
     <div v-if="isEthNetwork">
@@ -112,14 +101,6 @@
         :disabled="enoughToCoverRedeem"
         @click.native="executeSwap"
       />
-      <mew-button
-        :title="`Stake more ${currencyName}`"
-        :btn-style="compoundRewards ? 'background' : 'transparent'"
-        btn-size="small"
-        class="py-1"
-        :disabled="true"
-        @click.native="scrollToInput"
-      />
     </div>
 
     <!-- ======================================================================================= -->
@@ -143,17 +124,12 @@ import {
   SETH2_MAINNET_CONTRACT
 } from '@/dapps/stakewise/handlers/configs.js';
 import sEthAbi from '@/dapps/stakewise/handlers/abi/stakedEthToken.js';
-import { STAKEWISE_ROUTES } from '../configsRoutes';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 export default {
   name: 'ModuleSideStaking',
   mixins: [buyMore],
   props: {
-    compoundRewards: {
-      type: Boolean,
-      default: false
-    },
     txFee: {
       type: String,
       default: ''
@@ -300,24 +276,6 @@ export default {
           }
         });
       }, 10000);
-    },
-    changeRoute() {
-      return new Promise(resolve => {
-        resolve(
-          this.$router.push({
-            name: STAKEWISE_ROUTES.CORE.NAME,
-            query: { module: 'stake' }
-          })
-        );
-      });
-    },
-    scrollToInput() {
-      this.$emit('scroll');
-      this.changeRoute().then(() => {
-        this.$nextTick(() => {
-          this.$emit('set-max');
-        });
-      });
     }
   }
 };
