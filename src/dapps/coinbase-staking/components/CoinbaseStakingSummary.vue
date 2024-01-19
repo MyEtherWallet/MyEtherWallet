@@ -141,36 +141,43 @@ export default {
     },
     stake() {
       const value = this.hasDetails
-        ? `${fromBase(this.details.integratorShareBalance.value, 18)}...`
+        ? `${fromBase(this.details.integratorShareBalance.value, 18)}`
         : '';
-      return value.length > 7 ? value.substr(0, value.length - 4) : value;
+      return value.length > 7
+        ? `${value.substr(0, value.length - 4)}...`
+        : value;
     },
     stakeInETH() {
       const value = this.hasDetails
-        ? `${fromBase(
-            this.details.integratorShareUnderlyingBalance.value,
-            18
-          )}...`
+        ? `${fromBase(this.details.integratorShareUnderlyingBalance.value, 18)}`
         : '';
-      return value.length > 7 ? value.substr(0, value.length - 4) : value;
+      return value.length > 7
+        ? `${value.substr(0, value.length - 4)}...`
+        : value;
     },
     exitableETH() {
       const value = this.hasDetails
-        ? `${fromBase(this.details.totalExitableEth.value, 18)}...`
+        ? `${fromBase(this.details.totalExitableEth.value, 18)}`
         : '';
-      return value.length > 7 ? value.substr(0, value.length - 4) : value;
+      return value.length > 7
+        ? `${value.substr(0, value.length - 4)}...`
+        : value;
     },
     claimableStake() {
       const value = this.hasDetails
-        ? `${fromBase(this.details.fulfillableShareCount.value, 18)}...`
+        ? `${fromBase(this.details.fulfillableShareCount.value, 18)}`
         : '';
-      return value.length > 7 ? value.substr(0, value.length - 4) : value;
+      return value.length > 7
+        ? `${value.substr(0, value.length - 4)}...`
+        : value;
     },
     stakePendingExit() {
       const value = this.hasDetails
-        ? `${fromBase(this.details.totalSharesPendingExit.value, 18)}...`
+        ? `${fromBase(this.details.totalSharesPendingExit.value, 18)}`
         : '';
-      return value.length > 7 ? value.substr(0, value.length - 4) : value;
+      return value.length > 7
+        ? `${value.substr(0, value.length - 4)}...`
+        : value;
     },
     showClaimNow() {
       return BigNumber(this.claimableStake).gt(0);
@@ -273,7 +280,7 @@ export default {
           this.loadingClaim = false;
           this.fetchInfo();
           Toast(
-            'Successfully staked! Account will reflect once pool refreshes.',
+            'Successfully claimed exitable stake! Account will reflect once pool refreshes.',
             {},
             SUCCESS
           );
