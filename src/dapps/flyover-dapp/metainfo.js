@@ -13,7 +13,7 @@ export default {
   path: FLYOVER_ROUTE.FLYOVER.PATH,
   name: FLYOVER_ROUTE.FLYOVER.NAME,
   defaultName: FLYOVER_ROUTE.FLYOVER.NAME,
-  networks: [ROOTSTOCK],
+  networks: [],
   isNew: true,
   layout,
   release: '01/22/2024',
