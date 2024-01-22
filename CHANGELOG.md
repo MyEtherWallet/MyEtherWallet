@@ -1,11 +1,8 @@
-### feature
-
-* coinbase staking [#4816](https://github.com/MyEtherWallet/MyEtherWallet/pull/4816)
-
 ### Release v6.9.0
 
 ### feature
 
+* coinbase staking [#4816](https://github.com/MyEtherWallet/MyEtherWallet/pull/4816)
 * add Arthera Mainnet support [#4804](https://github.com/MyEtherWallet/MyEtherWallet/pull/4804)
 * mainnet arthera [#4809](https://github.com/MyEtherWallet/MyEtherWallet/pull/4809)
 * add flyover dapp for rootstock network [#4678](https://github.com/MyEtherWallet/MyEtherWallet/pull/4678)
