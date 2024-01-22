@@ -120,12 +120,12 @@
                 conversion rate.
               </li>
               <li class="mb-2">
-                The conversion rate grows over time, as your stake accumulates
+                The conversion rate changes over time, as your stake accumulates
                 rewards and compounds automatically while you hold MEWcbETH.
               </li>
               <li>
                 Conversion rate of MEWcbETH to {{ currencyName }} and balance of
-                Total Exitable {{ currencyName }} refresh daily at 1pm UTC
+                {{ currencyName }} refresh daily at 1pm UTC
               </li>
             </ul>
 

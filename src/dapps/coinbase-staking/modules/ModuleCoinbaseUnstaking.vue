@@ -111,12 +111,12 @@
             <div class="font-weight-bold mb-2">How unstaking works</div>
             <ul class="textMedium--text">
               <li class="mb-2">
-                Request to unstake the desired amount of Total Exitable
+                Request to unstake the desired amount of
                 {{ currencyName }}.
               </li>
               <li class="mb-2">
-                Wait for the {{ currencyName }} to claim. Status updtes daily at
-                1pm UTC.
+                Wait for the {{ currencyName }} to claim. Status updates daily
+                at 1pm UTC.
               </li>
               <li class="mb-2">
                 Claim available {{ currencyName }} to unstake. Unstaked
@@ -320,7 +320,7 @@ export default {
       ).then(res => res.json());
       if (error) {
         Toast(error, {}, ERROR);
-        this.loadingClaim = false;
+        this.loading = false;
         return;
       }
       const txObj = {
