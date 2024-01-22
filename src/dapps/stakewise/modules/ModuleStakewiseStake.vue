@@ -6,8 +6,7 @@
           class="mb-5"
           title="StakeWise V3 is now live on
         mainnet"
-          :link-obj="linkObj"
-          description="The Stakewise integration on MEW is no longer accepting deposits. You can still unstake your ETH by redeeming your sETH2 and rETH2 tokens"
+          description="The Stakewise integration on MEW is no longer accepting deposits. You can still unstake your ETH by redeeming your sETH2 and rETH2 tokens."
           :bottom="false"
         />
       </v-col>
@@ -26,16 +25,21 @@
           <!-- ======================================================================================= -->
           <!-- How stake works -->
           <!-- ======================================================================================= -->
-          <div class="mt-6" @click="$vuetify.goTo(target)">
+          <div class="mt-6">
             <ul class="textMedium--text">
               <li class="mb-2">
-                Unstake your ETH from Stakewise in MEW and re-stake via one of
-                our staking partners - Staked.us, for full validators staking,
-                and Coinbase, for staking any amount with no minimum.
+                <a
+                  href="https://help.myetherwallet.com/en/articles/6136823-stake-your-eth-using-stakewise"
+                  target="_blank"
+                  >Unstake your ETH from Stakewise
+                </a>
+                in MEW and re-stake via one of our staking partners - Staked.us,
+                for full validators staking, and Coinbase, for staking any
+                amount with no minimum.
               </li>
               <li class="mb-2">
                 Connect your wallet to the
-                <a href="https://app.stakewise.io/" target="blank"
+                <a href="https://app.stakewise.io/" target="_blank"
                   >Stakewise web app</a
                 >
                 to view and continue managing your stake there.
@@ -131,10 +135,6 @@ export default {
         validUntil: 0,
         selectedProvider: '',
         txFee: ''
-      },
-      linkObj: {
-        title: 'Stakewise web app.',
-        url: 'https://app.stakewise.io/'
       }
     };
   },
