@@ -280,6 +280,9 @@ export default {
       };
       this.web3.eth
         .sendTransaction(txObj)
+        .once('receipt', () => {
+          this.fetchInfo();
+        })
         .then(() => {
           this.loadingClaim = false;
           this.fetchInfo();

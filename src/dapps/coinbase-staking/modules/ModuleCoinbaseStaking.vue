@@ -326,6 +326,9 @@ export default {
       };
       this.web3.eth
         .sendTransaction(txObj)
+        .once('receipt', () => {
+          EventBus.$emit('fetchSummary');
+        })
         .then(() => {
           Toast(
             'Successfully staked! Account will reflect once pool refreshes.',

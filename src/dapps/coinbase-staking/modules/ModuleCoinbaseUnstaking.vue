@@ -332,6 +332,9 @@ export default {
       };
       this.web3.eth
         .sendTransaction(txObj)
+        .once('receipt', () => {
+          EventBus.$emit('fetchSummary');
+        })
         .then(() => {
           this.reset();
           EventBus.$emit('fetchSummary');
