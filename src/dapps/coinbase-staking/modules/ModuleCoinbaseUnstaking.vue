@@ -126,7 +126,7 @@
 
             <div class="mt-6">
               <a
-                href="https://help.myetherwallet.com/en/articles/6136823-stake-your-eth-using-stakewise"
+                href="https://help.myetherwallet.com/en/articles/8843926-stake-eth-with-coinbase-in-mew-web"
                 target="_blank"
               >
                 <div class="greenPrimary--text">
