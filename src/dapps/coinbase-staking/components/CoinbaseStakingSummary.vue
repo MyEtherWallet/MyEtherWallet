@@ -180,7 +180,11 @@ export default {
         : value;
     },
     showClaimNow() {
-      return BigNumber(this.claimableStake).gt(0);
+      return this.hasDetails
+        ? BigNumber(fromBase(this.details.fulfillableShareCount.value, 18)).gt(
+            0
+          )
+        : false;
     },
     closestOnePM() {
       const currentFetched = new Date(this.actualLastFetched);
