@@ -16,6 +16,7 @@ export default {
   networks: [ROOTSTOCK],
   isNew: true,
   layout,
+  release: '01/22/2024',
   meta: {
     noAuth: false
   },

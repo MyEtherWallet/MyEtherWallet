@@ -13,7 +13,7 @@ export default {
   path: COINBASE_STAKING_ROUTES.CORE.PATH,
   networks: SUPPORTED_NETWORKS,
   layout,
-  release: '01/18/2024',
+  release: '01/22/2024',
   defaultName: COINBASE_STAKING_ROUTES.CORE.NAME,
   meta: {
     noAuth: false,
