@@ -1,3 +1,7 @@
+### feature
+
+* coinbase staking [#4816](https://github.com/MyEtherWallet/MyEtherWallet/pull/4816)
+
 ### Release v6.9.0
 
 ### feature
