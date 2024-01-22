@@ -280,6 +280,9 @@ export default {
       if (BigNumber(this.unstakeAmount).lt(0)) {
         return 'Value cannot be negative';
       }
+      if (BigNumber(this.unstakeAmount).gt(this.stakedBalance)) {
+        return `Balance too low! User only has ${this.stakedBalance}.`;
+      }
       if (
         BigNumber(this.unstakeAmount).gt(0) &&
         !hasValidDecimals(BigNumber(this.unstakeAmount).toFixed(), 18)
@@ -319,7 +322,10 @@ export default {
         }&amount=${toBase(this.unstakeAmount, 18)}`
       ).then(res => res.json());
       if (error) {
-        Toast(error, {}, ERROR);
+        const message = isEmpty(error)
+          ? 'Something went wrong! Please try again!'
+          : error.message;
+        Toast(message, {}, ERROR);
         this.loading = false;
         return;
       }

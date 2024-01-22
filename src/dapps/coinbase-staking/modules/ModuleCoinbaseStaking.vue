@@ -188,7 +188,7 @@ import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalyti
 import { fromWei } from 'web3-utils';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
-import { debounce } from 'lodash';
+import { debounce, isEmpty } from 'lodash';
 
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
@@ -313,7 +313,10 @@ export default {
         }&amount=${toBase(this.stakeAmount, 18)}`
       ).then(res => res.json());
       if (error) {
-        Toast(error, {}, ERROR);
+        const message = isEmpty(error)
+          ? 'Something went wrong! Please try again!'
+          : error.message;
+        Toast(message, {}, ERROR);
         this.reset();
         return;
       }
