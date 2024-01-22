@@ -17,12 +17,20 @@
         ]"
       >
         <div
-          v-if="!isOfflineApp && network.type.canBuy"
+          v-if="
+            !isOfflineApp &&
+            (network.type.chainID === 1 || network.type.chainID === 5)
+          "
           class="eth-banner d-flex"
         >
           <div class="mr-5">
-            <white-sheet class="pa-3">
-              <v-icon color="blackBg"> mdi-bank </v-icon>
+            <white-sheet class="pa-2 d-flex align-center">
+              <!-- <v-icon color="blackBg"> mdi-bank </v-icon> -->
+              <img
+                src="@/assets/images/icons/dapps/icon-dapp-coinbase.png"
+                width="30"
+                height="30"
+              />
             </white-sheet>
           </div>
           <div class="d-flex flex-column align-start">
@@ -30,7 +38,7 @@
               class="font-weight-bold textDark--text"
               style="font-size: 0.95rem"
             >
-              You can now buy crypto with low fees
+              <b>NEW: Stake any amount of ETH with Coinbase</b>
             </span>
             <span
               :class="[
@@ -41,12 +49,13 @@
                   : 'py-2',
                 'mew-body textMedium--text'
               ]"
-              >Enjoy 0.9% fee when you select ‘Bank account’ as payment method.
+              >Stake ETH with no minimums and start earning rewards right away;
+              unstake at any time.
               <br v-if="ads.length > 0" />
               <span
                 class="greenPrimary--text font-weight-bold cursor--pointer"
-                @click="buyCryptoNow"
-                >Buy crypto now.</span
+                @click="stakeNow"
+                >Stake now</span
               >
             </span>
           </div>
@@ -124,8 +133,9 @@
 <script>
 import { mapGetters, mapState } from 'vuex';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-import { BUYSELL_EVENT } from '@/modules/buy-sell/helpers';
-import { EventBus } from '@/core/plugins/eventBus';
+// import { BUYSELL_EVENT } from '@/modules/buy-sell/helpers';
+// import { EventBus } from '@/core/plugins/eventBus';
+import { COINBASE_STAKING_ROUTES } from '@/dapps/coinbase-staking/configs';
 export default {
   components: {
     notificationOverlay: () =>
@@ -140,7 +150,7 @@ export default {
   computed: {
     ...mapState('wallet', ['identifier', 'isOfflineApp']),
     ...mapState('global', ['online']),
-    ...mapGetters('global', ['network']),
+    ...mapGetters('global', ['network', 'isEthNetwork']),
     hasAds() {
       return this.ads.length > 0;
     }
@@ -154,8 +164,13 @@ export default {
       const ads = await res.json();
       this.ads = ads;
     },
-    buyCryptoNow() {
-      EventBus.$emit(BUYSELL_EVENT);
+    // buyCryptoNow() {
+    //   EventBus.$emit(BUYSELL_EVENT);
+    // },
+    stakeNow() {
+      this.$router.push({
+        name: COINBASE_STAKING_ROUTES.STAKE.NAME
+      });
     },
     buttonTracking(name) {
       this.trackAd(name);

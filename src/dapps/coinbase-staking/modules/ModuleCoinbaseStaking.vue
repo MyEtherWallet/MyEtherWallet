@@ -125,7 +125,7 @@
               </li>
               <li>
                 Conversion rate of MEWcbETH to {{ currencyName }} and balance of
-                {{ currencyName }} refresh daily at 1pm UTC
+                {{ currencyName }} refresh daily at 1pm UTC.
               </li>
             </ul>
 

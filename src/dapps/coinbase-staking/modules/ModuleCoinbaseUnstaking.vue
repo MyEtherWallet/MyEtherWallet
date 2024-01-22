@@ -115,8 +115,8 @@
                 {{ currencyName }}.
               </li>
               <li class="mb-2">
-                Wait for the {{ currencyName }} to claim. Status updates daily
-                at 1pm UTC.
+                Wait for {{ currencyName }} to become ready to claim. Status
+                updates daily at 1pm UTC.
               </li>
               <li class="mb-2">
                 Claim available {{ currencyName }} to unstake. Unstaked
