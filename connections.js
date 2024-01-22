@@ -5,6 +5,7 @@ module.exports = [
   'https://staging.mewbuilds.com:443',
   'https://localhost:8080',
   'wss://localhost:8080',
+  'https://coinbase-staking.mewapi.io:443',
   'https://swap.mewapi.io:443',
   'wss://connect.mewapi.io:443',
   'wss://connect2.mewapi.io:443',

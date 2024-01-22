@@ -1,6 +1,6 @@
 import layout from './TheFlyoverLayout.vue';
 import Module1 from './modules/ModulePegin.vue';
-import { ROOTSTOCK } from '@/utils/networks/types';
+// import { ROOTSTOCK } from '@/utils/networks/types';
 import { FLYOVER_ROUTE, flyoverRouterGuard } from './routes';
 
 export default {
@@ -13,9 +13,10 @@ export default {
   path: FLYOVER_ROUTE.FLYOVER.PATH,
   name: FLYOVER_ROUTE.FLYOVER.NAME,
   defaultName: FLYOVER_ROUTE.FLYOVER.NAME,
-  networks: [ROOTSTOCK],
+  networks: [],
   isNew: true,
   layout,
+  release: '01/22/2024',
   meta: {
     noAuth: false
   },

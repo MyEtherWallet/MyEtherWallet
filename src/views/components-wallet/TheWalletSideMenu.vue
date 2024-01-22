@@ -86,7 +86,7 @@
                 v-if="item.hasNew"
                 class="new-dapp-label white--text mew-label px-1"
               >
-                new
+                NEW
               </div>
             </v-list-item>
           </template>
@@ -356,7 +356,12 @@ export default {
     sectionOne() {
       if (this.online) {
         const hasNew = Object.values(dappsMeta).filter(item => {
-          if (isNew(item.release)) {
+          const dappSupport = item.networks.findIndex(nType => {
+            if (nType.chainID === this.network.type.chainID) {
+              return nType;
+            }
+          });
+          if (isNew(item.release) && dappSupport > -1) {
             return item;
           }
         });
