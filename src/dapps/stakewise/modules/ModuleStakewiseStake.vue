@@ -6,7 +6,7 @@
           class="mb-5"
           title="StakeWise V3 is now live on
         mainnet"
-          description="The Stakewise integration on MEW is no longer accepting deposits. You can still unstake your ETH by redeeming your sETH2 and rETH2 tokens on the Stakewise app"
+          description="The Stakewise integration on MEW is no longer accepting deposits. You can still unstake your ETH by redeeming your sETH2 and rETH2 tokens."
           :bottom="false"
         />
       </v-col>
