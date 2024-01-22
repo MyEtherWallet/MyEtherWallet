@@ -31,7 +31,7 @@ export default {
     return {
       header: {
         title: 'Stakewise',
-        subtext: 'Stake any amount of ETH and begin earning rewards.'
+        subtext: 'Unstake only'
       },
       activeTab: 0,
       headerImg: require('@/assets/images/icons/dapps/icon-dapp-stakewise.svg'),
@@ -52,32 +52,16 @@ export default {
     tabs() {
       const arr = [
         {
-          name: 'Stake ETH',
+          name: 'Unstake ETH',
           route: { name: STAKEWISE_ROUTES.CORE.NAME },
           id: 0
         }
       ];
 
-      if (this.isEthNetwork) {
-        arr.push({
-          name: 'Compound Rewards',
-          route: {
-            name: STAKEWISE_ROUTES.REWARDS.NAME
-          },
-          id: 1
-        });
-      }
       return arr;
     }
   },
   watch: {
-    $route(to) {
-      if (to.name === STAKEWISE_ROUTES.REWARDS.NAME) {
-        this.activeTab = this.tabs[1].id;
-      } else {
-        this.activeTab = this.tabs[0].id;
-      }
-    },
     web3() {
       clearInterval(this.fetchInterval);
       if (this.isSupported) {
@@ -92,9 +76,6 @@ export default {
     }
   },
   mounted() {
-    if (this.$route.name === STAKEWISE_ROUTES.REWARDS.NAME) {
-      this.activeTab = this.tabs[1].id;
-    }
     if (this.isSupported) {
       this.setup();
     }

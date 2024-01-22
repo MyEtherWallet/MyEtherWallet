@@ -1,3 +1,31 @@
+### Release v6.9.0
+
+### feature
+
+* coinbase staking [#4816](https://github.com/MyEtherWallet/MyEtherWallet/pull/4816)
+* add Arthera Mainnet support [#4804](https://github.com/MyEtherWallet/MyEtherWallet/pull/4804)
+* mainnet arthera [#4809](https://github.com/MyEtherWallet/MyEtherWallet/pull/4809)
+* add flyover dapp for rootstock network [#4678](https://github.com/MyEtherWallet/MyEtherWallet/pull/4678)
+
+### devop
+
+* fix nft dashboard on dark mode [#4801](https://github.com/MyEtherWallet/MyEtherWallet/pull/4801)
+* remove banner [#4806](https://github.com/MyEtherWallet/MyEtherWallet/pull/4806)
+
+### fix
+
+* fix offline access [#4808](https://github.com/MyEtherWallet/MyEtherWallet/pull/4808)
+
+### Release v6.8.1-hotfix.1
+
+### devop
+
+* sync develop [#4805](https://github.com/MyEtherWallet/MyEtherWallet/pull/4805)
+
+### fix
+
+* hide nft dashboard module for now [#4811](https://github.com/MyEtherWallet/MyEtherWallet/pull/4811)
+
 ### Release v6.8.1
 
 ### feature

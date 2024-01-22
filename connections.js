@@ -5,6 +5,7 @@ module.exports = [
   'https://staging.mewbuilds.com:443',
   'https://localhost:8080',
   'wss://localhost:8080',
+  'https://coinbase-staking.mewapi.io:443',
   'https://swap.mewapi.io:443',
   'wss://connect.mewapi.io:443',
   'wss://connect2.mewapi.io:443',
@@ -54,6 +55,7 @@ module.exports = [
   'wss://rpc.gnosischain.com:443/wss',
   'wss://public-node-api.klaytnapi.com:443/v1/cypress/ws',
   'wss://wsapi.fantom.network:443/',
+  'wss://ws.arthera.net:443/',
   'wss://ws-test.arthera.net:443/',
   // intercom stuff
   'api-iam.intercom.io:443',
@@ -77,6 +79,8 @@ module.exports = [
   'https://buy-staging.moonpay.com:443',
   // Dapps
   'https://public-node.rsk.co', // Rootstock
+  'https://eiqxqk2yzamq64zayk7zjsz6rq0hywyn.lambda-url.us-east-1.on.aws/', // Flyover
+  'https://lps.flyover.rif.technology', // Flyover
   'https://staked.mewapi.io:443', // staked
   'https://stakedtest.mewapi.io:443', // staked
   'https://ethblocksapi.mewapi.io:443', // Eth Blocks
