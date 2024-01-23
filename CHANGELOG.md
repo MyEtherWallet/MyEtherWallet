@@ -1,3 +1,9 @@
+### Release v6.9.0-hotfix.1
+
+### devop
+
+* remove liquidity language [#4820](https://github.com/MyEtherWallet/MyEtherWallet/pull/4820)
+
 ### Release v6.9.0
 
 ### feature
