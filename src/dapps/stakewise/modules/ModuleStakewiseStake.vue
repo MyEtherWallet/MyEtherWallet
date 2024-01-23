@@ -356,7 +356,7 @@ export default {
         Toast(err, {}, ERROR);
       }
     },
-    executeTrade() {
+    executeTrade(type) {
       const currentTradeCopy = clone(this.currentTrade);
       try {
         this.loading = false;
@@ -366,6 +366,9 @@ export default {
             this.swapNotificationFormatter(res, currentTradeCopy);
           })
           .then(() => {
+            this.trackDapp(
+              `stakewiseRedeem${type === 'seth' ? 'Seth' : 'Reth'}Fail`
+            );
             this.setAmount(0);
             this.compoundAmount = '0';
             this.locGasPrice = this.gasPriceByType(this.gasPriceType);
@@ -373,12 +376,18 @@ export default {
             this.agreeToTerms = false;
           })
           .catch(err => {
+            this.trackDapp(
+              `stakewiseRedeem${type === 'seth' ? 'Seth' : 'Reth'}Success`
+            );
             this.loading = false;
             Toast(err.message, {}, ERROR);
           });
       } catch (err) {
         this.loading = false;
         this.instance.errorHandler(err.message, {}, ERROR);
+        this.trackDapp(
+          `stakewiseRedeem${type === 'seth' ? 'Seth' : 'Reth'}Fail`
+        );
       }
     },
     swapNotificationFormatter(obj, currentTrade) {
@@ -412,6 +421,7 @@ export default {
     },
     async redeemToEth(type, balance) {
       const eth = type === 'seth' ? this.hasSeth : this.hasReth;
+      this.trackDapp(`stakewiseRedeem${type === 'seth' ? 'Seth' : 'Reth'}`);
       await this.getQuote(eth, ETH_Token, balance);
       try {
         this.loading = true;
@@ -439,7 +449,7 @@ export default {
           txFee: this.txFee,
           gasPriceType: this.gasPriceType
         };
-        await this.executeTrade();
+        await this.executeTrade(type);
       } catch (err) {
         this.loading = false;
         this.instance.errorHandler(err.message, {}, ERROR);

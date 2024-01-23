@@ -156,15 +156,6 @@
           <!-- Start staking -->
           <!-- ======================================================================================= -->
           <div class="d-flex flex-column align-center">
-            <mew-checkbox
-              v-model="agreeToTerms"
-              label="I have read and agreed to Coinbase Staking terms of
-      service."
-              :link="{
-                title: 'Coinbase terms',
-                url: 'https://www.coinbase.com/legal/user_agreement/united_states'
-              }"
-            />
             <mew-button
               class="mt-8"
               title="Start staking"
@@ -196,7 +187,7 @@ import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 import { EventBus } from '@/core/plugins/eventBus';
 import hasValidDecimals from '@/core/helpers/hasValidDecimals';
 import { toBase } from '@/core/helpers/unit';
-import { API } from '@/dapps/coinbase-staking/configs.js';
+import { API, CB_TRACKING } from '@/dapps/coinbase-staking/configs.js';
 
 const MIN_GAS_LIMIT = 400000;
 export default {
@@ -211,7 +202,6 @@ export default {
       stakeAmount: '0',
       locGasPrice: '0',
       gasLimit: '21000',
-      agreeToTerms: false,
       estimateGasError: false,
       loading: false
     };
@@ -255,11 +245,7 @@ export default {
       return BigNumber(this.ethTotalFee).lte(this.balanceInETH);
     },
     isValid() {
-      return (
-        BigNumber(this.stakeAmount).gt(0) &&
-        this.hasEnoughBalanceToStake &&
-        this.agreeToTerms
-      );
+      return BigNumber(this.stakeAmount).gt(0) && this.hasEnoughBalanceToStake;
     },
     errorMessages() {
       if (!this.hasEnoughBalanceToStake || !this.hasEnoughBalance) {
@@ -301,11 +287,11 @@ export default {
   methods: {
     reset() {
       this.setAmount(0);
-      this.agreeToTerms = false;
       this.loading = false;
     },
     async stake() {
       window.scrollTo(0, 0);
+      this.trackDapp(CB_TRACKING.CLICK_STAKE);
       this.loading = true;
       const { gasLimit, to, data, value, error } = await fetch(
         `${API}?address=${this.address}&action=stake&networkId=${
@@ -318,6 +304,7 @@ export default {
           : error.message;
         Toast(message, {}, ERROR);
         this.reset();
+        this.trackDapp(CB_TRACKING.STAKE_FAIL);
         return;
       }
       const txObj = {
@@ -340,10 +327,12 @@ export default {
           );
           this.reset();
           EventBus.$emit('fetchSummary');
+          this.trackDapp(CB_TRACKING.STAKE_SUCCESS);
         })
         .catch(e => {
           this.instance.errorHandler(e);
           this.reset();
+          this.trackDapp(CB_TRACKING.STAKE_FAIL);
         });
     },
     setAmount: debounce(function (val) {

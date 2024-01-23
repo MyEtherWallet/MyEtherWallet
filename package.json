@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "6.9.0",
+  "version": "6.9.0-hotfix.1",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build": "npm run update && vue-cli-service build",
@@ -53,7 +53,7 @@
     "@ensdomains/ensjs": "2.1.0",
     "@ethereumjs/common": "2.6.5",
     "@ethereumjs/tx": "3.5.2",
-    "@formatjs/intl-numberformat": "8.9.0",
+    "@formatjs/intl-numberformat": "8.9.2",
     "@keepkey/device-protocol": "7.12.2",
     "@kleros/address-tags-sdk": "github:MyEtherWallet/address-tags-sdk",
     "@lokalise/node-api": "8.0.1",
