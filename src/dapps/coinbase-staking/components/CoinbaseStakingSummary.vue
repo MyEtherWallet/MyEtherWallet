@@ -108,13 +108,15 @@ import moment from 'moment';
 
 import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 import { fromBase } from '@/core/helpers/unit';
-import { API } from '@/dapps/coinbase-staking/configs.js';
+import { API, CB_TRACKING } from '@/dapps/coinbase-staking/configs.js';
 import { EventBus } from '@/core/plugins/eventBus';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 const FIVE_MINS = 300000; // 1000 * 60 * 5
 
 export default {
   name: 'CoinbaseStakingSummary',
+  mixins: [handlerAnalytics],
   data() {
     return {
       currentTime: 0,
@@ -262,6 +264,7 @@ export default {
     },
     async claim() {
       this.loadingClaim = true;
+      this.trackDapp(CB_TRACKING.CLICK_CLAIM);
       const { gasLimit, to, data, value, error } = await fetch(
         `${API}?address=${this.address}&action=claim&networkId=${this.network.type.chainID}`
       ).then(res => res.json());
@@ -269,6 +272,7 @@ export default {
       if (error) {
         Toast(error, {}, ERROR);
         this.loadingClaim = false;
+        this.trackDapp(CB_TRACKING.CLAIM_FAIL);
         return;
       }
       const txObj = {
@@ -291,10 +295,12 @@ export default {
             {},
             SUCCESS
           );
+          this.trackDapp(CB_TRACKING.CLAIM_SUCCESS);
         })
         .catch(e => {
           this.loadingClaim = false;
           this.instance.errorHandler(e);
+          this.trackDapp(CB_TRACKING.CLAIM_FAIL);
         });
     }
   }
