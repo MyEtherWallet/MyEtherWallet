@@ -17,9 +17,8 @@ export default {
   defaultName: COINBASE_STAKING_ROUTES.CORE.NAME,
   meta: {
     noAuth: false,
-    title: 'Liquid Ethereum Staking | MyEtherWallet',
-    description:
-      'Stake your Ethereum without a full lockup period. Earn rewards with liquid tokens.'
+    title: 'Partial Ethereum staking | MyEtherWallet',
+    description: 'Stake your Ethereum without a full lockup period.'
   },
   children: [
     {
@@ -28,9 +27,8 @@ export default {
       component: ModuleCoinbaseStaking,
       meta: {
         noAuth: false,
-        title: 'Liquid Ethereum Staking | MyEtherWallet',
-        description:
-          'Stake your Ethereum without a full lockup period. Earn rewards with liquid tokens.'
+        title: 'Partial Ethereum staking | MyEtherWallet',
+        description: 'Stake your Ethereum without a full lockup period.'
       }
     },
     {
@@ -39,9 +37,8 @@ export default {
       component: ModuleCoinbaseStaking,
       meta: {
         noAuth: false,
-        title: 'Liquid Ethereum Staking | MyEtherWallet',
-        description:
-          'Stake your Ethereum without a full lockup period. Earn rewards with liquid tokens.'
+        title: 'Partial Ethereum staking | MyEtherWallet',
+        description: 'Stake your Ethereum without a full lockup period.'
       }
     },
     {
@@ -50,7 +47,7 @@ export default {
       component: ModuleCoinbaseUnstaking,
       meta: {
         noAuth: false,
-        title: 'Liquid Ethereum Unstaking | MyEtherWallet',
+        title: 'Partial Ethereum staking | MyEtherWallet',
         description: 'Unstake your staked ETH'
       }
     }

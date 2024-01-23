@@ -151,15 +151,6 @@
           <!-- Start staking -->
           <!-- ======================================================================================= -->
           <div class="d-flex flex-column align-center">
-            <mew-checkbox
-              v-model="agreeToTerms"
-              label="I have read and agreed to Coinbase Staking terms of
-      service."
-              :link="{
-                title: 'Coinbase terms',
-                url: 'https://www.coinbase.com/legal/user_agreement/united_states'
-              }"
-            />
             <mew-button
               class="mt-8"
               title="Unstake"
@@ -191,7 +182,7 @@ import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 import { EventBus } from '@/core/plugins/eventBus';
 import hasValidDecimals from '@/core/helpers/hasValidDecimals';
 import { toBase, fromBase } from '@/core/helpers/unit';
-import { API } from '@/dapps/coinbase-staking/configs.js';
+import { API, CB_TRACKING } from '@/dapps/coinbase-staking/configs.js';
 
 const MIN_GAS_LIMIT = 400000;
 export default {
@@ -206,7 +197,6 @@ export default {
       unstakeAmount: '0',
       locGasPrice: '0',
       gasLimit: '21000',
-      agreeToTerms: false,
       estimateGasError: false,
       loading: false
     };
@@ -260,7 +250,6 @@ export default {
       return (
         BigNumber(this.unstakeAmount).gt(0) &&
         this.hasEnoughBalanceToStake &&
-        this.agreeToTerms &&
         this.errorMessages === ''
       );
     },
@@ -310,10 +299,10 @@ export default {
   methods: {
     reset() {
       this.setAmount(0);
-      this.agreeToTerms = false;
       this.loading = false;
     },
     async unstake() {
+      this.trackDapp(CB_TRACKING.CLICK_UNSTAKE);
       window.scrollTo(0, 0);
       this.loading = true;
       const { gasLimit, to, data, value, error } = await fetch(
@@ -327,6 +316,7 @@ export default {
           : error.message;
         Toast(message, {}, ERROR);
         this.loading = false;
+        this.trackDapp(CB_TRACKING.UNSTAKE_FAIL);
         return;
       }
       const txObj = {
@@ -349,10 +339,12 @@ export default {
             {},
             SUCCESS
           );
+          this.trackDapp(CB_TRACKING.UNSTAKE_SUCCESS);
         })
         .catch(e => {
           this.reset();
           this.instance.errorHandler(e);
+          this.trackDapp(CB_TRACKING.UNSTAKE_FAIL);
         });
     },
     setAmount: debounce(function (val) {
