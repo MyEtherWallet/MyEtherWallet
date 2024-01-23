@@ -22,7 +22,7 @@ export default {
   data() {
     return {
       header: {
-        title: 'Coinbase Staking',
+        title: 'ETH Staking Powered By Coinbase',
         subtext: 'Stake any amount of ETH and begin earning rewards.'
       },
       activeTab: 0,
