@@ -7,7 +7,7 @@ import icon from '@/assets/images/icons/dapps/icon-dapp-coinbase.png';
 export default {
   title: 'ETH Staking',
   subtitle:
-    'Stake any amount of ETH and begin earning rewards. Powered by Coinbase',
+    'Powered by Coinbase. Stake any amount of ETH and begin earning rewards.',
   tag: '#DeFi',
   rightIconType: 'img',
   rightIcon: icon,
