@@ -851,7 +851,7 @@ export default {
           .signTransaction(this.tx)
           .then(res => {
             this.signedTxObject = res;
-            if (this.isHardware && this.txSigned) {
+            if (this.txSigned) {
               this.btnAction();
             }
           })
@@ -971,7 +971,9 @@ export default {
       });
     },
     btnAction() {
+      console.log('1');
       if (this.isSwap) {
+        console.log('a');
         this.trackSwapAmplitude(SWAP.CONFIRM_CLICKED);
       }
       if (!this.isWeb3Wallet) {
@@ -980,9 +982,11 @@ export default {
             this.signedTxArray.length < this.unsignedTxArr.length) &&
           isEmpty(this.signedTxObject)
         ) {
+          console.log('2');
           this.isBatch ? this.signBatchTx() : this.signTx();
           return;
         }
+        console.log('3');
         this.isBatch ? this.sendBatchTransaction() : this.sendSignedTx();
         return;
       }
