@@ -851,7 +851,7 @@ export default {
           .signTransaction(this.tx)
           .then(res => {
             this.signedTxObject = res;
-            if (this.isHardware && this.txSigned) {
+            if (this.txSigned) {
               this.btnAction();
             }
           })

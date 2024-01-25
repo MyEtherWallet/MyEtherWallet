@@ -8,9 +8,7 @@
         :class="$vuetify.breakpoint.smAndDown ? 'my-10' : 'pr-7'"
       >
         <mew-sheet class="pa-15">
-          <div class="mew-heading-2 textDark--text mb-8">
-            Unstake ETH with Coinbase Staking
-          </div>
+          <div class="mew-heading-2 textDark--text mb-8">Unstake ETH</div>
 
           <!-- ======================================================================================= -->
           <!-- Stake direction information -->
@@ -130,7 +128,7 @@
                 target="_blank"
               >
                 <div class="greenPrimary--text">
-                  View Coinbase Staking guide<v-icon
+                  View the ETH Staking guide<v-icon
                     color="greenPrimary"
                     small
                     class="ml-2"

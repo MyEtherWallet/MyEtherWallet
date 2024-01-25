@@ -33,5 +33,5 @@ export default {
   coingeckoID: 'rootstock',
   gasPriceMultiplier: 1.1,
   canBuy: false,
-  balanceApi: ''
+  balanceApi: 'https://partners.mewapi.io/balances/rsk/'
 };

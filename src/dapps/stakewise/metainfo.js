@@ -7,6 +7,7 @@ import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
 export default {
   title: 'Stakewise',
   subtitle: 'Unstaking only',
+  description: '',
   tag: '#DeFi',
   rightIconType: 'mew',
   rightIcon: 'stakewise',

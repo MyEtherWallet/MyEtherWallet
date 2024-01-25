@@ -5,7 +5,8 @@ import { FLYOVER_ROUTE, flyoverRouterGuard } from './routes';
 
 export default {
   title: 'Flyover',
-  subtitle:
+  subtitle: '',
+  description:
     'Transfer BTC from Bitcoin directly to Rootstock or RBTC to Bitcoin faster',
   tag: '#DeFi',
   rightIconType: 'mew',
@@ -14,7 +15,6 @@ export default {
   name: FLYOVER_ROUTE.FLYOVER.NAME,
   defaultName: FLYOVER_ROUTE.FLYOVER.NAME,
   networks: [],
-  isNew: true,
   layout,
   release: '01/22/2024',
   meta: {

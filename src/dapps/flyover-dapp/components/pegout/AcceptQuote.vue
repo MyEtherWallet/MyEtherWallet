@@ -77,9 +77,11 @@
 
 <script>
 import { acceptQuote } from '../../handlers/pegout';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import AppCopyBtn from '@/core/components/AppCopyBtn';
 import { mapState } from 'vuex';
 import { ethers } from 'ethers';
+import { toBase } from '@/core/helpers/unit';
 
 export default {
   name: 'AcceptQuote',
@@ -149,7 +151,7 @@ export default {
         // Create a transaction object
         const transactionObject = {
           to: quoteReply.lbcAddress,
-          value: this.quoteAmount * 10 ** 18
+          value: toBase(this.quoteAmount, 18)
         };
 
         this.wait = true;
@@ -165,7 +167,7 @@ export default {
         quoteReply.hash = this.hash;
         this.$emit('onSubmit', quoteReply);
       } catch (e) {
-        this.msg = `${e.message}`;
+        Toast(e, {}, ERROR);
       }
       this.loading = false;
     }

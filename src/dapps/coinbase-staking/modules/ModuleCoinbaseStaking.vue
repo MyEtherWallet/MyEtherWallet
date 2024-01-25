@@ -8,9 +8,7 @@
         :class="$vuetify.breakpoint.smAndDown ? 'my-10' : 'pr-7'"
       >
         <mew-sheet class="pa-15">
-          <div class="mew-heading-2 textDark--text mb-8">
-            Stake ETH with Coinbase Staking
-          </div>
+          <div class="mew-heading-2 textDark--text mb-8">Stake ETH</div>
 
           <!-- ======================================================================================= -->
           <!-- Stake direction information -->
@@ -111,8 +109,8 @@
             <div class="font-weight-bold mb-2">How staking works</div>
             <ul class="textMedium--text">
               <li class="mb-2">
-                Anyone can stake any amount of {{ currencyName }} with Coinbase
-                Staking. No minimum required.
+                Anyone can stake any amount of {{ currencyName }} with ETH
+                Staking powered by Coinbase. No minimum required.
               </li>
               <li class="mb-2">
                 When you deposit {{ currencyName }} to Coinbase via MEW web, you
@@ -135,7 +133,7 @@
                 target="_blank"
               >
                 <div class="greenPrimary--text">
-                  View Coinbase Staking guide<v-icon
+                  View the ETH Staking guide<v-icon
                     color="greenPrimary"
                     small
                     class="ml-2"

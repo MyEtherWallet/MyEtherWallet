@@ -7,7 +7,7 @@
   >
     <div class="d-flex align-center justify-space-between mb-1">
       <div class="text-uppercase mew-header-4 font-weight-medium">
-        Coinbase Staking Summary
+        ETH Staking Summary
       </div>
     </div>
     <div class="d-flex align-center justify-space-between pt-2">

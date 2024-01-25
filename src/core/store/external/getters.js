@@ -67,23 +67,64 @@ const networkTokenUSDMarket = function (
 };
 const getCoinGeckoTokenById = state => cgid => {
   const cgToken = state.coinGeckoTokens.get(cgid);
+  const networkCurrencyTokens = state.coinGeckoNetworkCurrencies.get(cgid);
   return {
-    name: cgToken ? cgToken.symbol.toUpperCase() : '',
-    symbol: cgToken ? cgToken.symbol.toUpperCase() : '',
-    subtext: cgToken ? cgToken.name : '',
-    value: cgToken ? cgToken.name : '',
-    img: cgToken ? `https://img.mewapi.io/?image=${cgToken.image}` : '',
-    market_cap: cgToken ? cgToken.market_cap : '0',
-    market_capf: cgToken ? formatIntegerValue(cgToken.market_cap).value : '0',
-    price_change_percentage_24h: cgToken
+    name: networkCurrencyTokens
+      ? networkCurrencyTokens.symbol.toUpperCase()
+      : cgToken
+      ? cgToken.symbol.toUpperCase()
+      : '',
+    symbol: networkCurrencyTokens
+      ? networkCurrencyTokens.symbol.toUpperCase()
+      : cgToken
+      ? cgToken.symbol.toUpperCase()
+      : '',
+    subtext: networkCurrencyTokens
+      ? networkCurrencyTokens.name
+      : cgToken
+      ? cgToken.name
+      : '',
+    value: networkCurrencyTokens
+      ? networkCurrencyTokens.name
+      : cgToken
+      ? cgToken.name
+      : '',
+    img: networkCurrencyTokens
+      ? `https://img.mewapi.io/?image=${networkCurrencyTokens.image}`
+      : cgToken
+      ? `https://img.mewapi.io/?image=${cgToken.image}`
+      : '',
+    market_cap: networkCurrencyTokens
+      ? networkCurrencyTokens.market_cap
+      : cgToken
+      ? cgToken.market_cap
+      : '0',
+    market_capf: networkCurrencyTokens
+      ? formatIntegerValue(networkCurrencyTokens.market_cap).value
+      : cgToken
+      ? formatIntegerValue(cgToken.market_cap).value
+      : '0',
+    price_change_percentage_24h: networkCurrencyTokens
+      ? networkCurrencyTokens.price_change_percentage_24h
+      : cgToken
       ? cgToken.price_change_percentage_24h
       : '0',
-    price_change_percentage_24hf:
-      cgToken && cgToken.price_change_percentage_24h
-        ? formatPercentageValue(cgToken.price_change_percentage_24h).value
-        : '0',
-    price: cgToken ? cgToken.current_price : '0',
-    pricef: cgToken ? formatFiatValue(cgToken.current_price).value : '0'
+    price_change_percentage_24hf: networkCurrencyTokens
+      ? formatPercentageValue(networkCurrencyTokens.price_change_percentage_24h)
+          .value
+      : cgToken
+      ? formatPercentageValue(cgToken.price_change_percentage_24h).value
+      : '0',
+    price: networkCurrencyTokens
+      ? networkCurrencyTokens.current_price
+      : cgToken
+      ? cgToken.current_price
+      : '0',
+    pricef: networkCurrencyTokens
+      ? formatFiatValue(networkCurrencyTokens.current_price).value
+      : cgToken
+      ? formatFiatValue(cgToken.current_price).value
+      : '0'
   };
 };
 /**

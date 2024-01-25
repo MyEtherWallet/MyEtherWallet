@@ -10,6 +10,10 @@ const SET_COIN_GECKO_TOKENS = function (state, tokens) {
   state.coinGeckoTokens = tokens;
 };
 
+const SET_COIN_GECKO_NETWORK_IDS = function (state, tokens) {
+  state.coinGeckoNetworkCurrencies = tokens;
+};
+
 const SET_NETWORK_TOKENS = function (state, tokens) {
   state.networkTokens = tokens;
 };
@@ -40,6 +44,7 @@ export default {
   SET_LAST_PATH,
   SET_CURRENCY_RATE,
   SET_COIN_GECKO_TOKENS,
+  SET_COIN_GECKO_NETWORK_IDS,
   SET_NETWORK_TOKENS,
   SET_SELECTED_EIP6963_PROVIDER,
   SET_SELECTED_EIP6963_INFO,

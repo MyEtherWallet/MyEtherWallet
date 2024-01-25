@@ -5,8 +5,9 @@ import ModuleCoinbaseStaking from './modules/ModuleCoinbaseStaking';
 import ModuleCoinbaseUnstaking from './modules/ModuleCoinbaseUnstaking';
 import icon from '@/assets/images/icons/dapps/icon-dapp-coinbase.png';
 export default {
-  title: 'Coinbase Staking',
-  subtitle: 'Stake any amount of ETH and begin earning rewards',
+  title: 'ETH Staking',
+  subtitle: 'Powered by Coinbase',
+  description: 'Stake any amount of ETH and begin earning rewards',
   tag: '#DeFi',
   rightIconType: 'img',
   rightIcon: icon,

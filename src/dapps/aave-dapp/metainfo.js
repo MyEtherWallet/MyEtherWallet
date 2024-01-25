@@ -4,7 +4,8 @@ const layout = () =>
   import(/* webpackChunkName: "dapp-aave" */ './TheAaveLayout');
 export default {
   title: 'Aave V2',
-  subtitle: 'Earn on your deposits and borrow assets',
+  subtitle: '',
+  description: 'Earn on your deposits and borrow assets',
   tag: '#DeFi',
   rightIconType: 'mew',
   rightIcon: 'aave',
