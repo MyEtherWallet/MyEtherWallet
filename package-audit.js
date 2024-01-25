@@ -32,7 +32,8 @@ const AUDIT_EXCEPTIONS = [
   'is_js',
   'get-func-name',
   'chart.js',
-  'browserify-sign'
+  'browserify-sign',
+  'lodash.pick'
 ];
 const execute = (command, callback) => {
   exec(

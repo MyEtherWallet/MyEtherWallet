@@ -37,6 +37,10 @@ const setLastPath = function ({ commit }, val) {
 const setCoinGeckoTokens = function ({ commit }, params) {
   commit('SET_COIN_GECKO_TOKENS', params);
 };
+
+const setCoinGeckoNetworkIds = function ({ commit }, params) {
+  commit('SET_COIN_GECKO_NETWORK_IDS', params);
+};
 const setNetworkTokens = function ({ commit }, params) {
   commit('SET_NETWORK_TOKENS', params);
 };
@@ -230,6 +234,7 @@ export default {
   setLastPath,
   setCurrency,
   setCoinGeckoTokens,
+  setCoinGeckoNetworkIds,
   setTokenAndEthBalance,
   setNetworkTokens,
   storeEIP6963Wallet,
