@@ -1,3 +1,7 @@
+### devop
+
+* copy changes [#4823](https://github.com/MyEtherWallet/MyEtherWallet/pull/4823)
+
 ### Release v6.9.0-hotfix.1
 
 ### devop
