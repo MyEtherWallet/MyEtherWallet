@@ -1,11 +1,12 @@
 import layout from './TheFlyoverLayout.vue';
 import Module1 from './modules/ModulePegin.vue';
-import { ROOTSTOCK } from '@/utils/networks/types';
+// import { ROOTSTOCK } from '@/utils/networks/types';
 import { FLYOVER_ROUTE, flyoverRouterGuard } from './routes';
 
 export default {
   title: 'Flyover',
-  subtitle:
+  subtitle: '',
+  description:
     'Transfer BTC from Bitcoin directly to Rootstock or RBTC to Bitcoin faster',
   tag: '#DeFi',
   rightIconType: 'mew',
@@ -13,7 +14,7 @@ export default {
   path: FLYOVER_ROUTE.FLYOVER.PATH,
   name: FLYOVER_ROUTE.FLYOVER.NAME,
   defaultName: FLYOVER_ROUTE.FLYOVER.NAME,
-  networks: [ROOTSTOCK],
+  networks: [],
   layout,
   release: '01/22/2024',
   meta: {

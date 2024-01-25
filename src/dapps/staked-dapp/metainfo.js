@@ -5,7 +5,8 @@ const layout = () =>
 import { stakedRouterGuard } from '@/core/router/helpers';
 export default {
   title: 'Staked',
-  subtitle: 'Stake full validators with 32 ETH or more',
+  subtitle: '',
+  description: 'Stake full validators with 32 ETH or more',
   tag: '#DeFi',
   rightIconType: 'mew',
   rightIcon: 'stake',

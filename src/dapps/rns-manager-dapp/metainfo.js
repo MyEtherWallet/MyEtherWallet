@@ -5,7 +5,8 @@ import { RNS_MANAGER_ROUTE, rnsRouterGuard } from './routes';
 
 export default {
   title: 'RNS Manager',
-  subtitle: 'Register RNS domain',
+  subtitle: '',
+  description: 'Register RNS domain',
   tag: '#Property',
   rightIconType: 'mew',
   rightIcon: 'rns',
