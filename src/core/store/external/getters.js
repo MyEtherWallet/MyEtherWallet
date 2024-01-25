@@ -112,7 +112,7 @@ const getCoinGeckoTokenById = state => cgid => {
     price_change_percentage_24hf: networkCurrencyTokens
       ? formatPercentageValue(networkCurrencyTokens.price_change_percentage_24h)
           .value
-      : cgToken
+      : cgToken && cgToken.price_change_percentage_24h
       ? formatPercentageValue(cgToken.price_change_percentage_24h).value
       : '0',
     price: networkCurrencyTokens
