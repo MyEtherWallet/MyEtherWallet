@@ -21,5 +21,6 @@ export default {
   buySell: 'BuySell',
   mewVersion: 'mewVersion',
   advertisement: 'MEWAd',
-  nftModule: 'NftModule'
+  nftModule: 'NftModule',
+  staking: 'Staking'
 };

@@ -38,7 +38,7 @@
               class="font-weight-bold textDark--text"
               style="font-size: 0.95rem"
             >
-              <b>NEW: Stake any amount of ETH with Coinbase</b>
+              <b>NEW: Stake any amount of ETH powered by Coinbase</b>
             </span>
             <span
               :class="[
@@ -49,8 +49,8 @@
                   : 'py-2',
                 'mew-body textMedium--text'
               ]"
-              >Stake ETH with no minimums and start earning rewards right away;
-              unstake at any time.
+              >Stake ETH with no minimums and start earning up to 4% APR right
+              away; unstake at any time.
               <br v-if="ads.length > 0" />
               <span
                 class="greenPrimary--text font-weight-bold cursor--pointer"

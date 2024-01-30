@@ -1,6 +1,7 @@
 import DappRoutes from '@/dapps/routes-dapps.js';
 import { swapProps, swapRouterGuard } from './helpers';
 import { ROUTES_WALLET } from '../configs/configRoutes';
+import StakeRoute from '@/core/router/routes-staking.js';
 export default {
   path: '/wallet',
   component: () => import('@/views/TheWalletView'),
@@ -96,6 +97,18 @@ export default {
         title: 'Swap and Trade Crypto | Easy Crypto Trading',
         description:
           'Swap crypto across chains. Trade crypto securely without using a centralized exchange.'
+      }
+    },
+    {
+      path: ROUTES_WALLET.STAKE.PATH,
+      name: ROUTES_WALLET.STAKE.NAME,
+      children: StakeRoute,
+      component: () => import('@/views/layouts-wallet/TheDappCenterLayout.vue'),
+      meta: {
+        noAuth: false,
+        title: 'Stake on MyEtherWallet | Staking',
+        description:
+          'Earn rewards on your Ethereum with Staking. Help secure the Ethereum network and earn crypto.'
       }
     },
     {
