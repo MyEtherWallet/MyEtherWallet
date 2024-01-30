@@ -54,7 +54,7 @@
     "@ethereumjs/common": "2.6.5",
     "@ethereumjs/tx": "3.5.2",
     "@formatjs/intl-numberformat": "8.9.2",
-    "@keepkey/device-protocol": "7.12.2",
+    "@keepkey/device-protocol": "7.13.1",
     "@kleros/address-tags-sdk": "github:MyEtherWallet/address-tags-sdk",
     "@lokalise/node-api": "8.0.1",
     "@mathieustan/vue-intercom": "0.0.9",
