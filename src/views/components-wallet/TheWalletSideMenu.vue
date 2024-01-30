@@ -294,7 +294,10 @@ import { EventBus } from '@/core/plugins/eventBus';
 import { ETH, BSC, MATIC, GOERLI } from '@/utils/networks/types';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-import { DASHBOARD } from '@/modules/analytics-opt-in/handlers/configs/events';
+import {
+  DASHBOARD,
+  STAKING
+} from '@/modules/analytics-opt-in/handlers/configs/events';
 import dappsMeta from '@/dapps/metainfo-dapps';
 import stakingMeta from '@/dapps/metainfo-staking';
 import { BUYSELL_EVENT } from '@/modules/buy-sell/helpers';
@@ -438,7 +441,8 @@ export default {
             title: 'Stake',
             icon: stake,
             route: { name: ROUTES_WALLET.STAKE.NAME },
-            hasNew: hasNew.length > 0
+            hasNew: hasNew.length > 0,
+            fn: this.trackToStaking
           },
           {
             title: this.$t('interface.menu.receive'),
@@ -575,6 +579,9 @@ export default {
     ...mapActions('global', ['setDarkMode']),
     trackToSwap() {
       this.trackDashboardAmplitude(DASHBOARD.SWAP_LEFT_NAVIGATION);
+    },
+    trackToStaking() {
+      this.trackStaking(STAKING.SIDE_MENU);
     },
     closeNetworkOverlay() {
       if (this.validNetwork) {

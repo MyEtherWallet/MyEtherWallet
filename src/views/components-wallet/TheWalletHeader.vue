@@ -133,6 +133,7 @@
 <script>
 import { mapGetters, mapState } from 'vuex';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { STAKING } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 // import { BUYSELL_EVENT } from '@/modules/buy-sell/helpers';
 // import { EventBus } from '@/core/plugins/eventBus';
 import { COINBASE_STAKING_ROUTES } from '@/dapps/coinbase-staking/configs';
@@ -171,6 +172,7 @@ export default {
       this.$router.push({
         name: COINBASE_STAKING_ROUTES.STAKE.NAME
       });
+      this.trackStaking(STAKING.HEADER_NOW);
     },
     buttonTracking(name) {
       this.trackAd(name);

@@ -24,6 +24,7 @@
           href="https://www.mewtopia.com/staking-the-easiest-way-to-earn-rewards/"
           target="_blank"
           class="white--text font-weight-bold pt-0 pt-md-2"
+          @click="trackMoreAbout"
           >More about staking ></a
         >
       </div>
@@ -94,17 +95,22 @@
 <script>
 import { mapGetters } from 'vuex';
 
+import { formatPercentageValue } from '@/core/helpers/numberFormatHelper';
 import stakedInfo from '@/dapps/staked-dapp/metainfo.js';
 import coinbaseInfo from '@/dapps/coinbase-staking/metainfo.js';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import isNew from '@/core/helpers/isNew.js';
 import { STAKED_ROUTE } from '@/dapps/staked-dapp/configsRoutes';
 import { COINBASE_STAKING_ROUTES } from '@/dapps/coinbase-staking/configs';
+import { STAKING } from '../analytics-opt-in/handlers/configs/events';
+import handlerStaked from '@/dapps/staked-dapp/handlers/handlerStaked.js';
 
 export default {
   mixins: [handlerAnalytics],
   data() {
-    return {};
+    return {
+      handlerStaked: {}
+    };
   },
   computed: {
     ...mapGetters('global', ['network']),
@@ -112,7 +118,7 @@ export default {
       return [
         {
           title: 'Staked',
-          apr: '---',
+          apr: this.currentAprFormatted,
           description: 'Stake full validators with 32 ETH or more',
           icon: require('@/assets/images/icons/dapps/icon-dapp-stake.svg'),
           routeName: STAKED_ROUTE.STAKED.NAME,
@@ -127,12 +133,28 @@ export default {
           release: coinbaseInfo.release
         }
       ];
+    },
+    currentAprFormatted() {
+      if (this.handlerStaked.apr > 0) {
+        return `${formatPercentageValue(this.handlerStaked.apr).value}% APR`;
+      }
+      return '---';
     }
+  },
+  mounted() {
+    this.handlerStaked = new handlerStaked(
+      this.web3,
+      this.network,
+      this.address
+    );
   },
   methods: {
     routeTo(name) {
-      this.trackStaking(name);
+      this.trackStaking(`Page${name}`);
       this.$router.push({ name: name });
+    },
+    trackMoreAbout() {
+      this.trackStaking(STAKING.STAKE_CENTER_MORE_ABOUT);
     },
     /**
      * defualtName is used to route to dapps that has defalt child route
@@ -144,23 +166,14 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.warning-container {
-  padding: 10px;
-  width: 100%;
-  border-radius: 10px;
-  border: 1px solid #05c0a5;
-  color: #05c0a5;
-  background-color: #ebfaf8;
-}
-
+<style lang="scss" scoped>
 .staking-banner {
   position: relative;
 }
 .staking-banner-copy {
   position: absolute;
-  top: 15px;
-  left: 20px;
+  top: 0;
+  padding: 20px;
 }
 
 .override-title {
@@ -174,5 +187,16 @@ export default {
 
 .staking-item {
   background-color: #ffffff;
+}
+</style>
+
+<style lang="scss">
+.warning-container {
+  padding: 10px;
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid #05c0a5;
+  color: #05c0a5;
+  background-color: #ebfaf8;
 }
 </style>
