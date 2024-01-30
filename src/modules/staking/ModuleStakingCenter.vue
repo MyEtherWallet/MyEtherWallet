@@ -9,13 +9,15 @@
         alt="staking banner"
         width="100%"
       />
-      <div class="staking-banner-copy">
+      <div
+        class="staking-banner-copy py-2 py-md-10 py-sm-4 px-2 px-md-8 px-sm-4"
+      >
         <div class="mew-title white--text override-title">Ethereum Staking</div>
         <div class="mew-title font-weight-regular white--text override-title">
           Make your crypto make crypto
         </div>
         <div
-          class="mew-heading-4 font-weight-regular faded pt-0 pt-md-4 d-none d-md-block"
+          class="mew-heading-4 font-weight-regular faded pt-0 pt-md-4 d-none d-sm-block"
         >
           Stake your ETH and get rewarded by Ethereum <br />
           blockchain.
@@ -23,7 +25,7 @@
         <a
           href="https://www.mewtopia.com/staking-the-easiest-way-to-earn-rewards/"
           target="_blank"
-          class="white--text font-weight-bold pt-0 pt-md-2"
+          class="white--text font-weight-bold"
           @click="trackMoreAbout"
           >More about staking ></a
         >
@@ -174,7 +176,6 @@ export default {
 .staking-banner-copy {
   position: absolute;
   top: 0;
-  padding: 40px 30px;
 }
 
 .override-title {
