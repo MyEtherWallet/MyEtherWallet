@@ -93,7 +93,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 
 import { formatPercentageValue } from '@/core/helpers/numberFormatHelper';
 import stakedInfo from '@/dapps/staked-dapp/metainfo.js';
@@ -114,6 +114,7 @@ export default {
   },
   computed: {
     ...mapGetters('global', ['network']),
+    ...mapState('wallet', ['web3', 'address']),
     dapps() {
       return [
         {
@@ -136,7 +137,7 @@ export default {
     },
     currentAprFormatted() {
       if (this.handlerStaked.apr > 0) {
-        return `${formatPercentageValue(this.handlerStaked.apr).value}% APR`;
+        return `${formatPercentageValue(this.handlerStaked.apr).value} APR`;
       }
       return '---';
     }
@@ -173,7 +174,7 @@ export default {
 .staking-banner-copy {
   position: absolute;
   top: 0;
-  padding: 20px;
+  padding: 40px 30px;
 }
 
 .override-title {

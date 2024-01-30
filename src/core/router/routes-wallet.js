@@ -101,7 +101,6 @@ export default {
     },
     {
       path: ROUTES_WALLET.STAKE.PATH,
-      name: ROUTES_WALLET.STAKE.NAME,
       children: StakeRoute,
       component: () => import('@/views/layouts-wallet/TheDappCenterLayout.vue'),
       meta: {
