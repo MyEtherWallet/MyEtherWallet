@@ -18,15 +18,10 @@ const closeEnkryptWalletSnackbar = function ({ commit }) {
   commit('CLOSE_WALLET_ENKRYPT_SNACKBAR');
 };
 
-const closeDashboardBanner = function ({ commit }) {
-  commit('CLOSE_DASHBOARD_BANNER');
-};
-
 export default {
   setTrackingConsent,
   neverShowEnkryptLandingPage,
   neverShowEnkryptWalletPage,
   showEnkryptWalletSnackbar,
-  closeEnkryptWalletSnackbar,
-  closeDashboardBanner
+  closeEnkryptWalletSnackbar
 };

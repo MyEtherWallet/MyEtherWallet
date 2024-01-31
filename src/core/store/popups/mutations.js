@@ -36,10 +36,6 @@ const CLOSE_WALLET_ENKRYPT_SNACKBAR = function (state) {
   state.enkryptWalletSnackbarClosed = new Date().getTime();
 };
 
-const CLOSE_DASHBOARD_BANNER = function (state) {
-  state.showDashboardBanner = false;
-};
-
 export default {
   INIT_STORE,
   SET_TRACKING_CONSENT,
@@ -47,6 +43,5 @@ export default {
   NEVER_SHOW_BANNER,
   NEVER_SHOW_WALLET_ENKRYPT_POPUP,
   SHOW_WALLET_ENKRYPT_SNACKBAR,
-  CLOSE_WALLET_ENKRYPT_SNACKBAR,
-  CLOSE_DASHBOARD_BANNER
+  CLOSE_WALLET_ENKRYPT_SNACKBAR
 };

@@ -10,8 +10,7 @@ const state = {
   enkryptWalletPopupClosed: 0,
   enkryptWalletSnackbar: false,
   enkryptWalletSnackbarClosed: 0,
-  enkryptWalletSnackbarCounter: 0,
-  showDashboardBanner: true
+  enkryptWalletSnackbarCounter: 0
 };
 
 export default state;
