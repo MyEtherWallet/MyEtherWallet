@@ -2,7 +2,10 @@
   <!-- ===================================================================================== -->
   <!-- Dapp Center Module -->
   <!-- ===================================================================================== -->
-  <v-sheet color="#F8F8F8">
+  <v-sheet
+    color="bgWalletBlock-base"
+    class="mew-component--white-sheet border-radius--15px"
+  >
     <div class="staking-banner">
       <img
         src="@/assets/images/backgrounds/staking-banner.png"
@@ -68,7 +71,12 @@
               </div>
             </v-col>
             <v-col cols="2">
-              <img :src="dapp.icon" width="64px" height="64px" />
+              <img
+                :src="dapp.icon"
+                width="64px"
+                height="64px"
+                class="elevation-2 border-radius--15px"
+              />
             </v-col>
             <v-col cols="12" class="text-center pt-3">
               <mew-button
@@ -188,7 +196,7 @@ export default {
 }
 
 .staking-item {
-  background-color: #ffffff;
+  background-color: var(--v-offWhite-base) !important;
 }
 </style>
 
