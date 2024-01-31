@@ -28,7 +28,7 @@
 
 <script>
 import { ETH, GOERLI } from '@/utils/networks/types';
-import { mapGetters, mapState } from 'vuex';
+import { mapGetters } from 'vuex';
 
 export default {
   components: {
@@ -44,7 +44,6 @@ export default {
   },
   computed: {
     ...mapGetters('global', ['isEthNetwork', 'network']),
-    ...mapState('popups', ['showDashboardBanner']),
     stakingSupported() {
       return [GOERLI, ETH];
     },
@@ -52,7 +51,7 @@ export default {
       const supportedIdx = this.stakingSupported.findIndex(item => {
         if (item.chainID === this.network.type.chainID) return item;
       });
-      return supportedIdx > -1 && this.showDashboardBanner;
+      return supportedIdx > -1;
     },
     hasBanner() {
       return `leftColItem${this.showBanner ? 3 : 2}`;
