@@ -29,6 +29,7 @@
           class="mt-2 mt-sm-5 text-blue"
           title="View Staking Options"
           :btn-size="$vuetify.breakpoint.smAndDown ? 'small' : 'large'"
+          color-theme="white"
           @click.native="viewStakingOptions"
         />
       </div>
@@ -61,12 +62,16 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .text-blue {
   color: #355eec !important;
-  background-color: var(--v-white-base) !important;
+  span {
+    color: #355eec !important;
+  }
 }
+</style>
 
+<style lang="scss" scoped>
 .banner-container {
   position: relative;
 }
