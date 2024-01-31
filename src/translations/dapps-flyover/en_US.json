@@ -2,7 +2,7 @@
   "title": "Flyover",
   "dapp-desc": "Transfer BTC from Bitcoin directly to Rootstock or RBTC to Bitcoin faster",
   "pegin": {
-    "title": "Pegin",
+    "title": "BTC to RBTC",
     "provider" :"Liquidity Provider",
     "quote": {
       "rskAddress": "Wallet Address to get RBTC Refund",
@@ -19,7 +19,7 @@
     },
     "deposit": {
       "nextStep": "Use a bitcoin wallet to send {amount} btc to {address}.",
-      "doneStep": "Wait for the {blocks} blocks of confirmations to complete the pegin process completion and then verify the funds in your wallet.",
+      "doneStep": "Wait for the {blocks} blocks of confirmations to complete the pegin process and then verify the funds in your wallet. Thanks for using Flyover dApp.",
       "amount": "Amount to deposit (BTC) = Amount to deposit + Call Fee",
       "address": "BTC Address",
       "deadline": "You have {ticker} to make the deposit.",
@@ -28,7 +28,7 @@
     }
   },
   "pegout": {
-    "title": "Pegout",
+    "title": "RBTC to BTC",
     "provider" :"Liquidity Provider",
     "quote": {
       "rskAddress": "Wallet Address to get RBTC Refund",
