@@ -64,7 +64,7 @@
       <v-col class="pl-0" cols="4">
         <mew-button
           :loading="loading"
-          :disabled="loading"
+          :disabled="loading || !token"
           :has-full-width="true"
           btn-size="xlarge"
           :title="$t('flyover.pegin.accept.acceptBtn')"
@@ -139,6 +139,9 @@ export default {
         this.$emit('onSubmit', quoteReply);
       } catch (e) {
         this.msg = `${e.message}`;
+        if (window.grecaptcha) {
+          window.grecaptcha.reset();
+        }
       }
       this.loading = false;
     }
