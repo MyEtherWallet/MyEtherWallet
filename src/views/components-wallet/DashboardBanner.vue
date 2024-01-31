@@ -1,7 +1,11 @@
 <template>
   <div class="banner-container">
-    <div class="close-icon" @click="trackClosing">
-      <v-icon size="24" class="cursor--pointer" color="white">
+    <div class="close-icon pa-2 pa-sm-5" @click="trackClosing">
+      <v-icon
+        :size="$vuetify.breakpoint.smAndDown ? '16' : '24'"
+        class="cursor--pointer"
+        color="white"
+      >
         mdi-close
       </v-icon>
     </div>
@@ -9,7 +13,7 @@
       src="@/assets/images/backgrounds/staking-popup-banner.png"
       width="100%"
     />
-    <div class="banner-text">
+    <div class="banner-text pa-2 pa-sm-5">
       <div>
         <div class="mew-title font-weight-regular white--text override-title">
           Make your crypto make crypto
@@ -21,7 +25,7 @@
       <mew-button
         class="mt-2 mt-sm-5 text-blue"
         title="View Staking Options"
-        btn-size="large"
+        :btn-size="$vuetify.breakpoint.smAndDown ? 'small' : 'large'"
         color-theme="white"
         @click.native="viewStakingOptions"
       />
@@ -63,14 +67,13 @@ export default {
 
 .close-icon {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 0;
+  right: 0;
 }
 
 .banner-text {
   position: absolute;
-  top: 20px;
-  left: 20px;
+  top: 0px;
 }
 
 .override-title {
