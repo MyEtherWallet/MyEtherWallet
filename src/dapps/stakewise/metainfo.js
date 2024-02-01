@@ -9,6 +9,7 @@ export default {
   subtitle: 'Unstaking only',
   description: '',
   tag: '#DeFi',
+  staking: true,
   rightIconType: 'mew',
   rightIcon: 'stakewise',
   path: STAKEWISE_ROUTES.CORE.PATH,

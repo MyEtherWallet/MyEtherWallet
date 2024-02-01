@@ -34,6 +34,7 @@ const ROUTES_WALLET = {
   NFT_MANAGER_SEND: { NAME: 'NftManagerSend', PATH: 'send-your-nft' },
   PRINT: { NAME: 'PrintPaperWallet', PATH: 'print-wallet' },
   SEND_TX: { NAME: 'SendTX', PATH: 'send-tx' },
+  STAKE: { NAME: 'Stake', PATH: 'stake' },
   SEND_TX_OFFLINE: { NAME: 'SendTXOffline', PATH: 'send-tx-offline' },
   SETTINGS: { NAME: 'Settings', PATH: 'settings' },
   SIGN_MESSAGE: { NAME: 'SignMessage', PATH: 'sign' },

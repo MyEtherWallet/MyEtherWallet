@@ -187,6 +187,15 @@ export default {
       }
     },
     /**
+     * Tracks which dapp user navigates to
+     */
+    trackStaking(action) {
+      if (this.isOfflineApp) return;
+      if (action && this.consentToTrack) {
+        this.$amplitude.track(`${categories.staking}${action}`);
+      }
+    },
+    /**
      * Tracks ad
      */
     trackAd(action) {
