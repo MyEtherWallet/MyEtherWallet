@@ -121,6 +121,12 @@
                   {{ item.title }}
                 </v-list-item-title>
               </v-list-item-content>
+              <div
+                v-if="item.hasNew"
+                class="new-dapp-label white--text mew-label px-1"
+              >
+                NEW
+              </div>
             </v-list-item>
           </template>
         </v-list-item-group>
@@ -274,7 +280,7 @@
 import { mapActions, mapGetters, mapState } from 'vuex';
 import send from '@/assets/images/icons/icon-send.svg';
 import portfolio from '@/assets/images/icons/icon-dashboard-enable.svg';
-// import bridge from '@/assets/images/icons/icon-bridge-enable.svg';
+import stake from '@/assets/images/icons/icon-stake.svg';
 import nft from '@/assets/images/icons/icon-nft.svg';
 import swap from '@/assets/images/icons/icon-swap-enable.svg';
 import receive from '@/assets/images/icons/icon-arrow-down-right.svg';
@@ -285,11 +291,15 @@ import message from '@/assets/images/icons/icon-message-enable.svg';
 import settings from '@/assets/images/icons/icon-setting-enable.svg';
 import logout from '@/assets/images/icons/icon-logout-enable.svg';
 import { EventBus } from '@/core/plugins/eventBus';
-import { ETH, BSC, MATIC } from '@/utils/networks/types';
+import { ETH, BSC, MATIC, GOERLI } from '@/utils/networks/types';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-import { DASHBOARD } from '@/modules/analytics-opt-in/handlers/configs/events';
+import {
+  DASHBOARD,
+  STAKING
+} from '@/modules/analytics-opt-in/handlers/configs/events';
 import dappsMeta from '@/dapps/metainfo-dapps';
+import stakingMeta from '@/dapps/metainfo-staking';
 import { BUYSELL_EVENT } from '@/modules/buy-sell/helpers';
 import isNew from '@/core/helpers/isNew.js';
 
@@ -314,6 +324,7 @@ export default {
       showLogoutPopup: false,
       routeNetworks: {
         [ROUTES_WALLET.SWAP.NAME]: [ETH, BSC, MATIC],
+        [ROUTES_WALLET.STAKE.NAME]: [ETH, GOERLI],
         [ROUTES_WALLET.NFT_MANAGER.NAME]: [ETH, BSC, MATIC]
       },
       footer: {
@@ -361,7 +372,7 @@ export default {
               return nType;
             }
           });
-          if (isNew(item.release) && dappSupport > -1) {
+          if (isNew(item.release) && dappSupport > -1 && !item.staking) {
             return item;
           }
         });
@@ -398,6 +409,16 @@ export default {
       ];
     },
     sectionTwo() {
+      const hasNew = Object.values(stakingMeta).filter(item => {
+        const stakingSupport = item.networks.findIndex(nType => {
+          if (nType.chainID === this.network.type.chainID) {
+            return nType;
+          }
+        });
+        if (isNew(item.release) && stakingSupport > -1) {
+          return item;
+        }
+      });
       if (this.online) {
         const sectionTwo = [
           {
@@ -415,6 +436,13 @@ export default {
             title: this.$t('interface.menu.send'),
             icon: send,
             route: { name: ROUTES_WALLET.SEND_TX.NAME }
+          },
+          {
+            title: 'Stake',
+            icon: stake,
+            route: { name: ROUTES_WALLET.STAKE.NAME },
+            hasNew: hasNew.length > 0,
+            fn: this.trackToStaking
           },
           {
             title: this.$t('interface.menu.receive'),
@@ -551,6 +579,9 @@ export default {
     ...mapActions('global', ['setDarkMode']),
     trackToSwap() {
       this.trackDashboardAmplitude(DASHBOARD.SWAP_LEFT_NAVIGATION);
+    },
+    trackToStaking() {
+      this.trackStaking(STAKING.SIDE_MENU);
     },
     closeNetworkOverlay() {
       if (this.validNetwork) {

@@ -8,6 +8,7 @@ export default {
   subtitle: '',
   description: 'Stake full validators with 32 ETH or more',
   tag: '#DeFi',
+  staking: true,
   rightIconType: 'mew',
   rightIcon: 'stake',
   name: ROUTES_WALLET.STAKED.NAME,

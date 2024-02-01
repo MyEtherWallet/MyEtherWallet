@@ -7,8 +7,9 @@ import icon from '@/assets/images/icons/dapps/icon-dapp-coinbase.png';
 export default {
   title: 'ETH Staking',
   subtitle: 'Powered by Coinbase',
-  description: 'Stake any amount of ETH and begin earning rewards',
+  description: 'Stake any amount of ETH and earn up to 4% APR',
   tag: '#DeFi',
+  staking: true,
   rightIconType: 'img',
   rightIcon: icon,
   path: COINBASE_STAKING_ROUTES.CORE.PATH,

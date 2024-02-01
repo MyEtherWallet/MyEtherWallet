@@ -108,6 +108,7 @@ export default {
         whiteAlways: '#FFFFFF',
         whiteBackground: '#FFFFFF',
         whitePopup: '#FFFFFF',
+        offWhite: '#F8F9FB',
         //old colors
         primaryHover: '#1eb19b',
         primaryActive: '#56c5b4',
@@ -254,6 +255,7 @@ export default {
         whiteAlways: '#FFFFFF',
         whiteBackground: '#192439',
         whitePopup: '#202B43',
+        offWhite: '#292B42',
         //old colors
         primaryHover: '#1eb19b',
         primaryActive: '#56c5b4',

@@ -1,0 +1,1 @@
+staking center page

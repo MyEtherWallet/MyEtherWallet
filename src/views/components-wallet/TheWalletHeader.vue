@@ -38,7 +38,7 @@
               class="font-weight-bold textDark--text"
               style="font-size: 0.95rem"
             >
-              <b>NEW: Stake any amount of ETH with Coinbase</b>
+              <b>NEW: Stake any amount of ETH powered by Coinbase</b>
             </span>
             <span
               :class="[
@@ -49,8 +49,8 @@
                   : 'py-2',
                 'mew-body textMedium--text'
               ]"
-              >Stake ETH with no minimums and start earning rewards right away;
-              unstake at any time.
+              >Stake ETH with no minimums and start earning up to 4% APR right
+              away; unstake at any time.
               <br v-if="ads.length > 0" />
               <span
                 class="greenPrimary--text font-weight-bold cursor--pointer"
@@ -133,6 +133,7 @@
 <script>
 import { mapGetters, mapState } from 'vuex';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { STAKING } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 // import { BUYSELL_EVENT } from '@/modules/buy-sell/helpers';
 // import { EventBus } from '@/core/plugins/eventBus';
 import { COINBASE_STAKING_ROUTES } from '@/dapps/coinbase-staking/configs';
@@ -171,6 +172,7 @@ export default {
       this.$router.push({
         name: COINBASE_STAKING_ROUTES.STAKE.NAME
       });
+      this.trackStaking(STAKING.HEADER_NOW);
     },
     buttonTracking(name) {
       this.trackAd(name);
