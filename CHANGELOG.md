@@ -1,3 +1,9 @@
+### Release v6.9.2
+
+### feature
+
+* staking center page [#4829](https://github.com/MyEtherWallet/MyEtherWallet/pull/4829)
+
 ### Release v6.9.1
 
 ### devop
