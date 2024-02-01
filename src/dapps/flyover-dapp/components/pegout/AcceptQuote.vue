@@ -64,7 +64,7 @@
       <v-col class="pl-0" cols="4">
         <mew-button
           :loading="loading"
-          :disabled="loading"
+          :disabled="loading || !token"
           :has-full-width="true"
           btn-size="xlarge"
           :title="$t('flyover.pegout.accept.acceptBtn')"
@@ -81,7 +81,6 @@ import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import AppCopyBtn from '@/core/components/AppCopyBtn';
 import { mapState } from 'vuex';
 import { ethers } from 'ethers';
-import { toBase } from '@/core/helpers/unit';
 
 export default {
   name: 'AcceptQuote',
@@ -132,6 +131,7 @@ export default {
   },
   methods: {
     async submit() {
+      this.msg = '';
       const ethersProvider = new ethers.providers.Web3Provider(
         this.web3.currentProvider
       );
@@ -148,26 +148,40 @@ export default {
           }
         );
 
+        const amountToSend = ethers.utils.parseEther(this.quoteAmount);
+
         // Create a transaction object
         const transactionObject = {
           to: quoteReply.lbcAddress,
-          value: toBase(this.quoteAmount, 18)
+          value: amountToSend
         };
 
-        this.wait = true;
+        const gasLimit = await wallet.estimateGas(transactionObject);
+        const gasPrice = await ethersProvider.getGasPrice();
+        const transactionCost = gasLimit.mul(gasPrice);
+        const balance = await wallet.getBalance();
 
-        const transactionResponse = await wallet.sendTransaction(
-          transactionObject
-        );
+        // Account must have enough balance for the transaction
+        if (balance.lt(amountToSend.add(transactionCost))) {
+          this.msg = 'Insufficient balance to send the transaction.';
+        } else {
+          this.wait = true;
+          const transactionResponse = await wallet.sendTransaction(
+            transactionObject
+          );
 
-        this.hash = `https://explorer.rsk.co/tx/${transactionResponse.hash}`;
-        // Wait for transaction confirmation
-        await transactionResponse.wait();
-        this.wait = false;
-        quoteReply.hash = this.hash;
-        this.$emit('onSubmit', quoteReply);
+          this.hash = `https://explorer.rsk.co/tx/${transactionResponse.hash}`;
+          // Wait for transaction confirmation
+          await transactionResponse.wait();
+          this.wait = false;
+          quoteReply.hash = this.hash;
+          this.$emit('onSubmit', quoteReply);
+        }
       } catch (e) {
         Toast(e, {}, ERROR);
+        if (window.grecaptcha) {
+          window.grecaptcha.reset();
+        }
       }
       this.loading = false;
     }
