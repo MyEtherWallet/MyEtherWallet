@@ -1,5 +1,5 @@
 import { isAddress } from '@/core/helpers/addressUtils.js';
-
+import MultiCoinValidator from 'multicoin-address-validator';
 export function isAmountValid(amount, min, max) {
   const val = parseFloat(amount);
 
@@ -14,10 +14,8 @@ export function isRootstockAddress(address) {
   return isAddress(address);
 }
 
-const LEGACY_MAINNET_REGEX = /^[1]([a-km-zA-HJ-NP-Z1-9]{25,34})$/;
-
 export function isLegacyBtcAddress(address) {
   if (!address) false;
 
-  return LEGACY_MAINNET_REGEX.test(address);
+  return MultiCoinValidator.validate(address, 'Bitcoin');
 }
