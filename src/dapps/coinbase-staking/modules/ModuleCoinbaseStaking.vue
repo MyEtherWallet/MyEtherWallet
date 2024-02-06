@@ -185,9 +185,12 @@ import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 import { EventBus } from '@/core/plugins/eventBus';
 import hasValidDecimals from '@/core/helpers/hasValidDecimals';
 import { toBase } from '@/core/helpers/unit';
-import { API, CB_TRACKING } from '@/dapps/coinbase-staking/configs.js';
+import {
+  API,
+  CB_TRACKING,
+  MIN_GAS_LIMIT
+} from '@/dapps/coinbase-staking/configs.js';
 
-const MIN_GAS_LIMIT = 400000;
 export default {
   name: 'ModuleCoinbaseUnstaking',
   components: {
