@@ -164,12 +164,17 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 import CloseIcon from '@/assets/images/icons/close-icon.vue';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+
 export default {
   components: {
     CloseIcon
   },
+  mixins: [handlerAnalytics],
   props: {
     isOpen: {
       type: Boolean,
@@ -184,6 +189,7 @@ export default {
     };
   },
   computed: {
+    ...mapState('popups', ['consentToTrack']),
     showAccess() {
       return this.$route.name === ROUTES_HOME.ACCESS_WALLET.NAME
         ? 'visibility: hidden'
