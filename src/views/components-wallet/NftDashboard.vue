@@ -227,6 +227,7 @@ export default {
         return res.json();
       })
       .then(res => {
+        if (!res.season) return;
         const response = res.season;
         const rewards = response.rewards.map(item => {
           item.pricef = fromBase(item.price, 18);
