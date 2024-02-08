@@ -149,6 +149,16 @@
         :style="showAccess"
         >Access my wallet</a
       >
+      <div class="matomo-tracking-switch d-md-none pt-5">
+        <v-switch
+          :input-value="consentToTrack"
+          inset
+          :label="`Data Tracking ${consentToTrack ? 'On' : 'Off'}`"
+          color="greenPrimary"
+          off-icon="mdi-alert-circle"
+          @change="setConsent"
+        />
+      </div>
     </div>
   </div>
 </template>
