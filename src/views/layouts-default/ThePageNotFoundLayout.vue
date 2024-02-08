@@ -27,7 +27,7 @@
       title="Home"
       class="mt-8"
       btn-size="xlarge"
-      @click.native="$router.push({ name: 'Home' })"
+      @click.native="$router.push({ name: 'AccessWallet' })"
     />
   </v-container>
 </template>
