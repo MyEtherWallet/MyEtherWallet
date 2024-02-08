@@ -11,7 +11,7 @@
       Summary
     =====================================================================================
     -->
-    <confirmation-summary-block :items="summaryItems">
+    <confirmation-summary-block v-if="isWeb3Wallet" :items="summaryItems">
       <template #rightColItem0>
         <div class="mew-body">
           {{ feeFormatted }}
@@ -80,8 +80,7 @@ export default {
       default: ''
     },
     isWeb3Wallet: {
-      type: Boolean,
-      default: false
+      type: Boolean
     }
   },
   data: function () {
