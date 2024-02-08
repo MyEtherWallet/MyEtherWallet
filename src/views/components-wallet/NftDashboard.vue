@@ -1,7 +1,7 @@
 <template>
-  <white-sheet :sideinfo="!mobile">
+  <white-sheet v-if="seasonOnGoing" :sideinfo="!mobile">
     <div class="px-5 px-lg-7 py-5">
-      <div class="mew-heading-2">MEW exclusive holiday NFTs</div>
+      <div class="mew-heading-2">MEW exclusive season 4 NFT</div>
       <a
         class="mew-heading-4 d-flex align-center py-2 more-mew-universe"
         href="https://www.mewtopia.com/join-us-in-the-mew-universe/"
@@ -11,84 +11,134 @@
         More about MEW universe
         <v-icon color="#5A678A"> mdi-chevron-right </v-icon>
       </a>
-      <div
-        v-if="loading"
-        class="single-mint-section d-flex align-center justify-space-around justify-md-space-between my-2 flex-wrap text-center"
-      >
-        <div class="image-container">
-          <div class="nft-image mb-2">
-            <v-skeleton-loader
-              :height="imageContainerWidth"
-              :width="imageContainerWidth"
-              type="image"
+      <div v-if="hasBundle">
+        <div
+          v-if="loading"
+          class="single-mint-section d-flex align-center justify-space-around justify-md-space-between my-2 flex-wrap text-center"
+        >
+          <div class="image-container">
+            <div class="nft-image mb-2">
+              <v-skeleton-loader
+                :height="imageContainerWidth"
+                :width="imageContainerWidth"
+                type="image"
+              />
+            </div>
+            <mew-button
+              :loading="loading"
+              :disabled="loading"
+              has-full-width
+              btn-size="small"
+              :btn-style="loading ? 'outline' : 'transparent'"
+              :class="loading ? '' : 'button-background'"
             />
           </div>
-          <mew-button
-            :loading="loading"
-            :disabled="loading"
-            has-full-width
-            btn-size="small"
-            :btn-style="loading ? 'outline' : 'transparent'"
-            :class="loading ? '' : 'button-background'"
-          />
-        </div>
-        <div class="image-container">
-          <div class="nft-image mb-2">
-            <v-skeleton-loader
-              :height="imageContainerWidth"
-              :width="imageContainerWidth"
-              type="image"
+          <div class="image-container">
+            <div class="nft-image mb-2">
+              <v-skeleton-loader
+                :height="imageContainerWidth"
+                :width="imageContainerWidth"
+                type="image"
+              />
+            </div>
+            <mew-button
+              :loading="loading"
+              :disabled="loading"
+              has-full-width
+              btn-size="small"
+              :btn-style="loading ? 'outline' : 'transparent'"
+              :class="loading ? '' : 'button-background'"
             />
           </div>
+        </div>
+        <div
+          v-else
+          class="single-mint-section d-flex align-center justify-space-around justify-md-space-between my-2 flex-wrap text-center"
+        >
+          <div
+            v-for="item in singlePaidItems"
+            :key="item.description + item.title"
+            class="image-container"
+          >
+            <img :src="item.url" :alt="item.title" class="mb-2 nft-image" />
+            <mew-button
+              :loading="loading || loaders[item.reward_id]"
+              :disabled="loading"
+              has-full-width
+              :title="`Mint · ${item.pricef} ETH`"
+              btn-size="small"
+              :btn-style="
+                loading ? 'outline' : darkMode ? 'outline' : 'transparent'
+              "
+              :class="loading ? '' : darkMode ? '' : 'button-background'"
+              @click.native="mint(item.reward_id)"
+            />
+          </div>
+        </div>
+        <div>
           <mew-button
-            :loading="loading"
+            :loading="loading || loaders[mintBothId]"
             :disabled="loading"
+            :title="mintBothText"
             has-full-width
-            btn-size="small"
-            :btn-style="loading ? 'outline' : 'transparent'"
-            :class="loading ? '' : 'button-background'"
+            :btn-style="darkMode ? 'light' : 'primary'"
+            btn-size="large"
+            @click.native="mint(mintBothId)"
           />
+          <div
+            v-show="!loading"
+            class="mt-2 textLight--text text-center mew-label"
+          >
+            Save on price and gas when you mint both
+          </div>
         </div>
       </div>
-      <div
-        v-else
-        class="single-mint-section d-flex align-center justify-space-around justify-md-space-between my-2 flex-wrap text-center"
-      >
+      <div v-else>
         <div
-          v-for="item in singlePaidItems"
-          :key="item.description + item.title"
-          class="image-container"
+          v-if="loading"
+          class="single-mint-section d-flex align-center justify-center my-2 flex-wrap text-center"
         >
-          <img :src="item.url" :alt="item.title" class="mb-2 nft-image" />
-          <mew-button
-            :loading="loading || loaders[item.reward_id]"
-            :disabled="loading"
-            has-full-width
-            :title="`Mint · ${item.pricef} ETH`"
-            btn-size="small"
-            :btn-style="
-              loading ? 'outline' : darkMode ? 'outline' : 'transparent'
-            "
-            :class="loading ? '' : darkMode ? '' : 'button-background'"
-            @click.native="mint(item.reward_id)"
-          />
+          <div class="image-container">
+            <div class="nft-image mb-2">
+              <v-skeleton-loader
+                :height="imageContainerWidth"
+                :width="imageContainerWidth"
+                type="image"
+              />
+            </div>
+            <mew-button
+              :loading="loading"
+              :disabled="loading"
+              has-full-width
+              btn-size="small"
+              :btn-style="loading ? 'outline' : 'transparent'"
+              :class="loading ? '' : 'button-background'"
+            />
+          </div>
         </div>
-      </div>
-      <div>
-        <mew-button
-          :loading="loading || loaders[mintBothId]"
-          :disabled="loading"
-          :title="mintBothText"
-          has-full-width
-          :btn-style="darkMode ? 'light' : 'primary'"
-          btn-size="large"
-          @click.native="mint(mintBothId)"
-        />
         <div
-          v-show="!loading"
-          class="mt-2 textLight--text text-center mew-label"
+          v-else
+          class="d-flex align-center justify-center my-2 flex-wrap text-center"
         >
-          Save on price and gas when you mint both
+          <div
+            v-for="item in rewards"
+            :key="item.description + item.title"
+            class="image-container"
+          >
+            <img :src="item.url" :alt="item.title" class="mb-2 nft-image" />
+            <mew-button
+              :loading="loading || loaders[item.reward_id]"
+              :disabled="loading"
+              has-full-width
+              :title="`Mint · ${item.pricef} ETH`"
+              btn-size="small"
+              :btn-style="
+                loading ? 'outline' : darkMode ? 'outline' : 'transparent'
+              "
+              :class="loading ? '' : darkMode ? '' : 'button-background'"
+              @click.native="mint(item.reward_id)"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -119,7 +169,8 @@ export default {
       loaders: {
         seasons_3_exclusive_nft_1: false,
         season_3_exclusive_nft_2: false,
-        season_3_exclusive_nfts: false
+        season_3_exclusive_nfts: false,
+        season_4_exclusive_nft_1: false
       }
     };
   },
@@ -128,20 +179,37 @@ export default {
     ...mapState('global', ['darkMode']),
     ...mapGetters('global', ['gasPrice']),
     ...mapGetters('wallet', ['balanceInWei']),
+    hasBundle() {
+      return !isEmpty(this.fetchedData)
+        ? this.fetchedData.rewards.length > 1
+        : false;
+    },
+    seasonOnGoing() {
+      return !isEmpty(this.fetchedData)
+        ? new Date(this.fetchedData.end_on) > new Date()
+        : false;
+    },
     mintBothText() {
       return !isEmpty(this.fetchedData)
-        ? `Mint both NFTs · ${this.fetchedData.rewards[2].pricef} ETH`
+        ? `Mint both NFTs · ${
+            this.hasBundle ? this.fetchedData.rewards[2].pricef : ''
+          } ETH`
         : '';
     },
     mintBothId() {
       return !isEmpty(this.fetchedData)
-        ? this.fetchedData.rewards[2].reward_id
+        ? this.hasBundle
+          ? this.fetchedData.rewards[2].reward_id
+          : ''
         : '';
     },
     singlePaidItems() {
       return !isEmpty(this.fetchedData)
         ? this.fetchedData.rewards.slice(0, 2).reverse()
         : [];
+    },
+    rewards() {
+      return !isEmpty(this.fetchedData) ? this.fetchedData.rewards : [];
     },
     imageContainerWidth() {
       return this.$vuetify.breakpoint.xsAndDown
@@ -179,7 +247,7 @@ export default {
       });
       this.loaders[id] = true;
       const { transaction } = await fetch(
-        `https://mainnet.mewwallet.dev/energy/web/purchase?address=${this.address}&reward_id=${id}&season_id=3`
+        `https://mainnet.mewwallet.dev/energy/web/purchase?address=${this.address}&reward_id=${id}&season_id=${this.fetchedData.season_id}`
       )
         .then(res => res.json())
         .then(res => {
