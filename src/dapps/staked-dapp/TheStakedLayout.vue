@@ -151,6 +151,7 @@ import {
 } from '@/core/helpers/numberFormatHelper';
 
 import handlerStaked from './handlers/handlerStaked';
+import handlerAnalyticsMixin from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 export default {
   name: 'TheStakedLayout',
   components: {
@@ -158,6 +159,7 @@ export default {
     StakedStepper: () => import('./components/staked-stepper/StakedStepper'),
     StakedStatus: () => import('./components/StakedStatus')
   },
+  mixins: [handlerAnalyticsMixin],
   data() {
     return {
       validNetworks: SUPPORTED_NETWORKS,
@@ -298,7 +300,8 @@ export default {
       this.handlerStaked = new handlerStaked(
         this.web3,
         this.network,
-        this.address
+        this.address,
+        this.trackDapp
       );
     }
   },
@@ -325,6 +328,7 @@ export default {
      * and set amount value for staked status
      */
     sendTransaction(amountETH) {
+      this.trackDapp('StakedSendStake');
       this.handlerStaked.sendTransaction();
       this.amount = amountETH;
     },
