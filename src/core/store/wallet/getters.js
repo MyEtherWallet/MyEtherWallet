@@ -40,6 +40,7 @@ const tokensList = function (state, getters, rootState, rootGetters) {
 const initialLoad = function (state) {
   return state.loadingWalletInfo;
 };
+
 const getLedgerApp = function (state) {
   return state.ledgerApp;
 };

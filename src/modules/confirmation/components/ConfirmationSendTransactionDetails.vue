@@ -78,6 +78,10 @@ export default {
     avatar: {
       type: String,
       default: ''
+    },
+    isWeb3Wallet: {
+      type: Boolean,
+      default: false
     }
   },
   data: function () {
