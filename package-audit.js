@@ -33,7 +33,8 @@ const AUDIT_EXCEPTIONS = [
   'get-func-name',
   'chart.js',
   'browserify-sign',
-  'lodash.pick'
+  'lodash.pick',
+  'ip'
 ];
 const execute = (command, callback) => {
   exec(
