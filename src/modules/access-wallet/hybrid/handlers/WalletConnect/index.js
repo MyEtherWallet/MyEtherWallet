@@ -129,7 +129,10 @@ const createWallet = async (identifier = WALLET_TYPES.WALLET_CONNECT) => {
     qrModalOptions: {
       themeVariables: {
         '--wcm-z-index': 300
-      }
+      },
+      explorerExcludedWalletIds: 'ALL',
+      explorerRecommendedWalletIds: 'NONE',
+      enableExplorer: false
     }
   });
   if (signClient.connected) {
