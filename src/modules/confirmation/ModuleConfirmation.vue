@@ -53,6 +53,7 @@
             :to-tx-data="tx.toTxData"
             :to-details="allToDetails"
             :send-currency="sendCurrency"
+            :is-web3-wallet="isWeb3Wallet"
           />
           <confirmation-swap-transaction-details
             v-else
@@ -196,6 +197,7 @@
                     no-gutters
                   >
                     <v-col
+                      v-if="shouldDisplayDetail(txVal.title)"
                       cols="12"
                       md="3"
                       class="d-flex d-sm-block ma-0 greyPrimary--text"
@@ -203,7 +205,11 @@
                       {{ txVal.title }}
                     </v-col>
 
-                    <v-col cols="12" md="9">
+                    <v-col
+                      v-if="shouldDisplayDetail(txVal.title)"
+                      cols="12"
+                      md="9"
+                    >
                       <scroll-block>
                         <div class="data-values text-md-right">
                           {{ txVal.value }}
@@ -335,6 +341,7 @@ export default {
     ]),
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network', 'getFiatValue']),
+    ...mapGetters('wallet', ['isWeb3Wallet']),
     ...mapGetters('article', ['getArticle']),
     ...mapState('addressBook', ['addressBookStore']),
     txTo() {
@@ -343,13 +350,6 @@ export default {
           ? this.tx.toTxData.to
           : this.tx.to;
       return this.unsignedTxArr[0].to;
-    },
-    isWeb3Wallet() {
-      return (
-        this.identifier === WALLET_TYPES.WEB3_WALLET ||
-        this.identifier === WALLET_TYPES.WALLET_CONNECT ||
-        this.identifier === WALLET_TYPES.MEW_WALLET
-      );
     },
     isOtherWallet() {
       return (
@@ -622,6 +622,12 @@ export default {
     }
   },
   methods: {
+    shouldDisplayDetail(name) {
+      if (this.isWeb3Wallet && name === 'Gas Price') {
+        return false;
+      }
+      return true;
+    },
     rejectTransaction(value) {
       if (this.isSwap) {
         this.trackSwapAmplitude(SWAP.CANCELLED, {

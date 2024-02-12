@@ -360,6 +360,18 @@
               </div>
             </div>
           </div>
+          <div
+            class="matomo-tracking-switch d-none d-md-flex justify-center d-lg-none"
+          >
+            <v-switch
+              :input-value="consentToTrack"
+              inset
+              :label="`Data Tracking ${consentToTrack ? 'On' : 'Off'}`"
+              color="greenPrimary"
+              off-icon="mdi-alert-circle"
+              @change="setConsent"
+            />
+          </div>
         </v-sheet>
       </v-container>
 
