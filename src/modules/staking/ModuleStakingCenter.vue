@@ -156,7 +156,8 @@ export default {
     this.handlerStaked = new handlerStaked(
       this.web3,
       this.network,
-      this.address
+      this.address,
+      this.trackDapp
     );
   },
   methods: {

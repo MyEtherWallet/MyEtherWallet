@@ -312,11 +312,11 @@ export default {
         walletType: this.instance?.identifier || ''
       })
         .then(() => {
+          this.networkLoading = false;
           if (this.isWallet) {
             this.networkSelected = this.validNetwork
               ? this.network.type.name
               : '';
-            this.networkLoading = false;
             const setNetworkCall =
               this.identifier === WALLET_TYPES.WEB3_WALLET
                 ? this.setWeb3Instance(this.selectedEIP6963Provider)

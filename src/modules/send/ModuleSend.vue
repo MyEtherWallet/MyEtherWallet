@@ -42,11 +42,7 @@
               placeholder="0"
               :persistent-hint="true"
               :error-messages="amountErrorMessage"
-              :max-btn-obj="{
-                title: 'Max',
-                disabled: disableSwapBtn,
-                method: setEntireBal
-              }"
+              :max-btn-obj="maxBtn"
               :buy-more-str="buyMoreStr"
               class="AmountInput"
               @keydown.native="preventCharE($event)"
@@ -82,7 +78,7 @@
         <!-- ===================================================================================== -->
         <!-- Network Fee (Note: comes with mt-5(20px) mb-8(32px))) -->
         <!-- ===================================================================================== -->
-        <v-col cols="12" class="py-0 mb-8">
+        <v-col v-if="!isWeb3Wallet" cols="12" class="py-0 mb-8">
           <transaction-fee
             :show-fee="showSelectedBalance"
             :getting-fee="!txFeeIsReady"
@@ -257,7 +253,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['address', 'instance']),
+    ...mapState('wallet', ['address', 'instance', 'identifier']),
     ...mapState('global', ['preferredCurrency']),
     ...mapGetters('global', [
       'network',
@@ -266,12 +262,28 @@ export default {
       'swapLink',
       'getFiatValue'
     ]),
-    ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
+    ...mapGetters('wallet', ['balanceInETH', 'tokensList', 'isWeb3Wallet']),
     ...mapGetters('custom', ['hasCustom', 'customTokens', 'hiddenTokens']),
+    maxBtn() {
+      return this.isWeb3Wallet
+        ? {}
+        : {
+            title: 'Max',
+            disabled: this.disableSwapBtn,
+            method: this.setEntireBal
+          };
+    },
     isFromNetworkCurrency() {
       return this.selectedCurrency?.contract === MAIN_TOKEN_ADDRESS;
     },
     isDisabledNextBtn() {
+      if (this.isWeb3Wallet) {
+        return (
+          !this.isValidGasLimit ||
+          !this.allValidInputs ||
+          !isHexStrict(this.data)
+        );
+      }
       return (
         this.feeError !== '' ||
         !this.isValidGasLimit ||
@@ -319,7 +331,7 @@ export default {
         BigNumber(this.balanceInETH).gt(0) &&
         BigNumber(this.txFeeETH).gt(this.balanceInETH);
 
-      if (isZero || isLessThanTxFee) {
+      if (isZero || (isLessThanTxFee && !this.isWeb3Wallet)) {
         return true;
       }
 
@@ -625,7 +637,7 @@ export default {
       this.setAmountError(value);
     }, 1000);
     this.debounceEstimateGas = debounce(() => {
-      if (this.isValidForGas) {
+      if (this.isValidForGas && !this.isWeb3Wallet) {
         this.estimateAndSetGas();
       }
     }, 500);
