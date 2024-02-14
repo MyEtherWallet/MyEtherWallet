@@ -429,9 +429,8 @@ export default {
      * based on how the swap state is
      */
     showNetworkFee() {
-      return (
-        (this.showNextButton && !this.isFromNonChain) || !this.isWeb3Wallet
-      );
+      if (this.isWeb3Wallet) return false;
+      return this.showNextButton && !this.isFromNonChain;
     },
     /**
      * @returns a boolean
@@ -449,7 +448,9 @@ export default {
      * if native token, return empty
      */
     maxBtn() {
-      return this.isFromNonChain || this.availableBalance.isZero()
+      return this.isWeb3Wallet ||
+        this.isFromNonChain ||
+        this.availableBalance.isZero()
         ? {}
         : {
             title: 'Max',

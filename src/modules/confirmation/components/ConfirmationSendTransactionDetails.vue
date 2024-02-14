@@ -11,7 +11,7 @@
       Summary
     =====================================================================================
     -->
-    <confirmation-summary-block v-if="isWeb3Wallet" :items="summaryItems">
+    <confirmation-summary-block v-if="!isWeb3Wallet" :items="summaryItems">
       <template #rightColItem0>
         <div class="mew-body">
           {{ feeFormatted }}
