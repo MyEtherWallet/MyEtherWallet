@@ -29,5 +29,12 @@ import { ETH, GOERLI } from '@/utils/networks/types';
 
 const SUPPORTED_NETWORKS = [ETH, GOERLI];
 const API = 'https://coinbase-staking.mewapi.io/staking';
+const MIN_GAS_LIMIT = 400000;
 
-export { COINBASE_STAKING_ROUTES, SUPPORTED_NETWORKS, API, CB_TRACKING };
+export {
+  COINBASE_STAKING_ROUTES,
+  SUPPORTED_NETWORKS,
+  API,
+  CB_TRACKING,
+  MIN_GAS_LIMIT
+};

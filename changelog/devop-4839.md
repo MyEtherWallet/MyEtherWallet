@@ -1,0 +1,1 @@
+staked amplitude events
