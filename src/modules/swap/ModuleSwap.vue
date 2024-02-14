@@ -449,7 +449,9 @@ export default {
      * if native token, return empty
      */
     maxBtn() {
-      return this.isFromNonChain || this.availableBalance.isZero()
+      return this.isWeb3Wallet ||
+        this.isFromNonChain ||
+        this.availableBalance.isZero()
         ? {}
         : {
             title: 'Max',
