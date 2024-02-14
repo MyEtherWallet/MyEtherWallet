@@ -1,3 +1,15 @@
+### devop
+
+* remove gas price on send and swap for web3 wallets [#4838](https://github.com/MyEtherWallet/MyEtherWallet/pull/4838)
+* staked amplitude events [#4839](https://github.com/MyEtherWallet/MyEtherWallet/pull/4839)
+
+### fix
+
+* add claim balance check [#4837](https://github.com/MyEtherWallet/MyEtherWallet/pull/4837)
+* fix mobile menu [#4840](https://github.com/MyEtherWallet/MyEtherWallet/pull/4840)
+* fix routes [#4842](https://github.com/MyEtherWallet/MyEtherWallet/pull/4842)
+* fix network selection frozen [#4843](https://github.com/MyEtherWallet/MyEtherWallet/pull/4843)
+
 ### Release v6.9.2
 
 ### feature
