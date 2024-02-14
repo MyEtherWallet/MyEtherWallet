@@ -90,7 +90,8 @@ const EXCEPTIONS = [
   'chart.js',
   'vue-tippy',
   'less-loader', // doesn't support webpack 4
-  'eslint-plugin-security' // part of major release for eslint
+  'eslint-plugin-security', // part of major release for eslint
+  '@ensdomains/address-encoder'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
