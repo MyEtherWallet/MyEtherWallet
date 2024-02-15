@@ -246,6 +246,15 @@
                 :class="isFromNonChain ? '' : 'mt-7'"
                 :selected-provider-id="selectedProviderId"
               />
+              <p v-if="isWeb3Wallet && step >= 1" class="error--text">
+                {{
+                  feeError
+                    ? feeError
+                    : providersErrorMsg
+                    ? providersErrorMsg.subtitle
+                    : ''
+                }}
+              </p>
               <!--
                   =====================================================================================
                   Swap Fee
@@ -318,7 +327,7 @@ import Swapper from './handlers/handlerSwap';
 import handleError from '../confirmation/handlers/errorHandler';
 import { fromBase, toBase } from '@/core/helpers/unit';
 
-const MIN_GAS_LIMIT = 800000;
+const MIN_GAS_LIMIT = 400000;
 let localContractToToken = {};
 export default {
   name: 'ModuleSwap',
@@ -408,7 +417,8 @@ export default {
       'balanceInETH',
       'tokensList',
       'initialLoad',
-      'balanceInWei'
+      'balanceInWei',
+      'isWeb3Wallet'
     ]),
     ...mapGetters('external', [
       'balanceFiatValue',
@@ -428,6 +438,7 @@ export default {
      * based on how the swap state is
      */
     showNetworkFee() {
+      if (this.isWeb3Wallet) return false;
       return this.showNextButton && !this.isFromNonChain;
     },
     /**
@@ -446,7 +457,9 @@ export default {
      * if native token, return empty
      */
     maxBtn() {
-      return this.isFromNonChain || this.availableBalance.isZero()
+      return this.isWeb3Wallet ||
+        this.isFromNonChain ||
+        this.availableBalance.isZero()
         ? {}
         : {
             title: 'Max',
@@ -735,6 +748,7 @@ export default {
     totalCost() {
       const amount = this.isFromTokenMain ? this.tokenInValue : '0';
       const amountWei = toWei(amount);
+      if (this.isWeb3Wallet) return BigNumber(amountWei).toString();
       return BigNumber(this.txFee).plus(amountWei).toString();
     },
     totalGasLimit() {
@@ -780,6 +794,10 @@ export default {
         !this.fromTokenType.isEth
       ) {
         return true;
+      }
+
+      if (this.isWeb3Wallet) {
+        return toBN(this.balanceInWei).gte(0);
       }
       return toBN(this.balanceInWei).gte(
         toBN(this.localGasPrice).muln(MIN_GAS_LIMIT)
@@ -1585,7 +1603,7 @@ export default {
         this.step = 2;
       }
       if (trade instanceof Error || !trade) {
-        this.feeError = 'Provider issue';
+        this.feeError = 'There was an issue with the provider';
         return;
       }
       this.feeError = '';

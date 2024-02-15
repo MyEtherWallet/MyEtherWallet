@@ -18,7 +18,7 @@
       :idx-to-expand="idxToExpand"
       class="mt-6"
     >
-      <template #panelBody1>
+      <template v-if="!isWeb3Wallet" #panelBody1>
         <div class="px-5">
           <settings-gas-price
             :buttons="gasButtons"
@@ -68,7 +68,7 @@
     <div v-if="online && !addMode && !editMode" class="mt-3 px-8">
       <div class="matomo-tracking-switch">
         <v-switch
-          :label="`Data Sharing is ${consentToTrack ? 'on' : 'off'}`"
+          :label="`Data Sharing is ${consentToTrack ? 'On' : 'Off'}`"
           :input-value="consentToTrack"
           inset
           color="greenPrimary"
@@ -93,7 +93,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
 import handlerSettings from './handler/handlerSettings';
 import gasPriceMixin from './handler/gasPriceMixin';
@@ -136,12 +136,15 @@ export default {
     ...mapState('addressBook', ['addressBookStore']),
     ...mapState('global', ['online']),
     ...mapState('popups', ['consentToTrack']),
+    ...mapGetters('wallet', ['isWeb3Wallet']),
     panelItems() {
-      return [
+      const txPriority = [
         {
           name: 'Transaction priority',
           toggleTitle: this.setPriority(this.gasPriceType)
-        },
+        }
+      ];
+      const panels = [
         {
           name: 'Import configurations'
         },
@@ -155,6 +158,7 @@ export default {
           name: 'Currency settings'
         }
       ];
+      return this.isWeb3Wallet ? panels : txPriority.concat(panels);
     },
     onMode() {
       return this.addMode ? modes[0] : modes[1];

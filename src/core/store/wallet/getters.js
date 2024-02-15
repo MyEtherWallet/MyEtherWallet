@@ -1,4 +1,6 @@
 import { fromWei, toBN } from 'web3-utils';
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
+
 const balanceInETH = function (state) {
   if (!state.balance) state.balance = '0';
   return fromWei(state.balance);
@@ -40,8 +42,17 @@ const tokensList = function (state, getters, rootState, rootGetters) {
 const initialLoad = function (state) {
   return state.loadingWalletInfo;
 };
+
 const getLedgerApp = function (state) {
   return state.ledgerApp;
+};
+
+const isWeb3Wallet = function (state) {
+  return (
+    state.identifier === WALLET_TYPES.WEB3_WALLET ||
+    state.identifier === WALLET_TYPES.WALLET_CONNECT ||
+    state.identifier === WALLET_TYPES.MEW_WALLET
+  );
 };
 
 export default {
@@ -50,5 +61,6 @@ export default {
   totalOwnedDomains,
   tokensList,
   initialLoad,
-  getLedgerApp
+  getLedgerApp,
+  isWeb3Wallet
 };
