@@ -246,6 +246,15 @@
                 :class="isFromNonChain ? '' : 'mt-7'"
                 :selected-provider-id="selectedProviderId"
               />
+              <p v-if="isWeb3Wallet && step >= 1" class="error--text">
+                {{
+                  feeError
+                    ? feeError
+                    : providersErrorMsg
+                    ? providersErrorMsg.subtitle
+                    : ''
+                }}
+              </p>
               <!--
                   =====================================================================================
                   Swap Fee
