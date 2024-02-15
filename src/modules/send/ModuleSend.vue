@@ -637,7 +637,7 @@ export default {
       this.setAmountError(value);
     }, 1000);
     this.debounceEstimateGas = debounce(() => {
-      if (this.isValidForGas && !this.isWeb3Wallet) {
+      if (this.isValidForGas) {
         this.estimateAndSetGas();
       }
     }, 500);

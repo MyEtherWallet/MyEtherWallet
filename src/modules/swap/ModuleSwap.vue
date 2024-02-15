@@ -246,6 +246,15 @@
                 :class="isFromNonChain ? '' : 'mt-7'"
                 :selected-provider-id="selectedProviderId"
               />
+              <p v-if="isWeb3Wallet && step >= 1" class="error--text">
+                {{
+                  feeError
+                    ? feeError
+                    : providersErrorMsg
+                    ? providersErrorMsg.subtitle
+                    : ''
+                }}
+              </p>
               <!--
                   =====================================================================================
                   Swap Fee
@@ -429,9 +438,8 @@ export default {
      * based on how the swap state is
      */
     showNetworkFee() {
-      return (
-        (this.showNextButton && !this.isFromNonChain) || !this.isWeb3Wallet
-      );
+      if (this.isWeb3Wallet) return false;
+      return this.showNextButton && !this.isFromNonChain;
     },
     /**
      * @returns a boolean
@@ -1595,7 +1603,7 @@ export default {
         this.step = 2;
       }
       if (trade instanceof Error || !trade) {
-        this.feeError = 'Provider issue';
+        this.feeError = 'There was an issue with the provider';
         return;
       }
       this.feeError = '';
