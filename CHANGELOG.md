@@ -1,9 +1,8 @@
+### Release v6.9.3
+
 ### devop
 
-<<<<<<< HEAD
-=======
 * add new ethvm api [#4832](https://github.com/MyEtherWallet/MyEtherWallet/pull/4832)
->>>>>>> 50127f0002e1ec94f100a205721e60da4ea0fd6e
 * remove gas price on send and swap for web3 wallets [#4838](https://github.com/MyEtherWallet/MyEtherWallet/pull/4838)
 * staked amplitude events [#4839](https://github.com/MyEtherWallet/MyEtherWallet/pull/4839)
 
