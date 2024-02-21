@@ -91,7 +91,9 @@ const EXCEPTIONS = [
   'vue-tippy',
   'less-loader', // doesn't support webpack 4
   'eslint-plugin-security', // part of major release for eslint
-  '@ensdomains/address-encoder'
+  '@ensdomains/address-encoder',
+  '@commitlint/config-conventional',
+  'commitlint'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
