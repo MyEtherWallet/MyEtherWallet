@@ -110,56 +110,6 @@ export default {
         note: 'The most trusted hardware wallet in the world. Get yours today!',
         link: 'https://trezor.io/?offer_id=12&aff_id=2029',
         name: 'Trezor'
-      },
-      {
-        logoImg: require('@/assets/images/hardware-wallets/logo-keepkey.png'),
-        walletImg: require('@/assets/images/hardware-wallets/keepkey.png'),
-        priceNote: 'Starting from',
-        currency: '$',
-        price: '79.00',
-        note: 'The most trusted hardware wallet in the world. Get yours today!',
-        link: 'https://keepkey.myshopify.com/?afmc=pi&utm_campaign=pi&utm_source=leaddyno&utm_medium=affiliate',
-        name: 'Keepkey'
-      },
-      {
-        logoText: 'BitBox02',
-        walletImg: require('@/assets/images/hardware-wallets/bitbox.png'),
-        priceNote: 'Starting from',
-        currency: '$',
-        price: '143.00',
-        note: 'The most trusted hardware wallet in the world. Get yours today!',
-        link: 'https://shiftcrypto.ch/',
-        name: 'BitBox02'
-      },
-      {
-        logoText: 'ETHER.CARDS',
-        walletImg: require('@/assets/images/hardware-wallets/bitmap.png'),
-        priceNote: 'Starting from',
-        currency: '$',
-        price: '645.70',
-        note: 'The most trusted hardware wallet in the world. Get yours today!',
-        link: 'https://ether.cards/?utm_source=mew&utm_medium=cpm&utm_campaign=site',
-        name: 'EtherCards'
-      },
-      {
-        logoImg: require('@/assets/images/hardware-wallets/logo-billfodl.png'),
-        walletImg: require('@/assets/images/hardware-wallets/billfodl.png'),
-        priceNote: 'Starting from',
-        currency: '$',
-        price: '89.00',
-        note: 'Unmatched physical security for your private keys.',
-        link: 'https://privacypros.io/?afmc=2j&utm_campaign=2j&utm_source=leaddyno&utm_medium=affiliate',
-        name: 'Billfodl'
-      },
-      {
-        logoText: 'COOL WALLET',
-        walletImg: require('@/assets/images/hardware-wallets/CoolwalletMEW_new.png'),
-        priceNote: 'Starting from',
-        currency: '$',
-        price: '99.00',
-        note: 'Unmatched physical security for your private keys.',
-        link: 'https://www.coolwallet.io/mew/?ref=myetherwallet1',
-        name: 'CoolWallet'
       }
     ]
   }),

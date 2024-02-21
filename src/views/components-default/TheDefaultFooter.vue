@@ -439,21 +439,7 @@ export default {
         title: 'Affiliate Hardware Wallets',
         data: [
           { label: 'Ledger', link: 'https://www.ledger.com/?r=fa4b' },
-          { label: 'BitBox02', link: 'https://shiftcrypto.ch/?ref=mew' },
-          {
-            label: 'Ether Cards',
-            link: 'https://ether.cards/?utm_source=mew&utm_medium=cpm&utm_campaign=site'
-          },
-          { label: 'Trezor', link: 'https://trezor.io/' },
-          { label: 'KeepKey', link: 'http://lddy.no/a4im' },
-          {
-            label: 'CoolWallet',
-            link: 'https://www.coolwallet.io/mew/?ref=myetherwallet1'
-          },
-          {
-            label: 'Billfodl',
-            link: 'https://billfodl.com/?afmc=2j&utm_campaign=2j&utm_source=leaddyno&utm_medium=affiliate'
-          }
+          { label: 'Trezor', link: 'https://trezor.io/' }
         ]
       },
       {
