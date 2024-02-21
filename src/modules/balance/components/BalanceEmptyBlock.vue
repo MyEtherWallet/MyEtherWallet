@@ -24,7 +24,11 @@
           :has-full-width="false"
           title="Buy ETH with a credit card"
           btn-size="xlarge"
-          @click.native="openBuySell"
+          @click.native="
+            () => {
+              openBuySell('BalanceEmptyBlock');
+            }
+          "
         />
         <div class="d-flex align-center mt-5">
           <div>We accept credit card</div>

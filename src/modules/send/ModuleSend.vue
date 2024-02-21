@@ -46,7 +46,11 @@
               :buy-more-str="buyMoreStr"
               class="AmountInput"
               @keydown.native="preventCharE($event)"
-              @buyMore="openBuySell"
+              @buyMore="
+                () => {
+                  openBuySell('ModuleSend');
+                }
+              "
               @input="val => setAmount(val, false)"
             />
           </div>

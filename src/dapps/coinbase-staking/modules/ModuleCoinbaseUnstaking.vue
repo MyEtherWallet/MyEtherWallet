@@ -68,7 +68,11 @@
               :value="unstakeAmount"
               :error-messages="errorMessages"
               :buy-more-str="buyMoreStr"
-              @buyMore="openBuySell"
+              @buyMore="
+                () => {
+                  openBuySell('CoinbaseUnstaking');
+                }
+              "
               @input="setAmount"
             />
           </div>

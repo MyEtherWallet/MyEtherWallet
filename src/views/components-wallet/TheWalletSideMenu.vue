@@ -300,7 +300,7 @@ import {
 } from '@/modules/analytics-opt-in/handlers/configs/events';
 import dappsMeta from '@/dapps/metainfo-dapps';
 import stakingMeta from '@/dapps/metainfo-staking';
-import { BUYSELL_EVENT } from '@/modules/buy-sell/helpers';
+import buyMore from '@/core/mixins/buyMore.mixin';
 import isNew from '@/core/helpers/isNew.js';
 
 export default {
@@ -312,7 +312,7 @@ export default {
     NetworkSwitch: () =>
       import('@/modules/network/components/NetworkSwitch.vue')
   },
-  mixins: [handlerAnalytics],
+  mixins: [handlerAnalytics, buyMore],
   data() {
     const locDarkMode = this.$vuetify.theme.dark;
     return {
@@ -462,7 +462,9 @@ export default {
           sectionTwo.push({
             title: this.$t('interface.menu.buy-sell'),
             icon: buy,
-            fn: this.openBuySell,
+            fn: () => {
+              this.openBuySell('WalletSideMenu');
+            },
             route: undefined
           });
         }
@@ -599,9 +601,6 @@ export default {
     },
     openNetwork() {
       this.isOpenNetworkOverlay = true;
-    },
-    openBuySell() {
-      EventBus.$emit(BUYSELL_EVENT);
     },
     openNavigation() {
       this.navOpen = true;
