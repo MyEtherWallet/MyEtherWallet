@@ -24,14 +24,14 @@
           class="eth-banner d-flex"
         >
           <div class="mr-5">
-            <white-sheet class="pa-2 d-flex align-center">
-              <!-- <v-icon color="blackBg"> mdi-bank </v-icon> -->
+            <div class="pa-2 d-flex align-center">
               <img
-                src="@/assets/images/icons/dapps/icon-dapp-coinbase.png"
+                src="@/assets/images/icons/dapps/icon-dapp-coinbase.svg"
                 width="30"
                 height="30"
               />
-            </white-sheet>
+              <!-- <v-icon color="blackBg"> mdi-bank </v-icon> -->
+            </div>
           </div>
           <div class="d-flex flex-column align-start">
             <span
