@@ -42,7 +42,7 @@
     "@actions/github": "6.0.0",
     "@amplitude/analytics-browser": "2.4.1",
     "@coolwallet/bsc": "1.1.7",
-    "@coolwallet/core": "1.1.22",
+    "@coolwallet/core": "1.1.23",
     "@coolwallet/eth": "1.1.21",
     "@coolwallet/transport-web-ble": "1.1.3",
     "@coolwallets/eth": "0.2.0-beta.1",
