@@ -82,7 +82,7 @@
         <!-- ===================================================================================== -->
         <!-- Network Fee (Note: comes with mt-5(20px) mb-8(32px))) -->
         <!-- ===================================================================================== -->
-        <v-col v-if="isNotWeb3Wallet" cols="12" class="py-0 mb-8">
+        <v-col cols="12" class="py-0 mb-8">
           <transaction-fee
             :show-fee="showSelectedBalance"
             :getting-fee="!txFeeIsReady"
@@ -202,7 +202,6 @@ import {
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 import { fromBase, toBase } from '@/core/helpers/unit';
-import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import SendTransaction from '@/modules/send/handlers/handlerSend';
 
 export default {
@@ -272,13 +271,6 @@ export default {
       return this.selectedCurrency?.contract === MAIN_TOKEN_ADDRESS;
     },
     isDisabledNextBtn() {
-      if (!this.isNotWeb3Wallet) {
-        return (
-          !this.isValidGasLimit ||
-          !this.allValidInputs ||
-          !isHexStrict(this.data)
-        );
-      }
       return (
         this.feeError !== '' ||
         !this.isValidGasLimit ||
@@ -320,16 +312,13 @@ export default {
     currencyName() {
       return this.network.type.currencyName;
     },
-    isNotWeb3Wallet() {
-      return this.instance.identifier !== WALLET_TYPES.WEB3_WALLET;
-    },
     showBalanceNotice() {
       const isZero = BigNumber(this.balanceInETH).lte(0);
       const isLessThanTxFee =
         BigNumber(this.balanceInETH).gt(0) &&
         BigNumber(this.txFeeETH).gt(this.balanceInETH);
 
-      if (isZero || (isLessThanTxFee && this.isNotWeb3Wallet)) {
+      if (isZero || isLessThanTxFee) {
         return true;
       }
 
@@ -635,7 +624,7 @@ export default {
       this.setAmountError(value);
     }, 1000);
     this.debounceEstimateGas = debounce(() => {
-      if (this.isValidForGas && this.isNotWeb3Wallet) {
+      if (this.isValidForGas) {
         this.estimateAndSetGas();
       }
     }, 500);

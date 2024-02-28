@@ -429,9 +429,7 @@ export default {
      * based on how the swap state is
      */
     showNetworkFee() {
-      return (
-        (this.showNextButton && !this.isFromNonChain) || !this.isWeb3Wallet
-      );
+      return this.showNextButton && !this.isFromNonChain;
     },
     /**
      * @returns a boolean
@@ -738,7 +736,7 @@ export default {
     totalCost() {
       const amount = this.isFromTokenMain ? this.tokenInValue : '0';
       const amountWei = toWei(amount);
-      if (this.isWeb3Wallet) return BigNumber(amountWei).toString();
+      // if (this.isWeb3Wallet) return BigNumber(amountWei).toString();
       return BigNumber(this.txFee).plus(amountWei).toString();
     },
     totalGasLimit() {
@@ -786,9 +784,9 @@ export default {
         return true;
       }
 
-      if (this.isWeb3Wallet) {
-        return toBN(this.balanceInWei).gte(0);
-      }
+      // if (this.isWeb3Wallet) {
+      //   return toBN(this.balanceInWei).gte(0);
+      // }
       return toBN(this.balanceInWei).gte(
         toBN(this.localGasPrice).muln(MIN_GAS_LIMIT)
       );
