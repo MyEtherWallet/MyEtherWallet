@@ -72,12 +72,8 @@ class WalletConnectWallet {
             sanitizeHex(store.state.wallet.address),
             '0x' + toBuffer(msg).toString('hex')
           ];
-          const signerMethod =
-            this.identifier === WALLET_TYPES.WALLET_CONNECT
-              ? 'personal_sign'
-              : 'eth_sign';
           this.client
-            .request({ method: signerMethod, params: msgParams })
+            .request({ method: 'personal_sign', params: msgParams })
             .then(result => {
               resolve(getBufferFromHex(sanitizeHex(result)));
             })
@@ -116,16 +112,12 @@ const createWallet = async (identifier = WALLET_TYPES.WALLET_CONNECT) => {
           })
           .filter(item => !!item)
       : [BSC.chainID, MATIC.chainID];
-  const methods =
-    identifier === WALLET_TYPES.WALLET_CONNECT
-      ? ['personal_sign']
-      : ['eth_sign'];
   const signClient = await EthereumProvider.init({
     projectId,
     showQrModal: true,
     chains: [ETH.chainID],
     optionalChains: allChainIds,
-    methods: ['eth_sendTransaction'].concat(methods),
+    methods: ['eth_sendTransaction', 'personal_sign'],
     events: ['chainChanged', 'accountsChanged'],
     metadata: {
       name: 'MyEtherWallet Inc',
