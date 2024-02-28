@@ -155,9 +155,10 @@ export default {
       return this.getFiatValue(feeETH.times(this.fiatValue));
     },
     summaryItems() {
-      const newArr = this.isWeb3Wallet
-        ? ['Exchange rate']
-        : ['Exchange rate', 'Transaction fee'];
+      const newArr = [
+        'Exchange rate',
+        this.isWeb3Wallet ? 'Estimated fee' : 'Transaction fee'
+      ];
       if (this.isToNonEth) {
         newArr.unshift(`Receive ${this.toCurrency} to`);
       }
