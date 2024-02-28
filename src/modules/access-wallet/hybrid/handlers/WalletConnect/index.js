@@ -118,14 +118,14 @@ const createWallet = async (identifier = WALLET_TYPES.WALLET_CONNECT) => {
       : [BSC.chainID, MATIC.chainID];
   const methods =
     identifier === WALLET_TYPES.WALLET_CONNECT
-      ? ['eth_sendTransaction', 'personal_sign']
-      : ['eth_sendTransaction', 'eth_sign'];
+      ? ['personal_sign']
+      : ['eth_sign'];
   const signClient = await EthereumProvider.init({
     projectId,
     showQrModal: true,
     chains: [ETH.chainID],
     optionalChains: allChainIds,
-    methods: methods,
+    methods: ['eth_sendTransaction'].concat(methods),
     events: ['chainChanged', 'accountsChanged'],
     metadata: {
       name: 'MyEtherWallet Inc',
