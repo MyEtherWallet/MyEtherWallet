@@ -42,11 +42,7 @@
               placeholder="0"
               :persistent-hint="true"
               :error-messages="amountErrorMessage"
-              :max-btn-obj="{
-                title: 'Max',
-                disabled: disableSwapBtn,
-                method: setEntireBal
-              }"
+              :max-btn-obj="maxBtn"
               :buy-more-str="buyMoreStr"
               class="AmountInput"
               @keydown.native="preventCharE($event)"
@@ -265,8 +261,17 @@ export default {
       'swapLink',
       'getFiatValue'
     ]),
-    ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
+    ...mapGetters('wallet', ['balanceInETH', 'tokensList', 'isWeb3Wallet']),
     ...mapGetters('custom', ['hasCustom', 'customTokens', 'hiddenTokens']),
+    maxBtn() {
+      return this.isWeb3Wallet
+        ? {}
+        : {
+            title: 'Max',
+            disabled: this.disableSwapBtn,
+            method: this.setEntireBal
+          };
+    },
     isFromNetworkCurrency() {
       return this.selectedCurrency?.contract === MAIN_TOKEN_ADDRESS;
     },

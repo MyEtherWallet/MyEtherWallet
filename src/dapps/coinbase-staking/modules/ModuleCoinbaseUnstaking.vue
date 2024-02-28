@@ -59,7 +59,8 @@
               type="number"
               :max-btn-obj="{
                 title: 'Max',
-                method: setMax
+                method: setMax,
+                disabled: errorMessages !== ''
               }"
               :image="iconEth"
               label="Amount to unstake"

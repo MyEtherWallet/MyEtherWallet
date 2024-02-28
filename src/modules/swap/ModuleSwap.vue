@@ -246,6 +246,15 @@
                 :class="isFromNonChain ? '' : 'mt-7'"
                 :selected-provider-id="selectedProviderId"
               />
+              <p v-if="isWeb3Wallet && step >= 1" class="error--text">
+                {{
+                  feeError
+                    ? feeError
+                    : providersErrorMsg
+                    ? providersErrorMsg.subtitle
+                    : ''
+                }}
+              </p>
               <!--
                   =====================================================================================
                   Swap Fee
@@ -447,7 +456,9 @@ export default {
      * if native token, return empty
      */
     maxBtn() {
-      return this.isFromNonChain || this.availableBalance.isZero()
+      return this.isWeb3Wallet ||
+        this.isFromNonChain ||
+        this.availableBalance.isZero()
         ? {}
         : {
             title: 'Max',
@@ -1591,7 +1602,7 @@ export default {
         this.step = 2;
       }
       if (trade instanceof Error || !trade) {
-        this.feeError = 'Provider issue';
+        this.feeError = 'There was an issue with the provider';
         return;
       }
       this.feeError = '';
