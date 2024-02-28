@@ -4,7 +4,7 @@
       <div class="mew-heading-2">MEW exclusive holiday NFTs</div>
       <a
         class="mew-heading-4 d-flex align-center py-2 more-mew-universe"
-        href="https://www.mewtopia.com/join-us-in-the-mew-universe/"
+        href="https://www.myetherwallet.com/blogjoin-us-in-the-mew-universe/"
         target="_blank"
         @click="() => trackNftModule('Mewtopia')"
       >

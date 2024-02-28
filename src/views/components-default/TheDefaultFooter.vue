@@ -73,10 +73,10 @@
 
           <div class="footer__links">
             <a
-              href="https://www.mewtopia.com/"
+              href="https://www.myetherwallet.com/blog"
               target="_blank"
               @click="trackMewtopia"
-              >MEWtopia</a
+              >Blog</a
             >
 
             <a
@@ -401,6 +401,7 @@ export default {
 <style lang="less" scoped>
 @import '@/assets/styles/headerStyles/theme.less';
 .footer {
+  font-family: @font !important;
   overflow: hidden;
   padding-bottom: 104px;
   position: relative;

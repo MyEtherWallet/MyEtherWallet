@@ -57,10 +57,10 @@
           >
             <div class="mobile-menu__menu-dropdown-wrap">
               <a
-                href="https://www.mewtopia.com/"
+                href="https://www.myetherwallet.com/blog"
                 target="_blank"
                 class="mobile-menu__menu-dropdown-link"
-                >MEWtopia</a
+                >Blog</a
               >
               <a
                 href="https://help.myetherwallet.com/en/"

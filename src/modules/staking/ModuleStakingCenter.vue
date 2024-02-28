@@ -25,7 +25,7 @@
           Stake your ETH and get rewarded by Ethereum blockchain.
         </div>
         <a
-          href="https://www.mewtopia.com/staking-the-easiest-way-to-earn-rewards/"
+          href="https://www.myetherwallet.com/blogstaking-the-easiest-way-to-earn-rewards/"
           target="_blank"
           class="white--text font-weight-bold"
           @click="trackMoreAbout"
