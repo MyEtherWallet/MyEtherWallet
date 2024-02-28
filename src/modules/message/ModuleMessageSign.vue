@@ -67,7 +67,6 @@ export default {
             this.instance.errorHandler(e.message);
           });
       } catch (e) {
-        console.log(e);
         this.instance.errorHandler(e.hasOwnProperty('message') ? e.message : e);
       }
     },
