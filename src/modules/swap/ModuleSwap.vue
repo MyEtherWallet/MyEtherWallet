@@ -246,7 +246,7 @@
                 :class="isFromNonChain ? '' : 'mt-7'"
                 :selected-provider-id="selectedProviderId"
               />
-              <p v-if="isWeb3Wallet && step >= 1" class="error--text">
+              <p v-if="hasGasPriceOption && step >= 1" class="error--text">
                 {{
                   feeError
                     ? feeError
@@ -418,7 +418,7 @@ export default {
       'tokensList',
       'initialLoad',
       'balanceInWei',
-      'isWeb3Wallet'
+      'hasGasPriceOption'
     ]),
     ...mapGetters('external', [
       'balanceFiatValue',
@@ -456,7 +456,7 @@ export default {
      * if native token, return empty
      */
     maxBtn() {
-      return this.isWeb3Wallet ||
+      return this.hasGasPriceOption ||
         this.isFromNonChain ||
         this.availableBalance.isZero()
         ? {}
@@ -747,7 +747,7 @@ export default {
     totalCost() {
       const amount = this.isFromTokenMain ? this.tokenInValue : '0';
       const amountWei = toWei(amount);
-      // if (this.isWeb3Wallet) return BigNumber(amountWei).toString();
+      // if (this.hasGasPriceOption) return BigNumber(amountWei).toString();
       return BigNumber(this.txFee).plus(amountWei).toString();
     },
     totalGasLimit() {
@@ -795,7 +795,7 @@ export default {
         return true;
       }
 
-      // if (this.isWeb3Wallet) {
+      // if (this.hasGasPriceOption) {
       //   return toBN(this.balanceInWei).gte(0);
       // }
       return toBN(this.balanceInWei).gte(

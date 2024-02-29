@@ -57,7 +57,7 @@
     -->
     <div class="d-flex align-center mb-2">
       <div class="mew-heading-3 ml-2">
-        {{ isWeb3Wallet ? 'Estimated Fee' : 'Transaction Fee' }}
+        {{ hasGasPriceOption ? 'Estimated Fee' : 'Transaction Fee' }}
       </div>
     </div>
 
@@ -87,7 +87,7 @@
               color="buttonGrayLight"
               depressed
               class="text-transform--initial"
-              :disabled="isWeb3Wallet || error !== ''"
+              :disabled="hasGasPriceOption || error !== ''"
               @click="openGasPriceModal"
             >
               <div class="d-flex align-center">
@@ -223,7 +223,7 @@ export default {
   computed: {
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network', 'isEthNetwork', 'gasPriceByType']),
-    ...mapGetters('wallet', ['isWeb3Wallet']),
+    ...mapGetters('wallet', ['hasGasPriceOption']),
     ...mapState('global', ['gasPriceType', 'preferredCurrency']),
     txFeeInEth() {
       return fromWei(this.txFee);

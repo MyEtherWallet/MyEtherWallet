@@ -146,7 +146,7 @@ export default {
   computed: {
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network', 'getFiatValue']),
-    ...mapGetters('wallet', ['isWeb3Wallet']),
+    ...mapGetters('wallet', ['hasGasPriceOption']),
     convertedFees() {
       return formatGasValue(this.txFee);
     },
@@ -157,7 +157,7 @@ export default {
     summaryItems() {
       const newArr = [
         'Exchange rate',
-        this.isWeb3Wallet ? 'Estimated fee' : 'Transaction fee'
+        this.hasGasPriceOption ? 'Estimated fee' : 'Transaction fee'
       ];
       if (this.isToNonEth) {
         newArr.unshift(`Receive ${this.toCurrency} to`);

@@ -261,10 +261,14 @@ export default {
       'swapLink',
       'getFiatValue'
     ]),
-    ...mapGetters('wallet', ['balanceInETH', 'tokensList', 'isWeb3Wallet']),
+    ...mapGetters('wallet', [
+      'balanceInETH',
+      'tokensList',
+      'hasGasPriceOption'
+    ]),
     ...mapGetters('custom', ['hasCustom', 'customTokens', 'hiddenTokens']),
     maxBtn() {
-      return this.isWeb3Wallet
+      return this.hasGasPriceOption
         ? {}
         : {
             title: 'Max',
