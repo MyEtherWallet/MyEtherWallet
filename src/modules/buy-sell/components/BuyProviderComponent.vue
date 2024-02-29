@@ -183,10 +183,6 @@ export default {
       type: Object,
       default: () => {}
     },
-    close: {
-      type: Function,
-      default: () => {}
-    },
     inWallet: {
       type: Boolean,
       default: false
@@ -274,14 +270,14 @@ export default {
         .then(() => {
           this.trackBuySell(BUY_SELL.BUY_W_SIMPLEX_SUCCESS);
           this.reset();
-          this.close();
+          this.$emit('close');
           this.$emit('reset');
         })
         .catch(err => {
           this.trackBuySell(BUY_SELL.BUY_W_SIMPLEX_FAILED);
           this.reset();
           Toast(err, {}, ERROR);
-          this.close();
+          this.$emit('close');
           this.$emit('reset');
         });
     },
@@ -309,14 +305,14 @@ export default {
         .then(() => {
           this.trackBuySell(BUY_SELL.BUY_W_MOONPAY_SUCCESS);
           this.reset();
-          this.close();
+          this.$emit('close');
           this.$emit('reset');
         })
         .catch(err => {
           this.trackBuySell(BUY_SELL.BUY_W_MOONPAY_FAILED);
           this.reset();
           Toast(err, {}, ERROR);
-          this.close();
+          this.$emit('close');
           this.$emit('reset');
         });
     },
