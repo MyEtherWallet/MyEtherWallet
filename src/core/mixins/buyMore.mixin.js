@@ -6,8 +6,8 @@ import { BUYSELL_EVENT } from '@/modules/buy-sell/helpers';
 export default {
   name: 'BuyMoreMixin',
   methods: {
-    openBuySell(place) {
-      EventBus.$emit(BUYSELL_EVENT, place);
+    openBuySell(module) {
+      EventBus.$emit(BUYSELL_EVENT, [module, this.$route.path]);
     }
   }
 };
