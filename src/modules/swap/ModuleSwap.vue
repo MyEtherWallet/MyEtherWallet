@@ -52,7 +52,7 @@
                   :max-btn-obj="maxBtn"
                   @buyMore="
                     () => {
-                      openBuySell('ModuleSwap');
+                      openBuySell('ModuleSwapInput');
                     }
                   "
                   @keydown.native="preventCharE($event)"
@@ -117,7 +117,7 @@
                 :has-full-width="$vuetify.breakpoint.xsOnly"
                 @click.native="
                   () => {
-                    openBuySell('ModuleSwap');
+                    openBuySell('ModuleSwapErrorBlock');
                   }
                 "
               />
