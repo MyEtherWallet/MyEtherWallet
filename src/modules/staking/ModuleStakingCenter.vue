@@ -28,7 +28,7 @@
           href="https://www.mewtopia.com/staking-the-easiest-way-to-earn-rewards/"
           target="_blank"
           class="white--text font-weight-bold"
-          @click="trackMoreAbout"
+          @click.native="trackMoreAbout"
           >More about staking ></a
         >
       </div>
