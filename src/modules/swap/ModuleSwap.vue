@@ -929,7 +929,13 @@ export default {
       return `To ${name} address`;
     },
     multipleWatcher() {
-      return this.network, this.web3, this.tokensList, this.coinGeckoTokens;
+      return (
+        this.address,
+        this.network,
+        this.web3,
+        this.tokensList,
+        this.coinGeckoTokens
+      );
     }
   },
   watch: {

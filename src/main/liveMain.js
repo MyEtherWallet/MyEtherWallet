@@ -75,7 +75,11 @@ amplitude.init(nameHashPckg.hash(VERSION), {
     ipAddress: false
   },
   identityStorage: 'none',
-  logLevel: amplitude.Types.LogLevel.None
+  logLevel: amplitude.Types.LogLevel.None,
+  defaultTracking: {
+    formInteractions: false,
+    pageViews: false
+  }
 });
 Vue.prototype.$amplitude = amplitude;
 

@@ -111,7 +111,11 @@
                     {{ timeWillTake }}
                   </div>
                 </div>
-                <v-icon :color="hasError ? 'redPrimary' : ''" class="ml-3">
+                <v-icon
+                  v-if="!hasGasPriceOption"
+                  :color="hasError ? 'redPrimary' : ''"
+                  class="ml-3"
+                >
                   mdi-chevron-down
                 </v-icon>
               </div>
