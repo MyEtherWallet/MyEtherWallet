@@ -919,6 +919,9 @@ export default {
             }
           })
           .catch(e => {
+            this.trackAccessWalletAmplitude(ACCESS_WALLET.ACCESS_FAILED, {
+              wallet: getInjectedName(providedProvider)
+            });
             this.reset();
             Toast(e, {}, ERROR);
           });

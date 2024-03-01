@@ -482,6 +482,9 @@ export default {
             this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
           }
         } catch (e) {
+          this.trackAccessWalletAmplitude(ACCESS_WALLET.ACCESS_FAILED, {
+            wallet: getInjectedName(providedProvider)
+          });
           if (
             e instanceof Error &&
             e.message === 'Already processing eth_requestAccounts. Please wait.'
@@ -494,6 +497,9 @@ export default {
           else Toast(e, {}, WARNING);
         }
       } else {
+        this.trackAccessWalletAmplitude(ACCESS_WALLET.ACCESS_FAILED, {
+          wallet: 'NoWallet'
+        });
         Toast('No web3 wallet found!', {}, WARNING);
       }
     }
