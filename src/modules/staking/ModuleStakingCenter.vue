@@ -22,14 +22,13 @@
         <div
           class="mew-heading-4 font-weight-regular faded pt-0 pt-md-4 d-none d-sm-block"
         >
-          Stake your ETH and get rewarded by Ethereum <br />
-          blockchain.
+          Stake your ETH and get rewarded by Ethereum blockchain.
         </div>
         <a
           href="https://www.mewtopia.com/staking-the-easiest-way-to-earn-rewards/"
           target="_blank"
           class="white--text font-weight-bold"
-          @click="trackMoreAbout"
+          @click.native="trackMoreAbout"
           >More about staking ></a
         >
       </div>
@@ -54,6 +53,14 @@
             no-gutters
             class="pa-6 staking-item border-radius--5px elevation-2"
           >
+            <v-col cols="2">
+              <img
+                :src="dapp.icon"
+                width="64px"
+                height="64px"
+                class="elevation-2 border-radius--15px"
+              />
+            </v-col>
             <v-col cols="10">
               <div class="mew-body font-weight-bold">
                 {{ dapp.title }}
@@ -69,14 +76,6 @@
               <div class="mew-label">
                 {{ dapp.description }}
               </div>
-            </v-col>
-            <v-col cols="2">
-              <img
-                :src="dapp.icon"
-                width="64px"
-                height="64px"
-                class="elevation-2 border-radius--15px"
-              />
             </v-col>
             <v-col cols="12" class="text-center pt-3">
               <mew-button
@@ -139,7 +138,7 @@ export default {
           title: 'ETH Staking Powered by Coinbase',
           apr: 'Up to 4% APR',
           description: 'Stake any amount of ETH and earn rewards',
-          icon: require('@/assets/images/icons/dapps/icon-dapp-coinbase.png'),
+          icon: require('@/assets/images/icons/dapps/icon-dapp-coinbase.svg'),
           routeName: COINBASE_STAKING_ROUTES.CORE.NAME,
           release: coinbaseInfo.release
         }
