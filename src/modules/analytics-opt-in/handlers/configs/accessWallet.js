@@ -38,5 +38,6 @@ export default {
   HW_TREZOR_CONNECTED: 'HWTrezorConnected',
   HW_COOL_WALLET_CONNECTED: 'HWCoolWalletConnected',
   HW_BITBOX02_CONNECTED: 'HWBitBox02Connected',
-  HW_KEEPKEY_CONNECTED: 'HWKeepKeyConnected'
+  HW_KEEPKEY_CONNECTED: 'HWKeepKeyConnected',
+  ACCESS_FAILED: 'Failed'
 };
