@@ -246,7 +246,7 @@
                 :class="isFromNonChain ? '' : 'mt-7'"
                 :selected-provider-id="selectedProviderId"
               />
-              <p v-if="isWeb3Wallet && step >= 1" class="error--text">
+              <p v-if="hasGasPriceOption && step >= 1" class="error--text">
                 {{
                   feeError
                     ? feeError
@@ -418,7 +418,7 @@ export default {
       'tokensList',
       'initialLoad',
       'balanceInWei',
-      'isWeb3Wallet'
+      'hasGasPriceOption'
     ]),
     ...mapGetters('external', [
       'balanceFiatValue',
@@ -438,7 +438,6 @@ export default {
      * based on how the swap state is
      */
     showNetworkFee() {
-      if (this.isWeb3Wallet) return false;
       return this.showNextButton && !this.isFromNonChain;
     },
     /**
@@ -457,7 +456,7 @@ export default {
      * if native token, return empty
      */
     maxBtn() {
-      return this.isWeb3Wallet ||
+      return this.hasGasPriceOption ||
         this.isFromNonChain ||
         this.availableBalance.isZero()
         ? {}
@@ -748,7 +747,7 @@ export default {
     totalCost() {
       const amount = this.isFromTokenMain ? this.tokenInValue : '0';
       const amountWei = toWei(amount);
-      if (this.isWeb3Wallet) return BigNumber(amountWei).toString();
+      // if (this.hasGasPriceOption) return BigNumber(amountWei).toString();
       return BigNumber(this.txFee).plus(amountWei).toString();
     },
     totalGasLimit() {
@@ -796,9 +795,9 @@ export default {
         return true;
       }
 
-      if (this.isWeb3Wallet) {
-        return toBN(this.balanceInWei).gte(0);
-      }
+      // if (this.hasGasPriceOption) {
+      //   return toBN(this.balanceInWei).gte(0);
+      // }
       return toBN(this.balanceInWei).gte(
         toBN(this.localGasPrice).muln(MIN_GAS_LIMIT)
       );
@@ -930,7 +929,13 @@ export default {
       return `To ${name} address`;
     },
     multipleWatcher() {
-      return this.network, this.web3, this.tokensList, this.coinGeckoTokens;
+      return (
+        this.address,
+        this.network,
+        this.web3,
+        this.tokensList,
+        this.coinGeckoTokens
+      );
     }
   },
   watch: {

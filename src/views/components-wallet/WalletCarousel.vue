@@ -9,7 +9,7 @@
         cycle
       >
         <v-carousel-item :ripple="false">
-          <a :href="browserLink" target="_blank">
+          <a :href="browserLink" target="_blank" @click="trackEnkrypt">
             <img
               class="slide-img"
               src="@/assets/images/slides/slide1.jpg"
@@ -30,6 +30,7 @@
           :ripple="false"
           :to="{ name: ROUTES_HOME.BUY_HARDWARE_WALLET.NAME }"
           target="_blank"
+          @click="trackHardware"
         >
           <img
             class="slide-img"
@@ -54,8 +55,15 @@ export default {
   }),
   methods: {
     openMewWallet() {
+      this.$amplitude.track('WalletSlideMEWWallet');
       // eslint-disable-next-line
       window.open('https://download.mewwallet.com/?source=mew_web', '_blank');
+    },
+    trackEnkrypt() {
+      this.$amplitude.track('WalletSlideEnkrypt');
+    },
+    trackHardware() {
+      this.$amplitude.track('WalletSlideHardware');
     }
   }
 };

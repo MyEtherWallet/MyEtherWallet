@@ -18,7 +18,7 @@
       :idx-to-expand="idxToExpand"
       class="mt-6"
     >
-      <template v-if="!isWeb3Wallet" #panelBody1>
+      <template v-if="!hasGasPriceOption" #panelBody1>
         <div class="px-5">
           <settings-gas-price
             :buttons="gasButtons"
@@ -136,7 +136,7 @@ export default {
     ...mapState('addressBook', ['addressBookStore']),
     ...mapState('global', ['online']),
     ...mapState('popups', ['consentToTrack']),
-    ...mapGetters('wallet', ['isWeb3Wallet']),
+    ...mapGetters('wallet', ['hasGasPriceOption']),
     panelItems() {
       const txPriority = [
         {
@@ -158,7 +158,7 @@ export default {
           name: 'Currency settings'
         }
       ];
-      return this.isWeb3Wallet ? panels : txPriority.concat(panels);
+      return this.hasGasPriceOption ? panels : txPriority.concat(panels);
     },
     onMode() {
       return this.addMode ? modes[0] : modes[1];

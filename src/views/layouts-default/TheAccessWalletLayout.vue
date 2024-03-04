@@ -185,6 +185,7 @@ import {
   ACCESS_WALLET,
   COMMON
 } from '@/modules/analytics-opt-in/handlers/configs/events';
+import { getInjectedName } from '@/core/helpers/detectProvider.js';
 
 export default {
   name: 'TheAccessWalletLayout',
@@ -473,7 +474,7 @@ export default {
           const wallet = new Web3Wallet(acc[0]);
           this.setWallet([wallet, providedProvider]);
           this.trackAccessWalletAmplitude(ACCESS_WALLET.WEB3_ACCESS_SUCCESS, {
-            provider: item ? item.info.name : 'BrowserExtension'
+            provider: getInjectedName(providedProvider)
           });
           if (this.path !== '') {
             this.$router.push({ path: this.path });
@@ -481,6 +482,9 @@ export default {
             this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
           }
         } catch (e) {
+          this.trackAccessWalletAmplitude(ACCESS_WALLET.ACCESS_FAILED, {
+            wallet: getInjectedName(providedProvider)
+          });
           if (
             e instanceof Error &&
             e.message === 'Already processing eth_requestAccounts. Please wait.'
@@ -493,6 +497,9 @@ export default {
           else Toast(e, {}, WARNING);
         }
       } else {
+        this.trackAccessWalletAmplitude(ACCESS_WALLET.ACCESS_FAILED, {
+          wallet: 'NoWallet'
+        });
         Toast('No web3 wallet found!', {}, WARNING);
       }
     }
