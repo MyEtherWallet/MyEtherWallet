@@ -41,7 +41,11 @@
               v-if="isEthNetwork"
               class="mew-body font-weight-medium"
               rel="noopener noreferrer"
-              @click="openBuySell"
+              @click="
+                () => {
+                  openBuySell('SendLowBalanceNotic');
+                }
+              "
             >
               Buy {{ currencyName }}
             </a>

@@ -108,7 +108,15 @@
     <div v-if="notEnoughFunds || noFundsForRegFees">
       <span class="balance-error d-flex mt-5 justify-center align-center">
         Not enough balance:
-        <a target="_blank" class="link" @click="openBuySell">
+        <a
+          target="_blank"
+          class="link"
+          @click="
+            () => {
+              openBuySell('ENSRegister');
+            }
+          "
+        >
           <u>Buy More Eth</u>
         </a>
       </span>

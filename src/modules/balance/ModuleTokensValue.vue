@@ -71,14 +71,14 @@
 import { mapGetters, mapState } from 'vuex';
 import { toBN } from 'web3-utils';
 
-import { EventBus } from '@/core/plugins/eventBus';
-import { BUYSELL_EVENT } from '../buy-sell/helpers';
+import buyMore from '@/core/mixins/buyMore.mixin';
 
 export default {
   name: 'ModuleTokensValue',
   components: {
     ModuleTokens: () => import('@/modules/balance/ModuleTokens')
   },
+  mixins: [buyMore],
   props: {
     draggable: {
       type: Boolean,
@@ -145,10 +145,7 @@ export default {
     },
     checkLink() {
       if (this.tokenCount > 0) this.handleTokensPopup();
-      else this.openBuySell();
-    },
-    openBuySell() {
-      EventBus.$emit(BUYSELL_EVENT);
+      else this.openBuySell('ModuleTokensValue');
     }
   }
 };

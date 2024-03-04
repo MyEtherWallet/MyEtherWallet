@@ -68,7 +68,11 @@
               :value="stakeAmount"
               :error-messages="errorMessages"
               :buy-more-str="buyMoreStr"
-              @buyMore="openBuySell"
+              @buyMore="
+                () => {
+                  openBuySell('CoinbaseStaking');
+                }
+              "
               @input="setAmount"
             />
           </div>

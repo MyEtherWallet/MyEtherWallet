@@ -80,7 +80,7 @@ export default {
       },
       {
         img: require('@/assets/images/icons/socials/mewtopia.png'),
-        link: 'https://www.mewtopia.com/',
+        link: 'https://www.myetherwallet.com/blog',
         label: 'Mewtopia'
       },
       {
