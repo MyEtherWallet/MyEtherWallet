@@ -40,7 +40,7 @@
     "@aave/math-utils": "1.7.0",
     "@aave/protocol-js": "4.3.0",
     "@actions/github": "6.0.0",
-    "@amplitude/analytics-browser": "2.4.1",
+    "@amplitude/analytics-browser": "2.5.2",
     "@coolwallet/bsc": "1.1.7",
     "@coolwallet/core": "1.1.23",
     "@coolwallet/eth": "1.1.21",
