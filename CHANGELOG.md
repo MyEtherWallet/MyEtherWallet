@@ -1,3 +1,5 @@
+### Release v6.9.4
+
 ### feature
 
 * add landing page footer [#4860](https://github.com/MyEtherWallet/MyEtherWallet/pull/4860)
