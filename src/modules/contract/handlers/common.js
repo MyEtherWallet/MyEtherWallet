@@ -1,4 +1,4 @@
-import { isInt, stringToArray } from '@/core/helpers/common';
+import { isInt } from '@/core/helpers/common';
 import {
   address,
   bool,
@@ -14,8 +14,11 @@ const isContractArgValid = (value, solidityType) => {
   try {
     if (!value && typeof value !== 'boolean') value = '';
     if (solidityType.includes('[]')) {
-      const parsedValue = Array.isArray(value) ? value : stringToArray(value);
+      const parsedValue = JSON.parse(value);
       const type = solidityType.replace('[]', '');
+      if (parsedValue.length === 0) {
+        return true;
+      }
       for (const parsedItem of parsedValue) {
         if (!isContractArgValid(parsedItem, type)) return false;
       }

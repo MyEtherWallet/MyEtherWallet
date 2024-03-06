@@ -16,7 +16,7 @@
           sm="2"
           md="1"
         >
-          <a :href="p.link" target="_blank">
+          <a :href="p.link" target="_blank" @click="trackSocialClick(p)">
             <img
               v-lazy="p.img"
               max-height="40px"
@@ -36,9 +36,11 @@
 </template>
 
 <script>
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { LANDING_PAGE } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 export default {
   name: 'HomeSocials',
-  components: {},
+  mixins: [handlerAnalytics],
   data: () => ({
     socials: [
       {
@@ -78,7 +80,7 @@ export default {
       },
       {
         img: require('@/assets/images/icons/socials/mewtopia.png'),
-        link: 'https://www.mewtopia.com/',
+        link: 'https://www.myetherwallet.com/blog',
         label: 'Mewtopia'
       },
       {
@@ -92,6 +94,13 @@ export default {
         label: 'Telegram'
       }
     ]
-  })
+  }),
+  methods: {
+    trackSocialClick(social) {
+      this.trackLandingPageAmplitude(LANDING_PAGE.MEW_COMMUNITY, {
+        name: social
+      });
+    }
+  }
 };
 </script>

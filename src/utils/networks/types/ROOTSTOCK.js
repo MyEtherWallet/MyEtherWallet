@@ -5,6 +5,7 @@ export default {
   name: 'Rootstock',
   name_long: 'Rootstock',
   homePage: 'https://rsk.co/',
+  blockExplorer: 'RSK Explorer',
   blockExplorerTX: 'https://explorer.rsk.co/tx/[[txHash]]',
   blockExplorerAddr: 'https://explorer.rsk.co/address/[[address]]',
   chainID: 30,
@@ -32,5 +33,5 @@ export default {
   coingeckoID: 'rootstock',
   gasPriceMultiplier: 1.1,
   canBuy: false,
-  balanceApi: ''
+  balanceApi: 'https://partners.mewapi.io/balances/rsk/'
 };

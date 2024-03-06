@@ -29,7 +29,6 @@
       :scrollable="true"
       :anchored="true"
       width="650"
-      @close="rejectTransaction"
     >
       <template #dialogBody>
         <v-card-text ref="scrollableContent" class="py-0 px-4 px-md-0">
@@ -54,6 +53,7 @@
             :to-tx-data="tx.toTxData"
             :to-details="allToDetails"
             :send-currency="sendCurrency"
+            :is-web3-wallet="hasGasPriceOption"
           />
           <confirmation-swap-transaction-details
             v-else
@@ -197,6 +197,7 @@
                     no-gutters
                   >
                     <v-col
+                      v-if="shouldDisplayDetail(txVal.title)"
                       cols="12"
                       md="3"
                       class="d-flex d-sm-block ma-0 greyPrimary--text"
@@ -204,12 +205,16 @@
                       {{ txVal.title }}
                     </v-col>
 
-                    <v-col cols="12" md="9">
-                      <app-scroll-block>
+                    <v-col
+                      v-if="shouldDisplayDetail(txVal.title)"
+                      cols="12"
+                      md="9"
+                    >
+                      <scroll-block>
                         <div class="data-values text-md-right">
                           {{ txVal.value }}
                         </div>
-                      </app-scroll-block>
+                      </scroll-block>
                     </v-col>
                   </v-row>
                 </div>
@@ -274,15 +279,15 @@ import { setEvents } from '@/utils/web3-provider/methods/utils';
 import { sanitizeHex } from '@/modules/access-wallet/common/helpers';
 import dataToAction from './handlers/dataToAction';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { SWAP } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
 import errorHandler from './handlers/errorHandler';
 
 export default {
   name: 'ModuleConfirmation',
   components: {
-    AppScrollBlock: () => import('@/core/components/AppScrollBlock'),
+    ScrollBlock: () => import('./components/ScrollBlock'),
     ConfirmationMesssage: () => import('./components/ConfirmationMessage'),
-    AppModal: () => import('@/core/components/AppModal'),
     ConfirmationSwapTransactionDetails: () =>
       import('./components/ConfirmationSwapTransactionDetails'),
     ConfirmationSendTransactionDetails: () =>
@@ -336,6 +341,7 @@ export default {
     ]),
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network', 'getFiatValue']),
+    ...mapGetters('wallet', ['hasGasPriceOption']),
     ...mapGetters('article', ['getArticle']),
     ...mapState('addressBook', ['addressBookStore']),
     txTo() {
@@ -344,12 +350,6 @@ export default {
           ? this.tx.toTxData.to
           : this.tx.to;
       return this.unsignedTxArr[0].to;
-    },
-    isWeb3Wallet() {
-      return (
-        this.identifier === WALLET_TYPES.WEB3_WALLET ||
-        this.identifier === WALLET_TYPES.WALLET_CONNECT
-      );
     },
     isOtherWallet() {
       return (
@@ -361,7 +361,7 @@ export default {
       return this.tx.data !== '0x' && this.identifier === WALLET_TYPES.LEDGER;
     },
     isNotSoftware() {
-      return this.isHardware || this.isWeb3Wallet || this.isOtherWallet;
+      return this.isHardware || this.hasGasPriceOption || this.isOtherWallet;
     },
     showConfirmWithWallet() {
       return this.isNotSoftware && (this.signing || this.error !== '');
@@ -489,17 +489,10 @@ export default {
     signedTxArray: {
       handler: function (newVal) {
         if (
-          this.isWeb3Wallet &&
+          this.hasGasPriceOption &&
           newVal.length !== 0 &&
           newVal.length === this.unsignedTxArr.length
         ) {
-          if (this.isSwap) {
-            this.trackSwap(
-              'swapTransactionSuccessfullySent',
-              newVal[newVal.length - 1],
-              this.network.type.name
-            );
-          }
           this.showTxOverlay = false;
           this.showSuccess(newVal);
         }
@@ -523,13 +516,12 @@ export default {
       this.showTxOverlay = true;
       this.tx.transactionFee = this.txFee;
       this.isSwap = false; // reset isSwap
+      this.error = '';
       tx[0].transactionFee = this.txFee;
       if (tx.length > 1) {
         this.toDetails = tx[1];
         this.sendCurrency = tx[2];
       }
-      if (!this.isHardware && this.identifier !== WALLET_TYPES.WEB3_WALLET)
-        await this.signTx();
     });
     /**
      * receives an @Array
@@ -542,11 +534,10 @@ export default {
       this.resolver = resolver;
       this.showTxOverlay = true;
       this.title = 'Verify Swap';
+      this.error = '';
       this.toNonEth = !this.swapInfo.toTokenType.isEth;
       this.isSwap = true;
-      if (!this.isHardware && this.identifier !== WALLET_TYPES.WEB3_WALLET) {
-        await this.signTx();
-      }
+      this.trackSwapAmplitude(SWAP.VERIFY_PAGE_SHOWN);
     });
 
     /**
@@ -558,6 +549,7 @@ export default {
       EventNames.SHOW_BATCH_TX_MODAL,
       async (arr, resolver, isHardware) => {
         this.isHardwareWallet = isHardware;
+        this.error = '';
         if (arr[0].hasOwnProperty('confirmInfo')) {
           this.swapInfo = arr[0].confirmInfo;
           this.title = 'Verify Swap';
@@ -569,15 +561,12 @@ export default {
         if (!resolver) this.resolver = () => {};
         this.resolver = resolver;
         this.showTxOverlay = true;
-
-        if (!isHardware && this.identifier !== WALLET_TYPES.WEB3_WALLET) {
-          this.signBatchTx();
-        }
       }
     );
     EventBus.$on(EventNames.SHOW_MSG_CONFIRM_MODAL, (msg, resolver) => {
       this.title = 'Message Signed';
       this.isSwap = false; // reset isSwap
+      this.error = '';
       this.instance
         .signMessage(msg)
         .then(res => {
@@ -609,6 +598,7 @@ export default {
     EventBus.$on(EventNames.SHOW_CROSS_CHAIN_MODAL, (txObj, resolver) => {
       this.title = `Send ${txObj.fromType}`;
       this.tx = txObj;
+      this.error = '';
       this.showCrossChainModal = true;
       this.resolver = val => {
         resolver(val);
@@ -632,13 +622,23 @@ export default {
     }
   },
   methods: {
-    rejectTransaction() {
-      if (this.isSwap) this.trackSwap('swapTxCancelled');
+    shouldDisplayDetail(name) {
+      if (this.hasGasPriceOption && name === 'Gas Price') {
+        return false;
+      }
+      return true;
+    },
+    rejectTransaction(value) {
+      if (this.isSwap) {
+        this.trackSwapAmplitude(SWAP.CANCELLED, {
+          type: value
+        });
+      }
       this.resolver({ rejected: true });
       this.reset();
     },
     sendCrossChain(bool) {
-      this.trackSwap('swapSendCrossChain');
+      this.trackSwapAmplitude(SWAP.CONFIRMED_CLICKED);
       this.resolver(bool);
     },
     dataToAction(data) {
@@ -659,6 +659,11 @@ export default {
       }, 500);
     },
     resetSuccess() {
+      this.trackSwapAmplitude(SWAP.INITIAL_MODAL_CLOSED, {
+        type: this.showSuccessSwap
+          ? SWAP.SWAP_INITIATED
+          : SWAP.TRANSACTION_INITIATED
+      });
       this.showSuccessSwap = false;
       this.reset();
     },
@@ -725,11 +730,7 @@ export default {
           .once('receipt', receipt => {
             if (_this.isSwap && idx + 1 === _arr.length) {
               const hash = receipt.transactionHash;
-              _this.trackSwap(
-                'swapTxReceivedReceipt',
-                hash,
-                this.network.type.chainID
-              );
+              _this.trackSwapTransactionReceipt(hash);
             }
           })
           .on('transactionHash', hash => {
@@ -746,11 +747,7 @@ export default {
             if (idx + 1 === _arr.length) {
               if (_this.isSwap) {
                 _this.showSuccessSwap = true;
-                _this.trackSwap(
-                  'swapTxBroadcasted',
-                  hash,
-                  this.network.type.chainID
-                );
+                _this.trackSwapTransactionBroadcasted(hash);
               }
               _this.reset();
               _this.showSuccess(hash);
@@ -759,7 +756,7 @@ export default {
           .catch(err => {
             if (_this.isSwap && idx + 1 === _arr.length) {
               if (this.rejectedError(err.message)) {
-                _this.trackSwap('swapTxRejected');
+                _this.trackSwapAmplitude(SWAP.REJECTED);
               } else {
                 _this.emitSwapTxFail(err);
               }
@@ -790,11 +787,7 @@ export default {
         );
         this.showSuccessModal = true;
         if (this.isSwap) {
-          this.trackSwap(
-            'swapTransactionSuccessfullySent',
-            lastHash,
-            this.network.type.name
-          );
+          this.trackSwapTransactionSuccessful(param);
         }
         return;
       }
@@ -805,28 +798,37 @@ export default {
       );
       this.showSuccessModal = true;
       if (this.isSwap) {
-        this.trackSwap(
-          'swapTransactionSuccessfullySent',
-          param,
-          this.network.type.chainID
-        );
+        this.trackSwapTransactionSuccessful(param);
       }
     },
+    trackSwapTransactionSuccessful(param) {
+      this.trackSwapAmplitude(SWAP.SUCCESS, {
+        hash: param,
+        network: this.network.type.chainID
+      });
+    },
+    trackSwapTransactionReceipt(param) {
+      this.trackSwapAmplitude(SWAP.RECEIPT, {
+        hash: param,
+        network: this.network.type.chainID
+      });
+    },
+    trackSwapTransactionBroadcasted(res) {
+      this.trackSwapAmplitude(SWAP.BROADCASTED, {
+        hash: res,
+        network: this.network.type.chainID
+      });
+    },
     async signTx() {
-      this.error = '';
       if (this.isNotSoftware) {
         this.signing = true;
       }
-      if (this.isWeb3Wallet) {
+      if (this.hasGasPriceOption) {
         const event = this.instance.signTransaction(this.tx);
         event
           .on('transactionHash', res => {
             if (this.isSwap) {
-              this.trackSwap(
-                'swapTxBroadcasted',
-                res,
-                this.network.type.chainID
-              );
+              this.trackSwapTransactionBroadcasted(res);
             }
             this.showTxOverlay = false;
             this.showSuccess(res);
@@ -834,17 +836,13 @@ export default {
           .once('receipt', receipt => {
             if (this.isSwap) {
               const hash = receipt.transactionHash;
-              this.trackSwap(
-                'swapTxReceivedReceipt',
-                hash,
-                this.network.type.chainID
-              );
+              this.trackSwapTransactionReceipt(hash);
             }
           })
           .catch(e => {
             if (this.isSwap) {
               if (this.rejectedError(e.message)) {
-                this.trackSwap('swapTxRejected');
+                this.trackSwapAmplitude(SWAP.REJECTED);
               } else {
                 this.emitSwapTxFail(e);
               }
@@ -859,12 +857,14 @@ export default {
           .signTransaction(this.tx)
           .then(res => {
             this.signedTxObject = res;
-            if (this.isHardware && this.txSigned) {
+            if (this.txSigned) {
               this.btnAction();
             }
           })
           .catch(e => {
-            if (this.isSwap) this.trackSwap('swapTxCancelled');
+            if (this.isSwap) {
+              this.trackSwapAmplitude(SWAP.REJECTED);
+            }
             this.signedTxObject = {};
             this.error = errorHandler(e);
             this.signing = false;
@@ -874,7 +874,6 @@ export default {
       }
     },
     async signBatchTx() {
-      this.error = '';
       const signed = [];
       const batchTxEvents = [];
       if (this.isNotSoftware) {
@@ -887,7 +886,7 @@ export default {
         delete objClone['currency'];
         delete objClone['confirmInfo'];
         try {
-          if (!this.isWeb3Wallet) {
+          if (!this.hasGasPriceOption) {
             const _signedTx = await this.instance.signTransaction(objClone);
             if (this.unsignedTxArr[i].hasOwnProperty('handleNotification')) {
               _signedTx.tx['handleNotification'] =
@@ -919,17 +918,13 @@ export default {
                   timestamp: localStoredObj.timestamp
                 });
                 if (this.isSwap && i + 1 === this.unsignedTxArr.length) {
-                  this.trackSwap(
-                    'swapTxReceivedReceipt',
-                    hash,
-                    this.network.type.chainID
-                  );
+                  this.trackSwapTransactionReceipt(hash);
                 }
               })
               .catch(e => {
                 if (this.isSwap) {
                   if (this.rejectedError(e.message)) {
-                    this.trackSwap('swapTxRejected');
+                    this.trackSwapAmplitude(SWAP.REJECTED);
                     throw new Error(e.message);
                   } else {
                     this.emitSwapTxFail(e);
@@ -942,7 +937,7 @@ export default {
           }
           this.signedTxArray = signed;
         } catch (err) {
-          if (this.isSwap && !this.isWeb3Wallet) {
+          if (this.isSwap && !this.hasGasPriceOption) {
             this.emitSwapTxFail(err);
           }
           this.error = errorHandler(err);
@@ -963,10 +958,10 @@ export default {
           return;
         }
       }
-      if (!this.isWeb3Wallet && !this.isHardware && !this.isOtherWallet) {
+      if (!this.hasGasPriceOption && !this.isHardware && !this.isOtherWallet) {
         this.signing = false;
       }
-      if (this.isWeb3Wallet) this.resolver(batchTxEvents);
+      if (this.hasGasPriceOption) this.resolver(batchTxEvents);
     },
     rejectedError(msg) {
       return (
@@ -976,13 +971,16 @@ export default {
     },
     emitSwapTxFail(err) {
       const hash = err?.receipt?.transactionHash;
-      this.trackSwap('swapTxFailedV2', hash, this.network.type.chainID);
+      this.trackSwapAmplitude(SWAP.FAILED, {
+        hash: hash,
+        network: this.network.type.chainID
+      });
     },
     btnAction() {
       if (this.isSwap) {
-        this.trackSwap('swapTransactionSend');
+        this.trackSwapAmplitude(SWAP.CONFIRM_CLICKED);
       }
-      if (!this.isWeb3Wallet) {
+      if (!this.hasGasPriceOption) {
         if (
           (this.signedTxArray.length === 0 ||
             this.signedTxArray.length < this.unsignedTxArr.length) &&

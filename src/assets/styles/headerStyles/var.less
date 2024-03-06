@@ -1,0 +1,348 @@
+/**
+ * Переменные
+ **/
+
+@font: "DM Sans", sans-serif;
+
+@borderRadius: 5px;
+
+@background: #f5f5f7;
+@white: #ffffff;
+@black: #000000;
+@text: #222222;
+@primary: #005ae5;
+@primaryActive: #0067e0;
+@violet: #ba4aff;
+@violetActive: #a81aff;
+@mewBg: rgba(53, 94, 236, 0.1);
+@enkryptBg: rgba(186, 74, 255, 0.1);
+@portfolio: #0c5876;
+
+/****
+ * Миксины, разное
+ ****/
+
+.title1 {
+  color: @text;
+  text-align: center;
+  font-kerning: none;
+  font-size: 80px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 120%;
+
+  .screen-desktop-min({
+        font-size: 64px;
+        font-style: normal;
+        font-weight: 700;
+    });
+
+  .screen-tablet-portaint({
+        font-kerning: none;
+        font-size: 30px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 110%; /* 33px */
+    });
+}
+
+.title2 {
+  color: @black;
+  font-size: 72px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 110%; /* 79.2px */
+
+  .screen-desktop-min({
+        font-size: 52px;
+    });
+}
+
+.title3 {
+  color: @black;
+  font-feature-settings: "ss15" on;
+  font-size: 64px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 110%; /* 70.4px */
+
+  .screen-desktop-min({
+        font-size: 52px;
+    });
+
+  .screen-tablet-portaint({
+        font-size: 40px;
+        line-height: 110%; /* 44px */
+    });
+}
+
+.title4 {
+  color: @black;
+  font-size: 48px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 110%;
+
+  .screen-desktop-min({
+        font-size: 36px;
+    });
+}
+
+.title5 {
+  color: @black;
+  font-feature-settings: "ss15" on;
+  font-size: 32px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 110%; /* 35.2px */
+
+  .screen-desktop-min({
+        font-size: 28px;
+    });
+}
+
+.text5 {
+  color: @black;
+  font-size: 32px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 130%;
+
+  .screen-desktop-min({
+        font-size: 24px;
+    });
+
+  .screen-tablet-portaint({
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 130%; /* 26px */
+    });
+}
+
+.text6 {
+  color: @black;
+  font-feature-settings: "ss15" on;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 140%; /* 33.6px */
+
+  .screen-desktop-min({
+        font-size: 24px;
+    });
+
+  .screen-tablet-portaint({
+        font-size: 20px;
+    });
+}
+
+.text7 {
+  color: @primary;
+  font-feature-settings: "ss15" on !important;
+  font-size: 20px !important;
+  font-style: normal !important;
+  font-weight: 500 !important;
+  line-height: 150% !important; /* 30px */
+
+  .screen-desktop-min({
+        font-size: 16px;
+    });
+}
+
+.text8 {
+  color: @black;
+  font-size: 17px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%; /* 25.5px */
+}
+
+.footer-text {
+  color: @black;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 22px; /* 137.5% */
+}
+
+.relative {
+  position: relative;
+}
+
+.sizing() {
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.border-radius(@radius: @borderRadius) {
+  -webkit-border-radius: @radius;
+  border-radius: @radius;
+}
+
+.size(@width, @height: @width) {
+  width: @width;
+  height: @height;
+}
+
+.relativePos(@top, @left:@top) {
+  position: relative;
+  top: @top;
+  left: @left;
+}
+
+.pseudo() {
+  content: "";
+  display: block;
+  position: absolute;
+}
+
+.menu-icon() {
+  content: "";
+  display: block;
+  position: absolute;
+  left: 15px;
+  top: 13px;
+}
+
+.hover-opacity(@opacity: 0.75) {
+  cursor: pointer;
+
+  &:hover {
+    opacity: @opacity;
+  }
+}
+
+.transition(@property: all, @time: 0.3s) {
+  -webkit-transition: @property @time ease;
+  transition: @property @time ease;
+}
+
+.transition-transform(@time: 0.3s) {
+  -webkit-transition: @time cubic-bezier(0.25, 0.1, 0.25, 1);
+  -moz-transition: @time cubic-bezier(0.25, 0.1, 0.25, 1);
+  -o-transition: @time cubic-bezier(0.25, 0.1, 0.25, 1);
+  transition: @time cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.transform(@propvalue) {
+  -webkit-transform: @propvalue;
+  -ms-transform: @propvalue;
+  transform: @propvalue;
+}
+
+.rotate(@degree) {
+  -webkit-transform: rotate(@degree);
+  -ms-transform: rotate(@degree);
+  transform: rotate(@degree);
+}
+
+.scale(@scale) {
+  -webkit-transform: scale(@scale);
+  -ms-transform: scale(@scale);
+  transform: scale(@scale);
+}
+
+.transform-origin(@x, @y) {
+  -webkit-transform-origin: @x @y;
+  -ms-transform-origin: @x @y;
+  transform-origin: @x @y;
+}
+
+.placeholder(@color) {
+}
+
+/* =============================================================================
+   Screen size variables
+   ========================================================================== */
+
+@screen-desktop-large: 1601px;
+@screen-desktop: 1400px;
+@screen-desktop-min: 1280px;
+@screen-tablet-big: 1084px;
+@screen-tablet: 1024px;
+@screen-tablet-header: 940px;
+@screen-tablet-portaint: 820px;
+@screen-tablet-min: 768px;
+@screen-mobile: 576px;
+
+/* =============================================================================
+   Media queries for different screen sizes
+   ========================================================================== */
+
+// Desktop large
+.screen-desktop-large(@rules) {
+  @media (max-width: @screen-desktop-large) {
+    @rules();
+  }
+}
+
+// Desktop
+.screen-desktop(@rules) {
+  @media (max-width: @screen-desktop) {
+    @rules();
+  }
+}
+
+// Desktop min
+.screen-desktop-min(@rules) {
+  @media (max-width: @screen-desktop-min) {
+    @rules();
+  }
+}
+
+// Tablet big
+.screen-tablet-big(@rules) {
+  @media (max-width: @screen-tablet-big) {
+    @rules();
+  }
+}
+
+// Tablet
+.screen-tablet(@rules) {
+  @media (max-width: @screen-tablet) {
+    @rules();
+  }
+}
+
+// Tablet Header
+.screen-tablet-header(@rules) {
+  @media (max-width: @screen-tablet-header) {
+    @rules();
+  }
+}
+
+// Tablet Portaint
+.screen-tablet-portaint(@rules) {
+  @media (max-width: @screen-tablet-portaint) {
+    @rules();
+  }
+}
+
+// Tablet Min
+.screen-tablet-min(@rules) {
+  @media (max-width: @screen-tablet-min) {
+    @rules();
+  }
+}
+
+// Mobile
+.screen-mobile(@rules) {
+  @media (max-width: @screen-mobile) {
+    @rules();
+  }
+}
+
+// Height
+.min-height(@rules) {
+  @media (min-height: 900px) {
+    @rules();
+  }
+}
+
+// Small height
+.small-height(@rules) {
+  @media (max-height: 680px) {
+    @rules();
+  }
+}

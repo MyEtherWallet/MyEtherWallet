@@ -1,5 +1,5 @@
 <template>
-  <div class="expandHeader">
+  <div class="expandHeader pt-16">
     <v-container>
       <!--
     =====================================================================================
@@ -110,10 +110,16 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
 import enkryptMarketing from '@/core/mixins/enkryptMarketing.mixin';
-import { mapState } from 'vuex';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import {
+  COMMON,
+  CREATE_WALLET
+} from '@/modules/analytics-opt-in/handlers/configs/events.js';
 
 export default {
   name: 'TheCreateWalletLayout',
@@ -122,7 +128,7 @@ export default {
       import('@/modules/create-wallet/ModuleCreateWalletSoftware'),
     TheLayoutHeader: () => import('../components-default/TheLayoutHeader')
   },
-  mixins: [enkryptMarketing],
+  mixins: [enkryptMarketing, handlerAnalytics],
   props: {
     showSoftwareModule: {
       type: Boolean
@@ -139,7 +145,10 @@ export default {
     },
     titleRoute: {
       text: 'Access Wallet',
-      routeName: 'AccessWallet'
+      routeName: 'AccessWallet',
+      func: () => {
+        this.trackCreateWalletAmplitude(CREATE_WALLET.NAVIGATE_TO_ACCESS);
+      }
     }
   }),
   computed: {
@@ -158,6 +167,7 @@ export default {
               icon: require('@/assets/images/icons/icon-enkrypt-block.svg'),
               alt: 'Enkrypt',
               fn: () => {
+                this.trackCreateWalletAmplitude(COMMON.GOOGLE_STORE);
                 this.openEnkrypt();
               }
             },
@@ -172,6 +182,7 @@ export default {
               icon: require('@/assets/images/icons/icon-mew-wallet.png'),
               alt: 'MEW wallet',
               fn: () => {
+                this.trackCreateWalletAmplitude(COMMON.MEW_WALLET);
                 this.openMewWallet();
               }
             },
@@ -186,6 +197,7 @@ export default {
               icon: require('@/assets/images/icons/icon-hardware-wallet.png'),
               alt: 'Hardware Wallets',
               fn: () => {
+                this.trackCreateWalletAmplitude(CREATE_WALLET.BUY_HARDWARE);
                 this.$router.push({
                   name: ROUTES_HOME.BUY_HARDWARE_WALLET.NAME
                 });
@@ -201,6 +213,7 @@ export default {
               official: false,
               recommended: false,
               fn: () => {
+                this.trackCreateWalletAmplitude(CREATE_WALLET.SOFTWARE_METHOD);
                 this.openSoftwareModule();
               }
             }
@@ -216,11 +229,15 @@ export default {
               official: false,
               recommended: false,
               fn: () => {
+                this.trackCreateWalletAmplitude(CREATE_WALLET.SOFTWARE_METHOD);
                 this.openSoftwareModule();
               }
             }
           ];
     }
+  },
+  mounted() {
+    this.trackCreateWalletAmplitude(COMMON.PAGE_SHOWN);
   },
   methods: {
     openSoftwareModule() {
@@ -236,6 +253,7 @@ export default {
     },
     closeSoftwareModule() {
       try {
+        this.trackCreateWalletAmplitude(CREATE_WALLET.CLOSE_SOFTWARE);
         this.$router.push({
           name: ROUTES_HOME.CREATE_WALLET.NAME
         });

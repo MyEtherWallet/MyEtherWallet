@@ -5,13 +5,10 @@
       <v-container class="pa-2 pa-md-3 mb-14" fluid>
         <the-wallet-header />
         <module-confirmation v-if="address" />
-        <the-enkrypt-popup v-if="!isOfflineApp" :show="walletEnkryptPopup" />
         <router-view />
-        <survey-banner :show="!neverShowSurveyBanner" />
       </v-container>
     </v-main>
     <the-wallet-footer :is-offline-app="isOfflineApp" />
-    <enkrypt-promo-snackbar v-if="!isOfflineApp" />
     <module-paper-wallet
       :open="showPaperWallet"
       :close="closePaperWallet"
@@ -24,8 +21,6 @@
 <script>
 import { mapActions, mapState, mapGetters } from 'vuex';
 import { toBN } from 'web3-utils';
-import Web3 from 'web3';
-import moment from 'moment';
 import { debounce, isEqual } from 'lodash';
 import handlerWallet from '@/core/mixins/handlerWallet.mixin';
 import nodeList from '@/utils/networks';
@@ -54,12 +49,7 @@ export default {
     TheWalletFooter: () => import('./components-wallet/TheWalletFooter'),
     ModuleConfirmation: () =>
       import('@/modules/confirmation/ModuleConfirmation'),
-    EnkryptPromoSnackbar: () =>
-      import('@/views/components-wallet/EnkryptPromoSnackbar'),
-    TheEnkryptPopup: () =>
-      import('@/views/components-default/TheEnkryptPopup.vue'),
-    ModulePaperWallet: () => import('@/modules/balance/ModulePaperWallet.vue'),
-    SurveyBanner: () => import('@/views/components-wallet/SurveyBanner.vue')
+    ModulePaperWallet: () => import('@/modules/balance/ModulePaperWallet.vue')
   },
   mixins: [handlerWallet, handlerAnalytics],
   data() {
@@ -82,46 +72,66 @@ export default {
       'baseGasPrice',
       'darkMode'
     ]),
-    ...mapState('external', ['coinGeckoTokens']),
-    ...mapState('popups', [
-      'enkryptWalletPopup',
-      'enkryptLandingPopup',
-      'enkryptLandingPopupClosed',
-      'neverShowSurveyBanner'
-    ]),
+    ...mapState('external', ['coinGeckoTokens', 'selectedEIP6963Provider']),
     ...mapGetters('global', [
       'network',
       'gasPrice',
       'isEIP1559SupportedNetwork'
     ]),
-    ...mapGetters('wallet', ['balanceInWei']),
-    walletEnkryptPopup() {
-      return (
-        !this.enkryptLandingPopup &&
-        moment(new Date()).diff(this.enkryptLandingPopupClosed, 'hours') >=
-          24 &&
-        this.enkryptWalletPopup
-      );
-    }
+    ...mapGetters('wallet', ['balanceInWei'])
   },
   watch: {
     address(newVal) {
       if (!newVal) {
-        this.$router.push({ name: ROUTES_HOME.HOME.NAME });
+        this.$router.push({ name: ROUTES_HOME.ACCESS_WALLET.NAME });
       } else {
         this.setup();
         this.setTokensAndBalance();
       }
     },
-    network() {
+    network(newVal, oldVal) {
       if (this.online && !this.isOfflineApp) {
         this.web3.eth.clearSubscriptions();
         this.identifier === WALLET_TYPES.WEB3_WALLET
-          ? this.setWeb3Instance(window.ethereum)
+          ? this.setWeb3Instance(this.selectedEIP6963Provider)
           : this.setWeb3Instance();
         this.setup();
         if (this.identifier !== WALLET_TYPES.WEB3_WALLET) {
           this.setTokensAndBalance();
+        }
+
+        if (
+          (this.identifier === WALLET_TYPES.WALLET_CONNECT ||
+            this.identifier === WALLET_TYPES.MEW_WALLET) &&
+          newVal.type.chainID !== this.instance.connection.chainId
+        ) {
+          this.instance.connection.sendAsync(
+            {
+              method: 'wallet_switchEthereumChain',
+              params: [{ chainId: newVal.type.chainID.toString(16) }]
+            },
+            err => {
+              if (err) {
+                Toast(
+                  'Selected network may not be supported by wallet',
+                  {},
+                  WARNING
+                );
+                this.instance.connection.switchEthereumChain(
+                  oldVal.type.chainID
+                );
+
+                setTimeout(() => {
+                  this.setNetwork({
+                    network: oldVal,
+                    walletType: this.identifier
+                  }).then(() => {
+                    this.setWeb3Instance();
+                  });
+                }, 1000);
+              }
+            }
+          );
         }
       }
     },
@@ -133,7 +143,6 @@ export default {
   },
   mounted() {
     this.$vuetify.theme.dark = this.darkMode;
-    this.trackUserVersion(VERSION);
     EventBus.$on('openPaperWallet', () => {
       this.showPaperWallet = true;
       this.$router.push({
@@ -149,7 +158,10 @@ export default {
       this.checkNetwork();
     }
 
-    if (this.instance.identifier === 'walletConnect') {
+    if (
+      this.identifier === WALLET_TYPES.WALLET_CONNECT ||
+      this.identifier === WALLET_TYPES.MEW_WALLET
+    ) {
       this.instance.connection.on('session_update', () => {
         this.instance.connection.sendAsync(
           { method: 'eth_requestAccounts' },
@@ -158,7 +170,7 @@ export default {
               const newWallet = new HybridWalletInterface(
                 sanitizeHex(res[0]),
                 this.instance.isHardware,
-                this.instance.identifier,
+                this.identifier,
                 this.instance.txSigner,
                 this.instance.msgSigner,
                 this.instance.connection,
@@ -175,11 +187,12 @@ export default {
   beforeDestroy() {
     EventBus.$off('openPaperWallet');
     if (this.online && !this.isOfflineApp) this.web3.eth.clearSubscriptions();
-    if (window.ethereum && window.ethereum.removeListener instanceof Function) {
+    const provider = this.selectedEIP6963Provider;
+    if (provider && provider.removeListener instanceof Function) {
       if (this.findAndSetNetwork instanceof Function)
-        window.ethereum.removeListener('chainChanged', this.findAndSetNetwork);
+        provider.removeListener('chainChanged', this.findAndSetNetwork);
       if (this.setWeb3Account instanceof Function)
-        window.ethereum.removeListener('accountsChanged', this.setWeb3Account);
+        provider.removeListener('accountsChanged', this.setWeb3Account);
     }
     clearInterval(this.manualBlockSubscription);
   },
@@ -197,6 +210,7 @@ export default {
       'setValidNetwork'
     ]),
     ...mapActions('external', ['setTokenAndEthBalance', 'setNetworkTokens']),
+
     /**
      * set showPaperWallet to false
      * to close the modal
@@ -283,9 +297,9 @@ export default {
      * and setup listeners for metamask changes
      */
     web3Listeners() {
-      if (window.ethereum?.on) {
-        window.ethereum.on('chainChanged', this.findAndSetNetwork);
-        window.ethereum.on('accountsChanged', this.setWeb3Account);
+      if (this.selectedEIP6963Provider?.on) {
+        this.selectedEIP6963Provider.on('chainChanged', this.findAndSetNetwork);
+        this.selectedEIP6963Provider.on('accountsChanged', this.setWeb3Account);
       }
     },
     /**
@@ -307,26 +321,26 @@ export default {
     },
     async findAndSetNetwork() {
       if (
-        window.ethereum &&
-        this.instance.identifier === WALLET_TYPES.WEB3_WALLET
+        this.selectedEIP6963Provider &&
+        this.identifier === WALLET_TYPES.WEB3_WALLET
       ) {
-        const networkId = await window.ethereum?.request({
+        const networkId = await this.selectedEIP6963Provider?.request({
           method: 'eth_chainId'
         });
+
         const foundNetwork = Object.values(nodeList).find(item => {
           if (toBN(networkId).eq(toBN(item[0].type.chainID))) return item;
         });
-        if (window.ethereum.isMetaMask) {
+        if (this.selectedEIP6963Provider) {
           try {
             if (foundNetwork) {
               await this.setNetwork({
                 network: foundNetwork[0],
-                walletType: this.instance.identifier
+                walletType: this.identifier
               });
-              await this.setWeb3Instance(window.ethereum);
+              await this.setWeb3Instance(this.selectedEIP6963Provider);
               this.setTokensAndBalance();
               this.setValidNetwork(true);
-              this.trackNetworkSwitch(foundNetwork[0].type.name);
               this.$emit('newNetwork');
               Toast(
                 `Switched network to: ${foundNetwork[0].type.name}`,
@@ -342,7 +356,7 @@ export default {
           }
         } else {
           Toast(
-            "Can't find matching nodes for selected MetaMask node! MetaMask may not function properly. Please select a supported node",
+            "Can't find matching nodes for selected Web3 Wallet node! Web3 Wallet may not function properly. Please select a supported node",
             {},
             WARNING
           );
@@ -350,9 +364,8 @@ export default {
       }
     },
     setWeb3Account(acc) {
-      const web3 = new Web3(window.ethereum);
       const wallet = new Web3Wallet(acc[0]);
-      this.setWallet([wallet, web3.currentProvider]);
+      this.setWallet([wallet, this.selectedEIP6963Provider]);
     }
   }
 };

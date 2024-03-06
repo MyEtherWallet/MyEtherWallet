@@ -48,8 +48,7 @@ export default {
     disableIcon: {
       type: Boolean
     }
-  },
-  data: () => ({})
+  }
 };
 </script>
 

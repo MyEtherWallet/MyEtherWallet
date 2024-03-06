@@ -53,8 +53,7 @@ export default {
       },
       type: Object
     }
-  },
-  data: () => ({})
+  }
 };
 </script>
 

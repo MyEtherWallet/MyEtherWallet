@@ -6,8 +6,10 @@ import ModuleStakewiseStake from './modules/ModuleStakewiseStake';
 import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
 export default {
   title: 'Stakewise',
-  subtitle: 'Stake any amount of ETH and begin earning rewards',
+  subtitle: 'Unstaking only',
+  description: '',
   tag: '#DeFi',
+  staking: true,
   rightIconType: 'mew',
   rightIcon: 'stakewise',
   path: STAKEWISE_ROUTES.CORE.PATH,
@@ -16,23 +18,44 @@ export default {
   release: '04/14/2022',
   defaultName: STAKEWISE_ROUTES.CORE.NAME,
   meta: {
-    noAuth: false
+    noAuth: false,
+    title: 'Liquid Ethereum Staking | MyEtherWallet',
+    description:
+      'Stake your Ethereum without a full lockup period. Earn rewards with liquid tokens.'
   },
   children: [
     {
       name: STAKEWISE_ROUTES.CORE.NAME,
       path: '',
-      component: ModuleStakewiseStake
+      component: ModuleStakewiseStake,
+      meta: {
+        noAuth: false,
+        title: 'Liquid Ethereum Staking | MyEtherWallet',
+        description:
+          'Stake your Ethereum without a full lockup period. Earn rewards with liquid tokens.'
+      }
     },
     {
       name: STAKEWISE_ROUTES.STAKE.NAME,
       path: STAKEWISE_ROUTES.STAKE.PATH,
-      component: ModuleStakewiseStake
+      component: ModuleStakewiseStake,
+      meta: {
+        noAuth: false,
+        title: 'Liquid Ethereum Staking | MyEtherWallet',
+        description:
+          'Stake your Ethereum without a full lockup period. Earn rewards with liquid tokens.'
+      }
     },
     {
       path: STAKEWISE_ROUTES.REWARDS.PATH,
       name: STAKEWISE_ROUTES.REWARDS.NAME,
-      component: ModuleStakewiseRewards
+      component: ModuleStakewiseRewards,
+      meta: {
+        noAuth: false,
+        title: 'Claim Crypto Staking Rewards | MyEtherWallet ',
+        description:
+          'Deposit your crypto rewards into your crypto wallet. Claim your staking rewards.'
+      }
     }
   ]
 };

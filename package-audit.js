@@ -29,7 +29,12 @@ const AUDIT_EXCEPTIONS = [
   'socket.io-parser',
   'fast-xml-parser',
   '@grpc/grpc-js',
-  'is_js'
+  'is_js',
+  'get-func-name',
+  'chart.js',
+  'browserify-sign',
+  'lodash.pick',
+  'ip'
 ];
 const execute = (command, callback) => {
   exec(

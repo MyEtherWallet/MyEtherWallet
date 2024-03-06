@@ -10,7 +10,7 @@
 export default {
   components: {
     ModuleMessage: () => import('@/modules/message/ModuleMessageSign'),
-    TheWrapperWallet: () => import('@/core/components/TheWrapperWallet')
+    TheWrapperWallet: () => import('@/views/components-wallet/TheWrapperWallet')
   }
 };
 </script>

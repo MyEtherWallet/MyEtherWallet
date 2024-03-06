@@ -43,6 +43,14 @@
               target="_blank"
               >Help Center</a
             >
+            <span class="px-1">|</span>
+            <a
+              v-if="!isOfflineApp"
+              class="textDark--text"
+              href="https://hackenproof.com/myetherwallet/myetherwallet"
+              target="_blank"
+              >Bug Bounty</a
+            >
             <!-- hide language select till translations are done-->
             <!-- <span class="mx-5">|</span>
             <div style="max-width=200px">
@@ -66,7 +74,6 @@
 <script>
 export default {
   name: 'TheWalletFooter',
-  components: {},
   props: {
     isOfflineApp: {
       type: Boolean,

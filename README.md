@@ -3,8 +3,7 @@
 [![Website](https://img.shields.io/website-up-down-green-red/http/myetherwallet.com.svg?label=MyEtherWallet.com\&style=flat-square)](http://www.MyEtherWallet.com/)
 [![Github All Releases](https://img.shields.io/github/downloads/MyEtherWallet/MyEtherWallet/total.svg?style=flat-square)](https://www.github.com/MyEtherWallet/MyEtherWallet/releases)
 [![GitHub issues](https://img.shields.io/github/issues-raw/MyEtherWallet/MyEtherWallet.svg?style=flat-square)](https://github.com/MyEtherWallet/MyEtherWallet/issues)
-[![Travis](https://img.shields.io/travis/MyEtherWallet/MyEtherWallet.svg?style=flat-square)](https://travis-ci.org/MyEtherWallet/MyEtherWallet)
-[![GitHub package version](https://img.shields.io/github/package-json/v/MyEtherWallet/MyEtherWallet.svg?style=flat-square)](https://github.com/MyEtherWallet/MyEtherWallet/blob/main/package.json) [![Greenkeeper badge](https://badges.greenkeeper.io/MyEtherWallet/MyEtherWallet.svg)](https://greenkeeper.io/)
+[![GitHub package version](https://img.shields.io/github/package-json/v/MyEtherWallet/MyEtherWallet.svg?style=flat-square)](https://github.com/MyEtherWallet/MyEtherWallet/blob/main/package.json)
 ![GitHub contributors](https://img.shields.io/github/contributors/MyEtherWallet/MyEtherWallet.svg?style=flat-square) [![Codecov badge](https://img.shields.io/codecov/c/github/MyEtherWallet/MyEtherWallet/develop.svg?style=flat-square)](https://codecov.io/github/MyEtherWallet/MyEtherWallet?branch=develop)
 
 MyEtherWallet is a doorway to the Ethereum blockchain, allowing users to manage their own funds without a centralized platform. - <i>Stephen, #MEWForce</i>
@@ -31,7 +30,7 @@ MyEtherWallet is a doorway to the Ethereum blockchain, allowing users to manage 
 * [EthVM Blockchain explorer](https://www.ethvm.com/)
 * [Enkrypt: https://www.enkrypt.com](https://www.enkrypt.com)
 * [MEW Team](https://team.myetherwallet.com/)
-* [MEWtopia](https://www.mewtopia.com/)
+* [Blog](https://www.myetherwallet.com/blog)
 * [MEW Help Center](https://help.myetherwallet.com/)
 * [FB: https://www.facebook.com/MyEtherWallet/](https://www.facebook.com/MyEtherWallet/)
 * [Twitter: https://twitter.com/myetherwallet](https://twitter.com/myetherwallet)
@@ -54,24 +53,23 @@ If you find a bug, or want a new feature added, please submit it on the [Github 
 
 1. Open terminal
 2. Clone the repo: `git clone git@github.com:MyEtherWallet/MyEtherWallet.git`
-3. run `npm ci` to install node packages.
-4. run `npm run build`. You can also use the offline version by opening the index file from the dist folder with your preferred browser
-5. start `npm start`
-6. If `npm start` fails and above the error message it states 'new update found' then the package.json version of the indicated packages needs to be updated to match the versions shown in the notice.
-7. App should be running in `https://localhost:8080`
+3. go into repo: `cd MyEtherWallet`
+4. run `git checkout develop`
+5. run `npm ci` to install node packages.
+6. run `npm update` and update packages indicated by the script or add the packages to `package-test.js`
+7. run `npm run build:nohash` and open the `index.html` file within the `/dist` folder. You can also build the offline version by running `npm run build:offline` and opening the `index.html` file from the `/dist` folder with your preferred browser
 
-## Developers
+### To start the local dev environment, follow everything above and skip step 7
 
-1. Open terminal
-2. Clone the repo: `git clone git@github.com:MyEtherWallet/MyEtherWallet.git`
-3. run `git checkout develop`
-4. run `npm ci` to install node packages.
-5. run `npm run build`. You can also use the offline version by opening the index file from the dist folder with your preferred browser
-6. start `npm run dev`
-7. App should be running in `https://localhost:8080`
+1. start `npm run dev`
+2. App should be running in `https://localhost:8080`
 
 EACCESS issue can be resolved by running: `sudo chown -R $(whoami) ~/.npm`
+
 For other issues, try the steps shown here: <https://github.com/MyEtherWallet/MyEtherWallet/issues/1182#issuecomment-506342875> by @tomwalton78
+
+For step 7, you may run into a memory heap problem, rerun the script using `NODE_OPTIONS=--max-old-space-size=8192 npm run build:nohash` or `NODE_OPTIONS=--max-old-space-size=8192 npm run build:offline`
+P.S if you want Intercom to be enabled locally, create a `.env` file and add `INTERCOM_ID={yourIntercomKey}` otherwise Intercom will be disabled.
 
 ## Integrations
 

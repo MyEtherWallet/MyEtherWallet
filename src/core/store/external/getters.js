@@ -67,23 +67,64 @@ const networkTokenUSDMarket = function (
 };
 const getCoinGeckoTokenById = state => cgid => {
   const cgToken = state.coinGeckoTokens.get(cgid);
+  const networkCurrencyTokens = state.coinGeckoNetworkCurrencies.get(cgid);
   return {
-    name: cgToken ? cgToken.symbol.toUpperCase() : '',
-    symbol: cgToken ? cgToken.symbol.toUpperCase() : '',
-    subtext: cgToken ? cgToken.name : '',
-    value: cgToken ? cgToken.name : '',
-    img: cgToken ? `https://img.mewapi.io/?image=${cgToken.image}` : '',
-    market_cap: cgToken ? cgToken.market_cap : '0',
-    market_capf: cgToken ? formatIntegerValue(cgToken.market_cap).value : '0',
-    price_change_percentage_24h: cgToken
+    name: networkCurrencyTokens
+      ? networkCurrencyTokens.symbol.toUpperCase()
+      : cgToken
+      ? cgToken.symbol.toUpperCase()
+      : '',
+    symbol: networkCurrencyTokens
+      ? networkCurrencyTokens.symbol.toUpperCase()
+      : cgToken
+      ? cgToken.symbol.toUpperCase()
+      : '',
+    subtext: networkCurrencyTokens
+      ? networkCurrencyTokens.name
+      : cgToken
+      ? cgToken.name
+      : '',
+    value: networkCurrencyTokens
+      ? networkCurrencyTokens.name
+      : cgToken
+      ? cgToken.name
+      : '',
+    img: networkCurrencyTokens
+      ? `https://img.mewapi.io/?image=${networkCurrencyTokens.image}`
+      : cgToken
+      ? `https://img.mewapi.io/?image=${cgToken.image}`
+      : '',
+    market_cap: networkCurrencyTokens
+      ? networkCurrencyTokens.market_cap
+      : cgToken
+      ? cgToken.market_cap
+      : '0',
+    market_capf: networkCurrencyTokens
+      ? formatIntegerValue(networkCurrencyTokens.market_cap).value
+      : cgToken
+      ? formatIntegerValue(cgToken.market_cap).value
+      : '0',
+    price_change_percentage_24h: networkCurrencyTokens
+      ? networkCurrencyTokens.price_change_percentage_24h
+      : cgToken
       ? cgToken.price_change_percentage_24h
       : '0',
-    price_change_percentage_24hf:
-      cgToken && cgToken.price_change_percentage_24h
-        ? formatPercentageValue(cgToken.price_change_percentage_24h).value
-        : '0',
-    price: cgToken ? cgToken.current_price : '0',
-    pricef: cgToken ? formatFiatValue(cgToken.current_price).value : '0'
+    price_change_percentage_24hf: networkCurrencyTokens
+      ? formatPercentageValue(networkCurrencyTokens.price_change_percentage_24h)
+          .value
+      : cgToken && cgToken.price_change_percentage_24h
+      ? formatPercentageValue(cgToken.price_change_percentage_24h).value
+      : '0',
+    price: networkCurrencyTokens
+      ? networkCurrencyTokens.current_price
+      : cgToken
+      ? cgToken.current_price
+      : '0',
+    pricef: networkCurrencyTokens
+      ? formatFiatValue(networkCurrencyTokens.current_price).value
+      : cgToken
+      ? formatFiatValue(cgToken.current_price).value
+      : '0'
   };
 };
 /**
@@ -113,17 +154,28 @@ const contractToToken =
     }
     cgToken = getters.getCoinGeckoTokenById(tokenId);
     const networkToken = state.networkTokens.get(contractAddress);
+    const name = networkToken ? networkToken.name : cgToken.name;
+    const symbol = networkToken ? networkToken.symbol : cgToken.symbol;
+    const img = cgToken.img
+      ? cgToken.img
+      : networkToken
+      ? networkToken.icon
+      : '';
+    const address = networkToken ? networkToken.address : contractAddress;
+    const networkTokenObj = {
+      name: name,
+      symbol: symbol,
+      subtext: name,
+      value: name,
+      contract: address,
+      img: img
+    };
 
-    if (!networkToken) return null;
-    return Object.assign(cgToken, {
-      name: networkToken.name,
-      symbol: networkToken.symbol,
-      subtext: networkToken.name,
-      value: networkToken.name,
-      contract: networkToken.address,
-      img: networkToken.icon_png ? networkToken.icon_png : '',
-      decimals: networkToken.decimals
-    });
+    if (networkToken && networkToken.hasOwnProperty('decimals')) {
+      networkTokenObj['decimals'] = networkToken.decimals;
+    }
+
+    return Object.assign(cgToken, networkTokenObj);
   };
 
 export default {

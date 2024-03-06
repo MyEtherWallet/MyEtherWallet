@@ -86,7 +86,7 @@
                 v-if="item.hasNew"
                 class="new-dapp-label white--text mew-label px-1"
               >
-                new
+                NEW
               </div>
             </v-list-item>
           </template>
@@ -121,6 +121,12 @@
                   {{ item.title }}
                 </v-list-item-title>
               </v-list-item-content>
+              <div
+                v-if="item.hasNew"
+                class="new-dapp-label white--text mew-label px-1"
+              >
+                NEW
+              </div>
             </v-list-item>
           </template>
         </v-list-item-group>
@@ -274,6 +280,7 @@
 import { mapActions, mapGetters, mapState } from 'vuex';
 import send from '@/assets/images/icons/icon-send.svg';
 import portfolio from '@/assets/images/icons/icon-dashboard-enable.svg';
+import stake from '@/assets/images/icons/icon-stake.svg';
 import nft from '@/assets/images/icons/icon-nft.svg';
 import swap from '@/assets/images/icons/icon-swap-enable.svg';
 import receive from '@/assets/images/icons/icon-arrow-down-right.svg';
@@ -284,18 +291,20 @@ import message from '@/assets/images/icons/icon-message-enable.svg';
 import settings from '@/assets/images/icons/icon-setting-enable.svg';
 import logout from '@/assets/images/icons/icon-logout-enable.svg';
 import { EventBus } from '@/core/plugins/eventBus';
-import { ETH, BSC, MATIC } from '@/utils/networks/types';
+import { ETH, BSC, MATIC, GOERLI } from '@/utils/networks/types';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import {
+  DASHBOARD,
+  STAKING
+} from '@/modules/analytics-opt-in/handlers/configs/events';
 import dappsMeta from '@/dapps/metainfo-dapps';
-import { BUYSELL_EVENT } from '@/modules/buy-sell/helpers';
+import stakingMeta from '@/dapps/metainfo-staking';
+import buyMore from '@/core/mixins/buyMore.mixin';
 import isNew from '@/core/helpers/isNew.js';
 
 export default {
   components: {
-    AppModal: () => import('@/core/components/AppModal'),
-    AppAddrQr: () => import('@/core/components/AppAddrQr'),
-    AppBtnMenu: () => import('@/core/components/AppBtnMenu'),
     BalanceCard: () => import('@/modules/balance/ModuleBalanceCard'),
     ModuleSettings: () => import('@/modules/settings/ModuleSettings'),
     ModuleNotifications: () =>
@@ -303,7 +312,7 @@ export default {
     NetworkSwitch: () =>
       import('@/modules/network/components/NetworkSwitch.vue')
   },
-  mixins: [handlerAnalytics],
+  mixins: [handlerAnalytics, buyMore],
   data() {
     const locDarkMode = this.$vuetify.theme.dark;
     return {
@@ -315,6 +324,7 @@ export default {
       showLogoutPopup: false,
       routeNetworks: {
         [ROUTES_WALLET.SWAP.NAME]: [ETH, BSC, MATIC],
+        [ROUTES_WALLET.STAKE.NAME]: [ETH, GOERLI],
         [ROUTES_WALLET.NFT_MANAGER.NAME]: [ETH, BSC, MATIC]
       },
       footer: {
@@ -357,7 +367,12 @@ export default {
     sectionOne() {
       if (this.online) {
         const hasNew = Object.values(dappsMeta).filter(item => {
-          if (isNew(item.release)) {
+          const dappSupport = item.networks.findIndex(nType => {
+            if (nType.chainID === this.network.type.chainID) {
+              return nType;
+            }
+          });
+          if (isNew(item.release) && dappSupport > -1 && !item.staking) {
             return item;
           }
         });
@@ -394,6 +409,16 @@ export default {
       ];
     },
     sectionTwo() {
+      const hasNew = Object.values(stakingMeta).filter(item => {
+        const stakingSupport = item.networks.findIndex(nType => {
+          if (nType.chainID === this.network.type.chainID) {
+            return nType;
+          }
+        });
+        if (isNew(item.release) && stakingSupport > -1) {
+          return item;
+        }
+      });
       if (this.online) {
         const sectionTwo = [
           {
@@ -413,9 +438,17 @@ export default {
             route: { name: ROUTES_WALLET.SEND_TX.NAME }
           },
           {
+            title: 'Stake',
+            icon: stake,
+            route: { name: ROUTES_WALLET.STAKE.NAME },
+            hasNew: hasNew.length > 0,
+            fn: this.trackToStaking
+          },
+          {
             title: this.$t('interface.menu.receive'),
             icon: receive,
             fn: () => {
+              this.trackDashboardAmplitude(DASHBOARD.SHOW_RECEIVE_ADDRESS);
               this.openQR = true;
             },
             route: undefined
@@ -429,7 +462,9 @@ export default {
           sectionTwo.push({
             title: this.$t('interface.menu.buy-sell'),
             icon: buy,
-            fn: this.openBuySell,
+            fn: () => {
+              this.openBuySell('WalletSideMenu');
+            },
             route: undefined
           });
         }
@@ -510,11 +545,6 @@ export default {
       this.setDarkMode(val);
       this.$vuetify.theme.dark = val;
     },
-    isOpenNetworkOverlay(newVal) {
-      if (newVal && this.$route.name == ROUTES_WALLET.SWAP.NAME) {
-        this.trackSwap('switchingNetworkOnSwap');
-      }
-    },
     navOpen(newVal) {
       if (this.isOpenNetworkOverlay && !newVal)
         this.isOpenNetworkOverlay = false;
@@ -553,10 +583,10 @@ export default {
     ...mapActions('wallet', ['removeWallet']),
     ...mapActions('global', ['setDarkMode']),
     trackToSwap() {
-      this.trackSwap('fromSideMenu');
+      this.trackDashboardAmplitude(DASHBOARD.SWAP_LEFT_NAVIGATION);
     },
-    trackBuySellFunc() {
-      this.trackBuySell('buySellHome');
+    trackToStaking() {
+      this.trackStaking(STAKING.SIDE_MENU);
     },
     closeNetworkOverlay() {
       if (this.validNetwork) {
@@ -575,10 +605,6 @@ export default {
     openNetwork() {
       this.isOpenNetworkOverlay = true;
     },
-    openBuySell() {
-      EventBus.$emit(BUYSELL_EVENT);
-      this.trackBuySellFunc();
-    },
     openNavigation() {
       this.navOpen = true;
     },
@@ -593,6 +619,7 @@ export default {
     onLogout() {
       this.showLogoutPopup = false;
       this.$vuetify.theme.dark = false;
+      this.trackLogout();
       this.removeWallet();
     },
     toggleLogout() {

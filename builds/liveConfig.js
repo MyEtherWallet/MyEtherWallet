@@ -10,11 +10,12 @@ const exportObj = {
   pwa: {
     name: 'MyEtherWallet',
     workboxOptions: {
+      cacheId: `myetherwallet-${JSON.parse(config.env_vars.VERSION)}`,
       importWorkboxFrom: 'local',
       skipWaiting: true,
       clientsClaim: true,
-      navigateFallback: '/index.html',
-      navigateFallbackBlacklist: [/^\/pages/]
+      cleanupOutdatedCaches: true,
+      exclude: [/index\.html$/, /\.map$/]
     },
     iconPaths: {
       faviconSVG: 'icons/favicon.svg',

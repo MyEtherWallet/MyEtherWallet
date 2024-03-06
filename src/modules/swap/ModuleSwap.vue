@@ -249,14 +249,7 @@
 
 <script>
 import { toBN, fromWei, toWei, isAddress } from 'web3-utils';
-import {
-  debounce,
-  isEmpty,
-  clone,
-  isUndefined,
-  isObject,
-  isNumber
-} from 'lodash';
+import { debounce, isEmpty, clone, isUndefined, isObject } from 'lodash';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import xss from 'xss';
 import MultiCoinValidator from 'multicoin-address-validator';
@@ -270,13 +263,14 @@ import NonChainNotification from '@/modules/notifications/handlers/nonChainNotif
 import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { SWAP } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 import Swapper from './handlers/handlerSwap';
 import handleError from '../confirmation/handlers/errorHandler';
 import { EventBus } from '@/core/plugins/eventBus';
 import { fromBase, toBase } from '@/core/helpers/unit';
 
-const MIN_GAS_LIMIT = 800000;
+const MIN_GAS_LIMIT = 400000;
 let localContractToToken = {};
 export default {
   name: 'ModuleSwap',
@@ -290,9 +284,9 @@ export default {
     AppButtonBalance: () => import('@/core/components/AppButtonBalance'),
     AppUserMsgBlock: () => import('@/core/components/AppUserMsgBlock'),
     ModuleAddressBook: () => import('@/modules/address-book/ModuleAddressBook'),
+    TransactionFee: () => import('@/modules/transaction-fee/TransactionFee'),
     SwapProvidersList: () => import('./components/SwapProvidersList.vue'),
     SwapProviderMentions: () => import('./components/SwapProviderMentions.vue'),
-    AppTransactionFee: () => import('@/core/components/AppTransactionFee.vue'),
     SwapFee: () => import('./components/SwapFee.vue')
   },
   mixins: [handlerAnalytics, buyMore],
@@ -373,7 +367,8 @@ export default {
       'balanceInETH',
       'tokensList',
       'initialLoad',
-      'balanceInWei'
+      'balanceInWei',
+      'hasGasPriceOption'
     ]),
     ...mapGetters('external', [
       'balanceFiatValue',
@@ -611,6 +606,7 @@ export default {
     totalCost() {
       const amount = this.isFromTokenMain ? this.tokenInValue : '0';
       const amountWei = toWei(amount);
+      // if (this.hasGasPriceOption) return BigNumber(amountWei).toString();
       return BigNumber(this.txFee).plus(amountWei).toString();
     },
     totalGasLimit() {
@@ -653,6 +649,10 @@ export default {
       if (!isEmpty(this.fromTokenType)) {
         return true;
       }
+
+      // if (this.hasGasPriceOption) {
+      //   return toBN(this.balanceInWei).gte(0);
+      // }
       return toBN(this.balanceInWei).gte(
         toBN(this.localGasPrice).muln(MIN_GAS_LIMIT)
       );
@@ -820,9 +820,6 @@ export default {
     },
     tokenInValue() {
       this.feeError = '';
-      if (!this.clearingSwap) {
-        this.trackSwap('tokenFromValueChanged');
-      }
     },
     gasPriceType() {
       if (this.currentTrade) this.currentTrade.gasPrice = this.localGasPrice;
@@ -833,18 +830,8 @@ export default {
       },
       immediate: true
     },
-    selectedProvider(p, oldVal) {
-      if (!isEmpty(oldVal) && !this.clearingSwap) {
-        this.trackSwap('switchProviders');
-      }
+    selectedProvider(p) {
       if (isEmpty(p)) this.selectedProviderId = undefined;
-    },
-    selectedProviderId(newVal) {
-      if (isNumber(newVal) && !this.clearingSwap) {
-        this.trackSwap(
-          `swapProvider: ${newVal + 1}/${this.availableQuotes.length}`
-        );
-      }
     },
     defaults: {
       handler: function () {
@@ -884,7 +871,6 @@ export default {
   },
   mounted() {
     this.abortSetTokenValue = false;
-    this.trackSwap('swapPageView');
     this.resetSwapState();
   },
   methods: {
@@ -945,9 +931,6 @@ export default {
       const findToken = this.availableTokens.toTokens.find(
         item => item.symbol.toLowerCase() === to.toLowerCase()
       );
-      if (!this.clearingSwap) {
-        this.trackSwap('stayOnEth: ' + to);
-      }
       this.toTokenType = findToken;
     },
     setupSwap() {
@@ -1053,7 +1036,6 @@ export default {
      */
     async setMaxAmount() {
       this.maxLoading = true;
-      this.trackSwap('setMaxValue');
       if (
         !isEmpty(this.toTokenType) &&
         this.toTokenType.isEth &&
@@ -1183,7 +1165,9 @@ export default {
       this.resetAddressValues({ clearTo: false });
       this.$nextTick(() => {
         if (value && value.name && !this.clearingSwap) {
-          this.trackSwapToken('from: ' + value.name);
+          this.trackSwapAmplitude(SWAP.FIELD_INPUTS, {
+            fromToken: value.name
+          });
         }
         this.setTokenInValue(this.tokenInValue);
       });
@@ -1202,7 +1186,9 @@ export default {
       this.toTokenType = value;
       this.resetAddressValues({ clearRefund: false });
       if (value && value.name) {
-        this.trackSwapToken('to: ' + value.name);
+        this.trackSwapAmplitude(SWAP.FIELD_INPUTS, {
+          toToken: value.name
+        });
       }
       this.setTokenInValue(this.tokenInValue);
     },
@@ -1277,6 +1263,9 @@ export default {
         this.isLoadingProviders = true;
         this.showAnimation = true;
         this.cachedAmount = this.tokenInValue;
+        this.trackSwapAmplitude(SWAP.FIELD_INPUTS, {
+          FromAmount: toBase(this.tokenInValue, this.fromTokenType.decimals)
+        });
         this.swapper
           .getAllQuotes({
             fromT: this.fromTokenType,
@@ -1326,9 +1315,9 @@ export default {
           if (!clicked) {
             this.selectedProvider = q;
             if (!this.clearingSwap) {
-              this.trackSwap(
-                `swapProvider: ${idx + 1}/ ${this.availableQuotes.length}`
-              );
+              this.trackSwapAmplitude(SWAP.FIELD_INPUTS, {
+                SelectRate: q.amount
+              });
             }
           } else {
             this.selectedProvider =
@@ -1351,6 +1340,10 @@ export default {
         return this.setupTrade(this.allTrades[idx]);
       if (!this.allTrades[idx]) {
         this.loadingFee = true;
+      }
+      // don't fetch trade for 0 rate quote
+      if (BigNumber(this.availableQuotes[idx].rate).lte(0)) {
+        return;
       }
       const swapObj = {
         fromAddress: this.address,
@@ -1398,7 +1391,7 @@ export default {
         this.step = 2;
       }
       if (trade instanceof Error || !trade) {
-        this.feeError = 'Provider issue';
+        this.feeError = 'There was an issue with the provider';
         return;
       }
       this.feeError = '';
@@ -1409,7 +1402,7 @@ export default {
       }
     },
     showConfirm() {
-      this.trackSwap('showConfirm');
+      this.trackSwapAmplitude(SWAP.NEXT_CLICKED);
       this.setConfirmInfo();
       this.executeTrade();
     },
@@ -1593,6 +1586,9 @@ export default {
     },
     handleLocalGasPrice(e) {
       this.localGasPrice = e;
+      this.trackSwapAmplitude(SWAP.FIELD_INPUTS, {
+        TransactionFee: e
+      });
     },
     openQr() {
       EventBus.$emit('openQrCode');

@@ -50,13 +50,13 @@ import {
 import { mapGetters, mapActions, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-import AppNetworkSettingsModal from '@/core/components/AppNetworkSettingsModal.vue';
-import AppFeeNote from '@/core/components/AppFeeNote.vue';
+
 export default {
   name: 'SwapFee',
   components: {
-    AppNetworkSettingsModal,
-    AppFeeNote
+    AppNetworkSettingsModal: () =>
+      import('@/modules/transaction-fee/AppNetworkSettingsModal.vue'),
+    AppFeeNote: () => import('@/core/components/AppFeeNote.vue')
   },
   mixins: [handlerAnalytics],
   props: {

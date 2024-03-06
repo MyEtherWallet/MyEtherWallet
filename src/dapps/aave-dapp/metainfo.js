@@ -4,7 +4,8 @@ const layout = () =>
   import(/* webpackChunkName: "dapp-aave" */ './TheAaveLayout');
 export default {
   title: 'Aave V2',
-  subtitle: 'Earn on your deposits and borrow assets',
+  subtitle: '',
+  description: 'Earn on your deposits and borrow assets',
   tag: '#DeFi',
   rightIconType: 'mew',
   rightIcon: 'aave',
@@ -14,6 +15,9 @@ export default {
   layout,
   release: '09/01/2022',
   meta: {
-    noAuth: false
+    noAuth: false,
+    title: 'Borrow And Lend With Aave on MyEtherWallet',
+    description:
+      'Earn interest on supplying and borrowing crypto assets using Aave. Earn crypto rewards.'
   }
 };

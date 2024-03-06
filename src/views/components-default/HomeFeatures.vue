@@ -18,6 +18,7 @@
             class="mew-tabs-container d-flex align-center flex-column"
             :items="mewTabs"
             is-block
+            @onTab="trackClick"
           >
             <template #tabContent1>
               <home-features-tokens class="mt-16 mb-10" />
@@ -68,6 +69,7 @@
 </template>
 
 <script>
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 export default {
   name: 'HomeFeatures',
   components: {
@@ -76,8 +78,10 @@ export default {
     HomeFeaturesDapps: () => import('./HomeFeaturesDapps'),
     HomeFeaturesTokens: () => import('./HomeFeaturesTokens')
   },
+  mixins: [handlerAnalytics],
   data: () => ({
-    mobileTab: null,
+    mewTabIdx: 0,
+    mobileTab: 0,
     mobileItems: [
       {
         tab: 'Tokens',
@@ -110,7 +114,20 @@ export default {
         name: 'DApps'
       }
     ]
-  })
+  }),
+  watch: {
+    mobileTab(newVal) {
+      this.trackLandingPageAmplitude(this.mobileItems[newVal].tab);
+    }
+  },
+  methods: {
+    trackClick(newVal) {
+      if (this.mewTabIdx !== newVal) {
+        this.mewTabIdx = newVal;
+        this.trackLandingPageAmplitude(this.mewTabs[newVal].name);
+      }
+    }
+  }
 };
 </script>
 

@@ -91,7 +91,7 @@
       :not-enough-funds="notEnoughFunds"
       :loading-commit="loadingCommit"
       :loading-reg="loadingReg"
-      :commited="committed"
+      :committed="committed"
       :minimum-age="minimumAge"
       :commit="commit"
       :no-funds-for-reg-fees="noFundsForRegFees"
@@ -107,21 +107,21 @@
 </template>
 <script>
 import { mapGetters, mapState } from 'vuex';
+import { ethers, BigNumber } from 'ethers';
+import { setInterval } from 'timers';
+
 import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
-import TheWrapperDapp from '@/core/components/TheWrapperDapp';
 import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
 import { RNS_MANAGER_ROUTE } from './routes';
 import normalise from '@/core/helpers/normalise';
 import RNSManager from './handlers/handlerRNSManager';
 import ReverseRegister from './handlers/helpers/reverseRegistrar';
-import { ethers, BigNumber } from 'ethers';
-import { setInterval } from 'timers';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin.js';
 
 export default {
   name: 'RNSManagerLayout',
   components: {
-    TheWrapperDapp,
+    TheWrapperDapp: () => import('@/dapps/TheWrapperDapp.vue'),
     ModuleRegisterDomain: () => import('./modules/ModuleRegisterDomain'),
     RnsReverseLookup: () => import('./components/reverse/RnsReverseLookup')
   },
@@ -258,13 +258,13 @@ export default {
       this.loadingReg = false;
       this.name = '';
       this.$router.push({ name: RNS_MANAGER_ROUTE.MANAGE.NAME });
-      this.trackDapp('closeRnsRegister');
+      this.trackDapp('rnsCloseRegister');
     },
     setName(name) {
       this.searchError = '';
       try {
         this.name = normalise(name);
-        this.trackDapp('setRnsDomainName');
+        this.trackDapp('rnsSetDomainName');
       } catch (e) {
         this.searchError = e.message.includes('Failed to validate')
           ? 'Invalid name!'
@@ -289,7 +289,6 @@ export default {
         BigNumber.from(duration),
         this.domainPrice
       );
-
       await registerTx.wait();
       await this.reverseHandler.setReverseRecord(this.name, this.address);
       this.loadingReg = false;
@@ -320,11 +319,11 @@ export default {
         const intervalId = setInterval(async () => {
           commitmentReady = await canReveal();
           if (commitmentReady) {
-            let id = intervalId;
             if (intervalId && intervalId._id) {
-              id = intervalId._id;
+              clearInterval(intervalId._id);
+            } else {
+              clearInterval(intervalId);
             }
-            clearInterval(id);
             this.loadingCommit = false;
             this.committed = true;
             this.waitingForReg = false;

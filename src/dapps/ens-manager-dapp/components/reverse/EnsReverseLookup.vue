@@ -54,10 +54,13 @@
 import { isEmpty } from 'lodash';
 import ENS from '@ensdomains/ensjs';
 import { mapGetters, mapState } from 'vuex';
-import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+
 import PermanentNameModule from '../../handlers/handlerPermanentName';
+import NameResolver from '@/modules/name-resolver/index';
 import errorHandler from '@/modules/confirmation/handlers/errorHandler.js';
 import metainfo from '../../metainfo.js';
+
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { toBNSafe } from '@/core/helpers/numberFormatHelper';
 export default {
   name: 'EnsReverseLookup',
@@ -88,7 +91,8 @@ export default {
       permHandler: {},
       hasReverseRecordNames: false,
       reverseRecordNames: '',
-      domainListItems: []
+      domainListItems: [],
+      nameResolver: null
     };
   },
   computed: {
@@ -131,20 +135,27 @@ export default {
   methods: {
     async setDomainListItems() {
       const array = [];
+      const { name } = await this.nameResolver.resolveAddress(this.address);
       this.ensLookupResults?.forEach(async i => {
         i.loading = true;
         i.fee = toBNSafe(0);
         i.error = '';
-        try {
-          const gas = await this.permHandler.getNameReverseData(i.name);
-          i.fee = toBNSafe(gas * this.gasPrice);
-          if (toBNSafe(this.balance).lt(i.fee)) {
-            i.error = `Insufficient amount of ${this.network.type.currencyName}`;
+        /**
+         * check if address already has a reverse name
+         */
+        if (!name) {
+          try {
+            const gas = await this.permHandler.getNameReverseData(i.name);
+            i.fee = toBNSafe(gas * this.gasPrice);
+            if (toBNSafe(this.balance).lt(i.fee)) {
+              i.error = `Insufficient amount of ${this.network.type.currencyName}`;
+            }
+          } catch {
+            i.error =
+              'An error occurred while retrieving the domain information';
+            i.loading = false;
+            return array.push(i);
           }
-        } catch {
-          i.error = 'An error occurred while retrieving the domain information';
-          i.loading = false;
-          return array.push(i);
         }
         i.loading = false;
         return array.push(i);
@@ -172,6 +183,7 @@ export default {
         ens,
         this.durationPick
       );
+      this.nameResolver = new NameResolver(this.network, this.web3);
       this.selectedDomain = { loading: false, fee: toBNSafe(0), error: '' };
       await this.setDomainListItems();
       this.getReverseRecordNames();
@@ -211,17 +223,6 @@ export default {
         if (err) Toast(err, {}, ERROR);
       }
     },
-    // async getReverseRecordNames() {
-    //   try {
-    //     const reverseRecordNames = await this.permHandler.getReverseNameRecords(
-    //       this.permHandler.nameHash
-    //     );
-    //     this.reverseRecordNames = reverseRecordNames;
-    //     return reverseRecordNames;
-    //   } catch (e) {
-    //     Toast(e, {}, ERROR);
-    //   }
-    // },
     async getReverseRecordNames() {
       try {
         const ens = this.network.type.ens

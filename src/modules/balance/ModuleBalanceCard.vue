@@ -156,7 +156,7 @@
             class="info-container--action-btn mr-2 px-0 BalanceCardQR"
             fab
             depressed
-            @click="openQR = true"
+            @click="open"
           >
             <img
               class="info-container--icon"
@@ -263,16 +263,17 @@ import wallets from './handlers/config';
 import WALLET_TYPES from '../access-wallet/common/walletTypes';
 import NameResolver from '@/modules/name-resolver/index';
 import { EventBus } from '@/core/plugins/eventBus';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { DASHBOARD } from '../analytics-opt-in/handlers/configs/events';
 
 export default {
   components: {
-    AppModal: () => import('@/core/components/AppModal'),
-    AppAddrQr: () => import('@/core/components/AppAddrQr'),
     ModuleAccessWalletHardware: () =>
       import('@/modules/access-wallet/ModuleAccessWalletHardware'),
     ModuleAccessWalletSoftware: () =>
       import('@/modules/access-wallet/ModuleAccessWalletSoftware')
   },
+  mixins: [handlerAnalytics],
   props: {
     sidemenuStatus: {
       type: Boolean,
@@ -549,6 +550,10 @@ export default {
         SUCCESS
       );
     },
+    open() {
+      this.trackDashboardAmplitude(DASHBOARD.SHOW_RECEIVE_ADDRESS);
+      this.openQR = true;
+    },
     /**
      * set openQR to false
      * to close the modal
@@ -582,6 +587,7 @@ export default {
      */
     onLogout() {
       this.closeLogout();
+      this.trackLogout();
       this.removeWallet();
     }
   }

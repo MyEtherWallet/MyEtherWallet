@@ -42,15 +42,15 @@
               placeholder="0"
               :persistent-hint="true"
               :error-messages="amountErrorMessage"
-              :max-btn-obj="{
-                title: 'Max',
-                disabled: disableSwapBtn,
-                method: setEntireBal
-              }"
+              :max-btn-obj="maxBtn"
               :buy-more-str="buyMoreStr"
               class="AmountInput"
               @keydown.native="preventCharE($event)"
-              @buyMore="openBuySell"
+              @buyMore="
+                () => {
+                  openBuySell('ModuleSend');
+                }
+              "
               @input="val => setAmount(val, false)"
             />
           </div>
@@ -83,7 +83,7 @@
         <!-- Network Fee (Note: comes with mt-5(20px) mb-8(32px))) -->
         <!-- ===================================================================================== -->
         <v-col cols="12" class="py-0 mb-8">
-          <app-transaction-fee
+          <transaction-fee
             :show-fee="showSelectedBalance"
             :getting-fee="!txFeeIsReady"
             :error="feeError"
@@ -202,15 +202,13 @@ import {
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 import { fromBase, toBase } from '@/core/helpers/unit';
-
 import SendTransaction from '@/modules/send/handlers/handlerSend';
 
 export default {
   components: {
     ModuleAddressBook: () => import('@/modules/address-book/ModuleAddressBook'),
-    SendLowBalanceNotice: () => import('./components/SendLowBalanceNotice.vue'),
-    AppButtonBalance: () => import('@/core/components/AppButtonBalance'),
-    AppTransactionFee: () => import('@/core/components/AppTransactionFee.vue')
+    TransactionFee: () => import('@/modules/transaction-fee/TransactionFee'),
+    SendLowBalanceNotice: () => import('./components/SendLowBalanceNotice.vue')
   },
   mixins: [buyMore],
   props: {
@@ -258,7 +256,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['address', 'instance']),
+    ...mapState('wallet', ['address', 'instance', 'identifier']),
     ...mapState('global', ['preferredCurrency']),
     ...mapGetters('global', [
       'network',
@@ -267,10 +265,23 @@ export default {
       'swapLink',
       'getFiatValue'
     ]),
-    ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
+    ...mapGetters('wallet', [
+      'balanceInETH',
+      'tokensList',
+      'hasGasPriceOption'
+    ]),
     ...mapGetters('custom', ['hasCustom', 'customTokens', 'hiddenTokens']),
+    maxBtn() {
+      return this.hasGasPriceOption
+        ? {}
+        : {
+            title: 'Max',
+            disabled: this.disableSwapBtn,
+            method: this.setEntireBal
+          };
+    },
     isFromNetworkCurrency() {
-      return this.selectedCurrency?.symbol === this.currencyName;
+      return this.selectedCurrency?.contract === MAIN_TOKEN_ADDRESS;
     },
     isDisabledNextBtn() {
       return (
@@ -283,7 +294,7 @@ export default {
     },
     buyMoreStr() {
       return this.isEthNetwork &&
-        MAIN_TOKEN_ADDRESS === this.selectedCurrency?.contract &&
+        this.isFromNetworkCurrency &&
         this.amountError === 'Not enough balance to send!'
         ? this.network.type.canBuy
           ? 'Buy more.'
@@ -292,7 +303,7 @@ export default {
     },
     hasEnoughEth() {
       // Check whether user has enough eth to cover tx fee + amount to send
-      if (this.selectedCurrency?.contract === MAIN_TOKEN_ADDRESS) {
+      if (this.isFromNetworkCurrency) {
         return BigNumber(this.amount)
           .plus(this.txFeeETH)
           .lte(this.balanceInETH);
@@ -640,10 +651,10 @@ export default {
       if (
         (this.selectedMax &&
           this.selectedCurrency &&
-          this.selectedCurrency.contract === MAIN_TOKEN_ADDRESS &&
+          this.isFromNetworkCurrency &&
           total.gt(this.balanceInETH)) ||
         (this.selectedCurrency &&
-          this.selectedCurrency.contract !== MAIN_TOKEN_ADDRESS &&
+          !this.isFromNetworkCurrency &&
           balance.lt(amt))
       ) {
         this.setEntireBal();
@@ -804,10 +815,7 @@ export default {
       return decimals ? fromBase(amt, decimals).toString() : amt;
     },
     setEntireBal() {
-      if (
-        isEmpty(this.selectedCurrency) ||
-        this.selectedCurrency.contract === MAIN_TOKEN_ADDRESS
-      ) {
+      if (isEmpty(this.selectedCurrency) || this.isFromNetworkCurrency) {
         const amt = BigNumber(this.balanceInETH).minus(this.txFeeETH);
         this.setAmount(amt.lt(0) ? '0' : amt.toFixed(), true);
       } else {

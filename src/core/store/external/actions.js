@@ -9,6 +9,7 @@ import {
 import { toBN } from 'web3-utils';
 import getTokenInfo from '@/core/helpers/tokenInfo';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
+import { fromBase } from '../../helpers/unit';
 
 const setCurrency = async function ({ commit }, val) {
   fetch('https://mainnet.mewwallet.dev/v2/prices/exchange-rates')
@@ -36,6 +37,10 @@ const setLastPath = function ({ commit }, val) {
 const setCoinGeckoTokens = function ({ commit }, params) {
   commit('SET_COIN_GECKO_TOKENS', params);
 };
+
+const setCoinGeckoNetworkIds = function ({ commit }, params) {
+  commit('SET_COIN_GECKO_NETWORK_IDS', params);
+};
 const setNetworkTokens = function ({ commit }, params) {
   commit('SET_NETWORK_TOKENS', params);
 };
@@ -51,16 +56,48 @@ const setTokenAndEthBalance = function ({
   const isTokenBalanceApiSupported = network.type.balanceApi !== '';
   const address = rootState.wallet.address;
 
-  const _getTokenBalance = (balance, decimals) => {
+  const _formatBalance = (balance, decimals) => {
     let n = new BigNumber(balance);
     if (decimals) {
-      n = n.div(new BigNumber(10).pow(decimals));
-      n = formatFloatingPointValue(n);
+      n = formatFloatingPointValue(fromBase(n, decimals));
     } else {
       n = formatIntegerValue(n);
     }
     return n;
   };
+
+  const _getBalance = () => {
+    rootState.wallet.web3.eth.getBalance(address).then(res => {
+      const token = getters.contractToToken(MAIN_TOKEN_ADDRESS);
+      const usdBalance = new BigNumber(fromBase(res, token.decimals))
+        .times(token.price)
+        .toString();
+      dispatch(
+        'wallet/setTokens',
+        [
+          Object.assign(
+            {
+              balance: res,
+              balancef: _formatBalance(res, token.decimals).value,
+              usdBalance: usdBalance,
+              usdBalancef: formatFiatValue(usdBalance).value
+            },
+            token
+          )
+        ],
+        { root: true }
+      )
+        .then(() =>
+          dispatch('wallet/setAccountBalance', toBN(res), { root: true })
+        )
+        .then(() => {
+          // dispatch can't be blank
+          dispatch('custom/updateCustomTokenBalances', false, { root: true });
+          commit('wallet/SET_LOADING_WALLET_INFO', false, { root: true });
+        });
+    });
+  };
+
   if (!isTokenBalanceApiSupported) {
     const currentProvider = rootState.wallet.web3.eth.currentProvider;
     // Prevent the 'Invalid return values' error
@@ -80,46 +117,23 @@ const setTokenAndEthBalance = function ({
         dispatch('wallet/setWeb3Instance', undefined, { root: true });
       }
     }
-    rootState.wallet.web3.eth.getBalance(address).then(res => {
-      const token = getters.contractToToken(MAIN_TOKEN_ADDRESS);
-      const denominator = new BigNumber(10).pow(token.decimals);
-      const usdBalance = new BigNumber(res)
-        .div(denominator)
-        .times(token.price)
-        .toString();
-      dispatch(
-        'wallet/setTokens',
-        [
-          Object.assign(
-            {
-              balance: res,
-              balancef: _getTokenBalance(res, token.decimals).value,
-              usdBalance: usdBalance,
-              usdBalancef: formatFiatValue(usdBalance).value
-            },
-            token
-          )
-        ],
-        { root: true }
-      )
-        .then(() =>
-          dispatch('wallet/setAccountBalance', toBN(res), { root: true })
-        )
-        .then(() => {
-          // dispatch can't be blank
-          dispatch('custom/updateCustomTokenBalances', false, { root: true });
-          commit('wallet/SET_LOADING_WALLET_INFO', false, { root: true });
-        });
-    });
+    _getBalance();
     return;
   }
   let mainTokenBalance = toBN('0');
-  const TOKEN_BALANCE_API = network.type.balanceApi + address;
+  const isQuery = network.type.balanceApi.includes('partners.mewapi')
+    ? '?'
+    : '&';
+  const TOKEN_BALANCE_API = `${network.type.balanceApi}${address}${isQuery}type=internal&platform=web`;
   fetch(TOKEN_BALANCE_API)
     .then(res => res.json())
     .then(res => res.result)
     .then(preTokens => {
       const hasPreTokens = preTokens ? preTokens : [];
+      if (hasPreTokens.length === 0) {
+        _getBalance();
+        return [];
+      }
       const includedUserBalance = hasPreTokens.filter(item => {
         if (
           item.contract.toLowerCase() ===
@@ -134,7 +148,6 @@ const setTokenAndEthBalance = function ({
         });
       }
       const promises = [];
-
       hasPreTokens.forEach(t => {
         if (!t.contract) return;
         const token = getters.contractToToken(t.contract);
@@ -153,32 +166,33 @@ const setTokenAndEthBalance = function ({
           );
         }
       });
-      return Promise.all(promises).then(() => hasPreTokens);
+      return Promise.all(promises).then(() => {
+        return hasPreTokens;
+      });
     })
     .then(tokens => {
       const formattedList = [];
       tokens.forEach(t => {
         const token = getters.contractToToken(t.contract);
-        if (!token) return;
         if (t.contract === MAIN_TOKEN_ADDRESS) {
           mainTokenBalance = toBN(t.balance);
         }
-        const denominator = new BigNumber(10).pow(token.decimals);
-        const usdBalance = new BigNumber(t.balance)
-          .div(denominator)
-          .times(token.price)
-          .toString();
-        formattedList.push(
-          Object.assign(
-            {
-              balance: t.balance,
-              balancef: _getTokenBalance(t.balance, token.decimals).value,
-              usdBalance: usdBalance,
-              usdBalancef: formatFiatValue(usdBalance).value
-            },
-            token
-          )
-        );
+        if (token.name && token.hasOwnProperty('decimals')) {
+          const base = fromBase(t.balance, token.decimals);
+          const usdBalance = new BigNumber(base).times(token.price).toString();
+          formattedList.push(
+            Object.assign(
+              {
+                balance: t.balance,
+                balancef: _formatBalance(t.balance, token.decimals).value,
+                usdBalance: usdBalance,
+                usdBalancef: formatFiatValue(usdBalance).value
+              },
+              t,
+              token
+            )
+          );
+        }
       });
       formattedList.sort(function (x, y) {
         return x.contract == MAIN_TOKEN_ADDRESS
@@ -199,13 +213,31 @@ const setTokenAndEthBalance = function ({
         })
       );
     })
-    .catch(e => Toast(e.message, {}, ERROR));
+    .catch(e => {
+      Toast(e.message, {}, ERROR);
+      _getBalance();
+      return [];
+    });
 };
 
+const storeEIP6963Wallet = function ({ commit }, params) {
+  commit('STORE_EIP6963_WALLET', params);
+};
+const setSelectedEIP6963Provider = function ({ commit }, params) {
+  commit('SET_SELECTED_EIP6963_PROVIDER', params);
+};
+
+const setSelectedEIP6963Info = function ({ commit }, params) {
+  commit('SET_SELECTED_EIP6963_INFO', params);
+};
 export default {
   setLastPath,
   setCurrency,
   setCoinGeckoTokens,
+  setCoinGeckoNetworkIds,
   setTokenAndEthBalance,
-  setNetworkTokens
+  setNetworkTokens,
+  storeEIP6963Wallet,
+  setSelectedEIP6963Info,
+  setSelectedEIP6963Provider
 };

@@ -1,0 +1,111 @@
+<template>
+  <app-simple-dialog
+    :value="gasPriceModal"
+    :width="width"
+    :title="title"
+    @close="handleClose"
+  >
+    <settings-gas-price
+      :is-swap="true"
+      :buttons="gasButtons"
+      :set-selected="setGas"
+      :gas-price="gasPrice"
+      :cost-in-eth="costInEth"
+      :tx-fee-formatted="txFeeFormatted"
+      :tx-fee-usd="txFeeUsd"
+      :not-enough-eth="notEnoughEth"
+      :total-gas-limit="totalGasLimit"
+      :close-dialog="closeDialog"
+      :from-settings="false"
+    />
+  </app-simple-dialog>
+</template>
+
+<script>
+import gasPriceMixin from '@/modules/settings/handler/gasPriceMixin';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+export default {
+  components: {
+    AppSimpleDialog: () => import('./AppSimpleDialog'),
+    SettingsGasPrice: () =>
+      import('@/modules/settings/components/SettingsGasPrice')
+  },
+  mixins: [gasPriceMixin, handlerAnalytics],
+  props: {
+    title: {
+      type: String,
+      default: 'Select transaction fee'
+    },
+    width: {
+      type: String,
+      default: '420'
+    },
+    gasPriceModal: {
+      type: Boolean,
+      default: false
+    },
+    close: {
+      type: Function,
+      default: () => {}
+    },
+    notEnoughEth: {
+      type: Boolean,
+      default: false
+    },
+    costInEth: {
+      type: String,
+      default: '0'
+    },
+    txFeeFormatted: {
+      type: String,
+      default: '0'
+    },
+    txFeeUsd: {
+      type: String,
+      default: '0'
+    },
+    totalGasLimit: {
+      type: String,
+      default: '0'
+    }
+  },
+  watch: {
+    /**
+     * emit gas when modal
+     * opens in case of difference
+     */
+    gasPriceModal(newVal) {
+      if (newVal) {
+        this.$emit('onLocalGasPrice', this.gasPriceByType(this.gasPriceType));
+      }
+    },
+    /**
+     * only emit new gas price
+     * when modal is open
+     */
+    gasPrice() {
+      if (this.gasPriceModal) {
+        this.$emit('onLocalGasPrice', this.gasPriceByType(this.gasPriceType));
+      }
+    }
+  },
+  methods: {
+    /**
+     * emit selected gas
+     */
+    setGas(value) {
+      this.$emit('onLocalGasPrice', this.gasPriceByType(value));
+      this.setSelected(value);
+      this.closeDialog();
+    },
+    closeDialog() {
+      this.close();
+    },
+    handleClose() {
+      this.$emit('close');
+    }
+  }
+};
+</script>
+
+<style></style>

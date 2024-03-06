@@ -10,9 +10,14 @@
 
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex';
+import { v4 as uuidv4 } from 'uuid';
 import '@formatjs/intl-numberformat/polyfill';
 import '@formatjs/intl-numberformat/locale-data/en';
 
+import {
+  getInjectedName,
+  getInjectedIcon
+} from '@/core/helpers/detectProvider.js';
 import { PWA_EVENTS } from '@/core/helpers/common';
 import {
   Toast,
@@ -23,7 +28,11 @@ import {
 import { BUYSELL_EVENT } from '@/modules/buy-sell/helpers';
 import { EventBus } from '@/core/plugins/eventBus';
 import handlerAnalyticsMixin from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin.js';
-import { ROUTES_WALLET } from '@/core/configs/configRoutes';
+import {
+  BUY_SELL,
+  SWAP
+} from '@/modules/analytics-opt-in/handlers/configs/events.js';
+
 export default {
   name: 'App',
   components: {
@@ -45,8 +54,7 @@ export default {
     ...mapState('global', ['preferredCurrency']),
     ...mapState('article', ['timestamp']),
     ...mapGetters('article', ['articleList']),
-    ...mapGetters('global', ['network']),
-    ...mapState('popups', ['surveyPopup', 'neverShowSurveyPopup'])
+    ...mapGetters('global', ['network'])
   },
   created() {
     const succMsg = this.$t('common.updates.new');
@@ -64,43 +72,42 @@ export default {
     window.addEventListener(PWA_EVENTS.PWA_UPDATE_FOUND, () => {
       Toast(updateMsg, {}, INFO);
     });
-
-    // popup listeners
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden && !this.surveyPopup && !this.neverShowSurveyPopup) {
-        this.showSurveyPopup();
-      }
-    });
-
-    window.addEventListener('mouseout', e => {
-      if (
-        (e.clientY <= 0 ||
-          e.clientX <= 0 ||
-          e.clientX >= window.innerWidth ||
-          e.clientY >= window.innerHeight) &&
-        !this.surveyPopup &&
-        !this.neverShowSurveyPopup
-      ) {
-        this.showSurveyPopup();
-      }
-    });
   },
   mounted() {
+    // manually add web3 wallet detected
+    if (window.ethereum) {
+      const name = getInjectedName(window.ethereum);
+      const info = {
+        rdns: 'com.detected.injectedwallet',
+        uuid: uuidv4(),
+        name: name,
+        icon: getInjectedIcon(name)
+      };
+      const provider = window.ethereum;
+      this.storeEIP6963Wallet({ info, provider });
+    }
+    // epi6963 listener
+    window.addEventListener('eip6963:announceProvider', e => {
+      this.storeEIP6963Wallet(e.detail);
+    });
     EventBus.$on('swapTxBroadcasted', hash => {
-      this.trackSwap('swapTxBroadcasted', hash, this.network.type.chainID);
+      const id = this.network.type.chainID;
+      this.trackSwapAmplitude(SWAP.BROADCASTED, { hash: hash, network: id });
     });
     EventBus.$on('swapTxReceivedReceipt', hash => {
-      this.trackSwap('swapTxReceivedReceipt', hash, this.network.type.chainID);
+      const id = this.network.type.chainID;
+      this.trackSwapAmplitude(SWAP.RECEIPT, { hash: hash, network: id });
     });
     EventBus.$on('swapTxFailed', hash => {
+      const id = this.network.type.chainID;
       const passedHash = hash === '0x' ? 'no hash' : hash;
-      this.trackSwap('swapTxFailedV2', passedHash, this.network.type.chainID);
+      this.trackSwapAmplitude(SWAP.FAILED, { hash: passedHash, network: id });
     });
     EventBus.$on('swapTxNotBroadcastedFailed', () => {
-      this.trackSwap('swapTxNotBroadcastedFailed');
+      this.trackSwapAmplitude(SWAP.NOT_BROADCASTED);
     });
-    EventBus.$on(BUYSELL_EVENT, () => {
-      this.openBuy();
+    EventBus.$on(BUYSELL_EVENT, arg => {
+      this.openBuy(arg);
     });
     this.footerHideIntercom();
     this.logMessage();
@@ -127,11 +134,6 @@ export default {
       });
     }
 
-    window.onbeforeunload = () => {
-      if (this.$route.name === ROUTES_WALLET.SWAP.NAME) {
-        this.trackSwap('swapUserExit');
-      }
-    };
     const _self = this;
     // Close modal with 'esc' key
     document.addEventListener('keydown', e => {
@@ -148,6 +150,7 @@ export default {
     EventBus.$off('swapTxNotBroadcastedFailed');
     document.removeEventListener('visibilitychange');
     window.removeEventListener('mouseout');
+    window.removeEventListener('eip6963:announceProvider');
   },
   methods: {
     ...mapActions('global', ['setOnlineStatus']),
@@ -156,7 +159,12 @@ export default {
     ...mapActions('article', ['updateArticles']),
     ...mapActions('article', ['updateArticles']),
     ...mapActions('popups', ['showSurveyPopup']),
-    openBuy() {
+    ...mapActions('external', ['storeEIP6963Wallet']),
+    openBuy(arg) {
+      this.trackBuySell(BUY_SELL.OPEN_BUY_SELL_MODAL, {
+        module: arg[0],
+        path: arg[1]
+      });
       this.buySellOpen = true;
     },
     logMessage() {
@@ -192,5 +200,5 @@ export default {
 
 <style lang="scss">
 @import '@/assets/styles/GlobalStyles.scss';
-@import '@myetherwallet/mew-components/src/assets/styles/global.scss';
+@import '@/assets/styles/GlobalComponents.scss';
 </style>

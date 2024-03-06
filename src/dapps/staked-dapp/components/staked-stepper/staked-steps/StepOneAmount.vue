@@ -27,7 +27,11 @@
           filter-placeholder="Search for Amount"
           is-custom
           outlined
-          @buyMore="openBuySell"
+          @buyMore="
+            () => {
+              openBuySell('StakedAmount');
+            }
+          "
           @input="setAmount"
         />
         <!--
@@ -139,10 +143,10 @@ import {
   formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
+import handlerAnalyticsMixin from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 export default {
-  components: { BorderBlock: () => import('@/components/BorderBlock') },
-  mixins: [buyMore],
+  mixins: [buyMore, handlerAnalyticsMixin],
   props: {
     currentApr: {
       type: String,
@@ -297,6 +301,7 @@ export default {
      * Emits onContinue to go to next step
      */
     onContinue() {
+      this.trackDapp('StakedSetAmount');
       this.$emit('onContinue', { onStep: 1, amount: this.amount });
     },
     /**

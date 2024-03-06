@@ -126,6 +126,7 @@ import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import Web3 from 'web3';
 import { fromWei, toBN } from 'web3-utils';
+
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import nodeList from '@/utils/networks';
 import {
@@ -135,12 +136,16 @@ import {
 import { getCurrency } from '@/modules/settings/components/currencyList';
 import { buyContracts } from './tokenList';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
+import { ETH, BSC, MATIC } from '@/utils/networks/types';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook.vue';
-import BuySellTokenSelect from '@/modules/buy-sell/components/TokenSelect.vue';
 
 export default {
   name: 'ModuleBuyEth',
-  components: { ModuleAddressBook, BuySellTokenSelect },
+  components: {
+    ModuleAddressBook: ModuleAddressBook,
+    BuySellTokenSelect: () =>
+      import('@/modules/buy-sell/components/TokenSelect.vue')
+  },
   props: {
     orderHandler: {
       type: Object,
@@ -245,11 +250,27 @@ export default {
       return fromWei(BigNumber(this.gasPrice).times(21000).toString());
     },
     priceOb() {
-      return !isEmpty(this.fetchedData)
-        ? this.fetchedData[0].prices.find(
+      if (!isEmpty(this.fetchedData)) {
+        if (this.fetchedData[0] && this.fetchedData[0].prices.length > 0) {
+          const inMoonpay = this.fetchedData[0].prices.find(
             item => item.fiat_currency === this.selectedFiatName
-          )
-        : { crypto_currency: 'ETH', fiat_currency: 'USD', price: '3379.08322' };
+          );
+          if (inMoonpay) return inMoonpay;
+        }
+
+        if (this.fetchedData[1] && this.fetchedData[1].prices.length > 0) {
+          const inSimplex = this.fetchedData[1].prices.find(
+            item => item.fiat_currency === this.selectedFiatName
+          );
+          return inSimplex;
+        }
+      }
+
+      return {
+        crypto_currency: ETH.name,
+        fiat_currency: 'USD',
+        price: '3379.08322'
+      };
     },
     networkFeeToFiat() {
       return BigNumber(this.networkFee).times(this.priceOb.price).toString();
@@ -278,6 +299,9 @@ export default {
     isEUR() {
       return this.selectedFiatName === 'EUR' || this.selectedFiatName === 'GBP';
     },
+    isCAD() {
+      return this.selectedFiatName === 'CAD';
+    },
     disableBuy() {
       return (
         (!this.inWallet && !this.actualValidAddress) ||
@@ -301,7 +325,7 @@ export default {
           formatFiatValue(this.min.toFixed(), this.currencyConfig).value
         } ${this.selectedFiatName}`;
       }
-      if (this.maxVal.lt(this.amount)) {
+      if (this.maxVal.gt(0) && this.maxVal.lt(this.amount)) {
         return `Amount can't be above provider's maximum: ${
           formatFiatValue(this.maxVal.toFixed(), this.currencyConfig).value
         } ${this.selectedFiatName}`;
@@ -309,8 +333,9 @@ export default {
       return '';
     },
     tokens() {
+      const filteredContracts = this.isCAD ? [buyContracts[0]] : buyContracts;
       if (this.inWallet) {
-        return buyContracts.reduce((arr, item) => {
+        return filteredContracts.reduce((arr, item) => {
           const inList = this.tokensList.find(t => {
             if (t.contract.toLowerCase() === item.toLowerCase()) return t;
           });
@@ -324,7 +349,7 @@ export default {
         }, []);
       }
       const arr = new Array();
-      for (const contract of buyContracts) {
+      for (const contract of filteredContracts) {
         const token = this.contractToToken(contract);
         if (token) arr.push(token);
       }
@@ -370,9 +395,10 @@ export default {
       return formatFloatingPointValue(this.simplexQuote.crypto_amount).value;
     },
     fiatCurrencyItems() {
-      const arrItems = this.hasData
-        ? this.fetchedData[0].fiat_currencies.filter(item => item !== 'RUB')
-        : ['USD'];
+      const arrItems =
+        this.hasData && this.fetchedData[0].fiat_currencies.length > 0
+          ? this.fetchedData[0].fiat_currencies.filter(item => item !== 'RUB')
+          : ['USD'];
       return getCurrency(arrItems);
     },
     max() {
@@ -423,9 +449,9 @@ export default {
     selectedCurrency: {
       handler: function (newVal, oldVal) {
         const supportedCoins = {
-          ETH: 'ETH',
-          BNB: 'BNB',
-          MATIC: 'MATIC'
+          ETH: ETH.name,
+          BNB: BSC.name,
+          MATIC: MATIC.name
         };
         if (
           !newVal ||
@@ -445,6 +471,12 @@ export default {
     selectedFiat: {
       handler: function (newVal, oldVal) {
         if (!isEqual(newVal, oldVal)) {
+          if (newVal.name === 'CAD' || newVal.name === 'JPY') {
+            this.selectedCurrency = this.tokens[0];
+            this.$emit('selectedFiat', newVal);
+            return;
+          }
+
           const token = this.currencyItems.find(
             item => item.name === this.selectedCryptoName
           );
@@ -453,6 +485,7 @@ export default {
             .multipliedBy(price)
             .toFixed(2);
           this.localCryptoAmount = BigNumber(this.amount).div(price).toString();
+
           this.$emit('selectedFiat', newVal);
         }
       },
@@ -520,12 +553,12 @@ export default {
     },
     async fetchGasPrice() {
       const supportedNodes = {
-        ETH: 'ETH',
-        BNB: 'BSC',
-        MATIC: 'MATIC'
+        ETH: ETH.name,
+        BNB: BSC.name,
+        MATIC: MATIC.name
       };
       const nodeType = !supportedNodes[this.selectedCurrency?.symbol]
-        ? 'ETH'
+        ? ETH.name
         : supportedNodes[this.selectedCurrency.symbol];
       const node = nodeList[nodeType];
       if (!this.web3Connections[nodeType]) {
@@ -578,10 +611,11 @@ export default {
         isEmpty(this.amount) ||
         this.min.gt(this.amount) ||
         isNaN(this.amount) ||
-        this.max.simplex.lt(this.amount) ||
+        (this.max.simplex.gt(0) && this.max.simplex.lt(this.amount)) ||
         this.amountErrorMessages !== ''
-      )
+      ) {
         return;
+      }
       this.loading = true;
       this.disableCurrencySelect = true;
       this.simplexQuote = {};
@@ -600,7 +634,10 @@ export default {
           this.compareQuotes();
         })
         .catch(e => {
-          Toast(e, {}, ERROR);
+          const error = e.response ? e.response.data.error : e;
+          this.loading = false;
+          this.$emit('simplexQuote', {});
+          Toast(error, {}, ERROR);
         });
     },
     compareQuotes() {

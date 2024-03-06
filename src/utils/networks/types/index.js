@@ -16,6 +16,8 @@ import FTM from './FTM';
 import GNO from './GNO';
 import KLAY from './KLAY';
 import OP from './OP';
+import AA from './AA';
+import AAT from './AAT';
 
 export {
   ETH,
@@ -35,5 +37,7 @@ export {
   FTM,
   GNO,
   KLAY,
-  OP
+  OP,
+  AA,
+  AAT
 };

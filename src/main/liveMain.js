@@ -4,14 +4,15 @@ import '@/assets/fonts/Roboto/css/Roboto.css';
 
 import './sentry';
 import './components';
-import './matomo';
 
 import Vue from 'vue';
 import Router from 'vue-router';
 import { v4 as uuidv4 } from 'uuid';
+import * as nameHashPckg from 'eth-ens-namehash';
 
 import VueIntercom from '@mathieustan/vue-intercom';
 import VueSocialSharing from 'vue-social-sharing';
+import * as amplitude from '@amplitude/analytics-browser';
 
 /**Dapps Store */
 import { dappStoreBeforeCreate } from '../dapps/dappsStore';
@@ -47,14 +48,40 @@ Vue.directive('lottie', LottieAnimation);
 // Filters
 Vue.filter('lokalise', lokalise);
 
-// eslint-disable-next-line
-Vue.use(VueIntercom, { appId: 'ja20qe25' });
+/* eslint-disable */
+if (INTERCOM_ID) {
+  Vue.use(VueIntercom, { appId: INTERCOM_ID });
+}
+/* eslint-enable */
 Vue.use(VueSocialSharing);
 
 //Router
 Vue.use(Router);
 Vue.use(Vuex);
 Vue.config.productionTip = false;
+
+// setup amplitude
+// fake generative 32 hex character
+amplitude.init(nameHashPckg.hash(VERSION), {
+  instanceName:
+    process.env.NODE_ENV === 'production' ? 'mew-web-prod' : 'mew-web-dev',
+  optOut: false,
+  serverUrl:
+    process.env.NODE_ENV === 'production'
+      ? 'https://analytics-web.mewwallet.dev/record'
+      : 'https://analytics-web-development.mewwallet.dev/record',
+  appVersion: VERSION,
+  trackingOptions: {
+    ipAddress: false
+  },
+  identityStorage: 'none',
+  logLevel: amplitude.Types.LogLevel.None,
+  defaultTracking: {
+    formInteractions: false,
+    pageViews: false
+  }
+});
+Vue.prototype.$amplitude = amplitude;
 
 // Lazy Loader
 Vue.use(VueLazyLoad, { lazyComponent: true });
@@ -82,7 +109,8 @@ new Vue({
     this.$store.commit('article/INIT_STORE');
     this.$store.commit('popups/INIT_STORE');
     dappStoreBeforeCreate(this.$store);
-    this.$store.dispatch('popups/setTracking');
+
+    this.$amplitude.setOptOut(!this.$store.state.popups.consentToTrack);
   },
   render: h => h(app)
 });

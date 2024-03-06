@@ -155,9 +155,6 @@ import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 const MAX_PROVIDERS = 3;
 export default {
   name: 'SwapProvidersList',
-  components: {
-    AppUserMsgBlock: () => import('@/core/components/AppUserMsgBlock')
-  },
   props: {
     step: {
       type: Number,

@@ -150,16 +150,16 @@ import {
   formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
 
-import StakedStatus from './components/StakedStatus';
-
 import handlerStaked from './handlers/handlerStaked';
+import handlerAnalyticsMixin from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 export default {
   name: 'TheStakedLayout',
   components: {
-    TheWrapperDapp: () => import('@/core/components/TheWrapperDapp'),
+    TheWrapperDapp: () => import('@/dapps/TheWrapperDapp.vue'),
     StakedStepper: () => import('./components/staked-stepper/StakedStepper'),
-    'staked-status': StakedStatus
+    StakedStatus: () => import('./components/StakedStatus')
   },
+  mixins: [handlerAnalyticsMixin],
   data() {
     return {
       validNetworks: SUPPORTED_NETWORKS,
@@ -300,7 +300,8 @@ export default {
       this.handlerStaked = new handlerStaked(
         this.web3,
         this.network,
-        this.address
+        this.address,
+        this.trackDapp
       );
     }
   },
@@ -327,6 +328,7 @@ export default {
      * and set amount value for staked status
      */
     sendTransaction(amountETH) {
+      this.trackDapp('StakedSendStake');
       this.handlerStaked.sendTransaction();
       this.amount = amountETH;
     },

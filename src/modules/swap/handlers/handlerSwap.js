@@ -104,44 +104,41 @@ class MEWSwap {
     return Promise.all(
       newQuotes.map(async item => {
         const swap = await this.swapper.getSwap(item.quote);
+        return swap;
       })
     );
-    const newSwap = await this.swapper.getSwap(newQuotes[0].quote);
-    const providers = [this.providers[0], this.providers[3]];
-    return Promise.all(
-      providers.map((p, i) => {
-        if (!p.isSupportedNetwork(this.chain)) return Promise.resolve();
-        return i === 0
-          ? p.getTrade({ fromT, toT, fromAmount, fromAddress }).then(quotes => {
-              allQuotes = allQuotes.concat(quotes);
-            })
-          : p.getQuote({ fromT, toT, fromAmount }).then(quotes => {
-              allQuotes = allQuotes.concat(quotes);
-            });
-      })
-    ).then(() => {
-      allQuotes.sort((q1, q2) => {
-        // Distinguishes between changelly amount and mew
-        const amount1 = q1.amount ? q1.amount : q1.minimum;
-        const amount2 = q2.amount ? q2.amount : q2.minimum;
-        if (new BigNumber(amount1).gt(new BigNumber(amount2))) return -1;
-        return 1;
-      });
+    // const newSwap = await this.swapper.getSwap(newQuotes[0].quote);
+    // const providers = [this.providers[0], this.providers[3]];
+    // return Promise.all(
+    //   providers.map((p, i) => {
+    //     if (!p.isSupportedNetwork(this.chain)) return Promise.resolve();
+    //     return p.getQuote({ fromT, toT, fromAmount }).then(quotes => {
+    //       if (quotes) allQuotes = allQuotes.concat(quotes);
+    //     });
+    //   })
+    // ).then(() => {
+    //   allQuotes.sort((q1, q2) => {
+    //     // Distinguishes between changelly amount and mew
+    //     const amount1 = q1.amount ? q1.amount : q1.minimum;
+    //     const amount2 = q2.amount ? q2.amount : q2.minimum;
+    //     if (new BigNumber(amount1).gt(new BigNumber(amount2))) return -1;
+    //     return 1;
+    //   });
 
-      // Set Provider information
-      const quotesWProvider = allQuotes.map(q => {
-        const provider = q.exchange || q.provider.toLowerCase();
-        if (Configs.exchangeInfo[provider]) {
-          q.exchangeInfo = Configs.exchangeInfo[provider];
-        } else {
-          q.exchangeInfo = Configs.exchangeInfo.default;
-          q.exchangeInfo.name = provider;
-        }
-        return q;
-      });
-      console.log(quotesWProvider, newSwap);
-      return quotesWProvider;
-    });
+    //   // Set Provider information
+    //   const quotesWProvider = allQuotes.map(q => {
+    //     const provider = q.exchange || q.provider.toLowerCase();
+    //     if (Configs.exchangeInfo[provider]) {
+    //       q.exchangeInfo = Configs.exchangeInfo[provider];
+    //     } else {
+    //       q.exchangeInfo = Configs.exchangeInfo.default;
+    //       q.exchangeInfo.name = provider;
+    //     }
+    //     return q;
+    //   });
+    //   console.log(quotesWProvider, newSwap);
+    //   return quotesWProvider;
+    // });
   }
   getQuotesForSet(arr) {
     const quotes = [];

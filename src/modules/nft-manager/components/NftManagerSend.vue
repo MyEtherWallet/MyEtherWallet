@@ -22,7 +22,15 @@
       v-if="!enoughFunds && showBalanceError"
       class="redPrimary--text px-6 py-0 py-sm-3 mb-3 mb-sm-0"
       >You do not have enough {{ currencyName }} to send.
-      <a target="_blank" class="link" @click="openBuySell">
+      <a
+        target="_blank"
+        class="link"
+        @click="
+          () => {
+            openBuySell('NFTManagerSend');
+          }
+        "
+      >
         <u>Buy More {{ currencyName }}</u>
       </a>
     </span>
@@ -39,9 +47,10 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 import nftPlaceholder from '@/assets/images/icons/icon-nft-placeholder.png';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
-import { mapGetters } from 'vuex';
 export default {
   components: {
     ModuleAddressBook: () => import('@/modules/address-book/ModuleAddressBook')

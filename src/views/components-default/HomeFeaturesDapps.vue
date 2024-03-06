@@ -1,5 +1,5 @@
 <template>
-  <mew6-white-sheet
+  <white-sheet
     class="mew-component--features-dapps px-6 pb-6 pt-5 pt-dm-4 pa-md-10"
     max-width="700px"
   >
@@ -32,24 +32,12 @@
         </div>
       </v-col>
     </v-row>
-    <div class="message d-flex align-center justify-center px-3 py-5 mt-7">
-      <div class="message--text textMedium--text text-center">
-        {{ $t('home.features.dapps.text') }}
-        <a
-          href="https://v5.myetherwallet.com"
-          target="_blank"
-          class="greenPrimary--text"
-          >{{ $t('home.features.dapps.link-text') }}</a
-        >
-      </div>
-    </div>
-  </mew6-white-sheet>
+  </white-sheet>
 </template>
 
 <script>
 export default {
   name: 'HomeFeaturesDapps',
-  components: {},
   data: vm => ({
     dapps: [
       {

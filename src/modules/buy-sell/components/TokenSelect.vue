@@ -63,6 +63,7 @@ import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import * as nodes from '@/utils/networks/nodes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { ETH, BSC, MATIC } from '@/utils/networks/types';
 
 export default {
   name: 'BuySellTokenSelect',
@@ -104,6 +105,7 @@ export default {
   computed: {
     ...mapGetters('global', ['network', 'Networks']),
     ...mapState('wallet', ['instance', 'identifier']),
+    ...mapState('external', ['selectedEIP6963Provider']),
     searchedCurrencyItems() {
       if (this.searchValue) {
         const found = this.currencyItems.filter(element => {
@@ -142,14 +144,14 @@ export default {
     fetchNetworks() {
       const networkList = Object.values(this.Networks).filter(network => {
         if (this.isSell) {
-          if (network[0].type.name === 'ETH') {
+          if (network[0].type.name === ETH.name) {
             return network;
           }
         } else {
           if (
-            network[0].type.name === 'ETH' ||
-            network[0].type.name === 'MATIC' ||
-            network[0].type.name === 'BSC'
+            network[0].type.name === ETH.name ||
+            network[0].type.name === MATIC.name ||
+            network[0].type.name === BSC.name
           ) {
             return network;
           }
@@ -180,7 +182,7 @@ export default {
             this.networkSelected = validNetwork ? this.network.type.name : '';
             const provider =
               this.identifier === WALLET_TYPES.WEB3_WALLET
-                ? this.setWeb3Instance(window.ethereum)
+                ? this.setWeb3Instance(this.selectedEIP6963Provider)
                 : this.setWeb3Instance();
             if (!this.isOfflineApp) {
               provider.then(() => {
@@ -191,7 +193,6 @@ export default {
             this.setWeb3Instance();
           }
           Toast(`Switched network to: ${network.name}`, {}, SUCCESS);
-          this.trackNetworkSwitch(network.name);
           this.$emit('newNetwork');
         })
         .catch(e => {

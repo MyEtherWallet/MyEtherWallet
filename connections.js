@@ -1,7 +1,11 @@
 module.exports = [
   'https://www.myetherwallet.com:443',
+  'https://v6.mewbuilds.com:443',
+  'https://develop.mewbuilds.com:443',
+  'https://staging.mewbuilds.com:443',
   'https://localhost:8080',
   'wss://localhost:8080',
+  'https://coinbase-staking.mewapi.io:443',
   'https://swap.mewapi.io:443',
   'wss://connect.mewapi.io:443',
   'wss://connect2.mewapi.io:443',
@@ -17,6 +21,8 @@ module.exports = [
   'wss://apiws.ethvm.com:443',
   'https://api-v2.ethvm.dev:443',
   'wss://apiws-v2.ethvm.dev:443',
+  'https://api-v3.ethvm.dev:443',
+  'wss://apiws-v3.ethvm.dev:443',
   'https://nft.mewapi.io:443',
   'https://qa.mewwallet.dev:443',
   'https://mainnet.mewwallet.dev:443',
@@ -25,6 +31,9 @@ module.exports = [
   'https://tokenbalance.mewapi.io:443',
   'https://requestcache.mewapi.io:443',
   'https://partners.mewapi.io:443',
+  'https://analytics-web.mewwallet.dev:443',
+  'https://analytics-web-development.mewwallet.dev:443',
+  'https://api2.amplitude.com:443',
   'data:',
   'https://app.lokalise.com:443',
   'https://myetherwallet.matomo.cloud:443',
@@ -47,12 +56,12 @@ module.exports = [
   'https://raw.githubusercontent.com:443/enkryptcom/dynamic-data/main/swaplists/changelly.json',
   'https://formspree.io:443/f/mqjndkkx',
   'https://formspree.io:443/f/xbjenjql',
-  'https://broadcast.mewapi.io:443',
+  'https://broadcast.mewapi.io:443/eth',
   // nodes
   'https://nodes.mewapi.io:443',
   'wss://nodes.mewapi.io:443',
   'wss://rpc.gochain.io:443/ws',
-  'wss://ws1.xinfin.network:443',
+  'wss://ws.xinfin.network:443',
   'wss://www.ethercluster.com:443',
   'wss://node1.mintme.com:443/ws',
   'wss://wss.api.moonriver.moonbeam.network:443',
@@ -63,6 +72,8 @@ module.exports = [
   'wss://rpc.gnosischain.com:443/wss',
   'wss://public-node-api.klaytnapi.com:443/v1/cypress/ws',
   'wss://wsapi.fantom.network:443/',
+  'wss://ws.arthera.net:443/',
+  'wss://ws-test.arthera.net:443/',
   // intercom stuff
   'api-iam.intercom.io:443',
   'https://api.zilliqa.com:443',
@@ -85,6 +96,8 @@ module.exports = [
   'https://buy-staging.moonpay.com:443',
   // Dapps
   'https://public-node.rsk.co', // Rootstock
+  'https://eiqxqk2yzamq64zayk7zjsz6rq0hywyn.lambda-url.us-east-1.on.aws/', // Flyover
+  'https://lps.flyover.rif.technology', // Flyover
   'https://staked.mewapi.io:443', // staked
   'https://stakedtest.mewapi.io:443', // staked
   'https://ethblocksapi.mewapi.io:443', // Eth Blocks

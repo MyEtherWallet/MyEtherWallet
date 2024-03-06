@@ -33,7 +33,6 @@ import { isEmpty } from 'lodash';
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 export default {
   name: 'DateSelectorPopup',
-  components: { AppModal: () => import('@/core/components/AppModal') },
   props: {
     showBlock: {
       type: Boolean,

@@ -36,7 +36,7 @@
       "title": "Swap fiat to ETH, ETH to BTC, and ETH to ERC20 tokens via integrated partners 1inch, DEX AG, Changelly, Bity, and Simplex."
     },
     "dapps": {
-      "text": "MEW team is working hard to update the DApps Center. Cant’s wait?",
+      "text": "MEW team is working hard to update the DApps Center. Can't wait?",
       "link-text": "Access all DApps in MEW Version 5",
       "eth-blocks": "ETH Blocks",
       "stake-eth2": "Stake on ETH 2.0",
@@ -96,12 +96,12 @@
     }
   },
   "mewtopia-block": {
-    "title": "New to crypto? Explore MEWtopia!",
+    "title": "New to crypto? Explore our blog!",
     "text": "Learn how to get the most out of Ethereum with our free library of resources!",
     "button-text": "Get started",
     "mobile": {
       "title-one": "New to crypto?",
-      "title-two": "Explore MEWtopia!"
+      "title-two": "Explore our blog!"
     }
   },
   "get-started": {

@@ -154,11 +154,23 @@ class Changelly {
         ]
       )
         .then(response => {
-          const newResponse = isArray(response.data.result)
-            ? response.data.result[0]
-            : response.data.result;
-          if (response.error || !newResponse.result || !newResponse.id) {
-            return [{}];
+          const newResponse = response.data
+            ? isArray(response.data.result)
+              ? response.data.result[0]
+              : response.data.result
+            : null;
+          // return formatted response and let ui handle error
+          if (response.error || !newResponse || !newResponse.id) {
+            return [
+              {
+                exchange: this.provider,
+                provider: this.provider,
+                amount: '0',
+                rateId: '0',
+                minFrom: minmax?.minFrom ? minmax.minFrom : 0,
+                maxFrom: minmax?.maxFrom ? minmax.maxFrom : 0
+              }
+            ];
           }
           return [
             {

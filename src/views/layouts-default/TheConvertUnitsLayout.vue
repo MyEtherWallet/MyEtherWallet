@@ -1,5 +1,5 @@
 <template>
-  <div class="mew-component--convert-units">
+  <div class="mew-component--convert-units pt-16">
     <the-layout-header
       title="Convert Units"
       subtitle-line-one="Our helpful conversion tool and ether unit reference allow you to calculate the total cost of your transactions."
@@ -95,7 +95,7 @@
       </div>
     </v-container>
 
-    <app-get-started />
+    <get-started />
   </div>
 </template>
 
@@ -108,7 +108,7 @@ export default {
   name: 'TheConvertUnitsLayout',
   components: {
     TheLayoutHeader: () => import('../components-default/TheLayoutHeader'),
-    AppGetStarted: () => import('@/core/components/AppGetStarted')
+    GetStarted: () => import('../components-default/GetStarted')
   },
   data() {
     return {

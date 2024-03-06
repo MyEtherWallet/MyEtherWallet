@@ -115,8 +115,9 @@
 
 <script>
 import BigNumber from 'bignumber.js';
-import { ACTION_TYPES, INTEREST_TYPES } from '../handlers/helpers';
 import { calculateHealthFactorFromBalancesBigUnits } from '@aave/protocol-js';
+
+import { ACTION_TYPES, INTEREST_TYPES } from '../handlers/helpers';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import handlerAave from '../handlers/handlerAave.mixin';
 
