@@ -666,6 +666,7 @@ export default {
       });
       this.showSuccessSwap = false;
       this.reset();
+      this.isSwap = false;
     },
     reset() {
       this.showTxOverlay = false;
@@ -674,7 +675,6 @@ export default {
       this.showSuccessSwap = false;
       this.showCrossChainModal = false;
       this.toNonEth = false;
-      this.isSwap = false;
       this.tx = {};
       this.resolver = () => {};
       this.title = '';
@@ -800,6 +800,7 @@ export default {
       if (this.isSwap) {
         this.trackSwapTransactionSuccessful(param);
       }
+      this.isSwap = false;
     },
     trackSwapTransactionSuccessful(param) {
       this.trackSwapAmplitude(SWAP.SUCCESS, {
