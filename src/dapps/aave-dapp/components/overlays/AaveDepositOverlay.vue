@@ -96,13 +96,7 @@ export default {
       return hasBalance ? BigNumber(hasBalance.usdBalance).toFixed() : '0';
     },
     tokenPrice() {
-      const symbol = this.selectedToken.token;
-      const hasBalance = this.tokensList.find(item => {
-        if (item.symbol === symbol) {
-          return item;
-        }
-      });
-      return hasBalance ? BigNumber(hasBalance.price).toFixed() : '0';
+      return BigNumber(this.selectedToken.price).toFixed();
     },
     tokenBalance() {
       const symbol = this.selectedToken.token;
@@ -112,7 +106,7 @@ export default {
           return item;
         }
       });
-      const decimals = BigNumber(10).pow(hasBalance.decimals);
+      const decimals = BigNumber(10).pow(this.selectedToken.decimals);
       return hasBalance
         ? BigNumber(hasBalance.balance).dividedBy(decimals).toFixed()
         : '0';
