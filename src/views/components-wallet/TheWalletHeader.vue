@@ -157,7 +157,7 @@ export default {
     }
   },
   mounted() {
-    this.setHeaderAds();
+    if (!this.isOfflineApp) this.setHeaderAds();
   },
   methods: {
     async setHeaderAds() {

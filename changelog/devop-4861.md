@@ -1,1 +1,0 @@
-add platform for moonpay

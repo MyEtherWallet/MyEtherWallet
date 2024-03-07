@@ -29,13 +29,13 @@
           />
         </div>
       </template>
-      <template #panelBody2>
+      <template #[importPanel]>
         <settings-import-config :import-config="settingsHandler" />
       </template>
-      <template #panelBody3>
+      <template #[exportPanel]>
         <settings-export-config :export-config="exportStore" />
       </template>
-      <template #panelBody4>
+      <template #[addressBookPanel]>
         <div class="pa-6">
           <div class="mb-4">
             {{ $t('interface.address-book.add-up-to') }}
@@ -53,7 +53,7 @@
           </div>
         </div>
       </template>
-      <template #panelBody5>
+      <template #[localPanel]>
         <settings-locale-config />
       </template>
       <!-- <template #panelBody5>
@@ -137,6 +137,18 @@ export default {
     ...mapState('global', ['online']),
     ...mapState('popups', ['consentToTrack']),
     ...mapGetters('wallet', ['hasGasPriceOption']),
+    importPanel() {
+      return `panelBody${!this.hasGasPriceOption ? 2 : 1}`;
+    },
+    exportPanel() {
+      return `panelBody${!this.hasGasPriceOption ? 3 : 2}`;
+    },
+    addressBookPanel() {
+      return `panelBody${!this.hasGasPriceOption ? 4 : 3}`;
+    },
+    localPanel() {
+      return `panelBody${!this.hasGasPriceOption ? 5 : 4}`;
+    },
     panelItems() {
       const txPriority = [
         {
