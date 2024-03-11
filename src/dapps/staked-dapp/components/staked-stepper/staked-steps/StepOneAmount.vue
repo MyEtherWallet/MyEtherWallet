@@ -27,7 +27,11 @@
           filter-placeholder="Search for Amount"
           is-custom
           outlined
-          @buyMore="openBuySell"
+          @buyMore="
+            () => {
+              openBuySell('StakedAmount');
+            }
+          "
           @input="setAmount"
         />
         <!--

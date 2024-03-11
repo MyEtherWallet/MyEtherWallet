@@ -47,11 +47,12 @@ const getLedgerApp = function (state) {
   return state.ledgerApp;
 };
 
-const isWeb3Wallet = function (state) {
+const hasGasPriceOption = function (state) {
   return (
     state.identifier === WALLET_TYPES.WEB3_WALLET ||
     state.identifier === WALLET_TYPES.WALLET_CONNECT ||
-    state.identifier === WALLET_TYPES.MEW_WALLET
+    state.identifier === WALLET_TYPES.MEW_WALLET ||
+    state.identifier === WALLET_TYPES.WALLET_LINK
   );
 };
 
@@ -62,5 +63,5 @@ export default {
   tokensList,
   initialLoad,
   getLedgerApp,
-  isWeb3Wallet
+  hasGasPriceOption
 };

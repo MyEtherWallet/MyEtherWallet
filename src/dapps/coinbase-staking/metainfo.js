@@ -3,7 +3,7 @@ const layout = () =>
   import(/* webpackChunkName: "dapp-stakewise" */ './TheCoinbaseStakingLayout');
 import ModuleCoinbaseStaking from './modules/ModuleCoinbaseStaking';
 import ModuleCoinbaseUnstaking from './modules/ModuleCoinbaseUnstaking';
-import icon from '@/assets/images/icons/dapps/icon-dapp-coinbase.png';
+import icon from '@/assets/images/icons/dapps/icon-dapp-coinbase.svg';
 export default {
   title: 'ETH Staking',
   subtitle: 'Powered by Coinbase',

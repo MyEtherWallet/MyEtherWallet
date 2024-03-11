@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="showBanner" class="banner-container">
-      <div class="close-icon pa-2 pa-sm-5" @click="trackClosing">
+      <div class="close-icon pa-2 pa-sm-2" @click="trackClosing">
         <v-icon
           :size="$vuetify.breakpoint.smAndDown ? '16' : '24'"
           class="cursor--pointer"

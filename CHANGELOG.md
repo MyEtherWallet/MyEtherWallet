@@ -1,3 +1,24 @@
+### Release v6.9.4
+
+### feature
+
+* add landing page footer [#4860](https://github.com/MyEtherWallet/MyEtherWallet/pull/4860)
+* add gas estimation, disable gas price switch [#4862](https://github.com/MyEtherWallet/MyEtherWallet/pull/4862)
+
+### devop
+
+* remove other wallet option from walletconnect modal [#4844](https://github.com/MyEtherWallet/MyEtherWallet/pull/4844)
+* remove affiliates and fix language on tracking [#4854](https://github.com/MyEtherWallet/MyEtherWallet/pull/4854)
+* update portfolio banner, update copy, rearrange logos [#4855](https://github.com/MyEtherWallet/MyEtherWallet/pull/4855)
+* fix header color [#4856](https://github.com/MyEtherWallet/MyEtherWallet/pull/4856)
+* add buy/sell tracking [#4857](https://github.com/MyEtherWallet/MyEtherWallet/pull/4857)
+* add platform for moonpay [#4861](https://github.com/MyEtherWallet/MyEtherWallet/pull/4861)
+
+### fix
+
+* fix offline access [#4864](https://github.com/MyEtherWallet/MyEtherWallet/pull/4864)
+* fix amplitude for browser extension, add more events [#4865](https://github.com/MyEtherWallet/MyEtherWallet/pull/4865)
+
 ### Release v6.9.3
 
 ### devop

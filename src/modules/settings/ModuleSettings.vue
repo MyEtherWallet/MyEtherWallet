@@ -18,7 +18,7 @@
       :idx-to-expand="idxToExpand"
       class="mt-6"
     >
-      <template v-if="!isWeb3Wallet" #panelBody1>
+      <template v-if="!hasGasPriceOption" #panelBody1>
         <div class="px-5">
           <settings-gas-price
             :buttons="gasButtons"
@@ -29,13 +29,13 @@
           />
         </div>
       </template>
-      <template #panelBody2>
+      <template #[importPanel]>
         <settings-import-config :import-config="settingsHandler" />
       </template>
-      <template #panelBody3>
+      <template #[exportPanel]>
         <settings-export-config :export-config="exportStore" />
       </template>
-      <template #panelBody4>
+      <template #[addressBookPanel]>
         <div class="pa-6">
           <div class="mb-4">
             {{ $t('interface.address-book.add-up-to') }}
@@ -53,7 +53,7 @@
           </div>
         </div>
       </template>
-      <template #panelBody5>
+      <template #[localPanel]>
         <settings-locale-config />
       </template>
       <!-- <template #panelBody5>
@@ -68,7 +68,7 @@
     <div v-if="online && !addMode && !editMode" class="mt-3 px-8">
       <div class="matomo-tracking-switch">
         <v-switch
-          :label="`Data Sharing is ${consentToTrack ? 'On' : 'Off'}`"
+          :label="`Data tracking ${consentToTrack ? 'On' : 'Off'}`"
           :input-value="consentToTrack"
           inset
           color="greenPrimary"
@@ -136,7 +136,19 @@ export default {
     ...mapState('addressBook', ['addressBookStore']),
     ...mapState('global', ['online']),
     ...mapState('popups', ['consentToTrack']),
-    ...mapGetters('wallet', ['isWeb3Wallet']),
+    ...mapGetters('wallet', ['hasGasPriceOption']),
+    importPanel() {
+      return `panelBody${!this.hasGasPriceOption ? 2 : 1}`;
+    },
+    exportPanel() {
+      return `panelBody${!this.hasGasPriceOption ? 3 : 2}`;
+    },
+    addressBookPanel() {
+      return `panelBody${!this.hasGasPriceOption ? 4 : 3}`;
+    },
+    localPanel() {
+      return `panelBody${!this.hasGasPriceOption ? 5 : 4}`;
+    },
     panelItems() {
       const txPriority = [
         {
@@ -158,7 +170,7 @@ export default {
           name: 'Currency settings'
         }
       ];
-      return this.isWeb3Wallet ? panels : txPriority.concat(panels);
+      return this.hasGasPriceOption ? panels : txPriority.concat(panels);
     },
     onMode() {
       return this.addMode ? modes[0] : modes[1];

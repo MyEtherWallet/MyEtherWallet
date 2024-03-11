@@ -276,6 +276,9 @@ export default {
             }
           })
           .catch(e => {
+            this.trackAccessWalletAmplitude(ACCESS_WALLET.ACCESS_FAILED, {
+              wallet: type
+            });
             Toast(e, {}, ERROR);
           });
       } catch (e) {

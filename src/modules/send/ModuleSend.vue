@@ -46,7 +46,11 @@
               :buy-more-str="buyMoreStr"
               class="AmountInput"
               @keydown.native="preventCharE($event)"
-              @buyMore="openBuySell"
+              @buyMore="
+                () => {
+                  openBuySell('ModuleSend');
+                }
+              "
               @input="val => setAmount(val, false)"
             />
           </div>
@@ -78,7 +82,7 @@
         <!-- ===================================================================================== -->
         <!-- Network Fee (Note: comes with mt-5(20px) mb-8(32px))) -->
         <!-- ===================================================================================== -->
-        <v-col v-if="!isWeb3Wallet" cols="12" class="py-0 mb-8">
+        <v-col cols="12" class="py-0 mb-8">
           <transaction-fee
             :show-fee="showSelectedBalance"
             :getting-fee="!txFeeIsReady"
@@ -198,7 +202,6 @@ import {
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 import { fromBase, toBase } from '@/core/helpers/unit';
-
 import SendTransaction from '@/modules/send/handlers/handlerSend';
 
 export default {
@@ -262,10 +265,14 @@ export default {
       'swapLink',
       'getFiatValue'
     ]),
-    ...mapGetters('wallet', ['balanceInETH', 'tokensList', 'isWeb3Wallet']),
+    ...mapGetters('wallet', [
+      'balanceInETH',
+      'tokensList',
+      'hasGasPriceOption'
+    ]),
     ...mapGetters('custom', ['hasCustom', 'customTokens', 'hiddenTokens']),
     maxBtn() {
-      return this.isWeb3Wallet
+      return this.hasGasPriceOption
         ? {}
         : {
             title: 'Max',
@@ -277,13 +284,6 @@ export default {
       return this.selectedCurrency?.contract === MAIN_TOKEN_ADDRESS;
     },
     isDisabledNextBtn() {
-      if (this.isWeb3Wallet) {
-        return (
-          !this.isValidGasLimit ||
-          !this.allValidInputs ||
-          !isHexStrict(this.data)
-        );
-      }
       return (
         this.feeError !== '' ||
         !this.isValidGasLimit ||
@@ -331,7 +331,7 @@ export default {
         BigNumber(this.balanceInETH).gt(0) &&
         BigNumber(this.txFeeETH).gt(this.balanceInETH);
 
-      if (isZero || (isLessThanTxFee && !this.isWeb3Wallet)) {
+      if (isZero || isLessThanTxFee) {
         return true;
       }
 

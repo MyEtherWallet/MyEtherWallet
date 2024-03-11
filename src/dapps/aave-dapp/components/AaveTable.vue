@@ -248,6 +248,9 @@ export default {
               return {
                 token: item.reserve.symbol,
                 tokenImg: `${item.reserve.icon}`,
+                contract: item.reserve.aToken.id,
+                decimals: item.reserve.decimals,
+                price: BigNumber(item.reserve.priceInUSD).toString(),
                 balance: [
                   `${formatFloatingPointValue(item.underlyingBalance).value} ${
                     item.reserve.symbol
@@ -291,6 +294,9 @@ export default {
               return {
                 token: item.reserve.symbol,
                 tokenImg: `${item.reserve.icon}`,
+                contract: item.reserve.aToken.id,
+                decimals: item.reserve.decimals,
+                price: BigNumber(item.reserve.priceInUSD).toString(),
                 balance: [
                   `${formatFloatingPointValue(item.totalBorrows).value} ${
                     item.reserve.symbol

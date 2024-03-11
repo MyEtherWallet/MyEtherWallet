@@ -64,7 +64,13 @@
       />
       <p v-show="!hasEnoughBalanceToStake" class="error--text">
         Not enough balance to claim.
-        <a v-show="network.type.canBuy" @click="openBuySell"
+        <a
+          v-show="network.type.canBuy"
+          @click="
+            () => {
+              openBuySell('CoinbaseStakingSummary');
+            }
+          "
           >Buy More {{ network.type.currencyName }}</a
         >
       </p>
@@ -117,7 +123,6 @@ import moment from 'moment';
 import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { fromBase } from '@/core/helpers/unit';
-import { BUYSELL_EVENT } from '@/modules/buy-sell/helpers';
 import {
   API,
   CB_TRACKING,
@@ -125,12 +130,13 @@ import {
 } from '@/dapps/coinbase-staking/configs.js';
 import { EventBus } from '@/core/plugins/eventBus';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import buyMore from '@/core/mixins/buyMore.mixin.js';
 
 const FIVE_MINS = 300000; // 1000 * 60 * 5
 
 export default {
   name: 'CoinbaseStakingSummary',
-  mixins: [handlerAnalytics],
+  mixins: [handlerAnalytics, buyMore],
   data() {
     return {
       currentTime: 0,
@@ -294,9 +300,6 @@ export default {
           }
           this.storeFetched([res, this.network.type.name]);
         });
-    },
-    openBuySell() {
-      EventBus.$emit(BUYSELL_EVENT);
     },
     async claim() {
       this.loadingClaim = true;

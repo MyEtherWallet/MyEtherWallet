@@ -56,7 +56,9 @@
     =====================================================
     -->
     <div class="d-flex align-center mb-2">
-      <div class="mew-heading-3 ml-4">Transaction fee</div>
+      <div class="mew-heading-3 ml-2">
+        {{ hasGasPriceOption ? 'Estimated Fee' : 'Transaction Fee' }}
+      </div>
     </div>
 
     <!--
@@ -85,7 +87,7 @@
               color="buttonGrayLight"
               depressed
               class="text-transform--initial"
-              :disabled="error !== ''"
+              :disabled="hasGasPriceOption || error !== ''"
               @click="openGasPriceModal"
             >
               <div class="d-flex align-center">
@@ -109,7 +111,11 @@
                     {{ timeWillTake }}
                   </div>
                 </div>
-                <v-icon :color="hasError ? 'redPrimary' : ''" class="ml-3">
+                <v-icon
+                  v-if="!hasGasPriceOption"
+                  :color="hasError ? 'redPrimary' : ''"
+                  class="ml-3"
+                >
                   mdi-chevron-down
                 </v-icon>
               </div>
@@ -143,7 +149,14 @@
             class="ml-2"
           >
             {{ error }}
-            <a v-if="notEnoughEth && network.type.canBuy" @click="openBuySell">
+            <a
+              v-if="notEnoughEth && network.type.canBuy"
+              @click="
+                () => {
+                  openBuySell('TransactionFee');
+                }
+              "
+            >
               Buy more {{ network.type.currencyName }}
             </a>
           </div>
@@ -221,6 +234,7 @@ export default {
   computed: {
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network', 'isEthNetwork', 'gasPriceByType']),
+    ...mapGetters('wallet', ['hasGasPriceOption']),
     ...mapState('global', ['gasPriceType', 'preferredCurrency']),
     txFeeInEth() {
       return fromWei(this.txFee);

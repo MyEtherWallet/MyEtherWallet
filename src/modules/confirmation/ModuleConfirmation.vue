@@ -53,7 +53,7 @@
             :to-tx-data="tx.toTxData"
             :to-details="allToDetails"
             :send-currency="sendCurrency"
-            :is-web3-wallet="isWeb3Wallet"
+            :is-web3-wallet="hasGasPriceOption"
           />
           <confirmation-swap-transaction-details
             v-else
@@ -341,7 +341,7 @@ export default {
     ]),
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network', 'getFiatValue']),
-    ...mapGetters('wallet', ['isWeb3Wallet']),
+    ...mapGetters('wallet', ['hasGasPriceOption']),
     ...mapGetters('article', ['getArticle']),
     ...mapState('addressBook', ['addressBookStore']),
     txTo() {
@@ -361,7 +361,7 @@ export default {
       return this.tx.data !== '0x' && this.identifier === WALLET_TYPES.LEDGER;
     },
     isNotSoftware() {
-      return this.isHardware || this.isWeb3Wallet || this.isOtherWallet;
+      return this.isHardware || this.hasGasPriceOption || this.isOtherWallet;
     },
     showConfirmWithWallet() {
       return this.isNotSoftware && (this.signing || this.error !== '');
@@ -489,7 +489,7 @@ export default {
     signedTxArray: {
       handler: function (newVal) {
         if (
-          this.isWeb3Wallet &&
+          this.hasGasPriceOption &&
           newVal.length !== 0 &&
           newVal.length === this.unsignedTxArr.length
         ) {
@@ -623,7 +623,7 @@ export default {
   },
   methods: {
     shouldDisplayDetail(name) {
-      if (this.isWeb3Wallet && name === 'Gas Price') {
+      if (this.hasGasPriceOption && name === 'Gas Price') {
         return false;
       }
       return true;
@@ -666,6 +666,7 @@ export default {
       });
       this.showSuccessSwap = false;
       this.reset();
+      this.isSwap = false;
     },
     reset() {
       this.showTxOverlay = false;
@@ -674,7 +675,6 @@ export default {
       this.showSuccessSwap = false;
       this.showCrossChainModal = false;
       this.toNonEth = false;
-      this.isSwap = false;
       this.tx = {};
       this.resolver = () => {};
       this.title = '';
@@ -800,6 +800,7 @@ export default {
       if (this.isSwap) {
         this.trackSwapTransactionSuccessful(param);
       }
+      this.isSwap = false;
     },
     trackSwapTransactionSuccessful(param) {
       this.trackSwapAmplitude(SWAP.SUCCESS, {
@@ -823,7 +824,7 @@ export default {
       if (this.isNotSoftware) {
         this.signing = true;
       }
-      if (this.isWeb3Wallet) {
+      if (this.hasGasPriceOption) {
         const event = this.instance.signTransaction(this.tx);
         event
           .on('transactionHash', res => {
@@ -886,7 +887,7 @@ export default {
         delete objClone['currency'];
         delete objClone['confirmInfo'];
         try {
-          if (!this.isWeb3Wallet) {
+          if (!this.hasGasPriceOption) {
             const _signedTx = await this.instance.signTransaction(objClone);
             if (this.unsignedTxArr[i].hasOwnProperty('handleNotification')) {
               _signedTx.tx['handleNotification'] =
@@ -937,7 +938,7 @@ export default {
           }
           this.signedTxArray = signed;
         } catch (err) {
-          if (this.isSwap && !this.isWeb3Wallet) {
+          if (this.isSwap && !this.hasGasPriceOption) {
             this.emitSwapTxFail(err);
           }
           this.error = errorHandler(err);
@@ -958,10 +959,10 @@ export default {
           return;
         }
       }
-      if (!this.isWeb3Wallet && !this.isHardware && !this.isOtherWallet) {
+      if (!this.hasGasPriceOption && !this.isHardware && !this.isOtherWallet) {
         this.signing = false;
       }
-      if (this.isWeb3Wallet) this.resolver(batchTxEvents);
+      if (this.hasGasPriceOption) this.resolver(batchTxEvents);
     },
     rejectedError(msg) {
       return (
@@ -980,7 +981,7 @@ export default {
       if (this.isSwap) {
         this.trackSwapAmplitude(SWAP.CONFIRM_CLICKED);
       }
-      if (!this.isWeb3Wallet) {
+      if (!this.hasGasPriceOption) {
         if (
           (this.signedTxArray.length === 0 ||
             this.signedTxArray.length < this.unsignedTxArr.length) &&
