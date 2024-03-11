@@ -1,6 +1,5 @@
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
-const layout = () =>
-  import(/* webpackChunkName: "dapp-unstoppable" */ './UnstoppableDomain');
+const layout = () => import('./UnstoppableDomain');
 export default {
   title: 'Unstoppable Domains',
   subtitle: '',

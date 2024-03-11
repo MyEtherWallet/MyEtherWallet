@@ -1,11 +1,13 @@
+import Vue from 'vue';
+import Router from 'vue-router';
+import Vuex from 'vuex';
+import VueCompositionAPI from '@vue/composition-api';
+
 import app from './offlineApp';
 import '@/assets/fonts/MaterialDesignIcons/css/materialdesignicons.min.css';
 import '@/assets/fonts/Roboto/css/Roboto.css';
 
 import './components';
-
-import Vue from 'vue';
-import Router from 'vue-router';
 
 const originalPush = Router.prototype.push;
 const originalReplace = Router.prototype.replace;
@@ -20,7 +22,6 @@ Router.prototype.originalReplace = originalReplace;
 
 import router from '@/core/router';
 import store from '@/core/store';
-import Vuex from 'vuex';
 
 import LottieAnimation from '@/core/directives/lottie';
 import lokalise from '@/core/filters/lokalise';
@@ -38,7 +39,13 @@ Vue.filter('lokalise', lokalise);
 
 //Router
 Vue.use(Router);
+
+//Store
 Vue.use(Vuex);
+
+//Composition
+Vue.use(Vuex);
+
 Vue.config.productionTip = false;
 new Vue({
   el: '#app',

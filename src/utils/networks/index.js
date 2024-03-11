@@ -1,4 +1,4 @@
-const platform = require('platform');
+import plafrom from 'platform';
 import * as types from './types';
 import * as nodes from './nodes';
 

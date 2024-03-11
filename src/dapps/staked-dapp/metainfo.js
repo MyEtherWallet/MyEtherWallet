@@ -1,7 +1,6 @@
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { SUPPORTED_NETWORKS } from './handlers/supportedNetworks';
-const layout = () =>
-  import(/* webpackChunkName: "dapp-staked" */ './TheStakedLayout');
+const layout = () => import('./TheStakedLayout');
 import { stakedRouterGuard } from '@/core/router/helpers';
 export default {
   title: 'Staked',

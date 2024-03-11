@@ -3,7 +3,7 @@
 import { Toast, SENTRY } from '@/modules/toast/handler/handlerToast';
 import VuexStore from '@/core/store';
 import { XDC } from '@/utils/networks/types';
-const errors = require('web3-core-helpers').errors;
+import helpers from 'web3-core-helpers';
 import { isArray, isFunction } from 'lodash';
 import { parseXDCValues } from './xdc-parser';
 let Ws = null;
@@ -113,7 +113,7 @@ WebsocketProvider.prototype._parseResponse = function (data) {
       clearTimeout(_this.lastChunkTimeout);
       _this.lastChunkTimeout = setTimeout(function () {
         _this._timeout();
-        throw errors.InvalidResponse(data);
+        throw helpers.errors.InvalidResponse(data);
       }, 1000 * 15);
 
       return;
@@ -142,7 +142,7 @@ WebsocketProvider.prototype._addResponseCallback = function (
     setTimeout(function () {
       if (_this.responseCallbacks[id]) {
         _this.responseCallbacks[id](
-          errors.ConnectionTimeout(_this._customTimeout)
+          helpers.errors.ConnectionTimeout(_this._customTimeout)
         );
         delete _this.responseCallbacks[id];
       }
@@ -152,7 +152,7 @@ WebsocketProvider.prototype._addResponseCallback = function (
 WebsocketProvider.prototype._timeout = function () {
   for (const key in this.responseCallbacks) {
     if (this.responseCallbacks.hasOwnProperty(key)) {
-      this.responseCallbacks[key](errors.InvalidConnection('on WS'));
+      this.responseCallbacks[key](helpers.errors.InvalidConnection('on WS'));
       delete this.responseCallbacks[key];
     }
   }

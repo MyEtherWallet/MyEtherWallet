@@ -1,6 +1,5 @@
 import { STAKEWISE_ROUTES } from './configsRoutes';
-const layout = () =>
-  import(/* webpackChunkName: "dapp-stakewise" */ './TheStakewiseLayout');
+const layout = () => import('./TheStakewiseLayout');
 import ModuleStakewiseRewards from './modules/ModuleStakewiseRewards';
 import ModuleStakewiseStake from './modules/ModuleStakewiseStake';
 import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';

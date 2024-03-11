@@ -1,8 +1,5 @@
 import dappsmeta from './metainfo-dapps';
-const Dapps = () =>
-  import(
-    /* webpackChunkName: "dapp" */ '@/modules/dapps-center/ModuleDappsCenter'
-  );
+const Dapps = () => import('@/modules/dapps-center/ModuleDappsCenter');
 export default [
   {
     path: '',

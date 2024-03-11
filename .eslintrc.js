@@ -7,7 +7,8 @@ module.exports = {
   root: true,
   env: {
     node: true,
-    jest: true
+    jest: true,
+    es2022: true
   },
   extends: [
     'plugin:vue/recommended',
@@ -46,9 +47,6 @@ module.exports = {
         ignorePublicMembers: false
       }
     ]
-  },
-  parserOptions: {
-    parser: 'babel-eslint'
   },
   plugins: ['security']
 };

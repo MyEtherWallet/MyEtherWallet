@@ -25,9 +25,9 @@ const cleanupOldServiceWorkers = () => {
     });
 };
 
-if (process.env.NODE_ENV === 'production') {
+if (import.meta.env.NODE_ENV === 'production') {
   cleanupOldServiceWorkers().then(() => {
-    register(`${process.env.BASE_URL}service-worker.js`, {
+    register(`${import.meta.env.BASE_URL}service-worker.js`, {
       registrationOptions: { scope: '/' },
       updatefound() {
         if (window)

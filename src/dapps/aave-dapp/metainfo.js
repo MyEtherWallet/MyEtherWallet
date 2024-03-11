@@ -1,7 +1,6 @@
 import { ETH } from '@/utils/networks/types';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
-const layout = () =>
-  import(/* webpackChunkName: "dapp-aave" */ './TheAaveLayout');
+const layout = () => import('./TheAaveLayout');
 export default {
   title: 'Aave V2',
   subtitle: '',

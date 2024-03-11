@@ -1,18 +1,21 @@
+import Vue from 'vue';
+import Router from 'vue-router';
+import VueIntercom from '@mathieustan/vue-intercom';
+import VueSocialSharing from 'vue-social-sharing';
+import Vuex from 'vuex';
+import VueLazyLoad from 'vue-lazyload';
+import VueCompositionAPI from '@vue/composition-api';
+import { v4 as uuidv4 } from 'uuid';
+import * as nameHashPckg from 'eth-ens-namehash';
+import * as amplitude from '@amplitude/analytics-browser';
+import * as locStore from 'store';
+
 import app from './mainApp';
 import '@/assets/fonts/MaterialDesignIcons/css/materialdesignicons.min.css';
 import '@/assets/fonts/Roboto/css/Roboto.css';
 
 import './sentry';
 import './components';
-
-import Vue from 'vue';
-import Router from 'vue-router';
-import { v4 as uuidv4 } from 'uuid';
-import * as nameHashPckg from 'eth-ens-namehash';
-
-import VueIntercom from '@mathieustan/vue-intercom';
-import VueSocialSharing from 'vue-social-sharing';
-import * as amplitude from '@amplitude/analytics-browser';
 
 /**Dapps Store */
 import { dappStoreBeforeCreate } from '../dapps/dappsStore';
@@ -30,7 +33,6 @@ Router.prototype.originalReplace = originalReplace;
 
 import router from '@/core/router';
 import store from '@/core/store';
-import Vuex from 'vuex';
 
 import LottieAnimation from '@/core/directives/lottie';
 import lokalise from '@/core/filters/lokalise';
@@ -40,8 +42,7 @@ import '@/core/plugins/registerServiceWorker';
 import vuetify from '@/core/plugins/vuetify';
 import apolloProvider from './apolloProvider';
 import i18n from './i18n';
-import * as locStore from 'store';
-import VueLazyLoad from 'vue-lazyload';
+
 // Directives
 Vue.directive('lottie', LottieAnimation);
 
@@ -64,10 +65,10 @@ Vue.config.productionTip = false;
 // fake generative 32 hex character
 amplitude.init(nameHashPckg.hash(VERSION), {
   instanceName:
-    process.env.NODE_ENV === 'production' ? 'mew-web-prod' : 'mew-web-dev',
+    import.meta.env.NODE_ENV === 'production' ? 'mew-web-prod' : 'mew-web-dev',
   optOut: false,
   serverUrl:
-    process.env.NODE_ENV === 'production'
+    import.meta.env.NODE_ENV === 'production'
       ? 'https://analytics-web.mewwallet.dev/record'
       : 'https://analytics-web-development.mewwallet.dev/record',
   appVersion: VERSION,
@@ -85,6 +86,9 @@ Vue.prototype.$amplitude = amplitude;
 
 // Lazy Loader
 Vue.use(VueLazyLoad);
+
+// Composition
+Vue.use(VueCompositionAPI);
 
 new Vue({
   el: '#app',

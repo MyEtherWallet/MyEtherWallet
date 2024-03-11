@@ -1,6 +1,5 @@
 import { COINBASE_STAKING_ROUTES, SUPPORTED_NETWORKS } from './configs';
-const layout = () =>
-  import(/* webpackChunkName: "dapp-stakewise" */ './TheCoinbaseStakingLayout');
+const layout = () => import('./TheCoinbaseStakingLayout');
 import ModuleCoinbaseStaking from './modules/ModuleCoinbaseStaking';
 import ModuleCoinbaseUnstaking from './modules/ModuleCoinbaseUnstaking';
 import icon from '@/assets/images/icons/dapps/icon-dapp-coinbase.svg';

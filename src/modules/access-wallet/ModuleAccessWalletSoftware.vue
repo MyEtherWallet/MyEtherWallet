@@ -162,9 +162,9 @@ export default {
           icon: require('@/assets/images/icons/icon-private-key-grey.png'),
           class: 'AccessPrivateKeyWallet',
           fn: () => {
-            if (process.env.VUE_APP_PRIV_KEY) {
+            if (import.meta.env.VITE_APP_PRIV_KEY) {
               this.accessHandler.unlockPrivateKeyWallet(
-                process.env.VUE_APP_PRIV_KEY
+                import.meta.env.VITE_APP_PRIV_KEY
               );
               this.unlockWallet();
             } else {

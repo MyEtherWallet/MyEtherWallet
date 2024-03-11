@@ -9,13 +9,9 @@ export default {
   rightIcon: 'ensManager',
   path: ENS_MANAGER_ROUTE.ENS_MANAGER.PATH,
   name: ENS_MANAGER_ROUTE.ENS_MANAGER.NAME,
-  component: () =>
-    import(
-      /* webpackChunkName: "dapp-ens" */ '@/dapps/ens-manager-dapp/TheENSManagerLayout'
-    ),
+  component: () => import('@/dapps/ens-manager-dapp/TheENSManagerLayout'),
   networks: SUPPORTED_NETWORKS,
-  layout: () =>
-    import(/* webpackChunkName: "dapp-ens" */ './TheENSManagerLayout'),
+  layout: () => import('./TheENSManagerLayout'),
   release: '07/08/2021',
   meta: {
     noAuth: false,

@@ -1,7 +1,4 @@
-const Staking = () =>
-  import(
-    /* webpackChunkName: "stake" */ '@/modules/staking/ModuleStakingCenter.vue'
-  );
+const Staking = () => import('@/modules/staking/ModuleStakingCenter.vue');
 export default [
   {
     path: '',

@@ -1,3 +1,15 @@
+import xblaster from '@/modules/swap/assets/xblaster.png';
+import uniswap from '@/modules/swap/assets/uniswap.png';
+import Bancor from '@/modules/swap/assets/Bancor.png';
+import kyber from '@/modules/swap/assets/kyber.png';
+import ZeroX from '@/modules/swap/assets/0x.png';
+import Oasis from '@/modules/swap/assets/Oasis.png';
+import Synthetix from '@/modules/swap/assets/Synthetix.png';
+import Curve from '@/modules/swap/assets/Curve.png';
+import Sushiswap from '@/modules/swap/assets/Sushiswap.png';
+import OneInch from '@/modules/swap/assets/1inch.png';
+import Changelly from '@/modules/swap/assets/Changelly.png';
+import iconSwap from '@/assets/images/icons/icon-swap.svg';
 export default {
   status: {
     SUBMITTED: 'SUBMITTED',
@@ -11,7 +23,7 @@ export default {
     ag: {
       name: 'X Blaster',
       description: '',
-      img: require('@/modules/swap/assets/xblaster.png')
+      img: xblaster
     },
     balancer: {
       name: 'Balancer',
@@ -26,82 +38,82 @@ export default {
     uniswap: {
       name: 'Uniswap',
       description: '',
-      img: require('@/modules/swap/assets/uniswap.png')
+      img: uniswap
     },
     uniswap_v2: {
       name: 'Uniswap v2',
       description: '',
-      img: require('@/modules/swap/assets/uniswap.png')
+      img: uniswap
     },
     uniswap_v3: {
       name: 'Uniswap v3',
       description: '',
-      img: require('@/modules/swap/assets/uniswap.png')
+      img: uniswap
     },
     bancor: {
       name: 'Bancor',
       description: '',
-      img: require('@/modules/swap/assets/Bancor.png')
+      img: Bancor
     },
     kyber: {
       name: 'Kyber Swap',
       description: '',
-      img: require('@/modules/swap/assets/kyber.png')
+      img: kyber
     },
     zero_x: {
       name: '0x',
       description: '',
-      img: require('@/modules/swap/assets/0x.png')
+      img: ZeroX
     },
     zero_x_v2: {
       name: '0x v2',
       description: '',
-      img: require('@/modules/swap/assets/0x.png')
+      img: ZeroX
     },
     zero_x_v3: {
       name: '0x v3',
       description: '',
-      img: require('@/modules/swap/assets/0x.png')
+      img: ZeroX
     },
     oasis: {
       name: 'Oasis',
       description: '',
-      img: require('@/modules/swap/assets/Oasis.png')
+      img: Oasis
     },
     synthetix: {
       name: 'Synthetix',
       description: '',
-      img: require('@/modules/swap/assets/Synthetix.png')
+      img: Synthetix
     },
     curvefi: {
       name: 'Curve fi',
       description: '',
-      img: require('@/modules/swap/assets/Curve.png')
+      img: Curve
     },
     curve_susd: {
       name: 'Curve sUSD',
       description: '',
-      img: require('@/modules/swap/assets/Curve.png')
+      img: Curve
     },
     sushiswap: {
       name: 'Sushiswap',
       description: '',
-      img: require('@/modules/swap/assets/Sushiswap.png')
+      img: Sushiswap
     },
     one_inch: {
       name: 'One Inch',
       description: '',
-      img: require('@/modules/swap/assets/1inch.png')
+      img: OneInch
     },
     changelly: {
       name: 'Changelly',
       description: '',
-      img: require('@/modules/swap/assets/Changelly.png')
+      img: Changelly
     },
     default: {
       name: '',
       description: '',
-      img: require('@/assets/images/icons/icon-swap.svg')
+      img: iconSwap
     }
   }
 };

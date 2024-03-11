@@ -6,23 +6,26 @@ import { getMainDefinition } from 'apollo-utilities';
 import { onError } from 'apollo-link-error';
 import * as Sentry from '@sentry/vue';
 import ApolloClient from 'apollo-client';
-import { SubscriptionClient } from 'subscriptions-transport-ws';
+// import { SubscriptionClient } from 'subscriptions-transport-ws';
+// import WebSocket from 'ws';
+import { createClient } from 'graphql-ws';
 
 export function createApolloClient(httpsEndpoint, wsEndpoint) {
   const httpLink = new HttpLink({
     uri: httpsEndpoint
   });
 
-  const subscriptionClient = new SubscriptionClient(wsEndpoint, {
+  const subscriptionClient = createClient({
+    url: wsEndpoint,
     lazy: true,
-    timeout: 60000,
-    reconnect: true
+    lazyCloseTimeout: 60000,
+    retryAttempts: 10
   });
 
   const websocket = new WebSocketLink(subscriptionClient);
 
   const onErrorLink = onError(error => {
-    if (error.graphQLErrors && process.env.NODE_ENV !== 'production') {
+    if (error.graphQLErrors && import.meta.env.NODE_ENV !== 'production') {
       error.graphQLErrors.map(({ message, locations, path }) => {
         const newError = `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`;
         // eslint-disable-next-line
@@ -30,7 +33,7 @@ export function createApolloClient(httpsEndpoint, wsEndpoint) {
       });
     }
 
-    if (error.graphQLErrors && process.env.NODE_ENV === 'production') {
+    if (error.graphQLErrors && import.meta.env.NODE_ENV === 'production') {
       error.graphQLErrors.map(({ message, locations, path }) => {
         const newError = `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`;
         Sentry.captureException(newError);

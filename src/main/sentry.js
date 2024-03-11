@@ -13,10 +13,11 @@ Sentry.init({
   environment: 'web',
   requestBodies: 'small',
   autoSessionTracking: false,
-  release: NODE_ENV === 'production' ? VERSION : 'develop',
-  beforeSend(event, hint) {
-    // eslint-disable-next-line
-    console.error(hint.originalException || hint.syntheticException);
+  release:
+    import.meta.env.NODE_ENV === 'production'
+      ? import.meta.env.VERSION
+      : 'develop',
+  beforeSend(event) {
     const network = store.getters['global/network']
       ? store.getters['global/network'].type.name
       : '';

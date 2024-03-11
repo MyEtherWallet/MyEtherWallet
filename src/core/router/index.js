@@ -9,19 +9,19 @@ import routesNotFound from './routes-not-found';
 import { ROUTES_HOME } from '../configs/configRoutes';
 const routes =
   // eslint-disable-next-line
-  BUILD === 'offline'
+  import.meta.env.BUILD === 'offline'
     ? [routesOfflineDefault, routesOfflineWallet, routesNotFound]
     : [routesDefault, routesWallet, routesNotFound];
 
 const getLangBasePath = () => {
-  if (ROUTER_MODE === 'hash') return undefined;
+  if (import.meta.env.ROUTER_MODE === 'hash') return undefined;
   const locale = window.location.pathname.replace(/^\/([^/]+).*/i, '$1').trim();
   if (Object.keys(langShortCodes).includes(locale)) return '/' + locale;
   return undefined;
 };
 const router = new Router({
   base: getLangBasePath(),
-  mode: ROUTER_MODE || 'hash',
+  mode: import.meta.env.ROUTER_MODE || 'hash',
   routes: routes,
   scrollBehavior(to) {
     if (to.hash) {
