@@ -192,7 +192,7 @@
     "web3-utils": "1.5.0",
     "webpack": "4.44.2",
     "webpack-bundle-analyzer": "4.10.1",
-    "xss": "1.0.14"
+    "xss": "1.0.15"
   },
   "engines": {
     "node": ">= 10.0.0 < 12.3.0",
