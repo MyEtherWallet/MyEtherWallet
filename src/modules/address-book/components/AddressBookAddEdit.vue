@@ -188,17 +188,8 @@ export default {
     addMode() {
       return this.mode === modes[0];
     },
-    isMyAddress() {
-      return (
-        this.address?.toLowerCase() === this.addressToAdd?.toLowerCase() ||
-        this.address?.toLowerCase() === this.resolvedAddr?.toLowerCase()
-      );
-    },
     alreadyExists() {
       if (this.addMode) {
-        if (this.isMyAddress) {
-          return true;
-        }
         return this.checkResolvedExists || this.checkAddressExists;
       }
       return false;

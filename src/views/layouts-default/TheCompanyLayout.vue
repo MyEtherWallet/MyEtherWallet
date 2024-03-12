@@ -1,6 +1,6 @@
 <template>
   <div>
-    <the-layout-header :title="$t('aboutUs.title')" />
+    <the-layout-header :title="$t('aboutUs.title')" class="pt-16" />
     <div class="py-9" />
     <company-what-is-mew />
     <div class="py-7" />

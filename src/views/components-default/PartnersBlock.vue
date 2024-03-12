@@ -57,11 +57,6 @@ export default {
         name: 'bity'
       },
       {
-        img: require('@/assets/images/partners/sirin.png'),
-        link: 'https://sirinlabs.com/',
-        name: 'sirin'
-      },
-      {
         img: require('@/assets/images/partners/keepkey.png'),
         link: 'http://lddy.no/a4im',
         name: 'keepkey'

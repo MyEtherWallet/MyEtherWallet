@@ -3,6 +3,6 @@ export default {
     stakedStore: 'staked-store'
   },
   VERSION: {
-    stakedStore: '0.0.1'
+    stakedStore: '0.0.2'
   }
 };

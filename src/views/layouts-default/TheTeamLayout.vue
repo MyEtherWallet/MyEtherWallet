@@ -1,6 +1,6 @@
 <template>
   <div>
-    <the-layout-header title="Join us" />
+    <the-layout-header title="Join us" class="pt-16" />
     <div class="py-7" />
     <v-container>
       <v-sheet max-width="700px" class="mx-auto">

@@ -34,7 +34,9 @@
                 >
                   <img
                     :src="
-                      require(`@/assets/images/icons/dapps/icon-dapp-${dapp.rightIcon.toLowerCase()}.svg`)
+                      dapp.rightIconType === 'mew'
+                        ? require(`@/assets/images/icons/dapps/icon-dapp-${dapp.rightIcon.toLowerCase()}.svg`)
+                        : dapp.rightIcon
                     "
                     :alt="dapp.title"
                     height="60"
@@ -53,8 +55,14 @@
                         mdi-new-box
                       </v-icon>
                     </div>
-                    <div class="text-left break-word" style="line-height: 19px">
+                    <div
+                      class="text-left break-word font-weight-bold"
+                      style="line-height: 19px"
+                    >
                       {{ dapp.subtitle }}
+                    </div>
+                    <div class="text-left break-word" style="line-height: 19px">
+                      {{ dapp.description }}
                     </div>
                     <div class="body-2 mt-1 textLight--text text-left">
                       {{ dapp.tag }}

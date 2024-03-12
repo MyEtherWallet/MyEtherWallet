@@ -16,6 +16,8 @@ import fantom from './fantom-ws';
 import gnosis from './gnosis-ws';
 import klaytn from './klaytn-ws';
 import opmew from './op-mew-ws';
+import arthera from './arthera-ws';
+import artheratest from './arthera-test-ws';
 
 export {
   etcethereumclassiccooperativeparityws,
@@ -35,5 +37,7 @@ export {
   fantom,
   gnosis,
   klaytn,
-  opmew
+  opmew,
+  arthera,
+  artheratest
 };

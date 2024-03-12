@@ -1,6 +1,6 @@
 <template>
   <div class="mew-component--how-it-works">
-    <the-layout-header :title="$t('howItWorks.title')" />
+    <the-layout-header :title="$t('howItWorks.title')" class="pt-16" />
     <div class="py-7" />
     <v-container>
       <v-sheet color="transparent" max-width="500px" class="mx-auto mb-10">
@@ -29,6 +29,13 @@ export default {
     HowItWorksTokens: () => import('../components-default/HowItWorksTokens'),
     HowItWorksMore: () => import('../components-default/HowItWorksMore'),
     GetStarted: () => import('../components-default/GetStarted')
+  },
+  updated() {
+    const id = this.$route.hash.replace('#', '');
+    const container = document.getElementById(id);
+    if (container) {
+      container.scrollIntoView();
+    }
   }
 };
 </script>

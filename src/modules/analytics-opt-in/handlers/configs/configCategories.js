@@ -12,13 +12,15 @@ export default {
   gasSwitch: 'gasSwitch',
   swap: 'swapFlow',
   swapAmplitude: 'Swap',
-  dapp: 'dapp',
+  dapp: 'Dapp',
   swapTokenPair: 'swapTokenPair',
   swapToken: 'swapToken',
   globalError: 'globalError',
   enkrypt: 'enkrypt',
   mewwallet: 'mewwallet',
-  buySell: 'buySell',
+  buySell: 'BuySell',
   mewVersion: 'mewVersion',
-  advertisement: 'MEWAd'
+  advertisement: 'MEWAd',
+  nftModule: 'NftModule',
+  staking: 'Staking'
 };

@@ -19,8 +19,9 @@
           <span class="text-uppercase font-weight-bold">{{ title }}</span>
           <span>
             {{ description }}
+            <a v-if="!bottom" :href="linkObj.url">{{ linkObj.title }} </a>
           </span>
-          <span>
+          <span v-if="bottom">
             <a :href="linkObj.url">{{ linkObj.title }} </a>
           </span>
         </v-col>
@@ -46,6 +47,10 @@ export default {
     description: {
       type: String,
       default: ''
+    },
+    bottom: {
+      type: Boolean,
+      default: true
     },
     /**
      * Applies the link url to the end of the text. Takes title and url, i.e. {title: '', url: ''}

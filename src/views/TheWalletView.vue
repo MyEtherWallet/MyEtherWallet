@@ -5,12 +5,10 @@
       <v-container class="pa-2 pa-md-3 mb-14" fluid>
         <the-wallet-header />
         <module-confirmation v-if="address" />
-        <the-enkrypt-popup v-if="!isOfflineApp" :show="walletEnkryptPopup" />
         <router-view />
       </v-container>
     </v-main>
     <the-wallet-footer :is-offline-app="isOfflineApp" />
-    <enkrypt-promo-snackbar v-if="!isOfflineApp" />
     <module-paper-wallet
       :open="showPaperWallet"
       :close="closePaperWallet"
@@ -23,7 +21,6 @@
 <script>
 import { mapActions, mapState, mapGetters } from 'vuex';
 import { toBN } from 'web3-utils';
-import moment from 'moment';
 import { debounce, isEqual } from 'lodash';
 import handlerWallet from '@/core/mixins/handlerWallet.mixin';
 import nodeList from '@/utils/networks';
@@ -52,10 +49,6 @@ export default {
     TheWalletFooter: () => import('./components-wallet/TheWalletFooter'),
     ModuleConfirmation: () =>
       import('@/modules/confirmation/ModuleConfirmation'),
-    EnkryptPromoSnackbar: () =>
-      import('@/views/components-wallet/EnkryptPromoSnackbar'),
-    TheEnkryptPopup: () =>
-      import('@/views/components-default/TheEnkryptPopup.vue'),
     ModulePaperWallet: () => import('@/modules/balance/ModulePaperWallet.vue')
   },
   mixins: [handlerWallet, handlerAnalytics],
@@ -80,30 +73,17 @@ export default {
       'darkMode'
     ]),
     ...mapState('external', ['coinGeckoTokens', 'selectedEIP6963Provider']),
-    ...mapState('popups', [
-      'enkryptWalletPopup',
-      'enkryptLandingPopup',
-      'enkryptLandingPopupClosed'
-    ]),
     ...mapGetters('global', [
       'network',
       'gasPrice',
       'isEIP1559SupportedNetwork'
     ]),
-    ...mapGetters('wallet', ['balanceInWei']),
-    walletEnkryptPopup() {
-      return (
-        !this.enkryptLandingPopup &&
-        moment(new Date()).diff(this.enkryptLandingPopupClosed, 'hours') >=
-          24 &&
-        this.enkryptWalletPopup
-      );
-    }
+    ...mapGetters('wallet', ['balanceInWei'])
   },
   watch: {
     address(newVal) {
       if (!newVal) {
-        this.$router.push({ name: ROUTES_HOME.HOME.NAME });
+        this.$router.push({ name: ROUTES_HOME.ACCESS_WALLET.NAME });
       } else {
         this.setup();
         this.setTokensAndBalance();

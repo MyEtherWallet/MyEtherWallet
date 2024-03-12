@@ -17,6 +17,9 @@
     <v-col cols="12" class="pa-2 pa-md-3 d-md-none pb-0">
       <module-network />
     </v-col>
+    <!-- <v-col v-if="isEthNetwork && !isOfflineApp" cols="12" class="pa-2 pa-md-3 d-md-none pb-0">
+      <nft-dashboard />
+    </v-col> -->
     <!--
     =====================================================================================
       Left Col - primary modules
@@ -31,13 +34,6 @@
           class="pa-2 pa-md-3 pb-0"
         >
           <slot :name="`leftColItem${n}`" />
-        </v-col>
-        <v-col
-          cols="12"
-          class="d-none d-md-flex align-center justify-center flex-column"
-        >
-          <div class="coinzilla" data-zone="C-5186467cdba0c51c392"></div>
-          <div class="paid-ad">Paid Advertisement</div>
         </v-col>
       </v-row>
     </v-col>
@@ -56,13 +52,14 @@
         <v-col cols="12" class="pa-2 pt-4 pa-md-3 d-none d-md-block">
           <module-network />
         </v-col>
-        <v-col
+        <!-- <v-col
+          v-if="isEthNetwork && !isOfflineApp"
           cols="12"
-          class="pa-2 pa-md-3 d-flex align-center justify-center flex-column"
+          class="pa-2 pt-4 pa-md-3 d-none d-md-block"
         >
-          <div class="coinzilla" data-zone="C-4136467cdba0bdc8324"></div>
-          <div class="paid-ad">Paid Advertisement</div>
-        </v-col>
+          <nft-dashboard />
+        </v-col> -->
+
         <v-col
           v-for="n in totalRightColItems"
           v-show="totalRightColItems >= 1"
@@ -83,12 +80,9 @@
       <div class="d-none d-md-block mb-2">
         <module-network />
       </div>
-      <div
-        class="d-flex align-center justify-center flex-column pa-2 pb-4 pa-md-3 pb-md-5"
-      >
-        <div class="coinzilla" data-zone="C-4136467cdba0bdc8324"></div>
-        <div class="paid-ad">Paid Advertisement</div>
-      </div>
+      <!-- <div v-if="isEthNetwork && !isOfflineApp" class="d-none d-md-block mb-2">
+        <nft-dashboard />
+      </div> -->
       <draggable
         v-bind="dragOptions"
         v-model="draggableItems"
@@ -114,14 +108,17 @@
 </template>
 
 <script>
+import { mapGetters, mapState } from 'vuex';
 import draggable from 'vuedraggable';
+
 import ModuleNetwork from '@/modules/network/ModuleNetwork';
 
 export default {
   name: 'TheWrapperWallet',
   components: {
     ModuleNetwork,
-    draggable
+    draggable,
+    NftDashboard: () => import('@/views/components-wallet/NftDashboard')
   },
   props: {
     totalLeftColItems: {
@@ -147,6 +144,8 @@ export default {
     };
   },
   computed: {
+    ...mapGetters('global', ['isEthNetwork']),
+    ...mapState('wallet', ['isOfflineApp']),
     dragOptions() {
       return {
         animation: 200,
@@ -165,20 +164,6 @@ export default {
       }
       this.draggableItems = arr;
     }
-  },
-  created() {
-    const adConfig1 = {
-      zone: '4136467cdba0bdc8324',
-      width: '300',
-      height: '250'
-    };
-    const adConfig2 = {
-      zone: '5186467cdba0c51c392',
-      width: '728',
-      height: '90'
-    };
-    window.coinzilla_display.push(adConfig1);
-    window.coinzilla_display.push(adConfig2);
   }
 };
 </script>

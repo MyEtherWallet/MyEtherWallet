@@ -1,5 +1,5 @@
 <template>
-  <v-container class="py-12">
+  <v-container class="py-12 mt-13 pt-16">
     <h1 class="mb-5 text-center">MyEtherWallet security policy</h1>
     <p>
       MyEtherWallet (MEW) looks forward to working with the security community

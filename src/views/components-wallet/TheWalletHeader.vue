@@ -16,64 +16,29 @@
           'd-flex align-center justify-space-between'
         ]"
       >
-        <div v-if="!promoOver && !isOfflineApp" class="d-flex align-center">
-          <div
-            class="party-popper-container ml-2 mr-3 d-flex pa-3"
-            style="filter: invert(1)"
-          >
-            <img
-              src="@/assets/images/icons/icon-party-popper.png"
-              width="20px"
-              height="20px"
-            />
-          </div>
-          <div
-            class="d-flex flex-column flex-md-row flex-lg-row flex-xl-row align-start align-md-center align-lg-center align-xl-center"
-          >
-            <div class="d-flex">
-              <span class="mr-2 textMedium--text font-weight-bold">
-                Buy & sell crypto with 0% fees
-              </span>
-              <mew-button
-                title="Buy crypto"
-                btn-size="medium"
-                class="d-md-none d-lg-none d-xl-none"
-                @click.native="buyCryptoNow"
-              />
-            </div>
-            <div>
-              <span
-                class="mew-label textMedium--text mr-2 margin-one-off d-none d-md-inline d-lg-inline d-xl-inline"
-                >Promo ends in:</span
-              >
-              <span
-                class="font-weight-medium time-container textMedium--text mew-label mr-1 margin-one-off pa-1"
-              >
-                {{ daysLeft }} {{ dayText }}
-              </span>
-              <span
-                class="font-weight-medium time-container textMedium--text mew-label margin-one-off pa-1"
-              >
-                {{ hoursLeft }} h
-              </span>
-            </div>
-          </div>
-        </div>
         <div
-          v-else-if="promoOver && !isOfflineApp && network.type.canBuy"
+          v-if="
+            !isOfflineApp &&
+            (network.type.chainID === 1 || network.type.chainID === 5)
+          "
           class="eth-banner d-flex"
         >
           <div class="mr-5">
-            <white-sheet class="pa-3">
-              <v-icon color="blackBg"> mdi-bank </v-icon>
-            </white-sheet>
+            <div class="pa-2 d-flex align-center">
+              <img
+                src="@/assets/images/icons/dapps/icon-dapp-coinbase.svg"
+                width="30"
+                height="30"
+              />
+              <!-- <v-icon color="blackBg"> mdi-bank </v-icon> -->
+            </div>
           </div>
           <div class="d-flex flex-column align-start">
             <span
               class="font-weight-bold textDark--text"
               style="font-size: 0.95rem"
             >
-              You can now buy crypto with low fees
+              <b>NEW: Stake any amount of ETH powered by Coinbase</b>
             </span>
             <span
               :class="[
@@ -84,12 +49,13 @@
                   : 'py-2',
                 'mew-body textMedium--text'
               ]"
-              >Enjoy 0.9% fee when you select ‘Bank account’ as payment method.
+              >Stake ETH with no minimums and start earning up to 4% APR right
+              away; unstake at any time.
               <br v-if="ads.length > 0" />
               <span
                 class="greenPrimary--text font-weight-bold cursor--pointer"
-                @click="buyCryptoNow"
-                >Buy crypto now.</span
+                @click="stakeNow"
+                >Stake now</span
               >
             </span>
           </div>
@@ -149,6 +115,7 @@
           href="https://www.myetherwallet.com/advertise-with-us"
           target="_blank"
           rel="noopener noreferrer"
+          @click="buttonTracking('AdvertiseWithUs')"
         >
           <span> Advertise With Us </span>
         </a>
@@ -164,11 +131,12 @@
 </template>
 
 <script>
-import moment from 'moment';
 import { mapGetters, mapState } from 'vuex';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-import { BUYSELL_EVENT, MOONPAY_OFFER_END } from '@/modules/buy-sell/helpers';
-import { EventBus } from '@/core/plugins/eventBus';
+import { STAKING } from '@/modules/analytics-opt-in/handlers/configs/events.js';
+// import { BUYSELL_EVENT } from '@/modules/buy-sell/helpers';
+// import { EventBus } from '@/core/plugins/eventBus';
+import { COINBASE_STAKING_ROUTES } from '@/dapps/coinbase-staking/configs';
 export default {
   components: {
     notificationOverlay: () =>
@@ -183,30 +151,13 @@ export default {
   computed: {
     ...mapState('wallet', ['identifier', 'isOfflineApp']),
     ...mapState('global', ['online']),
-    ...mapGetters('global', ['network']),
-    daysLeft() {
-      const eventDate = moment(MOONPAY_OFFER_END);
-      const todaysDate = moment();
-      return eventDate.diff(todaysDate, 'days');
-    },
-    hoursLeft() {
-      const today = moment();
-      const tomorrowsDate = moment().add(1, 'days').startOf('day');
-      const duration = moment.duration(tomorrowsDate.diff(today));
-      return Math.ceil(duration.asHours());
-    },
-    dayText() {
-      return `day${this.daysLeft > 1 ? 's' : ''}`;
-    },
-    promoOver() {
-      return moment(moment()).isAfter(MOONPAY_OFFER_END);
-    },
+    ...mapGetters('global', ['network', 'isEthNetwork']),
     hasAds() {
       return this.ads.length > 0;
     }
   },
   mounted() {
-    this.setHeaderAds();
+    if (!this.isOfflineApp) this.setHeaderAds();
   },
   methods: {
     async setHeaderAds() {
@@ -214,8 +165,14 @@ export default {
       const ads = await res.json();
       this.ads = ads;
     },
-    buyCryptoNow() {
-      EventBus.$emit(BUYSELL_EVENT);
+    // buyCryptoNow() {
+    //   EventBus.$emit(BUYSELL_EVENT);
+    // },
+    stakeNow() {
+      this.$router.push({
+        name: COINBASE_STAKING_ROUTES.STAKE.NAME
+      });
+      this.trackStaking(STAKING.HEADER_NOW);
     },
     buttonTracking(name) {
       this.trackAd(name);

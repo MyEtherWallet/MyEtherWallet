@@ -12,7 +12,7 @@
       =====================================================================================
     -->
     <confirmation-summary-block
-      v-if="summaryItems.length == 2"
+      v-if="summaryItems.length <= 2"
       :items="summaryItems"
     >
       <template #rightColItem0>
@@ -146,6 +146,7 @@ export default {
   computed: {
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network', 'getFiatValue']),
+    ...mapGetters('wallet', ['hasGasPriceOption']),
     convertedFees() {
       return formatGasValue(this.txFee);
     },
@@ -154,7 +155,10 @@ export default {
       return this.getFiatValue(feeETH.times(this.fiatValue));
     },
     summaryItems() {
-      const newArr = ['Exchange rate', 'Transaction fee'];
+      const newArr = [
+        'Exchange rate',
+        this.hasGasPriceOption ? 'Estimated fee' : 'Transaction fee'
+      ];
       if (this.isToNonEth) {
         newArr.unshift(`Receive ${this.toCurrency} to`);
       }

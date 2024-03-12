@@ -116,10 +116,10 @@ export default {
               link: 'https://www.ethvm.com/'
             },
             {
-              label: 'MEWtopia',
+              label: 'Blog',
               description: 'Education Blog',
               img: require('@/assets/images/icons/icon-puppy-mew.svg'),
-              link: 'https://www.mewtopia.com/'
+              link: 'https://www.myetherwallet.com/blog'
             },
             {
               label: 'Help Center',

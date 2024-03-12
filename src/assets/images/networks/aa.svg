@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 27.5.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 397 387" style="enable-background:new 0 0 397 387;" xml:space="preserve">
+<style type="text/css">
+	
+		.st0{clip-path:url(#SVGID_00000098911101653101457890000008259814287740265099_);fill:url(#SVGID_00000166643596381822175280000001743291888960027008_);}
+	.st1{clip-path:url(#SVGID_00000059999988864385268390000000875128571798722692_);fill:#FFFFFF;}
+</style>
+<g>
+	<defs>
+		<path id="SVGID_1_" d="M25.28,193.59c0,95.05,77.33,172.38,172.38,172.38c95.05,0,172.38-77.33,172.38-172.38
+			S292.71,21.22,197.66,21.22C102.61,21.22,25.28,98.54,25.28,193.59"/>
+	</defs>
+	<clipPath id="SVGID_00000059286493294856411500000011588046309768363164_">
+		<use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+	</clipPath>
+	
+		<linearGradient id="SVGID_00000176001327021345708610000001868965450748901803_" gradientUnits="userSpaceOnUse" x1="-761.9039" y1="737.1057" x2="-760.9039" y2="737.1057" gradientTransform="matrix(252.6042 252.6042 252.6042 -252.6042 6336.3657 378724.2188)">
+		<stop  offset="0" style="stop-color:#1DC0CC"/>
+		<stop  offset="0.5" style="stop-color:#8E15F8"/>
+		<stop  offset="1" style="stop-color:#E20000"/>
+	</linearGradient>
+	
+		<polygon style="clip-path:url(#SVGID_00000059286493294856411500000011588046309768363164_);fill:url(#SVGID_00000176001327021345708610000001868965450748901803_);" points="
+		197.66,-151.16 542.41,193.59 197.66,538.34 -147.09,193.59 	"/>
+</g>
+<g>
+	<defs>
+		<rect id="SVGID_00000122709530154060510220000016775563932512718014_" x="-206.84" y="-346.41" width="1920" height="1080"/>
+	</defs>
+	<clipPath id="SVGID_00000129195594574759787450000009704644775612706699_">
+		<use xlink:href="#SVGID_00000122709530154060510220000016775563932512718014_"  style="overflow:visible;"/>
+	</clipPath>
+	<path style="clip-path:url(#SVGID_00000129195594574759787450000009704644775612706699_);fill:#FFFFFF;" d="M287.25,161.32V261.6
+		h-33.8V161.32c0-14.97-12.18-27.16-27.16-27.16v-33.8C259.9,100.36,287.25,127.7,287.25,161.32"/>
+	<path style="clip-path:url(#SVGID_00000129195594574759787450000009704644775612706699_);fill:#FFFFFF;" d="M169.03,168.95v33.8
+		c-14.98,0-27.16,12.18-27.16,27.16v31.69h-33.8v-31.69C108.07,196.29,135.42,168.95,169.03,168.95"/>
+	
+		<rect x="180.76" y="134.04" style="clip-path:url(#SVGID_00000129195594574759787450000009704644775612706699_);fill:#FFFFFF;" width="33.8" height="127.56"/>
+</g>
+</svg>

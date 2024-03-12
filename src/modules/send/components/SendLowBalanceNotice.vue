@@ -41,7 +41,11 @@
               v-if="isEthNetwork"
               class="mew-body font-weight-medium"
               rel="noopener noreferrer"
-              @click="openBuySell"
+              @click="
+                () => {
+                  openBuySell('SendLowBalanceNotic');
+                }
+              "
             >
               Buy {{ currencyName }}
             </a>
@@ -56,9 +60,11 @@
 import { mapGetters } from 'vuex';
 
 import buyMore from '@/core/mixins/buyMore.mixin.js';
+import handlerAnalyticsMixin from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { DASHBOARD } from '@/modules/analytics-opt-in/handlers/configs/events';
 
 export default {
-  mixins: [buyMore],
+  mixins: [buyMore, handlerAnalyticsMixin],
   props: {
     currencyName: {
       type: String,
@@ -75,6 +81,7 @@ export default {
   },
   methods: {
     openBarcodeModal() {
+      this.trackDashboardAmplitude(DASHBOARD.SHOW_RECEIVE_ADDRESS);
       this.openQR = true;
     },
     closeQR() {

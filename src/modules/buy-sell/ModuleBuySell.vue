@@ -24,7 +24,6 @@
           <template #tabContent1>
             <buy-eth-component
               :order-handler="orderHandler"
-              :close="close"
               :tab="activeTab"
               :default-currency="defaultCurrency"
               :in-wallet="inWallet"
@@ -42,7 +41,6 @@
           <template v-if="sellSupported" #tabContent2>
             <sell-eth-component
               :order-handler="orderHandler"
-              :close="close"
               :tab="activeTab"
               :in-wallet="inWallet"
               :default-currency="defaultCurrency"
@@ -54,7 +52,6 @@
       <BuyProviderComponent
         v-if="step === 1"
         :order-handler="orderHandler"
-        :close="close"
         :in-wallet="inWallet"
         :only-simplex="onlySimplex"
         :selected-currency="selectedCurrency"
@@ -78,6 +75,8 @@ import { ETH, BSC, MATIC } from '@/utils/networks/types';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 
 import handler from './handlers/handlerOrder';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { BUY_SELL } from '@/modules/analytics-opt-in/handlers/configs/events';
 
 export default {
   name: 'MoonPay',
@@ -86,6 +85,7 @@ export default {
     SellEthComponent: () => import('./components/SellComponent'),
     BuyProviderComponent: () => import('./components/BuyProviderComponent.vue')
   },
+  mixins: [handlerAnalytics],
   props: {
     open: {
       type: Boolean,
@@ -180,6 +180,7 @@ export default {
   methods: {
     ...mapActions('external', ['setNetworkTokens']),
     onTab(val) {
+      this.trackBuySell(val === 0 ? BUY_SELL.BUY_TAB : BUY_SELL.SELL_TAB);
       this.selectedCurrency = {};
       this.selectedCurrency = this.defaultCurrency;
       this.activeTab = val;
@@ -199,11 +200,23 @@ export default {
       this.step = 0;
       this.onlySimplex = false;
       this.$emit('close', false);
+      this.trackBuySell(BUY_SELL.BUY_SELL_CLOSED);
     },
     setSelectedCurrency(e) {
+      if (this.selectedCurrency.symbol !== e.symbol) {
+        const event =
+          this.activeTab === 0 ? BUY_SELL.BUY_INPUT : BUY_SELL.SELL_INPUT;
+        this.trackBuySell(event, {
+          old: this.selectedCurrency.symbol,
+          new: e.symbol
+        });
+      }
       this.selectedCurrency = e;
     },
     setSelectedFiat(e) {
+      if (e.name === 'CAD') {
+        this.selectedCurrency = this.defaultCurrency;
+      }
       this.selectedFiat = e;
     },
     openProviders(val) {
@@ -238,6 +251,7 @@ export default {
       this.openProviders(items[3]);
       this.setSelectedCurrency(items[4]);
       this.setSelectedFiat(items[5]);
+      this.trackBuySell(BUY_SELL.BUY_NOW_BUTTON);
     },
     checkTokenPadding(isOpen) {
       if (this.inWallet) {

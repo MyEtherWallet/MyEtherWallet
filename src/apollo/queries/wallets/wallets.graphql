@@ -19,6 +19,20 @@ query getLatestPrices {
   }
 }
 
+query getCoinGeckoTokenMarketDataByIds($ids: [String!]!) {
+  getCoinGeckoTokenMarketDataByIds(coinGeckoTokenIds: $ids) {
+    id
+    symbol
+    name
+    image
+    current_price
+    market_cap
+    total_volume
+    price_change_percentage_24h
+    total_supply
+  }
+}
+
 subscription subscribeToAccountBalance(
   $owner: String!
   $event: AddressEventType!

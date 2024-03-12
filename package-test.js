@@ -80,7 +80,12 @@ const EXCEPTIONS = [
   '@mathieustan/vue-intercom', // major version
   'vue-chartjs',
   'chart.js',
-  'vue-tippy'
+  'vue-tippy',
+  'less-loader', // doesn't support webpack 4
+  'eslint-plugin-security', // part of major release for eslint
+  '@ensdomains/address-encoder',
+  '@commitlint/config-conventional',
+  'commitlint'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

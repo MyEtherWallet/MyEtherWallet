@@ -14,7 +14,7 @@
             </p>
           </div>
           <mew-button
-            btn-link="https://www.mewtopia.com/"
+            btn-link="https://www.myetherwallet.com/blog"
             :has-full-width="false"
             :title="$t('home.mewtopia-block.button-text')"
             btn-style="outline"
@@ -42,7 +42,7 @@
             </p>
           </div>
           <mew-button
-            btn-link="https://www.mewtopia.com/"
+            btn-link="https://www.myetherwallet.com/blog"
             :has-full-width="false"
             :title="$t('home.mewtopia-block.button-text')"
             btn-style="outline"

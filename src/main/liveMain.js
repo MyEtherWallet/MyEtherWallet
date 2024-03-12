@@ -65,7 +65,7 @@ Vue.config.productionTip = false;
 amplitude.init(nameHashPckg.hash(VERSION), {
   instanceName:
     process.env.NODE_ENV === 'production' ? 'mew-web-prod' : 'mew-web-dev',
-  optOut: true, // should be true on live or localStorage value,
+  optOut: false,
   serverUrl:
     process.env.NODE_ENV === 'production'
       ? 'https://analytics-web.mewwallet.dev/record'
@@ -75,7 +75,11 @@ amplitude.init(nameHashPckg.hash(VERSION), {
     ipAddress: false
   },
   identityStorage: 'none',
-  logLevel: amplitude.Types.LogLevel.None
+  logLevel: amplitude.Types.LogLevel.None,
+  defaultTracking: {
+    formInteractions: false,
+    pageViews: false
+  }
 });
 Vue.prototype.$amplitude = amplitude;
 

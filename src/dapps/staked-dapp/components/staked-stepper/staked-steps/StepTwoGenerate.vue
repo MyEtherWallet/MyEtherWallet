@@ -60,11 +60,13 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex';
+import handlerAnalyticsMixin from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 export default {
   components: {
     ModuleAddressBook: () => import('@/modules/address-book/ModuleAddressBook')
   },
+  mixins: [handlerAnalyticsMixin],
   data() {
     return {
       eth2Address: '',
@@ -116,6 +118,7 @@ export default {
      * a new keystore
      */
     onContinue(skipped) {
+      this.trackDapp('StakedSetWithdrawalAddress');
       this.$emit('onContinue', {
         onStep: 2,
         isSkipped: skipped,

@@ -30,7 +30,7 @@ MyEtherWallet is a doorway to the Ethereum blockchain, allowing users to manage 
 * [EthVM Blockchain explorer](https://www.ethvm.com/)
 * [Enkrypt: https://www.enkrypt.com](https://www.enkrypt.com)
 * [MEW Team](https://team.myetherwallet.com/)
-* [MEWtopia](https://www.mewtopia.com/)
+* [Blog](https://www.myetherwallet.com/blog)
 * [MEW Help Center](https://help.myetherwallet.com/)
 * [FB: https://www.facebook.com/MyEtherWallet/](https://www.facebook.com/MyEtherWallet/)
 * [Twitter: https://twitter.com/myetherwallet](https://twitter.com/myetherwallet)

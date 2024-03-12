@@ -6,6 +6,7 @@
     ==========================================================================
     -->
     <the-layout-header
+      class="pt-16"
       :title="$t('careers.header')"
       :subtitle-line-one="$t('careers.subtitle')"
     />

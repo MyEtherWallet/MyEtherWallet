@@ -3,13 +3,14 @@
     <template #leftColItem1>
       <module-contract-interact />
     </template>
-    <template #rightColItem1>
+    <template v-if="isEthNetwork" #rightColItem1>
       <module-swap-rates />
     </template>
   </the-wrapper-wallet>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 export default {
   name: 'InteracContractLayout',
   components: {
@@ -18,6 +19,9 @@ export default {
     ModuleSwapRates: () => import('@/modules/swap/ModuleSwapRates'),
     ModuleContractInteract: () =>
       import('@/modules/contract/ModuleContractInteract')
+  },
+  computed: {
+    ...mapGetters('global', ['isEthNetwork'])
   }
 };
 </script>

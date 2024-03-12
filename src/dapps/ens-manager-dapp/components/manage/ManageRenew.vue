@@ -18,7 +18,15 @@
           class="balance-error d-flex mt-2 mb-3 justify-center align-center"
         >
           Not enough balance:
-          <a target="_blank" class="link" @click="openBuySell">
+          <a
+            target="_blank"
+            class="link"
+            @click="
+              () => {
+                openBuySell('ENSRenew');
+              }
+            "
+          >
             <u>Buy More Eth</u>
           </a>
         </span>
