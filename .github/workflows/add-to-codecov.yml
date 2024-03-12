@@ -24,18 +24,18 @@ jobs:
         uses: actions/cache@v2
         with:
           path: node_modules
-          key: ${{ runner.os }}-node-${{steps.node-version.outputs.NODE_VERSION}}-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-node-${{steps.node-version.outputs.NODE_VERSION}}-${{ hashFiles('**/yarn-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-${{steps.node-version.outputs.NODE_VERSION}}-
 
-      - name: npm install
-        run: docker run --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" mew-build-container /bin/bash -c "npm install"
+      - name: yarn install
+        run: docker run --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" mew-build-container /bin/bash -c "yarn"
 
       - name: add to codecov
         run: |
           git config --global --add safe.directory '*'
           ci_env=`bash <(curl -s https://codecov.io/env)`
-          docker run $ci_env --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run codecov"
+          docker run $ci_env --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "yarn codecov"
 
       - name: upload to codecov
         uses: codecov/codecov-action@v3

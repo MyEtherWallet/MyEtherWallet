@@ -9,9 +9,6 @@ export default {
   blockExplorerTX: 'https://explorer.rsk.co/tx/[[txHash]]',
   blockExplorerAddr: 'https://explorer.rsk.co/address/[[address]]',
   chainID: 30,
-  tokens: import('@/_generated/tokens/tokens-rsk.json').then(
-    val => val.default
-  ),
   contracts: import('@/_generated/contracts/contract-abi-rsk.json').then(
     val => val.default
   ),

@@ -7,9 +7,6 @@ export default {
   blockExplorerTX: 'https://snowtrace.io/tx/[[txHash]]',
   blockExplorerAddr: 'https://snowtrace.io/address/[[address]]',
   chainID: 43114,
-  tokens: import('@/_generated/tokens/tokens-avax.json').then(
-    module => module.default
-  ),
   contracts: import('@/_generated/contracts/contract-abi-avax.json').then(
     module => module.default
   ),

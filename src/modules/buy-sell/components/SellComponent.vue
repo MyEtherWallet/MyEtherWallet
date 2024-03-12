@@ -149,7 +149,7 @@
 
 <script>
 import MultiCoinValidator from 'multicoin-address-validator';
-import { mapActions, mapGetters, mapState } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 import { isEmpty, debounce, isNumber, isEqual } from 'lodash';
 import BigNumber from 'bignumber.js';
 import { fromWei, toBN } from 'web3-utils';
@@ -553,7 +553,6 @@ export default {
     this.locGasPrice = this.gasPriceByType(this.gasPriceType);
   },
   methods: {
-    ...mapActions('external', ['setCoinGeckoTokens']),
     setAddress(newVal, isValid, data) {
       if (data.type === 'RESOLVED' && !data.value.includes('.'))
         this.toAddress = data.value;

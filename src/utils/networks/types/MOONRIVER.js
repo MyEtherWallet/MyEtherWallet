@@ -8,9 +8,6 @@ export default {
   blockExplorerTX: 'https://moonriver.moonscan.io/tx/[[txHash]]',
   blockExplorerAddr: 'https://moonriver.moonscan.io/addr/[[address]]',
   chainID: 1285,
-  tokens: import('@/_generated/tokens/tokens-moonriver.json').then(
-    val => val.default
-  ),
   contracts: import('@/_generated/contracts/contract-abi-moonriver.json').then(
     val => val.default
   ),

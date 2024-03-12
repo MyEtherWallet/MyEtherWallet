@@ -17,7 +17,7 @@ module.exports = {
   moduleFileExtensions: ['js', 'jsx', 'json', 'vue', 'node', 'svg'],
   reporters: ['default', 'jest-skipped-reporter'],
   transform: {
-    '^.+\\.vue$': 'vue-jest',
+    '^.+\\.vue$': '@vue/vue2-jest',
     '.+\\.(css|styl|less|sass|scss|svg|png|jpg|ttf|woff|woff2)$':
       'jest-transform-stub',
     '^.+\\.jsx?$': 'babel-jest'
@@ -41,7 +41,9 @@ module.exports = {
     '**/__tests__/*.(js | jsx | ts | tsx)',
     '**/tests/*.spec.js'
   ],
-  testEnvironmentOptions: {},
-  testURL: 'https://localhost:8080',
+  testEnvironment: 'jsdom',
+  testEnvironmentOptions: {
+    url: 'https://localhost:8080'
+  },
   setupFilesAfterEnv: ['<rootDir>/tests/unit/__mocks__/mocks.js']
 };
