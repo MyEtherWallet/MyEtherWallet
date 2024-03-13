@@ -79,6 +79,7 @@ const EXCEPTIONS = [
   'ethers', // major update
   'patch-package', // major update
   'highcharts', // major update
+  'highcharts-vue', // major update for vue 3
   'geckodriver',
   '@ensdomains/ens-contracts', // breaks current ENS integration
   '@shapeshiftoss/hdwallet-core',

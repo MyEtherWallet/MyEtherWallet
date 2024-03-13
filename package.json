@@ -64,7 +64,7 @@
     "@sentry/vue": "7.93.0",
     "@shapeshiftoss/hdwallet-core": "1.22.0",
     "@shapeshiftoss/hdwallet-keepkey-webusb": "1.22.0",
-    "@trezor/connect-web": "9.1.12",
+    "@trezor/connect-web": "9.2.1",
     "@unstoppabledomains/resolution": "9.0.0",
     "@walletconnect/ethereum-provider": "2.11.2",
     "@walletconnect/modal": "2.6.2",
