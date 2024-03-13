@@ -615,7 +615,7 @@
 * Fix password confirmation for downloading keystore file [#4373](https://github.com/MyEtherWallet/MyEtherWallet/pull/4373)
 * Generate keystore file: reset password when user click back button to go back to step 2 [#4379](https://github.com/MyEtherWallet/MyEtherWallet/pull/4379)
 * fix eth block layout [#4380](https://github.com/MyEtherWallet/MyEtherWallet/pull/4380)
-* fix logout issue with walletconnect, disbale network switching [#4383](https://github.com/MyEtherWallet/MyEtherWallet/pull/4383)
+* fix logout issue with walletconnect, disable network switching [#4383](https://github.com/MyEtherWallet/MyEtherWallet/pull/4383)
 * fix offline nonce too low [#4387](https://github.com/MyEtherWallet/MyEtherWallet/pull/4387)
 * Fix ENS text records saving after cancelling txn [#4388](https://github.com/MyEtherWallet/MyEtherWallet/pull/4388)
 * Fix stakewise not able to stake twice [#4399](https://github.com/MyEtherWallet/MyEtherWallet/pull/4399)
@@ -1457,7 +1457,7 @@
 
 ### fix
 
-* fix dapps tranlsations, add link out to release [#3601](https://github.com/MyEtherWallet/MyEtherWallet/pull/3601)
+* fix dapps translations, add link out to release [#3601](https://github.com/MyEtherWallet/MyEtherWallet/pull/3601)
 
 ### feat
 

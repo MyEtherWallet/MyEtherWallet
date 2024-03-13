@@ -168,7 +168,7 @@ export default {
       this.trackStaking(STAKING.STAKE_CENTER_MORE_ABOUT);
     },
     /**
-     * defualtName is used to route to dapps that has defalt child route
+     * defaultName is used to route to dapps that has defalt child route
      */
     checkIfNew(release) {
       return isNew(release);
