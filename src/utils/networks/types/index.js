@@ -1,6 +1,7 @@
 import ETC from './ETC.js';
 import ETH from './ETH.js';
 import GOERLI from './GOERLI.js';
+import HOLESKY from './HOLESKY.js';
 import BSC from './BSC.js';
 import MATIC from './MATIC.js';
 import GO from './GO.js';
@@ -22,6 +23,7 @@ import AAT from './AAT';
 export {
   ETH,
   GOERLI,
+  HOLESKY,
   ETC,
   BSC,
   MATIC,
