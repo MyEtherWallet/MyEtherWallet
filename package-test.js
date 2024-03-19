@@ -82,8 +82,6 @@ const EXCEPTIONS = [
   'highcharts-vue', // major update for vue 3
   'geckodriver',
   '@ensdomains/ens-contracts', // breaks current ENS integration
-  '@shapeshiftoss/hdwallet-core',
-  '@shapeshiftoss/hdwallet-keepkey-webusb',
   'eslint-plugin-prettier', // breaks
   'ethereum-block-by-date',
   '@mathieustan/vue-intercom', // major version

@@ -40,7 +40,7 @@
     "@aave/math-utils": "1.7.0",
     "@aave/protocol-js": "4.3.0",
     "@actions/github": "6.0.0",
-    "@amplitude/analytics-browser": "2.5.2",
+    "@amplitude/analytics-browser": "2.5.3",
     "@coolwallet/bsc": "1.1.7",
     "@coolwallet/core": "1.1.23",
     "@coolwallet/eth": "1.1.21",
@@ -62,8 +62,8 @@
     "@sentry/browser": "7.93.0",
     "@sentry/tracing": "7.93.0",
     "@sentry/vue": "7.93.0",
-    "@shapeshiftoss/hdwallet-core": "1.22.0",
-    "@shapeshiftoss/hdwallet-keepkey-webusb": "1.22.0",
+    "@shapeshiftoss/hdwallet-core": "1.53.4",
+    "@shapeshiftoss/hdwallet-keepkey-webusb": "1.53.4",
     "@trezor/connect-web": "9.2.1",
     "@unstoppabledomains/resolution": "9.0.0",
     "@walletconnect/ethereum-provider": "2.11.2",
@@ -195,7 +195,7 @@
     "xss": "1.0.15"
   },
   "engines": {
-    "node": ">= 10.0.0 < 12.3.0",
+    "node": ">= 10.0.0 < 12.25.0",
     "npm": ">= 6.0.0"
   },
   "resolutions": {
