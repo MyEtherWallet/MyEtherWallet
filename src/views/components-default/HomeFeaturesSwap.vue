@@ -178,7 +178,7 @@ export default {
   },
   methods: {
     setSwapHandler(val) {
-      this.swapHandler = new handlerSwap(val, this.network.type.name);
+      this.swapHandler = new handlerSwap(val, 'ETH');
       this.fetchRates();
     },
     fetchRates() {

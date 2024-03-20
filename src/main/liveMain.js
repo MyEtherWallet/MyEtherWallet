@@ -84,7 +84,7 @@ amplitude.init(nameHashPckg.hash(VERSION), {
 Vue.prototype.$amplitude = amplitude;
 
 // Lazy Loader
-Vue.use(VueLazyLoad);
+Vue.use(VueLazyLoad, { lazyComponent: true });
 
 new Vue({
   el: '#app',

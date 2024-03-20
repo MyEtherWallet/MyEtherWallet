@@ -6,7 +6,7 @@
           <!-- =============================================================== -->
           <!-- You Give -->
           <!-- =============================================================== -->
-          <swap-token-selector-interface
+          <mew-token-selector-interface
             title="YOU GIVE"
             :left-text="maxMsg"
             :max-button="setMaxAmount"
@@ -29,14 +29,10 @@
           <!-- =============================================================== -->
           <!-- You Receive -->
           <!-- =============================================================== -->
-          <swap-network-selector
-            :selected-network="selectedNetwork"
-            :networks="supportedNetworks"
-            class="mb-2"
-            @selectedNetwork="setSwapSelectedNetwork"
-          />
-          <swap-token-selector-interface
+          <mew-token-selector-interface
             title="YOU RECEIVE"
+            :left-text="availableBalanceTo"
+            :right-text="fiatBalanceTo"
             :token-select="setToToken"
             :token="toTokenType"
             :tokens="actualToTokens"
@@ -46,7 +42,36 @@
             :loading="isLoading"
             read-only
           />
+          <!--
+            =====================================================================================
+              Address Book
+            =====================================================================================
+        -->
           <div class="mt-8">
+            <v-row v-if="isFromNonChain">
+              <v-col>
+                <span>What is your refund address?</span>
+              </v-col>
+              <v-col md="auto">
+                <mew-tooltip
+                  hide-icon
+                  max-width="240px"
+                  text="The refund address is the wallet you are swapping from. If there is an issue with the swap, your coins will be returned to that address."
+                />
+                <span class="cta pointer"> What is this? </span>
+              </v-col>
+            </v-row>
+            <v-row v-if="isFromNonChain">
+              <v-col class="pb-0">
+                <module-address-book
+                  ref="refundAddressInput"
+                  class="FromAddressInput"
+                  :label="nativeLabel"
+                  :is-valid-address-func="isValidRefundAddress"
+                  @setAddress="setRefundAddr"
+                />
+              </v-col>
+            </v-row>
             <v-row v-if="showToAddress">
               <v-col>
                 <span>Where should we send your crypto?</span>
@@ -249,7 +274,14 @@
 
 <script>
 import { toBN, fromWei, toWei, isAddress } from 'web3-utils';
-import { debounce, isEmpty, clone, isUndefined, isObject } from 'lodash';
+import {
+  debounce,
+  isEmpty,
+  clone,
+  isUndefined,
+  isObject,
+  isNumber
+} from 'lodash';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import xss from 'xss';
 import MultiCoinValidator from 'multicoin-address-validator';
@@ -263,30 +295,27 @@ import NonChainNotification from '@/modules/notifications/handlers/nonChainNotif
 import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-import { SWAP } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 import Swapper from './handlers/handlerSwap';
 import handleError from '../confirmation/handlers/errorHandler';
 import { EventBus } from '@/core/plugins/eventBus';
 import { fromBase, toBase } from '@/core/helpers/unit';
 
-const MIN_GAS_LIMIT = 400000;
+const MIN_GAS_LIMIT = 800000;
 let localContractToToken = {};
 export default {
   name: 'ModuleSwap',
   components: {
+    MewTokenSelectorInterface: () => import('./MewTokenSelectorInterface'),
     SwapLoader: () => import('@/modules/swap/components/SwapLoader'),
-    SwapTokenSelectorInterface: () =>
-      import('./components/SwapTokenSelectorInterface'),
-    SwapNetworkSelector: () => import('./components/SwapNetworkSelector'),
     AppBorderContainer: () => import('@/core/components/AppBorderContainer'),
     AppWalletBlock: () => import('@/core/components/AppWalletBlock'),
     AppButtonBalance: () => import('@/core/components/AppButtonBalance'),
     AppUserMsgBlock: () => import('@/core/components/AppUserMsgBlock'),
     ModuleAddressBook: () => import('@/modules/address-book/ModuleAddressBook'),
-    TransactionFee: () => import('@/modules/transaction-fee/TransactionFee'),
     SwapProvidersList: () => import('./components/SwapProvidersList.vue'),
     SwapProviderMentions: () => import('./components/SwapProviderMentions.vue'),
+    AppTransactionFee: () => import('@/core/components/AppTransactionFee.vue'),
     SwapFee: () => import('./components/SwapFee.vue')
   },
   mixins: [handlerAnalytics, buyMore],
@@ -309,9 +338,7 @@ export default {
     return {
       step: 0,
       selectedNetwork: supportedNetworks[1],
-      supportedNetworks: supportedNetworks.filter(item => {
-        if (item.id) return item;
-      }),
+      supportedNetworks: supportedNetworks,
       confirmInfo: {
         to: '',
         from: '',
@@ -328,7 +355,7 @@ export default {
       fromTokenType: {},
       tokenInValue: this.amount || '0',
       tokenOutValue: '0',
-      availableTokens: { toTokens: [], fromTokens: [], featured: [] },
+      availableTokens: { toTokens: [], fromTokens: [] },
       availableQuotes: [],
       currentTrade: null,
       allTrades: [],
@@ -344,6 +371,7 @@ export default {
       addressValue: {},
       selectedProvider: {},
       refundAddress: '',
+      isValidRefundAddr: false,
       localGasPrice: '0',
       mainTokenDetails: {},
       cachedAmount: '0',
@@ -357,6 +385,7 @@ export default {
     ...mapState('swap', ['prefetched', 'swapTokens']),
     ...mapState('wallet', ['web3', 'address', 'balance', 'identifier']),
     ...mapState('global', ['gasPriceType']),
+    ...mapState('external', ['coinGeckoTokens']),
     ...mapGetters('global', [
       'network',
       'isEthNetwork',
@@ -367,8 +396,7 @@ export default {
       'balanceInETH',
       'tokensList',
       'initialLoad',
-      'balanceInWei',
-      'hasGasPriceOption'
+      'balanceInWei'
     ]),
     ...mapGetters('external', [
       'balanceFiatValue',
@@ -382,6 +410,13 @@ export default {
         subtitle:
           'Please select ETH, BNB or MATIC networks to use this feature.'
       };
+    },
+    /**
+     * @returns string
+     * is used as a label for module-address-book
+     */
+    nativeLabel() {
+      return `Your ${this.fromTokenType?.name} refund address`;
     },
     /**
      * @returns a boolean
@@ -454,7 +489,10 @@ export default {
         return disableSet;
       }
       return (
-        disableSet || (!this.refundAddress && this.actualTrade?.length === 0)
+        disableSet ||
+        (!this.refundAddress &&
+          !this.isValidRefundAddr &&
+          this.actualTrade?.length === 0)
       );
     },
     providersErrorMsg() {
@@ -512,16 +550,13 @@ export default {
      */
     actualToTokens() {
       if (this.isLoading) return [];
-      let validToTokens =
-        this.network.type.name === this.selectedNetwork.id
-          ? this.toTokens.filter(item => {
-              if (
-                item.contract.toLowerCase() !==
-                this.fromTokenType?.contract?.toLowerCase()
-              )
-                return item;
-            })
-          : this.toTokens;
+      let validToTokens = this.toTokens.filter(item => {
+        if (
+          item.contract.toLowerCase() !==
+          this.fromTokenType?.contract?.toLowerCase()
+        )
+          return item;
+      });
       validToTokens = this.formatTokenPrice(validToTokens);
       let filteredTrendingTokens = this.trendingTokens().filter(token => {
         return token.contract !== this.fromTokenType?.contract;
@@ -587,7 +622,12 @@ export default {
         },
         ...tradebleWalletTokens
       ];
-      return returnableTokens;
+      return returnableTokens.concat([
+        {
+          header: 'All'
+        },
+        ...validFromTokens
+      ]);
     },
     /**
      * @returns object of other tokens
@@ -606,7 +646,6 @@ export default {
     totalCost() {
       const amount = this.isFromTokenMain ? this.tokenInValue : '0';
       const amountWei = toWei(amount);
-      // if (this.hasGasPriceOption) return BigNumber(amountWei).toString();
       return BigNumber(this.txFee).plus(amountWei).toString();
     },
     totalGasLimit() {
@@ -626,7 +665,7 @@ export default {
      * @returns {String} - Ethereum Address
      */
     toAddress() {
-      if (this.selectedNetwork.type !== 'evm') {
+      if (!this.toTokenType?.isEth) {
         if (!isEmpty(this.addressValue)) {
           return this.addressValue.isValid
             ? this.addressValue.value
@@ -638,7 +677,7 @@ export default {
       if (this.toTokenType?.contract === MAIN_TOKEN_ADDRESS) {
         return this.address;
       }
-      if (this.selectedNetwork.type === 'evm') return this.address;
+      if (this.toTokenType?.isEth) return this.address;
       return this.address;
     },
     /**
@@ -646,13 +685,13 @@ export default {
      * @returns{boolean}
      */
     hasMinEth() {
-      if (!isEmpty(this.fromTokenType)) {
+      if (
+        !isEmpty(this.fromTokenType) &&
+        this.fromTokenType.hasOwnProperty('isEth') &&
+        !this.fromTokenType.isEth
+      ) {
         return true;
       }
-
-      // if (this.hasGasPriceOption) {
-      //   return toBN(this.balanceInWei).gte(0);
-      // }
       return toBN(this.balanceInWei).gte(
         toBN(this.localGasPrice).muln(MIN_GAS_LIMIT)
       );
@@ -671,7 +710,8 @@ export default {
       }
     },
     showToAddress() {
-      return this.selectedNetwork.type !== 'evm';
+      if (typeof this.toTokenType?.isEth === 'undefined') return false;
+      return !this.toTokenType?.isEth;
     },
     /**
      * @returns BigNumber of the available balance for the From Token
@@ -795,24 +835,10 @@ export default {
       return `To ${name} address`;
     },
     multipleWatcher() {
-      return this.network, this.web3, this.tokensList;
+      return this.network, this.web3, this.tokensList, this.coinGeckoTokens;
     }
   },
   watch: {
-    selectedNetwork: {
-      handler: function (val) {
-        this.isLoading = true;
-        this.swapper
-          .getAllTokens(val.id)
-          .then(tokens => {
-            this.processTokens(tokens);
-          })
-          .then(() => {
-            this.isLoading = false;
-          });
-      },
-      deep: true
-    },
     multipleWatcher: {
       handler: function () {
         this.resetSwapState();
@@ -820,6 +846,9 @@ export default {
     },
     tokenInValue() {
       this.feeError = '';
+      if (!this.clearingSwap) {
+        this.trackSwap('tokenFromValueChanged');
+      }
     },
     gasPriceType() {
       if (this.currentTrade) this.currentTrade.gasPrice = this.localGasPrice;
@@ -830,8 +859,18 @@ export default {
       },
       immediate: true
     },
-    selectedProvider(p) {
+    selectedProvider(p, oldVal) {
+      if (!isEmpty(oldVal) && !this.clearingSwap) {
+        this.trackSwap('switchProviders');
+      }
       if (isEmpty(p)) this.selectedProviderId = undefined;
+    },
+    selectedProviderId(newVal) {
+      if (isNumber(newVal) && !this.clearingSwap) {
+        this.trackSwap(
+          `swapProvider: ${newVal + 1}/${this.availableQuotes.length}`
+        );
+      }
     },
     defaults: {
       handler: function () {
@@ -871,7 +910,12 @@ export default {
   },
   mounted() {
     this.abortSetTokenValue = false;
-    this.resetSwapState();
+    // multi value watcher to clear
+    // refund address and to address
+    if (this.coinGeckoTokens.size > 0) {
+      this.resetSwapState();
+    }
+    this.trackSwap('swapPageView');
   },
   methods: {
     ...mapActions('notifications', ['addNotification']),
@@ -882,8 +926,14 @@ export default {
       localContractToToken[MAIN_TOKEN_ADDRESS] = this.mainTokenDetails;
       this.setupSwap();
     },
-    setSwapSelectedNetwork(network) {
-      this.selectedNetwork = network;
+    /**
+     * Handles emitted values from
+     * module-address-book
+     */
+    setRefundAddr(address, valid) {
+      this.refundAddress = address;
+      this.isValidRefundAddr = valid;
+      this.setTokenInValue(this.tokenInValue);
     },
     /**
      * @returns all trending tokens
@@ -899,12 +949,42 @@ export default {
     },
     setupTokenInfo(tokens) {
       tokens.forEach(token => {
-        token.pricef = this.getFiatValue(token.price);
-        token.value = token.address;
-        token.contract = token.address;
+        if (localContractToToken[token.contract]) return;
+        if (
+          token.isEth === false &&
+          (token.contract?.toLowerCase() === '0xeth' ||
+            token.contract?.toLowerCase().includes('matic') ||
+            token.contract?.toLowerCase().includes('bnb'))
+        )
+          return;
+        if (token.cgid) {
+          const foundToken = this.getCoinGeckoTokenById(token.cgid);
+          foundToken.price = this.getFiatValue(foundToken.pricef);
+          const name = foundToken.name;
+          foundToken.name = token.symbol;
+          foundToken.value = foundToken.contract;
+          foundToken.subtext = name;
+          foundToken.symbol = token.symbol || foundToken.symbol;
+          this.setToLocaContractToToken(Object.assign({}, token, foundToken));
+          return;
+        }
+        const foundToken = this.contractToToken(token.contract);
+        if (foundToken) {
+          const name = foundToken.name || foundToken.subtext;
+          foundToken.contract = token.contract;
+          foundToken.price = this.getFiatValue(foundToken.pricef);
+          foundToken.isEth = true;
+          foundToken.name = token.symbol || foundToken.symbol;
+          foundToken.value = foundToken.contract;
+          foundToken.subtext = name;
+          this.setToLocaContractToToken(foundToken);
+          return;
+        }
+        token.price = '';
         token.subtext = token.name;
-        token.img = `https://img.mewapi.io/?image=${token.logoURI}`;
-        this.setToLocaContractToToken(Object.assign({}, token));
+        token.value = token.contract;
+        token.name = token.symbol || token.subtext;
+        this.setToLocaContractToToken(token);
       });
     },
     /**
@@ -928,9 +1008,12 @@ export default {
       this.setTokenInValue(this.tokenInValue);
     },
     swapTo(to) {
-      const findToken = this.availableTokens.toTokens.find(
+      const findToken = this.toTokens.find(
         item => item.symbol.toLowerCase() === to.toLowerCase()
       );
+      if (!this.clearingSwap) {
+        this.trackSwap('stayOnEth: ' + to);
+      }
       this.toTokenType = findToken;
     },
     setupSwap() {
@@ -939,7 +1022,7 @@ export default {
         this.swapper = new Swapper(this.web3, this.network.type.name);
         if (!this.prefetched) {
           this.swapper
-            .getAllTokens(this.selectedNetwork.id)
+            .getAllTokens()
             .then(tokens => {
               this.processTokens(tokens);
             })
@@ -994,6 +1077,7 @@ export default {
       this.localGasPrice = '0';
       if (this.$refs.amountInput) this.$refs.amountInput.clear();
       this.refundAddress = '';
+      this.isValidRefundAddr = false;
       this.maxLoading = false;
       this.setupSwap();
     },
@@ -1036,6 +1120,7 @@ export default {
      */
     async setMaxAmount() {
       this.maxLoading = true;
+      this.trackSwap('setMaxValue');
       if (
         !isEmpty(this.toTokenType) &&
         this.toTokenType.isEth &&
@@ -1129,6 +1214,7 @@ export default {
       return findToken ? findToken : this.actualToTokens[0];
     },
     processTokens(tokens, storeTokens) {
+      this.setupTokenInfo(tokens.fromTokens);
       this.setupTokenInfo(tokens.toTokens);
       this.setupTokenInfo(tokens.featured);
       this.availableTokens = tokens;
@@ -1165,9 +1251,7 @@ export default {
       this.resetAddressValues({ clearTo: false });
       this.$nextTick(() => {
         if (value && value.name && !this.clearingSwap) {
-          this.trackSwapAmplitude(SWAP.FIELD_INPUTS, {
-            fromToken: value.name
-          });
+          this.trackSwapToken('from: ' + value.name);
         }
         this.setTokenInValue(this.tokenInValue);
       });
@@ -1186,9 +1270,7 @@ export default {
       this.toTokenType = value;
       this.resetAddressValues({ clearRefund: false });
       if (value && value.name) {
-        this.trackSwapAmplitude(SWAP.FIELD_INPUTS, {
-          toToken: value.name
-        });
+        this.trackSwapToken('to: ' + value.name);
       }
       this.setTokenInValue(this.tokenInValue);
     },
@@ -1206,6 +1288,7 @@ export default {
       if (this.isLoading || this.initialLoad) return;
       const val = value ? value : 0;
       this.tokenInValue = BigNumber(val).toFixed();
+      // Check if (in amount) is larger than (available balance)
       if (
         !this.isFromNonChain &&
         (this.availableBalance.lt(new BigNumber(this.tokenInValue)) ||
@@ -1228,25 +1311,23 @@ export default {
         return;
       }
       this.tokenOutValue = '0';
-
-      /**
-       * unselect quotes
-       */
       this.availableQuotes.forEach(q => {
         if (q) {
           q.isSelected = false;
         }
       });
-      /**
-       * reset quotes, trades, and step
-       */
       this.availableQuotes = [];
       this.allTrades = [];
       this.step = 0;
+      if (
+        this.isFromNonChain &&
+        (this.refundAddress === '' || !this.isValidRefundAddr)
+      )
+        return;
       if (this.showToAddress && !this.addressValue?.isValid) return;
       if (
         !isEmpty(this.toTokenType) &&
-        this.showToAddress &&
+        !this.toTokenType.isEth &&
         (isEmpty(this.addressValue) ||
           (!isEmpty(this.addressValue) && !this.addressValue.isValid))
       ) {
@@ -1263,9 +1344,6 @@ export default {
         this.isLoadingProviders = true;
         this.showAnimation = true;
         this.cachedAmount = this.tokenInValue;
-        this.trackSwapAmplitude(SWAP.FIELD_INPUTS, {
-          FromAmount: toBase(this.tokenInValue, this.fromTokenType.decimals)
-        });
         this.swapper
           .getAllQuotes({
             fromT: this.fromTokenType,
@@ -1315,9 +1393,9 @@ export default {
           if (!clicked) {
             this.selectedProvider = q;
             if (!this.clearingSwap) {
-              this.trackSwapAmplitude(SWAP.FIELD_INPUTS, {
-                SelectRate: q.amount
-              });
+              this.trackSwap(
+                `swapProvider: ${idx + 1}/ ${this.availableQuotes.length}`
+              );
             }
           } else {
             this.selectedProvider =
@@ -1327,6 +1405,13 @@ export default {
       });
     },
     getTrade(idx) {
+      if (this.isFromNonChain && !this.isValidRefundAddr) {
+        return;
+      }
+      if (this.isFromNonChain && !this.isValidRefundAddr) {
+        return;
+      }
+
       if (this.availableQuotes.length === 0) {
         return;
       }
@@ -1340,10 +1425,6 @@ export default {
         return this.setupTrade(this.allTrades[idx]);
       if (!this.allTrades[idx]) {
         this.loadingFee = true;
-      }
-      // don't fetch trade for 0 rate quote
-      if (BigNumber(this.availableQuotes[idx].rate).lte(0)) {
-        return;
       }
       const swapObj = {
         fromAddress: this.address,
@@ -1391,7 +1472,7 @@ export default {
         this.step = 2;
       }
       if (trade instanceof Error || !trade) {
-        this.feeError = 'There was an issue with the provider';
+        this.feeError = 'Provider issue';
         return;
       }
       this.feeError = '';
@@ -1402,7 +1483,7 @@ export default {
       }
     },
     showConfirm() {
-      this.trackSwapAmplitude(SWAP.NEXT_CLICKED);
+      this.trackSwap('showConfirm');
       this.setConfirmInfo();
       this.executeTrade();
     },
@@ -1450,6 +1531,17 @@ export default {
         return this.swapper.isValidToAddress({
           provider: 'changelly',
           toT: this.toTokenType,
+          address
+        });
+      }
+    },
+    isValidRefundAddress(address) {
+      try {
+        return MultiCoinValidator.validate(address, this.fromTokenType.name);
+      } catch (e) {
+        return this.swapper.isValidToAddress({
+          provider: 'changelly',
+          toT: this.fromTokenType,
           address
         });
       }
@@ -1586,9 +1678,6 @@ export default {
     },
     handleLocalGasPrice(e) {
       this.localGasPrice = e;
-      this.trackSwapAmplitude(SWAP.FIELD_INPUTS, {
-        TransactionFee: e
-      });
     },
     openQr() {
       EventBus.$emit('openQrCode');

@@ -27,7 +27,6 @@
         <div class="textDark--text font-weight-medium py-5">
           Finding best rates...
         </div>
-        <v-progress-linear indeterminate color="greenPrimary" />
       </v-container>
     </div>
   </div>
@@ -61,12 +60,9 @@ export default {
 
 <style lang="scss" scoped>
 .rate-active {
-  border: 1px solid var(--v-greenPrimary-base) !important;
   background-color: var(--v-greyLight-base) !important;
 }
 .rate {
   min-height: 60px;
-  border-radius: 8px;
-  border: 1px solid var(--v-greyLight-base);
 }
 </style>
