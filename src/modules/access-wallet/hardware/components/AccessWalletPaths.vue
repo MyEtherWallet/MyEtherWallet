@@ -64,7 +64,7 @@ export default {
   },
   computed: {
     /**
-     * Property returns defualt Paths + Custom paths, used in Select Path component
+     * Property returns default Paths + Custom paths, used in Select Path component
      * Property Interface:
      * {  name = string -> Name of the Path,
      *    subtext = string --> Derivation Path,

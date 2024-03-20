@@ -77,7 +77,7 @@
               <mew-alert
                 theme="warning"
                 hide-close-icon
-                title="DApps are are not supported on this network"
+                title="DApps are not supported on this network"
                 description="Please select a different network."
               />
             </v-col>
@@ -132,7 +132,7 @@ export default {
       this.$router.push({ name: name });
     },
     /**
-     * defualtName is used to route to dapps that has defalt child route
+     * defaultName is used to route to dapps that has defalt child route
      */
     dappName(dapp) {
       return dapp.name || dapp.defaultName;
