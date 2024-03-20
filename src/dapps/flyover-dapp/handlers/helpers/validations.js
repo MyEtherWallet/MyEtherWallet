@@ -1,5 +1,6 @@
 import { isAddress } from '@/core/helpers/addressUtils.js';
 import MultiCoinValidator from 'multicoin-address-validator';
+
 export function isAmountValid(amount, min, max) {
   const val = parseFloat(amount);
 
@@ -15,7 +16,7 @@ export function isRootstockAddress(address) {
 }
 
 export function isLegacyBtcAddress(address) {
-  if (!address) false;
+  if (!address) return false;
 
   return MultiCoinValidator.validate(address, 'Bitcoin');
 }

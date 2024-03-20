@@ -77,10 +77,12 @@
 
 <script>
 import { acceptQuote } from '../../handlers/pegout';
+import { abi } from '../../handlers/helpers/bridgeContract';
+import { decodeBtcAddress } from '../../handlers/helpers/btc';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import AppCopyBtn from '@/core/components/AppCopyBtn';
 import { mapState } from 'vuex';
-import { ethers } from 'ethers';
+import { ethers, Contract, utils } from 'ethers';
 
 export default {
   name: 'AcceptQuote',
@@ -105,6 +107,12 @@ export default {
     quoteHash: {
       default: '',
       type: String
+    },
+    quoteResponse: {
+      default() {
+        return {};
+      },
+      type: Object
     }
   },
   data() {
@@ -149,6 +157,41 @@ export default {
         );
 
         const amountToSend = ethers.utils.parseEther(this.quoteAmount);
+        const amountInWei = ethers.utils.parseUnits(this.quoteAmount, 'ether');
+
+        // create signer
+        const ethersProvider = new ethers.providers.Web3Provider(
+          this.web3.currentProvider
+        );
+        const signer = ethersProvider.getSigner();
+
+        // Create bridge contract
+        const bridgeContract = new Contract(quoteReply.lbcAddress, abi, signer);
+
+        // Create depositPegout contract payload
+        const signatureBytes = utils.arrayify('0x' + quoteReply.signature);
+
+        const lbcPegoutQuote = {
+          lbcAddress: this.quoteResponse.lbcAddress,
+          lpRskAddress: this.quoteResponse.liquidityProviderRskAddress,
+          btcRefundAddress: decodeBtcAddress(
+            this.quoteResponse.btcRefundAddress
+          ),
+          rskRefundAddress: this.quoteResponse.rskRefundAddress,
+          lpBtcAddress: decodeBtcAddress(this.quoteResponse.lpBtcAddr),
+          callFee: String(this.quoteResponse.callFee),
+          penaltyFee: String(this.quoteResponse.penaltyFee),
+          nonce: String(this.quoteResponse.nonce),
+          deposityAddress: decodeBtcAddress(this.quoteResponse.depositAddr),
+          value: String(this.quoteResponse.value),
+          agreementTimestamp: this.quoteResponse.agreementTimestamp,
+          depositDateLimit: this.quoteResponse.depositDateLimit,
+          depositConfirmations: this.quoteResponse.depositConfirmations,
+          transferConfirmations: this.quoteResponse.transferConfirmations,
+          transferTime: this.quoteResponse.transferTime,
+          expireDate: this.quoteResponse.expireDate,
+          expireBlock: this.quoteResponse.expireBlocks
+        };
 
         // Create a transaction object
         const transactionObject = {
@@ -166,11 +209,13 @@ export default {
           this.msg = 'Insufficient balance to send the transaction.';
         } else {
           this.wait = true;
-          const transactionResponse = await wallet.sendTransaction(
-            transactionObject
+          const transactionResponse = await bridgeContract.depositPegout(
+            lbcPegoutQuote,
+            signatureBytes,
+            { value: amountInWei }
           );
 
-          this.hash = `https://explorer.rsk.co/tx/${transactionResponse.hash}`;
+          this.hash = `https://explorer.rootstock.io/tx/${transactionResponse.hash}`;
           // Wait for transaction confirmation
           await transactionResponse.wait();
           this.wait = false;

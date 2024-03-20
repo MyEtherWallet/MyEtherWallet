@@ -146,7 +146,7 @@ export default {
         bitcoinRefundAddress: this.btcAddress,
         rskRefundAddress: this.rskAddress,
         valueToTransfer: parseFloat(toBase(parseFloat(this.amount), 18)),
-        callContractArguments: ''
+        callContractArguments: '0x'
       };
 
       try {
