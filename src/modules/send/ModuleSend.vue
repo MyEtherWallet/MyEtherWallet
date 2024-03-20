@@ -42,15 +42,15 @@
               placeholder="0"
               :persistent-hint="true"
               :error-messages="amountErrorMessage"
-              :max-btn-obj="{
-                title: 'Max',
-                disabled: disableSwapBtn,
-                method: setEntireBal
-              }"
+              :max-btn-obj="maxBtn"
               :buy-more-str="buyMoreStr"
               class="AmountInput"
               @keydown.native="preventCharE($event)"
-              @buyMore="openBuySell"
+              @buyMore="
+                () => {
+                  openBuySell('ModuleSend');
+                }
+              "
               @input="val => setAmount(val, false)"
             />
           </div>
@@ -202,7 +202,6 @@ import {
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 import { fromBase, toBase } from '@/core/helpers/unit';
-
 import SendTransaction from '@/modules/send/handlers/handlerSend';
 
 export default {
@@ -257,7 +256,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['address', 'instance']),
+    ...mapState('wallet', ['address', 'instance', 'identifier']),
     ...mapState('global', ['preferredCurrency']),
     ...mapGetters('global', [
       'network',
@@ -266,8 +265,21 @@ export default {
       'swapLink',
       'getFiatValue'
     ]),
-    ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
+    ...mapGetters('wallet', [
+      'balanceInETH',
+      'tokensList',
+      'hasGasPriceOption'
+    ]),
     ...mapGetters('custom', ['hasCustom', 'customTokens', 'hiddenTokens']),
+    maxBtn() {
+      return this.hasGasPriceOption
+        ? {}
+        : {
+            title: 'Max',
+            disabled: this.disableSwapBtn,
+            method: this.setEntireBal
+          };
+    },
     isFromNetworkCurrency() {
       return this.selectedCurrency?.contract === MAIN_TOKEN_ADDRESS;
     },

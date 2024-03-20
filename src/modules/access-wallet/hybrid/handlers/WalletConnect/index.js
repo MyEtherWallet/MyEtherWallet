@@ -73,7 +73,7 @@ class WalletConnectWallet {
             '0x' + toBuffer(msg).toString('hex')
           ];
           this.client
-            .request({ method: 'eth_sign', params: msgParams })
+            .request({ method: 'personal_sign', params: msgParams })
             .then(result => {
               resolve(getBufferFromHex(sanitizeHex(result)));
             })
@@ -117,7 +117,7 @@ const createWallet = async (identifier = WALLET_TYPES.WALLET_CONNECT) => {
     showQrModal: true,
     chains: [ETH.chainID],
     optionalChains: allChainIds,
-    methods: ['eth_sendTransaction', 'eth_sign'],
+    methods: ['eth_sendTransaction', 'personal_sign'],
     events: ['chainChanged', 'accountsChanged'],
     metadata: {
       name: 'MyEtherWallet Inc',
@@ -129,7 +129,10 @@ const createWallet = async (identifier = WALLET_TYPES.WALLET_CONNECT) => {
     qrModalOptions: {
       themeVariables: {
         '--wcm-z-index': 300
-      }
+      },
+      explorerExcludedWalletIds: 'ALL',
+      explorerRecommendedWalletIds: 'NONE',
+      enableExplorer: false
     }
   });
   if (signClient.connected) {

@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "6.9.2",
+  "version": "6.9.4",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build": "npm run update && vue-cli-service build",
@@ -40,9 +40,9 @@
     "@aave/math-utils": "1.7.0",
     "@aave/protocol-js": "4.3.0",
     "@actions/github": "6.0.0",
-    "@amplitude/analytics-browser": "2.4.0",
+    "@amplitude/analytics-browser": "2.5.3",
     "@coolwallet/bsc": "1.1.7",
-    "@coolwallet/core": "1.1.21",
+    "@coolwallet/core": "1.1.23",
     "@coolwallet/eth": "1.1.21",
     "@coolwallet/transport-web-ble": "1.1.3",
     "@coolwallets/eth": "0.2.0-beta.1",
@@ -53,8 +53,8 @@
     "@ensdomains/ensjs": "2.1.0",
     "@ethereumjs/common": "2.6.5",
     "@ethereumjs/tx": "3.5.2",
-    "@formatjs/intl-numberformat": "8.9.2",
-    "@keepkey/device-protocol": "7.13.1",
+    "@formatjs/intl-numberformat": "8.10.0",
+    "@keepkey/device-protocol": "7.13.2",
     "@kleros/address-tags-sdk": "github:MyEtherWallet/address-tags-sdk",
     "@lokalise/node-api": "8.0.1",
     "@mathieustan/vue-intercom": "0.0.9",
@@ -62,11 +62,11 @@
     "@sentry/browser": "7.93.0",
     "@sentry/tracing": "7.93.0",
     "@sentry/vue": "7.93.0",
-    "@shapeshiftoss/hdwallet-core": "1.22.0",
-    "@shapeshiftoss/hdwallet-keepkey-webusb": "1.22.0",
-    "@trezor/connect-web": "9.1.8",
+    "@shapeshiftoss/hdwallet-core": "1.53.4",
+    "@shapeshiftoss/hdwallet-keepkey-webusb": "1.53.4",
+    "@trezor/connect-web": "9.2.1",
     "@unstoppabledomains/resolution": "9.0.0",
-    "@walletconnect/ethereum-provider": "2.11.0",
+    "@walletconnect/ethereum-provider": "2.11.2",
     "@walletconnect/modal": "2.6.2",
     "@web3modal/standalone": "2.4.3",
     "animejs": "3.2.2",
@@ -117,7 +117,7 @@
     "walletlink": "2.5.0"
   },
   "devDependencies": {
-    "@commitlint/config-conventional": "18.6.0",
+    "@commitlint/config-conventional": "18.6.1",
     "@ledgerhq/hw-app-eth": "6.33.7",
     "@ledgerhq/hw-transport-web-ble": "6.27.16",
     "@ledgerhq/hw-transport-webusb": "6.27.16",
@@ -142,7 +142,7 @@
     "bip39": "3.0.4",
     "chromedriver": "104.0.0",
     "codecov": "3.8.3",
-    "commitlint": "18.6.0",
+    "commitlint": "18.6.1",
     "copy-webpack-plugin": "6.3.2",
     "eslint": "7.32.0",
     "eslint-plugin-prettier": "4.2.1",
@@ -192,14 +192,14 @@
     "web3-utils": "1.5.0",
     "webpack": "4.44.2",
     "webpack-bundle-analyzer": "4.10.1",
-    "xss": "1.0.14"
+    "xss": "1.0.15"
   },
   "engines": {
-    "node": ">= 10.0.0 < 12.3.0",
+    "node": ">= 10.0.0 < 12.25.0",
     "npm": ">= 6.0.0"
   },
   "resolutions": {
-    "@keepkey/device-protocol": "7.8.1",
+    "@keepkey/device-protocol": "7.13.2",
     "engine.io": "6.2.1",
     "glob-parent": "5.1.2",
     "follow-redirects": "1.15.2",

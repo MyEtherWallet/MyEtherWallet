@@ -184,7 +184,7 @@ export default {
      * NEW TAB ITEMS OBJECT SHOULD LOOK LIKE THIS:
      * tabItems:
      *   [{
-     *      name: 'Mint a new block',                      // String that will be displayd as a tab menu
+     *      name: 'Mint a new block',                      // String that will be displayed as a tab menu
      *      route: { name: ETH_BLOCKS_ROUTE.CORE.NAME },   // Route name of the child
      *    }]
      */

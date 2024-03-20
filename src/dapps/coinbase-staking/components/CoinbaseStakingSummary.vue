@@ -52,15 +52,28 @@
     </div>
     <div
       v-if="showClaimNow"
-      class="d-flex align-center justify-space-between pt-3 pb-2"
+      class="d-flex flex-column align-center justify-space-between pt-3 pb-2"
     >
       <mew-button
         title="Claim now"
         has-full-width
         btn-size="medium"
         :loading="loadingClaim"
+        :disabled="!hasEnoughBalanceToStake"
         @click.native="claim"
       />
+      <p v-show="!hasEnoughBalanceToStake" class="error--text">
+        Not enough balance to claim.
+        <a
+          v-show="network.type.canBuy"
+          @click="
+            () => {
+              openBuySell('CoinbaseStakingSummary');
+            }
+          "
+          >Buy More {{ network.type.currencyName }}</a
+        >
+      </p>
     </div>
     <div class="d-flex align-center justify-space-between pt-2">
       <div
@@ -102,33 +115,55 @@
 
 <script>
 import { mapGetters, mapState, mapActions } from 'vuex';
+import { fromWei } from 'web3-utils';
 import { isEmpty } from 'lodash';
 import BigNumber from 'bignumber.js';
 import moment from 'moment';
 
 import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
+import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { fromBase } from '@/core/helpers/unit';
-import { API, CB_TRACKING } from '@/dapps/coinbase-staking/configs.js';
+import {
+  API,
+  CB_TRACKING,
+  MIN_GAS_LIMIT
+} from '@/dapps/coinbase-staking/configs.js';
 import { EventBus } from '@/core/plugins/eventBus';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import buyMore from '@/core/mixins/buyMore.mixin.js';
 
 const FIVE_MINS = 300000; // 1000 * 60 * 5
 
 export default {
   name: 'CoinbaseStakingSummary',
-  mixins: [handlerAnalytics],
+  mixins: [handlerAnalytics, buyMore],
   data() {
     return {
       currentTime: 0,
       timeInterval: null,
       loading: true,
-      loadingClaim: false
+      loadingClaim: false,
+      locGasPrice: '0'
     };
   },
   computed: {
-    ...mapGetters('global', ['network']),
+    ...mapGetters('wallet', ['balanceInETH']),
+    ...mapGetters('global', ['network', 'gasPriceByType']),
     ...mapState('coinbaseStaking', ['lastFetched', 'fetchedDetails']),
     ...mapState('wallet', ['address', 'instance', 'web3']),
+    ethTotalFee() {
+      const gasPrice = BigNumber(this.locGasPrice).gt(0)
+        ? BigNumber(this.locGasPrice)
+        : BigNumber(this.gasPriceByType(this.gasPriceType));
+      const gasLimit = BigNumber(this.gasLimit).gt('21000')
+        ? this.gasLimit
+        : MIN_GAS_LIMIT;
+      const ethFee = fromWei(BigNumber(gasPrice).times(gasLimit).toFixed());
+      return formatFloatingPointValue(ethFee).value;
+    },
+    hasEnoughBalanceToStake() {
+      return BigNumber(this.ethTotalFee).lte(this.balanceInETH);
+    },
     actualLastFetched() {
       return this.lastFetched[this.network.type.name];
     },
@@ -231,10 +266,14 @@ export default {
       if (fetchedInThePast && onePMPastNow) {
         this.fetchInfo();
       }
+    },
+    gasPriceType() {
+      this.locGasPrice = this.gasPriceByType(this.gasPriceType);
     }
   },
   mounted() {
     this.fetchInfo();
+    this.locGasPrice = this.gasPriceByType(this.gasPriceType);
     this.currentTime = new Date().getTime();
     this.timeInterval = setInterval(() => {
       const time = new Date();

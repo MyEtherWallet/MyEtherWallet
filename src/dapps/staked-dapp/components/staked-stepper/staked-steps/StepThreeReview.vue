@@ -191,8 +191,10 @@ import { ABI_GET_FEES } from '@/dapps/staked-dapp/handlers/handlerStaked';
 import { formatBalanceEthValue } from '@/core/helpers/numberFormatHelper';
 import iconColorfulETH from '@/assets/images/icons/icon-colorful-eth.svg';
 import configNetworkTypes from '@/dapps/staked-dapp/handlers/configNetworkTypes';
+import handlerAnalyticsMixin from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 export default {
+  mixins: [handlerAnalyticsMixin],
   props: {
     amount: {
       type: Number,
@@ -389,6 +391,7 @@ export default {
      */
     prepareToStake() {
       this.stakedStep += 1;
+      this.trackDapp('StakedPrepareStake');
       this.startProvision({
         eth2Address: this.eth2Address,
         count: this.validatorsCount

@@ -102,7 +102,14 @@
             class="d-flex align-center justify-end mt-4"
           >
             <div class="error--text mew-label mr-2">{{ notEnoughMessage }}</div>
-            <a class="mew-label font-weight-medium" @click="openBuySell">
+            <a
+              class="mew-label font-weight-medium"
+              @click="
+                () => {
+                  openBuySell('ETHBlocksBatchMint');
+                }
+              "
+            >
               Buy more {{ network.type.name }}.
             </a>
           </div>

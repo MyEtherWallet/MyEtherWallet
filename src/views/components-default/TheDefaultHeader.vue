@@ -52,10 +52,10 @@
                 <div class="header__menu-dropdown">
                   <div class="header__menu-dropdown-wrap">
                     <a
-                      href="https://www.mewtopia.com/"
+                      href="https://www.myetherwallet.com/blog"
                       target="_blank"
                       class="header__menu-dropdown-link"
-                      >MEWtopia</a
+                      >Blog</a
                     >
                     <a
                       href="https://help.myetherwallet.com/en/"

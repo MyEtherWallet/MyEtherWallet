@@ -44,7 +44,7 @@
     margin: 11px 0;
     text-align: center;
     margin: 0 !important;
-    font-family: 'DM Sans', sans-serif !important;
+    font-family: @font !important;
     font-weight: 400 !important;
 
     .screen-tablet-min({

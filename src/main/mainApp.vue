@@ -106,8 +106,8 @@ export default {
     EventBus.$on('swapTxNotBroadcastedFailed', () => {
       this.trackSwapAmplitude(SWAP.NOT_BROADCASTED);
     });
-    EventBus.$on(BUYSELL_EVENT, () => {
-      this.openBuy();
+    EventBus.$on(BUYSELL_EVENT, arg => {
+      this.openBuy(arg);
     });
     this.footerHideIntercom();
     this.logMessage();
@@ -160,8 +160,11 @@ export default {
     ...mapActions('article', ['updateArticles']),
     ...mapActions('popups', ['showSurveyPopup']),
     ...mapActions('external', ['storeEIP6963Wallet']),
-    openBuy() {
-      this.trackBuySell(BUY_SELL.OPEN_BUY_SELL_MODAL);
+    openBuy(arg) {
+      this.trackBuySell(BUY_SELL.OPEN_BUY_SELL_MODAL, {
+        module: arg[0],
+        path: arg[1]
+      });
       this.buySellOpen = true;
     },
     logMessage() {

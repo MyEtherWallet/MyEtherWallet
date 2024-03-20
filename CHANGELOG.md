@@ -1,3 +1,39 @@
+### Release v6.9.4
+
+### feature
+
+* add landing page footer [#4860](https://github.com/MyEtherWallet/MyEtherWallet/pull/4860)
+* add gas estimation, disable gas price switch [#4862](https://github.com/MyEtherWallet/MyEtherWallet/pull/4862)
+
+### devop
+
+* remove other wallet option from walletconnect modal [#4844](https://github.com/MyEtherWallet/MyEtherWallet/pull/4844)
+* remove affiliates and fix language on tracking [#4854](https://github.com/MyEtherWallet/MyEtherWallet/pull/4854)
+* update portfolio banner, update copy, rearrange logos [#4855](https://github.com/MyEtherWallet/MyEtherWallet/pull/4855)
+* fix header color [#4856](https://github.com/MyEtherWallet/MyEtherWallet/pull/4856)
+* add buy/sell tracking [#4857](https://github.com/MyEtherWallet/MyEtherWallet/pull/4857)
+* add platform for moonpay [#4861](https://github.com/MyEtherWallet/MyEtherWallet/pull/4861)
+
+### fix
+
+* fix offline access [#4864](https://github.com/MyEtherWallet/MyEtherWallet/pull/4864)
+* fix amplitude for browser extension, add more events [#4865](https://github.com/MyEtherWallet/MyEtherWallet/pull/4865)
+
+### Release v6.9.3
+
+### devop
+
+* add new ethvm api [#4832](https://github.com/MyEtherWallet/MyEtherWallet/pull/4832)
+* remove gas price on send and swap for web3 wallets [#4838](https://github.com/MyEtherWallet/MyEtherWallet/pull/4838)
+* staked amplitude events [#4839](https://github.com/MyEtherWallet/MyEtherWallet/pull/4839)
+
+### fix
+
+* add claim balance check [#4837](https://github.com/MyEtherWallet/MyEtherWallet/pull/4837)
+* fix mobile menu [#4840](https://github.com/MyEtherWallet/MyEtherWallet/pull/4840)
+* fix routes [#4842](https://github.com/MyEtherWallet/MyEtherWallet/pull/4842)
+* fix network selection frozen [#4843](https://github.com/MyEtherWallet/MyEtherWallet/pull/4843)
+
 ### Release v6.9.2
 
 ### feature
@@ -579,7 +615,7 @@
 * Fix password confirmation for downloading keystore file [#4373](https://github.com/MyEtherWallet/MyEtherWallet/pull/4373)
 * Generate keystore file: reset password when user click back button to go back to step 2 [#4379](https://github.com/MyEtherWallet/MyEtherWallet/pull/4379)
 * fix eth block layout [#4380](https://github.com/MyEtherWallet/MyEtherWallet/pull/4380)
-* fix logout issue with walletconnect, disbale network switching [#4383](https://github.com/MyEtherWallet/MyEtherWallet/pull/4383)
+* fix logout issue with walletconnect, disable network switching [#4383](https://github.com/MyEtherWallet/MyEtherWallet/pull/4383)
 * fix offline nonce too low [#4387](https://github.com/MyEtherWallet/MyEtherWallet/pull/4387)
 * Fix ENS text records saving after cancelling txn [#4388](https://github.com/MyEtherWallet/MyEtherWallet/pull/4388)
 * Fix stakewise not able to stake twice [#4399](https://github.com/MyEtherWallet/MyEtherWallet/pull/4399)
@@ -1421,7 +1457,7 @@
 
 ### fix
 
-* fix dapps tranlsations, add link out to release [#3601](https://github.com/MyEtherWallet/MyEtherWallet/pull/3601)
+* fix dapps translations, add link out to release [#3601](https://github.com/MyEtherWallet/MyEtherWallet/pull/3601)
 
 ### feat
 

@@ -50,7 +50,11 @@
                       : null
                   "
                   :max-btn-obj="maxBtn"
-                  @buyMore="openBuySell"
+                  @buyMore="
+                    () => {
+                      openBuySell('ModuleSwapInput');
+                    }
+                  "
                   @keydown.native="preventCharE($event)"
                   @input="val => triggerSetTokenInValue(val, false)"
               /></v-col>
@@ -111,7 +115,11 @@
                 :title="`Buy ${network.type.currencyName}`"
                 class="ma-1"
                 :has-full-width="$vuetify.breakpoint.xsOnly"
-                @click.native="openBuySell"
+                @click.native="
+                  () => {
+                    openBuySell('ModuleSwapErrorBlock');
+                  }
+                "
               />
             </div>
           </app-user-msg-block>
@@ -246,6 +254,15 @@
                 :class="isFromNonChain ? '' : 'mt-7'"
                 :selected-provider-id="selectedProviderId"
               />
+              <p v-if="hasGasPriceOption && step >= 1" class="error--text">
+                {{
+                  feeError
+                    ? feeError
+                    : providersErrorMsg
+                    ? providersErrorMsg.subtitle
+                    : ''
+                }}
+              </p>
               <!--
                   =====================================================================================
                   Swap Fee
@@ -318,7 +335,7 @@ import Swapper from './handlers/handlerSwap';
 import handleError from '../confirmation/handlers/errorHandler';
 import { fromBase, toBase } from '@/core/helpers/unit';
 
-const MIN_GAS_LIMIT = 800000;
+const MIN_GAS_LIMIT = 400000;
 let localContractToToken = {};
 export default {
   name: 'ModuleSwap',
@@ -408,7 +425,8 @@ export default {
       'balanceInETH',
       'tokensList',
       'initialLoad',
-      'balanceInWei'
+      'balanceInWei',
+      'hasGasPriceOption'
     ]),
     ...mapGetters('external', [
       'balanceFiatValue',
@@ -446,7 +464,9 @@ export default {
      * if native token, return empty
      */
     maxBtn() {
-      return this.isFromNonChain || this.availableBalance.isZero()
+      return this.hasGasPriceOption ||
+        this.isFromNonChain ||
+        this.availableBalance.isZero()
         ? {}
         : {
             title: 'Max',
@@ -735,6 +755,7 @@ export default {
     totalCost() {
       const amount = this.isFromTokenMain ? this.tokenInValue : '0';
       const amountWei = toWei(amount);
+      // if (this.hasGasPriceOption) return BigNumber(amountWei).toString();
       return BigNumber(this.txFee).plus(amountWei).toString();
     },
     totalGasLimit() {
@@ -781,6 +802,10 @@ export default {
       ) {
         return true;
       }
+
+      // if (this.hasGasPriceOption) {
+      //   return toBN(this.balanceInWei).gte(0);
+      // }
       return toBN(this.balanceInWei).gte(
         toBN(this.localGasPrice).muln(MIN_GAS_LIMIT)
       );
@@ -912,7 +937,13 @@ export default {
       return `To ${name} address`;
     },
     multipleWatcher() {
-      return this.network, this.web3, this.tokensList, this.coinGeckoTokens;
+      return (
+        this.address,
+        this.network,
+        this.web3,
+        this.tokensList,
+        this.coinGeckoTokens
+      );
     }
   },
   watch: {
@@ -1585,7 +1616,7 @@ export default {
         this.step = 2;
       }
       if (trade instanceof Error || !trade) {
-        this.feeError = 'Provider issue';
+        this.feeError = 'There was an issue with the provider';
         return;
       }
       this.feeError = '';

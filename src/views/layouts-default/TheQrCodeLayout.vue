@@ -68,7 +68,7 @@ export default {
       } else if (isApple) {
         window.location.href = 'https://itunes.apple.com/app/id1464614025';
       } else {
-        this.$router.push({ name: ROUTES_HOME.HOME.NAME });
+        this.$router.push({ name: ROUTES_HOME.ACCESS_WALLET.NAME });
         window.open('https://www.mewwallet.com/', '_blank');
       }
     },

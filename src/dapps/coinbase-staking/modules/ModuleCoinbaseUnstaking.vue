@@ -59,7 +59,8 @@
               type="number"
               :max-btn-obj="{
                 title: 'Max',
-                method: setMax
+                method: setMax,
+                disabled: errorMessages !== ''
               }"
               :image="iconEth"
               label="Amount to unstake"
@@ -67,7 +68,11 @@
               :value="unstakeAmount"
               :error-messages="errorMessages"
               :buy-more-str="buyMoreStr"
-              @buyMore="openBuySell"
+              @buyMore="
+                () => {
+                  openBuySell('CoinbaseUnstaking');
+                }
+              "
               @input="setAmount"
             />
           </div>
@@ -168,21 +173,24 @@
 </template>
 
 <script>
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { fromWei } from 'web3-utils';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { debounce, isEmpty } from 'lodash';
 
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 import { EventBus } from '@/core/plugins/eventBus';
 import hasValidDecimals from '@/core/helpers/hasValidDecimals';
 import { toBase, fromBase } from '@/core/helpers/unit';
-import { API, CB_TRACKING } from '@/dapps/coinbase-staking/configs.js';
+import {
+  API,
+  CB_TRACKING,
+  MIN_GAS_LIMIT
+} from '@/dapps/coinbase-staking/configs.js';
 
-const MIN_GAS_LIMIT = 400000;
 export default {
   name: 'ModuleCoinbaseUnstaking',
   components: {

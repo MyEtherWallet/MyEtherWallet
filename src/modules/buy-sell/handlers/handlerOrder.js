@@ -11,7 +11,7 @@ export default class OrderHandler {
     const hash = sha3(address);
     const id = `WEB|${hash.substring(0, 42)}`;
     return new Promise(resolve => {
-      let link = `${API}/v3/purchase/moonpay/order?address=${address}&id=${id}&cryptoCurrency=${tokenSymbol}&fiatCurrency=${fiatCurrency}`;
+      let link = `${API}/v3/purchase/moonpay/order?address=${address}&id=${id}&cryptoCurrency=${tokenSymbol}&fiatCurrency=${fiatCurrency}&platform=web`;
       if (amount) {
         link += `&requestedAmount=${amount}`;
       }
@@ -27,7 +27,7 @@ export default class OrderHandler {
     const id = `WEB|${hash.substring(0, 42)}`;
     return new Promise(resolve => {
       const parsedUrl = encodeURI(
-        `${API}/v3/sell/moonpay/order?address=${address}&id=${id}&cryptoCurrency=${tokenSymbol}&requestedAmount=${amount}`
+        `${API}/v3/sell/moonpay/order?address=${address}&id=${id}&cryptoCurrency=${tokenSymbol}&requestedAmount=${amount}&platform=web`
       );
       // eslint-disable-next-line
       window.open(parsedUrl, '_blank');

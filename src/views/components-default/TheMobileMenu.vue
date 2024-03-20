@@ -57,10 +57,10 @@
           >
             <div class="mobile-menu__menu-dropdown-wrap">
               <a
-                href="https://www.mewtopia.com/"
+                href="https://www.myetherwallet.com/blog"
                 target="_blank"
                 class="mobile-menu__menu-dropdown-link"
-                >MEWtopia</a
+                >Blog</a
               >
               <a
                 href="https://help.myetherwallet.com/en/"
@@ -149,17 +149,32 @@
         :style="showAccess"
         >Access my wallet</a
       >
+      <div class="matomo-tracking-switch d-md-none pt-5">
+        <v-switch
+          :input-value="consentToTrack"
+          inset
+          :label="`Data Tracking ${consentToTrack ? 'On' : 'Off'}`"
+          color="greenPrimary"
+          off-icon="mdi-alert-circle"
+          @change="setConsent"
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 import CloseIcon from '@/assets/images/icons/close-icon.vue';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+
 export default {
   components: {
     CloseIcon
   },
+  mixins: [handlerAnalytics],
   props: {
     isOpen: {
       type: Boolean,
@@ -174,6 +189,7 @@ export default {
     };
   },
   computed: {
+    ...mapState('popups', ['consentToTrack']),
     showAccess() {
       return this.$route.name === ROUTES_HOME.ACCESS_WALLET.NAME
         ? 'visibility: hidden'
