@@ -264,8 +264,7 @@ import {
   hexToNumber,
   toWei,
   sha3,
-  isHex,
-  isContractAddressInBloom
+  isHex
 } from 'web3-utils';
 import { isEmpty, isArray, cloneDeep } from 'lodash';
 import { mapState, mapGetters } from 'vuex';
