@@ -766,42 +766,43 @@ export default {
   .v-list-item--active::before {
     opacity: 0 !important;
   }
-  // .v-navigation-drawer__content {
-  //   margin-right: 2px;
-  //   &::-webkit-scrollbar {
-  //     width: 4px !important;
-  //     height: 4px !important;
-  //   }
-  //   &::-webkit-scrollbar-button {
-  //     width: 0 !important;
-  //     height: 0 !important;
-  //   }
-  //   &::-webkit-scrollbar-thumb {
-  //     background: #7b91ac !important;
-  //     border: 0 none #fff !important;
-  //     border-radius: 50px !important;
-  //   }
-  //   &::-webkit-scrollbar-thumb:hover {
-  //     background: #7b91ac !important;
-  //   }
-  //   &::-webkit-scrollbar-thumb:active {
-  //     background: #4b4949 !important;
-  //   }
-  //   &::-webkit-scrollbar-track {
-  //     background: #e1dfdf !important;
-  //     border: 0 none #fff !important;
-  //     border-radius: 39px !important;
-  //   }
-  //   &::-webkit-scrollbar-track:hover {
-  //     background: #ddd5d5 !important;
-  //   }
-  //   &::-webkit-scrollbar-track:active {
-  //     background: #dedede !important;
-  //   }
-  //   &::-webkit-scrollbar-corner {
-  //     background: transparent !important;
-  //   }
-  // }
+  .v-navigation-drawer__content {
+    scrollbar-width: thin !important;
+    margin-right: 2px;
+    &::-webkit-scrollbar {
+      width: 4px !important;
+      height: 4px !important;
+    }
+    &::-webkit-scrollbar-button {
+      width: 0 !important;
+      height: 0 !important;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: #7b91ac !important;
+      border: 0 none #fff !important;
+      border-radius: 50px !important;
+    }
+    &::-webkit-scrollbar-thumb:hover {
+      background: #7b91ac !important;
+    }
+    &::-webkit-scrollbar-thumb:active {
+      background: #4b4949 !important;
+    }
+    &::-webkit-scrollbar-track {
+      background: #e1dfdf !important;
+      border: 0 none #fff !important;
+      border-radius: 39px !important;
+    }
+    &::-webkit-scrollbar-track:hover {
+      background: #ddd5d5 !important;
+    }
+    &::-webkit-scrollbar-track:active {
+      background: #dedede !important;
+    }
+    &::-webkit-scrollbar-corner {
+      background: transparent !important;
+    }
+  }
   .tracking-switch {
     .v-label {
       color: var(--v-white-base);
