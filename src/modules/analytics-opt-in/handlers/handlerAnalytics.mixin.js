@@ -225,6 +225,19 @@ export default {
         }
         this.$amplitude.track(`${categories.buySell}${action}`);
       }
+    },
+    /**
+     * Track Contract
+     */
+    trackContract(action, event = {}) {
+      if (this.isOfflineApp) return;
+      if (this.consentToTrack) {
+        if (!isEmpty(event)) {
+          this.$amplitude.track(`${categories.contract}${action}`, event);
+          return;
+        }
+        this.$amplitude.track(`${categories.contract}${action}`);
+      }
     }
   }
 };

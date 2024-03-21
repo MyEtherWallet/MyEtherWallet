@@ -6,6 +6,7 @@ import CREATE_WALLET from './createWallet';
 import ACCESS_WALLET from './accessWallet';
 import BUY_SELL from './buySell';
 import STAKING from './staking';
+import CONTRACT from './contract';
 
 const COMMON = {
   PAGE_SHOWN: 'PageShown',
@@ -22,5 +23,6 @@ export {
   COMMON,
   ACCESS_WALLET,
   BUY_SELL,
+  CONTRACT,
   STAKING
 };

@@ -167,6 +167,7 @@
                 dense
                 class="pl-4"
                 :to="child.route"
+                @click="child.fn ? child.fn() : () => {}"
               >
                 <v-list-item-content>
                   <v-list-item-title
@@ -295,6 +296,7 @@ import { ETH, BSC, MATIC, GOERLI } from '@/utils/networks/types';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import {
+  CONTRACT,
   DASHBOARD,
   STAKING
 } from '@/modules/analytics-opt-in/handlers/configs/events';
@@ -481,11 +483,13 @@ export default {
             children: [
               {
                 title: this.$t('interface.menu.deploy'),
-                route: { name: ROUTES_WALLET.DEPLOY_CONTRACT.NAME }
+                route: { name: ROUTES_WALLET.DEPLOY_CONTRACT.NAME },
+                fn: this.trackDeploy
               },
               {
                 title: this.$t('interface.menu.interact-contract'),
-                route: { name: ROUTES_WALLET.INTERACT_WITH_CONTRACT.NAME }
+                route: { name: ROUTES_WALLET.INTERACT_WITH_CONTRACT.NAME },
+                fn: this.trackInteract
               }
             ]
           },
@@ -581,6 +585,12 @@ export default {
     ...mapActions('global', ['setDarkMode']),
     trackToSwap() {
       this.trackDashboardAmplitude(DASHBOARD.SWAP_LEFT_NAVIGATION);
+    },
+    trackInteract() {
+      this.trackContract(CONTRACT.NAVIGATE_TO_INTERACT);
+    },
+    trackDeploy() {
+      this.trackContract(CONTRACT.NAVIGATE_TO_DEPLOY);
     },
     trackToStaking() {
       this.trackStaking(STAKING.SIDE_MENU);
