@@ -21,7 +21,6 @@ const AUDIT_EXCEPTIONS = [
   'json5',
   'http-cache-semantics',
   'cacheable-request',
-  // look into updating after release
   'dns-packet',
   'decode-uri-component',
   '@openzeppelin/contracts',
@@ -34,7 +33,8 @@ const AUDIT_EXCEPTIONS = [
   'chart.js',
   'browserify-sign',
   'lodash.pick',
-  'ip'
+  'ip',
+  'webpack-dev-middleware'
 ];
 const execute = (command, callback) => {
   exec(
