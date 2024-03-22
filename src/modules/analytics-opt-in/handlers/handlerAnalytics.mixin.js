@@ -238,6 +238,11 @@ export default {
         }
         this.$amplitude.track(`${categories.contract}${action}`);
       }
+    },
+    trackSurvey(val) {
+      if (this.consentToTrack) {
+        this.$amplitude.track(`Survey${val}`);
+      }
     }
   }
 };

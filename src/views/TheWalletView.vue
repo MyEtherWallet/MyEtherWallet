@@ -15,11 +15,47 @@
       :is-offline-app="isOfflineApp"
       @close="closePaperWallet"
     />
+    <v-dialog
+      :value="showSurvey"
+      class="pk-survey"
+      max-width="320"
+      :content-class="
+        $vuetify.breakpoint.smAndUp
+          ? 'position-right survey-dialog ma-0'
+          : 'survey-dialog ma-0'
+      "
+      persistent
+      no-click-animation
+      hide-overlay
+    >
+      <div class="inner-container pa-5">
+        <div class="d-flex justify-end">
+          <v-icon
+            size="x-large"
+            color="grey cursor--pointer"
+            @click="closeSurveyModal"
+          >
+            mdi-close
+          </v-icon>
+        </div>
+        <div class="text-center font-weight-bold font-size--16px pt-2">
+          Want to make MEW even better?
+        </div>
+        <div class="px-4 py-2">
+          Please take a quick survey about your experience. We appreciate you!
+        </div>
+        <mew-button
+          title="Click Here"
+          :has-full-width="true"
+          @click.native="openSurvey"
+        />
+      </div>
+    </v-dialog>
   </div>
 </template>
 
 <script>
-import { mapActions, mapState, mapGetters } from 'vuex';
+import { mapGetters, mapState, mapActions } from 'vuex';
 import { toBN } from 'web3-utils';
 import { debounce, isEqual } from 'lodash';
 import handlerWallet from '@/core/mixins/handlerWallet.mixin';
@@ -78,7 +114,12 @@ export default {
       'gasPrice',
       'isEIP1559SupportedNetwork'
     ]),
-    ...mapGetters('wallet', ['balanceInWei'])
+    ...mapGetters('wallet', ['balanceInWei']),
+    showSurvey() {
+      return this.surveyTracker(
+        this.identifier === WALLET_TYPES.PRIV_KEY && !this.pkSurveyShown
+      );
+    }
   },
   watch: {
     address(newVal) {
@@ -210,7 +251,21 @@ export default {
       'setValidNetwork'
     ]),
     ...mapActions('external', ['setTokenAndEthBalance', 'setNetworkTokens']),
-
+    ...mapActions('popups', ['setPkSurvey']),
+    surveyTracker(val) {
+      if (val) {
+        this.trackSurvey('Shown');
+      }
+      return val;
+    },
+    closeSurveyModal() {
+      this.setPkSurvey();
+      this.trackSurvey('Closed');
+    },
+    openSurvey() {
+      this.setPkSurvey();
+      this.trackSurvey('Answered');
+    },
     /**
      * set showPaperWallet to false
      * to close the modal
@@ -371,7 +426,26 @@ export default {
 };
 </script>
 
+<style lang="scss">
+.survey-dialog {
+  &.position-right {
+    position: absolute !important;
+    right: 30px !important;
+    top: 55% !important;
+  }
+
+  .v-expansion-panel-content__wrap {
+    padding: 0 0 32px 0 !important;
+  }
+}
+</style>
+
 <style lang="scss" scoped>
+.inner-container {
+  background-color: white;
+  border-top: 8px solid var(--v-greenPrimary-base);
+}
+
 .wallet-main {
   background-color: var(--v-bgWallet-base);
   height: 100%;
