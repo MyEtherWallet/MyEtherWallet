@@ -68,7 +68,7 @@ const popupStore = locStore.get('popups-store');
 amplitude.init(nameHashPckg.hash(VERSION), {
   instanceName:
     process.env.NODE_ENV === 'production' ? 'mew-web-prod' : 'mew-web-dev',
-  optOut: !popupStore.consentToTrack,
+  optOut: popupStore.consentToTrack,
   serverUrl:
     process.env.NODE_ENV === 'production'
       ? 'https://analytics-web.mewwallet.dev/record'
