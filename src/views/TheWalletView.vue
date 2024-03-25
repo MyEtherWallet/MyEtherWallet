@@ -59,6 +59,8 @@
 import { mapGetters, mapState, mapActions } from 'vuex';
 import { toBN } from 'web3-utils';
 import { debounce, isEqual } from 'lodash';
+import moment from 'moment';
+
 import handlerWallet from '@/core/mixins/handlerWallet.mixin';
 import nodeList from '@/utils/networks';
 import {
@@ -110,7 +112,7 @@ export default {
       'darkMode'
     ]),
     ...mapState('external', ['coinGeckoTokens', 'selectedEIP6963Provider']),
-    ...mapState('popups', ['pkSurveyShown']),
+    ...mapState('popups', ['pkSurveyShown', 'pkSurveyShownCounter']),
     ...mapGetters('global', [
       'network',
       'gasPrice',
@@ -118,7 +120,17 @@ export default {
     ]),
     ...mapGetters('wallet', ['balanceInWei']),
     showSurvey() {
-      return this.identifier === WALLET_TYPES.PRIV_KEY && !this.pkSurveyShown;
+      return (
+        this.identifier === WALLET_TYPES.PRIV_KEY &&
+        !this.pkSurveyShown &&
+        this.pkSurveyShownCounter <= 2 &&
+        this.withinDate
+      );
+    },
+    withinDate() {
+      const startDate = new Date('03/28/2024');
+      const endDate = new Date('04/29/2024');
+      return moment(new Date()).isBetween(startDate, endDate);
     }
   },
   watch: {
@@ -183,7 +195,10 @@ export default {
     }
   },
   mounted() {
-    if (this.showSurvey) this.trackSurvey('Shown');
+    if (this.showSurvey) {
+      this.shownPkSurveyCounter();
+      this.trackSurvey('Shown');
+    }
     this.$vuetify.theme.dark = this.darkMode;
     EventBus.$on('openPaperWallet', () => {
       this.showPaperWallet = true;
@@ -252,7 +267,7 @@ export default {
       'setValidNetwork'
     ]),
     ...mapActions('external', ['setTokenAndEthBalance', 'setNetworkTokens']),
-    ...mapActions('popups', ['setPkSurvey']),
+    ...mapActions('popups', ['setPkSurvey', 'shownPkSurveyCounter']),
     closeSurveyModal() {
       this.setPkSurvey();
       this.trackSurvey('Closed');

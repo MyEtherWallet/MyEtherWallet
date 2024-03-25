@@ -40,6 +40,10 @@ const SET_PK_SURVEY = function (state) {
   state.pkSurveyShown = true;
 };
 
+const SHOWN_PK_SURVEY_COUNTER = function (state) {
+  state.pkSurveyShownCounter += 1;
+};
+
 export default {
   INIT_STORE,
   SET_TRACKING_CONSENT,
@@ -48,5 +52,6 @@ export default {
   NEVER_SHOW_WALLET_ENKRYPT_POPUP,
   SHOW_WALLET_ENKRYPT_SNACKBAR,
   CLOSE_WALLET_ENKRYPT_SNACKBAR,
-  SET_PK_SURVEY
+  SET_PK_SURVEY,
+  SHOWN_PK_SURVEY_COUNTER
 };
