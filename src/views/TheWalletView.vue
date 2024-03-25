@@ -47,6 +47,7 @@
         <mew-button
           title="Click Here"
           :has-full-width="true"
+          btn-link="https://mewwallet.typeform.com/pkuser-research"
           @click.native="openSurvey"
         />
       </div>
@@ -109,6 +110,7 @@ export default {
       'darkMode'
     ]),
     ...mapState('external', ['coinGeckoTokens', 'selectedEIP6963Provider']),
+    ...mapState('popups', ['pkSurveyShown']),
     ...mapGetters('global', [
       'network',
       'gasPrice',
@@ -116,9 +118,7 @@ export default {
     ]),
     ...mapGetters('wallet', ['balanceInWei']),
     showSurvey() {
-      return this.surveyTracker(
-        this.identifier === WALLET_TYPES.PRIV_KEY && !this.pkSurveyShown
-      );
+      return this.identifier === WALLET_TYPES.PRIV_KEY && !this.pkSurveyShown;
     }
   },
   watch: {
@@ -183,6 +183,7 @@ export default {
     }
   },
   mounted() {
+    if (this.showSurvey) this.trackSurvey('Shown');
     this.$vuetify.theme.dark = this.darkMode;
     EventBus.$on('openPaperWallet', () => {
       this.showPaperWallet = true;
@@ -252,12 +253,6 @@ export default {
     ]),
     ...mapActions('external', ['setTokenAndEthBalance', 'setNetworkTokens']),
     ...mapActions('popups', ['setPkSurvey']),
-    surveyTracker(val) {
-      if (val) {
-        this.trackSurvey('Shown');
-      }
-      return val;
-    },
     closeSurveyModal() {
       this.setPkSurvey();
       this.trackSurvey('Closed');

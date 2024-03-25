@@ -37,7 +37,7 @@ const CLOSE_WALLET_ENKRYPT_SNACKBAR = function (state) {
 };
 
 const SET_PK_SURVEY = function (state) {
-  state.pkSurvey = true;
+  state.pkSurveyShown = true;
 };
 
 export default {
