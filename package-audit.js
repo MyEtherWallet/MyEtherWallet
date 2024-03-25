@@ -34,7 +34,8 @@ const AUDIT_EXCEPTIONS = [
   'browserify-sign',
   'lodash.pick',
   'ip',
-  'webpack-dev-middleware'
+  'webpack-dev-middleware',
+  'web3-utils'
 ];
 const execute = (command, callback) => {
   exec(
