@@ -40,6 +40,10 @@ const SET_PK_SURVEY = function (state) {
   state.pkSurveyShown = true;
 };
 
+const SET_SHOWN_EU = function (state) {
+  state.shownChoiceEU = true;
+};
+
 export default {
   INIT_STORE,
   SET_TRACKING_CONSENT,
@@ -48,5 +52,6 @@ export default {
   NEVER_SHOW_WALLET_ENKRYPT_POPUP,
   SHOW_WALLET_ENKRYPT_SNACKBAR,
   CLOSE_WALLET_ENKRYPT_SNACKBAR,
-  SET_PK_SURVEY
+  SET_PK_SURVEY,
+  SET_SHOWN_EU
 };

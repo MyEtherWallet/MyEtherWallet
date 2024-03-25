@@ -22,11 +22,16 @@ const setPkSurvey = function ({ commit }) {
   commit('SET_PK_SURVEY');
 };
 
+const setShownEu = function ({ commit }) {
+  commit('SET_SHOWN_EU');
+};
+
 export default {
   setTrackingConsent,
   neverShowEnkryptLandingPage,
   neverShowEnkryptWalletPage,
   showEnkryptWalletSnackbar,
   closeEnkryptWalletSnackbar,
-  setPkSurvey
+  setPkSurvey,
+  setShownEu
 };
