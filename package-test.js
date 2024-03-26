@@ -92,7 +92,8 @@ const EXCEPTIONS = [
   'eslint-plugin-security', // part of major release for eslint
   '@ensdomains/address-encoder',
   '@commitlint/config-conventional',
-  'commitlint'
+  'commitlint',
+  'minizlib'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

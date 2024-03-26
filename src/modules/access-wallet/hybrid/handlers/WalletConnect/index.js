@@ -60,7 +60,7 @@ class WalletConnectWallet {
           .catch(err => {
             prom.reject(
               err.message === '' && err.code === 0
-                ? prom.reject('User cancelled')
+                ? prom.reject('User cancelled or rejected transaction')
                 : err
             );
           });
@@ -69,8 +69,8 @@ class WalletConnectWallet {
       const msgSigner = msg => {
         return new Promise((resolve, reject) => {
           const msgParams = [
-            sanitizeHex(store.state.wallet.address),
-            '0x' + toBuffer(msg).toString('hex')
+            '0x' + toBuffer(msg).toString('hex'),
+            sanitizeHex(store.state.wallet.address)
           ];
           this.client
             .request({ method: 'personal_sign', params: msgParams })
@@ -80,7 +80,7 @@ class WalletConnectWallet {
             .catch(err => {
               reject(
                 err.message === '' && err.code === 0
-                  ? reject('User cancelled')
+                  ? reject('User cancelled or rejected transaction')
                   : err
               );
             });

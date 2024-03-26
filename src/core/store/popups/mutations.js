@@ -36,6 +36,17 @@ const CLOSE_WALLET_ENKRYPT_SNACKBAR = function (state) {
   state.enkryptWalletSnackbarClosed = new Date().getTime();
 };
 
+const SET_PK_SURVEY = function (state) {
+  state.pkSurveyShown = true;
+};
+
+const SHOWN_PK_SURVEY_COUNTER = function (state) {
+  state.pkSurveyShownCounter += 1;
+};
+const SET_SHOWN_EU = function (state) {
+  state.shownChoiceEU = true;
+};
+
 export default {
   INIT_STORE,
   SET_TRACKING_CONSENT,
@@ -43,5 +54,8 @@ export default {
   NEVER_SHOW_BANNER,
   NEVER_SHOW_WALLET_ENKRYPT_POPUP,
   SHOW_WALLET_ENKRYPT_SNACKBAR,
-  CLOSE_WALLET_ENKRYPT_SNACKBAR
+  CLOSE_WALLET_ENKRYPT_SNACKBAR,
+  SET_PK_SURVEY,
+  SHOWN_PK_SURVEY_COUNTER,
+  SET_SHOWN_EU
 };
