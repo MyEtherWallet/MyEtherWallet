@@ -264,7 +264,6 @@ export default {
       this.searchError = '';
       try {
         this.name = normalise(name);
-        this.trackDapp('rnsSetDomainName');
       } catch (e) {
         this.searchError = e.message.includes('Failed to validate')
           ? 'Invalid name!'

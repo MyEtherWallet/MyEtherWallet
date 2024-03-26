@@ -43,38 +43,40 @@
               >Learn more.</a
             >
           </div>
-          <confirmation-send-transaction-details
-            v-if="!isSwap"
-            :to="txTo"
-            :network="network"
-            :tx-fee="txFee"
-            :tx-fee-usd="txFeeUSD"
-            :value="value"
-            :to-tx-data="tx.toTxData"
-            :to-details="allToDetails"
-            :send-currency="sendCurrency"
-            :is-web3-wallet="hasGasPriceOption"
-          />
-          <confirmation-swap-transaction-details
-            v-else
-            :to="swapInfo.to"
-            :from="swapInfo.from"
-            :from-img="swapInfo.fromImg"
-            :from-type="swapInfo.fromType"
-            :to-type="swapInfo.toType"
-            :to-img="swapInfo.toImg"
-            :from-val="swapInfo.fromVal"
-            :to-val="swapInfo.toVal"
-            :provider="swapInfo.selectedProvider"
-            :to-usd="swapInfo.toUsdVal"
-            :from-usd="swapInfo.fromUsdVal"
-            :tx-fee="swapInfo.txFee"
-            :gas-price-type="swapInfo.gasPriceType"
-            :is-hardware="isHardware"
-            :is-to-non-eth="toNonEth"
-            :to-currency="swapInfo.toType"
-            :to-address="swapInfo.to"
-          />
+          <div v-if="!isContractCreation">
+            <confirmation-send-transaction-details
+              v-if="!isSwap"
+              :to="txTo"
+              :network="network"
+              :tx-fee="txFee"
+              :tx-fee-usd="txFeeUSD"
+              :value="value"
+              :to-tx-data="tx.toTxData"
+              :to-details="allToDetails"
+              :send-currency="sendCurrency"
+              :is-web3-wallet="hasGasPriceOption"
+            />
+            <confirmation-swap-transaction-details
+              v-else
+              :to="swapInfo.to"
+              :from="swapInfo.from"
+              :from-img="swapInfo.fromImg"
+              :from-type="swapInfo.fromType"
+              :to-type="swapInfo.toType"
+              :to-img="swapInfo.toImg"
+              :from-val="swapInfo.fromVal"
+              :to-val="swapInfo.toVal"
+              :provider="swapInfo.selectedProvider"
+              :to-usd="swapInfo.toUsdVal"
+              :from-usd="swapInfo.fromUsdVal"
+              :tx-fee="swapInfo.txFee"
+              :gas-price-type="swapInfo.gasPriceType"
+              :is-hardware="isHardware"
+              :is-to-non-eth="toNonEth"
+              :to-currency="swapInfo.toType"
+              :to-address="swapInfo.to"
+            />
+          </div>
 
           <!-- Ledger Warning Sheet -->
           <div
@@ -344,6 +346,9 @@ export default {
     ...mapGetters('wallet', ['hasGasPriceOption']),
     ...mapGetters('article', ['getArticle']),
     ...mapState('addressBook', ['addressBookStore']),
+    isContractCreation() {
+      return !this.txTo;
+    },
     txTo() {
       if (!this.isBatch)
         return this.tx.hasOwnProperty('toTxData')
@@ -518,9 +523,12 @@ export default {
       this.isSwap = false; // reset isSwap
       this.error = '';
       tx[0].transactionFee = this.txFee;
+      if (!tx[0].to) {
+        this.title = 'Contract creation';
+      }
       if (tx.length > 1) {
         this.toDetails = tx[1];
-        this.sendCurrency = tx[2];
+        this.sendCurrency = tx[2] ? tx[2] : {};
       }
     });
     /**
@@ -1025,7 +1033,11 @@ export default {
               : `0 ${this.network.type.currencyName}`
             : `${this.value} ${symbol}`;
         const from = item.from ? item.from : this.address;
-        const toAdd = item.to ? item.to : this.txTo;
+        const toAdd = this.isContractCreation
+          ? ''
+          : item.to
+          ? item.to
+          : this.txTo;
         return [
           {
             title: 'Network',

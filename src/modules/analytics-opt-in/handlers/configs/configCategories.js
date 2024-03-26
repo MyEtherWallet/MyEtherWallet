@@ -22,5 +22,6 @@ export default {
   mewVersion: 'mewVersion',
   advertisement: 'MEWAd',
   nftModule: 'NftModule',
-  staking: 'Staking'
+  staking: 'Staking',
+  contract: 'Contract'
 };
