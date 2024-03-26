@@ -15,6 +15,11 @@ export default {
     module => module.default
   ),
   isTestNetwork: true,
+  isEthVMSupported: {
+    supported: false,
+    url: null,
+    websocket: null
+  },
   icon: goerli,
   currencyName: 'HolETH',
   gasPriceMultiplier: 1,

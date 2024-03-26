@@ -43,6 +43,9 @@ const SET_PK_SURVEY = function (state) {
 const SHOWN_PK_SURVEY_COUNTER = function (state) {
   state.pkSurveyShownCounter += 1;
 };
+const SET_SHOWN_EU = function (state) {
+  state.shownChoiceEU = true;
+};
 
 export default {
   INIT_STORE,
@@ -53,5 +56,6 @@ export default {
   SHOW_WALLET_ENKRYPT_SNACKBAR,
   CLOSE_WALLET_ENKRYPT_SNACKBAR,
   SET_PK_SURVEY,
-  SHOWN_PK_SURVEY_COUNTER
+  SHOWN_PK_SURVEY_COUNTER,
+  SET_SHOWN_EU
 };

@@ -12,7 +12,8 @@ const state = {
   enkryptWalletSnackbarClosed: 0,
   enkryptWalletSnackbarCounter: 0,
   pkSurveyShown: false,
-  pkSurveyShownCounter: 0
+  pkSurveyShownCounter: 0,
+  shownChoiceEU: false
 };
 
 export default state;
