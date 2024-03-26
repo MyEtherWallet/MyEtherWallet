@@ -5,8 +5,8 @@ export default {
   name_long: 'Holesky',
   homePage: 'https://github.com/eth-clients/holesky',
   blockExplorer: 'Etherscan',
-  blockExplorerTX: 'https://holesky.etherscan.io//tx/[[txHash]]',
-  blockExplorerAddr: 'https://holesky.etherscan.io//address/[[address]]',
+  blockExplorerTX: 'https://holesky.etherscan.io/tx/[[txHash]]',
+  blockExplorerAddr: 'https://holesky.etherscan.io/address/[[address]]',
   chainID: 17000,
   tokens: import('@/_generated/tokens/tokens-akroma.json').then(
     module => module.default
@@ -15,6 +15,13 @@ export default {
     module => module.default
   ),
   isTestNetwork: true,
+  isEthVMSupported: {
+    supported: false,
+    url: null,
+    blockExplorerTX: '',
+    blockExplorerAddr: '',
+    websocket: null
+  },
   icon: goerli,
   currencyName: 'HolETH',
   gasPriceMultiplier: 1,
