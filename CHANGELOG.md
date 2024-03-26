@@ -1,3 +1,14 @@
+### devop
+
+* add holesky, update cb staking with holesky support [#4876](https://github.com/MyEtherWallet/MyEtherWallet/pull/4876)
+* add wbtc on offline [#4877](https://github.com/MyEtherWallet/MyEtherWallet/pull/4877)
+* add tracking for contract pages, add direct link access tracking [#4878](https://github.com/MyEtherWallet/MyEtherWallet/pull/4878)
+
+### feat
+
+* add pk survey [#4879](https://github.com/MyEtherWallet/MyEtherWallet/pull/4879)
+* gdpr banner [#4881](https://github.com/MyEtherWallet/MyEtherWallet/pull/4881)
+
 ### Release v6.9.4
 
 ### feature
