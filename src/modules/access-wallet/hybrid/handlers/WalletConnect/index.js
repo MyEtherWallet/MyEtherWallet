@@ -69,8 +69,8 @@ class WalletConnectWallet {
       const msgSigner = msg => {
         return new Promise((resolve, reject) => {
           const msgParams = [
-            sanitizeHex(store.state.wallet.address),
-            '0x' + toBuffer(msg).toString('hex')
+            '0x' + toBuffer(msg).toString('hex'),
+            sanitizeHex(store.state.wallet.address)
           ];
           this.client
             .request({ method: 'personal_sign', params: msgParams })
