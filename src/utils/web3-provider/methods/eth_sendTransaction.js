@@ -28,8 +28,10 @@ export default async ({ payload, store, requestManager }, res, next) => {
     };
   }
   let currency = store.getters['external/contractToToken'](tx.to);
-  if (!(currency.name && currency.symbol))
-    currency = store.getters['external/contractToToken'](MAIN_TOKEN_ADDRESS);
+  if (tx.to) {
+    if (!(currency.name && currency.symbol))
+      currency = store.getters['external/contractToToken'](MAIN_TOKEN_ADDRESS);
+  }
   tx.gasPrice = tx.gasPrice
     ? tx.gasPrice
     : BigNumber(store.getters['global/gasPrice']).toFixed();
@@ -65,7 +67,9 @@ export default async ({ payload, store, requestManager }, res, next) => {
         : EventNames.SHOW_TX_CONFIRM_MODAL;
       const params = confirmInfo
         ? [_tx, confirmInfo]
-        : [_tx, toDetails, currency];
+        : currency
+        ? [_tx, toDetails, currency]
+        : [_tx, toDetails];
       if (
         store.state.wallet.identifier === WALLET_TYPES.WEB3_WALLET ||
         store.state.wallet.identifier === WALLET_TYPES.WALLET_CONNECT ||

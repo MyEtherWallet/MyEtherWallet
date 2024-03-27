@@ -335,7 +335,14 @@ export default {
     generateTokens() {
       const networkToken = [this.networkToken];
       this.network.type.tokens.then(tokens => {
-        this.tokens = networkToken.concat(tokens);
+        this.tokens = networkToken.concat(
+          tokens.map(item => {
+            item.subtext = item.name;
+            item.value = item.contract;
+            item.name = item.symbol;
+            return item;
+          })
+        );
       });
     },
     generateData() {

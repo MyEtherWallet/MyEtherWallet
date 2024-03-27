@@ -108,6 +108,42 @@ const transpilers = config => {
     .loader('babel-loader')
     .end();
   config.module
+    .rule('transpile-metamask-cjs')
+    .test(/node_modules\/@metamask\/.*\.cjs$/)
+    .use('babel')
+    .loader('babel-loader')
+    .end();
+  config.module
+    .rule('transpile-metamask-mjs')
+    .test(/node_modules\/@metamask\/.*\.mjs$/)
+    .use('babel')
+    .loader('babel-loader')
+    .end();
+  config.module
+    .rule('transpile-metamask-js')
+    .test(/node_modules\/@metamask\/.*\.js$/)
+    .use('babel')
+    .loader('babel-loader')
+    .end();
+  config.module
+    .rule('transpile-ethereumjs')
+    .test(/node_modules\/@ethereumjs\/.*\.js$/)
+    .use('babel')
+    .loader('babel-loader')
+    .end();
+  config.module
+    .rule('transpile-noble')
+    .test(/node_modules\/@noble\/.*\.js$/)
+    .use('babel')
+    .loader('babel-loader')
+    .end();
+  config.module
+    .rule('transpile-micro-ftch')
+    .test(/node_modules\/micro-ftch\/.*\.js$/)
+    .use('babel')
+    .loader('babel-loader')
+    .end();
+  config.module
     .rule('transpile-chainsafe')
     .test(/node_modules\/@chainsafe\/.*\.js$/)
     .use('babel')

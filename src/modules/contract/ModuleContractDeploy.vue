@@ -94,7 +94,7 @@
             @click.native="resetDefaults()"
           />
           <mew-button
-            title="Sign transaction"
+            title="Deploy Contract"
             class="SignTransactionButton"
             :has-full-width="false"
             :disabled="!canDeploy"
@@ -120,9 +120,12 @@ import {
   isContractArgValid
 } from './handlers/common';
 import { stringToArray } from '@/core/helpers/common';
+import handlerAnalyticsMixin from '../analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { CONTRACT } from '../analytics-opt-in/handlers/configs/events';
 
 export default {
   name: 'ModuleContractDeploy',
+  mixins: [handlerAnalyticsMixin],
   data() {
     return {
       contractName: '',
@@ -134,7 +137,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['address', 'web3']),
+    ...mapState('wallet', ['address', 'web3', 'instance']),
     ...mapState('global', ['currentNetwork']),
     ...mapGetters('global', ['gasPrice']),
     canDeploy() {
@@ -222,6 +225,7 @@ export default {
           params.push(stringToArray(_input.value));
         else params.push(_input.value);
       }
+      this.trackContract(CONTRACT.DEPLOY_CONTRACT);
       contract
         .deploy({
           data: this.byteCodeHex,
@@ -245,7 +249,12 @@ export default {
           if (details.name === '') {
             details.name = result.contractAddress;
           }
+          this.trackContract(CONTRACT.DEPLOY_CONTRACT_SUCCESS);
           this.addLocalContract(details);
+        })
+        .on('error', err => {
+          this.trackContract(CONTRACT.DEPLOY_CONTRACT_FAIL);
+          this.instance.errorHandler(err);
         });
     },
     valueInput(idx, value) {

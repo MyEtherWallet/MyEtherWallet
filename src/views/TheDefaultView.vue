@@ -6,6 +6,7 @@
     </v-main>
     <the-default-footer />
     <the-mobile-menu :is-open="mobileOpen" @closeMobileMenu="handleClose" />
+    <gdpr-banner />
   </div>
 </template>
 
@@ -19,7 +20,8 @@ export default {
     TheMobileMenu: () => import('./components-default/TheMobileMenu'),
     NewLookBanner: () => import('./components-default/NewLookBanner'),
     TheDefaultFooter: () => import('./components-default/TheDefaultFooter'),
-    TheEnkryptPopup: () => import('./components-default/TheEnkryptPopup')
+    TheEnkryptPopup: () => import('./components-default/TheEnkryptPopup'),
+    GdprBanner: () => import('./components-default/GDPRBanner')
   },
   data() {
     return {

@@ -238,7 +238,7 @@
         </div>
         <div class="col-12 d-none d-md-block">
           <v-switch
-            :model-value="consentToTrack"
+            :input-value="consentToTrack"
             inset
             :label="`Data Tracking ${consentToTrack ? 'On' : 'Off'}`"
             color="#05C0A5"

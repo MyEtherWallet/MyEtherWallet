@@ -647,7 +647,7 @@ export default {
       this.manageDomainHandler
         .renew(duration, this.balanceToWei)
         .then(() => {
-          this.getDomains;
+          this.getDomains();
           this.trackDapp('ensDomainRenew');
         })
         .catch(err => {
@@ -729,7 +729,6 @@ export default {
       }
       try {
         this.name = normalise(name);
-        this.trackDapp('ensSetDomainName');
       } catch (e) {
         this.searchError = e.message.includes('Failed to validate')
           ? 'Invalid name!'

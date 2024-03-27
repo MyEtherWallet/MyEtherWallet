@@ -18,10 +18,25 @@ const closeEnkryptWalletSnackbar = function ({ commit }) {
   commit('CLOSE_WALLET_ENKRYPT_SNACKBAR');
 };
 
+const setPkSurvey = function ({ commit }) {
+  commit('SET_PK_SURVEY');
+};
+
+const shownPkSurveyCounter = function ({ commit }) {
+  commit('SHOWN_PK_SURVEY_COUNTER');
+};
+
+const setShownEu = function ({ commit }) {
+  commit('SET_SHOWN_EU');
+};
+
 export default {
   setTrackingConsent,
   neverShowEnkryptLandingPage,
   neverShowEnkryptWalletPage,
   showEnkryptWalletSnackbar,
-  closeEnkryptWalletSnackbar
+  closeEnkryptWalletSnackbar,
+  setPkSurvey,
+  shownPkSurveyCounter,
+  setShownEu
 };

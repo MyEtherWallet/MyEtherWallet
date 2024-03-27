@@ -42,6 +42,7 @@ import apolloProvider from './apolloProvider';
 import i18n from './i18n';
 import * as locStore from 'store';
 import VueLazyLoad from 'vue-lazyload';
+
 // Directives
 Vue.directive('lottie', LottieAnimation);
 
@@ -62,10 +63,12 @@ Vue.config.productionTip = false;
 
 // setup amplitude
 // fake generative 32 hex character
+const popupStore = locStore.get('popups-store');
+
 amplitude.init(nameHashPckg.hash(VERSION), {
   instanceName:
     process.env.NODE_ENV === 'production' ? 'mew-web-prod' : 'mew-web-dev',
-  optOut: false,
+  optOut: popupStore.consentToTrack,
   serverUrl:
     process.env.NODE_ENV === 'production'
       ? 'https://analytics-web.mewwallet.dev/record'

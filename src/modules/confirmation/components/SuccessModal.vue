@@ -48,6 +48,7 @@
                 target="_blank"
                 :href="links.explorer"
                 class="d-flex justify-center justify-sm-start"
+                @click="trackExplorrer(explorerText)"
                 >View on {{ explorerText }}
                 <v-icon color="primary" small>mdi-launch</v-icon></a
               >
@@ -116,6 +117,11 @@ export default {
     viewProgress() {
       EventBus.$emit('openNotifications');
       this.reset();
+    },
+    trackExplorrer(explorer) {
+      if (explorer.toLowerCase() === 'ethvm') {
+        this.$amplitude.track('EthVMLinkClicked', { path: this.$route.path });
+      }
     }
   }
 };

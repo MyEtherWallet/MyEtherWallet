@@ -167,6 +167,7 @@
                 dense
                 class="pl-4"
                 :to="child.route"
+                @click="child.fn ? child.fn() : () => {}"
               >
                 <v-list-item-content>
                   <v-list-item-title
@@ -295,6 +296,7 @@ import { ETH, BSC, MATIC, GOERLI } from '@/utils/networks/types';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import {
+  CONTRACT,
   DASHBOARD,
   STAKING
 } from '@/modules/analytics-opt-in/handlers/configs/events';
@@ -481,11 +483,13 @@ export default {
             children: [
               {
                 title: this.$t('interface.menu.deploy'),
-                route: { name: ROUTES_WALLET.DEPLOY_CONTRACT.NAME }
+                route: { name: ROUTES_WALLET.DEPLOY_CONTRACT.NAME },
+                fn: this.trackDeploy
               },
               {
                 title: this.$t('interface.menu.interact-contract'),
-                route: { name: ROUTES_WALLET.INTERACT_WITH_CONTRACT.NAME }
+                route: { name: ROUTES_WALLET.INTERACT_WITH_CONTRACT.NAME },
+                fn: this.trackInteract
               }
             ]
           },
@@ -581,6 +585,12 @@ export default {
     ...mapActions('global', ['setDarkMode']),
     trackToSwap() {
       this.trackDashboardAmplitude(DASHBOARD.SWAP_LEFT_NAVIGATION);
+    },
+    trackInteract() {
+      this.trackContract(CONTRACT.NAVIGATE_TO_INTERACT);
+    },
+    trackDeploy() {
+      this.trackContract(CONTRACT.NAVIGATE_TO_DEPLOY);
     },
     trackToStaking() {
       this.trackStaking(STAKING.SIDE_MENU);
@@ -767,39 +777,40 @@ export default {
     opacity: 0 !important;
   }
   .v-navigation-drawer__content {
+    scrollbar-width: thin !important;
     margin-right: 2px;
     &::-webkit-scrollbar {
-      width: 4px;
-      height: 4px;
+      width: 4px !important;
+      height: 4px !important;
     }
     &::-webkit-scrollbar-button {
-      width: 0;
-      height: 0;
+      width: 0 !important;
+      height: 0 !important;
     }
     &::-webkit-scrollbar-thumb {
-      background: #7b91ac;
-      border: 0 none #fff;
-      border-radius: 50px;
+      background: #7b91ac !important;
+      border: 0 none #fff !important;
+      border-radius: 50px !important;
     }
     &::-webkit-scrollbar-thumb:hover {
-      background: #7b91ac;
+      background: #7b91ac !important;
     }
     &::-webkit-scrollbar-thumb:active {
-      background: #4b4949;
+      background: #4b4949 !important;
     }
     &::-webkit-scrollbar-track {
-      background: #e1dfdf;
-      border: 0 none #fff;
-      border-radius: 39px;
+      background: #e1dfdf !important;
+      border: 0 none #fff !important;
+      border-radius: 39px !important;
     }
     &::-webkit-scrollbar-track:hover {
-      background: #ddd5d5;
+      background: #ddd5d5 !important;
     }
     &::-webkit-scrollbar-track:active {
-      background: #dedede;
+      background: #dedede !important;
     }
     &::-webkit-scrollbar-corner {
-      background: transparent;
+      background: transparent !important;
     }
   }
   .tracking-switch {

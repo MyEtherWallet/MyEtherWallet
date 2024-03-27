@@ -7,6 +7,7 @@ import routesOfflineWallet from './routes-offline-wallet';
 import routesWallet from './routes-wallet';
 import routesNotFound from './routes-not-found';
 import { ROUTES_HOME } from '../configs/configRoutes';
+import Vue from 'vue';
 const routes =
   // eslint-disable-next-line
   BUILD === 'offline'
@@ -46,6 +47,9 @@ router.beforeResolve((to, from, next) => {
     } else {
       if (store.state.external.path !== '') {
         const localPath = store.state.external.path;
+        Vue.prototype.$amplitude.track('WalletDirectLinkAccess', {
+          to: localPath
+        });
         store.dispatch('external/setLastPath', '');
         router.push({ path: localPath });
       } else {
