@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   offline-build:
-    if: ${{contains(github.ref, 'offline')}}
+    if: ${{contains(github.ref, 'offline') || contains(github.ref, 'chore/generate-changelog')}}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
