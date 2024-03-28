@@ -113,6 +113,7 @@ import { STAKED_ROUTE } from '@/dapps/staked-dapp/configsRoutes';
 import { COINBASE_STAKING_ROUTES } from '@/dapps/coinbase-staking/configs';
 import { STAKING } from '../analytics-opt-in/handlers/configs/events';
 import handlerStaked from '@/dapps/staked-dapp/handlers/handlerStaked.js';
+import { ETH, GOERLI, HOLESKY } from '@/utils/networks/types';
 
 export default {
   mixins: [handlerAnalytics],
@@ -125,24 +126,30 @@ export default {
     ...mapGetters('global', ['network']),
     ...mapState('wallet', ['web3', 'address']),
     dapps() {
-      return [
-        {
+      const staking = [];
+      if (this.network.type.name === ETH.name || GOERLI.name) {
+        staking.push({
           title: 'Staked',
           apr: this.currentAprFormatted,
           description: 'Stake full validators with 32 ETH or more',
           icon: require('@/assets/images/icons/dapps/icon-dapp-stake.svg'),
           routeName: STAKED_ROUTE.STAKED.NAME,
           release: stakedInfo.release
-        },
-        {
+        });
+      }
+
+      if (this.network.type.name === ETH.name || HOLESKY.name) {
+        staking.push({
           title: 'ETH Staking Powered by Coinbase',
           apr: 'Up to 4% APR',
           description: 'Stake any amount of ETH and earn rewards',
           icon: require('@/assets/images/icons/dapps/icon-dapp-coinbase.svg'),
           routeName: COINBASE_STAKING_ROUTES.CORE.NAME,
           release: coinbaseInfo.release
-        }
-      ];
+        });
+      }
+
+      return staking;
     },
     currentAprFormatted() {
       if (this.handlerStaked.apr > 0) {
@@ -152,12 +159,14 @@ export default {
     }
   },
   mounted() {
-    this.handlerStaked = new handlerStaked(
-      this.web3,
-      this.network,
-      this.address,
-      this.trackDapp
-    );
+    if (this.network.type.name === ETH.name || GOERLI.name) {
+      this.handlerStaked = new handlerStaked(
+        this.web3,
+        this.network,
+        this.address,
+        this.trackDapp
+      );
+    }
   },
   methods: {
     routeTo(name) {

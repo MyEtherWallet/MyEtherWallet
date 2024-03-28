@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { ETH, HOLESKY } from '@/utils/networks/types';
+import { ETH, HOLESKY, GOERLI } from '@/utils/networks/types';
 import { mapGetters } from 'vuex';
 
 export default {
@@ -45,7 +45,7 @@ export default {
   computed: {
     ...mapGetters('global', ['isEthNetwork', 'network']),
     stakingSupported() {
-      return [HOLESKY, ETH];
+      return [GOERLI, HOLESKY, ETH];
     },
     showBanner() {
       const supportedIdx = this.stakingSupported.findIndex(item => {
