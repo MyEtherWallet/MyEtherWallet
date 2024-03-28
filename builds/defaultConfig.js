@@ -133,6 +133,18 @@ const transpilers = config => {
     .end();
   config.module
     .rule('transpile-noble')
+    .test(/node_modules\/@enkryptcom\/.*\.js$/)
+    .use('babel')
+    .loader('babel-loader')
+    .end();
+  config.module
+    .rule('transpile-noble')
+    .test(/node_modules\/@polkadot\/.*\.js$/)
+    .use('babel')
+    .loader('babel-loader')
+    .end();
+  config.module
+    .rule('transpile-noble')
     .test(/node_modules\/@noble\/.*\.js$/)
     .use('babel')
     .loader('babel-loader')

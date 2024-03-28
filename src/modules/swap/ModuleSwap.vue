@@ -1,8 +1,13 @@
 <template>
-  <div class="mew-component--swap">{{ sample }}</div>
+  <div class="mew-component--swap">
+    <white-sheet>
+      {{ sample }}
+    </white-sheet>
+  </div>
 </template>
 
 <script setup>
+import EnkryptSwap from '@enkryptcom/swap';
 const sample = 'HELLO';
 </script>
 
