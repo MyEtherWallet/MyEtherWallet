@@ -79,10 +79,9 @@ const EXCEPTIONS = [
   'ethers', // major update
   'patch-package', // major update
   'highcharts', // major update
+  'highcharts-vue', // major update for vue 3
   'geckodriver',
   '@ensdomains/ens-contracts', // breaks current ENS integration
-  '@shapeshiftoss/hdwallet-core',
-  '@shapeshiftoss/hdwallet-keepkey-webusb',
   'eslint-plugin-prettier', // breaks
   'ethereum-block-by-date',
   '@mathieustan/vue-intercom', // major version
@@ -93,7 +92,8 @@ const EXCEPTIONS = [
   'eslint-plugin-security', // part of major release for eslint
   '@ensdomains/address-encoder',
   '@commitlint/config-conventional',
-  'commitlint'
+  'commitlint',
+  'minizlib'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

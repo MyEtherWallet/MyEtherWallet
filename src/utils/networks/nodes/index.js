@@ -1,6 +1,7 @@
 import etcethereumclassiccooperativeparityws from './etc-ethereumclassiccooperative-parity-ws';
 import ethmewws from './eth-mew-ws';
 import goerlimewws from './goerli-mew-ws';
+import holeskymewws from './holesky-mew-ws';
 import bscmewws from './bsc-mew-ws';
 import maticmewws from './matic-mew-ws';
 import gochain from './gochain-ws';
@@ -23,6 +24,7 @@ export {
   etcethereumclassiccooperativeparityws,
   ethmewws,
   goerlimewws,
+  holeskymewws,
   bscmewws,
   maticmewws,
   gochain,

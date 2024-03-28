@@ -146,6 +146,7 @@ export default {
   computed: {
     ...mapGetters('global', ['isEthNetwork']),
     ...mapState('wallet', ['isOfflineApp']),
+    ...mapState('popups', ['pkSurveyShown']),
     dragOptions() {
       return {
         animation: 200,
@@ -194,5 +195,10 @@ export default {
   text-align: right;
   padding: 10px 40px 0;
   font-size: 8px;
+}
+
+.font-size--16px {
+  font-size: 16px;
+  line-height: 24px;
 }
 </style>
