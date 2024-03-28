@@ -32,8 +32,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-${{steps.node-version.outputs.NODE_VERSION}}-
 
-      - name: npm install
-        run: docker run --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" mew-build-container /bin/bash -c "npm install"
+      - name: yarn install
+        run: docker run --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" mew-build-container /bin/bash -c "yarn install"
 
       - name: Get release tag
         id: get_release_tag
@@ -48,17 +48,17 @@ jobs:
 
       - name: build
         run: |
-          docker run -e INTERCOM_ID="${{secrets.INTERCOM_ID}}" -e WALLET_CONNECT_PROJECT_ID="${{secrets.WALLET_CONNECT_PROJECT_ID}}" --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build"
+          docker run -e INTERCOM_ID="${{secrets.INTERCOM_ID}}" -e WALLET_CONNECT_PROJECT_ID="${{secrets.WALLET_CONNECT_PROJECT_ID}}" --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "yarn run build"
           cd dist && zip -r ../release/MyEtherWallet-${{ steps.get_release_tag.outputs.VERSION }}.zip * && cd ..
 
       - name: build hash
         run: |
-          docker run -e INTERCOM_ID="${{secrets.INTERCOM_ID}}" -e WALLET_CONNECT_PROJECT_ID="${{secrets.WALLET_CONNECT_PROJECT_ID}}" --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:nohash"
+          docker run -e INTERCOM_ID="${{secrets.INTERCOM_ID}}" -e WALLET_CONNECT_PROJECT_ID="${{secrets.WALLET_CONNECT_PROJECT_ID}}" --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "yarn run build:nohash"
           cd dist && zip -r ../release/MyEtherWallet-${{ steps.get_release_tag.outputs.VERSION }}-Hash.zip * && cd ..
 
       - name: build offline
         run: |
-          docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:offline"
+          docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "yarn run build:offline"
           cd dist && zip -r ../release/MyEtherWallet-${{ steps.get_release_tag.outputs.VERSION }}-Offline.zip * && cd ..
 
       - name: sign files

@@ -28,11 +28,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-${{steps.node-version.outputs.NODE_VERSION}}-
 
-      - name: npm install
-        run: docker run --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" mew-build-container /bin/bash -c "npm install"
+      - name: yarn install
+        run: docker run --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" mew-build-container /bin/bash -c "yarn install"
 
       - name: build
-        run: docker run -e INTERCOM_ID="${{secrets.INTERCOM_ID}}" -e WALLET_CONNECT_PROJECT_ID="${{secrets.WALLET_CONNECT_PROJECT_ID}}" --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:hash"
+        run: docker run -e INTERCOM_ID="${{secrets.INTERCOM_ID}}" -e WALLET_CONNECT_PROJECT_ID="${{secrets.WALLET_CONNECT_PROJECT_ID}}" --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "yarn run build:hash"
 
       - name: post build
         if: github.base_ref == ''

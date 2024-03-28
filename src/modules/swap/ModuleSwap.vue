@@ -1,6 +1,6 @@
 <template>
   <div class="mew-component--swap">
-    <white-sheet>
+    <white-sheet class="px-10 py-10">
       {{ sample }}
     </white-sheet>
   </div>
