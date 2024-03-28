@@ -35,7 +35,12 @@ const AUDIT_EXCEPTIONS = [
   'lodash.pick',
   'ip',
   'webpack-dev-middleware',
-  'web3-utils'
+  'web3-utils',
+  // added from transition to yarn
+  'crypto-js',
+  'flat',
+  'bls12377js',
+  'parse-url'
 ];
 const execute = (command, callback) => {
   exec(
@@ -49,23 +54,27 @@ const execute = (command, callback) => {
   );
 };
 execute('yarn audit --json --level=high', json => {
-  const x = typeof json;
-  console.log(x);
-  // const advisories = JSON.parse(json).advisories;
-  // if (!advisories) {
-  //   console.info('Most likely npm audit is unavailable', json);
-  //   process.exit(0);
-  // }
-  // let auditPass = true;
-  // for (const id in advisories) {
-  //   if (
-  //     advisories[id].severity === 'high' &&
-  //     !AUDIT_EXCEPTIONS.includes(advisories[id].module_name)
-  //   ) {
-  //     console.error('AUDIT Failed', advisories[id]);
-  //     auditPass = false;
-  //   }
-  // }
-  // if (!auditPass) process.exit(1);
-  // console.log('AUDIT complete');
+  const x = json
+    .split(new RegExp(/\n/))
+    .filter(item => {
+      if (item !== '') return item;
+    })
+    .map(item => {
+      return JSON.parse(item);
+    })
+    .filter(item => {
+      if (item.type !== 'auditSummary') {
+        const module_name = item.data.advisory.module_name;
+        const found = AUDIT_EXCEPTIONS.includes(module_name);
+        if (!found) return item;
+      }
+    });
+  if (x.length > 0) {
+    x.forEach(item => {
+      console.log(item);
+    });
+    process.exit(1);
+  }
+  console.log('AUDIT complete');
+  process.exit(0);
 });
