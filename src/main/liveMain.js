@@ -63,7 +63,7 @@ Vue.config.productionTip = false;
 
 // setup amplitude
 // fake generative 32 hex character
-const popupStore = locStore.get('popups-store');
+const popupStore = locStore.get('popups-store') || { consentToTrack: false };
 
 amplitude.init(nameHashPckg.hash(VERSION), {
   instanceName:
