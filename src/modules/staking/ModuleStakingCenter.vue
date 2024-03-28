@@ -127,7 +127,10 @@ export default {
     ...mapState('wallet', ['web3', 'address']),
     dapps() {
       const staking = [];
-      if (this.network.type.name === ETH.name || GOERLI.name) {
+      if (
+        this.network.type.name === ETH.name ||
+        this.network.type.name === GOERLI.name
+      ) {
         staking.push({
           title: 'Staked',
           apr: this.currentAprFormatted,
@@ -138,7 +141,10 @@ export default {
         });
       }
 
-      if (this.network.type.name === ETH.name || HOLESKY.name) {
+      if (
+        this.network.type.name === ETH.name ||
+        this.network.type.name === HOLESKY.name
+      ) {
         staking.push({
           title: 'ETH Staking Powered by Coinbase',
           apr: 'Up to 4% APR',
@@ -159,7 +165,10 @@ export default {
     }
   },
   mounted() {
-    if (this.network.type.name === ETH.name || GOERLI.name) {
+    if (
+      this.network.type.name === ETH.name ||
+      this.network.type.name === GOERLI.name
+    ) {
       this.handlerStaked = new handlerStaked(
         this.web3,
         this.network,
