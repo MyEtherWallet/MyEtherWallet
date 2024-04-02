@@ -1,3 +1,5 @@
+### Release v6.9.5
+
 ### devop
 
 * add holesky, update cb staking with holesky support [#4876](https://github.com/MyEtherWallet/MyEtherWallet/pull/4876)
