@@ -45,15 +45,19 @@
 <script>
 import { isValidPrivate } from 'ethereumjs-util';
 import { isString } from 'lodash';
+import { mapState } from 'vuex';
 
 import { isPrivateKey } from '../handlers/helpers';
 import {
   getBufferFromHex,
   sanitizeHex
 } from '../../../access-wallet/common/helpers';
-import { mapState } from 'vuex';
+import handlerAnalyticsMixin from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { ACCESS_WALLET } from '@/modules/analytics-opt-in/handlers/configs/events';
+
 export default {
   name: 'AccessWalletPrivateKey',
+  // mixins: [handlerAnalyticsMixin],
   props: {
     handlerAccessWallet: {
       type: Object,
@@ -113,6 +117,13 @@ export default {
       ];
     }
   },
+  // watch: {
+  //   acceptTerms(val) {
+  //     if (val) {
+  //       this.trackAccessWalletAmplitude(ACCESS_WALLET.PRIV_KEY_TERMS);
+  //     }
+  //   }
+  // },
   mounted() {
     if (this.isOfflineApp) {
       this.link = {};
