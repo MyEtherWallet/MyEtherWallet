@@ -188,7 +188,7 @@
 
 <script>
 import { fromWei, isHexStrict } from 'web3-utils';
-import { debounce, isEmpty, isEqual, isNumber } from 'lodash';
+import { debounce, isEmpty, isNumber } from 'lodash';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 
@@ -548,9 +548,6 @@ export default {
         this.isValidAmount &&
         this.isValidAddress
       );
-    },
-    gasAndNetwork() {
-      return `${this.network}|${this.gasPrice}`;
     }
   },
   watch: {
