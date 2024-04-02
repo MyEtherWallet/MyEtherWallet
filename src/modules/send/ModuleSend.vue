@@ -188,7 +188,7 @@
 
 <script>
 import { fromWei, isHexStrict } from 'web3-utils';
-import { debounce, isEmpty, isNumber } from 'lodash';
+import { debounce, isEmpty, isEqual, isNumber } from 'lodash';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 
@@ -548,6 +548,9 @@ export default {
         this.isValidAmount &&
         this.isValidAddress
       );
+    },
+    gasAndNetwork() {
+      return `${this.network}|${this.gasPrice}`;
     }
   },
   watch: {
@@ -613,6 +616,15 @@ export default {
     },
     network() {
       this.clear();
+      const currentGasPrice = this.gasPrice;
+      // wait for gas price to update after network is updated
+      const x = setInterval(() => {
+        if (this.gasPrice !== currentGasPrice) {
+          this.localGasPrice = this.gasPrice;
+          this.sendTx.setLocalGasPrice(this.actualGasPrice);
+          clearInterval(x);
+        }
+      }, 500);
     },
     address() {
       this.clear();
