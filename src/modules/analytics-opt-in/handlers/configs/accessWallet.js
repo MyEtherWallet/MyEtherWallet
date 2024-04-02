@@ -40,5 +40,6 @@ export default {
   HW_BITBOX02_CONNECTED: 'HWBitBox02Connected',
   HW_KEEPKEY_CONNECTED: 'HWKeepKeyConnected',
   ACCESS_FAILED: 'Failed',
-  PRIV_KEY_TERMS: 'PrivateKeyTermsAccepted'
+  PRIV_KEY_TERMS: 'PrivateKeyTermsAccepted',
+  PRIV_INVISIBLE_BOX: 'PrivateKeyInvisibleBox'
 };

@@ -20,6 +20,7 @@
     =====================================================================================
     -->
     <div class="text-center">
+      <mew-checkbox v-model="invis" class="checkbox" />
       <mew-checkbox
         v-model="acceptTerms"
         :label="label"
@@ -57,7 +58,7 @@ import { ACCESS_WALLET } from '@/modules/analytics-opt-in/handlers/configs/event
 
 export default {
   name: 'AccessWalletPrivateKey',
-  // mixins: [handlerAnalyticsMixin],
+  mixins: [handlerAnalyticsMixin],
   props: {
     handlerAccessWallet: {
       type: Object,
@@ -70,6 +71,7 @@ export default {
     return {
       privateKey: '',
       acceptTerms: false,
+      invis: false,
       label: 'To access my wallet, I accept ',
       link: {
         title: 'Terms',
@@ -117,13 +119,18 @@ export default {
       ];
     }
   },
-  // watch: {
-  //   acceptTerms(val) {
-  //     if (val) {
-  //       this.trackAccessWalletAmplitude(ACCESS_WALLET.PRIV_KEY_TERMS);
-  //     }
-  //   }
-  // },
+  watch: {
+    acceptTerms(val) {
+      if (val) {
+        this.trackAccessWalletAmplitude(ACCESS_WALLET.PRIV_KEY_TERMS);
+      }
+    },
+    invis(val) {
+      if (val) {
+        this.trackAccessWalletAmplitude(ACCESS_WALLET.PRIV_INVISIBLE_BOX);
+      }
+    }
+  },
   mounted() {
     if (this.isOfflineApp) {
       this.link = {};
@@ -143,3 +150,9 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.checkbox {
+  opacity: 0 !important;
+}
+</style>
