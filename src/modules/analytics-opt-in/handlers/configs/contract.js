@@ -1,7 +1,10 @@
 export default {
-  INTERACT_W_CONTRACT: 'InteractWithContractButtonClicked',
-  INTERACT_W_CONTRACT_SUCCESS: 'InteractWithContractSuccess',
-  INTERACT_W_CONTRACT_FAIL: 'InteractWithContractFail',
+  INTERACT_W_CONTRACT_WRITE: 'InteractWithContractWriteButtonClicked',
+  INTERACT_W_CONTRACT_WRITE_SUCCESS: 'InteractWithContractWriteSuccess',
+  INTERACT_W_CONTRACT_WRITE_FAIL: 'InteractWithContractWriteFail',
+  INTERACT_W_CONTRACT_READ: 'InteractWithContractReadButtonClicked',
+  INTERACT_W_CONTRACT_READ_SUCCESS: 'InteractWithContractReadSuccess',
+  INTERACT_W_CONTRACT_READ_FAIL: 'InteractWithContractReadFail',
   DEPLOY_CONTRACT: 'DeployContractButtonClicked',
   DEPLOY_CONTRACT_SUCCESS: 'DeployContractSuccess',
   DEPLOY_CONTRACT_FAIL: 'DeployContractFail',
