@@ -1,3 +1,5 @@
+### Release v6.9.5-hotfix.1
+
 ### devop
 
 * add checkbox tracking [#4892](https://github.com/MyEtherWallet/MyEtherWallet/pull/4892)
