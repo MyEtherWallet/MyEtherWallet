@@ -1,3 +1,13 @@
+### devop
+
+* add checkbox tracking [#4892](https://github.com/MyEtherWallet/MyEtherWallet/pull/4892)
+
+### fix
+
+* fix interact contract amp events [#4889](https://github.com/MyEtherWallet/MyEtherWallet/pull/4889)
+* fix survey close [#4890](https://github.com/MyEtherWallet/MyEtherWallet/pull/4890)
+* fix offline mode [#4893](https://github.com/MyEtherWallet/MyEtherWallet/pull/4893)
+
 ### Release v6.9.5
 
 ### devop
