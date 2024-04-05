@@ -27,24 +27,23 @@ export default class ENSManager {
     );
   }
   fetchAllNames() {
-    const query = `
-                  query getRegistrations($id: ID!, $first: Int, $skip: Int, $orderBy: Registration_orderBy, $orderDirection: OrderDirection, $expiryDate: Int) {
-                    account(id: $id) {
-                        registrations(first: $first, skip: $skip, orderBy: $orderBy, orderDirection: $orderDirection, where: {expiryDate_gt: $expiryDate}) {
-                          expiryDate
-                          domain {
-                            labelName
-                            labelhash
-                            name
-                            isMigrated
-                            parent {
-                              name
-                            }
-                          }
-                        }
-                      }
-                  }
-                `;
+    const query = `query getRegistrations($id: ID!, $first: Int, $skip: Int, $orderBy: Registration_orderBy, $orderDirection: OrderDirection, $expiryDate: BigInt) {
+  account(id: $id) {
+    registrations(first: $first, skip: $skip, orderBy: $orderBy, orderDirection: $orderDirection, where: {expiryDate_gt: $expiryDate}) {
+      expiryDate
+      domain {
+        labelName
+        labelhash
+        name
+        isMigrated
+        parent {
+          name
+        }
+      }
+    }
+  }
+}
+`;
     const variables = {
       id: this.address.toLowerCase(),
       first: 1000,
@@ -53,10 +52,16 @@ export default class ENSManager {
     return fetch(this.network.type.ens.subgraphPath, {
       method: 'POST',
       'Content-Type': 'application/json',
-      body: JSON.stringify({ query, variables })
+      body: JSON.stringify({
+        query: query,
+        variables: variables,
+        operationName: 'getRegistrations',
+        extensions: {}
+      })
     })
       .then(response => response.json())
-      .then(({ data }) => {
+      .then(({ data, error }) => {
+        if (error) return [];
         if (!data.account) return [];
         return data.account.registrations.map(r => {
           r.domain.expiryDate = r.expiryDate;
