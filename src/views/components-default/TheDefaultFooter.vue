@@ -163,6 +163,14 @@
                 >CoinGecko</a
               >.
             </p>
+            <v-switch
+              :input-value="consentToTrack"
+              inset
+              :label="`Data Tracking ${consentToTrack ? 'On' : 'Off'}`"
+              color="#05C0A5"
+              off-icon="mdi-alert-circle"
+              @change="setConsent"
+            />
           </div>
         </div>
         <div class="col-6">
@@ -236,15 +244,13 @@
             </div>
           </div>
         </div>
-        <div class="col-12 d-none d-md-block">
-          <v-switch
-            :input-value="consentToTrack"
-            inset
-            :label="`Data Tracking ${consentToTrack ? 'On' : 'Off'}`"
-            color="#05C0A5"
-            off-icon="mdi-alert-circle"
-            @change="setConsent"
-          />
+        <div class="col-12 d-none d-md-block footer__copyright">
+          <p>
+            <a
+              :href="`https://github.com/MyEtherWallet/MyEtherWallet/releases/tag/${packageVersion}`"
+              >Version: v{{ packageVersion }}</a
+            >
+          </p>
         </div>
       </div>
     </div>
@@ -317,7 +323,10 @@ export default {
     };
   },
   computed: {
-    ...mapState('popups', ['consentToTrack'])
+    ...mapState('popups', ['consentToTrack']),
+    packageVersion() {
+      return VERSION;
+    }
   },
   methods: {
     trackAboutUs() {
