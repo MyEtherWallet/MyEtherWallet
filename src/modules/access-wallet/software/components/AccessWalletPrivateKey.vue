@@ -11,7 +11,7 @@
       class="PrivateKeyInput"
       label="Private Key"
       placeholder="Enter your Private Key"
-      :rules="privKeyRulles"
+      :rules="privKeyRules"
       type="password"
     />
     <!--
@@ -110,9 +110,9 @@ export default {
         : this.privateKey;
     },
     /**
-     * @returns rulles fot the private key input
+     * @returns rules fot the private key input
      */
-    privKeyRulles() {
+    privKeyRules() {
       return [
         value => !!value || 'Required',
         value => isPrivateKey(value) || 'This is not a real private Key'
@@ -120,6 +120,13 @@ export default {
     }
   },
   watch: {
+    privateKey(val) {
+      if (val !== '' && !this.privKey) {
+        this.trackAccessWalletAmplitude(ACCESS_WALLET.SOFTWARE_FAILED, {
+          error: 'This is not a real private Key'
+        });
+      }
+    },
     acceptTerms(val) {
       if (val) {
         this.trackAccessWalletAmplitude(ACCESS_WALLET.PRIV_KEY_TERMS);

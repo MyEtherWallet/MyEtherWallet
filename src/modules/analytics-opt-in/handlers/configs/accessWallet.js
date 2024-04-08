@@ -41,5 +41,7 @@ export default {
   HW_KEEPKEY_CONNECTED: 'HWKeepKeyConnected',
   ACCESS_FAILED: 'Failed',
   PRIV_KEY_TERMS: 'PrivateKeyTermsAccepted',
-  PRIV_INVISIBLE_BOX: 'PrivateKeyInvisibleBox'
+  PRIV_INVISIBLE_BOX: 'PrivateKeyInvisibleBox',
+  SOFTWARE_FAILED: 'SoftwareFailed',
+  HW_FAILED: 'HWFailed'
 };

@@ -152,6 +152,8 @@ import { Toast, ERROR, SENTRY } from '@/modules/toast/handler/handlerToast';
 
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import paths from '@/modules/access-wallet/hardware/handlers/bip44';
+import handlerAnalyticsMixin from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { ACCESS_WALLET } from '@/modules/analytics-opt-in/handlers/configs/events';
 export default {
   name: 'AccessMnemonic',
   components: {
@@ -161,6 +163,7 @@ export default {
         '@/modules/access-wallet/common/components/AccessWalletAddressNetwork'
       )
   },
+  mixins: [handlerAnalyticsMixin],
   props: {
     handlerAccessWallet: {
       type: Object,
@@ -313,6 +316,9 @@ export default {
           }
         })
         .catch(e => {
+          this.trackAccessWalletAmplitude(ACCESS_WALLET.SOFTWARE_FAILED, {
+            error: e
+          });
           Toast(e, {}, ERROR);
         });
     },
@@ -324,6 +330,9 @@ export default {
       this.handlerAccessWallet
         .updateMnemonicPath(defaultPath.value)
         .catch(e => {
+          this.trackAccessWalletAmplitude(ACCESS_WALLET.SOFTWARE_FAILED, {
+            error: e
+          });
           Toast(e, {}, ERROR);
         });
       this.walletInstance = this.handlerAccessWallet.getWalletInstance();
