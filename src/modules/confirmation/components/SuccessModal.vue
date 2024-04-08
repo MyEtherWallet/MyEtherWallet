@@ -61,7 +61,9 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import { EventBus } from '@/core/plugins/eventBus';
+
 export default {
   name: 'SuccessModal',
   props: {
@@ -103,6 +105,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters('global', ['network']),
     /**
      * Property returns string, depending whether or not this is a swap or send
      */
@@ -120,7 +123,10 @@ export default {
     },
     trackExplorrer(explorer) {
       if (explorer.toLowerCase() === 'ethvm') {
-        this.$amplitude.track('EthVMLinkClicked', { path: this.$route.path });
+        this.$amplitude.track('EthVMLinkClicked', {
+          path: this.$route.path,
+          network: this.network.type.name
+        });
       }
     }
   }

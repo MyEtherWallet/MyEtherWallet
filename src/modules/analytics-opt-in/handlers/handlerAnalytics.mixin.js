@@ -1,7 +1,7 @@
 /**
  * Amplitude Analytics Mixin
  */
-import { mapState, mapActions } from 'vuex';
+import { mapState, mapActions, mapGetters } from 'vuex';
 import categories from './configs/configCategories';
 import { isEmpty } from 'lodash';
 
@@ -10,6 +10,8 @@ export default {
   computed: {
     ...mapState('popups', ['consentToTrack']),
     ...mapState('wallet', ['isOfflineApp']),
+    ...mapState('wallet', ['isOfflineApp']),
+    ...mapGetters('global', ['network']),
     shouldDisplayTrackingPopup() {
       if (this.isOfflineApp) return false;
       return true;
@@ -23,7 +25,9 @@ export default {
     setConsent() {
       if (this.isOfflineApp) return;
       if (this.consentToTrack) {
-        this.$amplitude.track(`UserOptOutTracking`);
+        this.$amplitude.track(`UserOptOutTracking`, {
+          network: this.network.type.name
+        });
       }
 
       const initialValue = this.consentToTrack;
@@ -31,7 +35,9 @@ export default {
       this.setTrackingConsent(!this.consentToTrack).then(() => {
         this.$amplitude.setOptOut(!this.consentToTrack);
         if (!initialValue && this.consentToTrack)
-          this.$amplitude.track(`UserOptInTracking`);
+          this.$amplitude.track(`UserOptInTracking`, {
+            network: this.network.type.name
+          });
       });
     },
     /**
@@ -44,10 +50,15 @@ export default {
       if (this.isOfflineApp) return;
       if (this.consentToTrack) {
         if (!isEmpty(prop)) {
-          this.$amplitude.track(`${categories.landingPage}${event}`, prop);
+          const newObj = Object.assign({}, prop, {
+            network: this.network.type.name
+          });
+          this.$amplitude.track(`${categories.landingPage}${event}`, newObj);
           return;
         }
-        this.$amplitude.track(`${categories.landingPage}${event}`);
+        this.$amplitude.track(`${categories.landingPage}${event}`, {
+          network: this.network.type.name
+        });
       }
     },
     /**
@@ -60,10 +71,15 @@ export default {
       if (this.isOfflineApp) return;
       if (this.consentToTrack) {
         if (!isEmpty(prop)) {
-          this.$amplitude.track(`${categories.nftModule}${event}`, prop);
+          const newObj = Object.assign({}, prop, {
+            network: this.network.type.name
+          });
+          this.$amplitude.track(`${categories.nftModule}${event}`, newObj);
           return;
         }
-        this.$amplitude.track(`${categories.nftModule}${event}`);
+        this.$amplitude.track(`${categories.nftModule}${event}`, {
+          network: this.network.type.name
+        });
       }
     },
     /**
@@ -76,10 +92,15 @@ export default {
       if (this.isOfflineApp) return;
       if (this.consentToTrack) {
         if (!isEmpty(prop)) {
-          this.$amplitude.track(`${categories.header}${event}`, prop);
+          const newObj = Object.assign({}, prop, {
+            network: this.network.type.name
+          });
+          this.$amplitude.track(`${categories.header}${event}`, newObj);
           return;
         }
-        this.$amplitude.track(`${categories.header}${event}`);
+        this.$amplitude.track(`${categories.header}${event}`, {
+          network: this.network.type.name
+        });
       }
     },
     /**
@@ -92,7 +113,8 @@ export default {
       if (this.isOfflineApp) return;
       if (this.consentToTrack) {
         this.$amplitude.track(categories.footer, {
-          to: event
+          to: event,
+          network: this.network.type.name
         });
       }
     },
@@ -106,10 +128,15 @@ export default {
       if (this.isOfflineApp) return;
       if (this.consentToTrack) {
         if (!isEmpty(prop)) {
-          this.$amplitude.track(`${categories.dashboard}${event}`, prop);
+          const newObj = Object.assign({}, prop, {
+            network: this.network.type.name
+          });
+          this.$amplitude.track(`${categories.dashboard}${event}`, newObj);
           return;
         }
-        this.$amplitude.track(`${categories.dashboard}${event}`);
+        this.$amplitude.track(`${categories.dashboard}${event}`, {
+          network: this.network.type.name
+        });
       }
     },
     /**
@@ -122,10 +149,15 @@ export default {
       if (this.isOfflineApp) return;
       if (this.consentToTrack) {
         if (!isEmpty(prop)) {
-          this.$amplitude.track(`${categories.swapAmplitude}${event}`, prop);
+          const newObj = Object.assign({}, prop, {
+            network: this.network.type.name
+          });
+          this.$amplitude.track(`${categories.swapAmplitude}${event}`, newObj);
           return;
         }
-        this.$amplitude.track(`${categories.swapAmplitude}${event}`);
+        this.$amplitude.track(`${categories.swapAmplitude}${event}`, {
+          network: this.network.type.name
+        });
       }
     },
     /**
@@ -137,7 +169,9 @@ export default {
     trackCreateWalletAmplitude(event) {
       if (this.isOfflineApp) return;
       if (this.consentToTrack) {
-        this.$amplitude.track(`${categories.createWallet}${event}`);
+        this.$amplitude.track(`${categories.createWallet}${event}`, {
+          network: this.network.type.name
+        });
       }
     },
     /**
@@ -149,7 +183,9 @@ export default {
     trackBuyHardwareAmplitude(event) {
       if (this.isOfflineApp) return;
       if (this.consentToTrack) {
-        this.$amplitude.track(`${categories.buyHardware}${event}`);
+        this.$amplitude.track(`${categories.buyHardware}${event}`, {
+          network: this.network.type.name
+        });
       }
     },
     /**
@@ -162,10 +198,15 @@ export default {
       if (this.isOfflineApp) return;
       if (this.consentToTrack) {
         if (!isEmpty(prop)) {
-          this.$amplitude.track(`${categories.accessWallet}${event}`, prop);
+          const newObj = Object.assign({}, prop, {
+            network: this.network.type.name
+          });
+          this.$amplitude.track(`${categories.accessWallet}${event}`, newObj);
           return;
         }
-        this.$amplitude.track(`${categories.accessWallet}${event}`);
+        this.$amplitude.track(`${categories.accessWallet}${event}`, {
+          network: this.network.type.name
+        });
       }
     },
     /**
@@ -174,7 +215,9 @@ export default {
     trackLandingPage() {
       if (this.isOfflineApp) return;
       if (this.consentToTrack) {
-        this.$amplitude.track('LandingPageShown');
+        this.$amplitude.track('LandingPageShown', {
+          network: this.network.type.name
+        });
       }
     },
     /**
@@ -183,7 +226,9 @@ export default {
     trackDapp(action) {
       if (this.isOfflineApp) return;
       if (action && this.consentToTrack) {
-        this.$amplitude.track(`${categories.dapp}${action}`);
+        this.$amplitude.track(`${categories.dapp}${action}`, {
+          network: this.network.type.name
+        });
       }
     },
     /**
@@ -192,7 +237,9 @@ export default {
     trackStaking(action) {
       if (this.isOfflineApp) return;
       if (action && this.consentToTrack) {
-        this.$amplitude.track(`${categories.staking}${action}`);
+        this.$amplitude.track(`${categories.staking}${action}`, {
+          network: this.network.type.name
+        });
       }
     },
     /**
@@ -201,7 +248,9 @@ export default {
     trackAd(action) {
       if (this.isOfflineApp) return;
       if (action && this.consentToTrack) {
-        this.$amplitude.track(`${categories.advertisement}${action}`);
+        this.$amplitude.track(`${categories.advertisement}${action}`, {
+          network: this.network.type.name
+        });
       }
     },
     /**
@@ -220,10 +269,15 @@ export default {
       if (this.isOfflineApp) return;
       if (this.consentToTrack) {
         if (!isEmpty(event)) {
-          this.$amplitude.track(`${categories.buySell}${action}`, event);
+          const newObj = Object.assign({}, event, {
+            network: this.network.type.name
+          });
+          this.$amplitude.track(`${categories.buySell}${action}`, newObj);
           return;
         }
-        this.$amplitude.track(`${categories.buySell}${action}`);
+        this.$amplitude.track(`${categories.buySell}${action}`, {
+          network: this.network.type.name
+        });
       }
     },
     /**
@@ -233,15 +287,22 @@ export default {
       if (this.isOfflineApp) return;
       if (this.consentToTrack) {
         if (!isEmpty(event)) {
-          this.$amplitude.track(`${categories.contract}${action}`, event);
+          const newObj = Object.assign({}, event, {
+            network: this.network.type.name
+          });
+          this.$amplitude.track(`${categories.contract}${action}`, newObj);
           return;
         }
-        this.$amplitude.track(`${categories.contract}${action}`);
+        this.$amplitude.track(`${categories.contract}${action}`, {
+          network: this.network.type.name
+        });
       }
     },
     trackSurvey(val) {
       if (this.consentToTrack) {
-        this.$amplitude.track(`Survey${val}`);
+        this.$amplitude.track(`Survey${val}`, {
+          network: this.network.type.name
+        });
       }
     }
   }
