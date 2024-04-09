@@ -75,6 +75,8 @@ const webpackConfig = {
   }
 };
 
+const transpileDependencies = ['@ensdomains/address-encoder'];
+
 const transpilers = config => {
   // GraphQL Loader
   config.module
@@ -126,6 +128,12 @@ const transpilers = config => {
     .loader('babel-loader')
     .end();
   config.module
+    .rule('transpile-ensdomains')
+    .test(/node_modules\/@ensdomains\/address-encoder\/.*\/.js$/)
+    .use('babel')
+    .loader('babel-loader')
+    .end();
+  config.module
     .rule('transpile-ethereumjs')
     .test(/node_modules\/@ethereumjs\/.*\.js$/)
     .use('babel')
@@ -167,4 +175,10 @@ const transpilers = config => {
     .end();
 };
 
-module.exports = { webpackConfig, sourceMapsConfig, env_vars, transpilers };
+module.exports = {
+  webpackConfig,
+  sourceMapsConfig,
+  env_vars,
+  transpilers,
+  transpileDependencies
+};
