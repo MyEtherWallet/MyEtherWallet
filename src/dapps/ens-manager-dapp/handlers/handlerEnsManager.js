@@ -51,7 +51,9 @@ export default class ENSManager {
     };
     return fetch(this.network.type.ens.subgraphPath, {
       method: 'POST',
-      'Content-Type': 'application/json',
+      headers: {
+        'Content-Type': 'application/json'
+      },
       body: JSON.stringify({
         query: query,
         variables: variables,
