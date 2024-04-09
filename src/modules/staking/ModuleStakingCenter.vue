@@ -124,7 +124,7 @@ export default {
   },
   computed: {
     ...mapGetters('global', ['network']),
-    ...mapState('wallet', ['web3', 'address']),
+    ...mapState('wallet', ['web3', 'address', 'identifier']),
     dapps() {
       const staking = [];
       if (
@@ -173,7 +173,8 @@ export default {
         this.web3,
         this.network,
         this.address,
-        this.trackDapp
+        this.trackDapp,
+        this.identifier
       );
     }
   },

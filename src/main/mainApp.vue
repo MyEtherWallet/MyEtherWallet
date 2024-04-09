@@ -50,6 +50,7 @@ export default {
   },
   computed: {
     ...mapState('custom', ['addressBook']),
+    ...mapState('wallet', ['identifier']),
     ...mapState('addressBook', ['isMigrated']),
     ...mapState('global', ['preferredCurrency']),
     ...mapState('article', ['timestamp']),
@@ -96,7 +97,11 @@ export default {
     });
     EventBus.$on('swapTxReceivedReceipt', hash => {
       const id = this.network.type.name;
-      this.trackSwapAmplitude(SWAP.RECEIPT, { hash: hash, network: id });
+      this.trackSwapAmplitude(SWAP.RECEIPT, {
+        hash: hash,
+        network: id,
+        wallet: this.identifier
+      });
     });
     EventBus.$on('swapTxFailed', hash => {
       const id = this.network.type.name;

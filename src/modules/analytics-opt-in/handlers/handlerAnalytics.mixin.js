@@ -223,10 +223,17 @@ export default {
     /**
      * Tracks which dapp user navigates to
      */
-    trackDapp(action) {
+    trackDapp(action, prop) {
       if (this.isOfflineApp) return;
       if (action && this.consentToTrack) {
-        this.$amplitude.track(`${categories.dapp}${action}`, {
+        if (!isEmpty(prop)) {
+          const newObj = Object.assign({}, prop, {
+            network: this.network.type.name
+          });
+          this.$amplitude.track(`${categories.accessWallet}${action}`, newObj);
+          return;
+        }
+        this.$amplitude.track(`${categories.accessWallet}${action}`, {
           network: this.network.type.name
         });
       }

@@ -46,7 +46,7 @@ const STATUS_TYPES = {
 
 export { ABI_GET_FEES, STATUS_TYPES };
 export default class Staked {
-  constructor(web3, network, address, trackDapp) {
+  constructor(web3, network, address, trackDapp, identifier) {
     /**
      * set up the variables
      */
@@ -65,6 +65,7 @@ export default class Staked {
     this.txReceipt = false;
     this.endpoint = configNetworkTypes.network[this.network.type.name].endpoint;
     this.trackDapp = trackDapp;
+    this.identifier = identifier;
     /**
      * get the initial data (total staked, apr, validators)
      */
@@ -308,7 +309,7 @@ export default class Staked {
         this.pendingTxHash = res;
       })
       .on('receipt', () => {
-        this.trackDapp('StakedStakeSuccess');
+        this.trackDapp('StakedStakeSuccess', { wallet: this.identifier });
         this.txReceipt = true;
       })
       .catch(err => {
