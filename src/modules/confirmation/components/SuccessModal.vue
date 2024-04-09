@@ -61,7 +61,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
 import { EventBus } from '@/core/plugins/eventBus';
 
 export default {
@@ -105,7 +104,6 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('global', ['network']),
     /**
      * Property returns string, depending whether or not this is a swap or send
      */

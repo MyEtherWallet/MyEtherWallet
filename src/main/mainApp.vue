@@ -91,15 +91,15 @@ export default {
       this.storeEIP6963Wallet(e.detail);
     });
     EventBus.$on('swapTxBroadcasted', hash => {
-      const id = this.network.type.chainID;
+      const id = this.network.type.name;
       this.trackSwapAmplitude(SWAP.BROADCASTED, { hash: hash, network: id });
     });
     EventBus.$on('swapTxReceivedReceipt', hash => {
-      const id = this.network.type.chainID;
+      const id = this.network.type.name;
       this.trackSwapAmplitude(SWAP.RECEIPT, { hash: hash, network: id });
     });
     EventBus.$on('swapTxFailed', hash => {
-      const id = this.network.type.chainID;
+      const id = this.network.type.name;
       const passedHash = hash === '0x' ? 'no hash' : hash;
       this.trackSwapAmplitude(SWAP.FAILED, { hash: passedHash, network: id });
     });
