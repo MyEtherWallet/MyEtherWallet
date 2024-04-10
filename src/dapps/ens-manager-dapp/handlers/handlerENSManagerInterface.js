@@ -13,6 +13,7 @@ import { toChecksumAddress } from 'web3-utils';
 import { clone } from 'lodash';
 import normalise from '@/core/helpers/normalise';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
+import contracts from './configs/contracts';
 
 export default class ENSManagerInterface {
   constructor(name, address, network, web3, ens) {
@@ -42,7 +43,8 @@ export default class ENSManagerInterface {
     // Addresses
     this.mainResolvingAddress = '';
     this.registrarAddress = '0x';
-    this.contractControllerAddress = '0x';
+    this.contractControllerAddress =
+      contracts[this.network.type.chainID].ETHRegistrarControllerAddress;
     this.resolverAddress = '0x';
     this.publicResolverAddress = '0x';
     this.controllerAddress = '0x';
@@ -205,10 +207,9 @@ export default class ENSManagerInterface {
       BaseRegistrarImplementation.address
     );
     try {
-      this.contractControllerAddress = ETHRegistrarController.address;
       this.registrarControllerContract = new web3.eth.Contract(
         ETHRegistrarController.abi,
-        ETHRegistrarController.address
+        this.contractControllerAddress
       );
     } catch (e) {
       throw new Error(e);

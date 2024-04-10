@@ -123,7 +123,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
       const rentPrice = await this.registrarControllerContract.methods
         .rentPrice(this.parsedHostName, this.getActualDuration(duration))
         .call();
-      return rentPrice;
+      return new BigNumber(rentPrice[0]).plus(rentPrice[1]).toString();
     }
   }
   async totalRenewCost(duration) {
@@ -243,7 +243,9 @@ export default class PermanentNameModule extends ENSManagerInterface {
   }
 
   async getMinimumAge() {
-    const minimumAge = this.registrarControllerContract.MIN_COMMITMENT_AGE;
+    const minimumAge = await this.registrarControllerContract.methods
+      .minCommitmentAge()
+      .call();
     return `${parseInt(minimumAge) + 30}`;
   }
 
@@ -376,6 +378,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
       const gasPrice = this.gasPriceByType()(this.gasPriceType());
       const rentPrice = await this.getRentPrice(duration);
       const hasBalance = new BigNumber(balance).gte(rentPrice);
+
       if (hasBalance) {
         const rentPriceWithTenPercent = new BigNumber(rentPrice)
           .times(1.1)
