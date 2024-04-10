@@ -204,18 +204,11 @@ export default class PermanentNameModule extends ENSManagerInterface {
     return this.secretPhrase;
   }
 
-  createCommitment() {
+  createCommitment(duration) {
     const gasPrice = this.gasPriceByType()(this.gasPriceType());
     const txObj = { from: this.address, gasPrice: gasPrice };
     const promiEvent = new EventEmitter();
-    this.registrarControllerContract.methods
-      .makeCommitmentWithConfig(
-        this.parsedHostName,
-        this.address,
-        sha3(this.secretPhrase),
-        this.publicResolverAddress,
-        this.address
-      )
+    this._createContractMethod(duration, true)
       .call()
       .then(commitment => {
         return this.registrarControllerContract.methods
@@ -232,19 +225,14 @@ export default class PermanentNameModule extends ENSManagerInterface {
     return promiEvent;
   }
 
-  async getCommitmentFees() {
+  async getCommitmentFees(duration) {
     try {
       const gasPrice = this.gasPriceByType()(this.gasPriceType());
       const commitTxObj = { from: this.address };
-      const createCommitment = await this.registrarControllerContract.methods
-        .makeCommitmentWithConfig(
-          this.parsedHostName,
-          this.address,
-          sha3(this.secretPhrase),
-          this.publicResolverAddress,
-          this.address
-        )
-        .call();
+      const createCommitment = await this._createContractMethod(
+        duration,
+        true
+      ).call();
       const gasLimit = await this.registrarControllerContract.methods
         .commit(createCommitment)
         .estimateGas(commitTxObj);
@@ -255,9 +243,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
   }
 
   async getMinimumAge() {
-    const minimumAge = await this.registrarControllerContract.methods
-      .minCommitmentAge()
-      .call();
+    const minimumAge = this.registrarControllerContract.MIN_COMMITMENT_AGE;
     return `${parseInt(minimumAge) + 30}`;
   }
 
@@ -334,8 +320,21 @@ export default class PermanentNameModule extends ENSManagerInterface {
     }
   }
 
+  _createContractMethod(duration, commitment = false) {
+    const method = commitment ? 'makeCommitment' : 'register';
+    return this.registrarControllerContract.methods[method](
+      this.parsedHostName,
+      this.address,
+      this.getActualDuration(duration),
+      sha3(this.secretPhrase),
+      this.publicResolverAddress,
+      [],
+      false,
+      0
+    );
+  }
+
   _registerWithDuration(duration, balance) {
-    const utils = this.web3.utils;
     const promiEvent = new EventEmitter();
     this.getRentPrice(duration).then(rentPrice => {
       const hasBalance = new BigNumber(balance).gte(rentPrice);
@@ -351,15 +350,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
         from: this.address,
         value: withTenPercent
       };
-      const registerWithConfig =
-        this.registrarControllerContract.methods.registerWithConfig(
-          this.parsedHostName,
-          this.address,
-          this.getActualDuration(duration),
-          utils.sha3(this.secretPhrase),
-          this.publicResolverAddress,
-          this.address
-        );
+      const registerWithConfig = this._createContractMethod(duration);
 
       registerWithConfig
         .estimateGas(txObj)
@@ -394,16 +385,9 @@ export default class PermanentNameModule extends ENSManagerInterface {
           from: this.address,
           value: rentPriceWithTenPercent
         };
-        const gasAmt = await this.registrarControllerContract.methods
-          .registerWithConfig(
-            this.parsedHostName,
-            this.address,
-            this.getActualDuration(duration),
-            sha3(this.secretPhrase),
-            this.publicResolverAddress,
-            this.address
-          )
-          .estimateGas(txObj);
+        const gasAmt = await this._createContractMethod(duration).estimateGas(
+          txObj
+        );
         if (!gasAmt) {
           return false;
         }

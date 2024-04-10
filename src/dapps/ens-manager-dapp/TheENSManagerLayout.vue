@@ -761,7 +761,7 @@ export default {
       let waitingTime;
       this.trackDapp('ensDomainCommitEvent');
       this.nameHandler
-        .createCommitment()
+        .createCommitment(this.durationPick)
         .on('transactionHash', () => {
           this.nameHandler.getMinimumAge().then(resp => {
             this.minimumAge = resp;
@@ -789,7 +789,9 @@ export default {
     },
 
     async getCommitFeeOnly() {
-      const commitFeeOnly = await this.nameHandler.getCommitmentFees(); // ETH
+      const commitFeeOnly = await this.nameHandler.getCommitmentFees(
+        this.durationPick
+      ); // ETH
       this.commitFeeInEth = commitFeeOnly.toString();
       this.commitFeeInWei = toWei(commitFeeOnly);
       this.commitFeeUsd = this.getFiatValue(
@@ -839,9 +841,9 @@ export default {
         : this.nameHandler;
       return handler.getRentPrice(this.durationPick).then(resp => {
         if (resp) {
-          const ethValue = fromWei(resp);
+          const ethValue = fromWei(resp.base);
           return {
-            wei: resp,
+            wei: resp.base,
             eth: ethValue,
             usd: new BigNumber(ethValue).times(this.fiatValue).toFixed(2)
           };
