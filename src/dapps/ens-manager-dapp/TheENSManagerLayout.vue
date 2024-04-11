@@ -718,6 +718,7 @@ export default {
       this.loadingCommit = false;
       this.loadingReg = false;
       this.name = '';
+      this.minimumAge = '';
       this.nameHandler = {};
       this.$router.push({ name: ENS_MANAGER_ROUTE.ENS_MANAGER.NAME });
       this.trackDapp('ensCloseRegister');
@@ -738,7 +739,7 @@ export default {
     },
     register(duration) {
       this.trackDapp('ensDomainRegisterEvent');
-      this.nameHandler
+      return this.nameHandler
         .register(duration, this.balanceToWei)
         .on('transactionHash', () => {
           Toast(`Registering ENS name: ${this.name}`, {}, SUCCESS);
@@ -760,7 +761,7 @@ export default {
     commit() {
       let waitingTime;
       this.trackDapp('ensDomainCommitEvent');
-      return this.nameHandler
+      this.nameHandler
         .createCommitment(this.durationPick)
         .on('transactionHash', () => {
           this.nameHandler.getMinimumAge().then(resp => {
