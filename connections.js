@@ -16,6 +16,8 @@ module.exports = [
   'https://estimategas.mewapi.io:443/bsc',
   'https://estimategas.mewapi.io:443/matic',
   'https://estimategas.mewapi.io:443/goerli',
+  'https://estimategas.mewapi.io:443/holesky',
+  'https://estimategas.mewapi.io:443/sepolia',
   'https://api.ethvm.com:443',
   'wss://apiws.ethvm.com:443',
   'https://api-v2.ethvm.dev:443',
