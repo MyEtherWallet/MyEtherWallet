@@ -748,19 +748,19 @@ export default {
           setTimeout(() => {
             this.getDomains();
           }, 15000);
-          this.closeRegister();
-          this.trackDapp('ensDomainRegisterReceipt');
+          this.trackDapp('ensDomainRegisterSuccess');
           Toast(`Registration successful!`, {}, SUCCESS);
         })
         .on('error', err => {
           this.loadingReg = false;
+          this.trackDapp('ensDomainRegisterFail');
           this.instance.errorHandler(err.message ? err.message : err);
         });
     },
     commit() {
       let waitingTime;
       this.trackDapp('ensDomainCommitEvent');
-      this.nameHandler
+      return this.nameHandler
         .createCommitment(this.durationPick)
         .on('transactionHash', () => {
           this.nameHandler.getMinimumAge().then(resp => {
@@ -784,11 +784,13 @@ export default {
           this.committed = false;
           this.waitingForReg = false;
           this.notEnoughFunds = false;
+          this.trackDapp('ensDomainRegisterFail');
           Toast(err, {}, ERROR);
         });
     },
 
     async getCommitFeeOnly() {
+      this.trackDapp('ensDomainInitializeRegister');
       const commitFeeOnly = await this.nameHandler.getCommitmentFees(
         this.durationPick
       ); // ETH
