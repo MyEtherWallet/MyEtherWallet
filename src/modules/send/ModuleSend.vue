@@ -613,6 +613,15 @@ export default {
     },
     network() {
       this.clear();
+      const currentGasPrice = this.gasPrice;
+      // wait for gas price to update after network is updated
+      const x = setInterval(() => {
+        if (this.gasPrice !== currentGasPrice) {
+          this.localGasPrice = this.gasPrice;
+          this.sendTx.setLocalGasPrice(this.actualGasPrice);
+          clearInterval(x);
+        }
+      }, 500);
     },
     address() {
       this.clear();
