@@ -19,7 +19,7 @@
           <div
             v-if="showSuccessModal"
             v-lottie="successLottie"
-            :class="[{ 'py-7': showSuccessSwap }, 'lottie']"
+            :class="[showSuccessSwap ? 'py-7' : '', 'lottie']"
           />
           <!--
           ====================================================================================
@@ -62,6 +62,7 @@
 
 <script>
 import { EventBus } from '@/core/plugins/eventBus';
+
 export default {
   name: 'SuccessModal',
   props: {
@@ -120,7 +121,10 @@ export default {
     },
     trackExplorrer(explorer) {
       if (explorer.toLowerCase() === 'ethvm') {
-        this.$amplitude.track('EthVMLinkClicked', { path: this.$route.path });
+        this.$amplitude.track('EthVMLinkClicked', {
+          path: this.$route.path,
+          network: this.network.type.name
+        });
       }
     }
   }

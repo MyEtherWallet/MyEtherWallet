@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "6.9.5-hotfix.1",
+  "version": "6.9.6",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build": "npm run update && vue-cli-service build",
@@ -48,8 +48,8 @@
     "@coolwallets/eth": "0.2.0-beta.1",
     "@coolwallets/transport-web-ble": "0.1.0",
     "@coolwallets/wallet": "0.2.0-beta.1",
-    "@ensdomains/address-encoder": "0.2.22",
-    "@ensdomains/ens-contracts": "0.0.20",
+    "@ensdomains/address-encoder": "1.1.1",
+    "@ensdomains/ens-contracts": "1.1.4",
     "@ensdomains/ensjs": "2.1.0",
     "@ethereumjs/common": "2.6.5",
     "@ethereumjs/tx": "3.5.2",
@@ -64,7 +64,7 @@
     "@sentry/vue": "7.109.0",
     "@shapeshiftoss/hdwallet-core": "1.53.5",
     "@shapeshiftoss/hdwallet-keepkey-webusb": "1.53.5",
-    "@trezor/connect-web": "9.2.1",
+    "@trezor/connect-web": "9.2.2",
     "@unstoppabledomains/resolution": "9.0.0",
     "@walletconnect/ethereum-provider": "2.11.3",
     "@walletconnect/modal": "2.6.2",
