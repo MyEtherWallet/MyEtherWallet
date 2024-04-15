@@ -27,6 +27,7 @@
       persistent
       no-click-animation
       hide-overlay
+      :retain-focus="false"
     >
       <div class="inner-container pa-5">
         <div class="d-flex justify-end">

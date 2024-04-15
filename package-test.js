@@ -81,7 +81,6 @@ const EXCEPTIONS = [
   'highcharts', // major update
   'highcharts-vue', // major update for vue 3
   'geckodriver',
-  '@ensdomains/ens-contracts', // breaks current ENS integration
   'eslint-plugin-prettier', // breaks
   'ethereum-block-by-date',
   '@mathieustan/vue-intercom', // major version
@@ -90,7 +89,6 @@ const EXCEPTIONS = [
   'vue-tippy',
   'less-loader', // doesn't support webpack 4
   'eslint-plugin-security', // part of major release for eslint
-  '@ensdomains/address-encoder',
   '@commitlint/config-conventional',
   'commitlint',
   'minizlib'

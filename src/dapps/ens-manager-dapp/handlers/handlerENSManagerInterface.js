@@ -13,6 +13,7 @@ import { toChecksumAddress } from 'web3-utils';
 import { clone } from 'lodash';
 import normalise from '@/core/helpers/normalise';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
+import contracts from './configs/contracts';
 
 export default class ENSManagerInterface {
   constructor(name, address, network, web3, ens) {
@@ -27,22 +28,26 @@ export default class ENSManagerInterface {
     this.name = normalise(this.parsedHostName + '.' + this.tld);
     this.nameHash = nameHashPckg.hash(this.name);
     this.subtext = '';
-    this.mainResolvingAddress = '';
     this.txtRecords = null;
     this.multiCoin = null;
     this.labelHash = web3.utils.sha3(this.parsedHostName);
     this.owner = '0x';
-    this.registrarAddress = '0x';
-    this.contractControllerAddress = '0x';
-    this.resolverAddress = '0x';
-    this.publicResolverAddress = '0x';
-    this.controllerAddress = '0x';
+
     this.contentHash = '';
     this.textRecordSupport = false;
     this.multicoinSupport = false;
     this.isAvailable = false;
     this.isController = false;
     this.checkingDomainAvail = true;
+
+    // Addresses
+    this.mainResolvingAddress = '';
+    this.registrarAddress = '0x';
+    this.contractControllerAddress =
+      contracts[this.network.type.chainID].ETHRegistrarControllerAddress;
+    this.resolverAddress = '0x';
+    this.publicResolverAddress = '0x';
+    this.controllerAddress = '0x';
 
     // Contracts
     this.publicResolverContract = null;
@@ -202,10 +207,9 @@ export default class ENSManagerInterface {
       BaseRegistrarImplementation.address
     );
     try {
-      this.contractControllerAddress = ETHRegistrarController.address;
       this.registrarControllerContract = new web3.eth.Contract(
         ETHRegistrarController.abi,
-        ETHRegistrarController.address
+        this.contractControllerAddress
       );
     } catch (e) {
       throw new Error(e);

@@ -16,6 +16,8 @@ module.exports = [
   'https://estimategas.mewapi.io:443/bsc',
   'https://estimategas.mewapi.io:443/matic',
   'https://estimategas.mewapi.io:443/goerli',
+  'https://estimategas.mewapi.io:443/holesky',
+  'https://estimategas.mewapi.io:443/sepolia',
   'https://api.ethvm.com:443',
   'wss://apiws.ethvm.com:443',
   'https://api-v2.ethvm.dev:443',
@@ -92,6 +94,7 @@ module.exports = [
   'https://protocol-api.aave.com:443', // Aave
   'https://api.thegraph.com:443/subgraphs/name/ensdomains/', // ENS
   'https://s3.us-west-2.amazonaws.com:443/mew-ipfs-bucket', // ENS
+  'https://api.studio.thegraph.com:443/proxy/49574/',
   'https://assets.coingecko.com',
   'https://api.stakewise.io:443', // stakewise
   'https://api.stakewise.io:443/pool-stats', // stakewise pool

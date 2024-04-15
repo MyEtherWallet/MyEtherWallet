@@ -787,7 +787,6 @@ export default {
           this.clear();
         })
         .catch(error => {
-          this.clear();
           if (!this.instance) {
             Toast(error, {}, ERROR);
           }

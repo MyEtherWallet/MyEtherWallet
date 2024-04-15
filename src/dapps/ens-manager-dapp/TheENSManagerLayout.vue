@@ -718,6 +718,7 @@ export default {
       this.loadingCommit = false;
       this.loadingReg = false;
       this.name = '';
+      this.minimumAge = '';
       this.nameHandler = {};
       this.$router.push({ name: ENS_MANAGER_ROUTE.ENS_MANAGER.NAME });
       this.trackDapp('ensCloseRegister');
@@ -738,7 +739,7 @@ export default {
     },
     register(duration) {
       this.trackDapp('ensDomainRegisterEvent');
-      this.nameHandler
+      return this.nameHandler
         .register(duration, this.balanceToWei)
         .on('transactionHash', () => {
           Toast(`Registering ENS name: ${this.name}`, {}, SUCCESS);
@@ -748,12 +749,12 @@ export default {
           setTimeout(() => {
             this.getDomains();
           }, 15000);
-          this.closeRegister();
-          this.trackDapp('ensDomainRegisterReceipt');
+          this.trackDapp('ensDomainRegisterSuccess');
           Toast(`Registration successful!`, {}, SUCCESS);
         })
         .on('error', err => {
           this.loadingReg = false;
+          this.trackDapp('ensDomainRegisterFail');
           this.instance.errorHandler(err.message ? err.message : err);
         });
     },
@@ -761,7 +762,7 @@ export default {
       let waitingTime;
       this.trackDapp('ensDomainCommitEvent');
       this.nameHandler
-        .createCommitment()
+        .createCommitment(this.durationPick)
         .on('transactionHash', () => {
           this.nameHandler.getMinimumAge().then(resp => {
             this.minimumAge = resp;
@@ -784,12 +785,16 @@ export default {
           this.committed = false;
           this.waitingForReg = false;
           this.notEnoughFunds = false;
+          this.trackDapp('ensDomainRegisterFail');
           Toast(err, {}, ERROR);
         });
     },
 
     async getCommitFeeOnly() {
-      const commitFeeOnly = await this.nameHandler.getCommitmentFees(); // ETH
+      this.trackDapp('ensDomainInitializeRegister');
+      const commitFeeOnly = await this.nameHandler.getCommitmentFees(
+        this.durationPick
+      ); // ETH
       this.commitFeeInEth = commitFeeOnly.toString();
       this.commitFeeInWei = toWei(commitFeeOnly);
       this.commitFeeUsd = this.getFiatValue(

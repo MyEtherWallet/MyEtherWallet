@@ -1,7 +1,7 @@
 <template>
   <div class="module-network-switch full-width">
     <v-row
-      v-if="!isSwapPage && hasNetworks"
+      v-if="!shouldFilter && hasNetworks"
       class="align-end justify-center justify-sm-space-between pa-0"
     >
       <!-- ===================================================================================== -->
@@ -37,9 +37,9 @@
     <!-- Empty Search Message -->
     <!-- ===================================================================================== -->
     <app-user-msg-block
-      v-if="showEmptySearch || isSwapPage"
+      v-if="showEmptySearch || shouldFilter"
       :message="emptySearchMes"
-      :is-alert="isSwapPage"
+      :is-alert="shouldFilter"
       class="mt-5"
     />
 
@@ -110,11 +110,7 @@ export default {
     /** Set this prop to pass specific networks to be displayed */
     filterTypes: { type: Array, default: () => [] },
     /** Set this prop to false if device does not support networks */
-    hasNetworks: { type: Boolean, default: true },
-    isSwapPage: {
-      type: Boolean,
-      default: false
-    }
+    hasNetworks: { type: Boolean, default: true }
   },
   data() {
     return {
@@ -131,6 +127,9 @@ export default {
     ...mapState('global', ['validNetwork']),
     ...mapState('external', ['selectedEIP6963Provider']),
     ...mapState('wallet', ['identifier', 'instance', 'isOfflineApp']),
+    shouldFilter() {
+      return this.$route.name === 'Swap' || this.$route.name === 'NFTManager';
+    },
     /**
      * Property returns sorted network names alphabetically in this order: ETH, main and then test networks
      * @returns {string[]}
@@ -164,7 +163,7 @@ export default {
       this.typeNames.forEach(item => {
         allNetworks.push(types[item]);
       });
-      if (this.isSwapPage || this.identifier === WALLET_TYPES.MEW_WALLET) {
+      if (this.shouldFilter || this.identifier === WALLET_TYPES.MEW_WALLET) {
         allNetworks = allNetworks.filter(
           item =>
             item.name === types.ETH.name ||
@@ -201,9 +200,10 @@ export default {
      * @returns {object}
      */
     emptySearchMes() {
-      if (this.isSwapPage && this.typeNames.length === 0) {
+      const msgTitle = this.$route.name === 'Swap' ? 'Swap' : 'NFT Manager';
+      if (this.shouldFilter && this.typeNames.length === 0) {
         return {
-          title: 'Swap is not supported on your device',
+          title: `${msgTitle} is not supported on your device`,
           subtitle: ''
         };
       }
@@ -214,10 +214,10 @@ export default {
         };
       }
       return {
-        title: this.isSwapPage
-          ? 'Swap is only available on these networks'
+        title: this.shouldFilter
+          ? `${msgTitle} is only available on these networks`
           : '',
-        subtitle: this.isSwapPage
+        subtitle: this.shouldFilter
           ? 'Select different feature to see all networks.'
           : 'We do not have a network with this name.'
       };

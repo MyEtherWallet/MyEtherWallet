@@ -51,14 +51,20 @@
         >
           <v-row
             no-gutters
-            class="pa-6 staking-item border-radius--5px elevation-2"
+            class="pa-3 pa-sm-6 staking-item border-radius--5px elevation-2"
           >
-            <v-col cols="2">
+            <v-col
+              cols="2"
+              :class="$vuetify.breakpoint.smAndUp ? '' : 'align-content-center'"
+            >
               <img
                 :src="dapp.icon"
-                width="64px"
-                height="64px"
-                class="elevation-2 border-radius--15px"
+                :width="$vuetify.breakpoint.smAndUp ? '64px' : '32px'"
+                :height="$vuetify.breakpoint.smAndUp ? '64px' : '32px'"
+                :class="[
+                  $vuetify.breakpoint.smAndUp ? 'border-radius--15px' : '',
+                  'elevation-2'
+                ]"
               />
             </v-col>
             <v-col cols="10">
