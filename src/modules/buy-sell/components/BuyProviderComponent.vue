@@ -236,12 +236,7 @@ export default {
       return this.onlySimplex;
     },
     hideSimplex() {
-      return (
-        this.selectedCryptoName === 'USDC' ||
-        this.selectedCryptoName === 'USDT' ||
-        this.selectedCryptoName === 'DAI' ||
-        isEmpty(this.simplexQuote)
-      );
+      return isEmpty(this.simplexQuote);
     },
     simplexBtnTitle() {
       return 'BUY WITH SIMPLEX';

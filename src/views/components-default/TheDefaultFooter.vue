@@ -247,7 +247,7 @@
         <div class="col-12 d-none d-md-block footer__copyright">
           <p>
             <a
-              :href="`https://github.com/MyEtherWallet/MyEtherWallet/releases/tag/${packageVersion}`"
+              :href="`https://github.com/MyEtherWallet/MyEtherWallet/releases/tag/v${packageVersion}`"
               >Version: v{{ packageVersion }}</a
             >
           </p>

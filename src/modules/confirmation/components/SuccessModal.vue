@@ -19,7 +19,7 @@
           <div
             v-if="showSuccessModal"
             v-lottie="successLottie"
-            :class="[{ 'py-7': showSuccessSwap }, 'lottie']"
+            :class="[showSuccessSwap ? 'py-7' : '', 'lottie']"
           />
           <!--
           ====================================================================================

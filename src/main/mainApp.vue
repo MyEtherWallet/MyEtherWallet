@@ -23,7 +23,8 @@ import {
   Toast,
   ERROR,
   SUCCESS,
-  INFO
+  INFO,
+  WARNING
 } from '@/modules/toast/handler/handlerToast';
 import { BUYSELL_EVENT } from '@/modules/buy-sell/helpers';
 import { EventBus } from '@/core/plugins/eventBus';
@@ -112,6 +113,14 @@ export default {
       this.trackSwapAmplitude(SWAP.NOT_BROADCASTED);
     });
     EventBus.$on(BUYSELL_EVENT, arg => {
+      if (!this.network.type.canBuy) {
+        Toast(
+          'Unsupported network to buy. Please switch network to ETH, MATIC, or BNB to buy.',
+          {},
+          WARNING
+        );
+        return;
+      }
       this.openBuy(arg);
     });
     this.footerHideIntercom();

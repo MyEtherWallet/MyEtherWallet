@@ -17,8 +17,9 @@
           v-if="noFundsForRenewalFees"
           class="balance-error d-flex mt-2 mb-3 justify-center align-center"
         >
-          Not enough balance:
+          Not enough balance.
           <a
+            v-show="network.type.canBuy"
             target="_blank"
             class="link"
             @click="
@@ -108,7 +109,7 @@ export default {
     this.getTotalRenewFeeOnly(1);
   },
   methods: {
-    ...mapGetters('global', ['getFiatValue']),
+    ...mapGetters('global', ['getFiatValue', 'network']),
     rentPrice() {
       return this.getRentPrice(this.duration).then(resp => {
         if (resp) {

@@ -272,30 +272,34 @@ export default {
       }
     },
     async register(duration) {
-      this.trackDapp('rnsDomainRegisterEvent');
-      this.loadingReg = true;
-      this.minimumAge = '90';
-      // trigger loader
-      this.loadingCommit = true;
-      this.waitingForReg = true;
+      try {
+        this.loadingReg = true;
+        this.minimumAge = '90';
+        // trigger loader
+        this.loadingCommit = true;
+        this.waitingForReg = true;
 
-      const [label] = this.name.split('.');
-      const address = this.instance.getAddressString();
-      const registerTx = await this.nameHandler.rskRegistrar.register(
-        label,
-        address,
-        this.regSecret,
-        BigNumber.from(duration),
-        this.domainPrice
-      );
-      await registerTx.wait();
-      await this.reverseHandler.setReverseRecord(this.name, this.address);
-      this.loadingReg = false;
-      this.waitingForReg = false;
+        const [label] = this.name.split('.');
+        const address = this.instance.getAddressString();
+        const registerTx = await this.nameHandler.rskRegistrar.register(
+          label,
+          address,
+          this.regSecret,
+          BigNumber.from(duration),
+          this.domainPrice
+        );
+        await registerTx.wait();
+        await this.reverseHandler.setReverseRecord(this.name, this.address);
+        this.loadingReg = false;
+        this.waitingForReg = false;
 
-      this.closeRegister();
-      this.trackDapp('rnsDomainRegisterReceipt');
-      Toast(`Registration successful!`, {}, SUCCESS);
+        this.closeRegister();
+        this.trackDapp('rnsDomainsRegisterSuccess');
+        Toast(`Registration successful!`, {}, SUCCESS);
+      } catch (e) {
+        this.trackDapp('rnsDomainRegisterFailed');
+        Toast(e, {}, ERROR);
+      }
     },
     async commit(duration) {
       this.loadingCommit = true;
@@ -336,13 +340,14 @@ export default {
           }
         }, 1000 * 10 * 60);
       } catch (e) {
+        this.trackDapp('rnsDomainRegisterFailed');
         Toast(e, {}, ERROR);
       }
     },
     getRentPrice(duration) {
       const token = this.customTokens.find(token => token.name === 'RIF');
       const [label] = this.name.split('.');
-
+      this.trackDapp('rnsDomainInitializeRegister');
       return this.nameHandler.fetchPrice(label, duration).then(resp => {
         this.commitFeeInEth = resp.eth;
         this.domainPrice = resp.bn;
