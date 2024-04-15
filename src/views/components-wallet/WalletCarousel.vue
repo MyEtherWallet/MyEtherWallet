@@ -55,15 +55,27 @@ export default {
   }),
   methods: {
     openMewWallet() {
-      this.$amplitude.track('WalletSlideMEWWallet');
+      if (this.consentToTrack) {
+        this.$amplitude.track('WalletSlideMEWWallet', {
+          network: this.network.type.name
+        });
+      }
       // eslint-disable-next-line
       window.open('https://download.mewwallet.com/?source=mew_web', '_blank');
     },
     trackEnkrypt() {
-      this.$amplitude.track('WalletSlideEnkrypt');
+      if (this.consentToTrack) {
+        this.$amplitude.track('WalletSlideEnkrypt', {
+          network: this.network.type.name
+        });
+      }
     },
     trackHardware() {
-      this.$amplitude.track('WalletSlideHardware');
+      if (this.consentToTrack) {
+        this.$amplitude.track('WalletSlideHardware', {
+          network: this.network.type.name
+        });
+      }
     }
   }
 };
