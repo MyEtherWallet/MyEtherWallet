@@ -163,6 +163,14 @@
                 >CoinGecko</a
               >.
             </p>
+            <v-switch
+              :input-value="consentToTrack"
+              inset
+              :label="`Data Tracking ${consentToTrack ? 'On' : 'Off'}`"
+              color="#05C0A5"
+              off-icon="mdi-alert-circle"
+              @change="setConsent"
+            />
           </div>
         </div>
         <div class="col-6">
@@ -236,15 +244,13 @@
             </div>
           </div>
         </div>
-        <div class="col-12 d-none d-md-block">
-          <v-switch
-            :input-value="consentToTrack"
-            inset
-            :label="`Data Tracking ${consentToTrack ? 'On' : 'Off'}`"
-            color="#05C0A5"
-            off-icon="mdi-alert-circle"
-            @change="setConsent"
-          />
+        <div class="col-12 d-none d-md-block footer__copyright">
+          <p>
+            <a
+              :href="`https://github.com/MyEtherWallet/MyEtherWallet/releases/tag/v${packageVersion}`"
+              >Version: v{{ packageVersion }}</a
+            >
+          </p>
         </div>
       </div>
     </div>
@@ -252,7 +258,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 
 import Facebook from '@/assets/images/icons/social/facebook-logo.vue';
 import Twitter from '@/assets/images/icons/social/twitter-logo.vue';
@@ -317,81 +323,132 @@ export default {
     };
   },
   computed: {
-    ...mapState('popups', ['consentToTrack'])
+    ...mapState('popups', ['consentToTrack']),
+    ...mapGetters('global', ['network']),
+    packageVersion() {
+      return VERSION;
+    }
   },
   methods: {
     trackAboutUs() {
-      this.$amplitude.track(FOOTER_EVENTS.footerAboutUs);
+      this.$amplitude.track(FOOTER_EVENTS.footerAboutUs, {
+        network: this.network.type.name
+      });
     },
     trackCareers() {
-      this.$amplitude.track(FOOTER_EVENTS.footerCareers);
+      this.$amplitude.track(FOOTER_EVENTS.footerCareers, {
+        network: this.network.type.name
+      });
     },
     trackHowItWorks() {
-      this.$amplitude.track(FOOTER_EVENTS.footerHowItWorks);
+      this.$amplitude.track(FOOTER_EVENTS.footerHowItWorks, {
+        network: this.network.type.name
+      });
     },
     trackTeam() {
-      this.$amplitude.track(FOOTER_EVENTS.footerTeam);
+      this.$amplitude.track(FOOTER_EVENTS.footerTeam, {
+        network: this.network.type.name
+      });
     },
     trackAdvertiseWithUs() {
-      this.$amplitude.track(FOOTER_EVENTS.footerAdvertiseWithUs);
+      this.$amplitude.track(FOOTER_EVENTS.footerAdvertiseWithUs, {
+        network: this.network.type.name
+      });
     },
     trackPrivacy() {
-      this.$amplitude.track(FOOTER_EVENTS.footerPrivacy);
+      this.$amplitude.track(FOOTER_EVENTS.footerPrivacy, {
+        network: this.network.type.name
+      });
     },
     trackTerms() {
-      this.$amplitude.track(FOOTER_EVENTS.footerTerms);
+      this.$amplitude.track(FOOTER_EVENTS.footerTerms, {
+        network: this.network.type.name
+      });
     },
     trackBugBounty() {
-      this.$amplitude.track(FOOTER_EVENTS.footerBugBounty);
+      this.$amplitude.track(FOOTER_EVENTS.footerBugBounty, {
+        network: this.network.type.name
+      });
     },
     trackMobile() {
-      this.$amplitude.track(FOOTER_EVENTS.footerMobile);
+      this.$amplitude.track(FOOTER_EVENTS.footerMobile, {
+        network: this.network.type.name
+      });
     },
     trackEnkrypt() {
-      this.$amplitude.track(FOOTER_EVENTS.footerEnkrypt);
+      this.$amplitude.track(FOOTER_EVENTS.footerEnkrypt, {
+        network: this.network.type.name
+      });
     },
     trackPortfolio() {
-      this.$amplitude.track(FOOTER_EVENTS.footerPortfolio);
+      this.$amplitude.track(FOOTER_EVENTS.footerPortfolio, {
+        network: this.network.type.name
+      });
     },
     trackEthvm() {
-      this.$amplitude.track(FOOTER_EVENTS.footerEthvm);
+      this.$amplitude.track(FOOTER_EVENTS.footerEthvm, {
+        network: this.network.type.name
+      });
     },
     trackMewtopia() {
-      this.$amplitude.track(FOOTER_EVENTS.footerMewtopia);
+      this.$amplitude.track(FOOTER_EVENTS.footerMewtopia, {
+        network: this.network.type.name
+      });
     },
     trackPressKit() {
-      this.$amplitude.track(FOOTER_EVENTS.footerPressKit);
+      this.$amplitude.track(FOOTER_EVENTS.footerPressKit, {
+        network: this.network.type.name
+      });
     },
     trackHelpCenter() {
-      this.$amplitude.track(FOOTER_EVENTS.footerHelpCenter);
+      this.$amplitude.track(FOOTER_EVENTS.footerHelpCenter, {
+        network: this.network.type.name
+      });
     },
     trackCustomerSupport() {
-      this.$amplitude.track(FOOTER_EVENTS.footerCustomerSupport);
+      this.$amplitude.track(FOOTER_EVENTS.footerCustomerSupport, {
+        network: this.network.type.name
+      });
     },
     trackSecurityPolicy() {
-      this.$amplitude.track(FOOTER_EVENTS.footerSecurityPolicy);
+      this.$amplitude.track(FOOTER_EVENTS.footerSecurityPolicy, {
+        network: this.network.type.name
+      });
     },
     trackVerifyMessage() {
-      this.$amplitude.track(FOOTER_EVENTS.footerVerifyMessage);
+      this.$amplitude.track(FOOTER_EVENTS.footerVerifyMessage, {
+        network: this.network.type.name
+      });
     },
     trackConvertUnits() {
-      this.$amplitude.track(FOOTER_EVENTS.footerConvertUnits);
+      this.$amplitude.track(FOOTER_EVENTS.footerConvertUnits, {
+        network: this.network.type.name
+      });
     },
     trackSendOfflineHelper() {
-      this.$amplitude.track(FOOTER_EVENTS.footerSendOfflineHelper);
+      this.$amplitude.track(FOOTER_EVENTS.footerSendOfflineHelper, {
+        network: this.network.type.name
+      });
     },
     trackEthDonation() {
-      this.$amplitude.track(FOOTER_EVENTS.footerEthDonation);
+      this.$amplitude.track(FOOTER_EVENTS.footerEthDonation, {
+        network: this.network.type.name
+      });
     },
     trackBtcDonation() {
-      this.$amplitude.track(FOOTER_EVENTS.footerBtcDonation);
+      this.$amplitude.track(FOOTER_EVENTS.footerBtcDonation, {
+        network: this.network.type.name
+      });
     },
     trackCoinGecko() {
-      this.$amplitude.track(FOOTER_EVENTS.footerCoinGecko);
+      this.$amplitude.track(FOOTER_EVENTS.footerCoinGecko, {
+        network: this.network.type.name
+      });
     },
     trackJoinMewCommunity(item) {
       this.$amplitude.track(FOOTER_EVENTS.footerJoinMewCommunity, {
-        item: item
+        item: item,
+        network: this.network.type.name
       });
     }
   }

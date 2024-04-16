@@ -222,7 +222,7 @@ export default {
     ]),
     ...mapGetters('external', ['fiatValue']),
     ...mapState('global', ['gasPriceType']),
-    ...mapState('wallet', ['web3', 'address', 'instance']),
+    ...mapState('wallet', ['web3', 'address', 'instance', 'identifier']),
     currencyName() {
       return this.network.type.currencyName;
     },
@@ -333,7 +333,9 @@ export default {
           );
           this.reset();
           EventBus.$emit('fetchSummary');
-          this.trackDapp(CB_TRACKING.STAKE_SUCCESS);
+          this.trackDapp(CB_TRACKING.STAKE_SUCCESS, {
+            wallet: this.identifier
+          });
         })
         .catch(e => {
           this.instance.errorHandler(e);

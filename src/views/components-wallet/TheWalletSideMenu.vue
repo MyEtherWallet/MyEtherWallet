@@ -27,7 +27,6 @@
         >
           <network-switch
             :filter-types="filterNetworks"
-            :is-swap-page="isSwapPage"
             @newNetwork="closeNetworkOverlay"
           />
         </mew-popup>
@@ -358,13 +357,6 @@ export default {
         return [];
       }
       return [];
-    },
-    /**
-     * Property returns whether or not you are on the swap page
-     * @returns {boolean}
-     */
-    isSwapPage() {
-      return this.$route.name === 'Swap';
     },
     sectionOne() {
       if (this.online) {

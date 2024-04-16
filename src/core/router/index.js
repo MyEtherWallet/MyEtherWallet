@@ -47,9 +47,11 @@ router.beforeResolve((to, from, next) => {
     } else {
       if (store.state.external.path !== '') {
         const localPath = store.state.external.path;
-        Vue.prototype.$amplitude.track('WalletDirectLinkAccess', {
-          to: localPath
-        });
+        if (window.navigator.onLine) {
+          Vue.prototype.$amplitude.track('WalletDirectLinkAccess', {
+            to: localPath
+          });
+        }
         store.dispatch('external/setLastPath', '');
         router.push({ path: localPath });
       } else {

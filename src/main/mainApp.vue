@@ -23,7 +23,8 @@ import {
   Toast,
   ERROR,
   SUCCESS,
-  INFO
+  INFO,
+  WARNING
 } from '@/modules/toast/handler/handlerToast';
 import { BUYSELL_EVENT } from '@/modules/buy-sell/helpers';
 import { EventBus } from '@/core/plugins/eventBus';
@@ -50,6 +51,7 @@ export default {
   },
   computed: {
     ...mapState('custom', ['addressBook']),
+    ...mapState('wallet', ['identifier']),
     ...mapState('addressBook', ['isMigrated']),
     ...mapState('global', ['preferredCurrency']),
     ...mapState('article', ['timestamp']),
@@ -91,15 +93,19 @@ export default {
       this.storeEIP6963Wallet(e.detail);
     });
     EventBus.$on('swapTxBroadcasted', hash => {
-      const id = this.network.type.chainID;
+      const id = this.network.type.name;
       this.trackSwapAmplitude(SWAP.BROADCASTED, { hash: hash, network: id });
     });
     EventBus.$on('swapTxReceivedReceipt', hash => {
-      const id = this.network.type.chainID;
-      this.trackSwapAmplitude(SWAP.RECEIPT, { hash: hash, network: id });
+      const id = this.network.type.name;
+      this.trackSwapAmplitude(SWAP.RECEIPT, {
+        hash: hash,
+        network: id,
+        wallet: this.identifier
+      });
     });
     EventBus.$on('swapTxFailed', hash => {
-      const id = this.network.type.chainID;
+      const id = this.network.type.name;
       const passedHash = hash === '0x' ? 'no hash' : hash;
       this.trackSwapAmplitude(SWAP.FAILED, { hash: passedHash, network: id });
     });
@@ -107,6 +113,14 @@ export default {
       this.trackSwapAmplitude(SWAP.NOT_BROADCASTED);
     });
     EventBus.$on(BUYSELL_EVENT, arg => {
+      if (!this.network.type.canBuy) {
+        Toast(
+          'Unsupported network to buy. Please switch network to ETH, MATIC, or BNB to buy.',
+          {},
+          WARNING
+        );
+        return;
+      }
       this.openBuy(arg);
     });
     this.footerHideIntercom();

@@ -27,6 +27,7 @@
       persistent
       no-click-animation
       hide-overlay
+      :retain-focus="false"
     >
       <div class="inner-container pa-5">
         <div class="d-flex justify-end">
@@ -93,6 +94,7 @@ export default {
   mixins: [handlerWallet, handlerAnalytics],
   data() {
     return {
+      tempClose: false,
       showPaperWallet: false,
       manualBlockSubscription: null
     };
@@ -120,10 +122,15 @@ export default {
     ]),
     ...mapGetters('wallet', ['balanceInWei']),
     showSurvey() {
+      const isPrivKey = this.identifier === WALLET_TYPES.PRIV_KEY;
+      const userClosed = !this.tempClose;
+      const userAnswered = !this.pkSurveyShown;
+      const shownTwice = this.pkSurveyShownCounter > 2;
       return (
-        this.identifier === WALLET_TYPES.PRIV_KEY &&
-        !this.pkSurveyShown &&
-        this.pkSurveyShownCounter <= 2 &&
+        isPrivKey &&
+        userClosed &&
+        userAnswered &&
+        !shownTwice &&
         this.withinDate
       );
     },
@@ -269,7 +276,7 @@ export default {
     ...mapActions('external', ['setTokenAndEthBalance', 'setNetworkTokens']),
     ...mapActions('popups', ['setPkSurvey', 'shownPkSurveyCounter']),
     closeSurveyModal() {
-      this.setPkSurvey();
+      this.tempClose = true;
       this.trackSurvey('Closed');
     },
     openSurvey() {

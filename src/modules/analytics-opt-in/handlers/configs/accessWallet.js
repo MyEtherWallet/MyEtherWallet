@@ -39,5 +39,9 @@ export default {
   HW_COOL_WALLET_CONNECTED: 'HWCoolWalletConnected',
   HW_BITBOX02_CONNECTED: 'HWBitBox02Connected',
   HW_KEEPKEY_CONNECTED: 'HWKeepKeyConnected',
-  ACCESS_FAILED: 'Failed'
+  ACCESS_FAILED: 'Failed',
+  PRIV_KEY_TERMS: 'PrivateKeyTermsAccepted',
+  PRIV_INVISIBLE_BOX: 'PrivateKeyInvisibleBox',
+  SOFTWARE_FAILED: 'SoftwareFailed',
+  HW_FAILED: 'HWFailed'
 };

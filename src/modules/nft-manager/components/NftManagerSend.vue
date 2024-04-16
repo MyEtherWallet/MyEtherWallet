@@ -23,6 +23,7 @@
       class="redPrimary--text px-6 py-0 py-sm-3 mb-3 mb-sm-0"
       >You do not have enough {{ currencyName }} to send.
       <a
+        v-show="network.type.canBuy"
         target="_blank"
         class="link"
         @click="
