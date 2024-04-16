@@ -1,3 +1,5 @@
+### Release v6.9.6
+
 ### devop
 
 * add network property to all tracking [#4903](https://github.com/MyEtherWallet/MyEtherWallet/pull/4903)
