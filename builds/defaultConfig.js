@@ -75,8 +75,6 @@ const webpackConfig = {
   }
 };
 
-const transpileDependencies = ['@ensdomains/address-encoder'];
-
 const transpilers = config => {
   // GraphQL Loader
   config.module
@@ -194,6 +192,7 @@ const transpilers = config => {
 };
 
 const transpileDependencies = [
+  '@ensdomains/address-encoder',
   '@myetherwallet/eth2-keystore',
   '@enkryptcom/swap',
   'web3-eth',
