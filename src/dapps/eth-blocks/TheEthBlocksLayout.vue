@@ -41,7 +41,7 @@ export default {
   computed: {
     ...mapState('wallet', ['web3']),
     ...mapState('ethBlocksTxs', ['cart']),
-    ...mapGetters('global', ['network', 'isTestNetwork']),
+    ...mapGetters('global', ['network']),
     ...mapGetters('ethBlocksTxs', ['getAllEthBlocksTxs']),
 
     /**

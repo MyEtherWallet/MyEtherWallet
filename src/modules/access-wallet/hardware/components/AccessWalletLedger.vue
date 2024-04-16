@@ -78,7 +78,7 @@
   </div>
 </template>
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 
 export default {
   name: 'AccessWalletLedger',
@@ -116,12 +116,9 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('wallet', ['getLedgerApp', 'initialLoad']),
+    ...mapState('wallet', ['ledgerApp']),
     isRecovery() {
       return this.ledgerApp?.value?.includes('Recovery');
-    },
-    ledgerApp() {
-      return this.getLedgerApp;
     },
     isMobile() {
       return this.$vuetify.breakpoint.width < 576;

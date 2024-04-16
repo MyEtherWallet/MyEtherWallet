@@ -210,7 +210,7 @@ export default {
     ...mapState('wallet', ['address']),
     ...mapState('ethBlocksTxs', ['cart']),
     ...mapGetters('external', ['fiatValue']),
-    ...mapGetters('global', ['network', 'isTestNetwork', 'getFiatValue']),
+    ...mapGetters('global', ['network', 'getFiatValue']),
     isReady() {
       return !isEmpty(this.blockHandler) && !this.isLoading;
     },

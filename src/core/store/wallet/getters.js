@@ -39,14 +39,6 @@ const tokensList = function (state, getters, rootState, rootGetters) {
     : [];
 };
 
-const initialLoad = function (state) {
-  return state.loadingWalletInfo;
-};
-
-const getLedgerApp = function (state) {
-  return state.ledgerApp;
-};
-
 const hasGasPriceOption = function (state) {
   return (
     state.identifier === WALLET_TYPES.WEB3_WALLET ||
@@ -61,7 +53,5 @@ export default {
   balanceInWei,
   totalOwnedDomains,
   tokensList,
-  initialLoad,
-  getLedgerApp,
   hasGasPriceOption
 };

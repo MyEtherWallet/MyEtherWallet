@@ -88,7 +88,7 @@ export default {
   data: () => ({ showPopup: false }),
   computed: {
     ...mapGetters('wallet', ['tokensList']),
-    ...mapState('wallet', ['initialLoad']),
+    ...mapState('wallet', ['loadingWalletInfo']),
     ...mapGetters('external', ['totalTokenFiatValue']),
     ...mapGetters('global', ['getFiatValue', 'network']),
     canBuy() {
@@ -115,7 +115,7 @@ export default {
       return this.tokenCount - this.tokens.length;
     },
     showTokens() {
-      return !this.initialLoad;
+      return !this.loadingWalletInfo;
     },
     getText() {
       if (this.showTokens) {

@@ -165,7 +165,7 @@ export default {
     /**
      * STORE GETTERS
      */
-    ...mapGetters('global', ['network', 'isTestNetwork']),
+    ...mapGetters('global', ['network']),
     ...mapGetters('ethBlocksTxs', ['getAllEthBlocksTxs']),
 
     /**

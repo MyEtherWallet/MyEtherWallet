@@ -40,7 +40,7 @@
                   :value="tokenInValue"
                   :persistent-hint="true"
                   :error-messages="amountErrorMessage"
-                  :disabled="initialLoad"
+                  :disabled="loadingWalletInfo"
                   :buy-more-str="
                     amountErrorMessage === errorMsgs.amountExceedsEthBalance ||
                     amountErrorMessage === errorMsgs.amountEthIsTooLow
@@ -412,7 +412,13 @@ export default {
   },
   computed: {
     ...mapState('swap', ['prefetched', 'swapTokens']),
-    ...mapState('wallet', ['web3', 'address', 'balance', 'identifier']),
+    ...mapState('wallet', [
+      'web3',
+      'address',
+      'balance',
+      'identifier',
+      'loadingWalletInfo'
+    ]),
     ...mapState('global', ['gasPriceType']),
     ...mapState('external', ['coinGeckoTokens']),
     ...mapGetters('global', [
@@ -424,7 +430,6 @@ export default {
     ...mapGetters('wallet', [
       'balanceInETH',
       'tokensList',
-      'initialLoad',
       'balanceInWei',
       'hasGasPriceOption'
     ]),
@@ -831,7 +836,7 @@ export default {
      * @returns BigNumber of the available balance for the From Token
      */
     availableBalance() {
-      if (!this.initialLoad && this.fromTokenType?.name) {
+      if (!this.loadingWalletInfo && this.fromTokenType?.name) {
         const hasBalance = this.tokensList.find(
           token =>
             token.contract.toLowerCase() ===
@@ -862,7 +867,11 @@ export default {
      * Used to show error messages for the amount input component
      */
     amountErrorMessage() {
-      if (!this.initialLoad && !this.isLoading && this.fromTokenType?.name) {
+      if (
+        !this.loadingWalletInfo &&
+        !this.isLoading &&
+        this.fromTokenType?.name
+      ) {
         /* Balance is <= 0*/
         if (this.availableBalance.lte(0)) {
           return this.isFromTokenMain
@@ -1427,7 +1436,7 @@ export default {
        * before calling the providers
        */
       this.belowMinError = false;
-      if (this.isLoading || this.initialLoad) return;
+      if (this.isLoading || this.loadingWalletInfo) return;
       const val = value ? value : 0;
       this.tokenInValue = BigNumber(val).toFixed();
       // Check if (in amount) is larger than (available balance)

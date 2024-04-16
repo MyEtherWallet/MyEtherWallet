@@ -155,7 +155,6 @@ export default {
     ...mapState('wallet', ['web3', 'address', 'balance']),
     ...mapGetters('global', [
       'network',
-      'isTestNetwork',
       'gasPrice',
       'gasPriceByType',
       'getFiatValue'

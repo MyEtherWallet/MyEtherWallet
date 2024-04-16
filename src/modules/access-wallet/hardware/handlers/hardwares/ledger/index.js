@@ -54,7 +54,7 @@ class ledgerWallet {
     this.transport = bluetooth
       ? await getLedgerXTransport()
       : await getLedgerTransport();
-    const ledgerApp = store.getters['wallet/getLedgerApp'];
+    const ledgerApp = store.state['wallet/ledgerApp'];
     try {
       this.openedApp = (await getAppAndVersion(this.transport)).name;
       if (bluetooth && this.openedApp !== ledgerApp.name)

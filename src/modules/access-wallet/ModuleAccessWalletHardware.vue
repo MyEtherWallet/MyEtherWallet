@@ -362,8 +362,7 @@ export default {
   },
   computed: {
     ...mapGetters('global', ['Networks', 'network']),
-    ...mapGetters('wallet', ['getLedgerApp']),
-    ...mapState('wallet', ['identifier', 'ledgerBLE']),
+    ...mapState('wallet', ['identifier', 'ledgerBLE', 'ledgerApp']),
     buttons() {
       return [
         {
@@ -420,9 +419,9 @@ export default {
      * Returns the correct network icon
      */
     icon() {
-      if (this.getLedgerApp !== null) {
+      if (this.ledgerApp !== null) {
         const found = appPaths.find(item => {
-          return item.network.name_long === this.getLedgerApp.name;
+          return item.network.name_long === this.ledgerApp.name;
         });
         return found ? found.network.icon : appPaths[0].network.icon;
       }
@@ -549,9 +548,9 @@ export default {
     paths() {
       const newArr = [];
       if (this.walletType === WALLET_TYPES.LEDGER) {
-        if (this.getLedgerApp !== null) {
+        if (this.ledgerApp !== null) {
           const found = appPaths.find(item => {
-            return item.network.name_long === this.getLedgerApp.name;
+            return item.network.name_long === this.ledgerApp.name;
           });
           const path = found ? found.paths : appPaths[0].paths;
           return path.map(item => {
@@ -802,7 +801,7 @@ export default {
           : this.selectedPath
         : this.paths[0].value;
       this.wallets[this.walletType]
-        .create(path, this.ledgerBluetooth, this.getLedgerApp)
+        .create(path, this.ledgerBluetooth, this.ledgerApp)
         .then(_hwWallet => {
           try {
             this.loaded = true;
