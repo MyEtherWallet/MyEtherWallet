@@ -1,6 +1,6 @@
-import Vue from 'vue';
+// import Vue from 'vue';
 // import Vuex from 'vuex';
-import { PiniaVuePlugin, createPinia, defineStore } from 'pinia';
+import { defineStore } from 'pinia';
 import globalModule from './global';
 import popups from './popups';
 import wallet from './wallet';
@@ -10,11 +10,9 @@ import swap from './swap';
 import custom from './custom';
 import addressBook from './addressBook';
 import article from './article';
-import Configs from './configs';
-import LocalStore from 'store';
+// import Configs from './configs';
+// import LocalStore from 'store';
 import { dappStore } from '@/dapps/dappsStore';
-
-Vue.use(PiniaVuePlugin);
 
 const stores = {
   global: globalModule,
@@ -31,12 +29,22 @@ const stores = {
 
 const piniaStores = {};
 Object.keys(stores).forEach(item => {
-  piniaStores[item] = defineStore(item, {
-    state: () => stores[item].state,
-    getters: stores[item].getters,
-    actions: stores[item].actions,
-    mutations: stores[item].mutations
-  });
+  const piniaObj = {};
+  if (stores[item].state) {
+    piniaObj.state = () => {
+      return stores[item].state;
+    };
+  }
+  if (stores[item].getters) {
+    piniaObj.getters = stores[item].getters;
+  }
+  if (stores[item].actions) {
+    piniaObj.actions = stores[item].actions;
+  }
+  if (stores[item].mutations) {
+    piniaObj.mutations = stores[item].mutations;
+  }
+  piniaStores[item] = defineStore(item, piniaObj);
 });
 
 // const store = new createPinia.Store({
@@ -54,12 +62,12 @@ Object.keys(stores).forEach(item => {
 //   }
 // });
 
-store.subscribe((mutation, state) => {
-  const modules = Object.keys(state);
-  modules.forEach(m => {
-    if (mutation.type.startsWith(m) && state[m].localStore) {
-      LocalStore.set(Configs.LOCAL_STORAGE_KEYS[m], state[m]);
-    }
-  });
-});
-export default store;
+// store.subscribe((mutation, state) => {
+//   const modules = Object.keys(state);
+//   modules.forEach(m => {
+//     if (mutation.type.startsWith(m) && state[m].localStore) {
+//       LocalStore.set(Configs.LOCAL_STORAGE_KEYS[m], state[m]);
+//     }
+//   });
+// });
+export default piniaStores;

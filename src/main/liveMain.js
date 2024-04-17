@@ -29,8 +29,15 @@ Router.prototype.originalPush = originalPush;
 Router.prototype.originalReplace = originalReplace;
 
 import router from '@/core/router';
-import store from '@/core/store';
-import Vuex from 'vuex';
+
+import {
+  global as useGlobalStore,
+  custom as useCustomStore,
+  notifications as useNotificationsStore,
+  addressBook as useAddressBookStore,
+  articles as useArticlesStore,
+  popups as usePopupsStore
+} from '@/core/store/index.js';
 
 import LottieAnimation from '@/core/directives/lottie';
 import lokalise from '@/core/filters/lokalise';
@@ -42,6 +49,9 @@ import apolloProvider from './apolloProvider';
 import i18n from './i18n';
 import * as locStore from 'store';
 import VueLazyLoad from 'vue-lazyload';
+import { PiniaVuePlugin, createPinia } from 'pinia';
+
+const pinia = createPinia();
 
 // Directives
 Vue.directive('lottie', LottieAnimation);
@@ -58,7 +68,7 @@ Vue.use(VueSocialSharing);
 
 //Router
 Vue.use(Router);
-Vue.use(Vuex);
+Vue.use(PiniaVuePlugin);
 Vue.config.productionTip = false;
 
 // setup amplitude
@@ -93,7 +103,7 @@ new Vue({
   el: '#app',
   i18n,
   router,
-  store,
+  pinia,
   apolloProvider,
   vuetify,
   beforeCreate() {
@@ -105,15 +115,15 @@ new Vue({
     if (locStore.get('mew-testing') === undefined) {
       locStore.set('mew-testing', false);
     }
-    this.$store.commit('custom/INIT_STORE');
-    this.$store.commit('global/INIT_STORE');
-    this.$store.commit('notifications/INIT_STORE');
-    this.$store.commit('addressBook/INIT_STORE');
-    this.$store.commit('article/INIT_STORE');
-    this.$store.commit('popups/INIT_STORE');
-    dappStoreBeforeCreate(this.$store);
+    const customStore = useCustomStore();
+    const globalStore = useGlobalStore();
+    const notificationsStore = useNotificationsStore();
+    const addressBookStore = useAddressBookStore();
+    const articleStore = useArticlesStore();
+    const popupsStore = usePopupsStore();
+    dappStoreBeforeCreate();
 
-    this.$amplitude.setOptOut(!this.$store.state.popups.consentToTrack);
+    this.$amplitude.setOptOut(!popupsStore.consentToTrack);
   },
   render: h => h(app)
 });
