@@ -1,7 +1,7 @@
 <template>
   <div class="mew-component--advertise-with-us pb-md-15">
     <div class="desktop-content d-none d-lg-block expandHeader">
-      <v-container class="banner-content-container pt-16 mt-13">
+      <v-container class="banner-content-container pt-16">
         <div
           :class="[
             $vuetify.breakpoint.mdAndDown ? 'mew-subtitle' : 'mew-title',
