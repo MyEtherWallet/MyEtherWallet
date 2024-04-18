@@ -191,7 +191,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['web3', 'address']),
+    ...mapState('wallet', ['web3', 'address', 'identifier']),
     ...mapGetters('global', ['network']),
     ...mapGetters('article', ['getArticle']),
     /**
@@ -301,7 +301,8 @@ export default {
         this.web3,
         this.network,
         this.address,
-        this.trackDapp
+        this.trackDapp,
+        this.identifier
       );
     }
   },

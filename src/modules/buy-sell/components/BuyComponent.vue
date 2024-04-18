@@ -436,13 +436,6 @@ export default {
         return foundLimit ? BigNumber(foundLimit.limit.min) : BigNumber(30);
       }
       return BigNumber(30);
-    },
-    hideSimplex() {
-      return (
-        this.selectedCryptoName === 'USDC' ||
-        this.selectedCryptoName === 'USDT' ||
-        this.selectedCryptoName === 'DAI'
-      );
     }
   },
   watch: {
@@ -606,7 +599,6 @@ export default {
     },
     getSimplexQuote() {
       if (
-        this.hideSimplex ||
         !this.actualValidAddress ||
         isEmpty(this.amount) ||
         this.min.gt(this.amount) ||

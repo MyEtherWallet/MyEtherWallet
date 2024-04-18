@@ -26,7 +26,8 @@ const exportObj = {
       msTileImage: 'icons/msapplication-icon-144x144.png'
     }
   },
-  chainWebpack: config.transpilers
+  chainWebpack: config.transpilers,
+  transpileDependencies: config.transpileDependencies
 };
 
 module.exports = exportObj;

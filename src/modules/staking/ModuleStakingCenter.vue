@@ -51,17 +51,23 @@
         >
           <v-row
             no-gutters
-            class="pa-6 staking-item border-radius--5px elevation-2"
+            class="pa-3 pa-sm-6 staking-item border-radius--5px elevation-2"
           >
-            <v-col cols="2">
+            <v-col
+              cols="3"
+              sm="2"
+              :class="$vuetify.breakpoint.smAndUp ? '' : 'align-content-center'"
+            >
               <img
                 :src="dapp.icon"
                 width="64px"
                 height="64px"
-                class="elevation-2 border-radius--15px"
+                :class="[
+                  $vuetify.breakpoint.smAndUp ? 'border-radius--15px' : ''
+                ]"
               />
             </v-col>
-            <v-col cols="10">
+            <v-col cols="9" sm="10">
               <div class="mew-body font-weight-bold">
                 {{ dapp.title }}
                 <v-icon
@@ -124,7 +130,7 @@ export default {
   },
   computed: {
     ...mapGetters('global', ['network']),
-    ...mapState('wallet', ['web3', 'address']),
+    ...mapState('wallet', ['web3', 'address', 'identifier']),
     dapps() {
       const staking = [];
       if (
@@ -173,7 +179,8 @@ export default {
         this.web3,
         this.network,
         this.address,
-        this.trackDapp
+        this.trackDapp,
+        this.identifier
       );
     }
   },

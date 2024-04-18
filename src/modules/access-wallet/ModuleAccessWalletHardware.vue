@@ -666,6 +666,9 @@ export default {
       if (!bluetooth) return (this.bluetooth = false);
       this.bluetooth = await bluetooth.getAvailability();
     } catch (e) {
+      this.trackAccessWalletAmplitude(ACCESS_WALLET.HW_FAILED, {
+        error: e.message
+      });
       Toast(e, {}, ERROR);
     }
   },
@@ -809,6 +812,9 @@ export default {
             if (this.onBitbox2) {
               this.hwWalletInstance = _hwWallet;
               if (!this.hwWalletInstance) {
+                this.trackAccessWalletAmplitude(ACCESS_WALLET.HW_FAILED, {
+                  error: 'bitboxInstanceError'
+                });
                 this.wallets[this.walletType].create.errorHandler(
                   'bitboxInstanceError'
                 );
@@ -820,6 +826,9 @@ export default {
                   this.nextStep();
                 })
                 .catch(e => {
+                  this.trackAccessWalletAmplitude(ACCESS_WALLET.HW_FAILED, {
+                    error: e.message
+                  });
                   this.wallets[this.walletType]?.create.errorHandler(e);
                   if (e.message === 'Error: Pairing rejected') {
                     this.reset();
@@ -829,10 +838,16 @@ export default {
               this.hwWalletInstance = _hwWallet;
             }
           } catch (err) {
+            this.trackAccessWalletAmplitude(ACCESS_WALLET.HW_FAILED, {
+              error: err.message
+            });
             this.wallets[this.walletType].create.errorHandler(err);
           }
         })
         .catch(err => {
+          this.trackAccessWalletAmplitude(ACCESS_WALLET.HW_FAILED, {
+            error: err.message
+          });
           if (this.onLedger || this.onLedgerX) this.step--;
           if (this.wallets[this.walletType]) {
             this.wallets[this.walletType].create.errorHandler(err);
@@ -853,6 +868,9 @@ export default {
           this.step++;
         })
         .catch(e => {
+          this.trackAccessWalletAmplitude(ACCESS_WALLET.HW_FAILED, {
+            error: e.message
+          });
           if (this.wallets[this.walletType]) {
             if (
               e.message === 'Wrong Password' &&

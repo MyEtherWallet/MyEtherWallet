@@ -1,4 +1,25 @@
-### Release v6.9.5-hotfix.1
+### Release v6.9.6
+
+### devop
+
+* add network property to all tracking [#4903](https://github.com/MyEtherWallet/MyEtherWallet/pull/4903)
+* add new software and hardware failed events [#4904](https://github.com/MyEtherWallet/MyEtherWallet/pull/4904)
+
+### feat
+
+* enable stablecoins for simplex [#4906](https://github.com/MyEtherWallet/MyEtherWallet/pull/4906)
+
+### fix
+
+* reset gas price after network change [#4891](https://github.com/MyEtherWallet/MyEtherWallet/pull/4891)
+* hide networks in nft manager thats not supported [#4899](https://github.com/MyEtherWallet/MyEtherWallet/pull/4899)
+* keep data when user closes/rejects transaction [#4900](https://github.com/MyEtherWallet/MyEtherWallet/pull/4900)
+* fix mobile layout for staking center [#4901](https://github.com/MyEtherWallet/MyEtherWallet/pull/4901)
+* add version back to footer [#4902](https://github.com/MyEtherWallet/MyEtherWallet/pull/4902)
+* fix ens 3rd step, add amp event, update packages to support sepolia and holesky [#4905](https://github.com/MyEtherWallet/MyEtherWallet/pull/4905)
+* allow forms to be interacted with when ignoring popup [#4907](https://github.com/MyEtherWallet/MyEtherWallet/pull/4907)
+
+### Release v6.9.6
 
 ### devop
 
