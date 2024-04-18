@@ -11,38 +11,38 @@ import getTokenInfo from '@/core/helpers/tokenInfo';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { fromBase } from '../../helpers/unit';
 
-const setCurrency = async function ({ commit }, val) {
+const setCurrency = async function (val) {
   fetch('https://mainnet.mewwallet.dev/v2/prices/exchange-rates')
     .then(res => res.json())
     .then(rates => {
       const currentRate = rates
         ? rates.find(rate => rate.fiat_currency === val)
         : {};
-      commit('SET_CURRENCY_RATE', {
+      this.currencyRate = {
         data: currentRate,
         timestamp: Date.now()
-      });
+      };
     })
     .catch(e => {
-      commit('SET_CURRENCY_RATE', {
+      this.currencyRate = {
         data: {},
         timestamp: Date.now()
-      });
+      };
       Toast(e.message, {}, ERROR);
     });
 };
-const setLastPath = function ({ commit }, val) {
-  commit('SET_LAST_PATH', val);
+const setLastPath = function (val) {
+  this.lastPath = val;
 };
-const setCoinGeckoTokens = function ({ commit }, params) {
-  commit('SET_COIN_GECKO_TOKENS', params);
+const setCoinGeckoTokens = function (params) {
+  this.coinGeckoTokens = params;
 };
 
-const setCoinGeckoNetworkIds = function ({ commit }, params) {
-  commit('SET_COIN_GECKO_NETWORK_IDS', params);
+const setCoinGeckoNetworkIds = function (params) {
+  this.coinGeckoNetworkCurrencies = params;
 };
-const setNetworkTokens = function ({ commit }, params) {
-  commit('SET_NETWORK_TOKENS', params);
+const setNetworkTokens = function (params) {
+  this.networkTokens = params;
 };
 const setTokenAndEthBalance = function ({
   rootGetters,
@@ -220,15 +220,27 @@ const setTokenAndEthBalance = function ({
     });
 };
 
-const storeEIP6963Wallet = function ({ commit }, params) {
-  commit('STORE_EIP6963_WALLET', params);
+const storeEIP6963Wallet = function (detail) {
+  const newArr = this.eip6963Providers;
+  const findInArr = newArr.findIndex(item => {
+    return (
+      detail.info.uuid.toLowerCase() === item.info.uuid.toLowerCase() ||
+      detail.info.name.toLowerCase() === item.info.name.toLowerCase()
+    );
+  });
+  if (findInArr > -1) {
+    newArr[findInArr] = detail;
+  } else {
+    newArr.push(detail);
+  }
+  this.eip6963Providers = newArr;
 };
-const setSelectedEIP6963Provider = function ({ commit }, params) {
-  commit('SET_SELECTED_EIP6963_PROVIDER', params);
+const setSelectedEIP6963Provider = function (provider) {
+  this.selectedEIP6963Provider = provider;
 };
 
-const setSelectedEIP6963Info = function ({ commit }, params) {
-  commit('SET_SELECTED_EIP6963_INFO', params);
+const setSelectedEIP6963Info = function (info) {
+  this.selectedEIP6963Info = info;
 };
 export default {
   setLastPath,

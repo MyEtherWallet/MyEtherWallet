@@ -1,7 +1,7 @@
 import localStore from 'store';
 import Configs from '../configs';
 
-const initStore = function () {
+const initStore = () => {
   if (localStore.get(Configs.LOCAL_STORAGE_KEYS.popups)) {
     const savedStore = localStore.get(Configs.LOCAL_STORAGE_KEYS.popups);
     if (savedStore.stateVersion === Configs.VERSION.popups) {
@@ -10,38 +10,38 @@ const initStore = function () {
   }
 };
 
-const setTrackingConsent = function (val) {
+const setTrackingConsent = val => {
   this.consentToTrack = val;
 };
 
-const neverShowEnkryptLandingPage = function () {
+const neverShowEnkryptLandingPage = () => {
   this.displayedTrackingPopup = true;
 };
 
-const neverShowEnkryptWalletPage = function () {
+const neverShowEnkryptWalletPage = () => {
   this.showedBanner = true;
 };
 
-const showEnkryptWalletSnackbar = function () {
+const showEnkryptWalletSnackbar = () => {
   this.enkryptWalletPopup = false;
   this.enkryptWalletPopupClosed = new Date().getTime();
 };
 
-const closeEnkryptWalletSnackbar = function () {
+const closeEnkryptWalletSnackbar = () => {
   this.enkryptWalletSnackbar = true;
   this.enkryptWalletSnackbarCounter += 1;
 };
 
-const setPkSurvey = function () {
+const setPkSurvey = () => {
   this.enkryptWalletSnackbar = false;
   this.enkryptWalletSnackbarClosed = new Date().getTime();
 };
 
-const shownPkSurveyCounter = function () {
+const shownPkSurveyCounter = () => {
   this.pkSurveyShown = true;
 };
 
-const setShownEu = function () {
+const setShownEu = () => {
   this.shownChoiceEU = true;
 };
 

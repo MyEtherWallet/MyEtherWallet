@@ -1,4 +1,7 @@
+import localStore from 'store';
 import BigNumber from 'bignumber.js';
+
+import Configs from '../configs';
 import { fromBase } from '@/core/helpers/unit';
 import {
   formatFloatingPointValue,
@@ -7,6 +10,15 @@ import {
 import abi from '@/modules/balance/handlers/abiERC20.js';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import { isAddress } from '@/core/helpers/addressUtils.js';
+
+const initStore = () => {
+  if (localStore.get(Configs.LOCAL_STORAGE_KEYS.custom)) {
+    const savedStore = localStore.get(Configs.LOCAL_STORAGE_KEYS.custom);
+    if (savedStore.stateVersion === Configs.VERSION.custom) {
+      this.$state = Object.assign(this.$state, savedStore);
+    }
+  }
+};
 
 const setCustomToken = function ({ rootGetters, commit }, token) {
   commit('SET_CUSTOM_TOKEN', { token, rootGetters });
@@ -76,6 +88,7 @@ const updateCustomTokenBalances = function ({ dispatch, getters, rootState }) {
 };
 
 export default {
+  initStore,
   setAddressBook,
   setCustomToken,
   deleteAll,
