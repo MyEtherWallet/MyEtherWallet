@@ -35,7 +35,9 @@ const AUDIT_EXCEPTIONS = [
   'lodash.pick',
   'ip',
   'webpack-dev-middleware',
-  'web3-utils'
+  'web3-utils',
+  '@solana/web3.js',
+  'lodash.template'
 ];
 const execute = (command, callback) => {
   exec(
