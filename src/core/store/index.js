@@ -41,9 +41,6 @@ Object.keys(stores).forEach(item => {
   if (stores[item].actions) {
     piniaObj.actions = stores[item].actions;
   }
-  if (stores[item].mutations) {
-    piniaObj.mutations = stores[item].mutations;
-  }
   piniaStores[item] = defineStore(item, piniaObj);
 });
 
