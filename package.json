@@ -66,7 +66,7 @@
     "@shapeshiftoss/hdwallet-keepkey-webusb": "1.53.5",
     "@trezor/connect-web": "9.2.2",
     "@unstoppabledomains/resolution": "9.0.0",
-    "@walletconnect/ethereum-provider": "2.11.3",
+    "@walletconnect/ethereum-provider": "2.12.2",
     "@walletconnect/modal": "2.6.2",
     "@web3modal/standalone": "2.4.3",
     "animejs": "3.2.2",
@@ -191,7 +191,7 @@
     "web3-eth-contract": "1.5.0",
     "web3-utils": "1.5.0",
     "webpack": "4.44.2",
-    "webpack-bundle-analyzer": "4.10.1",
+    "webpack-bundle-analyzer": "4.10.2",
     "xss": "1.0.15"
   },
   "engines": {
