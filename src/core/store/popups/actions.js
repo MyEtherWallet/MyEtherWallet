@@ -1,33 +1,48 @@
-const setTrackingConsent = function ({ commit }, val) {
-  commit('SET_TRACKING_CONSENT', val);
+import localStore from 'store';
+import Configs from '../configs';
+
+const initStore = function () {
+  if (localStore.get(Configs.LOCAL_STORAGE_KEYS.popups)) {
+    const savedStore = localStore.get(Configs.LOCAL_STORAGE_KEYS.popups);
+    if (savedStore.stateVersion === Configs.VERSION.popups) {
+      this.$state = Object.assign(this.$state, savedStore);
+    }
+  }
 };
 
-const neverShowEnkryptLandingPage = function ({ commit }) {
-  commit('NEVER_SHOW_LANDING_ENKRYPT_POPUP');
+const setTrackingConsent = function (val) {
+  this.consentToTrack = val;
 };
 
-const neverShowEnkryptWalletPage = function ({ commit }) {
-  commit('NEVER_SHOW_WALLET_ENKRYPT_POPUP');
+const neverShowEnkryptLandingPage = function () {
+  this.displayedTrackingPopup = true;
 };
 
-const showEnkryptWalletSnackbar = function ({ commit }) {
-  commit('SHOW_WALLET_ENKRYPT_SNACKBAR');
+const neverShowEnkryptWalletPage = function () {
+  this.showedBanner = true;
 };
 
-const closeEnkryptWalletSnackbar = function ({ commit }) {
-  commit('CLOSE_WALLET_ENKRYPT_SNACKBAR');
+const showEnkryptWalletSnackbar = function () {
+  this.enkryptWalletPopup = false;
+  this.enkryptWalletPopupClosed = new Date().getTime();
 };
 
-const setPkSurvey = function ({ commit }) {
-  commit('SET_PK_SURVEY');
+const closeEnkryptWalletSnackbar = function () {
+  this.enkryptWalletSnackbar = true;
+  this.enkryptWalletSnackbarCounter += 1;
 };
 
-const shownPkSurveyCounter = function ({ commit }) {
-  commit('SHOWN_PK_SURVEY_COUNTER');
+const setPkSurvey = function () {
+  this.enkryptWalletSnackbar = false;
+  this.enkryptWalletSnackbarClosed = new Date().getTime();
 };
 
-const setShownEu = function ({ commit }) {
-  commit('SET_SHOWN_EU');
+const shownPkSurveyCounter = function () {
+  this.pkSurveyShown = true;
+};
+
+const setShownEu = function () {
+  this.shownChoiceEU = true;
 };
 
 export default {
@@ -38,5 +53,6 @@ export default {
   closeEnkryptWalletSnackbar,
   setPkSurvey,
   shownPkSurveyCounter,
-  setShownEu
+  setShownEu,
+  initStore
 };
