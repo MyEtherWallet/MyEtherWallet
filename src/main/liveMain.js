@@ -121,6 +121,13 @@ new Vue({
     const addressBookStore = useAddressBookStore();
     const articleStore = useArticlesStore();
     const popupsStore = usePopupsStore();
+
+    customStore.initStore();
+    globalStore.initStore();
+    notificationsStore.initStore();
+    addressBookStore.initStore();
+    articleStore.initStore();
+    popupsStore.initStore();
     dappStoreBeforeCreate();
 
     this.$amplitude.setOptOut(!popupsStore.consentToTrack);

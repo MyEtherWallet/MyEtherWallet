@@ -1,4 +1,10 @@
 import BigNumber from 'bignumber.js';
+
+import {
+  global as useGlobalStore,
+  wallet as useWalletStore
+} from '@/core/store/index.js';
+
 import platformList from '@/_generated/platformlist.json';
 import {
   formatFiatValue,
@@ -9,21 +15,23 @@ import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 /**
  * Get Eth Fiat value
  */
-const fiatValue = function (state, getters) {
-  const tokenUSDValue = getters.networkTokenUSDMarket.value;
+const fiatValue = function () {
+  const tokenUSDValue = this.networkTokenUSDMarket.value;
   return new BigNumber(tokenUSDValue);
 };
 
 /**
  * Get Eth Balance Fiat value
  */
-const balanceFiatValue = function (state, getters, rootState, rootGetters) {
-  const balanceInETH = rootGetters['wallet/balanceInETH'];
-  return new BigNumber(balanceInETH).times(getters.fiatValue);
+const balanceFiatValue = function () {
+  const walletStore = useWalletStore();
+  const balanceInETH = walletStore.balanceInETH;
+  return new BigNumber(balanceInETH).times(this.fiatValue);
 };
 
-const totalTokenFiatValue = function (state, getters, rootState, rootGetters) {
-  const tokenList = rootGetters['wallet/tokensList'];
+const totalTokenFiatValue = function () {
+  const walletStore = useWalletStore();
+  const tokenList = walletStore.tokensList;
   if (!tokenList.length) return new BigNumber(0);
   const totalValue = tokenList.reduce((total, currentVal) => {
     const balance =
@@ -41,13 +49,9 @@ const totalTokenFiatValue = function (state, getters, rootState, rootGetters) {
 /**
  * Get main currency market info
  */
-const networkTokenUSDMarket = function (
-  state,
-  getters,
-  rootState,
-  rootGetters
-) {
-  const cgid = rootGetters['global/network'].type.coingeckoID;
+const networkTokenUSDMarket = function (state) {
+  const globalStore = useGlobalStore();
+  const cgid = globalStore.network.type.coingeckoID;
   if (cgid) {
     const token = state.coinGeckoTokens.get(cgid);
     if (token)
@@ -130,53 +134,49 @@ const getCoinGeckoTokenById = state => cgid => {
 /**
  * Get Token info including market data if exists
  */
-const contractToToken =
-  (state, getters, rootState, rootGetters) => contractAddress => {
-    if (!contractAddress) {
-      return null;
-    }
-    contractAddress = contractAddress.toLowerCase();
-    let tokenId = platformList[contractAddress];
-    let cgToken;
-    if (contractAddress === MAIN_TOKEN_ADDRESS) {
-      tokenId = rootGetters['global/network'].type.coingeckoID;
-      cgToken = getters.getCoinGeckoTokenById(tokenId);
-      const networkType = rootGetters['global/network'].type;
-      return Object.assign(cgToken, {
-        name: networkType.currencyName,
-        symbol: networkType.currencyName,
-        subtext: networkType.name_long,
-        value: networkType.name_long,
-        contract: MAIN_TOKEN_ADDRESS,
-        img: cgToken.img !== '' ? cgToken.img : networkType.icon,
-        decimals: 18
-      });
-    }
-    cgToken = getters.getCoinGeckoTokenById(tokenId);
-    const networkToken = state.networkTokens.get(contractAddress);
-    const name = networkToken ? networkToken.name : cgToken.name;
-    const symbol = networkToken ? networkToken.symbol : cgToken.symbol;
-    const img = cgToken.img
-      ? cgToken.img
-      : networkToken
-      ? networkToken.icon
-      : '';
-    const address = networkToken ? networkToken.address : contractAddress;
-    const networkTokenObj = {
-      name: name,
-      symbol: symbol,
-      subtext: name,
-      value: name,
-      contract: address,
-      img: img
-    };
-
-    if (networkToken && networkToken.hasOwnProperty('decimals')) {
-      networkTokenObj['decimals'] = networkToken.decimals;
-    }
-
-    return Object.assign(cgToken, networkTokenObj);
+const contractToToken = state => contractAddress => {
+  const globalStore = useGlobalStore();
+  if (!contractAddress) {
+    return null;
+  }
+  contractAddress = contractAddress.toLowerCase();
+  let tokenId = platformList[contractAddress];
+  let cgToken;
+  if (contractAddress === MAIN_TOKEN_ADDRESS) {
+    tokenId = globalStore.network.type.coingeckoID;
+    cgToken = this.getCoinGeckoTokenById(tokenId);
+    const networkType = globalStore.network.type;
+    return Object.assign(cgToken, {
+      name: networkType.currencyName,
+      symbol: networkType.currencyName,
+      subtext: networkType.name_long,
+      value: networkType.name_long,
+      contract: MAIN_TOKEN_ADDRESS,
+      img: cgToken.img !== '' ? cgToken.img : networkType.icon,
+      decimals: 18
+    });
+  }
+  cgToken = this.getCoinGeckoTokenById(tokenId);
+  const networkToken = state.networkTokens.get(contractAddress);
+  const name = networkToken ? networkToken.name : cgToken.name;
+  const symbol = networkToken ? networkToken.symbol : cgToken.symbol;
+  const img = cgToken.img ? cgToken.img : networkToken ? networkToken.icon : '';
+  const address = networkToken ? networkToken.address : contractAddress;
+  const networkTokenObj = {
+    name: name,
+    symbol: symbol,
+    subtext: name,
+    value: name,
+    contract: address,
+    img: img
   };
+
+  if (networkToken && networkToken.hasOwnProperty('decimals')) {
+    networkTokenObj['decimals'] = networkToken.decimals;
+  }
+
+  return Object.assign(cgToken, networkTokenObj);
+};
 
 export default {
   fiatValue,

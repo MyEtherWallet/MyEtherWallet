@@ -1,4 +1,7 @@
 import { fromWei, toBN } from 'web3-utils';
+
+import { custom as useCustomStore } from '@/core/store/index.js';
+
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 
 const balanceInETH = function (state) {
@@ -15,7 +18,8 @@ const totalOwnedDomains = function (state) {
   return state.ensDomains ? state.ensDomains.length : 0;
 };
 
-const tokensList = function (state, getters, rootState, rootGetters) {
+const tokensList = function (state) {
+  const customStore = useCustomStore();
   const tokens = state.tokens;
   return tokens.length > 0
     ? tokens.map(item => {
@@ -26,7 +30,7 @@ const tokensList = function (state, getters, rootState, rootGetters) {
         }
         // Check if token is in hiddenTokens
         let isHidden = false;
-        const hiddenTokens = rootGetters['custom/hiddenTokens'];
+        const hiddenTokens = customStore.hiddenTokens;
         if (hiddenTokens.length > 0) {
           isHidden =
             hiddenTokens.find(token => {

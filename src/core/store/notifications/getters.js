@@ -1,8 +1,16 @@
+import {
+  wallet as useWalletStore,
+  global as useGlobalStore
+} from '@/core/store/index.js';
+
 import { NOTIFICATION_TYPES } from '@/modules/notifications/handlers/handlerNotification';
 
-const currentNotifications = function (state, _, rootState, rootGetters) {
-  const address = rootState.wallet.address;
-  const currentNetworkType = rootGetters['global/network'].type.name;
+const currentNotifications = function (state) {
+  const walletStore = useWalletStore();
+  const globalStore = useGlobalStore();
+
+  const address = walletStore.address;
+  const currentNetworkType = globalStore.network.type.name;
   const filteredArray = state.notifications.filter(item => {
     if (
       item.from?.toLowerCase() === address?.toLowerCase() &&
@@ -13,9 +21,12 @@ const currentNotifications = function (state, _, rootState, rootGetters) {
   return state.notifications.length > 0 ? filteredArray : [];
 };
 
-const txNotifications = function (state, _, rootState, rootGetters) {
-  const address = rootState.wallet.address;
-  const currentNetworkType = rootGetters['global/network'].type.name;
+const txNotifications = function (state) {
+  const walletStore = useWalletStore();
+  const globalStore = useGlobalStore();
+
+  const address = walletStore.address;
+  const currentNetworkType = globalStore.network.type.name;
   const filteredArray = state.notifications.filter(item => {
     if (
       item.from?.toLowerCase() === address?.toLowerCase() &&
@@ -27,9 +38,12 @@ const txNotifications = function (state, _, rootState, rootGetters) {
   return state.notifications.length > 0 ? filteredArray : [];
 };
 
-const swapNotifications = function (state, _, rootState, rootGetters) {
-  const address = rootState.wallet.address;
-  const currentNetworkType = rootGetters['global/network'].type.name;
+const swapNotifications = function (state) {
+  const walletStore = useWalletStore();
+  const globalStore = useGlobalStore();
+
+  const address = walletStore.address;
+  const currentNetworkType = globalStore.network.type.name;
   const filteredArray = state.notifications.filter(item => {
     if (
       item.from?.toLowerCase() === address?.toLowerCase() &&

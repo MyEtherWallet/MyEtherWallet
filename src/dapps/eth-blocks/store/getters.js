@@ -1,9 +1,11 @@
+import { global as useGlobalStore } from '@/core/store/index.js';
 /**
  * Returns all transactions in the state
  * @returns {Array}
  */
-const getAllEthBlocksTxs = function (state, _, rootState, rootGetters) {
-  const currentNetworkType = rootGetters['global/network'].type.name;
+const getAllEthBlocksTxs = function (state) {
+  const globalStore = useGlobalStore();
+  const currentNetworkType = globalStore.network.type.name;
   const filteredArray = state.ethBlocksTxs.filter(item => {
     if (item.network === currentNetworkType) return item;
   });

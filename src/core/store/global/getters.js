@@ -1,3 +1,11 @@
+import { toBN } from 'web3-utils';
+import { isEmpty } from 'lodash';
+
+import {
+  wallet as useWalletStore,
+  external as useExternalStore
+} from '@/core/store/index.js';
+
 import nodeList from '@/utils/networks';
 import { ETH, BSC, MATIC } from '@/utils/networks/types';
 import {
@@ -6,8 +14,6 @@ import {
   getBaseFeeBasedOnType,
   gasPriceTypes
 } from '@/core/helpers/gasPriceHelper';
-import { toBN } from 'web3-utils';
-import { isEmpty } from 'lodash';
 import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 
@@ -33,9 +39,9 @@ const network = function (state) {
   return network;
 };
 const gasPriceByType =
-  (state, getters) =>
+  state =>
   (type = 'economy') => {
-    if (!getters.isEIP1559SupportedNetwork) {
+    if (!this.isEIP1559SupportedNetwork) {
       return getGasBasedOnType(state.baseGasPrice, type);
     }
     const priorityFee = getPriorityFeeBasedOnType(
@@ -48,48 +54,51 @@ const gasPriceByType =
     );
     return baseFee.add(priorityFee).toString();
   };
-const gasPrice = function (state, getters) {
-  if (!getters.isEIP1559SupportedNetwork) {
+const gasPrice = function (state) {
+  if (!this.isEIP1559SupportedNetwork) {
     return getGasBasedOnType(state.baseGasPrice, state.gasPriceType);
   }
-  return getters.gasFeeMarketInfo.maxFeePerGas.toString();
+  return this.gasFeeMarketInfo.maxFeePerGas.toString();
 };
 
-const isEthNetwork = function (state, getters) {
-  return getters.network.type.name === ETH.name;
+const isEthNetwork = function () {
+  return this.network.type.name === ETH.name;
 };
-const isTestNetwork = function (state, getters) {
-  return getters.network.type.isTestNetwork;
+const isTestNetwork = function () {
+  return this.network.type.isTestNetwork;
 };
 
-const localContracts = function (state, getters) {
-  return state.localContracts[getters.network.type.name]
-    ? state.localContracts[getters.network.type.name]
+const localContracts = function () {
+  return this.localContracts[this.network.type.name]
+    ? this.localContracts[this.network.type.name]
     : [];
 };
 
-const hasSwap = function (state, getters, rootState) {
-  const name = getters.network.type.name;
-  const device = rootState.wallet.instance?.identifier;
+const hasSwap = function () {
+  const walletStore = useWalletStore();
+  const name = this.network.type.name;
+  const device = walletStore.instance?.identifier;
 
   if (device === WALLET_TYPES.COOL_WALLET_S) return false;
   return name === ETH.name || name === BSC.name || name === MATIC.name;
 };
 
-const swapLink = function (state, getters, rootState) {
-  const hasAddress = rootState.wallet.address;
+const swapLink = function () {
+  const walletStore = useWalletStore();
+  const hasAddress = walletStore.address;
   const link = 'https://ccswap.myetherwallet.com/#/';
   return hasAddress ? `${link}?to=${hasAddress}` : link;
 };
-const currencyConfig = (state, getters, rootState) => {
+const currencyConfig = state => {
+  const externalStore = useExternalStore();
   const currency = state.preferredCurrency;
-  const { currencyRate } = rootState.external;
+  const { currencyRate } = externalStore;
   const rate = currencyRate.data ? currencyRate.data.exchange_rate : 1;
   return { currency, rate };
 };
 
 const getFiatValue =
-  (state, getters) =>
+  () =>
   /**
    * @param {Number|String} value
    * @param {Object} options
@@ -98,8 +107,8 @@ const getFiatValue =
    */
   (value, options = {}) => {
     const config = options.doNotLocalize
-      ? { currency: getters.currencyConfig.currency }
-      : getters.currencyConfig;
+      ? { currency: this.currencyConfig.currency }
+      : this.currencyConfig;
     return formatFiatValue(value, config).value;
   };
 
