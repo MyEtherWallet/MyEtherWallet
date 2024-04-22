@@ -7,9 +7,9 @@ const Url =
   'https://raw.githubusercontent.com/MyEtherWallet/dynamic-data/main/articles.json';
 
 const initStore = () => {
-  if (localStore.get(Configs.LOCAL_STORAGE_KEYS.custom)) {
-    const savedStore = localStore.get(Configs.LOCAL_STORAGE_KEYS.custom);
-    if (savedStore.stateVersion === Configs.VERSION.custom) {
+  if (localStore.get(Configs.LOCAL_STORAGE_KEYS.article)) {
+    const savedStore = localStore.get(Configs.LOCAL_STORAGE_KEYS.article);
+    if (savedStore.stateVersion === Configs.VERSION.article) {
       this.$state = Object.assign(this.$state, savedStore);
     }
   }

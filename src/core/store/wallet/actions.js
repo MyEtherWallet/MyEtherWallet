@@ -1,19 +1,25 @@
 import url from 'url';
-import web3 from 'web3';
+import Web3 from 'web3';
 import { formatters } from 'web3-core-helpers';
+
+import {
+  external as useExternalStore,
+  global as useGlobalStore
+} from '@/core/store/index.js';
 
 import MEWProvider from '@/utils/web3-provider';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import EventNames from '@/utils/web3-provider/events';
 import { EventBus } from '@/core/plugins/eventBus';
 
-const removeWallet = function ({ commit, state, dispatch }) {
+const removeWallet = function () {
+  const externalStore = useExternalStore();
   if (
-    state.identifier === WALLET_TYPES.WALLET_CONNECT ||
-    state.identifier === WALLET_TYPES.MEW_WALLET ||
-    state.identifier === WALLET_TYPES.WALLET_LINK
+    this.identifier === WALLET_TYPES.WALLET_CONNECT ||
+    this.identifier === WALLET_TYPES.MEW_WALLET ||
+    this.identifier === WALLET_TYPES.WALLET_LINK
   ) {
-    const connection = state.instance.getConnection();
+    const connection = this.instance.getConnection();
     if (connection) {
       if (connection.disconnect) {
         connection.disconnect();
@@ -23,53 +29,60 @@ const removeWallet = function ({ commit, state, dispatch }) {
       }
     }
   }
-  commit('REMOVE_WALLET');
-  dispatch('external/setSelectedEIP6963Provider', null, { root: true });
-  dispatch('external/setSelectedEIP6963Info', null, { root: true });
+  this.removeWallet();
+  externalStore.setSelectedEIP6963Provider(null);
+  externalStore.setSelectedEIP6963Info(null);
 };
 
-const setWallet = function ({ commit, dispatch }, params) {
-  commit('SET_WALLET', params[0]);
-  dispatch('setWeb3Instance', params[1]);
-  dispatch('external/setSelectedEIP6963Provider', params[1], { root: true });
+const setWallet = function (params) {
+  const externalStore = useExternalStore();
+  const wallet = params[0];
+
+  this.instance = wallet;
+  this.address = wallet.getAddressString();
+  this.isHardware = wallet.hasOwnProperty('isHardware')
+    ? wallet.isHardware
+    : false;
+  this.identifier = wallet.identifier;
+  if (!wallet.hasOwnProperty('isHardware')) {
+    this.nickname = wallet.getNickname();
+  }
+  this.setWeb3Instance(params[1]);
+  externalStore.setSelectedEIP6963Provider(params[1]);
 };
-const setTokens = function ({ commit }, params) {
-  commit('SET_TOKENS', params);
+const setTokens = function (params) {
+  this.tokens = params;
 };
 
-const setAccountBalance = function ({ commit }, balance) {
-  commit('SET_BALANCE', balance);
+const setAccountBalance = function (balance) {
+  this.balance = balance;
 };
 
-const setLedgerBluetooth = function ({ commit }, ledgerBLE) {
-  commit('SET_LEDGER_BLUETOOTH', ledgerBLE);
+const setLedgerBluetooth = function (ledgerBLE) {
+  this.ledgerBLE = ledgerBLE;
 };
 
-const setWeb3Instance = function (
-  { commit, state, rootState, rootGetters },
-  provider
-) {
-  const hostUrl = rootState.global.currentNetwork.url
-    ? url.parse(rootState.global.currentNetwork.url)
-    : rootGetters['global/Networks']['ETH'][0];
+const setWeb3Instance = function (provider) {
+  const globalStore = useGlobalStore();
+  const hostUrl = globalStore.currentNetwork.url
+    ? url.parse(globalStore.currentNetwork.url)
+    : globalStore.Networks['ETH'][0];
   const options = {};
   // eslint-disable-next-line
   const parsedUrl = `${hostUrl.protocol}//${hostUrl.host}${
-    rootState.global.currentNetwork.port
-      ? ':' + rootState.global.currentNetwork.port
-      : ''
+    globalStore.currentNetwork.port ? ':' + globalStore.currentNetwork.port : ''
   }${hostUrl.pathname ? hostUrl.pathname : ''}`;
-  rootState.global.currentNetwork.username !== '' &&
-  rootState.global.currentNetwork.password !== ''
+  globalStore.currentNetwork.username !== '' &&
+  globalStore.currentNetwork.password !== ''
     ? (options['headers'] = {
         authorization: `Basic: ${btoa(
-          rootState.global.currentNetwork.username +
+          globalStore.currentNetwork.username +
             ':' +
-            rootState.global.currentNetwork.password
+            globalStore.currentNetwork.password
         )}`
       })
     : {};
-  const web3Instance = new web3(
+  const web3Instance = new Web3(
     new MEWProvider(provider ? provider : parsedUrl, options)
   );
   web3Instance.eth.transactionConfirmationBlocks = 1;
@@ -78,10 +91,10 @@ const setWeb3Instance = function (
     // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve, reject) => {
       const nonce = await (arr[0].nonce === undefined
-        ? web3Instance.eth.getTransactionCount(state.address)
+        ? web3Instance.eth.getTransactionCount(this.address)
         : arr[0].nonce);
       for (let i = 0; i < arr.length; i++) {
-        const gasPrice = rootGetters['global/gasPrice'];
+        const gasPrice = globalStore.gasPrice;
 
         const localTx = {
           to: arr[i].to,
@@ -92,11 +105,11 @@ const setWeb3Instance = function (
         const gas = await (arr[i].gas === undefined
           ? web3Instance.eth.estimateGas(localTx)
           : arr[i].gas);
-        arr[i].nonce = web3.utils.toBN(nonce).addn(i).toString();
+        arr[i].nonce = web3Instance.utils.toBN(nonce).addn(i).toString();
         arr[i].gas = gas;
         arr[i].gasLimit = gas;
         arr[i].chainId = !arr[i].chainId
-          ? rootGetters['global/network'].type.chainID
+          ? globalStore.network.type.chainID
           : arr[i].chainId;
         arr[i].gasPrice =
           arr[i].gasPrice === undefined ? gasPrice : arr[i].gasPrice;
@@ -108,7 +121,7 @@ const setWeb3Instance = function (
         }
         if (promises && promises.rejected)
           reject(new Error('User rejected transaction'));
-        if (state.identifier === WALLET_TYPES.WEB3_WALLET) {
+        if (this.identifier === WALLET_TYPES.WEB3_WALLET) {
           Promise.all(promises)
             .then(values => {
               resolve(values);
@@ -120,30 +133,30 @@ const setWeb3Instance = function (
         EventNames.SHOW_BATCH_TX_MODAL,
         arr,
         batchSignCallback,
-        state.isHardware
+        this.isHardware
       );
     });
   };
-  commit('SET_WEB3_INSTANCE', web3Instance);
+  this.web3 = web3Instance;
 };
 
-const setOwnedDomains = function ({ commit }, ownedDomains) {
-  commit('SET_OWNED_DOMAINS', ownedDomains);
+const setOwnedDomains = function (ownedDomains) {
+  this.ensDomains = ownedDomains;
 };
 
-const setBlockNumber = function ({ commit }, val) {
-  commit('SET_BLOCK_NUMBER', val);
+const setBlockNumber = function (val) {
+  this.blockNumber = val;
 };
 
-const setOfflineApp = function ({ commit }, val) {
-  commit('SET_OFFLINE_APP', val);
+const setOfflineApp = function (val) {
+  this.isOfflineApp = val;
 };
 
-const setLedgerApp = function ({ commit }, val) {
-  commit('SET_LEDGER_APP', val);
+const setLedgerApp = function (val) {
+  this.ledgerApp = val;
 };
-const setSwapRates = function ({ commit }, val) {
-  commit('SET_SWAP_RATES', val);
+const setSwapRates = function (val) {
+  this.swapRates = val;
 };
 
 export default {

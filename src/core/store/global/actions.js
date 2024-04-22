@@ -1,79 +1,94 @@
+import {
+  external as useExternalStore,
+  swap as useSwapStore,
+  wallet as useWalletStore
+} from '@/core/store/index.js';
+
 import matchNetwork from '@/core/helpers/matchNetwork';
 import { toBNSafe } from '@/core/helpers/numberFormatHelper';
 
-const setOnlineStatus = function ({ commit, dispatch }, val) {
-  if (val) dispatch('wallet/setWeb3Instance', null, { root: true });
-  commit('SET_ONLINE_STATUS', val);
+const setOnlineStatus = function (val) {
+  const walletStore = useWalletStore();
+  if (val) walletStore.setWeb3Instance(null);
+  this.online = val;
 };
 
-const setLocale = function ({ commit }, val) {
-  commit('SET_LOCALE', val);
+const setLocale = function (val) {
+  this.locale = val;
 };
-const setPreferredCurrency = function ({ commit }, val) {
-  commit('SET_PREFERRED_CURRENCY', val);
+const setPreferredCurrency = function (val) {
+  this.preferredCurrency = val;
 };
 
-const updateGasPrice = function ({ rootState, dispatch, getters, state }) {
-  const web3 = rootState.wallet.web3;
-  const { gasPriceMultiplier } = getters.network.type;
-  if (!getters.isEIP1559SupportedNetwork) {
+const updateGasPrice = function () {
+  const walletStore = useWalletStore();
+  const web3 = walletStore.web3;
+  const { gasPriceMultiplier } = this.network.type;
+  if (!this.isEIP1559SupportedNetwork) {
     return web3.eth.getGasPrice().then(res => {
       const modifiedGasPrice = toBNSafe(res).muln(gasPriceMultiplier);
-      return dispatch('setGasPrice', modifiedGasPrice.toString());
+      return this.setGasPrice(modifiedGasPrice.toString());
     });
   }
   return web3.eth.getGasPrice().then(gasPrice => {
     const modGas = toBNSafe(gasPrice).muln(gasPriceMultiplier);
     const priorityFee = toBNSafe(modGas).sub(
-      toBNSafe(state.eip1559.baseFeePerGas)
+      toBNSafe(this.eip1559.baseFeePerGas)
     );
-    return dispatch('setMaxPriorityFeePerGas', priorityFee);
+    return this.setMaxPriorityFeePerGas(priorityFee);
   });
 };
-const setGasPrice = function ({ commit }, gasPrice) {
-  commit('SET_GAS_PRICE', gasPrice);
+const setGasPrice = function (gasPrice) {
+  this.baseGasPrice = gasPrice;
 };
 
-const setGasPriceType = function ({ commit }, type) {
-  commit('SET_GAS_PRICE_TYPE', type);
+const setGasPriceType = function (type) {
+  this.gasPriceType = type;
 };
-const setNetwork = async function (
-  { commit, dispatch, rootState },
-  { network, walletType }
-) {
+const setNetwork = async function ({ network, walletType }) {
+  const externalStore = useExternalStore();
+  const swapStore = useSwapStore();
   const chainID = network?.type?.chainID;
   const matched = await matchNetwork(
     chainID,
     walletType,
-    rootState.external.selectedEIP6963Provider
+    externalStore.selectedEIP6963Provider
   );
   if (matched) {
-    commit('SET_NETWORK', network);
-    dispatch('swap/resetPrefetch', null, { root: true });
+    const _netObj = Object.assign({}, network);
+    _netObj.type = {
+      name: network.type.name
+    };
+    this.currentNetwork = _netObj;
+    swapStore.resetPrefetch(null);
     return;
   }
   throw new Error('Network not found');
 };
-const setValidNetwork = function ({ commit }, valid) {
-  commit('SET_VALID_NETWORK', valid);
+const setValidNetwork = function (valid) {
+  this.validNetwork = valid;
 };
-const addLocalContract = function ({ commit }, localContract) {
-  commit('ADD_LOCAL_CONTRACT', localContract);
+const addLocalContract = function (localContract) {
+  if (!this.localContracts[this.currentNetwork.type.name])
+    this.localContracts[this.currentNetwork.type.name] = [];
+  this.localContracts[this.currentNetwork.type.name].push(localContract);
 };
-const setImportedState = function ({ commit }, stateObj) {
+const setImportedState = function (stateObj) {
   stateObj['localStore'] = true;
-  commit('SET_IMPORTED_STATE', stateObj);
+  Object.keys(stateObj).forEach(item => {
+    this.$state[item] = stateObj[item];
+  });
 };
-const setMaxPriorityFeePerGas = function ({ commit }, valBN) {
-  commit('SET_MAX_PRIORITY_FEE_PER_GAS', valBN);
-};
-
-const setBaseFeePerGas = function ({ commit }, valBN) {
-  commit('SET_BASE_FEE_PER_GAS', valBN);
+const setMaxPriorityFeePerGas = function (valBN) {
+  this.eip1559.maxPriorityFeePerGas = valBN.toString();
 };
 
-const setDarkMode = function ({ commit }, val) {
-  commit('SET_DARK_MODE', val);
+const setBaseFeePerGas = function (valBN) {
+  this.eip1559.baseFeePerGas = valBN.toString();
+};
+
+const setDarkMode = function (val) {
+  this.darkMode = val;
 };
 
 export default {

@@ -1,7 +1,22 @@
-const setShowHasClaimable = function ({ commit }, val) {
-  commit('SET_SHOW_HAS_CLAIMABLE', val);
+import localStore from 'store';
+import Configs from './configs';
+
+const initStore = function () {
+  if (localStore.get(Configs.LOCAL_STORAGE_KEYS.coinbaseStaking)) {
+    const savedStore = localStore.get(
+      Configs.LOCAL_STORAGE_KEYS.coinbaseStaking
+    );
+    if (savedStore.stateVersion === Configs.VERSION.coinbaseStaking) {
+      this.$state = Object.assign(this.$state, savedStore);
+    }
+  }
+};
+
+const setShowHasClaimable = function (val) {
+  this.showHasClaimable = val;
 };
 
 export default {
+  initStore,
   setShowHasClaimable
 };
