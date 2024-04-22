@@ -158,6 +158,12 @@
           off-icon="mdi-alert-circle"
           @change="setConsent"
         />
+        <p class="version-style">
+          <a
+            :href="`https://github.com/MyEtherWallet/MyEtherWallet/releases/tag/v${packageVersion}`"
+            >Version: v{{ packageVersion }}</a
+          >
+        </p>
       </div>
     </div>
   </div>
@@ -185,7 +191,8 @@ export default {
     return {
       isFeaturesOpen: false,
       isResourcesOpen: false,
-      isProductsOpen: false
+      isProductsOpen: false,
+      packageVersion: VERSION
     };
   },
   computed: {
@@ -398,6 +405,28 @@ export default {
     &:hover {
       opacity: 0.5;
     }
+  }
+}
+
+.version-style {
+  color: @black;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  margin: 0 0 10px 0;
+  opacity: 0.65;
+
+  a {
+    color: @black;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  &:last-child {
+    margin: 0;
   }
 }
 </style>

@@ -164,6 +164,7 @@
               >.
             </p>
             <v-switch
+              class="d-none d-md-block"
               :input-value="consentToTrack"
               inset
               :label="`Data Tracking ${consentToTrack ? 'On' : 'Off'}`"
@@ -244,7 +245,7 @@
             </div>
           </div>
         </div>
-        <div class="col-12 d-none d-md-block footer__copyright">
+        <div class="col-12 footer__copyright d-none d-md-block">
           <p>
             <a
               :href="`https://github.com/MyEtherWallet/MyEtherWallet/releases/tag/v${packageVersion}`"

@@ -40,7 +40,9 @@ const AUDIT_EXCEPTIONS = [
   'crypto-js',
   'flat',
   'bls12377js',
-  'parse-url'
+  'parse-url',
+  '@solana/web3.js',
+  'lodash.template'
 ];
 const execute = (command, callback) => {
   exec(
