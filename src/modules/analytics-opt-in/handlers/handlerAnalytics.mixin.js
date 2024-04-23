@@ -10,7 +10,6 @@ export default {
   computed: {
     ...mapState('popups', ['consentToTrack']),
     ...mapState('wallet', ['isOfflineApp']),
-    ...mapState('wallet', ['isOfflineApp']),
     ...mapGetters('global', ['network']),
     shouldDisplayTrackingPopup() {
       if (this.isOfflineApp) return false;

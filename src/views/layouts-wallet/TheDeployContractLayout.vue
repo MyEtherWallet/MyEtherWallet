@@ -1,27 +1,28 @@
 <template>
-  <the-wrapper-wallet>
+  <TheWrapperWallet>
     <template #leftColItem1>
-      <module-contract-deploy />
+      <ModuleContractDeploy />
     </template>
     <template v-if="isEthNetwork" #rightColItem1>
-      <module-swap-rates />
+      <ModuleSwapRates />
     </template>
-  </the-wrapper-wallet>
+  </TheWrapperWallet>
 </template>
 
-<script>
-import { mapGetters } from 'vuex';
-export default {
-  name: 'TheDeployContractLayout',
-  components: {
-    TheWrapperWallet: () =>
-      import('@/views/components-wallet/TheWrapperWallet'),
-    ModuleSwapRates: () => import('@/modules/swap/ModuleSwapRates'),
-    ModuleContractDeploy: () =>
-      import('@/modules/contract/ModuleContractDeploy')
-  },
-  computed: {
-    ...mapGetters('global', ['isEthNetwork'])
-  }
-};
+<script setup>
+import { defineAsyncComponent } from 'vue';
+
+import { global as useGlobalStore } from '@/core/store/index.js';
+
+const TheWrapperWallet = defineAsyncComponent(() =>
+  import('@/views/components-wallet/TheWrapperWallet')
+);
+const ModuleSwapRates = defineAsyncComponent(() =>
+  import('@/modules/swap/ModuleSwapRates')
+);
+const ModuleContractDeploy = defineAsyncComponent(() =>
+  import('@/modules/contract/ModuleContractDeploy')
+);
+
+const { isEthNetwork } = useGlobalStore();
 </script>

@@ -24,14 +24,12 @@ const fiatValue = function () {
  * Get Eth Balance Fiat value
  */
 const balanceFiatValue = function () {
-  const walletStore = useWalletStore();
-  const balanceInETH = walletStore.balanceInETH;
+  const { balanceInETH } = useWalletStore();
   return new BigNumber(balanceInETH).times(this.fiatValue);
 };
 
 const totalTokenFiatValue = function () {
-  const walletStore = useWalletStore();
-  const tokenList = walletStore.tokensList;
+  const { tokenList } = useWalletStore();
   if (!tokenList.length) return new BigNumber(0);
   const totalValue = tokenList.reduce((total, currentVal) => {
     const balance =
@@ -50,8 +48,8 @@ const totalTokenFiatValue = function () {
  * Get main currency market info
  */
 const networkTokenUSDMarket = function (state) {
-  const globalStore = useGlobalStore();
-  const cgid = globalStore.network.type.coingeckoID;
+  const { network } = useGlobalStore();
+  const cgid = network.type.coingeckoID;
   if (cgid) {
     const token = state.coinGeckoTokens.get(cgid);
     if (token)
@@ -135,7 +133,7 @@ const getCoinGeckoTokenById = state => cgid => {
  * Get Token info including market data if exists
  */
 const contractToToken = state => contractAddress => {
-  const globalStore = useGlobalStore();
+  const { network } = useGlobalStore();
   if (!contractAddress) {
     return null;
   }
@@ -143,9 +141,9 @@ const contractToToken = state => contractAddress => {
   let tokenId = platformList[contractAddress];
   let cgToken;
   if (contractAddress === MAIN_TOKEN_ADDRESS) {
-    tokenId = globalStore.network.type.coingeckoID;
+    tokenId = network.type.coingeckoID;
     cgToken = this.getCoinGeckoTokenById(tokenId);
-    const networkType = globalStore.network.type;
+    const networkType = network.type;
     return Object.assign(cgToken, {
       name: networkType.currencyName,
       symbol: networkType.currencyName,

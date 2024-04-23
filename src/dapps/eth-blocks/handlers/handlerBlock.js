@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { toBN } from 'web3-utils';
+
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import handleError from '@/modules/confirmation/handlers/errorHandler';
 import {
@@ -7,9 +9,9 @@ import {
   URL_POST_TRANSFER,
   IMAGE_PROXY
 } from './configs';
-import { toBN } from 'web3-utils';
 const NO_OWNER = '0x0000000000000000000000000000000000000000';
-import store from '@/core/store';
+
+import { ethBlocksTxs as useEthBlocksTxsStore } from '@/core/store/index.js';
 
 export default class HandlerBlock {
   constructor(_web3, _network, _blockNumber, _currAdr) {
@@ -153,6 +155,7 @@ export default class HandlerBlock {
   }
 
   mintBlock(_balanceinWei, _gasprice) {
+    const { addEthBlockTx } = useEthBlocksTxsStore();
     if (!this.hasOwner && this.owner) {
       this.isMinting = true;
       const payload = {
@@ -181,7 +184,7 @@ export default class HandlerBlock {
                   hash: hash,
                   network: this.network.type.name
                 };
-                store.dispatch('ethBlocksTxs/addEthBlockTx', _block);
+                addEthBlockTx(_block);
               })
               .catch(err => {
                 this.isMinting = false;
@@ -211,6 +214,7 @@ export default class HandlerBlock {
    * @void
    */
   transferBlock(toAdr, _balanceinWei, _gasprice) {
+    const { addEthBlockTx } = useEthBlocksTxsStore();
     if (this.owner === this.currAdr) {
       this.isSending = true;
       const payload = {
@@ -239,7 +243,7 @@ export default class HandlerBlock {
                   hash: hash,
                   network: this.network.type.name
                 };
-                store.dispatch('ethBlocksTxs/addEthBlockTx', _block);
+                addEthBlockTx(_block);
               })
               .catch(err => {
                 this.isSending = false;

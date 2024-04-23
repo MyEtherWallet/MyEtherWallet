@@ -7,7 +7,7 @@
     <!-- Mew Banner - props: bannerText, bannerImg -->
     <!-- TODO: Add block header to mew banner component -->
     <!-- ===================================================================================== -->
-    <the-dapp-block-header
+    <TheDappBlockHeader
       v-if="!isNewHeader"
       :text-obj="bannerTextObj"
       :banner-img="bannerImg"
@@ -22,12 +22,12 @@
       <template #right>
         <slot name="HeaderRight" />
       </template>
-    </the-dapp-block-header>
+    </TheDappBlockHeader>
 
     <!-- ===================================================================================== -->
     <!-- NER DAPP HEADER: -->
     <!-- ===================================================================================== -->
-    <the-dapp-header
+    <TheDappHeader
       v-else
       :dapp-name="bannerText.title"
       :dapp-text="bannerText.subtext"
@@ -148,140 +148,123 @@
   </white-sheet>
 </template>
 
-<script>
-import { mapGetters } from 'vuex';
+<script setup>
+import {
+  defineProps,
+  ref,
+  computed,
+  onMounted,
+  defineAsyncComponent
+} from 'vue';
 
 import bannerImage from '@/assets/images/backgrounds/bg-dapps-center.jpg';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
-export default {
-  components: {
-    TheDappBlockHeader: () => import('./TheDappBlockHeader'),
-    TheDappHeader: () => import('./TheDappHeader')
-  },
-  props: {
-    // OLD
-    hasExitBtn: {
-      default: false,
-      type: Boolean
-    },
-    // OLD
-    bannerImg: {
-      default: bannerImage,
-      type: String
-    },
-    /**
-     * NEW Banner Text:
-     * bannerText: {
-     *     title: 'ETH Blocks', //
-     *     subtext: 'Mint stunning QR art-pieces based on your favorite blocks.'
-     * }
-     */
-    bannerText: {
-      default: () => {},
-      type: Object
-    },
-    /**
-     * NEW TAB ITEMS OBJECT SHOULD LOOK LIKE THIS:
-     * tabItems:
-     *   [{
-     *      name: 'Mint a new block',                      // String that will be displayed as a tab menu
-     *      route: { name: ETH_BLOCKS_ROUTE.CORE.NAME },   // Route name of the child
-     *    }]
-     */
-    tabItems: {
-      default: () => [],
-      type: Array
-    },
-    // USED ALSE IN NEW TAB MENU
-    activeTab: {
-      default: 0,
-      type: Number
-    },
-    // OLD
-    titleIcon: {
-      default: '',
-      type: String
-    },
-    // OLD
-    noBackBtn: {
-      default: false,
-      type: Boolean
-    },
-    // OLD
-    topStrip: {
-      default: false,
-      type: Boolean
-    },
-    // OLD
-    onTab: {
-      default: () => {},
-      type: Function
-    },
-    // OLD
-    hideDefaultTabHeader: {
-      default: false,
-      type: Boolean
-    },
-    /** NEW ITEMS FOR UPDATED WRAPPER
-     * NOTE: REFACTOR NEEDED FOR OTHER DAPPS: you can remove all older menu and items
-     */
-    isNewHeader: {
-      default: false,
-      type: Boolean
-    },
-    dappImg: {
-      default: '',
-      type: String
-    },
-    validNetworks: {
-      default: () => [],
-      type: Array
-    },
-    externalContents: {
-      default: false,
-      type: Boolean
-    }
-  },
-  data() {
-    return {
-      bannerTextObj: {}
-    };
-  },
-  computed: {
-    ...mapGetters('global', ['network']),
-    isValidNetwork() {
-      const chainID = this.network.type.chainID;
-      const validChain = this.validNetworks.filter(
-        item => item.chainID === chainID
-      );
-      return validChain.length > 0;
-    },
-    networkAlertText() {
-      const names = this.validNetworks.map(item => item.name_long).join(', ');
-      const netString = this.validNetworks.length > 1 ? 'networks' : 'network';
-      return `Please select ${names} ${netString} to use this Dapp.`;
-    }
-  },
 
-  mounted() {
-    this.bannerTextObj = this.bannerText;
-    if (this.hasExitBtn) {
-      this.bannerTextObj.exit = this.$t('common.exit-dapp');
-    }
+const TheDappBlockHeader = defineAsyncComponent(() =>
+  import('./TheDappBlockHeader.vue')
+);
+const TheDappHeader = defineAsyncComponent(() => import('./TheDappHeader.vue'));
+
+import { global as useGlobalStore } from '@/core/store/index.js';
+
+const { network } = useGlobalStore();
+
+const props = defineProps({
+  hasExitBtn: {
+    default: false,
+    type: Boolean
   },
-  methods: {
-    onClose() {
-      this.$router.push({
-        name: 'Dapps'
-      });
-    },
-    routeToTab(route) {
-      try {
-        this.$router.push(route);
-      } catch (e) {
-        Toast(e, {}, ERROR);
-      }
-    }
+  bannerImg: {
+    default: bannerImage,
+    type: String
+  },
+  bannerText: {
+    default: () => {},
+    type: Object
+  },
+  tabItems: {
+    default: () => [],
+    type: Array
+  },
+  activeTab: {
+    default: 0,
+    type: Number
+  },
+  titleIcon: {
+    default: '',
+    type: String
+  },
+  noBackBtn: {
+    default: false,
+    type: Boolean
+  },
+  topStrip: {
+    default: false,
+    type: Boolean
+  },
+  onTab: {
+    default: () => {},
+    type: Function
+  },
+  hideDefaultTabHeader: {
+    default: false,
+    type: Boolean
+  },
+  isNewHeader: {
+    default: false,
+    type: Boolean
+  },
+  dappImg: {
+    default: '',
+    type: String
+  },
+  validNetworks: {
+    default: () => [],
+    type: Array
+  },
+  externalContents: {
+    default: false,
+    type: Boolean
+  }
+});
+
+// Data
+const bannerTextObj = ref({});
+
+// computed
+const isValidNetwork = computed(() => {
+  const chainID = network.type.chainID;
+  const validChain = props.validNetworks.filter(
+    item => item.chainID === chainID
+  );
+  return validChain.length > 0;
+});
+
+const networkAlertText = computed(() => {
+  const names = props.validNetworks.map(item => item.name_long).join(', ');
+  const netString = props.validNetworks.length > 1 ? 'networks' : 'network';
+  return `Please select ${names} ${netString} to use this Dapp.`;
+});
+
+onMounted(() => {
+  bannerTextObj.value = props.bannerText;
+  if (props.hasExitBtn) {
+    bannerTextObj.value = 'Exit DApp';
+  }
+});
+
+// methods
+const onClose = () => {
+  this.$router.push({
+    name: 'Dapps'
+  });
+};
+
+const routeToTab = route => {
+  try {
+    this.$router.push(route);
+  } catch (e) {
+    Toast(e, {}, ERROR);
   }
 };
 </script>

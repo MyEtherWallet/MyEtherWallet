@@ -8,8 +8,8 @@ import matchNetwork from '@/core/helpers/matchNetwork';
 import { toBNSafe } from '@/core/helpers/numberFormatHelper';
 
 const setOnlineStatus = function (val) {
-  const walletStore = useWalletStore();
-  if (val) walletStore.setWeb3Instance(null);
+  const { setWeb3Instance } = useWalletStore();
+  if (val) setWeb3Instance(null);
   this.online = val;
 };
 
@@ -21,8 +21,7 @@ const setPreferredCurrency = function (val) {
 };
 
 const updateGasPrice = function () {
-  const walletStore = useWalletStore();
-  const web3 = walletStore.web3;
+  const { web3 } = useWalletStore();
   const { gasPriceMultiplier } = this.network.type;
   if (!this.isEIP1559SupportedNetwork) {
     return web3.eth.getGasPrice().then(res => {
@@ -46,13 +45,13 @@ const setGasPriceType = function (type) {
   this.gasPriceType = type;
 };
 const setNetwork = async function ({ network, walletType }) {
-  const externalStore = useExternalStore();
-  const swapStore = useSwapStore();
+  const { selectedEIP6963Provider } = useExternalStore();
+  const { resetPrefetch } = useSwapStore();
   const chainID = network?.type?.chainID;
   const matched = await matchNetwork(
     chainID,
     walletType,
-    externalStore.selectedEIP6963Provider
+    selectedEIP6963Provider
   );
   if (matched) {
     const _netObj = Object.assign({}, network);
@@ -60,7 +59,7 @@ const setNetwork = async function ({ network, walletType }) {
       name: network.type.name
     };
     this.currentNetwork = _netObj;
-    swapStore.resetPrefetch(null);
+    resetPrefetch(null);
     return;
   }
   throw new Error('Network not found');

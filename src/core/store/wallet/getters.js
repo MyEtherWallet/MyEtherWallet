@@ -19,7 +19,7 @@ const totalOwnedDomains = function (state) {
 };
 
 const tokensList = function (state) {
-  const customStore = useCustomStore();
+  const { hiddenTokens } = useCustomStore();
   const tokens = state.tokens;
   return tokens.length > 0
     ? tokens.map(item => {
@@ -30,7 +30,6 @@ const tokensList = function (state) {
         }
         // Check if token is in hiddenTokens
         let isHidden = false;
-        const hiddenTokens = customStore.hiddenTokens;
         if (hiddenTokens.length > 0) {
           isHidden =
             hiddenTokens.find(token => {

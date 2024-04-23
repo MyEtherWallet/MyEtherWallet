@@ -6,11 +6,10 @@ import {
 import { NOTIFICATION_TYPES } from '@/modules/notifications/handlers/handlerNotification';
 
 const currentNotifications = function (state) {
-  const walletStore = useWalletStore();
-  const globalStore = useGlobalStore();
+  const { address } = useWalletStore();
+  const { network } = useGlobalStore();
 
-  const address = walletStore.address;
-  const currentNetworkType = globalStore.network.type.name;
+  const currentNetworkType = network.type.name;
   const filteredArray = state.notifications.filter(item => {
     if (
       item.from?.toLowerCase() === address?.toLowerCase() &&
@@ -22,11 +21,10 @@ const currentNotifications = function (state) {
 };
 
 const txNotifications = function (state) {
-  const walletStore = useWalletStore();
-  const globalStore = useGlobalStore();
+  const { address } = useWalletStore();
+  const { network } = useGlobalStore();
 
-  const address = walletStore.address;
-  const currentNetworkType = globalStore.network.type.name;
+  const currentNetworkType = network.type.name;
   const filteredArray = state.notifications.filter(item => {
     if (
       item.from?.toLowerCase() === address?.toLowerCase() &&
@@ -39,11 +37,10 @@ const txNotifications = function (state) {
 };
 
 const swapNotifications = function (state) {
-  const walletStore = useWalletStore();
-  const globalStore = useGlobalStore();
+  const { address } = useWalletStore();
+  const { network } = useGlobalStore();
 
-  const address = walletStore.address;
-  const currentNetworkType = globalStore.network.type.name;
+  const currentNetworkType = network.type.name;
   const filteredArray = state.notifications.filter(item => {
     if (
       item.from?.toLowerCase() === address?.toLowerCase() &&

@@ -1,5 +1,3 @@
-// import Vue from 'vue';
-// import Vuex from 'vuex';
 import { defineStore } from 'pinia';
 import globalModule from './global';
 import popups from './popups';
@@ -44,21 +42,7 @@ Object.keys(stores).forEach(item => {
   piniaStores[item] = defineStore(item, piniaObj);
 });
 
-// const store = new createPinia.Store({
-//   modules: {
-//     global: globalModule,
-//     popups: popups,
-//     wallet: wallet,
-//     external: externalData,
-//     notifications: notifications,
-//     swap: swap,
-//     custom: custom,
-//     addressBook: addressBook,
-//     article: article,
-//     ...dappStore
-//   }
-// });
-
+// implement later
 // store.subscribe((mutation, state) => {
 //   const modules = Object.keys(state);
 //   modules.forEach(m => {

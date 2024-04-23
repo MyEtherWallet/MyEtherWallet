@@ -13,7 +13,8 @@ import EventNames from '@/utils/web3-provider/events';
 import { EventBus } from '@/core/plugins/eventBus';
 
 const removeWallet = function () {
-  const externalStore = useExternalStore();
+  const { setSelectedEIP6963Info, setSelectedEIP6963Provider } =
+    useExternalStore();
   if (
     this.identifier === WALLET_TYPES.WALLET_CONNECT ||
     this.identifier === WALLET_TYPES.MEW_WALLET ||
@@ -30,12 +31,12 @@ const removeWallet = function () {
     }
   }
   this.removeWallet();
-  externalStore.setSelectedEIP6963Provider(null);
-  externalStore.setSelectedEIP6963Info(null);
+  setSelectedEIP6963Provider(null);
+  setSelectedEIP6963Info(null);
 };
 
 const setWallet = function (params) {
-  const externalStore = useExternalStore();
+  const { setSelectedEIP6963Provider } = useExternalStore();
   const wallet = params[0];
 
   this.instance = wallet;
@@ -48,7 +49,7 @@ const setWallet = function (params) {
     this.nickname = wallet.getNickname();
   }
   this.setWeb3Instance(params[1]);
-  externalStore.setSelectedEIP6963Provider(params[1]);
+  setSelectedEIP6963Provider(params[1]);
 };
 const setTokens = function (params) {
   this.tokens = params;
@@ -63,22 +64,19 @@ const setLedgerBluetooth = function (ledgerBLE) {
 };
 
 const setWeb3Instance = function (provider) {
-  const globalStore = useGlobalStore();
-  const hostUrl = globalStore.currentNetwork.url
-    ? url.parse(globalStore.currentNetwork.url)
-    : globalStore.Networks['ETH'][0];
+  const { currentNetwork, Networks, gasPrice, network } = useGlobalStore();
+  const hostUrl = currentNetwork.url
+    ? url.parse(currentNetwork.url)
+    : Networks['ETH'][0];
   const options = {};
   // eslint-disable-next-line
   const parsedUrl = `${hostUrl.protocol}//${hostUrl.host}${
-    globalStore.currentNetwork.port ? ':' + globalStore.currentNetwork.port : ''
+    currentNetwork.port ? ':' + currentNetwork.port : ''
   }${hostUrl.pathname ? hostUrl.pathname : ''}`;
-  globalStore.currentNetwork.username !== '' &&
-  globalStore.currentNetwork.password !== ''
+  currentNetwork.username !== '' && currentNetwork.password !== ''
     ? (options['headers'] = {
         authorization: `Basic: ${btoa(
-          globalStore.currentNetwork.username +
-            ':' +
-            globalStore.currentNetwork.password
+          currentNetwork.username + ':' + currentNetwork.password
         )}`
       })
     : {};
@@ -94,8 +92,6 @@ const setWeb3Instance = function (provider) {
         ? web3Instance.eth.getTransactionCount(this.address)
         : arr[0].nonce);
       for (let i = 0; i < arr.length; i++) {
-        const gasPrice = globalStore.gasPrice;
-
         const localTx = {
           to: arr[i].to,
           data: arr[i].data,
@@ -109,7 +105,7 @@ const setWeb3Instance = function (provider) {
         arr[i].gas = gas;
         arr[i].gasLimit = gas;
         arr[i].chainId = !arr[i].chainId
-          ? globalStore.network.type.chainID
+          ? network.type.chainID
           : arr[i].chainId;
         arr[i].gasPrice =
           arr[i].gasPrice === undefined ? gasPrice : arr[i].gasPrice;
@@ -144,6 +140,10 @@ const setOwnedDomains = function (ownedDomains) {
   this.ensDomains = ownedDomains;
 };
 
+const setLoadingWalletInfo = function (isLoading) {
+  this.loadingWalletInfo = isLoading;
+};
+
 const setBlockNumber = function (val) {
   this.blockNumber = val;
 };
@@ -170,5 +170,6 @@ export default {
   setTokens,
   setOfflineApp,
   setLedgerApp,
-  setSwapRates
+  setSwapRates,
+  setLoadingWalletInfo
 };

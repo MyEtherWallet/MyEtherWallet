@@ -4,8 +4,8 @@ import { global as useGlobalStore } from '@/core/store/index.js';
  * @returns {Array}
  */
 const getAllEthBlocksTxs = function (state) {
-  const globalStore = useGlobalStore();
-  const currentNetworkType = globalStore.network.type.name;
+  const { network } = useGlobalStore();
+  const currentNetworkType = network.type.name;
   const filteredArray = state.ethBlocksTxs.filter(item => {
     if (item.network === currentNetworkType) return item;
   });

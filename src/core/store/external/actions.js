@@ -1,15 +1,22 @@
-import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
-import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import BigNumber from 'bignumber.js';
+import { toBN } from 'web3-utils';
+
+import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import {
   formatFiatValue,
   formatFloatingPointValue,
   formatIntegerValue
 } from '@/core/helpers/numberFormatHelper';
-import { toBN } from 'web3-utils';
 import getTokenInfo from '@/core/helpers/tokenInfo';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { fromBase } from '../../helpers/unit';
+import {
+  global as useGlobalStore,
+  custom as useCustomStore,
+  external as useExternalStore,
+  wallet as useWalletStore
+} from '@/core/store/index.js';
 
 const setCurrency = async function (val) {
   fetch('https://mainnet.mewwallet.dev/v2/prices/exchange-rates')
@@ -44,17 +51,22 @@ const setCoinGeckoNetworkIds = function (params) {
 const setNetworkTokens = function (params) {
   this.networkTokens = params;
 };
-const setTokenAndEthBalance = function ({
-  rootGetters,
-  getters,
-  dispatch,
-  commit,
-  rootState
-}) {
-  commit('wallet/SET_LOADING_WALLET_INFO', true, { root: true });
-  const network = rootGetters['global/network'];
+const setTokenAndEthBalance = function () {
+  const {
+    web3,
+    setTokens,
+    setAccountBalance,
+    setLoadingWalletInfo,
+    identifier,
+    setWeb3Instance
+  } = useWalletStore();
+  const { updateCustomTokenBalances } = useCustomStore();
+  const { network } = useGlobalStore();
+  const { networkTokens } = useExternalStore();
+
+  setLoadingWalletInfo(true);
   const isTokenBalanceApiSupported = network.type.balanceApi !== '';
-  const address = rootState.wallet.address;
+  const address = address;
 
   const _formatBalance = (balance, decimals) => {
     let n = new BigNumber(balance);
@@ -67,54 +79,44 @@ const setTokenAndEthBalance = function ({
   };
 
   const _getBalance = () => {
-    rootState.wallet.web3.eth.getBalance(address).then(res => {
-      const token = getters.contractToToken(MAIN_TOKEN_ADDRESS);
+    web3.eth.getBalance(address).then(res => {
+      const token = this.contractToToken(MAIN_TOKEN_ADDRESS);
       const usdBalance = new BigNumber(fromBase(res, token.decimals))
         .times(token.price)
         .toString();
-      dispatch(
-        'wallet/setTokens',
-        [
-          Object.assign(
-            {
-              balance: res,
-              balancef: _formatBalance(res, token.decimals).value,
-              usdBalance: usdBalance,
-              usdBalancef: formatFiatValue(usdBalance).value
-            },
-            token
-          )
-        ],
-        { root: true }
-      )
-        .then(() =>
-          dispatch('wallet/setAccountBalance', toBN(res), { root: true })
+      setTokens([
+        Object.assign(
+          {
+            balance: res,
+            balancef: _formatBalance(res, token.decimals).value,
+            usdBalance: usdBalance,
+            usdBalancef: formatFiatValue(usdBalance).value
+          },
+          token
         )
+      ])
+        .then(() => setAccountBalance(toBN(res)))
         .then(() => {
-          // dispatch can't be blank
-          dispatch('custom/updateCustomTokenBalances', false, { root: true });
-          commit('wallet/SET_LOADING_WALLET_INFO', false, { root: true });
+          updateCustomTokenBalances();
+          setLoadingWalletInfo(false);
         });
     });
   };
 
   if (!isTokenBalanceApiSupported) {
-    const currentProvider = rootState.wallet.web3.eth.currentProvider;
+    const currentProvider = web3.eth.currentProvider;
     // Prevent the 'Invalid return values' error
     // when accessing new network on MetaMask
     if (
-      rootState.wallet.identifier === WALLET_TYPES.WEB3_WALLET &&
+      identifier === WALLET_TYPES.WEB3_WALLET &&
       network.type.chainID !== parseInt(currentProvider.chainId)
     ) {
       return;
     }
-    if (
-      rootState.wallet.identifier !== WALLET_TYPES.WEB3_WALLET &&
-      currentProvider.connection
-    ) {
+    if (identifier !== WALLET_TYPES.WEB3_WALLET && currentProvider.connection) {
       const currentProviderUrl = currentProvider.connection.url;
       if (network.url !== currentProviderUrl) {
-        dispatch('wallet/setWeb3Instance', undefined, { root: true });
+        setWeb3Instance(undefined);
       }
     }
     _getBalance();
@@ -150,12 +152,12 @@ const setTokenAndEthBalance = function ({
       const promises = [];
       hasPreTokens.forEach(t => {
         if (!t.contract) return;
-        const token = getters.contractToToken(t.contract);
+        const token = this.contractToToken(t.contract);
         if (!token) {
           promises.push(
-            getTokenInfo(t.contract, rootState.wallet.web3).then(info => {
+            getTokenInfo(t.contract, web3).then(info => {
               if (info) {
-                rootState.external.networkTokens.set({
+                networkTokens.set({
                   name: info.name,
                   symbol: info.symbol,
                   decimals: info.decimals,
@@ -173,7 +175,7 @@ const setTokenAndEthBalance = function ({
     .then(tokens => {
       const formattedList = [];
       tokens.forEach(t => {
-        const token = getters.contractToToken(t.contract);
+        const token = this.contractToToken(t.contract);
         if (t.contract === MAIN_TOKEN_ADDRESS) {
           mainTokenBalance = toBN(t.balance);
         }
@@ -201,15 +203,10 @@ const setTokenAndEthBalance = function ({
           ? 1
           : 0;
       });
-      dispatch('wallet/setTokens', formattedList, { root: true }).then(() =>
-        dispatch('wallet/setAccountBalance', mainTokenBalance, {
-          root: true
-        }).then(() => {
-          // dispatch can't be blank
-          dispatch('custom/updateCustomTokenBalances', false, {
-            root: true
-          }).catch(e => Toast(e, {}, ERROR));
-          commit('wallet/SET_LOADING_WALLET_INFO', false, { root: true });
+      setTokens(formattedList).then(() =>
+        setAccountBalance(mainTokenBalance).then(() => {
+          updateCustomTokenBalances().catch(e => Toast(e, {}, ERROR));
+          setLoadingWalletInfo(false);
         })
       );
     })

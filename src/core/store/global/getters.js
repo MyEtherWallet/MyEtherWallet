@@ -75,24 +75,22 @@ const localContracts = function () {
 };
 
 const hasSwap = function () {
-  const walletStore = useWalletStore();
+  const { instance } = useWalletStore();
   const name = this.network.type.name;
-  const device = walletStore.instance?.identifier;
+  const device = instance?.identifier;
 
   if (device === WALLET_TYPES.COOL_WALLET_S) return false;
   return name === ETH.name || name === BSC.name || name === MATIC.name;
 };
 
 const swapLink = function () {
-  const walletStore = useWalletStore();
-  const hasAddress = walletStore.address;
+  const { address } = useWalletStore();
   const link = 'https://ccswap.myetherwallet.com/#/';
-  return hasAddress ? `${link}?to=${hasAddress}` : link;
+  return address ? `${link}?to=${address}` : link;
 };
 const currencyConfig = state => {
-  const externalStore = useExternalStore();
+  const { currencyRate } = useExternalStore();
   const currency = state.preferredCurrency;
-  const { currencyRate } = externalStore;
   const rate = currencyRate.data ? currencyRate.data.exchange_rate : 1;
   return { currency, rate };
 };

@@ -8,6 +8,15 @@ import routesWallet from './routes-wallet';
 import routesNotFound from './routes-not-found';
 import { ROUTES_HOME } from '../configs/configRoutes';
 import Vue from 'vue';
+
+import {
+  external as useExternalStore,
+  wallet as useWalletStore
+} from '@/core/store/index.js';
+
+const { setLastPath } = useExternalStore();
+const { removeWallet } = useWalletStore();
+
 const routes =
   // eslint-disable-next-line
   BUILD === 'offline'
@@ -36,13 +45,13 @@ const router = new Router({
 router.beforeResolve((to, from, next) => {
   // Check if user is coming from a path that needs auth
   if (!from.meta.noAuth && store.state.wallet.address && to.meta.noAuth) {
-    store.dispatch('wallet/removeWallet');
+    removeWallet();
   }
   if (to.meta.noAuth) {
     next();
   } else {
     if (store.state.wallet.address === null) {
-      store.dispatch('external/setLastPath', to.path);
+      setLastPath(to.path);
       next({ name: ROUTES_HOME.ACCESS_WALLET.NAME });
     } else {
       if (store.state.external.path !== '') {
@@ -52,7 +61,7 @@ router.beforeResolve((to, from, next) => {
             to: localPath
           });
         }
-        store.dispatch('external/setLastPath', '');
+        setLastPath('');
         router.push({ path: localPath });
       } else {
         next();

@@ -1,16 +1,15 @@
 <template>
   <div class="wallet-main">
-    <component :is="TheWalletSideMenu" />
+    <TheWalletSideMenu />
     <v-main>
       <v-container class="pa-2 pa-md-3 mb-14" fluid>
-        <component :is="TheWalletHeader" />
-        <component :is="ModuleConfirmation" v-if="address" />
+        <TheWalletHeader />
+        <ModuleConfirmation v-if="address" />
         <router-view />
       </v-container>
     </v-main>
-    <component :is="TheWalletFooter" :is-offline-app="isOfflineApp" />
-    <component
-      :is="ModulePaperWallet"
+    <TheWalletFooter :is-offline-app="isOfflineApp" />
+    <ModulePaperWallet
       :open="showPaperWallet"
       :close="closePaperWallet"
       :is-offline-app="isOfflineApp"
@@ -61,9 +60,19 @@
 import { toBN } from 'web3-utils';
 import { debounce, isEqual } from 'lodash';
 import moment from 'moment';
-import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue';
+import {
+  ref,
+  computed,
+  watch,
+  onMounted,
+  onBeforeUnmount,
+  defineEmits,
+  defineAsyncComponent
+} from 'vue';
+import { useRouter } from 'vue-router/composables';
 
-import useVuetify from '@/core/helpers/composeVuetify.js';
+import useVuetify from '@/core/composables/vuetify.js';
+import useAmplitude from '@/core/composables/amplitude.js';
 
 import {
   global as useGlobalStore,
@@ -71,9 +80,6 @@ import {
   external as useExternalStore,
   popups as usePopupsStore
 } from '@/core/store/index.js';
-
-// import handlerWallet from '@/core/mixins/handlerWallet.mixin';
-// import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 import nodeList from '@/utils/networks';
 import {
@@ -92,11 +98,21 @@ import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import HybridWalletInterface from '@/modules/access-wallet/hybrid/handlers/walletInterface';
 import sanitizeHex from '@/core/helpers/sanitizeHex';
 
-import TheWalletSideMenu from './components-wallet/TheWalletSideMenu';
-import TheWalletHeader from './components-wallet/TheWalletHeader';
-import TheWalletFooter from './components-wallet/TheWalletFooter';
-import ModuleConfirmation from '@/modules/confirmation/ModuleConfirmation';
-import ModulePaperWallet from '@/modules/balance/ModulePaperWallet.vue';
+const TheWalletSideMenu = defineAsyncComponent(() =>
+  import('./components-wallet/TheWalletSideMenu')
+);
+const TheWalletHeader = defineAsyncComponent(() =>
+  import('./components-wallet/TheWalletHeader')
+);
+const TheWalletFooter = defineAsyncComponent(() =>
+  import('./components-wallet/TheWalletFooter')
+);
+const ModuleConfirmation = defineAsyncComponent(() =>
+  import('@/modules/confirmation/ModuleConfirmation')
+);
+const ModulePaperWallet = defineAsyncComponent(() =>
+  import('@/modules/balance/ModulePaperWallet.vue')
+);
 
 const INTERVAL = 14000;
 
@@ -107,12 +123,31 @@ let manualBlockSubscription;
 
 // pinia imports
 const walletStore = useWalletStore();
-const globalStore = useGlobalStore();
-const externalStore = useExternalStore();
-const popupsStore = usePopupsStore();
+const {
+  darkMode,
+  online,
+  network,
+  setBaseFeePerGas,
+  updateGasPrice,
+  isEIP1559SupportedNetwork,
+  setNetwork,
+  setValidNetwork
+} = useGlobalStore();
+const {
+  selectedEIP6963Provider,
+  coinGeckoTokens,
+  setNetworkTokens,
+  setTokenAndEthBalance
+} = useExternalStore();
+const { shownPkSurveyCounter, setPkSurvey } = usePopupsStore();
 
 // injections/use
 const vuetify = useVuetify();
+const { trackSurvey } = useAmplitude();
+const router = useRouter();
+
+// events
+const emit = defineEmits(['newNetwork']);
 
 // computed
 const showSurvey = computed(() => {
@@ -133,18 +168,18 @@ const withinDate = computed(() => {
 watch(walletStore.address, newVal => {
   if (!newVal) {
     // change later
-    this.$router.push({ name: ROUTES_HOME.ACCESS_WALLET.NAME });
+    router.push({ name: ROUTES_HOME.ACCESS_WALLET.NAME });
   } else {
     setup();
     setTokensAndBalance();
   }
 });
 
-watch(globalStore.network, (newVal, oldVal) => {
-  if (globalStore.online && !walletStore.isOfflineApp) {
+watch(network, (newVal, oldVal) => {
+  if (online && !walletStore.isOfflineApp) {
     walletStore.web3.eth.clearSubscriptions();
     walletStore.identifier === WALLET_TYPES.WEB3_WALLET
-      ? walletStore.setWeb3Instance(externalStore.selectedEIP6963Provider)
+      ? walletStore.setWeb3Instance(selectedEIP6963Provider)
       : walletStore.setWeb3Instance();
     setup();
     if (walletStore.identifier !== WALLET_TYPES.WEB3_WALLET) {
@@ -173,14 +208,12 @@ watch(globalStore.network, (newVal, oldVal) => {
             );
 
             setTimeout(() => {
-              globalStore
-                .setNetwork({
-                  network: oldVal,
-                  walletType: walletStore.identifier
-                })
-                .then(() => {
-                  walletStore.setWeb3Instance();
-                });
+              setNetwork({
+                network: oldVal,
+                walletType: walletStore.identifier
+              }).then(() => {
+                walletStore.setWeb3Instance();
+              });
             }, 1000);
           }
         }
@@ -189,7 +222,7 @@ watch(globalStore.network, (newVal, oldVal) => {
   }
 });
 
-watch(externalStore.coinGeckoTokens, (newVal, oldVal) => {
+watch(coinGeckoTokens, (newVal, oldVal) => {
   if (!isEqual(newVal, oldVal)) {
     setTokensAndBalance();
   }
@@ -197,22 +230,21 @@ watch(externalStore.coinGeckoTokens, (newVal, oldVal) => {
 
 onMounted(() => {
   if (showSurvey.value) {
-    popupsStore.shownPkSurveyCounter();
-    // rewrite mixins to composables
-    // trackSurvey('Shown')
+    shownPkSurveyCounter();
+    trackSurvey('Shown');
   }
-  vuetify.theme.dark = globalStore.darkMode;
+  vuetify.theme.dark = darkMode;
   EventBus.$on('openPaperWallet', () => {
     showPaperWallet.value = true;
     // change later
-    this.$router.push({
+    router.push({
       name: ROUTES_WALLET.PRINT.NAME
     });
   });
 
-  if (globalStore.online && !walletStore.isOfflineApp) {
+  if (online && !walletStore.isOfflineApp) {
     setup();
-    externalStore.setTokenAndEthBalance();
+    setTokenAndEthBalance();
 
     if (walletStore.identifier === WALLET_TYPES.WEB3_WALLET) {
       web3Listeners();
@@ -249,9 +281,9 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   EventBus.$off('openPaperWallet');
-  if (globalStore.online && !walletStore.isOfflineApp)
+  if (online && !walletStore.isOfflineApp)
     walletStore.web3.eth.clearSubscriptions();
-  const provider = externalStore.selectedEIP6963Provider;
+  const provider = selectedEIP6963Provider;
   if (provider && provider.removeListener instanceof Function) {
     if (findAndSetNetwork instanceof Function)
       provider.removeListener('chainChanged', findAndSetNetwork);
@@ -264,16 +296,16 @@ onBeforeUnmount(() => {
 // methods
 const closeSurveyModal = () => {
   tempClose.value = true;
-  // this.trackSurvey('Closed');
+  trackSurvey('Closed');
 };
 
 const openSurvey = () => {
-  popupsStore.setPkSurvey();
-  // this.trackSurvey('Answered');
+  setPkSurvey();
+  trackSurvey('Answered');
 };
 
 const closePaperWallet = () => {
-  if (showPaperWallet.value) this.$router.go(-1);
+  if (showPaperWallet.value) router.go(-1);
   showPaperWallet.value = false;
 };
 
@@ -284,25 +316,25 @@ const setup = () => {
 
 const checkNetwork = async () => {
   const matched = await matchNetwork(
-    globalStore.network.type.chainID,
+    network.type.chainID,
     walletStore.identifier
   );
-  globalStore.setValidNetwork(matched);
+  setValidNetwork(matched);
 };
 
 const processNetworkTokens = () => {
-  globalStore.network.type.tokens.then(res => {
+  network.type.tokens.then(res => {
     const tokenMap = new Map();
     res.forEach(item => {
       tokenMap.set(item.address.toLowerCase(), item);
     });
-    externalStore.setNetworkTokens(tokenMap);
+    setNetworkTokens(tokenMap);
   });
 };
 
 const setTokensAndBalance = () => {
-  if (externalStore.coinGeckoTokens?.get) {
-    externalStore.setTokenAndEthBalance();
+  if (coinGeckoTokens?.get) {
+    setTokenAndEthBalance();
   } else {
     walletStore.setTokens([]);
   }
@@ -310,11 +342,11 @@ const setTokensAndBalance = () => {
 
 const checkAndSetBaseFee = baseFee => {
   if (baseFee) {
-    globalStore.setBaseFeePerGas(toBN(baseFee));
+    setBaseFeePerGas(toBN(baseFee));
   } else {
-    globalStore.setBaseFeePerGas(toBN('0'));
+    setBaseFeePerGas(toBN('0'));
   }
-  globalStore.updateGasPrice();
+  updateGasPrice();
 };
 
 const subscribeToBlockNumber = debounce(function () {
@@ -324,7 +356,7 @@ const subscribeToBlockNumber = debounce(function () {
     walletStore.web3.subscribe
       .on('newBlockHeaders')
       .on('data', res => {
-        if (globalStore.isEIP1559SupportedNetwork && res.baseFeePerGas) {
+        if (isEIP1559SupportedNetwork && res.baseFeePerGas) {
           checkAndSetBaseFee(toBN(res.baseFeePerGas));
         }
         walletStore.setBlockNumber(res.number);
@@ -358,36 +390,34 @@ const manualBlockSub = () => {
 
 const findAndSetNetwork = async () => {
   if (
-    externalStore.selectedEIP6963Provider &&
+    selectedEIP6963Provider &&
     walletStore.identifier === WALLET_TYPES.WEB3_WALLET
   ) {
-    const networkId = await externalStore.selectedEIP6963Provider?.request({
+    const networkId = await selectedEIP6963Provider?.request({
       method: 'eth_chainId'
     });
 
     const foundNetwork = Object.values(nodeList).find(item => {
       if (toBN(networkId).eq(toBN(item[0].type.chainID))) return item;
     });
-    if (externalStore.selectedEIP6963Provider) {
+    if (selectedEIP6963Provider) {
       try {
         if (foundNetwork) {
-          await globalStore.setNetwork({
+          await setNetwork({
             network: foundNetwork[0],
             walletType: walletStore.identifier
           });
-          await walletStore.setWeb3Instance(
-            externalStore.selectedEIP6963Provider
-          );
+          await walletStore.setWeb3Instance(selectedEIP6963Provider);
           setTokensAndBalance();
-          globalStore.setValidNetwork(true);
-          this.$emit('newNetwork');
+          setValidNetwork(true);
+          emit('newNetwork');
           Toast(
             `Switched network to: ${foundNetwork[0].type.name}`,
             {},
             SUCCESS
           );
         } else {
-          globalStore.setValidNetwork(false);
+          setValidNetwork(false);
           Toast("Current wallet's network is unsupported", {}, ERROR);
         }
       } catch (er) {
@@ -405,13 +435,13 @@ const findAndSetNetwork = async () => {
 
 const setWeb3Account = acc => {
   const wallet = new Web3Wallet(acc[0]);
-  walletStore.setWallet([wallet, globalStore.selectedEIP6963Provider]);
+  walletStore.setWallet([wallet, selectedEIP6963Provider]);
 };
 
 const web3Listeners = () => {
-  if (globalStore.selectedEIP6963Provider?.on) {
-    globalStore.selectedEIP6963Provider.on('chainChanged', findAndSetNetwork);
-    globalStore.selectedEIP6963Provider.on('accountsChanged', setWeb3Account);
+  if (selectedEIP6963Provider?.on) {
+    selectedEIP6963Provider.on('chainChanged', findAndSetNetwork);
+    selectedEIP6963Provider.on('accountsChanged', setWeb3Account);
   }
 };
 </script>

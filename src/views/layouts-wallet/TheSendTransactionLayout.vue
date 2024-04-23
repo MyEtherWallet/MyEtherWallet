@@ -16,26 +16,31 @@
   </the-wrapper-wallet>
 </template>
 
-<script>
-import { mapGetters } from 'vuex';
+<script setup>
+import { computed, defineAsyncComponent } from 'vue';
 
-export default {
-  components: {
-    ModuleSend: () => import('@/modules/send/ModuleSend'),
-    TheWrapperWallet: () =>
-      import('@/views/components-wallet/TheWrapperWallet'),
-    ModuleTokensValue: () => import('@/modules/balance/ModuleTokensValue'),
-    ModuleTransferHistory: () =>
-      import('@/modules/transfer-history/ModuleTransferHistory')
-  },
-  computed: {
-    ...mapGetters('notifications', ['txNotifications']),
-    hasHistory() {
-      return this.txNotifications && this.txNotifications.length > 0;
-    },
-    totalRightColItems() {
-      return this.hasHistory ? 2 : 1;
-    }
-  }
-};
+const ModuleSend = defineAsyncComponent(() =>
+  import('@/modules/send/ModuleSend')
+);
+const TheWrapperWallet = defineAsyncComponent(() =>
+  import('@/views/components-wallet/TheWrapperWallet')
+);
+const ModuleTokensValue = defineAsyncComponent(() =>
+  import('@/modules/balance/ModuleTokensValue')
+);
+const ModuleTransferHistory = defineAsyncComponent(() =>
+  import('@/modules/transfer-history/ModuleTransferHistory')
+);
+
+import { notifications as useNotificationsStore } from '@/core/store/index.js';
+
+const { txNotifications } = useNotificationsStore();
+
+const hasHistory = computed(() => {
+  return txNotifications && txNotifications.length > 0;
+});
+
+const totalRightColItems = computed(() => {
+  return hasHistory.value ? 2 : 1;
+});
 </script>

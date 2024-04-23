@@ -63,43 +63,48 @@
     </div>
   </div>
 </template>
-<script>
+<script setup>
 import anime from 'animejs/lib/anime.es.js';
 import clipboardCopy from 'clipboard-copy';
-import { Toast, SUCCESS } from '@/modules/toast/handler/handlerToast';
-import { mapState, mapGetters } from 'vuex';
-import { toChecksumAddress } from '@/core/helpers/addressUtils';
+import { computed } from 'vue';
 import { isObject } from 'lodash';
-export default {
-  computed: {
-    ...mapState('wallet', ['address']),
-    ...mapGetters('global', ['network']),
-    getChecksumAddressString() {
-      if (!this.address) return '';
-      return toChecksumAddress(this.address);
-    }
-  },
-  methods: {
-    copyAddress() {
-      clipboardCopy(this.address);
-      Toast(`Copied ${this.address} successfully!`, {}, SUCCESS);
-    },
-    getNetwork() {
-      return this.network ? this.network.type.currencyName : 'ETH';
-    },
-    animateMewCard() {
-      const el = document.querySelector('.mew-card');
-      if (!el || !isObject(el?.style)) return;
-      el.style.opacity = 0;
-      anime({
-        targets: el,
-        opacity: 1,
-        delay: 1300,
-        duration: 500,
-        easing: 'easeInOutQuad'
-      });
-    }
-  }
+
+import { Toast, SUCCESS } from '@/modules/toast/handler/handlerToast';
+import { toChecksumAddress } from '@/core/helpers/addressUtils';
+
+import {
+  global as useGlobalStore,
+  wallet as useWalletStore
+} from '@/core/store/index.js';
+
+const walletStore = useWalletStore();
+const globalStore = useGlobalStore();
+
+const getChecksumAddressString = computed(() => {
+  if (!walletStore.address) return '';
+  return toChecksumAddress(walletStore.address);
+});
+
+const copyAddress = () => {
+  clipboardCopy(walletStore.address);
+  Toast(`Copied ${this.address} successfully!`, {}, SUCCESS);
+};
+
+const getNetwork = () => {
+  return globalStore.network ? globalStore.network.type.currencyName : 'ETH';
+};
+
+const animateMewCard = () => {
+  const el = document.querySelector('.mew-card');
+  if (!el || !isObject(el?.style)) return;
+  el.style.opacity = 0;
+  anime({
+    targets: el,
+    opacity: 1,
+    delay: 1300,
+    duration: 500,
+    easing: 'easeInOutQuad'
+  });
 };
 </script>
 

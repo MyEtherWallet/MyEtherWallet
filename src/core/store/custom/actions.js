@@ -28,8 +28,7 @@ const initStore = () => {
 };
 
 const setCustomToken = function (token) {
-  const globalStore = useGlobalStore();
-  const network = globalStore.network;
+  const { network } = useGlobalStore();
   let customTokensByNetwork = this.tokens[network.type.name];
   if (!this.tokens[network.type.name]) {
     customTokensByNetwork = [];
@@ -46,9 +45,8 @@ const setCustomToken = function (token) {
 };
 
 const deleteToken = function (token) {
-  const globalStore = useGlobalStore();
-  const customStore = useCustomStore();
-  const network = globalStore.network;
+  const { network } = useGlobalStore();
+  const { hiddenTokens } = useCustomStore();
   const currentCustomTokens = this.tokens[network.type.name].filter(
     currentTokens => {
       const found = token.find(item => {
@@ -56,8 +54,6 @@ const deleteToken = function (token) {
           return item;
         }
       });
-      // Check if token is in hiddenTokens
-      const hiddenTokens = customStore.hiddenTokens;
       if (found && hiddenTokens.length > 0) {
         const newHiddenTokens = hiddenTokens.filter(item => {
           return found.address !== item.address;
@@ -73,16 +69,16 @@ const deleteToken = function (token) {
 };
 
 const deleteAll = function () {
-  const globalStore = useGlobalStore();
-  const network = globalStore.network;
+  const { network } = useGlobalStore();
+
   let customTokensByNetwork = this.tokens[network.type.name];
   customTokensByNetwork = [];
   Vue.set(this.tokens, network.type.name, customTokensByNetwork);
 };
 
 const setHiddenToken = function (token) {
-  const globalStore = useGlobalStore();
-  const network = globalStore.network;
+  const { network } = useGlobalStore();
+
   let hiddenTokensByNetwork = this.hiddenTokens[network.type.name];
   if (!this.hiddenTokens[network.type.name]) {
     hiddenTokensByNetwork = [];
@@ -99,8 +95,8 @@ const setHiddenToken = function (token) {
 };
 
 const deleteHiddenToken = function (token) {
-  const globalStore = useGlobalStore();
-  const network = globalStore.network;
+  const { network } = useGlobalStore();
+
   const currentHiddenTokens = this.hiddenTokens[network.type.name].filter(
     currentTokens => {
       const found = token.find(item => {
@@ -132,8 +128,7 @@ const deleteAllCustomPaths = function () {
 };
 
 const updateCustomTokenBalances = function () {
-  const walletStore = useWalletStore();
-  const web3 = walletStore.web3;
+  const { web3, address } = useWalletStore();
   const _getTokenBalance = (balance, decimals) => {
     let n = new BigNumber(balance);
     if (decimals) {
@@ -153,7 +148,7 @@ const updateCustomTokenBalances = function () {
         item.contract.toLowerCase()
       );
       newContract.methods
-        .balanceOf(walletStore.address)
+        .balanceOf(address)
         .call()
         .then(res => {
           newToken.balancef = _getTokenBalance(res, item.decimals).value;

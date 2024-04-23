@@ -1,21 +1,26 @@
-const customTokens = function (state, _, rootState, rootGetters) {
-  const network = rootGetters['global/network'];
+import {
+  global as useGlobalStore,
+  custom as useCustomStore
+} from '@/core/store/index.js';
+
+const customTokens = function (state) {
+  const { network } = useGlobalStore();
   return state.tokens[network.type.name] || [];
 };
 
-const hasCustom = function (state, _, rootState, rootGetters) {
-  const tokens = rootGetters['custom/customTokens'];
-  return tokens.length > 0;
+const hasCustom = function () {
+  const { customTokens } = useCustomStore();
+  return customTokens.length > 0;
 };
 
-const hiddenTokens = function (state, _, rootState, rootGetters) {
-  const network = rootGetters['global/network'];
+const hiddenTokens = function (state) {
+  const { network } = useGlobalStore();
   return state.hiddenTokens[network.type.name] || [];
 };
 
-const hasHidden = function (state, _, rootState, rootGetters) {
-  const tokens = rootGetters['custom/hiddenTokens'];
-  return tokens.length > 0;
+const hasHidden = function () {
+  const { hiddenTokens } = useCustomStore();
+  return hiddenTokens.length > 0;
 };
 
 export default {
