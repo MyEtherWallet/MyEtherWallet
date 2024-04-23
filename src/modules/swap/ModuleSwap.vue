@@ -6,8 +6,8 @@
   </div>
 </template>
 
-<script setup>
+<!-- <script setup>
 import EnkryptSwap from '@enkryptcom/swap';
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped></style> -->
