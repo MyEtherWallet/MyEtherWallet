@@ -1,64 +1,72 @@
 <template>
-  <the-wrapper-wallet
+  <TheWrapperWallet
     :total-left-col-items="showBanner ? 3 : 2"
     :has-draggable="false"
     :total-right-col-items="2"
   >
     <template #leftColItem1>
       <div>
-        <module-balance />
+        <ModuleBalance />
       </div>
     </template>
     <template v-if="showBanner" #leftColItem2>
       <div>
-        <dashboard-banner />
+        <DashboardBanner />
       </div>
     </template>
     <template #[hasBanner]>
-      <module-tokens />
+      <ModuleTokens />
     </template>
     <template v-if="isEthNetwork" #rightColItem1>
-      <module-swap-rates />
+      <ModuleSwapRates />
     </template>
     <template #[name]>
-      <wallet-carousel />
+      <WalletCarousel />
     </template>
-  </the-wrapper-wallet>
+  </TheWrapperWallet>
 </template>
 
-<script>
-import { ETH, HOLESKY, GOERLI } from '@/utils/networks/types';
-import { mapGetters } from 'vuex';
+<script setup>
+import { defineAsyncComponent, computed } from 'vue';
 
-export default {
-  components: {
-    WalletCarousel: () =>
-      import('@/views/components-wallet/WalletCarousel.vue'),
-    ModuleBalance: () => import('@/modules/balance/ModuleBalance'),
-    ModuleTokens: () => import('@/modules/balance/ModuleTokens'),
-    ModuleSwapRates: () => import('@/modules/swap/ModuleSwapRates'),
-    TheWrapperWallet: () =>
-      import('@/views/components-wallet/TheWrapperWallet'),
-    DashboardBanner: () =>
-      import('@/views/components-wallet/DashboardBanner.vue')
-  },
-  computed: {
-    ...mapGetters('global', ['isEthNetwork', 'network']),
-    stakingSupported() {
-      return [GOERLI, HOLESKY, ETH];
-    },
-    showBanner() {
-      const supportedIdx = this.stakingSupported.findIndex(item => {
-        if (item.chainID === this.network.type.chainID) return item;
-      });
-      return supportedIdx > -1;
-    },
-    hasBanner() {
-      return `leftColItem${this.showBanner ? 3 : 2}`;
-    },
-    name() {
-      return !this.isEthNetwork ? 'rightColItem1' : 'rightColItem2';
-    }
-  }
-};
+import { global as useGlobalStore } from '@/core/store/index.js';
+
+import { ETH, HOLESKY, GOERLI } from '@/utils/networks/types';
+
+const WalletCarousel = defineAsyncComponent(() =>
+  import('@/views/components-wallet/WalletCarousel.vue')
+);
+const ModuleBalance = defineAsyncComponent(() =>
+  import('@/modules/balance/ModuleBalance')
+);
+const ModuleTokens = defineAsyncComponent(() =>
+  import('@/modules/balance/ModuleTokens')
+);
+const ModuleSwapRates = defineAsyncComponent(() =>
+  import('@/modules/swap/ModuleSwapRates')
+);
+const TheWrapperWallet = defineAsyncComponent(() =>
+  import('@/views/components-wallet/TheWrapperWallet')
+);
+const DashboardBanner = defineAsyncComponent(() =>
+  import('@/views/components-wallet/DashboardBanner.vue')
+);
+
+// injections/use
+const { isEthNetwork, network } = useGlobalStore();
+const stakingSupported = [GOERLI, HOLESKY, ETH];
+const showBanner = computed(() => {
+  const supportedIdx = stakingSupported.findIndex(item => {
+    if (item.chainID === network.type.chainID) return item;
+  });
+  return supportedIdx > -1;
+});
+
+const hasBanner = computed(() => {
+  return `leftColItem${showBanner.value ? 3 : 2}`;
+});
+
+const name = computed(() => {
+  return isEthNetwork ? 'rightColItem1' : 'rightColItem2';
+});
 </script>

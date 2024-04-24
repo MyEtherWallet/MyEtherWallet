@@ -19,7 +19,7 @@ export const useAmplitude = () => {
 
   const networkName = network.type.name;
 
-  const wrapperMethod = (evt, prop) => {
+  const wrapperMethod = (evt, prop = {}) => {
     if (isOfflineApp) return;
     if (consentToTrack) {
       const newObj = !isEmpty(prop)
@@ -142,6 +142,7 @@ export const useAmplitude = () => {
     trackLogout,
     trackBuySell,
     trackContract,
-    trackSurvey
+    trackSurvey,
+    $amplitude
   };
 };

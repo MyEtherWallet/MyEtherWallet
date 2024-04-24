@@ -45,7 +45,7 @@
             class="ml-sm-n4 mt-1 mt-sm-0"
             color-theme="#939fb9"
             btn-style="transparent"
-            @click.native="openHelpCenter"
+            @click.native="openHC"
             >Learn More</mew-button
           >
           <mew-button
@@ -56,7 +56,7 @@
           >
             <img
               class="mr-3"
-              :src="browserLogo"
+              :src="logo"
               alt="chrome"
               width="25px"
               height="25px"
@@ -68,51 +68,45 @@
     </v-snackbar>
   </div>
 </template>
-<script>
-import { mapActions, mapState } from 'vuex';
-import moment from 'moment';
 
-import enkryptMarketing from '@/core/mixins/enkryptMarketing.mixin';
-export default {
-  mixins: [enkryptMarketing],
-  computed: {
-    ...mapState('popups', [
-      'enkryptWalletPopup',
-      'enkryptWalletPopupClosed',
-      'enkryptWalletSnackbarClosed',
-      'enkryptWalletSnackbar'
-    ])
-  },
-  mounted() {
-    this.checkIfShouldShow();
-  },
-  methods: {
-    ...mapActions('popups', [
-      'showEnkryptWalletSnackbar',
-      'closeEnkryptWalletSnackbar',
-      'enkryptWalletSnackbarCounter'
-    ]),
-    closeSnackbar() {
-      this.closeEnkryptWalletSnackbar();
-    },
-    /**
-     * checks if the enkrypt wallet ad has been shown
-     * and if it has been 7 days since closing
-     * and if snackbard has not been closed or 7 days since it was closed
-     * and the snacknar has not been shown 3 times
-     */
-    checkIfShouldShow() {
-      if (
-        !this.enkryptWalletPopup &&
-        moment(new Date()).diff(this.enkryptWalletPopupClosed, 'days') >= 7 &&
-        (this.enkryptWalletSnackbarClosed > 0 ||
-          moment(new Date()).diff(this.enkryptWalletSnackbarClosed, 'days') >=
-            7) &&
-        this.enkryptWalletSnackbarCounter <= 3
-      ) {
-        this.showEnkryptWalletSnackbar();
-      }
-    }
+<script setup>
+import moment from 'moment';
+import { onMounted } from 'vue';
+
+import useEnkryptMarketing from '@/core/composables/enkryptMarketing.js';
+import { popups as usePopupsStore } from '@/core/store/index.js';
+
+const { openHelpCenter, browserLogo } = useEnkryptMarketing();
+
+const logo = browserLogo;
+const openHC = openHelpCenter;
+
+const {
+  enkryptWalletPopup,
+  enkryptWalletPopupClosed,
+  enkryptWalletSnackbarClosed,
+  enkryptWalletSnackbar,
+  showEnkryptWalletSnackbar,
+  closeEnkryptWalletSnackbar,
+  enkryptWalletSnackbarCounter
+} = usePopupsStore();
+
+onMounted(() => {
+  checkIfShouldShow();
+});
+
+const closeSnackbar = () => {
+  closeEnkryptWalletSnackbar();
+};
+const checkIfShouldShow = () => {
+  if (
+    !enkryptWalletPopup &&
+    moment(new Date()).diff(enkryptWalletPopupClosed, 'days') >= 7 &&
+    (enkryptWalletSnackbarClosed > 0 ||
+      moment(new Date()).diff(enkryptWalletSnackbarClosed, 'days') >= 7) &&
+    enkryptWalletSnackbarCounter <= 3
+  ) {
+    showEnkryptWalletSnackbar();
   }
 };
 </script>

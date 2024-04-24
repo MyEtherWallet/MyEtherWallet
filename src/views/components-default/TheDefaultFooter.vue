@@ -259,21 +259,6 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex';
-
-import Facebook from '@/assets/images/icons/social/facebook-logo.vue';
-import Twitter from '@/assets/images/icons/social/twitter-logo.vue';
-import Instagram from '@/assets/images/icons/social/instagram-logo.vue';
-import Linkedin from '@/assets/images/icons/social/linkedin-logo.vue';
-import Github from '@/assets/images/icons/social/github-logo.vue';
-import Reddit from '@/assets/images/icons/social/reddit-logo.vue';
-import Medium from '@/assets/images/icons/social/medium-logo.vue';
-import Telegram from '@/assets/images/icons/social/telegram-logo.vue';
-import DonateEth from '@/assets/images/icons/social/donate-eth.vue';
-import DonateBtc from '@/assets/images/icons/social/donate-btc.vue';
-
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-
 const FOOTER_EVENTS = {
   footerAboutUs: 'LP2FooterAboutUs',
   footerCareers: 'LP2Footercareers',
@@ -302,157 +287,155 @@ const FOOTER_EVENTS = {
   closeMobileMenu: 'LP2CloseMobileMenu',
   otherWaysToCreate: 'LP2OtherWaysToCreate'
 };
+</script>
 
-export default {
-  name: 'TheDefaultFooter',
-  components: {
-    Facebook,
-    Twitter,
-    Instagram,
-    Linkedin,
-    Github,
-    Reddit,
-    Medium,
-    Telegram,
-    DonateEth,
-    DonateBtc
-  },
-  mixins: [handlerAnalytics],
-  data() {
-    return {
-      year: new Date().getFullYear()
-    };
-  },
-  computed: {
-    ...mapState('popups', ['consentToTrack']),
-    ...mapGetters('global', ['network']),
-    packageVersion() {
-      return VERSION;
-    }
-  },
-  methods: {
-    trackAboutUs() {
-      this.$amplitude.track(FOOTER_EVENTS.footerAboutUs, {
-        network: this.network.type.name
-      });
-    },
-    trackCareers() {
-      this.$amplitude.track(FOOTER_EVENTS.footerCareers, {
-        network: this.network.type.name
-      });
-    },
-    trackHowItWorks() {
-      this.$amplitude.track(FOOTER_EVENTS.footerHowItWorks, {
-        network: this.network.type.name
-      });
-    },
-    trackTeam() {
-      this.$amplitude.track(FOOTER_EVENTS.footerTeam, {
-        network: this.network.type.name
-      });
-    },
-    trackAdvertiseWithUs() {
-      this.$amplitude.track(FOOTER_EVENTS.footerAdvertiseWithUs, {
-        network: this.network.type.name
-      });
-    },
-    trackPrivacy() {
-      this.$amplitude.track(FOOTER_EVENTS.footerPrivacy, {
-        network: this.network.type.name
-      });
-    },
-    trackTerms() {
-      this.$amplitude.track(FOOTER_EVENTS.footerTerms, {
-        network: this.network.type.name
-      });
-    },
-    trackBugBounty() {
-      this.$amplitude.track(FOOTER_EVENTS.footerBugBounty, {
-        network: this.network.type.name
-      });
-    },
-    trackMobile() {
-      this.$amplitude.track(FOOTER_EVENTS.footerMobile, {
-        network: this.network.type.name
-      });
-    },
-    trackEnkrypt() {
-      this.$amplitude.track(FOOTER_EVENTS.footerEnkrypt, {
-        network: this.network.type.name
-      });
-    },
-    trackPortfolio() {
-      this.$amplitude.track(FOOTER_EVENTS.footerPortfolio, {
-        network: this.network.type.name
-      });
-    },
-    trackEthvm() {
-      this.$amplitude.track(FOOTER_EVENTS.footerEthvm, {
-        network: this.network.type.name
-      });
-    },
-    trackMewtopia() {
-      this.$amplitude.track(FOOTER_EVENTS.footerMewtopia, {
-        network: this.network.type.name
-      });
-    },
-    trackPressKit() {
-      this.$amplitude.track(FOOTER_EVENTS.footerPressKit, {
-        network: this.network.type.name
-      });
-    },
-    trackHelpCenter() {
-      this.$amplitude.track(FOOTER_EVENTS.footerHelpCenter, {
-        network: this.network.type.name
-      });
-    },
-    trackCustomerSupport() {
-      this.$amplitude.track(FOOTER_EVENTS.footerCustomerSupport, {
-        network: this.network.type.name
-      });
-    },
-    trackSecurityPolicy() {
-      this.$amplitude.track(FOOTER_EVENTS.footerSecurityPolicy, {
-        network: this.network.type.name
-      });
-    },
-    trackVerifyMessage() {
-      this.$amplitude.track(FOOTER_EVENTS.footerVerifyMessage, {
-        network: this.network.type.name
-      });
-    },
-    trackConvertUnits() {
-      this.$amplitude.track(FOOTER_EVENTS.footerConvertUnits, {
-        network: this.network.type.name
-      });
-    },
-    trackSendOfflineHelper() {
-      this.$amplitude.track(FOOTER_EVENTS.footerSendOfflineHelper, {
-        network: this.network.type.name
-      });
-    },
-    trackEthDonation() {
-      this.$amplitude.track(FOOTER_EVENTS.footerEthDonation, {
-        network: this.network.type.name
-      });
-    },
-    trackBtcDonation() {
-      this.$amplitude.track(FOOTER_EVENTS.footerBtcDonation, {
-        network: this.network.type.name
-      });
-    },
-    trackCoinGecko() {
-      this.$amplitude.track(FOOTER_EVENTS.footerCoinGecko, {
-        network: this.network.type.name
-      });
-    },
-    trackJoinMewCommunity(item) {
-      this.$amplitude.track(FOOTER_EVENTS.footerJoinMewCommunity, {
-        item: item,
-        network: this.network.type.name
-      });
-    }
-  }
+<script setup>
+import Facebook from '@/assets/images/icons/social/facebook-logo.vue';
+import Twitter from '@/assets/images/icons/social/twitter-logo.vue';
+import Instagram from '@/assets/images/icons/social/instagram-logo.vue';
+import Linkedin from '@/assets/images/icons/social/linkedin-logo.vue';
+import Github from '@/assets/images/icons/social/github-logo.vue';
+import Reddit from '@/assets/images/icons/social/reddit-logo.vue';
+import Medium from '@/assets/images/icons/social/medium-logo.vue';
+import Telegram from '@/assets/images/icons/social/telegram-logo.vue';
+import DonateEth from '@/assets/images/icons/social/donate-eth.vue';
+import DonateBtc from '@/assets/images/icons/social/donate-btc.vue';
+
+import {
+  global as useGlobalStore,
+  popups as usePopupsStore
+} from '@/core/store/index.js';
+import { useAmplitude } from '@/core/composables/amplitude';
+
+// injections/use
+const { $amplitude } = useAmplitude();
+const { network } = useGlobalStore();
+const { consentToTrack } = usePopupsStore();
+
+// data
+const packageVersion = VERSION;
+
+// methods
+const trackAboutUs = () => {
+  $amplitude.track(FOOTER_EVENTS.footerAboutUs, {
+    network: network.type.name
+  });
+};
+const trackCareers = () => {
+  $amplitude.track(FOOTER_EVENTS.footerCareers, {
+    network: network.type.name
+  });
+};
+const trackHowItWorks = () => {
+  $amplitude.track(FOOTER_EVENTS.footerHowItWorks, {
+    network: network.type.name
+  });
+};
+const trackTeam = () => {
+  $amplitude.track(FOOTER_EVENTS.footerTeam, {
+    network: network.type.name
+  });
+};
+const trackAdvertiseWithUs = () => {
+  $amplitude.track(FOOTER_EVENTS.footerAdvertiseWithUs, {
+    network: network.type.name
+  });
+};
+const trackPrivacy = () => {
+  $amplitude.track(FOOTER_EVENTS.footerPrivacy, {
+    network: network.type.name
+  });
+};
+const trackTerms = () => {
+  $amplitude.track(FOOTER_EVENTS.footerTerms, {
+    network: network.type.name
+  });
+};
+const trackBugBounty = () => {
+  $amplitude.track(FOOTER_EVENTS.footerBugBounty, {
+    network: network.type.name
+  });
+};
+const trackMobile = () => {
+  $amplitude.track(FOOTER_EVENTS.footerMobile, {
+    network: network.type.name
+  });
+};
+const trackEnkrypt = () => {
+  $amplitude.track(FOOTER_EVENTS.footerEnkrypt, {
+    network: network.type.name
+  });
+};
+const trackPortfolio = () => {
+  $amplitude.track(FOOTER_EVENTS.footerPortfolio, {
+    network: network.type.name
+  });
+};
+const trackEthvm = () => {
+  $amplitude.track(FOOTER_EVENTS.footerEthvm, {
+    network: network.type.name
+  });
+};
+const trackMewtopia = () => {
+  $amplitude.track(FOOTER_EVENTS.footerMewtopia, {
+    network: network.type.name
+  });
+};
+const trackPressKit = () => {
+  $amplitude.track(FOOTER_EVENTS.footerPressKit, {
+    network: network.type.name
+  });
+};
+const trackHelpCenter = () => {
+  $amplitude.track(FOOTER_EVENTS.footerHelpCenter, {
+    network: network.type.name
+  });
+};
+const trackCustomerSupport = () => {
+  $amplitude.track(FOOTER_EVENTS.footerCustomerSupport, {
+    network: network.type.name
+  });
+};
+const trackSecurityPolicy = () => {
+  $amplitude.track(FOOTER_EVENTS.footerSecurityPolicy, {
+    network: network.type.name
+  });
+};
+const trackVerifyMessage = () => {
+  $amplitude.track(FOOTER_EVENTS.footerVerifyMessage, {
+    network: network.type.name
+  });
+};
+const trackConvertUnits = () => {
+  $amplitude.track(FOOTER_EVENTS.footerConvertUnits, {
+    network: network.type.name
+  });
+};
+const trackSendOfflineHelper = () => {
+  $amplitude.track(FOOTER_EVENTS.footerSendOfflineHelper, {
+    network: network.type.name
+  });
+};
+const trackEthDonation = () => {
+  $amplitude.track(FOOTER_EVENTS.footerEthDonation, {
+    network: network.type.name
+  });
+};
+const trackBtcDonation = () => {
+  $amplitude.track(FOOTER_EVENTS.footerBtcDonation, {
+    network: network.type.name
+  });
+};
+const trackCoinGecko = () => {
+  $amplitude.track(FOOTER_EVENTS.footerCoinGecko, {
+    network: network.type.name
+  });
+};
+const trackJoinMewCommunity = item => {
+  $amplitude.track(FOOTER_EVENTS.footerJoinMewCommunity, {
+    item: item,
+    network: network.type.name
+  });
 };
 </script>
 

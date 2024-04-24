@@ -107,66 +107,53 @@
   </v-row>
 </template>
 
-<script>
-import { mapGetters, mapState } from 'vuex';
+<script setup>
+import { ref, watch, defineProps } from 'vue';
 import draggable from 'vuedraggable';
+// import {
+//   global as useGlobalStore,
+//   wallet as useWalletStore,
+//   popups as usePopupsStore
+// } from '@/core/store/index.js';
 
 import ModuleNetwork from '@/modules/network/ModuleNetwork';
 
-export default {
-  name: 'TheWrapperWallet',
-  components: {
-    ModuleNetwork,
-    draggable,
-    NftDashboard: () => import('@/views/components-wallet/NftDashboard')
+const props = defineProps({
+  totalLeftColItems: {
+    type: Number,
+    default: 1
   },
-  props: {
-    totalLeftColItems: {
-      type: Number,
-      default: 1
-    },
-    totalRightColItems: {
-      type: Number,
-      default: 1
-    },
-    hasDraggable: {
-      type: Boolean,
-      default: false
-    }
+  totalRightColItems: {
+    type: Number,
+    default: 1
   },
-  data() {
-    const arr = [];
-    for (let i = 0; i < this.totalRightColItems; i++) {
-      arr.push(i + 1);
-    }
-    return {
-      draggableItems: arr
-    };
-  },
-  computed: {
-    ...mapGetters('global', ['isEthNetwork']),
-    ...mapState('wallet', ['isOfflineApp']),
-    ...mapState('popups', ['pkSurveyShown']),
-    dragOptions() {
-      return {
-        animation: 200,
-        group: 'description',
-        disabled: false,
-        ghostClass: 'ghost'
-      };
-    }
-  },
-  watch: {
-    totalRightColItems() {
-      this.draggableItems = [];
-      const arr = [];
-      for (let i = 0; i < this.totalRightColItems; i++) {
-        arr.push(i + 1);
-      }
-      this.draggableItems = arr;
-    }
+  hasDraggable: {
+    type: Boolean,
+    default: false
   }
+});
+
+// injection/use
+// const { isEthNetwork } = useGlobalStore();
+// const { isOfflineApp } = useWalletStore();
+// const { pkSurveyShow } = usePopupsStore();
+
+// data
+const draggableItems = ref(
+  Array.from({ length: props.totalRightColItems }, (_, i) => i + 1)
+);
+const dragOptions = {
+  animation: 200,
+  group: 'description',
+  disabled: false,
+  ghostClass: 'ghost'
 };
+
+// watch
+watch(props.totalRightColItems, newVal => {
+  draggableItems.value = [];
+  draggableItems.value = Array.from({ length: newVal }, (_, i) => i + 1);
+});
 </script>
 
 <style lang="scss" scoped>

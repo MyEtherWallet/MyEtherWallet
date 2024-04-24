@@ -109,158 +109,168 @@
   </div>
 </template>
 
-<script>
-import { mapState } from 'vuex';
+<script setup>
+import { defineAsyncComponent, defineProps, computed, onMounted } from 'vue';
+import { useRouter } from 'vue-router/composables';
 
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
-import enkryptMarketing from '@/core/mixins/enkryptMarketing.mixin';
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import useEnkryptMarketing from '@/core/composables/enkryptMarketing.js';
+import useAmplitude from '@/core/composables/amplitude.js';
+
 import {
   COMMON,
   CREATE_WALLET
 } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 
-export default {
-  name: 'TheCreateWalletLayout',
-  components: {
-    ModuleCreateWalletSoftware: () =>
-      import('@/modules/create-wallet/ModuleCreateWalletSoftware'),
-    TheLayoutHeader: () => import('../components-default/TheLayoutHeader')
+import { wallet as useWalletStore } from '@/core/store/index.js';
+
+const ModuleCreateWalletSoftware = defineAsyncComponent(() =>
+  import('@/modules/create-wallet/ModuleCreateWalletSoftware')
+);
+const TheLayoutHeader = defineAsyncComponent(() =>
+  import('../components-default/TheLayoutHeader')
+);
+
+defineProps({
+  showSoftwareModule: {
+    type: Boolean
   },
-  mixins: [enkryptMarketing, handlerAnalytics],
-  props: {
-    showSoftwareModule: {
-      type: Boolean
-    },
-    type: {
-      type: String,
-      default: 'overview'
-    }
-  },
-  data: () => ({
-    toastLink: {
-      title: 'Buy a hardware wallet',
-      url: ''
-    },
-    titleRoute: {
-      text: 'Access Wallet',
-      routeName: 'AccessWallet',
-      func: () => {
-        this.trackCreateWalletAmplitude(CREATE_WALLET.NAVIGATE_TO_ACCESS);
-      }
-    }
-  }),
-  computed: {
-    ...mapState('wallet', ['isOfflineApp']),
-    buttons() {
-      return !this.isOfflineApp
-        ? [
-            /* Enkrypt */
-            {
-              color: 'white',
-              title: 'Install Enkrypt browser extension',
-              subtitle:
-                'MEW’s official browser extension. Connect to web3 on Ethereum and Polkadot, manage your NFTs, buy, send and swap',
-              official: true,
-              recommended: true,
-              icon: require('@/assets/images/icons/icon-enkrypt-block.svg'),
-              alt: 'Enkrypt',
-              fn: () => {
-                this.trackCreateWalletAmplitude(COMMON.GOOGLE_STORE);
-                this.openEnkrypt();
-              }
-            },
-            /* MEW wallet Button */
-            {
-              color: 'white',
-              title: 'Download MEW wallet app',
-              subtitle:
-                'Our official mobile app to create your wallet, and connect to MEW Web using your mobile phone',
-              official: true,
-              recommended: true,
-              icon: require('@/assets/images/icons/icon-mew-wallet.png'),
-              alt: 'MEW wallet',
-              fn: () => {
-                this.trackCreateWalletAmplitude(COMMON.MEW_WALLET);
-                this.openMewWallet();
-              }
-            },
-            /* Hardware wallets */
-            {
-              color: 'white',
-              title: 'Buy a hardware wallet',
-              subtitle:
-                'For the highest standard of security, buy a hardware wallet and use it with MEW',
-              official: false,
-              recommended: true,
-              icon: require('@/assets/images/icons/icon-hardware-wallet.png'),
-              alt: 'Hardware Wallets',
-              fn: () => {
-                this.trackCreateWalletAmplitude(CREATE_WALLET.BUY_HARDWARE);
-                this.$router.push({
-                  name: ROUTES_HOME.BUY_HARDWARE_WALLET.NAME
-                });
-              }
-            },
-            /* Software */
-            {
-              color: 'white',
-              style: 'outline',
-              title: 'Software',
-              subtitle:
-                'Software methods like Keystore File and Mnemonic Phrase should only be used in offline settings by experienced users',
-              official: false,
-              recommended: false,
-              fn: () => {
-                this.trackCreateWalletAmplitude(CREATE_WALLET.SOFTWARE_METHOD);
-                this.openSoftwareModule();
-              }
-            }
-          ]
-        : [
-            /* Software */
-            {
-              color: 'white',
-              style: 'outline',
-              title: 'Software',
-              subtitle:
-                'Software methods like Keystore File and Mnemonic Phrase should only be used in offline settings by experienced users',
-              official: false,
-              recommended: false,
-              fn: () => {
-                this.trackCreateWalletAmplitude(CREATE_WALLET.SOFTWARE_METHOD);
-                this.openSoftwareModule();
-              }
-            }
-          ];
-    }
-  },
-  mounted() {
-    this.trackCreateWalletAmplitude(COMMON.PAGE_SHOWN);
-  },
-  methods: {
-    openSoftwareModule() {
-      try {
-        this.$router.push({
-          name: ROUTES_HOME.CREATE_WALLET.NAME,
-          params: { overlay: 'software' },
-          query: { type: 'overview' }
-        });
-      } catch (e) {
-        Toast(e, {}, ERROR);
-      }
-    },
-    closeSoftwareModule() {
-      try {
-        this.trackCreateWalletAmplitude(CREATE_WALLET.CLOSE_SOFTWARE);
-        this.$router.push({
-          name: ROUTES_HOME.CREATE_WALLET.NAME
-        });
-      } catch (e) {
-        Toast(e, {}, ERROR);
-      }
-    }
+  type: {
+    type: String,
+    default: 'overview'
+  }
+});
+
+// injection/use
+const { isOfflineApp } = useWalletStore();
+const { trackCreateWalletAmplitude } = useAmplitude();
+const { openEnkrypt, openMewWallet } = useEnkryptMarketing();
+const router = useRouter();
+
+// data
+
+const toastLink = {
+  title: 'Buy a hardware wallet',
+  url: ''
+};
+
+const titleRoute = {
+  text: 'Access Wallet',
+  routeName: 'AccessWallet',
+  func: () => {
+    trackCreateWalletAmplitude(CREATE_WALLET.NAVIGATE_TO_ACCESS);
+  }
+};
+
+// computed
+const buttons = computed(() => {
+  return !isOfflineApp
+    ? [
+        /* Enkrypt */
+        {
+          color: 'white',
+          title: 'Install Enkrypt browser extension',
+          subtitle:
+            'MEW’s official browser extension. Connect to web3 on Ethereum and Polkadot, manage your NFTs, buy, send and swap',
+          official: true,
+          recommended: true,
+          icon: require('@/assets/images/icons/icon-enkrypt-block.svg'),
+          alt: 'Enkrypt',
+          fn: () => {
+            trackCreateWalletAmplitude(COMMON.GOOGLE_STORE);
+            openEnkrypt();
+          }
+        },
+        /* MEW wallet Button */
+        {
+          color: 'white',
+          title: 'Download MEW wallet app',
+          subtitle:
+            'Our official mobile app to create your wallet, and connect to MEW Web using your mobile phone',
+          official: true,
+          recommended: true,
+          icon: require('@/assets/images/icons/icon-mew-wallet.png'),
+          alt: 'MEW wallet',
+          fn: () => {
+            trackCreateWalletAmplitude(COMMON.MEW_WALLET);
+            openMewWallet();
+          }
+        },
+        /* Hardware wallets */
+        {
+          color: 'white',
+          title: 'Buy a hardware wallet',
+          subtitle:
+            'For the highest standard of security, buy a hardware wallet and use it with MEW',
+          official: false,
+          recommended: true,
+          icon: require('@/assets/images/icons/icon-hardware-wallet.png'),
+          alt: 'Hardware Wallets',
+          fn: () => {
+            trackCreateWalletAmplitude(CREATE_WALLET.BUY_HARDWARE);
+            router.push({
+              name: ROUTES_HOME.BUY_HARDWARE_WALLET.NAME
+            });
+          }
+        },
+        /* Software */
+        {
+          color: 'white',
+          style: 'outline',
+          title: 'Software',
+          subtitle:
+            'Software methods like Keystore File and Mnemonic Phrase should only be used in offline settings by experienced users',
+          official: false,
+          recommended: false,
+          fn: () => {
+            trackCreateWalletAmplitude(CREATE_WALLET.SOFTWARE_METHOD);
+            openSoftwareModule();
+          }
+        }
+      ]
+    : [
+        /* Software */
+        {
+          color: 'white',
+          style: 'outline',
+          title: 'Software',
+          subtitle:
+            'Software methods like Keystore File and Mnemonic Phrase should only be used in offline settings by experienced users',
+          official: false,
+          recommended: false,
+          fn: () => {
+            trackCreateWalletAmplitude(CREATE_WALLET.SOFTWARE_METHOD);
+            openSoftwareModule();
+          }
+        }
+      ];
+});
+
+onMounted(() => {
+  trackCreateWalletAmplitude(COMMON.PAGE_SHOWN);
+});
+
+// methods
+const openSoftwareModule = () => {
+  try {
+    router.push({
+      name: ROUTES_HOME.CREATE_WALLET.NAME,
+      params: { overlay: 'software' },
+      query: { type: 'overview' }
+    });
+  } catch (e) {
+    Toast(e, {}, ERROR);
+  }
+};
+const closeSoftwareModule = () => {
+  try {
+    trackCreateWalletAmplitude(CREATE_WALLET.CLOSE_SOFTWARE);
+    router.push({
+      name: ROUTES_HOME.CREATE_WALLET.NAME
+    });
+  } catch (e) {
+    Toast(e, {}, ERROR);
   }
 };
 </script>
