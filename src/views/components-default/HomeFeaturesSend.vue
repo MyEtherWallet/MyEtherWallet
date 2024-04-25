@@ -19,47 +19,50 @@
           />
         </v-col>
         <v-col cols="12" class="mt-n5">
-          <module-address-book is-home-page />
+          <ModuleAddressBook is-home-page />
         </v-col>
       </v-row>
     </div>
   </white-sheet>
 </template>
 
-<script>
-import { mapGetters, mapState } from 'vuex';
+<script setup>
+import { computed, defineAsyncComponent, ref } from 'vue';
 
-export default {
-  name: 'HomeFeaturesSend',
-  components: {
-    ModuleAddressBook: () => import('@/modules/address-book/ModuleAddressBook')
-  },
-  data: () => ({
-    data: '1337'
-  }),
-  computed: {
-    ...mapState('wallet', ['balance', 'web3', 'address']),
-    ...mapGetters('global', ['network', 'gasPrice']),
-    ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
-    tokens() {
-      const eth = {
-        name: this.network.type.name,
-        symbol: this.network.type.name,
-        subtext: this.network.type.name_long,
-        value: this.network.type.name_long,
-        balance: this.balance,
-        img: this.network.type.icon,
-        decimals: 18,
-        market_cap: null,
-        price_change_percentage_24h: null
-      };
+const ModuleAddressBook = defineAsyncComponent(() =>
+  import('@/modules/address-book/ModuleAddressBook')
+);
 
-      const copiedTokens = this.tokensList.slice();
-      copiedTokens.unshift(eth);
-      return copiedTokens;
-    }
-  }
-};
+import {
+  global as useGlobalStore,
+  wallet as useWalletStore
+} from '@/core/store/index.js';
+
+// injections/use
+
+const { balance, tokensList } = useWalletStore();
+const { network } = useGlobalStore;
+
+// data
+const data = ref('1337');
+
+const tokens = computed(() => {
+  const eth = {
+    name: network.type.name,
+    symbol: network.type.name,
+    subtext: network.type.name_long,
+    value: network.type.name_long,
+    balance: balance,
+    img: network.type.icon,
+    decimals: 18,
+    market_cap: null,
+    price_change_percentage_24h: null
+  };
+
+  const copiedTokens = tokensList.slice();
+  copiedTokens.unshift(eth);
+  return copiedTokens;
+});
 </script>
 
 <style lang="scss" scoped></style>

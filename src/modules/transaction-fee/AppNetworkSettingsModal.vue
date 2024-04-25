@@ -21,82 +21,80 @@
   </app-simple-dialog>
 </template>
 
-<script>
-import gasPriceMixin from '@/modules/settings/handler/gasPriceMixin';
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-export default {
-  components: {
-    AppSimpleDialog: () => import('./AppSimpleDialog'),
-    SettingsGasPrice: () =>
-      import('@/modules/settings/components/SettingsGasPrice')
+<script setup>
+import { defineAsyncComponent, defineProps, defineEmit, watch } from 'vue';
+
+import { global as useGlobalStore } from '@/core/store/index.js';
+
+import { useGasPrice } from '@/core/composables/gasPrice';
+
+const AppSimpleDialog = defineAsyncComponent(() => import('./AppSimpleDialog'));
+const SettingsGasPrice = defineAsyncComponent(() =>
+  import('@/modules/settings/components/SettingsGasPrice')
+);
+
+// emit
+const emit = defineEmit(['onLocalGasPrice', 'close']);
+
+// props
+const props = defineProps({
+  gasPriceModal: {
+    type: Boolean,
+    default: false
   },
-  mixins: [gasPriceMixin, handlerAnalytics],
-  props: {
-    gasPriceModal: {
-      type: Boolean,
-      default: false
-    },
-    close: {
-      type: Function,
-      default: () => {}
-    },
-    notEnoughEth: {
-      type: Boolean,
-      default: false
-    },
-    costInEth: {
-      type: String,
-      default: '0'
-    },
-    txFeeFormatted: {
-      type: String,
-      default: '0'
-    },
-    txFeeUsd: {
-      type: String,
-      default: '0'
-    },
-    totalGasLimit: {
-      type: String,
-      default: '0'
-    }
+  close: {
+    type: Function,
+    default: () => {}
   },
-  watch: {
-    /**
+  notEnoughEth: {
+    type: Boolean,
+    default: false
+  },
+  costInEth: {
+    type: String,
+    default: '0'
+  },
+  txFeeFormatted: {
+    type: String,
+    default: '0'
+  },
+  txFeeUsd: {
+    type: String,
+    default: '0'
+  },
+  totalGasLimit: {
+    type: String,
+    default: '0'
+  }
+});
+
+// injections/use
+const { gasButtons, setSelected } = useGasPrice();
+const { gasPrice, gasPriceByType, gasPriceType } = useGlobalStore();
+// watchers
+/**
      * emit gas when modal
      * opens in case of difference
-     */
-    gasPriceModal(newVal) {
-      if (newVal) {
-        this.$emit('onLocalGasPrice', this.gasPriceByType(this.gasPriceType));
-      }
-    },
-    /**
+      OR
      * only emit new gas price
      * when modal is open
      */
-    gasPrice() {
-      if (this.gasPriceModal) {
-        this.$emit('onLocalGasPrice', this.gasPriceByType(this.gasPriceType));
-      }
-    }
-  },
-  methods: {
-    /**
-     * emit selected gas
-     */
-    setGas(value) {
-      this.$emit('onLocalGasPrice', this.gasPriceByType(value));
-      this.setSelected(value);
-      this.closeDialog();
-    },
-    closeDialog() {
-      this.close();
-    },
-    handleClose() {
-      this.$emit('close');
-    }
+watch([props.gasPriceModal, gasPrice], ([newGasPriceModal]) => {
+  if (newGasPriceModal || props.gasPriceModal) {
+    emit('onLocalGasPrice', gasPriceByType(gasPriceType));
   }
+});
+
+const setGas = value => {
+  emit('onLocalGasPrice', gasPriceByType(value));
+  setSelected(value);
+  closeDialog();
+};
+const closeDialog = () => {
+  props.close();
+};
+const handleClose = () => {
+  emit('close');
 };
 </script>
 

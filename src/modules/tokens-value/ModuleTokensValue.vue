@@ -15,33 +15,37 @@
   </white-sheet>
 </template>
 
-<script>
-import { mapGetters } from 'vuex';
+<script setup>
+import { computed } from 'vue';
 import BigNumber from 'bignumber.js';
-export default {
-  name: 'ModuleTokensValue',
-  computed: {
-    ...mapGetters('wallet', ['tokensList']),
-    ...mapGetters('global', ['getFiatValue']),
-    tokenTitle() {
-      return `My Token${this.tokensList.length > 1 ? 's' : ''} Value`;
-    },
-    totalTokenValues() {
-      let total = BigNumber(0);
-      this.tokensList.forEach(token => {
-        const value = token.usdBalance ? token.usdBalance : 0;
-        total = total.plus(value);
-      });
-      return this.getFiatValue(total);
-    },
-    tokenImages() {
-      const firstFive = this.tokensList.slice(0, 5);
-      return firstFive.map(item => {
-        return item.img;
-      });
-    }
-  }
-};
+
+import {
+  global as useGlobalStore,
+  wallet as useWalletStore
+} from '@/core/store/index.js';
+
+// injections/use
+const { tokensList } = useGlobalStore();
+const { getFiatValue } = useWalletStore();
+
+// methods
+const tokenTitle = computed(() => {
+  return `My Token${tokensList.length > 1 ? 's' : ''} Value`;
+});
+const totalTokenValues = computed(() => {
+  let total = BigNumber(0);
+  tokensList.forEach(token => {
+    const value = token.usdBalance ? token.usdBalance : 0;
+    total = total.plus(value);
+  });
+  return getFiatValue(total);
+});
+const tokenImages = computed(() => {
+  const firstFive = tokensList.slice(0, 5);
+  return firstFive.map(item => {
+    return item.img;
+  });
+});
 </script>
 <style lang="scss" scoped>
 .circled-total {

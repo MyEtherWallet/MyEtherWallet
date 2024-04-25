@@ -107,8 +107,8 @@
   </v-sheet>
 </template>
 
-<script>
-import { mapGetters, mapState } from 'vuex';
+<script setup>
+import { computed, ref, onMounted } from 'vue';
 
 import { formatPercentageValue } from '@/core/helpers/numberFormatHelper';
 import stakedInfo from '@/dapps/staked-dapp/metainfo.js';
@@ -120,85 +120,82 @@ import { COINBASE_STAKING_ROUTES } from '@/dapps/coinbase-staking/configs';
 import { STAKING } from '../analytics-opt-in/handlers/configs/events';
 import handlerStaked from '@/dapps/staked-dapp/handlers/handlerStaked.js';
 import { ETH, GOERLI, HOLESKY } from '@/utils/networks/types';
+import { useAmplitude } from '@/core/composables/amplitude';
+import {
+  global as useGlobalStore,
+  wallet as useWalletStore
+} from '@/core/store/index.js';
+import { useRouter } from 'vue-router/composables';
 
-export default {
-  mixins: [handlerAnalytics],
-  data() {
-    return {
-      handlerStaked: {}
-    };
-  },
-  computed: {
-    ...mapGetters('global', ['network']),
-    ...mapState('wallet', ['web3', 'address', 'identifier']),
-    dapps() {
-      const staking = [];
-      if (
-        this.network.type.name === ETH.name ||
-        this.network.type.name === GOERLI.name
-      ) {
-        staking.push({
-          title: 'Staked',
-          apr: this.currentAprFormatted,
-          description: 'Stake full validators with 32 ETH or more',
-          icon: require('@/assets/images/icons/dapps/icon-dapp-stake.svg'),
-          routeName: STAKED_ROUTE.STAKED.NAME,
-          release: stakedInfo.release
-        });
-      }
+// injections/use
+const { trackDapp, trackStaking } = useAmplitude();
+const { network } = useGlobalStore();
+const { web3, address, identifier } = useWalletStore();
+const router = useRouter();
 
-      if (
-        this.network.type.name === ETH.name ||
-        this.network.type.name === HOLESKY.name
-      ) {
-        staking.push({
-          title: 'ETH Staking Powered by Coinbase',
-          apr: 'Up to 4% APR',
-          description: 'Stake any amount of ETH and earn rewards',
-          icon: require('@/assets/images/icons/dapps/icon-dapp-coinbase.svg'),
-          routeName: COINBASE_STAKING_ROUTES.CORE.NAME,
-          release: coinbaseInfo.release
-        });
-      }
+// data
+const stakedHandler = ref({});
 
-      return staking;
-    },
-    currentAprFormatted() {
-      if (this.handlerStaked.apr > 0) {
-        return `${formatPercentageValue(this.handlerStaked.apr).value} APR`;
-      }
-      return '---';
-    }
-  },
-  mounted() {
-    if (
-      this.network.type.name === ETH.name ||
-      this.network.type.name === GOERLI.name
-    ) {
-      this.handlerStaked = new handlerStaked(
-        this.web3,
-        this.network,
-        this.address,
-        this.trackDapp,
-        this.identifier
-      );
-    }
-  },
-  methods: {
-    routeTo(name) {
-      this.trackStaking(`Page${name}`);
-      this.$router.push({ name: name });
-    },
-    trackMoreAbout() {
-      this.trackStaking(STAKING.STAKE_CENTER_MORE_ABOUT);
-    },
-    /**
-     * defaultName is used to route to dapps that has defalt child route
-     */
-    checkIfNew(release) {
-      return isNew(release);
-    }
+// computed
+const dapps = computed(() => {
+  const staking = [];
+  if (network.type.name === ETH.name || network.type.name === GOERLI.name) {
+    staking.push({
+      title: 'Staked',
+      apr: currentAprFormatted,
+      description: 'Stake full validators with 32 ETH or more',
+      icon: require('@/assets/images/icons/dapps/icon-dapp-stake.svg'),
+      routeName: STAKED_ROUTE.STAKED.NAME,
+      release: stakedInfo.release
+    });
   }
+
+  if (network.type.name === ETH.name || network.type.name === HOLESKY.name) {
+    staking.push({
+      title: 'ETH Staking Powered by Coinbase',
+      apr: 'Up to 4% APR',
+      description: 'Stake any amount of ETH and earn rewards',
+      icon: require('@/assets/images/icons/dapps/icon-dapp-coinbase.svg'),
+      routeName: COINBASE_STAKING_ROUTES.CORE.NAME,
+      release: coinbaseInfo.release
+    });
+  }
+
+  return staking;
+});
+
+const currentAprFormatted = computed(() => {
+  if (stakedHandler.value.apr > 0) {
+    return `${formatPercentageValue(stakedHandler.value.apr).value} APR`;
+  }
+  return '---';
+});
+
+// mounted
+onMounted(() => {
+  if (network.type.name === ETH.name || network.type.name === GOERLI.name) {
+    stakedHandler.value = new handlerStaked(
+      web3,
+      network,
+      address,
+      trackDapp,
+      identifier
+    );
+  }
+});
+// methods
+const routeTo = name => {
+  trackStaking(`Page${name}`);
+  router.push({ name: name });
+};
+const trackMoreAbout = () => {
+  trackStaking(STAKING.STAKE_CENTER_MORE_ABOUT);
+};
+/**
+ * defaultName is used to route to dapps that has defalt child route
+ */
+const checkIfNew = release => {
+  return isNew(release);
 };
 </script>
 

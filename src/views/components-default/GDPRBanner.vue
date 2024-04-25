@@ -35,39 +35,39 @@
   </div>
 </template>
 
-<script>
-import { mapActions, mapState } from 'vuex';
+<script setup>
+import { onMounted, ref } from 'vue';
+
+import { popups as usePopupsStore } from '@/core/store/index.js';
 
 import isEU from '@/core/helpers/isEU.js';
-export default {
-  data() {
-    return {
-      show: false
-    };
-  },
-  computed: {
-    ...mapState('popups', ['shownChoiceEU'])
-  },
-  mounted() {
-    this.checkToShow();
-  },
-  methods: {
-    ...mapActions('popups', ['setShownEu', 'setTrackingConsent']),
-    async checkToShow() {
-      const isFromEU = await isEU();
-      this.show = !this.shownChoiceEU && isFromEU;
-    },
-    handleReject() {
-      this.setShownEu().then(() => {
-        this.setTrackingConsent(false);
-      });
-    },
-    handleAccept() {
-      this.setShownEu().then(() => {
-        this.setTrackingConsent(true);
-      });
-    }
-  }
+
+// injections/use
+const { shownChoiceEU, setShownEu, setTrackingConsent } = usePopupsStore();
+
+// data
+const show = ref(false);
+
+// mounted
+onMounted(() => {
+  checkToShow();
+});
+
+// methods
+const checkToShow = async () => {
+  const isFromEU = await isEU();
+  show.value = !shownChoiceEU && isFromEU;
+};
+
+const handleReject = () => {
+  setShownEu().then(() => {
+    setTrackingConsent(false);
+  });
+};
+const handleAccept = () => {
+  setShownEu().then(() => {
+    setTrackingConsent(true);
+  });
 };
 </script>
 

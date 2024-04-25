@@ -208,7 +208,7 @@
                 title="Upload JSON file"
                 btn-size="small"
                 btn-style="transparent"
-                @click.native="$refs.uploadSig.click()"
+                @click.native="triggerUpload"
               />
             </div>
           </v-sheet>
@@ -218,8 +218,8 @@
   </div>
 </template>
 
-<script>
-import { mapGetters, mapState } from 'vuex';
+<script setup>
+import { defineAsyncComponent, defineProps, ref, computed } from 'vue';
 import { isAddress, fromWei, toHex, toBN } from 'web3-utils';
 import { Transaction } from 'ethereumjs-tx';
 import { BigNumber } from 'bignumber.js';
@@ -229,453 +229,464 @@ import { isEmpty } from 'lodash';
 import commonGenerator from '@/core/helpers/commonGenerator';
 import sanitizeHex from '@/core/helpers/sanitizeHex';
 
-export default {
-  name: 'ModuleToolsOfflineHelper',
-  components: {
-    NetworkSwitch: () =>
-      import('@/modules/network/components/NetworkSwitch.vue')
-  },
-  props: {
-    isHomePage: {
-      type: Boolean,
-      default: true
-    }
-  },
-  data: () => ({
-    dialog: false,
-    currentStep: 1,
-    fromAddress: '',
-    fromAddressMessage: [],
-    details: [],
-    exportFileName: '',
-    signature: '',
-    signatureError: false,
-    signatureMessage: [],
-    rawTransaction: '',
-    transactionDetails: [],
-    validTx: false,
-    file: {},
-    fileLink: '',
-    alerts: [],
-    dialogAlert: '',
-    txHash: '',
-    status: false,
-    txLoading: false,
-    title: {
-      title: 'Send Offline Helper',
-      description:
-        'Use this tool to help you sign transactions securely on an offline computer'
-    },
-    exPanelStep2: [
-      {
-        name: 'Details'
-      }
-    ],
-    exPanelStep3: [
-      {
-        name: 'Raw transaction'
-      },
-      {
-        name: 'Details'
-      }
-    ],
-    stepperItems: [
-      {
-        step: 1,
-        name: 'STEP 1. Select network'
-      },
-      {
-        step: 2,
-        name: 'STEP 2. Generate information'
-      },
-      {
-        step: 3,
-        name: 'STEP 3. Signed transaction'
-      }
-    ]
-  }),
-  computed: {
-    ...mapState('wallet', ['web3', 'address']),
-    ...mapState('addressBook', ['addressBookStore']),
-    ...mapGetters('global', ['network']),
-    addresses() {
-      return this.isHomePage
-        ? [
-            {
-              address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
-              currency: 'ETH',
-              nickname: 'MEW Donations',
-              resolverAddr: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
-            }
-          ]
-        : this.address
-        ? [
-            {
-              address: toChecksumAddress(this.address),
-              nickname: 'My Address',
-              resolverAddr: ''
-            }
-          ]
-        : [].concat(this.addressBookStore);
-    },
-    detailLength() {
-      return this.details.length > 0;
-    },
-    sortedAlerts() {
-      const x = this.alerts;
-      return x.sort((a, b) =>
-        a.severity > b.severity ? 1 : a.severity < b.severity ? -1 : 0
-      );
-    },
-    error() {
-      return this.alerts.filter(a => a.severity === 'error').length
-        ? true
-        : false;
-    },
-    getRawTransaction() {
-      let sig = this.signature;
-      try {
-        sig = JSON.parse(sig);
-        if (!isEmpty(sig)) {
-          if (sig.rawTransaction) sig = sanitizeHex(sig.rawTransaction);
-        }
-      } catch {
-        sig = sanitizeHex(sig);
-      }
-      return sig;
-    }
-  },
-  methods: {
-    handleBack() {
-      if (this.currentStep === 3) {
-        this.checkTx('');
-      }
-      this.currentStep -= 1;
-    },
-    clear() {
-      this.fromAddress = '';
-      this.rawTransaction = '';
-      this.signature = '';
-      this.currentStep = 1;
-      this.dialogAlert = '';
-    },
-    dismiss() {
-      this.dialog = false;
-      this.dialogAlert = '';
-      this.txHash = '';
-    },
-    /*********************************************
-     * checks if address is valid on each change
-     * shows and hides accordingly to address
-     *********************************************/
-    setAddress(val = '') {
-      this.fromAddress = val;
-      if (isAddress(this.fromAddress)) {
-        if (this.fromAddressMessage.length) this.fromAddressMessage = [];
-        this.setDetails();
-        return;
-      }
-      if (this.details.length > 1) this.setDetails([]);
-      if (this.fromAddress === null || this.fromAddress === '') {
-        if (this.fromAddressMessage.length) this.fromAddressMessage = [];
-        return;
-      }
-      this.fromAddressMessage = ['Not a valid Address'];
-    },
-    /**********************************************************
-     * Gets data from current network and web3 instance
-     * @returns {object} data - used for exporting to json,
-     * details - details to be displayed to the user
-     **********************************************************/
-    async txData() {
-      const { eth } = this.web3;
-      const chainID = await eth.getChainId();
-      const fetchedGasPrice = await eth.getGasPrice();
-      const gasPrice = fromWei(fetchedGasPrice, 'gwei');
-      const nonce = await eth.getTransactionCount(this.fromAddress);
-      return {
-        data: {
-          nonce,
-          fetchedGasPrice,
-          chainID
-        },
-        details: {
-          address: this.fromAddress,
-          nonce: nonce.toString(),
-          chainID,
-          gasLimit: `21000`,
-          gasPrice
-        }
-      };
-    },
+import {
+  global as useGlobalStore,
+  wallet as useWalletStore,
+  addressBook as useAddressBookStore
+} from '@/core/store/index.js';
 
-    /*************************************************************
-     * Sets details to current data or specified data from param
-     * @param {array} val - optional, expecting array
-     *************************************************************/
-    async setDetails(val) {
-      if (val) return (this.details = val);
-      const { details } = await this.txData();
-      this.details = [
-        {
-          title: 'Sender',
-          value: '',
-          address: details.address
-        },
-        {
-          title: 'Nonce',
-          value: details.nonce
-        },
-        { title: 'Date', value: Date() },
-        {
-          title: 'Chain ID',
-          value: details.chainID
-        },
-        {
-          title: 'Gas Limit',
-          value: details.gasLimit
-        },
-        {
-          title: 'Gas Price',
-          value: `${details.gasPrice} gwei`
-        }
-      ];
-      this.exportFile();
-    },
+const NetworkSwitch = defineAsyncComponent(() =>
+  import('@/modules/network/components/NetworkSwitch.vue')
+);
 
-    /************************
-     * exports data to json
-     ************************/
-    async exportFile() {
-      let { data } = await this.txData();
-      data = {
-        nonce: toHex(data.nonce),
-        gasPrice: toHex(data.fetchedGasPrice),
-        chainID: toHex(data.chainID)
-      };
-      const blob = new Blob([JSON.stringify(data)], { type: 'mime' });
-      this.fileLink = window.URL.createObjectURL(blob);
-      this.exportFileName = `generated-offline-tx-${Date.now()}.json`;
-    },
+// injections/use
+const { network } = useGlobalStore();
+const { web3, address } = useWalletStore();
+const { addressBookStore } = useAddressBookStore();
 
-    /*********************************************
-     * checks if the signature is a valid hex
-     * generates data and details
-     * @param {string} val - value of signature
-     *********************************************/
-    checkTx(val = '') {
-      this.signature = val;
-      if (this.signature === '') {
-        this.signatureError = false;
-        this.signatureMessage = [];
-        this.alerts = [];
-        this.validTx = false;
-        return;
-      }
-      if (this.signatureError) {
-        this.signatureError = false;
-        this.signatureMessage = [];
-      }
-      if (this.alerts.length) this.alerts = [];
-      this.setRawTransaction();
-      this.setRawDetails();
-    },
-
-    /****************************************************
-     * number helper
-     * @param {int,string} val - number to be evaluated
-     ****************************************************/
-    gtr(val) {
-      return new BigNumber(val).gt(0) ? new BigNumber(val).toFixed() : '0';
-    },
-
-    /***********************************************************************************
-     * creates data and details
-     * handles errors
-     * @return {object}
-     * - raw: raw data
-     * - details: detailed data (includes more fields)
-     ***********************************************************************************/
-    rawTxData() {
-      try {
-        const tx = new Transaction(this.getRawTransaction, {
-          common: commonGenerator(this.network)
-        });
-        const txValues = tx.toJSON(true);
-        const txChain = tx.getChainId();
-        const txFrom = sanitizeHex(tx.getSenderAddress().toString('hex'));
-        this.validTx = tx.verifySignature();
-        const fee = tx.getBaseFee().toString();
-        const basicDetails = {
-          from: txFrom,
-          nonce: this.gtr(txValues.nonce),
-          gasPrice: this.gtr(txValues.gasPrice),
-          gasLimit: this.gtr(txValues.gasLimit),
-          to: txValues.to,
-          value: fromWei(this.gtr(txValues.value), 'ether'),
-          data: txValues.data
-        };
-        return {
-          fee,
-          raw: {
-            ...basicDetails
-          },
-          details: {
-            ...basicDetails,
-            chainID: txChain
-          }
-        };
-      } catch ({ message }) {
-        const errors = {
-          'invalid rlp: total length is larger than the data':
-            'Malformed signature',
-          'chain id': 'Incorrect network selected'
-        };
-        this.signatureError = true;
-        this.validTx = false;
-        const errorMsgs = Object.keys(errors);
-        const foundError = errorMsgs.find(e => {
-          if (!message) return false;
-          return message.includes(e);
-        });
-        if (foundError) {
-          this.signatureMessage = [errors[foundError]];
-        } else {
-          this.signatureMessage = ['Must be a valid transaction'];
-        }
-        return {};
-      }
-    },
-    /**********************************************************
-     * sets raw data to specified value or generated raw data
-     * @param {Object[]} val - array of entries
-     * @param {string} val[].title - Name of value
-     * @param {string|number} val[].value - Value
-     **********************************************************/
-    async setRawTransaction(val) {
-      if (val) return (this.rawTransaction = val);
-      const { raw, fee } = this.rawTxData();
-      if (raw) {
-        this.rawTransaction = JSON.stringify(raw, null, 3);
-        const { eth } = this.web3;
-        const addressMatch =
-          toChecksumAddress(raw.from) === toChecksumAddress(this.fromAddress);
-        const balance = await eth.getBalance(raw.from);
-        if (!addressMatch)
-          this.alerts.push({
-            name: 'addressMatch',
-            severity: 'error',
-            title: 'Error',
-            message: 'Signer does not match selected address!'
-          });
-        if (BigNumber(balance).lt(fee))
-          this.alerts.push({
-            name: 'balance',
-            severity: 'error',
-            title: 'Error',
-            message: "Current address can't afford this transaction"
-          });
-      }
-    },
-
-    /**********************************************************
-     * sets details to specified value or generated details
-     * @param {Object[]} val - array of entries
-     * @param {string} val[].title - Name of value
-     * @param {string|number} val[].value - Value
-     **********************************************************/
-    setRawDetails(val) {
-      if (val) return (this.transactionDetails = val);
-      const { details } = this.rawTxData();
-      if (details)
-        this.transactionDetails = [
-          {
-            title: 'From',
-            value: '',
-            address: details.from
-          },
-          {
-            title: 'To',
-            value: '',
-            address: details.to
-          },
-          {
-            title: 'Value',
-            value: details.value
-          },
-          {
-            title: 'Gas Price',
-            value: details.gasPrice
-          },
-          {
-            title: 'Gas Limit',
-            value: details.gasLimit
-          },
-          {
-            title: 'Data',
-            value: details.data
-          },
-          {
-            title: 'Chain Id',
-            value: details.chainID
-          }
-        ];
-    },
-
-    /***************************************************
-     * processes uploaded file and gets signature from
-     * rawTransaction value
-     * sets processed signature to signature
-     ***************************************************/
-    uploadFile({ target: { files } }) {
-      const reader = new FileReader();
-      const self = this;
-      reader.onloadend = function ({ target: { result } }) {
-        try {
-          self.file = JSON.parse(result);
-          if (!isEmpty(self.file)) {
-            if (self.file.rawTransaction) {
-              self.checkTx(self.file.rawTransaction);
-              self.$refs.uploadSig.value = '';
-              return;
-            }
-          }
-          throw Error();
-        } catch {
-          self.signatureError = true;
-          self.signatureMessage = ['Bad signature upload'];
-        }
-      };
-      if (files[0]) reader.readAsBinaryString(files[0]);
-    },
-    async sendTx() {
-      const { eth } = this.web3;
-      const actualNonce = await eth.getTransactionCount(this.fromAddress);
-      const { raw } = await this.rawTxData();
-      const nonce = raw.nonce;
-      this.dialog = true;
-      this.txLoading = true;
-      if (toBN(actualNonce).gt(toBN(nonce))) {
-        this.dialogAlert = 'Nonce too low!';
-        this.txLoading = false;
-        return;
-      }
-      eth
-        .sendSignedTransaction(this.getRawTransaction)
-        .once('transactionHash', hash => {
-          this.txHash = hash;
-          this.clear();
-        })
-        .once('receipt', receipt => {
-          const { status } = receipt;
-          this.status = status;
-          this.txLoading = false;
-        })
-        .catch(({ message }) => {
-          this.dialogAlert = message;
-          this.txLoading = false;
-        });
-    }
+// props
+const props = defineProps({
+  isHomePage: {
+    type: Boolean,
+    default: true
   }
+});
+
+// data
+const dialog = ref(false);
+const currentStep = ref(1);
+const fromAddress = ref('');
+const fromAddressMessage = ref([]);
+const details = ref([]);
+const exportFileName = ref('');
+const signature = ref('');
+const signatureError = ref(false);
+const signatureMessage = ref([]);
+const rawTransaction = ref('');
+const transactionDetails = ref([]);
+const validTx = ref(false);
+const file = ref({});
+const fileLink = ref('');
+const alerts = ref([]);
+const dialogAlert = ref('');
+const txHash = ref('');
+const status = ref(false);
+const txLoading = ref(false);
+const uploadSig = ref(null);
+const title = {
+  title: 'Send Offline Helper',
+  description:
+    'Use this tool to help you sign transactions securely on an offline computer'
+};
+const exPanelStep2 = [
+  {
+    name: 'Details'
+  }
+];
+const exPanelStep3 = [
+  {
+    name: 'Raw transaction'
+  },
+  {
+    name: 'Details'
+  }
+];
+const stepperItems = [
+  {
+    step: 1,
+    name: 'STEP 1. Select network'
+  },
+  {
+    step: 2,
+    name: 'STEP 2. Generate information'
+  },
+  {
+    step: 3,
+    name: 'STEP 3. Signed transaction'
+  }
+];
+
+// computed
+const addresses = computed(() => {
+  return props.isHomePage
+    ? [
+        {
+          address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
+          currency: 'ETH',
+          nickname: 'MEW Donations',
+          resolverAddr: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
+        }
+      ]
+    : address
+    ? [
+        {
+          address: toChecksumAddress(address),
+          nickname: 'My Address',
+          resolverAddr: ''
+        }
+      ]
+    : [].concat(addressBookStore);
+});
+
+const detailLength = computed(() => {
+  return details.value.length > 0;
+});
+
+const sortedAlerts = computed(() => {
+  const x = alerts.value;
+  return x.sort((a, b) => {
+    a.severity > b.severity ? 1 : a.severity < b.severity ? -1 : 0;
+  });
+});
+
+const error = computed(() => {
+  return alerts.value.filter(a => a.severity === 'error').length ? true : false;
+});
+const getRawTransaction = computed(() => {
+  let sig = signature.value;
+  try {
+    sig = JSON.parse(sig);
+    if (!isEmpty(sig)) {
+      if (sig.rawTransaction) sig = sanitizeHex(sig.rawTransaction);
+    }
+  } catch {
+    sig = sanitizeHex(sig);
+  }
+  return sig;
+});
+
+// methods
+const handleBack = () => {
+  if (currentStep.value === 3) {
+    checkTx('');
+  }
+  currentStep.value -= 1;
+};
+const clear = () => {
+  fromAddress.value = '';
+  rawTransaction.value = '';
+  signature.value = '';
+  currentStep.value = 1;
+  dialogAlert.value = '';
+};
+const dismiss = () => {
+  dialog.value = false;
+  dialogAlert.value = '';
+  txHash.value = '';
+};
+/*********************************************
+ * checks if address is valid on each change
+ * shows and hides accordingly to address
+ *********************************************/
+const setAddress = (val = '') => {
+  fromAddress.value = val;
+  if (isAddress(fromAddress.value)) {
+    if (fromAddressMessage.value.length) fromAddressMessage.value = [];
+    setDetails();
+    return;
+  }
+  if (details.value.length > 1) setDetails([]);
+  if (fromAddress.value === null || fromAddress.value === '') {
+    if (fromAddressMessage.value.length) fromAddressMessage.value = [];
+    return;
+  }
+  fromAddressMessage.value = ['Not a valid Address'];
+};
+/**********************************************************
+ * Gets data from current network and web3 instance
+ * @returns {object} data - used for exporting to json,
+ * details - details to be displayed to the user
+ **********************************************************/
+const txData = async () => {
+  const { eth } = web3;
+  const chainID = await eth.getChainId();
+  const fetchedGasPrice = await eth.getGasPrice();
+  const gasPrice = fromWei(fetchedGasPrice, 'gwei');
+  const nonce = await eth.getTransactionCount(fromAddress);
+  return {
+    data: {
+      nonce,
+      fetchedGasPrice,
+      chainID
+    },
+    details: {
+      address: fromAddress,
+      nonce: nonce.toString(),
+      chainID,
+      gasLimit: `21000`,
+      gasPrice
+    }
+  };
+};
+
+/*************************************************************
+ * Sets details to current data or specified data from param
+ * @param {array} val - optional, expecting array
+ *************************************************************/
+const setDetails = async val => {
+  if (val) return (details.value = val);
+  const { resDetails } = await txData();
+  details.value = [
+    {
+      title: 'Sender',
+      value: '',
+      address: resDetails.address
+    },
+    {
+      title: 'Nonce',
+      value: resDetails.nonce
+    },
+    { title: 'Date', value: Date() },
+    {
+      title: 'Chain ID',
+      value: resDetails.chainID
+    },
+    {
+      title: 'Gas Limit',
+      value: resDetails.gasLimit
+    },
+    {
+      title: 'Gas Price',
+      value: `${resDetails.gasPrice} gwei`
+    }
+  ];
+  exportFile();
+};
+
+/************************
+ * exports data to json
+ ************************/
+const exportFile = async () => {
+  let { data } = await txData();
+  data = {
+    nonce: toHex(data.nonce),
+    gasPrice: toHex(data.fetchedGasPrice),
+    chainID: toHex(data.chainID)
+  };
+  const blob = new Blob([JSON.stringify(data)], { type: 'mime' });
+  fileLink.value = window.URL.createObjectURL(blob);
+  exportFileName.value = `generated-offline-tx-${Date.now()}.json`;
+};
+
+/*********************************************
+ * checks if the signature is a valid hex
+ * generates data and details
+ * @param {string} val - value of signature
+ *********************************************/
+const checkTx = (val = '') => {
+  signature.value = val;
+  if (signature.value === '') {
+    signatureError.value = false;
+    signatureMessage.value = [];
+    alerts.value = [];
+    validTx.value = false;
+    return;
+  }
+  if (signatureError.value) {
+    signatureError.value = false;
+    signatureMessage.value = [];
+  }
+  if (alerts.value.length) alerts.value = [];
+  setRawTransaction();
+  setRawDetails();
+};
+
+/****************************************************
+ * number helper
+ * @param {int,string} val - number to be evaluated
+ ****************************************************/
+const gtr = val => {
+  return new BigNumber(val).gt(0) ? new BigNumber(val).toFixed() : '0';
+};
+
+/***********************************************************************************
+ * creates data and details
+ * handles errors
+ * @return {object}
+ * - raw: raw data
+ * - details: detailed data (includes more fields)
+ ***********************************************************************************/
+const rawTxData = () => {
+  try {
+    const tx = new Transaction(getRawTransaction, {
+      common: commonGenerator(network)
+    });
+    const txValues = tx.toJSON(true);
+    const txChain = tx.getChainId();
+    const txFrom = sanitizeHex(tx.getSenderAddress().toString('hex'));
+    validTx.value = tx.verifySignature();
+    const fee = tx.getBaseFee().toString();
+    const basicDetails = {
+      from: txFrom,
+      nonce: gtr(txValues.nonce),
+      gasPrice: gtr(txValues.gasPrice),
+      gasLimit: gtr(txValues.gasLimit),
+      to: txValues.to,
+      value: fromWei(gtr(txValues.value), 'ether'),
+      data: txValues.data
+    };
+    return {
+      fee,
+      raw: {
+        ...basicDetails
+      },
+      details: {
+        ...basicDetails,
+        chainID: txChain
+      }
+    };
+  } catch ({ message }) {
+    const errors = {
+      'invalid rlp: total length is larger than the data':
+        'Malformed signature',
+      'chain id': 'Incorrect network selected'
+    };
+    signatureError.value = true;
+    validTx.value = false;
+    const errorMsgs = Object.keys(errors);
+    const foundError = errorMsgs.find(e => {
+      if (!message) return false;
+      return message.includes(e);
+    });
+    if (foundError) {
+      signatureMessage.value = [errors[foundError]];
+    } else {
+      signatureMessage.value = ['Must be a valid transaction'];
+    }
+    return {};
+  }
+};
+/**********************************************************
+ * sets raw data to specified value or generated raw data
+ * @param {Object[]} val - array of entries
+ * @param {string} val[].title - Name of value
+ * @param {string|number} val[].value - Value
+ **********************************************************/
+const setRawTransaction = async val => {
+  if (val) return (rawTransaction.value = val);
+  const { raw, fee } = rawTxData();
+  if (raw) {
+    rawTransaction.value = JSON.stringify(raw, null, 3);
+    const { eth } = web3;
+    const addressMatch =
+      toChecksumAddress(raw.from) === toChecksumAddress(fromAddress);
+    const balance = await eth.getBalance(raw.from);
+    if (!addressMatch)
+      alerts.value.push({
+        name: 'addressMatch',
+        severity: 'error',
+        title: 'Error',
+        message: 'Signer does not match selected address!'
+      });
+    if (BigNumber(balance).lt(fee))
+      alerts.value.push({
+        name: 'balance',
+        severity: 'error',
+        title: 'Error',
+        message: "Current address can't afford this transaction"
+      });
+  }
+};
+
+/**********************************************************
+ * sets details to specified value or generated details
+ * @param {Object[]} val - array of entries
+ * @param {string} val[].title - Name of value
+ * @param {string|number} val[].value - Value
+ **********************************************************/
+const setRawDetails = val => {
+  if (val) return (transactionDetails.value = val);
+  const { details } = rawTxData();
+  if (details)
+    transactionDetails.value = [
+      {
+        title: 'From',
+        value: '',
+        address: details.from
+      },
+      {
+        title: 'To',
+        value: '',
+        address: details.to
+      },
+      {
+        title: 'Value',
+        value: details.value
+      },
+      {
+        title: 'Gas Price',
+        value: details.gasPrice
+      },
+      {
+        title: 'Gas Limit',
+        value: details.gasLimit
+      },
+      {
+        title: 'Data',
+        value: details.data
+      },
+      {
+        title: 'Chain Id',
+        value: details.chainID
+      }
+    ];
+};
+
+/***************************************************
+ * processes uploaded file and gets signature from
+ * rawTransaction value
+ * sets processed signature to signature
+ ***************************************************/
+const uploadFile = ({ target: { files } }) => {
+  const reader = new FileReader();
+  reader.onloadend = function ({ target: { result } }) {
+    try {
+      file.value = JSON.parse(result);
+      if (!isEmpty(file.value)) {
+        if (file.value.rawTransaction) {
+          checkTx(file.value.rawTransaction);
+          uploadSig.value = '';
+          return;
+        }
+      }
+      throw Error();
+    } catch {
+      signatureError.value = true;
+      signatureMessage.value = ['Bad signature upload'];
+    }
+  };
+  if (files[0]) reader.readAsBinaryString(files[0]);
+};
+const sendTx = async () => {
+  const { eth } = web3;
+  const actualNonce = await eth.getTransactionCount(fromAddress);
+  const { raw } = await rawTxData();
+  const nonce = raw.nonce;
+  dialog.value = true;
+  txLoading.value = true;
+  if (toBN(actualNonce).gt(toBN(nonce))) {
+    dialogAlert.value = 'Nonce too low!';
+    txLoading.value = false;
+    return;
+  }
+  eth
+    .sendSignedTransaction(getRawTransaction)
+    .once('transactionHash', hash => {
+      txHash.value = hash;
+      clear();
+    })
+    .once('receipt', receipt => {
+      const { status } = receipt;
+      status.value = status;
+      txLoading.value = false;
+    })
+    .catch(({ message }) => {
+      dialogAlert.value = message;
+      txLoading.value = false;
+    });
+};
+
+const triggerUpload = () => {
+  uploadSig.value.click();
 };
 </script>

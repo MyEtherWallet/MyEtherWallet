@@ -175,8 +175,16 @@
   </div>
 </template>
 
-<script>
-import { mapGetters, mapActions, mapState } from 'vuex';
+<script setup>
+import {
+  defineProps,
+  defineAsyncComponent,
+  ref,
+  watch,
+  computed,
+  onMounted,
+  defineEmit
+} from 'vue';
 import BigNumber from 'bignumber.js';
 import { fromWei } from 'web3-utils';
 
@@ -186,118 +194,135 @@ import {
 } from '@/core/helpers/numberFormatHelper';
 import { estimatedTime } from '@/core/helpers/gasPriceHelper';
 
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-import buyMore from '@/core/mixins/buyMore.mixin.js';
-export default {
-  name: 'AppTransactionFee',
-  components: {
-    AppNetworkSettingsModal: () => import('./AppNetworkSettingsModal.vue')
+import { useBuySell } from '@/core/composables/buyMore';
+import {
+  global as useGlobalStore,
+  external as useExternalStore,
+  wallet as useWalletStore
+} from '@/core/store/index.js';
+
+const AppNetworkSettingsModal = defineAsyncComponent(() =>
+  import('./AppNetworkSettingsModal.vue')
+);
+
+// emit
+const emit = defineEmit(['onLocalGasPrice']);
+
+// props
+const props = defineProps({
+  showFee: {
+    type: Boolean,
+    default: false
   },
-  mixins: [buyMore, handlerAnalytics],
-  props: {
-    showFee: {
-      type: Boolean,
-      default: false
-    },
-    gettingFee: {
-      type: Boolean,
-      default: false
-    },
-    error: {
-      type: String,
-      default: ''
-    },
-    txFee: {
-      type: String,
-      default: '0'
-    },
-    totalCost: {
-      type: String,
-      default: '0'
-    },
-    notEnoughEth: {
-      type: Boolean,
-      default: false
-    },
-    fromEth: {
-      type: Boolean,
-      default: false
-    },
-    totalGasLimit: {
-      type: String,
-      default: '0'
-    }
+  gettingFee: {
+    type: Boolean,
+    default: false
   },
-  data() {
-    return { gasPriceModal: false, openHighFeeNote: false, interval: () => {} };
+  error: {
+    type: String,
+    default: ''
   },
-  computed: {
-    ...mapGetters('external', ['fiatValue']),
-    ...mapGetters('global', ['network', 'isEthNetwork', 'gasPriceByType']),
-    ...mapGetters('wallet', ['hasGasPriceOption']),
-    ...mapState('global', ['gasPriceType', 'preferredCurrency']),
-    txFeeInEth() {
-      return fromWei(this.txFee);
-    },
-    costInEth() {
-      const cost = new BigNumber(this.totalCost).toFixed();
-      return fromWei(cost);
-    },
-    txFeeFormatted() {
-      return formatFloatingPointValue(this.txFeeInEth).value;
-    },
-    actualCostFormatted() {
-      return formatFloatingPointValue(this.costInEth).value;
-    },
-    feeInUsd() {
-      const value = formatFiatValue(
-        BigNumber(this.txFeeInEth).times(this.fiatValue).toFixed(2),
-        { currency: this.preferredCurrency }
-      ).value;
-      return value;
-    },
-    hasError() {
-      return this.error !== '';
-    },
-    timeWillTake() {
-      return estimatedTime(this.gasPriceType);
-    }
+  txFee: {
+    type: String,
+    default: '0'
   },
-  watch: {
-    gasPriceModal() {
-      clearInterval(this.interval);
-      this.interval = this.setGasPriceInterval();
-    }
+  totalCost: {
+    type: String,
+    default: '0'
   },
-  mounted() {
-    // update gasprice every 2 minutes
-    this.interval = this.setGasPriceInterval();
+  notEnoughEth: {
+    type: Boolean,
+    default: false
   },
-  methods: {
-    ...mapActions('global', ['updateGasPrice']),
-    setGasPriceInterval() {
-      return setInterval(() => {
-        this.handleLocalGasPrice(this.gasPriceByType(this.gasPrice));
-      }, 60 * 2000);
-    },
-    closeGasPrice() {
-      this.gasPriceModal = false;
-    },
-    openGasPriceModal() {
-      this.updateGasPrice().then(() => {
-        this.gasPriceModal = true;
-      });
-    },
-    handleLocalGasPrice(val) {
-      this.$emit('onLocalGasPrice', val);
-    },
-    showHighNote() {
-      this.openHighFeeNote = true;
-    },
-    closeHighFeeNote() {
-      this.openHighFeeNote = false;
-    }
+  fromEth: {
+    type: Boolean,
+    default: false
+  },
+  totalGasLimit: {
+    type: String,
+    default: '0'
   }
+});
+
+// injections/use
+const { openBuySell } = useBuySell();
+const { fiatValue } = useExternalStore();
+const {
+  network,
+  isEthNetwork,
+  gasPriceByType,
+  gasPriceType,
+  preferredCurrency,
+  updateGasPrice
+} = useGlobalStore();
+const { hasGasPriceOption } = useWalletStore();
+
+// data
+const gasPriceModal = ref(false);
+const openHighFeeNote = ref(false);
+let interval = null;
+
+// computed
+const txFeeInEth = computed(() => {
+  return fromWei(props.txFee);
+});
+const costInEth = computed(() => {
+  const cost = new BigNumber(props.totalCost).toFixed();
+  return fromWei(cost);
+});
+const txFeeFormatted = computed(() => {
+  return formatFloatingPointValue(txFeeInEth).value;
+});
+const actualCostFormatted = computed(() => {
+  return formatFloatingPointValue(costInEth).value;
+});
+const feeInUsd = computed(() => {
+  const value = formatFiatValue(
+    BigNumber(txFeeInEth).times(fiatValue).toFixed(2),
+    { currency: preferredCurrency }
+  ).value;
+  return value;
+});
+const hasError = computed(() => {
+  return props.error !== '';
+});
+const timeWillTake = computed(() => {
+  return estimatedTime(gasPriceType);
+});
+
+// watchers
+watch(gasPriceModal, () => {
+  clearInterval(interval);
+  interval = setGasPriceInterval();
+});
+
+// mounted
+onMounted(() => {
+  interval = setGasPriceInterval();
+});
+
+// methods
+const setGasPriceInterval = () => {
+  return setInterval(() => {
+    handleLocalGasPrice(gasPriceByType(props.gasPrice));
+  }, 60 * 2000);
+};
+const closeGasPrice = () => {
+  gasPriceModal.value = false;
+};
+const openGasPriceModal = () => {
+  updateGasPrice().then(() => {
+    gasPriceModal.value = true;
+  });
+};
+const handleLocalGasPrice = val => {
+  emit('onLocalGasPrice', val);
+};
+const showHighNote = () => {
+  openHighFeeNote.value = true;
+};
+const closeHighFeeNote = () => {
+  openHighFeeNote.value = false;
 };
 </script>
 

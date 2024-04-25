@@ -2,8 +2,8 @@ import { toBN, toHex, toChecksumAddress, isHexStrict } from 'web3-utils';
 import { isAddress } from '@/core/helpers/addressUtils';
 import SanitizeHex from '@/core/helpers/sanitizeHex';
 import { Transaction } from '@ethereumjs/tx';
-import { mapState, mapGetters } from 'vuex';
-import vuexStore from '@/core/store';
+import { wallet as useWalletStore } from '@/core/store/index.js';
+
 import ErrorList from '../errors';
 import Web3Contract from 'web3-eth-contract';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
@@ -14,9 +14,6 @@ import { toBNSafe } from '@/core/helpers/numberFormatHelper';
 
 class SendTransaction {
   constructor() {
-    this.$store = vuexStore;
-    Object.assign(this, mapState('wallet', ['balance', 'web3', 'address']));
-    Object.assign(this, mapGetters('global', ['network']));
     this.currency = null;
     this.localGasPrice = '0';
     this.TX = {
@@ -83,24 +80,24 @@ class SendTransaction {
     this.TX.data = '0x';
   }
   getEntireBal() {
+    const { balance } = useWalletStore();
     if (this.isToken()) {
       return this.currency.balance;
     }
     const gasPriceBN = toBN(this.localGasPrice);
     const fee = gasPriceBN.mul(toBN(this.TX.gas));
-    return this.balance().gt(this.balance().sub(fee))
-      ? this.balance().sub(fee)
-      : 0;
+    return balance.gt(balance.sub(fee)) ? balance.sub(fee) : 0;
   }
   txFee() {
     return toBN(this.localGasPrice).mul(toBN(this.TX.gas));
   }
   estimateGas() {
-    if (this.address()) this.setFrom(this.address());
+    const { web3, address } = useWalletStore();
+    if (address) this.setFrom(address);
     this._setTo();
     this._setValue();
     this._setGasPrice();
-    return this.web3().eth.estimateGas({
+    return web3.eth.estimateGas({
       data: this.TX.data,
       from: this.TX.from,
       to: this.TX.to,
@@ -112,12 +109,13 @@ class SendTransaction {
   }
   hasEnoughBalance() {
     const amount = toBN(this.TX.destinationValue);
+    const { balance } = useWalletStore();
     if (this.isToken() && this.currency.balance) {
       const hasAmountToken = amount.lte(toBNSafe(this.currency.balance));
-      const hasGas = this.txFee().lte(this.balance());
+      const hasGas = this.txFee().lte(balance);
       return hasAmountToken && hasGas;
     }
-    return amount.add(this.txFee()).lte(this.balance());
+    return amount.add(this.txFee()).lte(balance);
   }
   getTokenTransferABI(amount, _toAddress) {
     amount = toBN(amount);
@@ -141,18 +139,19 @@ class SendTransaction {
       .encodeABI();
   }
   async submitTransaction() {
+    const { web3, address } = useWalletStore();
     try {
       this._setTo();
       this._setValue();
       this._setGasPrice();
-      const nonce = await this.web3().eth.getTransactionCount(this.address());
+      const nonce = await web3.eth.getTransactionCount(address);
       this.setNonce(nonce);
       this.TX.gasLimit = this.TX.gas;
       const _tx = Transaction.fromTxData(this.TX);
       const json = _tx.toJSON(true);
-      json.from = this.address();
+      json.from = address;
       json.toDetails = this.TX.toDetails;
-      return this.web3().eth.sendTransaction(json);
+      return web3.eth.sendTransaction(json);
     } catch (e) {
       return e;
     }

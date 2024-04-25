@@ -38,7 +38,7 @@
       <template #[addressBookPanel]>
         <div class="pa-6">
           <div class="mb-4">
-            {{ $t('interface.address-book.add-up-to') }}
+            {{ t('interface.address-book.add-up-to') }}
           </div>
 
           <settings-address-table :table-data="tableData" @onClick="onEdit" />
@@ -48,7 +48,7 @@
               :disabled="addressBookStore.length >= 10"
               title="+ Add"
               btn-size="xlarge"
-              @click.native="addMode = !addMode"
+              @click.native="addMode.value = !addMode"
             />
           </div>
         </div>
@@ -93,164 +93,202 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex';
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
-import handlerSettings from './handler/handlerSettings';
-import gasPriceMixin from './handler/gasPriceMixin';
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-const modes = ['add', 'edit'];
+const MODES = ['add', 'edit'];
 
+// adding here as script support has no beforeRouteLeave support
 export default {
-  name: 'ModuleSettings',
-  components: {
-    SettingsAddressTable: () => import('./components/SettingsAddressTable'),
-    SettingsImportConfig: () => import('./components/SettingsImportConfig'),
-    SettingsExportConfig: () => import('./components/SettingsExportConfig'),
-    SettingsGasPrice: () => import('./components/SettingsGasPrice'),
-    AddressBookAddEdit: () =>
-      import('@/modules/address-book/components/AddressBookAddEdit'),
-    SettingsLocaleConfig: () => import('./components/SettingsLocaleConfig.vue')
-  },
-  mixins: [gasPriceMixin, handlerAnalytics],
   beforeRouteLeave(to, from, next) {
     if (to.name == ROUTES_HOME.ACCESS_WALLET.NAME) {
       next({ name: ROUTES_WALLET.DASHBOARD.NAME });
     } else {
       next();
     }
-  },
-  props: {
-    onSettings: { default: false, type: Boolean }
-  },
-  data() {
-    return {
-      settingsHandler: null,
-      idxToExpand: null,
-      editMode: false,
-      addMode: false,
-      itemToEdit: {},
-      tableData: []
-    };
-  },
-  computed: {
-    ...mapState('addressBook', ['addressBookStore']),
-    ...mapState('global', ['online']),
-    ...mapState('popups', ['consentToTrack']),
-    ...mapGetters('wallet', ['hasGasPriceOption']),
-    importPanel() {
-      return `panelBody${!this.hasGasPriceOption ? 2 : 1}`;
-    },
-    exportPanel() {
-      return `panelBody${!this.hasGasPriceOption ? 3 : 2}`;
-    },
-    addressBookPanel() {
-      return `panelBody${!this.hasGasPriceOption ? 4 : 3}`;
-    },
-    localPanel() {
-      return `panelBody${!this.hasGasPriceOption ? 5 : 4}`;
-    },
-    panelItems() {
-      const txPriority = [
-        {
-          name: 'Transaction priority',
-          toggleTitle: this.setPriority(this.gasPriceType)
-        }
-      ];
-      const panels = [
-        {
-          name: 'Import configurations'
-        },
-        {
-          name: 'Export configurations'
-        },
-        {
-          name: 'Contact addresses'
-        },
-        {
-          name: 'Currency settings'
-        }
-      ];
-      return this.hasGasPriceOption ? panels : txPriority.concat(panels);
-    },
-    onMode() {
-      return this.addMode ? modes[0] : modes[1];
-    },
-    title() {
-      if (this.addMode) {
-        return this.$t('interface.address-book.add-addr');
-      }
-      if (this.editMode) {
-        return this.$t('interface.address-book.edit');
-      }
-      return this.$t('common.settings');
-    }
-  },
-  watch: {
-    addressBookStore: {
-      deep: true,
-      handler: function () {
-        this.getAddressBookTableData();
-      }
-    }
-  },
-  mounted() {
-    this.getAddressBookTableData();
-  },
-  created() {
-    this.settingsHandler = new handlerSettings();
-  },
-  methods: {
-    getAddressBookTableData() {
-      this.tableData = [];
-      this.addressBookStore.forEach((item, idx) => {
-        this.tableData.push({
-          number: idx + 1,
-          address: item.address,
-          nickname: item.nickname,
-          resolvedAddr: item.address.includes('.') ? item.resolvedAddr : null,
-          callToAction: [
-            {
-              title: 'Edit',
-              btnStyle: 'transparent',
-              colorTheme: 'greenPrimary',
-              method: this.onEdit
-            }
-          ]
-        });
-      });
-    },
-    back(idx) {
-      if (!isNaN(idx)) {
-        this.idxToExpand = idx ? idx : null;
-      }
-      if (idx instanceof PointerEvent) {
-        this.idxToExpand = [3];
-      }
-      this.addMode = false;
-      this.editMode = false;
-    },
-    onEdit(item) {
-      this.editMode = !this.editMode;
-      this.itemToEdit = item;
-    },
-    close() {
-      this.$emit('closeSettings');
-      this.idxToExpand = null;
-      this.addMode = false;
-      this.editMode = false;
-    },
-    exportStore() {
-      this.settingsHandler.exportStore();
-    },
-    setPriority(priority) {
-      const priorities = {
-        economy: 'Normal',
-        regular: 'Higher',
-        fast: 'Highest'
-      };
-      return priorities[priority];
-    }
   }
+};
+</script>
+<script setup>
+import {
+  defineAsyncComponent,
+  defineProps,
+  ref,
+  computed,
+  watch,
+  onMounted,
+  onBeforeMount,
+  defineEmit
+} from 'vue';
+import handlerSettings from './handler/handlerSettings';
+import { useGasPrice } from '@/core/composables/gasPrice';
+import {
+  addressBook as useAddressBookStore,
+  global as useGlobalStore,
+  popups as usePopupsStore,
+  wallet as useWalletStore
+} from '@/core/store/index.js';
+import { useI18n } from 'vue-i18n-composable';
+import { useAmplitude } from '@/core/composables/amplitude';
+
+const SettingsAddressTable = defineAsyncComponent(() =>
+  import('./components/SettingsAddressTable')
+);
+const SettingsImportConfig = defineAsyncComponent(() =>
+  import('./components/SettingsImportConfig')
+);
+const SettingsExportConfig = defineAsyncComponent(() =>
+  import('./components/SettingsExportConfig')
+);
+const SettingsGasPrice = defineAsyncComponent(() =>
+  import('./components/SettingsGasPrice')
+);
+const AddressBookAddEdit = defineAsyncComponent(() =>
+  import('@/modules/address-book/components/AddressBookAddEdit')
+);
+const SettingsLocaleConfig = defineAsyncComponent(() =>
+  import('./components/SettingsLocaleConfig.vue')
+);
+
+// emit
+const emit = defineEmit(['closeSettings']);
+
+// props
+defineProps({ onSettings: { default: false, type: Boolean } });
+
+// injections/use
+const { setConsent } = useAmplitude();
+const { gasButtons, setSelected } = useGasPrice();
+const { addressBookStore } = useAddressBookStore();
+const { online, gasPriceType } = useGlobalStore();
+const { consentToTrack } = usePopupsStore();
+const { hasGasPriceOption } = useWalletStore();
+const { t } = useI18n();
+
+// data
+const settingsHandler = ref(null);
+const idxToExpand = ref(null);
+const editMode = ref(false);
+const addMode = ref(false);
+const itemToEdit = ref({});
+const tableData = ref([]);
+
+// computed
+const importPanel = computed(() => {
+  return `panelBody${!hasGasPriceOption ? 2 : 1}`;
+});
+const exportPanel = computed(() => {
+  return `panelBody${!hasGasPriceOption ? 3 : 2}`;
+});
+const addressBookPanel = computed(() => {
+  return `panelBody${!hasGasPriceOption ? 4 : 3}`;
+});
+const localPanel = computed(() => {
+  return `panelBody${!hasGasPriceOption ? 5 : 4}`;
+});
+const panelItems = computed(() => {
+  const txPriority = [
+    {
+      name: 'Transaction priority',
+      toggleTitle: setPriority(gasPriceType)
+    }
+  ];
+  const panels = [
+    {
+      name: 'Import configurations'
+    },
+    {
+      name: 'Export configurations'
+    },
+    {
+      name: 'Contact addresses'
+    },
+    {
+      name: 'Currency settings'
+    }
+  ];
+  return hasGasPriceOption ? panels : txPriority.concat(panels);
+});
+const onMode = computed(() => {
+  return addMode.value ? MODES[0] : MODES[1];
+});
+const title = computed(() => {
+  if (addMode.value) {
+    return t('interface.address-book.add-addr');
+  }
+  if (editMode.value) {
+    return t('interface.address-book.edit');
+  }
+  return t('common.settings');
+});
+
+// watch
+watch(
+  addressBookStore,
+  () => {
+    getAddressBookTableData();
+  },
+  { deep: true }
+);
+
+// created
+onBeforeMount(() => {
+  settingsHandler.value = new handlerSettings();
+});
+
+// mounted
+onMounted(() => {
+  getAddressBookTableData();
+});
+
+// methods
+const getAddressBookTableData = () => {
+  tableData.value = [];
+  addressBookStore.forEach((item, idx) => {
+    tableData.value.push({
+      number: idx + 1,
+      address: item.address,
+      nickname: item.nickname,
+      resolvedAddr: item.address.includes('.') ? item.resolvedAddr : null,
+      callToAction: [
+        {
+          title: 'Edit',
+          btnStyle: 'transparent',
+          colorTheme: 'greenPrimary',
+          method: onEdit
+        }
+      ]
+    });
+  });
+};
+const back = idx => {
+  if (!isNaN(idx)) {
+    idxToExpand.value = idx ? idx : null;
+  }
+  if (idx instanceof PointerEvent) {
+    idxToExpand.value = [3];
+  }
+  addMode.value = false;
+  editMode.value = false;
+};
+const onEdit = item => {
+  editMode.value = !editMode.value;
+  itemToEdit.value = item;
+};
+const close = () => {
+  emit('closeSettings');
+  idxToExpand.value = null;
+  addMode.value = false;
+  editMode.value = false;
+};
+const exportStore = () => {
+  settingsHandler.value.exportStore();
+};
+const setPriority = priority => {
+  const priorities = {
+    economy: 'Normal',
+    regular: 'Higher',
+    fast: 'Highest'
+  };
+  return priorities[priority];
 };
 </script>
 

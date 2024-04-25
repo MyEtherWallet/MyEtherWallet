@@ -107,245 +107,229 @@
   </mew-module>
 </template>
 
-<script>
-import { mapState } from 'vuex';
+<script setup>
+import { ref, watch } from 'vue';
 import { BigNumber } from 'bignumber.js';
 import utils from 'web3-utils';
 
-export default {
-  name: 'TheConvertUnits',
-
-  data() {
-    return {
-      title: 'Convert Units',
-      items: [
-        {
-          name: 'Wei',
-          value: 'wei'
-        },
-        {
-          name: 'Kwei',
-          value: 'kwei'
-        },
-        {
-          name: 'Mwei',
-          value: 'mwei'
-        },
-        {
-          name: 'Gwei',
-          value: 'gwei'
-        },
-        {
-          name: 'Szabo',
-          value: 'szabo'
-        },
-        {
-          name: 'Finney',
-          value: 'finney'
-        },
-        {
-          name: 'Ether',
-          value: 'ether'
-        },
-        {
-          name: 'Kether',
-          value: 'kether'
-        },
-        {
-          name: 'Mether',
-          value: 'mether'
-        },
-        {
-          name: 'Gether',
-          value: 'gether'
-        },
-        {
-          name: 'Tether',
-          value: 'tether'
-        }
-      ],
-      selectedLeft: {
-        name: 'Wei',
-        value: 'wei'
-      },
-      selectedRight: {
-        name: 'Ether',
-        value: 'ether'
-      },
-      valueLeft: '1000000000000000000',
-      valueRight: '1',
-      etherUnitRef: [
-        {
-          name: 'Wei',
-          unit1: '1',
-          unit2: '1',
-          unit2e: '',
-          etherUnit1: '0.000,000,000,000,000,001',
-          etherUnit2: '10',
-          etherUnit2e: '-18',
-          desc: ''
-        },
-        {
-          name: 'Kwei',
-          unit1: '1,000',
-          unit2: '10',
-          unit2e: '3',
-          etherUnit1: '0.000,000,000,000,001',
-          etherUnit2: '10',
-          etherUnit2e: '-15',
-          desc: 'ada, femtoether'
-        },
-        {
-          name: 'Mwei',
-          unit1: '1,000,000',
-          unit2: '10',
-          unit2e: '6',
-          etherUnit1: '0.000,000,000,001',
-          etherUnit2: '10',
-          etherUnit2e: '-12',
-          desc: 'babbage, picoether'
-        },
-        {
-          name: 'Gwei',
-          unit1: '1,000,000,000',
-          unit2: '10',
-          unit2e: '9',
-          etherUnit1: '0.000,000,001',
-          etherUnit2: '10',
-          etherUnit2e: '-9',
-          desc: 'shannon, nanoether, nano'
-        },
-        {
-          name: 'Szabo',
-          unit1: '1,000,000,000,000',
-          unit2: '10',
-          unit2e: '12',
-          etherUnit1: '0.000,001',
-          etherUnit2: '10',
-          etherUnit2e: '-6',
-          desc: 'microether, micro'
-        },
-        {
-          name: 'Finney',
-          unit1: '1,000,000,000,000,000',
-          unit2: '10',
-          unit2e: '15',
-          etherUnit1: '0.001',
-          etherUnit2: '10',
-          etherUnit2e: '-3',
-          desc: 'milliether, milli'
-        },
-        {
-          name: 'Ether',
-          unit1: '1,000,000,000,000,000,000',
-          unit2: '10',
-          unit2e: '18',
-          etherUnit1: '1',
-          etherUnit2: '1',
-          etherUnit2e: '',
-          desc: ''
-        },
-        {
-          name: 'Kether',
-          unit1: '1,000,000,000,000,000,000,000',
-          unit2: '10',
-          unit2e: '21',
-          etherUnit1: '1,000',
-          etherUnit2: '10',
-          etherUnit2e: '3',
-          desc: 'grand, einstein'
-        },
-        {
-          name: 'Mether',
-          unit1: '1,000,000,000,000,000,000,000,000',
-          unit2: '10',
-          unit2e: '24',
-          etherUnit1: '1,000,000',
-          etherUnit2: '10',
-          etherUnit2e: '6',
-          desc: ''
-        },
-        {
-          name: 'Gether',
-          unit1: '1,000,000,000,000,000,000,000,000,000',
-          unit2: '10',
-          unit2e: '27',
-          etherUnit1: '1,000,000,000',
-          etherUnit2: '10',
-          etherUnit2e: '9',
-          desc: ''
-        },
-        {
-          name: 'Tether',
-          unit1: '1,000,000,000,000,000,000,000,000,000,000',
-          unit2: '10',
-          unit2e: '30',
-          etherUnit1: '1,000,000,000,000',
-          etherUnit2: '10',
-          etherUnit2e: '12',
-          desc: ''
-        }
-      ]
-    };
+// data
+const title = 'Convert Units';
+const items = [
+  {
+    name: 'Wei',
+    value: 'wei'
   },
-  computed: {
-    ...mapState('wallet', ['web3'])
+  {
+    name: 'Kwei',
+    value: 'kwei'
   },
-  watch: {
-    valueLeft(newVal) {
-      this.valueRight = this.convertFromTo(
-        newVal,
-        this.selectedLeft,
-        this.selectedRight
-      );
-    },
-    valueRight(newVal) {
-      this.valueLeft = this.convertFromTo(
-        newVal,
-        this.selectedRight,
-        this.selectedLeft
-      );
-    },
-    selectedLeft(newVal) {
-      this.valueRight = this.convertFromTo(
-        this.valueLeft,
-        newVal,
-        this.selectedRight
-      );
-    },
-    selectedRight(newVal) {
-      this.valueLeft = this.convertFromTo(
-        this.valueRight,
-        newVal,
-        this.selectedLeft
-      );
-    }
+  {
+    name: 'Mwei',
+    value: 'mwei'
   },
-  methods: {
-    getValueOfUnit(unit) {
-      unit = unit ? unit.value.toLowerCase() : 'ether';
-      const unitValue = utils.unitMap[unit];
-      return new BigNumber(unitValue, 10);
-    },
-    convertFromTo(amt, from, to) {
-      return new BigNumber(String(amt))
-        .times(this.getValueOfUnit(from))
-        .div(this.getValueOfUnit(to))
-        .toString(10);
-    },
-    updateCurrencyLeft(e) {
-      this.selectedLeft = e;
-    },
-    updateCurrencyRight(e) {
-      this.selectedRight = e;
-    },
-    updateAmountLeft(e) {
-      this.valueLeft = e;
-    },
-    updateAmountRight(e) {
-      this.valueRight = e;
-    }
+  {
+    name: 'Gwei',
+    value: 'gwei'
+  },
+  {
+    name: 'Szabo',
+    value: 'szabo'
+  },
+  {
+    name: 'Finney',
+    value: 'finney'
+  },
+  {
+    name: 'Ether',
+    value: 'ether'
+  },
+  {
+    name: 'Kether',
+    value: 'kether'
+  },
+  {
+    name: 'Mether',
+    value: 'mether'
+  },
+  {
+    name: 'Gether',
+    value: 'gether'
+  },
+  {
+    name: 'Tether',
+    value: 'tether'
   }
+];
+const selectedLeft = ref({
+  name: 'Wei',
+  value: 'wei'
+});
+const selectedRight = ref({
+  name: 'Ether',
+  value: 'ether'
+});
+const valueLeft = ref('1000000000000000000');
+const valueRight = ref('1');
+const etherUnitRef = [
+  {
+    name: 'Wei',
+    unit1: '1',
+    unit2: '1',
+    unit2e: '',
+    etherUnit1: '0.000,000,000,000,000,001',
+    etherUnit2: '10',
+    etherUnit2e: '-18',
+    desc: ''
+  },
+  {
+    name: 'Kwei',
+    unit1: '1,000',
+    unit2: '10',
+    unit2e: '3',
+    etherUnit1: '0.000,000,000,000,001',
+    etherUnit2: '10',
+    etherUnit2e: '-15',
+    desc: 'ada, femtoether'
+  },
+  {
+    name: 'Mwei',
+    unit1: '1,000,000',
+    unit2: '10',
+    unit2e: '6',
+    etherUnit1: '0.000,000,000,001',
+    etherUnit2: '10',
+    etherUnit2e: '-12',
+    desc: 'babbage, picoether'
+  },
+  {
+    name: 'Gwei',
+    unit1: '1,000,000,000',
+    unit2: '10',
+    unit2e: '9',
+    etherUnit1: '0.000,000,001',
+    etherUnit2: '10',
+    etherUnit2e: '-9',
+    desc: 'shannon, nanoether, nano'
+  },
+  {
+    name: 'Szabo',
+    unit1: '1,000,000,000,000',
+    unit2: '10',
+    unit2e: '12',
+    etherUnit1: '0.000,001',
+    etherUnit2: '10',
+    etherUnit2e: '-6',
+    desc: 'microether, micro'
+  },
+  {
+    name: 'Finney',
+    unit1: '1,000,000,000,000,000',
+    unit2: '10',
+    unit2e: '15',
+    etherUnit1: '0.001',
+    etherUnit2: '10',
+    etherUnit2e: '-3',
+    desc: 'milliether, milli'
+  },
+  {
+    name: 'Ether',
+    unit1: '1,000,000,000,000,000,000',
+    unit2: '10',
+    unit2e: '18',
+    etherUnit1: '1',
+    etherUnit2: '1',
+    etherUnit2e: '',
+    desc: ''
+  },
+  {
+    name: 'Kether',
+    unit1: '1,000,000,000,000,000,000,000',
+    unit2: '10',
+    unit2e: '21',
+    etherUnit1: '1,000',
+    etherUnit2: '10',
+    etherUnit2e: '3',
+    desc: 'grand, einstein'
+  },
+  {
+    name: 'Mether',
+    unit1: '1,000,000,000,000,000,000,000,000',
+    unit2: '10',
+    unit2e: '24',
+    etherUnit1: '1,000,000',
+    etherUnit2: '10',
+    etherUnit2e: '6',
+    desc: ''
+  },
+  {
+    name: 'Gether',
+    unit1: '1,000,000,000,000,000,000,000,000,000',
+    unit2: '10',
+    unit2e: '27',
+    etherUnit1: '1,000,000,000',
+    etherUnit2: '10',
+    etherUnit2e: '9',
+    desc: ''
+  },
+  {
+    name: 'Tether',
+    unit1: '1,000,000,000,000,000,000,000,000,000,000',
+    unit2: '10',
+    unit2e: '30',
+    etherUnit1: '1,000,000,000,000',
+    etherUnit2: '10',
+    etherUnit2e: '12',
+    desc: ''
+  }
+];
+
+// watchers
+watch(valueLeft, newVal => {
+  valueRight.value = convertFromTo(
+    newVal,
+    selectedLeft.value,
+    selectedRight.value
+  );
+});
+watch(valueRight, newVal => {
+  valueLeft.value = convertFromTo(
+    newVal,
+    selectedRight.value,
+    selectedLeft.value
+  );
+});
+watch(selectedLeft, newVal => {
+  valueRight.value = convertFromTo(
+    valueLeft.value,
+    newVal,
+    selectedRight.value
+  );
+});
+watch(selectedRight, newVal => {
+  valueLeft.value = convertFromTo(valueRight.value, newVal, selectedLeft.value);
+});
+const getValueOfUnit = unit => {
+  unit = unit ? unit.value.toLowerCase() : 'ether';
+  const unitValue = utils.unitMap[unit];
+  return new BigNumber(unitValue, 10);
+};
+const convertFromTo = (amt, from, to) => {
+  return new BigNumber(String(amt))
+    .times(getValueOfUnit(from))
+    .div(getValueOfUnit(to))
+    .toString(10);
+};
+const updateCurrencyLeft = e => {
+  selectedLeft.value = e;
+};
+const updateCurrencyRight = e => {
+  selectedRight.value = e;
+};
+const updateAmountLeft = e => {
+  valueLeft.value = e;
+};
+const updateAmountRight = e => {
+  valueRight.value = e;
 };
 </script>
 

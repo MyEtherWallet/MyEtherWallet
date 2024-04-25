@@ -1,43 +1,42 @@
 <template>
   <div>
-    <the-default-header @openMobileMenu="handleOpen" />
+    <TheDefaultHeader @openMobileMenu="handleOpen" />
     <v-main class="js-body">
       <router-view />
     </v-main>
-    <the-default-footer />
-    <the-mobile-menu :is-open="mobileOpen" @closeMobileMenu="handleClose" />
-    <gdpr-banner />
+    <TheDefaultFooter />
+    <TheMobileMenu :is-open="mobileOpen" @closeMobileMenu="handleClose" />
+    <GDPRBanner />
   </div>
 </template>
 
-<script>
-import { mapState } from 'vuex';
+<script setup>
+import { defineAsyncComponent, ref } from 'vue';
 
-export default {
-  name: 'TheDefaultView',
-  components: {
-    TheDefaultHeader: () => import('./components-default/TheDefaultHeader'),
-    TheMobileMenu: () => import('./components-default/TheMobileMenu'),
-    NewLookBanner: () => import('./components-default/NewLookBanner'),
-    TheDefaultFooter: () => import('./components-default/TheDefaultFooter'),
-    TheEnkryptPopup: () => import('./components-default/TheEnkryptPopup'),
-    GdprBanner: () => import('./components-default/GDPRBanner')
-  },
-  data() {
-    return {
-      mobileOpen: false
-    };
-  },
-  computed: {
-    ...mapState('wallet', ['isOfflineApp'])
-  },
-  methods: {
-    handleOpen() {
-      this.mobileOpen = true;
-    },
-    handleClose() {
-      this.mobileOpen = false;
-    }
-  }
+const TheDefaultHeader = defineAsyncComponent(() =>
+  import('./components-default/TheDefaultHeader')
+);
+const TheMobileMenu = defineAsyncComponent(() =>
+  import('./components-default/TheMobileMenu')
+);
+const TheDefaultFooter = defineAsyncComponent(() =>
+  import('./components-default/TheDefaultFooter')
+);
+// const NewLookBanner = defineAsyncComponent(()=> import('./components-default/NewLookBanner'),)
+// const TheEnkryptPopup = defineAsyncComponent(()=> import('./components-default/TheEnkryptPopup'),)
+const GDPRBanner = defineAsyncComponent(() =>
+  import('./components-default/GDPRBanner')
+);
+
+// data
+const mobileOpen = ref(false);
+
+// methods
+const handleOpen = () => {
+  mobileOpen.value = true;
+};
+
+const handleClose = () => {
+  mobileOpen.value = false;
 };
 </script>

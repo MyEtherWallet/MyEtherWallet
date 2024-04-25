@@ -56,38 +56,36 @@
   </div>
 </template>
 
-<script>
-import { mapGetters } from 'vuex';
+<script setup>
+import { defineProps, ref } from 'vue';
 
-import buyMore from '@/core/mixins/buyMore.mixin.js';
-import handlerAnalyticsMixin from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { DASHBOARD } from '@/modules/analytics-opt-in/handlers/configs/events';
+import { useBuySell } from '@/core/composables/buyMore';
+import { useAmplitude } from '@/core/composables/amplitude';
+import { global as useGlobalStore } from '@/core/store/index.js';
 
-export default {
-  mixins: [buyMore, handlerAnalyticsMixin],
-  props: {
-    currencyName: {
-      type: String,
-      default: 'ETH'
-    }
-  },
-  data() {
-    return {
-      openQR: false
-    };
-  },
-  computed: {
-    ...mapGetters('global', ['isEthNetwork'])
-  },
-  methods: {
-    openBarcodeModal() {
-      this.trackDashboardAmplitude(DASHBOARD.SHOW_RECEIVE_ADDRESS);
-      this.openQR = true;
-    },
-    closeQR() {
-      this.openQR = false;
-    }
+defineProps({
+  currencyName: {
+    type: String,
+    default: 'ETH'
   }
+});
+
+// injections
+const { openBuySell } = useBuySell();
+const { trackDashboardAmplitude } = useAmplitude();
+const { isEthNetwork } = useGlobalStore();
+
+// data
+const openQR = ref(false);
+
+// methods
+const openBarcodeModal = () => {
+  trackDashboardAmplitude(DASHBOARD.SHOW_RECEIVE_ADDRESS);
+  openQR.value = true;
+};
+const closeQR = () => {
+  openQR.value = false;
 };
 </script>
 

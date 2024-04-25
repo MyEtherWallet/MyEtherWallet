@@ -125,9 +125,9 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { defineProps, ref, computed, watch, onMounted } from 'vue';
 import { fromWei } from 'web3-utils';
-import { mapState, mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
 
 import { gasPriceTypes } from '@/core/helpers/gasPriceHelper';
@@ -136,161 +136,166 @@ import {
   formatFloatingPointValue,
   toBNSafe
 } from '@/core/helpers/numberFormatHelper';
-import buyMore from '@/core/mixins/buyMore.mixin.js';
 
-export default {
-  name: 'SettingsGasPrice',
-  mixins: [buyMore],
-  props: {
-    setSelected: {
-      type: Function,
-      default: () => {}
-    },
-    buttons: {
-      type: Array,
-      default: () => []
-    },
-    notEnoughEth: {
-      type: Boolean,
-      default: false
-    },
-    totalGasLimit: {
-      type: String,
-      default: '0'
-    },
-    fromSettings: {
-      type: Boolean,
-      default: false
-    },
-    costInEth: {
-      type: String,
-      default: '0'
-    }
-  },
-  data() {
-    return {
-      gasPriceTypes: gasPriceTypes,
-      previousSelected: null,
-      economyDisabled: false,
-      regularDisabled: false,
-      fastDisabled: false
-    };
-  },
-  computed: {
-    ...mapGetters('external', ['fiatValue']),
-    ...mapGetters('global', ['gasPriceByType', 'network']),
-    ...mapState('global', ['gasPriceType', 'gasPrice', 'preferredCurrency']),
-    ...mapGetters('wallet', ['balanceInETH']),
-    currencyName() {
-      return this.network.type.currencyName;
-    },
-    economyInEth() {
-      const txFee = this.calcTxFee(gasPriceTypes.ECONOMY);
-      return this.formatInEth(txFee);
-    },
-    regularInEth() {
-      const txFee = this.calcTxFee(gasPriceTypes.REGULAR);
-      return this.formatInEth(txFee);
-    },
-    fastInEth() {
-      const txFee = this.calcTxFee(gasPriceTypes.FAST);
-      return this.formatInEth(txFee);
-    },
-    economyInUsd() {
-      const txFee = this.calcTxFee(gasPriceTypes.ECONOMY);
-      return this.formatInUsd(txFee);
-    },
-    regularInUsd() {
-      const txFee = this.calcTxFee(gasPriceTypes.REGULAR);
-      return this.formatInUsd(txFee);
-    },
-    fastInUsd() {
-      const txFee = this.calcTxFee(gasPriceTypes.FAST);
-      return this.formatInUsd(txFee);
-    },
-    showGetMoreEth() {
-      let counter = 0;
-      Object.values(this.gasPriceTypes).forEach(item => {
-        if (!this[`${item}Disabled`]) {
-          counter++;
-        }
-      });
+import {
+  global as useGlobalStore,
+  external as useExternalStore,
+  wallet as useWalletStore
+} from '@/core/store/index.js';
+import { useBuySell } from '@/core/composables/buyMore';
+import { useVuetify } from '@/core/composables/vuetify';
 
-      return counter < 3;
-    },
-    isDark() {
-      return this.$vuetify.theme.dark;
+// injections/use
+const { openBuySell } = useBuySell();
+const { gasPriceByType, network, gasPriceType, gasPrice, preferredCurrency } =
+  useGlobalStore();
+const { fiatValue } = useExternalStore();
+const { balanceInETH } = useWalletStore();
+const vuetify = useVuetify();
+
+// props
+const props = defineProps({
+  setSelected: {
+    type: Function,
+    default: () => {}
+  },
+  buttons: {
+    type: Array,
+    default: () => []
+  },
+  notEnoughEth: {
+    type: Boolean,
+    default: false
+  },
+  totalGasLimit: {
+    type: String,
+    default: '0'
+  },
+  fromSettings: {
+    type: Boolean,
+    default: false
+  },
+  costInEth: {
+    type: String,
+    default: '0'
+  }
+});
+
+// data
+const previousSelected = ref(null);
+const economyDisabled = ref(false);
+const regularDisabled = ref(false);
+const fastDisabled = ref(false);
+
+// computed
+const currencyName = computed(() => {
+  return network.type.currencyName;
+});
+const economyInEth = computed(() => {
+  const txFee = calcTxFee(gasPriceTypes.ECONOMY);
+  return formatInEth(txFee);
+});
+const regularInEth = computed(() => {
+  const txFee = calcTxFee(gasPriceTypes.REGULAR);
+  return formatInEth(txFee);
+});
+const fastInEth = computed(() => {
+  const txFee = calcTxFee(gasPriceTypes.FAST);
+  return formatInEth(txFee);
+});
+const economyInUsd = computed(() => {
+  const txFee = calcTxFee(gasPriceTypes.ECONOMY);
+  return formatInUsd(txFee);
+});
+const regularInUsd = computed(() => {
+  const txFee = calcTxFee(gasPriceTypes.REGULAR);
+  return formatInUsd(txFee);
+});
+const fastInUsd = computed(() => {
+  const txFee = calcTxFee(gasPriceTypes.FAST);
+  return formatInUsd(txFee);
+});
+const showGetMoreEth = computed(() => {
+  let counter = 0;
+  Object.values(gasPriceTypes).forEach(item => {
+    if (!this[`${item}Disabled`]) {
+      counter++;
     }
-  },
-  watch: {
-    /**
-     * If not enough balance to cover new priority, go back to previous priority
-     */
-    fromSettings() {
-      this.setGasType();
-    },
-    gasPriceType() {
-      this.setGasType();
-    },
-    gasPrice() {
-      this.recalculate();
-    },
-    costInEth() {
-      this.recalculate();
-    },
-    notEnoughEth() {
-      this.recalculate();
+  });
+
+  return counter < 3;
+});
+const isDark = computed(() => {
+  return vuetify.theme.dark;
+});
+
+// watch
+/**
+ * If not enough balance to cover new priority, go back to previous priority
+ */
+watch(props.fromSettings, () => {
+  setGasType();
+});
+watch(gasPriceType, () => {
+  setGasType();
+});
+watch(gasPrice, () => {
+  recalculate();
+});
+watch(props.costInEth, () => {
+  recalculate();
+});
+watch(props.notEnoughEth, () => {
+  recalculate();
+});
+
+// mounted
+onMounted(() => {
+  recalculate();
+  previousSelected.value = gasPriceType;
+});
+
+// methods
+const setGasType = () => {
+  if (props.notEnoughEth && !props.fromSettings) {
+    if (gasPriceType == 'regular') {
+      regularDisabled.value = true;
+      fastDisabled.value = true;
+    } else if (gasPriceType == 'fast') {
+      fastDisabled.value = true;
+    } else {
+      economyDisabled.value = true;
+      regularDisabled.value = true;
+      fastDisabled.value = true;
     }
-  },
-  mounted() {
-    this.recalculate();
-    this.previousSelected = this.gasPriceType;
-  },
-  methods: {
-    setGasType() {
-      if (this.notEnoughEth && !this.fromSettings) {
-        if (this.gasPriceType == 'regular') {
-          this.regularDisabled = true;
-          this.fastDisabled = true;
-        } else if (this.gasPriceType == 'fast') {
-          this.fastDisabled = true;
-        } else {
-          this.economyDisabled = true;
-          this.regularDisabled = true;
-          this.fastDisabled = true;
-        }
-        this.setSelected(this.previousSelected);
-        if (!this.notEnoughEth) {
-          this.previousSelected = this.gasPriceType;
-        }
-      }
-    },
-    calcTxFee(priority) {
-      return fromWei(
-        toBNSafe(this.totalGasLimit)
-          .mul(toBNSafe(this.gasPriceByType(priority)))
-          .toString()
-      );
-    },
-    formatInEth(fee) {
-      return formatFloatingPointValue(fee).value;
-    },
-    formatInUsd(fee) {
-      const number = BigNumber(fee).times(this.fiatValue).toFixed(2);
-      return formatFiatValue(number, {
-        currency: this.preferredCurrency
-      }).value;
-    },
-    recalculate() {
-      const amount = BigNumber(this.costInEth).minus(
-        this[`${this.gasPriceType}InEth`]
-      );
-      Object.values(this.gasPriceTypes).forEach(item => {
-        const withFee = BigNumber(amount).plus(this[`${item}InEth`]);
-        this[`${item}Disabled`] = withFee.gt(this.balanceInETH);
-      });
+    props.setSelected(previousSelected);
+    if (!props.notEnoughEth) {
+      previousSelected.value = gasPriceType;
     }
   }
+};
+const calcTxFee = priority => {
+  return fromWei(
+    toBNSafe(props.totalGasLimit)
+      .mul(toBNSafe(gasPriceByType(priority)))
+      .toString()
+  );
+};
+const formatInEth = fee => {
+  return formatFloatingPointValue(fee).value;
+};
+const formatInUsd = fee => {
+  const number = BigNumber(fee).times(fiatValue).toFixed(2);
+  return formatFiatValue(number, {
+    currency: preferredCurrency
+  }).value;
+};
+const recalculate = () => {
+  const amount = BigNumber(costInEth.value).minus(this[`${gasPriceType}InEth`]);
+  Object.values(gasPriceTypes).forEach(item => {
+    const withFee = BigNumber(amount).plus(this[`${item}InEth`]);
+    this[`${item}Disabled`] = withFee.gt(balanceInETH);
+  });
 };
 </script>
 

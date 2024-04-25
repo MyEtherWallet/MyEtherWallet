@@ -1,20 +1,20 @@
-import vuexStore from '@/core/store';
-import { mapActions } from 'vuex';
 import { toWei } from 'web3-utils';
 import { includes, isString, keys } from 'lodash';
 import xss from 'xss';
+
+import { global as useGlobalStore } from '@/core/store/index.js';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 
 export default class Settings {
   constructor() {
-    this.$store = vuexStore;
-    this.validFields = Object.keys(this.$store.state.global);
-    Object.assign(this, mapActions('global', ['setImportedState']));
+    const { $state } = useGlobalStore();
+    this.validFields = Object.keys($state);
   }
 
   // Receives object from file read in module
   // Returns a promise so the module can react accordingly
   importStore(file) {
+    const { setImportedState } = useGlobalStore();
     return new Promise((resolve, reject) => {
       const _this = this;
       try {
@@ -28,7 +28,7 @@ export default class Settings {
             const obj = JSON.parse(file);
             const parsedObj = _this._validateImportObject(obj);
             // sets the imported state to the store
-            _this.setImportedState(parsedObj).then(() => {
+            setImportedState(parsedObj).then(() => {
               resolve();
             });
           } catch ({ message }) {
@@ -43,10 +43,11 @@ export default class Settings {
   }
 
   exportStore() {
+    const { $state } = useGlobalStore();
     const body = document.body;
     const time = new Date();
     const filename = `Store-Export-${time.getTime()}.json`;
-    const newObj = Object.assign({}, this.$store.state.global);
+    const newObj = Object.assign({}, $state);
     const el = document.createElement('a');
     el.setAttribute(
       'href',

@@ -23,87 +23,92 @@
   </white-sheet>
 </template>
 
-<script>
-import { mapState, mapGetters, mapActions } from 'vuex';
+<script setup>
+import { defineProps, ref, computed } from 'vue';
+import {
+  global as useGlobalStore,
+  notifications as useNotificationStore
+} from '@/core/store/index.js';
+
 import formatNotification from '@/modules/notifications/helpers/formatNotification';
 import formatNonChainNotification from '@/modules/notifications/helpers/formatNonChainNotification';
 import { NOTIFICATION_TYPES } from '@/modules/notifications/handlers/handlerNotification.js';
 
-export default {
-  name: 'ModuleTransferHistory',
-  props: {
-    isSwap: {
-      type: Boolean,
-      default: false
-    },
-    draggable: {
-      type: Boolean,
-      default: false
-    }
+// injections/use
+const { network } = useGlobalStore();
+const { txNotifications, swapNotifications, updateNotification } =
+  useNotificationStore();
+
+// props
+const props = defineProps({
+  isSwap: {
+    type: Boolean,
+    default: false
   },
-  data() {
-    return { dropdown: true };
-  },
-  computed: {
-    ...mapState('wallet', ['web3', 'address']),
-    ...mapGetters('global', ['network']),
-    ...mapGetters('notifications', ['txNotifications', 'swapNotifications']),
-    parsedTxNotifications() {
-      return this.txNotifications
-        .map(item => {
-          if (item.hasOwnProperty('hash')) {
-            return formatNotification(item, this.network);
-          }
-          return formatNonChainNotification(item);
-        })
-        .sort(this.sortByDate);
-    },
-    parsedSwapNotifications() {
-      return this.swapNotifications
-        .map(item => {
-          if (item.hasOwnProperty('hash')) {
-            return formatNotification(item, this.network);
-          }
-          return formatNonChainNotification(item);
-        })
-        .sort(this.sortByDate);
-    },
-    actualNotifications() {
-      return !this.isSwap
-        ? this.parsedTxNotifications
-        : this.parsedSwapNotifications;
-    },
-    actualTitle() {
-      return this.isSwap ? `Swap History` : `Send History`;
-    },
-    chevronIcon() {
-      return this.dropdown ? 'mdi-chevron-up' : 'mdi-chevron-down';
-    }
-  },
-  methods: {
-    ...mapActions('notifications', ['updateNotification']),
-    markNotificationAsRead(notification) {
-      if (!notification.read) {
-        notification.markAsRead().then(() => {
-          const type = notification.type.toLowerCase();
-          if (
-            type === NOTIFICATION_TYPES.OUT ||
-            type === NOTIFICATION_TYPES.SWAP
-          ) {
-            this.updateNotification(notification);
-          } else {
-            notification.read = true;
-          }
-        });
-      }
-    },
-    sortByDate(a, b) {
-      return new Date(b.date) - new Date(a.date);
-    },
-    toggleDropdown() {
-      this.dropdown = !this.dropdown;
-    }
+  draggable: {
+    type: Boolean,
+    default: false
   }
+});
+
+// data
+const dropdown = ref(true);
+
+// computed
+const parsedTxNotifications = computed(() => {
+  return txNotifications
+    .map(item => {
+      if (item.hasOwnProperty('hash')) {
+        return formatNotification(item, network);
+      }
+      return formatNonChainNotification(item);
+    })
+    .sort(sortByDate);
+});
+
+const parsedSwapNotifications = computed(() => {
+  return swapNotifications
+    .map(item => {
+      if (item.hasOwnProperty('hash')) {
+        return formatNotification(item, network);
+      }
+      return formatNonChainNotification(item);
+    })
+    .sort(sortByDate);
+});
+
+const actualNotifications = computed(() => {
+  return props.isSwap ? parsedSwapNotifications : parsedTxNotifications;
+});
+
+const actualTitle = computed(() => {
+  return props.isSwap ? 'Swap History' : 'Send History';
+});
+
+const chevronIcon = computed(() => {
+  return dropdown.value ? 'mdi-chevron-up' : 'mdi-chevron-down';
+});
+
+// methods
+const markNotificationAsRead = notification => {
+  if (!notification.read) {
+    notification.markAsRead().then(() => {
+      const type = notification.type.toLowerCase();
+      if (type === NOTIFICATION_TYPES.OUT || type === NOTIFICATION_TYPES.SWAP) {
+        updateNotification(notification);
+      } else {
+        notification.read = true;
+      }
+    });
+  }
+};
+
+const sortByDate = (a, b) => {
+  return new Date(b.date) - new Date(a.date);
+};
+
+const toggleDropdown = () => {
+  dropdown.value = !dropdown.value;
 };
 </script>
 

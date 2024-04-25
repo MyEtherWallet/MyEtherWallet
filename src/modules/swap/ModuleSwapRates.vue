@@ -67,15 +67,7 @@
 </template>
 
 <script>
-import ethIcon from '@/assets/images/networks/eth.svg';
-import { mapState, mapGetters, mapActions } from 'vuex';
 import { toWei } from 'web3-utils';
-import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
-import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-import { DASHBOARD } from '../analytics-opt-in/handlers/configs/events';
-import handlerSwap from '@/modules/swap/handlers/handlerSwap';
-
 const STATIC_PAIRS = [
   {
     toT: {
@@ -155,107 +147,123 @@ const STATIC_PAIRS = [
     fromAmount: toWei('1')
   }
 ];
-export default {
-  name: 'ModuleSwapRates',
-  mixins: [handlerAnalytics],
-  props: {
-    mobile: {
-      type: Boolean,
-      default: false
-    }
-  },
-  data() {
-    return {
-      ethIcon: ethIcon,
-      swapHandler: null,
-      loading: true,
-      error: false
-    };
-  },
-  computed: {
-    ...mapState('wallet', ['web3', 'swapRates']),
-    ...mapGetters('global', ['isEthNetwork', 'network']),
-    showTokenIssue() {
-      return (this.error || !this.hasSwapRates) && !this.loading;
-    },
-    hasSwapRates() {
-      if (this.swapRates) {
-        return this.swapRates.some(item => {
-          return item.rate;
-        });
-      }
-      return false;
-    }
-  },
-  watch: {
-    web3(newVal) {
-      this.setSwapHandler(newVal, this.network.type.name);
-    }
-  },
-  mounted() {
-    this.setSwapHandler(this.web3, this.network.type.name);
-  },
-  methods: {
-    ...mapActions('wallet', ['setSwapRates']),
-    setSwapHandler(val) {
-      if (!this.isEthNetwork) return;
-      this.swapHandler = new handlerSwap(val, this.network.type.name);
-      this.loading = this.swapRates.length === 0;
-      if (this.swapRates.length !== 0) return;
-      this.fetchRates();
-    },
-    fetchRates() {
-      try {
-        this.loading = true;
-        this.swapHandler.getQuotesForSet(STATIC_PAIRS).then(res => {
-          this.setSwapRates(
-            STATIC_PAIRS.map((itm, idx) => {
-              itm['rate'] =
-                res[idx] &&
-                res[idx].length !== 0 &&
-                res[idx][0] &&
-                res[idx][0]?.amount
-                  ? formatFloatingPointValue(res[idx][0]?.amount).value
-                  : false;
-              return itm;
-            })
-          );
-          this.loading = false;
-        });
-      } catch (e) {
-        this.loading = false;
-        this.error = true;
-        Toast(e.message, {}, ERROR);
-      }
-    },
-    toSwap() {
-      this.trackDashboardAmplitude(DASHBOARD.SWAP_PAIRS);
-      this.navigateToSwap();
-    },
-    goToSwap(data) {
-      const obj = {
-        fromToken: data.fromT.contract,
-        toToken: data.toT.contract,
-        amount: '1'
-      };
-      this.trackDashboardAmplitude(DASHBOARD.SWAP_PAIRS, {
-        TokenPair: `${data.fromT.symbol} to ${data.toT.symbol}`
-      });
-      this.navigateToSwap(obj);
-    },
-    navigateToSwap(query) {
-      const obj = { name: 'Swap' };
-      if (query) {
-        obj['query'] = query;
-      }
-      if (this.$route.name === 'Swap') {
-        // this will allow vue to update query param
-        // within the swap page when user clicks on the pairs again
-        this.$router.replace(obj);
-      } else {
-        this.$router.push(obj);
-      }
-    }
+</script>
+<script setup>
+import { defineProps, ref, computed, watch, onMounted } from 'vue';
+
+import ethIcon from '@/assets/images/networks/eth.svg';
+
+import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+import { DASHBOARD } from '../analytics-opt-in/handlers/configs/events';
+import handlerSwap from '@/modules/swap/handlers/handlerSwap';
+import { useAmplitude } from '@/core/composables/amplitude';
+import {
+  global as useGlobalStore,
+  wallet as useWalletStore
+} from '@/core/store/index.js';
+import { useRoute, useRouter } from 'vue-router/composables';
+
+// injections/use
+const { trackDashboardAmplitude } = useAmplitude();
+const { web3, swapRates, setSwapRates } = useWalletStore();
+const { isEthNetwork, network } = useGlobalStore();
+const router = useRouter();
+const route = useRoute();
+
+// props
+defineProps({
+  mobile: {
+    type: Boolean,
+    default: false
+  }
+});
+
+// data
+const swapHandler = ref(null);
+const loading = ref(true);
+const error = ref(false);
+
+// computed
+const showTokenIssue = computed(() => {
+  return (error.value || !hasSwapRates.value) && !loading.value;
+});
+const hasSwapRates = computed(() => {
+  if (swapRates) {
+    return swapRates.some(item => {
+      return item.rate;
+    });
+  }
+  return false;
+});
+
+// watchers
+watch(web3, newVal => {
+  setSwapHandler(newVal, network.type.name);
+});
+
+// mounted
+onMounted(() => {
+  setSwapHandler(web3, network.type.name);
+});
+
+const setSwapHandler = val => {
+  if (!isEthNetwork) return;
+  swapHandler.value = new handlerSwap(val, network.type.name);
+  loading.value = swapRates.length === 0;
+  if (swapRates.length !== 0) return;
+  fetchRates();
+};
+const fetchRates = () => {
+  try {
+    loading.value = true;
+    swapHandler.value.getQuotesForSet(STATIC_PAIRS).then(res => {
+      setSwapRates(
+        STATIC_PAIRS.map((itm, idx) => {
+          itm['rate'] =
+            res[idx] &&
+            res[idx].length !== 0 &&
+            res[idx][0] &&
+            res[idx][0]?.amount
+              ? formatFloatingPointValue(res[idx][0]?.amount).value
+              : false;
+          return itm;
+        })
+      );
+      loading.value = false;
+    });
+  } catch (e) {
+    loading.value = false;
+    error.value = true;
+    Toast(e.message, {}, ERROR);
+  }
+};
+const toSwap = () => {
+  trackDashboardAmplitude(DASHBOARD.SWAP_PAIRS);
+  navigateToSwap();
+};
+const goToSwap = data => {
+  const obj = {
+    fromToken: data.fromT.contract,
+    toToken: data.toT.contract,
+    amount: '1'
+  };
+  trackDashboardAmplitude(DASHBOARD.SWAP_PAIRS, {
+    TokenPair: `${data.fromT.symbol} to ${data.toT.symbol}`
+  });
+  navigateToSwap(obj);
+};
+const navigateToSwap = query => {
+  const obj = { name: 'Swap' };
+  if (query) {
+    obj['query'] = query;
+  }
+  if (route.name === 'Swap') {
+    // this will allow vue to update query param
+    // within the swap page when user clicks on the pairs again
+    router.replace(obj);
+  } else {
+    router.push(obj);
   }
 };
 </script>

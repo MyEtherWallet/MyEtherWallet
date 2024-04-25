@@ -57,26 +57,25 @@
   </app-user-msg-block>
 </template>
 
-<script>
-import { mapGetters } from 'vuex';
+<script setup>
+import { defineProps } from 'vue';
 
-export default {
-  props: {
-    message: {
-      type: Object,
-      default: () => {
-        return {};
-      }
-    },
-    toTokenType: {
-      type: String,
-      default: ''
+import { article as useArticleStore } from '@/core/store/index.js';
+
+// injection/use
+const { getArticle } = useArticleStore();
+
+// props
+defineProps({
+  message: {
+    type: Object,
+    default: () => {
+      return {};
     }
   },
-  computed: {
-    ...mapGetters('article', ['getArticle'])
+  toTokenType: {
+    type: String,
+    default: ''
   }
-};
+});
 </script>
-
-<style></style>
