@@ -116,7 +116,7 @@ import { useRouter } from 'vue-router/composables';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
 import useEnkryptMarketing from '@/core/composables/enkryptMarketing.js';
-import useAmplitude from '@/core/composables/amplitude.js';
+import { useAmplitude } from '@/core/composables/amplitude.js';
 
 import {
   COMMON,

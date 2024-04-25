@@ -42,7 +42,7 @@ const ModuleTransferHistory = defineAsyncComponent(() =>
   import('@/modules/transfer-history/ModuleTransferHistory')
 );
 
-import useAmplitude from '@/core/composables/amplitude.js';
+import { useAmplitude } from '@/core/composables/amplitude.js';
 import { COMMON } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 
 import {

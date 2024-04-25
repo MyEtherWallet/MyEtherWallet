@@ -95,129 +95,134 @@
   </white-sheet>
 </template>
 
-<script>
-import { mapGetters, mapState } from 'vuex';
-import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
+<script setup>
+import { defineProps, ref, computed, onMounted } from 'vue';
 import { isEmpty } from 'lodash';
+
+import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import { fromBase } from '@/core/helpers/unit';
 import { toBNSafe } from '@/core/helpers/numberFormatHelper';
-import handlerAnalyticsMixin from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { useAmplitude } from '@/core/composables/amplitude';
+import { useVuetify } from './vuetify';
+import {
+  global as useGlobalStore,
+  wallet as useWalletStore
+} from '@/core/store/index.js';
 
-export default {
-  name: 'NftDashboard',
-  mixins: [handlerAnalyticsMixin],
-  props: {
-    mobile: {
-      type: Boolean,
-      default: false
-    }
-  },
-  data() {
-    return {
-      loading: true,
-      fetchedData: {},
-      loaders: {
-        seasons_3_exclusive_nft_1: false,
-        season_3_exclusive_nft_2: false,
-        season_3_exclusive_nfts: false
-      }
-    };
-  },
-  computed: {
-    ...mapState('wallet', ['address', 'web3', 'instance']),
-    ...mapState('global', ['darkMode']),
-    ...mapGetters('global', ['gasPrice']),
-    ...mapGetters('wallet', ['balanceInWei']),
-    mintBothText() {
-      return !isEmpty(this.fetchedData)
-        ? `Mint both NFTs · ${this.fetchedData.rewards[2].pricef} ETH`
-        : '';
-    },
-    mintBothId() {
-      return !isEmpty(this.fetchedData)
-        ? this.fetchedData.rewards[2].reward_id
-        : '';
-    },
-    singlePaidItems() {
-      return !isEmpty(this.fetchedData)
-        ? this.fetchedData.rewards.slice(0, 2).reverse()
-        : [];
-    },
-    imageContainerWidth() {
-      return this.$vuetify.breakpoint.xsAndDown
-        ? '144px'
-        : this.$vuetify.breakpoint.lgAndUp
-        ? '144px'
-        : this.$vuetify.breakpoint.smAndDown
-        ? '250px'
-        : '276px';
-    }
-  },
-  mounted() {
-    fetch('https://mainnet.mewwallet.dev/energy/web/info')
-      .then(res => {
-        return res.json();
-      })
-      .then(res => {
-        const response = res.season;
-        const rewards = response.rewards.map(item => {
-          item.pricef = fromBase(item.price, 18);
-          return item;
-        });
-        response['rewards'] = rewards;
-        this.fetchedData = response;
-        this.loading = false;
-      })
-      .catch(err => {
-        Toast(err, {}, ERROR);
+// injections/use
+const { darkMode, gasPrice } = useGlobalStore();
+const { address, web3, instance, balanceInWei } = useWalletStore();
+const { trackNftModule } = useAmplitude();
+const vuetify = useVuetify();
+
+// props
+defineProps({
+  mobile: {
+    type: Boolean,
+    default: false
+  }
+});
+
+// data
+const loading = ref(true);
+const fetchedData = ref(true);
+const loaders = ref({
+  seasons_3_exclusive_nft_1: false,
+  season_3_exclusive_nft_2: false,
+  season_3_exclusive_nfts: false
+});
+
+const mintBothText = computed(() => {
+  return !isEmpty(fetchedData.value)
+    ? `Mint both NFTs · ${fetchedData.value.rewards[2].pricef} ETH`
+    : '';
+});
+
+const mintBothId = computed(() => {
+  return !isEmpty(fetchedData.value)
+    ? fetchedData.value.rewards[2].reward_id
+    : '';
+});
+
+const singlePaidItems = computed(() => {
+  return !isEmpty(fetchedData.value)
+    ? fetchedData.value.rewards.slice(0, 2).reverse()
+    : [];
+});
+const imageContainerWidth = computed(() => {
+  return vuetify.breakpoint.xsAndDown
+    ? '144px'
+    : vuetify.breakpoint.lgAndUp
+    ? '144px'
+    : vuetify.breakpoint.smAndDown
+    ? '250px'
+    : '276px';
+});
+
+// mounted
+onMounted(() => {
+  fetch('https://mainnet.mewwallet.dev/energy/web/info')
+    .then(res => {
+      return res.json();
+    })
+    .then(res => {
+      const response = res.season;
+      const rewards = response.rewards.map(item => {
+        item.pricef = fromBase(item.price, 18);
+        return item;
       });
-  },
-  methods: {
-    async mint(id) {
-      this.trackNftModule('Mint', {
+      response['rewards'] = rewards;
+      fetchedData.value = response;
+      loading.value = false;
+    })
+    .catch(err => {
+      Toast(err, {}, ERROR);
+    });
+});
+// methods
+const mint = async id => {
+  trackNftModule('Mint', {
+    item: id
+  });
+  loaders.value[id] = true;
+  const { transaction } = await fetch(
+    `https://mainnet.mewwallet.dev/energy/web/purchase?address=${address}&reward_id=${id}&season_id=3`
+  )
+    .then(res => res.json())
+    .then(res => {
+      return res;
+    })
+    .catch(err => {
+      Toast(err, {}, ERROR);
+    });
+  const transactionFee = toBNSafe(transaction.value).add(
+    toBNSafe(transaction.gas).mul(toBNSafe(gasPrice))
+  );
+  if (toBNSafe(transactionFee).gt(toBNSafe(balanceInWei))) {
+    loaders.value[id] = false;
+    trackNftModule('MintNotEnoughBalance', {
+      item: id
+    });
+    Toast('Not enough balance!', {}, ERROR);
+    return;
+  }
+
+  web3.eth
+    .sendTransaction(transaction)
+    .then(() => {
+      trackNftModule('MintSuccess', {
         item: id
       });
-      this.loaders[id] = true;
-      const { transaction } = await fetch(
-        `https://mainnet.mewwallet.dev/energy/web/purchase?address=${this.address}&reward_id=${id}&season_id=3`
-      )
-        .then(res => res.json())
-        .then(res => {
-          return res;
-        })
-        .catch(err => {
-          Toast(err, {}, ERROR);
-        });
-      const transactionFee = toBNSafe(transaction.value).add(
-        toBNSafe(transaction.gas).mul(toBNSafe(this.gasPrice))
-      );
-      if (toBNSafe(transactionFee).gt(toBNSafe(this.balanceInWei))) {
-        this.loaders[id] = false;
-        this.trackNftModule('MintNotEnoughBalance', {
-          item: id
-        });
-        Toast('Not enough balance!', {}, ERROR);
-        return;
-      }
-
-      this.web3.eth
-        .sendTransaction(transaction)
-        .then(() => {
-          this.trackNftModule('MintSuccess', {
-            item: id
-          });
-          Toast('Succesfully minted NFT!', {}, SUCCESS);
-          this.loaders[id] = false;
-        })
-        .catch(err => {
-          this.loaders[id] = false;
-          this.trackNftModule('MintFailed', {
-            item: id
-          });
-          this.instance.errorHandler(err.message ? err.message : err);
-        });
-    }
-  }
+      Toast('Succesfully minted NFT!', {}, SUCCESS);
+      loaders.value[id] = false;
+    })
+    .catch(err => {
+      loaders.value[id] = false;
+      trackNftModule('MintFailed', {
+        item: id
+      });
+      instance.errorHandler(err.message ? err.message : err);
+    });
 };
 </script>
 

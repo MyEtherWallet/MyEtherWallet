@@ -13,7 +13,7 @@
       <!-- ======================================================================= -->
       <!-- Popup close button -->
       <!-- ======================================================================= -->
-      <v-btn icon class="close-button" @click="close">
+      <v-btn icon class="close-button" @click="neverShowEnkryptWalletPage">
         <v-icon color="white">mdi-close</v-icon>
       </v-btn>
 
@@ -109,74 +109,53 @@
     </div>
   </mew-popup>
 </template>
-<script>
+<script setup>
+import { defineProps, computed } from 'vue';
+
 import imageOne from '@/assets/images/icons/enkrypt/promo1.jpg';
 import imageTwo from '@/assets/images/icons/enkrypt/promo2.jpg';
 import white from '@/assets/images/icons/enkrypt/icon-enkrypt-white.svg';
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-import enkryptMarketing from '@/core/mixins/enkryptMarketing.mixin.js';
-import { mapActions } from 'vuex';
-export default {
-  name: 'TheEnkryptPopup',
-  mixins: [handlerAnalytics, enkryptMarketing],
-  props: {
-    show: {
-      type: Boolean,
-      default: false
-    }
-  },
-  data() {
-    return {
-      white: white,
-      nfts: [
-        {
-          src: imageOne
-        },
-        {
-          src: imageTwo
-        }
-      ]
-    };
-  },
-  computed: {
-    checkedText() {
-      return [
-        'Lives in your favorite browser',
-        'All the wallet features you already love',
-        'State of the art security',
-        'Hardware wallet support',
-        'Use your existing MEW accounts'
-      ];
-    },
-    surpriseLottie() {
-      return 'confetti';
-    },
-    leftBtn() {
-      return {
-        text: 'Cancel',
-        color: 'basic',
-        method: this.close
-      };
-    }
-  },
-  methods: {
-    ...mapActions('popups', [
-      'neverShowEnkryptLandingPage',
-      'neverShowEnkryptWalletPage'
-    ]),
-    install() {
-      // eslint-disable-next-line
-      window.open(this.browserLink, '_blank');
-      this.close();
-    },
-    close() {
-      if (this.enkryptLandingPopup) {
-        this.neverShowEnkryptLandingPage();
-      } else {
-        this.neverShowEnkryptWalletPage();
-      }
-    }
+import { useEnkryptMarketing } from '@/core/composables/enkryptMarketing';
+
+import { popups as usePopupsStore } from '@/core/store/index.js';
+
+// injections/use
+const { browserLink, openHelpCenter, browserLogo, browser } =
+  useEnkryptMarketing();
+const { neverShowEnkryptWalletPage } = usePopupsStore();
+
+defineProps({
+  show: {
+    type: Boolean,
+    default: false
   }
+});
+
+// data
+const nfts = [{ src: imageOne }, { src: imageTwo }];
+
+const checkedText = [
+  'Lives in your favorite browser',
+  'All the wallet features you already love',
+  'State of the art security',
+  'Hardware wallet support',
+  'Use your existing MEW accounts'
+];
+
+const leftBtn = {
+  text: 'Cancel',
+  color: 'basic',
+  method: neverShowEnkryptWalletPage
+};
+
+// computed
+const surpriseLottie = computed(() => {
+  return 'confetti';
+});
+
+// methods
+const install = () => {
+  window.open(browserLink, '_blank');
 };
 </script>
 

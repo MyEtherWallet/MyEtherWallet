@@ -169,54 +169,60 @@
   </div>
 </template>
 
-<script>
-import { mapState } from 'vuex';
+<script setup>
+import { defineProps, ref, computed, defineEmits } from 'vue';
+import { useRoute } from 'vue-router/composables';
 
 import CloseIcon from '@/assets/images/icons/close-icon.vue';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { useAmplitude } from '@/core/composables/amplitude';
 
-export default {
-  components: {
-    CloseIcon
-  },
-  mixins: [handlerAnalytics],
-  props: {
-    isOpen: {
-      type: Boolean,
-      default: false
-    }
-  },
-  data() {
-    return {
-      isFeaturesOpen: false,
-      isResourcesOpen: false,
-      isProductsOpen: false,
-      packageVersion: VERSION
-    };
-  },
-  computed: {
-    ...mapState('popups', ['consentToTrack']),
-    showAccess() {
-      return this.$route.name === ROUTES_HOME.ACCESS_WALLET.NAME
-        ? 'visibility: hidden'
-        : '';
-    }
-  },
-  methods: {
-    closeMobileMenu() {
-      this.$emit('closeMobileMenu');
-    },
-    featuresToggle() {
-      this.isFeaturesOpen = !this.isFeaturesOpen;
-    },
-    resourcesToggle() {
-      this.isResourcesOpen = !this.isResourcesOpen;
-    },
-    productsToggle() {
-      this.isProductsOpen = !this.isProductsOpen;
-    }
+import { popups as usePopupsStore } from '@/core/store/index.js';
+
+// emits
+const emit = defineEmits(['closeMobileMenu']);
+
+// props
+defineProps({
+  isOpen: {
+    type: Boolean,
+    default: false
   }
+});
+
+// injections/use
+const route = useRoute();
+const { setConsent } = useAmplitude();
+const { consentToTrack } = usePopupsStore();
+
+// data
+const isFeaturesOpen = ref(false);
+const isResourcesOpen = ref(false);
+const isProductsOpen = ref(false);
+const packageVersion = VERSION;
+
+// computed
+const showAccess = computed(() => {
+  return route.name === ROUTES_HOME.ACCESS_WALLET.NAME
+    ? 'visibility: hidden'
+    : '';
+});
+
+// methods
+const closeMobileMenu = () => {
+  emit('closeMobileMenu');
+};
+
+const featuresToggle = () => {
+  isFeaturesOpen.value = !isFeaturesOpen.value;
+};
+
+const resourcesToggle = () => {
+  isResourcesOpen.value = !isResourcesOpen.value;
+};
+
+const productsToggle = () => {
+  isProductsOpen.value = !isProductsOpen.value;
 };
 </script>
 

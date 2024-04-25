@@ -130,54 +130,64 @@
   </v-container>
 </template>
 
-<script>
-import { mapGetters, mapState } from 'vuex';
+<script setup>
+import { ref, computed, onMounted } from 'vue';
+import { useRouter } from 'vue-router/composables';
+
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { STAKING } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 // import { BUYSELL_EVENT } from '@/modules/buy-sell/helpers';
 // import { EventBus } from '@/core/plugins/eventBus';
 import { COINBASE_STAKING_ROUTES } from '@/dapps/coinbase-staking/configs';
-export default {
-  components: {
-    notificationOverlay: () =>
-      import('@/modules/notifications/ModuleNotifications')
-  },
-  mixins: [handlerAnalytics],
-  data() {
-    return {
-      ads: []
-    };
-  },
-  computed: {
-    ...mapState('wallet', ['identifier', 'isOfflineApp']),
-    ...mapState('global', ['online']),
-    ...mapGetters('global', ['network', 'isEthNetwork']),
-    hasAds() {
-      return this.ads.length > 0;
-    }
-  },
-  mounted() {
-    if (!this.isOfflineApp) this.setHeaderAds();
-  },
-  methods: {
-    async setHeaderAds() {
-      const res = await fetch('https://partners.mewapi.io/ads-web');
-      const ads = await res.json();
-      this.ads = ads;
-    },
-    // buyCryptoNow() {
-    //   EventBus.$emit(BUYSELL_EVENT);
-    // },
-    stakeNow() {
-      this.$router.push({
-        name: COINBASE_STAKING_ROUTES.STAKE.NAME
-      });
-      this.trackStaking(STAKING.HEADER_NOW);
-    },
-    buttonTracking(name) {
-      this.trackAd(name);
-    }
-  }
+
+import {
+  global as useGlobalStore,
+  wallet as useWalletStore
+} from '@/core/store/index.js';
+import { useAmplitude } from '@/core/composables/amplitude';
+
+const notificationOverlay = import(
+  '@/modules/notifications/ModuleNotifications'
+);
+
+// injections/use
+const router = useRouter();
+const { online, network } = useGlobalStore();
+const { isOfflineApp } = useWalletStore();
+const { trackStaking, trackAd } = useAmplitude();
+
+// data
+const ads = ref([]);
+
+// computed
+const hasAds = computed(() => {
+  return ads.value.length > 0;
+});
+
+// mounted
+onMounted(() => {
+  if (isOfflineApp) setHeaderAds();
+});
+
+const setHeaderAds = async () => {
+  const res = await fetch('https://partners.mewapi.io/ads-web');
+  const adRes = await res.json();
+  ads.value = adRes;
+};
+
+// const buyCryptoNow = () => {
+//   EventBus.$emit(BUYSELL_EVENT);
+// }
+
+const stakeNow = () => {
+  router.push({
+    name: COINBASE_STAKING_ROUTES.STAKE.NAME
+  });
+  trackStaking(STAKING.HEADER_NOW);
+};
+
+const buttonTracking = name => {
+  trackAd(name);
 };
 </script>
 

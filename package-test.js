@@ -45,7 +45,6 @@ const EXCEPTIONS = [
   '@vue/cli-plugin-pwa',
   '@vue/cli-plugin-unit-jest',
   '@vue/cli-service',
-  'vue-i18n',
   'vue',
   '@vue/cli-plugin-e2e-nightwatch',
   '@kleros/address-tags-sdk',

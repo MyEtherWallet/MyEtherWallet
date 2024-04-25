@@ -96,45 +96,44 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref } from 'vue';
+const platform = require('platform');
+
 import appStore from '@/assets/images/icons/button-app-store.svg';
 import googlePlay from '@/assets/images/icons/button-play-store.svg';
-import { mapMutations, mapState } from 'vuex';
-const platform = require('platform');
-export default {
-  data() {
-    return {
-      isExpanded: false,
-      storeButtons: [
-        {
-          src: appStore,
-          url: 'https://itunes.apple.com/app/id1464614025'
-        },
-        {
-          src: googlePlay,
-          url: 'https://play.google.com/store/apps/details?id=com.myetherwallet.mewwallet'
-        }
-      ]
-    };
+
+import {
+  global as useGlobalStore,
+  popups as usePopupsStore
+} from '@/core/store/index.js';
+
+// injections/vue
+const { showedBanner } = useGlobalStore();
+const { neverShowBanner } = usePopupsStore();
+
+const isExpanded = ref(false);
+const storeButtons = [
+  {
+    src: appStore,
+    url: 'https://itunes.apple.com/app/id1464614025'
   },
-  computed: {
-    ...mapState('global', ['showedBanner'])
-  },
-  methods: {
-    ...mapMutations('global', ['NEVER_SHOW_BANNER']),
-    toggleBanner() {
-      this.isExpanded = !this.isExpanded;
-    },
-    setHideBanner() {
-      this.NEVER_SHOW_BANNER();
-    },
-    isMobile() {
-      return (
-        platform.os.family.includes('iOS') ||
-        platform.os.family.includes('Android')
-      );
-    }
+  {
+    src: googlePlay,
+    url: 'https://play.google.com/store/apps/details?id=com.myetherwallet.mewwallet'
   }
+];
+
+const toggleBanner = () => {
+  isExpanded.value = !isExpanded.value;
+};
+
+const setHideBanner = () => {
+  neverShowBanner();
+};
+
+const isMobile = () => {
+  platform.os.family.includes('iOS') || platform.os.family.includes('Android');
 };
 </script>
 

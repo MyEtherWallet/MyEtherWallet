@@ -45,6 +45,10 @@ const setShownEu = () => {
   this.shownChoiceEU = true;
 };
 
+const neverShowBanner = () => {
+  this.showedBanner = true;
+};
+
 export default {
   setTrackingConsent,
   neverShowEnkryptLandingPage,
@@ -54,5 +58,6 @@ export default {
   setPkSurvey,
   shownPkSurveyCounter,
   setShownEu,
-  initStore
+  initStore,
+  neverShowBanner
 };

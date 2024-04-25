@@ -112,6 +112,7 @@
     "vue": "2.7.14",
     "vue-apollo": "3.1.2",
     "vue-chartjs": "3.5.0",
+    "vue-i18n-composable": "^2.0.0",
     "vue-lazyload": "1.3.4",
     "vue-router": "3.6.4",
     "vue-social-sharing": "3.0.9",

@@ -164,9 +164,16 @@
   </div>
 </template>
 
-<script>
-import { mapActions, mapState } from 'vuex';
+<script setup>
 import Web3 from 'web3';
+import {
+  defineAsyncComponent,
+  defineProps,
+  ref,
+  computed,
+  onMounted
+} from 'vue';
+import { useRouter } from 'vue-router/composables';
 
 import { WalletConnectWallet } from '@/modules/access-wallet/hybrid/handlers';
 
@@ -179,7 +186,6 @@ import {
 import { ACCESS_VALID_OVERLAYS } from '@/core/router/helpers';
 import { Web3Wallet } from '@/modules/access-wallet/common';
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import {
   ACCESS_WALLET,
@@ -187,322 +193,320 @@ import {
 } from '@/modules/analytics-opt-in/handlers/configs/events';
 import { getInjectedName } from '@/core/helpers/detectProvider.js';
 
-export default {
-  name: 'TheAccessWalletLayout',
-  components: {
-    ModuleAccessWalletHardware: () =>
-      import('@/modules/access-wallet/ModuleAccessWalletHardware'),
-    ModuleAccessWalletSoftware: () =>
-      import('@/modules/access-wallet/ModuleAccessWalletSoftware'),
-    ModuleAccessWalletMobile: () =>
-      import('@/modules/access-wallet/ModuleAccessWalletMobile'),
-    EnkryptMissingSnackbar: () =>
-      import('@/views/components-default/EnkryptMissingSnackbar.vue'),
-    TheLayoutHeader: () => import('../components-default/TheLayoutHeader')
+import { useAmplitude } from '@/core/composables/amplitude';
+import {
+  external as useExternalStore,
+  wallet as useWalletStore
+} from '@/core/store/index.js';
+import { useVuetify } from '@/core/composables/vuetify';
+
+const ModuleAccessWalletHardware = defineAsyncComponent(() =>
+  import('@/modules/access-wallet/ModuleAccessWalletHardware')
+);
+const ModuleAccessWalletSoftware = defineAsyncComponent(() =>
+  import('@/modules/access-wallet/ModuleAccessWalletSoftware')
+);
+const ModuleAccessWalletMobile = defineAsyncComponent(() =>
+  import('@/modules/access-wallet/ModuleAccessWalletMobile')
+);
+const EnkryptMissingSnackbar = defineAsyncComponent(() =>
+  import('@/views/components-default/EnkryptMissingSnackbar.vue')
+);
+const TheLayoutHeader = defineAsyncComponent(() =>
+  import('../components-default/TheLayoutHeader')
+);
+
+// injections/use
+const router = useRouter();
+const { trackAccessWalletAmplitude } = useAmplitude();
+const {
+  path,
+  eip6963Providers,
+  setSelectedEIP6963Info,
+  setSelectedEIP6963Provider
+} = useExternalStore();
+const { isOfflineApp, setWallet } = useWalletStore();
+const vuetify = useVuetify();
+
+// props
+const props = defineProps({
+  overlay: {
+    type: String,
+    default: ''
   },
-  mixins: [handlerAnalytics],
-  props: {
-    overlay: {
-      type: String,
-      default: ''
-    },
-    type: {
-      type: String,
-      default: 'overview'
-    }
-  },
-  data() {
-    return {
-      titleRoute: {
-        text: 'Create Wallet',
-        routeName: 'CreateWallet'
+  type: {
+    type: String,
+    default: 'overview'
+  }
+});
+
+// data
+const titleRoute = {
+  text: 'Create Wallet',
+  routeName: 'CreateWallet'
+};
+
+const showInstallEnkrypt = ref(false);
+
+// computed
+const showSoftware = computed(() => {
+  return props.overlay === ACCESS_VALID_OVERLAYS.SOFTWARE;
+});
+const showHardware = computed(() => {
+  return props.overlay === ACCESS_VALID_OVERLAYS.HARDWARE;
+});
+const showMobile = computed(() => {
+  return props.overlay === ACCESS_VALID_OVERLAYS.MOBILE;
+});
+
+const buttons = computed(() => {
+  if (!isOfflineApp) {
+    return [
+      /* Enkrypt */
+      {
+        color: 'white',
+        title: 'Enkrypt',
+        subtitle: 'Connect with Enkrypt browser extension',
+        official: true,
+        recommended: true,
+        useBtn: true,
+        icon: require('@/assets/images/icons/icon-enkrypt-block.svg'),
+        alt: 'Enkrypt',
+        fn: () => {
+          trackAccessWalletAmplitude(ACCESS_WALLET.ENKRYPT);
+          checkEnkrypt();
+        }
       },
-      showInstallEnkrypt: false
-    };
-  },
-  computed: {
-    ...mapState('external', ['path', 'eip6963Providers']),
-    ...mapState('wallet', ['isOfflineApp']),
-    /**
-     * Opens up software module overlay. Returns true if overlay prop from route is ACCESS_VALID_OVERLAYS.SOFTWARE
-     * @return - boolean
-     */
-    showSoftware() {
-      return this.overlay === ACCESS_VALID_OVERLAYS.SOFTWARE;
-    },
-    /**
-     * Opens up harware module overlay. Returns true if overlay prop from route is ACCESS_VALID_OVERLAYS.HARDWARE
-     * @return - boolean
-     */
-    showHardware() {
-      return this.overlay === ACCESS_VALID_OVERLAYS.HARDWARE;
-    },
-    /**
-     * Opens up mobile module overlay. Returns true if overlay prop from route is ACCESS_VALID_OVERLAYS.MOBILE
-     * @return - boolean
-     */
-    showMobile() {
-      return this.overlay === ACCESS_VALID_OVERLAYS.MOBILE;
-    },
-    /**
-     * Opens up software module overlay. Returns true if overlay prop from route is ACCESS_VALID_OVERLAYS.SOFTWARE
-     * @return - boolean
-     */
-    showOffline() {
-      return this.overlay === ACCESS_VALID_OVERLAYS.SOFTWARE;
-    },
-    buttons() {
-      if (!this.isOfflineApp) {
-        return [
-          /* Enkrypt */
-          {
-            color: 'white',
-            title: 'Enkrypt',
-            subtitle: 'Connect with Enkrypt browser extension',
-            official: true,
-            recommended: true,
-            useBtn: true,
-            icon: require('@/assets/images/icons/icon-enkrypt-block.svg'),
-            alt: 'Enkrypt',
-            fn: () => {
-              this.trackAccessWalletAmplitude(ACCESS_WALLET.ENKRYPT);
-              this.checkEnkrypt();
-            }
-          },
-          /* MEW wallet Button */
-          {
-            color: 'white',
-            title: 'MEW wallet app',
-            subtitle: 'Connect MEW Wallet app to MEW web',
-            official: true,
-            recommended: true,
-            useBtn: true,
-            icon: require('@/assets/images/icons/icon-mew-wallet.png'),
-            alt: 'MEW wallet',
-            fn: () => {
-              this.openMEWwallet();
-            }
-          },
-          /* Browser extension */
-          {
-            color: 'white',
-            title: 'Browser extension',
-            subtitle: 'Use your Web3 wallet with MEW',
-            official: false,
-            recommended: true,
-            useBtn: this.eip6963Providers.length <= 1,
-            icon: require('@/assets/images/icons/icon-extensions.png'),
-            alt: 'Hardware Wallets',
-            fn: () => {
-              this.trackAccessWalletAmplitude(ACCESS_WALLET.BROWSER_EXTENSION);
-              this.openWeb3Wallet();
-            }
-          },
-          /* Mobile Apps */
-          {
-            color: 'white',
-            title: 'Mobile Apps',
-            subtitle: 'WalletConnect, WalletLink',
-            official: false,
-            recommended: true,
-            useBtn: true,
-            icon: require('@/assets/images/icons/icon-mobile-apps.png'),
-            alt: 'Hardware Wallets',
-            fn: () => {
-              this.trackAccessWalletAmplitude(ACCESS_WALLET.MOBILE_APPS);
-              this.openOverlay(ACCESS_VALID_OVERLAYS.MOBILE);
-            }
-          },
-          /* Hardware wallets */
-          {
-            color: 'white',
-            title: 'Hardware wallets',
-            subtitle: 'Ledger, Trezor, KeepKey, Cool Wallet, Bitbox02',
-            official: false,
-            recommended: true,
-            useBtn: true,
-            icon: require('@/assets/images/icons/icon-hardware-wallet.png'),
-            alt: 'Hardware Wallets',
-            fn: () => {
-              this.trackAccessWalletAmplitude(ACCESS_WALLET.HARWARE_WALLETS);
-              this.openOverlay(ACCESS_VALID_OVERLAYS.HARDWARE);
-            }
-          },
-          /* Software */
-          {
-            color: 'white',
-            style: 'outline',
-            title: 'Software',
-            subtitle: 'Keystore File, Mnemonic Phrase, and Private Key',
-            official: false,
-            useBtn: true,
-            recommended: false,
-            fn: () => {
-              this.trackAccessWalletAmplitude(ACCESS_WALLET.SOFTWARE);
-              this.openOverlay(ACCESS_VALID_OVERLAYS.SOFTWARE);
-            }
-          }
-        ];
-      }
-      return [
-        {
-          color: 'white',
-          title: 'Software',
-          useBtn: true,
-          subtitle: 'Keystore files, Mnemonic phrase, Private key',
-          fn: () => {
-            this.trackAccessWalletAmplitude(ACCESS_WALLET.SOFTWARE);
-            this.openOverlay(ACCESS_VALID_OVERLAYS.SOFTWARE);
-          }
+      /* MEW wallet Button */
+      {
+        color: 'white',
+        title: 'MEW wallet app',
+        subtitle: 'Connect MEW Wallet app to MEW web',
+        official: true,
+        recommended: true,
+        useBtn: true,
+        icon: require('@/assets/images/icons/icon-mew-wallet.png'),
+        alt: 'MEW wallet',
+        fn: () => {
+          openMEWwallet();
         }
-      ];
-    },
-    isMobile() {
-      return this.$vuetify.breakpoint.smAndDown;
+      },
+      /* Browser extension */
+      {
+        color: 'white',
+        title: 'Browser extension',
+        subtitle: 'Use your Web3 wallet with MEW',
+        official: false,
+        recommended: true,
+        useBtn: eip6963Providers.length <= 1,
+        icon: require('@/assets/images/icons/icon-extensions.png'),
+        alt: 'Hardware Wallets',
+        fn: () => {
+          trackAccessWalletAmplitude(ACCESS_WALLET.BROWSER_EXTENSION);
+          openWeb3Wallet();
+        }
+      },
+      /* Mobile Apps */
+      {
+        color: 'white',
+        title: 'Mobile Apps',
+        subtitle: 'WalletConnect, WalletLink',
+        official: false,
+        recommended: true,
+        useBtn: true,
+        icon: require('@/assets/images/icons/icon-mobile-apps.png'),
+        alt: 'Hardware Wallets',
+        fn: () => {
+          trackAccessWalletAmplitude(ACCESS_WALLET.MOBILE_APPS);
+          openOverlay(ACCESS_VALID_OVERLAYS.MOBILE);
+        }
+      },
+      /* Hardware wallets */
+      {
+        color: 'white',
+        title: 'Hardware wallets',
+        subtitle: 'Ledger, Trezor, KeepKey, Cool Wallet, Bitbox02',
+        official: false,
+        recommended: true,
+        useBtn: true,
+        icon: require('@/assets/images/icons/icon-hardware-wallet.png'),
+        alt: 'Hardware Wallets',
+        fn: () => {
+          trackAccessWalletAmplitude(ACCESS_WALLET.HARWARE_WALLETS);
+          openOverlay(ACCESS_VALID_OVERLAYS.HARDWARE);
+        }
+      },
+      /* Software */
+      {
+        color: 'white',
+        style: 'outline',
+        title: 'Software',
+        subtitle: 'Keystore File, Mnemonic Phrase, and Private Key',
+        official: false,
+        useBtn: true,
+        recommended: false,
+        fn: () => {
+          trackAccessWalletAmplitude(ACCESS_WALLET.SOFTWARE);
+          openOverlay(ACCESS_VALID_OVERLAYS.SOFTWARE);
+        }
+      }
+    ];
+  }
+  return [
+    {
+      color: 'white',
+      title: 'Software',
+      useBtn: true,
+      subtitle: 'Keystore files, Mnemonic phrase, Private key',
+      fn: () => {
+        trackAccessWalletAmplitude(ACCESS_WALLET.SOFTWARE);
+        openOverlay(ACCESS_VALID_OVERLAYS.SOFTWARE);
+      }
     }
-  },
-  mounted() {
-    window.dispatchEvent(new Event('eip6963:requestProvider'));
-    this.trackAccessWalletAmplitude(COMMON.PAGE_SHOWN);
-  },
-  methods: {
-    ...mapActions('wallet', ['setWallet']),
-    ...mapActions('external', [
-      'setSelectedEIP6963Info',
-      'setSelectedEIP6963Provider'
-    ]),
-    /**
-     * Pushes route to empty Access wallet with no props
-     * Consequently closing any open overlay
-     * @type - must be one of the VALID_OVERLAYS
-     */
-    close() {
-      try {
-        if (this.showSoftware) {
-          this.trackAccessWalletAmplitude(ACCESS_WALLET.CLOSE_SOFTWARE_ACCESS);
-        } else if (this.showHardware) {
-          this.trackAccessWalletAmplitude(ACCESS_WALLET.CLOSE_HARDWARE_ACCESS);
-        } else if (this.showMobile) {
-          this.trackAccessWalletAmplitude(ACCESS_WALLET.CLOSE_MOBILE_ACCESS);
-        }
-        this.$router.push({
-          name: ROUTES_HOME.ACCESS_WALLET.NAME
+  ];
+});
+
+const isMobile = computed(() => {
+  return vuetify.breakpoint.smAndDown;
+});
+
+// on mounted
+onMounted(() => {
+  window.dispatchEvent(new Event('eip6963:requestProvider'));
+  trackAccessWalletAmplitude(COMMON.PAGE_SHOWN);
+});
+
+// methods
+
+/**
+ * Pushes route to empty Access wallet with no props
+ * Consequently closing any open overlay
+ * @type - must be one of the VALID_OVERLAYS
+ */
+const close = () => {
+  try {
+    if (showSoftware.value) {
+      trackAccessWalletAmplitude(ACCESS_WALLET.CLOSE_SOFTWARE_ACCESS);
+    } else if (showHardware.value) {
+      trackAccessWalletAmplitude(ACCESS_WALLET.CLOSE_HARDWARE_ACCESS);
+    } else if (showMobile.value) {
+      trackAccessWalletAmplitude(ACCESS_WALLET.CLOSE_MOBILE_ACCESS);
+    }
+    router.push({
+      name: ROUTES_HOME.ACCESS_WALLET.NAME
+    });
+  } catch (e) {
+    Toast(e, {}, ERROR);
+  }
+};
+
+const openWeb3WithProvider = item => {
+  trackAccessWalletAmplitude(ACCESS_WALLET.BROWSER_EXTENSION);
+  openWeb3Wallet(item);
+};
+
+const openMEWwallet = () => {
+  try {
+    trackAccessWalletAmplitude(ACCESS_WALLET.MEW_WALLET_QR_SHOWN);
+    WalletConnectWallet(WALLET_TYPES.MEW_WALLET)
+      .then(_newWallet => {
+        setWallet([_newWallet]).then(() => {
+          trackAccessWalletAmplitude(ACCESS_WALLET.MEW_WALLET_QR_SUCCESSFUL);
+          router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
         });
-      } catch (e) {
-        Toast(e, {}, ERROR);
+      })
+      .catch(e => {
+        trackAccessWalletAmplitude(ACCESS_WALLET.MEW_WALLET_QR_FAILED);
+        WalletConnectWallet.errorHandler(e);
+      });
+  } catch (e) {
+    trackAccessWalletAmplitude(ACCESS_WALLET.MEW_WALLET_QR_FAILED);
+    Toast(e.message, {}, SENTRY);
+  }
+};
+
+/**
+ * Pushes a correct router prop for the overlay and sets query prop 'type' to the 'overview'.
+ * Consiquently this will open the correct module overlay.
+ * @type - must be one of the VALID_OVERLAYS
+ */
+const openOverlay = type => {
+  try {
+    router.push({
+      name: ROUTES_HOME.ACCESS_WALLET.NAME,
+      params: { overlay: type },
+      query: { type: 'overview' }
+    });
+  } catch (e) {
+    Toast(e, {}, ERROR);
+  }
+};
+
+/**
+ * Checks if Enkrypt is available
+ */
+const checkEnkrypt = () => {
+  if (eip6963Providers.length > 0) {
+    const item = eip6963Providers.find(item => {
+      if (item.info.name.toLowerCase() === 'enkrypt') return item;
+    });
+    if (item) {
+      openWeb3Wallet(item);
+      return;
+    }
+  }
+  if (
+    window.ethereum &&
+    window.ethereum.isMetaMask &&
+    window.ethereum.isEnkrypt
+  ) {
+    openWeb3Wallet();
+  } else {
+    showInstallEnkrypt.value = true;
+  }
+};
+
+const openWeb3Wallet = async item => {
+  if (item || window.ethereum) {
+    if (item) {
+      setSelectedEIP6963Info(item.info);
+      setSelectedEIP6963Provider(item.provider);
+    }
+    const providedProvider = item ? item.provider : window.ethereum;
+    const web3 = new Web3(providedProvider);
+    try {
+      await providedProvider.enable();
+      const acc = await web3.eth.requestAccounts();
+      const wallet = new Web3Wallet(acc[0]);
+      setWallet([wallet, providedProvider]);
+      trackAccessWalletAmplitude(ACCESS_WALLET.WEB3_ACCESS_SUCCESS, {
+        provider: getInjectedName(providedProvider)
+      });
+      if (path !== '') {
+        router.push({ path: path });
+      } else {
+        router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
       }
-    },
-    openWeb3WithProvider(item) {
-      this.trackAccessWalletAmplitude(ACCESS_WALLET.BROWSER_EXTENSION);
-      this.openWeb3Wallet(item);
-    },
-    openMEWwallet() {
-      try {
-        this.trackAccessWalletAmplitude(ACCESS_WALLET.MEW_WALLET_QR_SHOWN);
-        WalletConnectWallet(WALLET_TYPES.MEW_WALLET)
-          .then(_newWallet => {
-            this.setWallet([_newWallet]).then(() => {
-              this.trackAccessWalletAmplitude(
-                ACCESS_WALLET.MEW_WALLET_QR_SUCCESSFUL
-              );
-              this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
-            });
-          })
-          .catch(e => {
-            this.trackAccessWalletAmplitude(ACCESS_WALLET.MEW_WALLET_QR_FAILED);
-            WalletConnectWallet.errorHandler(e);
-          });
-      } catch (e) {
-        this.trackAccessWalletAmplitude(ACCESS_WALLET.MEW_WALLET_QR_FAILED);
-        Toast(e.message, {}, SENTRY);
-      }
-    },
-    /**
-     * Pushes a correct router prop for the overlay and sets query prop 'type' to the 'overview'.
-     * Consiquently this will open the correct module overlay.
-     * @type - must be one of the VALID_OVERLAYS
-     */
-    openOverlay(type) {
-      try {
-        this.$router.push({
-          name: ROUTES_HOME.ACCESS_WALLET.NAME,
-          params: { overlay: type },
-          query: { type: 'overview' }
-        });
-      } catch (e) {
-        Toast(e, {}, ERROR);
-      }
-      this[type] = true;
-    },
-    /**
-     * Checks if Enkrypt is available
-     */
-    checkEnkrypt() {
-      if (this.eip6963Providers.length > 0) {
-        const item = this.eip6963Providers.find(item => {
-          if (item.info.name.toLowerCase() === 'enkrypt') return item;
-        });
-        if (item) {
-          this.openWeb3Wallet(item);
-          return;
-        }
-      }
+    } catch (e) {
+      trackAccessWalletAmplitude(ACCESS_WALLET.ACCESS_FAILED, {
+        wallet: getInjectedName(providedProvider)
+      });
       if (
-        window.ethereum &&
-        window.ethereum.isMetaMask &&
-        window.ethereum.isEnkrypt
-      ) {
-        this.openWeb3Wallet();
-      } else {
-        this.showInstallEnkrypt = true;
-      }
-    },
-    /**
-     * Checks and open web3 wallet
-     */
-    async openWeb3Wallet(item) {
-      if (item || window.ethereum) {
-        if (item) {
-          this.setSelectedEIP6963Info(item.info);
-          this.setSelectedEIP6963Provider(item.provider);
-        }
-        const providedProvider = item ? item.provider : window.ethereum;
-        const web3 = new Web3(providedProvider);
-        try {
-          await providedProvider.enable();
-          const acc = await web3.eth.requestAccounts();
-          const wallet = new Web3Wallet(acc[0]);
-          this.setWallet([wallet, providedProvider]);
-          this.trackAccessWalletAmplitude(ACCESS_WALLET.WEB3_ACCESS_SUCCESS, {
-            provider: getInjectedName(providedProvider)
-          });
-          if (this.path !== '') {
-            this.$router.push({ path: this.path });
-          } else {
-            this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
-          }
-        } catch (e) {
-          this.trackAccessWalletAmplitude(ACCESS_WALLET.ACCESS_FAILED, {
-            wallet: getInjectedName(providedProvider)
-          });
-          if (
-            e instanceof Error &&
-            e.message === 'Already processing eth_requestAccounts. Please wait.'
-          )
-            Toast(
-              'Please open the MetaMask extension and unlock your wallet.',
-              {},
-              WARNING
-            );
-          else Toast(e, {}, WARNING);
-        }
-      } else {
-        this.trackAccessWalletAmplitude(ACCESS_WALLET.ACCESS_FAILED, {
-          wallet: 'NoWallet'
-        });
-        Toast('No web3 wallet found!', {}, WARNING);
-      }
+        e instanceof Error &&
+        e.message === 'Already processing eth_requestAccounts. Please wait.'
+      )
+        Toast(
+          'Please open the MetaMask extension and unlock your wallet.',
+          {},
+          WARNING
+        );
+      else Toast(e, {}, WARNING);
     }
+  } else {
+    trackAccessWalletAmplitude(ACCESS_WALLET.ACCESS_FAILED, {
+      wallet: 'NoWallet'
+    });
+    Toast('No web3 wallet found!', {}, WARNING);
   }
 };
 </script>

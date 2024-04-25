@@ -1,10 +1,3 @@
-import app from './mainApp';
-import '@/assets/fonts/MaterialDesignIcons/css/materialdesignicons.min.css';
-import '@/assets/fonts/Roboto/css/Roboto.css';
-
-import './sentry';
-import './components';
-
 import Vue from 'vue';
 import Router from 'vue-router';
 import { v4 as uuidv4 } from 'uuid';
@@ -13,6 +6,13 @@ import * as nameHashPckg from 'eth-ens-namehash';
 import VueIntercom from '@mathieustan/vue-intercom';
 import VueSocialSharing from 'vue-social-sharing';
 import * as amplitude from '@amplitude/analytics-browser';
+
+import app from './mainApp';
+import '@/assets/fonts/MaterialDesignIcons/css/materialdesignicons.min.css';
+import '@/assets/fonts/Roboto/css/Roboto.css';
+
+import './sentry';
+import './components';
 
 /**Dapps Store */
 import { dappStoreBeforeCreate } from '../dapps/dappsStore';

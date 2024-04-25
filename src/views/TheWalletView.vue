@@ -71,8 +71,8 @@ import {
 } from 'vue';
 import { useRouter } from 'vue-router/composables';
 
-import useVuetify from '@/core/composables/vuetify.js';
-import useAmplitude from '@/core/composables/amplitude.js';
+import { useVuetify } from '@/core/composables/vuetify.js';
+import { useAmplitude } from '@/core/composables/amplitude.js';
 
 import {
   global as useGlobalStore,
