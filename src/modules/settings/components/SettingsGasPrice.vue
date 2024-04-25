@@ -291,7 +291,7 @@ const formatInUsd = fee => {
   }).value;
 };
 const recalculate = () => {
-  const amount = BigNumber(costInEth.value).minus(this[`${gasPriceType}InEth`]);
+  const amount = BigNumber(props.costInEth).minus(this[`${gasPriceType}InEth`]);
   Object.values(gasPriceTypes).forEach(item => {
     const withFee = BigNumber(amount).plus(this[`${item}InEth`]);
     this[`${item}Disabled`] = withFee.gt(balanceInETH);
