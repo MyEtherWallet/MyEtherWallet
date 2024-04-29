@@ -16,7 +16,7 @@
     </div>
     <span class="mew-heading-2">Send Your NFT </span>
     <img height="150" :src="nft.image" alt="nft image" @error="onImgErr" />
-    <div class="mb-4 mt-2">{{ nft.name | concatName }}</div>
+    <div class="mb-4 mt-2">{{ concatName(nft.name) }}</div>
     <module-address-book @setAddress="setAddress" />
     <span
       v-if="!enoughFunds && showBalanceError"
@@ -47,86 +47,84 @@
   </v-sheet>
 </template>
 
-<script>
-import { mapGetters } from 'vuex';
+<script setup>
+import { defineAsyncComponent, defineProps, computed } from 'vue';
 
 import nftPlaceholder from '@/assets/images/icons/icon-nft-placeholder.png';
-import buyMore from '@/core/mixins/buyMore.mixin.js';
-export default {
-  components: {
-    ModuleAddressBook: () => import('@/modules/address-book/ModuleAddressBook')
+import { useBuySell } from '@/core/composables/buyMore';
+import { global as useGlobalStore } from '@/core/store/index.js';
+
+const ModuleAddressBook = defineAsyncComponent(() =>
+  import('@/modules/address-book/ModuleAddressBook')
+);
+
+// injections/use
+const { openBuySell } = useBuySell();
+const { network } = useGlobalStore();
+
+const props = defineProps({
+  nft: {
+    default: () => {
+      return {};
+    },
+    type: Object
   },
-  filters: {
-    concatName(val) {
-      // should probably be moved globablly
-      if (val.length < 11) return val;
-      return `${val.substring(0, 11)}...${val.substring(
-        val.length - 4,
-        val.length
-      )}`;
-    }
+  send: {
+    default: () => {
+      return;
+    },
+    type: Function
   },
-  mixins: [buyMore],
-  props: {
-    nft: {
-      default: () => {
-        return {};
-      },
-      type: Object
+  setAddress: {
+    default: () => {
+      return;
     },
-    send: {
-      default: () => {
-        return;
-      },
-      type: Function
-    },
-    setAddress: {
-      default: () => {
-        return;
-      },
-      type: Function
-    },
-    close: {
-      default: () => {
-        return;
-      },
-      type: Function
-    },
-    nftCategory: {
-      default: '',
-      type: String
-    },
-    disabled: {
-      default: false,
-      type: Boolean
-    },
-    enoughFunds: {
-      default: false,
-      type: Boolean
-    },
-    showBalanceError: {
-      default: false,
-      type: Boolean
-    }
+    type: Function
   },
-  data() {
-    return {
-      nftPlaceholder: nftPlaceholder
-    };
-  },
-  computed: {
-    ...mapGetters('global', ['network']),
-    backTxt() {
-      return 'Back to ' + this.nftCategory;
+  close: {
+    default: () => {
+      return;
     },
-    currencyName() {
-      return this.network.type.currencyName;
-    }
+    type: Function
   },
-  methods: {
-    onImgErr(e) {
-      e.target.src = this.nftPlaceholder;
-    }
+  nftCategory: {
+    default: '',
+    type: String
+  },
+  disabled: {
+    default: false,
+    type: Boolean
+  },
+  enoughFunds: {
+    default: false,
+    type: Boolean
+  },
+  showBalanceError: {
+    default: false,
+    type: Boolean
   }
+});
+
+// computed
+const backTxt = computed(() => {
+  return `Back to ${props.nftCategory}`;
+});
+
+const currencyName = computed(() => {
+  return network.type.currencyName;
+});
+
+// methods
+const onImgErr = e => {
+  e.target.src = nftPlaceholder;
+};
+
+const concatName = str => {
+  // should probably be moved globablly
+  if (str.length < 11) return str;
+  return `${str.substring(0, 11)}...${str.substring(
+    str.length - 4,
+    str.length
+  )}`;
 };
 </script>

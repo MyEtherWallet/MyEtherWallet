@@ -140,8 +140,8 @@
   </div>
 </template>
 
-<script>
-import { mapGetters, mapState } from 'vuex';
+<script setup>
+import { defineAsyncComponent, ref, onMounted, watch, computed } from 'vue';
 import { toBN, isAddress } from 'web3-utils';
 import {
   Toast,
@@ -151,337 +151,339 @@ import {
 } from '@/modules/toast/handler/handlerToast';
 import getService from '@/core/helpers/getService';
 
+import {
+  global as useGlobalStore,
+  wallet as useWalletStore
+} from '@/core/store/index.js';
+
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { ETH, BSC, MATIC } from '@/utils/networks/types';
 import { toBNSafe } from '@/core/helpers/numberFormatHelper';
 import NFT from './handlers/handlerNftManager';
 import handleError from '@/modules/confirmation/handlers/errorHandler.js';
+import { useRouter } from 'vue-router/composables';
 
 const MIN_GAS_LIMIT = 21000;
 
-export default {
-  components: {
-    NftManagerDetails: () => import('./components/NftManagerDetails'),
-    NftManagerSend: () => import('./components/NftManagerSend')
-  },
-  data() {
-    return {
-      nft: {},
-      activeTab: 0,
-      onNftSend: false,
-      hasNoTokens: false,
-      selectedNft: {},
-      toAddress: '',
-      selectedContract: {},
-      gasFees: '0',
-      enoughFunds: false,
-      showBalanceError: false,
-      localGasPrice: '0',
-      loadingContracts: true,
-      loadingTokens: true,
-      nftApiResponse: []
-    };
-  },
-  computed: {
-    ...mapState('wallet', ['balance', 'web3', 'address']),
-    ...mapState('global', ['network', 'gasPriceType']),
-    ...mapGetters('wallet', ['balanceInETH', 'balanceInWei']),
-    ...mapGetters('global', [
-      'isEthNetwork',
-      'network',
-      'gasPrice',
-      'gasPriceByType'
-    ]),
-    /**
-     * Get Tabs
-     */
-    tabs() {
-      return this.contracts.map(item => {
-        let tabName = `${item.name} (${item.count})`;
-        if (tabName.length > 25) {
-          tabName = item.name.substring(0, 20);
-          tabName += `... (${item.count})`;
-        }
-        return { name: tabName };
-      });
-    },
-    tokens() {
-      if (this.nftApiResponse.length > 0) {
-        const contract = this.nftApiResponse.filter(item => {
-          return (
-            item.contract_address.toLowerCase() ===
-            this.selectedContract.contract.toLowerCase()
-          );
-        });
-        if (contract) {
-          return contract.map(item => {
-            const url = item.image_url ? item.image_url : '';
-            return {
-              image: `https://img.mewapi.io/?image=${url}`,
-              name: item.name || item.token_id,
-              token_id: item.token_id,
-              contract: item.contract_address,
-              erc721: item.contract.type === 'ERC721'
-            };
-          });
-        }
-      }
-      return [];
-    },
-    contracts() {
-      if (this.nftApiResponse.length > 0) {
-        // Organize contracts by address
-        return this.nftApiResponse.reduce((arr, item) => {
-          const nftAmount = item.queried_wallet_balances[0].quantity;
-          const inList = arr.find(i => i.contract === item.contract_address);
-          if (inList) {
-            inList.count++;
-            inList.total += nftAmount;
-          } else {
-            arr.push({
-              contract: item.contract_address,
-              count: 1,
-              total: nftAmount,
-              name: item.contract.name || item.collection.name
-            });
-          }
-          return arr;
-        }, []);
-      }
-      return [];
-    },
-    /**
-     * Pagination
-     */
-    totalPages() {
-      return this.nft.totalPages(this.selectedContract.count);
-    },
-    hasPages() {
-      return this.nft.hasPages(this.selectedContract.count);
-    },
-    startIndex() {
-      return this.nft.startIndex();
-    },
-    endIndex() {
-      return this.nft.endIndex(this.selectedContract.count);
-    },
-    currentPage: {
-      get() {
-        return this.nft.currentPage;
-      },
-      set(value) {
-        return value;
-      }
-    },
-    /**
-     * Display tokens according to page
-     */
-    displayedTokens() {
-      return this.tokens.slice(this.startIndex, this.endIndex);
-    },
-    /**
-     * Check if address is valid
-     */
-    isValid() {
-      return this.nft.isValidAddress(this.toAddress) && this.enoughFunds;
-    },
-    /**
-     * Check if network is supported
-     */
-    supportedNetwork() {
-      return this.supportedNetworks.includes(this.network.type.name);
-    },
-    /**
-     * List of supported networks
-     */
-    supportedNetworks() {
-      return [ETH.name, MATIC.name, BSC.name];
-    }
-  },
-  watch: {
-    balanceInWei() {
-      this.hasMinEth();
-    },
-    web3() {
-      this.loadingContracts = true;
-      this.loadingTokens = true;
-      this.onNftSend = false;
-      if (this.address)
-        this.$router.push({ name: ROUTES_WALLET.NFT_MANAGER.NAME });
-      if (this.supportedNetwork) {
-        this.setUpNFT();
-      } else {
-        setTimeout(() => {
-          Toast(
-            `NFT Manager not supported in network: ${this.network.type.name}`,
-            {},
-            WARNING
-          );
-          this.nftApiResponse = [];
-        }, 1000);
-      }
-    },
-    address() {
-      this.loadingContracts = true;
-      this.loadingTokens = true;
-      this.onNftSend = false;
-      if (this.address)
-        this.$router.push({ name: ROUTES_WALLET.NFT_MANAGER.NAME });
-      this.setUpNFT();
-    },
-    contracts(newVal) {
-      if (newVal.length > 0) {
-        this.onTab(0);
-      }
-    },
-    async toAddress(newVal) {
-      if (isAddress(newVal) && this.enoughFunds) {
-        try {
-          const gasTypeFee = this.gasPriceByType(this.gasPriceType);
-          this.localGasPrice = gasTypeFee;
-          const gasFees = await this.nft.getGasFees(newVal, this.selectedNft);
-          const gasFeesToBN = toBNSafe(gasFees).mul(toBNSafe(gasTypeFee));
-          this.gasFees = gasFeesToBN.toString();
-          if (gasFeesToBN.gte(toBN(this.balanceInWei))) {
-            //gasFeesToBN vs current balance
-            this.enoughFunds = false;
-            this.showBalanceError = true;
-          } else {
-            this.enoughFunds = true;
-            this.showBalanceError = false;
-          }
-        } catch (e) {
-          this.enoughFunds = false;
-          this.showBalanceError = false;
-          Toast(
-            `Can't send NFT! Please double check if everything is correct`,
-            {},
-            ERROR
-          );
-        }
-      }
-    }
-  },
-  mounted() {
-    this.setUpNFT();
-  },
-  methods: {
-    setUpNFT() {
-      if (!this.supportedNetwork) return;
-      /**
-       * Init NFT Handler
-       */
-      this.nft = new NFT({
-        network: this.network,
-        address: this.address,
-        web3: this.web3
-      });
+const NftManagerDetails = defineAsyncComponent(() =>
+  import('./components/NftManagerDetails')
+);
+const NftManagerSend = defineAsyncComponent(() =>
+  import('./components/NftManagerSend')
+);
 
-      this.getNfts();
-      this.localGasPrice = this.gasPriceByType(this.gasPriceType);
-      this.hasMinEth();
-    },
-    getNfts() {
-      this.nft.getNfts().then(res => {
-        this.nftApiResponse = res;
-        this.loadingContracts = false;
-        setTimeout(() => {
-          this.loadingTokens = false;
-        }, 500);
-      });
-    },
-    hasMinEth() {
-      const currentGasPrice = this.localGasPrice;
-      if (
-        toBN(this.balanceInWei).gt(toBN(currentGasPrice).muln(MIN_GAS_LIMIT))
-      ) {
-        this.enoughFunds = true;
-        this.showBalanceError = false;
-      } else {
-        this.enoughFunds = false;
-        this.showBalanceError = true;
-      }
-    },
-    onTab(val) {
-      this.activeTab = val;
-      this.selectedContract = this.contracts[val];
-      this.selectedContractHash = this.contracts[val].contract;
-      this.nft.goToFirstPage();
-    },
-    /**
-     * Send NFT
-     */
-    openNftSend(selectedNft) {
-      if (selectedNft) {
-        this.selectedNft = selectedNft;
-      }
-      this.onNftSend = true;
-      this.$router.push({ name: ROUTES_WALLET.NFT_MANAGER_SEND.NAME });
-    },
-    closeNftSend() {
-      this.onNftSend = false;
-      this.toAddress = '';
-      this.$router.push({ name: ROUTES_WALLET.NFT_MANAGER.NAME });
-    },
-    async sendTx() {
-      if (this.isValid) {
-        try {
-          let gasPrice = undefined;
-          if (this.network.type.name === 'MATIC')
-            gasPrice = `0x${toBN(this.localGasPrice).toString('hex')}`;
-          this.nft
-            .send(this.toAddress, this.selectedNft, gasPrice)
-            .then(response => {
-              this.updateValues();
-              this.enoughFunds = true;
-              this.toAddress = '';
-              this.closeNftSend();
-              Toast(
-                'Cheers! Your transaction was mined. Check it in ',
-                {
-                  title: `${getService(this.network.type.blockExplorerTX)}`,
-                  url: this.network.type.blockExplorerTX.replace(
-                    '[[txHash]]',
-                    response.blockHash
-                  )
-                },
-                SUCCESS,
-                5000
-              );
-            })
-            .catch(e => {
-              const error = handleError(e.message);
-              if (error) Toast(error, {}, ERROR);
-            });
-        } catch (e) {
-          Toast(e.message, {}, WARNING);
-        }
-      }
-    },
-    updateValues() {
-      const idx = this.tokens.findIndex(
-        item => item.token_id === this.selectedNft.token_id
+// injections/use
+const { gasPriceType, network, gasPriceByType } = useGlobalStore();
+const { web3, address, balanceInWei } = useWalletStore();
+const router = useRouter();
+
+// data
+const nft = ref({});
+const activeTab = ref(0);
+const onNftSend = ref(false);
+const hasNoTokens = ref(false);
+const selectedNft = ref({});
+const toAddress = ref('');
+const selectedContract = ref({});
+const gasFees = ref('0');
+const enoughFunds = ref(false);
+const showBalanceError = ref(false);
+const localGasPrice = ref('0');
+const loadingContracts = ref(true);
+const loadingTokens = ref(true);
+const nftApiResponse = ref([]);
+
+// computed
+const tabs = computed(() => {
+  return contracts.value.map(item => {
+    let tabName = `${item.name} (${item.count})`;
+    if (tabName.length > 25) {
+      tabName = item.name.substring(0, 20);
+      tabName += `... (${item.count})`;
+    }
+    return { name: tabName };
+  });
+});
+
+const tokens = computed(() => {
+  if (nftApiResponse.value.length > 0) {
+    const contract = nftApiResponse.value.filter(item => {
+      return (
+        item.contract_address.toLowerCase() ===
+        selectedContract.value.contract.toLowerCase()
       );
-      this.tokens.splice(idx, 1);
-      if (this.tokens.length === 0 && this.contracts.length === 1) {
-        this.hasNoTokens = true;
-      }
-      this.getNfts();
-    },
-    setAddress(address) {
-      if (typeof address === 'object' && !!address) {
-        this.toAddress = address.address;
-      } else {
-        this.toAddress = address;
-      }
-    },
-    /**
-     * Pagination
-     */
-    setPage(number) {
-      this.nft.setCurrentPage(number);
+    });
+    if (contract) {
+      return contract.map(item => {
+        const url = item.image_url ? item.image_url : '';
+        return {
+          image: `https://img.mewapi.io/?image=${url}`,
+          name: item.name || item.token_id,
+          token_id: item.token_id,
+          contract: item.contract_address,
+          erc721: item.contract.type === 'ERC721'
+        };
+      });
     }
   }
+  return [];
+});
+
+const contracts = computed(() => {
+  if (nftApiResponse.value.length > 0) {
+    // Organize contracts by address
+    return nftApiResponse.value.reduce((arr, item) => {
+      const nftAmount = item.queried_wallet_balances[0].quantity;
+      const inList = arr.find(i => i.contract === item.contract_address);
+      if (inList) {
+        inList.count++;
+        inList.total += nftAmount;
+      } else {
+        arr.push({
+          contract: item.contract_address,
+          count: 1,
+          total: nftAmount,
+          name: item.contract.name || item.collection.name
+        });
+      }
+      return arr;
+    }, []);
+  }
+  return [];
+});
+
+const totalPages = computed(() => {
+  return nft.value.totalPages(selectedContract.value.count);
+});
+const hasPages = computed(() => {
+  return nft.value.hasPages(selectedContract.value.count);
+});
+const startIndex = computed(() => {
+  return nft.value.startIndex();
+});
+const endIndex = computed(() => {
+  return nft.value.endIndex(selectedContract.value.count);
+});
+
+const currentPage = computed({
+  get() {
+    return nft.value.currentPage;
+  },
+  set(newValue) {
+    return newValue;
+  }
+});
+/**
+ * Display tokens according to page
+ */
+const displayedTokens = () => {
+  return tokens.value.slice(startIndex.value, endIndex.value);
+};
+/**
+ * Check if address is valid
+ */
+const isValid = () => {
+  return nft.value.isValidAddress(toAddress.value) && enoughFunds.value;
+};
+/**
+ * Check if network is supported
+ */
+const supportedNetwork = () => {
+  return supportedNetworks.values.includes(network.type.name);
+};
+/**
+ * List of supported networks
+ */
+const supportedNetworks = () => {
+  return [ETH.name, MATIC.name, BSC.name];
+};
+
+// watch
+watch(balanceInWei, () => {
+  hasMinEth();
+});
+
+watch(web3, () => {
+  loadingContracts.value = true;
+  loadingTokens.value = true;
+  onNftSend.value = false;
+  if (address) router.push({ name: ROUTES_WALLET.NFT_MANAGER.NAME });
+  if (supportedNetwork) {
+    setUpNFT();
+  } else {
+    setTimeout(() => {
+      Toast(
+        `NFT Manager not supported in network: ${network.type.name}`,
+        {},
+        WARNING
+      );
+      nftApiResponse.value = [];
+    }, 1000);
+  }
+});
+
+watch(address, () => {
+  loadingContracts.value = true;
+  loadingTokens.value = true;
+  onNftSend.value = false;
+  if (address) router.push({ name: ROUTES_WALLET.NFT_MANAGER.NAME });
+  setUpNFT();
+});
+
+watch(contracts, newVal => {
+  if (newVal.length > 0) {
+    onTab(0);
+  }
+});
+
+watch(toAddress, async newVal => {
+  if (isAddress(newVal) && enoughFunds) {
+    try {
+      const gasTypeFee = gasPriceByType(gasPriceType);
+      localGasPrice.value = gasTypeFee;
+      const locGasFees = await nft.value.getGasFees(newVal, selectedNft);
+      const gasFeesToBN = toBNSafe(locGasFees).mul(toBNSafe(gasTypeFee));
+      gasFees.value = gasFeesToBN.toString();
+      if (gasFeesToBN.gte(toBN(balanceInWei))) {
+        //gasFeesToBN vs current balance
+        enoughFunds.value = false;
+        showBalanceError.value = true;
+      } else {
+        enoughFunds.value = true;
+        showBalanceError.value = false;
+      }
+    } catch (e) {
+      enoughFunds.value = false;
+      showBalanceError.value = false;
+      Toast(
+        `Can't send NFT! Please double check if everything is correct`,
+        {},
+        ERROR
+      );
+    }
+  }
+});
+
+// mounted
+onMounted(() => {
+  setUpNFT();
+});
+
+// methods
+const setUpNFT = () => {
+  if (!supportedNetwork.value) return;
+  /**
+   * Init NFT Handler
+   */
+  nft.value = new NFT({
+    network: network,
+    address: address,
+    web3: web3
+  });
+
+  getNfts();
+  localGasPrice.value = gasPriceByType(gasPriceType);
+  this.hasMinEth();
+};
+
+const getNfts = () => {
+  nft.value.getNfts().then(res => {
+    nftApiResponse.value = res;
+    loadingContracts.value = false;
+    setTimeout(() => {
+      loadingTokens.value = false;
+    }, 500);
+  });
+};
+
+const hasMinEth = () => {
+  const currentGasPrice = localGasPrice.value;
+  if (toBN(balanceInWei).gt(toBN(currentGasPrice).muln(MIN_GAS_LIMIT))) {
+    enoughFunds.value = true;
+    showBalanceError.value = false;
+  } else {
+    enoughFunds.value = false;
+    showBalanceError.value = true;
+  }
+};
+
+const onTab = val => {
+  activeTab.value = val;
+  selectedContract.value = contracts.value[val];
+  nft.value.goToFirstPage();
+};
+
+const openNftSend = selectedNft => {
+  if (selectedNft) {
+    selectedNft.value = selectedNft;
+  }
+  onNftSend.value = true;
+  router.push({ name: ROUTES_WALLET.NFT_MANAGER_SEND.NAME });
+};
+
+const closeNftSend = () => {
+  onNftSend.value = false;
+  toAddress.value = '';
+  router.push({ name: ROUTES_WALLET.NFT_MANAGER.NAME });
+};
+
+const sendTx = async () => {
+  if (isValid.value) {
+    try {
+      let gasPrice = undefined;
+      if (network.type.name === 'MATIC')
+        gasPrice = `0x${toBN(localGasPrice.value).toString('hex')}`;
+      nft.value
+        .send(toAddress.value, selectedNft.value, gasPrice.value)
+        .then(response => {
+          updateValues();
+          enoughFunds.value = true;
+          toAddress.value = '';
+          closeNftSend();
+          Toast(
+            'Cheers! Your transaction was mined. Check it in ',
+            {
+              title: `${getService(network.type.blockExplorerTX)}`,
+              url: network.type.blockExplorerTX.replace(
+                '[[txHash]]',
+                response.blockHash
+              )
+            },
+            SUCCESS,
+            5000
+          );
+        })
+        .catch(e => {
+          const error = handleError(e.message);
+          if (error) Toast(error, {}, ERROR);
+        });
+    } catch (e) {
+      Toast(e.message, {}, WARNING);
+    }
+  }
+};
+
+const updateValues = () => {
+  const idx = tokens.value.findIndex(
+    item => item.token_id === selectedNft.value.token_id
+  );
+  tokens.value.splice(idx, 1);
+  if (tokens.value.length === 0 && contracts.value.length === 1) {
+    hasNoTokens.value = true;
+  }
+  getNfts();
+};
+
+const setAddress = address => {
+  if (typeof address === 'object' && !!address) {
+    toAddress.value = address.address;
+  } else {
+    toAddress.value = address;
+  }
+};
+
+const setPage = number => {
+  nft.value.setCurrentPage(number);
 };
 </script>
 

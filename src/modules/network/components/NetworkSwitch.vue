@@ -91,260 +91,250 @@
   </div>
 </template>
 
-<script>
-import { mapActions, mapGetters, mapState } from 'vuex';
+<script setup>
+import { defineProps, ref, computed, watch, onMounted, defineEmits } from 'vue';
 import { debounce } from 'lodash';
+import { useRoute } from 'vue-router/composables';
 
 import * as nodes from '@/utils/networks/nodes';
 import * as types from '@/utils/networks/types';
 import { Toast, SUCCESS, ERROR } from '@/modules/toast/handler/handlerToast';
 
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
+import {
+  global as useGlobalStore,
+  wallet as useWalletStore,
+  external as useExternalStore
+} from '@/core/store/index.js';
 
-export default {
-  name: 'NetworkSwitch',
-  mixins: [handlerAnalytics],
-  props: {
-    isWallet: { type: Boolean, default: true },
-    /** Set this prop to pass specific networks to be displayed */
-    filterTypes: { type: Array, default: () => [] },
-    /** Set this prop to false if device does not support networks */
-    hasNetworks: { type: Boolean, default: true }
-  },
-  data() {
+const emit = defineEmits(['newNetwork']);
+
+// props
+const props = defineProps({
+  isWallet: { type: Boolean, default: true },
+  /** Set this prop to pass specific networks to be displayed */
+  filterTypes: { type: Array, default: () => [] },
+  /** Set this prop to false if device does not support networks */
+  hasNetworks: { type: Boolean, default: true }
+});
+
+// injections/use
+const { network, validNetwork, setNetwork, setValidNetwork } = useGlobalStore();
+const { identifier, instance, setWeb3Instance } = useWalletStore();
+const { selectedEIP6963Provider, setTokenAndEthBalance } = useExternalStore();
+const route = useRoute();
+
+// data
+const networkSelectedBefore = ref(null);
+const networkSelected = ref(null);
+const toggleType = ref(0);
+const searchInput = ref('');
+const networkLoading = ref(false);
+
+// computed
+const shouldFilter = computed(() => {
+  return route.name === 'Swap' || route.name === 'NFTManager';
+});
+
+const typeNames = computed(() => {
+  if (props.hasNetworks) {
+    const unsorted =
+      props.filterTypes.length > 0
+        ? [...props.filterTypes]
+        : Object.keys(types);
+    unsorted.splice(unsorted.indexOf('ETH'), 1);
+    unsorted.sort();
+    const test = unsorted.filter(item => {
+      return types[item].isTestNetwork;
+    });
+    const main = unsorted.filter(item => {
+      return !types[item].isTestNetwork;
+    });
+    const sorted = main.concat(test);
+    sorted.unshift('ETH');
+    return sorted;
+  }
+  return [];
+});
+
+const networks = computed(() => {
+  let allNetworks = [];
+  typeNames.value.forEach(item => {
+    allNetworks.push(types[item]);
+  });
+  if (shouldFilter.value || identifier.value === WALLET_TYPES.MEW_WALLET) {
+    allNetworks = allNetworks.filter(
+      item =>
+        item.name === types.ETH.name ||
+        item.name === types.BSC.name ||
+        item.name === types.MATIC.name
+    );
+  }
+  if (searchInput.value && searchInput.value !== '') {
+    return allNetworks.filter(item => hasString(item.name, item.name_long));
+  }
+  if (toggleType.value === 0) {
+    return allNetworks.filter(item => !item.isTestNetwork);
+  }
+  if (toggleType.value === 1) {
+    return allNetworks.filter(item => item.isTestNetwork);
+  }
+  return allNetworks;
+});
+
+/**
+ * Property shows invalid search if user included input and networks length is 0
+ * @returns {boolean}
+ */
+const showEmptySearch = computed(() => {
+  return (
+    searchInput.value && searchInput.value !== '' && networks.value.length === 0
+  );
+});
+
+/**
+ * Property shows search input string
+ * @returns {object}
+ */
+const emptySearchMes = computed(() => {
+  const msgTitle = route.name === 'Swap' ? 'Swap' : 'NFT Manager';
+  if (shouldFilter.value && typeNames.value.length === 0) {
     return {
-      networkSelectedBefore: null,
-      networkSelected: null,
-      nodes: nodes,
-      toggleType: 0,
-      searchInput: '',
-      networkLoading: false
+      title: `${msgTitle} is not supported on your device`,
+      subtitle: ''
     };
-  },
-  computed: {
-    ...mapGetters('global', ['network']),
-    ...mapState('global', ['validNetwork']),
-    ...mapState('external', ['selectedEIP6963Provider']),
-    ...mapState('wallet', ['identifier', 'instance', 'isOfflineApp']),
-    shouldFilter() {
-      return this.$route.name === 'Swap' || this.$route.name === 'NFTManager';
-    },
-    /**
-     * Property returns sorted network names alphabetically in this order: ETH, main and then test networks
-     * @returns {string[]}
-     */
-    typeNames() {
-      if (this.hasNetworks) {
-        const unsorted =
-          this.filterTypes.length > 0
-            ? [...this.filterTypes]
-            : Object.keys(types);
-        unsorted.splice(unsorted.indexOf('ETH'), 1);
-        unsorted.sort();
-        const test = unsorted.filter(item => {
-          return types[item].isTestNetwork;
-        });
-        const main = unsorted.filter(item => {
-          return !types[item].isTestNetwork;
-        });
-        const sorted = main.concat(test);
-        sorted.unshift('ETH');
-        return sorted;
-      }
-      return [];
-    },
-    /**
-     * Property returns filter networks list based on search input and toggle  type
-     * @returns {object[]}
-     */
-    networks() {
-      let allNetworks = [];
-      this.typeNames.forEach(item => {
-        allNetworks.push(types[item]);
-      });
-      if (this.shouldFilter || this.identifier === WALLET_TYPES.MEW_WALLET) {
-        allNetworks = allNetworks.filter(
-          item =>
-            item.name === types.ETH.name ||
-            item.name === types.BSC.name ||
-            item.name === types.MATIC.name
-        );
-      }
-      if (this.searchInput && this.searchInput !== '') {
-        return allNetworks.filter(item =>
-          this.hasString(item.name, item.name_long)
-        );
-      }
-      if (this.toggleType === 0) {
-        return allNetworks.filter(item => !item.isTestNetwork);
-      }
-      if (this.toggleType === 1) {
-        return allNetworks.filter(item => item.isTestNetwork);
-      }
-      return allNetworks;
-    },
-    /**
-     * Property shows invalid search if user included input and networks length is 0
-     * @returns {boolean}
-     */
-    showEmptySearch() {
-      return (
-        this.searchInput &&
-        this.searchInput !== '' &&
-        this.networks.length === 0
-      );
-    },
-    /**
-     * Property shows search input string
-     * @returns {object}
-     */
-    emptySearchMes() {
-      const msgTitle = this.$route.name === 'Swap' ? 'Swap' : 'NFT Manager';
-      if (this.shouldFilter && this.typeNames.length === 0) {
-        return {
-          title: `${msgTitle} is not supported on your device`,
-          subtitle: ''
-        };
-      }
-      if (this.typeNames.length === 0) {
-        return {
-          title: 'Changing a network is not supported on your device',
-          subtitle: ''
-        };
-      }
-      return {
-        title: this.shouldFilter
-          ? `${msgTitle} is only available on these networks`
-          : '',
-        subtitle: this.shouldFilter
-          ? 'Select different feature to see all networks.'
-          : 'We do not have a network with this name.'
-      };
-    }
-  },
-  watch: {
-    network: {
-      handler: function (newVal, oldVal) {
-        if (newVal.type.name !== oldVal.type.name) {
-          this.networkSelected = newVal.type.name;
-        }
-      },
-      deep: true
-    },
-    networkSelected(value) {
-      if (!!value && (value !== this.network.type.name || !this.validNetwork)) {
-        this.networkLoading = true;
-        this.setNetworkDebounced(value);
-      }
-    },
-    searchInput(newVal, oldVal) {
-      /**
-       * Set current network to prevent undefined networkSelected value
-       */
-      if (this.networks.length > 0) {
-        this.networkSelected = this.networkSelectedBefore;
-      }
+  }
+  if (typeNames.value.length === 0) {
+    return {
+      title: 'Changing a network is not supported on your device',
+      subtitle: ''
+    };
+  }
+  return {
+    title: shouldFilter.value
+      ? `${msgTitle} is only available on these networks`
+      : '',
+    subtitle: shouldFilter.value
+      ? 'Select different feature to see all networks.'
+      : 'We do not have a network with this name.'
+  };
+});
 
-      if (newVal != oldVal && (!oldVal || oldVal === '')) {
-        this.toggleType = 2;
-      }
-    },
-    validNetwork(val) {
-      this.networkSelected = val ? this.network.type.name : null;
-    },
-    /**
-     * Set networkSelected on toggle change, if network is in the list
-     */
-    toggleType() {
-      if (!this.networkSelected) {
-        if (
-          this.networks.filter(item => item.name === this.network.type.name)
-            .length > 0
-        ) {
-          this.networkSelected = this.validNetwork
-            ? this.network.type.name
-            : '';
-        }
-      }
+// watch
+watch(
+  network,
+  (newVal, oldVal) => {
+    if (newVal.type.name !== oldVal.type.name) {
+      networkSelected.value = newVal.type.name;
     }
   },
-  mounted() {
-    this.networkSelected = this.validNetwork ? this.network.type.name : '';
-    this.networkSelectedBefore = this.networkSelected;
-  },
-  methods: {
-    ...mapActions('wallet', ['setWeb3Instance']),
-    ...mapActions('global', ['setNetwork', 'setValidNetwork']),
-    ...mapActions('external', ['setTokenAndEthBalance']),
-    /**
-     * Method checks whether symbol or name has searchInput substring
-     * @returns {boolean}
-     */
-    hasString(symbol, name) {
-      return (
-        symbol.toLowerCase().includes(this.searchInput.toLowerCase()) ||
-        name.toLowerCase().includes(this.searchInput.toLowerCase())
-      );
-    },
-    /**
-     * Method sets SearchInout on mew-search input event
-     * @returns {boolean}
-     */
-    setSearch(newVal) {
-      this.searchInput = newVal;
-    },
-    /**
-     * Debounce network switch from user input
-     * @return {void}
-     */
-    setNetworkDebounced: debounce(function (value) {
-      this.savePreviousNetwork();
+  { deep: true }
+);
 
-      const found = Object.values(this.nodes).filter(item => {
-        if (item.type.name === value) {
-          return item;
-        }
-      });
-      this.setValidNetwork(true);
-      this.setNetwork({
-        network: found[0],
-        walletType: this.instance?.identifier || ''
-      })
-        .then(() => {
-          this.networkLoading = false;
-          if (this.isWallet) {
-            this.networkSelected = this.validNetwork
-              ? this.network.type.name
-              : '';
-            const setNetworkCall =
-              this.identifier === WALLET_TYPES.WEB3_WALLET
-                ? this.setWeb3Instance(this.selectedEIP6963Provider)
-                : this.setWeb3Instance();
-            setNetworkCall.then(() => {
-              Toast(`Switched network to: ${found[0].type.name}`, {}, SUCCESS);
-              this.setTokenAndEthBalance();
-              this.$emit('newNetwork');
-            });
-          }
-        })
-        .catch(e => {
-          this.setValidNetwork(false);
-          this.networkSelected = this.validNetwork
-            ? this.network.type.name
-            : '';
-          this.networkLoading = false;
-          Toast(e, {}, ERROR);
-        });
-    }, 1000),
-    /**
-     * Backup current network value
-     */
-    savePreviousNetwork() {
-      if (this.networkSelected) {
-        this.networkSelectedBefore = this.networkSelected;
-      }
+watch(networkSelected, value => {
+  if (!!value && (value !== network.type.name || !validNetwork)) {
+    networkLoading.value = true;
+    setNetworkDebounced(value);
+  }
+});
+
+watch(searchInput, (newVal, oldVal) => {
+  if (networks.value.length > 0) {
+    networkSelected.value = networkSelectedBefore.value;
+  }
+
+  if (newVal !== oldVal && (!oldVal || oldVal === '')) {
+    toggleType.value = 2;
+  }
+});
+
+watch(validNetwork, val => {
+  networkSelected.value = val ? network.type.name : null;
+});
+
+watch(toggleType, () => {
+  /**
+   * Set networkSelected on toggle change, if network is in the list
+   */
+  if (!networkSelected.value) {
+    if (
+      networks.value.filter(item => item.name === network.type.name).length > 0
+    ) {
+      networkSelected.value = validNetwork ? network.type.name : '';
     }
+  }
+});
+
+// mounted
+onMounted(() => {
+  networkSelected.value = validNetwork ? network.type.name : '';
+  networkSelectedBefore.value = networkSelected.value;
+});
+
+// methods
+/**
+ * Method checks whether symbol or name has searchInput substring
+ * @returns {boolean}
+ */
+const hasString = (symbol, name) => {
+  return (
+    symbol.toLowerCase().includes(searchInput.value.toLowerCase()) ||
+    name.toLowerCase().includes(searchInput.value.toLowerCase())
+  );
+};
+
+/**
+ * Method sets SearchInout on mew-search input event
+ * @returns {boolean}
+ */
+const setSearch = newVal => {
+  searchInput.value = newVal;
+};
+/**
+ * Debounce network switch from user input
+ * @return {void}
+ */
+const setNetworkDebounced = debounce(function (value) {
+  savePreviousNetwork();
+
+  const found = Object.values(nodes).filter(item => {
+    if (item.type.name === value) {
+      return item;
+    }
+  });
+  setValidNetwork(true);
+  setNetwork({
+    network: found[0],
+    walletType: instance?.identifier || ''
+  })
+    .then(() => {
+      networkLoading.value = false;
+      if (props.isWallet) {
+        networkSelected.value = validNetwork ? network.type.name : '';
+        const setNetworkCall =
+          identifier === WALLET_TYPES.WEB3_WALLET
+            ? setWeb3Instance(selectedEIP6963Provider)
+            : setWeb3Instance();
+        setNetworkCall.then(() => {
+          Toast(`Switched network to: ${found[0].type.name}`, {}, SUCCESS);
+          setTokenAndEthBalance();
+          emit('newNetwork');
+        });
+      }
+    })
+    .catch(e => {
+      setValidNetwork(false);
+      networkSelected.value = validNetwork ? network.type.name : '';
+      networkLoading.value = false;
+      Toast(e, {}, ERROR);
+    });
+}, 1000);
+/**
+ * Backup current network value
+ */
+const savePreviousNetwork = () => {
+  if (networkSelected.value) {
+    networkSelectedBefore.value = networkSelected;
   }
 };
 </script>
