@@ -5,6 +5,12 @@ import Notification, {
 } from '@/modules/notifications/handlers/handlerNotification';
 import { clone } from 'lodash';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+
+import {
+  notifications as useNotificationsStore,
+  external as useExternalStore
+} from '@/core/store/index.js';
+
 const getSanitizedTx = tx => {
   return new Promise((resolve, reject) => {
     if (!tx.gas && !tx.gasLimit && !tx.chainId)
@@ -28,7 +34,9 @@ const getSanitizedTx = tx => {
   });
 };
 
-const setEvents = (promiObj, tx, dispatch) => {
+const setEvents = (promiObj, tx) => {
+  const { addNotification, updateNotification } = useNotificationsStore();
+  const { setTokenAndEthBalance } = useExternalStore();
   // create a no reference copy specifically for notification
   const newTxObj = clone(tx);
   newTxObj.type = NOTIFICATION_TYPES.OUT;
@@ -44,9 +52,7 @@ const setEvents = (promiObj, tx, dispatch) => {
       newTxObj.hash = hash;
       if (!isExempt) {
         const notification = new Notification(newTxObj);
-        dispatch('notifications/addNotification', notification, {
-          root: true
-        });
+        addNotification(notification);
       }
     })
     .once('receipt', () => {
@@ -54,17 +60,9 @@ const setEvents = (promiObj, tx, dispatch) => {
         newTxObj.status = NOTIFICATION_STATUS.SUCCESS;
         const notification = new Notification(newTxObj);
         setTimeout(() => {
-          dispatch(
-            'external/setTokenAndEthBalance',
-            {},
-            {
-              root: true
-            }
-          );
+          setTokenAndEthBalance();
         }, 3000); //give network some time to update
-        dispatch('notifications/updateNotification', notification, {
-          root: true
-        });
+        updateNotification(notification);
       }
     })
     .on('error', err => {
@@ -80,17 +78,9 @@ const setEvents = (promiObj, tx, dispatch) => {
         }
         const notification = new Notification(newTxObj);
         setTimeout(() => {
-          dispatch(
-            'external/setTokenAndEthBalance',
-            {},
-            {
-              root: true
-            }
-          );
+          setTokenAndEthBalance();
         }, 3000); //give network some time to update
-        dispatch('notifications/updateNotification', notification, {
-          root: true
-        });
+        updateNotification(notification);
       }
     });
 };

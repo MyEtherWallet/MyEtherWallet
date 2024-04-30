@@ -32,8 +32,6 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
-
 export default {
   name: 'BalanceAddressPaperWallet',
   components: {
@@ -51,6 +49,10 @@ export default {
     isOfflineApp: {
       default: false,
       type: Boolean
+    },
+    instance: {
+      default: () => null,
+      type: Object
     }
   },
   data() {
@@ -63,7 +65,6 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['instance']),
     isOverlayOpen() {
       return this.open;
     }

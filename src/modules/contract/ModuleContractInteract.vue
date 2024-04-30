@@ -151,9 +151,8 @@
   </mew-module>
 </template>
 
-<script>
-import Vue from 'vue';
-import { mapState, mapGetters } from 'vuex';
+<script setup>
+import { ref, computed, watch, onMounted } from 'vue';
 import { toBN, toWei } from 'web3-utils';
 import { isString, throttle } from 'lodash';
 import { getAddressInfo } from '@kleros/address-tags-sdk';
@@ -167,276 +166,262 @@ import {
   isContractArgValid
 } from './handlers/common';
 import { ERROR, Toast } from '../toast/handler/handlerToast';
-import handlerAnalyticsMixin from '../analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { CONTRACT } from '../analytics-opt-in/handlers/configs/events';
+import { useAmplitude } from '@/core/composables/amplitude';
+import {
+  global as useGlobalStore,
+  wallet as useWalletStore
+} from '@/core/store/index.js';
 
-export default {
-  name: 'ModuleContractInteract',
-  mixins: [handlerAnalyticsMixin],
-  data() {
-    return {
-      currentContract: null,
-      interact: false,
-      inputsValid: false,
-      hasEnough: false,
-      abi: [],
-      contractAddress: '',
-      selectedMethod: {
-        inputs: [],
-        outputs: []
-      },
-      outputValues: [],
-      ethPayable: '0',
-      nametag: '',
-      networkContracts: []
-    };
-  },
-  computed: {
-    ...mapState('wallet', ['address', 'web3', 'balance']),
-    ...mapGetters('global', ['network', 'gasPrice', 'localContracts']),
-    canProceed() {
-      if (this.isPayableFunction) {
-        if (!this.canPay) {
-          return true;
-        }
-        return (
-          !this.inputsValid &&
-          !!this.selectedMethod.inputs.length &&
-          this.canPay
-        );
-      }
-      return !this.inputsValid && !!this.selectedMethod.inputs.length;
-    },
-    isViewFunction() {
-      return (
-        this.selectedMethod.constant ||
-        this.selectedMethod.stateMutability === 'view'
-      );
-    },
-    isPayableFunction() {
-      return this.selectedMethod.stateMutability === 'payable';
-    },
-    canPay() {
-      if (this.isPayableFunction) {
-        return this.hasEnough;
-      }
+// injections/vue
+const { trackContract } = useAmplitude();
+const { address, web3, balance } = useGlobalStore();
+const { network, localContracts } = useWalletStore();
+
+// data
+const currentContract = ref(null);
+const interact = ref(false);
+const inputsValid = ref(false);
+const hasEnough = ref(false);
+const abi = ref([]);
+const contractAddress = ref('');
+const selectedMethod = ref({
+  inputs: [],
+  outputs: []
+});
+const outputValues = ref([]);
+const ethPayable = ref('0');
+const nametag = ref('');
+const networkContracts = ref([]);
+
+// computed
+const canProceed = computed(() => {
+  if (isPayableFunction.value) {
+    if (!canPay.value) {
       return true;
-    },
-    mergedContracts() {
-      const checkContract = arr =>
-        arr.filter(contract => isString(contract.name));
-      return [
-        { text: 'Select a Contract', selectLabel: true, divider: true }
-      ].concat(
-        checkContract(this.localContracts),
-        checkContract(this.networkContracts)
-      );
-    },
-    methods() {
-      if (this.canInteract) {
-        return JSON.parse(this.abi).filter(item => {
-          if (
-            item.type !== 'constructor' &&
-            item.type !== 'event' &&
-            item.type !== 'fallback'
-          ) {
-            return item;
-          }
-        });
-      }
-      return [];
-    },
-    canInteract() {
-      return isAddress(this.contractAddress) && parseABI(parseJSON(this.abi));
-    },
-    hasOutputs() {
-      const outputsWithValues = this.selectedMethod.outputs.filter(item => {
-        if (item.value !== '') {
-          return item;
-        }
-      });
-
-      return outputsWithValues.length > 0;
     }
-  },
-  watch: {
-    contractAddress(newVal) {
-      this.nametag = '';
-      if (!newVal) {
-        this.contractAddress = '';
+    return !inputsValid.value && !!selectedMethod.value.inputs.length && canPay;
+  }
+  return !inputsValid.value && !!selectedMethod.value.inputs.length;
+});
+const isViewFunction = computed(() => {
+  return (
+    selectedMethod.value.constant ||
+    selectedMethod.value.stateMutability === 'view'
+  );
+});
+const isPayableFunction = computed(() => {
+  return selectedMethod.value.stateMutability === 'payable';
+});
+const canPay = computed(() => {
+  if (isPayableFunction.value) {
+    return hasEnough.value;
+  }
+  return true;
+});
+const mergedContracts = computed(() => {
+  const checkContract = arr => arr.filter(contract => isString(contract.name));
+  return [
+    { text: 'Select a Contract', selectLabel: true, divider: true }
+  ].concat(
+    checkContract(localContracts),
+    checkContract(networkContracts.value)
+  );
+});
+const methods = computed(() => {
+  if (canInteract.value) {
+    return JSON.parse(abi.value).filter(item => {
+      if (
+        item.type !== 'constructor' &&
+        item.type !== 'event' &&
+        item.type !== 'fallback'
+      ) {
+        return item;
       }
-      if (newVal && isAddress(newVal.toLowerCase())) {
-        this.resolveAddress();
-      }
-    },
-    web3: {
-      handler: function () {
-        this.generateNetworkContracts();
-      }
+    });
+  }
+  return [];
+});
+const canInteract = computed(() => {
+  return isAddress(contractAddress.value) && parseABI(parseJSON(abi.value));
+});
+const hasOutputs = computed(() => {
+  const outputsWithValues = selectedMethod.value.outputs.filter(item => {
+    if (item.value !== '') {
+      return item;
     }
-  },
-  mounted() {
-    this.generateNetworkContracts();
-  },
-  methods: {
-    generateNetworkContracts() {
-      this.network.type.contracts.then(contracts => {
-        this.networkContracts = contracts;
-      });
-    },
-    resetDefaults() {
-      this.currentContract = null;
-      this.abi = [];
-      this.contractAddress = '';
-      this.interact = false;
-      this.selectedMethod = {
-        inputs: [],
-        outputs: []
-      };
-    },
-    readWrite() {
-      const params = [];
-      for (const _input of this.selectedMethod.inputs) {
-        if (_input.type.includes('[]')) {
-          if (_input.value === '[]') {
-            params.push([]);
-          } else {
-            params.push(stringToArray(_input.value));
-          }
-        } else {
-          params.push(_input.value);
-        }
-      }
-      const caller = this.currentContract.methods[
-        this.selectedMethod.name
-      ].apply(this, params);
-      if (this.isViewFunction) {
-        this.trackContract(CONTRACT.INTERACT_W_CONTRACT_READ);
-        caller
-          .call()
-          .then(result => {
-            this.trackContract(CONTRACT.INTERACT_W_CONTRACT_READ_SUCCESS);
-            if (this.selectedMethod.outputs.length === 1) {
-              this.selectedMethod.outputs[0].value = result;
-              Vue.set(
-                this.selectedMethod.outputs,
-                0,
-                this.selectedMethod.outputs[0]
-              );
-            } else if (this.selectedMethod.outputs.length > 1) {
-              this.selectedMethod.outputs.forEach((out, idx) => {
-                out.value = result[idx];
-                Vue.set(this.selectedMethod.outputs, idx, out);
-              });
-            }
-          })
-          .catch(({ message }) => {
-            this.trackContract(CONTRACT.INTERACT_W_CONTRACT_READ_FAIL);
-            Toast(message, {}, ERROR);
-          });
-      } else if (this.isPayableFunction) {
-        this.trackContract(CONTRACT.INTERACT_W_CONTRACT_WRITE);
-        const rawTx = {
-          to: this.contractAddress,
-          from: this.address,
-          value: this.ethPayable,
-          data: caller.encodeABI()
-        };
+  });
 
-        this.web3.eth
-          .estimateGas(rawTx)
-          .then(gasLimit => {
-            this.trackContract(CONTRACT.INTERACT_W_CONTRACT_WRITE_SUCCESS);
-            rawTx.gas = gasLimit;
-            caller.send(rawTx);
-          })
-          .catch(({ message }) => {
-            this.trackContract(CONTRACT.INTERACT_W_CONTRACT_WRITE_FAIL);
-            Toast(message, {}, ERROR);
-          });
+  return outputsWithValues.length > 0;
+});
+
+// watch
+watch(contractAddress, newVal => {
+  nametag.value = '';
+  if (!newVal) {
+    contractAddress.value = '';
+  }
+  if (newVal && isAddress(newVal.toLowerCase())) {
+    resolveAddress();
+  }
+});
+watch(web3, () => {
+  generateNetworkContracts();
+});
+
+// mounted
+onMounted(() => {
+  generateNetworkContracts();
+});
+
+// methods
+const generateNetworkContracts = () => {
+  network.type.contracts.then(contracts => {
+    networkContracts.value = contracts;
+  });
+};
+const resetDefaults = () => {
+  currentContract.value = null;
+  abi.value = [];
+  contractAddress.value = '';
+  interact.value = false;
+  selectedMethod.value = {
+    inputs: [],
+    outputs: []
+  };
+};
+const readWrite = () => {
+  const params = [];
+  for (const _input of selectedMethod.value.inputs) {
+    if (_input.type.includes('[]')) {
+      if (_input.value === '[]') {
+        params.push([]);
       } else {
-        this.trackContract(CONTRACT.INTERACT_W_CONTRACT_WRITE);
-        caller
-          .send({ from: this.address })
-          .then(() => {
-            this.trackContract(CONTRACT.INTERACT_W_CONTRACT_WRITE_SUCCESS);
-          })
-          .catch(({ message }) => {
-            this.trackContract(CONTRACT.INTERACT_W_CONTRACT_WRITE_FAIL);
-            Toast(message, {}, ERROR);
+        params.push(stringToArray(_input.value));
+      }
+    } else {
+      params.push(_input.value);
+    }
+  }
+  const caller = currentContract.value.methods[selectedMethod.value.name].apply(
+    this,
+    params
+  );
+  if (isViewFunction.value) {
+    trackContract(CONTRACT.INTERACT_W_CONTRACT_READ);
+    caller
+      .call()
+      .then(result => {
+        trackContract(CONTRACT.INTERACT_W_CONTRACT_READ_SUCCESS);
+        if (selectedMethod.value.outputs.length === 1) {
+          selectedMethod.value.outputs[0].value = result;
+          selectedMethod.value.outputs[0] = selectedMethod.value;
+        } else if (selectedMethod.value.outputs.length > 1) {
+          selectedMethod.value.outputs.forEach((out, idx) => {
+            out.value = result[idx];
+            selectedMethod.value.outputs[idx] = out;
           });
-      }
-    },
-    payableInput(amount) {
-      if (!amount || amount === '') amount = '0';
-      this.ethPayable = toWei(amount, 'ether');
-      this.hasEnough = toBN(this.ethPayable).lte(this.balance);
-    },
-    valueInput(idx, value) {
-      this.selectedMethod.inputs[idx].value = value;
-      this.inputsValid = true;
-      for (const _input of this.selectedMethod.inputs) {
-        if (
-          !this.isValidInput(
-            _input.value,
-            this.getType(_input.type).solidityType
-          )
-        )
-          this.inputsValid = false;
-      }
-    },
-    selectedContract(selected) {
-      if (parseABI(parseJSON(selected.abi))) {
-        if (typeof selected.abi !== 'string')
-          this.abi = JSON.stringify(selected.abi);
-        else this.abi = selected.abi;
-      }
-      if (isAddress(selected.address)) {
-        this.contractAddress = selected.address;
-      }
-    },
-    closeInteract() {
-      this.interact = false;
-      this.resetDefaults();
-    },
-    showInteract() {
-      this.interact = true;
-      this.currentContract = new this.web3.eth.Contract(
-        JSON.parse(this.abi),
-        this.contractAddress
-      );
-    },
-    methodSelect(evt) {
-      if (evt && evt.inputs && evt.outputs) {
-        this.inputsValid = false;
-        this.selectedMethod = evt;
-        this.selectedMethod.inputs.forEach(v => (v.value = ''));
-        this.selectedMethod.outputs.forEach(v => (v.value = ''));
-        this.outputValues = [];
-      }
-    },
+        }
+      })
+      .catch(({ message }) => {
+        trackContract(CONTRACT.INTERACT_W_CONTRACT_READ_FAIL);
+        Toast(message, {}, ERROR);
+      });
+  } else if (isPayableFunction.value) {
+    trackContract(CONTRACT.INTERACT_W_CONTRACT_WRITE);
+    const rawTx = {
+      to: contractAddress.value,
+      from: address,
+      value: ethPayable,
+      data: caller.encodeABI()
+    };
 
-    isValidInput(value, sType) {
-      return isContractArgValid(value, sType);
-    },
-    getType(type) {
-      return getInputType(type);
-    },
-    /**
-     * Resolves address and @returns name
-     */
-    resolveAddress: throttle(async function () {
-      try {
-        await getAddressInfo(
-          this.contractAddress,
-          'https://ipfs.kleros.io'
-        ).then(data => {
-          this.nametag = data?.publicNameTag || '';
-        });
-      } catch (e) {
-        this.nametag = '';
-      }
-    }, 300)
+    web3.eth
+      .estimateGas(rawTx)
+      .then(gasLimit => {
+        trackContract(CONTRACT.INTERACT_W_CONTRACT_WRITE_SUCCESS);
+        rawTx.gas = gasLimit;
+        caller.send(rawTx);
+      })
+      .catch(({ message }) => {
+        trackContract(CONTRACT.INTERACT_W_CONTRACT_WRITE_FAIL);
+        Toast(message, {}, ERROR);
+      });
+  } else {
+    trackContract(CONTRACT.INTERACT_W_CONTRACT_WRITE);
+    caller
+      .send({ from: address })
+      .then(() => {
+        trackContract(CONTRACT.INTERACT_W_CONTRACT_WRITE_SUCCESS);
+      })
+      .catch(({ message }) => {
+        trackContract(CONTRACT.INTERACT_W_CONTRACT_WRITE_FAIL);
+        Toast(message, {}, ERROR);
+      });
   }
 };
+const payableInput = amount => {
+  if (!amount || amount === '') amount = '0';
+  ethPayable.value = toWei(amount, 'ether');
+  hasEnough.value = toBN(ethPayable.value).lte(balance);
+};
+const valueInput = (idx, value) => {
+  selectedMethod.value.inputs[idx].value = value;
+  inputsValid.value = true;
+  for (const _input of selectedMethod.value.inputs) {
+    if (!isValidInput(_input.value, getType(_input.type).solidityType))
+      inputsValid.value = false;
+  }
+};
+const selectedContract = selected => {
+  if (parseABI(parseJSON(selected.abi))) {
+    if (typeof selected.abi !== 'string')
+      abi.value = JSON.stringify(selected.abi);
+    else abi.value = selected.abi;
+  }
+  if (isAddress(selected.address)) {
+    contractAddress.value = selected.address;
+  }
+};
+const closeInteract = () => {
+  interact.value = false;
+  resetDefaults();
+};
+const showInteract = () => {
+  interact.value = true;
+  currentContract.value = new web3.eth.Contract(
+    JSON.parse(abi.value),
+    contractAddress.value
+  );
+};
+const methodSelect = evt => {
+  if (evt && evt.inputs && evt.outputs) {
+    inputsValid.value = false;
+    selectedMethod.value = evt;
+    selectedMethod.value.inputs.forEach(v => (v.value = ''));
+    selectedMethod.value.outputs.forEach(v => (v.value = ''));
+    outputValues.value = [];
+  }
+};
+
+const isValidInput = (value, sType) => {
+  return isContractArgValid(value, sType);
+};
+const getType = type => {
+  return getInputType(type);
+};
+/**
+ * Resolves address and @returns name
+ */
+const resolveAddress = throttle(async () => {
+  try {
+    await getAddressInfo(contractAddress.value, 'https://ipfs.kleros.io').then(
+      data => {
+        nametag.value = data?.publicNameTag || '';
+      }
+    );
+  } catch (e) {
+    nametag.value = '';
+  }
+}, 300);
 </script>

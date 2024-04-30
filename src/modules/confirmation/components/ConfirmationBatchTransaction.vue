@@ -30,58 +30,54 @@
   </v-sheet>
 </template>
 
-<script>
-import { mapGetters } from 'vuex';
+<script setup>
+import { defineProps, computed, ref } from 'vue';
 import BigNumber from 'bignumber.js';
 import { fromWei, toBN } from 'web3-utils';
 
-export default {
-  props: {
-    transactions: {
-      type: Array,
-      default: () => []
-    },
-    send: {
-      type: Function,
-      default: () => {}
-    }
+// props
+const props = defineProps({
+  transactions: {
+    type: Array,
+    default: () => []
   },
-  data() {
-    return {
-      warningDescription:
-        'Make sure all your transaction details are CORRECT. Canceling or replacing transactions can not be guaranteed to work. You still be charged gas fee even transaction failing. Learn more here…',
-      activeTab: 0
-    };
-  },
-  computed: {
-    ...mapGetters('external', ['fiatValue']),
-    panelItems() {
-      const copyTransactions = JSON.parse(JSON.stringify(this.transactions));
-      return copyTransactions.map((item, idx) => {
-        const reparseItem = {};
-        Object.keys(item).forEach(key => {
-          reparseItem[key] =
-            key !== 'data' && key !== 'from' && key !== 'to'
-              ? key === 'gasPrice'
-                ? fromWei(item[key], 'gwei')
-                : BigNumber(item[key]).toFixed()
-              : item[key];
-        });
-        const txFee = fromWei(toBN(item.gasPrice).mul(toBN(item.gas)));
-        delete reparseItem['__typename'];
-        delete reparseItem['type'];
-        delete reparseItem['handleNotification'];
-        return Object.assign(
-          {},
-          {
-            name: `Transaction ${idx + 1}`,
-            subtext: `Tx Fee: ${txFee}`,
-            slotName: `panelBody${idx + 1}`,
-            details: reparseItem
-          }
-        );
-      });
-    }
+  send: {
+    type: Function,
+    default: () => {}
   }
-};
+});
+
+// data
+const warningDescription = ref(
+  'Make sure all your transaction details are CORRECT. Canceling or replacing transactions can not be guaranteed to work. You still be charged gas fee even transaction failing. Learn more here…'
+);
+const activeTab = ref(0);
+
+const panelItems = computed(() => {
+  const copyTransactions = JSON.parse(JSON.stringify(props.transactions));
+  return copyTransactions.map((item, idx) => {
+    const reparseItem = {};
+    Object.keys(item).forEach(key => {
+      reparseItem[key] =
+        key !== 'data' && key !== 'from' && key !== 'to'
+          ? key === 'gasPrice'
+            ? fromWei(item[key], 'gwei')
+            : BigNumber(item[key]).toFixed()
+          : item[key];
+    });
+    const txFee = fromWei(toBN(item.gasPrice).mul(toBN(item.gas)));
+    delete reparseItem['__typename'];
+    delete reparseItem['type'];
+    delete reparseItem['handleNotification'];
+    return Object.assign(
+      {},
+      {
+        name: `Transaction ${idx + 1}`,
+        subtext: `Tx Fee: ${txFee}`,
+        slotName: `panelBody${idx + 1}`,
+        details: reparseItem
+      }
+    );
+  });
+});
 </script>

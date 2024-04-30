@@ -34,120 +34,121 @@
   </v-sheet>
 </template>
 
-<script>
+<script setup>
+import { defineProps, defineAsyncComponent, computed } from 'vue';
 import BigNumber from 'bignumber.js';
-import { mapGetters } from 'vuex';
 
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
 
-export default {
-  components: {
-    ConfirmationSummaryBlock: () => import('./ConfirmationSummaryBlock'),
-    ConfirmationValuesContainer: () => import('./ConfirmationValuesContainer')
+import {
+  global as useGlobalStore,
+  external as useExternalStore
+} from '@/core/store/index.js';
+
+const ConfirmationSummaryBlock = defineAsyncComponent(() =>
+  import('./ConfirmationSummaryBlock')
+);
+const ConfirmationValuesContainer = defineAsyncComponent(() =>
+  import('./ConfirmationValuesContainer')
+);
+
+// injections/use
+const { fiatValue } = useExternalStore();
+const { getFiatValue } = useGlobalStore();
+
+// props
+const props = defineProps({
+  to: {
+    type: String,
+    default: ''
   },
-  props: {
-    to: {
-      type: String,
-      default: ''
-    },
-    network: {
-      type: Object,
-      default: () => {}
-    },
-    txFee: {
-      type: String,
-      default: '0'
-    },
-    txFeeUsd: {
-      type: String,
-      default: '0'
-    },
-    value: {
-      type: String,
-      default: '0'
-    },
-    toDetails: {
-      type: Object,
-      default: () => {}
-    },
-    sendCurrency: {
-      type: Object,
-      default: () => {}
-    },
-    avatar: {
-      type: String,
-      default: ''
-    }
+  network: {
+    type: Object,
+    default: () => {}
   },
-  data: function () {
-    return {};
+  txFee: {
+    type: String,
+    default: '0'
   },
-  computed: {
-    ...mapGetters('external', ['fiatValue']),
-    ...mapGetters('global', ['getFiatValue']),
-    currency() {
-      const obj = Object.assign({}, this.sendCurrency);
-      if (!obj.hasOwnProperty('amount')) obj['amount'] = this.value;
-      if (!obj.hasOwnProperty('priceRaw'))
-        obj['priceRaw'] = BigNumber(this.sendCurrency.price).toNumber();
-      return obj;
-    },
-    isNetworkCurrency() {
-      return this.currency.symbol === this.network.type.currencyName;
-    },
-    feeFormatted() {
-      return formatFloatingPointValue(this.txFee).value;
-    },
-    totalFee() {
-      if (this.currency.symbol === this.network.type.currencyName) {
-        return formatFloatingPointValue(BigNumber(this.value).plus(this.txFee))
-          .value;
-      }
-      return this.feeFormatted;
-    },
-    totalFeeUSD() {
-      const ethFeeToUsd = BigNumber(this.txFee).times(this.value);
-      if (this.currency.symbol === this.network.type.currencyName) {
-        return this.getFiatValue(
-          BigNumber(this.totalFee).times(this.fiatValue).toFixed(2)
-        );
-      }
-      const tokenPrice = BigNumber(this.currency.priceRaw).times(this.value);
-      return this.getFiatValue(tokenPrice.plus(ethFeeToUsd));
-    },
-    usdAmount() {
-      return this.getFiatValue(
-        BigNumber(this.value).times(this.currency.priceRaw)
-      );
-    },
-    summaryItems() {
-      return this.isNetworkCurrency
-        ? ['Transaction Fee', 'Total']
-        : ['Transaction Fee'];
-    },
-    valueItems() {
-      return [
-        {
-          amount: formatFloatingPointValue(this.currency.amount).value,
-          icon: this.currency.img,
-          usd: this.usdAmount,
-          type: this.currency.symbol
-        },
-        {
-          avatar: this.avatar,
-          address: this.to ? toChecksumAddress(this.to) : '',
-          nickname:
-            this.toDetails && this.toDetails.nickname
-              ? this.toDetails.nickname
-              : '',
-          ensName:
-            this.toDetails && this.toDetails.ensName
-              ? this.toDetails.ensName
-              : ''
-        }
-      ];
-    }
+  txFeeUsd: {
+    type: String,
+    default: '0'
+  },
+  value: {
+    type: String,
+    default: '0'
+  },
+  toDetails: {
+    type: Object,
+    default: () => {}
+  },
+  sendCurrency: {
+    type: Object,
+    default: () => {}
+  },
+  avatar: {
+    type: String,
+    default: ''
   }
-};
+});
+
+const currency = computed(() => {
+  const obj = Object.assign({}, props.sendCurrency);
+  if (!obj.hasOwnProperty('amount')) obj['amount'] = props.value;
+  if (!obj.hasOwnProperty('priceRaw'))
+    obj['priceRaw'] = BigNumber(props.sendCurrency.price).toNumber();
+  return obj;
+});
+const isNetworkCurrency = computed(() => {
+  return props.currency.symbol === props.network.type.currencyName;
+});
+const feeFormatted = computed(() => {
+  return formatFloatingPointValue(props.txFee).value;
+});
+const totalFee = computed(() => {
+  if (currency.value.symbol === props.network.type.currencyName) {
+    return formatFloatingPointValue(BigNumber(props.value).plus(props.txFee))
+      .value;
+  }
+  return feeFormatted;
+});
+const totalFeeUSD = computed(() => {
+  const ethFeeToUsd = BigNumber(props.txFee).times(props.value);
+  if (currency.value.symbol === props.network.type.currencyName) {
+    return getFiatValue(BigNumber(totalFee).times(fiatValue).toFixed(2));
+  }
+  const tokenPrice = BigNumber(currency.value.priceRaw).times(props.value);
+  return getFiatValue(tokenPrice.plus(ethFeeToUsd));
+});
+const usdAmount = computed(() => {
+  return getFiatValue(BigNumber(props.value).times(currency.value.priceRaw));
+});
+const summaryItems = computed(() => {
+  return isNetworkCurrency.value
+    ? ['Transaction Fee', 'Total']
+    : ['Transaction Fee'];
+});
+const valueItems = computed(() => {
+  return [
+    {
+      amount: formatFloatingPointValue(currency.value.amount).value,
+      icon: currency.value.img,
+      usd: usdAmount,
+      type: currency.value.symbol
+    },
+    {
+      avatar: props.avatar,
+      address: props.to ? toChecksumAddress(props.to) : '',
+      nickname:
+        props.toDetails && props.toDetails.nickname
+          ? props.toDetails.nickname
+          : '',
+      ensName:
+        props.toDetails && props.toDetails.ensName
+          ? props.toDetails.ensName
+          : ''
+    }
+  ];
+});
 </script>

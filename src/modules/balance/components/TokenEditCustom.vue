@@ -129,129 +129,135 @@
   </mew-overlay>
 </template>
 
-<script>
+<script setup>
+import { defineProps, computed, ref, defineEmits } from 'vue';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
-import { mapActions, mapGetters } from 'vuex';
 import { cloneDeep } from 'lodash';
 
-export default {
-  props: {
-    open: {
-      default: false,
-      type: Boolean
-    },
-    close: {
-      default: () => {},
-      type: Function
-    }
+import {
+  global as useGlobalStore,
+  wallet as useWalletStore,
+  custom as useCustomStore
+} from '@/core/store/index.js';
+import { useVuetify } from '@/core/composables/vuetify';
+
+const emit = defineEmits(['removeToken', 'addToken']);
+
+// injections/use
+const { network } = useGlobalStore();
+const { tokensList } = useWalletStore();
+const { customTokens, hiddenTokens, setHiddenToken, deleteHiddenToken } =
+  useCustomStore();
+const vuetify = useVuetify();
+
+// props
+const props = defineProps({
+  open: {
+    default: false,
+    type: Boolean
   },
-  data() {
-    return {
-      selectedToken: {}
-    };
-  },
-  computed: {
-    ...mapGetters('wallet', ['tokensList']),
-    ...mapGetters('custom', ['customTokens', 'hiddenTokens']),
-    ...mapGetters('global', ['network']),
-    formattedCustomTokens() {
-      return this.customTokens
-        ? this.customTokens.map(item => {
-            item.isCustom = true;
-            // Check if token is in hiddenTokens
-            const isHidden = this.hiddenTokens.find(token => {
-              return item.contract == token.address;
-            });
-            item.isHidden = isHidden !== undefined;
-            return this.formatValues(item);
-          })
-        : [];
-    },
-    formattedTokens() {
-      return this.tokensList
-        ? this.tokensList.reduce((arr, item) => {
-            if (item.contract.toLowerCase() !== MAIN_TOKEN_ADDRESS)
-              arr.push(this.formatValues(item));
-            return arr;
-          }, [])
-        : [];
-    },
-    formattedAllTokens() {
-      const x = this.formattedCustomTokens.concat(this.formattedTokens);
-      return x.map((item, index) => {
-        return { id: index, ...item };
-      });
-    },
-    title() {
-      return 'Edit Tokens';
-    },
-    isMobile() {
-      return this.$vuetify.breakpoint.xs;
-    }
-  },
-  methods: {
-    ...mapActions('custom', ['setHiddenToken', 'deleteHiddenToken']),
-    /**
-     * close overlay
-     */
-    closeEdit() {
-      this.selectedToken = {};
-      this.close();
-    },
-    /**
-     * @returns formatted values to display correctly on token table
-     */
-    formatValues(item) {
-      const newObj = {};
-      newObj.checkbox = {
-        // color: 'primary',
-        value: !item.isHidden,
-        label: '',
-        method: token => {
-          const tokenClone = cloneDeep(token);
-          delete tokenClone['callToAction'];
-          delete tokenClone['checkbox'];
-          delete tokenClone['id'];
-          delete tokenClone['balance'];
-          if (item.isHidden) this.deleteHiddenToken([tokenClone]);
-          else this.setHiddenToken(tokenClone);
-        }
-      };
-      newObj.balance = [
-        item.balancef
-          ? item.balancef + ' ' + item.symbol
-          : '0' + ' ' + item.symbol
-      ];
-      newObj.token = item.symbol;
-      newObj.address = item.contract;
-      newObj.tokenImg = item.img ? item.img : this.network.type.icon;
-      newObj.callToAction = item.isCustom
-        ? [
-            {
-              title: 'Remove',
-              btnStyle: 'transparent',
-              colorTheme: 'error',
-              method: this.removeToken
-            }
-          ]
-        : [];
-      return newObj;
-    },
-    removeToken(token) {
-      this.$emit('removeToken', token);
-    },
-    back() {
-      this.closeEdit();
-    },
-    addCustomToken() {
-      this.$emit('addToken');
-    },
-    explorerAddr(addr) {
-      const networkType = this.network.type;
-      const explorer = networkType.blockExplorerAddr;
-      return explorer.replace('[[address]]', addr);
-    }
+  close: {
+    default: () => {},
+    type: Function
   }
+});
+
+// data
+const selectedToken = ref({});
+
+// computed
+const formattedCustomTokens = computed(() => {
+  return customTokens
+    ? customTokens.map(item => {
+        item.isCustom = true;
+        // Check if token is in hiddenTokens
+        const isHidden = hiddenTokens.find(token => {
+          return item.contract == token.address;
+        });
+        item.isHidden = isHidden !== undefined;
+        return formatValues(item);
+      })
+    : [];
+});
+const formattedTokens = computed(() => {
+  return tokensList
+    ? tokensList.reduce((arr, item) => {
+        if (item.contract.toLowerCase() !== MAIN_TOKEN_ADDRESS)
+          arr.push(formatValues(item));
+        return arr;
+      }, [])
+    : [];
+});
+const formattedAllTokens = computed(() => {
+  const x = formattedCustomTokens.value.concat(formattedTokens.value);
+  return x.map((item, index) => {
+    return { id: index, ...item };
+  });
+});
+const title = computed(() => {
+  return 'Edit Tokens';
+});
+const isMobile = computed(() => {
+  return vuetify.breakpoint.xs;
+});
+// methods
+/**
+ * close overlay
+ */
+const closeEdit = () => {
+  selectedToken.value = ref({});
+  props.close();
+};
+/**
+ * @returns formatted values to display correctly on token table
+ */
+const formatValues = item => {
+  const newObj = {};
+  newObj.checkbox = {
+    // color: 'primary',
+    value: !item.isHidden,
+    label: '',
+    method: token => {
+      const tokenClone = cloneDeep(token);
+      delete tokenClone['callToAction'];
+      delete tokenClone['checkbox'];
+      delete tokenClone['id'];
+      delete tokenClone['balance'];
+      if (item.isHidden) deleteHiddenToken([tokenClone]);
+      else setHiddenToken(tokenClone);
+    }
+  };
+  newObj.balance = [
+    item.balancef ? item.balancef + ' ' + item.symbol : '0' + ' ' + item.symbol
+  ];
+  newObj.token = item.symbol;
+  newObj.address = item.contract;
+  newObj.tokenImg = item.img ? item.img : network.type.icon;
+  newObj.callToAction = item.isCustom
+    ? [
+        {
+          title: 'Remove',
+          btnStyle: 'transparent',
+          colorTheme: 'error',
+          method: removeToken
+        }
+      ]
+    : [];
+  return newObj;
+};
+const removeToken = token => {
+  emit('removeToken', token);
+};
+const back = () => {
+  closeEdit();
+};
+const addCustomToken = () => {
+  emit('addToken');
+};
+const explorerAddr = addr => {
+  const networkType = network.type;
+  const explorer = networkType.blockExplorerAddr;
+  return explorer.replace('[[address]]', addr);
 };
 </script>
 

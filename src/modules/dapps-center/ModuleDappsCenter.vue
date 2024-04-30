@@ -93,54 +93,57 @@
   </the-wrapper-wallet>
 </template>
 
-<script>
-import { mapGetters } from 'vuex';
+<script setup>
+import { computed, defineAsyncComponent } from 'vue';
 
 import bannerImage from '@/assets/images/backgrounds/bg-dapps-center.jpg';
 import dappsMeta from '@/dapps/metainfo-dapps';
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import isNew from '@/core/helpers/isNew.js';
+import { global as useGlobalStore } from '@/core/store/index.js';
+import { useAmplitude } from '@/core/composables/amplitude';
+import { useRouter } from 'vue-router/composables';
 
-export default {
-  components: {
-    TheWrapperDapp: () => import('@/dapps/TheWrapperDapp.vue'),
-    TheWrapperWallet: () => import('@/views/components-wallet/TheWrapperWallet')
-  },
-  mixins: [handlerAnalytics],
-  data() {
-    return {
-      bannerImage: bannerImage,
-      bannerText: {
-        title: 'Explore New DApps'
-      }
-    };
-  },
-  computed: {
-    ...mapGetters('global', ['network']),
-    dapps() {
-      return Object.values(dappsMeta).filter(val => {
-        for (const n of val.networks) {
-          if (n.name === this.network.type.name) return true;
-        }
-        return false;
-      });
+const TheWrapperDapp = defineAsyncComponent(() =>
+  import('@/dapps/TheWrapperDapp.vue')
+);
+const TheWrapperWallet = defineAsyncComponent(() =>
+  import('@/views/components-wallet/TheWrapperWallet')
+);
+
+// injections/use
+const { network } = useGlobalStore();
+const { trackDapp } = useAmplitude();
+const router = useRouter();
+
+// data
+const bannerText = {
+  title: 'Explore New DApps'
+};
+
+// computed
+const dapps = computed(() => {
+  return Object.values(dappsMeta).filter(val => {
+    for (const n of val.networks) {
+      if (n.name === network.type.name) return true;
     }
-  },
-  methods: {
-    routeTo(name) {
-      this.trackDapp(name);
-      this.$router.push({ name: name });
-    },
-    /**
-     * defaultName is used to route to dapps that has defalt child route
-     */
-    dappName(dapp) {
-      return dapp.name || dapp.defaultName;
-    },
-    checkIfNew(release) {
-      return isNew(release);
-    }
-  }
+    return false;
+  });
+});
+
+// methods
+const routeTo = name => {
+  trackDapp(name);
+  router.push({ name: name });
+};
+
+/**
+ * defaultName is used to route to dapps that has defalt child route
+ */
+const dappName = dapp => {
+  return dapp.name || dapp.defaultName;
+};
+const checkIfNew = release => {
+  return isNew(release);
 };
 </script>
 

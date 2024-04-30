@@ -66,9 +66,9 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { defineAsyncComponent, defineProps, computed } from 'vue';
 import BigNumber from 'bignumber.js';
-import { mapGetters } from 'vuex';
 import { fromWei } from 'web3-utils';
 
 import {
@@ -76,136 +76,145 @@ import {
   formatGasValue
 } from '@/core/helpers/numberFormatHelper';
 
-export default {
-  components: {
-    ConfirmationSummaryBlock: () => import('./ConfirmationSummaryBlock'),
-    ConfirmationValuesContainer: () => import('./ConfirmationValuesContainer')
-  },
-  props: {
-    provider: {
-      type: Object,
-      default: () => {
-        return {
-          exchangeInfo: {
-            img: ''
-          },
-          amount: '0',
-          rate: '0'
-        };
-      }
-    },
-    fromVal: {
-      type: String,
-      default: '0'
-    },
-    toVal: {
-      type: String,
-      default: '0'
-    },
-    fromImg: {
-      type: String,
-      default: ''
-    },
-    toImg: {
-      type: String,
-      default: ''
-    },
-    fromType: {
-      type: String,
-      default: ''
-    },
-    toType: {
-      type: String,
-      default: ''
-    },
-    fromUsd: {
-      type: String,
-      default: ''
-    },
-    toUsd: {
-      type: String,
-      default: ''
-    },
-    txFee: {
-      type: String,
-      default: '0'
-    },
-    isToNonEth: {
-      type: Boolean,
-      default: false
-    },
-    toCurrency: {
-      type: String,
-      default: 'ETH'
-    },
-    toAddress: {
-      type: String,
-      default: ''
-    }
-  },
-  computed: {
-    ...mapGetters('external', ['fiatValue']),
-    ...mapGetters('global', ['network', 'getFiatValue']),
-    ...mapGetters('wallet', ['hasGasPriceOption']),
-    convertedFees() {
-      return formatGasValue(this.txFee);
-    },
-    txFeeUSD() {
-      const feeETH = BigNumber(fromWei(this.txFee));
-      return this.getFiatValue(feeETH.times(this.fiatValue));
-    },
-    summaryItems() {
-      const newArr = [
-        'Exchange rate',
-        this.hasGasPriceOption ? 'Estimated fee' : 'Transaction fee'
-      ];
-      if (this.isToNonEth) {
-        newArr.unshift(`Receive ${this.toCurrency} to`);
-      }
-      return newArr;
-    },
-    formattedToVal() {
-      return formatFloatingPointValue(this.toVal).value;
-    },
-    formattedFromVal() {
-      return formatFloatingPointValue(this.fromVal).value;
-    },
-    formattedRate() {
-      return formatFloatingPointValue(this.provider.rate).value;
-    },
-    valueItems() {
-      return [
-        {
-          title: 'You Swap',
-          icon: this.fromImg,
-          value: this.formattedFromVal,
-          type: this.fromType,
-          address: this.from,
-          amount: formatFloatingPointValue(this.fromVal).value,
-          usd: formatFloatingPointValue(this.fromUsd).value
+import {
+  global as useGlobalStore,
+  external as useExternalStore,
+  wallet as useWalletStore
+} from '@/core/store/index.js';
+
+const ConfirmationSummaryBlock = defineAsyncComponent(() =>
+  import('./ConfirmationSummaryBlock')
+);
+const ConfirmationValuesContainer = defineAsyncComponent(() =>
+  import('./ConfirmationValuesContainer')
+);
+
+// injections/use
+const { network, getFiatValue } = useGlobalStore();
+const { fiatValue } = useExternalStore();
+const { hasGasPriceOption } = useWalletStore();
+
+const props = defineProps({
+  provider: {
+    type: Object,
+    default: () => {
+      return {
+        exchangeInfo: {
+          img: ''
         },
-        {
-          title: 'You will get',
-          icon: this.toImg,
-          value: this.formattedToVal,
-          type: this.toType,
-          address: this.to,
-          amount: formatFloatingPointValue(this.toVal).value,
-          usd: this.getFiatValue(this.toUsd)
-        }
-      ];
-    },
-    toAddressStart() {
-      return this.toAddress.substring(0, 20);
-    },
-    toAddressEnd() {
-      return this.toAddress.substring(this.toAddress.length - 4);
-    },
-    toAddressShortened() {
-      return this.toAddress.length > 30
-        ? `${this.toAddressStart}... ${this.toAddressEnd}`
-        : this.toAddress;
+        amount: '0',
+        rate: '0'
+      };
     }
+  },
+  fromVal: {
+    type: String,
+    default: '0'
+  },
+  toVal: {
+    type: String,
+    default: '0'
+  },
+  fromImg: {
+    type: String,
+    default: ''
+  },
+  toImg: {
+    type: String,
+    default: ''
+  },
+  fromType: {
+    type: String,
+    default: ''
+  },
+  toType: {
+    type: String,
+    default: ''
+  },
+  fromUsd: {
+    type: String,
+    default: ''
+  },
+  toUsd: {
+    type: String,
+    default: ''
+  },
+  txFee: {
+    type: String,
+    default: '0'
+  },
+  isToNonEth: {
+    type: Boolean,
+    default: false
+  },
+  toCurrency: {
+    type: String,
+    default: 'ETH'
+  },
+  toAddress: {
+    type: String,
+    default: ''
   }
-};
+});
+
+// computed
+const convertedFees = computed(() => {
+  return formatGasValue(props.txFee);
+});
+const txFeeUSD = computed(() => {
+  const feeETH = BigNumber(fromWei(props.txFee));
+  return getFiatValue(feeETH.times(fiatValue));
+});
+const summaryItems = computed(() => {
+  const newArr = [
+    'Exchange rate',
+    hasGasPriceOption ? 'Estimated fee' : 'Transaction fee'
+  ];
+  if (props.isToNonEth) {
+    newArr.unshift(`Receive ${props.toCurrency} to`);
+  }
+  return newArr;
+});
+const formattedToVal = computed(() => {
+  return formatFloatingPointValue(props.toVal).value;
+});
+const formattedFromVal = computed(() => {
+  return formatFloatingPointValue(props.fromVal).value;
+});
+const formattedRate = computed(() => {
+  return formatFloatingPointValue(props.provider.rate).value;
+});
+const valueItems = computed(() => {
+  return [
+    {
+      title: 'You Swap',
+      icon: props.fromImg,
+      value: formattedFromVal.value,
+      type: props.fromType,
+      address: props.from,
+      amount: formatFloatingPointValue(props.fromVal).value,
+      usd: formatFloatingPointValue(props.fromUsd).value
+    },
+    {
+      title: 'You will get',
+      icon: props.toImg,
+      value: formattedToVal.value,
+      type: props.toType,
+      address: props.to,
+      amount: formatFloatingPointValue(props.toVal).value,
+      usd: getFiatValue(props.toUsd)
+    }
+  ];
+});
+const toAddressStart = computed(() => {
+  return props.toAddress.substring(0, 20);
+});
+const toAddressEnd = computed(() => {
+  return props.toAddress.substring(props.toAddress.length - 4);
+});
+const toAddressShortened = computed(() => {
+  return props.toAddress.length > 30
+    ? `${toAddressStart.value}... ${toAddressEnd.value}`
+    : props.toAddress;
+});
 </script>

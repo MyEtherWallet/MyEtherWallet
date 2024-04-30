@@ -23,33 +23,37 @@
   </div>
 </template>
 
-<script>
-import { mapState } from 'vuex';
-export default {
-  props: {
-    txLength: {
-      type: Number,
-      default: 1
-    },
-    signed: {
-      type: Boolean,
-      default: false
-    },
-    error: {
-      type: String,
-      default: ''
-    }
+<script setup>
+import { defineProps, computed } from 'vue';
+
+import { wallet as useWalletStore } from '@/core/store/index.js';
+
+// props
+const props = defineProps({
+  txLength: {
+    type: Number,
+    default: 1
   },
-  computed: {
-    ...mapState('wallet', ['instance']),
-    bodyText() {
-      if (this.error !== '') return this.error;
-      return `Approve ${this.txLength} ${
-        this.txLength > 1 ? 'transactions' : 'transaction'
-      } on ${this.instance.meta.name}.`;
-    }
+  signed: {
+    type: Boolean,
+    default: false
+  },
+  error: {
+    type: String,
+    default: ''
   }
-};
+});
+
+// injections/use
+const { instance } = useWalletStore();
+
+// computed
+const bodyText = computed(() => {
+  if (props.error !== '') return props.error;
+  return `Approve ${props.txLength} ${
+    props.txLength > 1 ? 'transactions' : 'transaction'
+  } on ${instance.meta.name}.`;
+});
 </script>
 <style lang="scss" scoped>
 .custom-icon-style {

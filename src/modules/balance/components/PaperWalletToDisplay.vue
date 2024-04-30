@@ -107,26 +107,26 @@
   </div>
 </template>
 
-<script>
-import { mapState } from 'vuex';
+<script setup>
+import { computed } from 'vue';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
 
-export default {
-  name: 'BalanceAddressPaperWallet',
-  computed: {
-    ...mapState('wallet', ['address', 'instance', 'isHardware']),
-    key() {
-      if (this.showPrivateKey) {
-        return this.instance.getPrivateKeyString();
-      }
-      return null;
-    },
-    getChecksumAddressString() {
-      return this.address ? toChecksumAddress(this.address) : '';
-    },
-    showPrivateKey() {
-      return !this.instance.isPubOnly;
-    }
+import { wallet as useWalletStore } from '@/core/store/index.js';
+
+// injections/use
+const { address, instance } = useWalletStore();
+
+// computed
+const key = computed(() => {
+  if (showPrivateKey.value) {
+    return instance.getPrivateKeyString();
   }
-};
+  return null;
+});
+const getChecksumAddressString = computed(() => {
+  return address ? toChecksumAddress(address) : '';
+});
+const showPrivateKey = computed(() => {
+  return !instance.isPubOnly;
+});
 </script>

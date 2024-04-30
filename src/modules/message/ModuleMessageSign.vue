@@ -31,49 +31,50 @@
   </mew-module>
 </template>
 
-<script>
-import { mapState } from 'vuex';
+<script setup>
+import { ref, computed, onMounted } from 'vue';
+
+import { wallet as useWalletStore } from '@/core/store/index.js';
 
 import SignAndVerifyMessage from '@/modules/message/handlers';
-export default {
-  name: 'ModuleMessageSign',
-  data() {
-    return {
-      title: 'Sign Message',
-      message: '',
-      signature: '',
-      signAndVerify: ''
-    };
-  },
-  computed: {
-    ...mapState('wallet', ['instance']),
-    disableSignBtn() {
-      return this.message === '';
-    }
-  },
-  mounted() {
-    this.signAndVerify = new SignAndVerifyMessage();
-  },
-  methods: {
-    signMessage() {
-      try {
-        this.signAndVerify
-          .signMessage(this.message)
-          .then(() => {
-            this.message = '';
-          })
-          .catch(e => {
-            this.message = '';
-            this.instance.errorHandler(e.message);
-          });
-      } catch (e) {
-        this.instance.errorHandler(e.hasOwnProperty('message') ? e.message : e);
-      }
-    },
-    clearAll() {
-      this.signature = '';
-      this.message = '';
-    }
+
+// injections/use
+const { instance } = useWalletStore();
+
+// data
+const title = ref('Sign Message');
+const message = ref('');
+const signature = ref('');
+const signAndVerify = ref('');
+
+// computed
+const disableSignBtn = computed(() => {
+  return message.value === '';
+});
+
+// mounted
+onMounted(() => {
+  signAndVerify.value = new SignAndVerifyMessage();
+});
+
+// methods
+const signMessage = () => {
+  try {
+    signAndVerify.value
+      .signMessage(message.value)
+      .then(() => {
+        message.value = '';
+      })
+      .catch(e => {
+        message.value = '';
+        instance.errorHandler(e.message);
+      });
+  } catch (e) {
+    instance.errorHandler(e.hasOwnProperty('message') ? e.message : e);
   }
+};
+const clearAll = () => {
+  signature.value = '';
+  message.value = '';
 };
 </script>

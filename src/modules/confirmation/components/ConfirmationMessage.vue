@@ -19,19 +19,24 @@
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    msg: {
-      type: String,
-      default: ''
-    },
-    copy: {
-      type: Function,
-      default: () => {}
-    }
+<script setup>
+import { ref, defineProps, defineExpose } from 'vue';
+
+defineProps({
+  msg: {
+    type: String,
+    default: ''
+  },
+  copy: {
+    type: Function,
+    default: () => {}
   }
-};
+});
+
+const signatureContent = ref(0);
+defineExpose({
+  signatureContent
+});
 </script>
 
 <style lang="scss">

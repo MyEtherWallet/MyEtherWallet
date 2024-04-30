@@ -106,9 +106,8 @@
   </mew-module>
 </template>
 
-<script>
-import Vue from 'vue';
-import { mapState, mapActions, mapGetters } from 'vuex';
+<script setup>
+import { ref, computed, watch } from 'vue';
 import { toWei, toBN, toHex } from 'web3-utils';
 
 import sanitizeHex from '@/core/helpers/sanitizeHex';
@@ -120,172 +119,163 @@ import {
   isContractArgValid
 } from './handlers/common';
 import { stringToArray } from '@/core/helpers/common';
-import handlerAnalyticsMixin from '../analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { CONTRACT } from '../analytics-opt-in/handlers/configs/events';
+import { useAmplitude } from '@/core/composables/amplitude';
 
-export default {
-  name: 'ModuleContractDeploy',
-  mixins: [handlerAnalyticsMixin],
-  data() {
-    return {
-      contractName: '',
-      byteCode: '',
-      byteCodeHex: '',
-      abiInterface: '',
-      inputsValid: false,
-      ethAmount: '0'
-    };
-  },
-  computed: {
-    ...mapState('wallet', ['address', 'web3', 'instance']),
-    ...mapState('global', ['currentNetwork']),
-    ...mapGetters('global', ['gasPrice']),
-    canDeploy() {
-      return (
-        this.byteCodeHex !== '' &&
-        this.isValidByteCodeInput(this.byteCodeHex) &&
-        this.isValidABI(this.abiInterface) &&
-        (this.getConstructor(JSON.parse(this.abiInterface)).inputs.length ===
-          0 ||
-          this.inputsValid) &&
-        (this.isContructorPayable === false || this.isETHValue(this.ethAmount))
-      );
-    },
-    constructorInputs() {
-      if (this.isValidABI(this.abiInterface)) {
-        return this.getConstructor(JSON.parse(this.abiInterface)).inputs;
-      }
-      return [];
-    },
-    isContructorPayable() {
-      if (this.isValidABI(this.abiInterface)) {
-        return (
-          this.getConstructor(JSON.parse(this.abiInterface)).stateMutability ===
-          'payable'
-        );
-      }
-      return false;
-    }
-  },
-  watch: {
-    abiInterface() {
-      this.constructorInputs.forEach((i, idx) => {
-        this.constructorInputs[idx].value = '';
-        Vue.set(this.constructorInputs, idx, this.constructorInputs[idx]);
-      });
-    }
-  },
-  methods: {
-    ...mapActions('global', ['addLocalContract']),
-    resetDefaults() {
-      this.contractName = '';
-      this.byteCode = '';
-      this.byteCodeHex = '';
-      this.abiInterface = '';
-      this.inputsValid = false;
-      this.ethAmount = '0';
-    },
-    isValidByteCodeInput(val) {
-      if (validateHexString(val)) {
-        this.byteCodeHex = sanitizeHex(val);
-        return true;
-      }
-      if (validateHexString('0x' + val)) {
-        this.byteCodeHex = '0x' + val;
-        return true;
-      }
-      try {
-        const parsed = JSON.parse(val);
-        if (validateHexString('0x' + parsed.object)) {
-          this.byteCodeHex = '0x' + parsed.object;
-          return true;
-        }
-        return false;
-      } catch (e) {
-        return false;
-      }
-    },
-    isValidABI(val) {
-      return !!parseJSON(val) && !!parseABI(parseJSON(val));
-    },
-    getConstructor(abi) {
-      for (const method of abi) {
-        if (method.type === 'constructor') return method;
-      }
-      return { inputs: [] };
-    },
-    deploy() {
-      const contract = new this.web3.eth.Contract(
-        JSON.parse(this.abiInterface)
-      );
-      const params = [];
-      let details = {};
-      for (const _input of this.constructorInputs) {
-        if (_input.type.includes('[]') && _input.value)
-          params.push(stringToArray(_input.value));
-        else params.push(_input.value);
-      }
-      this.trackContract(CONTRACT.DEPLOY_CONTRACT);
-      contract
-        .deploy({
-          data: this.byteCodeHex,
-          arguments: params
-        })
-        .send({
-          from: this.address,
-          value: this.isContructorPayable
-            ? toHex(toBN(toWei(this.ethAmount)))
-            : '0x00'
-        })
-        .on('transactionHash', () => {
-          details = {
-            name: this.contractName,
-            abi: JSON.stringify(JSON.parse(this.abiInterface))
-          };
-          this.resetDefaults();
-        })
-        .on('receipt', result => {
-          details.address = result.contractAddress;
-          if (details.name === '') {
-            details.name = result.contractAddress;
-          }
-          this.trackContract(CONTRACT.DEPLOY_CONTRACT_SUCCESS);
-          this.addLocalContract(details);
-        })
-        .on('error', err => {
-          this.trackContract(CONTRACT.DEPLOY_CONTRACT_FAIL);
-          this.instance.errorHandler(err);
-        });
-    },
-    valueInput(idx, value) {
-      if (idx && value) {
-        this.constructorInputs[idx].value = value;
-      }
-      this.inputsValid = true;
-      for (const _input of this.constructorInputs) {
-        if (
-          !this.isValidInput(
-            _input.value,
-            this.getType(_input.type).solidityType
-          )
-        )
-          this.inputsValid = false;
-      }
-    },
-    isETHValue(val) {
-      try {
-        toWei(val, 'ether');
-        return true;
-      } catch (e) {
-        return false;
-      }
-    },
-    getType(type) {
-      return getInputType(type);
-    },
-    isValidInput(value, sType) {
-      return isContractArgValid(value, sType);
-    }
+import {
+  global as useGlobalStore,
+  wallet as useWalletStore
+} from '@/core/store/index.js';
+
+// injections/use
+const { trackContract } = useAmplitude();
+const { addLocalContract } = useGlobalStore();
+const { address, web3, instance } = useWalletStore();
+
+// data
+const contractName = ref('');
+const byteCode = ref('');
+const byteCodeHex = ref('');
+const abiInterface = ref('');
+const inputsValid = ref(false);
+const ethAmount = ref('0');
+
+// computed
+const canDeploy = computed(() => {
+  return (
+    byteCodeHex.value !== '' &&
+    isValidByteCodeInput(byteCodeHex.value) &&
+    isValidABI(abiInterface.value) &&
+    (getConstructor(JSON.parse(abiInterface.value)).inputs.length === 0 ||
+      inputsValid.value) &&
+    (isContructorPayable.value === false || isETHValue(ethAmount.value))
+  );
+});
+const constructorInputs = computed(() => {
+  if (isValidABI(abiInterface.value)) {
+    return getConstructor(JSON.parse(abiInterface.value)).inputs;
   }
+  return [];
+});
+const isContructorPayable = computed(() => {
+  if (isValidABI(abiInterface.value)) {
+    return (
+      getConstructor(JSON.parse(abiInterface.value)).stateMutability ===
+      'payable'
+    );
+  }
+  return false;
+});
+
+// watch
+watch(abiInterface, () => {
+  constructorInputs.value.forEach((i, idx) => {
+    constructorInputs.value[idx].value = '';
+    constructorInputs.value[idx] = constructorInputs[idx].value;
+  });
+});
+
+// methods
+const resetDefaults = () => {
+  contractName.value = '';
+  byteCode.value = '';
+  byteCodeHex.value = '';
+  abiInterface.value = '';
+  inputsValid.value = false;
+  ethAmount.value = '0';
+};
+const isValidByteCodeInput = val => {
+  if (validateHexString(val)) {
+    byteCodeHex.value = sanitizeHex(val);
+    return true;
+  }
+  if (validateHexString('0x' + val)) {
+    byteCodeHex.value = '0x' + val;
+    return true;
+  }
+  try {
+    const parsed = JSON.parse(val);
+    if (validateHexString('0x' + parsed.object)) {
+      byteCodeHex.value = '0x' + parsed.object;
+      return true;
+    }
+    return false;
+  } catch (e) {
+    return false;
+  }
+};
+const isValidABI = val => {
+  return !!parseJSON(val) && !!parseABI(parseJSON(val));
+};
+const getConstructor = abi => {
+  for (const method of abi) {
+    if (method.type === 'constructor') return method;
+  }
+  return { inputs: [] };
+};
+const deploy = () => {
+  const contract = new web3.eth.Contract(JSON.parse(abiInterface.value));
+  const params = [];
+  let details = {};
+  for (const _input of constructorInputs.value) {
+    if (_input.type.includes('[]') && _input.value)
+      params.push(stringToArray(_input.value));
+    else params.push(_input.value);
+  }
+  trackContract(CONTRACT.DEPLOY_CONTRACT);
+  contract
+    .deploy({
+      data: byteCodeHex.value,
+      arguments: params
+    })
+    .send({
+      from: address,
+      value: isContructorPayable.value
+        ? toHex(toBN(toWei(ethAmount.value)))
+        : '0x00'
+    })
+    .on('transactionHash', () => {
+      details = {
+        name: contractName.value,
+        abi: JSON.stringify(JSON.parse(abiInterface.value))
+      };
+      resetDefaults();
+    })
+    .on('receipt', result => {
+      details.address = result.contractAddress;
+      if (details.name === '') {
+        details.name = result.contractAddress;
+      }
+      trackContract(CONTRACT.DEPLOY_CONTRACT_SUCCESS);
+      addLocalContract(details);
+    })
+    .on('error', err => {
+      trackContract(CONTRACT.DEPLOY_CONTRACT_FAIL);
+      instance.errorHandler(err);
+    });
+};
+const valueInput = (idx, value) => {
+  if (idx && value) {
+    constructorInputs.value[idx].value = value;
+  }
+  inputsValid.value = true;
+  for (const _input of constructorInputs.value) {
+    if (!isValidInput(_input.value, getType(_input.type).solidityType))
+      inputsValid.value = false;
+  }
+};
+const isETHValue = val => {
+  try {
+    toWei(val, 'ether');
+    return true;
+  } catch (e) {
+    return false;
+  }
+};
+const getType = type => {
+  return getInputType(type);
+};
+const isValidInput = (value, sType) => {
+  return isContractArgValid(value, sType);
 };
 </script>

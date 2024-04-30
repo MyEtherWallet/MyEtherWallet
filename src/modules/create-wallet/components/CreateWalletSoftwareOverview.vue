@@ -87,37 +87,40 @@
   </div>
 </template>
 
-<script>
-import { mapGetters, mapState } from 'vuex';
+<script setup>
+import { onMounted, defineEmits } from 'vue';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
-export default {
-  name: 'CreateWalletSoftwareOverview',
-  data: () => ({
-    walletTypes: WALLET_TYPES,
-    linkToLearnMore: {
-      url: '',
-      title: 'Learn more'
-    }
-  }),
-  computed: {
-    ...mapGetters('article', ['getArticle']),
-    ...mapState('wallet', ['isOfflineApp'])
-  },
-  mounted() {
-    if (this.isOfflineApp) this.linkToLearnMore = {};
-    else
-      this.linkToLearnMore.url = this.getArticle('not-rec-when-access-wallet');
-  },
-  methods: {
-    /**
-     * Emit wallet type creation.
-     * @type - is part of WALLET_TYPES
-     * function is void
-     */
-    selectWalletType(type) {
-      this.$emit('typeSelect', type);
-    }
-  }
+
+import {
+  article as useArticleStore,
+  wallet as useWalletStore
+} from '@/core/store/index.js';
+
+// emits
+const emit = defineEmits(['typeSelect']);
+
+// injections/use
+const { getArticle } = useArticleStore();
+const { isOfflineApp } = useWalletStore();
+
+// data
+const walletTypes = WALLET_TYPES;
+const linkToLearnMore = {
+  url: '',
+  title: 'Learn more'
+};
+
+onMounted(() => {
+  if (isOfflineApp) linkToLearnMore.value = {};
+  else linkToLearnMore.value.url = getArticle('not-rec-when-access-wallet');
+});
+/**
+ * Emit wallet type creation.
+ * @type - is part of WALLET_TYPES
+ * function is void
+ */
+const selectWalletType = type => {
+  emit('typeSelect', type);
 };
 </script>
 

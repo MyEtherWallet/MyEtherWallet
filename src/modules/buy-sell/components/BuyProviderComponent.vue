@@ -165,161 +165,161 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { defineProps, ref, computed, defineEmits } from 'vue';
 import MultiCoinValidator from 'multicoin-address-validator';
-import { mapGetters, mapState } from 'vuex';
 import { isEmpty } from 'lodash';
 
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import { LOCALE } from '../helpers';
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { BUY_SELL } from '@/modules/analytics-opt-in/handlers/configs/events';
+import { useAmplitude } from '@/core/composables/amplitude';
+import { wallet as useWalletStore } from '@/core/store/index.js';
 
-export default {
-  name: 'ModuleBuyEthProvider',
-  mixins: [handlerAnalytics],
-  props: {
-    orderHandler: {
-      type: Object,
-      default: () => {}
-    },
-    inWallet: {
-      type: Boolean,
-      default: false
-    },
-    onlySimplex: {
-      type: Boolean,
-      default: false
-    },
-    selectedFiat: {
-      type: Object,
-      default: () => ({})
-    },
-    selectedCurrency: {
-      type: Object,
-      default: () => ({})
-    },
-    buyObj: {
-      type: Object,
-      default: () => ({})
-    },
-    simplexQuote: {
-      type: Object,
-      default: () => ({})
-    },
-    toAddress: {
-      type: String,
-      default: ''
-    }
+// injections
+const { trackBuySell } = useAmplitude();
+const { address } = useWalletStore();
+
+// props
+const props = defineProps({
+  orderHandler: {
+    type: Object,
+    default: () => {}
   },
-  data() {
-    return {
-      loading: false
-    };
+  inWallet: {
+    type: Boolean,
+    default: false
   },
-  computed: {
-    ...mapGetters('global', ['network']),
-    ...mapState('wallet', ['address']),
-    selectedFiatName() {
-      return this.selectedFiat.name;
-    },
-    actualAddress() {
-      return this.inWallet ? this.address : this.toAddress;
-    },
-    selectedCryptoName() {
-      return this.selectedCurrency.symbol;
-    },
-    isEUR() {
-      return this.selectedFiatName === 'EUR' || this.selectedFiatName === 'GBP';
-    },
-    hideMoonpay() {
-      return this.onlySimplex;
-    },
-    hideSimplex() {
-      return isEmpty(this.simplexQuote);
-    },
-    simplexBtnTitle() {
-      return 'BUY WITH SIMPLEX';
-    },
-    moonpayBtnTitle() {
-      return 'BUY WITH MOONPAY';
-    },
-    paymentOptionString() {
-      return `Visa, Mastercard, Apple Pay${this.isEUR ? ', Bank account' : ''}`;
-    }
+  onlySimplex: {
+    type: Boolean,
+    default: false
   },
-  methods: {
-    isValidToAddress(address) {
-      return MultiCoinValidator.validate(address, this.selectedCurrency.symbol);
-    },
-    openSimplex() {
-      if (!this.validToAddress()) return;
-      this.trackBuySell(BUY_SELL.BUY_W_SIMPLEX);
-      this.orderHandler
-        .simplexBuy(
-          this.selectedCryptoName,
-          this.selectedFiatName,
-          this.buyObj.fiatAmount,
-          this.actualAddress
-        )
-        .then(() => {
-          this.trackBuySell(BUY_SELL.BUY_W_SIMPLEX_SUCCESS);
-          this.reset();
-          this.$emit('close');
-          this.$emit('reset');
-        })
-        .catch(err => {
-          this.trackBuySell(BUY_SELL.BUY_W_SIMPLEX_FAILED);
-          this.reset();
-          Toast(err, {}, ERROR);
-          this.$emit('close');
-          this.$emit('reset');
-        });
-    },
-    currencyFormatter(value) {
-      const locale = this.hasData ? LOCALE[this.selectedFiatName] : 'en-US';
-      return new Intl.NumberFormat(locale, {
-        style: 'currency',
-        currency: this.selectedFiatName
-      }).format(value);
-    },
-    reset() {
-      this.loading = true;
-      this.fetchData = {};
-    },
-    buy() {
-      if (!this.validToAddress()) return;
-      this.trackBuySell(BUY_SELL.BUY_W_MOONPAY);
-      this.orderHandler
-        .buy(
-          this.selectedCryptoName,
-          this.selectedFiatName,
-          this.buyObj.fiatAmount,
-          this.actualAddress
-        )
-        .then(() => {
-          this.trackBuySell(BUY_SELL.BUY_W_MOONPAY_SUCCESS);
-          this.reset();
-          this.$emit('close');
-          this.$emit('reset');
-        })
-        .catch(err => {
-          this.trackBuySell(BUY_SELL.BUY_W_MOONPAY_FAILED);
-          this.reset();
-          Toast(err, {}, ERROR);
-          this.$emit('close');
-          this.$emit('reset');
-        });
-    },
-    validToAddress() {
-      if (isEmpty(this.actualAddress)) {
-        Toast('To address cannot be empty!', {}, ERROR);
-        this.$emit('close');
-        return false;
-      }
-      return true;
-    }
+  selectedFiat: {
+    type: Object,
+    default: () => ({})
+  },
+  selectedCurrency: {
+    type: Object,
+    default: () => ({})
+  },
+  buyObj: {
+    type: Object,
+    default: () => ({})
+  },
+  simplexQuote: {
+    type: Object,
+    default: () => ({})
+  },
+  toAddress: {
+    type: String,
+    default: ''
   }
+});
+
+// emit
+const emit = defineEmits(['close', 'reset']);
+
+// data
+const loading = ref(false);
+
+// computed
+const selectedFiatName = computed(() => {
+  return props.selectedFiat.name;
+});
+const actualAddress = computed(() => {
+  return props.inWallet ? address.value : props.toAddress;
+});
+const selectedCryptoName = computed(() => {
+  return props.selectedCurrency.symbol;
+});
+const isEUR = computed(() => {
+  return selectedFiatName.value === 'EUR' || selectedFiatName.value === 'GBP';
+});
+const hideMoonpay = computed(() => {
+  return props.onlySimplex;
+});
+const hideSimplex = computed(() => {
+  return isEmpty(props.simplexQuote);
+});
+const simplexBtnTitle = computed(() => {
+  return 'BUY WITH SIMPLEX';
+});
+const moonpayBtnTitle = computed(() => {
+  return 'BUY WITH MOONPAY';
+});
+const paymentOptionString = computed(() => {
+  return `Visa, Mastercard, Apple Pay${isEUR.value ? ', Bank account' : ''}`;
+});
+
+// methods
+const isValidToAddress = address => {
+  return MultiCoinValidator.validate(address, props.selectedCurrency.symbol);
+};
+const openSimplex = () => {
+  if (!validToAddress()) return;
+  trackBuySell(BUY_SELL.BUY_W_SIMPLEX);
+  props.orderHandler
+    .simplexBuy(
+      selectedCryptoName.value,
+      selectedFiatName.value,
+      props.buyObj.fiatAmount,
+      actualAddress.value
+    )
+    .then(() => {
+      trackBuySell(BUY_SELL.BUY_W_SIMPLEX_SUCCESS);
+      reset();
+      emit('close');
+      emit('reset');
+    })
+    .catch(err => {
+      trackBuySell(BUY_SELL.BUY_W_SIMPLEX_FAILED);
+      reset();
+      Toast(err, {}, ERROR);
+      emit('close');
+      emit('reset');
+    });
+};
+const currencyFormatter = value => {
+  const locale = props.hasData ? LOCALE[selectedFiatName.value] : 'en-US';
+  return new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency: selectedFiatName.value
+  }).format(value);
+};
+const reset = () => {
+  loading.value = true;
+};
+const buy = () => {
+  if (!validToAddress()) return;
+  trackBuySell(BUY_SELL.BUY_W_MOONPAY);
+  props.orderHandler
+    .buy(
+      selectedCryptoName.value,
+      selectedFiatName.value,
+      props.buyObj.fiatAmount,
+      actualAddress.value
+    )
+    .then(() => {
+      trackBuySell(BUY_SELL.BUY_W_MOONPAY_SUCCESS);
+      reset();
+      emit('close');
+      emit('reset');
+    })
+    .catch(err => {
+      trackBuySell(BUY_SELL.BUY_W_MOONPAY_FAILED);
+      reset();
+      Toast(err, {}, ERROR);
+      emit('close');
+      emit('reset');
+    });
+};
+const validToAddress = () => {
+  if (isEmpty(actualAddress.value)) {
+    Toast('To address cannot be empty!', {}, ERROR);
+    emit('close');
+    return false;
+  }
+  return true;
 };
 </script>
 

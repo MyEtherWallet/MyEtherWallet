@@ -13,6 +13,7 @@
       :open="showPaperWallet"
       :close="closePaperWallet"
       :is-offline-app="isOfflineApp"
+      :instance="instance"
       @close="closePaperWallet"
     />
     <v-dialog
@@ -122,7 +123,17 @@ const showPaperWallet = ref(false);
 let manualBlockSubscription;
 
 // pinia imports
-const walletStore = useWalletStore();
+const {
+  address,
+  isOfflineApp,
+  web3,
+  identifier,
+  setWeb3Instance,
+  instance,
+  setWallet,
+  setTokens,
+  setBlockNumber
+} = useWalletStore();
 const {
   darkMode,
   online,
@@ -165,7 +176,7 @@ const withinDate = computed(() => {
 });
 
 // watchers
-watch(walletStore.address, newVal => {
+watch(address, newVal => {
   if (!newVal) {
     // change later
     router.push({ name: ROUTES_HOME.ACCESS_WALLET.NAME });
@@ -176,22 +187,22 @@ watch(walletStore.address, newVal => {
 });
 
 watch(network, (newVal, oldVal) => {
-  if (online && !walletStore.isOfflineApp) {
-    walletStore.web3.eth.clearSubscriptions();
-    walletStore.identifier === WALLET_TYPES.WEB3_WALLET
-      ? walletStore.setWeb3Instance(selectedEIP6963Provider)
-      : walletStore.setWeb3Instance();
+  if (online && !isOfflineApp) {
+    web3.eth.clearSubscriptions();
+    identifier === WALLET_TYPES.WEB3_WALLET
+      ? setWeb3Instance(selectedEIP6963Provider)
+      : setWeb3Instance();
     setup();
-    if (walletStore.identifier !== WALLET_TYPES.WEB3_WALLET) {
+    if (identifier !== WALLET_TYPES.WEB3_WALLET) {
       setTokensAndBalance();
     }
 
     if (
-      (walletStore.identifier === WALLET_TYPES.WALLET_CONNECT ||
-        walletStore.identifier === WALLET_TYPES.MEW_WALLET) &&
-      newVal.type.chainID !== walletStore.instance.connection.chainId
+      (identifier === WALLET_TYPES.WALLET_CONNECT ||
+        identifier === WALLET_TYPES.MEW_WALLET) &&
+      newVal.type.chainID !== instance.connection.chainId
     ) {
-      walletStore.instance.connection.sendAsync(
+      instance.connection.sendAsync(
         {
           method: 'wallet_switchEthereumChain',
           params: [{ chainId: newVal.type.chainID.toString(16) }]
@@ -203,16 +214,14 @@ watch(network, (newVal, oldVal) => {
               {},
               WARNING
             );
-            walletStore.instance.connection.switchEthereumChain(
-              oldVal.type.chainID
-            );
+            instance.connection.switchEthereumChain(oldVal.type.chainID);
 
             setTimeout(() => {
               setNetwork({
                 network: oldVal,
-                walletType: walletStore.identifier
+                walletType: identifier
               }).then(() => {
-                walletStore.setWeb3Instance();
+                setWeb3Instance();
               });
             }, 1000);
           }
@@ -242,36 +251,36 @@ onMounted(() => {
     });
   });
 
-  if (online && !walletStore.isOfflineApp) {
+  if (online && !isOfflineApp) {
     setup();
     setTokenAndEthBalance();
 
-    if (walletStore.identifier === WALLET_TYPES.WEB3_WALLET) {
+    if (identifier === WALLET_TYPES.WEB3_WALLET) {
       web3Listeners();
     }
     checkNetwork();
   }
 
   if (
-    walletStore.identifier === WALLET_TYPES.WALLET_CONNECT ||
-    walletStore.identifier === WALLET_TYPES.WALLET_LINK
+    identifier === WALLET_TYPES.WALLET_CONNECT ||
+    identifier === WALLET_TYPES.WALLET_LINK
   ) {
-    walletStore.instance.connection.on('session_update', () => {
-      walletStore.instance.connection.sendAsync(
+    instance.connection.on('session_update', () => {
+      instance.connection.sendAsync(
         { method: 'eth_requestAccounts' },
         (err, res) => {
-          if (res[0].toLowerCase() !== walletStore.address.toLowerCase()) {
+          if (res[0].toLowerCase() !== address.toLowerCase()) {
             const newWallet = new HybridWalletInterface(
               sanitizeHex(res[0]),
-              walletStore.instance.isHardware,
-              walletStore.identifier,
-              walletStore.instance.txSigner,
-              walletStore.instance.msgSigner,
-              walletStore.instance.connection,
-              walletStore.instance.errorHandler,
-              walletStore.instance.meta
+              instance.isHardware,
+              identifier,
+              instance.txSigner,
+              instance.msgSigner,
+              instance.connection,
+              instance.errorHandler,
+              instance.meta
             );
-            walletStore.setWallet([newWallet]);
+            setWallet([newWallet]);
           }
         }
       );
@@ -281,8 +290,7 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   EventBus.$off('openPaperWallet');
-  if (online && !walletStore.isOfflineApp)
-    walletStore.web3.eth.clearSubscriptions();
+  if (online && !isOfflineApp) web3.eth.clearSubscriptions();
   const provider = selectedEIP6963Provider;
   if (provider && provider.removeListener instanceof Function) {
     if (findAndSetNetwork instanceof Function)
@@ -315,10 +323,7 @@ const setup = () => {
 };
 
 const checkNetwork = async () => {
-  const matched = await matchNetwork(
-    network.type.chainID,
-    walletStore.identifier
-  );
+  const matched = await matchNetwork(network.type.chainID, identifier);
   setValidNetwork(matched);
 };
 
@@ -336,7 +341,7 @@ const setTokensAndBalance = () => {
   if (coinGeckoTokens?.get) {
     setTokenAndEthBalance();
   } else {
-    walletStore.setTokens([]);
+    setTokens([]);
   }
 };
 
@@ -351,15 +356,15 @@ const checkAndSetBaseFee = baseFee => {
 
 const subscribeToBlockNumber = debounce(function () {
   clearInterval(manualBlockSubscription);
-  walletStore.web3.eth.getBlockNumber().then(bNumber => {
-    walletStore.setBlockNumber(bNumber);
-    walletStore.web3.subscribe
+  web3.eth.getBlockNumber().then(bNumber => {
+    setBlockNumber(bNumber);
+    web3.subscribe
       .on('newBlockHeaders')
       .on('data', res => {
         if (isEIP1559SupportedNetwork && res.baseFeePerGas) {
           checkAndSetBaseFee(toBN(res.baseFeePerGas));
         }
-        walletStore.setBlockNumber(res.number);
+        setBlockNumber(res.number);
       })
       .on('error', err => {
         const message = err.message ? err.message : err;
@@ -377,9 +382,9 @@ const subscribeToBlockNumber = debounce(function () {
 
 const manualBlockSub = () => {
   manualBlockSubscription = setInterval(() => {
-    walletStore.web3.eth.getBlockNumber().then(bNumber => {
-      walletStore.setBlockNumber(bNumber);
-      walletStore.web3.eth.getBlock(bNumber).then(block => {
+    web3.eth.getBlockNumber().then(bNumber => {
+      setBlockNumber(bNumber);
+      web3.eth.getBlock(bNumber).then(block => {
         if (block) {
           checkAndSetBaseFee(block.baseFeePerGas);
         }
@@ -389,10 +394,7 @@ const manualBlockSub = () => {
 };
 
 const findAndSetNetwork = async () => {
-  if (
-    selectedEIP6963Provider &&
-    walletStore.identifier === WALLET_TYPES.WEB3_WALLET
-  ) {
+  if (selectedEIP6963Provider && identifier === WALLET_TYPES.WEB3_WALLET) {
     const networkId = await selectedEIP6963Provider?.request({
       method: 'eth_chainId'
     });
@@ -405,9 +407,9 @@ const findAndSetNetwork = async () => {
         if (foundNetwork) {
           await setNetwork({
             network: foundNetwork[0],
-            walletType: walletStore.identifier
+            walletType: identifier
           });
-          await walletStore.setWeb3Instance(selectedEIP6963Provider);
+          await setWeb3Instance(selectedEIP6963Provider);
           setTokensAndBalance();
           setValidNetwork(true);
           emit('newNetwork');
@@ -435,7 +437,7 @@ const findAndSetNetwork = async () => {
 
 const setWeb3Account = acc => {
   const wallet = new Web3Wallet(acc[0]);
-  walletStore.setWallet([wallet, selectedEIP6963Provider]);
+  setWallet([wallet, selectedEIP6963Provider]);
 };
 
 const web3Listeners = () => {

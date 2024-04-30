@@ -50,38 +50,37 @@
   </div>
 </template>
 
-<script>
-import { mapActions } from 'vuex';
+<script setup>
+import { defineProps } from 'vue';
 import { SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 
-export default {
-  props: {
-    open: {
-      default: false,
-      type: Boolean
-    },
-    close: {
-      default: () => {},
-      type: Function
-    },
-    selectedToken: {
-      default: () => {},
-      type: Object
-    }
+import { custom as useCustomStore } from '@/core/store/index.js';
+
+// injections/use
+const { deleteToken } = useCustomStore();
+// props
+const props = defineProps({
+  open: {
+    default: false,
+    type: Boolean
   },
-  methods: {
-    ...mapActions('custom', ['deleteToken', 'deleteHiddenToken']),
-    /**
-     * Delete custom token
-     */
-    confirmDelete() {
-      const tokenSymbol = this.selectedToken.token;
-      this.deleteToken([this.selectedToken]).then(() => {
-        this.close();
-        Toast(`${tokenSymbol} Token removed succesfully`, {}, SUCCESS);
-      });
-    }
+  close: {
+    default: () => {},
+    type: Function
+  },
+  selectedToken: {
+    default: () => {},
+    type: Object
   }
+});
+
+// methods
+const confirmDelete = () => {
+  const tokenSymbol = props.selectedToken.token;
+  deleteToken([props.selectedToken]).then(() => {
+    props.close();
+    Toast(`${tokenSymbol} Token removed succesfully`, {}, SUCCESS);
+  });
 };
 </script>
 <style lang="scss" scoped>

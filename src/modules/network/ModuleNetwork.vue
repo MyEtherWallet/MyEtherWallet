@@ -35,67 +35,78 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex';
-
-import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
-import WALLET_TYPES from '../access-wallet/common/walletTypes';
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
-import { EventBus } from '@/core/plugins/eventBus';
 
 export default {
-  name: 'ModuleNetwork',
   beforeRouteLeave(to, from, next) {
     if (to.name == ROUTES_HOME.ACCESS_WALLET.NAME) {
       next({ name: ROUTES_WALLET.DASHBOARD.NAME });
     } else {
       next();
     }
-  },
-  props: {
-    mobile: {
-      type: Boolean,
-      default: false
-    }
-  },
-  computed: {
-    ...mapState('wallet', ['blockNumber', 'identifier', 'isHardware']),
-    ...mapState('global', ['validNetwork']),
-    ...mapState('external', ['selectedEIP6963Provider']),
-    ...mapGetters('global', ['network']),
-    fullName() {
-      return this.network.type.name_long;
-    },
-    lastBlock() {
-      return formatIntegerToString(this.blockNumber);
-    },
-    icon() {
-      return this.network.type.icon;
-    },
-    show() {
-      let switchNetworkWeb3Supported = false;
-      if (this.selectedEIP6963Provider) {
-        const isMetaMask =
-          this.selectedEIP6963Provider.isMetaMask &&
-          !this.selectedEIP6963Provider.hasOwnProperty('isTrust') &&
-          !this.selectedEIP6963Provider.hasOwnProperty('isMEWwallet');
-        const isMEWwallet =
-          this.selectedEIP6963Provider.isMetaMask &&
-          this.selectedEIP6963Provider.isMEWwallet &&
-          this.selectedEIP6963Provider.isTrust;
-        switchNetworkWeb3Supported = isMetaMask || isMEWwallet;
-      }
-
-      return (
-        this.identifier !== WALLET_TYPES.WEB3_WALLET ||
-        switchNetworkWeb3Supported
-      );
-    }
-  },
-  methods: {
-    openNetworkOverlay() {
-      EventBus.$emit('openNetwork');
-    }
   }
+};
+</script>
+
+<script setup>
+import { defineProps, computed } from 'vue';
+
+import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
+
+import {
+  global as useGlobalStore,
+  wallet as useWalletStore,
+  external as useExternalStore
+} from '@/core/store/index.js';
+import WALLET_TYPES from '../access-wallet/common/walletTypes';
+
+import { EventBus } from '@/core/plugins/eventBus';
+
+// props
+
+defineProps({
+  mobile: {
+    type: Boolean,
+    default: false
+  }
+});
+
+// injections/use
+const { network } = useGlobalStore();
+const { selectedEIP6963Provider } = useExternalStore();
+const { blockNumber, identifier } = useWalletStore();
+
+// computed
+const fullName = computed(() => {
+  return network.type.name_long;
+});
+
+const lastBlock = computed(() => {
+  return formatIntegerToString(blockNumber);
+});
+const icon = computed(() => {
+  return network.type.icon;
+});
+const show = computed(() => {
+  let switchNetworkWeb3Supported = false;
+  if (selectedEIP6963Provider) {
+    const isMetaMask =
+      selectedEIP6963Provider.isMetaMask &&
+      !selectedEIP6963Provider.hasOwnProperty('isTrust') &&
+      !selectedEIP6963Provider.hasOwnProperty('isMEWwallet');
+    const isMEWwallet =
+      selectedEIP6963Provider.isMetaMask &&
+      selectedEIP6963Provider.isMEWwallet &&
+      selectedEIP6963Provider.isTrust;
+    switchNetworkWeb3Supported = isMetaMask || isMEWwallet;
+  }
+
+  return identifier !== WALLET_TYPES.WEB3_WALLET || switchNetworkWeb3Supported;
+});
+
+// methods
+const openNetworkOverlay = () => {
+  EventBus.$emit('openNetwork');
 };
 </script>
 
