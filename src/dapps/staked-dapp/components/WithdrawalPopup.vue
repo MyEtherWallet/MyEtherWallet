@@ -154,12 +154,13 @@
   </mew-popup>
 </template>
 
-<script>
-import { mapGetters, mapState, mapActions } from 'vuex';
+<script setup>
+import { defineAsyncComponent, defineProps, ref, computed, watch } from 'vue';
 import {
   keystoreToBLSExecution,
   mnemonicToBLSExecution
 } from '@myetherwallet/eth2-keystore';
+import { isEmpty } from 'lodash';
 
 import {
   Toast,
@@ -168,363 +169,368 @@ import {
   WARNING
 } from '@/modules/toast/handler/handlerToast';
 import { SOFTWARE_WALLET_TYPES } from '@/modules/access-wallet/software/handlers/helpers.js';
+import {
+  global as useGlobalStore,
+  wallet as useWalletStore,
+  stakedStore as useStakedStore
+} from '@/core/store/index.js';
 
-import { isEmpty } from 'lodash';
+const PhraseBlock = defineAsyncComponent(() =>
+  import('@/core/components/PhraseBlock')
+);
+const ModuleAddressBook = defineAsyncComponent(() =>
+  import('@/modules/address-book/ModuleAddressBook')
+);
 
-export default {
-  components: {
-    phraseBlock: () => import('@/core/components/PhraseBlock'),
-    ModuleAddressBook: () => import('@/modules/address-book/ModuleAddressBook')
-  },
-  props: {
-    reset: {
-      type: Function,
-      default: () => {}
-    },
-    openWithdrawalModal: {
-      type: Boolean,
-      default: false
-    },
-    selectedValidator: {
-      type: Object,
-      default: () => {}
-    }
-  },
-  data() {
-    return {
-      step: 1,
-      executionAddress: '',
-      isValidAddress: false,
-      selectedRecoveryType: '',
-      file: {},
-      password: '',
-      blsExecution: '',
-      phrase: {},
-      length: 24,
-      loadingButton: false
-    };
-  },
-  computed: {
-    ...mapState('wallet', ['address']),
-    ...mapGetters('global', ['network']),
-    nextButton() {
-      const obj = {
-        title: 'Next',
-        disabled: false,
-        fn: this.nextStep
-      };
-      if (this.step === 1) {
-        return Object.assign({}, obj, {
-          disabled: !this.isValidAddress && this.executionAddress !== '',
-          fn: this.nextStep
-        });
-      }
-      if (this.step === 3) {
-        if (this.isKeystore) {
-          return Object.assign({}, obj, {
-            disabled: this.loadingButton || !this.validPassword,
-            fn: this.validateUserInputs
-          });
-        }
+// injections
+const { network } = useGlobalStore();
+const { address } = useWalletStore();
+const { addValidatorIndex } = useStakedStore();
 
-        return Object.assign({}, obj, {
-          disabled: !this.isValidMnemonic,
-          fn: this.validateUserInputs
-        });
-      }
-      if (this.step === 4) {
-        return Object.assign({}, obj, {
-          title: 'Set withdrawal address',
-          disabled: this.loadingButton,
-          fn: this.setWithdrawalAddress
-        });
-      }
+// props
+const props = defineProps({
+  reset: {
+    type: Function,
+    default: () => {}
+  },
+  openWithdrawalModal: {
+    type: Boolean,
+    default: false
+  },
+  selectedValidator: {
+    type: Object,
+    default: () => {}
+  }
+});
 
-      return obj;
-    },
-    phraseToLength() {
-      const phrase = Object.values(this.phrase);
-      if (phrase.length > this.length) phrase.length = this.length;
-      return phrase;
-    },
-    isValidMnemonic() {
-      return this.phraseToLength.length === this.length;
-    },
-    parsedPhrase() {
-      return this.phraseToLength.join(' ').toLowerCase();
-    },
-    /**
-     * @returns array
-     * returns button configs
-     */
-    buttons() {
-      return [
-        /* Keystore Button */
-        {
-          label: 'Keystore',
-          icon: require('@/assets/images/icons/icon-keystore-file.svg'),
-          fn: () => {
-            this.userSelectFile();
-          }
-        },
-        /* Mnemonic */
-        {
-          label: 'Mnemonic Phrase',
-          icon: require('@/assets/images/icons/icon-mnemonic.svg'),
-          fn: () => {
-            this.setType(SOFTWARE_WALLET_TYPES.MNEMONIC);
-          }
-        }
-      ];
-    },
-    /**
-     * @returns string
-     * returns currency name from current selected network
-     */
-    currencyName() {
-      return this.network.type.currencyName;
-    },
-    /**
-     * @returns object
-     * Returns the left button config for
-     * mew popup
-     */
-    leftBtn() {
-      return {
-        text: 'Cancel',
-        color: 'basic',
-        method: this.closeModal
-      };
-    },
-    /**
-     * @returns string
-     * Returns title based on current step
-     */
-    modalTitle() {
-      return this.step === 1
-        ? 'Provide withdrawal address'
-        : this.step === 2
-        ? 'Choose recovery method'
-        : this.step === 3 && this.isKeystore
-        ? 'Enter Keystore Password'
-        : this.step === 3 && this.isMnemonic
-        ? 'Enter Mnemonic Phrase'
-        : this.step === 4
-        ? 'Verify details'
-        : '';
-    },
-    /**
-     * @returns boolean
-     * returns whether selected recovery is keystore
-     */
-    isKeystore() {
-      return this.selectedRecoveryType === SOFTWARE_WALLET_TYPES.KEYSTORE;
-    },
-    /**
-     * @returns boolean
-     * returns whether selected recovery is keystore
-     */
-    isMnemonic() {
-      return this.selectedRecoveryType === SOFTWARE_WALLET_TYPES.MNEMONIC;
-    },
-    validPassword() {
-      return this.password.length > 3;
-    }
-  },
-  watch: {
-    phrase: {
-      deep: true,
-      handler: function (newval) {
-        if (newval && !isEmpty(newval) && !isEmpty(newval[1])) {
-          this.checkPhrase(newval);
-          const splitVal = newval[1].split(' ');
-          if (splitVal.length === 12 || splitVal.length === 24) {
-            this.length = splitVal.length;
-            const newObj = {};
-            splitVal.forEach((item, idx) => {
-              newObj[idx + 1] = item.toLowerCase();
-            });
-            this.phrase = newObj;
-          }
-        }
-      }
-    }
-  },
-  methods: {
-    ...mapActions('stakedStore', ['addValidatorIndex']),
-    setWithdrawalAddress() {
-      const submitSubDomain =
-        this.network.type.name === 'ETH' ? 'mainnet' : 'staging';
-      const submitEndpoint = `https://${submitSubDomain}.mewwallet.dev/v2/stake/upgrade`;
-      this.blsExecution.message.validator_index = parseInt(
-        this.blsExecution.message.validator_index
-      );
-      this.loadingButton = true;
-      fetch(submitEndpoint, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          signed: [this.blsExecution]
-        })
-      })
-        .then(res => {
-          if (res.ok) {
-            this.addValidatorIndex(this.selectedValidator.validator_index);
-            Toast('Successfully set withdrawal address!', {}, SUCCESS);
-            return;
-          }
-          return res.json().then(jsonres => {
-            if (
-              JSON.stringify(jsonres).includes(
-                'withdrawal credential prefix is not a BLS prefix'
-              )
-            ) {
-              this.addValidatorIndex(this.selectedValidator.validator_index);
-              Toast(
-                'Withdrawal credentials are already set for this validator',
-                {},
-                WARNING
-              );
-            } else {
-              Toast(jsonres.error ? jsonres.error : jsonres.msg, {}, ERROR);
-            }
-          });
-        })
-        .finally(() => {
-          this.clear();
-        });
-    },
-    checkPhrase(val) {
-      const testObj = {};
-      let changed = false;
-      Object.values(val).forEach((item, idx) => {
-        if (!isEmpty(item)) testObj[idx + 1] = item.toLowerCase();
-        else changed = true;
+// data
+const step = ref(1);
+const executionAddress = ref('');
+const isValidAddress = ref(false);
+const selectedRecoveryType = ref('');
+const file = ref({});
+const password = ref('');
+const blsExecution = ref('');
+const phrase = ref({});
+const length = ref(24);
+const loadingButton = ref(false);
+const addressInput = ref(null);
+const jsonInput = ref(null);
+
+// computed
+const nextButton = computed(() => {
+  const obj = {
+    title: 'Next',
+    disabled: false,
+    fn: nextStep
+  };
+  if (step.value === 1) {
+    return Object.assign({}, obj, {
+      disabled: !isValidAddress.value && executionAddress.value !== '',
+      fn: nextStep
+    });
+  }
+  if (step.value === 3) {
+    if (isKeystore.value) {
+      return Object.assign({}, obj, {
+        disabled: loadingButton.value || !validPassword.value,
+        fn: validateUserInputs
       });
-      if (changed) this.phrase = testObj;
+    }
+
+    return Object.assign({}, obj, {
+      disabled: !isValidMnemonic.value,
+      fn: validateUserInputs
+    });
+  }
+  if (step.value === 4) {
+    return Object.assign({}, obj, {
+      title: 'Set withdrawal address',
+      disabled: loadingButton.value,
+      fn: setWithdrawalAddress
+    });
+  }
+
+  return obj;
+});
+const phraseToLength = computed(() => {
+  const locPhrase = Object.values(phrase.value);
+  if (locPhrase.length > length.value) locPhrase.length = length;
+  return locPhrase;
+});
+const isValidMnemonic = computed(() => {
+  return phraseToLength.value.length === length.value;
+});
+const parsedPhrase = computed(() => {
+  return phraseToLength.value.join(' ').toLowerCase();
+});
+/**
+ * @returns array
+ * returns button configs
+ */
+const buttons = computed(() => {
+  return [
+    /* Keystore Button */
+    {
+      label: 'Keystore',
+      icon: require('@/assets/images/icons/icon-keystore-file.svg'),
+      fn: () => {
+        userSelectFile();
+      }
     },
-    /**
-     * takes the keystore inputs
-     * and checks if valid
-     */
-    async validateUserInputs() {
-      this.loadingButton = true;
-      try {
-        this.validating = true;
-        const selectedNetwork =
-          this.network.type.name === 'ETH' ? 'mainnet' : 'goerli';
-        if (this.isKeystore) {
-          this.blsExecution = await keystoreToBLSExecution(
-            this.file,
-            this.password,
-            this.executionAddress,
-            this.selectedValidator.validator_index,
-            `0x${this.selectedValidator.decoded.withdrawal_credentials}`,
-            selectedNetwork
+    /* Mnemonic */
+    {
+      label: 'Mnemonic Phrase',
+      icon: require('@/assets/images/icons/icon-mnemonic.svg'),
+      fn: () => {
+        setType(SOFTWARE_WALLET_TYPES.MNEMONIC);
+      }
+    }
+  ];
+});
+/**
+ * @returns string
+ * returns currency name from current selected network
+ */
+const currencyName = computed(() => {
+  return network.type.currencyName;
+});
+/**
+ * @returns object
+ * Returns the left button config for
+ * mew popup
+ */
+const leftBtn = computed(() => {
+  return {
+    text: 'Cancel',
+    color: 'basic',
+    method: closeModal
+  };
+});
+/**
+ * @returns string
+ * Returns title based on current step
+ */
+const modalTitle = computed(() => {
+  return step.value === 1
+    ? 'Provide withdrawal address'
+    : step.value === 2
+    ? 'Choose recovery method'
+    : step.value === 3 && isKeystore.value
+    ? 'Enter Keystore Password'
+    : step.value === 3 && isMnemonic.value
+    ? 'Enter Mnemonic Phrase'
+    : step.value === 4
+    ? 'Verify details'
+    : '';
+});
+/**
+ * @returns boolean
+ * returns whether selected recovery is keystore
+ */
+const isKeystore = computed(() => {
+  return selectedRecoveryType.value === SOFTWARE_WALLET_TYPES.KEYSTORE;
+});
+/**
+ * @returns boolean
+ * returns whether selected recovery is keystore
+ */
+const isMnemonic = computed(() => {
+  return selectedRecoveryType.value === SOFTWARE_WALLET_TYPES.MNEMONIC;
+});
+const validPassword = computed(() => {
+  return password.value.length > 3;
+});
+
+// watch
+watch(
+  phrase,
+  newval => {
+    if (newval && !isEmpty(newval) && !isEmpty(newval[1])) {
+      checkPhrase(newval);
+      const splitVal = newval[1].split(' ');
+      if (splitVal.length === 12 || splitVal.length === 24) {
+        length.value = splitVal.length;
+        const newObj = {};
+        splitVal.forEach((item, idx) => {
+          newObj[idx + 1] = item.toLowerCase();
+        });
+        phrase.value = newObj;
+      }
+    }
+  },
+  { deep: true }
+);
+
+// methods
+const setWithdrawalAddress = () => {
+  const submitSubDomain = network.type.name === 'ETH' ? 'mainnet' : 'staging';
+  const submitEndpoint = `https://${submitSubDomain}.mewwallet.dev/v2/stake/upgrade`;
+  blsExecution.value.message.validator_index = parseInt(
+    blsExecution.value.message.validator_index
+  );
+  loadingButton.value = true;
+  fetch(submitEndpoint, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      signed: [blsExecution.value]
+    })
+  })
+    .then(res => {
+      if (res.ok) {
+        addValidatorIndex(props.selectedValidator.validator_index);
+        Toast('Successfully set withdrawal address!', {}, SUCCESS);
+        return;
+      }
+      return res.json().then(jsonres => {
+        if (
+          JSON.stringify(jsonres).includes(
+            'withdrawal credential prefix is not a BLS prefix'
+          )
+        ) {
+          addValidatorIndex(props.selectedValidator.validator_index);
+          Toast(
+            'Withdrawal credentials are already set for this validator',
+            {},
+            WARNING
           );
         } else {
-          this.blsExecution = await mnemonicToBLSExecution(
-            {
-              mnemonic: this.parsedPhrase
-            },
-            this.executionAddress,
-            this.selectedValidator.validator_index,
-            `0x${this.selectedValidator.decoded.withdrawal_credentials}`,
-            selectedNetwork
-          );
+          Toast(jsonres.error ? jsonres.error : jsonres.msg, {}, ERROR);
         }
-        this.loadingButton = false;
-        this.nextStep();
-      } catch (err) {
-        this.loadingButton = false;
-        Toast(err, {}, ERROR);
-        this.clear();
-      }
-    },
-    clear() {
-      if (this.$refs.addressInput) {
-        this.$refs.addressInput.clear();
-      }
-      this.step = 1;
-      this.executionAddress = this.address;
-      this.isValidAddress = false;
-      this.selectedRecoveryType = '';
-      this.file = {};
-      this.password = '';
-      this.blsExecution = '';
-      this.phrase = {};
-      this.loadingButton = false;
-      this.reset();
-    },
-    /**
-     * sets selected wallet
-     */
-    setType(type) {
-      this.selectedRecoveryType = type;
-      this.nextStep();
-    },
-    /**
-     * upload keystore
-     */
-    uploadFile(e) {
-      const reader = new FileReader();
-      reader.onloadend = evt => {
-        try {
-          this.file = JSON.parse(evt.target.result);
-          this.setType(SOFTWARE_WALLET_TYPES.KEYSTORE);
-        } catch (err) {
-          Toast(err.message, {}, ERROR);
-        }
-      };
-      reader.readAsBinaryString(e.target.files[0]);
-    },
-    userSelectFile() {
-      const jsonInput = this.$refs.jsonInput;
-      jsonInput.value = '';
-      jsonInput.click();
-    },
-    /**
-     * Increments stepper
-     */
-    nextStep() {
-      this.step += 1;
-    },
-    /**
-     * Increments stepper
-     */
-    back() {
-      const jsonInput = this.$refs.jsonInput;
-      switch (this.step) {
-        case 2:
-          this.selectedRecoveryType = '';
-          jsonInput.value = '';
-          break;
-        case 3:
-          this.password = '';
-          this.phrase = {};
-          this.file = {};
-          break;
-        default:
-          break;
-      }
-      this.step -= 1;
-    },
-    /**
-     * Sets address passed from addressbook
-     */
-    setAddress(addr, isValidAddress) {
-      this.executionAddress = addr;
-      this.isValidAddress = isValidAddress;
-    },
-    /**
-     * Close modal and clear selected validator
-     */
-    closeModal() {
-      this.clear();
+      });
+    })
+    .finally(() => {
+      clear();
+    });
+};
+const checkPhrase = val => {
+  const testObj = {};
+  let changed = false;
+  Object.values(val).forEach((item, idx) => {
+    if (!isEmpty(item)) testObj[idx + 1] = item.toLowerCase();
+    else changed = true;
+  });
+  if (changed) phrase.value = testObj;
+};
+/**
+ * takes the keystore inputs
+ * and checks if valid
+ */
+const validateUserInputs = async () => {
+  loadingButton.value = true;
+  try {
+    const selectedNetwork = network.type.name === 'ETH' ? 'mainnet' : 'goerli';
+    if (isKeystore.value) {
+      blsExecution.value = await keystoreToBLSExecution(
+        file.value,
+        password.value,
+        executionAddress.value,
+        props.selectedValidator.validator_index,
+        `0x${props.selectedValidator.decoded.withdrawal_credentials}`,
+        selectedNetwork
+      );
+    } else {
+      blsExecution.value = await mnemonicToBLSExecution(
+        {
+          mnemonic: parsedPhrase.value
+        },
+        executionAddress.value,
+        props.selectedValidator.validator_index,
+        `0x${props.selectedValidator.decoded.withdrawal_credentials}`,
+        selectedNetwork
+      );
     }
+    loadingButton.value = false;
+    nextStep();
+  } catch (err) {
+    loadingButton.value = false;
+    Toast(err, {}, ERROR);
+    clear();
   }
+};
+const clear = () => {
+  if (addressInput.value) {
+    addressInput.value.clear();
+  }
+  step.value = 1;
+  executionAddress.value = address;
+  isValidAddress.value = false;
+  selectedRecoveryType.value = '';
+  file.value = {};
+  password.value = '';
+  blsExecution.value = '';
+  phrase.value = {};
+  loadingButton.value = false;
+  props.reset();
+};
+/**
+ * sets selected wallet
+ */
+const setType = type => {
+  selectedRecoveryType.value = type;
+  nextStep();
+};
+/**
+ * upload keystore
+ */
+const uploadFile = e => {
+  const reader = new FileReader();
+  reader.onloadend = evt => {
+    try {
+      file.value = JSON.parse(evt.target.result);
+      setType(SOFTWARE_WALLET_TYPES.KEYSTORE);
+    } catch (err) {
+      Toast(err.message, {}, ERROR);
+    }
+  };
+  reader.readAsBinaryString(e.target.files[0]);
+};
+const userSelectFile = () => {
+  const jsonInput = jsonInput.value;
+  jsonInput.value = '';
+  jsonInput.click();
+};
+/**
+ * Increments stepper
+ */
+const nextStep = () => {
+  step.value += 1;
+};
+/**
+ * Increments stepper
+ */
+const back = () => {
+  const jsonInput = jsonInput.value;
+  switch (step.value) {
+    case 2:
+      selectedRecoveryType.value = '';
+      jsonInput.value = '';
+      break;
+    case 3:
+      password.value = '';
+      phrase.value = {};
+      file.value = {};
+      break;
+    default:
+      break;
+  }
+  step.value -= 1;
+};
+/**
+ * Sets address passed from addressbook
+ */
+const setAddress = (addr, isValidAddress) => {
+  executionAddress.value = addr;
+  isValidAddress.value = isValidAddress;
+};
+/**
+ * Close modal and clear selected validator
+ */
+const closeModal = () => {
+  clear();
 };
 </script>
 

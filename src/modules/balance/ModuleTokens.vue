@@ -106,232 +106,231 @@
     />
   </div>
 </template>
-<script>
-import { mapGetters, mapState } from 'vuex';
+<script setup>
+import { defineAsyncComponent, defineProps, ref, computed } from 'vue';
 import { uniqWith, isEqual } from 'lodash';
 import BigNumber from 'bignumber.js';
 
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { currencyToNumber } from '@/core/helpers/localization';
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { DASHBOARD } from '../analytics-opt-in/handlers/configs/events';
+import { useAmplitude } from '@/core/composables/amplitude';
+import {
+  wallet as useWalletStore,
+  custom as useCustomStore,
+  global as useGlobalStore,
+  external as useExternalStore
+} from '@/core/store/index.js';
+import { useRouter } from 'vue-router/composables';
 
-export default {
-  components: {
-    BalanceTable: () => import('./components/BalanceTable'),
-    BalanceEmptyBlock: () => import('./components/BalanceEmptyBlock'),
-    TokenAddCustom: () => import('./components/TokenAddCustom'),
-    TokenEditCustom: () => import('./components/TokenEditCustom'),
-    TokenRemoveCustom: () => import('./components/TokenRemoveCustom')
-  },
-  mixins: [handlerAnalytics],
-  props: {
-    dense: {
-      type: Boolean,
-      default: false
-    }
-  },
-  data() {
-    return {
-      openAddCustomToken: false,
-      openEditCustomToken: false,
-      openRemoveCustomToken: false,
-      tableHeaders: [
-        {
-          text: 'Token',
-          value: 'token',
-          sortable: false,
-          width: '20%'
-        },
-        {
-          text: 'Price',
-          value: 'price',
-          sortable: false,
-          width: '15%'
-        },
-        {
-          text: 'Market Cap',
-          value: 'cap',
-          sortable: false,
-          width: '20%'
-        },
-        {
-          text: '24H',
-          value: 'change',
-          sortable: false,
-          width: '20%'
-        },
-        {
-          text: 'Balance',
-          value: 'balance',
-          sortable: false,
-          width: '20%'
-        },
-        {
-          text: '',
-          value: 'callToAction',
-          sortable: false,
-          width: '10%'
-        }
-      ],
-      items: [
-        {
-          icon: 'mdi-plus',
-          title: 'Add Token',
-          action: this.toggleAddCustomToken
-        },
-        {
-          icon: 'mdi-pencil-outline',
-          title: 'Edit Token',
-          action: this.toggleEditCustomToken
-        }
-      ],
-      selectedToken: {}
-    };
-  },
-  computed: {
-    ...mapGetters('wallet', ['tokensList', 'web3']),
-    ...mapState('wallet', ['web3', 'loadingWalletInfo']),
-    ...mapGetters('custom', [
-      'customTokens',
-      'hasCustom',
-      'hiddenTokens',
-      'hasHidden'
-    ]),
-    ...mapGetters('global', [
-      'isEthNetwork',
-      'network',
-      'hasSwap',
-      'getFiatValue'
-    ]),
-    ...mapGetters('external', ['totalTokenFiatValue']),
-    loading() {
-      return this.loadingWalletInfo;
-    },
-    hasTokens() {
-      return (
-        !this.loading &&
-        (this.tokensData.length > 0 || this.hiddenTokens.length > 0)
-      );
-    },
-    emptyWallet() {
-      return (
-        !this.loading &&
-        this.tokensData.length === 0 &&
-        this.hiddenTokens.length === 0
-      );
-    },
-    /**
-     * @returns formatted custom token values and token list values
-     * displays custom tokens first and then token list
-     * will be sorted by usd balance for both
-     */
-    tokensData() {
-      if (!this.tokensList && !this.customTokens && !this.hiddenTokens)
-        return [];
-      const customTokens = this.customTokens.reduce((arr, item) => {
-        // Check if token is in hiddenTokens
-        const isHidden = this.hiddenTokens.find(token => {
-          return item.contract == token.address;
-        });
-        if (!isHidden) arr.push(this.formatValues(item));
-        return arr;
-      }, []);
-      const uniqueTokens = uniqWith(
-        this.tokensList.filter(t => {
-          return !t.isHidden;
-        }),
-        isEqual
-      );
-      const tokenList = uniqueTokens
-        .filter(item => {
-          if (item && item.balance && BigNumber(item.balance).gt(0))
-            return item;
-        })
-        .map(item => {
-          return this.formatValues(item);
-        });
-      tokenList.sort((a, b) => b.usdBalance - a.usdBalance);
-      return customTokens.concat(tokenList);
-    },
-    totalTokensValue() {
-      return this.getFiatValue(this.totalTokenFiatValue);
-    }
-  },
-  methods: {
-    /**
-     * @returns formatted values to display correctly on token table
-     */
-    formatValues(item) {
-      const newObj = {};
-      newObj.balance = [
-        item.balancef
-          ? item.balancef + ' ' + item.symbol
-          : '0' + ' ' + item.symbol,
-        item.usdBalancef ? this.getFiatValue(item.usdBalancef) : '0'
-      ];
-      newObj.usdBalance = item.usdBalance ? item.usdBalance : '0';
-      newObj.token = item.symbol;
-      newObj.cap = item.market_capf !== '0' ? item.market_capf : '';
-      newObj.change =
-        item.price_change_percentage_24hf &&
-        item.price_change_percentage_24hf !== '0'
-          ? item.price_change_percentage_24hf.replaceAll('%', '')
-          : '';
-      newObj.status = item.price_change_percentage_24h > 0 ? '+' : '-';
-      const priceUF = currencyToNumber(item.pricef);
-      newObj.price =
-        item.pricef && priceUF.toString() !== '0'
-          ? this.getFiatValue(item.pricef)
-          : '';
+const BalanceTable = defineAsyncComponent(() =>
+  import('./components/BalanceTable')
+);
+const BalanceEmptyBlock = defineAsyncComponent(() =>
+  import('./components/BalanceEmptyBlock')
+);
+const TokenAddCustom = defineAsyncComponent(() =>
+  import('./components/TokenAddCustom')
+);
+const TokenEditCustom = defineAsyncComponent(() =>
+  import('./components/TokenEditCustom')
+);
+const TokenRemoveCustom = defineAsyncComponent(() =>
+  import('./components/TokenRemoveCustom')
+);
 
-      // Use eth.svg icon for ETH
-      if (item.symbol == 'ETH') {
-        newObj.tokenImg = require('@/assets/images/networks/eth.svg');
-      } else {
-        newObj.tokenImg = item.img ? item.img : this.network.type.icon;
-      }
+// emits
+const emit = defineEmits(['trade']);
 
-      if (this.hasSwap) {
-        newObj.callToAction = [
-          {
-            title: 'Swap',
-            method: () => {
-              const obj = {
-                fromToken: item.contract,
-                amount: item.balancef
-              };
-              this.trackDashboardAmplitude(DASHBOARD.SWAP_MY_TOKENS_VALUE);
-              this.$router
-                .push({
-                  name: ROUTES_WALLET.SWAP.NAME,
-                  query: obj
-                })
-                .then(() => {
-                  this.$emit('trade');
-                });
-            },
-            btnStyle: 'outline',
-            colorTheme: 'greenPrimary'
-          }
-        ];
-      }
-      return newObj;
-    },
-    toggleAddCustomToken(val) {
-      this.openAddCustomToken = val ? val : !this.openAddCustomToken;
-    },
-    toggleRemoveCustomToken() {
-      this.openRemoveCustomToken = !this.openRemoveCustomToken;
-    },
-    openRemoveToken(token) {
-      this.selectedToken = token;
-      this.toggleRemoveCustomToken();
-    },
-    toggleEditCustomToken() {
-      this.openEditCustomToken = !this.openEditCustomToken;
-    }
+// props
+defineProps({
+  dense: {
+    type: Boolean,
+    default: false
   }
+});
+
+// injections/use
+const { trackDashboardAmplitude } = useAmplitude();
+const { tokensList, loadingWalletInfo } = useWalletStore();
+const { hiddenTokens } = useCustomStore();
+const { isEthNetwork, network, hasSwap, getFiatValue } = useGlobalStore();
+const { totalTokenFiatValue } = useExternalStore();
+const router = useRouter();
+
+// data
+const openAddCustomToken = ref(false);
+const openEditCustomToken = ref(false);
+const openRemoveCustomToken = ref(false);
+const tableHeaders = ref([
+  {
+    text: 'Token',
+    value: 'token',
+    sortable: false,
+    width: '20%'
+  },
+  {
+    text: 'Price',
+    value: 'price',
+    sortable: false,
+    width: '15%'
+  },
+  {
+    text: 'Market Cap',
+    value: 'cap',
+    sortable: false,
+    width: '20%'
+  },
+  {
+    text: '24H',
+    value: 'change',
+    sortable: false,
+    width: '20%'
+  },
+  {
+    text: 'Balance',
+    value: 'balance',
+    sortable: false,
+    width: '20%'
+  },
+  {
+    text: '',
+    value: 'callToAction',
+    sortable: false,
+    width: '10%'
+  }
+]);
+const items = ref([
+  {
+    icon: 'mdi-plus',
+    title: 'Add Token',
+    action: toggleAddCustomToken
+  },
+  {
+    icon: 'mdi-pencil-outline',
+    title: 'Edit Token',
+    action: toggleEditCustomToken
+  }
+]);
+const selectedToken = ref({});
+
+// computed
+const loading = computed(() => {
+  return loadingWalletInfo;
+});
+const hasTokens = computed(() => {
+  return (
+    !loading.value && (tokensData.value.length > 0 || hiddenTokens.length > 0)
+  );
+});
+const emptyWallet = computed(() => {
+  return (
+    !loading.value && tokensData.value.length === 0 && hiddenTokens.length === 0
+  );
+});
+/**
+ * @returns formatted custom token values and token list values
+ * displays custom tokens first and then token list
+ * will be sorted by usd balance for both
+ */
+const tokensData = computed(() => {
+  if (!tokensList && !customTokens && !hiddenTokens) return [];
+  const customTokens = customTokens.reduce((arr, item) => {
+    // Check if token is in hiddenTokens
+    const isHidden = hiddenTokens.find(token => {
+      return item.contract == token.address;
+    });
+    if (!isHidden) arr.push(formatValues(item));
+    return arr;
+  }, []);
+  const uniqueTokens = uniqWith(
+    tokensList.filter(t => {
+      return !t.isHidden;
+    }),
+    isEqual
+  );
+  const tokenList = uniqueTokens
+    .filter(item => {
+      if (item && item.balance && BigNumber(item.balance).gt(0)) return item;
+    })
+    .map(item => {
+      return formatValues(item);
+    });
+  tokenList.sort((a, b) => b.usdBalance - a.usdBalance);
+  return customTokens.concat(tokenList);
+});
+const totalTokensValue = computed(() => {
+  return getFiatValue(totalTokenFiatValue);
+});
+
+// methods
+/**
+ * @returns formatted values to display correctly on token table
+ */
+const formatValues = item => {
+  const newObj = {};
+  newObj.balance = [
+    item.balancef ? item.balancef + ' ' + item.symbol : '0' + ' ' + item.symbol,
+    item.usdBalancef ? getFiatValue(item.usdBalancef) : '0'
+  ];
+  newObj.usdBalance = item.usdBalance ? item.usdBalance : '0';
+  newObj.token = item.symbol;
+  newObj.cap = item.market_capf !== '0' ? item.market_capf : '';
+  newObj.change =
+    item.price_change_percentage_24hf &&
+    item.price_change_percentage_24hf !== '0'
+      ? item.price_change_percentage_24hf.replaceAll('%', '')
+      : '';
+  newObj.status = item.price_change_percentage_24h > 0 ? '+' : '-';
+  const priceUF = currencyToNumber(item.pricef);
+  newObj.price =
+    item.pricef && priceUF.toString() !== '0' ? getFiatValue(item.pricef) : '';
+
+  // Use eth.svg icon for ETH
+  if (item.symbol == 'ETH') {
+    newObj.tokenImg = require('@/assets/images/networks/eth.svg');
+  } else {
+    newObj.tokenImg = item.img ? item.img : network.type.icon;
+  }
+
+  if (hasSwap) {
+    newObj.callToAction = [
+      {
+        title: 'Swap',
+        method: () => {
+          const obj = {
+            fromToken: item.contract,
+            amount: item.balancef
+          };
+          trackDashboardAmplitude(DASHBOARD.SWAP_MY_TOKENS_VALUE);
+          router
+            .push({
+              name: ROUTES_WALLET.SWAP.NAME,
+              query: obj
+            })
+            .then(() => {
+              emit('trade');
+            });
+        },
+        btnStyle: 'outline',
+        colorTheme: 'greenPrimary'
+      }
+    ];
+  }
+  return newObj;
+};
+const toggleAddCustomToken = val => {
+  openAddCustomToken.value = val ? val : !openAddCustomToken.value;
+};
+const toggleRemoveCustomToken = () => {
+  openRemoveCustomToken.value = !openRemoveCustomToken.value;
+};
+const openRemoveToken = token => {
+  selectedToken.value = token;
+  toggleRemoveCustomToken();
+};
+const toggleEditCustomToken = () => {
+  openEditCustomToken.value = !openEditCustomToken.value;
 };
 </script>
 

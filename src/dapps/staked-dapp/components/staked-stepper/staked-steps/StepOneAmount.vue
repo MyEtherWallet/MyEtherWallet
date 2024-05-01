@@ -134,184 +134,184 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, computed, defineProps, defineEmits } from 'vue';
 import BigNumber from 'bignumber.js';
-import { mapState, mapGetters } from 'vuex';
 
 import {
   formatPercentageValue,
   formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
-import buyMore from '@/core/mixins/buyMore.mixin.js';
-import handlerAnalyticsMixin from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import {
+  global as useGlobalStore,
+  wallet as useWalletStore,
+  external as useExternalStore
+} from '@/core/store/index.js';
+import { useAmplitude } from '@/core/composables/amplitude';
+import { useBuySell } from '@/core/composables/buyMore';
 
-export default {
-  mixins: [buyMore, handlerAnalyticsMixin],
-  props: {
-    currentApr: {
-      type: String,
-      default: ''
-    }
-  },
-  data() {
-    return {
-      toolTipFee:
-        'In order to provide uninterrupted, reliable staking service and maintain your validators, Staked.us and MEW retain 13% of your rewards as a service fee. APR figures shown here already account for this fee. In addition, MEW will charge a one-time staking fee of 0.1 ETH for each 32 ETH you stake.',
-      amount: 0,
-      selectedItem: {}
-    };
-  },
-  computed: {
-    ...mapState('wallet', ['web3']),
-    ...mapGetters('wallet', ['balanceInETH']),
-    ...mapGetters('external', ['fiatValue']),
-    ...mapGetters('global', ['network', 'getFiatValue']),
-    stakingFee() {
-      const val = BigNumber(this.amount).div(32);
-      return BigNumber(val).times(0.1).toFixed();
-    },
-    networkImg() {
-      return this.network.type.icon;
-    },
-    buttonText() {
-      return !this.hasEnoughBalance
-        ? 'Not enough funds'
-        : 'Next: Withdrawal Address';
-    },
-    /**
-     * Current APR Formatted
-     * @returns string
-     */
-    currentAprFormatted() {
-      if (this.currentApr > 0) {
-        return formatPercentageValue(this.currentApr).value;
-      }
-      return '--';
-    },
-    /**
-     * @returns array
-     * Mew select dropdown items
-     */
-    selectItems() {
-      const items = [];
-      for (let i = 1; i <= 4000; i++) {
-        if (i % 32 === 0) {
-          items.push({
-            name: i + ' ETH',
-            value: i + '', //change to string to make mew select filter work
-            img: this.networkImg,
-            price: this.getFiatValue(new BigNumber(i).times(this.fiatValue))
-          });
-        }
-      }
-      return items;
-    },
-    /**
-     * @returns array
-     * Used to show error messages
-     * Validates amount
-     */
-    errorMessages() {
-      if (!this.hasEnoughBalance) {
-        return 'Not enough funds. Staking requires 32 ETH per validator.';
-      }
-      return null;
-    },
-    /**
-     * @returns boolean
-     * Checks to make sure there is enough ETH balance to stake
-     */
-    hasEnoughBalance() {
-      return BigNumber(this.balanceInETH).gte(this.amount);
-    },
-    /**
-     * @returns array
-     * Calculates the deposit growth forecast
-     */
-    depositForecast() {
-      /**
-       * 1 year Forecast
-       */
-      const oneYearEarnings = this.getEarnings(12);
-      /**
-       * 2 years forecast
-       */
-      const twoYearEarnings = this.getEarnings(24);
-      /**
-       * 3 years forecast
-       */
-      const threeYearEarnings = this.getEarnings(36);
-      return [
-        {
-          duration: 'In 1 year',
-          balanceFiat: this.getFiatValue(
-            new BigNumber(this.amount)
-              .plus(oneYearEarnings)
-              .times(this.fiatValue)
-          ),
-          balanceETH: formatFloatingPointValue(
-            new BigNumber(this.amount).plus(oneYearEarnings)
-          ).value,
-          earningsETH: formatFloatingPointValue(oneYearEarnings).value
-        },
-        {
-          duration: 'In 2 years',
-          balanceFiat: this.getFiatValue(
-            new BigNumber(this.amount)
-              .plus(twoYearEarnings)
-              .times(this.fiatValue)
-          ),
-          balanceETH: formatFloatingPointValue(
-            new BigNumber(this.amount).plus(twoYearEarnings)
-          ).value,
-          earningsETH: formatFloatingPointValue(twoYearEarnings).value
-        },
-        {
-          duration: 'In 3 years',
-          balanceFiat: this.getFiatValue(
-            new BigNumber(this.amount)
-              .plus(threeYearEarnings)
-              .times(this.fiatValue)
-          ),
-          balanceETH: formatFloatingPointValue(
-            new BigNumber(this.amount).plus(threeYearEarnings)
-          ).value,
-          earningsETH: formatFloatingPointValue(threeYearEarnings).value
-        }
-      ];
-    }
-  },
-  methods: {
-    /**
-     * get earning based on months
-     */
-    getEarnings(months) {
-      const apr = new BigNumber(this.currentApr)
-        .dividedBy(100) // 12*100
-        .times(months / 12)
-        .toFixed();
-      const yieldFees = BigNumber(apr).times(0.13);
-      const stakeYields = new BigNumber(this.amount).times(
-        BigNumber(apr).minus(yieldFees)
-      );
+// emits
+const emit = defineEmits(['onContinue']);
+// injections/use
+const { trackDapp } = useAmplitude();
+const { openBuySell } = useBuySell();
+const { network, getFiatValue } = useGlobalStore();
+const { balanceInETH } = useWalletStore();
+const { fiatValue } = useExternalStore();
 
-      return stakeYields.toFixed();
-    },
-    /**
-     * Emits onContinue to go to next step
-     */
-    onContinue() {
-      this.trackDapp('StakedSetAmount');
-      this.$emit('onContinue', { onStep: 1, amount: this.amount });
-    },
-    /**
-     * Sets the amount
-     * change from str -> integer to keep amount as integer
-     */
-    setAmount(item) {
-      this.amount = parseInt(item.value);
+// props
+const props = defineProps({
+  currentApr: {
+    type: String,
+    default: ''
+  }
+});
+
+// data
+const toolTipFee = ref(
+  'In order to provide uninterrupted, reliable staking service and maintain your validators, Staked.us and MEW retain 13% of your rewards as a service fee. APR figures shown here already account for this fee. In addition, MEW will charge a one-time staking fee of 0.1 ETH for each 32 ETH you stake.'
+);
+const amount = ref(0);
+const selectedItem = ref({});
+
+// computed
+const stakingFee = computed(() => {
+  const val = BigNumber(amount).div(32);
+  return BigNumber(val).times(0.1).toFixed();
+});
+const networkImg = computed(() => {
+  return network.type.icon;
+});
+const buttonText = computed(() => {
+  return !hasEnoughBalance.value
+    ? 'Not enough funds'
+    : 'Next: Withdrawal Address';
+});
+/**
+ * Current APR Formatted
+ * @returns string
+ */
+const currentAprFormatted = computed(() => {
+  if (props.currentApr > 0) {
+    return formatPercentageValue(props.currentApr).value;
+  }
+  return '--';
+});
+/**
+ * @returns array
+ * Mew select dropdown items
+ */
+const selectItems = computed(() => {
+  const items = [];
+  for (let i = 1; i <= 4000; i++) {
+    if (i % 32 === 0) {
+      items.push({
+        name: i + ' ETH',
+        value: i + '', //change to string to make mew select filter work
+        img: networkImg,
+        price: getFiatValue(new BigNumber(i).times(fiatValue))
+      });
     }
   }
+  return items;
+});
+/**
+ * @returns array
+ * Used to show error messages
+ * Validates amount
+ */
+const errorMessages = computed(() => {
+  if (!hasEnoughBalance.value) {
+    return 'Not enough funds. Staking requires 32 ETH per validator.';
+  }
+  return null;
+});
+/**
+ * @returns boolean
+ * Checks to make sure there is enough ETH balance to stake
+ */
+const hasEnoughBalance = computed(() => {
+  return BigNumber(balanceInETH).gte(amount.value);
+});
+/**
+ * @returns array
+ * Calculates the deposit growth forecast
+ */
+const depositForecast = computed(() => {
+  /**
+   * 1 year Forecast
+   */
+  const oneYearEarnings = getEarnings(12);
+  /**
+   * 2 years forecast
+   */
+  const twoYearEarnings = getEarnings(24);
+  /**
+   * 3 years forecast
+   */
+  const threeYearEarnings = getEarnings(36);
+  return [
+    {
+      duration: 'In 1 year',
+      balanceFiat: getFiatValue(
+        new BigNumber(amount.value).plus(oneYearEarnings).times(fiatValue)
+      ),
+      balanceETH: formatFloatingPointValue(
+        new BigNumber(amount.value).plus(oneYearEarnings)
+      ).value,
+      earningsETH: formatFloatingPointValue(oneYearEarnings).value
+    },
+    {
+      duration: 'In 2 years',
+      balanceFiat: getFiatValue(
+        new BigNumber(amount.value).plus(twoYearEarnings).times(fiatValue)
+      ),
+      balanceETH: formatFloatingPointValue(
+        new BigNumber(amount.value).plus(twoYearEarnings)
+      ).value,
+      earningsETH: formatFloatingPointValue(twoYearEarnings).value
+    },
+    {
+      duration: 'In 3 years',
+      balanceFiat: getFiatValue(
+        new BigNumber(amount.value).plus(threeYearEarnings).times(fiatValue)
+      ),
+      balanceETH: formatFloatingPointValue(
+        new BigNumber(amount.value).plus(threeYearEarnings)
+      ).value,
+      earningsETH: formatFloatingPointValue(threeYearEarnings).value
+    }
+  ];
+});
+// methods
+/**
+ * get earning based on months
+ */
+const getEarnings = months => {
+  const apr = new BigNumber(props.currentApr)
+    .dividedBy(100) // 12*100
+    .times(months / 12)
+    .toFixed();
+  const yieldFees = BigNumber(apr).times(0.13);
+  const stakeYields = new BigNumber(amount.value).times(
+    BigNumber(apr).minus(yieldFees)
+  );
+
+  return stakeYields.toFixed();
+};
+/**
+ * Emits onContinue to go to next step
+ */
+const onContinue = () => {
+  trackDapp('StakedSetAmount');
+  emit('onContinue', { onStep: 1, amount: amount.value });
+};
+/**
+ * Sets the amount
+ * change from str -> integer to keep amount as integer
+ */
+const setAmount = item => {
+  amount.value = parseInt(item.value);
 };
 </script>
 

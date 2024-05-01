@@ -49,8 +49,8 @@
   </mew-overlay>
 </template>
 
-<script>
-import { mapActions } from 'vuex';
+<script setup>
+import { defineProps } from 'vue';
 
 import { Toast, SENTRY } from '@/modules/toast/handler/handlerToast';
 import {
@@ -59,88 +59,82 @@ import {
 } from '@/modules/access-wallet/hybrid/handlers';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { ACCESS_WALLET } from '@/modules/analytics-opt-in/handlers/configs/events';
+import { useAmplitude } from '@/core/composables/amplitude';
+import { wallet as useWalletStore } from '@/core/store/index.js';
+import { useRouter } from 'vue-router/composables';
 
-export default {
-  name: 'ModuleAccessWalletMobile',
-  mixins: [handlerAnalytics],
-  props: {
-    open: {
-      type: Boolean,
-      default: false
-    },
-    close: {
-      type: Function,
-      default: () => {}
+// injections/use
+const { trackAccessWalletAmplitude } = useAmplitude();
+const { setWallet } = useWalletStore();
+const router = useRouter();
+
+// props
+defineProps({
+  open: {
+    type: Boolean,
+    default: false
+  },
+  close: {
+    type: Function,
+    default: () => {}
+  }
+});
+
+// data
+const buttons = [
+  {
+    label: 'WalletConnect',
+    icon: require('@/assets/images/icons/icon-wallet-connect.svg'),
+    fn: () => {
+      openWalletConnect();
     }
   },
-  data() {
-    return {
-      buttons: [
-        {
-          label: 'WalletConnect',
-          icon: require('@/assets/images/icons/icon-wallet-connect.svg'),
-          fn: () => {
-            this.openWalletConnect();
-          }
-        },
-        {
-          label: 'WalletLink',
-          icon: require('@/assets/images/icons/icon-wallet-link.png'),
-          fn: () => {
-            this.openWalletLink();
-          }
-        }
-      ]
-    };
-  },
-  methods: {
-    ...mapActions('wallet', ['setWallet']),
-    openWalletConnect() {
-      try {
-        this.trackAccessWalletAmplitude(ACCESS_WALLET.WALLET_CONNECT_QR_SHOWN);
-        WalletConnectWallet()
-          .then(_newWallet => {
-            this.setWallet([_newWallet]).then(() => {
-              this.trackAccessWalletAmplitude(
-                ACCESS_WALLET.WALLET_CONNECT_QR_SUCCESSFUL
-              );
-              this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
-            });
-          })
-          .catch(e => {
-            this.trackAccessWalletAmplitude(
-              ACCESS_WALLET.WALLET_CONNECT_QR_FAILED
-            );
-            WalletConnectWallet.errorHandler(e);
-          });
-      } catch (e) {
-        Toast(e.message, {}, SENTRY);
-      }
-    },
-    openWalletLink() {
-      try {
-        this.trackAccessWalletAmplitude(ACCESS_WALLET.WALLET_LINK_QR_SHOWN);
-        WalletLinkWallet()
-          .then(_newWallet => {
-            this.setWallet([_newWallet]).then(() => {
-              this.trackAccessWalletAmplitude(
-                ACCESS_WALLET.WALLET_LINK_QR_SUCCESSFUL
-              );
-              this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
-            });
-          })
-          .catch(e => {
-            this.trackAccessWalletAmplitude(
-              ACCESS_WALLET.WALLET_LINK_QR_FAILED
-            );
-            WalletLinkWallet.errorHandler(e);
-          });
-      } catch (e) {
-        Toast(e.message, {}, SENTRY);
-      }
+  {
+    label: 'WalletLink',
+    icon: require('@/assets/images/icons/icon-wallet-link.png'),
+    fn: () => {
+      openWalletLink();
     }
+  }
+];
+// methods
+const openWalletConnect = () => {
+  try {
+    trackAccessWalletAmplitude(ACCESS_WALLET.WALLET_CONNECT_QR_SHOWN);
+    WalletConnectWallet()
+      .then(_newWallet => {
+        setWallet([_newWallet]).then(() => {
+          trackAccessWalletAmplitude(
+            ACCESS_WALLET.WALLET_CONNECT_QR_SUCCESSFUL
+          );
+          router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
+        });
+      })
+      .catch(e => {
+        trackAccessWalletAmplitude(ACCESS_WALLET.WALLET_CONNECT_QR_FAILED);
+        WalletConnectWallet.errorHandler(e);
+      });
+  } catch (e) {
+    Toast(e.message, {}, SENTRY);
+  }
+};
+const openWalletLink = () => {
+  try {
+    trackAccessWalletAmplitude(ACCESS_WALLET.WALLET_LINK_QR_SHOWN);
+    WalletLinkWallet()
+      .then(_newWallet => {
+        setWallet([_newWallet]).then(() => {
+          trackAccessWalletAmplitude(ACCESS_WALLET.WALLET_LINK_QR_SUCCESSFUL);
+          router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
+        });
+      })
+      .catch(e => {
+        trackAccessWalletAmplitude(ACCESS_WALLET.WALLET_LINK_QR_FAILED);
+        WalletLinkWallet.errorHandler(e);
+      });
+  } catch (e) {
+    Toast(e.message, {}, SENTRY);
   }
 };
 </script>

@@ -184,17 +184,18 @@
   </div>
 </template>
 <script>
+import { mapGetters, mapState } from 'vuex';
+import { fromWei, toChecksumAddress } from 'web3-utils';
+import { isEmpty, isEqual } from 'underscore';
+import ENS from '@ensdomains/ensjs';
+import Web3 from 'web3';
+import { isValidAddress } from 'ethereumjs-util';
+
 import NetworkSwitch from '@/modules/network/components/NetworkSwitch.vue';
 import AccessWalletDerivationPath from '@/modules/access-wallet/hardware/components/AccessWalletDerivationPath.vue';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { getEthBalance } from '@/apollo/queries/wallets/wallets.graphql';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
-import { fromWei, toChecksumAddress } from 'web3-utils';
-import { mapGetters, mapState } from 'vuex';
-import { isEmpty, isEqual } from 'underscore';
-import ENS from '@ensdomains/ensjs';
-import Web3 from 'web3';
-import { isValidAddress } from 'ethereumjs-util';
 
 const MAX_ADDRESSES = 5;
 

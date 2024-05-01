@@ -221,9 +221,17 @@
   </mew-overlay>
 </template>
 
-<script>
+<script setup>
+import {
+  defineAsyncComponent,
+  defineProps,
+  ref,
+  computed,
+  watch,
+  onMounted,
+  onBeforeUnmount
+} from 'vue';
 import { isEmpty, isObject } from 'lodash';
-import { mapActions, mapGetters, mapState } from 'vuex';
 
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 
@@ -235,726 +243,654 @@ import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { EventBus } from '@/core/plugins/eventBus.js';
 import { ethereum as ethereumPath } from '@/modules/access-wallet/hardware/handlers/configs/configPaths.js';
 
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { ACCESS_WALLET } from '@/modules/analytics-opt-in/handlers/configs/events';
+import { useAmplitude } from '@/core/composables/amplitude.js';
+import { wallet as useWalletStore } from '@/core/store/index.js';
+import { useRouter } from 'vue-router/composables.js';
 
-export default {
-  name: 'HardwareAccessOverlay',
-  components: {
-    AccessWalletKeepkey: () =>
-      import('./hardware/components/AccessWalletKeepkey'),
-    AccessWalletCoolWallet: () =>
-      import('./hardware/components/AccessWalletCoolWallet'),
-    AccessWalletTrezor: () =>
-      import('./hardware/components/AccessWalletTrezor.vue'),
-    AccessWalletLedger: () =>
-      import('./hardware/components/AccessWalletLedger.vue'),
-    AccessWalletAddressNetwork: () =>
-      import(
-        '@/modules/access-wallet/common/components/AccessWalletAddressNetwork'
-      ),
-    AccessWalletBitbox: () => import('./hardware/components/AccessWalletBitbox')
+const AccessWalletKeepkey = defineAsyncComponent(() =>
+  import('./hardware/components/AccessWalletKeepkey')
+);
+const AccessWalletCoolWallet = defineAsyncComponent(() =>
+  import('./hardware/components/AccessWalletCoolWallet')
+);
+const AccessWalletTrezor = defineAsyncComponent(() =>
+  import('./hardware/components/AccessWalletTrezor.vue')
+);
+const AccessWalletLedger = defineAsyncComponent(() =>
+  import('./hardware/components/AccessWalletLedger.vue')
+);
+const AccessWalletBitbox = defineAsyncComponent(() =>
+  import('./hardware/components/AccessWalletBitbox')
+);
+const AccessWalletAddressNetwork = defineAsyncComponent(() =>
+  import('@/modules/access-wallet/common/components/AccessWalletAddressNetwork')
+);
+
+// injections/use
+const { trackAccessWalletAmplitude } = useAmplitude();
+const { identifier, ledgerBLE, setWallet, setLedgerBluetooth } =
+  useWalletStore();
+const router = useRouter();
+
+// props
+const props = defineProps({
+  open: {
+    type: Boolean,
+    default: false
   },
-  filters: {
-    concatAddress(val) {
-      // should probably be moved globablly
-      return `${val.substring(0, 11)}...${val.substring(
-        val.length - 4,
-        val.length
-      )}`;
-    }
+  close: {
+    type: Function,
+    default: () => {}
   },
-  mixins: [handlerAnalytics],
-  props: {
-    open: {
-      type: Boolean,
-      default: false
-    },
-    close: {
-      type: Function,
-      default: () => {}
-    },
-    switchAddress: {
-      type: Boolean,
-      default: false
-    }
-  },
-  data() {
-    return {
-      enableBluetooth: [
-        {
-          title: 'Chrome',
-          direction: [
-            {
-              title: 'Enable experimental flags',
-              steps: [
-                'chrome://flags/#enable-web-bluetooth',
-                'chrome://flags/#enable-web-bluetooth-new-permissions-backend',
-                'chrome://flags/#enable-experimental-web-platform-features'
-              ]
-            },
-            {
-              title: 'Official browser directions',
-              steps: [
-                {
-                  link: 'https://support.google.com/chrome/answer/6362090?hl=en&co=GENIE.Platform%3DDesktop'
-                }
-              ]
-            }
-          ]
-        },
-        {
-          title: 'Opera',
-          direction: [
-            {
-              title: 'Enable experimental flags',
-              steps: [
-                'opera://flags/#enable-web-bluetooth-new-permissions-backend',
-                'opera://flags/#enable-experimental-web-platform-features'
-              ]
-            }
-          ]
-        },
-        {
-          title: 'Edge',
-          direction: [
-            {
-              title: 'Official browser directions',
-              steps: [
-                {
-                  link: 'https://support.microsoft.com/en-us/microsoft-edge/connect-a-website-to-a-bluetooth-or-usb-device-in-microsoft-edge-107ba8a4-60aa-0fd3-2d26-afd63d0964f4'
-                }
-              ]
-            }
-          ]
-        }
-      ],
-      bluetooth: false,
-      bluetoothModal: false,
-      supportedBrowsers: ['Chrome', 'Edge', 'Opera'],
-      ledgerApps: appPaths.map(item => {
-        return {
-          name: item.network.name_long,
-          value: item.network.name,
-          img: item.network.icon
-        };
-      }),
-      wallets: wallets,
-      step: 1,
-      hwWalletInstance: {},
-      ledgerApp: {},
-      selectedPath: {
-        name: ethereumPath.label,
-        value: ethereumPath.path
+  switchAddress: {
+    type: Boolean,
+    default: false
+  }
+});
+
+// data
+const enableBluetooth = [
+  {
+    title: 'Chrome',
+    direction: [
+      {
+        title: 'Enable experimental flags',
+        steps: [
+          'chrome://flags/#enable-web-bluetooth',
+          'chrome://flags/#enable-web-bluetooth-new-permissions-backend',
+          'chrome://flags/#enable-experimental-web-platform-features'
+        ]
       },
-      walletType: '',
-      selectedLedgerApp: {},
-      password: '',
-      loaded: false,
-      ledgerConnected: false,
-      callback: () => {},
-      unwatch: () => {},
-      passwordError: false,
-      transport: null,
-      address: '',
-      ledgerBluetooth: false
-    };
+      {
+        title: 'Official browser directions',
+        steps: [
+          {
+            link: 'https://support.google.com/chrome/answer/6362090?hl=en&co=GENIE.Platform%3DDesktop'
+          }
+        ]
+      }
+    ]
   },
-  computed: {
-    ...mapGetters('global', ['Networks', 'network']),
-    ...mapState('wallet', ['identifier', 'ledgerBLE', 'ledgerApp']),
-    buttons() {
-      return [
-        {
-          label: 'Ledger',
-          icon: require('@/assets/images/icons/hardware-wallets/Ledger-Nano-X-Label-Icon.svg'),
-          type: WALLET_TYPES.LEDGER,
-          fn: () => {
-            this.trackAccessWalletAmplitude(ACCESS_WALLET.HW_LEDGER_CLICKED);
-          }
-        },
-        {
-          label: 'Trezor',
-          icon: require('@/assets/images/icons/hardware-wallets/icon-trezor.svg'),
-          type: WALLET_TYPES.TREZOR,
-          fn: () => {
-            this.trackAccessWalletAmplitude(ACCESS_WALLET.HW_TREZOR_CLICKED);
-          }
-        },
-        {
-          label: 'KeepKey',
-          icon: require('@/assets/images/icons/hardware-wallets/icon-keepkey.svg'),
-          type: WALLET_TYPES.KEEPKEY,
-          fn: () => {
-            this.trackAccessWalletAmplitude(ACCESS_WALLET.HW_KEEPKEY_CLICKED);
-          }
-        },
-        {
-          label: 'BitBox02',
-          icon: require('@/assets/images/icons/hardware-wallets/icon-bitbox.svg'),
-          type: WALLET_TYPES.BITBOX2,
-          fn: () => {
-            this.trackAccessWalletAmplitude(ACCESS_WALLET.HW_BITBOX02_CLICKED);
-          }
-        },
-        {
-          label: 'CoolWallet',
-          icon: require('@/assets/images/icons/hardware-wallets/icon-coolwallet.svg'),
-          type: WALLET_TYPES.COOL_WALLET,
-          fn: () => {
-            this.trackAccessWalletAmplitude(
-              ACCESS_WALLET.HW_COOL_WALLET_CLICKED
-            );
-          },
-          bluetooth: true
-        }
-      ];
-    },
-    walletInitialized() {
-      return this.wallets[this.walletType]
-        ? this.wallets[this.walletType]?.when
-        : 1;
-    },
-    /**
-     * Returns the correct network icon
-     */
-    icon() {
-      if (this.ledgerApp !== null) {
-        const found = appPaths.find(item => {
-          return item.network.name_long === this.ledgerApp.name;
-        });
-        return found ? found.network.icon : appPaths[0].network.icon;
+  {
+    title: 'Opera',
+    direction: [
+      {
+        title: 'Enable experimental flags',
+        steps: [
+          'opera://flags/#enable-web-bluetooth-new-permissions-backend',
+          'opera://flags/#enable-experimental-web-platform-features'
+        ]
       }
-      return appPaths[0].network.icon;
-    },
-    /**
-     * Footer links to display beneath container
-     * TODO: get link urls from Russ
-     */
-    footerLink() {
-      // Commented for now as the new articles aren't available yet
-      // if (this.onKeepkey) {
-      //   return {
-      //     title: 'Using a KeepKey Hardware wallet with MEW',
-      //     url: 'https://kb.myetherwallet.com/en/hardware-wallets/using-keepkey-with-mew/'
-      //   };
-      // } else if (this.onCoolWalletS) {
-      //   return {
-      //     title: 'Using a CoolWallet S Hardware Wallet with MEW',
-      //     url: 'https://kb.myetherwallet.com/en/hardware-wallets/using-coolwallet-with-mew/'
-      //   };
-      // }
-      // if (this.onLedger) {
-      //   return {
-      //     title: 'Using a Ledger Hardware wallet with MEW',
-      //     url: 'https://kb.myetherwallet.com/en/hardware-wallets/using-ledger-with-mew/'
-      //   };
-      // }
-      // if (this.onTrezor) {
-      //   return {
-      //     title: 'Using a Trezor Hardware wallet with MEW',
-      //     url: 'https://kb.myetherwallet.com/en/hardware-wallets/using-trezor-with-mew/'
-      //   };
-      // }
-      return {
-        title: 'Hardware Wallets',
-        url: 'https://help.myetherwallet.com/en/collections/3043244-access-wallet'
-      };
-    },
-    showBack() {
-      if (this.switchAddress) {
-        return this.step === 2;
-      }
-
-      return this.step === 1;
-    },
-    /**
-     * On Bitbox2
-     */
-    onBitbox2() {
-      if (this.walletType === WALLET_TYPES.BITBOX2) {
-        this.trackAccessWalletAmplitude(ACCESS_WALLET.HW_BITBOX02_SHOWN);
-        return true;
-      }
-      return false;
-    },
-    /**
-     * On Ledger
-     */
-    onLedger() {
-      if (this.walletType === WALLET_TYPES.LEDGER) {
-        this.trackAccessWalletAmplitude(ACCESS_WALLET.HW_LEDGER_SHOWN);
-        return true;
-      }
-      return false;
-    },
-    /**
-     * On Ledger X
-     */
-    onLedgerX() {
-      if (this.walletType === WALLET_TYPES.LEDGER) {
-        this.trackAccessWalletAmplitude(ACCESS_WALLET.HW_LEDGER_SHOWN);
-        return true;
-      }
-      return false;
-    },
-    /**
-     * On CoolWallet
-     */
-    onCoolWallet() {
-      if (
-        this.walletType === WALLET_TYPES.COOL_WALLET &&
-        isEmpty(this.hwWalletInstance)
-      ) {
-        this.trackAccessWalletAmplitude(ACCESS_WALLET.HW_COOL_WALLET_SHOWN);
-        return true;
-      }
-      return false;
-    },
-    /**
-     * On Keepkey
-     */
-    onKeepkey() {
-      if (this.walletType === WALLET_TYPES.KEEPKEY) {
-        this.trackAccessWalletAmplitude(ACCESS_WALLET.HW_KEEPKEY_SHOWN);
-        return true;
-      }
-      return false;
-    },
-    /**
-     * On Trezor
-     */
-    onTrezor() {
-      if (this.walletType === WALLET_TYPES.TREZOR) {
-        this.trackAccessWalletAmplitude(ACCESS_WALLET.HW_TREZOR_SHOWN);
-        return true;
-      }
-      return false;
-    },
-    /**
-     * On Password step
-     */
-    onPassword() {
-      return (
-        this.walletType !== '' &&
-        this.wallets[this.walletType] &&
-        this.wallets[this.walletType].requiresPassword &&
-        (this.step === 3 || this.step === 1)
-      );
-    },
-    /**
-     * On Paths step
-     */
-    paths() {
-      const newArr = [];
-      if (this.walletType === WALLET_TYPES.LEDGER) {
-        if (this.ledgerApp !== null) {
-          const found = appPaths.find(item => {
-            return item.network.name_long === this.ledgerApp.name;
-          });
-          const path = found ? found.paths : appPaths[0].paths;
-          return path.map(item => {
-            return {
-              name: item.label,
-              value: item.path
-            };
-          });
-        }
-
-        appPaths[0].paths.forEach(item => {
-          newArr.push({
-            name: item.label,
-            value: item.path
-          });
-        });
-      }
-      if (
-        this.wallets[this.walletType] &&
-        this.wallets[this.walletType].hasPaths
-      ) {
-        allPaths[this.walletType].forEach(item => {
-          newArr.push({
-            name: item.label,
-            value: item.path
-          });
-        });
-      }
-      return newArr;
-    },
-    /**
-     * Overlay title
-     */
-    title() {
-      if (this.switchAddress) return 'Switch Address';
-      if (this.step > this.walletInitialized) {
-        return 'Select Network and Address';
-      } else if (this.step === 1) {
-        return 'Select a hardware wallet';
-      }
-      if (this.onBitbox2) return this.bitbox2Titles;
-      return this.walletType
-        ? this.wallets[this.walletType].title
-        : 'Select a hardware wallet';
-    },
-    bitBox2NotPaired() {
-      return (
-        isEmpty(this.hwWalletInstance) ||
-        (!isEmpty(this.hwWalletInstance) && !this.hwWalletInstance?.status)
-      );
-    },
-    bitBox2Connected() {
-      return (
-        !this.bitBox2NotPaired && this.hwWalletInstance?.status === 'connected'
-      );
-    },
-    bitBox2Unpaired() {
-      return (
-        !this.bitBox2NotPaired && this.hwWalletInstance?.status === 'unpaired'
-      );
-    },
-    bitBox2Initialized() {
-      return (
-        !this.bitBox2NotPaired &&
-        this.hwWalletInstance?.status === 'initialized'
-      );
-    },
-    bitBox2PairingCode() {
-      return !this.bitBox2NotPaired ? this.hwWalletInstance?.pairingCode : '';
-    },
-    bitBox2Confirmed() {
-      return !this.bitBox2NotPaired
-        ? this.hwWalletInstance?.pairingConfirmed
-        : false;
-    },
-    bitbox2Titles() {
-      if (this.bitBox2Connected) return 'Enter BitBox02 password';
-      if (this.bitBox2Unpaired) return 'Confirm pairing code';
-      if (this.bitBox2Initialized)
-        return 'BitBox02 succesfully initialized. Loading wallet';
-      return this.walletType ? this.wallets[this.walletType].title : '';
-    }
+    ]
   },
-  watch: {
-    selectedPath: {
-      handler: function () {
-        /**
-         * only call this when hwWalletInstance is not empty (ledger will error out)
-         * and when walletType has been selected (closing modal will error out)
-         */
-        if (this.walletType && !isEmpty(this.hwWalletInstance)) {
-          this.hwWalletInstance = {};
-          this[`${this.walletType}Unlock`]();
-        }
+  {
+    title: 'Edge',
+    direction: [
+      {
+        title: 'Official browser directions',
+        steps: [
+          {
+            link: 'https://support.microsoft.com/en-us/microsoft-edge/connect-a-website-to-a-bluetooth-or-usb-device-in-microsoft-edge-107ba8a4-60aa-0fd3-2d26-afd63d0964f4'
+          }
+        ]
+      }
+    ]
+  }
+];
+const ledgerApps = appPaths.map(item => {
+  return {
+    name: item.network.name_long,
+    value: item.network.name,
+    img: item.network.icon
+  };
+});
+const supportedBrowsers = ['Chrome', 'Edge', 'Opera'];
+const bluetooth = ref(false);
+const bluetoothModal = ref(false);
+const step = ref(1);
+const hwWalletInstance = ref({});
+const ledgerApp = ref({});
+const selectedPath = ref({
+  name: ethereumPath.label,
+  value: ethereumPath.path
+});
+const walletType = ref('');
+const password = ref('');
+const loaded = ref(false);
+const ledgerConnected = ref(false);
+const passwordError = ref(false);
+const ledgerBluetooth = ref(false);
+
+// computed
+const buttons = computed(() => {
+  return [
+    {
+      label: 'Ledger',
+      icon: require('@/assets/images/icons/hardware-wallets/Ledger-Nano-X-Label-Icon.svg'),
+      type: WALLET_TYPES.LEDGER,
+      fn: () => {
+        trackAccessWalletAmplitude(ACCESS_WALLET.HW_LEDGER_CLICKED);
+      }
+    },
+    {
+      label: 'Trezor',
+      icon: require('@/assets/images/icons/hardware-wallets/icon-trezor.svg'),
+      type: WALLET_TYPES.TREZOR,
+      fn: () => {
+        trackAccessWalletAmplitude(ACCESS_WALLET.HW_TREZOR_CLICKED);
+      }
+    },
+    {
+      label: 'KeepKey',
+      icon: require('@/assets/images/icons/hardware-wallets/icon-keepkey.svg'),
+      type: WALLET_TYPES.KEEPKEY,
+      fn: () => {
+        trackAccessWalletAmplitude(ACCESS_WALLET.HW_KEEPKEY_CLICKED);
+      }
+    },
+    {
+      label: 'BitBox02',
+      icon: require('@/assets/images/icons/hardware-wallets/icon-bitbox.svg'),
+      type: WALLET_TYPES.BITBOX2,
+      fn: () => {
+        trackAccessWalletAmplitude(ACCESS_WALLET.HW_BITBOX02_CLICKED);
+      }
+    },
+    {
+      label: 'CoolWallet',
+      icon: require('@/assets/images/icons/hardware-wallets/icon-coolwallet.svg'),
+      type: WALLET_TYPES.COOL_WALLET,
+      fn: () => {
+        trackAccessWalletAmplitude(ACCESS_WALLET.HW_COOL_WALLET_CLICKED);
       },
-      deep: true
-    },
-    open(newVal) {
-      if (newVal && this.switchAddress) this.setupSwitchAddress();
+      bluetooth: true
     }
-  },
-  async mounted() {
-    /**
-     * errors and resets for disconnect of ble
-     */
-    EventBus.$on('bleDisconnect', () => {
-      this.reset();
-    });
+  ];
+});
+const walletInitialized = computed(() => {
+  return wallets[walletType] ? wallets[walletType]?.when : 1;
+});
+/**
+ * Footer links to display beneath container
+ * TODO: get link urls from Russ
+ */
+const footerLink = computed(() => {
+  // Commented for now as the new articles aren't available yet
+  // if (onKeepkey) {
+  //   return {
+  //     title: 'Using a KeepKey Hardware wallet with MEW',
+  //     url: 'https://kb.myetherwallet.com/en/hardware-wallets/using-keepkey-with-mew/'
+  //   };
+  // } else if (onCoolWalletS) {
+  //   return {
+  //     title: 'Using a CoolWallet S Hardware Wallet with MEW',
+  //     url: 'https://kb.myetherwallet.com/en/hardware-wallets/using-coolwallet-with-mew/'
+  //   };
+  // }
+  // if (onLedger) {
+  //   return {
+  //     title: 'Using a Ledger Hardware wallet with MEW',
+  //     url: 'https://kb.myetherwallet.com/en/hardware-wallets/using-ledger-with-mew/'
+  //   };
+  // }
+  // if (onTrezor) {
+  //   return {
+  //     title: 'Using a Trezor Hardware wallet with MEW',
+  //     url: 'https://kb.myetherwallet.com/en/hardware-wallets/using-trezor-with-mew/'
+  //   };
+  // }
+  return {
+    title: 'Hardware Wallets',
+    url: 'https://help.myetherwallet.com/en/collections/3043244-access-wallet'
+  };
+});
+const showBack = computed(() => {
+  if (props.switchAddress) {
+    return step.value === 2;
+  }
 
-    try {
-      const { bluetooth } = navigator;
-      if (!bluetooth) return (this.bluetooth = false);
-      this.bluetooth = await bluetooth.getAvailability();
-    } catch (e) {
-      this.trackAccessWalletAmplitude(ACCESS_WALLET.HW_FAILED, {
-        error: e.message
+  return step.value === 1;
+});
+/**
+ * On Bitbox2
+ */
+const onBitbox2 = computed(() => {
+  if (walletType.value === WALLET_TYPES.BITBOX2) {
+    trackAccessWalletAmplitude(ACCESS_WALLET.HW_BITBOX02_SHOWN);
+    return true;
+  }
+  return false;
+});
+/**
+ * On Ledger
+ */
+const onLedger = computed(() => {
+  if (walletType.value === WALLET_TYPES.LEDGER) {
+    trackAccessWalletAmplitude(ACCESS_WALLET.HW_LEDGER_SHOWN);
+    return true;
+  }
+  return false;
+});
+/**
+ * On Ledger X
+ */
+const onLedgerX = computed(() => {
+  if (walletType.value === WALLET_TYPES.LEDGER) {
+    trackAccessWalletAmplitude(ACCESS_WALLET.HW_LEDGER_SHOWN);
+    return true;
+  }
+  return false;
+});
+/**
+ * On CoolWallet
+ */
+const onCoolWallet = computed(() => {
+  if (
+    walletType.value === WALLET_TYPES.COOL_WALLET &&
+    isEmpty(hwWalletInstance)
+  ) {
+    trackAccessWalletAmplitude(ACCESS_WALLET.HW_COOL_WALLET_SHOWN);
+    return true;
+  }
+  return false;
+});
+/**
+ * On Keepkey
+ */
+const onKeepkey = computed(() => {
+  if (walletType.value === WALLET_TYPES.KEEPKEY) {
+    trackAccessWalletAmplitude(ACCESS_WALLET.HW_KEEPKEY_SHOWN);
+    return true;
+  }
+  return false;
+});
+/**
+ * On Trezor
+ */
+const onTrezor = computed(() => {
+  if (walletType.value === WALLET_TYPES.TREZOR) {
+    trackAccessWalletAmplitude(ACCESS_WALLET.HW_TREZOR_SHOWN);
+    return true;
+  }
+  return false;
+});
+/**
+ * On Paths step
+ */
+const paths = computed(() => {
+  const newArr = [];
+  if (walletType.value === WALLET_TYPES.LEDGER) {
+    if (ledgerApp.value !== null) {
+      const found = appPaths.find(item => {
+        return item.network.name_long === ledgerApp.value.name;
       });
-      Toast(e, {}, ERROR);
+      const path = found ? found.paths : appPaths[0].paths;
+      return path.map(item => {
+        return {
+          name: item.label,
+          value: item.path
+        };
+      });
+    }
+
+    appPaths[0].paths.forEach(item => {
+      newArr.push({
+        name: item.label,
+        value: item.path
+      });
+    });
+  }
+  if (wallets[walletType] && wallets[walletType].hasPaths) {
+    allPaths[walletType].forEach(item => {
+      newArr.push({
+        name: item.label,
+        value: item.path
+      });
+    });
+  }
+  return newArr;
+});
+/**
+ * Overlay title
+ */
+const title = computed(() => {
+  if (props.switchAddress) return 'Switch Address';
+  if (step.value > walletInitialized.value) {
+    return 'Select Network and Address';
+  } else if (step.value === 1) {
+    return 'Select a hardware wallet';
+  }
+  if (onBitbox2.value) return bitbox2Titles.value;
+  return walletType.value
+    ? wallets[walletType.value].title
+    : 'Select a hardware wallet';
+});
+const bitBox2NotPaired = computed(() => {
+  return (
+    isEmpty(hwWalletInstance.value) ||
+    (!isEmpty(hwWalletInstance.value) && !hwWalletInstance.value?.status)
+  );
+});
+const bitBox2Connected = computed(() => {
+  return (
+    !bitBox2NotPaired.value && hwWalletInstance.value?.status === 'connected'
+  );
+});
+const bitBox2Unpaired = computed(() => {
+  return (
+    !bitBox2NotPaired.value && hwWalletInstance.value?.status === 'unpaired'
+  );
+});
+const bitBox2Initialized = computed(() => {
+  return (
+    !bitBox2NotPaired.value && hwWalletInstance.value?.status === 'initialized'
+  );
+});
+const bitBox2PairingCode = computed(() => {
+  return !bitBox2NotPaired.value ? hwWalletInstance.value?.pairingCode : '';
+});
+const bitBox2Confirmed = computed(() => {
+  return !bitBox2NotPaired.value
+    ? hwWalletInstance.value?.pairingConfirmed
+    : false;
+});
+const bitbox2Titles = computed(() => {
+  if (bitBox2Connected.value) return 'Enter BitBox02 password';
+  if (bitBox2Unpaired.value) return 'Confirm pairing code';
+  if (bitBox2Initialized.value)
+    return 'BitBox02 succesfully initialized. Loading wallet';
+  return walletType.value ? wallets[walletType.value].title : '';
+});
+
+// watch
+watch(
+  selectedPath,
+  () => {
+    /**
+     * only call this when hwWalletInstance is not empty (ledger will error out)
+     * and when walletType has been selected (closing modal will error out)
+     */
+    if (walletType.value && !isEmpty(hwWalletInstance.value)) {
+      hwWalletInstance.value = {};
+      this[`${walletType.value}Unlock`]();
     }
   },
-  beforeDestroy() {
-    EventBus.$off('bleDisconnect');
-  },
-  methods: {
-    ...mapActions('wallet', [
-      'setWallet',
-      'setLedgerBluetooth',
-      'setLedgerApp'
-    ]),
-    /**
-     * Resets the Data
-     */
-    reset() {
-      this.step = 1;
-      this.hwWalletInstance = {};
-      this.selectedPath = this.paths[0];
-      //this.setLedgerApp(this.ledgerApps[0]);
-      this.password = '';
-      this.walletType = '';
-      this.ledgerConnected = false;
-      this.ledgerBluetooth = false;
-    },
-    /**
-     * Sets up switch address
-     */
-    setupSwitchAddress() {
-      this.walletType = this.identifier;
-      if (this.identifier === WALLET_TYPES.LEDGER) {
-        this.ledgerBluetooth = this.ledgerBLE;
-      }
-      this.nextStep();
-    },
-    /**
-     * calls this.close and this.setupSwitchAddress
-     */
-    closeAndSetupSwitch() {
-      this.reset();
-      this.setupSwitchAddress();
-      this.close();
-    },
-    /**
-     * Overlay Action: Back
-     * if on keepkey step 3, it will return to step 1 so it will reset everything
-     */
-    back() {
-      if (this.step > 0) {
-        if (this.step === 1) {
-          this.reset();
-        } else if (this.step === 2) {
-          this.step = 1;
-          this.walletType = '';
-        } else {
-          this.hwWalletInstance = {};
-          if (this.onLedger || this.onLedgerX) {
-            this.step = 2;
-            //this[`${this.walletType}Unlock`]();
-          } else {
-            this.walletType = '';
-            this.step = 1;
-          }
-        }
+  { deep: true }
+);
+watch(open, newVal => {
+  if (newVal && props.switchAddress) setupSwitchAddress();
+});
+
+onMounted(async () => {
+  /**
+   * errors and resets for disconnect of ble
+   */
+  EventBus.$on('bleDisconnect', () => {
+    reset();
+  });
+
+  try {
+    const { bluetooth } = navigator;
+    if (!bluetooth) return (bluetooth.value = false);
+    bluetooth.value = await bluetooth.getAvailability();
+  } catch (e) {
+    trackAccessWalletAmplitude(ACCESS_WALLET.HW_FAILED, {
+      error: e.message
+    });
+    Toast(e, {}, ERROR);
+  }
+});
+
+// before destroy
+onBeforeUnmount(() => {
+  EventBus.$off('bleDisconnect');
+});
+
+// methods
+/**
+ * Resets the Data
+ */
+const reset = () => {
+  step.value = 1;
+  hwWalletInstance.value = {};
+  selectedPath.value = paths.value[0];
+  password.value = '';
+  walletType.value = '';
+  ledgerConnected.value = false;
+  ledgerBluetooth.value = false;
+};
+/**
+ * Sets up switch address
+ */
+const setupSwitchAddress = () => {
+  walletType.value = identifier;
+  if (identifier === WALLET_TYPES.LEDGER) {
+    ledgerBluetooth.value = ledgerBLE;
+  }
+  nextStep();
+};
+/**
+ * Overlay Action: Back
+ * if on keepkey step 3, it will return to step 1 so it will reset everything
+ */
+const back = () => {
+  if (step.value > 0) {
+    if (step.value === 1) {
+      reset();
+    } else if (step.value === 2) {
+      step.value = 1;
+      walletType.value = '';
+    } else {
+      hwWalletInstance.value = {};
+      if (onLedger.value || onLedgerX.value) {
+        step.value = 2;
+        //this[`${walletType}Unlock`]();
       } else {
-        this.close('showHardware');
+        walletType.value = '';
+        step.value = 1;
       }
-    },
-    overlayClose() {
-      this.reset();
-      this.close('showHardware');
-    },
-    trezorClose() {
-      this.step = 2;
-      this.walletType = WALLET_TYPES.TREZOR;
-    },
-    setWalletInstance(btnObj) {
-      this.walletType = btnObj.type;
-      this.nextStep();
-    },
-    nextStep() {
-      if (this.walletType) {
-        this.step++;
-        if (
-          this.step === 2 &&
-          (this.onTrezor || this.onLedger || this.onLedgerX)
-        )
-          this.selectedPath = this.paths[0];
-        if (this.step === this.walletInitialized) {
-          if (this.onCoolWallet || this.onBitbox2) return;
-          this[`${this.walletType}Unlock`]();
-        }
-      }
-    },
-    /**
-     * Unlock the hardware wallets
-     */
-    ledgerUnlock() {
-      if (this.ledgerBluetooth) {
-        this.bluetoothLedgerUnlock();
-      } else {
-        this.unlockPathOnly();
-      }
-    },
-    setBluetoothLedgerUnlock() {
-      this.ledgerBluetooth = true;
-      this.nextStep();
-    },
-    bluetoothLedgerUnlock() {
-      this.unlockPathOnly();
-    },
-    trezorUnlock() {
-      this.unlockPathOnly();
-    },
-    bitbox02Unlock() {
-      this.unlockPathOnly();
-    },
-    keepkeyUnlock() {
-      this.unlockPathOnly();
-    },
-    coolWalletUnlock() {
-      this.unlockPathAndPassword(null, this.password);
-    },
-    /**
-     * Unlock only the path step
-     */
-    unlockPathOnly() {
-      const path = isObject(this.selectedPath)
-        ? this.selectedPath.hasOwnProperty('value')
-          ? this.selectedPath?.value
-          : this.selectedPath
-        : this.paths[0].value;
-      this.wallets[this.walletType]
-        .create(path, this.ledgerBluetooth, this.ledgerApp)
-        .then(_hwWallet => {
-          try {
-            this.loaded = true;
-            if (this.onLedgerX || this.onLedger) this.nextStep();
-            if ((this.onTrezor || this.onKeepkey) && this.step === 2)
-              this.step++;
-            if (this.onBitbox2) {
-              this.hwWalletInstance = _hwWallet;
-              if (!this.hwWalletInstance) {
-                this.trackAccessWalletAmplitude(ACCESS_WALLET.HW_FAILED, {
-                  error: 'bitboxInstanceError'
-                });
-                this.wallets[this.walletType].create.errorHandler(
-                  'bitboxInstanceError'
-                );
-                return;
-              }
-              this.hwWalletInstance
-                .init()
-                .then(() => {
-                  this.nextStep();
-                })
-                .catch(e => {
-                  this.trackAccessWalletAmplitude(ACCESS_WALLET.HW_FAILED, {
-                    error: e.message
-                  });
-                  this.wallets[this.walletType]?.create.errorHandler(e);
-                  if (e.message === 'Error: Pairing rejected') {
-                    this.reset();
-                  }
-                });
-            } else {
-              this.hwWalletInstance = _hwWallet;
-            }
-          } catch (err) {
-            this.trackAccessWalletAmplitude(ACCESS_WALLET.HW_FAILED, {
-              error: err.message
-            });
-            this.wallets[this.walletType].create.errorHandler(err);
-          }
-        })
-        .catch(err => {
-          this.trackAccessWalletAmplitude(ACCESS_WALLET.HW_FAILED, {
-            error: err.message
-          });
-          if (this.onLedger || this.onLedgerX) this.step--;
-          if (this.wallets[this.walletType]) {
-            this.wallets[this.walletType].create.errorHandler(err);
-          } else {
-            Toast(err, {}, ERROR);
-          }
-          this.onTrezor ? this.trezorClose : this.reset();
-        });
-    },
-    /**
-     * Unlock the path and password step
-     */
-    unlockPathAndPassword(path, password) {
-      this.wallets[this.walletType]
-        .create(path, password)
-        .then(_hwWallet => {
-          this.hwWalletInstance = _hwWallet;
-          this.step++;
-        })
-        .catch(e => {
-          this.trackAccessWalletAmplitude(ACCESS_WALLET.HW_FAILED, {
-            error: e.message
-          });
-          if (this.wallets[this.walletType]) {
-            if (
-              e.message === 'Wrong Password' &&
-              this.walletType === WALLET_TYPES.COOL_WALLET
-            ) {
-              this.passwordError = true;
-            } else {
-              this.wallets[this.walletType].create.errorHandler(e);
-            }
-          } else {
-            Toast(e, {}, ERROR);
-          }
-          if (e.message !== 'Wrong Password') {
-            this.reset();
-          }
-        });
-    },
-    /**
-     * Sets Path
-     */
-    setPath(obj) {
-      this.selectedPath = obj;
-    },
-    trackWallet(id) {
-      switch (id) {
-        case WALLET_TYPES.LEDGER:
-          this.trackAccessWalletAmplitude(ACCESS_WALLET.HW_LEDGER_CONNECTED);
-          break;
-        case WALLET_TYPES.TREZOR:
-          this.trackAccessWalletAmplitude(ACCESS_WALLET.HW_TREZOR_CONNECTED);
-          break;
-        case WALLET_TYPES.COOL_WALLET_PRO:
-        case WALLET_TYPES.COOL_WALLET_S:
-          this.trackAccessWalletAmplitude(
-            ACCESS_WALLET.HW_COOL_WALLET_CONNECTED
-          );
-          break;
-        case WALLET_TYPES.BITBOX2:
-          this.trackAccessWalletAmplitude(ACCESS_WALLET.HW_BITBOX02_CONNECTED);
-          break;
-        case WALLET_TYPES.KEEPKEY:
-          this.trackAccessWalletAmplitude(ACCESS_WALLET.HW_KEEPKEY_CONNECTED);
-          break;
-        default:
-          break;
-      }
-    },
-    /**
-     * Set the selected wallet
-     */
-    setHardwareWallet(wallet) {
-      try {
-        this.setWallet([wallet])
-          .then(() => {
-            if (!this.switchAddress) {
-              if (wallet.identifier === WALLET_TYPES.LEDGER) {
-                this.setLedgerBluetooth(this.ledgerBluetooth);
-              }
-              this.trackWallet(wallet.identifier);
-              this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
-            } else {
-              this.reset();
-              this.close();
-            }
-          })
-          .catch(e => {
-            this.trackAccessWalletAmplitude(ACCESS_WALLET.ACCESS_FAILED, {
-              wallet: wallet.identifier
-            });
-            this.reset();
-            Toast(e, {}, ERROR);
-          });
-      } catch (e) {
-        this.reset();
-        Toast(e, {}, ERROR);
-      }
-    },
-    /**
-     * Sets Password
-     */
-    setPassword(str) {
-      this.password = str;
-      this.passwordError = false;
+    }
+  } else {
+    close('showHardware');
+  }
+};
+const overlayClose = () => {
+  reset();
+  close('showHardware');
+};
+const trezorClose = () => {
+  step.value = 2;
+  walletType.value = WALLET_TYPES.TREZOR;
+};
+const setWalletInstance = btnObj => {
+  walletType.value = btnObj.type;
+  nextStep();
+};
+const nextStep = () => {
+  if (walletType.value) {
+    step.value++;
+    if (step.value === 2 && (onTrezor.value || onLedger.value || onLedgerX))
+      selectedPath.value = paths.value[0];
+    if (step.value === walletInitialized.value) {
+      if (onCoolWallet.value || onBitbox2.value) return;
+      this[`${walletType.value}Unlock`]();
     }
   }
+};
+const setBluetoothLedgerUnlock = () => {
+  ledgerBluetooth.value = true;
+  nextStep();
+};
+const trezorUnlock = () => {
+  unlockPathOnly();
+};
+const bitbox02Unlock = () => {
+  unlockPathOnly();
+};
+const coolWalletUnlock = () => {
+  unlockPathAndPassword(null, password);
+};
+/**
+ * Unlock only the path step
+ */
+const unlockPathOnly = () => {
+  const path = isObject(selectedPath.value)
+    ? selectedPath.value.hasOwnProperty('value')
+      ? selectedPath.value?.value
+      : selectedPath.value
+    : paths.value[0].value;
+  wallets[walletType.value]
+    .create(path.value, ledgerBluetooth.value, ledgerApp.value)
+    .then(_hwWallet => {
+      try {
+        loaded.value = true;
+        if (onLedgerX.value || onLedger.value) nextStep();
+        if ((onTrezor.value || onKeepkey.value) && step.value === 2)
+          step.value++;
+        if (onBitbox2.value) {
+          hwWalletInstance.value = _hwWallet;
+          if (!hwWalletInstance.value) {
+            trackAccessWalletAmplitude(ACCESS_WALLET.HW_FAILED, {
+              error: 'bitboxInstanceError'
+            });
+            wallets[walletType.value].create.errorHandler(
+              'bitboxInstanceError'
+            );
+            return;
+          }
+          hwWalletInstance.value
+            .init()
+            .then(() => {
+              nextStep();
+            })
+            .catch(e => {
+              trackAccessWalletAmplitude(ACCESS_WALLET.HW_FAILED, {
+                error: e.message
+              });
+              wallets[walletType.value]?.create.errorHandler(e);
+              if (e.message === 'Error: Pairing rejected') {
+                reset();
+              }
+            });
+        } else {
+          hwWalletInstance.value = _hwWallet;
+        }
+      } catch (err) {
+        trackAccessWalletAmplitude(ACCESS_WALLET.HW_FAILED, {
+          error: err.message
+        });
+        wallets[walletType.value].create.errorHandler(err);
+      }
+    })
+    .catch(err => {
+      trackAccessWalletAmplitude(ACCESS_WALLET.HW_FAILED, {
+        error: err.message
+      });
+      if (onLedger.value || onLedgerX.value) step.value--;
+      if (wallets[walletType.value]) {
+        wallets[walletType.value].create.errorHandler(err);
+      } else {
+        Toast(err, {}, ERROR);
+      }
+      onTrezor.value ? trezorClose : reset();
+    });
+};
+/**
+ * Unlock the path and password step
+ */
+const unlockPathAndPassword = (path, password) => {
+  wallets[walletType.value]
+    .create(path, password)
+    .then(_hwWallet => {
+      hwWalletInstance.value = _hwWallet;
+      step.value++;
+    })
+    .catch(e => {
+      trackAccessWalletAmplitude(ACCESS_WALLET.HW_FAILED, {
+        error: e.message
+      });
+      if (wallets[walletType.value]) {
+        if (
+          e.message === 'Wrong Password' &&
+          walletType.value === WALLET_TYPES.COOL_WALLET
+        ) {
+          passwordError.value = true;
+        } else {
+          wallets[walletType.value].create.errorHandler(e);
+        }
+      } else {
+        Toast(e, {}, ERROR);
+      }
+      if (e.message !== 'Wrong Password') {
+        reset();
+      }
+    });
+};
+/**
+ * Sets Path
+ */
+const setPath = obj => {
+  selectedPath.value = obj;
+};
+const trackWallet = id => {
+  switch (id) {
+    case WALLET_TYPES.LEDGER:
+      trackAccessWalletAmplitude(ACCESS_WALLET.HW_LEDGER_CONNECTED);
+      break;
+    case WALLET_TYPES.TREZOR:
+      trackAccessWalletAmplitude(ACCESS_WALLET.HW_TREZOR_CONNECTED);
+      break;
+    case WALLET_TYPES.COOL_WALLET_PRO:
+    case WALLET_TYPES.COOL_WALLET_S:
+      trackAccessWalletAmplitude(ACCESS_WALLET.HW_COOL_WALLET_CONNECTED);
+      break;
+    case WALLET_TYPES.BITBOX2:
+      trackAccessWalletAmplitude(ACCESS_WALLET.HW_BITBOX02_CONNECTED);
+      break;
+    case WALLET_TYPES.KEEPKEY:
+      trackAccessWalletAmplitude(ACCESS_WALLET.HW_KEEPKEY_CONNECTED);
+      break;
+    default:
+      break;
+  }
+};
+/**
+ * Set the selected wallet
+ */
+const setHardwareWallet = wallet => {
+  try {
+    setWallet([wallet])
+      .then(() => {
+        if (!props.switchAddress) {
+          if (wallet.identifier === WALLET_TYPES.LEDGER) {
+            setLedgerBluetooth(ledgerBluetooth);
+          }
+          trackWallet(wallet.identifier);
+          router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
+        } else {
+          reset();
+          props.close();
+        }
+      })
+      .catch(e => {
+        trackAccessWalletAmplitude(ACCESS_WALLET.ACCESS_FAILED, {
+          wallet: wallet.identifier
+        });
+        reset();
+        Toast(e, {}, ERROR);
+      });
+  } catch (e) {
+    reset();
+    Toast(e, {}, ERROR);
+  }
+};
+/**
+ * Sets Password
+ */
+const setPassword = str => {
+  password.value = str;
+  passwordError.value = false;
 };
 </script>
 

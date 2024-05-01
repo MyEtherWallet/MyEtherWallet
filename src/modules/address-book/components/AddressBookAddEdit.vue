@@ -92,269 +92,274 @@
 </template>
 
 <script>
-import { mapState, mapActions, mapGetters } from 'vuex';
+const modes = ['add', 'edit'];
+</script>
+<script setup>
+import { defineProps, ref, computed, watch, onMounted, defineEmits } from 'vue';
 import { isEmpty, throttle } from 'lodash';
 import { getAddressInfo } from '@kleros/address-tags-sdk';
 
 import NameResolver from '@/modules/name-resolver/index';
 import { toChecksumAddress, isAddress } from '@/core/helpers/addressUtils';
 import { isValidCoinAddress } from '../handlers/handlerMulticoins.js';
+import {
+  global as useGlobalStore,
+  wallet as useWalletStore,
+  addressBook as useAddressBookStore
+} from '@/core/store/index.js';
+import { useI18n } from 'vue-i18n-composable/dist/index.js';
 
-const modes = ['add', 'edit'];
+// emits
+const emit = defineEmits(['back']);
 
-export default {
-  name: 'AddressBookAddEdit',
-  props: {
-    mode: { default: modes[0], type: String },
-    item: { default: () => {}, type: Object },
-    toAddress: { default: '', type: String }
-  },
-  data() {
-    return {
-      resolvedAddr: '',
-      nameResolver: null,
-      currentIdx: null,
-      nickname: '',
-      addressToAdd: '',
-      nametag: ''
-    };
-  },
-  computed: {
-    ...mapState('wallet', ['address', 'web3']),
-    ...mapState('addressBook', ['addressBookStore']),
-    ...mapGetters('global', ['network']),
-    disabled() {
-      if (this.addMode) {
-        return (
-          !this.addressToAdd ||
-          !this.validAddress ||
-          isEmpty(this.nickname) ||
-          this.nickname?.length > 20 ||
-          this.alreadyExists
-        );
-      }
-      if (this.editMode) {
-        return (
-          this.nickname === this.item.nickname ||
-          this.nickname?.length > 20 ||
-          isEmpty(this.nickname)
-        );
-      }
-      return true;
-    },
-    addressRules() {
-      return [
-        () =>
-          !this.alreadyExists ||
-          this.$t('interface.address-book.validations.already-exists'),
-        this.validAddress ||
-          this.$t('interface.address-book.validations.invalid-address'),
-        value =>
-          !!value || this.$t('interface.address-book.validations.addr-required')
-      ];
-    },
-    nicknameRules() {
-      return [
-        value =>
-          (value && value.length >= 1) ||
-          this.$t('interface.address-book.validations.nickname-required'),
-        value =>
-          (value && value.length <= 20) ||
-          this.$t('interface.address-book.validations.nickname-length')
-      ];
-    },
-    validAddress() {
-      if (this.addressToAdd.length > 94) return false;
-      return this.resolvedAddr.length > 0 && !this.resolvedAddr?.includes('.')
-        ? isAddress(this.resolvedAddr) ||
-            isValidCoinAddress(this.resolvedAddr).valid
-        : isAddress(this.lowercaseAddressToAdd) ||
-            isValidCoinAddress(this.lowercaseAddressToAdd).valid ||
-            isValidCoinAddress(this.addressToAdd).valid;
-    },
-    coin() {
-      if (!this.validAddress) return '';
-      return `Valid ${this.coinType} address`;
-    },
-    coinType() {
-      return this.resolvedAddr.length > 0 && !this.resolvedAddr?.includes('.')
-        ? isValidCoinAddress(this.resolvedAddr).coin
-        : isValidCoinAddress(this.lowercaseAddressToAdd).coin ||
-            isValidCoinAddress(this.addressToAdd).coin;
-    },
-    editMode() {
-      return this.mode === modes[1];
-    },
-    addMode() {
-      return this.mode === modes[0];
-    },
-    alreadyExists() {
-      if (this.addMode) {
-        return this.checkResolvedExists || this.checkAddressExists;
-      }
-      return false;
-    },
-    checkResolvedExists() {
-      return Object.keys(this.addressBookStore).some(key => {
-        const storedAddr = this.addressBookStore[key];
-        return (
-          this.resolvedAddr !== '' &&
-          (storedAddr.address.toLowerCase() ===
-            this.resolvedAddr?.toLowerCase() ||
-            storedAddr.resolvedAddr.toLowerCase() ===
-              this.resolvedAddr?.toLowerCase())
-        );
-      });
-    },
-    checkAddressExists() {
-      return Object.keys(this.addressBookStore).some(key => {
-        const storedAddr = this.addressBookStore[key];
-        return (
-          (storedAddr.resolvedAddr !== '' &&
-            storedAddr.resolvedAddr?.toLowerCase() ===
-              this.addressToAdd?.toLowerCase()) ||
-          storedAddr.address.toLowerCase() === this.addressToAdd?.toLowerCase()
-        );
-      });
-    },
-    checksumAddressToAdd() {
-      if (this.addressToAdd !== '' && isAddress(this.lowercaseAddressToAdd)) {
-        return toChecksumAddress(this.lowercaseAddressToAdd);
-      }
-      return this.addressToAdd;
-    },
-    lowercaseAddressToAdd() {
-      return this.addressToAdd.toLowerCase();
-    },
-    resolvedAddress() {
-      if (this.resolvedAddr.length === 0) return '';
-      return this.validAddress && !this.resolvedAddr?.includes('.')
-        ? this.resolvedAddr
-        : '';
-    },
-    resolvedName() {
-      if (this.resolvedAddr.length === 0) return '';
-      return this.validAddress && this.resolvedAddr?.includes('.')
-        ? this.resolvedAddr
-        : '';
-    }
-  },
-  watch: {
-    toAddress(newVal) {
-      this.addressToAdd = newVal;
-    },
-    addressToAdd(newVal) {
-      this.nametag = '';
-      if (isAddress(newVal.toLowerCase())) {
-        this.resolveAddress();
-      } else {
-        this.resolveName();
-      }
-    },
-    web3() {
-      if (this.network.type.ens) {
-        this.nameResolver = new NameResolver(this.network, this.web3);
-      } else {
-        this.nameResolver = null;
-      }
-    }
-  },
-  mounted() {
-    if (this.network.type.ens)
-      this.nameResolver = new NameResolver(this.network, this.web3);
-    if (this.addMode && this.toAddress) {
-      this.addressToAdd = this.toAddress;
-    }
-    if (this.editMode) {
-      this.addressToAdd = this.item.address;
-      this.nickname = this.item.nickname;
-      this.currentIdx = this.addressBookStore.findIndex(
-        item => item.address === this.item.address
+// injections/use
+const { network } = useGlobalStore();
+const { web3 } = useWalletStore();
+const { addressBookStore, setAddressBook } = useAddressBookStore();
+const { t } = useI18n();
+
+// props
+const props = defineProps({
+  mode: { default: modes[0], type: String },
+  item: { default: () => {}, type: Object },
+  toAddress: { default: '', type: String }
+});
+
+// data
+const resolvedAddr = ref('');
+const nameResolver = ref(null);
+const currentIdx = ref(null);
+const nickname = ref('');
+const addressToAdd = ref('');
+const nametag = ref('');
+
+// computed
+const disabled = computed(() => {
+  if (addMode.value) {
+    return (
+      !addressToAdd.value ||
+      !validAddress.value ||
+      isEmpty(nickname.value) ||
+      nickname.value?.length > 20 ||
+      alreadyExists.value
+    );
+  }
+  if (editMode.value) {
+    return (
+      nickname.value === props.item.value.nickname ||
+      nickname.value?.length > 20 ||
+      isEmpty(nickname.value)
+    );
+  }
+  return true;
+});
+const addressRules = computed(() => {
+  return [
+    () =>
+      !alreadyExists.value ||
+      t('interface.address-book.validations.already-exists'),
+    validAddress.value ||
+      t('interface.address-book.validations.invalid-address'),
+    value => !!value || t('interface.address-book.validations.addr-required')
+  ];
+});
+const nicknameRules = computed(() => {
+  return [
+    value =>
+      (value && value.length >= 1) ||
+      t('interface.address-book.validations.nickname-required'),
+    value =>
+      (value && value.length <= 20) ||
+      t('interface.address-book.validations.nickname-length')
+  ];
+});
+const validAddress = computed(() => {
+  if (addressToAdd.value.length > 94) return false;
+  return resolvedAddr.value.length > 0 && !resolvedAddr.value?.includes('.')
+    ? isAddress(resolvedAddr.value) ||
+        isValidCoinAddress(resolvedAddr.value).valid
+    : isAddress(lowercaseAddressToAdd.value) ||
+        isValidCoinAddress(lowercaseAddressToAdd.value).valid ||
+        isValidCoinAddress(addressToAdd.value).valid;
+});
+const coin = computed(() => {
+  if (!validAddress.value) return '';
+  return `Valid ${coinType.value} address`;
+});
+const coinType = computed(() => {
+  return resolvedAddr.value.length > 0 && !resolvedAddr.value?.includes('.')
+    ? isValidCoinAddress(resolvedAddr.value).coin
+    : isValidCoinAddress(lowercaseAddressToAdd.value).coin ||
+        isValidCoinAddress(addressToAdd.value).coin;
+});
+const editMode = computed(() => {
+  return props.mode === modes[1];
+});
+const addMode = computed(() => {
+  return props.mode === modes[0];
+});
+const alreadyExists = computed(() => {
+  if (addMode.value) {
+    return checkResolvedExists.value || checkAddressExists.value;
+  }
+  return false;
+});
+const checkResolvedExists = computed(() => {
+  return Object.keys(addressBookStore).some(key => {
+    const storedAddr = addressBookStore[key];
+    return (
+      resolvedAddr.value !== '' &&
+      (storedAddr.address.toLowerCase() === resolvedAddr.value?.toLowerCase() ||
+        storedAddr.resolvedAddr.toLowerCase() ===
+          resolvedAddr.value?.toLowerCase())
+    );
+  });
+});
+const checkAddressExists = computed(() => {
+  return Object.keys(addressBookStore).some(key => {
+    const storedAddr = addressBookStore[key];
+    return (
+      (storedAddr.resolvedAddr !== '' &&
+        storedAddr.resolvedAddr?.toLowerCase() ===
+          addressToAdd.value?.toLowerCase()) ||
+      storedAddr.address.toLowerCase() === addressToAdd.value?.toLowerCase()
+    );
+  });
+});
+const checksumAddressToAdd = computed(() => {
+  if (addressToAdd.value !== '' && isAddress(lowercaseAddressToAdd.value)) {
+    return toChecksumAddress(lowercaseAddressToAdd.value);
+  }
+  return addressToAdd.value;
+});
+const lowercaseAddressToAdd = computed(() => {
+  return addressToAdd.value.toLowerCase();
+});
+const resolvedAddress = computed(() => {
+  if (resolvedAddr.value.length === 0) return '';
+  return validAddress.value && !resolvedAddr.value?.includes('.')
+    ? resolvedAddr.value
+    : '';
+});
+const resolvedName = computed(() => {
+  if (resolvedAddr.value.length === 0) return '';
+  return validAddress.value && resolvedAddr.value?.includes('.')
+    ? resolvedAddr.value
+    : '';
+});
+
+// watch
+watch(props.toAddress, newVal => {
+  addressToAdd.value = newVal;
+});
+watch(addressToAdd, newVal => {
+  nametag.value = '';
+  if (isAddress(newVal.toLowerCase())) {
+    resolveAddress();
+  } else {
+    resolveName();
+  }
+});
+watch(web3, () => {
+  if (network.type.ens) {
+    nameResolver.value = new NameResolver(network, web3);
+  } else {
+    nameResolver.value = null;
+  }
+});
+
+// mounted
+onMounted(() => {
+  if (network.type.ens) nameResolver.value = new NameResolver(network, web3);
+  if (addMode.value && props.toAddress) {
+    addressToAdd.value = props.toAddress;
+  }
+  if (editMode.value) {
+    addressToAdd.value = props.item.address;
+    nickname.value = props.item.nickname;
+    currentIdx.value = addressBookStore.findIndex(
+      item => item.address === item.address
+    );
+  }
+});
+
+// methods
+const reset = () => {
+  addressToAdd.value = '';
+  nickname.value = '';
+  resolvedAddr.value = '';
+  nametag.value = '';
+};
+/**
+ * Resolves address and @returns name
+ */
+const resolveAddress = throttle(async function () {
+  if (nameResolver.value) {
+    try {
+      const resolvedName = await nameResolver.value.resolveAddress(
+        addressToAdd
       );
-    }
-  },
-  methods: {
-    ...mapActions('addressBook', ['setAddressBook']),
-    reset() {
-      this.addressToAdd = '';
-      this.nickname = '';
-      this.resolvedAddr = '';
-      this.nametag = '';
-    },
-    /**
-     * Resolves address and @returns name
-     */
-    resolveAddress: throttle(async function () {
-      if (this.nameResolver) {
-        try {
-          const resolvedName = await this.nameResolver.resolveAddress(
-            this.addressToAdd
-          );
-          if (resolvedName && !resolvedName.name) {
-            await getAddressInfo(
-              this.checksumAddressToAdd,
-              'https://ipfs.kleros.io'
-            ).then(data => {
-              this.nametag = data?.publicNameTag || '';
-            });
-          }
-          this.resolvedAddr = resolvedName.name ? resolvedName.name : '';
-        } catch (e) {
-          this.nametag = '';
-          this.resolvedAddr = '';
-        }
+      if (resolvedName && !resolvedName.name) {
+        await getAddressInfo(
+          checksumAddressToAdd.value,
+          'https://ipfs.kleros.io'
+        ).then(data => {
+          nametag.value = data?.publicNameTag || '';
+        });
       }
-    }, 300),
-    /**
-     * Resolves name and @returns address
-     */
-    resolveName: throttle(async function () {
-      if (this.nameResolver) {
-        try {
-          await this.nameResolver.resolveName(this.addressToAdd).then(addr => {
-            this.resolvedAddr = addr;
-          });
-        } catch (e) {
-          this.resolvedAddr = '';
-        }
-      }
-    }, 500),
-    setAddress(value) {
-      this.addressToAdd = value ? value : '';
-    },
-    setNickname(value) {
-      this.nickname = value;
-    },
-    update() {
-      this.addressBookStore[this.currentIdx].address =
-        this.checksumAddressToAdd;
-      this.addressBookStore[this.currentIdx].coinType =
-        this.coinType.toLowerCase();
-      this.addressBookStore[this.currentIdx].nickname = this.nickname;
-      this.setAddressBook(this.addressBookStore);
-      this.$emit('back', [3]);
-    },
-    remove() {
-      this.addressBookStore.splice(this.currentIdx, 1);
-      this.setAddressBook(this.addressBookStore);
-      this.reset();
-      this.$emit('back', [3]);
-    },
-    add() {
-      if (this.alreadyExists) {
-        this.reset();
-        return;
-      }
-      this.addressBookStore.push({
-        address: this.checksumAddressToAdd,
-        resolvedAddr: this.resolvedAddress,
-        coinType: this.coinType.toLowerCase(),
-        nickname: this.nickname || (this.addressBookStore.length + 1).toString()
-      });
-      this.setAddressBook(this.addressBookStore);
-      this.reset();
-      this.$emit('back', [3]);
+      resolvedAddr.value = resolvedName.name ? resolvedName.name : '';
+    } catch (e) {
+      nametag.value = '';
+      resolvedAddr.value = '';
     }
   }
+}, 300);
+/**
+ * Resolves name and @returns address
+ */
+const resolveName = throttle(async function () {
+  if (nameResolver.value) {
+    try {
+      await nameResolver.value.resolveName(addressToAdd.value).then(addr => {
+        resolvedAddr.value = addr;
+      });
+    } catch (e) {
+      resolvedAddr.value = '';
+    }
+  }
+}, 500);
+const setAddress = value => {
+  addressToAdd.value = value ? value : '';
+};
+const setNickname = value => {
+  nickname.value = value;
+};
+const update = () => {
+  addressBookStore[currentIdx].address = checksumAddressToAdd.value;
+  addressBookStore[currentIdx].coinType = coinType.value.toLowerCase();
+  addressBookStore[currentIdx].nickname = nickname.value;
+  setAddressBook(addressBookStore);
+  emit('back', [3]);
+};
+const remove = () => {
+  addressBookStore.splice(currentIdx, 1);
+  setAddressBook(addressBookStore);
+  reset();
+  emit('back', [3]);
+};
+const add = () => {
+  if (alreadyExists.value) {
+    reset();
+    return;
+  }
+  addressBookStore.push({
+    address: checksumAddressToAdd.value,
+    resolvedAddr: resolvedAddress.value,
+    coinType: coinType.value.toLowerCase(),
+    nickname: nickname.value || (addressBookStore.length + 1).toString()
+  });
+  setAddressBook(addressBookStore);
+  reset();
+  emit('back', [3]);
 };
 </script>

@@ -49,6 +49,10 @@ const neverShowBanner = () => {
   this.showedBanner = true;
 };
 
+const neverShowPopup = () => {
+  this.displayedTrackingPopup = false;
+};
+
 export default {
   setTrackingConsent,
   neverShowEnkryptLandingPage,
@@ -59,5 +63,6 @@ export default {
   shownPkSurveyCounter,
   setShownEu,
   initStore,
-  neverShowBanner
+  neverShowBanner,
+  neverShowPopup
 };

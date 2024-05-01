@@ -80,45 +80,41 @@
   </v-dialog>
 </template>
 
-<script>
-import { mapMutations } from 'vuex';
+<script setup>
+import { useAmplitude } from '@/core/composables/amplitude';
+import { popups as usePopupsStore } from '@/core/store/index.js';
 
-import handlerAnalytics from './handlers/handlerAnalytics.mixin';
+// injections/use
+const { setTrackingConsent, $amplitude } = useAmplitude();
+const { neverShowPopup } = usePopupsStore();
 
-export default {
-  mixins: [handlerAnalytics],
-  data() {
-    return {
-      whatWeCollect: [
-        {
-          yes: true,
-          text: 'We will only collect basic usage data like event clicks and page-views'
-        },
-        { yes: true, text: 'You can opt-in and out anytime' },
-        {
-          yes: false,
-          text: 'We will never collect your full IP address or exact location'
-        },
-        {
-          yes: false,
-          text: 'We cannot access any personal data: No private keys, nor passwords'
-        }
-      ]
-    };
+// data
+const whatWeCollect = [
+  {
+    yes: true,
+    text: 'We will only collect basic usage data like event clicks and page-views'
   },
-  methods: {
-    ...mapMutations('popups', ['NEVER_SHOW_TRACKING']),
-    /**
-     * Sets the tracking consent and
-     * then never displays the dialog again
-     */
-    onClick(val, showAgain) {
-      this.$amplitude.setOptOut(!val);
-      const prom = this.setTrackingConsent(val);
-      if (!showAgain) {
-        prom.then(this.NEVER_SHOW_TRACKING);
-      }
-    }
+  { yes: true, text: 'You can opt-in and out anytime' },
+  {
+    yes: false,
+    text: 'We will never collect your full IP address or exact location'
+  },
+  {
+    yes: false,
+    text: 'We cannot access any personal data: No private keys, nor passwords'
+  }
+];
+
+// methods
+/**
+ * Sets the tracking consent and
+ * then never displays the dialog again
+ */
+const onClick = (val, showAgain) => {
+  $amplitude.setOptOut(!val);
+  const prom = setTrackingConsent(val);
+  if (!showAgain) {
+    prom.then(neverShowPopup);
   }
 };
 </script>

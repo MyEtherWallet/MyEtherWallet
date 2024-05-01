@@ -62,84 +62,88 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { defineProps, computed, watch, defineEmits, nextTick } from 'vue';
 import BigNumber from 'bignumber.js';
-import { mapGetters, mapState } from 'vuex';
 
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
-export default {
-  name: 'ModuleSideRewards',
+import {
+  global as useGlobalStore,
+  wallet as useWalletStore,
+  external as useExternalStore,
+  stakewise as useStakewiseStore
+} from '@/core/store/index.js';
+import { useRoute } from 'vue-router/composables';
 
-  props: {
-    txFee: {
-      type: String,
-      default: ''
-    },
-    hasEnoughBalance: {
-      type: Boolean,
-      default: false
-    }
+const emit = defineEmits(['scroll', 'set-max', 'redeem-to-eth']);
+
+// injections/use
+const { isEthNetwork, network, getFiatValue } = useGlobalStore();
+const { balance } = useWalletStore();
+const { fiatValue } = useExternalStore();
+const { rethBalance, sethBalance } = useStakewiseStore();
+const route = useRoute();
+
+// props
+const props = defineProps({
+  txFee: {
+    type: String,
+    default: ''
   },
-  computed: {
-    ...mapGetters('wallet', ['tokensList']),
-    ...mapGetters('global', ['isEthNetwork', 'network', 'getFiatValue']),
-    ...mapGetters('external', ['fiatValue']),
-    ...mapState('wallet', ['web3', 'address', 'balance']),
-    ...mapState('stakewise', ['rethBalance', 'sethBalance']),
-    hasStakedNoRewards() {
-      return (
-        BigNumber(this.sethBalance).gt(0) && BigNumber(this.rethBalance).eq(0)
-      );
-    },
-    hasBalance() {
-      return BigNumber(this.rethBalance).gt(0);
-    },
-    enoughToCoverRedeem() {
-      if (this.hasStakedNoRewards) {
-        return false;
-      }
-      if (!this.hasBalance) {
-        return false;
-      }
-      if (BigNumber(this.balance).gt(this.txFee)) {
-        return false;
-      }
-      if (!this.hasEnoughBalance) {
-        return true;
-      }
-      return true;
-    },
-    ethvmSupport() {
-      return this.network.type.isEthVMSupported.supported;
-    },
-    formattedBalance() {
-      return formatFloatingPointValue(this.rethBalance).value;
-    },
-    rethBalanceFiat() {
-      return this.getFiatValue(
-        BigNumber(this.rethBalance).times(this.fiatValue).toString()
-      );
-    }
-  },
-  watch: {
-    $route: {
-      handler: function (from) {
-        if (from.query.module === 'compound') {
-          this.$nextTick(() => {
-            this.$emit('scroll');
-            this.$emit('set-max');
-          });
-        }
-      },
-      deep: true,
-      immediate: true
-    }
-  },
-  methods: {
-    executeSwap() {
-      this.$emit('redeem-to-eth', 'reth', this.rethBalance);
-    }
+  hasEnoughBalance: {
+    type: Boolean,
+    default: false
   }
+});
+
+// computed
+const hasStakedNoRewards = computed(() => {
+  return BigNumber(sethBalance).gt(0) && BigNumber(rethBalance).eq(0);
+});
+const hasBalance = computed(() => {
+  return BigNumber(rethBalance).gt(0);
+});
+const enoughToCoverRedeem = computed(() => {
+  if (hasStakedNoRewards.value) {
+    return false;
+  }
+  if (!hasBalance.value) {
+    return false;
+  }
+  if (BigNumber(balance).gt(props.txFee)) {
+    return false;
+  }
+  if (!props.hasEnoughBalance) {
+    return true;
+  }
+  return true;
+});
+const ethvmSupport = computed(() => {
+  return network.type.isEthVMSupported.supported;
+});
+const formattedBalance = computed(() => {
+  return formatFloatingPointValue(rethBalance).value;
+});
+const rethBalanceFiat = computed(() => {
+  return getFiatValue(BigNumber(rethBalance).times(fiatValue).toString());
+});
+
+// watch
+watch(
+  route.from.query.module,
+  val => {
+    if (val === 'stake') {
+      nextTick(() => {
+        emit('scroll');
+        emit('set-max');
+      });
+    }
+  },
+  { deep: true, immediate: true }
+);
+
+const executeSwap = () => {
+  emit('redeem-to-eth', 'reth', rethBalance);
 };
 </script>
 

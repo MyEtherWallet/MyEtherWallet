@@ -215,7 +215,7 @@
       max-width="400px"
       hide-close-btn
       :show="showLogout"
-      :title="$t('interface.menu.logout')"
+      :title="t('interface.menu.logout')"
       :left-btn="{ text: 'Cancel', method: closeLogout, color: 'basic' }"
       :right-btn="{
         text: 'Log out',
@@ -249,9 +249,9 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { defineAsyncComponent, ref, computed, watch, onMounted } from 'vue';
 import anime from 'animejs/lib/anime.es.js';
-import { mapGetters, mapActions, mapState } from 'vuex';
 import clipboardCopy from 'clipboard-copy';
 import { isEmpty } from 'lodash';
 
@@ -263,334 +263,318 @@ import wallets from './handlers/config';
 import WALLET_TYPES from '../access-wallet/common/walletTypes';
 import NameResolver from '@/modules/name-resolver/index';
 import { EventBus } from '@/core/plugins/eventBus';
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { DASHBOARD } from '../analytics-opt-in/handlers/configs/events';
+import { useAmplitude } from '@/core/composables/amplitude';
+import {
+  wallet as useWalletStore,
+  external as useExternalStore,
+  global as useGlobalStore
+} from '@/core/store/index.js';
+import { useI18n } from 'vue-i18n-composable/dist';
 
-export default {
-  components: {
-    ModuleAccessWalletHardware: () =>
-      import('@/modules/access-wallet/ModuleAccessWalletHardware'),
-    ModuleAccessWalletSoftware: () =>
-      import('@/modules/access-wallet/ModuleAccessWalletSoftware')
-  },
-  mixins: [handlerAnalytics],
-  props: {
-    sidemenuStatus: {
-      type: Boolean,
-      default: false
-    }
-  },
-  data() {
-    return {
-      showChangeAddress: false,
-      openQR: false,
-      showLogout: false,
-      showVerify: false,
-      wallets: wallets,
-      resolvedName: '',
-      nameResolver: null
-    };
-  },
-  computed: {
-    ...mapState('wallet', [
-      'address',
-      'instance',
-      'identifier',
-      'isHardware',
-      'isOfflineApp',
-      'loadingWalletInfo'
-    ]),
-    ...mapGetters('external', ['totalTokenFiatValue']),
-    ...mapGetters('global', ['network', 'isTestNetwork', 'getFiatValue']),
-    ...mapGetters('wallet', ['tokensList', 'balanceInETH']),
-    ...mapState('wallet', ['web3']),
-    /**
-     * verifies whether instance exists before giving path
-     */
-    instancePath() {
-      return this.instance && this.instance.path ? true : false;
-    },
-    /**
-     * show default title
-     * unless resolved name isn't false
-     * returns @string
-     */
-    title() {
-      return this.resolvedName
-        ? this.resolvedName
-        : 'Portfolio Value'.toUpperCase();
-    },
-    /**
-     * verify address title
-     * returns @String
-     */
-    verifyAddressTitle() {
-      return `This wallet is accessed with ${this.walletName}`;
-    },
-    /**
-     * verify address body
-     * returns @String
-     */
-    verifyAddressBody() {
-      return `To verify, check the address on your ${this.walletName} device & make sure it is the same address as the one shown below.`;
-    },
-    /**
-     * Shows hardware access or software access
-     * returns @Boolean
-     */
-    showHardware() {
-      return (
-        !isEmpty(this.instance) &&
-        this.instance?.path &&
-        this.identifier !== WALLET_TYPES.MNEMONIC
-      );
-    },
-    /**
-     * returns checksummed address
-     */
-    getChecksumAddressString() {
-      return this.address ? toChecksumAddress(this.address) : '';
-    },
-    /**
-     * checks whether hardware wallet
-     * can display address with the device
-     *
-     * returns @Boolean
-     */
-    canDisplayAddress() {
-      return (
-        !isEmpty(this.instance) &&
-        this.instance.hasOwnProperty('displayAddress') &&
-        this.instance.displayAddress
-      );
-    },
-    /**
-     * adds checks for icons that mew-components doesn't have
-     * returns @String
-     */
-    iconIdentifier() {
-      if (this.identifier === WALLET_TYPES.BITBOX2) {
-        return 'bitbox';
-      }
-      return this.identifier;
-    },
-    /**
-     * checks whether wallet can switch address
-     * returns @Boolean
-     */
-    canSwitch() {
-      return !isEmpty(this.instance) && this.wallets[this.identifier];
-    },
-    /**
-     * returns hardware wallet name
-     * returns @String
-     */
-    walletName() {
-      return !isEmpty(this.instance) &&
-        this.instance.meta.hasOwnProperty('name')
-        ? this.instance.meta.name
-        : '';
-    },
-    /**
-     * returns token values
-     * returns @String
-     */
-    totalTokenBalance() {
-      return this.totalTokenFiatValue;
-    },
-    /**
-     * returns total value including tokens
-     * returns @String
-     */
-    totalWalletBalance() {
-      if (!this.isTestNetwork) {
-        const total = this.totalTokenBalance;
-        return this.getFiatValue(total);
-      }
-      return this.walletChainBalance;
-    },
-    /**
-     * returns formatted wallet balance
-     * returns @String
-     */
-    walletChainBalance() {
-      return `${formatFloatingPointValue(this.balanceInETH).value}`;
-    },
-    /**
-     * @returns {string} first 6 letters in the address
-     */
-    addrFirstSix() {
-      return this.address ? this.address.substring(0, 6) : '';
-    },
-    /**
-     * @returns {string} lat 4 letters in the address
-     */
-    addrlastFour() {
-      return this.address
-        ? this.address.substring(this.address.length - 4, this.address.length)
-        : '';
-    },
-    /**
-     * @returns {number} count of non chain tokens
-     */
-    nonChainTokensCount() {
-      return this.tokensList.length - 1;
-    }
-  },
-  watch: {
-    /**
-     * run setup for name resolver when web3 changes
-     */
-    web3() {
-      this.setupNameResolver();
-    },
-    sidemenuStatus() {
-      /**
-       * At side menu closes, close paper wallet
-       */
-      this.showPaperWallet = false;
-    }
-  },
-  mounted() {
-    this.setupNameResolver();
-  },
-  methods: {
-    ...mapActions('external', ['setTokenAndEthBalance']),
-    ...mapActions('wallet', ['removeWallet']),
-    /**
-     * checks if network supoorts ens
-     * and creates a new name resolver instance
-     */
-    async setupNameResolver() {
-      if (this.network.type.ens && this.web3.currentProvider) {
-        this.nameResolver = new NameResolver(this.network, this.web3);
-      } else {
-        this.nameResolver = null;
-      }
+const ModuleAccessWalletHardware = defineAsyncComponent(() =>
+  import('@/modules/access-wallet/ModuleAccessWalletHardware')
+);
+const ModuleAccessWalletSoftware = defineAsyncComponent(() =>
+  import('@/modules/access-wallet/ModuleAccessWalletSoftware')
+);
 
-      if (this.nameResolver) {
-        try {
-          const { name } = await this.nameResolver.resolveAddress(this.address);
-          this.resolvedName = name;
-        } catch (e) {
-          this.resolvedName = '';
-        }
-      }
-    },
-    /**
-     * refreshes the token and eth balance
-     */
-    refresh() {
-      this.setTokenAndEthBalance();
-    },
-    /**
-     * calls hardware wallet show address function
-     * and opens verify modal
-     */
-    viewAddressOnDevice() {
-      this.showVerify = true;
-      if (this.canDisplayAddress) {
-        this.instance
-          .displayAddress()
-          .then(() => {
-            this.showVerify = false;
-            Toast('Address verified!', {}, SUCCESS);
-          })
-          .catch(e => {
-            this.showVerify = false;
-            Toast(e.message, {}, ERROR);
-          });
-      }
-    },
-    /**
-     * Animates wallet card
-     */
-    animateMewCard() {
-      const el = document.querySelector('.mew-card');
-      if (el) {
-        el.style.opacity = 0;
-        anime({
-          targets: el,
-          opacity: 1,
-          delay: 1300,
-          duration: 500,
-          easing: 'easeInOutQuad'
-        });
-      }
-    },
-    /**
-     * set showChangeAddress to false
-     * to close the modal
-     */
-    closeChangeAddress() {
-      this.showChangeAddress = false;
-    },
-    /**
-     * set showChangeAddress to true
-     * to open the modal
-     */
-    openChangeAddress() {
-      this.showChangeAddress = true;
-    },
-    /**
-     * sets showPaperWallet to true
-     * to open the modal
-     */
-    openPaperWallet() {
-      EventBus.$emit('openPaperWallet');
-    },
-    /**
-     * Copies address
-     */
-    copyAddress() {
-      clipboardCopy(this.getChecksumAddressString);
-      Toast(
-        `Copied ${this.getChecksumAddressString} successfully!`,
-        {},
-        SUCCESS
-      );
-    },
-    open() {
-      this.trackDashboardAmplitude(DASHBOARD.SHOW_RECEIVE_ADDRESS);
-      this.openQR = true;
-    },
-    /**
-     * set openQR to false
-     * to close the modal
-     */
-    closeQR() {
-      this.openQR = false;
-    },
-    /**
-     * set showLogout to false
-     * to close the modal
-     */
-    closeLogout() {
-      this.showLogout = false;
-    },
-    /**
-     * close verify address
-     */
-    closeVerify() {
-      this.showVerify = false;
-    },
-    /**
-     * set showLogout to true
-     * to open the modal
-     */
-    openLogout() {
-      this.showLogout = true;
-    },
-    /**
-     * calls removeWallet
-     * and closes modal
-     */
-    onLogout() {
-      this.closeLogout();
-      this.trackLogout();
-      this.removeWallet();
+// injections/use
+const { trackDashboardAmplitude, trackLogout } = useAmplitude();
+const {
+  address,
+  instance,
+  identifier,
+  isHardware,
+  isOfflineApp,
+  loadingWalletInfo,
+  tokensList,
+  balanceInETH,
+  web3,
+  removeWallet
+} = useWalletStore();
+const { totalTokenFiatValue, setTokenAndEthBalance } = useExternalStore();
+const { network, isTestNetwork, getFiatValue } = useGlobalStore();
+const { t } = useI18n();
+
+// data
+const showChangeAddress = ref(false);
+const openQR = ref(false);
+const showLogout = ref(false);
+const showVerify = ref(false);
+const resolvedName = ref('');
+const nameResolver = ref(null);
+
+// computed
+/**
+ * verifies whether instance exists before giving path
+ */
+const instancePath = computed(() => {
+  return instance && instance.path ? true : false;
+});
+/**
+ * show default title
+ * unless resolved name isn't false
+ * returns @string
+ */
+const title = computed(() => {
+  return resolvedName.value
+    ? resolvedName.value
+    : 'Portfolio Value'.toUpperCase();
+});
+/**
+ * verify address title
+ * returns @String
+ */
+const verifyAddressTitle = computed(() => {
+  return `This wallet is accessed with ${walletName.value}`;
+});
+/**
+ * verify address body
+ * returns @String
+ */
+const verifyAddressBody = computed(() => {
+  return `To verify, check the address on your ${walletName.value} device & make sure it is the same address as the one shown below.`;
+});
+/**
+ * Shows hardware access or software access
+ * returns @Boolean
+ */
+const showHardware = computed(() => {
+  return (
+    !isEmpty(instance) && instance?.path && identifier !== WALLET_TYPES.MNEMONIC
+  );
+});
+/**
+ * returns checksummed address
+ */
+const getChecksumAddressString = computed(() => {
+  return address ? toChecksumAddress(address) : '';
+});
+/**
+ * checks whether hardware wallet
+ * can display address with the device
+ *
+ * returns @Boolean
+ */
+const canDisplayAddress = computed(() => {
+  return (
+    !isEmpty(instance) &&
+    instance.hasOwnProperty('displayAddress') &&
+    instance.displayAddress
+  );
+});
+/**
+ * adds checks for icons that mew-components doesn't have
+ * returns @String
+ */
+const iconIdentifier = computed(() => {
+  if (identifier === WALLET_TYPES.BITBOX2) {
+    return 'bitbox';
+  }
+  return identifier;
+});
+/**
+ * checks whether wallet can switch address
+ * returns @Boolean
+ */
+const canSwitch = computed(() => {
+  return !isEmpty(instance) && wallets[identifier];
+});
+/**
+ * returns hardware wallet name
+ * returns @String
+ */
+const walletName = computed(() => {
+  return !isEmpty(instance) && instance.meta.hasOwnProperty('name')
+    ? instance.meta.name
+    : '';
+});
+/**
+ * returns token values
+ * returns @String
+ */
+const totalTokenBalance = computed(() => {
+  return totalTokenFiatValue;
+});
+/**
+ * returns total value including tokens
+ * returns @String
+ */
+const totalWalletBalance = computed(() => {
+  if (!isTestNetwork) {
+    const total = totalTokenBalance;
+    return getFiatValue(total);
+  }
+  return walletChainBalance.value;
+});
+/**
+ * returns formatted wallet balance
+ * returns @String
+ */
+const walletChainBalance = computed(() => {
+  return `${formatFloatingPointValue(balanceInETH).value}`;
+});
+/**
+ * @returns {string} first 6 letters in the address
+ */
+const addrFirstSix = computed(() => {
+  return address ? address.substring(0, 6) : '';
+});
+/**
+ * @returns {string} lat 4 letters in the address
+ */
+const addrlastFour = computed(() => {
+  return address ? address.substring(address.length - 4, address.length) : '';
+});
+/**
+ * @returns {number} count of non chain tokens
+ */
+const nonChainTokensCount = computed(() => {
+  return tokensList.length - 1;
+});
+
+// watch
+/**
+ * run setup for name resolver when web3 changes
+ */
+watch(web3, () => {
+  setupNameResolver();
+});
+// mounted
+onMounted(() => {
+  setupNameResolver();
+});
+
+// methods
+/**
+ * checks if network supoorts ens
+ * and creates a new name resolver instance
+ */
+const setupNameResolver = async () => {
+  if (network.type.ens && web3.currentProvider) {
+    nameResolver.value = new NameResolver(network, web3);
+  } else {
+    nameResolver.value = null;
+  }
+
+  if (nameResolver.value) {
+    try {
+      const { name } = await nameResolver.value.resolveAddress(address);
+      resolvedName.value = name;
+    } catch (e) {
+      resolvedName.value = '';
     }
   }
+};
+/**
+ * refreshes the token and eth balance
+ */
+const refresh = () => {
+  setTokenAndEthBalance();
+};
+/**
+ * calls hardware wallet show address function
+ * and opens verify modal
+ */
+const viewAddressOnDevice = () => {
+  showVerify.value = true;
+  if (canDisplayAddress.value) {
+    instance
+      .displayAddress()
+      .then(() => {
+        showVerify.value = false;
+        Toast('Address verified!', {}, SUCCESS);
+      })
+      .catch(e => {
+        showVerify.value = false;
+        Toast(e.message, {}, ERROR);
+      });
+  }
+};
+/**
+ * Animates wallet card
+ */
+const animateMewCard = () => {
+  const el = document.querySelector('.mew-card');
+  if (el) {
+    el.style.opacity = 0;
+    anime({
+      targets: el,
+      opacity: 1,
+      delay: 1300,
+      duration: 500,
+      easing: 'easeInOutQuad'
+    });
+  }
+};
+/**
+ * set showChangeAddress to false
+ * to close the modal
+ */
+const closeChangeAddress = () => {
+  showChangeAddress.value = false;
+};
+/**
+ * set showChangeAddress to true
+ * to open the modal
+ */
+const openChangeAddress = () => {
+  showChangeAddress.value = true;
+};
+/**
+ * sets showPaperWallet to true
+ * to open the modal
+ */
+const openPaperWallet = () => {
+  EventBus.$emit('openPaperWallet');
+};
+/**
+ * Copies address
+ */
+const copyAddress = () => {
+  clipboardCopy(getChecksumAddressString.value);
+  Toast(`Copied ${getChecksumAddressString.value} successfully!`, {}, SUCCESS);
+};
+const open = () => {
+  trackDashboardAmplitude(DASHBOARD.SHOW_RECEIVE_ADDRESS);
+  openQR.value = true;
+};
+/**
+ * set openQR to false
+ * to close the modal
+ */
+const closeQR = () => {
+  openQR.value = false;
+};
+/**
+ * set showLogout to false
+ * to close the modal
+ */
+const closeLogout = () => {
+  showLogout.value = false;
+};
+/**
+ * close verify address
+ */
+const closeVerify = () => {
+  showVerify.value = false;
+};
+/**
+ * set showLogout to true
+ * to open the modal
+ */
+const openLogout = () => {
+  showLogout.value = true;
+};
+/**
+ * calls removeWallet
+ * and closes modal
+ */
+const onLogout = () => {
+  closeLogout();
+  trackLogout();
+  removeWallet();
 };
 </script>
 

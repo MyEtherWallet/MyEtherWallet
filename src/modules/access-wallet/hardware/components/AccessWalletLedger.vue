@@ -77,67 +77,76 @@
     </div>
   </div>
 </template>
-<script>
-import { mapActions, mapState } from 'vuex';
+<script setup>
+import {
+  defineAsyncComponent,
+  defineProps,
+  watch,
+  computed,
+  defineEmits
+} from 'vue';
+import { wallet as useWalletStore } from '@/core/store/index.js';
+import { useVuetify } from '@/core/composables/vuetify';
 
-export default {
-  name: 'AccessWalletLedger',
-  components: {
-    AccessWalletDerivationPath: () => import('./AccessWalletDerivationPath.vue')
+const AccessWalletDerivationPath = defineAsyncComponent(() =>
+  import('./AccessWalletDerivationPath.vue')
+);
+// emits
+const emit = defineEmits(['setBluetoothLedgerUnlock']);
+
+// injections/use
+const { ledgerApp, setLedgerApp } = useWalletStore();
+const vuetify = useVuetify();
+
+// props
+const props = defineProps({
+  ledgerApps: {
+    type: Array,
+    default: () => []
   },
-  props: {
-    ledgerApps: {
-      type: Array,
-      default: () => []
-    },
-    ledgerUnlock: {
-      type: Function,
-      default: () => {}
-    },
-    paths: {
-      type: Array,
-      default: () => []
-    },
-    selectedPath: {
-      type: Object,
-      default: () => {}
-    },
-    setPath: {
-      type: Function,
-      default: () => {}
-    }
+  ledgerUnlock: {
+    type: Function,
+    default: () => {}
   },
-  data() {
-    return {
-      article: {
-        text: 'See article here for instructions',
-        url: 'https://winaero.com/enable-or-disable-bluetooth-device-permissions-in-google-chrome/'
-      }
-    };
+  paths: {
+    type: Array,
+    default: () => []
   },
-  computed: {
-    ...mapState('wallet', ['ledgerApp']),
-    isRecovery() {
-      return this.ledgerApp?.value?.includes('Recovery');
-    },
-    isMobile() {
-      return this.$vuetify.breakpoint.width < 576;
-    }
+  selectedPath: {
+    type: Object,
+    default: () => {}
   },
-  watch: {
-    ledgerApp() {
-      this.setPath(this.paths[0]);
-    }
-  },
-  methods: {
-    ...mapActions('wallet', ['setLedgerApp']),
-    ledgerUnlockBle() {
-      this.$emit('setBluetoothLedgerUnlock');
-    },
-    handleApp(e) {
-      this.setLedgerApp(e);
-    }
+  setPath: {
+    type: Function,
+    default: () => {}
   }
+});
+
+// data
+const article = {
+  text: 'See article here for instructions',
+  url: 'https://winaero.com/enable-or-disable-bluetooth-device-permissions-in-google-chrome/'
+};
+
+// computed
+const isRecovery = computed(() => {
+  return ledgerApp?.value?.includes('Recovery');
+});
+const isMobile = computed(() => {
+  return vuetify.breakpoint.width < 576;
+});
+
+// watch
+watch(ledgerApp, () => {
+  props.setPath(props.paths[0]);
+});
+
+// methods
+const ledgerUnlockBle = () => {
+  emit('setBluetoothLedgerUnlock');
+};
+const handleApp = e => {
+  setLedgerApp(e);
 };
 </script>
 

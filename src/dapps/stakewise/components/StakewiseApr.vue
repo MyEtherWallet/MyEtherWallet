@@ -20,24 +20,25 @@
   </div>
 </template>
 
-<script>
-import { mapGetters, mapState } from 'vuex';
+<script setup>
+import { computed } from 'vue';
+
+import {
+  global as useGlobalStore,
+  stakewise as useStakewiseStore
+} from '@/core/store/index.js';
+
+// injections
+const { network } = useGlobalStore();
+const { validatorApr, getPoolSupply } = useStakewiseStore();
 
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
-export default {
-  name: 'StakewiseApr',
-  computed: {
-    ...mapState('stakewise', ['validatorApr']),
-    ...mapGetters('global', ['network']),
-    ...mapGetters('stakewise', ['getPoolSupply']),
-    networkName() {
-      return this.network.type.currencyName;
-    },
-    formattedPoolValue() {
-      return formatFloatingPointValue(this.getPoolSupply).value;
-    }
-  }
-};
-</script>
 
-<style lang="scss" scoped></style>
+// computed
+const networkName = computed(() => {
+  return network.type.currencyName;
+});
+const formattedPoolValue = computed(() => {
+  return formatFloatingPointValue(getPoolSupply).value;
+});
+</script>

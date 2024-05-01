@@ -91,251 +91,260 @@
   </mew-overlay>
 </template>
 
-<script>
-import { mapActions, mapGetters, mapState } from 'vuex';
+<script setup>
+import {
+  defineAsyncComponent,
+  defineProps,
+  ref,
+  computed,
+  watch,
+  onMounted,
+  onUnmounted
+} from 'vue';
 
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { SOFTWARE_WALLET_TYPES } from './software/handlers/helpers';
 import { ROUTES_WALLET } from '../../core/configs/configRoutes';
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 import handlerAccessWalletSoftware from './software/handlers/handlerAccessWalletSoftware';
 import { ACCESS_WALLET } from '../analytics-opt-in/handlers/configs/events';
+import { useAmplitude } from '@/core/composables/amplitude';
+import {
+  external as useExternalStore,
+  wallet as useWalletStore,
+  article as useArticleStore
+} from '@/core/store/index.js';
+import { useRouter } from 'vue-router/composables';
 
-export default {
-  name: 'ModuleAccessWalletSoftware',
-  components: {
-    AccessWalletKeystore: () =>
-      import('./software/components/AccessWalletKeystore'),
-    AccessWalletMnemonic: () =>
-      import('./software/components/AccessWalletMnemonic'),
-    AccessWalletPrivateKey: () =>
-      import('./software/components/AccessWalletPrivateKey')
+const AccessWalletKeystore = defineAsyncComponent(() =>
+  import('./software/components/AccessWalletKeystore')
+);
+const AccessWalletMnemonic = defineAsyncComponent(() =>
+  import('./software/components/AccessWalletMnemonic')
+);
+const AccessWalletPrivateKey = defineAsyncComponent(() =>
+  import('./software/components/AccessWalletPrivateKey')
+);
+
+// injections/use
+const { trackAccessWalletAmplitude } = useAmplitude();
+const { path } = useExternalStore();
+const { identifier, isOfflineApp, setWallet } = useWalletStore();
+const { getArticle } = useArticleStore();
+const router = useRouter();
+
+// props
+const props = defineProps({
+  open: {
+    type: Boolean,
+    default: false
   },
-  mixins: [handlerAnalytics],
-  props: {
-    open: {
-      type: Boolean,
-      default: false
-    },
-    close: {
-      type: Function,
-      default: () => {}
-    },
-    walletType: {
-      type: String,
-      default: ''
-    },
-    switchAddress: {
-      type: Boolean,
-      default: false
+  close: {
+    type: Function,
+    default: () => {}
+  },
+  walletType: {
+    type: String,
+    default: ''
+  },
+  switchAddress: {
+    type: Boolean,
+    default: false
+  }
+});
+
+// data
+const type = ref('');
+const types = SOFTWARE_WALLET_TYPES;
+const warningSheetObj = ref({
+  title: 'Learn More',
+  url: ''
+});
+const buttons = [
+  /* Keystore Button */
+  {
+    label: 'Keystore',
+    icon: require('@/assets/images/icons/icon-keystore-file.svg'),
+    fn: () => {
+      setType(SOFTWARE_WALLET_TYPES.KEYSTORE);
     }
   },
-  data() {
-    return {
-      type: '',
-      types: SOFTWARE_WALLET_TYPES,
-      warningSheetObj: {
-        title: 'Learn More',
-        url: ''
-      },
-      buttons: [
-        /* Keystore Button */
-        {
-          label: 'Keystore',
-          icon: require('@/assets/images/icons/icon-keystore-file.svg'),
-          fn: () => {
-            this.setType(SOFTWARE_WALLET_TYPES.KEYSTORE);
-          }
-        },
-        /* Mnemonic */
-        {
-          label: 'Mnemonic Phrase',
-          icon: require('@/assets/images/icons/icon-mnemonic.svg'),
-          fn: () => {
-            this.setType(SOFTWARE_WALLET_TYPES.MNEMONIC);
-          }
-        },
-        /* Private Key */
-        {
-          label: 'Private Key',
-          icon: require('@/assets/images/icons/icon-private-key-grey.png'),
-          class: 'AccessPrivateKeyWallet',
-          fn: () => {
-            if (process.env.VUE_APP_PRIV_KEY) {
-              this.accessHandler.unlockPrivateKeyWallet(
-                process.env.VUE_APP_PRIV_KEY
-              );
-              this.unlockWallet();
-            } else {
-              this.setType(SOFTWARE_WALLET_TYPES.PRIVATE_KEY);
-            }
-          }
-        }
-      ],
-      accessHandler: {},
-      footer: {
-        text: 'Need help?',
-        linkTitle: 'Contact support',
-        link: 'mailto:support@myetherwallet.com'
-      }
-    };
-  },
-
-  computed: {
-    /**
-     * @returns if the back button on overlay should be displayed
-     */
-    showBackBtn() {
-      return this.walletType !== SOFTWARE_WALLET_TYPES.OVERVIEW;
-    },
-    /**
-     * @returns correct title of the overlay according to the wallet type selected
-     */
-    title() {
-      if (this.switchAddress) return 'Switch Address';
-      switch (this.walletType) {
-        case SOFTWARE_WALLET_TYPES.KEYSTORE:
-          return 'Access Wallet with Keystore File';
-        case SOFTWARE_WALLET_TYPES.MNEMONIC:
-          return 'Access Wallet with Mnemonic Phrase';
-        case SOFTWARE_WALLET_TYPES.PRIVATE_KEY:
-          return 'Access Wallet with Private Key';
-        default:
-          return 'Select Software Wallet';
-      }
-    },
-    ...mapState('external', ['path']),
-    ...mapState('wallet', ['identifier', 'isOfflineApp']),
-    ...mapGetters('article', ['getArticle'])
-  },
-  watch: {
-    open(newVal) {
-      if (this.identifier && this.switchAddress && newVal) {
-        this.setType(this.identifier);
-      }
+  /* Mnemonic */
+  {
+    label: 'Mnemonic Phrase',
+    icon: require('@/assets/images/icons/icon-mnemonic.svg'),
+    fn: () => {
+      setType(SOFTWARE_WALLET_TYPES.MNEMONIC);
     }
   },
-  /**
-   * Lifecycle hooks to create and destroy access wallet handler
-   */
-  mounted() {
-    this.accessHandler = new handlerAccessWalletSoftware();
-    if (this.isOfflineApp) {
-      this.footer = {
-        text: 'Need help? Email us at support@myetherwallet.com',
-        linkTitle: '',
-        link: ''
-      };
-      this.warningSheetObj = {};
-    } else
-      this.warningSheetObj.url = this.getArticle('not-rec-when-access-wallet');
-  },
-  destroyed() {
-    this.accessHandler = {};
-  },
-  methods: {
-    /**
-     * Sets Wallet in the store
-     */
-    ...mapActions('wallet', ['setWallet']),
-
-    /**
-     * Sets Wallet and Pushes new route query param
-     * Used in overlay back button
-     * account is defined in Mnemonic phrase access
-     */
-    unlockWallet(account = undefined) {
-      try {
-        const wallet = !account
-          ? this.accessHandler.getWalletInstance()
-          : account;
-        const _this = this;
-        let type = '';
-        if (this.type === this.types.KEYSTORE) {
-          type = ACCESS_WALLET.KEYSTORE_CONNECTED;
-        } else if (this.type === this.types.MNEMONIC) {
-          type = ACCESS_WALLET.MNEMONIC_CONNECTED;
-        } else if (this.type === this.types.PRIVATE_KEY) {
-          type = ACCESS_WALLET.PRIVATE_KEY_CONNECTED;
-        }
-        this.setWallet([wallet])
-          .then(() => {
-            if (this.switchAddress) {
-              this.close();
-              return;
-            }
-            _this.trackAccessWalletAmplitude(type);
-            if (_this.path !== '') {
-              _this.$router.push({ path: _this.path });
-            } else {
-              const name = _this.isOfflineApp
-                ? ROUTES_WALLET.WALLETS.NAME
-                : ROUTES_WALLET.DASHBOARD.NAME;
-              _this.$router.push({ name: name });
-            }
-          })
-          .catch(e => {
-            this.trackAccessWalletAmplitude(ACCESS_WALLET.ACCESS_FAILED, {
-              wallet: type
-            });
-            Toast(e, {}, ERROR);
-          });
-      } catch (e) {
-        Toast(e, {}, ERROR);
-      }
-    },
-
-    /**
-     * Directs user back to software overview
-     * Pushes new route query param
-     * Used in overlay back button
-     */
-    accessBack() {
-      if (this.walletType !== SOFTWARE_WALLET_TYPES.OVERVIEW) {
-        try {
-          this.trackAccessWalletAmplitude(ACCESS_WALLET.SOFTWARE_BACK);
-          this.$router.push({
-            query: { type: SOFTWARE_WALLET_TYPES.OVERVIEW }
-          });
-        } catch (e) {
-          Toast(e, {}, ERROR);
-        }
-      }
-    },
-
-    /**
-     * Sets a wallet type, pushes new route
-     * This method is used in create overview block
-     * @type - must be one of the SOFTWARE_WALLET_TYPES
-     */
-    setType(newType) {
-      if (Object.values(SOFTWARE_WALLET_TYPES).includes(newType)) {
-        try {
-          this.type = newType;
-          switch (newType) {
-            case SOFTWARE_WALLET_TYPES.KEYSTORE:
-              this.trackAccessWalletAmplitude(ACCESS_WALLET.KEYSTORE_SHOWN);
-              break;
-            case SOFTWARE_WALLET_TYPES.MNEMONIC:
-              this.trackAccessWalletAmplitude(ACCESS_WALLET.MNEMONIC_SHOWN);
-              break;
-            case SOFTWARE_WALLET_TYPES.PRIVATE_KEY:
-              this.trackAccessWalletAmplitude(ACCESS_WALLET.PRIVATE_KEY_SHOWN);
-              break;
-            default:
-              break;
-          }
-          this.$router.push({
-            query: { type: newType }
-          });
-        } catch (e) {
-          Toast(e, {}, ERROR);
-        }
+  /* Private Key */
+  {
+    label: 'Private Key',
+    icon: require('@/assets/images/icons/icon-private-key-grey.png'),
+    class: 'AccessPrivateKeyWallet',
+    fn: () => {
+      if (process.env.VUE_APP_PRIV_KEY) {
+        accessHandler.value.unlockPrivateKeyWallet(
+          process.env.VUE_APP_PRIV_KEY
+        );
+        unlockWallet();
       } else {
-        throw new Error('Not a valid type!');
+        setType(SOFTWARE_WALLET_TYPES.PRIVATE_KEY);
       }
     }
+  }
+];
+const accessHandler = ref({});
+const footer = ref({
+  text: 'Need help?',
+  linkTitle: 'Contact support',
+  link: 'mailto:support@myetherwallet.com'
+});
+
+// computed
+/**
+ * @returns if the back button on overlay should be displayed
+ */
+const showBackBtn = computed(() => {
+  return props.walletType !== SOFTWARE_WALLET_TYPES.OVERVIEW;
+});
+/**
+ * @returns correct title of the overlay according to the wallet type selected
+ */
+const title = computed(() => {
+  if (props.switchAddress) return 'Switch Address';
+  switch (props.walletType) {
+    case SOFTWARE_WALLET_TYPES.KEYSTORE:
+      return 'Access Wallet with Keystore File';
+    case SOFTWARE_WALLET_TYPES.MNEMONIC:
+      return 'Access Wallet with Mnemonic Phrase';
+    case SOFTWARE_WALLET_TYPES.PRIVATE_KEY:
+      return 'Access Wallet with Private Key';
+    default:
+      return 'Select Software Wallet';
+  }
+});
+
+// watch
+watch(open, newVal => {
+  if (identifier && props.switchAddress && newVal) {
+    setType(identifier);
+  }
+});
+
+// mounted
+onMounted(() => {
+  accessHandler.value = new handlerAccessWalletSoftware();
+  if (isOfflineApp) {
+    footer.value = {
+      text: 'Need help? Email us at support@myetherwallet.com',
+      linkTitle: '',
+      link: ''
+    };
+    warningSheetObj.value = {};
+  } else {
+    warningSheetObj.value.url = getArticle('not-rec-when-access-wallet');
+  }
+});
+
+// destroy
+onUnmounted(() => {
+  accessHandler.value = {};
+});
+
+// methods
+
+/**
+ * Sets Wallet and Pushes new route query param
+ * Used in overlay back button
+ * account is defined in Mnemonic phrase access
+ */
+const unlockWallet = (account = undefined) => {
+  try {
+    const wallet = !account ? accessHandler.value.getWalletInstance() : account;
+    let type = '';
+    if (type === types.KEYSTORE) {
+      type = ACCESS_WALLET.KEYSTORE_CONNECTED;
+    } else if (type === types.MNEMONIC) {
+      type = ACCESS_WALLET.MNEMONIC_CONNECTED;
+    } else if (type === types.PRIVATE_KEY) {
+      type = ACCESS_WALLET.PRIVATE_KEY_CONNECTED;
+    }
+    setWallet([wallet])
+      .then(() => {
+        if (props.switchAddress) {
+          close();
+          return;
+        }
+        trackAccessWalletAmplitude(type);
+        if (path !== '') {
+          router.push({ path: path });
+        } else {
+          const name = isOfflineApp
+            ? ROUTES_WALLET.WALLETS.NAME
+            : ROUTES_WALLET.DASHBOARD.NAME;
+          router.push({ name: name });
+        }
+      })
+      .catch(e => {
+        trackAccessWalletAmplitude(ACCESS_WALLET.ACCESS_FAILED, {
+          wallet: type
+        });
+        Toast(e, {}, ERROR);
+      });
+  } catch (e) {
+    Toast(e, {}, ERROR);
+  }
+};
+
+/**
+ * Directs user back to software overview
+ * Pushes new route query param
+ * Used in overlay back button
+ */
+const accessBack = () => {
+  if (props.walletType !== SOFTWARE_WALLET_TYPES.OVERVIEW) {
+    try {
+      trackAccessWalletAmplitude(ACCESS_WALLET.SOFTWARE_BACK);
+      router.push({
+        query: { type: SOFTWARE_WALLET_TYPES.OVERVIEW }
+      });
+    } catch (e) {
+      Toast(e, {}, ERROR);
+    }
+  }
+};
+
+/**
+ * Sets a wallet type, pushes new route
+ * This method is used in create overview block
+ * @type - must be one of the SOFTWARE_WALLET_TYPES
+ */
+const setType = newType => {
+  if (Object.values(SOFTWARE_WALLET_TYPES).includes(newType)) {
+    try {
+      type.value = newType;
+      switch (newType) {
+        case SOFTWARE_WALLET_TYPES.KEYSTORE:
+          trackAccessWalletAmplitude(ACCESS_WALLET.KEYSTORE_SHOWN);
+          break;
+        case SOFTWARE_WALLET_TYPES.MNEMONIC:
+          trackAccessWalletAmplitude(ACCESS_WALLET.MNEMONIC_SHOWN);
+          break;
+        case SOFTWARE_WALLET_TYPES.PRIVATE_KEY:
+          trackAccessWalletAmplitude(ACCESS_WALLET.PRIVATE_KEY_SHOWN);
+          break;
+        default:
+          break;
+      }
+      router.push({
+        query: { type: newType }
+      });
+    } catch (e) {
+      Toast(e, {}, ERROR);
+    }
+  } else {
+    throw new Error('Not a valid type!');
   }
 };
 </script>

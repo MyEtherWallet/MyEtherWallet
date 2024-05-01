@@ -214,196 +214,197 @@
   </mew-menu-popup>
 </template>
 
-<script>
-import { mapGetters, mapState, mapActions } from 'vuex';
+<script setup>
+import { defineProps, ref, computed, defineEmits } from 'vue';
 import { isEmpty } from 'lodash';
 
 import { checkCustomPath } from '@/modules/access-wallet/software/handlers/pathHelper';
 import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import { ethereum as ethereumPath } from '@/modules/access-wallet/hardware/handlers/configs/configPaths.js';
-export default {
-  props: {
-    passedPaths: {
-      type: Array,
-      default: () => []
-    },
-    selectedPath: {
-      type: Object,
-      default: () => {
-        return {
-          name: ethereumPath.label,
-          value: ethereumPath.path
-        };
-      }
-    },
-    /**
-     * disables custom derivation path
-     */
-    disableCustomPaths: {
-      type: Boolean,
-      default: false
-    },
-    isMobile: {
-      type: Boolean,
-      default: false
+import { custom as useCustomStore } from '@/core/store/index.js';
+
+// emits
+const emit = defineEmits(['setPath']);
+
+// injections/use
+const { paths, addCustomPath, deleteCustomPath, deleteAllCustomPaths } =
+  useCustomStore();
+
+// props
+const props = defineProps({
+  passedPaths: {
+    type: Array,
+    default: () => []
+  },
+  selectedPath: {
+    type: Object,
+    default: () => {
+      return {
+        name: ethereumPath.label,
+        value: ethereumPath.path
+      };
     }
   },
-  data() {
-    return {
-      showDerivationPath: false,
-      showCustomField: false,
-      searchValue: '',
-      customAlias: '',
-      customPath: '',
-      showRemove: false,
-      showRemoveAll: false,
-      selectedRemovePath: ''
+  /**
+   * disables custom derivation path
+   */
+  disableCustomPaths: {
+    type: Boolean,
+    default: false
+  },
+  isMobile: {
+    type: Boolean,
+    default: false
+  }
+});
+
+// data
+const showDerivationPath = ref(false);
+const showCustomField = ref(false);
+const searchValue = ref('');
+const customAlias = ref('');
+const customPath = ref('');
+const showRemove = ref(false);
+const showRemoveAll = ref(false);
+const selectedRemovePath = ref('');
+const aliasInput = ref(null);
+const pathInput = ref(null);
+
+// computed
+/**
+ * Custom filtered paths based on search
+ */
+const filteredCustomPaths = computed(() => {
+  if (props.disableCustomPaths) return [];
+  return paths.filter(path => {
+    if (searchValue.value) {
+      const pathName = path.name.toLowerCase();
+      const pathVal = path.value.toLowerCase();
+      const searchVal = searchValue.value.trim().toLowerCase();
+      return pathName.includes(searchVal) || pathVal.includes(searchVal);
+    }
+    return path;
+  });
+});
+/**
+ * Filtered paths based on search
+ */
+const filteredPaths = computed(() => {
+  return props.passedPaths.filter(path => {
+    if (!paths.find(e => e.value === path.value)) {
+      if (searchValue.value) {
+        const pathName = path.name.toLowerCase();
+        const pathVal = path.value.toLowerCase();
+        const searchVal = searchValue.value.trim().toLowerCase();
+        return pathName.includes(searchVal) || pathVal.includes(searchVal);
+      }
+      return path;
+    }
+  });
+});
+
+// methods
+/**
+ * Emits the path value and name back to parent
+ * then closes dropdown
+ */
+const setPath = path => {
+  emit('setPath', path);
+  showDerivationPath.value = false;
+};
+const hideRemove = () => {
+  showRemove.value = false;
+  showRemoveAll.value = false;
+};
+const handleRemove = path => {
+  showRemove.value = true;
+  selectedRemovePath.value = path;
+};
+const toggleCustomField = (scroll = false) => {
+  showCustomField.value = !showCustomField.value;
+  if (!showCustomField.value) {
+    customPath.value = '';
+    customAlias.value = '';
+    aliasInput.value.clear();
+    pathInput.value.clear();
+  }
+  if (scroll === true)
+    setTimeout(() => {
+      document.getElementById('bottomList').scrollIntoView();
+      aliasInput.value.$children[0].focus();
+    }, 150);
+};
+const deletePath = path => {
+  deleteCustomPath(path);
+  showRemove.value = false;
+};
+const deleteAllPaths = () => {
+  deleteAllCustomPaths();
+  showRemoveAll.value = false;
+};
+/**
+ * Sets the custom alias value
+ */
+const setCustomAlias = val => {
+  if (val) customAlias.value = val.trim();
+  else customAlias.value = '';
+};
+/**
+ * Sets the custom path value
+ */
+const setCustomPath = val => {
+  if (val) customPath.value = val.trim();
+  else customPath.value = '';
+};
+/**
+ * Method sets searchValue on mew-search input event
+ */
+const setSearch = newVal => {
+  searchValue.value = newVal;
+};
+/**
+ * Method to add custom path.
+ * Checks if path is valid and already exists in the filtered paths.
+ */
+const saveCustomPath = () => {
+  try {
+    const locCustomPath = checkCustomPath(customPath.value);
+    if (!locCustomPath) {
+      Toast('Invalid Derivation path', {}, ERROR);
+      return;
+    }
+    if (isEmpty(customAlias.value)) {
+      Toast('Custom alias cannot be empty', {}, ERROR);
+      return;
+    }
+    const foundPath =
+      filteredPaths.value.find(e => e.value === locCustomPath) ||
+      filteredCustomPaths.value.find(e => e.value === locCustomPath);
+    if (foundPath) {
+      Toast(`Path already exists: ${foundPath.name}`, {}, ERROR);
+      return;
+    }
+    const foundName =
+      filteredPaths.value.find(e => e.name === customAlias.value) ||
+      filteredCustomPaths.value.find(e => e.name === customAlias.value);
+    if (foundName) {
+      Toast(`Path name already exists: ${foundName.name}`, {}, ERROR);
+      return;
+    }
+    const newPath = {
+      name: customAlias.value,
+      value: locCustomPath
     };
-  },
-  computed: {
-    ...mapGetters('global', ['network']),
-    ...mapState('custom', ['paths']),
-    /**
-     * Custom filtered paths based on search
-     */
-    filteredCustomPaths() {
-      if (this.disableCustomPaths) return [];
-      return this.paths.filter(path => {
-        if (this.searchValue) {
-          const pathName = path.name.toLowerCase();
-          const pathVal = path.value.toLowerCase();
-          const searchVal = this.searchValue.trim().toLowerCase();
-          return pathName.includes(searchVal) || pathVal.includes(searchVal);
-        }
-        return path;
-      });
-    },
-    /**
-     * Filtered paths based on search
-     */
-    filteredPaths() {
-      return this.passedPaths.filter(path => {
-        if (!this.paths.find(e => e.value === path.value)) {
-          if (this.searchValue) {
-            const pathName = path.name.toLowerCase();
-            const pathVal = path.value.toLowerCase();
-            const searchVal = this.searchValue.trim().toLowerCase();
-            return pathName.includes(searchVal) || pathVal.includes(searchVal);
-          }
-          return path;
-        }
-      });
-    }
-  },
-  methods: {
-    ...mapActions('custom', [
-      'addCustomPath',
-      'deleteCustomPath',
-      'deleteAllCustomPaths'
-    ]),
-    /**
-     * Emits the path value and name back to parent
-     * then closes dropdown
-     */
-    setPath(path) {
-      this.$emit('setPath', path);
-      this.showDerivationPath = false;
-    },
-    hideRemove() {
-      this.showRemove = false;
-      this.showRemoveAll = false;
-    },
-    handleRemove(path) {
-      this.showRemove = true;
-      this.selectedRemovePath = path;
-    },
-    toggleCustomField(scroll = false) {
-      this.showCustomField = !this.showCustomField;
-      if (!this.showCustomField) {
-        this.customPath = '';
-        this.customAlias = '';
-        this.$refs.aliasInput.clear();
-        this.$refs.pathInput.clear();
-      }
-      if (scroll === true)
-        setTimeout(() => {
-          document.getElementById('bottomList').scrollIntoView();
-          this.$refs.aliasInput.$children[0].focus();
-        }, 150);
-    },
-    deletePath(path) {
-      this.deleteCustomPath(path);
-      this.showRemove = false;
-    },
-    deleteAllPaths() {
-      this.deleteAllCustomPaths();
-      this.showRemoveAll = false;
-    },
-    /**
-     * Sets the custom alias value
-     */
-    setCustomAlias(val) {
-      if (val) this.customAlias = val.trim();
-      else this.customAlias = '';
-    },
-    /**
-     * Sets the custom path value
-     */
-    setCustomPath(val) {
-      if (val) this.customPath = val.trim();
-      else this.customPath = '';
-    },
-    /**
-     * Method sets searchValue on mew-search input event
-     */
-    setSearch(newVal) {
-      this.searchValue = newVal;
-    },
-    /**
-     * Method to add custom path.
-     * Checks if path is valid and already exists in the filtered paths.
-     */
-    saveCustomPath() {
-      try {
-        const customPath = checkCustomPath(this.customPath);
-        if (!customPath) {
-          Toast('Invalid Derivation path', {}, ERROR);
-          return;
-        }
-        if (isEmpty(this.customAlias)) {
-          Toast('Custom alias cannot be empty', {}, ERROR);
-          return;
-        }
-        const foundPath =
-          this.filteredPaths.find(e => e.value === this.customPath) ||
-          this.filteredCustomPaths.find(e => e.value === this.customPath);
-        if (foundPath) {
-          Toast(`Path already exists: ${foundPath.name}`, {}, ERROR);
-          return;
-        }
-        const foundName =
-          this.filteredPaths.find(e => e.name === this.customAlias) ||
-          this.filteredCustomPaths.find(e => e.name === this.customAlias);
-        if (foundName) {
-          Toast(`Path name already exists: ${foundName.name}`, {}, ERROR);
-          return;
-        }
-        const newPath = {
-          name: this.customAlias,
-          value: this.customPath
-        };
-        this.addCustomPath(newPath).then(() => {
-          this.customPath = '';
-          this.customAlias = '';
-          this.$refs.aliasInput.clear();
-          this.$refs.pathInput.clear();
-          Toast('Custom derivation path added!', {}, SUCCESS);
-        });
-        this.showCustomField = false;
-      } catch (error) {
-        Toast(error, {}, ERROR);
-      }
-    }
+    addCustomPath(newPath).then(() => {
+      customPath.value = '';
+      customAlias.value = '';
+      aliasInput.value.clear();
+      pathInput.value.clear();
+      Toast('Custom derivation path added!', {}, SUCCESS);
+    });
+    showCustomField.value = false;
+  } catch (error) {
+    Toast(error, {}, ERROR);
   }
 };
 </script>

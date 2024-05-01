@@ -1,10 +1,10 @@
 <template>
   <div class="mew-component-fix--unstoppable-domain">
     <div class="d-flex align-center">
-      <buy-overlay :open="buyOverlay" :close="closeBuyOverlay" />
+      <buy-overlay :open="buyOverlayVal" :close="closeBuyOverlay" />
       <div
         class="cursor--pointer font-weight-bold mr-4"
-        @click="buyOverlay = true"
+        @click="openBuyOverlay"
       >
         Buy Domain Overlay
       </div>
@@ -405,162 +405,159 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, computed } from 'vue';
+
 import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.jpg';
 import buyOverlay from './components/UnstoppableDomainBuyOverlay';
 import addOwnedDomainOverlay from './components/UnstoppableAddOwnedDomainOverlay';
 import transferDomainOverlay from './components/UnstoppableTransferDomainOverlay';
-import buyMore from '@/core/mixins/buyMore.mixin.js';
-import { mapGetters, mapState } from 'vuex';
 import Resolution from '@unstoppabledomains/resolution';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+import { useBuySell } from '@/core/composables/buyMore';
+import {
+  global as useGlobalStore,
+  wallet as useWalletStore
+} from '@/core/store/index.js';
 
-export default {
-  components: {
-    buyOverlay,
-    addOwnedDomainOverlay,
-    transferDomainOverlay
-  },
-  mixins: [buyMore],
-  data() {
-    return {
-      buyOverlay: false,
-      addOverlay: false,
-      transferOverlay: false,
-      inputtedAddress: null,
-      reverseTokenIdResults: '',
-      reverseUrlResults: '',
-      hasUrlResults: false,
-      hasTokenIdResults: false,
-      isLoading: false,
-      tabs: [
-        { name: 'Buy domain' },
-        { name: 'Manage domain' },
-        { name: 'Reverse Resolver' }
-      ],
-      domainFunctions: [
-        { label: 'Transfer Domain' },
-        { label: 'Renew Domain', expire: '07/21/2020' },
-        { label: 'ENS Configurations' },
-        { label: 'Manage Multicoins' },
-        { label: 'Manage Text Records' },
-        { label: 'Upload Website' },
-        { label: 'Return Funds' }
-      ],
-      myDomains: [
-        {
-          name: 'mewdev009.eth',
-          toggleTitle: '',
-          colorTheme: 'greyLight',
-          warningBadge: {
-            color: 'orangePrimary',
-            text: 'Expire soon'
-          }
-        },
-        {
-          name: 'mewdev008.eth',
-          toggleTitle: '',
-          colorTheme: 'greyLight',
-          warningBadge: {
-            color: 'orangePrimary',
-            text: 'Expire soon'
-          }
-        }
-      ],
-      BG: BG,
-      topBanner: {
-        title: 'Unstoppable Domain',
-        toggleTitle:
-          'Replace cryptocurrency addresses with a human readable name.'
-      },
-      results: [
-        {
-          label: 'Labelhash (mewwallet)',
-          value: '0x527b9715d99aCfB7E1b01C6C864DC8402fC6C864DC8402f2a3C3b'
-        },
-        {
-          label: 'Namehash (mewwallet.eth)',
-          value: '0x527b9715d99aCfB7E1b01C6C864DC8402fC6C864DC8402f2a3C3b'
-        },
-        {
-          label: 'Owner',
-          value: '0x527b9715d99aCfB7E1b01C6C864DC8402f2a3C3b'
-        },
-        {
-          label: 'Multi-coin',
-          value: 'None'
-        },
-        {
-          label: 'ETH address',
-          value: '0x502e119bbf7b476a449a67fdabfa35f486194c9a'
-        }
-      ]
-    };
-  },
-  computed: {
-    ...mapGetters('global', ['network']),
-    ...mapState('wallet', ['balance', 'web3', 'instance', 'address']),
-    inputErrorMessage() {
-      if (this.inputtedAddress === '') {
-        return `Address input cannot be empty.`;
-      }
-      return '';
+// injections/use
+const { openBuySell } = useBuySell();
+const { network } = useGlobalStore();
+const { address } = useWalletStore();
+
+// data
+const buyOverlayVal = ref(false);
+const addOverlay = ref(false);
+const transferOverlay = ref(false);
+const inputtedAddress = ref(null);
+const reverseTokenIdResults = ref('');
+const reverseUrlResults = ref('');
+const hasUrlResults = ref(false);
+const hasTokenIdResults = ref(false);
+const isLoading = ref(false);
+// non reactive ones
+const tabs = [
+  { name: 'Buy domain' },
+  { name: 'Manage domain' },
+  { name: 'Reverse Resolver' }
+];
+const domainFunctions = [
+  { label: 'Transfer Domain' },
+  { label: 'Renew Domain', expire: '07/21/2020' },
+  { label: 'ENS Configurations' },
+  { label: 'Manage Multicoins' },
+  { label: 'Manage Text Records' },
+  { label: 'Upload Website' },
+  { label: 'Return Funds' }
+];
+const myDomains = [
+  {
+    name: 'mewdev009.eth',
+    toggleTitle: '',
+    colorTheme: 'greyLight',
+    warningBadge: {
+      color: 'orangePrimary',
+      text: 'Expire soon'
     }
   },
-  methods: {
-    async reverseTokenId() {
-      this.isLoading = true;
-      const address = this.inputtedAddress;
-      const resolution = new Resolution();
-      try {
-        const results = await resolution
-          .reverseTokenId(address)
-          .then(tokenId => {
-            const tokenIdRes = tokenId;
-            this.reverseTokenIdResults =
-              address + ' ' + `reversed to` + ' ' + tokenIdRes;
-          });
-        this.isLoading = false;
-        this.hasTokenIdResults = true;
-        return results;
-      } catch (e) {
-        Toast(e, {}, ERROR);
-      }
-    },
-    async reverseUrl() {
-      this.isLoading = true;
-      const address = this.inputtedAddress;
-      const resolution = new Resolution();
-      try {
-        const results = await resolution
-          .reverse(address, {
-            location: 'UNSLayer2'
-          })
-          .then(domain => {
-            const domainRes = domain;
-            this.reverseUrlResults =
-              address + ' ' + `reversed to` + ' ' + domainRes;
-          });
-        this.isLoading = false;
-        this.hasUrlResults = true;
-        return results;
-      } catch (e) {
-        Toast(e, {}, ERROR);
-      }
-    },
-    setAddress(value) {
-      this.inputtedAddress = value;
-    },
-    closeBuyOverlay() {
-      this.buyOverlay = false;
-    },
-    closeAddOverlay() {
-      this.addOverlay = false;
-    },
-    closeTransferOverlay() {
-      this.transferOverlay = false;
+  {
+    name: 'mewdev008.eth',
+    toggleTitle: '',
+    colorTheme: 'greyLight',
+    warningBadge: {
+      color: 'orangePrimary',
+      text: 'Expire soon'
     }
   }
+];
+const topBanner = {
+  title: 'Unstoppable Domain',
+  toggleTitle: 'Replace cryptocurrency addresses with a human readable name.'
+};
+const results = [
+  {
+    label: 'Labelhash (mewwallet)',
+    value: '0x527b9715d99aCfB7E1b01C6C864DC8402fC6C864DC8402f2a3C3b'
+  },
+  {
+    label: 'Namehash (mewwallet.eth)',
+    value: '0x527b9715d99aCfB7E1b01C6C864DC8402fC6C864DC8402f2a3C3b'
+  },
+  {
+    label: 'Owner',
+    value: '0x527b9715d99aCfB7E1b01C6C864DC8402f2a3C3b'
+  },
+  {
+    label: 'Multi-coin',
+    value: 'None'
+  },
+  {
+    label: 'ETH address',
+    value: '0x502e119bbf7b476a449a67fdabfa35f486194c9a'
+  }
+];
+
+// computed
+const inputErrorMessage = computed(() => {
+  if (inputtedAddress.value === '') {
+    return `Address input cannot be empty.`;
+  }
+  return '';
+});
+
+const reverseTokenId = async () => {
+  isLoading.value = true;
+  const address = inputtedAddress.value;
+  const resolution = new Resolution();
+  try {
+    const results = await resolution.reverseTokenId(address).then(tokenId => {
+      const tokenIdRes = tokenId;
+      reverseTokenIdResults.value =
+        address + ' ' + `reversed to` + ' ' + tokenIdRes;
+    });
+    isLoading.value = false;
+    hasTokenIdResults.value = true;
+    return results;
+  } catch (e) {
+    Toast(e, {}, ERROR);
+  }
+};
+const reverseUrl = async () => {
+  isLoading.value = true;
+  const address = inputtedAddress.value;
+  const resolution = new Resolution();
+  try {
+    const results = await resolution
+      .reverse(address, {
+        location: 'UNSLayer2'
+      })
+      .then(domain => {
+        const domainRes = domain;
+        reverseUrlResults.value =
+          address + ' ' + `reversed to` + ' ' + domainRes;
+      });
+    isLoading.value = false;
+    hasUrlResults.value = true;
+    return results;
+  } catch (e) {
+    Toast(e, {}, ERROR);
+  }
+};
+const setAddress = value => {
+  inputtedAddress.value = value;
+};
+const closeBuyOverlay = () => {
+  buyOverlayVal.value = false;
+};
+const closeAddOverlay = () => {
+  addOverlay.value = false;
+};
+const closeTransferOverlay = () => {
+  transferOverlay.value = false;
+};
+
+const openBuyOverlay = () => {
+  buyOverlayVal.value = true;
 };
 </script>
 <style lang="scss" scoped>

@@ -43,118 +43,118 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { defineProps, ref, computed, watch, onMounted, defineEmits } from 'vue';
 import { isValidPrivate } from 'ethereumjs-util';
 import { isString } from 'lodash';
-import { mapState } from 'vuex';
 
 import { isPrivateKey } from '../handlers/helpers';
 import {
   getBufferFromHex,
   sanitizeHex
 } from '../../../access-wallet/common/helpers';
-import handlerAnalyticsMixin from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { ACCESS_WALLET } from '@/modules/analytics-opt-in/handlers/configs/events';
+import { useAmplitude } from '@/core/composables/amplitude';
+import { wallet as useWalletStore } from '@/core/store/index.js';
 
-export default {
-  name: 'AccessWalletPrivateKey',
-  mixins: [handlerAnalyticsMixin],
-  props: {
-    handlerAccessWallet: {
-      type: Object,
-      default: () => {
-        return {};
-      }
-    }
-  },
-  data() {
-    return {
-      privateKey: '',
-      acceptTerms: false,
-      invis: false,
-      label: 'To access my wallet, I accept ',
-      link: {
-        title: 'Terms',
-        url: 'https://www.myetherwallet.com/terms-of-service'
-      }
-    };
-  },
-  computed: {
-    ...mapState('wallet', ['isOfflineApp']),
-    /**
-     * Property that controls Access Wallet button
-     * Button is enabled when terms were accepted and
-     * private key entered is valid
-     * @return boolean
-     */
-    disableBtn() {
-      return this.acceptTerms && this.isPrivKey;
-    },
-    /**
-     * Property validates whether or not entered private key is valid
-     * @return booelan
-     */
-    isPrivKey() {
-      const _privKey = Buffer.isBuffer(this.actualPrivateKey)
-        ? this.actualPrivateKey
-        : getBufferFromHex(sanitizeHex(this.actualPrivateKey));
-      return isPrivateKey(this.privateKey) && isValidPrivate(_privKey);
-    },
-    /**
-     * @returns actual private without '0x' prefix
-     */
-    actualPrivateKey() {
-      if (!isString(this.privateKey)) return '';
-      return this.privateKey && this.privateKey.substr(0, 2) === '0x'
-        ? this.privateKey.replace('0x', '')
-        : this.privateKey;
-    },
-    /**
-     * @returns rules fot the private key input
-     */
-    privKeyRules() {
-      return [
-        value => !!value || 'Required',
-        value => isPrivateKey(value) || 'This is not a real private Key'
-      ];
-    }
-  },
-  watch: {
-    privateKey(val) {
-      if (val !== '' && !this.privKey) {
-        this.trackAccessWalletAmplitude(ACCESS_WALLET.SOFTWARE_FAILED, {
-          error: 'This is not a real private Key'
-        });
-      }
-    },
-    acceptTerms(val) {
-      if (val) {
-        this.trackAccessWalletAmplitude(ACCESS_WALLET.PRIV_KEY_TERMS);
-      }
-    },
-    invis(val) {
-      if (val) {
-        this.trackAccessWalletAmplitude(ACCESS_WALLET.PRIV_INVISIBLE_BOX);
-      }
-    }
-  },
-  mounted() {
-    if (this.isOfflineApp) {
-      this.link = {};
-      this.label = 'To access my wallet, I accept Terms';
-    }
-  },
-  methods: {
-    /**
-     * Method unlocks private key wallet,
-     * Emits to the parent module to enter wallet route
-     */
-    unlockBtn() {
-      this.handlerAccessWallet.unlockPrivateKeyWallet(this.actualPrivateKey);
-      this.$emit('unlock');
-      this.privateKey = '';
+// defineEmits
+const emit = defineEmits(['unlock']);
+
+// injections/use
+const { trackAccessWalletAmplitude } = useAmplitude();
+const { isOfflineApp } = useWalletStore();
+
+// props
+const props = defineProps({
+  handlerAccessWallet: {
+    type: Object,
+    default: () => {
+      return {};
     }
   }
+});
+
+// data
+const privateKey = ref('');
+const acceptTerms = ref(false);
+const invis = ref(false);
+const label = ref('To access my wallet, I accept ');
+const link = ref({
+  title: 'Terms',
+  url: 'https://www.myetherwallet.com/terms-of-service'
+});
+
+// computed
+/**
+ * Property that controls Access Wallet button
+ * Button is enabled when terms were accepted and
+ * private key entered is valid
+ * @return boolean
+ */
+const disableBtn = computed(() => {
+  return acceptTerms.value && isPrivKey.value;
+});
+/**
+ * Property validates whether or not entered private key is valid
+ * @return booelan
+ */
+const isPrivKey = computed(() => {
+  const _privKey = Buffer.isBuffer(actualPrivateKey.value)
+    ? actualPrivateKey.value
+    : getBufferFromHex(sanitizeHex(actualPrivateKey.value));
+  return isPrivateKey(privateKey.value) && isValidPrivate(_privKey);
+});
+/**
+ * @returns actual private without '0x' prefix
+ */
+const actualPrivateKey = computed(() => {
+  if (!isString(privateKey.value)) return '';
+  return privateKey.value && privateKey.value.substr(0, 2) === '0x'
+    ? privateKey.value.replace('0x', '')
+    : privateKey.value;
+});
+/**
+ * @returns rules fot the private key input
+ */
+const privKeyRules = computed(() => {
+  return [
+    value => !!value || 'Required',
+    value => isPrivateKey(value) || 'This is not a real private Key'
+  ];
+});
+
+// watch
+watch(privateKey, val => {
+  if (val !== '' && !isPrivKey.value) {
+    trackAccessWalletAmplitude(ACCESS_WALLET.SOFTWARE_FAILED, {
+      error: 'This is not a real private Key'
+    });
+  }
+});
+watch(acceptTerms, val => {
+  if (val) {
+    trackAccessWalletAmplitude(ACCESS_WALLET.PRIV_KEY_TERMS);
+  }
+});
+watch(invis, val => {
+  if (val) {
+    trackAccessWalletAmplitude(ACCESS_WALLET.PRIV_INVISIBLE_BOX);
+  }
+});
+
+// mounted
+onMounted(() => {
+  if (isOfflineApp) {
+    link.value = {};
+    label.value = 'To access my wallet, I accept Terms';
+  }
+});
+
+// methods
+const unlockBtn = () => {
+  props.handlerAccessWallet.unlockPrivateKeyWallet(actualPrivateKey.value);
+  emit('unlock');
+  privateKey.value = '';
 };
 </script>
 

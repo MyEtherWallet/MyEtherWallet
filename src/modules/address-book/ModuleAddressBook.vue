@@ -36,7 +36,22 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex';
+const USER_INPUT_TYPES = {
+  typed: 'TYPED',
+  selected: 'SELECTED',
+  resolved: 'RESOLVED'
+};
+</script>
+<script setup>
+import {
+  defineAsyncComponent,
+  defineProps,
+  ref,
+  computed,
+  watch,
+  onMounted,
+  defineEmits
+} from 'vue';
 import { isObject, throttle } from 'lodash';
 import WAValidator from 'multicoin-address-validator';
 import { getAddressInfo } from '@kleros/address-tags-sdk';
@@ -45,336 +60,329 @@ import { isAddress, toChecksumAddress } from '@/core/helpers/addressUtils';
 import NameResolver from '@/modules/name-resolver/index';
 import { ERROR, Toast } from '../toast/handler/handlerToast';
 
-const USER_INPUT_TYPES = {
-  typed: 'TYPED',
-  selected: 'SELECTED',
-  resolved: 'RESOLVED'
-};
+import {
+  addressBook as useAddressBookStore,
+  global as useGlobalStore,
+  wallet as useWalletStore
+} from '@/core/store/index.js';
+import { useI18n } from 'vue-i18n-composable/dist';
 
-export default {
-  components: {
-    AddressBookAddEdit: () => import('./components/AddressBookAddEdit')
+const AddressBookAddEdit = defineAsyncComponent(() =>
+  import('./components/AddressBookAddEdit')
+);
+
+// emits
+const emit = defineEmits(['setAddress']);
+
+// injections/use
+const { addressBookStore } = useAddressBookStore();
+const { network } = useGlobalStore();
+const { web3, address, isOfflineApp, identifier, instance } = useWalletStore();
+const { t } = useI18n();
+
+// props
+const props = defineProps({
+  isValidAddressFunc: {
+    type: Function,
+    default: isAddress
   },
-  props: {
-    isValidAddressFunc: {
-      type: Function,
-      default: isAddress
-    },
-    isHomePage: {
-      type: Boolean,
-      default: false
-    },
-    label: {
-      type: String,
-      default: ''
-    },
-    currency: {
-      type: String,
-      default: 'ETH'
-    },
-    preselectCurrWalletAdr: {
-      type: Boolean,
-      default: false
-    },
-    enableSaveAddress: {
-      type: Boolean,
-      default: true
-    }
+  isHomePage: {
+    type: Boolean,
+    default: false
   },
-  data() {
-    return {
-      addMode: false,
-      resolvedAddr: '',
-      inputAddr: '',
-      nameResolver: null,
-      isValidAddress: false,
-      loadedAddressValidation: false,
-      nametag: '',
-      footer: {
-        text: 'Need help?',
-        linkTitle: 'Contact support',
-        link: 'mailto:support@myetherwallet.com'
-      }
+  label: {
+    type: String,
+    default: ''
+  },
+  currency: {
+    type: String,
+    default: 'ETH'
+  },
+  preselectCurrWalletAdr: {
+    type: Boolean,
+    default: false
+  },
+  enableSaveAddress: {
+    type: Boolean,
+    default: true
+  }
+});
+
+// data
+const addMode = ref(false);
+const resolvedAddr = ref('');
+const inputAddr = ref('');
+const nameResolver = ref(null);
+const isValidAddress = ref(false);
+const loadedAddressValidation = ref(false);
+const nametag = ref('');
+const footer = ref({
+  text: 'Need help?',
+  linkTitle: 'Contact support',
+  link: 'mailto:support@myetherwallet.com'
+});
+const addressSelect = ref(null);
+
+// computed
+const errorMessages = computed(() => {
+  if (!isValidAddress.value && loadedAddressValidation.value) {
+    return t('interface.address-book.validations.invalid-address');
+  }
+  if (!inputAddr.value && loadedAddressValidation.value) {
+    return t('interface.address-book.validations.addr-required');
+  }
+  return '';
+});
+const addressBookWithMyAddress = computed(() => {
+  return props.isHomePage
+    ? [
+        {
+          address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
+          currency: 'ETH',
+          nickname: 'MEW Donations',
+          resolverAddr: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
+        }
+      ]
+    : myAddressBook.value;
+});
+const myAddressBook = computed(() => {
+  if (!props.isHomePage && !identifier && instance)
+    instance.errorHandler(
+      new Error('Wallet has no identifier! Please refresh the page')
+    );
+  return address
+    ? [
+        {
+          address: toChecksumAddress(address),
+          nickname: 'My Address',
+          resolverAddr: ''
+        }
+      ].concat(addressBookStore)
+    : // If address is undefined set to MEW Donations
+      [
+        {
+          address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
+          currency: 'ETH',
+          nickname: 'MEW Donations',
+          resolverAddr: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
+        }
+      ].concat(addressBookStore);
+});
+const enableSave = computed(() => {
+  return props.isHomePage
+    ? false
+    : isValidAddress.value && props.enableSaveAddress;
+});
+const addrLabel = computed(() => {
+  return props.label === '' ? t('sendTx.to-addr') : props.label;
+});
+const addressOnly = computed(() => {
+  return isAddress(resolvedAddr.value) && isValidAddress.value
+    ? resolvedAddr.value
+    : '';
+});
+const nameOnly = computed(() => {
+  return !isAddress(resolvedAddr.value) && isValidAddress.value
+    ? resolvedAddr.value || nametag.value
+    : '';
+});
+
+// watch
+watch(web3, () => {
+  if (network.type.ens && web3.currentProvider) {
+    nameResolver.value = new NameResolver(network, web3);
+  } else {
+    nameResolver.value = null;
+  }
+});
+watch(inputAddr, newVal => {
+  nametag.value = '';
+  if (isAddress(newVal.toLowerCase())) {
+    resolveAddress();
+  } else {
+    resolveName();
+  }
+});
+
+onMounted(() => {
+  if (isOfflineApp) {
+    footer.value = {
+      text: 'Need help? Email us at support@myetherwallet.com',
+      linkTitle: '',
+      link: ''
     };
-  },
+  }
+  if (network.type.ens && web3.currentProvider)
+    nameResolver.value = new NameResolver(network, web3);
+  if (props.isHomePage) {
+    setDonationAddress();
+  }
+  if (props.preselectCurrWalletAdr) {
+    addressSelect.value.selectAddress(addressBookWithMyAddress.value[0]);
+    setAddress(toChecksumAddress(address), USER_INPUT_TYPES.selected);
+  }
+});
 
-  computed: {
-    ...mapState('addressBook', ['addressBookStore']),
-    ...mapGetters('global', ['network']),
-    ...mapState('wallet', [
-      'web3',
-      'address',
-      'isOfflineApp',
-      'identifier',
-      'instance'
-    ]),
-    errorMessages() {
-      if (!this.isValidAddress && this.loadedAddressValidation) {
-        return this.$t('interface.address-book.validations.invalid-address');
-      }
-      if (!this.inputAddr && this.loadedAddressValidation) {
-        return this.$t('interface.address-book.validations.addr-required');
-      }
-      return '';
-    },
-    addressBookWithMyAddress() {
-      return this.isHomePage
-        ? [
-            {
-              address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
-              currency: 'ETH',
-              nickname: 'MEW Donations',
-              resolverAddr: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
-            }
-          ]
-        : this.myAddressBook;
-    },
-    myAddressBook() {
-      if (!this.isHomePage && !this.identifier && this.instance)
-        this.instance.errorHandler(
-          new Error('Wallet has no identifier! Please refresh the page')
-        );
-      return this.address
-        ? [
-            {
-              address: toChecksumAddress(this.address),
-              nickname: 'My Address',
-              resolverAddr: ''
-            }
-          ].concat(this.addressBookStore)
-        : // If address is undefined set to MEW Donations
-          [
-            {
-              address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
-              currency: 'ETH',
-              nickname: 'MEW Donations',
-              resolverAddr: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
-            }
-          ].concat(this.addressBookStore);
-    },
-    enableSave() {
-      return this.isHomePage
-        ? false
-        : this.isValidAddress && this.enableSaveAddress;
-    },
-    addrLabel() {
-      return this.label === '' ? this.$t('sendTx.to-addr') : this.label;
-    },
-    addressOnly() {
-      return isAddress(this.resolvedAddr) && this.isValidAddress
-        ? this.resolvedAddr
-        : '';
-    },
-    nameOnly() {
-      return !isAddress(this.resolvedAddr) && this.isValidAddress
-        ? this.resolvedAddr || this.nametag
-        : '';
-    }
-  },
-  watch: {
-    web3() {
-      if (this.network.type.ens && this.web3.currentProvider) {
-        this.nameResolver = new NameResolver(this.network, this.web3);
-      } else {
-        this.nameResolver = null;
-      }
-    },
-    inputAddr(newVal) {
-      this.nametag = '';
-      if (isAddress(newVal.toLowerCase())) {
-        this.resolveAddress();
-      } else {
-        this.resolveName();
-      }
-    }
-  },
-  mounted() {
-    if (this.isOfflineApp) {
-      this.footer = {
-        text: 'Need help? Email us at support@myetherwallet.com',
-        linkTitle: '',
-        link: ''
-      };
-    }
-    if (this.network.type.ens && this.web3.currentProvider)
-      this.nameResolver = new NameResolver(this.network, this.web3);
-    if (this.isHomePage) {
-      this.setDonationAddress();
-    }
-    if (this.preselectCurrWalletAdr) {
-      this.$refs.addressSelect.selectAddress(this.addressBookWithMyAddress[0]);
-      this.setAddress(
-        toChecksumAddress(this.address),
-        USER_INPUT_TYPES.selected
-      );
-    }
-  },
-  methods: {
-    /**
-     * Checks if address is valid
-     * and sets the address value
-     */
-    async setAddress(value, inputType) {
-      if (typeof value === 'string') {
-        if (
-          this.currency.toLowerCase() ===
-          this.network.type.currencyName?.toLowerCase()
-        ) {
-          /**
-           * Checks if user typed or selected an address from dropdown
-           */
-          const typeVal =
-            inputType === USER_INPUT_TYPES.typed
-              ? value
-              : this.addressBookWithMyAddress.find(item => {
-                  return value.toLowerCase() === item.address.toLowerCase();
-                });
-          this.inputAddr = value;
-          this.resolvedAddr = '';
-          /**
-           * Checks if the address is valid
-           */
-          try {
-            const isAddValid = this.isValidAddressFunc(this.inputAddr);
-            if (isAddValid instanceof Promise) {
-              const validation = await isAddValid;
-              this.isValidAddress = validation;
-            } else {
-              this.isValidAddress = isAddValid;
-            }
-          } catch (e) {
-            this.isValidAddress = false;
-          }
-          this.loadedAddressValidation = !this.isValidAddress ? false : true;
-          /**
-           * @emits setAddress
-           */
-          this.$emit('setAddress', value, this.isValidAddress, {
-            type: inputType,
-            value: isObject(typeVal) ? typeVal.nickname : typeVal
-          });
-          /**
-           * Resolve address with ENS/Unstoppable/Kleros
-           */
-          if (this.isValidAddress && !this.isOfflineApp)
-            await this.resolveAddress();
-
-          if (!this.isValidAddress) {
-            await this.resolveName();
-          }
+// methods
+/**
+ * Checks if address is valid
+ * and sets the address value
+ */
+const setAddress = async (value, inputType) => {
+  if (typeof value === 'string') {
+    if (
+      props.currency.toLowerCase() === network.type.currencyName?.toLowerCase()
+    ) {
+      /**
+       * Checks if user typed or selected an address from dropdown
+       */
+      const typeVal =
+        inputType === USER_INPUT_TYPES.typed
+          ? value
+          : addressBookWithMyAddress.value.find(item => {
+              return value.toLowerCase() === item.address.toLowerCase();
+            });
+      inputAddr.value = value;
+      resolvedAddr.value = '';
+      /**
+       * Checks if the address is valid
+       */
+      try {
+        const isAddValid = props.isValidAddressFunc(inputAddr);
+        if (isAddValid instanceof Promise) {
+          const validation = await isAddValid;
+          isValidAddress.value = validation;
         } else {
-          const currencyExists = WAValidator.findCurrency(
-            this.currency.toLowerCase()
-          );
-          if (currencyExists) {
-            const validate = WAValidator.validate(
-              value,
-              this.currency.toLowerCase()
-            );
-            if (validate) {
-              this.inputAddr = value;
-              this.isValidAddress = true;
-            } else {
-              this.isValidAddress = false;
-            }
-            this.loadedAddressValidation = true;
-            /**
-             * @emits setAddress
-             */
-            this.$emit('setAddress', value, this.isValidAddress, {
-              type: inputType,
-              value: value
-            });
-          } else {
-            this.isValidAddress = false;
-            this.loadedAddressValidation = true;
-            this.$emit('setAddress', value, this.isValidAddress, {
-              type: inputType,
-              value: value
-            });
-          }
+          isValidAddress.value = isAddValid;
         }
+      } catch (e) {
+        isValidAddress.value = false;
       }
-    },
-    // is used from the parent context
-    // eslint-disable-next-line
-    clear() {
-      this.addMode = false;
-      this.resolvedAddr = '';
-      this.inputAddr = '';
-      this.nameResolver = null;
-      this.isValidAddress = false;
-      this.loadedAddressValidation = false;
-      this.$refs.addressSelect.clear();
-      this.$emit('setAddress', this.resolvedAddr, this.isValidAddress, {
-        type: USER_INPUT_TYPES.typed,
-        value: this.inputAddr
+      loadedAddressValidation.value = !isValidAddress.value ? false : true;
+      /**
+       * @emits setAddress
+       */
+      emit('setAddress', value, isValidAddress, {
+        type: inputType,
+        value: isObject(typeVal) ? typeVal.nickname : typeVal
       });
+      /**
+       * Resolve address with ENS/Unstoppable/Kleros
+       */
+      if (isValidAddress.value && !isOfflineApp) await resolveAddress();
 
-      // Calls setups from mounted
-      if (!this.isOfflineApp && this.network.type.ens)
-        this.nameResolver = new NameResolver(this.network, this.web3);
-      if (this.isHomePage) {
-        this.setDonationAddress();
+      if (!isValidAddress.value) {
+        await resolveName();
       }
-    },
-    /**
-     * Sets selected address to be MEW donation address
-     * only happens on home page
-     */
-    setDonationAddress() {
-      this.$refs.addressSelect.selectAddress(this.addressBookWithMyAddress[0]);
-    },
-    toggleOverlay() {
-      this.addMode = !this.addMode;
-    },
-    /**
-     * Resolves address and @returns name
-     */
-    resolveAddress: throttle(async function () {
-      if (this.nameResolver) {
-        try {
-          const reverseName = await this.nameResolver.resolveAddress(
-            this.inputAddr
-          );
-          if (reverseName && !reverseName.name) {
-            try {
-              await getAddressInfo(
-                toChecksumAddress(this.inputAddr),
-                'https://ipfs.kleros.io'
-              ).then(data => {
-                this.nametag = data?.publicNameTag || '';
-              });
-            } catch (e) {
-              this.nametag = '';
-            }
-          }
-          this.resolvedAddr = reverseName?.name ? reverseName.name : '';
-        } catch (e) {
-          Toast(e, {}, ERROR);
+    } else {
+      const currencyExists = WAValidator.findCurrency(
+        props.currency.toLowerCase()
+      );
+      if (currencyExists) {
+        const validate = WAValidator.validate(
+          value,
+          props.currency.toLowerCase()
+        );
+        if (validate) {
+          inputAddr.value = value;
+          isValidAddress.value = true;
+        } else {
+          isValidAddress.value = false;
         }
+        loadedAddressValidation.value = true;
+        /**
+         * @emits setAddress
+         */
+        emit('setAddress', value, isValidAddress.value, {
+          type: inputType,
+          value: value
+        });
+      } else {
+        isValidAddress.value = false;
+        loadedAddressValidation.value = true;
+        emit('setAddress', value, isValidAddress.value, {
+          type: inputType,
+          value: value
+        });
       }
-    }, 300),
-    /**
-     * Resolves name and @returns address
-     */
-    resolveName: throttle(async function () {
-      if (this.nameResolver) {
-        try {
-          await this.nameResolver.resolveName(this.inputAddr).then(addr => {
-            this.resolvedAddr = addr;
-            this.isValidAddress = true;
-            this.loadedAddressValidation = true;
-            this.$emit('setAddress', this.resolvedAddr, this.isValidAddress, {
-              type: USER_INPUT_TYPES.resolved,
-              value: this.inputAddr
-            });
-          });
-        } catch (e) {
-          this.loadedAddressValidation = true;
-        }
-      }
-    }, 500)
+    }
   }
 };
+// is used from the parent context
+// eslint-disable-next-line
+const clear = () => {
+  addMode.value = false;
+  resolvedAddr.value = '';
+  inputAddr.value = '';
+  nameResolver.value = null;
+  isValidAddress.value = false;
+  loadedAddressValidation.value = false;
+  addressSelect.value.clear();
+  emit('setAddress', resolvedAddr.value, isValidAddress.value, {
+    type: USER_INPUT_TYPES.typed,
+    value: inputAddr.value
+  });
+
+  // Calls setups from mounted
+  if (!isOfflineApp && network.type.ens)
+    nameResolver.value = new NameResolver(network, web3);
+  if (props.isHomePage) {
+    setDonationAddress();
+  }
+};
+/**
+ * Sets selected address to be MEW donation address
+ * only happens on home page
+ */
+const setDonationAddress = () => {
+  addressSelect.value.selectAddress(addressBookWithMyAddress.value[0]);
+};
+const toggleOverlay = () => {
+  addMode.value = !addMode.value;
+};
+/**
+ * Resolves address and @returns name
+ */
+const resolveAddress = throttle(async function () {
+  if (nameResolver.value) {
+    try {
+      const reverseName = await nameResolver.value.resolveAddress(inputAddr);
+      if (reverseName && !reverseName.name) {
+        try {
+          await getAddressInfo(
+            toChecksumAddress(inputAddr),
+            'https://ipfs.kleros.io'
+          ).then(data => {
+            nametag.value = data?.publicNameTag || '';
+          });
+        } catch (e) {
+          name.valuetag = '';
+        }
+      }
+      resolvedAddr.value = reverseName?.name ? reverseName.name : '';
+    } catch (e) {
+      Toast(e, {}, ERROR);
+    }
+  }
+}, 300);
+/**
+ * Resolves name and @returns address
+ */
+const resolveName = throttle(async function () {
+  if (nameResolver.value) {
+    try {
+      await nameResolver.value.resolveName(inputAddr).then(addr => {
+        resolvedAddr.value = addr;
+        isValidAddress.value = true;
+        loadedAddressValidation.value = true;
+        emit('setAddress', resolvedAddr.value, isValidAddress.value, {
+          type: USER_INPUT_TYPES.resolved,
+          value: inputAddr.value
+        });
+      });
+    } catch (e) {
+      loadedAddressValidation.value = true;
+    }
+  }
+}, 500);
 </script>

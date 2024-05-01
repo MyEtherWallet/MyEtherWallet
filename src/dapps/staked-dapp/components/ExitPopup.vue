@@ -116,146 +116,146 @@
   </mew-popup>
 </template>
 
-<script>
-import { mapActions, mapGetters, mapState } from 'vuex';
+<script setup>
+import { defineProps, ref, computed } from 'vue';
 import { isEmpty } from 'lodash';
 import { toHex } from 'web3-utils';
 
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import networkConfig from '../handlers/configNetworkTypes';
-export default {
-  props: {
-    openExitModal: {
-      type: Boolean,
-      default: false
-    },
-    closeModal: {
-      type: Function,
-      default: () => {}
-    },
-    selectedValidator: {
-      type: Object,
-      default: () => {}
-    }
-  },
-  data() {
-    return {
-      loadingButton: false,
-      loadingSign: true,
-      loadingStakedCall: true,
-      exitFinished: false
-    };
-  },
-  computed: {
-    ...mapState('wallet', ['instance', 'address']),
-    ...mapGetters('global', ['network']),
-    validatorUrl() {
-      return networkConfig.network[this.network.type.name].url;
-    },
-    /**
-     * returns the challenge to be signed by the user
-     */
-    message() {
-      return JSON.stringify({
-        intentToExit:
-          'I am signing this message and requesting that Staked exit the following validators from the network',
-        validatorIndexes: [this.selectedValidator.validator_index],
-        address: this.address
-      });
-    },
-    /**
-     * @returns object
-     * Returns the left button config for
-     * mew popup
-     */
-    leftBtn() {
-      return {
-        text: 'Cancel',
-        color: 'basic',
-        method: this.modalClose
-      };
-    },
-    btnMethod() {
-      if (this.loadingSign && this.loadingStakedCall) {
-        return this.signAndExit;
-      }
-      return this.modalClose;
-    },
-    btnTitle() {
-      if (this.loadingSign && this.loadingStakedCall) {
-        return 'Sign & Exit';
-      }
-      return 'Close';
-    },
-    withdrawalAddress() {
-      return isEmpty(this.selectedValidator)
-        ? '0x'
-        : `0x${this.selectedValidator.withdrawal_credentials.substring(
-            24,
-            this.selectedValidator.withdrawal_credentials.length
-          )}`;
-    }
-  },
-  methods: {
-    ...mapActions('stakedStore', ['addWithdrawalValidatorIndex']),
-    modalClose() {
-      this.localReset();
-      this.closeModal();
-    },
-    localReset() {
-      this.loadingButton = false;
-      this.loadingSign = true;
-      this.loadingStakedCall = true;
-      this.exitFinished = false;
-    },
-    async signAndExit() {
-      this.loadingButton = true;
-      try {
-        const signature = await this.instance.signMessage(
-          this.message,
-          this.address
-        );
-        const parsedSignature = toHex(signature);
-        this.loadingSign = false;
-        const challenge = Buffer.from(
-          '\u{19}Ethereum Signed Message:\n' +
-            this.message.length.toString() +
-            this.message
-        ).toString('hex');
 
-        const headerDomain =
-          this.network.type.name === 'ETH' ? 'mainnet' : 'staging';
-        const submitEndpoint = `https://${headerDomain}.mewwallet.dev/v2/stake/exit`;
-        await fetch(submitEndpoint, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            address: this.address,
-            challenge: challenge.toString('hex'),
-            signature: parsedSignature
-          })
-        }).then(res => {
-          if (res.ok) {
-            this.loadingStakedCall = false;
-            this.loadingButton = false;
-            this.exitFinished = true;
-            this.addWithdrawalValidatorIndex(
-              this.selectedValidator.validator_index
-            );
-            return;
-          }
-          res.json().then(jsonres => {
-            Toast(jsonres.error ? jsonres.error : jsonres.msg, {}, ERROR);
-            this.localReset();
-          });
-        });
-      } catch (e) {
-        Toast(e, {}, ERROR);
-        this.localReset();
+import {
+  global as useGlobalStore,
+  wallet as useWalletStore,
+  stakedStore as useStakedStoreStore
+} from '@/core/store/index.js';
+
+// injections
+const { network } = useGlobalStore();
+const { instance, address } = useWalletStore();
+const { addWithdrawalValidatorIndex } = useStakedStoreStore();
+
+// props
+const props = defineProps({
+  openExitModal: {
+    type: Boolean,
+    default: false
+  },
+  closeModal: {
+    type: Function,
+    default: () => {}
+  },
+  selectedValidator: {
+    type: Object,
+    default: () => {}
+  }
+});
+
+// data
+const loadingButton = ref(false);
+const loadingSign = ref(true);
+const loadingStakedCall = ref(true);
+const exitFinished = ref(false);
+
+// computed
+const validatorUrl = computed(() => {
+  return networkConfig.network[network.type.name].url;
+});
+/**
+ * returns the challenge to be signed by the user
+ */
+const message = computed(() => {
+  return JSON.stringify({
+    intentToExit:
+      'I am signing this message and requesting that Staked exit the following validators from the network',
+    validatorIndexes: [props.selectedValidator.validator_index],
+    address: address
+  });
+});
+/**
+ * @returns object
+ * Returns the left button config for
+ * mew popup
+ */
+const leftBtn = computed(() => {
+  return {
+    text: 'Cancel',
+    color: 'basic',
+    method: modalClose
+  };
+});
+const btnMethod = computed(() => {
+  if (loadingSign.value && loadingStakedCall.value) {
+    return signAndExit;
+  }
+  return modalClose;
+});
+const btnTitle = computed(() => {
+  if (loadingSign.value && loadingStakedCall.value) {
+    return 'Sign & Exit';
+  }
+  return 'Close';
+});
+const withdrawalAddress = computed(() => {
+  return isEmpty(props.selectedValidator)
+    ? '0x'
+    : `0x${props.selectedValidator.withdrawal_credentials.substring(
+        24,
+        props.selectedValidator.withdrawal_credentials.length
+      )}`;
+});
+
+// methods
+const modalClose = () => {
+  localReset();
+  props.closeModal();
+};
+const localReset = () => {
+  loadingButton.value = false;
+  loadingSign.value = true;
+  loadingStakedCall.value = true;
+  exitFinished.value = false;
+};
+const signAndExit = async () => {
+  loadingButton.value = true;
+  try {
+    const signature = await instance.signMessage(message, address);
+    const parsedSignature = toHex(signature);
+    loadingSign.value = false;
+    const challenge = Buffer.from(
+      '\u{19}Ethereum Signed Message:\n' +
+        message.value.length.toString() +
+        message.value
+    ).toString('hex');
+
+    const headerDomain = network.type.name === 'ETH' ? 'mainnet' : 'staging';
+    const submitEndpoint = `https://${headerDomain}.mewwallet.dev/v2/stake/exit`;
+    await fetch(submitEndpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        address: address,
+        challenge: challenge.toString('hex'),
+        signature: parsedSignature
+      })
+    }).then(res => {
+      if (res.ok) {
+        loadingStakedCall.value = false;
+        loadingButton.value = false;
+        exitFinished.value = true;
+        addWithdrawalValidatorIndex(props.selectedValidator.validator_index);
+        return;
       }
-    }
+      res.json().then(jsonres => {
+        Toast(jsonres.error ? jsonres.error : jsonres.msg, {}, ERROR);
+        localReset();
+      });
+    });
+  } catch (e) {
+    Toast(e, {}, ERROR);
+    localReset();
   }
 };
 </script>

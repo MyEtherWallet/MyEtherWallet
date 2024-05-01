@@ -6,26 +6,33 @@
   </v-app>
 </template>
 
-<script>
-import { mapActions } from 'vuex';
+<script setup>
+import { defineAsyncComponent, onMounted } from 'vue';
 
-export default {
-  name: 'App',
-  components: {
-    ModuleToast: () => import('@/modules/toast/ModuleToast.vue'),
-    ModuleGlobalModals: () =>
-      import('@/modules/global-modals/ModuleGlobalModals')
-  },
-  mounted() {
-    this.$vuetify.theme.dark = false;
-    this.setOnlineStatus(false);
-    this.setOfflineApp(true);
-  },
-  methods: {
-    ...mapActions('wallet', ['setOfflineApp']),
-    ...mapActions('global', ['setOnlineStatus'])
-  }
-};
+const ModuleToast = defineAsyncComponent(() =>
+  import('@/modules/toast/ModuleToast.vue')
+);
+const ModuleGlobalModals = defineAsyncComponent(() =>
+  import('@/modules/global-modals/ModuleGlobalModals')
+);
+
+import {
+  global as useGlobalStore,
+  wallet as useWalletStore
+} from '@/core/store/index.js';
+import { useVuetify } from '@/core/composables/vuetify';
+
+// injections/use
+const { setOfflineApp } = useWalletStore();
+const { setOnlineStatus } = useGlobalStore();
+const vuetify = useVuetify();
+
+// mounted
+onMounted(() => {
+  vuetify.theme.dark = false;
+  setOnlineStatus(false);
+  setOfflineApp(true);
+});
 </script>
 
 <style lang="scss">

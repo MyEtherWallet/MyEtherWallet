@@ -58,74 +58,83 @@
   </div>
 </template>
 
-<script>
-import { mapGetters, mapState } from 'vuex';
-import handlerAnalyticsMixin from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+<script setup>
+import {
+  ref,
+  defineAsyncComponent,
+  onMounted,
+  computed,
+  defineEmits
+} from 'vue';
+import { useAmplitude } from '@/core/composables/amplitude';
+import {
+  global as useGlobalStore,
+  wallet as useWalletStore
+} from '@/core/store/index.js';
 
-export default {
-  components: {
-    ModuleAddressBook: () => import('@/modules/address-book/ModuleAddressBook')
-  },
-  mixins: [handlerAnalyticsMixin],
-  data() {
-    return {
-      eth2Address: '',
-      isValidAddress: false,
-      downloadedKeystore: false,
-      link: {}
-    };
-  },
-  computed: {
-    ...mapState('wallet', ['address']),
-    ...mapGetters('global', ['network']),
-    currencyName() {
-      return this.network.type.currencyName;
-    },
-    buttonText() {
-      return this.downloadedKeystore
-        ? 'Next: upload your keystore file'
-        : 'Review & stake';
-    }
-  },
-  mounted() {
-    /**
-     * Create Keystore handler
-     * then create address, mnemonic
-     */
-    this.createAddress();
-  },
-  methods: {
-    setAddress(addr, isValidAddress) {
-      this.eth2Address = addr;
-      this.isValidAddress = isValidAddress;
-    },
-    /**
-     * Create Eth2 Address
-     */
-    async createAddress() {
-      this.eth2Address = this.address;
-      this.validAddress = false;
-    },
-    /**
-     * Emits back to go to previous step
-     */
-    onBack() {
-      this.$emit('back');
-    },
-    /**
-     * Emits onContinue to go to next step
-     * if skipped @returns true means do not need to generate
-     * a new keystore
-     */
-    onContinue(skipped) {
-      this.trackDapp('StakedSetWithdrawalAddress');
-      this.$emit('onContinue', {
-        onStep: 2,
-        isSkipped: skipped,
-        address: this.eth2Address
-      });
-      URL.revokeObjectURL(this.link.href);
-    }
-  }
+const ModuleAddressBook = defineAsyncComponent(() =>
+  import('@/modules/address-book/ModuleAddressBook')
+);
+
+// emits
+const emit = defineEmits(['onContinue']);
+
+// injections/use
+const { trackDapp } = useAmplitude();
+const { network } = useGlobalStore();
+const { address } = useWalletStore();
+
+// data
+const eth2Address = ref('');
+const isValidAddress = ref(false);
+const downloadedKeystore = ref(false);
+const link = ref({});
+
+// computed
+const currencyName = computed(() => {
+  return network.type.currencyName;
+});
+const buttonText = computed(() => {
+  return downloadedKeystore.value
+    ? 'Next: upload your keystore file'
+    : 'Review & stake';
+});
+
+// mounted
+onMounted(() => {
+  createAddress();
+});
+
+// methods
+const setAddress = (addr, isValidAddress) => {
+  eth2Address.value = addr;
+  isValidAddress.value = isValidAddress;
+};
+/**
+ * Create Eth2 Address
+ */
+const createAddress = async () => {
+  eth2Address.value = address;
+  isValidAddress.value = false;
+};
+/**
+ * Emits back to go to previous step
+ */
+const onBack = () => {
+  emit('back');
+};
+/**
+ * Emits onContinue to go to next step
+ * if skipped @returns true means do not need to generate
+ * a new keystore
+ */
+const onContinue = skipped => {
+  trackDapp('StakedSetWithdrawalAddress');
+  emit('onContinue', {
+    onStep: 2,
+    isSkipped: skipped,
+    address: eth2Address
+  });
+  URL.revokeObjectURL(link.value.href);
 };
 </script>

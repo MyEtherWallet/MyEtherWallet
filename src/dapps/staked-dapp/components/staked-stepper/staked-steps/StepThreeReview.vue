@@ -183,227 +183,228 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { defineProps, ref, computed, watch, onMounted, defineEmits } from 'vue';
 import BigNumber from 'bignumber.js';
-import { mapState, mapGetters } from 'vuex';
 
 import { ABI_GET_FEES } from '@/dapps/staked-dapp/handlers/handlerStaked';
 import { formatBalanceEthValue } from '@/core/helpers/numberFormatHelper';
 import iconColorfulETH from '@/assets/images/icons/icon-colorful-eth.svg';
 import configNetworkTypes from '@/dapps/staked-dapp/handlers/configNetworkTypes';
-import handlerAnalyticsMixin from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { useAmplitude } from '@/core/composables/amplitude';
+import {
+  global as useGlobalStore,
+  external as useExternalStore,
+  wallet as useWalletStore
+} from '@/core/store/index.js';
 
-export default {
-  mixins: [handlerAnalyticsMixin],
-  props: {
-    amount: {
-      type: Number,
-      default: 0
-    },
-    eth2Address: {
-      type: String,
-      default: ''
-    },
-    startProvision: {
-      type: Function,
-      default: () => {}
-    },
-    pollingStatus: {
-      type: Object,
-      default: () => {}
-    }
+// injections/use
+const { trackDapp } = useAmplitude();
+const { network, getFiatValue, gasPrice } = useGlobalStore();
+const { fiatValue } = useExternalStore();
+const { web3 } = useWalletStore();
+
+// emits
+const emit = defineEmits(['back', 'readyToStake']);
+
+// props
+const props = defineProps({
+  amount: {
+    type: Number,
+    default: 0
   },
-  data() {
-    return {
-      secondCondition: false,
-      thirdCondition: false,
-      readyToStake: false,
-      serviceFees: {},
-      stakedStep: 1,
-      stakedStep1Title: {
+  eth2Address: {
+    type: String,
+    default: ''
+  },
+  startProvision: {
+    type: Function,
+    default: () => {}
+  },
+  pollingStatus: {
+    type: Object,
+    default: () => {}
+  }
+});
+
+// data
+const secondCondition = ref(false);
+const thirdCondition = ref(false);
+const readyToStake = ref(false);
+const serviceFees = ref({});
+const stakedStep = ref(1);
+const stakedStep1Title = ref({
+  message:
+    'We will prepare validators for you. After that you can confirm and stake your ETH.'
+});
+
+// computed
+const buttonTitle = computed(() => {
+  return `Stake ${props.amount} ETH`;
+});
+/**
+ * Returns current network eth icon
+ * @return string
+ */
+const networkImg = computed(() => {
+  return network.type.icon;
+});
+/**
+ * @returns array
+ * Staking details to display (including amount and eth2 address)
+ */
+const details = computed(() => {
+  return [
+    {
+      img: networkImg,
+      subtitle: 'Staking',
+      title: props.amount + ' ETH',
+      desc: amountFiat.value
+    },
+    {
+      img: iconColorfulETH,
+      subtitle: 'Ethereum',
+      title: 'Your withdrawal address',
+      desc: props.eth2Address,
+      isAddress: true
+    }
+  ];
+});
+/**
+ * @returns array
+ * Includes network, service fees, total
+ */
+const fees = computed(() => {
+  return [
+    {
+      title: 'Network fee',
+      ethValue: networkFees.value.eth,
+      fiatValue: networkFees.value.fiat
+    },
+    {
+      title: 'Service fee',
+      ethValue: serviceFees.value.eth,
+      fiatValue: serviceFees.value.fiat
+    },
+    {
+      title: 'Total',
+      ethValue: totalFees.value.eth,
+      fiatValue: totalFees.value.fiat
+    }
+  ];
+});
+/**
+ * @returns object
+ * Network fees in ETH and fiat
+ */
+const networkFees = computed(() => {
+  const gasPriceETH = formatBalanceEthValue(gasPrice).value;
+  return {
+    eth: gasPriceETH,
+    fiat: getFiatValue(BigNumber(fiatValue).times(gasPriceETH))
+  };
+});
+/**
+ * @returns object
+ * Total fees in ETH and fiat
+ */
+const totalFees = computed(() => {
+  const totalETH = new BigNumber(networkFees.value.eth)
+    .plus(serviceFees.value.eth)
+    .toFixed();
+  return {
+    eth: totalETH,
+    fiat: getFiatValue(new BigNumber(fiatValue).times(totalETH).toFixed())
+  };
+});
+/**
+ * @returns how many validators are needed to stake x amount of eth
+ */
+const validatorsCount = computed(() => {
+  if (props.amount) {
+    return new BigNumber(props.amount).dividedBy(32).toFixed();
+  }
+  return 0;
+});
+/**
+ * @returns eth staking amount in fiat
+ */
+const amountFiat = computed(() => {
+  return getFiatValue(new BigNumber(props.amount).times(fiatValue));
+});
+
+// watch
+/**
+ * Watches the status of polling
+ * if successful -> then its ready to stake
+ * else will error out
+ */
+watch(props.pollingStatus, newVal => {
+  if (newVal.success) {
+    stakedStep.value += 1;
+    readyToStake.value = true;
+  } else {
+    stakedStep.value -= 1;
+    if (newVal.error.status === 406 || newVal.error.message?.includes('406')) {
+      stakedStep1Title.value = {
         message:
-          'We will prepare validators for you. After that you can confirm and stake your ETH.'
-      }
-    };
-  },
-  computed: {
-    ...mapGetters('external', ['fiatValue']),
-    ...mapGetters('global', ['network', 'getFiatValue']),
-    ...mapState('wallet', ['web3']),
-    ...mapGetters('global', ['gasPrice', 'network']),
-    buttonTitle() {
-      return `Stake ${this.amount} ETH`;
-    },
-    /**
-     * Returns current network eth icon
-     * @return string
-     */
-    networkImg() {
-      return this.network.type.icon;
-    },
-    /**
-     * @returns array
-     * Staking details to display (including amount and eth2 address)
-     */
-    details() {
-      return [
-        {
-          img: this.networkImg,
-          subtitle: 'Staking',
-          title: this.amount + ' ETH',
-          desc: this.amountFiat
-        },
-        {
-          img: iconColorfulETH,
-          subtitle: 'Ethereum',
-          title: 'Your withdrawal address',
-          desc: this.eth2Address,
-          isAddress: true
-        }
-      ];
-    },
-    /**
-     * @returns array
-     * Includes network, service fees, total
-     */
-    fees() {
-      return [
-        {
-          title: 'Network fee',
-          ethValue: this.networkFees.eth,
-          fiatValue: this.networkFees.fiat
-        },
-        {
-          title: 'Service fee',
-          ethValue: this.serviceFees.eth,
-          fiatValue: this.serviceFees.fiat
-        },
-        {
-          title: 'Total',
-          ethValue: this.totalFees.eth,
-          fiatValue: this.totalFees.fiat
-        }
-      ];
-    },
-    /**
-     * @returns object
-     * Network fees in ETH and fiat
-     */
-    networkFees() {
-      const gasPriceETH = formatBalanceEthValue(this.gasPrice).value;
-      return {
-        eth: gasPriceETH,
-        fiat: this.getFiatValue(BigNumber(this.fiatValue).times(gasPriceETH))
+          'Oops. We don’t know how you got this far without enough ETH. Please start over and check your funds.',
+        error: true
       };
-    },
-    /**
-     * @returns object
-     * Total fees in ETH and fiat
-     */
-    totalFees() {
-      const totalETH = new BigNumber(this.networkFees.eth)
-        .plus(this.serviceFees.eth)
-        .toFixed();
-      return {
-        eth: totalETH,
-        fiat: this.getFiatValue(
-          new BigNumber(this.fiatValue).times(totalETH).toFixed()
-        )
+    } else {
+      stakedStep1Title.value = {
+        message:
+          'Something went wrong. Please try again in a few minutes. If the problem persists,',
+        error: true,
+        showContactSupport: true
       };
-    },
-    /**
-     * @returns how many validators are needed to stake x amount of eth
-     */
-    validatorsCount() {
-      if (this.amount) {
-        return new BigNumber(this.amount).dividedBy(32).toFixed();
-      }
-      return 0;
-    },
-    /**
-     * @returns eth staking amount in fiat
-     */
-    amountFiat() {
-      return this.getFiatValue(
-        new BigNumber(this.amount).times(this.fiatValue)
-      );
-    }
-  },
-  watch: {
-    /**
-     * Watches the status of polling
-     * if successful -> then its ready to stake
-     * else will error out
-     */
-    pollingStatus(newVal) {
-      if (newVal.success) {
-        this.stakedStep += 1;
-        this.readyToStake = true;
-      } else {
-        this.stakedStep -= 1;
-        if (
-          newVal.error.status === 406 ||
-          newVal.error.message?.includes('406')
-        ) {
-          this.stakedStep1Title = {
-            message:
-              'Oops. We don’t know how you got this far without enough ETH. Please start over and check your funds.',
-            error: true
-          };
-        } else {
-          this.stakedStep1Title = {
-            message:
-              'Something went wrong. Please try again in a few minutes. If the problem persists,',
-            error: true,
-            showContactSupport: true
-          };
-        }
-      }
-    }
-  },
-  mounted() {
-    this.getServiceFees();
-  },
-  methods: {
-    /**
-     * @returns object
-     * Gets service fees (calls contract and abi to get exact fee)
-     */
-    async getServiceFees() {
-      const batchContract =
-        configNetworkTypes.network[this.network.type.name].batchContract;
-      const contract = new this.web3.eth.Contract(ABI_GET_FEES, batchContract);
-      const feesWEI = await contract.methods.getFees(this.amount / 32).call();
-      const feesETH = formatBalanceEthValue(feesWEI).value;
-      this.serviceFees = {
-        eth: feesETH,
-        fiat: this.getFiatValue(BigNumber(this.fiatValue).times(feesETH))
-      };
-    },
-    /**
-     * Emits back to go to previous step
-     */
-    onBack() {
-      this.$emit('back');
-    },
-    /**
-     * Start provisioning and polling (step 1: prepare to stake)
-     */
-    prepareToStake() {
-      this.stakedStep += 1;
-      this.trackDapp('StakedPrepareStake');
-      this.startProvision({
-        eth2Address: this.eth2Address,
-        count: this.validatorsCount
-      });
-    },
-    /**
-     * Sends the transaction to confirm eth stake
-     */
-    onReadyToStake() {
-      this.$emit('readyToStake');
     }
   }
+});
+
+// mounted
+onMounted(() => {
+  getServiceFees();
+});
+
+// methods
+/**
+ * @returns object
+ * Gets service fees (calls contract and abi to get exact fee)
+ */
+const getServiceFees = async () => {
+  const batchContract =
+    configNetworkTypes.network[network.type.name].batchContract;
+  const contract = new web3.eth.Contract(ABI_GET_FEES, batchContract);
+  const feesWEI = await contract.methods.getFees(props.amount / 32).call();
+  const feesETH = formatBalanceEthValue(feesWEI).value;
+  serviceFees.value = {
+    eth: feesETH,
+    fiat: getFiatValue(BigNumber(fiatValue).times(feesETH))
+  };
+};
+/**
+ * Emits back to go to previous step
+ */
+const onBack = () => {
+  emit('back');
+};
+/**
+ * Start provisioning and polling (step 1: prepare to stake)
+ */
+const prepareToStake = () => {
+  stakedStep.value += 1;
+  trackDapp('StakedPrepareStake');
+  props.startProvision({
+    eth2Address: props.eth2Address,
+    count: validatorsCount
+  });
+};
+/**
+ * Sends the transaction to confirm eth stake
+ */
+const onReadyToStake = () => {
+  emit('readyToStake');
 };
 </script>
 

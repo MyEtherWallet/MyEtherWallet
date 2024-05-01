@@ -372,8 +372,8 @@
   </div>
 </template>
 
-<script>
-import { mapGetters, mapState } from 'vuex';
+<script setup>
+import { defineAsyncComponent, defineProps, ref, computed } from 'vue';
 import BigNumber from 'bignumber.js';
 import moment from 'moment';
 
@@ -386,364 +386,344 @@ import { STATUS_TYPES } from '@/dapps/staked-dapp/handlers/handlerStaked';
 import { GOERLI } from '@/utils/networks/types';
 
 import iconETHNavy from '@/assets/images/currencies/eth-dark-navy.svg';
+import {
+  global as useGlobalStore,
+  wallet as useWalletStore,
+  external as useExternalStore,
+  stakedStore as useStakedStoreStore
+} from '@/core/store/index.js';
 
-export default {
-  components: {
-    WithdrawalPopup: () => import('./WithdrawalPopup'),
-    ExitPopup: () => import('./ExitPopup')
+const WithdrawalPopup = defineAsyncComponent(() => import('./WithdrawalPopup'));
+const ExitPopup = defineAsyncComponent(() => import('./ExitPopup'));
+
+// injections
+const { network, getFiatValue } = useGlobalStore();
+const { address } = useWalletStore();
+const { fiatValue } = useExternalStore();
+const { validatorIndex, withdrawalValidatorIndex } = useStakedStoreStore();
+
+// props
+const props = defineProps({
+  validators: {
+    type: Array,
+    default: () => []
   },
-  props: {
-    validators: {
-      type: Array,
-      default: () => []
-    },
-    pendingHash: {
-      type: String,
-      default: ''
-    },
-    txReceipt: {
-      type: Boolean,
-      default: true
-    },
-    loading: {
-      type: Boolean,
-      default: true
-    },
-    amount: {
-      type: Number,
-      default: 0
-    },
-    refetchValidators: {
-      type: Function,
-      default: () => {}
-    }
+  pendingHash: {
+    type: String,
+    default: ''
   },
-  data() {
-    return {
-      iconETHNavy: iconETHNavy,
-      expanded: 0,
-      STATUS_TYPES: STATUS_TYPES,
-      openWithdrawalModal: false,
-      openExitModal: false,
-      selectedValidator: {}
-    };
+  txReceipt: {
+    type: Boolean,
+    default: true
   },
-  computed: {
-    ...mapState('wallet', ['address']),
-    ...mapState('global', ['preferredCurrency']),
-    ...mapState('external', ['currencyRate']),
-    ...mapState('stakedStore', ['validatorIndex', 'withdrawalValidatorIndex']),
-    ...mapGetters('external', ['fiatValue']),
-    ...mapGetters('global', ['network', 'getFiatValue']),
-    /**
-     * @returns array
-     * Returns all the raw objects in all the validators
-     */
-    validatorsRaw() {
-      const allRawValidators = [];
-      this.validators.map(validator => {
-        validator.raw.map(raw => {
-          allRawValidators.push(raw);
-        });
-      });
-      return allRawValidators;
-    },
-    /**
-     * @returns array
-     * Returns all the active validators with correct info
-     * includes status: ACTIVE
-     */
-    activeValidators() {
-      return this.validatorsRaw.reduce((acc, raw) => {
-        if (raw.status.toLowerCase() === STATUS_TYPES.ACTIVE) {
-          const totalBalanceETH = this.convertToEth1(
-            raw.detailed_balance_info.balance,
-            raw.detailed_balance_info.conversion_factor_power
-          );
-          const earning = new BigNumber(totalBalanceETH).minus(raw.amount);
-          const withdrawn = this.findWithdrawalValidator(
-            raw.validator_index,
-            false
-          );
-          if (!withdrawn) {
-            acc.push(
-              Object.assign({}, raw, {
-                url: `${
-                  configNetworkTypes.network[this.network.type.name].url
-                }${raw.validator_index}`,
-                earned: formatFloatingPointValue(earning).value,
-                totalBalanceETH:
-                  formatFloatingPointValue(totalBalanceETH).value,
-                totalBalanceFiat: this.getFiatValue(
-                  new BigNumber(totalBalanceETH).times(this.fiatValue)
-                ),
-                averageApr: formatPercentageValue(
-                  this.getAverageApr(raw.created, earning, raw.amount)
-                ).value,
-                withdrawal_set:
-                  this.findValidatorIndex(raw.validator_index) ||
-                  raw.withdrawal_credentials_are_eth1Address,
-                can_exit: this.findWithdrawalValidator(
-                  raw.validator_index,
-                  raw.can_exit
-                )
-              })
-            );
-          }
-        }
-        return acc;
-      }, []);
-    },
-    /**
-     * @returns array
-     * Returns all the active validators with correct info
-     * includes status: ACTIVE, EXITED
-     * currently includes active but is possibly exited
-     */
-    exitedValidators() {
-      return this.validatorsRaw.reduce((acc, raw) => {
-        if (
-          raw.status.toLowerCase() === STATUS_TYPES.ACTIVE ||
-          raw.status.toLowerCase() === STATUS_TYPES.EXITED ||
-          raw.status.toLowerCase() === STATUS_TYPES.EXITING
-        ) {
-          const totalBalanceETH = this.convertToEth1(
-            raw.detailed_balance_info.balance,
-            raw.detailed_balance_info.conversion_factor_power
-          );
-          const earning = new BigNumber(totalBalanceETH).minus(raw.amount);
-          const withdrawn = this.findWithdrawalValidator(
-            raw.validator_index,
-            true
-          );
-          if (
-            !withdrawn ||
-            raw.status.toLowerCase() === STATUS_TYPES.EXITED ||
-            raw.status.toLowerCase() === STATUS_TYPES.EXITING
-          ) {
-            acc.push(
-              Object.assign({}, raw, {
-                url: `${
-                  configNetworkTypes.network[this.network.type.name].url
-                }${raw.validator_index}`,
-                earned: formatFloatingPointValue(earning).value,
-                totalBalanceETH:
-                  formatFloatingPointValue(totalBalanceETH).value,
-                totalBalanceFiat: this.getFiatValue(
-                  new BigNumber(totalBalanceETH).times(this.fiatValue)
-                ),
-                averageApr: formatPercentageValue(
-                  this.getAverageApr(raw.created, earning, raw.amount)
-                ).value,
-                withdrawal_set: true,
-                can_exit: false
-              })
-            );
-          }
-        }
-        return acc;
-      }, []);
-    },
-    /**
-     * @returns array
-     * Returns all the pending validators with correct info
-     * includes status: DEPOSITED, PENDING, FAILED, CREATED
-     */
-    pendingValidators() {
-      return this.validatorsRaw.reduce((acc, raw) => {
-        const nextDay = 60 * 60 * 24 * 1000;
-        const createdDate = new Date(raw.created).getTime() + nextDay;
-        const withinTheDay = new Date().getTime() <= createdDate;
-        if (
-          raw.status.toLowerCase() === STATUS_TYPES.DEPOSITED ||
-          raw.status.toLowerCase() === STATUS_TYPES.PENDING ||
-          raw.status.toLowerCase() === STATUS_TYPES.FAILED ||
-          (raw.status.toLowerCase() === STATUS_TYPES.CREATED && withinTheDay)
-        ) {
-          acc.push({
-            amount: formatFloatingPointValue(raw.amount).value,
-            amountFiat: this.getFiatValue(
-              new BigNumber(raw.amount).times(this.fiatValue)
-            ),
-            status: raw.status,
-            ethVmUrl:
-              configNetworkTypes.network[this.network.type.name].ethvmAddrUrl +
-              this.address,
-            etherscanUrl:
-              configNetworkTypes.network[this.network.type.name]
-                .etherscanAddrUrl + this.address,
-            url: raw.address
-              ? configNetworkTypes.network[this.network.type.name].url +
-                '0x' +
-                raw.address
-              : '',
-            estimatedWaitTime:
-              raw.queue && raw.queue.estimated_activation_timestamp
-                ? this.getEstimatedDuration(
-                    raw.queue.estimated_activation_timestamp
-                  )
-                : '~'
-          });
-        }
-        return acc;
-      }, []);
-    },
-    /**
-     * @returns array
-     * Returns the validator that was just staked
-     * displays after step 4 of New Stake tab
-     */
-    justStakedValidator() {
-      if (this.pendingHash) {
-        return [
-          {
-            amount: formatFloatingPointValue(this.amount).value,
-            amountFiat: this.getFiatValue(
-              new BigNumber(this.amount).times(this.fiatValue)
-            ),
-            justStaked: true,
-            status: STATUS_TYPES.CREATED,
-            ethVmUrl: this.pendingHash
-              ? configNetworkTypes.network[this.network.type.name].ethvmTxUrl +
-                this.pendingHash
-              : null,
-            etherscanUrl: this.pendingHash
-              ? configNetworkTypes.network[this.network.type.name]
-                  .etherscanTxUrl + this.pendingHash
-              : null
-          }
-        ];
-      }
-      return [];
-    },
-    /**
-     * @returns array
-     * Returns ALL the pending validators
-     * including pending validators from api and just staked validator
-     */
-    allPendingValidators() {
-      return this.justStakedValidator.concat(this.pendingValidators);
-    }
+  loading: {
+    type: Boolean,
+    default: true
   },
-  methods: {
-    findValidatorIndex(idx) {
-      const findIdx = !!this.validatorIndex.find(item => idx === item);
-      return !!findIdx;
-    },
-    /**
-     *
-     * @param {*} idx
-     * @param {*} canExit
-     * @returns Boolean
-     *
-     * checks withdrawal validator address in the local store
-     */
-    findWithdrawalValidator(idx, canExit) {
-      const findIdx = !!this.withdrawalValidatorIndex.find(
-        item => idx === item
-      );
-      if (findIdx) {
-        return !findIdx;
-      }
-      return canExit;
-    },
-    convertTotalReward(balance, decimal) {
-      const convertedBalance = BigNumber(balance)
-        .div(BigNumber(10).pow(decimal))
-        .toString();
-      const hasEarnings = BigNumber(convertedBalance).gt(0)
-        ? convertedBalance
-        : BigNumber(0).toString();
-      if (hasEarnings.length > 10) {
-        return `${hasEarnings.slice(0, 9)}...`;
-      }
-      return hasEarnings;
-    },
-    reset() {
-      this.selectedValidator = {};
-      this.refetchValidators();
-    },
-    closeWithdrawal() {
-      this.openWithdrawalModal = false;
-      this.reset();
-    },
-    closeExit() {
-      this.openExitModal = false;
-      this.reset();
-    },
-    /**
-     * Open modal and set selected validator
-     */
-    openWithdrawal(validator) {
-      this.selectedValidator = validator;
-      this.openWithdrawalModal = true;
-    },
-    /**
-     * Open modal and set selected validator
-     */
-    openExit(validator) {
-      this.selectedValidator = validator;
-      this.openExitModal = true;
-    },
-    /**
-     * @returns BigNumber
-     * Converts the unit to ETH1 from ETH2
-     */
-    convertToEth1(balance, decimal = 9) {
-      return new BigNumber(balance).div(new BigNumber(10).pow(decimal));
-    },
-    /**
-     * @returns BigNumber
-     * Gets the average apr for a specific validator
-     */
-    getAverageApr(activationTime, earning, amountStaked) {
-      if (earning.lte(0)) {
-        return BigNumber(0);
-      }
-      const now = moment.utc();
-      const activated = moment.utc(activationTime);
-      const daysActive = now.diff(activated, 'days');
-      const percentIncrease = BigNumber(earning).div(amountStaked);
-      const percentIncreasePerDay =
-        BigNumber(percentIncrease).dividedBy(daysActive);
-      const apr = percentIncreasePerDay.times(365).times(100);
-      return new BigNumber(apr);
-    },
-    /**
-     * Sets the idx container to expand
-     */
-    expand(idx) {
-      this.expanded = this.expanded !== idx ? idx : null;
-    },
-    /**
-     * @returns boolean
-     * Returns if the pending container is expanded
-     */
-    isExpanded(idx) {
-      return this.expanded === idx;
-    },
-    /**
-     * @returns boolean
-     * Checks if its goerli
-     */
-    onGoerli() {
-      return this.network.type.name === GOERLI.name;
-    },
-    /**
-     * @returns string
-     * Returns the exact estimated wait time till activation in days, hours, minutes
-     */
-    getEstimatedDuration(timestamp) {
-      const now = moment().utc();
-      const activationTime = moment(timestamp);
-      if (now.unix() === activationTime.unix())
-        return 'Should activate momentarily';
-      return `${activationTime.diff(now, 'days')} days ${activationTime.diff(
-        now,
-        'hours'
-      )} hours and ${activationTime.diff(now, 'minutes')} minutes`;
-    }
+  amount: {
+    type: Number,
+    default: 0
+  },
+  refetchValidators: {
+    type: Function,
+    default: () => {}
   }
+});
+
+// data
+const expanded = ref(0);
+const openWithdrawalModal = ref(false);
+const openExitModal = ref(false);
+const selectedValidator = ref({});
+
+// computed
+/**
+ * @returns array
+ * Returns all the raw objects in all the validators
+ */
+const validatorsRaw = computed(() => {
+  const allRawValidators = [];
+  props.validators.map(validator => {
+    validator.raw.map(raw => {
+      allRawValidators.push(raw);
+    });
+  });
+  return allRawValidators;
+});
+/**
+ * @returns array
+ * Returns all the active validators with correct info
+ * includes status: ACTIVE
+ */
+const activeValidators = computed(() => {
+  return validatorsRaw.value.reduce((acc, raw) => {
+    if (raw.status.toLowerCase() === STATUS_TYPES.ACTIVE) {
+      const totalBalanceETH = convertToEth1(
+        raw.detailed_balance_info.balance,
+        raw.detailed_balance_info.conversion_factor_power
+      );
+      const earning = new BigNumber(totalBalanceETH).minus(raw.amount);
+      const withdrawn = findWithdrawalValidator(raw.validator_index, false);
+      if (!withdrawn) {
+        acc.push(
+          Object.assign({}, raw, {
+            url: `${configNetworkTypes.network[network.type.name].url}${
+              raw.validator_index
+            }`,
+            earned: formatFloatingPointValue(earning).value,
+            totalBalanceETH: formatFloatingPointValue(totalBalanceETH).value,
+            totalBalanceFiat: getFiatValue(
+              new BigNumber(totalBalanceETH).times(fiatValue)
+            ),
+            averageApr: formatPercentageValue(
+              getAverageApr(raw.created, earning, raw.amount)
+            ).value,
+            withdrawal_set:
+              findValidatorIndex(raw.validator_index) ||
+              raw.withdrawal_credentials_are_eth1Address,
+            can_exit: findWithdrawalValidator(raw.validator_index, raw.can_exit)
+          })
+        );
+      }
+    }
+    return acc;
+  }, []);
+});
+/**
+ * @returns array
+ * Returns all the active validators with correct info
+ * includes status: ACTIVE, EXITED
+ * currently includes active but is possibly exited
+ */
+const exitedValidators = computed(() => {
+  return validatorsRaw.value.reduce((acc, raw) => {
+    if (
+      raw.status.toLowerCase() === STATUS_TYPES.ACTIVE ||
+      raw.status.toLowerCase() === STATUS_TYPES.EXITED ||
+      raw.status.toLowerCase() === STATUS_TYPES.EXITING
+    ) {
+      const totalBalanceETH = convertToEth1(
+        raw.detailed_balance_info.balance,
+        raw.detailed_balance_info.conversion_factor_power
+      );
+      const earning = new BigNumber(totalBalanceETH).minus(raw.amount);
+      const withdrawn = findWithdrawalValidator(raw.validator_index, true);
+      if (
+        !withdrawn ||
+        raw.status.toLowerCase() === STATUS_TYPES.EXITED ||
+        raw.status.toLowerCase() === STATUS_TYPES.EXITING
+      ) {
+        acc.push(
+          Object.assign({}, raw, {
+            url: `${configNetworkTypes.network[network.type.name].url}${
+              raw.validator_index
+            }`,
+            earned: formatFloatingPointValue(earning).value,
+            totalBalanceETH: formatFloatingPointValue(totalBalanceETH).value,
+            totalBalanceFiat: getFiatValue(
+              new BigNumber(totalBalanceETH).times(fiatValue)
+            ),
+            averageApr: formatPercentageValue(
+              getAverageApr(raw.created, earning, raw.amount)
+            ).value,
+            withdrawal_set: true,
+            can_exit: false
+          })
+        );
+      }
+    }
+    return acc;
+  }, []);
+});
+/**
+ * @returns array
+ * Returns all the pending validators with correct info
+ * includes status: DEPOSITED, PENDING, FAILED, CREATED
+ */
+const pendingValidators = computed(() => {
+  return validatorsRaw.value.reduce((acc, raw) => {
+    const nextDay = 60 * 60 * 24 * 1000;
+    const createdDate = new Date(raw.created).getTime() + nextDay;
+    const withinTheDay = new Date().getTime() <= createdDate;
+    if (
+      raw.status.toLowerCase() === STATUS_TYPES.DEPOSITED ||
+      raw.status.toLowerCase() === STATUS_TYPES.PENDING ||
+      raw.status.toLowerCase() === STATUS_TYPES.FAILED ||
+      (raw.status.toLowerCase() === STATUS_TYPES.CREATED && withinTheDay)
+    ) {
+      acc.push({
+        amount: formatFloatingPointValue(raw.amount).value,
+        amountFiat: getFiatValue(new BigNumber(raw.amount).times(fiatValue)),
+        status: raw.status,
+        ethVmUrl:
+          configNetworkTypes.network[network.type.name].ethvmAddrUrl + address,
+        etherscanUrl:
+          configNetworkTypes.network[network.type.name].etherscanAddrUrl +
+          address,
+        url: raw.address
+          ? configNetworkTypes.network[network.type.name].url +
+            '0x' +
+            raw.address
+          : '',
+        estimatedWaitTime:
+          raw.queue && raw.queue.estimated_activation_timestamp
+            ? getEstimatedDuration(raw.queue.estimated_activation_timestamp)
+            : '~'
+      });
+    }
+    return acc;
+  }, []);
+});
+/**
+ * @returns array
+ * Returns the validator that was just staked
+ * displays after step 4 of New Stake tab
+ */
+const justStakedValidator = computed(() => {
+  if (props.pendingHash) {
+    return [
+      {
+        amount: formatFloatingPointValue(props.amount).value,
+        amountFiat: getFiatValue(new BigNumber(props.amount).times(fiatValue)),
+        justStaked: true,
+        status: STATUS_TYPES.CREATED,
+        ethVmUrl: props.pendingHash
+          ? configNetworkTypes.network[network.type.name].ethvmTxUrl +
+            props.pendingHash
+          : null,
+        etherscanUrl: props.pendingHash
+          ? configNetworkTypes.network[network.type.name].etherscanTxUrl +
+            props.pendingHash
+          : null
+      }
+    ];
+  }
+  return [];
+});
+/**
+ * @returns array
+ * Returns ALL the pending validators
+ * including pending validators from api and just staked validator
+ */
+const allPendingValidators = computed(() => {
+  return justStakedValidator.value.concat(pendingValidators);
+});
+
+// methods
+const findValidatorIndex = idx => {
+  const findIdx = !!validatorIndex.find(item => idx === item);
+  return !!findIdx;
+};
+/**
+ *
+ * @param {*} idx
+ * @param {*} canExit
+ * @returns Boolean
+ *
+ * checks withdrawal validator address in the local store
+ */
+const findWithdrawalValidator = (idx, canExit) => {
+  const findIdx = !!withdrawalValidatorIndex.find(item => idx === item);
+  if (findIdx) {
+    return !findIdx;
+  }
+  return canExit;
+};
+const convertTotalReward = (balance, decimal) => {
+  const convertedBalance = BigNumber(balance)
+    .div(BigNumber(10).pow(decimal))
+    .toString();
+  const hasEarnings = BigNumber(convertedBalance).gt(0)
+    ? convertedBalance
+    : BigNumber(0).toString();
+  if (hasEarnings.length > 10) {
+    return `${hasEarnings.slice(0, 9)}...`;
+  }
+  return hasEarnings;
+};
+const reset = () => {
+  selectedValidator.value = {};
+  props.refetchValidators();
+};
+const closeWithdrawal = () => {
+  openWithdrawalModal.value = false;
+  reset();
+};
+const closeExit = () => {
+  openExitModal.value = false;
+  reset();
+};
+/**
+ * Open modal and set selected validator
+ */
+const openWithdrawal = validator => {
+  selectedValidator.value = validator;
+  openWithdrawalModal.value = true;
+};
+/**
+ * Open modal and set selected validator
+ */
+const openExit = validator => {
+  selectedValidator.value = validator;
+  openExitModal.value = true;
+};
+/**
+ * @returns BigNumber
+ * Converts the unit to ETH1 from ETH2
+ */
+const convertToEth1 = (balance, decimal = 9) => {
+  return new BigNumber(balance).div(new BigNumber(10).pow(decimal));
+};
+/**
+ * @returns BigNumber
+ * Gets the average apr for a specific validator
+ */
+const getAverageApr = (activationTime, earning, amountStaked) => {
+  if (earning.lte(0)) {
+    return BigNumber(0);
+  }
+  const now = moment.utc();
+  const activated = moment.utc(activationTime);
+  const daysActive = now.diff(activated, 'days');
+  const percentIncrease = BigNumber(earning).div(amountStaked);
+  const percentIncreasePerDay =
+    BigNumber(percentIncrease).dividedBy(daysActive);
+  const apr = percentIncreasePerDay.times(365).times(100);
+  return new BigNumber(apr);
+};
+/**
+ * Sets the idx container to expand
+ */
+const expand = idx => {
+  expanded.value = expanded.value !== idx ? idx : null;
+};
+/**
+ * @returns boolean
+ * Returns if the pending container is expanded
+ */
+const isExpanded = idx => {
+  return expanded.value === idx;
+};
+/**
+ * @returns boolean
+ * Checks if its goerli
+ */
+const onGoerli = () => {
+  return network.type.name === GOERLI.name;
+};
+/**
+ * @returns string
+ * Returns the exact estimated wait time till activation in days, hours, minutes
+ */
+const getEstimatedDuration = timestamp => {
+  const now = moment().utc();
+  const activationTime = moment(timestamp);
+  if (now.unix() === activationTime.unix())
+    return 'Should activate momentarily';
+  return `${activationTime.diff(now, 'days')} days ${activationTime.diff(
+    now,
+    'hours'
+  )} hours and ${activationTime.diff(now, 'minutes')} minutes`;
 };
 </script>
 

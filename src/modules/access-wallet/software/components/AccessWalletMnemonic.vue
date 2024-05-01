@@ -144,249 +144,255 @@
   </mew-stepper>
 </template>
 
-<script>
-import { mapActions, mapState } from 'vuex';
+<script setup>
+import {
+  defineAsyncComponent,
+  defineProps,
+  ref,
+  computed,
+  watch,
+  defineEmits
+} from 'vue';
 import { isEmpty } from 'lodash';
 
 import { Toast, ERROR, SENTRY } from '@/modules/toast/handler/handlerToast';
 
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import paths from '@/modules/access-wallet/hardware/handlers/bip44';
-import handlerAnalyticsMixin from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { ACCESS_WALLET } from '@/modules/analytics-opt-in/handlers/configs/events';
-export default {
-  name: 'AccessMnemonic',
-  components: {
-    phraseBlock: () => import('@/core/components/PhraseBlock'),
-    AccessWalletAddressNetwork: () =>
-      import(
-        '@/modules/access-wallet/common/components/AccessWalletAddressNetwork'
-      )
-  },
-  mixins: [handlerAnalyticsMixin],
-  props: {
-    handlerAccessWallet: {
-      type: Object,
-      default: () => {
-        return {};
-      }
-    },
-    switchAddress: {
-      type: Boolean,
-      default: false
+import { useAmplitude } from '@/core/composables/amplitude';
+
+const PhraseBlock = defineAsyncComponent(() =>
+  import('@/core/components/PhraseBlock')
+);
+const AccessWalletAddressNetwork = defineAsyncComponent(() =>
+  import('@/modules/access-wallet/common/components/AccessWalletAddressNetwork')
+);
+
+// emits
+const emit = defineEmits(['unlock']);
+
+// injections/use
+const { trackAccessWalletAmplitude } = useAmplitude();
+
+// props
+const props = defineProps({
+  handlerAccessWallet: {
+    type: Object,
+    default: () => {
+      return {};
     }
   },
-  data() {
-    return {
-      /* Stepper Items */
-      step: 1,
-      stepperItems: [
-        {
-          step: 1,
-          name: 'Enter Phrase'
-        },
-        {
-          step: 3,
-          name: 'Address & Network'
-        }
-      ],
-      /*Phrase Items: */
-      extraWord: '',
-      phrase: {},
-      length: 12,
-      mnemonicOptions: [
-        {
-          label: '12 words',
-          value: 12
-        },
-        {
-          label: '24 words',
-          value: 24
-        }
-      ],
-      /* Derivation Path */
-      selectedPath: {
-        name: 'Ethereum',
-        subtext: "m/44'/60'/0'/0",
-        value: "m/44'/60'/0'/0"
-      },
-      walletInstance: {}
-    };
-  },
-  computed: {
-    ...mapState('custom', ['paths']),
-    /*------------------------------------
-     * STEP 1 ITEMS
-    -------------------------------------*/
-    /**
-     * Property returns panel items for the extra word,used in step 1
-     */
-    extraWordPanel() {
-      return [
-        {
-          name: 'Do you have an extra word?',
-          toggleTitle: 'Add your word'
-        }
-      ];
-    },
-    /**
-     * Property validates whether or not all words has been entered
-     * @return boolean
-     */
-    isValidMnemonic() {
-      return this.phraseToLength.length === this.length;
-    },
+  switchAddress: {
+    type: Boolean,
+    default: false
+  }
+});
 
-    /*------------------------------------
+// data
+const step = ref(1);
+const stepperItems = ref([
+  {
+    step: 1,
+    name: 'Enter Phrase'
+  },
+  {
+    step: 3,
+    name: 'Address & Network'
+  }
+]);
+/*Phrase Items: */
+const extraWord = ref('');
+const phrase = ref({});
+const length = ref(12);
+const mnemonicOptions = ref([
+  {
+    label: '12 words',
+    value: 12
+  },
+  {
+    label: '24 words',
+    value: 24
+  }
+]);
+/* Derivation Path */
+const selectedPath = ref({
+  name: 'Ethereum',
+  subtext: "m/44'/60'/0'/0",
+  value: "m/44'/60'/0'/0"
+});
+const walletInstance = ref({});
+
+// computed
+/*------------------------------------
+ * STEP 1 ITEMS
+-------------------------------------*/
+/**
+ * Property returns panel items for the extra word,used in step 1
+ */
+const extraWordPanel = computed(() => {
+  return [
+    {
+      name: 'Do you have an extra word?',
+      toggleTitle: 'Add your word'
+    }
+  ];
+});
+/**
+ * Property validates whether or not all words has been entered
+ * @return boolean
+ */
+const isValidMnemonic = computed(() => {
+  return phraseToLength.value.length === length.value;
+});
+
+/*------------------------------------
      * STEP 2 ITEMS
     -------------------------------------*/
-    /**
-     * Property returns parsed mnemonic phrase
-     * Is used in unlock wallet method
-     */
-    parsedPhrase() {
-      return this.phraseToLength.join(' ').toLowerCase();
-    },
-    /**
-     * Property returns default Paths + Custom paths, used in Select Path component
-     * Property Interface:
-     * {  name = string -> Name of the Path,
-     *    subtext = string --> Derivation Path,
-     *    value = tring --> Derivation Path
-     * }
-     */
-    parsedPaths() {
-      return paths[WALLET_TYPES.MNEMONIC]
-        .map(item => {
-          const newObj = {};
-          newObj['name'] = item['label'];
-          newObj['subtext'] = item['path'];
-          newObj['value'] = item['path'];
-          return newObj;
-        })
-        .concat(this.paths);
-    },
-    phraseToLength() {
-      const phrase = Object.values(this.phrase);
-      if (phrase.length > this.length) phrase.length = this.length;
-      return phrase;
+/**
+ * Property returns parsed mnemonic phrase
+ * Is used in unlock wallet method
+ */
+const parsedPhrase = computed(() => {
+  return phraseToLength.value.join(' ').toLowerCase();
+});
+/**
+ * Property returns default Paths + Custom paths, used in Select Path component
+ * Property Interface:
+ * {  name = string -> Name of the Path,
+ *    subtext = string --> Derivation Path,
+ *    value = tring --> Derivation Path
+ * }
+ */
+const parsedPaths = computed(() => {
+  return paths[WALLET_TYPES.MNEMONIC]
+    .map(item => {
+      const newObj = {};
+      newObj['name'] = item['label'];
+      newObj['subtext'] = item['path'];
+      newObj['value'] = item['path'];
+      return newObj;
+    })
+    .concat(paths);
+});
+const phraseToLength = computed(() => {
+  const phrase = Object.values(phrase);
+  if (phrase.length > length.value) phrase.length = length.value;
+  return phrase;
+});
+
+// watch
+watch(
+  phrase,
+  newval => {
+    if (newval && !isEmpty(newval) && !isEmpty(newval[1])) {
+      checkPhrase(newval);
+      const splitVal = newval[1].split(' ');
+      if (splitVal.length === 12 || splitVal.length === 24) {
+        length.value = splitVal.length;
+        const newObj = {};
+        splitVal.forEach((item, idx) => {
+          newObj[idx + 1] = item.toLowerCase();
+        });
+        phrase.value = newObj;
+      }
     }
   },
-  watch: {
-    phrase: {
-      deep: true,
-      handler: function (newval) {
-        if (newval && !isEmpty(newval) && !isEmpty(newval[1])) {
-          this.checkPhrase(newval);
-          const splitVal = newval[1].split(' ');
-          if (splitVal.length === 12 || splitVal.length === 24) {
-            this.length = splitVal.length;
-            const newObj = {};
-            splitVal.forEach((item, idx) => {
-              newObj[idx + 1] = item.toLowerCase();
-            });
-            this.phrase = newObj;
-          }
-        }
-      }
-    },
-    selectedPath: {
-      handler: function () {
-        this.walletInstance = {};
-        this.nextStepTwo();
-      },
-      deep: true
-    }
+  { deep: true }
+);
+watch(
+  selectedPath,
+  () => {
+    walletInstance.value = {};
+    nextStepTwo();
   },
-  methods: {
-    ...mapActions('global', ['addCustomPath']),
-    /**
-     * Method unlocks mnemonic phrase;
-     * Direct to second step if mnemonic was valid;
-     * Shows toast on error
-     * Used in STEP 1
-     */
-    unlockBtn() {
-      this.handlerAccessWallet
-        .unlockMnemonicWallet(this.parsedPhrase, this.extraWord)
-        .then(res => {
-          if (res) {
-            this.step = 2;
-            this.nextStepTwo();
-          }
-        })
-        .catch(e => {
-          this.trackAccessWalletAmplitude(ACCESS_WALLET.SOFTWARE_FAILED, {
-            error: e
-          });
-          Toast(e, {}, ERROR);
-        });
-    },
-    setPath(e) {
-      this.selectedPath = e;
-    },
-    nextStepTwo() {
-      const defaultPath = this.selectedPath;
-      this.handlerAccessWallet
-        .updateMnemonicPath(defaultPath.value)
-        .catch(e => {
-          this.trackAccessWalletAmplitude(ACCESS_WALLET.SOFTWARE_FAILED, {
-            error: e
-          });
-          Toast(e, {}, ERROR);
-        });
-      this.walletInstance = this.handlerAccessWallet.getWalletInstance();
-    },
-    /**
-     * Clears mnemonic input field
-     */
-    clearFields() {
-      this.phrase = {};
-      this.length = 12;
-      this.extraWord = '';
-    },
-    /**
-     * reset component
-     */
-    reset() {
-      this.step = 1;
-      /*Phrase Items: */
-      this.extraWord = '';
-      this.phrase = {};
-      this.length = 12;
-      /* Derivation Path */
-      this.selectedPath = {
-        name: 'Ethereum',
-        subtext: "m/44'/60'/0'/0",
-        value: "m/44'/60'/0'/0"
-      };
-      this.walletInstance = {};
-    },
-    /**
-     * Methods emits parent to unlock wallet
-     * and passes account withinMnemonic Phrase
-     * Used in STEP 2
-     */
-    accessWallet(account) {
-      if (account) {
-        this.$emit('unlock', account);
-        this.reset();
-      } else {
-        Toast('Something went wrong in mnemonic wallet access', {}, SENTRY);
+  { deep: true }
+);
+
+// methods
+/**
+ * Method unlocks mnemonic phrase;
+ * Direct to second step if mnemonic was valid;
+ * Shows toast on error
+ * Used in STEP 1
+ */
+const unlockBtn = () => {
+  props.handlerAccessWallet
+    .unlockMnemonicWallet(parsedPhrase, extraWord)
+    .then(res => {
+      if (res) {
+        step.value = 2;
+        nextStepTwo();
       }
-    },
-    /**
-     * Remove empty words from the phrase
-     */
-    checkPhrase(val) {
-      const testObj = {};
-      let changed = false;
-      Object.values(val).forEach((item, idx) => {
-        if (!isEmpty(item)) testObj[idx + 1] = item.toLowerCase();
-        else changed = true;
+    })
+    .catch(e => {
+      trackAccessWalletAmplitude(ACCESS_WALLET.SOFTWARE_FAILED, {
+        error: e
       });
-      if (changed) this.phrase = testObj;
-    }
+      Toast(e, {}, ERROR);
+    });
+};
+const setPath = e => {
+  selectedPath.value = e;
+};
+const nextStepTwo = () => {
+  const defaultPath = selectedPath.value;
+  props.handlerAccessWallet.updateMnemonicPath(defaultPath.value).catch(e => {
+    trackAccessWalletAmplitude(ACCESS_WALLET.SOFTWARE_FAILED, {
+      error: e
+    });
+    Toast(e, {}, ERROR);
+  });
+  walletInstance.value = props.handlerAccessWallet.getWalletInstance();
+};
+/**
+ * Clears mnemonic input field
+ */
+const clearFields = () => {
+  phrase.value = {};
+  length.value = 12;
+  extraWord.value = '';
+};
+/**
+ * reset component
+ */
+const reset = () => {
+  step.value = 1;
+  /*Phrase Items: */
+  extraWord.value = '';
+  phrase.value = {};
+  length.value = 12;
+  /* Derivation Path */
+  selectedPath.value = {
+    name: 'Ethereum',
+    subtext: "m/44'/60'/0'/0",
+    value: "m/44'/60'/0'/0"
+  };
+  walletInstance.value = {};
+};
+/**
+ * Methods emits parent to unlock wallet
+ * and passes account withinMnemonic Phrase
+ * Used in STEP 2
+ */
+const accessWallet = account => {
+  if (account) {
+    emit('unlock', account);
+    reset();
+  } else {
+    Toast('Something went wrong in mnemonic wallet access', {}, SENTRY);
   }
+};
+/**
+ * Remove empty words from the phrase
+ */
+const checkPhrase = val => {
+  const testObj = {};
+  let changed = false;
+  Object.values(val).forEach((item, idx) => {
+    if (!isEmpty(item)) testObj[idx + 1] = item.toLowerCase();
+    else changed = true;
+  });
+  if (changed) phrase.value = testObj;
 };
 </script>
