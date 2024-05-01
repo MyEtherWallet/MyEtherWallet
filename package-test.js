@@ -90,7 +90,11 @@ const EXCEPTIONS = [
   'eslint-plugin-security', // part of major release for eslint
   '@commitlint/config-conventional',
   'commitlint',
-  'minizlib'
+  'minizlib',
+  // update after release
+  '@sentry/browser',
+  '@sentry/tracing',
+  '@sentry/vue'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

@@ -107,9 +107,9 @@
         color="transparent"
         class="mx-auto"
       >
-        <staked-stepper
+        <StakedStepper
           ref="stakedStepper"
-          :current-apr="handlerStaked.apr"
+          :current-apr="stakedHandler.apr"
           :start-provision="startProvision"
           :polling-status="pollingStatus"
           @readyToStake="sendTransaction"
@@ -129,7 +129,7 @@
         class="py-13 mx-auto"
       >
         <staked-status
-          :tx-receipt="handlerStaked.txReceipt"
+          :tx-receipt="stakedHandler.txReceipt"
           :pending-hash="pendingTxHash"
           :validators="validators"
           :loading="loadingValidators"
@@ -141,8 +141,8 @@
   </the-wrapper-dapp>
 </template>
 
-<script>
-import { mapGetters, mapState } from 'vuex';
+<script setup>
+import { ref, defineAsyncComponent, computed, watch, onMounted } from 'vue';
 import { SUPPORTED_NETWORKS } from './handlers/supportedNetworks';
 import { STAKED_ROUTE } from './configsRoutes';
 import {
@@ -151,195 +151,205 @@ import {
 } from '@/core/helpers/numberFormatHelper';
 
 import handlerStaked from './handlers/handlerStaked';
-import handlerAnalyticsMixin from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-export default {
-  name: 'TheStakedLayout',
-  components: {
-    TheWrapperDapp: () => import('@/dapps/TheWrapperDapp.vue'),
-    StakedStepper: () => import('./components/staked-stepper/StakedStepper'),
-    StakedStatus: () => import('./components/StakedStatus')
+import { useAmplitude } from '@/core/composables/amplitude';
+import {
+  global as useGlobalStore,
+  wallet as useWalletStore,
+  article as useArticleStore
+} from '@/core/store/index.js';
+import { useRoute } from 'vue-router/composables';
+
+const TheWrapperDapp = defineAsyncComponent(() =>
+  import('@/dapps/TheWrapperDapp.vue')
+);
+const StakedStepper = defineAsyncComponent(() =>
+  import('./components/staked-stepper/StakedStepper')
+);
+const StakedStatus = defineAsyncComponent(() =>
+  import('./components/StakedStatus')
+);
+
+// injections/use
+const { trackDapp } = useAmplitude();
+const { web3, address, identifier } = useWalletStore();
+const { network } = useGlobalStore();
+const { getArticle } = useArticleStore();
+const route = useRoute();
+
+// data
+const validNetworks = SUPPORTED_NETWORKS;
+const headerImg = require('@/assets/images/icons/dapps/icon-dapp-stake.svg');
+const tabs = [
+  {
+    name: 'Stake',
+    route: { name: STAKED_ROUTE.STAKED.NAME },
+    id: 0
   },
-  mixins: [handlerAnalyticsMixin],
-  data() {
-    return {
-      validNetworks: SUPPORTED_NETWORKS,
-      headerImg: require('@/assets/images/icons/dapps/icon-dapp-stake.svg'),
-      amount: 0,
-      header: {
-        title: 'Ethereum 2.0 staking',
-        subtext:
-          'Stake on Ethereum 2.0 and earn continuous rewards for providing a public good to the community.',
-        subtextClass: 'textMedium--text'
-      },
-      activeTab: 0,
-      handlerStaked: {},
-      tabs: [
-        {
-          name: 'Stake',
-          route: { name: STAKED_ROUTE.STAKED.NAME },
-          id: 0
-        },
-        {
-          name: 'Status',
-          route: {
-            name: STAKED_ROUTE.STATUS.NAME,
-            path: STAKED_ROUTE.STATUS.PATH
-          },
-          id: 1
-        }
-      ]
-    };
-  },
-  computed: {
-    ...mapState('wallet', ['web3', 'address', 'identifier']),
-    ...mapGetters('global', ['network']),
-    ...mapGetters('article', ['getArticle']),
-    /**
-     * Total staked by user
-     * @returns string
-     */
-    myETHTotalStaked() {
-      return (
-        formatFloatingPointValue(this.handlerStaked.myETHTotalStaked).value +
-        ' ETH'
-      );
+  {
+    name: 'Status',
+    route: {
+      name: STAKED_ROUTE.STATUS.NAME,
+      path: STAKED_ROUTE.STATUS.PATH
     },
-    /**
-     * Total Staked
-     * @returns string
-     */
-    totalStaked() {
-      return (
-        formatFloatingPointValue(this.handlerStaked.totalStaked).value + ' ETH'
-      );
-    },
-    /**
-     * Current APR Formatted
-     * @returns string
-     */
-    currentAprFormatted() {
-      if (this.handlerStaked.apr > 0) {
-        return formatPercentageValue(this.handlerStaked.apr).value;
-      }
-      return '--';
-    },
-    /**
-     * Gets the status after polling (happens on step4)
-     * @returns object
-     */
-    pollingStatus() {
-      return this.handlerStaked.pollingStatus;
-    },
-    /**
-     * Gets the clients validators
-     * @returns array
-     */
-    validators() {
-      return this.handlerStaked.myValidators;
-    },
-    /**
-     * Checks if validators are loading
-     * @returns boolean
-     */
-    loadingValidators() {
-      return this.handlerStaked.loadingValidators;
-    },
-    /**
-     * Checks for pending tx hash
-     * @returns string
-     */
-    pendingTxHash() {
-      return this.handlerStaked.pendingTxHash;
-    },
-    isValidNetwork() {
-      const chainID = this.network.type.chainID;
-      const validChain = this.validNetworks.filter(
-        item => item.chainID === chainID
-      );
-      return validChain.length > 0;
-    }
-  },
-  watch: {
-    $route() {
-      this.detactUrlChangeTab();
-    },
-    /**
-     * @watches pendingTxHash (comes after send transaction)
-     * if it gets set then go to staked status
-     */
-    pendingTxHash(newVal) {
-      if (newVal !== '') {
-        this.activeTab = 1;
-      }
-      if (this.$refs.stakedStepper) {
-        this.$refs.stakedStepper.reset();
-      }
-    },
-    /*
+    id: 1
+  }
+];
+const header = {
+  title: 'Ethereum 2.0 staking',
+  subtext:
+    'Stake on Ethereum 2.0 and earn continuous rewards for providing a public good to the community.',
+  subtextClass: 'textMedium--text'
+};
+const amount = ref(0);
+const activeTab = ref(0);
+const stakedHandler = ref({});
+const stakedStepper = ref(null);
+
+// computed
+/**
+ * Total staked by user
+ * @returns string
+ */
+const myETHTotalStaked = computed(() => {
+  return (
+    formatFloatingPointValue(stakedHandler.value.myETHTotalStaked).value +
+    ' ETH'
+  );
+});
+/**
+ * Total Staked
+ * @returns string
+ */
+const totalStaked = computed(() => {
+  return (
+    formatFloatingPointValue(stakedHandler.value.totalStaked).value + ' ETH'
+  );
+});
+/**
+ * Current APR Formatted
+ * @returns string
+ */
+const currentAprFormatted = computed(() => {
+  if (stakedHandler.value.apr > 0) {
+    return formatPercentageValue(stakedHandler.value.apr).value;
+  }
+  return '--';
+});
+/**
+ * Gets the status after polling (happens on step4)
+ * @returns object
+ */
+const pollingStatus = computed(() => {
+  return stakedHandler.value.pollingStatus;
+});
+/**
+ * Gets the clients validators
+ * @returns array
+ */
+const validators = computed(() => {
+  return stakedHandler.value.myValidators;
+});
+/**
+ * Checks if validators are loading
+ * @returns boolean
+ */
+const loadingValidators = computed(() => {
+  return stakedHandler.value.loadingValidators;
+});
+/**
+ * Checks for pending tx hash
+ * @returns string
+ */
+const pendingTxHash = computed(() => {
+  return stakedHandler.value.pendingTxHash;
+});
+const isValidNetwork = computed(() => {
+  const chainID = network.type.chainID;
+  const validChain = validNetworks.filter(item => item.chainID === chainID);
+  return validChain.length > 0;
+});
+
+// watch
+watch(route, () => {
+  detactUrlChangeTab();
+});
+/**
+ * @watches pendingTxHash (comes after send transaction)
+ * if it gets set then go to staked status
+ */
+watch(pendingTxHash, newVal => {
+  if (newVal !== '') {
+    activeTab.value = 1;
+  }
+  if (stakedStepper.value) {
+    stakedStepper.value.reset();
+  }
+});
+/*
     - watches for address state change
     - updates handlerStaked with new address
     - if user is currently onStep within the stakeStepper component, it will run the reset function
     */
-    address(newVal) {
-      this.handlerStaked.address = newVal;
-      if (this.$refs.stakedStepper) {
-        this.$refs.stakedStepper.reset();
-      }
-    }
-  },
-  mounted() {
-    /**
-     * Check url and change tab on load
-     */
-    this.detactUrlChangeTab();
-
-    /**
-     * Initiate Stake Handler
-     */
-    if (this.isValidNetwork) {
-      this.handlerStaked = new handlerStaked(
-        this.web3,
-        this.network,
-        this.address,
-        this.trackDapp,
-        this.identifier
-      );
-    }
-  },
-  methods: {
-    detactUrlChangeTab() {
-      const currentRoute = this.$route.name;
-      if (currentRoute === STAKED_ROUTE.STATUS.NAME) {
-        this.activeTab = this.tabs[1].id;
-      } else {
-        this.activeTab = this.tabs[0].id;
-      }
-    },
-    tabChanged(tab) {
-      this.activeTab = tab;
-    },
-    /**
-     * Start provisioning
-     */
-    startProvision(params) {
-      return this.handlerStaked.startProvision(params);
-    },
-    /**
-     * Send transaction to confirm staking
-     * and set amount value for staked status
-     */
-    sendTransaction(amountETH) {
-      this.trackDapp('StakedSendStake');
-      this.handlerStaked.sendTransaction();
-      this.amount = amountETH;
-    },
-    /**
-     * refetch validators
-     */
-    refetchValidators() {
-      this.handlerStaked.getValidators();
-    }
+watch(address, newVal => {
+  stakedHandler.value.address = newVal;
+  if (stakedStepper.value) {
+    stakedStepper.value.reset();
   }
+});
+
+// mounted
+onMounted(() => {
+  /**
+   * Check url and change tab on load
+   */
+  detactUrlChangeTab();
+
+  /**
+   * Initiate Stake Handler
+   */
+  if (isValidNetwork.value) {
+    stakedHandler.value = new handlerStaked(
+      web3,
+      network,
+      address,
+      trackDapp,
+      identifier
+    );
+  }
+});
+
+// methods
+const detactUrlChangeTab = () => {
+  const currentRoute = route.name;
+  if (currentRoute === STAKED_ROUTE.STATUS.NAME) {
+    activeTab.value = tabs[1].id;
+  } else {
+    activeTab.value = tabs[0].id;
+  }
+};
+const tabChanged = tab => {
+  activeTab.value = tab;
+};
+/**
+ * Start provisioning
+ */
+const startProvision = params => {
+  return stakedHandler.value.startProvision(params);
+};
+/**
+ * Send transaction to confirm staking
+ * and set amount value for staked status
+ */
+const sendTransaction = amountETH => {
+  trackDapp('StakedSendStake');
+  stakedHandler.value.sendTransaction();
+  amount.value = amountETH;
+};
+/**
+ * refetch validators
+ */
+const refetchValidators = () => {
+  stakedHandler.value.getValidators();
 };
 </script>
 

@@ -39,65 +39,65 @@
   </div>
 </template>
 
-<script>
-import { mapGetters } from 'vuex';
+<script setup>
+import { defineProps, ref, computed, onMounted, defineEmits } from 'vue';
 
-export default {
-  props: {
-    getRentPrice: {
-      default: function () {
-        return {};
-      },
-      type: Function
+// emit
+const emit = defineEmits(['onRequest']);
+
+// props
+const props = defineProps({
+  getRentPrice: {
+    default: function () {
+      return {};
     },
-    loading: {
-      default: false,
-      type: Boolean
-    },
-    name: {
-      default: '',
-      type: String
-    }
+    type: Function
   },
-  data() {
-    return {
-      duration: 0,
-      rentPriceETH: '',
-      rentPriceUSD: ''
-    };
+  loading: {
+    default: false,
+    type: Boolean
   },
-  computed: {
-    ...mapGetters('custom', ['customTokens']),
-    items() {
-      const items = [];
-      for (let i = 0; i < 20; i++) {
-        items.push({
-          name: i + 1 + ' ' + `year${i < 1 ? '' : 's'}`,
-          value: (i + 1).toString()
-        });
-      }
-      return items;
-    }
-  },
-  mounted() {
-    this.rentPrice();
-  },
-  methods: {
-    rentPrice() {
-      if (this.duration > 0) {
-        return this.getRentPrice(this.duration).then(resp => {
-          this.rentPriceETH = resp.rif;
-          this.rentPriceUSD = resp.usd;
-        });
-      }
-    },
-    onClick() {
-      this.$emit('onRequest', this.duration);
-    },
-    setDuration(item) {
-      this.duration = parseInt(item.value);
-      this.rentPrice();
-    }
+  name: {
+    default: '',
+    type: String
   }
+});
+
+// data
+const duration = ref(0);
+const rentPriceETH = ref('');
+const rentPriceUSD = ref('');
+
+// computed
+const items = computed(() => {
+  const items = [];
+  for (let i = 0; i < 20; i++) {
+    items.push({
+      name: i + 1 + ' ' + `year${i < 1 ? '' : 's'}`,
+      value: (i + 1).toString()
+    });
+  }
+  return items;
+});
+
+// mounted
+onMounted(() => {
+  rentPrice();
+});
+// methods
+const rentPrice = () => {
+  if (duration.value > 0) {
+    return props.getRentPrice(duration.value).then(resp => {
+      rentPriceETH.value = resp.rif;
+      rentPriceUSD.value = resp.usd;
+    });
+  }
+};
+const onClick = () => {
+  emit('onRequest', duration);
+};
+const setDuration = item => {
+  duration.value = parseInt(item.value);
+  rentPrice();
 };
 </script>

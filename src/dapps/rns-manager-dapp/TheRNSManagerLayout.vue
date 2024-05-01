@@ -23,7 +23,7 @@
         >
           <div class="mb-5">
             <div class="mew-heading-2 mb-8 ml-2">
-              {{ $t('rns.search-domain') }}
+              {{ t('rns.search-domain') }}
             </div>
             <form @submit.prevent="findDomain">
               <v-row class="mx-0">
@@ -32,8 +32,8 @@
                     :value="name"
                     :has-clear-btn="true"
                     :rules="rules"
-                    :label="$t('rns.register.domain-name')"
-                    :placeholder="$t('rns.ph.three-char')"
+                    :label="t('rns.register.domain-name')"
+                    :placeholder="t('rns.ph.three-char')"
                     class="mr-3 flex-grow-1"
                     :error-messages="errorMessages"
                     @input="setName"
@@ -50,7 +50,7 @@
                     "
                     :has-full-width="true"
                     btn-size="xlarge"
-                    :title="$t('rns.register.name')"
+                    :title="t('rns.register.name')"
                     @click.native="findDomain"
                   />
                 </v-col>
@@ -105,10 +105,19 @@
     />
   </div>
 </template>
-<script>
-import { mapGetters, mapState } from 'vuex';
+<script setup>
+import {
+  defineAsyncComponent,
+  ref,
+  computed,
+  watch,
+  onMounted,
+  defineEmits
+} from 'vue';
 import { ethers, BigNumber } from 'ethers';
 import { setInterval } from 'timers';
+import { useI18n } from 'vue-i18n-composable';
+import { useRoute, useRouter } from 'vue-router/composables';
 
 import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
@@ -116,254 +125,266 @@ import { RNS_MANAGER_ROUTE } from './routes';
 import normalise from '@/core/helpers/normalise';
 import RNSManager from './handlers/handlerRNSManager';
 import ReverseRegister from './handlers/helpers/reverseRegistrar';
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin.js';
+import { useAmplitude } from '@/core/composables/amplitude';
+import {
+  wallet as useWalletStore,
+  custom as useCustomStore
+} from '@/core/store/index.js';
 
-export default {
-  name: 'RNSManagerLayout',
-  components: {
-    TheWrapperDapp: () => import('@/dapps/TheWrapperDapp.vue'),
-    ModuleRegisterDomain: () => import('./modules/ModuleRegisterDomain'),
-    RnsReverseLookup: () => import('./components/reverse/RnsReverseLookup')
+const TheWrapperDapp = defineAsyncComponent(() =>
+  import('@/dapps/TheWrapperDapp.vue')
+);
+const ModuleRegisterDomain = defineAsyncComponent(() =>
+  import('./modules/ModuleRegisterDomain')
+);
+const RnsReverseLookup = defineAsyncComponent(() =>
+  import('./components/reverse/RnsReverseLookup')
+);
+
+// emits
+const emit = defineEmits(['onRequest']);
+// injections/use
+const { trackDapp } = useAmplitude();
+const route = useRoute();
+const router = useRouter();
+const { t } = useI18n();
+const { address, web3, instance } = useWalletStore();
+const { customTokens } = useCustomStore();
+
+// data
+const validNetworks = SUPPORTED_NETWORKS;
+const headerImg = require('@/assets/images/icons/dapps/icon-dapp-rns.svg');
+const header = {
+  title: t('rns.title'),
+  subtext: t('rns.dapp-desc')
+};
+const tabs = [
+  {
+    name: t('rns.register-domain'),
+    route: { name: RNS_MANAGER_ROUTE.CORE.NAME },
+    id: 0
   },
-  mixins: [handlerAnalytics],
-  data() {
-    return {
-      name: '',
-      regSecret: '',
-      searchError: '',
-      notEnoughFunds: false,
-      onRegister: false,
-      validNetworks: SUPPORTED_NETWORKS,
-      headerImg: require('@/assets/images/icons/dapps/icon-dapp-rns.svg'),
-      header: {
-        title: this.$t('rns.title'),
-        subtext: this.$t('rns.dapp-desc')
-      },
-      activeTab: 0,
-      loadingCommit: false,
-      loadingReg: false,
-      committed: false,
-      minimumAge: '',
-      noFundsForRegFees: false,
-      commitFeeInEth: '',
-      domainPrice: '',
-      commitFeeInWei: '0',
-      commitFeeUsd: '0',
-      waitingForReg: true,
-      tabs: [
-        {
-          name: this.$t('rns.register-domain'),
-          route: { name: RNS_MANAGER_ROUTE.CORE.NAME },
-          id: 0
-        },
-        {
-          name: this.$t('rns.my-domains'),
-          route: {
-            name: RNS_MANAGER_ROUTE.MANAGE.NAME,
-            path: RNS_MANAGER_ROUTE.MANAGE.PATH
-          },
-          id: 1
-        }
-      ]
-    };
-  },
-  computed: {
-    ...mapGetters('custom', ['customTokens']),
-    ...mapState('wallet', ['balance', 'address', 'web3', 'instance']),
-    errorMessages() {
-      if (this.domainTaken) return this.$t('rns.domain-taken');
-      return this.searchError;
+  {
+    name: t('rns.my-domains'),
+    route: {
+      name: RNS_MANAGER_ROUTE.MANAGE.NAME,
+      path: RNS_MANAGER_ROUTE.MANAGE.PATH
     },
-    loading() {
-      return false;
-    },
-    rules() {
-      return [
-        this.searchError === '' || this.searchError,
-        (this.name && this.name.length > 2) ||
-          this.$t('rns.warning.not-enough-char'),
-        !this.hasInvalidChars || this.$t('rns.warning.invalid-symbol'),
-        (this.name && this.name.split('.').length <= 2) ||
-          this.$t('rns.warning.invalid-symbol')
-      ];
-    },
-    hasInvalidChars() {
-      const letters = /^[0-9a-zA-Z_.-]+$/;
-      if (!letters.test(this.name)) {
-        return true;
-      }
-      return false;
-    }
-  },
-  watch: {
-    $route() {
-      this.detactUrlChangeTab();
-    }
-  },
-  mounted() {
-    this.setup();
-  },
-  methods: {
-    setup() {
-      const ethersProvider = new ethers.providers.Web3Provider(
-        this.web3.currentProvider
-      );
-      const ethersSigner = ethersProvider.getSigner();
-      this.nameHandler = new RNSManager(ethersSigner);
-      this.reverseHandler = new ReverseRegister(ethersSigner);
-    },
-    async findDomain() {
-      try {
-        const [name, domain] = this.name.split('.');
-
-        if (domain !== 'rsk') {
-          this.searchError =
-            'Only .rsk names are supported. Please make sure to include ".rsk".';
-          return;
-        }
-
-        if (name.length < 5) {
-          this.searchError =
-            'Domains with less than 5 characters are blocked. stay tuned, we are going to release them soon';
-          return;
-        }
-
-        const available = await this.nameHandler.searchName(name);
-
-        if (available) {
-          this.onRegister = true;
-        } else {
-          this.searchError = 'Name not available';
-        }
-      } catch (e) {
-        Toast(e, {}, ERROR);
-      }
-    },
-    detactUrlChangeTab() {
-      const currentRoute = this.$route.name;
-
-      if (currentRoute === RNS_MANAGER_ROUTE.MANAGE.NAME) {
-        this.activeTab = this.tabs[1].id;
-      } else {
-        this.activeTab = this.tabs[0].id;
-      }
-    },
-    tabChanged(tab) {
-      this.activeTab = tab;
-    },
-    closeRegister() {
-      this.onRegister = false;
-      this.committed = false;
-      this.loadingCommit = false;
-      this.loadingReg = false;
-      this.name = '';
-      this.$router.push({ name: RNS_MANAGER_ROUTE.MANAGE.NAME });
-      this.trackDapp('rnsCloseRegister');
-    },
-    setName(name) {
-      this.searchError = '';
-      try {
-        this.name = normalise(name);
-      } catch (e) {
-        this.searchError = e.message.includes('Failed to validate')
-          ? 'Invalid name!'
-          : e.message;
-        this.name = name;
-      }
-    },
-    async register(duration) {
-      try {
-        this.loadingReg = true;
-        this.minimumAge = '90';
-        // trigger loader
-        this.loadingCommit = true;
-        this.waitingForReg = true;
-
-        const [label] = this.name.split('.');
-        const address = this.instance.getAddressString();
-        const registerTx = await this.nameHandler.rskRegistrar.register(
-          label,
-          address,
-          this.regSecret,
-          BigNumber.from(duration),
-          this.domainPrice
-        );
-        await registerTx.wait();
-        await this.reverseHandler.setReverseRecord(this.name, this.address);
-        this.loadingReg = false;
-        this.waitingForReg = false;
-
-        this.closeRegister();
-        this.trackDapp('rnsDomainsRegisterSuccess');
-        Toast(`Registration successful!`, {}, SUCCESS);
-      } catch (e) {
-        this.trackDapp('rnsDomainRegisterFailed');
-        Toast(e, {}, ERROR);
-      }
-    },
-    async commit(duration) {
-      this.loadingCommit = true;
-      this.minimumAge = '120';
-      this.committed = false;
-      this.waitingForReg = true;
-      try {
-        const address = this.instance.getAddressString();
-        const [label] = this.name.split('.');
-
-        const { makeCommitmentTransaction, secret, canReveal } =
-          await this.nameHandler.rskRegistrar.commitToRegister(label, address);
-        await makeCommitmentTransaction.wait();
-        this.regSecret = secret;
-        // Ref: https://github.com/rsksmart/rns-sdk
-        // you need to wait at least for one minute, you can build
-        // your own polling strategy checking canReveal to ensure
-        // it is the correct time to submit the register tx
-        let commitmentReady = await canReveal();
-        const intervalId = setInterval(async () => {
-          commitmentReady = await canReveal();
-          if (commitmentReady) {
-            if (intervalId && intervalId._id) {
-              clearInterval(intervalId._id);
-            } else {
-              clearInterval(intervalId);
-            }
-            this.loadingCommit = false;
-            this.committed = true;
-            this.waitingForReg = false;
-            this.canRegister = true;
-            this.$emit('onRequest', duration);
-          }
-        }, 1000);
-        setTimeout(() => {
-          if (!commitmentReady) {
-            throw 'failed to commit name registration';
-          }
-        }, 1000 * 10 * 60);
-      } catch (e) {
-        this.trackDapp('rnsDomainRegisterFailed');
-        Toast(e, {}, ERROR);
-      }
-    },
-    getRentPrice(duration) {
-      const token = this.customTokens.find(token => token.name === 'RIF');
-      const [label] = this.name.split('.');
-      this.trackDapp('rnsDomainInitializeRegister');
-      return this.nameHandler.fetchPrice(label, duration).then(resp => {
-        this.commitFeeInEth = resp.eth;
-        this.domainPrice = resp.bn;
-
-        if (token) {
-          if (parseFloat(token.balancef) < parseFloat(resp.eth)) {
-            this.notEnoughFunds = true;
-          }
-          this.commitFeeUsd = (
-            (token.price || 0) * parseFloat(resp.eth)
-          ).toFixed(2);
-        }
-
-        return { usd: this.commitFeeUsd, rif: resp.eth };
-      });
-    }
+    id: 1
   }
+];
+const name = ref('');
+const regSecret = ref('');
+const searchError = ref('');
+const notEnoughFunds = ref(false);
+const onRegister = ref(false);
+const activeTab = ref(0);
+const loadingCommit = ref(false);
+const loadingReg = ref(false);
+const committed = ref(false);
+const minimumAge = ref('');
+const noFundsForRegFees = ref(false);
+const commitFeeInEth = ref('');
+const domainPrice = ref('');
+const commitFeeInWei = ref('0');
+const commitFeeUsd = ref('0');
+const waitingForReg = ref(true);
+const nameHandler = ref({});
+const reverseHandler = ref({});
+
+// computed
+const errorMessages = computed(() => {
+  // if (domainTaken) return t('rns.domain-taken');
+  return searchError;
+});
+const loading = computed(() => {
+  return false;
+});
+const rules = computed(() => {
+  return [
+    searchError.value === '' || searchError.value,
+    (name.value && name.value.length > 2) || t('rns.warning.not-enough-char'),
+    !hasInvalidChars.value || t('rns.warning.invalid-symbol'),
+    (name.value && name.value.split('.').length <= 2) ||
+      t('rns.warning.invalid-symbol')
+  ];
+});
+const hasInvalidChars = computed(() => {
+  const letters = /^[0-9a-zA-Z_.-]+$/;
+  if (!letters.test(name)) {
+    return true;
+  }
+  return false;
+});
+
+// watch
+watch(route, () => {
+  detactUrlChangeTab();
+});
+
+//
+onMounted(() => {
+  setup();
+});
+
+// methods
+const setup = () => {
+  const ethersProvider = new ethers.providers.Web3Provider(
+    web3.currentProvider
+  );
+  const ethersSigner = ethersProvider.getSigner();
+  nameHandler.value = new RNSManager(ethersSigner);
+  reverseHandler.value = new ReverseRegister(ethersSigner);
+};
+const findDomain = async () => {
+  try {
+    const [name, domain] = name.split('.');
+
+    if (domain !== 'rsk') {
+      searchError.value =
+        'Only .rsk names are supported. Please make sure to include ".rsk".';
+      return;
+    }
+
+    if (name.length < 5) {
+      searchError.value =
+        'Domains with less than 5 characters are blocked. stay tuned, we are going to release them soon';
+      return;
+    }
+
+    const available = await nameHandler.value.searchName(name);
+
+    if (available) {
+      onRegister.value = true;
+    } else {
+      searchError.value = 'Name not available';
+    }
+  } catch (e) {
+    Toast(e, {}, ERROR);
+  }
+};
+const detactUrlChangeTab = () => {
+  const currentRoute = route.name;
+
+  if (currentRoute === RNS_MANAGER_ROUTE.MANAGE.NAME) {
+    activeTab.value = tabs[1].id;
+  } else {
+    activeTab.value = tabs[0].id;
+  }
+};
+const tabChanged = tab => {
+  activeTab.value = tab;
+};
+const closeRegister = () => {
+  onRegister.value = false;
+  committed.value = false;
+  loadingCommit.value = false;
+  loadingReg.value = false;
+  name.value = '';
+  router.push({ name: RNS_MANAGER_ROUTE.MANAGE.NAME });
+  trackDapp('rnsCloseRegister');
+};
+const setName = locName => {
+  searchError.value = '';
+  try {
+    name.value = normalise(locName);
+  } catch (e) {
+    searchError.value = e.message.includes('Failed to validate')
+      ? 'Invalid name!'
+      : e.message;
+    name.value = locName;
+  }
+};
+const register = async duration => {
+  try {
+    loadingReg.value = true;
+    minimumAge.value = '90';
+    // trigger loader
+    loadingCommit.value = true;
+    waitingForReg.value = true;
+
+    const [label] = name.value.split('.');
+    const address = instance.getAddressString();
+    const registerTx = await nameHandler.value.rskRegistrar.register(
+      label,
+      address,
+      regSecret.value,
+      BigNumber.from(duration),
+      domainPrice.value
+    );
+    await registerTx.wait();
+    await reverseHandler.value.setReverseRecord(name, address);
+    loadingReg.value = false;
+    waitingForReg.value = false;
+
+    closeRegister();
+    trackDapp('rnsDomainsRegisterSuccess');
+    Toast(`Registration successful!`, {}, SUCCESS);
+  } catch (e) {
+    trackDapp('rnsDomainRegisterFailed');
+    Toast(e, {}, ERROR);
+  }
+};
+const commit = async duration => {
+  loadingCommit.value = true;
+  minimumAge.value = '120';
+  committed.value = false;
+  waitingForReg.value = true;
+  try {
+    const address = instance.getAddressString();
+    const [label] = name.value.split('.');
+
+    const { makeCommitmentTransaction, secret, canReveal } =
+      await nameHandler.value.rskRegistrar.commitToRegister(label, address);
+    await makeCommitmentTransaction.wait();
+    regSecret.value = secret;
+    // Ref: https://github.com/rsksmart/rns-sdk
+    // you need to wait at least for one minute, you can build
+    // your own polling strategy checking canReveal to ensure
+    // it is the correct time to submit the register tx
+    let commitmentReady = await canReveal();
+    const intervalId = setInterval(async () => {
+      commitmentReady = await canReveal();
+      if (commitmentReady) {
+        if (intervalId && intervalId._id) {
+          clearInterval(intervalId._id);
+        } else {
+          clearInterval(intervalId);
+        }
+        loadingCommit.value = false;
+        committed.value = true;
+        waitingForReg.value = false;
+        emit('onRequest', duration);
+      }
+    }, 1000);
+    setTimeout(() => {
+      if (!commitmentReady) {
+        throw 'failed to commit name registration';
+      }
+    }, 1000 * 10 * 60);
+  } catch (e) {
+    trackDapp('rnsDomainRegisterFailed');
+    Toast(e, {}, ERROR);
+  }
+};
+const getRentPrice = duration => {
+  const token = customTokens.find(token => token.name === 'RIF');
+  const [label] = name.value.split('.');
+  trackDapp('rnsDomainInitializeRegister');
+  return nameHandler.value.fetchPrice(label, duration).then(resp => {
+    commitFeeInEth.value = resp.eth;
+    domainPrice.value = resp.bn;
+
+    if (token) {
+      if (parseFloat(token.balancef) < parseFloat(resp.eth)) {
+        notEnoughFunds.value = true;
+      }
+      commitFeeUsd.value = ((token.price || 0) * parseFloat(resp.eth)).toFixed(
+        2
+      );
+    }
+
+    return { usd: commitFeeUsd, rif: resp.eth };
+  });
 };
 </script>
