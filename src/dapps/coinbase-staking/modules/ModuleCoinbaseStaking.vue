@@ -177,14 +177,12 @@
   </div>
 </template>
 
-<script>
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+<script setup>
+import { defineAsyncComponent, ref, computed, watch, onMounted } from 'vue';
 import { fromWei } from 'web3-utils';
-import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { debounce, isEmpty } from 'lodash';
 
-import buyMore from '@/core/mixins/buyMore.mixin.js';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 import { EventBus } from '@/core/plugins/eventBus';
@@ -195,170 +193,167 @@ import {
   CB_TRACKING,
   MIN_GAS_LIMIT
 } from '@/dapps/coinbase-staking/configs.js';
+import {
+  global as useGlobalStore,
+  wallet as useWalletStore,
+  external as useExternalStore
+} from '@/core/store/index.js';
+import { useAmplitude } from '@/core/composables/amplitude';
+import { useBuySell } from '@/core/composables/buyMore';
 
-export default {
-  name: 'ModuleCoinbaseUnstaking',
-  components: {
-    CoinbaseStakingSummary: () => import('../components/CoinbaseStakingSummary')
-  },
-  mixins: [buyMore, handlerAnalytics],
-  data() {
-    return {
-      iconEth: require('@/assets/images/icons/icon-eth-gray.svg'),
-      stakeAmount: '0',
-      locGasPrice: '0',
-      gasLimit: '21000',
-      estimateGasError: false,
-      loading: false
-    };
-  },
-  computed: {
-    ...mapGetters('wallet', ['balanceInETH']),
-    ...mapGetters('global', [
-      'network',
-      'isEthNetwork',
-      'gasPriceByType',
-      'getFiatValue'
-    ]),
-    ...mapGetters('external', ['fiatValue']),
-    ...mapState('global', ['gasPriceType']),
-    ...mapState('wallet', ['web3', 'address', 'instance', 'identifier']),
-    currencyName() {
-      return this.network.type.currencyName;
-    },
-    ethTotalFee() {
-      const gasPrice = BigNumber(this.locGasPrice).gt(0)
-        ? BigNumber(this.locGasPrice)
-        : BigNumber(this.gasPriceByType(this.gasPriceType));
-      const gasLimit = BigNumber(this.gasLimit).gt('21000')
-        ? this.gasLimit
-        : MIN_GAS_LIMIT;
-      const ethFee = fromWei(BigNumber(gasPrice).times(gasLimit).toFixed());
-      return formatFloatingPointValue(ethFee).value;
-    },
-    gasPriceFiat() {
-      const gasPrice = BigNumber(this.ethTotalFee);
-      return gasPrice.gt(0)
-        ? this.getFiatValue(gasPrice.times(this.fiatValue).toFixed())
-        : '0';
-    },
-    hasEnoughBalanceToStake() {
-      return BigNumber(this.ethTotalFee)
-        .plus(this.stakeAmount)
-        .lte(this.balanceInETH);
-    },
-    hasEnoughBalance() {
-      return BigNumber(this.ethTotalFee).lte(this.balanceInETH);
-    },
-    isValid() {
-      return BigNumber(this.stakeAmount).gt(0) && this.hasEnoughBalanceToStake;
-    },
-    errorMessages() {
-      if (!this.hasEnoughBalanceToStake || !this.hasEnoughBalance) {
-        return 'Not enough ETH.';
-      }
+const CoinbaseStakingSummary = defineAsyncComponent(() =>
+  import('../components/CoinbaseStakingSummary')
+);
 
-      if (this.estimateGasError) {
-        return !this.hasEnoughBalanceToStake
-          ? 'Issue with gas estimation. Please check if you have enough balance!'
-          : '';
-      }
-      if (BigNumber(this.stakeAmount).lt(0)) {
-        return 'Value cannot be negative';
-      }
-      if (
-        BigNumber(this.stakeAmount).gt(0) &&
-        !hasValidDecimals(BigNumber(this.stakeAmount).toFixed(), 18)
-      ) {
-        return 'Invalid decimals. ETH can only have 18 decimals';
-      }
-      return '';
-    },
-    buyMoreStr() {
-      return this.isEthNetwork && !this.hasEnoughBalanceToStake
-        ? this.network.type.canBuy
-          ? 'Buy more.'
-          : ''
-        : null;
-    }
-  },
-  watch: {
-    gasPriceType() {
-      this.locGasPrice = this.gasPriceByType(this.gasPriceType);
-    }
-  },
-  mounted() {
-    this.locGasPrice = this.gasPriceByType(this.gasPriceType);
-  },
-  methods: {
-    reset() {
-      this.setAmount(0);
-      this.loading = false;
-    },
-    async stake() {
-      window.scrollTo(0, 0);
-      this.trackDapp(CB_TRACKING.CLICK_STAKE);
-      this.loading = true;
-      const { gasLimit, to, data, value, error } = await fetch(
-        `${API}?address=${this.address}&action=stake&networkId=${
-          this.network.type.chainID
-        }&amount=${toBase(this.stakeAmount, 18)}`
-      ).then(res => res.json());
-      if (error) {
-        const message = isEmpty(error)
-          ? 'Something went wrong! Please try again!'
-          : error.message;
-        Toast(message, {}, ERROR);
-        this.reset();
-        this.trackDapp(CB_TRACKING.STAKE_FAIL);
-        return;
-      }
-      const txObj = {
-        gasLimit: gasLimit,
-        to: to,
-        from: this.address,
-        data: data,
-        value: value
-      };
-      this.web3.eth
-        .sendTransaction(txObj)
-        .once('receipt', () => {
-          EventBus.$emit('fetchSummary');
-        })
-        .then(() => {
-          Toast(
-            'Successfully staked! Account will reflect once pool refreshes.',
-            {},
-            SUCCESS
-          );
-          this.reset();
-          EventBus.$emit('fetchSummary');
-          this.trackDapp(CB_TRACKING.STAKE_SUCCESS, {
-            wallet: this.identifier
-          });
-        })
-        .catch(e => {
-          this.instance.errorHandler(e);
-          this.reset();
-          this.trackDapp(CB_TRACKING.STAKE_FAIL);
-        });
-    },
-    setAmount: debounce(function (val) {
-      const value = val ? val : 0;
-      this.stakeAmount = BigNumber(value).toFixed();
-    }, 500),
-    setMax() {
-      if (this.hasEnoughBalanceToStake) {
-        const max = BigNumber(this.balanceInETH).minus(
-          BigNumber(this.ethTotalFee)
-        );
-        this.setAmount(max.toFixed());
-      }
-    },
-    openSettings() {
-      EventBus.$emit('openSettings');
-    }
+// injections/use
+const { trackDapp } = useAmplitude();
+const { openBuySell } = useBuySell();
+const { network, isEthNetwork, gasPriceByType, getFiatValue, gasPriceType } =
+  useGlobalStore();
+const { balanceInETH, web3, address, instance, identifier } = useWalletStore();
+const { fiatValue } = useExternalStore();
+
+// data
+const iconEth = require('@/assets/images/icons/icon-eth-gray.svg');
+const stakeAmount = ref('0');
+const locGasPrice = ref('0');
+const gasLimit = ref('21000');
+const estimateGasError = ref(false);
+const loading = ref(false);
+
+// computed
+const currencyName = computed(() => {
+  return network.type.currencyName;
+});
+const ethTotalFee = computed(() => {
+  const gasPrice = BigNumber(locGasPrice.value).gt(0)
+    ? BigNumber(locGasPrice.value)
+    : BigNumber(gasPriceByType(gasPriceType));
+  const locGasLimit = BigNumber(gasLimit.value).gt('21000')
+    ? gasLimit.value
+    : MIN_GAS_LIMIT;
+  const ethFee = fromWei(BigNumber(gasPrice).times(locGasLimit).toFixed());
+  return formatFloatingPointValue(ethFee).value;
+});
+const gasPriceFiat = computed(() => {
+  const gasPrice = BigNumber(ethTotalFee.value);
+  return gasPrice.gt(0)
+    ? getFiatValue(gasPrice.times(fiatValue).toFixed())
+    : '0';
+});
+const hasEnoughBalanceToStake = computed(() => {
+  return BigNumber(ethTotalFee.value).plus(stakeAmount.value).lte(balanceInETH);
+});
+const hasEnoughBalance = computed(() => {
+  return BigNumber(ethTotalFee.value).lte(balanceInETH);
+});
+const isValid = computed(() => {
+  return BigNumber(stakeAmount.value).gt(0) && hasEnoughBalanceToStake.value;
+});
+const errorMessages = computed(() => {
+  if (!hasEnoughBalanceToStake.value || !hasEnoughBalance.value) {
+    return 'Not enough ETH.';
   }
+
+  if (estimateGasError.value) {
+    return !hasEnoughBalanceToStake.value
+      ? 'Issue with gas estimation. Please check if you have enough balance!'
+      : '';
+  }
+  if (BigNumber(stakeAmount.value).lt(0)) {
+    return 'Value cannot be negative';
+  }
+  if (
+    BigNumber(stakeAmount.value).gt(0) &&
+    !hasValidDecimals(BigNumber(stakeAmount.value).toFixed(), 18)
+  ) {
+    return 'Invalid decimals. ETH can only have 18 decimals';
+  }
+  return '';
+});
+const buyMoreStr = computed(() => {
+  return isEthNetwork && !hasEnoughBalanceToStake.value
+    ? network.type.canBuy
+      ? 'Buy more.'
+      : ''
+    : null;
+});
+
+// watch
+watch(gasPriceType, () => {
+  locGasPrice.value = gasPriceByType(gasPriceType);
+});
+
+// mounted
+onMounted(() => {
+  locGasPrice.value = gasPriceByType(gasPriceType);
+});
+
+// methods
+const reset = () => {
+  setAmount(0);
+  loading.value = false;
+};
+const stake = async () => {
+  window.scrollTo(0, 0);
+  trackDapp(CB_TRACKING.CLICK_STAKE);
+  loading.value = true;
+  const { gasLimit, to, data, value, error } = await fetch(
+    `${API}?address=${address}&action=stake&networkId=${
+      network.type.chainID
+    }&amount=${toBase(stakeAmount, 18)}`
+  ).then(res => res.json());
+  if (error) {
+    const message = isEmpty(error)
+      ? 'Something went wrong! Please try again!'
+      : error.message;
+    Toast(message, {}, ERROR);
+    reset();
+    trackDapp(CB_TRACKING.STAKE_FAIL);
+    return;
+  }
+  const txObj = {
+    gasLimit: gasLimit,
+    to: to,
+    from: address,
+    data: data,
+    value: value
+  };
+  web3.eth
+    .sendTransaction(txObj)
+    .once('receipt', () => {
+      EventBus.$emit('fetchSummary');
+    })
+    .then(() => {
+      Toast(
+        'Successfully staked! Account will reflect once pool refreshes.',
+        {},
+        SUCCESS
+      );
+      reset();
+      EventBus.$emit('fetchSummary');
+      trackDapp(CB_TRACKING.STAKE_SUCCESS, {
+        wallet: identifier
+      });
+    })
+    .catch(e => {
+      instance.errorHandler(e);
+      reset();
+      trackDapp(CB_TRACKING.STAKE_FAIL);
+    });
+};
+const setAmount = debounce(function (val) {
+  const value = val ? val : 0;
+  stakeAmount.value = BigNumber(value).toFixed();
+}, 500);
+const setMax = () => {
+  if (hasEnoughBalanceToStake.value) {
+    const max = BigNumber(balanceInETH).minus(BigNumber(ethTotalFee.value));
+    setAmount(max.toFixed());
+  }
+};
+const openSettings = () => {
+  EventBus.$emit('openSettings');
 };
 </script>
 

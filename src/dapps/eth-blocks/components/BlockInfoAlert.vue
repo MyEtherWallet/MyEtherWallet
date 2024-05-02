@@ -317,8 +317,18 @@
 </template>
 
 <script>
+const RARIBLE_CONTRACT = 'token/0x01234567bac6ff94d7e4f0ee23119cf848f93245:';
+const RARIBLE = 'https://rarible.com/';
+const RARIBLE_TOKEN = `${RARIBLE}${RARIBLE_CONTRACT}`;
+const RARIBLE_OWNER = `${RARIBLE}user/`;
+
+const RARIBLE_TEST = 'https://rinkeby.rarible.com/';
+const RARIBLE_TEST_TOKEN = `${RARIBLE_TEST}${RARIBLE_CONTRACT}`;
+const RARIBLE_TEST_OWNER = `${RARIBLE_TEST}user/`;
+</script>
+<script setup>
+import { defineProps, computed, defineEmits } from 'vue';
 import { fromWei } from 'web3-utils';
-import { mapGetters, mapState, mapActions } from 'vuex';
 import BigNumber from 'bignumber.js';
 
 import {
@@ -329,281 +339,271 @@ import {
   formatIntegerToString,
   formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-const RARIBLE_CONTRACT = 'token/0x01234567bac6ff94d7e4f0ee23119cf848f93245:';
-const RARIBLE = 'https://rarible.com/';
-const RARIBLE_TOKEN = `${RARIBLE}${RARIBLE_CONTRACT}`;
-const RARIBLE_OWNER = `${RARIBLE}user/`;
 
-const RARIBLE_TEST = 'https://rinkeby.rarible.com/';
-const RARIBLE_TEST_TOKEN = `${RARIBLE_TEST}${RARIBLE_CONTRACT}`;
-const RARIBLE_TEST_OWNER = `${RARIBLE_TEST}user/`;
-import buyMore from '@/core/mixins/buyMore.mixin.js';
+import { useBuySell } from '@/core/composables/buyMore';
+import { useAmplitude } from '@/core/composables/amplitude';
+import {
+  global as useGlobalStore,
+  external as useExternalStore,
+  ethBlocksTxs as useEthBlocksTxsStore
+} from '@/core/store/index.js';
 
-export default {
-  name: 'BlockInfoAlert',
-  mixins: [handlerAnalytics, buyMore],
-  props: {
-    blockAlert: {
-      default: BLOCK_ALERT.NOT_AVAILABLE,
-      validator: blockAlertValidator
-    },
-    owner: {
-      type: String,
-      default: ''
-    },
-    price: {
-      type: String,
-      default: ''
-    },
-    disableAction: {
-      type: Boolean,
-      default: false
-    },
-    isPending: {
-      type: Boolean,
-      default: false
-    },
-    blockNumber: {
-      type: String,
-      default: ''
-    },
-    hasEnoughEth: {
-      type: Boolean,
-      default: true
-    },
-    estimatedTotalWei: {
-      type: String,
-      default: '0'
-    }
+// emit
+const emit = defineEmits(['mint', 'openSend']);
+
+// injections/use
+const { openBuySell } = useBuySell();
+const { trackDapp } = useAmplitude();
+const { network, isTestNetwork, getFiatValue, gasPrice } = useGlobalStore();
+const { fiatValue } = useExternalStore();
+const { cart, addBlockToCart } = useEthBlocksTxsStore();
+
+// props
+const props = defineProps({
+  blockAlert: {
+    default: BLOCK_ALERT.NOT_AVAILABLE,
+    validator: blockAlertValidator
   },
-  computed: {
-    /**
-     * STORE GETTERS
-     */
-    ...mapGetters('global', [
-      'network',
-      'isTestNetwork',
-      'getFiatValue',
-      'gasPrice'
-    ]),
-    ...mapGetters('external', ['fiatValue']),
-    ...mapState('ethBlocksTxs', ['cart']),
-    /**
-     * @returns{string}
-     */
-    alertTheme() {
-      switch (this.blockAlert) {
-        case BLOCK_ALERT.NOT_AVAILABLE:
-          return 'warning';
-        case BLOCK_ALERT.AVAILABLE:
-          return 'success';
-        case BLOCK_ALERT.RESERVED:
-          return 'error';
-        default:
-          return 'info';
-      }
-    },
-    /**
-     * @returns{string}
-     */
-    alertTitle() {
-      switch (this.blockAlert) {
-        case BLOCK_ALERT.NOT_AVAILABLE:
-          return 'This block is not available';
-        case BLOCK_ALERT.AVAILABLE:
-          return 'This block is available';
-        case BLOCK_ALERT.RESERVED:
-          return 'This block is reserved';
-        default:
-          return 'You own this ETH Block';
-      }
-    },
-    /**
-     * @returns{string}
-     */
-    alertTitleColor() {
-      switch (this.blockAlert) {
-        case BLOCK_ALERT.NOT_AVAILABLE:
-          return 'orangePrimary--text';
-        case BLOCK_ALERT.AVAILABLE:
-          return 'greenPrimary--text';
-        case BLOCK_ALERT.RESERVED:
-          return 'redPrimary--text';
-        default:
-          return 'bluePrimary--text';
-      }
-    },
-    /**
-     * @returns{string}
-     */
-    alertIcon() {
-      switch (this.blockAlert) {
-        case BLOCK_ALERT.NOT_AVAILABLE:
-          return 'mdi-alert';
-        case BLOCK_ALERT.AVAILABLE:
-          return 'mdi-checkbox-marked-circle';
-        case BLOCK_ALERT.RESERVED:
-          return 'mdi-close-circle';
-        default:
-          return 'mdi-information';
-      }
-    },
-    isAvailable() {
-      return this.blockAlert === BLOCK_ALERT.AVAILABLE;
-    },
-    isNotAvailable() {
-      return this.blockAlert === BLOCK_ALERT.NOT_AVAILABLE;
-    },
-    isOwned() {
-      return this.blockAlert === BLOCK_ALERT.OWNED;
-    },
-    isReserved() {
-      return this.blockAlert === BLOCK_ALERT.RESERVED;
-    },
-    /**
-     * @returns{string}
-     * Property returns formatted owner string such as '0x4356...5a24'
-     */
-    ownerFormatted() {
-      return this.owner && this.owner !== ''
-        ? `${this.owner.substr(0, 6)}...${this.owner.substr(
-            this.owner.length - 4,
-            4
-          )}`
-        : '';
-    },
-    /**
-     * @returns{string}
-     * Property returns formatted transaction fee in ETH
-     */
-    txFee() {
-      const GAS_LIMIT = '21000';
-      const val = BigNumber(GAS_LIMIT).times(this.gasPrice);
-      return formatFloatingPointValue(fromWei(val.toString())).value;
-    },
-    /**
-     * @returns{string}
-     * Property returns formatted FIAT price
-     */
-    formattedFiatTxFee() {
-      const value = this.getFiatValue(
-        BigNumber(fromWei(this.gasPrice)).times(this.fiatValue)
-      );
-      return value;
-    },
-    /**
-     * @returns{string}
-     * Property returns formatted ETH price
-     */
-    formattedPrice() {
-      return formatIntegerToString(fromWei(this.price));
-    },
-    /**
-     * @returns{string}
-     * Property returns formatted FIAT price
-     */
-    formatFiatPrice() {
-      const value = this.getFiatValue(
-        BigNumber(fromWei(this.price)).times(this.fiatValue)
-      );
-      return `~${value}`;
-    },
-    /**
-     * Property returns rarible link to a block based on block number and current netowrk
-     * @returns{string}
-     */
-    raribleLink() {
-      if (this.blockNumber !== '') {
-        const endLInk = '?tab=details';
-        return this.isTestNetwork
-          ? `${RARIBLE_TEST_TOKEN}${this.blockNumber}${endLInk}`
-          : `${RARIBLE_TOKEN}${this.blockNumber}${endLInk}`;
-      }
-      return '';
-    },
-    /**
-     * Property returns rarible link to an owner based on owner and current netowrk
-     * @returns{string}
-     */
-    raribleOwnerLink() {
-      if (this.blockNumber !== '') {
-        const endLInk = '?tab=owned';
-        return this.isTestNetwork
-          ? `${RARIBLE_TEST_OWNER}${this.owner}${endLInk}`
-          : `${RARIBLE_OWNER}${this.owner}${endLInk}`;
-      }
-      return '';
-    },
-    /**
-     * Property disables action buttons whether or not if was passed or user has enough eth
-     * @returns{boolean}
-     */
-    disableActionBtn() {
-      return !this.hasEnoughEth || this.disableAction;
-    },
-    /**
-     * Property return not enough string based on the netowrk type
-     * @returns{string}
-     */
-    notEnoughMessage() {
-      const text = this.isOwned ? 'transfer' : 'mint';
-      return `Not enough ${this.network.type.name.toUpperCase()} to ${text}. `;
-    },
-    estimatedFeesTooltip() {
-      const formattedTotal = formatFloatingPointValue(
-        fromWei(this.estimatedTotalWei)
-      ).value;
-      const estimate = this.isOwned
-        ? `Estimated transaction fee is ${formattedTotal} ${this.network.type.name}.`
-        : `Estimated total: mint price + transaction fee = ${formattedTotal} ${this.network.type.name}.`;
-      return estimate;
-    },
-    isAdded() {
-      if (this.length >= 1) {
-        const found = this.cart.find(item => {
-          return item === this.blockNumber;
-        });
-        return found;
-      }
-      return false;
-    },
-    addText() {
-      return !this.isAdded && this.isAvailable
-        ? 'Added to batch'
-        : 'Add to batch';
-    }
+  owner: {
+    type: String,
+    default: ''
   },
-  methods: {
-    ...mapActions('ethBlocksTxs', ['addBlockToCart', 'removeBlockFromCart']),
-    /**
-     * Emits 'mint' to the parent
-     * ONLY USED IN AVALAILABLE block alert Mint button
-     * @emits mint
-     */
-    emitMint() {
-      if (this.isAvailable) {
-        this.$emit('mint');
-      }
-    },
-    /**
-     * Emits 'send' to the parent
-     * ONLY USED IN OWNED block alert SEND button
-     * @emits mint
-     */
-    emitOpenSend() {
-      if (this.isOwned) {
-        this.$emit('openSend');
-      }
-    },
-    trackToRarible() {
-      this.trackDapp('ethBlocksToRarible');
-    },
-    addToCart() {
-      if (this.isAvailable && !this.isAdded) {
-        this.addBlockToCart(this.blockNumber);
-      }
-    }
+  price: {
+    type: String,
+    default: ''
+  },
+  disableAction: {
+    type: Boolean,
+    default: false
+  },
+  isPending: {
+    type: Boolean,
+    default: false
+  },
+  blockNumber: {
+    type: String,
+    default: ''
+  },
+  hasEnoughEth: {
+    type: Boolean,
+    default: true
+  },
+  estimatedTotalWei: {
+    type: String,
+    default: '0'
+  }
+});
+
+// computed
+/**
+ * @returns{string}
+ */
+const alertTheme = computed(() => {
+  switch (props.blockAlert) {
+    case BLOCK_ALERT.NOT_AVAILABLE:
+      return 'warning';
+    case BLOCK_ALERT.AVAILABLE:
+      return 'success';
+    case BLOCK_ALERT.RESERVED:
+      return 'error';
+    default:
+      return 'info';
+  }
+});
+/**
+ * @returns{string}
+ */
+const alertTitle = computed(() => {
+  switch (props.blockAlert) {
+    case BLOCK_ALERT.NOT_AVAILABLE:
+      return 'This block is not available';
+    case BLOCK_ALERT.AVAILABLE:
+      return 'This block is available';
+    case BLOCK_ALERT.RESERVED:
+      return 'This block is reserved';
+    default:
+      return 'You own this ETH Block';
+  }
+});
+/**
+ * @returns{string}
+ */
+const alertTitleColor = computed(() => {
+  switch (props.blockAlert) {
+    case BLOCK_ALERT.NOT_AVAILABLE:
+      return 'orangePrimary--text';
+    case BLOCK_ALERT.AVAILABLE:
+      return 'greenPrimary--text';
+    case BLOCK_ALERT.RESERVED:
+      return 'redPrimary--text';
+    default:
+      return 'bluePrimary--text';
+  }
+});
+/**
+ * @returns{string}
+ */
+const alertIcon = computed(() => {
+  switch (props.blockAlert) {
+    case BLOCK_ALERT.NOT_AVAILABLE:
+      return 'mdi-alert';
+    case BLOCK_ALERT.AVAILABLE:
+      return 'mdi-checkbox-marked-circle';
+    case BLOCK_ALERT.RESERVED:
+      return 'mdi-close-circle';
+    default:
+      return 'mdi-information';
+  }
+});
+const isAvailable = computed(() => {
+  return props.blockAlert === BLOCK_ALERT.AVAILABLE;
+});
+const isNotAvailable = computed(() => {
+  return props.blockAlert === BLOCK_ALERT.NOT_AVAILABLE;
+});
+const isOwned = computed(() => {
+  return props.blockAlert === BLOCK_ALERT.OWNED;
+});
+const isReserved = computed(() => {
+  return props.blockAlert === BLOCK_ALERT.RESERVED;
+});
+/**
+ * @returns{string}
+ * Property returns formatted owner string such as '0x4356...5a24'
+ */
+const ownerFormatted = computed(() => {
+  return props.owner && props.owner !== ''
+    ? `${props.owner.substr(0, 6)}...${props.owner.substr(
+        props.owner.length - 4,
+        4
+      )}`
+    : '';
+});
+/**
+ * @returns{string}
+ * Property returns formatted transaction fee in ETH
+ */
+const txFee = computed(() => {
+  const GAS_LIMIT = '21000';
+  const val = BigNumber(GAS_LIMIT).times(gasPrice);
+  return formatFloatingPointValue(fromWei(val.toString())).value;
+});
+/**
+ * @returns{string}
+ * Property returns formatted FIAT price
+ */
+const formattedFiatTxFee = computed(() => {
+  const value = getFiatValue(BigNumber(fromWei(gasPrice)).times(fiatValue));
+  return value;
+});
+/**
+ * @returns{string}
+ * Property returns formatted ETH price
+ */
+const formattedPrice = computed(() => {
+  return formatIntegerToString(fromWei(props.price));
+});
+/**
+ * @returns{string}
+ * Property returns formatted FIAT price
+ */
+const formatFiatPrice = computed(() => {
+  const value = getFiatValue(BigNumber(fromWei(props.price)).times(fiatValue));
+  return `~${value}`;
+});
+/**
+ * Property returns rarible link to a block based on block number and current netowrk
+ * @returns{string}
+ */
+const raribleLink = computed(() => {
+  if (props.blockNumber !== '') {
+    const endLInk = '?tab=details';
+    return isTestNetwork
+      ? `${RARIBLE_TEST_TOKEN}${props.blockNumber}${endLInk}`
+      : `${RARIBLE_TOKEN}${props.blockNumber}${endLInk}`;
+  }
+  return '';
+});
+/**
+ * Property returns rarible link to an owner based on owner and current netowrk
+ * @returns{string}
+ */
+const raribleOwnerLink = computed(() => {
+  if (props.blockNumber !== '') {
+    const endLInk = '?tab=owned';
+    return isTestNetwork
+      ? `${RARIBLE_TEST_OWNER}${props.owner}${endLInk}`
+      : `${RARIBLE_OWNER}${props.owner}${endLInk}`;
+  }
+  return '';
+});
+/**
+ * Property disables action buttons whether or not if was passed or user has enough eth
+ * @returns{boolean}
+ */
+const disableActionBtn = computed(() => {
+  return !props.hasEnoughEth || props.disableAction;
+});
+/**
+ * Property return not enough string based on the netowrk type
+ * @returns{string}
+ */
+const notEnoughMessage = computed(() => {
+  const text = isOwned.value ? 'transfer' : 'mint';
+  return `Not enough ${network.type.name.toUpperCase()} to ${text}. `;
+});
+const estimatedFeesTooltip = computed(() => {
+  const formattedTotal = formatFloatingPointValue(
+    fromWei(props.estimatedTotalWei)
+  ).value;
+  const estimate = isOwned.value
+    ? `Estimated transaction fee is ${formattedTotal} ${network.type.name}.`
+    : `Estimated total: mint price + transaction fee = ${formattedTotal} ${network.type.name}.`;
+  return estimate;
+});
+const isAdded = computed(() => {
+  if (length >= 1) {
+    const found = cart.find(item => {
+      return item === props.blockNumber;
+    });
+    return found;
+  }
+  return false;
+});
+const addText = computed(() => {
+  return !isAdded.value && isAvailable.value
+    ? 'Added to batch'
+    : 'Add to batch';
+});
+
+// methods
+
+/**
+ * Emits 'mint' to the parent
+ * ONLY USED IN AVALAILABLE block alert Mint button
+ * @emits mint
+ */
+const emitMint = () => {
+  if (isAvailable.value) {
+    emit('mint');
+  }
+};
+/**
+ * Emits 'send' to the parent
+ * ONLY USED IN OWNED block alert SEND button
+ * @emits mint
+ */
+const emitOpenSend = () => {
+  if (isOwned.value) {
+    emit('openSend');
+  }
+};
+const trackToRarible = () => {
+  trackDapp('ethBlocksToRarible');
+};
+const addToCart = () => {
+  if (isAvailable.value && !isAdded.value) {
+    addBlockToCart(props.blockNumber);
   }
 };
 </script>

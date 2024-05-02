@@ -172,14 +172,12 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { defineAsyncComponent, ref, computed, watch, onMounted } from 'vue';
 import { fromWei } from 'web3-utils';
-import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { debounce, isEmpty } from 'lodash';
 
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-import buyMore from '@/core/mixins/buyMore.mixin.js';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 import { EventBus } from '@/core/plugins/eventBus';
@@ -190,183 +188,186 @@ import {
   CB_TRACKING,
   MIN_GAS_LIMIT
 } from '@/dapps/coinbase-staking/configs.js';
+import { useBuySell } from '@/core/composables/buyMore';
+import { useAmplitude } from '@/core/composables/amplitude';
 
-export default {
-  name: 'ModuleCoinbaseUnstaking',
-  components: {
-    CoinbaseStakingSummary: () => import('../components/CoinbaseStakingSummary')
-  },
-  mixins: [buyMore, handlerAnalytics],
-  data() {
-    return {
-      iconEth: require('@/assets/images/icons/icon-eth-gray.svg'),
-      unstakeAmount: '0',
-      locGasPrice: '0',
-      gasLimit: '21000',
-      estimateGasError: false,
-      loading: false
-    };
-  },
-  computed: {
-    ...mapGetters('wallet', ['balanceInETH']),
-    ...mapGetters('global', [
-      'network',
-      'isEthNetwork',
-      'gasPriceByType',
-      'getFiatValue'
-    ]),
-    ...mapGetters('external', ['fiatValue']),
-    ...mapState('global', ['gasPriceType']),
-    ...mapState('wallet', ['web3', 'address', 'instance']),
-    ...mapState('coinbaseStaking', ['fetchedDetails']),
-    details() {
-      return this.fetchedDetails[this.network.type.name];
-    },
-    hasDetails() {
-      return !isEmpty(this.details);
-    },
-    stakedBalance() {
-      return this.hasDetails
-        ? fromBase(this.details.integratorShareUnderlyingBalance.value, 18)
-        : 0;
-    },
-    currencyName() {
-      return this.network.type.currencyName;
-    },
-    ethTotalFee() {
-      const gasPrice = BigNumber(this.locGasPrice).gt(0)
-        ? BigNumber(this.locGasPrice)
-        : BigNumber(this.gasPriceByType(this.gasPriceType));
-      const gasLimit = BigNumber(this.gasLimit).gt('21000')
-        ? this.gasLimit
-        : MIN_GAS_LIMIT;
-      const ethFee = fromWei(BigNumber(gasPrice).times(gasLimit).toFixed());
-      return formatFloatingPointValue(ethFee).value;
-    },
-    gasPriceFiat() {
-      const gasPrice = BigNumber(this.ethTotalFee);
-      return gasPrice.gt(0)
-        ? this.getFiatValue(gasPrice.times(this.fiatValue).toFixed())
-        : '0';
-    },
-    hasEnoughBalanceToStake() {
-      return BigNumber(this.ethTotalFee).lte(this.balanceInETH);
-    },
-    isValid() {
-      return (
-        BigNumber(this.unstakeAmount).gt(0) &&
-        this.hasEnoughBalanceToStake &&
-        this.errorMessages === ''
-      );
-    },
-    errorMessages() {
-      if (!this.hasEnoughBalanceToStake) {
-        return 'Not enough ETH.';
-      }
+import {
+  global as useGlobalStore,
+  external as useExternalStore,
+  wallet as useWalletStore,
+  coinbaseStaking as useCoinbaseStakingStore
+} from '@/core/store/index.js';
 
-      if (this.estimateGasError) {
-        return !this.hasEnoughBalanceToStake
-          ? 'Issue with gas estimation. Please check if you have enough balance!'
-          : '';
-      }
-      if (BigNumber(this.stakedBalance).lte(0)) {
-        return 'User has no ETH staked.';
-      }
-      if (BigNumber(this.unstakeAmount).lt(0)) {
-        return 'Value cannot be negative';
-      }
-      if (BigNumber(this.unstakeAmount).gt(this.stakedBalance)) {
-        return `Balance too low! User only has ${this.stakedBalance}.`;
-      }
-      if (
-        BigNumber(this.unstakeAmount).gt(0) &&
-        !hasValidDecimals(BigNumber(this.unstakeAmount).toFixed(), 18)
-      ) {
-        return 'Invalid decimals. ETH can only have 18 decimals';
-      }
-      return '';
-    },
-    buyMoreStr() {
-      return this.isEthNetwork && !this.hasEnoughBalanceToStake
-        ? this.network.type.canBuy
-          ? 'Buy more.'
-          : ''
-        : null;
-    }
-  },
-  watch: {
-    gasPriceType() {
-      this.locGasPrice = this.gasPriceByType(this.gasPriceType);
-    }
-  },
-  mounted() {
-    this.locGasPrice = this.gasPriceByType(this.gasPriceType);
-  },
-  methods: {
-    reset() {
-      this.setAmount(0);
-      this.loading = false;
-    },
-    async unstake() {
-      this.trackDapp(CB_TRACKING.CLICK_UNSTAKE);
-      window.scrollTo(0, 0);
-      this.loading = true;
-      const { gasLimit, to, data, value, error } = await fetch(
-        `${API}?address=${this.address}&action=unstake&networkId=${
-          this.network.type.chainID
-        }&amount=${toBase(this.unstakeAmount, 18)}`
-      ).then(res => res.json());
-      if (error) {
-        const message = isEmpty(error)
-          ? 'Something went wrong! Please try again!'
-          : error.message;
-        Toast(message, {}, ERROR);
-        this.loading = false;
-        this.trackDapp(CB_TRACKING.UNSTAKE_FAIL);
-        return;
-      }
-      const txObj = {
-        gasLimit: gasLimit,
-        to: to,
-        from: this.address,
-        data: data,
-        value: value
-      };
-      this.web3.eth
-        .sendTransaction(txObj)
-        .once('receipt', () => {
-          EventBus.$emit('fetchSummary');
-        })
-        .then(() => {
-          this.reset();
-          EventBus.$emit('fetchSummary');
-          Toast(
-            'Successfully unstaked! Account will reflect once pool refreshes.',
-            {},
-            SUCCESS
-          );
-          this.trackDapp(CB_TRACKING.UNSTAKE_SUCCESS);
-        })
-        .catch(e => {
-          this.reset();
-          this.instance.errorHandler(e);
-          this.trackDapp(CB_TRACKING.UNSTAKE_FAIL);
-        });
-    },
-    setAmount: debounce(function (val) {
-      const value = val ? val : 0;
-      this.unstakeAmount = BigNumber(value).toFixed();
-    }, 500),
-    setMax() {
-      if (this.hasEnoughBalanceToStake) {
-        const max = BigNumber(this.stakedBalance);
-        this.setAmount(max.toFixed());
-      }
-    },
-    openSettings() {
-      EventBus.$emit('openSettings');
-    }
+const CoinbaseStakingSummary = defineAsyncComponent(() =>
+  import('../components/CoinbaseStakingSummary')
+);
+
+// injections/use
+const { openBuySell } = useBuySell();
+const { trackDapp } = useAmplitude();
+const { network, isEthNetwork, gasPriceByType, getFiatValue, gasPriceType } =
+  useGlobalStore();
+const { fiatValue } = useExternalStore();
+const { balanceInETH, web3, address, instance } = useWalletStore();
+const { fetchedDetails } = useCoinbaseStakingStore();
+
+// data
+const iconEth = require('@/assets/images/icons/icon-eth-gray.svg');
+const unstakeAmount = ref('0');
+const locGasPrice = ref('0');
+const gasLimit = ref('21000');
+const estimateGasError = ref(false);
+const loading = ref(false);
+
+// computed
+const details = computed(() => {
+  return fetchedDetails[network.type.name];
+});
+const hasDetails = computed(() => {
+  return !isEmpty(details.value);
+});
+const stakedBalance = computed(() => {
+  return hasDetails.value
+    ? fromBase(details.value.integratorShareUnderlyingBalance.value, 18)
+    : 0;
+});
+const currencyName = computed(() => {
+  return network.type.currencyName;
+});
+const ethTotalFee = computed(() => {
+  const gasPrice = BigNumber(locGasPrice.value).gt(0)
+    ? BigNumber(locGasPrice.value)
+    : BigNumber(gasPriceByType(gasPriceType));
+  const locGasLimit = BigNumber(gasLimit.value).gt('21000')
+    ? gasLimit.value
+    : MIN_GAS_LIMIT;
+  const ethFee = fromWei(BigNumber(gasPrice).times(locGasLimit).toFixed());
+  return formatFloatingPointValue(ethFee).value;
+});
+const gasPriceFiat = computed(() => {
+  const gasPrice = BigNumber(ethTotalFee.value);
+  return gasPrice.gt(0)
+    ? getFiatValue(gasPrice.times(fiatValue).toFixed())
+    : '0';
+});
+const hasEnoughBalanceToStake = computed(() => {
+  return BigNumber(ethTotalFee.value).lte(balanceInETH);
+});
+const isValid = computed(() => {
+  return (
+    BigNumber(unstakeAmount.value).gt(0) &&
+    hasEnoughBalanceToStake.value &&
+    errorMessages.value === ''
+  );
+});
+const errorMessages = computed(() => {
+  if (!hasEnoughBalanceToStake.value) {
+    return 'Not enough ETH.';
   }
+
+  if (estimateGasError.value) {
+    return !hasEnoughBalanceToStake.value
+      ? 'Issue with gas estimation. Please check if you have enough balance!'
+      : '';
+  }
+  if (BigNumber(stakedBalance.value).lte(0)) {
+    return 'User has no ETH staked.';
+  }
+  if (BigNumber(unstakeAmount.value).lt(0)) {
+    return 'Value cannot be negative';
+  }
+  if (BigNumber(unstakeAmount.value).gt(stakedBalance)) {
+    return `Balance too low! User only has ${stakedBalance.value}.`;
+  }
+  if (
+    BigNumber(unstakeAmount.value).gt(0) &&
+    !hasValidDecimals(BigNumber(unstakeAmount.value).toFixed(), 18)
+  ) {
+    return 'Invalid decimals. ETH can only have 18 decimals';
+  }
+  return '';
+});
+const buyMoreStr = computed(() => {
+  return isEthNetwork && !hasEnoughBalanceToStake.value
+    ? network.type.canBuy
+      ? 'Buy more.'
+      : ''
+    : null;
+});
+
+// watch
+watch(gasPriceType, () => {
+  locGasPrice.value = gasPriceByType(gasPriceType);
+});
+
+// mounted
+onMounted(() => {
+  locGasPrice.value = gasPriceByType(gasPriceType);
+});
+
+// methods
+const reset = () => {
+  setAmount(0);
+  loading.value = false;
+};
+const unstake = async () => {
+  trackDapp(CB_TRACKING.CLICK_UNSTAKE);
+  window.scrollTo(0, 0);
+  loading.value = true;
+  const { gasLimit, to, data, value, error } = await fetch(
+    `${API}?address=${address}&action=unstake&networkId=${
+      network.type.chainID
+    }&amount=${toBase(unstakeAmount, 18)}`
+  ).then(res => res.json());
+  if (error) {
+    const message = isEmpty(error)
+      ? 'Something went wrong! Please try again!'
+      : error.message;
+    Toast(message, {}, ERROR);
+    loading.value = false;
+    trackDapp(CB_TRACKING.UNSTAKE_FAIL);
+    return;
+  }
+  const txObj = {
+    gasLimit: gasLimit,
+    to: to,
+    from: address,
+    data: data,
+    value: value
+  };
+  web3.eth
+    .sendTransaction(txObj)
+    .once('receipt', () => {
+      EventBus.$emit('fetchSummary');
+    })
+    .then(() => {
+      reset();
+      EventBus.$emit('fetchSummary');
+      Toast(
+        'Successfully unstaked! Account will reflect once pool refreshes.',
+        {},
+        SUCCESS
+      );
+      trackDapp(CB_TRACKING.UNSTAKE_SUCCESS);
+    })
+    .catch(e => {
+      reset();
+      instance.errorHandler(e);
+      trackDapp(CB_TRACKING.UNSTAKE_FAIL);
+    });
+};
+const setAmount = debounce(function (val) {
+  const value = val ? val : 0;
+  unstakeAmount.value = BigNumber(value).toFixed();
+}, 500);
+const setMax = () => {
+  if (hasEnoughBalanceToStake.value) {
+    const max = BigNumber(stakedBalance.value);
+    setAmount(max.toFixed());
+  }
+};
+const openSettings = () => {
+  EventBus.$emit('openSettings');
 };
 </script>
 

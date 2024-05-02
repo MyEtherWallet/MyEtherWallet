@@ -114,7 +114,10 @@
 </template>
 
 <script>
-import { mapGetters, mapState, mapActions } from 'vuex';
+const FIVE_MINS = 300000; // 1000 * 60 * 5
+</script>
+<script setup>
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
 import { fromWei } from 'web3-utils';
 import { isEmpty } from 'lodash';
 import BigNumber from 'bignumber.js';
@@ -129,220 +132,211 @@ import {
   MIN_GAS_LIMIT
 } from '@/dapps/coinbase-staking/configs.js';
 import { EventBus } from '@/core/plugins/eventBus';
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-import buyMore from '@/core/mixins/buyMore.mixin.js';
+import { useBuySell } from '@/core/composables/buyMore';
+import { useAmplitude } from '@/core/composables/amplitude';
+import {
+  global as useGlobalStore,
+  wallet as useWalletStore,
+  coinbaseStaking as useCoinbaseStakingStore
+} from '@/core/store/index.js';
 
-const FIVE_MINS = 300000; // 1000 * 60 * 5
+// injections
+const { openBuySell } = useBuySell();
+const { trackDapp } = useAmplitude();
+const { network, gasPriceByType, gasPriceType } = useGlobalStore();
+const { balanceInETH, address, instance, web3 } = useWalletStore();
+const { lastFetched, fetchedDetails, storeFetched } = useCoinbaseStakingStore();
 
-export default {
-  name: 'CoinbaseStakingSummary',
-  mixins: [handlerAnalytics, buyMore],
-  data() {
-    return {
-      currentTime: 0,
-      timeInterval: null,
-      loading: true,
-      loadingClaim: false,
-      locGasPrice: '0'
-    };
-  },
-  computed: {
-    ...mapGetters('wallet', ['balanceInETH']),
-    ...mapGetters('global', ['network', 'gasPriceByType']),
-    ...mapState('coinbaseStaking', ['lastFetched', 'fetchedDetails']),
-    ...mapState('wallet', ['address', 'instance', 'web3']),
-    ethTotalFee() {
-      const gasPrice = BigNumber(this.locGasPrice).gt(0)
-        ? BigNumber(this.locGasPrice)
-        : BigNumber(this.gasPriceByType(this.gasPriceType));
-      const gasLimit = BigNumber(this.gasLimit).gt('21000')
-        ? this.gasLimit
-        : MIN_GAS_LIMIT;
-      const ethFee = fromWei(BigNumber(gasPrice).times(gasLimit).toFixed());
-      return formatFloatingPointValue(ethFee).value;
-    },
-    hasEnoughBalanceToStake() {
-      return BigNumber(this.ethTotalFee).lte(this.balanceInETH);
-    },
-    actualLastFetched() {
-      return this.lastFetched[this.network.type.name];
-    },
-    currencyName() {
-      return this.network.type.currencyName;
-    },
-    details() {
-      return this.fetchedDetails[this.network.type.name];
-    },
-    hasDetails() {
-      return !isEmpty(this.details);
-    },
-    stake() {
-      const value = this.hasDetails
-        ? `${fromBase(this.details.integratorShareBalance.value, 18)}`
-        : '';
-      return value.length > 7
-        ? `${value.substr(0, value.length - 4)}...`
-        : value;
-    },
-    stakeInETH() {
-      const value = this.hasDetails
-        ? `${fromBase(this.details.integratorShareUnderlyingBalance.value, 18)}`
-        : '';
-      return value.length > 7
-        ? `${value.substr(0, value.length - 4)}...`
-        : value;
-    },
-    exitableETH() {
-      const value = this.hasDetails
-        ? `${fromBase(this.details.totalExitableEth.value, 18)}`
-        : '';
-      return value.length > 7
-        ? `${value.substr(0, value.length - 4)}...`
-        : value;
-    },
-    claimableStake() {
-      const value = this.hasDetails
-        ? `${fromBase(this.details.fulfillableShareCount.value, 18)}`
-        : '';
-      return value.length > 7
-        ? `${value.substr(0, value.length - 4)}...`
-        : value;
-    },
-    stakePendingExit() {
-      const value = this.hasDetails
-        ? `${fromBase(this.details.totalSharesPendingExit.value, 18)}`
-        : '';
-      return value.length > 7
-        ? `${value.substr(0, value.length - 4)}...`
-        : value;
-    },
-    showClaimNow() {
-      return this.hasDetails
-        ? BigNumber(fromBase(this.details.fulfillableShareCount.value, 18)).gt(
-            0
-          )
-        : false;
-    },
-    closestOnePM() {
-      const currentFetched = new Date(this.actualLastFetched);
-      const nearestFromLastFetched = new Date(this.actualLastFetched);
-      nearestFromLastFetched.setUTCHours(13, 0, 0); // set last fetched date to 1PM UTC
-      if (nearestFromLastFetched > currentFetched) {
-        return nearestFromLastFetched.getTime();
-      }
-      const nextNearest = nearestFromLastFetched.setDate(
-        nearestFromLastFetched.getUTCDate() + 1
-      );
-      if (nextNearest > currentFetched) {
-        return new Date(nextNearest).getTime();
-      }
-      return currentFetched.getTime();
-    },
-    ticker() {
-      const now = moment(this.currentTime);
-      const expiration = moment(this.closestOnePM);
-      const diff = expiration.diff(now);
-      const duration = moment.duration(diff);
-      const hours = duration.hours();
-      const minutes = duration.minutes();
-      return `${hours} Hour${hours > 9 ? 's' : ''} and ${minutes} min${
-        minutes > 9 ? 's' : ''
-      }`;
-    }
-  },
-  watch: {
-    /**
-     * if lastFetched is behind lastFetched1PMUTC
-     * and if currentTime is after lastFetched1PMUTC, refresh details
-     */
-    currentTime(newVal) {
-      const currentFetched = new Date(this.actualLastFetched);
-      const currentFetchedOnePMUTC = new Date(
-        new Date(this.actualLastFetched).setUTCHours(13, 0, 0)
-      );
-      const currentTime = new Date(newVal);
-      const fetchedInThePast = currentFetched < currentFetchedOnePMUTC;
-      const onePMPastNow = currentTime >= currentFetchedOnePMUTC;
-      if (fetchedInThePast && onePMPastNow) {
-        this.fetchInfo();
-      }
-    },
-    gasPriceType() {
-      this.locGasPrice = this.gasPriceByType(this.gasPriceType);
-    }
-  },
-  mounted() {
-    this.fetchInfo();
-    this.locGasPrice = this.gasPriceByType(this.gasPriceType);
-    this.currentTime = new Date().getTime();
-    this.timeInterval = setInterval(() => {
-      const time = new Date();
-      this.currentTime = time.getTime();
-    }, FIVE_MINS);
-    EventBus.$on('fetchSummary', this.fetchInfo);
-  },
-  destroyed() {
-    EventBus.$off('fetchSummary');
-  },
-  methods: {
-    ...mapActions('coinbaseStaking', ['storeFetched']),
-    fetchInfo() {
-      this.loading = true;
-      fetch(
-        `${API}?address=${this.address}&action=details&networkId=${this.network.type.chainID}`
-      )
-        .then(res => res.json())
-        .then(res => {
-          this.loading = false;
-          if (res.error || res.message) {
-            Toast(res.error || res.message, {}, ERROR);
-            return;
-          }
-          this.storeFetched([res, this.network.type.name]);
-        });
-    },
-    async claim() {
-      this.loadingClaim = true;
-      this.trackDapp(CB_TRACKING.CLICK_CLAIM);
-      const { gasLimit, to, data, value, error } = await fetch(
-        `${API}?address=${this.address}&action=claim&networkId=${this.network.type.chainID}`
-      ).then(res => res.json());
+// data
+const currentTime = ref(0);
+const timeInterval = ref(null);
+const gasLimit = ref('21000');
+const loading = ref(true);
+const loadingClaim = ref(false);
+const locGasPrice = ref('0');
 
-      if (error) {
-        Toast(error, {}, ERROR);
-        this.loadingClaim = false;
-        this.trackDapp(CB_TRACKING.CLAIM_FAIL);
+// computed
+const ethTotalFee = computed(() => {
+  const gasPrice = BigNumber(locGasPrice).gt(0)
+    ? BigNumber(locGasPrice)
+    : BigNumber(gasPriceByType(gasPriceType));
+  const locGasLimit = BigNumber(gasLimit.value).gt('21000')
+    ? gasLimit.value
+    : MIN_GAS_LIMIT;
+  const ethFee = fromWei(BigNumber(gasPrice).times(locGasLimit).toFixed());
+  return formatFloatingPointValue(ethFee).value;
+});
+const hasEnoughBalanceToStake = computed(() => {
+  return BigNumber(ethTotalFee.value).lte(balanceInETH);
+});
+const actualLastFetched = computed(() => {
+  return lastFetched[network.type.name];
+});
+const currencyName = computed(() => {
+  return network.type.currencyName;
+});
+const details = computed(() => {
+  return fetchedDetails[network.type.name];
+});
+const hasDetails = computed(() => {
+  return !isEmpty(details.value);
+});
+const stake = computed(() => {
+  const value = hasDetails.value
+    ? `${fromBase(details.value.integratorShareBalance.value, 18)}`
+    : '';
+  return value.length > 7 ? `${value.substr(0, value.length - 4)}...` : value;
+});
+const stakeInETH = computed(() => {
+  const value = hasDetails.value
+    ? `${fromBase(details.value.integratorShareUnderlyingBalance.value, 18)}`
+    : '';
+  return value.length > 7 ? `${value.substr(0, value.length - 4)}...` : value;
+});
+const exitableETH = computed(() => {
+  const value = hasDetails.value
+    ? `${fromBase(details.value.totalExitableEth.value, 18)}`
+    : '';
+  return value.length > 7 ? `${value.substr(0, value.length - 4)}...` : value;
+});
+const claimableStake = computed(() => {
+  const value = hasDetails.value
+    ? `${fromBase(details.value.fulfillableShareCount.value, 18)}`
+    : '';
+  return value.length > 7 ? `${value.substr(0, value.length - 4)}...` : value;
+});
+const stakePendingExit = computed(() => {
+  const value = hasDetails.value
+    ? `${fromBase(details.value.totalSharesPendingExit.value, 18)}`
+    : '';
+  return value.length > 7 ? `${value.substr(0, value.length - 4)}...` : value;
+});
+const showClaimNow = computed(() => {
+  return hasDetails.value
+    ? BigNumber(fromBase(details.value.fulfillableShareCount.value, 18)).gt(0)
+    : false;
+});
+const closestOnePM = computed(() => {
+  const currentFetched = new Date(actualLastFetched.value);
+  const nearestFromLastFetched = new Date(actualLastFetched.value);
+  nearestFromLastFetched.setUTCHours(13, 0, 0); // set last fetched date to 1PM UTC
+  if (nearestFromLastFetched > currentFetched) {
+    return nearestFromLastFetched.getTime();
+  }
+  const nextNearest = nearestFromLastFetched.setDate(
+    nearestFromLastFetched.getUTCDate() + 1
+  );
+  if (nextNearest > currentFetched) {
+    return new Date(nextNearest).getTime();
+  }
+  return currentFetched.getTime();
+});
+const ticker = computed(() => {
+  const now = moment(currentTime.value);
+  const expiration = moment(closestOnePM.value);
+  const diff = expiration.diff(now);
+  const duration = moment.duration(diff);
+  const hours = duration.hours();
+  const minutes = duration.minutes();
+  return `${hours} Hour${hours > 9 ? 's' : ''} and ${minutes} min${
+    minutes > 9 ? 's' : ''
+  }`;
+});
+
+// watch
+/**
+ * if lastFetched is behind lastFetched1PMUTC
+ * and if currentTime is after lastFetched1PMUTC, refresh details
+ */
+watch(currentTime, newVal => {
+  const currentFetched = new Date(actualLastFetched.value);
+  const currentFetchedOnePMUTC = new Date(
+    new Date(actualLastFetched.value).setUTCHours(13, 0, 0)
+  );
+  const currentTime = new Date(newVal);
+  const fetchedInThePast = currentFetched < currentFetchedOnePMUTC;
+  const onePMPastNow = currentTime >= currentFetchedOnePMUTC;
+  if (fetchedInThePast && onePMPastNow) {
+    fetchInfo();
+  }
+});
+watch(gasPriceType, () => {
+  locGasPrice.value = gasPriceByType(gasPriceType);
+});
+
+// mounted
+onMounted(() => {
+  fetchInfo();
+  locGasPrice.value = gasPriceByType(gasPriceType);
+  currentTime.value = new Date().getTime();
+  timeInterval.value = setInterval(() => {
+    const time = new Date();
+    currentTime.value = time.getTime();
+  }, FIVE_MINS);
+  EventBus.$on('fetchSummary', fetchInfo);
+});
+
+// destroyed
+onUnmounted(() => {
+  EventBus.$off('fetchSummary');
+});
+
+// methods
+const fetchInfo = () => {
+  loading.value = true;
+  fetch(
+    `${API}?address=${address}&action=details&networkId=${network.type.chainID}`
+  )
+    .then(res => res.json())
+    .then(res => {
+      loading.value = false;
+      if (res.error || res.message) {
+        Toast(res.error || res.message, {}, ERROR);
         return;
       }
-      const txObj = {
-        gasLimit: gasLimit,
-        to: to,
-        from: this.address,
-        data: data,
-        value: value
-      };
-      this.web3.eth
-        .sendTransaction(txObj)
-        .once('receipt', () => {
-          this.fetchInfo();
-        })
-        .then(() => {
-          this.loadingClaim = false;
-          this.fetchInfo();
-          Toast(
-            'Successfully claimed exitable stake! Account will reflect once pool refreshes.',
-            {},
-            SUCCESS
-          );
-          this.trackDapp(CB_TRACKING.CLAIM_SUCCESS);
-        })
-        .catch(e => {
-          this.loadingClaim = false;
-          this.instance.errorHandler(e);
-          this.trackDapp(CB_TRACKING.CLAIM_FAIL);
-        });
-    }
+      storeFetched([res, network.type.name]);
+    });
+};
+const claim = async () => {
+  loadingClaim.value = true;
+  trackDapp(CB_TRACKING.CLICK_CLAIM);
+  const { gasLimit, to, data, value, error } = await fetch(
+    `${API}?address=${address}&action=claim&networkId=${network.type.chainID}`
+  ).then(res => res.json());
+
+  if (error) {
+    Toast(error, {}, ERROR);
+    loadingClaim.value = false;
+    trackDapp(CB_TRACKING.CLAIM_FAIL);
+    return;
   }
+  const txObj = {
+    gasLimit: gasLimit,
+    to: to,
+    from: address,
+    data: data,
+    value: value
+  };
+  web3.eth
+    .sendTransaction(txObj)
+    .once('receipt', () => {
+      fetchInfo();
+    })
+    .then(() => {
+      loadingClaim.value = false;
+      fetchInfo();
+      Toast(
+        'Successfully claimed exitable stake! Account will reflect once pool refreshes.',
+        {},
+        SUCCESS
+      );
+      trackDapp(CB_TRACKING.CLAIM_SUCCESS);
+    })
+    .catch(e => {
+      loadingClaim.value = false;
+      instance.errorHandler(e);
+      trackDapp(CB_TRACKING.CLAIM_FAIL);
+    });
 };
 </script>
 

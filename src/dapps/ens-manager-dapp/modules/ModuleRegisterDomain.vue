@@ -6,7 +6,7 @@
       link: 'mailto:support@myetherwallet.com'
     }"
     :show-overlay="onRegister"
-    :title="$t('ens.register-domain')"
+    :title="t('ens.register-domain')"
     content-size="xlarge"
     :close="close"
   >
@@ -49,166 +49,176 @@
   </mew-overlay>
 </template>
 
-<script>
-import BigNumber from 'bignumber.js';
-import { mapGetters, mapState } from 'vuex';
+<script setup>
+import {
+  defineAsyncComponent,
+  defineProps,
+  ref,
+  watch,
+  onMounted,
+  defineEmits
+} from 'vue';
 
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
-export default {
-  components: {
-    Request: () => import('../components/register/RegisterRequest'),
-    Register: () => import('../components/register/Register'),
-    CompleteRegistration: () =>
-      import('../components/register/CompleteRegistration')
+import { useRouter } from 'vue-router/composables';
+import { useI18n } from 'vue-i18n-composable';
+
+const Request = defineAsyncComponent(() =>
+  import('../components/register/RegisterRequest')
+);
+const Register = defineAsyncComponent(() =>
+  import('../components/register/Register')
+);
+const CompleteRegistration = defineAsyncComponent(() =>
+  import('../components/register/CompleteRegistration')
+);
+
+// emit
+const emit = defineEmits(['getCommitFeeOnly']);
+
+// injections/use
+const router = useRouter();
+const { t } = useI18n();
+
+// props
+const props = defineProps({
+  getRentPrice: {
+    default: function () {
+      return {};
+    },
+    type: Function
   },
-  props: {
-    getRentPrice: {
-      default: function () {
-        return {};
-      },
-      type: Function
+  commit: {
+    default: function () {
+      return {};
     },
-    commit: {
-      default: function () {
-        return {};
-      },
-      type: Function
-    },
-    onRegister: { default: false, type: Boolean },
-    close: {
-      default: function () {
-        return {};
-      },
-      type: Function
-    },
-    register: {
-      default: function () {
-        return {};
-      },
-      type: Function
-    },
-    generateKeyPhrase: {
-      default: function () {
-        return {};
-      },
-      type: Function
-    },
-    waitingForReg: {
-      default: false,
-      type: Boolean
-    },
-    notEnoughFunds: {
-      default: false,
-      type: Boolean
-    },
-    noFundsForRegFees: {
-      default: false,
-      type: Boolean
-    },
-    commitFeeInWei: {
-      type: String,
-      default: ''
-    },
-    commitFeeInEth: {
-      type: String,
-      default: ''
-    },
-    commitFeeUsd: {
-      type: String,
-      default: ''
-    },
-    totalCost: {
-      type: String,
-      default: ''
-    },
-    totalCostUsd: {
-      type: String,
-      default: ''
-    },
-    loadingCommit: {
-      default: false,
-      type: Boolean
-    },
-    loadingReg: {
-      default: false,
-      type: Boolean
-    },
-    committed: {
-      default: false,
-      type: Boolean
-    },
-    minimumAge: {
-      default: '',
-      type: String
-    },
-    name: {
-      default: '',
-      type: String
-    },
-    parsedHostName: {
-      default: '',
-      type: String
-    },
-    checkingDomainAvail: {
-      default: false,
-      type: Boolean
-    }
+    type: Function
   },
-  data() {
-    return {
-      duration: 1,
-      onStep: 1,
-      stepperItems: [
-        {
-          step: 1,
-          name: 'STEP 1. Select Duration'
-        },
-        {
-          step: 2,
-          name: 'STEP 2. Create Commitment'
-        },
-        {
-          step: 3,
-          name: 'STEP 3. Complete registration'
-        }
-      ]
-    };
-  },
-  computed: {
-    ...mapGetters('global', ['network', 'gasPrice', 'gasPriceByType']),
-    ...mapGetters('external', ['fiatValue']),
-    ...mapState('wallet', ['balance', 'address', 'web3']),
-    ...mapState('global', ['gasPriceType'])
-  },
-  balanceToWei() {
-    return this.web3.utils.toWei(BigNumber(this.balance).toString(), 'ether');
-  },
-  watch: {
-    onStep(newStep) {
-      if (newStep == 2) {
-        this.$router.push({ name: ROUTES_WALLET.ENS_2.NAME });
-      } else if (newStep == 3) {
-        this.$router.push({ name: ROUTES_WALLET.ENS_3.NAME });
-      } else {
-        this.$router.push({ name: ROUTES_WALLET.ENS_MANAGER.NAME });
-      }
-    }
-  },
-  mounted() {
-    if (this.onStep == 1) this.$router.push({ name: ROUTES_WALLET.ENS_1.NAME });
-  },
-  methods: {
-    onRequest(val) {
-      this.duration = val;
-      this.generateKeyPhrase();
-      this.$emit('getCommitFeeOnly');
-      this.onStep += 1;
+  onRegister: { default: false, type: Boolean },
+  close: {
+    default: function () {
+      return {};
     },
-    registerClick(duration) {
-      this.register(duration).on('receipt', () => {
-        this.onStep += 1;
-      });
-    }
+    type: Function
+  },
+  register: {
+    default: function () {
+      return {};
+    },
+    type: Function
+  },
+  generateKeyPhrase: {
+    default: function () {
+      return {};
+    },
+    type: Function
+  },
+  waitingForReg: {
+    default: false,
+    type: Boolean
+  },
+  notEnoughFunds: {
+    default: false,
+    type: Boolean
+  },
+  noFundsForRegFees: {
+    default: false,
+    type: Boolean
+  },
+  commitFeeInWei: {
+    type: String,
+    default: ''
+  },
+  commitFeeInEth: {
+    type: String,
+    default: ''
+  },
+  commitFeeUsd: {
+    type: String,
+    default: ''
+  },
+  totalCost: {
+    type: String,
+    default: ''
+  },
+  totalCostUsd: {
+    type: String,
+    default: ''
+  },
+  loadingCommit: {
+    default: false,
+    type: Boolean
+  },
+  loadingReg: {
+    default: false,
+    type: Boolean
+  },
+  committed: {
+    default: false,
+    type: Boolean
+  },
+  minimumAge: {
+    default: '',
+    type: String
+  },
+  name: {
+    default: '',
+    type: String
+  },
+  parsedHostName: {
+    default: '',
+    type: String
+  },
+  checkingDomainAvail: {
+    default: false,
+    type: Boolean
   }
+});
+
+// data
+const stepperItems = ref([
+  {
+    step: 1,
+    name: 'STEP 1. Select Duration'
+  },
+  {
+    step: 2,
+    name: 'STEP 2. Create Commitment'
+  },
+  {
+    step: 3,
+    name: 'STEP 3. Complete registration'
+  }
+]);
+const duration = ref(1);
+const onStep = ref(1);
+
+// watch
+watch(onStep, newStep => {
+  if (newStep == 2) {
+    router.push({ name: ROUTES_WALLET.ENS_2.NAME });
+  } else if (newStep == 3) {
+    router.push({ name: ROUTES_WALLET.ENS_3.NAME });
+  } else {
+    router.push({ name: ROUTES_WALLET.ENS_MANAGER.NAME });
+  }
+});
+
+// mounted
+onMounted(() => {
+  if (onStep.value == 1) router.push({ name: ROUTES_WALLET.ENS_1.NAME });
+});
+
+// methods
+const onRequest = val => {
+  duration.value = val;
+  props.generateKeyPhrase();
+  emit('getCommitFeeOnly');
+  onStep.value += 1;
+};
+const registerClick = duration => {
+  props.register(duration).on('receipt', () => {
+    onStep.value += 1;
+  });
 };
 </script>

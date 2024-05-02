@@ -23,107 +23,105 @@
   </div>
 </template>
 
-<script>
-import { mapState, mapGetters } from 'vuex';
+<script setup>
+import { defineAsyncComponent, computed, watch, ref, onMounted } from 'vue';
 import { toBN } from 'web3-utils';
 import EthDater from 'ethereum-block-by-date';
 import moment from 'moment';
 import { uniqBy } from 'lodash';
+import { useRoute } from 'vue-router/composables';
 
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import handlerBlock from '../handlers/handlerBlock';
+import {
+  global as useGlobalStore,
+  wallet as useWalletStore
+} from '@/core/store/index.js';
 
-export default {
-  name: 'ModuleEthBlocksDateSearch',
-  components: {
-    BlockSearch: () => import('../components/BlockSearch'),
-    BlockResultComponent: () => import('../components/BlockResultComponent')
-  },
-  data() {
-    return {
-      foundBlocks: [],
-      totalResult: 0
-    };
-  },
-  computed: {
-    ...mapState('wallet', ['web3', 'address']),
+const BlockSearch = defineAsyncComponent(() =>
+  import('../components/BlockSearch')
+);
+const BlockResultComponent = defineAsyncComponent(() =>
+  import('../components/BlockResultComponent')
+);
 
-    /**
-     * STORE GETTERS
-     */
-    ...mapGetters('global', ['network']),
-    ...mapState('wallet', ['blockNumber']),
-    /**
-     * Returns max block that can be minted
-     * current block - 50
-     * @returns {string}
-     */
-    maxBlock() {
-      const max = toBN(this.blockNumber).sub(toBN(50));
-      const ZERO = toBN(0);
-      return max.gt(ZERO) ? max.toNumber() : 0;
-    }
+// injections/use
+const { network } = useGlobalStore();
+const { web3, address, blockNumber } = useWalletStore();
+const route = useRoute();
+
+// data
+const foundBlocks = ref([]);
+const totalResult = ref(0);
+
+// computed
+const maxBlock = computed(() => {
+  const max = toBN(blockNumber).sub(toBN(50));
+  const ZERO = toBN(0);
+  return max.gt(ZERO) ? max.toNumber() : 0;
+});
+
+// watch
+watch(
+  route.params,
+  () => {
+    fetchBlocksByDate();
   },
-  watch: {
-    '$route.params': {
-      deep: true,
-      handler: function () {
-        this.fetchBlocksByDate();
-      }
-    }
-  },
-  mounted() {
-    this.fetchBlocksByDate();
-  },
-  methods: {
-    // initializes the block searcher
-    // loops through the result and fetch the
-    // block meta before pushing to empty array
-    async fetchBlocksByDate() {
-      const newResultArray = [];
-      this.foundBlocks = [];
-      const dater = new EthDater(this.web3.eth);
-      const startTimeString = this.$route.params.dateString;
-      const endTimeString = startTimeString + 1000 * 60; // adds a minute to starting range
-      try {
-        const blocks = await dater.getEvery(
-          'seconds',
-          moment(startTimeString),
-          moment(endTimeString),
-          1,
-          true
+  { deep: true }
+);
+
+// mounted
+onMounted(() => {
+  fetchBlocksByDate();
+});
+
+// methods
+// initializes the block searcher
+// loops through the result and fetch the
+// block meta before pushing to empty array
+const fetchBlocksByDate = async () => {
+  const newResultArray = [];
+  foundBlocks.value = [];
+  const dater = new EthDater(web3.eth);
+  const startTimeString = route.params.dateString;
+  const endTimeString = startTimeString + 1000 * 60; // adds a minute to starting range
+  try {
+    const blocks = await dater.getEvery(
+      'seconds',
+      moment(startTimeString),
+      moment(endTimeString),
+      1,
+      true
+    );
+    const filterBlocks = uniqBy(blocks, 'block');
+    totalResult.value = filterBlocks.length;
+    for (let index = 0; index < filterBlocks.length; index++) {
+      if (filterBlocks[index].block <= maxBlock.value) {
+        const block = new handlerBlock(
+          web3,
+          network,
+          filterBlocks[index].block,
+          address
         );
-        const filterBlocks = uniqBy(blocks, 'block');
-        this.totalResult = filterBlocks.length;
-        for (let index = 0; index < filterBlocks.length; index++) {
-          if (filterBlocks[index].block <= this.maxBlock) {
-            const block = new handlerBlock(
-              this.web3,
-              this.network,
-              filterBlocks[index].block,
-              this.address
-            );
 
-            newResultArray.push(
-              block.getBlock().then(() => {
-                return block;
-              })
-            );
-          }
-        }
-        Promise.all(newResultArray).then(values => {
-          this.foundBlocks = values.sort((a, b) => {
-            return a.blockNumber < b.blockNumber
-              ? -1
-              : a.blockNumber > b.blockNumber
-              ? 1
-              : 0;
-          });
-        });
-      } catch (e) {
-        Toast(e, {}, ERROR);
+        newResultArray.push(
+          block.getBlock().then(() => {
+            return block;
+          })
+        );
       }
     }
+    Promise.all(newResultArray).then(values => {
+      foundBlocks.value = values.sort((a, b) => {
+        return a.blockNumber < b.blockNumber
+          ? -1
+          : a.blockNumber > b.blockNumber
+          ? 1
+          : 0;
+      });
+    });
+  } catch (e) {
+    Toast(e, {}, ERROR);
   }
 };
 </script>

@@ -2,15 +2,15 @@
   <div>
     <div class="d-flex flex-column bgWalletBlockDark pa-6 rounded">
       <div class="d-flex justify-space-between">
-        <span>{{ $t('ens.register.domain-name') }}:</span>
+        <span>{{ t('ens.register.domain-name') }}:</span>
         <span class="font-weight-medium">{{ name }}</span>
       </div>
       <div class="d-flex justify-space-between">
-        <span>{{ $t('ens.register.term') }}:</span>
+        <span>{{ t('ens.register.term') }}:</span>
         <span class="font-weight-medium">{{
           duration === 1
-            ? $tc('ens.commit.year', 1)
-            : $tc('ens.commit.year', 2, { duration: duration })
+            ? tc('ens.commit.year', 1)
+            : tc('ens.commit.year', 2, { duration: duration })
         }}</span>
       </div>
       <div
@@ -90,18 +90,18 @@
         v-if="!canRegister"
         class="d-flex flex-column mt-5 justify-center align-center"
       >
-        <span class="mew-heading-2">{{ $t('ens.hang-on') }}</span>
+        <span class="mew-heading-2">{{ t('ens.hang-on') }}</span>
         <span class="mt-3 desc-container">{{
-          $t('ens.hang-on-committing')
+          t('ens.hang-on-committing')
         }}</span>
       </div>
       <div
         v-if="canRegister"
         class="d-flex flex-column mt-5 justify-center align-center"
       >
-        <span class="mew-heading-2">{{ $t('ens.register.complete-reg') }}</span>
+        <span class="mew-heading-2">{{ t('ens.register.complete-reg') }}</span>
         <span class="mt-3 desc-container">{{
-          $t('ens.register.complete-reg-desc')
+          t('ens.register.complete-reg-desc')
         }}</span>
       </div>
     </div>
@@ -134,8 +134,8 @@
         :loading="loadingReg"
         :title="
           canRegister
-            ? $t('ens.register.name')
-            : $t('ens.register.create-commitment')
+            ? t('ens.register.name')
+            : t('ens.register.create-commitment')
         "
         btn-size="xlarge"
         @click.native="!canRegister ? commit() : register(duration)"
@@ -144,126 +144,127 @@
   </div>
 </template>
 
-<script>
-import buyMore from '@/core/mixins/buyMore.mixin.js';
-import { mapGetters } from 'vuex';
-export default {
-  name: 'EnsRegister',
-  mixins: [buyMore],
-  props: {
-    notEnoughFunds: {
-      default: false,
-      type: Boolean
-    },
-    noFundsForRegFees: {
-      default: false,
-      type: Boolean
-    },
-    commitFeeInEth: {
-      type: String,
-      default: ''
-    },
-    commitFeeUsd: {
-      type: String,
-      default: ''
-    },
-    totalCost: {
-      type: String,
-      default: ''
-    },
-    totalCostUsd: {
-      type: String,
-      default: ''
-    },
-    waitingForReg: {
-      default: false,
-      type: Boolean
-    },
-    loadingCommit: {
-      default: false,
-      type: Boolean
-    },
-    loadingReg: {
-      default: false,
-      type: Boolean
-    },
-    committed: {
-      default: false,
-      type: Boolean
-    },
-    name: {
-      type: String,
-      default: ''
-    },
-    duration: {
-      type: Number,
-      default: 1
-    },
-    minimumAge: {
-      type: String,
-      default: ''
-    },
-    register: {
-      default: function () {
-        return {};
-      },
-      type: Function
-    },
-    commit: {
-      default: function () {
-        return {};
-      },
-      type: Function
-    }
+<script setup>
+import { defineProps, ref, watch, onUnmounted } from 'vue';
+import { global as useGlobalStore } from '@/core/store/index.js';
+import { useBuySell } from '@/core/composables/buyMore';
+import { useI18n } from 'vue-i18n-composable';
+
+// injections
+const { openBuySell } = useBuySell();
+const { t, tc } = useI18n();
+const { network } = useGlobalStore();
+
+// props
+const props = defineProps({
+  notEnoughFunds: {
+    default: false,
+    type: Boolean
   },
-  data() {
-    return {
-      ticker: '00:00',
-      timer: () => {},
-      canRegister: false
-    };
+  noFundsForRegFees: {
+    default: false,
+    type: Boolean
   },
-  computed: {
-    ...mapGetters('global', ['network'])
+  commitFeeInEth: {
+    type: String,
+    default: ''
   },
-  watch: {
-    minimumAge(newVal) {
-      this.ticker = `0${newVal / 60 < 10 ? Math.ceil(newVal / 60) : '00'}:00`;
+  commitFeeUsd: {
+    type: String,
+    default: ''
+  },
+  totalCost: {
+    type: String,
+    default: ''
+  },
+  totalCostUsd: {
+    type: String,
+    default: ''
+  },
+  waitingForReg: {
+    default: false,
+    type: Boolean
+  },
+  loadingCommit: {
+    default: false,
+    type: Boolean
+  },
+  loadingReg: {
+    default: false,
+    type: Boolean
+  },
+  committed: {
+    default: false,
+    type: Boolean
+  },
+  name: {
+    type: String,
+    default: ''
+  },
+  duration: {
+    type: Number,
+    default: 1
+  },
+  minimumAge: {
+    type: String,
+    default: ''
+  },
+  register: {
+    default: function () {
+      return {};
     },
-    loadingCommit(newVal) {
-      if (newVal) {
-        clearInterval(this.timer);
-        const startTime = new Date().getTime();
-        const endTime = startTime + this.minimumAge * 1000;
-        if (this.minimumAge > 0) {
-          this.timer = setInterval(() => {
-            const startInterval = new Date().getTime();
-            const difference = endTime - startInterval;
-            const minutes = Math.floor(
-              (difference % (1000 * 60 * 60)) / (1000 * 60)
-            );
-            const seconds = Math.floor((difference % (1000 * 60)) / 1000);
-            this.ticker = `${
-              minutes >= 10 ? minutes : minutes < 0 ? '00' : '0' + minutes
-            }:${seconds >= 10 ? seconds : seconds < 0 ? '00' : '0' + seconds}`;
-            if (seconds < 0) {
-              clearInterval(this.timer);
-            }
-          }, 1000);
-        }
-      } else if (!newVal) {
-        clearInterval(this.timer);
-        this.canRegister = true;
-        this.ticker = '00:00';
-      } else {
-        clearInterval(this.timer);
-      }
-    }
+    type: Function
   },
-  destroyed() {
-    clearInterval(this.timer);
+  commit: {
+    default: function () {
+      return {};
+    },
+    type: Function
   }
-};
+});
+
+// data
+const ticker = ref('00:00');
+const timer = ref(() => {});
+const canRegister = ref(false);
+
+// watch
+watch(props.minimumAge, newVal => {
+  ticker.value = `0${newVal / 60 < 10 ? Math.ceil(newVal / 60) : '00'}:00`;
+});
+watch(props.loadingCommit, newVal => {
+  if (newVal) {
+    clearInterval(timer);
+    const startTime = new Date().getTime();
+    const endTime = startTime + props.minimumAge * 1000;
+    if (props.minimumAge > 0) {
+      timer.value = setInterval(() => {
+        const startInterval = new Date().getTime();
+        const difference = endTime - startInterval;
+        const minutes = Math.floor(
+          (difference % (1000 * 60 * 60)) / (1000 * 60)
+        );
+        const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+        ticker.value = `${
+          minutes >= 10 ? minutes : minutes < 0 ? '00' : '0' + minutes
+        }:${seconds >= 10 ? seconds : seconds < 0 ? '00' : '0' + seconds}`;
+        if (seconds < 0) {
+          clearInterval(timer);
+        }
+      }, 1000);
+    }
+  } else if (!newVal) {
+    clearInterval(timer);
+    canRegister.value = true;
+    ticker.value = '00:00';
+  } else {
+    clearInterval(timer);
+  }
+});
+// destroyed
+onUnmounted(() => {
+  clearInterval(timer);
+});
 </script>
 
 <style lang="scss" scoped>

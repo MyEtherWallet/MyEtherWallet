@@ -16,148 +16,161 @@
   </the-wrapper-dapp>
 </template>
 
-<script>
-import { mapActions, mapGetters, mapState } from 'vuex';
+<script setup>
+import {
+  defineAsyncComponent,
+  ref,
+  computed,
+  watch,
+  onMounted,
+  onBeforeUnmount
+} from 'vue';
 import { ETH_BLOCKS_ROUTE } from './configsRoutes';
 import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
+import { useRoute } from 'vue-router/composables';
 
-export default {
-  name: 'TheEthBlocksLayout',
-  components: {
-    TheWrapperDapp: () => import('@/dapps/TheWrapperDapp.vue')
-  },
-  data() {
-    return {
-      header: {
-        title: 'ETH Blocks',
-        subtext: 'Mint generative art NFTs of Ethereum blocks. '
+import {
+  global as useGlobalStore,
+  wallet as useWalletStore,
+  ethBlocksTxs as useEthBlocksTxsStore
+} from '@/core/store/index.js';
+
+const TheWrapperDapp = defineAsyncComponent(() =>
+  import('@/dapps/TheWrapperDapp.vue')
+);
+
+// injections
+const route = useRoute();
+const { network } = useGlobalStore();
+const { web3 } = useWalletStore();
+const { cart, getAllEthBlocksTxs, deleteEthBlockTx } = useEthBlocksTxsStore();
+
+// data
+const header = {
+  title: 'ETH Blocks',
+  subtext: 'Mint generative art NFTs of Ethereum blocks. '
+};
+const headerImg = require('@/assets/images/icons/dapps/icon-dapp-ethblocks.svg');
+const validNetworks = SUPPORTED_NETWORKS;
+const activeTab = ref(0);
+const checkPendingInterval = ref(false);
+
+// computed
+/**
+ * Checks if there are pending txs in the dapp
+ * @returns {boolean}
+ */
+const hasPendingTxs = computed(() => {
+  return getAllEthBlocksTxs.length > 0;
+});
+const identifyNetwork = computed(() => {
+  return cart.ETH;
+});
+const tabs = computed(() => {
+  return [
+    {
+      name: 'Mint a New block',
+      route: { name: ETH_BLOCKS_ROUTE.CORE.NAME },
+      id: 0,
+      hasBadge: false
+    },
+    {
+      name: 'My Blocks',
+      route: {
+        name: ETH_BLOCKS_ROUTE.MY_BLOCKS.NAME
       },
-      activeTab: 0,
-      headerImg: require('@/assets/images/icons/dapps/icon-dapp-ethblocks.svg'),
-      validNetworks: SUPPORTED_NETWORKS,
-      checkPendingInterval: false
-    };
-  },
-  computed: {
-    ...mapState('wallet', ['web3']),
-    ...mapState('ethBlocksTxs', ['cart']),
-    ...mapGetters('global', ['network']),
-    ...mapGetters('ethBlocksTxs', ['getAllEthBlocksTxs']),
+      id: 1,
+      hasBadge: false
+    },
+    {
+      name: `Bulk Minting `,
+      route: {
+        name: ETH_BLOCKS_ROUTE.BATCH_MINTING.NAME
+      },
+      id: 2,
+      hasBadge: identifyNetwork.value.length > 0 ? true : false,
+      badgeContent:
+        identifyNetwork.value.length > 0
+          ? `${identifyNetwork.value.length}`
+          : ''
+    }
+  ];
+});
 
-    /**
-     * Checks if there are pending txs in the dapp
-     * @returns {boolean}
-     */
-    hasPendingTxs() {
-      return this.getAllEthBlocksTxs.length > 0;
-    },
-    identifyNetwork() {
-      return this.cart.ETH;
-    },
-    tabs() {
-      return [
-        {
-          name: 'Mint a New block',
-          route: { name: ETH_BLOCKS_ROUTE.CORE.NAME },
-          id: 0,
-          hasBadge: false
-        },
-        {
-          name: 'My Blocks',
-          route: {
-            name: ETH_BLOCKS_ROUTE.MY_BLOCKS.NAME
-          },
-          id: 1,
-          hasBadge: false
-        },
-        {
-          name: `Bulk Minting `,
-          route: {
-            name: ETH_BLOCKS_ROUTE.BATCH_MINTING.NAME
-          },
-          id: 2,
-          hasBadge: this.identifyNetwork.length > 0 ? true : false,
-          badgeContent:
-            this.identifyNetwork.length > 0
-              ? `${this.identifyNetwork.length}`
-              : ''
-        }
-      ];
-    }
-  },
-  watch: {
-    /**
-     * Starts interval on new pending txs
-     */
-    hasPendingTxs(newVal) {
-      if (newVal) {
-        this.setCheckPendingInterval();
-      }
-    },
-    $route(to) {
-      if (to.name === ETH_BLOCKS_ROUTE.MY_BLOCKS.NAME) {
-        this.activeTab = this.tabs[1].id;
-      } else if (to.name === ETH_BLOCKS_ROUTE.BATCH_MINTING.NAME) {
-        this.activeTab = this.tabs[2].id;
-      } else {
-        this.activeTab = this.tabs[0].id;
-      }
-    }
-  },
-  mounted() {
-    if (this.hasPendingTxs) {
-      this.setCheckPendingInterval();
-    }
-    if (this.$route.name === ETH_BLOCKS_ROUTE.MY_BLOCKS.NAME) {
-      this.activeTab = this.tabs[1].id;
-    }
-    if (this.$route.name === ETH_BLOCKS_ROUTE.BATCH_MINTING.NAME) {
-      this.activeTab = this.tabs[2].id;
-    }
-  },
-  beforeDestroy() {
-    clearInterval(this.checkPendingInterval);
-  },
-  methods: {
-    ...mapActions('ethBlocksTxs', ['deleteEthBlockTx']),
-    /**
-     * Sets interval to start checking pending transactions
-     */
-    setCheckPendingInterval() {
-      clearInterval(this.checkPendingInterval);
-      this.checkPendingInterval = setInterval(() => {
-        if (this.hasPendingTxs) {
-          this.getAllEthBlocksTxs
-            .filter(i => i.network === this.network.type.name)
-            .forEach(i => {
-              this.checkTx(i.hash);
-            });
-        } else {
-          clearInterval(this.checkPendingInterval);
-        }
-      }, 5000);
-    },
+// watch
+/**
+ * Starts interval on new pending txs
+ */
+watch(hasPendingTxs, newVal => {
+  if (newVal) {
+    setCheckPendingInterval();
+  }
+});
+watch(route, to => {
+  if (to.name === ETH_BLOCKS_ROUTE.MY_BLOCKS.NAME) {
+    activeTab.value = tabs.value[1].id;
+  } else if (to.name === ETH_BLOCKS_ROUTE.BATCH_MINTING.NAME) {
+    activeTab.value = tabs.value[2].id;
+  } else {
+    activeTab.value = tabs.value[0].id;
+  }
+});
 
-    /**
-     * Checks web3 Transaction hash.
-     * If reciept is defined, removes transaction hash from
-     * @param {string} txHash - transaction hash of the
-     */
-    checkTx(txHash) {
-      if (txHash) {
-        this.web3.eth.getTransactionReceipt(txHash).then(receipt => {
-          if (receipt) {
-            const _block = {
-              hash: txHash
-            };
-            this.deleteEthBlockTx(_block);
-            if (this.getAllEthBlocksTxs.length === 0) {
-              clearInterval(this.checkPendingInterval);
-            }
-          }
+// onMounted
+onMounted(() => {
+  if (hasPendingTxs.value) {
+    setCheckPendingInterval();
+  }
+  if (route.name === ETH_BLOCKS_ROUTE.MY_BLOCKS.NAME) {
+    activeTab.value = tabs.value[1].id;
+  }
+  if (route.name === ETH_BLOCKS_ROUTE.BATCH_MINTING.NAME) {
+    activeTab.value = tabs.value[2].id;
+  }
+});
+
+// beforeDestroy
+onBeforeUnmount(() => {
+  clearInterval(checkPendingInterval.value);
+});
+
+// methods
+/**
+ * Sets interval to start checking pending transactions
+ */
+const setCheckPendingInterval = () => {
+  clearInterval(checkPendingInterval.value);
+  checkPendingInterval.value = setInterval(() => {
+    if (hasPendingTxs.value) {
+      getAllEthBlocksTxs
+        .filter(i => i.network === network.type.name)
+        .forEach(i => {
+          checkTx(i.hash);
         });
-      }
+    } else {
+      clearInterval(checkPendingInterval.value);
     }
+  }, 5000);
+};
+
+/**
+ * Checks web3 Transaction hash.
+ * If reciept is defined, removes transaction hash from
+ * @param {string} txHash - transaction hash of the
+ */
+const checkTx = txHash => {
+  if (txHash) {
+    web3.eth.getTransactionReceipt(txHash).then(receipt => {
+      if (receipt) {
+        const _block = {
+          hash: txHash
+        };
+        deleteEthBlockTx(_block);
+        if (getAllEthBlocksTxs.length === 0) {
+          clearInterval(checkPendingInterval.value);
+        }
+      }
+    });
   }
 };
 </script>

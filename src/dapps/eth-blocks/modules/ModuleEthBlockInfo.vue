@@ -34,13 +34,13 @@
       class="justify-center mb-4 d-flex d-md-none align-center"
     >
       <a
-        :href="handlerBlock.rawImg"
+        :href="blockHandler.rawImg"
         target="_blank"
         class="border-container d-block pa-1 mx-auto cursor-image"
       >
         <v-img
           lazy-src="../assets/loading-block.svg"
-          :src="handlerBlock.img"
+          :src="blockHandler.img"
           :max-width="$vuetify.breakpoint.xs ? '160' : '240'"
           contain
         >
@@ -63,13 +63,13 @@
         -->
       <div class="d-block">
         <a
-          :href="handlerBlock.rawImg"
+          :href="blockHandler.rawImg"
           target="_blank"
           class="border-container d-none d-md-flex pa-1 mr-md-10 cursor-image"
         >
           <v-img
             lazy-src="../assets/loading-block.svg"
-            :src="handlerBlock.img"
+            :src="blockHandler.img"
             max-width="332"
             contain
           >
@@ -87,7 +87,7 @@
         <!-- <div v-if="isReserved">
           <h3 class="text-center text-md-left mt-5 ml-1">Owners Comment:</h3>
           <p class="ml-1">
-            {{ handlerBlock.description }}
+            {{ blockHandler.description }}
           </p>
         </div> -->
       </div>
@@ -122,7 +122,7 @@
             <!-------------* Below is commented out for now * ------------------->
             <!-- <share-network
               network="twitter"
-              :url="`https://www.ethvm.com/block/number/${blockRef}`"
+              :url="`https://www.ethvm.com/block/number/${props.blockRef}`"
               title="Eth Museum"
               hashtags="MyEtherWallet,MEW,EthBlocks"
             > -->
@@ -142,7 +142,7 @@
         </div>
         <!--
         ===================================================
-          Block Info Alert component
+          Block Info alert.value component
         ===================================================
         -->
         <block-info
@@ -164,7 +164,7 @@
         -->
         <div class="mt-10 mt-md-5">
           <div :class="['textMedium--text', { 'mb-2': !isTestNetwork }]">
-            {{ handlerBlock.description }}
+            {{ blockHandler.description }}
           </div>
         </div>
         <!--
@@ -199,7 +199,7 @@
     <a
       v-if="!loading"
       class="d-flex flex-row-reverse mt-3"
-      :href="`https://www.ethvm.com/block/number/${blockRef}`"
+      :href="`https://www.ethvm.com/block/number/${props.blockRef}`"
       target="_blank"
       @click="trackToEthVM"
     >
@@ -217,7 +217,11 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState } from 'vuex';
+const MIN_GAS_TRANSFER = 150000;
+const MIN_GAS_MINT = 350000;
+</script>
+<script setup>
+import { defineAsyncComponent, ref, computed, onMounted, watch } from 'vue';
 import { toBN } from 'web3-utils';
 
 import { BLOCK_ALERT } from '../handlers/helpers/blockAlertType';
@@ -226,329 +230,325 @@ import { ETH_BLOCKS_ROUTE } from '../configsRoutes';
 import { validBlockNumber } from '../handlers/helpers/common';
 
 import handlerBlock from '../handlers/handlerBlock';
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { useAmplitude } from '@/core/composables/amplitude';
+import {
+  global as useGlobalStore,
+  wallet as useWalletStore,
+  ethBlocksTxs as useEthBlocksTxsStore
+} from '@/core/store/index.js';
+import { useRouter } from 'vue-router/composables';
 
-const MIN_GAS_TRANSFER = 150000;
-const MIN_GAS_MINT = 350000;
+const BlockInfo = defineAsyncComponent(() =>
+  import('../components/BlockInfo.vue')
+);
+const BlockSearch = defineAsyncComponent(() =>
+  import('../components/BlockSearch.vue')
+);
+const BlockSend = defineAsyncComponent(() =>
+  import('../components/BlockSend.vue')
+);
+const BlocksLoading = defineAsyncComponent(() =>
+  import('../components/BlocksLoading.vue')
+);
 
-export default {
-  name: 'ModuleEthBlockInfo',
-  components: {
-    BlockInfo: () => import('../components/BlockInfo.vue'),
-    BlockSearch: () => import('../components/BlockSearch.vue'),
-    BlockSend: () => import('../components/BlockSend.vue'),
-    BlocksLoading: () => import('../components/BlocksLoading.vue')
+// injections/use
+const { trackDapp } = useAmplitude();
+const { network, isTestNetwork, gasPrice } = useGlobalStore();
+const { web3, address, balanceInWei } = useWalletStore();
+const { getEthBlockTx } = useEthBlocksTxsStore();
+const router = useRouter();
+
+// props
+const props = defineProps({
+  blockRef: {
+    type: String,
+    required: true
   },
-  mixins: [handlerAnalytics],
-  props: {
-    blockRef: {
-      type: String,
-      required: true
-    },
-    hasSearch: {
-      type: Boolean,
-      default: true
+  hasSearch: {
+    type: Boolean,
+    default: true
+  }
+});
+
+// data
+const ROUTES = ETH_BLOCKS_ROUTE;
+const blockHandler = ref({});
+const openSendOverlay = ref(false);
+
+// computed
+/**
+ * Deteremines if you have default min eth to pay
+ * @returns {boolean}
+ */
+const hasEnoughEth = computed(() => {
+  if (
+    alert.value === BLOCK_ALERT.OWNED ||
+    alert.value === BLOCK_ALERT.AVAILABLE
+  ) {
+    return !toBN(balanceInWei).sub(toBN(estimatedTotal.value)).isNeg();
+  }
+  return true;
+});
+const estimatedTotal = computed(() => {
+  if (
+    alert.value === BLOCK_ALERT.OWNED ||
+    alert.value === BLOCK_ALERT.AVAILABLE
+  ) {
+    const gasLimit =
+      alert.value === BLOCK_ALERT.OWNED ? MIN_GAS_TRANSFER : MIN_GAS_MINT;
+    const txFee = toBN(gasLimit).mul(toBN(gasPrice));
+    return alert.value === BLOCK_ALERT.OWNED
+      ? txFee.toString()
+      : txFee.add(toBN(blockHandler.value.mintPrice)).toString();
+  }
+  return '0';
+});
+
+/**
+ * @returns {string}:
+ * formatted string of the block number
+ */
+const blockNumberFormatted = computed(() => {
+  return formatIntegerToString(props.blockRef);
+});
+/**
+ * @returns {boolean}:
+ * if HandelrBlockInfo.loading equals false,  returns false, otherwise returns true
+ */
+const loading = computed(() => {
+  return blockHandler.value && blockHandler.value.loading === false
+    ? false
+    : true;
+});
+/**
+ * @returns allert type based on the owner of the block:
+ * - null -> available
+ * - adrees === wallet address -> owned
+ * - address !== wallet address -> not available
+ */
+const alert = computed(() => {
+  if (isReserved.value) {
+    return BLOCK_ALERT.RESERVED;
+  }
+  if (!loading.value && blockHandler.value.hasOwner) {
+    return address === blockHandler.value.owner
+      ? BLOCK_ALERT.OWNED
+      : BLOCK_ALERT.NOT_AVAILABLE;
+  }
+  return BLOCK_ALERT.AVAILABLE;
+});
+/**
+ * @returns {string} block owner
+ */
+const alertOwner = computed(() => {
+  return loading.value ? '' : blockHandler.value.owner;
+});
+/**
+ * @returns {string} block mint price
+ */
+const alertMintPrice = computed(() => {
+  return loading.value ? '' : blockHandler.value.mintPrice;
+});
+
+/**
+ * @returns array of block properties
+ */
+const properties = computed(() => {
+  if (!loading.value) {
+    const author = `${blockHandler.value.author.substr(
+      0,
+      6
+    )}...${blockHandler.value.author.substr(
+      blockHandler.value.author.length - 4,
+      4
+    )}`;
+
+    const _data = [
+      { text: 'Number', value: blockNumberFormatted.value },
+      { text: 'Date Created', value: blockHandler.value.date },
+      { text: 'Author', value: author },
+      {
+        text: 'Transactions',
+        value: formatIntegerToString(blockHandler.value.transactions)
+      },
+      {
+        text: 'Gas Used',
+        value: formatIntegerToString(blockHandler.value.gasUsed)
+      },
+      {
+        text: 'Uncles',
+        value: formatIntegerToString(blockHandler.value.transactions)
+      }
+    ];
+    if (blockHandler.value.extra.length > 0) {
+      blockHandler.value.extra.forEach(item => {
+        _data.push({
+          text: 'Extra',
+          value: item.value
+        });
+      });
     }
-  },
-  data() {
-    return {
-      handlerBlock: {},
-      ROUTES: ETH_BLOCKS_ROUTE,
-      openSendOverlay: false
-    };
-  },
-  computed: {
-    /**
-     * STORE STATE
-     */
-    ...mapState('wallet', ['web3', 'address']),
+    return _data;
+  }
+  return [];
+});
+/**
+ * @returns {boolean}:
+ */
+const isSending = computed(() => {
+  return loading.value ? false : blockHandler.value.isSending;
+});
+/**
+ * Used in alert.value ui, disals button after user clicks send/mint to show that soemthign is happening
+ * @returns {boolean}
+ */
+const isActionInProgress = computed(() => {
+  return loading.value
+    ? false
+    : blockHandler.value.isMinting || blockHandler.value.isSending;
+});
+/**
+ * Determines whether or not there is a pending transaction in the current chain for current block
+ * @returns {boolean}
+ */
+const hasPendingTx = computed(() => {
+  const _block = {
+    blockNumber: props.blockRef.toString(),
+    hash: blockHandler.value.pendingTxHash,
+    network: network.type.name
+  };
+  return getEthBlockTx(_block) ? true : false;
+});
+/**
+ * Determines whether or not this block is reserved 1-10
+ * @returns {boolean}
+ */
+const isReserved = computed(() => {
+  const _currBlock = toBN(props.blockRef);
+  const RESERVED = toBN(10);
+  return !_currBlock.isZero() && _currBlock.lte(RESERVED);
+});
 
-    /**
-     * STORE GETTERS
-     */
-    ...mapGetters('global', ['network', 'isTestNetwork', 'gasPrice']),
-    ...mapGetters('ethBlocksTxs', ['getEthBlockTx']),
-    ...mapGetters('wallet', ['balanceInWei']),
+// watch
+/**
+ * Update HandelrBlockInfo on block number change and fetch data
+ */
+watch(props.blockRef, newVal => {
+  if (validBlockNumber(newVal)) {
+    blockHandler.value.setBlockNumber(newVal);
+    resetBlock();
+  } else {
+    router.push({ name: ETH_BLOCKS_ROUTE.CORE.NAME });
+  }
+});
+/**
+ * Update HandelrBlockInfo on network change and fetch data
+ */
+watch(network, newVal => {
+  if (newVal) {
+    blockHandler.value.setNetwork(newVal);
+    resetBlock();
+  }
+});
 
-    /**
-     * Deteremines if you have default min eth to pay
-     * @returns {boolean}
-     */
-    hasEnoughEth() {
-      if (
-        this.alert === BLOCK_ALERT.OWNED ||
-        this.alert === BLOCK_ALERT.AVAILABLE
-      ) {
-        return !toBN(this.balanceInWei).sub(toBN(this.estimatedTotal)).isNeg();
-      }
-      return true;
-    },
-    estimatedTotal() {
-      if (
-        this.alert === BLOCK_ALERT.OWNED ||
-        this.alert === BLOCK_ALERT.AVAILABLE
-      ) {
-        const gasLimit =
-          this.alert === BLOCK_ALERT.OWNED ? MIN_GAS_TRANSFER : MIN_GAS_MINT;
-        const txFee = toBN(gasLimit).mul(toBN(this.gasPrice));
-        return this.alert === BLOCK_ALERT.OWNED
-          ? txFee.toString()
-          : txFee.add(toBN(this.handlerBlock.mintPrice)).toString();
-      }
-      return '0';
-    },
+/**
+ * Update HandelrBlockInfo on network change and fetch data
+ */
+watch(address, newVal => {
+  if (newVal) {
+    blockHandler.value.setAddress(newVal);
+    resetBlock();
+  }
+});
 
-    /**
-     * @returns {string}:
-     * formatted string of the block number
-     */
-    blockNumberFormatted() {
-      return formatIntegerToString(this.blockRef);
-    },
-    /**
-     * @returns {boolean}:
-     * if HandelrBlockInfo.loading equals false,  returns false, otherwise returns true
-     */
-    loading() {
-      return this.handlerBlock && this.handlerBlock.loading === false
-        ? false
-        : true;
-    },
-    /**
-     * @returns allert type based on the owner of the block:
-     * - null -> available
-     * - adrees === wallet address -> owned
-     * - address !== wallet address -> not available
-     */
-    alert() {
-      if (this.isReserved) {
-        return BLOCK_ALERT.RESERVED;
-      }
-      if (!this.loading && this.handlerBlock.hasOwner) {
-        return this.address === this.handlerBlock.owner
-          ? BLOCK_ALERT.OWNED
-          : BLOCK_ALERT.NOT_AVAILABLE;
-      }
-      return BLOCK_ALERT.AVAILABLE;
-    },
-    /**
-     * @returns {string} block owner
-     */
-    alertOwner() {
-      return this.loading ? '' : this.handlerBlock.owner;
-    },
-    /**
-     * @returns {string} block mint price
-     */
-    alertMintPrice() {
-      return this.loading ? '' : this.handlerBlock.mintPrice;
-    },
-
-    /**
-     * @returns array of block properties
-     */
-    properties() {
-      if (!this.loading) {
-        const author = `${this.handlerBlock.author.substr(
-          0,
-          6
-        )}...${this.handlerBlock.author.substr(
-          this.handlerBlock.author.length - 4,
-          4
-        )}`;
-
-        const _data = [
-          { text: 'Number', value: this.blockNumberFormatted },
-          { text: 'Date Created', value: this.handlerBlock.date },
-          { text: 'Author', value: author },
-          {
-            text: 'Transactions',
-            value: formatIntegerToString(this.handlerBlock.transactions)
-          },
-          {
-            text: 'Gas Used',
-            value: formatIntegerToString(this.handlerBlock.gasUsed)
-          },
-          {
-            text: 'Uncles',
-            value: formatIntegerToString(this.handlerBlock.transactions)
-          }
-        ];
-        if (this.handlerBlock.extra.length > 0) {
-          this.handlerBlock.extra.forEach(item => {
-            _data.push({
-              text: 'Extra',
-              value: item.value
-            });
-          });
-        }
-        return _data;
-      }
-      return [];
-    },
-    /**
-     * @returns {boolean}:
-     */
-    isSending() {
-      return this.loading ? false : this.handlerBlock.isSending;
-    },
-    /**
-     * Used in alert ui, disals button after user clicks send/mint to show that soemthign is happening
-     * @returns {boolean}
-     */
-    isActionInProgress() {
-      return this.loading
-        ? false
-        : this.handlerBlock.isMinting || this.handlerBlock.isSending;
-    },
-    /**
-     * Determines whether or not there is a pending transaction in the current chain for current block
-     * @returns {boolean}
-     */
-    hasPendingTx() {
-      const _block = {
-        blockNumber: this.blockRef.toString(),
-        hash: this.handlerBlock.pendingTxHash,
-        network: this.network.type.name
-      };
-      return this.getEthBlockTx(_block) ? true : false;
-    },
-    /**
-     * Determines whether or not this block is reserved 1-10
-     * @returns {boolean}
-     */
-    isReserved() {
-      const _currBlock = toBN(this.blockRef);
-      const RESERVED = toBN(10);
-      return !_currBlock.isZero() && _currBlock.lte(RESERVED);
-    }
-  },
-  watch: {
-    /**
-     * Update HandelrBlockInfo on block number change and fetch data
-     */
-    blockRef(newVal) {
-      if (validBlockNumber(newVal)) {
-        this.handlerBlock.setBlockNumber(newVal);
-        this.resetBlock();
-      } else {
-        this.$router.push({ name: ETH_BLOCKS_ROUTE.CORE.NAME });
-      }
-    },
-    /**
-     * Update HandelrBlockInfo on network change and fetch data
-     */
-    network(newVal) {
-      if (newVal) {
-        this.handlerBlock.setNetwork(newVal);
-        this.resetBlock();
-      }
-    },
-
-    /**
-     * Update HandelrBlockInfo on network change and fetch data
-     */
-    address(newVal) {
-      if (newVal) {
-        this.handlerBlock.setAddress(newVal);
-        this.resetBlock();
-      }
-    },
-
-    /**
-     * Watch hasPending txs
-     * if newVal - close send overlay
-     * if !newVal - refetch block info
-     */
-    hasPendingTx(newVal, oldVal) {
-      /* New Hash was asigned */ {
-        if (newVal && newVal !== oldVal) {
-          if (this.openSendOverlay) {
-            this.closeSendOverlay();
-          }
-        }
-        if (newVal === false) {
-          this.resetBlock();
-        }
+/**
+ * Watch hasPending txs
+ * if newVal - close send overlay
+ * if !newVal - refetch block info
+ */
+watch(hasPendingTx, (newVal, oldVal) => {
+  /* New Hash was asigned */ {
+    if (newVal && newVal !== oldVal) {
+      if (openSendOverlay.value) {
+        closeSendOverlay();
       }
     }
-  },
-  mounted() {
-    /**
-     * Initiate Block Info Handler
-     * if valid block number --> fetch block info
-     * if !valid block number --> reroute to default eth blocks route
-     */
-    if (validBlockNumber(this.blockRef)) {
-      this.handlerBlock = new handlerBlock(
-        this.web3,
-        this.network,
-        this.blockRef,
-        this.address
-      );
-      this.resetBlock();
-    } else {
-      this.$router.push({ name: ETH_BLOCKS_ROUTE.CORE.NAME });
-    }
-  },
-
-  methods: {
-    /**
-     * STORE ACTIONS
-     */
-    ...mapActions('ethBlocksTxs', ['addEthBlockTx']),
-    /**
-     * tracks when user clicks ethvm from ethblocks
-     */
-    trackToEthVM() {
-      this.trackDapp('ethBlocksToEthVM');
-    },
-    resetBlock() {
-      this.handlerBlock.getBlock();
-    },
-
-    /**
-     * Method returns whether or no number is even.
-     * Used in table component, to determine row color
-     * @param {number} _value
-     * @returns {boolean}
-     */
-    isEven(_value) {
-      return _value % 2 == 0;
-    },
-    /**
-     * Method mints a blocks.
-     * Responds, to child Alert component on emit 'mint' event
-     */
-    mintBlock() {
-      this.trackDapp('ethBlocksMint');
-      this.handlerBlock.mintBlock(this.balanceInWei, this.gasPrice);
-    },
-
-    /**
-     * Method opens send overlay .
-     * Responds, to child Alert component on emit 'openSend' event
-     */
-    openSendBlockOverlay() {
-      this.openSendOverlay = true;
-    },
-    /**
-     * Method closes send overlay .
-     * Responds, to child Alert component on emit 'close' event
-     */
-    closeSendOverlay() {
-      this.openSendOverlay = false;
-    },
-    /**
-     * Method sends EthBlock .
-     * Responds, to child Alert component on emit 'send' event
-     * @param {string} value - to address
-     */
-    sendBlock(value) {
-      this.trackDapp('ethBlocksSendBlock');
-      this.handlerBlock.transferBlock(value, this.balanceInWei, this.gasPrice);
+    if (newVal === false) {
+      resetBlock();
     }
   }
+});
+
+onMounted(() => {
+  /**
+   * Initiate Block Info Handler
+   * if valid block number --> fetch block info
+   * if !valid block number --> reroute to default eth blocks route
+   */
+  if (validBlockNumber(props.props.blockRef)) {
+    blockHandler.value = new handlerBlock(
+      web3,
+      network,
+      props.props.blockRef,
+      address
+    );
+    resetBlock();
+  } else {
+    router.push({ name: ETH_BLOCKS_ROUTE.CORE.NAME });
+  }
+});
+
+// methods
+/**
+ * tracks when user clicks ethvm from ethblocks
+ */
+const trackToEthVM = () => {
+  trackDapp('ethBlocksToEthVM');
+};
+const resetBlock = () => {
+  blockHandler.value.getBlock();
+};
+
+/**
+ * Method returns whether or no number is even.
+ * Used in table component, to determine row color
+ * @param {number} _value
+ * @returns {boolean}
+ */
+const isEven = _value => {
+  return _value % 2 == 0;
+};
+/**
+ * Method mints a blocks.
+ * Responds, to child alert.value component on emit 'mint' event
+ */
+const mintBlock = () => {
+  trackDapp('ethBlocksMint');
+  blockHandler.value.mintBlock(balanceInWei, gasPrice);
+};
+
+/**
+ * Method opens send overlay .
+ * Responds, to child alert.value component on emit 'openSend' event
+ */
+const openSendBlockOverlay = () => {
+  openSendOverlay.value = true;
+};
+/**
+ * Method closes send overlay .
+ * Responds, to child alert.value component on emit 'close' event
+ */
+const closeSendOverlay = () => {
+  openSendOverlay.value = false;
+};
+/**
+ * Method sends EthBlock .
+ * Responds, to child alert.value component on emit 'send' event
+ * @param {string} value - to address
+ */
+const sendBlock = value => {
+  trackDapp('ethBlocksSendBlock');
+  blockHandler.value.transferBlock(value, balanceInWei, gasPrice);
 };
 </script>
 

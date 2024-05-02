@@ -164,168 +164,163 @@
   </div>
 </template>
 
-<script>
-import { mapState, mapGetters, mapActions } from 'vuex';
+<script setup>
+import { defineAsyncComponent, defineProps, ref, computed } from 'vue';
 import BigNumber from 'bignumber.js';
 import { fromWei } from 'web3-utils';
 import { some, isEmpty } from 'lodash';
 
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 import { ETH_BLOCKS_ROUTE } from '../configsRoutes';
+import {
+  global as useGlobalStore,
+  wallet as useWalletStore,
+  external as useExternalStore,
+  ethBlocksTxs as useEthBlocksTxsStore
+} from '@/core/store/index.js';
+import { useRouter } from 'vue-router/composables';
 
-export default {
-  name: 'BlockResultComponent',
-  components: {
-    BlockQuickViewPopup: () => import('./BlockQuickViewPopup')
+const BlockQuickViewPopup = defineAsyncComponent(() =>
+  import('./BlockQuickViewPopup')
+);
+
+// injections/use
+const { network, getFiatValue } = useGlobalStore();
+const { address } = useWalletStore();
+const { fiatValue } = useExternalStore();
+const { addBlockToCart, removeBlockFromCart } = useEthBlocksTxsStore();
+const router = useRouter();
+
+// props
+const props = defineProps({
+  blockHandler: {
+    type: Object,
+    default: () => {}
   },
-  props: {
-    blockHandler: {
-      type: Object,
-      default: () => {}
-    },
-    isLoading: {
-      type: Boolean,
-      default: false
-    },
-    showAdd: {
-      type: Boolean,
-      default: true
-    },
-    hasBorder: {
-      type: Boolean,
-      default: true
-    },
-    removeMe: {
-      type: Function,
-      default: () => {}
-    }
+  isLoading: {
+    type: Boolean,
+    default: false
   },
-  data() {
-    return {
-      showRemove: false,
-      showBlock: false
-    };
+  showAdd: {
+    type: Boolean,
+    default: true
   },
-  computed: {
-    ...mapState('wallet', ['address']),
-    ...mapState('ethBlocksTxs', ['cart']),
-    ...mapGetters('external', ['fiatValue']),
-    ...mapGetters('global', ['network', 'getFiatValue']),
-    isReady() {
-      return !isEmpty(this.blockHandler) && !this.isLoading;
-    },
-    img() {
-      return this.isReady ? this.blockHandler.img : '';
-    },
-    blockNumber() {
-      return this.isReady
-        ? formatIntegerToString(this.blockHandler.blockNumber)
-        : '0';
-    },
-    convertedPrice() {
-      return this.isReady ? fromWei(this.blockHandler.mintPrice) : 0;
-    },
-    mintPrice() {
-      return this.isReady
-        ? `${BigNumber(this.convertedPrice).toString()} ${
-            this.network.type.currencyName
-          }`
-        : '';
-    },
-    mintFiatPrice() {
-      const val = BigNumber(this.convertedPrice)
-        .times(this.fiatValue)
-        .toString();
-      return this.isReady ? this.getFiatValue(val) : '';
-    },
-    isOwned() {
-      return this.isReady ? this.blockHandler.owner === this.address : false;
-    },
-    isUnavailable() {
-      return this.isReady ? this.blockHandler.hasOwner : false;
-    },
-    blockStatusStyle() {
-      if (this.isOwned) {
-        return 'bluePrimary--text';
-      } else if (!this.showAdd && this.isUnavailable) {
-        return 'redPrimary--text';
-      } else if (this.isUnavailable) {
-        return 'orangePrimary--text';
-      }
-      return '';
-    },
-    blockStatusText() {
-      return this.isOwned
-        ? 'You own this'
-        : this.isUnavailable
-        ? 'Unavailable'
-        : '';
-    },
-    isAvailable() {
-      return this.isOwned || !this.isUnavailable;
-    },
-    addText() {
-      return this.isAdded && this.isAvailable
-        ? 'Added to batch'
-        : 'Add to batch';
-    },
-    mdiIcon() {
-      return this.isAdded && this.isAvailable ? 'mdi-check' : 'mdi-plus';
-    },
-    isAdded() {
-      const cart = this.cart.ETH;
-      if (this.isReady) {
-        const found = some(cart, block => {
-          return block === this.blockHandler.blockNumber.toString();
-        });
-        return found;
-      }
-      return false;
-    }
+  hasBorder: {
+    type: Boolean,
+    default: true
   },
-  methods: {
-    ...mapActions('ethBlocksTxs', [
-      'addBlockToCart',
-      'addTestBlockToCart',
-      'removeBlockFromCart'
-    ]),
-    showPanel() {
-      this.showRemove = true;
-    },
-    hideRemove() {
-      this.showRemove = false;
-    },
-    removeBlock() {
-      const block = this.blockHandler.blockNumber.toString();
-      this.removeMe(block);
-      this.removeBlockFromCart(block);
-    },
-    addToCart() {
-      const block = this.blockHandler.blockNumber.toString();
-      if (this.isAvailable && !this.isAdded) {
-        this.addBlockToCart(block);
-      }
-    },
-    toggleAddRemoveBlock() {
-      if (this.isAvailable && this.isAdded) {
-        this.removeBlock();
-      } else {
-        this.addToCart();
-      }
-    },
-    navigateToBlockInfo() {
-      this.$router.push({
-        name: ETH_BLOCKS_ROUTE.BLOCK.NAME,
-        params: { blockRef: `${this.blockHandler.blockNumber}` }
-      });
-    },
-    showBlockQuickView() {
-      this.showBlock = true;
-    },
-    hideBlockQuickView() {
-      this.showBlock = false;
-    }
+  removeMe: {
+    type: Function,
+    default: () => {}
   }
+});
+
+// data
+const showRemove = ref(false);
+const showBlock = ref(false);
+
+// computed
+const isReady = computed(() => {
+  return !isEmpty(props.blockHandler) && !props.isLoading;
+});
+const img = computed(() => {
+  return isReady.value ? props.blockHandler.img : '';
+});
+const blockNumber = computed(() => {
+  return isReady.value
+    ? formatIntegerToString(props.blockHandler.blockNumber)
+    : '0';
+});
+const convertedPrice = computed(() => {
+  return isReady.value ? fromWei(props.blockHandler.mintPrice) : 0;
+});
+const mintPrice = computed(() => {
+  return isReady.value
+    ? `${BigNumber(convertedPrice).toString()} ${network.type.currencyName}`
+    : '';
+});
+const mintFiatPrice = computed(() => {
+  const val = BigNumber(convertedPrice).times(fiatValue).toString();
+  return isReady.value ? getFiatValue(val) : '';
+});
+const isOwned = computed(() => {
+  return isReady.value ? props.blockHandler.owner === address : false;
+});
+const isUnavailable = computed(() => {
+  return isReady.value ? props.blockHandler.hasOwner : false;
+});
+const blockStatusStyle = computed(() => {
+  if (isOwned.value) {
+    return 'bluePrimary--text';
+  } else if (!props.showAdd && isUnavailable.value) {
+    return 'redPrimary--text';
+  } else if (isUnavailable.value) {
+    return 'orangePrimary--text';
+  }
+  return '';
+});
+const blockStatusText = computed(() => {
+  return isOwned.value
+    ? 'You own this'
+    : isUnavailable.value
+    ? 'Unavailable'
+    : '';
+});
+const isAvailable = computed(() => {
+  return isOwned.value || !isUnavailable.value;
+});
+const addText = computed(() => {
+  return isAdded.value && isAvailable.value ? 'Added to batch' : 'Add to batch';
+});
+const mdiIcon = computed(() => {
+  return isAdded.value && isAvailable.value ? 'mdi-check' : 'mdi-plus';
+});
+const isAdded = computed(() => {
+  const cart = cart.ETH;
+  if (isReady.value) {
+    const found = some(cart, block => {
+      return block === props.blockHandler.blockNumber.toString();
+    });
+    return found;
+  }
+  return false;
+});
+
+const showPanel = () => {
+  showRemove.value = true;
+};
+const hideRemove = () => {
+  showRemove.value = false;
+};
+const removeBlock = () => {
+  const block = props.blockHandler.blockNumber.toString();
+  props.removeMe(block);
+  removeBlockFromCart(block);
+};
+const addToCart = () => {
+  const block = props.blockHandler.blockNumber.toString();
+  if (isAvailable.value && !isAdded.value) {
+    addBlockToCart(block);
+  }
+};
+const toggleAddRemoveBlock = () => {
+  if (isAvailable.value && isAdded) {
+    removeBlock();
+  } else {
+    addToCart();
+  }
+};
+const navigateToBlockInfo = () => {
+  router.push({
+    name: ETH_BLOCKS_ROUTE.BLOCK.NAME,
+    params: { blockRef: `${props.blockHandler.blockNumber}` }
+  });
+};
+const showBlockQuickView = () => {
+  showBlock.value = true;
+};
+const hideBlockQuickView = () => {
+  showBlock.value = false;
 };
 </script>
 

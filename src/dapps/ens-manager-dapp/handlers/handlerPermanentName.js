@@ -5,8 +5,7 @@ import * as nameHashPckg from 'eth-ens-namehash';
 import DNSRegistrar from '@ensdomains/ens-contracts/deployments/mainnet/DNSRegistrar.json';
 import contentHash from 'content-hash';
 import EventEmitter from 'events';
-import vuexStore from '@/core/store';
-import { mapGetters, mapState } from 'vuex';
+import { global as useGlobalStore } from '@/core/store/index.js';
 import { toBN, toHex, fromWei, sha3 } from 'web3-utils';
 import { estimateGasList } from '@/core/helpers/gasPriceHelper.js';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
@@ -16,9 +15,6 @@ const bip39 = require('bip39');
 export default class PermanentNameModule extends ENSManagerInterface {
   constructor(name, address, network, web3, ens, expiry) {
     super(name, address, network, web3, ens);
-    this.$store = vuexStore;
-    Object.assign(this, mapState('global', ['gasPriceType']));
-    Object.assign(this, mapGetters('global', ['gasPriceByType']));
     this.expiryTime = expiry;
     this.secretPhrase = '';
     this.expiration = null;
@@ -63,6 +59,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
   }
 
   getTransactions(toAddress) {
+    const { gasPriceType, gasPriceByType } = useGlobalStore();
     const transferMethod = this.registrarContract?.methods.transferFrom(
       this.address,
       toAddress,
@@ -72,7 +69,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
       to: this.registrarAddress,
       from: this.address,
       value: '0x0',
-      gasPrice: toHex(this.gasPriceByType(this.gasPriceType)())
+      gasPrice: toHex(gasPriceByType(gasPriceType))
     };
     const tx1 = Object.assign({}, baseTx, {
       data: this.setController(toAddress, true).encodeABI()
@@ -85,6 +82,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
   }
 
   async estimateGas(toAddress) {
+    const { gasPriceType, gasPriceByType } = useGlobalStore();
     // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve, reject) => {
       const txns = this.getTransactions(toAddress).map(item => {
@@ -97,7 +95,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
         const gasTotal = gas.reduce((previousVal, currentVal) => {
           return toBN(previousVal).add(toBN(currentVal));
         }, toBN(0));
-        const gasPrice = this.gasPriceByType(this.gasPriceType)();
+        const gasPrice = gasPriceByType(gasPriceType);
         const txFee = toBN(gasPrice).mul(gasTotal);
         resolve(txFee);
       } catch (e) {
@@ -127,8 +125,9 @@ export default class PermanentNameModule extends ENSManagerInterface {
     }
   }
   async totalRenewCost(duration) {
+    const { gasPriceType, gasPriceByType } = useGlobalStore();
     try {
-      const gasPrice = this.gasPriceByType()(this.gasPriceType());
+      const gasPrice = gasPriceByType(gasPriceType);
       const rentPrice = await this.getRentPrice(duration);
       const withTenPercent = BigNumber(rentPrice)
         .times(1.1)
@@ -205,7 +204,8 @@ export default class PermanentNameModule extends ENSManagerInterface {
   }
 
   createCommitment(duration) {
-    const gasPrice = this.gasPriceByType()(this.gasPriceType());
+    const { gasPriceType, gasPriceByType } = useGlobalStore();
+    const gasPrice = gasPriceByType(gasPriceType);
     const txObj = { from: this.address, gasPrice: gasPrice };
     const promiEvent = new EventEmitter();
     this._createContractMethod(duration, true)
@@ -226,8 +226,9 @@ export default class PermanentNameModule extends ENSManagerInterface {
   }
 
   async getCommitmentFees(duration) {
+    const { gasPriceType, gasPriceByType } = useGlobalStore();
     try {
-      const gasPrice = this.gasPriceByType()(this.gasPriceType());
+      const gasPrice = gasPriceByType(gasPriceType);
       const commitTxObj = { from: this.address };
       const createCommitment = await this._createContractMethod(
         duration,
@@ -374,8 +375,9 @@ export default class PermanentNameModule extends ENSManagerInterface {
   }
 
   async getRegFees(duration, balance) {
+    const { gasPriceType, gasPriceByType } = useGlobalStore();
     try {
-      const gasPrice = this.gasPriceByType()(this.gasPriceType());
+      const gasPrice = gasPriceByType(gasPriceType);
       const rentPrice = await this.getRentPrice(duration);
       const hasBalance = new BigNumber(balance).gte(rentPrice);
 

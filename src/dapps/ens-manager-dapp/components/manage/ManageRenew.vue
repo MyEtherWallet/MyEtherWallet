@@ -2,14 +2,14 @@
   <div class="full-width">
     <mew-select
       :has-filter="true"
-      :label="$t('ens.request.select-duration')"
+      :label="t('ens.request.select-duration')"
       :items="items"
       normal-dropdown
       @input="setDuration"
     />
     <div class="font-weight-bold text-center">
-      {{ $t('ens.request.estimated-price') }}: {{ rentPriceETH }}
-      {{ $t('common.currency.eth') }} ({{ rentPriceUSD }})
+      {{ t('ens.request.estimated-price') }}: {{ rentPriceETH }}
+      {{ t('common.currency.eth') }} ({{ rentPriceUSD }})
     </div>
     <div class="d-flex align-center justify-center mt-3">
       <div>
@@ -35,7 +35,7 @@
           <mew-button
             :loading="loadingRenew"
             :disabled="noFundsForRenewalFees || loadingRenew"
-            :title="$t('ens.renew')"
+            :title="t('ens.renew')"
             btn-size="xlarge"
             @click.native="renew(duration)"
           />
@@ -45,84 +45,83 @@
   </div>
 </template>
 
-<script>
-import { mapGetters } from 'vuex';
+<script setup>
+import { defineProps, ref, computed, watch, onMounted } from 'vue';
 
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
-import buyMore from '@/core/mixins/buyMore.mixin.js';
-export default {
-  mixins: [buyMore],
-  props: {
-    getRentPrice: {
-      default: function () {
-        return {};
-      },
-      type: Function
+import { useBuySell } from '@/core/composables/buyMore';
+import { global as useGlobalStore } from '@/core/store/index.js';
+import { useI18n } from 'vue-i18n-composable';
+
+// injections/use
+const { openBuySell } = useBuySell();
+const { getFiatValue, network } = useGlobalStore();
+const { t } = useI18n();
+
+// props
+const props = defineProps({
+  getRentPrice: {
+    default: function () {
+      return {};
     },
-    renew: {
-      default: function () {
-        return {};
-      },
-      type: Function
+    type: Function
+  },
+  renew: {
+    default: function () {
+      return {};
     },
-    getTotalRenewFeeOnly: {
-      default: function () {
-        return {};
-      },
-      type: Function
-    },
-    noFundsForRenewalFees: {
-      default: false,
-      type: Boolean
-    },
-    loadingRenew: {
-      default: false,
-      type: Boolean
-    }
+    type: Function
   },
-  data() {
-    return {
-      duration: 0,
-      rentPriceETH: '',
-      rentPriceUSD: ''
-    };
+  noFundsForRenewalFees: {
+    default: false,
+    type: Boolean
   },
-  computed: {
-    items() {
-      const items = [];
-      for (let i = 0; i < 20; i++) {
-        items.push({
-          name: i + 1 + ' ' + `year${i < 1 ? '' : 's'}`,
-          value: (i + 1).toString()
-        });
-      }
-      return items;
-    }
-  },
-  watch: {
-    duration(newVal) {
-      this.getTotalRenewFeeOnly(newVal);
-    }
-  },
-  mounted() {
-    this.rentPrice();
-    this.getTotalRenewFeeOnly(1);
-  },
-  methods: {
-    ...mapGetters('global', ['getFiatValue', 'network']),
-    rentPrice() {
-      return this.getRentPrice(this.duration).then(resp => {
-        if (resp) {
-          this.rentPriceETH = formatFloatingPointValue(resp.eth).value;
-          this.rentPriceUSD = this.getFiatValue()(resp.usd);
-        }
-      });
-    },
-    setDuration(item) {
-      this.duration = parseInt(item.value);
-      this.rentPrice();
-    }
+  loadingRenew: {
+    default: false,
+    type: Boolean
   }
+});
+
+// data
+const duration = ref(0);
+const rentPriceETH = ref('');
+const rentPriceUSD = ref('');
+
+// computed
+const items = computed(() => {
+  const items = [];
+  for (let i = 0; i < 20; i++) {
+    items.push({
+      name: i + 1 + ' ' + `year${i < 1 ? '' : 's'}`,
+      value: (i + 1).toString()
+    });
+  }
+  return items;
+});
+
+// watch
+watch(duration, newVal => {
+  props.getRentPricegetTotalRenewFeeOnly(newVal);
+});
+
+// mounted
+onMounted(() => {
+  rentPrice();
+  props.getRentPricegetTotalRenewFeeOnly(1);
+});
+
+// methods
+const rentPrice = () => {
+  return props.getRentPrice(duration).then(resp => {
+    if (resp) {
+      rentPriceETH.value = formatFloatingPointValue(resp.eth).value;
+      rentPriceUSD.value = getFiatValue()(resp.usd);
+    }
+  });
+};
+const setDuration = item => {
+  duration.value = parseInt(item.value);
+  rentPrice();
 };
 </script>
 <style lang="scss" scoped>

@@ -28,7 +28,7 @@
         >
           <div class="mb-5">
             <div class="mew-heading-2 mb-8 ml-2">
-              {{ $t('ens.search-domain') }}
+              {{ t('ens.search-domain') }}
             </div>
             <form @submit.prevent="findDomain">
               <v-row class="mx-0">
@@ -37,8 +37,8 @@
                     :value="name"
                     :has-clear-btn="true"
                     :rules="rules"
-                    :label="$t('ens.register.domain-name')"
-                    :placeholder="$t('ens.ph.three-char')"
+                    :label="t('ens.register.domain-name')"
+                    :placeholder="t('ens.ph.three-char')"
                     class="mr-3 flex-grow-1"
                     :error-messages="errorMessages"
                     @input="setName"
@@ -55,7 +55,7 @@
                     "
                     :has-full-width="true"
                     btn-size="xlarge"
-                    :title="$t('ens.register.name')"
+                    :title="t('ens.register.name')"
                     @click.native="findDomain"
                   />
                 </v-col>
@@ -77,7 +77,7 @@
         >
           <div class="d-flex align-center justify-space-between mb-7">
             <span class="mew-heading-2 font-weight-bold">
-              {{ $t('ens.my-domains') }}
+              {{ t('ens.my-domains') }}
               <span class="font-weight-regular">({{ totalDomains }})</span>
             </span>
           </div>
@@ -85,7 +85,7 @@
             :idx-to-expand="null"
             class="my-domains-panel"
             :panel-items="myDomains"
-            :right-action-text="$t('ens.buy-domain')"
+            :right-action-text="t('ens.buy-domain')"
             @onActionClick="buyDomain"
           >
             <template
@@ -101,7 +101,7 @@
               >
                 <v-row class="subheader-container">
                   <v-col cols="12" md="6" class="d-flex align-center">
-                    <div>{{ $t('ens.manage-domains.registrant') }}</div>
+                    <div>{{ t('ens.manage-domains.registrant') }}</div>
                     <mew-blockie
                       :address="domain.registrarAddress"
                       width="25px"
@@ -131,7 +131,7 @@
                   <v-spacer></v-spacer>
 
                   <v-col cols="12" md="6" class="d-flex align-center">
-                    <div>{{ $t('ens.manage-domains.controller') }}</div>
+                    <div>{{ t('ens.manage-domains.controller') }}</div>
                     <mew-blockie
                       :address="domain.controllerAddress"
                       width="25px"
@@ -163,7 +163,7 @@
                   class="d-flex align-center justify-space-between pb-5 pt-8 px-sm-7"
                 >
                   <span class="mew-heading-3">
-                    {{ $t('ens.manage-domains.what-to-do') }}
+                    {{ t('ens.manage-domains.what-to-do') }}
                   </span>
                 </div>
                 <v-divider class="mx-7"></v-divider>
@@ -191,7 +191,7 @@
                       >
                         <div>
                           {{
-                            $t('ens.manage-domains.expire-on', {
+                            t('ens.manage-domains.expire-on', {
                               date: domain.expiration
                             })
                           }}
@@ -288,14 +288,20 @@
   </div>
 </template>
 
-<script>
-import { mapGetters, mapState } from 'vuex';
+<script setup>
+import {
+  defineAsyncComponent,
+  ref,
+  computed,
+  watch,
+  onMounted,
+  onBeforeMount
+} from 'vue';
 import { fromWei, toBN, toWei } from 'web3-utils';
 import { clone } from 'lodash';
 import BigNumber from 'bignumber.js';
 import ENS from '@ensdomains/ensjs';
 
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin.js';
 import handlerEnsManager from './handlers/handlerEnsManager';
 import normalise from '@/core/helpers/normalise';
 import stripQuery from '@/core/helpers/stripQuery.js';
@@ -303,557 +309,551 @@ import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
 import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 import { ENS_MANAGER_ROUTE } from './configsRoutes';
+import { useAmplitude } from '@/core/composables/amplitude';
+import { useI18n } from 'vue-i18n-composable';
+import {
+  global as useGlobalStore,
+  wallet as useWalletStore,
+  external as useExternalStore
+} from '@/core/store/index.js';
+import { useRoute, useRouter } from 'vue-router/composables';
 
-export default {
-  name: 'ENSManagerLayout',
-  components: {
-    ModuleRegisterDomain: () => import('./modules/ModuleRegisterDomain'),
-    ModuleManageDomain: () => import('./modules/ModuleManageDomain'),
-    TheWrapperDapp: () => import('@/dapps/TheWrapperDapp.vue'),
-    EnsReverseLookup: () => import('./components/reverse/EnsReverseLookup')
+const ModuleRegisterDomain = defineAsyncComponent(() =>
+  import('./modules/ModuleRegisterDomain')
+);
+const ModuleManageDomain = defineAsyncComponent(() =>
+  import('./modules/ModuleManageDomain')
+);
+const TheWrapperDapp = defineAsyncComponent(() =>
+  import('@/dapps/TheWrapperDapp.vue')
+);
+const EnsReverseLookup = defineAsyncComponent(() =>
+  import('./components/reverse/EnsReverseLookup')
+);
+
+// injections/use
+const route = useRoute();
+const { trackDapp } = useAmplitude();
+const { t } = useI18n();
+const { network, gasPrice, getFiatValue } = useGlobalStore();
+const { balance, address, web3, instance } = useWalletStore();
+const { fiatValue } = useExternalStore();
+const router = useRouter();
+
+// data
+const validNetworks = SUPPORTED_NETWORKS;
+const headerImg = require('@/assets/images/icons/dapps/icon-dapp-ensmanager.svg');
+const header = {
+  title: t('ens.title'),
+  subtext: t('ens.dapp-desc')
+};
+const manageDomainOptions = [
+  {
+    label: t('ens.transfer-domain'),
+    type: 'transfer',
+    icon: 'mdi-account-arrow-right'
   },
-  mixins: [handlerAnalytics],
-  data() {
-    return {
-      validNetworks: SUPPORTED_NETWORKS,
-      headerImg: require('@/assets/images/icons/dapps/icon-dapp-ensmanager.svg'),
-      header: {
-        title: this.$t('ens.title'),
-        subtext: this.$t('ens.dapp-desc')
-      },
-      activeTab: 0,
-      loadingCommit: false,
-      loadingReg: false,
-      loadingRenew: false,
-      minimumAge: '',
-      committed: false,
-      settingIpfs: false,
-      manageDomainHandler: {},
-      manageType: '',
-      onManage: false,
-      name: '',
-      nameHandler: {},
-      ensManager: {},
-      onRegister: false,
-      searchError: '',
-      notEnoughFunds: false,
-      noFundsForRegFees: false,
-      noFundsForRenewalFees: false,
-      durationPick: '',
-      commitFeeInEth: '',
-      commitFeeInWei: '0',
-      commitFeeUsd: '0',
-      renewalInEth: '',
-      renewalInWei: '',
-      renewalInUsd: '0',
-      regFee: '0',
-      totalCost: '0',
-      totalCostUsd: '0',
-      waitingForReg: true,
-      manageDomainOptions: [
-        {
-          label: this.$t('ens.transfer-domain'),
-          type: 'transfer',
-          icon: 'mdi-account-arrow-right'
-        },
-        {
-          label: this.$t('ens.manage-domains.renew-domain'),
-          type: 'renew',
-          icon: 'mdi-autorenew'
-        },
-        {
-          label: this.$t('ens.manage-domains.manage-multi'),
-          type: 'manageMulticoin',
-          icon: 'mdi-link'
-        },
-        {
-          label: this.$t('ens.manage-domains.manage-txt'),
-          type: 'manageTxtRecord',
-          icon: 'mdi-book-open'
-        },
-        {
-          label: this.$t('ens.manage-domains.upload-site'),
-          type: 'manageUpload',
-          icon: 'mdi-cloud-upload'
-        }
-      ],
-      tabs: [
-        {
-          name: this.$t('ens.register-domain'),
-          route: { name: ENS_MANAGER_ROUTE.CORE.NAME },
-          id: 0
-        },
-        {
-          name: this.$t('ens.manage-domain'),
-          route: {
-            name: ENS_MANAGER_ROUTE.MANAGE.NAME,
-            path: ENS_MANAGER_ROUTE.MANAGE.PATH
-          },
-          id: 1
-        },
-        {
-          name: this.$t('ENS Reverse Lookup'),
-          route: {
-            name: ENS_MANAGER_ROUTE.REVERSE.NAME,
-            path: ENS_MANAGER_ROUTE.REVERSE.PATH
-          },
-          id: 2
-        }
-      ],
-      /*
-      tabs: [
-        { name: this.$t('ens.register-domain') },
-        { name: this.$t('ens.manage-domain') }
-      ],
-      */
-      myDomains: [],
-      /*,
-      ensBannerImg: ensBannerImg,
-      bannerText: {
-        title: this.$t('ens.title'),
-        subtext: this.$t('ens.dapp-desc')
-      }
-      */
-      oldTxtRecords: {}
-    };
+  {
+    label: t('ens.manage-domains.renew-domain'),
+    type: 'renew',
+    icon: 'mdi-autorenew'
   },
-  computed: {
-    ...mapGetters('global', [
-      'network',
-      'gasPrice',
-      'gasPriceByType',
-      'getFiatValue'
-    ]),
-    ...mapGetters('external', ['fiatValue']),
-    ...mapState('global', ['gasPriceType']),
-    ...mapState('wallet', ['balance', 'address', 'web3', 'instance']),
-    errorMessages() {
-      if (this.domainTaken) return this.$t('ens.domain-taken');
-      return this.searchError;
-    },
-    rules() {
-      return [
-        this.searchError === '' || this.searchError,
-        (this.name && this.name.length > 2) ||
-          this.$t('ens.warning.not-enough-char'),
-        !this.hasInvalidChars || this.$t('ens.warning.invalid-symbol'),
-        (this.name && this.name.split('.').length <= 2) ||
-          this.$t('ens.warning.invalid-symbol')
-      ];
-    },
-    hasInvalidChars() {
-      const letters = /^[0-9a-zA-Z_.-]+$/;
-      if (!letters.test(this.name)) {
-        return true;
-      }
-      return false;
-    },
-    balanceToWei() {
-      return toWei(BigNumber(this.balance).toString(), 'ether');
-    },
-    loading() {
-      return this.nameHandler?.checkingDomainAvail;
-    },
-    ensDomainAvailable() {
-      return this.nameHandler?.isAvailable;
-    },
-    isNameEmpty() {
-      return this.name === null || this.name === '';
-    },
-    domainTaken() {
-      return (
-        !this.isNameEmpty &&
-        !this.loading &&
-        !this.ensDomainAvailable &&
-        Object.keys(this.nameHandler).length !== 0
-      );
-    },
-    totalDomains() {
-      return formatIntegerToString(this.myDomains.length);
-    }
+  {
+    label: t('ens.manage-domains.manage-multi'),
+    type: 'manageMulticoin',
+    icon: 'mdi-link'
   },
-  watch: {
-    ensDomainAvailable(newVal) {
-      if (newVal === true) {
-        this.onRegister = true;
-      }
+  {
+    label: t('ens.manage-domains.manage-txt'),
+    type: 'manageTxtRecord',
+    icon: 'mdi-book-open'
+  },
+  {
+    label: t('ens.manage-domains.upload-site'),
+    type: 'manageUpload',
+    icon: 'mdi-cloud-upload'
+  }
+];
+const tabs = [
+  {
+    name: t('ens.register-domain'),
+    route: { name: ENS_MANAGER_ROUTE.CORE.NAME },
+    id: 0
+  },
+  {
+    name: t('ens.manage-domain'),
+    route: {
+      name: ENS_MANAGER_ROUTE.MANAGE.NAME,
+      path: ENS_MANAGER_ROUTE.MANAGE.PATH
     },
-    /*
+    id: 1
+  },
+  {
+    name: t('ENS Reverse Lookup'),
+    route: {
+      name: ENS_MANAGER_ROUTE.REVERSE.NAME,
+      path: ENS_MANAGER_ROUTE.REVERSE.PATH
+    },
+    id: 2
+  }
+];
+// reactive
+const activeTab = ref(0);
+const loadingCommit = ref(false);
+const loadingReg = ref(false);
+const loadingRenew = ref(false);
+const minimumAge = ref('');
+const committed = ref(false);
+const settingIpfs = ref(false);
+const manageDomainHandler = ref({});
+const manageType = ref('');
+const onManage = ref(false);
+const name = ref('');
+const nameHandler = ref({});
+const ensManager = ref({});
+const onRegister = ref(false);
+const searchError = ref('');
+const notEnoughFunds = ref(false);
+const noFundsForRegFees = ref(false);
+const noFundsForRenewalFees = ref(false);
+const durationPick = ref('');
+const commitFeeInEth = ref('');
+const commitFeeInWei = ref('0');
+const commitFeeUsd = ref('0');
+const renewalInEth = ref('');
+const renewalInWei = ref('');
+const renewalInUsd = ref('0');
+const regFee = ref('0');
+const totalCost = ref('0');
+const totalCostUsd = ref('0');
+const waitingForReg = ref(true);
+const myDomains = ref([]);
+const oldTxtRecords = ref({});
+
+// computed
+const errorMessages = computed(() => {
+  if (domainTaken.value) return t('ens.domain-taken');
+  return searchError.value;
+});
+const rules = computed(() => {
+  return [
+    searchError.value === '' || searchError,
+    (name.value && name.value.length > 2) || t('ens.warning.not-enough-char'),
+    !hasInvalidChars.value || t('ens.warning.invalid-symbol'),
+    (name.value && name.value.split('.').length <= 2) ||
+      t('ens.warning.invalid-symbol')
+  ];
+});
+const hasInvalidChars = computed(() => {
+  const letters = /^[0-9a-zA-Z_.-]+$/;
+  if (!letters.test(name.value)) {
+    return true;
+  }
+  return false;
+});
+const balanceToWei = computed(() => {
+  return toWei(BigNumber(balance).toString(), 'ether');
+});
+const loading = computed(() => {
+  return nameHandler.value?.checkingDomainAvail;
+});
+const ensDomainAvailable = computed(() => {
+  return nameHandler.value?.isAvailable;
+});
+const isNameEmpty = computed(() => {
+  return name.value === null || name.value === '';
+});
+const domainTaken = computed(() => {
+  return (
+    !isNameEmpty.value &&
+    !loading.value &&
+    !ensDomainAvailable.value &&
+    Object.keys(nameHandler.value).length !== 0
+  );
+});
+const totalDomains = computed(() => {
+  return formatIntegerToString(myDomains.value.length);
+});
+
+// watch
+watch(ensDomainAvailable, newVal => {
+  if (newVal === true) {
+    onRegister.value = true;
+  }
+});
+/*
     - watches for address state change
     - updates ensManager with new address
     - if user is onRegister it will reset and take them back
     - if user is onManage it will run getDomain to refresh domains
     */
-    address(newVal) {
-      if (newVal) {
-        this.ensManager.address = newVal;
-        if (this.onRegister) {
-          this.closeRegister();
-        }
-        this.getDomains();
-      }
-    },
-    /*
+watch(address, newVal => {
+  if (newVal) {
+    ensManager.value.address = newVal;
+    if (onRegister.value) {
+      closeRegister();
+    }
+    getDomains();
+  }
+});
+/*
     - watches for network change
     - updates ensManager with new network
     - if user is onRegister it will reset and take them back
     - if user is onManage it will run getDomain to refresh domains
     */
-    network() {
-      if (this.checkNetwork()) {
-        this.setup();
-        this.getDomains();
-      }
-      if (this.onRegister) {
-        this.closeRegister();
-      }
-    },
-    $route() {
-      this.detactUrlChangeTab();
-    }
-  },
-  beforeMount() {
-    this.setTokenFromURL();
-  },
-  mounted() {
-    /**
-     * Check url and change tab on load
-     */
-    this.detactUrlChangeTab();
-    if (this.checkNetwork()) {
-      this.setup();
-      this.getDomains();
-    }
-  },
-  methods: {
-    checkNetwork() {
-      return this.validNetworks.find(
-        item => item.chainID === this.network.type.chainID
-      );
-    },
-    setup() {
-      const ens = this.network.type.ens
-        ? new ENS({
-            provider: this.web3.eth.currentProvider,
-            ensAddress: this.network.type.ens.registry
-          })
-        : null;
-      this.ensManager = new handlerEnsManager(
-        this.network,
-        this.address,
-        this.web3,
-        ens,
-        this.gasPrice
-      );
-    },
-    detactUrlChangeTab() {
-      const currentRoute = this.$route.name;
-      if (currentRoute === ENS_MANAGER_ROUTE.MANAGE.NAME) {
-        this.activeTab = this.tabs[1].id;
-      } else if (currentRoute === ENS_MANAGER_ROUTE.REVERSE.NAME) {
-        this.activeTab = this.tabs[2].id;
-      } else {
-        this.activeTab = this.tabs[0].id;
-      }
-    },
-    tabChanged(tab) {
-      this.activeTab = tab;
-    },
-    setTokenFromURL() {
-      if (Object.keys(this.$route.query).length > 0) {
-        const { active } = stripQuery(this.$route.query);
-        this.activeTab = BigNumber(active).toNumber();
-      }
-    },
-    buyDomain() {
-      this.activeTab = 0;
-      this.trackDapp('ensBuyDomainTab');
-    },
-    /**
-     * Manage Domain
-     */
-    manage(type, idx) {
-      this.onManage = true;
-      this.manageType = type;
-      this.manageDomainHandler = this.myDomains[idx];
-      this.oldTxtRecords = clone(this.myDomains[idx].txtRecords);
-    },
-    getDomains() {
-      this.ensManager
-        .getAllNamesForAddress()
-        .then(res => {
-          res.forEach(domain => {
-            domain.hasActiveBorder = !domain.expired;
-            domain.disabled = domain.expired;
-            domain.colorTheme = domain.expired ? 'redMedium' : 'greyLight';
-            domain.warningBadge = domain.expired
-              ? {
-                  color: 'redPrimary',
-                  text: this.$t('ens.expired')
-                }
-              : '';
-          });
-          this.myDomains = res;
-        })
-        .catch(err => {
-          Toast(err, {}, ERROR);
-        });
-    },
-    closeManage() {
-      this.onManage = false;
-      this.settingIpfs = false;
-      this.trackDapp('ensCloseManageTab');
-    },
-    transfer(address) {
-      this.trackDapp('ensDomainTransferEvent');
-      this.manageDomainHandler
-        .transfer(address)
-        .then(() => {
-          setTimeout(() => {
-            this.getDomains();
-          }, 15000);
-          this.trackDapp('ensTransferred');
-        })
-        .catch(err => {
-          this.instance.errorHandler(err.message ? err.message : err);
-        });
-      this.closeManage();
-    },
+watch(network, () => {
+  if (checkNetwork()) {
+    setup();
+    getDomains();
+  }
+  if (onRegister.value) {
+    closeRegister();
+  }
+});
+watch(route, () => {
+  detactUrlChangeTab();
+});
 
-    async getTotalRenewFeeOnly(duration) {
-      this.loadingRenew = true;
-      const renewFeeOnly = await this.manageDomainHandler.totalRenewCost(
-        duration
-      ); // ETH
-      if (!renewFeeOnly) {
-        this.noFundsForRenewalFees = true;
-      } else {
-        this.renewalInEth = renewFeeOnly;
-        this.renewalInWei = toWei(renewFeeOnly);
-        this.renewalInUsd = new BigNumber(this.renewalInEth)
-          .times(this.fiatValue)
-          .toFixed(2);
-        if (toBN(this.renewalInWei).gte(this.balance)) {
-          // commit fee vs current user balance in wei
-          this.noFundsForRenewalFees = true;
-        } else {
-          this.noFundsForRenewalFees = false;
-        }
-      }
-      this.loadingRenew = false;
-    },
+// beforeMount
+onBeforeMount(() => {
+  setTokenFromURL();
+});
 
-    renew(duration) {
-      this.manageDomainHandler
-        .renew(duration, this.balanceToWei)
-        .then(() => {
-          this.getDomains();
-          this.trackDapp('ensDomainRenew');
-        })
-        .catch(err => {
-          this.instance.errorHandler(err.message ? err.message : err);
-        });
-      this.closeManage();
-    },
-    setMulticoin(coin) {
-      this.manageDomainHandler
-        .setMulticoin(coin)
-        .then(this.getDomains)
-        .catch(err => {
-          this.instance.errorHandler(err.message ? err.message : err);
-        });
-      this.closeManage();
-    },
-    setTextRecords(records) {
-      this.manageDomainHandler
-        .setTxtRecord(records)
-        .then(this.getDomains)
-        .catch(err => {
-          this.manageDomainHandler.txtRecords = this.oldTxtRecords;
-          this.instance.errorHandler(err.message ? err.message : err);
-        });
-      this.closeManage();
-    },
-    uploadFile(file) {
-      this.settingIpfs = true;
-      this.manageDomainHandler
-        .uploadFile(file)
-        .then(res => {
-          this.manageDomainHandler.setIPFSHash(res);
-          this.trackDapp('ensFileUpload');
-        })
-        .then(resp => {
-          this.settingIpfs = false;
-          this.uploadedHash = resp;
-          this.closeManage();
-        })
-        .catch(err => {
-          this.instance.errorHandler(err.message ? err.message : err);
-        });
-    },
-    setIpfs(hash) {
-      this.settingIpfs = true;
-      this.manageDomainHandler
-        .setIPFSHash(hash)
-        .then(() => {
-          this.settingIpfs = false;
-          this.trackDapp('ensSetIpfs');
-        })
-        .catch(err => {
-          this.instance.errorHandler(err.message ? err.message : err);
-        });
-      this.closeManage();
-    },
-    async findDomain() {
-      try {
-        this.nameHandler = await this.ensManager.searchName(this.name);
-        this.trackDapp('ensFindDomain');
-      } catch (e) {
-        Toast(e, {}, ERROR);
-      }
-    },
-    closeRegister() {
-      this.onRegister = false;
-      this.committed = false;
-      this.loadingCommit = false;
-      this.loadingReg = false;
-      this.name = '';
-      this.minimumAge = '';
-      this.nameHandler = {};
-      this.$router.push({ name: ENS_MANAGER_ROUTE.ENS_MANAGER.NAME });
-      this.trackDapp('ensCloseRegister');
-    },
-    setName(name) {
-      this.searchError = '';
-      if (this.name === null || this.name === '') {
-        this.nameHandler = {};
-      }
-      try {
-        this.name = normalise(name);
-      } catch (e) {
-        this.searchError = e.message.includes('Failed to validate')
-          ? 'Invalid name!'
-          : e.message;
-        this.name = name;
-      }
-    },
-    register(duration) {
-      this.trackDapp('ensDomainRegisterEvent');
-      return this.nameHandler
-        .register(duration, this.balanceToWei)
-        .on('transactionHash', () => {
-          Toast(`Registering ENS name: ${this.name}`, {}, SUCCESS);
-          this.loadingReg = true;
-        })
-        .once('receipt', () => {
-          setTimeout(() => {
-            this.getDomains();
-          }, 15000);
-          this.trackDapp('ensDomainRegisterSuccess');
-          Toast(`Registration successful!`, {}, SUCCESS);
-        })
-        .on('error', () => {
-          this.loadingReg = false;
-          this.trackDapp('ensDomainRegisterFail');
-          Toast(`Registering ENS name: ${this.name} failed`, {}, ERROR);
-        });
-    },
-    commit() {
-      let waitingTime;
-      this.trackDapp('ensDomainCommitEvent');
-      this.nameHandler
-        .createCommitment(this.durationPick)
-        .on('transactionHash', () => {
-          this.nameHandler.getMinimumAge().then(resp => {
-            this.minimumAge = resp;
-            waitingTime = parseInt(resp);
-          });
-        })
-        .on('receipt', () => {
-          this.loadingCommit = true;
-          this.committed = false;
-          this.waitingForReg = true;
-          this.trackDapp('ensDomainCommittReceipt');
-          setTimeout(() => {
-            this.committed = true;
-            this.waitingForReg = false;
-            this.getTotalCost(); //calling total cost for regfees
-          }, waitingTime * 1000);
-        })
-        .on('error', err => {
-          this.loadingCommit = false;
-          this.committed = false;
-          this.waitingForReg = false;
-          this.notEnoughFunds = false;
-          this.trackDapp('ensDomainRegisterFail');
-          Toast(err, {}, ERROR);
-        });
-    },
+// mount
+onMounted(() => {
+  /**
+   * Check url and change tab on load
+   */
+  detactUrlChangeTab();
+  if (checkNetwork()) {
+    setup();
+    getDomains();
+  }
+});
 
-    async getCommitFeeOnly() {
-      this.trackDapp('ensDomainInitializeRegister');
-      const commitFeeOnly = await this.nameHandler.getCommitmentFees(
-        this.durationPick
-      ); // ETH
-      this.commitFeeInEth = commitFeeOnly.toString();
-      this.commitFeeInWei = toWei(commitFeeOnly);
-      this.commitFeeUsd = this.getFiatValue(
-        new BigNumber(this.commitFeeInEth).times(this.fiatValue).toFixed(2)
-      );
-      if (toBN(this.commitFeeInWei).gte(this.balance)) {
-        // commit fee vs current user balance in wei
-        this.notEnoughFunds = true;
-      } else {
-        this.notEnoughFunds = false;
-      }
-    },
-
-    async getTotalCost() {
-      const registerFeesOnly = await this.nameHandler.getRegFees(
-        this.durationPick,
-        this.balance
-      );
-      if (!registerFeesOnly) {
-        this.noFundsForRegFees = true;
-      } else {
-        this.regFee = registerFeesOnly;
-        const feesAdded = new BigNumber(this.regFee).plus(this.commitFeeInEth);
-        this.totalCost = feesAdded.toString();
-        this.totalCostUsd = this.getFiatValue(
-          new BigNumber(this.totalCost).times(this.fiatValue).toFixed(2)
-        );
-        if (this.totalCost >= this.balance) {
-          this.noFundsForRegFees = true;
-        } else {
-          this.noFundsForRegFees = false;
-        }
-      }
-      this.loadingCommit = false;
-    },
-
-    generateKeyPhrase() {
-      if (this.nameHandler.generateKeyPhrase) {
-        this.nameHandler.generateKeyPhrase();
-      }
-    },
-
-    getRentPrice(duration) {
-      this.durationPick = duration;
-      const handler = this.onManage
-        ? this.manageDomainHandler
-        : this.nameHandler;
-      return handler.getRentPrice(this.durationPick).then(resp => {
-        if (resp) {
-          const ethValue = fromWei(resp);
-          return {
-            wei: resp,
-            eth: ethValue,
-            usd: new BigNumber(ethValue).times(this.fiatValue).toFixed(2)
-          };
-        }
+// methods
+const checkNetwork = () => {
+  return validNetworks.find(item => item.chainID === network.type.chainID);
+};
+const setup = () => {
+  const ens = network.type.ens
+    ? new ENS({
+        provider: web3.eth.currentProvider,
+        ensAddress: network.type.ens.registry
+      })
+    : null;
+  ensManager.value = new handlerEnsManager(
+    network,
+    address,
+    web3,
+    ens,
+    gasPrice
+  );
+};
+const detactUrlChangeTab = () => {
+  const currentRoute = route.name;
+  if (currentRoute === ENS_MANAGER_ROUTE.MANAGE.NAME) {
+    activeTab.value = tabs[1].id;
+  } else if (currentRoute === ENS_MANAGER_ROUTE.REVERSE.NAME) {
+    activeTab.value = tabs[2].id;
+  } else {
+    activeTab.value = tabs[0].id;
+  }
+};
+const tabChanged = tab => {
+  activeTab.value = tab;
+};
+const setTokenFromURL = () => {
+  if (Object.keys(route.query).length > 0) {
+    const { active } = stripQuery(route.query);
+    activeTab.value = BigNumber(active).toNumber();
+  }
+};
+const buyDomain = () => {
+  activeTab.value = 0;
+  trackDapp('ensBuyDomainTab');
+};
+/**
+ * Manage Domain
+ */
+const manage = (type, idx) => {
+  onManage.value = true;
+  manageType.value = type;
+  manageDomainHandler.value = myDomains.value[idx];
+  oldTxtRecords.value = clone(myDomains.value[idx].txtRecords);
+};
+const getDomains = () => {
+  ensManager.value
+    .getAllNamesForAddress()
+    .then(res => {
+      res.forEach(domain => {
+        domain.hasActiveBorder = !domain.expired;
+        domain.disabled = domain.expired;
+        domain.colorTheme = domain.expired ? 'redMedium' : 'greyLight';
+        domain.warningBadge = domain.expired
+          ? {
+              color: 'redPrimary',
+              text: t('ens.expired')
+            }
+          : '';
       });
+      myDomains.value = res;
+    })
+    .catch(err => {
+      Toast(err, {}, ERROR);
+    });
+};
+const closeManage = () => {
+  onManage.value = false;
+  settingIpfs.value = false;
+  trackDapp('ensCloseManageTab');
+};
+const transfer = address => {
+  trackDapp('ensDomainTransferEvent');
+  manageDomainHandler.value
+    .transfer(address)
+    .then(() => {
+      setTimeout(() => {
+        getDomains();
+      }, 15000);
+      trackDapp('ensTransferred');
+    })
+    .catch(err => {
+      instance.errorHandler(err.message ? err.message : err);
+    });
+  closeManage();
+};
+
+const getTotalRenewFeeOnly = async duration => {
+  loadingRenew.value = true;
+  const renewFeeOnly = await manageDomainHandler.value.totalRenewCost(duration); // ETH
+  if (!renewFeeOnly) {
+    noFundsForRenewalFees.value = true;
+  } else {
+    renewalInEth.value = renewFeeOnly;
+    renewalInWei.value = toWei(renewFeeOnly);
+    renewalInUsd.value = new BigNumber(renewalInEth.value)
+      .times(fiatValue)
+      .toFixed(2);
+    if (toBN(renewalInWei).gte(balance)) {
+      // commit fee vs current user balance in wei
+      noFundsForRenewalFees.value = true;
+    } else {
+      noFundsForRenewalFees.value = false;
     }
   }
+  loadingRenew.value = false;
+};
+
+const renew = duration => {
+  manageDomainHandler.value
+    .renew(duration, balanceToWei.value)
+    .then(() => {
+      getDomains();
+      trackDapp('ensDomainRenew');
+    })
+    .catch(err => {
+      instance.errorHandler(err.message ? err.message : err);
+    });
+  closeManage();
+};
+const setMulticoin = coin => {
+  manageDomainHandler.value
+    .setMulticoin(coin)
+    .then(getDomains)
+    .catch(err => {
+      instance.errorHandler(err.message ? err.message : err);
+    });
+  closeManage();
+};
+const setTextRecords = records => {
+  manageDomainHandler.value
+    .setTxtRecord(records)
+    .then(getDomains)
+    .catch(err => {
+      manageDomainHandler.value.txtRecords = oldTxtRecords;
+      instance.errorHandler(err.message ? err.message : err);
+    });
+  closeManage();
+};
+const uploadFile = file => {
+  settingIpfs.value = true;
+  manageDomainHandler.value
+    .uploadFile(file)
+    .then(res => {
+      manageDomainHandler.value.setIPFSHash(res);
+      trackDapp('ensFileUpload');
+    })
+    .then(() => {
+      settingIpfs.value = false;
+      closeManage();
+    })
+    .catch(err => {
+      instance.errorHandler(err.message ? err.message : err);
+    });
+};
+const setIpfs = hash => {
+  settingIpfs.value = true;
+  manageDomainHandler.value
+    .setIPFSHash(hash)
+    .then(() => {
+      settingIpfs.value = false;
+      trackDapp('ensSetIpfs');
+    })
+    .catch(err => {
+      instance.errorHandler(err.message ? err.message : err);
+    });
+  closeManage();
+};
+const findDomain = async () => {
+  try {
+    nameHandler.value = await ensManager.value.searchName(name);
+    trackDapp('ensFindDomain');
+  } catch (e) {
+    Toast(e, {}, ERROR);
+  }
+};
+const closeRegister = () => {
+  onRegister.value = false;
+  committed.value = false;
+  loadingCommit.value = false;
+  loadingReg.value = false;
+  name.value = '';
+  minimumAge.value = '';
+  nameHandler.value = {};
+  router.push({ name: ENS_MANAGER_ROUTE.ENS_MANAGER.NAME });
+  trackDapp('ensCloseRegister');
+};
+const setName = passedName => {
+  searchError.value = '';
+  if (passedName === null || passedName === '') {
+    nameHandler.value = {};
+  }
+  try {
+    name.value = normalise(passedName);
+  } catch (e) {
+    searchError.value = e.message.includes('Failed to validate')
+      ? 'Invalid name!'
+      : e.message;
+    name.value = passedName;
+  }
+};
+const register = duration => {
+  trackDapp('ensDomainRegisterEvent');
+  return nameHandler.value
+    .register(duration, balanceToWei)
+    .on('transactionHash', () => {
+      Toast(`Registering ENS name: ${name.value}`, {}, SUCCESS);
+      loadingReg.value = true;
+    })
+    .once('receipt', () => {
+      setTimeout(() => {
+        getDomains();
+      }, 15000);
+      trackDapp('ensDomainRegisterSuccess');
+      Toast(`Registration successful!`, {}, SUCCESS);
+    })
+    .on('error', () => {
+      loadingReg.value = false;
+      trackDapp('ensDomainRegisterFail');
+      Toast(`Registering ENS name: ${name.value} failed`, {}, ERROR);
+    });
+};
+const commit = () => {
+  let waitingTime;
+  trackDapp('ensDomainCommitEvent');
+  nameHandler.value
+    .createCommitment(durationPick)
+    .on('transactionHash', () => {
+      nameHandler.value.getMinimumAge().then(resp => {
+        minimumAge.value = resp;
+        waitingTime = parseInt(resp);
+      });
+    })
+    .on('receipt', () => {
+      loadingCommit.value = true;
+      committed.value = false;
+      waitingForReg.value = true;
+      trackDapp('ensDomainCommittReceipt');
+      setTimeout(() => {
+        committed.value = true;
+        waitingForReg.value = false;
+        getTotalCost(); //calling total cost for regfees
+      }, waitingTime * 1000);
+    })
+    .on('error', err => {
+      loadingCommit.value = false;
+      committed.value = false;
+      waitingForReg.value = false;
+      notEnoughFunds.value = false;
+      trackDapp('ensDomainRegisterFail');
+      Toast(err, {}, ERROR);
+    });
+};
+
+const getCommitFeeOnly = async () => {
+  trackDapp('ensDomainInitializeRegister');
+  const commitFeeOnly = await nameHandler.value.getCommitmentFees(
+    durationPick.value
+  ); // ETH
+  commitFeeInEth.value = commitFeeOnly.toString();
+  commitFeeInWei.value = toWei(commitFeeOnly);
+  commitFeeUsd.value = getFiatValue(
+    new BigNumber(commitFeeInEth.value).times(fiatValue).toFixed(2)
+  );
+  if (toBN(commitFeeInWei.value).gte(balance)) {
+    // commit fee vs current user balance in wei
+    notEnoughFunds.value = true;
+  } else {
+    notEnoughFunds.value = false;
+  }
+};
+
+const getTotalCost = async () => {
+  const registerFeesOnly = await nameHandler.value.getRegFees(
+    durationPick.value,
+    balance
+  );
+  if (!registerFeesOnly) {
+    noFundsForRegFees.value = true;
+  } else {
+    regFee.value = registerFeesOnly;
+    const feesAdded = new BigNumber(regFee.value).plus(commitFeeInEth.value);
+    totalCost.value = feesAdded.toString();
+    totalCostUsd.value = getFiatValue(
+      new BigNumber(totalCost.value).times(fiatValue).toFixed(2)
+    );
+    if (totalCost.value >= balance) {
+      noFundsForRegFees.value = true;
+    } else {
+      noFundsForRegFees.value = false;
+    }
+  }
+  loadingCommit.value = false;
+};
+
+const generateKeyPhrase = () => {
+  if (nameHandler.value.generateKeyPhrase) {
+    nameHandler.value.generateKeyPhrase();
+  }
+};
+
+const getRentPrice = duration => {
+  durationPick.value = duration;
+  const handler = onManage.value
+    ? manageDomainHandler.value
+    : nameHandler.value;
+  return handler.getRentPrice(durationPick.value).then(resp => {
+    if (resp) {
+      const ethValue = fromWei(resp);
+      return {
+        wei: resp,
+        eth: ethValue,
+        usd: new BigNumber(ethValue).times(fiatValue).toFixed(2)
+      };
+    }
+  });
 };
 </script>
 

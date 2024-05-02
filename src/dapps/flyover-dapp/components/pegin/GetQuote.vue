@@ -2,7 +2,7 @@
   <div>
     <mew-select
       :has-filter="false"
-      :label="$t('flyover.pegin.provider')"
+      :label="t('flyover.pegin.provider')"
       :items="providers"
       normal-dropdown
       class="mr-3 flex-grow-1 mb-4"
@@ -12,16 +12,16 @@
     <mew-input
       v-model="rskAddress"
       :has-clear-btn="false"
-      :label="$t('flyover.pegin.quote.rskAddress')"
-      :placeholder="$t('flyover.pegin.quote.rskAddress')"
+      :label="t('flyover.pegin.quote.rskAddress')"
+      :placeholder="t('flyover.pegin.quote.rskAddress')"
       class="mr-3 flex-grow-1"
     />
 
     <mew-input
       v-model="btcAddress"
       :has-clear-btn="false"
-      :label="$t('flyover.pegin.quote.btcAddress')"
-      :placeholder="$t('flyover.pegin.quote.btcAddress')"
+      :label="t('flyover.pegin.quote.btcAddress')"
+      :placeholder="t('flyover.pegin.quote.btcAddress')"
       class="mr-3 flex-grow-1"
     />
 
@@ -29,8 +29,8 @@
       <mew-input
         v-model="amount"
         :has-clear-btn="false"
-        :label="$t('flyover.pegin.quote.amountBTC')"
-        :placeholder="$t('flyover.pegin.quote.amountBTC')"
+        :label="t('flyover.pegin.quote.amountBTC')"
+        :placeholder="t('flyover.pegin.quote.amountBTC')"
         class="mr-3 flex-grow-1"
       />
       <div class="notes">{{ amountNote }}</div>
@@ -51,104 +51,106 @@
           :disabled="loading"
           :has-full-width="true"
           btn-size="xlarge"
-          :title="$t('flyover.pegin.quote.quoteBtn')"
-          @click.native="getQuote"
+          :title="t('flyover.pegin.quote.quoteBtn')"
+          @click.native="fetchQuote"
         />
       </v-col>
     </v-row>
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, onMounted, defineEmits } from 'vue';
 import { getQuote } from '../../handlers/pegin';
-import { mapState } from 'vuex';
 import { fromBase, toBase } from '@/core/helpers/unit';
 import { getProviders, getDetails } from '../../handlers/helpers/provider';
+import { wallet as useWalletStore } from '@/core/store/index.js';
+import { useI18n } from 'vue-i18n-composable';
 
-export default {
-  name: 'GetQuote',
-  data() {
-    return {
-      msg: '',
-      loading: false,
-      amount: '0.005',
-      rskAddress: null,
-      btcAddress: '',
-      provider: null,
-      providers: [],
-      amountNote: '',
-      siteKey: ''
-    };
-  },
-  computed: {
-    ...mapState('wallet', ['instance'])
-  },
-  mounted() {
-    this.msg = '';
-    getDetails()
-      .then(data => {
-        this.siteKey = data.siteKey;
-        const max = fromBase(parseFloat(data.pegin.maxTransactionValue), 18);
-        const min = fromBase(parseFloat(data.pegin.minTransactionValue), 18);
-        this.amountNote = `min: ${min}, max: ${max} btc`;
-      })
-      .catch(() => {
-        this.msg = 'No liquidity providers available!';
+// emits
+const emit = defineEmits(['onSubmit']);
+
+// injections
+const { instance } = useWalletStore();
+const { t } = useI18n();
+
+// data
+const msg = ref('');
+const loading = ref(false);
+const amount = ref('0.005');
+const rskAddress = ref(null);
+const btcAddress = ref('');
+const provider = ref(null);
+const providers = ref([]);
+const amountNote = ref('');
+const siteKey = ref('');
+
+// onMounted
+onMounted(() => {
+  msg.value = '';
+  getDetails()
+    .then(data => {
+      siteKey.value = data.siteKey;
+      const max = fromBase(parseFloat(data.pegin.maxTransactionValue), 18);
+      const min = fromBase(parseFloat(data.pegin.minTransactionValue), 18);
+      amountNote.value = `min: ${min}, max: ${max} btc`;
+    })
+    .catch(() => {
+      msg.value = 'No liquidity providers available!';
+    });
+
+  getProviders()
+    .then(data => {
+      rskAddress.value = instance.getAddressString();
+      providers.value = data.map(provider => {
+        return {
+          ...provider,
+          name: `${provider.name}-(${provider.providerType})`
+        };
       });
+    })
+    .catch(() => {
+      msg.value = 'No liquidity providers available!';
+    });
+});
 
-    getProviders()
-      .then(data => {
-        this.rskAddress = this.instance.getAddressString();
-        this.providers = data.map(provider => {
-          return {
-            ...provider,
-            name: `${provider.name}-(${provider.providerType})`
-          };
-        });
-      })
-      .catch(() => {
-        this.msg = 'No liquidity providers available!';
+// methods
+const fetchQuote = async () => {
+  loading.value = true;
+  msg.value = '';
+  const payload = {
+    callEoaOrContractAddress: instance.getAddressString(),
+    bitcoinRefundAddress: btcAddress.value,
+    rskRefundAddress: rskAddress.value,
+    valueToTransfer: parseFloat(toBase(parseFloat(amount.value), 18)),
+    callContractArguments: ''
+  };
+
+  try {
+    const quoteReply = await getQuote(provider, payload);
+
+    if (quoteReply.length == 0) {
+      msg.value = 'No quote to accept';
+    } else {
+      emit('onSubmit', {
+        ...quoteReply[0],
+        quoteUrl: provider,
+        siteKey: siteKey.value
       });
-  },
-  methods: {
-    async getQuote() {
-      this.loading = true;
-      this.msg = '';
-      const payload = {
-        callEoaOrContractAddress: this.instance.getAddressString(),
-        bitcoinRefundAddress: this.btcAddress,
-        rskRefundAddress: this.rskAddress,
-        valueToTransfer: parseFloat(toBase(parseFloat(this.amount), 18)),
-        callContractArguments: ''
-      };
-
-      try {
-        const quoteReply = await getQuote(this.provider, payload);
-
-        if (quoteReply.length == 0) {
-          this.msg = 'No quote to accept';
-        } else {
-          this.$emit('onSubmit', {
-            ...quoteReply[0],
-            quoteUrl: this.provider,
-            siteKey: this.siteKey
-          });
-        }
-      } catch (e) {
-        let detail = '';
-        if (e.details && e.details.maxValueTotransfer) {
-          detail = fromBase(e.details.maxValueTotransfer, 18);
-        }
-
-        this.msg = `${e.message} ${detail}`;
-      }
-      this.loading = false;
-    },
-    setProvider(provider) {
-      if (provider) {
-        this.provider = provider.apiBaseUrl;
-      }
     }
+  } catch (e) {
+    let detail = '';
+    if (e.details && e.details.maxValueTotransfer) {
+      detail = fromBase(e.details.maxValueTotransfer, 18);
+    }
+
+    msg.value = `${e.message} ${detail}`;
+  }
+  loading.value = false;
+};
+const setProvider = provider => {
+  if (provider) {
+    provider = provider.apiBaseUrl;
   }
 };
 </script>

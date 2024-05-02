@@ -50,10 +50,10 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { defineProps, ref, computed, watch, onMounted } from 'vue';
 import { isEmpty } from 'lodash';
 import ENS from '@ensdomains/ensjs';
-import { mapGetters, mapState } from 'vuex';
 
 import PermanentNameModule from '../../handlers/handlerPermanentName';
 import NameResolver from '@/modules/name-resolver/index';
@@ -62,179 +62,174 @@ import metainfo from '../../metainfo.js';
 
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { toBNSafe } from '@/core/helpers/numberFormatHelper';
-export default {
-  name: 'EnsReverseLookup',
-  props: {
-    address: {
-      default: '',
-      type: String
-    },
-    name: {
-      default: '',
-      type: String
-    },
-    durationPick: {
-      default: '',
-      type: String
-    },
-    ensManager: {
-      default: () => {},
-      type: Object
-    }
+import {
+  global as useGlobalStore,
+  wallet as useWalletStore
+} from '@/core/store/index.js';
+
+// injections/use
+const { network, gasPrice } = useGlobalStore();
+const { balance, web3, address } = useWalletStore();
+
+// props
+const props = defineProps({
+  address: {
+    default: '',
+    type: String
   },
-  data() {
-    return {
-      ensLookupResults: null,
-      hasDomains: false,
-      selectedDomain: { loading: false, fee: toBNSafe(0), error: '' },
-      selectedDomainAddr: '',
-      permHandler: {},
-      hasReverseRecordNames: false,
-      reverseRecordNames: '',
-      domainListItems: [],
-      nameResolver: null
-    };
+  name: {
+    default: '',
+    type: String
   },
-  computed: {
-    ...mapGetters('global', [
-      'network',
-      'gasPrice',
-      'gasPriceByType',
-      'getFiatValue'
-    ]),
-    ...mapGetters('external', ['fiatValue']),
-    ...mapState('global', ['gasPriceType']),
-    ...mapState('wallet', ['balance', 'web3', 'instance']),
-    disableRegister() {
-      if (
-        !this.selectedDomain.hasOwnProperty('address') ||
-        !this.selectedDomain.hasOwnProperty('name')
-      )
-        return true;
-      return (
-        (!this.selectedDomain.value &&
-          toBNSafe(this.balance).lt(this.selectedDomain.fee)) ||
-        this.selectedDomain.error.length > 0
-      );
-    }
+  durationPick: {
+    default: '',
+    type: String
   },
-  watch: {
-    network() {
-      if (this.checkNetwork()) this.setup();
-    },
-    address(addr) {
-      if (this.checkNetwork() && addr) this.setup();
-    },
-    web3() {
-      if (this.checkNetwork()) this.setup();
-    }
-  },
-  async mounted() {
-    if (this.checkNetwork()) await this.setup();
-  },
-  methods: {
-    async setDomainListItems() {
-      const array = [];
-      const { name } = await this.nameResolver.resolveAddress(this.address);
-      this.ensLookupResults?.forEach(async i => {
-        i.loading = true;
-        i.fee = toBNSafe(0);
-        i.error = '';
-        /**
-         * check if address already has a reverse name
-         */
-        if (!name) {
-          try {
-            const gas = await this.permHandler.getNameReverseData(i.name);
-            i.fee = toBNSafe(gas * this.gasPrice);
-            if (toBNSafe(this.balance).lt(i.fee)) {
-              i.error = `Insufficient amount of ${this.network.type.currencyName}`;
-            }
-          } catch {
-            i.error =
-              'An error occurred while retrieving the domain information';
-            i.loading = false;
-            return array.push(i);
-          }
+  ensManager: {
+    default: () => {},
+    type: Object
+  }
+});
+
+// data
+const ensLookupResults = ref(null);
+const hasDomains = ref(false);
+const selectedDomain = ref({ loading: false, fee: toBNSafe(0), error: '' });
+const selectedDomainAddr = ref('');
+const permHandler = ref({});
+const hasReverseRecordNames = ref(false);
+const reverseRecordNames = ref('');
+const domainListItems = ref([]);
+const nameResolver = ref(null);
+
+// computed
+const disableRegister = computed(() => {
+  if (
+    !selectedDomain.value.hasOwnProperty('address') ||
+    !selectedDomain.value.hasOwnProperty('name')
+  )
+    return true;
+  return (
+    (!selectedDomain.value.value &&
+      toBNSafe(balance).lt(selectedDomain.value.fee)) ||
+    selectedDomain.value.error.length > 0
+  );
+});
+
+// watch
+watch(network, () => {
+  if (checkNetwork()) setup();
+});
+watch(address, addr => {
+  if (checkNetwork() && addr) setup();
+});
+watch(web3, () => {
+  if (checkNetwork()) setup();
+});
+
+// onMounted
+onMounted(async () => {
+  if (checkNetwork()) await setup();
+});
+
+// methods
+const checkNetwork = () => {
+  return metainfo.networks.find(item => item.chainID === network.type.chainID);
+};
+const setDomain = value => {
+  selectedDomain.value = value;
+  getReverseRecordNames(selectedDomainAddr.value);
+};
+const setDomainListItems = async () => {
+  const array = [];
+  const { name } = await nameResolver.value.resolveAddress(address);
+  ensLookupResults.value?.forEach(async i => {
+    i.loading = true;
+    i.fee = toBNSafe(0);
+    i.error = '';
+    /**
+     * check if address already has a reverse name
+     */
+    if (!name) {
+      try {
+        const gas = await permHandler.value.getNameReverseData(i.name);
+        i.fee = toBNSafe(gas * gasPrice);
+        if (toBNSafe(balance).lt(i.fee)) {
+          i.error = `Insufficient amount of ${network.type.currencyName}`;
         }
+      } catch {
+        i.error = 'An error occurred while retrieving the domain information';
         i.loading = false;
         return array.push(i);
-      }) || [];
-      this.domainListItems = array;
-    },
-    checkNetwork() {
-      return metainfo.networks.find(
-        item => item.chainID === this.network.type.chainID
-      );
-    },
-    async setup() {
-      await this.findDomainByAddress();
-      const ens = this.network.type.ens
-        ? new ENS({
-            provider: this.web3.eth.currentProvider,
-            ensAddress: this.network.type.ens.registry
-          })
-        : null;
-      this.permHandler = new PermanentNameModule(
-        this.name,
-        this.address,
-        this.network,
-        this.web3,
-        ens,
-        this.durationPick
-      );
-      this.nameResolver = new NameResolver(this.network, this.web3);
-      this.selectedDomain = { loading: false, fee: toBNSafe(0), error: '' };
-      await this.setDomainListItems();
-      this.getReverseRecordNames();
-    },
-    async fetchDomains() {
-      return await this.ensManager.getAllNamesForAddress(this.address);
-    },
-    async findDomainByAddress() {
-      try {
-        this.hasDomains = true;
-        const domains = await this.fetchDomains();
-        if (isEmpty(domains)) this.hasDomains = false;
-        this.ensLookupResults = domains.map(item => {
-          return {
-            name: item.name,
-            value: item.nameHash,
-            address: item.address
-          };
-        });
-      } catch (e) {
-        Toast(e, {}, ERROR);
-      }
-    },
-    setDomain(value) {
-      this.selectedDomain = value;
-      this.getReverseRecordNames(this.selectedDomainAddr);
-    },
-    async setReverseRecord(chosenDomain) {
-      try {
-        const reverseRecord = await this.permHandler.setNameReverseRecord(
-          chosenDomain.name
-        );
-        this.hasReverseRecordNames = true;
-        return reverseRecord;
-      } catch (e) {
-        const err = errorHandler(e);
-        if (err) Toast(err, {}, ERROR);
-      }
-    },
-    async getReverseRecordNames() {
-      try {
-        const ens = this.network.type.ens
-          ? new ENS(this.web3.currentProvider, this.network.type.ens.registry)
-          : null;
-        const reverse = ens.reverse(this.address);
-        this.reverseRecordNames = await reverse.name();
-        this.hasReverseRecordNames = true;
-      } catch (e) {
-        this.hasReverseRecordNames = false;
       }
     }
+    i.loading = false;
+    return array.push(i);
+  }) || [];
+  domainListItems.value = array;
+};
+const setup = async () => {
+  await findDomainByAddress();
+  const ens = network.type.ens
+    ? new ENS({
+        provider: web3.eth.currentProvider,
+        ensAddress: network.type.ens.registry
+      })
+    : null;
+  permHandler.value = new PermanentNameModule(
+    props.name,
+    address,
+    network,
+    web3,
+    ens,
+    props.durationPick
+  );
+  nameResolver.value = new NameResolver(network, web3);
+  selectedDomain.value = { loading: false, fee: toBNSafe(0), error: '' };
+  await setDomainListItems();
+  getReverseRecordNames();
+};
+const fetchDomains = async () => {
+  return await props.ensManager.value.getAllNamesForAddress(address);
+};
+const findDomainByAddress = async () => {
+  try {
+    hasDomains.value = true;
+    const domains = await fetchDomains();
+    if (isEmpty(domains)) hasDomains.value = false;
+    ensLookupResults.value = domains.map(item => {
+      return {
+        name: item.name,
+        value: item.nameHash,
+        address: item.address
+      };
+    });
+  } catch (e) {
+    Toast(e, {}, ERROR);
+  }
+};
+const setReverseRecord = async chosenDomain => {
+  try {
+    const reverseRecord = await permHandler.value.setNameReverseRecord(
+      chosenDomain.name
+    );
+    hasReverseRecordNames.value = true;
+    return reverseRecord;
+  } catch (e) {
+    const err = errorHandler(e);
+    if (err) Toast(err, {}, ERROR);
+  }
+};
+const getReverseRecordNames = async () => {
+  try {
+    const ens = network.type.ens
+      ? new ENS(web3.currentProvider, network.type.ens.registry)
+      : null;
+    const reverse = ens.reverse(address);
+    reverseRecordNames.value = await reverse.name();
+    hasReverseRecordNames.value = true;
+  } catch (e) {
+    hasReverseRecordNames.value = false;
   }
 };
 </script>

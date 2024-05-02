@@ -126,206 +126,210 @@
   </div>
 </template>
 
-<script>
-import { mapState, mapGetters } from 'vuex';
+<script setup>
+import {
+  defineAsyncComponent,
+  defineProps,
+  ref,
+  computed,
+  watch,
+  onMounted
+} from 'vue';
 
 import { ETH_BLOCKS_ROUTE } from '../configsRoutes';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 import { validBlockNumber } from '../handlers/helpers/common';
-
 import HandlerMyBlocks from '../handlers/handlerMyBlocks';
+import {
+  global as useGlobalStore,
+  wallet as useWalletStore,
+  ethBlocksTxs as useEthBlocksTxsStore
+} from '@/core/store/index.js';
+import { useRouter } from 'vue-router/composables';
 
-export default {
-  name: 'ModuleEthBlocksMyBlocks',
-  components: {
-    BlocksLoading: () => import('../components/BlocksLoading.vue'),
-    BlocksSort: () => import('../components/BlocksSort.vue'),
-    ModuleEthBlockInfo: () => import('./ModuleEthBlockInfo.vue')
-  },
-  props: {
-    blockRef: {
-      type: String,
-      default: ''
-    }
-  },
-  data() {
-    return {
-      handlerMyBlocks: {},
-      activeSort: 0,
-      filterBlock: ''
-    };
-  },
-  computed: {
-    /**
-     * STORE STATE
-     */
-    ...mapState('wallet', ['address']),
+const BlocksLoading = defineAsyncComponent(() =>
+  import('../components/BlocksLoading.vue')
+);
+const BlocksSort = defineAsyncComponent(() =>
+  import('../components/BlocksSort.vue')
+);
+const ModuleEthBlockInfo = defineAsyncComponent(() =>
+  import('./ModuleEthBlockInfo.vue')
+);
 
-    /**
-     * STORE GETTERS
-     */
-    ...mapGetters('global', ['network']),
-    ...mapGetters('ethBlocksTxs', ['getAllEthBlocksTxs']),
+// injections
+const router = useRouter();
+const { network } = useGlobalStore();
+const { address, web3 } = useWalletStore();
+const { getAllEthBlocksTxs } = useEthBlocksTxsStore();
 
-    /**
-     * @returns {boolean}:
-     * if HandelrMyBlocks.loading equals false,  returns false, otherwise returns true
-     */
-    loading() {
-      return this.handlerMyBlocks && this.handlerMyBlocks.loading === false
-        ? false
-        : true;
-    },
-    /**
-     * Returns filtered array based on the user input
-     * @returns {Array}
-     */
-    blocks() {
-      if (!this.loading) {
-        switch (this.activeSort) {
-          case 0:
-            return this.filter(this.handlerMyBlocks.blocks.newest);
-          case 1:
-            return this.filter(this.handlerMyBlocks.blocks.oldest);
-          case 2:
-            return this.filter(this.handlerMyBlocks.blocks.ascend);
-          case 3:
-            return this.filter(this.handlerMyBlocks.blocks.dscend);
-          default:
-            return this.filter(this.handlerMyBlocks.blocks.newest);
-        }
-      }
-      return [];
-    },
-    /**
-     * Returns whether or not you own any blocks
-     * Used to hide/show search components, as well as styling adjustments
-     * @returns {boolean}:
-     *
-     */
-    hasBlocks() {
-      return this.handlerMyBlocks.totalBlocks > 0;
-    },
-    /**
-     * Property returns an error message based onthe filter input
-     * @returns {string}
-     */
-    filterErrorMessage() {
-      if (this.filterBlock && this.filterBlock !== '') {
-        if (!validBlockNumber(this.filterBlock)) {
-          return 'value must be a positive  integer';
-        }
-        if (!this.handlerMyBlocks.checkHasBlock(this.filterBlock)) {
-          return `You do not own block #${this.filterBlock}`;
-        }
-      }
-      return '';
-    }
-  },
-  watch: {
-    /**
-     * WATCH: Update HandelrMyBlocks on network change and fetch data
-     *  @param {Object} newVal - current address
-     */
-    network(newVal) {
-      if (newVal) {
-        this.handlerMyBlocks.setNetwork(newVal);
-        this.handlerMyBlocks.getBlocks();
-      }
-    },
-    /**
-     * WATCH: Update HandelrMyBlocks on address change and fetch data
-     * @param {string} newVal - current address
-     */
-    address(newVal) {
-      if (newVal) {
-        this.handlerMyBlocks.setAddress(newVal);
-        this.handlerMyBlocks.getBlocks();
-      }
-    },
-    /**
-     * WATCH: Update HandelrMyBlocks on pending txs resolution
-     * @param {Array} newVal - current address
-     */
-    getAllEthBlocksTxs(newVal) {
-      if (newVal) {
-        this.handlerMyBlocks.getBlocks();
-      }
-    }
-  },
-  mounted() {
-    /**
-     * Initiate My Blocks Handler
-     */
-    this.handlerMyBlocks = new HandlerMyBlocks(
-      this.web3,
-      this.network,
-      this.address
-    );
-    this.handlerMyBlocks.getBlocks();
-  },
+// props
+defineProps({
+  blockRef: {
+    type: String,
+    default: ''
+  }
+});
 
-  methods: {
-    /**
-     * Routes to block info page, based on block number
-     * Used in block containers
-     * @param {number} block
-     */
-    routeTo(block) {
-      try {
-        this.$router.push({
-          name: ETH_BLOCKS_ROUTE.MY_BLOCKS.NAME,
-          query: { block: block.toString() }
-        });
-      } catch (e) {
-        Toast(e, {}, ERROR);
-      }
-    },
-    /**
-     * Formats block number
-     * @param {number} block
-     * @returns {string}
-     */
-    formatBlockNumber(block) {
-      return formatIntegerToString(block);
-    },
-    /**
-     * Sets Active sort, invoked by emit from BlockSort component
-     * @param {number} value
-     */
-    setActiveSort(value) {
-      this.activeSort = value;
-    },
-    /**
-     * Methods sets this.filterBlock based on the use input in search block component
-     * @param {any}
-     * If value is undefined or null sets filter block to empry string
-     */
-    setFilter(block) {
-      if (block) {
-        this.filterBlock = block;
-      } else {
-        this.filterBlock = '';
-      }
-    },
-    /**
-     * Methods filters array based on the search input provided by user
-     * @param {Array} blocks
-     * @return {Array}
-     */
-    filter(blocks) {
-      if (this.filterBlock !== '' && this.filterErrorMessage === '') {
-        return blocks.filter(value =>
-          value.blockNumber
-            .toString()
-            .toLowerCase()
-            .includes(this.filterBlock.toLowerCase())
-        );
-      }
-      return blocks;
+// data
+const handlerMyBlocks = ref({});
+const activeSort = ref(0);
+const filterBlock = ref('');
+
+// computed
+/**
+ * @returns {boolean}:
+ * if HandelrMyBlocks.loading equals false,  returns false, otherwise returns true
+ */
+const loading = computed(() => {
+  return handlerMyBlocks.value && handlerMyBlocks.value.loading === false
+    ? false
+    : true;
+});
+/**
+ * Returns filtered array based on the user input
+ * @returns {Array}
+ */
+const blocks = computed(() => {
+  if (!loading.value) {
+    switch (activeSort.value) {
+      case 0:
+        return filter(handlerMyBlocks.value.blocks.newest);
+      case 1:
+        return filter(handlerMyBlocks.value.blocks.oldest);
+      case 2:
+        return filter(handlerMyBlocks.value.blocks.ascend);
+      case 3:
+        return filter(handlerMyBlocks.value.blocks.dscend);
+      default:
+        return filter(handlerMyBlocks.value.blocks.newest);
     }
   }
+  return [];
+});
+/**
+ * Returns whether or not you own any blocks
+ * Used to hide/show search components, as well as styling adjustments
+ * @returns {boolean}:
+ *
+ */
+const hasBlocks = computed(() => {
+  return handlerMyBlocks.value.totalBlocks > 0;
+});
+/**
+ * Property returns an error message based onthe filter input
+ * @returns {string}
+ */
+const filterErrorMessage = computed(() => {
+  if (filterBlock.value && filterBlock.value !== '') {
+    if (!validBlockNumber(filterBlock)) {
+      return 'value must be a positive  integer';
+    }
+    if (!handlerMyBlocks.value.checkHasBlock(filterBlock.value)) {
+      return `You do not own block #${filterBlock.value}`;
+    }
+  }
+  return '';
+});
+
+// watch
+/**
+ * WATCH: Update HandelrMyBlocks on network change and fetch data
+ *  @param {Object} newVal - current address
+ */
+watch(network, newVal => {
+  if (newVal) {
+    handlerMyBlocks.value.setNetwork(newVal);
+    handlerMyBlocks.value.getBlocks();
+  }
+});
+/**
+ * WATCH: Update HandelrMyBlocks on address change and fetch data
+ * @param {string} newVal - current address
+ */
+watch(address, newVal => {
+  if (newVal) {
+    handlerMyBlocks.value.setAddress(newVal);
+    handlerMyBlocks.value.getBlocks();
+  }
+});
+/**
+ * WATCH: Update HandelrMyBlocks on pending txs resolution
+ * @param {Array} newVal - current address
+ */
+watch(getAllEthBlocksTxs, newVal => {
+  if (newVal) {
+    handlerMyBlocks.value.getBlocks();
+  }
+});
+
+// mounted
+onMounted(() => {
+  /**
+   * Initiate My Blocks Handler
+   */
+  handlerMyBlocks.value = new HandlerMyBlocks(web3, network, address);
+  handlerMyBlocks.value.getBlocks();
+});
+
+/**
+ * Routes to block info page, based on block number
+ * Used in block containers
+ * @param {number} block
+ */
+const routeTo = block => {
+  try {
+    router.push({
+      name: ETH_BLOCKS_ROUTE.MY_BLOCKS.NAME,
+      query: { block: block.toString() }
+    });
+  } catch (e) {
+    Toast(e, {}, ERROR);
+  }
+};
+/**
+ * Formats block number
+ * @param {number} block
+ * @returns {string}
+ */
+const formatBlockNumber = block => {
+  return formatIntegerToString(block);
+};
+/**
+ * Sets Active sort, invoked by emit from BlockSort component
+ * @param {number} value
+ */
+const setActiveSort = value => {
+  activeSort.value = value;
+};
+/**
+ * Methods sets filterBlock based on the use input in search block component
+ * @param {any}
+ * If value is undefined or null sets filter block to empry string
+ */
+const setFilter = block => {
+  if (block) {
+    filterBlock.value = block;
+  } else {
+    filterBlock.value = '';
+  }
+};
+/**
+ * Methods filters array based on the search input provided by user
+ * @param {Array} blocks
+ * @return {Array}
+ */
+const filter = blocks => {
+  if (filterBlock.value !== '' && filterErrorMessage.value === '') {
+    return blocks.filter(value =>
+      value.blockNumber
+        .toString()
+        .toLowerCase()
+        .includes(filterBlock.value.toLowerCase())
+    );
+  }
+  return blocks;
 };
 </script>
 

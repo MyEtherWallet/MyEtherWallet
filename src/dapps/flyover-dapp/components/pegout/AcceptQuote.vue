@@ -2,7 +2,7 @@
   <div>
     <!-- amount -->
     <div class="field-card">
-      <div class="field-label">{{ $t('flyover.pegout.accept.amount') }}</div>
+      <div class="field-label">{{ t('flyover.pegout.accept.amount') }}</div>
       <div class="field-value">
         <p class="field-text">{{ String(quoteAmount) }}</p>
 
@@ -20,7 +20,7 @@
     <!-- confirmations -->
     <div class="field-card">
       <div class="field-label">
-        {{ $t('flyover.pegout.accept.confirmations') }}
+        {{ t('flyover.pegout.accept.confirmations') }}
       </div>
       <div class="field-value">
         <p class="field-text">{{ String(confirmations) }}</p>
@@ -39,7 +39,7 @@
 
     <!-- hash -->
     <div class="field-card">
-      <div class="field-label">{{ $t('flyover.pegout.accept.hash') }}</div>
+      <div class="field-label">{{ t('flyover.pegout.accept.hash') }}</div>
       <div class="field-value">
         <p class="field-text">{{ String(quoteHash) }}</p>
 
@@ -67,7 +67,7 @@
           :disabled="loading"
           :has-full-width="true"
           btn-size="xlarge"
-          :title="$t('flyover.pegout.accept.acceptBtn')"
+          :title="t('flyover.pegout.accept.acceptBtn')"
           @click.native="submit"
         />
       </v-col>
@@ -75,103 +75,105 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { defineProps, ref, onMounted, defineEmits } from 'vue';
+import { ethers } from 'ethers';
+
 import { acceptQuote } from '../../handlers/pegout';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import AppCopyBtn from '@/core/components/AppCopyBtn';
-import { mapState } from 'vuex';
-import { ethers } from 'ethers';
 import { toBase } from '@/core/helpers/unit';
+import { wallet as useWalletStore } from '@/core/store/index.js';
+import { useI18n } from 'vue-i18n-composable';
 
-export default {
-  name: 'AcceptQuote',
-  components: { AppCopyBtn },
-  props: {
-    siteKey: {
-      default: '',
-      type: String
-    },
-    quoteUrl: {
-      default: '',
-      type: String
-    },
-    quoteAmount: {
-      default: 0,
-      type: Number
-    },
-    confirmations: {
-      default: 0,
-      type: Number
-    },
-    quoteHash: {
-      default: '',
-      type: String
-    }
+// emits
+const emit = defineEmits(['onSubmit']);
+
+// injections/use
+const { web3 } = useWalletStore();
+const { t } = useI18n();
+
+// props
+const props = defineProps({
+  siteKey: {
+    default: '',
+    type: String
   },
-  data() {
-    return {
-      msg: '',
-      loading: false,
-      wait: false,
-      token: '',
-      hash: ''
-    };
+  quoteUrl: {
+    default: '',
+    type: String
   },
-  computed: {
-    ...mapState('wallet', ['balance', 'address', 'web3', 'instance'])
+  quoteAmount: {
+    default: 0,
+    type: Number
   },
-  mounted() {
-    if (window.grecaptcha) {
-      this.widgetId = window.grecaptcha.render('g-recaptcha', {
-        sitekey: this.siteKey,
-        callback: response => {
-          this.token = response;
-        }
-      });
-    }
+  confirmations: {
+    default: 0,
+    type: Number
   },
-  methods: {
-    async submit() {
-      const ethersProvider = new ethers.providers.Web3Provider(
-        this.web3.currentProvider
-      );
-      const wallet = ethersProvider.getSigner();
-      this.loading = true;
-      try {
-        const quoteReply = await acceptQuote(
-          this.quoteUrl,
-          {
-            QuoteHash: this.quoteHash
-          },
-          {
-            'X-Captcha-Token': this.token
-          }
-        );
-
-        // Create a transaction object
-        const transactionObject = {
-          to: quoteReply.lbcAddress,
-          value: toBase(this.quoteAmount, 18)
-        };
-
-        this.wait = true;
-
-        const transactionResponse = await wallet.sendTransaction(
-          transactionObject
-        );
-
-        this.hash = `https://explorer.rsk.co/tx/${transactionResponse.hash}`;
-        // Wait for transaction confirmation
-        await transactionResponse.wait();
-        this.wait = false;
-        quoteReply.hash = this.hash;
-        this.$emit('onSubmit', quoteReply);
-      } catch (e) {
-        Toast(e, {}, ERROR);
-      }
-      this.loading = false;
-    }
+  quoteHash: {
+    default: '',
+    type: String
   }
+});
+
+// data
+const msg = ref('');
+const loading = ref(false);
+const wait = ref(false);
+const token = ref('');
+const hash = ref('');
+
+// mounted
+onMounted(() => {
+  if (window.grecaptcha) {
+    window.grecaptcha.render('g-recaptcha', {
+      sitekey: props.siteKey,
+      callback: response => {
+        token.value = response;
+      }
+    });
+  }
+});
+
+// methods
+const submit = async () => {
+  const ethersProvider = new ethers.providers.Web3Provider(
+    web3.currentProvider
+  );
+  const wallet = ethersProvider.getSigner();
+  loading.value = true;
+  try {
+    const quoteReply = await acceptQuote(
+      props.quoteUrl,
+      {
+        QuoteHash: props.quoteHash
+      },
+      {
+        'X-Captcha-Token': token
+      }
+    );
+
+    // Create a transaction object
+    const transactionObject = {
+      to: quoteReply.lbcAddress,
+      value: toBase(props.quoteAmount, 18)
+    };
+
+    wait.value = true;
+
+    const transactionResponse = await wallet.sendTransaction(transactionObject);
+
+    hash.value = `https://explorer.rsk.co/tx/${transactionResponse.hash}`;
+    // Wait for transaction confirmation
+    await transactionResponse.wait();
+    wait.value = false;
+    quoteReply.hash = hash;
+    emit('onSubmit', quoteReply);
+  } catch (e) {
+    Toast(e, {}, ERROR);
+  }
+  loading.value = false;
 };
 </script>
 <style lang="scss" scoped>

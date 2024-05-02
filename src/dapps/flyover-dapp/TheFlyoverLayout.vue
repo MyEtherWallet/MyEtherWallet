@@ -42,77 +42,89 @@
     </the-wrapper-dapp>
   </div>
 </template>
-<script>
+<script setup>
+import {
+  defineAsyncComponent,
+  ref,
+  watch,
+  onMounted,
+  onBeforeUnmount
+} from 'vue';
+
 import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
 import { FLYOVER_ROUTE } from './routes';
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin.js';
+import { useI18n } from 'vue-i18n-composable';
+import { useRoute } from 'vue-router/composables';
 
-export default {
-  name: 'FlyoverLayout',
-  components: {
-    TheWrapperDapp: () => import('@/dapps/TheWrapperDapp.vue'),
-    ModulePegin: () => import('./modules/ModulePegin'),
-    ModulePegout: () => import('./modules/ModulePegout')
+const TheWrapperDapp = defineAsyncComponent(() =>
+  import('@/dapps/TheWrapperDapp.vue')
+);
+const ModulePegin = defineAsyncComponent(() => import('./modules/ModulePegin'));
+const ModulePegout = defineAsyncComponent(() =>
+  import('./modules/ModulePegout')
+);
+
+// injections
+const { t } = useI18n();
+const route = useRoute();
+
+// data
+const validNetworks = SUPPORTED_NETWORKS;
+const headerImg = require('@/assets/images/icons/dapps/icon-dapp-flyover.svg');
+const header = {
+  title: t('flyover.title'),
+  subtext: t('flyover.dapp-desc')
+};
+const tabs = [
+  {
+    name: t('flyover.pegin.title'),
+    route: { name: FLYOVER_ROUTE.PEGIN.NAME },
+    id: 0
   },
-  mixins: [handlerAnalytics],
-  data() {
-    return {
-      validNetworks: SUPPORTED_NETWORKS,
-      headerImg: require('@/assets/images/icons/dapps/icon-dapp-flyover.svg'),
-      header: {
-        title: this.$t('flyover.title'),
-        subtext: this.$t('flyover.dapp-desc')
-      },
-      activeTab: 0,
-      tabs: [
-        {
-          name: this.$t('flyover.pegin.title'),
-          route: { name: FLYOVER_ROUTE.PEGIN.NAME },
-          id: 0
-        },
-        {
-          name: this.$t('flyover.pegout.title'),
-          route: {
-            name: FLYOVER_ROUTE.PEGOUT.NAME,
-            path: FLYOVER_ROUTE.PEGOUT.PATH
-          },
-          id: 1
-        }
-      ]
-    };
-  },
-  computed: {},
-  watch: {
-    $route() {
-      this.detactUrlChangeTab();
-    }
-  },
-  mounted() {
-    this.setup();
-  },
-  beforeDestroy() {
-    document.getElementById('recaptchaScript').remove();
-  },
-  methods: {
-    setup() {
-      const script = document.createElement('script');
-      script.setAttribute('async', '');
-      script.setAttribute('defer', '');
-      script.id = 'recaptchaScript';
-      script.src = 'https://www.google.com/recaptcha/api.js?render=explicit';
-      document.getElementsByTagName('head')[0].appendChild(script);
+  {
+    name: t('flyover.pegout.title'),
+    route: {
+      name: FLYOVER_ROUTE.PEGOUT.NAME,
+      path: FLYOVER_ROUTE.PEGOUT.PATH
     },
-    detactUrlChangeTab() {
-      const currentRoute = this.$route.name;
-      if (currentRoute === FLYOVER_ROUTE.PEGOUT.NAME) {
-        this.activeTab = this.tabs[1].id;
-      } else {
-        this.activeTab = this.tabs[0].id;
-      }
-    },
-    tabChanged(tab) {
-      this.activeTab = tab;
-    }
+    id: 1
   }
+];
+const activeTab = ref(0);
+
+// watch
+watch(route, () => {
+  detachUrlChangeTab();
+});
+
+// mounted
+onMounted(() => {
+  setup();
+});
+
+// beforeDestroy
+onBeforeUnmount(() => {
+  document.getElementById('recaptchaScript').remove();
+});
+
+// methods
+const setup = () => {
+  const script = document.createElement('script');
+  script.setAttribute('async', '');
+  script.setAttribute('defer', '');
+  script.id = 'recaptchaScript';
+  script.src = 'https://www.google.com/recaptcha/api.js?render=explicit';
+  document.getElementsByTagName('head')[0].appendChild(script);
+};
+const detachUrlChangeTab = () => {
+  const currentRoute = route.name;
+  if (currentRoute === FLYOVER_ROUTE.PEGOUT.NAME) {
+    activeTab.value = tabs[1].id;
+  } else {
+    activeTab.value = tabs[0].id;
+  }
+};
+const tabChanged = tab => {
+  activeTab.value = tab;
 };
 </script>

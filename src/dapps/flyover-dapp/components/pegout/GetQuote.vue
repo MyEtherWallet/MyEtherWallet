@@ -2,7 +2,7 @@
   <div>
     <mew-select
       :has-filter="false"
-      :label="$t('flyover.pegout.provider')"
+      :label="t('flyover.pegout.provider')"
       :items="providers"
       normal-dropdown
       class="mr-3 flex-grow-1 mb-4"
@@ -12,8 +12,8 @@
     <mew-input
       :value="btcAddress"
       :has-clear-btn="false"
-      :label="$t('flyover.pegout.quote.btcAddress')"
-      :placeholder="$t('flyover.pegout.quote.btcAddress')"
+      :label="t('flyover.pegout.quote.btcAddress')"
+      :placeholder="t('flyover.pegout.quote.btcAddress')"
       class="mr-3 flex-grow-1"
       @input="setBtcAddress"
     />
@@ -21,16 +21,16 @@
     <mew-input
       v-model="btcRefund"
       :has-clear-btn="false"
-      :label="$t('flyover.pegout.quote.btcRefund')"
-      :placeholder="$t('flyover.pegout.quote.btcRefund')"
+      :label="t('flyover.pegout.quote.btcRefund')"
+      :placeholder="t('flyover.pegout.quote.btcRefund')"
       class="mr-3 flex-grow-1"
     />
 
     <mew-input
       :value="rskAddress"
       :has-clear-btn="false"
-      :label="$t('flyover.pegout.quote.rskAddress')"
-      :placeholder="$t('flyover.pegout.quote.rskAddress')"
+      :label="t('flyover.pegout.quote.rskAddress')"
+      :placeholder="t('flyover.pegout.quote.rskAddress')"
       class="mr-3 flex-grow-1"
       @input="setRskAddress"
     />
@@ -39,8 +39,8 @@
       <mew-input
         v-model="amount"
         :has-clear-btn="false"
-        :label="$t('flyover.pegout.quote.amountBTC')"
-        :placeholder="$t('flyover.pegout.quote.amountBTC')"
+        :label="t('flyover.pegout.quote.amountBTC')"
+        :placeholder="t('flyover.pegout.quote.amountBTC')"
         class="mr-3 flex-grow-1"
       />
       <div class="notes">{{ amountNote }}</div>
@@ -56,109 +56,113 @@
           :disabled="loading"
           :has-full-width="true"
           btn-size="xlarge"
-          :title="$t('flyover.pegout.quote.quoteBtn')"
-          @click.native="getQuote"
+          :title="t('flyover.pegout.quote.quoteBtn')"
+          @click.native="fetchQuote"
         />
       </v-col>
     </v-row>
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, onMounted, defineEmits } from 'vue';
+
 import { getQuote } from '../../handlers/pegout';
 import { getProviders, getDetails } from '../../handlers/helpers/provider';
-import { mapState } from 'vuex';
 import { fromBase, toBase } from '@/core/helpers/unit';
 
-export default {
-  name: 'GetQuote',
-  data() {
-    return {
-      msg: '',
-      loading: false,
-      amount: '0.005',
-      rskAddress: null,
-      btcAddress: '',
-      btcRefund: '',
-      provider: null,
-      providers: [],
-      amountNote: '',
-      siteKey: ''
-    };
-  },
-  computed: {
-    ...mapState('wallet', ['balance', 'address', 'web3', 'instance'])
-  },
-  mounted() {
-    getDetails()
-      .then(data => {
-        this.siteKey = data.siteKey;
-        const max = fromBase(parseFloat(data.pegout.maxTransactionValue), 18);
-        const min = fromBase(parseFloat(data.pegout.minTransactionValue), 18);
-        this.amountNote = `min: ${min}, max: ${max} btc`;
-      })
-      .catch(() => {
-        this.msg = 'No liquidity providers available!';
+import { wallet as useWalletStore } from '@/core/store/index.js';
+import { useI18n } from 'vue-i18n-composable';
+
+// emit
+const emit = defineEmits(['onSubmit']);
+
+// injections/use
+const { instance } = useWalletStore();
+const { t } = useI18n();
+
+// data
+const msg = ref('');
+const loading = ref(false);
+const amount = ref('0.005');
+const rskAddress = ref(null);
+const btcAddress = ref('');
+const btcRefund = ref('');
+const provider = ref(null);
+const providers = ref([]);
+const amountNote = ref('');
+const siteKey = ref('');
+
+// mounted
+onMounted(() => {
+  getDetails()
+    .then(data => {
+      siteKey.value = data.siteKey;
+      const max = fromBase(parseFloat(data.pegout.maxTransactionValue), 18);
+      const min = fromBase(parseFloat(data.pegout.minTransactionValue), 18);
+      amountNote.value = `min: ${min}, max: ${max} btc`;
+    })
+    .catch(() => {
+      msg.value = 'No liquidity providers available!';
+    });
+
+  getProviders()
+    .then(data => {
+      rskAddress.value = instance.getAddressString();
+      providers.value = data.map(provider => {
+        return {
+          ...provider,
+          name: `${provider.name}-(${provider.providerType})`
+        };
       });
+    })
+    .catch(() => {
+      msg.value = 'No liquidity providers available!';
+    });
+});
 
-    getProviders()
-      .then(data => {
-        this.rskAddress = this.instance.getAddressString();
-        this.providers = data.map(provider => {
-          return {
-            ...provider,
-            name: `${provider.name}-(${provider.providerType})`
-          };
-        });
-      })
-      .catch(() => {
-        this.msg = 'No liquidity providers available!';
+// methods
+const fetchQuote = async () => {
+  loading.value = true;
+  msg.value = '';
+  const payload = {
+    bitcoinRefundAddress: btcRefund,
+    rskRefundAddress: rskAddress,
+    to: btcAddress,
+    valueToTransfer: parseFloat(toBase(parseFloat(amount), 18))
+  };
+
+  try {
+    const quoteReply = await getQuote(provider, payload);
+    if (quoteReply.length == 0) {
+      msg.value = 'No quote to accept';
+    } else {
+      emit('onSubmit', {
+        ...quoteReply[0],
+        quoteUrl: provider,
+        siteKey: siteKey
       });
-  },
-  methods: {
-    async getQuote() {
-      this.loading = true;
-      this.msg = '';
-      const payload = {
-        bitcoinRefundAddress: this.btcRefund,
-        rskRefundAddress: this.rskAddress,
-        to: this.btcAddress,
-        valueToTransfer: parseFloat(toBase(parseFloat(this.amount), 18))
-      };
-
-      try {
-        const quoteReply = await getQuote(this.provider, payload);
-        if (quoteReply.length == 0) {
-          this.msg = 'No quote to accept';
-        } else {
-          this.$emit('onSubmit', {
-            ...quoteReply[0],
-            quoteUrl: this.provider,
-            siteKey: this.siteKey
-          });
-        }
-      } catch (e) {
-        let detail = '';
-        if (e.details && e.details.maxValueTotransfer) {
-          detail = fromBase(e.details.maxValueTotransfer, 18);
-        }
-
-        this.msg = `${e.message} ${detail}`;
-      }
-      this.loading = false;
-    },
-    setProvider(provider) {
-      if (provider) {
-        this.provider = provider.apiBaseUrl;
-      }
-    },
-    setRskAddress(addr) {
-      this.rskAddress = addr;
-    },
-    setBtcAddress(addr) {
-      this.btcAddress = addr;
     }
+  } catch (e) {
+    let detail = '';
+    if (e.details && e.details.maxValueTotransfer) {
+      detail = fromBase(e.details.maxValueTotransfer, 18);
+    }
+
+    msg.value = `${e.message} ${detail}`;
   }
+  loading.value = false;
+};
+const setProvider = prv => {
+  if (prv) {
+    provider.value = provider.value.apiBaseUrl;
+  }
+};
+const setRskAddress = addr => {
+  rskAddress.value = addr;
+};
+const setBtcAddress = addr => {
+  btcAddress.value = addr;
 };
 </script>
 <style lang="scss" scoped>
