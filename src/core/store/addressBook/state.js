@@ -1,10 +1,8 @@
-import Configs from '../configs';
-
 const state = {
   localStore: true,
   addressBookStore: [],
   isMigrated: false,
-  stateVersion: Configs.VERSION.addressBook
+  stateVersion: '1.0.0'
 };
 
 export default state;

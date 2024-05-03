@@ -1,4 +1,3 @@
-import Configs from '../configs';
 import { toWei } from 'web3-utils';
 import nodeList from '@/utils/networks';
 import { gasPriceTypes } from '@/core/helpers/gasPriceHelper';
@@ -12,7 +11,7 @@ const state = {
   online: true,
   linkQuery: {},
   locale: 'en_US',
-  stateVersion: Configs.VERSION.global,
+  stateVersion: '1.0.9',
   gasLimitWarning: 100,
   baseGasPrice: toWei('41', 'gwei'),
   gasPriceType: gasPriceTypes.ECONOMY,

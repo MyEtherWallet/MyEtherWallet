@@ -1,8 +1,6 @@
-import Configs from '../configs';
-
 const state = {
   localStore: true,
-  stateVersion: Configs.VERSION.popups,
+  stateVersion: '1.0.2',
   consentToTrack: true,
   displayedTrackingPopup: true,
   showedBanner: true,

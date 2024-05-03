@@ -1,7 +1,7 @@
 import localStore from 'store';
 import Configs from '../configs';
 import Notification from '@/modules/notifications/handlers/handlerNotification';
-import NonChainNotification from '@/modules/notifications/handlers/nonChainNotification.js';
+import NonChainNotification from '@/modules/notifications/handlers/nonChainNotification';
 
 const initStore = () => {
   if (localStore.get(Configs.LOCAL_STORAGE_KEYS.notifications)) {

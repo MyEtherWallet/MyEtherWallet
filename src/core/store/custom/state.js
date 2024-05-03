@@ -1,10 +1,8 @@
-import Configs from '../configs';
-
 const state = {
   localStore: true,
   tokens: {},
   paths: [],
-  stateVersion: Configs.VERSION.custom,
+  stateVersion: '1.0.4',
   addressBook: [],
   hiddenTokens: {}
 };
