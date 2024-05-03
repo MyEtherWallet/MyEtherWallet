@@ -11,12 +11,9 @@ import {
 import getTokenInfo from '@/core/helpers/tokenInfo';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { fromBase } from '../../helpers/unit';
-import {
-  global as useGlobalStore,
-  custom as useCustomStore,
-  external as useExternalStore,
-  wallet as useWalletStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useCustomStore } from '@/core/store/custom';
 
 const setCurrency = async function (val) {
   fetch('https://mainnet.mewwallet.dev/v2/prices/exchange-rates')
@@ -62,7 +59,6 @@ const setTokenAndEthBalance = function () {
   } = useWalletStore();
   const { updateCustomTokenBalances } = useCustomStore();
   const { network } = useGlobalStore();
-  const { networkTokens } = useExternalStore();
 
   setLoadingWalletInfo(true);
   const isTokenBalanceApiSupported = network.type.balanceApi !== '';
@@ -157,7 +153,7 @@ const setTokenAndEthBalance = function () {
           promises.push(
             getTokenInfo(t.contract, web3).then(info => {
               if (info) {
-                networkTokens.set({
+                this.networkTokens.set({
                   name: info.name,
                   symbol: info.symbol,
                   decimals: info.decimals,

@@ -72,11 +72,9 @@ import { defineProps, computed, ref, defineAsyncComponent } from 'vue';
 import { toBN } from 'web3-utils';
 
 import { useBuySell } from '@/core/composables/buyMore';
-import {
-  global as useGlobalStore,
-  external as useExternalStore,
-  wallet as useWalletStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
 
 const ModuleTokens = defineAsyncComponent(() =>
   import('@/modules/balance/ModuleTokens')

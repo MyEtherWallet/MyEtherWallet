@@ -116,18 +116,16 @@ import {
   watch,
   onMounted,
   onBeforeMount,
-  defineEmit
+  defineEmits
 } from 'vue';
 import handlerSettings from './handler/handlerSettings';
 import { useGasPrice } from '@/core/composables/gasPrice';
-import {
-  addressBook as useAddressBookStore,
-  global as useGlobalStore,
-  popups as usePopupsStore,
-  wallet as useWalletStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
 import { useI18n } from 'vue-i18n-composable';
 import { useAmplitude } from '@/core/composables/amplitude';
+import { useAddressBookStore } from '@/core/store/addressBook';
+import { usePopupStore } from '@/core/store/popups';
 
 const SettingsAddressTable = defineAsyncComponent(() =>
   import('./components/SettingsAddressTable')
@@ -149,7 +147,7 @@ const SettingsLocaleConfig = defineAsyncComponent(() =>
 );
 
 // emit
-const emit = defineEmit(['closeSettings']);
+const emit = defineEmits(['closeSettings']);
 
 // props
 defineProps({ onSettings: { default: false, type: Boolean } });
@@ -159,7 +157,7 @@ const { setConsent } = useAmplitude();
 const { gasButtons, setSelected } = useGasPrice();
 const { addressBookStore } = useAddressBookStore();
 const { online, gasPriceType } = useGlobalStore();
-const { consentToTrack } = usePopupsStore();
+const { consentToTrack } = usePopupStore();
 const { hasGasPriceOption } = useWalletStore();
 const { t } = useI18n();
 

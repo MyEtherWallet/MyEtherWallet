@@ -1,13 +1,10 @@
 import { computed, getCurrentInstance } from 'vue';
 import { isEmpty } from 'lodash';
 
-import {
-  global as useGlobalStore,
-  wallet as useWalletStore,
-  popups as usePopupsStore
-} from '@/core/store/index.js';
-
 import categories from './amplitudeConfigs/configCategories';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { usePopupStore } from '@/core/store/popups';
 
 export const useAmplitude = () => {
   const vm = getCurrentInstance();
@@ -15,7 +12,7 @@ export const useAmplitude = () => {
 
   const { network } = useGlobalStore();
   const { isOfflineApp } = useWalletStore();
-  const { consentToTrack, setTrackingConsent } = usePopupsStore();
+  const { consentToTrack, setTrackingConsent } = usePopupStore();
 
   const networkName = network.type.name;
 

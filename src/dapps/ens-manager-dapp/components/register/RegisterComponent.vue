@@ -146,7 +146,10 @@
 
 <script setup>
 import { defineProps, ref, watch, onUnmounted } from 'vue';
-import { global as useGlobalStore } from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
+
 import { useBuySell } from '@/core/composables/buyMore';
 import { useI18n } from 'vue-i18n-composable';
 

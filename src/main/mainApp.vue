@@ -39,16 +39,14 @@ import {
   SWAP
 } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 import { useAmplitude } from '@/core/composables/amplitude';
-import {
-  global as useGlobalStore,
-  article as useArticleStore,
-  wallet as useWalletStore,
-  custom as useCustomStore,
-  addressBook as useAddressBookStore,
-  external as useExternalStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
 import { useI18n } from 'vue-i18n-composable/dist';
 import { useVuetify } from '@/core/composables/vuetify';
+import { useArticleStore } from '@/core/store/article';
+import { useCustomStore } from '@/core/store/custom';
+import { useAddressBookStore } from '@/core/store/addressBook';
 
 const ModuleToast = defineAsyncComponent(() =>
   import('@/modules/toast/ModuleToast.vue')

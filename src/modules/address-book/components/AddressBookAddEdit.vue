@@ -102,11 +102,10 @@ import { getAddressInfo } from '@kleros/address-tags-sdk';
 import NameResolver from '@/modules/name-resolver/index';
 import { toChecksumAddress, isAddress } from '@/core/helpers/addressUtils';
 import { isValidCoinAddress } from '../handlers/handlerMulticoins.js';
-import {
-  global as useGlobalStore,
-  wallet as useWalletStore,
-  addressBook as useAddressBookStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useAddressBookStore } from '@/core/store/addressBook/index.js';
+
 import { useI18n } from 'vue-i18n-composable/dist/index.js';
 
 // emits

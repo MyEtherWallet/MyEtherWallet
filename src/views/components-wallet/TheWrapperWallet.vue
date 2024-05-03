@@ -110,11 +110,6 @@
 <script setup>
 import { ref, watch, defineProps } from 'vue';
 import draggable from 'vuedraggable';
-// import {
-//   global as useGlobalStore,
-//   wallet as useWalletStore,
-//   popups as usePopupsStore
-// } from '@/core/store/index.js';
 
 import ModuleNetwork from '@/modules/network/ModuleNetwork';
 
@@ -132,11 +127,6 @@ const props = defineProps({
     default: false
   }
 });
-
-// injection/use
-// const { isEthNetwork } = useGlobalStore();
-// const { isOfflineApp } = useWalletStore();
-// const { pkSurveyShow } = usePopupsStore();
 
 // data
 const draggableItems = ref(

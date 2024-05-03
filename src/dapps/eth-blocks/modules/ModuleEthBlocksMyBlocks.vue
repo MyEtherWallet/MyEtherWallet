@@ -141,11 +141,10 @@ import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 import { validBlockNumber } from '../handlers/helpers/common';
 import HandlerMyBlocks from '../handlers/handlerMyBlocks';
-import {
-  global as useGlobalStore,
-  wallet as useWalletStore,
-  ethBlocksTxs as useEthBlocksTxsStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
+
 import { useRouter } from 'vue-router/composables';
 
 const BlocksLoading = defineAsyncComponent(() =>

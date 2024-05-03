@@ -311,11 +311,9 @@ import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 import { ENS_MANAGER_ROUTE } from './configsRoutes';
 import { useAmplitude } from '@/core/composables/amplitude';
 import { useI18n } from 'vue-i18n-composable';
-import {
-  global as useGlobalStore,
-  wallet as useWalletStore,
-  external as useExternalStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
 import { useRoute, useRouter } from 'vue-router/composables';
 
 const ModuleRegisterDomain = defineAsyncComponent(() =>

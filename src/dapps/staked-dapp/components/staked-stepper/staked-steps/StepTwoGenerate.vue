@@ -67,10 +67,9 @@ import {
   defineEmits
 } from 'vue';
 import { useAmplitude } from '@/core/composables/amplitude';
-import {
-  global as useGlobalStore,
-  wallet as useWalletStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
 
 const ModuleAddressBook = defineAsyncComponent(() =>
   import('@/modules/address-book/ModuleAddressBook')

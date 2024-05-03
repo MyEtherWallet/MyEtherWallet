@@ -1,9 +1,8 @@
+import { useWalletStore } from '../../../core/store/wallet';
 import { toPayload } from '../jsonrpc';
-export default async ({ payload, store }, res, next) => {
+export default async ({ payload }, res, next) => {
+  const { wallet } = useWalletStore();
   if (payload.method !== 'eth_coinbase') return next();
-  if (!store.state.wallet.instance) res(null, toPayload(payload.id, null));
-  res(
-    null,
-    toPayload(payload.id, store.state.wallet.instance.getAddressString())
-  );
+  if (!wallet.instance) res(null, toPayload(payload.id, null));
+  res(null, toPayload(payload.id, wallet.instance.getAddressString()));
 };

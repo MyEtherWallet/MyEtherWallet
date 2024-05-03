@@ -126,10 +126,8 @@ import normalise from '@/core/helpers/normalise';
 import RNSManager from './handlers/handlerRNSManager';
 import ReverseRegister from './handlers/helpers/reverseRegistrar';
 import { useAmplitude } from '@/core/composables/amplitude';
-import {
-  wallet as useWalletStore,
-  custom as useCustomStore
-} from '@/core/store/index.js';
+import { useWalletStore } from '@/core/store/wallet';
+import { useCustomStore } from '@/core/store/custom';
 
 const TheWrapperDapp = defineAsyncComponent(() =>
   import('@/dapps/TheWrapperDapp.vue')

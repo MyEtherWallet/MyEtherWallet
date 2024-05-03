@@ -1,7 +1,5 @@
-import {
-  global as useGlobalStore,
-  custom as useCustomStore
-} from '@/core/store/index.js';
+import { useCustomStore } from '.';
+import { useGlobalStore } from '@/core/store/global';
 
 const customTokens = function (state) {
   const { network } = useGlobalStore();

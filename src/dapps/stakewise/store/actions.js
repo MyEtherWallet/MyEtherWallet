@@ -5,7 +5,7 @@ const initStore = function () {
   if (localStore.get(Configs.LOCAL_STORAGE_KEYS.stakewise)) {
     const savedStore = localStore.get(Configs.LOCAL_STORAGE_KEYS.stakewise);
     if (savedStore.stateVersion === Configs.VERSION.stakewise) {
-      this.$state = Object.assign(this.$state, savedStore);
+      this.$patch(Object.assign(this.$state, savedStore));
     }
   }
 };

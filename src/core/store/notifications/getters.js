@@ -1,7 +1,5 @@
-import {
-  wallet as useWalletStore,
-  global as useGlobalStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '../global';
+import { useWalletStore } from '../wallet';
 
 import { NOTIFICATION_TYPES } from '@/modules/notifications/handlers/handlerNotification';
 

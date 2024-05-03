@@ -137,11 +137,10 @@ import {
   toBNSafe
 } from '@/core/helpers/numberFormatHelper';
 
-import {
-  global as useGlobalStore,
-  external as useExternalStore,
-  wallet as useWalletStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
+
 import { useBuySell } from '@/core/composables/buyMore';
 import { useVuetify } from '@/core/composables/vuetify';
 

@@ -34,7 +34,9 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 
-import { wallet as useWalletStore } from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
 
 import SignAndVerifyMessage from '@/modules/message/handlers';
 

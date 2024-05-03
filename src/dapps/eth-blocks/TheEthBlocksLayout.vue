@@ -29,11 +29,9 @@ import { ETH_BLOCKS_ROUTE } from './configsRoutes';
 import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
 import { useRoute } from 'vue-router/composables';
 
-import {
-  global as useGlobalStore,
-  wallet as useWalletStore,
-  ethBlocksTxs as useEthBlocksTxsStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useEthBlocksTxsStore } from './store';
 
 const TheWrapperDapp = defineAsyncComponent(() =>
   import('@/dapps/TheWrapperDapp.vue')

@@ -194,10 +194,8 @@ import {
 import { getInjectedName } from '@/core/helpers/detectProvider.js';
 
 import { useAmplitude } from '@/core/composables/amplitude';
-import {
-  external as useExternalStore,
-  wallet as useWalletStore
-} from '@/core/store/index.js';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
 import { useVuetify } from '@/core/composables/vuetify';
 
 const ModuleAccessWalletHardware = defineAsyncComponent(() =>

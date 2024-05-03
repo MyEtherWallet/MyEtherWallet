@@ -22,9 +22,11 @@
 </template>
 
 <script setup>
-import { defineAsyncComponent, defineProps, defineEmit, watch } from 'vue';
+import { defineAsyncComponent, defineProps, defineEmits, watch } from 'vue';
 
-import { global as useGlobalStore } from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
 
 import { useGasPrice } from '@/core/composables/gasPrice';
 
@@ -34,7 +36,7 @@ const SettingsGasPrice = defineAsyncComponent(() =>
 );
 
 // emit
-const emit = defineEmit(['onLocalGasPrice', 'close']);
+const emit = defineEmits(['onLocalGasPrice', 'close']);
 
 // props
 const props = defineProps({

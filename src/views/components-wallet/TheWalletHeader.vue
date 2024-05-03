@@ -134,16 +134,15 @@
 import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router/composables';
 
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { STAKING } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 // import { BUYSELL_EVENT } from '@/modules/buy-sell/helpers';
 // import { EventBus } from '@/core/plugins/eventBus';
 import { COINBASE_STAKING_ROUTES } from '@/dapps/coinbase-staking/configs';
 
-import {
-  global as useGlobalStore,
-  wallet as useWalletStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
+
 import { useAmplitude } from '@/core/composables/amplitude';
 
 const notificationOverlay = import(

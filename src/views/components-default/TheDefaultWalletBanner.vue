@@ -103,14 +103,12 @@ const platform = require('platform');
 import appStore from '@/assets/images/icons/button-app-store.svg';
 import googlePlay from '@/assets/images/icons/button-play-store.svg';
 
-import {
-  global as useGlobalStore,
-  popups as usePopupsStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { usePopupStore } from '@/core/store/popups';
 
 // injections/vue
 const { showedBanner } = useGlobalStore();
-const { neverShowBanner } = usePopupsStore();
+const { neverShowBanner } = usePopupStore();
 
 const isExpanded = ref(false);
 const storeButtons = [

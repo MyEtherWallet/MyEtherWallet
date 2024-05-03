@@ -67,13 +67,11 @@ import { defineProps, computed, watch, defineEmits, nextTick } from 'vue';
 import BigNumber from 'bignumber.js';
 
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
-import {
-  global as useGlobalStore,
-  wallet as useWalletStore,
-  external as useExternalStore,
-  stakewise as useStakewiseStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
 import { useRoute } from 'vue-router/composables';
+import { useStakewiseStore } from '../store';
 
 const emit = defineEmits(['scroll', 'set-max', 'redeem-to-eth']);
 

@@ -75,12 +75,9 @@ import { useRouter } from 'vue-router/composables';
 import { useVuetify } from '@/core/composables/vuetify.js';
 import { useAmplitude } from '@/core/composables/amplitude.js';
 
-import {
-  global as useGlobalStore,
-  wallet as useWalletStore,
-  external as useExternalStore,
-  popups as usePopupsStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
 
 import nodeList from '@/utils/networks';
 import {
@@ -98,6 +95,7 @@ import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import HybridWalletInterface from '@/modules/access-wallet/hybrid/handlers/walletInterface';
 import sanitizeHex from '@/core/helpers/sanitizeHex';
+import { usePopupStore } from '@/core/store/popups';
 
 const TheWalletSideMenu = defineAsyncComponent(() =>
   import('./components-wallet/TheWalletSideMenu')
@@ -150,7 +148,7 @@ const {
   setNetworkTokens,
   setTokenAndEthBalance
 } = useExternalStore();
-const { shownPkSurveyCounter, setPkSurvey } = usePopupsStore();
+const { shownPkSurveyCounter, setPkSurvey } = usePopupStore();
 
 // injections/use
 const vuetify = useVuetify();

@@ -99,7 +99,10 @@ import { computed, defineAsyncComponent } from 'vue';
 import bannerImage from '@/assets/images/backgrounds/bg-dapps-center.jpg';
 import dappsMeta from '@/dapps/metainfo-dapps';
 import isNew from '@/core/helpers/isNew.js';
-import { global as useGlobalStore } from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
+
 import { useAmplitude } from '@/core/composables/amplitude';
 import { useRouter } from 'vue-router/composables';
 

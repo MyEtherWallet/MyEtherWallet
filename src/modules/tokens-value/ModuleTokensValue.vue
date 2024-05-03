@@ -19,10 +19,9 @@
 import { computed } from 'vue';
 import BigNumber from 'bignumber.js';
 
-import {
-  global as useGlobalStore,
-  wallet as useWalletStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
 
 // injections/use
 const { tokensList } = useGlobalStore();

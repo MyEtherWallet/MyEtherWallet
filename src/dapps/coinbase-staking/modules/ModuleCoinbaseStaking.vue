@@ -193,11 +193,9 @@ import {
   CB_TRACKING,
   MIN_GAS_LIMIT
 } from '@/dapps/coinbase-staking/configs.js';
-import {
-  global as useGlobalStore,
-  wallet as useWalletStore,
-  external as useExternalStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
 import { useAmplitude } from '@/core/composables/amplitude';
 import { useBuySell } from '@/core/composables/buyMore';
 

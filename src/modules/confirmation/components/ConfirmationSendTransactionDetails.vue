@@ -41,10 +41,8 @@ import BigNumber from 'bignumber.js';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
 
-import {
-  global as useGlobalStore,
-  external as useExternalStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useExternalStore } from '@/core/store/external';
 
 const ConfirmationSummaryBlock = defineAsyncComponent(() =>
   import('./ConfirmationSummaryBlock')

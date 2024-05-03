@@ -134,12 +134,10 @@ import { defineProps, computed, ref, defineEmits } from 'vue';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import { cloneDeep } from 'lodash';
 
-import {
-  global as useGlobalStore,
-  wallet as useWalletStore,
-  custom as useCustomStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
 import { useVuetify } from '@/core/composables/vuetify';
+import { useCustomStore } from '@/core/store/custom';
 
 const emit = defineEmits(['removeToken', 'addToken']);
 

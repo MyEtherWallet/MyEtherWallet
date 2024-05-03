@@ -229,11 +229,9 @@ import { isEmpty } from 'lodash';
 import commonGenerator from '@/core/helpers/commonGenerator';
 import sanitizeHex from '@/core/helpers/sanitizeHex';
 
-import {
-  global as useGlobalStore,
-  wallet as useWalletStore,
-  addressBook as useAddressBookStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
 
 const NetworkSwitch = defineAsyncComponent(() =>
   import('@/modules/network/components/NetworkSwitch.vue')

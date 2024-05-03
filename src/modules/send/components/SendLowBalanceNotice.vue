@@ -62,7 +62,9 @@ import { defineProps, ref } from 'vue';
 import { DASHBOARD } from '@/modules/analytics-opt-in/handlers/configs/events';
 import { useBuySell } from '@/core/composables/buyMore';
 import { useAmplitude } from '@/core/composables/amplitude';
-import { global as useGlobalStore } from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
 
 defineProps({
   currencyName: {

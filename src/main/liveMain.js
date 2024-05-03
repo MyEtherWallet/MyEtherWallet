@@ -2,20 +2,24 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import { v4 as uuidv4 } from 'uuid';
 import * as nameHashPckg from 'eth-ens-namehash';
+import Configs from '@/core/store/configs.js';
 
 import VueIntercom from '@mathieustan/vue-intercom';
 import VueSocialSharing from 'vue-social-sharing';
 import * as amplitude from '@amplitude/analytics-browser';
 
+import { PiniaVuePlugin, createPinia } from 'pinia';
+const pinia = createPinia();
+
 import app from './mainApp';
 import '@/assets/fonts/MaterialDesignIcons/css/materialdesignicons.min.css';
 import '@/assets/fonts/Roboto/css/Roboto.css';
 
-import './sentry';
 import './components';
+import './sentry';
 
 /**Dapps Store */
-import { dappStoreBeforeCreate } from '../dapps/dappsStore';
+// import { dappStoreBeforeCreate } from '../dapps/dappsStore';
 
 const originalPush = Router.prototype.push;
 const originalReplace = Router.prototype.replace;
@@ -30,15 +34,12 @@ Router.prototype.originalReplace = originalReplace;
 
 import router from '@/core/router';
 
-import {
-  global as useGlobalStore,
-  custom as useCustomStore,
-  notifications as useNotificationsStore,
-  addressBook as useAddressBookStore,
-  articles as useArticlesStore,
-  popups as usePopupsStore
-} from '@/core/store/index.js';
-
+import { useGlobalStore } from '../core/store/global';
+import { useCustomStore } from '../core/store/custom';
+import { useNotificationsStore } from '../core/store/notifications';
+import { useAddressBookStore } from '../core/store/addressBook';
+import { useArticleStore } from '../core/store/article';
+import { usePopupStore } from '../core/store/popups';
 import LottieAnimation from '@/core/directives/lottie';
 import lokalise from '@/core/filters/lokalise';
 
@@ -49,9 +50,6 @@ import apolloProvider from './apolloProvider';
 import i18n from './i18n';
 import * as locStore from 'store';
 import VueLazyLoad from 'vue-lazyload';
-import { PiniaVuePlugin, createPinia } from 'pinia';
-
-const pinia = createPinia();
 
 // Directives
 Vue.directive('lottie', LottieAnimation);
@@ -102,8 +100,8 @@ Vue.use(VueLazyLoad);
 new Vue({
   el: '#app',
   i18n,
-  router,
   pinia,
+  router,
   apolloProvider,
   vuetify,
   beforeCreate() {
@@ -119,18 +117,36 @@ new Vue({
     const globalStore = useGlobalStore();
     const notificationsStore = useNotificationsStore();
     const addressBookStore = useAddressBookStore();
-    const articleStore = useArticlesStore();
-    const popupsStore = usePopupsStore();
+    const articleStore = useArticleStore();
+    const { consentToTrack } = usePopupStore();
 
-    customStore.initStore();
-    globalStore.initStore();
-    notificationsStore.initStore();
-    addressBookStore.initStore();
-    articleStore.initStore();
-    popupsStore.initStore();
-    dappStoreBeforeCreate();
+    customStore.$patch(state => {
+      this.initStore(state, Configs, 'custom');
+    });
+    globalStore.$patch(state => {
+      this.initStore(state, Configs, 'global');
+    });
+    notificationsStore.$patch(state => {
+      this.initStore(state, Configs, 'notifications');
+    });
+    addressBookStore.$patch(state => {
+      this.initStore(state, Configs, 'addressBook');
+    });
+    articleStore.$patch(state => {
+      this.initStore(state, Configs, 'article');
+    });
 
-    this.$amplitude.setOptOut(!popupsStore.consentToTrack);
+    this.$amplitude.setOptOut(!consentToTrack);
+  },
+  methods: {
+    initStore(state, config, storeName) {
+      if (locStore.get(config.LOCAL_STORAGE_KEYS[storeName])) {
+        const savedStore = locStore.get(config.LOCAL_STORAGE_KEYS[storeName]);
+        if (savedStore.stateVersion === config.VERSION[storeName]) {
+          state = Object.assign(state, savedStore);
+        }
+      }
+    }
   },
   render: h => h(app)
 });

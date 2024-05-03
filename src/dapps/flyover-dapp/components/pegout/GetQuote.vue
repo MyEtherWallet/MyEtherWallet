@@ -71,7 +71,10 @@ import { getQuote } from '../../handlers/pegout';
 import { getProviders, getDetails } from '../../handlers/helpers/provider';
 import { fromBase, toBase } from '@/core/helpers/unit';
 
-import { wallet as useWalletStore } from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
+
 import { useI18n } from 'vue-i18n-composable';
 
 // emit

@@ -18,7 +18,7 @@ import BigNumber from 'bignumber.js';
 
 import addressBook from '@/modules/address-book/ModuleAddressBook';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
-import { wallet as useWalletStore } from '@/core/store/index.js';
+import { useWalletStore } from '@/core/store/wallet';
 import { useI18n } from 'vue-i18n-composable';
 
 // injections

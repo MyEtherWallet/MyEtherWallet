@@ -342,11 +342,9 @@ import {
 
 import { useBuySell } from '@/core/composables/buyMore';
 import { useAmplitude } from '@/core/composables/amplitude';
-import {
-  global as useGlobalStore,
-  external as useExternalStore,
-  ethBlocksTxs as useEthBlocksTxsStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useExternalStore } from '@/core/store/external';
+import { useEthBlocksTxsStore } from '../store';
 
 // emit
 const emit = defineEmits(['mint', 'openSend']);

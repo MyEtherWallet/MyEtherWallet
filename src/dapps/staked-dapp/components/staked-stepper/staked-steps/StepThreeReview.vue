@@ -192,11 +192,9 @@ import { formatBalanceEthValue } from '@/core/helpers/numberFormatHelper';
 import iconColorfulETH from '@/assets/images/icons/icon-colorful-eth.svg';
 import configNetworkTypes from '@/dapps/staked-dapp/handlers/configNetworkTypes';
 import { useAmplitude } from '@/core/composables/amplitude';
-import {
-  global as useGlobalStore,
-  external as useExternalStore,
-  wallet as useWalletStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
 
 // injections/use
 const { trackDapp } = useAmplitude();

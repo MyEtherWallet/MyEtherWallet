@@ -2,13 +2,15 @@ import { toPayload } from '../jsonrpc';
 import { randomHex } from 'web3-utils';
 import * as locStore from 'store';
 import { v4 } from 'uuid';
-export default async ({ payload, store }, res, next) => {
+import { useGlobalStore } from '../../../core/store/global';
+export default async ({ payload }, res, next) => {
+  const { network } = useGlobalStore();
   if (payload.method !== 'eth_sendRawTransaction') return next();
   const val = locStore.get('mew-testing');
   if (val) {
     res(null, toPayload(payload.id, randomHex(32)));
   } else {
-    if (store.getters['global/network'].type.chainID === 1) {
+    if (network.type.chainID === 1) {
       const burl = 'https://broadcast.mewapi.io/eth?product=web';
       fetch(burl, {
         method: 'POST',

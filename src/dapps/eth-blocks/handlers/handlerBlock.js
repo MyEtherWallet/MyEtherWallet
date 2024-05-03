@@ -11,7 +11,7 @@ import {
 } from './configs';
 const NO_OWNER = '0x0000000000000000000000000000000000000000';
 
-import { ethBlocksTxs as useEthBlocksTxsStore } from '@/core/store/index.js';
+import { useEthBlocksTxsStore } from '../store';
 
 export default class HandlerBlock {
   constructor(_web3, _network, _blockNumber, _currAdr) {

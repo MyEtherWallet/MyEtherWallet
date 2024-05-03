@@ -1,13 +1,14 @@
 import web3 from 'web3';
-import store from '@/core/store';
 import { ROOTSTOCK } from '@/utils/networks/types';
 import {
   toChecksumAddress as toChecksumAddr,
   isValidChecksumAddress
 } from 'ethereumjs-util';
+import { useGlobalStore } from '@/core/store/global';
 
 const isAddress = address => {
-  const chainId = store.getters['global/network'].type.chainID;
+  const { network } = useGlobalStore();
+  const chainId = network.type.chainID;
 
   if (chainId === ROOTSTOCK.chainID) {
     // check if it has the basic requirements of an address
@@ -30,7 +31,8 @@ const isAddress = address => {
   );
 };
 const toChecksumAddress = address => {
-  const chainId = store.getters['global/network'].type.chainID;
+  const { network } = useGlobalStore();
+  const chainId = network.type.chainID;
   // Use EIP-1191 Address Checksum if its Rootstock network
   if (chainId === ROOTSTOCK.chainID) {
     return toChecksumAddr(address, chainId);

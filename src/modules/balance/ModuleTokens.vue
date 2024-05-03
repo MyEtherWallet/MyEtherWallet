@@ -115,13 +115,11 @@ import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { currencyToNumber } from '@/core/helpers/localization';
 import { DASHBOARD } from '../analytics-opt-in/handlers/configs/events';
 import { useAmplitude } from '@/core/composables/amplitude';
-import {
-  wallet as useWalletStore,
-  custom as useCustomStore,
-  global as useGlobalStore,
-  external as useExternalStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
 import { useRouter } from 'vue-router/composables';
+import { useCustomStore } from '@/core/store/custom';
 
 const BalanceTable = defineAsyncComponent(() =>
   import('./components/BalanceTable')

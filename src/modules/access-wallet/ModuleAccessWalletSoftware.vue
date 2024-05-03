@@ -109,12 +109,10 @@ import { ROUTES_WALLET } from '../../core/configs/configRoutes';
 import handlerAccessWalletSoftware from './software/handlers/handlerAccessWalletSoftware';
 import { ACCESS_WALLET } from '../analytics-opt-in/handlers/configs/events';
 import { useAmplitude } from '@/core/composables/amplitude';
-import {
-  external as useExternalStore,
-  wallet as useWalletStore,
-  article as useArticleStore
-} from '@/core/store/index.js';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
 import { useRouter } from 'vue-router/composables';
+import { useArticleStore } from '@/core/store/article';
 
 const AccessWalletKeystore = defineAsyncComponent(() =>
   import('./software/components/AccessWalletKeystore')

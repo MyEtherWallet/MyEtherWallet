@@ -1,9 +1,7 @@
 import BigNumber from 'bignumber.js';
 
-import {
-  global as useGlobalStore,
-  wallet as useWalletStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
 
 import platformList from '@/_generated/platformlist.json';
 import {
@@ -12,6 +10,7 @@ import {
   formatIntegerValue
 } from '@/core/helpers/numberFormatHelper';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
+
 /**
  * Get Eth Fiat value
  */

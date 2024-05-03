@@ -2,10 +2,8 @@ import url from 'url';
 import Web3 from 'web3';
 import { formatters } from 'web3-core-helpers';
 
-import {
-  external as useExternalStore,
-  global as useGlobalStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useExternalStore } from '@/core/store/external';
 
 import MEWProvider from '@/utils/web3-provider';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';

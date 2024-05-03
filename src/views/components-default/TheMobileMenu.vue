@@ -176,8 +176,7 @@ import { useRoute } from 'vue-router/composables';
 import CloseIcon from '@/assets/images/icons/close-icon.vue';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
 import { useAmplitude } from '@/core/composables/amplitude';
-
-import { popups as usePopupsStore } from '@/core/store/index.js';
+import { usePopupStore } from '@/core/store/popups';
 
 // emits
 const emit = defineEmits(['closeMobileMenu']);
@@ -193,7 +192,7 @@ defineProps({
 // injections/use
 const route = useRoute();
 const { setConsent } = useAmplitude();
-const { consentToTrack } = usePopupsStore();
+const { consentToTrack } = usePopupStore();
 
 // data
 const isFeaturesOpen = ref(false);

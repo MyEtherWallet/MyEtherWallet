@@ -5,11 +5,9 @@ import { fromWei, toWei } from 'web3-utils';
 import { gasPriceTypes, estimatedTime } from '@/core/helpers/gasPriceHelper';
 import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 
-import {
-  global as useGlobalStore,
-  wallet as useWalletStore,
-  external as useExternalStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
 
 export const useGasPrice = () => {
   // injections/use

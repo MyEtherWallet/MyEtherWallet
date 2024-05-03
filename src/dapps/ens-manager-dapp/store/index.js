@@ -1,11 +1,14 @@
+import { defineStore } from 'pinia';
+
 import State from './state';
 import Actions from './actions';
 
 const ensManagerStore = {
-  namespaced: true,
-  state: State,
-  actions: Actions,
-  strict: false
+  state: () => State,
+  actions: Actions
 };
 
-export default ensManagerStore;
+export const useEnsManagerStore = defineStore(
+  'ensManagerStore',
+  ensManagerStore
+);

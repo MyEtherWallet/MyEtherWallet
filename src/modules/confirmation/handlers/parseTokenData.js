@@ -1,9 +1,13 @@
 import BigNumber from 'bignumber.js';
-import store from '@/core/store';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
 import Web3 from 'web3';
+
 function parseTokensData(data, to) {
+  const { contractToToken } = useExternalStore();
   const web3 = new Web3();
-  const token = store.getters['external/contractToToken'](to);
+  const token = contractToToken(to);
   const jsonInterface = {
     constant: false,
     inputs: [

@@ -55,7 +55,9 @@ import {
 } from '../../../access-wallet/common/helpers';
 import { ACCESS_WALLET } from '@/modules/analytics-opt-in/handlers/configs/events';
 import { useAmplitude } from '@/core/composables/amplitude';
-import { wallet as useWalletStore } from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
 
 // defineEmits
 const emit = defineEmits(['unlock']);

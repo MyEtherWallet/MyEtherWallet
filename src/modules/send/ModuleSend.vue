@@ -210,12 +210,11 @@ import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import { fromBase, toBase } from '@/core/helpers/unit';
 import SendTransaction from '@/modules/send/handlers/handlerSend';
 import { useBuySell } from '@/core/composables/buyMore';
-import {
-  global as useGlobalStore,
-  wallet as useWalletStore,
-  custom as useCustomStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+
 import { useI18n } from 'vue-i18n-composable';
+import { useCustomStore } from '@/core/store/custom';
 
 const ModuleAddressBook = defineAsyncComponent(() =>
   import('@/modules/address-book/ModuleAddressBook')

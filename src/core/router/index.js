@@ -1,5 +1,6 @@
 import Router from 'vue-router';
-import store from '@/core/store';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
 import langShortCodes from '@/translations/getShortCodes';
 import routesDefault from './routes-default';
 import routesOfflineDefault from './routes-offline-default';
@@ -8,14 +9,6 @@ import routesWallet from './routes-wallet';
 import routesNotFound from './routes-not-found';
 import { ROUTES_HOME } from '../configs/configRoutes';
 import Vue from 'vue';
-
-import {
-  external as useExternalStore,
-  wallet as useWalletStore
-} from '@/core/store/index.js';
-
-const { setLastPath } = useExternalStore();
-const { removeWallet } = useWalletStore();
 
 const routes =
   // eslint-disable-next-line
@@ -43,19 +36,21 @@ const router = new Router({
   }
 });
 router.beforeResolve((to, from, next) => {
+  const { setLastPath, path } = useExternalStore();
+  const { removeWallet, address } = useWalletStore();
   // Check if user is coming from a path that needs auth
-  if (!from.meta.noAuth && store.state.wallet.address && to.meta.noAuth) {
+  if (!from.meta.noAuth && address && to.meta.noAuth) {
     removeWallet();
   }
   if (to.meta.noAuth) {
     next();
   } else {
-    if (store.state.wallet.address === null) {
+    if (address === null) {
       setLastPath(to.path);
       next({ name: ROUTES_HOME.ACCESS_WALLET.NAME });
     } else {
-      if (store.state.external.path !== '') {
-        const localPath = store.state.external.path;
+      if (path !== '') {
+        const localPath = path;
         if (window.navigator.onLine) {
           Vue.prototype.$amplitude.track('WalletDirectLinkAccess', {
             to: localPath

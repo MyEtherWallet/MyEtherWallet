@@ -6,19 +6,19 @@ import errorHandler from './errorHandler';
 import metamask from '@/assets/images/icons/wallets/metamask.svg';
 import enkrypt from '@/assets/images/icons/enkrypt/icon-enkrypt-colored.svg';
 import { CustomRequestManager } from '@/utils/web3-provider/providers/given-provider';
-import store from '@/core/store';
+import { useExternalStore } from '@/core/store/external';
+
 class Web3Wallet extends WalletInterface {
   static get errorHandler() {
     return errorHandler;
   }
   constructor(address) {
     super(address, true, WALLET_TYPES.WEB3_WALLET);
+    const { selectedEIP6963Info, selectedEIP6963Provider } = useExternalStore();
     this.errorHandler = errorHandler;
     if (!window.ethereum) throw new Error('No Web3 instance found');
-    const isEIP6963 = store.state.external.selectedEIP6963Info;
-    const provider = isEIP6963
-      ? store.state.external.selectedEIP6963Provider
-      : window.ethereum;
+    const isEIP6963 = selectedEIP6963Info;
+    const provider = isEIP6963 ? selectedEIP6963Provider : window.ethereum;
     this.web3 = new Web3(new CustomRequestManager(provider));
     const isMetamask = provider?.isMetaMask && !provider?.isEnkrypt;
     const isEnkrypt = provider?.isMetaMask && provider?.isEnkrypt;

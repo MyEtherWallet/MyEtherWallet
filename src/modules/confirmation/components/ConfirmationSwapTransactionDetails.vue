@@ -76,11 +76,9 @@ import {
   formatGasValue
 } from '@/core/helpers/numberFormatHelper';
 
-import {
-  global as useGlobalStore,
-  external as useExternalStore,
-  wallet as useWalletStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
 
 const ConfirmationSummaryBlock = defineAsyncComponent(() =>
   import('./ConfirmationSummaryBlock')

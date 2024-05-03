@@ -60,12 +60,10 @@ import { isAddress, toChecksumAddress } from '@/core/helpers/addressUtils';
 import NameResolver from '@/modules/name-resolver/index';
 import { ERROR, Toast } from '../toast/handler/handlerToast';
 
-import {
-  addressBook as useAddressBookStore,
-  global as useGlobalStore,
-  wallet as useWalletStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
 import { useI18n } from 'vue-i18n-composable/dist';
+import { useAddressBookStore } from '@/core/store/addressBook';
 
 const AddressBookAddEdit = defineAsyncComponent(() =>
   import('./components/AddressBookAddEdit')

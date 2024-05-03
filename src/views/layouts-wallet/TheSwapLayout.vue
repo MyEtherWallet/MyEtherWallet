@@ -29,6 +29,13 @@ const DAI_TOKEN = '0x6b175474e89094c44da98b954eedeac495271d0f';
 
 <script setup>
 import { defineProps, computed, onMounted, defineAsyncComponent } from 'vue';
+import { useAmplitude } from '@/core/composables/amplitude.js';
+import { COMMON } from '@/modules/analytics-opt-in/handlers/configs/events.js';
+
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
+
 const TheWrapperWallet = defineAsyncComponent(() =>
   import('@/views/components-wallet/TheWrapperWallet')
 );
@@ -41,14 +48,6 @@ const ModuleTokensValue = defineAsyncComponent(() =>
 const ModuleTransferHistory = defineAsyncComponent(() =>
   import('@/modules/transfer-history/ModuleTransferHistory')
 );
-
-import { useAmplitude } from '@/core/composables/amplitude.js';
-import { COMMON } from '@/modules/analytics-opt-in/handlers/configs/events.js';
-
-import {
-  global as useGlobalStore,
-  notifications as useNotificationsStore
-} from '@/core/store/index.js';
 
 // injections/use
 const { trackSwapAmplitude } = useAmplitude();

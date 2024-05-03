@@ -13,7 +13,7 @@ const initStore = () => {
         : new NonChainNotification(item);
     });
     if (savedStore.stateVersion === Configs.VERSION.notifications) {
-      this.$state = Object.assign(this.$state, savedStore);
+      this.$patch(Object.assign(this.$state, savedStore));
     }
   }
 };

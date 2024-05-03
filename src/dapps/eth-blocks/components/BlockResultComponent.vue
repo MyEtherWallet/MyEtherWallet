@@ -172,13 +172,11 @@ import { some, isEmpty } from 'lodash';
 
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 import { ETH_BLOCKS_ROUTE } from '../configsRoutes';
-import {
-  global as useGlobalStore,
-  wallet as useWalletStore,
-  external as useExternalStore,
-  ethBlocksTxs as useEthBlocksTxsStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
 import { useRouter } from 'vue-router/composables';
+import { useEthBlocksTxsStore } from '../store';
 
 const BlockQuickViewPopup = defineAsyncComponent(() =>
   import('./BlockQuickViewPopup')

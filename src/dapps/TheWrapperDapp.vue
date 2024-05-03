@@ -165,7 +165,7 @@ const TheDappBlockHeader = defineAsyncComponent(() =>
 );
 const TheDappHeader = defineAsyncComponent(() => import('./TheDappHeader.vue'));
 
-import { global as useGlobalStore } from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
 
 const { network } = useGlobalStore();
 

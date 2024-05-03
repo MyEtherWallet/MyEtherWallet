@@ -1,10 +1,8 @@
 import { toBN } from 'web3-utils';
 import { isEmpty } from 'lodash';
 
-import {
-  wallet as useWalletStore,
-  external as useExternalStore
-} from '@/core/store/index.js';
+import { useWalletStore } from '../wallet';
+import { useExternalStore } from '../external';
 
 import nodeList from '@/utils/networks';
 import { ETH, BSC, MATIC } from '@/utils/networks/types';

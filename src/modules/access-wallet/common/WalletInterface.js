@@ -18,7 +18,10 @@ import toBuffer from '@/core/helpers/toBuffer';
 import commonGenerator from '@/core/helpers/commonGenerator';
 import { Transaction, FeeMarketEIP1559Transaction } from '@ethereumjs/tx';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
-import store from '@/core/store';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
+
 class WalletInterface {
   constructor(key, isPub = false, identifier, nick, keystore) {
     this.nickname = nick !== null && nick !== '' ? nick : '';
@@ -106,22 +109,24 @@ class WalletInterface {
     return toChecksumAddress(this.getAddressString());
   }
   signTransaction(txParams, signer) {
+    const { network, isEIP1559SupportedNetwork, gasFeeMarketInfo } =
+      useGlobalStore();
     if (this.isPubOnly && typeof signer !== 'function')
       throw new Error('public key only wallets needs a signer');
     if (!this.isPubOnly) {
       return new Promise(resolve => {
         let tx = Transaction.fromTxData(txParams, {
-          common: commonGenerator(store.getters['global/network'])
+          common: commonGenerator(network)
         });
-        if (store.getters['global/isEIP1559SupportedNetwork']) {
-          const feeMarket = store.getters['global/gasFeeMarketInfo'];
+        if (isEIP1559SupportedNetwork) {
+          const feeMarket = gasFeeMarketInfo;
           const _txParams = Object.assign(
             eip1559Params(txParams.gasPrice, feeMarket),
             txParams
           );
           delete _txParams.gasPrice;
           tx = FeeMarketEIP1559Transaction.fromTxData(_txParams, {
-            common: commonGenerator(store.getters['global/network'])
+            common: commonGenerator(network)
           });
         }
         const networkId = tx.common.chainId();

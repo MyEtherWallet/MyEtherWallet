@@ -82,11 +82,11 @@
 
 <script setup>
 import { useAmplitude } from '@/core/composables/amplitude';
-import { popups as usePopupsStore } from '@/core/store/index.js';
+import { usePopupStore } from '@/core/store/popups';
 
 // injections/use
 const { setTrackingConsent, $amplitude } = useAmplitude();
-const { neverShowPopup } = usePopupsStore();
+const { neverShowPopup } = usePopupStore();
 
 // data
 const whatWeCollect = [

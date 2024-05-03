@@ -144,13 +144,11 @@ import {
 import sEthAbi from '@/dapps/stakewise/handlers/abi/stakedEthToken.js';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { useBuySell } from '@/core/composables/buyMore';
-import {
-  wallet as useWalletStore,
-  global as useGlobalStore,
-  stakewise as useStakewiseStore,
-  external as useExternalStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
 import { useRoute } from 'vue-router/composables';
+import { useStakewiseStore } from '../store';
 
 // emits
 const emit = defineEmits(['scroll', 'redeem-to-eth', 'set-max']);

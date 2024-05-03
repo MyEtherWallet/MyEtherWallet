@@ -169,11 +169,9 @@ import {
   WARNING
 } from '@/modules/toast/handler/handlerToast';
 import { SOFTWARE_WALLET_TYPES } from '@/modules/access-wallet/software/handlers/helpers.js';
-import {
-  global as useGlobalStore,
-  wallet as useWalletStore,
-  stakedStore as useStakedStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useStakedStore } from '../store';
 
 const PhraseBlock = defineAsyncComponent(() =>
   import('@/core/components/PhraseBlock')

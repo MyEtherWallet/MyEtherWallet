@@ -2,11 +2,8 @@ import localStore from 'store';
 import BigNumber from 'bignumber.js';
 import Vue from 'vue';
 
-import {
-  global as useGlobalStore,
-  custom as useCustomStore,
-  wallet as useWalletStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
 
 import Configs from '../configs';
 import { fromBase } from '@/core/helpers/unit';
@@ -16,13 +13,13 @@ import {
 } from '@/core/helpers/numberFormatHelper';
 import abi from '@/modules/balance/handlers/abiERC20.js';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
-import { isAddress } from '@/core/helpers/addressUtils.js';
+import { isAddress } from 'web3-utils';
 
 const initStore = () => {
   if (localStore.get(Configs.LOCAL_STORAGE_KEYS.custom)) {
     const savedStore = localStore.get(Configs.LOCAL_STORAGE_KEYS.custom);
     if (savedStore.stateVersion === Configs.VERSION.custom) {
-      this.$state = Object.assign(this.$state, savedStore);
+      this.$patch(Object.assign(this.$state, savedStore));
     }
   }
 };
@@ -46,7 +43,6 @@ const setCustomToken = function (token) {
 
 const deleteToken = function (token) {
   const { network } = useGlobalStore();
-  const { hiddenTokens } = useCustomStore();
   const currentCustomTokens = this.tokens[network.type.name].filter(
     currentTokens => {
       const found = token.find(item => {
@@ -54,8 +50,8 @@ const deleteToken = function (token) {
           return item;
         }
       });
-      if (found && hiddenTokens.length > 0) {
-        const newHiddenTokens = hiddenTokens.filter(item => {
+      if (found && this.hiddenTokens.length > 0) {
+        const newHiddenTokens = this.hiddenTokens.filter(item => {
           return found.address !== item.address;
         });
         Vue.set(this.hiddenTokens, network.type.name, newHiddenTokens);

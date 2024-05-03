@@ -140,12 +140,10 @@ import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 import { isAddress } from '@/core/helpers/addressUtils';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 
-import {
-  global as useGlobalStore,
-  wallet as useWalletStore,
-  external as useExternalStore,
-  custom as useCustomStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
+import { useCustomStore } from '@/core/store/custom';
 
 // injections/use
 const { getFiatValue } = useGlobalStore();

@@ -60,7 +60,10 @@ import handlerCreateWallet from './handlers/handlerCreateWallet';
 import { SOFTWARE_WALLET_TYPES } from '../access-wallet/software/handlers/helpers';
 import { CREATE_WALLET } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 import { useAmplitude } from '@/core/composables/amplitude';
-import { wallet as useWalletStore } from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
+
 import { useRouter } from 'vue-router/composables';
 
 const CreateWalletSoftwareOverview = defineAsyncComponent(() =>

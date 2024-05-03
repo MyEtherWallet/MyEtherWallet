@@ -151,10 +151,9 @@ import {
 } from '@/modules/toast/handler/handlerToast';
 import getService from '@/core/helpers/getService';
 
-import {
-  global as useGlobalStore,
-  wallet as useWalletStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
 
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { ETH, BSC, MATIC } from '@/utils/networks/types';

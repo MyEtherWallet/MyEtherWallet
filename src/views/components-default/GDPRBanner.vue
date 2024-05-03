@@ -38,12 +38,11 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 
-import { popups as usePopupsStore } from '@/core/store/index.js';
-
 import isEU from '@/core/helpers/isEU.js';
+import { usePopupStore } from '@/core/store/popups';
 
 // injections/use
-const { shownChoiceEU, setShownEu, setTrackingConsent } = usePopupsStore();
+const { shownChoiceEU, setShownEu, setTrackingConsent } = usePopupStore();
 
 // data
 const show = ref(false);

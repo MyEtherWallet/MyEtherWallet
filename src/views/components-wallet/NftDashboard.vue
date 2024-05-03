@@ -104,10 +104,9 @@ import { fromBase } from '@/core/helpers/unit';
 import { toBNSafe } from '@/core/helpers/numberFormatHelper';
 import { useAmplitude } from '@/core/composables/amplitude';
 import { useVuetify } from './vuetify';
-import {
-  global as useGlobalStore,
-  wallet as useWalletStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
 
 // injections/use
 const { darkMode, gasPrice } = useGlobalStore();

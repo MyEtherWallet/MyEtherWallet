@@ -5,7 +5,7 @@ const initStore = function () {
   if (localStore.get(Configs.LOCAL_STORAGE_KEYS.ethBlocksTxs)) {
     const savedStore = localStore.get(Configs.LOCAL_STORAGE_KEYS.ethBlocksTxs);
     if (savedStore.stateVersion === Configs.VERSION.ethBlocksTxs) {
-      this.$state = Object.assign(this.$state, savedStore);
+      this.$patch(Object.assign(this.$state, savedStore));
     }
   }
 };

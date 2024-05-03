@@ -134,11 +134,9 @@ import {
 import { EventBus } from '@/core/plugins/eventBus';
 import { useBuySell } from '@/core/composables/buyMore';
 import { useAmplitude } from '@/core/composables/amplitude';
-import {
-  global as useGlobalStore,
-  wallet as useWalletStore,
-  coinbaseStaking as useCoinbaseStakingStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useCoinbaseStakingStore } from '../store';
 
 // injections
 const { openBuySell } = useBuySell();

@@ -28,11 +28,9 @@ import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
 import { toBNSafe } from '@/core/helpers/numberFormatHelper';
 
 import handler from './handlers/stakewiseHandler';
-import {
-  global as useGlobalStore,
-  wallet as useWalletStore,
-  stakewise as useStakewiseStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useStakewiseStore } from './store';
 
 const TheWrapperDapp = defineAsyncComponent(() =>
   import('@/dapps/TheWrapperDapp.vue')

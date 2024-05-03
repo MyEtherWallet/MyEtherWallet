@@ -1,11 +1,8 @@
-import {
-  external as useExternalStore,
-  swap as useSwapStore,
-  wallet as useWalletStore
-} from '@/core/store/index.js';
-
 import matchNetwork from '@/core/helpers/matchNetwork';
 import { toBNSafe } from '@/core/helpers/numberFormatHelper';
+import { useSwapStore } from '../swap';
+import { useWalletStore } from '../wallet';
+import { useExternalStore } from '../external';
 
 const setOnlineStatus = function (val) {
   const { setWeb3Instance } = useWalletStore();

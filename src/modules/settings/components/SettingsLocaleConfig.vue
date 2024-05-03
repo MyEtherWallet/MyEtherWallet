@@ -19,10 +19,8 @@
 import { computed, ref, onMounted } from 'vue';
 
 import currencyList from './currencyList';
-import {
-  global as useGlobalStore,
-  extenral as useExternalStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useExternalStore } from '@/core/store/external';
 
 // injections/use
 const { preferredCurrency, setPreferredCurrency } = useGlobalStore();

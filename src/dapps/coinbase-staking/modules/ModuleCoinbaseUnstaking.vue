@@ -191,12 +191,10 @@ import {
 import { useBuySell } from '@/core/composables/buyMore';
 import { useAmplitude } from '@/core/composables/amplitude';
 
-import {
-  global as useGlobalStore,
-  external as useExternalStore,
-  wallet as useWalletStore,
-  coinbaseStaking as useCoinbaseStakingStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
+import { useCoinbaseStakingStore } from '../store';
 
 const CoinbaseStakingSummary = defineAsyncComponent(() =>
   import('../components/CoinbaseStakingSummary')

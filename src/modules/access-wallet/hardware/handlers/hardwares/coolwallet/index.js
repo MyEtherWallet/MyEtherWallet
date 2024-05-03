@@ -17,7 +17,9 @@ import Vue from 'vue';
 import coolwallet from '@/assets/images/icons/wallets/coolwallet.svg';
 import coolwalletPro from '@/assets/images/icons/wallets/coolwalletpro.svg';
 import * as locstore from 'store';
-import store from '@/core/store';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
 import {
   getSignTransactionObject,
   sanitizeHex,
@@ -64,6 +66,7 @@ class CoolWallet {
       : '';
   }
   async init(password) {
+    const { network } = useGlobalStore();
     const _this = this;
     const transport = await createTransport();
     const device = transport.device;
@@ -94,7 +97,7 @@ class CoolWallet {
               locstore.set(CW_DEVICE_NAME, device.name);
               if (_this.isPro) {
                 _this.connectToCWP();
-                const chainID = store.getters['global/network'].type.chainID;
+                const chainID = network.type.chainID;
                 await _this.deviceInstance[chainID].getAddress(
                   _this.transport,
                   _this.appPrivateKey,
@@ -194,7 +197,9 @@ class CoolWallet {
   }
 
   async getAccount(idx) {
-    const chainID = store.getters['global/network'].type.chainID;
+    const { network, gasFeeMarketInfo, isEIP1559SupportedNetwork } =
+      useGlobalStore();
+    const chainID = network.type.chainID;
     const instance = this.isPro
       ? this.deviceInstance[chainID]
       : this.deviceInstance;
@@ -209,7 +214,7 @@ class CoolWallet {
     const txSigner = async txParam => {
       const legacySigner = async _txParam => {
         const tx = new Transaction.fromTxData(_txParam, {
-          common: commonGenerator(store.getters['global/network'])
+          common: commonGenerator(network)
         });
         const cwTx = {
           data: bufferToHex(tx.data),
@@ -238,7 +243,7 @@ class CoolWallet {
               .catch(errorHandler);
         if (result) {
           const resultTx = Transaction.fromSerializedTx(result, {
-            common: commonGenerator(store.getters['global/network'])
+            common: commonGenerator(network)
           });
           const signedChainId = calculateChainIdFromV(resultTx.v);
           if (signedChainId !== chainID)
@@ -254,14 +259,14 @@ class CoolWallet {
         return result;
       };
       const eip1559Signer = async _txParam => {
-        const feeMarket = store.getters['global/gasFeeMarketInfo'];
+        const feeMarket = gasFeeMarketInfo;
         const _txParams = Object.assign(
           eip1559Params(_txParam.gasPrice, feeMarket),
           _txParam
         );
         delete _txParams.gasPrice;
         const tx = FeeMarketEIP1559Transaction.fromTxData(_txParams, {
-          common: commonGenerator(store.getters['global/network'])
+          common: commonGenerator(network)
         });
         const cwTx = {
           data: bufferToHex(tx.data),
@@ -285,7 +290,7 @@ class CoolWallet {
           const resultTx = FeeMarketEIP1559Transaction.fromSerializedTx(
             toBuffer(result),
             {
-              common: commonGenerator(store.getters['global/network'])
+              common: commonGenerator(network)
             }
           );
           return getSignTransactionObject(resultTx);
@@ -293,7 +298,7 @@ class CoolWallet {
         return result;
       };
 
-      if (store.getters['global/isEIP1559SupportedNetwork'] && this.isPro) {
+      if (isEIP1559SupportedNetwork && this.isPro) {
         try {
           return eip1559Signer(txParam);
         } catch (e) {

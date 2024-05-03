@@ -137,12 +137,10 @@ import handlerBlock from '../handlers/handlerBlock';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { EventBus } from '@/core/plugins/eventBus';
 import { useBuySell } from '@/core/composables/buyMore.js';
-import {
-  global as useGlobalStore,
-  wallet as useWalletStore,
-  ethBlocksTxs as useEthBlocksTxsStore,
-  external as useExternalStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
+import { useEthBlocksTxsStore } from '../store';
 
 const BlockResultComponent = defineAsyncComponent(() =>
   import('../components/BlockResultComponent')

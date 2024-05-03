@@ -9,8 +9,14 @@ import BigNumber from 'bignumber.js';
 import sanitizeHex from '@/core/helpers/sanitizeHex';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import { EventBus } from '@/core/plugins/eventBus';
+import { useExternalStore } from '../../../core/store/external';
+import { useGlobalStore } from '../../../core/store/global';
+import { useWalletStore } from '../../../core/store/wallet';
 
-export default async ({ payload, store, requestManager }, res, next) => {
+export default async ({ payload, requestManager }, res, next) => {
+  const { contractToToken } = useExternalStore();
+  const { gasPrice, network } = useGlobalStore();
+  const { wallet } = useWalletStore();
   if (payload.method !== 'eth_sendTransaction') return next();
   const tx = Object.assign({}, payload.params[0]);
   let confirmInfo;
@@ -27,14 +33,12 @@ export default async ({ payload, store, requestManager }, res, next) => {
       type: 'TYPED'
     };
   }
-  let currency = store.getters['external/contractToToken'](tx.to);
+  let currency = contractToToken(tx.to);
   if (tx.to) {
     if (!(currency.name && currency.symbol))
-      currency = store.getters['external/contractToToken'](MAIN_TOKEN_ADDRESS);
+      currency = contractToToken(MAIN_TOKEN_ADDRESS);
   }
-  tx.gasPrice = tx.gasPrice
-    ? tx.gasPrice
-    : BigNumber(store.getters['global/gasPrice']).toFixed();
+  tx.gasPrice = tx.gasPrice ? tx.gasPrice : BigNumber(gasPrice).toFixed();
   const localTx = Object.assign({}, tx);
   delete localTx['gas'];
   delete localTx['nonce'];
@@ -43,8 +47,8 @@ export default async ({ payload, store, requestManager }, res, next) => {
   const ethCalls = new EthCalls(requestManager);
   try {
     tx.nonce = !tx.nonce
-      ? await store.state.wallet.web3.eth.getTransactionCount(
-          store.state.wallet.instance.getAddressString()
+      ? await wallet.web3.eth.getTransactionCount(
+          wallet.instance.getAddressString()
         )
       : tx.nonce;
     if (tx.gasLimit) {
@@ -56,10 +60,8 @@ export default async ({ payload, store, requestManager }, res, next) => {
     res(e);
     return;
   }
-  tx.chainId = !tx.chainId
-    ? store.getters['global/network'].type.chainID
-    : tx.chainId;
-  tx.from = tx.from ? tx.from : store.state.wallet.address;
+  tx.chainId = !tx.chainId ? network.type.chainID : tx.chainId;
+  tx.from = tx.from ? tx.from : wallet.address;
   getSanitizedTx(tx)
     .then(_tx => {
       const event = confirmInfo
@@ -71,25 +73,23 @@ export default async ({ payload, store, requestManager }, res, next) => {
         ? [_tx, toDetails, currency]
         : [_tx, toDetails];
       if (
-        store.state.wallet.identifier === WALLET_TYPES.WEB3_WALLET ||
-        store.state.wallet.identifier === WALLET_TYPES.WALLET_CONNECT ||
-        store.state.wallet.identifier === WALLET_TYPES.MEW_WALLET
+        wallet.identifier === WALLET_TYPES.WEB3_WALLET ||
+        wallet.identifier === WALLET_TYPES.WALLET_CONNECT ||
+        wallet.identifier === WALLET_TYPES.MEW_WALLET
       ) {
         EventBus.$emit(event, params, _promiObj => {
           if (_promiObj.rejected) {
             res(new Error('User rejected action'));
             return;
           }
-          setEvents(_promiObj, _tx, store.dispatch);
+          setEvents(_promiObj, _tx);
           _promiObj
             .once('transactionHash', hash => {
-              if (store.state.wallet.instance !== null) {
+              if (wallet.instance !== null) {
                 const isTesting = locStore.get('mew-testing');
                 if (!isTesting) {
                   const storeKey = utils.sha3(
-                    `${
-                      store.getters['global/network'].type.name
-                    }-${store.state.wallet.instance
+                    `${network.type.name}-${wallet.instance
                       .getChecksumAddressString()
                       .toLowerCase()}`
                   );
@@ -120,10 +120,10 @@ export default async ({ payload, store, requestManager }, res, next) => {
             res(new Error('User rejected action'));
             return;
           }
-          const _promiObj = store.state.wallet.web3.eth.sendSignedTransaction(
+          const _promiObj = wallet.web3.eth.sendSignedTransaction(
             _response.rawTransaction
           );
-          setEvents(_promiObj, _tx, store.dispatch);
+          setEvents(_promiObj, _tx);
           _promiObj
             .once('receipt', receipt => {
               if (confirmInfo) {
@@ -135,13 +135,11 @@ export default async ({ payload, store, requestManager }, res, next) => {
             })
             .once('transactionHash', hash => {
               txHash = hash;
-              if (store.state.wallet.instance !== null) {
+              if (wallet.instance !== null) {
                 const isTesting = locStore.get('mew-testing');
                 if (!isTesting) {
                   const storeKey = utils.sha3(
-                    `${
-                      store.getters['global/network'].type.name
-                    }-${store.state.wallet.instance
+                    `${network.type.name}-${wallet.instance
                       .getChecksumAddressString()
                       .toLowerCase()}`
                   );

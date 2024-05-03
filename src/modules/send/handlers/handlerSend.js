@@ -2,7 +2,9 @@ import { toBN, toHex, toChecksumAddress, isHexStrict } from 'web3-utils';
 import { isAddress } from '@/core/helpers/addressUtils';
 import SanitizeHex from '@/core/helpers/sanitizeHex';
 import { Transaction } from '@ethereumjs/tx';
-import { wallet as useWalletStore } from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
 
 import ErrorList from '../errors';
 import Web3Contract from 'web3-eth-contract';

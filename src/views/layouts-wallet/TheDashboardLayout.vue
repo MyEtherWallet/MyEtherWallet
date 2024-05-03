@@ -29,7 +29,9 @@
 <script setup>
 import { defineAsyncComponent, computed } from 'vue';
 
-import { global as useGlobalStore } from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
 
 import { ETH, HOLESKY, GOERLI } from '@/utils/networks/types';
 

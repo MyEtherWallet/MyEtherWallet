@@ -6,10 +6,8 @@ import Notification, {
 import { clone } from 'lodash';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 
-import {
-  notifications as useNotificationsStore,
-  external as useExternalStore
-} from '@/core/store/index.js';
+import { useExternalStore } from '@/core/store/external';
+import { useNotificationsStore } from '../../../core/store/notifications';
 
 const getSanitizedTx = tx => {
   return new Promise((resolve, reject) => {

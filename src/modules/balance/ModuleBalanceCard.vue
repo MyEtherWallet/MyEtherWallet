@@ -265,11 +265,9 @@ import NameResolver from '@/modules/name-resolver/index';
 import { EventBus } from '@/core/plugins/eventBus';
 import { DASHBOARD } from '../analytics-opt-in/handlers/configs/events';
 import { useAmplitude } from '@/core/composables/amplitude';
-import {
-  wallet as useWalletStore,
-  external as useExternalStore,
-  global as useGlobalStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
 import { useI18n } from 'vue-i18n-composable/dist';
 
 const ModuleAccessWalletHardware = defineAsyncComponent(() =>

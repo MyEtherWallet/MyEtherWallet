@@ -115,7 +115,7 @@ import { useRouter } from 'vue-router/composables';
 
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
-import useEnkryptMarketing from '@/core/composables/enkryptMarketing.js';
+import { useEnkryptMarketing } from '@/core/composables/enkryptMarketing';
 import { useAmplitude } from '@/core/composables/amplitude.js';
 
 import {
@@ -123,7 +123,7 @@ import {
   CREATE_WALLET
 } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 
-import { wallet as useWalletStore } from '@/core/store/index.js';
+import { useWalletStore } from '@/core/store/wallet';
 
 const ModuleCreateWalletSoftware = defineAsyncComponent(() =>
   import('@/modules/create-wallet/ModuleCreateWalletSoftware')

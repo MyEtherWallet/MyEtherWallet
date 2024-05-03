@@ -113,7 +113,6 @@ import { computed, ref, onMounted } from 'vue';
 import { formatPercentageValue } from '@/core/helpers/numberFormatHelper';
 import stakedInfo from '@/dapps/staked-dapp/metainfo.js';
 import coinbaseInfo from '@/dapps/coinbase-staking/metainfo.js';
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import isNew from '@/core/helpers/isNew.js';
 import { STAKED_ROUTE } from '@/dapps/staked-dapp/configsRoutes';
 import { COINBASE_STAKING_ROUTES } from '@/dapps/coinbase-staking/configs';
@@ -121,10 +120,10 @@ import { STAKING } from '../analytics-opt-in/handlers/configs/events';
 import handlerStaked from '@/dapps/staked-dapp/handlers/handlerStaked.js';
 import { ETH, GOERLI, HOLESKY } from '@/utils/networks/types';
 import { useAmplitude } from '@/core/composables/amplitude';
-import {
-  global as useGlobalStore,
-  wallet as useWalletStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
+
 import { useRouter } from 'vue-router/composables';
 
 // injections/use

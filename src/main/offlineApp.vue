@@ -16,10 +16,10 @@ const ModuleGlobalModals = defineAsyncComponent(() =>
   import('@/modules/global-modals/ModuleGlobalModals')
 );
 
-import {
-  global as useGlobalStore,
-  wallet as useWalletStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
+
 import { useVuetify } from '@/core/composables/vuetify';
 
 // injections/use

@@ -1,14 +1,7 @@
-import ethBlocksTxs from './eth-blocks/store';
-import stakewise from './stakewise/store';
-import stakedStore from './staked-dapp/store';
-import coinbaseStaking from './coinbase-staking/store';
-
-import {
-  ethBlocksTxs as useEthBlocksTxsStore,
-  stakewise as useStakewiseStore,
-  stakedStore as useStakedStoreStore,
-  coinbaseStaking as useCoinbaseStakingStore
-} from '@/core/store/index.js';
+import { useEthBlocksTxsStore } from './eth-blocks/store';
+import { useStakewiseStore } from './stakewise/store';
+import { useCoinbaseStakingStore } from './coinbase-staking/store';
+import { useStakedStore } from './staked-dapp/store';
 
 import EthBlockConfigs from './eth-blocks/store/configs';
 import EnsManagerStore from './ens-manager-dapp/store/configs';
@@ -16,18 +9,18 @@ import StakewiseConfigs from './stakewise/store/configs';
 import StakedConfigs from './staked-dapp/store/configs';
 import CoinbaseStaking from './coinbase-staking/store/configs';
 
-const dappStore = {
-  ethBlocksTxs: ethBlocksTxs,
-  ensManagerStore: EnsManagerStore,
-  stakewise: stakewise,
-  stakedStore: stakedStore,
-  coinbaseStaking: coinbaseStaking
-};
+// const dappStore = {
+//   useEthBlocksTxsStore: ethBlocksTxs,
+//   useEnsManagerStoreStore: EnsManagerStore,
+//   useStakewiseStore: stakewise,
+//   useStakedStore: stakedStore,
+//   useCoinbaseStakingStore: coinbaseStaking
+// };
 
 const dappStoreBeforeCreate = () => {
   const ethBlocksTxsStore = useEthBlocksTxsStore();
   const stakewiseStore = useStakewiseStore();
-  const stakedStoreStore = useStakedStoreStore();
+  const stakedStoreStore = useStakedStore();
   const coinbaseStakingStore = useCoinbaseStakingStore();
   ethBlocksTxsStore.initStore();
   stakewiseStore.initStore();
@@ -52,4 +45,4 @@ const dappStoreConfigs = {
   }
 };
 
-export { dappStore, dappStoreBeforeCreate, dappStoreConfigs };
+export { dappStoreBeforeCreate, dappStoreConfigs };

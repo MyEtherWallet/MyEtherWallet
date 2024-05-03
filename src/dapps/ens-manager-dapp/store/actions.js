@@ -7,7 +7,7 @@ const initStore = function () {
       Configs.LOCAL_STORAGE_KEYS.coinbaseStaking
     );
     if (savedStore.stateVersion === Configs.VERSION.coinbaseStaking) {
-      this.$state = Object.assign(this.$state, savedStore);
+      this.$patch(Object.assign(this.$state, savedStore));
     }
   }
 };

@@ -311,10 +311,9 @@ import isNew from '@/core/helpers/isNew.js';
 import { useAmplitude } from '@/core/composables/amplitude';
 import { useBuySell } from '@/core/composables/buyMore';
 import { useVuetify } from '@/core/composables/vuetify';
-import {
-  global as useGlobalStore,
-  wallet as useWalletStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
 
 const ModuleBalanceCard = defineAsyncComponent(() =>
   import('@/modules/balance/ModuleBalanceCard')

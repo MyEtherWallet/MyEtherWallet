@@ -1,11 +1,10 @@
+import { defineStore } from 'pinia';
 import State from './state';
 import Actions from './actions';
 
 const swap = {
-  namespaced: true,
-  state: State,
-  actions: Actions,
-  strict: false
+  state: () => State,
+  actions: Actions
 };
 
-export default swap;
+export const useSwapStore = defineStore('swap', swap);

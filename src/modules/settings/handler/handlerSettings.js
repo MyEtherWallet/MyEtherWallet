@@ -2,7 +2,10 @@ import { toWei } from 'web3-utils';
 import { includes, isString, keys } from 'lodash';
 import xss from 'xss';
 
-import { global as useGlobalStore } from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
+
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 
 export default class Settings {

@@ -6,12 +6,21 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const UglifyJS = require('uglify-es');
 const env_vars = require('../ENV_VARS');
 const allowedConnections = require('../connections');
+const path = require('path');
 
 const sourceMapsConfig = {
   filename: 'sourcemaps/[file].map'
 };
 
 const webpackConfig = {
+  resolve: {
+    alias: {
+      'vue-i18n': path.join(
+        __dirname,
+        '../node_modules/vue-i18n/dist/vue-i18n.js'
+      )
+    }
+  },
   devtool: false,
   node: {
     process: true
@@ -137,12 +146,6 @@ const transpilers = config => {
     .use('babel')
     .loader('babel-loader')
     .end();
-  // config.module
-  //   .rule('transpile-enkrypt')
-  //   .test(/node_modules\/@enkryptcom\/.*\.js$/)
-  //   .use('babel')
-  //   .loader('babel-loader')
-  //   .end();
   config.module
     .rule('transpile-polkadot-meta')
     .test(/node_modules\/@polkadot\/.*\/packageInfo.js$/)
@@ -161,12 +164,6 @@ const transpilers = config => {
     .use('babel')
     .loader('babel-loader')
     .end();
-  // config.module
-  //   .rule('transpile-micro-ftch')
-  //   .test(/node_modules\/micro-ftch\/.*\.js$/)
-  //   .use('babel')
-  //   .loader('babel-loader')
-  //   .end();
   config.module
     .rule('transpile-chainsafe')
     .test(/node_modules\/@chainsafe\/.*\.js$/)

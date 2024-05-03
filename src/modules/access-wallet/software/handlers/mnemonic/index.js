@@ -10,7 +10,9 @@ import {
   eip1559Params
 } from '@/modules/access-wallet/common/helpers';
 import errorHandler from './errorHandler';
-import store from '@/core/store';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
 import commonGenerator from '@/core/helpers/commonGenerator';
 import toBuffer from '@/core/helpers/toBuffer';
 import Vue from 'vue';
@@ -44,20 +46,22 @@ class MnemonicWallet {
     );
   }
   getAccount(idx) {
+    const { network, isEIP1559SupportedNetwork, gasFeeMarketInfo } =
+      useGlobalStore();
     const derivedKey = this.hdKey.derive(this.basePath + '/' + idx);
     const txSigner = async txParams => {
       let tx = Transaction.fromTxData(txParams, {
-        common: commonGenerator(store.getters['global/network'])
+        common: commonGenerator(network)
       });
-      if (store.getters['global/isEIP1559SupportedNetwork']) {
-        const feeMarket = store.getters['global/gasFeeMarketInfo'];
+      if (isEIP1559SupportedNetwork) {
+        const feeMarket = gasFeeMarketInfo;
         const _txParams = Object.assign(
           eip1559Params(txParams.gasPrice, feeMarket),
           txParams
         );
         delete _txParams.gasPrice;
         tx = FeeMarketEIP1559Transaction.fromTxData(_txParams, {
-          common: commonGenerator(store.getters['global/network'])
+          common: commonGenerator(network)
         });
       }
       const networkId = tx.common.chainIdBN().toString();

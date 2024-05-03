@@ -22,7 +22,7 @@
           @onRequest="onRequest"
       /></template>
       <template #stepperContent2>
-        <register
+        <register-component
           v-if="onStep === 2"
           class="mt-3"
           :name="name"
@@ -66,8 +66,8 @@ import { useI18n } from 'vue-i18n-composable';
 const Request = defineAsyncComponent(() =>
   import('../components/register/RegisterRequest')
 );
-const Register = defineAsyncComponent(() =>
-  import('../components/register/Register')
+const RegisterComponent = defineAsyncComponent(() =>
+  import('../components/register/RegisterComponent')
 );
 const CompleteRegistration = defineAsyncComponent(() =>
   import('../components/register/CompleteRegistration')

@@ -152,12 +152,10 @@ import {
 
 import handlerStaked from './handlers/handlerStaked';
 import { useAmplitude } from '@/core/composables/amplitude';
-import {
-  global as useGlobalStore,
-  wallet as useWalletStore,
-  article as useArticleStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
 import { useRoute } from 'vue-router/composables';
+import { useArticleStore } from '@/core/store/article';
 
 const TheWrapperDapp = defineAsyncComponent(() =>
   import('@/dapps/TheWrapperDapp.vue')

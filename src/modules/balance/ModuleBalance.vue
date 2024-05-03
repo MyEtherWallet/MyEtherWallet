@@ -109,11 +109,10 @@ import {
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { DASHBOARD } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 import { useAmplitude } from '@/core/composables/amplitude';
-import {
-  global as useGlobalStore,
-  wallet as useWalletStore,
-  external as useExternalStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
+
 import { useRouter } from 'vue-router/composables';
 
 const ModuleBalanceLoader = defineAsyncComponent(() =>

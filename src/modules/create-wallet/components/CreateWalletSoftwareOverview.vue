@@ -91,10 +91,8 @@
 import { onMounted, defineEmits } from 'vue';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 
-import {
-  article as useArticleStore,
-  wallet as useWalletStore
-} from '@/core/store/index.js';
+import { useWalletStore } from '@/core/store/wallet';
+import { useArticleStore } from '@/core/store/article';
 
 // emits
 const emit = defineEmits(['typeSelect']);

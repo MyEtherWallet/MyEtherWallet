@@ -294,15 +294,13 @@ import { ROUTES_HOME } from '@/core/configs/configRoutes';
 import errorHandler from './handlers/errorHandler';
 import { useAmplitude } from '@/core/composables/amplitude';
 
-import {
-  wallet as useWalletStore,
-  external as useExternalStore,
-  global as useGlobalStore,
-  article as useArticleStore,
-  addressBook as useAddressBookStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
 import { useVuetify } from '@/core/composables/vuetify';
 import { useI18n } from 'vue-i18n-composable/dist';
+import { useArticleStore } from '@/core/store/article';
+import { useAddressBookStore } from '@/core/store/addressBook';
 
 const ScrollBlock = defineAsyncComponent(() =>
   import('./components/ScrollBlock')

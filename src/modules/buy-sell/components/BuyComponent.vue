@@ -151,11 +151,9 @@ const BuySellTokenSelect = defineAsyncComponent(() =>
   import('@/modules/buy-sell/components/TokenSelect.vue')
 );
 
-import {
-  global as useGlobalStore,
-  wallet as useWalletStore,
-  external as useExternalStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
 
 // injections/use
 const { network } = useGlobalStore();

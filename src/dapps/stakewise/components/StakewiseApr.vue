@@ -23,16 +23,14 @@
 <script setup>
 import { computed } from 'vue';
 
-import {
-  global as useGlobalStore,
-  stakewise as useStakewiseStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
 
 // injections
 const { network } = useGlobalStore();
 const { validatorApr, getPoolSupply } = useStakewiseStore();
 
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
+import { useStakewiseStore } from '../store';
 
 // computed
 const networkName = computed(() => {

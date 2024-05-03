@@ -220,14 +220,12 @@ import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import Swapper from '@/modules/swap/handlers/handlerSwap';
 import stakewiseHandler from '../handlers/stakewiseStakeHandler';
 import { useAmplitude } from '@/core/composables/amplitude';
-import {
-  wallet as useWalletStore,
-  global as useGlobalStore,
-  stakewise as useStakewiseStore,
-  external as useExternalStore,
-  notifications as useNotificationsStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
 import { useVuetify } from '@/core/composables/vuetify';
+import { useStakewiseStore } from '../store';
+import { useNotificationsStore } from '@/core/store/notifications';
 
 const StakewiseApr = defineAsyncComponent(() =>
   import('../components/StakewiseApr')

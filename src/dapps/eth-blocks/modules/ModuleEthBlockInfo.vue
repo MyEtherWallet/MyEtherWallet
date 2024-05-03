@@ -231,11 +231,10 @@ import { validBlockNumber } from '../handlers/helpers/common';
 
 import handlerBlock from '../handlers/handlerBlock';
 import { useAmplitude } from '@/core/composables/amplitude';
-import {
-  global as useGlobalStore,
-  wallet as useWalletStore,
-  ethBlocksTxs as useEthBlocksTxsStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
+
 import { useRouter } from 'vue-router/composables';
 
 const BlockInfo = defineAsyncComponent(() =>

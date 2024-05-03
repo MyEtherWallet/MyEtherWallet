@@ -386,12 +386,10 @@ import { STATUS_TYPES } from '@/dapps/staked-dapp/handlers/handlerStaked';
 import { GOERLI } from '@/utils/networks/types';
 
 import iconETHNavy from '@/assets/images/currencies/eth-dark-navy.svg';
-import {
-  global as useGlobalStore,
-  wallet as useWalletStore,
-  external as useExternalStore,
-  stakedStore as useStakedStoreStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
+import { useStakedStore } from '../store';
 
 const WithdrawalPopup = defineAsyncComponent(() => import('./WithdrawalPopup'));
 const ExitPopup = defineAsyncComponent(() => import('./ExitPopup'));
@@ -400,7 +398,7 @@ const ExitPopup = defineAsyncComponent(() => import('./ExitPopup'));
 const { network, getFiatValue } = useGlobalStore();
 const { address } = useWalletStore();
 const { fiatValue } = useExternalStore();
-const { validatorIndex, withdrawalValidatorIndex } = useStakedStoreStore();
+const { validatorIndex, withdrawalValidatorIndex } = useStakedStore();
 
 // props
 const props = defineProps({

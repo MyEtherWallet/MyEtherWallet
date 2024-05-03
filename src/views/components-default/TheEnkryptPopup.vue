@@ -117,7 +117,7 @@ import imageTwo from '@/assets/images/icons/enkrypt/promo2.jpg';
 import white from '@/assets/images/icons/enkrypt/icon-enkrypt-white.svg';
 import { useEnkryptMarketing } from '@/core/composables/enkryptMarketing';
 
-import { popups as usePopupsStore } from '@/core/store/index.js';
+import { usePopupsStore } from '@/core/store/popups';
 
 // injections/use
 const { browserLink, openHelpCenter, browserLogo, browser } =

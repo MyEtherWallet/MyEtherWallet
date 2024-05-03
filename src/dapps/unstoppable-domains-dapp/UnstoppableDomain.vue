@@ -415,10 +415,9 @@ import transferDomainOverlay from './components/UnstoppableTransferDomainOverlay
 import Resolution from '@unstoppabledomains/resolution';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { useBuySell } from '@/core/composables/buyMore';
-import {
-  global as useGlobalStore,
-  wallet as useWalletStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
 
 // injections/use
 const { openBuySell } = useBuySell();

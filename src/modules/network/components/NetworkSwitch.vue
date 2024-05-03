@@ -51,8 +51,8 @@
       :class="networks.length > 10 ? 'network-container' : ''"
     >
       <v-container
-        v-for="(network, i) in networks"
-        :key="network.name"
+        v-for="(n, i) in networks"
+        :key="n.name"
         :class="[
           { 'network-border-first': i === 0 },
           { 'network-border-last': i + 1 === networks.length },
@@ -63,16 +63,16 @@
           <!-- ===================================================================================== -->
           <!-- Icon -->
           <!-- ===================================================================================== -->
-          <mew-token-container :img="network.icon" size="24px" />
+          <mew-token-container :img="n.icon" size="24px" />
           <!-- ===================================================================================== -->
           <!-- Symbol/Name -->
           <!-- ===================================================================================== -->
           <div class="textDark--text Capitalize pl-3">
-            {{ network.name }}
+            {{ n.name }}
           </div>
           <div class="px-2 textLight--text">-</div>
           <div class="textLight--text">
-            {{ network.name_long }}
+            {{ n.name_long }}
           </div>
           <v-spacer />
 
@@ -80,7 +80,7 @@
           <!-- Radio -->
           <!-- ===================================================================================== -->
           <v-radio
-            :value="network.name"
+            :value="n.name"
             :class="['py-2 mb-0']"
             :disabled="networkLoading"
           >
@@ -101,11 +101,9 @@ import * as types from '@/utils/networks/types';
 import { Toast, SUCCESS, ERROR } from '@/modules/toast/handler/handlerToast';
 
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
-import {
-  global as useGlobalStore,
-  wallet as useWalletStore,
-  external as useExternalStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
 
 const emit = defineEmits(['newNetwork']);
 

@@ -84,11 +84,10 @@ import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import handler from './handlers/handlerOrder';
 import { BUY_SELL } from '@/modules/analytics-opt-in/handlers/configs/events';
 import { useAmplitude } from '@/core/composables/amplitude';
-import {
-  global as useGlobalStore,
-  wallet as useWalletStore,
-  external as useExternalStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
+
 import { useRoute } from 'vue-router/composables';
 
 const BuyEthComponent = defineAsyncComponent(() =>

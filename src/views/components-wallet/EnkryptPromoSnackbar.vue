@@ -74,7 +74,7 @@ import moment from 'moment';
 import { onMounted } from 'vue';
 
 import useEnkryptMarketing from '@/core/composables/enkryptMarketing.js';
-import { popups as usePopupsStore } from '@/core/store/index.js';
+import { usePopupStore } from '@/core/store/popups';
 
 const { openHelpCenter, browserLogo } = useEnkryptMarketing();
 
@@ -89,7 +89,7 @@ const {
   showEnkryptWalletSnackbar,
   closeEnkryptWalletSnackbar,
   enkryptWalletSnackbarCounter
-} = usePopupsStore();
+} = usePopupStore();
 
 onMounted(() => {
   checkIfShouldShow();

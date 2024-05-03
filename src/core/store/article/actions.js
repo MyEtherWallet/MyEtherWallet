@@ -10,7 +10,7 @@ const initStore = () => {
   if (localStore.get(Configs.LOCAL_STORAGE_KEYS.article)) {
     const savedStore = localStore.get(Configs.LOCAL_STORAGE_KEYS.article);
     if (savedStore.stateVersion === Configs.VERSION.article) {
-      this.$state = Object.assign(this.$state, savedStore);
+      this.$patch(Object.assign(this.$state, savedStore));
     }
   }
 };

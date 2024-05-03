@@ -2,10 +2,10 @@ import localStore from 'store';
 import Configs from '../configs';
 
 const initStore = () => {
-  if (localStore.get(Configs.LOCAL_STORAGE_KEYS.custom)) {
-    const savedStore = localStore.get(Configs.LOCAL_STORAGE_KEYS.custom);
-    if (savedStore.stateVersion === Configs.VERSION.custom) {
-      this.$state = Object.assign(this.$state, savedStore);
+  if (localStore.get(Configs.LOCAL_STORAGE_KEYS.addressBook)) {
+    const savedStore = localStore.get(Configs.LOCAL_STORAGE_KEYS.addressBook);
+    if (savedStore.stateVersion === Configs.VERSION.addressBook) {
+      this.$patch(Object.assign(this.$state, savedStore));
     }
   }
 };

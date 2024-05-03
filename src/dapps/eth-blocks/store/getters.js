@@ -1,8 +1,9 @@
-import { global as useGlobalStore } from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
 /**
  * Returns all transactions in the state
  * @returns {Array}
  */
+
 const getAllEthBlocksTxs = function (state) {
   const { network } = useGlobalStore();
   const currentNetworkType = network.type.name;

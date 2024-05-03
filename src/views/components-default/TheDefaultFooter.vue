@@ -301,16 +301,14 @@ import Telegram from '@/assets/images/icons/social/telegram-logo.vue';
 import DonateEth from '@/assets/images/icons/social/donate-eth.vue';
 import DonateBtc from '@/assets/images/icons/social/donate-btc.vue';
 
-import {
-  global as useGlobalStore,
-  popups as usePopupsStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
 import { useAmplitude } from '@/core/composables/amplitude';
+import { usePopupStore } from '@/core/store/popups';
 
 // injections/use
 const { $amplitude } = useAmplitude();
 const { network } = useGlobalStore();
-const { consentToTrack } = usePopupsStore();
+const { consentToTrack } = usePopupStore();
 
 // data
 const packageVersion = VERSION;

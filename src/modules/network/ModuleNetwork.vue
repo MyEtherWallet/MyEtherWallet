@@ -53,11 +53,10 @@ import { defineProps, computed } from 'vue';
 
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 
-import {
-  global as useGlobalStore,
-  wallet as useWalletStore,
-  external as useExternalStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
+
 import WALLET_TYPES from '../access-wallet/common/walletTypes';
 
 import { EventBus } from '@/core/plugins/eventBus';

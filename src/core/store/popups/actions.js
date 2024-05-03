@@ -5,7 +5,7 @@ const initStore = () => {
   if (localStore.get(Configs.LOCAL_STORAGE_KEYS.popups)) {
     const savedStore = localStore.get(Configs.LOCAL_STORAGE_KEYS.popups);
     if (savedStore.stateVersion === Configs.VERSION.popups) {
-      this.$state = Object.assign(this.$state, savedStore);
+      this.$patch(Object.assign(this.$state, savedStore));
     }
   }
 };

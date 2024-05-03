@@ -13,7 +13,9 @@ import {
 } from '@/modules/access-wallet/common/helpers';
 import toBuffer from '@/core/helpers/toBuffer';
 import errorHandler from './errorHandler';
-import store from '@/core/store';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
 import commonGenerator from '@/core/helpers/commonGenerator';
 import Vue from 'vue';
 import trezor from '@/assets/images/icons/wallets/trezor.svg';
@@ -52,10 +54,12 @@ class TrezorWallet {
     this.hdKey.chainCode = Buffer.from(rootPub.chainCode, 'hex');
   }
   getAccount(idx) {
+    const { network, isEIP1559SupportedNetwork, gasFeeMarketInfo } =
+      useGlobalStore();
     const derivedKey = this.hdKey.derive('m/' + idx);
     const txSigner = async tx => {
       const _tx = new Transaction(tx, {
-        common: commonGenerator(store.getters['global/network'])
+        common: commonGenerator(network)
       });
       const legacySigner = async _txParams => {
         const networkId = _tx.common.chainId();
@@ -79,11 +83,8 @@ class TrezorWallet {
           );
         return getSignTransactionObject(Transaction.fromTxData(_txParams));
       };
-      if (
-        store.getters['global/isEIP1559SupportedNetwork'] &&
-        this.model === 'T'
-      ) {
-        const feeMarket = store.getters['global/gasFeeMarketInfo'];
+      if (isEIP1559SupportedNetwork && this.model === 'T') {
+        const feeMarket = gasFeeMarketInfo;
         const txParams = getHexTxObject(_tx);
         Object.assign(txParams, eip1559Params(txParams.gasPrice, feeMarket));
         delete txParams.gasPrice;

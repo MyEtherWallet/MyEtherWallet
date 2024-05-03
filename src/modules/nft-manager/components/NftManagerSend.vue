@@ -52,7 +52,9 @@ import { defineAsyncComponent, defineProps, computed } from 'vue';
 
 import nftPlaceholder from '@/assets/images/icons/icon-nft-placeholder.png';
 import { useBuySell } from '@/core/composables/buyMore';
-import { global as useGlobalStore } from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
 
 const ModuleAddressBook = defineAsyncComponent(() =>
   import('@/modules/address-book/ModuleAddressBook')

@@ -17,6 +17,7 @@
 </template>
 
 <script setup>
+import { useNotificationsStore } from '@/core/store/notifications';
 import { computed, defineAsyncComponent } from 'vue';
 
 const ModuleSend = defineAsyncComponent(() =>
@@ -31,8 +32,6 @@ const ModuleTokensValue = defineAsyncComponent(() =>
 const ModuleTransferHistory = defineAsyncComponent(() =>
   import('@/modules/transfer-history/ModuleTransferHistory')
 );
-
-import { notifications as useNotificationsStore } from '@/core/store/index.js';
 
 const { txNotifications } = useNotificationsStore();
 

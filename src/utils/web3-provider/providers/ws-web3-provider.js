@@ -1,11 +1,11 @@
 'use strict';
 
 import { Toast, SENTRY } from '@/modules/toast/handler/handlerToast';
-import VuexStore from '@/core/store';
 import { XDC } from '@/utils/networks/types';
 const errors = require('web3-core-helpers').errors;
 import { isArray, isFunction } from 'lodash';
 import { parseXDCValues } from './xdc-parser';
+import { useGlobalStore } from '../../../core/store/global';
 let Ws = null;
 let _btoa = null;
 let parseURL = null;
@@ -175,10 +175,11 @@ WebsocketProvider.prototype.send = function (payload, callback) {
   this._addResponseCallback(payload, callback);
 };
 WebsocketProvider.prototype.on = function (type, callback) {
+  const { network } = useGlobalStore();
   if (typeof callback !== 'function')
     throw new Error('The second parameter callback must be a function.');
 
-  const chainID = VuexStore.getters['global/network'].type.chainID;
+  const chainID = network.type.chainID;
   switch (type) {
     case 'message':
       this.notificationCallbacks.push(resp => {

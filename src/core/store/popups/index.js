@@ -1,11 +1,11 @@
+import { defineStore } from 'pinia';
+
 import State from './state';
 import Actions from './actions';
 
-const globalModule = {
-  namespaced: true,
-  state: State,
-  actions: Actions,
-  strict: false
+const popupModule = {
+  state: () => State,
+  actions: Actions
 };
 
-export default globalModule;
+export const usePopupStore = defineStore('popups', popupModule);

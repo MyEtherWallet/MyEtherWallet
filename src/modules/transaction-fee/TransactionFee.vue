@@ -183,7 +183,7 @@ import {
   watch,
   computed,
   onMounted,
-  defineEmit
+  defineEmits
 } from 'vue';
 import BigNumber from 'bignumber.js';
 import { fromWei } from 'web3-utils';
@@ -195,18 +195,16 @@ import {
 import { estimatedTime } from '@/core/helpers/gasPriceHelper';
 
 import { useBuySell } from '@/core/composables/buyMore';
-import {
-  global as useGlobalStore,
-  external as useExternalStore,
-  wallet as useWalletStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
 
 const AppNetworkSettingsModal = defineAsyncComponent(() =>
   import('./AppNetworkSettingsModal.vue')
 );
 
 // emit
-const emit = defineEmit(['onLocalGasPrice']);
+const emit = defineEmits(['onLocalGasPrice']);
 
 // props
 const props = defineProps({

@@ -1,8 +1,7 @@
 import { fromWei, toBN } from 'web3-utils';
 
-import { custom as useCustomStore } from '@/core/store/index.js';
-
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
+import { useCustomStore } from '../custom';
 
 const balanceInETH = function (state) {
   if (!state.balance) state.balance = '0';

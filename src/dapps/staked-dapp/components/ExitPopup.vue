@@ -124,16 +124,14 @@ import { toHex } from 'web3-utils';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import networkConfig from '../handlers/configNetworkTypes';
 
-import {
-  global as useGlobalStore,
-  wallet as useWalletStore,
-  stakedStore as useStakedStoreStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useStakedStore } from '../store';
 
 // injections
 const { network } = useGlobalStore();
 const { instance, address } = useWalletStore();
-const { addWithdrawalValidatorIndex } = useStakedStoreStore();
+const { addWithdrawalValidatorIndex } = useStakedStore();
 
 // props
 const props = defineProps({

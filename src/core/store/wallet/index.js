@@ -1,13 +1,13 @@
+import { defineStore } from 'pinia';
+
 import State from './state';
 import Actions from './actions';
 import Getters from './getters';
 
 const wallets = {
-  namespaced: true,
-  state: State,
+  state: () => State,
   actions: Actions,
-  getters: Getters,
-  strict: false
+  getters: Getters
 };
 
-export default wallets;
+export const useWalletStore = defineStore('wallets', wallets);

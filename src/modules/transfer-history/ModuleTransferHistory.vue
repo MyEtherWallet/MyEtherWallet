@@ -25,19 +25,17 @@
 
 <script setup>
 import { defineProps, ref, computed } from 'vue';
-import {
-  global as useGlobalStore,
-  notifications as useNotificationStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
 
 import formatNotification from '@/modules/notifications/helpers/formatNotification';
 import formatNonChainNotification from '@/modules/notifications/helpers/formatNonChainNotification';
 import { NOTIFICATION_TYPES } from '@/modules/notifications/handlers/handlerNotification.js';
+import { useNotificationsStore } from '@/core/store/notifications';
 
 // injections/use
 const { network } = useGlobalStore();
 const { txNotifications, swapNotifications, updateNotification } =
-  useNotificationStore();
+  useNotificationsStore();
 
 // props
 const props = defineProps({

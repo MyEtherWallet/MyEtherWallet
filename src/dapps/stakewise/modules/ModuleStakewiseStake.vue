@@ -107,13 +107,11 @@ import {
 import stakewiseHandler from '../handlers/stakewiseStakeHandler';
 import Swapper from '@/modules/swap/handlers/handlerSwap';
 import { useAmplitude } from '@/core/composables/amplitude';
-import {
-  wallet as useWalletStore,
-  global as useGlobalStore,
-  stakewise as useStakewiseStore,
-  notifications as useNotificationsStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
 import { useVuetify } from '@/core/composables/vuetify';
+import { useNotificationsStore } from '@/core/store/notifications';
+import { useStakewiseStore } from '../store';
 
 const StakewiseStaking = defineAsyncComponent(() =>
   import('../components/StakewiseStaking')

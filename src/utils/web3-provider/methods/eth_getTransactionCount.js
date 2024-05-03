@@ -3,15 +3,15 @@ import { toPayload } from '../jsonrpc';
 import EthCalls from '../web3Calls';
 import * as locstore from 'store';
 import sanitizeHex from '@/core/helpers/sanitizeHex';
+import { useGlobalStore } from '../../../core/store/global';
 
-export default async ({ payload, store, requestManager }, res, next) => {
+export default async ({ payload, requestManager }, res, next) => {
+  const { network } = useGlobalStore();
   if (payload.method !== 'eth_getTransactionCount') return next();
   const ethCalls = new EthCalls(requestManager);
   const addr = payload.params[0].toLowerCase();
   let cached = {};
-  const storeKey = utils.sha3(
-    `${store.getters['global/network'].type.name}-${addr}`
-  );
+  const storeKey = utils.sha3(`${network.type.name}-${addr}`);
   if (!locstore.get(storeKey)) {
     cached = {
       nonce: '0x00',

@@ -58,9 +58,8 @@
 </template>
 
 <script setup>
+import { useArticleStore } from '@/core/store/article';
 import { defineProps } from 'vue';
-
-import { article as useArticleStore } from '@/core/store/index.js';
 
 // injection/use
 const { getArticle } = useArticleStore();

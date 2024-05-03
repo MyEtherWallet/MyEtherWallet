@@ -158,10 +158,10 @@ import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { LANDING_PAGE } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 
 import { useAmplitude } from '@/core/composables/amplitude';
-import {
-  global as useGlobalStore,
-  wallet as useWalletStore
-} from '@/core/store/index.js';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
+
 import { useRoute, useRouter } from 'vue-router/composables';
 
 // injections/vue
