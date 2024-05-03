@@ -153,7 +153,6 @@ import getService from '@/core/helpers/getService';
 
 import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
-import { useExternalStore } from '@/core/store/external';
 
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { ETH, BSC, MATIC } from '@/utils/networks/types';
@@ -321,13 +320,16 @@ watch(web3, () => {
   }
 });
 
-watch(address, () => {
-  loadingContracts.value = true;
-  loadingTokens.value = true;
-  onNftSend.value = false;
-  if (address) router.push({ name: ROUTES_WALLET.NFT_MANAGER.NAME });
-  setUpNFT();
-});
+watch(
+  () => address,
+  () => {
+    loadingContracts.value = true;
+    loadingTokens.value = true;
+    onNftSend.value = false;
+    if (address) router.push({ name: ROUTES_WALLET.NFT_MANAGER.NAME });
+    setUpNFT();
+  }
+);
 
 watch(contracts, newVal => {
   if (newVal.length > 0) {

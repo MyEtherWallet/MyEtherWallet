@@ -1,7 +1,5 @@
 import { hashPersonalMessage, ecrecover, pubToAddress } from 'ethereumjs-util';
-import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
-import { useExternalStore } from '@/core/store/external';
 
 import toBuffer from '@/core/helpers/toBuffer';
 import ErrorList from '../errors';

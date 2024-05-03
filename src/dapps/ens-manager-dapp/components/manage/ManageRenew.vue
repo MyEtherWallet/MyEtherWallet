@@ -51,8 +51,6 @@ import { defineProps, ref, computed, watch, onMounted } from 'vue';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { useBuySell } from '@/core/composables/buyMore';
 import { useGlobalStore } from '@/core/store/global';
-import { useWalletStore } from '@/core/store/wallet';
-import { useExternalStore } from '@/core/store/external';
 
 import { useI18n } from 'vue-i18n-composable';
 

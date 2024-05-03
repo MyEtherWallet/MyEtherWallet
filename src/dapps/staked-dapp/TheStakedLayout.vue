@@ -288,12 +288,15 @@ watch(pendingTxHash, newVal => {
     - updates handlerStaked with new address
     - if user is currently onStep within the stakeStepper component, it will run the reset function
     */
-watch(address, newVal => {
-  stakedHandler.value.address = newVal;
-  if (stakedStepper.value) {
-    stakedStepper.value.reset();
+watch(
+  () => address,
+  newVal => {
+    stakedHandler.value.address = newVal;
+    if (stakedStepper.value) {
+      stakedStepper.value.reset();
+    }
   }
-});
+);
 
 // mounted
 onMounted(() => {

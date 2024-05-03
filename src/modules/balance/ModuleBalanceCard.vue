@@ -1,11 +1,7 @@
 <template>
   <div class="component--wallet-card theBalanceCard">
     <div class="mew-card drop-shadow">
-      <img
-        :src="'https://mewcard.mewapi.io/?address=' + address"
-        alt="MEW Card"
-        @load="animateMewCard()"
-      />
+      <img :src="addressLink" alt="MEW Card" @load="animateMewCard()" />
     </div>
     <div class="info-container pl-8 pr-5 py-4 text-shadow">
       <div class="d-flex flex-row justify-space-between align-start">
@@ -432,13 +428,20 @@ const nonChainTokensCount = computed(() => {
   return tokensList.length - 1;
 });
 
+const addressLink = computed(() => {
+  return `https://mewcard.mewapi.io/?address=${address}`;
+});
+
 // watch
 /**
  * run setup for name resolver when web3 changes
  */
-watch(web3, () => {
-  setupNameResolver();
-});
+watch(
+  () => web3,
+  () => {
+    setupNameResolver();
+  }
+);
 // mounted
 onMounted(() => {
   setupNameResolver();

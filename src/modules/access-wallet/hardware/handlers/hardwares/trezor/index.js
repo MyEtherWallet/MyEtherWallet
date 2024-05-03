@@ -14,8 +14,6 @@ import {
 import toBuffer from '@/core/helpers/toBuffer';
 import errorHandler from './errorHandler';
 import { useGlobalStore } from '@/core/store/global';
-import { useWalletStore } from '@/core/store/wallet';
-import { useExternalStore } from '@/core/store/external';
 import commonGenerator from '@/core/helpers/commonGenerator';
 import Vue from 'vue';
 import trezor from '@/assets/images/icons/wallets/trezor.svg';

@@ -35,7 +35,6 @@ const ModuleAddressBook = defineAsyncComponent(() =>
 
 import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
-import { useExternalStore } from '@/core/store/external';
 
 // injections/use
 

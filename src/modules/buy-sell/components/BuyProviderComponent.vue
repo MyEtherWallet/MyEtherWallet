@@ -174,9 +174,7 @@ import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import { LOCALE } from '../helpers';
 import { BUY_SELL } from '@/modules/analytics-opt-in/handlers/configs/events';
 import { useAmplitude } from '@/core/composables/amplitude';
-import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
-import { useExternalStore } from '@/core/store/external';
 
 // injections
 const { trackBuySell } = useAmplitude();

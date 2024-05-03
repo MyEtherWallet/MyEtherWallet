@@ -230,9 +230,12 @@ watch(stakeAmount, value => {
     setGasLimit();
   }
 });
-watch(address, () => {
-  setup();
-});
+watch(
+  () => address,
+  () => {
+    setup();
+  }
+);
 watch(web3, () => {
   setup();
   setGasPrice();

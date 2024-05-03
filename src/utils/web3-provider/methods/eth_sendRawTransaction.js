@@ -4,8 +4,8 @@ import * as locStore from 'store';
 import { v4 } from 'uuid';
 import { useGlobalStore } from '../../../core/store/global';
 export default async ({ payload }, res, next) => {
-  const { network } = useGlobalStore();
   if (payload.method !== 'eth_sendRawTransaction') return next();
+  const { network } = useGlobalStore();
   const val = locStore.get('mew-testing');
   if (val) {
     res(null, toPayload(payload.id, randomHex(32)));

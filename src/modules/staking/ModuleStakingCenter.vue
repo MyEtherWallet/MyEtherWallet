@@ -122,7 +122,6 @@ import { ETH, GOERLI, HOLESKY } from '@/utils/networks/types';
 import { useAmplitude } from '@/core/composables/amplitude';
 import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
-import { useExternalStore } from '@/core/store/external';
 
 import { useRouter } from 'vue-router/composables';
 

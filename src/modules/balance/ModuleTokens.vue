@@ -6,7 +6,7 @@
   -->
   <div class="module-tokens">
     <v-skeleton-loader
-      v-if="loading && (tokensData || hiddenTokens)"
+      v-if="loadingWalletInfo && (tokensData || hiddenTokens)"
       class="mx-auto"
       type="table"
     />
@@ -72,7 +72,7 @@
       v-if="emptyWallet"
       is-tokens
       :is-eth="isEthNetwork"
-      @openAddCustomToken="() => toggleAddCustomToken(true)"
+      @openAddCustomToken="handleOpenAddCustomToken"
     />
     <!--
     =====================================================================================
@@ -154,6 +154,7 @@ const { tokensList, loadingWalletInfo } = useWalletStore();
 const { hiddenTokens } = useCustomStore();
 const { isEthNetwork, network, hasSwap, getFiatValue } = useGlobalStore();
 const { totalTokenFiatValue } = useExternalStore();
+const { customTokens } = useCustomStore();
 const router = useRouter();
 
 // data
@@ -202,28 +203,28 @@ const items = ref([
   {
     icon: 'mdi-plus',
     title: 'Add Token',
-    action: toggleAddCustomToken
+    action: () => toggleAddCustomToken()
   },
   {
     icon: 'mdi-pencil-outline',
     title: 'Edit Token',
-    action: toggleEditCustomToken
+    action: () => toggleEditCustomToken()
   }
 ]);
 const selectedToken = ref({});
 
 // computed
-const loading = computed(() => {
-  return loadingWalletInfo;
-});
 const hasTokens = computed(() => {
   return (
-    !loading.value && (tokensData.value.length > 0 || hiddenTokens.length > 0)
+    !loadingWalletInfo &&
+    (tokensData.value.length > 0 || hiddenTokens.length > 0)
   );
 });
 const emptyWallet = computed(() => {
   return (
-    !loading.value && tokensData.value.length === 0 && hiddenTokens.length === 0
+    !loadingWalletInfo &&
+    tokensData.value.length === 0 &&
+    hiddenTokens.length === 0
   );
 });
 /**
@@ -233,7 +234,7 @@ const emptyWallet = computed(() => {
  */
 const tokensData = computed(() => {
   if (!tokensList && !customTokens && !hiddenTokens) return [];
-  const customTokens = customTokens.reduce((arr, item) => {
+  const locCustomTokens = customTokens.reduce((arr, item) => {
     // Check if token is in hiddenTokens
     const isHidden = hiddenTokens.find(token => {
       return item.contract == token.address;
@@ -255,7 +256,7 @@ const tokensData = computed(() => {
       return formatValues(item);
     });
   tokenList.sort((a, b) => b.usdBalance - a.usdBalance);
-  return customTokens.concat(tokenList);
+  return locCustomTokens.concat(tokenList);
 });
 const totalTokensValue = computed(() => {
   return getFiatValue(totalTokenFiatValue);
@@ -316,6 +317,9 @@ const formatValues = item => {
     ];
   }
   return newObj;
+};
+const handleOpenAddCustomToken = () => {
+  toggleAddCustomToken(true);
 };
 const toggleAddCustomToken = val => {
   openAddCustomToken.value = val ? val : !openAddCustomToken.value;

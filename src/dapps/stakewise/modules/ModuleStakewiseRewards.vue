@@ -406,9 +406,12 @@ watch(compoundAmount, value => {
 watch(isEthNetwork, () => {
   setup();
 });
-watch(address, () => {
-  setup();
-});
+watch(
+  () => address,
+  () => {
+    setup();
+  }
+);
 
 onMounted(() => {
   locGasPrice.value = gasPriceByType(gasPriceType);

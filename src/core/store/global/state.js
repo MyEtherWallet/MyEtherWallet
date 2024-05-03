@@ -20,7 +20,7 @@ const state = {
     : Object.assign({}, nodeList['ETH'][0]),
   validNetwork: true,
   preferredCurrency: 'USD',
-  localContracts: {},
+  localContractsHolder: {},
   eip1559: {
     baseFeePerGas: '0',
     maxPriorityFeePerGas: '0'

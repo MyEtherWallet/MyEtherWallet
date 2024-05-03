@@ -19,7 +19,6 @@ import * as HDKey from 'hdkey';
 import platform from 'platform';
 import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
-import { useExternalStore } from '@/core/store/external';
 import commonGenerator from '@/core/helpers/commonGenerator';
 import {
   getSignTransactionObject,

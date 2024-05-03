@@ -85,7 +85,8 @@ import { useAmplitude } from '@/core/composables/amplitude';
 import { usePopupStore } from '@/core/store/popups';
 
 // injections/use
-const { setTrackingConsent, $amplitude } = useAmplitude();
+const { setTrackingConsent, $amplitude, shouldDisplayTrackingPopup } =
+  useAmplitude();
 const { neverShowPopup } = usePopupStore();
 
 // data

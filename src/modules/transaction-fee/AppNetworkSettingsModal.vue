@@ -25,8 +25,6 @@
 import { defineAsyncComponent, defineProps, defineEmits, watch } from 'vue';
 
 import { useGlobalStore } from '@/core/store/global';
-import { useWalletStore } from '@/core/store/wallet';
-import { useExternalStore } from '@/core/store/external';
 
 import { useGasPrice } from '@/core/composables/gasPrice';
 

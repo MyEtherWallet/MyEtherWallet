@@ -231,7 +231,7 @@ import sanitizeHex from '@/core/helpers/sanitizeHex';
 
 import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
-import { useExternalStore } from '@/core/store/external';
+import { useAddressBookStore } from '@/core/store/addressBook';
 
 const NetworkSwitch = defineAsyncComponent(() =>
   import('@/modules/network/components/NetworkSwitch.vue')

@@ -14,10 +14,10 @@ import { useGlobalStore } from '../../../core/store/global';
 import { useWalletStore } from '../../../core/store/wallet';
 
 export default async ({ payload, requestManager }, res, next) => {
+  if (payload.method !== 'eth_sendTransaction') return next();
   const { contractToToken } = useExternalStore();
   const { gasPrice, network } = useGlobalStore();
   const { wallet } = useWalletStore();
-  if (payload.method !== 'eth_sendTransaction') return next();
   const tx = Object.assign({}, payload.params[0]);
   let confirmInfo;
   let toDetails;

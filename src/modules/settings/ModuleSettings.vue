@@ -1,11 +1,7 @@
 <template>
   <mew-overlay
-    :footer="{
-      text: 'Need help?',
-      linkTitle: 'Contact support',
-      link: 'mailto:support@myetherwallet.com'
-    }"
-    :title="title"
+    :footer="footerTitle"
+    :title="computedTitle"
     :show-overlay="onSettings"
     :back="editMode || addMode ? back : null"
     content-size="xlarge"
@@ -170,6 +166,13 @@ const itemToEdit = ref({});
 const tableData = ref([]);
 
 // computed
+const footerTitle = computed(() => {
+  return {
+    text: 'Need help?',
+    linkTitle: 'Contact support',
+    link: 'mailto:support@myetherwallet.com'
+  };
+});
 const importPanel = computed(() => {
   return `panelBody${!hasGasPriceOption ? 2 : 1}`;
 });
@@ -208,7 +211,7 @@ const panelItems = computed(() => {
 const onMode = computed(() => {
   return addMode.value ? MODES[0] : MODES[1];
 });
-const title = computed(() => {
+const computedTitle = computed(() => {
   if (addMode.value) {
     return t('interface.address-book.add-addr');
   }

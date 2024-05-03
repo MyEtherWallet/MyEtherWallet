@@ -140,10 +140,13 @@ const dragOptions = {
 };
 
 // watch
-watch(props.totalRightColItems, newVal => {
-  draggableItems.value = [];
-  draggableItems.value = Array.from({ length: newVal }, (_, i) => i + 1);
-});
+watch(
+  () => props.totalRightColItems,
+  newVal => {
+    draggableItems.value = [];
+    draggableItems.value = Array.from({ length: newVal }, (_, i) => i + 1);
+  }
+);
 </script>
 
 <style lang="scss" scoped>

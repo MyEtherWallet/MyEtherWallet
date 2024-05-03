@@ -552,9 +552,12 @@ watch(validToAddress, newVal => {
   getSimplexQuote();
 });
 
-watch(coinGeckoTokens, () => {
-  fetchCurrencyData();
-});
+watch(
+  () => coinGeckoTokens,
+  () => {
+    fetchCurrencyData();
+  }
+);
 
 watch(openTokenSelect, () => {
   emit('openTokenSelect', openTokenSelect);

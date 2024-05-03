@@ -6,8 +6,6 @@ import DNSRegistrar from '@ensdomains/ens-contracts/deployments/mainnet/DNSRegis
 import contentHash from 'content-hash';
 import EventEmitter from 'events';
 import { useGlobalStore } from '@/core/store/global';
-import { useWalletStore } from '@/core/store/wallet';
-import { useExternalStore } from '@/core/store/external';
 
 import { toBN, toHex, fromWei, sha3 } from 'web3-utils';
 import { estimateGasList } from '@/core/helpers/gasPriceHelper.js';

@@ -64,9 +64,7 @@ import { ref, onMounted, defineEmits } from 'vue';
 import { getQuote } from '../../handlers/pegin';
 import { fromBase, toBase } from '@/core/helpers/unit';
 import { getProviders, getDetails } from '../../handlers/helpers/provider';
-import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
-import { useExternalStore } from '@/core/store/external';
 
 import { useI18n } from 'vue-i18n-composable';
 

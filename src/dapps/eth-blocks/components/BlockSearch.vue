@@ -38,9 +38,8 @@ import { useRouter } from 'vue-router/composables';
 import { ETH_BLOCKS_ROUTE } from '../configsRoutes';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { validBlockNumber, beginsWithZero } from '../handlers/helpers/common';
-import { useGlobalStore } from '@/core/store/global';
+
 import { useWalletStore } from '@/core/store/wallet';
-import { useExternalStore } from '@/core/store/external';
 
 const DateSelectorPopup = defineAsyncComponent(() =>
   import('./DateSelectorPopup.vue')

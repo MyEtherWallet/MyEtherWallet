@@ -186,14 +186,20 @@ watch(open, newVal => {
   selectedCurrency.value = {};
   selectedCurrency.value = defaultCurrency;
 });
-watch(address, () => {
-  selectedCurrency.value = defaultCurrency;
-});
-watch(network, () => {
-  selectedCurrency.value = {};
-  selectedCurrency.value = defaultCurrency;
-  setTokens();
-});
+watch(
+  () => address,
+  () => {
+    selectedCurrency.value = defaultCurrency;
+  }
+);
+watch(
+  () => network,
+  () => {
+    selectedCurrency.value = {};
+    selectedCurrency.value = defaultCurrency;
+    setTokens();
+  }
+);
 
 // methods
 const onTab = val => {

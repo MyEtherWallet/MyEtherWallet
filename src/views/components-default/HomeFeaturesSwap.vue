@@ -160,7 +160,6 @@ import { LANDING_PAGE } from '@/modules/analytics-opt-in/handlers/configs/events
 import { useAmplitude } from '@/core/composables/amplitude';
 import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
-import { useExternalStore } from '@/core/store/external';
 
 import { useRoute, useRouter } from 'vue-router/composables';
 

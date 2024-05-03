@@ -514,11 +514,14 @@ watch(error, newVal => {
 /**
  * Closes modal then brings it back to the start fetching new address data
  */
-watch(address, newVal => {
-  if (newVal) {
-    resetSuccess();
+watch(
+  () => address,
+  newVal => {
+    if (newVal) {
+      resetSuccess();
+    }
   }
-});
+);
 watch(
   signedTxArray,
   newVal => {
@@ -1071,9 +1074,9 @@ const arrayParser = arr => {
     const value =
       data !== '0x'
         ? !isSwap.value && !isBatch.value
-          ? `${value} ${symbol}`
+          ? `${item.value} ${symbol}`
           : `0 ${network.type.currencyName}`
-        : `${value} ${symbol}`;
+        : `${item.value} ${symbol}`;
     const from = item.from ? item.from : address;
     const toAdd = isContractCreation.value
       ? ''

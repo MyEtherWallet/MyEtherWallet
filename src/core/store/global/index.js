@@ -4,7 +4,6 @@ import State from './state';
 import Actions from './actions';
 import Getters from './getters';
 
-console.log(Getters);
 const globalModule = {
   state: () => State,
   actions: Actions,

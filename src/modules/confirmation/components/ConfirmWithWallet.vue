@@ -26,9 +26,7 @@
 <script setup>
 import { defineProps, computed } from 'vue';
 
-import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
-import { useExternalStore } from '@/core/store/external';
 
 // props
 const props = defineProps({

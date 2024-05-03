@@ -65,9 +65,9 @@ const setValidNetwork = function (valid) {
   this.validNetwork = valid;
 };
 const addLocalContract = function (localContract) {
-  if (!this.localContracts[this.currentNetwork.type.name])
-    this.localContracts[this.currentNetwork.type.name] = [];
-  this.localContracts[this.currentNetwork.type.name].push(localContract);
+  if (!this.localContractsHolder[this.currentNetwork.type.name])
+    this.localContractsHolder[this.currentNetwork.type.name] = [];
+  this.localContractsHolder[this.currentNetwork.type.name].push(localContract);
 };
 const setImportedState = function (stateObj) {
   stateObj['localStore'] = true;

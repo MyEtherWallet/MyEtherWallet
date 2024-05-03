@@ -67,8 +67,8 @@ const isTestNetwork = function () {
 };
 
 const localContracts = function () {
-  return this.localContracts[this.network.type.name]
-    ? this.localContracts[this.network.type.name]
+  return this.localContractsHolder[this.network.type.name]
+    ? this.localContractsHolder[this.network.type.name]
     : [];
 };
 

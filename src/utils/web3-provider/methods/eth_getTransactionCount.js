@@ -6,8 +6,8 @@ import sanitizeHex from '@/core/helpers/sanitizeHex';
 import { useGlobalStore } from '../../../core/store/global';
 
 export default async ({ payload, requestManager }, res, next) => {
-  const { network } = useGlobalStore();
   if (payload.method !== 'eth_getTransactionCount') return next();
+  const { network } = useGlobalStore();
   const ethCalls = new EthCalls(requestManager);
   const addr = payload.params[0].toLowerCase();
   let cached = {};

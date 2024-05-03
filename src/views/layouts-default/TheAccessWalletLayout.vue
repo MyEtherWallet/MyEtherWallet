@@ -408,10 +408,9 @@ const openMEWwallet = () => {
     trackAccessWalletAmplitude(ACCESS_WALLET.MEW_WALLET_QR_SHOWN);
     WalletConnectWallet(WALLET_TYPES.MEW_WALLET)
       .then(_newWallet => {
-        setWallet([_newWallet]).then(() => {
-          trackAccessWalletAmplitude(ACCESS_WALLET.MEW_WALLET_QR_SUCCESSFUL);
-          router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
-        });
+        setWallet([_newWallet]);
+        trackAccessWalletAmplitude(ACCESS_WALLET.MEW_WALLET_QR_SUCCESSFUL);
+        router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
       })
       .catch(e => {
         trackAccessWalletAmplitude(ACCESS_WALLET.MEW_WALLET_QR_FAILED);

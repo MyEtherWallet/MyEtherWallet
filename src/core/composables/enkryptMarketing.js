@@ -14,6 +14,10 @@ export const useEnkryptMarketing = () => {
       link: 'https://addons.mozilla.org/en-US/firefox/addon/enkrypt/',
       img: require('@/assets/images/icons/icon-firefox.svg')
     },
+    chrome: {
+      link: 'https://chromewebstore.google.com/detail/enkrypt-multichain-crypto/kkpllkodjeloidieedojogacfhpaihoh',
+      img: require('@/assets/images/icons/icon-chrome.svg')
+    },
     safari: {
       link: 'https://apps.apple.com/app/enkrypt-web3-wallet/id1640164309',
       img: require('@/assets/images/icons/icon-safari.svg')

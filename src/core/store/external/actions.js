@@ -61,8 +61,8 @@ const setTokenAndEthBalance = function () {
   const { network } = useGlobalStore();
 
   setLoadingWalletInfo(true);
+  const { address } = useWalletStore();
   const isTokenBalanceApiSupported = network.type.balanceApi !== '';
-  const address = address;
 
   const _formatBalance = (balance, decimals) => {
     let n = new BigNumber(balance);

@@ -630,22 +630,28 @@ watch(gasLimit, newVal => {
   gasLimitError.value = '';
   debouncedGasLimitError(newVal);
 });
-watch(network, () => {
-  clear();
-  const currentGasPrice = gasPrice;
-  // wait for gas price to update after network is updated
-  const x = setInterval(() => {
-    if (gasPrice !== currentGasPrice) {
-      localGasPrice.value = gasPrice;
-      sendTx.value.setLocalGasPrice(actualGasPrice.value);
-      clearInterval(x);
-    }
-  }, 500);
-});
-watch(address, () => {
-  clear();
-  debounceAmountError('0');
-});
+watch(
+  () => network,
+  () => {
+    clear();
+    const currentGasPrice = gasPrice;
+    // wait for gas price to update after network is updated
+    const x = setInterval(() => {
+      if (gasPrice !== currentGasPrice) {
+        localGasPrice.value = gasPrice;
+        sendTx.value.setLocalGasPrice(actualGasPrice.value);
+        clearInterval(x);
+      }
+    }, 500);
+  }
+);
+watch(
+  () => address,
+  () => {
+    clear();
+    debounceAmountError('0');
+  }
+);
 watch(txFeeETH, newVal => {
   if (!isEmpty(selectedCurrency)) localGasPriceWatcher(newVal);
 });

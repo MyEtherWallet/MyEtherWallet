@@ -141,7 +141,6 @@ import { COINBASE_STAKING_ROUTES } from '@/dapps/coinbase-staking/configs';
 
 import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
-import { useExternalStore } from '@/core/store/external';
 
 import { useAmplitude } from '@/core/composables/amplitude';
 

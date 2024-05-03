@@ -306,12 +306,13 @@ import { useAmplitude } from '@/core/composables/amplitude';
 import { usePopupStore } from '@/core/store/popups';
 
 // injections/use
-const { $amplitude } = useAmplitude();
+const { $amplitude, setConsent } = useAmplitude();
 const { network } = useGlobalStore();
 const { consentToTrack } = usePopupStore();
 
 // data
 const packageVersion = VERSION;
+const year = new Date().getFullYear();
 
 // methods
 const trackAboutUs = () => {

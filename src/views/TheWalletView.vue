@@ -67,8 +67,7 @@ import {
   watch,
   onMounted,
   onBeforeUnmount,
-  defineEmits,
-  defineAsyncComponent
+  defineEmits
 } from 'vue';
 import { useRouter } from 'vue-router/composables';
 
@@ -97,21 +96,11 @@ import HybridWalletInterface from '@/modules/access-wallet/hybrid/handlers/walle
 import sanitizeHex from '@/core/helpers/sanitizeHex';
 import { usePopupStore } from '@/core/store/popups';
 
-const TheWalletSideMenu = defineAsyncComponent(() =>
-  import('./components-wallet/TheWalletSideMenu')
-);
-const TheWalletHeader = defineAsyncComponent(() =>
-  import('./components-wallet/TheWalletHeader')
-);
-const TheWalletFooter = defineAsyncComponent(() =>
-  import('./components-wallet/TheWalletFooter')
-);
-const ModuleConfirmation = defineAsyncComponent(() =>
-  import('@/modules/confirmation/ModuleConfirmation')
-);
-const ModulePaperWallet = defineAsyncComponent(() =>
-  import('@/modules/balance/ModulePaperWallet.vue')
-);
+import TheWalletSideMenu from './components-wallet/TheWalletSideMenu';
+import TheWalletHeader from './components-wallet/TheWalletHeader';
+import TheWalletFooter from './components-wallet/TheWalletFooter';
+import ModuleConfirmation from '@/modules/confirmation/ModuleConfirmation';
+import ModulePaperWallet from '@/modules/balance/ModulePaperWallet.vue';
 
 const INTERVAL = 14000;
 
@@ -148,7 +137,12 @@ const {
   setNetworkTokens,
   setTokenAndEthBalance
 } = useExternalStore();
-const { shownPkSurveyCounter, setPkSurvey } = usePopupStore();
+const {
+  shownPkSurveyCounter,
+  setPkSurvey,
+  pkSurveyShown,
+  pkSurveyShownCounter
+} = usePopupStore();
 
 // injections/use
 const vuetify = useVuetify();
@@ -160,10 +154,10 @@ const emit = defineEmits(['newNetwork']);
 
 // computed
 const showSurvey = computed(() => {
-  const isPrivKey = this.identifier === WALLET_TYPES.PRIV_KEY;
+  const isPrivKey = identifier === WALLET_TYPES.PRIV_KEY;
   const userClosed = !tempClose.value;
-  const userAnswered = !this.pkSurveyShown;
-  const shownTwice = this.pkSurveyShownCounter > 2;
+  const userAnswered = !pkSurveyShown;
+  const shownTwice = pkSurveyShownCounter > 2;
   return isPrivKey && userClosed && userAnswered && !shownTwice && withinDate;
 });
 
@@ -174,66 +168,75 @@ const withinDate = computed(() => {
 });
 
 // watchers
-watch(address, newVal => {
-  if (!newVal) {
-    // change later
-    router.push({ name: ROUTES_HOME.ACCESS_WALLET.NAME });
-  } else {
-    setup();
-    setTokensAndBalance();
-  }
-});
-
-watch(network, (newVal, oldVal) => {
-  if (online && !isOfflineApp) {
-    web3.eth.clearSubscriptions();
-    identifier === WALLET_TYPES.WEB3_WALLET
-      ? setWeb3Instance(selectedEIP6963Provider)
-      : setWeb3Instance();
-    setup();
-    if (identifier !== WALLET_TYPES.WEB3_WALLET) {
+watch(
+  () => address,
+  newVal => {
+    if (!newVal) {
+      // change later
+      router.push({ name: ROUTES_HOME.ACCESS_WALLET.NAME });
+    } else {
+      setup();
       setTokensAndBalance();
     }
+  }
+);
 
-    if (
-      (identifier === WALLET_TYPES.WALLET_CONNECT ||
-        identifier === WALLET_TYPES.MEW_WALLET) &&
-      newVal.type.chainID !== instance.connection.chainId
-    ) {
-      instance.connection.sendAsync(
-        {
-          method: 'wallet_switchEthereumChain',
-          params: [{ chainId: newVal.type.chainID.toString(16) }]
-        },
-        err => {
-          if (err) {
-            Toast(
-              'Selected network may not be supported by wallet',
-              {},
-              WARNING
-            );
-            instance.connection.switchEthereumChain(oldVal.type.chainID);
+watch(
+  () => network,
+  (newVal, oldVal) => {
+    if (online && !isOfflineApp) {
+      web3.eth.clearSubscriptions();
+      identifier === WALLET_TYPES.WEB3_WALLET
+        ? setWeb3Instance(selectedEIP6963Provider)
+        : setWeb3Instance();
+      setup();
+      if (identifier !== WALLET_TYPES.WEB3_WALLET) {
+        setTokensAndBalance();
+      }
 
-            setTimeout(() => {
-              setNetwork({
-                network: oldVal,
-                walletType: identifier
-              }).then(() => {
-                setWeb3Instance();
-              });
-            }, 1000);
+      if (
+        (identifier === WALLET_TYPES.WALLET_CONNECT ||
+          identifier === WALLET_TYPES.MEW_WALLET) &&
+        newVal.type.chainID !== instance.connection.chainId
+      ) {
+        instance.connection.sendAsync(
+          {
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: newVal.type.chainID.toString(16) }]
+          },
+          err => {
+            if (err) {
+              Toast(
+                'Selected network may not be supported by wallet',
+                {},
+                WARNING
+              );
+              instance.connection.switchEthereumChain(oldVal.type.chainID);
+
+              setTimeout(() => {
+                setNetwork({
+                  network: oldVal,
+                  walletType: identifier
+                }).then(() => {
+                  setWeb3Instance();
+                });
+              }, 1000);
+            }
           }
-        }
-      );
+        );
+      }
     }
   }
-});
+);
 
-watch(coinGeckoTokens, (newVal, oldVal) => {
-  if (!isEqual(newVal, oldVal)) {
-    setTokensAndBalance();
+watch(
+  () => coinGeckoTokens,
+  (newVal, oldVal) => {
+    if (!isEqual(newVal, oldVal)) {
+      setTokensAndBalance();
+    }
   }
-});
+);
 
 onMounted(() => {
   if (showSurvey.value) {
@@ -356,7 +359,7 @@ const subscribeToBlockNumber = debounce(function () {
   clearInterval(manualBlockSubscription);
   web3.eth.getBlockNumber().then(bNumber => {
     setBlockNumber(bNumber);
-    web3.subscribe
+    web3.eth.subscribe
       .on('newBlockHeaders')
       .on('data', res => {
         if (isEIP1559SupportedNetwork && res.baseFeePerGas) {

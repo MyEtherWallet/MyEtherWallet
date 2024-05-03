@@ -11,22 +11,14 @@
 </template>
 
 <script setup>
-import { defineAsyncComponent, ref } from 'vue';
+import { ref } from 'vue';
 
-const TheDefaultHeader = defineAsyncComponent(() =>
-  import('./components-default/TheDefaultHeader')
-);
-const TheMobileMenu = defineAsyncComponent(() =>
-  import('./components-default/TheMobileMenu')
-);
-const TheDefaultFooter = defineAsyncComponent(() =>
-  import('./components-default/TheDefaultFooter')
-);
+import TheDefaultHeader from './components-default/TheDefaultHeader';
+import TheMobileMenu from './components-default/TheMobileMenu';
+import TheDefaultFooter from './components-default/TheDefaultFooter';
 // const NewLookBanner = defineAsyncComponent(()=> import('./components-default/NewLookBanner'),)
 // const TheEnkryptPopup = defineAsyncComponent(()=> import('./components-default/TheEnkryptPopup'),)
-const GDPRBanner = defineAsyncComponent(() =>
-  import('./components-default/GDPRBanner')
-);
+import GDPRBanner from './components-default/GDPRBanner';
 
 // data
 const mobileOpen = ref(false);

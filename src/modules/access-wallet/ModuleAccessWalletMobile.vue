@@ -61,9 +61,7 @@ import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 
 import { ACCESS_WALLET } from '@/modules/analytics-opt-in/handlers/configs/events';
 import { useAmplitude } from '@/core/composables/amplitude';
-import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
-import { useExternalStore } from '@/core/store/external';
 
 import { useRouter } from 'vue-router/composables';
 
@@ -107,12 +105,9 @@ const openWalletConnect = () => {
     trackAccessWalletAmplitude(ACCESS_WALLET.WALLET_CONNECT_QR_SHOWN);
     WalletConnectWallet()
       .then(_newWallet => {
-        setWallet([_newWallet]).then(() => {
-          trackAccessWalletAmplitude(
-            ACCESS_WALLET.WALLET_CONNECT_QR_SUCCESSFUL
-          );
-          router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
-        });
+        setWallet([_newWallet]);
+        trackAccessWalletAmplitude(ACCESS_WALLET.WALLET_CONNECT_QR_SUCCESSFUL);
+        router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
       })
       .catch(e => {
         trackAccessWalletAmplitude(ACCESS_WALLET.WALLET_CONNECT_QR_FAILED);
@@ -127,10 +122,9 @@ const openWalletLink = () => {
     trackAccessWalletAmplitude(ACCESS_WALLET.WALLET_LINK_QR_SHOWN);
     WalletLinkWallet()
       .then(_newWallet => {
-        setWallet([_newWallet]).then(() => {
-          trackAccessWalletAmplitude(ACCESS_WALLET.WALLET_LINK_QR_SUCCESSFUL);
-          router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
-        });
+        setWallet([_newWallet]);
+        trackAccessWalletAmplitude(ACCESS_WALLET.WALLET_LINK_QR_SUCCESSFUL);
+        router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
       })
       .catch(e => {
         trackAccessWalletAmplitude(ACCESS_WALLET.WALLET_LINK_QR_FAILED);

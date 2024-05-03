@@ -417,7 +417,6 @@ import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { useBuySell } from '@/core/composables/buyMore';
 import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
-import { useExternalStore } from '@/core/store/external';
 
 // injections/use
 const { openBuySell } = useBuySell();

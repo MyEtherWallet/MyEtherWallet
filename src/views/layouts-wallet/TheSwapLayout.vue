@@ -28,27 +28,18 @@ const DAI_TOKEN = '0x6b175474e89094c44da98b954eedeac495271d0f';
 </script>
 
 <script setup>
-import { defineProps, computed, onMounted, defineAsyncComponent } from 'vue';
+import { defineProps, computed, onMounted } from 'vue';
 import { useAmplitude } from '@/core/composables/amplitude.js';
 import { COMMON } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 
 import { useGlobalStore } from '@/core/store/global';
-import { useWalletStore } from '@/core/store/wallet';
-import { useExternalStore } from '@/core/store/external';
+import { useNotificationsStore } from '@/core/store/notifications';
 
-const TheWrapperWallet = defineAsyncComponent(() =>
-  import('@/views/components-wallet/TheWrapperWallet')
-);
-const ModuleSwap = defineAsyncComponent(() =>
-  import('@/modules/swap/ModuleSwap')
-);
-const ModuleTokensValue = defineAsyncComponent(() =>
-  import('@/modules/balance/ModuleTokensValue')
-);
-const ModuleTransferHistory = defineAsyncComponent(() =>
-  import('@/modules/transfer-history/ModuleTransferHistory')
-);
+import TheWrapperWallet from '@/views/components-wallet/TheWrapperWallet';
+import ModuleSwap from '@/modules/swap/ModuleSwap';
 
+import ModuleTokensValue from '@/modules/balance/ModuleTokensValue';
+import ModuleTransferHistory from '@/modules/transfer-history/ModuleTransferHistory';
 // injections/use
 const { trackSwapAmplitude } = useAmplitude();
 const { hasSwap } = useGlobalStore();

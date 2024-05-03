@@ -4,7 +4,7 @@ const state = {
   paths: [],
   stateVersion: '1.0.4',
   addressBook: [],
-  hiddenTokens: {}
+  hiddenTokensHolder: {}
 };
 
 export default state;

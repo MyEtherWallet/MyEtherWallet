@@ -143,9 +143,9 @@ import { validBlockNumber } from '../handlers/helpers/common';
 import HandlerMyBlocks from '../handlers/handlerMyBlocks';
 import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
-import { useExternalStore } from '@/core/store/external';
 
 import { useRouter } from 'vue-router/composables';
+import { useEthBlocksTxsStore } from '../store';
 
 const BlocksLoading = defineAsyncComponent(() =>
   import('../components/BlocksLoading.vue')
@@ -237,22 +237,28 @@ const filterErrorMessage = computed(() => {
  * WATCH: Update HandelrMyBlocks on network change and fetch data
  *  @param {Object} newVal - current address
  */
-watch(network, newVal => {
-  if (newVal) {
-    handlerMyBlocks.value.setNetwork(newVal);
-    handlerMyBlocks.value.getBlocks();
+watch(
+  () => network,
+  newVal => {
+    if (newVal) {
+      handlerMyBlocks.value.setNetwork(newVal);
+      handlerMyBlocks.value.getBlocks();
+    }
   }
-});
+);
 /**
  * WATCH: Update HandelrMyBlocks on address change and fetch data
  * @param {string} newVal - current address
  */
-watch(address, newVal => {
-  if (newVal) {
-    handlerMyBlocks.value.setAddress(newVal);
-    handlerMyBlocks.value.getBlocks();
+watch(
+  () => address,
+  newVal => {
+    if (newVal) {
+      handlerMyBlocks.value.setAddress(newVal);
+      handlerMyBlocks.value.getBlocks();
+    }
   }
-});
+);
 /**
  * WATCH: Update HandelrMyBlocks on pending txs resolution
  * @param {Array} newVal - current address

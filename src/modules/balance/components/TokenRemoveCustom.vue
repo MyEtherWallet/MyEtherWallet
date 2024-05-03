@@ -54,10 +54,7 @@
 import { defineProps } from 'vue';
 import { SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 
-import { useGlobalStore } from '@/core/store/global';
-import { useWalletStore } from '@/core/store/wallet';
-import { useExternalStore } from '@/core/store/external';
-
+import { useCustomStore } from '@/core/store/custom';
 // injections/use
 const { deleteToken } = useCustomStore();
 // props

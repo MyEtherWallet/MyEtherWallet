@@ -3,9 +3,6 @@ import { includes, isString, keys } from 'lodash';
 import xss from 'xss';
 
 import { useGlobalStore } from '@/core/store/global';
-import { useWalletStore } from '@/core/store/wallet';
-import { useExternalStore } from '@/core/store/external';
-
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 
 export default class Settings {

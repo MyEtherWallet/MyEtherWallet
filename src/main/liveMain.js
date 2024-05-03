@@ -64,9 +64,9 @@ if (INTERCOM_ID) {
 /* eslint-enable */
 Vue.use(VueSocialSharing);
 
+Vue.use(PiniaVuePlugin);
 //Router
 Vue.use(Router);
-Vue.use(PiniaVuePlugin);
 Vue.config.productionTip = false;
 
 // setup amplitude
@@ -121,32 +121,51 @@ new Vue({
     const { consentToTrack } = usePopupStore();
 
     customStore.$patch(state => {
-      this.initStore(state, Configs, 'custom');
+      if (locStore.get(Configs.LOCAL_STORAGE_KEYS['custom'])) {
+        const savedStore = locStore.get(Configs.LOCAL_STORAGE_KEYS['custom']);
+        if (savedStore.stateVersion === Configs.VERSION['custom']) {
+          Object.assign(state, savedStore);
+        }
+      }
     });
     globalStore.$patch(state => {
-      this.initStore(state, Configs, 'global');
+      if (locStore.get(Configs.LOCAL_STORAGE_KEYS['global'])) {
+        const savedStore = locStore.get(Configs.LOCAL_STORAGE_KEYS['global']);
+        if (savedStore.stateVersion === Configs.VERSION['global']) {
+          Object.assign(state, savedStore);
+        }
+      }
     });
     notificationsStore.$patch(state => {
-      this.initStore(state, Configs, 'notifications');
+      if (locStore.get(Configs.LOCAL_STORAGE_KEYS['notifications'])) {
+        const savedStore = locStore.get(
+          Configs.LOCAL_STORAGE_KEYS['notifications']
+        );
+        if (savedStore.stateVersion === Configs.VERSION['notifications']) {
+          Object.assign(state, savedStore);
+        }
+      }
     });
     addressBookStore.$patch(state => {
-      this.initStore(state, Configs, 'addressBook');
+      if (locStore.get(Configs.LOCAL_STORAGE_KEYS['addressBook'])) {
+        const savedStore = locStore.get(
+          Configs.LOCAL_STORAGE_KEYS['addressBook']
+        );
+        if (savedStore.stateVersion === Configs.VERSION['addressBook']) {
+          Object.assign(state, savedStore);
+        }
+      }
     });
     articleStore.$patch(state => {
-      this.initStore(state, Configs, 'article');
+      if (locStore.get(Configs.LOCAL_STORAGE_KEYS['article'])) {
+        const savedStore = locStore.get(Configs.LOCAL_STORAGE_KEYS['article']);
+        if (savedStore.stateVersion === Configs.VERSION['article']) {
+          Object.assign(state, savedStore);
+        }
+      }
     });
 
     this.$amplitude.setOptOut(!consentToTrack);
-  },
-  methods: {
-    initStore(state, config, storeName) {
-      if (locStore.get(config.LOCAL_STORAGE_KEYS[storeName])) {
-        const savedStore = locStore.get(config.LOCAL_STORAGE_KEYS[storeName]);
-        if (savedStore.stateVersion === config.VERSION[storeName]) {
-          state = Object.assign(state, savedStore);
-        }
-      }
-    }
   },
   render: h => h(app)
 });

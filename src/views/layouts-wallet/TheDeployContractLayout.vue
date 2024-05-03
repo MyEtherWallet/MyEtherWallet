@@ -13,8 +13,6 @@
 import { defineAsyncComponent } from 'vue';
 
 import { useGlobalStore } from '@/core/store/global';
-import { useWalletStore } from '@/core/store/wallet';
-import { useExternalStore } from '@/core/store/external';
 
 const TheWrapperWallet = defineAsyncComponent(() =>
   import('@/views/components-wallet/TheWrapperWallet')

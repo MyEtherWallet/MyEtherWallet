@@ -1,4 +1,3 @@
-import { useCustomStore } from '.';
 import { useGlobalStore } from '@/core/store/global';
 
 const customTokens = function (state) {
@@ -7,18 +6,16 @@ const customTokens = function (state) {
 };
 
 const hasCustom = function () {
-  const { customTokens } = useCustomStore();
   return customTokens.length > 0;
 };
 
 const hiddenTokens = function (state) {
   const { network } = useGlobalStore();
-  return state.hiddenTokens[network.type.name] || [];
+  return state.hiddenTokensHolder[network.type.name] || [];
 };
 
 const hasHidden = function () {
-  const { hiddenTokens } = useCustomStore();
-  return hiddenTokens.length > 0;
+  return this.hiddenTokens.length > 0;
 };
 
 export default {

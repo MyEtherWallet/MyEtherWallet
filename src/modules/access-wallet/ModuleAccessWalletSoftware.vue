@@ -268,29 +268,24 @@ const unlockWallet = (account = undefined) => {
     } else if (type === types.PRIVATE_KEY) {
       type = ACCESS_WALLET.PRIVATE_KEY_CONNECTED;
     }
-    setWallet([wallet])
-      .then(() => {
-        if (props.switchAddress) {
-          close();
-          return;
-        }
-        trackAccessWalletAmplitude(type);
-        if (path !== '') {
-          router.push({ path: path });
-        } else {
-          const name = isOfflineApp
-            ? ROUTES_WALLET.WALLETS.NAME
-            : ROUTES_WALLET.DASHBOARD.NAME;
-          router.push({ name: name });
-        }
-      })
-      .catch(e => {
-        trackAccessWalletAmplitude(ACCESS_WALLET.ACCESS_FAILED, {
-          wallet: type
-        });
-        Toast(e, {}, ERROR);
-      });
+    setWallet([wallet]);
+    if (props.switchAddress) {
+      close();
+      return;
+    }
+    trackAccessWalletAmplitude(type);
+    if (path !== '') {
+      router.push({ path: path });
+    } else {
+      const name = isOfflineApp
+        ? ROUTES_WALLET.WALLETS.NAME
+        : ROUTES_WALLET.DASHBOARD.NAME;
+      router.push({ name: name });
+    }
   } catch (e) {
+    trackAccessWalletAmplitude(ACCESS_WALLET.ACCESS_FAILED, {
+      wallet: type
+    });
     Toast(e, {}, ERROR);
   }
 };

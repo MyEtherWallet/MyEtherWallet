@@ -106,7 +106,6 @@ import { useAmplitude } from '@/core/composables/amplitude';
 import { useVuetify } from './vuetify';
 import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
-import { useExternalStore } from '@/core/store/external';
 
 // injections/use
 const { darkMode, gasPrice } = useGlobalStore();

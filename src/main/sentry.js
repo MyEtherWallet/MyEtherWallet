@@ -5,7 +5,6 @@ import { EventBus } from '@/core/plugins/eventBus';
 import errorHandler from '@/main/errorHandler';
 import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
-import { useExternalStore } from '@/core/store/external';
 
 // Sentry
 Sentry.init({

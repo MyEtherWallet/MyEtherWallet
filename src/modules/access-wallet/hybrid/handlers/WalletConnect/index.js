@@ -5,7 +5,6 @@ import PromiEvent from 'web3-core-promievent';
 import HybridWalletInterface from '../walletInterface';
 import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
-import { useExternalStore } from '@/core/store/external';
 import * as nodes from '@/utils/networks/nodes';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import {
@@ -40,9 +39,10 @@ class WalletConnectWallet {
     };
   }
   init() {
+    const { network } = useGlobalStore();
+    const { wallet } = useWalletStore();
     // eslint-disable-next-line
     return new Promise(async resolve => {
-      const { network } = useGlobalStore();
       const txSigner = tx => {
         const from = tx.from;
         tx = new Transaction(tx, {
@@ -55,7 +55,7 @@ class WalletConnectWallet {
           .request({ method: 'eth_sendTransaction', params: [txJSON] })
           .then(hash => {
             prom.eventEmitter.emit('transactionHash', hash);
-            store.state.wallet.web3.eth.sendTransaction.method._confirmTransaction(
+            wallet.web3.eth.sendTransaction.method._confirmTransaction(
               prom,
               hash,
               { params: [txJSON] }
@@ -74,7 +74,7 @@ class WalletConnectWallet {
         return new Promise((resolve, reject) => {
           const msgParams = [
             '0x' + toBuffer(msg).toString('hex'),
-            sanitizeHex(store.state.wallet.address)
+            sanitizeHex(wallet.address)
           ];
           this.client
             .request({ method: 'personal_sign', params: msgParams })

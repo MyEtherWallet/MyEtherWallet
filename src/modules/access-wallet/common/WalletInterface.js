@@ -19,8 +19,6 @@ import commonGenerator from '@/core/helpers/commonGenerator';
 import { Transaction, FeeMarketEIP1559Transaction } from '@ethereumjs/tx';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
 import { useGlobalStore } from '@/core/store/global';
-import { useWalletStore } from '@/core/store/wallet';
-import { useExternalStore } from '@/core/store/external';
 
 class WalletInterface {
   constructor(key, isPub = false, identifier, nick, keystore) {

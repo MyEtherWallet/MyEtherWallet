@@ -56,18 +56,18 @@
       <!-- ================================================================================== -->
       <v-list dense>
         <v-list-item-group>
-          <template v-for="(item, idx) in sectionOne">
+          <template v-for="(sectionOneItem, idx) in sectionOne">
             <v-list-item
-              v-if="shouldShow(item.route)"
-              :key="item + idx + 1"
-              :to="item.route"
+              v-if="shouldShow(sectionOneItem.route)"
+              :key="'sectionOneItem' + idx + 1"
+              :to="sectionOneItem.route"
             >
               <v-list-item-icon class="mx-3">
                 <img
                   width="24"
                   height="24"
-                  :src="item.icon"
-                  :alt="item.title"
+                  :src="sectionOneItem.icon"
+                  :alt="sectionOneItem.title"
                 />
               </v-list-item-icon>
 
@@ -75,11 +75,11 @@
                 <v-list-item-title
                   class="white--text font-weight-regular mew-body"
                 >
-                  {{ item.title }}
+                  {{ sectionOneItem.title }}
                 </v-list-item-title>
               </v-list-item-content>
               <div
-                v-if="item.hasNew"
+                v-if="sectionOneItem.hasNew"
                 class="new-dapp-label white--text mew-label px-1"
               >
                 NEW
@@ -93,20 +93,20 @@
 
       <v-list v-if="!isOfflineApp" dense>
         <v-list-item-group>
-          <template v-for="(item, idx) in sectionTwo">
+          <template v-for="(sectionTwoItem, idx) in sectionTwo">
             <v-list-item
-              v-if="shouldShow(item.route)"
-              :key="item + idx"
-              :to="item.route"
-              :active-class="item.route ? '' : 'remove-active-class'"
-              @click="item.fn ? item.fn() : () => {}"
+              v-if="shouldShow(sectionTwoItem.route)"
+              :key="'sectionTwoItem' + idx"
+              :to="sectionTwoItem.route"
+              :active-class="sectionTwoItem.route ? '' : 'remove-active-class'"
+              @click="sectionTwoItem.fn ? sectionTwoItem.fn() : () => {}"
             >
               <v-list-item-icon class="mx-3">
                 <img
                   width="24"
                   height="24"
-                  :src="item.icon"
-                  :alt="item.title"
+                  :src="sectionTwoItem.icon"
+                  :alt="sectionTwoItem.title"
                 />
               </v-list-item-icon>
 
@@ -114,11 +114,11 @@
                 <v-list-item-title
                   class="white--text mew-body font-weight-regular"
                 >
-                  {{ item.title }}
+                  {{ sectionTwoItem.title }}
                 </v-list-item-title>
               </v-list-item-content>
               <div
-                v-if="item.hasNew"
+                v-if="sectionTwoItem.hasNew"
                 class="new-dapp-label white--text mew-label px-1"
               >
                 NEW
@@ -132,34 +132,34 @@
 
       <v-list v-if="!isOfflineApp" dense>
         <v-list-item-group>
-          <template v-for="(item, idx) in sectionThree">
+          <template v-for="(sectionThreeItem, idx) in sectionThree">
             <!-- Sub-menu items -->
             <v-list-group
-              v-if="item.children"
-              :key="item + idx + 2"
+              v-if="sectionThreeItem.children"
+              :key="'sectionThreeItem' + idx"
               prepend-icon=""
-              :value="expendSubMenu(item.children)"
+              :value="expendSubMenu(sectionThreeItem.children)"
             >
               <template #activator>
                 <v-list-item-icon class="mx-3">
                   <img
                     width="24"
                     height="24"
-                    :src="item.icon"
-                    :alt="item.title"
+                    :src="sectionThreeItem.icon"
+                    :alt="sectionThreeItem.title"
                   />
                 </v-list-item-icon>
                 <v-list-item-content>
                   <v-list-item-title
                     class="white--text font-weight-regular mew-body"
                   >
-                    {{ item.title }}
+                    {{ sectionThreeItem.title }}
                   </v-list-item-title>
                 </v-list-item-content>
               </template>
               <v-list-item
-                v-for="child in item.children"
-                :key="child.title"
+                v-for="child in sectionThreeItem.children"
+                :key="'sectionThreeItem' + child.title"
                 dense
                 class="pl-4"
                 :to="child.route"
@@ -182,18 +182,23 @@
 
       <v-list dense>
         <v-list-item
-          v-for="(item, idx) in sectionFour"
-          :key="item + idx"
-          :to="item.route"
-          @click="item.fn()"
+          v-for="(sectionFourItem, idx) in sectionFour"
+          :key="'sectionFourItem' + idx"
+          :to="sectionFourItem.route"
+          @click="sectionFourItem.fn()"
         >
           <v-list-item-icon class="mx-3">
-            <img width="24" height="24" :src="item.icon" :alt="item.title" />
+            <img
+              width="24"
+              height="24"
+              :src="sectionFourItem.icon"
+              :alt="sectionFourItem.title"
+            />
           </v-list-item-icon>
 
           <v-list-item-content>
             <v-list-item-title class="white--text mew-body font-weight-regular">
-              {{ item.title }}
+              {{ sectionFourItem.title }}
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
@@ -274,14 +279,7 @@
 </template>
 
 <script setup>
-import {
-  defineAsyncComponent,
-  ref,
-  computed,
-  watch,
-  onMounted,
-  onBeforeUnmount
-} from 'vue';
+import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue';
 import { useI18n } from 'vue-i18n-composable';
 import { useRoute, useRouter } from 'vue-router/composables';
 
@@ -313,20 +311,11 @@ import { useBuySell } from '@/core/composables/buyMore';
 import { useVuetify } from '@/core/composables/vuetify';
 import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
-import { useExternalStore } from '@/core/store/external';
 
-const ModuleBalanceCard = defineAsyncComponent(() =>
-  import('@/modules/balance/ModuleBalanceCard')
-);
-const ModuleSettings = defineAsyncComponent(() =>
-  import('@/modules/settings/ModuleSettings')
-);
-const ModuleNotifications = defineAsyncComponent(() =>
-  import('@/modules/notifications/ModuleNotifications')
-);
-const NetworkSwitch = defineAsyncComponent(() =>
-  import('@/modules/network/components/NetworkSwitch.vue')
-);
+import ModuleBalanceCard from '@/modules/balance/ModuleBalanceCard';
+import ModuleSettings from '@/modules/settings/ModuleSettings';
+import ModuleNotifications from '@/modules/notifications/ModuleNotifications';
+import NetworkSwitch from '@/modules/network/components/NetworkSwitch.vue';
 
 // injections/use
 const route = useRoute();

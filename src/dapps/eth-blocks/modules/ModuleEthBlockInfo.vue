@@ -233,9 +233,9 @@ import handlerBlock from '../handlers/handlerBlock';
 import { useAmplitude } from '@/core/composables/amplitude';
 import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
-import { useExternalStore } from '@/core/store/external';
 
 import { useRouter } from 'vue-router/composables';
+import { useEthBlocksTxsStore } from '../store';
 
 const BlockInfo = defineAsyncComponent(() =>
   import('../components/BlockInfo.vue')
@@ -443,22 +443,28 @@ watch(props.blockRef, newVal => {
 /**
  * Update HandelrBlockInfo on network change and fetch data
  */
-watch(network, newVal => {
-  if (newVal) {
-    blockHandler.value.setNetwork(newVal);
-    resetBlock();
+watch(
+  () => network,
+  newVal => {
+    if (newVal) {
+      blockHandler.value.setNetwork(newVal);
+      resetBlock();
+    }
   }
-});
+);
 
 /**
  * Update HandelrBlockInfo on network change and fetch data
  */
-watch(address, newVal => {
-  if (newVal) {
-    blockHandler.value.setAddress(newVal);
-    resetBlock();
+watch(
+  () => address,
+  newVal => {
+    if (newVal) {
+      blockHandler.value.setAddress(newVal);
+      resetBlock();
+    }
   }
-});
+);
 
 /**
  * Watch hasPending txs

@@ -27,32 +27,17 @@
 </template>
 
 <script setup>
-import { defineAsyncComponent, computed } from 'vue';
+import { computed } from 'vue';
 
 import { useGlobalStore } from '@/core/store/global';
-import { useWalletStore } from '@/core/store/wallet';
-import { useExternalStore } from '@/core/store/external';
-
 import { ETH, HOLESKY, GOERLI } from '@/utils/networks/types';
 
-const WalletCarousel = defineAsyncComponent(() =>
-  import('@/views/components-wallet/WalletCarousel.vue')
-);
-const ModuleBalance = defineAsyncComponent(() =>
-  import('@/modules/balance/ModuleBalance')
-);
-const ModuleTokens = defineAsyncComponent(() =>
-  import('@/modules/balance/ModuleTokens')
-);
-const ModuleSwapRates = defineAsyncComponent(() =>
-  import('@/modules/swap/ModuleSwapRates')
-);
-const TheWrapperWallet = defineAsyncComponent(() =>
-  import('@/views/components-wallet/TheWrapperWallet')
-);
-const DashboardBanner = defineAsyncComponent(() =>
-  import('@/views/components-wallet/DashboardBanner.vue')
-);
+import WalletCarousel from '@/views/components-wallet/WalletCarousel.vue';
+import ModuleBalance from '@/modules/balance/ModuleBalance';
+import ModuleTokens from '@/modules/balance/ModuleTokens';
+import ModuleSwapRates from '@/modules/swap/ModuleSwapRates';
+import TheWrapperWallet from '@/views/components-wallet/TheWrapperWallet';
+import DashboardBanner from '@/views/components-wallet/DashboardBanner.vue';
 
 // injections/use
 const { isEthNetwork, network } = useGlobalStore();

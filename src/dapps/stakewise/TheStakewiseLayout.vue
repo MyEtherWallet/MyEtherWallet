@@ -84,12 +84,15 @@ watch(web3, () => {
     setup();
   }
 });
-watch(network, () => {
-  clearInterval(fetchInterval.value);
-  if (isSupported.value) {
-    setup();
+watch(
+  () => network,
+  () => {
+    clearInterval(fetchInterval.value);
+    if (isSupported.value) {
+      setup();
+    }
   }
-});
+);
 
 // mounted
 onMounted(() => {

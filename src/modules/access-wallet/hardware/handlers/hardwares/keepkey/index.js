@@ -18,8 +18,6 @@ import HDKey from 'hdkey';
 import { Transaction } from '@ethereumjs/tx';
 import errorHandler from './errorHandler';
 import { useGlobalStore } from '@/core/store/global';
-import { useWalletStore } from '@/core/store/wallet';
-import { useExternalStore } from '@/core/store/external';
 import commonGenerator from '@/core/helpers/commonGenerator';
 import Vue from 'vue';
 import { EventBus } from '@/core/plugins/eventBus';

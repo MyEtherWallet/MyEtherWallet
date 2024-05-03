@@ -28,9 +28,9 @@ const balanceFiatValue = function () {
 };
 
 const totalTokenFiatValue = function () {
-  const { tokenList } = useWalletStore();
-  if (!tokenList.length) return new BigNumber(0);
-  const totalValue = tokenList.reduce((total, currentVal) => {
+  const { tokensList } = useWalletStore();
+  if (!tokensList.length) return new BigNumber(0);
+  const totalValue = tokensList.reduce((total, currentVal) => {
     const balance =
       !currentVal.isHidden &&
       currentVal.usdBalance !== null &&
@@ -66,66 +66,69 @@ const networkTokenUSDMarket = function (state) {
     price_change_percentage_24h: 0
   };
 };
-const getCoinGeckoTokenById = state => cgid => {
-  const cgToken = state.coinGeckoTokens.get(cgid);
-  const networkCurrencyTokens = state.coinGeckoNetworkCurrencies.get(cgid);
-  return {
-    name: networkCurrencyTokens
-      ? networkCurrencyTokens.symbol.toUpperCase()
-      : cgToken
-      ? cgToken.symbol.toUpperCase()
-      : '',
-    symbol: networkCurrencyTokens
-      ? networkCurrencyTokens.symbol.toUpperCase()
-      : cgToken
-      ? cgToken.symbol.toUpperCase()
-      : '',
-    subtext: networkCurrencyTokens
-      ? networkCurrencyTokens.name
-      : cgToken
-      ? cgToken.name
-      : '',
-    value: networkCurrencyTokens
-      ? networkCurrencyTokens.name
-      : cgToken
-      ? cgToken.name
-      : '',
-    img: networkCurrencyTokens
-      ? `https://img.mewapi.io/?image=${networkCurrencyTokens.image}`
-      : cgToken
-      ? `https://img.mewapi.io/?image=${cgToken.image}`
-      : '',
-    market_cap: networkCurrencyTokens
-      ? networkCurrencyTokens.market_cap
-      : cgToken
-      ? cgToken.market_cap
-      : '0',
-    market_capf: networkCurrencyTokens
-      ? formatIntegerValue(networkCurrencyTokens.market_cap).value
-      : cgToken
-      ? formatIntegerValue(cgToken.market_cap).value
-      : '0',
-    price_change_percentage_24h: networkCurrencyTokens
-      ? networkCurrencyTokens.price_change_percentage_24h
-      : cgToken
-      ? cgToken.price_change_percentage_24h
-      : '0',
-    price_change_percentage_24hf: networkCurrencyTokens
-      ? formatPercentageValue(networkCurrencyTokens.price_change_percentage_24h)
-          .value
-      : cgToken && cgToken.price_change_percentage_24h
-      ? formatPercentageValue(cgToken.price_change_percentage_24h).value
-      : '0',
-    price: networkCurrencyTokens
-      ? networkCurrencyTokens.current_price
-      : cgToken
-      ? cgToken.current_price
-      : '0',
-    pricef: networkCurrencyTokens
-      ? formatFiatValue(networkCurrencyTokens.current_price).value
-      : cgToken
-      ? formatFiatValue(cgToken.current_price).value
-      : '0'
+const getCoinGeckoTokenById = state => {
+  return cgid => {
+    const cgToken = state.coinGeckoTokens.get(cgid);
+    const networkCurrencyTokens = state.coinGeckoNetworkCurrencies.get(cgid);
+    return {
+      name: networkCurrencyTokens
+        ? networkCurrencyTokens.symbol.toUpperCase()
+        : cgToken
+        ? cgToken.symbol.toUpperCase()
+        : '',
+      symbol: networkCurrencyTokens
+        ? networkCurrencyTokens.symbol.toUpperCase()
+        : cgToken
+        ? cgToken.symbol.toUpperCase()
+        : '',
+      subtext: networkCurrencyTokens
+        ? networkCurrencyTokens.name
+        : cgToken
+        ? cgToken.name
+        : '',
+      value: networkCurrencyTokens
+        ? networkCurrencyTokens.name
+        : cgToken
+        ? cgToken.name
+        : '',
+      img: networkCurrencyTokens
+        ? `https://img.mewapi.io/?image=${networkCurrencyTokens.image}`
+        : cgToken
+        ? `https://img.mewapi.io/?image=${cgToken.image}`
+        : '',
+      market_cap: networkCurrencyTokens
+        ? networkCurrencyTokens.market_cap
+        : cgToken
+        ? cgToken.market_cap
+        : '0',
+      market_capf: networkCurrencyTokens
+        ? formatIntegerValue(networkCurrencyTokens.market_cap).value
+        : cgToken
+        ? formatIntegerValue(cgToken.market_cap).value
+        : '0',
+      price_change_percentage_24h: networkCurrencyTokens
+        ? networkCurrencyTokens.price_change_percentage_24h
+        : cgToken
+        ? cgToken.price_change_percentage_24h
+        : '0',
+      price_change_percentage_24hf: networkCurrencyTokens
+        ? formatPercentageValue(
+            networkCurrencyTokens.price_change_percentage_24h
+          ).value
+        : cgToken && cgToken.price_change_percentage_24h
+        ? formatPercentageValue(cgToken.price_change_percentage_24h).value
+        : '0',
+      price: networkCurrencyTokens
+        ? networkCurrencyTokens.current_price
+        : cgToken
+        ? cgToken.current_price
+        : '0',
+      pricef: networkCurrencyTokens
+        ? formatFiatValue(networkCurrencyTokens.current_price).value
+        : cgToken
+        ? formatFiatValue(cgToken.current_price).value
+        : '0'
+    };
   };
 };
 /**
@@ -141,7 +144,7 @@ const contractToToken = state => contractAddress => {
   let cgToken;
   if (contractAddress === MAIN_TOKEN_ADDRESS) {
     tokenId = network.type.coingeckoID;
-    cgToken = this.getCoinGeckoTokenById(tokenId);
+    cgToken = getCoinGeckoTokenById()(tokenId);
     const networkType = network.type;
     return Object.assign(cgToken, {
       name: networkType.currencyName,
@@ -153,7 +156,7 @@ const contractToToken = state => contractAddress => {
       decimals: 18
     });
   }
-  cgToken = this.getCoinGeckoTokenById(tokenId);
+  cgToken = getCoinGeckoTokenById()(tokenId);
   const networkToken = state.networkTokens.get(contractAddress);
   const name = networkToken ? networkToken.name : cgToken.name;
   const symbol = networkToken ? networkToken.symbol : cgToken.symbol;

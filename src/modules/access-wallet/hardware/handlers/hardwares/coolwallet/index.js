@@ -18,8 +18,6 @@ import coolwallet from '@/assets/images/icons/wallets/coolwallet.svg';
 import coolwalletPro from '@/assets/images/icons/wallets/coolwalletpro.svg';
 import * as locstore from 'store';
 import { useGlobalStore } from '@/core/store/global';
-import { useWalletStore } from '@/core/store/wallet';
-import { useExternalStore } from '@/core/store/external';
 import {
   getSignTransactionObject,
   sanitizeHex,

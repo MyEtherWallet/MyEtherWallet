@@ -485,30 +485,36 @@ watch(ensDomainAvailable, newVal => {
     - if user is onRegister it will reset and take them back
     - if user is onManage it will run getDomain to refresh domains
     */
-watch(address, newVal => {
-  if (newVal) {
-    ensManager.value.address = newVal;
-    if (onRegister.value) {
-      closeRegister();
+watch(
+  () => address,
+  newVal => {
+    if (newVal) {
+      ensManager.value.address = newVal;
+      if (onRegister.value) {
+        closeRegister();
+      }
+      getDomains();
     }
-    getDomains();
   }
-});
+);
 /*
     - watches for network change
     - updates ensManager with new network
     - if user is onRegister it will reset and take them back
     - if user is onManage it will run getDomain to refresh domains
     */
-watch(network, () => {
-  if (checkNetwork()) {
-    setup();
-    getDomains();
+watch(
+  () => network,
+  () => {
+    if (checkNetwork()) {
+      setup();
+      getDomains();
+    }
+    if (onRegister.value) {
+      closeRegister();
+    }
   }
-  if (onRegister.value) {
-    closeRegister();
-  }
-});
+);
 watch(route, () => {
   detactUrlChangeTab();
 });
