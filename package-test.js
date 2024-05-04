@@ -1,4 +1,4 @@
-// package-test.js: check to make sure that all dependcies are sufficiently up
+// package-test.js: check to make sure that all dependencies are sufficiently up
 // to date. If dependencies are too outdated, exit with an error, failing `npm
 // run update:packages` and thus eventually the entire build.
 
