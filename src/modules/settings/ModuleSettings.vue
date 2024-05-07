@@ -105,7 +105,6 @@ export default {
 </script>
 <script setup>
 import {
-  defineAsyncComponent,
   defineProps,
   ref,
   computed,
@@ -123,25 +122,12 @@ import { useAmplitude } from '@/core/composables/amplitude';
 import { useAddressBookStore } from '@/core/store/addressBook';
 import { usePopupStore } from '@/core/store/popups';
 
-const SettingsAddressTable = defineAsyncComponent(() =>
-  import('./components/SettingsAddressTable')
-);
-const SettingsImportConfig = defineAsyncComponent(() =>
-  import('./components/SettingsImportConfig')
-);
-const SettingsExportConfig = defineAsyncComponent(() =>
-  import('./components/SettingsExportConfig')
-);
-const SettingsGasPrice = defineAsyncComponent(() =>
-  import('./components/SettingsGasPrice')
-);
-const AddressBookAddEdit = defineAsyncComponent(() =>
-  import('@/modules/address-book/components/AddressBookAddEdit')
-);
-const SettingsLocaleConfig = defineAsyncComponent(() =>
-  import('./components/SettingsLocaleConfig.vue')
-);
-
+import SettingsAddressTable from './components/SettingsAddressTable';
+import SettingsImportConfig from './components/SettingsImportConfig';
+import SettingsExportConfig from './components/SettingsExportConfig';
+import SettingsGasPrice from './components/SettingsGasPrice';
+import AddressBookAddEdit from '@/modules/address-book/components/AddressBookAddEdit';
+import SettingsLocaleConfig from './components/SettingsLocaleConfig.vue';
 // emit
 const emit = defineEmits(['closeSettings']);
 

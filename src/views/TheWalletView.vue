@@ -359,8 +359,8 @@ const subscribeToBlockNumber = debounce(function () {
   clearInterval(manualBlockSubscription);
   web3.eth.getBlockNumber().then(bNumber => {
     setBlockNumber(bNumber);
-    web3.eth.subscribe
-      .on('newBlockHeaders')
+    web3.eth
+      .subscribe('newBlockHeaders')
       .on('data', res => {
         if (isEIP1559SupportedNetwork && res.baseFeePerGas) {
           checkAndSetBaseFee(toBN(res.baseFeePerGas));

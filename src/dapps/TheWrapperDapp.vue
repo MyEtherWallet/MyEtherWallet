@@ -149,21 +149,13 @@
 </template>
 
 <script setup>
-import {
-  defineProps,
-  ref,
-  computed,
-  onMounted,
-  defineAsyncComponent
-} from 'vue';
+import { defineProps, ref, computed, onMounted } from 'vue';
 
 import bannerImage from '@/assets/images/backgrounds/bg-dapps-center.jpg';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 
-const TheDappBlockHeader = defineAsyncComponent(() =>
-  import('./TheDappBlockHeader.vue')
-);
-const TheDappHeader = defineAsyncComponent(() => import('./TheDappHeader.vue'));
+import TheDappBlockHeader from './TheDappBlockHeader.vue';
+import TheDappHeader from './TheDappHeader.vue';
 
 import { useGlobalStore } from '@/core/store/global';
 
