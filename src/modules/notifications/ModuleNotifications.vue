@@ -87,7 +87,19 @@
 </template>
 
 <script>
-import { mapGetters, mapState, mapActions } from 'vuex';
+const MAX_ITEMS = 15;
+</script>
+
+<script setup>
+import {
+  defineProps,
+  ref,
+  computed,
+  watch,
+  onMounted,
+  onBeforeUnmount
+} from 'vue';
+import { useQuery, useSubscription } from '@vue/apollo-composable';
 import Notification, {
   NOTIFICATION_TYPES,
   NOTIFICATION_STATUS
@@ -97,232 +109,398 @@ import formatNotification from './helpers/formatNotification';
 import formatNonChainNotification from './helpers/formatNonChainNotification';
 import { EventBus } from '@/core/plugins/eventBus.js';
 
-import handlerNotification from './handlers/handlerNotification.mixin';
+import { useNotificationsStore } from '@/core/store/notifications';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import {
+  getEthTransfersV2,
+  getTransactionsByHashes,
+  getTransactionByHash,
+  pendingTransaction,
+  transactionEvent
+} from '@/apollo/queries/notifications/notification.graphql';
 import handlerSwap from '@/modules/swap/handlers/handlerSwap';
 import NonChainNotification from './handlers/nonChainNotification';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+import { errorMsgs } from '@/apollo/configs/configErrorMsgs';
 
-export default {
-  name: 'ModuleNotifications',
-  mixins: [handlerNotification],
-  props: {
-    invertIcon: {
-      type: Boolean,
-      default: false
-    }
-  },
-  data() {
-    return {
-      selected: NOTIFICATION_TYPES.ALL,
-      items: [
-        { name: 'All', value: NOTIFICATION_TYPES.ALL },
-        { name: 'In', value: NOTIFICATION_TYPES.IN },
-        { name: 'Out', value: NOTIFICATION_TYPES.OUT },
-        { name: 'Swap', value: NOTIFICATION_TYPES.SWAP }
-      ],
-      isOpenNotifications: false
-    };
-  },
-  computed: {
-    ...mapGetters('notifications', [
-      'currentNotifications',
-      'txNotifications',
-      'swapNotifications'
-    ]),
-    ...mapGetters('global', ['network', 'isEthNetwork']),
-    ...mapState('wallet', ['address', 'web3']),
-    loading() {
-      return this.$apollo.loading;
-    },
-    /**
-     * Swap Handler
-     */
-    swapper() {
-      return new handlerSwap(this.web3, this.network.type.name);
-    },
-    /**
-     * Formatted outgoing tx notifications
-     */
-    outgoingTxNotifications() {
-      return this.txNotifications
-        .map(notification => {
-          if (notification.hasOwnProperty('hash')) {
-            return formatNotification(notification, this.network);
-          }
-          return formatNonChainNotification(notification);
-        })
-        .sort(this.sortByDate);
-    },
-    /**
-     * Formatted incoming tx notifications
-     */
-    incomingTxNotifications() {
-      const address = this.address ? this.address.toLowerCase() : '';
-      if (!this.loading) {
-        return this.ethTransfersIncoming
-          .reduce((arr, notification) => {
-            if (notification.to?.toLowerCase() === address) {
-              notification.type = NOTIFICATION_TYPES.IN;
-              if (notification.status) notification.read = true;
-              else notification.read = false;
-              if (notification.hasOwnProperty('hash')) {
-                notification = new Notification(notification);
-                arr.push(formatNotification(notification, this.network));
-              } else {
-                notification = new NonChainNotification(notification);
-                arr.push(formatNonChainNotification(notification));
-              }
-            }
-            return arr;
-          }, [])
-          .sort(this.sortByDate);
-      }
-      return [];
-    },
-    /**
-     * Returns all the notifications
-     */
-    allNotifications() {
-      const sorted = this.formattedCurrentNotifications().concat(
-        this.incomingTxNotifications
-      );
-      sorted.sort(this.sortByDate);
-      return sorted.slice(0, 20);
-    },
-    /**
-     * Display notifications based on type
-     */
-    notificationsByType() {
-      switch (this.selected) {
-        case NOTIFICATION_TYPES.IN:
-          return this.incomingTxNotifications
-            .slice(0, 20)
-            .sort(this.sortByDate);
-        case NOTIFICATION_TYPES.OUT:
-          return this.outgoingTxNotifications
-            .slice(0, 20)
-            .sort(this.sortByDate);
-        case NOTIFICATION_TYPES.SWAP:
-          return this.swapNotifications.slice(0, 20).sort(this.sortByDate);
-        default:
-          return this.allNotifications;
-      }
-    },
-    /**
-     * new notification count
-     */
-    newNotificationCount() {
-      const unread = this.allNotifications.filter(item => {
-        if (!item.read) {
+// injections/use
+const {
+  currentNotifications,
+  txNotifications,
+  swapNotifications,
+  updateNotification
+} = useNotificationsStore();
+const { network, isEthNetwork } = useGlobalStore();
+const { address, web3 } = useWalletStore();
+
+// props
+defineProps({
+  invertIcon: {
+    type: Boolean,
+    default: false
+  }
+});
+
+// apollo calls
+/**
+ * Apollo query to get the last 20 eth transfers by owner
+ */
+const {
+  onResult: getEthTransfersV2Result,
+  onError: getEthTransfersV2Error,
+  loading: getEthTransfersV2Loading
+} = useQuery(
+  () => getEthTransfersV2,
+  () => ({ owner: address, limit: MAX_ITEMS }),
+  () => ({
+    enabled: isEthNetwork || address === null || address === ''
+  })
+);
+
+getEthTransfersV2Result(({ data }) => {
+  if (data && data.getEthTransfersV2.transfers) {
+    data.getEthTransfersV2.transfers.forEach(transfer => {
+      const hash = transfer.transfer.transactionHash;
+      !txHashes.value.includes(hash) ? txHashes.value.push(hash) : null;
+    });
+  }
+});
+
+getEthTransfersV2Error(({ error }) => {
+  Toast(error.message, {}, ERROR);
+});
+
+/**
+ * Apollo query to fetch transaction details by hashes
+ * Only returns 10 at a time
+ */
+const {
+  onResult: getTransactionsByHashesResult,
+  onError: getTrasnactionsByHashesError,
+  loading: getTrasnactionsByHashesLoading
+} = useQuery(
+  () => getTransactionsByHashes,
+  () => ({ hashes: txHashes.value }),
+  () => ({
+    fetchPolicy: 'cache-and-network',
+    enabled: !isEthNetwork || txHashes.value.length === 0
+  })
+);
+
+getTransactionsByHashesResult(({ data }) => {
+  if (data && data.getTransactionsByHashes) {
+    ethTransfersIncoming.value = data.getTransactionsByHashes;
+  }
+});
+getTrasnactionsByHashesError(({ error }) => {
+  Toast(error.message, {}, ERROR);
+});
+
+/**
+ * Apollo query to fetch transaction details by hash
+ * Only fetches one at a time
+ */
+const {
+  onResult: getTransactionByHashResult,
+  onError: getTransactionByHashError,
+  loading: getTransactionByHashLoading,
+  subscribeToMore: getTransactionByHashUpdate,
+  refetch: getTransactionByHashRefetch
+} = useQuery(
+  () => getTransactionByHash,
+  () => ({
+    hash: txHash.value
+  }),
+  () => ({
+    enabled:
+      isEthNetwork ||
+      txHash.value ||
+      txHash.value !== '' ||
+      txHash.value !== null
+  })
+);
+
+getTransactionByHashUpdate(({ data }) => {
+  return data.transactionByHash;
+});
+
+getTransactionByHashResult(({ data }) => {
+  if (data) {
+    const getTransactionByHash = data.getTransactionByHash;
+    if (getTransactionByHash.to === address) {
+      const copyArray = ethTransfersIncoming.value;
+      const foundIdx = copyArray.findIndex(item => {
+        if (getTransactionByHash.hash === item.hash) {
           return item;
         }
       });
-      return unread.length;
-    },
-    /**
-     * checks whether user has notifications
-     */
-    hasNotification() {
-      return this.allNotifications.length > 0;
-    }
-  },
-  watch: {
-    currentNotifications: {
-      handler: function (newVal) {
-        newVal.forEach(notification => {
-          this.checkAndSetNotificationStatus(notification);
-        });
-      },
-      deep: true
-    }
-  },
-  mounted() {
-    const _this = this;
-    EventBus.$on('openNotifications', () => {
-      _this.openNotifications();
-    });
-    _this.currentNotifications.forEach(notification => {
-      _this.checkAndSetNotificationStatus(notification);
-    });
-  },
-  beforeDestroy() {
-    EventBus.$off('openNotifications');
-  },
-  methods: {
-    ...mapActions('notifications', ['updateNotification']),
-    /**
-     * Set the filter value
-     */
-    setSelected(input) {
-      this.selected = input.value;
-    },
-    sortByDate(a, b) {
-      return new Date(b.date) - new Date(a.date);
-    },
-    /**
-     * Formatted current notifications
-     */
-    formattedCurrentNotifications() {
-      return this.currentNotifications.map(notification => {
-        if (notification.hasOwnProperty('hash')) {
-          return formatNotification(notification, this.network);
-        }
-        return formatNonChainNotification(notification);
-      });
-    },
-    /**
-     * Check status if it is an outgoing pending tx
-     */
-    checkAndSetNotificationStatus(notification) {
-      const type = notification.type;
-      if (notification.status) {
-        if (
-          type === NOTIFICATION_TYPES.SWAP &&
-          notification.status.toLowerCase() === NOTIFICATION_STATUS.PENDING
-        ) {
-          notification.checkSwapStatus(this.swapper);
-        }
-        if (
-          type === NOTIFICATION_TYPES.OUT &&
-          notification.status.toLowerCase() === NOTIFICATION_STATUS.PENDING
-        ) {
-          this.web3.eth
-            .getTransactionReceipt(notification.hash)
-            .then(receipt => {
-              if (receipt) {
-                notification.status = receipt.status
-                  ? NOTIFICATION_STATUS.SUCCESS
-                  : NOTIFICATION_STATUS.FAILED;
-                this.updateNotification(notification);
-              }
-            });
-        }
-      }
-    },
-    /**
-     * Mark notification as read
-     */
-    markNotificationAsRead(notification) {
-      if (!notification.read) {
-        notification.markAsRead().then(() => {
-          const type = notification.type.toLowerCase();
-          if (
-            type === NOTIFICATION_TYPES.OUT ||
-            type === NOTIFICATION_TYPES.SWAP
-          ) {
-            this.updateNotification(notification);
-          } else {
-            notification.read = true;
-          }
-        });
-      }
-    },
-    openNotifications() {
-      this.isOpenNotifications = true;
-    },
-    closeNotifications() {
-      this.isOpenNotifications = false;
+      foundIdx >= 0
+        ? copyArray.splice(foundIdx, 1, getTransactionByHash)
+        : copyArray.unshift(getTransactionByHash);
+      ethTransfersIncoming.value = copyArray;
     }
   }
+});
+getTransactionByHashError(({ error }) => {
+  if (error.message.includes(errorMsgs.cannotReturnNull)) {
+    return;
+  }
+  Toast(error.message, {}, ERROR);
+});
+
+/**
+ * Apollo subscription for pending txs
+ */
+const { onResult: pendingTransactionResult, onError: pendingTransactionError } =
+  useSubscription(
+    () => pendingTransaction,
+    () => ({ owner: address }),
+    () => ({
+      enabled:
+        isEthNetwork || address !== '' || address !== null || !loading.value
+    })
+  );
+
+pendingTransactionResult(({ data }) => {
+  if (data && data.pendingTransaction) {
+    const pendingTx = data.pendingTransaction;
+    if (pendingTx.to?.toLowerCase() === address) {
+      txHash.value = pendingTx.transactionHash;
+    }
+  }
+});
+pendingTransactionError(({ error }) => {
+  Toast(error.message, {}, ERROR);
+});
+
+/**
+ * Apollo subscription for transactions
+ */
+const { onResult: transactionEventResult, onError: transactionEventError } =
+  useSubscription(
+    () => transactionEvent,
+    () => ({ hash: txHash.value }),
+    () => ({
+      enabled:
+        isEthNetwork ||
+        txHash.value ||
+        txHash.value !== '' ||
+        txHash.value !== null
+    })
+  );
+
+transactionEventResult(() => {
+  getTransactionByHashRefetch();
+});
+transactionEventError(({ error }) => {
+  Toast(error.message, {}, ERROR);
+});
+
+// data
+const selected = NOTIFICATION_TYPES.ALL;
+const items = [
+  { name: 'All', value: NOTIFICATION_TYPES.ALL },
+  { name: 'In', value: NOTIFICATION_TYPES.IN },
+  { name: 'Out', value: NOTIFICATION_TYPES.OUT },
+  { name: 'Swap', value: NOTIFICATION_TYPES.SWAP }
+];
+const isOpenNotifications = ref(false);
+const txHash = ref('');
+const txHashes = ref([]);
+const ethTransfersIncoming = ref([]);
+
+// computed
+const loading = computed(() => {
+  return (
+    getEthTransfersV2Loading.value &&
+    getTrasnactionsByHashesLoading.value &&
+    getTransactionByHashLoading.value
+  );
+});
+
+/**
+ * Swap Handler
+ */
+const swapper = computed(() => {
+  return new handlerSwap(web3, network.type.name);
+});
+/**
+ * Formatted outgoing tx notifications
+ */
+const outgoingTxNotifications = computed(() => {
+  return txNotifications
+    .map(notification => {
+      if (notification.hasOwnProperty('hash')) {
+        return formatNotification(notification, network);
+      }
+      return formatNonChainNotification(notification);
+    })
+    .sort(sortByDate);
+});
+/**
+ * Formatted incoming tx notifications
+ */
+const incomingTxNotifications = computed(() => {
+  const address = address ? address.toLowerCase() : '';
+  if (!loading.value) {
+    return ethTransfersIncoming.value
+      .reduce((arr, notification) => {
+        if (notification.to?.toLowerCase() === address) {
+          notification.type = NOTIFICATION_TYPES.IN;
+          if (notification.status) notification.read = true;
+          else notification.read = false;
+          if (notification.hasOwnProperty('hash')) {
+            notification = new Notification(notification);
+            arr.push(formatNotification(notification, network));
+          } else {
+            notification = new NonChainNotification(notification);
+            arr.push(formatNonChainNotification(notification));
+          }
+        }
+        return arr;
+      }, [])
+      .sort(sortByDate);
+  }
+  return [];
+});
+/**
+ * Returns all the notifications
+ */
+const allNotifications = computed(() => {
+  const sorted = formattedCurrentNotifications().concat(
+    incomingTxNotifications
+  );
+  sorted.sort(sortByDate);
+  return sorted.slice(0, 20);
+});
+/**
+ * Display notifications based on type
+ */
+const notificationsByType = computed(() => {
+  switch (selected) {
+    case NOTIFICATION_TYPES.IN:
+      return incomingTxNotifications.value.slice(0, 20).sort(sortByDate);
+    case NOTIFICATION_TYPES.OUT:
+      return outgoingTxNotifications.value.slice(0, 20).sort(sortByDate);
+    case NOTIFICATION_TYPES.SWAP:
+      return swapNotifications.slice(0, 20).sort(sortByDate);
+    default:
+      return allNotifications;
+  }
+});
+/**
+ * new notification count
+ */
+const newNotificationCount = computed(() => {
+  const unread = allNotifications.value.filter(item => {
+    if (!item.read) {
+      return item;
+    }
+  });
+  return unread.length;
+});
+/**
+ * checks whether user has notifications
+ */
+const hasNotification = computed(() => {
+  return allNotifications.value.length > 0;
+});
+
+// watch
+watch(
+  currentNotifications,
+  newVal => {
+    newVal.forEach(notification => {
+      checkAndSetNotificationStatus(notification);
+    });
+  },
+  { deep: true }
+);
+
+// mounted
+onMounted(() => {
+  EventBus.$on('openNotifications', () => {
+    openNotifications();
+  });
+  currentNotifications.value.forEach(notification => {
+    checkAndSetNotificationStatus(notification);
+  });
+});
+
+// before Destroy
+onBeforeUnmount(() => {
+  EventBus.$off('openNotifications');
+});
+
+// methods
+/**
+ * Set the filter value
+ */
+const setSelected = input => {
+  selected.value = input.value;
+};
+const sortByDate = (a, b) => {
+  return new Date(b.date) - new Date(a.date);
+};
+/**
+ * Formatted current notifications
+ */
+const formattedCurrentNotifications = () => {
+  return currentNotifications.map(notification => {
+    if (notification.hasOwnProperty('hash')) {
+      return formatNotification(notification, network);
+    }
+    return formatNonChainNotification(notification);
+  });
+};
+/**
+ * Check status if it is an outgoing pending tx
+ */
+const checkAndSetNotificationStatus = notification => {
+  const type = notification.type;
+  if (notification.status) {
+    if (
+      type === NOTIFICATION_TYPES.SWAP &&
+      notification.status.toLowerCase() === NOTIFICATION_STATUS.PENDING
+    ) {
+      notification.checkSwapStatus(swapper);
+    }
+    if (
+      type === NOTIFICATION_TYPES.OUT &&
+      notification.status.toLowerCase() === NOTIFICATION_STATUS.PENDING
+    ) {
+      web3.eth.getTransactionReceipt(notification.hash).then(receipt => {
+        if (receipt) {
+          notification.status = receipt.status
+            ? NOTIFICATION_STATUS.SUCCESS
+            : NOTIFICATION_STATUS.FAILED;
+          updateNotification(notification);
+        }
+      });
+    }
+  }
+};
+/**
+ * Mark notification as read
+ */
+const markNotificationAsRead = notification => {
+  if (!notification.read) {
+    notification.markAsRead().then(() => {
+      const type = notification.type.toLowerCase();
+      if (type === NOTIFICATION_TYPES.OUT || type === NOTIFICATION_TYPES.SWAP) {
+        updateNotification(notification);
+      } else {
+        notification.read = true;
+      }
+    });
+  }
+};
+const openNotifications = () => {
+  isOpenNotifications.value = true;
+};
+const closeNotifications = () => {
+  isOpenNotifications.value = false;
 };
 </script>
 

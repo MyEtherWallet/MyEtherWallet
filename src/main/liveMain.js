@@ -1,4 +1,4 @@
-import Vue from 'vue';
+import Vue, { provide } from 'vue';
 import Router from 'vue-router';
 import { v4 as uuidv4 } from 'uuid';
 import * as nameHashPckg from 'eth-ens-namehash';
@@ -7,6 +7,7 @@ import Configs from '@/core/store/configs.js';
 import VueIntercom from '@mathieustan/vue-intercom';
 import VueSocialSharing from 'vue-social-sharing';
 import * as amplitude from '@amplitude/analytics-browser';
+import { ApolloClients } from '@vue/apollo-composable';
 
 import { PiniaVuePlugin, createPinia } from 'pinia';
 const pinia = createPinia();
@@ -15,6 +16,7 @@ import app from './mainApp';
 import '@/assets/fonts/MaterialDesignIcons/css/materialdesignicons.min.css';
 import '@/assets/fonts/Roboto/css/Roboto.css';
 
+import clients from '@/apollo/index.js';
 import './components';
 import './sentry';
 
@@ -46,7 +48,6 @@ import lokalise from '@/core/filters/lokalise';
 // etc
 import '@/core/plugins/registerServiceWorker';
 import vuetify from '@/core/plugins/vuetify';
-import apolloProvider from './apolloProvider';
 import i18n from './i18n';
 import * as locStore from 'store';
 import VueLazyLoad from 'vue-lazyload';
@@ -102,8 +103,10 @@ new Vue({
   i18n,
   pinia,
   router,
-  apolloProvider,
   vuetify,
+  setup() {
+    provide(ApolloClients, clients);
+  },
   beforeCreate() {
     const userId = this.$route.query.intercomid
       ? this.$route.query.intercomid
