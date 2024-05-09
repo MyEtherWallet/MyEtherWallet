@@ -291,7 +291,7 @@ const { totalTokenFiatValue, setTokenAndEthBalance } = useExternalStore();
 const { network, isTestNetwork, getFiatValue } = useGlobalStore();
 const { t } = useI18n();
 
-const { web3 } = storeToRefs(useGlobalStore);
+const { web3 } = storeToRefs(useGlobalStore());
 
 // data
 const showChangeAddress = ref(false);

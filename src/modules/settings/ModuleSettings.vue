@@ -143,7 +143,7 @@ const { consentToTrack } = usePopupStore();
 const { hasGasPriceOption } = useWalletStore();
 const { t } = useI18n();
 
-const { addressBookStore } = storeToRefs(useAddressBookStore);
+const { addressBookStore } = storeToRefs(useAddressBookStore());
 
 // data
 const settingsHandler = ref(null);

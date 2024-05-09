@@ -234,8 +234,8 @@ const { instance, balanceInETH, hasGasPriceOption } = useWalletStore();
 const { hiddenTokens } = useCustomStore();
 const { t } = useI18n();
 
-const { tokensList, address } = storeToRefs(useWalletStore);
-const { network } = storeToRefs(useGlobalStore);
+const { tokensList, address } = storeToRefs(useWalletStore());
+const { network } = storeToRefs(useGlobalStore());
 // props
 const props = defineProps({
   prefilledAmount: {

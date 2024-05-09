@@ -110,8 +110,8 @@ const { tokensList } = useWalletStore();
 const { contractToToken, setNetworkTokens } = useExternalStore();
 const route = useRoute();
 
-const { network } = storeToRefs(useGlobalStore);
-const { address } = storeToRefs(useWalletStore);
+const { network } = storeToRefs(useGlobalStore());
+const { address } = storeToRefs(useWalletStore());
 
 // props
 const props = defineProps({

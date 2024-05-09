@@ -189,7 +189,7 @@ const { setCoinGeckoTokens, setCoinGeckoNetworkIds, contractToToken } =
 const { gasPriceByType } = useGlobalStore();
 const { address, instance, web3, tokensList } = useWalletStore();
 const { trackBuySell } = useAmplitude();
-const { gasPriceType, network } = storeToRefs(useGlobalStore);
+const { gasPriceType, network } = storeToRefs(useGlobalStore());
 
 // apollo
 const { onResult: getLatestPricesResult, onError: getLatestPricesError } =

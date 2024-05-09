@@ -48,8 +48,8 @@ const {
   setStakeBalance
 } = useStakewiseStore();
 
-const { web3 } = storeToRefs(useWalletStore);
-const { network } = storeToRefs(useGlobalStore);
+const { web3 } = storeToRefs(useWalletStore());
+const { network } = storeToRefs(useGlobalStore());
 
 // data
 const header = {

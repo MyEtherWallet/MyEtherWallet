@@ -92,15 +92,7 @@
 </template>
 
 <script setup>
-import {
-  defineAsyncComponent,
-  defineProps,
-  ref,
-  computed,
-  watch,
-  onMounted,
-  onUnmounted
-} from 'vue';
+import { defineProps, ref, computed, watch, onMounted, onUnmounted } from 'vue';
 
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { SOFTWARE_WALLET_TYPES } from './software/handlers/helpers';
@@ -114,15 +106,9 @@ import { useExternalStore } from '@/core/store/external';
 import { useRouter } from 'vue-router/composables';
 import { useArticleStore } from '@/core/store/article';
 
-const AccessWalletKeystore = defineAsyncComponent(() =>
-  import('./software/components/AccessWalletKeystore')
-);
-const AccessWalletMnemonic = defineAsyncComponent(() =>
-  import('./software/components/AccessWalletMnemonic')
-);
-const AccessWalletPrivateKey = defineAsyncComponent(() =>
-  import('./software/components/AccessWalletPrivateKey')
-);
+import AccessWalletKeystore from './software/components/AccessWalletKeystore';
+import AccessWalletMnemonic from './software/components/AccessWalletMnemonic';
+import AccessWalletPrivateKey from './software/components/AccessWalletPrivateKey';
 
 // injections/use
 const { trackAccessWalletAmplitude } = useAmplitude();

@@ -206,7 +206,7 @@ const { openBuySell } = useBuySell();
 const { trackDapp } = useAmplitude();
 const { network, isEthNetwork, gasPriceByType, getFiatValue } =
   useGlobalStore();
-const { gasPriceType } = storeToRefs(useGlobalStore);
+const { gasPriceType } = storeToRefs(useGlobalStore());
 const { fiatValue } = useExternalStore();
 const { balanceInETH, web3, address, instance } = useWalletStore();
 const { fetchedDetails } = useCoinbaseStakingStore();

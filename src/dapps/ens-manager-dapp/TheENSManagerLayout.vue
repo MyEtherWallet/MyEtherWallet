@@ -339,8 +339,8 @@ const { balance, web3, instance } = useWalletStore();
 const { fiatValue } = useExternalStore();
 const router = useRouter();
 
-const { network } = storeToRefs(useGlobalStore);
-const { address } = storeToRefs(useWalletStore);
+const { network } = storeToRefs(useGlobalStore());
+const { address } = storeToRefs(useWalletStore());
 
 // data
 const validNetworks = SUPPORTED_NETWORKS;

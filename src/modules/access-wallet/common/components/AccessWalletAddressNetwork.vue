@@ -214,7 +214,7 @@ const { isOfflineApp } = useWalletStore();
 const { addressBookStore } = useAddressBookStore();
 const vuetify = useVuetify();
 
-const { network } = storeToRefs(useGlobalStore);
+const { network } = storeToRefs(useGlobalStore());
 
 // apollo
 const { onResult: getEthBalanceResult } = useQuery(

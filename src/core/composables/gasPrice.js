@@ -15,7 +15,7 @@ export const useGasPrice = () => {
   const { gasPrice, gasPriceByType, online, setGasPriceType, updateGasPrice } =
     useGlobalStore();
   const { isOfflineApp } = useWalletStore();
-  const { web3 } = storeToRefs(useWalletStore);
+  const { web3 } = storeToRefs(useWalletStore());
 
   const { fiatValue } = useExternalStore();
 

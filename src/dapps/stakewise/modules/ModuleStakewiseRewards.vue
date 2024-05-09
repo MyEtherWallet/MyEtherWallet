@@ -247,8 +247,8 @@ const { fiatValue } = useExternalStore();
 const { addNotification } = useNotificationsStore();
 const vuetify = useVuetify();
 
-const { gasPriceType, isEthNetwork } = storeToRefs(useGlobalStore);
-const { address } = storeToRefs(useWalletStore);
+const { gasPriceType, isEthNetwork } = storeToRefs(useGlobalStore());
+const { address } = storeToRefs(useWalletStore());
 
 // data
 const iconStakewise = require('@/dapps/stakewise/assets/icon-stakewise-red.svg');

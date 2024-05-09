@@ -342,7 +342,7 @@ const { getArticle } = useArticleStore();
 const { addressBookStore } = useAddressBookStore();
 const { t } = useI18n();
 
-const { address } = storeToRefs(useWalletStore);
+const { address } = storeToRefs(useWalletStore());
 
 // data
 const footer = ref({

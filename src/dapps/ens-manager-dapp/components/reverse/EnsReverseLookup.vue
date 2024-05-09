@@ -69,8 +69,8 @@ import { storeToRefs } from 'pinia';
 // injections/use
 const { gasPrice } = useGlobalStore();
 const { balance } = useWalletStore();
-const { network } = storeToRefs(useGlobalStore);
-const { web3, address } = storeToRefs(useWalletStore);
+const { network } = storeToRefs(useGlobalStore());
+const { web3, address } = storeToRefs(useWalletStore());
 
 // props
 const props = defineProps({

@@ -162,8 +162,8 @@ const ModuleEthBlockInfo = defineAsyncComponent(() =>
 const router = useRouter();
 const { web3 } = useWalletStore();
 
-const { address } = storeToRefs(useWalletStore);
-const { network } = storeToRefs(useGlobalStore);
+const { address } = storeToRefs(useWalletStore());
+const { network } = storeToRefs(useGlobalStore());
 const { getAllEthBlocksTxs } = storeToRefs(useEthBlocksTxsStore());
 
 // props

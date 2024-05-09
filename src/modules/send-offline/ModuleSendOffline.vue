@@ -202,7 +202,7 @@ const ModuleAddressBook = defineAsyncComponent(() =>
 // injections/use
 const { instance, setWeb3Instance } = useWalletStore();
 const { setNetwork } = useGlobalStore();
-const { network } = storeToRefs(useGlobalStore);
+const { network } = storeToRefs(useGlobalStore());
 
 // data
 const isSignedTxOpen = ref(false);

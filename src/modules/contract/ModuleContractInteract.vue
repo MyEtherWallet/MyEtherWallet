@@ -177,7 +177,7 @@ const { trackContract } = useAmplitude();
 const { address, balance } = useWalletStore();
 const { network, localContracts } = useGlobalStore();
 
-const { web3 } = storeToRefs(useWalletStore);
+const { web3 } = storeToRefs(useWalletStore());
 // data
 const currentContract = ref(null);
 const interact = ref(false);

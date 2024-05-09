@@ -159,8 +159,8 @@ import { storeToRefs } from 'pinia';
 // injections/use
 const { address, tokensList } = useWalletStore();
 const { currencyRate, contractToToken } = useExternalStore();
-const { coinGeckoTokens } = storeToRefs(useExternalStore);
-const { network } = storeToRefs(useGlobalStore);
+const { coinGeckoTokens } = storeToRefs(useExternalStore());
+const { network } = storeToRefs(useGlobalStore());
 
 // emits
 const emit = defineEmits([

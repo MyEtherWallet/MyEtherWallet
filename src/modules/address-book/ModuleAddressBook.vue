@@ -79,7 +79,7 @@ const { network } = useGlobalStore();
 const { address, isOfflineApp, identifier, instance } = useWalletStore();
 const { t } = useI18n();
 
-const { web3 } = storeToRefs(useWalletStore);
+const { web3 } = storeToRefs(useWalletStore());
 
 // props
 const props = defineProps({

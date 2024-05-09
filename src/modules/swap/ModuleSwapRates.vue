@@ -171,7 +171,7 @@ const { isEthNetwork, network } = useGlobalStore();
 const router = useRouter();
 const route = useRoute();
 
-const { web3 } = storeToRefs(useGlobalStore);
+const { web3 } = storeToRefs(useGlobalStore());
 
 // props
 defineProps({

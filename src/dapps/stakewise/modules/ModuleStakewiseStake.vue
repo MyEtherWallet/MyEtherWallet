@@ -130,8 +130,8 @@ const { network, isEthNetwork, gasPriceByType, updateGasPrice } =
 const { sethBalance, rethBalance } = useStakewiseStore();
 const vuetify = useVuetify();
 
-const { gasPriceType } = storeToRefs(useGlobalStore);
-const { address, web3 } = storeToRefs(useWalletStore);
+const { gasPriceType } = storeToRefs(useGlobalStore());
+const { address, web3 } = storeToRefs(useWalletStore());
 
 // data
 const stakeAmount = ref('0');

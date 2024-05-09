@@ -123,7 +123,7 @@ const { identifier, instance, setWeb3Instance } = useWalletStore();
 const { selectedEIP6963Provider, setTokenAndEthBalance } = useExternalStore();
 const route = useRoute();
 
-const { network } = storeToRefs(useGlobalStore);
+const { network } = storeToRefs(useGlobalStore());
 
 // data
 const networkSelectedBefore = ref(null);

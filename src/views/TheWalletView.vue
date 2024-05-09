@@ -142,9 +142,9 @@ const vuetify = useVuetify();
 const { trackSurvey } = useAmplitude();
 const router = useRouter();
 
-const { coinGeckoTokens } = storeToRefs(useExternalStore);
-const { address } = storeToRefs(useWalletStore);
-const { network } = storeToRefs(useGlobalStore);
+const { coinGeckoTokens } = storeToRefs(useExternalStore());
+const { address } = storeToRefs(useWalletStore());
+const { network } = storeToRefs(useGlobalStore());
 
 // events
 const emit = defineEmits(['newNetwork']);

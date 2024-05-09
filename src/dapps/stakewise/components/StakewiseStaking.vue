@@ -167,7 +167,7 @@ const {
 const { fiatValue } = useExternalStore();
 const route = useRoute();
 
-const { stakewiseTxs } = storeToRefs(useStakewiseStore);
+const { stakewiseTxs } = storeToRefs(useStakewiseStore());
 
 // props
 const props = defineProps({

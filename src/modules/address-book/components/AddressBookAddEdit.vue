@@ -116,7 +116,7 @@ const emit = defineEmits(['back']);
 const { network } = useGlobalStore();
 const { addressBookStore, setAddressBook } = useAddressBookStore();
 const { t } = useI18n();
-const { web3 } = storeToRefs(useWalletStore);
+const { web3 } = storeToRefs(useWalletStore());
 
 // props
 const props = defineProps({

@@ -143,7 +143,7 @@ import { storeToRefs } from 'pinia';
 const { openBuySell } = useBuySell();
 const { trackDapp } = useAmplitude();
 const { network, gasPriceByType } = useGlobalStore();
-const { gasPriceType } = storeToRefs(useGlobalStore);
+const { gasPriceType } = storeToRefs(useGlobalStore());
 const { balanceInETH, address, instance, web3 } = useWalletStore();
 const { lastFetched, fetchedDetails, storeFetched } = useCoinbaseStakingStore();
 

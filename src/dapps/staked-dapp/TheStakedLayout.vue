@@ -175,7 +175,7 @@ const { network } = useGlobalStore();
 const { getArticle } = useArticleStore();
 const route = useRoute();
 
-const { address } = storeToRefs(useWalletStore);
+const { address } = storeToRefs(useWalletStore());
 
 // data
 const validNetworks = SUPPORTED_NETWORKS;

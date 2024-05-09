@@ -258,8 +258,8 @@ const { web3, balanceInWei } = useWalletStore();
 const { getEthBlockTx } = useEthBlocksTxsStore();
 const router = useRouter();
 
-const { network } = storeToRefs(useGlobalStore);
-const { address } = storeToRefs(useWalletStore);
+const { network } = storeToRefs(useGlobalStore());
+const { address } = storeToRefs(useWalletStore());
 
 // props
 const props = defineProps({

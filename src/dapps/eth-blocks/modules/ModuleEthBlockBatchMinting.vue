@@ -153,7 +153,7 @@ const { web3, address, balance } = useWalletStore();
 const { emptyCart } = useEthBlocksTxsStore();
 const { fiatValue } = useExternalStore();
 
-const { gasPriceType } = storeToRefs(useGlobalStore);
+const { gasPriceType } = storeToRefs(useGlobalStore());
 const { cart } = storeToRefs(useEthBlocksTxsStore());
 
 // data

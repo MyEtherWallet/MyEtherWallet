@@ -174,7 +174,7 @@ const NftManagerSend = defineAsyncComponent(() =>
 // injections/use
 const { gasPriceType, network, gasPriceByType } = useGlobalStore();
 const router = useRouter();
-const { web3, balanceInWei, address } = storeToRefs(useWalletStore);
+const { web3, balanceInWei, address } = storeToRefs(useWalletStore());
 
 // data
 const nft = ref({});

@@ -152,7 +152,7 @@ const { fiatValue } = useExternalStore();
 const { balanceInETH } = useWalletStore();
 const vuetify = useVuetify();
 
-const { gasPriceType, gasPrice } = storeToRefs(useGlobalStore);
+const { gasPriceType, gasPrice } = storeToRefs(useGlobalStore());
 
 // props
 const props = defineProps({

@@ -169,7 +169,7 @@ const router = useRouter();
 const route = useRoute();
 const { trackLandingPageAmplitude } = useAmplitude();
 const { network } = useGlobalStore();
-const { web3 } = storeToRefs(useWalletStore);
+const { web3 } = storeToRefs(useWalletStore());
 
 // data
 const swapHandler = ref(null);

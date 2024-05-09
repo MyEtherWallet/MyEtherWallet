@@ -209,7 +209,7 @@ const { trackDapp } = useAmplitude();
 const { openBuySell } = useBuySell();
 const { network, isEthNetwork, gasPriceByType, getFiatValue } =
   useGlobalStore();
-const { gasPriceType } = storeToRefs(useGlobalStore);
+const { gasPriceType } = storeToRefs(useGlobalStore());
 const { balanceInETH, web3, address, instance, identifier } = useWalletStore();
 const { fiatValue } = useExternalStore();
 
