@@ -16,11 +16,9 @@
       :reserves-data="reservesData"
       :user-reserves-data="userSummary.userReservesData"
       :title="depositTitle"
-      :user-summary=""
-      :is-loading-data=""
-      :format-usd-value=""
-      :user-borrow-power=""
-      :reserves-data=""
+      :user-summary="userSummary"
+      :format-usd-value="formatUsdValue"
+      :user-borrow-power="userBorrowPower"
       @selectedDeposit="handleSelectedDeposit"
     />
     <!--
@@ -53,9 +51,10 @@
       :step="step"
       :action-type="depositTitle"
       :amount-usd="amountUSD"
-      :user-summary=""
-      :selectedt-token-in-user-summary=""
-      :selected-token-details=""
+      :user-summary="userSummary"
+      :selected-token-in-user-summary="selectedTokenInUserSummary"
+      :selected-token-details="selectedTokenDetails"
+      :current-health-factor="currentHealthFactor"
       @onConfirm="handleConfirm"
     />
   </mew-overlay>
@@ -102,6 +101,34 @@ const props = defineProps({
   onDeposit: {
     type: Function,
     default: () => {}
+  },
+  userSummary: {
+    type: Object,
+    default: () => {}
+  },
+  selectedTokenInUserSummary: {
+    type: Object,
+    default: () => {}
+  },
+  isLoadingData: {
+    type: Boolean,
+    default: false
+  },
+  reservesData: {
+    type: Array,
+    default: () => []
+  },
+  formatUsdValue: {
+    type: Function,
+    default: () => {}
+  },
+  userBorrowPower: {
+    type: Function,
+    default: () => {}
+  },
+  currentHealthFactor: {
+    type: String,
+    default: '-'
   }
 });
 

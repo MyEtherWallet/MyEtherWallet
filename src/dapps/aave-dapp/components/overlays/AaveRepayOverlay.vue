@@ -38,9 +38,10 @@
       :amount="amount"
       :action-type="repayTitle"
       :amount-usd="amountUSD"
-      :user-summary=""
-      :selectedt-token-in-user-summary=""
-      :selected-token-details=""
+      :user-summary="userSummary"
+      :selected-token-in-user-summary="selectedTokenInUserSummary"
+      :selected-token-details="selectedTokenDetails"
+      :current-health-factor="currentHealthFactor"
       @onConfirm="handleConfirm"
     />
   </mew-overlay>
@@ -94,6 +95,14 @@ const props = defineProps({
   userSummary: {
     type: Object,
     default: () => {}
+  },
+  selectedTokenDetails: {
+    type: Object,
+    default: () => {}
+  },
+  currentHealthFactor: {
+    type: String,
+    default: '-'
   }
 });
 

@@ -114,7 +114,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, computed, defineEmits } from 'vue';
+import { defineProps, computed, defineEmits } from 'vue';
 import BigNumber from 'bignumber.js';
 import { calculateHealthFactorFromBalancesBigUnits } from '@aave/protocol-js';
 
@@ -161,6 +161,10 @@ const props = defineProps({
   selectedTokenDetails: {
     type: Object,
     default: () => {}
+  },
+  currentHealthFactor: {
+    type: String,
+    default: '-'
   }
 });
 
@@ -212,7 +216,7 @@ const currentHealthFactorTooltip = computed(() => {
 
 const nextHealthFactorTooltip = computed(() => {
   return `This transaction will ${
-    +currentHealthFactor.value > +nextHealthFactor.value ? 'lower' : 'increase'
+    +props.currentHealthFactor > +nextHealthFactor.value ? 'lower' : 'increase'
   } your health factor. If the health factor reaches 1, the liquidation of your deposits will be triggered. A Health Factor below 1 can get liquidated.`;
 });
 
@@ -225,9 +229,9 @@ const details = computed(() => {
     }
   ];
   const realHealthFactor =
-    currentHealthFactor.value === '-'
+    props.currentHealthFactor === '-'
       ? nextHealthFactor.value
-      : currentHealthFactor.value;
+      : props.currentHealthFactor;
   switch (props.actionType.toLowerCase()) {
     /**
      * Case: Aave Deposit, Withdraw and Collateral Summary
@@ -241,7 +245,7 @@ const details = computed(() => {
         {
           title: 'Current Health Factor',
           tooltip: currentHealthFactorTooltip,
-          value: currentHealthFactor,
+          value: props.currentHealthFactor,
           class: ''
         },
         {
@@ -288,7 +292,7 @@ const details = computed(() => {
           {
             title: 'Current Health Factor',
             tooltip: currentHealthFactorTooltip.value,
-            value: currentHealthFactor.value,
+            value: props.currentHealthFactor,
             class: ''
           },
           {
@@ -314,15 +318,9 @@ const details = computed(() => {
   return details;
 });
 
-const currentHealthFactor = computed(() => {
-  let curHF = new BigNumber(props.userSummary?.healthFactor).toFixed(3);
-  if (curHF === 'NaN' || curHF === '-1.000') curHF = '-';
-  return curHF;
-});
-
 const nextHealthFactor = computed(() => {
   const selectedToken = props.selectedTokenInUserSummary;
-  let nextHealthFactor = currentHealthFactor.value,
+  let nextHealthFactor = props.currentHealthFactor,
     collateralBalanceETH =
       props.userSummary.totalCollateralMarketReferenceCurrency,
     totalBorrowsETH = props.userSummary.totalBorrowsMarketReferenceCurrency;

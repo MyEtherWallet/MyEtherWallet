@@ -13,11 +13,11 @@
     <aave-table
       v-if="step === 0"
       :title="borrowTitle"
-      :user-summary=""
-      :is-loading-data=""
-      :format-usd-value=""
-      :user-borrow-power=""
-      :reserves-data=""
+      :user-summary="userSummary"
+      :format-usd-value="formatUsdValue"
+      :user-borrow-power="userBorrowPower"
+      :is-loading-data="isLoadingData"
+      :reserves-data="reservesData"
       @selectedBorrow="handleSelectedBorrow"
     />
     <!--
@@ -62,9 +62,10 @@
       :apr="apr"
       :action-type="borrowTitle"
       :amount-usd="amountUsd"
-      :user-summary=""
-      :selectedt-token-in-user-summary=""
-      :selected-token-details=""
+      :user-summary="userSummary"
+      :selected-token-in-user-summary="selectedTokenInUserSummary"
+      :selected-token-details="selectedTokenDetails"
+      :current-health-factor="currentHealthFactor"
       @onConfirm="handleConfirm"
     />
   </mew-overlay>
@@ -123,6 +124,22 @@ const props = defineProps({
   userBorrowPower: {
     type: Function,
     default: () => {}
+  },
+  selectedTokenInUserSummary: {
+    type: Object,
+    default: () => {}
+  },
+  isLoadingData: {
+    type: Boolean,
+    default: false
+  },
+  reservesData: {
+    type: Array,
+    default: () => []
+  },
+  currentHealthFactor: {
+    type: String,
+    default: '-'
   }
 });
 

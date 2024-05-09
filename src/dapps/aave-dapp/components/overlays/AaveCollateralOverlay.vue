@@ -9,73 +9,96 @@
       :selected-token="preSelectedToken"
       :action-type="collateral"
       :amount="tokenAmount"
-      :user-summary=""
-      :selectedt-token-in-user-summary=""
-      :selected-token-details=""
+      :user-summary="userSummary"
+      :selected-token-in-user-summary="selectedTokenInUserSummary"
+      :selected-token-details="selectedTokenDetails"
+      :current-health-factor="currentHealthFactor"
       @onConfirm="callSwitchCollateral"
     />
   </mew-overlay>
 </template>
 
-<script>
+<script setup>
+import { ref, computed, defineProps, defineEmits } from 'vue';
 import AaveSummary from '../AaveSummary';
 import { ACTION_TYPES } from '@/dapps/aave-dapp/handlers/helpers';
-import { mapState } from 'vuex';
-import handlerAave from '../../handlers/handlerAave.mixin';
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-export default {
-  name: 'AaveCollateralOverlay',
-  components: { AaveSummary },
-  mixins: [handlerAave, handlerAnalytics],
-  props: {
-    open: {
-      default: false,
-      type: Boolean
-    },
-    close: {
-      default: () => {},
-      type: Function
-    }
+
+import { useAmplitude } from '@/core/composables/amplitude';
+
+// emit
+const emit = defineEmits(['onConfirm', 'onClose']);
+
+// injections/use
+const { trackDapp } = useAmplitude();
+
+// props
+const props = defineProps({
+  open: {
+    default: false,
+    type: Boolean
   },
-  data() {
-    return {
-      collateral: ACTION_TYPES.collateral
-    };
+  close: {
+    default: () => {},
+    type: Function
   },
-  computed: {
-    ...mapState('wallet', ['address']),
-    title() {
-      return !this.selectedTokenInUserSummary
-        ? ''
-        : !this.selectedTokenInUserSummary?.usageAsCollateralEnabledOnUser
-        ? 'Usage as collateral'
-        : 'Disable usage as collateral';
-    },
-    tokenAmount() {
-      return this.selectedTokenInUserSummary?.underlyingBalance;
-    }
+  selectedTokenDetails: {
+    type: Object,
+    default: () => {}
   },
-  methods: {
-    callSwitchCollateral() {
-      const param = {
-        reserve: this.selectedTokenDetails.underlyingAsset,
-        useAsCollateral:
-          !this.selectedTokenInUserSummary.usageAsCollateralEnabledOnUser,
-        symbol: this.selectedTokenDetails.symbol
-      };
-      this.$emit('onConfirm', param);
-      this.trackDapp('aaveSetCollateral');
-      this.close();
-    },
-    resetToggle() {
-      const param = {
-        reserve: this.selectedTokenDetails.symbol,
-        useAsCollateral:
-          this.selectedTokenInUserSummary.usageAsCollateralEnabledOnUser
-      };
-      this.$emit('onClose', param);
-      this.close();
-    }
+  preSelectedToken: {
+    type: Object,
+    default: () => {}
+  },
+  selectedTokenInUserSummary: {
+    type: Object,
+    default: () => {}
+  },
+  userSummary: {
+    type: Object,
+    default: () => {}
+  },
+  currentHealthFactor: {
+    type: String,
+    default: '-'
   }
+});
+
+// data
+const collateral = ref(ACTION_TYPES.collateral);
+
+// computed
+const title = computed(() => {
+  return !props.selectedTokenInUserSummary
+    ? ''
+    : !props.selectedTokenInUserSummary?.usageAsCollateralEnabledOnUser
+    ? 'Usage as collateral'
+    : 'Disable usage as collateral';
+});
+
+const tokenAmount = computed(() => {
+  return props.selectedTokenInUserSummary?.underlyingBalance;
+});
+
+// methods
+const callSwitchCollateral = () => {
+  const param = {
+    reserve: props.selectedTokenDetails.underlyingAsset,
+    useAsCollateral:
+      !props.selectedTokenInUserSummary.usageAsCollateralEnabledOnUser,
+    symbol: props.selectedTokenDetails.symbol
+  };
+  emit('onConfirm', param);
+  trackDapp('aaveSetCollateral');
+  props.close();
+};
+
+const resetToggle = () => {
+  const param = {
+    reserve: props.selectedTokenDetails.symbol,
+    useAsCollateral:
+      props.selectedTokenInUserSummary.usageAsCollateralEnabledOnUser
+  };
+  emit('onClose', param);
+  props.close();
 };
 </script>
