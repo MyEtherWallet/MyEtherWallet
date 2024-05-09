@@ -36,149 +36,178 @@
       :amount="amount"
       :action-type="withdrawTitle"
       :amount-usd="amountUSD"
+      :user-summary=""
+      :selectedt-token-in-user-summary=""
+      :selected-token-details=""
       @onConfirm="handleConfirm"
     />
   </mew-overlay>
 </template>
 
-<script>
+<script setup>
 import BigNumber from 'bignumber.js';
+import { ref, computed, watch } from 'vue';
+import { toBN, toHex } from 'web3-utils';
+
 import AaveAmountForm from '../AaveAmountForm';
 import AaveSummary from '../AaveSummary';
-import handlerAave from '../../handlers/handlerAave.mixin';
 import { AAVE_TABLE_TITLE } from '../../handlers/helpers';
-import { mapGetters } from 'vuex';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { toBase } from '@/core/helpers/unit';
-import { toBN, toHex } from 'web3-utils';
 import { MAX_UINT_AMOUNT } from '@aave/contract-helpers';
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { useAmplitude } from '@/core/composables/amplitude';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
 
-export default {
-  name: 'AaveWithdrawOverlay',
-  components: {
-    AaveAmountForm,
-    AaveSummary
+// injection/use
+const { trackDapp } = useAmplitude();
+const { network, getFiatValue } = useGlobalStore();
+const { tokensList, balanceInETH, address } = useWalletStore();
+
+// data
+const props = defineProps({
+  open: {
+    default: false,
+    type: Boolean
   },
-  mixins: [handlerAave, handlerAnalytics],
-  data() {
-    return {
-      step: 0,
-      amount: '0',
-      withdrawTitle: AAVE_TABLE_TITLE.withdraw
-    };
+  close: {
+    default: () => {},
+    type: Function
   },
-  computed: {
-    ...mapGetters('wallet', ['tokensList', 'balanceInETH']),
-    ...mapGetters('global', ['network', 'getFiatValue']),
-    tokenBalanceUSD() {
-      const symbol = this.preSelectedToken.token;
-      const hasBalance = this.tokensList.find(item => {
-        if (item.symbol === symbol) {
-          return item;
-        }
-      });
-      return hasBalance ? BigNumber(hasBalance.usdBalance).toFixed() : '0';
+  preSelectedToken: {
+    default: () => {
+      return {};
     },
-    tokenPrice() {
-      const symbol = this.preSelectedToken.token;
-      const hasBalance = this.tokensList.find(item => {
-        if (item.symbol === symbol) {
-          return item;
-        }
-      });
-      return hasBalance ? BigNumber(hasBalance.price).toFixed() : '0';
-    },
-    tokenBalance() {
-      const symbol = this.preSelectedToken.token;
-      if (symbol === this.network.type.currencyName) return this.balanceInETH;
-      const hasBalance = this.tokensList.find(item => {
-        if (item.symbol === symbol) {
-          return item;
-        }
-      });
-      return hasBalance
-        ? BigNumber(hasBalance.balancef)
-            .decimalPlaces(hasBalance.decimals)
-            .toFixed()
-        : '0';
-    },
-    amountUSD() {
-      return this.getFiatValue(
-        BigNumber(this.amount).times(this.tokenPrice).toFixed()
-      );
-    },
-    aaveWithdrawForm() {
-      const hasDeposit = this.selectedTokenInUserSummary;
-      const depositedBalance = `${
-        formatFloatingPointValue(hasDeposit?.underlyingBalance || 0).value
-      } ${this.preSelectedToken.token}`;
-      const depositedBalanceInUSD = this.getFiatValue(
-        BigNumber(this.tokenPrice).times(hasDeposit?.underlyingBalance || 0)
-      );
-      const tokenBalance = `${
-        formatFloatingPointValue(this.tokenBalance).value
-      } ${this.preSelectedToken.token}`;
-      const usd = this.getFiatValue(this.tokenBalanceUSD);
-      return {
-        showToggle: true,
-        leftSideValues: {
-          title: depositedBalance,
-          caption: depositedBalanceInUSD,
-          subTitle: 'Aave Withdraw Balance'
-        },
-        rightSideValues: {
-          title: tokenBalance,
-          caption: usd,
-          subTitle: 'Aave Wallet Balance'
-        },
-        formText: {
-          title: 'How much would you like to withdraw?',
-          caption:
-            'Here you can set the amount you want to withdraw. You can manually enter a specific amount or use the percentage buttons below.'
-        },
-        buttonTitle: {
-          action: 'Withdraw',
-          cancel: 'Cancel withdraw'
-        },
-        depositedBalance: hasDeposit?.underlyingBalance || '0',
-        decimals: hasDeposit?.reserve?.decimals || 18
-      };
-    }
+    type: Object
   },
-  watch: {
-    preSelectedToken() {
-      this.handleSelectedToken();
-    }
-  },
-  methods: {
-    handleSelectedToken() {
-      this.step = 0;
-    },
-    handleWithdrawAmount(e) {
-      this.amount = e;
-      this.step = 1;
-    },
-    handleConfirm() {
-      this.trackDapp('aaveWithdrawEvent');
-      this.amount =
-        this.amount === this.selectedTokenInUserSummary.underlyingBalance
-          ? toBN(MAX_UINT_AMOUNT)
-          : toBase(this.amount, this.selectedTokenDetails.decimals);
-      const param = {
-        user: this.address,
-        reserve: this.selectedTokenDetails.underlyingAsset,
-        amount: toHex(this.amount)
-      };
-      this.onWithdraw(param).then(() => {
-        this.trackDapp('aaveWithdrawCollateral');
-      });
-      this.step = 0;
-      this.close();
-    },
-    handleCancel() {
-      this.close();
-    }
+  onWithdraw: {
+    type: Function,
+    default: () => {}
   }
+});
+
+// data
+const withdrawTitle = AAVE_TABLE_TITLE.withdraw;
+const step = ref(0);
+const amount = ref('0');
+
+// computed
+const tokenBalanceUSD = computed(() => {
+  const symbol = props.preSelectedToken.token;
+  const hasBalance = tokensList.find(item => {
+    if (item.symbol === symbol) {
+      return item;
+    }
+  });
+  return hasBalance ? BigNumber(hasBalance.usdBalance).toFixed() : '0';
+});
+
+const tokenPrice = computed(() => {
+  const symbol = props.preSelectedToken.token;
+  const hasBalance = tokensList.find(item => {
+    if (item.symbol === symbol) {
+      return item;
+    }
+  });
+  return hasBalance ? BigNumber(hasBalance.price).toFixed() : '0';
+});
+
+const tokenBalance = computed(() => {
+  const symbol = props.preSelectedToken.token;
+  if (symbol === network.type.currencyName) return balanceInETH;
+  const hasBalance = tokensList.find(item => {
+    if (item.symbol === symbol) {
+      return item;
+    }
+  });
+  return hasBalance
+    ? BigNumber(hasBalance.balancef)
+        .decimalPlaces(hasBalance.decimals)
+        .toFixed()
+    : '0';
+});
+
+const amountUSD = computed(() => {
+  return getFiatValue(
+    BigNumber(amount.value).times(tokenPrice.value).toFixed()
+  );
+});
+
+const aaveWithdrawForm = computed(() => {
+  const hasDeposit = props.preSelectedToken;
+  const depositedBalance = `${
+    formatFloatingPointValue(hasDeposit?.underlyingBalance || 0).value
+  } ${props.preSelectedToken.token}`;
+  const depositedBalanceInUSD = getFiatValue(
+    BigNumber(tokenPrice.value).times(hasDeposit?.underlyingBalance || 0)
+  );
+  const tokenBalance = `${formatFloatingPointValue(tokenBalance.value).value} ${
+    props.preSelectedToken.token
+  }`;
+  const usd = getFiatValue(tokenBalanceUSD.value);
+  return {
+    showToggle: true,
+    leftSideValues: {
+      title: depositedBalance,
+      caption: depositedBalanceInUSD,
+      subTitle: 'Aave Withdraw Balance'
+    },
+    rightSideValues: {
+      title: tokenBalance,
+      caption: usd,
+      subTitle: 'Aave Wallet Balance'
+    },
+    formText: {
+      title: 'How much would you like to withdraw?',
+      caption:
+        'Here you can set the amount you want to withdraw. You can manually enter a specific amount or use the percentage buttons below.'
+    },
+    buttonTitle: {
+      action: 'Withdraw',
+      cancel: 'Cancel withdraw'
+    },
+    depositedBalance: hasDeposit?.underlyingBalance || '0',
+    decimals: hasDeposit?.reserve?.decimals || 18
+  };
+});
+
+// watch
+watch(
+  () => props.preSelectedToken,
+  () => {
+    handleSelectedToken();
+  }
+);
+
+// methods
+const handleSelectedToken = () => {
+  step.value = 0;
+};
+
+const handleWithdrawAmount = e => {
+  amount.value = e;
+  step.value = 1;
+};
+
+const handleConfirm = () => {
+  trackDapp('aaveWithdrawEvent');
+  amount.value =
+    amount.value === tokenBalance.value
+      ? toBN(MAX_UINT_AMOUNT)
+      : toBase(amount.value, props.preSelectedToken.decimals);
+  const param = {
+    user: address,
+    reserve: props.preSelectedToken.underlyingAsset,
+    amount: toHex(amount.value)
+  };
+  props.onWithdraw(param).then(() => {
+    trackDapp('aaveWithdrawCollateral');
+  });
+  step.value = 0;
+  props.close();
+};
+
+const handleCancel = () => {
+  props.close();
 };
 </script>

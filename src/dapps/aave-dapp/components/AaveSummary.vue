@@ -113,277 +113,304 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, defineProps, computed, defineEmits } from 'vue';
 import BigNumber from 'bignumber.js';
 import { calculateHealthFactorFromBalancesBigUnits } from '@aave/protocol-js';
 
 import { ACTION_TYPES, INTEREST_TYPES } from '../handlers/helpers';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
-import handlerAave from '../handlers/handlerAave.mixin';
 
-export default {
-  mixins: [handlerAave],
-  props: {
-    actionType: {
-      type: String,
-      default: ''
-    },
-    apr: {
-      type: Object,
-      default: () => {}
-    },
-    selectedToken: {
-      type: Object,
-      default: () => {}
-    },
-    amount: {
-      type: String,
-      default: '0'
-    },
-    amountUsd: {
-      type: String,
-      default: '0'
-    },
-    step: {
-      type: Number,
-      default: 0
-    }
-  },
-  computed: {
-    formattedAmount() {
-      return formatFloatingPointValue(this.amount || '0').value;
-    },
-    actionTitle() {
-      if (this.isBorrow) {
-        return 'Borrow';
-      }
-      if (this.isRepay) {
-        return 'Repay';
-      }
-      if (this.isWithdraw) {
-        return 'Withdraw';
-      }
-      return 'Deposit';
-    },
-    isDeposit() {
-      return this.actionType.toLowerCase() === ACTION_TYPES.deposit;
-    },
-    isRepay() {
-      return this.actionType.toLowerCase() === ACTION_TYPES.repay;
-    },
-    isBorrow() {
-      return this.actionType.toLowerCase() === ACTION_TYPES.borrow;
-    },
-    isInterest() {
-      return this.actionType.toLowerCase() === ACTION_TYPES.interest;
-    },
-    isWithdraw() {
-      return this.actionType.toLowerCase() === ACTION_TYPES.withdraw;
-    },
-    isCollateral() {
-      return this.actionType.toLowerCase() === ACTION_TYPES.collateral;
-    },
-    currentHealthFactorTooltip() {
-      return 'The health factor is the numeric representation of the safety of your deposited assets against the borrowed assets and its underlying value. The higher the value is, the safer the state of your funds are against a liquidation scenario.';
-    },
-    nextHealthFactorTooltip() {
-      return `This transaction will ${
-        +this.currentHealthFactor > +this.nextHealthFactor
-          ? 'lower'
-          : 'increase'
-      } your health factor. If the health factor reaches 1, the liquidation of your deposits will be triggered. A Health Factor below 1 can get liquidated.`;
-    },
-    details() {
-      let details = [
-        {
-          title: 'Currency',
-          value: this.tokenSymbol,
-          icon: this.tokenIcon
-        }
-      ];
-      const realHealthFactor =
-        this.currentHealthFactor === '-'
-          ? this.nextHealthFactor
-          : this.currentHealthFactor;
-      switch (this.actionType.toLowerCase()) {
-        /**
-         * Case: Aave Deposit, Withdraw and Collateral Summary
-         */
-        case ACTION_TYPES.deposit:
-        case ACTION_TYPES.withdraw:
-        case ACTION_TYPES.repay:
-        case ACTION_TYPES.collateral:
-          details = this.step === 1 && this.isDeposit ? [] : details;
-          details.push(
-            {
-              title: 'Current Health Factor',
-              tooltip: this.currentHealthFactorTooltip,
-              value: this.currentHealthFactor,
-              class: ''
-            },
-            {
-              title: 'Next Health Factor',
-              tooltip: this.nextHealthFactorTooltip,
-              value: this.nextHealthFactor,
-              class:
-                realHealthFactor == this.nextHealthFactor
-                  ? ''
-                  : BigNumber(realHealthFactor).gt(this.nextHealthFactor)
-                  ? 'redPrimary--text'
-                  : 'greenPrimary--text',
-              indicator:
-                realHealthFactor == this.nextHealthFactor
-                  ? ''
-                  : BigNumber(realHealthFactor).lt(this.nextHealthFactor)
-                  ? 'mdi-arrow-up-bold'
-                  : 'mdi-arrow-down-bold'
-            }
-          );
-          return details;
-        case ACTION_TYPES.borrow:
-          if (this.step === 3) {
-            details = [
-              {
-                title: 'Interest APR',
-                value: this.apr.percentage,
-                class:
-                  this.apr.type.toLowerCase() === INTEREST_TYPES.stable
-                    ? 'secondary--text'
-                    : 'warning--text text--darken-1'
-              },
-              {
-                title: 'Interest rate type',
-                value: this.apr.type,
-                class:
-                  this.apr.type.toLowerCase() === INTEREST_TYPES.stable
-                    ? 'secondary--text capitalize'
-                    : 'warning--text text--darken-1 capitalize'
-              }
-            ];
-          } else if (this.step === 4) {
-            details.push(
-              {
-                title: 'Current Health Factor',
-                tooltip: this.currentHealthFactorTooltip,
-                value: this.currentHealthFactor,
-                class: ''
-              },
-              {
-                title: 'Next Health Factor',
-                tooltip: this.nextHealthFactorTooltip,
-                value: this.nextHealthFactor,
-                class:
-                  realHealthFactor == this.nextHealthFactor
-                    ? ''
-                    : BigNumber(realHealthFactor).gt(this.nextHealthFactor)
-                    ? 'redPrimary--text'
-                    : 'greenPrimary--text',
-                indicator:
-                  realHealthFactor == this.nextHealthFactor
-                    ? ''
-                    : BigNumber(realHealthFactor).lt(this.nextHealthFactor)
-                    ? 'mdi-arrow-up-bold'
-                    : 'mdi-arrow-down-bold'
-              }
-            );
-          }
-      }
-      return details;
-    },
-    currentHealthFactor() {
-      let curHF = new BigNumber(this.userSummary?.healthFactor).toFixed(3);
-      if (curHF === 'NaN' || curHF === '-1.000') curHF = '-';
-      return curHF;
-    },
-    nextHealthFactor() {
-      const selectedToken = this.selectedTokenInUserSummary;
-      let nextHealthFactor = this.currentHealthFactor,
-        collateralBalanceETH =
-          this.userSummary.totalCollateralMarketReferenceCurrency,
-        totalBorrowsETH = this.userSummary.totalBorrowsMarketReferenceCurrency;
+// emit
+const emit = defineEmits(['confirmed', 'onConfirm']);
 
-      const formattedPriceInETH =
-        this.selectedTokenDetails?.formattedPriceInMarketReferenceCurrency;
-      const collateralEnabled = selectedToken?.reserve.usageAsCollateralEnabled;
-      if (formattedPriceInETH && this.amount !== '0') {
-        const ethBalance = BigNumber(this.amount).times(formattedPriceInETH);
-        if (
-          collateralEnabled &&
-          (this.isDeposit ||
-            (this.isCollateral &&
-              !selectedToken?.usageAsCollateralEnabledOnUser))
-        ) {
-          collateralBalanceETH = new BigNumber(
-            this.userSummary.totalCollateralMarketReferenceCurrency
-          ).plus(ethBalance);
-        } else if (
-          collateralEnabled &&
-          ((this.isWithdraw && selectedToken?.usageAsCollateralEnabledOnUser) ||
-            (this.isCollateral &&
-              selectedToken?.usageAsCollateralEnabledOnUser))
-        ) {
-          collateralBalanceETH = new BigNumber(
-            this.userSummary.totalCollateralMarketReferenceCurrency
-          ).minus(ethBalance);
-        } else if (this.isRepay) {
-          totalBorrowsETH = new BigNumber(
-            this.userSummary.totalBorrowsMarketReferenceCurrency
-          ).minus(ethBalance);
-        } else if (this.isBorrow) {
-          totalBorrowsETH = new BigNumber(
-            this.userSummary.totalBorrowsMarketReferenceCurrency
-          ).plus(ethBalance);
-        }
-        nextHealthFactor = calculateHealthFactorFromBalancesBigUnits(
-          collateralBalanceETH,
-          totalBorrowsETH,
-          this.userSummary.currentLiquidationThreshold
-        ).toFixed(3);
-      }
-      if (nextHealthFactor === 'NaN' || nextHealthFactor === '-1.000')
-        nextHealthFactor = '-';
-      return nextHealthFactor;
-    },
-    /* currently using dummy data for values */
-    currentInterest() {
-      return {
-        type: 'Variable',
-        percentage: '11.33%'
-      };
-    },
-    nextInterest() {
-      return {
-        type: 'Stable',
-        percentage: '2.837%'
-      };
-    },
-    disableBtn() {
-      return this.nextHealthFactor <= 1 && this.nextHealthFactor !== '-1.000';
-    },
-    btnTitle() {
-      return !this.disableBtn ? 'Confirm' : 'Health Factor Too Low';
-    },
-    tokenSymbol() {
-      return this.selectedToken?.token;
-    },
-    tokenIcon() {
-      return this.selectedToken?.tokenImg;
-    }
+// props
+const props = defineProps({
+  actionType: {
+    type: String,
+    default: ''
   },
-  methods: {
-    confirm() {
-      if (this.step === 1) {
-        this.$emit('confirmed');
-      } else {
-        this.$emit('onConfirm');
-      }
-    },
-    getInterestTypeClass(type) {
-      if (type.toLowerCase() === INTEREST_TYPES.stable) {
-        return 'secondary--text';
-      }
-      return 'orangePrimary';
-    }
+  apr: {
+    type: Object,
+    default: () => {}
+  },
+  selectedToken: {
+    type: Object,
+    default: () => {}
+  },
+  amount: {
+    type: String,
+    default: '0'
+  },
+  amountUsd: {
+    type: String,
+    default: '0'
+  },
+  step: {
+    type: Number,
+    default: 0
+  },
+  userSummary: {
+    type: Object,
+    default: () => {}
+  },
+  selectedTokenInUserSummary: {
+    type: Object,
+    default: () => {}
+  },
+  selectedTokenDetails: {
+    type: Object,
+    default: () => {}
   }
+});
+
+// computed
+const formattedAmount = computed(() => {
+  return formatFloatingPointValue(props.amount || '0').value;
+});
+
+const actionTitle = computed(() => {
+  if (isBorrow.value) {
+    return 'Borrow';
+  }
+  if (isRepay.value) {
+    return 'Repay';
+  }
+  if (isWithdraw.value) {
+    return 'Withdraw';
+  }
+  return 'Deposit';
+});
+
+const isDeposit = computed(() => {
+  return props.actionType.toLowerCase() === ACTION_TYPES.deposit;
+});
+
+const isRepay = computed(() => {
+  return props.actionType.toLowerCase() === ACTION_TYPES.repay;
+});
+
+const isBorrow = computed(() => {
+  return props.actionType.toLowerCase() === ACTION_TYPES.borrow;
+});
+
+const isInterest = computed(() => {
+  return props.actionType.toLowerCase() === ACTION_TYPES.interest;
+});
+
+const isWithdraw = computed(() => {
+  return props.actionType.toLowerCase() === ACTION_TYPES.withdraw;
+});
+
+const isCollateral = computed(() => {
+  return props.actionType.toLowerCase() === ACTION_TYPES.collateral;
+});
+
+const currentHealthFactorTooltip = computed(() => {
+  return 'The health factor is the numeric representation of the safety of your deposited assets against the borrowed assets and its underlying value. The higher the value is, the safer the state of your funds are against a liquidation scenario.';
+});
+
+const nextHealthFactorTooltip = computed(() => {
+  return `This transaction will ${
+    +currentHealthFactor.value > +nextHealthFactor.value ? 'lower' : 'increase'
+  } your health factor. If the health factor reaches 1, the liquidation of your deposits will be triggered. A Health Factor below 1 can get liquidated.`;
+});
+
+const details = computed(() => {
+  let details = [
+    {
+      title: 'Currency',
+      value: tokenSymbol,
+      icon: tokenIcon
+    }
+  ];
+  const realHealthFactor =
+    currentHealthFactor.value === '-'
+      ? nextHealthFactor.value
+      : currentHealthFactor.value;
+  switch (props.actionType.toLowerCase()) {
+    /**
+     * Case: Aave Deposit, Withdraw and Collateral Summary
+     */
+    case ACTION_TYPES.deposit:
+    case ACTION_TYPES.withdraw:
+    case ACTION_TYPES.repay:
+    case ACTION_TYPES.collateral:
+      details = props.step === 1 && isDeposit.value ? [] : details.value;
+      details.push(
+        {
+          title: 'Current Health Factor',
+          tooltip: currentHealthFactorTooltip,
+          value: currentHealthFactor,
+          class: ''
+        },
+        {
+          title: 'Next Health Factor',
+          tooltip: nextHealthFactorTooltip.value,
+          value: nextHealthFactor.value,
+          class:
+            realHealthFactor.value == nextHealthFactor.value
+              ? ''
+              : BigNumber(realHealthFactor.value).gt(nextHealthFactor.value)
+              ? 'redPrimary--text'
+              : 'greenPrimary--text',
+          indicator:
+            realHealthFactor.value == nextHealthFactor.value
+              ? ''
+              : BigNumber(realHealthFactor.value).lt(nextHealthFactor.value)
+              ? 'mdi-arrow-up-bold'
+              : 'mdi-arrow-down-bold'
+        }
+      );
+      return details;
+    case ACTION_TYPES.borrow:
+      if (props.step === 3) {
+        details = [
+          {
+            title: 'Interest APR',
+            value: props.apr.percentage,
+            class:
+              props.apr.type.toLowerCase() === INTEREST_TYPES.stable
+                ? 'secondary--text'
+                : 'warning--text text--darken-1'
+          },
+          {
+            title: 'Interest rate type',
+            value: props.apr.type,
+            class:
+              props.apr.type.toLowerCase() === INTEREST_TYPES.stable
+                ? 'secondary--text capitalize'
+                : 'warning--text text--darken-1 capitalize'
+          }
+        ];
+      } else if (props.step === 4) {
+        details.push(
+          {
+            title: 'Current Health Factor',
+            tooltip: currentHealthFactorTooltip.value,
+            value: currentHealthFactor.value,
+            class: ''
+          },
+          {
+            title: 'Next Health Factor',
+            tooltip: nextHealthFactorTooltip.value,
+            value: nextHealthFactor.value,
+            class:
+              realHealthFactor.value == nextHealthFactor.value
+                ? ''
+                : BigNumber(realHealthFactor.value).gt(nextHealthFactor.value)
+                ? 'redPrimary--text'
+                : 'greenPrimary--text',
+            indicator:
+              realHealthFactor.value == nextHealthFactor.value
+                ? ''
+                : BigNumber(realHealthFactor.value).lt(nextHealthFactor.value)
+                ? 'mdi-arrow-up-bold'
+                : 'mdi-arrow-down-bold'
+          }
+        );
+      }
+  }
+  return details;
+});
+
+const currentHealthFactor = computed(() => {
+  let curHF = new BigNumber(props.userSummary?.healthFactor).toFixed(3);
+  if (curHF === 'NaN' || curHF === '-1.000') curHF = '-';
+  return curHF;
+});
+
+const nextHealthFactor = computed(() => {
+  const selectedToken = props.selectedTokenInUserSummary;
+  let nextHealthFactor = currentHealthFactor.value,
+    collateralBalanceETH =
+      props.userSummary.totalCollateralMarketReferenceCurrency,
+    totalBorrowsETH = props.userSummary.totalBorrowsMarketReferenceCurrency;
+
+  const formattedPriceInETH =
+    props.selectedTokenDetails?.formattedPriceInMarketReferenceCurrency;
+  const collateralEnabled = selectedToken?.reserve.usageAsCollateralEnabled;
+  if (formattedPriceInETH && props.amount !== '0') {
+    const ethBalance = BigNumber(props.amount).times(formattedPriceInETH);
+    if (
+      collateralEnabled &&
+      (isDeposit.value ||
+        (isCollateral.value && !selectedToken?.usageAsCollateralEnabledOnUser))
+    ) {
+      collateralBalanceETH = new BigNumber(
+        props.userSummary.totalCollateralMarketReferenceCurrency
+      ).plus(ethBalance);
+    } else if (
+      collateralEnabled &&
+      ((isWithdraw.value && selectedToken?.usageAsCollateralEnabledOnUser) ||
+        (isCollateral.value && selectedToken?.usageAsCollateralEnabledOnUser))
+    ) {
+      collateralBalanceETH = new BigNumber(
+        props.userSummary.totalCollateralMarketReferenceCurrency
+      ).minus(ethBalance);
+    } else if (isRepay.value) {
+      totalBorrowsETH = new BigNumber(
+        props.userSummary.totalBorrowsMarketReferenceCurrency
+      ).minus(ethBalance);
+    } else if (isBorrow.value) {
+      totalBorrowsETH = new BigNumber(
+        props.userSummary.totalBorrowsMarketReferenceCurrency
+      ).plus(ethBalance);
+    }
+    nextHealthFactor = calculateHealthFactorFromBalancesBigUnits(
+      collateralBalanceETH,
+      totalBorrowsETH,
+      props.userSummary.currentLiquidationThreshold
+    ).toFixed(3);
+  }
+  if (nextHealthFactor === 'NaN' || nextHealthFactor === '-1.000')
+    nextHealthFactor = '-';
+  return nextHealthFactor;
+});
+
+const currentInterest = computed(() => {
+  return {
+    type: 'Variable',
+    percentage: '11.33%'
+  };
+});
+
+const nextInterest = computed(() => {
+  return {
+    type: 'Stable',
+    percentage: '2.837%'
+  };
+});
+
+const disableBtn = computed(() => {
+  return nextHealthFactor.value <= 1 && nextHealthFactor.value !== '-1.000';
+});
+
+const btnTitle = computed(() => {
+  return !disableBtn.value ? 'Confirm' : 'Health Factor Too Low';
+});
+
+const tokenSymbol = computed(() => {
+  return props.selectedToken?.token;
+});
+
+const tokenIcon = computed(() => {
+  return props.selectedToken?.tokenImg;
+});
+
+// methods
+const confirm = () => {
+  if (props.props.step === 1) {
+    emit('confirmed');
+  } else {
+    emit('onConfirm');
+  }
+};
+
+const getInterestTypeClass = type => {
+  if (type.toLowerCase() === INTEREST_TYPES.stable) {
+    return 'secondary--text';
+  }
+  return 'orangePrimary';
 };
 </script>

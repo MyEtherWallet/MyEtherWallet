@@ -96,6 +96,11 @@
                 :title="aaveTableTitle.balance_deposit"
                 :has-search="false"
                 :has-toggle="false"
+                :user-summary=""
+                :is-loading-data=""
+                :format-usd-value=""
+                :user-borrow-power=""
+                :reserves-data=""
               />
             </v-col>
           </v-row>
@@ -235,6 +240,11 @@
                 :title="aaveTableTitle.balance_borrow"
                 :has-search="false"
                 :has-toggle="false"
+                :user-summary=""
+                :is-loading-data=""
+                :format-usd-value=""
+                :user-borrow-power=""
+                :reserves-data=""
               />
             </v-col>
           </v-row>
@@ -252,11 +262,18 @@
       :open="showDepositOverlay"
       :close="toggleDepositOverlay"
       :pre-selected-token="tokenSelected"
+      :selected-token-details=""
+      :on-deposit=""
     />
     <aave-borrow-overlay
       :pre-selected-token="tokenSelected"
       :open="showBorrowOverlay"
       :close="toggleBorrowOverlay"
+      :selected-token-details=""
+      :on-borrow=""
+      :format-usd-value=""
+      :user-summary=""
+      :user-borrow-power=""
     />
     <aave-collateral-overlay
       :open="showCollateralOverlay"
@@ -266,11 +283,16 @@
       @onClose="resetCollateralToggle"
     />
     <aave-withdraw-overlay
+      :on-withdraw=""
       :open="showWithdrawOverlay"
       :close="closeWithdrawOverlay"
       :pre-selected-token="tokenSelected"
     />
     <aave-repay-overlay
+      :on-repay=""
+      :selected-token-in-user-summary=""
+      :format-usd-value=""
+      :userSummary=""
       :open="showRepayOverlay"
       :close="closeRepayOverlay"
       :pre-selected-token="tokenSelected"
@@ -278,7 +300,8 @@
     <aave-set-apr-overlay
       :open="showAprTypeOverlay"
       :close="closeAprTypeOverlay"
-      :pre-selected-token="tokenSelected"
+      :selectedTokenInUserSummary=""
+      :selectedTokenDetails=""
       @onConfirm="setBorrowRate"
       @onClose="resetAprToggle"
     />

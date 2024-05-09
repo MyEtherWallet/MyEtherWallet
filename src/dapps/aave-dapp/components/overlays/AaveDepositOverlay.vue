@@ -16,6 +16,11 @@
       :reserves-data="reservesData"
       :user-reserves-data="userSummary.userReservesData"
       :title="depositTitle"
+      :user-summary=""
+      :is-loading-data=""
+      :format-usd-value=""
+      :user-borrow-power=""
+      :reserves-data=""
       @selectedDeposit="handleSelectedDeposit"
     />
     <!--
@@ -48,169 +53,200 @@
       :step="step"
       :action-type="depositTitle"
       :amount-usd="amountUSD"
+      :user-summary=""
+      :selectedt-token-in-user-summary=""
+      :selected-token-details=""
       @onConfirm="handleConfirm"
     />
   </mew-overlay>
 </template>
 
-<script>
+<script setup>
+import { ref, computed, watch } from 'vue';
+import { isEmpty } from 'lodash';
+import BigNumber from 'bignumber.js';
+
 import AaveTable from '../AaveTable';
 import AaveSummary from '../AaveSummary';
 import AaveAmountForm from '../AaveAmountForm.vue';
 import { AAVE_TABLE_TITLE } from '../../handlers/helpers';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
-import { isEmpty } from 'lodash';
-import handlerAave from '../../handlers/handlerAave.mixin';
-import BigNumber from 'bignumber.js';
-import { mapGetters } from 'vuex';
 import { toBase } from '@/core/helpers/unit';
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { useWalletStore } from '@/core/store/wallet';
+import { useGlobalStore } from '@/core/store/global';
+import { useAmplitude } from '@/core/composables/amplitude';
 
-export default {
-  name: 'AaveDepositOverlay',
-  components: { AaveTable, AaveSummary, AaveAmountForm },
-  mixins: [handlerAave, handlerAnalytics],
-  data() {
-    return {
-      step: 0,
-      selectedToken: {},
-      amount: '0',
-      depositTitle: AAVE_TABLE_TITLE.deposit
-    };
-  },
-  computed: {
-    ...mapGetters('wallet', ['tokensList', 'balanceInETH']),
-    ...mapGetters('global', ['network', 'getFiatValue']),
-    selectedTokenDecimal() {
-      return this.selectedTokenDetails
-        ? this.selectedTokenDetails.decimals
-        : 18;
-    },
-    tokenBalanceUSD() {
-      const symbol = this.selectedToken.token;
-      const hasBalance = this.tokensList.find(item => {
-        if (item.symbol === symbol) {
-          return item;
-        }
-      });
-      return hasBalance ? BigNumber(hasBalance.usdBalance).toFixed() : '0';
-    },
-    tokenPrice() {
-      return BigNumber(this.selectedToken.price).toFixed();
-    },
-    tokenBalance() {
-      const symbol = this.selectedToken.token;
-      if (symbol === this.network.type.currencyName) return this.balanceInETH;
-      const hasBalance = this.tokensList.find(item => {
-        if (item.symbol === symbol) {
-          return item;
-        }
-      });
-      const decimals = BigNumber(10).pow(this.selectedToken.decimals);
-      return hasBalance
-        ? BigNumber(hasBalance.balance).dividedBy(decimals).toFixed()
-        : '0';
-    },
-    amountUSD() {
-      return this.getFiatValue(
-        BigNumber(this.amount).times(this.tokenPrice).toFixed()
-      );
-    },
-    header() {
-      switch (this.step) {
-        case 1:
-          return 'Deposit';
-        case 2:
-          return 'Confirmation';
-        default:
-          return 'Select the token you want to deposit';
-      }
-    },
-    aaveDepositForm() {
-      const hasDeposit = this.selectedTokenInUserSummary;
-      const depositedBalance = `${
-        formatFloatingPointValue(hasDeposit?.underlyingBalance || 0).value
-      } ${this.selectedToken.token}`;
-      const depositedBalanceInUSD = this.getFiatValue(
-        BigNumber(this.tokenPrice).times(hasDeposit?.underlyingBalance || 0)
-      );
+// injections/use
+const { tokensList, balanceInETH, address } = useWalletStore();
+const { network, getFiatValue } = useGlobalStore();
+const { trackDapp } = useAmplitude();
 
-      const tokenBalance = `${
-        formatFloatingPointValue(this.tokenBalance).value
-      } ${this.selectedToken.token}`;
-      const usd = this.getFiatValue(this.tokenBalanceUSD);
-      return {
-        showToggle: true,
-        leftSideValues: {
-          title: depositedBalance,
-          caption: depositedBalanceInUSD,
-          subTitle: 'Aave Deposit Balance'
-        },
-        rightSideValues: {
-          title: tokenBalance,
-          caption: usd,
-          subTitle: 'Aave Wallet Balance'
-        },
-        formText: {
-          title: 'How much would you like to deposit?',
-          caption:
-            'Here you can set the amount you want to deposit. You can manually enter a specific amount or use the percentage buttons below.'
-        },
-        buttonTitle: {
-          action: 'Deposit',
-          cancel: 'Cancel deposit'
-        }
-      };
-    }
+// props
+const props = defineProps({
+  open: {
+    default: false,
+    type: Boolean
   },
-  watch: {
-    preSelectedToken: {
-      handler: function (newVal) {
-        if (newVal && !isEmpty(newVal)) {
-          this.handleSelectedDeposit(this.preSelectedToken);
-        }
-        if (isEmpty(newVal)) {
-          this.selectedToken = {};
-          this.step = 0;
-        }
-      },
-      deep: true
-    },
-    step(val) {
-      if (val === 0) this.selectedToken = {};
-    }
+  close: {
+    default: () => {},
+    type: Function
   },
-  methods: {
-    handleSelectedDeposit(val) {
-      this.selectedToken = val;
-      this.step = 1;
-    },
-    handleDepositAmount(e) {
-      this.step = 2;
-      this.amount = e;
-    },
-    callClose() {
-      this.step = 0;
-      this.selectedToken = {};
-      this.amount = '0';
-      this.depositTitle = AAVE_TABLE_TITLE.deposit;
-
-      this.close(false);
-    },
-    handleConfirm() {
-      this.trackDapp('aaveDepositEvent');
-      const amount = toBase(this.amount, this.selectedTokenDetails.decimals);
-      const param = {
-        user: this.address,
-        amount: amount,
-        referralCode: '14',
-        reserve: this.selectedTokenDetails.underlyingAsset
-      };
-      this.onDeposit(param).then(() => {
-        this.trackDapp('aaveDepositedCollateral');
-      });
-      this.callClose();
-    }
+  selectedTokenDetails: {
+    type: Object,
+    default: () => {}
+  },
+  preSelectedToken: {
+    type: Object,
+    default: () => {}
+  },
+  onDeposit: {
+    type: Function,
+    default: () => {}
   }
+});
+
+// data
+const depositTitle = ref(AAVE_TABLE_TITLE.deposit);
+const step = ref(0);
+const selectedToken = ref({});
+const amount = ref('0');
+
+// computed
+const selectedTokenDecimal = computed(() => {
+  return props.selectedTokenDetails ? props.selectedTokenDetails.decimals : 18;
+});
+const tokenBalanceUSD = computed(() => {
+  const symbol = selectedToken.value.token;
+  const hasBalance = tokensList.find(item => {
+    if (item.symbol === symbol) {
+      return item;
+    }
+  });
+  return hasBalance ? BigNumber(hasBalance.usdBalance).toFixed() : '0';
+});
+
+const tokenPrice = computed(() => {
+  return BigNumber(selectedToken.value.price).toFixed();
+});
+
+const tokenBalance = computed(() => {
+  const symbol = selectedToken.value.token;
+  if (symbol === network.type.currencyName) return balanceInETH;
+  const hasBalance = tokensList.find(item => {
+    if (item.symbol === symbol) {
+      return item;
+    }
+  });
+  const decimals = BigNumber(10).pow(selectedToken.value.decimals);
+  return hasBalance
+    ? BigNumber(hasBalance.balance).dividedBy(decimals).toFixed()
+    : '0';
+});
+
+const amountUSD = computed(() => {
+  return getFiatValue(
+    BigNumber(amount.value).times(tokenPrice.value).toFixed()
+  );
+});
+
+const header = computed(() => {
+  switch (step.value) {
+    case 1:
+      return 'Deposit';
+    case 2:
+      return 'Confirmation';
+    default:
+      return 'Select the token you want to deposit';
+  }
+});
+
+const aaveDepositForm = computed(() => {
+  const hasDeposit = selectedToken.value;
+  const depositedBalance = `${
+    formatFloatingPointValue(hasDeposit?.underlyingBalance || 0).value
+  } ${selectedToken.value.token}`;
+  const depositedBalanceInUSD = getFiatValue(
+    BigNumber(tokenPrice.value).times(hasDeposit?.underlyingBalance || 0)
+  );
+
+  const tokenBalance = `${formatFloatingPointValue(tokenBalance.value).value} ${
+    selectedToken.value.token
+  }`;
+  const usd = getFiatValue(tokenBalanceUSD.value);
+  return {
+    showToggle: true,
+    leftSideValues: {
+      title: depositedBalance,
+      caption: depositedBalanceInUSD,
+      subTitle: 'Aave Deposit Balance'
+    },
+    rightSideValues: {
+      title: tokenBalance,
+      caption: usd,
+      subTitle: 'Aave Wallet Balance'
+    },
+    formText: {
+      title: 'How much would you like to deposit?',
+      caption:
+        'Here you can set the amount you want to deposit. You can manually enter a specific amount or use the percentage buttons below.'
+    },
+    buttonTitle: {
+      action: 'Deposit',
+      cancel: 'Cancel deposit'
+    }
+  };
+});
+
+// watch
+watch(
+  props.preSelectedToken,
+  newVal => {
+    if (newVal && !isEmpty(newVal)) {
+      handleSelectedDeposit(props.preSelectedToken);
+    }
+    if (isEmpty(newVal)) {
+      selectedToken.value = {};
+      step.value = 0;
+    }
+  },
+  { deep: true }
+);
+
+watch(step, val => {
+  if (val === 0) selectedToken.value = {};
+});
+
+// methods
+
+const handleSelectedDeposit = val => {
+  selectedToken.value = val;
+  step.value = 1;
+};
+
+const handleDepositAmount = e => {
+  step.value = 2;
+  amount.value = e;
+};
+
+const callClose = () => {
+  step.value = 0;
+  selectedToken.value = {};
+  amount.value = '0';
+  depositTitle.value = AAVE_TABLE_TITLE.deposit;
+  props.close(false);
+};
+
+const handleConfirm = () => {
+  const amount = toBase(amount.value, selectedToken.value.decimals);
+  const param = {
+    user: address,
+    amount: amount,
+    referralCode: '14',
+    reserve: selectedToken.value.underlyingAsset
+  };
+  props.onDeposit(param).then(() => {
+    trackDapp('aaveDepositedCollateral');
+  });
+  callClose();
 };
 </script>

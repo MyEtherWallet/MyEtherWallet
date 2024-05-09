@@ -37,28 +37,30 @@
   </div>
 </template>
 
-<script>
-import { ROUTES_WALLET } from '@/core/configs/configRoutes';
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-import { STAKING } from '@/modules/analytics-opt-in/handlers/configs/events.js';
+<script setup>
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
-export default {
-  mixins: [handlerAnalytics],
-  data() {
-    return {
-      showBanner: true
-    };
-  },
-  methods: {
-    viewStakingOptions() {
-      this.$router.push({ name: ROUTES_WALLET.STAKE.NAME });
-      this.trackStaking(STAKING.DASHBOARD);
-    },
-    trackClosing() {
-      this.showBanner = false;
-      this.trackStaking(STAKING.DASHBOARD_CLOSED);
-    }
-  }
+import { ROUTES_WALLET } from '@/core/configs/configRoutes';
+import { STAKING } from '@/modules/analytics-opt-in/handlers/configs/events.js';
+import { useAmplitude } from '@/core/composables/amplitude';
+
+// injections/use
+const { trackStaking } = useAmplitude();
+const router = useRouter();
+
+// data
+const showBanner = ref(true);
+
+// methods
+const viewStakingOptions = () => {
+  router.push({ name: ROUTES_WALLET.STAKE.NAME });
+  trackStaking(STAKING.DASHBOARD);
+};
+
+const trackClosing = () => {
+  showBanner.value = false;
+  trackStaking(STAKING.DASHBOARD_CLOSED);
 };
 </script>
 

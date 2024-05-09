@@ -80,47 +80,48 @@
   </div>
 </template>
 
-<script>
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+<script setup>
+import { onMounted } from 'vue';
+
 import { COMMON } from '@/modules/analytics-opt-in/handlers/configs/events';
-export default {
-  name: 'TheBuyHardwareWalletLayout',
-  components: {
-    TheLayoutHeader: () => import('../components-default/TheLayoutHeader')
+import TheLayoutHeader from '../components-default/TheLayoutHeader.vue';
+import { useAmplitude } from '@/core/composables/amplitude';
+
+// injections/use
+const { trackBuyHardwareAmplitude } = useAmplitude();
+
+// data
+const buttons = [
+  {
+    logoImg: require('@/assets/images/hardware-wallets/logo-ledger.svg'),
+    walletImg: require('@/assets/images/hardware-wallets/ledger.png'),
+    priceNote: 'Starting from',
+    currency: '$',
+    price: '59.00',
+    note: 'Easy to carry everywhere thanks to its USB format.',
+    link: 'https://shop.ledger.com/?r=fa4b',
+    name: 'Ledger'
   },
-  mixins: [handlerAnalytics],
-  data: () => ({
-    buttons: [
-      {
-        logoImg: require('@/assets/images/hardware-wallets/logo-ledger.svg'),
-        walletImg: require('@/assets/images/hardware-wallets/ledger.png'),
-        priceNote: 'Starting from',
-        currency: '$',
-        price: '59.00',
-        note: 'Easy to carry everywhere thanks to its USB format.',
-        link: 'https://shop.ledger.com/?r=fa4b',
-        name: 'Ledger'
-      },
-      {
-        logoImg: require('@/assets/images/hardware-wallets/logo-trezor.svg'),
-        walletImg: require('@/assets/images/hardware-wallets/trezor.png'),
-        priceNote: 'Starting from',
-        currency: '$',
-        price: '60.00',
-        note: 'The most trusted hardware wallet in the world. Get yours today!',
-        link: 'https://trezor.io/?offer_id=12&aff_id=2029',
-        name: 'Trezor'
-      }
-    ]
-  }),
-  mounted() {
-    this.trackBuyHardwareAmplitude(COMMON.PAGE_SHOWN);
-  },
-  methods: {
-    trackBuy(name) {
-      this.trackBuyHardwareAmplitude(name);
-    }
+  {
+    logoImg: require('@/assets/images/hardware-wallets/logo-trezor.svg'),
+    walletImg: require('@/assets/images/hardware-wallets/trezor.png'),
+    priceNote: 'Starting from',
+    currency: '$',
+    price: '60.00',
+    note: 'The most trusted hardware wallet in the world. Get yours today!',
+    link: 'https://trezor.io/?offer_id=12&aff_id=2029',
+    name: 'Trezor'
   }
+];
+
+// onMounted
+onMounted(() => {
+  trackBuyHardwareAmplitude(COMMON.PAGE_SHOWN);
+});
+
+// methods
+const trackBuy = name => {
+  trackBuyHardwareAmplitude(name);
 };
 </script>
 

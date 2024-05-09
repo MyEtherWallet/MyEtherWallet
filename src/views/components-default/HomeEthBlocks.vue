@@ -51,29 +51,29 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { useRouter } from 'vue-router/composables';
+
+import { useAmplitude } from '@/core/composables/amplitude';
 import ethBlocksThree from '@/assets/images/icons/eth-blocks-3.jpg';
 import ethBlocksSix from '@/assets/images/icons/eth-blocks-6.jpg';
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { LANDING_PAGE } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 import { ETH_BLOCKS_ROUTE } from '@/dapps/eth-blocks/configsRoutes';
-export default {
-  name: 'HomeEthBlocks',
-  mixins: [handlerAnalytics],
-  data() {
-    return {
-      three: ethBlocksThree,
-      six: ethBlocksSix
-    };
-  },
-  methods: {
-    navigateToEthBlocks() {
-      this.trackLandingPageAmplitude(LANDING_PAGE.ACCESS_WALLET_MINT);
-      this.$router.push({
-        name: ETH_BLOCKS_ROUTE.CORE.NAME
-      });
-    }
-  }
+
+// injections/use
+const { trackLandingPageAmplitude } = useAmplitude();
+const router = useRouter();
+
+// data
+const three = ethBlocksThree;
+const six = ethBlocksSix;
+
+// methods
+const navigateToEthBlocks = () => {
+  trackLandingPageAmplitude(LANDING_PAGE.ACCESS_WALLET_MINT);
+  router.push({
+    name: ETH_BLOCKS_ROUTE.CORE.NAME
+  });
 };
 </script>
 

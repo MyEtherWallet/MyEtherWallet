@@ -26,87 +26,87 @@
 </template>
 
 <script>
-import { isEmpty } from 'lodash';
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-import { EventBus } from '@/core/plugins/eventBus';
-
 const OPEN_HARDWARE_PASSWORD = 'showHardwarePassword';
 const ISSUE_MODAL = 'issueModal';
-export default {
-  components: {
-    HardwarePasswordModal: () =>
-      import('./components/HardwarePasswordModal.vue'),
-    ErrorMsg: () => import('./components/ErrorMsg.vue')
-  },
-  mixins: [handlerAnalytics],
-  data() {
-    return {
-      deviceInfo: {},
-      callback: () => {},
-      openHardwarePassword: false,
-      openError: false,
-      password: '',
-      acceptTerms: false,
-      errors: {}
-    };
-  },
-  computed: {
-    showModal() {
-      return this.openHardwarePassword;
-    },
-    title() {
-      const walletName = isEmpty(this.deviceInfo)
-        ? 'wallet'
-        : this.deviceInfo.name;
-      return `Access your ${walletName}`;
-    },
-    enableButton() {
-      if (this.openHardwarePassword) {
-        return this.acceptTerms && this.password !== '';
-      }
-      return this.password !== '';
-    }
-  },
-  created() {
-    EventBus.$on(ISSUE_MODAL, (errors, callback) => {
-      this.errors = errors;
-      this.callback = callback;
-      this.openError = true;
-    });
-    EventBus.$on(OPEN_HARDWARE_PASSWORD, (deviceInfo, callback) => {
-      this.callback = callback;
-      this.deviceInfo = deviceInfo;
-      this.openHardwarePassword = true;
-    });
-  },
-  beforeDestroy() {
-    EventBus.$off(ISSUE_MODAL);
-    EventBus.$off(OPEN_HARDWARE_PASSWORD);
-  },
-  methods: {
-    reset() {
-      this.deviceInfo = {};
-      this.callback = () => {};
-      this.identifier = '';
-      this.openHardwarePassword = false;
-      this.openError = false;
-      this.password = '';
-      this.acceptTerms = false;
-    },
-    submit() {
-      this.callback(this.password);
-      this.reset();
-    },
-    setPassword(e) {
-      this.password = e;
-    },
-    setTerms(e) {
-      this.acceptTerms = e;
-    },
-    send(bool) {
-      this.callback(bool);
-      this.reset();
-    }
+</script>
+<script setup>
+import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { isEmpty } from 'lodash';
+
+import HardwarePasswordModal from './components/HardwarePasswordModal.vue';
+import ErrorMsg from './components/ErrorMsg.vue';
+
+import { EventBus } from '@/core/plugins/eventBus';
+
+// data
+const deviceInfo = ref({});
+const callback = ref(() => {});
+const openHardwarePassword = ref(false);
+const openError = ref(false);
+const password = ref('');
+const acceptTerms = ref(false);
+const errors = ref({});
+
+// computed
+const showModal = computed(() => openHardwarePassword.value);
+const title = computed(() => {
+  const walletName = isEmpty(deviceInfo.value)
+    ? 'wallet'
+    : deviceInfo.value.name;
+  return `Access your ${walletName}`;
+});
+const enableButton = computed(() => {
+  if (openHardwarePassword.value) {
+    return acceptTerms.value && password.value !== '';
   }
+  return password.value !== '';
+});
+
+// created
+onMounted(() => {
+  EventBus.$on(ISSUE_MODAL, (errors, callback) => {
+    errors.value = errors;
+    callback.value = callback;
+    openError.value = true;
+  });
+  EventBus.$on(OPEN_HARDWARE_PASSWORD, (deviceInfo, callback) => {
+    callback.value = callback;
+    deviceInfo.value = deviceInfo;
+    openHardwarePassword.value = true;
+  });
+});
+
+// beforeDestroy
+onUnmounted(() => {
+  EventBus.$off(ISSUE_MODAL);
+  EventBus.$off(OPEN_HARDWARE_PASSWORD);
+});
+
+// methods
+const reset = () => {
+  deviceInfo.value = {};
+  callback.value = () => {};
+  openHardwarePassword.value = false;
+  openError.value = false;
+  password.value = '';
+  acceptTerms.value = false;
+};
+
+const submit = () => {
+  callback.value(password.value);
+  reset();
+};
+
+const setPassword = e => {
+  password.value = e;
+};
+
+const setTerms = e => {
+  acceptTerms.value = e;
+};
+
+const send = bool => {
+  callback.value(bool);
+  reset();
 };
 </script>

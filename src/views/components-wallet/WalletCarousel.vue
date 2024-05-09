@@ -43,41 +43,39 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref } from 'vue';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
-import enkryptMarketing from '@/core/mixins/enkryptMarketing.mixin.js';
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin.js';
-export default {
-  mixins: [enkryptMarketing, handlerAnalytics],
-  data: () => ({
-    currentSlide: 0,
-    ROUTES_HOME: ROUTES_HOME
-  }),
-  methods: {
-    openMewWallet() {
-      if (this.consentToTrack) {
-        this.$amplitude.track('WalletSlideMEWWallet', {
-          network: this.network.type.name
-        });
-      }
-      // eslint-disable-next-line
-      window.open('https://download.mewwallet.com/?source=mew_web', '_blank');
-    },
-    trackEnkrypt() {
-      if (this.consentToTrack) {
-        this.$amplitude.track('WalletSlideEnkrypt', {
-          network: this.network.type.name
-        });
-      }
-    },
-    trackHardware() {
-      if (this.consentToTrack) {
-        this.$amplitude.track('WalletSlideHardware', {
-          network: this.network.type.name
-        });
-      }
-    }
-  }
+import { useAmplitude } from '@/core/composables/amplitude';
+import { useEnkryptMarketing } from '@/core/composables/enkryptMarketing';
+import { useGlobalStore } from '@/core/store/global';
+
+// injections/use
+const { $amplitude } = useAmplitude();
+const { browserLink } = useEnkryptMarketing();
+const { network } = useGlobalStore();
+
+// data
+const currentSlide = ref(0);
+
+// methods
+const openMewWallet = () => {
+  $amplitude.track('WalletSlideMEWWallet', {
+    network: network.type.name
+  });
+  window.open('https://download.mewwallet.com/?source=mew_web', '_blank');
+};
+
+const trackEnkrypt = () => {
+  $amplitude.track('WalletSlideEnkrypt', {
+    network: network.type.name
+  });
+};
+
+const trackHardware = () => {
+  $amplitude.track('WalletSlideHardware', {
+    network: network.type.name
+  });
 };
 </script>
 

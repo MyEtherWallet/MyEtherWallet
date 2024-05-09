@@ -100,100 +100,108 @@
   </mew-stepper>
 </template>
 
-<script>
+<script setup>
+import { defineProps, ref, defineEmits } from 'vue';
+
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
-import handlerAnalyticsMixin from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { ACCESS_WALLET } from '@/modules/analytics-opt-in/handlers/configs/events';
+import { useAmplitude } from '@/core/composables/amplitude';
 
-export default {
-  name: 'AccessWalletKeystore',
-  mixins: [handlerAnalyticsMixin],
-  props: {
-    handlerAccessWallet: {
-      type: Object,
-      default: () => {
-        return {};
-      }
-    }
-  },
-  data() {
-    return {
-      step: 1,
-      file: {},
-      password: '',
-      stepperItems: [
-        {
-          step: 1,
-          name: 'Select File'
-        },
-        {
-          step: 2,
-          name: 'Enter Password'
-        }
-      ],
-      isUnlockingKeystore: false
-    };
-  },
+// emits
+const emit = defineEmits(['unlock']);
 
-  methods: {
-    /**
-     * Sets keystore file and directs to step 2
-     */
-    uploadFile(e) {
-      const reader = new FileReader();
-      reader.onloadend = evt => {
-        try {
-          this.file = JSON.parse(evt.target.result);
-          this.step = 2;
-        } catch (err) {
-          this.trackAccessWalletAmplitude(ACCESS_WALLET.SOFTWARE_FAILED, {
-            error: err.message
-          });
-          Toast(err.message, {}, ERROR);
-        }
-      };
-      reader.readAsBinaryString(e.target.files[0]);
-    },
-    /**
-     * Opens file input control
-     */
-    uploadBtn() {
-      const jsonInput = this.$refs.jsonInput;
-      jsonInput.value = '';
-      jsonInput.click();
-    },
-    /**
-     * Unlocks Keystre wallet file
-     * Sets isUnlockingKeystore = true , to dispaly loading state
-     * On Error - dispatches Toast on error and sets isUnlockingKeystore = false
-     */
-    unlockBtn() {
-      this.isUnlockingKeystore = true;
-      this.handlerAccessWallet
-        .unlockKeystoreWallet(this.file, this.password)
-        .then(res => {
-          if (res) {
-            this.$emit('unlock');
-            this.isUnlockingKeystore = false;
-          }
-        })
-        .catch(e => {
-          this.isUnlockingKeystore = false;
-          this.trackAccessWalletAmplitude(ACCESS_WALLET.SOFTWARE_FAILED, {
-            error: e.message
-          });
-          Toast(e.message, {}, ERROR);
-        });
-    },
-    /**
-     * Methods changes stepper to step 1
-     * Used in STEP 2
-     */
-    backStepOne() {
-      this.step = 1;
-      this.password = '';
-      this.$refs.passwordInput.clear();
+// injections/use
+const { trackAccessWalletAmplitude } = useAmplitude();
+
+// props
+const props = defineProps({
+  handlerAccessWallet: {
+    type: Object,
+    default: () => {
+      return {};
     }
   }
+});
+
+// data
+const stepperItems = [
+  {
+    step: 1,
+    name: 'Select File'
+  },
+  {
+    step: 2,
+    name: 'Enter Password'
+  }
+];
+// reactive
+const step = ref(1);
+const file = ref({});
+const password = ref('');
+const isUnlockingKeystore = ref(false);
+const jsonInput = ref(null);
+const passwordInput = ref(null);
+
+// methods
+/**
+ * Sets keystore file and directs to step 2
+ */
+const uploadFile = e => {
+  const reader = new FileReader();
+  reader.onloadend = evt => {
+    try {
+      file.value = JSON.parse(evt.target.result);
+      step.value = 2;
+    } catch (err) {
+      trackAccessWalletAmplitude(ACCESS_WALLET.SOFTWARE_FAILED, {
+        error: err.message
+      });
+      Toast(err.message, {}, ERROR);
+    }
+  };
+  reader.readAsBinaryString(e.target.files[0]);
+};
+/**
+ * Opens file input control
+ */
+const uploadBtn = () => {
+  jsonInput.value = '';
+  jsonInput.value.click();
+};
+
+/**
+ * Unlocks Keystre wallet file
+ * Sets isUnlockingKeystore = true , to dispaly loading state
+ * On Error - dispatches Toast on error and sets isUnlockingKeystore = false
+ */
+
+const unlockBtn = () => {
+  isUnlockingKeystore.value = true;
+  props.handlerAccessWallet
+    .unlockKeystoreWallet(file.value, password.value)
+    .then(res => {
+      if (res) {
+        emit('unlock');
+        isUnlockingKeystore.value = false;
+      }
+    })
+    .catch(e => {
+      isUnlockingKeystore.value = false;
+      trackAccessWalletAmplitude(ACCESS_WALLET.SOFTWARE_FAILED, {
+        error: e.message
+      });
+      Toast(e.message, {}, ERROR);
+    });
+};
+
+/**
+ * Methods changes stepper to step 1
+ * Used in STEP 2
+ */
+
+const backStepOne = () => {
+  step.value = 1;
+  password.value = '';
+  passwordInput.value.clear();
 };
 </script>

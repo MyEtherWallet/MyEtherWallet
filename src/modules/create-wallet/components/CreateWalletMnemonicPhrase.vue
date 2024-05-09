@@ -206,169 +206,173 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { watch, ref, computed, onMounted } from 'vue';
+
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { CREATE_WALLET } from '@/modules/analytics-opt-in/handlers/configs/events.js';
+import mnemonicPhraseTable from '@/core/components/MnemonicPhraseTable.vue';
+import phraseBlock from '@/core/components/PhraseBlock.vue';
 
-export default {
-  name: 'CreateWalletMnemonicPhrase',
-  components: {
-    mnemonicPhraseTable: () => import('@/core/components/MnemonicPhraseTable'),
-    phraseBlock: () => import('@/core/components/PhraseBlock')
-  },
-  mixins: [handlerAnalytics],
-  props: {
-    handlerCreateWallet: {
-      type: Object,
-      default: () => {
-        return {};
-      }
-    }
-  },
-  data: () => ({
-    step: 1,
-    validateMnemonicValues: {},
-    extraWord: '',
-    extraWordVerification: '',
-    steppers: [
-      {
-        step: 1,
-        name: 'STEP 1. Write down the words'
-      },
-      {
-        step: 2,
-        name: 'STEP 2. Verification'
-      },
-      {
-        step: 3,
-        name: 'STEP 3. Well done'
-      }
-    ],
-    mnemonicOptions: [
-      {
-        name: '12 words',
-        value: 12
-      },
-      {
-        name: '24 words',
-        value: 24
-      }
-    ],
-    phraseSize: 12,
-    phrase: [],
-    generatedVerification: []
-  }),
-  computed: {
-    canVerify() {
-      return this.isValidMnemonic && this.extraWordMatch;
-    },
-    isValidMnemonic() {
-      return this.phrase.length === this.phraseSize;
-    },
-    extraWordMatch() {
-      return this.extraWord
-        ? this.extraWord === this.extraWordVerification
-        : true;
-    },
-    stepTwoText() {
-      return this.extraWord === ''
-        ? 'Please select correct words based on their numbers.'
-        : 'Please select correct words based on their numbers, and enter your extra word.';
-    }
-  },
-  watch: {
-    phraseSize: {
-      deep: true,
-      handler: function (newVal) {
-        this.phraseSize = newVal;
-        this.setPhrase();
-      }
-    },
-    phrase: {
-      deep: true,
-      handler: function () {}
-    }
-  },
-  mounted() {
-    this.setPhrase();
-  },
-  methods: {
-    generateVerification() {
-      this.generatedVerification = this.handlerCreateWallet.getVerification();
-      this.generatedVerification.sort(function (a, b) {
-        return a.itemNumber - b.itemNumber;
-      });
-    },
-    getOnlyKey(obj) {
-      return Number(Object.keys(obj)[0]);
-    },
-    getEntries(obj) {
-      return Object.values(obj[this.getOnlyKey(obj)]);
-    },
-    setPhrase() {
-      this.handlerCreateWallet
-        .generateMnemonic(this.phraseSize)
-        .then(res => {
-          this.phrase = res;
-          this.generateVerification();
-        })
-        .catch(e => {
-          this.generateVerification();
-          Toast(e, {}, ERROR);
-        });
-    },
-    verify() {
-      this.handlerCreateWallet
-        .validateMnemonic(this.validateMnemonicValues)
-        .then(() => {
-          this.trackCreateWalletAmplitude(CREATE_WALLET.MNEMONIC_SUCCESS);
-          this.updateStep(3);
-        })
-        .catch(e => {
-          Toast(e, {}, ERROR);
-        });
-    },
-    /**
-     * Reroutes to access wallet
-     * Used in Step 3
-     */
-    goToAccess() {
-      this.trackCreateWalletAmplitude(CREATE_WALLET.MNEMONIC_SUCCESS_ACCESS);
-      this.$router.push({ name: ROUTES_HOME.ACCESS_WALLET.NAME });
-    },
-    trackIWroteThemDown() {
-      this.trackCreateWalletAmplitude(CREATE_WALLET.MNEMONIC_WROTE_DOWN);
-      this.updateStep(2);
-    },
-    trackBackToStepOne() {
-      this.trackCreateWalletAmplitude(CREATE_WALLET.MNEMONIC_BACK);
-      this.updateStep(1);
-    },
+import { useAmplitude } from '@/core/composables/amplitude';
+import { useRouter } from 'vue-router/composables';
 
-    /**
-     * Updates Step
-     * Resets phrase if step is reset to 1 from step 3 ( user is creating a new wallet)
-     */
-    updateStep(newStep) {
-      if (this.step === 3 && newStep === 1) {
-        this.validateMnemonicValues = {};
-        this.setPhrase();
-      }
-      this.step = newStep;
-    },
-    /**
-     * Go back to step 1 to create another wallet
-     * and reset extra word
-     */
-    createAnotherWallet() {
-      this.extraWord = '';
-      this.extraWordVerification = '';
-      this.trackCreateWalletAmplitude(CREATE_WALLET.MNEMONIC_SUCCESS_CREATE);
-      this.updateStep(1);
+// injections/use
+const { trackCreateWalletAmplitude } = useAmplitude();
+const router = useRouter();
+
+// props
+const props = defineProps({
+  handlerCreateWallet: {
+    type: Object,
+    default: () => {
+      return {};
     }
   }
+});
+
+// data
+const steppers = [
+  {
+    step: 1,
+    name: 'STEP 1. Write down the words'
+  },
+  {
+    step: 2,
+    name: 'STEP 2. Verification'
+  },
+  {
+    step: 3,
+    name: 'STEP 3. Well done'
+  }
+];
+const mnemonicOptions = [
+  {
+    name: '12 words',
+    value: 12
+  },
+  {
+    name: '24 words',
+    value: 24
+  }
+];
+// reactive
+const step = ref(1);
+const validateMnemonicValues = ref({});
+const extraWord = ref('');
+const extraWordVerification = ref('');
+const phraseSize = ref(12);
+const phrase = ref([]);
+const generatedVerification = ref([]);
+
+// computed
+const canVerify = computed(() => {
+  return isValidMnemonic.value && extraWordMatch.value;
+});
+
+const isValidMnemonic = computed(() => {
+  return phrase.value.length === phraseSize.value;
+});
+
+const extraWordMatch = computed(() => {
+  return extraWord.value
+    ? extraWord.value === extraWordVerification.value
+    : true;
+});
+
+const stepTwoText = computed(() => {
+  return extraWord.value === ''
+    ? 'Please select correct words based on their numbers.'
+    : 'Please select correct words based on their numbers, and enter your extra word.';
+});
+
+// watch
+watch(
+  phraseSize,
+  () => {
+    phrase.value = [];
+    setPhrase();
+  },
+  { deep: true }
+);
+
+watch(phrase, () => {}, { deep: true });
+
+// mounted
+onMounted(() => {
+  setPhrase();
+});
+
+// methods
+const generateVerification = () => {
+  generatedVerification.value = props.handlerCreateWallet.getVerification();
+  generatedVerification.value.sort(function (a, b) {
+    return a.itemNumber - b.itemNumber;
+  });
+};
+
+const getOnlyKey = obj => {
+  return Number(Object.keys(obj)[0]);
+};
+
+const getEntries = obj => {
+  return Object.values(obj[getOnlyKey(obj)]);
+};
+
+const setPhrase = () => {
+  props.handlerCreateWallet
+    .generateMnemonic(phraseSize.value)
+    .then(res => {
+      phrase.value = res;
+      generateVerification();
+    })
+    .catch(e => {
+      generateVerification();
+      Toast(e, {}, ERROR);
+    });
+};
+
+const verify = () => {
+  props.handlerCreateWallet
+    .validateMnemonic(validateMnemonicValues.value)
+    .then(() => {
+      trackCreateWalletAmplitude(CREATE_WALLET.MNEMONIC_SUCCESS);
+      updateStep(3);
+    })
+    .catch(e => {
+      Toast(e, {}, ERROR);
+    });
+};
+
+const goToAccess = () => {
+  trackCreateWalletAmplitude(CREATE_WALLET.MNEMONIC_SUCCESS_ACCESS);
+  router.push({ name: ROUTES_HOME.ACCESS_WALLET.NAME });
+};
+
+const trackIWroteThemDown = () => {
+  trackCreateWalletAmplitude(CREATE_WALLET.MNEMONIC_WROTE_DOWN);
+  updateStep(2);
+};
+
+const trackBackToStepOne = () => {
+  trackCreateWalletAmplitude(CREATE_WALLET.MNEMONIC_BACK);
+  updateStep(1);
+};
+
+const updateStep = newStep => {
+  if (step.value === 3 && newStep === 1) {
+    validateMnemonicValues.value = {};
+    setPhrase();
+  }
+  step.value = newStep;
+};
+
+const createAnotherWallet = () => {
+  extraWord.value = '';
+  extraWordVerification.value = '';
+  trackCreateWalletAmplitude(CREATE_WALLET.MNEMONIC_SUCCESS_CREATE);
+  updateStep(1);
 };
 </script>
 

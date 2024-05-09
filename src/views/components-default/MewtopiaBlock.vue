@@ -56,22 +56,19 @@
   </div>
 </template>
 
-<script>
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+<script setup>
+import { useAmplitude } from '@/core/composables/amplitude';
 import { LANDING_PAGE } from '@/modules/analytics-opt-in/handlers/configs/events.js';
-export default {
-  name: 'AppMewtopiaBlock',
-  mixins: [handlerAnalytics],
-  data() {
-    return {
-      backgroundImg: require('@/assets/images/backgrounds/bg-light.jpg')
-    };
-  },
-  methods: {
-    trackMewtopia() {
-      this.trackLandingPageAmplitude(LANDING_PAGE.MEWTOPIA);
-    }
-  }
+
+// injections/use
+const { trackLandingPageAmplitude } = useAmplitude();
+
+// data
+const backgroundImg = require('@/assets/images/backgrounds/bg-light.jpg');
+
+// methods
+const trackMewtopia = () => {
+  trackLandingPageAmplitude(LANDING_PAGE.MEWTOPIA);
 };
 </script>
 

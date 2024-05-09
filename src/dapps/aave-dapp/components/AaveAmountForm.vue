@@ -68,159 +68,168 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { defineProps, ref, computed, watch, onMounted, defineEmits } from 'vue';
 import BigNumber from 'bignumber.js';
 import { isEmpty } from 'lodash';
 
 import { ACTION_TYPES } from '@/dapps/aave-dapp/handlers/helpers';
 import hasValidDecimals from '@/core/helpers/hasValidDecimals';
 
-export default {
-  name: 'AaveAmountForm',
-  props: {
-    tokenDecimal: {
-      type: Number,
-      default: 18
-    },
-    selectedToken: {
-      type: Object,
-      default: () => {}
-    },
-    showToggle: {
-      type: Boolean,
-      default: false
-    },
-    leftSideValues: {
-      type: Object,
-      default: () => {
-        return {
-          title: '',
-          caption: '',
-          subTitle: ''
-        };
-      }
-    },
-    rightSideValues: {
-      type: Object,
-      default: () => {
-        return { title: '', caption: '', subTitle: '' };
-      }
-    },
-    formText: {
-      type: Object,
-      default: () => {
-        return { title: '', caption: '' };
-      }
-    },
-    buttonTitle: {
-      type: Object,
-      default: () => {
-        return { action: '', cancel: '' };
-      }
-    },
-    tokenBalance: {
-      type: String,
-      default: '0'
-    },
-    aaveBalance: {
-      type: String,
-      default: '0'
+// emits
+const emit = defineEmits(['cancel', 'emitValues']);
+
+// props
+const props = defineProps({
+  tokenDecimal: {
+    type: Number,
+    default: 18
+  },
+  selectedToken: {
+    type: Object,
+    default: () => {}
+  },
+  showToggle: {
+    type: Boolean,
+    default: false
+  },
+  leftSideValues: {
+    type: Object,
+    default: () => {
+      return {
+        title: '',
+        caption: '',
+        subTitle: ''
+      };
     }
   },
-  data() {
-    return {
-      group: ['25%', '50%', '75%', 'MAX'],
-      amount: '0',
-      startingIdx: 0
-    };
-  },
-  computed: {
-    hasAmount() {
-      return (
-        BigNumber(this.amount).gt(0) &&
-        BigNumber(this.amount).lte(this.actualTokenBalance)
-      );
-    },
-    checkIfNumerical() {
-      const regex = new RegExp('^-?\\d+[.]?\\d*$');
-      const test = regex.test(this.amount);
-      return [test || 'Please enter a valid value!'];
-    },
-    errorMessages() {
-      if (isEmpty(this.amount)) return 'Amount is required!';
-      if (BigNumber(this.actualTokenBalance).lte(0))
-        return 'Not enough token balance';
-      if (!hasValidDecimals(this.amount, this.tokenDecimal))
-        return 'Too many decimal places';
-      if (BigNumber(this.amount).isNegative())
-        return 'Amount cannot be negative';
-      if (BigNumber(this.amount).lte(0))
-        return 'Please enter an amount greater than 0';
-      if (BigNumber(this.amount).gt(this.actualTokenBalance))
-        return 'Amount exceeds available balance';
-      return '';
-    },
-    disabled() {
-      return !this.hasAmount || this.errorMessages !== '';
-    },
-    actualTokenBalance() {
-      return this.buttonTitle.action.toLowerCase() === ACTION_TYPES.withdraw
-        ? this.aaveBalance
-        : this.tokenBalance;
+  rightSideValues: {
+    type: Object,
+    default: () => {
+      return { title: '', caption: '', subTitle: '' };
     }
   },
-  watch: {
-    selectedToken() {
-      this.setToggle();
+  formText: {
+    type: Object,
+    default: () => {
+      return { title: '', caption: '' };
     }
   },
-  mounted() {
-    this.setToggle();
-  },
-  methods: {
-    setToggle() {
-      if (this.showToggle) {
-        setTimeout(() => {
-          this.onToggle(this.group[1]);
-        }, 100);
-      }
-    },
-    setAmount(e) {
-      this.amount = e;
-    },
-    onToggle(e) {
-      switch (e) {
-        case this.group[0]:
-          this.startingIdx = 0;
-          this.amount = this.calculatedAmt(0.25);
-          break;
-        case this.group[1]:
-          this.startingIdx = 1;
-          this.amount = this.calculatedAmt(0.5);
-          break;
-        case this.group[2]:
-          this.startingIdx = 2;
-          this.amount = this.calculatedAmt(0.75);
-          break;
-        default:
-          this.startingIdx = 3;
-          this.amount = this.calculatedAmt(1);
-      }
-    },
-    cancel() {
-      this.$emit('cancel');
-    },
-    emitValues() {
-      this.$emit('emitValues', this.amount);
-    },
-    calculatedAmt(per) {
-      let amt = this.actualTokenBalance;
-      if (isNaN(amt)) amt = 0;
-      return BigNumber(amt)
-        .times(per)
-        .decimalPlaces(this.tokenDecimal)
-        .toFixed();
+  buttonTitle: {
+    type: Object,
+    default: () => {
+      return { action: '', cancel: '' };
     }
+  },
+  tokenBalance: {
+    type: String,
+    default: '0'
+  },
+  aaveBalance: {
+    type: String,
+    default: '0'
   }
+});
+
+// data
+const group = ['25%', '50%', '75%', 'MAX'];
+const amount = ref('0');
+const startingIdx = ref(0);
+
+// computed
+const hasAmount = computed(() => {
+  return (
+    BigNumber(amount.value).gt(0) &&
+    BigNumber(amount.value).lte(actualTokenBalance)
+  );
+});
+
+const checkIfNumerical = computed(() => {
+  const regex = new RegExp('^-?\\d+[.]?\\d*$');
+  const test = regex.test(amount.value);
+  return [test || 'Please enter a valid value!'];
+});
+
+const errorMessages = computed(() => {
+  if (isEmpty(amount.value)) return 'Amount is required!';
+  if (BigNumber(actualTokenBalance).lte(0)) return 'Not enough token balance';
+  if (!hasValidDecimals(amount.value, props.tokenDecimal))
+    return 'Too many decimal places';
+  if (BigNumber(amount.value).isNegative()) return 'Amount cannot be negative';
+  if (BigNumber(amount.value).lte(0))
+    return 'Please enter an amount greater than 0';
+  if (BigNumber(amount.value).gt(actualTokenBalance))
+    return 'Amount exceeds available balance';
+  return '';
+});
+
+const disabled = computed(() => {
+  return !hasAmount.value || errorMessages.value !== '';
+});
+
+const actualTokenBalance = computed(() => {
+  return props.buttonTitle.action.toLowerCase() === ACTION_TYPES.withdraw
+    ? props.aaveBalance
+    : props.tokenBalance;
+});
+
+// watch
+watch(
+  () => props.selectedToken,
+  () => {
+    setToggle();
+  }
+);
+
+// mounted
+onMounted(() => {
+  setToggle();
+});
+
+// methods
+const setToggle = () => {
+  if (props.showToggle) {
+    setTimeout(() => {
+      onToggle(group[1]);
+    }, 100);
+  }
+};
+
+const setAmount = e => {
+  amount.value = e;
+};
+
+const onToggle = e => {
+  switch (e) {
+    case group[0]:
+      startingIdx.value = 0;
+      amount.value = calculatedAmt(0.25);
+      break;
+    case group[1]:
+      startingIdx.value = 1;
+      amount.value = calculatedAmt(0.5);
+      break;
+    case group[2]:
+      startingIdx.value = 2;
+      amount.value = calculatedAmt(0.75);
+      break;
+    default:
+      startingIdx.value = 3;
+      amount.value = calculatedAmt(1);
+  }
+};
+
+const cancel = () => {
+  emit('cancel');
+};
+
+const emitValues = () => {
+  emit('emitValues', amount.value);
+};
+
+const calculatedAmt = per => {
+  let amt = actualTokenBalance;
+  if (isNaN(amt)) amt = 0;
+  return BigNumber(amt).times(per).decimalPlaces(props.tokenDecimal).toFixed();
 };
 </script>

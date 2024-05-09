@@ -63,66 +63,61 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, computed, defineProps, defineEmits } from 'vue';
 import BigNumber from 'bignumber.js';
 
 import { INTEREST_TYPES } from '../handlers/helpers';
 import { formatPercentageValue } from '@/core/helpers/numberFormatHelper';
 
-export default {
-  props: {
-    selectedToken: {
-      type: Object,
-      default: () => {}
-    }
-  },
-  data() {
-    return {
-      apr: {},
-      interestTypes: INTEREST_TYPES
-    };
-  },
-  computed: {
-    rates() {
-      const stable = this.selectedToken?.stableBorrowRateEnabled
-        ? formatPercentageValue(
-            new BigNumber(this.selectedToken.stableBorrowAPY).multipliedBy(100)
-          ).value
-        : '--';
-      const variable =
-        this.selectedToken?.variableBorrowAPY > 0
-          ? formatPercentageValue(
-              new BigNumber(this.selectedToken.variableBorrowAPY).multipliedBy(
-                100
-              )
-            ).value
-          : '--';
-      return {
-        stable,
-        variable
-      };
-    },
-    isStable() {
-      return this.apr.type === INTEREST_TYPES.stable;
-    },
-    isVariable() {
-      return this.apr.type === INTEREST_TYPES.variable;
-    }
-  },
-  methods: {
-    setType(type) {
-      this.apr = {
-        type: type,
-        percentage:
-          type === INTEREST_TYPES.stable
-            ? this.rates.stable
-            : this.rates.variable
-      };
-    },
-    onContinue() {
-      this.$emit('continue', this.apr);
-    }
+// emits
+const emit = defineEmits(['continue']);
+
+// props
+const props = defineProps({
+  selectedToken: {
+    type: Object,
+    default: () => {}
   }
+});
+
+// data
+const apr = ref({});
+const interestTypes = INTEREST_TYPES;
+
+// computed
+const rates = computed(() => {
+  const stable = props.selectedToken?.stableBorrowRateEnabled
+    ? formatPercentageValue(
+        new BigNumber(props.selectedToken.stableBorrowAPY).multipliedBy(100)
+      ).value
+    : '--';
+  const variable =
+    props.selectedToken?.variableBorrowAPY > 0
+      ? formatPercentageValue(
+          new BigNumber(props.selectedToken.variableBorrowAPY).multipliedBy(100)
+        ).value
+      : '--';
+  return {
+    stable,
+    variable
+  };
+});
+
+const isStable = computed(() => apr.value.type === INTEREST_TYPES.stable);
+const isVariable = computed(() => apr.value.type === INTEREST_TYPES.variable);
+
+// methods
+const setType = type => {
+  apr.value = {
+    type: type,
+    percentage:
+      type === INTEREST_TYPES.stable ? rates.value.stable : rates.value.variable
+  };
+};
+
+const onContinue = () => {
+  emit('continue', apr.value);
 };
 </script>
 

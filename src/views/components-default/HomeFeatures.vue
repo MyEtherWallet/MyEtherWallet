@@ -68,65 +68,64 @@
   </div>
 </template>
 
-<script>
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-export default {
-  name: 'HomeFeatures',
-  components: {
-    HomeFeaturesSend: () => import('./HomeFeaturesSend'),
-    HomeFeaturesSwap: () => import('./HomeFeaturesSwap'),
-    HomeFeaturesDapps: () => import('./HomeFeaturesDapps'),
-    HomeFeaturesTokens: () => import('./HomeFeaturesTokens')
+<script setup>
+import { ref, watch } from 'vue';
+
+import { useAmplitude } from '@/core/composables/amplitude';
+import HomeFeaturesTokens from './HomeFeaturesTokens.vue';
+import HomeFeaturesSend from './HomeFeaturesSend.vue';
+import HomeFeaturesSwap from './HomeFeaturesSwap.vue';
+import HomeFeaturesDapps from './HomeFeaturesDapps.vue';
+
+// injections/use
+const { trackLandingPageAmplitude } = useAmplitude();
+
+// data
+const mewTabIdx = ref(0);
+const mobileTab = ref(0);
+const mobileItems = [
+  {
+    tab: 'Tokens',
+    img: require('@/assets/images/snippets/mobile/mobile-features-tokens.svg')
   },
-  mixins: [handlerAnalytics],
-  data: () => ({
-    mewTabIdx: 0,
-    mobileTab: 0,
-    mobileItems: [
-      {
-        tab: 'Tokens',
-        img: require('@/assets/images/snippets/mobile/mobile-features-tokens.svg')
-      },
-      {
-        tab: 'ETH',
-        img: require('@/assets/images/snippets/mobile/mobile-features-send.svg')
-      },
-      {
-        tab: 'Swap',
-        img: require('@/assets/images/snippets/mobile/mobile-features-swap.svg')
-      },
-      {
-        tab: 'DApps',
-        img: require('@/assets/images/snippets/mobile/mobile-features-dapps.svg')
-      }
-    ],
-    mewTabs: [
-      {
-        name: 'Tokens'
-      },
-      {
-        name: 'ETH'
-      },
-      {
-        name: 'Swap'
-      },
-      {
-        name: 'DApps'
-      }
-    ]
-  }),
-  watch: {
-    mobileTab(newVal) {
-      this.trackLandingPageAmplitude(this.mobileItems[newVal].tab);
-    }
+  {
+    tab: 'ETH',
+    img: require('@/assets/images/snippets/mobile/mobile-features-send.svg')
   },
-  methods: {
-    trackClick(newVal) {
-      if (this.mewTabIdx !== newVal) {
-        this.mewTabIdx = newVal;
-        this.trackLandingPageAmplitude(this.mewTabs[newVal].name);
-      }
-    }
+  {
+    tab: 'Swap',
+    img: require('@/assets/images/snippets/mobile/mobile-features-swap.svg')
+  },
+  {
+    tab: 'DApps',
+    img: require('@/assets/images/snippets/mobile/mobile-features-dapps.svg')
+  }
+];
+const mewTabs = [
+  {
+    name: 'Tokens'
+  },
+  {
+    name: 'ETH'
+  },
+  {
+    name: 'Swap'
+  },
+  {
+    name: 'DApps'
+  }
+];
+
+// watch
+watch(mobileTab, newVal => {
+  trackLandingPageAmplitude(mobileItems[newVal].tab);
+});
+
+// methods
+const trackClick = newVal => {
+  if (mewTabIdx.value !== newVal) {
+    mewTabIdx.value = newVal;
+    trackLandingPageAmplitude(mewTabs[newVal].name);
   }
 };
 </script>

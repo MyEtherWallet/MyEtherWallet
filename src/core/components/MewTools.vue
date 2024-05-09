@@ -64,85 +64,84 @@
   </mew-menu-popup>
 </template>
 
-<script>
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+<script setup>
+import { computed } from 'vue';
 import { HEADER } from '@/modules/analytics-opt-in/handlers/configs/events.js';
-export default {
-  mixins: [handlerAnalytics],
-  data() {
-    return {
-      sections: [
-        {
-          title: 'Wallets',
-          classes: '',
-          items: [
-            {
-              label: 'MEW web',
-              description: 'Ethereum desktop wallet',
-              img: require('@/assets/images/icons/icon-mew-logo.svg'),
-              link: 'https://www.myetherwallet.com/'
-            },
-            {
-              label: 'MEW wallet',
-              imgDescription: {
-                icons: [
-                  require('@/assets/images/icons/icon-apple.svg'),
-                  require('@/assets/images/icons/icon-google.svg')
-                ],
-                label: 'Get the app'
-              },
-              img: require('@/assets/images/icons/icon-mew-wallet.png'),
-              link: 'https://www.mewwallet.com/'
-            },
-            {
-              label: 'Enkrypt',
-              imgDescription: {
-                icons: [require('@/assets/images/icons/icon-chrome.svg')],
-                label: 'Get the extension'
-              },
-              img: require('@/assets/images/icons/icon-enkrypt-block.svg'),
-              link: 'https://www.enkrypt.com'
-            }
-          ]
+import { useAmplitude } from '@/core/composables/amplitude';
+import { useVuetify } from './vuetify';
+
+// injections/use
+const { trackHeaderAmplitude } = useAmplitude();
+const vuetify = useVuetify();
+
+// data
+const sections = [
+  {
+    title: 'Wallets',
+    classes: '',
+    items: [
+      {
+        label: 'MEW web',
+        description: 'Ethereum desktop wallet',
+        img: require('@/assets/images/icons/icon-mew-logo.svg'),
+        link: 'https://www.myetherwallet.com/'
+      },
+      {
+        label: 'MEW wallet',
+        imgDescription: {
+          icons: [
+            require('@/assets/images/icons/icon-apple.svg'),
+            require('@/assets/images/icons/icon-google.svg')
+          ],
+          label: 'Get the app'
         },
-        {
-          title: 'Tools',
-          classes: 'tools-block',
-          items: [
-            {
-              label: 'EthVM',
-              description: 'Blockchain explorer',
-              img: require('@/assets/images/icons/icon-ethvm-dark.svg'),
-              link: 'https://www.ethvm.com/'
-            },
-            {
-              label: 'Blog',
-              description: 'Education Blog',
-              img: require('@/assets/images/icons/icon-puppy-mew.svg'),
-              link: 'https://www.myetherwallet.com/blog'
-            },
-            {
-              label: 'Help Center',
-              description: 'How to use MEW products',
-              img: require('@/assets/images/icons/icon-customer-support.svg'),
-              link: 'https://help.myetherwallet.com/'
-            }
-          ]
-        }
-      ]
-    };
+        img: require('@/assets/images/icons/icon-mew-wallet.png'),
+        link: 'https://www.mewwallet.com/'
+      },
+      {
+        label: 'Enkrypt',
+        imgDescription: {
+          icons: [require('@/assets/images/icons/icon-chrome.svg')],
+          label: 'Get the extension'
+        },
+        img: require('@/assets/images/icons/icon-enkrypt-block.svg'),
+        link: 'https://www.enkrypt.com'
+      }
+    ]
   },
-  computed: {
-    isMobile() {
-      return this.$vuetify.breakpoint.smAndDown;
-    }
-  },
-  methods: {
-    trackToolLink(val) {
-      const parsedLabel = val.label.replace(' ', '_').toLowerCase();
-      this.trackHeaderAmplitude(HEADER.MEW_PRODUCTS, { name: parsedLabel });
-    }
+  {
+    title: 'Tools',
+    classes: 'tools-block',
+    items: [
+      {
+        label: 'EthVM',
+        description: 'Blockchain explorer',
+        img: require('@/assets/images/icons/icon-ethvm-dark.svg'),
+        link: 'https://www.ethvm.com/'
+      },
+      {
+        label: 'Blog',
+        description: 'Education Blog',
+        img: require('@/assets/images/icons/icon-puppy-mew.svg'),
+        link: 'https://www.myetherwallet.com/blog'
+      },
+      {
+        label: 'Help Center',
+        description: 'How to use MEW products',
+        img: require('@/assets/images/icons/icon-customer-support.svg'),
+        link: 'https://help.myetherwallet.com/'
+      }
+    ]
   }
+];
+
+// computed
+const isMobile = computed(() => vuetify.breakpoint.smAndDown);
+
+// methods
+const trackToolLink = val => {
+  const parsedLabel = val.label.replace(' ', '_').toLowerCase();
+  trackHeaderAmplitude(HEADER.MEW_PRODUCTS, { name: parsedLabel });
 };
 </script>
 

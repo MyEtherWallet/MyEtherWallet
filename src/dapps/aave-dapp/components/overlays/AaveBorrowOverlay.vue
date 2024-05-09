@@ -13,6 +13,11 @@
     <aave-table
       v-if="step === 0"
       :title="borrowTitle"
+      :user-summary=""
+      :is-loading-data=""
+      :format-usd-value=""
+      :user-borrow-power=""
+      :reserves-data=""
       @selectedBorrow="handleSelectedBorrow"
     />
     <!--
@@ -57,172 +62,220 @@
       :apr="apr"
       :action-type="borrowTitle"
       :amount-usd="amountUsd"
+      :user-summary=""
+      :selectedt-token-in-user-summary=""
+      :selected-token-details=""
       @onConfirm="handleConfirm"
     />
   </mew-overlay>
 </template>
 
-<script>
-import { mapGetters, mapState } from 'vuex';
+<script setup>
+import { ref, defineProps, computed, watch } from 'vue';
 import { isEmpty } from 'lodash';
 
 import { AAVE_TABLE_TITLE } from '../../handlers/helpers';
-import handlerAave from '../../handlers/handlerAave.mixin';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { toBase } from '@/core/helpers/unit';
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import AaveTable from '../AaveTable';
+import AaveSummary from '../AaveSummary';
+import AaveAmountForm from '../AaveAmountForm.vue';
+import AaveSelectInterest from '../AaveSelectInterest.vue';
+import { useAmplitude } from '@/core/composables/amplitude';
+import { useWalletStore } from '@/core/store/wallet';
+import { useGlobalStore } from '@/core/store/global';
 
-export default {
-  name: 'AaveBorrowOverlay',
-  components: {
-    AaveTable: () => import('../AaveTable'),
-    AaveSummary: () => import('../AaveSummary'),
-    AaveAmountForm: () => import('../AaveAmountForm.vue'),
-    AaveSelectInterest: () => import('../AaveSelectInterest.vue')
+// injection/use
+const { trackDapp } = useAmplitude();
+const { address } = useWalletStore();
+const { getFiatValue } = useGlobalStore();
+
+// props
+const props = defineProps({
+  open: {
+    default: false,
+    type: Boolean
   },
-  mixins: [handlerAave, handlerAnalytics],
-  data() {
-    return {
-      step: 0,
-      selectedToken: {},
-      borrowTitle: AAVE_TABLE_TITLE.borrow,
-      amount: '0',
-      apr: {}
+  close: {
+    default: () => {},
+    type: Function
+  },
+  preSelectedToken: {
+    type: Object,
+    default: () => {}
+  },
+  selectedTokenDetails: {
+    type: Object,
+    default: () => {}
+  },
+  onBorrow: {
+    type: Function,
+    default: () => {}
+  },
+  formatUsdValue: {
+    type: Function,
+    default: () => {}
+  },
+  userSummary: {
+    type: Object,
+    default: () => {}
+  },
+  userBorrowPower: {
+    type: Function,
+    default: () => {}
+  }
+});
+
+// data
+const step = ref(0);
+const selectedToken = ref({});
+const borrowTitle = ref(AAVE_TABLE_TITLE.borrow);
+const amount = ref('0');
+const apr = ref({});
+
+// computed
+const aaveBorrowForm = computed(() => {
+  const hasBorrowed = selectedToken.value;
+  const borrowedEth = hasBorrowed
+    ? `${formatFloatingPointValue(hasBorrowed.totalBorrows).value} ${
+        selectedToken.value.token
+      }`
+    : `0 ${selectedToken.value.token}`;
+  const borrowedUSD = hasBorrowed
+    ? getFiatValue(props.formatUsdValue(hasBorrowed.totalBorrowsUSD))
+    : getFiatValue(0);
+  const eth = `${
+    formatFloatingPointValue(
+      props.userSummary.totalCollateralMarketReferenceCurrency
+    ).value
+  } ETH`;
+  const usd = getFiatValue(
+    props.formatUsdValue(props.userSummary.totalCollateralUSD)
+  );
+  const amountUSD = getFiatValue(
+    props.formatUsdValue(amount.value * hasBorrowed?.reserve?.priceInUSD || 0)
+  );
+  return {
+    showToggle: true,
+    leftSideValues: {
+      title: borrowedEth,
+      caption: borrowedUSD,
+      subTitle: 'You borrowed'
+    },
+    rightSideValues: {
+      title: usd,
+      caption: eth,
+      subTitle: 'Total Collateral'
+    },
+    formText: {
+      title: 'How much would you like to borrow?',
+      caption: 'Here you can set the amount you want to borrow.'
+    },
+    buttonTitle: {
+      action: 'Borrow',
+      cancel: 'Cancel borrow'
+    },
+    amountInUSD: amountUSD
+  };
+});
+
+const header = computed(() => {
+  switch (step.value) {
+    case 1:
+      return 'Borrow';
+    case 2:
+      return 'Select Interest';
+    case 3:
+      return 'Confirm Interest Rate';
+    case 4:
+      return 'Confirm Health Factor';
+    default:
+      return 'Select the token you want to borrow';
+  }
+});
+
+const amountWithDecimals = computed(() => {
+  return toBase(amount.value, props.selectedTokenDetails.decimals);
+});
+
+const amountUsd = computed(() => {
+  const amountUSD = getFiatValue(
+    props.formatUsdValue(
+      amount.value * props.selectedTokenDetails.priceInUSD || 0
+    )
+  );
+  return step.value === 1 ? aaveBorrowForm.value.amountInUSD : amountUSD;
+});
+
+const tokenBalance = computed(() => {
+  return props.userBorrowPower(props.selectedTokenDetails);
+});
+
+const tokenDecimals = computed(() => {
+  return props.selectedTokenDetails.decimals;
+});
+
+// watch
+watch(
+  () => props.preSelectedToken,
+  newVal => {
+    if (newVal && !isEmpty(newVal)) {
+      handleSelectedBorrow(props.preSelectedToken);
+    }
+    if (isEmpty(newVal)) {
+      selectedToken.value = {};
+      step.value = 0;
+    }
+  }
+);
+
+watch(step, val => {
+  if (val === 0) selectedToken.value = {};
+});
+
+// methods
+const handleSelectedBorrow = e => {
+  selectedToken.value = e;
+  step.value = 1;
+};
+
+const handleValues = e => {
+  step.value = 2;
+  amount.value = e;
+};
+
+const handleCancel = () => {
+  callClose();
+};
+
+const callClose = () => {
+  step.value = 0;
+  selectedToken.value = {};
+  borrowTitle.value = AAVE_TABLE_TITLE.borrow;
+  amount.value = '0';
+  props.close(false);
+};
+
+const handleContinue = apr => {
+  apr.value = apr;
+  step.value = 3;
+};
+
+const handleConfirm = () => {
+  if (step.value === 3) step.value = 4;
+  else if (step.value === 4) {
+    trackDapp('aaveBorrowEvent');
+    const data = {
+      user: address,
+      reserve: props.selectedTokenDetails.underlyingAsset,
+      amount: amountWithDecimals,
+      interestRateMode: apr.value.type,
+      referralCode: '14'
     };
-  },
-  computed: {
-    ...mapState('wallet', ['address']),
-    ...mapGetters('global', ['getFiatValue']),
-    aaveBorrowForm() {
-      const hasBorrowed = this.selectedTokenInUserSummary;
-      const borrowedEth = hasBorrowed
-        ? `${formatFloatingPointValue(hasBorrowed.totalBorrows).value} ${
-            this.selectedToken.token
-          }`
-        : `0 ${this.selectedToken.token}`;
-      const borrowedUSD = hasBorrowed
-        ? this.getFiatValue(this.formatUSDValue(hasBorrowed.totalBorrowsUSD))
-        : this.getFiatValue(0);
-      const eth = `${
-        formatFloatingPointValue(
-          this.userSummary.totalCollateralMarketReferenceCurrency
-        ).value
-      } ETH`;
-      const usd = this.getFiatValue(
-        this.formatUSDValue(this.userSummary.totalCollateralUSD)
-      );
-      const amountUSD = this.getFiatValue(
-        this.formatUSDValue(this.amount * hasBorrowed?.reserve?.priceInUSD || 0)
-      );
-      return {
-        showToggle: true,
-        leftSideValues: {
-          title: borrowedEth,
-          caption: borrowedUSD,
-          subTitle: 'You borrowed'
-        },
-        rightSideValues: {
-          title: usd,
-          caption: eth,
-          subTitle: 'Total Collateral'
-        },
-        formText: {
-          title: 'How much would you like to borrow?',
-          caption: 'Here you can set the amount you want to borrow.'
-        },
-        buttonTitle: {
-          action: 'Borrow',
-          cancel: 'Cancel borrow'
-        },
-        amountInUSD: amountUSD
-      };
-    },
-    header() {
-      switch (this.step) {
-        case 1:
-          return 'Borrow';
-        case 2:
-          return 'Select Interest';
-        case 3:
-          return 'Confirm Interest Rate';
-        case 4:
-          return 'Confirm Health Factor';
-        default:
-          return 'Select the token you want to borrow';
-      }
-    },
-    amountWithDecimals() {
-      return toBase(this.amount, this.selectedTokenDetails.decimals);
-    },
-    amountUsd() {
-      const amountUSD = this.getFiatValue(
-        this.formatUSDValue(
-          this.amount * this.selectedTokenDetails.priceInUSD || 0
-        )
-      );
-      return this.step === 1 ? this.aaveBorrowForm.amountInUSD : amountUSD;
-    },
-    tokenBalance() {
-      return this.userBorrowPower(this.selectedTokenDetails);
-    },
-    tokenDecimals() {
-      return this.selectedTokenDetails.decimals;
-    }
-  },
-  watch: {
-    preSelectedToken(newVal) {
-      if (newVal && !isEmpty(newVal)) {
-        this.handleSelectedBorrow(this.preSelectedToken);
-      }
-      if (isEmpty(newVal)) {
-        this.selectedToken = {};
-        this.step = 0;
-      }
-    },
-    step(val) {
-      if (val === 0) this.selectedToken = {};
-    }
-  },
-  methods: {
-    handleSelectedBorrow(e) {
-      this.selectedToken = e;
-      this.step = 1;
-    },
-    handleValues(e) {
-      this.step = 2;
-      this.amount = e;
-    },
-    handleCancel() {
-      this.callClose();
-    },
-    callClose() {
-      this.step = 0;
-      this.selectedToken = {};
-      this.borrowTitle = AAVE_TABLE_TITLE.borrow;
-      this.amount = '0';
-      this.close(false);
-    },
-    handleContinue(apr) {
-      this.apr = apr;
-      this.step = 3;
-    },
-    handleConfirm() {
-      if (this.step === 3) this.step = 4;
-      else if (this.step === 4) {
-        this.trackDapp('aaveBorrowEvent');
-        const data = {
-          user: this.address,
-          reserve: this.selectedTokenDetails.underlyingAsset,
-          amount: this.amountWithDecimals,
-          interestRateMode: this.apr.type,
-          referralCode: '14'
-        };
-        this.onBorrow(data).then(() => {
-          this.trackDapp('aaveBorrowedAssets');
-        });
-        this.callClose();
-      }
-    }
+    props.onBorrow(data).then(() => {
+      trackDapp('aaveBorrowedAssets');
+    });
+    callClose();
   }
 };
 </script>

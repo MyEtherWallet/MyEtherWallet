@@ -170,136 +170,144 @@
   </mew-stepper>
 </template>
 
-<script>
+<script setup>
+import { defineProps, ref, computed } from 'vue';
 import { isEmpty } from 'lodash';
+import { useRouter } from 'vue-router/composables';
 
+import { useAmplitude } from '@/core/composables/amplitude';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { CREATE_WALLET } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 
-export default {
-  name: 'CreateWalletKeystore',
-  mixins: [handlerAnalytics],
-  props: {
-    handlerCreateWallet: {
-      type: Object,
-      default: () => {
-        return {};
-      }
-    }
-  },
-  data() {
-    return {
-      step: 1,
-      warningData: [
-        {
-          icon: 'paperPlane',
-          title: "Don't lose it",
-          description: 'Be careful, it can not be recovered if you lose it.'
-        },
-        {
-          icon: 'thief',
-          title: "Don't share it",
-          description:
-            'Your funds will be stolen if you use this file on a malicious phishing site.'
-        },
-        {
-          icon: 'copy',
-          title: 'Make a backup',
-          description:
-            'Secure it like the millions of dollars it may one day be worth.'
-        }
-      ],
-      items: [
-        {
-          step: 1,
-          name: 'STEP 1. Create password'
-        },
-        {
-          step: 2,
-          name: 'STEP 2. Download keystore file'
-        },
-        {
-          step: 3,
-          name: 'STEP 3. Well done'
-        }
-      ],
-      password: '',
-      cofirmPassword: '',
-      walletFile: '',
-      name: '',
-      isGeneratingKeystore: false
-    };
-  },
-  computed: {
-    errorPasswordConfirmation() {
-      if (
-        this.password !== this.cofirmPassword &&
-        this.cofirmPassword?.length > 0
-      ) {
-        return 'Passwords do not match';
-      }
-      return '';
-    },
-    passwordMessages() {
-      if (isEmpty(this.password)) return 'Required';
-      if (this.password?.length < 8)
-        return 'Password is less than 8 characters';
-      return '';
-    },
-    enableCreateButton() {
-      return (
-        !isEmpty(this.password) &&
-        this.cofirmPassword === this.password &&
-        this.password?.length >= 8
-      );
-    }
-  },
-  methods: {
-    createWallet() {
-      this.trackCreateWalletAmplitude(CREATE_WALLET.KEYSTORE_VERIFICATION);
-      this.isGeneratingKeystore = true;
-      this.handlerCreateWallet
-        .generateKeystore(this.password)
-        .then(res => {
-          this.name = res.name;
-          this.walletFile = res.blobUrl;
-          this.updateStep(2);
-          this.isGeneratingKeystore = false;
-          // Reset password value
-          this.password = '';
-          this.cofirmPassword = '';
-        })
-        .catch(e => {
-          Toast(e, {}, ERROR);
-        });
-    },
-    downloadWallet() {
-      this.$refs.downloadLink.click();
-      this.trackCreateWalletAmplitude(CREATE_WALLET.KEYSTORE_DOWNLOAD);
-      this.updateStep(3);
-    },
-    goToAccess() {
-      this.trackCreateWalletAmplitude(CREATE_WALLET.KEYSTORE_SUCCESS_ACCESS);
-      this.$router.push({ name: ROUTES_HOME.ACCESS_WALLET.NAME });
-    },
-    /**
-     * Update step
-     */
-    updateStep(step) {
-      if (step === 1) {
-        this.trackCreateWalletAmplitude(CREATE_WALLET.KEYSTORE_BACK);
-      }
-      this.step = step ? step : 1;
-    },
-    restart() {
-      this.step = 1;
-      this.password = '';
-      this.cofirmPassword = '';
-      this.trackCreateWalletAmplitude(CREATE_WALLET.KEYSTORE_SUCCESS_CREATE);
+// injections/use
+const { trackCreateWalletAmplitude } = useAmplitude();
+const router = useRouter();
+
+const props = defineProps({
+  handlerCreateWallet: {
+    type: Object,
+    default: () => {
+      return {};
     }
   }
+});
+
+// data
+const warningData = [
+  {
+    icon: 'paperPlane',
+    title: "Don't lose it",
+    description: 'Be careful, it can not be recovered if you lose it.'
+  },
+  {
+    icon: 'thief',
+    title: "Don't share it",
+    description:
+      'Your funds will be stolen if you use this file on a malicious phishing site.'
+  },
+  {
+    icon: 'copy',
+    title: 'Make a backup',
+    description:
+      'Secure it like the millions of dollars it may one day be worth.'
+  }
+];
+
+const items = [
+  {
+    step: 1,
+    name: 'STEP 1. Create password'
+  },
+  {
+    step: 2,
+    name: 'STEP 2. Download keystore file'
+  },
+  {
+    step: 3,
+    name: 'STEP 3. Well done'
+  }
+];
+// reactive
+const step = ref(1);
+const password = ref('');
+const cofirmPassword = ref('');
+const walletFile = ref('');
+const name = ref('');
+const isGeneratingKeystore = ref(false);
+const downloadLink = ref(null);
+
+// computed
+const errorPasswordConfirmation = computed(() => {
+  if (
+    password.value !== cofirmPassword.value &&
+    cofirmPassword.value?.length > 0
+  ) {
+    return 'Passwords do not match';
+  }
+  return '';
+});
+
+const passwordMessages = computed(() => {
+  if (isEmpty(password.value)) return 'Required';
+  if (password.value?.length < 8) return 'Password is less than 8 characters';
+  return '';
+});
+
+const enableCreateButton = computed(() => {
+  return (
+    !isEmpty(password.value) &&
+    cofirmPassword.value === password.value &&
+    password.value?.length >= 8
+  );
+});
+
+// methods
+const createWallet = () => {
+  trackCreateWalletAmplitude(CREATE_WALLET.KEYSTORE_VERIFICATION);
+  isGeneratingKeystore.value = true;
+  props.handlerCreateWallet
+    .generateKeystore(password.value)
+    .then(res => {
+      name.value = res.name;
+      walletFile.value = res.blobUrl;
+      updateStep(2);
+      isGeneratingKeystore.value = false;
+      // Reset password value
+      password.value = '';
+      cofirmPassword.value = '';
+    })
+    .catch(e => {
+      Toast(e, {}, ERROR);
+    });
+};
+
+const downloadWallet = () => {
+  downloadLink.value.click();
+  trackCreateWalletAmplitude(CREATE_WALLET.KEYSTORE_DOWNLOAD);
+  updateStep(3);
+};
+
+const goToAccess = () => {
+  trackCreateWalletAmplitude(CREATE_WALLET.KEYSTORE_SUCCESS_ACCESS);
+  router.push({ name: ROUTES_HOME.ACCESS_WALLET.NAME });
+};
+
+/**
+ * Update step
+ */
+const updateStep = step => {
+  if (step === 1) {
+    trackCreateWalletAmplitude(CREATE_WALLET.KEYSTORE_BACK);
+  }
+  step.value = step ? step : 1;
+};
+
+const restart = () => {
+  step.value = 1;
+  password.value = '';
+  cofirmPassword.value = '';
+  trackCreateWalletAmplitude(CREATE_WALLET.KEYSTORE_SUCCESS_CREATE);
 };
 </script>
 

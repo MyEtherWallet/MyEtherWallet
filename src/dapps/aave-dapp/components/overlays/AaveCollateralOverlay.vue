@@ -9,6 +9,9 @@
       :selected-token="preSelectedToken"
       :action-type="collateral"
       :amount="tokenAmount"
+      :user-summary=""
+      :selectedt-token-in-user-summary=""
+      :selected-token-details=""
       @onConfirm="callSwitchCollateral"
     />
   </mew-overlay>
