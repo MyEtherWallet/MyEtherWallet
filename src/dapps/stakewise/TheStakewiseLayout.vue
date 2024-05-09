@@ -31,14 +31,15 @@ import handler from './handlers/stakewiseHandler';
 import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
 import { useStakewiseStore } from './store';
+import { storeToRefs } from 'pinia';
 
 const TheWrapperDapp = defineAsyncComponent(() =>
   import('@/dapps/TheWrapperDapp.vue')
 );
 
 // injections/use
-const { isEthNetwork, network } = useGlobalStore();
-const { web3, address } = useWalletStore();
+const { isEthNetwork } = useGlobalStore();
+const { address } = useWalletStore();
 const {
   setPoolSupply,
   setStakingFee,
@@ -46,6 +47,9 @@ const {
   setRewardBalance,
   setStakeBalance
 } = useStakewiseStore();
+
+const { web3 } = storeToRefs(useWalletStore);
+const { network } = storeToRefs(useGlobalStore);
 
 // data
 const header = {
@@ -78,12 +82,15 @@ const tabs = computed(() => {
 });
 
 // watch
-watch(web3, () => {
-  clearInterval(fetchInterval.value);
-  if (isSupported.value) {
-    setup();
+watch(
+  () => web3,
+  () => {
+    clearInterval(fetchInterval.value);
+    if (isSupported.value) {
+      setup();
+    }
   }
-});
+);
 watch(
   () => network,
   () => {

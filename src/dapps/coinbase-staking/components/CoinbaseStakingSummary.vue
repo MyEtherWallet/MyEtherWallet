@@ -137,11 +137,13 @@ import { useAmplitude } from '@/core/composables/amplitude';
 import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
 import { useCoinbaseStakingStore } from '../store';
+import { storeToRefs } from 'pinia';
 
 // injections
 const { openBuySell } = useBuySell();
 const { trackDapp } = useAmplitude();
-const { network, gasPriceByType, gasPriceType } = useGlobalStore();
+const { network, gasPriceByType } = useGlobalStore();
+const { gasPriceType } = storeToRefs(useGlobalStore);
 const { balanceInETH, address, instance, web3 } = useWalletStore();
 const { lastFetched, fetchedDetails, storeFetched } = useCoinbaseStakingStore();
 
@@ -246,21 +248,27 @@ const ticker = computed(() => {
  * if lastFetched is behind lastFetched1PMUTC
  * and if currentTime is after lastFetched1PMUTC, refresh details
  */
-watch(currentTime, newVal => {
-  const currentFetched = new Date(actualLastFetched.value);
-  const currentFetchedOnePMUTC = new Date(
-    new Date(actualLastFetched.value).setUTCHours(13, 0, 0)
-  );
-  const currentTime = new Date(newVal);
-  const fetchedInThePast = currentFetched < currentFetchedOnePMUTC;
-  const onePMPastNow = currentTime >= currentFetchedOnePMUTC;
-  if (fetchedInThePast && onePMPastNow) {
-    fetchInfo();
+watch(
+  () => currentTime,
+  newVal => {
+    const currentFetched = new Date(actualLastFetched.value);
+    const currentFetchedOnePMUTC = new Date(
+      new Date(actualLastFetched.value).setUTCHours(13, 0, 0)
+    );
+    const currentTime = new Date(newVal);
+    const fetchedInThePast = currentFetched < currentFetchedOnePMUTC;
+    const onePMPastNow = currentTime >= currentFetchedOnePMUTC;
+    if (fetchedInThePast && onePMPastNow) {
+      fetchInfo();
+    }
   }
-});
-watch(gasPriceType, () => {
-  locGasPrice.value = gasPriceByType(gasPriceType);
-});
+);
+watch(
+  () => gasPriceType,
+  () => {
+    locGasPrice.value = gasPriceByType(gasPriceType);
+  }
+);
 
 // mounted
 onMounted(() => {

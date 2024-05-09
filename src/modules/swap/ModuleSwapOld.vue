@@ -1757,15 +1757,14 @@ export default {
             },
             main
           );
-          this.addNotification(new NonChainNotification(notif)).then(() => {
-            const currency = this.toTokenType?.symbol;
-            Toast(
-              `Swap initiated, you should receive ${currency} in 1-3 hours. You will be notified when it's completed`,
-              {},
-              SUCCESS
-            );
-            this.clear();
-          });
+          this.addNotification(new NonChainNotification(notif));
+          const currency = this.toTokenType?.symbol;
+          Toast(
+            `Swap initiated, you should receive ${currency} in 1-3 hours. You will be notified when it's completed`,
+            {},
+            SUCCESS
+          );
+          this.clear();
         } else {
           const notif = Object.assign(
             {
@@ -1775,7 +1774,8 @@ export default {
             main,
             currentTrade.transactions[idx]
           );
-          this.addNotification(new Notification(notif)).then(this.clear);
+          this.addNotification(new Notification(notif));
+          this.clear;
         }
       });
     },

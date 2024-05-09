@@ -230,38 +230,44 @@ const timer = ref(() => {});
 const canRegister = ref(false);
 
 // watch
-watch(props.minimumAge, newVal => {
-  ticker.value = `0${newVal / 60 < 10 ? Math.ceil(newVal / 60) : '00'}:00`;
-});
-watch(props.loadingCommit, newVal => {
-  if (newVal) {
-    clearInterval(timer);
-    const startTime = new Date().getTime();
-    const endTime = startTime + props.minimumAge * 1000;
-    if (props.minimumAge > 0) {
-      timer.value = setInterval(() => {
-        const startInterval = new Date().getTime();
-        const difference = endTime - startInterval;
-        const minutes = Math.floor(
-          (difference % (1000 * 60 * 60)) / (1000 * 60)
-        );
-        const seconds = Math.floor((difference % (1000 * 60)) / 1000);
-        ticker.value = `${
-          minutes >= 10 ? minutes : minutes < 0 ? '00' : '0' + minutes
-        }:${seconds >= 10 ? seconds : seconds < 0 ? '00' : '0' + seconds}`;
-        if (seconds < 0) {
-          clearInterval(timer);
-        }
-      }, 1000);
-    }
-  } else if (!newVal) {
-    clearInterval(timer);
-    canRegister.value = true;
-    ticker.value = '00:00';
-  } else {
-    clearInterval(timer);
+watch(
+  () => props.minimumAge,
+  newVal => {
+    ticker.value = `0${newVal / 60 < 10 ? Math.ceil(newVal / 60) : '00'}:00`;
   }
-});
+);
+watch(
+  () => props.loadingCommit,
+  newVal => {
+    if (newVal) {
+      clearInterval(timer);
+      const startTime = new Date().getTime();
+      const endTime = startTime + props.minimumAge * 1000;
+      if (props.minimumAge > 0) {
+        timer.value = setInterval(() => {
+          const startInterval = new Date().getTime();
+          const difference = endTime - startInterval;
+          const minutes = Math.floor(
+            (difference % (1000 * 60 * 60)) / (1000 * 60)
+          );
+          const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+          ticker.value = `${
+            minutes >= 10 ? minutes : minutes < 0 ? '00' : '0' + minutes
+          }:${seconds >= 10 ? seconds : seconds < 0 ? '00' : '0' + seconds}`;
+          if (seconds < 0) {
+            clearInterval(timer);
+          }
+        }, 1000);
+      }
+    } else if (!newVal) {
+      clearInterval(timer);
+      canRegister.value = true;
+      ticker.value = '00:00';
+    } else {
+      clearInterval(timer);
+    }
+  }
+);
 // destroyed
 onUnmounted(() => {
   clearInterval(timer);

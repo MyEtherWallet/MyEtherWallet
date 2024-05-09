@@ -124,23 +124,32 @@ const privKeyRules = computed(() => {
 });
 
 // watch
-watch(privateKey, val => {
-  if (val !== '' && !isPrivKey.value) {
-    trackAccessWalletAmplitude(ACCESS_WALLET.SOFTWARE_FAILED, {
-      error: 'This is not a real private Key'
-    });
+watch(
+  () => privateKey,
+  val => {
+    if (val !== '' && !isPrivKey.value) {
+      trackAccessWalletAmplitude(ACCESS_WALLET.SOFTWARE_FAILED, {
+        error: 'This is not a real private Key'
+      });
+    }
   }
-});
-watch(acceptTerms, val => {
-  if (val) {
-    trackAccessWalletAmplitude(ACCESS_WALLET.PRIV_KEY_TERMS);
+);
+watch(
+  () => acceptTerms,
+  val => {
+    if (val) {
+      trackAccessWalletAmplitude(ACCESS_WALLET.PRIV_KEY_TERMS);
+    }
   }
-});
-watch(invis, val => {
-  if (val) {
-    trackAccessWalletAmplitude(ACCESS_WALLET.PRIV_INVISIBLE_BOX);
+);
+watch(
+  () => invis,
+  val => {
+    if (val) {
+      trackAccessWalletAmplitude(ACCESS_WALLET.PRIV_INVISIBLE_BOX);
+    }
   }
-});
+);
 
 // mounted
 onMounted(() => {

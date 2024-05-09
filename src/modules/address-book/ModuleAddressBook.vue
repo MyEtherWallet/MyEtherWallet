@@ -64,6 +64,7 @@ import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
 import { useI18n } from 'vue-i18n-composable';
 import { useAddressBookStore } from '@/core/store/addressBook';
+import { storeToRefs } from 'pinia';
 
 const AddressBookAddEdit = defineAsyncComponent(() =>
   import('./components/AddressBookAddEdit')
@@ -75,8 +76,10 @@ const emit = defineEmits(['setAddress']);
 // injections/use
 const { addressBookStore } = useAddressBookStore();
 const { network } = useGlobalStore();
-const { web3, address, isOfflineApp, identifier, instance } = useWalletStore();
+const { address, isOfflineApp, identifier, instance } = useWalletStore();
 const { t } = useI18n();
+
+const { web3 } = storeToRefs(useWalletStore);
 
 // props
 const props = defineProps({
@@ -186,21 +189,27 @@ const nameOnly = computed(() => {
 });
 
 // watch
-watch(web3, () => {
-  if (network.type.ens && web3.currentProvider) {
-    nameResolver.value = new NameResolver(network, web3);
-  } else {
-    nameResolver.value = null;
+watch(
+  () => web3,
+  () => {
+    if (network.type.ens && web3.currentProvider) {
+      nameResolver.value = new NameResolver(network, web3);
+    } else {
+      nameResolver.value = null;
+    }
   }
-});
-watch(inputAddr, newVal => {
-  nametag.value = '';
-  if (isAddress(newVal.toLowerCase())) {
-    resolveAddress();
-  } else {
-    resolveName();
+);
+watch(
+  () => inputAddr,
+  newVal => {
+    nametag.value = '';
+    if (isAddress(newVal.toLowerCase())) {
+      resolveAddress();
+    } else {
+      resolveName();
+    }
   }
-});
+);
 
 onMounted(() => {
   if (isOfflineApp) {

@@ -42,14 +42,13 @@ export const useAmplitude = () => {
     }
 
     const initialValue = consentToTrack;
-    setTrackingConsent(!consentToTrack).then(() => {
-      $amplitude.setOptOut(!consentToTrack);
-      if (!initialValue && consentToTrack) {
-        $amplitude.track('UserOptInTracking', {
-          network: networkName
-        });
-      }
-    });
+    setTrackingConsent(!consentToTrack);
+    $amplitude.setOptOut(!consentToTrack);
+    if (!initialValue && consentToTrack) {
+      $amplitude.track('UserOptInTracking', {
+        network: networkName
+      });
+    }
   };
 
   const trackLandingPageAmplitude = (event, prop) => {

@@ -289,10 +289,13 @@ const timeWillTake = computed(() => {
 });
 
 // watchers
-watch(gasPriceModal, () => {
-  clearInterval(interval);
-  interval = setGasPriceInterval();
-});
+watch(
+  () => gasPriceModal,
+  () => {
+    clearInterval(interval);
+    interval = setGasPriceInterval();
+  }
+);
 
 // mounted
 onMounted(() => {
@@ -309,9 +312,8 @@ const closeGasPrice = () => {
   gasPriceModal.value = false;
 };
 const openGasPriceModal = () => {
-  updateGasPrice().then(() => {
-    gasPriceModal.value = true;
-  });
+  updateGasPrice();
+  gasPriceModal.value = true;
 };
 const handleLocalGasPrice = val => {
   emit('onLocalGasPrice', val);

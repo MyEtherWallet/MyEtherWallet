@@ -68,6 +68,7 @@
 
 <script>
 import { toWei } from 'web3-utils';
+import { storeToRefs } from 'pinia';
 const STATIC_PAIRS = [
   {
     toT: {
@@ -165,10 +166,12 @@ import { useRoute, useRouter } from 'vue-router/composables';
 
 // injections/use
 const { trackDashboardAmplitude } = useAmplitude();
-const { web3, swapRates, setSwapRates } = useWalletStore();
+const { swapRates, setSwapRates } = useWalletStore();
 const { isEthNetwork, network } = useGlobalStore();
 const router = useRouter();
 const route = useRoute();
+
+const { web3 } = storeToRefs(useGlobalStore);
 
 // props
 defineProps({
@@ -197,9 +200,12 @@ const hasSwapRates = computed(() => {
 });
 
 // watchers
-watch(web3, newVal => {
-  setSwapHandler(newVal, network.type.name);
-});
+watch(
+  () => web3,
+  newVal => {
+    setSwapHandler(newVal, network.type.name);
+  }
+);
 
 // mounted
 onMounted(() => {

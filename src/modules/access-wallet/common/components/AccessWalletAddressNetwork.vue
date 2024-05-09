@@ -204,15 +204,17 @@ import { useWalletStore } from '@/core/store/wallet';
 import { useGlobalStore } from '@/core/store/global';
 import { useAddressBookStore } from '@/core/store/addressBook';
 import { useVuetify } from '@/core/composables/vuetify';
+import { storeToRefs } from 'pinia';
 
 // emits
 const emits = defineEmits(['setPath', 'unlock']);
 
 // injections/use
-const { network } = useGlobalStore();
 const { isOfflineApp } = useWalletStore();
 const { addressBookStore } = useAddressBookStore();
 const vuetify = useVuetify();
+
+const { network } = storeToRefs(useGlobalStore);
 
 // apollo
 const { onResult: getEthBalanceResult } = useQuery(
@@ -388,33 +390,36 @@ const blockExplorer = computed(() => {
 
 // watch
 watch(
-  accounts,
+  () => accounts,
   newVal => {
     accounts.value = newVal;
   },
-  { deep: true }
+  () => ({ deep: true })
 );
 watch(
-  network,
+  () => network,
   () => {
     changeHandler();
   },
-  { deep: true }
+  () => ({ deep: true })
 );
 watch(
-  props.selectedPath,
+  () => props.selectedPath,
   (newVal, oldVal) => {
     if (!isEqual(newVal, oldVal)) {
       changeHandler();
     }
   },
-  { deep: true }
+  () => ({ deep: true })
 );
-watch(props.handlerWallet, (newVal, oldVal) => {
-  if (!isEqual(newVal, oldVal)) {
-    changeHandler();
+watch(
+  () => props.handlerWallet,
+  (newVal, oldVal) => {
+    if (!isEqual(newVal, oldVal)) {
+      changeHandler();
+    }
   }
-});
+);
 
 // mounted
 onMounted(() => {

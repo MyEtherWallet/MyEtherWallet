@@ -138,9 +138,12 @@ const isMobile = computed(() => {
 });
 
 // watch
-watch(ledgerApp, () => {
-  props.setPath(props.paths[0]);
-});
+watch(
+  () => ledgerApp,
+  () => {
+    props.setPath(props.paths[0]);
+  }
+);
 
 // methods
 const ledgerUnlockBle = () => {

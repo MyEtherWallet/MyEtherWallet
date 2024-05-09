@@ -265,6 +265,7 @@ import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
 import { useExternalStore } from '@/core/store/external';
 import { useI18n } from 'vue-i18n-composable';
+import { storeToRefs } from 'pinia';
 
 const ModuleAccessWalletHardware = defineAsyncComponent(() =>
   import('@/modules/access-wallet/ModuleAccessWalletHardware')
@@ -284,12 +285,13 @@ const {
   loadingWalletInfo,
   tokensList,
   balanceInETH,
-  web3,
   removeWallet
 } = useWalletStore();
 const { totalTokenFiatValue, setTokenAndEthBalance } = useExternalStore();
 const { network, isTestNetwork, getFiatValue } = useGlobalStore();
 const { t } = useI18n();
+
+const { web3 } = storeToRefs(useGlobalStore);
 
 // data
 const showChangeAddress = ref(false);

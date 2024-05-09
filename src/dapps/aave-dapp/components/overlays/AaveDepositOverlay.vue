@@ -226,7 +226,7 @@ const aaveDepositForm = computed(() => {
 
 // watch
 watch(
-  props.preSelectedToken,
+  () => props.preSelectedToken,
   newVal => {
     if (newVal && !isEmpty(newVal)) {
       handleSelectedDeposit(props.preSelectedToken);
@@ -236,12 +236,15 @@ watch(
       step.value = 0;
     }
   },
-  { deep: true }
+  () => ({ deep: true })
 );
 
-watch(step, val => {
-  if (val === 0) selectedToken.value = {};
-});
+watch(
+  () => step,
+  val => {
+    if (val === 0) selectedToken.value = {};
+  }
+);
 
 // methods
 

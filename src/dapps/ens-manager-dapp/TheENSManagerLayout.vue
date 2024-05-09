@@ -315,6 +315,7 @@ import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
 import { useExternalStore } from '@/core/store/external';
 import { useRoute, useRouter } from 'vue-router/composables';
+import { storeToRefs } from 'pinia';
 
 const ModuleRegisterDomain = defineAsyncComponent(() =>
   import('./modules/ModuleRegisterDomain')
@@ -333,10 +334,13 @@ const EnsReverseLookup = defineAsyncComponent(() =>
 const route = useRoute();
 const { trackDapp } = useAmplitude();
 const { t } = useI18n();
-const { network, gasPrice, getFiatValue } = useGlobalStore();
-const { balance, address, web3, instance } = useWalletStore();
+const { gasPrice, getFiatValue } = useGlobalStore();
+const { balance, web3, instance } = useWalletStore();
 const { fiatValue } = useExternalStore();
 const router = useRouter();
+
+const { network } = storeToRefs(useGlobalStore);
+const { address } = storeToRefs(useWalletStore);
 
 // data
 const validNetworks = SUPPORTED_NETWORKS;
@@ -474,11 +478,14 @@ const totalDomains = computed(() => {
 });
 
 // watch
-watch(ensDomainAvailable, newVal => {
-  if (newVal === true) {
-    onRegister.value = true;
+watch(
+  () => ensDomainAvailable,
+  newVal => {
+    if (newVal === true) {
+      onRegister.value = true;
+    }
   }
-});
+);
 /*
     - watches for address state change
     - updates ensManager with new address
@@ -515,9 +522,12 @@ watch(
     }
   }
 );
-watch(route, () => {
-  detactUrlChangeTab();
-});
+watch(
+  () => route,
+  () => {
+    detactUrlChangeTab();
+  }
+);
 
 // beforeMount
 onBeforeMount(() => {

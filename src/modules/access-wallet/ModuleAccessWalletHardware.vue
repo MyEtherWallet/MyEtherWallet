@@ -606,7 +606,7 @@ const bitbox2Titles = computed(() => {
 
 // watch
 watch(
-  selectedPath,
+  () => selectedPath,
   () => {
     /**
      * only call this when hwWalletInstance is not empty (ledger will error out)
@@ -617,11 +617,14 @@ watch(
       this[`${walletType.value}Unlock`]();
     }
   },
-  { deep: true }
+  () => ({ deep: true })
 );
-watch(open, newVal => {
-  if (newVal && props.switchAddress) setupSwitchAddress();
-});
+watch(
+  () => open,
+  newVal => {
+    if (newVal && props.switchAddress) setupSwitchAddress();
+  }
+);
 
 onMounted(async () => {
   /**
@@ -861,26 +864,17 @@ const trackWallet = id => {
  */
 const setHardwareWallet = wallet => {
   try {
-    setWallet([wallet])
-      .then(() => {
-        if (!props.switchAddress) {
-          if (wallet.identifier === WALLET_TYPES.LEDGER) {
-            setLedgerBluetooth(ledgerBluetooth);
-          }
-          trackWallet(wallet.identifier);
-          router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
-        } else {
-          reset();
-          props.close();
-        }
-      })
-      .catch(e => {
-        trackAccessWalletAmplitude(ACCESS_WALLET.ACCESS_FAILED, {
-          wallet: wallet.identifier
-        });
-        reset();
-        Toast(e, {}, ERROR);
-      });
+    setWallet([wallet]);
+    if (!props.switchAddress) {
+      if (wallet.identifier === WALLET_TYPES.LEDGER) {
+        setLedgerBluetooth(ledgerBluetooth);
+      }
+      trackWallet(wallet.identifier);
+      router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
+    } else {
+      reset();
+      props.close();
+    }
   } catch (e) {
     reset();
     Toast(e, {}, ERROR);

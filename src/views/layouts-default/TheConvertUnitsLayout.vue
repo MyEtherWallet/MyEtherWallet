@@ -282,30 +282,46 @@ const etherUnitRef = [
 ];
 
 // watchers
-watch(valueLeft, newVal => {
-  valueRight.value = convertFromTo(
-    newVal,
-    selectedLeft.value,
-    selectedRight.value
-  );
-});
-watch(valueRight, newVal => {
-  valueLeft.value = convertFromTo(
-    newVal,
-    selectedRight.value,
-    selectedLeft.value
-  );
-});
-watch(selectedLeft.value, newVal => {
-  valueRight.value = convertFromTo(
-    valueLeft.value,
-    newVal,
-    selectedRight.value
-  );
-});
-watch(selectedRight, newVal => {
-  valueLeft.value = convertFromTo(valueRight.value, newVal, selectedLeft.value);
-});
+watch(
+  () => valueLeft,
+  newVal => {
+    valueRight.value = convertFromTo(
+      newVal,
+      selectedLeft.value,
+      selectedRight.value
+    );
+  }
+);
+watch(
+  () => valueRight,
+  newVal => {
+    valueLeft.value = convertFromTo(
+      newVal,
+      selectedRight.value,
+      selectedLeft.value
+    );
+  }
+);
+watch(
+  () => selectedLeft.value,
+  newVal => {
+    valueRight.value = convertFromTo(
+      valueLeft.value,
+      newVal,
+      selectedRight.value
+    );
+  }
+);
+watch(
+  () => selectedRight,
+  newVal => {
+    valueLeft.value = convertFromTo(
+      valueRight.value,
+      newVal,
+      selectedLeft.value
+    );
+  }
+);
 
 // methods
 const getValueOfUnit = unit => {

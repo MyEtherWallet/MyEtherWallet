@@ -246,9 +246,12 @@ watch(
   }
 );
 
-watch(step, val => {
-  if (val === 0) selectedToken.value = {};
-});
+watch(
+  () => step,
+  val => {
+    if (val === 0) selectedToken.value = {};
+  }
+);
 
 // methods
 const handleSelectedBorrow = e => {

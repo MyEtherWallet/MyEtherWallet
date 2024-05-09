@@ -59,7 +59,7 @@
 import { defineProps, ref, computed, watch, onMounted, defineEmits } from 'vue';
 import { isEmpty } from 'lodash';
 
-import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
+import { SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import * as nodes from '@/utils/networks/nodes';
 import { ETH, BSC, MATIC } from '@/utils/networks/types';
@@ -123,15 +123,21 @@ const searchedCurrencyItems = computed(() => {
 });
 
 // watch
-watch(selectedNetwork, (newVal, oldVal) => {
-  // actual check whether the value was changed or just initially set
-  if (newVal && !isEmpty(newVal) && oldVal && !isEmpty(oldVal)) {
-    setNewNetwork(newVal);
+watch(
+  () => selectedNetwork,
+  (newVal, oldVal) => {
+    // actual check whether the value was changed or just initially set
+    if (newVal && !isEmpty(newVal) && oldVal && !isEmpty(oldVal)) {
+      setNewNetwork(newVal);
+    }
   }
-});
-watch(open, () => {
-  searchValue.value = '';
-});
+);
+watch(
+  () => props.open,
+  () => {
+    searchValue.value = '';
+  }
+);
 
 onMounted(() => {
   fetchNetworks();
@@ -171,27 +177,21 @@ const setNewNetwork = network => {
   setNetwork({
     network: found[0],
     walletType: instance?.identifier || ''
-  })
-    .then(() => {
-      if (props.inWallet) {
-        const provider =
-          identifier === WALLET_TYPES.WEB3_WALLET
-            ? setWeb3Instance(selectedEIP6963Provider)
-            : setWeb3Instance();
-        if (!isOfflineApp) {
-          provider.then(() => {
-            setTokenAndEthBalance();
-          });
-        }
-      } else {
-        setWeb3Instance();
-      }
-      Toast(`Switched network to: ${network.name}`, {}, SUCCESS);
-      emit('newNetwork');
-    })
-    .catch(e => {
-      Toast(e, {}, ERROR);
-    });
+  });
+  if (props.inWallet) {
+    if (identifier === WALLET_TYPES.WEB3_WALLET) {
+      setWeb3Instance(selectedEIP6963Provider);
+    } else {
+      setWeb3Instance();
+    }
+    if (!isOfflineApp) {
+      setTokenAndEthBalance();
+    }
+  } else {
+    setWeb3Instance();
+  }
+  Toast(`Switched network to: ${network.name}`, {}, SUCCESS);
+  emit('newNetwork');
 };
 const tokenSelected = token => {
   props.setCurrency(token);

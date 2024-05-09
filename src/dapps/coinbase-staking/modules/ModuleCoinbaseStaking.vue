@@ -198,6 +198,7 @@ import { useWalletStore } from '@/core/store/wallet';
 import { useExternalStore } from '@/core/store/external';
 import { useAmplitude } from '@/core/composables/amplitude';
 import { useBuySell } from '@/core/composables/buyMore';
+import { storeToRefs } from 'pinia';
 
 const CoinbaseStakingSummary = defineAsyncComponent(() =>
   import('../components/CoinbaseStakingSummary')
@@ -206,8 +207,9 @@ const CoinbaseStakingSummary = defineAsyncComponent(() =>
 // injections/use
 const { trackDapp } = useAmplitude();
 const { openBuySell } = useBuySell();
-const { network, isEthNetwork, gasPriceByType, getFiatValue, gasPriceType } =
+const { network, isEthNetwork, gasPriceByType, getFiatValue } =
   useGlobalStore();
+const { gasPriceType } = storeToRefs(useGlobalStore);
 const { balanceInETH, web3, address, instance, identifier } = useWalletStore();
 const { fiatValue } = useExternalStore();
 
@@ -278,9 +280,12 @@ const buyMoreStr = computed(() => {
 });
 
 // watch
-watch(gasPriceType, () => {
-  locGasPrice.value = gasPriceByType(gasPriceType);
-});
+watch(
+  () => gasPriceType,
+  () => {
+    locGasPrice.value = gasPriceByType(gasPriceType);
+  }
+);
 
 // mounted
 onMounted(() => {

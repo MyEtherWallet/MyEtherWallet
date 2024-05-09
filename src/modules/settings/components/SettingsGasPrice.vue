@@ -143,14 +143,16 @@ import { useExternalStore } from '@/core/store/external';
 
 import { useBuySell } from '@/core/composables/buyMore';
 import { useVuetify } from '@/core/composables/vuetify';
+import { storeToRefs } from 'pinia';
 
 // injections/use
 const { openBuySell } = useBuySell();
-const { gasPriceByType, network, gasPriceType, gasPrice, preferredCurrency } =
-  useGlobalStore();
+const { gasPriceByType, network, preferredCurrency } = useGlobalStore();
 const { fiatValue } = useExternalStore();
 const { balanceInETH } = useWalletStore();
 const vuetify = useVuetify();
+
+const { gasPriceType, gasPrice } = storeToRefs(useGlobalStore);
 
 // props
 const props = defineProps({
@@ -232,21 +234,36 @@ const isDark = computed(() => {
 /**
  * If not enough balance to cover new priority, go back to previous priority
  */
-watch(props.fromSettings, () => {
-  setGasType();
-});
-watch(gasPriceType, () => {
-  setGasType();
-});
-watch(gasPrice, () => {
-  recalculate();
-});
-watch(props.costInEth, () => {
-  recalculate();
-});
-watch(props.notEnoughEth, () => {
-  recalculate();
-});
+watch(
+  () => props.fromSettings,
+  () => {
+    setGasType();
+  }
+);
+watch(
+  () => gasPriceType,
+  () => {
+    setGasType();
+  }
+);
+watch(
+  () => gasPrice,
+  () => {
+    recalculate();
+  }
+);
+watch(
+  () => props.costInEth,
+  () => {
+    recalculate();
+  }
+);
+watch(
+  () => props.notEnoughEth,
+  () => {
+    recalculate();
+  }
+);
 
 // mounted
 onMounted(() => {

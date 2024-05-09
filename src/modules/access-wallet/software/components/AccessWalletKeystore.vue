@@ -165,8 +165,8 @@ const uploadFile = e => {
  * Opens file input control
  */
 const uploadBtn = () => {
-  jsonInput.value = '';
   jsonInput.value.click();
+  jsonInput.value = '';
 };
 
 /**

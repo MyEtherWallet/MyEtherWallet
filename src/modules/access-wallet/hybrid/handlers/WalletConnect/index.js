@@ -154,9 +154,8 @@ const createWallet = async (identifier = WALLET_TYPES.WALLET_CONNECT) => {
       setNetwork({
         network: foundNode,
         walletType: identifier
-      }).then(() => {
-        setWalletWeb3Instance();
       });
+      setWalletWeb3Instance();
     }
   });
   await signClient.connect().catch(e => {

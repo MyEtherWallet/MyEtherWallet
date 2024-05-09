@@ -156,6 +156,7 @@ import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
 import { useRoute } from 'vue-router/composables';
 import { useArticleStore } from '@/core/store/article';
+import { storeToRefs } from 'pinia';
 
 const TheWrapperDapp = defineAsyncComponent(() =>
   import('@/dapps/TheWrapperDapp.vue')
@@ -169,10 +170,12 @@ const StakedStatus = defineAsyncComponent(() =>
 
 // injections/use
 const { trackDapp } = useAmplitude();
-const { web3, address, identifier } = useWalletStore();
+const { web3, identifier } = useWalletStore();
 const { network } = useGlobalStore();
 const { getArticle } = useArticleStore();
 const route = useRoute();
+
+const { address } = storeToRefs(useWalletStore);
 
 // data
 const validNetworks = SUPPORTED_NETWORKS;
@@ -268,21 +271,27 @@ const isValidNetwork = computed(() => {
 });
 
 // watch
-watch(route, () => {
-  detactUrlChangeTab();
-});
+watch(
+  () => route,
+  () => {
+    detactUrlChangeTab();
+  }
+);
 /**
  * @watches pendingTxHash (comes after send transaction)
  * if it gets set then go to staked status
  */
-watch(pendingTxHash, newVal => {
-  if (newVal !== '') {
-    activeTab.value = 1;
+watch(
+  () => pendingTxHash,
+  newVal => {
+    if (newVal !== '') {
+      activeTab.value = 1;
+    }
+    if (stakedStepper.value) {
+      stakedStepper.value.reset();
+    }
   }
-  if (stakedStepper.value) {
-    stakedStepper.value.reset();
-  }
-});
+);
 /*
     - watches for address state change
     - updates handlerStaked with new address

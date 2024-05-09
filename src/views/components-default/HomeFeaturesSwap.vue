@@ -162,13 +162,14 @@ import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
 
 import { useRoute, useRouter } from 'vue-router/composables';
+import { storeToRefs } from 'pinia';
 
 // injections/vue
 const router = useRouter();
 const route = useRoute();
 const { trackLandingPageAmplitude } = useAmplitude();
 const { network } = useGlobalStore();
-const { web3 } = useWalletStore();
+const { web3 } = storeToRefs(useWalletStore);
 
 // data
 const swapHandler = ref(null);
@@ -177,9 +178,12 @@ const loading = ref(true);
 const error = ref(false);
 
 // watchers
-watch(web3, newVal => {
-  setSwapHandler(newVal);
-});
+watch(
+  () => web3,
+  newVal => {
+    setSwapHandler(newVal);
+  }
+);
 
 onMounted(() => {
   setSwapHandler(web3);

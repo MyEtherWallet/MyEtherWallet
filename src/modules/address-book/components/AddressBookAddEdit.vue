@@ -107,15 +107,16 @@ import { useWalletStore } from '@/core/store/wallet';
 import { useAddressBookStore } from '@/core/store/addressBook/index.js';
 
 import { useI18n } from 'vue-i18n-composable';
+import { storeToRefs } from 'pinia';
 
 // emits
 const emit = defineEmits(['back']);
 
 // injections/use
 const { network } = useGlobalStore();
-const { web3 } = useWalletStore();
 const { addressBookStore, setAddressBook } = useAddressBookStore();
 const { t } = useI18n();
+const { web3 } = storeToRefs(useWalletStore);
 
 // props
 const props = defineProps({
@@ -248,24 +249,33 @@ const resolvedName = computed(() => {
 });
 
 // watch
-watch(props.toAddress, newVal => {
-  addressToAdd.value = newVal;
-});
-watch(addressToAdd, newVal => {
-  nametag.value = '';
-  if (isAddress(newVal.toLowerCase())) {
-    resolveAddress();
-  } else {
-    resolveName();
+watch(
+  () => props.toAddress,
+  newVal => {
+    addressToAdd.value = newVal;
   }
-});
-watch(web3, () => {
-  if (network.type.ens) {
-    nameResolver.value = new NameResolver(network, web3);
-  } else {
-    nameResolver.value = null;
+);
+watch(
+  () => addressToAdd,
+  newVal => {
+    nametag.value = '';
+    if (isAddress(newVal.toLowerCase())) {
+      resolveAddress();
+    } else {
+      resolveName();
+    }
   }
-});
+);
+watch(
+  () => web3,
+  () => {
+    if (network.type.ens) {
+      nameResolver.value = new NameResolver(network, web3);
+    } else {
+      nameResolver.value = null;
+    }
+  }
+);
 
 // mounted
 onMounted(() => {

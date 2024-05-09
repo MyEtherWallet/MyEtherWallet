@@ -194,15 +194,18 @@ const duration = ref(1);
 const onStep = ref(1);
 
 // watch
-watch(onStep, newStep => {
-  if (newStep == 2) {
-    router.push({ name: ROUTES_WALLET.ENS_2.NAME });
-  } else if (newStep == 3) {
-    router.push({ name: ROUTES_WALLET.ENS_3.NAME });
-  } else {
-    router.push({ name: ROUTES_WALLET.ENS_MANAGER.NAME });
+watch(
+  () => onStep,
+  newStep => {
+    if (newStep == 2) {
+      router.push({ name: ROUTES_WALLET.ENS_2.NAME });
+    } else if (newStep == 3) {
+      router.push({ name: ROUTES_WALLET.ENS_3.NAME });
+    } else {
+      router.push({ name: ROUTES_WALLET.ENS_MANAGER.NAME });
+    }
   }
-});
+);
 
 // mounted
 onMounted(() => {

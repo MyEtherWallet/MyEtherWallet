@@ -76,10 +76,9 @@ const props = defineProps({
 // methods
 const confirmDelete = () => {
   const tokenSymbol = props.selectedToken.token;
-  deleteToken([props.selectedToken]).then(() => {
-    props.close();
-    Toast(`${tokenSymbol} Token removed succesfully`, {}, SUCCESS);
-  });
+  deleteToken([props.selectedToken]);
+  props.close();
+  Toast(`${tokenSymbol} Token removed succesfully`, {}, SUCCESS);
 };
 </script>
 <style lang="scss" scoped>

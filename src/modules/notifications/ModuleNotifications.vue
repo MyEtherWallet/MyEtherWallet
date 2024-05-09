@@ -415,7 +415,7 @@ watch(
       checkAndSetNotificationStatus(notification);
     });
   },
-  { deep: true }
+  () => ({ deep: true })
 );
 
 // mounted

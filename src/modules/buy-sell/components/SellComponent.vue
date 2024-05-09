@@ -178,6 +178,7 @@ import { useExternalStore } from '@/core/store/external';
 import { useWalletStore } from '@/core/store/wallet';
 import { useGlobalStore } from '@/core/store/global';
 import { useAmplitude } from '@/core/composables/amplitude';
+import { storeToRefs } from 'pinia';
 
 // emits
 const emit = defineEmits(['selectedFiat']);
@@ -185,9 +186,10 @@ const emit = defineEmits(['selectedFiat']);
 // injection/use
 const { setCoinGeckoTokens, setCoinGeckoNetworkIds, contractToToken } =
   useExternalStore();
-const { gasPriceType, network, gasPriceByType } = useGlobalStore();
+const { gasPriceByType } = useGlobalStore();
 const { address, instance, web3, tokensList } = useWalletStore();
 const { trackBuySell } = useAmplitude();
+const { gasPriceType, network } = storeToRefs(useGlobalStore);
 
 // apollo
 const { onResult: getLatestPricesResult, onError: getLatestPricesError } =
@@ -536,11 +538,14 @@ const priceOb = computed(() => {
 });
 
 // watchers
-watch(toAddress, () => {
-  amount.value = '0';
-});
 watch(
-  selectedCurrency,
+  () => toAddress,
+  () => {
+    amount.value = '0';
+  }
+);
+watch(
+  () => selectedCurrency,
   newVal => {
     maxBalance.value = '0';
     hasPersistentHint.value = false;
@@ -553,51 +558,66 @@ watch(
     }
     fetchSellInfo();
   },
-  { deep: true }
+  () => ({ deep: true })
 );
 watch(
-  selectedFiat,
+  () => selectedFiat,
   (newVal, oldVal) => {
     if (!isEqual(newVal, oldVal)) {
       emit('selectedFiat', newVal);
     }
   },
-  { deep: true }
+  () => ({ deep: true })
 );
-watch(amount, newVal => {
-  debouncedSetAmount(newVal);
-});
-watch(gasPriceType, newVal => {
-  locGasPrice.value = gasPriceByType(newVal);
-});
-watch(locGasPrice, val => {
-  sendHandler.value.setLocalGasPrice(val);
-});
-watch(gasLimit, val => {
-  sendHandler.value.setGasLimit(val);
-});
 watch(
-  props.orderHandler,
+  () => amount,
+  newVal => {
+    debouncedSetAmount(newVal);
+  }
+);
+watch(
+  () => gasPriceType,
+  newVal => {
+    locGasPrice.value = gasPriceByType(newVal);
+  }
+);
+watch(
+  () => locGasPrice,
+  val => {
+    sendHandler.value.setLocalGasPrice(val);
+  }
+);
+watch(
+  () => gasLimit,
+  val => {
+    sendHandler.value.setGasLimit(val);
+  }
+);
+watch(
+  () => props.orderHandler,
   () => {
     sendHandler.value = new handlerSend();
     fetchSellInfo();
     locGasPrice.value = gasPriceByType(gasPriceType);
   },
-  { deep: true }
+  () => ({ deep: true })
 );
-watch(network, () => {
-  maxBalance.value = '0';
-  hasPersistentHint.value = false;
-  selectedBalance.value = '0';
-  amount.value = '0';
-  selectedCurrency.value = {};
-  selectedCurrency.value = props.defaultCurrency;
-  if (supportedNetworks.value.includes(network.type.name)) {
-    sendHandler.value = new handlerSend();
-    fetchSellInfo();
-    locGasPrice.value = gasPriceByType(gasPriceType);
+watch(
+  () => network,
+  () => {
+    maxBalance.value = '0';
+    hasPersistentHint.value = false;
+    selectedBalance.value = '0';
+    amount.value = '0';
+    selectedCurrency.value = {};
+    selectedCurrency.value = props.defaultCurrency;
+    if (supportedNetworks.value.includes(network.type.name)) {
+      sendHandler.value = new handlerSend();
+      fetchSellInfo();
+      locGasPrice.value = gasPriceByType(gasPriceType);
+    }
   }
-});
+);
 
 // onMounted
 onMounted(() => {

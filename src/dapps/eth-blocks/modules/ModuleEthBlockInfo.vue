@@ -236,6 +236,7 @@ import { useWalletStore } from '@/core/store/wallet';
 
 import { useRouter } from 'vue-router/composables';
 import { useEthBlocksTxsStore } from '../store';
+import { storeToRefs } from 'pinia';
 
 const BlockInfo = defineAsyncComponent(() =>
   import('../components/BlockInfo.vue')
@@ -252,10 +253,13 @@ const BlocksLoading = defineAsyncComponent(() =>
 
 // injections/use
 const { trackDapp } = useAmplitude();
-const { network, isTestNetwork, gasPrice } = useGlobalStore();
-const { web3, address, balanceInWei } = useWalletStore();
+const { isTestNetwork, gasPrice } = useGlobalStore();
+const { web3, balanceInWei } = useWalletStore();
 const { getEthBlockTx } = useEthBlocksTxsStore();
 const router = useRouter();
+
+const { network } = storeToRefs(useGlobalStore);
+const { address } = storeToRefs(useWalletStore);
 
 // props
 const props = defineProps({
@@ -432,14 +436,17 @@ const isReserved = computed(() => {
 /**
  * Update HandelrBlockInfo on block number change and fetch data
  */
-watch(props.blockRef, newVal => {
-  if (validBlockNumber(newVal)) {
-    blockHandler.value.setBlockNumber(newVal);
-    resetBlock();
-  } else {
-    router.push({ name: ETH_BLOCKS_ROUTE.CORE.NAME });
+watch(
+  () => props.blockRef,
+  newVal => {
+    if (validBlockNumber(newVal)) {
+      blockHandler.value.setBlockNumber(newVal);
+      resetBlock();
+    } else {
+      router.push({ name: ETH_BLOCKS_ROUTE.CORE.NAME });
+    }
   }
-});
+);
 /**
  * Update HandelrBlockInfo on network change and fetch data
  */
@@ -471,18 +478,21 @@ watch(
  * if newVal - close send overlay
  * if !newVal - refetch block info
  */
-watch(hasPendingTx, (newVal, oldVal) => {
-  /* New Hash was asigned */ {
-    if (newVal && newVal !== oldVal) {
-      if (openSendOverlay.value) {
-        closeSendOverlay();
+watch(
+  () => hasPendingTx,
+  (newVal, oldVal) => {
+    /* New Hash was asigned */ {
+      if (newVal && newVal !== oldVal) {
+        if (openSendOverlay.value) {
+          closeSendOverlay();
+        }
+      }
+      if (newVal === false) {
+        resetBlock();
       }
     }
-    if (newVal === false) {
-      resetBlock();
-    }
   }
-});
+);
 
 onMounted(() => {
   /**

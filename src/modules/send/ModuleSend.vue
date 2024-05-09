@@ -215,6 +215,7 @@ import { useWalletStore } from '@/core/store/wallet';
 
 import { useI18n } from 'vue-i18n-composable';
 import { useCustomStore } from '@/core/store/custom';
+import { storeToRefs } from 'pinia';
 
 const ModuleAddressBook = defineAsyncComponent(() =>
   import('@/modules/address-book/ModuleAddressBook')
@@ -228,12 +229,13 @@ const SendLowBalanceNotice = defineAsyncComponent(() =>
 
 // injections
 const { openBuySell } = useBuySell();
-const { network, gasPrice, isEthNetwork, swapLink, getFiatValue } =
-  useGlobalStore();
-const { address, instance, balanceInETH, tokensList, hasGasPriceOption } =
-  useWalletStore();
+const { gasPrice, isEthNetwork, swapLink, getFiatValue } = useGlobalStore();
+const { instance, balanceInETH, hasGasPriceOption } = useWalletStore();
 const { hiddenTokens } = useCustomStore();
 const { t } = useI18n();
+
+const { tokensList, address } = storeToRefs(useWalletStore);
+const { network } = storeToRefs(useGlobalStore);
 // props
 const props = defineProps({
   prefilledAmount: {
@@ -567,16 +569,22 @@ const isPrefilled = computed(() => {
 });
 
 // watch
-watch(multiwatch, () => {
-  if (allValidInputs.value) {
-    debounceEstimateGas();
-  }
-});
-watch(isPrefilled, () => {
-  prefillForm();
-});
 watch(
-  tokensList,
+  () => multiwatch,
+  () => {
+    if (allValidInputs.value) {
+      debounceEstimateGas();
+    }
+  }
+);
+watch(
+  () => isPrefilled,
+  () => {
+    prefillForm();
+  }
+);
+watch(
+  () => tokensList,
   newVal => {
     selectedCurrency.value = newVal.length > 0 ? newVal[0] : {};
     if (sendTx.value) {
@@ -585,24 +593,30 @@ watch(
   },
   { deep: true, immediate: true }
 );
-watch(toAddress, () => {
-  if (isValidAddress.value) {
-    sendTx.value.setTo(toAddress, userInputType);
-  }
-});
-watch(amount, newVal => {
-  // make sure amount never becomes null
-  if (!newVal) amount.value = '0';
-  if (isValidAmount.value) {
-    sendTx.value.setValue(getCalculatedAmount);
-  }
-  amountError.value = '';
-  gasEstimationError.value = '';
-  if (isValidForGas.value) debounceEstimateGas();
-  debounceAmountError(newVal);
-});
 watch(
-  selectedCurrency,
+  () => toAddress,
+  () => {
+    if (isValidAddress.value) {
+      sendTx.value.setTo(toAddress, userInputType);
+    }
+  }
+);
+watch(
+  () => amount,
+  newVal => {
+    // make sure amount never becomes null
+    if (!newVal) amount.value = '0';
+    if (isValidAmount.value) {
+      sendTx.value.setValue(getCalculatedAmount);
+    }
+    amountError.value = '';
+    gasEstimationError.value = '';
+    if (isValidForGas.value) debounceEstimateGas();
+    debounceAmountError(newVal);
+  }
+);
+watch(
+  () => selectedCurrency,
   newVal => {
     if (sendTx.value) {
       sendTx.value.setCurrency(newVal);
@@ -619,17 +633,23 @@ watch(
     deep: true
   }
 );
-watch(data, () => {
-  if (!data.value) data.value = '0x';
-  if (isHexStrict(data.value)) sendTx.value.setData(data.value);
-});
-watch(gasLimit, newVal => {
-  if (isValidGasLimit.value) {
-    sendTx.value.setGasLimit(gasLimit.value);
+watch(
+  () => data,
+  () => {
+    if (!data.value) data.value = '0x';
+    if (isHexStrict(data.value)) sendTx.value.setData(data.value);
   }
-  gasLimitError.value = '';
-  debouncedGasLimitError(newVal);
-});
+);
+watch(
+  () => gasLimit,
+  newVal => {
+    if (isValidGasLimit.value) {
+      sendTx.value.setGasLimit(gasLimit.value);
+    }
+    gasLimitError.value = '';
+    debouncedGasLimitError(newVal);
+  }
+);
 watch(
   () => network,
   () => {
@@ -652,9 +672,12 @@ watch(
     debounceAmountError('0');
   }
 );
-watch(txFeeETH, newVal => {
-  if (!isEmpty(selectedCurrency)) localGasPriceWatcher(newVal);
-});
+watch(
+  () => txFeeETH,
+  newVal => {
+    if (!isEmpty(selectedCurrency)) localGasPriceWatcher(newVal);
+  }
+);
 
 // mounted
 onMounted(() => {

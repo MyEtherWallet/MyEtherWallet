@@ -28,9 +28,8 @@ export default class Settings {
             const obj = JSON.parse(file);
             const parsedObj = _this._validateImportObject(obj);
             // sets the imported state to the store
-            setImportedState(parsedObj).then(() => {
-              resolve();
-            });
+            setImportedState(parsedObj);
+            resolve();
           } catch ({ message }) {
             Toast('Invalid JSON: ' + message, {}, ERROR);
           }

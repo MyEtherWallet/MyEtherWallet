@@ -99,20 +99,26 @@ const tabs = computed(() => {
 /**
  * Starts interval on new pending txs
  */
-watch(hasPendingTxs, newVal => {
-  if (newVal) {
-    setCheckPendingInterval();
+watch(
+  () => hasPendingTxs,
+  newVal => {
+    if (newVal) {
+      setCheckPendingInterval();
+    }
   }
-});
-watch(route, to => {
-  if (to.name === ETH_BLOCKS_ROUTE.MY_BLOCKS.NAME) {
-    activeTab.value = tabs.value[1].id;
-  } else if (to.name === ETH_BLOCKS_ROUTE.BATCH_MINTING.NAME) {
-    activeTab.value = tabs.value[2].id;
-  } else {
-    activeTab.value = tabs.value[0].id;
+);
+watch(
+  () => route,
+  to => {
+    if (to.name === ETH_BLOCKS_ROUTE.MY_BLOCKS.NAME) {
+      activeTab.value = tabs.value[1].id;
+    } else if (to.name === ETH_BLOCKS_ROUTE.BATCH_MINTING.NAME) {
+      activeTab.value = tabs.value[2].id;
+    } else {
+      activeTab.value = tabs.value[0].id;
+    }
   }
-});
+);
 
 // onMounted
 onMounted(() => {

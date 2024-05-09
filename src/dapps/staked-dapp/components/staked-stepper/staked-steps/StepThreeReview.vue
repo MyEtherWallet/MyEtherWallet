@@ -337,28 +337,34 @@ const amountFiat = computed(() => {
  * if successful -> then its ready to stake
  * else will error out
  */
-watch(props.pollingStatus, newVal => {
-  if (newVal.success) {
-    stakedStep.value += 1;
-    readyToStake.value = true;
-  } else {
-    stakedStep.value -= 1;
-    if (newVal.error.status === 406 || newVal.error.message?.includes('406')) {
-      stakedStep1Title.value = {
-        message:
-          'Oops. We don’t know how you got this far without enough ETH. Please start over and check your funds.',
-        error: true
-      };
+watch(
+  () => props.pollingStatus,
+  newVal => {
+    if (newVal.success) {
+      stakedStep.value += 1;
+      readyToStake.value = true;
     } else {
-      stakedStep1Title.value = {
-        message:
-          'Something went wrong. Please try again in a few minutes. If the problem persists,',
-        error: true,
-        showContactSupport: true
-      };
+      stakedStep.value -= 1;
+      if (
+        newVal.error.status === 406 ||
+        newVal.error.message?.includes('406')
+      ) {
+        stakedStep1Title.value = {
+          message:
+            'Oops. We don’t know how you got this far without enough ETH. Please start over and check your funds.',
+          error: true
+        };
+      } else {
+        stakedStep1Title.value = {
+          message:
+            'Something went wrong. Please try again in a few minutes. If the problem persists,',
+          error: true,
+          showContactSupport: true
+        };
+      }
     }
   }
-});
+);
 
 // mounted
 onMounted(() => {

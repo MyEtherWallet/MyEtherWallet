@@ -44,7 +44,7 @@
               :disabled="addressBookStore.length >= 10"
               title="+ Add"
               btn-size="xlarge"
-              @click.native="addMode.value = !addMode"
+              @click.native="toggleAddMode"
             />
           </div>
         </div>
@@ -90,6 +90,7 @@
 
 <script>
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
+import { storeToRefs } from 'pinia';
 const MODES = ['add', 'edit'];
 
 // adding here as script support has no beforeRouteLeave support
@@ -137,11 +138,12 @@ defineProps({ onSettings: { default: false, type: Boolean } });
 // injections/use
 const { setConsent } = useAmplitude();
 const { gasButtons, setSelected } = useGasPrice();
-const { addressBookStore } = useAddressBookStore();
 const { online, gasPriceType } = useGlobalStore();
 const { consentToTrack } = usePopupStore();
 const { hasGasPriceOption } = useWalletStore();
 const { t } = useI18n();
+
+const { addressBookStore } = storeToRefs(useAddressBookStore);
 
 // data
 const settingsHandler = ref(null);
@@ -209,11 +211,11 @@ const computedTitle = computed(() => {
 
 // watch
 watch(
-  addressBookStore,
+  () => addressBookStore,
   () => {
     getAddressBookTableData();
   },
-  { deep: true }
+  () => () => ({ deep: true })
 );
 
 // created
@@ -246,6 +248,11 @@ const getAddressBookTableData = () => {
     });
   });
 };
+
+const toggleAddMode = () => {
+  addMode.value = !addMode.value;
+};
+
 const back = idx => {
   if (!isNaN(idx)) {
     idxToExpand.value = idx ? idx : null;

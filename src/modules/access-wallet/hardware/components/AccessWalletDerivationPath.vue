@@ -395,13 +395,12 @@ const saveCustomPath = () => {
       name: customAlias.value,
       value: locCustomPath
     };
-    addCustomPath(newPath).then(() => {
-      customPath.value = '';
-      customAlias.value = '';
-      aliasInput.value.clear();
-      pathInput.value.clear();
-      Toast('Custom derivation path added!', {}, SUCCESS);
-    });
+    addCustomPath(newPath);
+    customPath.value = '';
+    customAlias.value = '';
+    aliasInput.value.clear();
+    pathInput.value.clear();
+    Toast('Custom derivation path added!', {}, SUCCESS);
     showCustomField.value = false;
   } catch (error) {
     Toast(error, {}, ERROR);

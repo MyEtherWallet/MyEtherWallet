@@ -283,7 +283,7 @@ const phraseToLength = computed(() => {
 
 // watch
 watch(
-  phrase,
+  () => phrase,
   newval => {
     if (newval && !isEmpty(newval) && !isEmpty(newval[1])) {
       checkPhrase(newval);
@@ -298,15 +298,15 @@ watch(
       }
     }
   },
-  { deep: true }
+  () => ({ deep: true })
 );
 watch(
-  selectedPath,
+  () => selectedPath,
   () => {
     walletInstance.value = {};
     nextStepTwo();
   },
-  { deep: true }
+  () => ({ deep: true })
 );
 
 // methods

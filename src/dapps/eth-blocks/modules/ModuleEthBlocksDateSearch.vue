@@ -61,11 +61,11 @@ const maxBlock = computed(() => {
 
 // watch
 watch(
-  route.params,
+  () => route.params,
   () => {
     fetchBlocksByDate();
   },
-  { deep: true }
+  () => ({ deep: true })
 );
 
 // mounted

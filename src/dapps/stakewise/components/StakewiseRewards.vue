@@ -128,7 +128,7 @@ const rethBalanceFiat = computed(() => {
 
 // watch
 watch(
-  route.from.query.module,
+  () => route.from.query.module,
   val => {
     if (val === 'stake') {
       nextTick(() => {

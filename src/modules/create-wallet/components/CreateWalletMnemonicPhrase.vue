@@ -289,15 +289,19 @@ const stepTwoText = computed(() => {
 
 // watch
 watch(
-  phraseSize,
+  () => phraseSize,
   () => {
     phrase.value = [];
     setPhrase();
   },
-  { deep: true }
+  () => ({ deep: true })
 );
 
-watch(phrase, () => {}, { deep: true });
+watch(
+  () => phrase,
+  () => {},
+  () => ({ deep: true })
+);
 
 // mounted
 onMounted(() => {

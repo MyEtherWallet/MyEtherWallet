@@ -154,11 +154,13 @@ const BuySellTokenSelect = defineAsyncComponent(() =>
 import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
 import { useExternalStore } from '@/core/store/external';
+import { storeToRefs } from 'pinia';
 
 // injections/use
-const { network } = useGlobalStore();
 const { address, tokensList } = useWalletStore();
-const { currencyRate, coinGeckoTokens, contractToToken } = useExternalStore();
+const { currencyRate, contractToToken } = useExternalStore();
+const { coinGeckoTokens } = storeToRefs(useExternalStore);
+const { network } = storeToRefs(useGlobalStore);
 
 // emits
 const emit = defineEmits([
@@ -458,7 +460,7 @@ const min = computed(() => {
 
 // watch
 watch(
-  selectedCurrency,
+  () => selectedCurrency,
   (newVal, oldVal) => {
     const supportedCoins = {
       ETH: ETH.name,
@@ -478,11 +480,11 @@ watch(
     }
     emit('selectedCurrency', selectedCurrency.value);
   },
-  { deep: true }
+  () => ({ deep: true })
 );
 
 watch(
-  selectedFiat,
+  () => selectedFiat,
   (newVal, oldVal) => {
     if (!isEqual(newVal, oldVal)) {
       if (newVal.name === 'CAD' || newVal.name === 'JPY') {
@@ -503,54 +505,60 @@ watch(
       emit('selectedFiat', newVal);
     }
   },
-  {
+  () => ({
     deep: true
-  }
+  })
 );
 
 watch(
-  network,
+  () => network,
   () => {
     selectedCurrency.value = {};
     selectedCurrency.value = props.defaultCurrency;
   },
-  { deep: true }
+  () => ({ deep: true })
 );
 
 watch(
-  props.orderHandler,
+  () => props.orderHandler,
   () => {
     fetchCurrencyData();
   },
-  {
+  () => ({
     deep: true
+  })
+);
+
+watch(
+  () => amount,
+  newVal => {
+    const simplexMax = max.value.simplex.multipliedBy(fiatMultiplier);
+    checkMoonPayMax();
+    if (
+      simplexMax.lt(newVal) ||
+      isEmpty(newVal) ||
+      min.value.gt(newVal) ||
+      isNaN(newVal)
+    ) {
+      loading.value = true;
+    } else {
+      loading.value = false;
+      getSimplexQuote();
+      localCryptoAmount.value = BigNumber(amount.value)
+        .div(priceOb.value.price)
+        .toString();
+    }
   }
 );
 
-watch(amount, newVal => {
-  const simplexMax = max.value.simplex.multipliedBy(fiatMultiplier);
-  checkMoonPayMax();
-  if (
-    simplexMax.lt(newVal) ||
-    isEmpty(newVal) ||
-    min.value.gt(newVal) ||
-    isNaN(newVal)
-  ) {
-    loading.value = true;
-  } else {
-    loading.value = false;
+watch(
+  () => validToAddress,
+  newVal => {
+    if (!newVal) return;
+    emit('toAddress', toAddress.value);
     getSimplexQuote();
-    localCryptoAmount.value = BigNumber(amount.value)
-      .div(priceOb.value.price)
-      .toString();
   }
-});
-
-watch(validToAddress, newVal => {
-  if (!newVal) return;
-  emit('toAddress', toAddress.value);
-  getSimplexQuote();
-});
+);
 
 watch(
   () => coinGeckoTokens,
@@ -559,9 +567,12 @@ watch(
   }
 );
 
-watch(openTokenSelect, () => {
-  emit('openTokenSelect', openTokenSelect);
-});
+watch(
+  () => openTokenSelect,
+  () => {
+    emit('openTokenSelect', openTokenSelect);
+  }
+);
 
 // mounted
 onMounted(() => {

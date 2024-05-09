@@ -301,6 +301,7 @@ import { useVuetify } from '@/core/composables/vuetify';
 import { useI18n } from 'vue-i18n-composable';
 import { useArticleStore } from '@/core/store/article';
 import { useAddressBookStore } from '@/core/store/addressBook';
+import { storeToRefs } from 'pinia';
 
 const ScrollBlock = defineAsyncComponent(() =>
   import('./components/ScrollBlock')
@@ -330,7 +331,6 @@ const { trackSwapAmplitude, trackDapp } = useAmplitude();
 const {
   instance,
   web3,
-  address,
   identifier,
   isHardware,
   isOfflineApp,
@@ -341,6 +341,8 @@ const { network, getFiatValue } = useGlobalStore();
 const { getArticle } = useArticleStore();
 const { addressBookStore } = useAddressBookStore();
 const { t } = useI18n();
+
+const { address } = storeToRefs(useWalletStore);
 
 // data
 const footer = ref({
@@ -502,15 +504,18 @@ const successBodyText = computed(() => {
 });
 
 // watch
-watch(error, newVal => {
-  /**
-   * Reset signed values if any of the tx in batch is declined
-   */
-  if (newVal !== '') {
-    signedTxArray.value = [];
-    signedTxObject.value = {};
+watch(
+  () => error,
+  newVal => {
+    /**
+     * Reset signed values if any of the tx in batch is declined
+     */
+    if (newVal !== '') {
+      signedTxArray.value = [];
+      signedTxObject.value = {};
+    }
   }
-});
+);
 /**
  * Closes modal then brings it back to the start fetching new address data
  */
@@ -523,7 +528,7 @@ watch(
   }
 );
 watch(
-  signedTxArray,
+  () => signedTxArray,
   newVal => {
     if (
       hasGasPriceOption &&

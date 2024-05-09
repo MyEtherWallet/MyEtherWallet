@@ -146,6 +146,7 @@ import { useWalletStore } from '@/core/store/wallet';
 
 import { useRouter } from 'vue-router/composables';
 import { useEthBlocksTxsStore } from '../store';
+import { storeToRefs } from 'pinia';
 
 const BlocksLoading = defineAsyncComponent(() =>
   import('../components/BlocksLoading.vue')
@@ -159,9 +160,11 @@ const ModuleEthBlockInfo = defineAsyncComponent(() =>
 
 // injections
 const router = useRouter();
-const { network } = useGlobalStore();
-const { address, web3 } = useWalletStore();
-const { getAllEthBlocksTxs } = useEthBlocksTxsStore();
+const { web3 } = useWalletStore();
+
+const { address } = storeToRefs(useWalletStore);
+const { network } = storeToRefs(useGlobalStore);
+const { getAllEthBlocksTxs } = storeToRefs(useEthBlocksTxsStore());
 
 // props
 defineProps({
@@ -263,11 +266,14 @@ watch(
  * WATCH: Update HandelrMyBlocks on pending txs resolution
  * @param {Array} newVal - current address
  */
-watch(getAllEthBlocksTxs, newVal => {
-  if (newVal) {
-    handlerMyBlocks.value.getBlocks();
+watch(
+  () => getAllEthBlocksTxs,
+  newVal => {
+    if (newVal) {
+      handlerMyBlocks.value.getBlocks();
+    }
   }
-});
+);
 
 // mounted
 onMounted(() => {

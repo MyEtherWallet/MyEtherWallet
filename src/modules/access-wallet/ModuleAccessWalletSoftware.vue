@@ -224,11 +224,14 @@ const title = computed(() => {
 });
 
 // watch
-watch(open, newVal => {
-  if (identifier && props.switchAddress && newVal) {
-    setType(identifier);
+watch(
+  () => open,
+  newVal => {
+    if (identifier && props.switchAddress && newVal) {
+      setType(identifier);
+    }
   }
-});
+);
 
 // mounted
 onMounted(() => {

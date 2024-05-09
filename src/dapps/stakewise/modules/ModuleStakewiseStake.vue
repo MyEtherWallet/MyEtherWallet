@@ -112,6 +112,7 @@ import { useWalletStore } from '@/core/store/wallet';
 import { useVuetify } from '@/core/composables/vuetify';
 import { useNotificationsStore } from '@/core/store/notifications';
 import { useStakewiseStore } from '../store';
+import { storeToRefs } from 'pinia';
 
 const StakewiseStaking = defineAsyncComponent(() =>
   import('../components/StakewiseStaking')
@@ -122,12 +123,15 @@ const StakewiseRewards = defineAsyncComponent(() =>
 
 // injections/use
 const { trackDapp } = useAmplitude();
-const { balanceInETH, web3, address, instance, tokensList } = useWalletStore();
+const { balanceInETH, instance, tokensList } = useWalletStore();
 const { addNotification } = useNotificationsStore();
-const { network, isEthNetwork, gasPriceByType, gasPriceType, updateGasPrice } =
+const { network, isEthNetwork, gasPriceByType, updateGasPrice } =
   useGlobalStore();
 const { sethBalance, rethBalance } = useStakewiseStore();
 const vuetify = useVuetify();
+
+const { gasPriceType } = storeToRefs(useGlobalStore);
+const { address, web3 } = storeToRefs(useWalletStore);
 
 // data
 const stakeAmount = ref('0');
@@ -216,30 +220,42 @@ const txFee = computed(() => {
 });
 
 // watch
-watch(locGasPrice, newVal => {
-  stakeHandler.value._setGasPrice(newVal);
-});
-watch(gasPriceType, () => {
-  locGasPrice.value = gasPriceByType(gasPriceType);
-});
-watch(stakeAmount, value => {
-  const val = value ? value : 0;
-  stakeHandler.value._setAmount(BigNumber(val).toFixed());
-
-  if (BigNumber(value).lte(balanceInETH) && BigNumber(value).gt(0)) {
-    setGasLimit();
+watch(
+  () => locGasPrice,
+  newVal => {
+    stakeHandler.value._setGasPrice(newVal);
   }
-});
+);
+watch(
+  () => gasPriceType,
+  () => {
+    locGasPrice.value = gasPriceByType(gasPriceType);
+  }
+);
+watch(
+  () => stakeAmount,
+  value => {
+    const val = value ? value : 0;
+    stakeHandler.value._setAmount(BigNumber(val).toFixed());
+
+    if (BigNumber(value).lte(balanceInETH) && BigNumber(value).gt(0)) {
+      setGasLimit();
+    }
+  }
+);
 watch(
   () => address,
   () => {
     setup();
   }
 );
-watch(web3, () => {
-  setup();
-  setGasPrice();
-});
+watch(
+  () => web3,
+  () => {
+    setup();
+    setGasPrice();
+  }
+);
 
 // mounted
 onMounted(() => {
@@ -259,9 +275,8 @@ const setup = () => {
   stakeHandler.value = new stakewiseHandler(web3, isEthNetwork, address);
 };
 const setGasPrice = () => {
-  updateGasPrice().then(() => {
-    locGasPrice.value = gasPriceByType(gasPriceType);
-  });
+  updateGasPrice();
+  locGasPrice.value = gasPriceByType(gasPriceType);
 };
 const setGasLimit = () => {
   estimateGasError.value = false;

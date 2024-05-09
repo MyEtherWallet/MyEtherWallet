@@ -141,17 +141,20 @@ import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
 import { useExternalStore } from '@/core/store/external';
 import { useEthBlocksTxsStore } from '../store';
+import { storeToRefs } from 'pinia';
 
 const BlockResultComponent = defineAsyncComponent(() =>
   import('../components/BlockResultComponent')
 );
 // injections/use
 const { openBuySell } = useBuySell();
-const { network, gasPrice, gasPriceByType, getFiatValue, gasPriceType } =
-  useGlobalStore();
+const { network, gasPrice, gasPriceByType, getFiatValue } = useGlobalStore();
 const { web3, address, balance } = useWalletStore();
-const { cart, emptyCart } = useEthBlocksTxsStore();
+const { emptyCart } = useEthBlocksTxsStore();
 const { fiatValue } = useExternalStore();
+
+const { gasPriceType } = storeToRefs(useGlobalStore);
+const { cart } = storeToRefs(useEthBlocksTxsStore());
 
 // data
 const blocks = ref([]);
@@ -231,15 +234,18 @@ const hasEnoughEth = computed(() => {
 
 // watch
 watch(
-  cart,
+  () => cart,
   () => {
     fetchBlocks();
   },
-  { deep: true }
+  () => ({ deep: true })
 );
-watch(gasPriceType, () => {
-  localGasPrice.value = gasPriceByType(gasPriceType);
-});
+watch(
+  () => gasPriceType,
+  () => {
+    localGasPrice.value = gasPriceByType(gasPriceType);
+  }
+);
 
 // mounted
 onMounted(() => {

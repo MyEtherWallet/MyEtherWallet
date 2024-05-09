@@ -117,9 +117,12 @@ const mewTabs = [
 ];
 
 // watch
-watch(mobileTab, newVal => {
-  trackLandingPageAmplitude(mobileItems[newVal].tab);
-});
+watch(
+  () => mobileTab,
+  newVal => {
+    trackLandingPageAmplitude(mobileItems[newVal].tab);
+  }
+);
 
 // methods
 const trackClick = newVal => {

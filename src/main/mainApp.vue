@@ -148,9 +148,8 @@ onMounted(() => {
   });
   if (!isMigrated) {
     // addressBook is the old one that resides in custom store
-    setAddressBook(addressBook).then(() => {
-      setMigrated(true);
-    });
+    setAddressBook(addressBook);
+    setMigrated(true);
   }
 
   // Close modal with 'esc' key

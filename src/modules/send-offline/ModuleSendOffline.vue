@@ -188,11 +188,12 @@ import { debounce, isEmpty } from 'lodash';
 import * as nodes from '@/utils/networks/nodes';
 
 import sanitizeHex from '@/core/helpers/sanitizeHex';
-import { ERROR, SUCCESS, Toast } from '../toast/handler/handlerToast';
+import { SUCCESS, Toast } from '../toast/handler/handlerToast';
 import { toBNSafe } from '@/core/helpers/numberFormatHelper';
 
 import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
+import { storeToRefs } from 'pinia';
 
 const ModuleAddressBook = defineAsyncComponent(() =>
   import('@/modules/address-book/ModuleAddressBook')
@@ -200,7 +201,8 @@ const ModuleAddressBook = defineAsyncComponent(() =>
 
 // injections/use
 const { instance, setWeb3Instance } = useWalletStore();
-const { network, setNetwork } = useGlobalStore();
+const { setNetwork } = useGlobalStore();
+const { network } = storeToRefs(useGlobalStore);
 
 // data
 const isSignedTxOpen = ref(false);
@@ -305,25 +307,34 @@ const canGenerate = computed(() => {
 });
 
 // watch
-watch(signed, newVal => {
-  const parsedVal = JSON.parse(newVal);
-  const string = JSON.stringify(parsedVal);
-  const blob = new Blob([string], {
-    type: 'mime'
-  });
-  jsonFileName.value = `signedTransactionObject-${+new Date()}.json`;
-  jsonFile.value = window.URL.createObjectURL(blob);
-});
-watch(selectedCurrency, () => {
-  if (canGenerate.value) {
-    generateData();
+watch(
+  () => signed,
+  newVal => {
+    const parsedVal = JSON.parse(newVal);
+    const string = JSON.stringify(parsedVal);
+    const blob = new Blob([string], {
+      type: 'mime'
+    });
+    jsonFileName.value = `signedTransactionObject-${+new Date()}.json`;
+    jsonFile.value = window.URL.createObjectURL(blob);
   }
-});
-watch(toAddress, () => {
-  if (canGenerate.value) {
-    generateData();
+);
+watch(
+  () => selectedCurrency,
+  () => {
+    if (canGenerate.value) {
+      generateData();
+    }
   }
-});
+);
+watch(
+  () => toAddress,
+  () => {
+    if (canGenerate.value) {
+      generateData();
+    }
+  }
+);
 watch(
   () => network,
   () => {
@@ -463,13 +474,8 @@ const setNetworkDebounced = debounce(function (value) {
   setNetwork({
     network: found[0],
     walletType: instance?.identifier || ''
-  })
-    .then(() => {
-      setWeb3Instance();
-      Toast(`Switched network to: ${found[0].type.name}`, {}, SUCCESS);
-    })
-    .catch(e => {
-      Toast(e, {}, ERROR);
-    });
+  });
+  setWeb3Instance();
+  Toast(`Switched network to: ${found[0].type.name}`, {}, SUCCESS);
 }, 1000);
 </script>

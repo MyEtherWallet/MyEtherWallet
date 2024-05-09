@@ -177,6 +177,7 @@ import { defineAsyncComponent, ref, computed, watch, onMounted } from 'vue';
 import { fromWei } from 'web3-utils';
 import BigNumber from 'bignumber.js';
 import { debounce, isEmpty } from 'lodash';
+import { storeToRefs } from 'pinia';
 
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
@@ -203,8 +204,9 @@ const CoinbaseStakingSummary = defineAsyncComponent(() =>
 // injections/use
 const { openBuySell } = useBuySell();
 const { trackDapp } = useAmplitude();
-const { network, isEthNetwork, gasPriceByType, getFiatValue, gasPriceType } =
+const { network, isEthNetwork, gasPriceByType, getFiatValue } =
   useGlobalStore();
+const { gasPriceType } = storeToRefs(useGlobalStore);
 const { fiatValue } = useExternalStore();
 const { balanceInETH, web3, address, instance } = useWalletStore();
 const { fetchedDetails } = useCoinbaseStakingStore();
@@ -294,9 +296,12 @@ const buyMoreStr = computed(() => {
 });
 
 // watch
-watch(gasPriceType, () => {
-  locGasPrice.value = gasPriceByType(gasPriceType);
-});
+watch(
+  () => gasPriceType,
+  () => {
+    locGasPrice.value = gasPriceByType(gasPriceType);
+  }
+);
 
 // mounted
 onMounted(() => {

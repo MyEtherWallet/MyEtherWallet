@@ -93,9 +93,12 @@ const tabs = [
 const activeTab = ref(0);
 
 // watch
-watch(route, () => {
-  detachUrlChangeTab();
-});
+watch(
+  () => route,
+  () => {
+    detachUrlChangeTab();
+  }
+);
 
 // mounted
 onMounted(() => {

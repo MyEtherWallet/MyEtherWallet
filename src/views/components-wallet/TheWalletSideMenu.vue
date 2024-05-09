@@ -541,20 +541,29 @@ const vDarkMode = computed(() => {
 });
 
 // watchers
-watch(vDarkMode, val => {
-  locDarkMode.value = val;
-});
-
-watch(locDarkMode, val => {
-  setDarkMode(val);
-  vuetify.theme.dark = val;
-});
-
-watch(navOpen, val => {
-  if (isOpenNetworkOverlay.value && !val) {
-    isOpenNetworkOverlay.value = false;
+watch(
+  () => vDarkMode,
+  val => {
+    locDarkMode.value = val;
   }
-});
+);
+
+watch(
+  () => locDarkMode,
+  val => {
+    setDarkMode(val);
+    vuetify.theme.dark = val;
+  }
+);
+
+watch(
+  () => navOpen,
+  val => {
+    if (isOpenNetworkOverlay.value && !val) {
+      isOpenNetworkOverlay.value = false;
+    }
+  }
+);
 
 // mounted
 onMounted(() => {

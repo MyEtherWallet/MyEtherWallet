@@ -219,12 +219,10 @@ const external = {
               ? 1
               : 0;
           });
-          setTokens(formattedList).then(() =>
-            setAccountBalance(mainTokenBalance).then(() => {
-              updateCustomTokenBalances().catch(e => Toast(e, {}, ERROR));
-              setLoadingWalletInfo(false);
-            })
-          );
+          setTokens(formattedList);
+          setAccountBalance(mainTokenBalance);
+          updateCustomTokenBalances().catch(e => Toast(e, {}, ERROR));
+          setLoadingWalletInfo(false);
         })
         .catch(e => {
           Toast(e.message, {}, ERROR);

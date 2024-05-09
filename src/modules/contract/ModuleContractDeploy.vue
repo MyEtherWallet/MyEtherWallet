@@ -166,12 +166,15 @@ const isContructorPayable = computed(() => {
 });
 
 // watch
-watch(abiInterface, () => {
-  constructorInputs.value.forEach((i, idx) => {
-    constructorInputs.value[idx].value = '';
-    constructorInputs.value[idx] = constructorInputs[idx].value;
-  });
-});
+watch(
+  () => abiInterface,
+  () => {
+    constructorInputs.value.forEach((i, idx) => {
+      constructorInputs.value[idx].value = '';
+      constructorInputs.value[idx] = constructorInputs[idx].value;
+    });
+  }
+);
 
 // methods
 const resetDefaults = () => {

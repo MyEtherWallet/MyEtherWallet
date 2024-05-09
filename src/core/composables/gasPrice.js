@@ -1,6 +1,7 @@
 import { ref, watch, onMounted } from 'vue';
 import BigNumber from 'bignumber.js';
 import { fromWei, toWei } from 'web3-utils';
+import { storeToRefs } from 'pinia';
 
 import { gasPriceTypes, estimatedTime } from '@/core/helpers/gasPriceHelper';
 import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
@@ -11,16 +12,11 @@ import { useExternalStore } from '@/core/store/external';
 
 export const useGasPrice = () => {
   // injections/use
-  const {
-    gasPrice,
+  const { gasPrice, gasPriceByType, online, setGasPriceType, updateGasPrice } =
+    useGlobalStore();
+  const { isOfflineApp } = useWalletStore();
+  const { web3 } = storeToRefs(useWalletStore);
 
-    gasPriceByType,
-
-    online,
-    setGasPriceType,
-    updateGasPrice
-  } = useGlobalStore();
-  const { isOfflineApp, web3 } = useWalletStore();
   const { fiatValue } = useExternalStore();
 
   // data
@@ -66,9 +62,12 @@ export const useGasPrice = () => {
       }
     ];
   };
-  watch(web3, () => {
-    fetchGasPrice();
-  });
+  watch(
+    () => web3,
+    () => {
+      fetchGasPrice();
+    }
+  );
 
   // mounted
   onMounted(() => {

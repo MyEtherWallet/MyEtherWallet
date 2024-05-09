@@ -64,10 +64,13 @@ import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { toBNSafe } from '@/core/helpers/numberFormatHelper';
 import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
+import { storeToRefs } from 'pinia';
 
 // injections/use
-const { network, gasPrice } = useGlobalStore();
-const { balance, web3, address } = useWalletStore();
+const { gasPrice } = useGlobalStore();
+const { balance } = useWalletStore();
+const { network } = storeToRefs(useGlobalStore);
+const { web3, address } = storeToRefs(useWalletStore);
 
 // props
 const props = defineProps({
@@ -127,9 +130,12 @@ watch(
     if (checkNetwork() && addr) setup();
   }
 );
-watch(web3, () => {
-  if (checkNetwork()) setup();
-});
+watch(
+  () => web3,
+  () => {
+    if (checkNetwork()) setup();
+  }
+);
 
 // onMounted
 onMounted(async () => {

@@ -160,6 +160,7 @@ import { toBNSafe } from '@/core/helpers/numberFormatHelper';
 import NFT from './handlers/handlerNftManager';
 import handleError from '@/modules/confirmation/handlers/errorHandler.js';
 import { useRouter } from 'vue-router/composables';
+import { storeToRefs } from 'pinia';
 
 const MIN_GAS_LIMIT = 21000;
 
@@ -172,8 +173,8 @@ const NftManagerSend = defineAsyncComponent(() =>
 
 // injections/use
 const { gasPriceType, network, gasPriceByType } = useGlobalStore();
-const { web3, address, balanceInWei } = useWalletStore();
 const router = useRouter();
+const { web3, balanceInWei, address } = storeToRefs(useWalletStore);
 
 // data
 const nft = ref({});
@@ -297,28 +298,34 @@ const supportedNetworks = () => {
 };
 
 // watch
-watch(balanceInWei, () => {
-  hasMinEth();
-});
-
-watch(web3, () => {
-  loadingContracts.value = true;
-  loadingTokens.value = true;
-  onNftSend.value = false;
-  if (address) router.push({ name: ROUTES_WALLET.NFT_MANAGER.NAME });
-  if (supportedNetwork) {
-    setUpNFT();
-  } else {
-    setTimeout(() => {
-      Toast(
-        `NFT Manager not supported in network: ${network.type.name}`,
-        {},
-        WARNING
-      );
-      nftApiResponse.value = [];
-    }, 1000);
+watch(
+  () => balanceInWei,
+  () => {
+    hasMinEth();
   }
-});
+);
+
+watch(
+  () => web3,
+  () => {
+    loadingContracts.value = true;
+    loadingTokens.value = true;
+    onNftSend.value = false;
+    if (address) router.push({ name: ROUTES_WALLET.NFT_MANAGER.NAME });
+    if (supportedNetwork) {
+      setUpNFT();
+    } else {
+      setTimeout(() => {
+        Toast(
+          `NFT Manager not supported in network: ${network.type.name}`,
+          {},
+          WARNING
+        );
+        nftApiResponse.value = [];
+      }, 1000);
+    }
+  }
+);
 
 watch(
   () => address,
@@ -331,39 +338,45 @@ watch(
   }
 );
 
-watch(contracts, newVal => {
-  if (newVal.length > 0) {
-    onTab(0);
-  }
-});
-
-watch(toAddress, async newVal => {
-  if (isAddress(newVal) && enoughFunds) {
-    try {
-      const gasTypeFee = gasPriceByType(gasPriceType);
-      localGasPrice.value = gasTypeFee;
-      const locGasFees = await nft.value.getGasFees(newVal, selectedNft);
-      const gasFeesToBN = toBNSafe(locGasFees).mul(toBNSafe(gasTypeFee));
-      gasFees.value = gasFeesToBN.toString();
-      if (gasFeesToBN.gte(toBN(balanceInWei))) {
-        //gasFeesToBN vs current balance
-        enoughFunds.value = false;
-        showBalanceError.value = true;
-      } else {
-        enoughFunds.value = true;
-        showBalanceError.value = false;
-      }
-    } catch (e) {
-      enoughFunds.value = false;
-      showBalanceError.value = false;
-      Toast(
-        `Can't send NFT! Please double check if everything is correct`,
-        {},
-        ERROR
-      );
+watch(
+  () => contracts,
+  newVal => {
+    if (newVal.length > 0) {
+      onTab(0);
     }
   }
-});
+);
+
+watch(
+  () => toAddress,
+  async newVal => {
+    if (isAddress(newVal) && enoughFunds) {
+      try {
+        const gasTypeFee = gasPriceByType(gasPriceType);
+        localGasPrice.value = gasTypeFee;
+        const locGasFees = await nft.value.getGasFees(newVal, selectedNft);
+        const gasFeesToBN = toBNSafe(locGasFees).mul(toBNSafe(gasTypeFee));
+        gasFees.value = gasFeesToBN.toString();
+        if (gasFeesToBN.gte(toBN(balanceInWei))) {
+          //gasFeesToBN vs current balance
+          enoughFunds.value = false;
+          showBalanceError.value = true;
+        } else {
+          enoughFunds.value = true;
+          showBalanceError.value = false;
+        }
+      } catch (e) {
+        enoughFunds.value = false;
+        showBalanceError.value = false;
+        Toast(
+          `Can't send NFT! Please double check if everything is correct`,
+          {},
+          ERROR
+        );
+      }
+    }
+  }
+);
 
 // mounted
 onMounted(() => {

@@ -149,6 +149,7 @@ import { useWalletStore } from '@/core/store/wallet';
 import { useExternalStore } from '@/core/store/external';
 import { useRoute } from 'vue-router/composables';
 import { useStakewiseStore } from '../store';
+import { storeToRefs } from 'pinia';
 
 // emits
 const emit = defineEmits(['scroll', 'redeem-to-eth', 'set-max']);
@@ -159,13 +160,14 @@ const { network, isEthNetwork, getFiatValue } = useGlobalStore();
 const {
   rethBalance,
   sethBalance,
-  stakewiseTxs,
   removePendingTxs,
   removePendingTxsGoerli,
   setStakeBalance
 } = useStakewiseStore();
 const { fiatValue } = useExternalStore();
 const route = useRoute();
+
+const { stakewiseTxs } = storeToRefs(useStakewiseStore);
 
 // props
 const props = defineProps({
@@ -229,7 +231,7 @@ const hasStaked = computed(() => {
 
 // watch
 watch(
-  stakewiseTxs,
+  () => stakewiseTxs,
   newVal => {
     const txList = isEthNetwork ? newVal.ETH : newVal.GOERLI;
     if (txList.length > 0) {
@@ -238,10 +240,10 @@ watch(
       });
     }
   },
-  { deep: true }
+  () => ({ deep: true })
 );
 watch(
-  route.from.query.module,
+  () => route.from.query.module,
   val => {
     if (val === 'stake') {
       nextTick(() => {

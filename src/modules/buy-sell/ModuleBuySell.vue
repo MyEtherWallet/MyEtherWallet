@@ -89,6 +89,7 @@ import { useWalletStore } from '@/core/store/wallet';
 import { useExternalStore } from '@/core/store/external';
 
 import { useRoute } from 'vue-router/composables';
+import { storeToRefs } from 'pinia';
 
 const BuyEthComponent = defineAsyncComponent(() =>
   import('./components/BuyComponent')
@@ -105,13 +106,15 @@ const emit = defineEmits(['close']);
 
 // injections/use
 const { trackBuySell } = useAmplitude();
-const { network } = useGlobalStore();
-const { address, tokensList } = useWalletStore();
+const { tokensList } = useWalletStore();
 const { contractToToken, setNetworkTokens } = useExternalStore();
 const route = useRoute();
 
+const { network } = storeToRefs(useGlobalStore);
+const { address } = storeToRefs(useWalletStore);
+
 // props
-defineProps({
+const props = defineProps({
   open: {
     type: Boolean,
     default: false
@@ -178,14 +181,17 @@ const tabItems = computed(() => {
 });
 
 // watch
-watch(open, newVal => {
-  isOpen.value = newVal;
-  if (newVal) {
-    orderHandler.value = new handler();
+watch(
+  () => props.open,
+  newVal => {
+    isOpen.value = newVal;
+    if (newVal) {
+      orderHandler.value = new handler();
+    }
+    selectedCurrency.value = {};
+    selectedCurrency.value = defaultCurrency;
   }
-  selectedCurrency.value = {};
-  selectedCurrency.value = defaultCurrency;
-});
+);
 watch(
   () => address,
   () => {

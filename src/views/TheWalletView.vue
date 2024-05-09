@@ -101,6 +101,7 @@ import TheWalletHeader from './components-wallet/TheWalletHeader';
 import TheWalletFooter from './components-wallet/TheWalletFooter';
 import ModuleConfirmation from '@/modules/confirmation/ModuleConfirmation';
 import ModulePaperWallet from '@/modules/balance/ModulePaperWallet.vue';
+import { storeToRefs } from 'pinia';
 
 const INTERVAL = 14000;
 
@@ -109,9 +110,8 @@ const tempClose = ref(false);
 const showPaperWallet = ref(false);
 let manualBlockSubscription;
 
-// pinia imports
+// injections/use
 const {
-  address,
   isOfflineApp,
   web3,
   identifier,
@@ -124,30 +124,27 @@ const {
 const {
   darkMode,
   online,
-  network,
   setBaseFeePerGas,
   updateGasPrice,
   isEIP1559SupportedNetwork,
   setNetwork,
   setValidNetwork
 } = useGlobalStore();
-const {
-  selectedEIP6963Provider,
-  coinGeckoTokens,
-  setNetworkTokens,
-  setTokenAndEthBalance
-} = useExternalStore();
+const { selectedEIP6963Provider, setNetworkTokens, setTokenAndEthBalance } =
+  useExternalStore();
 const {
   shownPkSurveyCounter,
   setPkSurvey,
   pkSurveyShown,
   pkSurveyShownCounter
 } = usePopupStore();
-
-// injections/use
 const vuetify = useVuetify();
 const { trackSurvey } = useAmplitude();
 const router = useRouter();
+
+const { coinGeckoTokens } = storeToRefs(useExternalStore);
+const { address } = storeToRefs(useWalletStore);
+const { network } = storeToRefs(useGlobalStore);
 
 // events
 const emit = defineEmits(['newNetwork']);
@@ -217,9 +214,8 @@ watch(
                 setNetwork({
                   network: oldVal,
                   walletType: identifier
-                }).then(() => {
-                  setWeb3Instance();
                 });
+                setWeb3Instance();
               }, 1000);
             }
           }

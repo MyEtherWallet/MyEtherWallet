@@ -226,6 +226,7 @@ import { useExternalStore } from '@/core/store/external';
 import { useVuetify } from '@/core/composables/vuetify';
 import { useStakewiseStore } from '../store';
 import { useNotificationsStore } from '@/core/store/notifications';
+import { storeToRefs } from 'pinia';
 
 const StakewiseApr = defineAsyncComponent(() =>
   import('../components/StakewiseApr')
@@ -239,13 +240,15 @@ const StakewiseRewards = defineAsyncComponent(() =>
 
 // injections
 const { trackDapp } = useAmplitude();
-const { balanceInETH, tokensList, web3, address, instance } = useWalletStore();
-const { network, isEthNetwork, gasPriceByType, getFiatValue, gasPriceType } =
-  useGlobalStore();
+const { balanceInETH, tokensList, web3, instance } = useWalletStore();
+const { network, gasPriceByType, getFiatValue } = useGlobalStore();
 const { rethBalance, sethBalance } = useStakewiseStore();
 const { fiatValue } = useExternalStore();
 const { addNotification } = useNotificationsStore();
 const vuetify = useVuetify();
+
+const { gasPriceType, isEthNetwork } = storeToRefs(useGlobalStore);
+const { address } = storeToRefs(useWalletStore);
 
 // data
 const iconStakewise = require('@/dapps/stakewise/assets/icon-stakewise-red.svg');
@@ -395,17 +398,26 @@ const maxBtnObj = computed(() => {
 });
 
 // watch
-watch(gasPriceType, () => {
-  locGasPrice.value = gasPriceByType(gasPriceType);
-});
-watch(compoundAmount, value => {
-  if (BigNumber(value).lte(balanceInETH) && BigNumber(value).gt(0)) {
-    setGasLimit();
+watch(
+  () => gasPriceType,
+  () => {
+    locGasPrice.value = gasPriceByType(gasPriceType);
   }
-});
-watch(isEthNetwork, () => {
-  setup();
-});
+);
+watch(
+  () => compoundAmount,
+  value => {
+    if (BigNumber(value).lte(balanceInETH) && BigNumber(value).gt(0)) {
+      setGasLimit();
+    }
+  }
+);
+watch(
+  () => isEthNetwork,
+  () => {
+    setup();
+  }
+);
 watch(
   () => address,
   () => {

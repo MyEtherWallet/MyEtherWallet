@@ -170,12 +170,14 @@ import { CONTRACT } from '../analytics-opt-in/handlers/configs/events';
 import { useAmplitude } from '@/core/composables/amplitude';
 import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
+import { storeToRefs } from 'pinia';
 
 // injections/vue
 const { trackContract } = useAmplitude();
-const { address, web3, balance } = useGlobalStore();
-const { network, localContracts } = useWalletStore();
+const { address, balance } = useWalletStore();
+const { network, localContracts } = useGlobalStore();
 
+const { web3 } = storeToRefs(useWalletStore);
 // data
 const currentContract = ref(null);
 const interact = ref(false);
@@ -254,18 +256,24 @@ const hasOutputs = computed(() => {
 });
 
 // watch
-watch(contractAddress, newVal => {
-  nametag.value = '';
-  if (!newVal) {
-    contractAddress.value = '';
+watch(
+  () => contractAddress,
+  newVal => {
+    nametag.value = '';
+    if (!newVal) {
+      contractAddress.value = '';
+    }
+    if (newVal && isAddress(newVal.toLowerCase())) {
+      resolveAddress();
+    }
   }
-  if (newVal && isAddress(newVal.toLowerCase())) {
-    resolveAddress();
+);
+watch(
+  () => web3,
+  () => {
+    generateNetworkContracts();
   }
-});
-watch(web3, () => {
-  generateNetworkContracts();
-});
+);
 
 // mounted
 onMounted(() => {

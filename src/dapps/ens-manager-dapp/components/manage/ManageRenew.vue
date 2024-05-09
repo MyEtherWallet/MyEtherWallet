@@ -101,9 +101,12 @@ const items = computed(() => {
 });
 
 // watch
-watch(duration, newVal => {
-  props.getRentPricegetTotalRenewFeeOnly(newVal);
-});
+watch(
+  () => duration,
+  newVal => {
+    props.getRentPricegetTotalRenewFeeOnly(newVal);
+  }
+);
 
 // mounted
 onMounted(() => {

@@ -59,14 +59,12 @@ const checkToShow = async () => {
 };
 
 const handleReject = () => {
-  setShownEu().then(() => {
-    setTrackingConsent(false);
-  });
+  setShownEu();
+  setTrackingConsent(false);
 };
 const handleAccept = () => {
-  setShownEu().then(() => {
-    setTrackingConsent(true);
-  });
+  setShownEu();
+  setTrackingConsent(true);
 };
 </script>
 

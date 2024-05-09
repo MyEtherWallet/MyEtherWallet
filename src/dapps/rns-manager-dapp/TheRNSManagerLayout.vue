@@ -216,9 +216,12 @@ const hasInvalidChars = computed(() => {
 });
 
 // watch
-watch(route, () => {
-  detactUrlChangeTab();
-});
+watch(
+  () => route,
+  () => {
+    detactUrlChangeTab();
+  }
+);
 
 //
 onMounted(() => {

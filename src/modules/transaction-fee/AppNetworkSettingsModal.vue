@@ -79,11 +79,14 @@ const { gasPrice, gasPriceByType, gasPriceType } = useGlobalStore();
      * only emit new gas price
      * when modal is open
      */
-watch([props.gasPriceModal, gasPrice], ([newGasPriceModal]) => {
-  if (newGasPriceModal || props.gasPriceModal) {
-    emit('onLocalGasPrice', gasPriceByType(gasPriceType));
+watch(
+  () => [props.gasPriceModal, gasPrice],
+  ([newGasPriceModal]) => {
+    if (newGasPriceModal || props.gasPriceModal) {
+      emit('onLocalGasPrice', gasPriceByType(gasPriceType));
+    }
   }
-});
+);
 
 const setGas = value => {
   emit('onLocalGasPrice', gasPriceByType(value));

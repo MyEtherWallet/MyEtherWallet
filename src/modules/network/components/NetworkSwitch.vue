@@ -98,12 +98,13 @@ import { useRoute } from 'vue-router/composables';
 
 import * as nodes from '@/utils/networks/nodes';
 import * as types from '@/utils/networks/types';
-import { Toast, SUCCESS, ERROR } from '@/modules/toast/handler/handlerToast';
+import { Toast, SUCCESS } from '@/modules/toast/handler/handlerToast';
 
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
 import { useExternalStore } from '@/core/store/external';
+import { storeToRefs } from 'pinia';
 
 const emit = defineEmits(['newNetwork']);
 
@@ -117,10 +118,12 @@ const props = defineProps({
 });
 
 // injections/use
-const { network, validNetwork, setNetwork, setValidNetwork } = useGlobalStore();
+const { validNetwork, setNetwork, setValidNetwork } = useGlobalStore();
 const { identifier, instance, setWeb3Instance } = useWalletStore();
 const { selectedEIP6963Provider, setTokenAndEthBalance } = useExternalStore();
 const route = useRoute();
+
+const { network } = storeToRefs(useGlobalStore);
 
 // data
 const networkSelectedBefore = ref(null);
@@ -220,48 +223,61 @@ const emptySearchMes = computed(() => {
 
 // watch
 watch(
-  network,
+  () => network,
   (newVal, oldVal) => {
     if (newVal.type.name !== oldVal.type.name) {
       networkSelected.value = newVal.type.name;
     }
   },
-  { deep: true }
+  () => ({ deep: true })
 );
 
-watch(networkSelected, value => {
-  if (!!value && (value !== network.type.name || !validNetwork)) {
-    networkLoading.value = true;
-    setNetworkDebounced(value);
-  }
-});
-
-watch(searchInput, (newVal, oldVal) => {
-  if (networks.value.length > 0) {
-    networkSelected.value = networkSelectedBefore.value;
-  }
-
-  if (newVal !== oldVal && (!oldVal || oldVal === '')) {
-    toggleType.value = 2;
-  }
-});
-
-watch(validNetwork, val => {
-  networkSelected.value = val ? network.type.name : null;
-});
-
-watch(toggleType, () => {
-  /**
-   * Set networkSelected on toggle change, if network is in the list
-   */
-  if (!networkSelected.value) {
-    if (
-      networks.value.filter(item => item.name === network.type.name).length > 0
-    ) {
-      networkSelected.value = validNetwork ? network.type.name : '';
+watch(
+  () => networkSelected,
+  value => {
+    if (!!value && (value !== network.type.name || !validNetwork)) {
+      networkLoading.value = true;
+      setNetworkDebounced(value);
     }
   }
-});
+);
+
+watch(
+  () => searchInput,
+  (newVal, oldVal) => {
+    if (networks.value.length > 0) {
+      networkSelected.value = networkSelectedBefore.value;
+    }
+
+    if (newVal !== oldVal && (!oldVal || oldVal === '')) {
+      toggleType.value = 2;
+    }
+  }
+);
+
+watch(
+  () => validNetwork,
+  val => {
+    networkSelected.value = val ? network.type.name : null;
+  }
+);
+
+watch(
+  () => toggleType,
+  () => {
+    /**
+     * Set networkSelected on toggle change, if network is in the list
+     */
+    if (!networkSelected.value) {
+      if (
+        networks.value.filter(item => item.name === network.type.name).length >
+        0
+      ) {
+        networkSelected.value = validNetwork ? network.type.name : '';
+      }
+    }
+  }
+);
 
 // mounted
 onMounted(() => {
@@ -304,28 +320,19 @@ const setNetworkDebounced = debounce(function (value) {
   setNetwork({
     network: found[0],
     walletType: instance?.identifier || ''
-  })
-    .then(() => {
-      networkLoading.value = false;
-      if (props.isWallet) {
-        networkSelected.value = validNetwork ? network.type.name : '';
-        const setNetworkCall =
-          identifier === WALLET_TYPES.WEB3_WALLET
-            ? setWeb3Instance(selectedEIP6963Provider)
-            : setWeb3Instance();
-        setNetworkCall.then(() => {
-          Toast(`Switched network to: ${found[0].type.name}`, {}, SUCCESS);
-          setTokenAndEthBalance();
-          emit('newNetwork');
-        });
-      }
-    })
-    .catch(e => {
-      setValidNetwork(false);
-      networkSelected.value = validNetwork ? network.type.name : '';
-      networkLoading.value = false;
-      Toast(e, {}, ERROR);
-    });
+  });
+  networkLoading.value = false;
+  if (props.isWallet) {
+    networkSelected.value = validNetwork ? network.type.name : '';
+    if (identifier === WALLET_TYPES.WEB3_WALLET) {
+      setWeb3Instance(selectedEIP6963Provider);
+    } else {
+      setWeb3Instance();
+    }
+    Toast(`Switched network to: ${found[0].type.name}`, {}, SUCCESS);
+    setTokenAndEthBalance();
+    emit('newNetwork');
+  }
 }, 1000);
 /**
  * Backup current network value
