@@ -103,7 +103,7 @@ import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import { fromBase } from '@/core/helpers/unit';
 import { toBNSafe } from '@/core/helpers/numberFormatHelper';
 import { useAmplitude } from '@/core/composables/amplitude';
-import { useVuetify } from './vuetify';
+import { useVuetify } from '@/core/composables/vuetify';
 import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
 

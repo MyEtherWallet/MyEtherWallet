@@ -382,9 +382,9 @@ import {
 import configs from '@/dapps/aave-dapp/apollo/configs';
 import eth from '@/assets/images/currencies/eth.png';
 import { ethers } from 'ethers';
-import { INTEREST_TYPES } from '../handlers/helpers';
+import { INTEREST_TYPES } from './handlers/helpers';
 import { estimateGasList } from '@/core/helpers/gasPriceHelper';
-import { ABI } from './ABI';
+import { ABI } from './handlers/ABI';
 import handleError from '@/modules/confirmation/handlers/errorHandler';
 
 import { SUPPORTED_NETWORKS } from './handlers/supportedNetworks';

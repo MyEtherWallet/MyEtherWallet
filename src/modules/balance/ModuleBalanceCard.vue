@@ -264,7 +264,7 @@ import { useAmplitude } from '@/core/composables/amplitude';
 import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
 import { useExternalStore } from '@/core/store/external';
-import { useI18n } from 'vue-i18n-composable/dist';
+import { useI18n } from 'vue-i18n-composable';
 
 const ModuleAccessWalletHardware = defineAsyncComponent(() =>
   import('@/modules/access-wallet/ModuleAccessWalletHardware')

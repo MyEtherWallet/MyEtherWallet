@@ -1,7 +1,7 @@
 import platform from 'platform';
 import { computed } from 'vue';
 
-import { useVuetify } from './vuetify';
+import { useVuetify } from '@/core/composables/vuetify';
 
 export const useEnkryptMarketing = () => {
   const vuetify = useVuetify();

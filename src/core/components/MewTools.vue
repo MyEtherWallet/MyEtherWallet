@@ -68,7 +68,7 @@
 import { computed } from 'vue';
 import { HEADER } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 import { useAmplitude } from '@/core/composables/amplitude';
-import { useVuetify } from './vuetify';
+import { useVuetify } from '@/core/composables/vuetify';
 
 // injections/use
 const { trackHeaderAmplitude } = useAmplitude();

@@ -9,13 +9,7 @@
 </template>
 
 <script setup>
-import {
-  ref,
-  onBeforeMount,
-  onMounted,
-  onBeforeUnmount,
-  defineAsyncComponent
-} from 'vue';
+import { ref, onBeforeMount, onMounted, onBeforeUnmount } from 'vue';
 import { v4 as uuidv4 } from 'uuid';
 import '@formatjs/intl-numberformat/polyfill';
 import '@formatjs/intl-numberformat/locale-data/en';
@@ -42,24 +36,16 @@ import { useAmplitude } from '@/core/composables/amplitude';
 import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
 import { useExternalStore } from '@/core/store/external';
-import { useI18n } from 'vue-i18n-composable/dist';
+import { useI18n } from 'vue-i18n-composable';
 import { useVuetify } from '@/core/composables/vuetify';
 import { useArticleStore } from '@/core/store/article';
 import { useCustomStore } from '@/core/store/custom';
 import { useAddressBookStore } from '@/core/store/addressBook';
 
-const ModuleToast = defineAsyncComponent(() =>
-  import('@/modules/toast/ModuleToast.vue')
-);
-const ModuleGlobalModals = defineAsyncComponent(() =>
-  import('@/modules/global-modals/ModuleGlobalModals')
-);
-const ModuleAnalytics = defineAsyncComponent(() =>
-  import('@/modules/analytics-opt-in/ModuleAnalytics')
-);
-const ModuleBuySell = defineAsyncComponent(() =>
-  import('@/modules/buy-sell/ModuleBuySell')
-);
+import ModuleToast from '@/modules/toast/ModuleToast.vue';
+import ModuleGlobalModals from '@/modules/global-modals/ModuleGlobalModals';
+import ModuleAnalytics from '@/modules/analytics-opt-in/ModuleAnalytics';
+import ModuleBuySell from '@/modules/buy-sell/ModuleBuySell';
 
 // injection/use
 const { trackSwapAmplitude, trackBuySell } = useAmplitude();

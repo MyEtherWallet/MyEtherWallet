@@ -39,7 +39,7 @@
 
 <script setup>
 import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRouter } from 'vue-router/composables';
 
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { STAKING } from '@/modules/analytics-opt-in/handlers/configs/events.js';

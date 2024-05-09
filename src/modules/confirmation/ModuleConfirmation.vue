@@ -298,7 +298,7 @@ import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
 import { useExternalStore } from '@/core/store/external';
 import { useVuetify } from '@/core/composables/vuetify';
-import { useI18n } from 'vue-i18n-composable/dist';
+import { useI18n } from 'vue-i18n-composable';
 import { useArticleStore } from '@/core/store/article';
 import { useAddressBookStore } from '@/core/store/addressBook';
 

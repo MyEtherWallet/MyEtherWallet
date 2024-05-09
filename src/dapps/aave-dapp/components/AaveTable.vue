@@ -63,7 +63,7 @@ import {
 } from '@/core/helpers/numberFormatHelper';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { EventBus } from '@/core/plugins/eventBus';
-import { useRouter } from 'vue-router/types/composables.js';
+import { useRouter } from 'vue-router/composables';
 import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
 

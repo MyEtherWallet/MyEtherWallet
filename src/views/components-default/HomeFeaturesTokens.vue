@@ -4,15 +4,21 @@
     max-width="700px"
   >
     <div class="mew-heading-1 mb-3">
-      {{ $t('home.features.tokens.heading') }}
+      {{ t('home.features.tokens.heading') }}
     </div>
     <div class="mt-10">
       <v-row>
-        <v-col v-for="(t, k) in tokens" :key="k" cols="12" lg="4" sm="6">
-          <a :href="t.link">
+        <v-col
+          v-for="(a, k) in tokens"
+          :key="a.label + k"
+          cols="12"
+          lg="4"
+          sm="6"
+        >
+          <a :href="a.link">
             <div class="d-flex align-center no-link-colors">
-              <img :src="t.icon" :alt="t.label" height="20" class="mr-2" />
-              <div>{{ t.label }}</div>
+              <img :src="a.icon" :alt="a.label" height="20" class="mr-2" />
+              <div>{{ a.label }}</div>
             </div>
           </a>
         </v-col>
@@ -28,9 +34,9 @@
 </template>
 
 <script setup>
-import { useI18n } from 'vue-i18n';
+import { useI18n } from 'vue-i18n-composable';
 import { onBeforeMount } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRouter } from 'vue-router/composables';
 
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
 import { knuthShuffle } from '@/modules/create-wallet/handlers/helpers';

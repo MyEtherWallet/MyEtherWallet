@@ -106,7 +106,7 @@ import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
 import { useAddressBookStore } from '@/core/store/addressBook/index.js';
 
-import { useI18n } from 'vue-i18n-composable/dist/index.js';
+import { useI18n } from 'vue-i18n-composable';
 
 // emits
 const emit = defineEmits(['back']);

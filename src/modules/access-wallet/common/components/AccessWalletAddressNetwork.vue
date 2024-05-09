@@ -203,7 +203,7 @@ import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { useWalletStore } from '@/core/store/wallet';
 import { useGlobalStore } from '@/core/store/global';
 import { useAddressBookStore } from '@/core/store/addressBook';
-import { useVuetify } from './vuetify';
+import { useVuetify } from '@/core/composables/vuetify';
 
 // emits
 const emits = defineEmits(['setPath', 'unlock']);

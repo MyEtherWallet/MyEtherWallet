@@ -62,7 +62,7 @@ import { ERROR, Toast } from '../toast/handler/handlerToast';
 
 import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
-import { useI18n } from 'vue-i18n-composable/dist';
+import { useI18n } from 'vue-i18n-composable';
 import { useAddressBookStore } from '@/core/store/addressBook';
 
 const AddressBookAddEdit = defineAsyncComponent(() =>
