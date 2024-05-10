@@ -146,7 +146,7 @@ const createWallet = async (identifier = WALLET_TYPES.WALLET_CONNECT) => {
   signClient.on('connect', evt => {
     const { chainId } = evt;
     const { setNetwork } = useGlobalStore();
-    const { setWalletWeb3Instance } = useWalletStore();
+    const { setWeb3Instance } = useWalletStore();
     const foundNode = Object.values(nodes).find(item => {
       if (item.type.chainID === parseInt(chainId)) return item;
     });
@@ -155,7 +155,7 @@ const createWallet = async (identifier = WALLET_TYPES.WALLET_CONNECT) => {
         network: foundNode,
         walletType: identifier
       });
-      setWalletWeb3Instance();
+      setWeb3Instance();
     }
   });
   await signClient.connect().catch(e => {

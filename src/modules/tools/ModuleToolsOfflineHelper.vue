@@ -219,7 +219,7 @@
 </template>
 
 <script setup>
-import { defineAsyncComponent, defineProps, ref, computed } from 'vue';
+import { defineAsyncComponent, defineProps, ref, computed, watch } from 'vue';
 import { isAddress, fromWei, toHex, toBN } from 'web3-utils';
 import { Transaction } from 'ethereumjs-tx';
 import { BigNumber } from 'bignumber.js';
@@ -232,15 +232,17 @@ import sanitizeHex from '@/core/helpers/sanitizeHex';
 import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
 import { useAddressBookStore } from '@/core/store/addressBook';
+import { storeToRefs } from 'pinia';
 
 const NetworkSwitch = defineAsyncComponent(() =>
   import('@/modules/network/components/NetworkSwitch.vue')
 );
 
 // injections/use
-const { network } = useGlobalStore();
-const { web3, address } = useWalletStore();
+const { address, setWeb3Instance } = useWalletStore();
 const { addressBookStore } = useAddressBookStore();
+const { network } = storeToRefs(useGlobalStore());
+const { web3 } = storeToRefs(useWalletStore());
 
 // props
 const props = defineProps({
@@ -353,6 +355,14 @@ const getRawTransaction = computed(() => {
   return sig;
 });
 
+// watch
+watch(
+  () => network.value,
+  () => {
+    setWeb3Instance();
+  }
+);
+
 // methods
 const handleBack = () => {
   if (currentStep.value === 3) {
@@ -396,11 +406,11 @@ const setAddress = (val = '') => {
  * details - details to be displayed to the user
  **********************************************************/
 const txData = async () => {
-  const { eth } = web3;
-  const chainID = await eth.getChainId();
-  const fetchedGasPrice = await eth.getGasPrice();
+  // const { eth } = web3.value;
+  const chainID = await web3.value.eth.getChainId();
+  const fetchedGasPrice = await web3.value.eth.getGasPrice();
   const gasPrice = fromWei(fetchedGasPrice, 'gwei');
-  const nonce = await eth.getTransactionCount(fromAddress);
+  const nonce = await web3.value.eth.getTransactionCount(fromAddress.value);
   return {
     data: {
       nonce,
@@ -408,7 +418,7 @@ const txData = async () => {
       chainID
     },
     details: {
-      address: fromAddress,
+      address: fromAddress.value,
       nonce: nonce.toString(),
       chainID,
       gasLimit: `21000`,
@@ -423,7 +433,7 @@ const txData = async () => {
  *************************************************************/
 const setDetails = async val => {
   if (val) return (details.value = val);
-  const { resDetails } = await txData();
+  const { details: resDetails } = await txData();
   details.value = [
     {
       title: 'Sender',
@@ -506,8 +516,8 @@ const gtr = val => {
  ***********************************************************************************/
 const rawTxData = () => {
   try {
-    const tx = new Transaction(getRawTransaction, {
-      common: commonGenerator(network)
+    const tx = new Transaction(getRawTransaction.value, {
+      common: commonGenerator(network.value)
     });
     const txValues = tx.toJSON(true);
     const txChain = tx.getChainId();
@@ -565,9 +575,9 @@ const setRawTransaction = async val => {
   const { raw, fee } = rawTxData();
   if (raw) {
     rawTransaction.value = JSON.stringify(raw, null, 3);
-    const { eth } = web3;
+    const { eth } = web3.value;
     const addressMatch =
-      toChecksumAddress(raw.from) === toChecksumAddress(fromAddress);
+      toChecksumAddress(raw.from) === toChecksumAddress(fromAddress.value);
     const balance = await eth.getBalance(raw.from);
     if (!addressMatch)
       alerts.value.push({
@@ -656,8 +666,8 @@ const uploadFile = ({ target: { files } }) => {
   if (files[0]) reader.readAsBinaryString(files[0]);
 };
 const sendTx = async () => {
-  const { eth } = web3;
-  const actualNonce = await eth.getTransactionCount(fromAddress);
+  const { eth } = web3.value;
+  const actualNonce = await eth.getTransactionCount(fromAddress.value);
   const { raw } = await rawTxData();
   const nonce = raw.nonce;
   dialog.value = true;
@@ -668,14 +678,14 @@ const sendTx = async () => {
     return;
   }
   eth
-    .sendSignedTransaction(getRawTransaction)
+    .sendSignedTransaction(getRawTransaction.value)
     .once('transactionHash', hash => {
       txHash.value = hash;
       clear();
     })
     .once('receipt', receipt => {
-      const { status } = receipt;
-      status.value = status;
+      const { status: receiptStatus } = receipt;
+      status.value = receiptStatus;
       txLoading.value = false;
     })
     .catch(({ message }) => {

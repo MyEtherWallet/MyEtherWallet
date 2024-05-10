@@ -285,7 +285,7 @@ const etherUnitRef = [
 
 // watchers
 watch(
-  () => valueLeft,
+  () => valueLeft.value,
   newVal => {
     valueRight.value = convertFromTo(
       newVal,
@@ -295,7 +295,7 @@ watch(
   }
 );
 watch(
-  () => valueRight,
+  () => valueRight.value,
   newVal => {
     valueLeft.value = convertFromTo(
       newVal,
@@ -305,7 +305,7 @@ watch(
   }
 );
 watch(
-  () => selectedLeft,
+  () => selectedLeft.value,
   newVal => {
     valueRight.value = convertFromTo(
       valueLeft.value,
@@ -315,7 +315,7 @@ watch(
   }
 );
 watch(
-  () => selectedRight,
+  () => selectedRight.value,
   newVal => {
     valueLeft.value = convertFromTo(
       valueRight.value,

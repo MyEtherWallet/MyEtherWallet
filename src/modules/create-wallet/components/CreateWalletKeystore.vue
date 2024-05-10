@@ -278,6 +278,7 @@ const createWallet = () => {
       cofirmPassword.value = '';
     })
     .catch(e => {
+      console.log(e);
       Toast(e, {}, ERROR);
     });
 };
@@ -296,11 +297,11 @@ const goToAccess = () => {
 /**
  * Update step
  */
-const updateStep = step => {
-  if (step === 1) {
+const updateStep = passedStepVal => {
+  if (passedStepVal === 1) {
     trackCreateWalletAmplitude(CREATE_WALLET.KEYSTORE_BACK);
   }
-  step.value = step ? step : 1;
+  step.value = passedStepVal ? passedStepVal : 1;
 };
 
 const restart = () => {

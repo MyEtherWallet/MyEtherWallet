@@ -124,6 +124,7 @@ import {
 } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 
 import { useWalletStore } from '@/core/store/wallet';
+import { useVuetify } from '@/core/composables/vuetify';
 
 const ModuleCreateWalletSoftware = defineAsyncComponent(() =>
   import('@/modules/create-wallet/ModuleCreateWalletSoftware')
@@ -146,10 +147,10 @@ defineProps({
 const { isOfflineApp } = useWalletStore();
 const { trackCreateWalletAmplitude } = useAmplitude();
 const { openEnkrypt, openMewWallet } = useEnkryptMarketing();
+const vuetify = useVuetify();
 const router = useRouter();
 
 // data
-
 const toastLink = {
   title: 'Buy a hardware wallet',
   url: ''
@@ -164,6 +165,10 @@ const titleRoute = {
 };
 
 // computed
+const isMobile = computed(() => {
+  return vuetify.mdAndDown;
+});
+
 const buttons = computed(() => {
   return !isOfflineApp
     ? [

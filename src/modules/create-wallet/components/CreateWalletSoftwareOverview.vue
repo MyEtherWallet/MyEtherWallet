@@ -88,7 +88,7 @@
 </template>
 
 <script setup>
-import { onMounted, defineEmits } from 'vue';
+import { onMounted, defineEmits, ref } from 'vue';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 
 import { useWalletStore } from '@/core/store/wallet';
@@ -103,14 +103,17 @@ const { isOfflineApp } = useWalletStore();
 
 // data
 const walletTypes = WALLET_TYPES;
-const linkToLearnMore = {
+const linkToLearnMore = ref({
   url: '',
   title: 'Learn more'
-};
+});
 
 onMounted(() => {
-  if (isOfflineApp) linkToLearnMore.value = {};
-  else linkToLearnMore.value.url = getArticle('not-rec-when-access-wallet');
+  if (isOfflineApp) {
+    linkToLearnMore.value = {};
+  } else {
+    linkToLearnMore.value.url = getArticle('not-rec-when-access-wallet');
+  }
 });
 /**
  * Emit wallet type creation.

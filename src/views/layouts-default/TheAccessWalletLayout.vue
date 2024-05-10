@@ -197,6 +197,7 @@ import { useAmplitude } from '@/core/composables/amplitude';
 import { useWalletStore } from '@/core/store/wallet';
 import { useExternalStore } from '@/core/store/external';
 import { useVuetify } from '@/core/composables/vuetify';
+import { storeToRefs } from 'pinia';
 
 const ModuleAccessWalletHardware = defineAsyncComponent(() =>
   import('@/modules/access-wallet/ModuleAccessWalletHardware')
@@ -217,14 +218,12 @@ const TheLayoutHeader = defineAsyncComponent(() =>
 // injections/use
 const router = useRouter();
 const { trackAccessWalletAmplitude } = useAmplitude();
-const {
-  path,
-  eip6963Providers,
-  setSelectedEIP6963Info,
-  setSelectedEIP6963Provider
-} = useExternalStore();
+const { path, setSelectedEIP6963Info, setSelectedEIP6963Provider } =
+  useExternalStore();
+
 const { isOfflineApp, setWallet } = useWalletStore();
 const vuetify = useVuetify();
+const { eip6963Providers } = storeToRefs(useExternalStore());
 
 // props
 const props = defineProps({
@@ -296,7 +295,7 @@ const buttons = computed(() => {
         subtitle: 'Use your Web3 wallet with MEW',
         official: false,
         recommended: true,
-        useBtn: eip6963Providers.length <= 1,
+        useBtn: eip6963Providers.value.length <= 1,
         icon: require('@/assets/images/icons/icon-extensions.png'),
         alt: 'Hardware Wallets',
         fn: () => {
@@ -443,8 +442,8 @@ const openOverlay = type => {
  * Checks if Enkrypt is available
  */
 const checkEnkrypt = () => {
-  if (eip6963Providers.length > 0) {
-    const item = eip6963Providers.find(item => {
+  if (eip6963Providers.value.length > 0) {
+    const item = eip6963Providers.value.find(item => {
       if (item.info.name.toLowerCase() === 'enkrypt') return item;
     });
     if (item) {

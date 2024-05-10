@@ -223,7 +223,7 @@ const emptySearchMes = computed(() => {
 
 // watch
 watch(
-  () => network,
+  () => network.value,
   (newVal, oldVal) => {
     if (newVal.type.name !== oldVal.type.name) {
       networkSelected.value = newVal.type.name;
@@ -233,9 +233,9 @@ watch(
 );
 
 watch(
-  () => networkSelected,
+  () => networkSelected.value,
   value => {
-    if (!!value && (value !== network.type.name || !validNetwork)) {
+    if (!!value && (value !== network.value.type.name || !validNetwork)) {
       networkLoading.value = true;
       setNetworkDebounced(value);
     }
@@ -243,7 +243,7 @@ watch(
 );
 
 watch(
-  () => searchInput,
+  () => searchInput.value,
   (newVal, oldVal) => {
     if (networks.value.length > 0) {
       networkSelected.value = networkSelectedBefore.value;
@@ -256,24 +256,24 @@ watch(
 );
 
 watch(
-  () => validNetwork,
+  () => validNetwork.value,
   val => {
-    networkSelected.value = val ? network.type.name : null;
+    networkSelected.value = val ? network.value.type.name : null;
   }
 );
 
 watch(
-  () => toggleType,
+  () => toggleType.value,
   () => {
     /**
      * Set networkSelected on toggle change, if network is in the list
      */
     if (!networkSelected.value) {
       if (
-        networks.value.filter(item => item.name === network.type.name).length >
-        0
+        networks.value.filter(item => item.name === network.value.type.name)
+          .length > 0
       ) {
-        networkSelected.value = validNetwork ? network.type.name : '';
+        networkSelected.value = validNetwork ? network.value.type.name : '';
       }
     }
   }
@@ -281,7 +281,7 @@ watch(
 
 // mounted
 onMounted(() => {
-  networkSelected.value = validNetwork ? network.type.name : '';
+  networkSelected.value = validNetwork ? network.value.type.name : '';
   networkSelectedBefore.value = networkSelected.value;
 });
 
@@ -323,7 +323,7 @@ const setNetworkDebounced = debounce(function (value) {
   });
   networkLoading.value = false;
   if (props.isWallet) {
-    networkSelected.value = validNetwork ? network.type.name : '';
+    networkSelected.value = validNetwork ? network.value.type.name : '';
     if (identifier === WALLET_TYPES.WEB3_WALLET) {
       setWeb3Instance(selectedEIP6963Provider);
     } else {

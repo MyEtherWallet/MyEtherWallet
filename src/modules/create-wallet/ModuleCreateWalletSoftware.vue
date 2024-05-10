@@ -122,9 +122,9 @@ const isMnemonic = computed(() => {
  * @returns correct title of the overlay according to the wallet type selected
  */
 const typeTitle = computed(() => {
-  return this.walletType === this.types.MNEMONIC
+  return props.walletType === types.MNEMONIC
     ? 'Create Wallet with Mnemonic Phrase'
-    : this.walletType === this.types.KEYSTORE
+    : props.walletType === types.KEYSTORE
     ? 'Create Wallet with Keystore File'
     : 'Create wallet using software';
 });

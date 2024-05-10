@@ -8,22 +8,23 @@ export default class SignAndVerifyMessage {
   constructor() {}
 
   signMessage(message) {
-    const { web3, address, isHardware, identifier } = useWalletStore();
-    const _this = this;
+    const {
+      web3,
+      address: walletAddress,
+      isHardware,
+      identifier
+    } = useWalletStore();
     try {
-      return web3.eth.sign(message, address).then(_signedMessage => {
-        _this.signature = JSON.stringify(
-          {
-            address: address,
-            msg: _this.message,
-            sig: _signedMessage,
-            version: '3',
-            signer: isHardware ? identifier : 'MEW'
-          },
-          null,
-          2
-        );
-        return _this.signature;
+      return web3.eth.sign(message, walletAddress).then(_signedMessage => {
+        const obj = {
+          address: `${walletAddress.value}`,
+          msg: message,
+          sig: _signedMessage,
+          version: '3',
+          signer: isHardware ? identifier : 'MEW'
+        };
+        const signature = JSON.stringify(obj, null, 2);
+        return signature;
       });
     } catch (e) {
       throw ErrorList.SIGN_FAILED;
@@ -51,11 +52,12 @@ export default class SignAndVerifyMessage {
       );
       return {
         verified:
-          !json.address.replace('0x', '').toLowerCase() !==
+          !json.address.value.replace('0x', '').toLowerCase() !==
           pubToAddress(pubKey).toString('hex').toLowerCase(),
         signer: pubToAddress(pubKey).toString('hex').toLowerCase()
       };
     } catch (e) {
+      console.log(e);
       throw ErrorList.FAILED_TO_VERIFY;
     }
   }
