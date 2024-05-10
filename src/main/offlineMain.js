@@ -30,7 +30,7 @@ Vue.use(PiniaVuePlugin);
 // etc
 import '@/core/plugins/registerServiceWorker';
 import vuetify from '@/core/plugins/vuetify';
-import i18n from './i18n';
+import { i18n } from './i18n';
 
 // Directives
 Vue.directive('lottie', LottieAnimation);

@@ -229,7 +229,7 @@ watch(
       networkSelected.value = newVal.type.name;
     }
   },
-  () => ({ deep: true })
+  { deep: true }
 );
 
 watch(

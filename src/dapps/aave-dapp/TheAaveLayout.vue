@@ -421,7 +421,7 @@ const { contractToToken } = useExternalStore();
  */
 const { onResult: reserveUpdateOnResult, onError: reserveUpdateOnError } =
   useSubscription(
-    () => ReserveUpdateSubscription,
+    ReserveUpdateSubscription,
     () => ({
       pool: configs.POOL_ID
     }),
@@ -457,7 +457,7 @@ const {
   onResult: userPositionUpdateOnResult,
   onError: userPositionUpdateOnError
 } = useSubscription(
-  () => UserPositionUpdateSubscription,
+  UserPositionUpdateSubscription,
   () => ({
     user: address.value,
     pool: configs.POOL_ID
@@ -489,7 +489,7 @@ userPositionUpdateOnError(({ error }) => {
 
 const { onResult: usdPriceEthOnResult, onError: usdPriceEthOnError } =
   useSubscription(
-    () => UsdPriceEth,
+    UsdPriceEth,
     () => ({
       pool: configs.POOL_ID
     }),

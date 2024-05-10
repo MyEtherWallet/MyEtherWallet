@@ -194,7 +194,7 @@ const { gasPriceType, network } = storeToRefs(useGlobalStore());
 // apollo
 const { onResult: getLatestPricesResult, onError: getLatestPricesError } =
   useQuery(
-    () => getLatestPrices,
+    getLatestPrices,
     () => ({}),
     () => ({
       pollInterval: 600000
@@ -217,7 +217,7 @@ const {
   onResult: getCoinGeckoTokenMarketDataByIdsResult,
   onError: getCoinGeckoTokenMarketDataByIdsError
 } = useQuery(
-  () => getCoinGeckoTokenMarketDataByIds,
+  getCoinGeckoTokenMarketDataByIds,
   () => ({
     ids: Object.keys(nodes)
       .map(item => nodes[item].coingeckoID)
@@ -558,7 +558,7 @@ watch(
     }
     fetchSellInfo();
   },
-  () => ({ deep: true })
+  { deep: true }
 );
 watch(
   () => selectedFiat,
@@ -567,7 +567,7 @@ watch(
       emit('selectedFiat', newVal);
     }
   },
-  () => ({ deep: true })
+  { deep: true }
 );
 watch(
   () => amount,
@@ -600,7 +600,7 @@ watch(
     fetchSellInfo();
     locGasPrice.value = gasPriceByType(gasPriceType);
   },
-  () => ({ deep: true })
+  { deep: true }
 );
 watch(
   () => network,

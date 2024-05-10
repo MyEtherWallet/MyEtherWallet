@@ -1,7 +1,7 @@
 {
 	"operations": [
 		{
-			"filePath": "file:///c%3A/Users/Jess/MyEtherWallet/src/dapps/aave-dapp/apollo/graphql/queries/get-reserve-rates-history-query.graphql",
+			"filePath": "file:///Users/yelpadillo/workspace/work/mewv6/src/dapps/aave-dapp/apollo/graphql/queries/get-reserve-rates-history-query.graphql",
 			"operationName": "ReserveRatesHistoryUpdateQuery",
 			"operationType": "query",
 			"rootType": "Query",
@@ -70,7 +70,7 @@
 			"operationId": "448e16f801ec764a4aecc7a7f0bc61b9b6568e70e64b297f4c99a92be7281cbd"
 		},
 		{
-			"filePath": "file:///c%3A/Users/Jess/MyEtherWallet/src/dapps/aave-dapp/apollo/graphql/queries/reserve-rates-30-days-ago.graphql",
+			"filePath": "file:///Users/yelpadillo/workspace/work/mewv6/src/dapps/aave-dapp/apollo/graphql/queries/reserve-rates-30-days-ago.graphql",
 			"operationName": "ReservesRates30DaysAgoQuery",
 			"operationType": "query",
 			"rootType": "Query",
@@ -205,7 +205,7 @@
 			"operationId": "5e0543e329ef40897a611cd5c857ae683c9ec825bab7864f59283d70f2b3dd13"
 		},
 		{
-			"filePath": "file:///c%3A/Users/Jess/MyEtherWallet/src/dapps/aave-dapp/apollo/graphql/subscriptions/get-reserve-rates-history-subscription.graphql",
+			"filePath": "file:///Users/yelpadillo/workspace/work/mewv6/src/dapps/aave-dapp/apollo/graphql/subscriptions/get-reserve-rates-history-subscription.graphql",
 			"operationName": "ReserveRatesHistoryUpdate",
 			"operationType": "subscription",
 			"rootType": "Subscription",
@@ -274,7 +274,7 @@
 			"operationId": "180880ca021d1b9e28f162b1fef5fa032968f206c22648b18eb433dd2400123f"
 		},
 		{
-			"filePath": "file:///c%3A/Users/Jess/MyEtherWallet/src/dapps/aave-dapp/apollo/graphql/subscriptions/reserve-rates-30-days-ago.graphql",
+			"filePath": "file:///Users/yelpadillo/workspace/work/mewv6/src/dapps/aave-dapp/apollo/graphql/subscriptions/reserve-rates-30-days-ago.graphql",
 			"operationName": "ReservesRates30DaysAgo",
 			"operationType": "subscription",
 			"rootType": "Subscription",
@@ -409,7 +409,7 @@
 			"operationId": "e5908befb2807f4f27e3b4923128e5e122eec41ab71c344f31fc01b698547fd7"
 		},
 		{
-			"filePath": "file:///c%3A/Users/Jess/MyEtherWallet/src/dapps/aave-dapp/apollo/graphql/subscriptions/reserve-update-subscription.graphql",
+			"filePath": "file:///Users/yelpadillo/workspace/work/mewv6/src/dapps/aave-dapp/apollo/graphql/subscriptions/reserve-update-subscription.graphql",
 			"operationName": "ReserveUpdateSubscription",
 			"operationType": "subscription",
 			"rootType": "Subscription",
@@ -463,7 +463,7 @@
 			"operationId": "44ed818059712d6aee48801da3c2a063140758cd165ba8b162bf917efe3cb107"
 		},
 		{
-			"filePath": "file:///c%3A/Users/Jess/MyEtherWallet/src/dapps/aave-dapp/apollo/graphql/subscriptions/usd-price-eth-update-subscription.graphql",
+			"filePath": "file:///Users/yelpadillo/workspace/work/mewv6/src/dapps/aave-dapp/apollo/graphql/subscriptions/usd-price-eth-update-subscription.graphql",
 			"operationName": "UsdPriceEth",
 			"operationType": "subscription",
 			"rootType": "Subscription",
@@ -510,7 +510,7 @@
 			"operationId": "f9a585b5c9372d09ee6ca057145600f8edffd93591367101cba10184449c6e70"
 		},
 		{
-			"filePath": "file:///c%3A/Users/Jess/MyEtherWallet/src/dapps/aave-dapp/apollo/graphql/subscriptions/user-position-update-subscription.graphql",
+			"filePath": "file:///Users/yelpadillo/workspace/work/mewv6/src/dapps/aave-dapp/apollo/graphql/subscriptions/user-position-update-subscription.graphql",
 			"operationName": "UserPositionUpdateSubscription",
 			"operationType": "subscription",
 			"rootType": "Subscription",
@@ -574,12 +574,67 @@
 	],
 	"fragments": [
 		{
+			"typeCondition": "ReserveParamsHistoryItem",
+			"possibleTypes": [
+				"ReserveParamsHistoryItem"
+			],
+			"fragmentName": "ReserveRatesHistoryData",
+			"filePath": "file:///Users/yelpadillo/workspace/work/mewv6/src/dapps/aave-dapp/apollo/graphql/subscriptions/reserve-rates-30-days-ago.graphql",
+			"source": "fragment ReserveRatesHistoryData on ReserveParamsHistoryItem {\n  __typename\n  variableBorrowRate\n  stableBorrowRate\n  liquidityRate\n  utilizationRate\n  timestamp\n}",
+			"fields": [
+				{
+					"responseName": "__typename",
+					"fieldName": "__typename",
+					"type": "String!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "variableBorrowRate",
+					"fieldName": "variableBorrowRate",
+					"type": "BigInt!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "stableBorrowRate",
+					"fieldName": "stableBorrowRate",
+					"type": "BigInt!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "liquidityRate",
+					"fieldName": "liquidityRate",
+					"type": "BigInt!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "utilizationRate",
+					"fieldName": "utilizationRate",
+					"type": "BigDecimal!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "timestamp",
+					"fieldName": "timestamp",
+					"type": "Int!",
+					"isConditional": false,
+					"isDeprecated": false
+				}
+			],
+			"fragmentSpreads": [],
+			"inlineFragments": []
+		},
+		{
 			"typeCondition": "Reserve",
 			"possibleTypes": [
 				"Reserve"
 			],
 			"fragmentName": "ReserveData",
-			"filePath": "file:///c%3A/Users/Jess/MyEtherWallet/src/dapps/aave-dapp/apollo/graphql/subscriptions/reserve-update-subscription.graphql",
+			"filePath": "file:///Users/yelpadillo/workspace/work/mewv6/src/dapps/aave-dapp/apollo/graphql/subscriptions/reserve-update-subscription.graphql",
 			"source": "fragment ReserveData on Reserve {\n  __typename\n  id\n  underlyingAsset\n  name\n  symbol\n  decimals\n  isActive\n  isFrozen\n  usageAsCollateralEnabled\n  borrowingEnabled\n  stableBorrowRateEnabled\n  baseLTVasCollateral\n  optimalUtilisationRate\n  averageStableRate\n  stableRateSlope1\n  stableRateSlope2\n  baseVariableBorrowRate\n  variableRateSlope1\n  variableRateSlope2\n  variableBorrowIndex\n  variableBorrowRate\n  totalScaledVariableDebt\n  liquidityIndex\n  reserveLiquidationThreshold\n  aToken {\n    __typename\n    id\n  }\n  vToken {\n    __typename\n    id\n  }\n  sToken {\n    __typename\n    id\n  }\n  availableLiquidity\n  stableBorrowRate\n  liquidityRate\n  totalPrincipalStableDebt\n  totalLiquidity\n  utilizationRate\n  reserveLiquidationBonus\n  price {\n    __typename\n    priceInEth\n  }\n  lastUpdateTimestamp\n  stableDebtLastUpdateTimestamp\n  reserveFactor\n}",
 			"fields": [
 				{
@@ -929,67 +984,12 @@
 			"inlineFragments": []
 		},
 		{
-			"typeCondition": "ReserveParamsHistoryItem",
-			"possibleTypes": [
-				"ReserveParamsHistoryItem"
-			],
-			"fragmentName": "ReserveRatesHistoryData",
-			"filePath": "file:///c%3A/Users/Jess/MyEtherWallet/src/dapps/aave-dapp/apollo/graphql/fragments/reserve-rates-history-data.graphql",
-			"source": "fragment ReserveRatesHistoryData on ReserveParamsHistoryItem {\n  __typename\n  variableBorrowRate\n  stableBorrowRate\n  liquidityRate\n  utilizationRate\n  timestamp\n}",
-			"fields": [
-				{
-					"responseName": "__typename",
-					"fieldName": "__typename",
-					"type": "String!",
-					"isConditional": false,
-					"isDeprecated": false
-				},
-				{
-					"responseName": "variableBorrowRate",
-					"fieldName": "variableBorrowRate",
-					"type": "BigInt!",
-					"isConditional": false,
-					"isDeprecated": false
-				},
-				{
-					"responseName": "stableBorrowRate",
-					"fieldName": "stableBorrowRate",
-					"type": "BigInt!",
-					"isConditional": false,
-					"isDeprecated": false
-				},
-				{
-					"responseName": "liquidityRate",
-					"fieldName": "liquidityRate",
-					"type": "BigInt!",
-					"isConditional": false,
-					"isDeprecated": false
-				},
-				{
-					"responseName": "utilizationRate",
-					"fieldName": "utilizationRate",
-					"type": "BigDecimal!",
-					"isConditional": false,
-					"isDeprecated": false
-				},
-				{
-					"responseName": "timestamp",
-					"fieldName": "timestamp",
-					"type": "Int!",
-					"isConditional": false,
-					"isDeprecated": false
-				}
-			],
-			"fragmentSpreads": [],
-			"inlineFragments": []
-		},
-		{
 			"typeCondition": "UserReserve",
 			"possibleTypes": [
 				"UserReserve"
 			],
 			"fragmentName": "UserReserveData",
-			"filePath": "file:///c%3A/Users/Jess/MyEtherWallet/src/dapps/aave-dapp/apollo/graphql/subscriptions/user-position-update-subscription.graphql",
+			"filePath": "file:///Users/yelpadillo/workspace/work/mewv6/src/dapps/aave-dapp/apollo/graphql/subscriptions/user-position-update-subscription.graphql",
 			"source": "fragment UserReserveData on UserReserve {\n  __typename\n  scaledATokenBalance\n  reserve {\n    __typename\n    id\n    underlyingAsset\n    name\n    symbol\n    decimals\n    liquidityRate\n    reserveLiquidationBonus\n    lastUpdateTimestamp\n    aToken {\n      __typename\n      id\n    }\n  }\n  usageAsCollateralEnabledOnUser\n  stableBorrowRate\n  stableBorrowLastUpdateTimestamp\n  principalStableDebt\n  scaledVariableDebt\n  variableBorrowIndex\n  lastUpdateTimestamp\n}",
 			"fields": [
 				{
@@ -1169,11 +1169,11 @@
 		},
 		{
 			"kind": "ScalarType",
-			"name": "Bytes"
+			"name": "BigDecimal"
 		},
 		{
 			"kind": "ScalarType",
-			"name": "BigDecimal"
+			"name": "Bytes"
 		}
 	],
 	"unionTypes": [],

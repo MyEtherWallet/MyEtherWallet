@@ -236,7 +236,7 @@ watch(
       step.value = 0;
     }
   },
-  () => ({ deep: true })
+  { deep: true }
 );
 
 watch(

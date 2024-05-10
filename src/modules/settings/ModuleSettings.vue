@@ -215,7 +215,7 @@ watch(
   () => {
     getAddressBookTableData();
   },
-  () => () => ({ deep: true })
+  { deep: true }
 );
 
 // created

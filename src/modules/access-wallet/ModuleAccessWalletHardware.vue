@@ -617,7 +617,7 @@ watch(
       this[`${walletType.value}Unlock`]();
     }
   },
-  () => ({ deep: true })
+  { deep: true }
 );
 watch(
   () => open,

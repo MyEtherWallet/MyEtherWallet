@@ -480,7 +480,7 @@ watch(
     }
     emit('selectedCurrency', selectedCurrency.value);
   },
-  () => ({ deep: true })
+  { deep: true }
 );
 
 watch(
@@ -516,7 +516,7 @@ watch(
     selectedCurrency.value = {};
     selectedCurrency.value = props.defaultCurrency;
   },
-  () => ({ deep: true })
+  { deep: true }
 );
 
 watch(

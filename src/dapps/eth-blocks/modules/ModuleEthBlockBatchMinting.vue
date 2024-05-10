@@ -238,7 +238,7 @@ watch(
   () => {
     fetchBlocks();
   },
-  () => ({ deep: true })
+  { deep: true }
 );
 watch(
   () => gasPriceType,

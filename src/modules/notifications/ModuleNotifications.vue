@@ -151,7 +151,7 @@ const {
   onError: getEthTransfersV2Error,
   loading: getEthTransfersV2Loading
 } = useQuery(
-  () => getEthTransfersV2,
+  getEthTransfersV2,
   () => ({ owner: address, limit: MAX_ITEMS }),
   () => ({
     enabled: isEthNetwork || address === null || address === ''
@@ -180,7 +180,7 @@ const {
   onError: getTrasnactionsByHashesError,
   loading: getTrasnactionsByHashesLoading
 } = useQuery(
-  () => getTransactionsByHashes,
+  getTransactionsByHashes,
   () => ({ hashes: txHashes.value }),
   () => ({
     fetchPolicy: 'cache-and-network',
@@ -208,7 +208,7 @@ const {
   subscribeToMore: getTransactionByHashUpdate,
   refetch: getTransactionByHashRefetch
 } = useQuery(
-  () => getTransactionByHash,
+  getTransactionByHash,
   () => ({
     hash: txHash.value
   }),
@@ -254,7 +254,7 @@ getTransactionByHashError(({ error }) => {
  */
 const { onResult: pendingTransactionResult, onError: pendingTransactionError } =
   useSubscription(
-    () => pendingTransaction,
+    pendingTransaction,
     () => ({ owner: address }),
     () => ({
       enabled:
@@ -279,7 +279,7 @@ pendingTransactionError(({ error }) => {
  */
 const { onResult: transactionEventResult, onError: transactionEventError } =
   useSubscription(
-    () => transactionEvent,
+    transactionEvent,
     () => ({ hash: txHash.value }),
     () => ({
       enabled:
@@ -415,7 +415,7 @@ watch(
       checkAndSetNotificationStatus(notification);
     });
   },
-  () => ({ deep: true })
+  { deep: true }
 );
 
 // mounted

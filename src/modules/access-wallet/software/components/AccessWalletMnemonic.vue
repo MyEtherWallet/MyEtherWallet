@@ -44,7 +44,7 @@
             Enter Phrase Block
           =====================================================================================
           -->
-            <phrase-block class="mb-8">
+            <phrase-block v-if="phrase" class="mb-8">
               <v-row>
                 <v-col
                   v-for="n in length"
@@ -145,14 +145,7 @@
 </template>
 
 <script setup>
-import {
-  defineAsyncComponent,
-  defineProps,
-  ref,
-  computed,
-  watch,
-  defineEmits
-} from 'vue';
+import { defineProps, ref, computed, watch, defineEmits } from 'vue';
 import { isEmpty } from 'lodash';
 
 import { Toast, ERROR, SENTRY } from '@/modules/toast/handler/handlerToast';
@@ -162,13 +155,8 @@ import paths from '@/modules/access-wallet/hardware/handlers/bip44';
 import { ACCESS_WALLET } from '@/modules/analytics-opt-in/handlers/configs/events';
 import { useAmplitude } from '@/core/composables/amplitude';
 
-const PhraseBlock = defineAsyncComponent(() =>
-  import('@/core/components/PhraseBlock')
-);
-const AccessWalletAddressNetwork = defineAsyncComponent(() =>
-  import('@/modules/access-wallet/common/components/AccessWalletAddressNetwork')
-);
-
+import PhraseBlock from '@/core/components/PhraseBlock';
+import AccessWalletAddressNetwork from '@/modules/access-wallet/common/components/AccessWalletAddressNetwork';
 // emits
 const emit = defineEmits(['unlock']);
 
@@ -276,18 +264,18 @@ const parsedPaths = computed(() => {
     .concat(paths);
 });
 const phraseToLength = computed(() => {
-  const phrase = Object.values(phrase);
-  if (phrase.length > length.value) phrase.length = length.value;
-  return phrase;
+  const locPhrase = Object.values(phrase.value);
+  if (locPhrase.length > length.value) locPhrase.length = length.value;
+  return locPhrase;
 });
 
 // watch
 watch(
-  () => phrase,
-  newval => {
-    if (newval && !isEmpty(newval) && !isEmpty(newval[1])) {
-      checkPhrase(newval);
-      const splitVal = newval[1].split(' ');
+  () => phrase.value,
+  newValue => {
+    if (newValue && !isEmpty(newValue) && !isEmpty(newValue[1])) {
+      checkPhrase(newValue);
+      const splitVal = newValue[1].split(' ');
       if (splitVal.length === 12 || splitVal.length === 24) {
         length.value = splitVal.length;
         const newObj = {};
@@ -298,15 +286,15 @@ watch(
       }
     }
   },
-  () => ({ deep: true })
+  { deep: true }
 );
 watch(
-  () => selectedPath,
+  () => selectedPath.value,
   () => {
     walletInstance.value = {};
     nextStepTwo();
   },
-  () => ({ deep: true })
+  { deep: true }
 );
 
 // methods
@@ -318,7 +306,7 @@ watch(
  */
 const unlockBtn = () => {
   props.handlerAccessWallet
-    .unlockMnemonicWallet(parsedPhrase, extraWord)
+    .unlockMnemonicWallet(parsedPhrase.value, extraWord.value)
     .then(res => {
       if (res) {
         step.value = 2;
@@ -326,6 +314,7 @@ const unlockBtn = () => {
       }
     })
     .catch(e => {
+      console.log(e);
       trackAccessWalletAmplitude(ACCESS_WALLET.SOFTWARE_FAILED, {
         error: e
       });

@@ -178,7 +178,7 @@
 </template>
 
 <script setup>
-import { defineAsyncComponent, ref, computed, watch, onMounted } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 import { fromWei } from 'web3-utils';
 import BigNumber from 'bignumber.js';
 import { debounce, isEmpty } from 'lodash';
@@ -200,9 +200,7 @@ import { useAmplitude } from '@/core/composables/amplitude';
 import { useBuySell } from '@/core/composables/buyMore';
 import { storeToRefs } from 'pinia';
 
-const CoinbaseStakingSummary = defineAsyncComponent(() =>
-  import('../components/CoinbaseStakingSummary')
-);
+import CoinbaseStakingSummary from '../components/CoinbaseStakingSummary';
 
 // injections/use
 const { trackDapp } = useAmplitude();

@@ -294,13 +294,13 @@ watch(
     phrase.value = [];
     setPhrase();
   },
-  () => ({ deep: true })
+  { deep: true }
 );
 
 watch(
   () => phrase,
   () => {},
-  () => ({ deep: true })
+  { deep: true }
 );
 
 // mounted

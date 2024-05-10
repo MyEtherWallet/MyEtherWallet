@@ -357,7 +357,7 @@ watch(
       }
     }
   },
-  () => ({ deep: true })
+  { deep: true }
 );
 
 // methods

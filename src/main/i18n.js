@@ -6,14 +6,12 @@ import Vue from 'vue';
 
 Vue.use(VueI18n);
 
-const i18n = new createI18n({
+export const i18n = new createI18n({
   locale: 'en_US',
   fallbackLocale: 'en_US',
   messages: languages,
   silentTranslationWarn: true
 });
-
-export default i18n;
 
 // our default language that is preloaded
 // const loadedLanguages = ['en_US'];

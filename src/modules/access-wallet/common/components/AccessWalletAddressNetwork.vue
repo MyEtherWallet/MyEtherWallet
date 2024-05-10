@@ -216,38 +216,19 @@ const vuetify = useVuetify();
 
 const { network } = storeToRefs(useGlobalStore());
 
-// apollo
-const { onResult: getEthBalanceResult } = useQuery(
-  () => getEthBalance,
-  () => ({ hash: accountAddress.value }),
-  () => ({
-    enabled: !isOfflineApp
-      ? true
-      : skipApollo.value || accountAddress.value !== null
-  })
-);
-getEthBalanceResult(({ data }) => {
-  if (data && data.getEthBalance) {
-    if (accounts.value[onAccountIndex.value]) {
-      /**
-       * Sets the balance of the account of accountAddress
-       */
-      accounts.value[onAccountIndex.value].balance = formatFloatingPointValue(
-        fromWei(data.getEthBalance.balance)
-      ).value;
-      /**
-       * Find the next index and set the address of it to accountAddress
-       */
-      const nextIdx = onAccountIndex.value + 1;
-      if (
-        nextIdx < accounts.value.length &&
-        accounts.value[nextIdx].balance === 'Loading..'
-      ) {
-        accountAddress.value = accounts.value[nextIdx].address;
-      }
-    }
-  }
+// data
+const currentIdx = ref(0);
+const acceptTerms = ref(false);
+const label = ref('To access my wallet, I accept ');
+const link = ref({
+  title: 'Terms',
+  url: 'https://www.myetherwallet.com/terms-of-service'
 });
+const selectedAddress = ref('');
+const accountAddress = ref('');
+const panelNetworkSubstring = ref('');
+const addressPage = ref(0);
+const accounts = ref([]);
 
 // props
 const props = defineProps({
@@ -285,27 +266,12 @@ const props = defineProps({
   }
 });
 
-// data
-const currentIdx = ref(0);
-const acceptTerms = ref(false);
-const label = ref('To access my wallet, I accept ');
-const link = ref({
-  title: 'Terms',
-  url: 'https://www.myetherwallet.com/terms-of-service'
-});
-const selectedAddress = ref('');
-const accountAddress = ref('');
-const panelNetworkSubstring = ref('');
-const addressPage = ref(0);
-const accounts = ref([]);
-
 // computed
-
 const buttonDisabled = computed(() => {
   return !acceptTerms.value || selectedAddress.value === '';
 });
 const web3 = computed(() => {
-  return new Web3(network.url);
+  return new Web3(network.value.url);
 });
 const isLoading = computed(() => {
   return accounts.value.length !== MAX_ADDRESSES;
@@ -321,9 +287,9 @@ const onAccountIndex = computed(() => {
  */
 const skipApollo = computed(() => {
   return (
-    (!accountAddress.value && accountAddress.value === '') ||
+    (accountAddress.value && accountAddress.value !== '') ||
     (accounts.value[onAccountIndex.value] &&
-      accounts.value[onAccountIndex.value].balance !== 'Loading..')
+      accounts.value[onAccountIndex.value].balance === 'Loading..')
   );
 });
 /**
@@ -383,25 +349,56 @@ const isMobile = computed(() => {
   return vuetify.breakpoint.smAndDown;
 });
 const blockExplorer = computed(() => {
-  const { type } = network;
-  const { blockExplorerAddr } = type;
-  return blockExplorer;
+  return network.value.type.blockExplorerAddr;
+});
+
+// apollo
+const { onResult: getEthBalanceResult } = useQuery(
+  getEthBalance,
+  () => ({ hash: accountAddress.value }),
+  {
+    enabled: isOfflineApp
+      ? false
+      : skipApollo.value || accountAddress.value !== null
+  }
+);
+getEthBalanceResult(({ data }) => {
+  if (data && data.getEthBalance) {
+    if (accounts.value[onAccountIndex.value]) {
+      /**
+       * Sets the balance of the account of accountAddress
+       */
+      accounts.value[onAccountIndex.value].balance = formatFloatingPointValue(
+        fromWei(data.getEthBalance.balance)
+      ).value;
+      /**
+       * Find the next index and set the address of it to accountAddress
+       */
+      const nextIdx = onAccountIndex.value + 1;
+      if (
+        nextIdx < accounts.value.length &&
+        accounts.value[nextIdx].balance === 'Loading..'
+      ) {
+        accountAddress.value = accounts.value[nextIdx].address;
+      }
+    }
+  }
 });
 
 // watch
 watch(
-  () => accounts,
+  () => accounts.value,
   newVal => {
     accounts.value = newVal;
   },
-  () => ({ deep: true })
+  { deep: true }
 );
 watch(
-  () => network,
+  () => network.value,
   () => {
     changeHandler();
   },
-  () => ({ deep: true })
+  { deep: true }
 );
 watch(
   () => props.selectedPath,
@@ -410,7 +407,7 @@ watch(
       changeHandler();
     }
   },
-  () => ({ deep: true })
+  { deep: true }
 );
 watch(
   () => props.handlerWallet,
@@ -456,10 +453,10 @@ const setAccounts = async () => {
       // resets the array to empty
       accounts.value.splice(0);
       const ens =
-        network.type.hasOwnProperty('ens') && !isOfflineApp
+        network.value.type.hasOwnProperty('ens') && !isOfflineApp
           ? new ENS({
               provider: web3.value.eth.currentProvider,
-              ensAddress: network.type.ens.registry
+              ensAddress: network.value.type.ens.registry
             })
           : null;
       for (
@@ -469,14 +466,14 @@ const setAccounts = async () => {
       ) {
         const account = await props.handlerWallet.getAccount(i);
         const address = account.getAddressString();
-        const name = ens
+        const ensName = ens
           ? await ens.getName(address)
           : {
               name: ''
             };
         const balance = isOfflineApp
           ? '0'
-          : network.type.isEthVMSupported.supported
+          : network.value.type.isEthVMSupported.supported
           ? 'Loading..'
           : await web3.value.eth.getBalance(address);
         const nickname = getNickname(address);
@@ -485,7 +482,7 @@ const setAccounts = async () => {
           account: account,
           idx: i,
           balance: balance !== 'Loading..' ? fromWei(balance) : balance,
-          ensName: name.name ? name.name : '',
+          ensName: ensName.name ? ensName.name : '',
           nickname: nickname
         });
       }
@@ -537,7 +534,7 @@ const previousAddressSet = () => {
  * @return {void}
  */
 const setNetworkPanel = () => {
-  panelNetworkSubstring.value = `${network.type.name} - ${network.type.name_long}`;
+  panelNetworkSubstring.value = `${network.value.type.name} - ${network.value.type.name_long}`;
 };
 /**
  * Methods emits parent to unlock wallet

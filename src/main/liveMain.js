@@ -48,7 +48,7 @@ import lokalise from '@/core/filters/lokalise';
 // etc
 import '@/core/plugins/registerServiceWorker';
 import vuetify from '@/core/plugins/vuetify';
-import i18n from './i18n';
+import { i18n } from './i18n';
 import * as locStore from 'store';
 import VueLazyLoad from 'vue-lazyload';
 

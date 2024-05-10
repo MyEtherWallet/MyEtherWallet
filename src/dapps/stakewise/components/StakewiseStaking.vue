@@ -240,7 +240,7 @@ watch(
       });
     }
   },
-  () => ({ deep: true })
+  { deep: true }
 );
 watch(
   () => route.from.query.module,

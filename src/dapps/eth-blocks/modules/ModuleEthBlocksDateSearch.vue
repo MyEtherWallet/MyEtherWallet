@@ -65,7 +65,7 @@ watch(
   () => {
     fetchBlocksByDate();
   },
-  () => ({ deep: true })
+  { deep: true }
 );
 
 // mounted
