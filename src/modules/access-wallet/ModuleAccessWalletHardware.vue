@@ -347,6 +347,7 @@ const ledgerApps = appPaths.map(item => {
   };
 });
 const supportedBrowsers = ['Chrome', 'Edge', 'Opera'];
+
 const bluetooth = ref(false);
 const bluetoothModal = ref(false);
 const step = ref(1);
@@ -364,6 +365,14 @@ const passwordError = ref(false);
 const ledgerBluetooth = ref(false);
 
 // computed
+const walletUnlock = computed(() => ({
+  [WALLET_TYPES.LEDGER]: trezorUnlock,
+  [WALLET_TYPES.TREZOR]: bitbox02Unlock,
+  [WALLET_TYPES.COOL_WALLET]: coolWalletUnlock,
+  [WALLET_TYPES.BITBOX2]: keepkeyUnlock,
+  [WALLET_TYPES.KEEPKEY]: ledgerUnlock
+}));
+
 const buttons = computed(() => {
   return [
     {
@@ -410,7 +419,7 @@ const buttons = computed(() => {
   ];
 });
 const walletInitialized = computed(() => {
-  return wallets[walletType] ? wallets[walletType]?.when : 1;
+  return wallets[walletType.value] ? wallets[walletType.value]?.when : 1;
 });
 /**
  * Footer links to display beneath container
@@ -489,7 +498,7 @@ const onLedgerX = computed(() => {
 const onCoolWallet = computed(() => {
   if (
     walletType.value === WALLET_TYPES.COOL_WALLET &&
-    isEmpty(hwWalletInstance)
+    isEmpty(hwWalletInstance.value)
   ) {
     trackAccessWalletAmplitude(ACCESS_WALLET.HW_COOL_WALLET_SHOWN);
     return true;
@@ -542,8 +551,8 @@ const paths = computed(() => {
       });
     });
   }
-  if (wallets[walletType] && wallets[walletType].hasPaths) {
-    allPaths[walletType].forEach(item => {
+  if (wallets[walletType.value] && wallets[walletType.value].hasPaths) {
+    allPaths[walletType.value].forEach(item => {
       newArr.push({
         name: item.label,
         value: item.path
@@ -606,7 +615,7 @@ const bitbox2Titles = computed(() => {
 
 // watch
 watch(
-  () => selectedPath,
+  () => selectedPath.value,
   () => {
     /**
      * only call this when hwWalletInstance is not empty (ledger will error out)
@@ -614,13 +623,13 @@ watch(
      */
     if (walletType.value && !isEmpty(hwWalletInstance.value)) {
       hwWalletInstance.value = {};
-      this[`${walletType.value}Unlock`]();
+      walletUnlock.value[walletType.value]();
     }
   },
   { deep: true }
 );
 watch(
-  () => open,
+  () => props.open,
   newVal => {
     if (newVal && props.switchAddress) setupSwitchAddress();
   }
@@ -635,9 +644,9 @@ onMounted(async () => {
   });
 
   try {
-    const { bluetooth } = navigator;
-    if (!bluetooth) return (bluetooth.value = false);
-    bluetooth.value = await bluetooth.getAvailability();
+    const { bluetooth: localBluetooth } = navigator;
+    if (!localBluetooth) return (bluetooth.value = false);
+    bluetooth.value = await localBluetooth.getAvailability();
   } catch (e) {
     trackAccessWalletAmplitude(ACCESS_WALLET.HW_FAILED, {
       error: e.message
@@ -696,12 +705,12 @@ const back = () => {
       }
     }
   } else {
-    close('showHardware');
+    props.close('showHardware');
   }
 };
 const overlayClose = () => {
   reset();
-  close('showHardware');
+  props.close('showHardware');
 };
 const trezorClose = () => {
   step.value = 2;
@@ -713,12 +722,16 @@ const setWalletInstance = btnObj => {
 };
 const nextStep = () => {
   if (walletType.value) {
-    step.value++;
-    if (step.value === 2 && (onTrezor.value || onLedger.value || onLedgerX))
+    step.value += 1;
+    if (
+      step.value === 2 &&
+      (onTrezor.value || onLedger.value || onLedgerX.value)
+    ) {
       selectedPath.value = paths.value[0];
+    }
     if (step.value === walletInitialized.value) {
       if (onCoolWallet.value || onBitbox2.value) return;
-      this[`${walletType.value}Unlock`]();
+      walletUnlock.value[walletType.value]();
     }
   }
 };
@@ -733,7 +746,20 @@ const bitbox02Unlock = () => {
   unlockPathOnly();
 };
 const coolWalletUnlock = () => {
-  unlockPathAndPassword(null, password);
+  unlockPathAndPassword(null, password.value);
+};
+const keepkeyUnlock = () => {
+  unlockPathOnly();
+};
+const ledgerUnlock = () => {
+  if (ledgerBluetooth.value) {
+    bluetoothLedgerUnlock();
+  } else {
+    unlockPathOnly();
+  }
+};
+const bluetoothLedgerUnlock = () => {
+  unlockPathOnly();
 };
 /**
  * Unlock only the path step
