@@ -38,6 +38,8 @@ jobs:
           docker run $ci_env --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run codecov"
 
       - name: upload to codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         with:
           fail_ci_if_error: false
