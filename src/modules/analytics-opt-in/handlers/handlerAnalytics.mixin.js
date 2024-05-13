@@ -230,10 +230,10 @@ export default {
           const newObj = Object.assign({}, prop, {
             network: this.network.type.name
           });
-          this.$amplitude.track(`${categories.accessWallet}${action}`, newObj);
+          this.$amplitude.track(`${categories.dapp}${action}`, newObj);
           return;
         }
-        this.$amplitude.track(`${categories.accessWallet}${action}`, {
+        this.$amplitude.track(`${categories.dapp}${action}`, {
           network: this.network.type.name
         });
       }
