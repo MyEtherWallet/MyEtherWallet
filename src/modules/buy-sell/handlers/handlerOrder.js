@@ -1,6 +1,6 @@
 import { sha3 } from 'web3-utils';
 import axios from 'axios';
-const API = 'https://mainnet.mewwallet.dev';
+const API = 'https://qa.mewwallet.dev';
 
 export default class OrderHandler {
   constructor() {}
@@ -42,7 +42,7 @@ export default class OrderHandler {
    */
   getSupportedFiatToBuy(symbol) {
     return axios
-      .get(`${API}/v3/purchase/providers/web?iso=us&cryptoCurrency=${symbol}`, {
+      .get(`${API}/v4/purchase/providers/web?iso=us&cryptoCurrency=${symbol}`, {
         headers: {
           'Accept-Language': 'en-US'
         }

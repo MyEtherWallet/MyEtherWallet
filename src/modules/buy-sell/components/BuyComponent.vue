@@ -136,7 +136,7 @@ import {
 import { getCurrency } from '@/modules/settings/components/currencyList';
 import { buyContracts } from './tokenList';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
-import { ETH, BSC, MATIC } from '@/utils/networks/types';
+import { ETH, OP, MATIC, ARB, BSC } from '@/utils/networks/types';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook.vue';
 
 export default {
@@ -333,7 +333,9 @@ export default {
       return '';
     },
     tokens() {
-      const filteredContracts = this.isCAD ? [buyContracts[0]] : buyContracts;
+      const filteredContracts = this.isCAD
+        ? [buyContracts[this.network.type.name][0]]
+        : buyContracts[this.network.type.name];
       if (this.inWallet) {
         return filteredContracts.reduce((arr, item) => {
           const inList = this.tokensList.find(t => {
@@ -376,6 +378,7 @@ export default {
             })
           : this.tokens;
       const returnedArray = [...tokensListWPrice];
+      console.log(returnedArray);
       return returnedArray;
     },
     hasData() {
@@ -443,7 +446,6 @@ export default {
       handler: function (newVal, oldVal) {
         const supportedCoins = {
           ETH: ETH.name,
-          BNB: BSC.name,
           MATIC: MATIC.name
         };
         if (
@@ -547,8 +549,9 @@ export default {
     async fetchGasPrice() {
       const supportedNodes = {
         ETH: ETH.name,
-        BNB: BSC.name,
-        MATIC: MATIC.name
+        MATIC: MATIC.name,
+        OP: OP.name,
+        ARB: ARB.name
       };
       const nodeType = !supportedNodes[this.selectedCurrency?.symbol]
         ? ETH.name
@@ -582,8 +585,8 @@ export default {
       this.orderHandler
         .getSupportedFiatToBuy(this.selectedCurrency?.symbol)
         .then(res => {
-          this.orderHandler.getFiatRatesForBuy().then(res => {
-            this.currencyRates = cloneDeep(res);
+          this.orderHandler.getFiatRatesForBuy().then(rateRes => {
+            this.currencyRates = cloneDeep(rateRes);
             this.loading = false;
             this.disableCurrencySelect = false;
           });
