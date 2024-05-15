@@ -231,7 +231,8 @@
     "minimatch": "3.0.5",
     "lodash": "4.17.21",
     "json5": "2.2.2",
-    "ethereumjs-abi": "https://registry.npmjs.org/ethereumjs-abi/-/ethereumjs-abi-0.6.8.tgz"
+    "ethereumjs-abi": "https://registry.npmjs.org/ethereumjs-abi/-/ethereumjs-abi-0.6.8.tgz",
+    "@ledgerhq/compressjs": "1.3.2"
   },
   "license": "MIT",
   "repository": "https://github.com/myetherwallet/myetherwallet"
