@@ -1,3 +1,7 @@
+### Release v6.9.6-hotfix.1
+
+* add 2% to ens register gas limit [#4913](https://github.com/MyEtherWallet/MyEtherWallet/pull/4913)
+
 ### Release v6.9.6
 
 ### devop
