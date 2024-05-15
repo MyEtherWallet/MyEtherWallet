@@ -99,7 +99,8 @@ export default {
       searchValue: '',
       nodes: nodes,
       fetchedNetworks: [],
-      selectedNetwork: {}
+      selectedNetwork: {},
+      currencyCopy: []
     };
   },
   computed: {
@@ -108,7 +109,7 @@ export default {
     ...mapState('external', ['selectedEIP6963Provider']),
     searchedCurrencyItems() {
       if (this.searchValue) {
-        const found = this.currencyItems.filter(element => {
+        const found = this.currencyCopy.filter(element => {
           return (
             element.name
               .toLowerCase()
@@ -120,18 +121,31 @@ export default {
         });
         return found;
       }
-      return this.currencyItems;
+      return this.currencyCopy;
     }
   },
   watch: {
+    currencyItems: {
+      handler(val) {
+        this.currencyCopy = val;
+      },
+      immediate: true,
+      deep: true
+    },
     selectedNetwork(newVal, oldVal) {
       // actual check whether the value was changed or just initially set
       if (newVal && !isEmpty(newVal) && oldVal && !isEmpty(oldVal)) {
         this.setNewNetwork(newVal);
       }
     },
-    open() {
+    open(val) {
       this.searchValue = '';
+      if (val) {
+        const currNetwork = this.fetchedNetworks.find(network => {
+          if (network.value === this.network.type.name) return network;
+        });
+        this.selectedNetwork = currNetwork;
+      }
     }
   },
   mounted() {
@@ -174,14 +188,13 @@ export default {
           return item;
         }
       });
-      const validNetwork = !isEmpty(found);
+      console.log(found);
       this.setNetwork({
         network: found[0],
         walletType: this.instance?.identifier || ''
       })
         .then(() => {
           if (this.inWallet) {
-            this.networkSelected = validNetwork ? this.network.type.name : '';
             const provider =
               this.identifier === WALLET_TYPES.WEB3_WALLET
                 ? this.setWeb3Instance(this.selectedEIP6963Provider)

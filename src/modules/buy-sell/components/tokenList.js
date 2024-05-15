@@ -40,4 +40,20 @@ const buyContracts = {
   OP: [tokenContracts.usdtop]
 };
 
-export { buyContracts, sellContracts };
+const coingeckoContracts = {
+  ETH: ['ethereum', 'dai', 'tether', 'usd-coin', 'paypal-usd', 'true-usd'],
+  BNB: [
+    'first-digital-usd',
+    'binance-bridged-usdc-bnb-smart-chain',
+    'binance-bridged-usdt-bnb-smart-chain'
+  ],
+  MATIC: [
+    'matic-network',
+    'bridged-usdc-polygon-pos-bridge',
+    'polygon-bridged-usdt-polygon'
+  ],
+  ARB: ['arbitrum-bridged-usdt-arbitrum'],
+  OP: ['bridged-usdt']
+};
+
+export { buyContracts, sellContracts, coingeckoContracts };
