@@ -183,12 +183,12 @@ export default {
       });
     },
     setNewNetwork(network) {
+      if (network.value === this.network.type.name) return;
       const found = Object.values(this.nodes).filter(item => {
         if (item.type.name === network.value) {
           return item;
         }
       });
-      console.log(found);
       this.setNetwork({
         network: found[0],
         walletType: this.instance?.identifier || ''
