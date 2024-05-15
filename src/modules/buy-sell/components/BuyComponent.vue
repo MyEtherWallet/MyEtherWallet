@@ -332,6 +332,16 @@ export default {
       }
       return '';
     },
+    appendSymbol() {
+      const appends = {
+        BNB: '-SC',
+        ETH: '',
+        ARB: '-ARBITRUM',
+        MATIC: '-MATIC',
+        OP: '-OPTIMISM'
+      };
+      return appends[this.network.type.name];
+    },
     tokens() {
       const filteredContracts = this.isCAD
         ? [buyContracts[this.network.type.name][0]]
@@ -342,18 +352,40 @@ export default {
             if (t.contract.toLowerCase() === item.toLowerCase()) return t;
           });
           if (inList) {
-            arr.push(inList);
+            const newToken =
+              inList.contract !== MAIN_TOKEN_ADDRESS
+                ? Object.assign({}, inList, {
+                    symbol: `${inList.symbol}${this.appendSymbol}`
+                  })
+                : inList;
+            arr.push(newToken);
             return arr;
           }
-          const token = this.contractToToken(item);
-          if (token) arr.push(token);
+          const token = this.contractToToken(item.toLowerCase());
+          if (token) {
+            const genToken =
+              token.contract !== MAIN_TOKEN_ADDRESS
+                ? Object.assign({}, token, {
+                    symbol: `${token.symbol}${this.appendSymbol}`
+                  })
+                : token;
+            arr.push(genToken);
+          }
           return arr;
         }, []);
       }
       const arr = new Array();
       for (const contract of filteredContracts) {
-        const token = this.contractToToken(contract);
-        if (token) arr.push(token);
+        const token = this.contractToToken(contract.toLowerCase());
+        if (token) {
+          const genToken =
+            token.contract !== MAIN_TOKEN_ADDRESS
+              ? Object.assign({}, token, {
+                  symbol: `${token.symbol}${this.appendSymbol}`
+                })
+              : token;
+          arr.push(genToken);
+        }
       }
       return arr;
     },
@@ -378,7 +410,6 @@ export default {
             })
           : this.tokens;
       const returnedArray = [...tokensListWPrice];
-      console.log(returnedArray);
       return returnedArray;
     },
     hasData() {
@@ -551,7 +582,8 @@ export default {
         ETH: ETH.name,
         MATIC: MATIC.name,
         OP: OP.name,
-        ARB: ARB.name
+        ARB: ARB.name,
+        BSC: BSC.name
       };
       const nodeType = !supportedNodes[this.selectedCurrency?.symbol]
         ? ETH.name
