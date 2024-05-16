@@ -752,10 +752,10 @@ export default {
           this.trackDapp('ensDomainRegisterSuccess');
           Toast(`Registration successful!`, {}, SUCCESS);
         })
-        .on('error', err => {
+        .on('error', () => {
           this.loadingReg = false;
           this.trackDapp('ensDomainRegisterFail');
-          this.instance.errorHandler(err.message ? err.message : err);
+          Toast(`Registering ENS name: ${this.name} failed`, {}, ERROR);
         });
     },
     commit() {
