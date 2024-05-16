@@ -71,7 +71,7 @@
 import { mapGetters, mapState, mapActions } from 'vuex';
 import { isEmpty } from 'lodash';
 
-import { ETH, BSC, MATIC } from '@/utils/networks/types';
+import { ETH, OP, MATIC, ARB, BSC } from '@/utils/networks/types';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 
 import handler from './handlers/handlerOrder';
@@ -137,7 +137,9 @@ export default {
       return (
         this.network.type.name === ETH.name ||
         this.network.type.name === BSC.name ||
-        this.network.type.name === MATIC.name
+        this.network.type.name === MATIC.name ||
+        this.network.type.name === OP.name ||
+        this.network.type.name === ARB.name
       );
     },
     leftBtn() {

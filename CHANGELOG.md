@@ -1,3 +1,23 @@
+### Release v6.9.6-hotfix.1
+
+### feat
+
+* add consistent header in access and create, add more stable coins [#4917](https://github.com/MyEtherWallet/MyEtherWallet/pull/4917)
+
+### fix
+
+* fix ens by raising gas [#4913](https://github.com/MyEtherWallet/MyEtherWallet/pull/4913)
+
+### Release v6.9.7
+
+### feature
+
+* add consistent header in access and create, add more stable coins [#4917](https://github.com/MyEtherWallet/MyEtherWallet/pull/4917)
+
+### devop
+
+* add 2% to ens register gas limit [#4913](https://github.com/MyEtherWallet/MyEtherWallet/pull/4913)
+
 ### Release v6.9.6
 
 ### devop

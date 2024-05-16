@@ -91,7 +91,8 @@ const EXCEPTIONS = [
   'eslint-plugin-security', // part of major release for eslint
   '@commitlint/config-conventional',
   'commitlint',
-  'minizlib'
+  'minizlib',
+  'remark-preset-lint-recommended' // breaks
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

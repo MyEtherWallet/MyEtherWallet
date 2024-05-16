@@ -37,7 +37,8 @@ const AUDIT_EXCEPTIONS = [
   'webpack-dev-middleware',
   'web3-utils',
   '@solana/web3.js',
-  'lodash.template'
+  'lodash.template',
+  'html-minifier'
 ];
 const execute = (command, callback) => {
   exec(

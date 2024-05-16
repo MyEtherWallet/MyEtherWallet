@@ -63,7 +63,7 @@ import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import * as nodes from '@/utils/networks/nodes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-import { ETH, BSC, MATIC } from '@/utils/networks/types';
+import { ETH, OP, MATIC, ARB, BSC } from '@/utils/networks/types';
 
 export default {
   name: 'BuySellTokenSelect',
@@ -99,7 +99,8 @@ export default {
       searchValue: '',
       nodes: nodes,
       fetchedNetworks: [],
-      selectedNetwork: {}
+      selectedNetwork: {},
+      currencyCopy: []
     };
   },
   computed: {
@@ -108,7 +109,7 @@ export default {
     ...mapState('external', ['selectedEIP6963Provider']),
     searchedCurrencyItems() {
       if (this.searchValue) {
-        const found = this.currencyItems.filter(element => {
+        const found = this.currencyCopy.filter(element => {
           return (
             element.name
               .toLowerCase()
@@ -120,18 +121,31 @@ export default {
         });
         return found;
       }
-      return this.currencyItems;
+      return this.currencyCopy;
     }
   },
   watch: {
+    currencyItems: {
+      handler(val) {
+        this.currencyCopy = val;
+      },
+      immediate: true,
+      deep: true
+    },
     selectedNetwork(newVal, oldVal) {
       // actual check whether the value was changed or just initially set
       if (newVal && !isEmpty(newVal) && oldVal && !isEmpty(oldVal)) {
         this.setNewNetwork(newVal);
       }
     },
-    open() {
+    open(val) {
       this.searchValue = '';
+      if (val) {
+        const currNetwork = this.fetchedNetworks.find(network => {
+          if (network.value === this.network.type.name) return network;
+        });
+        this.selectedNetwork = currNetwork;
+      }
     }
   },
   mounted() {
@@ -151,6 +165,8 @@ export default {
           if (
             network[0].type.name === ETH.name ||
             network[0].type.name === MATIC.name ||
+            network[0].type.name === ARB.name ||
+            network[0].type.name === OP.name ||
             network[0].type.name === BSC.name
           ) {
             return network;
@@ -167,19 +183,18 @@ export default {
       });
     },
     setNewNetwork(network) {
+      if (network.value === this.network.type.name) return;
       const found = Object.values(this.nodes).filter(item => {
         if (item.type.name === network.value) {
           return item;
         }
       });
-      const validNetwork = !isEmpty(found);
       this.setNetwork({
         network: found[0],
         walletType: this.instance?.identifier || ''
       })
         .then(() => {
           if (this.inWallet) {
-            this.networkSelected = validNetwork ? this.network.type.name : '';
             const provider =
               this.identifier === WALLET_TYPES.WEB3_WALLET
                 ? this.setWeb3Instance(this.selectedEIP6963Provider)

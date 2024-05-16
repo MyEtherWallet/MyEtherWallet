@@ -65,8 +65,8 @@
           @click="openTokenSelect = true"
         >
           <mew-token-container :img="selectedCurrency.img" size="28px" />
-          <div class="basic--text" style="margin-left: 8px">
-            {{ selectedCurrency.name }}
+          <div class="basic--text ml-2">
+            {{ selectedCurrency.name | concatName }}
           </div>
           <v-icon class="ml-auto" size="20px" color="titlePrimary">
             mdi-chevron-down
@@ -110,7 +110,7 @@
     <!-- ========================================================================= -->
     <buy-sell-token-select
       :open="openTokenSelect"
-      :currency-items="currencyItems"
+      :currency-items="tokens"
       :selected-currency="selectedCurrency"
       :set-currency="setCurrency"
       :in-wallet="inWallet"
@@ -131,16 +131,26 @@ import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import nodeList from '@/utils/networks';
 import {
   formatFloatingPointValue,
-  formatFiatValue
+  formatFiatValue,
+  formatIntegerValue,
+  formatPercentageValue
 } from '@/core/helpers/numberFormatHelper';
 import { getCurrency } from '@/modules/settings/components/currencyList';
-import { buyContracts } from './tokenList';
+import { coingeckoContracts } from './tokenList';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
-import { ETH, BSC, MATIC } from '@/utils/networks/types';
+import { ETH, OP, MATIC, ARB, BSC } from '@/utils/networks/types';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook.vue';
+import { getCoinGeckoTokenMarketDataByIds } from '@/apollo/queries/wallets/wallets.graphql';
 
 export default {
   name: 'ModuleBuyEth',
+  filters: {
+    concatName(val) {
+      // should probably be moved globablly
+      if (val.length < 4) return val;
+      return `${val.substring(0, 4)}...`;
+    }
+  },
   components: {
     ModuleAddressBook: ModuleAddressBook,
     BuySellTokenSelect: () =>
@@ -164,8 +174,84 @@ export default {
       default: false
     }
   },
+  apollo: {
+    getCoinGeckoTokenMarketDataByIds: {
+      query: getCoinGeckoTokenMarketDataByIds,
+      variables() {
+        return {
+          ids: coingeckoContracts[this.network.type.name]
+        };
+      },
+      skip() {
+        return !this.supportedBuy;
+      },
+      result({ data }) {
+        if (data) {
+          this.tokens = [];
+          const { getCoinGeckoTokenMarketDataByIds } = data;
+          const locTokens = this.isCAD
+            ? getCoinGeckoTokenMarketDataByIds.filter(item => {
+                return item.id === this.network.type.coingeckoID;
+              })
+            : getCoinGeckoTokenMarketDataByIds;
+          const parsedLoc = locTokens.map(token => {
+            return {
+              name: token.symbol.toUpperCase(),
+              symbol: this.symbols[token.id],
+              subtext: token.symbol.toUpperCase(),
+              value: token.symbol.toUpperCase(),
+              img: `https://img.mewapi.io/?image=${token.image}`,
+              market_cap: token.market_cap,
+              market_capf: formatIntegerValue(token.market_cap).value,
+              price_change_percentage_24h: token.price_change_percentage_24h,
+              price_change_percentage_24hf: formatPercentageValue(
+                token.price_change_percentage_24h
+              ).value,
+              price: token.current_price,
+              pricef: formatFiatValue(token.current_price).value
+            };
+          });
+          const tokensListWPrice =
+            this.currencyRates.length > 0
+              ? parsedLoc.map(token => {
+                  const priceRate = this.currencyRates.find(rate => {
+                    return rate.crypto_currency === token.symbol;
+                  });
+                  const actualPrice = priceRate?.quotes.find(quote => {
+                    return quote.fiat_currency === this.selectedFiatName;
+                  });
+                  token.price = formatFiatValue(
+                    actualPrice ? actualPrice.price : '0',
+                    this.currencyConfig
+                  ).value;
+                  token.value = token.name;
+                  token.name = token.symbol;
+                  return token;
+                })
+              : parsedLoc;
+          this.tokens = tokensListWPrice ? [...tokensListWPrice] : [];
+        }
+      }
+    }
+  },
   data() {
     return {
+      symbols: {
+        ethereum: 'ETH',
+        dai: 'DAI',
+        tether: 'USDT',
+        'usd-coin': 'USDC',
+        'paypal-usd': 'PYUSD',
+        'true-usd': 'TUSD',
+        'first-digital-usd': 'FDUSD-SC',
+        'binance-bridged-usdc-bnb-smart-chain': 'USDC-SC',
+        'binance-bridged-usdt-bnb-smart-chain': 'USDT-SC',
+        'matic-network': 'MATIC',
+        'bridged-usdc-polygon-pos-bridge': 'USDC-MATIC',
+        'polygon-bridged-usdt-polygon': 'USDT-MATIC',
+        'arbitrum-bridged-usdt-arbitrum': 'USDT-ARBITRUM',
+        'bridged-usdt': 'USDT-OPTIMISM'
+      },
       openTokenSelect: false,
       selectedCurrency: this.defaultCurrency,
       loading: true,
@@ -185,7 +271,8 @@ export default {
       simplexQuote: {},
       showMoonpay: true,
       disableCurrencySelect: true,
-      localCryptoAmount: '0'
+      localCryptoAmount: '0',
+      tokens: []
     };
   },
   computed: {
@@ -332,52 +419,6 @@ export default {
       }
       return '';
     },
-    tokens() {
-      const filteredContracts = this.isCAD ? [buyContracts[0]] : buyContracts;
-      if (this.inWallet) {
-        return filteredContracts.reduce((arr, item) => {
-          const inList = this.tokensList.find(t => {
-            if (t.contract.toLowerCase() === item.toLowerCase()) return t;
-          });
-          if (inList) {
-            arr.push(inList);
-            return arr;
-          }
-          const token = this.contractToToken(item);
-          if (token) arr.push(token);
-          return arr;
-        }, []);
-      }
-      const arr = new Array();
-      for (const contract of filteredContracts) {
-        const token = this.contractToToken(contract);
-        if (token) arr.push(token);
-      }
-      return arr;
-    },
-    currencyItems() {
-      if (!this.supportedBuy) return;
-      const tokensListWPrice =
-        this.currencyRates.length > 0
-          ? this.tokens.map(token => {
-              const priceRate = this.currencyRates.find(rate => {
-                return rate.crypto_currency === token.symbol;
-              });
-              const actualPrice = priceRate?.quotes.find(quote => {
-                return quote.fiat_currency === this.selectedFiatName;
-              });
-              token.price = formatFiatValue(
-                actualPrice ? actualPrice.price : '0',
-                this.currencyConfig
-              ).value;
-              token.value = token.name;
-              token.name = token.symbol;
-              return token;
-            })
-          : this.tokens;
-      const returnedArray = [...tokensListWPrice];
-      return returnedArray;
-    },
     hasData() {
       return !isEmpty(this.fetchedData);
     },
@@ -443,15 +484,13 @@ export default {
       handler: function (newVal, oldVal) {
         const supportedCoins = {
           ETH: ETH.name,
-          BNB: BSC.name,
           MATIC: MATIC.name
         };
         if (
           !newVal ||
           (newVal?.contract?.toLowerCase() === MAIN_TOKEN_ADDRESS &&
-            !supportedCoins[newVal.symbol])
+            !supportedCoins[newVal?.symbol])
         ) {
-          this.selectedCurrency = oldVal;
           return;
         }
         if (!isEqual(newVal, oldVal)) {
@@ -470,7 +509,7 @@ export default {
             return;
           }
 
-          const token = this.currencyItems.find(
+          const token = this.tokens.find(
             item => item.name === this.selectedCryptoName
           );
           const price = token.price.substring(1).replace(',', '');
@@ -486,8 +525,10 @@ export default {
     },
     network: {
       handler: function () {
+        this.tokens = [];
         this.selectedCurrency = {};
         this.selectedCurrency = this.defaultCurrency;
+        this.$apollo.queries.getCoinGeckoTokenMarketDataByIds.refresh();
       },
       deep: true
     },
@@ -547,8 +588,10 @@ export default {
     async fetchGasPrice() {
       const supportedNodes = {
         ETH: ETH.name,
-        BNB: BSC.name,
-        MATIC: MATIC.name
+        MATIC: MATIC.name,
+        OP: OP.name,
+        ARB: ARB.name,
+        BSC: BSC.name
       };
       const nodeType = !supportedNodes[this.selectedCurrency?.symbol]
         ? ETH.name
@@ -582,8 +625,8 @@ export default {
       this.orderHandler
         .getSupportedFiatToBuy(this.selectedCurrency?.symbol)
         .then(res => {
-          this.orderHandler.getFiatRatesForBuy().then(res => {
-            this.currencyRates = cloneDeep(res);
+          this.orderHandler.getFiatRatesForBuy().then(rateRes => {
+            this.currencyRates = cloneDeep(rateRes);
             this.loading = false;
             this.disableCurrencySelect = false;
           });
