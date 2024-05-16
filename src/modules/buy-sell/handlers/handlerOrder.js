@@ -42,7 +42,7 @@ export default class OrderHandler {
    */
   getSupportedFiatToBuy(symbol) {
     return axios
-      .get(`${API}/v3/purchase/providers/web?iso=us&cryptoCurrency=${symbol}`, {
+      .get(`${API}/v4/purchase/providers/web?iso=us&cryptoCurrency=${symbol}`, {
         headers: {
           'Accept-Language': 'en-US'
         }
