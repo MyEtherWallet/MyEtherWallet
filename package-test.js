@@ -92,10 +92,7 @@ const EXCEPTIONS = [
   '@commitlint/config-conventional',
   'commitlint',
   'minizlib',
-  // update after release
-  '@sentry/browser',
-  '@sentry/tracing',
-  '@sentry/vue'
+  'remark-preset-lint-recommended' // breaks
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
