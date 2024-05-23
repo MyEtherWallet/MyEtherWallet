@@ -50,7 +50,7 @@
                       'ml-2'
                     ]"
                   >
-                    {{ stakedRewards.totalRewards }} ETH
+                    {{ stakedRewards.totalRewards | concatStr }} ETH
                   </span>
                 </div>
                 <div
@@ -80,7 +80,7 @@
                       'ml-2'
                     ]"
                   >
-                    {{ stakedRewards.totalStaked }} ETH
+                    {{ stakedRewards.totalStaked | concatStr }} ETH
                   </span>
                 </div>
                 <div
@@ -131,7 +131,7 @@
                       'ml-2'
                     ]"
                   >
-                    {{ cbStakeRewards.totalRewards }} ETH
+                    {{ cbStakeRewards.totalRewards | concatStr }} ETH
                   </span>
                 </div>
                 <div
@@ -161,7 +161,7 @@
                       'ml-2'
                     ]"
                   >
-                    {{ cbStakeRewards.totalStaked }} ETH
+                    {{ cbStakeRewards.totalStaked | concatStr }} ETH
                   </span>
                 </div>
                 <div
@@ -203,6 +203,14 @@ import { COINBASE_STAKING_ROUTES } from '@/dapps/coinbase-staking/configs';
 
 export default {
   name: 'StakingSummaryCard',
+  filters: {
+    concatStr(val) {
+      const newVal = `${val}`;
+      // should probably be moved globablly
+      if (newVal.length < 8) return newVal;
+      return `${newVal.substr(0, 7)}...`;
+    }
+  },
   props: {
     stakedRewards: {
       type: Object,

@@ -9,14 +9,11 @@
         <module-balance />
       </div>
     </template>
-    <template v-if="showBanner" #leftColItem2>
+    <template #leftColItem2>
       <div>
-        <dashboard-banner />
-      </div>
-    </template>
-    <template v-if="hasStaked" #leftColItem2>
-      <div>
+        <dashboard-banner v-if="showBanner" />
         <staking-summary-card
+          v-if="hasStaked"
           :eth-price="ethPrice"
           :staked-rewards="stakedRewards"
           :cb-stake-rewards="cbStakeRewards"
