@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "6.9.7",
+  "version": "6.9.7-hotfix.1",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build": "npm run update && vue-cli-service build",
@@ -168,7 +168,7 @@
     "postcss-import": "12.0.1",
     "postcss-url": "8.0.0",
     "prettier": "2.8.0",
-    "protobufjs": "7.2.6",
+    "protobufjs": "7.3.0",
     "raw-loader": "4.0.2",
     "remark-cli": "10.0.0",
     "remark-preset-lint-recommended": "6.1.3",
