@@ -89,13 +89,6 @@
       </div>
     </v-container>
     <div class="spacer-y-medium" />
-    <mew-toast
-      ref="toast"
-      can-close
-      :link-obj="toastLink"
-      text="Did you know? Hardware wallets offer the highest security for accessing your crypto."
-      toast-type="info"
-    />
     <!--
     =====================================================================================
       Create Wallet with Software Overlay - activates on Create Software Button click
@@ -139,10 +132,6 @@ export default {
     }
   },
   data: () => ({
-    toastLink: {
-      title: 'Buy a hardware wallet',
-      url: ''
-    },
     titleRoute: {
       text: 'Access Wallet',
       routeName: 'AccessWallet',
