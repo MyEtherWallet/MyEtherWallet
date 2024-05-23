@@ -1,7 +1,7 @@
 import { ROUTES_HOME } from '../configs/configRoutes';
 import {
-  createWalletProps,
-  createRouteGuard,
+  // createWalletProps,
+  // createRouteGuard,
   accessWalletProps,
   accessRouteGuard
 } from './helpers';
@@ -170,14 +170,14 @@ export default {
       path: ROUTES_HOME.CREATE_WALLET.PATH,
       name: ROUTES_HOME.CREATE_WALLET.NAME,
       component: () => import('@/views/layouts-default/TheCreateWalletLayout'),
-      props: createWalletProps,
+      // props: createWalletProps,
       meta: {
         noAuth: true,
         title: 'Create A Crypto Wallet | Mobile and Browser Crypto Wallets',
         description:
           'Create a secure self custody crypto wallet using MyEtherWallet. Choose from our mobile app or browser extension wallet.'
-      },
-      beforeEnter: createRouteGuard
+      }
+      // beforeEnter: createRouteGuard
     },
     {
       path: ROUTES_HOME.ACCESS_WALLET.PATH,
