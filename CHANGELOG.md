@@ -1,7 +1,3 @@
-### devop
-
-* update privacy policy [#4925](https://github.com/MyEtherWallet/MyEtherWallet/pull/4925)
-
 ### Release v6.9.7-hotfix.1
 
 ### devop
