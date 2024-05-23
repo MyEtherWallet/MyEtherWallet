@@ -1,8 +1,8 @@
-### Release v6.9.6-hotfix.1
+### Release v6.9.7-hotfix.1
 
-### feat
+### devop
 
-* add consistent header in access and create, add more stable coins [#4917](https://github.com/MyEtherWallet/MyEtherWallet/pull/4917)
+* update privacy policy [#4925](https://github.com/MyEtherWallet/MyEtherWallet/pull/4925)
 
 ### fix
 
