@@ -5,7 +5,19 @@ const ROUTES_HOME = {
   ABOUT_PAGE: { NAME: 'AboutPage', PATH: 'about' },
   ADVERTISE: { NAME: 'AdvertiseWithUsPage', PATH: 'advertise-with-us' },
   BUY_HARDWARE_WALLET: { NAME: 'BuyHardwareWallet', PATH: 'buy-hardware' },
-  CREATE_WALLET: { NAME: 'CreateWallet', PATH: 'wallet/create/:overlay?' },
+  CREATE_WALLET: { NAME: 'CreateWallet', PATH: 'wallet/create' },
+  CREATE_WALLET_SOFTWARE_OVERVIEW: {
+    NAME: 'CreateWalletSoftwareOverview',
+    PATH: 'overview'
+  },
+  CREATE_WALLET_SOFTWARE_MNEMONIC: {
+    NAME: 'CreateWalletSoftwareMnemonic',
+    PATH: 'mnemonic'
+  },
+  CREATE_WALLET_SOFTWARE_KEYSTORE: {
+    NAME: 'CreateWalletSoftwareKeystore',
+    PATH: 'keystore'
+  },
   CONVERT_UNITS: { NAME: 'ConvertUnits', PATH: 'convert-units' },
   HOW_IT_WORKS: { NAME: 'HowItWorks', PATH: 'how-it-works' },
   JOBS: { NAME: 'Careers', PATH: 'careers' },

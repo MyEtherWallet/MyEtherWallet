@@ -1,5 +1,8 @@
 <template>
-  <div class="mew-component--create--mnemonic-phrase" style="max-width: 800px">
+  <white-sheet
+    class="mew-component--create--mnemonic-phrase mx-auto px-8 py-4"
+    style="max-width: 800px"
+  >
     <mew-stepper class="mx-md-0" :items="steppers" :on-step="step">
       <!-- ===================================================================================== -->
       <!-- Step 1: Write Down Words -->
@@ -203,7 +206,7 @@
         </div>
       </template>
     </mew-stepper>
-  </div>
+  </white-sheet>
 </template>
 
 <script>
@@ -211,6 +214,7 @@ import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { CREATE_WALLET } from '@/modules/analytics-opt-in/handlers/configs/events.js';
+import handlerCreateWallet from '../handlers/handlerCreateWallet';
 
 export default {
   name: 'CreateWalletMnemonicPhrase',
@@ -219,14 +223,6 @@ export default {
     phraseBlock: () => import('@/core/components/PhraseBlock')
   },
   mixins: [handlerAnalytics],
-  props: {
-    handlerCreateWallet: {
-      type: Object,
-      default: () => {
-        return {};
-      }
-    }
-  },
   data: () => ({
     step: 1,
     validateMnemonicValues: {},
@@ -258,7 +254,8 @@ export default {
     ],
     phraseSize: 12,
     phrase: [],
-    generatedVerification: []
+    generatedVerification: [],
+    createWalletHandler: null
   }),
   computed: {
     canVerify() {
@@ -292,11 +289,12 @@ export default {
     }
   },
   mounted() {
+    this.createWalletHandler = new handlerCreateWallet();
     this.setPhrase();
   },
   methods: {
     generateVerification() {
-      this.generatedVerification = this.handlerCreateWallet.getVerification();
+      this.generatedVerification = this.createWalletHandler.getVerification();
       this.generatedVerification.sort(function (a, b) {
         return a.itemNumber - b.itemNumber;
       });
@@ -308,7 +306,7 @@ export default {
       return Object.values(obj[this.getOnlyKey(obj)]);
     },
     setPhrase() {
-      this.handlerCreateWallet
+      this.createWalletHandler
         .generateMnemonic(this.phraseSize)
         .then(res => {
           this.phrase = res;
@@ -320,7 +318,7 @@ export default {
         });
     },
     verify() {
-      this.handlerCreateWallet
+      this.createWalletHandler
         .validateMnemonic(this.validateMnemonicValues)
         .then(() => {
           this.trackCreateWalletAmplitude(CREATE_WALLET.MNEMONIC_SUCCESS);
@@ -367,6 +365,9 @@ export default {
       this.extraWordVerification = '';
       this.trackCreateWalletAmplitude(CREATE_WALLET.MNEMONIC_SUCCESS_CREATE);
       this.updateStep(1);
+      this.$routeer.push({
+        name: ROUTES_HOME.CREATE_WALLET_SOFTWARE_OVERVIEW.NAME
+      });
     }
   }
 };
