@@ -44,6 +44,13 @@
         <!-- ===================================================================================== -->
         <div v-if="!isGeneratingKeystore" class="d-flex justify-center">
           <mew-button
+            title="Back"
+            btn-size="xlarge"
+            btn-style="outline"
+            class="mx-md-1"
+            @click.native="backToOverview"
+          />
+          <mew-button
             class="CreateWalletKeystoreSubmitButton"
             title="Create Wallet"
             btn-size="xlarge"
@@ -299,6 +306,12 @@ export default {
       this.password = '';
       this.cofirmPassword = '';
       this.trackCreateWalletAmplitude(CREATE_WALLET.KEYSTORE_SUCCESS_CREATE);
+      this.$router.push({
+        name: ROUTES_HOME.CREATE_WALLET_SOFTWARE_OVERVIEW.NAME
+      });
+    },
+    backToOverview() {
+      this.trackCreateWalletAmplitude(CREATE_WALLET.KEYSTORE_BACK);
       this.$router.push({
         name: ROUTES_HOME.CREATE_WALLET_SOFTWARE_OVERVIEW.NAME
       });

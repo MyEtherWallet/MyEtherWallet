@@ -71,6 +71,13 @@
           -->
         <div class="MnemonicWroteThemDown d-flex justify-center mt-6">
           <mew-button
+            title="Back"
+            btn-size="xlarge"
+            btn-style="outline"
+            class="mx-md-1"
+            @click.native="trackBackToOverview"
+          />
+          <mew-button
             title="I wrote them down"
             btn-size="xlarge"
             :has-full-width="false"
@@ -366,6 +373,12 @@ export default {
       this.trackCreateWalletAmplitude(CREATE_WALLET.MNEMONIC_SUCCESS_CREATE);
       this.updateStep(1);
       this.$routeer.push({
+        name: ROUTES_HOME.CREATE_WALLET_SOFTWARE_OVERVIEW.NAME
+      });
+    },
+    trackBackToOverview() {
+      this.trackCreateWalletAmplitude(CREATE_WALLET.MNEMONIC_BACK);
+      this.$router.push({
         name: ROUTES_HOME.CREATE_WALLET_SOFTWARE_OVERVIEW.NAME
       });
     }

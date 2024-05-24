@@ -194,14 +194,14 @@ export default {
     },
     inAccessOrCreate() {
       return (
-        this.$route.name === ROUTES_HOME.ACCESS_WALLET.NAME ||
-        this.$route.name === ROUTES_HOME.CREATE_WALLET.NAME
+        this.$route.path.includes('/access') ||
+        this.$route.path.includes('/create')
       );
     }
   },
   async mounted() {
     const controller = new ScrollMagic.Controller();
-    this.topOffset = this.offset;
+    this.topOffset = this.inAccessOrCreate ? 0 : this.offset;
     if (!this.inAccessOrCreate) {
       new ScrollMagic.Scene({
         triggerElement: '.js-body',

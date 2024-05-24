@@ -69,6 +69,17 @@
           </div>
         </mew-button>
       </div>
+      <div class="d-flex align-center justify-center">
+        <mew-button
+          title="Back"
+          btn-size="xlarge"
+          btn-style="outline"
+          has-full-width
+          color-theme="white"
+          class="mx-md-1 my-1"
+          @click.native="backToSoftware"
+        />
+      </div>
 
       <!--
       =====================================================================================
@@ -117,6 +128,11 @@ export default {
     routeToKeystore() {
       this.$router.push({
         name: ROUTES_HOME.CREATE_WALLET_SOFTWARE_KEYSTORE.NAME
+      });
+    },
+    backToSoftware() {
+      this.$router.push({
+        name: ROUTES_HOME.CREATE_WALLET.NAME
       });
     }
   }
