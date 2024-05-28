@@ -90,6 +90,7 @@ export default {
     hasStaked() {
       return (
         !this.loading &&
+        this.network.type.chainID === ETH.chainID &&
         (BigNumber(this.cbStakeRewards.totalStaked).gt(0) ||
           BigNumber(this.stakedRewards.totalStaked).gt(0))
       );
