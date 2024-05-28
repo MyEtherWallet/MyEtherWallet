@@ -107,5 +107,6 @@ module.exports = [
   'https://metadata.unstoppabledomains.com:443', // Unstoppable domains
   'wss://relay.walletconnect.com:443', // walletconnect2
   'https://explorer-api.walletconnect.com:443', // web3modal
-  'https://mew-seo-pages.pages.dev:443' //pages
+  'https://mew-seo-pages.pages.dev:443', //pages
+  'https://sr-client-cfg.amplitude.com:443' //amplitude
 ];

@@ -13,6 +13,7 @@ import * as nameHashPckg from 'eth-ens-namehash';
 import VueIntercom from '@mathieustan/vue-intercom';
 import VueSocialSharing from 'vue-social-sharing';
 import * as amplitude from '@amplitude/analytics-browser';
+import { sessionReplayPlugin } from '@amplitude/plugin-session-replay-browser';
 
 /**Dapps Store */
 import { dappStoreBeforeCreate } from '../dapps/dappsStore';
@@ -65,26 +66,34 @@ Vue.config.productionTip = false;
 // fake generative 32 hex character
 const popupStore = locStore.get('popups-store') || { consentToTrack: false };
 
-amplitude.init(nameHashPckg.hash(VERSION), {
-  instanceName:
-    process.env.NODE_ENV === 'production' ? 'mew-web-prod' : 'mew-web-dev',
-  optOut: popupStore.consentToTrack,
-  serverUrl:
+const sessionReplayTracking = sessionReplayPlugin({
+  configEndpointUrl:
     process.env.NODE_ENV === 'production'
       ? 'https://analytics-web.mewwallet.dev/record'
-      : 'https://analytics-web-development.mewwallet.dev/record',
-  appVersion: VERSION,
-  trackingOptions: {
-    ipAddress: false
-  },
-  identityStorage: 'none',
-  logLevel: amplitude.Types.LogLevel.None,
-  defaultTracking: {
-    formInteractions: false,
-    pageViews: false
-  }
+      : 'https://analytics-web-development.mewwallet.dev/record'
 });
-Vue.prototype.$amplitude = amplitude;
+amplitude.add(sessionReplayTracking).promise.then(() => {
+  amplitude.init(nameHashPckg.hash(VERSION), {
+    instanceName:
+      process.env.NODE_ENV === 'production' ? 'mew-web-prod' : 'mew-web-dev',
+    optOut: popupStore.consentToTrack,
+    serverUrl:
+      process.env.NODE_ENV === 'production'
+        ? 'https://analytics-web.mewwallet.dev/record'
+        : 'https://analytics-web-development.mewwallet.dev/record',
+    appVersion: VERSION,
+    trackingOptions: {
+      ipAddress: false
+    },
+    identityStorage: 'none',
+    logLevel: amplitude.Types.LogLevel.None,
+    defaultTracking: {
+      formInteractions: false,
+      pageViews: false
+    }
+  });
+  Vue.prototype.$amplitude = amplitude;
+});
 
 // Lazy Loader
 Vue.use(VueLazyLoad);
@@ -113,7 +122,7 @@ new Vue({
     this.$store.commit('popups/INIT_STORE');
     dappStoreBeforeCreate(this.$store);
 
-    this.$amplitude.setOptOut(!this.$store.state.popups.consentToTrack);
+    this.$amplitude?.setOptOut(!this.$store.state.popups.consentToTrack);
   },
   render: h => h(app)
 });
