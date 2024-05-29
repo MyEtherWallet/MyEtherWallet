@@ -66,7 +66,7 @@
                   {{ stakedApy }}
                 </div>
               </v-col>
-              <v-col cols="3" offset="1" offset-sm="0">
+              <v-col cols="5" sm="3" offset-sm="0">
                 <div class="d-flex align-center mb-1">
                   <img
                     :src="network.type.icon"
@@ -147,7 +147,7 @@
                   APY 4.00%
                 </div>
               </v-col>
-              <v-col cols="3" offset="1" offset-sm="0">
+              <v-col cols="5" sm="3" offset-sm="0">
                 <div class="d-flex align-center mb-1">
                   <img
                     :src="network.type.icon"
