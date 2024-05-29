@@ -71,10 +71,9 @@
       </div>
       <div class="d-flex align-center justify-center">
         <mew-button
-          title="Back"
+          title="Back To Create Wallet"
           btn-size="xlarge"
           btn-style="outline"
-          has-full-width
           color-theme="white"
           class="mx-md-1 my-1"
           @click.native="backToSoftware"
