@@ -74,7 +74,7 @@
             title="Back"
             btn-size="xlarge"
             btn-style="outline"
-            class="mx-md-1"
+            class="mr-1"
             @click.native="trackBackToOverview"
           />
           <mew-button

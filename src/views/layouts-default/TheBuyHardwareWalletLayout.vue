@@ -74,6 +74,19 @@
               </mew-button>
             </a>
           </v-col>
+          <v-col
+            v-if="showBackToCreate"
+            cols="12"
+            class="d-flex align-center justify-center"
+          >
+            <mew-button
+              title="Back to Create Wallet"
+              btn-size="xlarge"
+              btn-style="outline"
+              color-theme="white"
+              @click.native="backToCreate"
+            />
+          </v-col>
         </v-row>
       </v-sheet>
     </v-container>
@@ -83,12 +96,20 @@
 <script>
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { COMMON } from '@/modules/analytics-opt-in/handlers/configs/events';
+import { ROUTES_HOME } from '@/core/configs/configRoutes';
 export default {
   name: 'TheBuyHardwareWalletLayout',
   components: {
     TheLayoutHeader: () => import('../components-default/TheLayoutHeader')
   },
   mixins: [handlerAnalytics],
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      if (from.name === ROUTES_HOME.CREATE_WALLET.NAME) {
+        vm.showBackToCreate = true;
+      }
+    });
+  },
   data: () => ({
     buttons: [
       {
@@ -111,7 +132,8 @@ export default {
         link: 'https://trezor.io/?offer_id=12&aff_id=2029',
         name: 'Trezor'
       }
-    ]
+    ],
+    showBackToCreate: false
   }),
   mounted() {
     this.trackBuyHardwareAmplitude(COMMON.PAGE_SHOWN);
@@ -119,6 +141,9 @@ export default {
   methods: {
     trackBuy(name) {
       this.trackBuyHardwareAmplitude(name);
+    },
+    backToCreate() {
+      this.$router.push({ name: ROUTES_HOME.CREATE_WALLET.NAME });
     }
   }
 };
