@@ -224,6 +224,8 @@ export default {
       })
         .setClassToggle('.js-header', 'fixed')
         .addTo(controller);
+    } else {
+      this.topOffset = 0;
     }
   },
   methods: {
