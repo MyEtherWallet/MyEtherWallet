@@ -1,3 +1,13 @@
+### Release v6.9.8
+
+### devop
+
+* rewrite create wallet path [#4928](https://github.com/MyEtherWallet/MyEtherWallet/pull/4928)
+
+### feat
+
+* add staking summary card [#4923](https://github.com/MyEtherWallet/MyEtherWallet/pull/4923)
+
 ### Release v6.9.7-hotfix.1
 
 ### devop
