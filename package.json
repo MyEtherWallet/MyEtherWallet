@@ -122,7 +122,7 @@
     "@ledgerhq/hw-app-eth": "6.33.7",
     "@ledgerhq/hw-transport-web-ble": "6.27.16",
     "@ledgerhq/hw-transport-webusb": "6.27.16",
-    "@ledgerhq/live-common": "27.7.0",
+    "@ledgerhq/live-common": "34.2.0",
     "@mdi/font": "7.4.47",
     "@vue/babel-preset-app": "4.5.15",
     "@vue/cli-plugin-babel": "4.5.15",
