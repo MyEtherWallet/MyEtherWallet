@@ -66,7 +66,7 @@
                   {{ stakedApy }}
                 </div>
               </v-col>
-              <v-col cols="3" offset="1" offset-sm="0">
+              <v-col cols="5" sm="3" offset-sm="0">
                 <div class="d-flex align-center mb-1">
                   <img
                     :src="network.type.icon"
@@ -107,7 +107,7 @@
             </v-row>
             <v-row
               v-if="showCbStake"
-              class="px-2 px-sm-8 py-4 cb-item-border"
+              :class="['px-2 px-sm-8 py-4', showStaked ? 'cb-item-border' : '']"
               no-gutters
             >
               <v-col cols="1">
@@ -147,7 +147,7 @@
                   APY 4.00%
                 </div>
               </v-col>
-              <v-col cols="3" offset="1" offset-sm="0">
+              <v-col cols="5" sm="3" offset-sm="0">
                 <div class="d-flex align-center mb-1">
                   <img
                     :src="network.type.icon"
@@ -277,11 +277,14 @@ export default {
 
 <style lang="scss" scoped>
 .staking-summary-table-header {
+  height: 58px;
   border-bottom: 1px solid var(--v-asphalt100-base);
-  border-top: 1px solid var(--v-asphalt100-base);
+  align-content: center;
 
   .staking-summary-table-header-item {
-    color: var(--v-greyPrimary-base) !important;
+    color: #76848b;
+    font-weight: 500;
+    font-size: 12px;
     text-transform: uppercase;
   }
 }
