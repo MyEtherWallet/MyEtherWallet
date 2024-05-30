@@ -82,6 +82,7 @@ export default {
       return [GOERLI, HOLESKY, ETH];
     },
     showBanner() {
+      if (this.stakedLoading || this.cbStakeLoading) return false;
       const supportedIdx = this.stakingSupported.findIndex(item => {
         if (item.chainID === this.network.type.chainID) return item;
       });
@@ -90,6 +91,7 @@ export default {
     hasStaked() {
       return (
         !this.loading &&
+        this.network.type.chainID === ETH.chainID &&
         (BigNumber(this.cbStakeRewards.totalStaked).gt(0) ||
           BigNumber(this.stakedRewards.totalStaked).gt(0))
       );
