@@ -194,15 +194,16 @@ export default {
     },
     inAccessOrCreate() {
       return (
-        this.$route.name === ROUTES_HOME.ACCESS_WALLET.NAME ||
-        this.$route.name === ROUTES_HOME.CREATE_WALLET.NAME
+        this.$route.path.includes('/access') ||
+        this.$route.path.includes('/buy-hardware') ||
+        this.$route.path.includes('/create')
       );
     }
   },
   async mounted() {
-    const controller = new ScrollMagic.Controller();
-    this.topOffset = this.offset;
     if (!this.inAccessOrCreate) {
+      const controller = new ScrollMagic.Controller();
+      this.topOffset = this.inAccessOrCreate ? 0 : this.offset;
       new ScrollMagic.Scene({
         triggerElement: '.js-body',
         duration: 52,
@@ -223,6 +224,8 @@ export default {
       })
         .setClassToggle('.js-header', 'fixed')
         .addTo(controller);
+    } else {
+      this.topOffset = 0;
     }
   },
   methods: {

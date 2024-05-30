@@ -1,5 +1,5 @@
 <template>
-  <div class="mew-overview pt-5">
+  <div class="mew-overview pt-5 mx-auto">
     <div style="max-width: 650px; width: 100%" class="mx-auto">
       <!--
       =====================================================================================
@@ -10,18 +10,18 @@
         <mew-button
           class="CreateWalletSoftwareOverviewKeystore"
           has-full-width
-          color-theme="greyMedium"
+          color-theme="white"
           btn-style="outline"
           style="height: 160px"
-          @click.native="selectWalletType(walletTypes.KEYSTORE)"
+          @click.native="routeToKeystore"
         >
           <div
             class="text-left d-flex align-center justify-space-between px-2"
             style="width: 100%"
           >
             <div>
-              <div class="mew-heading-2 textDark--text mb-2">Keystore File</div>
-              <div class="break-word textDark--text">
+              <div class="mew-heading-2 white--text mb-2">Keystore File</div>
+              <div class="break-word white--text">
                 Using a keystore file online makes your wallet more vulnerable
                 to loss of funds. We don’t recommend this method of wallet
                 creation.
@@ -44,20 +44,18 @@
       <div class="CreateWalletSoftwareOverviewMnemonic mb-5">
         <mew-button
           has-full-width
-          color-theme="greyMedium"
+          color-theme="white"
           btn-style="outline"
           style="height: 160px"
-          @click.native="selectWalletType(walletTypes.MNEMONIC)"
+          @click.native="routeToMnemonic"
         >
           <div
             class="text-left d-flex align-center justify-space-between px-2"
             style="width: 100%"
           >
             <div>
-              <div class="mew-heading-2 textDark--text mb-2">
-                Mnemonic Phrase
-              </div>
-              <div class="break-word textDark--text">
+              <div class="mew-heading-2 white--text mb-2">Mnemonic Phrase</div>
+              <div class="break-word white--text">
                 Using a Mnemonic Phrase online makes your wallet more vulnerable
                 to loss of funds. We don’t recommend this method of wallet
                 creation.
@@ -70,6 +68,16 @@
             />
           </div>
         </mew-button>
+      </div>
+      <div class="d-flex align-center justify-center">
+        <mew-button
+          title="Back To Create Wallet"
+          btn-size="xlarge"
+          btn-style="outline"
+          color-theme="white"
+          class="mx-md-1 my-1"
+          @click.native="backToSoftware"
+        />
       </div>
 
       <!--
@@ -89,16 +97,18 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex';
-import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
+import { ROUTES_HOME } from '@/core/configs/configRoutes';
+
 export default {
   name: 'CreateWalletSoftwareOverview',
-  data: () => ({
-    walletTypes: WALLET_TYPES,
-    linkToLearnMore: {
-      url: '',
-      title: 'Learn more'
-    }
-  }),
+  data() {
+    return {
+      linkToLearnMore: {
+        text: 'Learn more',
+        url: ''
+      }
+    };
+  },
   computed: {
     ...mapGetters('article', ['getArticle']),
     ...mapState('wallet', ['isOfflineApp'])
@@ -109,13 +119,20 @@ export default {
       this.linkToLearnMore.url = this.getArticle('not-rec-when-access-wallet');
   },
   methods: {
-    /**
-     * Emit wallet type creation.
-     * @type - is part of WALLET_TYPES
-     * function is void
-     */
-    selectWalletType(type) {
-      this.$emit('typeSelect', type);
+    routeToMnemonic() {
+      this.$router.push({
+        name: ROUTES_HOME.CREATE_WALLET_SOFTWARE_MNEMONIC.NAME
+      });
+    },
+    routeToKeystore() {
+      this.$router.push({
+        name: ROUTES_HOME.CREATE_WALLET_SOFTWARE_KEYSTORE.NAME
+      });
+    },
+    backToSoftware() {
+      this.$router.push({
+        name: ROUTES_HOME.CREATE_WALLET.NAME
+      });
     }
   }
 };
