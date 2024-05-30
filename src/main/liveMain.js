@@ -12,12 +12,36 @@ import * as nameHashPckg from 'eth-ens-namehash';
 
 import VueIntercom from '@mathieustan/vue-intercom';
 import VueSocialSharing from 'vue-social-sharing';
-import * as amplitude from '@amplitude/analytics-browser';
-// import * as sessionReplay from '@amplitude/session-replay-browser';
-import { sessionReplayPlugin } from '@amplitude/plugin-session-replay-browser';
+import { Types } from '@amplitude/analytics-browser';
 
+import { AmplitudeSessionReplay } from './amplitude';
 /**Dapps Store */
 import { dappStoreBeforeCreate } from '../dapps/dappsStore';
+
+// overwrite fetch for session replay
+const originalFetch = fetch;
+const OVERRIDES = {
+  'https://sr-client-cfg.amplitude.com/config':
+    'https://analytics-web-development.mewwallet.dev/config',
+  'https://api-sr.amplitude.com/sessions/v2/track':
+    'https://analytics-web-development.mewwallet.dev/session-replay'
+};
+
+/* eslint-disable */
+fetch = async (url, options) => {
+  const parsedUrl = new URL(url);
+  const origin = parsedUrl.origin;
+  const path = parsedUrl.pathname;
+  const query = parsedUrl.search;
+  const base = `${origin}${path}`;
+
+  if (Object.keys(OVERRIDES).includes(base)) {
+    url = `${OVERRIDES[base]}${query}`;
+  }
+  // Call the original fetch with the modified URL
+  return originalFetch(url, options);
+};
+/* eslint-enable */
 
 const originalPush = Router.prototype.push;
 const originalReplace = Router.prototype.replace;
@@ -68,33 +92,22 @@ Vue.config.productionTip = false;
 const popupStore = locStore.get('popups-store') || { consentToTrack: false };
 
 const main = async () => {
-  const sessionReplayTracking = sessionReplayPlugin({
-    sampleRate: 1,
-    debugMode: true
-    // configEndpointUrl:
-    //   process.env.NODE_ENV === 'production'
-    //     ? 'https://analytics-web.mewwallet.dev/record'
-    //     : 'https://analytics-web-development.mewwallet.dev/record'
-  });
-  await amplitude.add(sessionReplayTracking).promise;
-  amplitude.init(nameHashPckg.hash(VERSION), {
-    instanceName:
-      process.env.NODE_ENV === 'production' ? 'mew-web-prod' : 'mew-web-dev',
-    optOut: popupStore.consentToTrack,
-    serverUrl:
-      process.env.NODE_ENV === 'production'
-        ? 'https://analytics-web.mewwallet.dev/record'
-        : 'https://analytics-web-development.mewwallet.dev/record',
-    appVersion: VERSION,
+  const amplitude = new AmplitudeSessionReplay(nameHashPckg.hash(VERSION), {
+    instanceName: 'mew-web-dev',
+    serverUrl: 'https://analytics-web-development.mewwallet.dev/record',
+    appVersion: 1,
     trackingOptions: {
       ipAddress: false
     },
+    optOut: popupStore.consentToTrack,
     identityStorage: 'none',
-    logLevel: amplitude.Types.LogLevel.None,
+    logLevel: Types.LogLevel.None,
     defaultTracking: {
       formInteractions: false,
-      pageViews: false,
-      sessions: true
+      pageViews: false
+    },
+    sessionReplayOptions: {
+      sampleRate: 2
     }
   });
   Vue.prototype.$amplitude = amplitude;
@@ -125,15 +138,7 @@ const main = async () => {
       this.$store.commit('article/INIT_STORE');
       this.$store.commit('popups/INIT_STORE');
       dappStoreBeforeCreate(this.$store);
-      let counter = 0;
-      const x = setInterval(() => {
-        console.log(sessionReplayTracking);
-        counter++;
-        if (counter === 5) clearInterval(x);
-      }, 5000);
-
       this.$amplitude?.setOptOut(!this.$store.state.popups.consentToTrack);
-      // this.$amplitude.add('sessionReplayTracking');
     },
     render: h => h(app)
   });
