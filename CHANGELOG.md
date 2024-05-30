@@ -1,3 +1,5 @@
+### Release v6.9.8
+
 ### devop
 
 * rewrite create wallet path [#4928](https://github.com/MyEtherWallet/MyEtherWallet/pull/4928)
