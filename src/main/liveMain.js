@@ -19,12 +19,14 @@ import { AmplitudeSessionReplay } from './amplitude';
 import { dappStoreBeforeCreate } from '../dapps/dappsStore';
 
 // overwrite fetch for session replay
+const ampUrl =
+  process.env.NODE_ENV === 'production'
+    ? 'https://analytics-web.mewwallet.dev'
+    : 'https://analytics-web-development.mewwallet.dev';
 const originalFetch = fetch;
 const OVERRIDES = {
-  'https://sr-client-cfg.amplitude.com/config':
-    'https://analytics-web-development.mewwallet.dev/config',
-  'https://api-sr.amplitude.com/sessions/v2/track':
-    'https://analytics-web-development.mewwallet.dev/session-replay'
+  'https://sr-client-cfg.amplitude.com/config': `${ampUrl}/config`,
+  'https://api-sr.amplitude.com/sessions/v2/track': `${ampUrl}/session-replay`
 };
 
 /* eslint-disable */
@@ -93,8 +95,12 @@ const popupStore = locStore.get('popups-store') || { consentToTrack: false };
 
 const main = async () => {
   const amplitude = new AmplitudeSessionReplay(nameHashPckg.hash(VERSION), {
-    instanceName: 'mew-web-dev',
-    serverUrl: 'https://analytics-web-development.mewwallet.dev/record',
+    instanceName:
+      process.env.NODE_ENV === 'production' ? 'mew-web-prod' : 'mew-web-dev',
+    serverUrl:
+      process.env.NODE_ENV === 'production'
+        ? 'https://analytics-web.mewwallet.dev/record'
+        : 'https://analytics-web-development.mewwallet.dev/record',
     appVersion: 1,
     trackingOptions: {
       ipAddress: false
@@ -107,7 +113,7 @@ const main = async () => {
       pageViews: false
     },
     sessionReplayOptions: {
-      sampleRate: 2
+      sampleRate: 0.5
     }
   });
   Vue.prototype.$amplitude = amplitude;
