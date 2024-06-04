@@ -31,8 +31,8 @@ export default {
     url: null,
     websocket: null
   },
-  coingeckoID: 'rootstock',
+  coingeckoID: '',
   gasPriceMultiplier: 1.1,
   canBuy: false,
-  balanceApi: 'https://partners.mewapi.io/balances/rsk/'
+  balanceApi: ''
 };

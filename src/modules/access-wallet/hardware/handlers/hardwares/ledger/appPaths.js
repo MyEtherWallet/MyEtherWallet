@@ -1,4 +1,11 @@
-import { ETC, ETH, GO, XDC, ROOTSTOCK, ROOTSTOCKTESTNET } from '@/utils/networks/types';
+import {
+  ETC,
+  ETH,
+  GO,
+  XDC,
+  ROOTSTOCK,
+  ROOTSTOCKTESTNET
+} from '@/utils/networks/types';
 import {
   ledgerEthereum,
   ledgerLiveEthereum,
