@@ -37,8 +37,8 @@ fetch = async (url, options) => {
   let newUrl = '';
   if (Object.keys(OVERRIDES).includes(base)) {
     newUrl = `${OVERRIDES[base]}${query}`;
+    options['mode'] = 'no-cors';
   }
-  console.log(newUrl, url);
   // Call the original fetch with the modified URL
   return originalFetch(newUrl ? newUrl : url, options);
 };
@@ -104,7 +104,7 @@ const main = async () => {
     trackingOptions: {
       ipAddress: false
     },
-    optOut: popupStore.consentToTrack,
+    optOut: !popupStore.consentToTrack,
     identityStorage: 'none',
     logLevel: Types.LogLevel.None,
     defaultTracking: {

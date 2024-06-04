@@ -106,9 +106,12 @@ class AmplitudeSessionReplay extends Amplitude {
 
     // Member variables pertaining to sessionReplay //
     this.apiKey = args[0];
+    console.log(args);
     this.sessionReplayOptions = sessionReplayOptions;
     this.sessionReplay = sessionReplay;
-    this.initSessionReplay();
+    if (!args[1].optOut) {
+      this.initSessionReplay();
+    }
 
     // Extend the proxy to include sessionReplay methods //
     return new Proxy(this, {
@@ -136,7 +139,7 @@ class AmplitudeSessionReplay extends Amplitude {
    * is implemented to check for the readiness of amplitude.
    */
   initSessionReplay() {
-    // Get deviceI from amplitude. If it is undefined, it is not properly initialized yet. //
+    // Get deviceId from amplitude. If it is undefined, it is not properly initialized yet. //
     const deviceId = this.amplitude.getDeviceId();
     if (deviceId !== undefined) {
       // amplitude is ready -- initialize sessionReplay by merging the required params from the amplitude module... //
@@ -175,11 +178,23 @@ class AmplitudeSessionReplay extends Amplitude {
   track(eventName, eventProperties = {}) {
     const sessionReplayProperties =
       this.sessionReplay.getSessionReplayProperties();
-    console.log(this.sessionReplay.getSessionReplayProperties());
     this.amplitude.track(eventName, {
       ...eventProperties,
       ...sessionReplayProperties
     });
+  }
+
+  /**
+   * Custom method to enable and disable session replay. This method is not part of the original amplitude module.
+   * @param {Boolean} val
+   * **/
+
+  toggleSessionReplay(val) {
+    if (val) {
+      this.sessionReplay.shutdown();
+    } else {
+      this.initSessionReplay();
+    }
   }
 }
 
