@@ -106,7 +106,6 @@ class AmplitudeSessionReplay extends Amplitude {
 
     // Member variables pertaining to sessionReplay //
     this.apiKey = args[0];
-    console.log(args);
     this.sessionReplayOptions = sessionReplayOptions;
     this.sessionReplay = sessionReplay;
     if (!args[1].optOut) {
@@ -154,6 +153,7 @@ class AmplitudeSessionReplay extends Amplitude {
     } else {
       // Not ready -- check again in (50ms) //
       setTimeout(() => {
+        /* eslint-disable no-console */
         console.log('Waiting for amplitude to initialize...');
         this.initSessionReplay();
       }, 50);
