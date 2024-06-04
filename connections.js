@@ -54,6 +54,7 @@ module.exports = [
   'wss://wss.api.moonriver.moonbeam.network:443',
   'wss://wss.api.moonbeam.network:443',
   'wss://public-node.rsk.co:443/websocket',
+  'wss://public-node.testnet.rsk.co:443/websocket',
   'wss://mainnet.aurora.dev:443',
   'wss://api.avax.network:443/ext/bc/C/ws',
   'wss://rpc.gnosischain.com:443/wss',
