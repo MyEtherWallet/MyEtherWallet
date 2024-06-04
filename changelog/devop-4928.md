@@ -1,1 +1,0 @@
-rewrite create wallet path
