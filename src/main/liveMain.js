@@ -19,14 +19,12 @@ import { AmplitudeSessionReplay } from './amplitude';
 import { dappStoreBeforeCreate } from '../dapps/dappsStore';
 
 // overwrite fetch for session replay
-const ampUrl =
-  process.env.NODE_ENV === 'production'
-    ? 'https://analytics-web.mewwallet.dev'
-    : 'https://analytics-web-development.mewwallet.dev';
 const originalFetch = fetch;
 const OVERRIDES = {
-  'https://sr-client-cfg.amplitude.com/config': `${ampUrl}/config`,
-  'https://api-sr.amplitude.com/sessions/v2/track': `${ampUrl}/session-replay`
+  'https://sr-client-cfg.amplitude.com/config':
+    'https://analytics-web-development.mewwallet.dev/config',
+  'https://api-sr.amplitude.com/sessions/v2/track':
+    'https://analytics-web-development.mewwallet.dev/session-replay'
 };
 
 /* eslint-disable */
@@ -36,12 +34,13 @@ fetch = async (url, options) => {
   const path = parsedUrl.pathname;
   const query = parsedUrl.search;
   const base = `${origin}${path}`;
-
+  let newUrl = '';
   if (Object.keys(OVERRIDES).includes(base)) {
-    url = `${OVERRIDES[base]}${query}`;
+    newUrl = `${OVERRIDES[base]}${query}`;
   }
+  console.log(newUrl, url);
   // Call the original fetch with the modified URL
-  return originalFetch(url, options);
+  return originalFetch(newUrl ? newUrl : url, options);
 };
 /* eslint-enable */
 
@@ -113,7 +112,7 @@ const main = async () => {
       pageViews: false
     },
     sessionReplayOptions: {
-      sampleRate: 0.5
+      sampleRate: 1
     }
   });
   Vue.prototype.$amplitude = amplitude;

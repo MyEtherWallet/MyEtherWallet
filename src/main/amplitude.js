@@ -151,6 +151,7 @@ class AmplitudeSessionReplay extends Amplitude {
     } else {
       // Not ready -- check again in (50ms) //
       setTimeout(() => {
+        console.log('Waiting for amplitude to initialize...');
         this.initSessionReplay();
       }, 50);
     }
@@ -174,6 +175,7 @@ class AmplitudeSessionReplay extends Amplitude {
   track(eventName, eventProperties = {}) {
     const sessionReplayProperties =
       this.sessionReplay.getSessionReplayProperties();
+    console.log(this.sessionReplay.getSessionReplayProperties());
     this.amplitude.track(eventName, {
       ...eventProperties,
       ...sessionReplayProperties
