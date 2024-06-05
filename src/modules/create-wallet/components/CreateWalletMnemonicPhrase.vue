@@ -1,5 +1,8 @@
 <template>
-  <div class="mew-component--create--mnemonic-phrase" style="max-width: 800px">
+  <white-sheet
+    class="mew-component--create--mnemonic-phrase mx-auto px-8 py-4"
+    style="max-width: 800px"
+  >
     <mew-stepper class="mx-md-0" :items="steppers" :on-step="step">
       <!-- ===================================================================================== -->
       <!-- Step 1: Write Down Words -->
@@ -67,6 +70,13 @@
           =====================================================================================
           -->
         <div class="MnemonicWroteThemDown d-flex justify-center mt-6">
+          <mew-button
+            title="Back"
+            btn-size="xlarge"
+            btn-style="outline"
+            class="mr-1"
+            @click.native="trackBackToOverview"
+          />
           <mew-button
             title="I wrote them down"
             btn-size="xlarge"
@@ -203,7 +213,7 @@
         </div>
       </template>
     </mew-stepper>
-  </div>
+  </white-sheet>
 </template>
 
 <script setup>
@@ -214,6 +224,7 @@ import { ROUTES_HOME } from '@/core/configs/configRoutes';
 import { CREATE_WALLET } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 import mnemonicPhraseTable from '@/core/components/MnemonicPhraseTable.vue';
 import phraseBlock from '@/core/components/PhraseBlock.vue';
+import handlerCreateWallet from '../handlers/handlerCreateWallet';
 
 import { useAmplitude } from '@/core/composables/amplitude';
 import { useRouter } from 'vue-router/composables';
@@ -222,18 +233,12 @@ import { useRouter } from 'vue-router/composables';
 const { trackCreateWalletAmplitude } = useAmplitude();
 const router = useRouter();
 
-// props
-const props = defineProps({
-  handlerCreateWallet: {
-    type: Object,
-    default: () => {
-      return {};
-    }
-  }
-});
-
 // data
-const steppers = [
+const step = ref(1);
+const validateMnemonicValues = ref({});
+const extraWord = ref('');
+const extraWordVerification = ref('');
+const steppers = ref([
   {
     step: 1,
     name: 'STEP 1. Write down the words'
@@ -246,8 +251,8 @@ const steppers = [
     step: 3,
     name: 'STEP 3. Well done'
   }
-];
-const mnemonicOptions = [
+]);
+const mnemonicOptions = ref([
   {
     name: '12 words',
     value: 12
@@ -256,31 +261,24 @@ const mnemonicOptions = [
     name: '24 words',
     value: 24
   }
-];
-// reactive
-const step = ref(1);
-const validateMnemonicValues = ref({});
-const extraWord = ref('');
-const extraWordVerification = ref('');
+]);
 const phraseSize = ref(12);
 const phrase = ref([]);
 const generatedVerification = ref([]);
+const createWalletHandler = ref(null);
 
 // computed
 const canVerify = computed(() => {
   return isValidMnemonic.value && extraWordMatch.value;
 });
-
 const isValidMnemonic = computed(() => {
   return phrase.value.length === phraseSize.value;
 });
-
 const extraWordMatch = computed(() => {
   return extraWord.value
     ? extraWord.value === extraWordVerification.value
     : true;
 });
-
 const stepTwoText = computed(() => {
   return extraWord.value === ''
     ? 'Please select correct words based on their numbers.'
@@ -305,28 +303,26 @@ watch(
 
 // mounted
 onMounted(() => {
+  createWalletHandler.value = new handlerCreateWallet();
   setPhrase();
 });
 
 // methods
 const generateVerification = () => {
-  generatedVerification.value = props.handlerCreateWallet.getVerification();
+  generatedVerification.value = createWalletHandler.value.getVerification();
   generatedVerification.value.sort(function (a, b) {
     return a.itemNumber - b.itemNumber;
   });
 };
-
 const getOnlyKey = obj => {
   return Number(Object.keys(obj)[0]);
 };
-
 const getEntries = obj => {
   return Object.values(obj[getOnlyKey(obj)]);
 };
-
 const setPhrase = () => {
-  props.handlerCreateWallet
-    .generateMnemonic(phraseSize.value)
+  createWalletHandler.value
+    .generateMnemonic(phraseSize)
     .then(res => {
       phrase.value = res;
       generateVerification();
@@ -336,9 +332,8 @@ const setPhrase = () => {
       Toast(e, {}, ERROR);
     });
 };
-
 const verify = () => {
-  props.handlerCreateWallet
+  createWalletHandler.value
     .validateMnemonic(validateMnemonicValues.value)
     .then(() => {
       trackCreateWalletAmplitude(CREATE_WALLET.MNEMONIC_SUCCESS);
@@ -348,22 +343,27 @@ const verify = () => {
       Toast(e, {}, ERROR);
     });
 };
-
+/**
+ * Reroutes to access wallet
+ * Used in Step 3
+ */
 const goToAccess = () => {
   trackCreateWalletAmplitude(CREATE_WALLET.MNEMONIC_SUCCESS_ACCESS);
   router.push({ name: ROUTES_HOME.ACCESS_WALLET.NAME });
 };
-
 const trackIWroteThemDown = () => {
   trackCreateWalletAmplitude(CREATE_WALLET.MNEMONIC_WROTE_DOWN);
   updateStep(2);
 };
-
 const trackBackToStepOne = () => {
   trackCreateWalletAmplitude(CREATE_WALLET.MNEMONIC_BACK);
   updateStep(1);
 };
 
+/**
+ * Updates Step
+ * Resets phrase if step is reset to 1 from step 3 ( user is creating a new wallet)
+ */
 const updateStep = newStep => {
   if (step.value === 3 && newStep === 1) {
     validateMnemonicValues.value = {};
@@ -371,12 +371,24 @@ const updateStep = newStep => {
   }
   step.value = newStep;
 };
-
+/**
+ * Go back to step 1 to create another wallet
+ * and reset extra word
+ */
 const createAnotherWallet = () => {
   extraWord.value = '';
   extraWordVerification.value = '';
   trackCreateWalletAmplitude(CREATE_WALLET.MNEMONIC_SUCCESS_CREATE);
   updateStep(1);
+  router.push({
+    name: ROUTES_HOME.CREATE_WALLET_SOFTWARE_OVERVIEW.NAME
+  });
+};
+const trackBackToOverview = () => {
+  trackCreateWalletAmplitude(CREATE_WALLET.MNEMONIC_BACK);
+  router.push({
+    name: ROUTES_HOME.CREATE_WALLET_SOFTWARE_OVERVIEW.NAME
+  });
 };
 </script>
 

@@ -24,11 +24,7 @@
         >
           Stake your ETH and get rewarded by Ethereum blockchain.
         </div>
-        <a
-          href="https://www.myetherwallet.com/blog/staking-the-easiest-way-to-earn-rewards/"
-          target="_blank"
-          class="white--text font-weight-bold"
-          @click.native="trackMoreAbout"
+        <a class="white--text font-weight-bold" @click="trackMoreAbout"
           >More about staking ></a
         >
       </div>
@@ -187,7 +183,12 @@ const routeTo = name => {
   router.push({ name: name });
 };
 const trackMoreAbout = () => {
-  trackStaking(STAKING.STAKE_CENTER_MORE_ABOUT);
+  // eslint-disable-next-line
+  window.open(
+    'https://www.myetherwallet.com/blog/staking-the-easiest-way-to-earn-rewards/',
+    '_blank'
+  );
+  this.trackStaking(STAKING.STAKE_CENTER_MORE_ABOUT);
 };
 /**
  * defaultName is used to route to dapps that has defalt child route

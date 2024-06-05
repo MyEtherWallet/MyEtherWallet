@@ -231,7 +231,7 @@ onMounted(() => {
 // methods
 const getAddressBookTableData = () => {
   tableData.value = [];
-  addressBookStore.forEach((item, idx) => {
+  addressBookStore.value.forEach((item, idx) => {
     tableData.value.push({
       number: idx + 1,
       address: item.address,

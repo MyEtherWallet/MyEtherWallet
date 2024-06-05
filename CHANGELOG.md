@@ -1,4 +1,30 @@
-### Release v6.9.6-hotfix.1
+### Release v6.9.8
+
+### devop
+
+* rewrite create wallet path [#4928](https://github.com/MyEtherWallet/MyEtherWallet/pull/4928)
+
+### feat
+
+* add staking summary card [#4923](https://github.com/MyEtherWallet/MyEtherWallet/pull/4923)
+
+### Release v6.9.7-hotfix.1
+
+### devop
+
+* update privacy policy [#4925](https://github.com/MyEtherWallet/MyEtherWallet/pull/4925)
+
+### fix
+
+* fix ens by raising gas [#4913](https://github.com/MyEtherWallet/MyEtherWallet/pull/4913)
+
+### Release v6.9.7
+
+### feature
+
+* add consistent header in access and create, add more stable coins [#4917](https://github.com/MyEtherWallet/MyEtherWallet/pull/4917)
+
+### devop
 
 * add 2% to ens register gas limit [#4913](https://github.com/MyEtherWallet/MyEtherWallet/pull/4913)
 

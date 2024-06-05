@@ -65,8 +65,8 @@
           @click="openTokenSelect = true"
         >
           <mew-token-container :img="selectedCurrency.img" size="28px" />
-          <div class="basic--text" style="margin-left: 8px">
-            {{ selectedCurrency.name }}
+          <div class="basic--text ml-2">
+            {{ parsedSelectedFiatName }}
           </div>
           <v-icon class="ml-auto" size="20px" color="titlePrimary">
             mdi-chevron-down
@@ -110,7 +110,7 @@
     <!-- ========================================================================= -->
     <buy-sell-token-select
       :open="openTokenSelect"
-      :currency-items="currencyItems"
+      :currency-items="tokens"
       :selected-currency="selectedCurrency"
       :set-currency="setCurrency"
       :in-wallet="inWallet"
@@ -134,18 +134,22 @@ import { isEmpty, cloneDeep, isEqual } from 'lodash';
 import BigNumber from 'bignumber.js';
 import Web3 from 'web3';
 import { fromWei, toBN } from 'web3-utils';
+import { useQuery } from '@vue/apollo-composable';
 
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import nodeList from '@/utils/networks';
 import {
   formatFloatingPointValue,
-  formatFiatValue
+  formatFiatValue,
+  formatIntegerValue,
+  formatPercentageValue
 } from '@/core/helpers/numberFormatHelper';
 import { getCurrency } from '@/modules/settings/components/currencyList';
-import { buyContracts } from './tokenList';
+import { coingeckoContracts } from './tokenList';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
-import { ETH, BSC, MATIC } from '@/utils/networks/types';
+import { ETH, OP, MATIC, ARB, BSC } from '@/utils/networks/types';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook.vue';
+import { getCoinGeckoTokenMarketDataByIds } from '@/apollo/queries/wallets/wallets.graphql';
 
 const BuySellTokenSelect = defineAsyncComponent(() =>
   import('@/modules/buy-sell/components/TokenSelect.vue')
@@ -157,8 +161,8 @@ import { useExternalStore } from '@/core/store/external';
 import { storeToRefs } from 'pinia';
 
 // injections/use
-const { address, tokensList } = useWalletStore();
-const { currencyRate, contractToToken } = useExternalStore();
+const { address } = useWalletStore();
+const { currencyRate } = useExternalStore();
 const { coinGeckoTokens } = storeToRefs(useExternalStore());
 const { network } = storeToRefs(useGlobalStore());
 
@@ -193,7 +197,89 @@ const props = defineProps({
   }
 });
 
+// apollo
+const {
+  onResult: getCoinGeckoTokenMarketDataByIdsResult,
+  onError: getCoinGeckoTokenMarketDataByIdsError,
+  refetch: refetchCoinGeckoTokenMarketDataByIds
+} = useQuery(
+  getCoinGeckoTokenMarketDataByIds,
+  () => ({
+    ids: coingeckoContracts[network.value.type.name]
+  }),
+  () => ({
+    enabled: props.supportedBuy
+  })
+);
+getCoinGeckoTokenMarketDataByIdsError(({ message }) => {
+  Toast(message, {}, ERROR);
+});
+
+getCoinGeckoTokenMarketDataByIdsResult(({ data }) => {
+  if (data) {
+    tokens.value = [];
+    const { getCoinGeckoTokenMarketDataByIds } = data;
+    const locTokens = isCAD.value
+      ? getCoinGeckoTokenMarketDataByIds.filter(item => {
+          return item.id === this.network.type.coingeckoID;
+        })
+      : getCoinGeckoTokenMarketDataByIds;
+    const parsedLoc = locTokens.map(token => {
+      return {
+        name: token.symbol.toUpperCase(),
+        symbol: symbols[token.id],
+        subtext: token.symbol.toUpperCase(),
+        value: token.symbol.toUpperCase(),
+        img: `https://img.mewapi.io/?image=${token.image}`,
+        market_cap: token.market_cap,
+        market_capf: formatIntegerValue(token.market_cap).value,
+        price_change_percentage_24h: token.price_change_percentage_24h,
+        price_change_percentage_24hf: formatPercentageValue(
+          token.price_change_percentage_24h
+        ).value,
+        price: token.current_price,
+        pricef: formatFiatValue(token.current_price).value
+      };
+    });
+    const tokensListWPrice =
+      currencyRates.value.length > 0
+        ? parsedLoc.map(token => {
+            const priceRate = currencyRates.value.find(rate => {
+              return rate.crypto_currency === token.symbol;
+            });
+            const actualPrice = priceRate?.quotes.find(quote => {
+              return quote.fiat_currency === selectedFiatName.value;
+            });
+            token.price = formatFiatValue(
+              actualPrice ? actualPrice.price : '0',
+              currencyConfig.value
+            ).value;
+            token.value = token.name;
+            token.name = token.symbol;
+            return token;
+          })
+        : parsedLoc;
+    tokens.value = tokensListWPrice ? [...tokensListWPrice] : [];
+  }
+});
+
 // data
+const symbols = {
+  ethereum: 'ETH',
+  dai: 'DAI',
+  tether: 'USDT',
+  'usd-coin': 'USDC',
+  'paypal-usd': 'PYUSD',
+  'true-usd': 'TUSD',
+  'first-digital-usd': 'FDUSD-SC',
+  'binance-bridged-usdc-bnb-smart-chain': 'USDC-SC',
+  'binance-bridged-usdt-bnb-smart-chain': 'USDT-SC',
+  'matic-network': 'MATIC',
+  'bridged-usdc-polygon-pos-bridge': 'USDC-MATIC',
+  'polygon-bridged-usdt-polygon': 'USDT-MATIC',
+  'arbitrum-bridged-usdt-arbitrum': 'USDT-ARBITRUM',
+  'bridged-usdt': 'USDT-OPTIMISM'
+};
 const openTokenSelect = ref(false);
 const selectedCurrency = ref(props.defaultCurrency);
 const loading = ref(true);
@@ -215,8 +301,14 @@ const showMoonpay = ref(true);
 const disableCurrencySelect = ref(true);
 const localCryptoAmount = ref('0');
 const addressInput = ref(null);
+const tokens = ref([]);
 
 // computed
+const parsedSelectedFiatName = computed(() => {
+  if (selectedCurrency.value.name.length < 5)
+    return selectedCurrency.value.name;
+  return `${selectedCurrency.value.name.substring(0, 4)}...`;
+});
 const includesFeeText = computed(() => {
   return `Includes ${percentFee.value} fee (${
     formatFiatValue(minFee, currencyConfig.value).value
@@ -354,29 +446,7 @@ const amountErrorMessages = computed(() => {
   }
   return '';
 });
-const tokens = computed(() => {
-  const filteredContracts = isCAD.value ? [buyContracts[0]] : buyContracts;
-  if (props.inWallet) {
-    return filteredContracts.reduce((arr, item) => {
-      const inList = tokensList.find(t => {
-        if (t.contract.toLowerCase() === item.toLowerCase()) return t;
-      });
-      if (inList) {
-        arr.push(inList);
-        return arr;
-      }
-      const token = contractToToken(item);
-      if (token) arr.push(token);
-      return arr;
-    }, []);
-  }
-  const arr = new Array();
-  for (const contract of filteredContracts) {
-    const token = contractToToken(contract);
-    if (token) arr.push(token);
-  }
-  return arr;
-});
+
 const currencyItems = computed(() => {
   if (!props.supportedBuy) return;
   const tokensListWPrice =
@@ -515,6 +585,8 @@ watch(
   () => {
     selectedCurrency.value = {};
     selectedCurrency.value = props.defaultCurrency;
+    tokens.value = [];
+    refetchCoinGeckoTokenMarketDataByIds();
   },
   { deep: true }
 );
@@ -590,8 +662,10 @@ const setAddress = (newVal, isValid, data) => {
 const fetchGasPrice = async () => {
   const supportedNodes = {
     ETH: ETH.name,
-    BNB: BSC.name,
-    MATIC: MATIC.name
+    MATIC: MATIC.name,
+    OP: OP.name,
+    ARB: ARB.name,
+    BSC: BSC.name
   };
   const nodeType = !supportedNodes[selectedCurrency.value?.symbol]
     ? ETH.name

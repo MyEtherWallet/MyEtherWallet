@@ -296,7 +296,7 @@ import message from '@/assets/images/icons/icon-message-enable.svg';
 import settings from '@/assets/images/icons/icon-setting-enable.svg';
 import logout from '@/assets/images/icons/icon-logout-enable.svg';
 import { EventBus } from '@/core/plugins/eventBus';
-import { ETH, BSC, MATIC, GOERLI } from '@/utils/networks/types';
+import { ETH, BSC, MATIC, GOERLI, ARB, OP } from '@/utils/networks/types';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import {
   CONTRACT,
@@ -402,17 +402,17 @@ const sectionOne = computed(() => {
 });
 
 const sectionTwo = computed(() => {
-  const hasNew = Object.values(stakingMeta).filter(item => {
-    const stakingSupport = item.networks.findIndex(nType => {
-      if (nType.chainID === network.type.chainID) {
-        return nType;
+  if (online) {
+    const hasNew = Object.values(stakingMeta).filter(item => {
+      const stakingSupport = item.networks.findIndex(nType => {
+        if (nType.chainID === network.type.chainID) {
+          return nType;
+        }
+      });
+      if (isNew(item.release) && stakingSupport > -1) {
+        return item;
       }
     });
-    if (isNew(item.release) && stakingSupport > -1) {
-      return item;
-    }
-  });
-  if (online) {
     const sectionTwo = [
       {
         title: t('interface.menu.swap'),
@@ -450,7 +450,9 @@ const sectionTwo = computed(() => {
     if (
       network.type.name === ETH.name ||
       network.type.name === BSC.name ||
-      network.type.name === MATIC.name
+      network.type.name === MATIC.name ||
+      network.type.name === ARB.name ||
+      network.type.name === OP.name
     ) {
       sectionTwo.push({
         title: t('interface.menu.buy-sell'),

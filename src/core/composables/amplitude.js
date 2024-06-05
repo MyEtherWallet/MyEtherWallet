@@ -92,7 +92,7 @@ export const useAmplitude = () => {
   };
 
   const trackDapp = (event, prop) => {
-    wrapperMethod(`${categories.accessWallet}${event}`, prop);
+    wrapperMethod(`${categories.dapp}${event}`, prop);
   };
 
   const trackStaking = event => {

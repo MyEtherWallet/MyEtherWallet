@@ -4,7 +4,10 @@
       <div class="row">
         <div class="col-12">
           <div
-            class="header__wrapper d-flex align-items-center justify-content-between js-header"
+            :class="[
+              inAccessOrCreate ? 'fixed' : '',
+              'header__wrapper d-flex align-items-center justify-content-between js-header'
+            ]"
           >
             <a href="/" class="header__logo">
               <logo-component v-if="showDark" />
@@ -187,33 +190,43 @@ export default {
       return this.$vuetify.breakpoint.mdAndDown ? 24 : 12;
     },
     showDark() {
-      return this.topOffset !== 12;
+      return this.topOffset !== 12 || this.inAccessOrCreate;
+    },
+    inAccessOrCreate() {
+      return (
+        this.$route.path.includes('/access') ||
+        this.$route.path.includes('/buy-hardware') ||
+        this.$route.path.includes('/create')
+      );
     }
   },
   async mounted() {
-    const controller = new ScrollMagic.Controller();
-    this.topOffset = this.offset;
-
-    new ScrollMagic.Scene({
-      triggerElement: '.js-body',
-      duration: 52,
-      triggerHook: 'onLeave'
-    })
-      .on('progress', e => {
-        this.topOffset = Math.max(
-          0,
-          this.offset - this.offset * e.progress.toFixed(3)
-        );
+    if (!this.inAccessOrCreate) {
+      const controller = new ScrollMagic.Controller();
+      this.topOffset = this.inAccessOrCreate ? 0 : this.offset;
+      new ScrollMagic.Scene({
+        triggerElement: '.js-body',
+        duration: 52,
+        triggerHook: 'onLeave'
       })
-      .addTo(controller);
+        .on('progress', e => {
+          this.topOffset = Math.max(
+            0,
+            this.offset - this.offset * e.progress.toFixed(3)
+          );
+        })
+        .addTo(controller);
 
-    new ScrollMagic.Scene({
-      triggerElement: '.js-body',
-      offset: this.offset,
-      triggerHook: 'onLeave'
-    })
-      .setClassToggle('.js-header', 'fixed')
-      .addTo(controller);
+      new ScrollMagic.Scene({
+        triggerElement: '.js-body',
+        offset: this.offset,
+        triggerHook: 'onLeave'
+      })
+        .setClassToggle('.js-header', 'fixed')
+        .addTo(controller);
+    } else {
+      this.topOffset = 0;
+    }
   },
   methods: {
     openMobileMenu() {

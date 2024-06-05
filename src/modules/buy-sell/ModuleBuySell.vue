@@ -68,17 +68,10 @@
 </template>
 
 <script setup>
-import {
-  defineAsyncComponent,
-  defineProps,
-  ref,
-  defineEmits,
-  watch,
-  computed
-} from 'vue';
+import { defineProps, ref, defineEmits, watch, computed } from 'vue';
 import { isEmpty } from 'lodash';
 
-import { ETH, BSC, MATIC } from '@/utils/networks/types';
+import { ETH, OP, MATIC, ARB, BSC } from '@/utils/networks/types';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 
 import handler from './handlers/handlerOrder';
@@ -91,15 +84,9 @@ import { useExternalStore } from '@/core/store/external';
 import { useRoute } from 'vue-router/composables';
 import { storeToRefs } from 'pinia';
 
-const BuyEthComponent = defineAsyncComponent(() =>
-  import('./components/BuyComponent')
-);
-const SellEthComponent = defineAsyncComponent(() =>
-  import('./components/SellComponent')
-);
-const BuyProviderComponent = defineAsyncComponent(() =>
-  import('./components/BuyProviderComponent.vue')
-);
+import BuyEthComponent from './components/BuyComponent';
+import SellEthComponent from './components/SellComponent';
+import BuyProviderComponent from './components/BuyProviderComponent.vue';
 
 // emits
 const emit = defineEmits(['close']);
@@ -158,7 +145,10 @@ const supportedNetwork = computed(() => {
   return (
     network.type.name === ETH.name ||
     network.type.name === BSC.name ||
-    network.type.name === MATIC.name
+    network.type.name === MATIC.name ||
+    network.type.name === MATIC.name ||
+    network.type.name === OP.name ||
+    network.type.name === ARB.name
   );
 });
 const leftBtn = computed(() => {

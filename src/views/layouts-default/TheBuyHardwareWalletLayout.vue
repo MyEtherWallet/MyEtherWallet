@@ -4,11 +4,11 @@
       <the-layout-header title="Get a hardware wallet today!" />
       <v-sheet
         color="transparent"
-        :max-width="!$vuetify.breakpoint.smAndDown ? '900px' : '470px'"
+        :max-width="!$vuetify.breakpoint.smAndDown ? '500px' : '470px'"
         class="mx-auto"
       >
         <v-row>
-          <v-col v-for="(b, key) in buttons" :key="key" cols="12" md="6">
+          <v-col v-for="(b, key) in buttons" :key="key" cols="12">
             <a :href="b.link" target="_blank" @click="trackBuy(b.name)">
               <mew-button
                 color-theme="basic"
@@ -74,6 +74,19 @@
               </mew-button>
             </a>
           </v-col>
+          <v-col
+            v-if="showBackToCreate"
+            cols="12"
+            class="d-flex align-center justify-center"
+          >
+            <mew-button
+              title="Back to Create Wallet"
+              btn-size="xlarge"
+              btn-style="outline"
+              color-theme="white"
+              @click.native="backToCreate"
+            />
+          </v-col>
         </v-row>
       </v-sheet>
     </v-container>
@@ -81,13 +94,16 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
+import { onMounted, ref, onBeforeMount } from 'vue';
 
 import { COMMON } from '@/modules/analytics-opt-in/handlers/configs/events';
-import TheLayoutHeader from '../components-default/TheLayoutHeader.vue';
 import { useAmplitude } from '@/core/composables/amplitude';
+import { useRouter } from 'vue-router/composables';
+
+import TheLayoutHeader from '../components-default/TheLayoutHeader.vue';
 
 // injections/use
+const router = useRouter();
 const { trackBuyHardwareAmplitude } = useAmplitude();
 
 // data
@@ -113,6 +129,12 @@ const buttons = [
     name: 'Trezor'
   }
 ];
+const showBackToCreate = ref(false);
+
+// onBeforeMount
+onBeforeMount(() => {
+  showBackToCreate.value = router.currentRoute.value.name === 'CreateWallet';
+});
 
 // onMounted
 onMounted(() => {
@@ -122,6 +144,10 @@ onMounted(() => {
 // methods
 const trackBuy = name => {
   trackBuyHardwareAmplitude(name);
+};
+
+const backToCreate = () => {
+  router.push({ name: 'CreateWallet' });
 };
 </script>
 

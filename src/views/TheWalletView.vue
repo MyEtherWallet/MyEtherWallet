@@ -320,12 +320,12 @@ const setup = () => {
 };
 
 const checkNetwork = async () => {
-  const matched = await matchNetwork(network.type.chainID, identifier);
+  const matched = await matchNetwork(network.value.type.chainID, identifier);
   setValidNetwork(matched);
 };
 
 const processNetworkTokens = () => {
-  network.type.tokens.then(res => {
+  network.value.type.tokens.then(res => {
     const tokenMap = new Map();
     res.forEach(item => {
       tokenMap.set(item.address.toLowerCase(), item);

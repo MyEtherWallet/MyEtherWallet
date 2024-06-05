@@ -62,7 +62,7 @@ import { isEmpty } from 'lodash';
 import { SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import * as nodes from '@/utils/networks/nodes';
-import { ETH, BSC, MATIC } from '@/utils/networks/types';
+import { ETH, BSC, MATIC, ARB, OP } from '@/utils/networks/types';
 import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
 import { useExternalStore } from '@/core/store/external';
@@ -107,11 +107,12 @@ const { selectedEIP6963Provider, setTokenAndEthBalance } = useExternalStore();
 const searchValue = ref('');
 const fetchedNetworks = ref([]);
 const selectedNetwork = ref({});
+const currencyCopy = ref([]);
 
 // computed
 const searchedCurrencyItems = computed(() => {
   if (searchValue.value) {
-    const found = props.currencyItems.filter(element => {
+    const found = currencyCopy.value.filter(element => {
       return (
         element.name.toLowerCase().includes(searchValue.value.toLowerCase()) ||
         element.subtext.toLowerCase().includes(searchValue.value.toLowerCase())
@@ -119,7 +120,7 @@ const searchedCurrencyItems = computed(() => {
     });
     return found;
   }
-  return props.currencyItems;
+  return currencyCopy.value;
 });
 
 // watch
@@ -131,6 +132,24 @@ watch(
       setNewNetwork(newVal);
     }
   }
+);
+
+watch(props.open, val => {
+  searchValue.value = '';
+  if (val) {
+    const currNetwork = fetchNetworks.find(network => {
+      if (network.value === network.type.name) return network;
+    });
+    selectedNetwork.value = currNetwork;
+  }
+});
+
+watch(
+  () => props.currencyItems,
+  () => {
+    currencyCopy.value = props.currencyItems;
+  },
+  { immediate: true, deep: true }
 );
 watch(
   () => props.open,
@@ -153,7 +172,9 @@ const fetchNetworks = () => {
       if (
         network[0].type.name === ETH.name ||
         network[0].type.name === MATIC.name ||
-        network[0].type.name === BSC.name
+        network[0].type.name === BSC.name ||
+        network[0].type.name === ARB.name ||
+        network[0].type.name === OP.name
       ) {
         return network;
       }
@@ -169,6 +190,7 @@ const fetchNetworks = () => {
   });
 };
 const setNewNetwork = network => {
+  if (network.value === network.type.name) return;
   const found = Object.values(nodes).filter(item => {
     if (item.type.name === network.value) {
       return item;
