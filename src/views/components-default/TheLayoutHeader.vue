@@ -20,28 +20,27 @@
   </v-sheet>
 </template>
 
-<script>
-export default {
-  name: 'TheLayoutHeader',
-  props: {
-    title: { default: '', type: String },
-    subtitleLineOne: { default: '', type: String },
-    subtitleLineTwo: { default: '', type: String },
-    /**
-     * If you use this prop set hasLink to true, otherwise it will not be dispalyed.
-     * routeObj should have the following:
-     * {
-     * @text string // text to be displayed
-     * @rounteName string // route name of the router.js
-     * }
-     */
-    routeObj: {
-      default: function () {
-        return {};
-      },
-      type: Object
+<script setup>
+import { defineProps } from 'vue';
+
+defineProps({
+  title: { default: '', type: String },
+  subtitleLineOne: { default: '', type: String },
+  subtitleLineTwo: { default: '', type: String },
+  /**
+   * If you use this prop set hasLink to true, otherwise it will not be dispalyed.
+   * routeObj should have the following:
+   * {
+   * @text string // text to be displayed
+   * @rounteName string // route name of the router.js
+   * }
+   */
+  routeObj: {
+    default: function () {
+      return {};
     },
-    hasLink: { default: false, type: Boolean }
-  }
-};
+    type: Object
+  },
+  hasLink: { default: false, type: Boolean }
+});
 </script>

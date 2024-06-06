@@ -24,7 +24,6 @@ const ROUTES_HOME = {
   PAGE_NOT_FOUND: { NAME: 'PageNotFound', PATH: '*' },
   PRESS_KIT: { NAME: 'PressKit', PATH: 'presskit' },
   PRIVACY_POLICY: { NAME: 'PrivacyPolicy', PATH: 'privacy-policy' },
-  QR_CODE: { NAME: 'QrCode', PATH: 'qr-code' },
   SECURITY_POLICY: { NAME: 'SecurityPolicy', PATH: 'security-policy' },
   TEAM_PAGE: { NAME: 'TeamPage', PATH: 'team' },
   TERMS_OF_SERVICE: { NAME: 'TermsOfService', PATH: 'terms-of-service' },

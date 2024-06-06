@@ -42,34 +42,41 @@
   </div>
 </template>
 
-<script>
-import enkryptMarketing from '@/core/mixins/enkryptMarketing.mixin.js';
-export default {
-  mixins: [enkryptMarketing],
-  props: {
-    show: {
-      type: Boolean,
-      default: false
-    }
-  },
-  computed: {
-    leftBtn() {
-      return {
-        text: 'Cancel',
-        color: 'basic',
-        method: this.emitClose
-      };
-    }
-  },
-  methods: {
-    emitClose() {
-      this.$emit('closeEnkryptMissingSnackbar');
-    },
-    downloadAndClose() {
-      this.openEnkrypt();
-      this.emitClose();
-    }
+<script setup>
+import { defineProps, defineEmits, computed } from 'vue';
+
+import { useEnkryptMarketing } from '@/core/composables/enkryptMarketing';
+
+const emit = defineEmits(['closeEnkryptMissingSnackbar']);
+
+// injections
+const { browserLogo, openEnkrypt } = useEnkryptMarketing();
+
+// props
+defineProps({
+  show: {
+    type: Boolean,
+    default: false
   }
+});
+
+// computed
+const leftBtn = computed(() => {
+  return {
+    text: 'Cancel',
+    color: 'basic',
+    method: emitClose
+  };
+});
+
+// methods
+const emitClose = () => {
+  emit('closeEnkryptMissingSnackbar');
+};
+
+const downloadAndClose = () => {
+  openEnkrypt();
+  emitClose();
 };
 </script>
 

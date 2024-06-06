@@ -163,76 +163,76 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, computed, onMounted, defineEmits } from 'vue';
+import ScrollMagic from 'scrollmagic';
+import { useRoute } from 'vue-router/composables';
+
 import LogoComponent from '@/assets/images/icons/logo-component.vue';
 import OpenMenu from '@/assets/images/icons/open-menu.vue';
-import ScrollMagic from 'scrollmagic';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
+import { useVuetify } from '@/core/composables/vuetify';
 
-export default {
-  name: 'TheDefaultHeader',
-  components: {
-    LogoComponent,
-    OpenMenu
-  },
-  data() {
-    return {
-      topOffset: 12
-    };
-  },
-  computed: {
-    showAccess() {
-      return this.$route.name === ROUTES_HOME.ACCESS_WALLET.NAME
-        ? 'visibility: hidden'
-        : '';
-    },
-    offset() {
-      return this.$vuetify.breakpoint.mdAndDown ? 24 : 12;
-    },
-    showDark() {
-      return this.topOffset !== 12 || this.inAccessOrCreate;
-    },
-    inAccessOrCreate() {
-      return (
-        this.$route.path.includes('/access') ||
-        this.$route.path.includes('/buy-hardware') ||
-        this.$route.path.includes('/create')
-      );
-    }
-  },
-  async mounted() {
-    if (!this.inAccessOrCreate) {
-      const controller = new ScrollMagic.Controller();
-      this.topOffset = this.inAccessOrCreate ? 0 : this.offset;
-      new ScrollMagic.Scene({
-        triggerElement: '.js-body',
-        duration: 52,
-        triggerHook: 'onLeave'
-      })
-        .on('progress', e => {
-          this.topOffset = Math.max(
-            0,
-            this.offset - this.offset * e.progress.toFixed(3)
-          );
-        })
-        .addTo(controller);
+// emits
+const emit = defineEmits(['openMobileMenu']);
 
-      new ScrollMagic.Scene({
-        triggerElement: '.js-body',
-        offset: this.offset,
-        triggerHook: 'onLeave'
+// injections
+const route = useRoute();
+const vuetify = useVuetify();
+
+// data
+const topOffset = ref(12);
+
+// computed
+const showAccess = computed(() =>
+  route.value.name === ROUTES_HOME.ACCESS_WALLET.NAME
+    ? 'visibility: hidden'
+    : ''
+);
+const offset = computed(() => (vuetify.breakpoint.mdAndDown ? 24 : 12));
+const showDark = computed(
+  () => topOffset.value !== 12 || inAccessOrCreate.value
+);
+const inAccessOrCreate = computed(
+  () =>
+    route.value.path.includes('/access') ||
+    route.value.path.includes('/buy-hardware') ||
+    route.value.path.includes('/create')
+);
+
+// onMounted
+onMounted(() => {
+  if (!inAccessOrCreate.value) {
+    const controller = new ScrollMagic.Controller();
+    topOffset.value = inAccessOrCreate.value ? 0 : offset.value;
+    new ScrollMagic.Scene({
+      triggerElement: '.js-body',
+      duration: 52,
+      triggerHook: 'onLeave'
+    })
+      .on('progress', e => {
+        topOffset.value = Math.max(
+          0,
+          offset.value - offset.value * e.progress.toFixed(3)
+        );
       })
-        .setClassToggle('.js-header', 'fixed')
-        .addTo(controller);
-    } else {
-      this.topOffset = 0;
-    }
-  },
-  methods: {
-    openMobileMenu() {
-      this.$emit('openMobileMenu');
-    }
+      .addTo(controller);
+
+    new ScrollMagic.Scene({
+      triggerElement: '.js-body',
+      offset: offset.value,
+      triggerHook: 'onLeave'
+    })
+      .setClassToggle('.js-header', 'fixed')
+      .addTo(controller);
+  } else {
+    topOffset.value = 0;
   }
+});
+
+// methods
+const openMobileMenu = () => {
+  emit('openMobileMenu');
 };
 </script>
 

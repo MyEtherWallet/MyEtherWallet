@@ -3,7 +3,7 @@
     <v-container>
       <div class="page-container pt-16">
         <div class="page-title text-center">
-          <h1>{{ $t('footer.press-kit.header') }}</h1>
+          <h1>{{ t('footer.press-kit.header') }}</h1>
           <i18n
             path="footer.press-kit.subtext"
             tag="div"
@@ -55,51 +55,51 @@
   </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      pressAssets: [
-        {
-          color: '',
-          style: '',
-          png: require('@/assets/images/presskit/logo-dark.png'),
-          svg: require('@/assets/images/presskit/logo-dark.svg')
-        },
-        {
-          color: 'light',
-          style: '',
-          png: require('@/assets/images/presskit/logo-light.png'),
-          svg: require('@/assets/images/presskit/logo-light.svg')
-        },
-        {
-          color: '',
-          style: 'width: 110px; height: 110px;',
-          png: require('@/assets/images/presskit/logo-simple.png'),
-          svg: require('@/assets/images/presskit/logo-simple.svg')
-        },
-        {
-          color: 'light',
-          style: 'width: 110px; height: 110px;',
-          png: require('@/assets/images/presskit/logo-simple.png'),
-          svg: require('@/assets/images/presskit/logo-simple.svg')
-        },
-        {
-          color: '',
-          style: 'width: 120px; height: 120px;',
-          png: require('@/assets/images/presskit/logo-kid.png'),
-          svg: require('@/assets/images/presskit/logo-kid.svg')
-        },
-        {
-          color: 'light',
-          style: 'width: 120px; height: 120px;',
-          png: require('@/assets/images/presskit/logo-kid.png'),
-          svg: require('@/assets/images/presskit/logo-kid.svg')
-        }
-      ]
-    };
+<script setup>
+import { useI18n } from 'vue-i18n-composable';
+
+// injections
+const { t } = useI18n();
+
+// data
+const pressAssets = [
+  {
+    color: '',
+    style: '',
+    png: require('@/assets/images/presskit/logo-dark.png'),
+    svg: require('@/assets/images/presskit/logo-dark.svg')
+  },
+  {
+    color: 'light',
+    style: '',
+    png: require('@/assets/images/presskit/logo-light.png'),
+    svg: require('@/assets/images/presskit/logo-light.svg')
+  },
+  {
+    color: '',
+    style: 'width: 110px; height: 110px;',
+    png: require('@/assets/images/presskit/logo-simple.png'),
+    svg: require('@/assets/images/presskit/logo-simple.svg')
+  },
+  {
+    color: 'light',
+    style: 'width: 110px; height: 110px;',
+    png: require('@/assets/images/presskit/logo-simple.png'),
+    svg: require('@/assets/images/presskit/logo-simple.svg')
+  },
+  {
+    color: '',
+    style: 'width: 120px; height: 120px;',
+    png: require('@/assets/images/presskit/logo-kid.png'),
+    svg: require('@/assets/images/presskit/logo-kid.svg')
+  },
+  {
+    color: 'light',
+    style: 'width: 120px; height: 120px;',
+    png: require('@/assets/images/presskit/logo-kid.png'),
+    svg: require('@/assets/images/presskit/logo-kid.svg')
   }
-};
+];
 </script>
 
 <style lang="scss" scoped>

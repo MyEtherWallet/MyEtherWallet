@@ -16,17 +16,19 @@
   </div>
 </template>
 
-<script>
-export default {
-  data: vm => ({
-    titleData: {
-      textProps: '',
-      toptitle: '',
-      title: vm.$t('aboutUs.about-us.title'),
-      description: vm.$t('aboutUs.about-us.description'),
-      centered: true
-    }
-  })
+<script setup>
+import { useI18n } from 'vue-i18n-composable';
+
+// injections
+const { t } = useI18n();
+
+// data
+const titleData = {
+  textProps: '',
+  toptitle: '',
+  title: t('aboutUs.about-us.title'),
+  description: t('aboutUs.about-us.description'),
+  centered: true
 };
 </script>
 

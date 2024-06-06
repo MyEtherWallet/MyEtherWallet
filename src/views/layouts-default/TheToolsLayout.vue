@@ -29,97 +29,103 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, watch, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router/composables';
+
+import TheLayoutHeader from '@/views/components-default/TheLayoutHeader.vue';
+import ModuleToolsConvert from '@/modules/tools/ModuleToolsConvert.vue';
+import ModuleToolsOfflineHelper from '@/modules/tools/ModuleToolsOfflineHelper.vue';
+import ModuleMessageVerify from '@/modules/message/ModuleMessageVerify.vue';
+import GetStarted from '@/views/components-default/GetStarted.vue';
+
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
 
-export default {
-  name: 'TheToolsLayout',
-  components: {
-    TheLayoutHeader: () => import('../components-default/TheLayoutHeader'),
-    ModuleToolsConvert: () => import('@/modules/tools/ModuleToolsConvert'),
-    ModuleToolsOfflineHelper: () =>
-      import('@/modules/tools/ModuleToolsOfflineHelper'),
-    ModuleMessageVerify: () => import('@/modules/message/ModuleMessageVerify'),
-    GetStarted: () => import('../components-default/GetStarted')
+// injections
+const route = useRoute();
+const router = useRouter();
+
+// data
+const currentTool = ref('');
+const activeTab = ref(0);
+const items = [
+  {
+    name: 'Verify Message',
+    val: 'verify'
   },
-  data: () => ({
-    currentTool: '',
-    activeTab: 0,
-    items: [
-      {
-        name: 'Verify Message',
-        val: 'verify'
-      },
-      {
-        name: 'Convert Units',
-        val: 'convert'
-      },
-      {
-        name: 'Send Offline Helper',
-        val: 'offline'
-      }
-    ]
-  }),
-  watch: {
-    $route() {
-      this.setCurrentTool();
-    },
-    currentTool(val) {
-      this.$refs.verifyMessageModule?.clearAll();
-      this.$router.push({ name: ROUTES_HOME.TOOLS.NAME, query: { tool: val } });
+  {
+    name: 'Convert Units',
+    val: 'convert'
+  },
+  {
+    name: 'Send Offline Helper',
+    val: 'offline'
+  }
+];
+const verifyMessageModule = ref(null);
+
+// watch
+watch(route, () => {
+  setCurrentTool();
+});
+
+watch(currentTool, val => {
+  verifyMessageModule.value?.clearAll();
+  router.push({ name: ROUTES_HOME.TOOLS.NAME, query: { tool: val } });
+});
+
+// mounted
+onMounted(() => {
+  setCurrentTool();
+});
+
+// methods
+const setCurrentTool = () => {
+  const tools = ['convert', 'offline', 'verify'];
+
+  // Check if tool value from URL is valid
+  if (tools.includes(route.query.tool)) {
+    currentTool.value = route.query.tool;
+
+    switch (currentTool.value) {
+      case 'verify':
+        activeTab.value = 0;
+        currentTool.value = 'verify';
+        break;
+
+      case 'convert':
+        activeTab.value = 1;
+        currentTool.value = 'convert';
+        break;
+      case 'offline':
+        activeTab.value = 2;
+        currentTool.value = 'offline';
+        break;
+      default:
+        activeTab.value = 0;
+        currentTool.value = 'verify';
     }
-  },
-  mounted() {
-    this.setCurrentTool();
-  },
-  methods: {
-    setCurrentTool() {
-      const tools = ['convert', 'offline', 'verify'];
+  } else {
+    activeTab.value = 0;
+    currentTool.value = 'verify';
+  }
+};
 
-      // Check if tool value from URL is valid
-      if (tools.includes(this.$route.query.tool)) {
-        this.currentTool = this.$route.query.tool;
+const tabChanged = tab => {
+  activeTab.value = tab;
 
-        switch (this.currentTool) {
-          case 'verify':
-            this.activeTab = 0;
-            this.currentTool = 'verify';
-            break;
-
-          case 'convert':
-            this.activeTab = 1;
-            this.currentTool = 'convert';
-            break;
-          case 'offline':
-            this.activeTab = 2;
-            this.currentTool = 'offline';
-            break;
-          default:
-            this.activeTab = 0;
-            this.currentTool = 'verify';
-        }
-      } else {
-        this.activeTab = 0;
-        this.currentTool = 'verify';
-      }
-    },
-    tabChanged(tab) {
-      this.activeTab = tab;
-
-      switch (tab) {
-        case 0:
-          this.currentTool = 'verify';
-          break;
-        case 1:
-          this.currentTool = 'convert';
-          break;
-        case 2:
-          this.currentTool = 'offline';
-          break;
-        default:
-          this.currentTool = 'verify';
-      }
-    }
+  switch (tab) {
+    case 0:
+      currentTool.value = 'verify';
+      break;
+    case 1:
+      currentTool.value = 'convert';
+      break;
+    case 2:
+      currentTool.value = 'offline';
+      break;
+    default:
+      currentTool.value = 'verify';
   }
 };
 </script>

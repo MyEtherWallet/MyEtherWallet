@@ -5,23 +5,18 @@
       <v-container>
         <v-sheet color="transparent" max-width="400px">
           <div class="mew-heading-3 text-uppercase textLight--text mb-1">
-            {{
-              $t('home.about-mew.subheading')
-                | lokalise('home.about-mew.subheading')
-            }}
+            {{ t('home.about-mew.subheading') }}
           </div>
           <h1 class="mb-9">
-            {{
-              $t('home.about-mew.heading') | lokalise('home.about-mew.heading')
-            }}
+            {{ t('home.about-mew.heading') }}
           </h1>
         </v-sheet>
 
         <div class="d-flex">
           <mew-info-card
             class="d-flex align-end block-box-shadow"
-            :title="$t('home.about-mew.card-one.title')"
-            :desc="$t('home.about-mew.card-one.text')"
+            :title="t('home.about-mew.card-one.title')"
+            :desc="t('home.about-mew.card-one.text')"
             :icon="require('@/assets/images/icons/icon-faces-mew.svg')"
           />
           <div class="pa-4"></div>
@@ -30,24 +25,24 @@
             <mew-info-card
               class="full-height"
               max-width="600"
-              :title="$t('home.about-mew.card-two.title')"
-              :desc="$t('home.about-mew.card-two.text')"
+              :title="t('home.about-mew.card-two.title')"
+              :desc="t('home.about-mew.card-two.text')"
             />
             <div class="pa-4"></div>
             <mew-info-card
               class="full-height"
               max-width="600"
-              :title="$t('home.about-mew.card-three.title')"
-              :desc="$t('home.about-mew.card-three.text')"
+              :title="t('home.about-mew.card-three.title')"
+              :desc="t('home.about-mew.card-three.text')"
             />
           </div>
 
           <div class="pa-4"></div>
           <mew-info-card
-            :title="$t('home.about-mew.card-four.title')"
-            :desc="$t('home.about-mew.card-four.text')"
+            :title="t('home.about-mew.card-four.title')"
+            :desc="t('home.about-mew.card-four.text')"
             :link="{
-              title: $t('home.about-mew.card-four.link'),
+              title: t('home.about-mew.card-four.link'),
               url: 'https://www.mewwallet.com/'
             }"
           >
@@ -81,36 +76,36 @@
         <v-sheet color="transparent" max-width="500px" class="mx-auto">
           <v-sheet color="transparent" max-width="400px" class="mb-9">
             <h5 class="font-weight-bold text-uppercase textLight--text mb-2">
-              {{ $t('home.about-mew.subheading') }}
+              {{ t('home.about-mew.subheading') }}
             </h5>
-            <h1>{{ $t('home.about-mew.heading') }}</h1>
+            <h1>{{ t('home.about-mew.heading') }}</h1>
           </v-sheet>
 
           <mew-info-card
             class="d-flex align-end block-box-shadow mx-auto mb-6"
-            :title="$t('home.about-mew.card-one.title')"
-            :desc="$t('home.about-mew.card-one.text')"
+            :title="t('home.about-mew.card-one.title')"
+            :desc="t('home.about-mew.card-one.text')"
             :icon="require('@/assets/images/icons/icon-faces-mew.svg')"
           />
 
           <mew-info-card
             class="full-height mx-auto mb-6"
-            :title="$t('home.about-mew.card-two.title')"
-            :desc="$t('home.about-mew.card-two.text')"
+            :title="t('home.about-mew.card-two.title')"
+            :desc="t('home.about-mew.card-two.text')"
           />
 
           <mew-info-card
             class="full-height mx-auto mb-6"
-            :title="$t('home.about-mew.card-three.title')"
-            :desc="$t('home.about-mew.card-three.text')"
+            :title="t('home.about-mew.card-three.title')"
+            :desc="t('home.about-mew.card-three.text')"
           />
 
           <mew-info-card
             class="mx-auto"
-            :title="$t('home.about-mew.card-four.title')"
-            :desc="$t('home.about-mew.card-four.text')"
+            :title="t('home.about-mew.card-four.title')"
+            :desc="t('home.about-mew.card-four.text')"
             :link="{
-              title: $t('home.about-mew.card-four.link'),
+              title: t('home.about-mew.card-four.link'),
               url: 'https://www.mewwallet.com/'
             }"
           >
@@ -143,10 +138,10 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'HomeWhyMew'
-};
+<script setup>
+import { useI18n } from 'vue-i18n-composable';
+
+const { t } = useI18n();
 </script>
 
 <style lang="scss" scoped>

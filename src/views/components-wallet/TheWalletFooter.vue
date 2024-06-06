@@ -13,16 +13,16 @@
       <v-row class="align-center justify-space-between">
         <v-col cols="12" md="7">
           <div class="mb-0 text-center text-md-left">
-            {{ $t('footer.copyright', { year: new Date().getFullYear() }) }}
+            {{ t('footer.copyright', { year: new Date().getFullYear() }) }}
             <a
               v-if="!isOfflineApp"
               class="textDark--text text-decoration--none"
               href="https://www.coingecko.com/en"
               target="_blank"
             >
-              {{ $t('footer.coingecko') }}
+              {{ t('footer.coingecko') }}
             </a>
-            <span v-else>{{ $t('footer.coingecko') }}</span>
+            <span v-else>{{ t('footer.coingecko') }}</span>
           </div>
         </v-col>
         <v-col
@@ -71,54 +71,58 @@
   </v-footer>
 </template>
 
-<script>
-export default {
-  name: 'TheWalletFooter',
-  props: {
-    isOfflineApp: {
-      type: Boolean,
-      default: false
-    }
-  },
-  data: () => ({
-    onLanguage: null,
-    languages: [
-      {
-        name: 'English',
-        value: 'en',
-        flag: require('@/assets/images/flags/uk.png')
-      },
-      {
-        name: 'Russian',
-        value: 'ru',
-        flag: require('@/assets/images/flags/russia.png')
-      },
-      {
-        name: 'Germany',
-        value: 'ge',
-        flag: require('@/assets/images/flags/germany.png')
-      },
-      {
-        name: 'China',
-        value: 'ch',
-        flag: require('@/assets/images/flags/china.png')
-      },
-      {
-        name: 'Korean',
-        value: 'kr',
-        flag: require('@/assets/images/flags/korea.png')
-      },
-      {
-        name: 'Japanese',
-        value: 'jp',
-        flag: require('@/assets/images/flags/japan.png')
-      }
-    ]
-  }),
-  mounted() {
-    this.onLanguage = this.languages[0].value;
+<script setup>
+import { defineProps, onMounted, ref } from 'vue';
+import { useI18n } from 'vue-i18n-composable';
+
+// injections
+const { t } = useI18n();
+
+defineProps({
+  isOfflineApp: {
+    type: Boolean,
+    default: false
   }
-};
+});
+
+// data
+const onLanguage = ref(null);
+const languages = [
+  {
+    name: 'English',
+    value: 'en',
+    flag: require('@/assets/images/flags/uk.png')
+  },
+  {
+    name: 'Russian',
+    value: 'ru',
+    flag: require('@/assets/images/flags/russia.png')
+  },
+  {
+    name: 'Germany',
+    value: 'ge',
+    flag: require('@/assets/images/flags/germany.png')
+  },
+  {
+    name: 'China',
+    value: 'ch',
+    flag: require('@/assets/images/flags/china.png')
+  },
+  {
+    name: 'Korean',
+    value: 'kr',
+    flag: require('@/assets/images/flags/korea.png')
+  },
+  {
+    name: 'Japanese',
+    value: 'jp',
+    flag: require('@/assets/images/flags/japan.png')
+  }
+];
+
+onMounted(() => {
+  onLanguage.value = languages[0].value;
+});
 </script>
 
 <style lang="scss">

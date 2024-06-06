@@ -5,9 +5,3 @@
     </v-main>
   </div>
 </template>
-
-<script>
-export default {
-  name: 'TheOfflineDefaultView'
-};
-</script>

@@ -52,41 +52,45 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { useI18n } from 'vue-i18n-composable';
 import Telegram from '@/assets/images/icons/icon-telegram-dark.svg';
 import Slack from '@/assets/images/icons/icon-slack-dark.svg';
 import Reddit from '@/assets/images/icons/icon-reddit-dark.svg';
 import Github from '@/assets/images/icons/icon-github-dark.svg';
-export default {
-  data: vm => ({
-    icons: [
-      {
-        link: 'https://t.me/myetherwallet',
-        img: Telegram
-      },
-      {
-        link: '#',
-        img: Slack
-      },
-      {
-        link: 'https://www.reddit.com/r/MyEtherWallet/',
-        img: Reddit
-      },
-      {
-        link: 'https://github.com/myetherwallet',
-        img: Github
-      }
-    ],
-    titleData: {
-      title: vm.$t('aboutUs.get-answers.title'),
-      description: vm.$t('aboutUs.get-answers.description'),
-      centered: false
-    },
-    titleDataRight: {
-      title: vm.$t('aboutUs.community.title'),
-      description: vm.$t('aboutUs.community.description'),
-      centered: false
-    }
-  })
+
+// injections
+const { t } = useI18n();
+
+// data
+const titleData = {
+  title: t('aboutUs.get-answers.title'),
+  description: t('aboutUs.get-answers.description'),
+  centered: false
 };
+
+const titleDataRight = {
+  title: t('aboutUs.community.title'),
+  description: t('aboutUs.community.description'),
+  centered: false
+};
+
+const icons = [
+  {
+    link: 'https://t.me/myetherwallet',
+    img: Telegram
+  },
+  {
+    link: '#',
+    img: Slack
+  },
+  {
+    link: 'https://www.reddit.com/r/MyEtherWallet/',
+    img: Reddit
+  },
+  {
+    link: 'https://github.com/myetherwallet',
+    img: Github
+  }
+];
 </script>

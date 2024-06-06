@@ -29,41 +29,39 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { useI18n } from 'vue-i18n-composable';
+
 import Contract from '@/assets/images/icons/icon-contract-mew.svg';
 import Message from '@/assets/images/icons/icon-message-mew.svg';
 import BuyEth from '@/assets/images/icons/icon-buy-eth-mew.svg';
 
-export default {
-  data: function () {
-    return {
-      titleData: {
-        textProps: '',
-        toptitle: '',
-        title: this.$i18n.t('howItWorks.more.title'),
-        description: '',
-        centered: false
-      },
-      blockContent: [
-        {
-          img: Contract,
-          title: this.$i18n.t('howItWorks.more.smart-contracts.title'),
-          description: this.$i18n.t(
-            'howItWorks.more.smart-contracts.description'
-          )
-        },
-        {
-          img: Message,
-          title: this.$i18n.t('howItWorks.more.messages.title'),
-          description: this.$i18n.t('howItWorks.more.messages.description')
-        },
-        {
-          img: BuyEth,
-          title: this.$i18n.t('howItWorks.more.buy-eth.title'),
-          description: this.$i18n.t('howItWorks.more.buy-eth.description')
-        }
-      ]
-    };
-  }
+// injections
+const { t } = useI18n();
+
+// data
+const titleData = {
+  textProps: '',
+  toptitle: '',
+  title: t('howItWorks.more.title'),
+  description: '',
+  centered: false
 };
+const blockContent = [
+  {
+    img: Contract,
+    title: t('howItWorks.more.smart-contracts.title'),
+    description: t('howItWorks.more.smart-contracts.description')
+  },
+  {
+    img: Message,
+    title: t('howItWorks.more.messages.title'),
+    description: t('howItWorks.more.messages.description')
+  },
+  {
+    img: BuyEth,
+    title: t('howItWorks.more.buy-eth.title'),
+    description: t('howItWorks.more.buy-eth.description')
+  }
+];
 </script>

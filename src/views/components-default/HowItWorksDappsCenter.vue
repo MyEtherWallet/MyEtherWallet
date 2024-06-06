@@ -19,16 +19,10 @@
             </div>
             <div>
               <div class="mb-1 font-weight-bold subtitle-1">
-                {{
-                  $t('howItWorks.dapps.info-one.title')
-                    | lokalise('howItWorks.dapps.info-one.title')
-                }}
+                {{ t('howItWorks.dapps.info-one.title') }}
               </div>
               <p>
-                {{
-                  $t('howItWorks.dapps.info-one.text')
-                    | lokalise('howItWorks.dapps.info-one.text')
-                }}
+                {{ t('howItWorks.dapps.info-one.text') }}
               </p>
             </div>
           </div>
@@ -39,32 +33,16 @@
             </div>
             <div>
               <div class="mb-1 font-weight-bold subtitle-1">
-                {{
-                  $t('howItWorks.dapps.info-two.title')
-                    | lokalise('howItWorks.dapps.info-two.title')
-                }}
+                {{ t('howItWorks.dapps.info-two.title') }}
               </div>
               <p>
-                {{
-                  $t('howItWorks.dapps.info-two.text')
-                    | lokalise('howItWorks.dapps.info-two.text')
-                }}
+                {{ t('howItWorks.dapps.info-two.text') }}
                 <a
                   href="https://www.myetherwallet.com/dapp-submission"
                   target="_blank"
-                  >{{
-                    $t('howItWorks.dapps.info-two.link')
-                      | lokalise('howItWorks.dapps.info-two.link')
-                  }}</a
+                  >{{ t('howItWorks.dapps.info-two.link') }}</a
                 >.
               </p>
-              <!-- <div class="d-flex align-center mt-10">
-                <a
-                  href="#"
-                  class="teal--text text--lighten-2 font-weight-medium text-decoration--underline"
-                  >Watch tutorial</a
-                >
-              </div> -->
             </div>
           </div>
         </v-col>
@@ -81,17 +59,18 @@
   </div>
 </template>
 
-<script>
-export default {
-  data: vm => ({
-    titleData: {
-      textProps: '',
-      toptitle: '',
-      title: vm.$t('howItWorks.dapps.title'),
-      description: vm.$t('howItWorks.dapps.description'),
-      centered: false
-    }
-  })
+<script setup>
+import { useI18n } from 'vue-i18n-composable';
+
+// injections
+const { t } = useI18n();
+
+const titleData = {
+  textProps: '',
+  toptitle: '',
+  title: t('howItWorks.dapps.title'),
+  description: t('howItWorks.dapps.description'),
+  centered: false
 };
 </script>
 

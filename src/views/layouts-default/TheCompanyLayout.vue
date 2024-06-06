@@ -15,16 +15,11 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'TheCompanyLayout',
-  components: {
-    TheLayoutHeader: () => import('../components-default/TheLayoutHeader'),
-    CompanyWhatIsMew: () => import('../components-default/CompanyWhatIsMew'),
-    CompanyOurStory: () => import('../components-default/CompanyOurStory'),
-    CompanyCommunity: () => import('../components-default/CompanyCommunity'),
-    MewtopiaBlock: () => import('../components-default/MewtopiaBlock'),
-    PartnersBlock: () => import('../components-default/PartnersBlock')
-  }
-};
+<script setup>
+import TheLayoutHeader from '../components-default/TheLayoutHeader';
+import CompanyWhatIsMew from '../components-default/CompanyWhatIsMew';
+import CompanyOurStory from '../components-default/CompanyOurStory';
+import CompanyCommunity from '../components-default/CompanyCommunity';
+import MewtopiaBlock from '../components-default/MewtopiaBlock';
+import PartnersBlock from '../components-default/PartnersBlock';
 </script>

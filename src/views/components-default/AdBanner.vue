@@ -78,12 +78,6 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'AdvertiseBanner'
-};
-</script>
-
 <style lang="scss" scoped>
 .desktop-content {
   background-image: url(~@/assets/images/backgrounds/bg-ad-with-us.png);

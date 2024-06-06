@@ -6,12 +6,7 @@
   </the-wrapper-wallet>
 </template>
 
-<script>
-export default {
-  components: {
-    TheWrapperWallet: () =>
-      import('@/views/components-wallet/TheWrapperWallet'),
-    ModuleNftManager: () => import('@/modules/nft-manager/ModuleNftManager')
-  }
-};
+<script setup>
+import TheWrapperWallet from '@/views/components-wallet/TheWrapperWallet.vue';
+import ModuleNftManager from '@/modules/nft-manager/ModuleNftManager.vue';
 </script>

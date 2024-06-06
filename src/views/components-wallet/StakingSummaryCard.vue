@@ -50,7 +50,7 @@
                       'ml-2'
                     ]"
                   >
-                    {{ stakedRewards.totalRewards | concatStr }} ETH
+                    {{ totalStakedStaked }} ETH
                   </span>
                 </div>
                 <div
@@ -80,7 +80,7 @@
                       'ml-2'
                     ]"
                   >
-                    {{ stakedRewards.totalStaked | concatStr }} ETH
+                    {{ totalStakedRewards }} ETH
                   </span>
                 </div>
                 <div
@@ -131,7 +131,7 @@
                       'ml-2'
                     ]"
                   >
-                    {{ cbStakeRewards.totalRewards | concatStr }} ETH
+                    {{ totalCbRewards }} ETH
                   </span>
                 </div>
                 <div
@@ -161,7 +161,7 @@
                       'ml-2'
                     ]"
                   >
-                    {{ cbStakeRewards.totalStaked | concatStr }} ETH
+                    {{ totalCbStaked }} ETH
                   </span>
                 </div>
                 <div
@@ -193,86 +193,110 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { defineProps, computed } from 'vue';
 import BigNumber from 'bignumber.js';
-import { mapGetters } from 'vuex';
+import { useRouter } from 'vue-router/composables';
 
 import { formatPercentageValue } from '@/core/helpers/numberFormatHelper';
 import { STAKED_ROUTE } from '@/dapps/staked-dapp/configsRoutes';
 import { COINBASE_STAKING_ROUTES } from '@/dapps/coinbase-staking/configs';
+import { useGlobalStore } from '@/core/store/global';
 
-export default {
-  name: 'StakingSummaryCard',
-  filters: {
-    concatStr(val) {
-      const newVal = `${val}`;
-      // should probably be moved globablly
-      if (newVal.length < 8) return newVal;
-      return `${newVal.substr(0, 7)}...`;
-    }
+// injections
+const { network, getFiatValue } = useGlobalStore();
+const router = useRouter();
+
+// props
+const props = defineProps({
+  stakedRewards: {
+    type: Object,
+    default: () => ({})
   },
-  props: {
-    stakedRewards: {
-      type: Object,
-      default: () => {}
-    },
-    cbStakeRewards: {
-      type: Object,
-      default: () => {}
-    },
-    ethPrice: {
-      type: Number,
-      default: 0
-    },
-    apr: {
-      type: String,
-      default: '0'
-    }
+  cbStakeRewards: {
+    type: Object,
+    default: () => ({})
   },
-  computed: {
-    ...mapGetters('global', ['network', 'getFiatValue']),
-    showStaked() {
-      return this.stakedRewards.totalStaked > 0;
-    },
-    showCbStake() {
-      return this.cbStakeRewards.totalStaked > 0;
-    },
-    cbStakeAmountFiat() {
-      return this.getFiatValue(
-        BigNumber(this.cbStakeRewards.totalStaked).times(this.ethPrice)
-      );
-    },
-    cbStakeRewardsFiat() {
-      return this.getFiatValue(
-        BigNumber(this.cbStakeRewards.totalRewards).times(this.ethPrice)
-      );
-    },
-    stakedAmountFiat() {
-      return this.getFiatValue(
-        BigNumber(this.stakedRewards.totalStaked).times(this.ethPrice)
-      );
-    },
-    stakedRewardsFiat() {
-      return this.getFiatValue(
-        BigNumber(this.stakedRewards.totalRewards).times(this.ethPrice)
-      );
-    },
-    stakedApy() {
-      if (this.apr > 0) {
-        return `APY ${formatPercentageValue(this.apr).value}`;
-      }
-      return '---';
-    }
+  ethPrice: {
+    type: Number,
+    default: 0
   },
-  methods: {
-    navigateToStaked() {
-      this.$router.push({ name: STAKED_ROUTE.STAKED.NAME });
-    },
-    navigateToCbStake() {
-      this.$router.push({ name: COINBASE_STAKING_ROUTES.CORE.NAME });
-    }
+  apr: {
+    type: String,
+    default: '0'
   }
+});
+
+// computed
+const showStaked = computed(() => {
+  return props.stakedRewards.totalStaked > 0;
+});
+const showCbStake = computed(() => {
+  return props.cbStakeRewards.totalStaked > 0;
+});
+const cbStakeAmountFiat = computed(() => {
+  return getFiatValue(
+    BigNumber(props.cbStakeRewards.totalStaked).times(props.ethPrice)
+  );
+});
+const cbStakeRewardsFiat = computed(() => {
+  return getFiatValue(
+    BigNumber(props.cbStakeRewards.totalRewards).times(props.ethPrice)
+  );
+});
+const stakedAmountFiat = computed(() => {
+  return getFiatValue(
+    BigNumber(props.stakedRewards.totalStaked).times(props.ethPrice)
+  );
+});
+const stakedRewardsFiat = computed(() => {
+  return getFiatValue(
+    BigNumber(props.stakedRewards.totalRewards).times(props.ethPrice)
+  );
+});
+const stakedApy = computed(() => {
+  if (props.apr > 0) {
+    return `APY ${formatPercentageValue(props.apr).value}`;
+  }
+  return '---';
+});
+
+const totalCbStaked = computed(() => {
+  return concatStr(props.cbStakeRewards.totalStaked);
+});
+const totalCbRewards = computed(() => {
+  return concatStr(props.cbStakeRewards.totalRewards.value);
+});
+const totalStakedStaked = computed(() => {
+  return concatStr(props.stakedRewards.totalStaked);
+});
+const totalStakedRewards = computed(() => {
+  return concatStr(props.stakedRewards.totalRewards.value);
+});
+
+// methods
+const navigateToStaked = () => {
+  router.push({ name: STAKED_ROUTE.STAKED.NAME });
 };
+const navigateToCbStake = () => {
+  router.push({ name: COINBASE_STAKING_ROUTES.CORE.NAME });
+};
+const concatStr = val => {
+  const newVal = `${val}`;
+  if (newVal.length < 8) return newVal;
+  return `${newVal.substr(0, 7)}...`;
+};
+
+// export default {
+//   filters: {
+//     concatStr(val) {
+//       const newVal = `${val}`;
+//       // should probably be moved globablly
+//       if (newVal.length < 8) return newVal;
+//       return `${newVal.substr(0, 7)}...`;
+//     }
+//   }
+// };
 </script>
 
 <style lang="scss" scoped>
