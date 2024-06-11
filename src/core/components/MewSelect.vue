@@ -351,17 +351,6 @@ export default {
           }
           return foundTokens;
         }, []);
-        // const foundItems = this.items.filter(item => {
-        //   const searchValue = String(newVal).toLowerCase();
-        //   const name = String(get(item, 'name', '')).toLowerCase();
-        //   const subtext = String(get(item, 'subtext', '')).toLowerCase();
-        //   return (
-        //     subtext === searchValue ||
-        //     name === searchValue ||
-        //     subtext.includes(searchValue) ||
-        //     name.includes(searchValue)
-        //   );
-        // });
         this.selectItems = foundItems;
       }
     },
