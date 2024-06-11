@@ -85,7 +85,7 @@
     "crypto": "1.0.1",
     "ethereum-block-by-date": "1.4.9",
     "ethers": "5.7.2",
-    "follow-redirects": "1.15.2",
+    "follow-redirects": "1.15.6",
     "graphql": "15.7.2",
     "graphql-tag": "2.12.6",
     "highcharts": "11.0.1",
