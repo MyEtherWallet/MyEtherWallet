@@ -59,7 +59,13 @@
         />
         <img
           src="@/assets/images/icons/moonpay/icon-apple-pay.svg"
-          alt="Master"
+          alt="applepay"
+          height="24"
+          class="mr-2"
+        />
+        <img
+          src="@/assets/images/icons/moonpay/icon-paypal-logo.svg"
+          alt="paypal"
           height="24"
           class="mr-2"
         />
@@ -245,7 +251,9 @@ export default {
       return 'BUY WITH MOONPAY';
     },
     paymentOptionString() {
-      return `Visa, Mastercard, Apple Pay${this.isEUR ? ', Bank account' : ''}`;
+      return `Visa, Mastercard, Apple Pay, Paypal${
+        this.isEUR ? ', Bank account' : ''
+      }`;
     }
   },
   methods: {
