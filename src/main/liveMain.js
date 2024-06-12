@@ -20,23 +20,33 @@ import { dappStoreBeforeCreate } from '../dapps/dappsStore';
 
 // overwrite fetch for session replay
 const originalFetch = fetch;
-const OVERRIDES = {
-  'https://sr-client-cfg.amplitude.com/config':
-    'https://analytics-web-development.mewwallet.dev/config',
-  'https://api-sr.amplitude.com/sessions/v2/track':
-    'https://analytics-web-development.mewwallet.dev/session-replay'
-};
 
 /* eslint-disable */
 fetch = async (url, options) => {
+  let overrides;
+  if (process.env.NODE_ENV === 'production') {
+    overrides = {
+      'https://sr-client-cfg.amplitude.com/config':
+        'https://analytics-web.mewwallet.dev/config',
+      'https://api-sr.amplitude.com/sessions/v2/track':
+        'https://analytics-web.mewwallet.dev/session-replay'
+    };
+  } else {
+    overrides = {
+      'https://sr-client-cfg.amplitude.com/config':
+        'https://analytics-web-development.mewwallet.dev/config',
+      'https://api-sr.amplitude.com/sessions/v2/track':
+        'https://analytics-web-development.mewwallet.dev/session-replay'
+    };
+  }
   const parsedUrl = new URL(url);
   const origin = parsedUrl.origin;
   const path = parsedUrl.pathname;
   const query = parsedUrl.search;
   const base = `${origin}${path}`;
   let newUrl = '';
-  if (Object.keys(OVERRIDES).includes(base)) {
-    newUrl = `${OVERRIDES[base]}${query}`;
+  if (Object.keys(overrides).includes(base)) {
+    newUrl = `${overrides[base]}${query}`;
     options['mode'] = 'no-cors';
   }
   // Call the original fetch with the modified URL
