@@ -128,210 +128,131 @@ const USER_INPUT_TYPES = {
   typed: 'TYPED',
   selected: 'SELECTED'
 };
-export default {
-  name: 'MewAddressSelect',
-  components: {
-    MewBlockie: () => import('./MewBlockie.vue'),
-    MewCopy: () => import('./MewCopy.vue'),
-    MewTransformHash: () => import('./MewTransformHash.vue')
-  },
-  props: {
-    /**
-     * Text displayed under the input container.
-     */
-    hint: {
-      type: String,
-      default: ''
-    },
-    /**
-     * For validating your input - accepts an array of functions that take
-     * an input value as an argument and return either true / false or a
-     * string with an error message.
-     */
-    rules: {
-      type: Array,
-      default: () => {
-        return [];
-      }
-    },
-    /**
-     * The text to display if there is no data.
-     */
-    noDataText: {
-      type: String,
-      default: ''
-    },
-    /**
-     * Resolved address for name.
-     */
-    resolvedAddr: {
-      type: String,
-      default: ''
-    },
-    /**
-     * Disables the input.
-     */
-    disabled: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Enables save address button.
-     */
-    enableSaveAddress: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Returns if the address is valid or not.
-     */
-    isValidAddress: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * The input label.
-     */
-    label: {
-      type: String,
-      default: 'To Address'
-    },
-    /**
-     * The items that are displayed in the dropdown.
-     * Currently takes an array of objects, i.e { address: '', nickname: ''}
-     */
-    items: {
-      type: Array,
-      default: () => {
-        return [];
-      }
-    },
-    /**
-     * The input placeholder.
-     */
-    placeholder: {
-      type: String,
-      default: 'Please enter an address'
-    },
-    /**
-     * Tooltip text for copy icon.
-     */
-    copyTooltip: {
-      type: String,
-      default: ''
-    },
-    /**
-     * Displays copy button.
-     */
-    showCopy: {
-      type: Boolean,
-      default: true
-    },
-    /**
-     * Displays save button.
-     */
-    showSave: {
-      type: Boolean,
-      default: true
-    },
-    /**
-     * Tooltip text for save address icon.
-     */
-    saveTooltip: {
-      type: String,
-      default: ''
-    },
-    /**
-     * Error messages to display when its an invalid value.
-     */
-    errorMessages: {
-      type: [String, Array],
-      default: ''
-    },
-    /**
-     * Clear address
-     */
-    clearAddress: {
-      type: Boolean,
-      default: false
-    }
-  },
-  data() {
-    return {
-      /**
-       * The v-model value for the combobox.
-       */
-      addressValue: '',
-      /**
-       * Controls the dropdown expansion.
-       */
-      dropdown: false,
-      /**
-       * Indicates whether the user selected from dropdown or typed in the address
-       */
-      isTyped: USER_INPUT_TYPES.typed
-    };
-  },
-  computed: {
-    /**
-     * If the input item is a name (i.e, ens) and has a valid resolved address,
-     * display the blockie for the resolved address otherwise display
-     * the blockie for the regular address value.
-     */
-    blockieHash() {
-      // return this.addressValue.address || this.addressValue;
+</script>
+<script setup>
+import { ref, defineProps, watch, computed, defineEmits } from 'vue';
 
-      return this.resolvedAddr.length > 0
-        ? this.resolvedAddr
-        : this.addressValue.address || this.addressValue;
+import MewBlockie from './MewBlockie.vue';
+import MewCopy from './MewCopy.vue';
+import MewTransformHash from './MewTransformHash.vue';
+
+// emits
+const emit = defineEmits(['input', 'saveAddress']);
+
+// props
+const props = defineProps({
+  hint: {
+    type: String,
+    default: ''
+  },
+  rules: {
+    type: Array,
+    default: () => {
+      return [];
     }
   },
-  watch: {
-    clearAddress() {
-      this.clear();
+  noDataText: {
+    type: String,
+    default: ''
+  },
+  resolvedAddr: {
+    type: String,
+    default: ''
+  },
+  disabled: {
+    type: Boolean,
+    default: false
+  },
+  enableSaveAddress: {
+    type: Boolean,
+    default: false
+  },
+  isValidAddress: {
+    type: Boolean,
+    default: false
+  },
+  label: {
+    type: String,
+    default: 'To Address'
+  },
+  items: {
+    type: Array,
+    default: () => {
+      return [];
     }
   },
-  methods: {
-    /**
-     * Clears the v-model value.
-     */
-    clear() {
-      this.addressValue = '';
-    },
-    /**
-     * Emits 'saveAddress' when triggered by save address button.
-     */
-    saveAddress() {
-      this.$emit('saveAddress');
-    },
-    /**
-     * Toggles the dropdown.
-     */
-    toggle() {
-      this.dropdown = !this.dropdown;
-    },
-    /**
-     * Sets the dropdown item to be the v-model value.
-     */
-    selectAddress(data) {
-      this.dropdown = false;
-      this.isTyped = USER_INPUT_TYPES.selected;
-      this.addressValue = data.address;
-    },
-    /**
-     * Emits 'input' when there is a v-model value change.
-     */
-    onChange(value) {
-      this.$emit('input', value, this.isTyped);
-    },
-    /**
-     * Sets the value for what the user types int
-     */
-    onInputChange(e) {
-      this.isTyped = USER_INPUT_TYPES.typed;
-      this.addressValue = e.srcElement.value;
-    }
+  placeholder: {
+    type: String,
+    default: 'Please enter an address'
+  },
+  copyTooltip: {
+    type: String,
+    default: ''
+  },
+  showCopy: {
+    type: Boolean,
+    default: true
+  },
+  showSave: {
+    type: Boolean,
+    default: true
+  },
+  saveTooltip: {
+    type: String,
+    default: ''
+  },
+  errorMessages: {
+    type: [String, Array],
+    default: ''
+  },
+  clearAddress: {
+    type: Boolean,
+    default: false
   }
+});
+
+// data
+const isTyped = ref(USER_INPUT_TYPES.typed);
+const addressValue = ref('');
+const dropdown = ref(false);
+
+// computed
+const blockieHash = computed(() => {
+  return props.resolvedAddr.length > 0
+    ? props.resolvedAddr
+    : addressValue.value.address || addressValue.value;
+});
+
+// watch
+watch(() => addressValue.value, clear);
+watch(() => props.clearAddress, clear);
+
+// methods
+const clear = () => {
+  addressValue.value = '';
+};
+
+const saveAddress = () => {
+  emit('saveAddress');
+};
+
+const toggle = () => {
+  dropdown.value = !dropdown.value;
+};
+
+const selectAddress = data => {
+  dropdown.value = false;
+  isTyped.value = USER_INPUT_TYPES.selected;
+  addressValue.value = data.address;
+};
+
+const onChange = value => {
+  emit('input', value, isTyped.value);
+};
+
+const onInputChange = e => {
+  isTyped.value = USER_INPUT_TYPES.typed;
+  addressValue.value = e.srcElement.value;
 };
 </script>
 

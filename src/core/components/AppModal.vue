@@ -192,93 +192,96 @@
   </v-dialog>
 </template>
 
-<script>
+<script setup>
+import { defineProps } from 'vue';
 import { SWAP } from '@/modules/analytics-opt-in/handlers/configs/events.js';
-export default {
-  props: {
-    title: {
-      type: String,
-      default: ''
-    },
-    titleCenter: {
-      type: Boolean,
-      default: true
-    },
-    close: {
-      type: Function,
-      default: () => {}
-    },
-    show: {
-      type: Boolean,
-      default: false
-    },
-    btnEnabled: {
-      type: Boolean,
-      default: true
-    },
-    btnAction: {
-      type: Function,
-      default: () => {}
-    },
-    btnText: {
-      type: String,
-      default: 'Confirm & Send'
-    },
-    closeOnly: {
-      type: Boolean,
-      default: false
-    },
-    scrollable: {
-      type: Boolean,
-      default: false
-    },
-    width: {
-      type: String,
-      default: '600'
-    },
-    hasButtons: {
-      type: Boolean,
-      default: true
-    },
-    acceptOnly: {
-      type: Boolean,
-      default: false
-    },
-    isPersistent: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * NOTE:
-     * This prop will allow scroll anchoring for vuetify.goTo() inside scrollable content
-     * Important if you are using this prop please put v-card-text inside slot dgialogBody.
-     * For an example on how to use vuetify.goTo() see ModuleConfirmation.
-     *    <template #dialogBody>
-     *        <v-card-text ref="scrollableContent" class="py-0 px-5 px-md-0">
-     *          ...... your content ....
-     *        </v-card-text>
-     * <template>
-     */
-    anchored: {
-      type: Boolean,
-      default: false
-    },
-    hasCloseButton: {
-      type: Boolean,
-      default: true
-    }
+
+// props
+defineProps({
+  title: {
+    type: String,
+    default: ''
   },
-  methods: {
-    handleClickOutside() {
-      this.close(SWAP.CLICK_OUTSIDE);
-    },
-    handleCloseButton() {
-      this.close(SWAP.BUTTON_CANCEL);
-    },
-    handleClickX() {
-      this.close(SWAP.X_OUT);
-    }
+  titleCenter: {
+    type: Boolean,
+    default: true
+  },
+  close: {
+    type: Function,
+    default: () => {}
+  },
+  show: {
+    type: Boolean,
+    default: false
+  },
+  btnEnabled: {
+    type: Boolean,
+    default: true
+  },
+  btnAction: {
+    type: Function,
+    default: () => {}
+  },
+  btnText: {
+    type: String,
+    default: 'Confirm & Send'
+  },
+  closeOnly: {
+    type: Boolean,
+    default: false
+  },
+  scrollable: {
+    type: Boolean,
+    default: false
+  },
+  width: {
+    type: String,
+    default: '600'
+  },
+  hasButtons: {
+    type: Boolean,
+    default: true
+  },
+  acceptOnly: {
+    type: Boolean,
+    default: false
+  },
+  isPersistent: {
+    type: Boolean,
+    default: false
+  },
+  /**
+   * NOTE:
+   * This prop will allow scroll anchoring for vuetify.goTo() inside scrollable content
+   * Important if you are using this prop please put v-card-text inside slot dgialogBody.
+   * For an example on how to use vuetify.goTo() see ModuleConfirmation.
+   *    <template #dialogBody>
+   *        <v-card-text ref="scrollableContent" class="py-0 px-5 px-md-0">
+   *          ...... your content ....
+   *        </v-card-text>
+   * <template>
+   */
+  anchored: {
+    type: Boolean,
+    default: false
+  },
+  hasCloseButton: {
+    type: Boolean,
+    default: true
   }
+});
+
+// methods
+const handleClickOutside = () => {
+  close(SWAP.CLICK_OUTSIDE);
+};
+
+const handleCloseButton = () => {
+  close(SWAP.BUTTON_CANCEL);
+};
+
+const handleClickX = () => {
+  close(SWAP.X_OUT);
 };
 </script>
 

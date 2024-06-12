@@ -42,38 +42,25 @@
     </v-col>
   </v-row>
 </template>
-<script>
-export default {
-  name: 'AppBtnRow',
-  props: {
-    backBtnText: {
-      type: String,
-      default: 'Back'
+<script setup>
+import { defineProps } from 'vue';
+
+defineProps({
+  backBtnText: { default: 'Back', type: String },
+  backBtnMethod: {
+    default: function () {
+      return {};
     },
-    backBtnMethod: {
-      type: Function,
-      default: function () {
-        return {};
-      }
+    type: Function
+  },
+  backDisable: { default: false, type: Boolean },
+  nextBtnText: { default: 'Next', type: String },
+  nextBtnMethod: {
+    default: function () {
+      return {};
     },
-    backDisable: {
-      type: Boolean,
-      defualt: false
-    },
-    nextBtnText: {
-      type: String,
-      default: 'Next'
-    },
-    nextBtnMethod: {
-      type: Function,
-      default: function () {
-        return {};
-      }
-    },
-    nextDisable: {
-      type: Boolean,
-      default: false
-    }
-  }
-};
+    type: Function
+  },
+  nextDisable: { default: false, type: Boolean }
+});
 </script>

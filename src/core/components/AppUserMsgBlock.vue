@@ -25,24 +25,21 @@
   </v-sheet>
 </template>
 
-<script>
-export default {
-  name: 'WalletUserMsgBlock',
-  props: {
-    message: {
-      type: Object,
-      default: () => {}
-    },
-    isAlert: {
-      type: Boolean,
-      default: true
-    },
-    containerPadding: {
-      type: String,
-      default: 'pa-4'
-    }
-  }
-};
-</script>
+<script setup>
+import { defineProps } from 'vue';
 
-<style lang="scss" scoped></style>
+defineProps({
+  message: {
+    type: Object,
+    default: () => {}
+  },
+  isAlert: {
+    type: Boolean,
+    default: true
+  },
+  containerPadding: {
+    type: String,
+    default: 'pa-4'
+  }
+});
+</script>

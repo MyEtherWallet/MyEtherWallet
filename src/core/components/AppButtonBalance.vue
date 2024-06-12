@@ -29,54 +29,56 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, computed, onMounted, defineProps } from 'vue';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
-export default {
-  props: {
-    loading: {
-      type: Boolean,
-      default: false
-    },
-    noDots: {
-      type: Boolean,
-      default: false
-    },
-    loadingText: {
-      type: String,
-      default: 'Loading balance'
-    },
-    /** Set this proerty to wei if you are dispalying ETH balance vs erc20 tokens*/
-    balance: {
-      type: String,
-      default: ''
-    },
-    text: {
-      type: String,
-      default: ''
-    }
-  },
-  data() {
-    return { loadingDots: '' };
-  },
-  computed: {
-    balanceFormatted() {
-      return formatFloatingPointValue(this.balance);
-    }
-  },
-  mounted() {
-    this.animateLoadingDots();
-  },
-  methods: {
-    animateLoadingDots() {
-      const dots = 4;
 
-      setInterval(() => {
-        if (this.loadingDots.length < dots)
-          this.loadingDots = this.loadingDots + '.';
-        else this.loadingDots = '';
-      }, 400);
-    }
+// props
+const props = defineProps({
+  loading: {
+    type: Boolean,
+    default: false
+  },
+  noDots: {
+    type: Boolean,
+    default: false
+  },
+  loadingText: {
+    type: String,
+    default: 'Loading balance'
+  },
+  balance: {
+    type: String,
+    default: ''
+  },
+  text: {
+    type: String,
+    default: ''
   }
+});
+
+// data
+const loadingDots = ref('');
+
+// computed
+const balanceFormatted = computed(() => {
+  return formatFloatingPointValue(props.balance);
+});
+
+// mounted
+onMounted(() => {
+  animateLoadingDots();
+});
+
+// methods
+const animateLoadingDots = () => {
+  const dots = 4;
+
+  setInterval(() => {
+    if (loadingDots.value.length < dots)
+      loadingDots.value = loadingDots.value + '.';
+    else loadingDots.value = '';
+  }, 400);
 };
 </script>
 

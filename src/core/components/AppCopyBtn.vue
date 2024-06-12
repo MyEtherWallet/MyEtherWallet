@@ -12,30 +12,32 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'AppCopyBtn',
-  props: {
-    copyValue: {
-      type: String,
-      default: ''
-    },
-    successToast: {
-      type: String,
-      default: 'Copied!'
-    }
+<script setup>
+import { defineProps, ref } from 'vue';
+const props = defineProps({
+  copyValue: {
+    type: String,
+    default: ''
   },
-  methods: {
-    copy(value) {
-      return new Promise((resolve, reject) => {
-        navigator.clipboard.writeText(value).then(resolve).catch(reject);
-      });
-    },
-    copyToClipboard() {
-      this.copy(this.copyValue);
-      document.activeElement.blur();
-      this.$refs.toast.showToast();
-    }
+  successToast: {
+    type: String,
+    default: 'Copied!'
   }
+});
+
+// data
+const toast = ref(null);
+
+// methods
+const copy = value => {
+  return new Promise((resolve, reject) => {
+    navigator.clipboard.writeText(value).then(resolve).catch(reject);
+  });
+};
+
+const copyToClipboard = () => {
+  copy(props.copyValue);
+  document.activeElement.blur();
+  toast.value.showToast();
 };
 </script>

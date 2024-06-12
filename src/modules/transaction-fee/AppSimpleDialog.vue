@@ -47,90 +47,87 @@
   </v-dialog>
 </template>
 
-<script>
-export default {
-  name: 'AppDialog',
-  props: {
-    value: {
-      type: Boolean,
-      default: false
-    },
-    isOpen: {
-      type: Boolean,
-      default: false
-    },
-    width: {
-      type: String,
-      default: ''
-    },
-    maxWidth: {
-      type: String,
-      default: ''
-    },
-    title: {
-      type: String,
-      default: ''
-    },
-    noTitle: {
-      type: Boolean,
-      default: false
-    },
-    noPadding: {
-      type: Boolean,
-      default: false
+<script setup>
+import { ref, watch, defineEmits } from 'vue';
+
+// emits
+const emit = defineEmits(['close', 'input']);
+
+// props
+const props = defineProps({
+  value: {
+    type: Boolean,
+    default: false
+  },
+  isOpen: {
+    type: Boolean,
+    default: false
+  },
+  width: {
+    type: String,
+    default: ''
+  },
+  maxWidth: {
+    type: String,
+    default: ''
+  },
+  title: {
+    type: String,
+    default: ''
+  },
+  noTitle: {
+    type: Boolean,
+    default: false
+  },
+  noPadding: {
+    type: Boolean,
+    default: false
+  }
+});
+
+// data
+const isDialogOpen = ref(false);
+
+// watch
+watch(
+  () => props.value,
+  newVal => {
+    if (newVal === true && isDialogOpen.value === false) {
+      isDialogOpen.value = true;
     }
-  },
-  data() {
-    return { isDialogOpen: false };
-  },
-  watch: {
-    // "value" for model
-    value(newVal) {
-      // Open when dialog is already closed to prevent Infinite Loop
-      if (newVal === true && this.isDialogOpen === false) {
-        this.isDialogOpen = true;
-      }
-      // Close when dialog is already open to prevent Infinite Loop
-      if (newVal === false && this.isDialogOpen === true) {
-        this.isDialogOpen = false;
-      }
-    },
-    // Same as "value", but more user friendly option name
-    isOpen(newVal) {
-      // Open when dialog is already closed to prevent Infinite Loop
-      if (newVal === true && this.isDialogOpen === false) {
-        this.isDialogOpen = true;
-      }
-      // Close when dialog is already open to prevent Infinite Loop
-      if (newVal === false && this.isDialogOpen === true) {
-        this.isDialogOpen = false;
-      }
-    },
-    isDialogOpen(val) {
-      if (val === false && this.value === true) {
-        this.closeDialog();
-      }
-    }
-  },
-  mounted() {
-    // Apply initial v-model value
-    if (this.value) this.isDialogOpen = this.value;
-
-    // Apply initial isOpen value
-    if (this.isOpen) this.isDialogOpen = this.isOpen;
-  },
-  methods: {
-    closeDialog() {
-      // Close the dialog
-      this.isDialogOpen = false;
-
-      // Emit v-model
-      this.$emit('input', false);
-
-      // Emit @close event
-      this.$emit('close');
+    if (newVal === false && isDialogOpen.value === true) {
+      isDialogOpen.value = false;
     }
   }
+);
+
+watch(
+  () => props.isOpen,
+  newVal => {
+    if (newVal === true && isDialogOpen.value === false) {
+      isDialogOpen.value = true;
+    }
+    if (newVal === false && isDialogOpen.value === true) {
+      isDialogOpen.value = false;
+    }
+  }
+);
+
+watch(
+  () => isDialogOpen.value,
+  val => {
+    if (val === false && props.value === true) {
+      closeDialog();
+    }
+  }
+);
+
+// methods
+
+const closeDialog = () => {
+  isDialogOpen.value = false;
+  emit('input', false);
+  emit('close');
 };
 </script>
 

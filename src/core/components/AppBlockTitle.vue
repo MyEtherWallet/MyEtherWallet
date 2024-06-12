@@ -41,20 +41,19 @@
   </v-sheet>
 </template>
 
-<script>
-export default {
-  name: 'BlockTitle',
-  props: {
-    maxWidth: { default: '', type: String },
-    noPageTitle: { default: false, type: Boolean },
-    data: {
-      default: function () {
-        return {};
-      },
-      type: Object
-    }
+<script setup>
+import { defineProps } from 'vue';
+
+defineProps({
+  maxWidth: { default: '', type: String },
+  noPageTitle: { default: false, type: Boolean },
+  data: {
+    default: function () {
+      return {};
+    },
+    type: Object
   }
-};
+});
 </script>
 
 <style lang="scss" scoped>
