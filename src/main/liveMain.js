@@ -24,21 +24,21 @@ const originalFetch = fetch;
 /* eslint-disable */
 fetch = async (url, options) => {
   let overrides;
-  if (process.env.NODE_ENV === 'production') {
-    overrides = {
-      'https://sr-client-cfg.amplitude.com/config':
-        'https://analytics-web.mewwallet.dev/config',
-      'https://api-sr.amplitude.com/sessions/v2/track':
-        'https://analytics-web.mewwallet.dev/session-replay'
-    };
-  } else {
-    overrides = {
-      'https://sr-client-cfg.amplitude.com/config':
-        'https://analytics-web-development.mewwallet.dev/config',
-      'https://api-sr.amplitude.com/sessions/v2/track':
-        'https://analytics-web-development.mewwallet.dev/session-replay'
-    };
-  }
+  // if (process.env.NODE_ENV === 'production') {
+  //   overrides = {
+  //     'https://sr-client-cfg.amplitude.com/config':
+  //       'https://analytics-web.mewwallet.dev/config',
+  //     'https://api-sr.amplitude.com/sessions/v2/track':
+  //       'https://analytics-web.mewwallet.dev/session-replay'
+  //   };
+  // } else {
+  overrides = {
+    'https://sr-client-cfg.amplitude.com/config':
+      'https://analytics-web-development.mewwallet.dev/config',
+    'https://api-sr.amplitude.com/sessions/v2/track':
+      'https://analytics-web-development.mewwallet.dev/session-replay'
+  };
+  // }
   const parsedUrl = new URL(url);
   const origin = parsedUrl.origin;
   const path = parsedUrl.pathname;
@@ -104,12 +104,8 @@ const popupStore = locStore.get('popups-store') || { consentToTrack: false };
 
 const main = async () => {
   const amplitude = new AmplitudeSessionReplay(nameHashPckg.hash(VERSION), {
-    instanceName:
-      process.env.NODE_ENV === 'production' ? 'mew-web-prod' : 'mew-web-dev',
-    serverUrl:
-      process.env.NODE_ENV === 'production'
-        ? 'https://analytics-web.mewwallet.dev/record'
-        : 'https://analytics-web-development.mewwallet.dev/record',
+    instanceName: 'mew-web-dev',
+    serverUrl: 'https://analytics-web-development.mewwallet.dev/record',
     appVersion: 1,
     trackingOptions: {
       ipAddress: false
