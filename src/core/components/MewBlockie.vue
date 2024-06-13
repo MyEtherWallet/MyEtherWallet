@@ -23,86 +23,86 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { defineProps, watch, ref } from 'vue';
+
 import Blockies from '@/core/helpers/blockies.js';
 
-export default {
-  name: 'MewBlockie',
-  props: {
-    /**
-     * Currency image url
-     */
-    currency: {
-      type: String,
-      default: ''
-    },
-    /**
-     * Valid address
-     */
-    address: {
-      type: String,
-      default: ''
-    },
-    /**
-     * Blockie width
-     */
-    width: {
-      type: String,
-      default: '64px'
-    },
-    /**
-     * Blockie height
-     */
-    height: {
-      type: String,
-      default: '64px'
-    },
-    /**
-     * Remove inset shadow
-     */
-    flat: {
-      type: Boolean,
-      default: false
-    }
+// props
+const props = defineProps({
+  currency: {
+    type: String,
+    default: ''
   },
-  data() {
-    return {
-      scale: 16,
-      size: 8,
-      blockieImg: null
-    };
+  address: {
+    type: String,
+    default: ''
   },
-  watch: {
-    address() {
-      this.createBlockie();
-    },
-    width() {
-      this.createBlockie();
-    },
-    height() {
-      this.createBlockie();
-    },
-    scale() {
-      this.createBlockie();
-    },
-    size() {
-      this.createBlockie();
-    }
+  width: {
+    type: String,
+    default: '64px'
   },
-  mounted() {
-    this.createBlockie();
+  height: {
+    type: String,
+    default: '64px'
   },
-  methods: {
-    createBlockie() {
-      this.blockieImg = Blockies({
-        seed: this.address ? this.address.toLowerCase() : '',
-        size: this.size,
-        scale: this.scale
-      }).toDataURL();
-      this.$refs.blockie.style.width = this.width;
-      this.$refs.blockie.style.height = this.height;
-    }
+  flat: {
+    type: Boolean,
+    default: false
   }
+});
+
+// data
+const scale = 16;
+const size = 8;
+const blockieImg = ref(null);
+const blockie = ref(null);
+
+// watch
+watch(
+  () => props.address,
+  () => {
+    createBlockie();
+  }
+);
+
+watch(
+  () => props.width,
+  () => {
+    createBlockie();
+  }
+);
+
+watch(
+  () => props.height,
+  () => {
+    createBlockie();
+  }
+);
+
+watch(
+  () => props.scale,
+  () => {
+    createBlockie();
+  }
+);
+
+watch(
+  () => props.size,
+  () => {
+    createBlockie();
+  }
+);
+
+// methods
+const createBlockie = () => {
+  blockieImg.value = Blockies({
+    seed: props.address ? props.address.toLowerCase() : '',
+    size: size,
+    scale: scale
+  }).toDataURL();
+  blockie.value.style.width = props.width;
+  blockie.value.style.height = props.height;
 };
 </script>
 

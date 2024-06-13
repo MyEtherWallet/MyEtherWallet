@@ -76,59 +76,68 @@
   </v-menu>
 </template>
 
-<script>
-export default {
-  name: 'MewMenu',
-  props: {
-    /**
-     * Menu content. Accepts an object, i.e, { name: '', items: [{ title: '', items: [{ title: '' , iconName: ''}]}]}.
-     * Name and title takes any string and iconName takes material icon name.
-     * If you are using a slot then you just have to return the number of menu item categories you would like to have, i.e { name: '', items: 4 }.
-     */
-    listObj: {
-      type: Object,
-      default: () => {
-        return {};
-      }
-    },
-    topArrow: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Text color for activator title. Accepts a class.
-     */
-    activatorTextColor: {
-      type: String,
-      default: 'basic--text'
+<script setup>
+import {
+  ref,
+  onMounted,
+  computed,
+  defineProps,
+  defineEmits,
+  onBeforeMount
+} from 'vue';
+
+// emits
+const emits = defineEmits(['goToPage']);
+
+// props
+defineProps({
+  listObj: {
+    type: Object,
+    default: () => {
+      return {};
     }
   },
-  data() {
-    return {
-      isMenuOpen: false,
-      activatorId: '',
-      topArrowStyle: ''
-    };
+  topArrow: {
+    type: Boolean,
+    default: false
   },
-  computed: {
-    activatorWidth() {
-      return document.getElementById(this.activatorId).offsetWidth;
-    }
-  },
-  beforeMount() {
-    this.setActivatorId();
-  },
-  methods: {
-    goTo(link) {
-      this.$emit('goToPage', link);
-    },
-    setActivatorId() {
-      this.activatorId = 'menu-' + Math.floor(Math.random() * 1000);
-    },
-    adjustTopArrowPosition() {
-      this.topArrowStyle = `left: calc(${this.activatorWidth}px / 2)`;
-    }
+  activatorTextColor: {
+    type: String,
+    default: 'basic--text'
   }
+});
+
+// data
+const isMenuOpen = ref(false);
+const activatorId = ref('');
+const topArrowStyle = ref('');
+
+// computed
+const activatorWidth = computed(() => {
+  return document.getElementById(activatorId.value).offsetWidth;
+});
+
+// beforeMount
+onBeforeMount(() => {
+  setActivatorId();
+});
+
+// mounted
+onMounted(() => {
+  setActivatorId();
+});
+
+// methods
+const goTo = link => {
+  emits('goToPage', link);
+};
+
+const setActivatorId = () => {
+  activatorId.value = 'menu-' + Math.floor(Math.random() * 1000);
+};
+
+const adjustTopArrowPosition = () => {
+  topArrowStyle.value = `left: calc(${activatorWidth.value}px / 2)`;
 };
 </script>
 

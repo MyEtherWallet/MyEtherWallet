@@ -45,39 +45,38 @@
   </v-container>
 </template>
 
-<script>
+<script setup>
+import { defineEmits, defineProps } from 'vue';
 import placeholder from '@/assets/images/bg.png';
 
-export default {
-  name: 'MewBanner',
-  props: {
-    /**
-     * Text obj contains title, subtext and exit text , i.e. { title: '' , subtext: '', exit: ''}
-     */
-    textObj: {
-      type: Object,
-      default: () => {
-        return { title: '', subtext: '', exit: '' };
-      }
-    },
-    /**
-     * Banner image url.
-     */
-    bannerImg: {
-      type: [String, Array],
-      default: ''
+const emits = defineEmits('closeBanner');
+
+// props
+const props = defineProps({
+  /**
+   * Text obj contains title, subtext and exit text , i.e. { title: '' , subtext: '', exit: ''}
+   */
+  textObj: {
+    type: Object,
+    default: () => {
+      return { title: '', subtext: '', exit: '' };
     }
   },
-  data() {
-    return {
-      banner: this.bannerImg ? this.bannerImg : placeholder
-    };
-  },
-  methods: {
-    closeBanner() {
-      this.$emit('closeBanner');
-    }
+  /**
+   * Banner image url.
+   */
+  bannerImg: {
+    type: [String, Array],
+    default: ''
   }
+});
+
+// data
+const banner = props.bannerImg ? props.bannerImg : placeholder;
+
+// methods
+const closeBanner = () => {
+  emits('closeBanner');
 };
 </script>
 

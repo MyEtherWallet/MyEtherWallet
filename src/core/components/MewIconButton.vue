@@ -80,327 +80,336 @@
   </v-btn>
 </template>
 
-<script>
-export default {
-  name: 'MewIconButton',
-  props: {
-    /**
-     * Enables loading state.
-     */
-    loading: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Rounds button corners.
-     */
-    rounded: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Button sizes: small, medium.
-     */
-    btnSize: {
-      type: String,
-      default: 'medium'
-    },
-    /**
-     * Mdi icon size: xsmall, small, medium, large, xlarge.
-     */
-    mdiIconSize: {
-      type: String,
-      default: ''
-    },
-    /**
-     * TODO: decide if we still want to allow this option.
-     * Image icon size: small, medium.
-     */
-    // imgIconSize: {
-    //   type: String,
-    //   default: '20',
-    // },
-    /**
-     * TODO: decide if we still want to allow this option.
-     * Sets the button to have 100% width.
-     */
-    // hasFullWidth: {
-    //   type: Boolean,
-    //   default: true,
-    // },
-    /**
-     * Applies the button style: background, light, transparent, or outline.
-     * If nothing is passed then the button will be the
-     * default standard background color theme.
-     */
-    btnStyle: {
-      type: String,
-      default: 'background'
-    },
-    /**
-     * TODO: decide if we still want to allow this option.
-     * The text that will display at the center of the button.
-     * If not passed, a slot should be used.
-     */
-    // title: {
-    //   type: String,
-    //   default: '',
-    // },
-    /**
-     * Applies the button color theme: primary, secondary, basic, error.
-     */
-    colorTheme: {
-      type: String,
-      default: 'primary'
-    },
-    /**
-     * Removes the ability to click or target the component.
-     */
-    disabled: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Designates that the component is a link.
-     * when clicked, the link will open up a new page.
-     */
-    btnLink: {
-      type: String,
-      default: ''
-    },
-    /**
-     * mdi icon name.
-     */
-    mdiIcon: {
-      type: String,
-      default: ''
+<script setup>
+import { defineProps, computed } from 'vue';
+
+const props = defineProps({
+  /**
+   * Enables loading state.
+   */
+  loading: {
+    type: Boolean,
+    default: false
+  },
+  /**
+   * Rounds button corners.
+   */
+  rounded: {
+    type: Boolean,
+    default: false
+  },
+  /**
+   * Button sizes: small, medium.
+   */
+  btnSize: {
+    type: String,
+    default: 'medium'
+  },
+  /**
+   * Mdi icon size: xsmall, small, medium, large, xlarge.
+   */
+  mdiIconSize: {
+    type: String,
+    default: ''
+  },
+  /**
+   * TODO: decide if we still want to allow this option.
+   * Image icon size: small, medium.
+   */
+  // imgIconSize: {
+  //   type: String,
+  //   default: '20',
+  // },
+  /**
+   * TODO: decide if we still want to allow this option.
+   * Sets the button to have 100% width.
+   */
+  // hasFullWidth: {
+  //   type: Boolean,
+  //   default: true,
+  // },
+  /**
+   * Applies the button style: background, light, transparent, or outline.
+   * If nothing is passed then the button will be the
+   * default standard background color theme.
+   */
+  btnStyle: {
+    type: String,
+    default: 'background'
+  },
+  /**
+   * TODO: decide if we still want to allow this option.
+   * The text that will display at the center of the button.
+   * If not passed, a slot should be used.
+   */
+  // title: {
+  //   type: String,
+  //   default: '',
+  // },
+  /**
+   * Applies the button color theme: primary, secondary, basic, error.
+   */
+  colorTheme: {
+    type: String,
+    default: 'primary'
+  },
+  /**
+   * Removes the ability to click or target the component.
+   */
+  disabled: {
+    type: Boolean,
+    default: false
+  },
+  /**
+   * Designates that the component is a link.
+   * when clicked, the link will open up a new page.
+   */
+  btnLink: {
+    type: String,
+    default: ''
+  },
+  /**
+   * mdi icon name.
+   */
+  mdiIcon: {
+    type: String,
+    default: ''
+  }
+  /**
+   * TODO: decide if we still want to allow this option.
+   * img icon path. (base dir: @/assets/images)
+   * use) img-icon="/icons/icon-chrome.svg"
+   */
+  // imgIcon: {
+  //   type: String,
+  //   default: '',
+  // },
+});
+
+// data
+/**
+ * all color theme options
+ */
+const colorThemes = {
+  secondary: 'secondary',
+  primary: 'primary',
+  basic: 'basic',
+  error: 'error'
+};
+/**
+ * all btn style options
+ */
+const btnStyles = {
+  light: 'light',
+  transparent: 'transparent',
+  outline: 'outline',
+  background: 'background'
+};
+/**
+ * all btn size options
+ */
+const btnSizes = {
+  small: 'small',
+  medium: 'medium'
+};
+/**
+ * all mdi icon size options
+ */
+const mdiIconSizes = {
+  xsmall: 'x-small',
+  small: 'small',
+  dense: 'dense',
+  large: 'large',
+  xlarge: 'x-large'
+};
+
+// computed
+const size = computed(() => {
+  if (props.btnSize === btnSizes.small) return '32px';
+  return '40px';
+});
+
+/**
+ * @returns if color theme is primary.
+ */
+const isPrimaryTheme = computed(() => {
+  return props.colorTheme.toLowerCase() === colorThemes.primary;
+});
+
+/**
+ * @returns if color theme is secondary.
+ */
+const isSecondaryTheme = computed(() => {
+  return props.colorTheme.toLowerCase() === colorThemes.secondary;
+});
+
+/**
+ * @returns if color theme is basic.
+ */
+const isBasicTheme = computed(() => {
+  return props.colorTheme.toLowerCase() === colorThemes.basic;
+});
+
+/**
+ * @returns if color theme is error.
+ */
+const isErrorTheme = computed(() => {
+  return props.colorTheme.toLowerCase() === colorThemes.error;
+});
+
+/**
+ * @returns the process circular loading color.
+ */
+const loadingColor = computed(() => {
+  if (!props.disabled && isLight.value && isPrimaryTheme.value) {
+    return 'greenPrimary';
+  }
+
+  if (!props.disabled && isLight.value && isSecondaryTheme.value) {
+    return 'bluePrimary';
+  }
+
+  if (!props.disabled && isLight.value && isErrorTheme.value) {
+    return 'redPrimary';
+  }
+
+  if (!props.disabled && isLight.value && isBasicTheme.value) {
+    return 'greyPrimary';
+  }
+
+  if (!props.disabled && !isBackground.value) {
+    return props.buttonColor;
+  }
+
+  if (props.disabled && !isBackground.value) {
+    return 'disabledPrimary';
+  }
+
+  return 'white';
+});
+
+/**
+ * @returns button color based on color theme and btn style props.
+ */
+const buttonColor = computed(() => {
+  // SECONDARY COLORS
+  if (isLight.value && isSecondaryTheme.value) {
+    return 'rgba(75, 128, 233, 0.08)';
+  }
+
+  if (isSecondaryTheme.value) {
+    return 'bluePrimary';
+  }
+
+  // ERROR COLORS
+  if (isLight.value && isErrorTheme.value) {
+    return 'rgba(255, 68, 91, 0.08)';
+  }
+
+  if (isErrorTheme.value) {
+    return 'redPrimary';
+  }
+
+  // PRIMARY COLORS
+  if (isPrimaryTheme.value && isLight.value) {
+    return 'backgroundOverlay';
+  }
+
+  if (isPrimaryTheme.value) {
+    return 'greenPrimary';
+  }
+
+  // BASIC THEME COLORS
+  if (isBasicTheme.value && isLight.value) {
+    return 'greyLight';
+  }
+
+  if (isBasicTheme.value) {
+    return 'greyPrimary';
+  }
+
+  return props.colorTheme;
+});
+
+/**
+ * @returns button classes based on given props
+ */
+
+const buttonClasses = computed(() => {
+  const classes = [];
+  // adds btn size
+  if (props.btnSize.toLowerCase()) {
+    classes.push(props.btnSize.toLowerCase() + '-btn');
+  }
+
+  // adds 100% full width
+  // if (props.hasFullWidth === true) {
+  //   classes.push('full-width');
+  // }
+
+  // adds correct button color text
+  if (!props.disabled) {
+    if (isPrimaryTheme.value && isLight.value) {
+      classes.push('greenPrimary--text');
     }
-    /**
-     * TODO: decide if we still want to allow this option.
-     * img icon path. (base dir: @/assets/images)
-     * use) img-icon="/icons/icon-chrome.svg"
-     */
-    // imgIcon: {
-    //   type: String,
-    //   default: '',
-    // },
-  },
-  data() {
-    return {
-      /**
-       * all color theme options
-       */
-      colorThemes: {
-        secondary: 'secondary',
-        primary: 'primary',
-        basic: 'basic',
-        error: 'error'
-      },
-      /**
-       * all btn style options
-       */
-      btnStyles: {
-        light: 'light',
-        transparent: 'transparent',
-        outline: 'outline',
-        background: 'background'
-      },
-      /**
-       * all btn size options
-       */
-      btnSizes: {
-        small: 'small',
-        medium: 'medium'
-      },
-      /**
-       * all mdi icon size options
-       */
-      mdiIconSizes: {
-        xsmall: 'x-small',
-        small: 'small',
-        dense: 'dense',
-        large: 'large',
-        xlarge: 'x-large'
-      }
-    };
-  },
-  computed: {
-    size() {
-      if (this.btnSize === this.btnSizes.small) return '32px';
-      return '40px';
-    },
-    /**
-     * @returns if color theme is primary.
-     */
-    isPrimaryTheme() {
-      return this.colorTheme.toLowerCase() === this.colorThemes.primary;
-    },
-    /**
-     * @returns if color theme is secondary.
-     */
-    isSecondaryTheme() {
-      return this.colorTheme.toLowerCase() === this.colorThemes.secondary;
-    },
-    /**
-     * @returns if color theme is basic.
-     */
-    isBasicTheme() {
-      return this.colorTheme.toLowerCase() === this.colorThemes.basic;
-    },
-    /**
-     * @returns if color theme is error.
-     */
-    isErrorTheme() {
-      return this.colorTheme.toLowerCase() === this.colorThemes.error;
-    },
-    /**
-     * @returns the process circular loading color.
-     */
-    loadingColor() {
-      if (!this.disabled && this.isLight && this.isPrimaryTheme) {
-        return 'greenPrimary';
-      }
 
-      if (!this.disabled && this.isLight && this.isSecondaryTheme) {
-        return 'bluePrimary';
-      }
+    if (isErrorTheme.value && isLight.value) {
+      classes.push('redPrimary--text');
+    }
 
-      if (!this.disabled && this.isLight && this.isErrorTheme) {
-        return 'redPrimary';
-      }
+    if (isSecondaryTheme.value && isLight.value) {
+      classes.push('bluePrimary--text');
+    }
 
-      if (!this.disabled && this.isLight && this.isBasicTheme) {
-        return 'greyPrimary';
-      }
-
-      if (!this.disabled && !this.isBackground) {
-        return this.buttonColor;
-      }
-
-      if (this.disabled && !this.isBackground) {
-        return 'disabledPrimary';
-      }
-
-      return 'white';
-    },
-    /**
-     * @returns button color based on color theme and btn style props.
-     */
-    buttonColor() {
-      // SECONDARY COLORS
-      if (this.isLight && this.isSecondaryTheme) {
-        return 'rgba(75, 128, 233, 0.08)';
-      }
-
-      if (this.isSecondaryTheme) {
-        return 'bluePrimary';
-      }
-
-      // ERROR COLORS
-      if (this.isLight && this.isErrorTheme) {
-        return 'rgba(255, 68, 91, 0.08)';
-      }
-
-      if (this.isErrorTheme) {
-        return 'redPrimary';
-      }
-
-      // PRIMARY COLORS
-      if (this.isPrimaryTheme && this.isLight) {
-        return 'backgroundOverlay';
-      }
-
-      if (this.isPrimaryTheme) {
-        return 'greenPrimary';
-      }
-
-      // BASIC THEME COLORS
-      if (this.isBasicTheme && this.isLight) {
-        return 'greyLight';
-      }
-
-      if (this.isBasicTheme) {
-        return 'greyPrimary';
-      }
-
-      return this.colorTheme;
-    },
-    /**
-     * @returns button classes based on given props
-     */
-    buttonClasses() {
-      const classes = [];
-      // adds btn size
-      if (this.btnSize.toLowerCase()) {
-        classes.push(this.btnSize.toLowerCase() + '-btn');
-      }
-
-      // adds 100% full width
-      // if (this.hasFullWidth === true) {
-      //   classes.push('full-width');
-      // }
-
-      // adds correct button color text
-      if (!this.disabled) {
-        if (this.isPrimaryTheme && this.isLight) {
-          classes.push('greenPrimary--text');
-        }
-
-        if (this.isErrorTheme && this.isLight) {
-          classes.push('redPrimary--text');
-        }
-
-        if (this.isSecondaryTheme && this.isLight) {
-          classes.push('bluePrimary--text');
-        }
-
-        if (this.isBasicTheme && this.isLight) {
-          classes.push('greyPrimary--text');
-        }
-      }
-      // adds white text for all default backgrounds
-      if (this.isBackground) {
-        classes.push('white--text');
-      }
-
-      // adds class for disabled and btn style
-      if (this.disabled) {
-        classes.push('disabled-' + this.btnStyle.toLowerCase());
-      }
-
-      // adds class for btn style
-      if (this.btnStyle.toLowerCase()) {
-        classes.push('btn-' + this.btnStyle.toLowerCase());
-      }
-
-      return classes;
-    },
-    /**
-     * @returns if btn style is transparent.
-     */
-    isTransparent() {
-      return this.btnStyle.toLowerCase() === this.btnStyles.transparent;
-    },
-    /**
-     * @returns if btn style has an outline/border.
-     */
-    hasOutline() {
-      return this.btnStyle.toLowerCase() === this.btnStyles.outline;
-    },
-    /**
-     * @returns if btn style is a lighter color.
-     */
-    isLight() {
-      return this.btnStyle.toLowerCase() === this.btnStyles.light;
-    },
-    /**
-     * @returns if btn style is the default background color.
-     */
-    isBackground() {
-      return this.btnStyle.toLowerCase() === this.btnStyles.background;
+    if (isBasicTheme.value && isLight.value) {
+      classes.push('greyPrimary--text');
     }
   }
-};
+  // adds white text for all default backgrounds
+  if (isBackground.value) {
+    classes.push('white--text');
+  }
+
+  // adds class for disabled and btn style
+  if (props.disabled) {
+    classes.push('disabled-' + props.btnStyle.toLowerCase());
+  }
+
+  // adds class for btn style
+  if (props.btnStyle.toLowerCase()) {
+    classes.push('btn-' + props.btnStyle.toLowerCase());
+  }
+
+  return classes;
+});
+
+/**
+ * @returns if btn style is transparent.
+ */
+const isTransparent = computed(() => {
+  return props.btnStyle.toLowerCase() === btnStyles.transparent;
+});
+
+/**
+ * @returns if btn style has an outline/border.
+ */
+const hasOutline = computed(() => {
+  return props.btnStyle.toLowerCase() === btnStyles.outline;
+});
+
+/**
+ * @returns if btn style is a lighter color.
+ */
+const isLight = computed(() => {
+  return props.btnStyle.toLowerCase() === btnStyles.light;
+});
+
+/**
+ * @returns if btn style is the default background color.
+ */
+const isBackground = computed(() => {
+  return props.btnStyle.toLowerCase() === btnStyles.background;
+});
 </script>
 
 <style lang="scss" scoped>

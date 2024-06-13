@@ -18,36 +18,30 @@
   >
 </template>
 
-<script>
+<script setup>
+import { defineProps } from 'vue';
 const badgeTypes = {
   warning: 'warning'
 };
 
-export default {
-  name: 'MewBadge',
-  props: {
-    /**
-     * Badge types: 'in', 'out', 'swap, 'error', 'warning'
-     */
-    badgeType: {
-      type: String,
-      default: ''
-    },
-    /**
-     * Badge title
-     */
-    badgeTitle: {
-      type: String,
-      default: ''
-    }
+// props
+const props = defineProps({
+  badgeType: {
+    type: String,
+    default: ''
   },
-  methods: {
-    getBadgeType() {
-      if (this.badgeType.toLowerCase() === badgeTypes.warning) {
-        return 'warning darken-2';
-      }
-      return this.badgeType;
-    }
+  badgeTitle: {
+    type: String,
+    default: ''
   }
+});
+
+// methods
+
+const getBadgeType = () => {
+  if (props.badgeType.toLowerCase() === badgeTypes.warning) {
+    return 'warning darken-2';
+  }
+  return props.badgeType;
 };
 </script>

@@ -68,88 +68,61 @@
   </v-expansion-panels>
 </template>
 
-<script>
-export default {
-  name: 'MewExpandPanel',
-  props: {
-    /**
-     * Takes an array of panel indexes and
-     * will expand the panel indexes found in the array.
-     */
-    idxToExpand: {
-      type: Array,
-      default: () => [0]
-    },
-    /**
-     * Accepts an array of panel objects, i.e [{ name: '', toggleTitle: '' }]
-     */
-    panelItems: {
-      type: Array,
-      default: () => []
-    },
-    /**
-     * Sets a grey background and border.
-     */
-    isGreyTheme: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Removes margins between the panels
-     * if nothing is passed then there will be 8px margin in between panels (split)
-     */
-    isAccordion: {
-      type: Boolean,
-      default: false
-    }
+<script setup>
+import { ref, watch, computed, defineProps, onMounted } from 'vue';
+
+// props
+const props = defineProps({
+  idxToExpand: {
+    type: Array,
+    default: () => [0]
   },
-  data() {
-    return {
-      expandIdxArr: []
-    };
+  panelItems: {
+    type: Array,
+    default: () => []
   },
-  computed: {
-    /**
-     * @returns classes for expand panel - needed for styling
-     */
-    expandPanelsClasses() {
-      const classes = ['mew-expand-panel', 'rounded-lg'];
-      this.isGreyTheme
-        ? classes.push('grey-theme')
-        : classes.push('white-theme');
-      if (!this.isAccordion) {
-        classes.push('split-panels');
-      }
-      return classes;
-    }
+  isGreyTheme: {
+    type: Boolean,
+    default: false
   },
-  watch: {
-    /**
-     * @watches idxToExpand to ensure the correct panel is expanded
-     */
-    idxToExpand(newVal, oldVal) {
-      if (newVal !== oldVal) {
-        this.expandIdxArr = newVal;
-      }
-    }
-  },
-  mounted() {
-    /**
-     * on mount, will assign prop idxToExpand to expandIdxArr (so we can manipulate the data)
-     */
-    this.expandIdxArr = this.idxToExpand;
-  },
-  methods: {
-    /**
-     * @returns if the panel is expanded
-     */
-    isExpanded(idx) {
-      if (Array.isArray(this.expandIdxArr) && this.expandIdxArr.includes(idx)) {
-        return true;
-      }
-      return false;
-    }
+  isAccordion: {
+    type: Boolean,
+    default: false
   }
+});
+
+// data
+const expandIdxArr = ref([]);
+
+// computed
+const expandPanelsClasses = computed(() => {
+  const classes = ['mew-expand-panel', 'rounded-lg'];
+  props.isGreyTheme ? classes.push('grey-theme') : classes.push('white-theme');
+  if (!props.isAccordion) {
+    classes.push('split-panels');
+  }
+  return classes;
+});
+
+// watch
+watch(
+  () => props.idxToExpand,
+  newVal => {
+    expandIdxArr.value = newVal;
+  }
+);
+
+// mounted
+onMounted(() => {
+  expandIdxArr.value = props.idxToExpand;
+});
+
+// methods
+const isExpanded = idx => {
+  if (Array.isArray(expandIdxArr.value) && expandIdxArr.value.includes(idx)) {
+    return true;
+  }
+  return false;
 };
 </script>
 

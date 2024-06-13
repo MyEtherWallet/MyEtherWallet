@@ -63,43 +63,35 @@
   </v-menu>
 </template>
 
-<script>
-export default {
-  name: 'MewMenu',
-  props: {
-    /**
-     * Popup title.
-     */
-    popupTitle: {
-      type: String,
-      default: ''
-    },
-    /**
-     * Opens the popup dropdown if true.
-     */
-    isOpened: {
-      type: Boolean,
-      default: false
-    }
-  },
-  data() {
-    return {
-      isDropdownOpen: false
-    };
-  },
-  watch: {
-    isOpened(newVal) {
-      this.isDropdownOpen = newVal;
-    }
-  },
-  mounted() {
-    this.isDropdownOpen = this.isOpened;
-  },
-  methods: {
-    close() {
-      this.isDropdownOpen = false;
-    }
+<script setup>
+import { defineProps, ref, watch, onMounted } from 'vue';
+
+// props
+const props = defineProps({
+  popupTitle: { type: String, default: '' },
+  isOpened: { type: Boolean, default: false }
+});
+
+// data
+const isDropdownOpen = ref(false);
+
+// watch
+watch(
+  () => props.isOpened,
+  newVal => {
+    isDropdownOpen.value = newVal;
   }
+);
+
+// mounted
+onMounted(() => {
+  isDropdownOpen.value = props.isOpened;
+});
+
+// methods
+
+const close = () => {
+  isDropdownOpen.value = false;
 };
 </script>
 

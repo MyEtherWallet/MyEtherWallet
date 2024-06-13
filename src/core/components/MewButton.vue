@@ -36,268 +36,207 @@
   </v-btn>
 </template>
 
-<script>
-export default {
-  name: 'MewButton',
-  props: {
-    /**
-     * Enables loading state
-     */
-    loading: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Button sizes: small, medium, large, xlarge.
-     */
-    btnSize: {
-      type: String,
-      default: 'large'
-    },
-    /**
-     * Sets the button at 100% width.
-     */
-    hasFullWidth: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Applies the button style: background, light, transparent, or outline.
-     * If nothing is passed then the button will be the
-     * default standard background color theme.
-     */
-    btnStyle: {
-      type: String,
-      default: 'background'
-    },
-    /**
-     * The text that will be displayed at the center of the button.
-     * If not passed, a slot should be used.
-     */
-    title: {
-      type: String,
-      default: ''
-    },
-    /**
-     * Applies the button color theme: primary, secondary, basic, error, white.
-     */
-    colorTheme: {
-      type: String,
-      default: 'primary'
-    },
-    /**
-     * Removes the ability to click or target the component.
-     */
-    disabled: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Designates that the component is a link.
-     * when clicked, the link will open up a new page.
-     */
-    btnLink: {
-      type: String,
-      default: ''
+<script setup>
+import { defineProps, computed } from 'vue';
+
+const props = defineProps({
+  /**
+   * Enables loading state
+   */
+  loading: {
+    type: Boolean,
+    default: false
+  },
+  /**
+   * Button sizes: small, medium, large, xlarge.
+   */
+  btnSize: {
+    type: String,
+    default: 'large'
+  },
+  /**
+   * Sets the button at 100% width.
+   */
+  hasFullWidth: {
+    type: Boolean,
+    default: false
+  },
+  /**
+   * Applies the button style: background, light, transparent, or outline.
+   * If nothing is passed then the button will be the
+   * default standard background color theme.
+   */
+  btnStyle: {
+    type: String,
+    default: 'background'
+  },
+  /**
+   * The text that will be displayed at the center of the button.
+   * If not passed, a slot should be used.
+   */
+  title: {
+    type: String,
+    default: ''
+  },
+  /**
+   * Applies the button color theme: primary, secondary, basic, error, white.
+   */
+  colorTheme: {
+    type: String,
+    default: 'primary'
+  },
+  /**
+   * Removes the ability to click or target the component.
+   */
+  disabled: {
+    type: Boolean,
+    default: false
+  },
+  /**
+   * Designates that the component is a link.
+   * when clicked, the link will open up a new page.
+   */
+  btnLink: {
+    type: String,
+    default: ''
+  }
+});
+
+// data
+const colorThemes = {
+  secondary: 'secondary',
+  primary: 'primary',
+  basic: 'basic',
+  error: 'error'
+};
+
+const btnStyles = {
+  light: 'light',
+  transparent: 'transparent',
+  outline: 'outline',
+  background: 'background'
+};
+
+// computed
+const isPrimaryTheme = computed(() => {
+  return props.colorTheme.toLowerCase() === colorThemes.primary;
+});
+
+const isSecondaryTheme = computed(() => {
+  return props.colorTheme.toLowerCase() === colorThemes.secondary;
+});
+
+const isBasicTheme = computed(() => {
+  return props.colorTheme.toLowerCase() === colorThemes.basic;
+});
+
+const isErrorTheme = computed(() => {
+  return props.colorTheme.toLowerCase() === colorThemes.error;
+});
+
+const buttonColor = computed(() => {
+  // SECONDARY COLORS
+  if (isLight.value && isSecondaryTheme.value) {
+    return 'rgba(75, 128, 233, 0.08)';
+  }
+
+  if (isSecondaryTheme.value) {
+    return 'bluePrimary';
+  }
+
+  // ERROR COLORS
+  if (isLight.value && isErrorTheme.value) {
+    return 'rgba(255, 68, 91, 0.08)';
+  }
+
+  if (isErrorTheme.value) {
+    return 'redPrimary';
+  }
+
+  // PRIMARY COLORS
+  if (isPrimaryTheme.value && isLight.value) {
+    return 'buttonGrayLight';
+  }
+
+  if (isPrimaryTheme.value) {
+    return 'greenPrimary';
+  }
+
+  // BASIC THEME COLORS
+  if (isBasicTheme.value && isLight.value) {
+    return 'greyLight';
+  }
+
+  if (isBasicTheme.value) {
+    return 'greyPrimary';
+  }
+
+  return props.colorTheme;
+});
+
+const buttonClasses = computed(() => {
+  const classes = [];
+  // adds btn size
+  if (props.btnSize.toLowerCase()) {
+    classes.push(props.btnSize.toLowerCase() + '-btn');
+  }
+
+  // adds 100% full width
+  if (props.hasFullWidth === true) {
+    classes.push('full-width');
+  }
+
+  // adds correct button color text
+  if (!props.disabled) {
+    if (isPrimaryTheme.value && isLight.value) {
+      classes.push('greenPrimary--text');
     }
-  },
-  data() {
-    return {
-      /**
-       * all color theme options
-       */
-      colorThemes: {
-        secondary: 'secondary',
-        primary: 'primary',
-        basic: 'basic',
-        error: 'error'
-      },
-      /**
-       * all btn style options
-       */
-      btnStyles: {
-        light: 'light',
-        transparent: 'transparent',
-        outline: 'outline',
-        background: 'background'
-      }
-    };
-  },
-  computed: {
-    /**
-     * @returns if color theme is primary.
-     */
-    isPrimaryTheme() {
-      return this.colorTheme.toLowerCase() === this.colorThemes.primary;
-    },
-    /**
-     * @returns if color theme is secondary.
-     */
-    isSecondaryTheme() {
-      return this.colorTheme.toLowerCase() === this.colorThemes.secondary;
-    },
-    /**
-     * @returns if color theme is basic.
-     */
-    isBasicTheme() {
-      return this.colorTheme.toLowerCase() === this.colorThemes.basic;
-    },
-    /**
-     * @returns if color theme is error.
-     */
-    isErrorTheme() {
-      return this.colorTheme.toLowerCase() === this.colorThemes.error;
-    },
-    /**
-     * @returns the process circular loading color.
-     */
-    /*
-    loadingColor() {
-      if (!this.disabled && this.isLight && this.isPrimaryTheme) {
-        return 'greenPrimary';
-      }
 
-      if (!this.disabled && this.isLight && this.isSecondaryTheme) {
-        return 'bluePrimary';
-      }
+    if (isErrorTheme.value && isLight.value) {
+      classes.push('redPrimary--text');
+    }
 
-      if (!this.disabled && this.isLight && this.isErrorTheme) {
-        return 'redPrimary';
-      }
+    if (isSecondaryTheme.value && isLight.value) {
+      classes.push('bluePrimary--text');
+    }
 
-      if (!this.disabled && this.isLight && this.isBasicTheme) {
-        return 'greyPrimary';
-      }
-
-      if (!this.disabled && !this.isBackground) {
-        return this.buttonColor;
-      }
-
-      if (this.disabled && !this.isBackground) {
-        return 'disabledPrimary';
-      }
-
-      return 'white';
-    },
-    */
-    /**
-     * @returns button color based on color theme and btn style props.
-     */
-    buttonColor() {
-      // SECONDARY COLORS
-      if (this.isLight && this.isSecondaryTheme) {
-        return 'rgba(75, 128, 233, 0.08)';
-      }
-
-      if (this.isSecondaryTheme) {
-        return 'bluePrimary';
-      }
-
-      // ERROR COLORS
-      if (this.isLight && this.isErrorTheme) {
-        return 'rgba(255, 68, 91, 0.08)';
-      }
-
-      if (this.isErrorTheme) {
-        return 'redPrimary';
-      }
-
-      // PRIMARY COLORS
-      if (this.isPrimaryTheme && this.isLight) {
-        return 'buttonGrayLight';
-      }
-
-      if (this.isPrimaryTheme) {
-        return 'greenPrimary';
-      }
-
-      // BASIC THEME COLORS
-      if (this.isBasicTheme && this.isLight) {
-        return 'greyLight';
-      }
-
-      if (this.isBasicTheme) {
-        return 'greyPrimary';
-      }
-
-      return this.colorTheme;
-    },
-    /**
-     * @returns button classes based on given props
-     */
-    buttonClasses() {
-      const classes = [];
-      // adds btn size
-      if (this.btnSize.toLowerCase()) {
-        classes.push(this.btnSize.toLowerCase() + '-btn');
-      }
-
-      // adds 100% full width
-      if (this.hasFullWidth === true) {
-        classes.push('full-width');
-      }
-
-      // adds correct button color text
-      if (!this.disabled) {
-        if (this.isPrimaryTheme && this.isLight) {
-          classes.push('greenPrimary--text');
-        }
-
-        if (this.isErrorTheme && this.isLight) {
-          classes.push('redPrimary--text');
-        }
-
-        if (this.isSecondaryTheme && this.isLight) {
-          classes.push('bluePrimary--text');
-        }
-
-        if (this.isBasicTheme && this.isLight) {
-          classes.push('greyPrimary--text');
-        }
-      }
-      // adds white text for all default backgrounds
-      if (this.isBackground) {
-        classes.push('white--text');
-      }
-
-      // adds class for disabled and btn style
-      if (this.disabled) {
-        classes.push('disabled-' + this.btnStyle.toLowerCase());
-      }
-
-      // adds class for btn style
-      if (this.btnStyle.toLowerCase()) {
-        classes.push('btn-' + this.btnStyle.toLowerCase());
-      }
-
-      return classes;
-    },
-    /**
-     * @returns if btn style is transparent.
-     */
-    isTransparent() {
-      return this.btnStyle.toLowerCase() === this.btnStyles.transparent;
-    },
-    /**
-     * @returns if btn style has an outline/border.
-     */
-    hasOutline() {
-      return this.btnStyle.toLowerCase() === this.btnStyles.outline;
-    },
-    /**
-     * @returns if btn style is a lighter color.
-     */
-    isLight() {
-      return this.btnStyle.toLowerCase() === this.btnStyles.light;
-    },
-    /**
-     * @returns if btn style is the default background color.
-     */
-    isBackground() {
-      return this.btnStyle.toLowerCase() === this.btnStyles.background;
+    if (isBasicTheme.value && isLight.value) {
+      classes.push('greyPrimary--text');
     }
   }
-};
+  // adds white text for all default backgrounds
+  if (isBackground.value) {
+    classes.push('white--text');
+  }
+
+  // adds class for disabled and btn style
+  if (props.disabled) {
+    classes.push('disabled-' + props.btnStyle.toLowerCase());
+  }
+
+  // adds class for btn style
+  if (props.btnStyle.toLowerCase()) {
+    classes.push('btn-' + props.btnStyle.toLowerCase());
+  }
+
+  return classes;
+});
+
+const isTransparent = computed(() => {
+  return props.btnStyle.toLowerCase() === btnStyles.transparent;
+});
+
+const hasOutline = computed(() => {
+  return props.btnStyle.toLowerCase() === btnStyles.outline;
+});
+
+const isLight = computed(() => {
+  return props.btnStyle.toLowerCase() === btnStyles.light;
+});
+
+const isBackground = computed(() => {
+  return props.btnStyle.toLowerCase() === btnStyles.background;
+});
 </script>
 
 <style lang="scss" scoped>

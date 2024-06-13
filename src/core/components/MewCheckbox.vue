@@ -23,70 +23,53 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'MewCheckbox',
-  props: {
-    /**
-     * Pass a class to change the icon color (i.e error--text).
-     */
-    className: {
-      type: String,
-      default: 'titlePrimary--text'
-    },
-    /**
-     * Checkbox label text
-     */
-    label: {
-      type: String,
-      default: ''
-    },
-    /**
-     * Adds a link at the end of the label.
-     */
-    link: {
-      type: Object,
-      default: () => {
-        return { title: '', url: '' };
-      }
-    },
-    /**
-     * The checkbox id. Mainly used to distinguish each checkbox when mew-checkbox is used in a loop.
-     */
-    id: {
-      type: Number,
-      default: null
-    },
-    /**
-     * Controls the value of the checkbox (checked or not).
-     */
-    value: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Reduces the input height.
-     */
-    dense: {
-      type: Boolean,
-      default: false
+<script setup>
+import { computed, defineProps, defineEmits } from 'vue';
+
+// emits
+const emits = defineEmits(['input']);
+
+// props
+const props = defineProps({
+  className: {
+    type: String,
+    default: 'titlePrimary--text'
+  },
+  label: {
+    type: String,
+    default: ''
+  },
+  link: {
+    type: Object,
+    default: () => {
+      return { title: '', url: '' };
     }
   },
-  computed: {
-    isChecked: {
-      get() {
-        return this.value;
-      },
-      set(val) {
-        this.$emit('input', val, this.id);
-      }
-    }
+  id: {
+    type: Number,
+    default: null
   },
-  methods: {
-    toggleCheckbox() {
-      this.$emit('input', !this.value, this.id);
-    }
+  value: {
+    type: Boolean,
+    default: false
+  },
+  dense: {
+    type: Boolean,
+    default: false
   }
+});
+
+// computed
+const isChecked = computed({
+  get: () => props.value,
+  set: val => {
+    emits('input', val, props.id);
+  }
+});
+
+// methods
+const toggleCheckbox = () => {
+  emits('input', !props.value, props.id);
 };
 </script>
 <style lang="scss" scoped>

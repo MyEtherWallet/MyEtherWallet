@@ -112,228 +112,172 @@
   </v-text-field>
 </template>
 
-<script>
+<script setup>
+import { defineProps, ref, watch, computed, onMounted, defineEmits } from 'vue';
+import MewBlockie from './MewBlockie.vue';
+import MewTokenContainer from './MewTokenContainer.vue';
+
+const emits = defineEmits(['input', 'buyMore']);
+
 const types = ['password', 'text'];
 
-export default {
-  name: 'MewInput',
-  components: {
-    MewBlockie: () => import('./MewBlockie.vue'),
-    MewTokenContainer: () => import('./MewTokenContainer.vue')
+// props
+const props = defineProps({
+  errorMessages: {
+    type: [String, Array],
+    default: ''
   },
-  props: {
-    /**
-     * Error messages to display at the bottom of the input.
-     */
-    errorMessages: {
-      type: [String, Array],
-      default: ''
-    },
-    /**
-     * Input becomes read only.
-     */
-    isReadOnly: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Prepends the blockie to the beginning of the input.
-     */
-    showBlockie: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Removes the input border and adds a box shadow.
-     */
-    hasNoBorder: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Disables the input.
-     */
-    disabled: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * The input label.
-     */
-    label: {
-      type: String,
-      default: ''
-    },
-    /**
-     * The input placeholder.
-     */
-    placeholder: {
-      type: String,
-      default: ''
-    },
-    /**
-     * The input value.
-     */
-    value: {
-      type: String,
-      default: ''
-    },
-    /**
-     * The input id.
-     */
-    id: {
-      type: Number,
-      default: null
-    },
-    /**
-     * Displays text on the right inner side of the input.
-     */
-    rightLabel: {
-      type: String,
-      default: ''
-    },
-    /**
-     * Hides input clear functionality. Clear symbol will be displayed on the right side.
-     */
-    hideClearBtn: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * For validating your input - accepts an array of functions that take an input value as an argument and returns either true / false
-     * or a string containing an error message. The input field will enter an error state if a function returns (or any value in the array contains) false or is a string.
-     */
-    rules: {
-      type: Array,
-      default: () => {
-        return [];
-      }
-    },
-    /**
-     * The resolved address.
-     */
-    resolvedAddr: {
-      type: String,
-      default: ''
-    },
-    /**
-     * Enables persistent hint.
-     */
-    persistentHint: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Hint text (will be displayed at the bottom of the input).
-     */
-    hint: {
-      type: String,
-      default: ''
-    },
-    /**
-     * Sets input type.
-     */
-    type: {
-      type: String,
-      default: 'text'
-    },
-    /**
-     * Prepends an image to the beginning of the input.
-     */
-    image: {
-      type: String,
-      default: ''
-    },
-    /**
-     * Adds a "Buy more" string to the end of the first index of the errorMessages prop.
-     */
-    buyMoreStr: {
-      type: String,
-      default: ''
-    },
-    /**
-     * Displays a button to the right inner side of the input.
-     * Takes an object.
-     * i.e. {title: 'Max', disabled: false, method: () => {}, loading: false}.
-     */
-    maxBtnObj: {
-      type: Object,
-      default: () => {
-        return {};
-      }
-    },
-    /**
-     * Autofocuses the input.
-     */
-    autofocus: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Hides the toggle show password icon on the right
-     * when input type is password.
-     */
-    hidePasswordIcon: {
-      type: Boolean,
-      default: false
+  isReadOnly: {
+    type: Boolean,
+    default: false
+  },
+  showBlockie: {
+    type: Boolean,
+    default: false
+  },
+  hasNoBorder: {
+    type: Boolean,
+    default: false
+  },
+  disabled: {
+    type: Boolean,
+    default: false
+  },
+  label: {
+    type: String,
+    default: ''
+  },
+  placeholder: {
+    type: String,
+    default: ''
+  },
+  value: {
+    type: String,
+    default: ''
+  },
+  id: {
+    type: Number,
+    default: null
+  },
+  rightLabel: {
+    type: String,
+    default: ''
+  },
+  hideClearBtn: {
+    type: Boolean,
+    default: false
+  },
+  rules: {
+    type: Array,
+    default: () => {
+      return [];
     }
   },
-  data() {
-    return {
-      inputValue: '',
-      showPassword: false
-    };
+  resolvedAddr: {
+    type: String,
+    default: ''
   },
-  computed: {
-    isPasswordType() {
-      return this.type === types[0];
-    },
-    showPasswordIcon() {
-      if (this.isPasswordType && !this.hidePasswordIcon) {
-        return !this.showPassword ? 'mdi-eye' : 'mdi-eye-off';
-      }
-      return '';
-    },
-    inputType() {
-      if (this.isPasswordType && this.showPassword) {
-        return types[1];
-      }
-      return this.type;
+  persistentHint: {
+    type: Boolean,
+    default: false
+  },
+  hint: {
+    type: String,
+    default: ''
+  },
+  type: {
+    type: String,
+    default: 'text'
+  },
+  image: {
+    type: String,
+    default: ''
+  },
+  buyMoreStr: {
+    type: String,
+    default: ''
+  },
+  maxBtnObj: {
+    type: Object,
+    default: () => {
+      return {};
     }
   },
-  watch: {
-    inputValue(newVal, oldVal) {
-      if (newVal !== oldVal) {
-        this.$emit('input', newVal, this.id);
-      }
-    },
-    value(newVal, oldVal) {
-      if (newVal !== oldVal) {
-        this.inputValue = newVal;
-      }
-    }
+  autofocus: {
+    type: Boolean,
+    default: false
   },
-  mounted() {
-    this.inputValue = this.value;
-  },
-  methods: {
-    emitBuyMore() {
-      this.$emit('buyMore');
-    },
-    onPasswordIconClick() {
-      if (this.isPasswordType) {
-        this.showPassword = !this.showPassword;
-      }
-    },
-    /*eslint-disable */
-    clear(val) {
-      this.inputValue = val ? val : '';
-    },
-    /*eslint-enable */
-    preventCharE(e) {
-      if (this.type === 'number' && e.key === 'e') e.preventDefault();
+  hidePasswordIcon: {
+    type: Boolean,
+    default: false
+  }
+});
+
+// data
+const inputValue = ref('');
+const showPassword = ref(false);
+
+// computed
+const isPasswordType = computed(() => {
+  return props.type === types[0];
+});
+
+const showPasswordIcon = computed(() => {
+  if (isPasswordType.value && !props.hidePasswordIcon) {
+    return !showPassword.value ? 'mdi-eye' : 'mdi-eye-off';
+  }
+  return '';
+});
+
+const inputType = computed(() => {
+  if (isPasswordType.value && showPassword.value) {
+    return types[1];
+  }
+  return props.type;
+});
+
+// watch
+watch(
+  () => inputValue.value,
+  newVal => {
+    if (newVal !== props.value) {
+      emits('input', newVal, props.id);
     }
   }
+);
+
+watch(
+  () => props.value,
+  newVal => {
+    if (newVal !== inputValue.value) {
+      inputValue.value = newVal;
+    }
+  }
+);
+
+// mounted
+onMounted(() => {
+  inputValue.value = props.value;
+});
+
+// methods
+const emitBuyMore = () => {
+  emits('buyMore');
+};
+
+const onPasswordIconClick = () => {
+  if (isPasswordType.value) {
+    showPassword.value = !showPassword.value;
+  }
+};
+/* eslint-disable */
+const clear = val => {
+  inputValue.value = val ? val : '';
+};
+
+/* eslint-enable */
+const preventCharE = e => {
+  if (props.type === 'number' && e.key === 'e') e.preventDefault();
 };
 </script>
 

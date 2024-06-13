@@ -16,106 +16,105 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'AppTable',
+<script setup>
+import { computed, defineProps } from 'vue';
 
-  props: {
-    fullWidth: {
-      type: Boolean,
-      default: false
-    },
-    hoverEffect: {
-      type: Boolean,
-      default: false
-    },
-    background: {
-      type: Boolean,
-      default: false
-    },
-    mobileBackground: {
-      type: Boolean,
-      default: false
-    },
-    loading: {
-      type: Boolean,
-      default: false
-    },
-    loaderCount: {
-      type: [String, Number],
-      default: 1
-    },
-    borderAround: {
-      type: Boolean,
-      default: false
-    },
-    borderTopBottom: {
-      type: Boolean,
-      default: false
-    },
-    borderTop: {
-      type: Boolean,
-      default: false
-    },
-    borderBottom: {
-      type: Boolean,
-      default: false
-    },
-    divider: {
-      type: Boolean,
-      default: false
-    },
-    flat: {
-      type: Boolean,
-      default: false
-    },
-    title: {
-      type: String,
-      default: ''
-    },
-    paddingAround: {
-      type: Boolean,
-      default: false
-    },
-    paddingSide: {
-      type: Boolean,
-      default: false
-    },
-    roundCorner: {
-      type: Boolean,
-      default: false
-    },
-    noTablePadding: {
-      type: Boolean,
-      default: false
-    }
+// props
+const props = defineProps({
+  fullWidth: {
+    type: Boolean,
+    default: false
   },
-  computed: {
-    containerStyle() {
-      return {
-        display: this.fullWidth ? 'block' : 'inline-block'
-      };
-    },
-    containerClass() {
-      return [
-        this.hoverEffect ? 'hover-effect' : '',
-        this.background ? 'alteranting-background' : '',
-        this.borderAround ? 'border-around' : '',
-        this.borderTopBottom ? 'border-top-bottom' : '',
-        this.borderTop ? 'border-top' : '',
-        this.borderBottom ? 'border-bottom' : '',
-        this.roundCorner ? 'round-corner' : '',
-        this.loading ? 'loading' : '',
-        this.flat ? '' : 'box-shadow',
-        this.divider ? 'divider' : '',
-        this.paddingAround ? 'padding-around' : '',
-        this.paddingSide ? 'padding-side' : '',
-        this.mobileBackground ? 'mobile-background' : '',
-        this.noTablePadding ? 'no-table-padding' : ''
-      ];
-    }
+  hoverEffect: {
+    type: Boolean,
+    default: false
+  },
+  background: {
+    type: Boolean,
+    default: false
+  },
+  mobileBackground: {
+    type: Boolean,
+    default: false
+  },
+  loading: {
+    type: Boolean,
+    default: false
+  },
+  loaderCount: {
+    type: [String, Number],
+    default: 1
+  },
+  borderAround: {
+    type: Boolean,
+    default: false
+  },
+  borderTopBottom: {
+    type: Boolean,
+    default: false
+  },
+  borderTop: {
+    type: Boolean,
+    default: false
+  },
+  borderBottom: {
+    type: Boolean,
+    default: false
+  },
+  divider: {
+    type: Boolean,
+    default: false
+  },
+  flat: {
+    type: Boolean,
+    default: false
+  },
+  title: {
+    type: String,
+    default: ''
+  },
+  paddingAround: {
+    type: Boolean,
+    default: false
+  },
+  paddingSide: {
+    type: Boolean,
+    default: false
+  },
+  roundCorner: {
+    type: Boolean,
+    default: false
+  },
+  noTablePadding: {
+    type: Boolean,
+    default: false
   }
-};
+});
+
+// computed
+const containerStyle = computed(() => {
+  return {
+    display: props.fullWidth ? 'block' : 'inline-block'
+  };
+});
+const containerClass = computed(() => {
+  return [
+    props.hoverEffect ? 'hover-effect' : '',
+    props.background ? 'alteranting-background' : '',
+    props.borderAround ? 'border-around' : '',
+    props.borderTopBottom ? 'border-top-bottom' : '',
+    props.borderTop ? 'border-top' : '',
+    props.borderBottom ? 'border-bottom' : '',
+    props.roundCorner ? 'round-corner' : '',
+    props.loading ? 'loading' : '',
+    props.flat ? '' : 'box-shadow',
+    props.divider ? 'divider' : '',
+    props.paddingAround ? 'padding-around' : '',
+    props.paddingSide ? 'padding-side' : '',
+    props.mobileBackground ? 'mobile-background' : '',
+    props.noTablePadding ? 'no-table-padding' : ''
+  ];
+});
 </script>
 
 <style lang="scss">

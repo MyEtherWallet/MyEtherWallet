@@ -60,130 +60,136 @@
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    value: {
-      type: Boolean,
-      default: false
-    },
-    icon: {
-      type: Boolean,
-      default: false
-    },
-    outlined: {
-      type: Boolean,
-      default: false
-    },
-    color: {
-      type: String,
-      default: 'white'
-    },
-    btnTitle: {
-      type: String,
-      default: ''
-    },
-    btnSize: {
-      type: String,
-      default: 'large'
-    },
-    btnFontSize: {
-      type: String,
-      default: '14px'
-    },
-    btnIcon: {
-      type: String,
-      default: ''
-    },
-    btnIconSize: {
-      type: String,
-      default: '30px'
-    },
-    left: {
-      type: Boolean,
-      default: false
-    },
-    right: {
-      type: Boolean,
-      default: false
-    }
-  },
-  data() {
-    return {
-      show: this.value
-    };
-  },
-  computed: {
-    activatorEl() {
-      //return document.querySelector('#unique-id--mew-menu-popup--activator');
-      return this.$refs.activator;
-    },
-    contentEl() {
-      //return document.querySelector('#unique-id--mew-menu-popup--content');
-      return this.$refs.content;
-    },
-    btnTitleStyle() {
-      return `
-        font-size: ${this.btnFontSize};
-      `;
-    },
-    contentWindowStyle() {
-      // Align content to left edge
-      if (this.left) {
-        return `
-          left: 0;
-        `;
-      }
+<script setup>
+import { ref, watch, computed, defineProps, defineEmits } from 'vue';
 
-      // Align content to right edge
-      if (this.right) {
-        return `
-          right: 0;
-        `;
-      }
+// emits
+const emits = defineEmits(['input']);
 
-      // Align content to center
-      return `
-          left: 50%;
-          transform: translate(-50%, 0);
-      `;
-    }
+// props
+const props = defineProps({
+  value: {
+    type: Boolean,
+    default: false
   },
-  watch: {
-    value(val) {
-      this.show = val;
-    }
+  icon: {
+    type: Boolean,
+    default: false
   },
-  methods: {
-    toggleMenu() {
-      this.show = !this.show;
-      if (this.show) {
-        window.addEventListener('click', this.detactOutsideClick);
-      } else {
-        window.removeEventListener('click', this.detactOutsideClick);
-      }
+  outlined: {
+    type: Boolean,
+    default: false
+  },
+  color: {
+    type: String,
+    default: 'white'
+  },
+  btnTitle: {
+    type: String,
+    default: ''
+  },
+  btnSize: {
+    type: String,
+    default: 'large'
+  },
+  btnFontSize: {
+    type: String,
+    default: '14px'
+  },
+  btnIcon: {
+    type: String,
+    default: ''
+  },
+  btnIconSize: {
+    type: String,
+    default: '30px'
+  },
+  left: {
+    type: Boolean,
+    default: false
+  },
+  right: {
+    type: Boolean,
+    default: false
+  }
+});
 
-      this.$emit('input', this.show);
-    },
-    // =============================================================================
-    // Whenever outside of menu content window is clicked, close the menu
-    // =============================================================================
-    detactOutsideClick(e) {
-      const targetEl = e.target;
-      const contentEl = this.contentEl;
-      const activatorEl = this.activatorEl;
-      if (
-        !(
-          targetEl == this.contentEl ||
-          targetEl == this.activatorEl ||
-          (contentEl && this.contentEl.contains(targetEl)) ||
-          (activatorEl && this.activatorEl.contains(targetEl))
-        )
-      ) {
-        this.show = false;
-        window.removeEventListener('click', this.detactOutsideClick);
-      }
-    }
+// data
+const show = ref(props.value);
+const activator = ref(null);
+const content = ref(null);
+
+// computed
+const activatorEl = computed(() => {
+  //return document.querySelector('#unique-id--mew-menu-popup--activator');
+  return activator.value;
+});
+
+const contentEl = computed(() => {
+  //return document.querySelector('#unique-id--mew-menu-popup--content');
+  return content.value;
+});
+
+const btnTitleStyle = computed(() => {
+  return `
+    font-size: ${props.btnFontSize};
+  `;
+});
+
+const contentWindowStyle = computed(() => {
+  // Align content to left edge
+  if (props.left) {
+    return `
+      left: 0;
+    `;
+  }
+
+  // Align content to right edge
+  if (props.right) {
+    return `
+      right: 0;
+    `;
+  }
+
+  // Align content to center
+  return `
+      left: 50%;
+      transform: translate(-50%, 0);
+  `;
+});
+
+// watch
+watch(
+  () => props.value,
+  val => {
+    show.value = val;
+  }
+);
+
+// methods
+const toggleMenu = () => {
+  show.value = !show.value;
+  if (show.value) {
+    window.addEventListener('click', detactOutsideClick);
+  } else {
+    window.removeEventListener('click', detactOutsideClick);
+  }
+
+  emits('input', show.value);
+};
+
+const detactOutsideClick = e => {
+  const targetEl = e.target;
+  if (
+    !(
+      targetEl == contentEl.value ||
+      targetEl == activatorEl.value ||
+      (contentEl.value && contentEl.value.contains(targetEl)) ||
+      (activatorEl.value && activatorEl.value.contains(targetEl))
+    )
+  ) {
+    show.value = false;
+    window.removeEventListener('click', detactOutsideClick);
   }
 };
 </script>

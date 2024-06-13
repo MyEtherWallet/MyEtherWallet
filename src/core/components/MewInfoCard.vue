@@ -60,53 +60,53 @@
   </v-card>
 </template>
 
-<script>
-export default {
-  name: 'MewInfoCard',
-  props: {
-    /**
-     * Title of the card.
-     */
-    title: {
-      type: String,
-      default: ''
-    },
-    /**
-     * The description of the card.
-     */
-    desc: {
-      type: String,
-      default: ''
-    },
-    /**
-     * The icon url. Inserts an icon on top.
-     */
-    icon: {
-      type: [String, Array],
-      default: ''
-    },
-    /**
-     * The link object. Takes a title and url, i.e. {title: '', url: ''}.
-     * This is displayed below the description.
-     */
-    link: {
-      type: Object,
-      default: () => {
-        return {
-          title: '',
-          url: ''
-        };
-      }
-    },
-    /**
-     * The max width of the info card. Default is 300px.
-     */
-    maxWidth: {
-      type: String,
-      default: '300'
+<script setup>
+import { defineProps } from 'vue';
+
+// props
+defineProps({
+  /**
+   * Title of the card.
+   */
+  title: {
+    type: String,
+    default: ''
+  },
+  /**
+   * The description of the card.
+   */
+  desc: {
+    type: String,
+    default: ''
+  },
+  /**
+   * The icon url. Inserts an icon on top.
+   */
+  icon: {
+    type: [String, Array],
+    default: ''
+  },
+  /**
+   * The link object. Takes a title and url, i.e. {title: '', url: ''}.
+   * This is displayed below the description.
+   */
+  link: {
+    type: Object,
+    default: () => {
+      return {
+        title: '',
+        url: ''
+      };
     }
+  },
+  /**
+   * The max width of the info card. Default is 300px.
+   */
+  maxWidth: {
+    type: String,
+    default: '300'
   }
-};
+});
 </script>
 
 <style lang="scss" scoped>
