@@ -317,15 +317,15 @@ const addresses = computed(() => {
           resolverAddr: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
         }
       ]
-    : address
+    : address.value
     ? [
         {
-          address: toChecksumAddress(address),
+          address: toChecksumAddress(address.value),
           nickname: 'My Address',
           resolverAddr: ''
         }
       ]
-    : [].concat(addressBookStore);
+    : [].concat(addressBookStore.value);
 });
 
 const detailLength = computed(() => {

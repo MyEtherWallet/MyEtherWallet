@@ -265,7 +265,6 @@ import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
 import { useExternalStore } from '@/core/store/external';
 import { useI18n } from 'vue-i18n-composable';
-import { storeToRefs } from 'pinia';
 
 const ModuleAccessWalletHardware = defineAsyncComponent(() =>
   import('@/modules/access-wallet/ModuleAccessWalletHardware')
@@ -288,10 +287,8 @@ const {
   removeWallet
 } = useWalletStore();
 const { totalTokenFiatValue, setTokenAndEthBalance } = useExternalStore();
-const { network, isTestNetwork, getFiatValue } = useGlobalStore();
+const { network, isTestNetwork, getFiatValue, web3 } = useGlobalStore();
 const { t } = useI18n();
-
-const { web3 } = storeToRefs(useGlobalStore());
 
 // data
 const showChangeAddress = ref(false);
@@ -306,7 +303,7 @@ const nameResolver = ref(null);
  * verifies whether instance exists before giving path
  */
 const instancePath = computed(() => {
-  return instance && instance.path ? true : false;
+  return instance.value && instance.value.path ? true : false;
 });
 /**
  * show default title
@@ -338,14 +335,16 @@ const verifyAddressBody = computed(() => {
  */
 const showHardware = computed(() => {
   return (
-    !isEmpty(instance) && instance?.path && identifier !== WALLET_TYPES.MNEMONIC
+    !isEmpty(instance.value) &&
+    instance.value?.path &&
+    identifier.value !== WALLET_TYPES.MNEMONIC
   );
 });
 /**
  * returns checksummed address
  */
 const getChecksumAddressString = computed(() => {
-  return address ? toChecksumAddress(address) : '';
+  return address.value ? toChecksumAddress(address.value) : '';
 });
 /**
  * checks whether hardware wallet
@@ -355,9 +354,9 @@ const getChecksumAddressString = computed(() => {
  */
 const canDisplayAddress = computed(() => {
   return (
-    !isEmpty(instance) &&
-    instance.hasOwnProperty('displayAddress') &&
-    instance.displayAddress
+    !isEmpty(instance.value) &&
+    instance.value.hasOwnProperty('displayAddress') &&
+    instance.value.displayAddress
   );
 });
 /**
@@ -365,25 +364,25 @@ const canDisplayAddress = computed(() => {
  * returns @String
  */
 const iconIdentifier = computed(() => {
-  if (identifier === WALLET_TYPES.BITBOX2) {
+  if (identifier.value === WALLET_TYPES.BITBOX2) {
     return 'bitbox';
   }
-  return identifier;
+  return identifier.value;
 });
 /**
  * checks whether wallet can switch address
  * returns @Boolean
  */
 const canSwitch = computed(() => {
-  return !isEmpty(instance) && wallets[identifier];
+  return !isEmpty(instance.value) && wallets[identifier.value];
 });
 /**
  * returns hardware wallet name
  * returns @String
  */
 const walletName = computed(() => {
-  return !isEmpty(instance) && instance.meta.hasOwnProperty('name')
-    ? instance.meta.name
+  return !isEmpty(instance.value) && instance.value.meta.hasOwnProperty('name')
+    ? instance.value.meta.name
     : '';
 });
 /**
@@ -391,15 +390,15 @@ const walletName = computed(() => {
  * returns @String
  */
 const totalTokenBalance = computed(() => {
-  return totalTokenFiatValue;
+  return totalTokenFiatValue.value;
 });
 /**
  * returns total value including tokens
  * returns @String
  */
 const totalWalletBalance = computed(() => {
-  if (!isTestNetwork) {
-    const total = totalTokenBalance;
+  if (!isTestNetwork.value) {
+    const total = totalTokenBalance.value;
     return getFiatValue(total);
   }
   return walletChainBalance.value;
@@ -409,29 +408,31 @@ const totalWalletBalance = computed(() => {
  * returns @String
  */
 const walletChainBalance = computed(() => {
-  return `${formatFloatingPointValue(balanceInETH).value}`;
+  return `${formatFloatingPointValue(balanceInETH.value).value}`;
 });
 /**
  * @returns {string} first 6 letters in the address
  */
 const addrFirstSix = computed(() => {
-  return address ? address.substring(0, 6) : '';
+  return address.value ? address.value.substring(0, 6) : '';
 });
 /**
  * @returns {string} lat 4 letters in the address
  */
 const addrlastFour = computed(() => {
-  return address ? address.substring(address.length - 4, address.length) : '';
+  return address.value
+    ? address.value.substring(address.value.length - 4, address.value.length)
+    : '';
 });
 /**
  * @returns {number} count of non chain tokens
  */
 const nonChainTokensCount = computed(() => {
-  return tokensList.length - 1;
+  return tokensList.value.length - 1;
 });
 
 const addressLink = computed(() => {
-  return `https://mewcard.mewapi.io/?address=${address}`;
+  return `https://mewcard.mewapi.io/?address=${address.value}`;
 });
 
 // watch
@@ -439,7 +440,7 @@ const addressLink = computed(() => {
  * run setup for name resolver when web3 changes
  */
 watch(
-  () => web3,
+  () => web3.value,
   () => {
     setupNameResolver();
   }
@@ -455,15 +456,15 @@ onMounted(() => {
  * and creates a new name resolver instance
  */
 const setupNameResolver = async () => {
-  if (network.type.ens && web3.currentProvider) {
-    nameResolver.value = new NameResolver(network, web3);
+  if (network.value.type.ens && web3.value.currentProvider) {
+    nameResolver.value = new NameResolver(network.value, web3.value);
   } else {
     nameResolver.value = null;
   }
 
   if (nameResolver.value) {
     try {
-      const { name } = await nameResolver.value.resolveAddress(address);
+      const { name } = await nameResolver.value.resolveAddress(address.value);
       resolvedName.value = name;
     } catch (e) {
       resolvedName.value = '';
@@ -483,7 +484,7 @@ const refresh = () => {
 const viewAddressOnDevice = () => {
   showVerify.value = true;
   if (canDisplayAddress.value) {
-    instance
+    instance.value
       .displayAddress()
       .then(() => {
         showVerify.value = false;

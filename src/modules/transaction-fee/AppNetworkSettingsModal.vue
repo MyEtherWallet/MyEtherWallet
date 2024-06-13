@@ -83,7 +83,7 @@ watch(
   () => [props.gasPriceModal, gasPrice],
   ([newGasPriceModal]) => {
     if (newGasPriceModal || props.gasPriceModal) {
-      emit('onLocalGasPrice', gasPriceByType(gasPriceType));
+      emit('onLocalGasPrice', gasPriceByType(gasPriceType.value));
     }
   }
 );

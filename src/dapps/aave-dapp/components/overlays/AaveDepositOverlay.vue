@@ -144,7 +144,7 @@ const selectedTokenDecimal = computed(() => {
 });
 const tokenBalanceUSD = computed(() => {
   const symbol = selectedToken.value.token;
-  const hasBalance = tokensList.find(item => {
+  const hasBalance = tokensList.value.find(item => {
     if (item.symbol === symbol) {
       return item;
     }
@@ -158,8 +158,8 @@ const tokenPrice = computed(() => {
 
 const tokenBalance = computed(() => {
   const symbol = selectedToken.value.token;
-  if (symbol === network.type.currencyName) return balanceInETH;
-  const hasBalance = tokensList.find(item => {
+  if (symbol === network.value.type.currencyName) return balanceInETH.value;
+  const hasBalance = tokensList.value.find(item => {
     if (item.symbol === symbol) {
       return item;
     }
@@ -269,7 +269,7 @@ const callClose = () => {
 const handleConfirm = () => {
   const amount = toBase(amount.value, selectedToken.value.decimals);
   const param = {
-    user: address,
+    user: address.value,
     amount: amount,
     referralCode: '14',
     reserve: selectedToken.value.underlyingAsset

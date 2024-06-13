@@ -157,7 +157,7 @@ const exitFinished = ref(false);
 
 // computed
 const validatorUrl = computed(() => {
-  return networkConfig.network[network.type.name].url;
+  return networkConfig.network[network.value.type.name].url;
 });
 /**
  * returns the challenge to be signed by the user
@@ -167,7 +167,7 @@ const message = computed(() => {
     intentToExit:
       'I am signing this message and requesting that Staked exit the following validators from the network',
     validatorIndexes: [props.selectedValidator.validator_index],
-    address: address
+    address: address.value
   });
 });
 /**
@@ -217,7 +217,7 @@ const localReset = () => {
 const signAndExit = async () => {
   loadingButton.value = true;
   try {
-    const signature = await instance.signMessage(message, address);
+    const signature = await instance.value.signMessage(message, address.value);
     const parsedSignature = toHex(signature);
     loadingSign.value = false;
     const challenge = Buffer.from(
@@ -226,7 +226,8 @@ const signAndExit = async () => {
         message.value
     ).toString('hex');
 
-    const headerDomain = network.type.name === 'ETH' ? 'mainnet' : 'staging';
+    const headerDomain =
+      network.value.type.name === 'ETH' ? 'mainnet' : 'staging';
     const submitEndpoint = `https://${headerDomain}.mewwallet.dev/v2/stake/exit`;
     await fetch(submitEndpoint, {
       method: 'POST',
@@ -234,7 +235,7 @@ const signAndExit = async () => {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        address: address,
+        address: address.value,
         challenge: challenge.toString('hex'),
         signature: parsedSignature
       })

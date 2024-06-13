@@ -100,11 +100,12 @@ const closeSnackbar = () => {
 };
 const checkIfShouldShow = () => {
   if (
-    !enkryptWalletPopup &&
-    moment(new Date()).diff(enkryptWalletPopupClosed, 'days') >= 7 &&
-    (enkryptWalletSnackbarClosed > 0 ||
-      moment(new Date()).diff(enkryptWalletSnackbarClosed, 'days') >= 7) &&
-    enkryptWalletSnackbarCounter <= 3
+    !enkryptWalletPopup.value &&
+    moment(new Date()).diff(enkryptWalletPopupClosed.value, 'days') >= 7 &&
+    (enkryptWalletSnackbarClosed.value > 0 ||
+      moment(new Date()).diff(enkryptWalletSnackbarClosed.value, 'days') >=
+        7) &&
+    enkryptWalletSnackbarCounter.value <= 3
   ) {
     showEnkryptWalletSnackbar();
   }

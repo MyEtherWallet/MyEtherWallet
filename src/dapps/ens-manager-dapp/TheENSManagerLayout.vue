@@ -315,7 +315,6 @@ import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
 import { useExternalStore } from '@/core/store/external';
 import { useRoute, useRouter } from 'vue-router/composables';
-import { storeToRefs } from 'pinia';
 
 const ModuleRegisterDomain = defineAsyncComponent(() =>
   import('./modules/ModuleRegisterDomain')
@@ -334,13 +333,10 @@ const EnsReverseLookup = defineAsyncComponent(() =>
 const route = useRoute();
 const { trackDapp } = useAmplitude();
 const { t } = useI18n();
-const { gasPrice, getFiatValue } = useGlobalStore();
-const { balance, web3, instance } = useWalletStore();
+const { gasPrice, getFiatValue, network } = useGlobalStore();
+const { balance, web3, instance, address } = useWalletStore();
 const { fiatValue } = useExternalStore();
 const router = useRouter();
-
-const { network } = storeToRefs(useGlobalStore());
-const { address } = storeToRefs(useWalletStore());
 
 // data
 const validNetworks = SUPPORTED_NETWORKS;
@@ -454,7 +450,7 @@ const hasInvalidChars = computed(() => {
   return false;
 });
 const balanceToWei = computed(() => {
-  return toWei(BigNumber(balance).toString(), 'ether');
+  return toWei(BigNumber(balance.value).toString(), 'ether');
 });
 const loading = computed(() => {
   return nameHandler.value?.checkingDomainAvail;
@@ -493,7 +489,7 @@ watch(
     - if user is onManage it will run getDomain to refresh domains
     */
 watch(
-  () => address,
+  () => address.value,
   newVal => {
     if (newVal) {
       ensManager.value.address = newVal;
@@ -511,7 +507,7 @@ watch(
     - if user is onManage it will run getDomain to refresh domains
     */
 watch(
-  () => network,
+  () => network.value,
   () => {
     if (checkNetwork()) {
       setup();
@@ -548,21 +544,23 @@ onMounted(() => {
 
 // methods
 const checkNetwork = () => {
-  return validNetworks.find(item => item.chainID === network.type.chainID);
+  return validNetworks.find(
+    item => item.chainID === network.value.type.chainID
+  );
 };
 const setup = () => {
-  const ens = network.type.ens
+  const ens = network.value.type.ens
     ? new ENS({
-        provider: web3.eth.currentProvider,
-        ensAddress: network.type.ens.registry
+        provider: web3.value.eth.currentProvider,
+        ensAddress: network.value.type.ens.registry
       })
     : null;
   ensManager.value = new handlerEnsManager(
-    network,
-    address,
-    web3,
+    network.value,
+    address.value,
+    web3.value,
     ens,
-    gasPrice
+    gasPrice.value
   );
 };
 const detactUrlChangeTab = () => {
@@ -623,10 +621,10 @@ const closeManage = () => {
   settingIpfs.value = false;
   trackDapp('ensCloseManageTab');
 };
-const transfer = address => {
+const transfer = addr => {
   trackDapp('ensDomainTransferEvent');
   manageDomainHandler.value
-    .transfer(address)
+    .transfer(addr)
     .then(() => {
       setTimeout(() => {
         getDomains();
@@ -648,10 +646,10 @@ const getTotalRenewFeeOnly = async duration => {
     renewalInEth.value = renewFeeOnly;
     renewalInWei.value = toWei(renewFeeOnly);
     renewalInUsd.value = new BigNumber(renewalInEth.value)
-      .times(fiatValue)
+      .times(fiatValue.value)
       .toFixed(2);
-    if (toBN(renewalInWei).gte(balance)) {
-      // commit fee vs current user balance in wei
+    if (toBN(renewalInWei).gte(balance.value)) {
+      // commit fee vs current user balance.value in wei
       noFundsForRenewalFees.value = true;
     } else {
       noFundsForRenewalFees.value = false;
@@ -814,10 +812,10 @@ const getCommitFeeOnly = async () => {
   commitFeeInEth.value = commitFeeOnly.toString();
   commitFeeInWei.value = toWei(commitFeeOnly);
   commitFeeUsd.value = getFiatValue(
-    new BigNumber(commitFeeInEth.value).times(fiatValue).toFixed(2)
+    new BigNumber(commitFeeInEth.value).times(fiatValue.value).toFixed(2)
   );
-  if (toBN(commitFeeInWei.value).gte(balance)) {
-    // commit fee vs current user balance in wei
+  if (toBN(commitFeeInWei.value).gte(balance.value)) {
+    // commit fee vs current user balance.value in wei
     notEnoughFunds.value = true;
   } else {
     notEnoughFunds.value = false;
@@ -827,7 +825,7 @@ const getCommitFeeOnly = async () => {
 const getTotalCost = async () => {
   const registerFeesOnly = await nameHandler.value.getRegFees(
     durationPick.value,
-    balance
+    balance.value
   );
   if (!registerFeesOnly) {
     noFundsForRegFees.value = true;
@@ -836,9 +834,9 @@ const getTotalCost = async () => {
     const feesAdded = new BigNumber(regFee.value).plus(commitFeeInEth.value);
     totalCost.value = feesAdded.toString();
     totalCostUsd.value = getFiatValue(
-      new BigNumber(totalCost.value).times(fiatValue).toFixed(2)
+      new BigNumber(totalCost.value).times(fiatValue.value).toFixed(2)
     );
-    if (totalCost.value >= balance) {
+    if (totalCost.value >= balance.value) {
       noFundsForRegFees.value = true;
     } else {
       noFundsForRegFees.value = false;
@@ -864,7 +862,7 @@ const getRentPrice = duration => {
       return {
         wei: resp,
         eth: ethValue,
-        usd: new BigNumber(ethValue).times(fiatValue).toFixed(2)
+        usd: new BigNumber(ethValue).times(fiatValue.value).toFixed(2)
       };
     }
   });

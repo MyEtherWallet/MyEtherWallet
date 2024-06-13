@@ -80,7 +80,7 @@ let stakedHandler = {};
 // computed
 const showBanner = computed(() => {
   const supportedIdx = stakingSupported.findIndex(item => {
-    if (item.chainID === network.type.chainID) return item;
+    if (item.chainID === network.value.type.chainID) return item;
   });
   return supportedIdx > -1;
 });
@@ -90,13 +90,13 @@ const hasBanner = computed(() => {
 });
 
 const name = computed(() => {
-  return isEthNetwork ? 'rightColItem1' : 'rightColItem2';
+  return isEthNetwork.value ? 'rightColItem1' : 'rightColItem2';
 });
 
 const hasStaked = computed(() => {
   return (
     !loading.value &&
-    network.type.chainID === ETH.chainID &&
+    network.value.type.chainID === ETH.chainID &&
     (BigNumber(cbStakeRewards.totalStaked).gt(0) ||
       BigNumber(stakedRewards.totalStaked).gt(0))
   );
@@ -113,15 +113,15 @@ const currentApr = computed(() => {
 });
 
 onMounted(() => {
-  if (network.type.chainID === ETH.chainID) {
+  if (network.value.type.chainID === ETH.chainID) {
     getStakedRewards();
     getCbStakeRewards();
     stakedHandler = new handlerStaked(
-      web3,
-      network,
-      address,
+      web3.value,
+      network.value,
+      address.value,
       () => {},
-      identifier
+      identifier.value
     );
   }
 });
@@ -130,7 +130,7 @@ onMounted(() => {
 const getStakedRewards = async () => {
   try {
     const response = await fetch(
-      `${STAKED_ENDPOINT}/history?address=${address}`
+      `${STAKED_ENDPOINT}/history?address=${address.value}`
     );
     const data = await response.json();
     if (!isArray(data)) {
@@ -164,7 +164,7 @@ const getStakedRewards = async () => {
 const getCbStakeRewards = async () => {
   try {
     const response = await fetch(
-      `${COINBASE_ENDPOINT}?address=${address}&action=details&networkId=${network.type.chainID}`
+      `${COINBASE_ENDPOINT}?address=${address.value}&action=details&networkId=${network.value.type.chainID}`
     );
     const data = await response.json();
     const { integratorShareBalance, integratorShareUnderlyingBalance } = data;

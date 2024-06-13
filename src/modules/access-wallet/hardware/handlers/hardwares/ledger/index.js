@@ -58,27 +58,32 @@ class ledgerWallet {
       : await getLedgerTransport();
     try {
       this.openedApp = (await getAppAndVersion(this.transport)).name;
-      if (bluetooth && this.openedApp !== ledgerApp.name)
+      if (bluetooth && this.openedApp !== ledgerApp.value.name)
         throw new Error('Wrong App or No App');
-      if (this.openedApp !== 'BOLOS' && this.openedApp !== ledgerApp.name) {
+      if (
+        this.openedApp !== 'BOLOS' &&
+        this.openedApp !== ledgerApp.value.name
+      ) {
         attemptToQuitApp(this.transport, this.openedApp);
         await delay(3000);
         if (!bluetooth) {
           this.transport = await getLedgerTransport();
         }
       }
-      if (this.openedApp !== ledgerApp.name) {
+      if (this.openedApp !== ledgerApp.value.name) {
         Toast('Confirm selection on ledger', undefined, WARNING);
-        await openApp(this.transport, appNames[ledgerApp.value]).then(() => {
-          return new Promise(resolve => {
-            setTimeout(async () => {
-              if (!bluetooth) {
-                this.transport = await getLedgerTransport();
-              }
-              resolve();
-            }, 2500);
-          });
-        });
+        await openApp(this.transport, appNames[ledgerApp.value.value]).then(
+          () => {
+            return new Promise(resolve => {
+              setTimeout(async () => {
+                if (!bluetooth) {
+                  this.transport = await getLedgerTransport();
+                }
+                resolve();
+              }, 2500);
+            });
+          }
+        );
       }
     } catch (er) {
       if (this.openedApp === undefined) {
@@ -86,8 +91,8 @@ class ledgerWallet {
           throw new Error(`App has switched. Please retry again.`);
       } else if (er.message.includes('App switch')) {
         throw new Error(`App has switched. Please retry again.`);
-      } else if (this.openedApp !== appNames[ledgerApp.value]) {
-        throw new Error(`missing app ${ledgerApp.value}`);
+      } else if (this.openedApp !== appNames[ledgerApp.value.value]) {
+        throw new Error(`missing app ${ledgerApp.value.value}`);
       } else throw new Error(er);
     }
     this.ledger = new Ledger(this.transport);
@@ -117,13 +122,13 @@ class ledgerWallet {
       accountPath = this.basePath + '/' + idx;
     }
     const txSigner = async txParams => {
-      const networkId = network.type.chainID;
+      const networkId = network.value.type.chainID;
       const tokenInfo = byContractAddressAndChainId(txParams.to, networkId);
       if (tokenInfo)
         await this.ledger.provideERC20TokenInformation(tokenInfo.data);
       const legacySigner = async _txParams => {
         const tx = new Transaction(_txParams, {
-          common: commonGenerator(network)
+          common: commonGenerator(network.value)
         });
         const message = tx.getMessageToSign(false);
         const serializedMessage = rlp.encode(message);
@@ -151,15 +156,15 @@ class ledgerWallet {
           );
         return getSignTransactionObject(Transaction.fromTxData(_txParams));
       };
-      if (isEIP1559SupportedNetwork) {
-        const feeMarket = gasFeeMarketInfo;
+      if (isEIP1559SupportedNetwork.value) {
+        const feeMarket = gasFeeMarketInfo.value;
         const _txParams = Object.assign(
           eip1559Params(txParams.gasPrice, feeMarket),
           txParams
         );
         delete _txParams.gasPrice;
         const tx = FeeMarketEIP1559Transaction.fromTxData(_txParams, {
-          common: commonGenerator(network)
+          common: commonGenerator(network.value)
         });
         const message = tx.getMessageToSign(false);
         try {

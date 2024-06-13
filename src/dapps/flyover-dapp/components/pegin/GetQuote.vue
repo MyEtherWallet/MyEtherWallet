@@ -102,7 +102,7 @@ onMounted(() => {
 
   getProviders()
     .then(data => {
-      rskAddress.value = instance.getAddressString();
+      rskAddress.value = instance.value.getAddressString();
       providers.value = data.map(provider => {
         return {
           ...provider,
@@ -120,7 +120,7 @@ const fetchQuote = async () => {
   loading.value = true;
   msg.value = '';
   const payload = {
-    callEoaOrContractAddress: instance.getAddressString(),
+    callEoaOrContractAddress: instance.value.getAddressString(),
     bitcoinRefundAddress: btcAddress.value,
     rskRefundAddress: rskAddress.value,
     valueToTransfer: parseFloat(toBase(parseFloat(amount.value), 18)),

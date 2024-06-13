@@ -36,7 +36,7 @@ const ModuleTransferHistory = defineAsyncComponent(() =>
 const { txNotifications } = useNotificationsStore();
 
 const hasHistory = computed(() => {
-  return txNotifications && txNotifications.length > 0;
+  return txNotifications.value && txNotifications.value.length > 0;
 });
 
 const totalRightColItems = computed(() => {

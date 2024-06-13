@@ -234,7 +234,7 @@ const ethTotalFee = computed(() => {
 const gasPriceFiat = computed(() => {
   const gasPrice = BigNumber(ethTotalFee.value);
   return gasPrice.gt(0)
-    ? getFiatValue(gasPrice.times(fiatValue).toFixed())
+    ? getFiatValue(gasPrice.times(fiatValue.value).toFixed())
     : '0';
 });
 const hasEnoughBalanceToStake = computed(() => {

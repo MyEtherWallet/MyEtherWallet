@@ -352,15 +352,15 @@ const leftBtn = computed(() => {
   return {
     title: '',
     color: 'primary',
-    method: validNetwork ? closeNetworkOverlay.value : null
+    method: validNetwork.value ? closeNetworkOverlay.value : null
   };
 });
 
 const sectionOne = computed(() => {
-  if (online) {
+  if (online.value) {
     const hasNew = Object.values(dappsMeta).filter(item => {
       const dappSupport = item.networks.findIndex(nType => {
-        if (nType.chainID === network.type.chainID) {
+        if (nType.chainID === network.value.type.chainID) {
           return nType;
         }
       });
@@ -402,10 +402,10 @@ const sectionOne = computed(() => {
 });
 
 const sectionTwo = computed(() => {
-  if (online) {
+  if (online.value) {
     const hasNew = Object.values(stakingMeta).filter(item => {
       const stakingSupport = item.networks.findIndex(nType => {
-        if (nType.chainID === network.type.chainID) {
+        if (nType.chainID === network.value.type.chainID) {
           return nType;
         }
       });
@@ -448,11 +448,11 @@ const sectionTwo = computed(() => {
       }
     ];
     if (
-      network.type.name === ETH.name ||
-      network.type.name === BSC.name ||
-      network.type.name === MATIC.name ||
-      network.type.name === ARB.name ||
-      network.type.name === OP.name
+      network.value.type.name === ETH.name ||
+      network.value.type.name === BSC.name ||
+      network.value.type.name === MATIC.name ||
+      network.value.type.name === ARB.name ||
+      network.value.type.name === OP.name
     ) {
       sectionTwo.push({
         title: t('interface.menu.buy-sell'),
@@ -469,7 +469,7 @@ const sectionTwo = computed(() => {
 });
 
 const sectionThree = computed(() => {
-  if (online) {
+  if (online.value) {
     return [
       {
         title: t('interface.menu.contract'),
@@ -507,7 +507,7 @@ const sectionThree = computed(() => {
 });
 
 const sectionFour = computed(() => {
-  if (online) {
+  if (online.value) {
     return [
       {
         title: t('common.settings'),
@@ -532,7 +532,7 @@ const sectionFour = computed(() => {
 });
 
 const offlineModeRoute = computed(() => {
-  return isOfflineApp
+  return isOfflineApp.value
     ? { name: ROUTES_WALLET.WALLETS.NAME }
     : { name: ROUTES_WALLET.DASHBOARD.NAME };
 });
@@ -569,7 +569,7 @@ watch(
 
 // mounted
 onMounted(() => {
-  if (isOfflineApp) {
+  if (isOfflineApp.value) {
     redirectToDashboard();
   } else {
     footer.value = {
@@ -608,14 +608,14 @@ const trackToStaking = () => {
   trackStaking(STAKING.SIDE_MENU);
 };
 const closeNetworkOverlay = () => {
-  if (validNetwork) {
+  if (validNetwork.value) {
     isOpenNetworkOverlay.value = false;
   }
 };
 const shouldShow = route => {
   if (routeNetworks[route?.name]) {
     for (const net of routeNetworks[route.name]) {
-      if (net.name === network.type.name) return true;
+      if (net.name === network.value.type.name) return true;
     }
     return false;
   }

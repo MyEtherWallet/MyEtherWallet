@@ -42,7 +42,7 @@ const currencies = computed(() => {
 });
 
 const currentCurrency = computed(() => {
-  return currencyList.find(c => c.value === preferredCurrency);
+  return currencyList.find(c => c.value === preferredCurrency.value);
 });
 
 // mounted

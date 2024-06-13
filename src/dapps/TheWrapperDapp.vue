@@ -225,7 +225,7 @@ const bannerTextObj = ref({});
 
 // computed
 const isValidNetwork = computed(() => {
-  const chainID = network.type.chainID;
+  const chainID = network.value.type.chainID;
   const validChain = props.validNetworks.filter(
     item => item.chainID === chainID
   );

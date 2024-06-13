@@ -14,11 +14,11 @@ export const useAmplitude = () => {
   const { isOfflineApp } = useWalletStore();
   const { consentToTrack, setTrackingConsent } = usePopupStore();
 
-  const networkName = network.type.name;
+  const networkName = network.value.type.name;
 
   const wrapperMethod = (evt, prop = {}) => {
-    if (isOfflineApp) return;
-    if (consentToTrack) {
+    if (isOfflineApp.value) return;
+    if (consentToTrack.value) {
       const newObj = !isEmpty(prop)
         ? Object.assign({}, prop, {
             network: networkName
@@ -29,22 +29,22 @@ export const useAmplitude = () => {
   };
 
   const shouldDisplayTrackingPopup = computed(() => {
-    if (isOfflineApp) return false;
+    if (isOfflineApp.value) return false;
     return true;
   });
 
   const setConsent = () => {
-    if (isOfflineApp) return;
-    if (consentToTrack) {
+    if (isOfflineApp.value) return;
+    if (consentToTrack.value) {
       $amplitude.track('UserOptOutTracking', {
         network: networkName
       });
     }
 
-    const initialValue = consentToTrack;
-    setTrackingConsent(!consentToTrack);
-    $amplitude.setOptOut(!consentToTrack);
-    if (!initialValue && consentToTrack) {
+    const initialValue = consentToTrack.value;
+    setTrackingConsent(!consentToTrack.value);
+    $amplitude.setOptOut(!consentToTrack.value);
+    if (!initialValue && consentToTrack.value) {
       $amplitude.track('UserOptInTracking', {
         network: networkName
       });

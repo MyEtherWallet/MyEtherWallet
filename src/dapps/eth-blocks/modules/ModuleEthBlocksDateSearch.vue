@@ -54,7 +54,7 @@ const totalResult = ref(0);
 
 // computed
 const maxBlock = computed(() => {
-  const max = toBN(blockNumber).sub(toBN(50));
+  const max = toBN(blockNumber.value).sub(toBN(50));
   const ZERO = toBN(0);
   return max.gt(ZERO) ? max.toNumber() : 0;
 });
@@ -80,7 +80,7 @@ onMounted(() => {
 const fetchBlocksByDate = async () => {
   const newResultArray = [];
   foundBlocks.value = [];
-  const dater = new EthDater(web3.eth);
+  const dater = new EthDater(web3.value.eth);
   const startTimeString = route.params.dateString;
   const endTimeString = startTimeString + 1000 * 60; // adds a minute to starting range
   try {
@@ -96,10 +96,10 @@ const fetchBlocksByDate = async () => {
     for (let index = 0; index < filterBlocks.length; index++) {
       if (filterBlocks[index].block <= maxBlock.value) {
         const block = new handlerBlock(
-          web3,
-          network,
+          web3.value,
+          network.value,
           filterBlocks[index].block,
-          address
+          address.value
         );
 
         newResultArray.push(

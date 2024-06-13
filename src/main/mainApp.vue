@@ -98,19 +98,19 @@ onMounted(() => {
     storeEIP6963Wallet(e.detail);
   });
   EventBus.$on('swapTxBroadcasted', hash => {
-    const id = network.type.name;
+    const id = network.value.type.name;
     trackSwapAmplitude(SWAP.BROADCASTED, { hash: hash, network: id });
   });
   EventBus.$on('swapTxReceivedReceipt', hash => {
-    const id = network.type.name;
+    const id = network.value.type.name;
     trackSwapAmplitude(SWAP.RECEIPT, {
       hash: hash,
       network: id,
-      wallet: identifier
+      wallet: identifier.value
     });
   });
   EventBus.$on('swapTxFailed', hash => {
-    const id = network.type.name;
+    const id = network.value.type.name;
     const passedHash = hash === '0x' ? 'no hash' : hash;
     trackSwapAmplitude(SWAP.FAILED, { hash: passedHash, network: id });
   });
@@ -118,7 +118,7 @@ onMounted(() => {
     trackSwapAmplitude(SWAP.NOT_BROADCASTED);
   });
   EventBus.$on(BUYSELL_EVENT, arg => {
-    if (!network.type.canBuy) {
+    if (!network.value.type.canBuy) {
       Toast(
         'Unsupported network to buy. Please switch network to ETH, MATIC, or BNB to buy.',
         {},
@@ -132,10 +132,10 @@ onMounted(() => {
   logMessage();
   setOnlineStatus(window.navigator.onLine);
   if (window.navigator.onLine) {
-    setCurrency(preferredCurrency);
+    setCurrency(preferredCurrency.value);
     updateArticles({
-      timestamp: timestamp,
-      articleList: articleList
+      timestamp: timestamp.value,
+      articleList: articleList.value
     });
   }
   // Window events to watch out if the online status changes
@@ -144,11 +144,11 @@ onMounted(() => {
   });
   window.addEventListener('online', () => {
     setOnlineStatus(true);
-    setCurrency(preferredCurrency);
+    setCurrency(preferredCurrency.value);
   });
-  if (!isMigrated) {
+  if (!isMigrated.value) {
     // addressBook is the old one that resides in custom store
-    setAddressBook(addressBook);
+    setAddressBook(addressBook.value);
     setMigrated(true);
   }
 

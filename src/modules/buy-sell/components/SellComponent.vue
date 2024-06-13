@@ -178,7 +178,6 @@ import { useExternalStore } from '@/core/store/external';
 import { useWalletStore } from '@/core/store/wallet';
 import { useGlobalStore } from '@/core/store/global';
 import { useAmplitude } from '@/core/composables/amplitude';
-import { storeToRefs } from 'pinia';
 
 // emits
 const emit = defineEmits(['selectedFiat']);
@@ -186,10 +185,9 @@ const emit = defineEmits(['selectedFiat']);
 // injection/use
 const { setCoinGeckoTokens, setCoinGeckoNetworkIds, contractToToken } =
   useExternalStore();
-const { gasPriceByType } = useGlobalStore();
+const { gasPriceByType, gasPriceType, network } = useGlobalStore();
 const { address, instance, web3, tokensList } = useWalletStore();
 const { trackBuySell } = useAmplitude();
-const { gasPriceType, network } = storeToRefs(useGlobalStore());
 
 // apollo
 const { onResult: getLatestPricesResult, onError: getLatestPricesError } =
@@ -318,7 +316,7 @@ const currencyConfig = computed(() => {
 const preselectedCurrencies = computed(() => {
   if (props.inWallet) {
     return sellContracts.reduce((arr, item) => {
-      const inList = tokensList.find(t => {
+      const inList = tokensList.value.find(t => {
         if (t.contract.toLowerCase() === item.toLowerCase()) return t;
       });
       if (inList) {
@@ -349,11 +347,11 @@ const preselectedCurrencies = computed(() => {
   return arr;
 });
 const currencyItems = computed(() => {
-  const tokensList = preselectedCurrencies.value.map(token => {
+  const locTokensList = preselectedCurrencies.value.map(token => {
     token.name = token.symbol;
     return token;
   });
-  return tokensList;
+  return locTokensList;
 });
 const supportedCurrency = computed(() => {
   return ['ETH', 'USDT', 'USDC', 'MATIC', 'BNB'];
@@ -364,7 +362,7 @@ const supportedNetworks = computed(() => {
 const name = computed(() => {
   return supportedCurrency.value.includes(selectedCurrency.value.symbol)
     ? selectedCurrency.value.symbol
-    : network.type.currencyName;
+    : network.value.type.currencyName;
 });
 const disableSell = computed(() => {
   return (
@@ -405,13 +403,13 @@ const txFee = computed(() => {
 });
 const txFeeInEth = computed(() => {
   return `${BigNumber(txFee.value).decimalPlaces(4)} ${
-    network.type.currencyName
+    network.value.type.currencyName
   }`;
 });
 const errorMessages = computed(() => {
   const symbol = selectedCurrency.value?.symbol
     ? name
-    : network.type.currencyName;
+    : network.value.type.currencyName;
   const locAmount = BigNumber(amount.value);
   if (nonMainnetMetamask.value) {
     return 'Please switch your network to the Ethereum Mainnet on Metamask.';
@@ -467,9 +465,9 @@ const errorMessages = computed(() => {
 });
 const nonMainnetMetamask = computed(() => {
   return (
-    instance &&
-    instance.identifier === WALLET_TYPES.WEB3_WALLET &&
-    network?.type.name !== ETH.name
+    instance.value &&
+    instance.value.identifier === WALLET_TYPES.WEB3_WALLET &&
+    network.value?.type.name !== ETH.name
   );
 });
 const isValidAmount = computed(() => {
@@ -515,7 +513,7 @@ const hasEnoughAssets = computed(() => {
   }
 });
 const actualAddress = computed(() => {
-  return props.inWallet ? address : toAddress.value;
+  return props.inWallet ? address.value : toAddress.value;
 });
 const actualValidAddress = computed(() => {
   return props.inWallet ? true : validToAddress.value;
@@ -576,7 +574,7 @@ watch(
   }
 );
 watch(
-  () => gasPriceType,
+  () => gasPriceType.value,
   newVal => {
     locGasPrice.value = gasPriceByType(newVal);
   }
@@ -598,12 +596,12 @@ watch(
   () => {
     sendHandler.value = new handlerSend();
     fetchSellInfo();
-    locGasPrice.value = gasPriceByType(gasPriceType);
+    locGasPrice.value = gasPriceByType(gasPriceType.value);
   },
   { deep: true }
 );
 watch(
-  () => network,
+  () => network.value,
   () => {
     maxBalance.value = '0';
     hasPersistentHint.value = false;
@@ -611,10 +609,10 @@ watch(
     amount.value = '0';
     selectedCurrency.value = {};
     selectedCurrency.value = props.defaultCurrency;
-    if (supportedNetworks.value.includes(network.type.name)) {
+    if (supportedNetworks.value.includes(network.value.type.name)) {
       sendHandler.value = new handlerSend();
       fetchSellInfo();
-      locGasPrice.value = gasPriceByType(gasPriceType);
+      locGasPrice.value = gasPriceByType(gasPriceType.value);
     }
   }
 );
@@ -624,7 +622,7 @@ onMounted(() => {
   if (!props.inWallet) addressInput.value.$refs.addressSelect.clear();
   sendHandler.value = new handlerSend();
   fetchSellInfo();
-  locGasPrice.value = gasPriceByType(gasPriceType);
+  locGasPrice.value = gasPriceByType(gasPriceType.value);
 });
 
 // methods
@@ -640,7 +638,9 @@ const setAddress = (newVal, isValid, data) => {
 };
 const getEthBalance = () => {
   if (!actualValidAddress.value) return;
-  const web3Instance = props.inWallet ? web3 : new Web3(network.url);
+  const web3Instance = props.inWallet
+    ? web3.value
+    : new Web3(network.value.url);
   web3Instance.eth.getBalance(actualAddress.value).then(res => {
     fetchingBalance.value = false;
     selectedBalance.value = fromWei(res);
@@ -648,7 +648,9 @@ const getEthBalance = () => {
 };
 const getTokenBalance = () => {
   if (!actualValidAddress.value) return;
-  const web3Instance = props.inWallet ? web3 : new Web3(network.url);
+  const web3Instance = props.inWallet
+    ? web3.value
+    : new Web3(network.value.url);
   const contract = new web3Instance.eth.Contract(
     abi,
     selectedCurrency.value.contract
@@ -790,8 +792,8 @@ const fetchSellInfo = () => {
       Toast(e, {}, ERROR);
     });
 };
-const isValidToAddress = address => {
-  return MultiCoinValidator.validate(address, selectedCurrency.value.symbol);
+const isValidToAddress = addr => {
+  return MultiCoinValidator.validate(addr, selectedCurrency.value.symbol);
 };
 const preventCharE = e => {
   if (e.key === 'e') e.preventDefault();

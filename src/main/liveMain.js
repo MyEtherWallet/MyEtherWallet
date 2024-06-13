@@ -168,7 +168,7 @@ new Vue({
       }
     });
 
-    this.$amplitude.setOptOut(!consentToTrack);
+    this.$amplitude.setOptOut(!consentToTrack.value);
   },
   render: h => h(app)
 });

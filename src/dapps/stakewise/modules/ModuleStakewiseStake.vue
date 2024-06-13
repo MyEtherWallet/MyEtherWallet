@@ -112,7 +112,6 @@ import { useWalletStore } from '@/core/store/wallet';
 import { useVuetify } from '@/core/composables/vuetify';
 import { useNotificationsStore } from '@/core/store/notifications';
 import { useStakewiseStore } from '../store';
-import { storeToRefs } from 'pinia';
 
 const StakewiseStaking = defineAsyncComponent(() =>
   import('../components/StakewiseStaking')
@@ -123,15 +122,12 @@ const StakewiseRewards = defineAsyncComponent(() =>
 
 // injections/use
 const { trackDapp } = useAmplitude();
-const { balanceInETH, instance, tokensList } = useWalletStore();
+const { balanceInETH, instance, tokensList, address, web3 } = useWalletStore();
 const { addNotification } = useNotificationsStore();
-const { network, isEthNetwork, gasPriceByType, updateGasPrice } =
+const { network, isEthNetwork, gasPriceByType, updateGasPrice, gasPriceType } =
   useGlobalStore();
 const { sethBalance, rethBalance } = useStakewiseStore();
 const vuetify = useVuetify();
-
-const { gasPriceType } = storeToRefs(useGlobalStore());
-const { address, web3 } = storeToRefs(useWalletStore());
 
 // data
 const stakeAmount = ref('0');
@@ -162,7 +158,7 @@ const loading = ref(true);
 const ethTotalFee = computed(() => {
   const gasPrice = BigNumber(locGasPrice.value).gt(0)
     ? BigNumber(locGasPrice.value)
-    : BigNumber(gasPriceByType(gasPriceType));
+    : BigNumber(gasPriceByType(gasPriceType.value));
   const locGasLimit = BigNumber(gasLimit.value).gt('21000')
     ? gasLimit.value
     : MIN_GAS_LIMIT;
@@ -170,10 +166,12 @@ const ethTotalFee = computed(() => {
   return formatFloatingPointValue(ethFee).value;
 });
 const hasEnoughBalanceToStake = computed(() => {
-  return BigNumber(ethTotalFee.value).plus(stakeAmount.value).lte(balanceInETH);
+  return BigNumber(ethTotalFee.value)
+    .plus(stakeAmount.value)
+    .lte(balanceInETH.value);
 });
 const hasEnoughBalance = computed(() => {
-  return BigNumber(ethTotalFee.value).lte(balanceInETH);
+  return BigNumber(ethTotalFee.value).lte(balanceInETH.value);
 });
 const target = computed(() => {
   const value = element.value;
@@ -186,14 +184,14 @@ const element = computed(() => {
   return input.value;
 });
 const reth2Contract = computed(() => {
-  return isEthNetwork ? RETH2_MAINNET_CONTRACT : RETH2_GOERLI_CONTRACT;
+  return isEthNetwork.value ? RETH2_MAINNET_CONTRACT : RETH2_GOERLI_CONTRACT;
 });
 const seth2Contract = computed(() => {
-  return isEthNetwork ? SETH2_MAINNET_CONTRACT : SETH2_GOERLI_CONTRACT;
+  return isEthNetwork.value ? SETH2_MAINNET_CONTRACT : SETH2_GOERLI_CONTRACT;
 });
 const hasReth = computed(() => {
   const token = find(
-    tokensList,
+    tokensList.value,
     item => item.contract.toLowerCase() === reth2Contract.value.toLowerCase()
   );
   if (!token) {
@@ -203,7 +201,7 @@ const hasReth = computed(() => {
 });
 const hasSeth = computed(() => {
   const token = find(
-    tokensList,
+    tokensList.value,
     item => item.contract.toLowerCase() === seth2Contract.value.toLowerCase()
   );
   if (!token) {
@@ -227,9 +225,9 @@ watch(
   }
 );
 watch(
-  () => gasPriceType,
+  () => gasPriceType.value,
   () => {
-    locGasPrice.value = gasPriceByType(gasPriceType);
+    locGasPrice.value = gasPriceByType(gasPriceType.value);
   }
 );
 watch(
@@ -238,19 +236,19 @@ watch(
     const val = value ? value : 0;
     stakeHandler.value._setAmount(BigNumber(val).toFixed());
 
-    if (BigNumber(value).lte(balanceInETH) && BigNumber(value).gt(0)) {
+    if (BigNumber(value).lte(balanceInETH.value) && BigNumber(value).gt(0)) {
       setGasLimit();
     }
   }
 );
 watch(
-  () => address,
+  () => address.value,
   () => {
     setup();
   }
 );
 watch(
-  () => web3,
+  () => web3.value,
   () => {
     setup();
     setGasPrice();
@@ -260,8 +258,8 @@ watch(
 // mounted
 onMounted(() => {
   setup();
-  locGasPrice.value = gasPriceByType(gasPriceType);
-  swapper.value = new Swapper(web3, network.type.name);
+  locGasPrice.value = gasPriceByType(gasPriceType.value);
+  swapper.value = new Swapper(web3.value, network.value.type.name);
 });
 
 // methods
@@ -272,11 +270,15 @@ const setAmount = debounce(function (val) {
 const setup = () => {
   stakeAmount.value = '0';
   stakeHandler.value = {};
-  stakeHandler.value = new stakewiseHandler(web3, isEthNetwork, address);
+  stakeHandler.value = new stakewiseHandler(
+    web3.value,
+    isEthNetwork.value,
+    address.value
+  );
 };
 const setGasPrice = () => {
   updateGasPrice();
-  locGasPrice.value = gasPriceByType(gasPriceType);
+  locGasPrice.value = gasPriceByType(gasPriceType.value);
 };
 const setGasLimit = () => {
   estimateGasError.value = false;
@@ -292,7 +294,7 @@ const setGasLimit = () => {
 };
 const setMax = () => {
   if (hasEnoughBalanceToStake.value) {
-    const max = BigNumber(balanceInETH).minus(BigNumber(ethTotalFee));
+    const max = BigNumber(balanceInETH.value).minus(BigNumber(ethTotalFee));
     setAmount(max.toFixed());
   }
 };
@@ -339,11 +341,11 @@ const getQuote = async (from, to, balance) => {
   }
 };
 const getTrade = async (from, to, type) => {
-  const balance = type === 'seth' ? sethBalance : rethBalance;
+  const balance = type === 'seth' ? sethBalance.value : rethBalance.value;
   try {
     const trade = await swapper.value.getTrade({
-      fromAddress: address,
-      toAddress: address,
+      fromAddress: address.value,
+      toAddress: address.value,
       provider: availableQuotes.value[0].provider,
       fromT: from,
       toT: to,
@@ -381,7 +383,7 @@ const executeTrade = type => {
       .then(() => {
         trackDapp(`stakewiseRedeem${type === 'seth' ? 'Seth' : 'Reth'}Fail`);
         setAmount(0);
-        locGasPrice.value = gasPriceByType(gasPriceType);
+        locGasPrice.value = gasPriceByType(gasPriceType.value);
         gasLimit.value = '21000';
         agreeToTerms.value = false;
       })
@@ -392,7 +394,7 @@ const executeTrade = type => {
       });
   } catch (err) {
     loading.value = false;
-    instance.errorHandler(err.message, {}, ERROR);
+    instance.value.errorHandler(err.message, {}, ERROR);
     trackDapp(`stakewiseRedeem${type === 'seth' ? 'Seth' : 'Reth'}Fail`);
   }
 };
@@ -401,7 +403,7 @@ const swapNotificationFormatter = (obj, currentTrade) => {
     const notif = Object.assign(
       {
         hash,
-        from: address,
+        from: address.value,
         type: NOTIFICATION_TYPES.SWAP,
         network: network.type.name,
         status: NOTIFICATION_STATUS.PENDING,
@@ -445,20 +447,20 @@ const redeemToEth = async (type, balance) => {
       fromVal: balance,
       toVal: balance,
       toUsdVal: BigNumber(ETH_Token.price ? ETH_Token.price : 0)
-        .times(sethBalance)
+        .times(sethBalance.value)
         .toFixed(),
       fromUsdVal: BigNumber(eth.price ? eth.price : 0)
-        .times(sethBalance)
+        .times(sethBalance.value)
         .toFixed(),
       validUntil: new Date().getTime() + 10 * 60 * 1000,
       selectedProvider: selectedProvider.value,
       txFee: txFee.value,
-      gasPriceType: gasPriceType
+      gasPriceType: gasPriceType.value
     };
     await executeTrade(type);
   } catch (err) {
     loading.value = false;
-    instance.errorHandler(err.message, {}, ERROR);
+    instance.value.errorHandler(err.message, {}, ERROR);
   }
 };
 </script>

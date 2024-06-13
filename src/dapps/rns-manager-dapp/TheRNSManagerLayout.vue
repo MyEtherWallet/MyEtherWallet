@@ -146,7 +146,7 @@ const { trackDapp } = useAmplitude();
 const route = useRoute();
 const router = useRouter();
 const { t } = useI18n();
-const { address, web3, instance } = useWalletStore();
+const { address, web3 } = useWalletStore();
 const { customTokens } = useCustomStore();
 
 // data
@@ -231,7 +231,7 @@ onMounted(() => {
 // methods
 const setup = () => {
   const ethersProvider = new ethers.providers.Web3Provider(
-    web3.currentProvider
+    web3.value.currentProvider
   );
   const ethersSigner = ethersProvider.getSigner();
   nameHandler.value = new RNSManager(ethersSigner);
@@ -305,16 +305,15 @@ const register = async duration => {
     waitingForReg.value = true;
 
     const [label] = name.value.split('.');
-    const address = instance.getAddressString();
     const registerTx = await nameHandler.value.rskRegistrar.register(
       label,
-      address,
+      address.value,
       regSecret.value,
       BigNumber.from(duration),
       domainPrice.value
     );
     await registerTx.wait();
-    await reverseHandler.value.setReverseRecord(name, address);
+    await reverseHandler.value.setReverseRecord(name, address.value);
     loadingReg.value = false;
     waitingForReg.value = false;
 
@@ -332,11 +331,13 @@ const commit = async duration => {
   committed.value = false;
   waitingForReg.value = true;
   try {
-    const address = instance.getAddressString();
     const [label] = name.value.split('.');
 
     const { makeCommitmentTransaction, secret, canReveal } =
-      await nameHandler.value.rskRegistrar.commitToRegister(label, address);
+      await nameHandler.value.rskRegistrar.commitToRegister(
+        label,
+        address.value
+      );
     await makeCommitmentTransaction.wait();
     regSecret.value = secret;
     // Ref: https://github.com/rsksmart/rns-sdk
@@ -369,7 +370,7 @@ const commit = async duration => {
   }
 };
 const getRentPrice = duration => {
-  const token = customTokens.find(token => token.name === 'RIF');
+  const token = customTokens.value.find(token => token.name === 'RIF');
   const [label] = name.value.split('.');
   trackDapp('rnsDomainInitializeRegister');
   return nameHandler.value.fetchPrice(label, duration).then(resp => {

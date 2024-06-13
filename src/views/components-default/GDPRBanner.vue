@@ -55,7 +55,7 @@ onMounted(() => {
 // methods
 const checkToShow = async () => {
   const isFromEU = await isEU();
-  show.value = !shownChoiceEU && isFromEU;
+  show.value = !shownChoiceEU.value && isFromEU;
 };
 
 const handleReject = () => {

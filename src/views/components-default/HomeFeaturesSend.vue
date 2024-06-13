@@ -46,18 +46,18 @@ const data = ref('1337');
 
 const tokens = computed(() => {
   const eth = {
-    name: network.type.name,
-    symbol: network.type.name,
-    subtext: network.type.name_long,
-    value: network.type.name_long,
-    balance: balance,
-    img: network.type.icon,
+    name: network.value.type.name,
+    symbol: network.value.type.name,
+    subtext: network.value.type.name_long,
+    value: network.value.type.name_long,
+    balance: balance.value,
+    img: network.value.type.icon,
     decimals: 18,
     market_cap: null,
     price_change_percentage_24h: null
   };
 
-  const copiedTokens = tokensList.slice();
+  const copiedTokens = tokensList.value.slice();
   copiedTokens.unshift(eth);
   return copiedTokens;
 });

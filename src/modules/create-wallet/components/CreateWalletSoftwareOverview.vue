@@ -115,7 +115,7 @@ const linkToLearnMore = ref({
 });
 
 onMounted(() => {
-  if (isOfflineApp) {
+  if (isOfflineApp.value) {
     linkToLearnMore.value = {};
   } else {
     linkToLearnMore.value.url = getArticle('not-rec-when-access-wallet');

@@ -99,8 +99,7 @@ const emit = defineEmits(['newNetwork', 'close']);
 
 // injections/use
 const { Networks, setNetwork } = useGlobalStore();
-const { instance, identifier, setWeb3Instance, isOfflineApp } =
-  useWalletStore();
+const { identifier, setWeb3Instance, isOfflineApp } = useWalletStore();
 const { selectedEIP6963Provider, setTokenAndEthBalance } = useExternalStore();
 
 // data
@@ -163,7 +162,7 @@ onMounted(() => {
 });
 
 const fetchNetworks = () => {
-  const networkList = Object.values(Networks).filter(network => {
+  const networkList = Object.values(Networks.value).filter(network => {
     if (props.isSell) {
       if (network[0].type.name === ETH.name) {
         return network;
@@ -198,15 +197,15 @@ const setNewNetwork = network => {
   });
   setNetwork({
     network: found[0],
-    walletType: instance?.identifier || ''
+    walletType: identifier.value || ''
   });
   if (props.inWallet) {
-    if (identifier === WALLET_TYPES.WEB3_WALLET) {
+    if (identifier.value === WALLET_TYPES.WEB3_WALLET) {
       setWeb3Instance(selectedEIP6963Provider);
     } else {
       setWeb3Instance();
     }
-    if (!isOfflineApp) {
+    if (!isOfflineApp.value) {
       setTokenAndEthBalance();
     }
   } else {

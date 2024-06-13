@@ -96,10 +96,12 @@ const props = defineProps({
 
 // computed
 const hasStakedNoRewards = computed(() => {
-  return BigNumber(sethBalance).gt(0) && BigNumber(rethBalance).eq(0);
+  return (
+    BigNumber(sethBalance.value).gt(0) && BigNumber(rethBalance.value).eq(0)
+  );
 });
 const hasBalance = computed(() => {
-  return BigNumber(rethBalance).gt(0);
+  return BigNumber(rethBalance.value).gt(0);
 });
 const enoughToCoverRedeem = computed(() => {
   if (hasStakedNoRewards.value) {
@@ -108,7 +110,7 @@ const enoughToCoverRedeem = computed(() => {
   if (!hasBalance.value) {
     return false;
   }
-  if (BigNumber(balance).gt(props.txFee)) {
+  if (BigNumber(balance.value).gt(props.txFee)) {
     return false;
   }
   if (!props.hasEnoughBalance) {
@@ -117,13 +119,15 @@ const enoughToCoverRedeem = computed(() => {
   return true;
 });
 const ethvmSupport = computed(() => {
-  return network.type.isEthVMSupported.supported;
+  return network.value.type.isEthVMSupported.supported;
 });
 const formattedBalance = computed(() => {
-  return formatFloatingPointValue(rethBalance).value;
+  return formatFloatingPointValue(rethBalance.value).value;
 });
 const rethBalanceFiat = computed(() => {
-  return getFiatValue(BigNumber(rethBalance).times(fiatValue).toString());
+  return getFiatValue(
+    BigNumber(rethBalance.value).times(fiatValue.value).toString()
+  );
 });
 
 // watch

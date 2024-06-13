@@ -153,7 +153,7 @@ watch(
 
 // mounted
 onMounted(() => {
-  if (isOfflineApp) {
+  if (isOfflineApp.value) {
     link.value = {};
     label.value = 'To access my wallet, I accept Terms';
   }

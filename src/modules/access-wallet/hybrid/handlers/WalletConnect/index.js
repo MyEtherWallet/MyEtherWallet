@@ -40,13 +40,13 @@ class WalletConnectWallet {
   }
   init() {
     const { network } = useGlobalStore();
-    const { wallet } = useWalletStore();
+    const { address, web3 } = useWalletStore();
     // eslint-disable-next-line
     return new Promise(async resolve => {
       const txSigner = tx => {
         const from = tx.from;
         tx = new Transaction(tx, {
-          common: commonGenerator(network)
+          common: commonGenerator(network.value)
         });
         const txJSON = tx.toJSON();
         txJSON.from = from;
@@ -55,7 +55,7 @@ class WalletConnectWallet {
           .request({ method: 'eth_sendTransaction', params: [txJSON] })
           .then(hash => {
             prom.eventEmitter.emit('transactionHash', hash);
-            wallet.web3.eth.sendTransaction.method._confirmTransaction(
+            web3.value.eth.sendTransaction.method._confirmTransaction(
               prom,
               hash,
               { params: [txJSON] }
@@ -74,7 +74,7 @@ class WalletConnectWallet {
         return new Promise((resolve, reject) => {
           const msgParams = [
             '0x' + toBuffer(msg).toString('hex'),
-            sanitizeHex(wallet.address)
+            sanitizeHex(address.value)
           ];
           this.client
             .request({ method: 'personal_sign', params: msgParams })

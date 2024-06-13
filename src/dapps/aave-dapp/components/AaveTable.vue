@@ -185,8 +185,8 @@ const listData = computed(() => {
           /* Get User Balance for the item */
           const findBalance =
             item.symbol === 'ETH'
-              ? balanceInETH
-              : tokensList.find(balance => {
+              ? balanceInETH.value
+              : tokensList.value.find(balance => {
                   if (item.symbol === balance.symbol) return balance;
                 });
 

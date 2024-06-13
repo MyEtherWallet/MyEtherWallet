@@ -48,7 +48,7 @@ class WalletLinkWallet {
     return new Promise((resolve, reject) => {
       const txSigner = txParams => {
         const tx = new Transaction.fromTxData(txParams, {
-          common: commonGenerator(network)
+          common: commonGenerator(network.value)
         });
         const networkId = tx.common.chainId();
         const txJSON = tx.toJSON();

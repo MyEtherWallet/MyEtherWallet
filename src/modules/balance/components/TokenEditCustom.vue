@@ -165,11 +165,11 @@ const selectedToken = ref({});
 
 // computed
 const formattedCustomTokens = computed(() => {
-  return customTokens
-    ? customTokens.map(item => {
+  return customTokens.value
+    ? customTokens.value.map(item => {
         item.isCustom = true;
         // Check if token is in hiddenTokens
-        const isHidden = hiddenTokens.find(token => {
+        const isHidden = hiddenTokens.value.find(token => {
           return item.contract == token.address;
         });
         item.isHidden = isHidden !== undefined;
@@ -178,8 +178,8 @@ const formattedCustomTokens = computed(() => {
     : [];
 });
 const formattedTokens = computed(() => {
-  return tokensList
-    ? tokensList.reduce((arr, item) => {
+  return tokensList.value
+    ? tokensList.value.reduce((arr, item) => {
         if (item.contract.toLowerCase() !== MAIN_TOKEN_ADDRESS)
           arr.push(formatValues(item));
         return arr;
@@ -230,7 +230,7 @@ const formatValues = item => {
   ];
   newObj.token = item.symbol;
   newObj.address = item.contract;
-  newObj.tokenImg = item.img ? item.img : network.type.icon;
+  newObj.tokenImg = item.img ? item.img : network.value.type.icon;
   newObj.callToAction = item.isCustom
     ? [
         {
@@ -253,7 +253,7 @@ const addCustomToken = () => {
   emit('addToken');
 };
 const explorerAddr = addr => {
-  const networkType = network.type;
+  const networkType = network.value.type;
   const explorer = networkType.blockExplorerAddr;
   return explorer.replace('[[address]]', addr);
 };

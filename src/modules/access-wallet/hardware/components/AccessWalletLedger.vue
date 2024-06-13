@@ -139,7 +139,7 @@ const isMobile = computed(() => {
 
 // watch
 watch(
-  () => ledgerApp,
+  () => ledgerApp.value,
   () => {
     props.setPath(props.paths[0]);
   }

@@ -149,7 +149,6 @@ import { useWalletStore } from '@/core/store/wallet';
 import { useExternalStore } from '@/core/store/external';
 import { useRoute } from 'vue-router/composables';
 import { useStakewiseStore } from '../store';
-import { storeToRefs } from 'pinia';
 
 // emits
 const emit = defineEmits(['scroll', 'redeem-to-eth', 'set-max']);
@@ -162,12 +161,11 @@ const {
   sethBalance,
   removePendingTxs,
   removePendingTxsGoerli,
-  setStakeBalance
+  setStakeBalance,
+  stakewiseTxs
 } = useStakewiseStore();
 const { fiatValue } = useExternalStore();
 const route = useRoute();
-
-const { stakewiseTxs } = storeToRefs(useStakewiseStore());
 
 // props
 const props = defineProps({
@@ -186,10 +184,10 @@ const intervals = ref({});
 
 // computed
 const currencyName = computed(() => {
-  return network.type.currencyName;
+  return network.value.type.currencyName;
 });
 const ethvmSupport = computed(() => {
-  return network.type.isEthVMSupported.supported;
+  return network.value.type.isEthVMSupported.supported;
 });
 const enoughToCoverRedeem = computed(() => {
   if (!hasStaked.value && !hasPending.value) {
@@ -198,10 +196,13 @@ const enoughToCoverRedeem = computed(() => {
   if (!props.hasEnoughBalance) {
     return true;
   }
-  if (!BigNumber(rethBalance).gt(0) || !BigNumber(sethBalance).gt(0)) {
+  if (
+    !BigNumber(rethBalance.value).gt(0) ||
+    !BigNumber(sethBalance.value).gt(0)
+  ) {
     return false;
   }
-  if (BigNumber(balance).gt(props.txFee)) {
+  if (BigNumber(balance.value).gt(props.txFee)) {
     return false;
   }
   return true;
@@ -210,30 +211,34 @@ const linkUrl = computed(() => {
   return network.type.blockExplorerTX;
 });
 const hasPending = computed(() => {
-  const txList = isEthNetwork ? stakewiseTxs.ETH : stakewiseTxs.GOERLI;
+  const txList = isEthNetwork.value
+    ? stakewiseTxs.value.ETH
+    : stakewiseTxs.value.GOERLI;
   return txList.length > 0;
 });
 const formattedBalance = computed(() => {
-  return formatFloatingPointValue(sethBalance).value;
+  return formatFloatingPointValue(sethBalance.value).value;
 });
 const sethBalanceFiat = computed(() => {
-  return getFiatValue(BigNumber(sethBalance).times(fiatValue).toString());
+  return getFiatValue(
+    BigNumber(sethBalance.value).times(fiatValue.value).toString()
+  );
 });
 const seth2Contract = computed(() => {
-  return isEthNetwork ? SETH2_MAINNET_CONTRACT : SETH2_GOERLI_CONTRACT;
+  return isEthNetwork.value ? SETH2_MAINNET_CONTRACT : SETH2_GOERLI_CONTRACT;
 });
 const hasStaked = computed(() => {
   if (ethvmSupport.value) {
-    return BigNumber(sethBalance).gt(0);
+    return BigNumber(sethBalance.value).gt(0);
   }
-  return BigNumber(sethBalance).gt(0);
+  return BigNumber(sethBalance.value).gt(0);
 });
 
 // watch
 watch(
-  () => stakewiseTxs,
+  () => stakewiseTxs.value,
   newVal => {
-    const txList = isEthNetwork ? newVal.ETH : newVal.GOERLI;
+    const txList = isEthNetwork.value ? newVal.ETH : newVal.GOERLI;
     if (txList.length > 0) {
       txList.forEach(item => {
         fetcher(item.hash);
@@ -256,7 +261,9 @@ watch(
 );
 
 onMounted(() => {
-  const txList = isEthNetwork ? stakewiseTxs.ETH : stakewiseTxs.GOERLI;
+  const txList = isEthNetwork.value
+    ? stakewiseTxs.value.ETH
+    : stakewiseTxs.value.GOERLI;
   if (txList.length > 0) {
     txList.forEach(item => {
       fetcher(item.hash);
@@ -275,7 +282,7 @@ onBeforeUnmount(() => {
 // methods
 
 const executeSwap = () => {
-  emit('redeem-to-eth', 'seth', sethBalance);
+  emit('redeem-to-eth', 'seth', sethBalance.value);
 };
 const fetchBalance = () => {
   const contract = new web3.eth.Contract(sEthAbi, seth2Contract);
@@ -290,7 +297,7 @@ const checkHash = hash => {
 };
 const fetcher = hash => {
   intervals.value[hash] = setInterval(() => {
-    web3.eth.getTransactionReceipt(hash).then(res => {
+    web3.value.eth.getTransactionReceipt(hash).then(res => {
       if (res) {
         clearInterval(intervals.value[hash]);
         isEthNetwork ? removePendingTxs(hash) : removePendingTxsGoerli(hash);

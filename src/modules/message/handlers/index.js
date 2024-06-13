@@ -15,17 +15,19 @@ export default class SignAndVerifyMessage {
       identifier
     } = useWalletStore();
     try {
-      return web3.eth.sign(message, walletAddress).then(_signedMessage => {
-        const obj = {
-          address: `${walletAddress.value}`,
-          msg: message,
-          sig: _signedMessage,
-          version: '3',
-          signer: isHardware ? identifier : 'MEW'
-        };
-        const signature = JSON.stringify(obj, null, 2);
-        return signature;
-      });
+      return web3.value.eth
+        .sign(message, walletAddress.value)
+        .then(_signedMessage => {
+          const obj = {
+            address: `${walletAddress.value}`,
+            msg: message,
+            sig: _signedMessage,
+            version: '3',
+            signer: isHardware.value ? identifier.value : 'MEW'
+          };
+          const signature = JSON.stringify(obj, null, 2);
+          return signature;
+        });
     } catch (e) {
       throw ErrorList.SIGN_FAILED;
     }
@@ -42,7 +44,7 @@ export default class SignAndVerifyMessage {
       }
       sig[64] = sig[64] === 0 || sig[64] === 1 ? sig[64] + 27 : sig[64];
       if (json.version === '1') {
-        hash = web3.utils.sha3(json.msg);
+        hash = web3.value.utils.sha3(json.msg);
       }
       const pubKey = ecrecover(
         hash,

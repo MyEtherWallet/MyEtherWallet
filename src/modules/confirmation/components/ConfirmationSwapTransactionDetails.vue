@@ -161,12 +161,12 @@ const convertedFees = computed(() => {
 });
 const txFeeUSD = computed(() => {
   const feeETH = BigNumber(fromWei(props.txFee));
-  return getFiatValue(feeETH.times(fiatValue));
+  return getFiatValue(feeETH.times(fiatValue.value));
 });
 const summaryItems = computed(() => {
   const newArr = [
     'Exchange rate',
-    hasGasPriceOption ? 'Estimated fee' : 'Transaction fee'
+    hasGasPriceOption.value ? 'Estimated fee' : 'Transaction fee'
   ];
   if (props.isToNonEth) {
     newArr.unshift(`Receive ${props.toCurrency} to`);

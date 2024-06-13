@@ -11,7 +11,7 @@ export default async ({ payload, requestManager }, res, next) => {
   const ethCalls = new EthCalls(requestManager);
   const addr = payload.params[0].toLowerCase();
   let cached = {};
-  const storeKey = utils.sha3(`${network.type.name}-${addr}`);
+  const storeKey = utils.sha3(`${network.value.type.name}-${addr}`);
   if (!locstore.get(storeKey)) {
     cached = {
       nonce: '0x00',

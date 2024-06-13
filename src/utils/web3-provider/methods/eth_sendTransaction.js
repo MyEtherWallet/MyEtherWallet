@@ -17,7 +17,7 @@ export default async ({ payload, requestManager }, res, next) => {
   if (payload.method !== 'eth_sendTransaction') return next();
   const { contractToToken } = useExternalStore();
   const { gasPrice, network } = useGlobalStore();
-  const { wallet } = useWalletStore();
+  const { web3, instance, address, identifier } = useWalletStore();
   const tx = Object.assign({}, payload.params[0]);
   let confirmInfo;
   let toDetails;
@@ -38,7 +38,7 @@ export default async ({ payload, requestManager }, res, next) => {
     if (!(currency.name && currency.symbol))
       currency = contractToToken(MAIN_TOKEN_ADDRESS);
   }
-  tx.gasPrice = tx.gasPrice ? tx.gasPrice : BigNumber(gasPrice).toFixed();
+  tx.gasPrice = tx.gasPrice ? tx.gasPrice : BigNumber(gasPrice.value).toFixed();
   const localTx = Object.assign({}, tx);
   delete localTx['gas'];
   delete localTx['nonce'];
@@ -47,8 +47,8 @@ export default async ({ payload, requestManager }, res, next) => {
   const ethCalls = new EthCalls(requestManager);
   try {
     tx.nonce = !tx.nonce
-      ? await wallet.web3.eth.getTransactionCount(
-          wallet.instance.getAddressString()
+      ? await web3.value.eth.getTransactionCount(
+          instance.value.getAddressString()
         )
       : tx.nonce;
     if (tx.gasLimit) {
@@ -60,8 +60,8 @@ export default async ({ payload, requestManager }, res, next) => {
     res(e);
     return;
   }
-  tx.chainId = !tx.chainId ? network.type.chainID : tx.chainId;
-  tx.from = tx.from ? tx.from : wallet.address;
+  tx.chainId = !tx.chainId ? network.value.type.chainID : tx.chainId;
+  tx.from = tx.from ? tx.from : address.value;
   getSanitizedTx(tx)
     .then(_tx => {
       const event = confirmInfo
@@ -73,9 +73,9 @@ export default async ({ payload, requestManager }, res, next) => {
         ? [_tx, toDetails, currency]
         : [_tx, toDetails];
       if (
-        wallet.identifier === WALLET_TYPES.WEB3_WALLET ||
-        wallet.identifier === WALLET_TYPES.WALLET_CONNECT ||
-        wallet.identifier === WALLET_TYPES.MEW_WALLET
+        identifier.value === WALLET_TYPES.WEB3_WALLET ||
+        identifier.value === WALLET_TYPES.WALLET_CONNECT ||
+        identifier.value === WALLET_TYPES.MEW_WALLET
       ) {
         EventBus.$emit(event, params, _promiObj => {
           if (_promiObj.rejected) {
@@ -85,11 +85,11 @@ export default async ({ payload, requestManager }, res, next) => {
           setEvents(_promiObj, _tx);
           _promiObj
             .once('transactionHash', hash => {
-              if (wallet.instance !== null) {
+              if (instance.value !== null) {
                 const isTesting = locStore.get('mew-testing');
                 if (!isTesting) {
                   const storeKey = utils.sha3(
-                    `${network.type.name}-${wallet.instance
+                    `${network.value.type.name}-${instance.value
                       .getChecksumAddressString()
                       .toLowerCase()}`
                   );
@@ -120,7 +120,7 @@ export default async ({ payload, requestManager }, res, next) => {
             res(new Error('User rejected action'));
             return;
           }
-          const _promiObj = wallet.web3.eth.sendSignedTransaction(
+          const _promiObj = web3.value.eth.sendSignedTransaction(
             _response.rawTransaction
           );
           setEvents(_promiObj, _tx);
@@ -135,11 +135,11 @@ export default async ({ payload, requestManager }, res, next) => {
             })
             .once('transactionHash', hash => {
               txHash = hash;
-              if (wallet.instance !== null) {
+              if (instance.value !== null) {
                 const isTesting = locStore.get('mew-testing');
                 if (!isTesting) {
                   const storeKey = utils.sha3(
-                    `${network.type.name}-${wallet.instance
+                    `${network.value.type.name}-${instance.value
                       .getChecksumAddressString()
                       .toLowerCase()}`
                   );

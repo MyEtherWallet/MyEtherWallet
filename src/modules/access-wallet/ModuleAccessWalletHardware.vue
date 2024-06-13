@@ -677,9 +677,9 @@ const reset = () => {
  * Sets up switch address
  */
 const setupSwitchAddress = () => {
-  walletType.value = identifier;
-  if (identifier === WALLET_TYPES.LEDGER) {
-    ledgerBluetooth.value = ledgerBLE;
+  walletType.value = identifier.value;
+  if (identifier.value === WALLET_TYPES.LEDGER) {
+    ledgerBluetooth.value = ledgerBLE.value;
   }
   nextStep();
 };
@@ -892,10 +892,10 @@ const setHardwareWallet = wallet => {
   try {
     setWallet([wallet]);
     if (!props.switchAddress) {
-      if (wallet.identifier === WALLET_TYPES.LEDGER) {
+      if (wallet.identifier.value === WALLET_TYPES.LEDGER) {
         setLedgerBluetooth(ledgerBluetooth);
       }
-      trackWallet(wallet.identifier);
+      trackWallet(wallet.identifier.value);
       router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
     } else {
       reset();

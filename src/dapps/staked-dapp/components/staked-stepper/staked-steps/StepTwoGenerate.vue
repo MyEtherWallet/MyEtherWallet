@@ -90,7 +90,7 @@ const link = ref({});
 
 // computed
 const currencyName = computed(() => {
-  return network.type.currencyName;
+  return network.value.type.currencyName;
 });
 const buttonText = computed(() => {
   return downloadedKeystore.value
@@ -112,7 +112,7 @@ const setAddress = (addr, isValidAddress) => {
  * Create Eth2 Address
  */
 const createAddress = async () => {
-  eth2Address.value = address;
+  eth2Address.value = address.value;
   isValidAddress.value = false;
 };
 /**

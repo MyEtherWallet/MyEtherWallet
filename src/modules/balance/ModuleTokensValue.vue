@@ -99,16 +99,16 @@ const showPopup = ref(false);
 
 // computed
 const canBuy = computed(() => {
-  return network.type.canBuy;
+  return network.value.type.canBuy;
 });
 const tokenTitle = computed(() => {
   return `My Token${tokenCount.value !== 1 ? 's' : ''}`;
 });
 const totalTokenValues = computed(() => {
-  return getFiatValue(totalTokenFiatValue);
+  return getFiatValue(totalTokenFiatValue.value);
 });
 const tokens = computed(() => {
-  const tokens = tokensList
+  const locTokens = tokensList.value
     .reduce((arr, token) => {
       if (token && token.balance.gt(toBN(0))) {
         arr.push(token);
@@ -116,13 +116,13 @@ const tokens = computed(() => {
       return arr;
     }, [])
     .slice(0, 5);
-  return tokens;
+  return locTokens;
 });
 const moreTokensCount = computed(() => {
   return tokenCount.value - tokens.value.length;
 });
 const showTokens = computed(() => {
-  return !loadingWalletInfo;
+  return !loadingWalletInfo.value;
 });
 const getText = computed(() => {
   if (showTokens.value) {
@@ -135,10 +135,10 @@ const getText = computed(() => {
   return '';
 });
 const tokenCount = computed(() => {
-  if (tokensList.length > 0 && tokensList[0].balance.eq(toBN(0))) {
-    return tokensList.length - 1;
+  if (tokensList.value.length > 0 && tokensList.value[0].balance.eq(toBN(0))) {
+    return tokensList.value.length - 1;
   }
-  return tokensList.length;
+  return tokensList.value.length;
 });
 // methods
 const handleTokensPopup = () => {

@@ -101,7 +101,6 @@ import TheWalletHeader from './components-wallet/TheWalletHeader';
 import TheWalletFooter from './components-wallet/TheWalletFooter';
 import ModuleConfirmation from '@/modules/confirmation/ModuleConfirmation';
 import ModulePaperWallet from '@/modules/balance/ModulePaperWallet.vue';
-import { storeToRefs } from 'pinia';
 
 const INTERVAL = 14000;
 
@@ -119,7 +118,8 @@ const {
   instance,
   setWallet,
   setTokens,
-  setBlockNumber
+  setBlockNumber,
+  address
 } = useWalletStore();
 const {
   darkMode,
@@ -128,10 +128,15 @@ const {
   updateGasPrice,
   isEIP1559SupportedNetwork,
   setNetwork,
-  setValidNetwork
+  setValidNetwork,
+  network
 } = useGlobalStore();
-const { selectedEIP6963Provider, setNetworkTokens, setTokenAndEthBalance } =
-  useExternalStore();
+const {
+  selectedEIP6963Provider,
+  setNetworkTokens,
+  setTokenAndEthBalance,
+  coinGeckoTokens
+} = useExternalStore();
 const {
   shownPkSurveyCounter,
   setPkSurvey,
@@ -142,19 +147,15 @@ const vuetify = useVuetify();
 const { trackSurvey } = useAmplitude();
 const router = useRouter();
 
-const { coinGeckoTokens } = storeToRefs(useExternalStore());
-const { address } = storeToRefs(useWalletStore());
-const { network } = storeToRefs(useGlobalStore());
-
 // events
 const emit = defineEmits(['newNetwork']);
 
 // computed
 const showSurvey = computed(() => {
-  const isPrivKey = identifier === WALLET_TYPES.PRIV_KEY;
+  const isPrivKey = identifier.value === WALLET_TYPES.PRIV_KEY;
   const userClosed = !tempClose.value;
-  const userAnswered = !pkSurveyShown;
-  const shownTwice = pkSurveyShownCounter > 2;
+  const userAnswered = !pkSurveyShown.value;
+  const shownTwice = pkSurveyShownCounter.value > 2;
   return isPrivKey && userClosed && userAnswered && !shownTwice && withinDate;
 });
 
@@ -181,22 +182,22 @@ watch(
 watch(
   () => network,
   (newVal, oldVal) => {
-    if (online && !isOfflineApp) {
-      web3.eth.clearSubscriptions();
-      identifier === WALLET_TYPES.WEB3_WALLET
-        ? setWeb3Instance(selectedEIP6963Provider)
+    if (online.value && !isOfflineApp.value) {
+      web3.value.eth.clearSubscriptions();
+      identifier.value === WALLET_TYPES.WEB3_WALLET
+        ? setWeb3Instance(selectedEIP6963Provider.value)
         : setWeb3Instance();
       setup();
-      if (identifier !== WALLET_TYPES.WEB3_WALLET) {
+      if (identifier.value !== WALLET_TYPES.WEB3_WALLET) {
         setTokensAndBalance();
       }
 
       if (
-        (identifier === WALLET_TYPES.WALLET_CONNECT ||
-          identifier === WALLET_TYPES.MEW_WALLET) &&
-        newVal.type.chainID !== instance.connection.chainId
+        (identifier.value === WALLET_TYPES.WALLET_CONNECT ||
+          identifier.value === WALLET_TYPES.MEW_WALLET) &&
+        newVal.type.chainID !== instance.value.connection.chainId
       ) {
-        instance.connection.sendAsync(
+        instance.value.connection.sendAsync(
           {
             method: 'wallet_switchEthereumChain',
             params: [{ chainId: newVal.type.chainID.toString(16) }]
@@ -208,12 +209,14 @@ watch(
                 {},
                 WARNING
               );
-              instance.connection.switchEthereumChain(oldVal.type.chainID);
+              instance.value.connection.switchEthereumChain(
+                oldVal.type.chainID
+              );
 
               setTimeout(() => {
                 setNetwork({
                   network: oldVal,
-                  walletType: identifier
+                  walletType: identifier.value
                 });
                 setWeb3Instance();
               }, 1000);
@@ -239,7 +242,7 @@ onMounted(() => {
     shownPkSurveyCounter();
     trackSurvey('Shown');
   }
-  vuetify.theme.dark = darkMode;
+  vuetify.theme.dark = darkMode.value;
   EventBus.$on('openPaperWallet', () => {
     showPaperWallet.value = true;
     // change later
@@ -248,34 +251,34 @@ onMounted(() => {
     });
   });
 
-  if (online && !isOfflineApp) {
+  if (online.value && !isOfflineApp.value) {
     setup();
     setTokenAndEthBalance();
 
-    if (identifier === WALLET_TYPES.WEB3_WALLET) {
+    if (identifier.value === WALLET_TYPES.WEB3_WALLET) {
       web3Listeners();
     }
     checkNetwork();
   }
 
   if (
-    identifier === WALLET_TYPES.WALLET_CONNECT ||
-    identifier === WALLET_TYPES.WALLET_LINK
+    identifier.value === WALLET_TYPES.WALLET_CONNECT ||
+    identifier.value === WALLET_TYPES.WALLET_LINK
   ) {
-    instance.connection.on('session_update', () => {
-      instance.connection.sendAsync(
+    instance.value.connection.on('session_update', () => {
+      instance.value.connection.sendAsync(
         { method: 'eth_requestAccounts' },
         (err, res) => {
-          if (res[0].toLowerCase() !== address.toLowerCase()) {
+          if (res[0].toLowerCase() !== address.value.toLowerCase()) {
             const newWallet = new HybridWalletInterface(
               sanitizeHex(res[0]),
-              instance.isHardware,
-              identifier,
-              instance.txSigner,
-              instance.msgSigner,
-              instance.connection,
-              instance.errorHandler,
-              instance.meta
+              instance.value.isHardware,
+              identifier.value,
+              instance.value.txSigner,
+              instance.value.msgSigner,
+              instance.value.connection,
+              instance.value.errorHandler,
+              instance.value.meta
             );
             setWallet([newWallet]);
           }
@@ -287,8 +290,8 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   EventBus.$off('openPaperWallet');
-  if (online && !isOfflineApp) web3.eth.clearSubscriptions();
-  const provider = selectedEIP6963Provider;
+  if (online.value && !isOfflineApp.value) web3.value.eth.clearSubscriptions();
+  const provider = selectedEIP6963Provider.value;
   if (provider && provider.removeListener instanceof Function) {
     if (findAndSetNetwork instanceof Function)
       provider.removeListener('chainChanged', findAndSetNetwork);
@@ -320,7 +323,10 @@ const setup = () => {
 };
 
 const checkNetwork = async () => {
-  const matched = await matchNetwork(network.value.type.chainID, identifier);
+  const matched = await matchNetwork(
+    network.value.type.chainID,
+    identifier.value
+  );
   setValidNetwork(matched);
 };
 
@@ -335,7 +341,7 @@ const processNetworkTokens = () => {
 };
 
 const setTokensAndBalance = () => {
-  if (coinGeckoTokens?.get) {
+  if (coinGeckoTokens.value?.get) {
     setTokenAndEthBalance();
   } else {
     setTokens([]);
@@ -353,12 +359,12 @@ const checkAndSetBaseFee = baseFee => {
 
 const subscribeToBlockNumber = debounce(function () {
   clearInterval(manualBlockSubscription);
-  web3.eth.getBlockNumber().then(bNumber => {
+  web3.value.eth.getBlockNumber().then(bNumber => {
     setBlockNumber(bNumber);
-    web3.eth
+    web3.value.eth
       .subscribe('newBlockHeaders')
       .on('data', res => {
-        if (isEIP1559SupportedNetwork && res.baseFeePerGas) {
+        if (isEIP1559SupportedNetwork.value && res.baseFeePerGas) {
           checkAndSetBaseFee(toBN(res.baseFeePerGas));
         }
         setBlockNumber(res.number);
@@ -379,9 +385,9 @@ const subscribeToBlockNumber = debounce(function () {
 
 const manualBlockSub = () => {
   manualBlockSubscription = setInterval(() => {
-    web3.eth.getBlockNumber().then(bNumber => {
+    web3.value.eth.getBlockNumber().then(bNumber => {
       setBlockNumber(bNumber);
-      web3.eth.getBlock(bNumber).then(block => {
+      web3.value.eth.getBlock(bNumber).then(block => {
         if (block) {
           checkAndSetBaseFee(block.baseFeePerGas);
         }
@@ -391,22 +397,25 @@ const manualBlockSub = () => {
 };
 
 const findAndSetNetwork = async () => {
-  if (selectedEIP6963Provider && identifier === WALLET_TYPES.WEB3_WALLET) {
-    const networkId = await selectedEIP6963Provider?.request({
+  if (
+    selectedEIP6963Provider.value &&
+    identifier.value === WALLET_TYPES.WEB3_WALLET
+  ) {
+    const networkId = await selectedEIP6963Provider.value?.request({
       method: 'eth_chainId'
     });
 
     const foundNetwork = Object.values(nodeList).find(item => {
       if (toBN(networkId).eq(toBN(item[0].type.chainID))) return item;
     });
-    if (selectedEIP6963Provider) {
+    if (selectedEIP6963Provider.value) {
       try {
         if (foundNetwork) {
           await setNetwork({
             network: foundNetwork[0],
-            walletType: identifier
+            walletType: identifier.value
           });
-          await setWeb3Instance(selectedEIP6963Provider);
+          await setWeb3Instance(selectedEIP6963Provider.value);
           setTokensAndBalance();
           setValidNetwork(true);
           emit('newNetwork');
@@ -434,13 +443,13 @@ const findAndSetNetwork = async () => {
 
 const setWeb3Account = acc => {
   const wallet = new Web3Wallet(acc[0]);
-  setWallet([wallet, selectedEIP6963Provider]);
+  setWallet([wallet, selectedEIP6963Provider.value]);
 };
 
 const web3Listeners = () => {
-  if (selectedEIP6963Provider?.on) {
-    selectedEIP6963Provider.on('chainChanged', findAndSetNetwork);
-    selectedEIP6963Provider.on('accountsChanged', setWeb3Account);
+  if (selectedEIP6963Provider.value?.on) {
+    selectedEIP6963Provider.value.on('chainChanged', findAndSetNetwork);
+    selectedEIP6963Provider.value.on('accountsChanged', setWeb3Account);
   }
 };
 </script>

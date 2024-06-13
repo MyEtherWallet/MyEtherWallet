@@ -61,20 +61,20 @@ const currentSlide = ref(0);
 // methods
 const openMewWallet = () => {
   $amplitude.track('WalletSlideMEWWallet', {
-    network: network.type.name
+    network: network.value.type.name
   });
   window.open('https://download.mewwallet.com/?source=mew_web', '_blank');
 };
 
 const trackEnkrypt = () => {
   $amplitude.track('WalletSlideEnkrypt', {
-    network: network.type.name
+    network: network.value.type.name
   });
 };
 
 const trackHardware = () => {
   $amplitude.track('WalletSlideHardware', {
-    network: network.type.name
+    network: network.value.type.name
   });
 };
 </script>

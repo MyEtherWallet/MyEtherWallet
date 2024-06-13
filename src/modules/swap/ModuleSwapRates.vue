@@ -68,7 +68,6 @@
 
 <script>
 import { toWei } from 'web3-utils';
-import { storeToRefs } from 'pinia';
 const STATIC_PAIRS = [
   {
     toT: {
@@ -167,11 +166,9 @@ import { useRoute, useRouter } from 'vue-router/composables';
 // injections/use
 const { trackDashboardAmplitude } = useAmplitude();
 const { swapRates, setSwapRates } = useWalletStore();
-const { isEthNetwork, network } = useGlobalStore();
+const { isEthNetwork, network, web3 } = useGlobalStore();
 const router = useRouter();
 const route = useRoute();
-
-const { web3 } = storeToRefs(useGlobalStore());
 
 // props
 defineProps({
@@ -191,8 +188,8 @@ const showTokenIssue = computed(() => {
   return (error.value || !hasSwapRates.value) && !loading.value;
 });
 const hasSwapRates = computed(() => {
-  if (swapRates) {
-    return swapRates.some(item => {
+  if (swapRates.value) {
+    return swapRates.value.some(item => {
       return item.rate;
     });
   }
@@ -203,20 +200,20 @@ const hasSwapRates = computed(() => {
 watch(
   () => web3,
   newVal => {
-    setSwapHandler(newVal, network.type.name);
+    setSwapHandler(newVal, network.value.type.name);
   }
 );
 
 // mounted
 onMounted(() => {
-  setSwapHandler(web3, network.type.name);
+  setSwapHandler(web3.value, network.value.type.name);
 });
 
 const setSwapHandler = val => {
-  if (!isEthNetwork) return;
-  swapHandler.value = new handlerSwap(val, network.type.name);
-  loading.value = swapRates.length === 0;
-  if (swapRates.length !== 0) return;
+  if (!isEthNetwork.value) return;
+  swapHandler.value = new handlerSwap(val, network.value.type.name);
+  loading.value = swapRates.value.length === 0;
+  if (swapRates.value.length !== 0) return;
   fetchRates();
 };
 const fetchRates = () => {

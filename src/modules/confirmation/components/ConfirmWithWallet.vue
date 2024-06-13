@@ -52,7 +52,7 @@ const bodyText = computed(() => {
   if (props.error !== '') return props.error;
   return `Approve ${props.txLength} ${
     props.txLength > 1 ? 'transactions' : 'transaction'
-  } on ${instance.meta.name}.`;
+  } on ${instance.value.meta.name}.`;
 });
 </script>
 <style lang="scss" scoped>

@@ -230,7 +230,7 @@ const setInputValue = debounce((inputVal, idx) => {
     symbolLengthTooLong.value = '';
     let foundSymbol = false;
 
-    customTokens.concat(tokensList).find(token => {
+    customTokens.value.concat(tokensList.value).find(token => {
       if (inputVal === token.symbol) {
         foundSymbol = true;
         return;
@@ -323,8 +323,8 @@ const next = () => {
  * sets the contract address that user inputs
  * (index 0 of token data)
  */
-const setContractAddress = address => {
-  contractAddress.value = address;
+const setContractAddress = addr => {
+  contractAddress.value = addr;
 };
 /**
  * checks if the contract address is valid
@@ -332,7 +332,9 @@ const setContractAddress = address => {
  * otherwise it will throw toast error
  */
 const checkIfValidAddress = async () => {
-  const codeHash = await web3.eth.getCode(contractAddress.value.toLowerCase());
+  const codeHash = await web3.value.eth.getCode(
+    contractAddress.value.toLowerCase()
+  );
   if (
     contractAddress.value &&
     isAddress(contractAddress.value) &&
@@ -352,7 +354,7 @@ const checkIfValidAddress = async () => {
  */
 const checkIfTokenExistsAlready = () => {
   let foundToken = false;
-  customTokens.concat(tokensList).find(token => {
+  customTokens.value.concat(tokensList.value).find(token => {
     if (contractAddress.value.toLowerCase() === token.contract?.toLowerCase()) {
       foundToken = true;
     }
@@ -374,13 +376,13 @@ const checkIfTokenExistsAlready = () => {
  * if it enters the catch then will just assign contract address.
  */
 const findTokenInfo = async () => {
-  const contract = new web3.eth.Contract(
+  const contract = new web3.value.eth.Contract(
     abiERC20,
     contractAddress.value.toLowerCase()
   );
   token.value = contractToToken(contractAddress.value) || {};
   try {
-    const balance = await contract.methods.balanceOf(address).call(),
+    const balance = await contract.methods.balanceOf(address.value).call(),
       decimals = await contract.methods.decimals().call();
     if (token.value) {
       const denominator = new BigNumber(10).pow(decimals);

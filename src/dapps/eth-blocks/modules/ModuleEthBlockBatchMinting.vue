@@ -148,12 +148,12 @@ const BlockResultComponent = defineAsyncComponent(() =>
 );
 // injections/use
 const { openBuySell } = useBuySell();
-const { network, gasPrice, gasPriceByType, getFiatValue } = useGlobalStore();
+const { network, gasPrice, gasPriceByType, getFiatValue, gasPriceType } =
+  useGlobalStore();
 const { web3, address, balance } = useWalletStore();
 const { emptyCart } = useEthBlocksTxsStore();
 const { fiatValue } = useExternalStore();
 
-const { gasPriceType } = storeToRefs(useGlobalStore());
 const { cart } = storeToRefs(useEthBlocksTxsStore());
 
 // data
@@ -169,7 +169,7 @@ const gasPriceInterval = ref(0);
 
 // computed
 const notEnoughMessage = computed(() => {
-  return `Not enough ${network.type.name} to mint. `;
+  return `Not enough ${network.value.type.name} to mint. `;
 });
 const totalAvailable = computed(() => {
   return blocks.value.filter(item => {
@@ -187,7 +187,7 @@ const totalMintPrice = computed(() => {
 });
 const totalMintPriceFiat = computed(() => {
   const value = getFiatValue(
-    BigNumber(totalMintPrice.value).times(fiatValue).toFixed(2)
+    BigNumber(totalMintPrice.value).times(fiatValue.value).toFixed(2)
   );
   return value;
 });
@@ -197,7 +197,7 @@ const totalNetworkFee = computed(() => {
 });
 const totalNetworkFiatFee = computed(() => {
   const value = getFiatValue(
-    BigNumber(totalNetworkFee.value).times(fiatValue).toFixed(2)
+    BigNumber(totalNetworkFee.value).times(fiatValue.value).toFixed(2)
   );
   return value;
 });
@@ -209,41 +209,41 @@ const totalTransactionPrice = computed(() => {
 });
 const totalTransactionFiatPrice = computed(() => {
   const value = getFiatValue(
-    BigNumber(totalTransactionPrice.value).times(fiatValue).toFixed(2)
+    BigNumber(totalTransactionPrice.value).times(fiatValue.value).toFixed(2)
   );
   return value;
 });
 const blockCount = computed(() => {
-  const cart = cart.ETH;
-  return cart.length;
+  const locCart = cart.value.ETH;
+  return locCart.length;
 });
 const pluralizeBlockCount = computed(() => {
-  const cart = cart.ETH;
-  return cart.length > 1 ? 'Blocks' : 'Block';
+  const locCart = cart.value.ETH;
+  return locCart.length > 1 ? 'Blocks' : 'Block';
 });
 const isCartEmpty = computed(() => {
-  const cart = cart.ETH;
-  return cart.length >= 1 ? false : true;
+  const locCart = cart.value.ETH;
+  return locCart.length >= 1 ? false : true;
 });
 const hasEnoughEth = computed(() => {
   const totalPrice = toBN(gasLimit.value)
     .mul(toBN(localGasPrice.value))
     .add(toBN(toWei(totalMintPrice.value)));
-  return totalPrice.lt(balance);
+  return totalPrice.lt(balance.value);
 });
 
 // watch
 watch(
-  () => cart,
+  () => cart.value,
   () => {
     fetchBlocks();
   },
   { deep: true }
 );
 watch(
-  () => gasPriceType,
+  () => gasPriceType.value,
   () => {
-    localGasPrice.value = gasPriceByType(gasPriceType);
+    localGasPrice.value = gasPriceByType(gasPriceType.value);
   }
 );
 
@@ -251,9 +251,9 @@ watch(
 onMounted(() => {
   const timer = 5 * 60 * 1000;
   fetchBlocks();
-  localGasPrice.value = gasPrice;
+  localGasPrice.value = gasPrice.value;
   gasPriceInterval.value = setInterval(() => {
-    localGasPrice.value = gasPrice;
+    localGasPrice.value = gasPrice.value;
   }, timer);
 });
 
@@ -270,16 +270,21 @@ onUnmounted(() => {
 const fetchBlocks = async () => {
   isLoading.value = true;
   const newResultArray = [];
-  const cart = cart.ETH;
+  const locCart = cart.value.ETH;
   try {
     const foundBlocks = [];
-    for (let index = 0; index < cart.length; index++) {
+    for (let index = 0; index < locCart.length; index++) {
       const found = blockCache[cart[index]];
       if (found) {
         foundBlocks.push(found);
         continue;
       }
-      const block = new handlerBlock(web3, network, cart[index], address);
+      const block = new handlerBlock(
+        web3.value,
+        network.value,
+        locCart[index],
+        address.value
+      );
       newResultArray.push(
         block.getBlock().then(() => {
           return block;
@@ -359,7 +364,7 @@ const setupMulticall = async () => {
           batchMintData.value = blocks.value.map(item => {
             return item.mintData.data;
           });
-          mintContract.value = new web3.eth.Contract(
+          mintContract.value = new web3.value.eth.Contract(
             abi,
             blocks.value[0].mintData.to
           );
@@ -403,14 +408,14 @@ const mintBlocks = async () => {
   mintContract.value.methods
     .multicall(batchMintData.value)
     .send({
-      from: address,
+      from: address.value,
       gas: gasLimit,
       gasPrice: localGasPrice.value,
       value: totalMintValue.value
     })
     .on('transactionHash', () => {
-      const network = 'ETH';
-      emptyCart(network);
+      const locNetwork = 'ETH';
+      emptyCart(locNetwork);
       isLoading.value = false;
     })
     .on('error', err => {

@@ -276,7 +276,7 @@ const pathInput = ref(null);
  */
 const filteredCustomPaths = computed(() => {
   if (props.disableCustomPaths) return [];
-  return paths.filter(path => {
+  return paths.value.filter(path => {
     if (searchValue.value) {
       const pathName = path.name.toLowerCase();
       const pathVal = path.value.toLowerCase();
@@ -291,7 +291,7 @@ const filteredCustomPaths = computed(() => {
  */
 const filteredPaths = computed(() => {
   return props.passedPaths.filter(path => {
-    if (!paths.find(e => e.value === path.value)) {
+    if (!paths.value.find(e => e.value === path.value)) {
       if (searchValue.value) {
         const pathName = path.name.toLowerCase();
         const pathVal = path.value.toLowerCase();

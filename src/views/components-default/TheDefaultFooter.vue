@@ -317,123 +317,123 @@ const year = new Date().getFullYear();
 // methods
 const trackAboutUs = () => {
   $amplitude.track(FOOTER_EVENTS.footerAboutUs, {
-    network: network.type.name
+    network: network.value.type.name
   });
 };
 const trackCareers = () => {
   $amplitude.track(FOOTER_EVENTS.footerCareers, {
-    network: network.type.name
+    network: network.value.type.name
   });
 };
 const trackHowItWorks = () => {
   $amplitude.track(FOOTER_EVENTS.footerHowItWorks, {
-    network: network.type.name
+    network: network.value.type.name
   });
 };
 const trackTeam = () => {
   $amplitude.track(FOOTER_EVENTS.footerTeam, {
-    network: network.type.name
+    network: network.value.type.name
   });
 };
 const trackAdvertiseWithUs = () => {
   $amplitude.track(FOOTER_EVENTS.footerAdvertiseWithUs, {
-    network: network.type.name
+    network: network.value.type.name
   });
 };
 const trackPrivacy = () => {
   $amplitude.track(FOOTER_EVENTS.footerPrivacy, {
-    network: network.type.name
+    network: network.value.type.name
   });
 };
 const trackTerms = () => {
   $amplitude.track(FOOTER_EVENTS.footerTerms, {
-    network: network.type.name
+    network: network.value.type.name
   });
 };
 const trackBugBounty = () => {
   $amplitude.track(FOOTER_EVENTS.footerBugBounty, {
-    network: network.type.name
+    network: network.value.type.name
   });
 };
 const trackMobile = () => {
   $amplitude.track(FOOTER_EVENTS.footerMobile, {
-    network: network.type.name
+    network: network.value.type.name
   });
 };
 const trackEnkrypt = () => {
   $amplitude.track(FOOTER_EVENTS.footerEnkrypt, {
-    network: network.type.name
+    network: network.value.type.name
   });
 };
 const trackPortfolio = () => {
   $amplitude.track(FOOTER_EVENTS.footerPortfolio, {
-    network: network.type.name
+    network: network.value.type.name
   });
 };
 const trackEthvm = () => {
   $amplitude.track(FOOTER_EVENTS.footerEthvm, {
-    network: network.type.name
+    network: network.value.type.name
   });
 };
 const trackMewtopia = () => {
   $amplitude.track(FOOTER_EVENTS.footerMewtopia, {
-    network: network.type.name
+    network: network.value.type.name
   });
 };
 const trackPressKit = () => {
   $amplitude.track(FOOTER_EVENTS.footerPressKit, {
-    network: network.type.name
+    network: network.value.type.name
   });
 };
 const trackHelpCenter = () => {
   $amplitude.track(FOOTER_EVENTS.footerHelpCenter, {
-    network: network.type.name
+    network: network.value.type.name
   });
 };
 const trackCustomerSupport = () => {
   $amplitude.track(FOOTER_EVENTS.footerCustomerSupport, {
-    network: network.type.name
+    network: network.value.type.name
   });
 };
 const trackSecurityPolicy = () => {
   $amplitude.track(FOOTER_EVENTS.footerSecurityPolicy, {
-    network: network.type.name
+    network: network.value.type.name
   });
 };
 const trackVerifyMessage = () => {
   $amplitude.track(FOOTER_EVENTS.footerVerifyMessage, {
-    network: network.type.name
+    network: network.value.type.name
   });
 };
 const trackConvertUnits = () => {
   $amplitude.track(FOOTER_EVENTS.footerConvertUnits, {
-    network: network.type.name
+    network: network.value.type.name
   });
 };
 const trackSendOfflineHelper = () => {
   $amplitude.track(FOOTER_EVENTS.footerSendOfflineHelper, {
-    network: network.type.name
+    network: network.value.type.name
   });
 };
 const trackEthDonation = () => {
   $amplitude.track(FOOTER_EVENTS.footerEthDonation, {
-    network: network.type.name
+    network: network.value.type.name
   });
 };
 const trackBtcDonation = () => {
   $amplitude.track(FOOTER_EVENTS.footerBtcDonation, {
-    network: network.type.name
+    network: network.value.type.name
   });
 };
 const trackCoinGecko = () => {
   $amplitude.track(FOOTER_EVENTS.footerCoinGecko, {
-    network: network.type.name
+    network: network.value.type.name
   });
 };
 const trackJoinMewCommunity = item => {
   $amplitude.track(FOOTER_EVENTS.footerJoinMewCommunity, {
     item: item,
-    network: network.type.name
+    network: network.value.type.name
   });
 };
 </script>

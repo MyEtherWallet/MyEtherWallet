@@ -102,7 +102,7 @@ const rentPrice = () => {
     return props.getRentPrice(duration).then(resp => {
       if (resp) {
         rentPriceETH.value = formatFloatingPointValue(resp.eth).value;
-        rentPriceUSD.value = getFiatValue()(resp.usd);
+        rentPriceUSD.value = getFiatValue(resp.usd);
       }
     });
   }

@@ -59,10 +59,10 @@ const checkPendingInterval = ref(false);
  * @returns {boolean}
  */
 const hasPendingTxs = computed(() => {
-  return getAllEthBlocksTxs.length > 0;
+  return getAllEthBlocksTxs.value.length > 0;
 });
 const identifyNetwork = computed(() => {
-  return cart.ETH;
+  return cart.value.ETH;
 });
 const tabs = computed(() => {
   return [
@@ -146,8 +146,8 @@ const setCheckPendingInterval = () => {
   clearInterval(checkPendingInterval.value);
   checkPendingInterval.value = setInterval(() => {
     if (hasPendingTxs.value) {
-      getAllEthBlocksTxs
-        .filter(i => i.network === network.type.name)
+      getAllEthBlocksTxs.value
+        .filter(i => i.network === network.value.type.name)
         .forEach(i => {
           checkTx(i.hash);
         });
@@ -164,13 +164,13 @@ const setCheckPendingInterval = () => {
  */
 const checkTx = txHash => {
   if (txHash) {
-    web3.eth.getTransactionReceipt(txHash).then(receipt => {
+    web3.value.eth.getTransactionReceipt(txHash).then(receipt => {
       if (receipt) {
         const _block = {
           hash: txHash
         };
         deleteEthBlockTx(_block);
-        if (getAllEthBlocksTxs.length === 0) {
+        if (getAllEthBlocksTxs.value.length === 0) {
           clearInterval(checkPendingInterval.value);
         }
       }

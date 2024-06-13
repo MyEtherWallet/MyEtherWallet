@@ -236,7 +236,6 @@ import { useWalletStore } from '@/core/store/wallet';
 
 import { useRouter } from 'vue-router/composables';
 import { useEthBlocksTxsStore } from '../store';
-import { storeToRefs } from 'pinia';
 
 const BlockInfo = defineAsyncComponent(() =>
   import('../components/BlockInfo.vue')
@@ -253,13 +252,10 @@ const BlocksLoading = defineAsyncComponent(() =>
 
 // injections/use
 const { trackDapp } = useAmplitude();
-const { isTestNetwork, gasPrice } = useGlobalStore();
-const { web3, balanceInWei } = useWalletStore();
+const { isTestNetwork, gasPrice, network } = useGlobalStore();
+const { web3, balanceInWei, address } = useWalletStore();
 const { getEthBlockTx } = useEthBlocksTxsStore();
 const router = useRouter();
-
-const { network } = storeToRefs(useGlobalStore());
-const { address } = storeToRefs(useWalletStore());
 
 // props
 const props = defineProps({
@@ -288,7 +284,7 @@ const hasEnoughEth = computed(() => {
     alert.value === BLOCK_ALERT.OWNED ||
     alert.value === BLOCK_ALERT.AVAILABLE
   ) {
-    return !toBN(balanceInWei).sub(toBN(estimatedTotal.value)).isNeg();
+    return !toBN(balanceInWei.value).sub(toBN(estimatedTotal.value)).isNeg();
   }
   return true;
 });
@@ -299,7 +295,7 @@ const estimatedTotal = computed(() => {
   ) {
     const gasLimit =
       alert.value === BLOCK_ALERT.OWNED ? MIN_GAS_TRANSFER : MIN_GAS_MINT;
-    const txFee = toBN(gasLimit).mul(toBN(gasPrice));
+    const txFee = toBN(gasLimit).mul(toBN(gasPrice.value));
     return alert.value === BLOCK_ALERT.OWNED
       ? txFee.toString()
       : txFee.add(toBN(blockHandler.value.mintPrice)).toString();
@@ -334,7 +330,7 @@ const alert = computed(() => {
     return BLOCK_ALERT.RESERVED;
   }
   if (!loading.value && blockHandler.value.hasOwner) {
-    return address === blockHandler.value.owner
+    return address.value === blockHandler.value.owner
       ? BLOCK_ALERT.OWNED
       : BLOCK_ALERT.NOT_AVAILABLE;
   }
@@ -451,7 +447,7 @@ watch(
  * Update HandelrBlockInfo on network change and fetch data
  */
 watch(
-  () => network,
+  () => network.value,
   newVal => {
     if (newVal) {
       blockHandler.value.setNetwork(newVal);
@@ -464,7 +460,7 @@ watch(
  * Update HandelrBlockInfo on network change and fetch data
  */
 watch(
-  () => address,
+  () => address.value,
   newVal => {
     if (newVal) {
       blockHandler.value.setAddress(newVal);
@@ -479,7 +475,7 @@ watch(
  * if !newVal - refetch block info
  */
 watch(
-  () => hasPendingTx,
+  () => hasPendingTx.value,
   (newVal, oldVal) => {
     /* New Hash was asigned */ {
       if (newVal && newVal !== oldVal) {
@@ -502,10 +498,10 @@ onMounted(() => {
    */
   if (validBlockNumber(props.props.blockRef)) {
     blockHandler.value = new handlerBlock(
-      web3,
-      network,
+      web3.value,
+      network.value,
       props.props.blockRef,
-      address
+      address.value
     );
     resetBlock();
   } else {
@@ -539,7 +535,7 @@ const isEven = _value => {
  */
 const mintBlock = () => {
   trackDapp('ethBlocksMint');
-  blockHandler.value.mintBlock(balanceInWei, gasPrice);
+  blockHandler.value.mintBlock(balanceInWei.value, gasPrice.value);
 };
 
 /**
@@ -563,7 +559,7 @@ const closeSendOverlay = () => {
  */
 const sendBlock = value => {
   trackDapp('ethBlocksSendBlock');
-  blockHandler.value.transferBlock(value, balanceInWei, gasPrice);
+  blockHandler.value.transferBlock(value, balanceInWei.value, gasPrice.value);
 };
 </script>
 

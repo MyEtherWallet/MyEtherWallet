@@ -1,4 +1,5 @@
 import web3 from 'web3';
+import { isHexStrict, isAddress } from 'web3-utils';
 import { ROOTSTOCK } from '@/utils/networks/types';
 import {
   toChecksumAddress as toChecksumAddr,
@@ -8,7 +9,7 @@ import { useGlobalStore } from '@/core/store/global';
 
 const isAddress = address => {
   const { network } = useGlobalStore();
-  const chainId = network.type.chainID;
+  const chainId = network.value.type.chainID;
 
   if (chainId === ROOTSTOCK.chainID) {
     // check if it has the basic requirements of an address
@@ -26,13 +27,11 @@ const isAddress = address => {
     return isValidChecksumAddress(address, chainId);
   }
 
-  return (
-    address && web3.utils.isHexStrict(address) && web3.utils.isAddress(address)
-  );
+  return address && isHexStrict(address) && isAddress(address);
 };
 const toChecksumAddress = address => {
   const { network } = useGlobalStore();
-  const chainId = network.type.chainID;
+  const chainId = network.value.type.chainID;
   // Use EIP-1191 Address Checksum if its Rootstock network
   if (chainId === ROOTSTOCK.chainID) {
     return toChecksumAddr(address, chainId);

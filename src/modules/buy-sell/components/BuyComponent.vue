@@ -158,13 +158,11 @@ const BuySellTokenSelect = defineAsyncComponent(() =>
 import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
 import { useExternalStore } from '@/core/store/external';
-import { storeToRefs } from 'pinia';
 
 // injections/use
 const { address } = useWalletStore();
-const { currencyRate } = useExternalStore();
-const { coinGeckoTokens } = storeToRefs(useExternalStore());
-const { network } = storeToRefs(useGlobalStore());
+const { currencyRate, coinGeckoTokens } = useExternalStore();
+const { network } = useGlobalStore();
 
 // emits
 const emit = defineEmits([
@@ -221,7 +219,7 @@ getCoinGeckoTokenMarketDataByIdsResult(({ data }) => {
     const { getCoinGeckoTokenMarketDataByIds } = data;
     const locTokens = isCAD.value
       ? getCoinGeckoTokenMarketDataByIds.filter(item => {
-          return item.id === this.network.type.coingeckoID;
+          return item.id === network.value.type.coingeckoID;
         })
       : getCoinGeckoTokenMarketDataByIds;
     const parsedLoc = locTokens.map(token => {
@@ -356,7 +354,7 @@ const selectedFiatName = computed(() => {
   return selectedFiat.value.name;
 });
 const actualAddress = computed(() => {
-  return props.inWallet ? address : toAddress.value;
+  return props.inWallet ? address.value : toAddress.value;
 });
 const actualValidAddress = computed(() => {
   return props.inWallet ? true : validToAddress.value;
@@ -581,7 +579,7 @@ watch(
 );
 
 watch(
-  () => network,
+  () => network.value,
   () => {
     selectedCurrency.value = {};
     selectedCurrency.value = props.defaultCurrency;
@@ -633,7 +631,7 @@ watch(
 );
 
 watch(
-  () => coinGeckoTokens,
+  () => coinGeckoTokens.value,
   () => {
     fetchCurrencyData();
   }
@@ -680,8 +678,8 @@ const fetchGasPrice = async () => {
 const isLT = (num, num2) => {
   return BigNumber(num).lt(num2);
 };
-const isValidToAddress = address => {
-  return MultiCoinValidator.validate(address, selectedCurrency.value.symbol);
+const isValidToAddress = addr => {
+  return MultiCoinValidator.validate(addr, selectedCurrency.value.symbol);
 };
 const checkMoonPayMax = () => {
   const moonpayMax = max.value.moonpay;

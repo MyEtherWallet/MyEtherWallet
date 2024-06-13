@@ -465,13 +465,13 @@ const activeValidators = computed(() => {
       if (!withdrawn) {
         acc.push(
           Object.assign({}, raw, {
-            url: `${configNetworkTypes.network[network.type.name].url}${
+            url: `${configNetworkTypes.network[network.value.type.name].url}${
               raw.validator_index
             }`,
             earned: formatFloatingPointValue(earning).value,
             totalBalanceETH: formatFloatingPointValue(totalBalanceETH).value,
             totalBalanceFiat: getFiatValue(
-              new BigNumber(totalBalanceETH).times(fiatValue)
+              new BigNumber(totalBalanceETH).times(fiatValue.value)
             ),
             averageApr: formatPercentageValue(
               getAverageApr(raw.created, earning, raw.amount)
@@ -513,13 +513,13 @@ const exitedValidators = computed(() => {
       ) {
         acc.push(
           Object.assign({}, raw, {
-            url: `${configNetworkTypes.network[network.type.name].url}${
+            url: `${configNetworkTypes.network[network.value.type.name].url}${
               raw.validator_index
             }`,
             earned: formatFloatingPointValue(earning).value,
             totalBalanceETH: formatFloatingPointValue(totalBalanceETH).value,
             totalBalanceFiat: getFiatValue(
-              new BigNumber(totalBalanceETH).times(fiatValue)
+              new BigNumber(totalBalanceETH).times(fiatValue.value)
             ),
             averageApr: formatPercentageValue(
               getAverageApr(raw.created, earning, raw.amount)
@@ -551,15 +551,18 @@ const pendingValidators = computed(() => {
     ) {
       acc.push({
         amount: formatFloatingPointValue(raw.amount).value,
-        amountFiat: getFiatValue(new BigNumber(raw.amount).times(fiatValue)),
+        amountFiat: getFiatValue(
+          new BigNumber(raw.amount).times(fiatValue.value)
+        ),
         status: raw.status,
         ethVmUrl:
-          configNetworkTypes.network[network.type.name].ethvmAddrUrl + address,
+          configNetworkTypes.network[network.value.type.name].ethvmAddrUrl +
+          address.value,
         etherscanUrl:
-          configNetworkTypes.network[network.type.name].etherscanAddrUrl +
-          address,
+          configNetworkTypes.network[network.value.type.name].etherscanAddrUrl +
+          address.value,
         url: raw.address
-          ? configNetworkTypes.network[network.type.name].url +
+          ? configNetworkTypes.network[network.value.type.name].url +
             '0x' +
             raw.address
           : '',
@@ -582,15 +585,17 @@ const justStakedValidator = computed(() => {
     return [
       {
         amount: formatFloatingPointValue(props.amount).value,
-        amountFiat: getFiatValue(new BigNumber(props.amount).times(fiatValue)),
+        amountFiat: getFiatValue(
+          new BigNumber(props.amount).times(fiatValue.value)
+        ),
         justStaked: true,
         status: STATUS_TYPES.CREATED,
         ethVmUrl: props.pendingHash
-          ? configNetworkTypes.network[network.type.name].ethvmTxUrl +
+          ? configNetworkTypes.network[network.value.type.name].ethvmTxUrl +
             props.pendingHash
           : null,
         etherscanUrl: props.pendingHash
-          ? configNetworkTypes.network[network.type.name].etherscanTxUrl +
+          ? configNetworkTypes.network[network.value.type.name].etherscanTxUrl +
             props.pendingHash
           : null
       }
@@ -609,7 +614,7 @@ const allPendingValidators = computed(() => {
 
 // methods
 const findValidatorIndex = idx => {
-  const findIdx = !!validatorIndex.find(item => idx === item);
+  const findIdx = !!validatorIndex.value.find(item => idx === item);
   return !!findIdx;
 };
 /**
@@ -621,7 +626,7 @@ const findValidatorIndex = idx => {
  * checks withdrawal validator address in the local store
  */
 const findWithdrawalValidator = (idx, canExit) => {
-  const findIdx = !!withdrawalValidatorIndex.find(item => idx === item);
+  const findIdx = !!withdrawalValidatorIndex.value.find(item => idx === item);
   if (findIdx) {
     return !findIdx;
   }
@@ -707,7 +712,7 @@ const isExpanded = idx => {
  * Checks if its goerli
  */
 const onGoerli = () => {
-  return network.type.name === GOERLI.name;
+  return network.value.type.name === GOERLI.name;
 };
 /**
  * @returns string

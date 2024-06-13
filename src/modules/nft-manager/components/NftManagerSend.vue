@@ -111,7 +111,7 @@ const backTxt = computed(() => {
 });
 
 const currencyName = computed(() => {
-  return network.type.currencyName;
+  return network.value.type.currencyName;
 });
 
 // methods

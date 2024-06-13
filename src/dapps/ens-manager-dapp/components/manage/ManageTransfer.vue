@@ -61,7 +61,7 @@ const setAddress = (newVal, checkValid) => {
   props.manageDomainHandler
     .estimateGas(resolvedAddr)
     .then(val => {
-      const hasBalance = BigNumber(val).lte(balance);
+      const hasBalance = BigNumber(val).lte(balance.value);
       isDisabled.value = !(isvalid.value && hasBalance);
       if (!hasBalance) {
         Toast('Not enough balance', {}, ERROR);

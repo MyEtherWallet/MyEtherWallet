@@ -64,7 +64,6 @@ import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
 import { useI18n } from 'vue-i18n-composable';
 import { useAddressBookStore } from '@/core/store/addressBook';
-import { storeToRefs } from 'pinia';
 
 const AddressBookAddEdit = defineAsyncComponent(() =>
   import('./components/AddressBookAddEdit')
@@ -75,11 +74,9 @@ const emit = defineEmits(['setAddress']);
 
 // injections/use
 const { addressBookStore } = useAddressBookStore();
-const { network } = useGlobalStore();
+const { network, web3 } = useGlobalStore();
 const { address, isOfflineApp, identifier, instance } = useWalletStore();
 const { t } = useI18n();
-
-const { web3 } = storeToRefs(useWalletStore());
 
 // props
 const props = defineProps({
@@ -147,18 +144,18 @@ const addressBookWithMyAddress = computed(() => {
     : myAddressBook.value;
 });
 const myAddressBook = computed(() => {
-  if (!props.isHomePage && !identifier && instance)
-    instance.errorHandler(
+  if (!props.isHomePage && !identifier.value && instance.value)
+    instance.value.errorHandler(
       new Error('Wallet has no identifier! Please refresh the page')
     );
-  return address
+  return address.value
     ? [
         {
-          address: toChecksumAddress(address),
+          address: toChecksumAddress(address.value),
           nickname: 'My Address',
           resolverAddr: ''
         }
-      ].concat(addressBookStore)
+      ].concat(addressBookStore.value)
     : // If address is undefined set to MEW Donations
       [
         {
@@ -167,7 +164,7 @@ const myAddressBook = computed(() => {
           nickname: 'MEW Donations',
           resolverAddr: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
         }
-      ].concat(addressBookStore);
+      ].concat(addressBookStore.value);
 });
 const enableSave = computed(() => {
   return props.isHomePage
@@ -190,10 +187,10 @@ const nameOnly = computed(() => {
 
 // watch
 watch(
-  () => web3,
+  () => web3.value,
   () => {
-    if (network.type.ens && web3.currentProvider) {
-      nameResolver.value = new NameResolver(network, web3);
+    if (network.value.type.ens && web3.value.currentProvider) {
+      nameResolver.value = new NameResolver(network.value, web3.value);
     } else {
       nameResolver.value = null;
     }
@@ -212,15 +209,15 @@ watch(
 );
 
 onMounted(() => {
-  if (isOfflineApp) {
+  if (isOfflineApp.value) {
     footer.value = {
       text: 'Need help? Email us at support@myetherwallet.com',
       linkTitle: '',
       link: ''
     };
   }
-  if (network.type.ens && web3.currentProvider)
-    nameResolver.value = new NameResolver(network, web3);
+  if (network.value.type.ens && web3.value.currentProvider)
+    nameResolver.value = new NameResolver(network.value, web3.value);
   if (props.isHomePage) {
     setDonationAddress();
   }
@@ -238,7 +235,8 @@ onMounted(() => {
 const setAddress = async (value, inputType) => {
   if (typeof value === 'string') {
     if (
-      props.currency.toLowerCase() === network.type.currencyName?.toLowerCase()
+      props.currency.toLowerCase() ===
+      network.value.type.currencyName?.toLowerCase()
     ) {
       /**
        * Checks if user typed or selected an address from dropdown
@@ -276,7 +274,7 @@ const setAddress = async (value, inputType) => {
       /**
        * Resolve address with ENS/Unstoppable/Kleros
        */
-      if (isValidAddress.value && !isOfflineApp) await resolveAddress();
+      if (isValidAddress.value && !isOfflineApp.value) await resolveAddress();
 
       if (!isValidAddress.value) {
         await resolveName();
@@ -331,8 +329,8 @@ const clear = () => {
   });
 
   // Calls setups from mounted
-  if (!isOfflineApp && network.type.ens)
-    nameResolver.value = new NameResolver(network, web3);
+  if (!isOfflineApp.value && network.value.type.ens)
+    nameResolver.value = new NameResolver(network.value, web3.value);
   if (props.isHomePage) {
     setDonationAddress();
   }

@@ -77,30 +77,32 @@ const { blockNumber, identifier } = useWalletStore();
 
 // computed
 const fullName = computed(() => {
-  return network.type.name_long;
+  return network.value.type.name_long;
 });
 
 const lastBlock = computed(() => {
-  return formatIntegerToString(blockNumber);
+  return formatIntegerToString(blockNumber.value);
 });
 const icon = computed(() => {
-  return network.type.icon;
+  return network.value.type.icon;
 });
 const show = computed(() => {
   let switchNetworkWeb3Supported = false;
-  if (selectedEIP6963Provider) {
+  if (selectedEIP6963Provider.value) {
     const isMetaMask =
-      selectedEIP6963Provider.isMetaMask &&
-      !selectedEIP6963Provider.hasOwnProperty('isTrust') &&
-      !selectedEIP6963Provider.hasOwnProperty('isMEWwallet');
+      selectedEIP6963Provider.value.isMetaMask &&
+      !selectedEIP6963Provider.value.hasOwnProperty('isTrust') &&
+      !selectedEIP6963Provider.value.hasOwnProperty('isMEWwallet');
     const isMEWwallet =
-      selectedEIP6963Provider.isMetaMask &&
-      selectedEIP6963Provider.isMEWwallet &&
-      selectedEIP6963Provider.isTrust;
+      selectedEIP6963Provider.value.isMetaMask &&
+      selectedEIP6963Provider.value.isMEWwallet &&
+      selectedEIP6963Provider.value.isTrust;
     switchNetworkWeb3Supported = isMetaMask || isMEWwallet;
   }
 
-  return identifier !== WALLET_TYPES.WEB3_WALLET || switchNetworkWeb3Supported;
+  return (
+    identifier.value !== WALLET_TYPES.WEB3_WALLET || switchNetworkWeb3Supported
+  );
 });
 
 // methods

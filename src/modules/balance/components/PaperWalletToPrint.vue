@@ -121,14 +121,14 @@ const { address, instance } = useWalletStore();
 // computed
 const key = computed(() => {
   if (showPrivateKey.value) {
-    return instance.getPrivateKeyString();
+    return instance.value.getPrivateKeyString();
   }
   return null;
 });
 const getChecksumAddressString = computed(() => {
-  return address ? toChecksumAddress(address) : '';
+  return address.value ? toChecksumAddress(address.value) : '';
 });
 const showPrivateKey = computed(() => {
-  return !instance.isPubOnly;
+  return !instance.value.isPubOnly;
 });
 </script>

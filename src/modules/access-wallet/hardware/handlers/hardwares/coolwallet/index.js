@@ -95,7 +95,7 @@ class CoolWallet {
               locstore.set(CW_DEVICE_NAME, device.name);
               if (_this.isPro) {
                 _this.connectToCWP();
-                const chainID = network.type.chainID;
+                const chainID = network.value.type.chainID;
                 await _this.deviceInstance[chainID].getAddress(
                   _this.transport,
                   _this.appPrivateKey,
@@ -197,7 +197,7 @@ class CoolWallet {
   async getAccount(idx) {
     const { network, gasFeeMarketInfo, isEIP1559SupportedNetwork } =
       useGlobalStore();
-    const chainID = network.type.chainID;
+    const chainID = network.value.type.chainID;
     const instance = this.isPro
       ? this.deviceInstance[chainID]
       : this.deviceInstance;
@@ -257,7 +257,7 @@ class CoolWallet {
         return result;
       };
       const eip1559Signer = async _txParam => {
-        const feeMarket = gasFeeMarketInfo;
+        const feeMarket = gasFeeMarketInfo.value;
         const _txParams = Object.assign(
           eip1559Params(_txParam.gasPrice, feeMarket),
           _txParam
@@ -296,7 +296,7 @@ class CoolWallet {
         return result;
       };
 
-      if (isEIP1559SupportedNetwork && this.isPro) {
+      if (isEIP1559SupportedNetwork.value && this.isPro) {
         try {
           return eip1559Signer(txParam);
         } catch (e) {

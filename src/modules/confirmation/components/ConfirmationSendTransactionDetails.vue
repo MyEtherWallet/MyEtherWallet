@@ -114,7 +114,7 @@ const totalFee = computed(() => {
 const totalFeeUSD = computed(() => {
   const ethFeeToUsd = BigNumber(props.txFee).times(props.value);
   if (currency.value.symbol === props.network.type.currencyName) {
-    return getFiatValue(BigNumber(totalFee).times(fiatValue).toFixed(2));
+    return getFiatValue(BigNumber(totalFee).times(fiatValue.value).toFixed(2));
   }
   const tokenPrice = BigNumber(currency.value.priceRaw).times(props.value);
   return getFiatValue(tokenPrice.plus(ethFeeToUsd));

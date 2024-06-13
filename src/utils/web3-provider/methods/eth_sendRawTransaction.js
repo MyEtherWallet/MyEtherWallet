@@ -10,7 +10,7 @@ export default async ({ payload }, res, next) => {
   if (val) {
     res(null, toPayload(payload.id, randomHex(32)));
   } else {
-    if (network.type.chainID === 1) {
+    if (network.value.type.chainID === 1) {
       const burl = 'https://broadcast.mewapi.io/eth?product=web';
       fetch(burl, {
         method: 'POST',

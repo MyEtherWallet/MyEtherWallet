@@ -145,25 +145,25 @@ const priceChangeArrow = computed(() => {
   return priceChange.value ? 'mdi-arrow-up-bold' : 'mdi-arrow-down-bold';
 });
 const priceChange = computed(() => {
-  return networkTokenUSDMarket.price_change_percentage_24h > 0;
+  return networkTokenUSDMarket.value.price_change_percentage_24h > 0;
 });
 /**
  * Computed property returns formated eth value of the wallet balance
  * ie: $12.45 per 1 ETH
  */
 const title = computed(() => {
-  return `${formatFloatingPointValue(balanceInETH).value} ${
-    network.type.currencyName
+  return `${formatFloatingPointValue(balanceInETH.value).value} ${
+    network.value.type.currencyName
   }`;
 });
 const sendText = computed(() => {
-  return `Send ${network.type.currencyName}`;
+  return `Send ${network.value.type.currencyName}`;
 });
 const swapText = computed(() => {
-  return `Swap ${network.type.currencyName}`;
+  return `Swap ${network.value.type.currencyName}`;
 });
 const subtitle = computed(() => {
-  return `My ${network.type.currencyName} Balance`;
+  return `My ${network.value.type.currencyName} Balance`;
 });
 /**
  * Computed property returns formated eth wallet balance value in USD
@@ -171,7 +171,7 @@ const subtitle = computed(() => {
  */
 const convertedBalance = computed(() => {
   if (fiatLoaded.value) {
-    return getFiatValue(balanceFiatValue);
+    return getFiatValue(balanceFiatValue.value);
   }
   return '';
 });
@@ -182,7 +182,7 @@ const convertedBalance = computed(() => {
 const formatChange = computed(() => {
   if (fiatLoaded.value) {
     return formatPercentageValue(
-      networkTokenUSDMarket.price_change_percentage_24h
+      networkTokenUSDMarket.value.price_change_percentage_24h
     ).value;
   }
   return '';
@@ -193,7 +193,7 @@ const formatChange = computed(() => {
  */
 const formatFiatPrice = computed(() => {
   if (fiatLoaded.value) {
-    return getFiatValue(fiatValue);
+    return getFiatValue(fiatValue.value);
   }
   return '';
 });
@@ -202,10 +202,10 @@ const formatFiatPrice = computed(() => {
  */
 const fiatLoaded = computed(() => {
   return (
-    !!networkTokenUSDMarket &&
-    !!networkTokenUSDMarket.price_change_percentage_24h &&
-    !!balanceFiatValue &&
-    !!fiatValue
+    !!networkTokenUSDMarket.value &&
+    !!networkTokenUSDMarket.value.price_change_percentage_24h &&
+    !!balanceFiatValue.value &&
+    !!fiatValue.value
   );
 });
 /**
@@ -213,7 +213,7 @@ const fiatLoaded = computed(() => {
  * @return {boolean}
  */
 const hasBalance = computed(() => {
-  return BigNumber(balanceInWei).gt(0);
+  return BigNumber(balanceInWei.value).gt(0);
 });
 
 // mounted

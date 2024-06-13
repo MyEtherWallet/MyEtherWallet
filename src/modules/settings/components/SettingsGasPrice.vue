@@ -143,16 +143,14 @@ import { useExternalStore } from '@/core/store/external';
 
 import { useBuySell } from '@/core/composables/buyMore';
 import { useVuetify } from '@/core/composables/vuetify';
-import { storeToRefs } from 'pinia';
 
 // injections/use
 const { openBuySell } = useBuySell();
-const { gasPriceByType, network, preferredCurrency } = useGlobalStore();
+const { gasPriceByType, network, preferredCurrency, gasPriceType, gasPrice } =
+  useGlobalStore();
 const { fiatValue } = useExternalStore();
 const { balanceInETH } = useWalletStore();
 const vuetify = useVuetify();
-
-const { gasPriceType, gasPrice } = storeToRefs(useGlobalStore());
 
 // props
 const props = defineProps({
@@ -190,7 +188,7 @@ const fastDisabled = ref(false);
 
 // computed
 const currencyName = computed(() => {
-  return network.type.currencyName;
+  return network.value.type.currencyName;
 });
 const economyInEth = computed(() => {
   const txFee = calcTxFee(gasPriceTypes.ECONOMY);
@@ -268,16 +266,16 @@ watch(
 // mounted
 onMounted(() => {
   recalculate();
-  previousSelected.value = gasPriceType;
+  previousSelected.value = gasPriceType.value;
 });
 
 // methods
 const setGasType = () => {
   if (props.notEnoughEth && !props.fromSettings) {
-    if (gasPriceType == 'regular') {
+    if (gasPriceType.value == 'regular') {
       regularDisabled.value = true;
       fastDisabled.value = true;
-    } else if (gasPriceType == 'fast') {
+    } else if (gasPriceType.value == 'fast') {
       fastDisabled.value = true;
     } else {
       economyDisabled.value = true;
@@ -286,7 +284,7 @@ const setGasType = () => {
     }
     props.setSelected(previousSelected);
     if (!props.notEnoughEth) {
-      previousSelected.value = gasPriceType;
+      previousSelected.value = gasPriceType.value;
     }
   }
 };
@@ -301,16 +299,18 @@ const formatInEth = fee => {
   return formatFloatingPointValue(fee).value;
 };
 const formatInUsd = fee => {
-  const number = BigNumber(fee).times(fiatValue).toFixed(2);
+  const number = BigNumber(fee).times(fiatValue.value).toFixed(2);
   return formatFiatValue(number, {
-    currency: preferredCurrency
+    currency: preferredCurrency.value
   }).value;
 };
 const recalculate = () => {
-  const amount = BigNumber(props.costInEth).minus(this[`${gasPriceType}InEth`]);
+  const amount = BigNumber(props.costInEth).minus(
+    this[`${gasPriceType.value}InEth`]
+  );
   Object.values(gasPriceTypes).forEach(item => {
     const withFee = BigNumber(amount).plus(this[`${item}InEth`]);
-    this[`${item}Disabled`] = withFee.gt(balanceInETH);
+    this[`${item}Disabled`] = withFee.gt(balanceInETH.value);
   });
 };
 </script>

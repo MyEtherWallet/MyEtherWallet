@@ -34,7 +34,7 @@ import { useStakewiseStore } from '../store';
 
 // computed
 const networkName = computed(() => {
-  return network.type.currencyName;
+  return network.value.type.currencyName;
 });
 const formattedPoolValue = computed(() => {
   return formatFloatingPointValue(getPoolSupply).value;

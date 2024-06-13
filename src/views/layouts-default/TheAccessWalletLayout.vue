@@ -197,7 +197,6 @@ import { useAmplitude } from '@/core/composables/amplitude';
 import { useWalletStore } from '@/core/store/wallet';
 import { useExternalStore } from '@/core/store/external';
 import { useVuetify } from '@/core/composables/vuetify';
-import { storeToRefs } from 'pinia';
 
 const ModuleAccessWalletHardware = defineAsyncComponent(() =>
   import('@/modules/access-wallet/ModuleAccessWalletHardware')
@@ -218,12 +217,15 @@ const TheLayoutHeader = defineAsyncComponent(() =>
 // injections/use
 const router = useRouter();
 const { trackAccessWalletAmplitude } = useAmplitude();
-const { path, setSelectedEIP6963Info, setSelectedEIP6963Provider } =
-  useExternalStore();
-
+const {
+  path,
+  setSelectedEIP6963Info,
+  setSelectedEIP6963Provider,
+  eip6963Providers
+} = useExternalStore();
 const { isOfflineApp, setWallet } = useWalletStore();
+
 const vuetify = useVuetify();
-const { eip6963Providers } = storeToRefs(useExternalStore());
 
 // props
 const props = defineProps({
@@ -257,7 +259,7 @@ const showMobile = computed(() => {
 });
 
 const buttons = computed(() => {
-  if (!isOfflineApp) {
+  if (!isOfflineApp.value) {
     return [
       /* Enkrypt */
       {
@@ -478,8 +480,8 @@ const openWeb3Wallet = async item => {
       trackAccessWalletAmplitude(ACCESS_WALLET.WEB3_ACCESS_SUCCESS, {
         provider: getInjectedName(providedProvider)
       });
-      if (path !== '') {
-        router.push({ path: path });
+      if (path.value !== '') {
+        router.push({ path: path.value });
       } else {
         router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
       }

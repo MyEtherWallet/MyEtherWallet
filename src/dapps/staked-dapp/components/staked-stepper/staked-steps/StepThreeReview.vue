@@ -245,7 +245,7 @@ const buttonTitle = computed(() => {
  * @return string
  */
 const networkImg = computed(() => {
-  return network.type.icon;
+  return network.value.type.icon;
 });
 /**
  * @returns array
@@ -296,10 +296,10 @@ const fees = computed(() => {
  * Network fees in ETH and fiat
  */
 const networkFees = computed(() => {
-  const gasPriceETH = formatBalanceEthValue(gasPrice).value;
+  const gasPriceETH = formatBalanceEthValue(gasPrice.value).value;
   return {
     eth: gasPriceETH,
-    fiat: getFiatValue(BigNumber(fiatValue).times(gasPriceETH))
+    fiat: getFiatValue(BigNumber(fiatValue.value).times(gasPriceETH))
   };
 });
 /**
@@ -312,7 +312,7 @@ const totalFees = computed(() => {
     .toFixed();
   return {
     eth: totalETH,
-    fiat: getFiatValue(new BigNumber(fiatValue).times(totalETH).toFixed())
+    fiat: getFiatValue(new BigNumber(fiatValue.value).times(totalETH).toFixed())
   };
 });
 /**
@@ -328,7 +328,7 @@ const validatorsCount = computed(() => {
  * @returns eth staking amount in fiat
  */
 const amountFiat = computed(() => {
-  return getFiatValue(new BigNumber(props.amount).times(fiatValue));
+  return getFiatValue(new BigNumber(props.amount).times(fiatValue.value));
 });
 
 // watch
@@ -378,13 +378,13 @@ onMounted(() => {
  */
 const getServiceFees = async () => {
   const batchContract =
-    configNetworkTypes.network[network.type.name].batchContract;
-  const contract = new web3.eth.Contract(ABI_GET_FEES, batchContract);
+    configNetworkTypes.network[network.value.type.name].batchContract;
+  const contract = new web3.value.eth.Contract(ABI_GET_FEES, batchContract);
   const feesWEI = await contract.methods.getFees(props.amount / 32).call();
   const feesETH = formatBalanceEthValue(feesWEI).value;
   serviceFees.value = {
     eth: feesETH,
-    fiat: getFiatValue(BigNumber(fiatValue).times(feesETH))
+    fiat: getFiatValue(BigNumber(fiatValue.value).times(feesETH))
   };
 };
 /**

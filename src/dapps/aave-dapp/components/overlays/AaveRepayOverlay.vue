@@ -114,8 +114,8 @@ const step = ref(0);
 // computed
 const tokenBalance = computed(() => {
   const symbol = props.preSelectedToken.token;
-  if (symbol === network.type.currencyName) return balanceInETH;
-  const hasBalance = tokensList.find(item => {
+  if (symbol === network.value.type.currencyName) return balanceInETH.value;
+  const hasBalance = tokensList.value.find(item => {
     if (item.symbol === symbol) {
       return item;
     }
@@ -139,7 +139,7 @@ const totalBorrow = computed(() => {
 
 const tokenPrice = computed(() => {
   const symbol = props.preSelectedToken.token;
-  const hasBalance = tokensList.find(item => {
+  const hasBalance = tokensList.value.find(item => {
     if (item.symbol === symbol) {
       return item;
     }

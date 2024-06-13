@@ -184,7 +184,7 @@ const mint = async id => {
   });
   loaders.value[id] = true;
   const { transaction } = await fetch(
-    `https://mainnet.mewwallet.dev/energy/web/purchase?address=${address}&reward_id=${id}&season_id=3`
+    `https://mainnet.mewwallet.dev/energy/web/purchase?address=${address.value}&reward_id=${id}&season_id=3`
   )
     .then(res => res.json())
     .then(res => {
@@ -194,9 +194,9 @@ const mint = async id => {
       Toast(err, {}, ERROR);
     });
   const transactionFee = toBNSafe(transaction.value).add(
-    toBNSafe(transaction.gas).mul(toBNSafe(gasPrice))
+    toBNSafe(transaction.gas).mul(toBNSafe(gasPrice.value))
   );
-  if (toBNSafe(transactionFee).gt(toBNSafe(balanceInWei))) {
+  if (toBNSafe(transactionFee).gt(toBNSafe(balanceInWei.value))) {
     loaders.value[id] = false;
     trackNftModule('MintNotEnoughBalance', {
       item: id
@@ -205,7 +205,7 @@ const mint = async id => {
     return;
   }
 
-  web3.eth
+  web3.value.eth
     .sendTransaction(transaction)
     .then(() => {
       trackNftModule('MintSuccess', {
@@ -219,7 +219,7 @@ const mint = async id => {
       trackNftModule('MintFailed', {
         item: id
       });
-      instance.errorHandler(err.message ? err.message : err);
+      instance.value.errorHandler(err.message ? err.message : err);
     });
 };
 </script>

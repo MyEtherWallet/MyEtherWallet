@@ -82,7 +82,6 @@ import { useWalletStore } from '@/core/store/wallet';
 import { useExternalStore } from '@/core/store/external';
 
 import { useRoute } from 'vue-router/composables';
-import { storeToRefs } from 'pinia';
 
 import BuyEthComponent from './components/BuyComponent';
 import SellEthComponent from './components/SellComponent';
@@ -93,12 +92,10 @@ const emit = defineEmits(['close']);
 
 // injections/use
 const { trackBuySell } = useAmplitude();
-const { tokensList } = useWalletStore();
+const { tokensList, address } = useWalletStore();
 const { contractToToken, setNetworkTokens } = useExternalStore();
+const { network } = useGlobalStore();
 const route = useRoute();
-
-const { network } = storeToRefs(useGlobalStore());
-const { address } = storeToRefs(useWalletStore());
 
 // props
 const props = defineProps({
@@ -131,7 +128,7 @@ const inWallet = computed(() => {
 const defaultCurrency = computed(() => {
   if (isEmpty(selectedCurrency.value) && supportedNetwork.value) {
     if (inWallet.value) {
-      return tokensList[0];
+      return tokensList.value[0];
     }
     const token = contractToToken(MAIN_TOKEN_ADDRESS);
     token.value = token.symbol;

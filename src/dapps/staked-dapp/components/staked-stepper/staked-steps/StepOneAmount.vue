@@ -175,11 +175,11 @@ const selectedItem = ref({});
 
 // computed
 const stakingFee = computed(() => {
-  const val = BigNumber(amount).div(32);
+  const val = BigNumber(amount.value).div(32);
   return BigNumber(val).times(0.1).toFixed();
 });
 const networkImg = computed(() => {
-  return network.type.icon;
+  return network.value.type.icon;
 });
 const buttonText = computed(() => {
   return !hasEnoughBalance.value
@@ -230,7 +230,7 @@ const errorMessages = computed(() => {
  * Checks to make sure there is enough ETH balance to stake
  */
 const hasEnoughBalance = computed(() => {
-  return BigNumber(balanceInETH).gte(amount.value);
+  return BigNumber(balanceInETH.value).gte(amount.value);
 });
 /**
  * @returns array
@@ -253,7 +253,7 @@ const depositForecast = computed(() => {
     {
       duration: 'In 1 year',
       balanceFiat: getFiatValue(
-        new BigNumber(amount.value).plus(oneYearEarnings).times(fiatValue)
+        new BigNumber(amount.value).plus(oneYearEarnings).times(fiatValue.value)
       ),
       balanceETH: formatFloatingPointValue(
         new BigNumber(amount.value).plus(oneYearEarnings)
@@ -263,7 +263,7 @@ const depositForecast = computed(() => {
     {
       duration: 'In 2 years',
       balanceFiat: getFiatValue(
-        new BigNumber(amount.value).plus(twoYearEarnings).times(fiatValue)
+        new BigNumber(amount.value).plus(twoYearEarnings).times(fiatValue.value)
       ),
       balanceETH: formatFloatingPointValue(
         new BigNumber(amount.value).plus(twoYearEarnings)
@@ -273,7 +273,9 @@ const depositForecast = computed(() => {
     {
       duration: 'In 3 years',
       balanceFiat: getFiatValue(
-        new BigNumber(amount.value).plus(threeYearEarnings).times(fiatValue)
+        new BigNumber(amount.value)
+          .plus(threeYearEarnings)
+          .times(fiatValue.value)
       ),
       balanceETH: formatFloatingPointValue(
         new BigNumber(amount.value).plus(threeYearEarnings)

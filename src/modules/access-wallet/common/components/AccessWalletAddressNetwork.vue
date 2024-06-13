@@ -204,7 +204,6 @@ import { useWalletStore } from '@/core/store/wallet';
 import { useGlobalStore } from '@/core/store/global';
 import { useAddressBookStore } from '@/core/store/addressBook';
 import { useVuetify } from '@/core/composables/vuetify';
-import { storeToRefs } from 'pinia';
 
 // emits
 const emits = defineEmits(['setPath', 'unlock']);
@@ -212,9 +211,8 @@ const emits = defineEmits(['setPath', 'unlock']);
 // injections/use
 const { isOfflineApp } = useWalletStore();
 const { addressBookStore } = useAddressBookStore();
+const { network } = useGlobalStore();
 const vuetify = useVuetify();
-
-const { network } = storeToRefs(useGlobalStore());
 
 // data
 const currentIdx = ref(0);
@@ -357,7 +355,7 @@ const { onResult: getEthBalanceResult } = useQuery(
   getEthBalance,
   () => ({ hash: accountAddress.value }),
   {
-    enabled: isOfflineApp
+    enabled: isOfflineApp.value
       ? false
       : skipApollo.value || accountAddress.value !== null
   }
@@ -420,7 +418,7 @@ watch(
 
 // mounted
 onMounted(() => {
-  if (isOfflineApp) {
+  if (isOfflineApp.value) {
     link.value = {};
     label.value = 'To access my wallet, I accept Terms';
   }
@@ -453,7 +451,7 @@ const setAccounts = async () => {
       // resets the array to empty
       accounts.value.splice(0);
       const ens =
-        network.value.type.hasOwnProperty('ens') && !isOfflineApp
+        network.value.type.hasOwnProperty('ens') && !isOfflineApp.value
           ? new ENS({
               provider: web3.value.eth.currentProvider,
               ensAddress: network.value.type.ens.registry
@@ -471,7 +469,7 @@ const setAccounts = async () => {
           : {
               name: ''
             };
-        const balance = isOfflineApp
+        const balance = isOfflineApp.value
           ? '0'
           : network.value.type.isEthVMSupported.supported
           ? 'Loading..'
@@ -498,7 +496,7 @@ const setAccounts = async () => {
 };
 const getNickname = address => {
   const checksummedAddress = toChecksumAddress(address);
-  const isStored = addressBookStore.find(item => {
+  const isStored = addressBookStore.value.find(item => {
     const addressStored = item.resolvedAddr ? item.resolvedAddr : item.address;
     if (!isValidAddress(addressStored)) return;
     const storedAddr = toChecksumAddress(addressStored);

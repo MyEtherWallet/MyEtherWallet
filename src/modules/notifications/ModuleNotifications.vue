@@ -152,9 +152,9 @@ const {
   loading: getEthTransfersV2Loading
 } = useQuery(
   getEthTransfersV2,
-  () => ({ owner: address, limit: MAX_ITEMS }),
+  () => ({ owner: address.value, limit: MAX_ITEMS }),
   () => ({
-    enabled: isEthNetwork || address === null || address === ''
+    enabled: isEthNetwork || address.value === null || address.value === ''
   })
 );
 
@@ -228,7 +228,7 @@ getTransactionByHashUpdate(({ data }) => {
 getTransactionByHashResult(({ data }) => {
   if (data) {
     const getTransactionByHash = data.getTransactionByHash;
-    if (getTransactionByHash.to === address) {
+    if (getTransactionByHash.to === address.value) {
       const copyArray = ethTransfersIncoming.value;
       const foundIdx = copyArray.findIndex(item => {
         if (getTransactionByHash.hash === item.hash) {
@@ -255,17 +255,20 @@ getTransactionByHashError(({ error }) => {
 const { onResult: pendingTransactionResult, onError: pendingTransactionError } =
   useSubscription(
     pendingTransaction,
-    () => ({ owner: address }),
+    () => ({ owner: address.value }),
     () => ({
       enabled:
-        isEthNetwork || address !== '' || address !== null || !loading.value
+        isEthNetwork ||
+        address.value !== '' ||
+        address.value !== null ||
+        !loading.value
     })
   );
 
 pendingTransactionResult(({ data }) => {
   if (data && data.pendingTransaction) {
     const pendingTx = data.pendingTransaction;
-    if (pendingTx.to?.toLowerCase() === address) {
+    if (pendingTx.to?.toLowerCase() === address.value) {
       txHash.value = pendingTx.transactionHash;
     }
   }
@@ -323,16 +326,16 @@ const loading = computed(() => {
  * Swap Handler
  */
 const swapper = computed(() => {
-  return new handlerSwap(web3, network.type.name);
+  return new handlerSwap(web3.value, network.value.type.name);
 });
 /**
  * Formatted outgoing tx notifications
  */
 const outgoingTxNotifications = computed(() => {
-  return txNotifications
+  return txNotifications.value
     .map(notification => {
       if (notification.hasOwnProperty('hash')) {
-        return formatNotification(notification, network);
+        return formatNotification(notification, network.value);
       }
       return formatNonChainNotification(notification);
     })
@@ -342,17 +345,17 @@ const outgoingTxNotifications = computed(() => {
  * Formatted incoming tx notifications
  */
 const incomingTxNotifications = computed(() => {
-  const address = address ? address.toLowerCase() : '';
+  const locAddress = address.value ? address.value.toLowerCase() : '';
   if (!loading.value) {
     return ethTransfersIncoming.value
       .reduce((arr, notification) => {
-        if (notification.to?.toLowerCase() === address) {
+        if (notification.to?.toLowerCase() === locAddress) {
           notification.type = NOTIFICATION_TYPES.IN;
           if (notification.status) notification.read = true;
           else notification.read = false;
           if (notification.hasOwnProperty('hash')) {
             notification = new Notification(notification);
-            arr.push(formatNotification(notification, network));
+            arr.push(formatNotification(notification, network.value));
           } else {
             notification = new NonChainNotification(notification);
             arr.push(formatNonChainNotification(notification));
@@ -384,9 +387,9 @@ const notificationsByType = computed(() => {
     case NOTIFICATION_TYPES.OUT:
       return outgoingTxNotifications.value.slice(0, 20).sort(sortByDate);
     case NOTIFICATION_TYPES.SWAP:
-      return swapNotifications.slice(0, 20).sort(sortByDate);
+      return swapNotifications.value.slice(0, 20).sort(sortByDate);
     default:
-      return allNotifications;
+      return allNotifications.value;
   }
 });
 /**
@@ -409,7 +412,7 @@ const hasNotification = computed(() => {
 
 // watch
 watch(
-  currentNotifications,
+  currentNotifications.value,
   newVal => {
     newVal.forEach(notification => {
       checkAndSetNotificationStatus(notification);
@@ -449,7 +452,7 @@ const sortByDate = (a, b) => {
 const formattedCurrentNotifications = () => {
   return currentNotifications.map(notification => {
     if (notification.hasOwnProperty('hash')) {
-      return formatNotification(notification, network);
+      return formatNotification(notification, network.value);
     }
     return formatNonChainNotification(notification);
   });
@@ -470,7 +473,7 @@ const checkAndSetNotificationStatus = notification => {
       type === NOTIFICATION_TYPES.OUT &&
       notification.status.toLowerCase() === NOTIFICATION_STATUS.PENDING
     ) {
-      web3.eth.getTransactionReceipt(notification.hash).then(receipt => {
+      web3.value.eth.getTransactionReceipt(notification.hash).then(receipt => {
         if (receipt) {
           notification.status = receipt.status
             ? NOTIFICATION_STATUS.SUCCESS

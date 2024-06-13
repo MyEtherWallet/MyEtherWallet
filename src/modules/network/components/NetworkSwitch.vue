@@ -104,7 +104,6 @@ import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
 import { useExternalStore } from '@/core/store/external';
-import { storeToRefs } from 'pinia';
 
 const emit = defineEmits(['newNetwork']);
 
@@ -118,12 +117,10 @@ const props = defineProps({
 });
 
 // injections/use
-const { validNetwork, setNetwork, setValidNetwork } = useGlobalStore();
-const { identifier, instance, setWeb3Instance } = useWalletStore();
+const { validNetwork, setNetwork, setValidNetwork, network } = useGlobalStore();
+const { identifier, setWeb3Instance } = useWalletStore();
 const { selectedEIP6963Provider, setTokenAndEthBalance } = useExternalStore();
 const route = useRoute();
-
-const { network } = storeToRefs(useGlobalStore());
 
 // data
 const networkSelectedBefore = ref(null);
@@ -235,7 +232,7 @@ watch(
 watch(
   () => networkSelected.value,
   value => {
-    if (!!value && (value !== network.value.type.name || !validNetwork)) {
+    if (!!value && (value !== network.value.type.name || !validNetwork.value)) {
       networkLoading.value = true;
       setNetworkDebounced(value);
     }
@@ -273,7 +270,9 @@ watch(
         networks.value.filter(item => item.name === network.value.type.name)
           .length > 0
       ) {
-        networkSelected.value = validNetwork ? network.value.type.name : '';
+        networkSelected.value = validNetwork.value
+          ? network.value.type.name
+          : '';
       }
     }
   }
@@ -281,7 +280,7 @@ watch(
 
 // mounted
 onMounted(() => {
-  networkSelected.value = validNetwork ? network.value.type.name : '';
+  networkSelected.value = validNetwork.value ? network.value.type.name : '';
   networkSelectedBefore.value = networkSelected.value;
 });
 
@@ -319,13 +318,13 @@ const setNetworkDebounced = debounce(function (value) {
   setValidNetwork(true);
   setNetwork({
     network: found[0],
-    walletType: instance?.identifier || ''
+    walletType: identifier.value || ''
   });
   networkLoading.value = false;
   if (props.isWallet) {
-    networkSelected.value = validNetwork ? network.value.type.name : '';
-    if (identifier === WALLET_TYPES.WEB3_WALLET) {
-      setWeb3Instance(selectedEIP6963Provider);
+    networkSelected.value = validNetwork.value ? network.value.type.name : '';
+    if (identifier.value === WALLET_TYPES.WEB3_WALLET) {
+      setWeb3Instance(selectedEIP6963Provider.value);
     } else {
       setWeb3Instance();
     }

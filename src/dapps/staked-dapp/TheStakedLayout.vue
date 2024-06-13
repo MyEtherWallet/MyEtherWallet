@@ -156,7 +156,6 @@ import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
 import { useRoute } from 'vue-router/composables';
 import { useArticleStore } from '@/core/store/article';
-import { storeToRefs } from 'pinia';
 
 const TheWrapperDapp = defineAsyncComponent(() =>
   import('@/dapps/TheWrapperDapp.vue')
@@ -170,12 +169,10 @@ const StakedStatus = defineAsyncComponent(() =>
 
 // injections/use
 const { trackDapp } = useAmplitude();
-const { web3, identifier } = useWalletStore();
+const { web3, identifier, address } = useWalletStore();
 const { network } = useGlobalStore();
 const { getArticle } = useArticleStore();
 const route = useRoute();
-
-const { address } = storeToRefs(useWalletStore());
 
 // data
 const validNetworks = SUPPORTED_NETWORKS;
@@ -265,7 +262,7 @@ const pendingTxHash = computed(() => {
   return stakedHandler.value.pendingTxHash;
 });
 const isValidNetwork = computed(() => {
-  const chainID = network.type.chainID;
+  const chainID = network.value.type.chainID;
   const validChain = validNetworks.filter(item => item.chainID === chainID);
   return validChain.length > 0;
 });
@@ -319,11 +316,11 @@ onMounted(() => {
    */
   if (isValidNetwork.value) {
     stakedHandler.value = new handlerStaked(
-      web3,
-      network,
-      address,
+      web3.value,
+      network.value,
+      address.value,
       trackDapp,
-      identifier
+      identifier.value
     );
   }
 });

@@ -291,7 +291,7 @@ const buttons = computed(() => {
  * returns currency name from current selected network
  */
 const currencyName = computed(() => {
-  return network.type.currencyName;
+  return network.value.type.currencyName;
 });
 /**
  * @returns object
@@ -362,7 +362,8 @@ watch(
 
 // methods
 const setWithdrawalAddress = () => {
-  const submitSubDomain = network.type.name === 'ETH' ? 'mainnet' : 'staging';
+  const submitSubDomain =
+    network.value.type.name === 'ETH' ? 'mainnet' : 'staging';
   const submitEndpoint = `https://${submitSubDomain}.mewwallet.dev/v2/stake/upgrade`;
   blsExecution.value.message.validator_index = parseInt(
     blsExecution.value.message.validator_index
@@ -420,7 +421,8 @@ const checkPhrase = val => {
 const validateUserInputs = async () => {
   loadingButton.value = true;
   try {
-    const selectedNetwork = network.type.name === 'ETH' ? 'mainnet' : 'goerli';
+    const selectedNetwork =
+      network.value.type.name === 'ETH' ? 'mainnet' : 'goerli';
     if (isKeystore.value) {
       blsExecution.value = await keystoreToBLSExecution(
         file.value,
@@ -454,7 +456,7 @@ const clear = () => {
     addressInput.value.clear();
   }
   step.value = 1;
-  executionAddress.value = address;
+  executionAddress.value = address.value;
   isValidAddress.value = false;
   selectedRecoveryType.value = '';
   file.value = {};

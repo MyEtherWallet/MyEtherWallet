@@ -18,17 +18,17 @@ Sentry.init({
   release: NODE_ENV === 'production' ? VERSION : 'develop',
   beforeSend(event, hint) {
     const { network } = useGlobalStore();
-    const { wallet } = useWalletStore();
+    const { identifier } = useWalletStore();
 
     // eslint-disable-next-line
     console.error(hint.originalException || hint.syntheticException);
-    const locNetwork = network ? locNetwork.type.name : '';
-    const service = locNetwork ? locNetwork.service : '';
-    const identifier = wallet ? wallet.identifier : '';
+    const locNetwork = network.value ? network.value.type.name : '';
+    const service = locNetwork ? network.value.service : '';
+    const locIdentifier = identifier.value ? identifier.value : '';
     event.tags = {
       network: locNetwork,
       service: service,
-      walletType: identifier
+      walletType: locIdentifier
     };
     const err = event.exception.values[0].value;
     if (errorHandler(err)) return null;

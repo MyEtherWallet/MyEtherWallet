@@ -252,8 +252,8 @@ const paymentOptionString = computed(() => {
 });
 
 // methods
-const isValidToAddress = address => {
-  return MultiCoinValidator.validate(address, props.selectedCurrency.symbol);
+const isValidToAddress = addr => {
+  return MultiCoinValidator.validate(addr, props.selectedCurrency.symbol);
 };
 const openSimplex = () => {
   if (!validToAddress()) return;

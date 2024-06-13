@@ -62,8 +62,8 @@ export const useGlobalStore = defineStore('global', () => {
 
   // actions
   const setOnlineStatus = val => {
-    const store = useWalletStore();
-    if (val) store.setWeb3Instance();
+    const { setWeb3Instance } = useWalletStore();
+    if (val) setWeb3Instance();
     online.value = val;
   };
   const setLocale = val => {
@@ -76,12 +76,12 @@ export const useGlobalStore = defineStore('global', () => {
     const { web3 } = useWalletStore();
     const { gasPriceMultiplier } = network.value.type;
     if (!isEIP1559SupportedNetwork.value) {
-      return web3.eth.getGasPrice().then(res => {
+      return web3.value.eth.getGasPrice().then(res => {
         const modifiedGasPrice = toBNSafe(res).muln(gasPriceMultiplier);
         return setGasPrice(modifiedGasPrice.toString());
       });
     }
-    return web3.eth.getGasPrice().then(gasPrice => {
+    return web3.value.eth.getGasPrice().then(gasPrice => {
       const modGas = toBNSafe(gasPrice).muln(gasPriceMultiplier);
       const priorityFee = toBNSafe(modGas).sub(
         toBNSafe(eip1559.value.baseFeePerGas)

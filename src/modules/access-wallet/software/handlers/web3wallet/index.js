@@ -17,8 +17,10 @@ class Web3Wallet extends WalletInterface {
     const { selectedEIP6963Info, selectedEIP6963Provider } = useExternalStore();
     this.errorHandler = errorHandler;
     if (!window.ethereum) throw new Error('No Web3 instance found');
-    const isEIP6963 = selectedEIP6963Info;
-    const provider = isEIP6963 ? selectedEIP6963Provider : window.ethereum;
+    const isEIP6963 = selectedEIP6963Info.value;
+    const provider = isEIP6963
+      ? selectedEIP6963Provider.value
+      : window.ethereum;
     this.web3 = new Web3(new CustomRequestManager(provider));
     const isMetamask = provider?.isMetaMask && !provider?.isEnkrypt;
     const isEnkrypt = provider?.isMetaMask && provider?.isEnkrypt;

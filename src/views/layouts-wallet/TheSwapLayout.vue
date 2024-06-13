@@ -63,11 +63,11 @@ defineProps({
 
 // computed
 const hasHistory = computed(() => {
-  return swapNotifications && swapNotifications.length > 0;
+  return swapNotifications.value && swapNotifications.value.length > 0;
 });
 
 const totalRightColumns = computed(() => {
-  return hasHistory.value && hasSwap ? 2 : 1;
+  return hasHistory.value && hasSwap.value ? 2 : 1;
 });
 
 onMounted(() => {

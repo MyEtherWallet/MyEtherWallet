@@ -133,7 +133,10 @@ const stakedHandler = ref({});
 // computed
 const dapps = computed(() => {
   const staking = [];
-  if (network.type.name === ETH.name || network.type.name === GOERLI.name) {
+  if (
+    network.value.type.name === ETH.name ||
+    network.value.type.name === GOERLI.name
+  ) {
     staking.push({
       title: 'Staked',
       apr: currentAprFormatted,
@@ -144,7 +147,10 @@ const dapps = computed(() => {
     });
   }
 
-  if (network.type.name === ETH.name || network.type.name === HOLESKY.name) {
+  if (
+    network.value.type.name === ETH.name ||
+    network.value.type.name === HOLESKY.name
+  ) {
     staking.push({
       title: 'ETH Staking Powered by Coinbase',
       apr: 'Up to 4% APR',
@@ -167,13 +173,16 @@ const currentAprFormatted = computed(() => {
 
 // mounted
 onMounted(() => {
-  if (network.type.name === ETH.name || network.type.name === GOERLI.name) {
+  if (
+    network.value.type.name === ETH.name ||
+    network.value.type.name === GOERLI.name
+  ) {
     stakedHandler.value = new handlerStaked(
-      web3,
-      network,
-      address,
+      web3.value,
+      network.value,
+      address.value,
       trackDapp,
-      identifier
+      identifier.value
     );
   }
 });

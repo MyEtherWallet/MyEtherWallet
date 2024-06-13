@@ -505,14 +505,16 @@ const inputErrorMessage = computed(() => {
 
 const reverseTokenId = async () => {
   isLoading.value = true;
-  const address = inputtedAddress.value;
+  const locAddress = inputtedAddress.value;
   const resolution = new Resolution();
   try {
-    const results = await resolution.reverseTokenId(address).then(tokenId => {
-      const tokenIdRes = tokenId;
-      reverseTokenIdResults.value =
-        address + ' ' + `reversed to` + ' ' + tokenIdRes;
-    });
+    const results = await resolution
+      .reverseTokenId(locAddress)
+      .then(tokenId => {
+        const tokenIdRes = tokenId;
+        reverseTokenIdResults.value =
+          locAddress + ' ' + `reversed to` + ' ' + tokenIdRes;
+      });
     isLoading.value = false;
     hasTokenIdResults.value = true;
     return results;
@@ -522,17 +524,17 @@ const reverseTokenId = async () => {
 };
 const reverseUrl = async () => {
   isLoading.value = true;
-  const address = inputtedAddress.value;
+  const locAddress = inputtedAddress.value;
   const resolution = new Resolution();
   try {
     const results = await resolution
-      .reverse(address, {
+      .reverse(locAddress, {
         location: 'UNSLayer2'
       })
       .then(domain => {
         const domainRes = domain;
         reverseUrlResults.value =
-          address + ' ' + `reversed to` + ' ' + domainRes;
+          locAddress + ' ' + `reversed to` + ' ' + domainRes;
       });
     isLoading.value = false;
     hasUrlResults.value = true;

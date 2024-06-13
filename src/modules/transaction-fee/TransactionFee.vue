@@ -276,8 +276,8 @@ const actualCostFormatted = computed(() => {
 });
 const feeInUsd = computed(() => {
   const value = formatFiatValue(
-    BigNumber(txFeeInEth).times(fiatValue).toFixed(2),
-    { currency: preferredCurrency }
+    BigNumber(txFeeInEth).times(fiatValue.value).toFixed(2),
+    { currency: preferredCurrency.value }
   ).value;
   return value;
 });
@@ -285,7 +285,7 @@ const hasError = computed(() => {
   return props.error !== '';
 });
 const timeWillTake = computed(() => {
-  return estimatedTime(gasPriceType);
+  return estimatedTime(gasPriceType.value);
 });
 
 // watchers

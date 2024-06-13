@@ -286,7 +286,7 @@ const handleConfirm = () => {
   else if (step.value === 4) {
     trackDapp('aaveBorrowEvent');
     const data = {
-      user: address,
+      user: address.value,
       reserve: props.selectedTokenDetails.underlyingAsset,
       amount: amountWithDecimals,
       interestRateMode: apr.value.type,

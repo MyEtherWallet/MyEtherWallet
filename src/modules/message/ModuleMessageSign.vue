@@ -67,10 +67,10 @@ const signMessage = () => {
       })
       .catch(e => {
         message.value = '';
-        instance.errorHandler(e.message);
+        instance.value.errorHandler(e.message);
       });
   } catch (e) {
-    instance.errorHandler(e.hasOwnProperty('message') ? e.message : e);
+    instance.value.errorHandler(e.hasOwnProperty('message') ? e.message : e);
   }
 };
 const clearAll = () => {

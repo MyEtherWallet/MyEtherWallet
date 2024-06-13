@@ -200,7 +200,7 @@ const ModuleAddressBook = defineAsyncComponent(() =>
 );
 
 // injections/use
-const { instance, setWeb3Instance } = useWalletStore();
+const { instance, identifier, setWeb3Instance } = useWalletStore();
 const { setNetwork } = useGlobalStore();
 const { network } = storeToRefs(useGlobalStore());
 
@@ -232,8 +232,8 @@ const uploadedFile = ref(null);
 // computed
 const networkToken = computed(() => {
   return {
-    symbol: network.type.currencyName,
-    name: network.type.name
+    symbol: network.value.type.currencyName,
+    name: network.value.type.name
   };
 });
 const isDisabledNextBtn = computed(() => {
@@ -293,7 +293,7 @@ const amountErrors = computed(() => {
   return '';
 });
 const disableData = computed(() => {
-  return selectedCurrency.value?.symbol !== network.type.currencyName;
+  return selectedCurrency.value?.symbol !== network.value.type.currencyName;
 });
 const validAddress = computed(() => {
   return toAddress.value !== '' && isValidAddress(toAddress);
@@ -302,7 +302,7 @@ const canGenerate = computed(() => {
   return (
     validAddress.value &&
     !isEmpty(selectedCurrency.value) &&
-    selectedCurrency.value.symbol !== network.type.currencyName
+    selectedCurrency.value.symbol !== network.value.type.currencyName
   );
 });
 
@@ -352,7 +352,7 @@ onMounted(() => {
 // method
 const generateTokens = () => {
   const networkToken = [networkToken];
-  network.type.tokens.then(tokens => {
+  network.value.type.tokens.then(tokens => {
     tokens.value = networkToken.concat(
       tokens.map(item => {
         item.subtext = item.name;
@@ -364,7 +364,7 @@ const generateTokens = () => {
   });
 };
 const generateData = () => {
-  const web3 = new Web3(network.url);
+  const web3 = new Web3(network.value.url);
   const jsonInterface = [
     {
       constant: false,
@@ -436,7 +436,7 @@ const upload = ({ target: { files } }) => {
   if (files[0]) reader.readAsBinaryString(files[0]);
 };
 const generateTx = async () => {
-  const symbol = network.type.currencyName;
+  const symbol = network.value.type.currencyName;
   const isToken = selectedCurrency.value.symbol !== symbol;
   const amtWei = toWei(amount, 'ether');
   const localRaw = {
@@ -450,11 +450,11 @@ const generateTx = async () => {
       ? sanitizeHex(toBNSafe(0).toString(16))
       : sanitizeHex(toBNSafe(amtWei).toString(16)),
     data: data,
-    chainId: network.type.chainID
+    chainId: network.value.type.chainID
   };
 
   raw.value = localRaw;
-  const signed = await instance.signTransaction(raw);
+  const signed = await instance.value.signTransaction(raw);
   signedTransaction.value = signed;
   signed.value = JSON.stringify(signed);
   window.scrollTo(0, 0);
@@ -473,7 +473,7 @@ const setNetworkDebounced = debounce(function (value) {
   });
   setNetwork({
     network: found[0],
-    walletType: instance?.identifier || ''
+    walletType: identifier.value || ''
   });
   setWeb3Instance();
   Toast(`Switched network to: ${found[0].type.name}`, {}, SUCCESS);

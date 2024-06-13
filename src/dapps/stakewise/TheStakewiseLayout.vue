@@ -31,15 +31,14 @@ import handler from './handlers/stakewiseHandler';
 import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
 import { useStakewiseStore } from './store';
-import { storeToRefs } from 'pinia';
 
 const TheWrapperDapp = defineAsyncComponent(() =>
   import('@/dapps/TheWrapperDapp.vue')
 );
 
 // injections/use
-const { isEthNetwork } = useGlobalStore();
-const { address } = useWalletStore();
+const { isEthNetwork, network } = useGlobalStore();
+const { address, web3 } = useWalletStore();
 const {
   setPoolSupply,
   setStakingFee,
@@ -47,9 +46,6 @@ const {
   setRewardBalance,
   setStakeBalance
 } = useStakewiseStore();
-
-const { web3 } = storeToRefs(useWalletStore());
-const { network } = storeToRefs(useGlobalStore());
 
 // data
 const header = {
@@ -65,7 +61,7 @@ const fetchInterval = ref(null);
 // computed
 const isSupported = computed(() => {
   const isSupported = validNetworks.find(item => {
-    return item.name === network.type.name;
+    return item.name === network.value.type.name;
   });
   return !!isSupported;
 });
@@ -83,7 +79,7 @@ const tabs = computed(() => {
 
 // watch
 watch(
-  () => web3,
+  () => web3.value,
   () => {
     clearInterval(fetchInterval.value);
     if (isSupported.value) {
@@ -92,7 +88,7 @@ watch(
   }
 );
 watch(
-  () => network,
+  () => network.value,
   () => {
     clearInterval(fetchInterval.value);
     if (isSupported.value) {
@@ -115,7 +111,7 @@ onBeforeUnmount(() => {
 
 // methods
 const setup = () => {
-  stakewiseHandler.value = new handler(web3, isEthNetwork);
+  stakewiseHandler.value = new handler(web3.value, isEthNetwork.value);
   collectiveFetch();
   fetchInterval.value = setInterval(() => {
     collectiveFetch();
@@ -126,8 +122,8 @@ const collectiveFetch = () => {
     stakewiseHandler.value.getEthPool(),
     stakewiseHandler.value.getStakingFee(),
     stakewiseHandler.value.getValidatorApr(),
-    stakewiseHandler.value.getSethBalance(address),
-    stakewiseHandler.value.getRethBalance(address)
+    stakewiseHandler.value.getSethBalance(address.value),
+    stakewiseHandler.value.getRethBalance(address.value)
   ]).then(res => {
     setPoolSupply(res[0]);
     setStakingFee(res[1]);

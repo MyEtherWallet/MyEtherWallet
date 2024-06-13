@@ -140,7 +140,7 @@ onMounted(() => {
 // methods
 const submit = async () => {
   const ethersProvider = new ethers.providers.Web3Provider(
-    web3.currentProvider
+    web3.value.currentProvider
   );
   const wallet = ethersProvider.getSigner();
   loading.value = true;

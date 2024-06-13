@@ -5,7 +5,7 @@ import { useWalletStore } from '../../core/store/wallet';
 class MEWProvider {
   constructor(host, options) {
     const { wallet, identifier } = useWalletStore();
-    if (wallet && identifier === WALLET_TYPES.WEB3_WALLET) {
+    if (wallet.value && identifier.value === WALLET_TYPES.WEB3_WALLET) {
       return new GivenProvider(host, options);
     } else if (host && typeof host === 'string') {
       if (host.includes('etherscan')) {

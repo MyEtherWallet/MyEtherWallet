@@ -179,7 +179,7 @@ WebsocketProvider.prototype.on = function (type, callback) {
   if (typeof callback !== 'function')
     throw new Error('The second parameter callback must be a function.');
 
-  const chainID = network.type.chainID;
+  const chainID = network.value.type.chainID;
   switch (type) {
     case 'message':
       this.notificationCallbacks.push(resp => {

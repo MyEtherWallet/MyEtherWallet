@@ -177,7 +177,6 @@ import { defineAsyncComponent, ref, computed, watch, onMounted } from 'vue';
 import { fromWei } from 'web3-utils';
 import BigNumber from 'bignumber.js';
 import { debounce, isEmpty } from 'lodash';
-import { storeToRefs } from 'pinia';
 
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';

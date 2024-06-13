@@ -125,7 +125,7 @@ const bannerText = {
 const dapps = computed(() => {
   return Object.values(dappsMeta).filter(val => {
     for (const n of val.networks) {
-      if (n.name === network.type.name) return true;
+      if (n.name === network.value.type.name) return true;
     }
     return false;
   });

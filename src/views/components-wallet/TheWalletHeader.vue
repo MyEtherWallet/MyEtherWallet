@@ -164,7 +164,7 @@ const hasAds = computed(() => {
 
 // mounted
 onMounted(() => {
-  if (isOfflineApp) setHeaderAds();
+  if (isOfflineApp.value) setHeaderAds();
 });
 
 const setHeaderAds = async () => {

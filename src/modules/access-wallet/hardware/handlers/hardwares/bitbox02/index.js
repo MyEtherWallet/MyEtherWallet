@@ -85,7 +85,7 @@ class BitBox02Wallet {
     const derivedKey = this.hdKey.derive('m/' + idx);
     const txSigner = async txParams => {
       const tx = new Transaction.fromTxData(txParams, {
-        common: commonGenerator(network)
+        common: commonGenerator(network.value)
       });
       const networkId = tx.common.chainId();
       const signingData = {

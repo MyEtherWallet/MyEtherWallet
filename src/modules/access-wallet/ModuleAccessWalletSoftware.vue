@@ -213,8 +213,8 @@ const title = computed(() => {
 watch(
   () => open,
   newVal => {
-    if (identifier && props.switchAddress && newVal) {
-      setType(identifier);
+    if (identifier.value && props.switchAddress && newVal) {
+      setType(identifier.value);
     }
   }
 );
@@ -222,7 +222,7 @@ watch(
 // mounted
 onMounted(() => {
   accessHandler.value = new handlerAccessWalletSoftware();
-  if (isOfflineApp) {
+  if (isOfflineApp.value) {
     footer.value = {
       text: 'Need help? Email us at support@myetherwallet.com',
       linkTitle: '',
@@ -263,10 +263,10 @@ const unlockWallet = (account = undefined) => {
       return;
     }
     trackAccessWalletAmplitude(type);
-    if (path !== '') {
-      router.push({ path: path });
+    if (path.value !== '') {
+      router.push({ path: path.value });
     } else {
-      const name = isOfflineApp
+      const name = isOfflineApp.value
         ? ROUTES_WALLET.WALLETS.NAME
         : ROUTES_WALLET.DASHBOARD.NAME;
       router.push({ name: name });

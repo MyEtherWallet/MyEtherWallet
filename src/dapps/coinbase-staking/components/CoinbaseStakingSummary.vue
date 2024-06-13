@@ -159,7 +159,7 @@ const locGasPrice = ref('0');
 const ethTotalFee = computed(() => {
   const gasPrice = BigNumber(locGasPrice).gt(0)
     ? BigNumber(locGasPrice)
-    : BigNumber(gasPriceByType(gasPriceType));
+    : BigNumber(gasPriceByType(gasPriceType.value));
   const locGasLimit = BigNumber(gasLimit.value).gt('21000')
     ? gasLimit.value
     : MIN_GAS_LIMIT;
@@ -167,16 +167,16 @@ const ethTotalFee = computed(() => {
   return formatFloatingPointValue(ethFee).value;
 });
 const hasEnoughBalanceToStake = computed(() => {
-  return BigNumber(ethTotalFee.value).lte(balanceInETH);
+  return BigNumber(ethTotalFee.value).lte(balanceInETH.value);
 });
 const actualLastFetched = computed(() => {
-  return lastFetched[network.type.name];
+  return lastFetched.value[network.value.type.name];
 });
 const currencyName = computed(() => {
-  return network.type.currencyName;
+  return network.value.type.currencyName;
 });
 const details = computed(() => {
-  return fetchedDetails[network.type.name];
+  return fetchedDetails.value[network.value.type.name];
 });
 const hasDetails = computed(() => {
   return !isEmpty(details.value);
@@ -264,16 +264,16 @@ watch(
   }
 );
 watch(
-  () => gasPriceType,
+  () => gasPriceType.value,
   () => {
-    locGasPrice.value = gasPriceByType(gasPriceType);
+    locGasPrice.value = gasPriceByType(gasPriceType.value);
   }
 );
 
 // mounted
 onMounted(() => {
   fetchInfo();
-  locGasPrice.value = gasPriceByType(gasPriceType);
+  locGasPrice.value = gasPriceByType(gasPriceType.value);
   currentTime.value = new Date().getTime();
   timeInterval.value = setInterval(() => {
     const time = new Date();
@@ -291,7 +291,7 @@ onUnmounted(() => {
 const fetchInfo = () => {
   loading.value = true;
   fetch(
-    `${API}?address=${address}&action=details&networkId=${network.type.chainID}`
+    `${API}?address=${address.value}&action=details&networkId=${network.value.type.chainID}`
   )
     .then(res => res.json())
     .then(res => {
@@ -300,14 +300,14 @@ const fetchInfo = () => {
         Toast(res.error || res.message, {}, ERROR);
         return;
       }
-      storeFetched([res, network.type.name]);
+      storeFetched([res, network.value.type.name]);
     });
 };
 const claim = async () => {
   loadingClaim.value = true;
   trackDapp(CB_TRACKING.CLICK_CLAIM);
   const { gasLimit, to, data, value, error } = await fetch(
-    `${API}?address=${address}&action=claim&networkId=${network.type.chainID}`
+    `${API}?address=${address.value}&action=claim&networkId=${network.value.type.chainID}`
   ).then(res => res.json());
 
   if (error) {
@@ -319,11 +319,11 @@ const claim = async () => {
   const txObj = {
     gasLimit: gasLimit,
     to: to,
-    from: address,
+    from: address.value,
     data: data,
     value: value
   };
-  web3.eth
+  web3.value.eth
     .sendTransaction(txObj)
     .once('receipt', () => {
       fetchInfo();
@@ -340,7 +340,7 @@ const claim = async () => {
     })
     .catch(e => {
       loadingClaim.value = false;
-      instance.errorHandler(e);
+      instance.value.errorHandler(e);
       trackDapp(CB_TRACKING.CLAIM_FAIL);
     });
 };

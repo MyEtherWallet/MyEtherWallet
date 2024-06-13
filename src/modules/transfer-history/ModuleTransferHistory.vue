@@ -54,10 +54,10 @@ const dropdown = ref(true);
 
 // computed
 const parsedTxNotifications = computed(() => {
-  return txNotifications
+  return txNotifications.value
     .map(item => {
       if (item.hasOwnProperty('hash')) {
-        return formatNotification(item, network);
+        return formatNotification(item, network.value);
       }
       return formatNonChainNotification(item);
     })
@@ -65,10 +65,10 @@ const parsedTxNotifications = computed(() => {
 });
 
 const parsedSwapNotifications = computed(() => {
-  return swapNotifications
+  return swapNotifications.value
     .map(item => {
       if (item.hasOwnProperty('hash')) {
-        return formatNotification(item, network);
+        return formatNotification(item, network.value);
       }
       return formatNonChainNotification(item);
     })

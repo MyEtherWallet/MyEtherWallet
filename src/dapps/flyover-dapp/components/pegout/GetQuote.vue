@@ -109,7 +109,7 @@ onMounted(() => {
 
   getProviders()
     .then(data => {
-      rskAddress.value = instance.getAddressString();
+      rskAddress.value = instance.value.getAddressString();
       providers.value = data.map(provider => {
         return {
           ...provider,

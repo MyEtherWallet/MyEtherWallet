@@ -60,7 +60,7 @@ const showDate = ref(false);
  * @returns {string}
  */
 const maxBlock = computed(() => {
-  const max = toBN(blockNumber ? blockNumber : 0).sub(toBN(50));
+  const max = toBN(blockNumber.value ? blockNumber.value : 0).sub(toBN(50));
   const ZERO = toBN(0);
   return max.gt(ZERO) ? max.toNumber() : '';
 });

@@ -216,15 +216,15 @@ const selectedToken = ref({});
 // computed
 const hasTokens = computed(() => {
   return (
-    !loadingWalletInfo &&
-    (tokensData.value.length > 0 || hiddenTokens.length > 0)
+    !loadingWalletInfo.value &&
+    (tokensData.value.length > 0 || hiddenTokens.value.length > 0)
   );
 });
 const emptyWallet = computed(() => {
   return (
-    !loadingWalletInfo &&
+    !loadingWalletInfo.value &&
     tokensData.value.length === 0 &&
-    hiddenTokens.length === 0
+    hiddenTokens.value.length === 0
   );
 });
 /**
@@ -233,17 +233,18 @@ const emptyWallet = computed(() => {
  * will be sorted by usd balance for both
  */
 const tokensData = computed(() => {
-  if (!tokensList && !customTokens && !hiddenTokens) return [];
-  const locCustomTokens = customTokens.reduce((arr, item) => {
+  if (!tokensList.value && !customTokens.value && !hiddenTokens.value)
+    return [];
+  const locCustomTokens = customTokens.value.reduce((arr, item) => {
     // Check if token is in hiddenTokens
-    const isHidden = hiddenTokens.find(token => {
+    const isHidden = hiddenTokens.value.find(token => {
       return item.contract == token.address;
     });
     if (!isHidden) arr.push(formatValues(item));
     return arr;
   }, []);
   const uniqueTokens = uniqWith(
-    tokensList.filter(t => {
+    tokensList.value.filter(t => {
       return !t.isHidden;
     }),
     isEqual
@@ -259,7 +260,7 @@ const tokensData = computed(() => {
   return locCustomTokens.concat(tokenList);
 });
 const totalTokensValue = computed(() => {
-  return getFiatValue(totalTokenFiatValue);
+  return getFiatValue(totalTokenFiatValue.value);
 });
 
 // methods
@@ -289,10 +290,10 @@ const formatValues = item => {
   if (item.symbol == 'ETH') {
     newObj.tokenImg = require('@/assets/images/networks/eth.svg');
   } else {
-    newObj.tokenImg = item.img ? item.img : network.type.icon;
+    newObj.tokenImg = item.img ? item.img : network.value.type.icon;
   }
 
-  if (hasSwap) {
+  if (hasSwap.value) {
     newObj.callToAction = [
       {
         title: 'Swap',

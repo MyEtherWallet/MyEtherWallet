@@ -160,7 +160,6 @@ import { toBNSafe } from '@/core/helpers/numberFormatHelper';
 import NFT from './handlers/handlerNftManager';
 import handleError from '@/modules/confirmation/handlers/errorHandler.js';
 import { useRouter } from 'vue-router/composables';
-import { storeToRefs } from 'pinia';
 
 const MIN_GAS_LIMIT = 21000;
 
@@ -173,8 +172,8 @@ const NftManagerSend = defineAsyncComponent(() =>
 
 // injections/use
 const { gasPriceType, network, gasPriceByType } = useGlobalStore();
+const { web3, balanceInWei, address } = useWalletStore();
 const router = useRouter();
-const { web3, balanceInWei, address } = storeToRefs(useWalletStore());
 
 // data
 const nft = ref({});
@@ -288,7 +287,7 @@ const isValid = () => {
  * Check if network is supported
  */
 const supportedNetwork = () => {
-  return supportedNetworks.values.includes(network.type.name);
+  return supportedNetworks.values.includes(network.value.type.name);
 };
 /**
  * List of supported networks
@@ -299,25 +298,25 @@ const supportedNetworks = () => {
 
 // watch
 watch(
-  () => balanceInWei,
+  () => balanceInWei.value,
   () => {
     hasMinEth();
   }
 );
 
 watch(
-  () => web3,
+  () => web3.value,
   () => {
     loadingContracts.value = true;
     loadingTokens.value = true;
     onNftSend.value = false;
-    if (address) router.push({ name: ROUTES_WALLET.NFT_MANAGER.NAME });
+    if (address.value) router.push({ name: ROUTES_WALLET.NFT_MANAGER.NAME });
     if (supportedNetwork) {
       setUpNFT();
     } else {
       setTimeout(() => {
         Toast(
-          `NFT Manager not supported in network: ${network.type.name}`,
+          `NFT Manager not supported in network: ${network.value.type.name}`,
           {},
           WARNING
         );
@@ -328,12 +327,12 @@ watch(
 );
 
 watch(
-  () => address,
+  () => address.value,
   () => {
     loadingContracts.value = true;
     loadingTokens.value = true;
     onNftSend.value = false;
-    if (address) router.push({ name: ROUTES_WALLET.NFT_MANAGER.NAME });
+    if (address.value) router.push({ name: ROUTES_WALLET.NFT_MANAGER.NAME });
     setUpNFT();
   }
 );
@@ -352,12 +351,12 @@ watch(
   async newVal => {
     if (isAddress(newVal) && enoughFunds) {
       try {
-        const gasTypeFee = gasPriceByType(gasPriceType);
+        const gasTypeFee = gasPriceByType(gasPriceType.value);
         localGasPrice.value = gasTypeFee;
         const locGasFees = await nft.value.getGasFees(newVal, selectedNft);
         const gasFeesToBN = toBNSafe(locGasFees).mul(toBNSafe(gasTypeFee));
         gasFees.value = gasFeesToBN.toString();
-        if (gasFeesToBN.gte(toBN(balanceInWei))) {
+        if (gasFeesToBN.gte(toBN(balanceInWei.value))) {
           //gasFeesToBN vs current balance
           enoughFunds.value = false;
           showBalanceError.value = true;
@@ -390,13 +389,13 @@ const setUpNFT = () => {
    * Init NFT Handler
    */
   nft.value = new NFT({
-    network: network,
-    address: address,
-    web3: web3
+    network: network.value,
+    address: address.value,
+    web3: web3.value
   });
 
   getNfts();
-  localGasPrice.value = gasPriceByType(gasPriceType);
+  localGasPrice.value = gasPriceByType(gasPriceType.value);
   this.hasMinEth();
 };
 
@@ -412,7 +411,7 @@ const getNfts = () => {
 
 const hasMinEth = () => {
   const currentGasPrice = localGasPrice.value;
-  if (toBN(balanceInWei).gt(toBN(currentGasPrice).muln(MIN_GAS_LIMIT))) {
+  if (toBN(balanceInWei.value).gt(toBN(currentGasPrice).muln(MIN_GAS_LIMIT))) {
     enoughFunds.value = true;
     showBalanceError.value = false;
   } else {
@@ -445,7 +444,7 @@ const sendTx = async () => {
   if (isValid.value) {
     try {
       let gasPrice = undefined;
-      if (network.type.name === 'MATIC')
+      if (network.value.type.name === 'MATIC')
         gasPrice = `0x${toBN(localGasPrice.value).toString('hex')}`;
       nft.value
         .send(toAddress.value, selectedNft.value, gasPrice.value)
@@ -457,8 +456,8 @@ const sendTx = async () => {
           Toast(
             'Cheers! Your transaction was mined. Check it in ',
             {
-              title: `${getService(network.type.blockExplorerTX)}`,
-              url: network.type.blockExplorerTX.replace(
+              title: `${getService(network.value.type.blockExplorerTX)}`,
+              url: network.value.type.blockExplorerTX.replace(
                 '[[txHash]]',
                 response.blockHash
               )
@@ -488,11 +487,11 @@ const updateValues = () => {
   getNfts();
 };
 
-const setAddress = address => {
-  if (typeof address === 'object' && !!address) {
-    toAddress.value = address.address;
+const setAddress = addr => {
+  if (typeof addr === 'object' && !!addr) {
+    toAddress.value = addr.address;
   } else {
-    toAddress.value = address;
+    toAddress.value = addr;
   }
 };
 

@@ -64,13 +64,10 @@ import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { toBNSafe } from '@/core/helpers/numberFormatHelper';
 import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
-import { storeToRefs } from 'pinia';
 
 // injections/use
-const { gasPrice } = useGlobalStore();
-const { balance } = useWalletStore();
-const { network } = storeToRefs(useGlobalStore());
-const { web3, address } = storeToRefs(useWalletStore());
+const { gasPrice, network } = useGlobalStore();
+const { web3, balance } = useWalletStore();
 
 // props
 const props = defineProps({
@@ -112,26 +109,26 @@ const disableRegister = computed(() => {
     return true;
   return (
     (!selectedDomain.value.value &&
-      toBNSafe(balance).lt(selectedDomain.value.fee)) ||
+      toBNSafe(balance.value).lt(selectedDomain.value.fee)) ||
     selectedDomain.value.error.length > 0
   );
 });
 
 // watch
 watch(
-  () => network,
+  () => network.value,
   () => {
     if (checkNetwork()) setup();
   }
 );
 watch(
-  () => address,
+  () => props.address,
   addr => {
     if (checkNetwork() && addr) setup();
   }
 );
 watch(
-  () => web3,
+  () => web3.value,
   () => {
     if (checkNetwork()) setup();
   }
@@ -144,7 +141,9 @@ onMounted(async () => {
 
 // methods
 const checkNetwork = () => {
-  return metainfo.networks.find(item => item.chainID === network.type.chainID);
+  return metainfo.networks.find(
+    item => item.chainID === network.value.type.chainID
+  );
 };
 const setDomain = value => {
   selectedDomain.value = value;
@@ -152,7 +151,7 @@ const setDomain = value => {
 };
 const setDomainListItems = async () => {
   const array = [];
-  const { name } = await nameResolver.value.resolveAddress(address);
+  const { name } = await nameResolver.value.resolveAddress(props.address);
   ensLookupResults.value?.forEach(async i => {
     i.loading = true;
     i.fee = toBNSafe(0);
@@ -163,9 +162,9 @@ const setDomainListItems = async () => {
     if (!name) {
       try {
         const gas = await permHandler.value.getNameReverseData(i.name);
-        i.fee = toBNSafe(gas * gasPrice);
-        if (toBNSafe(balance).lt(i.fee)) {
-          i.error = `Insufficient amount of ${network.type.currencyName}`;
+        i.fee = toBNSafe(gas * gasPrice.value);
+        if (toBNSafe(balance.value).lt(i.fee)) {
+          i.error = `Insufficient amount of ${network.value.type.currencyName}`;
         }
       } catch {
         i.error = 'An error occurred while retrieving the domain information';
@@ -180,27 +179,27 @@ const setDomainListItems = async () => {
 };
 const setup = async () => {
   await findDomainByAddress();
-  const ens = network.type.ens
+  const ens = network.value.type.ens
     ? new ENS({
-        provider: web3.eth.currentProvider,
-        ensAddress: network.type.ens.registry
+        provider: web3.value.eth.currentProvider,
+        ensAddress: network.value.type.ens.registry
       })
     : null;
   permHandler.value = new PermanentNameModule(
     props.name,
-    address,
-    network,
-    web3,
+    props.address,
+    network.value,
+    web3.value,
     ens,
     props.durationPick
   );
-  nameResolver.value = new NameResolver(network, web3);
+  nameResolver.value = new NameResolver(network.value, web3.value);
   selectedDomain.value = { loading: false, fee: toBNSafe(0), error: '' };
   await setDomainListItems();
   getReverseRecordNames();
 };
 const fetchDomains = async () => {
-  return await props.ensManager.value.getAllNamesForAddress(address);
+  return await props.ensManager.value.getAllNamesForAddress(props.address);
 };
 const findDomainByAddress = async () => {
   try {
@@ -232,10 +231,10 @@ const setReverseRecord = async chosenDomain => {
 };
 const getReverseRecordNames = async () => {
   try {
-    const ens = network.type.ens
-      ? new ENS(web3.currentProvider, network.type.ens.registry)
+    const ens = network.value.type.ens
+      ? new ENS(web3.value.currentProvider, network.value.type.ens.registry)
       : null;
-    const reverse = ens.reverse(address);
+    const reverse = ens.reverse(props.address);
     reverseRecordNames.value = await reverse.name();
     hasReverseRecordNames.value = true;
   } catch (e) {

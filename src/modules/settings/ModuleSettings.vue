@@ -90,7 +90,6 @@
 
 <script>
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
-import { storeToRefs } from 'pinia';
 const MODES = ['add', 'edit'];
 
 // adding here as script support has no beforeRouteLeave support
@@ -141,9 +140,8 @@ const { gasButtons, setSelected } = useGasPrice();
 const { online, gasPriceType } = useGlobalStore();
 const { consentToTrack } = usePopupStore();
 const { hasGasPriceOption } = useWalletStore();
+const { addressBookStore } = useAddressBookStore();
 const { t } = useI18n();
-
-const { addressBookStore } = storeToRefs(useAddressBookStore());
 
 // data
 const settingsHandler = ref(null);
@@ -162,22 +160,22 @@ const footerTitle = computed(() => {
   };
 });
 const importPanel = computed(() => {
-  return `panelBody${!hasGasPriceOption ? 2 : 1}`;
+  return `panelBody${!hasGasPriceOption.value ? 2 : 1}`;
 });
 const exportPanel = computed(() => {
-  return `panelBody${!hasGasPriceOption ? 3 : 2}`;
+  return `panelBody${!hasGasPriceOption.value ? 3 : 2}`;
 });
 const addressBookPanel = computed(() => {
-  return `panelBody${!hasGasPriceOption ? 4 : 3}`;
+  return `panelBody${!hasGasPriceOption.value ? 4 : 3}`;
 });
 const localPanel = computed(() => {
-  return `panelBody${!hasGasPriceOption ? 5 : 4}`;
+  return `panelBody${!hasGasPriceOption.value ? 5 : 4}`;
 });
 const panelItems = computed(() => {
   const txPriority = [
     {
       name: 'Transaction priority',
-      toggleTitle: setPriority(gasPriceType)
+      toggleTitle: setPriority(gasPriceType.value)
     }
   ];
   const panels = [
@@ -194,7 +192,7 @@ const panelItems = computed(() => {
       name: 'Currency settings'
     }
   ];
-  return hasGasPriceOption ? panels : txPriority.concat(panels);
+  return hasGasPriceOption.value ? panels : txPriority.concat(panels);
 });
 const onMode = computed(() => {
   return addMode.value ? MODES[0] : MODES[1];

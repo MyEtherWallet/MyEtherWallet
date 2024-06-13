@@ -107,16 +107,15 @@ import { useWalletStore } from '@/core/store/wallet';
 import { useAddressBookStore } from '@/core/store/addressBook/index.js';
 
 import { useI18n } from 'vue-i18n-composable';
-import { storeToRefs } from 'pinia';
 
 // emits
 const emit = defineEmits(['back']);
 
 // injections/use
 const { network } = useGlobalStore();
+const { web3 } = useWalletStore();
 const { addressBookStore, setAddressBook } = useAddressBookStore();
 const { t } = useI18n();
-const { web3 } = storeToRefs(useWalletStore());
 
 // props
 const props = defineProps({
@@ -205,8 +204,8 @@ const alreadyExists = computed(() => {
   return false;
 });
 const checkResolvedExists = computed(() => {
-  return Object.keys(addressBookStore).some(key => {
-    const storedAddr = addressBookStore[key];
+  return Object.keys(addressBookStore.value).some(key => {
+    const storedAddr = addressBookStore.value[key];
     return (
       resolvedAddr.value !== '' &&
       (storedAddr.address.toLowerCase() === resolvedAddr.value?.toLowerCase() ||
@@ -216,8 +215,8 @@ const checkResolvedExists = computed(() => {
   });
 });
 const checkAddressExists = computed(() => {
-  return Object.keys(addressBookStore).some(key => {
-    const storedAddr = addressBookStore[key];
+  return Object.keys(addressBookStore.value).some(key => {
+    const storedAddr = addressBookStore.value[key];
     return (
       (storedAddr.resolvedAddr !== '' &&
         storedAddr.resolvedAddr?.toLowerCase() ===
@@ -267,10 +266,10 @@ watch(
   }
 );
 watch(
-  () => web3,
+  () => web3.value,
   () => {
-    if (network.type.ens) {
-      nameResolver.value = new NameResolver(network, web3);
+    if (network.value.type.ens) {
+      nameResolver.value = new NameResolver(network.value, web3.value);
     } else {
       nameResolver.value = null;
     }
@@ -279,14 +278,15 @@ watch(
 
 // mounted
 onMounted(() => {
-  if (network.type.ens) nameResolver.value = new NameResolver(network, web3);
+  if (network.value.type.ens)
+    nameResolver.value = new NameResolver(network.value, web3.value);
   if (addMode.value && props.toAddress) {
     addressToAdd.value = props.toAddress;
   }
   if (editMode.value) {
     addressToAdd.value = props.item.address;
     nickname.value = props.item.nickname;
-    currentIdx.value = addressBookStore.findIndex(
+    currentIdx.value = addressBookStore.value.findIndex(
       item => item.address === item.address
     );
   }
@@ -344,15 +344,15 @@ const setNickname = value => {
   nickname.value = value;
 };
 const update = () => {
-  addressBookStore[currentIdx].address = checksumAddressToAdd.value;
-  addressBookStore[currentIdx].coinType = coinType.value.toLowerCase();
-  addressBookStore[currentIdx].nickname = nickname.value;
-  setAddressBook(addressBookStore);
+  addressBookStore.value[currentIdx].address = checksumAddressToAdd.value;
+  addressBookStore.value[currentIdx].coinType = coinType.value.toLowerCase();
+  addressBookStore.value[currentIdx].nickname = nickname.value;
+  setAddressBook(addressBookStore.value);
   emit('back', [3]);
 };
 const remove = () => {
-  addressBookStore.splice(currentIdx, 1);
-  setAddressBook(addressBookStore);
+  addressBookStore.value.splice(currentIdx, 1);
+  setAddressBook(addressBookStore.value);
   reset();
   emit('back', [3]);
 };
@@ -361,13 +361,13 @@ const add = () => {
     reset();
     return;
   }
-  addressBookStore.push({
+  addressBookStore.value.push({
     address: checksumAddressToAdd.value,
     resolvedAddr: resolvedAddress.value,
     coinType: coinType.value.toLowerCase(),
-    nickname: nickname.value || (addressBookStore.length + 1).toString()
+    nickname: nickname.value || (addressBookStore.value.length + 1).toString()
   });
-  setAddressBook(addressBookStore);
+  setAddressBook(addressBookStore.value);
   reset();
   emit('back', [3]);
 };

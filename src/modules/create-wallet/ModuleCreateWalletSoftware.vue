@@ -130,7 +130,7 @@ const typeTitle = computed(() => {
 });
 
 onMounted(() => {
-  if (isOfflineApp) {
+  if (isOfflineApp.value) {
     footer.value = {
       text: 'Need help? Email us at support@myetherwallet.com',
       linkTitle: '',

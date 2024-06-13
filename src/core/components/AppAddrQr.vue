@@ -74,21 +74,21 @@ import { toChecksumAddress } from '@/core/helpers/addressUtils';
 import { useWalletStore } from '@/core/store/wallet';
 import { useGlobalStore } from '@/core/store/global';
 
-const walletStore = useWalletStore();
-const globalStore = useGlobalStore();
+const { address } = useWalletStore();
+const { network } = useGlobalStore();
 
 const getChecksumAddressString = computed(() => {
-  if (!walletStore.address) return '';
-  return toChecksumAddress(walletStore.address);
+  if (!address.value) return '';
+  return toChecksumAddress(address.value);
 });
 
 const copyAddress = () => {
-  clipboardCopy(walletStore.address);
-  Toast(`Copied ${this.address} successfully!`, {}, SUCCESS);
+  clipboardCopy(address.value);
+  Toast(`Copied ${address.value} successfully!`, {}, SUCCESS);
 };
 
 const getNetwork = () => {
-  return globalStore.network ? globalStore.network.type.currencyName : 'ETH';
+  return network.value ? network.value.type.currencyName : 'ETH';
 };
 
 const animateMewCard = () => {

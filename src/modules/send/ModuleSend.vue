@@ -215,7 +215,6 @@ import { useWalletStore } from '@/core/store/wallet';
 
 import { useI18n } from 'vue-i18n-composable';
 import { useCustomStore } from '@/core/store/custom';
-import { storeToRefs } from 'pinia';
 
 const ModuleAddressBook = defineAsyncComponent(() =>
   import('@/modules/address-book/ModuleAddressBook')
@@ -229,13 +228,12 @@ const SendLowBalanceNotice = defineAsyncComponent(() =>
 
 // injections
 const { openBuySell } = useBuySell();
-const { gasPrice, isEthNetwork, swapLink, getFiatValue } = useGlobalStore();
-const { instance, balanceInETH, hasGasPriceOption } = useWalletStore();
+const { gasPrice, isEthNetwork, swapLink, getFiatValue, network } =
+  useGlobalStore();
+const { instance, balanceInETH, hasGasPriceOption, tokensList, address } =
+  useWalletStore();
 const { hiddenTokens } = useCustomStore();
 const { t } = useI18n();
-
-const { tokensList, address } = storeToRefs(useWalletStore());
-const { network } = storeToRefs(useGlobalStore());
 // props
 const props = defineProps({
   prefilledAmount: {
@@ -288,7 +286,7 @@ const expandPanel = ref(null);
 
 // computed
 const maxBtn = computed(() => {
-  return hasGasPriceOption
+  return hasGasPriceOption.value
     ? {}
     : {
         title: 'Max',
@@ -309,10 +307,10 @@ const isDisabledNextBtn = computed(() => {
   );
 });
 const buyMoreStr = computed(() => {
-  return isEthNetwork &&
+  return isEthNetwork.value &&
     isFromNetworkCurrency.value &&
     amountError.value === 'Not enough balance to send!'
-    ? network.type.canBuy
+    ? network.value.type.canBuy
       ? 'Buy more.'
       : ''
     : '';
@@ -320,10 +318,10 @@ const buyMoreStr = computed(() => {
 const hasEnoughEth = computed(() => {
   // Check whether user has enough eth to cover tx fee + amount to send
   if (isFromNetworkCurrency.value) {
-    return BigNumber(amount).plus(txFeeETH).lte(balanceInETH);
+    return BigNumber(amount).plus(txFeeETH).lte(balanceInETH.value);
   }
   // Check whether user has enough eth to cover tx fee + user has enough token balance for the amount to send
-  return BigNumber(balanceInETH).gte(txFeeETH);
+  return BigNumber(balanceInETH.value).gte(txFeeETH);
 });
 const feeError = computed(() => {
   return !hasEnoughEth.value
@@ -336,12 +334,13 @@ const showSelectedBalance = computed(() => {
   );
 });
 const currencyName = computed(() => {
-  return network.type.currencyName;
+  return network.value.type.currencyName;
 });
 const showBalanceNotice = computed(() => {
-  const isZero = BigNumber(balanceInETH).lte(0);
+  const isZero = BigNumber(balanceInETH.value).lte(0);
   const isLessThanTxFee =
-    BigNumber(balanceInETH).gt(0) && BigNumber(txFeeETH).gt(balanceInETH);
+    BigNumber(balanceInETH.value).gt(0) &&
+    BigNumber(txFeeETH).gt(balanceInETH.value);
 
   if (isZero || isLessThanTxFee) {
     return true;
@@ -370,7 +369,7 @@ const tokens = computed(() => {
   });
   const customTokens = customTokens.reduce((arr, item) => {
     // Check if token is in hiddenTokens
-    const isHidden = hiddenTokens.find(token => {
+    const isHidden = hiddenTokens.value.find(token => {
       return item.contract == token.address;
     });
     item.decimals = BigNumber(item.decimals).toNumber();
@@ -386,13 +385,13 @@ const tokens = computed(() => {
     item.name = item.symbol;
     return item.img;
   });
-  BigNumber(balanceInETH).lte(0)
+  BigNumber(balanceInETH.value).lte(0)
     ? tokensList.unshift({
         hasNoEth: true,
         disabled: true,
         text: 'Your wallet is empty.',
-        linkText: isEthNetwork ? 'Buy ETH' : '',
-        link: isEthNetwork ? swapLink : ''
+        linkText: isEthNetwork.value ? 'Buy ETH' : '',
+        link: isEthNetwork.value ? swapLink.value : ''
       })
     : null;
   const returnedArray = [
@@ -654,11 +653,11 @@ watch(
   () => network,
   () => {
     clear();
-    const currentGasPrice = gasPrice;
+    const currentGasPrice = gasPrice.value;
     // wait for gas price to update after network is updated
     const x = setInterval(() => {
-      if (gasPrice !== currentGasPrice) {
-        localGasPrice.value = gasPrice;
+      if (gasPrice.value !== currentGasPrice) {
+        localGasPrice.value = gasPrice.value;
         sendTx.value.setLocalGasPrice(actualGasPrice.value);
         clearInterval(x);
       }
@@ -713,7 +712,7 @@ const localGasPriceWatcher = newVal => {
     (selectedMax.value &&
       selectedCurrency.value &&
       isFromNetworkCurrency.value &&
-      total.gt(balanceInETH)) ||
+      total.gt(balanceInETH.value)) ||
     (selectedCurrency.value && !isFromNetworkCurrency.value && balance.lt(amt))
   ) {
     setEntireBal();
@@ -814,7 +813,7 @@ const setAddress = (addr, isValidAddress, userInputType) => {
   userInputType.value = userInputType;
 };
 const setSendTransaction = () => {
-  localGasPrice.value = gasPrice;
+  localGasPrice.value = gasPrice.value;
   sendTx.value = new SendTransaction();
 };
 const estimateAndSetGas = () => {
@@ -845,7 +844,7 @@ const send = () => {
       clear();
     })
     .catch(error => {
-      if (!instance) {
+      if (!instance.value) {
         Toast(error, {}, ERROR);
       }
     });
@@ -866,7 +865,7 @@ const convertToDisplay = (amount, decimals) => {
 };
 const setEntireBal = () => {
   if (isEmpty(selectedCurrency) || isFromNetworkCurrency) {
-    const amt = BigNumber(balanceInETH).minus(txFeeETH);
+    const amt = BigNumber(balanceInETH.value).minus(txFeeETH);
     setAmount(amt.lt(0) ? '0' : amt.toFixed(), true);
   } else {
     setAmount(

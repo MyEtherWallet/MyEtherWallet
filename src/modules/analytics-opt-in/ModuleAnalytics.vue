@@ -115,7 +115,7 @@ const onClick = (val, showAgain) => {
   $amplitude.setOptOut(!val);
   const prom = setTrackingConsent(val);
   if (!showAgain) {
-    prom.then(neverShowPopup);
+    prom.then(neverShowPopup.value);
   }
 };
 </script>

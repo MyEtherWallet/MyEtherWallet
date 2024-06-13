@@ -146,7 +146,6 @@ import { useWalletStore } from '@/core/store/wallet';
 
 import { useRouter } from 'vue-router/composables';
 import { useEthBlocksTxsStore } from '../store';
-import { storeToRefs } from 'pinia';
 
 const BlocksLoading = defineAsyncComponent(() =>
   import('../components/BlocksLoading.vue')
@@ -160,11 +159,9 @@ const ModuleEthBlockInfo = defineAsyncComponent(() =>
 
 // injections
 const router = useRouter();
-const { web3 } = useWalletStore();
-
-const { address } = storeToRefs(useWalletStore());
-const { network } = storeToRefs(useGlobalStore());
-const { getAllEthBlocksTxs } = storeToRefs(useEthBlocksTxsStore());
+const { web3, address } = useWalletStore();
+const { network } = useGlobalStore();
+const { getAllEthBlocksTxs } = useEthBlocksTxsStore();
 
 // props
 defineProps({
@@ -241,7 +238,7 @@ const filterErrorMessage = computed(() => {
  *  @param {Object} newVal - current address
  */
 watch(
-  () => network,
+  () => network.value,
   newVal => {
     if (newVal) {
       handlerMyBlocks.value.setNetwork(newVal);
@@ -254,7 +251,7 @@ watch(
  * @param {string} newVal - current address
  */
 watch(
-  () => address,
+  () => address.value,
   newVal => {
     if (newVal) {
       handlerMyBlocks.value.setAddress(newVal);
@@ -267,7 +264,7 @@ watch(
  * @param {Array} newVal - current address
  */
 watch(
-  () => getAllEthBlocksTxs,
+  () => getAllEthBlocksTxs.value,
   newVal => {
     if (newVal) {
       handlerMyBlocks.value.getBlocks();
@@ -280,7 +277,11 @@ onMounted(() => {
   /**
    * Initiate My Blocks Handler
    */
-  handlerMyBlocks.value = new HandlerMyBlocks(web3, network, address);
+  handlerMyBlocks.value = new HandlerMyBlocks(
+    web3.value,
+    network.value,
+    address.value
+  );
   handlerMyBlocks.value.getBlocks();
 });
 

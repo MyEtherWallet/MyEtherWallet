@@ -413,7 +413,7 @@ const transactions = computed(() => {
   return arrayParser(newArr);
 });
 const allToDetails = computed(() => {
-  const toNickname = addressBookStore.find(item => {
+  const toNickname = addressBookStore.value.find(item => {
     return tx.value.to?.toLowerCase() === item.address?.toLowerCase();
   });
   return {
@@ -424,8 +424,8 @@ const allToDetails = computed(() => {
 });
 const gasPrice = computed(() => {
   if (!isBatch.value) {
-    const gasPrice = tx.value.gasPrice ? tx.value.gasPrice : '0x';
-    return fromWei(hexToNumberString(gasPrice), 'gwei');
+    const locGasPrice = tx.value.gasPrice ? tx.value.gasPrice : '0x';
+    return fromWei(hexToNumberString(locGasPrice), 'gwei');
   }
 
   const batchGasPrice = unsignedTxArr.value[0].gasPrice;
@@ -611,7 +611,7 @@ onBeforeMount(() => {
     title.value = 'Message Signed';
     isSwap.value = false; // reset isSwap
     error.value = '';
-    instance
+    instance.value
       .signMessage(msg)
       .then(res => {
         const result = Buffer.from(res).toString('hex');
@@ -631,7 +631,7 @@ onBeforeMount(() => {
       })
       .catch(e => {
         reset();
-        instance.errorHandler(e);
+        instance.value.errorHandler(e);
       });
   });
   /**
@@ -751,7 +751,7 @@ const parseRawData = tx => {
   ) {
     tokenData = parseTokenData(tx.value.data, tx.value.to);
     tx.value.fromTxData = {
-      currency: network.type.currencyName,
+      currency: network.value.type.currencyName,
       amount: tx.value.amount
     };
     tx.value.toTxData = {
@@ -760,7 +760,7 @@ const parseRawData = tx => {
       to: tokenData.tokenTransferTo
     };
   }
-  tx.value.network = network.type.name;
+  tx.value.network = network.value.type.name;
 };
 
 const sendBatchTransaction = () => {
@@ -770,8 +770,8 @@ const sendBatchTransaction = () => {
     const _tx = tx.tx;
     _tx.from = address;
     const _rawTx = tx.rawTransaction;
-    const promiEvent = web3.eth[_method](_rawTx);
-    _tx.network = network.type.name;
+    const promiEvent = web3.value.eth[_method](_rawTx);
+    _tx.network = network.value.type.name;
     _tx.gasPrice = isHex(_tx.gasPrice)
       ? hexToNumberString(_tx.gasPrice)
       : _tx.gasPrice;
@@ -788,7 +788,9 @@ const sendBatchTransaction = () => {
         }
       })
       .on('transactionHash', hash => {
-        const storeKey = sha3(`${network.type.name}-${address.toLowerCase()}`);
+        const storeKey = sha3(
+          `${network.value.type.name}-${address.toLowerCase()}`
+        );
         const localStoredObj = locStore.get(storeKey);
         locStore.set(storeKey, {
           nonce: sanitizeHex(
@@ -835,7 +837,7 @@ const sendSignedTx = () => {
 const showSuccess = param => {
   if (isArray(param)) {
     const lastHash = param[param.length - 1].tx.hash;
-    links.value.explorer = network.type.blockExplorerTX.replace(
+    links.value.explorer = network.value.type.blockExplorerTX.replace(
       '[[txHash]]',
       lastHash
     );
@@ -846,7 +848,7 @@ const showSuccess = param => {
     return;
   }
 
-  links.value.explorer = network.type.blockExplorerTX.replace(
+  links.value.explorer = network.value.type.blockExplorerTX.replace(
     '[[txHash]]',
     param
   );
@@ -860,19 +862,19 @@ const showSuccess = param => {
 const trackSwapTransactionSuccessful = param => {
   trackSwapAmplitude(SWAP.SUCCESS, {
     hash: param,
-    network: network.type.chainID
+    network: network.value.type.chainID
   });
 };
 const trackSwapTransactionReceipt = param => {
   trackSwapAmplitude(SWAP.RECEIPT, {
     hash: param,
-    network: network.type.chainID
+    network: network.value.type.chainID
   });
 };
 const trackSwapTransactionBroadcasted = res => {
   trackSwapAmplitude(SWAP.BROADCASTED, {
     hash: res,
-    network: network.type.chainID
+    network: network.value.type.chainID
   });
 };
 
@@ -881,7 +883,7 @@ const signTx = async () => {
     signing.value = true;
   }
   if (hasGasPriceOption) {
-    const event = instance.signTransaction(tx);
+    const event = instance.value.signTransaction(tx);
     event
       .on('transactionHash', res => {
         if (isSwap.value) {
@@ -910,7 +912,7 @@ const signTx = async () => {
       });
     resolver(event);
   } else {
-    await instance
+    await instance.value
       .signTransaction(tx)
       .then(res => {
         signedTxObject.value = res;
@@ -926,7 +928,7 @@ const signTx = async () => {
         error.value = errorHandler(e);
         signing.value = false;
         const toastError = errorHandler(e, true);
-        if (toastError) instance.errorHandler(toastError);
+        if (toastError) instance.value.errorHandler(toastError);
       });
   }
 };
@@ -945,7 +947,7 @@ const signBatchTx = async () => {
     delete objClone['confirmInfo'];
     try {
       if (!hasGasPriceOption) {
-        const _signedTx = await instance.signTransaction(objClone);
+        const _signedTx = await instance.value.signTransaction(objClone);
         if (unsignedTxArr.value[i].hasOwnProperty('handleNotification')) {
           _signedTx.tx['handleNotification'] =
             unsignedTxArr.value[i].handleNotification;
@@ -955,7 +957,7 @@ const signBatchTx = async () => {
           btnAction();
         }
       } else {
-        await instance
+        await instance.value
           .signTransaction(objClone)
           .then(event => {
             const hash = event.transactionHash;
@@ -966,7 +968,7 @@ const signBatchTx = async () => {
             });
             batchTxEvents.push(event);
             const storeKey = sha3(
-              `${network.type.name}-${address.toLowerCase()}`
+              `${network.value.type.name}-${address.toLowerCase()}`
             );
             const localStoredObj = locStore.get(storeKey);
             locStore.set(storeKey, {
@@ -989,7 +991,7 @@ const signBatchTx = async () => {
               }
             }
             signing.value = false;
-            instance.errorHandler(e.message);
+            instance.value.errorHandler(e.message);
             throw new Error(e.message);
           });
       }
@@ -1033,7 +1035,7 @@ const emitSwapTxFail = err => {
   const hash = err?.receipt?.transactionHash;
   trackSwapAmplitude(SWAP.FAILED, {
     hash: hash,
-    network: network.type.chainID
+    network: network.value.type.chainID
   });
 };
 
@@ -1074,13 +1076,13 @@ const arrayParser = arr => {
       ? item.encodeABI()
       : '0x';
     const symbol = isEmpty(sendCurrency.value)
-      ? network.type.currencyName
+      ? network.value.type.currencyName
       : sendCurrency.value.symbol;
     const value =
       data !== '0x'
         ? !isSwap.value && !isBatch.value
           ? `${item.value} ${symbol}`
-          : `0 ${network.type.currencyName}`
+          : `0 ${network.value.type.currencyName}`
         : `${item.value} ${symbol}`;
     const from = item.from ? item.from : address;
     const toAdd = isContractCreation.value
@@ -1091,7 +1093,7 @@ const arrayParser = arr => {
     return [
       {
         title: 'Network',
-        value: network.type.name_long
+        value: network.value.type.name_long
       },
       {
         title: 'From ENS',
@@ -1122,7 +1124,7 @@ const arrayParser = arr => {
       },
       // {
       //   title: 'Transaction fee',
-      //   value: `${this.txFee} ${this.network.type.currencyName} ~ $${this.txFeeUSD}`
+      //   value: `${this.txFee} ${this.network.value.type.currencyName} ~ $${this.txFeeUSD}`
       // },
       {
         title: 'Nonce',

@@ -483,7 +483,7 @@ const ownerFormatted = computed(() => {
  */
 const txFee = computed(() => {
   const GAS_LIMIT = '21000';
-  const val = BigNumber(GAS_LIMIT).times(gasPrice);
+  const val = BigNumber(GAS_LIMIT).times(gasPrice.value);
   return formatFloatingPointValue(fromWei(val.toString())).value;
 });
 /**
@@ -491,7 +491,9 @@ const txFee = computed(() => {
  * Property returns formatted FIAT price
  */
 const formattedFiatTxFee = computed(() => {
-  const value = getFiatValue(BigNumber(fromWei(gasPrice)).times(fiatValue));
+  const value = getFiatValue(
+    BigNumber(fromWei(gasPrice.value)).times(fiatValue.value)
+  );
   return value;
 });
 /**
@@ -506,7 +508,9 @@ const formattedPrice = computed(() => {
  * Property returns formatted FIAT price
  */
 const formatFiatPrice = computed(() => {
-  const value = getFiatValue(BigNumber(fromWei(props.price)).times(fiatValue));
+  const value = getFiatValue(
+    BigNumber(fromWei(props.price)).times(fiatValue.value)
+  );
   return `~${value}`;
 });
 /**
@@ -516,7 +520,7 @@ const formatFiatPrice = computed(() => {
 const raribleLink = computed(() => {
   if (props.blockNumber !== '') {
     const endLInk = '?tab=details';
-    return isTestNetwork
+    return isTestNetwork.value
       ? `${RARIBLE_TEST_TOKEN}${props.blockNumber}${endLInk}`
       : `${RARIBLE_TOKEN}${props.blockNumber}${endLInk}`;
   }
@@ -529,7 +533,7 @@ const raribleLink = computed(() => {
 const raribleOwnerLink = computed(() => {
   if (props.blockNumber !== '') {
     const endLInk = '?tab=owned';
-    return isTestNetwork
+    return isTestNetwork.value
       ? `${RARIBLE_TEST_OWNER}${props.owner}${endLInk}`
       : `${RARIBLE_OWNER}${props.owner}${endLInk}`;
   }
@@ -548,20 +552,20 @@ const disableActionBtn = computed(() => {
  */
 const notEnoughMessage = computed(() => {
   const text = isOwned.value ? 'transfer' : 'mint';
-  return `Not enough ${network.type.name.toUpperCase()} to ${text}. `;
+  return `Not enough ${network.value.type.name.toUpperCase()} to ${text}. `;
 });
 const estimatedFeesTooltip = computed(() => {
   const formattedTotal = formatFloatingPointValue(
     fromWei(props.estimatedTotalWei)
   ).value;
   const estimate = isOwned.value
-    ? `Estimated transaction fee is ${formattedTotal} ${network.type.name}.`
-    : `Estimated total: mint price + transaction fee = ${formattedTotal} ${network.type.name}.`;
+    ? `Estimated transaction fee is ${formattedTotal} ${network.value.type.name}.`
+    : `Estimated total: mint price + transaction fee = ${formattedTotal} ${network.value.type.name}.`;
   return estimate;
 });
 const isAdded = computed(() => {
   if (length >= 1) {
-    const found = cart.find(item => {
+    const found = cart.value.find(item => {
       return item === props.blockNumber;
     });
     return found;

@@ -215,7 +215,7 @@ const getConstructor = abi => {
   return { inputs: [] };
 };
 const deploy = () => {
-  const contract = new web3.eth.Contract(JSON.parse(abiInterface.value));
+  const contract = new web3.value.eth.Contract(JSON.parse(abiInterface.value));
   const params = [];
   let details = {};
   for (const _input of constructorInputs.value) {
@@ -230,7 +230,7 @@ const deploy = () => {
       arguments: params
     })
     .send({
-      from: address,
+      from: address.value,
       value: isContructorPayable.value
         ? toHex(toBN(toWei(ethAmount.value)))
         : '0x00'
@@ -252,7 +252,7 @@ const deploy = () => {
     })
     .on('error', err => {
       trackContract(CONTRACT.DEPLOY_CONTRACT_FAIL);
-      instance.errorHandler(err);
+      instance.value.errorHandler(err);
     });
 };
 const valueInput = (idx, value) => {

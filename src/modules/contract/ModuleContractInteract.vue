@@ -170,14 +170,13 @@ import { CONTRACT } from '../analytics-opt-in/handlers/configs/events';
 import { useAmplitude } from '@/core/composables/amplitude';
 import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
-import { storeToRefs } from 'pinia';
 
 // injections/vue
 const { trackContract } = useAmplitude();
 const { address, balance } = useWalletStore();
 const { network, localContracts } = useGlobalStore();
+const { web3 } = useWalletStore();
 
-const { web3 } = storeToRefs(useWalletStore());
 // data
 const currentContract = ref(null);
 const interact = ref(false);
@@ -224,7 +223,7 @@ const mergedContracts = computed(() => {
   return [
     { text: 'Select a Contract', selectLabel: true, divider: true }
   ].concat(
-    checkContract(localContracts),
+    checkContract(localContracts.value),
     checkContract(networkContracts.value)
   );
 });
@@ -269,7 +268,7 @@ watch(
   }
 );
 watch(
-  () => web3,
+  () => web3.value,
   () => {
     generateNetworkContracts();
   }
@@ -282,7 +281,7 @@ onMounted(() => {
 
 // methods
 const generateNetworkContracts = () => {
-  network.type.contracts.then(contracts => {
+  network.value.type.contracts.then(contracts => {
     networkContracts.value = contracts;
   });
 };
@@ -337,12 +336,12 @@ const readWrite = () => {
     trackContract(CONTRACT.INTERACT_W_CONTRACT_WRITE);
     const rawTx = {
       to: contractAddress.value,
-      from: address,
+      from: address.value,
       value: ethPayable,
       data: caller.encodeABI()
     };
 
-    web3.eth
+    web3.value.eth
       .estimateGas(rawTx)
       .then(gasLimit => {
         trackContract(CONTRACT.INTERACT_W_CONTRACT_WRITE_SUCCESS);
@@ -356,7 +355,7 @@ const readWrite = () => {
   } else {
     trackContract(CONTRACT.INTERACT_W_CONTRACT_WRITE);
     caller
-      .send({ from: address })
+      .send({ from: address.value })
       .then(() => {
         trackContract(CONTRACT.INTERACT_W_CONTRACT_WRITE_SUCCESS);
       })
@@ -369,7 +368,7 @@ const readWrite = () => {
 const payableInput = amount => {
   if (!amount || amount === '') amount = '0';
   ethPayable.value = toWei(amount, 'ether');
-  hasEnough.value = toBN(ethPayable.value).lte(balance);
+  hasEnough.value = toBN(ethPayable.value).lte(balance.value);
 };
 const valueInput = (idx, value) => {
   selectedMethod.value.inputs[idx].value = value;
@@ -395,7 +394,7 @@ const closeInteract = () => {
 };
 const showInteract = () => {
   interact.value = true;
-  currentContract.value = new web3.eth.Contract(
+  currentContract.value = new web3.value.eth.Contract(
     JSON.parse(abi.value),
     contractAddress.value
   );

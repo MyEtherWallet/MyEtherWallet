@@ -234,15 +234,17 @@ const convertedPrice = computed(() => {
 });
 const mintPrice = computed(() => {
   return isReady.value
-    ? `${BigNumber(convertedPrice).toString()} ${network.type.currencyName}`
+    ? `${BigNumber(convertedPrice).toString()} ${
+        network.value.type.currencyName
+      }`
     : '';
 });
 const mintFiatPrice = computed(() => {
-  const val = BigNumber(convertedPrice).times(fiatValue).toString();
+  const val = BigNumber(convertedPrice).times(fiatValue.value).toString();
   return isReady.value ? getFiatValue(val) : '';
 });
 const isOwned = computed(() => {
-  return isReady.value ? props.blockHandler.owner === address : false;
+  return isReady.value ? props.blockHandler.owner === address.value : false;
 });
 const isUnavailable = computed(() => {
   return isReady.value ? props.blockHandler.hasOwner : false;
