@@ -1,5 +1,4 @@
 import web3 from 'web3';
-import { isHexStrict, isAddress } from 'web3-utils';
 import { ROOTSTOCK } from '@/utils/networks/types';
 import {
   toChecksumAddress as toChecksumAddr,
@@ -27,7 +26,9 @@ const isAddress = address => {
     return isValidChecksumAddress(address, chainId);
   }
 
-  return address && isHexStrict(address) && isAddress(address);
+  return (
+    address && web3.utils.isHexStrict(address) && web3.utils.isAddress(address)
+  );
 };
 const toChecksumAddress = address => {
   const { network } = useGlobalStore();

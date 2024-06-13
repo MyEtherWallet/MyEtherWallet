@@ -193,7 +193,6 @@ import { toBNSafe } from '@/core/helpers/numberFormatHelper';
 
 import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
-import { storeToRefs } from 'pinia';
 
 const ModuleAddressBook = defineAsyncComponent(() =>
   import('@/modules/address-book/ModuleAddressBook')
@@ -201,8 +200,7 @@ const ModuleAddressBook = defineAsyncComponent(() =>
 
 // injections/use
 const { instance, identifier, setWeb3Instance } = useWalletStore();
-const { setNetwork } = useGlobalStore();
-const { network } = storeToRefs(useGlobalStore());
+const { setNetwork, network } = useGlobalStore();
 
 // data
 const isSignedTxOpen = ref(false);

@@ -1,5 +1,5 @@
-import { defineStore, computed } from 'pinia';
-import { ref } from 'vue';
+import { defineStore } from 'pinia';
+import { computed, ref } from 'vue';
 import store from 'store';
 import Configs from '../configs';
 import Notification from '@/modules/notifications/handlers/handlerNotification';

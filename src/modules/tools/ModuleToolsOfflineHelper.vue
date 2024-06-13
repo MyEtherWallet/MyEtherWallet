@@ -232,17 +232,15 @@ import sanitizeHex from '@/core/helpers/sanitizeHex';
 import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
 import { useAddressBookStore } from '@/core/store/addressBook';
-import { storeToRefs } from 'pinia';
 
 const NetworkSwitch = defineAsyncComponent(() =>
   import('@/modules/network/components/NetworkSwitch.vue')
 );
 
 // injections/use
-const { address, setWeb3Instance } = useWalletStore();
+const { address, setWeb3Instance, web3 } = useWalletStore();
 const { addressBookStore } = useAddressBookStore();
-const { network } = storeToRefs(useGlobalStore());
-const { web3 } = storeToRefs(useWalletStore());
+const { network } = useGlobalStore();
 
 // props
 const props = defineProps({

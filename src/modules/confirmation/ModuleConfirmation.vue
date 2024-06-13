@@ -301,7 +301,6 @@ import { useVuetify } from '@/core/composables/vuetify';
 import { useI18n } from 'vue-i18n-composable';
 import { useArticleStore } from '@/core/store/article';
 import { useAddressBookStore } from '@/core/store/addressBook';
-import { storeToRefs } from 'pinia';
 
 const ScrollBlock = defineAsyncComponent(() =>
   import('./components/ScrollBlock')
@@ -334,15 +333,14 @@ const {
   identifier,
   isHardware,
   isOfflineApp,
-  hasGasPriceOption
+  hasGasPriceOption,
+  address
 } = useWalletStore();
 const { fiatValue } = useExternalStore();
 const { network, getFiatValue } = useGlobalStore();
 const { getArticle } = useArticleStore();
 const { addressBookStore } = useAddressBookStore();
 const { t } = useI18n();
-
-const { address } = storeToRefs(useWalletStore());
 
 // data
 const footer = ref({
@@ -452,7 +450,7 @@ const txFee = computed(() => {
   return fromWei(parsedTxFee);
 });
 const txFeeUSD = computed(() => {
-  return getFiatValue(BigNumber(txFee).times(fiatValue).toFixed(2));
+  return getFiatValue(BigNumber(txFee).times(fiatValue.value).toFixed(2));
 });
 const value = computed(() => {
   if (!isBatch.value) {
@@ -617,7 +615,7 @@ onBeforeMount(() => {
         const result = Buffer.from(res).toString('hex');
         signature.value = JSON.stringify(
           {
-            address: address,
+            address: address.value,
             msg: msg,
             sig: result,
             version: '3',
@@ -768,7 +766,7 @@ const sendBatchTransaction = () => {
   const _arr = signedTxArray.value;
   const promises = _arr.map((tx, idx) => {
     const _tx = tx.tx;
-    _tx.from = address;
+    _tx.from = address.value;
     const _rawTx = tx.rawTransaction;
     const promiEvent = web3.value.eth[_method](_rawTx);
     _tx.network = network.value.type.name;
@@ -789,7 +787,7 @@ const sendBatchTransaction = () => {
       })
       .on('transactionHash', hash => {
         const storeKey = sha3(
-          `${network.value.type.name}-${address.toLowerCase()}`
+          `${network.value.type.name}-${address.value.toLowerCase()}`
         );
         const localStoredObj = locStore.get(storeKey);
         locStore.set(storeKey, {
@@ -968,7 +966,7 @@ const signBatchTx = async () => {
             });
             batchTxEvents.push(event);
             const storeKey = sha3(
-              `${network.value.type.name}-${address.toLowerCase()}`
+              `${network.value.type.name}-${address.value.toLowerCase()}`
             );
             const localStoredObj = locStore.get(storeKey);
             locStore.set(storeKey, {
@@ -1084,7 +1082,7 @@ const arrayParser = arr => {
           ? `${item.value} ${symbol}`
           : `0 ${network.value.type.currencyName}`
         : `${item.value} ${symbol}`;
-    const from = item.from ? item.from : address;
+    const from = item.from ? item.from : address.value;
     const toAdd = isContractCreation.value
       ? ''
       : item.to

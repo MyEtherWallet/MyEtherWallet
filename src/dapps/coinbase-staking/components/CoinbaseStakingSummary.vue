@@ -137,13 +137,11 @@ import { useAmplitude } from '@/core/composables/amplitude';
 import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
 import { useCoinbaseStakingStore } from '../store';
-import { storeToRefs } from 'pinia';
 
 // injections
 const { openBuySell } = useBuySell();
 const { trackDapp } = useAmplitude();
-const { network, gasPriceByType } = useGlobalStore();
-const { gasPriceType } = storeToRefs(useGlobalStore());
+const { network, gasPriceByType, gasPriceType } = useGlobalStore();
 const { balanceInETH, address, instance, web3 } = useWalletStore();
 const { lastFetched, fetchedDetails, storeFetched } = useCoinbaseStakingStore();
 

@@ -141,7 +141,6 @@ import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
 import { useExternalStore } from '@/core/store/external';
 import { useEthBlocksTxsStore } from '../store';
-import { storeToRefs } from 'pinia';
 
 const BlockResultComponent = defineAsyncComponent(() =>
   import('../components/BlockResultComponent')
@@ -151,10 +150,8 @@ const { openBuySell } = useBuySell();
 const { network, gasPrice, gasPriceByType, getFiatValue, gasPriceType } =
   useGlobalStore();
 const { web3, address, balance } = useWalletStore();
-const { emptyCart } = useEthBlocksTxsStore();
+const { emptyCart, cart } = useEthBlocksTxsStore();
 const { fiatValue } = useExternalStore();
-
-const { cart } = storeToRefs(useEthBlocksTxsStore());
 
 // data
 const blocks = ref([]);
@@ -274,7 +271,7 @@ const fetchBlocks = async () => {
   try {
     const foundBlocks = [];
     for (let index = 0; index < locCart.length; index++) {
-      const found = blockCache[cart[index]];
+      const found = blockCache[cart.value[index]];
       if (found) {
         foundBlocks.push(found);
         continue;
