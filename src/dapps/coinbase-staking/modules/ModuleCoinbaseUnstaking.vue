@@ -204,9 +204,8 @@ const CoinbaseStakingSummary = defineAsyncComponent(() =>
 // injections/use
 const { openBuySell } = useBuySell();
 const { trackDapp } = useAmplitude();
-const { network, isEthNetwork, gasPriceByType, getFiatValue } =
+const { network, isEthNetwork, gasPriceByType, getFiatValue, gasPriceType } =
   useGlobalStore();
-const { gasPriceType } = storeToRefs(useGlobalStore());
 const { fiatValue } = useExternalStore();
 const { balanceInETH, web3, address, instance } = useWalletStore();
 const { fetchedDetails } = useCoinbaseStakingStore();
@@ -221,7 +220,7 @@ const loading = ref(false);
 
 // computed
 const details = computed(() => {
-  return fetchedDetails[network.type.name];
+  return fetchedDetails.value[network.value.type.name];
 });
 const hasDetails = computed(() => {
   return !isEmpty(details.value);
@@ -232,12 +231,12 @@ const stakedBalance = computed(() => {
     : 0;
 });
 const currencyName = computed(() => {
-  return network.type.currencyName;
+  return network.value.type.currencyName;
 });
 const ethTotalFee = computed(() => {
   const gasPrice = BigNumber(locGasPrice.value).gt(0)
     ? BigNumber(locGasPrice.value)
-    : BigNumber(gasPriceByType(gasPriceType));
+    : BigNumber(gasPriceByType(gasPriceType.value));
   const locGasLimit = BigNumber(gasLimit.value).gt('21000')
     ? gasLimit.value
     : MIN_GAS_LIMIT;
@@ -247,11 +246,11 @@ const ethTotalFee = computed(() => {
 const gasPriceFiat = computed(() => {
   const gasPrice = BigNumber(ethTotalFee.value);
   return gasPrice.gt(0)
-    ? getFiatValue(gasPrice.times(fiatValue).toFixed())
+    ? getFiatValue(gasPrice.times(fiatValue.value).toFixed())
     : '0';
 });
 const hasEnoughBalanceToStake = computed(() => {
-  return BigNumber(ethTotalFee.value).lte(balanceInETH);
+  return BigNumber(ethTotalFee.value).lte(balanceInETH.value);
 });
 const isValid = computed(() => {
   return (
@@ -288,8 +287,8 @@ const errorMessages = computed(() => {
   return '';
 });
 const buyMoreStr = computed(() => {
-  return isEthNetwork && !hasEnoughBalanceToStake.value
-    ? network.type.canBuy
+  return isEthNetwork.value && !hasEnoughBalanceToStake.value
+    ? network.value.type.canBuy
       ? 'Buy more.'
       : ''
     : null;
@@ -297,15 +296,15 @@ const buyMoreStr = computed(() => {
 
 // watch
 watch(
-  () => gasPriceType,
+  () => gasPriceType.value,
   () => {
-    locGasPrice.value = gasPriceByType(gasPriceType);
+    locGasPrice.value = gasPriceByType(gasPriceType.value);
   }
 );
 
 // mounted
 onMounted(() => {
-  locGasPrice.value = gasPriceByType(gasPriceType);
+  locGasPrice.value = gasPriceByType(gasPriceType.value);
 });
 
 // methods
@@ -318,8 +317,8 @@ const unstake = async () => {
   window.scrollTo(0, 0);
   loading.value = true;
   const { gasLimit, to, data, value, error } = await fetch(
-    `${API}?address=${address}&action=unstake&networkId=${
-      network.type.chainID
+    `${API}?address=${address.value}&action=unstake&networkId=${
+      network.value.type.chainID
     }&amount=${toBase(unstakeAmount, 18)}`
   ).then(res => res.json());
   if (error) {
@@ -334,11 +333,11 @@ const unstake = async () => {
   const txObj = {
     gasLimit: gasLimit,
     to: to,
-    from: address,
+    from: address.value,
     data: data,
     value: value
   };
-  web3.eth
+  web3.value.eth
     .sendTransaction(txObj)
     .once('receipt', () => {
       EventBus.$emit('fetchSummary');
@@ -355,7 +354,7 @@ const unstake = async () => {
     })
     .catch(e => {
       reset();
-      instance.errorHandler(e);
+      instance.value.errorHandler(e);
       trackDapp(CB_TRACKING.UNSTAKE_FAIL);
     });
 };

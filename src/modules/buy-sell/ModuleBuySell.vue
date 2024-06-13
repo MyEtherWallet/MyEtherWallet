@@ -123,7 +123,7 @@ const addTokenPadding = ref(false);
 
 // computed
 const sellSupported = computed(() => {
-  return network.type.name === ETH.name;
+  return network.value.type.name === ETH.name;
 });
 const inWallet = computed(() => {
   return route.fullPath.includes('/wallet') && !route.meta.noAuth;
@@ -143,12 +143,12 @@ const defaultCurrency = computed(() => {
 });
 const supportedNetwork = computed(() => {
   return (
-    network.type.name === ETH.name ||
-    network.type.name === BSC.name ||
-    network.type.name === MATIC.name ||
-    network.type.name === MATIC.name ||
-    network.type.name === OP.name ||
-    network.type.name === ARB.name
+    network.value.type.name === ETH.name ||
+    network.value.type.name === BSC.name ||
+    network.value.type.name === MATIC.name ||
+    network.value.type.name === MATIC.name ||
+    network.value.type.name === OP.name ||
+    network.value.type.name === ARB.name
   );
 });
 const leftBtn = computed(() => {
@@ -183,13 +183,13 @@ watch(
   }
 );
 watch(
-  () => address,
+  () => address.value,
   () => {
     selectedCurrency.value = defaultCurrency;
   }
 );
 watch(
-  () => network,
+  () => network.value,
   () => {
     selectedCurrency.value = {};
     selectedCurrency.value = defaultCurrency;
@@ -207,7 +207,7 @@ const onTab = val => {
 const setTokens = async () => {
   if (!inWallet.value) {
     const tokenMap = new Map();
-    const tokens = await network.type.tokens;
+    const tokens = await network.value.type.tokens;
     tokens.forEach(token => {
       tokenMap.set(token.address.toLowerCase(), token);
     });

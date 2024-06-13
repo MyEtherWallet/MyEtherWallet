@@ -1,3 +1,4 @@
+import { ref } from 'vue';
 import { defineStore } from 'pinia';
 
 import localStore from 'store';
@@ -37,4 +38,37 @@ const addressBook = {
   }
 };
 
-export const useAddressBookStore = defineStore('addressBook', addressBook);
+export const useAddressBookStore = defineStore('addressBook', () => {
+  const localStore = ref(true);
+  const addressBookStore = ref([]);
+  const isMigrated = ref(false);
+  const stateVersion = ref('1.0.0');
+
+  // actions
+  const initStore = () => {
+    if (store.get(Configs.LOCAL_STORAGE_KEYS.addressBook)) {
+      const savedStore = store.get(Configs.LOCAL_STORAGE_KEYS.addressBook);
+      if (savedStore.stateVersion === Configs.VERSION.addressBook) {
+        $patch(Object.assign($state, savedStore));
+      }
+    }
+  };
+
+  const setAddressBook = val => {
+    addressBookStore.value = val;
+  };
+
+  const setMigrated = val => {
+    isMigrated.value = val;
+  };
+
+  return {
+    localStore,
+    addressBookStore,
+    isMigrated,
+    stateVersion,
+    initStore,
+    setAddressBook,
+    setMigrated
+  };
+});

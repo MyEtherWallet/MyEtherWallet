@@ -971,7 +971,7 @@ const onRepay = async ({ amount, reserve, interestRateMode, user }) => {
     } else {
       txs = [resetApproveData, approveData, data];
     }
-    const gasLimits = await estimateGasList(network.type.name, txs);
+    const gasLimits = await estimateGasList(network.value.type.name, txs);
     sendTxns(txs, gasLimits);
   } catch (e) {
     throw new Error(e);
@@ -1074,7 +1074,7 @@ const formatAllowanceData = async (tokenAddress, user, spender) => {
         type: 'function'
       }
     ];
-    const localToken = web3.eth.Contract(LOCAL_ABI, tokenAddress);
+    const localToken = web3.value.eth.Contract(LOCAL_ABI, tokenAddress);
     return localToken.methods.allowance(user, spender).call();
   } catch (e) {
     throw new Error(e);
@@ -1111,14 +1111,14 @@ const setCollateral = async ({ reserve, useAsCollateral, user }) => {
 const formatTxData = (txData, callback) => {
   try {
     const tx = {
-      from: address,
+      from: address.value,
       to: txData.to,
       data: txData.data,
       value: '0',
-      gasPrice: gasPriceByType(gasPriceType)
+      gasPrice: gasPriceByType(gasPriceType.value)
     };
 
-    web3.eth
+    web3.value.eth
       .estimateGas(tx)
       .then(res => {
         tx['gas'] = toHex(res);
@@ -1157,11 +1157,11 @@ const sendTxns = (txns, gasLimits) => {
     if (!gasLimits) throw new Error('Unable to estimate transaction fees');
     const locTxns = txns.map((tx, index) => {
       return {
-        from: address,
+        from: address.value,
         to: tx.to,
         data: tx.data,
         value: '0',
-        gasPrice: gasPriceByType(gasPriceType),
+        gasPrice: gasPriceByType(gasPriceType.value),
         gas: toHex(gasLimits[index])
       };
     });
@@ -1169,11 +1169,11 @@ const sendTxns = (txns, gasLimits) => {
     locTxns.forEach(tx => {
       totalGasPrice = totalGasPrice.add(toBN(tx.gas).mul(toBN(tx.gasPrice)));
     });
-    if (totalGasPrice.gt(toBN(balanceInWei))) {
+    if (totalGasPrice.gt(toBN(balanceInWei.value))) {
       Toast('Insufficient funds for gas', {}, ERROR);
       return;
     }
-    web3.mew
+    web3.value.mew
       .sendBatchTransactions(txns)
       .then(res => {
         if (res?.rejected) {
@@ -1198,7 +1198,7 @@ const sendTxns = (txns, gasLimits) => {
  */
 const sendTransaction = param => {
   if (param) {
-    return web3.mew.sendTransaction(param);
+    return web3.value.mew.sendTransaction(param);
   }
   return new Error('No Parameters sent!');
 };
@@ -1254,10 +1254,10 @@ const getReserveBalance = () => {
       reserve.tokenBalance = 0;
       reserve.user = reserve.user || {};
       if (reserve.symbol === 'ETH') {
-        reserve.tokenBalance = balanceInETH;
+        reserve.tokenBalance = balanceInETH.value;
       }
 
-      const foundReserve = tokensList.find(
+      const foundReserve = tokensList.value.find(
         elem => elem.symbol === reserve.symbol
       );
       if (foundReserve) {

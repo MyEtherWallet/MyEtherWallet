@@ -25,7 +25,7 @@ export const useGasPrice = () => {
 
   // computed
   const gasButtons = () => {
-    if (!gasPrice) return [];
+    if (!gasPrice.value) return [];
     const economy = fromWei(gasPriceByType(gasPriceTypes.ECONOMY));
     const regular = fromWei(gasPriceByType(gasPriceTypes.REGULAR));
     const fast = fromWei(gasPriceByType(gasPriceTypes.FAST));
@@ -34,8 +34,9 @@ export const useGasPrice = () => {
         title: gasPriceTypes.ECONOMY,
         gas: `${economy}`,
         usd: `$ ${
-          formatFiatValue(BigNumber(fiatValue).times(fromWei(toWei(economy))))
-            .value
+          formatFiatValue(
+            BigNumber(fiatValue.value).times(fromWei(toWei(economy)))
+          ).value
         }`,
         time: estimatedTime(gasPriceTypes.ECONOMY),
         priority: 'Normal priority'
@@ -44,8 +45,9 @@ export const useGasPrice = () => {
         title: gasPriceTypes.REGULAR,
         gas: `${regular}`,
         usd: `$ ${
-          formatFiatValue(BigNumber(fiatValue).times(fromWei(toWei(regular))))
-            .value
+          formatFiatValue(
+            BigNumber(fiatValue.value).times(fromWei(toWei(regular)))
+          ).value
         }`,
         time: estimatedTime(gasPriceTypes.REGULAR),
         priority: 'Higher priority'
@@ -54,8 +56,9 @@ export const useGasPrice = () => {
         title: gasPriceTypes.FAST,
         gas: `${fast}`,
         usd: `$ ${
-          formatFiatValue(BigNumber(fiatValue).times(fromWei(toWei(fast))))
-            .value
+          formatFiatValue(
+            BigNumber(fiatValue.value).times(fromWei(toWei(fast)))
+          ).value
         }`,
         time: estimatedTime(gasPriceTypes.FAST),
         priority: 'Highest priority'
@@ -63,7 +66,7 @@ export const useGasPrice = () => {
     ];
   };
   watch(
-    () => web3,
+    () => web3.value,
     () => {
       fetchGasPrice();
     }
@@ -79,7 +82,7 @@ export const useGasPrice = () => {
     setGasPriceType(selected);
   };
   const fetchGasPrice = () => {
-    if (online && !isOfflineApp) updateGasPrice();
+    if (online.value && !isOfflineApp.value) updateGasPrice();
   };
 
   return {

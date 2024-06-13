@@ -131,18 +131,18 @@ export const useWalletStore = defineStore('wallets', () => {
   };
   const setWeb3Instance = provider => {
     const { currentNetwork, Networks, gasPrice, network } = useGlobalStore();
-    const hostUrl = currentNetwork.url
-      ? url.parse(currentNetwork.url)
-      : Networks['ETH'][0];
+    const hostUrl = currentNetwork.value.url
+      ? url.parse(currentNetwork.value.url)
+      : Networks.value['ETH'][0];
     const options = {};
     // eslint-disable-next-line
     const parsedUrl = `${hostUrl.protocol}//${hostUrl.host}${
-      currentNetwork.port ? ':' + currentNetwork.port : ''
+      currentNetwork.value.port ? ':' + currentNetwork.value.port : ''
     }${hostUrl.pathname ? hostUrl.pathname : ''}`;
-    currentNetwork.username !== '' && currentNetwork.password !== ''
+    currentNetwork.value.username !== '' && currentNetwork.value.password !== ''
       ? (options['headers'] = {
           authorization: `Basic: ${btoa(
-            currentNetwork.username + ':' + currentNetwork.password
+            currentNetwork.value.username + ':' + currentNetwork.value.password
           )}`
         })
       : {};
@@ -171,10 +171,10 @@ export const useWalletStore = defineStore('wallets', () => {
           arr[i].gas = gas;
           arr[i].gasLimit = gas;
           arr[i].chainId = !arr[i].chainId
-            ? network.type.chainID
+            ? network.value.type.chainID
             : arr[i].chainId;
           arr[i].gasPrice =
-            arr[i].gasPrice === undefined ? gasPrice : arr[i].gasPrice;
+            arr[i].gasPrice === undefined ? gasPrice.value : arr[i].gasPrice;
           arr[i] = formatters.inputCallFormatter(arr[i]);
         }
         const batchSignCallback = promises => {

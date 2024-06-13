@@ -198,16 +198,14 @@ import { useWalletStore } from '@/core/store/wallet';
 import { useExternalStore } from '@/core/store/external';
 import { useAmplitude } from '@/core/composables/amplitude';
 import { useBuySell } from '@/core/composables/buyMore';
-import { storeToRefs } from 'pinia';
 
 import CoinbaseStakingSummary from '../components/CoinbaseStakingSummary';
 
 // injections/use
 const { trackDapp } = useAmplitude();
 const { openBuySell } = useBuySell();
-const { network, isEthNetwork, gasPriceByType, getFiatValue } =
+const { network, isEthNetwork, gasPriceByType, getFiatValue, gasPriceType } =
   useGlobalStore();
-const { gasPriceType } = storeToRefs(useGlobalStore());
 const { balanceInETH, web3, address, instance, identifier } = useWalletStore();
 const { fiatValue } = useExternalStore();
 
@@ -221,12 +219,12 @@ const loading = ref(false);
 
 // computed
 const currencyName = computed(() => {
-  return network.type.currencyName;
+  return network.value.type.currencyName;
 });
 const ethTotalFee = computed(() => {
   const gasPrice = BigNumber(locGasPrice.value).gt(0)
     ? BigNumber(locGasPrice.value)
-    : BigNumber(gasPriceByType(gasPriceType));
+    : BigNumber(gasPriceByType(gasPriceType.value));
   const locGasLimit = BigNumber(gasLimit.value).gt('21000')
     ? gasLimit.value
     : MIN_GAS_LIMIT;
@@ -240,10 +238,12 @@ const gasPriceFiat = computed(() => {
     : '0';
 });
 const hasEnoughBalanceToStake = computed(() => {
-  return BigNumber(ethTotalFee.value).plus(stakeAmount.value).lte(balanceInETH);
+  return BigNumber(ethTotalFee.value)
+    .plus(stakeAmount.value)
+    .lte(balanceInETH.value);
 });
 const hasEnoughBalance = computed(() => {
-  return BigNumber(ethTotalFee.value).lte(balanceInETH);
+  return BigNumber(ethTotalFee.value).lte(balanceInETH.value);
 });
 const isValid = computed(() => {
   return BigNumber(stakeAmount.value).gt(0) && hasEnoughBalanceToStake.value;
@@ -270,8 +270,8 @@ const errorMessages = computed(() => {
   return '';
 });
 const buyMoreStr = computed(() => {
-  return isEthNetwork && !hasEnoughBalanceToStake.value
-    ? network.type.canBuy
+  return isEthNetwork.value && !hasEnoughBalanceToStake.value
+    ? network.value.type.canBuy
       ? 'Buy more.'
       : ''
     : null;
@@ -279,15 +279,15 @@ const buyMoreStr = computed(() => {
 
 // watch
 watch(
-  () => gasPriceType,
+  () => gasPriceType.value,
   () => {
-    locGasPrice.value = gasPriceByType(gasPriceType);
+    locGasPrice.value = gasPriceByType(gasPriceType.value);
   }
 );
 
 // mounted
 onMounted(() => {
-  locGasPrice.value = gasPriceByType(gasPriceType);
+  locGasPrice.value = gasPriceByType(gasPriceType.value);
 });
 
 // methods
@@ -300,8 +300,8 @@ const stake = async () => {
   trackDapp(CB_TRACKING.CLICK_STAKE);
   loading.value = true;
   const { gasLimit, to, data, value, error } = await fetch(
-    `${API}?address=${address}&action=stake&networkId=${
-      network.type.chainID
+    `${API}?address=${address.value}&action=stake&networkId=${
+      network.value.type.chainID
     }&amount=${toBase(stakeAmount, 18)}`
   ).then(res => res.json());
   if (error) {
@@ -316,11 +316,11 @@ const stake = async () => {
   const txObj = {
     gasLimit: gasLimit,
     to: to,
-    from: address,
+    from: address.value,
     data: data,
     value: value
   };
-  web3.eth
+  web3.value.eth
     .sendTransaction(txObj)
     .once('receipt', () => {
       EventBus.$emit('fetchSummary');
@@ -334,11 +334,11 @@ const stake = async () => {
       reset();
       EventBus.$emit('fetchSummary');
       trackDapp(CB_TRACKING.STAKE_SUCCESS, {
-        wallet: identifier
+        wallet: identifier.value
       });
     })
     .catch(e => {
-      instance.errorHandler(e);
+      instance.value.errorHandler(e);
       reset();
       trackDapp(CB_TRACKING.STAKE_FAIL);
     });
@@ -349,7 +349,9 @@ const setAmount = debounce(function (val) {
 }, 500);
 const setMax = () => {
   if (hasEnoughBalanceToStake.value) {
-    const max = BigNumber(balanceInETH).minus(BigNumber(ethTotalFee.value));
+    const max = BigNumber(balanceInETH.value).minus(
+      BigNumber(ethTotalFee.value)
+    );
     setAmount(max.toFixed());
   }
 };

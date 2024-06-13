@@ -102,7 +102,7 @@ export const useGlobalStore = defineStore('global', () => {
     const matched = await matchNetwork(
       chainID,
       walletType,
-      selectedEIP6963Provider
+      selectedEIP6963Provider.value
     );
     if (matched) {
       const _netObj = Object.assign({}, network);
@@ -177,9 +177,9 @@ export const useGlobalStore = defineStore('global', () => {
       return baseFee.add(priorityFee).toString();
     };
   });
-  const gasPrice = computed(state => {
+  const gasPrice = computed(() => {
     if (!isEIP1559SupportedNetwork.value) {
-      return getGasBasedOnType(state.baseGasPrice, state.gasPriceType);
+      return getGasBasedOnType(baseGasPrice.value, gasPriceType.value);
     }
     return gasFeeMarketInfo.value.maxFeePerGas.toString();
   });
