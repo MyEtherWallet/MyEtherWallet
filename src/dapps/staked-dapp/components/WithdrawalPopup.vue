@@ -155,7 +155,7 @@
 </template>
 
 <script setup>
-import { defineAsyncComponent, defineProps, ref, computed, watch } from 'vue';
+import { defineAsyncComponent, ref, computed, watch } from 'vue';
 import {
   keystoreToBLSExecution,
   mnemonicToBLSExecution

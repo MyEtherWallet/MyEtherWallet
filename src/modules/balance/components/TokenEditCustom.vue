@@ -130,7 +130,7 @@
 </template>
 
 <script setup>
-import { defineProps, computed, ref, defineEmits } from 'vue';
+import { computed, ref } from 'vue';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import { cloneDeep } from 'lodash';
 

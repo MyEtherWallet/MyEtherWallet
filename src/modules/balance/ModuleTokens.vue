@@ -107,7 +107,7 @@
   </div>
 </template>
 <script setup>
-import { defineAsyncComponent, defineProps, ref, computed } from 'vue';
+import { defineAsyncComponent, ref, computed } from 'vue';
 import { uniqWith, isEqual } from 'lodash';
 import BigNumber from 'bignumber.js';
 

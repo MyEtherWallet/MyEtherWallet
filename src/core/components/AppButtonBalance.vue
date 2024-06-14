@@ -30,7 +30,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, defineProps } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 
 // props

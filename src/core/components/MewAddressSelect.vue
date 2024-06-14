@@ -123,19 +123,17 @@
   </v-combobox>
 </template>
 
-<script>
-const USER_INPUT_TYPES = {
-  typed: 'TYPED',
-  selected: 'SELECTED'
-};
-</script>
 <script setup>
-import { ref, defineProps, watch, computed, defineEmits } from 'vue';
+import { ref, watch, computed } from 'vue';
 
 import MewBlockie from './MewBlockie.vue';
 import MewCopy from './MewCopy.vue';
 import MewTransformHash from './MewTransformHash.vue';
 
+const USER_INPUT_TYPES = {
+  typed: 'TYPED',
+  selected: 'SELECTED'
+};
 // emits
 const emit = defineEmits(['input', 'saveAddress']);
 

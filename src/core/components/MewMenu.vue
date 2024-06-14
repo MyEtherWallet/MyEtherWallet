@@ -77,14 +77,7 @@
 </template>
 
 <script setup>
-import {
-  ref,
-  onMounted,
-  computed,
-  defineProps,
-  defineEmits,
-  onBeforeMount
-} from 'vue';
+import { ref, onMounted, computed, onBeforeMount } from 'vue';
 
 // emits
 const emits = defineEmits(['goToPage']);

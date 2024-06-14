@@ -164,7 +164,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, defineEmits } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import ScrollMagic from 'scrollmagic';
 import { useRoute } from 'vue-router/composables';
 

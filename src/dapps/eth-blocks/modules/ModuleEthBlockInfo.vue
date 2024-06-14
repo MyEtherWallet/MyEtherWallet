@@ -216,13 +216,14 @@
   </v-container>
 </template>
 
-<script>
-const MIN_GAS_TRANSFER = 150000;
-const MIN_GAS_MINT = 350000;
-</script>
 <script setup>
 import { defineAsyncComponent, ref, computed, onMounted, watch } from 'vue';
 import { toBN } from 'web3-utils';
+
+import {
+  ETH_BLOCKS_MIN_GAS_MINT,
+  ETH_BLOCKS_MIN_GAS_TRANSFER
+} from '@/core/configs/commons';
 
 import { BLOCK_ALERT } from '../handlers/helpers/blockAlertType';
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
@@ -294,7 +295,9 @@ const estimatedTotal = computed(() => {
     alert.value === BLOCK_ALERT.AVAILABLE
   ) {
     const gasLimit =
-      alert.value === BLOCK_ALERT.OWNED ? MIN_GAS_TRANSFER : MIN_GAS_MINT;
+      alert.value === BLOCK_ALERT.OWNED
+        ? ETH_BLOCKS_MIN_GAS_TRANSFER
+        : ETH_BLOCKS_MIN_GAS_MINT;
     const txFee = toBN(gasLimit).mul(toBN(gasPrice.value));
     return alert.value === BLOCK_ALERT.OWNED
       ? txFee.toString()

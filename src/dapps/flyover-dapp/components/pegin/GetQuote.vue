@@ -60,7 +60,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, defineEmits } from 'vue';
+import { ref, onMounted } from 'vue';
 import { getQuote } from '../../handlers/pegin';
 import { fromBase, toBase } from '@/core/helpers/unit';
 import { getProviders, getDetails } from '../../handlers/helpers/provider';

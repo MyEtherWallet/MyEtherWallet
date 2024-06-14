@@ -176,15 +176,7 @@
 </template>
 
 <script setup>
-import {
-  defineProps,
-  defineAsyncComponent,
-  ref,
-  watch,
-  computed,
-  onMounted,
-  defineEmits
-} from 'vue';
+import { defineAsyncComponent, ref, watch, computed, onMounted } from 'vue';
 import BigNumber from 'bignumber.js';
 import { fromWei } from 'web3-utils';
 

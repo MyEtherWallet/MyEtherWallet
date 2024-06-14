@@ -165,7 +165,7 @@
 </template>
 
 <script setup>
-import { defineAsyncComponent, defineProps, ref, computed } from 'vue';
+import { defineAsyncComponent, ref, computed } from 'vue';
 import BigNumber from 'bignumber.js';
 import { fromWei } from 'web3-utils';
 import { some, isEmpty } from 'lodash';

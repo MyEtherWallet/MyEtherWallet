@@ -7,7 +7,6 @@
   <img :height="imgHeight" :src="getIcon()" />
 </template>
 <script setup>
-import { defineProps } from 'vue';
 import aave from '@/assets/images/icon-component/aave.svg';
 import account from '@/assets/images/icon-component/account.svg';
 import acctValue from '@/assets/images/icon-component/acct-value.svg';

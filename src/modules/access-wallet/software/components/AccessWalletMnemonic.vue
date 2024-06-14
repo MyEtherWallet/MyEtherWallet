@@ -145,7 +145,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref, computed, watch, defineEmits } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { isEmpty } from 'lodash';
 
 import { Toast, ERROR, SENTRY } from '@/modules/toast/handler/handlerToast';

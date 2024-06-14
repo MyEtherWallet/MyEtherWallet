@@ -101,7 +101,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref, defineEmits } from 'vue';
+import { ref } from 'vue';
 
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { ACCESS_WALLET } from '@/modules/analytics-opt-in/handlers/configs/events';

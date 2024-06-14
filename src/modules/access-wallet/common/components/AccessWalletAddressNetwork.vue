@@ -183,17 +183,16 @@
     />
   </div>
 </template>
-<script>
-const MAX_ADDRESSES = 5;
-</script>
 <script setup>
-import { defineProps, ref, computed, watch, onMounted, defineEmits } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 import { useQuery } from '@vue/apollo-composable';
 import { fromWei, toChecksumAddress } from 'web3-utils';
 import { isEmpty, isEqual } from 'underscore';
 import ENS from '@ensdomains/ensjs';
 import Web3 from 'web3';
 import { isValidAddress } from 'ethereumjs-util';
+
+import { MAX_ADDRESSES } from '@/core/configs/commons';
 
 import NetworkSwitch from '@/modules/network/components/NetworkSwitch.vue';
 import AccessWalletDerivationPath from '@/modules/access-wallet/hardware/components/AccessWalletDerivationPath.vue';

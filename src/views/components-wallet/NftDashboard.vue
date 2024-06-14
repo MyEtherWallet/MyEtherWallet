@@ -96,7 +96,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { isEmpty } from 'lodash';
 
 import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';

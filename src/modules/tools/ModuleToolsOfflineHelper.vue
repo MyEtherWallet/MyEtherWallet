@@ -219,7 +219,7 @@
 </template>
 
 <script setup>
-import { defineAsyncComponent, defineProps, ref, computed, watch } from 'vue';
+import { defineAsyncComponent, ref, computed, watch } from 'vue';
 import { isAddress, fromWei, toHex, toBN } from 'web3-utils';
 import { Transaction } from 'ethereumjs-tx';
 import { BigNumber } from 'bignumber.js';

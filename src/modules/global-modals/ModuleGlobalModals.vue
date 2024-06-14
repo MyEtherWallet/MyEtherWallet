@@ -25,16 +25,14 @@
   </div>
 </template>
 
-<script>
-const OPEN_HARDWARE_PASSWORD = 'showHardwarePassword';
-const ISSUE_MODAL = 'issueModal';
-</script>
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { isEmpty } from 'lodash';
 
 import HardwarePasswordModal from './components/HardwarePasswordModal.vue';
 import ErrorMsg from './components/ErrorMsg.vue';
+
+import { ISSUE_MODAL, OPEN_HARDWARE_PASSWORD } from '@/core/configs/commons';
 
 import { EventBus } from '@/core/plugins/eventBus';
 

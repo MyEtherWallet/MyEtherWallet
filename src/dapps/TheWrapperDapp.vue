@@ -149,7 +149,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 
 import bannerImage from '@/assets/images/backgrounds/bg-dapps-center.jpg';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';

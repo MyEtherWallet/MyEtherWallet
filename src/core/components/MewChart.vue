@@ -4,7 +4,7 @@
   =====================================================================================
   -->
 <script setup>
-import { defineProps, onMounted, watch } from 'vue';
+import { onMounted, watch } from 'vue';
 import { Line } from 'vue-chartjs';
 
 // props

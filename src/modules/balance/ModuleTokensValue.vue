@@ -68,7 +68,7 @@
 </template>
 
 <script setup>
-import { defineProps, computed, ref, defineAsyncComponent } from 'vue';
+import { computed, ref, defineAsyncComponent } from 'vue';
 import { toBN } from 'web3-utils';
 
 import { useBuySell } from '@/core/composables/buyMore';

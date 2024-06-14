@@ -110,7 +110,7 @@
   </mew-popup>
 </template>
 <script setup>
-import { defineProps, computed } from 'vue';
+import { computed } from 'vue';
 
 import imageOne from '@/assets/images/icons/enkrypt/promo1.jpg';
 import imageTwo from '@/assets/images/icons/enkrypt/promo2.jpg';

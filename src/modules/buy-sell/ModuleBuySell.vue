@@ -68,7 +68,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref, defineEmits, watch, computed } from 'vue';
+import { ref, watch, computed } from 'vue';
 import { isEmpty } from 'lodash';
 
 import { ETH, OP, MATIC, ARB, BSC } from '@/utils/networks/types';

@@ -42,8 +42,6 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue';
-
 defineProps({
   maxWidth: { default: '', type: String },
   noPageTitle: { default: false, type: Boolean },

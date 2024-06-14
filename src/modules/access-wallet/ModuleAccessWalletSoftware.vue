@@ -92,7 +92,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref, computed, watch, onMounted, onUnmounted } from 'vue';
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
 
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { SOFTWARE_WALLET_TYPES } from './software/handlers/helpers';

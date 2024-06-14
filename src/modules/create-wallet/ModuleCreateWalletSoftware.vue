@@ -47,7 +47,6 @@
 <script setup>
 import {
   defineAsyncComponent,
-  defineProps,
   ref,
   computed,
   onMounted,

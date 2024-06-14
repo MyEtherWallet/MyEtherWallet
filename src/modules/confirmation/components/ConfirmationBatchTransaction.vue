@@ -31,7 +31,7 @@
 </template>
 
 <script setup>
-import { defineProps, computed, ref } from 'vue';
+import { computed, ref } from 'vue';
 import BigNumber from 'bignumber.js';
 import { fromWei, toBN } from 'web3-utils';
 

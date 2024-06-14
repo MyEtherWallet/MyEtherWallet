@@ -193,7 +193,6 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue';
 import { SWAP } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 
 // props

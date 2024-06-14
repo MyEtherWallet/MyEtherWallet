@@ -61,14 +61,7 @@
 import { toBN } from 'web3-utils';
 import { debounce, isEqual } from 'lodash';
 import moment from 'moment';
-import {
-  ref,
-  computed,
-  watch,
-  onMounted,
-  onBeforeUnmount,
-  defineEmits
-} from 'vue';
+import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue';
 import { useRouter } from 'vue-router/composables';
 
 import { useVuetify } from '@/core/composables/vuetify.js';

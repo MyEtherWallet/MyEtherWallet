@@ -35,23 +35,8 @@
   </div>
 </template>
 
-<script>
-const USER_INPUT_TYPES = {
-  typed: 'TYPED',
-  selected: 'SELECTED',
-  resolved: 'RESOLVED'
-};
-</script>
 <script setup>
-import {
-  defineAsyncComponent,
-  defineProps,
-  ref,
-  computed,
-  watch,
-  onMounted,
-  defineEmits
-} from 'vue';
+import { defineAsyncComponent, ref, computed, watch, onMounted } from 'vue';
 import { isObject, throttle } from 'lodash';
 import WAValidator from 'multicoin-address-validator';
 import { getAddressInfo } from '@kleros/address-tags-sdk';
@@ -59,6 +44,8 @@ import { getAddressInfo } from '@kleros/address-tags-sdk';
 import { isAddress, toChecksumAddress } from '@/core/helpers/addressUtils';
 import NameResolver from '@/modules/name-resolver/index';
 import { ERROR, Toast } from '../toast/handler/handlerToast';
+
+import { USER_INPUT_TYPES } from '@/core/configs/commons';
 
 import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';

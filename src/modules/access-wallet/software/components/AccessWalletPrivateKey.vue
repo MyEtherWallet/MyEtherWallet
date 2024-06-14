@@ -44,7 +44,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref, computed, watch, onMounted, defineEmits } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 import { isValidPrivate } from 'ethereumjs-util';
 import { isString } from 'lodash';
 

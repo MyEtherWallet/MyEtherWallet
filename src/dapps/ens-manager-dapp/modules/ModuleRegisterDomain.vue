@@ -50,14 +50,7 @@
 </template>
 
 <script setup>
-import {
-  defineAsyncComponent,
-  defineProps,
-  ref,
-  watch,
-  onMounted,
-  defineEmits
-} from 'vue';
+import { defineAsyncComponent, ref, watch, onMounted } from 'vue';
 
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { useRouter } from 'vue-router/composables';

@@ -21,16 +21,12 @@
   </TheWrapperWallet>
 </template>
 
-<script>
-// constants being imported by setup
-const ETH_TOKEN = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
-const DAI_TOKEN = '0x6b175474e89094c44da98b954eedeac495271d0f';
-</script>
-
 <script setup>
-import { defineProps, computed, onMounted } from 'vue';
+import { computed, onMounted } from 'vue';
 import { useAmplitude } from '@/core/composables/amplitude.js';
 import { COMMON } from '@/modules/analytics-opt-in/handlers/configs/events.js';
+
+import { ETH_TOKEN, DAI_TOKEN } from '@/core/configs/commons.js';
 
 import { useGlobalStore } from '@/core/store/global';
 import { useNotificationsStore } from '@/core/store/notifications';

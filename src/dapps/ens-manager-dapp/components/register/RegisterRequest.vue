@@ -43,7 +43,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref, computed, defineEmits, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { useGlobalStore } from '@/core/store/global';

@@ -90,7 +90,6 @@
 
 <script>
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
-const MODES = ['add', 'edit'];
 
 // adding here as script support has no beforeRouteLeave support
 export default {
@@ -104,15 +103,7 @@ export default {
 };
 </script>
 <script setup>
-import {
-  defineProps,
-  ref,
-  computed,
-  watch,
-  onMounted,
-  onBeforeMount,
-  defineEmits
-} from 'vue';
+import { ref, computed, watch, onMounted, onBeforeMount } from 'vue';
 import handlerSettings from './handler/handlerSettings';
 import { useGasPrice } from '@/core/composables/gasPrice';
 import { useGlobalStore } from '@/core/store/global';
@@ -128,6 +119,8 @@ import SettingsExportConfig from './components/SettingsExportConfig';
 import SettingsGasPrice from './components/SettingsGasPrice';
 import AddressBookAddEdit from '@/modules/address-book/components/AddressBookAddEdit';
 import SettingsLocaleConfig from './components/SettingsLocaleConfig.vue';
+
+import { MODES } from '@/core/configs/commons';
 // emit
 const emit = defineEmits(['closeSettings']);
 

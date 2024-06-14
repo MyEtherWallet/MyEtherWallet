@@ -51,7 +51,6 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue';
 import { SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 
 import { useCustomStore } from '@/core/store/custom';

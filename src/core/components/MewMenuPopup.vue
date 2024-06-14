@@ -61,7 +61,7 @@
 </template>
 
 <script setup>
-import { ref, watch, computed, defineProps, defineEmits } from 'vue';
+import { ref, watch, computed } from 'vue';
 
 // emits
 const emits = defineEmits(['input']);

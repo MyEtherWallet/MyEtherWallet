@@ -24,7 +24,7 @@
 </template>
 
 <script setup>
-import { defineProps, computed } from 'vue';
+import { computed } from 'vue';
 
 import { useWalletStore } from '@/core/store/wallet';
 

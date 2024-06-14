@@ -40,7 +40,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref, computed, onMounted, defineEmits } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 
 // emit
 const emit = defineEmits(['onRequest']);

@@ -244,21 +244,18 @@
   </div>
 </template>
 
-<script>
-const RARIBLE_CONTRACT = 'token/0x01234567bac6ff94d7e4f0ee23119cf848f93245:';
-const RARIBLE = 'https://rarible.com/';
-const RARIBLE_TOKEN = `${RARIBLE}${RARIBLE_CONTRACT}`;
-const RARIBLE_OWNER = `${RARIBLE}user/`;
-
-const RARIBLE_TEST = 'https://rinkeby.rarible.com/';
-const RARIBLE_TEST_TOKEN = `${RARIBLE_TEST}${RARIBLE_CONTRACT}`;
-const RARIBLE_TEST_OWNER = `${RARIBLE_TEST}user/`;
-</script>
 <script setup>
-import { defineProps, computed, defineEmits } from 'vue';
+import { computed } from 'vue';
 import { fromWei } from 'web3-utils';
 import BigNumber from 'bignumber.js';
 import { some } from 'lodash';
+
+import {
+  RARIBLE_TOKEN,
+  RARIBLE_OWNER,
+  RARIBLE_TEST_TOKEN,
+  RARIBLE_TEST_OWNER
+} from '@/core/configs/commons.js';
 
 import {
   BLOCK_ALERT,

@@ -148,7 +148,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref, computed, watch, onMounted, defineEmits } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 import { useQuery } from '@vue/apollo-composable';
 import MultiCoinValidator from 'multicoin-address-validator';
 import { isEmpty, debounce, isNumber, isEqual } from 'lodash';

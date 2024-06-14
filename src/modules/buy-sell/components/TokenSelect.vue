@@ -56,7 +56,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref, computed, watch, onMounted, defineEmits } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 import { isEmpty } from 'lodash';
 
 import { SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';

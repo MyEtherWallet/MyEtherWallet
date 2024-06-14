@@ -19,7 +19,7 @@
 </template>
 
 <script setup>
-import { ref, computed, defineProps, defineEmits } from 'vue';
+import { ref, computed } from 'vue';
 import AaveSummary from '../AaveSummary';
 import { ACTION_TYPES } from '@/dapps/aave-dapp/handlers/helpers';
 

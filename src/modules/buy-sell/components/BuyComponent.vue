@@ -120,15 +120,7 @@
 </template>
 
 <script setup>
-import {
-  defineAsyncComponent,
-  defineProps,
-  ref,
-  computed,
-  watch,
-  onMounted,
-  defineEmits
-} from 'vue';
+import { defineAsyncComponent, ref, computed, watch, onMounted } from 'vue';
 import MultiCoinValidator from 'multicoin-address-validator';
 import { isEmpty, cloneDeep, isEqual } from 'lodash';
 import BigNumber from 'bignumber.js';

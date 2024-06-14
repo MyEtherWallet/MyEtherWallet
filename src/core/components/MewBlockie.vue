@@ -24,7 +24,7 @@
 </template>
 
 <script setup>
-import { defineProps, watch, ref } from 'vue';
+import { watch, ref } from 'vue';
 
 import Blockies from '@/core/helpers/blockies.js';
 

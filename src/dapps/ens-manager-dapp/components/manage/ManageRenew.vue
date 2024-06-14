@@ -46,7 +46,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref, computed, watch, onMounted } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { useBuySell } from '@/core/composables/buyMore';

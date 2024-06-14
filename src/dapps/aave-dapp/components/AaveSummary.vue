@@ -114,7 +114,7 @@
 </template>
 
 <script setup>
-import { defineProps, computed, defineEmits } from 'vue';
+import { computed } from 'vue';
 import BigNumber from 'bignumber.js';
 import { calculateHealthFactorFromBalancesBigUnits } from '@aave/protocol-js';
 

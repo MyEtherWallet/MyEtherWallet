@@ -19,7 +19,6 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue';
 const badgeTypes = {
   warning: 'warning'
 };

@@ -106,14 +106,7 @@
   </div>
 </template>
 <script setup>
-import {
-  defineAsyncComponent,
-  ref,
-  computed,
-  watch,
-  onMounted,
-  defineEmits
-} from 'vue';
+import { defineAsyncComponent, ref, computed, watch, onMounted } from 'vue';
 import { ethers, BigNumber } from 'ethers';
 import { setInterval } from 'timers';
 import { useI18n } from 'vue-i18n-composable';

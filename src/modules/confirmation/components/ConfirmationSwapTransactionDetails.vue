@@ -67,7 +67,7 @@
 </template>
 
 <script setup>
-import { defineAsyncComponent, defineProps, computed } from 'vue';
+import { defineAsyncComponent, computed } from 'vue';
 import BigNumber from 'bignumber.js';
 import { fromWei } from 'web3-utils';
 

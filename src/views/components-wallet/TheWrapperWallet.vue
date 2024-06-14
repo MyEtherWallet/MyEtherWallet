@@ -108,7 +108,7 @@
 </template>
 
 <script setup>
-import { ref, watch, defineProps } from 'vue';
+import { ref, watch } from 'vue';
 import draggable from 'vuedraggable';
 
 import ModuleNetwork from '@/modules/network/ModuleNetwork';

@@ -3,7 +3,7 @@
 </template>
 
 <script setup>
-import { defineProps, watch, onMounted, onBeforeUnmount, ref } from 'vue';
+import { watch, onMounted, onBeforeUnmount, ref } from 'vue';
 import QrCodeWithLogo from 'qrcode-with-logos';
 
 // props

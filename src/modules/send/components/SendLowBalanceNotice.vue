@@ -57,7 +57,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref } from 'vue';
+import { ref } from 'vue';
 
 import { DASHBOARD } from '@/modules/analytics-opt-in/handlers/configs/events';
 import { useBuySell } from '@/core/composables/buyMore';

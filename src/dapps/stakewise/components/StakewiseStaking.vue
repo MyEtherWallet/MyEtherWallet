@@ -124,10 +124,8 @@
 
 <script setup>
 import {
-  defineProps,
   ref,
   computed,
-  defineEmits,
   watch,
   onMounted,
   onBeforeUnmount,

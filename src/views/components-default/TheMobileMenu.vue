@@ -170,7 +170,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref, computed, defineEmits } from 'vue';
+import { ref, computed } from 'vue';
 import { useRoute } from 'vue-router/composables';
 
 import CloseIcon from '@/assets/images/icons/close-icon.vue';

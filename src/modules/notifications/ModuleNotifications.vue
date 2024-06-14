@@ -91,14 +91,7 @@ const MAX_ITEMS = 15;
 </script>
 
 <script setup>
-import {
-  defineProps,
-  ref,
-  computed,
-  watch,
-  onMounted,
-  onBeforeUnmount
-} from 'vue';
+import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue';
 import { useQuery, useSubscription } from '@vue/apollo-composable';
 import Notification, {
   NOTIFICATION_TYPES,

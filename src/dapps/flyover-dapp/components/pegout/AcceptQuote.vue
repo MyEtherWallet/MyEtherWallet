@@ -76,7 +76,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref, onMounted, defineEmits } from 'vue';
+import { ref, onMounted } from 'vue';
 import { ethers } from 'ethers';
 
 import { acceptQuote } from '../../handlers/pegout';

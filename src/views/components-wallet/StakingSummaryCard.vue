@@ -194,7 +194,7 @@
 </template>
 
 <script setup>
-import { defineProps, computed } from 'vue';
+import { computed } from 'vue';
 import BigNumber from 'bignumber.js';
 import { useRouter } from 'vue-router/composables';
 

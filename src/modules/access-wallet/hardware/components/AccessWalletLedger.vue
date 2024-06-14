@@ -78,13 +78,7 @@
   </div>
 </template>
 <script setup>
-import {
-  defineAsyncComponent,
-  defineProps,
-  watch,
-  computed,
-  defineEmits
-} from 'vue';
+import { defineAsyncComponent, watch, computed } from 'vue';
 import { useWalletStore } from '@/core/store/wallet';
 
 import { useVuetify } from '@/core/composables/vuetify';

@@ -91,13 +91,13 @@
   </div>
 </template>
 
-<script>
-const modes = ['add', 'edit'];
-</script>
 <script setup>
-import { defineProps, ref, computed, watch, onMounted, defineEmits } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 import { isEmpty, throttle } from 'lodash';
 import { getAddressInfo } from '@kleros/address-tags-sdk';
+import { useI18n } from 'vue-i18n-composable';
+
+import { MODES } from '@/core/configs/commons.js';
 
 import NameResolver from '@/modules/name-resolver/index';
 import { toChecksumAddress, isAddress } from '@/core/helpers/addressUtils';
@@ -105,8 +105,6 @@ import { isValidCoinAddress } from '../handlers/handlerMulticoins.js';
 import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
 import { useAddressBookStore } from '@/core/store/addressBook/index.js';
-
-import { useI18n } from 'vue-i18n-composable';
 
 // emits
 const emit = defineEmits(['back']);
@@ -119,7 +117,7 @@ const { t } = useI18n();
 
 // props
 const props = defineProps({
-  mode: { default: modes[0], type: String },
+  mode: { default: MODES[0], type: String },
   item: { default: () => {}, type: Object },
   toAddress: { default: '', type: String }
 });
@@ -192,10 +190,10 @@ const coinType = computed(() => {
         isValidCoinAddress(addressToAdd.value).coin;
 });
 const editMode = computed(() => {
-  return props.mode === modes[1];
+  return props.mode === MODES[1];
 });
 const addMode = computed(() => {
-  return props.mode === modes[0];
+  return props.mode === MODES[0];
 });
 const alreadyExists = computed(() => {
   if (addMode.value) {

@@ -63,7 +63,7 @@
 </template>
 
 <script setup>
-import { defineProps, computed, watch, defineEmits, nextTick } from 'vue';
+import { computed, watch, nextTick } from 'vue';
 import BigNumber from 'bignumber.js';
 
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';

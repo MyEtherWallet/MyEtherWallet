@@ -166,7 +166,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref, computed, defineEmits } from 'vue';
+import { ref, computed } from 'vue';
 import MultiCoinValidator from 'multicoin-address-validator';
 import { isEmpty } from 'lodash';
 

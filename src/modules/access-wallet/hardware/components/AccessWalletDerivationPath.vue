@@ -215,7 +215,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref, computed, defineEmits } from 'vue';
+import { ref, computed } from 'vue';
 import { isEmpty } from 'lodash';
 
 import { checkCustomPath } from '@/modules/access-wallet/software/handlers/pathHelper';

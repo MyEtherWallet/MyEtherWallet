@@ -46,7 +46,6 @@
 </template>
 
 <script setup>
-import { defineEmits, defineProps } from 'vue';
 import placeholder from '@/assets/images/bg.png';
 
 const emits = defineEmits('closeBanner');

@@ -59,13 +59,7 @@
 </template>
 
 <script setup>
-import {
-  ref,
-  defineAsyncComponent,
-  onMounted,
-  computed,
-  defineEmits
-} from 'vue';
+import { ref, defineAsyncComponent, onMounted, computed } from 'vue';
 import { useAmplitude } from '@/core/composables/amplitude';
 import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';

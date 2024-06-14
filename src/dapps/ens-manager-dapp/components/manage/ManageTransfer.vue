@@ -13,7 +13,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref, onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import BigNumber from 'bignumber.js';
 
 import addressBook from '@/modules/address-book/ModuleAddressBook';

@@ -38,8 +38,9 @@ const router = new Router({
 router.beforeResolve((to, from, next) => {
   const { setLastPath, path } = useExternalStore();
   const { removeWallet, address } = useWalletStore();
+  console.log(address);
   // Check if user is coming from a path that needs auth
-  if (!from.meta.noAuth && address.value && to.meta.noAuth) {
+  if (!from.meta.noAuth && address?.value && to.meta.noAuth) {
     removeWallet();
   }
   if (to.meta.noAuth) {

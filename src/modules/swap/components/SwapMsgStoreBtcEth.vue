@@ -59,7 +59,6 @@
 
 <script setup>
 import { useArticleStore } from '@/core/store/article';
-import { defineProps } from 'vue';
 
 // injection/use
 const { getArticle } = useArticleStore();

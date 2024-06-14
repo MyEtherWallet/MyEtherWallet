@@ -145,7 +145,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref, watch, onUnmounted } from 'vue';
+import { ref, watch, onUnmounted } from 'vue';
 import { useGlobalStore } from '@/core/store/global';
 
 import { useBuySell } from '@/core/composables/buyMore';

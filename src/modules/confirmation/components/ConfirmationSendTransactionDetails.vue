@@ -35,7 +35,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineAsyncComponent, computed } from 'vue';
+import { defineAsyncComponent, computed } from 'vue';
 import BigNumber from 'bignumber.js';
 
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';

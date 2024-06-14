@@ -24,7 +24,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref, computed } from 'vue';
+import { ref, computed } from 'vue';
 import { useGlobalStore } from '@/core/store/global';
 
 import formatNotification from '@/modules/notifications/helpers/formatNotification';

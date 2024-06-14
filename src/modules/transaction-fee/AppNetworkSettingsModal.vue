@@ -22,7 +22,7 @@
 </template>
 
 <script setup>
-import { defineAsyncComponent, defineProps, defineEmits, watch } from 'vue';
+import { defineAsyncComponent, watch } from 'vue';
 
 import { useGlobalStore } from '@/core/store/global';
 

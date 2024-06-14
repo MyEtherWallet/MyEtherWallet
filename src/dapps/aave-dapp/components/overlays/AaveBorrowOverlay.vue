@@ -72,7 +72,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, computed, watch } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { isEmpty } from 'lodash';
 
 import { AAVE_TABLE_TITLE } from '../../handlers/helpers';

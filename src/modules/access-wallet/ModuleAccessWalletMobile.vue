@@ -50,8 +50,6 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue';
-
 import { Toast, SENTRY } from '@/modules/toast/handler/handlerToast';
 import {
   WalletConnectWallet,

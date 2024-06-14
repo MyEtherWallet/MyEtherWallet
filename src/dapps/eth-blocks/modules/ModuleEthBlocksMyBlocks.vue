@@ -127,14 +127,7 @@
 </template>
 
 <script setup>
-import {
-  defineAsyncComponent,
-  defineProps,
-  ref,
-  computed,
-  watch,
-  onMounted
-} from 'vue';
+import { defineAsyncComponent, ref, computed, watch, onMounted } from 'vue';
 
 import { ETH_BLOCKS_ROUTE } from '../configsRoutes';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';

@@ -373,7 +373,7 @@
 </template>
 
 <script setup>
-import { defineAsyncComponent, defineProps, ref, computed } from 'vue';
+import { defineAsyncComponent, ref, computed } from 'vue';
 import BigNumber from 'bignumber.js';
 import moment from 'moment';
 

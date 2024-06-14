@@ -13,7 +13,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref } from 'vue';
+import { ref } from 'vue';
 const props = defineProps({
   copyValue: {
     type: String,

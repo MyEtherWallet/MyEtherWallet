@@ -54,7 +54,7 @@
 </template>
 
 <script setup>
-import { computed, defineProps } from 'vue';
+import { computed } from 'vue';
 
 // props
 const props = defineProps({

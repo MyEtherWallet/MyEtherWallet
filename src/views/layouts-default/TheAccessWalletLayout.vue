@@ -166,13 +166,7 @@
 
 <script setup>
 import Web3 from 'web3';
-import {
-  defineAsyncComponent,
-  defineProps,
-  ref,
-  computed,
-  onMounted
-} from 'vue';
+import { defineAsyncComponent, ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router/composables';
 
 import { WalletConnectWallet } from '@/modules/access-wallet/hybrid/handlers';

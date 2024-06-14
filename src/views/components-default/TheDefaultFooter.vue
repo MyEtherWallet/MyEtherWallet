@@ -258,37 +258,6 @@
   </div>
 </template>
 
-<script>
-const FOOTER_EVENTS = {
-  footerAboutUs: 'LP2FooterAboutUs',
-  footerCareers: 'LP2Footercareers',
-  footerHowItWorks: 'LP2FooterHowItWorks',
-  footerTeam: 'LP2FooterTeam',
-  footerAdvertiseWithUs: 'LP2FooterAdvertiseWithUs',
-  footerPrivacy: 'LP2FooterPrivacy',
-  footerTerms: 'LP2FooterTerms',
-  footerBugBounty: 'LP2FooterBugBounty',
-  footerMobile: 'LP2FooterMewMobileApp',
-  footerEnkrypt: 'LP2FooterEnkrypt',
-  footerPortfolio: 'LP2FooterPortfolio',
-  footerEthvm: 'LP2FooterEthvm',
-  footerMewtopia: 'LP2FooterMewtopia',
-  footerPressKit: 'LP2FooterPressKit',
-  footerHelpCenter: 'LP2FooterHelpCenter',
-  footerCustomerSupport: 'LP2FooterCustomerSupport',
-  footerSecurityPolicy: 'LP2FooterSecurityPolicy',
-  footerVerifyMessage: 'LP2FooterVerifyMessage',
-  footerConvertUnits: 'LP2FooterConvertUnits',
-  footerSendOfflineHelper: 'LP2FooterSendOfflineHelper',
-  footerEthDonation: 'LP2FooterEthDonation',
-  footerBtcDonation: 'LP2FooterBtcDonation',
-  footerCoinGecko: 'LP2FooterCoinGecko',
-  footerJoinMewCommunity: 'LP2JoinCommunity',
-  closeMobileMenu: 'LP2CloseMobileMenu',
-  otherWaysToCreate: 'LP2OtherWaysToCreate'
-};
-</script>
-
 <script setup>
 import Facebook from '@/assets/images/icons/social/facebook-logo.vue';
 import Twitter from '@/assets/images/icons/social/twitter-logo.vue';
@@ -300,6 +269,8 @@ import Medium from '@/assets/images/icons/social/medium-logo.vue';
 import Telegram from '@/assets/images/icons/social/telegram-logo.vue';
 import DonateEth from '@/assets/images/icons/social/donate-eth.vue';
 import DonateBtc from '@/assets/images/icons/social/donate-btc.vue';
+
+import { FOOTER_EVENTS } from '@/core/configs/commons';
 
 import { useGlobalStore } from '@/core/store/global';
 import { useAmplitude } from '@/core/composables/amplitude';

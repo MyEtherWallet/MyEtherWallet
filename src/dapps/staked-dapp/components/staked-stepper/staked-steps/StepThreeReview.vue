@@ -184,7 +184,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref, computed, watch, onMounted, defineEmits } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 import BigNumber from 'bignumber.js';
 
 import { ABI_GET_FEES } from '@/dapps/staked-dapp/handlers/handlerStaked';

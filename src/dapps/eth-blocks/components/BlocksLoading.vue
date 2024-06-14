@@ -18,12 +18,6 @@
   </v-sheet>
 </template>
 
-<script>
-export default {
-  name: 'BlocksLoading'
-};
-</script>
-
 <style lang="scss" scoped>
 .staked-status-container {
   max-width: 500px;

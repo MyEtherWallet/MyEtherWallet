@@ -47,7 +47,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, computed, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import BigNumber from 'bignumber.js';
 import { isBN, toBN } from 'web3-utils';
 

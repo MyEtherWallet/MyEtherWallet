@@ -190,15 +190,13 @@
   </div>
 </template>
 
-<script>
-const MIN_GAS_LIMIT = 300000;
-</script>
-
 <script setup>
 import { defineAsyncComponent, ref, computed, watch, onMounted } from 'vue';
 import BigNumber from 'bignumber.js';
 import { find, clone, isEmpty, debounce } from 'lodash';
 import { fromWei } from 'web3-utils';
+
+import { STAKEWISE_REWARD_MIN_GAS_LIMIT } from '@/core/configs/commons';
 
 import { EventBus } from '@/core/plugins/eventBus';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
@@ -313,7 +311,7 @@ const gasPrice = computed(() => {
 const ethTotalFee = computed(() => {
   const locGasLimit = BigNumber(gasLimit.value).gt('21000')
     ? gasLimit.value
-    : MIN_GAS_LIMIT;
+    : STAKEWISE_REWARD_MIN_GAS_LIMIT;
   const ethFee = fromWei(BigNumber(gasPrice).times(locGasLimit).toFixed());
   return formatFloatingPointValue(ethFee).value;
 });
@@ -338,7 +336,7 @@ const isValid = computed(() => {
 const txFee = computed(() => {
   const locGasLimit = BigNumber(gasLimit.value).gt('21000')
     ? gasLimit.value
-    : MIN_GAS_LIMIT;
+    : STAKEWISE_REWARD_MIN_GAS_LIMIT;
   const txFee = BigNumber(gasPrice).times(locGasLimit).toFixed();
   return txFee;
 });

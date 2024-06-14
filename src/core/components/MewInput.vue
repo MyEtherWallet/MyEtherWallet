@@ -113,7 +113,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref, watch, computed, onMounted, defineEmits } from 'vue';
+import { ref, watch, computed, onMounted } from 'vue';
 import MewBlockie from './MewBlockie.vue';
 import MewTokenContainer from './MewTokenContainer.vue';
 

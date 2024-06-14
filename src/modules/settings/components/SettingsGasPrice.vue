@@ -126,7 +126,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref, computed, watch, onMounted } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 import { fromWei } from 'web3-utils';
 import BigNumber from 'bignumber.js';
 

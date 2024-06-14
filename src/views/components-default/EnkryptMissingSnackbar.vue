@@ -43,7 +43,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, computed } from 'vue';
+import { computed } from 'vue';
 
 import { useEnkryptMarketing } from '@/core/composables/enkryptMarketing';
 

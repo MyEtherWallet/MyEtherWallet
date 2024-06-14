@@ -113,15 +113,14 @@
   </div>
 </template>
 
-<script>
-const FIVE_MINS = 300000; // 1000 * 60 * 5
-</script>
 <script setup>
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
 import { fromWei } from 'web3-utils';
 import { isEmpty } from 'lodash';
 import BigNumber from 'bignumber.js';
 import moment from 'moment';
+
+import { FIVE_MINS } from '@/core/configs/commons.js';
 
 import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';

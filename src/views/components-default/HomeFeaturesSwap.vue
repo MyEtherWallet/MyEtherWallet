@@ -64,92 +64,11 @@
   </white-sheet>
 </template>
 
-<script>
-const fromAmount = '1000000000000000000';
-const STATIC_PAIRS = [
-  {
-    toT: {
-      symbol: 'BTC',
-      contract: '0xbtc'
-    },
-    fromT: {
-      symbol: 'ETH',
-      contract: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
-      decimals: 18
-    },
-    fromAmount: fromAmount
-  },
-  {
-    fromT: {
-      symbol: 'ETH',
-      contract: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
-      decimals: 18
-    },
-    toT: {
-      symbol: 'USDT',
-      contract: '0xdac17f958d2ee523a2206206994597c13d831ec7',
-      decimals: 6
-    },
-    fromAmount: fromAmount
-  },
-  {
-    fromT: {
-      symbol: 'ETH',
-      contract: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
-      decimals: 18
-    },
-    toT: {
-      symbol: 'KNC',
-      contract: '0xdd974d5c2e2928dea5f71b9825b8b646686bd200',
-      toT: 18
-    },
-    fromAmount: fromAmount
-  },
-  {
-    fromT: {
-      symbol: 'ETH',
-      contract: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
-      decimals: 18
-    },
-    toT: {
-      symbol: 'DAI',
-      contract: '0x6b175474e89094c44da98b954eedeac495271d0f',
-      decimals: 18
-    },
-    fromAmount: fromAmount
-  },
-  {
-    fromT: {
-      symbol: 'ETH',
-      contract: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
-      decimals: 18
-    },
-    toT: {
-      symbol: 'LINK',
-      contract: '0x514910771af9ca656af840dff83e8264ecf986ca',
-      decimals: 18
-    },
-    fromAmount: fromAmount
-  },
-  {
-    fromT: {
-      symbol: 'ETH',
-      contract: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
-      decimals: 18
-    },
-    toT: {
-      symbol: 'USDC',
-      contract: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
-      decimals: 6
-    },
-    fromAmount: fromAmount
-  }
-];
-</script>
-
 <script setup>
 import { ref, watch, onMounted } from 'vue';
 import { isEmpty } from 'lodash';
+
+import { STATIC_PAIRS } from '@/core/configs/commons.js';
 
 import handlerSwap from '@/modules/swap/handlers/handlerSwap';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
