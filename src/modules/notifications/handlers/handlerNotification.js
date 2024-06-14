@@ -1,7 +1,7 @@
 import { isAddress, isHexStrict, toBN, numberToHex, isBN } from 'web3-utils';
-import vuexStore from '@/core/store';
 import BigNumber from 'bignumber.js';
 import { debounce, isFunction, isObject } from 'lodash';
+import { useNotificationsStore } from '@/core/store/notifications';
 
 /**
  * NOTE: toTxData can be null if it's just a regular tx
@@ -151,9 +151,10 @@ export default class Notification {
    * Updates status and resolves back to ui with the new object
    */
   updateStatus(status) {
+    const { updateNotification } = useNotificationsStore();
     return new Promise(resolve => {
       this.status = status;
-      vuexStore.dispatch('notifications/updateNotification', this);
+      updateNotification(this);
       resolve(this);
     });
   }
@@ -161,6 +162,7 @@ export default class Notification {
    * Check swap status
    */
   checkSwapStatus(swapper) {
+    const { updateNotification } = useNotificationsStore();
     let swapResolver;
     if (
       this.status.toLowerCase() === NOTIFICATION_STATUS.PENDING ||
@@ -185,7 +187,7 @@ export default class Notification {
         }
         if (_this.status.toLowerCase() !== NOTIFICATION_STATUS.PENDING) {
           _this.read = false;
-          vuexStore.dispatch('notifications/updateNotification', _this);
+          updateNotification(_this);
           clearInterval(swapResolver);
         }
       }, 1000);
@@ -197,9 +199,10 @@ export default class Notification {
    * set status
    */
   setStatus(status) {
+    const { updateNotification } = useNotificationsStore();
     if (status.toLowerCase() !== NOTIFICATION_STATUS.PENDING) {
       this.read = false;
-      vuexStore.dispatch('notifications/updateNotification', this);
+      updateNotification(this);
     }
   }
 

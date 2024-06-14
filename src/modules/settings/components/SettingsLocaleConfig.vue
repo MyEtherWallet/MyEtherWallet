@@ -15,45 +15,45 @@
   </div>
 </template>
 
-<script>
-import { mapActions, mapState } from 'vuex';
+<script setup>
+import { computed, ref, onMounted } from 'vue';
 
 import currencyList from './currencyList';
-export default {
-  name: 'SettingsLocaleConfig',
-  data() {
-    return {
-      currencyList,
-      currency: {}
-    };
-  },
-  computed: {
-    ...mapState('global', ['locale', 'preferredCurrency']),
-    currencies() {
-      const imgs = this.currencyList.map(c => c.img);
-      return [
-        {
-          imgs,
-          divider: true
-        },
-        ...this.currencyList
-      ];
+import { useGlobalStore } from '@/core/store/global';
+import { useExternalStore } from '@/core/store/external';
+
+// injections/use
+const { preferredCurrency, setPreferredCurrency } = useGlobalStore();
+const { setCurrency } = useExternalStore();
+
+// data
+const currency = ref({});
+
+// computed
+const currencies = computed(() => {
+  const imgs = currencyList.map(c => c.img);
+  return [
+    {
+      imgs,
+      divider: true
     },
-    getCurrentCurrency() {
-      return this.currencyList.find(c => c.value === this.preferredCurrency);
-    }
-  },
-  mounted() {
-    this.currency = this.getCurrentCurrency;
-  },
-  methods: {
-    ...mapActions('global', ['setLocale', 'setPreferredCurrency']),
-    ...mapActions('external', ['setCurrency']),
-    setCurrencyType(value) {
-      this.setPreferredCurrency(value.value);
-      this.setCurrency(value.value);
-    }
-  }
+    ...currencyList
+  ];
+});
+
+const currentCurrency = computed(() => {
+  return currencyList.find(c => c.value === preferredCurrency.value);
+});
+
+// mounted
+onMounted(() => {
+  currency.value = currentCurrency;
+});
+
+// methods
+const setCurrencyType = val => {
+  setPreferredCurrency(val.value);
+  setCurrency(val.value);
 };
 </script>
 

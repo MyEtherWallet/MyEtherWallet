@@ -33,58 +33,57 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref } from 'vue';
 import copy from '@/core/helpers/copy.js';
+import MewToast from './MewToast.vue';
 
-export default {
-  name: 'MewCopy',
-  components: {
-    MewToast: () => import('./MewToast.vue')
+const props = defineProps({
+  /**
+   * Pass a class to change the icon color (i.e error--text).
+   */
+  className: {
+    type: String,
+    default: ''
   },
-  props: {
-    /**
-     * Pass a class to change the icon color (i.e error--text).
-     */
-    className: {
-      type: String,
-      default: ''
-    },
-    /**
-     * Makes the icon smaller.
-     */
-    isSmall: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Pass the value you would like to copy.
-     */
-    copyValue: {
-      type: String,
-      default: ''
-    },
-    /**
-     * The tooltip text.
-     */
-    tooltip: {
-      type: String,
-      default: 'Copy'
-    },
-    /**
-     * The toast text after successfully copying.
-     */
-    successToast: {
-      type: String,
-      default: 'Copied!'
-    }
+  /**
+   * Makes the icon smaller.
+   */
+  isSmall: {
+    type: Boolean,
+    default: false
   },
-  methods: {
-    copyToClipboard() {
-      copy(this.copyValue);
-      document.activeElement.blur();
-      this.$refs.toast.showToast();
-    }
+  /**
+   * Pass the value you would like to copy.
+   */
+  copyValue: {
+    type: String,
+    default: ''
+  },
+  /**
+   * The tooltip text.
+   */
+  tooltip: {
+    type: String,
+    default: 'Copy'
+  },
+  /**
+   * The toast text after successfully copying.
+   */
+  successToast: {
+    type: String,
+    default: 'Copied!'
   }
+});
+
+// data
+const toast = ref(null);
+
+// method
+const copyToClipboard = () => {
+  copy(props.copyValue);
+  document.activeElement.blur();
+  toast.value.showToast();
 };
 </script>
 

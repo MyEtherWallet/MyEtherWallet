@@ -25,16 +25,10 @@
             </div>
             <div>
               <div class="mb-1 font-weight-bold subtitle-1 white--text">
-                {{
-                  $t('howItWorks.tokens.info-one.title')
-                    | lokalise('howItWorks.tokens.info-one.title')
-                }}
+                {{ t('howItWorks.tokens.info-one.title') }}
               </div>
               <p class="white--text">
-                {{
-                  $t('howItWorks.tokens.info-one.text')
-                    | lokalise('howItWorks.tokens.info-one.text')
-                }}
+                {{ t('howItWorks.tokens.info-one.text') }}
               </p>
             </div>
           </div>
@@ -45,24 +39,11 @@
             </div>
             <div>
               <div class="mb-1 font-weight-bold subtitle-1 white--text">
-                {{
-                  $t('howItWorks.tokens.info-two.title')
-                    | lokalise('howItWorks.tokens.info-two.title')
-                }}
+                {{ t('howItWorks.tokens.info-two.title') }}
               </div>
               <p class="white--text">
-                {{
-                  $t('howItWorks.tokens.info-two.text')
-                    | lokalise('howItWorks.tokens.info-two.text')
-                }}
+                {{ t('howItWorks.tokens.info-two.text') }}
               </p>
-              <!-- <div class="d-flex align-center mt-10">
-                <a
-                  href="#"
-                  class="white--text font-weight-medium text-decoration--underline"
-                  >Watch tutorial</a
-                >
-              </div> -->
             </div>
           </div>
         </v-col>
@@ -72,17 +53,18 @@
   </div>
 </template>
 
-<script>
-export default {
-  data: vm => ({
-    titleData: {
-      textProps: 'white--text',
-      toptitle: '',
-      title: vm.$t('howItWorks.tokens.title'),
-      description: vm.$t('howItWorks.tokens.description'),
-      centered: false
-    }
-  })
+<script setup>
+import { useI18n } from 'vue-i18n-composable';
+
+// injections
+const { t } = useI18n();
+
+const titleData = {
+  textProps: 'white--text',
+  toptitle: '',
+  title: t('howItWorks.tokens.title'),
+  description: t('howItWorks.tokens.description'),
+  centered: false
 };
 </script>
 

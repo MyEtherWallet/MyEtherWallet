@@ -122,9 +122,16 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import {
+  ref,
+  computed,
+  watch,
+  onMounted,
+  onBeforeUnmount,
+  nextTick
+} from 'vue';
 import { isEmpty } from 'lodash';
-import { mapActions, mapGetters, mapState } from 'vuex';
 import { fromWei } from 'web3-utils';
 import BigNumber from 'bignumber.js';
 
@@ -134,159 +141,168 @@ import {
 } from '@/dapps/stakewise/handlers/configs.js';
 import sEthAbi from '@/dapps/stakewise/handlers/abi/stakedEthToken.js';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
-import buyMore from '@/core/mixins/buyMore.mixin.js';
-export default {
-  name: 'ModuleSideStaking',
-  mixins: [buyMore],
-  props: {
-    txFee: {
-      type: String,
-      default: ''
-    },
-    hasEnoughBalance: {
-      type: Boolean,
-      default: false
-    }
+import { useBuySell } from '@/core/composables/buyMore';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
+import { useRoute } from 'vue-router/composables';
+import { useStakewiseStore } from '../store';
+
+// emits
+const emit = defineEmits(['scroll', 'redeem-to-eth', 'set-max']);
+// injections
+const { openBuySell } = useBuySell();
+const { web3, address, balance } = useWalletStore();
+const { network, isEthNetwork, getFiatValue } = useGlobalStore();
+const {
+  rethBalance,
+  sethBalance,
+  removePendingTxs,
+  removePendingTxsGoerli,
+  setStakeBalance,
+  stakewiseTxs
+} = useStakewiseStore();
+const { fiatValue } = useExternalStore();
+const route = useRoute();
+
+// props
+const props = defineProps({
+  txFee: {
+    type: String,
+    default: ''
   },
-  data() {
-    return {
-      intervals: {}
-    };
-  },
-  computed: {
-    ...mapGetters('global', ['isEthNetwork', 'network', 'getFiatValue']),
-    ...mapGetters('wallet', ['tokensList']),
-    ...mapGetters('external', ['fiatValue']),
-    ...mapState('wallet', ['web3', 'address', 'balance']),
-    ...mapState('stakewise', ['stakewiseTxs', 'sethBalance', 'rethBalance']),
-    currencyName() {
-      return this.network.type.currencyName;
-    },
-    ethvmSupport() {
-      return this.network.type.isEthVMSupported.supported;
-    },
-    enoughToCoverRedeem() {
-      if (!this.hasStaked && !this.hasPending) {
-        return false;
-      }
-      if (!this.hasEnoughBalance) {
-        return true;
-      }
-      if (
-        !BigNumber(this.rethBalance).gt(0) ||
-        !BigNumber(this.sethBalance).gt(0)
-      ) {
-        return false;
-      }
-      if (BigNumber(this.balance).gt(this.txFee)) {
-        return false;
-      }
-      return true;
-    },
-    linkUrl() {
-      return this.network.type.blockExplorerTX;
-    },
-    hasPending() {
-      const txList = this.isEthNetwork
-        ? this.stakewiseTxs.ETH
-        : this.stakewiseTxs.GOERLI;
-      return txList.length > 0;
-    },
-    formattedBalance() {
-      return formatFloatingPointValue(this.sethBalance).value;
-    },
-    sethBalanceFiat() {
-      return this.getFiatValue(
-        BigNumber(this.sethBalance).times(this.fiatValue).toString()
-      );
-    },
-    seth2Contract() {
-      return this.isEthNetwork ? SETH2_MAINNET_CONTRACT : SETH2_GOERLI_CONTRACT;
-    },
-    hasStaked() {
-      if (this.ethvmSupport) {
-        return BigNumber(this.sethBalance).gt(0);
-      }
-      return BigNumber(this.sethBalance).gt(0);
-    }
-  },
-  watch: {
-    stakewiseTxs: {
-      handler(newVal) {
-        const txList = this.isEthNetwork ? newVal.ETH : newVal.GOERLI;
-        if (txList.length > 0) {
-          txList.forEach(item => {
-            this.fetcher(item.hash);
-          });
-        }
-      },
-      deep: true
-    },
-    $route: {
-      handler: function (from) {
-        if (from.query.module === 'stake') {
-          this.$nextTick(() => {
-            this.$emit('scroll');
-            this.$emit('set-max');
-          });
-        }
-      },
-      deep: true,
-      immediate: true
-    }
-  },
-  mounted() {
-    const txList = this.isEthNetwork
-      ? this.stakewiseTxs.ETH
-      : this.stakewiseTxs.GOERLI;
+  hasEnoughBalance: {
+    type: Boolean,
+    default: false
+  }
+});
+
+// data
+const intervals = ref({});
+
+// computed
+const currencyName = computed(() => {
+  return network.value.type.currencyName;
+});
+const ethvmSupport = computed(() => {
+  return network.value.type.isEthVMSupported.supported;
+});
+const enoughToCoverRedeem = computed(() => {
+  if (!hasStaked.value && !hasPending.value) {
+    return false;
+  }
+  if (!props.hasEnoughBalance) {
+    return true;
+  }
+  if (
+    !BigNumber(rethBalance.value).gt(0) ||
+    !BigNumber(sethBalance.value).gt(0)
+  ) {
+    return false;
+  }
+  if (BigNumber(balance.value).gt(props.txFee)) {
+    return false;
+  }
+  return true;
+});
+const linkUrl = computed(() => {
+  return network.type.blockExplorerTX;
+});
+const hasPending = computed(() => {
+  const txList = isEthNetwork.value
+    ? stakewiseTxs.value.ETH
+    : stakewiseTxs.value.GOERLI;
+  return txList.length > 0;
+});
+const formattedBalance = computed(() => {
+  return formatFloatingPointValue(sethBalance.value).value;
+});
+const sethBalanceFiat = computed(() => {
+  return getFiatValue(
+    BigNumber(sethBalance.value).times(fiatValue.value).toString()
+  );
+});
+const seth2Contract = computed(() => {
+  return isEthNetwork.value ? SETH2_MAINNET_CONTRACT : SETH2_GOERLI_CONTRACT;
+});
+const hasStaked = computed(() => {
+  if (ethvmSupport.value) {
+    return BigNumber(sethBalance.value).gt(0);
+  }
+  return BigNumber(sethBalance.value).gt(0);
+});
+
+// watch
+watch(
+  () => stakewiseTxs.value,
+  newVal => {
+    const txList = isEthNetwork.value ? newVal.ETH : newVal.GOERLI;
     if (txList.length > 0) {
       txList.forEach(item => {
-        this.fetcher(item.hash);
+        fetcher(item.hash);
       });
     }
   },
-  beforeDestroy() {
-    // clear intervals that may have been setup
-    if (isEmpty(this.intervals)) {
-      Object.values(this.intervals).forEach(item => {
-        clearInterval(item);
+  { deep: true }
+);
+watch(
+  () => route.from.query.module,
+  val => {
+    if (val === 'stake') {
+      nextTick(() => {
+        emit('scroll');
+        emit('set-max');
       });
     }
   },
-  methods: {
-    ...mapActions('stakewise', [
-      'removePendingTxs',
-      'removePendingTxsGoerli',
-      'setStakeBalance'
-    ]),
-    executeSwap() {
-      this.$emit('redeem-to-eth', 'seth', this.sethBalance);
-    },
-    fetchBalance() {
-      const contract = new this.web3.eth.Contract(sEthAbi, this.seth2Contract);
-      contract.methods
-        .balanceOf(this.address)
-        .call()
-        .then(res => this.setStakeBalance(fromWei(res)));
-    },
-    checkHash(hash) {
-      // eslint-disable-next-line
-      window.open(this.linkUrl.replace('[[txHash]]', hash), '_blank');
-    },
-    fetcher(hash) {
-      this.intervals[hash] = setInterval(() => {
-        this.web3.eth.getTransactionReceipt(hash).then(res => {
-          if (res) {
-            clearInterval(this.intervals[hash]);
-            this.isEthNetwork
-              ? this.removePendingTxs(hash)
-              : this.removePendingTxsGoerli(hash);
-            this.fetchBalance();
-          }
-        });
-      }, 10000);
-    }
+  { deep: true, immediate: true }
+);
+
+onMounted(() => {
+  const txList = isEthNetwork.value
+    ? stakewiseTxs.value.ETH
+    : stakewiseTxs.value.GOERLI;
+  if (txList.length > 0) {
+    txList.forEach(item => {
+      fetcher(item.hash);
+    });
   }
+});
+onBeforeUnmount(() => {
+  // clear intervals that may have been setup
+  if (isEmpty(intervals.value)) {
+    Object.values(intervals.value).forEach(item => {
+      clearInterval(item);
+    });
+  }
+});
+
+// methods
+
+const executeSwap = () => {
+  emit('redeem-to-eth', 'seth', sethBalance.value);
+};
+const fetchBalance = () => {
+  const contract = new web3.eth.Contract(sEthAbi, seth2Contract);
+  contract.methods
+    .balanceOf(address)
+    .call()
+    .then(res => setStakeBalance(fromWei(res)));
+};
+const checkHash = hash => {
+  // eslint-disable-next-line
+  window.open(linkUrl.replace('[[txHash]]', hash), '_blank');
+};
+const fetcher = hash => {
+  intervals.value[hash] = setInterval(() => {
+    web3.value.eth.getTransactionReceipt(hash).then(res => {
+      if (res) {
+        clearInterval(intervals.value[hash]);
+        isEthNetwork ? removePendingTxs(hash) : removePendingTxsGoerli(hash);
+        fetchBalance();
+      }
+    });
+  }, 10000);
 };
 </script>
 

@@ -17,7 +17,7 @@ import {
 import HDKey from 'hdkey';
 import { Transaction } from '@ethereumjs/tx';
 import errorHandler from './errorHandler';
-import store from '@/core/store';
+import { useGlobalStore } from '@/core/store/global';
 import commonGenerator from '@/core/helpers/commonGenerator';
 import Vue from 'vue';
 import { EventBus } from '@/core/plugins/eventBus';
@@ -70,6 +70,7 @@ class KeepkeyWallet {
     }
   }
   async getAccount(idx) {
+    const { network } = useGlobalStore();
     let derivedKey, accountPath;
     if (this.isHardened) {
       const rootPub = await getRootPubKey(
@@ -87,7 +88,7 @@ class KeepkeyWallet {
     }
     const txSigner = async txParams => {
       const tx = new Transaction(txParams, {
-        common: commonGenerator(store.getters['global/network'])
+        common: commonGenerator(network.value)
       });
       const hexTx = getHexTx(tx);
       const networkId = tx.common.chainId();

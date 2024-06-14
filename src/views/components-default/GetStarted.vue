@@ -119,37 +119,35 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { useAmplitude } from '@/core/composables/amplitude';
 import { ROUTES_HOME } from '@/core/configs/configRoutes.js';
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { LANDING_PAGE } from '@/modules/analytics-opt-in/handlers/configs/events.js';
-export default {
-  name: 'GetStarted',
-  mixins: [handlerAnalytics],
-  data() {
-    return {
-      LANDING_PAGE: LANDING_PAGE
-    };
-  },
-  methods: {
-    trackOpenMEWWallet(name) {
-      this.trackLandingPageAmplitude(name);
-    },
-    navigateToCreateWallet() {
-      this.trackLandingPageAmplitude(LANDING_PAGE.CREATE_WALLET_2);
-      this.$router.push({
-        name: ROUTES_HOME.CREATE_WALLET.NAME,
-        params: {}
-      });
-    },
-    navigateToAccessWallet() {
-      this.trackLandingPageAmplitude(LANDING_PAGE.ACCESS_WALLET_2);
-      this.$router.push({
-        name: ROUTES_HOME.ACCESS_WALLET.NAME,
-        params: {}
-      });
-    }
-  }
+import { useRouter } from 'vue-router/composables';
+
+// injections/use
+const { trackLandingPageAmplitude } = useAmplitude();
+const router = useRouter();
+
+// methods
+const trackOpenMEWWallet = name => {
+  trackLandingPageAmplitude(name);
+};
+
+const navigateToCreateWallet = () => {
+  trackLandingPageAmplitude(LANDING_PAGE.CREATE_WALLET_2);
+  router.push({
+    name: ROUTES_HOME.CREATE_WALLET.NAME,
+    params: {}
+  });
+};
+
+const navigateToAccessWallet = () => {
+  trackLandingPageAmplitude(LANDING_PAGE.ACCESS_WALLET_2);
+  router.push({
+    name: ROUTES_HOME.ACCESS_WALLET.NAME,
+    params: {}
+  });
 };
 </script>
 

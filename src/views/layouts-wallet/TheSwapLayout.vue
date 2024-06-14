@@ -1,11 +1,11 @@
 <template>
-  <the-wrapper-wallet
+  <TheWrapperWallet
     :total-left-col-items="1"
     has-draggable
     :total-right-col-items="totalRightColumns"
   >
     <template #leftColItem1>
-      <module-swap
+      <ModuleSwap
         :is-available="hasSwap"
         :from-token="fromToken"
         :to-token="toToken"
@@ -13,59 +13,60 @@
       />
     </template>
     <template #rightColItem1>
-      <module-tokens-value :draggable="hasHistory" />
+      <ModuleTokensValue :draggable="hasHistory" />
     </template>
     <template v-if="hasHistory && hasSwap" #rightColItem2>
-      <module-transfer-history draggable :is-swap="true" />
+      <ModuleTransferHistory draggable :is-swap="true" />
     </template>
-  </the-wrapper-wallet>
+  </TheWrapperWallet>
 </template>
 
-<script>
-import { mapGetters } from 'vuex';
-
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+<script setup>
+import { computed, onMounted } from 'vue';
+import { useAmplitude } from '@/core/composables/amplitude.js';
 import { COMMON } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 
-const ETH_TOKEN = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
-const DAI_TOKEN = '0x6b175474e89094c44da98b954eedeac495271d0f';
+import { ETH_TOKEN, DAI_TOKEN } from '@/core/configs/commons.js';
 
-export default {
-  components: {
-    TheWrapperWallet: () =>
-      import('@/views/components-wallet/TheWrapperWallet'),
-    ModuleSwap: () => import('@/modules/swap/ModuleSwap'),
-    ModuleTokensValue: () => import('@/modules/balance/ModuleTokensValue'),
-    ModuleTransferHistory: () =>
-      import('@/modules/transfer-history/ModuleTransferHistory')
+import { useGlobalStore } from '@/core/store/global';
+import { useNotificationsStore } from '@/core/store/notifications';
+
+import TheWrapperWallet from '@/views/components-wallet/TheWrapperWallet';
+import ModuleSwap from '@/modules/swap/ModuleSwap';
+
+import ModuleTokensValue from '@/modules/balance/ModuleTokensValue';
+import ModuleTransferHistory from '@/modules/transfer-history/ModuleTransferHistory';
+// injections/use
+const { trackSwapAmplitude } = useAmplitude();
+const { hasSwap } = useGlobalStore();
+const { swapNotifications } = useNotificationsStore();
+
+// props
+defineProps({
+  fromToken: {
+    type: String,
+    default: ETH_TOKEN
   },
-  mixins: [handlerAnalytics],
-  props: {
-    fromToken: {
-      type: String,
-      default: ETH_TOKEN
-    },
-    toToken: {
-      type: String,
-      default: DAI_TOKEN
-    },
-    amount: {
-      type: String,
-      default: ''
-    }
+  toToken: {
+    type: String,
+    default: DAI_TOKEN
   },
-  computed: {
-    ...mapGetters('global', ['hasSwap']),
-    ...mapGetters('notifications', ['swapNotifications']),
-    hasHistory() {
-      return this.swapNotifications && this.swapNotifications.length > 0;
-    },
-    totalRightColumns() {
-      return this.hasHistory && this.hasSwap ? 2 : 1;
-    }
-  },
-  mounted() {
-    this.trackSwapAmplitude(COMMON.PAGE_SHOWN);
+  amount: {
+    type: String,
+    default: ''
   }
-};
+});
+
+// computed
+const hasHistory = computed(() => {
+  return swapNotifications.value && swapNotifications.value.length > 0;
+});
+
+const totalRightColumns = computed(() => {
+  return hasHistory.value && hasSwap.value ? 2 : 1;
+});
+
+onMounted(() => {
+  trackSwapAmplitude(COMMON.PAGE_SHOWN);
+});
 </script>

@@ -67,87 +67,86 @@
   </div>
 </template>
 
-<script>
-import { mapGetters, mapState } from 'vuex';
+<script setup>
+import { computed, ref, defineAsyncComponent } from 'vue';
 import { toBN } from 'web3-utils';
 
-import buyMore from '@/core/mixins/buyMore.mixin';
+import { useBuySell } from '@/core/composables/buyMore';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
 
-export default {
-  name: 'ModuleTokensValue',
-  components: {
-    ModuleTokens: () => import('@/modules/balance/ModuleTokens')
-  },
-  mixins: [buyMore],
-  props: {
-    draggable: {
-      type: Boolean,
-      default: false
-    }
-  },
-  data: () => ({ showPopup: false }),
-  computed: {
-    ...mapGetters('wallet', ['tokensList']),
-    ...mapState('wallet', ['initialLoad']),
-    ...mapGetters('external', ['totalTokenFiatValue']),
-    ...mapGetters('global', ['getFiatValue', 'network']),
-    canBuy() {
-      return this.network.type.canBuy;
-    },
-    tokenTitle() {
-      return `My Token${this.tokenCount !== 1 ? 's' : ''}`;
-    },
-    totalTokenValues() {
-      return this.getFiatValue(this.totalTokenFiatValue);
-    },
-    tokens() {
-      const tokens = this.tokensList
-        .reduce((arr, token) => {
-          if (token && token.balance.gt(toBN(0))) {
-            arr.push(token);
-          }
-          return arr;
-        }, [])
-        .slice(0, 5);
-      return tokens;
-    },
-    moreTokensCount() {
-      return this.tokenCount - this.tokens.length;
-    },
-    showTokens() {
-      return !this.initialLoad;
-    },
-    getText() {
-      if (this.showTokens) {
-        const count =
-          this.moreTokensCount > 0 ? this.moreTokensCount : this.tokenCount;
-        return `${
-          this.moreTokensCount > 0
-            ? `+${this.moreTokensCount}`
-            : this.tokenCount
-        } token${count !== 1 ? 's' : ''}`;
-      }
-      return '';
-    },
-    tokenCount() {
-      if (
-        this.tokensList.length > 0 &&
-        this.tokensList[0].balance.eq(toBN(0))
-      ) {
-        return this.tokensList.length - 1;
-      }
-      return this.tokensList.length;
-    }
-  },
-  methods: {
-    handleTokensPopup() {
-      this.showPopup = !this.showPopup;
-    },
-    checkLink() {
-      if (this.tokenCount > 0) this.handleTokensPopup();
-      else this.openBuySell('ModuleTokensValue');
-    }
+const ModuleTokens = defineAsyncComponent(() =>
+  import('@/modules/balance/ModuleTokens')
+);
+
+// props
+defineProps({
+  draggable: {
+    type: Boolean,
+    default: false
   }
+});
+
+// injections/use
+const { openBuySell } = useBuySell();
+const { getFiatValue, network } = useGlobalStore();
+const { totalTokenFiatValue } = useExternalStore();
+const { tokensList, loadingWalletInfo } = useWalletStore();
+
+// data
+const showPopup = ref(false);
+
+// computed
+const canBuy = computed(() => {
+  return network.value.type.canBuy;
+});
+const tokenTitle = computed(() => {
+  return `My Token${tokenCount.value !== 1 ? 's' : ''}`;
+});
+const totalTokenValues = computed(() => {
+  return getFiatValue(totalTokenFiatValue.value);
+});
+const tokens = computed(() => {
+  const locTokens = tokensList.value
+    .reduce((arr, token) => {
+      if (token && token.balance.gt(toBN(0))) {
+        arr.push(token);
+      }
+      return arr;
+    }, [])
+    .slice(0, 5);
+  return locTokens;
+});
+const moreTokensCount = computed(() => {
+  return tokenCount.value - tokens.value.length;
+});
+const showTokens = computed(() => {
+  return !loadingWalletInfo.value;
+});
+const getText = computed(() => {
+  if (showTokens.value) {
+    const count =
+      moreTokensCount.value > 0 ? moreTokensCount.value : tokenCount.value;
+    return `${
+      moreTokensCount.value > 0 ? `+${moreTokensCount.value}` : tokenCount.value
+    } token${count !== 1 ? 's' : ''}`;
+  }
+  return '';
+});
+const tokenCount = computed(() => {
+  if (tokensList.value.length > 0 && tokensList.value[0].balance.eq(toBN(0))) {
+    return tokensList.value.length - 1;
+  }
+  return tokensList.value.length;
+});
+// methods
+const handleTokensPopup = () => {
+  showPopup.value = !showPopup.value;
+};
+const checkLink = () => {
+  if (tokenCount.value > 0) handleTokensPopup();
+  else openBuySell('ModuleTokensValue');
 };
 </script>
 <style lang="scss" scoped>

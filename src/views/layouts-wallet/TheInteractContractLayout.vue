@@ -9,19 +9,20 @@
   </the-wrapper-wallet>
 </template>
 
-<script>
-import { mapGetters } from 'vuex';
-export default {
-  name: 'InteracContractLayout',
-  components: {
-    TheWrapperWallet: () =>
-      import('@/views/components-wallet/TheWrapperWallet'),
-    ModuleSwapRates: () => import('@/modules/swap/ModuleSwapRates'),
-    ModuleContractInteract: () =>
-      import('@/modules/contract/ModuleContractInteract')
-  },
-  computed: {
-    ...mapGetters('global', ['isEthNetwork'])
-  }
-};
+<script setup>
+import { defineAsyncComponent } from 'vue';
+
+import { useGlobalStore } from '@/core/store/global';
+
+const TheWrapperWallet = defineAsyncComponent(() =>
+  import('@/views/components-wallet/TheWrapperWallet')
+);
+const ModuleSwapRates = defineAsyncComponent(() =>
+  import('@/modules/swap/ModuleSwapRates')
+);
+const ModuleContractInteract = defineAsyncComponent(() =>
+  import('@/modules/contract/ModuleContractInteract')
+);
+
+const { isEthNetwork } = useGlobalStore();
 </script>

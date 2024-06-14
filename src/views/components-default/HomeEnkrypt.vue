@@ -85,37 +85,37 @@
   </div>
 </template>
 
-<script>
-import enkryptMarketing from '@/core/mixins/enkryptMarketing.mixin.js';
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+<script setup>
+import { computed } from 'vue';
+
+import { useVuetify } from '@/core/composables/vuetify';
+import { useEnkryptMarketing } from '@/core/composables/enkryptMarketing';
+import { useAmplitude } from '@/core/composables/amplitude';
 import { LANDING_PAGE } from '@/modules/analytics-opt-in/handlers/configs/events.js';
-export default {
-  name: 'HomeEnkrypt',
 
-  mixins: [enkryptMarketing, handlerAnalytics],
+// injections/use
+const { trackLandingPageAmplitude } = useAmplitude();
+const { isMobile, browser, browserLogo } = useEnkryptMarketing();
+const vuetify = useVuetify();
 
-  computed: {
-    bgStyle() {
-      if (
-        this.$vuetify.breakpoint.mdAndUp &&
-        this.$vuetify.breakpoint.width < 2300
-      ) {
-        return 'bgLarge';
-      }
-      if (this.$vuetify.breakpoint.width >= 2300) {
-        return 'bgXLarge';
-      }
-      return 'bgSmall';
-    }
-  },
-  methods: {
-    trackEnkrypt() {
-      this.trackLandingPageAmplitude(LANDING_PAGE.GOOGLE_STORE_2);
-    },
-    trackEnkryptLearnMore() {
-      this.trackLandingPageAmplitude(LANDING_PAGE.ENKRYPT_LEARN_MORE);
-    }
+// computed
+const bgStyle = computed(() => {
+  if (vuetify.breakpoint.mdAndUp && vuetify.breakpoint.width < 2300) {
+    return 'bgLarge';
   }
+  if (vuetify.breakpoint.width >= 2300) {
+    return 'bgXLarge';
+  }
+  return 'bgSmall';
+});
+
+// methods
+const trackEnkrypt = () => {
+  trackLandingPageAmplitude(LANDING_PAGE.GOOGLE_STORE_2);
+};
+
+const trackEnkryptLearnMore = () => {
+  trackLandingPageAmplitude(LANDING_PAGE.ENKRYPT_LEARN_MORE);
 };
 </script>
 

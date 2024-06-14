@@ -8,7 +8,8 @@ import {
   calculateChainIdFromV
 } from '@/modules/access-wallet/common/helpers';
 import errorHandler from './errorHandler';
-import store from '@/core/store';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
 import commonGenerator from '@/core/helpers/commonGenerator';
 import toBuffer from '@/core/helpers/toBuffer';
 import { BN } from 'web3-utils';
@@ -38,6 +39,7 @@ class BitBox02Wallet {
   }
 
   async init(basePath) {
+    const { removeWallet } = useWalletStore();
     this.basePath = basePath ? basePath : this.supportedPaths[0].path;
     try {
       await this.BitBox02.connect(
@@ -54,7 +56,7 @@ class BitBox02Wallet {
           this.attestation = attestationResult;
         },
         () => {
-          store.dispatch('wallet/removeWallet');
+          removeWallet();
         },
         status => {
           this.status = status;
@@ -79,10 +81,11 @@ class BitBox02Wallet {
   }
 
   getAccount(idx) {
+    const { network } = useGlobalStore();
     const derivedKey = this.hdKey.derive('m/' + idx);
     const txSigner = async txParams => {
       const tx = new Transaction.fromTxData(txParams, {
-        common: commonGenerator(store.getters['global/network'])
+        common: commonGenerator(network.value)
       });
       const networkId = tx.common.chainId();
       const signingData = {

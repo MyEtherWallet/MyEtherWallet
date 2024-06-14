@@ -26,16 +26,10 @@
               </div>
               <div>
                 <div class="mb-1 font-weight-bold subtitle-1 white--text">
-                  {{
-                    $t('howItWorks.swap.info-one.title')
-                      | lokalise('howItWorks.swap.info-one.title')
-                  }}
+                  {{ t('howItWorks.swap.info-one.title') }}
                 </div>
                 <p class="white--text">
-                  {{
-                    $t('howItWorks.swap.info-one.text')
-                      | lokalise('howItWorks.swap.info-one.text')
-                  }}
+                  {{ t('howItWorks.swap.info-one.text') }}
                 </p>
               </div>
             </div>
@@ -46,16 +40,10 @@
               </div>
               <div>
                 <div class="mb-1 font-weight-bold subtitle-1 white--text">
-                  {{
-                    $t('howItWorks.swap.info-two.title')
-                      | lokalise('howItWorks.swap.info-two.title')
-                  }}
+                  {{ t('howItWorks.swap.info-two.title') }}
                 </div>
                 <p class="white--text">
-                  {{
-                    $t('howItWorks.swap.info-two.text')
-                      | $t('howItWorks.swap.info-two.text')
-                  }}
+                  {{ t('howItWorks.swap.info-two.text') }}
                 </p>
               </div>
             </div>
@@ -66,16 +54,10 @@
               </div>
               <div>
                 <div class="mb-1 font-weight-bold subtitle-1 white--text">
-                  {{
-                    $t('howItWorks.swap.info-three.title')
-                      | lokalise('howItWorks.swap.info-three.title')
-                  }}
+                  {{ t('howItWorks.swap.info-three.title') }}
                 </div>
                 <p class="white--text">
-                  {{
-                    $t('howItWorks.swap.info-three.text')
-                      | lokalise('howItWorks.swap.info-three.text')
-                  }}
+                  {{ t('howItWorks.swap.info-three.text') }}
                 </p>
               </div>
             </div>
@@ -86,17 +68,19 @@
   </div>
 </template>
 
-<script>
-export default {
-  data: vm => ({
-    titleData: {
-      textProps: 'white--text',
-      toptitle: '',
-      title: vm.$t('howItWorks.swap.title'),
-      description: vm.$t('howItWorks.swap.description'),
-      centered: false
-    }
-  })
+<script setup>
+import { useI18n } from 'vue-i18n-composable';
+
+// injections
+const { t } = useI18n();
+
+// data
+const titleData = {
+  textProps: 'white--text',
+  toptitle: '',
+  title: t('howItWorks.swap.title'),
+  description: t('howItWorks.swap.description'),
+  centered: false
 };
 </script>
 

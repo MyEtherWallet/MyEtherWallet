@@ -28,72 +28,71 @@
   </v-container>
 </template>
 
-<script>
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+<script setup>
 import { LANDING_PAGE } from '@/modules/analytics-opt-in/handlers/configs/events.js';
-export default {
-  name: 'AppPartnersBlock',
-  mixins: [handlerAnalytics],
-  data: () => ({
-    partners: [
-      {
-        img: require('@/assets/images/partners/ledger.png'),
-        link: 'https://www.ledger.com/?r=fa4b',
-        name: 'ledger'
-      },
-      {
-        img: require('@/assets/images/partners/trezor.png'),
-        link: 'https://trezor.io/?offer_id=12&aff_id=2029',
-        name: 'trezor'
-      },
-      {
-        img: require('@/assets/images/partners/bitbox.png'),
-        link: 'https://shiftcrypto.ch/?ref=mew',
-        name: 'bitbox'
-      },
-      {
-        img: require('@/assets/images/partners/bity.png'),
-        link: 'https://bity.com/af/jshkb37v',
-        name: 'bity'
-      },
-      {
-        img: require('@/assets/images/partners/keepkey.png'),
-        link: 'http://lddy.no/a4im',
-        name: 'keepkey'
-      },
-      {
-        img: require('@/assets/images/partners/kyber.png'),
-        link: 'https://kyber.network/',
-        name: 'kyber'
-      },
-      {
-        img: require('@/assets/images/partners/changelly.png'),
-        link: 'https://changelly.com/',
-        name: 'changelly'
-      },
-      {
-        img: require('@/assets/images/partners/simplex.png'),
-        link: 'https://www.simplex.com/',
-        name: 'simplex'
-      },
-      {
-        img: require('@/assets/images/partners/1inchdark.png'),
-        link: 'https://app.1inch.io/',
-        name: '1inchdark'
-      },
-      {
-        img: require('@/assets/images/partners/buitl-w-rivet-v2.svg'),
-        link: 'https://rivet.cloud/',
-        name: 'rivet'
-      }
-    ]
-  }),
-  methods: {
-    trackPartner(obj) {
-      this.trackLandingPageAmplitude(LANDING_PAGE.PARTNERS, {
-        name: obj.name
-      });
-    }
+import { useAmplitude } from '@/core/composables/amplitude';
+
+// injections/use
+const { trackLandingPageAmplitude } = useAmplitude();
+
+// data
+const partners = [
+  {
+    img: require('@/assets/images/partners/ledger.png'),
+    link: 'https://www.ledger.com/?r=fa4b',
+    name: 'ledger'
+  },
+  {
+    img: require('@/assets/images/partners/trezor.png'),
+    link: 'https://trezor.io/?offer_id=12&aff_id=2029',
+    name: 'trezor'
+  },
+  {
+    img: require('@/assets/images/partners/bitbox.png'),
+    link: 'https://shiftcrypto.ch/?ref=mew',
+    name: 'bitbox'
+  },
+  {
+    img: require('@/assets/images/partners/bity.png'),
+    link: 'https://bity.com/af/jshkb37v',
+    name: 'bity'
+  },
+  {
+    img: require('@/assets/images/partners/keepkey.png'),
+    link: 'http://lddy.no/a4im',
+    name: 'keepkey'
+  },
+  {
+    img: require('@/assets/images/partners/kyber.png'),
+    link: 'https://kyber.network/',
+    name: 'kyber'
+  },
+  {
+    img: require('@/assets/images/partners/changelly.png'),
+    link: 'https://changelly.com/',
+    name: 'changelly'
+  },
+  {
+    img: require('@/assets/images/partners/simplex.png'),
+    link: 'https://www.simplex.com/',
+    name: 'simplex'
+  },
+  {
+    img: require('@/assets/images/partners/1inchdark.png'),
+    link: 'https://app.1inch.io/',
+    name: '1inchdark'
+  },
+  {
+    img: require('@/assets/images/partners/buitl-w-rivet-v2.svg'),
+    link: 'https://rivet.cloud/',
+    name: 'rivet'
   }
+];
+
+// methods
+const trackPartner = obj => {
+  trackLandingPageAmplitude(LANDING_PAGE.PARTNERS, {
+    name: obj.name
+  });
 };
 </script>

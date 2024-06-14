@@ -12,8 +12,8 @@ The best way to start an integration is by creating a fork of MyEtherWallet and 
 
 ### Prerequisites
 
-* Best `Node.js` version to use is `10 >= Node.js <= 12`
-* `npm` version 6 or greater
+* Best `Node.js` version to use is `>= 16`
+* `yarn` version 6 or greater
 
 ***
 
@@ -26,13 +26,13 @@ The best way to start an integration is by creating a fork of MyEtherWallet and 
     $ git checkout develop
 
     # Install dependencies
-    $ npm install
+    $ yarn install
 
     # Create the build
-    $ npm run build.
+    $ yarn run build.
 
     # start
-    $ npm run start
+    $ yarn run start
 
     App should be running in https://localhost:8080
 
@@ -48,12 +48,12 @@ Note: You can also use the offline version by opening `index.html` from the `dis
 
   How to fix: Update packages (as told by the terminal error you will see) in `package.json`
 
-      $ npm install
-      $ npm start
+      $ yarn install
+      $ yarn start
 
 * `EACCESS` issue can be resolved by running:
 
-  `$ sudo chown -R $(whoami) ~/.npm`
+  `$ sudo chown -R $(whoami) ~/.yarn`
 
 For other issues, try the steps shown [here](https://www.google.com) by **@tomwalton78**.
 

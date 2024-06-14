@@ -1,7 +1,7 @@
 <template>
   <mew-module
     class="d-flex flex-grow-1 pt-6"
-    :title="title"
+    title="Verify Message"
     :has-elevation="true"
     :has-indicator="true"
   >
@@ -11,8 +11,7 @@
         class="VerifyInput"
         outlined
         label="Signature"
-        :value="message"
-      ></v-textarea>
+      />
 
       <div
         v-if="signResult"
@@ -30,7 +29,7 @@
       </div>
 
       <div v-if="verificationError" class="walletBg pa-3">
-        {{ $t('signMessage.failed') }}
+        {{ t('signMessage.failed') }}
       </div>
 
       <div
@@ -52,63 +51,66 @@
   </mew-module>
 </template>
 
-<script>
+<script setup>
+import { ref, onMounted } from 'vue';
 import { toChecksumAddress } from 'ethereumjs-util';
+import { useI18n } from 'vue-i18n-composable';
 
 import SignAndVerifyMessage from '@/modules/message/handlers';
-export default {
-  name: 'ModuleMessageVerify',
-  data() {
-    return {
-      title: 'Verify Message',
-      didSign: false,
-      didntSign: false,
-      signResult: false,
-      verificationError: false,
-      message: '',
-      signer: ''
-    };
-  },
-  mounted() {
-    this.signAndVerify = new SignAndVerifyMessage(this.web3, this.address);
-  },
-  methods: {
-    verifyMessage() {
-      try {
-        this.verificationError = false;
-        this.signResult = false;
-        this.didSign = false;
-        this.didntSign = false;
-        const signCheck = this.signAndVerify.verifyMessage(this.message);
-        const parsedMessage = JSON.parse(this.message);
-        if (!parsedMessage.address) {
-          this.verificationError = true;
-          return;
-        }
-        if (
-          signCheck.verified &&
-          toChecksumAddress(parsedMessage.address) ===
-            toChecksumAddress('0x' + signCheck.signer)
-        ) {
-          this.didSign = true;
-        } else {
-          this.didntSign = true;
-        }
-        this.signer = parsedMessage.address;
-        this.signResult = true;
-      } catch {
-        this.verificationError = true;
-      }
-    },
-    clearAll() {
-      this.verificationError = false;
-      this.didntSign = false;
-      this.didSign = false;
-      this.signResult = false;
-      this.message = '';
-      this.signer = '';
+
+// injections
+const { t } = useI18n();
+
+// data
+const didSign = ref(false);
+const didntSign = ref(false);
+const signResult = ref(false);
+const verificationError = ref(false);
+const message = ref('');
+const signer = ref('');
+const signAndVerify = ref(null);
+
+// mounted
+onMounted(() => {
+  signAndVerify.value = new SignAndVerifyMessage();
+});
+
+// methods
+const verifyMessage = () => {
+  try {
+    verificationError.value = false;
+    signResult.value = false;
+    didSign.value = false;
+    didntSign.value = false;
+    const signCheck = signAndVerify.value.verifyMessage(message.value);
+    const parsedMessage = JSON.parse(message.value);
+    if (!parsedMessage.address) {
+      verificationError.value = true;
+      return;
     }
+    if (
+      signCheck.verified &&
+      toChecksumAddress(parsedMessage.address) ===
+        toChecksumAddress('0x' + signCheck.signer)
+    ) {
+      didSign.value = true;
+    } else {
+      didntSign.value = true;
+    }
+    signer.value = parsedMessage.address;
+    signResult.value = true;
+  } catch {
+    verificationError.value = true;
   }
+};
+
+const clearAll = () => {
+  verificationError.value = false;
+  didntSign.value = false;
+  didSign.value = false;
+  signResult.value = false;
+  message.value = '';
+  signer.value = '';
 };
 </script>
 

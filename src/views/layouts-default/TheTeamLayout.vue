@@ -28,39 +28,37 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import axios from 'axios';
+import { onMounted, ref } from 'vue';
 
-export default {
-  name: 'TheTeamLayout',
-  components: {
-    TheLayoutHeader: () => import('../components-default/TheLayoutHeader')
-  },
-  data: vm => ({
-    titleData: {
-      textProps: '',
-      toptitle: '',
-      title: vm.$t('team.title'),
-      description: vm.$t('team.description'),
-      centered: true
-    },
-    team: {},
-    loadingTeam: true
-  }),
-  created() {
-    this.fetchTeam();
-  },
-  methods: {
-    fetchTeam() {
-      axios
-        .get(
-          'https://raw.githubusercontent.com/MyEtherWallet/dynamic-data/main/team.json'
-        )
-        .then(res => {
-          this.loadingTeam = false;
-          this.team = res.data.Team;
-        });
-    }
-  }
+import TheLayoutHeader from '@/views/components-default/TheLayoutHeader.vue';
+
+// data
+const titleData = {
+  textProps: '',
+  toptitle: '',
+  title: 'team.title',
+  description: 'team.description',
+  centered: true
+};
+const team = ref([]);
+const loadingTeam = ref(true);
+
+// onMounted
+onMounted(() => {
+  fetchTeam();
+});
+
+// methods
+const fetchTeam = () => {
+  axios
+    .get(
+      'https://raw.githubusercontent.com/MyEtherWallet/dynamic-data/main/team.json'
+    )
+    .then(res => {
+      loadingTeam.value = false;
+      team.value = res.data.Team;
+    });
 };
 </script>

@@ -55,173 +55,171 @@
   </div>
 </template>
 
-<script>
-import { mapActions, mapGetters, mapState } from 'vuex';
+<script setup>
+import { ref, computed, watch, onMounted } from 'vue';
 import { isEmpty } from 'lodash';
 
-import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
+import { SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import * as nodes from '@/utils/networks/nodes';
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-import { ETH, OP, MATIC, ARB, BSC } from '@/utils/networks/types';
+import { ETH, BSC, MATIC, ARB, OP } from '@/utils/networks/types';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
 
-export default {
-  name: 'BuySellTokenSelect',
-  mixins: [handlerAnalytics],
-  props: {
-    currencyItems: {
-      type: Array,
-      default: () => []
-    },
-    selectedCurrency: {
-      type: Object,
-      default: () => {}
-    },
-    setCurrency: {
-      type: Function,
-      default: () => {}
-    },
-    open: {
-      type: Boolean,
-      default: false
-    },
-    inWallet: {
-      type: Boolean,
-      default: false
-    },
-    isSell: {
-      type: Boolean,
-      default: false
-    }
+// props
+const props = defineProps({
+  currencyItems: {
+    type: Array,
+    default: () => []
   },
-  data() {
-    return {
-      searchValue: '',
-      nodes: nodes,
-      fetchedNetworks: [],
-      selectedNetwork: {},
-      currencyCopy: []
-    };
+  selectedCurrency: {
+    type: Object,
+    default: () => {}
   },
-  computed: {
-    ...mapGetters('global', ['network', 'Networks']),
-    ...mapState('wallet', ['instance', 'identifier']),
-    ...mapState('external', ['selectedEIP6963Provider']),
-    searchedCurrencyItems() {
-      if (this.searchValue) {
-        const found = this.currencyCopy.filter(element => {
-          return (
-            element.name
-              .toLowerCase()
-              .includes(this.searchValue.toLowerCase()) ||
-            element.subtext
-              .toLowerCase()
-              .includes(this.searchValue.toLowerCase())
-          );
-        });
-        return found;
-      }
-      return this.currencyCopy;
-    }
+  setCurrency: {
+    type: Function,
+    default: () => {}
   },
-  watch: {
-    currencyItems: {
-      handler(val) {
-        this.currencyCopy = val;
-      },
-      immediate: true,
-      deep: true
-    },
-    selectedNetwork(newVal, oldVal) {
-      // actual check whether the value was changed or just initially set
-      if (newVal && !isEmpty(newVal) && oldVal && !isEmpty(oldVal)) {
-        this.setNewNetwork(newVal);
-      }
-    },
-    open(val) {
-      this.searchValue = '';
-      if (val) {
-        const currNetwork = this.fetchedNetworks.find(network => {
-          if (network.value === this.network.type.name) return network;
-        });
-        this.selectedNetwork = currNetwork;
-      }
-    }
+  open: {
+    type: Boolean,
+    default: false
   },
-  mounted() {
-    this.fetchNetworks();
+  inWallet: {
+    type: Boolean,
+    default: false
   },
-  methods: {
-    ...mapActions('global', ['setNetwork']),
-    ...mapActions('external', ['setTokenAndEthBalance']),
-    ...mapActions('wallet', ['setWeb3Instance']),
-    fetchNetworks() {
-      const networkList = Object.values(this.Networks).filter(network => {
-        if (this.isSell) {
-          if (network[0].type.name === ETH.name) {
-            return network;
-          }
-        } else {
-          if (
-            network[0].type.name === ETH.name ||
-            network[0].type.name === MATIC.name ||
-            network[0].type.name === ARB.name ||
-            network[0].type.name === OP.name ||
-            network[0].type.name === BSC.name
-          ) {
-            return network;
-          }
-        }
-      });
-      this.fetchedNetworks = networkList.map(network => {
-        return {
-          img: network[0].type?.icon,
-          name: network[0].type?.name_long,
-          value: network[0].type?.name,
-          subtext: network[0].type?.currencyName
-        };
-      });
-    },
-    setNewNetwork(network) {
-      if (network.value === this.network.type.name) return;
-      const found = Object.values(this.nodes).filter(item => {
-        if (item.type.name === network.value) {
-          return item;
-        }
-      });
-      this.setNetwork({
-        network: found[0],
-        walletType: this.instance?.identifier || ''
-      })
-        .then(() => {
-          if (this.inWallet) {
-            const provider =
-              this.identifier === WALLET_TYPES.WEB3_WALLET
-                ? this.setWeb3Instance(this.selectedEIP6963Provider)
-                : this.setWeb3Instance();
-            if (!this.isOfflineApp) {
-              provider.then(() => {
-                this.setTokenAndEthBalance();
-              });
-            }
-          } else {
-            this.setWeb3Instance();
-          }
-          Toast(`Switched network to: ${network.name}`, {}, SUCCESS);
-          this.$emit('newNetwork');
-        })
-        .catch(e => {
-          Toast(e, {}, ERROR);
-        });
-    },
-    tokenSelected(token) {
-      this.setCurrency(token);
-      this.close();
-    },
-    close() {
-      this.$emit('close');
+  isSell: {
+    type: Boolean,
+    default: false
+  }
+});
+
+const emit = defineEmits(['newNetwork', 'close']);
+
+// injections/use
+const { Networks, setNetwork } = useGlobalStore();
+const { identifier, setWeb3Instance, isOfflineApp } = useWalletStore();
+const { selectedEIP6963Provider, setTokenAndEthBalance } = useExternalStore();
+
+// data
+const searchValue = ref('');
+const fetchedNetworks = ref([]);
+const selectedNetwork = ref({});
+const currencyCopy = ref([]);
+
+// computed
+const searchedCurrencyItems = computed(() => {
+  if (searchValue.value) {
+    const found = currencyCopy.value.filter(element => {
+      return (
+        element.name.toLowerCase().includes(searchValue.value.toLowerCase()) ||
+        element.subtext.toLowerCase().includes(searchValue.value.toLowerCase())
+      );
+    });
+    return found;
+  }
+  return currencyCopy.value;
+});
+
+// watch
+watch(
+  () => selectedNetwork,
+  (newVal, oldVal) => {
+    // actual check whether the value was changed or just initially set
+    if (newVal && !isEmpty(newVal) && oldVal && !isEmpty(oldVal)) {
+      setNewNetwork(newVal);
     }
   }
+);
+
+watch(props.open, val => {
+  searchValue.value = '';
+  if (val) {
+    const currNetwork = fetchNetworks.find(network => {
+      if (network.value === network.type.name) return network;
+    });
+    selectedNetwork.value = currNetwork;
+  }
+});
+
+watch(
+  () => props.currencyItems,
+  () => {
+    currencyCopy.value = props.currencyItems;
+  },
+  { immediate: true, deep: true }
+);
+watch(
+  () => props.open,
+  () => {
+    searchValue.value = '';
+  }
+);
+
+onMounted(() => {
+  fetchNetworks();
+});
+
+const fetchNetworks = () => {
+  const networkList = Object.values(Networks.value).filter(network => {
+    if (props.isSell) {
+      if (network[0].type.name === ETH.name) {
+        return network;
+      }
+    } else {
+      if (
+        network[0].type.name === ETH.name ||
+        network[0].type.name === MATIC.name ||
+        network[0].type.name === BSC.name ||
+        network[0].type.name === ARB.name ||
+        network[0].type.name === OP.name
+      ) {
+        return network;
+      }
+    }
+  });
+  fetchedNetworks.value = networkList.map(network => {
+    return {
+      img: network[0].type?.icon,
+      name: network[0].type?.name_long,
+      value: network[0].type?.name,
+      subtext: network[0].type?.currencyName
+    };
+  });
+};
+const setNewNetwork = network => {
+  if (network.value === network.type.name) return;
+  const found = Object.values(nodes).filter(item => {
+    if (item.type.name === network.value) {
+      return item;
+    }
+  });
+  setNetwork({
+    network: found[0],
+    walletType: identifier.value || ''
+  });
+  if (props.inWallet) {
+    if (identifier.value === WALLET_TYPES.WEB3_WALLET) {
+      setWeb3Instance(selectedEIP6963Provider);
+    } else {
+      setWeb3Instance();
+    }
+    if (!isOfflineApp.value) {
+      setTokenAndEthBalance();
+    }
+  } else {
+    setWeb3Instance();
+  }
+  Toast(`Switched network to: ${network.name}`, {}, SUCCESS);
+  emit('newNetwork');
+};
+const tokenSelected = token => {
+  props.setCurrency(token);
+  close();
+};
+const close = () => {
+  emit('close');
 };
 </script>
 

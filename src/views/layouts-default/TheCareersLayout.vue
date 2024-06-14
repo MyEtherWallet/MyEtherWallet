@@ -93,42 +93,33 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import axios from 'axios';
+import { onMounted, ref } from 'vue';
 
+import TheLayoutHeader from '@/views/components-default/TheLayoutHeader.vue';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
-export default {
-  name: 'TheCareersLayout',
-  components: {
-    TheLayoutHeader: () => import('../components-default/TheLayoutHeader')
-  },
-  data() {
-    return {
-      loadingCareers: true,
-      jobs: {}
-    };
-  },
-  created() {
-    this.fetchJobs();
-  },
-  methods: {
-    fetchJobs() {
-      axios
-        .get(
-          'https://raw.githubusercontent.com/MyEtherWallet/dynamic-data/main/careers.json',
-          {
-            headers: {
-              accept: 'application/json, text/plain, */*',
-              'Accept-Language': 'en-US,en;q=0.9'
-            }
-          }
-        )
-        .then(res => {
-          this.loadingCareers = false;
-          this.jobs = res.data;
-        })
-        .catch(e => Toast(e, {}, ERROR));
-    }
-  }
-};
+
+// data
+const jobs = ref({});
+const loadingCareers = ref(true);
+
+// onMounted
+onMounted(() => {
+  axios
+    .get(
+      'https://raw.githubusercontent.com/MyEtherWallet/dynamic-data/main/careers.json',
+      {
+        headers: {
+          accept: 'application/json, text/plain, */*',
+          'Accept-Language': 'en-US,en;q=0.9'
+        }
+      }
+    )
+    .then(res => {
+      loadingCareers.value = false;
+      jobs.value = res.data;
+    })
+    .catch(e => Toast(e, {}, ERROR));
+});
 </script>

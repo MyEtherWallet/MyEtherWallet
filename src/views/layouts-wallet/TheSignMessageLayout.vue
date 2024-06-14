@@ -6,11 +6,7 @@
   </the-wrapper-wallet>
 </template>
 
-<script>
-export default {
-  components: {
-    ModuleMessage: () => import('@/modules/message/ModuleMessageSign'),
-    TheWrapperWallet: () => import('@/views/components-wallet/TheWrapperWallet')
-  }
-};
+<script setup>
+import TheWrapperWallet from '@/views/components-wallet/TheWrapperWallet.vue';
+import ModuleMessage from '@/modules/message/ModuleMessageVerify.vue';
 </script>

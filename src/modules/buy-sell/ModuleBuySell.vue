@@ -67,200 +67,212 @@
   </div>
 </template>
 
-<script>
-import { mapGetters, mapState, mapActions } from 'vuex';
+<script setup>
+import { ref, watch, computed } from 'vue';
 import { isEmpty } from 'lodash';
 
 import { ETH, OP, MATIC, ARB, BSC } from '@/utils/networks/types';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 
 import handler from './handlers/handlerOrder';
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { BUY_SELL } from '@/modules/analytics-opt-in/handlers/configs/events';
+import { useAmplitude } from '@/core/composables/amplitude';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
+import { useExternalStore } from '@/core/store/external';
 
-export default {
-  name: 'MoonPay',
-  components: {
-    BuyEthComponent: () => import('./components/BuyComponent'),
-    SellEthComponent: () => import('./components/SellComponent'),
-    BuyProviderComponent: () => import('./components/BuyProviderComponent.vue')
-  },
-  mixins: [handlerAnalytics],
-  props: {
-    open: {
-      type: Boolean,
-      default: false
-    }
-  },
-  data() {
-    return {
-      isOpen: false,
-      activeTab: 0,
-      orderHandler: {},
-      selectedCurrency: {},
-      selectedFiat: {},
-      onlySimplex: false,
-      buyObj: {},
-      step: 0,
-      simplexQuote: {},
-      toAddress: '',
-      addTokenPadding: false
-    };
-  },
-  computed: {
-    ...mapState('wallet', ['address', 'instance']),
-    ...mapGetters('wallet', ['tokensList']),
-    ...mapGetters('global', ['network']),
-    ...mapGetters('external', ['contractToToken']),
-    sellSupported() {
-      return this.network.type.name === ETH.name;
-    },
-    inWallet() {
-      return (
-        this.$route.fullPath.includes('/wallet') && !this.$route.meta.noAuth
-      );
-    },
-    defaultCurrency() {
-      if (isEmpty(this.selectedCurrency) && this.supportedNetwork) {
-        if (this.inWallet) {
-          return this.tokensList[0];
-        }
-        const token = this.contractToToken(MAIN_TOKEN_ADDRESS);
-        token.value = token.symbol;
-        return token;
-      } else if (isEmpty(this.selectedCurrency) || !this.supportedNetwork) {
-        return this.selectedCurrency;
-      }
-      return this.selectedCurrency;
-    },
-    supportedNetwork() {
-      return (
-        this.network.type.name === ETH.name ||
-        this.network.type.name === BSC.name ||
-        this.network.type.name === MATIC.name ||
-        this.network.type.name === OP.name ||
-        this.network.type.name === ARB.name
-      );
-    },
-    leftBtn() {
-      return {
-        method: this.close
-      };
-    },
-    tabItems() {
-      if (this.sellSupported) {
-        return [
-          {
-            name: `Buy`
-          },
-          {
-            name: `Sell`
-          }
-        ];
-      }
-      return [{ name: 'Buy' }];
-    }
-  },
-  watch: {
-    open(newVal) {
-      this.isOpen = newVal;
-      if (newVal) {
-        this.orderHandler = new handler();
-      }
-      this.selectedCurrency = {};
-      this.selectedCurrency = this.defaultCurrency;
-    },
-    address() {
-      this.selectedCurrency = this.defaultCurrency;
-    },
-    network() {
-      this.selectedCurrency = {};
-      this.selectedCurrency = this.defaultCurrency;
-      this.setTokens();
-    }
-  },
-  methods: {
-    ...mapActions('external', ['setNetworkTokens']),
-    onTab(val) {
-      this.trackBuySell(val === 0 ? BUY_SELL.BUY_TAB : BUY_SELL.SELL_TAB);
-      this.selectedCurrency = {};
-      this.selectedCurrency = this.defaultCurrency;
-      this.activeTab = val;
-    },
-    async setTokens() {
-      if (!this.inWallet) {
-        const tokenMap = new Map();
-        const tokens = await this.network.type.tokens;
-        tokens.forEach(token => {
-          tokenMap.set(token.address.toLowerCase(), token);
-        });
-        this.setNetworkTokens(tokenMap);
-      }
-    },
-    close() {
-      this.activeTab = 0;
-      this.step = 0;
-      this.onlySimplex = false;
-      this.$emit('close', false);
-      this.trackBuySell(BUY_SELL.BUY_SELL_CLOSED);
-    },
-    setSelectedCurrency(e) {
-      if (this.selectedCurrency.symbol !== e.symbol) {
-        const event =
-          this.activeTab === 0 ? BUY_SELL.BUY_INPUT : BUY_SELL.SELL_INPUT;
-        this.trackBuySell(event, {
-          old: this.selectedCurrency.symbol,
-          new: e.symbol
-        });
-      }
-      this.selectedCurrency = e;
-    },
-    setSelectedFiat(e) {
-      if (e.name === 'CAD') {
-        this.selectedCurrency = this.defaultCurrency;
-      }
-      this.selectedFiat = e;
-    },
-    openProviders(val) {
-      this.step = val;
-    },
-    setBuyObj(val) {
-      this.buyObj = val;
-    },
-    setSimplexQuote(val) {
-      this.simplexQuote = val;
-    },
-    setToAddress(val) {
-      this.toAddress = val;
-    },
-    reset() {
-      this.selectedCurrency = this.defaultCurrency;
-      this.selectedFiat = {
-        name: 'USD',
-        value: 'USD',
-        // eslint-disable-next-line
-        img: require(`@/assets/images/currencies/USD.svg`)
-      };
-      this.onlySimplex = false;
-    },
-    hideMoonpay(val) {
-      this.onlySimplex = val;
-    },
-    buySuccess(items) {
-      this.setSimplexQuote(items[0]);
-      this.setToAddress(items[1]);
-      this.setBuyObj(items[2]);
-      this.openProviders(items[3]);
-      this.setSelectedCurrency(items[4]);
-      this.setSelectedFiat(items[5]);
-      this.trackBuySell(BUY_SELL.BUY_NOW_BUTTON);
-    },
-    checkTokenPadding(isOpen) {
-      if (this.inWallet) {
-        this.addTokenPadding = isOpen;
-      } else this.addTokenPadding = false;
-    }
+import { useRoute } from 'vue-router/composables';
+
+import BuyEthComponent from './components/BuyComponent';
+import SellEthComponent from './components/SellComponent';
+import BuyProviderComponent from './components/BuyProviderComponent.vue';
+
+// emits
+const emit = defineEmits(['close']);
+
+// injections/use
+const { trackBuySell } = useAmplitude();
+const { tokensList, address } = useWalletStore();
+const { contractToToken, setNetworkTokens } = useExternalStore();
+const { network } = useGlobalStore();
+const route = useRoute();
+
+// props
+const props = defineProps({
+  open: {
+    type: Boolean,
+    default: false
   }
+});
+
+// data
+const isOpen = ref(false);
+const activeTab = ref(0);
+const orderHandler = ref({});
+const selectedCurrency = ref({});
+const selectedFiat = ref({});
+const onlySimplex = ref(false);
+const buyObj = ref({});
+const step = ref(0);
+const simplexQuote = ref({});
+const toAddress = ref('');
+const addTokenPadding = ref(false);
+
+// computed
+const sellSupported = computed(() => {
+  return network.value.type.name === ETH.name;
+});
+const inWallet = computed(() => {
+  return route.fullPath.includes('/wallet') && !route.meta.noAuth;
+});
+const defaultCurrency = computed(() => {
+  if (isEmpty(selectedCurrency.value) && supportedNetwork.value) {
+    if (inWallet.value) {
+      return tokensList.value[0];
+    }
+    const token = contractToToken(MAIN_TOKEN_ADDRESS);
+    token.value = token.symbol;
+    return token;
+  } else if (isEmpty(selectedCurrency.value) || !supportedNetwork.value) {
+    return selectedCurrency.value;
+  }
+  return selectedCurrency.value;
+});
+const supportedNetwork = computed(() => {
+  return (
+    network.value.type.name === ETH.name ||
+    network.value.type.name === BSC.name ||
+    network.value.type.name === MATIC.name ||
+    network.value.type.name === MATIC.name ||
+    network.value.type.name === OP.name ||
+    network.value.type.name === ARB.name
+  );
+});
+const leftBtn = computed(() => {
+  return {
+    method: close
+  };
+});
+const tabItems = computed(() => {
+  if (sellSupported.value) {
+    return [
+      {
+        name: `Buy`
+      },
+      {
+        name: `Sell`
+      }
+    ];
+  }
+  return [{ name: 'Buy' }];
+});
+
+// watch
+watch(
+  () => props.open,
+  newVal => {
+    isOpen.value = newVal;
+    if (newVal) {
+      orderHandler.value = new handler();
+    }
+    selectedCurrency.value = {};
+    selectedCurrency.value = defaultCurrency;
+  }
+);
+watch(
+  () => address.value,
+  () => {
+    selectedCurrency.value = defaultCurrency;
+  }
+);
+watch(
+  () => network.value,
+  () => {
+    selectedCurrency.value = {};
+    selectedCurrency.value = defaultCurrency;
+    setTokens();
+  }
+);
+
+// methods
+const onTab = val => {
+  trackBuySell(val === 0 ? BUY_SELL.BUY_TAB : BUY_SELL.SELL_TAB);
+  selectedCurrency.value = {};
+  selectedCurrency.value = defaultCurrency;
+  activeTab.value = val;
+};
+const setTokens = async () => {
+  if (!inWallet.value) {
+    const tokenMap = new Map();
+    const tokens = await network.value.type.tokens;
+    tokens.forEach(token => {
+      tokenMap.set(token.address.toLowerCase(), token);
+    });
+    setNetworkTokens(tokenMap);
+  }
+};
+const close = () => {
+  activeTab.value = 0;
+  step.value = 0;
+  onlySimplex.value = false;
+  emit('close', false);
+  trackBuySell(BUY_SELL.BUY_SELL_CLOSED);
+};
+const setSelectedCurrency = e => {
+  if (selectedCurrency.value.symbol !== e.symbol) {
+    const event =
+      activeTab.value === 0 ? BUY_SELL.BUY_INPUT : BUY_SELL.SELL_INPUT;
+    trackBuySell(event, {
+      old: selectedCurrency.value.symbol,
+      new: e.symbol
+    });
+  }
+  selectedCurrency.value = e;
+};
+const setSelectedFiat = e => {
+  if (e.name === 'CAD') {
+    selectedCurrency.value = defaultCurrency;
+  }
+  selectedFiat.value = e;
+};
+const openProviders = val => {
+  step.value = val;
+};
+const setBuyObj = val => {
+  buyObj.value = val;
+};
+const setSimplexQuote = val => {
+  simplexQuote.value = val;
+};
+const setToAddress = val => {
+  toAddress.value = val;
+};
+const reset = () => {
+  selectedCurrency.value = defaultCurrency;
+  selectedFiat.value = {
+    name: 'USD',
+    value: 'USD',
+    // eslint-disable-next-line
+    img: require(`@/assets/images/currencies/USD.svg`)
+  };
+  onlySimplex.value = false;
+};
+const hideMoonpay = val => {
+  onlySimplex.value = val;
+};
+const buySuccess = items => {
+  setSimplexQuote(items[0]);
+  setToAddress(items[1]);
+  setBuyObj(items[2]);
+  openProviders(items[3]);
+  setSelectedCurrency(items[4]);
+  setSelectedFiat(items[5]);
+  trackBuySell(BUY_SELL.BUY_NOW_BUTTON);
+};
+const checkTokenPadding = isOpen => {
+  if (inWallet.value) {
+    addTokenPadding.value = isOpen;
+  } else addTokenPadding.value = false;
 };
 </script>
 

@@ -26,31 +26,32 @@
   </div>
 </template>
 
-<script>
-import enkryptMarketing from '@/core/mixins/enkryptMarketing.mixin';
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+<script setup>
+import { defineAsyncComponent, onMounted } from 'vue';
+
+import { useAmplitude } from '@/core/composables/amplitude.js';
+
 import {
   COMMON,
   CREATE_WALLET
 } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 
-export default {
-  name: 'TheCreateWalletLayout',
-  components: {
-    TheLayoutHeader: () => import('../components-default/TheLayoutHeader')
-  },
-  mixins: [enkryptMarketing, handlerAnalytics],
-  data: () => ({
-    titleRoute: {
-      text: 'Access Wallet',
-      routeName: 'AccessWallet',
-      func: () => {
-        this.trackCreateWalletAmplitude(CREATE_WALLET.NAVIGATE_TO_ACCESS);
-      }
-    }
-  }),
-  mounted() {
-    this.trackCreateWalletAmplitude(COMMON.PAGE_SHOWN);
+// injection/use
+const { trackCreateWalletAmplitude } = useAmplitude();
+
+const TheLayoutHeader = defineAsyncComponent(() =>
+  import('../components-default/TheLayoutHeader')
+);
+
+const titleRoute = {
+  text: 'Access Wallet',
+  routeName: 'AccessWallet',
+  func: () => {
+    trackCreateWalletAmplitude(CREATE_WALLET.NAVIGATE_TO_ACCESS);
   }
 };
+
+onMounted(() => {
+  trackCreateWalletAmplitude(COMMON.PAGE_SHOWN);
+});
 </script>

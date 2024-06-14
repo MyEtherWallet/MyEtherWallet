@@ -183,389 +183,369 @@
     />
   </div>
 </template>
-<script>
-import NetworkSwitch from '@/modules/network/components/NetworkSwitch.vue';
-import AccessWalletDerivationPath from '@/modules/access-wallet/hardware/components/AccessWalletDerivationPath.vue';
-import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
-import { getEthBalance } from '@/apollo/queries/wallets/wallets.graphql';
-import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
+<script setup>
+import { ref, computed, watch, onMounted } from 'vue';
+import { useQuery } from '@vue/apollo-composable';
 import { fromWei, toChecksumAddress } from 'web3-utils';
-import { mapGetters, mapState } from 'vuex';
 import { isEmpty, isEqual } from 'underscore';
 import ENS from '@ensdomains/ensjs';
 import Web3 from 'web3';
 import { isValidAddress } from 'ethereumjs-util';
 
-const MAX_ADDRESSES = 5;
+import { MAX_ADDRESSES } from '@/core/configs/commons';
 
-export default {
-  name: 'AccessWalletAddressNetwork',
-  filters: {
-    concatAddress(val) {
-      return `${val.substring(0, 11)}...${val.substring(
-        val.length - 4,
-        val.length
-      )}`;
-    },
-    concatAddressXS(val) {
-      return `${val.substring(0, 4)}...${val.substring(
-        val.length - 4,
-        val.length
-      )}`;
+import NetworkSwitch from '@/modules/network/components/NetworkSwitch.vue';
+import AccessWalletDerivationPath from '@/modules/access-wallet/hardware/components/AccessWalletDerivationPath.vue';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+import { getEthBalance } from '@/apollo/queries/wallets/wallets.graphql';
+import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
+import { useWalletStore } from '@/core/store/wallet';
+import { useGlobalStore } from '@/core/store/global';
+import { useAddressBookStore } from '@/core/store/addressBook';
+import { useVuetify } from '@/core/composables/vuetify';
+
+// emits
+const emits = defineEmits(['setPath', 'unlock']);
+
+// injections/use
+const { isOfflineApp } = useWalletStore();
+const { addressBookStore } = useAddressBookStore();
+const { network } = useGlobalStore();
+const vuetify = useVuetify();
+
+// data
+const currentIdx = ref(0);
+const acceptTerms = ref(false);
+const label = ref('To access my wallet, I accept ');
+const link = ref({
+  title: 'Terms',
+  url: 'https://www.myetherwallet.com/terms-of-service'
+});
+const selectedAddress = ref('');
+const accountAddress = ref('');
+const panelNetworkSubstring = ref('');
+const addressPage = ref(0);
+const accounts = ref([]);
+
+// props
+const props = defineProps({
+  handlerWallet: {
+    type: Object,
+    default: function () {
+      return {};
     }
   },
-  components: {
-    NetworkSwitch,
-    AccessWalletDerivationPath
+  paths: {
+    type: Array,
+    default: () => []
   },
-  props: {
-    handlerWallet: {
-      type: Object,
-      default: function () {
-        return {};
-      }
-    },
-    paths: {
-      type: Array,
-      default: () => []
-    },
-    selectedPath: {
-      type: Object,
-      default: () => {}
-    },
-    /**
-     * hides access wallet derivation path component
-     */
-    hidePathSelection: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * disables custom derivation path
-     */
-    disableCustomPaths: {
-      type: Boolean,
-      default: false
-    },
-    hideNetworks: {
-      type: Boolean,
-      default: false
+  selectedPath: {
+    type: Object,
+    default: () => {}
+  },
+  /**
+   * hides access wallet derivation path component
+   */
+  hidePathSelection: {
+    type: Boolean,
+    default: false
+  },
+  /**
+   * disables custom derivation path
+   */
+  disableCustomPaths: {
+    type: Boolean,
+    default: false
+  },
+  hideNetworks: {
+    type: Boolean,
+    default: false
+  }
+});
+
+// computed
+const buttonDisabled = computed(() => {
+  return !acceptTerms.value || selectedAddress.value === '';
+});
+const web3 = computed(() => {
+  return new Web3(network.value.url);
+});
+const isLoading = computed(() => {
+  return accounts.value.length !== MAX_ADDRESSES;
+});
+/**
+ * Property returns the index of the account of the accountAddress
+ */
+const onAccountIndex = computed(() => {
+  return accounts.value.findIndex(acc => acc.address === accountAddress.value);
+});
+/**
+ * Property returns boolean and validates whether or not to skip Apollo GetEthBalance query.
+ */
+const skipApollo = computed(() => {
+  return (
+    (accountAddress.value && accountAddress.value !== '') ||
+    (accounts.value[onAccountIndex.value] &&
+      accounts.value[onAccountIndex.value].balance === 'Loading..')
+  );
+});
+/**
+ * Property returns edited version of the selected address. ie: 0x3453...3a3b
+ */
+const panelAddressSubstring = computed(() => {
+  return selectedAddress.value && selectedAddress.value !== ''
+    ? `${selectedAddress.value.substring(
+        0,
+        6
+      )} ... ${selectedAddress.value.substring(
+        selectedAddress.value.length - 4,
+        selectedAddress.value.length
+      )}`
+    : '';
+});
+/**
+ * Property returns expand panel items for the Address and Network
+ */
+const panelItems = computed(() => {
+  const panelItems = [
+    {
+      name: 'Address',
+      subtext: panelAddressSubstring.value,
+      colorTheme: 'greyLight',
+      hasActiveBorder: true
     }
-  },
-  apollo: {
-    /**
-     * Apollo query to return eth balance for each account
-     */
-    getEthBalance: {
-      query: getEthBalance,
-      variables() {
-        return {
-          hash: this.accountAddress
-        };
-      },
-      skip() {
-        return this.isOfflineApp
-          ? true
-          : this.skipApollo || this.accountAddress === null;
-      },
-      result({ data }) {
-        if (data && data.getEthBalance) {
-          if (this.accounts[this.onAccountIndex]) {
-            /**
-             * Sets the balance of the account of accountAddress
-             */
-            this.accounts[this.onAccountIndex].balance =
-              formatFloatingPointValue(
-                fromWei(data.getEthBalance.balance)
-              ).value;
-            /**
-             * Find the next index and set the address of it to accountAddress
-             */
-            const nextIdx = this.onAccountIndex + 1;
-            if (
-              nextIdx < this.accounts.length &&
-              this.accounts[nextIdx].balance === 'Loading..'
-            ) {
-              this.accountAddress = this.accounts[nextIdx].address;
-            }
-          }
-        }
-      }
-    }
-  },
-  data() {
-    return {
-      currentIdx: 0,
-      acceptTerms: false,
-      label: 'To access my wallet, I accept ',
-      link: {
-        title: 'Terms',
-        url: 'https://www.myetherwallet.com/terms-of-service'
-      },
-      selectedAddress: '',
-      accountAddress: '',
-      /*Network Items: */
-      panelNetworkSubstring: '',
-      /* Path Items: */
-      addressPage: 0,
-      accounts: []
-    };
-  },
-  computed: {
-    ...mapGetters('global', ['network']),
-    ...mapState('addressBook', ['addressBookStore']),
-    ...mapState('wallet', ['isOfflineApp']),
-    buttonDisabled() {
-      return !this.acceptTerms || this.selectedAddress === '';
-    },
-    web3() {
-      return new Web3(this.network.url);
-    },
-    isLoading() {
-      return this.accounts.length !== MAX_ADDRESSES;
-    },
-    /**
-     * Property returns the index of the account of the accountAddress
-     */
-    onAccountIndex() {
-      return this.accounts.findIndex(
-        acc => acc.address === this.accountAddress
-      );
-    },
-    /**
-     * Property returns boolean and validates whether or not to skip Apollo GetEthBalance query.
-     */
-    skipApollo() {
-      return (
-        (!this.accountAddress && this.accountAddress === '') ||
-        (this.accounts[this.onAccountIndex] &&
-          this.accounts[this.onAccountIndex].balance !== 'Loading..')
-      );
-    },
-    /**
-     * Property returns edited version of the selected address. ie: 0x3453...3a3b
-     */
-    panelAddressSubstring() {
-      return this.selectedAddress && this.selectedAddress !== ''
-        ? `${this.selectedAddress.substring(
-            0,
-            6
-          )} ... ${this.selectedAddress.substring(
-            this.selectedAddress.length - 4,
-            this.selectedAddress.length
-          )}`
-        : '';
-    },
-    /**
-     * Property returns expand panel items for the Address and Network
-     */
-    panelItems() {
-      const panelItems = [
-        {
-          name: 'Address',
-          subtext: this.panelAddressSubstring,
-          colorTheme: 'greyLight',
-          hasActiveBorder: true
-        }
-      ];
-      if (!this.hideNetworks) {
-        panelItems.push({
-          name: 'Network',
-          subtext: this.panelNetworkSubstring,
-          colorTheme: 'greyLight',
-          hasActiveBorder: true
-        });
-      }
-      return panelItems;
-    },
-    /**
-     * Property returns default network and nodes items
-     * Property Interface:
-     * {  name = string -> Name of the Path,
-     *    subtext = string --> Derivation Path,
-     *    value = tring --> Derivation Path
-     * }
-     */
-    walletAccount() {
-      const wallet = this.accounts.find(item => {
-        return item.address === this.selectedAddress;
-      });
-      if (wallet) {
-        return wallet.account;
-      }
-      return null;
-    },
-    isMobile() {
-      return this.$vuetify.breakpoint.smAndDown;
-    },
-    blockExplorer() {
-      const networkType = this.network.type;
-      const blockExplorer = networkType.blockExplorerAddr;
-      return blockExplorer;
-    }
-  },
-  watch: {
-    accounts: {
-      deep: true,
-      handler: function (newVal) {
-        this.accounts = newVal;
-      }
-    },
-    network: {
-      deep: true,
-      handler: function () {
-        this.changeHandler();
-      }
-    },
-    selectedPath: {
-      handler: function (newVal, oldVal) {
-        if (!isEqual(newVal, oldVal)) {
-          this.changeHandler();
-        }
-      },
-      deep: true
-    },
-    handlerWallet(newVal, oldVal) {
-      if (!isEqual(newVal, oldVal)) {
-        this.changeHandler();
-      }
-    }
-  },
-  mounted() {
-    if (this.isOfflineApp) {
-      this.link = {};
-      this.label = 'To access my wallet, I accept Terms';
-    }
-    this.setNetworkPanel();
-    this.setAccounts();
-  },
-  methods: {
-    setPath(path) {
-      this.$emit('setPath', path);
-    },
-    changeHandler() {
-      this.accounts.splice(0);
-      this.addressPage = 0;
-      this.selectedAddress = '';
-      this.accountAddress = '';
-      this.currentIdx = 0;
-      this.setAccounts();
-    },
-    /**
-     * Async method that gets accounts according to the pagination
-     */
-    async setAccounts() {
+  ];
+  if (!props.hideNetworks) {
+    panelItems.push({
+      name: 'Network',
+      subtext: panelNetworkSubstring.value,
+      colorTheme: 'greyLight',
+      hasActiveBorder: true
+    });
+  }
+  return panelItems;
+});
+/**
+ * Property returns default network and nodes items
+ * Property Interface:
+ * {  name = string -> Name of the Path,
+ *    subtext = string --> Derivation Path,
+ *    value = tring --> Derivation Path
+ * }
+ */
+const walletAccount = computed(() => {
+  const wallet = accounts.value.find(item => {
+    return item.address === selectedAddress.value;
+  });
+  if (wallet) {
+    return wallet.account;
+  }
+  return null;
+});
+const isMobile = computed(() => {
+  return vuetify.breakpoint.smAndDown;
+});
+const blockExplorer = computed(() => {
+  return network.value.type.blockExplorerAddr;
+});
+
+// apollo
+const { onResult: getEthBalanceResult } = useQuery(
+  getEthBalance,
+  () => ({ hash: accountAddress.value }),
+  {
+    enabled: isOfflineApp.value
+      ? false
+      : skipApollo.value || accountAddress.value !== null
+  }
+);
+getEthBalanceResult(({ data }) => {
+  if (data && data.getEthBalance) {
+    if (accounts.value[onAccountIndex.value]) {
       /**
-       * prevents error when this.handlerWallet
-       * is empty due to selectedPatch changing
+       * Sets the balance of the account of accountAddress
        */
-      if (!isEmpty(this.handlerWallet)) {
-        const accountsArray = [];
-        try {
-          // resets the array to empty
-          this.accounts.splice(0);
-          const ens =
-            this.network.type.hasOwnProperty('ens') && !this.isOfflineApp
-              ? new ENS({
-                  provider: this.web3.eth.currentProvider,
-                  ensAddress: this.network.type.ens.registry
-                })
-              : null;
-          for (
-            let i = this.currentIdx;
-            i < this.currentIdx + MAX_ADDRESSES;
-            i++
-          ) {
-            const account = await this.handlerWallet.getAccount(i);
-            const address = account.getAddressString();
-            const name = ens
-              ? await ens.getName(address)
-              : {
-                  name: ''
-                };
-            const balance = this.isOfflineApp
-              ? '0'
-              : this.network.type.isEthVMSupported.supported
-              ? 'Loading..'
-              : await this.web3.eth.getBalance(address);
-            const nickname = this.getNickname(address);
-            accountsArray.push({
-              address: address,
-              account: account,
-              idx: i,
-              balance: balance !== 'Loading..' ? fromWei(balance) : balance,
-              ensName: name.name ? name.name : '',
-              nickname: nickname
-            });
-          }
-          this.currentIdx += MAX_ADDRESSES;
-          this.addressPage += 1;
-          this.selectedAddress = accountsArray[0].address;
-          this.accountAddress = accountsArray[0].address;
-          this.accounts = accountsArray;
-        } catch (e) {
-          Toast(e, {}, ERROR);
-        }
+      accounts.value[onAccountIndex.value].balance = formatFloatingPointValue(
+        fromWei(data.getEthBalance.balance)
+      ).value;
+      /**
+       * Find the next index and set the address of it to accountAddress
+       */
+      const nextIdx = onAccountIndex.value + 1;
+      if (
+        nextIdx < accounts.value.length &&
+        accounts.value[nextIdx].balance === 'Loading..'
+      ) {
+        accountAddress.value = accounts.value[nextIdx].address;
       }
-    },
-    getNickname(address) {
-      const checksummedAddress = toChecksumAddress(address);
-      const isStored = this.addressBookStore.find(item => {
-        const addressStored = item.resolvedAddr
-          ? item.resolvedAddr
-          : item.address;
-        if (!isValidAddress(addressStored)) return;
-        const storedAddr = toChecksumAddress(addressStored);
-        if (storedAddr === checksummedAddress) {
-          return item;
-        }
-      });
-      return isStored
-        ? isStored.resolvedAddr
-          ? isStored.resolvedAddr
-          : isStored.nickname
-        : '';
-    },
-    /**
-     * Methods generates previous derived addresses
-     */
-    nextAddressSet() {
-      this.setAccounts();
-    },
-    /**
-     * Methods generates previous derived addresses
-     */
-    previousAddressSet() {
-      const pageDeductor = this.currentIdx / MAX_ADDRESSES;
-      const idxDeductor = this.addressPage * MAX_ADDRESSES;
-      this.addressPage -=
-        this.currentIdx <= 10 ? pageDeductor : pageDeductor - 1;
-      this.currentIdx -=
-        this.currentIdx <= 10 ? idxDeductor : idxDeductor - MAX_ADDRESSES;
-      this.setAccounts();
-    },
-    /**
-     * Methods sets panelNetworkSubstring  based on the
-     * @return {void}
-     */
-    setNetworkPanel() {
-      this.panelNetworkSubstring = `${this.network.type.name} - ${this.network.type.name_long}`;
-    },
-    /**
-     * Methods emits parent to unlock wallet
-     * and passes selected wallet account
-     * this.walletAccount should always be defined,
-     * check in place if logic was compromised.
-     */
-    accessWallet() {
-      if (this.walletAccount) {
-        this.$emit('unlock', this.walletAccount);
-      }
-    },
-    getExplorerLink(addr) {
-      return this.blockExplorer.replace('[[address]]', addr);
     }
   }
+});
+
+// watch
+watch(
+  () => accounts.value,
+  newVal => {
+    accounts.value = newVal;
+  },
+  { deep: true }
+);
+watch(
+  () => network.value,
+  () => {
+    changeHandler();
+  },
+  { deep: true }
+);
+watch(
+  () => props.selectedPath,
+  (newVal, oldVal) => {
+    if (!isEqual(newVal, oldVal)) {
+      changeHandler();
+    }
+  },
+  { deep: true }
+);
+watch(
+  () => props.handlerWallet,
+  (newVal, oldVal) => {
+    if (!isEqual(newVal, oldVal)) {
+      changeHandler();
+    }
+  }
+);
+
+// mounted
+onMounted(() => {
+  if (isOfflineApp.value) {
+    link.value = {};
+    label.value = 'To access my wallet, I accept Terms';
+  }
+  setNetworkPanel();
+  setAccounts();
+});
+
+const setPath = path => {
+  emits('setPath', path);
+};
+const changeHandler = () => {
+  accounts.value.splice(0);
+  addressPage.value = 0;
+  selectedAddress.value = '';
+  accountAddress.value = '';
+  currentIdx.value = 0;
+  setAccounts();
+};
+/**
+ * Async method that gets accounts according to the pagination
+ */
+const setAccounts = async () => {
+  /**
+   * prevents error when handlerWallet
+   * is empty due to selectedPatch changing
+   */
+  if (!isEmpty(props.handlerWallet)) {
+    const accountsArray = [];
+    try {
+      // resets the array to empty
+      accounts.value.splice(0);
+      const ens =
+        network.value.type.hasOwnProperty('ens') && !isOfflineApp.value
+          ? new ENS({
+              provider: web3.value.eth.currentProvider,
+              ensAddress: network.value.type.ens.registry
+            })
+          : null;
+      for (
+        let i = currentIdx.value;
+        i < currentIdx.value + MAX_ADDRESSES;
+        i++
+      ) {
+        const account = await props.handlerWallet.getAccount(i);
+        const address = account.getAddressString();
+        const ensName = ens
+          ? await ens.getName(address)
+          : {
+              name: ''
+            };
+        const balance = isOfflineApp.value
+          ? '0'
+          : network.value.type.isEthVMSupported.supported
+          ? 'Loading..'
+          : await web3.value.eth.getBalance(address);
+        const nickname = getNickname(address);
+        accountsArray.push({
+          address: address,
+          account: account,
+          idx: i,
+          balance: balance !== 'Loading..' ? fromWei(balance) : balance,
+          ensName: ensName.name ? ensName.name : '',
+          nickname: nickname
+        });
+      }
+      currentIdx.value += MAX_ADDRESSES;
+      addressPage.value += 1;
+      selectedAddress.value = accountsArray[0].address;
+      accountAddress.value = accountsArray[0].address;
+      accounts.value = accountsArray;
+    } catch (e) {
+      Toast(e, {}, ERROR);
+    }
+  }
+};
+const getNickname = address => {
+  const checksummedAddress = toChecksumAddress(address);
+  const isStored = addressBookStore.value.find(item => {
+    const addressStored = item.resolvedAddr ? item.resolvedAddr : item.address;
+    if (!isValidAddress(addressStored)) return;
+    const storedAddr = toChecksumAddress(addressStored);
+    if (storedAddr === checksummedAddress) {
+      return item;
+    }
+  });
+  return isStored
+    ? isStored.resolvedAddr
+      ? isStored.resolvedAddr
+      : isStored.nickname
+    : '';
+};
+/**
+ * Methods generates previous derived addresses
+ */
+const nextAddressSet = () => {
+  setAccounts();
+};
+/**
+ * Methods generates previous derived addresses
+ */
+const previousAddressSet = () => {
+  const pageDeductor = currentIdx.value / MAX_ADDRESSES;
+  const idxDeductor = addressPage.value * MAX_ADDRESSES;
+  addressPage.value -= currentIdx.value <= 10 ? pageDeductor : pageDeductor - 1;
+  currentIdx.value -=
+    currentIdx.value <= 10 ? idxDeductor : idxDeductor - MAX_ADDRESSES;
+  setAccounts();
+};
+/**
+ * Methods sets panelNetworkSubstring  based on the
+ * @return {void}
+ */
+const setNetworkPanel = () => {
+  panelNetworkSubstring.value = `${network.value.type.name} - ${network.value.type.name_long}`;
+};
+/**
+ * Methods emits parent to unlock wallet
+ * and passes selected wallet account
+ * walletAccount should always be defined,
+ * check in place if logic was compromised.
+ */
+const accessWallet = () => {
+  if (walletAccount.value) {
+    emits('unlock', walletAccount.value);
+  }
+};
+const getExplorerLink = addr => {
+  return blockExplorer.value.replace('[[address]]', addr);
 };
 </script>
 <style lang="scss" scoped>

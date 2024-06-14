@@ -6,7 +6,7 @@
   >
     <template #leftColItem1>
       <div>
-        <module-balance />
+        <ModuleBalance />
       </div>
     </template>
     <template #leftColItem2>
@@ -22,171 +22,164 @@
       </div>
     </template>
     <template #[hasBanner]>
-      <module-tokens />
+      <ModuleTokens />
     </template>
     <template v-if="isEthNetwork" #rightColItem1>
-      <module-swap-rates />
+      <ModuleSwapRates />
     </template>
     <template #[name]>
-      <wallet-carousel />
+      <WalletCarousel />
     </template>
   </the-wrapper-wallet>
 </template>
 
-<script>
-import { mapGetters, mapState } from 'vuex';
-import BigNumber from 'bignumber.js';
+<script setup>
+import { computed, onMounted } from 'vue';
 import { isArray } from 'lodash';
+import BigNumber from 'bignumber.js';
 
-import { fromBase } from '@/core/helpers/unit';
-import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
+import { useGlobalStore } from '@/core/store/global';
+import { useExternalStore } from '@/core/store/external';
+import { useWalletStore } from '@/core/store/wallet';
 import { ETH, HOLESKY, GOERLI } from '@/utils/networks/types';
+
 import handlerStaked from '@/dapps/staked-dapp/handlers/handlerStaked.js';
 
 const STAKED_ENDPOINT = 'https://staked.mewapi.io';
 const COINBASE_ENDPOINT = 'https://coinbase-staking.mewapi.io/staking';
 
-export default {
-  components: {
-    WalletCarousel: () =>
-      import('@/views/components-wallet/WalletCarousel.vue'),
-    ModuleBalance: () => import('@/modules/balance/ModuleBalance'),
-    ModuleTokens: () => import('@/modules/balance/ModuleTokens'),
-    ModuleSwapRates: () => import('@/modules/swap/ModuleSwapRates'),
-    TheWrapperWallet: () =>
-      import('@/views/components-wallet/TheWrapperWallet'),
-    DashboardBanner: () => import('@/views/components-wallet/DashboardBanner'),
-    StakingSummaryCard: () =>
-      import('@/views/components-wallet/StakingSummaryCard')
-  },
-  data() {
-    return {
-      cbStakeRewards: {
-        totalRewards: 0,
-        totalStaked: 0
+import WalletCarousel from '@/views/components-wallet/WalletCarousel.vue';
+import ModuleBalance from '@/modules/balance/ModuleBalance';
+import ModuleTokens from '@/modules/balance/ModuleTokens';
+import ModuleSwapRates from '@/modules/swap/ModuleSwapRates';
+import TheWrapperWallet from '@/views/components-wallet/TheWrapperWallet';
+import DashboardBanner from '@/views/components-wallet/DashboardBanner.vue';
+import StakingSummaryCard from '@/views/components-wallet/StakingSummaryCard.vue';
+import { fromBase } from '@/core/helpers/unit';
+import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
+
+// injections/use
+const { isEthNetwork, network } = useGlobalStore();
+const { getCoinGeckoTokenById } = useExternalStore();
+const { address, web3, identifier } = useWalletStore();
+const stakingSupported = [GOERLI, HOLESKY, ETH];
+
+// data
+let cbStakeRewards = {
+  totalRewards: 0,
+  totalStaked: 0
+};
+let stakedRewards = {
+  totalRewards: 0,
+  totalStaked: 0
+};
+let stakedLoading = true;
+let cbStakeLoading = true;
+let stakedHandler = {};
+
+// computed
+const showBanner = computed(() => {
+  const supportedIdx = stakingSupported.findIndex(item => {
+    if (item.chainID === network.value.type.chainID) return item;
+  });
+  return supportedIdx > -1;
+});
+
+const hasBanner = computed(() => {
+  return `leftColItem${showBanner.value ? 3 : 2}`;
+});
+
+const name = computed(() => {
+  return isEthNetwork.value ? 'rightColItem1' : 'rightColItem2';
+});
+
+const hasStaked = computed(() => {
+  return (
+    !loading.value &&
+    network.value.type.chainID === ETH.chainID &&
+    (BigNumber(cbStakeRewards.totalStaked).gt(0) ||
+      BigNumber(stakedRewards.totalStaked).gt(0))
+  );
+});
+const loading = computed(() => {
+  return stakedLoading || cbStakeLoading;
+});
+const ethPrice = computed(() => {
+  const { price } = getCoinGeckoTokenById('ethereum');
+  return price;
+});
+const currentApr = computed(() => {
+  return stakedHandler.apr;
+});
+
+onMounted(() => {
+  if (network.value.type.chainID === ETH.chainID) {
+    getStakedRewards();
+    getCbStakeRewards();
+    stakedHandler = new handlerStaked(
+      web3.value,
+      network.value,
+      address.value,
+      () => {},
+      identifier.value
+    );
+  }
+});
+
+// methods
+const getStakedRewards = async () => {
+  try {
+    const response = await fetch(
+      `${STAKED_ENDPOINT}/history?address=${address.value}`
+    );
+    const data = await response.json();
+    if (!isArray(data)) {
+      stakedLoading = false;
+      return;
+    }
+    stakedRewards = data.reduce(
+      (initVal, currentValue) => {
+        const newValue = Object.assign({}, initVal);
+        const { raw } = currentValue;
+        let rewards = 0;
+        let staked = 0;
+        raw.forEach(rItm => {
+          if (rItm.status === 'ACTIVE') {
+            rewards += BigNumber(rItm.detailed_balance_info.reward).toNumber();
+            staked += BigNumber(rItm.amount).toNumber();
+          }
+        });
+        newValue.totalStaked += staked;
+        newValue.totalRewards += BigNumber(fromBase(rewards, 18)).toNumber();
+        return newValue;
       },
-      stakedRewards: {
-        totalRewards: 0,
-        totalStaked: 0
-      },
-      stakedLoading: true,
-      cbStakeLoading: true,
-      handlerStaked: {}
+      { totalStaked: 0, totalRewards: 0 }
+    );
+    stakedLoading = false;
+  } catch (error) {
+    stakedLoading = false;
+    Toast(error, {}, ERROR);
+  }
+};
+const getCbStakeRewards = async () => {
+  try {
+    const response = await fetch(
+      `${COINBASE_ENDPOINT}?address=${address.value}&action=details&networkId=${network.value.type.chainID}`
+    );
+    const data = await response.json();
+    const { integratorShareBalance, integratorShareUnderlyingBalance } = data;
+    cbStakeRewards = {
+      totalStaked: BigNumber(
+        fromBase(integratorShareUnderlyingBalance.value, 18)
+      ).toNumber(),
+      totalRewards: BigNumber(
+        fromBase(integratorShareBalance.value, 18)
+      ).toNumber()
     };
-  },
-  computed: {
-    ...mapState('wallet', ['address', 'web3', 'identifier']),
-    ...mapGetters('global', ['isEthNetwork', 'network']),
-    ...mapGetters('external', ['getCoinGeckoTokenById']),
-    stakingSupported() {
-      return [GOERLI, HOLESKY, ETH];
-    },
-    showBanner() {
-      if (this.stakedLoading || this.cbStakeLoading) return false;
-      const supportedIdx = this.stakingSupported.findIndex(item => {
-        if (item.chainID === this.network.type.chainID) return item;
-      });
-      return supportedIdx > -1 && !this.hasStaked;
-    },
-    hasStaked() {
-      return (
-        !this.loading &&
-        this.network.type.chainID === ETH.chainID &&
-        (BigNumber(this.cbStakeRewards.totalStaked).gt(0) ||
-          BigNumber(this.stakedRewards.totalStaked).gt(0))
-      );
-    },
-    hasBanner() {
-      return `leftColItem${this.showBanner || this.hasStaked ? 3 : 2}`;
-    },
-    name() {
-      return !this.isEthNetwork ? 'rightColItem1' : 'rightColItem2';
-    },
-    loading() {
-      return this.stakedLoading || this.cbStakeLoading;
-    },
-    ethPrice() {
-      const { price } = this.getCoinGeckoTokenById('ethereum');
-      return price;
-    },
-    currentApr() {
-      return this.handlerStaked.apr;
-    }
-  },
-  mounted() {
-    if (this.network.type.chainID === ETH.chainID) {
-      this.getStakedRewards();
-      this.getCbStakeRewards();
-      this.handlerStaked = new handlerStaked(
-        this.web3,
-        this.network,
-        this.address,
-        () => {},
-        this.identifier
-      );
-    }
-  },
-  methods: {
-    async getStakedRewards() {
-      try {
-        const response = await fetch(
-          `${STAKED_ENDPOINT}/history?address=${this.address}`
-        );
-        const data = await response.json();
-        if (!isArray(data)) {
-          this.stakedLoading = false;
-          return;
-        }
-        this.stakedRewards = data.reduce(
-          (initVal, currentValue) => {
-            const newValue = Object.assign({}, initVal);
-            const { raw } = currentValue;
-            let rewards = 0;
-            let staked = 0;
-            raw.forEach(rItm => {
-              if (rItm.status === 'ACTIVE') {
-                rewards += BigNumber(
-                  rItm.detailed_balance_info.reward
-                ).toNumber();
-                staked += BigNumber(rItm.amount).toNumber();
-              }
-            });
-            newValue.totalStaked += staked;
-            newValue.totalRewards += BigNumber(
-              fromBase(rewards, 18)
-            ).toNumber();
-            return newValue;
-          },
-          { totalStaked: 0, totalRewards: 0 }
-        );
-        this.stakedLoading = false;
-      } catch (error) {
-        this.stakedLoading = false;
-        Toast(error, {}, ERROR);
-      }
-    },
-    async getCbStakeRewards() {
-      try {
-        const response = await fetch(
-          `${COINBASE_ENDPOINT}?address=${this.address}&action=details&networkId=${this.network.type.chainID}`
-        );
-        const data = await response.json();
-        const { integratorShareBalance, integratorShareUnderlyingBalance } =
-          data;
-        this.cbStakeRewards = {
-          totalStaked: BigNumber(
-            fromBase(integratorShareUnderlyingBalance.value, 18)
-          ).toNumber(),
-          totalRewards: BigNumber(
-            fromBase(integratorShareBalance.value, 18)
-          ).toNumber()
-        };
-        this.cbStakeLoading = false;
-      } catch (error) {
-        this.cbStakeLoading = false;
-        Toast(error, {}, ERROR);
-      }
-    }
+    cbStakeLoading = false;
+  } catch (error) {
+    cbStakeLoading = false;
+    Toast(error, {}, ERROR);
   }
 };
 </script>

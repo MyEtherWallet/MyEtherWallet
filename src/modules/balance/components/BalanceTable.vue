@@ -85,8 +85,8 @@
     <!-- Mobile table -->
     <!-- ==================================================================== -->
     <mew-light-table
-      v-for="(td, dataKey) in tableDataPaginated"
       v-else
+      v-for="(td, dataKey) in tableDataPaginated"
       :key="dataKey"
       class="mx-4 mt-2"
       full-width

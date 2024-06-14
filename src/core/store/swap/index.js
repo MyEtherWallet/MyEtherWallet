@@ -1,13 +1,25 @@
-import State from './state';
-import Mutations from './mutations';
-import Actions from './actions';
+import { ref } from 'vue';
+import { defineStore } from 'pinia';
 
-const swap = {
-  namespaced: true,
-  state: State,
-  mutations: Mutations,
-  actions: Actions,
-  strict: false
-};
+export const useSwapStore = defineStore('swap', () => {
+  const localStore = false;
+  const prefetched = ref(false);
+  const swapTokens = ref([]);
 
-export default swap;
+  // actions
+  const setSwapTokens = tokens => {
+    swapTokens.value = tokens;
+    prefetched.value = true;
+  };
+  const resetPrefetch = () => {
+    prefetched.value = false;
+  };
+
+  return {
+    localStore,
+    prefetched,
+    swapTokens,
+    setSwapTokens,
+    resetPrefetch
+  };
+});

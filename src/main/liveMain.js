@@ -1,21 +1,27 @@
-import app from './mainApp';
-import '@/assets/fonts/MaterialDesignIcons/css/materialdesignicons.min.css';
-import '@/assets/fonts/Roboto/css/Roboto.css';
-
-import './sentry';
-import './components';
-
-import Vue from 'vue';
+import Vue, { provide } from 'vue';
 import Router from 'vue-router';
 import { v4 as uuidv4 } from 'uuid';
 import * as nameHashPckg from 'eth-ens-namehash';
+import Configs from '@/core/store/configs.js';
 
 import VueIntercom from '@mathieustan/vue-intercom';
 import VueSocialSharing from 'vue-social-sharing';
 import * as amplitude from '@amplitude/analytics-browser';
+import { ApolloClients } from '@vue/apollo-composable';
+
+import { PiniaVuePlugin, createPinia } from 'pinia';
+const pinia = createPinia();
+
+import app from './mainApp';
+import '@/assets/fonts/MaterialDesignIcons/css/materialdesignicons.min.css';
+import '@/assets/fonts/Roboto/css/Roboto.css';
+
+import clients from '@/apollo/index.js';
+import './components';
+import './sentry';
 
 /**Dapps Store */
-import { dappStoreBeforeCreate } from '../dapps/dappsStore';
+// import { dappStoreBeforeCreate } from '../dapps/dappsStore';
 
 const originalPush = Router.prototype.push;
 const originalReplace = Router.prototype.replace;
@@ -29,17 +35,20 @@ Router.prototype.originalPush = originalPush;
 Router.prototype.originalReplace = originalReplace;
 
 import router from '@/core/router';
-import store from '@/core/store';
-import Vuex from 'vuex';
 
+import { useGlobalStore } from '../core/store/global';
+import { useCustomStore } from '../core/store/custom';
+import { useNotificationsStore } from '../core/store/notifications';
+import { useAddressBookStore } from '../core/store/addressBook';
+import { useArticleStore } from '../core/store/article';
+import { usePopupStore } from '../core/store/popups';
 import LottieAnimation from '@/core/directives/lottie';
 import lokalise from '@/core/filters/lokalise';
 
 // etc
 import '@/core/plugins/registerServiceWorker';
 import vuetify from '@/core/plugins/vuetify';
-import apolloProvider from './apolloProvider';
-import i18n from './i18n';
+import { i18n } from './i18n';
 import * as locStore from 'store';
 import VueLazyLoad from 'vue-lazyload';
 
@@ -56,9 +65,9 @@ if (INTERCOM_ID) {
 /* eslint-enable */
 Vue.use(VueSocialSharing);
 
+Vue.use(PiniaVuePlugin);
 //Router
 Vue.use(Router);
-Vue.use(Vuex);
 Vue.config.productionTip = false;
 
 // setup amplitude
@@ -92,10 +101,12 @@ Vue.use(VueLazyLoad);
 new Vue({
   el: '#app',
   i18n,
+  pinia,
   router,
-  store,
-  apolloProvider,
   vuetify,
+  setup() {
+    provide(ApolloClients, clients);
+  },
   beforeCreate() {
     const userId = this.$route.query.intercomid
       ? this.$route.query.intercomid
@@ -105,15 +116,59 @@ new Vue({
     if (locStore.get('mew-testing') === undefined) {
       locStore.set('mew-testing', false);
     }
-    this.$store.commit('custom/INIT_STORE');
-    this.$store.commit('global/INIT_STORE');
-    this.$store.commit('notifications/INIT_STORE');
-    this.$store.commit('addressBook/INIT_STORE');
-    this.$store.commit('article/INIT_STORE');
-    this.$store.commit('popups/INIT_STORE');
-    dappStoreBeforeCreate(this.$store);
+    const customStore = useCustomStore();
+    const globalStore = useGlobalStore();
+    const notificationsStore = useNotificationsStore();
+    const addressBookStore = useAddressBookStore();
+    const articleStore = useArticleStore();
+    const { consentToTrack } = usePopupStore();
 
-    this.$amplitude.setOptOut(!this.$store.state.popups.consentToTrack);
+    customStore.$patch(state => {
+      if (locStore.get(Configs.LOCAL_STORAGE_KEYS['custom'])) {
+        const savedStore = locStore.get(Configs.LOCAL_STORAGE_KEYS['custom']);
+        if (savedStore.stateVersion === Configs.VERSION['custom']) {
+          Object.assign(state, savedStore);
+        }
+      }
+    });
+    globalStore.$patch(state => {
+      if (locStore.get(Configs.LOCAL_STORAGE_KEYS['global'])) {
+        const savedStore = locStore.get(Configs.LOCAL_STORAGE_KEYS['global']);
+        if (savedStore.stateVersion === Configs.VERSION['global']) {
+          Object.assign(state, savedStore);
+        }
+      }
+    });
+    notificationsStore.$patch(state => {
+      if (locStore.get(Configs.LOCAL_STORAGE_KEYS['notifications'])) {
+        const savedStore = locStore.get(
+          Configs.LOCAL_STORAGE_KEYS['notifications']
+        );
+        if (savedStore.stateVersion === Configs.VERSION['notifications']) {
+          Object.assign(state, savedStore);
+        }
+      }
+    });
+    addressBookStore.$patch(state => {
+      if (locStore.get(Configs.LOCAL_STORAGE_KEYS['addressBook'])) {
+        const savedStore = locStore.get(
+          Configs.LOCAL_STORAGE_KEYS['addressBook']
+        );
+        if (savedStore.stateVersion === Configs.VERSION['addressBook']) {
+          Object.assign(state, savedStore);
+        }
+      }
+    });
+    articleStore.$patch(state => {
+      if (locStore.get(Configs.LOCAL_STORAGE_KEYS['article'])) {
+        const savedStore = locStore.get(Configs.LOCAL_STORAGE_KEYS['article']);
+        if (savedStore.stateVersion === Configs.VERSION['article']) {
+          Object.assign(state, savedStore);
+        }
+      }
+    });
+
+    this.$amplitude.setOptOut(!consentToTrack.value);
   },
   render: h => h(app)
 });

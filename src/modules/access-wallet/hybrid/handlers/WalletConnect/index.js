@@ -3,7 +3,8 @@ import { Transaction } from '@ethereumjs/tx';
 import PromiEvent from 'web3-core-promievent';
 
 import HybridWalletInterface from '../walletInterface';
-import store from '@/core/store';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
 import * as nodes from '@/utils/networks/nodes';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import {
@@ -21,11 +22,12 @@ const projectId = WALLET_CONNECT_PROJECT_ID;
 const IS_HARDWARE = false;
 class WalletConnectWallet {
   constructor(signClient, identifier) {
+    const { removeWallet } = useWalletStore();
     this.identifier = identifier;
     this.isHardware = IS_HARDWARE;
     this.client = signClient;
     this.client.on('session_delete', () => {
-      store.dispatch('wallet/removeWallet');
+      removeWallet();
     });
 
     this.meta = {
@@ -37,12 +39,14 @@ class WalletConnectWallet {
     };
   }
   init() {
+    const { network } = useGlobalStore();
+    const { address, web3 } = useWalletStore();
     // eslint-disable-next-line
     return new Promise(async resolve => {
       const txSigner = tx => {
         const from = tx.from;
         tx = new Transaction(tx, {
-          common: commonGenerator(store.getters['global/network'])
+          common: commonGenerator(network.value)
         });
         const txJSON = tx.toJSON();
         txJSON.from = from;
@@ -51,7 +55,7 @@ class WalletConnectWallet {
           .request({ method: 'eth_sendTransaction', params: [txJSON] })
           .then(hash => {
             prom.eventEmitter.emit('transactionHash', hash);
-            store.state.wallet.web3.eth.sendTransaction.method._confirmTransaction(
+            web3.value.eth.sendTransaction.method._confirmTransaction(
               prom,
               hash,
               { params: [txJSON] }
@@ -70,7 +74,7 @@ class WalletConnectWallet {
         return new Promise((resolve, reject) => {
           const msgParams = [
             '0x' + toBuffer(msg).toString('hex'),
-            sanitizeHex(store.state.wallet.address)
+            sanitizeHex(address.value)
           ];
           this.client
             .request({ method: 'personal_sign', params: msgParams })
@@ -141,18 +145,17 @@ const createWallet = async (identifier = WALLET_TYPES.WALLET_CONNECT) => {
 
   signClient.on('connect', evt => {
     const { chainId } = evt;
+    const { setNetwork } = useGlobalStore();
+    const { setWeb3Instance } = useWalletStore();
     const foundNode = Object.values(nodes).find(item => {
       if (item.type.chainID === parseInt(chainId)) return item;
     });
     if (foundNode) {
-      store
-        .dispatch('global/setNetwork', {
-          network: foundNode,
-          walletType: identifier
-        })
-        .then(() => {
-          store.dispatch('wallet/setWeb3Instance');
-        });
+      setNetwork({
+        network: foundNode,
+        walletType: identifier
+      });
+      setWeb3Instance();
     }
   });
   await signClient.connect().catch(e => {

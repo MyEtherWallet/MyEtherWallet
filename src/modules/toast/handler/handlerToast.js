@@ -1,7 +1,7 @@
 import ToastEvents from './toastEvents';
 import { EventBus } from '@/core/plugins/eventBus';
 import * as Sentry from '@sentry/browser';
-import Vue from 'vue';
+import { useI18n } from 'vue-i18n-composable';
 const SUCCESS = 'success';
 const ERROR = 'error';
 const WARNING = 'warning';
@@ -59,6 +59,7 @@ const foundGlobalWarning = text => {
   return errorValues.includes(text);
 };
 const Toast = (text, link, type, duration) => {
+  const { t } = useI18n();
   const acceptableTypes = [SUCCESS, ERROR, WARNING, INFO, SENTRY];
   if (!type && !acceptableTypes.includes(type)) {
     EventBus.$emit(
@@ -87,7 +88,7 @@ const Toast = (text, link, type, duration) => {
     if (foundGlobalError(text) || foundGlobalWarning(text)) {
       EventBus.$emit(
         ToastEvents[ERROR],
-        Vue.$i18n.t(GLOBAL_ERRORS[text]),
+        t(GLOBAL_ERRORS[text]),
         link,
         duration
       );

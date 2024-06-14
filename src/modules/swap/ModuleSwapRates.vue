@@ -66,196 +66,126 @@
   </white-sheet>
 </template>
 
-<script>
+<script setup>
+import { ref, computed, watch, onMounted } from 'vue';
+
 import ethIcon from '@/assets/images/networks/eth.svg';
-import { mapState, mapGetters, mapActions } from 'vuex';
-import { toWei } from 'web3-utils';
+
+import { STATIC_PAIRS } from '@/core/configs/commons';
+
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { DASHBOARD } from '../analytics-opt-in/handlers/configs/events';
 import handlerSwap from '@/modules/swap/handlers/handlerSwap';
+import { useAmplitude } from '@/core/composables/amplitude';
+import { useGlobalStore } from '@/core/store/global';
+import { useWalletStore } from '@/core/store/wallet';
 
-const STATIC_PAIRS = [
-  {
-    toT: {
-      symbol: 'BTC',
-      contract: '0xbtc'
-    },
-    fromT: {
-      symbol: 'ETH',
-      contract: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
-      decimals: 18
-    },
-    fromAmount: toWei('1')
-  },
-  {
-    fromT: {
-      symbol: 'ETH',
-      contract: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
-      decimals: 18
-    },
-    toT: {
-      symbol: 'USDT',
-      contract: '0xdac17f958d2ee523a2206206994597c13d831ec7',
-      decimals: 6
-    },
-    fromAmount: toWei('1')
-  },
-  {
-    fromT: {
-      symbol: 'ETH',
-      contract: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
-      decimals: 18
-    },
-    toT: {
-      symbol: 'KNC',
-      contract: '0xdd974d5c2e2928dea5f71b9825b8b646686bd200',
-      toT: 18
-    },
-    fromAmount: toWei('1')
-  },
-  {
-    fromT: {
-      symbol: 'ETH',
-      contract: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
-      decimals: 18
-    },
-    toT: {
-      symbol: 'DAI',
-      contract: '0x6b175474e89094c44da98b954eedeac495271d0f',
-      decimals: 18
-    },
-    fromAmount: toWei('1')
-  },
-  {
-    fromT: {
-      symbol: 'ETH',
-      contract: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
-      decimals: 18
-    },
-    toT: {
-      symbol: 'LINK',
-      contract: '0x514910771af9ca656af840dff83e8264ecf986ca',
-      decimals: 18
-    },
-    fromAmount: toWei('1')
-  },
-  {
-    fromT: {
-      symbol: 'ETH',
-      contract: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
-      decimals: 18
-    },
-    toT: {
-      symbol: 'USDC',
-      contract: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
-      decimals: 6
-    },
-    fromAmount: toWei('1')
+import { useRoute, useRouter } from 'vue-router/composables';
+
+// injections/use
+const { trackDashboardAmplitude } = useAmplitude();
+const { swapRates, setSwapRates } = useWalletStore();
+const { isEthNetwork, network, web3 } = useGlobalStore();
+const router = useRouter();
+const route = useRoute();
+
+// props
+defineProps({
+  mobile: {
+    type: Boolean,
+    default: false
   }
-];
-export default {
-  name: 'ModuleSwapRates',
-  mixins: [handlerAnalytics],
-  props: {
-    mobile: {
-      type: Boolean,
-      default: false
-    }
-  },
-  data() {
-    return {
-      ethIcon: ethIcon,
-      swapHandler: null,
-      loading: true,
-      error: false
-    };
-  },
-  computed: {
-    ...mapState('wallet', ['web3', 'swapRates']),
-    ...mapGetters('global', ['isEthNetwork', 'network']),
-    showTokenIssue() {
-      return (this.error || !this.hasSwapRates) && !this.loading;
-    },
-    hasSwapRates() {
-      if (this.swapRates) {
-        return this.swapRates.some(item => {
-          return item.rate;
-        });
-      }
-      return false;
-    }
-  },
-  watch: {
-    web3(newVal) {
-      this.setSwapHandler(newVal, this.network.type.name);
-    }
-  },
-  mounted() {
-    this.setSwapHandler(this.web3, this.network.type.name);
-  },
-  methods: {
-    ...mapActions('wallet', ['setSwapRates']),
-    setSwapHandler(val) {
-      if (!this.isEthNetwork) return;
-      this.swapHandler = new handlerSwap(val, this.network.type.name);
-      this.loading = this.swapRates.length === 0;
-      if (this.swapRates.length !== 0) return;
-      this.fetchRates();
-    },
-    fetchRates() {
-      try {
-        this.loading = true;
-        this.swapHandler.getQuotesForSet(STATIC_PAIRS).then(res => {
-          this.setSwapRates(
-            STATIC_PAIRS.map((itm, idx) => {
-              itm['rate'] =
-                res[idx] &&
-                res[idx].length !== 0 &&
-                res[idx][0] &&
-                res[idx][0]?.amount
-                  ? formatFloatingPointValue(res[idx][0]?.amount).value
-                  : false;
-              return itm;
-            })
-          );
-          this.loading = false;
-        });
-      } catch (e) {
-        this.loading = false;
-        this.error = true;
-        Toast(e.message, {}, ERROR);
-      }
-    },
-    toSwap() {
-      this.trackDashboardAmplitude(DASHBOARD.SWAP_PAIRS);
-      this.navigateToSwap();
-    },
-    goToSwap(data) {
-      const obj = {
-        fromToken: data.fromT.contract,
-        toToken: data.toT.contract,
-        amount: '1'
-      };
-      this.trackDashboardAmplitude(DASHBOARD.SWAP_PAIRS, {
-        TokenPair: `${data.fromT.symbol} to ${data.toT.symbol}`
-      });
-      this.navigateToSwap(obj);
-    },
-    navigateToSwap(query) {
-      const obj = { name: 'Swap' };
-      if (query) {
-        obj['query'] = query;
-      }
-      if (this.$route.name === 'Swap') {
-        // this will allow vue to update query param
-        // within the swap page when user clicks on the pairs again
-        this.$router.replace(obj);
-      } else {
-        this.$router.push(obj);
-      }
-    }
+});
+
+// data
+const swapHandler = ref(null);
+const loading = ref(true);
+const error = ref(false);
+
+// computed
+const showTokenIssue = computed(() => {
+  return (error.value || !hasSwapRates.value) && !loading.value;
+});
+const hasSwapRates = computed(() => {
+  if (swapRates.value) {
+    return swapRates.value.some(item => {
+      return item.rate;
+    });
+  }
+  return false;
+});
+
+// watchers
+watch(
+  () => web3,
+  newVal => {
+    setSwapHandler(newVal, network.value.type.name);
+  }
+);
+
+// mounted
+onMounted(() => {
+  setSwapHandler(web3.value, network.value.type.name);
+});
+
+const setSwapHandler = val => {
+  if (!isEthNetwork.value) return;
+  swapHandler.value = new handlerSwap(val, network.value.type.name);
+  loading.value = swapRates.value.length === 0;
+  if (swapRates.value.length !== 0) return;
+  fetchRates();
+};
+const fetchRates = () => {
+  try {
+    loading.value = true;
+    swapHandler.value.getQuotesForSet(STATIC_PAIRS).then(res => {
+      setSwapRates(
+        STATIC_PAIRS.map((itm, idx) => {
+          itm['rate'] =
+            res[idx] &&
+            res[idx].length !== 0 &&
+            res[idx][0] &&
+            res[idx][0]?.amount
+              ? formatFloatingPointValue(res[idx][0]?.amount).value
+              : false;
+          return itm;
+        })
+      );
+      loading.value = false;
+    });
+  } catch (e) {
+    loading.value = false;
+    error.value = true;
+    Toast(e.message, {}, ERROR);
+  }
+};
+const toSwap = () => {
+  trackDashboardAmplitude(DASHBOARD.SWAP_PAIRS);
+  navigateToSwap();
+};
+const goToSwap = data => {
+  const obj = {
+    fromToken: data.fromT.contract,
+    toToken: data.toT.contract,
+    amount: '1'
+  };
+  trackDashboardAmplitude(DASHBOARD.SWAP_PAIRS, {
+    TokenPair: `${data.fromT.symbol} to ${data.toT.symbol}`
+  });
+  navigateToSwap(obj);
+};
+const navigateToSwap = query => {
+  const obj = { name: 'Swap' };
+  if (query) {
+    obj['query'] = query;
+  }
+  if (route.name === 'Swap') {
+    // this will allow vue to update query param
+    // within the swap page when user clicks on the pairs again
+    router.replace(obj);
+  } else {
+    router.push(obj);
   }
 };
 </script>

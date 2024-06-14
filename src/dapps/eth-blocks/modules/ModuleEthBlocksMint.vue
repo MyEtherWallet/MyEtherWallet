@@ -55,21 +55,12 @@
   </div>
 </template>
 
-<script>
-import { mapState } from 'vuex';
+<script setup>
+import { defineAsyncComponent } from 'vue';
 
-export default {
-  name: 'ModuleEthBlocksMint',
-  components: {
-    BlockSearch: () => import('../components/BlockSearch.vue')
-  },
-  computed: {
-    /**
-     * STORE STATE
-     */
-    ...mapState('wallet', ['blockNumber'])
-  }
-};
+const BlockSearch = defineAsyncComponent(() =>
+  import('../components/BlockSearch.vue')
+);
 </script>
 
 <style lang="scss" scoped>

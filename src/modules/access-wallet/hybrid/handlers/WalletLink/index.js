@@ -1,6 +1,7 @@
 import WalletLink from 'walletlink';
 
-import store from '@/core/store';
+import { useGlobalStore } from '@/core/store/global';
+
 import { Transaction } from '@ethereumjs/tx';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import {
@@ -18,6 +19,7 @@ import walletlink from '@/assets/images/icons/wallets/walletlink.png';
 const IS_HARDWARE = false;
 const APP_NAME = 'MEW';
 const APP_LOGO = 'https://www.myetherwallet.com/img/icons/icon192.png';
+
 class WalletLinkWallet {
   constructor() {
     this.identifier = WALLET_TYPES.WALLET_LINK;
@@ -42,10 +44,11 @@ class WalletLinkWallet {
     };
   }
   init() {
+    const { network } = useGlobalStore();
     return new Promise((resolve, reject) => {
       const txSigner = txParams => {
         const tx = new Transaction.fromTxData(txParams, {
-          common: commonGenerator(store.getters['global/network'])
+          common: commonGenerator(network.value)
         });
         const networkId = tx.common.chainId();
         const txJSON = tx.toJSON();

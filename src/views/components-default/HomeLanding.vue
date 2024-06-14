@@ -138,46 +138,40 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-import enkryptMarketing from '@/core/mixins/enkryptMarketing.mixin.js';
 import {
   COMMON,
   LANDING_PAGE
 } from '@/modules/analytics-opt-in/handlers/configs/events.js';
+import { useAmplitude } from '@/core/composables/amplitude';
+import { useEnkryptMarketing } from '@/core/composables/enkryptMarketing';
+import { useRouter } from 'vue-router/composables';
 
-export default {
-  name: 'HomeLanding',
-  mixins: [handlerAnalytics, enkryptMarketing],
-  mounted() {
-    setTimeout(() => {
-      this.trackLandingPage();
-    }, 1000);
-  },
-  methods: {
-    trackOpenMEWWallet() {
-      this.trackLandingPageAmplitude(LANDING_PAGE.APPLE_STORE);
-      this.openMewWallet();
-    },
-    trackOpenEnkrypt() {
-      this.trackLandingPageAmplitude(COMMON.GOOGLE_STORE);
-    },
-    navigateToCreateWallet() {
-      this.trackLandingPageAmplitude(LANDING_PAGE.CREATE_WALLET);
-      this.$router.push({
-        name: ROUTES_HOME.CREATE_WALLET.NAME,
-        params: {}
-      });
-    },
-    navigateToAccessWallet() {
-      this.trackLandingPageAmplitude(LANDING_PAGE.ACCESS_WALLET);
-      this.$router.push({
-        name: ROUTES_HOME.ACCESS_WALLET.NAME,
-        params: {}
-      });
-    }
-  }
+const { trackLandingPageAmplitude } = useAmplitude();
+const { openMewWallet, browserLink, browserLogo } = useEnkryptMarketing();
+const router = useRouter();
+
+const trackOpenMEWWallet = () => {
+  trackLandingPageAmplitude(LANDING_PAGE.APPLE_STORE);
+  openMewWallet();
+};
+const trackOpenEnkrypt = () => {
+  trackLandingPageAmplitude(COMMON.GOOGLE_STORE);
+};
+const navigateToCreateWallet = () => {
+  trackLandingPageAmplitude(LANDING_PAGE.CREATE_WALLET);
+  router.push({
+    name: ROUTES_HOME.CREATE_WALLET.NAME,
+    params: {}
+  });
+};
+const navigateToAccessWallet = () => {
+  trackLandingPageAmplitude(LANDING_PAGE.ACCESS_WALLET);
+  router.push({
+    name: ROUTES_HOME.ACCESS_WALLET.NAME,
+    params: {}
+  });
 };
 </script>
 

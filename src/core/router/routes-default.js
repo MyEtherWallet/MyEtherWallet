@@ -159,14 +159,6 @@ export default {
       }
     },
     {
-      path: ROUTES_HOME.QR_CODE.PATH,
-      name: ROUTES_HOME.QR_CODE.NAME,
-      component: () => import('@/views/layouts-default/TheQrCodeLayout'),
-      meta: {
-        noAuth: true
-      }
-    },
-    {
       path: ROUTES_HOME.CREATE_WALLET.PATH,
       component: () => import('@/views/layouts-default/TheCreateWalletLayout'),
       meta: {

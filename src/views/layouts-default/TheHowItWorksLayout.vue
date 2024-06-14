@@ -17,27 +17,28 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'TheHowItWorksLayout',
-  components: {
-    TheLayoutHeader: () => import('../components-default/TheLayoutHeader'),
-    HowItWorksSwap: () => import('../components-default/HowItWorksSwap'),
-    HowItWorksSend: () => import('../components-default/HowItWorksSend'),
-    HowItWorksDappsCenter: () =>
-      import('../components-default/HowItWorksDappsCenter'),
-    HowItWorksTokens: () => import('../components-default/HowItWorksTokens'),
-    HowItWorksMore: () => import('../components-default/HowItWorksMore'),
-    GetStarted: () => import('../components-default/GetStarted')
-  },
-  updated() {
-    const id = this.$route.hash.replace('#', '');
-    const container = document.getElementById(id);
-    if (container) {
-      container.scrollIntoView();
-    }
+<script setup>
+import { useRoute } from 'vue-router/composables';
+import { onUpdated } from 'vue';
+
+import TheLayoutHeader from '../components-default/TheLayoutHeader.vue';
+import HowItWorksSwap from '../components-default/HowItWorksSwap.vue';
+import HowItWorksSend from '../components-default/HowItWorksSend.vue';
+import HowItWorksDappsCenter from '../components-default/HowItWorksDappsCenter.vue';
+import HowItWorksTokens from '../components-default/HowItWorksTokens.vue';
+import HowItWorksMore from '../components-default/HowItWorksMore.vue';
+import GetStarted from '../components-default/GetStarted.vue';
+
+// injections
+const route = useRoute();
+
+onUpdated(() => {
+  const id = route.hash.replace('#', '');
+  const container = document.getElementById(id);
+  if (container) {
+    container.scrollIntoView();
   }
-};
+});
 </script>
 
 <style lang="scss" scoped>

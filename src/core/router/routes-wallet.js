@@ -2,15 +2,29 @@ import DappRoutes from '@/dapps/routes-dapps.js';
 import { swapProps, swapRouterGuard } from './helpers';
 import { ROUTES_WALLET } from '../configs/configRoutes';
 import StakeRoute from '@/core/router/routes-staking.js';
+import TheWalletView from '@/views/TheWalletView';
+import TheDashboardLayout from '@/views/layouts-wallet/TheDashboardLayout';
+import ModuleSettings from '@/modules/settings/ModuleSettings';
+import ModulePaperWallet from '@/modules/balance/ModulePaperWallet';
+import TheNFTManagerLayout from '@/views/layouts-wallet/TheNFTManagerLayout';
+import TheSwapLayout from '@/views/layouts-wallet/TheSwapLayout';
+import TheDappCenterLayout from '@/views/layouts-wallet/TheDappCenterLayout.vue';
+import TheDeployContractLayout from '@/views/layouts-wallet/TheDeployContractLayout';
+import TheSignMessageLayout from '@/views/layouts-wallet/TheSignMessageLayout';
+import TheVerifyMessageLayout from '@/views/layouts-wallet/TheVerifyMessageLayout';
+import TheSendTransactionLayout from '@/views/layouts-wallet/TheSendTransactionLayout';
+import NftManagerSend from '@/modules/nft-manager/components/NftManagerSend';
+import TheInteractContractLayout from '@/views/layouts-wallet/TheInteractContractLayout';
+
 export default {
   path: '/wallet',
-  component: () => import('@/views/TheWalletView'),
+  component: TheWalletView,
   props: true,
   children: [
     {
       path: ROUTES_WALLET.WALLETS.PATH,
       name: ROUTES_WALLET.WALLETS.NAME,
-      component: () => import('@/views/layouts-wallet/TheDashboardLayout'),
+      component: TheDashboardLayout,
       meta: {
         noAuth: false,
         title: 'Crypto Portfolio Manager | MyEtherWallet',
@@ -21,7 +35,7 @@ export default {
     {
       path: ROUTES_WALLET.DASHBOARD.PATH,
       name: ROUTES_WALLET.DASHBOARD.NAME,
-      component: () => import('@/views/layouts-wallet/TheDashboardLayout'),
+      component: TheDashboardLayout,
       meta: {
         noAuth: false,
         title: 'Crypto Portfolio Manager | MyEtherWallet',
@@ -32,7 +46,7 @@ export default {
     {
       path: ROUTES_WALLET.SETTINGS.PATH,
       name: ROUTES_WALLET.SETTINGS.NAME,
-      component: () => import('@/modules/settings/ModuleSettings'),
+      component: ModuleSettings,
       meta: {
         noAuth: false,
         title: 'Modify Your Settings | MyEtherWallet',
@@ -43,7 +57,7 @@ export default {
     {
       path: ROUTES_WALLET.PRINT.PATH,
       name: ROUTES_WALLET.PRINT.NAME,
-      component: () => import('@/modules/balance/ModulePaperWallet'),
+      component: ModulePaperWallet,
       meta: {
         noAuth: false
       }
@@ -51,8 +65,7 @@ export default {
     {
       path: ROUTES_WALLET.SEND_TX.PATH,
       name: ROUTES_WALLET.SEND_TX.NAME,
-      component: () =>
-        import('@/views/layouts-wallet/TheSendTransactionLayout'),
+      component: TheSendTransactionLayout,
       props: true,
       meta: {
         noAuth: false,
@@ -64,13 +77,12 @@ export default {
     {
       path: ROUTES_WALLET.NFT_MANAGER.PATH,
       name: ROUTES_WALLET.NFT_MANAGER.NAME,
-      component: () => import('@/views/layouts-wallet/TheNFTManagerLayout'),
+      component: TheNFTManagerLayout,
       children: [
         {
           path: ROUTES_WALLET.NFT_MANAGER_SEND.PATH,
           name: ROUTES_WALLET.NFT_MANAGER_SEND.NAME,
-          component: () =>
-            import('@/modules/nft-manager/components/NftManagerSend'),
+          component: NftManagerSend,
           meta: {
             noAuth: false,
             title: 'Send Your NFTs on MyEtherWallet',
@@ -89,7 +101,7 @@ export default {
     {
       path: ROUTES_WALLET.SWAP.PATH,
       name: ROUTES_WALLET.SWAP.NAME,
-      component: () => import('@/views/layouts-wallet/TheSwapLayout'),
+      component: TheSwapLayout,
       props: swapProps,
       beforeEnter: swapRouterGuard,
       meta: {
@@ -102,7 +114,7 @@ export default {
     {
       path: ROUTES_WALLET.STAKE.PATH,
       children: StakeRoute,
-      component: () => import('@/views/layouts-wallet/TheDappCenterLayout.vue'),
+      component: TheDappCenterLayout,
       meta: {
         noAuth: false,
         title: 'Stake on MyEtherWallet | Staking',
@@ -112,7 +124,7 @@ export default {
     },
     {
       path: ROUTES_WALLET.DAPPS.PATH,
-      component: () => import('@/views/layouts-wallet/TheDappCenterLayout.vue'),
+      component: TheDappCenterLayout,
       children: DappRoutes,
       meta: {
         noAuth: false,
@@ -124,7 +136,7 @@ export default {
     {
       path: ROUTES_WALLET.DEPLOY_CONTRACT.PATH,
       name: ROUTES_WALLET.DEPLOY_CONTRACT.NAME,
-      component: () => import('@/views/layouts-wallet/TheDeployContractLayout'),
+      component: TheDeployContractLayout,
       meta: {
         noAuth: false,
         title: 'Deploy Ethereum Contract On MyEtherWallet | MEW',
@@ -135,8 +147,7 @@ export default {
     {
       path: ROUTES_WALLET.INTERACT_WITH_CONTRACT.PATH,
       name: ROUTES_WALLET.INTERACT_WITH_CONTRACT.NAME,
-      component: () =>
-        import('@/views/layouts-wallet/TheInteractContractLayout'),
+      component: TheInteractContractLayout,
       meta: {
         noAuth: false,
         title: 'Interact With Ethereum Contracts On MyEtherWallet | MEW',
@@ -147,7 +158,7 @@ export default {
     {
       path: ROUTES_WALLET.SIGN_MESSAGE.PATH,
       name: ROUTES_WALLET.SIGN_MESSAGE.NAME,
-      component: () => import('@/views/layouts-wallet/TheSignMessageLayout'),
+      component: TheSignMessageLayout,
       meta: {
         noAuth: false,
         title: 'Use Your Wallet To Sign a Message | MyEtherWallet',
@@ -158,7 +169,7 @@ export default {
     {
       path: ROUTES_WALLET.VERIFY_MESSAGE.PATH,
       name: ROUTES_WALLET.VERIFY_MESSAGE.NAME,
-      component: () => import('@/views/layouts-wallet/TheVerifyMessageLayout'),
+      component: TheVerifyMessageLayout,
       meta: {
         noAuth: false,
         title: 'Verify A Signed Message With a Crypto Wallet | MyEtherWallet',

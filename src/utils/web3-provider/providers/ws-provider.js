@@ -2,7 +2,6 @@ import Web3WSProvider from './ws-web3-provider';
 import { Manager as Web3RequestManager } from 'web3-core-requestmanager';
 import MiddleWare from '../middleware';
 import { EventBus } from '@/core/plugins/eventBus';
-import VuexStore from '@/core/store';
 import { Toast, SENTRY } from '@/modules/toast/handler/handlerToast';
 import { v4 as uuidv4 } from 'uuid';
 import {
@@ -75,7 +74,6 @@ class WSProvider {
 
       const req = {
         payload,
-        store: VuexStore,
         requestManager: new Web3RequestManager(this.oWSProvider),
         eventHub: EventBus
       };

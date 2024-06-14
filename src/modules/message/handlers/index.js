@@ -1,36 +1,32 @@
 import { hashPersonalMessage, ecrecover, pubToAddress } from 'ethereumjs-util';
+import { useWalletStore } from '@/core/store/wallet';
+
 import toBuffer from '@/core/helpers/toBuffer';
-import vuexStore from '@/core/store';
-import { mapState } from 'vuex';
 import ErrorList from '../errors';
 
 export default class SignAndVerifyMessage {
-  constructor() {
-    this.$store = vuexStore;
-    Object.assign(
-      this,
-      mapState('wallet', ['web3', 'address', 'isHardware', 'identifier'])
-    );
-  }
+  constructor() {}
 
   signMessage(message) {
-    const _this = this;
+    const {
+      web3,
+      address: walletAddress,
+      isHardware,
+      identifier
+    } = useWalletStore();
     try {
-      return this.web3()
-        .eth.sign(message, this.address())
+      return web3.value.eth
+        .sign(message, walletAddress.value)
         .then(_signedMessage => {
-          _this.signature = JSON.stringify(
-            {
-              address: _this.address(),
-              msg: _this.message,
-              sig: _signedMessage,
-              version: '3',
-              signer: _this.isHardware() ? _this.identifier() : 'MEW'
-            },
-            null,
-            2
-          );
-          return _this.signature;
+          const obj = {
+            address: `${walletAddress.value}`,
+            msg: message,
+            sig: _signedMessage,
+            version: '3',
+            signer: isHardware.value ? identifier.value : 'MEW'
+          };
+          const signature = JSON.stringify(obj, null, 2);
+          return signature;
         });
     } catch (e) {
       throw ErrorList.SIGN_FAILED;
@@ -38,6 +34,7 @@ export default class SignAndVerifyMessage {
   }
 
   verifyMessage(message) {
+    const { web3 } = useWalletStore();
     try {
       const json = JSON.parse(message);
       let hash = hashPersonalMessage(toBuffer(json.msg));
@@ -47,7 +44,7 @@ export default class SignAndVerifyMessage {
       }
       sig[64] = sig[64] === 0 || sig[64] === 1 ? sig[64] + 27 : sig[64];
       if (json.version === '1') {
-        hash = this.web3().utils.sha3(json.msg);
+        hash = web3.value.utils.sha3(json.msg);
       }
       const pubKey = ecrecover(
         hash,
@@ -57,11 +54,12 @@ export default class SignAndVerifyMessage {
       );
       return {
         verified:
-          !json.address.replace('0x', '').toLowerCase() !==
+          !json.address.value.replace('0x', '').toLowerCase() !==
           pubToAddress(pubKey).toString('hex').toLowerCase(),
         signer: pubToAddress(pubKey).toString('hex').toLowerCase()
       };
     } catch (e) {
+      console.log(e);
       throw ErrorList.FAILED_TO_VERIFY;
     }
   }

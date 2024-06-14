@@ -6,12 +6,21 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const UglifyJS = require('uglify-es');
 const env_vars = require('../ENV_VARS');
 const allowedConnections = require('../connections');
+const path = require('path');
 
 const sourceMapsConfig = {
   filename: 'sourcemaps/[file].map'
 };
 
 const webpackConfig = {
+  resolve: {
+    alias: {
+      'vue-i18n': path.join(
+        __dirname,
+        '../node_modules/vue-i18n/dist/vue-i18n.js'
+      )
+    }
+  },
   devtool: false,
   node: {
     process: true
@@ -75,8 +84,6 @@ const webpackConfig = {
   }
 };
 
-const transpileDependencies = ['@ensdomains/address-encoder'];
-
 const transpilers = config => {
   // GraphQL Loader
   config.module
@@ -97,12 +104,12 @@ const transpilers = config => {
     .use('babel')
     .loader('babel-loader')
     .end();
-  config.module
-    .rule('transpile-eth2-keystore')
-    .test(/node_modules\/@myetherwallet\/eth2-keystore\/.*\.js$/)
-    .use('babel')
-    .loader('babel-loader')
-    .end();
+  // config.module
+  //   .rule('transpile-eth2-keystore')
+  //   .test(/node_modules\/@myetherwallet\/eth2-keystore\/.*\.js$/)
+  //   .use('babel')
+  //   .loader('babel-loader')
+  //   .end();
   config.module
     .rule('transpile-web3modal')
     .test(/node_modules\/@web3modal\/.*\.js$/)
@@ -140,14 +147,20 @@ const transpilers = config => {
     .loader('babel-loader')
     .end();
   config.module
-    .rule('transpile-noble')
-    .test(/node_modules\/@noble\/.*\.js$/)
+    .rule('transpile-polkadot-meta')
+    .test(/node_modules\/@polkadot\/.*\/packageInfo.js$/)
+    .use('@open-wc/webpack-import-meta-loader')
+    .loader('@open-wc/webpack-import-meta-loader')
+    .end();
+  config.module
+    .rule('transpile-polkadot')
+    .test(/node_modules\/@polkadot\/.*\.js$/)
     .use('babel')
     .loader('babel-loader')
     .end();
   config.module
-    .rule('transpile-micro-ftch')
-    .test(/node_modules\/micro-ftch\/.*\.js$/)
+    .rule('transpile-noble')
+    .test(/node_modules\/@noble\/.*\.js$/)
     .use('babel')
     .loader('babel-loader')
     .end();
@@ -174,6 +187,20 @@ const transpilers = config => {
     )
     .end();
 };
+
+const transpileDependencies = [
+  '@ensdomains/address-encoder',
+  '@myetherwallet/eth2-keystore',
+  '@enkryptcom/swap',
+  'web3-eth',
+  'web3-core',
+  'web3-net',
+  'web3-eth-personal',
+  'web3-eth-accounts',
+  'web3-eth-ens',
+  'micro-ftch',
+  '@ethereumjs/util'
+];
 
 module.exports = {
   webpackConfig,

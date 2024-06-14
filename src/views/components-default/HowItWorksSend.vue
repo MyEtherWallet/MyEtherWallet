@@ -15,13 +15,10 @@
             </div>
             <div>
               <div class="mb-1 font-weight-bold subtitle-1">
-                {{
-                  $t('howItWorks.send-funds.info-one.title')
-                    | lokalise('howItWorks.send-funds.info-one.title')
-                }}
+                {{ t('howItWorks.send-funds.info-one.title') }}
               </div>
               <p>
-                {{ $t('howItWorks.send-funds.info-one.text') }}
+                {{ t('howItWorks.send-funds.info-one.text') }}
               </p>
             </div>
           </div>
@@ -32,16 +29,10 @@
             </div>
             <div>
               <div class="mb-1 font-weight-bold subtitle-1">
-                {{
-                  $t('howItWorks.send-funds.info-two.title')
-                    | lokalise('howItWorks.send-funds.info-two.title')
-                }}
+                {{ t('howItWorks.send-funds.info-two.title') }}
               </div>
               <p>
-                {{
-                  $t('howItWorks.send-funds.info-two.text')
-                    | lokalise('howItWorks.send-funds.info-two.text')
-                }}
+                {{ t('howItWorks.send-funds.info-two.text') }}
               </p>
             </div>
           </div>
@@ -52,16 +43,10 @@
             </div>
             <div>
               <div class="mb-1 font-weight-bold subtitle-1">
-                {{
-                  $t('howItWorks.send-funds.info-three.title')
-                    | lokalise('howItWorks.send-funds.info-three.title')
-                }}
+                {{ t('howItWorks.send-funds.info-three.title') }}
               </div>
               <p>
-                {{
-                  $t('howItWorks.send-funds.info-three.text')
-                    | lokalise('howItWorks.send-funds.info-three.text')
-                }}
+                {{ t('howItWorks.send-funds.info-three.text') }}
               </p>
               <!-- <div class="d-flex align-center mt-10">
                 <a
@@ -86,16 +71,18 @@
   </div>
 </template>
 
-<script>
-export default {
-  data: vm => ({
-    titleData: {
-      textProps: '',
-      toptitle: '',
-      title: vm.$t('howItWorks.send-funds.title'),
-      description: vm.$t('howItWorks.send-funds.description'),
-      centered: false
-    }
-  })
+<script setup>
+import { useI18n } from 'vue-i18n-composable';
+
+// injections
+const { t } = useI18n();
+
+// data
+const titleData = {
+  textProps: '',
+  toptitle: '',
+  title: t('howItWorks.send-funds.title'),
+  description: t('howItWorks.send-funds.description'),
+  centered: false
 };
 </script>

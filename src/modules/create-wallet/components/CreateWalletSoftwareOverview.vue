@@ -95,46 +95,48 @@
   </div>
 </template>
 
-<script>
-import { mapGetters, mapState } from 'vuex';
+<script setup>
+import { onMounted, ref } from 'vue';
+
+import { useWalletStore } from '@/core/store/wallet';
+import { useArticleStore } from '@/core/store/article';
+import { useRouter } from 'vue-router/composables';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
 
-export default {
-  name: 'CreateWalletSoftwareOverview',
-  data() {
-    return {
-      linkToLearnMore: {
-        text: 'Learn more',
-        url: ''
-      }
-    };
-  },
-  computed: {
-    ...mapGetters('article', ['getArticle']),
-    ...mapState('wallet', ['isOfflineApp'])
-  },
-  mounted() {
-    if (this.isOfflineApp) this.linkToLearnMore = {};
-    else
-      this.linkToLearnMore.url = this.getArticle('not-rec-when-access-wallet');
-  },
-  methods: {
-    routeToMnemonic() {
-      this.$router.push({
-        name: ROUTES_HOME.CREATE_WALLET_SOFTWARE_MNEMONIC.NAME
-      });
-    },
-    routeToKeystore() {
-      this.$router.push({
-        name: ROUTES_HOME.CREATE_WALLET_SOFTWARE_KEYSTORE.NAME
-      });
-    },
-    backToSoftware() {
-      this.$router.push({
-        name: ROUTES_HOME.CREATE_WALLET.NAME
-      });
-    }
+// injections/use
+const { getArticle } = useArticleStore();
+const { isOfflineApp } = useWalletStore();
+const router = useRouter();
+
+// data
+const linkToLearnMore = ref({
+  url: '',
+  title: 'Learn more'
+});
+
+onMounted(() => {
+  if (isOfflineApp.value) {
+    linkToLearnMore.value = {};
+  } else {
+    linkToLearnMore.value.url = getArticle('not-rec-when-access-wallet');
   }
+});
+
+// methods
+const routeToMnemonic = () => {
+  router.push({
+    name: ROUTES_HOME.CREATE_WALLET_SOFTWARE_MNEMONIC.NAME
+  });
+};
+const routeToKeystore = () => {
+  router.push({
+    name: ROUTES_HOME.CREATE_WALLET_SOFTWARE_KEYSTORE.NAME
+  });
+};
+const backToSoftware = () => {
+  router.push({
+    name: ROUTES_HOME.CREATE_WALLET.NAME
+  });
 };
 </script>
 

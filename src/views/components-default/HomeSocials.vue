@@ -35,72 +35,71 @@
   </v-container>
 </template>
 
-<script>
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+<script setup>
+import { useAmplitude } from '@/core/composables/amplitude';
 import { LANDING_PAGE } from '@/modules/analytics-opt-in/handlers/configs/events.js';
-export default {
-  name: 'HomeSocials',
-  mixins: [handlerAnalytics],
-  data: () => ({
-    socials: [
-      {
-        img: require('@/assets/images/icons/socials/facebook.png'),
-        link: 'https://www.facebook.com/MyEtherWallet',
-        label: 'Facebook'
-      },
-      {
-        img: require('@/assets/images/icons/socials/twitter.png'),
-        link: 'https://twitter.com/myetherwallet',
-        label: 'Twitter'
-      },
-      {
-        img: require('@/assets/images/icons/socials/medium.png'),
-        link: 'https://medium.com/@myetherwallet',
-        label: 'Medium'
-      },
-      {
-        img: require('@/assets/images/icons/socials/reddit.png'),
-        link: 'https://www.reddit.com/r/MyEtherWallet/',
-        label: 'Reddit'
-      },
-      {
-        img: require('@/assets/images/icons/socials/github.png'),
-        link: 'https://github.com/myetherwallet',
-        label: 'Github'
-      },
-      {
-        img: require('@/assets/images/icons/socials/vkontakte.png'),
-        link: 'https://vk.com/public190491855',
-        label: 'Vkontakte'
-      },
-      {
-        img: require('@/assets/images/icons/socials/youtube.png'),
-        link: 'https://www.youtube.com/channel/UCQU5QbObwmaHNEMsuX3uQKA',
-        label: 'Youtube'
-      },
-      {
-        img: require('@/assets/images/icons/socials/mewtopia.png'),
-        link: 'https://www.myetherwallet.com/blog',
-        label: 'Mewtopia'
-      },
-      {
-        img: require('@/assets/images/icons/socials/instagram.png'),
-        link: 'https://www.instagram.com/myetherwallet/',
-        label: 'Instagram'
-      },
-      {
-        img: require('@/assets/images/icons/socials/telegram.png'),
-        link: 'https://t.me/myetherwallet',
-        label: 'Telegram'
-      }
-    ]
-  }),
-  methods: {
-    trackSocialClick(social) {
-      this.trackLandingPageAmplitude(LANDING_PAGE.MEW_COMMUNITY, {
-        name: social
-      });
-    }
+
+// injections/use
+const { trackLandingPageAmplitude } = useAmplitude();
+
+// data
+const socials = [
+  {
+    img: require('@/assets/images/icons/socials/facebook.png'),
+    link: 'https://www.facebook.com/MyEtherWallet',
+    label: 'Facebook'
+  },
+  {
+    img: require('@/assets/images/icons/socials/twitter.png'),
+    link: 'https://twitter.com/myetherwallet',
+    label: 'Twitter'
+  },
+  {
+    img: require('@/assets/images/icons/socials/medium.png'),
+    link: 'https://medium.com/@myetherwallet',
+    label: 'Medium'
+  },
+  {
+    img: require('@/assets/images/icons/socials/reddit.png'),
+    link: 'https://www.reddit.com/r/MyEtherWallet/',
+    label: 'Reddit'
+  },
+  {
+    img: require('@/assets/images/icons/socials/github.png'),
+    link: 'https://github.com/myetherwallet',
+    label: 'Github'
+  },
+  {
+    img: require('@/assets/images/icons/socials/vkontakte.png'),
+    link: 'https://vk.com/public190491855',
+    label: 'Vkontakte'
+  },
+  {
+    img: require('@/assets/images/icons/socials/youtube.png'),
+    link: 'https://www.youtube.com/channel/UCQU5QbObwmaHNEMsuX3uQKA',
+    label: 'Youtube'
+  },
+  {
+    img: require('@/assets/images/icons/socials/mewtopia.png'),
+    link: 'https://www.myetherwallet.com/blog',
+    label: 'Mewtopia'
+  },
+  {
+    img: require('@/assets/images/icons/socials/instagram.png'),
+    link: 'https://www.instagram.com/myetherwallet/',
+    label: 'Instagram'
+  },
+  {
+    img: require('@/assets/images/icons/socials/telegram.png'),
+    link: 'https://t.me/myetherwallet',
+    label: 'Telegram'
   }
+];
+
+// methods
+const trackSocialClick = social => {
+  trackLandingPageAmplitude(LANDING_PAGE.MEW_COMMUNITY, {
+    name: social
+  });
 };
 </script>

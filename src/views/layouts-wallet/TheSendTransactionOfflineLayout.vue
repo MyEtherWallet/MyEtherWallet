@@ -6,11 +6,7 @@
   </the-wrapper-wallet>
 </template>
 
-<script>
-export default {
-  components: {
-    ModuleSendOffline: () => import('@/modules/send-offline/ModuleSendOffline'),
-    TheWrapperWallet: () => import('@/views/components-wallet/TheWrapperWallet')
-  }
-};
+<script setup>
+import TheWrapperWallet from '@/views/components-wallet/TheWrapperWallet.vue';
+import ModuleSendOffline from '@/modules/send-offline/ModuleSendOffline.vue';
 </script>
