@@ -1,3 +1,12 @@
+### devop
+
+* * Add Rootstock Testnet integration\* Add Rootstock Testnet ledger config
+    [#4935](https://github.com/MyEtherWallet/MyEtherWallet/pull/4935)
+
+### fix
+
+* fix swap search, remove from values, add paypal [#4939](https://github.com/MyEtherWallet/MyEtherWallet/pull/4939)
+
 ### Release v6.9.8
 
 ### devop
