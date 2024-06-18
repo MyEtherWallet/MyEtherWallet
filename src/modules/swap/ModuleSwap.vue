@@ -901,13 +901,7 @@ export default {
       return `To ${name} address`;
     },
     multipleWatcher() {
-      return (
-        this.address,
-        this.network,
-        this.web3,
-        this.tokensList,
-        this.coinGeckoTokens
-      );
+      return this.address, this.web3, this.tokensList, this.coinGeckoTokens;
     }
   },
   watch: {
@@ -982,7 +976,7 @@ export default {
       this.mainTokenDetails = this.contractToToken(MAIN_TOKEN_ADDRESS);
       localContractToToken = {};
       localContractToToken[MAIN_TOKEN_ADDRESS] = this.mainTokenDetails;
-      this.setupSwap();
+      this.clear();
     },
     /**
      * Handles emitted values from
