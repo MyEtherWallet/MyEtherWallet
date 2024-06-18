@@ -36,7 +36,11 @@ fetch = async (url, options) => {
     'https://sr-client-cfg.amplitude.com/config':
       'https://analytics-web-development.mewwallet.dev/config',
     'https://api-sr.amplitude.com/sessions/v2/track':
-      'https://analytics-web-development.mewwallet.dev/session-replay'
+      'https://analytics-web-development.mewwallet.dev/session-replay',
+    'https://sr-client-cfg.eu.amplitude.com/config':
+      'https://analytics-web-development.mewwallet.dev/config-eu',
+    'https://api-sr.eu.amplitude.com/sessions/v2/track':
+      'https://analytics-web-development.mewwallet.dev/session-replay-eu'
   };
   // }
   const parsedUrl = new URL(url);
