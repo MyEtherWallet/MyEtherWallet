@@ -59,10 +59,15 @@
   </v-bottom-sheet>
 </template>
 
-<script>
-export default {
-  name: 'MewToast',
-  props: {
+<script setup>
+import { ref, watch, onMounted } from 'vue';
+
+// emits
+const emits = defineEmits(['onClick', 'closed']);
+
+// props
+const props = defineProps(
+  {
     /**
      * Toast types: success, warning, error.
      */
@@ -108,78 +113,83 @@ export default {
       default: false
     }
   },
-  data() {
-    return {
-      showsToast: false,
-      toastTypes: {
-        warning: 'warning',
-        error: 'error',
-        success: 'success',
-        info: 'info'
-      }
-    };
-  },
-  watch: {
-    showsToast(newVal) {
-      this.$nextTick(() => {
-        this.$refs.toast.showScroll();
-      });
+  { emit: emits }
+);
 
-      if (!newVal) {
-        this.$emit('closed');
-      }
+// data
+const toastTypes = {
+  warning: 'warning',
+  error: 'error',
+  success: 'success',
+  info: 'info'
+};
+const showsToast = ref(false);
+
+// watch
+watch(
+  () => props.toastType,
+  (newVal, oldVal) => {
+    if (newVal !== oldVal) {
+      showToast();
     }
-  },
-  mounted() {
-    this.setTimer();
-  },
-  methods: {
-    close() {
-      this.showsToast = false;
-    },
-    onClick() {
-      this.linkObj.url !== '' && this.linkObj.url
-        ? window.open(this.linkObj.url)
-        : this.$emit('onClick');
-    },
-    // eslint-disable-next-line
-    showToast() {
-      this.showsToast = true;
-      this.setTimer();
-    },
-    getLinkClasses() {
-      if (
-        this.toastTypes.warning === this.toastType.toLowerCase() ||
-        this.toastTypes.info === this.toastType.toLowerCase()
-      ) {
-        return 'primary--text';
-      }
-      return 'white--text';
-    },
-    getRowClasses() {
-      if (
-        this.toastTypes.warning === this.toastType.toLowerCase() ||
-        this.toastTypes.info === this.toastType.toLowerCase()
-      ) {
-        return 'titlePrimary--text';
-      }
-      return 'white--text';
-    },
-    getIcon() {
-      const toastType = this.toastType.toLowerCase();
-      if (toastType === this.toastTypes.warning) {
-        return 'mdi-alert';
-      } else if (toastType === this.toastTypes.success) {
-        return 'mdi-check-circle';
-      } else if (toastType === this.toastTypes.error) {
-        return 'mdi-close-circle';
-      }
-    },
-    setTimer() {
-      if (this.duration > 0 && this.showsToast === true && !this.persistent) {
-        setTimeout(() => (this.showsToast = false), this.duration);
-      }
-    }
+  }
+);
+
+// mounted
+onMounted(() => {
+  setTimer();
+});
+
+// methods
+const close = () => {
+  showsToast.value = false;
+};
+
+const onClick = () => {
+  props.linkObj.url !== '' && props.linkObj.url
+    ? window.open(props.linkObj.url)
+    : emits('onClick');
+};
+
+const showToast = () => {
+  showsToast.value = true;
+  setTimer();
+};
+
+const getLinkClasses = () => {
+  if (
+    toastTypes.warning === props.toastType.toLowerCase() ||
+    toastTypes.info === props.toastType.toLowerCase()
+  ) {
+    return 'primary--text';
+  }
+  return 'white--text';
+};
+
+const getRowClasses = () => {
+  if (
+    toastTypes.warning === props.toastType.toLowerCase() ||
+    toastTypes.info === props.toastType.toLowerCase()
+  ) {
+    return 'titlePrimary--text';
+  }
+  return 'white--text';
+};
+
+const getIcon = () => {
+  const toastType = props.toastType.toLowerCase();
+  if (toastType === toastTypes.warning) {
+    return 'mdi-alert';
+  } else if (toastType === toastTypes.success) {
+    return 'mdi-check-circle';
+  } else if (toastType === toastTypes.error) {
+    return 'mdi-close-circle';
+  }
+};
+
+const setTimer = () => {
+  if (props.duration > 0 && showsToast.value === true && !props.persistent) {
+    setTimeout(() => (showsToast.value = false), props.duration);
   }
 };
 </script>

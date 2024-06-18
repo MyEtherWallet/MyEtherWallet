@@ -19,28 +19,24 @@
   </tippy-component>
 </template>
 
-<script>
+<script setup>
 import { TippyComponent } from 'vue-tippy';
-export default {
-  name: 'MewTooltip',
-  components: {
-    TippyComponent
+
+// props
+defineProps({
+  maxWidth: {
+    type: String,
+    default: '450px'
   },
-  props: {
-    maxWidth: {
-      type: String,
-      default: '450px'
-    },
-    text: {
-      type: String,
-      default: ''
-    },
-    hideIcon: {
-      type: Boolean,
-      default: false
-    }
+  text: {
+    type: String,
+    default: ''
+  },
+  hideIcon: {
+    type: Boolean,
+    default: false
   }
-};
+});
 </script>
 
 <style lang="scss">

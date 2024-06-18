@@ -22,95 +22,100 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, computed, watch } from 'vue';
 import { isEmpty } from 'lodash';
+import { useI18n } from 'vue-i18n-composable';
 
 import textValidator from '@/dapps/ens-manager-dapp/handlers/handlerTextRecords';
 import { Toast, WARNING } from '@/modules/toast/handler/handlerToast';
 
-export default {
-  props: {
-    setTextRecords: {
-      default: function () {
-        return {};
-      },
-      type: Function
-    },
-    textRecords: {
-      type: [Object, null],
-      default: null
-    }
+const { t } = useI18n();
+
+// props
+const props = defineProps({
+  setTextRecords: {
+    default: () => {},
+    type: Function
   },
-  data() {
-    const errors = {};
-    const records = {};
-    Object.keys(this.textRecords).forEach(item => {
-      errors[item] = '';
-      records[item] = this.textRecords[item];
+  textRecords: {
+    type: [Object, null],
+    default: null
+  }
+});
+
+// data
+const locErrors = ref({});
+const locRecords = ref({});
+
+for (const type in props.textRecords) {
+  locErrors.value[type] = '';
+  // eslint-disable-next-line
+  locRecords.value[type] = props.multicoin[type];
+}
+
+const setRecords = ref(locRecords.value);
+const errors = ref(locErrors.value);
+
+// computed
+const hasError = computed(() => {
+  return (
+    Object.values(errors.value).filter(item => {
+      if (item !== '') return item;
+    }).length > 0
+  );
+});
+
+const isValid = computed(() => {
+  return !hasError.value && !isEmpty(props.setRecords.value);
+});
+
+const keys = computed(() => {
+  return Object.keys(props.textRecords);
+});
+
+// watch
+watch(
+  () => props.textRecords,
+  newVal => {
+    Object.keys(newVal).forEach(item => {
+      setRecords.value[item] = newVal[item];
+      errors.value[item] = '';
     });
-    return {
-      errors: errors,
-      setRecords: records
-    };
   },
-  computed: {
-    hasError() {
-      return (
-        Object.values(this.errors).filter(item => {
-          if (item !== '') return item;
-        }).length > 0
-      );
-    },
-    isValid() {
-      return !this.hasError && !isEmpty(this.setRecords);
-    },
-    keys() {
-      return Object.keys(this.textRecords);
-    }
-  },
-  watch: {
-    textRecords: {
-      handler: function (newVal) {
-        Object.keys(newVal).forEach(item => {
-          this.setRecords[item] = newVal[item];
-          this.errors[item] = '';
+  { deep: true, immediate: true }
+);
+
+// methods
+const validateRecord = (value, id) => {
+  const name = keys.value[id];
+  if (value) {
+    errors.value[name] = textValidator[id].validate(value)
+      ? ''
+      : t('ens.text-record-error', {
+          name: name
         });
-      },
-      deep: true,
-      immediate: true
-    }
-  },
-  methods: {
-    validateRecord(value, id) {
-      const name = this.keys[id];
-      if (value) {
-        this.errors[name] = textValidator[id].validate(value)
-          ? ''
-          : this.$t('ens.text-record-error', {
-              name: name
-            });
-      } else {
-        this.errors[name] = '';
-      }
-    },
-    callSetRecords() {
-      const newObj = {};
-      Object.keys(this.setRecords)
-        .filter(item => {
-          // Make sure text record is not null
-          if (!this.setRecords[item]) this.setRecords[item] = '';
-          // Filters out unchanged values
-          if (this.textRecords[item] !== this.setRecords[item]) return item;
-        })
-        .forEach(item => {
-          newObj[item] = this.setRecords[item];
-        });
-      if (!isEmpty(newObj)) {
-        this.setTextRecords(newObj);
-      } else {
-        Toast('No changes found!', {}, WARNING);
-      }
-    }
+  } else {
+    errors.value[name] = '';
+  }
+};
+
+const callSetRecords = () => {
+  const newObj = {};
+  Object.keys(setRecords.value)
+    .filter(item => {
+      // Make sure text record is not null
+      if (!setRecords.value[item]) setRecords.value[item] = '';
+      // Filters out unchanged values
+      if (props.textRecords.value[item] !== setRecords.value[item]) return item;
+    })
+    .forEach(item => {
+      newObj[item] = setRecords.value[item];
+    });
+  if (!isEmpty(newObj)) {
+    props.setTextRecords(newObj);
+  } else {
+    Toast('No changes found!', {}, WARNING);
   }
 };
 </script>

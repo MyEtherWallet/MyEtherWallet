@@ -241,159 +241,130 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'MewTable',
-  components: {
-    MewTokenContainer: () => import('./MewTokenContainer.vue'),
-    MewBlockie: () => import('./MewBlockie.vue'),
-    MewButton: () => import('./MewButton.vue'),
-    MewTransformHash: () => import('./MewTransformHash.vue'),
-    MewCopy: () => import('./MewCopy.vue')
+<script setup>
+import { computed, ref, watch } from 'vue';
+import MewTokenContainer from './MewTokenContainer.vue';
+import MewBlockie from './MewBlockie.vue';
+import MewButton from './MewButton.vue';
+import MewTransformHash from './MewTransformHash.vue';
+import MewCopy from './MewCopy.vue';
+
+// emit
+const emits = defineEmits(['selectedRow', 'selectedAll']);
+
+// props
+const props = defineProps({
+  /**
+   * Selected values passable
+   * from parent so values
+   * can be preselected
+   */
+  selectedValues: {
+    type: Array,
+    default: () => []
   },
-  props: {
-    /**
-     * Selected values passable
-     * from parent so values
-     * can be preselected
-     */
-    selectedValues: {
-      type: Array,
-      default: () => []
-    },
-    /**
-     * Applies skeleton loader
-     * note: tableData has to be empty
-     * for the prop to work correctly
-     */
-    loading: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * The table headers.
-     */
-    tableHeaders: {
-      type: Array,
-      default: () => []
-    },
-    /**
-     * The table data.
-     */
-    tableData: {
-      type: Array,
-      default: () => []
-    },
-    /**
-     * Applies select button to each row.
-     */
-    hasSelect: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Applies superPrimary color to table.
-     */
-    hasColor: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * No data text
-     */
-    noDataText: {
-      type: String,
-      default: ''
-    }
+  /**
+   * Applies skeleton loader
+   * note: tableData has to be empty
+   * for the prop to work correctly
+   */
+  loading: {
+    type: Boolean,
+    default: false
   },
-  data() {
-    return {
-      selected: []
-    };
+  /**
+   * The table headers.
+   */
+  tableHeaders: {
+    type: Array,
+    default: () => []
   },
-  computed: {
-    /**
-     * adds id to tableData items
-     */
-    indexedItems() {
-      return this.tableData.map((item, index) => ({
-        id: index,
-        ...item
-      }));
-    },
-    /**
-     * Default Tx Explorer
-     * if item doesn't include it
-     */
-    defaultExplorerTx() {
-      return 'https://ethvm.com/tx/[[txHash]]';
-    },
-    /**
-     * Default Address Explorer
-     * if item doesn't include it
-     */
-    defaultExplorerAddr() {
-      return 'https://ethvm.com/address/[[address]]';
-    }
+  /**
+   * The table data.
+   */
+  tableData: {
+    type: Array,
+    default: () => []
   },
-  watch: {
-    selectedValues: {
-      handler: function (newVal) {
-        this.selected = newVal;
-      },
-      deep: true
-    }
+  /**
+   * Applies select button to each row.
+   */
+  hasSelect: {
+    type: Boolean,
+    default: false
   },
-  methods: {
-    /**
-     * emits selectedRow when selecting a checkbox
-     */
-    onSelectAll(item) {
-      this.$emit('selectedAll', item);
-    },
-    /**
-     * emits selectedRow when selecting a checkbox
-     */
-    onSelect(item) {
-      this.$emit('selectedRow', item);
-    },
-    /**
-     * Get Tx Explorer from item
-     * return EthVM if explorer undefined
-     */
-    explorerTx(item) {
-      const explorer = item.explorerTx
-        ? item.explorerTx
-        : this.defaultExplorerTx;
-      return explorer.replace('[[txHash]]', item.txHash);
-    },
-    /**
-     * Get Address Explorer from item
-     * return EthVM if coinType/explorer is
-     * undefined but address is supported
-     */
-    explorerAddr(item) {
-      const address =
-        item.resolvedAddr && !item.resolvedAddr.includes('.')
-          ? item.resolvedAddr
-          : item.address;
-      const coinType = item.coinType;
-      if (coinType && coinType.toLowerCase() === 'bitcoin')
-        return 'https://www.blockchain.com/btc/address/' + address;
-      const prefix = address.substring(0, 2);
-      if (
-        item.explorerAddr ||
-        (coinType && coinType.toLowerCase() === 'ethereum') ||
-        (prefix === '0x' && address.length === 42)
-      ) {
-        const explorer = item.explorerAddr
-          ? item.explorerAddr
-          : this.defaultExplorerAddr;
-        return explorer.replace('[[address]]', address);
-      }
-      return '';
-    }
+  /**
+   * Applies superPrimary color to table.
+   */
+  hasColor: {
+    type: Boolean,
+    default: false
+  },
+  /**
+   * No data text
+   */
+  noDataText: {
+    type: String,
+    default: ''
   }
+});
+
+// data
+const defaultExplorerTx = 'https://ethvm.com/tx/[[txHash]]';
+const defaultExplorerAddr = 'https://ethvm.com/address/[[address]]';
+const selected = ref([]);
+
+// computed
+const indexedItems = computed(() =>
+  props.tableData.map((item, index) => ({
+    id: index,
+    ...item
+  }))
+);
+
+// watch
+watch(
+  () => props.selectedValues,
+  newVal => {
+    selected.value = newVal;
+  },
+  { deep: true }
+);
+
+// methods
+const onSelectAll = item => {
+  emits('selectedAll', item);
+};
+
+const onSelect = item => {
+  emits('selectedRow', item);
+};
+
+const explorerTx = item => {
+  const explorer = item.explorerTx ? item.explorerTx : defaultExplorerTx;
+  return explorer.replace('[[txHash]]', item.txHash);
+};
+
+const explorerAddr = item => {
+  const address =
+    item.resolvedAddr && !item.resolvedAddr.includes('.')
+      ? item.resolvedAddr
+      : item.address;
+  const coinType = item.coinType;
+  if (coinType && coinType.toLowerCase() === 'bitcoin')
+    return 'https://www.blockchain.com/btc/address/' + address;
+  const prefix = address.substring(0, 2);
+  if (
+    item.explorerAddr ||
+    (coinType && coinType.toLowerCase() === 'ethereum') ||
+    (prefix === '0x' && address.length === 42)
+  ) {
+    const explorer = item.explorerAddr
+      ? item.explorerAddr
+      : defaultExplorerAddr;
+    return explorer.replace('[[address]]', address);
+  }
+  return '';
 };
 </script>
 

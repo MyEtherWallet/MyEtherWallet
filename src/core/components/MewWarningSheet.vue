@@ -30,37 +30,25 @@
   </v-row>
 </template>
 
-<script>
-export default {
-  name: 'MewWarningSheet',
-  /**
-   * The title of the warning sheet.
-   */
-  props: {
-    title: {
-      type: String,
-      default: ''
-    },
-    /**
-     * The description of the warning sheet.
-     */
-    description: {
-      type: String,
-      default: ''
-    },
-    bottom: {
-      type: Boolean,
-      default: true
-    },
-    /**
-     * Applies the link url to the end of the text. Takes title and url, i.e. {title: '', url: ''}
-     */
-    linkObj: {
-      type: Object,
-      default: () => {
-        return {};
-      }
+<script setup>
+defineProps({
+  title: {
+    type: String,
+    default: ''
+  },
+  description: {
+    type: String,
+    default: ''
+  },
+  bottom: {
+    type: Boolean,
+    default: true
+  },
+  linkObj: {
+    type: Object,
+    default: () => {
+      return {};
     }
   }
-};
+});
 </script>

@@ -877,6 +877,8 @@ const onDeposit = async ({ amount, reserve, referralCode, user }) => {
     } else {
       txs = [resetApproveData, approveData, txData];
     }
+    const gasLimits = await estimateGasList(network.value.type.name, txs);
+    sendTxns(txs, gasLimits);
   } catch (e) {
     throw new Error(e);
   }
@@ -1063,7 +1065,7 @@ const formatAllowanceData = async (tokenAddress, user, spender) => {
  * function setUserUseReserveAsCollateral(address asset, bool useAsCollateral)
  * Sets the asset of msg.sender to be used as collateral or not.
  */
-const setCollateral = async ({ reserve, useAsCollateral, user }) => {
+const setCollateral = async ({ reserve, useAsCollateral, symbol }) => {
   try {
     const txData =
       await poolContract.value.populateTransaction.setUserUseReserveAsCollateral(
@@ -1071,7 +1073,7 @@ const setCollateral = async ({ reserve, useAsCollateral, user }) => {
         useAsCollateral
       );
     const params = {
-      reserve: reserve,
+      reserve: symbol,
       value: !useAsCollateral
     };
     const callback = [resetCollateralToggle, params];

@@ -19,21 +19,18 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'MewProgressBar',
-  props: {
-    /**
-     * Array of progress bar data , i.e [ percentage: '', color: '' ]}
-     */
-    data: {
-      type: Array,
-      default: () => {
-        return [];
-      }
+<script setup>
+defineProps({
+  /**
+   * Array of progress bar data , i.e [ percentage: '', color: '' ]}
+   */
+  data: {
+    type: Array,
+    default: () => {
+      return [];
     }
   }
-};
+});
 </script>
 
 <style lang="scss" scoped>

@@ -18,13 +18,11 @@
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    close: {
-      type: Function,
-      default: () => {}
-    }
+<script setup>
+defineProps({
+  close: {
+    type: Function,
+    default: () => {}
   }
-};
+});
 </script>

@@ -104,118 +104,109 @@
   </v-sheet>
 </template>
 
-<script>
+<script setup>
 import MewTooltip from './MewTooltip.vue';
 import MewTokenContainer from './MewTokenContainer.vue';
 
-export default {
-  name: 'MewModule',
-  components: {
-    MewTooltip,
-    MewTokenContainer
+const props = defineProps({
+  /**
+   * The icon url. Inserts an icon next to the title.
+   */
+  icon: {
+    type: [String, Array],
+    default: ''
   },
-  props: {
-    /**
-     * The icon url. Inserts an icon next to the title.
-     */
-    icon: {
-      type: [String, Array],
-      default: ''
-    },
-    /**
-     * Aligns the icon: left, right, or none.
-     */
-    iconAlign: {
-      type: String,
-      default: 'none'
-    },
-    /**
-     * Background color
-     */
-    colorType: {
-      type: String,
-      default: 'bgWalletBlock'
-    },
-    /**
-     * The module title.
-     */
-    title: {
-      type: String,
-      default: ''
-    },
-    /**
-     * The module subtitle.
-     */
-    subtitle: {
-      type: String,
-      default: ''
-    },
-    /**
-     * The module caption.
-     */
-    caption: {
-      type: String,
-      default: ''
-    },
-    /**
-     * The mew tooltip text.
-     */
-    mewTooltipText: {
-      type: String,
-      default: ''
-    },
-    /**
-     * Title size class.
-     */
-    titleSize: {
-      type: String,
-      default: 'mew-heading-2'
-    },
-    /**
-     * Displays indicator.
-     */
-    hasIndicator: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Adds elevation to the module.
-     */
-    hasElevation: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Adjusts the module to 100% height.
-     */
-    hasFullHeight: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Adds padding to the body container.
-     */
-    hasBodyPadding: {
-      type: Boolean,
-      default: true
-    }
+  /**
+   * Aligns the icon: left, right, or none.
+   */
+  iconAlign: {
+    type: String,
+    default: 'none'
   },
-  data() {
-    return {
-      iconAlignments: {
-        left: 'left',
-        right: 'right'
-      }
-    };
+  /**
+   * Background color
+   */
+  colorType: {
+    type: String,
+    default: 'bgWalletBlock'
   },
-  methods: {
-    showIcon(src) {
-      if (src === '' || src.length <= 0) {
-        return false;
-      }
-      return true;
-    }
+  /**
+   * The module title.
+   */
+  title: {
+    type: String,
+    default: ''
+  },
+  /**
+   * The module subtitle.
+   */
+  subtitle: {
+    type: String,
+    default: ''
+  },
+  /**
+   * The module caption.
+   */
+  caption: {
+    type: String,
+    default: ''
+  },
+  /**
+   * The mew tooltip text.
+   */
+  mewTooltipText: {
+    type: String,
+    default: ''
+  },
+  /**
+   * Title size class.
+   */
+  titleSize: {
+    type: String,
+    default: 'mew-heading-2'
+  },
+  /**
+   * Displays indicator.
+   */
+  hasIndicator: {
+    type: Boolean,
+    default: false
+  },
+  /**
+   * Adds elevation to the module.
+   */
+  hasElevation: {
+    type: Boolean,
+    default: false
+  },
+  /**
+   * Adjusts the module to 100% height.
+   */
+  hasFullHeight: {
+    type: Boolean,
+    default: false
+  },
+  /**
+   * Adds padding to the body container.
+   */
+  hasBodyPadding: {
+    type: Boolean,
+    default: true
   }
+});
+
+// data
+const iconAlignments = {
+  left: 'left',
+  right: 'right'
+};
+
+// methods
+const showIcon = src => {
+  if (src === '' || src.length <= 0) {
+    return false;
+  }
+  return true;
 };
 </script>
 

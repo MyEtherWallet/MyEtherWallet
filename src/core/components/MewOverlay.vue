@@ -140,128 +140,98 @@
   </v-bottom-sheet>
 </template>
 
-<script>
+<script setup>
+import { ref, computed, watch, onUnmounted, onMounted } from 'vue';
+import { useVuetify } from '@/core/composables/vuetify';
+
 const sizes = {
-  small: 'small',
-  medium: 'medium',
-  large: 'large',
-  xlarge: 'xlarge'
+  small: '384px',
+  medium: '504px',
+  large: '624px',
+  xlarge: '744px'
 };
 
-export default {
-  name: 'MewOverlay',
-  props: {
-    /**
-     * Displays on the outside bottom of the white sheet.
-     * takes an object, i.e {text: 'Need help?', linkTitle: 'Contact support',
-     * link: 'mailto:support@myetherwallet.com'}
-     */
-    footer: {
-      type: Object,
-      default: () => {
-        return {};
-      }
-    },
-    /**
-     * Opens the overlay from
-     * the bottom of the screen.
-     */
-    showOverlay: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Overlay title.
-     * Displays on the white sheet.
-     */
-    title: {
-      type: String,
-      default: ''
-    },
-    /**
-     * Function that gets triggered
-     * by close icon on the right.
-     *
-     */
-    close: {
-      type: Function,
-      default: () => {
-        return {};
-      }
-    },
-    /**
-     * Function that gets triggered
-     * by left arrow icon on the left.
-     */
-    back: {
-      type: Function,
-      default: null
-    },
-    /**
-     * Applies the size of the white sheet on the overlay.
-     * options: 'small' - 384px, 'medium' - 504px,
-     * 'large' - 624px, 'xlarge' - 744px.
-     */
-    contentSize: {
-      type: String,
-      default: 'small'
+// injections
+const vuetify = useVuetify();
+
+// props
+const props = defineProps({
+  footer: {
+    type: Object,
+    default: () => {
+      return {};
     }
   },
-  data() {
-    return {
-      isOverlayShown: false
-    };
+  showOverlay: {
+    type: Boolean,
+    default: false
   },
-  computed: {
-    isMobile() {
-      return this.$vuetify.breakpoint.xs || this.$vuetify.breakpoint.sm;
-    },
-    sheetWidth() {
-      if (this.contentSize) {
-        switch (this.contentSize.toLowerCase()) {
-          case sizes.small:
-            return '384px';
-          case sizes.medium:
-            return '504px';
-          case sizes.large:
-            return '624px';
-          case sizes.xlarge:
-            return '744px';
-          default:
-            return '384px';
-        }
-      }
-      return '384px';
+  title: {
+    type: String,
+    default: ''
+  },
+  close: {
+    type: Function,
+    default: () => {
+      return {};
     }
   },
-  watch: {
-    showOverlay(newVal) {
-      if (newVal) {
-        this.removeHtmlScrollbar();
-      } else {
-        this.restoreHtmlScrollbar();
-      }
-      this.isOverlayShown = newVal;
-    }
+  back: {
+    type: Function,
+    default: null
   },
-  destroyed() {
-    this.restoreHtmlScrollbar();
-  },
-  mounted() {
-    this.isOverlayShown = this.showOverlay;
-  },
-  methods: {
-    // Remove html element's side bar to fix double sidebar bug
-    removeHtmlScrollbar() {
-      const htmlElement = document.querySelector('html');
-      htmlElement.style.overflow = 'hidden';
-    },
-    // Restore html element's side bar on exit
-    restoreHtmlScrollbar() {
-      const htmlElement = document.querySelector('html');
-      htmlElement.style.overflow = null;
-    }
+  contentSize: {
+    type: String,
+    default: 'small'
   }
+});
+
+// data
+const isOverlayShown = ref(false);
+
+// computed
+const isMobile = computed(() => {
+  return vuetify.breakpoint.xs || vuetify.breakpoint.sm;
+});
+
+const sheetWidth = computed(() => {
+  return props.contentSize
+    ? sizes[props.contentSize.toLowerCase()]
+    : sizes.small;
+});
+
+// watch
+watch(
+  () => props.showOverlay,
+  newVal => {
+    if (newVal) {
+      removeHtmlScrollbar();
+    } else {
+      restoreHtmlScrollbar();
+    }
+    isOverlayShown.value = newVal;
+  }
+);
+
+// destroyed
+onUnmounted(() => {
+  restoreHtmlScrollbar();
+});
+
+// methods
+onMounted(() => {
+  isOverlayShown.value = props.showOverlay;
+});
+
+// methods
+const removeHtmlScrollbar = () => {
+  const htmlElement = document.querySelector('html');
+  htmlElement.style.overflow = 'hidden';
+};
+
+const restoreHtmlScrollbar = () => {
+  const htmlElement = document.querySelector('html');
+  htmlElement.style.overflow = null;
 };
 </script>
 

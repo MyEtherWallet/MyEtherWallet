@@ -13,52 +13,60 @@
   />
 </template>
 
-<script>
-export default {
-  props: {
-    /**
-     * Text area label.
-     */
-    label: {
-      default: '',
-      type: String
-    },
-    /**
-     * Text area value.
-     */
-    value: {
-      default: '',
-      type: [String, Array]
-    },
-    /**
-     * For validating your input - accepts an array of functions that take an input value as an argument and return either true / false or a string with an error message.
-     */
-    rules: {
-      type: Array,
-      default: () => {
-        return [];
-      }
-    }
+<script setup>
+import { ref, watch, onMounted } from 'vue';
+
+// emits
+const emits = defineEmits(['input']);
+
+// props
+const props = defineProps({
+  /**
+   * Text area label.
+   */
+  label: {
+    type: String,
+    default: ''
   },
-  data() {
-    return {
-      inputValue: null
-    };
+  /**
+   * Text area value.
+   */
+  value: {
+    type: [String, Array],
+    default: ''
   },
-  watch: {
-    inputValue(newVal, oldVal) {
-      if (newVal !== oldVal) {
-        this.$emit('input', newVal);
-      }
-    },
-    value(newVal, oldVal) {
-      if (newVal !== oldVal) {
-        this.inputValue = newVal;
-      }
-    }
-  },
-  mounted() {
-    this.inputValue = this.value;
+  /**
+   * For validating your input - accepts an array of functions that take an input value as an argument and return either true / false or a string with an error message.
+   */
+  rules: {
+    type: Array,
+    default: () => []
   }
-};
+});
+
+// data
+const inputValue = ref(null);
+
+// watch
+watch(
+  () => inputValue.value,
+  (newVal, oldVal) => {
+    if (newVal !== oldVal) {
+      emits('input', newVal);
+    }
+  }
+);
+watch(
+  () => props.value,
+  (newVal, oldVal) => {
+    if (newVal !== oldVal) {
+      inputValue.value = newVal;
+    }
+  }
+);
+
+// mounted
+onMounted(() => {
+  inputValue.value = props.value;
+});
 </script>

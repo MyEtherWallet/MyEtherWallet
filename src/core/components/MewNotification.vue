@@ -181,192 +181,194 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { computed } from 'vue';
 import ethTokenPlaceholder from '@/assets/images/icons/eth.svg';
+import MewTokenContainer from './MewTokenContainer.vue';
+import MewBadge from './MewBadge.vue';
+import MewBlockie from './MewBlockie.vue';
+import MewTransformHash from './MewTransformHash.vue';
+import MewTooltip from './MewTooltip.vue';
 
-export default {
-  name: 'MewNotification',
-  components: {
-    MewTokenContainer: () => import('./MewTokenContainer.vue'),
-    MewBadge: () => import('./MewBadge.vue'),
-    MewBlockie: () => import('./MewBlockie.vue'),
-    MewTransformHash: () => import('./MewTransformHash.vue'),
-    MewTooltip: () => import('./MewTooltip.vue')
-  },
-  props: {
-    /**
-     * Takes an object of notification information
-     * i.e. { txHash: { value: '', string: '' },
-     *        gasPrice: { value: '', string: '' }, gasLimit: { value: '', string: '' },
-     *        total: { value: '', string: '' }, from: { value: '', string: '' },
-     *        to: { value: '', string: '' }, amount: { value: '', string: '' },
-     *        timestamp: { value: '', string: '' }, status: { value: '', string: '' },
-     *        type: { value: '', string: '' }, fromObj: { currency: '', amount: '', icon: ''},
-     *        toObj: { currency: '', amount: '', icon: ''}, read: boolean }
-     */
-    notification: {
-      type: Object,
-      default: () => {
-        return {
-          txHash: {
-            value: '',
-            string: ''
-          },
-          gasPrice: {
-            value: '',
-            string: ''
-          },
-          gasLimit: {
-            value: '',
-            string: ''
-          },
-          total: {
-            value: '',
-            string: ''
-          },
-          from: {
-            value: '',
-            string: ''
-          },
-          to: {
-            value: '',
-            string: ''
-          },
-          amount: {
-            value: '',
-            string: ''
-          },
-          timestamp: {
-            value: '',
-            string: ''
-          },
-          status: {
-            value: '',
-            string: ''
-          },
-          type: {
-            value: '',
-            string: ''
-          },
-          fromObj: {
-            currency: '',
-            amount: '',
-            icon: ''
-          },
-          toObj: {
-            currency: '',
-            amount: '',
-            icon: '',
-            to: ''
-          },
-          read: false
-        };
-      }
-    },
-    showIndicator: {
-      type: Boolean,
-      default: true
+const props = defineProps({
+  /**
+   * Takes an object of notification information
+   * i.e. { txHash: { value: '', string: '' },
+   *        gasPrice: { value: '', string: '' }, gasLimit: { value: '', string: '' },
+   *        total: { value: '', string: '' }, from: { value: '', string: '' },
+   *        to: { value: '', string: '' }, amount: { value: '', string: '' },
+   *        timestamp: { value: '', string: '' }, status: { value: '', string: '' },
+   *        type: { value: '', string: '' }, fromObj: { currency: '', amount: '', icon: ''},
+   *        toObj: { currency: '', amount: '', icon: ''}, read: boolean }
+   */
+  notification: {
+    type: Object,
+    default: () => {
+      return {
+        txHash: {
+          value: '',
+          string: ''
+        },
+        gasPrice: {
+          value: '',
+          string: ''
+        },
+        gasLimit: {
+          value: '',
+          string: ''
+        },
+        total: {
+          value: '',
+          string: ''
+        },
+        from: {
+          value: '',
+          string: ''
+        },
+        to: {
+          value: '',
+          string: ''
+        },
+        amount: {
+          value: '',
+          string: ''
+        },
+        timestamp: {
+          value: '',
+          string: ''
+        },
+        status: {
+          value: '',
+          string: ''
+        },
+        type: {
+          value: '',
+          string: ''
+        },
+        fromObj: {
+          currency: '',
+          amount: '',
+          icon: ''
+        },
+        toObj: {
+          currency: '',
+          amount: '',
+          icon: '',
+          to: ''
+        },
+        read: false
+      };
     }
   },
-  data() {
-    return {
-      ethTokenPlaceholder: ethTokenPlaceholder,
-      txTypes: {
-        in: 'txIn',
-        out: 'txOut',
-        swap: 'swap'
-      },
-      txStatusOptions: {
-        success: 'success',
-        pending: 'pending',
-        failed: 'failed'
-      },
-      hashType: 'Transaction Hash'
-    };
-  },
-  computed: {
-    fromAmount() {
-      return this.notification.fromObj.amount.length > 10
-        ? this.notification.fromObj.amount.slice(0, 9 - 1) + '...'
-        : this.notification.fromObj.amount;
-    },
-    toAmount() {
-      return this.notification.toObj.amount.length > 10
-        ? this.notification.toObj.amount.slice(0, 9 - 1) + '...'
-        : this.notification.toObj.amount;
-    },
-    backgroundColor() {
-      if (this.$vuetify.theme.dark) {
-        return 'buttonGrayLight';
-      }
-      if (this.notification.status.value == this.txStatusOptions.pending) {
-        return 'warning';
-      }
-      if (this.notification.status.value == this.txStatusOptions.failed) {
-        return 'error lighten-1';
-      }
-      return 'buttonGrayLight';
-    },
-    getBadgeType() {
-      const type = this.notification.type.value.toLowerCase();
-      return this.txTypes[type];
-    },
-    getDetails() {
-      const details = [],
-        detailTypes = [
-          'txHash',
-          'gasPrice',
-          'gasLimit',
-          'total',
-          'timestamp',
-          'status'
-        ];
-      for (const key in this.notification) {
-        if (detailTypes.indexOf(key) >= 0) {
-          details.push(this.notification[key]);
-        }
-      }
-      return details;
-    },
-    isSwap() {
-      return this.notification.type.value.toLowerCase() === this.txTypes.swap;
+  showIndicator: {
+    type: Boolean,
+    default: true
+  }
+});
+
+// data
+const txTypes = {
+  in: 'txIn',
+  out: 'txOut',
+  swap: 'swap'
+};
+
+const txStatusOptions = {
+  success: 'success',
+  pending: 'pending',
+  failed: 'failed'
+};
+
+const hashType = 'Transaction Hash';
+
+// computed
+const fromAmount = computed(() => {
+  return props.notification.fromObj.amount.length > 10
+    ? props.notification.fromObj.amount.slice(0, 9 - 1) + '...'
+    : props.notification.fromObj.amount;
+});
+
+const toAmount = computed(() => {
+  return props.notification.toObj.amount.length > 10
+    ? props.notification.toObj.amount.slice(0, 9 - 1) + '...'
+    : props.notification.toObj.amount;
+});
+
+const backgroundColor = computed(() => {
+  if ($vuetify.theme.dark) {
+    return 'buttonGrayLight';
+  }
+  if (props.notification.status.value == txStatusOptions.pending) {
+    return 'warning';
+  }
+  if (props.notification.status.value == txStatusOptions.failed) {
+    return 'error lighten-1';
+  }
+  return 'buttonGrayLight';
+});
+
+const getBadgeType = computed(() => {
+  const type = props.notification.type.value.toLowerCase();
+  return txTypes[type];
+});
+
+const getDetails = computed(() => {
+  const details = [];
+  const detailTypes = [
+    'txHash',
+    'gasPrice',
+    'gasLimit',
+    'total',
+    'timestamp',
+    'status'
+  ];
+  for (const key in props.notification) {
+    if (detailTypes.indexOf(key) >= 0) {
+      details.push(props.notification[key]);
     }
-  },
-  methods: {
-    isHash(type) {
-      return type === this.hashType;
-    },
-    getClasses(status) {
-      if (status === this.txStatusOptions.success) {
-        return 'primary';
-      }
-      if (status === this.txStatusOptions.pending) {
-        return 'text--darken-1 darken-1 warning';
-      }
-      if (status === this.txStatusOptions.failed) {
-        return 'error';
-      }
-    },
-    getBorderClasses(status, read) {
-      if (status === this.txStatusOptions.success) {
-        if (read) {
-          return 'success-type read';
-        }
-        return 'success-type';
-      }
-      if (status === this.txStatusOptions.pending) {
-        if (read) {
-          return 'sucpendingcess-type read';
-        }
-        return 'pending-type';
-      }
-      if (status === this.txStatusOptions.failed) {
-        if (read) {
-          return 'failed-type read';
-        }
-        return 'failed-type';
-      }
+  }
+  return details;
+});
+
+const isSwap = computed(() => {
+  return props.notification.type.value.toLowerCase() === txTypes.swap;
+});
+
+// methods
+const isHash = type => {
+  return type === hashType;
+};
+
+const getClasses = status => {
+  if (status === txStatusOptions.success) {
+    return 'primary';
+  }
+  if (status === txStatusOptions.pending) {
+    return 'text--darken-1 darken-1 warning';
+  }
+  if (status === txStatusOptions.failed) {
+    return 'error';
+  }
+};
+
+const getBorderClasses = (status, read) => {
+  if (status === txStatusOptions.success) {
+    if (read) {
+      return 'success-type read';
     }
+    return 'success-type';
+  }
+  if (status === txStatusOptions.pending) {
+    if (read) {
+      return 'sucpendingcess-type read';
+    }
+    return 'pending-type';
+  }
+  if (status === txStatusOptions.failed) {
+    if (read) {
+      return 'failed-type read';
+    }
+    return 'failed-type';
   }
 };
 </script>

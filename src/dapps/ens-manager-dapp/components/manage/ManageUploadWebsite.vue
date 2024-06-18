@@ -44,94 +44,95 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import isIpfs from 'is-ipfs';
 
 import { Toast, WARNING } from '@/modules/toast/handler/handlerToast';
 
-export default {
-  props: {
-    setIpfs: {
-      default: function () {
-        return {};
-      },
-      type: Function
-    },
-    settingIpfs: {
-      default: false,
-      type: Boolean
-    },
-    uploadFile: {
-      default: function () {
-        return {};
-      },
-      type: Function
-    },
-    uploadedHash: {
-      default: '',
-      type: String
-    }
+import { useI18n } from 'vue-i18n-composable';
+import { computed, ref, watch } from 'vue';
+
+// injections
+const { t } = useI18n();
+
+// props
+const props = defineProps({
+  setIpfs: {
+    default: () => {},
+    type: Function
   },
-  data() {
-    return {
-      ipfs: '' || this.uploadedHash,
-      error: ''
-    };
+  settingIpfs: {
+    default: false,
+    type: Boolean
   },
-  computed: {
-    isValidIPFS() {
-      if (this.ipfs !== '') return isIpfs.multihash(this.ipfs);
-      return true;
-    }
+  uploadFile: {
+    default: () => {},
+    type: Function
   },
-  watch: {
-    uploadedHash(newVal) {
-      this.ipfs = newVal;
-    },
-    ipfs(newVal) {
-      if (!newVal) this.ipfs = '';
-    }
-  },
-  methods: {
-    fileChange(e) {
-      const TYPES = [
-        'application/zip',
-        'application/x-zip',
-        'application/octet-stream',
-        'application/x-zip-compressed'
-      ];
-      const supportedFile = TYPES.find(item => {
-        return (
-          e.target.files[0].type === item ||
-          e.target.files[0].name.includes('.zip')
-        );
-      });
-      if (!supportedFile) {
-        this.$refs.zipInput.value = '';
-        Toast(this.$t('ens.warning.upload-zip'), {}, WARNING);
-        return;
-      }
-      if (e.target.files[0].size < 500) {
-        this.$refs.zipInput.value = '';
-        Toast(this.$t('ens.warning.too-small'), {}, WARNING);
-        return;
-      }
-      if (e.target.files[0].size > 50000000) {
-        this.$refs.zipInput.value = '';
-        Toast(this.$t('ens.warning.too-big'), {}, WARNING);
-        return;
-      }
-      this.uploadFile(e.target.files[0]);
-    },
-    setHash(val) {
-      if (val) {
-        this.error = isIpfs.multihash(val)
-          ? ''
-          : this.$t('ens.error.empty-invalid-ipfs');
-      } else {
-        this.error = '';
-      }
-    }
+  uploadedHash: {
+    default: '',
+    type: String
+  }
+});
+
+// data
+const ipfs = ref('' || props.uploadedHash);
+const error = ref('');
+const zipInput = ref(null);
+
+// computed
+const isValidIPFS = computed(() => {
+  if (ipfs.value !== '') return isIpfs.multihash(ipfs.value);
+  return true;
+});
+
+// watch
+watch(props.uploadedHash, val => {
+  if (!val) ipfs.value = '';
+});
+
+watch(ipfs, val => {
+  if (!val) ipfs.value = '';
+});
+
+// methods
+const fileChange = e => {
+  const TYPES = [
+    'application/zip',
+    'application/x-zip',
+    'application/octet-stream',
+    'application/x-zip-compressed'
+  ];
+  const supportedFile = TYPES.find(item => {
+    return (
+      e.target.files[0].type === item || e.target.files[0].name.includes('.zip')
+    );
+  });
+  if (!supportedFile) {
+    zipInput.value = '';
+    Toast(t('ens.warning.upload-zip'), {}, WARNING);
+    return;
+  }
+  if (e.target.files[0].size < 500) {
+    zipInput.value = '';
+    Toast(t('ens.warning.too-small'), {}, WARNING);
+    return;
+  }
+  if (e.target.files[0].size > 50000000) {
+    zipInput.value = '';
+    Toast(t('ens.warning.too-big'), {}, WARNING);
+    return;
+  }
+  props.uploadFile(e.target.files[0]);
+};
+
+const setHash = val => {
+  if (val) {
+    error.value = isIpfs.multihash(val)
+      ? ''
+      : t('ens.error.empty-invalid-ipfs');
+  } else {
+    error.value = '';
   }
 };
 </script>

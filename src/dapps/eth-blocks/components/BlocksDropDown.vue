@@ -14,7 +14,7 @@
   >
     <template #activator="{ on, attrs }">
       <mew-button
-        :has-full-width="$vuetify.breakpoint.mdAndUp"
+        :has-full-width="vuetify.breakpoint.mdAndUp"
         color-theme="basic"
         height="36"
         btn-style="light"
@@ -22,7 +22,7 @@
         class="px-0"
         v-bind="attrs"
         v-on="on"
-        @click.native="isDropdownOpen = !isDropdownOpen"
+        @click.native="toggleDropdown"
       >
         <div
           class="d-flex flex-row px-3 align-center width--full justify-space-between"
@@ -72,38 +72,37 @@
   </v-menu>
 </template>
 
-<script>
-export default {
-  name: 'BlocksDropwDownMenu',
+<script setup>
+import { ref } from 'vue';
+import useVuetify from '@core/composables/useVuetify';
 
-  props: {
-    /**
-     * Popup title
-     */
-    popupTitle: {
-      type: String,
-      default: ''
-    },
-    hasClose: {
-      type: Boolean,
-      defualt: true
-    },
-
-    hasIcon: {
-      type: Boolean,
-      defualt: false
-    }
+const vuetify = useVuetify();
+// props
+defineProps({
+  popupTitle: {
+    type: String,
+    default: ''
   },
-  data() {
-    return {
-      isDropdownOpen: false
-    };
+  hasClose: {
+    type: Boolean,
+    default: true
   },
-  methods: {
-    close() {
-      this.isDropdownOpen = false;
-    }
+  hasIcon: {
+    type: Boolean,
+    default: false
   }
+});
+
+// data
+const isDropdownOpen = ref(false);
+
+// methods
+const close = () => {
+  isDropdownOpen.value = false;
+};
+
+const toggleDropdown = () => {
+  isDropdownOpen.value = !isDropdownOpen.value;
 };
 </script>
 

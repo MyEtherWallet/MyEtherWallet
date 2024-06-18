@@ -29,17 +29,18 @@
       class="mew-stepper"
     >
       <v-stepper-header>
-        <template v-for="(item, i) in items">
-          <v-stepper-step
-            :key="i + item"
-            color="expandHeader"
-            :step="i + 1"
-            complete-icon="mdi-check"
-            :complete="stepNumber > i + 1"
-          >
-            {{ item.name }}
-          </v-stepper-step>
-          <v-divider v-if="i < items.length - 1" :key="i" />
+        <template>
+          <div v-for="(item, i) in items" :key="i + item">
+            <v-stepper-step
+              color="expandHeader"
+              :step="i + 1"
+              complete-icon="mdi-check"
+              :complete="stepNumber > i + 1"
+            >
+              {{ item.name }}
+            </v-stepper-step>
+            <v-divider v-if="i < items.length - 1" :key="i" />
+          </div>
         </template>
       </v-stepper-header>
     </v-stepper>
@@ -53,40 +54,35 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'MewStepper',
-  props: {
-    /**
-     * Takes an array of stepper item objects i.e, [{step: 0, name: ''}].
-     */
-    items: {
-      type: Array,
-      default: () => []
-    },
-    /**
-     * Controls which step is active.
-     */
-    onStep: {
-      type: Number,
-      default: 1
-    },
-    compact: {
-      type: Boolean,
-      default: false
-    }
+<script setup>
+import { ref, watch } from 'vue';
+
+// props
+const props = defineProps({
+  items: {
+    type: Array,
+    default: () => []
   },
-  data() {
-    return {
-      stepNumber: this.onStep
-    };
+  onStep: {
+    type: Number,
+    default: 1
   },
-  watch: {
-    onStep(newVal) {
-      this.stepNumber = newVal > this.items.length || newVal < 1 ? 1 : newVal;
-    }
+  compact: {
+    type: Boolean,
+    default: false
   }
-};
+});
+
+// data
+const stepNumber = ref(props.onStep);
+
+// watch
+watch(
+  () => props.onStep,
+  newVal => {
+    stepNumber.value = newVal > props.items.length || newVal < 1 ? 1 : newVal;
+  }
+);
 </script>
 
 <style lang="scss">

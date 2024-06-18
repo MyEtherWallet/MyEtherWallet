@@ -54,35 +54,33 @@
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    button: {
-      type: String,
-      default: ''
-    },
-    button2: {
-      type: String,
-      default: ''
-    },
-    token: {
-      type: String,
-      default: ''
-    },
-    tokenValue: {
-      type: String,
-      default: ''
-    },
-    vault: {
-      type: Boolean,
-      default: false
-    },
-    tableData: {
-      type: Array,
-      default: () => []
-    }
+<script setup>
+defineProps({
+  button: {
+    type: String,
+    default: ''
+  },
+  button2: {
+    type: String,
+    default: ''
+  },
+  token: {
+    type: String,
+    default: ''
+  },
+  tokenValue: {
+    type: String,
+    default: ''
+  },
+  vault: {
+    type: Boolean,
+    default: false
+  },
+  tableData: {
+    type: Array,
+    default: () => []
   }
-};
+});
 </script>
 
 <style lang="scss" scoped>

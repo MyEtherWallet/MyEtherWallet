@@ -115,202 +115,153 @@
   </v-btn>
 </template>
 
-<script>
-export default {
-  name: 'MewSuperButton',
-  components: {
-    MewIcon: () => import('./MewIcon.vue')
-  },
-  props: {
-    /**
-     * The number of cols for the left side to take up.
-     */
-    leftColsNum: {
-      type: Number,
-      default: 9
-    },
-    /**
-     * The number of cols for the left side to take up.
-     */
-    rightColsNum: {
-      type: Number,
-      default: 3
-    },
-    /**
-     * The font size class that is added to the mew super button title.
-     */
-    fontClass: {
-      type: String,
-      default: 'mew-heading-3'
-    },
-    /**
-     * The button content will be set as a column rather than row.
-     */
-    isColumn: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * The text that will go in the button.
-     */
-    title: {
-      type: String,
-      default: ''
-    },
-    /**
-     * The text that will go under the button title.
-     */
-    subtitle: {
-      type: String,
-      default: ''
-    },
-    /**
-     * The text that will go under the button subtitle.
-     */
-    tag: {
-      type: String,
-      default: ''
-    },
-    /**
-     * The title-icon url. Inserts an icon next to the button title.
-     */
-    titleIcon: {
-      type: [String, Array],
-      default: ''
-    },
-    /**
-     * The right-icon url. Inserts an icon on the right container of the button.
-     */
-    rightIcon: {
-      type: [String, Array],
-      default: ''
-    },
-    /**
-     * The type of icon: mew, mdi, or img
-     */
-    titleIconType: {
-      type: String,
-      default: 'mew'
-    },
-    /**
-     * Adds the color class to the title icon.
-     */
-    titleIconClass: {
-      type: String,
-      default: ''
-    },
-    /**
-     * The type of icon: mew, mdi, or img
-     */
-    rightIconType: {
-      type: String,
-      default: 'mew'
-    },
-    /**
-     * The text that will go on the upper right corner. Will not display if right-icon is true.
-     */
-    note: {
-      type: String,
-      default: ''
-    },
-    /**
-     * Applies a new badge to the button.
-     */
-    isNew: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Applies the button color theme: basic, primary, or outline.
-     */
-    colorTheme: {
-      type: String,
-      default: 'primary'
-    },
-    /**
-     * Removes the ability to click or target the component.
-     */
-    disabled: {
-      type: Boolean,
-      default: false
-    }
-  },
-  data() {
-    return {
-      colorThemes: {
-        outline: 'outline',
-        basic: 'basic',
-        primary: 'primary'
-      },
-      active: false,
-      iconTypes: {
-        mew: 'mew',
-        mdi: 'mdi',
-        img: 'img'
-      }
-    };
-  },
-  methods: {
-    showTitleIcon(icon, type) {
-      return this.titleIconType.toLowerCase() === this.iconTypes[type];
-    },
-    showRightIcon(icon, type) {
-      return (
-        this.rightIconType.toLowerCase() === this.iconTypes[type] &&
-        this.hasSrc(icon)
-      );
-    },
-    getRowClasses() {
-      const classes = [];
-      if (this.hasSrc(this.rightIcon)) {
-        classes.push('text-center');
-      }
-      if (this.isColumn) {
-        classes.push('column-reverse');
-      }
-      return classes;
-    },
-    onBtnClick() {
-      this.active = !this.active;
-    },
-    getColor() {
-      const colorThemesWhite = ['outline', 'basic'];
-      if (colorThemesWhite.indexOf(this.colorTheme) >= 0) {
-        return 'white basic-border';
-      }
+<script setup>
+import { ref } from 'vue';
+import MewIcon from './MewIcon.vue';
 
-      if (this.colorTheme === this.colorThemes.primary) {
-        return 'superPrimary';
-      }
-      return this.colorTheme;
-    },
-    getClasses() {
-      const classes = [];
-      if (
-        this.colorTheme.toLowerCase() === this.colorThemes.basic ||
-        this.colorTheme.toLowerCase() === this.colorThemes.primary
-      ) {
-        classes.push('titlePrimary--text');
-      }
-      if (this.disabled) {
-        classes.push('disabled-btn');
-      }
-      if (
-        this.active &&
-        !this.disabled &&
-        this.colorTheme.toLowerCase() === this.colorThemes.basic
-      ) {
-        classes.push('active');
-      }
-      return classes;
-    },
-    hasSrc(src) {
-      if (src === '' || src.length <= 0) {
-        return false;
-      }
-      return true;
-    }
+const props = defineProps({
+  leftColsNum: {
+    type: Number,
+    default: 9
+  },
+  rightColsNum: {
+    type: Number,
+    default: 3
+  },
+  fontClass: {
+    type: String,
+    default: 'mew-heading-3'
+  },
+  isColumn: {
+    type: Boolean,
+    default: false
+  },
+  title: {
+    type: String,
+    default: ''
+  },
+  subtitle: {
+    type: String,
+    default: ''
+  },
+  tag: {
+    type: String,
+    default: ''
+  },
+  titleIcon: {
+    type: [String, Array],
+    default: ''
+  },
+  rightIcon: {
+    type: [String, Array],
+    default: ''
+  },
+  titleIconType: {
+    type: String,
+    default: 'mew'
+  },
+  titleIconClass: {
+    type: String,
+    default: ''
+  },
+  rightIconType: {
+    type: String,
+    default: 'mew'
+  },
+  note: {
+    type: String,
+    default: ''
+  },
+  isNew: {
+    type: Boolean,
+    default: false
+  },
+  colorTheme: {
+    type: String,
+    default: 'primary'
+  },
+  disabled: {
+    type: Boolean,
+    default: false
   }
+});
+
+const colorThemes = {
+  outline: 'outline',
+  basic: 'basic',
+  primary: 'primary'
+};
+
+const iconTypes = {
+  mew: 'mew',
+  mdi: 'mdi',
+  img: 'img'
+};
+
+const active = ref(false);
+
+// methods
+const showTitleIcon = (icon, type) => {
+  return props.titleIconType.toLowerCase() === iconTypes[type];
+};
+
+const showRightIcon = (icon, type) => {
+  return props.rightIconType.toLowerCase() === iconTypes[type] && hasSrc(icon);
+};
+
+const getRowClasses = () => {
+  const classes = [];
+  if (hasSrc(props.rightIcon)) {
+    classes.push('text-center');
+  }
+  if (props.isColumn) {
+    classes.push('column-reverse');
+  }
+  return classes;
+};
+
+const onBtnClick = () => {
+  active.value = !active.value;
+};
+
+const getColor = () => {
+  const colorThemesWhite = ['outline', 'basic'];
+  if (colorThemesWhite.indexOf(props.colorTheme) >= 0) {
+    return 'white basic-border';
+  }
+
+  if (props.colorTheme === colorThemes.primary) {
+    return 'superPrimary';
+  }
+  return props.colorTheme;
+};
+
+const getClasses = () => {
+  const classes = [];
+  if (
+    props.colorTheme.toLowerCase() === colorThemes.basic ||
+    props.colorTheme.toLowerCase() === colorThemes.primary
+  ) {
+    classes.push('titlePrimary--text');
+  }
+  if (props.disabled) {
+    classes.push('disabled-btn');
+  }
+  if (
+    active.value &&
+    !props.disabled &&
+    props.colorTheme.toLowerCase() === colorThemes.basic
+  ) {
+    classes.push('active');
+  }
+  return classes;
+};
+
+const hasSrc = src => {
+  if (src === '' || src.length <= 0) {
+    return false;
+  }
+  return true;
 };
 </script>
 

@@ -29,63 +29,63 @@
   </mew-overlay>
 </template>
 
-<script>
-export default {
-  name: 'BlockSend',
-  components: {
-    ModuleAddressBook: () => import('@/modules/address-book/ModuleAddressBook')
+<script setup>
+import { ref, computed, watch } from 'vue';
+import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook.vue';
+
+// emits
+const emits = defineEmits(['send']);
+
+// props
+const props = defineProps({
+  open: {
+    type: Boolean,
+    default: false
   },
-  props: {
-    open: {
-      type: Boolean,
-      default: false
-    },
-    close: {
-      type: Function,
-      default: () => {}
-    },
-    blockNumber: {
-      type: String,
-      default: ''
-    },
-    isSending: {
-      type: Boolean,
-      default: false
+  close: {
+    type: Function,
+    default: () => {}
+  },
+  blockNumber: {
+    type: String,
+    default: ''
+  },
+  isSending: {
+    type: Boolean,
+    default: false
+  }
+});
+
+// data
+const isValidAddress = ref(false);
+const toAddress = ref('');
+const addressInput = ref(null);
+
+// computed
+const title = computed(() => `Send ETH Block #${props.blockNumber}`);
+const disableSend = computed(() => !isValidAddress.value || props.isSending);
+
+// watch
+watch(
+  () => props.open,
+  newVal => {
+    if (newVal === false) {
+      addressInput.value.clear();
     }
-  },
-  data() {
-    return {
-      isValidAddress: false,
-      toAddress: ''
-    };
-  },
-  computed: {
-    title() {
-      return `Send ETH Block #${this.blockNumber}`;
-    },
-    disableSend() {
-      return !this.isValidAddress || this.isSending;
-    }
-  },
-  watch: {
-    open(newVal) {
-      if (newVal === false) {
-        this.$refs.addressInput.clear();
-      }
-    }
-  },
-  methods: {
-    setAddress(addr, isValidAddress) {
-      if (isValidAddress) {
-        this.toAddress = addr;
-      }
-      this.isValidAddress = isValidAddress;
-    },
-    sendBlock() {
-      if (this.isValidAddress) {
-        this.$emit('send', this.toAddress);
-      }
-    }
+  }
+);
+
+// methods
+const setAddress = (addr, isValidAddress) => {
+  if (isValidAddress) {
+    toAddress.value = addr;
+  }
+  isValidAddress.value = isValidAddress;
+};
+
+const sendBlock = () => {
+  if (isValidAddress.value) {
+    emits('send', toAddress.value);
   }
 };
 </script>

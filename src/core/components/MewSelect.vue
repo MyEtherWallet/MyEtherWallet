@@ -208,218 +208,237 @@
     </template>
   </v-select>
 </template>
-<script>
+<script setup>
 import get from 'lodash/get';
 
 import MewTokenContainer from './MewTokenContainer.vue';
+import { computed, onMounted, ref, watch } from 'vue';
 
-export default {
-  name: 'MewSelect',
-  components: {
-    MewTokenContainer
+// emits
+const emits = defineEmits(['input', 'buyMore']);
+
+// props
+const props = defineProps({
+  /**
+   * Adds a "Buy more" string to the end of the first index of the errorMessages prop.
+   */
+  buyMoreStr: {
+    type: String,
+    default: ''
   },
-  props: {
-    /**
-     * Adds a "Buy more" string to the end of the first index of the errorMessages prop.
-     */
-    buyMoreStr: {
-      type: String,
-      default: ''
-    },
-    /**
-     * Error messages to display
-     */
-    errorMessages: {
-      type: [String, Array],
-      default: ''
-    },
-    /**
-     * Adds filter to select items
-     */
-    hasFilter: {
-      type: Boolean,
-      default: true //  change to false
-    },
-    /**
-     * Filter placeholder
-     */
-    filterPlaceholder: {
-      type: String,
-      default: 'Search token name'
-    },
-    /**
-     * MEW select value
-     */
-    value: {
-      type: Object,
-      default: () => {
-        return {};
-      }
-    },
-    /**
-     * Disables the select dropdown.
-     */
-    disabled: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Can be an array of objects or array of strings. When using objects, will look for a text and value field.
-     * Can also add an img attribute to the object to append an img to the value.
-     * Also takes in header objs and a select token label obj, i.e. {text: 'Select Token', imgs: [], total: '', selectLabel: true, divider: true}
-     * Please check customItems for more info
-     * Example: { name: "Eth", subtext: "Ethereum", value: "Ethereum", img: ethIcon }
-     */
-    items: {
-      type: Array,
-      default: () => {
-        return [];
-      }
-    },
-    /**
-     * Sets the select label
-     */
-    label: {
-      type: String,
-      default: ''
-    },
-    /**
-     * Applies Custom Select styles
-     */
-    isCustom: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Loading state
-     */
-    loading: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Normal dropdown with no icon
-     */
-    normalDropdown: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Remove Capitalize style from all forms
-     */
-    noCapitalize: {
-      type: Boolean,
-      default: false
+  /**
+   * Error messages to display
+   */
+  errorMessages: {
+    type: [String, Array],
+    default: ''
+  },
+  /**
+   * Adds filter to select items
+   */
+  hasFilter: {
+    type: Boolean,
+    default: true //  change to false
+  },
+  /**
+   * Filter placeholder
+   */
+  filterPlaceholder: {
+    type: String,
+    default: 'Search token name'
+  },
+  /**
+   * MEW select value
+   */
+  value: {
+    type: Object,
+    default: () => {
+      return {};
     }
   },
-  data() {
-    return {
-      selectModel: null,
-      selectItems: [],
-      search: ''
-    };
+  /**
+   * Disables the select dropdown.
+   */
+  disabled: {
+    type: Boolean,
+    default: false
   },
-  computed: {
-    defaultItem() {
-      return this.items.find(obj => {
-        return obj.selectLabel || obj.name;
-      });
+  /**
+   * Can be an array of objects or array of strings. When using objects, will look for a text and value field.
+   * Can also add an img attribute to the object to append an img to the value.
+   * Also takes in header objs and a select token label obj, i.e. {text: 'Select Token', imgs: [], total: '', selectLabel: true, divider: true}
+   * Please check customItems for more info
+   * Example: { name: "Eth", subtext: "Ethereum", value: "Ethereum", img: ethIcon }
+   */
+  items: {
+    type: Array,
+    default: () => {
+      return [];
     }
   },
-  watch: {
-    search(newVal) {
-      const dropdown = document.querySelector('div.menuable__content__active');
-      if (dropdown) {
-        dropdown.scroll(0, 0);
-      }
-      if (newVal === '' || newVal === null) {
-        this.selectItems = this.items;
-      } else {
-        const foundItems = this.items.reduce((foundTokens, item) => {
-          const searchValue = String(newVal).toLowerCase();
-          const value = String(get(item, 'value', '')).toLowerCase();
-          const name = String(get(item, 'name', '')).toLowerCase();
-          const subtext = String(get(item, 'subtext', '')).toLowerCase();
-          if (
-            name === searchValue ||
-            subtext === searchValue ||
-            value === searchValue
-          ) {
-            foundTokens.unshift(item);
-          } else if (
-            name.includes(searchValue) ||
-            subtext.includes(searchValue) ||
-            value.includes(searchValue)
-          ) {
-            foundTokens.push(item);
-          }
-          return foundTokens;
-        }, []);
-        this.selectItems = foundItems;
-      }
-    },
-    selectModel(newVal) {
-      setTimeout(() => {
-        this.search = '';
-      }, 1000);
-      this.$emit('input', newVal);
-    },
-    value(newVal) {
-      this.selectModel =
-        newVal && Object.keys(newVal).length !== 0 ? newVal : this.defaultItem;
-    },
-    loading() {
-      if (!this.loading) {
-        this.togglePointerEventStyle();
-        this.selectModel =
-          this.value && Object.keys(this.value).length !== 0
-            ? this.value
-            : this.defaultItem;
-      }
-    },
-    items: {
-      handler: function (newVal) {
-        this.selectItems = newVal;
-        this.selectModel =
-          this.value && Object.keys(this.value).length !== 0
-            ? this.value
-            : this.defaultItem;
-      },
-      deep: true
+  /**
+   * Sets the select label
+   */
+  label: {
+    type: String,
+    default: ''
+  },
+  /**
+   * Applies Custom Select styles
+   */
+  isCustom: {
+    type: Boolean,
+    default: false
+  },
+  /**
+   * Loading state
+   */
+  loading: {
+    type: Boolean,
+    default: false
+  },
+  /**
+   * Normal dropdown with no icon
+   */
+  normalDropdown: {
+    type: Boolean,
+    default: false
+  },
+  /**
+   * Remove Capitalize style from all forms
+   */
+  noCapitalize: {
+    type: Boolean,
+    default: false
+  }
+});
+
+// data
+const selectModel = ref(null);
+const selectItems = ref([]);
+const search = ref('');
+const filterTextField = ref(null);
+
+// computed
+const defaultItem = computed(() => {
+  return props.items.value.find(obj => {
+    return obj.selectLabel || obj.name;
+  });
+});
+
+// watch
+watch(
+  () => props.search,
+  newVal => {
+    const dropdown = document.querySelector('div.menuable__content__active');
+    if (dropdown) {
+      dropdown.scroll(0, 0);
     }
-  },
-  mounted() {
-    this.selectItems = this.items;
-    this.selectModel =
-      this.value && Object.keys(this.value).length !== 0
-        ? this.value
-        : this.defaultItem;
-  },
-  methods: {
-    emitBuyMore() {
-      this.$emit('buyMore');
-    },
-    togglePointerEventStyle() {
-      const elems = document.querySelectorAll('div.v-list-item--link');
-      if (elems) {
-        const pointerEventStyle = this.loading ? 'none' : 'all';
-        for (let i = 0; i < elems.length; i++) {
-          elems[i].style.pointerEvents = pointerEventStyle;
+    if (newVal === '' || newVal === null) {
+      selectItems.value = props.items;
+    } else {
+      const foundItems = props.items.reduce((foundTokens, item) => {
+        const searchValue = String(newVal).toLowerCase();
+        const value = String(get(item, 'value', '')).toLowerCase();
+        const name = String(get(item, 'name', '')).toLowerCase();
+        const subtext = String(get(item, 'subtext', '')).toLowerCase();
+        if (
+          name === searchValue ||
+          subtext === searchValue ||
+          value === searchValue
+        ) {
+          foundTokens.unshift(item);
+        } else if (
+          name.includes(searchValue) ||
+          subtext.includes(searchValue) ||
+          value.includes(searchValue)
+        ) {
+          foundTokens.push(item);
         }
-      }
-    },
-    onClick() {
-      if (!this.hasFilter && !this.isCustom) {
-        return;
-      }
-      setTimeout(() => {
-        this.togglePointerEventStyle();
-        if (this.$refs.filterTextField) {
-          this.$refs.filterTextField.$refs.input.focus();
-        }
-      }, 100);
+        return foundTokens;
+      }, []);
+      selectItems.value = foundItems;
     }
   }
+);
+
+watch(
+  () => props.selectModel,
+  newVal => {
+    setTimeout(() => {
+      search.value = '';
+    }, 1000);
+    emits('input', newVal);
+  }
+);
+
+watch(
+  () => props.value,
+  newVal => {
+    selectModel.value =
+      newVal && Object.keys(newVal).length !== 0 ? newVal : defaultItem.value;
+  }
+);
+
+watch(
+  () => props.loading,
+  () => {
+    if (!props.loading) {
+      togglePointerEventStyle();
+      selectModel.value =
+        props.value && Object.keys(props.value).length !== 0
+          ? props.value
+          : defaultItem.value;
+    }
+  }
+);
+
+watch(
+  () => props.items,
+  newVal => {
+    selectItems.value = newVal;
+    selectModel.value =
+      props.value && Object.keys(props.value).length !== 0
+        ? props.value
+        : defaultItem.value;
+  },
+  { deep: true }
+);
+
+// mounted
+onMounted(() => {
+  selectItems.value = props.items;
+  selectModel.value =
+    props.value && Object.keys(props.value).length !== 0
+      ? props.value
+      : defaultItem.value;
+});
+
+// methods
+const emitBuyMore = () => {
+  emits('buyMore');
+};
+
+const togglePointerEventStyle = () => {
+  const elems = document.querySelectorAll('div.v-list-item--link');
+  if (elems) {
+    const pointerEventStyle = props.loading ? 'none' : 'all';
+    for (let i = 0; i < elems.length; i++) {
+      elems[i].style.pointerEvents = pointerEventStyle;
+    }
+  }
+};
+
+const onClick = () => {
+  if (!props.hasFilter && !props.isCustom) {
+    return;
+  }
+  setTimeout(() => {
+    togglePointerEventStyle();
+    if (filterTextField.value) {
+      filterTextField.value.input.focus();
+    }
+  }, 100);
 };
 </script>
 

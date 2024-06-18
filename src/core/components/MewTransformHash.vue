@@ -15,37 +15,38 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'MewTransformHash',
-  props: {
-    /**
-     * Hash to truncate.
-     */
-    hash: {
-      type: String,
-      default: ''
-    },
-    /**
-     * Adds justify start to parent div
-     * instead of justify end
-     */
-    justifyStart: {
-      type: Boolean,
-      default: false
-    }
+<script setup>
+import { computed } from 'vue';
+
+// props
+const props = defineProps({
+  /**
+   * Hash to truncate.
+   */
+  hash: {
+    type: String,
+    default: ''
   },
-  computed: {
-    start() {
-      const n = this.hash.length;
-      return this.hash.slice(0, n - 4);
-    },
-    end() {
-      const n = this.hash.length;
-      return this.hash.slice(n - 4, n);
-    }
+  /**
+   * Adds justify start to parent div
+   * instead of justify end
+   */
+  justifyStart: {
+    type: Boolean,
+    default: false
   }
-};
+});
+
+// computed
+const start = computed(() => {
+  const n = props.hash.length;
+  return props.hash.slice(0, n - 4);
+});
+
+const end = computed(() => {
+  const n = props.hash.length;
+  return props.hash.slice(n - 4, n);
+});
 </script>
 
 <style lang="scss" scoped>

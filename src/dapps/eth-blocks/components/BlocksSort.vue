@@ -24,35 +24,26 @@
   </blocks-drop-down>
 </template>
 
-<script>
+<script setup>
+import { ref } from 'vue';
+import BlocksDropDown from './BlocksDropDown.vue';
+
+// emits
+const emits = defineEmits(['setSort']);
+
 const SORT_VALUES = [
   { text: 'Newest', value: 0 },
   { text: 'Oldest', value: 1 },
   { text: 'Number: 0 to 9', value: 2 },
   { text: 'Number: 9 to 0', value: 3 }
 ];
-export default {
-  name: 'BlocksSort',
-  components: {
-    BlocksDropDown: () => import('./BlocksDropDown.vue')
-  },
-  data() {
-    return {
-      sort: SORT_VALUES,
-      selectedSort: SORT_VALUES[0]
-    };
-  },
-  computed: {},
-  methods: {
-    /**
-     * Emits the path value and name back to parent
-     * then closes dropdown
-     */
-    setSelected(value) {
-      this.selectedSort = value;
-      this.$emit('setSort', value.value);
-    }
-  }
+
+const selectedSort = ref(SORT_VALUES[0]);
+
+// methods
+const setSelected = value => {
+  selectedSort.value = value;
+  emits('setSort', value.value);
 };
 </script>
 

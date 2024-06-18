@@ -27,49 +27,44 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { computed } from 'vue';
 import { isEmpty } from 'lodash';
 
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
-export default {
-  name: 'DateSelectorPopup',
-  props: {
-    showBlock: {
-      type: Boolean,
-      default: false
-    },
-    blockHandler: {
-      type: Object,
-      default: () => {}
-    },
-    isLoading: {
-      type: Boolean,
-      default: false
-    }
+
+// emits
+const emits = defineEmits(['hide-block-quick-view', 'navigate-to-block-info']);
+
+// props
+const props = defineProps({
+  showBlock: {
+    type: Boolean,
+    default: false
   },
-  computed: {
-    isReady() {
-      return !isEmpty(this.blockHandler) && !this.isLoading;
-    },
-    img() {
-      return this.isReady ? this.blockHandler.img : '';
-    },
-    blockNumber() {
-      return this.isReady
-        ? formatIntegerToString(this.blockHandler.blockNumber)
-        : '';
-    },
-    description() {
-      return this.isReady ? this.blockHandler.description.toString() : '';
-    }
+  blockHandler: {
+    type: Object,
+    default: () => {}
   },
-  methods: {
-    close() {
-      this.$emit('hide-block-quick-view');
-    },
-    navToBlock() {
-      this.$emit('navigate-to-block-info');
-    }
+  isLoading: {
+    type: Boolean,
+    default: false
   }
-};
+});
+
+// computed
+const isReady = computed(
+  () => !isEmpty(props.blockHandler) && !props.isLoading
+);
+const img = computed(() => (isReady.value ? props.blockHandler.img : ''));
+const blockNumber = computed(() =>
+  isReady.value ? formatIntegerToString(props.blockHandler.blockNumber) : ''
+);
+const description = computed(() =>
+  isReady.value ? props.blockHandler.description.toString() : ''
+);
+
+// methods
+const close = () => emits('hide-block-quick-view');
+const navToBlock = () => emits('navigate-to-block-info');
 </script>

@@ -66,50 +66,44 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'BlockHeader',
-  props: {
-    /**
-     * Text obj contains title, subtext and exit text , i.e. { title: '' , subtext: '', exit: ''}
-     */
-    textObj: {
-      type: Object,
-      default: () => {
-        return {
-          title: '',
-          subtext: '',
-          subtextClass: '',
-          exit: ''
-        };
-      }
-    },
-    /**
-     * Banner image url.
-     */
-    bannerImg: {
-      type: [String, Array],
-      default: ''
-    },
-    titleIcon: {
-      type: String,
-      default: ''
-    },
-    noBackBtn: {
-      default: false,
-      type: Boolean
-    },
-    topStrip: {
-      default: false,
-      type: Boolean
+<script setup>
+// emits
+const emits = defineEmits(['closeBanner']);
+
+// props
+defineProps({
+  textObj: {
+    type: Object,
+    default: () => {
+      return {
+        title: '',
+        subtext: '',
+        subtextClass: '',
+        exit: ''
+      };
     }
   },
-
-  methods: {
-    closeBanner() {
-      this.$emit('closeBanner');
-    }
+  bannerImg: {
+    type: [String, Array],
+    default: ''
+  },
+  titleIcon: {
+    type: String,
+    default: ''
+  },
+  noBackBtn: {
+    default: false,
+    type: Boolean
+  },
+  topStrip: {
+    default: false,
+    type: Boolean
   }
+});
+
+// methods
+const closeBanner = () => {
+  emits('closeBanner');
 };
 </script>
 

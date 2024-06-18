@@ -8,15 +8,13 @@
   </v-row>
 </template>
 
-<script>
-export default {
-  props: {
-    data: {
-      default: () => [],
-      type: Array
-    }
+<script setup>
+defineProps({
+  data: {
+    default: () => [],
+    type: Array
   }
-};
+});
 </script>
 
 <style lang="scss" scoped>

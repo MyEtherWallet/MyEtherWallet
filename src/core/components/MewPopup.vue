@@ -101,106 +101,102 @@
   </v-dialog>
 </template>
 
-<script>
-export default {
-  components: { MewButton: () => import('./MewButton.vue') },
-  props: {
-    /**
-     * Title of popup.
-     */
-    title: {
-      type: String,
-      default: ''
-    },
-    largeTitle: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Hide top right close button
-     */
-    hideCloseBtn: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Controls popup visibility.
-     */
-    show: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Left Button: object of information.
-     * Includes text, color and method attributes.
-     * left button is always enabled.
-     */
-    leftBtn: {
-      type: Object,
-      default: () => {
-        return { text: 'Cancel', color: 'primary', method: () => {} };
-      }
-    },
-    /**
-     * Right Button: object of information.
-     * Includes text, color, enabled and method attributes.
-     */
-    rightBtn: {
-      type: Object,
-      default: () => {
-        return {
-          text: 'Confirm',
-          color: 'primary',
-          enabled: true,
-          method: () => {}
-        };
-      }
-    },
-    /**
-     * Makes the popup content scrollable.
-     */
-    scrollable: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Max width of the popup.
-     */
-    maxWidth: {
-      type: String,
-      default: '600'
-    },
-    /**
-     * Displays v-card-text if there is popup body content
-     * otherwise it removes it and adjusts the padding accordingly
-     */
-    hasBodyContent: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Will display popup body content padding if true
-     */
-    hasPadding: {
-      type: Boolean,
-      default: true
-    },
-    /**
-     * Will display popup body content padding if true
-     */
-    hasButtons: {
-      type: Boolean,
-      default: true
+<script setup>
+import MewButton from './MewButton.vue';
+
+const props = defineProps({
+  /**
+   * Title of popup.
+   */
+  title: {
+    type: String,
+    default: ''
+  },
+  largeTitle: {
+    type: Boolean,
+    default: false
+  },
+  /**
+   * Hide top right close button
+   */
+  hideCloseBtn: {
+    type: Boolean,
+    default: false
+  },
+  /**
+   * Controls popup visibility.
+   */
+  show: {
+    type: Boolean,
+    default: false
+  },
+  /**
+   * Left Button: object of information.
+   * Includes text, color and method attributes.
+   * left button is always enabled.
+   */
+  leftBtn: {
+    type: Object,
+    default: () => {
+      return { text: 'Cancel', color: 'primary', method: () => {} };
     }
   },
-  methods: {
-    /**
-     * Will call left btn method which is cancel method.
-     */
-    handleClickOutside() {
-      this.leftBtn.method();
+  /**
+   * Right Button: object of information.
+   * Includes text, color, enabled and method attributes.
+   */
+  rightBtn: {
+    type: Object,
+    default: () => {
+      return {
+        text: 'Confirm',
+        color: 'primary',
+        enabled: true,
+        method: () => {}
+      };
     }
+  },
+  /**
+   * Makes the popup content scrollable.
+   */
+  scrollable: {
+    type: Boolean,
+    default: false
+  },
+  /**
+   * Max width of the popup.
+   */
+  maxWidth: {
+    type: String,
+    default: '600'
+  },
+  /**
+   * Displays v-card-text if there is popup body content
+   * otherwise it removes it and adjusts the padding accordingly
+   */
+  hasBodyContent: {
+    type: Boolean,
+    default: false
+  },
+  /**
+   * Will display popup body content padding if true
+   */
+  hasPadding: {
+    type: Boolean,
+    default: true
+  },
+  /**
+   * Will display popup body content padding if true
+   */
+  hasButtons: {
+    type: Boolean,
+    default: true
   }
+});
+
+// methods
+const handleClickOutside = () => {
+  props.leftBtn.method();
 };
 </script>
 

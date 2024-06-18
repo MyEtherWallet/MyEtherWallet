@@ -47,73 +47,80 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'MewToggle',
-  props: {
-    /**
-     * Controls which toggle button index is active.
-     */
-    onToggleBtnIdx: {
-      type: Number,
-      default: 0
-    },
-    /**
-     * Accepts an array of button names.
-     */
-    buttonGroup: {
-      type: Array,
-      default: () => {
-        return [];
-      }
-    },
-    /**
-     * Applies the button type: 'custom', 'percentage', 'default'. Custom is used when you need to use the slots.
-     */
-    buttonType: {
-      type: String,
-      default: 'default'
-    }
-  },
-  data() {
-    return {
-      buttonTypes: {
-        custom: 'custom',
-        default: 'default',
-        percentage: 'percentage'
-      },
-      onBtn: null
-    };
-  },
-  computed: {
-    isDefault() {
-      return this.buttonType.toLowerCase() === this.buttonTypes.default;
-    },
-    isCustom() {
-      return this.buttonType.toLowerCase() === this.buttonTypes.custom;
-    }
-  },
-  watch: {
-    onToggleBtnIdx() {
-      this.onBtn = this.onToggleBtnIdx;
-    }
-  },
-  mounted() {
-    this.onBtn = this.onToggleBtnIdx;
-  },
-  methods: {
-    onBtnClick(btn) {
-      this.$emit('onBtnClick', btn);
-    },
-    getClasses() {
-      if (this.buttonType.toLowerCase() === this.buttonTypes.default) {
-        return 'mew-caption default-btn';
-      }
+<script setup>
+import { ref, watch, computed, onMounted } from 'vue';
 
-      if (this.buttonType.toLowerCase() === this.buttonTypes.percentage) {
-        return 'percentage-btn';
-      }
+// emits
+const emits = defineEmits(['onBtnClick']);
+
+// props
+const props = defineProps({
+  /**
+   * Controls which toggle button index is active.
+   */
+  onToggleBtnIdx: {
+    type: Number,
+    default: 0
+  },
+  /**
+   * Accepts an array of button names.
+   */
+  buttonGroup: {
+    type: Array,
+    default: () => {
+      return [];
     }
+  },
+  /**
+   * Applies the button type: 'custom', 'percentage', 'default'. Custom is used when you need to use the slots.
+   */
+  buttonType: {
+    type: String,
+    default: 'default'
+  }
+});
+
+// data
+const onBtn = ref(null);
+const buttonTypes = {
+  custom: 'custom',
+  default: 'default',
+  percentage: 'percentage'
+};
+
+// computed
+const isDefault = computed(() => {
+  return props.buttonType.toLowerCase() === buttonTypes.default;
+});
+const isCustom = computed(() => {
+  return props.buttonType.toLowerCase() === buttonTypes.custom;
+});
+
+// watch
+watch(
+  () => props.onToggleBtnIdx,
+  () => {
+    onBtn.value = props.onToggleBtnIdx;
+  }
+);
+
+// mounted
+onMounted(() => {
+  onBtn.value = props.onToggleBtnIdx;
+});
+
+// methods
+const onBtnClick = btn => {
+  emits('onBtnClick', btn);
+};
+
+const getClasses = () => {
+  if (props.buttonType.toLowerCase() === buttonTypes.default) {
+    return 'mew-caption default-btn';
+  }
+
+  if (props.buttonType.toLowerCase() === buttonTypes.percentage) {
+    return 'percentage-btn';
   }
 };
 </script>

@@ -20,29 +20,29 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'MewSwitch',
-  props: {
-    /**
-     * The switch label.
-     */
-    label: {
-      type: String,
-      default: ''
-    }
-  },
-  data() {
-    return {
-      value: false
-    };
-  },
-  methods: {
-    switchToggle() {
-      this.value = !this.value;
-      this.$emit('switch', this.value);
-    }
+<script setup>
+import { ref } from 'vue';
+
+// emits
+const emits = defineEmits(['switch']);
+
+defineProps({
+  /**
+   * The switch label.
+   */
+  label: {
+    type: String,
+    default: ''
   }
+});
+
+// data
+const value = ref(false);
+
+// methods
+const switchToggle = () => {
+  value.value = !value.value;
+  emits('switch', value.value);
 };
 </script>
 

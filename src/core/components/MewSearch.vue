@@ -87,177 +87,164 @@
   </v-text-field>
 </template>
 
-<script>
+<script setup>
+import { ref, computed, watch, onMounted } from 'vue';
 import MewIconButton from './MewIconButton.vue';
-export default {
-  name: 'MewSearch',
-  components: {
-    MewIconButton
-  },
-  props: {
-    /**
-     * Click to search method for search button
-     * displays on isSearchBlock
-     */
-    onSearch: {
-      type: Function,
-      default: () => {}
-    },
-    /**
-     * click function for calendar icon
-     * displays on isSearchBlock
-     */
-    onDateSearch: {
-      type: Function,
-      default: () => {}
-    },
-    /**
-     * Disables the input.
-     */
-    disabled: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * The input placeholder.
-     */
-    placeholder: {
-      type: String,
-      default: ''
-    },
-    /**
-     * The input value.
-     */
-    value: {
-      type: String,
-      default: ''
-    },
-    /**
-     * Displays an outline around input
-     * default is with a white background,
-     * if want to be filled then isFilled prop needs to be passed
-     */
-    isSearchBlock: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Displays a calendar icon.
-     * Removes search button in favor of search icon.
-     */
-    canSearchDate: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Adds a grey background color to the search block.
-     * In order to use this, isSearchBlock must be passed as true.
-     */
-    isFilled: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Adds a menu select dropdown
-     * Expects attributes label, and items, i.e {label: '', items: [{ name: '', value: ''}]}
-     */
-    menuSelect: {
-      type: Object,
-      default: () => {}
-    },
-    /**
-     * Adds a 36px height
-     * if not passed then 62px height will be used
-     */
-    isCompact: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Error messages to display
-     */
-    errorMessages: {
-      type: [String, Array],
-      default: ''
-    },
-    /**
-     * Input types
-     * default search
-     */
-    type: {
-      type: String,
-      default: 'search'
-    }
-  },
-  data() {
-    return {
-      inputValue: '',
-      menuSelectModel: {}
-    };
-  },
-  computed: {
-    /**
-     * @returns height for mew search input
-     */
-    searchHeight() {
-      if (this.isCompact && !this.isSearchBlock) {
-        return '36px';
-      }
-      if (this.isCompact && this.isSearchBlock) {
-        return '46px';
-      }
-      return '62px';
-    },
-    /**
-     * @returns classes for mew search - needed for styling
-     */
-    mewSearchClasses() {
-      const classes = ['mew-search'];
-      this.isSearchBlock
-        ? classes.push('search-block')
-        : classes.push('search-standard');
-      if (!this.isCompact) {
-        classes.push('search-large');
-      }
-      if (this.isFilled) {
-        classes.push('search-filled');
-      }
-      return classes;
-    }
-  },
-  watch: {
-    /**
-     * @watches the search value and emits it when it changes
-     */
-    inputValue(newVal, oldVal) {
-      if (newVal !== oldVal) {
-        this.$emit('input', newVal);
-      }
-    },
-    /**
-     * @watches the prop value and sets it to v-model value when it changes
-     */
-    value(newVal, oldVal) {
-      if (newVal !== oldVal) {
-        this.inputValue = newVal;
-      }
-    }
+
+// emits
+const emits = defineEmits(['input', 'menu-select']);
+
+// props
+const props = defineProps({
+  /**
+   * Click to search method for search button
+   * displays on isSearchBlock
+   */
+  onSearch: {
+    type: Function,
+    default: () => {}
   },
   /**
-   * sets prop value to inputValue on mount
+   * click function for calendar icon
+   * displays on isSearchBlock
    */
-  mounted() {
-    this.inputValue = this.value;
+  onDateSearch: {
+    type: Function,
+    default: () => {}
   },
-  methods: {
-    /**
-     * gets triggered from selecting an item from menu select
-     * will @emit menu-select with value to parent container
-     */
-    onMenuSelect() {
-      this.$emit('menu-select', this.menuSelectModel);
+  /**
+   * Disables the input.
+   */
+  disabled: {
+    type: Boolean,
+    default: false
+  },
+  /**
+   * The input placeholder.
+   */
+  placeholder: {
+    type: String,
+    default: ''
+  },
+  /**
+   * The input value.
+   */
+  value: {
+    type: String,
+    default: ''
+  },
+  /**
+   * Displays an outline around input
+   * default is with a white background,
+   * if want to be filled then isFilled prop needs to be passed
+   */
+  isSearchBlock: {
+    type: Boolean,
+    default: false
+  },
+  /**
+   * Displays a calendar icon.
+   * Removes search button in favor of search icon.
+   */
+  canSearchDate: {
+    type: Boolean,
+    default: false
+  },
+  /**
+   * Adds a grey background color to the search block.
+   * In order to use this, isSearchBlock must be passed as true.
+   */
+  isFilled: {
+    type: Boolean,
+    default: false
+  },
+  /**
+   * Adds a menu select dropdown
+   * Expects attributes label, and items, i.e {label: '', items: [{ name: '', value: ''}]}
+   */
+  menuSelect: {
+    type: Object,
+    default: () => {}
+  },
+  /**
+   * Adds a 36px height
+   * if not passed then 62px height will be used
+   */
+  isCompact: {
+    type: Boolean,
+    default: false
+  },
+  /**
+   * Error messages to display
+   */
+  errorMessages: {
+    type: [String, Array],
+    default: ''
+  },
+  /**
+   * Input types
+   * default search
+   */
+  type: {
+    type: String,
+    default: 'search'
+  }
+});
+
+// data
+const inputValue = ref('');
+const menuSelectModel = ref({});
+
+// computed
+const searchHeight = computed(() => {
+  if (props.isCompact && !props.isSearchBlock) {
+    return '36px';
+  }
+  if (props.isCompact && props.isSearchBlock) {
+    return '46px';
+  }
+  return '62px';
+});
+
+const mewSearchClasses = computed(() => {
+  const classes = ['mew-search'];
+  props.isSearchBlock
+    ? classes.push('search-block')
+    : classes.push('search-standard');
+  if (!props.isCompact) {
+    classes.push('search-large');
+  }
+  if (props.isFilled) {
+    classes.push('search-filled');
+  }
+  return classes;
+});
+
+// watch
+watch(
+  () => props.value,
+  newVal => {
+    inputValue.value = newVal;
+  }
+);
+
+watch(
+  () => inputValue.value,
+  (newVal, oldVal) => {
+    if (newVal !== oldVal) {
+      emits('input', newVal);
     }
   }
+);
+
+// mounted
+onMounted(() => {
+  inputValue.value = props.value;
+});
+
+// methods
+const onMenuSelect = () => {
+  emits('menu-select', menuSelectModel.value);
 };
 </script>
 <style lang="scss">

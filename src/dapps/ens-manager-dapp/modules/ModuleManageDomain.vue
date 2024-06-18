@@ -45,7 +45,99 @@
   </mew-overlay>
 </template>
 
-<script>
+<script setup>
+import { computed } from 'vue';
+import renew from '../components/manage/ManageRenew.vue';
+import transfer from '../components/manage/ManageTransfer.vue';
+import manageMulticoins from '../components/manage/ManageMulticoins.vue';
+import manageTxtRecords from '../components/manage/ManageTxtRecords.vue';
+import manageUploadWebsite from '../components/manage/ManageUploadWebsite.vue';
+import { useI18n } from 'vue-i18n-composable';
+
+// injections
+const { t } = useI18n();
+
+// props
+const props = defineProps({
+  hostName: {
+    default: '',
+    type: String
+  },
+  type: {
+    default: '',
+    type: String
+  },
+  renew: {
+    default: () => {},
+    type: Function
+  },
+  getTotalRenewFeeOnly: {
+    default: () => {},
+    type: Function
+  },
+  settingIpfs: {
+    default: false,
+    type: Boolean
+  },
+  noFundsForRenewalFees: {
+    default: false,
+    type: Boolean
+  },
+  loadingRenew: {
+    default: false,
+    type: Boolean
+  },
+  transfer: {
+    default: () => {},
+    type: Function
+  },
+  setTextRecords: {
+    default: () => {},
+    type: Function
+  },
+  setMulticoin: {
+    default: () => {},
+    type: Function
+  },
+  setIpfs: {
+    default: () => {},
+    type: Function
+  },
+  uploadFile: {
+    default: () => {},
+    type: Function
+  },
+  uploadedHash: {
+    default: '',
+    type: String
+  },
+  onManage: {
+    default: false,
+    type: Boolean
+  },
+  close: {
+    default: () => {},
+    type: Function
+  },
+  getRentPrice: {
+    default: () => {},
+    type: Function
+  },
+  multicoin: {
+    type: [Object, null],
+    default: null
+  },
+  textRecords: {
+    type: [Object, null],
+    default: null
+  },
+  manageDomainHandler: {
+    type: [Object, null],
+    default: null
+  }
+});
+
+// data
 const types = [
   'transfer',
   'renew',
@@ -53,142 +145,29 @@ const types = [
   'manageTxtRecord',
   'manageUpload'
 ];
-export default {
-  components: {
-    renew: () => import('../components/manage/ManageRenew'),
-    transfer: () => import('../components/manage/ManageTransfer'),
-    manageMulticoins: () => import('../components/manage/ManageMulticoins'),
-    manageTxtRecords: () => import('../components/manage/ManageTxtRecords'),
-    manageUploadWebsite: () =>
-      import('../components/manage/ManageUploadWebsite')
-  },
-  props: {
-    hostName: {
-      default: '',
-      type: String
-    },
-    type: {
-      default: '',
-      type: String
-    },
-    renew: {
-      default: function () {
-        return {};
-      },
-      type: Function
-    },
-    getTotalRenewFeeOnly: {
-      default: function () {
-        return {};
-      },
-      type: Function
-    },
-    settingIpfs: {
-      default: false,
-      type: Boolean
-    },
-    noFundsForRenewalFees: {
-      default: false,
-      type: Boolean
-    },
-    loadingRenew: {
-      default: false,
-      type: Boolean
-    },
-    transfer: {
-      default: function () {
-        return {};
-      },
-      type: Function
-    },
-    setTextRecords: {
-      default: function () {
-        return {};
-      },
-      type: Function
-    },
-    setMulticoin: {
-      default: function () {
-        return {};
-      },
-      type: Function
-    },
-    setIpfs: {
-      default: function () {
-        return {};
-      },
-      type: Function
-    },
-    uploadFile: {
-      default: function () {
-        return {};
-      },
-      type: Function
-    },
-    uploadedHash: {
-      default: '',
-      type: String
-    },
-    onManage: { default: false, type: Boolean },
-    close: {
-      default: function () {
-        return {};
-      },
-      type: Function
-    },
-    getRentPrice: {
-      default: function () {
-        return {};
-      },
-      type: Function
-    },
-    multicoin: {
-      type: [Object, null],
-      default: null
-    },
-    textRecords: {
-      type: [Object, null],
-      default: null
-    },
-    manageDomainHandler: {
-      type: [Object, null],
-      default: null
-    }
-  },
-  computed: {
-    isTransfer() {
-      return this.type === types[0];
-    },
-    isRenew() {
-      return this.type === types[1];
-    },
-    isManageMulticoin() {
-      return this.type === types[2];
-    },
-    isManageTxtRecord() {
-      return this.type === types[3];
-    },
-    isManageUpload() {
-      return this.type === types[4];
-    },
-    overlayTitle() {
-      if (this.isTransfer) {
-        return this.$t('ens.transfer-domain');
-      }
-      if (this.isRenew) {
-        return this.$t('ens.manage-domains.renew-domain');
-      }
-      if (this.isManageMulticoin) {
-        return this.$t('ens.manage-domains.manage-multi');
-      }
-      if (this.isManageTxtRecord) {
-        return this.$t('ens.manage-domains.manage-txt');
-      }
-      if (this.isManageUpload) {
-        return this.$t('ens.manage-domains.upload-site');
-      }
-      return this.$t('ens.manage-domain');
-    }
+
+// computed
+const isTransfer = computed(() => props.type === types[0]);
+const isRenew = computed(() => props.type === types[1]);
+const isManageMulticoin = computed(() => props.type === types[2]);
+const isManageTxtRecord = computed(() => props.type === types[3]);
+const isManageUpload = computed(() => props.type === types[4]);
+const overlayTitle = computed(() => {
+  if (isTransfer.value) {
+    return t('ens.transfer-domain');
   }
-};
+  if (isRenew.value) {
+    return t('ens.manage-domains.renew-domain');
+  }
+  if (isManageMulticoin.value) {
+    return t('ens.manage-domains.manage-multi');
+  }
+  if (isManageTxtRecord.value) {
+    return t('ens.manage-domains.manage-txt');
+  }
+  if (isManageUpload.value) {
+    return t('ens.manage-domains.upload-site');
+  }
+  return t('ens.manage-domain');
+});
 </script>

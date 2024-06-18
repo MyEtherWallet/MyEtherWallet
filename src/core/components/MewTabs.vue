@@ -25,8 +25,8 @@
       <!-- ========================================= -->
       <!-- Mobile tabs contents -->
       <!-- ========================================= -->
-      <template v-for="(mobileItem, mobileItemKey) in items">
-        <div :key="mobileItemKey">
+      <template>
+        <div v-for="(mobileItem, mobileItemKey) in items" :key="mobileItemKey">
           <slot
             v-if="onTab == mobileItemKey"
             :name="'tabItemContent' + (mobileItemKey + 1)"
@@ -96,125 +96,135 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'MewTabs',
-  props: {
-    /**
-     * Sets the color for active tab.
-     * If nothing passed, titlePrimary will be used.
-     */
-    activeColor: {
-      type: String,
-      default: 'titlePrimary'
-    },
-    /**
-     * Sets the color for the background of mew-tabs.
-     * If nothing passed, transparent will be used.
-     */
-    background: {
-      type: String,
-      default: 'transparent'
-    },
-    /**
-     * Displays arrows if tab items overflow container.
-     */
-    showArrows: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Sets the active tab.
-     */
-    activeTab: {
-      type: Number,
-      default: 0
-    },
-    /**
-     * Sets the tabs as vertical.
-     */
-    hasUnderline: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Sets the tabs as vertical.
-     */
-    isVertical: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Sets the tabs to the center of the page.
-     */
-    isCentered: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Tab content
-     */
-    items: {
-      type: Array,
-      default: () => {
-        return [];
-      }
-    },
-    /**
-     * Shows the tab as a block.
-     */
-    isBlock: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Allows tabs to take up the full-width of the page.
-     */
-    hasFullWidth: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Sets the font size to 14px (mew-body)
-     */
-    isSmall: {
-      type: Boolean,
-      default: false
-    },
-    compact: {
-      type: Boolean,
-      default: false
+<script setup>
+import { ref, computed, watch, onMounted } from 'vue';
+
+// emits
+const emits = defineEmits(['onTab']);
+
+// props
+const props = defineProps({
+  /**
+   * Sets the color for active tab.
+   * If nothing passed, titlePrimary will be used.
+   */
+  activeColor: {
+    type: String,
+    default: 'titlePrimary'
+  },
+  /**
+   * Sets the color for the background of mew-tabs.
+   * If nothing passed, transparent will be used.
+   */
+  background: {
+    type: String,
+    default: 'transparent'
+  },
+  /**
+   * Displays arrows if tab items overflow container.
+   */
+  showArrows: {
+    type: Boolean,
+    default: false
+  },
+  /**
+   * Sets the active tab.
+   */
+  activeTab: {
+    type: Number,
+    default: 0
+  },
+  /**
+   * Sets the tabs as vertical.
+   */
+  hasUnderline: {
+    type: Boolean,
+    default: false
+  },
+  /**
+   * Sets the tabs as vertical.
+   */
+  isVertical: {
+    type: Boolean,
+    default: false
+  },
+  /**
+   * Sets the tabs to the center of the page.
+   */
+  isCentered: {
+    type: Boolean,
+    default: false
+  },
+  /**
+   * Tab content
+   */
+  items: {
+    type: Array,
+    default: () => {
+      return [];
     }
   },
-  data() {
-    return {
-      onTab: null
-    };
+  /**
+   * Shows the tab as a block.
+   */
+  isBlock: {
+    type: Boolean,
+    default: false
   },
-  computed: {
-    tabClasses() {
-      const classes = ['mew-tabs'];
-      if (this.hasUnderline) {
-        classes.push('mew-tabs-underline');
-      }
-      if (this.isBlock) {
-        classes.push('mew-tabs-block elevation-3');
-      }
-      return classes;
-    }
+  /**
+   * Allows tabs to take up the full-width of the page.
+   */
+  hasFullWidth: {
+    type: Boolean,
+    default: false
   },
-  watch: {
-    activeTab(newVal) {
-      this.onTab = newVal;
-    },
-    onTab(newVal) {
-      this.$emit('onTab', newVal);
-    }
+  /**
+   * Sets the font size to 14px (mew-body)
+   */
+  isSmall: {
+    type: Boolean,
+    default: false
   },
-  mounted() {
-    this.onTab = this.activeTab;
+  compact: {
+    type: Boolean,
+    default: false
   }
-};
+});
+
+// data
+const onTab = ref(null);
+
+// computed
+const tabClasses = computed(() => {
+  const classes = ['mew-tabs'];
+  if (props.hasUnderline) {
+    classes.push('mew-tabs-underline');
+  }
+  if (props.isBlock) {
+    classes.push('mew-tabs-block elevation-3');
+  }
+  return classes;
+});
+
+// watch
+watch(
+  () => props.activeTab,
+  newVal => {
+    onTab.value = newVal;
+  }
+);
+
+watch(
+  () => onTab.value,
+  newVal => {
+    emits('onTab', newVal);
+  }
+);
+
+// mounted
+onMounted(() => {
+  onTab.value = props.activeTab;
+});
 </script>
 
 <style lang="scss">

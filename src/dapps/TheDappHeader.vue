@@ -61,28 +61,27 @@
   </v-container>
 </template>
 
-<script>
+<script setup>
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
-export default {
-  name: 'TheDappHeader',
-  props: {
-    dappName: {
-      type: String,
-      default: 'Sample Dapp Name'
-    },
-    dappText: {
-      type: String,
-      default: 'Sample Dapp Text'
-    },
-    dappImg: {
-      type: String,
-      default: ''
-    }
+
+// props
+defineProps({
+  dappName: {
+    type: String,
+    default: 'Sample Dapp Name'
   },
-  data: () => ({
-    ROUTE_DAPP_CENTER: ROUTES_WALLET.DAPPS
-  })
-};
+  dappText: {
+    type: String,
+    default: 'Sample Dapp Text'
+  },
+  dappImg: {
+    type: String,
+    default: ''
+  }
+});
+
+// data
+const ROUTE_DAPP_CENTER = ROUTES_WALLET.DAPPS;
 </script>
 
 <style lang="scss" scoped>

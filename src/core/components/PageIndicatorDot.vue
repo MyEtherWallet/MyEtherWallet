@@ -9,14 +9,11 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'PageIndicatorDot',
-  props: {
-    items: { default: 1, type: Number },
-    currentItem: { default: 1, type: Number }
-  }
-};
+<script setup>
+defineProps({
+  items: { default: 1, type: Number },
+  currentItem: { default: 1, type: Number }
+});
 </script>
 
 <style lang="scss" scoped>
