@@ -1,7 +1,8 @@
+### Release v6.9.9
+
 ### devop
 
-* * Add Rootstock Testnet integration\* Add Rootstock Testnet ledger config
-    [#4935](https://github.com/MyEtherWallet/MyEtherWallet/pull/4935)
+* Add Rootstock Testnet integration and Add Rootstock Testnet ledger config [#4935](https://github.com/MyEtherWallet/MyEtherWallet/pull/4935)
 
 ### fix
 
