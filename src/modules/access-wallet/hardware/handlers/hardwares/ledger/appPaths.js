@@ -1,4 +1,11 @@
-import { ETC, ETH, GO, XDC, ROOTSTOCK } from '@/utils/networks/types';
+import {
+  ETC,
+  ETH,
+  GO,
+  XDC,
+  ROOTSTOCK,
+  ROOTSTOCKTESTNET
+} from '@/utils/networks/types';
 import {
   ledgerEthereum,
   ledgerLiveEthereum,
@@ -6,7 +13,8 @@ import {
   ledgerLiveEthereumClassic,
   goChain,
   xdcnetwork,
-  rskMainnet
+  rskMainnet,
+  rskTestnet
 } from '@/modules/access-wallet/hardware/handlers/configs/configPaths';
 const appList = [
   {
@@ -35,6 +43,10 @@ const appList = [
   {
     network: ROOTSTOCK,
     paths: [rskMainnet]
+  },
+  {
+    network: ROOTSTOCKTESTNET,
+    paths: [rskTestnet]
   }
 ];
 export default appList;

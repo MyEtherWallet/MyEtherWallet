@@ -19,6 +19,7 @@ import klaytn from './klaytn-ws';
 import opmew from './op-mew-ws';
 import arthera from './arthera-ws';
 import artheratest from './arthera-test-ws';
+import rootstocktestnet from './rootstock-testnet-ws';
 
 export {
   etcethereumclassiccooperativeparityws,
@@ -41,5 +42,6 @@ export {
   klaytn,
   opmew,
   arthera,
-  artheratest
+  artheratest,
+  rootstocktestnet
 };

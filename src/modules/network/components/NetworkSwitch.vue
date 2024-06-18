@@ -71,7 +71,12 @@
             {{ network.name }}
           </div>
           <div class="px-2 textLight--text">-</div>
-          <div class="textLight--text">
+          <div
+            :class="[
+              'textLight--text',
+              $vuetify.breakpoint.smAndDown ? 'network-long-name' : ''
+            ]"
+          >
             {{ network.name_long }}
           </div>
           <v-spacer />
@@ -376,5 +381,12 @@ $borderNetwork: 1px solid #ececec;
 .mint-me-color {
   filter: brightness(0) saturate(100%) invert(90%) sepia(3%) saturate(5171%)
     hue-rotate(348deg) brightness(92%) contrast(63%);
+}
+
+.network-long-name {
+  max-width: 90px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>

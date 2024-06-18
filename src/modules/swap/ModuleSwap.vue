@@ -672,7 +672,7 @@ export default {
      */
     actualFromTokens() {
       if (this.isLoading) return [];
-      let validFromTokens = this.fromTokens.filter(
+      const validFromTokens = this.fromTokens.filter(
         item =>
           item.contract.toLowerCase() !==
           this.toTokenType?.contract?.toLowerCase()
@@ -683,31 +683,8 @@ export default {
             return item;
         }
       });
-      for (const token of tradebleWalletTokens) {
-        validFromTokens = validFromTokens.filter(item => {
-          if (token?.contract?.toLowerCase() !== item.contract.toLowerCase()) {
-            return item;
-          }
-        });
-      }
-      const nonChainTokens = this.fromTokens.reduce((arr, item) => {
-        if (
-          item.hasOwnProperty('isEth') &&
-          !item.isEth &&
-          item.name &&
-          item.symbol &&
-          item.subtext &&
-          item.symbol !== this.network.type.currencyName
-        ) {
-          delete item['tokenBalance'];
-          delete item['totalBalance'];
-          item = this.checkMultiChainToken(item);
-          arr.push(item);
-        }
-        return arr;
-      }, []);
       tradebleWalletTokens = this.formatTokensForSelect(tradebleWalletTokens);
-      let returnableTokens = [
+      const returnableTokens = [
         {
           text: 'Select Token',
           imgs: this.getPlaceholderImgs(true),
@@ -723,20 +700,7 @@ export default {
         },
         ...tradebleWalletTokens
       ];
-      if (nonChainTokens.length > 0) {
-        returnableTokens = returnableTokens.concat([
-          {
-            header: 'Cross-Chain Tokens'
-          },
-          ...nonChainTokens
-        ]);
-      }
-      return returnableTokens.concat([
-        {
-          header: 'All'
-        },
-        ...validFromTokens
-      ]);
+      return returnableTokens;
     },
     /**
      * @returns object of other tokens
@@ -1020,31 +984,6 @@ export default {
       localContractToToken[MAIN_TOKEN_ADDRESS] = this.mainTokenDetails;
       this.setupSwap();
     },
-    checkMultiChainToken(item) {
-      const multiChainTokens = ['USDT', 'SRM', 'DOGE']; // Hardcoding for now
-      const name = item.name;
-      if (
-        name.includes('SOL') ||
-        name.includes('OMNI') ||
-        name.includes('DOGE')
-      ) {
-        for (let i = 0; i < multiChainTokens.length; i++) {
-          const token = multiChainTokens[i];
-          if (name.includes(token)) {
-            const networks = {
-              OMNI: 'Omni',
-              SOL: 'Solana',
-              DOGE: 'Dogecoin'
-            };
-            const contractNetwork =
-              networks[name !== 'DOGE' ? name.replace(token, '') : name];
-            item.subtext = `${token} - ${contractNetwork}`;
-            break;
-          }
-        }
-      }
-      return item;
-    },
     /**
      * Handles emitted values from
      * module-address-book
@@ -1079,7 +1018,7 @@ export default {
         if (token.cgid) {
           const foundToken = this.getCoinGeckoTokenById(token.cgid);
           foundToken.price = this.getFiatValue(foundToken.pricef);
-          const name = foundToken.name;
+          const name = token.cgid || foundToken.name;
           foundToken.name = token.symbol;
           foundToken.value = foundToken.contract;
           foundToken.subtext = name;
