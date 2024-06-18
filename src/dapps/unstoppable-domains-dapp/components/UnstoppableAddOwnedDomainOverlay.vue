@@ -95,12 +95,13 @@
   </mew-overlay>
 </template>
 
-<script>
-export default {
-  props: {
-    open: { default: false, type: Boolean }
+<script setup>
+defineProps({
+  open: {
+    type: Boolean,
+    default: false
   }
-};
+});
 </script>
 
 <style lang="scss" scoped>

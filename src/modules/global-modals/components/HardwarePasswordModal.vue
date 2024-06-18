@@ -28,31 +28,35 @@
   </v-sheet>
 </template>
 
-<script>
-export default {
-  props: {
-    walletType: {
-      default: '',
-      type: String
-    }
-  },
-  data() {
-    return {
-      acceptTerms: false,
-      password: '',
-      link: {
-        title: 'Terms',
-        url: 'https://www.myetherwallet.com/terms-of-service'
-      }
-    };
-  },
-  watch: {
-    password(newVal) {
-      this.$emit('password', newVal);
-    },
-    acceptTerms(newVal) {
-      this.$emit('setTerms', newVal);
-    }
+<script setup>
+import { ref, watch } from 'vue';
+
+// emits
+const emit = defineEmits(['password', 'setTerms']);
+
+// props
+defineProps({
+  walletType: {
+    default: '',
+    type: String
   }
+});
+
+// data
+const link = {
+  title: 'Terms',
+  url: 'https://www.myetherwallet.com/terms-of-service'
 };
+const password = ref('');
+const acceptTerms = ref(false);
+
+// watch
+watch(
+  () => password.value,
+  newVal => emit('password', newVal)
+);
+watch(
+  () => acceptTerms.value,
+  newVal => emit('setTerms', newVal)
+);
 </script>

@@ -60,73 +60,77 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { computed } from 'vue';
+import { route } from 'vue-router/composables';
 import { EventBus } from '@/core/plugins/eventBus';
+import { useAmplitude } from '@/core/composables/amplitude';
 
-export default {
-  name: 'SuccessModal',
-  props: {
-    showSuccessModal: {
-      type: Boolean,
-      default: false
-    },
-    successTitle: {
-      type: String,
-      default: ''
-    },
-    resetSuccess: {
-      type: Function,
-      default: () => {}
-    },
-    reset: {
-      type: Function,
-      default: () => {}
-    },
-    network: {
-      type: Object,
-      default: () => {}
-    },
-    links: {
-      type: Object,
-      default: () => {}
-    },
-    successBodyText: {
-      type: String,
-      default: ''
-    },
-    showSuccessSwap: {
-      type: Boolean,
-      default: false
-    },
-    hasCloseButton: {
-      type: Boolean,
-      default: true
-    }
+// injections
+const { $amplitude } = useAmplitude();
+const { route } = useRoute();
+
+// props
+const props = defineProps({
+  showSuccessModal: {
+    type: Boolean,
+    default: false
   },
-  computed: {
-    /**
-     * Property returns string, depending whether or not this is a swap or send
-     */
-    successLottie() {
-      return this.showSuccessSwap ? 'swap' : 'checkmark';
-    },
-    explorerText() {
-      return this.network.type.blockExplorer;
-    }
+  successTitle: {
+    type: String,
+    default: ''
   },
-  methods: {
-    viewProgress() {
-      EventBus.$emit('openNotifications');
-      this.reset();
-    },
-    trackExplorrer(explorer) {
-      if (explorer.toLowerCase() === 'ethvm') {
-        this.$amplitude.track('EthVMLinkClicked', {
-          path: this.$route.path,
-          network: this.network.type.name
-        });
-      }
-    }
+  resetSuccess: {
+    type: Function,
+    default: () => {}
+  },
+  reset: {
+    type: Function,
+    default: () => {}
+  },
+  network: {
+    type: Object,
+    default: () => {}
+  },
+  links: {
+    type: Object,
+    default: () => {}
+  },
+  successBodyText: {
+    type: String,
+    default: ''
+  },
+  showSuccessSwap: {
+    type: Boolean,
+    default: false
+  },
+  hasCloseButton: {
+    type: Boolean,
+    default: true
+  }
+});
+
+// computed
+const successLottie = computed(() => {
+  return props.showSuccessSwap ? 'swap' : 'checkmark';
+});
+
+const explorerText = computed(() => {
+  return props.network.type.blockExplorer;
+});
+
+// methods
+const viewProgress = () => {
+  EventBus.$emit('openNotifications');
+  props.reset();
+};
+
+const trackExplorrer = explorer => {
+  if (explorer.toLowerCase() === 'ethvm') {
+    $amplitude.track('EthVMLinkClicked', {
+      path: route.path,
+      network: props.network.type.name
+    });
   }
 };
 </script>

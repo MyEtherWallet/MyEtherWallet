@@ -13,7 +13,7 @@
       ]"
     >
       <img
-        :src="swapIcon"
+        :src="SwapIcon"
         :class="[
           $vuetify.breakpoint.smAndUp ? '' : 'xs-svg',
           'pa-1',
@@ -148,27 +148,26 @@
     </v-row>
   </v-container>
 </template>
-<script>
+<script setup>
 import SwapIcon from '@/assets/images/icons/swap-arrow.svg';
-export default {
-  props: {
-    items: {
-      default: function () {
-        return [];
-      },
-      type: Array
+
+// props
+defineProps({
+  items: {
+    default: () => {
+      return [];
     },
-    isSwap: {
-      type: Boolean,
-      default: false
-    }
+    type: Array
   },
-  data: () => ({ swapIcon: SwapIcon }),
-  methods: {
-    isEven(_value) {
-      return _value % 2 == 0;
-    }
+  isSwap: {
+    type: Boolean,
+    default: false
   }
+});
+
+// methods
+const isEven = _value => {
+  return _value % 2 == 0;
 };
 </script>
 <style lang="scss" scoped>

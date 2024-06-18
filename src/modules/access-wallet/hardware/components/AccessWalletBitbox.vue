@@ -53,60 +53,57 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import videoPath from '@/assets/images/hardware-wallets/bb02-pw-entry.mp4';
 import bitbox2Locked from '@/assets/images/hardware-wallets/bitbox02-locked.png';
 import bitbox2Welcome from '@/assets/images/hardware-wallets/bitbox02-welcome.jpg';
-export default {
-  props: {
-    hwWalletInstance: {
-      type: Object,
-      default: () => {}
-    },
-    unlock: {
-      type: Function,
-      default: () => {}
-    },
-    deviceNotPaired: {
-      type: Boolean,
-      default: false
-    },
-    deviceConnected: {
-      type: Boolean,
-      default: false
-    },
-    deviceUnpaired: {
-      type: Boolean,
-      default: false
-    },
-    devicePairingCode: {
-      type: String,
-      default: ''
-    },
-    deviceConfirmed: {
-      type: Boolean,
-      default: false
-    },
-    deviceInitialized: {
-      type: Boolean,
-      default: false
-    }
+
+// props
+const props = defineProps({
+  hwWalletInstance: {
+    type: Object,
+    default: () => {}
   },
-  data() {
-    return {
-      videoPath: videoPath,
-      lockedImg: bitbox2Locked,
-      openImg: bitbox2Welcome
-    };
+  unlock: {
+    type: Function,
+    default: () => {}
   },
-  methods: {
-    resolvePairing() {
-      this.hwWalletInstance.pairingConfirmationResolve();
-    },
-    unlockWallet() {
-      this.unlock();
-    }
+  deviceNotPaired: {
+    type: Boolean,
+    default: false
+  },
+  deviceConnected: {
+    type: Boolean,
+    default: false
+  },
+  deviceUnpaired: {
+    type: Boolean,
+    default: false
+  },
+  devicePairingCode: {
+    type: String,
+    default: ''
+  },
+  deviceConfirmed: {
+    type: Boolean,
+    default: false
+  },
+  deviceInitialized: {
+    type: Boolean,
+    default: false
   }
+});
+
+// data
+const lockedImg = bitbox2Locked;
+const openImg = bitbox2Welcome;
+
+// methods
+const resolvePairing = () => {
+  props.hwWalletInstance.pairingConfirmationResolve();
+};
+const unlockWallet = () => {
+  props.unlock();
 };
 </script>
 

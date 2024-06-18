@@ -45,115 +45,107 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, watch, onMounted } from 'vue';
+import { useRouter, useRoute } from 'vue-router/composables';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 
-export default {
-  components: {
-    StepOneAmount: () => import('./staked-steps/StepOneAmount'),
-    StepTwoGenerate: () => import('./staked-steps/StepTwoGenerate'),
-    StepThreeReview: () => import('./staked-steps/StepThreeReview')
-  },
-  props: {
-    currentApr: {
-      type: String,
-      default: ''
-    },
-    startProvision: {
-      type: Function,
-      default: () => {}
-    },
-    pollingStatus: {
-      type: Object,
-      default: () => {}
-    }
-  },
-  data() {
-    return {
-      amount: 0,
-      onStep: 1,
-      stepperItems: [
-        {
-          step: 1,
-          name: 'Stake Amount'
-        },
-        {
-          step: 2,
-          name: 'Provide Address'
-        },
-        {
-          step: 3,
-          name: 'Review & Stake'
-        }
-      ],
-      skipped: false,
-      address: ''
-    };
-  },
-  watch: {
-    onStep(newStep) {
-      if (newStep == 2) {
-        this.$router.push({ name: ROUTES_WALLET.STAKED_2.NAME });
-      } else if (newStep == 3) {
-        this.$router.push({ name: ROUTES_WALLET.STAKED_3.NAME });
-      } else if (newStep == 4) {
-        this.$router.push({ name: ROUTES_WALLET.STAKED_4.NAME });
-      } else {
-        this.$router.push({ name: ROUTES_WALLET.STAKED.NAME });
-      }
-    }
-  },
-  mounted() {
-    if (this.$route.name == ROUTES_WALLET.STAKED.NAME)
-      this.$router.push({ name: ROUTES_WALLET.STAKED_1.NAME });
-  },
-  methods: {
-    /**
-     * Sets the correct values and continues to next step
-     */
-    nextStep(obj) {
-      switch (obj.onStep) {
-        case 1:
-          this.amount = obj.amount;
-          break;
-        case 2:
-          this.address = obj.address;
-          this.skipped = obj.isSkipped;
-          break;
-        case 3:
-          this.address = obj.address;
-          break;
-        default:
-          break;
-      }
-      this.onStep += 1;
-    },
-    /**
-     * Goes back a step
-     */
-    back() {
-      this.onStep -= 1;
-    },
+// emits
+const emits = defineEmits(['readyToStake']);
 
-    /**
-     * Emits 'readyToStake' to trigger send transaction
-     * and reset the page
-     */
+// injections
+const { router } = useRouter();
+const { route } = useRoute();
 
-    readyToStake() {
-      this.$emit('readyToStake', this.amount);
-    },
+// props
+defineProps({
+  currentApr: {
+    type: String,
+    default: ''
+  },
+  startProvision: {
+    type: Function,
+    default: () => {}
+  },
+  pollingStatus: {
+    type: Object,
+    default: () => {}
+  }
+});
 
-    /* 
-    modified reset to set data variables back to their 
-    initial state so user is taken back to step 1 when address is changed
-    */
-    // eslint-disable-next-line
-    reset() {
-      this.onStep = 1;
-      this.amount = 0;
-      this.skipped = false;
+// data
+const stepperItems = [
+  {
+    step: 1,
+    name: 'Stake Amount'
+  },
+  {
+    step: 2,
+    name: 'Provide Address'
+  },
+  {
+    step: 3,
+    name: 'Review & Stake'
+  }
+];
+
+const skipped = ref(false);
+const address = ref('');
+const amount = ref(0);
+const onStep = ref(1);
+
+// watch
+watch(
+  () => onStep,
+  newStep => {
+    if (newStep == 2) {
+      router.push({ name: ROUTES_WALLET.STAKED_2.NAME });
+    } else if (newStep == 3) {
+      router.push({ name: ROUTES_WALLET.STAKED_3.NAME });
+    } else if (newStep == 4) {
+      router.push({ name: ROUTES_WALLET.STAKED_4.NAME });
+    } else {
+      router.push({ name: ROUTES_WALLET.STAKED.NAME });
     }
   }
+);
+
+// mounted
+onMounted(() => {
+  if (route.name == ROUTES_WALLET.STAKED.NAME)
+    router.push({ name: ROUTES_WALLET.STAKED_1.NAME });
+});
+
+// methods
+const nextStep = obj => {
+  switch (obj.onStep) {
+    case 1:
+      amount.value = obj.amount;
+      break;
+    case 2:
+      address.value = obj.address;
+      skipped.value = obj.isSkipped;
+      break;
+    case 3:
+      address.value = obj.address;
+      break;
+    default:
+      break;
+  }
+  onStep.value += 1;
 };
+
+const back = () => {
+  onStep.value -= 1;
+};
+
+const readyToStake = () => {
+  emits('readyToStake', amount.value);
+};
+
+// const reset = () => {
+//   onStep.value = 1;
+//   amount.value = 0;
+//   skipped.value = false;
+// };
 </script>

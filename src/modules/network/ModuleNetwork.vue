@@ -34,25 +34,12 @@
   </div>
 </template>
 
-<script>
-import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
-
-export default {
-  beforeRouteLeave(to, from, next) {
-    if (to.name == ROUTES_HOME.ACCESS_WALLET.NAME) {
-      next({ name: ROUTES_WALLET.DASHBOARD.NAME });
-    } else {
-      next();
-    }
-  }
-};
-</script>
-
 <script setup>
 import { computed } from 'vue';
+import { onBeforeRouteLeave } from 'vue-router';
 
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
-
+import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
 import { useExternalStore } from '@/core/store/external';
@@ -103,6 +90,15 @@ const show = computed(() => {
   return (
     identifier.value !== WALLET_TYPES.WEB3_WALLET || switchNetworkWeb3Supported
   );
+});
+
+// beforeRouteLeave
+onBeforeRouteLeave((to, from, next) => {
+  if (to.name == ROUTES_HOME.ACCESS_WALLET.NAME) {
+    next({ name: ROUTES_WALLET.DASHBOARD.NAME });
+  } else {
+    next();
+  }
 });
 
 // methods

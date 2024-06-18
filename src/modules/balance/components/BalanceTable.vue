@@ -166,39 +166,42 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'ModulesBalanceTable',
-  props: {
-    tableData: {
-      type: Array,
-      default: () => {
-        return [];
-      }
-    }
-  },
-  data() {
-    return {
-      page: 1,
-      itemsPerPage: 10
-    };
-  },
-  computed: {
-    isMobile() {
-      return this.$vuetify.breakpoint.mdAndDown;
-    },
-    pageLength() {
-      return Math.ceil(this.tableData.length / this.itemsPerPage);
-    },
-    tableDataPaginated() {
-      return this.paginate(this.tableData, this.itemsPerPage, this.page);
-    }
-  },
-  methods: {
-    paginate(array, pageSize, pageNumber) {
-      return array.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
+<script setup>
+import { ref, computed } from 'vue';
+import { useVuetify } from '@/core/composables/vuetify';
+
+// injections
+const vuetify = useVuetify();
+// props
+const props = defineProps({
+  tableData: {
+    type: Array,
+    default: () => {
+      return [];
     }
   }
+});
+
+// data
+const page = ref(1);
+const itemsPerPage = ref(10);
+
+// computed
+const isMobile = computed(() => {
+  return vuetify.breakpoint.mdAndDown;
+});
+
+const pageLength = computed(() => {
+  return Math.ceil(props.tableData.length / itemsPerPage.value);
+});
+
+const tableDataPaginated = computed(() => {
+  return paginate(props.tableData, itemsPerPage.value, page.value);
+});
+
+// methods
+const paginate = (array, pageSize, pageNumber) => {
+  return array.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
 };
 </script>
 

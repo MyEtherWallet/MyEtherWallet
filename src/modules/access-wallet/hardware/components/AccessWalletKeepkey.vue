@@ -74,74 +74,70 @@ Unlock wallet button
   </div>
 </template>
 
-<script>
-import { EventBus } from '@/core/plugins/eventBus';
+<script setup>
+import { ref, watch, onBeforeMount, onBeforeUnmount } from 'vue';
 
-export default {
-  name: 'AccessWalletKeepkey',
-  components: {
-    AccessWalletDerivationPath: () => import('./AccessWalletDerivationPath.vue')
+import { EventBus } from '@/core/plugins/eventBus';
+import AccessWalletDerivationPath from './AccessWalletDerivationPath.vue';
+
+// emits
+const emits = defineEmits(['setPath']);
+
+// props
+defineProps({
+  paths: {
+    type: Array,
+    default: () => []
   },
-  props: {
-    paths: {
-      type: Array,
-      default: () => []
-    },
-    handlerLoaded: {
-      type: Boolean,
-      default: false
-    },
-    selectedPath: {
-      type: Object,
-      default: () => {}
-    }
+  handlerLoaded: {
+    type: Boolean,
+    default: false
   },
-  data() {
-    return {
-      callback: () => [],
-      pinEnabled: false,
-      pin: '',
-      loading: false,
-      numbers: ['7', '8', '9', '4', '5', '6', '1', '2', '3']
-    };
-  },
-  watch: {
-    pin(newValue) {
-      if (newValue === null) {
-        this.pin = '';
-      }
-    }
-  },
-  created() {
-    /**
-     * Listens to event: enablePin to allow user to input pin
-     * also saves callback method to use later on
-     */
-    EventBus.$on('enablePin', (deviceInfo, callback) => {
-      this.callback = callback;
-      // this.deviceInfo = deviceInfo;
-      this.pinEnabled = true;
-    });
-  },
-  beforeDestroy() {
-    EventBus.$off('enablePin');
-  },
-  methods: {
-    /**
-     * emits setPath back to parent in order to unlock wallet correctly
-     */
-    setPath(path) {
-      this.pin = '';
-      this.$emit('setPath', path);
-    },
-    /**
-     * uses callback method from handler to unlock wallet
-     */
-    unlock() {
-      this.loading = true;
-      this.callback(this.pin);
+  selectedPath: {
+    type: Object,
+    default: () => {}
+  }
+});
+
+// data
+const numbers = ['7', '8', '9', '4', '5', '6', '1', '2', '3'];
+const callback = ref(() => []);
+const pin = ref('');
+const pinEnabled = ref(false);
+const loading = ref(false);
+
+// watch
+watch(
+  () => pin,
+  newValue => {
+    if (newValue.length === 9) {
+      unlock();
     }
   }
+);
+
+// created
+onBeforeMount(() => {
+  EventBus.$on('enablePin', (deviceInfo, cb) => {
+    callback.value = cb;
+    pinEnabled.value = true;
+  });
+});
+
+// before destroy
+onBeforeUnmount(() => {
+  EventBus.$off('enablePin');
+});
+
+// methods
+const setPath = path => {
+  pin.value = '';
+  emits('setPath', path);
+};
+
+const unlock = () => {
+  loading.value = true;
+  callback.value(pin.value);
 };
 </script>
 

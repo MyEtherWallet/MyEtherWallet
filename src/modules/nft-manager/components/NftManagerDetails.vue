@@ -49,38 +49,32 @@
     </div>
   </v-card>
 </template>
-<script>
+<script setup>
 import nftPlaceholder from '@/assets/images/icons/icon-nft-placeholder.png';
 
-export default {
-  props: {
-    loading: {
-      default: false,
-      type: Boolean
-    },
-    token: {
-      default: () => {
-        return {};
-      },
-      type: Object
-    },
-    onClick: {
-      default: () => {
-        return;
-      },
-      type: Function
-    }
+// props
+defineProps({
+  loading: {
+    default: false,
+    type: Boolean
   },
-  data() {
-    return {
-      nftPlaceholder: nftPlaceholder
-    };
+  token: {
+    default: () => {
+      return {};
+    },
+    type: Object
   },
-  methods: {
-    onImgErr(e) {
-      e.target.src = this.nftPlaceholder;
-    }
+  onClick: {
+    default: () => {
+      return;
+    },
+    type: Function
   }
+});
+
+// methods
+const onImgErr = e => {
+  e.target.src = nftPlaceholder;
 };
 </script>
 <style lang="scss" scoped>

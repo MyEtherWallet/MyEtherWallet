@@ -111,18 +111,16 @@
   </white-sheet>
 </template>
 
-<script>
-export default {
-  name: 'ToolsTableContainer',
-  components: {
-    ToolsTable: () => import('./ToolsTable')
-  },
-  data: () => ({ panel: [] }),
-  methods: {
-    openPanel() {
-      this.panel = this.panel.length == 0 ? [0] : [];
-    }
-  }
+<script setup>
+import { ref } from 'vue';
+import ToolsTable from './ToolsTable.vue';
+
+// data
+const panel = ref([]);
+
+// methods
+const openPanel = () => {
+  panel.value = panel.value.length == 0 ? [0] : [];
 };
 </script>
 

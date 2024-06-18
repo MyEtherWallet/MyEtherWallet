@@ -15,20 +15,17 @@
   </v-tooltip>
 </template>
 
-<script>
-export default {
-  name: 'BalanceAddressQrCode',
-  props: {
-    title: {
-      type: String,
-      default: ''
-    },
-    value: {
-      type: String,
-      default: ''
-    }
+<script setup>
+defineProps({
+  title: {
+    type: String,
+    default: ''
+  },
+  value: {
+    type: String,
+    default: ''
   }
-};
+});
 </script>
 
 <style lang="scss" scoped>

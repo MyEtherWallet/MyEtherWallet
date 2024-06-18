@@ -14,16 +14,13 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'DepositFunds',
-  props: {
-    hash: {
-      default: '',
-      type: String
-    }
+<script setup>
+defineProps({
+  hash: {
+    default: '',
+    type: String
   }
-};
+});
 </script>
 <style lang="scss" scoped>
 .note {

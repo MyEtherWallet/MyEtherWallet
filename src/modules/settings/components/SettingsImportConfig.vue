@@ -24,36 +24,35 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref } from 'vue';
 import { SUCCESS, Toast, ERROR } from '@/modules/toast/handler/handlerToast';
-export default {
-  name: 'SettingsImportConfig',
-  props: {
-    importConfig: {
-      type: Object,
-      default: () => {}
-    }
-  },
-  data() {
-    return {
-      file: ''
-    };
-  },
-  methods: {
-    handleChange(e) {
-      this.file = e;
-    },
-    clickImport() {
-      this.importConfig
-        .importStore(this.file)
-        .then(() => {
-          Toast('Settings succesfully imported!', {}, SUCCESS);
-        })
-        .catch(e => {
-          Toast(e.messsage, {}, ERROR);
-        });
-    }
+
+// props
+const props = defineProps({
+  importConfig: {
+    type: Object,
+    default: () => {}
   }
+});
+
+// data
+const file = ref('');
+
+// methods
+const handleChange = e => {
+  file.value = e;
+};
+
+const clickImport = () => {
+  props.importConfig
+    .importStore(file.value)
+    .then(() => {
+      Toast('Settings succesfully imported!', {}, SUCCESS);
+    })
+    .catch(e => {
+      Toast(e.messsage, {}, ERROR);
+    });
 };
 </script>
 

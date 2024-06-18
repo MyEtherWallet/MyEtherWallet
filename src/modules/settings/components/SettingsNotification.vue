@@ -26,8 +26,6 @@
   </div>
 </template>
 
-<script>
-export default {
-  data: () => ({ radioGroup: '10' })
-};
+<script setup>
+const radioGroup = '10';
 </script>

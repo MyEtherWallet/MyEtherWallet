@@ -68,14 +68,17 @@ import anime from 'animejs/lib/anime.es.js';
 import clipboardCopy from 'clipboard-copy';
 import { computed } from 'vue';
 import { isObject } from 'lodash';
+import { useI18n } from 'vue-i18n-composable';
 
 import { Toast, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
 import { useWalletStore } from '@/core/store/wallet';
 import { useGlobalStore } from '@/core/store/global';
 
+// injections
 const { address } = useWalletStore();
 const { network } = useGlobalStore();
+const { t } = useI18n();
 
 const getChecksumAddressString = computed(() => {
   if (!address.value) return '';

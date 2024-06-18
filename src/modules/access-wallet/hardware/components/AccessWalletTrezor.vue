@@ -20,18 +20,15 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'AccessWalletTrezor',
-  props: {
-    trezorUnlock: {
-      type: Function,
-      default: () => {}
-    },
-    reset: {
-      type: Function,
-      default: () => {}
-    }
+<script setup>
+defineProps({
+  trezorUnlock: {
+    type: Function,
+    default: () => {}
+  },
+  reset: {
+    type: Function,
+    default: () => {}
   }
-};
+});
 </script>

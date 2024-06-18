@@ -36,58 +36,59 @@
   </v-row>
 </template>
 
-<script>
-export default {
-  props: {
-    paths: {
-      type: Array,
-      default: () => []
-    },
-    nextStep: {
-      type: Function,
-      default: () => {}
-    },
-    ledgerApps: {
-      type: Array,
-      default: () => []
-    },
-    onLedger: {
-      type: Boolean,
-      default: false
-    }
+<script setup>
+import { ref, computed, watch } from 'vue';
+
+// emits
+const emits = defineEmits(['setPath', 'setLedgerApp']);
+
+// props
+const props = defineProps({
+  paths: {
+    type: Array,
+    default: () => []
   },
-  data() {
-    return {
-      path: {},
-      ledgerApp: {}
-    };
+  nextStep: {
+    type: Function,
+    default: () => {}
   },
-  computed: {
-    /**
-     * Property returns default Paths + Custom paths, used in Select Path component
-     * Property Interface:
-     * {  name = string -> Name of the Path,
-     *    subtext = string --> Derivation Path,
-     *    value = tring --> Derivation Path
-     * }
-     */
-    parsedPaths() {
-      return this.paths.map(item => {
-        const newObj = {};
-        newObj['name'] = item['name'];
-        newObj['subtext'] = item['value'];
-        newObj['value'] = item['value'];
-        return newObj;
-      });
-    }
+  ledgerApps: {
+    type: Array,
+    default: () => []
   },
-  watch: {
-    path(newVal) {
-      this.$emit('setPath', newVal);
-    },
-    ledgerApp(newVal) {
-      this.$emit('setLedgerApp', newVal);
-    }
+  onLedger: {
+    type: Boolean,
+    default: false
   }
-};
+});
+
+// data
+const path = ref({});
+const ledgerApp = ref({});
+
+// computed
+const parsedPaths = computed(() => {
+  return props.paths.map(item => {
+    const newObj = {};
+    newObj['name'] = item['name'];
+    newObj['subtext'] = item['value'];
+    newObj['value'] = item['value'];
+    return newObj;
+  });
+});
+
+// watch
+watch(
+  () => path,
+  newVal => {
+    emits('setPath', newVal);
+  }
+);
+
+watch(
+  () => ledgerApp,
+  newVal => {
+    emits('setLedgerApp', newVal);
+  }
+);
 </script>

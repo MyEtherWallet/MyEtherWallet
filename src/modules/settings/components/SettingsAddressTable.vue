@@ -152,60 +152,59 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'SettingsAddressTable',
-  props: {
-    tableData: {
-      type: Array,
-      default: () => {
-        return [];
-      }
-    }
-  },
-  computed: {
-    isMobile() {
-      return this.$vuetify.breakpoint.mdAndDown;
-    },
-    /**
-     * Default Address Explorer
-     * if item doesn't include it
-     */
-    defaultExplorerAddr() {
-      return 'https://ethvm.com/address/[[address]]';
-    }
-  },
-  methods: {
-    onEdit(tableData) {
-      this.$emit('onClick', tableData);
-    },
-    /**
-     * Get Address Explorer from item
-     * return EthVM if coinType/explorer is
-     * undefined but address is supported
-     */
-    explorerAddr(item) {
-      const address =
-        item.resolvedAddr && !item.resolvedAddr.includes('.')
-          ? item.resolvedAddr
-          : item.address;
-      const coinType = item.coinType;
-      if (coinType && coinType.toLowerCase() === 'bitcoin')
-        return 'https://www.blockchain.com/btc/address/' + address;
-      const prefix = address.substring(0, 2);
-      if (
-        item.explorerAddr ||
-        (coinType && coinType.toLowerCase() === 'ethereum') ||
-        (prefix === '0x' && address.length === 42)
-      ) {
-        const explorer = item.explorerAddr
-          ? item.explorerAddr
-          : this.defaultExplorerAddr;
-        return explorer.replace('[[address]]', address);
-      }
-      return '';
+<script setup>
+import { computed } from 'vue';
+import useVuetify from '@/composables/useVuetify';
+
+// emits
+const emit = defineEmits(['onClick']);
+
+// injections
+const { vuetify } = useVuetify();
+
+// props
+defineProps({
+  tableData: {
+    type: Array,
+    default: () => {
+      return [];
     }
   }
+});
+
+// data
+const defaultExplorerAddr = 'https://ethvm.com/address/[[address]]';
+
+// computed
+const isMobile = computed(() => {
+  return vuetify.breakpoint.mdAndDown;
+});
+
+// methods
+const onEdit = tableData => {
+  emit('onClick', tableData);
+};
+
+const explorerAddr = item => {
+  const address =
+    item.resolvedAddr && !item.resolvedAddr.includes('.')
+      ? item.resolvedAddr
+      : item.address;
+  const coinType = item.coinType;
+  if (coinType && coinType.toLowerCase() === 'bitcoin')
+    return 'https://www.blockchain.com/btc/address/' + address;
+  const prefix = address.substring(0, 2);
+  if (
+    item.explorerAddr ||
+    (coinType && coinType.toLowerCase() === 'ethereum') ||
+    (prefix === '0x' && address.length === 42)
+  ) {
+    const explorer = item.explorerAddr
+      ? item.explorerAddr
+      : defaultExplorerAddr;
+    return explorer.replace('[[address]]', address);
+  }
+  return '';
 };
 </script>
 

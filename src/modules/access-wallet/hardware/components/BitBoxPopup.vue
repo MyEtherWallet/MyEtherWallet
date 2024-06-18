@@ -41,27 +41,25 @@
   </v-sheet>
 </template>
 
-<script>
+<script setup>
+import { computed } from 'vue';
 import bb02PwEntry from '@/assets/images/modal/bb02PwEntry.gif';
-export default {
-  props: {
-    device: {
-      type: Object,
-      default: () => {}
-    }
-  },
 
-  data() {
-    return {
-      imgPath: bb02PwEntry
-    };
-  },
-  computed: {
-    showModal() {
-      return (
-        this.device.status === 'connected' || this.device.status === 'unpaired'
-      );
-    }
+// props
+const props = defineProps({
+  device: {
+    type: Object,
+    default: () => {}
   }
-};
+});
+
+// data
+const imgPath = bb02PwEntry;
+
+// computed
+const showModal = computed(() => {
+  return (
+    props.device.status === 'connected' || props.device.status === 'unpaired'
+  );
+});
 </script>

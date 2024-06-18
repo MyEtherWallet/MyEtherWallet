@@ -39,92 +39,91 @@
   </mew-overlay>
 </template>
 
-<script>
-export default {
-  components: {
-    fromToBlock: () => import('./SwapFromToBlock')
-  },
-  props: {
-    to: {
-      type: String,
-      default: ''
-    },
-    from: {
-      type: String,
-      default: ''
-    },
-    fromType: {
-      type: String,
-      default: ''
-    },
-    fromImg: {
-      type: String,
-      default: ''
-    },
-    toType: {
-      type: String,
-      default: ''
-    },
-    toImg: {
-      type: String,
-      default: ''
-    },
-    fromVal: {
-      type: String,
-      default: '0'
-    },
-    toVal: {
-      type: String,
-      default: '0'
-    },
-    show: {
-      type: Boolean,
-      default: false
-    },
-    validUntil: {
-      type: Number,
-      default: 0
-    },
-    backFunc: {
-      type: Function,
-      default: () => {}
-    },
-    send: {
-      type: Function,
-      default: () => {}
-    }
-  },
-  data: function () {
-    return {
-      timeLeftStr: '0:0',
-      sendEnabled: true,
-      timeLeftTimer: null,
-      warningDescription:
-        'Make sure all your transaction details are CORRECT. Canceling or replacing transactions can not be guaranteed to work. You still be charged gas fee even transaction failing. Learn more here…'
-    };
-  },
-  computed: {},
+<script setup>
+import { onBeforeUnmount, onMounted, ref } from 'vue';
+import fromToBlock from './SwapFromToBlock.vue';
 
-  mounted() {
-    this.timeLeftTimer = setInterval(() => {
-      this.timeLeftStr = this.getTimeLeft().str;
-      if (this.getTimeLeft().seconds < 0) this.sendEnabled = false;
-      else this.sendEnabled = true;
-    }, 1000);
+// props
+const props = defineProps({
+  to: {
+    type: String,
+    default: ''
   },
-  beforeUnmount() {
-    clearInterval(this.timeLeftTimer);
+  from: {
+    type: String,
+    default: ''
   },
-  methods: {
-    getTimeLeft() {
-      const distance = this.validUntil - new Date().getTime();
-      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-      return {
-        str: distance > 0 ? minutes + ':' + seconds : '0:0',
-        seconds: distance
-      };
-    }
+  fromType: {
+    type: String,
+    default: ''
+  },
+  fromImg: {
+    type: String,
+    default: ''
+  },
+  toType: {
+    type: String,
+    default: ''
+  },
+  toImg: {
+    type: String,
+    default: ''
+  },
+  fromVal: {
+    type: String,
+    default: '0'
+  },
+  toVal: {
+    type: String,
+    default: '0'
+  },
+  show: {
+    type: Boolean,
+    default: false
+  },
+  validUntil: {
+    type: Number,
+    default: 0
+  },
+  backFunc: {
+    type: Function,
+    default: () => {}
+  },
+  send: {
+    type: Function,
+    default: () => {}
   }
+});
+
+// data
+const warningDescription =
+  'Make sure all your transaction details are CORRECT. Canceling or replacing transactions can not be guaranteed to work. You still be charged gas fee even transaction failing. Learn more here…';
+const timeLeftStr = ref('0:0');
+const sendEnabled = ref(true);
+const timeLeftTimer = ref(null);
+
+// mounted
+onMounted(() => {
+  timeLeftTimer.value = setInterval(() => {
+    timeLeftStr.value = getTimeLeft().str;
+    if (getTimeLeft().seconds < 0) sendEnabled.value = false;
+    else sendEnabled.value = true;
+  }, 1000);
+});
+
+// before unmount
+onBeforeUnmount(() => {
+  clearInterval(timeLeftTimer.value);
+});
+
+// methods
+const getTimeLeft = () => {
+  const distance = props.validUntil - new Date().getTime();
+  const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+  return {
+    str: distance > 0 ? minutes + ':' + seconds : '0:0',
+    seconds: distance
+  };
 };
 </script>

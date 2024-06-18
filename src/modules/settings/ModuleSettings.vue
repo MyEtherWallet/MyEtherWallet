@@ -87,28 +87,16 @@
     />
   </mew-overlay>
 </template>
-
-<script>
-import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
-
-// adding here as script support has no beforeRouteLeave support
-export default {
-  beforeRouteLeave(to, from, next) {
-    if (to.name == ROUTES_HOME.ACCESS_WALLET.NAME) {
-      next({ name: ROUTES_WALLET.DASHBOARD.NAME });
-    } else {
-      next();
-    }
-  }
-};
-</script>
 <script setup>
 import { ref, computed, watch, onMounted, onBeforeMount } from 'vue';
+import { useI18n } from 'vue-i18n-composable';
+import { onBeforeRouteLeave } from 'vue-router';
+
+import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
 import handlerSettings from './handler/handlerSettings';
 import { useGasPrice } from '@/core/composables/gasPrice';
 import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
-import { useI18n } from 'vue-i18n-composable';
 import { useAmplitude } from '@/core/composables/amplitude';
 import { useAddressBookStore } from '@/core/store/addressBook';
 import { usePopupStore } from '@/core/store/popups';
@@ -212,6 +200,14 @@ watch(
 // created
 onBeforeMount(() => {
   settingsHandler.value = new handlerSettings();
+});
+
+onBeforeRouteLeave((to, from, next) => {
+  if (to.name == ROUTES_HOME.ACCESS_WALLET.NAME) {
+    next({ name: ROUTES_WALLET.DASHBOARD.NAME });
+  } else {
+    next();
+  }
 });
 
 // mounted

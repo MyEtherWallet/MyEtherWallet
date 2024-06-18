@@ -94,68 +94,66 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, onMounted, onUnmounted } from 'vue';
 import AppCopyBtn from '@/core/components/AppCopyBtn';
 
-export default {
-  name: 'DepositFunds',
-  components: { AppCopyBtn },
-  props: {
-    finalAmount: {
-      default: 0,
-      type: Number
-    },
-    confirmations: {
-      default: 0,
-      type: Number
-    },
-    minimumAge: {
-      type: String,
-      default: ''
-    },
-    bitcoinDepositAddressHash: {
-      type: String,
-      default: ''
-    }
+// props
+const props = defineProps({
+  finalAmount: {
+    default: 0,
+    type: Number
   },
-  data() {
-    return {
-      ticker: '00:00',
-      timer: () => {},
-      tickerActive: true,
-      isDone: false
-    };
+  confirmations: {
+    default: 0,
+    type: Number
   },
-  mounted() {
-    clearInterval(this.timer);
-    const startTime = new Date().getTime();
-    const endTime = startTime + this.minimumAge * 1000;
-    if (this.minimumAge > 0) {
-      this.timer = setInterval(() => {
-        const startInterval = new Date().getTime();
-        const difference = endTime - startInterval;
-        const minutes = Math.floor(
-          (difference % (1000 * 60 * 60)) / (1000 * 60)
-        );
-        const seconds = Math.floor((difference % (1000 * 60)) / 1000);
-        this.ticker = `${
-          minutes >= 10 ? minutes : minutes < 0 ? '00' : '0' + minutes
-        }m:${seconds >= 10 ? seconds : seconds < 0 ? '00' : '0' + seconds}s`;
-        if (seconds < 0) {
-          this.tickerActive = false;
-          clearInterval(this.timer);
-        }
-      }, 1000);
-    }
+  minimumAge: {
+    type: String,
+    default: ''
   },
-  destroyed() {
-    clearInterval(this.timer);
-  },
-  methods: {
-    done() {
-      this.isDone = true;
-    }
+  bitcoinDepositAddressHash: {
+    type: String,
+    default: ''
   }
+});
+
+// data
+const ticker = ref('00:00');
+const timer = ref(() => {});
+const isDone = ref(false);
+const tickerActive = ref(true);
+
+// mounted
+onMounted(() => {
+  clearInterval(timer.value);
+  const startTime = new Date().getTime();
+  const endTime = startTime + props.minimumAge * 1000;
+  if (props.minimumAge > 0) {
+    timer.value = setInterval(() => {
+      const startInterval = new Date().getTime();
+      const difference = endTime - startInterval;
+      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+      ticker.value = `${
+        minutes >= 10 ? minutes : minutes < 0 ? '00' : '0' + minutes
+      }m:${seconds >= 10 ? seconds : seconds < 0 ? '00' : '0' + seconds}s`;
+      if (seconds < 0) {
+        tickerActive.value = false;
+        clearInterval(timer.value);
+      }
+    }, 1000);
+  }
+});
+
+// destroyed
+onUnmounted(() => {
+  clearInterval(timer.value);
+});
+
+// methods
+const done = () => {
+  isDone.value = true;
 };
 </script>
 <style lang="scss" scoped>

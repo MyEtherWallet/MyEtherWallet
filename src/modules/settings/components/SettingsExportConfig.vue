@@ -13,14 +13,12 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'SettingsExportConfig',
-  props: {
-    exportConfig: {
-      type: Function,
-      default: () => {}
-    }
+<script setup>
+// props
+defineProps({
+  exportConfig: {
+    type: Function,
+    default: () => {}
   }
-};
+});
 </script>

@@ -120,16 +120,16 @@
   </mew-overlay>
 </template>
 
-<script>
-// import transactionConfirmation from '@/modules/wallets/components/transaction-confirmation/TransactionConfirmation';
-import buyMore from '@/core/mixins/buyMore.mixin.js';
-export default {
-  // components: { transactionConfirmation },
-  mixins: [buyMore],
-  props: {
-    open: { default: false, type: Boolean }
-  }
-};
+<script setup>
+import { useBuySell } from '@/core/composables/buyMore';
+
+// injections
+const { openBuySell } = useBuySell();
+
+// props
+defineProps({
+  open: { default: false, type: Boolean }
+});
 </script>
 
 <style lang="scss" scoped></style>

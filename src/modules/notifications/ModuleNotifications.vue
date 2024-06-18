@@ -86,10 +86,6 @@
   </div>
 </template>
 
-<script>
-const MAX_ITEMS = 15;
-</script>
-
 <script setup>
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue';
 import { useQuery, useSubscription } from '@vue/apollo-composable';
@@ -116,6 +112,9 @@ import handlerSwap from '@/modules/swap/handlers/handlerSwap';
 import NonChainNotification from './handlers/nonChainNotification';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { errorMsgs } from '@/apollo/configs/configErrorMsgs';
+
+// constants
+const MAX_ITEMS = 15;
 
 // injections/use
 const {

@@ -4,12 +4,6 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'HoverExpandingBlock'
-};
-</script>
-
 <style lang="scss" scoped>
 .core--components--app-scroll-block {
   overflow-y: auto;

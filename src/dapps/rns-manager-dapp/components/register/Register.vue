@@ -2,15 +2,15 @@
   <div>
     <div class="d-flex flex-column greyLight pa-6 rounded">
       <div class="d-flex justify-space-between">
-        <span>{{ $t('rns.register.domain-name') }}:</span>
+        <span>{{ t('rns.register.domain-name') }}:</span>
         <span class="font-weight-medium">{{ name }}</span>
       </div>
       <div class="d-flex justify-space-between">
-        <span>{{ $t('rns.register.term') }}:</span>
+        <span>{{ t('rns.register.term') }}:</span>
         <span class="font-weight-medium">{{
           duration === 1
-            ? $tc('rns.commit.year', 1)
-            : $tc('rns.commit.year', 2, { duration: duration })
+            ? tc('rns.commit.year', 1)
+            : tc('rns.commit.year', 2, { duration: duration })
         }}</span>
       </div>
       <div
@@ -86,18 +86,18 @@
         v-if="!canRegister"
         class="d-flex flex-column mt-5 justify-center align-center"
       >
-        <span class="mew-heading-2">{{ $t('rns.hang-on') }}</span>
+        <span class="mew-heading-2">{{ t('rns.hang-on') }}</span>
         <span class="mt-3 desc-container">{{
-          $t('rns.hang-on-committing')
+          t('rns.hang-on-committing')
         }}</span>
       </div>
       <div
         v-if="canRegister"
         class="d-flex flex-column mt-5 justify-center align-center"
       >
-        <span class="mew-heading-2">{{ $t('rns.register.complete-reg') }}</span>
+        <span class="mew-heading-2">{{ t('rns.register.complete-reg') }}</span>
         <span class="mt-3 desc-container">{{
-          $t('rns.register.complete-reg-desc')
+          t('rns.register.complete-reg-desc')
         }}</span>
       </div>
     </div>
@@ -121,8 +121,8 @@
         :loading="loadingReg"
         :title="
           canRegister
-            ? $t('rns.register.name')
-            : $t('rns.register.create-commitment')
+            ? t('rns.register.name')
+            : t('rns.register.create-commitment')
         "
         btn-size="xlarge"
         @click.native="
@@ -135,114 +135,123 @@
   </div>
 </template>
 
-<script>
-import buyMore from '@/core/mixins/buyMore.mixin.js';
-export default {
-  name: 'RnsRegister',
-  mixins: [buyMore],
-  props: {
-    notEnoughFunds: {
-      default: false,
-      type: Boolean
-    },
-    noFundsForRegFees: {
-      default: false,
-      type: Boolean
-    },
-    commitFeeInEth: {
-      type: String,
-      default: ''
-    },
-    commitFeeUsd: {
-      type: String,
-      default: ''
-    },
-    waitingForReg: {
-      default: false,
-      type: Boolean
-    },
-    loadingCommit: {
-      default: false,
-      type: Boolean
-    },
-    loadingReg: {
-      default: false,
-      type: Boolean
-    },
-    committed: {
-      default: false,
-      type: Boolean
-    },
-    name: {
-      type: String,
-      default: ''
-    },
-    duration: {
-      type: Number,
-      default: 1
-    },
-    minimumAge: {
-      type: String,
-      default: ''
-    },
-    register: {
-      default: function () {
-        return {};
-      },
-      type: Function
-    },
-    commit: {
-      default: function () {
-        return {};
-      },
-      type: Function
-    }
+<script setup>
+import { ref, watch, onUnmounted } from 'vue';
+import { useI18n } from 'vue-i18n-composable';
+
+// injections
+const { t, tc } = useI18n();
+
+// props
+const props = defineProps({
+  notEnoughFunds: {
+    default: false,
+    type: Boolean
   },
-  data() {
-    return {
-      ticker: '00:00',
-      timer: () => {},
-      canRegister: false
-    };
+  noFundsForRegFees: {
+    default: false,
+    type: Boolean
   },
-  watch: {
-    minimumAge(newVal) {
-      this.ticker = `0${newVal / 60 < 10 ? Math.ceil(newVal / 60) : '00'}:00`;
+  commitFeeInEth: {
+    type: String,
+    default: ''
+  },
+  commitFeeUsd: {
+    type: String,
+    default: ''
+  },
+  waitingForReg: {
+    default: false,
+    type: Boolean
+  },
+  loadingCommit: {
+    default: false,
+    type: Boolean
+  },
+  loadingReg: {
+    default: false,
+    type: Boolean
+  },
+  committed: {
+    default: false,
+    type: Boolean
+  },
+  name: {
+    type: String,
+    default: ''
+  },
+  duration: {
+    type: Number,
+    default: 1
+  },
+  minimumAge: {
+    type: String,
+    default: ''
+  },
+  register: {
+    default: function () {
+      return {};
     },
-    loadingCommit(newVal) {
-      if (newVal) {
-        clearInterval(this.timer);
-        const startTime = new Date().getTime();
-        const endTime = startTime + this.minimumAge * 1000;
-        if (this.minimumAge > 0) {
-          this.timer = setInterval(() => {
-            const startInterval = new Date().getTime();
-            const difference = endTime - startInterval;
-            const minutes = Math.floor(
-              (difference % (1000 * 60 * 60)) / (1000 * 60)
-            );
-            const seconds = Math.floor((difference % (1000 * 60)) / 1000);
-            this.ticker = `${
-              minutes >= 10 ? minutes : minutes < 0 ? '00' : '0' + minutes
-            }:${seconds >= 10 ? seconds : seconds < 0 ? '00' : '0' + seconds}`;
-            if (seconds < 0) {
-              clearInterval(this.timer);
-            }
-          }, 1000);
-        }
-      } else if (!newVal) {
-        clearInterval(this.timer);
-        this.canRegister = true;
-        this.ticker = '00:00';
-      } else {
-        clearInterval(this.timer);
-      }
-    }
+    type: Function
   },
-  destroyed() {
-    clearInterval(this.timer);
+  commit: {
+    default: function () {
+      return {};
+    },
+    type: Function
   }
-};
+});
+
+// data
+const ticker = ref('00:00');
+const timer = ref(() => {});
+const canRegister = ref(false);
+
+// watch
+watch(
+  () => props.minimumAge,
+  newVal => {
+    ticker.value = `0${newVal / 60 < 10 ? Math.ceil(newVal / 60) : '00'}:00`;
+  }
+);
+
+watch(
+  () => props.loadingCommit,
+  newVal => {
+    if (newVal) {
+      clearInterval(timer.value);
+      const startTime = new Date().getTime();
+      const endTime = startTime + props.minimumAge * 1000;
+      if (props.minimumAge > 0) {
+        timer.value = setInterval(() => {
+          const startInterval = new Date().getTime();
+          const difference = endTime - startInterval;
+          const minutes = Math.floor(
+            (difference % (1000 * 60 * 60)) / (1000 * 60)
+          );
+          const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+          ticker.value = `${
+            minutes >= 10 ? minutes : minutes < 0 ? '00' : '0' + minutes
+          }:${seconds >= 10 ? seconds : seconds < 0 ? '00' : '0' + seconds}`;
+          if (seconds < 0) {
+            clearInterval(timer.value);
+          }
+        }, 1000);
+      }
+    } else if (!newVal) {
+      clearInterval(timer.value);
+      canRegister.value = true;
+      ticker.value = '00:00';
+    } else {
+      clearInterval(timer.value);
+    }
+  }
+);
+
+// destroyed
+onUnmounted(() => {
+  clearInterval(timer.value);
+});
 </script>
 
 <style lang="scss" scoped>

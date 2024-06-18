@@ -32,39 +32,42 @@
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    walletType: {
-      default: '',
-      type: String
-    },
-    onCoolWallet: {
-      default: false,
-      type: Boolean
-    },
-    nextStep: {
-      type: Function,
-      default: () => {}
-    }
+<script setup>
+import { ref, watch } from 'vue';
+
+// emits
+const emits = defineEmits(['setPassword', 'setTerms']);
+
+// props
+defineProps({
+  walletType: {
+    default: '',
+    type: String
   },
-  data() {
-    return {
-      acceptTerms: false,
-      password: '',
-      link: {
-        title: 'Terms',
-        url: 'https://www.myetherwallet.com/terms-of-service'
-      }
-    };
+  onCoolWallet: {
+    default: false,
+    type: Boolean
   },
-  watch: {
-    password(newVal) {
-      this.$emit('setPassword', newVal);
-    },
-    acceptTerms(newVal) {
-      this.$emit('setTerms', newVal);
-    }
+  nextStep: {
+    type: Function,
+    default: () => {}
   }
+});
+
+// data
+const link = {
+  title: 'Terms',
+  url: 'https://www.myetherwallet.com/terms-of-service'
 };
+const password = ref('');
+const acceptTerms = ref(false);
+
+// watch
+watch(password, newVal => {
+  emits('setPassword', newVal);
+});
+
+watch(acceptTerms, newVal => {
+  emits('setTerms', newVal);
+});
 </script>

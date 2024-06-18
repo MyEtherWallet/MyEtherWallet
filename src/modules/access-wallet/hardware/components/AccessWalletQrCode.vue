@@ -46,18 +46,15 @@
   </v-sheet>
 </template>
 
-<script>
-export default {
-  props: {
-    qrCode: {
-      type: String,
-      default: ''
-    },
-    onXwallet: {
-      type: Boolean,
-      default: false
-    }
+<script setup>
+defineProps({
+  qrCode: {
+    type: String,
+    default: ''
   },
-  data() {}
-};
+  onXwallet: {
+    type: Boolean,
+    default: false
+  }
+});
 </script>

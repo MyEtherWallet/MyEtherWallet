@@ -58,34 +58,40 @@
     />
   </div>
 </template>
-<script>
-export default {
-  props: {
-    coolWalletUnlock: {
-      type: Function,
-      default: () => {}
-    },
-    passwordError: {
-      type: Boolean,
-      default: false
-    }
+
+<script setup>
+import { ref, computed, watch } from 'vue';
+
+// emits
+const emits = defineEmits(['password']);
+
+// props
+const props = defineProps({
+  coolWalletUnlock: {
+    type: Function,
+    default: () => {}
   },
-  data() {
-    return {
-      pairingPassword: ''
-    };
-  },
-  computed: {
-    passwordErrorMsg() {
-      return this.passwordError ? 'Invalid PIN. Please enter correct PIN.' : '';
-    }
-  },
-  watch: {
-    pairingPassword(newVal) {
-      this.$emit('password', newVal);
-    }
+  passwordError: {
+    type: Boolean,
+    default: false
   }
-};
+});
+
+// data
+const pairingPassword = ref('');
+
+// computed
+const passwordErrorMsg = computed(() =>
+  props.passwordError ? 'Invalid PIN. Please enter correct PIN.' : ''
+);
+
+// watch
+watch(
+  () => pairingPassword,
+  newVal => {
+    emits('password', newVal);
+  }
+);
 </script>
 <style lang="scss" scoped>
 .border-container {

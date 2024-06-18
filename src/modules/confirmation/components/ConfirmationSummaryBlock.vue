@@ -19,16 +19,11 @@
     </v-row>
   </div>
 </template>
-<script>
-export default {
-  props: {
-    /**
-     * Array of strings to be displayed in rows on the left.
-     */
-    items: {
-      default: () => [],
-      type: Array
-    }
+<script setup>
+defineProps({
+  items: {
+    default: () => [],
+    type: Array
   }
-};
+});
 </script>

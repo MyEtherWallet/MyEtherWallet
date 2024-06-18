@@ -83,42 +83,42 @@
   </white-sheet>
 </template>
 
-<script>
+<script setup>
+import { useRouter } from 'vue-router/composables';
+
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
-import buyMore from '@/core/mixins/buyMore.mixin.js';
-export default {
-  name: 'BalanceEmptyBlock',
-  mixins: [buyMore],
-  props: {
-    networkType: {
-      type: String,
-      default: ''
-    },
-    isTokens: {
-      type: Boolean,
-      default: false
-    },
-    isEth: {
-      type: Boolean,
-      default: true
-    }
+import { useBuySell } from '@/core/composables/buyMore.js';
+
+// emits
+const emit = defineEmits(['openAddCustomToken']);
+
+// injections
+const { openBuySell } = useBuySell();
+const router = useRouter();
+
+// props
+defineProps({
+  networkType: {
+    type: String,
+    default: ''
   },
-  methods: {
-    /**
-     * Method which naviagates to the swap page.
-     * Used in Empty Tokens Block
-     */
-    navigateToSwap() {
-      this.$router.push({ name: ROUTES_WALLET.SWAP.NAME });
-    },
-    /**
-     * method that emits event to open
-     * custom token modal
-     */
-    openCustomTokens() {
-      this.$emit('openAddCustomToken');
-    }
+  isTokens: {
+    type: Boolean,
+    default: false
+  },
+  isEth: {
+    type: Boolean,
+    default: true
   }
+});
+
+// methods
+const navigateToSwap = () => {
+  router.push({ name: ROUTES_WALLET.SWAP.NAME });
+};
+
+const openCustomTokens = () => {
+  emit('openAddCustomToken');
 };
 </script>
 

@@ -33,73 +33,64 @@
   </div>
 </template>
 
-<script>
-import { roundUp } from '../handlers/helpers/units';
+<script setup>
+import { ref } from 'vue';
 import { ethers, BigNumber } from 'ethers';
+import { roundUp } from '../handlers/helpers/units';
+import GetQuote from '../components/pegin/GetQuote.vue';
+import AcceptQuote from '../components/pegin/AcceptQuote.vue';
+import DepositFunds from '../components/pegin/DepositFunds.vue';
 
-export default {
-  components: {
-    GetQuote: () => import('../components/pegin/GetQuote'),
-    AcceptQuote: () => import('../components/pegin/AcceptQuote'),
-    DepositFunds: () => import('../components/pegin/DepositFunds')
+// data
+const stepperItems = [
+  {
+    step: 1,
+    name: 'Get a quote'
   },
-  props: {},
-  data() {
-    return {
-      timeForDeposit: '3600',
-      quoteUrl: '',
-      btcAddress: '',
-      siteKey: '',
-      bitcoinDepositAddressHash: '',
-      signature: '',
-      quoteAmount: 0,
-      finalAmount: '0',
-      confirmations: '0',
-      quoteHash: '',
-      onStep: 1,
-      stepperItems: [
-        {
-          step: 1,
-          name: 'Get a quote'
-        },
-        {
-          step: 2,
-          name: 'Accept a quote'
-        },
-        {
-          step: 3,
-          name: 'Deposit'
-        }
-      ]
-    };
+  {
+    step: 2,
+    name: 'Accept a quote'
   },
-  methods: {
-    onSubmit(val) {
-      this.onStep += 1;
-      if (this.onStep === 2) {
-        const calculatedAmount = roundUp(
-          ethers.utils.formatEther(
-            BigNumber.from(String(val?.quote?.callFee ?? 0)).toBigInt() +
-              BigNumber.from(String(val?.quote?.value ?? 0)).toBigInt() +
-              BigNumber.from(String(val?.quote?.gasFee ?? 0)).toBigInt() +
-              BigNumber.from(
-                String(val?.quote?.productFeeAmount ?? 0)
-              ).toBigInt()
-          )
-        );
-        this.quoteAmount = calculatedAmount;
-        this.confirmations = val.quote.confirmations;
-        this.quoteHash = val.quoteHash;
-        this.quoteUrl = val.quoteUrl;
-        this.btcAddress = val.quote.btcRefundAddr;
-        this.timeForDeposit = String(val.quote.timeForDeposit);
-        this.finalAmount = calculatedAmount;
-        this.siteKey = val.siteKey;
-      } else if (this.onStep === 3) {
-        this.bitcoinDepositAddressHash = val.bitcoinDepositAddressHash;
-        this.signature = val.signature;
-      }
-    }
+  {
+    step: 3,
+    name: 'Deposit'
+  }
+];
+const timeForDeposit = ref('3600');
+const quoteUrl = ref('');
+const btcAddress = ref('');
+const siteKey = ref('');
+const bitcoinDepositAddressHash = ref('');
+const signature = ref('');
+const quoteAmount = ref(0);
+const finalAmount = ref('0');
+const confirmations = ref('0');
+const quoteHash = ref('');
+const onStep = ref(1);
+
+// methods
+const onSubmit = val => {
+  onStep.value += 1;
+  if (onStep.value === 2) {
+    const calculatedAmount = roundUp(
+      ethers.utils.formatEther(
+        BigNumber.from(String(val?.quote?.callFee ?? 0)).toBigInt() +
+          BigNumber.from(String(val?.quote?.value ?? 0)).toBigInt() +
+          BigNumber.from(String(val?.quote?.gasFee ?? 0)).toBigInt() +
+          BigNumber.from(String(val?.quote?.productFeeAmount ?? 0)).toBigInt()
+      )
+    );
+    quoteAmount.value = calculatedAmount;
+    confirmations.value = val.quote.confirmations;
+    quoteHash.value = val.quoteHash;
+    quoteUrl.value = val.quoteUrl;
+    btcAddress.value = val.quote.btcRefundAddr;
+    timeForDeposit.value = String(val.quote.timeForDeposit);
+    finalAmount.value = calculatedAmount;
+    siteKey.value = val.siteKey;
+  } else if (onStep.value === 3) {
+    bitcoinDepositAddressHash.value = val.bitcoinDepositAddressHash;
+    signature.value = val.signature;
   }
 };
 </script>

@@ -61,32 +61,33 @@
   </v-dialog>
 </template>
 
-<script>
-export default {
-  props: {
-    close: {
-      type: Function,
-      default: () => {}
-    },
-    show: {
-      type: Boolean,
-      default: false
-    },
-    resolve: {
-      type: Function,
-      default: () => {}
-    },
-    error: {
-      type: Object,
-      default: () => {}
-    }
+<script setup>
+import { computed } from 'vue';
+
+// props
+const props = defineProps({
+  close: {
+    type: Function,
+    default: () => {}
   },
-  computed: {
-    errorDetails() {
-      return JSON.stringify(this.error, null, 2);
-    }
+  show: {
+    type: Boolean,
+    default: false
+  },
+  resolve: {
+    type: Function,
+    default: () => {}
+  },
+  error: {
+    type: Object,
+    default: () => {}
   }
-};
+});
+
+// computed
+const errorDetails = computed(() => {
+  return JSON.stringify(props.error, null, 2);
+});
 </script>
 
 <style lang="scss" scoped>

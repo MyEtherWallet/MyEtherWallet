@@ -126,10 +126,11 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import clipboardCopy from 'clipboard-copy';
 import moment from 'moment';
 import { isEmpty, debounce } from 'lodash';
+import { computed, watch, onBeforeUnmount, ref } from 'vue';
 
 import { Toast, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import qrDisabled from '@/assets/images/icons/qr-disabled.png';
@@ -139,159 +140,138 @@ import { ROUTES_HOME } from '@/core/configs/configRoutes.js';
 const MILLISECONDS = 1000;
 const MINUTES = 20;
 const SECONDS_IN_MINUTES = 60;
-export default {
-  name: 'CrossChainModal',
-  props: {
-    showCrossChainModal: {
-      type: Boolean,
-      default: false
-    },
-    title: {
-      type: String,
-      default: ''
-    },
-    txObj: {
-      type: Object,
-      default: () => {}
-    },
-    reset: {
-      type: Function,
-      default: () => {}
-    },
-    sentBtc: {
-      type: Function,
-      default: () => {}
-    }
+
+// props
+const props = defineProps({
+  showCrossChainModal: {
+    type: Boolean,
+    default: false
   },
-  data() {
-    return {
-      time: '20:00',
-      startingTime: moment(SECONDS_IN_MINUTES * MINUTES * MILLISECONDS),
-      counter: () => {},
-      qrDisabled: qrDisabled,
-      panelItems: [
-        {
-          name: 'View Details'
-        }
-      ],
-      termRoute: { name: ROUTES_HOME.TERMS_OF_SERVICE.NAME }
-    };
+  title: {
+    type: String,
+    default: ''
   },
-  computed: {
-    buttonTitle() {
-      return `I sent the ${this.txObj?.fromType}`;
-    },
-    sendWarning() {
-      return `You can send ${this.txObj?.fromType} to this address only once.`;
-    },
-    hideQr() {
-      return this.payinAddress && this.payinAddress.length > 42;
-    },
-    payinAddress() {
-      return this.txObj?.actualTrade?.response?.payinAddress;
-    },
-    fromImg() {
-      return this.txObj.fromImg;
-    },
-    fromType() {
-      return this.txObj.fromType;
-    },
-    fromVal() {
-      return formatFloatingPointValue(this.txObj.fromVal).value;
-    },
-    toType() {
-      return this.txObj.toType;
-    },
-    toVal() {
-      return formatFloatingPointValue(this.txObj.toVal).value;
-    },
-    toImg() {
-      return this.txObj.toImg;
-    },
-    btnAction() {
-      if (this.timerFinished) {
-        return this.locReset;
-      }
-      return this.userSent;
-    },
-    timerFinished() {
-      return this.time === '00:00';
-    },
-    refundAddress() {
-      if (!isEmpty(this.txObj)) {
-        return this.txObj.refundAddress;
-      }
-      return '';
-    },
-    fromCurrency() {
-      if (!isEmpty(this.txObj)) {
-        return this.txObj.fromType;
-      }
-      return '';
-    },
-    toCurrency() {
-      if (!isEmpty(this.txObj)) {
-        return this.txObj.toType;
-      }
-      return '';
-    },
-    payTill() {
-      return this.txObj?.actualTrade?.response?.payTill;
-    },
-    rate() {
-      if (
-        !isEmpty(this.txObj) &&
-        this.txObj.hasOwnProperty('selectedProvider')
-      ) {
-        return formatFloatingPointValue(this.txObj.selectedProvider.rate).value;
-      }
-      return '';
-    }
+  txObj: {
+    type: Object,
+    default: () => {}
   },
-  watch: {
-    showCrossChainModal(newVal) {
-      if (newVal) {
-        if (moment().isBefore(this.payTill)) {
-          this.time = this.startingTime.format('mm:ss');
-          const throttledFunc = debounce(() => {
-            const now = new Date();
-            const deadline = moment(this.payTill).diff(now);
-            if (this.timerFinished) {
-              clearInterval(this.counter);
-              this.counter = null;
-            } else {
-              this.time = moment.utc(deadline).format('mm:ss');
-            }
-          }, 200);
-          this.counter = setInterval(throttledFunc, 1000);
-        } else {
-          this.time = '00:00';
-        }
+  reset: {
+    type: Function,
+    default: () => {}
+  },
+  sentBtc: {
+    type: Function,
+    default: () => {}
+  }
+});
+
+// data
+const startingTime = moment(SECONDS_IN_MINUTES * MINUTES * MILLISECONDS);
+const panelItems = [
+  {
+    name: 'View Details'
+  }
+];
+const termRoute = { name: ROUTES_HOME.TERMS_OF_SERVICE.NAME };
+const time = ref('20:00');
+const counter = ref(() => {});
+
+// computed
+const buttonTitle = computed(() => `I sent the ${props.txObj?.fromType}`);
+const sendWarning = computed(
+  () => `You can send ${props.txObj?.fromType} to this address only once.`
+);
+const hideQr = computed(
+  () => props.payinAddress && props.payinAddress.length > 42
+);
+const payinAddress = computed(
+  () => props.txObj?.actualTrade?.response?.payinAddress
+);
+const fromImg = computed(() => props.txObj.fromImg);
+const fromType = computed(() => props.txObj.fromType);
+const fromVal = computed(
+  () => formatFloatingPointValue(props.txObj.fromVal).value
+);
+const toType = computed(() => props.txObj.toType);
+const toVal = computed(() => formatFloatingPointValue(props.txObj.toVal).value);
+const toImg = computed(() => props.txObj.toImg);
+const btnAction = computed(() => {
+  if (timerFinished.value) {
+    return locReset.value;
+  }
+  return userSent.value;
+});
+const timerFinished = computed(() => time.value === '00:00');
+const refundAddress = computed(() => {
+  if (!isEmpty(props.txObj)) {
+    return props.txObj.refundAddress;
+  }
+  return '';
+});
+const fromCurrency = computed(() => {
+  if (!isEmpty(props.txObj)) {
+    return props.txObj.fromType;
+  }
+  return '';
+});
+const toCurrency = computed(() => {
+  if (!isEmpty(props.txObj)) {
+    return props.txObj.toType;
+  }
+  return '';
+});
+const payTill = computed(() => props.txObj?.actualTrade?.response?.payTill);
+const rate = computed(() => {
+  if (!isEmpty(props.txObj) && props.txObj.hasOwnProperty('selectedProvider')) {
+    return formatFloatingPointValue(props.txObj.selectedProvider.rate).value;
+  }
+  return '';
+});
+
+// watch
+watch(
+  () => props.showCrossChainModal,
+  newVal => {
+    if (newVal) {
+      if (moment().isBefore(payTill.value)) {
+        time.value = startingTime.format('mm:ss');
+        const throttledFunc = debounce(() => {
+          const now = new Date();
+          const deadline = moment(payTill.value).diff(now);
+          if (timerFinished.value) {
+            clearInterval(counter.value);
+            counter.value = null;
+          } else {
+            time.value = moment.utc(deadline).format('mm:ss');
+          }
+        }, 200);
+        counter.value = setInterval(throttledFunc, 1000);
       } else {
-        clearInterval(this.counter);
+        time.value = '00:00';
       }
-    }
-  },
-  beforeDestroy() {
-    clearInterval(this.counter);
-  },
-  methods: {
-    copy() {
-      clipboardCopy(this.txObj.actualTrade.response.payinAddress);
-      Toast(
-        `Copied ${this.txObj.actualTrade.response.payinAddress} successfully!`,
-        {},
-        SUCCESS
-      );
-    },
-    locReset() {
-      this.sentBtc(false);
-      this.reset();
-    },
-    userSent() {
-      this.sentBtc(true);
+    } else {
+      clearInterval(counter.value);
     }
   }
+);
+// beforeDestroy
+onBeforeUnmount(() => {
+  clearInterval(counter.value);
+});
+
+// methods
+const copy = () => {
+  clipboardCopy(payinAddress.value);
+  Toast(`Copied ${payinAddress.value} successfully!`, {}, SUCCESS);
+};
+
+const locReset = () => {
+  props.sentBtc(false);
+  props.reset();
+};
+
+const userSent = () => {
+  props.sentBtc(true);
 };
 </script>
 <style lang="scss" scoped>

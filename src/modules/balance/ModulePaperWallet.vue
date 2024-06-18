@@ -31,65 +31,66 @@
   </mew-overlay>
 </template>
 
-<script>
-export default {
-  name: 'BalanceAddressPaperWallet',
-  components: {
-    PaperWalletToPrint: () => import('./components/PaperWalletToPrint'),
-    PaperWalletToDisplay: () => import('./components/PaperWalletToDisplay')
+<script setup>
+import { ref, computed, watch, onMounted } from 'vue';
+
+import PaperWalletToPrint from './components/PaperWalletToPrint.vue';
+import PaperWalletToDisplay from './components/PaperWalletToDisplay.vue';
+
+// props
+const props = defineProps({
+  open: {
+    default: false,
+    type: Boolean
   },
-  props: {
-    open: { default: false, type: Boolean },
-    close: {
-      default: function () {
-        return {};
-      },
-      type: Function
-    },
-    isOfflineApp: {
-      default: false,
-      type: Boolean
-    },
-    instance: {
-      default: () => null,
-      type: Object
-    }
+  close: {
+    default: () => {},
+    type: Function
   },
-  data() {
-    return {
-      footer: {
-        text: 'Need help?',
-        linkTitle: 'Contact support',
-        link: 'mailto:support@myetherwallet.com'
-      }
-    };
+  isOfflineApp: {
+    default: false,
+    type: Boolean
   },
-  computed: {
-    isOverlayOpen() {
-      return this.open;
-    }
-  },
-  watch: {
-    isOverlayOpen(val) {
-      if (val === false) {
-        this.$emit('close');
-      }
-    }
-  },
-  mounted() {
-    if (this.isOfflineApp) {
-      this.footer = {
-        text: 'Need help? Email us at support@myetherwallet.com',
-        linkTitle: '',
-        link: ''
-      };
-    }
-  },
-  methods: {
-    async print() {
-      window.print();
+  instance: {
+    default: null,
+    type: Object
+  }
+});
+
+// data
+const footer = ref({
+  text: 'Need help?',
+  linkTitle: 'Contact support',
+  link: 'mailto:support@myetherwallet.com'
+});
+
+// computed
+const isOverlayOpen = computed(() => props.open);
+
+// watch
+watch(
+  () => isOverlayOpen,
+  val => {
+    if (val === false) {
+      props.close();
     }
   }
+);
+
+// mounted
+onMounted(() => {
+  if (props.isOfflineApp) {
+    footer.value = {
+      text: 'Need help? Email us at support@myetherwallet.com',
+      linkTitle: '',
+      link: ''
+    };
+  }
+});
+
+// methods
+const print = () => {
+  window.print();
 };
 </script>
 

@@ -33,35 +33,30 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'ModuleToolsWatchOnly',
-  components: {
-    ToolsTableContainer: () => import('./components/ToolsTableContainer')
+<script setup>
+import { ref } from 'vue';
+
+import ToolsTableContainer from './components/ToolsTableContainer.vue';
+
+// data
+const addDialog = ref(false);
+const addresses = [
+  {
+    address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
+    currency: 'ETH',
+    nickname: 'My Address',
+    resolverAddr: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
   },
-  data: () => ({
-    addDialog: false,
-    addresses: [
-      {
-        address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
-        currency: 'ETH',
-        nickname: 'My Address',
-        resolverAddr: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
-      },
-      {
-        address: '0x43689531907482BEE7e650D18411E284A7337A66',
-        currency: 'ETH',
-        nickname: 'nickname',
-        resolverAddr: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
-      }
-    ],
-    title: {
-      title: 'Watch only address',
-      description:
-        'This is a recommended way to view your balance. You can only view your balance via this option.'
-    }
-  })
+  {
+    address: '0x43689531907482BEE7e650D18411E284A7337A66',
+    currency: 'ETH',
+    nickname: 'nickname',
+    resolverAddr: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
+  }
+];
+const title = {
+  title: 'Watch only address',
+  description:
+    'This is a recommended way to view your balance. You can only view your balance via this option.'
 };
 </script>
-
-<style lang="scss" scoped></style>

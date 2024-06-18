@@ -75,74 +75,76 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, onMounted } from 'vue';
 import { acceptQuote } from '../../handlers/pegin';
 import AppCopyBtn from '@/core/components/AppCopyBtn';
 
-export default {
-  name: 'AcceptQuote',
-  components: { AppCopyBtn },
-  props: {
-    siteKey: {
-      default: '',
-      type: String
-    },
-    quoteUrl: {
-      default: '',
-      type: String
-    },
-    quoteAmount: {
-      default: 0,
-      type: Number
-    },
-    confirmations: {
-      default: 0,
-      type: Number
-    },
-    quoteHash: {
-      default: '',
-      type: String
-    }
-  },
-  data() {
-    return {
-      msg: '',
-      token: '',
-      loading: false
-    };
-  },
-  mounted() {
-    if (window.grecaptcha) {
-      this.widgetId = window.grecaptcha.render('g-recaptcha', {
-        sitekey: this.siteKey,
-        callback: response => {
-          this.token = response;
-        }
-      });
-    }
-  },
-  methods: {
-    async submit() {
-      this.msg = '';
-      this.loading = true;
-      try {
-        const quoteReply = await acceptQuote(
-          this.quoteUrl,
-          {
-            QuoteHash: this.quoteHash
-          },
-          {
-            'X-Captcha-Token': this.token
-          }
-        );
+// emits
+const emits = defineEmits(['onSubmit']);
 
-        this.$emit('onSubmit', quoteReply);
-      } catch (e) {
-        this.msg = `${e.message}`;
-      }
-      this.loading = false;
-    }
+// props
+const props = defineProps({
+  siteKey: {
+    default: '',
+    type: String
+  },
+  quoteUrl: {
+    default: '',
+    type: String
+  },
+  quoteAmount: {
+    default: 0,
+    type: Number
+  },
+  confirmations: {
+    default: 0,
+    type: Number
+  },
+  quoteHash: {
+    default: '',
+    type: String
   }
+});
+
+// data
+const msg = ref('');
+const token = ref('');
+const loading = ref(false);
+const widgetId = ref(null);
+
+// mounted
+onMounted(() => {
+  if (window.grecaptcha) {
+    widgetId.value = window.grecaptcha.render('g-recaptcha', {
+      sitekey: props.siteKey,
+      callback: response => {
+        token.value = response;
+      }
+    });
+  }
+});
+
+// methods
+const submit = async () => {
+  msg.value = '';
+  loading.value = true;
+  try {
+    const quoteReply = await acceptQuote(
+      props.quoteUrl,
+      {
+        QuoteHash: props.quoteHash
+      },
+      {
+        'X-Captcha-Token': token.value
+      }
+    );
+
+    emits('onSubmit', quoteReply);
+  } catch (e) {
+    msg.value = `${e.message}`;
+  }
+  loading.value = false;
 };
 </script>
 <style lang="scss" scoped>

@@ -30,39 +30,38 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, onMounted } from 'vue';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 
-export default {
-  name: 'RnsReverseLookup',
-  props: {
-    address: {
-      default: '',
-      type: String
-    },
-    rnsManager: {
-      default: () => {},
-      type: Object
-    }
+// props
+const props = defineProps({
+  address: {
+    default: '',
+    type: String
   },
-  data() {
-    return {
-      hasDomains: true,
-      reverseRecordName: 'Loading...'
-    };
-  },
-  mounted() {
-    if (this.rnsManager) {
-      this.rnsManager
-        .resolveReverseName(this.address)
-        .then(name => {
-          this.hasDomains = name ? true : false;
-          this.reverseRecordName = name || '';
-        })
-        .catch(e => {
-          Toast(e, {}, ERROR);
-        });
-    }
+  rnsManager: {
+    default: () => {},
+    type: Object
   }
-};
+});
+
+// data
+const hasDomains = ref(true);
+const reverseRecordName = ref('Loading...');
+
+// mounted
+onMounted(() => {
+  if (props.rnsManager) {
+    props.rnsManager
+      .resolveReverseName(props.address)
+      .then(name => {
+        hasDomains.value = name ? true : false;
+        reverseRecordName.value = name || '';
+      })
+      .catch(e => {
+        Toast(e, {}, ERROR);
+      });
+  }
+});
 </script>

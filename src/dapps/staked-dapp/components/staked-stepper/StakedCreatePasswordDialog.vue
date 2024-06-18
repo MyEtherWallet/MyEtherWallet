@@ -60,78 +60,70 @@
   </v-dialog>
 </template>
 
-<script>
-export default {
-  name: 'StakedCreatePasswordDialog',
-  props: {
-    opened: {
-      type: Boolean,
-      default: false
-    }
-  },
-  data() {
-    return {
-      onCreatePassword: false,
-      password: '',
-      confirmPassword: '',
-      userTermsAgreed: false,
-      userTermsLabel:
-        'I understand that MEW has no control over any assets I choose to associate with these keys and willingly assume all risk of loss, including those coming as a result of protocol or key failure.'
-    };
-  },
-  computed: {
-    /**
-     * @return string
-     * Password error msgs
-     */
-    passwordErrMessages() {
-      if (this.password && this.password.length < 8) {
-        return 'Password is less than 8 characters';
-      }
-      return '';
-    },
-    /**
-     * @return string
-     * Confirm pw error msgs
-     */
-    confirmPasswordErrMessages() {
-      if (
-        this.password &&
-        this.confirmPassword &&
-        this.password !== this.confirmPassword
-      ) {
-        return 'Passwords do not match';
-      }
-      return '';
-    }
-  },
-  watch: {
-    /**
-     * @watches opened
-     * sets the value to v-model value: onCreatePassword immediately
-     */
-    opened(newVal) {
-      this.onCreatePassword = newVal;
-    },
-    /**
-     * @watches onCreatePassword
-     * emits the value back to step two generate
-     */
-    onCreatePassword(newVal) {
-      this.$emit('onDialogStateChange', newVal);
-    }
-  },
-  mounted() {
-    this.onCreatePassword = this.opened;
-  },
-  methods: {
-    /**
-     * @emits generate with password
-     */
-    generateKeystore() {
-      this.$emit('generate', this.password);
-    }
+<script setup>
+import { ref, computed, watch, onMounted } from 'vue';
+
+// emits
+const emits = defineEmits(['onDialogStateChange', 'generate']);
+
+// props
+const props = defineProps({
+  opened: {
+    type: Boolean,
+    default: false
   }
+});
+
+// data
+const onCreatePassword = ref(false);
+const password = ref('');
+const confirmPassword = ref('');
+const userTermsAgreed = ref(false);
+const userTermsLabel =
+  'I understand that MEW has no control over any assets I choose to associate with these keys and willingly assume all risk of loss, including those coming as a result of protocol or key failure.';
+
+// computed
+const passwordErrMessages = computed(() => {
+  if (password.value && password.value.length < 8) {
+    return 'Password is less than 8 characters';
+  }
+  return '';
+});
+
+const confirmPasswordErrMessages = computed(() => {
+  if (
+    password.value &&
+    confirmPassword.value &&
+    password.value !== confirmPassword.value
+  ) {
+    return 'Passwords do not match';
+  }
+  return '';
+});
+
+// watch
+watch(
+  () => props.opened,
+  newVal => {
+    onCreatePassword.value = newVal;
+  }
+);
+
+watch(
+  () => onCreatePassword.value,
+  newVal => {
+    emits('onDialogStateChange', newVal);
+  }
+);
+
+// onMounted
+onMounted(() => {
+  onCreatePassword.value = props.opened;
+});
+
+// methods
+const generateKeystore = () => {
+  emits('generate', password.value);
 };
 </script>
 
