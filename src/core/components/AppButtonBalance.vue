@@ -45,7 +45,7 @@ export default {
       type: String,
       default: 'Loading balance'
     },
-    /** Set this proerty to wei if you are dispalying ETH balance vs erc20 tokens*/
+    /** Set this property to wei if you are displaying ETH balance vs erc20 tokens*/
     balance: {
       type: String,
       default: ''
