@@ -512,7 +512,6 @@ export default {
           const token = this.tokens.find(
             item => item.name === this.selectedCryptoName
           );
-          console.log(token);
           const price = token.price;
 
           this.amount = BigNumber(this.localCryptoAmount)
