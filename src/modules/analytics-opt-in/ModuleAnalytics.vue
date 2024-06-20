@@ -7,7 +7,7 @@
     max-width="320"
     overlay-opacity="0"
     :content-class="
-      $vuetify.breakpoint.smAndUp
+      vuetify.breakpoint.smAndUp
         ? 'position-right matomo-analytics-dialog ma-0'
         : 'matomo-analytics-dialog ma-0'
     "
@@ -83,8 +83,10 @@
 <script setup>
 import { useAmplitude } from '@/core/composables/amplitude';
 import { usePopupStore } from '@/core/store/popups';
+import { useVuetify } from '../composables/vuetify';
 
-// injections/use
+// injections
+const vuetify = useVuetify();
 const { setTrackingConsent, $amplitude, shouldDisplayTrackingPopup } =
   useAmplitude();
 const { neverShowPopup } = usePopupStore();

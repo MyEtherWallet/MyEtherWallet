@@ -7,7 +7,7 @@
   <v-dialog
     :max-width="maxWidth"
     :value="show"
-    :fullscreen="scrollable ? $vuetify.breakpoint.xs : false"
+    :fullscreen="scrollable ? vuetify.breakpoint.xs : false"
     content-class="ma-0"
     :scrollable="scrollable"
     @click:outside="handleClickOutside"
@@ -74,7 +74,7 @@
               btn-size="xlarge"
               :color-theme="leftBtn.color || 'primary'"
               :title="leftBtn.text"
-              :has-full-width="!rightBtn ? true : $vuetify.breakpoint.xs"
+              :has-full-width="!rightBtn ? true : vuetify.breakpoint.xs"
               @click.native="leftBtn.method"
             />
           </v-col>
@@ -91,7 +91,7 @@
               :color-theme="rightBtn.color || 'primary'"
               :title="rightBtn.text"
               :disabled="!rightBtn.enabled"
-              :has-full-width="$vuetify.breakpoint.xs"
+              :has-full-width="vuetify.breakpoint.xs"
               @click.native="rightBtn.method"
             />
           </v-col>
@@ -103,7 +103,12 @@
 
 <script setup>
 import MewButton from './MewButton.vue';
+import { useVuetify } from '../composables/vuetify';
 
+// injections
+const vuetify = useVuetify();
+
+// props
 const props = defineProps({
   /**
    * Title of popup.

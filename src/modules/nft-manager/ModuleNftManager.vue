@@ -54,8 +54,8 @@
             !loadingContracts && !onNftSend && tabs.length > 0 && !hasNoTokens
           "
           :items="tabs"
-          :is-vertical="$vuetify.breakpoint.mdAndUp"
-          :has-underline="$vuetify.breakpoint.smAndDown"
+          :is-vertical="vuetify.breakpoint.mdAndUp"
+          :has-underline="vuetify.breakpoint.smAndDown"
           :active-tab="activeTab"
           @onTab="onTab"
         >
@@ -160,6 +160,7 @@ import { toBNSafe } from '@/core/helpers/numberFormatHelper';
 import NFT from './handlers/handlerNftManager';
 import handleError from '@/modules/confirmation/handlers/errorHandler.js';
 import { useRouter } from 'vue-router/composables';
+import { useVuetify } from '../composables/vuetify';
 
 const MIN_GAS_LIMIT = 21000;
 
@@ -174,6 +175,7 @@ const NftManagerSend = defineAsyncComponent(() =>
 const { gasPriceType, network, gasPriceByType } = useGlobalStore();
 const { web3, balanceInWei, address } = useWalletStore();
 const router = useRouter();
+const vuetify = useVuetify();
 
 // data
 const nft = ref({});

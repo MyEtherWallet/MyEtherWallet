@@ -38,7 +38,7 @@
         class="mt-10 d-flex flex-column-reverse flex-md-row align-center justify-center"
       >
         <mew-button
-          :has-full-width="$vuetify.breakpoint.smAndDown"
+          :has-full-width="vuetify.breakpoint.smAndDown"
           btn-size="xlarge"
           class="d-block ma-2"
           title="Back"
@@ -46,7 +46,7 @@
           @click.native="onBack"
         />
         <mew-button
-          :has-full-width="$vuetify.breakpoint.smAndDown"
+          :has-full-width="vuetify.breakpoint.smAndDown"
           btn-size="xlarge"
           class="d-block ma-2"
           :title="buttonText"
@@ -63,6 +63,7 @@ import { ref, defineAsyncComponent, onMounted, computed } from 'vue';
 import { useAmplitude } from '@/core/composables/amplitude';
 import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
+import { useVuetify } from '../composables/vuetify';
 
 const ModuleAddressBook = defineAsyncComponent(() =>
   import('@/modules/address-book/ModuleAddressBook')
@@ -75,6 +76,7 @@ const emit = defineEmits(['onContinue']);
 const { trackDapp } = useAmplitude();
 const { network } = useGlobalStore();
 const { address } = useWalletStore();
+const vuetify = useVuetify();
 
 // data
 const eth2Address = ref('');

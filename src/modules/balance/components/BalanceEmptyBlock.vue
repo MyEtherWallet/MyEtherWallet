@@ -33,13 +33,13 @@
         <div class="d-flex align-center mt-5">
           <div>We accept credit card</div>
           <img
-            v-if="!$vuetify.theme.dark"
+            v-if="!vuetify.theme.dark"
             class="ml-2 mr-1"
             height="21"
             src="@/assets/images/icons/icon-visa-dark.png"
           />
           <img
-            v-if="$vuetify.theme.dark"
+            v-if="vuetify.theme.dark"
             class="ml-2 mr-2"
             height="13"
             src="@/assets/images/icons/icon-visa-white.png"
@@ -88,11 +88,13 @@ import { useRouter } from 'vue-router/composables';
 
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { useBuySell } from '@/core/composables/buyMore.js';
+import { useVuetify } from '../composables/vuetify';
 
 // emits
 const emit = defineEmits(['openAddCustomToken']);
 
 // injections
+const vuetify = useVuetify();
 const { openBuySell } = useBuySell();
 const router = useRouter();
 

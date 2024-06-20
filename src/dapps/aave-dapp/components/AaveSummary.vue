@@ -27,7 +27,7 @@
         <span class="textLight--text">{{ amountUsd }}</span>
       </div>
       <img
-        :height="$vuetify.breakpoint.mdAndUp ? '80' : '30'"
+        :height="vuetify.breakpoint.mdAndUp ? '80' : '30'"
         :src="tokenIcon"
         :alt="tokenSymbol"
       />
@@ -120,6 +120,11 @@ import { calculateHealthFactorFromBalancesBigUnits } from '@aave/protocol-js';
 
 import { ACTION_TYPES, INTEREST_TYPES } from '../handlers/helpers';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
+
+import { useVuetify } from '../composables/vuetify';
+
+// injections
+const vuetify = useVuetify();
 
 // emit
 const emit = defineEmits(['confirmed', 'onConfirm']);

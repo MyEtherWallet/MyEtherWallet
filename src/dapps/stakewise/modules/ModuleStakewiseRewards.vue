@@ -14,10 +14,10 @@
         />
       </v-col>
       <v-col
-        :order="$vuetify.breakpoint.smAndDown ? 'last' : ''"
+        :order="vuetify.breakpoint.smAndDown ? 'last' : ''"
         cols="12"
         md="8"
-        :class="$vuetify.breakpoint.smAndDown ? 'my-10' : 'pr-7'"
+        :class="vuetify.breakpoint.smAndDown ? 'my-10' : 'pr-7'"
       >
         <mew-sheet class="pa-15">
           <div class="mew-heading-2 textDark--text mb-8">Compound Rewards</div>

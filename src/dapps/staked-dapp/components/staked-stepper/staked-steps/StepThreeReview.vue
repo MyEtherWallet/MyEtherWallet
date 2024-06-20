@@ -162,7 +162,7 @@
         class="mt-10 d-flex flex-column-reverse flex-md-row align-center justify-center"
       >
         <mew-button
-          :has-full-width="$vuetify.breakpoint.smAndDown"
+          :has-full-width="vuetify.breakpoint.smAndDown"
           btn-size="xlarge"
           class="d-block ma-2"
           title="Back"
@@ -170,7 +170,7 @@
           @click.native="onBack"
         />
         <mew-button
-          :has-full-width="$vuetify.breakpoint.smAndDown"
+          :has-full-width="vuetify.breakpoint.smAndDown"
           btn-size="xlarge"
           class="d-block ma-2"
           :title="buttonTitle"
@@ -195,8 +195,10 @@ import { useAmplitude } from '@/core/composables/amplitude';
 import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
 import { useExternalStore } from '@/core/store/external';
+import { useVuetify } from '../composables/vuetify';
 
 // injections/use
+const vuetify = useVuetify();
 const { trackDapp } = useAmplitude();
 const { network, getFiatValue, gasPrice } = useGlobalStore();
 const { fiatValue } = useExternalStore();

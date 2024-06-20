@@ -97,7 +97,7 @@
       <div
         :class="[
           'py-4 px-0 full-width d-flex align-center justify-space-between',
-          $vuetify.breakpoint.smAndDown ? 'column-reverse align-baseline' : ''
+          vuetify.breakpoint.smAndDown ? 'column-reverse align-baseline' : ''
         ]"
         @click="selectAddress(item)"
       >
@@ -129,6 +129,11 @@ import { ref, watch, computed } from 'vue';
 import MewBlockie from './MewBlockie.vue';
 import MewCopy from './MewCopy.vue';
 import MewTransformHash from './MewTransformHash.vue';
+
+import { useVuetify } from '../composables/vuetify';
+
+// injections
+const vuetify = useVuetify();
 
 const USER_INPUT_TYPES = {
   typed: 'TYPED',

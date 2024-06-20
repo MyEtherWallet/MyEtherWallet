@@ -7,7 +7,7 @@
       >
         <div
           :class="[
-            $vuetify.breakpoint.mdAndDown ? 'mew-subtitle' : 'mew-title',
+            vuetify.breakpoint.mdAndDown ? 'mew-subtitle' : 'mew-title',
             'font-weight-regular text-center pb-5 pb-lg-10'
           ]"
         >
@@ -29,7 +29,7 @@
       <v-col cols="12" class="pt-10 pb-2 d-flex align-center justify-center">
         <div
           :class="[
-            $vuetify.breakpoint.mdAndDown ? 'mew-subtitle' : 'mew-title',
+            vuetify.breakpoint.mdAndDown ? 'mew-subtitle' : 'mew-title',
             'font-weight-regular text-center pb-5 pb-md-10'
           ]"
         >
@@ -51,7 +51,7 @@
       <v-col cols="12" class="pb-3 d-flex align-center justify-center">
         <div
           :class="[
-            $vuetify.breakpoint.mdAndDown ? 'mew-subtitle' : 'mew-title',
+            vuetify.breakpoint.mdAndDown ? 'mew-subtitle' : 'mew-title',
             'font-weight-regular text-center pb-5 pb-md-10'
           ]"
         >
@@ -74,7 +74,12 @@
     </v-row>
   </div>
 </template>
+<script setup>
+import { useVuetify } from '../composables/vuetify';
 
+// injections
+const vuetify = useVuetify();
+</script>
 <style lang="scss" scoped>
 %default-shadow-and-border {
   border-radius: 12px;

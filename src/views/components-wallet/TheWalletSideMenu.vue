@@ -5,7 +5,7 @@
       app
       class="wallet-sidemenu"
       width="300"
-      :dark="$vuetify.theme.dark"
+      :dark="vuetify.theme.dark"
       color="bgSideMenu"
     >
       <template #prepend>
@@ -259,7 +259,7 @@
     =====================================================================================
     -->
     <v-system-bar
-      v-if="!$vuetify.breakpoint.lgAndUp"
+      v-if="!vuetify.breakpoint.lgAndUp"
       color="#0b1a40"
       app
       :height="60"
@@ -317,7 +317,7 @@ import ModuleSettings from '@/modules/settings/ModuleSettings';
 import ModuleNotifications from '@/modules/notifications/ModuleNotifications';
 import NetworkSwitch from '@/modules/network/components/NetworkSwitch.vue';
 
-// injections/use
+// injections
 const route = useRoute();
 const router = useRouter();
 const { t } = useI18n();

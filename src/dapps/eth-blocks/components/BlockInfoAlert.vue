@@ -104,7 +104,7 @@
         <v-col cols="6">
           <mew-button
             v-if="!isPending"
-            :title="$vuetify.breakpoint.xs ? 'Mint' : 'Mint now'"
+            :title="vuetify.breakpoint.xs ? 'Mint' : 'Mint now'"
             btn-style="background"
             color-theme="primary"
             has-full-width
@@ -188,7 +188,7 @@
         <v-col v-if="isAvailable" cols="6" class="mt-1 d-flex justify-end">
           <mew-button
             v-if="!isPending"
-            :title="$vuetify.breakpoint.xs ? 'Mint' : 'Mint Block'"
+            :title="vuetify.breakpoint.xs ? 'Mint' : 'Mint Block'"
             :disabled="disableActionBtn"
             :loading="disableAction"
             @click.native="emitMint()"
@@ -244,7 +244,7 @@
           cols="12"
           sm="6"
           class="mt-5 mb-2 mt-sm-4 pl-sm-2"
-          :order="$vuetify.breakpoint.xs ? 'last' : ''"
+          :order="vuetify.breakpoint.xs ? 'last' : ''"
         >
           <mew-button
             v-if="!isPending"
@@ -341,6 +341,7 @@ import { useAmplitude } from '@/core/composables/amplitude';
 import { useGlobalStore } from '@/core/store/global';
 import { useExternalStore } from '@/core/store/external';
 import { useEthBlocksTxsStore } from '../store';
+import { useVuetify } from '../composables/vuetify';
 
 // emit
 const emit = defineEmits(['mint', 'openSend']);
@@ -351,6 +352,7 @@ const { trackDapp } = useAmplitude();
 const { network, isTestNetwork, getFiatValue, gasPrice } = useGlobalStore();
 const { fiatValue } = useExternalStore();
 const { cart, addBlockToCart } = useEthBlocksTxsStore();
+const vuetify = useVuetify();
 
 // props
 const props = defineProps({

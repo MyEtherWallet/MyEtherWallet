@@ -52,14 +52,14 @@
             <v-col
               cols="3"
               sm="2"
-              :class="$vuetify.breakpoint.smAndUp ? '' : 'align-content-center'"
+              :class="vuetify.breakpoint.smAndUp ? '' : 'align-content-center'"
             >
               <img
                 :src="dapp.icon"
                 width="64px"
                 height="64px"
                 :class="[
-                  $vuetify.breakpoint.smAndUp ? 'border-radius--15px' : ''
+                  vuetify.breakpoint.smAndUp ? 'border-radius--15px' : ''
                 ]"
               />
             </v-col>
@@ -120,8 +120,10 @@ import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
 
 import { useRouter } from 'vue-router/composables';
+import { useVuetify } from '../composables/vuetify';
 
 // injections/use
+const vuetify = useVuetify();
 const { trackDapp, trackStaking } = useAmplitude();
 const { network } = useGlobalStore();
 const { web3, address, identifier } = useWalletStore();

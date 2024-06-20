@@ -58,7 +58,7 @@
         depressed
         :class="[
           isCompact ? 'margin-offset' : '',
-          $vuetify.breakpoint.smAndDown ? 'ml-2' : 'ml-4',
+          vuetify.breakpoint.smAndDown ? 'ml-2' : 'ml-4',
           'search-btn'
         ]"
         color="primary"
@@ -90,6 +90,10 @@
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue';
 import MewIconButton from './MewIconButton.vue';
+import { useVuetify } from '../composables/vuetify';
+
+// injections
+const vuetify = useVuetify();
 
 // emits
 const emits = defineEmits(['input', 'menu-select']);

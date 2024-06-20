@@ -1,14 +1,14 @@
 <template>
   <div
     class="mew-component--tools"
-    :class="$vuetify.breakpoint.smAndDown ? 'mobile' : 'desktop'"
+    :class="vuetify.breakpoint.smAndDown ? 'mobile' : 'desktop'"
   >
     <the-layout-header title="Tools" class="pt-16" />
 
     <v-container class="px-3 my-12">
       <mew-tabs
-        :is-vertical="$vuetify.breakpoint.smAndDown ? false : true"
-        :compact="$vuetify.breakpoint.smAndDown"
+        :is-vertical="vuetify.breakpoint.smAndDown ? false : true"
+        :compact="vuetify.breakpoint.smAndDown"
         :items="items"
         :active-tab="activeTab"
         show-arrows
@@ -40,8 +40,10 @@ import ModuleMessageVerify from '@/modules/message/ModuleMessageVerify.vue';
 import GetStarted from '@/views/components-default/GetStarted.vue';
 
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
+import { useVuetify } from '../composables/vuetify';
 
 // injections
+const vuetify = useVuetify();
 const route = useRoute();
 const router = useRouter();
 

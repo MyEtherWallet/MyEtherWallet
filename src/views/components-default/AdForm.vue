@@ -23,7 +23,7 @@
           >
             <div
               :class="[
-                $vuetify.breakpoint.mdAndDown ? 'mew-subtitle' : 'mew-title',
+                vuetify.breakpoint.mdAndDown ? 'mew-subtitle' : 'mew-title',
                 'font-weight-regular text-center pb-5 talk-to-marketing-title title-anchor-ad-mew'
               ]"
             >
@@ -51,7 +51,12 @@
     </v-row>
   </div>
 </template>
+<script setup>
+import { useVuetify } from '../composables/vuetify';
 
+// injections
+const vuetify = useVuetify();
+</script>
 <style lang="scss" scoped>
 .margin-0-auto {
   margin: 0 auto !important;

@@ -166,7 +166,7 @@
       <!-- Displays the tx hash -->
       <!-- ===================================================================================== -->
       <template v-if="!loading" #[`item.txHash`]="{ item }">
-        <div :class="[!$vuetify.breakpoint.xs ? 'pr-3' : '']">
+        <div :class="[!vuetify.breakpoint.xs ? 'pr-3' : '']">
           <v-tooltip
             eager
             open-on-hover
@@ -248,6 +248,10 @@ import MewBlockie from './MewBlockie.vue';
 import MewButton from './MewButton.vue';
 import MewTransformHash from './MewTransformHash.vue';
 import MewCopy from './MewCopy.vue';
+import { useVuetify } from '../composables/vuetify';
+
+// injections
+const vuetify = useVuetify();
 
 // emit
 const emits = defineEmits(['selectedRow', 'selectedAll']);

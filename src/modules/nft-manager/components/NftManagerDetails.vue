@@ -32,9 +32,7 @@
         class="d-flex align-center flex-column flex-md-row flex-lg-row flex-xl-row justify-space-between pa-3 full-width"
       >
         <div class="nft-name pr-2">
-          <span
-            v-if="token"
-            :class="$vuetify.breakpoint.smAndDown ? 'mb-1' : ''"
+          <span v-if="token" :class="vuetify.breakpoint.smAndDown ? 'mb-1' : ''"
             >#{{ token.name || token.token_id }}</span
           >
         </div>
@@ -51,6 +49,10 @@
 </template>
 <script setup>
 import nftPlaceholder from '@/assets/images/icons/icon-nft-placeholder.png';
+import { useVuetify } from '../composables/vuetify';
+
+// injections
+const vuetify = useVuetify();
 
 // props
 defineProps({

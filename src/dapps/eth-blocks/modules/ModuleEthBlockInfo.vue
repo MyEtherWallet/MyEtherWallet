@@ -41,7 +41,7 @@
         <v-img
           lazy-src="../assets/loading-block.svg"
           :src="blockHandler.img"
-          :max-width="$vuetify.breakpoint.xs ? '160' : '240'"
+          :max-width="vuetify.breakpoint.xs ? '160' : '240'"
           contain
         >
           <template #placeholder>
@@ -237,6 +237,7 @@ import { useWalletStore } from '@/core/store/wallet';
 
 import { useRouter } from 'vue-router/composables';
 import { useEthBlocksTxsStore } from '../store';
+import { useVuetify } from '../composables/vuetify';
 
 const BlockInfo = defineAsyncComponent(() =>
   import('../components/BlockInfo.vue')
@@ -257,6 +258,7 @@ const { isTestNetwork, gasPrice, network } = useGlobalStore();
 const { web3, balanceInWei, address } = useWalletStore();
 const { getEthBlockTx } = useEthBlocksTxsStore();
 const router = useRouter();
+const vuetify = useVuetify();
 
 // props
 const props = defineProps({

@@ -42,7 +42,7 @@
           icon-type="mdi"
           icon-align="left"
           icon="mdi-download"
-          :has-full-width="$vuetify.breakpoint.smAndDown"
+          :has-full-width="vuetify.breakpoint.smAndDown"
           class="d-block mx-auto mt-8"
           btn-size="xlarge"
           :disabled="
@@ -62,6 +62,10 @@
 
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue';
+import { useVuetify } from '../composables/vuetify';
+
+// injections
+const vuetify = useVuetify();
 
 // emits
 const emits = defineEmits(['onDialogStateChange', 'generate']);

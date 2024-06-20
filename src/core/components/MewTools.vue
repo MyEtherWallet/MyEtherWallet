@@ -1,10 +1,10 @@
 <template>
   <mew-menu-popup
     class="mew-component--mew-tools"
-    :icon="$vuetify.breakpoint.smAndDown"
+    :icon="vuetify.breakpoint.smAndDown"
     :btn-icon="require('@/assets/images/icons/icon-grid-dot-white.svg')"
-    :btn-icon-size="$vuetify.breakpoint.mdAndUp ? '18px' : '20px'"
-    :btn-title="$vuetify.breakpoint.mdAndUp ? 'MEW Products' : ''"
+    :btn-icon-size="vuetify.breakpoint.mdAndUp ? '18px' : '20px'"
+    :btn-title="vuetify.breakpoint.mdAndUp ? 'MEW Products' : ''"
     btn-font-size="12px"
     color="white"
     outlined

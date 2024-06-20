@@ -124,7 +124,7 @@
       <mew-button
         class="mx-auto d-block mt-9"
         :loading="false"
-        :has-full-width="$vuetify.breakpoint.smAndDown"
+        :has-full-width="vuetify.breakpoint.smAndDown"
         btn-size="xlarge"
         :title="buttonText"
         :disabled="!hasEnoughBalance"
@@ -148,10 +148,13 @@ import { useExternalStore } from '@/core/store/external';
 
 import { useAmplitude } from '@/core/composables/amplitude';
 import { useBuySell } from '@/core/composables/buyMore';
+import { useVuetify } from '../composables/vuetify';
 
 // emits
 const emit = defineEmits(['onContinue']);
-// injections/use
+
+// injections
+const vuetify = useVuetify();
 const { trackDapp } = useAmplitude();
 const { openBuySell } = useBuySell();
 const { network, getFiatValue } = useGlobalStore();

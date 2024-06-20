@@ -21,7 +21,7 @@
       class="pk-survey"
       max-width="320"
       :content-class="
-        $vuetify.breakpoint.smAndUp
+        vuetify.breakpoint.smAndUp
           ? 'position-right survey-dialog ma-0'
           : 'survey-dialog ma-0'
       "

@@ -20,7 +20,7 @@
       v-if="step === 1"
       :class="[
         'pa-5 mb-4 full-width text-center rounded subtitle-container',
-        $vuetify.breakpoint.xs || $vuetify.breakpoint.sm ? 'mt-3' : ''
+        vuetify.breakpoint.xs || vuetify.breakpoint.sm ? 'mt-3' : ''
       ]"
     >
       <span class="full-width"
@@ -247,6 +247,7 @@ import { useAmplitude } from '@/core/composables/amplitude.js';
 import { useWalletStore } from '@/core/store/wallet';
 
 import { useRouter } from 'vue-router/composables.js';
+import { useVuetify } from '../composables/vuetify';
 
 const AccessWalletKeepkey = defineAsyncComponent(() =>
   import('./hardware/components/AccessWalletKeepkey')
@@ -272,6 +273,7 @@ const { trackAccessWalletAmplitude } = useAmplitude();
 const { identifier, ledgerBLE, setWallet, setLedgerBluetooth } =
   useWalletStore();
 const router = useRouter();
+const vuetify = useVuetify();
 
 // props
 const props = defineProps({

@@ -3,7 +3,7 @@
     <div v-if="showBanner" class="banner-container">
       <div class="close-icon pa-2 pa-sm-2" @click="trackClosing">
         <v-icon
-          :size="$vuetify.breakpoint.smAndDown ? '16' : '24'"
+          :size="vuetify.breakpoint.smAndDown ? '16' : '24'"
           class="cursor--pointer"
           color="white"
         >
@@ -28,7 +28,7 @@
         <mew-button
           class="mt-2 mt-sm-5 text-blue"
           title="View Staking Options"
-          :btn-size="$vuetify.breakpoint.smAndDown ? 'small' : 'large'"
+          :btn-size="vuetify.breakpoint.smAndDown ? 'small' : 'large'"
           color-theme="white"
           @click.native="viewStakingOptions"
         />
@@ -44,8 +44,10 @@ import { useRouter } from 'vue-router/composables';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { STAKING } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 import { useAmplitude } from '@/core/composables/amplitude';
+import { useVuetify } from '../composables/vuetify';
 
 // injections/use
+const vuetify = useVuetify();
 const { trackStaking } = useAmplitude();
 const router = useRouter();
 

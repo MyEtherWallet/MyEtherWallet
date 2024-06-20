@@ -4,7 +4,7 @@
       <the-layout-header title="Get a hardware wallet today!" />
       <v-sheet
         color="transparent"
-        :max-width="!$vuetify.breakpoint.smAndDown ? '500px' : '470px'"
+        :max-width="!vuetify.breakpoint.smAndDown ? '500px' : '470px'"
         class="mx-auto"
       >
         <v-row>
@@ -33,7 +33,7 @@
                       v-if="b.logoText"
                       class="d-flex align-center mb-3"
                       :class="
-                        !$vuetify.breakpoint.smAndDown
+                        !vuetify.breakpoint.smAndDown
                           ? 'mew-subtitle'
                           : 'mew-heading-2'
                       "
@@ -99,10 +99,12 @@ import { onMounted, ref, onBeforeMount } from 'vue';
 import { COMMON } from '@/modules/analytics-opt-in/handlers/configs/events';
 import { useAmplitude } from '@/core/composables/amplitude';
 import { useRouter } from 'vue-router/composables';
+import { useVuetify } from '../composables/vuetify';
 
 import TheLayoutHeader from '../components-default/TheLayoutHeader.vue';
 
 // injections/use
+const vuetify = useVuetify();
 const router = useRouter();
 const { trackBuyHardwareAmplitude } = useAmplitude();
 

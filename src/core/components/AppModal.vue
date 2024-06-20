@@ -2,7 +2,7 @@
   <v-dialog
     :max-width="width"
     :value="show"
-    :fullscreen="scrollable ? $vuetify.breakpoint.xs : false"
+    :fullscreen="scrollable ? vuetify.breakpoint.xs : false"
     content-class="core--components--app-modal"
     :scrollable="scrollable"
     :persistent="isPersistent"
@@ -22,7 +22,7 @@
           v-if="hasCloseButton"
           icon
           :class="
-            $vuetify.breakpoint.mdAndUp
+            vuetify.breakpoint.mdAndUp
               ? 'header-close-icon'
               : 'header-close-icon-mobile'
           "
@@ -73,7 +73,7 @@
               btn-style="outline"
               btn-size="xlarge"
               title="Cancel"
-              :has-full-width="$vuetify.breakpoint.xs"
+              :has-full-width="vuetify.breakpoint.xs"
               @click.native="close"
             />
           </v-col>
@@ -89,7 +89,7 @@
               btn-size="xlarge"
               :title="btnText"
               :disabled="!btnEnabled"
-              :has-full-width="$vuetify.breakpoint.xs"
+              :has-full-width="vuetify.breakpoint.xs"
               @click.native="btnAction"
             />
           </v-col>
@@ -159,7 +159,7 @@
             btn-style="outline"
             btn-size="xlarge"
             title="Cancel"
-            :has-full-width="$vuetify.breakpoint.xs"
+            :has-full-width="vuetify.breakpoint.xs"
             @click.native="handleCloseButton"
           />
         </v-col>
@@ -175,7 +175,7 @@
             btn-size="xlarge"
             :title="btnText"
             :disabled="!btnEnabled"
-            :has-full-width="$vuetify.breakpoint.xs"
+            :has-full-width="vuetify.breakpoint.xs"
             @click.native="btnAction"
           />
         </v-col>
@@ -194,6 +194,10 @@
 
 <script setup>
 import { SWAP } from '@/modules/analytics-opt-in/handlers/configs/events.js';
+import { useVuetify } from '../composables/vuetify';
+
+// injections
+const vuetify = useVuetify();
 
 // props
 defineProps({

@@ -46,7 +46,7 @@
                   />
                   <span
                     :class="[
-                      $vuetify.smAndUp ? 'mew-heading-2' : 'mew-heading-3',
+                      vuetify.smAndUp ? 'mew-heading-2' : 'mew-heading-3',
                       'ml-2'
                     ]"
                   >
@@ -76,7 +76,7 @@
                   />
                   <span
                     :class="[
-                      $vuetify.smAndUp ? 'mew-heading-2' : 'mew-heading-3',
+                      vuetify.smAndUp ? 'mew-heading-2' : 'mew-heading-3',
                       'ml-2'
                     ]"
                   >
@@ -127,7 +127,7 @@
                   />
                   <span
                     :class="[
-                      $vuetify.smAndUp ? 'mew-heading-2' : 'mew-heading-3',
+                      vuetify.smAndUp ? 'mew-heading-2' : 'mew-heading-3',
                       'ml-2'
                     ]"
                   >
@@ -157,7 +157,7 @@
                   />
                   <span
                     :class="[
-                      $vuetify.smAndUp ? 'mew-heading-2' : 'mew-heading-3',
+                      vuetify.smAndUp ? 'mew-heading-2' : 'mew-heading-3',
                       'ml-2'
                     ]"
                   >
@@ -202,8 +202,10 @@ import { formatPercentageValue } from '@/core/helpers/numberFormatHelper';
 import { STAKED_ROUTE } from '@/dapps/staked-dapp/configsRoutes';
 import { COINBASE_STAKING_ROUTES } from '@/dapps/coinbase-staking/configs';
 import { useGlobalStore } from '@/core/store/global';
+import { useVuetify } from '../composables/vuetify';
 
 // injections
+const vuetify = useVuetify();
 const { network, getFiatValue } = useGlobalStore();
 const router = useRouter();
 

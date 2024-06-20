@@ -4,7 +4,7 @@
       <v-container class="banner-content-container pt-16">
         <div
           :class="[
-            $vuetify.breakpoint.mdAndDown ? 'mew-subtitle' : 'mew-title',
+            vuetify.breakpoint.mdAndDown ? 'mew-subtitle' : 'mew-title',
             'font-weight-regular white--text mb-11'
           ]"
         >
@@ -77,6 +77,13 @@
     </div>
   </div>
 </template>
+
+<script setup>
+import { useVuetify } from '../composables/vuetify';
+
+// injections
+const vuetify = useVuetify();
+</script>
 
 <style lang="scss" scoped>
 .desktop-content {

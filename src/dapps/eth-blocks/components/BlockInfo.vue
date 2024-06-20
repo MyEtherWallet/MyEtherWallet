@@ -123,7 +123,7 @@
       >
         <mew-button
           v-if="!isPending"
-          :title="$vuetify.breakpoint.xs ? 'Mint' : 'Mint now'"
+          :title="vuetify.breakpoint.xs ? 'Mint' : 'Mint now'"
           :disabled="disableActionBtn"
           :loading="disableAction"
           has-full-width
@@ -178,7 +178,7 @@
         cols="12"
         sm="6"
         class="mt-5 mb-2 mt-sm-4 pl-sm-2 pa-3"
-        :order="$vuetify.breakpoint.xs ? 'last' : ''"
+        :order="vuetify.breakpoint.xs ? 'last' : ''"
       >
         <mew-button
           v-if="!isPending"
@@ -272,11 +272,13 @@ import { useAmplitude } from '@/core/composables/amplitude';
 import { useGlobalStore } from '@/core/store/global';
 import { useExternalStore } from '@/core/store/external';
 import { useEthBlocksTxsStore } from '../store';
+import { useVuetify } from '../composables/vuetify';
 
 // emit
 const emit = defineEmits(['mint', 'openSend']);
 
 // injections/use
+const vuetify = useVuetify();
 const { openBuySell } = useBuySell();
 const { trackDapp } = useAmplitude();
 const { network, isTestNetwork, gasPrice, getFiatValue } = useGlobalStore();

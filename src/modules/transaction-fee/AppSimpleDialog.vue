@@ -10,11 +10,11 @@
     content-class="whitePopup"
     :width="width"
     :max-width="maxWidth"
-    :fullscreen="$vuetify.breakpoint.smAndDown"
+    :fullscreen="vuetify.breakpoint.smAndDown"
   >
     <div
       v-if="!noPadding"
-      :class="$vuetify.breakpoint.smAndDown ? 'pa-3' : 'pa-8 pt-5'"
+      :class="vuetify.breakpoint.smAndDown ? 'pa-3' : 'pa-8 pt-5'"
     >
       <div
         v-if="!noTitle"
@@ -49,6 +49,10 @@
 
 <script setup>
 import { ref, watch } from 'vue';
+import { useVuetify } from '../composables/vuetify';
+
+// injections
+const vuetify = useVuetify();
 
 // emits
 const emit = defineEmits(['close', 'input']);

@@ -25,7 +25,7 @@
         <v-col cols="12" md="2" class="d-flex align-center justify-center">
           <v-icon
             :style="
-              $vuetify.breakpoint.smAndDown ? 'transform: rotate(90deg)' : ''
+              vuetify.breakpoint.smAndDown ? 'transform: rotate(90deg)' : ''
             "
             large
             >mdi-swap-horizontal</v-icon
@@ -68,7 +68,7 @@
               <td>{{ eu.name }}</td>
               <td>
                 <div class="d-flex align-center">
-                  <div v-show="$vuetify.breakpoint.mdAndUp" class="mr-1">
+                  <div v-show="vuetify.breakpoint.mdAndUp" class="mr-1">
                     {{ eu.unit1 }} =
                   </div>
                   <div class="unit-short">
@@ -79,7 +79,7 @@
               </td>
               <td>
                 <div class="d-flex align-center">
-                  <div v-show="$vuetify.breakpoint.lgAndUp" class="mr-1">
+                  <div v-show="vuetify.breakpoint.lgAndUp" class="mr-1">
                     {{ eu.etherUnit1 }} =
                   </div>
                   <div class="unit-short">
@@ -103,6 +103,7 @@
 import { defineAsyncComponent, ref, watch } from 'vue';
 import { BigNumber } from 'bignumber.js';
 import utils from 'web3-utils';
+import { useVuetify } from '../composables/vuetify';
 
 const TheLayoutHeader = defineAsyncComponent(() =>
   import('../components-default/TheLayoutHeader')
@@ -110,6 +111,9 @@ const TheLayoutHeader = defineAsyncComponent(() =>
 const GetStarted = defineAsyncComponent(() =>
   import('../components-default/GetStarted')
 );
+
+// injections
+const vuetify = useVuetify();
 
 const items = [
   {

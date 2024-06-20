@@ -27,7 +27,7 @@
         <v-col cols="12" md="2" class="d-flex align-center justify-center">
           <v-icon
             :style="
-              $vuetify.breakpoint.smAndDown ? 'transform: rotate(90deg)' : ''
+              vuetify.breakpoint.smAndDown ? 'transform: rotate(90deg)' : ''
             "
             large
             >mdi-swap-horizontal</v-icon
@@ -72,7 +72,7 @@
                 <div class="d-flex align-center">
                   <div
                     v-if="false"
-                    v-show="$vuetify.breakpoint.mdAndUp"
+                    v-show="vuetify.breakpoint.mdAndUp"
                     class="mr-1"
                   >
                     {{ eu.unit1 }} =
@@ -87,7 +87,7 @@
                 <div class="d-flex align-center">
                   <div
                     v-if="false"
-                    v-show="$vuetify.breakpoint.lgAndUp"
+                    v-show="vuetify.breakpoint.lgAndUp"
                     class="mr-1"
                   >
                     {{ eu.etherUnit1 }} =
@@ -111,6 +111,10 @@
 import { ref, watch } from 'vue';
 import { BigNumber } from 'bignumber.js';
 import utils from 'web3-utils';
+import { useVuetify } from '../composables/vuetify';
+
+// injections
+const vuetify = useVuetify();
 
 // data
 const title = 'Convert Units';

@@ -26,7 +26,7 @@
                   <!-- ===================================================================================== -->
                   <div
                     v-if="
-                      $vuetify.breakpoint.smAndUp &&
+                      vuetify.breakpoint.smAndUp &&
                       !notification.read &&
                       showIndicator
                     "
@@ -190,6 +190,11 @@ import MewBlockie from './MewBlockie.vue';
 import MewTransformHash from './MewTransformHash.vue';
 import MewTooltip from './MewTooltip.vue';
 
+import { useVuetify } from '../composables/vuetify';
+
+// injections
+const vuetify = useVuetify();
+
 const props = defineProps({
   /**
    * Takes an object of notification information
@@ -295,7 +300,7 @@ const toAmount = computed(() => {
 });
 
 const backgroundColor = computed(() => {
-  if ($vuetify.theme.dark) {
+  if (vuetify.theme.dark) {
     return 'buttonGrayLight';
   }
   if (props.notification.status.value == txStatusOptions.pending) {

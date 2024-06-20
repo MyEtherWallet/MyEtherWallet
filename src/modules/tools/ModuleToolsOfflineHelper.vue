@@ -45,7 +45,7 @@
     >
       <template #moduleBody>
         <mew-stepper
-          :compact="$vuetify.breakpoint.smAndDown"
+          :compact="vuetify.breakpoint.smAndDown"
           :items="stepperItems"
           :on-step="currentStep"
         ></mew-stepper>
@@ -232,12 +232,14 @@ import sanitizeHex from '@/core/helpers/sanitizeHex';
 import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
 import { useAddressBookStore } from '@/core/store/addressBook';
+import { useVuetify } from '../composables/vuetify';
 
 const NetworkSwitch = defineAsyncComponent(() =>
   import('@/modules/network/components/NetworkSwitch.vue')
 );
 
 // injections/use
+const vuetify = useVuetify();
 const { address, setWeb3Instance, web3 } = useWalletStore();
 const { addressBookStore } = useAddressBookStore();
 const { network } = useGlobalStore();

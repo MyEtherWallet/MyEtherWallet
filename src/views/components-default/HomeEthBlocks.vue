@@ -20,7 +20,7 @@
           cols="12"
           md="6"
           class="d-flex align-center justify-center"
-          :class="$vuetify.breakpoint.smAndDown ? 'mt-8' : ''"
+          :class="vuetify.breakpoint.smAndDown ? 'mt-8' : ''"
         >
           <div style="max-width: 370px">
             <div class="mew-subtitle mb-7">
@@ -35,7 +35,7 @@
               }}
             </div>
             <mew-button
-              :has-full-width="$vuetify.breakpoint.smAndDown"
+              :has-full-width="vuetify.breakpoint.smAndDown"
               class="mt-8"
               btn-size="xlarge"
               :title="
@@ -59,8 +59,10 @@ import ethBlocksThree from '@/assets/images/icons/eth-blocks-3.jpg';
 import ethBlocksSix from '@/assets/images/icons/eth-blocks-6.jpg';
 import { LANDING_PAGE } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 import { ETH_BLOCKS_ROUTE } from '@/dapps/eth-blocks/configsRoutes';
+import { useVuetify } from '../composables/vuetify';
 
 // injections/use
+const vuetify = useVuetify();
 const { trackLandingPageAmplitude } = useAmplitude();
 const router = useRouter();
 

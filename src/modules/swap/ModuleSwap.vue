@@ -114,7 +114,7 @@
                 btn-style="outline"
                 :title="`Buy ${network.type.currencyName}`"
                 class="ma-1"
-                :has-full-width="$vuetify.breakpoint.xsOnly"
+                :has-full-width="vuetify.breakpoint.xsOnly"
                 @click.native="
                   () => {
                     openBuySell('ModuleSwapErrorBlock');
@@ -345,8 +345,10 @@ import { useGlobalStore } from '@/core/store/global';
 import { useExternalStore } from '@/core/store/external';
 import { useArticleStore } from '@/core/store/article';
 import { useNotificationStore } from '@/core/store/notifications';
+import { useVuetify } from '../composables/vuetify';
 
 // injections
+const vuetify = useVuetify();
 const { trackSwapAmplitude } = useAmplitude();
 const { openBuySell } = useBuySell();
 const { prefetched, swapTokens, setSwapTokens } = useSwapStore();

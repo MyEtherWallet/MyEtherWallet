@@ -8,9 +8,9 @@
         no-gutters
         dense
         :class="[
-          $vuetify.breakpoint.md ||
-          $vuetify.breakpoint.lg ||
-          $vuetify.breakpoint.xl
+          vuetify.breakpoint.md ||
+          vuetify.breakpoint.lg ||
+          vuetify.breakpoint.xl
             ? 'set-fixed-height'
             : '',
           'd-flex align-center justify-space-between'
@@ -42,9 +42,9 @@
             </span>
             <span
               :class="[
-                $vuetify.breakpoint.md ||
-                $vuetify.breakpoint.lg ||
-                $vuetify.breakpoint.xl
+                vuetify.breakpoint.md ||
+                vuetify.breakpoint.lg ||
+                vuetify.breakpoint.xl
                   ? ''
                   : 'py-2',
                 'mew-body textMedium--text'
@@ -63,9 +63,9 @@
       </v-col>
       <v-col
         v-if="
-          $vuetify.breakpoint.md ||
-          $vuetify.breakpoint.lg ||
-          $vuetify.breakpoint.xl
+          vuetify.breakpoint.md ||
+          vuetify.breakpoint.lg ||
+          vuetify.breakpoint.xl
         "
         :cols="ads.length >= 1 ? '6' : '4'"
         class="ml-auto d-flex align-center justify-end"
@@ -122,7 +122,7 @@
         <div class="align-center d-none d-lg-block">
           <notification-overlay
             v-if="online"
-            :invert-icon="$vuetify.theme.dark"
+            :invert-icon="vuetify.theme.dark"
           />
         </div>
       </v-col>
@@ -143,12 +143,14 @@ import { useGlobalStore } from '@/core/store/global';
 import { useWalletStore } from '@/core/store/wallet';
 
 import { useAmplitude } from '@/core/composables/amplitude';
+import { useVuetify } from '../composables/vuetify';
 
 const notificationOverlay = import(
   '@/modules/notifications/ModuleNotifications'
 );
 
 // injections/use
+const vuetify = useVuetify();
 const router = useRouter();
 const { online, network } = useGlobalStore();
 const { isOfflineApp } = useWalletStore();

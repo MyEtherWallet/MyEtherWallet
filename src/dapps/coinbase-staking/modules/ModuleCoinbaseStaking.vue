@@ -2,10 +2,10 @@
   <div class="dapps-stakewise-stake pt-8 pb-13 px-3 pa-sm-15">
     <v-row>
       <v-col
-        :order="$vuetify.breakpoint.smAndDown ? 'last' : ''"
+        :order="vuetify.breakpoint.smAndDown ? 'last' : ''"
         cols="12"
         md="8"
-        :class="$vuetify.breakpoint.smAndDown ? 'my-10' : 'pr-7'"
+        :class="vuetify.breakpoint.smAndDown ? 'my-10' : 'pr-7'"
       >
         <mew-sheet class="pa-15">
           <div class="mew-heading-2 textDark--text mb-8">Stake ETH</div>
@@ -198,10 +198,12 @@ import { useWalletStore } from '@/core/store/wallet';
 import { useExternalStore } from '@/core/store/external';
 import { useAmplitude } from '@/core/composables/amplitude';
 import { useBuySell } from '@/core/composables/buyMore';
+import { useVuetify } from '../composables/vuetify';
 
 import CoinbaseStakingSummary from '../components/CoinbaseStakingSummary';
 
-// injections/use
+// injections
+const vuetify = useVuetify();
 const { trackDapp } = useAmplitude();
 const { openBuySell } = useBuySell();
 const { network, isEthNetwork, gasPriceByType, getFiatValue, gasPriceType } =

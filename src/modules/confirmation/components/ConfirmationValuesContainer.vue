@@ -7,7 +7,7 @@
     -->
     <div
       :class="[
-        $vuetify.breakpoint.smAndUp ? 'swap-icon-sm-and-up' : 'swap-icon-xs',
+        vuetify.breakpoint.smAndUp ? 'swap-icon-sm-and-up' : 'swap-icon-xs',
         isSwap ? 'swap-icon' : '',
         'arrow-icon align-center'
       ]"
@@ -15,10 +15,10 @@
       <img
         :src="SwapIcon"
         :class="[
-          $vuetify.breakpoint.smAndUp ? '' : 'xs-svg',
+          vuetify.breakpoint.smAndUp ? '' : 'xs-svg',
           'pa-1',
           {
-            [$vuetify.breakpoint.smAndUp ? 'pl-2' : 'pr-2']: !isSwap
+            [vuetify.breakpoint.smAndUp ? 'pl-2' : 'pr-2']: !isSwap
           }
         ]"
         width="30px"
@@ -33,11 +33,11 @@
         cols="12"
         sm="6"
         :class="{
-          [$vuetify.breakpoint.smAndUp ? 'pr-1' : 'pb-1']:
+          [vuetify.breakpoint.smAndUp ? 'pr-1' : 'pb-1']:
             isSwap && isEven(index),
-          [$vuetify.breakpoint.smAndUp ? 'pad-l' : 'pad-t']:
+          [vuetify.breakpoint.smAndUp ? 'pad-l' : 'pad-t']:
             !isSwap && !isEven(index),
-          [$vuetify.breakpoint.smAndUp ? 'pad-r' : 'pad-b']:
+          [vuetify.breakpoint.smAndUp ? 'pad-r' : 'pad-b']:
             !isSwap && isEven(index)
         }"
       >
@@ -150,6 +150,10 @@
 </template>
 <script setup>
 import SwapIcon from '@/assets/images/icons/swap-arrow.svg';
+import { useVuetify } from '../composables/vuetify';
+
+// injections
+const vuetify = useVuetify();
 
 // props
 defineProps({
