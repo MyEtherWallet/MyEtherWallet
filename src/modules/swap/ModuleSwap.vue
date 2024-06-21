@@ -897,9 +897,10 @@ export default {
   watch: {
     multipleWatcher: {
       handler: function () {
-        const defaults = Object.assign({}, this.defaults);
-        this.clear();
-        this.defaults = defaults;
+        // const defaults = Object.assign({}, this.defaults);
+        // this.clear();
+        // this.defaults = defaults;
+        this.resetSwapState();
       }
     },
     tokenInValue() {
@@ -1288,15 +1289,13 @@ export default {
       }
     },
     setDefaults() {
-      while (!this.isLoading) {
-        setTimeout(() => {
-          this.fromTokenType = this.getDefaultFromToken();
-          this.toTokenType = this.getDefaultToToken();
-          this.setTokenInValue(this.tokenInValue);
-          this.clearingSwap = false;
-        }, 500);
-        return;
-      }
+      setTimeout(() => {
+        this.fromTokenType = this.getDefaultFromToken();
+        this.toTokenType = this.getDefaultToToken();
+        this.setTokenInValue(this.tokenInValue);
+        this.clearingSwap = false;
+      }, 500);
+      return;
     },
     setFromToken(value) {
       if (
