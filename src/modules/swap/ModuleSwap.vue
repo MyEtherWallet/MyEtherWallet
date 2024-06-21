@@ -392,7 +392,8 @@ export default {
       loadingFee: false,
       feeError: '',
       defaults: {
-        fromToken: this.fromToken
+        fromToken: this.fromToken,
+        toToken: ''
       },
       isLoadingProviders: false,
       showAnimation: false,
@@ -896,7 +897,9 @@ export default {
   watch: {
     multipleWatcher: {
       handler: function () {
-        this.resetSwapState();
+        const defaults = Object.assign({}, this.defaults);
+        this.clear();
+        this.defaults = defaults;
       }
     },
     tokenInValue() {
@@ -965,7 +968,7 @@ export default {
       this.mainTokenDetails = this.contractToToken(MAIN_TOKEN_ADDRESS);
       localContractToToken = {};
       localContractToToken[MAIN_TOKEN_ADDRESS] = this.mainTokenDetails;
-      this.clear();
+      this.setupSwap();
     },
     /**
      * Handles emitted values from
@@ -1106,7 +1109,8 @@ export default {
       this.feeError = '';
       this.selectedProviderId = undefined;
       this.defaults = {
-        fromToken: this.fromToken
+        fromToken: this.fromToken,
+        toToken: ''
       };
       this.isLoadingProviders = false;
       this.checkLoading = true;
@@ -1234,7 +1238,7 @@ export default {
       ) {
         return findToken;
       }
-      return findToken ? findToken : this.actualFromTokens[0];
+      return findToken ? findToken : this.fromToken[0];
     },
     getDefaultToToken() {
       const findToken = this.actualToTokens.find(item => {
@@ -1284,12 +1288,15 @@ export default {
       }
     },
     setDefaults() {
-      setTimeout(() => {
-        this.fromTokenType = this.getDefaultFromToken();
-        this.toTokenType = this.getDefaultToToken();
-        this.setTokenInValue(this.tokenInValue);
-        this.clearingSwap = false;
-      }, 500);
+      while (!this.isLoading) {
+        setTimeout(() => {
+          this.fromTokenType = this.getDefaultFromToken();
+          this.toTokenType = this.getDefaultToToken();
+          this.setTokenInValue(this.tokenInValue);
+          this.clearingSwap = false;
+        }, 500);
+        return;
+      }
     },
     setFromToken(value) {
       if (
