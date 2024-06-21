@@ -500,14 +500,12 @@ export default {
         if (!isEqual(newVal, oldVal)) {
           this.fetchCurrencyData();
         }
-        console.log(newVal);
         this.$emit('selectedCurrency', this.selectedCurrency);
       },
       deep: true
     },
     selectedFiat: {
       handler: function (newVal, oldVal) {
-        console.log(newVal, 'called?');
         if (!isEqual(newVal, oldVal)) {
           if (newVal.name === 'CAD') {
             this.selectedCurrency = this.tokens[0];
