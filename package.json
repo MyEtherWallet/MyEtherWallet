@@ -232,7 +232,8 @@
     "minimatch": "3.0.5",
     "lodash": "4.17.21",
     "json5": "2.2.2",
-    "subscriptions-transport-ws": "0.11.0"
+    "subscriptions-transport-ws": "0.11.0",
+    "socket.io": "2.5.1"
   },
   "license": "MIT",
   "repository": "https://github.com/myetherwallet/myetherwallet"
