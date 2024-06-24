@@ -392,7 +392,8 @@ export default {
       loadingFee: false,
       feeError: '',
       defaults: {
-        fromToken: this.fromToken
+        fromToken: this.fromToken,
+        toToken: ''
       },
       isLoadingProviders: false,
       showAnimation: false,
@@ -672,18 +673,7 @@ export default {
      */
     actualFromTokens() {
       if (this.isLoading) return [];
-      const validFromTokens = this.fromTokens.filter(
-        item =>
-          item.contract.toLowerCase() !==
-          this.toTokenType?.contract?.toLowerCase()
-      );
-      let tradebleWalletTokens = this.tokensList.filter(item => {
-        for (const vt of validFromTokens) {
-          if (vt.contract.toLowerCase() === item?.contract?.toLowerCase())
-            return item;
-        }
-      });
-      tradebleWalletTokens = this.formatTokensForSelect(tradebleWalletTokens);
+      const tradebleWalletTokens = this.formatTokensForSelect(this.tokensList);
       const returnableTokens = [
         {
           text: 'Select Token',
@@ -706,13 +696,13 @@ export default {
      * @returns object of other tokens
      * to swap from
      */
-    fromTokens() {
-      return this.availableTokens.fromTokens.reduce((arr, token) => {
-        if (token && localContractToToken[token.contract])
-          arr.push(localContractToToken[token.contract]);
-        return arr;
-      }, []);
-    },
+    // fromTokens() {
+    //   return this.availableTokens.fromTokens.reduce((arr, token) => {
+    //     if (token && localContractToToken[token.contract])
+    //       arr.push(localContractToToken[token.contract]);
+    //     return arr;
+    //   }, []);
+    // },
     txFee() {
       return toBN(this.totalGasLimit).mul(toBN(this.localGasPrice)).toString();
     },
@@ -901,18 +891,15 @@ export default {
       return `To ${name} address`;
     },
     multipleWatcher() {
-      return (
-        this.address,
-        this.network,
-        this.web3,
-        this.tokensList,
-        this.coinGeckoTokens
-      );
+      return this.address, this.web3, this.tokensList, this.coinGeckoTokens;
     }
   },
   watch: {
     multipleWatcher: {
       handler: function () {
+        // const defaults = Object.assign({}, this.defaults);
+        // this.clear();
+        // this.defaults = defaults;
         this.resetSwapState();
       }
     },
@@ -1123,7 +1110,8 @@ export default {
       this.feeError = '';
       this.selectedProviderId = undefined;
       this.defaults = {
-        fromToken: this.fromToken
+        fromToken: this.fromToken,
+        toToken: ''
       };
       this.isLoadingProviders = false;
       this.checkLoading = true;
@@ -1251,7 +1239,7 @@ export default {
       ) {
         return findToken;
       }
-      return findToken ? findToken : this.actualFromTokens[0];
+      return findToken ? findToken : this.fromToken[0];
     },
     getDefaultToToken() {
       const findToken = this.actualToTokens.find(item => {
@@ -1307,6 +1295,7 @@ export default {
         this.setTokenInValue(this.tokenInValue);
         this.clearingSwap = false;
       }, 500);
+      return;
     },
     setFromToken(value) {
       if (

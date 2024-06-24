@@ -106,6 +106,7 @@ class AmplitudeSessionReplay extends Amplitude {
 
     // Member variables pertaining to sessionReplay //
     this.apiKey = args[0];
+    console.log(...args);
     this.sessionReplayOptions = sessionReplayOptions;
     this.sessionReplay = sessionReplay;
     if (!args[1].optOut) {

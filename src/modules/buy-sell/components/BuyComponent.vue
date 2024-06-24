@@ -440,7 +440,8 @@ export default {
         this.hasData && this.fetchedData[0].fiat_currencies.length > 0
           ? this.fetchedData[0].fiat_currencies.filter(item => item !== 'RUB')
           : ['USD'];
-      return getCurrency(arrItems);
+      const currencies = getCurrency(arrItems);
+      return currencies;
     },
     max() {
       if (this.hasData) {
@@ -480,6 +481,9 @@ export default {
     }
   },
   watch: {
+    fiatCurrencyItems() {
+      this.selectedFiat = this.fiatCurrencyItems[0];
+    },
     selectedCurrency: {
       handler: function (newVal, oldVal) {
         const supportedCoins = {
@@ -503,7 +507,7 @@ export default {
     selectedFiat: {
       handler: function (newVal, oldVal) {
         if (!isEqual(newVal, oldVal)) {
-          if (newVal.name === 'CAD' || newVal.name === 'JPY') {
+          if (newVal.name === 'CAD') {
             this.selectedCurrency = this.tokens[0];
             this.$emit('selectedFiat', newVal);
             return;
@@ -512,7 +516,8 @@ export default {
           const token = this.tokens.find(
             item => item.name === this.selectedCryptoName
           );
-          const price = token.price.substring(1).replace(',', '');
+          const price = token.price;
+
           this.amount = BigNumber(this.localCryptoAmount)
             .multipliedBy(price)
             .toFixed(2);

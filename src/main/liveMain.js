@@ -18,6 +18,8 @@ import { AmplitudeSessionReplay } from './amplitude';
 /**Dapps Store */
 import { dappStoreBeforeCreate } from '../dapps/dappsStore';
 
+import isEU from '@/core/helpers/isEU.js';
+
 // overwrite fetch for session replay
 const originalFetch = fetch;
 
@@ -107,26 +109,7 @@ Vue.config.productionTip = false;
 const popupStore = locStore.get('popups-store') || { consentToTrack: false };
 
 const main = async () => {
-  const amplitude = new AmplitudeSessionReplay(nameHashPckg.hash(VERSION), {
-    instanceName: 'mew-web-dev',
-    serverUrl: 'https://analytics-web-development.mewwallet.dev/record',
-    appVersion: 1,
-    trackingOptions: {
-      ipAddress: false
-    },
-    optOut: !popupStore.consentToTrack,
-    identityStorage: 'none',
-    logLevel: Types.LogLevel.None,
-    defaultTracking: {
-      formInteractions: false,
-      pageViews: false
-    },
-    sessionReplayOptions: {
-      sampleRate: 1
-    }
-  });
-  Vue.prototype.$amplitude = amplitude;
-
+  const eu = await isEU();
   // Lazy Loader
   Vue.use(VueLazyLoad);
 
@@ -138,6 +121,33 @@ const main = async () => {
     apolloProvider,
     vuetify,
     beforeCreate() {
+      const ampConfig = {
+        instanceName: 'mew-web-dev',
+        serverUrl: 'https://analytics-web-development.mewwallet.dev/record',
+        appVersion: 1,
+        trackingOptions: {
+          ipAddress: false
+        },
+        optOut: !popupStore.consentToTrack,
+        identityStorage: 'none',
+        logLevel: Types.LogLevel.None,
+        defaultTracking: {
+          formInteractions: false,
+          pageViews: false
+        },
+        sessionReplayOptions: {
+          sampleRate: 1
+        }
+      };
+      if (eu) {
+        ampConfig.sessionReplayOptions.serverZone = 'EU';
+      }
+      const amplitude = new AmplitudeSessionReplay(
+        nameHashPckg.hash(VERSION),
+        ampConfig
+      );
+      Vue.prototype.$amplitude = amplitude;
+
       const userId = this.$route.query.intercomid
         ? this.$route.query.intercomid
         : uuidv4();

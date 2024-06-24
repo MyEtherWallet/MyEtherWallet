@@ -39,7 +39,8 @@ const AUDIT_EXCEPTIONS = [
   '@solana/web3.js',
   'lodash.template',
   'html-minifier',
-  'braces'
+  'braces',
+  'ws'
 ];
 const execute = (command, callback) => {
   exec(

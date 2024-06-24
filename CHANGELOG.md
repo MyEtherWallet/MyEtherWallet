@@ -1,3 +1,15 @@
+### Release v6.9.9
+
+### devop
+
+* Add Rootstock Testnet integration and Add Rootstock Testnet ledger config [#4935](https://github.com/MyEtherWallet/MyEtherWallet/pull/4935)
+
+### fix
+
+* fix jpy buy pyusd [#4943](https://github.com/MyEtherWallet/MyEtherWallet/pull/4943)
+* fix swap double swapping [#4944](https://github.com/MyEtherWallet/MyEtherWallet/pull/4944)
+* fix swap search, remove from values, add paypal [#4939](https://github.com/MyEtherWallet/MyEtherWallet/pull/4939)
+
 ### Release v6.9.8
 
 ### devop
