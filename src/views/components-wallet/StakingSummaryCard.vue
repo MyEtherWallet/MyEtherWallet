@@ -221,8 +221,8 @@ export default {
       default: () => {}
     },
     ethPrice: {
-      type: String,
-      default: '0'
+      type: Number,
+      default: 0
     },
     apr: {
       type: String,

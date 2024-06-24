@@ -1,3 +1,8 @@
+### fix
+
+* fix jpy buy pyusd [#4943](https://github.com/MyEtherWallet/MyEtherWallet/pull/4943)
+* fix swap double swapping [#4944](https://github.com/MyEtherWallet/MyEtherWallet/pull/4944)
+
 ### Release v6.9.9
 
 ### devop
