@@ -107,7 +107,7 @@ export default {
     },
     ethPrice() {
       const { price } = this.getCoinGeckoTokenById('ethereum');
-      return price;
+      return BigNumber(price).toNumber();
     },
     currentApr() {
       return this.handlerStaked.apr;

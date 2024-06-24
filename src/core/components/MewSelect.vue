@@ -337,19 +337,15 @@ export default {
       } else {
         const foundItems = this.items.reduce((foundTokens, item) => {
           const searchValue = String(newVal).toLowerCase();
-          const value = String(get(item, 'value', '')).toLowerCase();
           const name = String(get(item, 'name', '')).toLowerCase();
           const subtext = String(get(item, 'subtext', '')).toLowerCase();
-          if (
-            name === searchValue ||
-            subtext === searchValue ||
-            value === searchValue
-          ) {
+          if (subtext === searchValue) {
             foundTokens.unshift(item);
+          } else if (name === searchValue) {
+            foundTokens.push(item);
           } else if (
-            name.includes(searchValue) ||
             subtext.includes(searchValue) ||
-            value.includes(searchValue)
+            name.includes(searchValue)
           ) {
             foundTokens.push(item);
           }

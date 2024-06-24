@@ -19,6 +19,7 @@ import KLAY from './KLAY';
 import OP from './OP';
 import AA from './AA';
 import AAT from './AAT';
+import ROOTSTOCKTESTNET from './ROOTSTOCKTESTNET.js';
 
 export {
   ETH,
@@ -41,5 +42,6 @@ export {
   KLAY,
   OP,
   AA,
-  AAT
+  AAT,
+  ROOTSTOCKTESTNET
 };

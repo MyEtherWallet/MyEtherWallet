@@ -2,7 +2,7 @@ import ENS from './resolvers/ens';
 import UNS from './resolvers/uns';
 import normalise from '@/core/helpers/normalise';
 import { isAddress, toChecksumAddress } from '@/core/helpers/addressUtils.js';
-import { ROOTSTOCK } from '@/utils/networks/types';
+import { ROOTSTOCK, ROOTSTOCKTESTNET } from '@/utils/networks/types';
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 export default class NameResolver {
   constructor(network, web3) {
@@ -26,7 +26,10 @@ export default class NameResolver {
     if (address === ZERO_ADDRESS) {
       address = await this.uns.resolveName(name);
     }
-    if (this.network.type.chainID === ROOTSTOCK.chainID) {
+    if (
+      this.network.type.chainID === ROOTSTOCK.chainID ||
+      this.network.type.chainID === ROOTSTOCKTESTNET.chainID
+    ) {
       address = toChecksumAddress(address);
     }
     if (isAddress(address) && address !== ZERO_ADDRESS) {
