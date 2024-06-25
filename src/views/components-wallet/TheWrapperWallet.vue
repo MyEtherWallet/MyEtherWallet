@@ -35,6 +35,13 @@
         >
           <slot :name="`leftColItem${n}`" />
         </v-col>
+        <!-- <v-col
+          cols="12"
+          class="d-none d-md-flex align-center justify-center flex-column"
+        >
+          <div class="coinzilla" data-zone="C-5186467cdba0c51c392"></div>
+          <div class="paid-ad">Paid Advertisement</div>
+        </v-col> -->
       </v-row>
     </v-col>
     <!--
@@ -53,13 +60,31 @@
           <module-network />
         </v-col>
         <!-- <v-col
+          cols="12"
+          class="pa-2 pa-md-3 d-flex align-center justify-center flex-column"
+        >
+          <div class="coinzilla" data-zone="C-4136467cdba0bdc8324"></div>
+          <div class="paid-ad">Paid Advertisement</div>
+        </v-col> -->
+        <!-- <v-col
           v-if="isEthNetwork && !isOfflineApp"
           cols="12"
           class="pa-2 pt-4 pa-md-3 d-none d-md-block"
         >
           <nft-dashboard />
         </v-col> -->
-
+        <v-col
+          v-if="showUndeadsAdd"
+          cols="12"
+          class="pa-2 pa-md-3 d-flex align-center justify-center flex-column"
+        >
+          <a href="https://undeads.com/staking" target="_blank">
+            <img
+              src="@/assets/images/ad/undeads-ad.png"
+              alt="Undeads Staking"
+            />
+          </a>
+        </v-col>
         <v-col
           v-for="n in totalRightColItems"
           v-show="totalRightColItems >= 1"
@@ -80,6 +105,21 @@
       <div class="d-none d-md-block mb-2">
         <module-network />
       </div>
+      <v-col
+        v-if="showUndeadsAdd"
+        cols="12"
+        class="d-flex align-center justify-center flex-column pa-2 pb-4 pa-md-3 pb-md-5"
+      >
+        <a href="https://undeads.com/staking" target="_blank">
+          <img src="@/assets/images/ad/undeads-ad.png" alt="Undeads Staking" />
+        </a>
+      </v-col>
+      <!-- <div
+        class="d-flex align-center justify-center flex-column pa-2 pb-4 pa-md-3 pb-md-5"
+      >
+        <div class="coinzilla" data-zone="C-4136467cdba0bdc8324"></div>
+        <div class="paid-ad">Paid Advertisement</div>
+      </div> -->
       <!-- <div v-if="isEthNetwork && !isOfflineApp" class="d-none d-md-block mb-2">
         <nft-dashboard />
       </div> -->
@@ -110,6 +150,7 @@
 <script>
 import { mapGetters, mapState } from 'vuex';
 import draggable from 'vuedraggable';
+import moment from 'moment';
 
 import ModuleNetwork from '@/modules/network/ModuleNetwork';
 
@@ -154,6 +195,12 @@ export default {
         disabled: false,
         ghostClass: 'ghost'
       };
+    },
+    showUndeadsAdd() {
+      const today = new Date();
+      const start = new Date('06-25-2024');
+      const end = new Date('07-25-2024');
+      return !this.isOfflineApp && moment(today).isBetween(start, end);
     }
   },
   watch: {
@@ -166,6 +213,20 @@ export default {
       this.draggableItems = arr;
     }
   }
+  // created() {
+  //   const adConfig1 = {
+  //     zone: '4136467cdba0bdc8324',
+  //     width: '300',
+  //     height: '250'
+  //   };
+  //   const adConfig2 = {
+  //     zone: '5186467cdba0c51c392',
+  //     width: '728',
+  //     height: '90'
+  //   };
+  //   window.coinzilla_display.push(adConfig1);
+  //   window.coinzilla_display.push(adConfig2);
+  // }
 };
 </script>
 

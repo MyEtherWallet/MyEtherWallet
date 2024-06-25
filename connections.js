@@ -41,9 +41,8 @@ module.exports = [
   'https://raw.githubusercontent.com:443/MyEtherWallet/dynamic-data/main/team.json',
   'https://raw.githubusercontent.com:443/MyEtherWallet/dynamic-data/main/careers.json',
   'https://raw.githubusercontent.com:443/MyEtherWallet/dynamic-data/main/articles.json',
-  'https://formspree.io:443/f/mqjndkkx',
-  'https://formspree.io:443/f/xbjenjql',
   'https://broadcast.mewapi.io:443/eth',
+  'https://mew-seo-pages.pages.dev:443', //pages
   // nodes
   'https://nodes.mewapi.io:443',
   'wss://nodes.mewapi.io:443',
@@ -107,6 +106,5 @@ module.exports = [
   'https://unstoppabledomains.g.alchemy.com:443', // Unstoppable domains
   'https://metadata.unstoppabledomains.com:443', // Unstoppable domains
   'wss://relay.walletconnect.com:443', // walletconnect2
-  'https://explorer-api.walletconnect.com:443', // web3modal
-  'https://mew-seo-pages.pages.dev:443' //pages
+  'https://explorer-api.walletconnect.com:443' // web3modal
 ];
