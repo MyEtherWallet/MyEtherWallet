@@ -16,7 +16,7 @@ const exportObj = {
       clientsClaim: true,
       cleanupOutdatedCaches: true,
       exclude: [/index\.html$/, /\.map$/, /staking/],
-      navigateFallbackDenylist: [/staking/]
+      navigateFallbackBlacklist: [/staking/]
     },
     iconPaths: {
       faviconSVG: 'icons/favicon.svg',
