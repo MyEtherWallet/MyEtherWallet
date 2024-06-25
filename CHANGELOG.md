@@ -1,7 +1,8 @@
-### fix
+### Release v6.9.9-hotfix.1
 
-* fix jpy buy pyusd [#4943](https://github.com/MyEtherWallet/MyEtherWallet/pull/4943)
-* fix swap double swapping [#4944](https://github.com/MyEtherWallet/MyEtherWallet/pull/4944)
+### devop
+
+* sync develop, setup hotfix [#4949](https://github.com/MyEtherWallet/MyEtherWallet/pull/4949)
 
 ### Release v6.9.9
 
@@ -11,6 +12,8 @@
 
 ### fix
 
+* fix jpy buy pyusd [#4943](https://github.com/MyEtherWallet/MyEtherWallet/pull/4943)
+* fix swap double swapping [#4944](https://github.com/MyEtherWallet/MyEtherWallet/pull/4944)
 * fix swap search, remove from values, add paypal [#4939](https://github.com/MyEtherWallet/MyEtherWallet/pull/4939)
 
 ### Release v6.9.8
