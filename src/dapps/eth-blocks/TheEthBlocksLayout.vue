@@ -140,7 +140,7 @@ export default {
 
     /**
      * Checks web3 Transaction hash.
-     * If reciept is defined, removes transaction hash from
+     * If receipt is defined, removes transaction hash from
      * @param {string} txHash - transaction hash of the
      */
     checkTx(txHash) {
