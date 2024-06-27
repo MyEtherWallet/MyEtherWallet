@@ -1,8 +1,8 @@
-import { ARB } from '../types';
+import { AMOY } from '../types';
 export default {
-  type: ARB,
+  type: AMOY,
   service: 'myetherwallet.com-ws',
-  url: 'wss://nodes.mewapi.io/ws/arb',
+  url: 'wss://nodesmw.mewapi.io/ws/amoy',
   port: 443,
   auth: false,
   username: '',
