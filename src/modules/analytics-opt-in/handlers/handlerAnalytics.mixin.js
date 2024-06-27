@@ -34,6 +34,7 @@ export default {
 
       this.setTrackingConsent(!this.consentToTrack).then(() => {
         this.$amplitude.setOptOut(!this.consentToTrack);
+        this.$amplitude.toggleSessionReplay(!this.consentToTrack);
         if (!initialValue && this.consentToTrack)
           this.$amplitude.track(`UserOptInTracking`, {
             network: this.network.type.name
