@@ -897,9 +897,6 @@ export default {
   watch: {
     multipleWatcher: {
       handler: function () {
-        // const defaults = Object.assign({}, this.defaults);
-        // this.clear();
-        // this.defaults = defaults;
         this.resetSwapState();
       }
     },
@@ -969,6 +966,7 @@ export default {
       this.mainTokenDetails = this.contractToToken(MAIN_TOKEN_ADDRESS);
       localContractToToken = {};
       localContractToToken[MAIN_TOKEN_ADDRESS] = this.mainTokenDetails;
+      this.tokenInValue = '0';
       this.setupSwap();
     },
     /**
