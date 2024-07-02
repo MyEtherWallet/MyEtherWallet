@@ -251,13 +251,6 @@ export default {
   beforeDestroy() {
     EventBus.$off('openPaperWallet');
     if (this.online && !this.isOfflineApp) this.web3.eth.clearSubscriptions();
-    const provider = this.selectedEIP6963Provider;
-    if (provider && provider.removeListener instanceof Function) {
-      if (this.findAndSetNetwork instanceof Function)
-        provider.removeListener('chainChanged', this.findAndSetNetwork);
-      if (this.setWeb3Account instanceof Function)
-        provider.removeListener('accountsChanged', this.setWeb3Account);
-    }
     clearInterval(this.manualBlockSubscription);
   },
   methods: {
