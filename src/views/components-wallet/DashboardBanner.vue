@@ -106,10 +106,7 @@ export default {
     showIsAdBanner() {
       const startDate = new Date('2024-07-11');
       const endDate = new Date('2024-09-19');
-      const isBetween = moment(new Date('2024-07-18')).isBetween(
-        startDate,
-        endDate
-      );
+      const isBetween = moment(new Date()).isBetween(startDate, endDate);
       return isBetween;
     },
     isEnkrypt() {
@@ -120,7 +117,7 @@ export default {
       );
     },
     adVersion() {
-      const rightNow = moment(new Date('2024-07-18'));
+      const rightNow = moment(new Date());
       const pdt = rightNow.tz('America/Los_Angeles');
       const date = pdt.day();
       return date % 2 === 0;
