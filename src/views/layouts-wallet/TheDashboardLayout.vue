@@ -11,7 +11,7 @@
     </template>
     <template #leftColItem2>
       <div>
-        <dashboard-banner v-if="showBanner" />
+        <dashboard-banner :show-banner="showBanner" />
         <staking-summary-card
           v-if="hasStaked"
           :eth-price="ethPrice"
