@@ -44,7 +44,7 @@
           <img :src="enkryptBanner" width="100%" />
         </a>
       </div>
-      <div>
+      <div v-if="!isMewWallet">
         <a
           href="https://download.mewwallet.com/?source=mew_web_create"
           target="_blank"
@@ -60,6 +60,7 @@
 import moment from 'moment';
 import 'moment-timezone';
 import { mapState } from 'vuex';
+import store from 'store';
 
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
@@ -97,7 +98,8 @@ export default {
   },
   data() {
     return {
-      locShowBanner: true
+      locShowBanner: true,
+      testDate: ''
     };
   },
   computed: {
@@ -106,7 +108,10 @@ export default {
     showIsAdBanner() {
       const startDate = new Date('2024-07-11');
       const endDate = new Date('2024-09-19');
-      const isBetween = moment(new Date()).isBetween(startDate, endDate);
+      const isBetween = moment(new Date(this.testDate)).isBetween(
+        startDate,
+        endDate
+      );
       return isBetween;
     },
     isEnkrypt() {
@@ -116,8 +121,11 @@ export default {
         this.selectedEIP6963Info.name === 'Enkrypt'
       );
     },
+    isMewWallet() {
+      return this.identifier === WALLET_TYPES.MEW_WALLET;
+    },
     adVersion() {
-      const rightNow = moment(new Date());
+      const rightNow = moment(new Date(this.testDate));
       const pdt = rightNow.tz('America/Los_Angeles');
       const date = pdt.day();
       return date % 2 === 0;
@@ -162,6 +170,9 @@ export default {
       // user is using software wallet
       return this.adVersion ? MEWAd5A : MEWAd5B;
     }
+  },
+  mounted() {
+    this.testDate = store.get('mew-test-date') || new Date();
   },
   methods: {
     viewStakingOptions() {
