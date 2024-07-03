@@ -50,6 +50,7 @@
 import moment from 'moment';
 import 'moment-timezone';
 import { mapState } from 'vuex';
+import store from 'store';
 
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
@@ -87,7 +88,8 @@ export default {
   },
   data() {
     return {
-      locShowBanner: true
+      locShowBanner: true,
+      testDate: new Date('2024-07-11')
     };
   },
   computed: {
@@ -168,6 +170,9 @@ export default {
         ? 'https://www.enkrypt.com'
         : 'https://download.mewwallet.com/?source=mew_web_create';
     }
+  },
+  mounted() {
+    this.testDate = store.get('mew-test-date') || new Date('2024-07-11');
   },
   methods: {
     viewStakingOptions() {
