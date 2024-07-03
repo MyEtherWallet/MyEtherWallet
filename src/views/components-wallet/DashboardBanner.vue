@@ -50,6 +50,7 @@
 import moment from 'moment';
 import 'moment-timezone';
 import { mapState } from 'vuex';
+import store from 'store';
 
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
@@ -94,9 +95,13 @@ export default {
     ...mapState('wallet', ['identifier', 'isHardware']),
     ...mapState('external', ['selectedEIP6963Info']),
     showIsAdBanner() {
+      const testDate = store.get('mew-test-date') || '2024-07-11';
       const startDate = new Date('2024-07-11');
       const endDate = new Date('2024-09-19');
-      const isBetween = moment(new Date()).isBetween(startDate, endDate);
+      const isBetween = moment(new Date(testDate)).isBetween(
+        startDate,
+        endDate
+      );
       return isBetween;
     },
     isEnkrypt() {
@@ -107,7 +112,10 @@ export default {
       );
     },
     pdtToday() {
-      const rightNow = moment(new Date());
+      const testDate = store.get('mew-test-date')
+        ? store.get('mew-test-date')
+        : '2024-07-11';
+      const rightNow = moment(new Date(testDate));
       const pdt = rightNow.tz('America/Los_Angeles');
       return pdt;
     },
