@@ -39,19 +39,9 @@
       </div>
     </div>
     <div v-else class="pb-3">
-      <div v-if="!isEnkrypt" class="pb-3">
-        <a href="https://www.enkrypt.com" target="_blank">
-          <img :src="enkryptBanner" width="100%" />
-        </a>
-      </div>
-      <div v-if="!isMewWallet">
-        <a
-          href="https://download.mewwallet.com/?source=mew_web_create"
-          target="_blank"
-        >
-          <img :src="mewWalletBanner" width="100%" />
-        </a>
-      </div>
+      <a :href="adLink" target="_blank">
+        <img :src="adBanner" width="100%" />
+      </a>
     </div>
   </div>
 </template>
@@ -97,8 +87,7 @@ export default {
   },
   data() {
     return {
-      locShowBanner: true,
-      testDate: ''
+      locShowBanner: true
     };
   },
   computed: {
@@ -117,54 +106,67 @@ export default {
         this.selectedEIP6963Info.name === 'Enkrypt'
       );
     },
-    isMewWallet() {
-      return this.identifier === WALLET_TYPES.MEW_WALLET;
-    },
-    adVersion() {
+    pdtToday() {
       const rightNow = moment(new Date());
       const pdt = rightNow.tz('America/Los_Angeles');
       const date = pdt.day();
-      return date % 2 === 0;
+      return date;
+    },
+    adVersion() {
+      return this.pdtToday % 2 === 0;
+    },
+    hardwareBanner() {
+      const ads = [MEWAd4A, EnkrAd4A, MEWAd4B, EnkrAd4B];
+      return ads[this.pdtToday % ads.length];
+    },
+    softwareBanner() {
+      const ads = [MEWAd5A, EnkrAd5A, MEWAd5B, EnkrAd5B];
+      return ads[this.pdtToday % ads.length];
+    },
+    otherMobileBanner() {
+      const ads = [MEWAd3A, EnkrAd3A, MEWAd3B, EnkrAd3B];
+      return ads[this.pdtToday % ads.length];
+    },
+    otherBrowserBanner() {
+      const ads = [MEWAd1A, EnkrAd1A, MEWAd1B, EnkrAd1B];
+      return ads[this.pdtToday % ads.length];
     },
     enkryptBanner() {
-      // user is using non enkrypt extension
-      if (this.identifier === WALLET_TYPES.WEB3_WALLET) {
-        return this.adVersion ? EnkrAd1A : EnkrAd1B;
-        // user is using MEW wallet
+      return this.adVersion ? MEWAd2A : MEWAd2B;
+    },
+    mewWalletBanner() {
+      return this.adVersion ? EnkrAd2A : EnkrAd2B;
+    },
+    adBanner() {
+      if (this.isHardware) {
+        // hardware
+        return this.hardwareBanner;
+      } else if (
+        // browser wallet and not enkrypt
+        this.identifier === WALLET_TYPES.WEB3_WALLET &&
+        !this.isEnkrypt
+      ) {
+        return this.otherBrowserBanner;
       } else if (this.identifier === WALLET_TYPES.MEW_WALLET) {
-        return this.adVersion ? EnkrAd2A : EnkrAd2B;
-        // user is using other mobile
+        // mew wallet
+        return this.mewWalletBanner;
       } else if (
         this.identifier === WALLET_TYPES.WALLET_CONNECT ||
         this.identifier === WALLET_TYPES.WALLET_LINK
       ) {
-        return this.adVersion ? EnkrAd3A : EnkrAd3B;
-        // user is using hardware wallet
-      } else if (this.isHardware) {
-        return this.adVersion ? EnkrAd4A : EnkrAd4B;
-      }
-      // user is using software wallet
-      return this.adVersion ? EnkrAd5A : EnkrAd5B;
-    },
-    mewWalletBanner() {
-      // user is using non enkrypt extension
-      if (
-        this.identifier === WALLET_TYPES.WALLET_CONNECT ||
-        this.identifier === WALLET_TYPES.WALLET_LINK
-      ) {
-        return this.adVersion ? MEWAd1A : MEWAd1B;
-        // user is using MEW wallet
+        // mobile wallet not mew wallet
+        return this.otherMobileBanner;
       } else if (this.isEnkrypt) {
-        return this.adVersion ? MEWAd2A : MEWAd2B;
-        // user is using other mobile
-      } else if (this.identifier === WALLET_TYPES.WEB3_WALLET) {
-        return this.adVersion ? MEWAd3A : MEWAd3B;
-        // user is using hardware wallet
-      } else if (this.isHardware) {
-        return this.adVersion ? MEWAd4A : MEWAd4B;
+        // enkrypt
+        return this.enkryptBanner;
       }
-      // user is using software wallet
-      return this.adVersion ? MEWAd5A : MEWAd5B;
+      // software
+      return this.softwareBanner;
+    },
+    adLink() {
+      return this.adBanner.includes('Enkr')
+        ? 'https://www.enkrypt.com'
+        : 'https://download.mewwallet.com/?source=mew_web_create';
     }
   },
   methods: {
