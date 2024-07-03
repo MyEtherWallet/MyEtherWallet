@@ -39,7 +39,7 @@
       </div>
     </div>
     <div v-else class="pb-3">
-      <a :href="adLink" target="_blank">
+      <a :href="adLink" target="_blank" @click="trackAdClick">
         <img :src="adBanner" width="100%" />
       </a>
     </div>
@@ -88,17 +88,20 @@ export default {
   },
   data() {
     return {
-      locShowBanner: true,
-      testDate: new Date('2024-07-11')
+      locShowBanner: true
     };
   },
   computed: {
     ...mapState('wallet', ['identifier', 'isHardware']),
     ...mapState('external', ['selectedEIP6963Info']),
     showIsAdBanner() {
+      const testDate = store.get('mew-test-date') || '2024-07-11';
       const startDate = new Date('2024-07-11');
       const endDate = new Date('2024-09-19');
-      const isBetween = moment(new Date()).isBetween(startDate, endDate);
+      const isBetween = moment(new Date(testDate)).isBetween(
+        startDate,
+        endDate
+      );
       return isBetween;
     },
     isEnkrypt() {
@@ -109,29 +112,31 @@ export default {
       );
     },
     pdtToday() {
-      const rightNow = moment(new Date());
+      const testDate = store.get('mew-test-date')
+        ? store.get('mew-test-date')
+        : '2024-07-11';
+      const rightNow = moment(new Date(testDate));
       const pdt = rightNow.tz('America/Los_Angeles');
-      const date = pdt.day();
-      return date;
+      return pdt;
     },
     adVersion() {
-      return this.pdtToday % 2 === 0;
+      return this.pdtToday.day() % 2 === 0;
     },
     hardwareBanner() {
-      const ads = [MEWAd4A, EnkrAd4A, MEWAd4B, EnkrAd4B];
-      return ads[this.pdtToday % ads.length];
+      const ads = [EnkrAd4A, MEWAd4B, EnkrAd4B, MEWAd4A];
+      return ads[this.pdtToday.date() % ads.length];
     },
     softwareBanner() {
-      const ads = [MEWAd5A, EnkrAd5A, MEWAd5B, EnkrAd5B];
-      return ads[this.pdtToday % ads.length];
+      const ads = [EnkrAd5A, MEWAd5B, EnkrAd5B, MEWAd5A];
+      return ads[this.pdtToday.date() % ads.length];
     },
     otherMobileBanner() {
-      const ads = [MEWAd3A, EnkrAd3A, MEWAd3B, EnkrAd3B];
-      return ads[this.pdtToday % ads.length];
+      const ads = [EnkrAd3A, MEWAd3B, EnkrAd3B, MEWAd3A];
+      return ads[this.pdtToday.date() % ads.length];
     },
     otherBrowserBanner() {
-      const ads = [MEWAd1A, EnkrAd1A, MEWAd1B, EnkrAd1B];
-      return ads[this.pdtToday % ads.length];
+      const ads = [EnkrAd1A, MEWAd1B, EnkrAd1B, MEWAd1A];
+      return ads[this.pdtToday.date() % ads.length];
     },
     enkryptBanner() {
       return this.adVersion ? MEWAd2A : MEWAd2B;
@@ -171,10 +176,12 @@ export default {
         : 'https://download.mewwallet.com/?source=mew_web_create';
     }
   },
-  mounted() {
-    this.testDate = store.get('mew-test-date') || new Date('2024-07-11');
-  },
   methods: {
+    trackAdClick() {
+      this.$amplitude.track('BrowserAdTracking', {
+        adName: this.adBanner
+      });
+    },
     viewStakingOptions() {
       this.$router.push({ name: ROUTES_WALLET.STAKE.NAME });
       this.trackStaking(STAKING.DASHBOARD);
