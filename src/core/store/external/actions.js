@@ -230,6 +230,10 @@ const setSelectedEIP6963Provider = function ({ commit }, params) {
 const setSelectedEIP6963Info = function ({ commit }, params) {
   commit('SET_SELECTED_EIP6963_INFO', params);
 };
+
+const clearEIP963Providers = function ({ commit }) {
+  commit('CLEAR_EIP6963_PROVIDERS');
+};
 export default {
   setLastPath,
   setCurrency,
@@ -239,5 +243,6 @@ export default {
   setNetworkTokens,
   storeEIP6963Wallet,
   setSelectedEIP6963Info,
-  setSelectedEIP6963Provider
+  setSelectedEIP6963Provider,
+  clearEIP963Providers
 };

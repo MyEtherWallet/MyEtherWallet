@@ -25,6 +25,10 @@ const SET_SELECTED_EIP6963_INFO = function (state, info) {
   state.selectedEIP6963Info = info;
 };
 
+const CLEAR_EIP6963_PROVIDERS = function (state) {
+  state.eip6963Providers = [];
+};
+
 const STORE_EIP6963_WALLET = function (state, detail) {
   const newArr = state.eip6963Providers;
   const findInArr = newArr.findIndex(item => {
@@ -48,5 +52,6 @@ export default {
   SET_NETWORK_TOKENS,
   SET_SELECTED_EIP6963_PROVIDER,
   SET_SELECTED_EIP6963_INFO,
-  STORE_EIP6963_WALLET
+  STORE_EIP6963_WALLET,
+  CLEAR_EIP6963_PROVIDERS
 };
