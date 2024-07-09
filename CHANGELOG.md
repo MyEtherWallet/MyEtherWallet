@@ -1,3 +1,17 @@
+### devop
+
+* change worker fallback [#4952](https://github.com/MyEtherWallet/MyEtherWallet/pull/4952)
+* fix to amount [#4954](https://github.com/MyEtherWallet/MyEtherWallet/pull/4954)
+
+### feat
+
+* add amoy testnet for matic [#4955](https://github.com/MyEtherWallet/MyEtherWallet/pull/4955)
+
+### fix
+
+* swap not clearing on network change [#4956](https://github.com/MyEtherWallet/MyEtherWallet/pull/4956)
+* remove web3 listeners when logging out [#4957](https://github.com/MyEtherWallet/MyEtherWallet/pull/4957)
+
 ### Release v6.9.9-hotfix.1
 
 ### devop
