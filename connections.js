@@ -45,6 +45,7 @@ module.exports = [
   'https://mew-seo-pages.pages.dev:443', //pages
   // nodes
   'https://nodes.mewapi.io:443',
+  'wss://nodesmw.mewapi.io:443',
   'wss://nodes.mewapi.io:443',
   'wss://rpc.gochain.io:443/ws',
   'wss://ws.xinfin.network:443',

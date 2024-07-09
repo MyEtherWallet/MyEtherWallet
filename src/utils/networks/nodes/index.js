@@ -20,6 +20,7 @@ import opmew from './op-mew-ws';
 import arthera from './arthera-ws';
 import artheratest from './arthera-test-ws';
 import rootstocktestnet from './rootstock-testnet-ws';
+import amoyws from './amoy-mew-ws';
 
 export {
   etcethereumclassiccooperativeparityws,
@@ -43,5 +44,6 @@ export {
   opmew,
   arthera,
   artheratest,
-  rootstocktestnet
+  rootstocktestnet,
+  amoyws
 };

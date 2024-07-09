@@ -52,7 +52,7 @@
     >
       <v-container
         v-for="(network, i) in networks"
-        :key="network.name"
+        :key="network.name + network.chainID"
         :class="[
           { 'network-border-first': i === 0 },
           { 'network-border-last': i + 1 === networks.length },
