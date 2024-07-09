@@ -189,6 +189,7 @@ import * as nodes from '@/utils/networks/nodes';
 import sanitizeHex from '@/core/helpers/sanitizeHex';
 import { ERROR, SUCCESS, Toast } from '../toast/handler/handlerToast';
 import { toBNSafe } from '@/core/helpers/numberFormatHelper';
+import { toBase } from '@/core/helpers/unit';
 export default {
   components: {
     ModuleAddressBook: () => import('@/modules/address-book/ModuleAddressBook')
@@ -365,7 +366,7 @@ export default {
         jsonInterface,
         this.selectedCurrency.address
       );
-      const amount = toBN(this.amount);
+      const amount = toBase(this.amount, this.selectedCurrency.decimals);
       this.data = contract.methods
         .transfer(this.toAddress.toLowerCase(), amount)
         .encodeABI();
@@ -388,6 +389,7 @@ export default {
       this.userInputType = '';
       this.localNonce = '0';
       this.gasPrice = '0';
+      this.gasLimit = '21000';
       this.defaultGasLimit = '21000';
       this.gasLimitError = '';
       this.amountError = '';
