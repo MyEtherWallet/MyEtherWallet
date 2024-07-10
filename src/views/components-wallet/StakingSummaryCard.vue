@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="">
     <mew-module
       has-elevation
       subtitle="My Staking Summary"

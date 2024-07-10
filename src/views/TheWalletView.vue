@@ -113,7 +113,11 @@ export default {
       'baseGasPrice',
       'darkMode'
     ]),
-    ...mapState('external', ['coinGeckoTokens', 'selectedEIP6963Provider']),
+    ...mapState('external', [
+      'coinGeckoTokens',
+      'selectedEIP6963Provider',
+      'selectedEIP6963Info'
+    ]),
     ...mapState('popups', ['pkSurveyShown', 'pkSurveyShownCounter']),
     ...mapGetters('global', [
       'network',
