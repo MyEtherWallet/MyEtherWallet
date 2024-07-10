@@ -1,3 +1,7 @@
+### feat
+
+* add mew wallet and enkrypt ads [#4958](https://github.com/MyEtherWallet/MyEtherWallet/pull/4958)
+
 ### devop
 
 * change worker fallback [#4952](https://github.com/MyEtherWallet/MyEtherWallet/pull/4952)
