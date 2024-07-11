@@ -20,6 +20,7 @@ import OP from './OP';
 import AA from './AA';
 import AAT from './AAT';
 import ROOTSTOCKTESTNET from './ROOTSTOCKTESTNET.js';
+import AMOY from './AMOY.js';
 
 export {
   ETH,
@@ -43,5 +44,6 @@ export {
   OP,
   AA,
   AAT,
-  ROOTSTOCKTESTNET
+  ROOTSTOCKTESTNET,
+  AMOY
 };
