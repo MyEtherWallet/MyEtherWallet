@@ -1363,7 +1363,6 @@ export default {
           !this.hasMinEth)
       ) {
         this.step = 0;
-        this.tokenOutValue = '0';
         return;
       }
       if (isEmpty(this.fromTokenType)) {
