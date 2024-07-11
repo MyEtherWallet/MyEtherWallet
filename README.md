@@ -1,12 +1,6 @@
 <img src="./src/assets/images/presskit/logo-dark.png" width="300px"/>
 
-[![Website](https://img.shields.io/website-up-down-green-red/http/myetherwallet.com.svg?label=MyEtherWallet.com\&style=flat-square)](http://www.MyEtherWallet.com/)
-[![Github All Releases](https://img.shields.io/github/downloads/MyEtherWallet/MyEtherWallet/total.svg?style=flat-square)](https://www.github.com/MyEtherWallet/MyEtherWallet/releases)
-[![GitHub issues](https://img.shields.io/github/issues-raw/MyEtherWallet/MyEtherWallet.svg?style=flat-square)](https://github.com/MyEtherWallet/MyEtherWallet/issues)
-[![GitHub package version](https://img.shields.io/github/package-json/v/MyEtherWallet/MyEtherWallet.svg?style=flat-square)](https://github.com/MyEtherWallet/MyEtherWallet/blob/main/package.json)
-![GitHub contributors](https://img.shields.io/github/contributors/MyEtherWallet/MyEtherWallet.svg?style=flat-square) [![Codecov badge](https://img.shields.io/codecov/c/github/MyEtherWallet/MyEtherWallet/develop.svg?style=flat-square)](https://codecov.io/github/MyEtherWallet/MyEtherWallet?branch=develop)
-
-MyEtherWallet is a doorway to the Ethereum blockchain, allowing users to manage their own funds without a centralized platform. - <i>Stephen, #MEWForce</i>
+MyEtherWallet is a doorway to the Ethereum blockchain, allowing users to manage their own funds without a centralized platform. - <i>Wajid Hussain, #MEWForce</i>
 
 !["MyEtherWallet Logo](./src/assets/images/backgrounds/bg-homepage-spaceman.svg "MyEtherWallet")
 
