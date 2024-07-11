@@ -94,7 +94,8 @@ const EXCEPTIONS = [
   'minizlib',
   'remark-preset-lint-recommended', // breaks
   '@sentry/browser', // major update
-  '@sentry/vue' // major update
+  '@sentry/vue', // major update
+  'qrcode-with-logos' // fix after release
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
