@@ -49,15 +49,16 @@
           </template>
         </mew-tabs>
       </div>
-      <BuyProviderComponent
+      <buy-provider-component
         v-if="step === 1"
         :order-handler="orderHandler"
         :in-wallet="inWallet"
         :only-simplex="onlySimplex"
         :selected-currency="selectedCurrency"
         :selected-fiat="selectedFiat"
-        :buy-obj="buyObj"
+        :moonpay-quote="moonpayQuote"
         :simplex-quote="simplexQuote"
+        :topper-quote="topperQuote"
         :to-address="toAddress"
         @close="step = 0"
         @openProviders="openProviders"
@@ -71,7 +72,12 @@
 import { mapGetters, mapState, mapActions } from 'vuex';
 import { isEmpty } from 'lodash';
 
-import { ETH, OP, MATIC, ARB, BSC } from '@/utils/networks/types';
+import {
+  ETH,
+  //  OP,
+  MATIC
+  // ARB, BSC
+} from '@/utils/networks/types';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 
 import handler from './handlers/handlerOrder';
@@ -100,9 +106,10 @@ export default {
       selectedCurrency: {},
       selectedFiat: {},
       onlySimplex: false,
-      buyObj: {},
+      moonpayQuote: {},
       step: 0,
       simplexQuote: {},
+      topperQuote: {},
       toAddress: '',
       addTokenPadding: false
     };
@@ -136,10 +143,10 @@ export default {
     supportedNetwork() {
       return (
         this.network.type.name === ETH.name ||
-        this.network.type.name === BSC.name ||
-        this.network.type.name === MATIC.name ||
-        this.network.type.name === OP.name ||
-        this.network.type.name === ARB.name
+        // this.network.type.name === BSC.name ||
+        this.network.type.name === MATIC.name
+        // this.network.type.name === OP.name ||
+        // this.network.type.name === ARB.name
       );
     },
     leftBtn() {
@@ -224,11 +231,14 @@ export default {
     openProviders(val) {
       this.step = val;
     },
-    setBuyObj(val) {
-      this.buyObj = val;
+    setMoonpayQuote(val) {
+      this.moonpayQuote = val;
     },
     setSimplexQuote(val) {
       this.simplexQuote = val;
+    },
+    setTopperQuote(val) {
+      this.topperQuote = val;
     },
     setToAddress(val) {
       this.toAddress = val;
@@ -248,11 +258,12 @@ export default {
     },
     buySuccess(items) {
       this.setSimplexQuote(items[0]);
-      this.setToAddress(items[1]);
-      this.setBuyObj(items[2]);
-      this.openProviders(items[3]);
-      this.setSelectedCurrency(items[4]);
-      this.setSelectedFiat(items[5]);
+      this.setTopperQuote(items[1]);
+      this.setToAddress(items[2]);
+      this.setMoonpayQuote(items[3]);
+      this.openProviders(items[4]);
+      this.setSelectedCurrency(items[5]);
+      this.setSelectedFiat(items[6]);
       this.trackBuySell(BUY_SELL.BUY_NOW_BUTTON);
     },
     checkTokenPadding(isOpen) {

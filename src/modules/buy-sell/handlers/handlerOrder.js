@@ -1,6 +1,7 @@
 import { sha3 } from 'web3-utils';
+import { toNumber } from 'lodash';
 import axios from 'axios';
-const API = 'https://mainnet.mewwallet.dev';
+const API = 'https://development.mewwallet.dev';
 
 export default class OrderHandler {
   constructor() {}
@@ -106,6 +107,32 @@ export default class OrderHandler {
         })
         .catch(reject);
     });
+  }
+
+  async getTopperUrl({
+    fiatCurrency,
+    cryptoCurrency,
+    requestedAmount,
+    address
+  }) {
+    const apiQuote = `${API}/v3/purchase/topper/order`;
+
+    return await axios
+      .get(apiQuote, {
+        params: {
+          id: `WEB|${sha3(address)?.substring(0, 42)}`,
+          fiatCurrency: fiatCurrency,
+          cryptoCurrency: cryptoCurrency,
+          amount: toNumber(requestedAmount),
+          address: address
+        }
+      })
+      .then(response => {
+        return response.data;
+      })
+      .catch(e => {
+        throw e;
+      });
   }
 
   // this won't be used for awhile but is setup here
