@@ -196,7 +196,7 @@ export default {
             : getCoinGeckoTokenMarketDataByIds;
           const parsedLoc = locTokens.map(token => {
             return {
-              name: token.symbol.toUpperCase(),
+              name: this.names[token.id],
               symbol: this.symbols[token.id],
               subtext: token.symbol.toUpperCase(),
               value: token.symbol.toUpperCase(),
@@ -251,6 +251,13 @@ export default {
         'polygon-bridged-usdt-polygon': 'USDT-MATIC',
         'arbitrum-bridged-usdt-arbitrum': 'USDT-ARBITRUM',
         'bridged-usdt': 'USDT-OPTIMISM'
+      },
+      names: {
+        ethereum: 'Ethereum',
+        dai: 'Dai Stablecoin',
+        tether: 'Tether',
+        'usd-coin': 'USD Coin',
+        'matic-network': 'Polygon'
       },
       openTokenSelect: false,
       selectedCurrency: this.defaultCurrency,
@@ -495,13 +502,15 @@ export default {
             item => item.fiat_currency === this.selectedFiatName
           ).price || 0
         );
-        const cryptoToFiat = BigNumber(this.amount).div(topperFiatPrice);
-        const cryptoToFiatWithFees = cryptoToFiat
+        // const cryptoToFiat = BigNumber(this.amount).times(topperFiatPrice);
+        const cryptoToFiatWithFees = BigNumber(this.amount)
           .minus(BigNumber(0.18))
           // topper fee
-          .minus(BigNumber(cryptoToFiat).times(0.029))
+          .minus(BigNumber(this.amount).times(0.029))
           // mew fee
-          .minus(BigNumber(cryptoToFiat).times(0.0175));
+          .minus(BigNumber(this.amount).times(0.0175))
+          // topper price
+          .div(topperFiatPrice);
 
         const cryptoToFiatWithFeesF = formatFiatValue(
           cryptoToFiatWithFees.toString(),
@@ -770,6 +779,7 @@ export default {
         monthlyLimit: this.monthlyLimit,
         fiatAmount: this.amount
       };
+      console.log(this.topperQuote);
       this.checkMoonPayMax();
       this.$emit('success', [
         this.simplexQuote,

@@ -42,9 +42,9 @@
             >
               <mew-token-container size="30px" :img="token.img" />
               <div class="mew-heading-3 textDark--text ml-4">
-                {{ token.name }}
+                {{ token.symbol }}
               </div>
-              <div class="textDark--text ml-1">- {{ token.subtext }}</div>
+              <div class="textDark--text ml-1">- {{ token.name }}</div>
               <div class="textDark--text ml-auto">{{ token.price }}</div>
             </v-btn>
           </div>
