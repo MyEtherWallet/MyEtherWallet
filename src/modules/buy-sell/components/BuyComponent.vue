@@ -779,7 +779,6 @@ export default {
         monthlyLimit: this.monthlyLimit,
         fiatAmount: this.amount
       };
-      console.log(this.topperQuote);
       this.checkMoonPayMax();
       this.$emit('success', [
         this.simplexQuote,
