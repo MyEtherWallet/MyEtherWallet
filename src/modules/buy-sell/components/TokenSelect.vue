@@ -167,13 +167,7 @@ export default {
             return network;
           }
         } else {
-          if (
-            network[0].type.name === ETH.name ||
-            network[0].type.name === MATIC.name
-            // network[0].type.name === ARB.name ||
-            // network[0].type.name === OP.name ||
-            // network[0].type.name === BSC.name
-          ) {
+          if (network[0].type.canBuy) {
             return network;
           }
         }

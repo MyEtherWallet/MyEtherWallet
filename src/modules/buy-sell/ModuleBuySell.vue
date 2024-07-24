@@ -141,13 +141,7 @@ export default {
       return this.selectedCurrency;
     },
     supportedNetwork() {
-      return (
-        this.network.type.name === ETH.name ||
-        // this.network.type.name === BSC.name ||
-        this.network.type.name === MATIC.name
-        // this.network.type.name === OP.name ||
-        // this.network.type.name === ARB.name
-      );
+      return this.network.type.canBuy;
     },
     leftBtn() {
       return {
