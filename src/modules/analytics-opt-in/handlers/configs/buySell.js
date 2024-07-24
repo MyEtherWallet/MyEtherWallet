@@ -14,5 +14,8 @@ export default {
   BUY_W_MOONPAY_FAILED: 'BuyWithMoonpayFailed',
   SELL_WITH_MOONPAY: 'SellWithMoonpay',
   SELL_WITH_MOONPAY_SUCCESS: 'SellWithMoonpaySuccess',
-  SELL_WITH_MOONPAY_FAILED: 'SellWithMoonpayFailed'
+  SELL_WITH_MOONPAY_FAILED: 'SellWithMoonpayFailed',
+  BUY_W_TOPPER: 'BuyWithTopper',
+  BUY_W_TOPPER_SUCCESS: 'BuyWithTopperSuccess',
+  BUY_W_TOPPER_FAILED: 'BuyWithTopperFailed'
 };
