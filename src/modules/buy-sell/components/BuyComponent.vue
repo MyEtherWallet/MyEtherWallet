@@ -221,7 +221,7 @@ export default {
                     return quote.fiat_currency === this.selectedFiatName;
                   });
                   token.price = formatFiatValue(
-                    actualPrice ? actualPrice.price : '0',
+                    actualPrice?.price || '0',
                     this.currencyConfig
                   ).value;
                   token.value = token.name;
@@ -591,9 +591,9 @@ export default {
           }
 
           const token = this.tokens.find(
-            item => item.name === this.selectedCryptoName
+            item => item.symbol === this.selectedCryptoName
           );
-          const price = token.price;
+          const price = token?.price || 0;
 
           this.amount = BigNumber(this.localCryptoAmount)
             .multipliedBy(price)

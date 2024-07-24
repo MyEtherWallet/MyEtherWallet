@@ -259,7 +259,7 @@ export default {
       if (this.inWallet) {
         return sellContracts.reduce((arr, item) => {
           const inList = this.tokensList.find(t => {
-            if (t.contract.toLowerCase() === item.toLowerCase()) return t;
+            if (t.contract?.toLowerCase() === item?.toLowerCase()) return t;
           });
           if (inList) {
             inList.price = formatFiatValue(inList ? inList.price : '0').value;
