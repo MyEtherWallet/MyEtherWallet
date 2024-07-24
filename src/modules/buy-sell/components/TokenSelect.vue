@@ -63,12 +63,7 @@ import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import * as nodes from '@/utils/networks/nodes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-import {
-  ETH,
-  // OP,
-  MATIC
-  // ARB, BSC
-} from '@/utils/networks/types';
+import { ETH } from '@/utils/networks/types';
 
 export default {
   name: 'BuySellTokenSelect',

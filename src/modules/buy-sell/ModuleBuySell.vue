@@ -73,9 +73,9 @@ import { mapGetters, mapState, mapActions } from 'vuex';
 import { isEmpty } from 'lodash';
 
 import {
-  ETH,
+  ETH
   //  OP,
-  MATIC
+  // MATIC
   // ARB, BSC
 } from '@/utils/networks/types';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
