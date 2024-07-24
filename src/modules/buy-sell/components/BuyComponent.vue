@@ -52,11 +52,7 @@
       <div class="d-flex align-start">
         <mew-input
           is-read-only
-          :value="
-            !loading
-              ? `${cryptoToFiat} ${selectedCryptoName} ≈ ${plusFeeF} `
-              : 'Loading...'
-          "
+          :value="!loading ? `${cryptoToFiat}` : 'Loading...'"
           hide-clear-btn
           class="no-right-border"
         />
@@ -276,7 +272,6 @@ export default {
       gasPrice: '0',
       web3Connections: {},
       simplexQuote: {},
-      showMoonpay: true,
       disableCurrencySelect: true,
       localCryptoAmount: '0',
       tokens: []
@@ -414,9 +409,9 @@ export default {
       if (BigNumber(this.amount).lt(0)) {
         return `Amount can't be negative`;
       }
-      if (this.min.gt(this.amount)) {
+      if (this.minVal.gt(this.amount)) {
         return `Amount can't be below provider's minimum: ${
-          formatFiatValue(this.min.toFixed(), this.currencyConfig).value
+          formatFiatValue(this.minVal.toFixed(), this.currencyConfig).value
         } ${this.selectedFiatName}`;
       }
       if (this.maxVal.gt(0) && this.maxVal.lt(this.amount)) {
@@ -430,9 +425,16 @@ export default {
       return !isEmpty(this.fetchedData);
     },
     cryptoToFiat() {
-      return this.showMoonpay
-        ? this.moonpayCryptoAmount
-        : this.simplexCryptoAmount;
+      return BigNumber(this.moonpayCryptoAmount).gt(this.simplexCryptoAmount)
+        ? BigNumber(this.moonpayCryptoAmount).gt(this.topperCryptoAmount)
+          ? this.moonpayCryptoAmount
+          : this.topperCryptoAmount
+        : BigNumber(this.simplexCryptoAmount).gt(this.topperCryptoAmount)
+        ? this.simplexCryptoAmount
+        : this.topperCryptoAmount;
+    },
+    topperCryptoAmount() {
+      return this.topperQuote.cryptoToFiat;
     },
     moonpayCryptoAmount() {
       return formatFloatingPointValue(
@@ -477,20 +479,54 @@ export default {
         topper: BigNumber(0)
       };
     },
+    min() {
+      if (this.hasData) {
+        const dataToArray = Object.values(this.fetchedData);
+        const moonPay = dataToArray.find(item => item.name === 'MOONPAY');
+        const simplex = dataToArray.find(item => item.name === 'SIMPLEX');
+        const topper = dataToArray.find(item => item.name === 'TOPPER');
+        const moonpayMax = moonPay?.limits.find(
+          item => item.fiat_currency === this.selectedFiatName
+        );
+        const simplexMax = simplex?.limits.find(
+          item => item.fiat_currency === this.selectedFiatName
+        );
+        const topperMax = topper?.limits.find(
+          item => item.fiat_currency === this.selectedFiatName
+        );
+        return {
+          moonpay: moonpayMax ? BigNumber(moonpayMax.limit.min) : BigNumber(0),
+          simplex: simplexMax ? BigNumber(simplexMax.limit.min) : BigNumber(0),
+          topper: topperMax ? BigNumber(topperMax.limit.min) : BigNumber(0)
+        };
+      }
+      return {
+        moonpay: BigNumber(0),
+        simplex: BigNumber(0),
+        topper: BigNumber(0)
+      };
+    },
     maxVal() {
       const moonpayMax = this.max.moonpay;
       const simplexMax = this.max.simplex;
-      const maxVal = Math.max(moonpayMax.toString(), simplexMax.toString());
-      return BigNumber(maxVal);
+      const topperMax = this.max.topper;
+      return BigNumber(simplexMax).gt(moonpayMax) &&
+        BigNumber(simplexMax).gt(topperMax)
+        ? simplexMax
+        : BigNumber(moonpayMax).gt(topperMax)
+        ? moonpayMax
+        : topperMax;
     },
-    min() {
-      if (this.hasData) {
-        const foundLimit = this.fetchedData[0].limits.find(
-          item => item.fiat_currency === this.selectedFiatName
-        );
-        return foundLimit ? BigNumber(foundLimit.limit.min) : BigNumber(30);
-      }
-      return BigNumber(30);
+    minVal() {
+      const moonpayMax = this.min.moonpay;
+      const simplexMax = this.min.simplex;
+      const topperMax = this.min.topper;
+      return BigNumber(simplexMax).lt(moonpayMax) &&
+        BigNumber(simplexMax).lt(topperMax)
+        ? simplexMax
+        : BigNumber(moonpayMax).lt(topperMax)
+        ? moonpayMax
+        : topperMax;
     },
     topperQuote() {
       const topper = Object.values(this.fetchedData).find(
@@ -584,16 +620,10 @@ export default {
     selectedFiat: {
       handler: function (newVal, oldVal) {
         if (!isEqual(newVal, oldVal)) {
-          if (newVal.name === 'CAD') {
-            this.selectedCurrency = this.tokens[0];
-            this.$emit('selectedFiat', newVal);
-            return;
-          }
-
           const token = this.tokens.find(
             item => item.symbol === this.selectedCryptoName
           );
-          const price = token?.price || 0;
+          const price = token?.price || this.tokens[0].price;
 
           this.amount = BigNumber(this.localCryptoAmount)
             .multipliedBy(price)
@@ -627,7 +657,7 @@ export default {
         if (
           simplexMax.lt(newVal) ||
           isEmpty(newVal) ||
-          this.min.gt(newVal) ||
+          this.minVal.gt(newVal) ||
           isNaN(newVal)
         ) {
           this.loading = true;
@@ -731,7 +761,7 @@ export default {
         simplex.prices.length === 0 ||
         !this.actualValidAddress ||
         isEmpty(this.amount) ||
-        this.min.gt(this.amount) ||
+        this.min.simplex.gt(this.amount) ||
         isNaN(this.amount) ||
         (this.max.simplex.gt(0) && this.max.simplex.lt(this.amount)) ||
         this.amountErrorMessages !== ''
@@ -752,7 +782,6 @@ export default {
           this.loading = false;
           this.disableCurrencySelect = false;
           this.$emit('simplexQuote', this.simplexQuote);
-          this.compareQuotes();
         })
         .catch(e => {
           const error = e.response ? e.response.data.error : e;
@@ -760,13 +789,6 @@ export default {
           this.$emit('simplexQuote', {});
           Toast(error, {}, ERROR);
         });
-    },
-    compareQuotes() {
-      const moonpayMax = this.max.moonpay;
-      // Moonpay has better rate and is not above max
-      this.showMoonpay = this.isLT(moonpayMax, this.amount) // max < amount
-        ? false
-        : this.isLT(this.simplexQuote.crypto_amount, this.moonpayCryptoAmount);
     },
     buy() {
       const buyObj = {
