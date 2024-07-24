@@ -346,7 +346,7 @@ export default {
       );
     },
     txFeeInEth() {
-      return `${BigNumber(this.txFee).decimalPlaces(4)} ${
+      return `${BigNumber(this.txFee).decimalPlaces(10)} ${
         this.network.type.currencyName
       }`;
     },
