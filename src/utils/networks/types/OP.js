@@ -22,7 +22,7 @@ export default {
     websocket: null
   },
   gasPriceMultiplier: 1,
-  canBuy: true,
+  canBuy: false,
   coingeckoID: 'ethereum',
   balanceApi: 'https://partners.mewapi.io/balances/op/'
 };

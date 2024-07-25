@@ -1,3 +1,9 @@
+### Release v6.9.11
+
+### feat
+
+* add topper [#4965](https://github.com/MyEtherWallet/MyEtherWallet/pull/4965)
+
 ### Release v6.9.10
 
 ### feat

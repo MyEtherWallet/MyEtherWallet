@@ -73,9 +73,9 @@ import { mapGetters, mapState, mapActions } from 'vuex';
 import { isEmpty } from 'lodash';
 
 import {
-  ETH,
+  ETH
   //  OP,
-  MATIC
+  // MATIC
   // ARB, BSC
 } from '@/utils/networks/types';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
@@ -141,13 +141,7 @@ export default {
       return this.selectedCurrency;
     },
     supportedNetwork() {
-      return (
-        this.network.type.name === ETH.name ||
-        // this.network.type.name === BSC.name ||
-        this.network.type.name === MATIC.name
-        // this.network.type.name === OP.name ||
-        // this.network.type.name === ARB.name
-      );
+      return this.network.type.canBuy;
     },
     leftBtn() {
       return {
