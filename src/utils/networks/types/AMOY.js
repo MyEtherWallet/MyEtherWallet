@@ -22,7 +22,7 @@ export default {
     websocket: null
   },
   gasPriceMultiplier: 1.7,
-  canBuy: true,
+  canBuy: false,
   coingeckoID: '',
   balanceApi: ''
 };

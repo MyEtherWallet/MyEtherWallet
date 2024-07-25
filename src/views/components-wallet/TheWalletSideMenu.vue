@@ -291,7 +291,7 @@ import message from '@/assets/images/icons/icon-message-enable.svg';
 import settings from '@/assets/images/icons/icon-setting-enable.svg';
 import logout from '@/assets/images/icons/icon-logout-enable.svg';
 import { EventBus } from '@/core/plugins/eventBus';
-import { ETH, BSC, MATIC, GOERLI, ARB, OP } from '@/utils/networks/types';
+import { ETH, BSC, MATIC, GOERLI } from '@/utils/networks/types';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import {
@@ -448,13 +448,7 @@ export default {
             route: undefined
           }
         ];
-        if (
-          this.network.type.name === ETH.name ||
-          this.network.type.name === BSC.name ||
-          this.network.type.name === MATIC.name ||
-          this.network.type.name === ARB.name ||
-          this.network.type.name === OP.name
-        ) {
+        if (this.network.type.canBuy) {
           sectionTwo.push({
             title: this.$t('interface.menu.buy-sell'),
             icon: buy,

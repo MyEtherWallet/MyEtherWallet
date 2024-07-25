@@ -42,9 +42,9 @@
             >
               <mew-token-container size="30px" :img="token.img" />
               <div class="mew-heading-3 textDark--text ml-4">
-                {{ token.name }}
+                {{ token.symbol }}
               </div>
-              <div class="textDark--text ml-1">- {{ token.subtext }}</div>
+              <div class="textDark--text ml-1">- {{ token.name }}</div>
               <div class="textDark--text ml-auto">{{ token.price }}</div>
             </v-btn>
           </div>
@@ -63,7 +63,7 @@ import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import * as nodes from '@/utils/networks/nodes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-import { ETH, OP, MATIC, ARB, BSC } from '@/utils/networks/types';
+import { ETH } from '@/utils/networks/types';
 
 export default {
   name: 'BuySellTokenSelect',
@@ -162,13 +162,7 @@ export default {
             return network;
           }
         } else {
-          if (
-            network[0].type.name === ETH.name ||
-            network[0].type.name === MATIC.name ||
-            network[0].type.name === ARB.name ||
-            network[0].type.name === OP.name ||
-            network[0].type.name === BSC.name
-          ) {
+          if (network[0].type.canBuy) {
             return network;
           }
         }
