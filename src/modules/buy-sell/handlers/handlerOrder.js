@@ -1,7 +1,7 @@
 import { sha3 } from 'web3-utils';
 import { toNumber } from 'lodash';
 import axios from 'axios';
-const API = 'https://qa.mewwallet.dev';
+const API = 'https://staging.mewwallet.dev';
 
 export default class OrderHandler {
   constructor() {}
