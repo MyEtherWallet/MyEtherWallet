@@ -45,7 +45,7 @@
                 {{ token.symbol }}
               </div>
               <div class="textDark--text ml-1">- {{ token.name }}</div>
-              <div class="textDark--text ml-auto">{{ token.price }}</div>
+              <div class="textDark--text ml-auto">{{ token.pricef }}</div>
             </v-btn>
           </div>
         </div>

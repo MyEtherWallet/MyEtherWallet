@@ -62,7 +62,7 @@
         >
           <mew-token-container :img="selectedCurrency.img" size="28px" />
           <div class="basic--text ml-2">
-            {{ selectedCurrency.name | concatName }}
+            {{ selectedCurrency.value | concatName }}
           </div>
           <v-icon class="ml-auto" size="20px" color="titlePrimary">
             mdi-chevron-down
@@ -216,12 +216,12 @@ export default {
                   const actualPrice = priceRate?.quotes.find(quote => {
                     return quote.fiat_currency === this.selectedFiatName;
                   });
+                  console.log('info', token.name, token.symbol);
                   token.price = formatFiatValue(
                     actualPrice?.price || '0',
                     this.currencyConfig
                   ).value;
-                  token.value = token.name;
-                  token.name = token.symbol;
+                  token.value = token.symbol;
                   return token;
                 })
               : parsedLoc;
@@ -624,11 +624,13 @@ export default {
             item => item.symbol === this.selectedCryptoName
           );
           const price = token?.price || this.tokens[0].price;
-
+          const parsedPrice = `${price}`.substring(1, price.length);
           this.amount = BigNumber(this.localCryptoAmount)
-            .multipliedBy(price)
+            .multipliedBy(parsedPrice)
             .toFixed(2);
-          this.localCryptoAmount = BigNumber(this.amount).div(price).toString();
+          this.localCryptoAmount = BigNumber(this.amount)
+            .div(parsedPrice)
+            .toString();
 
           this.$emit('selectedFiat', newVal);
         }
@@ -700,10 +702,10 @@ export default {
     async fetchGasPrice() {
       const supportedNodes = {
         ETH: ETH.name,
-        MATIC: MATIC.name,
-        OP: OP.name,
-        ARB: ARB.name,
-        BSC: BSC.name
+        MATIC: MATIC.name
+        // OP: OP.name,
+        // ARB: ARB.name,
+        // BSC: BSC.name
       };
       const nodeType = !supportedNodes[this.selectedCurrency?.symbol]
         ? ETH.name
