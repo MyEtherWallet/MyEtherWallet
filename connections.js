@@ -94,6 +94,7 @@ module.exports = [
   'https://api.thegraph.com:443/subgraphs/name/aave/', // Aave
   'https://protocol-api.aave.com:443', // Aave
   'https://api.thegraph.com:443/subgraphs/name/ensdomains/', // ENS
+  'https://gateway-arbitrum.network.thegraph.com:443', // ENS
   'https://s3.us-west-2.amazonaws.com:443/mew-ipfs-bucket', // ENS
   'https://api.studio.thegraph.com:443/proxy/49574/',
   'https://assets.coingecko.com',

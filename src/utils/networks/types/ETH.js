@@ -21,7 +21,8 @@ export default {
     registrarTLD: 'eth',
     registrarType: 'permanent',
     supportedTld: GOERLI,
-    subgraphPath: 'https://api.thegraph.com/subgraphs/name/ensdomains/ens'
+    subgraphPath:
+      'https://gateway-arbitrum.network.thegraph.com/api/eb17d5e0f1e62e505370ef6bfd7c2844/subgraphs/id/5XqPmWe6gjyrJtFn9cLy237i4cWw2j9HcUJEXsP5qGtH'
   },
   icon: eth,
   currencyName: 'ETH',
