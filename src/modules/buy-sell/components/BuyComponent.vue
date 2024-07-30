@@ -62,7 +62,7 @@
         >
           <mew-token-container :img="selectedCurrency.img" size="28px" />
           <div class="basic--text ml-2">
-            {{ selectedCurrency.value | concatName }}
+            {{ selectedCurrency.symbol | concatName }}
           </div>
           <v-icon class="ml-auto" size="20px" color="titlePrimary">
             mdi-chevron-down
@@ -134,7 +134,7 @@ import {
 import { getCurrency } from '@/modules/settings/components/currencyList';
 import { coingeckoContracts } from './tokenList';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
-import { ETH, OP, MATIC, ARB, BSC } from '@/utils/networks/types';
+import { ETH, MATIC } from '@/utils/networks/types';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook.vue';
 import { getCoinGeckoTokenMarketDataByIds } from '@/apollo/queries/wallets/wallets.graphql';
 
@@ -216,7 +216,6 @@ export default {
                   const actualPrice = priceRate?.quotes.find(quote => {
                     return quote.fiat_currency === this.selectedFiatName;
                   });
-                  console.log('info', token.name, token.symbol);
                   token.price = formatFiatValue(
                     actualPrice?.price || '0',
                     this.currencyConfig

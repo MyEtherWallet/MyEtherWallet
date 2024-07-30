@@ -53,7 +53,7 @@
         >
           <mew-token-container :img="selectedCurrency.img" size="28px" />
           <div class="basic--text" style="margin-left: 8px">
-            {{ selectedCurrency.name }}
+            {{ selectedCurrency.symbol }}
           </div>
           <v-icon class="ml-auto" size="20px" color="titlePrimary">
             mdi-chevron-down
@@ -137,7 +137,7 @@
     <!-- ========================================================================= -->
     <buy-sell-token-select
       :open="openTokenSelect"
-      :currency-items="currencyItems"
+      :currency-items="preselectedCurrencies"
       :selected-currency="selectedCurrency"
       :set-currency="setCurrency"
       :in-wallet="inWallet"
@@ -218,7 +218,11 @@ export default {
       selectedBalance: '0',
       toAddress: '',
       validToAddress: false,
-      currencyRates: []
+      currencyRates: [],
+      names: {
+        ETH: 'Ethereum',
+        USDC: 'USD Coin'
+      }
     };
   },
   computed: {
@@ -257,18 +261,20 @@ export default {
     },
     preselectedCurrencies() {
       if (this.inWallet) {
-        return sellContracts.reduce((arr, item) => {
+        const locArr = sellContracts.reduce((arr, item) => {
           const inList = this.tokensList.find(t => {
             if (t.contract?.toLowerCase() === item?.toLowerCase()) return t;
           });
           if (inList) {
             inList.price = formatFiatValue(inList ? inList.price : '0').value;
+            inList.name = this.names[inList.symbol];
             arr.push(inList);
             return arr;
           }
 
           const token = this.contractToToken(item);
           if (token) {
+            token.name = this.names[token.symbol];
             token.price = formatFiatValue(
               token ? token.price : '0',
               this.currencyConfig
@@ -277,23 +283,18 @@ export default {
           }
           return arr;
         }, []);
+        return locArr;
       }
       const arr = new Array();
       for (const contract of sellContracts) {
         const token = this.contractToToken(contract);
         if (token) {
+          token.name = this.names[token.symbol];
           token.price = formatFiatValue(token ? token.price : '0').value;
           arr.push(token);
         }
       }
       return arr;
-    },
-    currencyItems() {
-      const tokensList = this.preselectedCurrencies.map(token => {
-        token.name = token.symbol;
-        return token;
-      });
-      return tokensList;
     },
     supportedCurrency() {
       return ['ETH', 'USDT', 'USDC', 'MATIC', 'BNB'];
