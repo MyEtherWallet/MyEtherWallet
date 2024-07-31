@@ -633,14 +633,16 @@ export default {
           const token = this.tokens.find(
             item => item.symbol === this.selectedCryptoName
           );
-          const price = token?.price || this.tokens[0]?.price;
-          const parsedPrice = `${price}`.substring(1, price.length);
-          this.amount = BigNumber(this.localCryptoAmount)
-            .multipliedBy(parsedPrice)
-            .toFixed(2);
-          this.localCryptoAmount = BigNumber(this.amount)
-            .div(parsedPrice)
-            .toString();
+          if (token) {
+            const price = token?.price || this.tokens[0]?.price;
+            const parsedPrice = `${price}`.substring(1, price.length);
+            this.amount = BigNumber(this.localCryptoAmount)
+              .multipliedBy(parsedPrice)
+              .toFixed(2);
+            this.localCryptoAmount = BigNumber(this.amount)
+              .div(parsedPrice)
+              .toString();
+          }
 
           this.$emit('selectedFiat', newVal);
         }
