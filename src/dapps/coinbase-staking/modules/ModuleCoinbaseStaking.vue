@@ -179,7 +179,7 @@
 
 <script>
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-import { fromWei } from 'web3-utils';
+import { fromWei, toHex } from 'web3-utils';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { debounce, isEmpty } from 'lodash';
@@ -314,11 +314,11 @@ export default {
         return;
       }
       const txObj = {
-        gasLimit: gasLimit,
+        gasLimit: toHex(gasLimit),
         to: to,
         from: this.address,
         data: data,
-        value: value
+        value: toHex(value)
       };
       this.web3.eth
         .sendTransaction(txObj)
