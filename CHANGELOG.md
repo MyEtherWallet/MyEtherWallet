@@ -1,8 +1,13 @@
 ### Release v6.9.11-hotfix.1
 
+### devop
+
+- sync develop to main [#4968](https://github.com/MyEtherWallet/MyEtherWallet/pull/4968)
+
 ### fix
 
-- offline [#4972](https://github.com/MyEtherWallet/MyEtherWallet/pull/4972)
+- Fix: adjust min-height and add background-color to make text readable for wallet card in offline mode [#4969](https://github.com/MyEtherWallet/MyEtherWallet/pull/4969)
+- fix create wallet on offline [#4970](https://github.com/MyEtherWallet/MyEtherWallet/pull/4970)
 
 ### Release v6.9.11
 
