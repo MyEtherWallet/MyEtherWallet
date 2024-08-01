@@ -95,7 +95,8 @@ const EXCEPTIONS = [
   'remark-preset-lint-recommended', // breaks
   '@sentry/browser', // major update
   '@sentry/vue', // major update
-  'qrcode-with-logos' // fix after release
+  'qrcode-with-logos', // fix after release
+  '@ensdomains/ens-contracts'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
