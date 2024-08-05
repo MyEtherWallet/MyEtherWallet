@@ -21,10 +21,12 @@ import arthera from './arthera-ws';
 import artheratest from './arthera-test-ws';
 import rootstocktestnet from './rootstock-testnet-ws';
 import amoyws from './amoy-mew-ws';
+import cotiws from './coti-ws';
 
 export {
   etcethereumclassiccooperativeparityws,
   ethmewws,
+  cotiws,
   goerlimewws,
   holeskymewws,
   bscmewws,
