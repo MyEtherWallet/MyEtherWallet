@@ -3,6 +3,7 @@ import UNS from './resolvers/uns';
 import normalise from '@/core/helpers/normalise';
 import { isAddress, toChecksumAddress } from '@/core/helpers/addressUtils.js';
 import { ROOTSTOCK, ROOTSTOCKTESTNET } from '@/utils/networks/types';
+import { createWeb3Name } from '@web3-name-sdk/core';
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 export default class NameResolver {
   constructor(network, web3) {
@@ -10,6 +11,7 @@ export default class NameResolver {
     this.web3 = web3;
     this.ens = new ENS(this.network, this.web3);
     this.uns = new UNS();
+    this.web3Name = createWeb3Name();
   }
   isValidName(name) {
     const splitName = name.split('.');
@@ -42,7 +44,16 @@ export default class NameResolver {
     if (isAddress(address) && address !== ZERO_ADDRESS) {
       const resolvedName = await this.ens.resolveAddress(address);
       if (!resolvedName.name) {
-        resolvedName.name = await this.uns.resolveAddress(address);
+        const unsDomain = await this.uns.resolveAddress(address);
+        if (unsDomain) {
+          resolvedName.name = unsDomain;
+        } else {
+          const domainName = await this.web3Name.getDomainName({
+            address,
+            queryChainIdList: [this.network.type.chainID]
+          });
+          resolvedName.name = domainName;
+        }
       }
       return resolvedName;
     }
