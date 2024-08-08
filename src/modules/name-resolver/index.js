@@ -1,4 +1,5 @@
 import NameResolver from '@enkryptcom/name-resolution';
+import { createWeb3Name } from '@web3-name-sdk/core';
 
 import normalise from '@/core/helpers/normalise';
 import { isAddress, toChecksumAddress } from '@/core/helpers/addressUtils.js';
@@ -7,6 +8,7 @@ const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 export default class Resolver {
   constructor(network) {
     this.network = network;
+    this.web3Name = createWeb3Name();
     this.resolver = new NameResolver({
       ens: {
         node: 'https://nodes.mewapi.io/rpc/eth'
@@ -48,8 +50,20 @@ export default class Resolver {
 
   async resolveAddress(address) {
     if (isAddress(address) && address !== ZERO_ADDRESS) {
-      const resolvedName = await this.resolver.resolveReverseName(address);
-      return resolvedName;
+      let resolvedName = await this.resolver.resolveReverseName(address);
+      if (!resolvedName) {
+        resolvedName = await this.web3Name.getDomainName({
+          address,
+          queryChainIdList: [this.network.type.chainID]
+        });
+      }
+      return {
+        name: resolvedName?.name
+          ? resolvedName.name
+          : resolvedName
+          ? resolvedName
+          : ''
+      };
     }
   }
 }
