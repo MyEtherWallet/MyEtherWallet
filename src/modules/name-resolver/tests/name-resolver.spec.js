@@ -1,7 +1,7 @@
 import NameResolver from '../index';
 import Web3 from 'web3';
 const web3Instance = new Web3('https://nodes.mewapi.io/rpc/eth');
-const nameResolver = new NameResolver(
+const nameResolver = new Resolver(
   {
     type: {
       ens: {

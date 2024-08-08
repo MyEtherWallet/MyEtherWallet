@@ -24,5 +24,6 @@ export default {
   gasPriceMultiplier: 1,
   canBuy: false,
   coingeckoID: 'dai',
-  balanceApi: 'https://partners.mewapi.io/balances/xdai/'
+  balanceApi: 'https://partners.mewapi.io/balances/xdai/',
+  ensEnkryptType: 'GNO'
 };

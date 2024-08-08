@@ -36,5 +36,6 @@ export default {
   gasPriceMultiplier: 1,
   canBuy: true,
   coingeckoID: 'ethereum',
-  balanceApi: 'https://tokenbalance.mewapi.io/eth?address='
+  balanceApi: 'https://tokenbalance.mewapi.io/eth?address=',
+  ensEnkryptType: 'ETH'
 };

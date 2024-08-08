@@ -24,5 +24,6 @@ export default {
   gasPriceMultiplier: 1,
   canBuy: false,
   coingeckoID: 'binancecoin',
-  balanceApi: 'https://tokenbalance.mewapi.io/bsc?address='
+  balanceApi: 'https://tokenbalance.mewapi.io/bsc?address=',
+  ensEnkryptType: 'BNB'
 };

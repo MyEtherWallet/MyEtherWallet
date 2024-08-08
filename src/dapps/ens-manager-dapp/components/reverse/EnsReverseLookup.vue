@@ -56,7 +56,7 @@ import ENS from '@ensdomains/ensjs';
 import { mapGetters, mapState } from 'vuex';
 
 import PermanentNameModule from '../../handlers/handlerPermanentName';
-import NameResolver from '@/modules/name-resolver/index';
+import Resolver from '@/modules/name-resolver/index';
 import errorHandler from '@/modules/confirmation/handlers/errorHandler.js';
 import metainfo from '../../metainfo.js';
 
@@ -183,7 +183,7 @@ export default {
         ens,
         this.durationPick
       );
-      this.nameResolver = new NameResolver(this.network, this.web3);
+      this.nameResolver = new Resolver(this.network);
       this.selectedDomain = { loading: false, fee: toBNSafe(0), error: '' };
       await this.setDomainListItems();
       this.getReverseRecordNames();
