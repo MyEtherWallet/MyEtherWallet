@@ -1,3 +1,7 @@
+// import { TextEncoder } from 'util';
+
+// global.TextEncoder = TextEncoder;
+
 import Resolver from '../index';
 import Web3 from 'web3';
 const web3Instance = new Web3('https://nodes.mewapi.io/rpc/eth');
