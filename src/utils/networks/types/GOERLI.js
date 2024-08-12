@@ -21,7 +21,7 @@ export default {
     registrarTLD: 'eth',
     registrarType: 'permanent',
     supportedTld: GOERLI,
-    subgraphPath: 'https://api.thegraph.com/subgraphs/name/ensdomains/ensgoerli'
+    subgraphPath: ''
   },
   icon: goerli,
   currencyName: 'GöETH',

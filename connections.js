@@ -11,6 +11,7 @@ module.exports = [
   'wss://connect2.mewapi.io:443',
   'http://localhost:8178',
   'ws://127.0.0.1:8178',
+  'http://127.0.0.1:3000',
   'https://o382951.ingest.sentry.io:443',
   'https://estimategas.mewapi.io:443/eth',
   'https://estimategas.mewapi.io:443/bsc',
@@ -109,5 +110,7 @@ module.exports = [
   'https://unstoppabledomains.g.alchemy.com:443', // Unstoppable domains
   'https://metadata.unstoppabledomains.com:443', // Unstoppable domains
   'wss://relay.walletconnect.com:443', // walletconnect2
-  'https://explorer-api.walletconnect.com:443' // web3modal
+  'https://explorer-api.walletconnect.com:443', // web3modal
+  'https://rpc.ankr.com:443',
+  'https://cloudflare-eth.com:443'
 ];

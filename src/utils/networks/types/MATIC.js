@@ -24,5 +24,6 @@ export default {
   gasPriceMultiplier: 1.7,
   canBuy: true,
   coingeckoID: 'matic-network',
-  balanceApi: 'https://partners.mewapi.io/balances/matic/'
+  balanceApi: 'https://partners.mewapi.io/balances/matic/',
+  ensEnkryptType: 'MATIC'
 };

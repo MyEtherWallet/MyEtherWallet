@@ -115,7 +115,7 @@
 
 <script>
 import { mapGetters, mapState, mapActions } from 'vuex';
-import { fromWei } from 'web3-utils';
+import { fromWei, toHex } from 'web3-utils';
 import { isEmpty } from 'lodash';
 import BigNumber from 'bignumber.js';
 import moment from 'moment';
@@ -315,11 +315,11 @@ export default {
         return;
       }
       const txObj = {
-        gasLimit: gasLimit,
+        gasLimit: toHex(gasLimit),
         to: to,
         from: this.address,
         data: data,
-        value: value
+        value: toHex(value)
       };
       this.web3.eth
         .sendTransaction(txObj)

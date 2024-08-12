@@ -62,7 +62,7 @@
         >
           <mew-token-container :img="selectedCurrency.img" size="28px" />
           <div class="basic--text ml-2">
-            {{ selectedCurrency.name | concatName }}
+            {{ selectedCurrency.symbol | concatName }}
           </div>
           <v-icon class="ml-auto" size="20px" color="titlePrimary">
             mdi-chevron-down
@@ -134,7 +134,7 @@ import {
 import { getCurrency } from '@/modules/settings/components/currencyList';
 import { coingeckoContracts } from './tokenList';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
-import { ETH, OP, MATIC, ARB, BSC } from '@/utils/networks/types';
+import { ETH, MATIC, OP, ARB } from '@/utils/networks/types';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook.vue';
 import { getCoinGeckoTokenMarketDataByIds } from '@/apollo/queries/wallets/wallets.graphql';
 
@@ -220,8 +220,7 @@ export default {
                     actualPrice?.price || '0',
                     this.currencyConfig
                   ).value;
-                  token.value = token.name;
-                  token.name = token.symbol;
+                  token.value = token.symbol;
                   return token;
                 })
               : parsedLoc;
@@ -253,7 +252,16 @@ export default {
         dai: 'Dai Stablecoin',
         tether: 'Tether',
         'usd-coin': 'USD Coin',
-        'matic-network': 'Polygon'
+        'paypal-usd': 'Paypal USD',
+        'true-usd': 'True USD',
+        'first-digital-usd': 'First Digital USD',
+        'binance-bridged-usdc-bnb-smart-chain': 'USD Coin',
+        'binance-bridged-usdt-bnb-smart-chain': 'Tether',
+        'matic-network': 'MATIC',
+        'bridged-usdc-polygon-pos-bridge': 'USD Coin',
+        'polygon-bridged-usdt-polygon': 'Tether',
+        'arbitrum-bridged-usdt-arbitrum': 'Tether',
+        'bridged-usdt': 'Tether'
       },
       openTokenSelect: false,
       selectedCurrency: this.defaultCurrency,
@@ -601,7 +609,9 @@ export default {
       handler: function (newVal, oldVal) {
         const supportedCoins = {
           ETH: ETH.name,
-          MATIC: MATIC.name
+          MATIC: MATIC.name,
+          OP: OP.name,
+          ARB: ARB.name
         };
         if (
           !newVal ||
@@ -623,12 +633,16 @@ export default {
           const token = this.tokens.find(
             item => item.symbol === this.selectedCryptoName
           );
-          const price = token?.price || this.tokens[0].price;
-
-          this.amount = BigNumber(this.localCryptoAmount)
-            .multipliedBy(price)
-            .toFixed(2);
-          this.localCryptoAmount = BigNumber(this.amount).div(price).toString();
+          if (token) {
+            const price = token?.price || this.tokens[0]?.price;
+            const parsedPrice = `${price}`.substring(1, price.length);
+            this.amount = BigNumber(this.localCryptoAmount)
+              .multipliedBy(parsedPrice)
+              .toFixed(2);
+            this.localCryptoAmount = BigNumber(this.amount)
+              .div(parsedPrice)
+              .toString();
+          }
 
           this.$emit('selectedFiat', newVal);
         }
@@ -653,7 +667,6 @@ export default {
     amount: {
       handler: function (newVal) {
         const simplexMax = this.max.simplex.multipliedBy(this.fiatMultiplier);
-        this.checkMoonPayMax();
         if (
           simplexMax.lt(newVal) ||
           isEmpty(newVal) ||
@@ -702,8 +715,7 @@ export default {
         ETH: ETH.name,
         MATIC: MATIC.name,
         OP: OP.name,
-        ARB: ARB.name,
-        BSC: BSC.name
+        ARB: ARB.name
       };
       const nodeType = !supportedNodes[this.selectedCurrency?.symbol]
         ? ETH.name
@@ -715,16 +727,8 @@ export default {
       }
       this.gasPrice = await this.web3Connections[nodeType].eth.getGasPrice();
     },
-    isLT(num, num2) {
-      return BigNumber(num).lt(num2);
-    },
     isValidToAddress(address) {
       return MultiCoinValidator.validate(address, this.selectedCurrency.symbol);
-    },
-    checkMoonPayMax() {
-      const moonpayMax = this.max.moonpay;
-      const hideMoonpay = this.isLT(moonpayMax, this.amount);
-      this.$emit('hideMoonpay', hideMoonpay);
     },
     setCurrency(e) {
       this.selectedCurrency = e;
@@ -801,7 +805,6 @@ export default {
         monthlyLimit: this.monthlyLimit,
         fiatAmount: this.amount
       };
-      this.checkMoonPayMax();
       this.$emit('success', [
         this.simplexQuote,
         this.topperQuote,

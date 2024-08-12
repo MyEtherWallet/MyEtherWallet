@@ -259,6 +259,7 @@ import { isEmpty } from 'lodash';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { BUY_SELL } from '@/modules/analytics-opt-in/handlers/configs/events';
+import BigNumber from 'bignumber.js';
 
 export default {
   name: 'ModuleBuyEthProvider',
@@ -269,10 +270,6 @@ export default {
       default: () => {}
     },
     inWallet: {
-      type: Boolean,
-      default: false
-    },
-    onlySimplex: {
       type: Boolean,
       default: false
     },
@@ -322,13 +319,13 @@ export default {
       return this.selectedFiatName === 'EUR' || this.selectedFiatName === 'GBP';
     },
     hideMoonpay() {
-      return this.onlySimplex;
+      return isEmpty(this.moonpayQuote);
     },
     hideSimplex() {
       return isEmpty(this.simplexQuote);
     },
     hideTopper() {
-      return isEmpty(this.topperQuote);
+      return BigNumber(this.topperQuote.cryptoToFiat).isZero();
     },
     simplexBtnTitle() {
       return 'BUY WITH SIMPLEX';

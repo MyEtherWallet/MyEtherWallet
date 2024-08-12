@@ -96,7 +96,7 @@ import { mapState, mapActions, mapGetters } from 'vuex';
 import { isEmpty, throttle } from 'lodash';
 import { getAddressInfo } from '@kleros/address-tags-sdk';
 
-import NameResolver from '@/modules/name-resolver/index';
+import Resolver from '@/modules/name-resolver/index';
 import { toChecksumAddress, isAddress } from '@/core/helpers/addressUtils';
 import { isValidCoinAddress } from '../handlers/handlerMulticoins.js';
 
@@ -252,16 +252,16 @@ export default {
       }
     },
     web3() {
-      if (this.network.type.ens) {
-        this.nameResolver = new NameResolver(this.network, this.web3);
+      if (this.network.type.ensEnkryptType) {
+        this.nameResolver = new Resolver(this.network);
       } else {
         this.nameResolver = null;
       }
     }
   },
   mounted() {
-    if (this.network.type.ens)
-      this.nameResolver = new NameResolver(this.network, this.web3);
+    if (this.network.type.ensEnkryptType)
+      this.nameResolver = new Resolver(this.network);
     if (this.addMode && this.toAddress) {
       this.addressToAdd = this.toAddress;
     }
