@@ -24,5 +24,6 @@ export default {
   gasPriceMultiplier: 1,
   canBuy: false,
   coingeckoID: 'avalanche-2',
-  balanceApi: 'https://partners.mewapi.io/balances/avax/'
+  balanceApi: 'https://partners.mewapi.io/balances/avax/',
+  ensEnkryptType: 'AVAX'
 };

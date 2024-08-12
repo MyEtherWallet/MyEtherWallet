@@ -1,4 +1,6 @@
 import { ethers, BigNumber, Contract, utils, constants } from 'ethers';
+import NameResolver from '@enkryptcom/name-resolution';
+
 import { RSKRegistrar } from './helpers/rskRegistrar';
 
 // Reverse Lookup
@@ -11,10 +13,6 @@ const stripHexPrefix = hex => hex.slice(2);
 
 const RNS_REGISTRY_ABI = [
   'function resolver(bytes32 node) public view returns (address)'
-];
-
-const RNS_NAME_RESOLVER_ABI = [
-  'function name(bytes32 node) external view returns (string)'
 ];
 
 const rskOwnerAddress = '0x45d3e4fb311982a06ba52359d44cb4f5980e0ef1';
@@ -60,13 +58,21 @@ export default class RNSManager {
       return null;
     }
 
-    const nameResolverContract = new Contract(
-      resolverAddress,
-      RNS_NAME_RESOLVER_ABI,
-      this.RNSProvider
-    );
+    const nameResolverContract = new NameResolver({
+      ens: {
+        node: 'https://nodes.mewapi.io/rpc/eth'
+      },
+      sid: {
+        node: {
+          bnb: 'https://nodes.mewapi.io/rpc/bsc',
+          arb: 'https://nodes.mewapi.io/rpc/arb'
+        }
+      }
+    });
 
-    const name = await nameResolverContract.name(reverseRecordHash);
+    const name = await nameResolverContract.resolveReverseName(
+      reverseRecordHash
+    );
 
     if (name === undefined) {
       return null;

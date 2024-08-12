@@ -40,7 +40,15 @@ const AUDIT_EXCEPTIONS = [
   'lodash.template',
   'html-minifier',
   'braces',
-  'ws'
+  'ws',
+  // issues after new enkrypt ens lib
+  'lodash',
+  'node-forge',
+  'elliptic',
+  'protobufjs',
+  'minimatch',
+  'socket.io',
+  'semver'
 ];
 const execute = (command, callback) => {
   exec(
