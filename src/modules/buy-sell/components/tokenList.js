@@ -6,7 +6,7 @@ const tokenContracts = {
   usdt: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
   usdc: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
   pyusd: '0x6c3ea9036406852006290770BEdFcAbA0e23A0e8',
-  tusd: '0x0000000000085d4780B73119b644AE5ecd22b376',
+  // tusd: '0x0000000000085d4780B73119b644AE5ecd22b376',
   // fdusdsc: '0xc5f0f7b66764F6ec8C8Dff7BA683102295E16409',
   // usdcsc: '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d',
   // usdtsc: '0x55d398326f99059ff775485246999027b3197955',
@@ -27,8 +27,8 @@ const buyContracts = {
     tokenContracts.usdt,
     tokenContracts.usdc,
     tokenContracts.dai,
-    tokenContracts.pyusd,
-    tokenContracts.tusd
+    tokenContracts.pyusd
+    // tokenContracts.tusd
   ],
   // BNB: [tokenContracts.fdusdsc, tokenContracts.usdcsc, tokenContracts.usdtsc],
   MATIC: [
@@ -41,7 +41,13 @@ const buyContracts = {
 };
 
 const coingeckoContracts = {
-  ETH: ['ethereum', 'dai', 'tether', 'usd-coin', 'paypal-usd', 'true-usd'],
+  ETH: [
+    'ethereum',
+    'dai',
+    'tether',
+    'usd-coin',
+    'paypal-usd' //'true-usd'
+  ],
   // BNB: [
   //   'first-digital-usd',
   //   'binance-bridged-usdc-bnb-smart-chain',
