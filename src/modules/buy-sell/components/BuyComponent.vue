@@ -609,9 +609,6 @@ export default {
     }
   },
   watch: {
-    fiatCurrencyItems() {
-      this.selectedFiat = this.fiatCurrencyItems[0];
-    },
     selectedCurrency: {
       handler: function (newVal, oldVal) {
         const supportedCoins = {
