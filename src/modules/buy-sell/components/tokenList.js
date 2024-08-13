@@ -46,7 +46,8 @@ const coingeckoContracts = {
     'dai',
     'tether',
     'usd-coin',
-    'paypal-usd' //'true-usd'
+    'paypal-usd'
+    //'true-usd'
   ],
   // BNB: [
   //   'first-digital-usd',
