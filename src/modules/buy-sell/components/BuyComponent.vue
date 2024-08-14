@@ -454,13 +454,19 @@ export default {
     },
     fiatCurrencyItems() {
       if (this.hasData) {
-        const simplexCurrencies = Object.values(this.fetchedData).find(item => {
-          return item.name === 'SIMPLEX' || item.name === 'MOONPAY';
-        });
+        const simplexCurrencies = this.fetchedData[0];
 
         const arrItems =
           simplexCurrencies.fiat_currencies.length > 0
-            ? simplexCurrencies.fiat_currencies.filter(item => item !== 'RUB')
+            ? simplexCurrencies.fiat_currencies.filter(
+                item =>
+                  item === 'USD' ||
+                  item === 'EUR' ||
+                  item === 'GBP' ||
+                  item === 'CAD' ||
+                  item === 'AUD' ||
+                  item === 'JPY'
+              )
             : ['USD'];
         const currencies = getCurrency(arrItems);
         return currencies;
