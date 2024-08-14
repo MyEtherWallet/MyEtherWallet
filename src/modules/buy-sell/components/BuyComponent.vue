@@ -639,6 +639,9 @@ export default {
     },
     selectedFiat: {
       handler: function (newVal, oldVal) {
+        this.$apollo.queries.getCoinGeckoTokenMarketDataByIds.refetch({
+          ids: coingeckoContracts[this.network.type.name]
+        });
         if (!isEqual(newVal, oldVal)) {
           /**
            * converts value from USD to selected fiat
@@ -656,7 +659,9 @@ export default {
         this.tokens = [];
         this.selectedCurrency = {};
         this.selectedCurrency = this.defaultCurrency;
-        this.$apollo.queries.getCoinGeckoTokenMarketDataByIds.refresh();
+        this.$apollo.queries.getCoinGeckoTokenMarketDataByIds.refetch({
+          ids: coingeckoContracts[this.network.type.name]
+        });
       },
       deep: true
     },

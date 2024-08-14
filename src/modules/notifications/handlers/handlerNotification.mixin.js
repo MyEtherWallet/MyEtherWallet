@@ -71,7 +71,7 @@ export default {
           hashes: this.txHashes
         };
       },
-      fetchPolicy: 'cache-and-networ`k`',
+      fetchPolicy: 'cache-and-network',
       skip() {
         return !this.isEthNetwork || this.txHashes.length === 0;
       },
