@@ -640,20 +640,12 @@ export default {
     selectedFiat: {
       handler: function (newVal, oldVal) {
         if (!isEqual(newVal, oldVal)) {
-          const token = this.tokens.find(
-            item => item.symbol === this.selectedCryptoName
-          );
-          if (token) {
-            const price = token?.price || this.tokens[0]?.price;
-            const parsedPrice = `${price}`.substring(1, price.length);
-            this.amount = BigNumber(this.localCryptoAmount)
-              .multipliedBy(parsedPrice)
-              .toFixed(2);
-            this.localCryptoAmount = BigNumber(this.amount)
-              .div(parsedPrice)
-              .toString();
-          }
-
+          /**
+           * converts value from USD to selected fiat
+           * if value is not currently in USD
+           * revert first and then convert
+           */
+          this.handleConversion(newVal, oldVal);
           this.$emit('selectedFiat', newVal);
         }
       },
@@ -714,6 +706,26 @@ export default {
     this.fetchCurrencyData();
   },
   methods: {
+    /**
+     * converts value from USD to selected fiat
+     * if value is not currently in USD
+     * revert first and then convert
+     */
+    handleConversion(newVal, oldVal) {
+      const oldRate = this.currencyRates[0].conversion_rates.find(
+        item => item.fiat_currency === oldVal.name
+      );
+      const newRate = this.currencyRates[0].conversion_rates.find(
+        item => item.fiat_currency === newVal.name
+      );
+
+      const locAmount = BigNumber(this.amount)
+        .div(oldRate.exchange_rate)
+        .toFixed(2);
+      this.amount = BigNumber(locAmount)
+        .times(newRate.exchange_rate)
+        .toFixed(2);
+    },
     setAddress(newVal, isValid, data) {
       if (data.type === 'RESOLVED' && !data.value.includes('.'))
         this.toAddress = data.value;
