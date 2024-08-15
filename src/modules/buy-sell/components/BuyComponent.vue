@@ -609,7 +609,7 @@ export default {
   watch: {
     fiatCurrencyItems: {
       handler(val) {
-        this.selectedFiat = val[0];
+        if (val.length === 1) this.selectedFiat = val[0];
       },
       immediate: true,
       deep: true
