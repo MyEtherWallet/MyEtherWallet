@@ -1,3 +1,21 @@
+### Release v6.9.12
+
+### devop
+
+- handle new api response [#4973](https://github.com/MyEtherWallet/MyEtherWallet/pull/4973)
+- sync develop [#4977](https://github.com/MyEtherWallet/MyEtherWallet/pull/4977)
+- use enkrypt ens library [#4981](https://github.com/MyEtherWallet/MyEtherWallet/pull/4981)
+
+### feat
+
+- add coti testnet [#4978](https://github.com/MyEtherWallet/MyEtherWallet/pull/4978)
+
+### fix
+
+- [#4971](https://github.com/MyEtherWallet/MyEtherWallet/pull/4971)
+- add tokens fix, add sell fix as well [#4972](https://github.com/MyEtherWallet/MyEtherWallet/pull/4972)
+- add new mobile ad [#4979](https://github.com/MyEtherWallet/MyEtherWallet/pull/4979)
+
 ### Release v6.9.11-hotfix.1
 
 ### devop

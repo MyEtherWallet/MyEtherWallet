@@ -25,5 +25,6 @@ export default {
   gasPriceMultiplier: 1,
   canBuy: false,
   coingeckoID: 'gochain',
-  balanceApi: ''
+  balanceApi: '',
+  ensEnkryptType: 'GO'
 };

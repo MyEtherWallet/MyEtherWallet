@@ -62,7 +62,7 @@
         >
           <mew-token-container :img="selectedCurrency.img" size="28px" />
           <div class="basic--text ml-2">
-            {{ selectedCurrency.name | concatName }}
+            {{ selectedCurrency.symbol | concatName }}
           </div>
           <v-icon class="ml-auto" size="20px" color="titlePrimary">
             mdi-chevron-down
@@ -134,7 +134,7 @@ import {
 import { getCurrency } from '@/modules/settings/components/currencyList';
 import { coingeckoContracts } from './tokenList';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
-import { ETH, OP, MATIC, ARB, BSC } from '@/utils/networks/types';
+import { ETH, MATIC, OP, ARB } from '@/utils/networks/types';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook.vue';
 import { getCoinGeckoTokenMarketDataByIds } from '@/apollo/queries/wallets/wallets.graphql';
 
@@ -185,12 +185,7 @@ export default {
         if (data) {
           this.tokens = [];
           const { getCoinGeckoTokenMarketDataByIds } = data;
-          const locTokens = this.isCAD
-            ? getCoinGeckoTokenMarketDataByIds.filter(item => {
-                return item.id === this.network.type.coingeckoID;
-              })
-            : getCoinGeckoTokenMarketDataByIds;
-          const parsedLoc = locTokens.map(token => {
+          const parsedLoc = getCoinGeckoTokenMarketDataByIds.map(token => {
             return {
               name: this.names[token.id],
               symbol: this.symbols[token.id],
@@ -220,8 +215,7 @@ export default {
                     actualPrice?.price || '0',
                     this.currencyConfig
                   ).value;
-                  token.value = token.name;
-                  token.name = token.symbol;
+                  token.value = token.symbol;
                   return token;
                 })
               : parsedLoc;
@@ -253,7 +247,16 @@ export default {
         dai: 'Dai Stablecoin',
         tether: 'Tether',
         'usd-coin': 'USD Coin',
-        'matic-network': 'Polygon'
+        'paypal-usd': 'Paypal USD',
+        'true-usd': 'True USD',
+        'first-digital-usd': 'First Digital USD',
+        'binance-bridged-usdc-bnb-smart-chain': 'USD Coin',
+        'binance-bridged-usdt-bnb-smart-chain': 'Tether',
+        'matic-network': 'MATIC',
+        'bridged-usdc-polygon-pos-bridge': 'USD Coin',
+        'polygon-bridged-usdt-polygon': 'Tether',
+        'arbitrum-bridged-usdt-arbitrum': 'Tether',
+        'bridged-usdt': 'Tether'
       },
       openTokenSelect: false,
       selectedCurrency: this.defaultCurrency,
@@ -388,9 +391,6 @@ export default {
     isEUR() {
       return this.selectedFiatName === 'EUR' || this.selectedFiatName === 'GBP';
     },
-    isCAD() {
-      return this.selectedFiatName === 'CAD';
-    },
     disableBuy() {
       return (
         (!this.inWallet && !this.actualValidAddress) ||
@@ -445,12 +445,25 @@ export default {
       return formatFloatingPointValue(this.simplexQuote.crypto_amount).value;
     },
     fiatCurrencyItems() {
-      const arrItems =
-        this.hasData && this.fetchedData[0].fiat_currencies.length > 0
-          ? this.fetchedData[0].fiat_currencies.filter(item => item !== 'RUB')
-          : ['USD'];
-      const currencies = getCurrency(arrItems);
-      return currencies;
+      if (this.hasData) {
+        const simplexCurrencies = this.fetchedData[0];
+
+        const arrItems =
+          simplexCurrencies.fiat_currencies.length > 0
+            ? simplexCurrencies.fiat_currencies.filter(
+                item =>
+                  item === 'USD' ||
+                  item === 'EUR' ||
+                  item === 'GBP' ||
+                  item === 'CAD' ||
+                  item === 'AUD' ||
+                  item === 'JPY'
+              )
+            : ['USD'];
+        const currencies = getCurrency(arrItems);
+        return currencies;
+      }
+      return getCurrency(['USD']);
     },
     max() {
       if (this.hasData) {
@@ -594,14 +607,20 @@ export default {
     }
   },
   watch: {
-    fiatCurrencyItems() {
-      this.selectedFiat = this.fiatCurrencyItems[0];
+    fiatCurrencyItems: {
+      handler(val) {
+        if (val.length === 1) this.selectedFiat = val[0];
+      },
+      immediate: true,
+      deep: true
     },
     selectedCurrency: {
       handler: function (newVal, oldVal) {
         const supportedCoins = {
           ETH: ETH.name,
-          MATIC: MATIC.name
+          MATIC: MATIC.name,
+          OP: OP.name,
+          ARB: ARB.name
         };
         if (
           !newVal ||
@@ -619,17 +638,16 @@ export default {
     },
     selectedFiat: {
       handler: function (newVal, oldVal) {
+        this.$apollo.queries.getCoinGeckoTokenMarketDataByIds.refetch({
+          ids: coingeckoContracts[this.network.type.name]
+        });
         if (!isEqual(newVal, oldVal)) {
-          const token = this.tokens.find(
-            item => item.symbol === this.selectedCryptoName
-          );
-          const price = token?.price || this.tokens[0].price;
-
-          this.amount = BigNumber(this.localCryptoAmount)
-            .multipliedBy(price)
-            .toFixed(2);
-          this.localCryptoAmount = BigNumber(this.amount).div(price).toString();
-
+          /**
+           * converts value from USD to selected fiat
+           * if value is not currently in USD
+           * revert first and then convert
+           */
+          this.handleConversion(newVal, oldVal);
           this.$emit('selectedFiat', newVal);
         }
       },
@@ -640,7 +658,9 @@ export default {
         this.tokens = [];
         this.selectedCurrency = {};
         this.selectedCurrency = this.defaultCurrency;
-        this.$apollo.queries.getCoinGeckoTokenMarketDataByIds.refresh();
+        this.$apollo.queries.getCoinGeckoTokenMarketDataByIds.refetch({
+          ids: coingeckoContracts[this.network.type.name]
+        });
       },
       deep: true
     },
@@ -653,7 +673,6 @@ export default {
     amount: {
       handler: function (newVal) {
         const simplexMax = this.max.simplex.multipliedBy(this.fiatMultiplier);
-        this.checkMoonPayMax();
         if (
           simplexMax.lt(newVal) ||
           isEmpty(newVal) ||
@@ -691,6 +710,26 @@ export default {
     this.fetchCurrencyData();
   },
   methods: {
+    /**
+     * converts value from USD to selected fiat
+     * if value is not currently in USD
+     * revert first and then convert
+     */
+    handleConversion(newVal, oldVal) {
+      const oldRate = this.currencyRates[0].conversion_rates.find(
+        item => item.fiat_currency === oldVal.name
+      );
+      const newRate = this.currencyRates[0].conversion_rates.find(
+        item => item.fiat_currency === newVal.name
+      );
+
+      const locAmount = BigNumber(this.amount)
+        .div(oldRate.exchange_rate)
+        .toFixed(2);
+      this.amount = BigNumber(locAmount)
+        .times(newRate.exchange_rate)
+        .toFixed(2);
+    },
     setAddress(newVal, isValid, data) {
       if (data.type === 'RESOLVED' && !data.value.includes('.'))
         this.toAddress = data.value;
@@ -702,8 +741,7 @@ export default {
         ETH: ETH.name,
         MATIC: MATIC.name,
         OP: OP.name,
-        ARB: ARB.name,
-        BSC: BSC.name
+        ARB: ARB.name
       };
       const nodeType = !supportedNodes[this.selectedCurrency?.symbol]
         ? ETH.name
@@ -715,16 +753,8 @@ export default {
       }
       this.gasPrice = await this.web3Connections[nodeType].eth.getGasPrice();
     },
-    isLT(num, num2) {
-      return BigNumber(num).lt(num2);
-    },
     isValidToAddress(address) {
       return MultiCoinValidator.validate(address, this.selectedCurrency.symbol);
-    },
-    checkMoonPayMax() {
-      const moonpayMax = this.max.moonpay;
-      const hideMoonpay = this.isLT(moonpayMax, this.amount);
-      this.$emit('hideMoonpay', hideMoonpay);
     },
     setCurrency(e) {
       this.selectedCurrency = e;
@@ -801,7 +831,6 @@ export default {
         monthlyLimit: this.monthlyLimit,
         fiatAmount: this.amount
       };
-      this.checkMoonPayMax();
       this.$emit('success', [
         this.simplexQuote,
         this.topperQuote,

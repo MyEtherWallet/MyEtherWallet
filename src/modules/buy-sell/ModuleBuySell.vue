@@ -31,7 +31,6 @@
               @selectedCurrency="setSelectedCurrency"
               @openProviders="openProviders"
               @selectedFiat="setSelectedFiat"
-              @hideMoonpay="hideMoonpay"
               @simplexQuote="setSimplexQuote"
               @toAddress="setToAddress"
               @success="buySuccess"
@@ -53,7 +52,6 @@
         v-if="step === 1"
         :order-handler="orderHandler"
         :in-wallet="inWallet"
-        :only-simplex="onlySimplex"
         :selected-currency="selectedCurrency"
         :selected-fiat="selectedFiat"
         :moonpay-quote="moonpayQuote"
@@ -105,7 +103,6 @@ export default {
       orderHandler: {},
       selectedCurrency: {},
       selectedFiat: {},
-      onlySimplex: false,
       moonpayQuote: {},
       step: 0,
       simplexQuote: {},
@@ -201,7 +198,6 @@ export default {
     close() {
       this.activeTab = 0;
       this.step = 0;
-      this.onlySimplex = false;
       this.$emit('close', false);
       this.trackBuySell(BUY_SELL.BUY_SELL_CLOSED);
     },
@@ -245,10 +241,6 @@ export default {
         // eslint-disable-next-line
         img: require(`@/assets/images/currencies/USD.svg`)
       };
-      this.onlySimplex = false;
-    },
-    hideMoonpay(val) {
-      this.onlySimplex = val;
     },
     buySuccess(items) {
       this.setSimplexQuote(items[0]);

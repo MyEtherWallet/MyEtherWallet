@@ -1008,7 +1008,9 @@ export default {
           foundToken.value = foundToken.contract;
           foundToken.subtext = name;
           foundToken.symbol = token.symbol || foundToken.symbol;
-          this.setToLocaContractToToken(Object.assign({}, token, foundToken));
+          foundToken.img = foundToken.img || token.img;
+          const newToken = Object.assign({}, token, foundToken);
+          this.setToLocaContractToToken(newToken);
           return;
         }
         const foundToken = this.contractToToken(token.contract);

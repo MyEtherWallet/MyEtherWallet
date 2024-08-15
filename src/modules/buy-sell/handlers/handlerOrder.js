@@ -53,7 +53,7 @@ export default class OrderHandler {
 
   getFiatRatesForBuy() {
     return axios
-      .get(`${API}/v3/purchase/moonpay/quotes`, {
+      .get(`${API}/v4/purchase/providers/web`, {
         headers: {
           'Accept-Language': 'en-US'
         }

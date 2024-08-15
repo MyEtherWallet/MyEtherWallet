@@ -21,11 +21,13 @@ import AA from './AA';
 import AAT from './AAT';
 import ROOTSTOCKTESTNET from './ROOTSTOCKTESTNET.js';
 import AMOY from './AMOY.js';
+import COTI from './COTI.js';
 
 export {
   ETH,
   GOERLI,
   HOLESKY,
+  COTI,
   ETC,
   BSC,
   MATIC,

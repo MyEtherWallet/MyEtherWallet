@@ -11,6 +11,7 @@ module.exports = [
   'wss://connect2.mewapi.io:443',
   'http://localhost:8178',
   'ws://127.0.0.1:8178',
+  'http://127.0.0.1:3000',
   'https://o382951.ingest.sentry.io:443',
   'https://estimategas.mewapi.io:443/eth',
   'https://estimategas.mewapi.io:443/bsc',
@@ -62,6 +63,7 @@ module.exports = [
   'wss://wsapi.fantom.network:443/',
   'wss://ws.arthera.net:443/',
   'wss://ws-test.arthera.net:443/',
+  'wss://devnet.coti.io:443/ws',
   // intercom stuff
   'api-iam.intercom.io:443',
   'https://api.zilliqa.com:443',
@@ -94,6 +96,7 @@ module.exports = [
   'https://api.thegraph.com:443/subgraphs/name/aave/', // Aave
   'https://protocol-api.aave.com:443', // Aave
   'https://api.thegraph.com:443/subgraphs/name/ensdomains/', // ENS
+  'https://gateway-arbitrum.network.thegraph.com:443', // ENS
   'https://s3.us-west-2.amazonaws.com:443/mew-ipfs-bucket', // ENS
   'https://api.studio.thegraph.com:443/proxy/49574/',
   'https://assets.coingecko.com',
@@ -107,5 +110,7 @@ module.exports = [
   'https://unstoppabledomains.g.alchemy.com:443', // Unstoppable domains
   'https://metadata.unstoppabledomains.com:443', // Unstoppable domains
   'wss://relay.walletconnect.com:443', // walletconnect2
-  'https://explorer-api.walletconnect.com:443' // web3modal
+  'https://explorer-api.walletconnect.com:443', // web3modal
+  'https://rpc.ankr.com:443',
+  'https://cloudflare-eth.com:443'
 ];
