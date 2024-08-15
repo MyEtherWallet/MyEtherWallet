@@ -185,12 +185,7 @@ export default {
         if (data) {
           this.tokens = [];
           const { getCoinGeckoTokenMarketDataByIds } = data;
-          const locTokens = this.isCAD
-            ? getCoinGeckoTokenMarketDataByIds.filter(item => {
-                return item.id === this.network.type.coingeckoID;
-              })
-            : getCoinGeckoTokenMarketDataByIds;
-          const parsedLoc = locTokens.map(token => {
+          const parsedLoc = getCoinGeckoTokenMarketDataByIds.map(token => {
             return {
               name: this.names[token.id],
               symbol: this.symbols[token.id],
@@ -395,9 +390,6 @@ export default {
     },
     isEUR() {
       return this.selectedFiatName === 'EUR' || this.selectedFiatName === 'GBP';
-    },
-    isCAD() {
-      return this.selectedFiatName === 'CAD';
     },
     disableBuy() {
       return (
