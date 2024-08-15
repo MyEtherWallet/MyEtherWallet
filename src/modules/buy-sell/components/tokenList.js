@@ -41,7 +41,14 @@ const buyContracts = {
 };
 
 const coingeckoContracts = {
-  ETH: ['ethereum', 'dai', 'tether', 'usd-coin', 'paypal-usd'],
+  ETH: [
+    'ethereum',
+    'dai',
+    'tether',
+    'usd-coin',
+    'paypal-usd'
+    //'true-usd'
+  ],
   // BNB: [
   //   'first-digital-usd',
   //   'binance-bridged-usdc-bnb-smart-chain',

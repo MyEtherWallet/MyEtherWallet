@@ -185,12 +185,7 @@ export default {
         if (data) {
           this.tokens = [];
           const { getCoinGeckoTokenMarketDataByIds } = data;
-          const locTokens = this.isCAD
-            ? getCoinGeckoTokenMarketDataByIds.filter(item => {
-                return item.id === this.network.type.coingeckoID;
-              })
-            : getCoinGeckoTokenMarketDataByIds;
-          const parsedLoc = locTokens.map(token => {
+          const parsedLoc = getCoinGeckoTokenMarketDataByIds.map(token => {
             return {
               name: this.names[token.id],
               symbol: this.symbols[token.id],
@@ -396,9 +391,6 @@ export default {
     isEUR() {
       return this.selectedFiatName === 'EUR' || this.selectedFiatName === 'GBP';
     },
-    isCAD() {
-      return this.selectedFiatName === 'CAD';
-    },
     disableBuy() {
       return (
         (!this.inWallet && !this.actualValidAddress) ||
@@ -453,12 +445,25 @@ export default {
       return formatFloatingPointValue(this.simplexQuote.crypto_amount).value;
     },
     fiatCurrencyItems() {
-      const arrItems =
-        this.hasData && this.fetchedData[0].fiat_currencies.length > 0
-          ? this.fetchedData[0].fiat_currencies.filter(item => item !== 'RUB')
-          : ['USD'];
-      const currencies = getCurrency(arrItems);
-      return currencies;
+      if (this.hasData) {
+        const simplexCurrencies = this.fetchedData[0];
+
+        const arrItems =
+          simplexCurrencies.fiat_currencies.length > 0
+            ? simplexCurrencies.fiat_currencies.filter(
+                item =>
+                  item === 'USD' ||
+                  item === 'EUR' ||
+                  item === 'GBP' ||
+                  item === 'CAD' ||
+                  item === 'AUD' ||
+                  item === 'JPY'
+              )
+            : ['USD'];
+        const currencies = getCurrency(arrItems);
+        return currencies;
+      }
+      return getCurrency(['USD']);
     },
     max() {
       if (this.hasData) {
@@ -602,8 +607,12 @@ export default {
     }
   },
   watch: {
-    fiatCurrencyItems() {
-      this.selectedFiat = this.fiatCurrencyItems[0];
+    fiatCurrencyItems: {
+      handler(val) {
+        if (val.length === 1) this.selectedFiat = val[0];
+      },
+      immediate: true,
+      deep: true
     },
     selectedCurrency: {
       handler: function (newVal, oldVal) {
@@ -629,21 +638,16 @@ export default {
     },
     selectedFiat: {
       handler: function (newVal, oldVal) {
+        this.$apollo.queries.getCoinGeckoTokenMarketDataByIds.refetch({
+          ids: coingeckoContracts[this.network.type.name]
+        });
         if (!isEqual(newVal, oldVal)) {
-          const token = this.tokens.find(
-            item => item.symbol === this.selectedCryptoName
-          );
-          if (token) {
-            const price = token?.price || this.tokens[0]?.price;
-            const parsedPrice = `${price}`.substring(1, price.length);
-            this.amount = BigNumber(this.localCryptoAmount)
-              .multipliedBy(parsedPrice)
-              .toFixed(2);
-            this.localCryptoAmount = BigNumber(this.amount)
-              .div(parsedPrice)
-              .toString();
-          }
-
+          /**
+           * converts value from USD to selected fiat
+           * if value is not currently in USD
+           * revert first and then convert
+           */
+          this.handleConversion(newVal, oldVal);
           this.$emit('selectedFiat', newVal);
         }
       },
@@ -654,7 +658,9 @@ export default {
         this.tokens = [];
         this.selectedCurrency = {};
         this.selectedCurrency = this.defaultCurrency;
-        this.$apollo.queries.getCoinGeckoTokenMarketDataByIds.refresh();
+        this.$apollo.queries.getCoinGeckoTokenMarketDataByIds.refetch({
+          ids: coingeckoContracts[this.network.type.name]
+        });
       },
       deep: true
     },
@@ -704,6 +710,26 @@ export default {
     this.fetchCurrencyData();
   },
   methods: {
+    /**
+     * converts value from USD to selected fiat
+     * if value is not currently in USD
+     * revert first and then convert
+     */
+    handleConversion(newVal, oldVal) {
+      const oldRate = this.currencyRates[0].conversion_rates.find(
+        item => item.fiat_currency === oldVal.name
+      );
+      const newRate = this.currencyRates[0].conversion_rates.find(
+        item => item.fiat_currency === newVal.name
+      );
+
+      const locAmount = BigNumber(this.amount)
+        .div(oldRate.exchange_rate)
+        .toFixed(2);
+      this.amount = BigNumber(locAmount)
+        .times(newRate.exchange_rate)
+        .toFixed(2);
+    },
     setAddress(newVal, isValid, data) {
       if (data.type === 'RESOLVED' && !data.value.includes('.'))
         this.toAddress = data.value;
