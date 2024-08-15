@@ -463,7 +463,7 @@ export default {
         const currencies = getCurrency(arrItems);
         return currencies;
       }
-      return ['USD'];
+      return getCurrency(['USD']);
     },
     max() {
       if (this.hasData) {
@@ -607,6 +607,13 @@ export default {
     }
   },
   watch: {
+    fiatCurrencyItems: {
+      handler(val) {
+        this.selectedFiat = val[0];
+      },
+      immediate: true,
+      deep: true
+    },
     selectedCurrency: {
       handler: function (newVal, oldVal) {
         const supportedCoins = {
