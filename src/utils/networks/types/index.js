@@ -22,6 +22,8 @@ import AAT from './AAT';
 import ROOTSTOCKTESTNET from './ROOTSTOCKTESTNET.js';
 import AMOY from './AMOY.js';
 import COTI from './COTI.js';
+import XLAYER from './XLAYER.js';
+import XLAYERTESTNET from './XLAYER-TESTNET.js';
 
 export {
   ETH,
@@ -47,5 +49,7 @@ export {
   AA,
   AAT,
   ROOTSTOCKTESTNET,
-  AMOY
+  AMOY,
+  XLAYER,
+  XLAYERTESTNET
 };
