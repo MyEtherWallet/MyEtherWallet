@@ -1,5 +1,20 @@
 import nodeList from '@/utils/networks';
-import { ETH, BSC, MATIC } from '@/utils/networks/types';
+import {
+  ETH,
+  BSC,
+  MATIC,
+  ROOTSTOCK,
+  ETC,
+  XDC,
+  MOONBEAM,
+  MOONRIVER,
+  AURORA,
+  ARB,
+  FTM,
+  GNO,
+  OP,
+  COTI
+} from '@/utils/networks/types';
 import {
   getGasBasedOnType,
   getPriorityFeeBasedOnType,
@@ -73,7 +88,22 @@ const hasSwap = function (state, getters, rootState) {
   const device = rootState.wallet.instance?.identifier;
 
   if (device === WALLET_TYPES.COOL_WALLET_S) return false;
-  return name === ETH.name || name === BSC.name || name === MATIC.name;
+  return (
+    name === ETH.name ||
+    name === BSC.name ||
+    name === MATIC.name ||
+    name === ROOTSTOCK.name ||
+    name === ETC.name ||
+    name === XDC.name ||
+    name === MOONBEAM.name ||
+    name === MOONRIVER.name ||
+    name === AURORA.name ||
+    name === ARB.name ||
+    name === FTM.name ||
+    name === GNO.name ||
+    name === OP.name ||
+    name === COTI.name
+  );
 };
 
 const swapLink = function (state, getters, rootState) {

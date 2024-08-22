@@ -696,13 +696,13 @@ export default {
      * @returns object of other tokens
      * to swap from
      */
-    // fromTokens() {
-    //   return this.availableTokens.fromTokens.reduce((arr, token) => {
-    //     if (token && localContractToToken[token.contract])
-    //       arr.push(localContractToToken[token.contract]);
-    //     return arr;
-    //   }, []);
-    // },
+    fromTokens() {
+      return this.availableTokens.fromTokens.reduce((arr, token) => {
+        if (token && localContractToToken[token.contract])
+          arr.push(localContractToToken[token.contract]);
+        return arr;
+      }, []);
+    },
     txFee() {
       return toBN(this.totalGasLimit).mul(toBN(this.localGasPrice)).toString();
     },
@@ -1239,7 +1239,7 @@ export default {
       ) {
         return findToken;
       }
-      return findToken ? findToken : this.fromToken[0];
+      return findToken ? findToken : this.fromTokens[0];
     },
     getDefaultToToken() {
       const findToken = this.actualToTokens.find(item => {
@@ -1281,7 +1281,8 @@ export default {
     processTokens(tokens, storeTokens) {
       this.setupTokenInfo(tokens.fromTokens);
       this.setupTokenInfo(tokens.toTokens);
-      this.setupTokenInfo(TRENDING_LIST[this.network.type.name]);
+      if (TRENDING_LIST[this.network.type.name])
+        this.setupTokenInfo(TRENDING_LIST[this.network.type.name]);
       this.availableTokens = tokens;
       this.setDefaults();
       if (isUndefined(storeTokens)) {

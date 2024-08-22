@@ -7,7 +7,21 @@ import { toBN, toHex, toWei } from 'web3-utils';
 import { isValidAddress } from 'ethereumjs-util';
 
 import Web3Contract from 'web3-eth-contract';
-import { ETH } from '@/utils/networks/types';
+import {
+  ETH,
+  ROOTSTOCK,
+  ETC,
+  XDC,
+  MOONBEAM,
+  MOONRIVER,
+  MATIC,
+  AURORA,
+  ARB,
+  FTM,
+  GNO,
+  OP,
+  COTI
+} from '@/utils/networks/types';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { EventBus } from '@/core/plugins/eventBus';
 import EventNames from '@/utils/web3-provider/events.js';
@@ -48,7 +62,21 @@ class Changelly {
   constructor(web3, chain) {
     this.web3 = web3;
     this.provider = 'changelly';
-    this.supportednetworks = [ETH.name];
+    this.supportednetworks = [
+      ETH.name,
+      ROOTSTOCK.name,
+      ETC.name,
+      XDC.name,
+      MOONBEAM.name,
+      MOONRIVER.name,
+      MATIC.name,
+      AURORA.name,
+      ARB.name,
+      FTM.name,
+      GNO.name,
+      OP.name,
+      COTI.name
+    ];
     this.chain = chain;
   }
   isSupportedNetwork(chain) {

@@ -22,7 +22,7 @@
               ></mew-token-container>
             </v-col>
             <v-col cols="6" class="mt-2 token-balance textDark--text"
-              >{{ token.balancef }} {{ token.symbol }}</v-col
+              >{{ token.balancef }} {{ token.symbol | concatSymbol }}</v-col
             >
             <v-col
               cols="4"
@@ -75,6 +75,11 @@ import buyMore from '@/core/mixins/buyMore.mixin';
 
 export default {
   name: 'ModuleTokensValue',
+  filters: {
+    concatSymbol(value) {
+      return value.length > 6 ? `${value.slice(0, 6)}...` : value;
+    }
+  },
   components: {
     ModuleTokens: () => import('@/modules/balance/ModuleTokens')
   },
