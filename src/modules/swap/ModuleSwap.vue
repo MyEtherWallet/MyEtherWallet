@@ -325,7 +325,12 @@ import Notification, {
   NOTIFICATION_STATUS
 } from '@/modules/notifications/handlers/handlerNotification';
 import NonChainNotification from '@/modules/notifications/handlers/nonChainNotification';
-import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
+import {
+  Toast,
+  ERROR,
+  SUCCESS,
+  SENTRY
+} from '@/modules/toast/handler/handlerToast';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import { TRENDING_LIST } from './handlers/configs/configTrendingTokens';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
@@ -1490,8 +1495,9 @@ export default {
       }
 
       this.feeError = '';
-      if (this.allTrades.length > 0 && this.allTrades[idx])
+      if (this.allTrades.length > 0 && this.allTrades[idx]) {
         return this.setupTrade(this.allTrades[idx]);
+      }
       if (!this.allTrades[idx]) {
         this.loadingFee = true;
       }
@@ -1511,16 +1517,31 @@ export default {
       if (this.isFromNonChain) {
         swapObj['refundAddress'] = this.refundAddress;
       }
+      const removeQuote = () => {
+        const index = this.availableQuotes.indexOf(this.availableQuotes[idx]);
+        if (index > -1) {
+          // Remove the quote
+          this.availableQuotes.splice(index, 1);
+        }
+      };
       const trade = this.swapper.getTrade(swapObj);
       if (trade instanceof Promise) {
         trade.then(tradeResponse => {
           if (!tradeResponse) {
-            const index = this.availableQuotes.indexOf(swapObj.quote);
-            if (index > -1) {
-              // Remove the quote
-              this.availableQuotes.splice(index, 1);
-            }
+            removeQuote();
             this.feeError = 'There was an issue with the provider';
+            return;
+          }
+          const filteredTx = tradeResponse.transactions.filter(
+            tx => tx.data === '0x'
+          );
+          if (filteredTx.length > 0) {
+            Toast(
+              `Provider: ${filteredTx[0].provider} has no data.`,
+              {},
+              SENTRY
+            );
+            removeQuote();
             return;
           }
           if (this.tokenInValue === this.cachedAmount) {
