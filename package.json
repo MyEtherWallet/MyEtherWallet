@@ -195,7 +195,7 @@
     "web3-core-requestmanager": "1.5.0",
     "web3-eth-contract": "1.5.0",
     "web3-utils": "1.5.0",
-    "webpack": "4.44.2",
+    "webpack": "5.94.0",
     "webpack-bundle-analyzer": "4.10.2",
     "xss": "1.0.15"
   },
