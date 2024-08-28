@@ -139,7 +139,7 @@
               @setAddress="setRefundAddr"
             />
             <module-address-book
-              v-show="showToAddress"
+              v-if="showToAddress"
               ref="toAddressInput"
               class="ToAddressInput"
               :is-valid-address-func="isValidToAddress"
@@ -341,7 +341,7 @@ import handleError from '../confirmation/handlers/errorHandler';
 import { fromBase, toBase } from '@/core/helpers/unit';
 
 const MIN_GAS_LIMIT = 400000;
-let localContractToToken = {};
+let localContractToToken = new Map();
 export default {
   name: 'ModuleSwap',
   components: {
@@ -417,7 +417,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('swap', ['prefetched', 'swapTokens']),
+    ...mapState('swap', ['prefetched', 'swapTokens', 'localContracts']),
     ...mapState('wallet', ['web3', 'address', 'balance', 'identifier']),
     ...mapState('global', ['gasPriceType']),
     ...mapState('external', ['coinGeckoTokens']),
@@ -667,8 +667,8 @@ export default {
     toTokens() {
       if (this.isLoading) return [];
       return this.availableTokens.toTokens.reduce((arr, token) => {
-        if (token && localContractToToken[token.contract])
-          arr.push(localContractToToken[token.contract]);
+        if (token && localContractToToken.has(token.contract))
+          arr.push(localContractToToken.get(token.contract));
         return arr;
       }, []);
     },
@@ -703,8 +703,8 @@ export default {
      */
     fromTokens() {
       return this.availableTokens.fromTokens.reduce((arr, token) => {
-        if (token && localContractToToken[token.contract])
-          arr.push(localContractToToken[token.contract]);
+        if (token && localContractToToken.has(token.contract))
+          arr.push(localContractToToken.get(token.contract));
         return arr;
       }, []);
     },
@@ -966,11 +966,11 @@ export default {
   },
   methods: {
     ...mapActions('notifications', ['addNotification']),
-    ...mapActions('swap', ['setSwapTokens']),
+    ...mapActions('swap', ['setSwapTokens', 'setLocalContract']),
     resetSwapState() {
       this.mainTokenDetails = this.contractToToken(MAIN_TOKEN_ADDRESS);
-      localContractToToken = {};
-      localContractToToken[MAIN_TOKEN_ADDRESS] = this.mainTokenDetails;
+      localContractToToken = new Map();
+      localContractToToken.set(MAIN_TOKEN_ADDRESS, this.mainTokenDetails);
       this.tokenInValue = '0';
       this.setupSwap();
     },
@@ -991,13 +991,13 @@ export default {
       if (!TRENDING_LIST[this.network.type.name]) return [];
       return TRENDING_LIST[this.network.type.name]
         .map(token => {
-          return localContractToToken[token.contract];
+          return localContractToToken.get(token.contract);
         })
         .filter(token => token);
     },
     setupTokenInfo(tokens) {
       tokens.forEach(token => {
-        if (localContractToToken[token.contract]) return;
+        if (localContractToToken.has(token.contract)) return;
         if (
           token.isEth === false &&
           (token.contract?.toLowerCase() === '0xeth' ||
@@ -1045,7 +1045,7 @@ export default {
         return;
       }
 
-      localContractToToken[token.contract] = token;
+      localContractToToken.set(token.contract, token);
     },
     /**
      * Handles emitted values from module-address-book
@@ -1077,7 +1077,9 @@ export default {
               this.isLoading = false;
             });
         } else {
-          this.processTokens(this.swapTokens, false);
+          localContractToToken = this.localContracts;
+          this.availableTokens = this.swapTokens;
+          this.setDefaults();
           this.isLoading = false;
         }
 
@@ -1291,7 +1293,8 @@ export default {
       this.availableTokens = tokens;
       this.setDefaults();
       if (isUndefined(storeTokens)) {
-        this.setSwapTokens(tokens);
+        this.setSwapTokens(this.availableTokens);
+        this.setLocalContract(localContractToToken);
       }
     },
     setDefaults() {
