@@ -204,7 +204,6 @@
     "npm": ">= 6.0.0"
   },
   "resolutions": {
-    "@keepkey/device-protocol": "7.13.2",
     "engine.io": "6.2.1",
     "glob-parent": "5.1.2",
     "handlebars": "4.7.7",
