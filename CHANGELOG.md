@@ -1,5 +1,6 @@
 ### feat
 
+* add link out to balance card [#4984](https://github.com/MyEtherWallet/MyEtherWallet/pull/4984)
 * add xlayer [#4988](https://github.com/MyEtherWallet/MyEtherWallet/pull/4988)
 * enable swap for more chains [#4989](https://github.com/MyEtherWallet/MyEtherWallet/pull/4989)
 
@@ -12,7 +13,7 @@
 
 ### sentry
 
-* add error on sentry [#4990](https://github.com/MyEtherWallet/MyEtherWallet/pull/4990)
+* add error on sentry [#4992](https://github.com/MyEtherWallet/MyEtherWallet/pull/4992)
 
 ### Release v6.9.12
 
