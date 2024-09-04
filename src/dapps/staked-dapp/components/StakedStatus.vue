@@ -168,7 +168,7 @@
                 ></a
               >
               <a
-                v-if="pending.ethVmUrl && !onGoerli"
+                v-if="pending.ethVmUrl"
                 rel="noopener noreferrer"
                 class="font-weight-medium ml-5"
                 :href="pending.ethVmUrl"
@@ -383,7 +383,6 @@ import {
   formatPercentageValue
 } from '@/core/helpers/numberFormatHelper';
 import { STATUS_TYPES } from '@/dapps/staked-dapp/handlers/handlerStaked';
-import { GOERLI } from '@/utils/networks/types';
 
 import iconETHNavy from '@/assets/images/currencies/eth-dark-navy.svg';
 
@@ -721,13 +720,6 @@ export default {
      */
     isExpanded(idx) {
       return this.expanded === idx;
-    },
-    /**
-     * @returns boolean
-     * Checks if its goerli
-     */
-    onGoerli() {
-      return this.network.type.name === GOERLI.name;
     },
     /**
      * @returns string
