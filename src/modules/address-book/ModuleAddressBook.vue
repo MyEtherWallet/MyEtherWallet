@@ -337,18 +337,7 @@ export default {
           const reverseName = await this.nameResolver.resolveAddress(
             this.inputAddr
           );
-          // if (reverseName && !reverseName.name) {
-          //   try {
-          //     await getAddressInfo(
-          //       toChecksumAddress(this.inputAddr),
-          //       'https://ipfs.kleros.io'
-          //     ).then(data => {
-          //       this.nametag = data?.publicNameTag || '';
-          //     });
-          //   } catch (e) {
-          //     this.nametag = '';
-          //   }
-          // }
+
           this.resolvedAddr = reverseName?.name ? reverseName.name : '';
         } catch (e) {
           Toast(e, {}, ERROR);

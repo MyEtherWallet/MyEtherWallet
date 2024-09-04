@@ -190,7 +190,7 @@
                 >{{
                   data.item.tokenBalance
                     ? data.item.tokenBalance + ' ' + data.item.symbol
-                    : data.item.subtext
+                    : data.item.name
                 }}</span
               ></span
             >
@@ -212,6 +212,7 @@
 import get from 'lodash/get';
 
 import MewTokenContainer from './MewTokenContainer.vue';
+import { debounce } from 'lodash';
 
 export default {
   name: 'MewSelect',
@@ -327,32 +328,36 @@ export default {
     }
   },
   watch: {
-    search(newVal) {
-      const dropdown = document.querySelector('div.menuable__content__active');
-      if (dropdown) {
-        dropdown.scroll(0, 0);
-      }
-      if (newVal === '' || newVal === null) {
-        this.selectItems = this.items;
-      } else {
-        const foundItems = this.items.reduce((foundTokens, item) => {
-          const searchValue = String(newVal).toLowerCase();
-          const name = String(get(item, 'name', '')).toLowerCase();
-          const subtext = String(get(item, 'subtext', '')).toLowerCase();
-          if (subtext === searchValue) {
-            foundTokens.unshift(item);
-          } else if (name === searchValue) {
-            foundTokens.push(item);
-          } else if (
-            subtext.includes(searchValue) ||
-            name.includes(searchValue)
-          ) {
-            foundTokens.push(item);
-          }
-          return foundTokens;
-        }, []);
-        this.selectItems = foundItems;
-      }
+    search: {
+      handler: debounce(function (newVal) {
+        const dropdown = document.querySelector(
+          'div.menuable__content__active'
+        );
+        if (dropdown) {
+          dropdown.scroll(0, 0);
+        }
+        if (newVal === '' || newVal === null) {
+          this.selectItems = this.items;
+        } else {
+          const foundItems = this.items.reduce((foundTokens, item) => {
+            const searchValue = String(newVal).toLowerCase();
+            const name = String(get(item, 'name', '')).toLowerCase();
+            const subtext = String(get(item, 'subtext', '')).toLowerCase();
+            if (subtext === searchValue) {
+              foundTokens.unshift(item);
+            } else if (name === searchValue) {
+              foundTokens.push(item);
+            } else if (
+              subtext.includes(searchValue) ||
+              name.includes(searchValue)
+            ) {
+              foundTokens.push(item);
+            }
+            return foundTokens;
+          }, []);
+          this.selectItems = foundItems;
+        }
+      }, 500)
     },
     selectModel(newVal) {
       setTimeout(() => {
