@@ -22,6 +22,8 @@ import artheratest from './arthera-test-ws';
 import rootstocktestnet from './rootstock-testnet-ws';
 import amoyws from './amoy-mew-ws';
 import cotiws from './coti-ws';
+import xlayer from './xlayer-okx-ws';
+import xlayertestws from './xlayer-okx-testnet-ws';
 
 export {
   etcethereumclassiccooperativeparityws,
@@ -47,5 +49,7 @@ export {
   arthera,
   artheratest,
   rootstocktestnet,
-  amoyws
+  amoyws,
+  xlayer,
+  xlayertestws
 };

@@ -159,7 +159,8 @@ const setTokenAndEthBalance = function ({
                   name: info.name,
                   symbol: info.symbol,
                   decimals: info.decimals,
-                  address: t.contract
+                  address: t.contract,
+                  balance: t.balance
                 });
               }
             })
@@ -177,31 +178,48 @@ const setTokenAndEthBalance = function ({
         if (t.contract === MAIN_TOKEN_ADDRESS) {
           mainTokenBalance = toBN(t.balance);
         }
-        if (token.name && token.hasOwnProperty('decimals')) {
-          const base = fromBase(t.balance, token.decimals);
-          const usdBalance = new BigNumber(base).times(token.price).toString();
+        if ((t.name && t.hasOwnProperty('decimals')) || t.balance) {
+          const price = t.price ? t.price : token.price ? token.price : 0;
+          const decimal = t.decimals
+            ? t.decimals
+            : token.decimals
+            ? token.decimals
+            : 18;
+          const img =
+            t.logo_url && !t.logo_url.includes('null') ? t.logo_url : token.img;
+          const base = fromBase(BigNumber(t.balance), decimal);
+          const usdBalance = new BigNumber(base).times(price).toString();
           formattedList.push(
             Object.assign(
               {
-                balance: t.balance,
-                balancef: _formatBalance(t.balance, token.decimals).value,
+                balance: BigNumber(t.balance),
+                balancef: _formatBalance(t.balance, decimal).value,
                 usdBalance: usdBalance,
                 usdBalancef: formatFiatValue(usdBalance).value
               },
+              token,
               t,
-              token
+              {
+                img: img,
+                price: price,
+                pricef: formatFiatValue(price).value
+              }
             )
           );
         }
       });
-      formattedList.sort(function (x, y) {
-        return x.contract == MAIN_TOKEN_ADDRESS
-          ? -1
-          : y.contract == MAIN_TOKEN_ADDRESS
-          ? 1
-          : 0;
-      });
-      dispatch('wallet/setTokens', formattedList, { root: true }).then(() =>
+      const newList = formattedList
+        .sort(function (x, y) {
+          return x.contract == MAIN_TOKEN_ADDRESS
+            ? -1
+            : y.contract == MAIN_TOKEN_ADDRESS
+            ? 1
+            : 0;
+        })
+        .filter(item => {
+          if (item.name !== '') return item;
+        });
+      dispatch('wallet/setTokens', newList, { root: true }).then(() =>
         dispatch('wallet/setAccountBalance', mainTokenBalance, {
           root: true
         }).then(() => {

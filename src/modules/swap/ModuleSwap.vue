@@ -325,7 +325,12 @@ import Notification, {
   NOTIFICATION_STATUS
 } from '@/modules/notifications/handlers/handlerNotification';
 import NonChainNotification from '@/modules/notifications/handlers/nonChainNotification';
-import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
+import {
+  Toast,
+  ERROR,
+  SUCCESS,
+  SENTRY
+} from '@/modules/toast/handler/handlerToast';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import { TRENDING_LIST } from './handlers/configs/configTrendingTokens';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
@@ -696,13 +701,13 @@ export default {
      * @returns object of other tokens
      * to swap from
      */
-    // fromTokens() {
-    //   return this.availableTokens.fromTokens.reduce((arr, token) => {
-    //     if (token && localContractToToken[token.contract])
-    //       arr.push(localContractToToken[token.contract]);
-    //     return arr;
-    //   }, []);
-    // },
+    fromTokens() {
+      return this.availableTokens.fromTokens.reduce((arr, token) => {
+        if (token && localContractToToken[token.contract])
+          arr.push(localContractToToken[token.contract]);
+        return arr;
+      }, []);
+    },
     txFee() {
       return toBN(this.totalGasLimit).mul(toBN(this.localGasPrice)).toString();
     },
@@ -1239,7 +1244,7 @@ export default {
       ) {
         return findToken;
       }
-      return findToken ? findToken : this.fromToken[0];
+      return findToken ? findToken : this.fromTokens[0];
     },
     getDefaultToToken() {
       const findToken = this.actualToTokens.find(item => {
@@ -1281,7 +1286,8 @@ export default {
     processTokens(tokens, storeTokens) {
       this.setupTokenInfo(tokens.fromTokens);
       this.setupTokenInfo(tokens.toTokens);
-      this.setupTokenInfo(TRENDING_LIST[this.network.type.name]);
+      if (TRENDING_LIST[this.network.type.name])
+        this.setupTokenInfo(TRENDING_LIST[this.network.type.name]);
       this.availableTokens = tokens;
       this.setDefaults();
       if (isUndefined(storeTokens)) {
@@ -1489,8 +1495,9 @@ export default {
       }
 
       this.feeError = '';
-      if (this.allTrades.length > 0 && this.allTrades[idx])
+      if (this.allTrades.length > 0 && this.allTrades[idx]) {
         return this.setupTrade(this.allTrades[idx]);
+      }
       if (!this.allTrades[idx]) {
         this.loadingFee = true;
       }
@@ -1510,16 +1517,31 @@ export default {
       if (this.isFromNonChain) {
         swapObj['refundAddress'] = this.refundAddress;
       }
+      const removeQuote = () => {
+        const index = this.availableQuotes.indexOf(this.availableQuotes[idx]);
+        if (index > -1) {
+          // Remove the quote
+          this.availableQuotes.splice(index, 1);
+        }
+      };
       const trade = this.swapper.getTrade(swapObj);
       if (trade instanceof Promise) {
         trade.then(tradeResponse => {
           if (!tradeResponse) {
-            const index = this.availableQuotes.indexOf(swapObj.quote);
-            if (index > -1) {
-              // Remove the quote
-              this.availableQuotes.splice(index, 1);
-            }
+            removeQuote();
             this.feeError = 'There was an issue with the provider';
+            return;
+          }
+          const filteredTx = tradeResponse.transactions.filter(
+            tx => tx.data === '0x'
+          );
+          if (filteredTx.length > 0) {
+            Toast(
+              `Provider: ${filteredTx[0].provider} has no data.`,
+              {},
+              SENTRY
+            );
+            removeQuote();
             return;
           }
           if (this.tokenInValue === this.cachedAmount) {

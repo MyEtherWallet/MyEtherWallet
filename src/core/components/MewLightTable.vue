@@ -156,6 +156,14 @@ export default {
       height: 58px;
       padding: 0px 20px;
     }
+
+    tr {
+      td {
+        &:last-child {
+          padding-left: 0;
+        }
+      }
+    }
   }
 }
 

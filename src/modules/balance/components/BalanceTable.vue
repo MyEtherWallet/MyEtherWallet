@@ -24,7 +24,7 @@
                   size="22px"
                   class="mr-2"
                 />
-                {{ td.token }}
+                {{ td.token | concatSymbol }}
               </div>
             </td>
             <td>
@@ -58,7 +58,7 @@
                 style="font-size: 12px; margin-top: -2px"
                 class="textLight--text"
               >
-                {{ td.balance[1] }}
+                {{ td.balance[1] | concatSymbol }}
               </div>
             </td>
             <td>
@@ -100,7 +100,7 @@
         <div class="mew-label font-weight-bold">Token</div>
         <div class="mew-label d-flex align-center">
           <mew-token-container :img="td.tokenImg" size="17px" class="mr-2" />
-          {{ td.token }}
+          {{ td.token | concatSymbol }}
         </div>
       </div>
       <div class="d-flex align-center justify-space-between mb-1">
@@ -132,7 +132,7 @@
       <div class="d-flex align-center justify-space-between mb-1">
         <div class="mew-label font-weight-bold">Balance</div>
         <div class="mew-label d-flex align-center">
-          {{ td.balance[0] }} {{ td.balance[1] }}
+          {{ td.balance[0] }} {{ td.balance[1] | concatSymbol }}
         </div>
       </div>
       <div class="text-right mt-3">
@@ -169,6 +169,11 @@
 <script>
 export default {
   name: 'ModulesBalanceTable',
+  filters: {
+    concatSymbol(value) {
+      return value.length > 6 ? `${value.slice(0, 6)}...` : value;
+    }
+  },
   props: {
     tableData: {
       type: Array,
