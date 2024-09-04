@@ -92,6 +92,13 @@
             <span class="textDark--text">{{ getChecksumAddressString }}</span>
           </mew-tooltip>
         </div>
+        <div>
+          <a :href="blockExplorer" target="_blank">
+            <v-icon small color="white" class="cursor--pointer"
+              >mdi-open-in-new</v-icon
+            >
+          </a>
+        </div>
       </div>
       <!--
       =====================================================================================
@@ -304,6 +311,12 @@ export default {
     ...mapGetters('global', ['network', 'isTestNetwork', 'getFiatValue']),
     ...mapGetters('wallet', ['tokensList', 'balanceInETH']),
     ...mapState('wallet', ['web3']),
+    blockExplorer() {
+      return this.network.type.blockExplorerAddr.replace(
+        '[[address]]',
+        this.address
+      );
+    },
     /**
      * verifies whether instance exists before giving path
      */
