@@ -1,5 +1,5 @@
-import { ETH, GOERLI, HOLESKY, SEPOLIA } from '@/utils/networks/types';
+import { ETH, HOLESKY, SEPOLIA } from '@/utils/networks/types';
 
-const SUPPORTED_NETWORKS = [ETH, GOERLI, HOLESKY, SEPOLIA];
+const SUPPORTED_NETWORKS = [ETH, HOLESKY, SEPOLIA];
 
 export { SUPPORTED_NETWORKS };

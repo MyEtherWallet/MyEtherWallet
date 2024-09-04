@@ -1,4 +1,3 @@
-import GOERLI from './GOERLI.js';
 import HOLESKY from './HOLESKY.js';
 import BSC from './BSC.js';
 import SEPOLIA from './SEPOLIA';
@@ -28,7 +27,6 @@ import COTI from './COTI.js';
 
 export {
   ETH,
-  GOERLI,
   HOLESKY,
   COTI,
   ETC,

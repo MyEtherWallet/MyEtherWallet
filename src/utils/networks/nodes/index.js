@@ -1,6 +1,5 @@
 import etcethereumclassiccooperativeparityws from './etc-ethereumclassiccooperative-parity-ws';
 import ethmewws from './eth-mew-ws';
-import goerlimewws from './goerli-mew-ws';
 import holeskymewws from './holesky-mew-ws';
 import bscmewws from './bsc-mew-ws';
 import maticmewws from './matic-mew-ws';
@@ -29,7 +28,6 @@ export {
   etcethereumclassiccooperativeparityws,
   ethmewws,
   cotiws,
-  goerlimewws,
   holeskymewws,
   bscmewws,
   maticmewws,

@@ -92,6 +92,7 @@ class KeepkeyWallet {
       const hexTx = getHexTx(tx);
       const networkId = tx.common.chainId();
       hexTx.addressNList = bip32ToAddressNList(accountPath);
+      hexTx.chainId = networkId;
       const result = await this.keepkey.ethSignTx(hexTx);
       txParams.v = getBufferFromHex(sanitizeHex(numberToHex(result.v)));
       txParams.r = getBufferFromHex(sanitizeHex(result.r));

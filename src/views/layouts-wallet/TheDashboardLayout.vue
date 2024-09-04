@@ -40,7 +40,7 @@ import { isArray } from 'lodash';
 
 import { fromBase } from '@/core/helpers/unit';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
-import { ETH, HOLESKY, GOERLI } from '@/utils/networks/types';
+import { ETH, HOLESKY } from '@/utils/networks/types';
 import handlerStaked from '@/dapps/staked-dapp/handlers/handlerStaked.js';
 
 const STAKED_ENDPOINT = 'https://staked.mewapi.io';
@@ -79,7 +79,7 @@ export default {
     ...mapGetters('global', ['isEthNetwork', 'network']),
     ...mapGetters('external', ['getCoinGeckoTokenById']),
     stakingSupported() {
-      return [GOERLI, HOLESKY, ETH];
+      return [HOLESKY, ETH];
     },
     showBanner() {
       if (this.stakedLoading || this.cbStakeLoading) return false;
