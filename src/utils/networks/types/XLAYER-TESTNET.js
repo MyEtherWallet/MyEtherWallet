@@ -1,7 +1,7 @@
 import XLAYER from '@/assets/images/networks/xlayer.png';
 
 export default {
-  name: 'XLayer',
+  name: 'XLayer Testnet',
   name_long: 'XLayer Testnet',
   homePage: 'https://www.okx.com/xlayer',
   blockExplorer: 'Oklink',

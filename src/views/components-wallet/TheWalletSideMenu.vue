@@ -293,7 +293,7 @@ import logout from '@/assets/images/icons/icon-logout-enable.svg';
 import { EventBus } from '@/core/plugins/eventBus';
 import {
   ETH,
-  GOERLI,
+  HOLESKY,
   BSC,
   ROOTSTOCK,
   ETC,
@@ -356,7 +356,7 @@ export default {
           OP,
           COTI
         ],
-        [ROUTES_WALLET.STAKE.NAME]: [ETH, GOERLI],
+        [ROUTES_WALLET.STAKE.NAME]: [ETH, HOLESKY],
         [ROUTES_WALLET.NFT_MANAGER.NAME]: [ETH, BSC, MATIC]
       },
       footer: {

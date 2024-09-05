@@ -10,6 +10,8 @@
 * fix tokens table on resize [#4995](https://github.com/MyEtherWallet/MyEtherWallet/pull/4995)
 * [#4996](https://github.com/MyEtherWallet/MyEtherWallet/pull/4996)
 * fix search weight and update formatting [#4997](https://github.com/MyEtherWallet/MyEtherWallet/pull/4997)
+* fix keepkey signing [#4998](https://github.com/MyEtherWallet/MyEtherWallet/pull/4998)
+* remove goerli [#4999](https://github.com/MyEtherWallet/MyEtherWallet/pull/4999)
 
 ### sentry
 

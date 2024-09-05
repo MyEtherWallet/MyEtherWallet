@@ -1,5 +1,5 @@
-import { GOERLI } from '../tlds';
-import goerli from '@/assets/images/networks/network.svg';
+import { HOLESKY } from '../tlds';
+import network from '@/assets/images/networks/network.svg';
 
 export default {
   name: 'SEPOLIA',
@@ -19,12 +19,12 @@ export default {
     registry: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
     registrarTLD: 'eth',
     registrarType: 'permanent',
-    supportedTld: GOERLI,
+    supportedTld: HOLESKY,
     subgraphPath:
       'https://api.studio.thegraph.com/proxy/49574/enssepolia/version/latest'
   },
   isTestNetwork: true,
-  icon: goerli,
+  icon: network,
   currencyName: 'SEP',
   isEthVMSupported: {
     supported: false,
