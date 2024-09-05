@@ -300,7 +300,7 @@ import {
   XDC,
   MOONBEAM,
   MOONRIVER,
-  MATIC,
+  POL,
   AURORA,
   ARB,
   FTM,
@@ -348,7 +348,7 @@ export default {
           XDC,
           MOONBEAM,
           MOONRIVER,
-          MATIC,
+          POL,
           AURORA,
           ARB,
           FTM,
@@ -357,7 +357,7 @@ export default {
           COTI
         ],
         [ROUTES_WALLET.STAKE.NAME]: [ETH, HOLESKY],
-        [ROUTES_WALLET.NFT_MANAGER.NAME]: [ETH, BSC, MATIC]
+        [ROUTES_WALLET.NFT_MANAGER.NAME]: [ETH, BSC, POL]
       },
       footer: {
         text: 'Need help?',

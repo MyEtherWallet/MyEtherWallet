@@ -2,7 +2,7 @@ import etcethereumclassiccooperativeparityws from './etc-ethereumclassiccooperat
 import ethmewws from './eth-mew-ws';
 import holeskymewws from './holesky-mew-ws';
 import bscmewws from './bsc-mew-ws';
-import maticmewws from './matic-mew-ws';
+import polmewws from './pol-mew-ws';
 import gochain from './gochain-ws';
 import mintmemewws from './mintme-mew-ws';
 import xdcnetwork from './xdcnetwork-ws';
@@ -30,7 +30,7 @@ export {
   cotiws,
   holeskymewws,
   bscmewws,
-  maticmewws,
+  polmewws,
   gochain,
   mintmemewws,
   xdcnetwork,
