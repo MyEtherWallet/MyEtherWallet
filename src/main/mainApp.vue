@@ -115,7 +115,7 @@ export default {
     EventBus.$on(BUYSELL_EVENT, arg => {
       if (!this.network.type.canBuy) {
         Toast(
-          'Unsupported network to buy. Please switch network to ETH, MATIC, or BNB to buy.',
+          'Unsupported network to buy. Please switch network to ETH, POL, or BNB to buy.',
           {},
           WARNING
         );

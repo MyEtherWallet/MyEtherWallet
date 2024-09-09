@@ -173,7 +173,7 @@ export default {
           item =>
             item.name === types.ETH.name ||
             item.name === types.BSC.name ||
-            item.name === types.MATIC.name ||
+            item.name === types.POL.name ||
             item.name === types.ROOTSTOCK.name ||
             item.name === types.ETC.name ||
             item.name === types.XDC.name ||

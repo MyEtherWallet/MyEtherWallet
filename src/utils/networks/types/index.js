@@ -16,7 +16,7 @@ import ETC from './ETC.js';
 import XDC from './XDC';
 import MOONBEAM from './MOONBEAM';
 import MOONRIVER from './MOONRIVER';
-import MATIC from './MATIC.js';
+import POL from './POL.js';
 import ROOTSTOCK from './ROOTSTOCK';
 import AURORA from './AURORA';
 import ARB from './ARB';
@@ -31,7 +31,7 @@ export {
   COTI,
   ETC,
   BSC,
-  MATIC,
+  POL,
   GO,
   MINTME,
   XDC,

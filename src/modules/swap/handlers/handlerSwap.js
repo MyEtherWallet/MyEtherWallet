@@ -4,7 +4,7 @@ import BigNumber from 'bignumber.js';
 import { OneInch, ZEROX, ParaSwap, Changelly } from './providers';
 import Configs from './configs/providersConfigs';
 import hasValidDecimals from '@/core/helpers/hasValidDecimals.js';
-import { ETH, MATIC, BSC } from '@/utils/networks/types';
+import { ETH, POL, BSC } from '@/utils/networks/types';
 
 class Swap {
   constructor(web3, chain) {
@@ -21,7 +21,7 @@ class Swap {
     const DOGE_ADDRESS = '0x4206931337dc273a630d328dA6441786BfaD668f';
     const initialProvider =
       this.chain === ETH.name ||
-      this.chain === MATIC.name ||
+      this.chain === POL.name ||
       this.chain === BSC.name
         ? 0
         : 3;
