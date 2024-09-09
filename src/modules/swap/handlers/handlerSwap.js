@@ -1,8 +1,10 @@
-import { OneInch, ZEROX, ParaSwap, Changelly } from './providers';
+import { isObject } from 'lodash';
 import BigNumber from 'bignumber.js';
+
+import { OneInch, ZEROX, ParaSwap, Changelly } from './providers';
 import Configs from './configs/providersConfigs';
 import hasValidDecimals from '@/core/helpers/hasValidDecimals.js';
-import { isObject } from 'lodash';
+import { ETH, POL, BSC } from '@/utils/networks/types';
 
 class Swap {
   constructor(web3, chain) {
@@ -17,44 +19,52 @@ class Swap {
   getAllTokens() {
     const allTokens = {};
     const DOGE_ADDRESS = '0x4206931337dc273a630d328dA6441786BfaD668f';
-    return this.providers[0].getSupportedTokens().then(baseList => {
-      if (baseList && baseList.length > 0)
-        baseList.forEach(t => {
-          if (t.contract?.toLowerCase() !== DOGE_ADDRESS.toLowerCase())
-            allTokens[t.contract] = t;
+    const initialProvider =
+      this.chain === ETH.name ||
+      this.chain === POL.name ||
+      this.chain === BSC.name
+        ? 0
+        : 3;
+    return this.providers[initialProvider]
+      .getSupportedTokens()
+      .then(baseList => {
+        if (baseList && baseList.length > 0)
+          baseList.forEach(t => {
+            if (t.contract?.toLowerCase() !== DOGE_ADDRESS.toLowerCase())
+              allTokens[t.contract] = t;
+          });
+        return Promise.all(
+          this.providers.slice(3).map(p => {
+            if (!p.isSupportedNetwork(this.chain)) return Promise.resolve();
+            return p.getSupportedTokens().then(tokens => {
+              if (tokens && tokens.length > 0) {
+                tokens.forEach(t => {
+                  if (
+                    t.contract?.toLowerCase() !== DOGE_ADDRESS.toLowerCase() &&
+                    !allTokens[t.contract]
+                  ) {
+                    allTokens[t.contract] = t;
+                  }
+                });
+              }
+            });
+          })
+        ).then(() => {
+          const sorted = Object.values(allTokens)
+            .filter(t => isObject(t))
+            .sort((a, b) => {
+              if (a.name > b.name) return 1;
+              return -1;
+            });
+          return {
+            fromTokens: sorted?.filter(t => {
+              if (!t || !t.contract) return false;
+              return t;
+            }),
+            toTokens: sorted
+          };
         });
-      return Promise.all(
-        this.providers.slice(3).map(p => {
-          if (!p.isSupportedNetwork(this.chain)) return Promise.resolve();
-          return p.getSupportedTokens().then(tokens => {
-            if (tokens && tokens.length > 0) {
-              tokens.forEach(t => {
-                if (
-                  t.contract?.toLowerCase() !== DOGE_ADDRESS.toLowerCase() &&
-                  !allTokens[t.contract]
-                ) {
-                  allTokens[t.contract] = t;
-                }
-              });
-            }
-          });
-        })
-      ).then(() => {
-        const sorted = Object.values(allTokens)
-          .filter(t => isObject(t))
-          .sort((a, b) => {
-            if (a.name > b.name) return 1;
-            return -1;
-          });
-        return {
-          fromTokens: sorted?.filter(t => {
-            if (!t || !t.contract) return false;
-            return t;
-          }),
-          toTokens: sorted
-        };
       });
-    });
   }
   getAllQuotes({ fromT, toT, fromAmount }) {
     let allQuotes = [];

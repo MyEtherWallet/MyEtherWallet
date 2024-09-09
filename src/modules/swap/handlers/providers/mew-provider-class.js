@@ -25,6 +25,10 @@ class MEWPClass {
       .get(`${REQUEST_CACHER}${HOST_URL}${GET_LIST}?chain=${this.chain}`)
       .then(response => {
         const data = response.data;
+        if (data.error) {
+          throw new Error(data.error);
+        }
+
         return data.map(d => {
           const token = {
             contract: d.contract_address.toLowerCase(),

@@ -123,9 +123,8 @@ const estimateGasList = (network, txs) => {
   return new Promise(async (resolve, reject) => {
     const supportedNetworks = {
       ETH: 'https://estimategas.mewapi.io/eth',
-      GOERLI: 'https://estimategas.mewapi.io/goerli',
       BNB: 'https://estimategas.mewapi.io/bsc',
-      MATIC: 'https://estimategas.mewapi.io/matic',
+      POL: 'https://estimategas.mewapi.io/matic',
       HOLESKY: 'https://estimategas.mewapi.io/holesky',
       SEPOLIA: 'https://estimategas.mewapi.io/sepolia'
     };

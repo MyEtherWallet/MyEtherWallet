@@ -1,5 +1,5 @@
 import eth from '@/assets/images/networks/eth.svg';
-import { GOERLI } from '../tlds';
+import { HOLESKY } from '../tlds';
 
 export default {
   name: 'ETH',
@@ -20,7 +20,7 @@ export default {
     registry: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
     registrarTLD: 'eth',
     registrarType: 'permanent',
-    supportedTld: GOERLI,
+    supportedTld: HOLESKY,
     subgraphPath:
       'https://gateway-arbitrum.network.thegraph.com/api/eb17d5e0f1e62e505370ef6bfd7c2844/subgraphs/id/5XqPmWe6gjyrJtFn9cLy237i4cWw2j9HcUJEXsP5qGtH'
   },

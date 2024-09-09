@@ -167,7 +167,7 @@ import handlerWallet from '@/core/mixins/handlerWallet.mixin';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook.vue';
 import BuySellTokenSelect from '@/modules/buy-sell/components/TokenSelect.vue';
 import { getCurrency } from '@/modules/settings/components/currencyList';
-import { ETH, BSC, MATIC } from '@/utils/networks/types';
+import { ETH, BSC, POL } from '@/utils/networks/types';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { BUY_SELL } from '@/modules/analytics-opt-in/handlers/configs/events';
 export default {
@@ -297,10 +297,10 @@ export default {
       return arr;
     },
     supportedCurrency() {
-      return ['ETH', 'USDT', 'USDC', 'MATIC', 'BNB'];
+      return ['ETH', 'USDT', 'USDC', 'POL', 'BNB'];
     },
     supportedNetworks() {
-      return [ETH.name, BSC.name, MATIC.name];
+      return [ETH.name, BSC.name, POL.name];
     },
     name() {
       return this.supportedCurrency.includes(this.selectedCurrency.symbol)

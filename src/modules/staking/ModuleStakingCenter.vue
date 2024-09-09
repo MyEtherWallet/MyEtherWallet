@@ -115,7 +115,7 @@ import { STAKED_ROUTE } from '@/dapps/staked-dapp/configsRoutes';
 import { COINBASE_STAKING_ROUTES } from '@/dapps/coinbase-staking/configs';
 import { STAKING } from '../analytics-opt-in/handlers/configs/events';
 import handlerStaked from '@/dapps/staked-dapp/handlers/handlerStaked.js';
-import { ETH, GOERLI, HOLESKY } from '@/utils/networks/types';
+import { ETH, HOLESKY } from '@/utils/networks/types';
 
 export default {
   mixins: [handlerAnalytics],
@@ -129,10 +129,7 @@ export default {
     ...mapState('wallet', ['web3', 'address', 'identifier']),
     dapps() {
       const staking = [];
-      if (
-        this.network.type.name === ETH.name ||
-        this.network.type.name === GOERLI.name
-      ) {
+      if (this.network.type.name === ETH.name) {
         staking.push({
           title: 'Staked',
           apr: this.currentAprFormatted,
@@ -167,10 +164,7 @@ export default {
     }
   },
   mounted() {
-    if (
-      this.network.type.name === ETH.name ||
-      this.network.type.name === GOERLI.name
-    ) {
+    if (this.network.type.name === ETH.name) {
       this.handlerStaked = new handlerStaked(
         this.web3,
         this.network,

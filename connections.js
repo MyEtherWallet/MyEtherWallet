@@ -64,6 +64,8 @@ module.exports = [
   'wss://ws.arthera.net:443/',
   'wss://ws-test.arthera.net:443/',
   'wss://devnet.coti.io:443/ws',
+  'wss://xlayertestws.okx.com:443',
+  'wss://xlayerws.okx.com:443',
   // intercom stuff
   'api-iam.intercom.io:443',
   'https://api.zilliqa.com:443',

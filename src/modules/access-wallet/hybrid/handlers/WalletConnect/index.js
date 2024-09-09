@@ -14,7 +14,7 @@ import errorHandler from './errorHandler';
 import commonGenerator from '@/core/helpers/commonGenerator';
 import toBuffer from '@/core/helpers/toBuffer';
 import walletconnect from '@/assets/images/icons/wallets/walletconnect.svg';
-import { BSC, ETH, MATIC } from '@/utils/networks/types';
+import { BSC, ETH, POL } from '@/utils/networks/types';
 
 // eslint-disable-next-line
 const projectId = WALLET_CONNECT_PROJECT_ID;
@@ -111,7 +111,7 @@ const createWallet = async (identifier = WALLET_TYPES.WALLET_CONNECT) => {
             }
           })
           .filter(item => !!item)
-      : [BSC.chainID, MATIC.chainID];
+      : [BSC.chainID, POL.chainID];
   const signClient = await EthereumProvider.init({
     projectId,
     showQrModal: true,

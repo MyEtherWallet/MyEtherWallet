@@ -1,3 +1,28 @@
+### Release v6.9.13
+
+### devop
+
+- rename matic [#5002](https://github.com/MyEtherWallet/MyEtherWallet/pull/5002)
+
+### feat
+
+- add link out to balance card [#4984](https://github.com/MyEtherWallet/MyEtherWallet/pull/4984)
+- add xlayer [#4988](https://github.com/MyEtherWallet/MyEtherWallet/pull/4988)
+- enable swap for more chains [#4989](https://github.com/MyEtherWallet/MyEtherWallet/pull/4989)
+
+### fix
+
+- fix missing tokens [#4987](https://github.com/MyEtherWallet/MyEtherWallet/pull/4987)
+- fix tokens table on resize [#4995](https://github.com/MyEtherWallet/MyEtherWallet/pull/4995)
+- [#4996](https://github.com/MyEtherWallet/MyEtherWallet/pull/4996)
+- fix search weight and update formatting [#4997](https://github.com/MyEtherWallet/MyEtherWallet/pull/4997)
+- fix keepkey signing [#4998](https://github.com/MyEtherWallet/MyEtherWallet/pull/4998)
+- remove goerli [#4999](https://github.com/MyEtherWallet/MyEtherWallet/pull/4999)
+
+### sentry
+
+- add error on sentry [#4992](https://github.com/MyEtherWallet/MyEtherWallet/pull/4992)
+
 ### Release v6.9.12
 
 ### devop

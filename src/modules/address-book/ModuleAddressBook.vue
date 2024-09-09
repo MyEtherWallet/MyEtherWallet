@@ -44,6 +44,7 @@ import WAValidator from 'multicoin-address-validator';
 import { isAddress, toChecksumAddress } from '@/core/helpers/addressUtils';
 import Resolver from '@/modules/name-resolver/index';
 import { ERROR, Toast } from '../toast/handler/handlerToast';
+import { ROOTSTOCK } from '@/utils/networks/types';
 
 const USER_INPUT_TYPES = {
   typed: 'TYPED',
@@ -334,21 +335,15 @@ export default {
     resolveAddress: throttle(async function () {
       if (this.nameResolver) {
         try {
+          // Ethers.js rejects Rootstock checksummed address so use lowercase address.
+          const inputAddress =
+            this.network.type.chainID === ROOTSTOCK.chainID
+              ? this.inputAddr.toLowerCase()
+              : this.inputAddr;
           const reverseName = await this.nameResolver.resolveAddress(
-            this.inputAddr
+            inputAddress
           );
-          // if (reverseName && !reverseName.name) {
-          //   try {
-          //     await getAddressInfo(
-          //       toChecksumAddress(this.inputAddr),
-          //       'https://ipfs.kleros.io'
-          //     ).then(data => {
-          //       this.nametag = data?.publicNameTag || '';
-          //     });
-          //   } catch (e) {
-          //     this.nametag = '';
-          //   }
-          // }
+
           this.resolvedAddr = reverseName?.name ? reverseName.name : '';
         } catch (e) {
           Toast(e, {}, ERROR);

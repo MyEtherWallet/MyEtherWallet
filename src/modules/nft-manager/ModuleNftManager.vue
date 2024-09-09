@@ -152,7 +152,7 @@ import {
 import getService from '@/core/helpers/getService';
 
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
-import { ETH, BSC, MATIC } from '@/utils/networks/types';
+import { ETH, BSC, POL } from '@/utils/networks/types';
 import { toBNSafe } from '@/core/helpers/numberFormatHelper';
 import NFT from './handlers/handlerNftManager';
 import handleError from '@/modules/confirmation/handlers/errorHandler.js';
@@ -295,7 +295,7 @@ export default {
      * List of supported networks
      */
     supportedNetworks() {
-      return [ETH.name, MATIC.name, BSC.name];
+      return [ETH.name, POL.name, BSC.name];
     }
   },
   watch: {
@@ -427,7 +427,7 @@ export default {
       if (this.isValid) {
         try {
           let gasPrice = undefined;
-          if (this.network.type.name === 'MATIC')
+          if (this.network.type.name === POL.name)
             gasPrice = `0x${toBN(this.localGasPrice).toString('hex')}`;
           this.nft
             .send(this.toAddress, this.selectedNft, gasPrice)

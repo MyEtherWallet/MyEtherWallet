@@ -1,9 +1,8 @@
 import etcethereumclassiccooperativeparityws from './etc-ethereumclassiccooperative-parity-ws';
 import ethmewws from './eth-mew-ws';
-import goerlimewws from './goerli-mew-ws';
 import holeskymewws from './holesky-mew-ws';
 import bscmewws from './bsc-mew-ws';
-import maticmewws from './matic-mew-ws';
+import polmewws from './pol-mew-ws';
 import gochain from './gochain-ws';
 import mintmemewws from './mintme-mew-ws';
 import xdcnetwork from './xdcnetwork-ws';
@@ -22,15 +21,16 @@ import artheratest from './arthera-test-ws';
 import rootstocktestnet from './rootstock-testnet-ws';
 import amoyws from './amoy-mew-ws';
 import cotiws from './coti-ws';
+import xlayer from './xlayer-okx-ws';
+import xlayertestws from './xlayer-okx-testnet-ws';
 
 export {
   etcethereumclassiccooperativeparityws,
   ethmewws,
   cotiws,
-  goerlimewws,
   holeskymewws,
   bscmewws,
-  maticmewws,
+  polmewws,
   gochain,
   mintmemewws,
   xdcnetwork,
@@ -47,5 +47,7 @@ export {
   arthera,
   artheratest,
   rootstocktestnet,
-  amoyws
+  amoyws,
+  xlayer,
+  xlayertestws
 };

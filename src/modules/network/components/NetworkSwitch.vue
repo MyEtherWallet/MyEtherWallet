@@ -173,7 +173,18 @@ export default {
           item =>
             item.name === types.ETH.name ||
             item.name === types.BSC.name ||
-            item.name === types.MATIC.name
+            item.name === types.POL.name ||
+            item.name === types.ROOTSTOCK.name ||
+            item.name === types.ETC.name ||
+            item.name === types.XDC.name ||
+            item.name === types.MOONBEAM.name ||
+            item.name === types.MOONRIVER.name ||
+            item.name === types.AURORA.name ||
+            item.name === types.ARB.name ||
+            item.name === types.FTM.name ||
+            item.name === types.GNO.name ||
+            item.name === types.OP.name ||
+            item.name === types.COTI.name
         );
       }
       if (this.searchInput && this.searchInput !== '') {

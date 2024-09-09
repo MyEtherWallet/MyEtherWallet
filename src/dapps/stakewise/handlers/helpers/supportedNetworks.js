@@ -1,5 +1,5 @@
-import { ETH, GOERLI } from '@/utils/networks/types';
+import { ETH } from '@/utils/networks/types';
 
-const SUPPORTED_NETWORKS = [ETH, GOERLI];
+const SUPPORTED_NETWORKS = [ETH];
 
 export { SUPPORTED_NETWORKS };
