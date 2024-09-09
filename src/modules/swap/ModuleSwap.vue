@@ -973,6 +973,8 @@ export default {
       localContractToToken = new Map();
       localContractToToken.set(MAIN_TOKEN_ADDRESS, this.mainTokenDetails);
       this.tokenInValue = '0';
+      this.refundAddress = '';
+      this.addressValue = {};
       this.setupSwap();
     },
     /**
@@ -1536,17 +1538,19 @@ export default {
             this.feeError = 'There was an issue with the provider';
             return;
           }
-          const filteredTx = tradeResponse.transactions.filter(
-            tx => tx.data === '0x'
-          );
-          if (filteredTx.length > 0) {
-            Toast(
-              `Provider: ${filteredTx[0].provider} has no data.`,
-              {},
-              SENTRY
+          if (tradeResponse.provider !== 'changelly') {
+            const filteredTx = tradeResponse.transactions.filter(
+              tx => tx.data === '0x'
             );
-            removeQuote();
-            return;
+            if (filteredTx.length > 0) {
+              Toast(
+                `Provider: ${filteredTx[0].provider} has no data.`,
+                {},
+                SENTRY
+              );
+              removeQuote();
+              return;
+            }
           }
           if (this.tokenInValue === this.cachedAmount) {
             if (
