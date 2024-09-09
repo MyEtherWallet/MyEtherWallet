@@ -134,6 +134,7 @@
               v-if="isFromNonChain"
               ref="refundAddressInput"
               class="FromAddressInput"
+              :currency="fromTokenType.symbol"
               :label="nativeLabel"
               :is-valid-address-func="isValidRefundAddress"
               @setAddress="setRefundAddr"
@@ -142,6 +143,7 @@
               v-if="showToAddress"
               ref="toAddressInput"
               class="ToAddressInput"
+              :currency="toTokenType.symbol"
               :is-valid-address-func="isValidToAddress"
               :label="toAddressLabel"
               @setAddress="setToAddress"
@@ -971,6 +973,8 @@ export default {
       localContractToToken = new Map();
       localContractToToken.set(MAIN_TOKEN_ADDRESS, this.mainTokenDetails);
       this.tokenInValue = '0';
+      this.refundAddress = '';
+      this.addressValue = {};
       this.setupSwap();
     },
     /**
@@ -1534,17 +1538,19 @@ export default {
             this.feeError = 'There was an issue with the provider';
             return;
           }
-          const filteredTx = tradeResponse.transactions.filter(
-            tx => tx.data === '0x'
-          );
-          if (filteredTx.length > 0) {
-            Toast(
-              `Provider: ${filteredTx[0].provider} has no data.`,
-              {},
-              SENTRY
+          if (tradeResponse.provider !== 'changelly') {
+            const filteredTx = tradeResponse.transactions.filter(
+              tx => tx.data === '0x'
             );
-            removeQuote();
-            return;
+            if (filteredTx.length > 0) {
+              Toast(
+                `Provider: ${filteredTx[0].provider} has no data.`,
+                {},
+                SENTRY
+              );
+              removeQuote();
+              return;
+            }
           }
           if (this.tokenInValue === this.cachedAmount) {
             if (
@@ -1612,11 +1618,12 @@ export default {
     },
     isValidToAddress(address) {
       if (this.availableQuotes.length > 0) {
-        return this.swapper.isValidToAddress({
+        const valid = this.swapper.isValidToAddress({
           provider: this.availableQuotes[0].provider,
           toT: this.toTokenType,
           address
         });
+        return valid;
       }
       if (this.toTokenType.isEth) {
         return MultiCoinValidator.validate(address, 'Ethereum');

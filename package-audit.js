@@ -48,7 +48,8 @@ const AUDIT_EXCEPTIONS = [
   'protobufjs',
   'minimatch',
   'socket.io',
-  'semver'
+  'semver',
+  'path-to-regexp'
 ];
 const execute = (command, callback) => {
   exec(
