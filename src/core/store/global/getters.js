@@ -2,7 +2,7 @@ import nodeList from '@/utils/networks';
 import {
   ETH,
   BSC,
-  MATIC,
+  POL,
   ROOTSTOCK,
   ETC,
   XDC,
@@ -91,7 +91,7 @@ const hasSwap = function (state, getters, rootState) {
   return (
     name === ETH.name ||
     name === BSC.name ||
-    name === MATIC.name ||
+    name === POL.name ||
     name === ROOTSTOCK.name ||
     name === ETC.name ||
     name === XDC.name ||

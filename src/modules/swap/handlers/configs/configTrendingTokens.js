@@ -1,4 +1,4 @@
-import { ETH, BSC, MATIC } from '@/utils/networks/types';
+import { ETH, BSC, POL } from '@/utils/networks/types';
 
 const TRENDING_LIST = {
   [ETH.name]: [
@@ -31,7 +31,7 @@ const TRENDING_LIST = {
     }
   ],
   [BSC.name]: [],
-  [MATIC.name]: []
+  [POL.name]: []
 };
 
 export { TRENDING_LIST };

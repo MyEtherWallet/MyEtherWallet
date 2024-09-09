@@ -134,7 +134,7 @@ import {
 import { getCurrency } from '@/modules/settings/components/currencyList';
 import { coingeckoContracts } from './tokenList';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
-import { ETH, MATIC, OP, ARB } from '@/utils/networks/types';
+import { ETH, POL, OP, ARB } from '@/utils/networks/types';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook.vue';
 import { getCoinGeckoTokenMarketDataByIds } from '@/apollo/queries/wallets/wallets.graphql';
 
@@ -236,9 +236,9 @@ export default {
         'first-digital-usd': 'FDUSD-SC',
         'binance-bridged-usdc-bnb-smart-chain': 'USDC-SC',
         'binance-bridged-usdt-bnb-smart-chain': 'USDT-SC',
-        'matic-network': 'MATIC',
-        'bridged-usdc-polygon-pos-bridge': 'USDC-MATIC',
-        'polygon-bridged-usdt-polygon': 'USDT-MATIC',
+        'matic-network': 'POL',
+        'bridged-usdc-polygon-pos-bridge': 'USDC-POL',
+        'polygon-bridged-usdt-polygon': 'USDT-POL',
         'arbitrum-bridged-usdt-arbitrum': 'USDT-ARBITRUM',
         'bridged-usdt': 'USDT-OPTIMISM'
       },
@@ -252,7 +252,7 @@ export default {
         'first-digital-usd': 'First Digital USD',
         'binance-bridged-usdc-bnb-smart-chain': 'USD Coin',
         'binance-bridged-usdt-bnb-smart-chain': 'Tether',
-        'matic-network': 'MATIC',
+        'matic-network': 'POL',
         'bridged-usdc-polygon-pos-bridge': 'USD Coin',
         'polygon-bridged-usdt-polygon': 'Tether',
         'arbitrum-bridged-usdt-arbitrum': 'Tether',
@@ -618,7 +618,7 @@ export default {
       handler: function (newVal, oldVal) {
         const supportedCoins = {
           ETH: ETH.name,
-          MATIC: MATIC.name,
+          POL: POL.name,
           OP: OP.name,
           ARB: ARB.name
         };
@@ -739,7 +739,7 @@ export default {
     async fetchGasPrice() {
       const supportedNodes = {
         ETH: ETH.name,
-        MATIC: MATIC.name,
+        POL: POL.name,
         OP: OP.name,
         ARB: ARB.name
       };

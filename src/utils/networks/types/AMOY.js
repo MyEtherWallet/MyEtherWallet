@@ -1,4 +1,4 @@
-import matic from '@/assets/images/networks/matic.svg';
+import pol from '@/assets/images/networks/pol.svg';
 export default {
   name: 'AMOY',
   name_long: 'Polygon (AMOY) Testnet',
@@ -13,7 +13,7 @@ export default {
   contracts: import('@/_generated/contracts/contract-abi-ftm.json').then(
     module => module.default
   ),
-  icon: matic,
+  icon: pol,
   isTestNetwork: true,
   currencyName: 'MATIC',
   isEthVMSupported: {

@@ -31,11 +31,7 @@ const buyContracts = {
     // tokenContracts.tusd
   ],
   // BNB: [tokenContracts.fdusdsc, tokenContracts.usdcsc, tokenContracts.usdtsc],
-  MATIC: [
-    tokenContracts.eth,
-    tokenContracts.usdcmatic,
-    tokenContracts.usdtmatic
-  ],
+  POL: [tokenContracts.eth, tokenContracts.usdcmatic, tokenContracts.usdtmatic],
   ARB: [tokenContracts.usdtarbitrum],
   OP: [tokenContracts.usdtop]
 };
@@ -54,7 +50,7 @@ const coingeckoContracts = {
   //   'binance-bridged-usdc-bnb-smart-chain',
   //   'binance-bridged-usdt-bnb-smart-chain'
   // ],
-  MATIC: [
+  POL: [
     'matic-network',
     'bridged-usdc-polygon-pos-bridge',
     'polygon-bridged-usdt-polygon'

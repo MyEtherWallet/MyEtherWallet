@@ -1,6 +1,6 @@
-import { MATIC } from '../types';
+import { POL } from '../types';
 export default {
-  type: MATIC,
+  type: POL,
   service: 'myetherwallet.com-ws',
   url: 'wss://nodes.mewapi.io/ws/matic',
   port: 443,
