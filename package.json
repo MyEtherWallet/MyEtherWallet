@@ -154,7 +154,7 @@
     "eslint-plugin-vue": "9.0.1",
     "ethereumjs-util": "7.1.5",
     "ethereumjs-wallet": "1.0.2",
-    "follow-redirects": "1.15.6",
+    "follow-redirects": "1.15.9",
     "geckodriver": "3.2.0",
     "hdkey": "2.1.0",
     "husky": "5.0.9",
