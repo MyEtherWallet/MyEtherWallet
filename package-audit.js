@@ -49,7 +49,8 @@ const AUDIT_EXCEPTIONS = [
   'minimatch',
   'socket.io',
   'semver',
-  'path-to-regexp'
+  'path-to-regexp',
+  'body-parser'
 ];
 const execute = (command, callback) => {
   exec(
