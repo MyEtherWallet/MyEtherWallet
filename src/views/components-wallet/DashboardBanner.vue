@@ -87,7 +87,6 @@ export default {
     adBanner() {
       const testTime = localStore.get('mew-test-date') || '2024-10-03';
       const week = moment(new Date(testTime)).week() % 41;
-      console.log(week, moment(new Date(testTime)).week() % 41, testTime);
       switch (week) {
         case 0:
           return require('@/assets/images/ad/Topper1.png');
