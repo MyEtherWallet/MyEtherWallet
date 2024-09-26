@@ -17,7 +17,7 @@
             <v-col cols="2">
               <mew-token-container
                 size="medium"
-                :img="token.img"
+                :img="imgConverter(token.img)"
                 class="token-shadow"
               ></mew-token-container>
             </v-col>
@@ -145,6 +145,9 @@ export default {
     }
   },
   methods: {
+    imgConverter(img) {
+      return img || this.network.type.icon;
+    },
     handleTokensPopup() {
       this.showPopup = !this.showPopup;
     },
