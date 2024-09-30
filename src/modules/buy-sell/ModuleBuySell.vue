@@ -17,31 +17,24 @@
           :active-tab="activeTab"
           active-color="greenPrimary"
           has-underline
-          class="pt-3"
-          :class="addTokenPadding ? 'top-container' : ''"
+          class="pt-3 top-container"
           @onTab="onTab"
         >
           <template #tabContent1>
             <buy-eth-component
               :order-handler="orderHandler"
-              :tab="activeTab"
               :default-currency="defaultCurrency"
-              :in-wallet="inWallet"
               :supported-buy="supportedNetwork"
               @selectedCurrency="setSelectedCurrency"
               @openProviders="openProviders"
               @selectedFiat="setSelectedFiat"
-              @simplexQuote="setSimplexQuote"
-              @toAddress="setToAddress"
               @success="buySuccess"
-              @openTokenSelect="checkTokenPadding"
             />
           </template>
           <template v-if="sellSupported" #tabContent2>
             <sell-eth-component
               :order-handler="orderHandler"
               :tab="activeTab"
-              :in-wallet="inWallet"
               :default-currency="defaultCurrency"
               @selectedCurrency="setSelectedCurrency"
             />
@@ -51,7 +44,6 @@
       <buy-provider-component
         v-if="step === 1"
         :order-handler="orderHandler"
-        :in-wallet="inWallet"
         :selected-currency="selectedCurrency"
         :selected-fiat="selectedFiat"
         :moonpay-quote="moonpayQuote"
@@ -70,12 +62,7 @@
 import { mapGetters, mapState, mapActions } from 'vuex';
 import { isEmpty } from 'lodash';
 
-import {
-  ETH
-  //  OP,
-  // MATIC
-  // ARB, BSC
-} from '@/utils/networks/types';
+import { ETH, OP, ARB } from '@/utils/networks/types';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 
 import handler from './handlers/handlerOrder';
@@ -103,26 +90,18 @@ export default {
       orderHandler: {},
       selectedCurrency: {},
       selectedFiat: {},
-      moonpayQuote: {},
       step: 0,
-      simplexQuote: {},
-      topperQuote: {},
       toAddress: '',
-      addTokenPadding: false
+      networksWithTokens: []
     };
   },
   computed: {
     ...mapState('wallet', ['address', 'instance']),
     ...mapGetters('wallet', ['tokensList']),
     ...mapGetters('global', ['network']),
-    ...mapGetters('external', ['contractToToken']),
+    ...mapGetters('external', ['contractToToken', 'getCoinGeckoTokenById']),
     sellSupported() {
       return this.network.type.name === ETH.name;
-    },
-    inWallet() {
-      return (
-        this.$route.fullPath.includes('/wallet') && !this.$route.meta.noAuth
-      );
     },
     defaultCurrency() {
       if (isEmpty(this.selectedCurrency) && this.supportedNetwork) {
@@ -167,6 +146,7 @@ export default {
       }
       this.selectedCurrency = {};
       this.selectedCurrency = this.defaultCurrency;
+      this.fetchNetworks();
     },
     address() {
       this.selectedCurrency = this.defaultCurrency;
@@ -179,6 +159,39 @@ export default {
   },
   methods: {
     ...mapActions('external', ['setNetworkTokens']),
+    async fetchNetworks() {
+      const data = await fetch('https://qa.mewwallet.dev/v5/purchase/info');
+      const response = await data.json();
+      const { assets } = response;
+      const networks = assets
+        .filter(
+          asset =>
+            asset.chain === ETH.name ||
+            asset.chain === 'POL' ||
+            asset.chain === OP.name ||
+            asset.chain === ARB.name
+        )
+        .map(chain => {
+          const assets = chain.assets.map(asset => {
+            const cgToken =
+              this.getCoinGeckoTokenById(asset.coingecko_id) || {};
+            const token = this.contractToToken(asset.contract_address) || {};
+            return Object.assign({}, asset, token, cgToken);
+          });
+          chain.assets = assets;
+          return chain;
+        });
+
+      const sellNetworks = networks
+        .filter(network => network.chain === 'ETH')
+        .map(network => {
+          const filteredTokens = network.assets.filter(asset =>
+            asset.providers.includes('MOONPAY')
+          );
+          return Object.assign({}, network, { assets: filteredTokens });
+        });
+      console.log(sellNetworks);
+    },
     onTab(val) {
       this.trackBuySell(val === 0 ? BUY_SELL.BUY_TAB : BUY_SELL.SELL_TAB);
       this.selectedCurrency = {};
@@ -221,18 +234,6 @@ export default {
     openProviders(val) {
       this.step = val;
     },
-    setMoonpayQuote(val) {
-      this.moonpayQuote = val;
-    },
-    setSimplexQuote(val) {
-      this.simplexQuote = val;
-    },
-    setTopperQuote(val) {
-      this.topperQuote = val;
-    },
-    setToAddress(val) {
-      this.toAddress = val;
-    },
     reset() {
       this.selectedCurrency = this.defaultCurrency;
       this.selectedFiat = {
@@ -243,26 +244,17 @@ export default {
       };
     },
     buySuccess(items) {
-      this.setSimplexQuote(items[0]);
-      this.setTopperQuote(items[1]);
-      this.setToAddress(items[2]);
-      this.setMoonpayQuote(items[3]);
-      this.openProviders(items[4]);
-      this.setSelectedCurrency(items[5]);
+      this.openProviders();
       this.setSelectedFiat(items[6]);
       this.trackBuySell(BUY_SELL.BUY_NOW_BUTTON);
-    },
-    checkTokenPadding(isOpen) {
-      if (this.inWallet) {
-        this.addTokenPadding = isOpen;
-      } else this.addTokenPadding = false;
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.top-container {
-  min-height: 540px;
-}
+// .top-container {
+//   min-height: 540px;
+// }
+//
 </style>

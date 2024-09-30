@@ -269,10 +269,6 @@ export default {
       type: Object,
       default: () => {}
     },
-    inWallet: {
-      type: Boolean,
-      default: false
-    },
     selectedFiat: {
       type: Object,
       default: () => ({})
@@ -292,10 +288,6 @@ export default {
     topperQuote: {
       type: Object,
       default: () => ({})
-    },
-    toAddress: {
-      type: String,
-      default: ''
     }
   },
   data() {
@@ -308,9 +300,6 @@ export default {
     ...mapState('wallet', ['address']),
     selectedFiatName() {
       return this.selectedFiat.name;
-    },
-    actualAddress() {
-      return this.inWallet ? this.address : this.toAddress;
     },
     selectedCryptoName() {
       return this.selectedCurrency.symbol;
@@ -353,7 +342,7 @@ export default {
         fiatCurrency: this.selectedFiatName,
         cryptoCurrency: this.selectedCryptoName,
         requestedAmount: this.topperQuote.fiatAmount,
-        address: this.actualAddress
+        address: this.address
       };
       this.orderHandler
         .getTopperUrl(param)
@@ -380,7 +369,7 @@ export default {
           this.selectedCryptoName,
           this.selectedFiatName,
           this.moonpayQuote.fiatAmount,
-          this.actualAddress
+          this.address
         )
         .then(() => {
           this.trackBuySell(BUY_SELL.BUY_W_SIMPLEX_SUCCESS);
@@ -408,7 +397,7 @@ export default {
           this.selectedCryptoName,
           this.selectedFiatName,
           this.moonpayQuote.fiatAmount,
-          this.actualAddress
+          this.address
         )
         .then(() => {
           this.trackBuySell(BUY_SELL.BUY_W_MOONPAY_SUCCESS);
@@ -425,7 +414,7 @@ export default {
         });
     },
     validToAddress() {
-      if (isEmpty(this.actualAddress)) {
+      if (isEmpty(this.address)) {
         Toast('To address cannot be empty!', {}, ERROR);
         this.$emit('close');
         return false;

@@ -72,23 +72,6 @@
     </div>
 
     <!-- ========================================================================= -->
-    <!-- Receiver's address -->
-    <!-- ========================================================================= -->
-    <div v-if="!inWallet" class="mt-2">
-      <div class="font-weight-medium textDark--text mb-2">
-        Where should we send your crypto?
-      </div>
-      <module-address-book
-        ref="addressInput"
-        label="Enter Crypto Address"
-        :currency="selectedCryptoName"
-        :enable-save-address="false"
-        :is-home-page="true"
-        @setAddress="setAddress"
-      />
-    </div>
-
-    <!-- ========================================================================= -->
     <!-- BUY NEW button -->
     <!-- ========================================================================= -->
     <mew-button
@@ -109,7 +92,6 @@
       :currency-items="tokens"
       :selected-currency="selectedCurrency"
       :set-currency="setCurrency"
-      :in-wallet="inWallet"
       @close="openTokenSelect = false"
     />
   </div>
@@ -135,7 +117,6 @@ import { getCurrency } from '@/modules/settings/components/currencyList';
 import { coingeckoContracts } from './tokenList';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import { ETH, POL, OP, ARB } from '@/utils/networks/types';
-import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook.vue';
 import { getCoinGeckoTokenMarketDataByIds } from '@/apollo/queries/wallets/wallets.graphql';
 
 export default {
@@ -148,7 +129,6 @@ export default {
     }
   },
   components: {
-    ModuleAddressBook: ModuleAddressBook,
     BuySellTokenSelect: () =>
       import('@/modules/buy-sell/components/TokenSelect.vue')
   },
@@ -160,10 +140,6 @@ export default {
     defaultCurrency: {
       type: Object,
       default: () => {}
-    },
-    inWallet: {
-      type: Boolean,
-      default: false
     },
     supportedBuy: {
       type: Boolean,
@@ -332,12 +308,6 @@ export default {
     selectedFiatName() {
       return this.selectedFiat.name;
     },
-    actualAddress() {
-      return this.inWallet ? this.address : this.toAddress;
-    },
-    actualValidAddress() {
-      return this.inWallet ? true : this.validToAddress;
-    },
     networkFee() {
       return fromWei(BigNumber(this.gasPrice).times(21000).toString());
     },
@@ -393,10 +363,7 @@ export default {
     },
     disableBuy() {
       return (
-        (!this.inWallet && !this.actualValidAddress) ||
-        this.loading ||
-        this.amountErrorMessages !== '' ||
-        !this.supportedBuy
+        this.loading || this.amountErrorMessages !== '' || !this.supportedBuy
       );
     },
     buyBtnTitle() {
@@ -706,7 +673,6 @@ export default {
     }
   },
   mounted() {
-    if (!this.inWallet) this.$refs.addressInput.$refs?.addressSelect.clear();
     this.fetchCurrencyData();
   },
   methods: {
@@ -729,12 +695,6 @@ export default {
       this.amount = BigNumber(locAmount)
         .times(newRate.exchange_rate)
         .toFixed(2);
-    },
-    setAddress(newVal, isValid, data) {
-      if (data.type === 'RESOLVED' && !data.value.includes('.'))
-        this.toAddress = data.value;
-      else this.toAddress = newVal;
-      this.validToAddress = isValid;
     },
     async fetchGasPrice() {
       const supportedNodes = {
@@ -789,7 +749,6 @@ export default {
       );
       if (
         simplex.prices.length === 0 ||
-        !this.actualValidAddress ||
         isEmpty(this.amount) ||
         this.min.simplex.gt(this.amount) ||
         isNaN(this.amount) ||
@@ -805,7 +764,7 @@ export default {
           this.selectedCryptoName,
           this.selectedFiatName,
           this.amount,
-          this.actualAddress
+          this.address
         )
         .then(res => {
           this.simplexQuote = Object.assign({}, res);
