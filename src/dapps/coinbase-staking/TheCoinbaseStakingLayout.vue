@@ -1,13 +1,6 @@
 <template>
-  <the-wrapper-dapp
-    :is-new-header="true"
-    :dapp-img="headerImg"
-    :banner-text="header"
-    :tab-items="tabs"
-    :active-tab="activeTab"
-    :valid-networks="validNetworks"
-    top-strip
-  >
+  <the-wrapper-dapp :is-new-header="true" :dapp-img="headerImg" :banner-text="header" :tab-items="tabs"
+    :active-tab="activeTab" :valid-networks="validNetworks" top-strip>
   </the-wrapper-dapp>
 </template>
 
@@ -19,11 +12,13 @@ export default {
   components: {
     TheWrapperDapp: () => import('@/dapps/TheWrapperDapp.vue')
   },
-  data() {
+  data () {
     return {
       header: {
         title: 'ETH Staking Powered By Coinbase',
-        subtext: 'Stake any amount of ETH and begin earning rewards.'
+        subtext: 'Stake any amount of ETH and begin earning rewards. ',
+        dappLink:
+          'https://help.myetherwallet.com/en/articles/8843926-stake-eth-with-coinbase-in-mew-portfolio'
       },
       activeTab: 0,
       headerImg: require('@/assets/images/icons/dapps/icon-dapp-coinbase.svg'),
@@ -31,7 +26,7 @@ export default {
     };
   },
   computed: {
-    tabs() {
+    tabs () {
       return [
         {
           name: 'Stake',

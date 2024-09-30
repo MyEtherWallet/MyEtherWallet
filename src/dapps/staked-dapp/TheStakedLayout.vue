@@ -4,16 +4,8 @@
     The Staked Layout
     ===================================================
     -->
-  <the-wrapper-dapp
-    :is-new-header="true"
-    :dapp-img="headerImg"
-    :banner-text="header"
-    :tab-items="tabs"
-    :active-tab="activeTab"
-    external-contents
-    :on-tab="tabChanged"
-    :valid-networks="validNetworks"
-  >
+  <the-wrapper-dapp :is-new-header="true" :dapp-img="headerImg" :banner-text="header" :tab-items="tabs"
+    :active-tab="activeTab" external-contents :on-tab="tabChanged" :valid-networks="validNetworks">
     <!--
     ===================================================
     The Staked Header/Banner
@@ -37,35 +29,21 @@
     Menu tabs
     ===================================================
     -->
-      <v-btn-toggle
-        v-model="activeTab"
-        class="d-flex align-center justify-center mt-3 white--text"
-        mandatory
-        borderless
-        active-class="expandHeader font-weight-bold"
-        background-color="transparent"
-      >
-        <v-btn
-          class="px-md-9 white--text text-transform--initial"
-          :class="activeTab === 0 ? 'staked-tab-active' : 'staked-tab-inactive'"
-          color=""
-        >
+      <v-btn-toggle v-model="activeTab" class="d-flex align-center justify-center mt-3 white--text" mandatory borderless
+        active-class="expandHeader font-weight-bold" background-color="transparent">
+        <v-btn class="px-md-9 white--text text-transform--initial"
+          :class="activeTab === 0 ? 'staked-tab-active' : 'staked-tab-inactive'" color="">
           New stake
         </v-btn>
-        <v-btn
-          :class="[
-            'px-md-9 white--text text-transform--initial d-flex  flex-column align-center',
-            activeTab === 1 ? 'staked-tab-active' : 'staked-tab-inactive'
-          ]"
-          color=""
-        >
+        <v-btn :class="[
+    'px-md-9 white--text text-transform--initial d-flex  flex-column align-center',
+    activeTab === 1 ? 'staked-tab-active' : 'staked-tab-inactive'
+  ]" color="">
           <div>
-            <div
-              :class="[
-                'white--text',
-                activeTab === 1 ? 'font-weight-medium' : ''
-              ]"
-            >
+            <div :class="[
+    'white--text',
+    activeTab === 1 ? 'font-weight-medium' : ''
+  ]">
               My stake
             </div>
             <div v-if="!loadingValidators" class="mew-caption textLight--text">
@@ -82,15 +60,10 @@
     -->
     <template #HeaderRight>
       <div class="text-right">
-        <a
-          :href="getArticle('stake-eth2-mew-web')"
-          target="_blank"
-          class="greenPrimary--text font-weight-medium text-right"
-        >
+        <a :href="getArticle('stake-eth2-mew-web')" target="_blank"
+          class="greenPrimary--text font-weight-medium text-right">
           New to staking? Learn more
-          <v-icon class="ml-1" small color="greenPrimary"
-            >mdi-open-in-new</v-icon
-          >
+          <v-icon class="ml-1" small color="greenPrimary">mdi-open-in-new</v-icon>
         </a>
       </div>
     </template>
@@ -101,19 +74,9 @@
     ===================================================
     -->
     <template #tabContent1>
-      <v-sheet
-        min-height="500px"
-        max-width="700px"
-        color="transparent"
-        class="mx-auto"
-      >
-        <staked-stepper
-          ref="stakedStepper"
-          :current-apr="handlerStaked.apr"
-          :start-provision="startProvision"
-          :polling-status="pollingStatus"
-          @readyToStake="sendTransaction"
-        />
+      <v-sheet min-height="500px" max-width="700px" color="transparent" class="mx-auto">
+        <staked-stepper ref="stakedStepper" :current-apr="handlerStaked.apr" :start-provision="startProvision"
+          :polling-status="pollingStatus" @readyToStake="sendTransaction" />
       </v-sheet>
     </template>
     <!--
@@ -122,20 +85,9 @@
     ===================================================
     -->
     <template #tabContent2>
-      <v-sheet
-        min-height="500px"
-        max-width="700px"
-        color="transparent"
-        class="py-13 mx-auto"
-      >
-        <staked-status
-          :tx-receipt="handlerStaked.txReceipt"
-          :pending-hash="pendingTxHash"
-          :validators="validators"
-          :loading="loadingValidators"
-          :amount="amount"
-          :refetch-validators="refetchValidators"
-        />
+      <v-sheet min-height="500px" max-width="700px" color="transparent" class="py-13 mx-auto">
+        <staked-status :tx-receipt="handlerStaked.txReceipt" :pending-hash="pendingTxHash" :validators="validators"
+          :loading="loadingValidators" :amount="amount" :refetch-validators="refetchValidators" />
       </v-sheet>
     </template>
   </the-wrapper-dapp>
@@ -160,7 +112,7 @@ export default {
     StakedStatus: () => import('./components/StakedStatus')
   },
   mixins: [handlerAnalyticsMixin],
-  data() {
+  data () {
     return {
       validNetworks: SUPPORTED_NETWORKS,
       headerImg: require('@/assets/images/icons/dapps/icon-dapp-stake.svg'),
@@ -168,8 +120,10 @@ export default {
       header: {
         title: 'Ethereum 2.0 staking',
         subtext:
-          'Stake on Ethereum 2.0 and earn continuous rewards for providing a public good to the community.',
-        subtextClass: 'textMedium--text'
+          'Stake on Ethereum 2.0 and earn continuous rewards for providing a public good to the community. ',
+        subtextClass: 'textMedium--text',
+        dappLink:
+          'https://help.myetherwallet.com/en/articles/5380731-eth-validator-staking-with-mew-portfolio'
       },
       activeTab: 0,
       handlerStaked: {},
@@ -198,7 +152,7 @@ export default {
      * Total staked by user
      * @returns string
      */
-    myETHTotalStaked() {
+    myETHTotalStaked () {
       return (
         formatFloatingPointValue(this.handlerStaked.myETHTotalStaked).value +
         ' ETH'
@@ -208,7 +162,7 @@ export default {
      * Total Staked
      * @returns string
      */
-    totalStaked() {
+    totalStaked () {
       return (
         formatFloatingPointValue(this.handlerStaked.totalStaked).value + ' ETH'
       );
@@ -217,7 +171,7 @@ export default {
      * Current APR Formatted
      * @returns string
      */
-    currentAprFormatted() {
+    currentAprFormatted () {
       if (this.handlerStaked.apr > 0) {
         return formatPercentageValue(this.handlerStaked.apr).value;
       }
@@ -227,31 +181,31 @@ export default {
      * Gets the status after polling (happens on step4)
      * @returns object
      */
-    pollingStatus() {
+    pollingStatus () {
       return this.handlerStaked.pollingStatus;
     },
     /**
      * Gets the clients validators
      * @returns array
      */
-    validators() {
+    validators () {
       return this.handlerStaked.myValidators;
     },
     /**
      * Checks if validators are loading
      * @returns boolean
      */
-    loadingValidators() {
+    loadingValidators () {
       return this.handlerStaked.loadingValidators;
     },
     /**
      * Checks for pending tx hash
      * @returns string
      */
-    pendingTxHash() {
+    pendingTxHash () {
       return this.handlerStaked.pendingTxHash;
     },
-    isValidNetwork() {
+    isValidNetwork () {
       const chainID = this.network.type.chainID;
       const validChain = this.validNetworks.filter(
         item => item.chainID === chainID
@@ -260,14 +214,14 @@ export default {
     }
   },
   watch: {
-    $route() {
+    $route () {
       this.detactUrlChangeTab();
     },
     /**
      * @watches pendingTxHash (comes after send transaction)
      * if it gets set then go to staked status
      */
-    pendingTxHash(newVal) {
+    pendingTxHash (newVal) {
       if (newVal !== '') {
         this.activeTab = 1;
       }
@@ -280,14 +234,14 @@ export default {
     - updates handlerStaked with new address
     - if user is currently onStep within the stakeStepper component, it will run the reset function
     */
-    address(newVal) {
+    address (newVal) {
       this.handlerStaked.address = newVal;
       if (this.$refs.stakedStepper) {
         this.$refs.stakedStepper.reset();
       }
     }
   },
-  mounted() {
+  mounted () {
     /**
      * Check url and change tab on load
      */
@@ -307,7 +261,7 @@ export default {
     }
   },
   methods: {
-    detactUrlChangeTab() {
+    detactUrlChangeTab () {
       const currentRoute = this.$route.name;
       if (currentRoute === STAKED_ROUTE.STATUS.NAME) {
         this.activeTab = this.tabs[1].id;
@@ -315,20 +269,20 @@ export default {
         this.activeTab = this.tabs[0].id;
       }
     },
-    tabChanged(tab) {
+    tabChanged (tab) {
       this.activeTab = tab;
     },
     /**
      * Start provisioning
      */
-    startProvision(params) {
+    startProvision (params) {
       return this.handlerStaked.startProvision(params);
     },
     /**
      * Send transaction to confirm staking
      * and set amount value for staked status
      */
-    sendTransaction(amountETH) {
+    sendTransaction (amountETH) {
       this.trackDapp('StakedSendStake');
       this.handlerStaked.sendTransaction();
       this.amount = amountETH;
@@ -336,7 +290,7 @@ export default {
     /**
      * refetch validators
      */
-    refetchValidators() {
+    refetchValidators () {
       this.handlerStaked.getValidators();
     }
   }
@@ -347,6 +301,7 @@ export default {
 .staked-tab-inactive {
   background-color: rgba(0, 0, 0, 0.24) !important;
 }
+
 .staked-tab-active::before {
   opacity: 0 !important;
 }

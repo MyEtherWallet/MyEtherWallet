@@ -319,7 +319,9 @@ export default {
       headerImg: require('@/assets/images/icons/dapps/icon-dapp-ensmanager.svg'),
       header: {
         title: this.$t('ens.title'),
-        subtext: this.$t('ens.dapp-desc')
+        subtext: `${this.$t('ens.dapp-desc')}. `,
+        dappLink:
+          'https://help.myetherwallet.com/en/articles/5482841-register-and-manage-eth-domains-with-ens'
       },
       activeTab: 0,
       loadingCommit: false,
@@ -862,6 +864,7 @@ export default {
   .active-border {
     .subheader-container {
       background-color: var(--v-greyLight-base);
+
       div {
         max-width: 400px;
       }
