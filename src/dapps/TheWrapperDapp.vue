@@ -31,6 +31,7 @@
       v-else
       :dapp-name="bannerText.title"
       :dapp-text="bannerText.subtext"
+      :dapp-link="bannerText.dappLink"
       :dapp-img="dappImg"
     />
 
@@ -292,12 +293,14 @@ export default {
     display: none !important;
   }
 }
+
 .the-wrapper-dapp {
   .hide-default-tab-header {
     .v-tabs {
       display: none;
     }
   }
+
   .menu-tab-text {
     text-transform: none !important;
   }
