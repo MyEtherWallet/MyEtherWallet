@@ -1,6 +1,13 @@
 <template>
-  <the-wrapper-dapp :is-new-header="true" :dapp-img="headerImg" :banner-text="header" :tab-items="tabs"
-    :active-tab="activeTab" :valid-networks="validNetworks" top-strip>
+  <the-wrapper-dapp
+    :is-new-header="true"
+    :dapp-img="headerImg"
+    :banner-text="header"
+    :tab-items="tabs"
+    :active-tab="activeTab"
+    :valid-networks="validNetworks"
+    top-strip
+  >
   </the-wrapper-dapp>
 </template>
 
@@ -12,7 +19,7 @@ export default {
   components: {
     TheWrapperDapp: () => import('@/dapps/TheWrapperDapp.vue')
   },
-  data () {
+  data() {
     return {
       header: {
         title: 'ETH Staking Powered By Coinbase',
@@ -26,7 +33,7 @@ export default {
     };
   },
   computed: {
-    tabs () {
+    tabs() {
       return [
         {
           name: 'Stake',
