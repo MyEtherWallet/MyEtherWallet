@@ -20,7 +20,7 @@
         <mew-select
           v-model="selectedFiat"
           style="max-width: 135px; margin-top: -30px"
-          :items="fiatCurrencyItems"
+          :items="buyFiats"
           is-custom
           class="selectedFiat no-left-border"
         />
@@ -89,7 +89,7 @@
     <!-- ========================================================================= -->
     <buy-sell-token-select
       :open="openTokenSelect"
-      :currency-items="tokens"
+      :networks="buyNetworks"
       :selected-currency="selectedCurrency"
       :set-currency="setCurrency"
       @close="openTokenSelect = false"
@@ -99,7 +99,7 @@
 
 <script>
 import MultiCoinValidator from 'multicoin-address-validator';
-import { isEmpty, cloneDeep, isEqual } from 'lodash';
+import { isEmpty, cloneDeep, isEqual, min } from 'lodash';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import Web3 from 'web3';
@@ -144,96 +144,18 @@ export default {
     supportedBuy: {
       type: Boolean,
       default: false
-    }
-  },
-  apollo: {
-    getCoinGeckoTokenMarketDataByIds: {
-      query: getCoinGeckoTokenMarketDataByIds,
-      variables() {
-        return {
-          ids: coingeckoContracts[this.network.type.name]
-        };
-      },
-      skip() {
-        return !this.supportedBuy;
-      },
-      result({ data }) {
-        if (data) {
-          this.tokens = [];
-          const { getCoinGeckoTokenMarketDataByIds } = data;
-          const parsedLoc = getCoinGeckoTokenMarketDataByIds.map(token => {
-            return {
-              name: this.names[token.id],
-              symbol: this.symbols[token.id],
-              subtext: token.symbol.toUpperCase(),
-              value: token.symbol.toUpperCase(),
-              img: `https://img.mewapi.io/?image=${token.image}`,
-              market_cap: token.market_cap,
-              market_capf: formatIntegerValue(token.market_cap).value,
-              price_change_percentage_24h: token.price_change_percentage_24h,
-              price_change_percentage_24hf: formatPercentageValue(
-                token.price_change_percentage_24h
-              ).value,
-              price: token.current_price,
-              pricef: formatFiatValue(token.current_price).value
-            };
-          });
-          const tokensListWPrice =
-            this.currencyRates.length > 0
-              ? parsedLoc.map(token => {
-                  const priceRate = this.currencyRates.find(rate => {
-                    return rate.crypto_currency === token.symbol;
-                  });
-                  const actualPrice = priceRate?.quotes.find(quote => {
-                    return quote.fiat_currency === this.selectedFiatName;
-                  });
-                  token.price = formatFiatValue(
-                    actualPrice?.price || '0',
-                    this.currencyConfig
-                  ).value;
-                  token.value = token.symbol;
-                  return token;
-                })
-              : parsedLoc;
-          this.tokens = tokensListWPrice ? [...tokensListWPrice] : [];
-        }
-      }
+    },
+    buyNetworks: {
+      type: Array,
+      default: () => []
+    },
+    buyFiats: {
+      type: Array,
+      default: () => []
     }
   },
   data() {
     return {
-      symbols: {
-        ethereum: 'ETH',
-        dai: 'DAI',
-        tether: 'USDT',
-        'usd-coin': 'USDC',
-        'paypal-usd': 'PYUSD',
-        'true-usd': 'TUSD',
-        'first-digital-usd': 'FDUSD-SC',
-        'binance-bridged-usdc-bnb-smart-chain': 'USDC-SC',
-        'binance-bridged-usdt-bnb-smart-chain': 'USDT-SC',
-        'matic-network': 'POL',
-        'bridged-usdc-polygon-pos-bridge': 'USDC-POL',
-        'polygon-bridged-usdt-polygon': 'USDT-POL',
-        'arbitrum-bridged-usdt-arbitrum': 'USDT-ARBITRUM',
-        'bridged-usdt': 'USDT-OPTIMISM'
-      },
-      names: {
-        ethereum: 'Ethereum',
-        dai: 'Dai Stablecoin',
-        tether: 'Tether',
-        'usd-coin': 'USD Coin',
-        'paypal-usd': 'Paypal USD',
-        'true-usd': 'True USD',
-        'first-digital-usd': 'First Digital USD',
-        'binance-bridged-usdc-bnb-smart-chain': 'USD Coin',
-        'binance-bridged-usdt-bnb-smart-chain': 'Tether',
-        'matic-network': 'POL',
-        'bridged-usdc-polygon-pos-bridge': 'USD Coin',
-        'polygon-bridged-usdt-polygon': 'Tether',
-        'arbitrum-bridged-usdt-arbitrum': 'Tether',
-        'bridged-usdt': 'Tether'
-      },
       openTokenSelect: false,
       selectedCurrency: this.defaultCurrency,
       loading: true,
@@ -241,7 +163,11 @@ export default {
         name: 'USD',
         value: 'USD',
         // eslint-disable-next-line
-        img: require(`@/assets/images/currencies/USD.svg`)
+        img: require(`@/assets/images/currencies/USD.svg`),
+        limits: {
+          min: 50,
+          max: 20000
+        }
       },
       fetchedData: {},
       currencyRates: [],
@@ -622,7 +548,6 @@ export default {
     },
     network: {
       handler: function () {
-        this.tokens = [];
         this.selectedCurrency = {};
         this.selectedCurrency = this.defaultCurrency;
         this.$apollo.queries.getCoinGeckoTokenMarketDataByIds.refetch({

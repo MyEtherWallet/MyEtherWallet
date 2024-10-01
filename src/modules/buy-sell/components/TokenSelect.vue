@@ -10,7 +10,7 @@
       <div class="px-8 mt-8">
         <mew-select
           v-model="selectedNetwork"
-          :items="fetchedNetworks"
+          :items="networks"
           filter-placeholder="Select Network"
           label="Network"
           class="mt-1"
@@ -69,7 +69,7 @@ export default {
   name: 'BuySellTokenSelect',
   mixins: [handlerAnalytics],
   props: {
-    currencyItems: {
+    networks: {
       type: Array,
       default: () => []
     },
@@ -125,24 +125,34 @@ export default {
     }
   },
   watch: {
-    currencyItems: {
-      handler(val) {
-        this.currencyCopy = val;
-      },
-      immediate: true,
-      deep: true
-    },
+    // networks: {
+    //   handler(val) {
+    //     console.log(val);
+    //     const network = val.find(network => {
+    //       if (network.chain === this.selectedNetwork.type.name) return network;
+    //     });
+    //     console.log(network);
+    //     this.currencyCopy = network.assets;
+    //   },
+    //   immediate: true,
+    //   deep: true
+    // },
     selectedNetwork(newVal, oldVal) {
       // actual check whether the value was changed or just initially set
       if (newVal && !isEmpty(newVal) && oldVal && !isEmpty(oldVal)) {
         this.setNewNetwork(newVal);
+        const network = newVal.find(network => {
+          if (network.chain === this.selectedNetwork.type.name) return network;
+        });
+        console.log(network);
+        this.currencyCopy = network.assets;
       }
     },
     open(val) {
       this.searchValue = '';
       if (val) {
-        const currNetwork = this.fetchedNetworks.find(network => {
-          if (network.value === this.network.type.name) return network;
+        const currNetwork = this.networks.find(network => {
+          if (network.name === this.network.type.name) return network;
         });
         this.selectedNetwork = currNetwork;
       }

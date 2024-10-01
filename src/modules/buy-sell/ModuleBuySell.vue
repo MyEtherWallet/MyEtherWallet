@@ -25,6 +25,8 @@
               :order-handler="orderHandler"
               :default-currency="defaultCurrency"
               :supported-buy="supportedNetwork"
+              :buy-networks="buyNetworks"
+              :buy-fiats="buyFiats"
               @selectedCurrency="setSelectedCurrency"
               @openProviders="openProviders"
               @selectedFiat="setSelectedFiat"
@@ -59,7 +61,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState, mapActions } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 import { isEmpty } from 'lodash';
 
 import { ETH, OP, ARB } from '@/utils/networks/types';
@@ -92,11 +94,14 @@ export default {
       selectedFiat: {},
       step: 0,
       toAddress: '',
-      networksWithTokens: []
+      buyNetworks: [],
+      sellNetworks: [],
+      buyFiats: [],
+      sellFiats: []
     };
   },
   computed: {
-    ...mapState('wallet', ['address', 'instance']),
+    ...mapState('wallet', ['address']),
     ...mapGetters('wallet', ['tokensList']),
     ...mapGetters('global', ['network']),
     ...mapGetters('external', ['contractToToken', 'getCoinGeckoTokenById']),
@@ -143,10 +148,10 @@ export default {
       this.isOpen = newVal;
       if (newVal) {
         this.orderHandler = new handler();
+        this.fetchNetworks();
       }
       this.selectedCurrency = {};
       this.selectedCurrency = this.defaultCurrency;
-      this.fetchNetworks();
     },
     address() {
       this.selectedCurrency = this.defaultCurrency;
@@ -154,16 +159,14 @@ export default {
     network() {
       this.selectedCurrency = {};
       this.selectedCurrency = this.defaultCurrency;
-      this.setTokens();
     }
   },
   methods: {
-    ...mapActions('external', ['setNetworkTokens']),
     async fetchNetworks() {
       const data = await fetch('https://qa.mewwallet.dev/v5/purchase/info');
       const response = await data.json();
-      const { assets } = response;
-      const networks = assets
+      const { assets, providers } = response;
+      const buyNetworks = assets
         .filter(
           asset =>
             asset.chain === ETH.name ||
@@ -182,7 +185,7 @@ export default {
           return chain;
         });
 
-      const sellNetworks = networks
+      const sellNetworks = buyNetworks
         .filter(network => network.chain === 'ETH')
         .map(network => {
           const filteredTokens = network.assets.filter(asset =>
@@ -190,23 +193,31 @@ export default {
           );
           return Object.assign({}, network, { assets: filteredTokens });
         });
-      console.log(sellNetworks);
+      const buyFiats = [];
+      const sellFiats = providers.find(p => p.provider === 'MOONPAY').fiats;
+      providers.forEach(provider => {
+        provider.fiats.forEach(fiat => {
+          if (!buyFiats.find(f => f.fiat_currency === fiat)) {
+            buyFiats.push({
+              name: fiat.fiat_currency,
+              value: fiat.fiat_currency,
+              img: require(`@/assets/images/fiat/${fiat.fiat_currency}.svg`),
+              limits: fiat.limits
+            });
+          }
+        });
+      });
+
+      this.buyNetworks = buyNetworks;
+      this.sellNetworks = sellNetworks;
+      this.buyFiats = buyFiats;
+      this.sellFiats = sellFiats;
     },
     onTab(val) {
       this.trackBuySell(val === 0 ? BUY_SELL.BUY_TAB : BUY_SELL.SELL_TAB);
       this.selectedCurrency = {};
       this.selectedCurrency = this.defaultCurrency;
       this.activeTab = val;
-    },
-    async setTokens() {
-      if (!this.inWallet) {
-        const tokenMap = new Map();
-        const tokens = await this.network.type.tokens;
-        tokens.forEach(token => {
-          tokenMap.set(token.address.toLowerCase(), token);
-        });
-        this.setNetworkTokens(tokenMap);
-      }
     },
     close() {
       this.activeTab = 0;
