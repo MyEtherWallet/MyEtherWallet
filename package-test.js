@@ -96,7 +96,9 @@ const EXCEPTIONS = [
   '@sentry/browser', // major update
   '@sentry/vue', // major update
   'qrcode-with-logos', // fix after release
-  '@ensdomains/ens-contracts'
+  '@ensdomains/ens-contracts',
+  '@shapeshiftoss/hdwallet-core',
+  '@shapeshiftoss/hdwallet-keepkey-webusb'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
