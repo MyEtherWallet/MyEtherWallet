@@ -75,7 +75,7 @@ export default {
     showIsAdBanner() {
       const testTime = localStore.get('mew-test-date') || '2024-10-03';
       const startDate = new Date(testTime);
-      const endDate = new Date('2024-12-29');
+      const endDate = new Date('2024-12-12');
       const isBetween = moment(new Date(testTime)).isBetween(
         startDate,
         endDate,
@@ -99,27 +99,27 @@ export default {
         case 4:
           return require('@/assets/images/ad/Coinbase1.png');
         case 5:
-          return require('@/assets/images/ad/P2P1.png');
-        case 6:
           return require('@/assets/images/ad/Topper2.png');
-        case 7:
+        case 6:
           return require('@/assets/images/ad/CoinbaseOnramp2.png');
-        case 8:
+        case 7:
           return require('@/assets/images/ad/MoonPay2.png');
-        case 9:
+        case 8:
           return require('@/assets/images/ad/Simplex2.png');
-        case 10:
+        case 9:
           return require('@/assets/images/ad/Coinbase2.png');
-        case 11:
-          return require('@/assets/images/ad/P2P2.png');
+
         default:
           return require('@/assets/images/ad/Topper1.png');
       }
     },
     adLink() {
-      return this.adBanner.includes('Enkr')
-        ? 'https://www.enkrypt.com'
-        : 'https://download.mewwallet.com/?source=mew_web_create';
+      return this.adBanner.includes('Topper') ||
+        this.adBanner.includes('CoinbaseOnramp') ||
+        this.adBanner.includes('MoonPay') ||
+        this.adBanner.includes('Simplex')
+        ? 'https://ccswap.myetherwallet.com/'
+        : 'https://www.myetherwallet.com/wallet/stake/ ';
     }
   },
   methods: {
