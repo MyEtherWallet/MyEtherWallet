@@ -121,23 +121,14 @@
                 @close="openTokenSelect = false"
               />
             </div>
-            <!-- <buy-eth-component
-              :order-handler="orderHandler"
-              :default-currency="defaultCurrency"
-              :supported-buy="supportedNetwork"
-              :buy-networks="buyNetworks"
-              :buy-fiats="buyFiats"
-              @selectedCurrency="setSelectedCurrency"
-              @openProviders="openProviders"
-              @selectedFiat="setSelectedFiat"
-              @success="buySuccess"
-            /> -->
           </template>
           <template v-if="sellSupported" #tabContent2>
             <sell-eth-component
-              :order-handler="orderHandler"
               :tab="activeTab"
               :default-currency="defaultCurrency"
+              :sell-networks="sellNetworks"
+              :sell-fiats="sellFiats"
+              :close="close"
               @selectedCurrency="setSelectedCurrency"
             />
           </template>
@@ -249,7 +240,6 @@ import { ETH, OP, ARB, POL } from '@/utils/networks/types';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 
 import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
-// import handler from './handlers/handlerOrder';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { BUY_SELL } from '@/modules/analytics-opt-in/handlers/configs/events';
 import { currencySymbols } from './components/tokenList';
@@ -309,7 +299,8 @@ export default {
           max: 20000
         }
       },
-      openTokenSelect: false
+      openTokenSelect: false,
+      isFetching: false
     };
   },
   computed: {
@@ -558,17 +549,19 @@ export default {
     },
     async fetchQuotes() {
       this.loading = true;
-      if (!this.isOpen) return;
+      if (!this.isOpen || this.isFetching) return;
       this.buyQuote = [];
       const id = sha3(this.address)?.substring(0, 42);
       const network =
         this.network.type.name === 'Polygon' ? 'POL' : this.network.type.name;
+      this.isFetching = true; // prevent multiple requests
       const data = await fetch(
         `https://qa.mewwallet.dev/v5/purchase/buy?id=${id}&address=${this.address}&fiatCurrency=${this.selectedFiat.name}&amount=${this.amount}&cryptoCurrency=${this.selectedCurrency.symbol}&chain=${network}&iso=US`
       );
       const response = await data.json();
       this.buyQuote = response;
       this.loading = false;
+      this.isFetching = false;
     },
     async fetchNetworks() {
       const data = await fetch('https://qa.mewwallet.dev/v5/purchase/info');
@@ -661,17 +654,6 @@ export default {
       this.$emit('close', false);
       this.trackBuySell(BUY_SELL.BUY_SELL_CLOSED);
     },
-    // setSelectedCurrency(e) {
-    //   if (this.selectedCurrency.symbol !== e.symbol) {
-    //     const event =
-    //       this.activeTab === 0 ? BUY_SELL.BUY_INPUT : BUY_SELL.SELL_INPUT;
-    //     this.trackBuySell(event, {
-    //       old: this.selectedCurrency.symbol,
-    //       new: e.symbol
-    //     });
-    //   }
-    //   this.selectedCurrency = e;
-    // },
     openProviders(val) {
       this.step = val;
     },

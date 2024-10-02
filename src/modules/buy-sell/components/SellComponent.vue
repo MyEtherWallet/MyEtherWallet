@@ -93,7 +93,6 @@
       btn-size="xlarge"
       has-full-width
       :disabled="disableSell"
-      :is-valid-address-func="isValidToAddress"
       @click.native="sell"
     />
 
@@ -102,7 +101,7 @@
     <!-- ========================================================================= -->
     <buy-sell-token-select
       :open="openTokenSelect"
-      :currency-items="preselectedCurrencies"
+      :networks="sellNetworks"
       :selected-currency="selectedCurrency"
       :set-currency="setCurrency"
       is-sell
@@ -112,7 +111,7 @@
 </template>
 
 <script>
-import MultiCoinValidator from 'multicoin-address-validator';
+import { sha3 } from 'web3-utils';
 import { mapActions, mapGetters, mapState } from 'vuex';
 import { isEmpty, debounce, isNumber, isEqual } from 'lodash';
 import BigNumber from 'bignumber.js';
@@ -123,12 +122,12 @@ import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import handlerSend from '@/modules/send/handlers/handlerSend.js';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common.js';
 import abi from '@/modules/balance/handlers/abiERC20.js';
-import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
+// import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 import { toBase } from '@/core/helpers/unit';
-import { sellContracts } from './tokenList';
+// import { sellContracts } from './tokenList';
 import handlerWallet from '@/core/mixins/handlerWallet.mixin';
 import BuySellTokenSelect from '@/modules/buy-sell/components/TokenSelect.vue';
-import { getCurrency } from '@/modules/settings/components/currencyList';
+// import { getCurrency } from '@/modules/settings/components/currencyList';
 import { ETH, BSC, POL } from '@/utils/networks/types';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { BUY_SELL } from '@/modules/analytics-opt-in/handlers/configs/events';
@@ -150,6 +149,14 @@ export default {
     defaultCurrency: {
       type: Object,
       default: () => {}
+    },
+    sellFiats: {
+      type: Array,
+      default: () => []
+    },
+    sellNetworks: {
+      type: Array,
+      default: () => []
     }
   },
   data() {
@@ -173,13 +180,12 @@ export default {
       estimatingFees: true,
       maxBalance: '0',
       selectedBalance: '0',
-      toAddress: '',
-      validToAddress: false,
-      currencyRates: [],
-      names: {
-        ETH: 'Ethereum',
-        USDC: 'USD Coin'
-      }
+      toAddress: ''
+      // currencyRates: [],
+      // names: {
+      //   ETH: 'Ethereum',
+      //   USDC: 'USD Coin'
+      // }
     };
   },
   computed: {
@@ -189,10 +195,7 @@ export default {
     ...mapGetters('global', ['isEthNetwork', 'network', 'gasPriceByType']),
     ...mapGetters('external', ['contractToToken']),
     fiatCurrencyItems() {
-      const arrItems = this.hasData
-        ? this.fetchedData.fiat_currencies.filter(item => item !== 'RUB')
-        : ['USD'];
-      return getCurrency(arrItems);
+      return this.sellFiats;
     },
     persistentHintMessage() {
       return this.hasPersistentHint
@@ -210,37 +213,37 @@ export default {
           }
         : {};
     },
-    currencyConfig() {
-      const fiat = this.selectedFiat.value;
-      const rate = this.currencyRates[fiat];
-      const currency = fiat;
-      return { rate, currency };
-    },
-    preselectedCurrencies() {
-      const locArr = sellContracts.reduce((arr, item) => {
-        const inList = this.tokensList.find(t => {
-          if (t.contract?.toLowerCase() === item?.toLowerCase()) return t;
-        });
-        if (inList) {
-          inList.price = formatFiatValue(inList ? inList.price : '0').value;
-          inList.name = this.names[inList.symbol];
-          arr.push(inList);
-          return arr;
-        }
+    // currencyConfig() {
+    //   const fiat = this.selectedFiat.value;
+    //   const rate = this.currencyRates[fiat];
+    //   const currency = fiat;
+    //   return { rate, currency };
+    // },
+    // preselectedCurrencies() {
+    //   const locArr = sellContracts.reduce((arr, item) => {
+    //     const inList = this.tokensList.find(t => {
+    //       if (t.contract?.toLowerCase() === item?.toLowerCase()) return t;
+    //     });
+    //     if (inList) {
+    //       inList.price = formatFiatValue(inList ? inList.price : '0').value;
+    //       inList.name = this.names[inList.symbol];
+    //       arr.push(inList);
+    //       return arr;
+    //     }
 
-        const token = this.contractToToken(item);
-        if (token) {
-          token.name = this.names[token.symbol];
-          token.price = formatFiatValue(
-            token ? token.price : '0',
-            this.currencyConfig
-          ).value;
-          arr.push(token);
-        }
-        return arr;
-      }, []);
-      return locArr;
-    },
+    //     const token = this.contractToToken(item);
+    //     if (token) {
+    //       token.name = this.names[token.symbol];
+    //       token.price = formatFiatValue(
+    //         token ? token.price : '0',
+    //         this.currencyConfig
+    //       ).value;
+    //       arr.push(token);
+    //     }
+    //     return arr;
+    //   }, []);
+    //   return locArr;
+    // },
     supportedCurrency() {
       return ['ETH', 'USDT', 'USDC', 'POL', 'BNB'];
     },
@@ -258,8 +261,7 @@ export default {
         this.amount === '' ||
         BigNumber(this.amount).eq(0) ||
         this.loading ||
-        this.errorMessages !== '' ||
-        !this.validToAddress
+        this.errorMessages !== ''
       );
     },
     min() {
@@ -305,7 +307,7 @@ export default {
         return 'Please switch your network to the Ethereum Mainnet on Metamask.';
       }
 
-      if (BigNumber(this.selectedBalance).eq(0) && this.validToAddress) {
+      if (BigNumber(this.selectedBalance).eq(0)) {
         return `Address provided has no ${this.selectedCurrency.symbol}`;
       }
 
@@ -394,9 +396,9 @@ export default {
         return false;
       }
     },
-    hasData() {
-      return !isEmpty(this.fetchedData);
-    },
+    // hasData() {
+    //   return !isEmpty(this.fetchedData);
+    // },
     cryptoAmount() {
       return BigNumber(this.amount).times(this.priceOb.price).toString();
     },
@@ -479,17 +481,7 @@ export default {
   },
   methods: {
     ...mapActions('external', ['setCoinGeckoTokens']),
-    setAddress(newVal, isValid, data) {
-      if (data.type === 'RESOLVED' && !data.value.includes('.'))
-        this.toAddress = data.value;
-      else this.toAddress = newVal;
-      this.validToAddress = isValid;
-      if (!this.validToAddress) return;
-      this.sendHandler.setFrom(this.toAddress);
-      this.fetchSellInfo();
-    },
     getEthBalance() {
-      if (!this.validToAddress) return;
       const web3Instance = this.web3;
       web3Instance.eth.getBalance(this.address).then(res => {
         this.fetchingBalance = false;
@@ -497,7 +489,6 @@ export default {
       });
     },
     getTokenBalance() {
-      if (!this.validToAddress) return;
       const web3Instance = this.web3;
       const contract = new web3Instance.eth.Contract(
         abi,
@@ -574,26 +565,19 @@ export default {
       this.maxBalance = this.amount;
       this.hasPersistentHint = true;
     },
-    sell() {
+    async sell() {
       this.trackBuySell(BUY_SELL.SELL_WITH_MOONPAY);
-      this.orderHandler
-        .sell(this.name, this.amount, this.address)
-        .then(() => {
-          this.trackBuySell(BUY_SELL.SELL_WITH_MOONPAY_SUCCESS);
-          this.amount = '0';
-          this.close();
-          this.selectedCurrency = this.defaultCurrency;
-        })
-        .catch(err => {
-          this.trackBuySell(BUY_SELL.SELL_WITH_MOONPAY_FAILED);
-          Toast(err, {}, ERROR);
-          this.amount = '0';
-          this.close();
-          this.selectedCurrency = this.defaultCurrency;
-        });
+      const id = sha3(this.address)?.substring(0, 42);
+      const request = await fetch(
+        `https://qa.mewwallet.dev/v5/purchase/sell?id=${id}&address=${this.address}&fiatCurrency=${this.selectedFiat.name}&amount=${this.amount}&cryptoCurrency=${this.selectedCurrency.symbol}&chain=ETH&iso=US`
+      );
+      const response = await request.json();
+      const url = response[0].url;
+      window.open(url, '_blank');
+      this.close();
     },
     fetchSellInfo() {
-      if (this.validToAddress && this.selectedCurrency.contract) {
+      if (this.selectedCurrency.contract) {
         this.fetchingBalance = true;
         if (this.selectedCurrency.contract === MAIN_TOKEN_ADDRESS) {
           this.getEthBalance();
@@ -621,20 +605,22 @@ export default {
         this.fetchingBalance = false;
         this.selectedBalance = fromWei('0');
       }
-      this.orderHandler
-        .getSupportedFiatToSell(this.name)
-        .then(res => {
-          this.loading = false;
-          this.fetchedData = res[0];
-        })
-        .catch(e => {
-          this.loading = false;
-          Toast(e, {}, ERROR);
-        });
+      this.loading = false;
+
+      // this.orderHandler
+      //   .getSupportedFiatToSell(this.name)
+      //   .then(res => {
+      //     this.loading = false;
+      //     this.fetchedData = res[0];
+      //   })
+      //   .catch(e => {
+      //     this.loading = false;
+      //     Toast(e, {}, ERROR);
+      //   });
     },
-    isValidToAddress(address) {
-      return MultiCoinValidator.validate(address, this.selectedCurrency.symbol);
-    },
+    // isValidToAddress(address) {
+    //   return MultiCoinValidator.validate(address, this.selectedCurrency.symbol);
+    // },
     preventCharE(e) {
       if (e.key === 'e') e.preventDefault();
     }
