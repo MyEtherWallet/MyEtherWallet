@@ -287,7 +287,18 @@ export default {
               value: value
             });
           } else {
-            this.isValidAddress = false;
+            try {
+              this.inputAddr = value;
+              const isAddValid = this.isValidAddressFunc(this.inputAddr);
+              if (isAddValid instanceof Promise) {
+                const validation = await isAddValid;
+                this.isValidAddress = validation;
+              } else {
+                this.isValidAddress = isAddValid;
+              }
+            } catch (e) {
+              this.isValidAddress = false;
+            }
             this.loadedAddressValidation = true;
             this.$emit('setAddress', value, this.isValidAddress, {
               type: inputType,
