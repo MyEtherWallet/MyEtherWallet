@@ -78,6 +78,7 @@
                     is-read-only
                     :value="!loading ? `${cryptoToFiat}` : 'Loading...'"
                     hide-clear-btn
+                    :error-messages="fetchError"
                     class="no-right-border"
                   />
                   <div
@@ -140,6 +141,7 @@
         :selected-currency="selectedCurrency"
         :buy-quote="buyQuote"
         :buy-provider="buyProvider"
+        :close-providers="() => (step = 1)"
       />
     </mew-popup>
   </div>
@@ -205,7 +207,8 @@ export default {
         }
       },
       openTokenSelect: false,
-      isFetching: false
+      isFetching: false,
+      fetchError: ''
     };
   },
   computed: {
@@ -244,7 +247,8 @@ export default {
       return (
         !this.loading &&
         this.amountErrorMessages === '' &&
-        this.network.type.canBuy
+        this.network.type.canBuy &&
+        this.fetchError === ''
       );
     },
     sellSupported() {
@@ -351,8 +355,9 @@ export default {
     }
   },
   methods: {
-    async fetchQuotes() {
+    async fetchQuotes(navigate = false) {
       this.loading = true;
+      this.fetchError = '';
       if (!this.isOpen || this.isFetching) return;
       this.buyQuote = [];
       const id = sha3(this.address)?.substring(0, 42);
@@ -363,9 +368,16 @@ export default {
         `https://qa.mewwallet.dev/v5/purchase/buy?id=${id}&address=${this.address}&fiatCurrency=${this.selectedFiat.name}&amount=${this.amount}&cryptoCurrency=${this.selectedCurrency.symbol}&chain=${network}&iso=US`
       );
       const response = await data.json();
-      this.buyQuote = response;
       this.loading = false;
       this.isFetching = false;
+      if (response.msg) {
+        this.fetchError = response.msg;
+        return;
+      }
+      this.buyQuote = response;
+      if (navigate) {
+        this.openProviders(1);
+      }
     },
     async fetchNetworks() {
       const data = await fetch('https://qa.mewwallet.dev/v5/purchase/info');
@@ -473,8 +485,7 @@ export default {
       this.step = val;
     },
     buy() {
-      this.fetchQuotes();
-      this.openProviders(1);
+      this.fetchQuotes(true);
       this.trackBuySell(BUY_SELL.BUY_NOW_BUTTON);
     },
     preventCharE(e) {
@@ -509,31 +520,8 @@ export default {
   width: 20px;
   height: 20px;
 }
-.section-block {
-  border-radius: 12px;
-  left: 0px;
-  top: 0px;
-  box-sizing: border-box;
-  border: 2px solid var(--v-greyMedium-base);
-  flex: none;
-  order: 0;
-  align-self: stretch;
-  flex-grow: 0;
-  margin: 8px 0px;
-  position: relative;
-}
-.section-block:hover {
-  cursor: pointer;
-  border: 2px solid #1eb19b;
-  background-color: #e5eaee;
-}
 .selected {
   border: 2px solid #1eb19b;
-}
-.provider-logo {
-  position: absolute;
-  top: 18px;
-  right: 20px;
 }
 .token-select-button {
   height: 62px;
@@ -547,17 +535,6 @@ export default {
   &:hover {
     border: 1px solid var(--v-greyPrimary-base);
   }
-}
-
-.best-rate {
-  background-color: #05c0a5 !important;
-  text-align: center;
-  font-size: small;
-  width: 64px;
-  border-radius: 4px;
-  top: -10px;
-  position: absolute;
-  color: white;
 }
 </style>
 <style lang="scss">

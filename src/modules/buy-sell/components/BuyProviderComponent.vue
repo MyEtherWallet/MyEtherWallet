@@ -2,7 +2,7 @@
   <div class="py-8 px-8 pt-3">
     <div
       class="d-flex align-center textDark--text mb-10 cursor--pointer"
-      @click="step = 0"
+      @click="closeProviders"
     >
       <v-icon color="textDark">mdi-arrow-left mr-4</v-icon>
       <div class="mew-heading-2">Select a provider to buy</div>
@@ -116,6 +116,10 @@ export default {
       default: () => ({})
     },
     buyProvider: {
+      type: Function,
+      default: () => {}
+    },
+    closeProviders: {
       type: Function,
       default: () => {}
     },
@@ -241,7 +245,7 @@ export default {
   left: 0px;
   top: 0px;
   box-sizing: border-box;
-  border: 1px solid var(--v-greyMedium-base);
+  border: 2px solid var(--v-greyMedium-base);
   flex: none;
   order: 0;
   align-self: stretch;
@@ -249,9 +253,25 @@ export default {
   margin: 8px 0px;
   position: relative;
 }
+.section-block:hover {
+  cursor: pointer;
+  border: 2px solid #1eb19b;
+  background-color: #e5eaee;
+}
 .provider-logo {
   position: absolute;
   top: 18px;
   right: 20px;
+}
+
+.best-rate {
+  background-color: #05c0a5 !important;
+  text-align: center;
+  font-size: small;
+  width: 64px;
+  border-radius: 4px;
+  top: -10px;
+  position: absolute;
+  color: white;
 }
 </style>
