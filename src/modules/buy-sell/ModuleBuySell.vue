@@ -606,7 +606,16 @@ export default {
           return Object.assign({}, network, { assets: filteredTokens });
         });
       const buyFiats = [];
-      const sellFiats = providers.find(p => p.provider === 'MOONPAY').fiats;
+      const sellFiats = providers
+        .find(p => p.provider === 'MOONPAY')
+        .fiats.map(item => {
+          return {
+            name: item.fiat_currency,
+            value: item.fiat_currency,
+            img: require(`@/assets/images/fiat/${item.fiat_currency}.svg`),
+            limits: item.limits
+          };
+        });
       providers.forEach(provider => {
         provider.fiats.forEach(fiat => {
           const stored = buyFiats.findIndex(f => f.name === fiat.fiat_currency);
@@ -747,6 +756,14 @@ export default {
 }
 </style>
 <style lang="scss">
+.selectedFiat {
+  .mew-token-container {
+    img {
+      width: 30px !important;
+      height: 30px !important;
+    }
+  }
+}
 .moonpay-buy-component {
   .v-input__slot {
     height: 62px !important;
