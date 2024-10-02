@@ -612,6 +612,7 @@ export default {
           return {
             name: item.fiat_currency,
             value: item.fiat_currency,
+            // eslint-disable-next-line
             img: require(`@/assets/images/fiat/${item.fiat_currency}.svg`),
             limits: item.limits
           };
@@ -623,6 +624,7 @@ export default {
             buyFiats.push({
               name: fiat.fiat_currency,
               value: fiat.fiat_currency,
+              // eslint-disable-next-line
               img: require(`@/assets/images/fiat/${fiat.fiat_currency}.svg`),
               limits: fiat.limits
             });
