@@ -4,19 +4,10 @@
       <div class="row">
         <div class="col-12">
           <div
-            :class="[
-              inAccessOrCreate ? 'fixed' : '',
-              'header__wrapper d-flex align-items-center justify-content-between js-header'
-            ]"
+            class="header__wrapper d-flex align-items-center justify-content-between js-header fixed"
           >
             <a href="/" class="header__logo">
-              <logo-component v-if="showDark" />
-              <img
-                v-else
-                src="@/assets/images/icons/logo-mew.png"
-                width="113px"
-                height="32px"
-              />
+              <logo-component />
             </a>
             <div class="header__menu">
               <a
@@ -166,7 +157,6 @@
 <script>
 import LogoComponent from '@/assets/images/icons/logo-component.vue';
 import OpenMenu from '@/assets/images/icons/open-menu.vue';
-import ScrollMagic from 'scrollmagic';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
 
 export default {
@@ -176,9 +166,7 @@ export default {
     OpenMenu
   },
   data() {
-    return {
-      topOffset: 12
-    };
+    return {};
   },
   computed: {
     showAccess() {
@@ -186,46 +174,8 @@ export default {
         ? 'visibility: hidden'
         : '';
     },
-    offset() {
-      return this.$vuetify.breakpoint.mdAndDown ? 24 : 12;
-    },
-    showDark() {
-      return this.topOffset !== 12 || this.inAccessOrCreate;
-    },
-    inAccessOrCreate() {
-      return (
-        this.$route.path.includes('/access') ||
-        this.$route.path.includes('/buy-hardware') ||
-        this.$route.path.includes('/create')
-      );
-    }
-  },
-  async mounted() {
-    if (!this.inAccessOrCreate) {
-      const controller = new ScrollMagic.Controller();
-      this.topOffset = this.inAccessOrCreate ? 0 : this.offset;
-      new ScrollMagic.Scene({
-        triggerElement: '.js-body',
-        duration: 52,
-        triggerHook: 'onLeave'
-      })
-        .on('progress', e => {
-          this.topOffset = Math.max(
-            0,
-            this.offset - this.offset * e.progress.toFixed(3)
-          );
-        })
-        .addTo(controller);
-
-      new ScrollMagic.Scene({
-        triggerElement: '.js-body',
-        offset: this.offset,
-        triggerHook: 'onLeave'
-      })
-        .setClassToggle('.js-header', 'fixed')
-        .addTo(controller);
-    } else {
-      this.topOffset = 0;
+    topOffset() {
+      return this.$vuetify.breakpoint.mdAndDown ? 0 : 12;
     }
   },
   methods: {
@@ -250,6 +200,7 @@ export default {
   .container {
     padding-top: 0 !important;
   }
+
   .col-12 {
     .screen-mobile({
       padding-top: 0 !important;
@@ -257,16 +208,16 @@ export default {
   }
 
   .screen-tablet-header({
-    height: 80px;
-  });
+  height: 80px;
+});
 
   &__wrapper {
     height: 75px;
     position: relative;
 
     .screen-tablet-header({
-      height: 80px;
-    });
+    height: 80px;
+  });
 
     &::after {
       content: '';
@@ -285,12 +236,12 @@ export default {
       .transition(@property: opacity, @time: 0.3s);
 
       .screen-tablet-header({
-        width: calc(~'100% + 40px');
-        height: 72px;
-        left: -20px;
-        top: 0;
-        border-radius: 0;
-      });
+    width: calc(~'100% + 40px');
+    height: 72px;
+    left: -20px;
+    top: 0;
+    border-radius: 0;
+  });
     }
 
     &.fixed {
@@ -306,8 +257,8 @@ export default {
 
   &__menu {
     .screen-tablet-header({
-      display: none;
-    });
+    display: none;
+  });
 
     &-link {
       font-weight: 500;
@@ -322,9 +273,9 @@ export default {
       cursor: pointer;
 
       .screen-desktop-min({
-        font-size: 16px;
-        margin-left: 20px; 
-      });
+    font-size: 16px;
+    margin-left: 20px;
+  });
 
       &:first-child {
         margin-left: 0;
@@ -405,8 +356,8 @@ export default {
         }
 
         .screen-desktop-min({
-          font-size: 16px;
-        });
+      font-size: 16px;
+    });
       }
     }
 
@@ -417,9 +368,9 @@ export default {
       width: 584px;
 
       .screen-desktop-large({
-        width: 290px;
-        display: block;
-      });
+    width: 290px;
+    display: block;
+  });
 
       &-item {
         width: calc(~'50% - 4px');
@@ -432,8 +383,8 @@ export default {
         border-radius: 16px;
 
         .screen-desktop-large({
-          width: calc(~'100%');
-        });
+    width: calc(~'100%');
+  });
 
         &:hover {
           background-color: rgba(0, 0, 0, 0.05);
@@ -461,8 +412,8 @@ export default {
           margin: 0 0 4px 0;
 
           .screen-desktop-min({
-            font-size: 16px;
-          });
+    font-size: 16px;
+  });
         }
 
         p {
@@ -496,12 +447,12 @@ export default {
     }
 
     .screen-tablet-header({
-      display: none;
-    });
+    display: none;
+  });
 
     .screen-desktop-min({
-      font-size: 16px;
-    });
+  font-size: 16px;
+});
   }
 
   &__mobile-menu {
@@ -510,8 +461,8 @@ export default {
       text-decoration: none;
 
       .screen-tablet-header({
-        display: block;
-      });
+      display: block;
+    });
     }
   }
 }

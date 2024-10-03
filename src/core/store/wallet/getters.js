@@ -34,6 +34,7 @@ const tokensList = function (state, getters, rootState, rootGetters) {
             }) !== undefined;
         }
         item.isHidden = isHidden;
+        item.img = item.img || rootGetters['global/network'].type.icon;
         return item;
       })
     : [];

@@ -23,7 +23,9 @@ export default {
     return {
       header: {
         title: 'ETH Staking Powered By Coinbase',
-        subtext: 'Stake any amount of ETH and begin earning rewards.'
+        subtext: 'Stake any amount of ETH and begin earning rewards. ',
+        dappLink:
+          'https://help.myetherwallet.com/en/articles/8843926-stake-eth-with-coinbase-in-mew-portfolio'
       },
       activeTab: 0,
       headerImg: require('@/assets/images/icons/dapps/icon-dapp-coinbase.svg'),

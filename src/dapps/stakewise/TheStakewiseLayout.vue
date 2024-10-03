@@ -31,7 +31,9 @@ export default {
     return {
       header: {
         title: 'Stakewise',
-        subtext: 'Unstake only'
+        subtext: 'Unstake only. ',
+        dappLink:
+          'https://help.myetherwallet.com/en/articles/6136823-stake-your-eth-using-stakewise'
       },
       activeTab: 0,
       headerImg: require('@/assets/images/icons/dapps/icon-dapp-stakewise.svg'),
