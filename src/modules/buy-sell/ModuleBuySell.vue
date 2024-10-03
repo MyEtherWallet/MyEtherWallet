@@ -141,7 +141,7 @@
         :selected-currency="selectedCurrency"
         :buy-quote="buyQuote"
         :buy-provider="buyProvider"
-        :close-providers="() => (step = 1)"
+        :close-providers="() => (step = 0)"
       />
     </mew-popup>
   </div>
@@ -343,6 +343,17 @@ export default {
         this.amount = '300';
         this.fetchNetworks();
       }
+      this.selectedFiat = {};
+      this.selectedFiat = {
+        name: 'USD',
+        value: 'USD',
+        // eslint-disable-next-line
+        img: require(`@/assets/images/currencies/USD.svg`),
+        limits: {
+          min: 50,
+          max: 20000
+        }
+      };
       this.selectedCurrency = {};
       this.selectedCurrency = this.defaultCurrency;
     },
@@ -396,6 +407,13 @@ export default {
             const cgToken =
               this.getCoinGeckoTokenById(asset.coingecko_id) || {};
             const token = this.contractToToken(asset.contract_address) || {};
+            if (
+              chain.chain === 'POL' &&
+              asset.contract_address === MAIN_TOKEN_ADDRESS
+            ) {
+              cgToken.symbol = 'POL';
+              cgToken.name = 'Polygon';
+            }
             return Object.assign({}, asset, token, cgToken);
           });
           chain.assets = assets;

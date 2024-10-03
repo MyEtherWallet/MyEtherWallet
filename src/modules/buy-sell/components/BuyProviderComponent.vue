@@ -26,27 +26,19 @@
               <span class="mew-heading-3 pl-1 mr-1">{{
                 provider.crypto_currency
               }}</span>
-              <v-tooltip location="bottom" min-width="200px">
-                <template #activator="{ props }">
-                  <v-icon
-                    v-bind="props"
-                    color="grey-lighten-1"
-                    size="x-small"
-                    class="cursor-pointer"
-                  >
-                    mdi-information
-                  </v-icon>
+              <mew-tooltip>
+                <template #contentSlot>
+                  <div class="elevated-box pa-3">
+                    {{ generateFeeLabel(provider) }}
+                    <br />
+                    <br />
+                    <br />
+                    {{ generateLimits(provider.provider) }}
+                    <br />
+                    {{ generateLimits(provider.provider, false) }}
+                  </div>
                 </template>
-                <div class="elevated-box pa-3">
-                  {{ generateFeeLabel(provider) }}
-                  <br />
-                  <br />
-                  <br />
-                  {{ generateLimits(provider.provider) }}
-                  <br />
-                  {{ generateLimits(provider.provider, false) }}
-                </div>
-              </v-tooltip>
+              </mew-tooltip>
             </div>
           </div>
           <div class="d-flex align-center justify-space-between mt-3">
