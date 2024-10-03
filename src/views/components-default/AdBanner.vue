@@ -5,7 +5,7 @@
         <div
           :class="[
             $vuetify.breakpoint.mdAndDown ? 'mew-subtitle' : 'mew-title',
-            'font-weight-regular white--text mb-11'
+            'font-weight-regular white--text mb-11 mt-16'
           ]"
         >
           Advertise with MEW
@@ -42,7 +42,9 @@
     </div>
     <div class="mobile-content d-block d-lg-none expandHeader pt-5">
       <v-container>
-        <div class="mew-title font-weight-regular white--text text-center">
+        <div
+          class="mew-title font-weight-regular white--text text-center mt-16"
+        >
           Advertise With MEW
         </div>
         <v-row no-gutters>

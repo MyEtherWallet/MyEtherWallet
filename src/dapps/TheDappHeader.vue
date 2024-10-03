@@ -55,6 +55,12 @@
         -->
         <p class="textMedium--text mb-0">
           {{ dappText }}
+          <span v-if="dappLink !== ''">
+            <a target="_blank" class="greenPrimary--text" :href="dappLink">{{
+              $t('common.learn-more')
+            }}</a
+            >{{
+          }}</span>
         </p>
       </v-col>
     </v-row>
@@ -77,6 +83,10 @@ export default {
     dappImg: {
       type: String,
       default: ''
+    },
+    dappLink: {
+      type: String,
+      default: ''
     }
   },
   data: () => ({
@@ -91,6 +101,7 @@ export default {
   width: 88px;
   height: 88px;
 }
+
 .router-link {
   display: inline-block;
 }
