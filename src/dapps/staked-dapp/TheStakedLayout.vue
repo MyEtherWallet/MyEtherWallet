@@ -168,8 +168,10 @@ export default {
       header: {
         title: 'Ethereum 2.0 staking',
         subtext:
-          'Stake on Ethereum 2.0 and earn continuous rewards for providing a public good to the community.',
-        subtextClass: 'textMedium--text'
+          'Stake on Ethereum 2.0 and earn continuous rewards for providing a public good to the community. ',
+        subtextClass: 'textMedium--text',
+        dappLink:
+          'https://help.myetherwallet.com/en/articles/5380731-eth-validator-staking-with-mew-portfolio'
       },
       activeTab: 0,
       handlerStaked: {},
@@ -347,6 +349,7 @@ export default {
 .staked-tab-inactive {
   background-color: rgba(0, 0, 0, 0.24) !important;
 }
+
 .staked-tab-active::before {
   opacity: 0 !important;
 }
