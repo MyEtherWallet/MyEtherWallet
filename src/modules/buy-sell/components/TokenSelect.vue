@@ -10,7 +10,7 @@
       <div class="px-8 mt-8">
         <mew-select
           v-model="selectedNetwork"
-          :items="fetchedNetworks"
+          :items="networks"
           filter-placeholder="Select Network"
           label="Network"
           class="mt-1"
@@ -26,7 +26,11 @@
           hide-details
         ></v-text-field>
 
-        <div v-if="searchedCurrencyItems.length > 0" class="mt-5">
+        <div
+          v-if="searchedCurrencyItems.length > 0"
+          class="mt-5"
+          style="height: 200px; overflow: scroll"
+        >
           <div v-for="(token, idx) in searchedCurrencyItems" :key="idx">
             <v-btn
               v-if="token.name"
@@ -64,12 +68,13 @@ import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import * as nodes from '@/utils/networks/nodes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { ETH } from '@/utils/networks/types';
+import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 
 export default {
   name: 'BuySellTokenSelect',
   mixins: [handlerAnalytics],
   props: {
-    currencyItems: {
+    networks: {
       type: Array,
       default: () => []
     },
@@ -125,24 +130,35 @@ export default {
     }
   },
   watch: {
-    currencyItems: {
-      handler(val) {
-        this.currencyCopy = val;
-      },
-      immediate: true,
-      deep: true
-    },
     selectedNetwork(newVal, oldVal) {
+      this.currencyCopy = [];
       // actual check whether the value was changed or just initially set
       if (newVal && !isEmpty(newVal) && oldVal && !isEmpty(oldVal)) {
-        this.setNewNetwork(newVal);
+        const newNode = Object.values(this.nodes).find(
+          item => item.type.name === newVal.name
+        );
+        this.setNewNetwork(newNode);
+        const network = this.networks.find(network => {
+          if (network.chain === newVal.name) return network;
+        });
+
+        this.currencyCopy = network ? network.assets : newVal.assets;
+        const mainToken = this.currencyCopy.find(
+          token => token.contract_address === MAIN_TOKEN_ADDRESS
+        );
+        if (
+          mainToken &&
+          this.selectedCurrency.contract_address !== mainToken.contract_address
+        ) {
+          this.setCurrency(mainToken);
+        }
       }
     },
     open(val) {
       this.searchValue = '';
       if (val) {
-        const currNetwork = this.fetchedNetworks.find(network => {
-          if (network.value === this.network.type.name) return network;
+        const currNetwork = this.networks.find(network => {
+          if (network.name === this.network.type.name) return network;
         });
         this.selectedNetwork = currNetwork;
       }
@@ -177,14 +193,9 @@ export default {
       });
     },
     setNewNetwork(network) {
-      if (network.value === this.network.type.name) return;
-      const found = Object.values(this.nodes).filter(item => {
-        if (item.type.name === network.value) {
-          return item;
-        }
-      });
+      if (network.type.name === this.network.type.name) return;
       this.setNetwork({
-        network: found[0],
+        network: network,
         walletType: this.instance?.identifier || ''
       })
         .then(() => {
@@ -201,7 +212,7 @@ export default {
           } else {
             this.setWeb3Instance();
           }
-          Toast(`Switched network to: ${network.name}`, {}, SUCCESS);
+          Toast(`Switched network to: ${network.type.name}`, {}, SUCCESS);
           this.$emit('newNetwork');
         })
         .catch(e => {

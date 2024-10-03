@@ -1,3 +1,10 @@
+### Release v6.9.13-hotfix.1
+
+### fix
+
+- fix rootstock checksum error [#4993](https://github.com/MyEtherWallet/MyEtherWallet/pull/4993)
+- fix polygon swap [#5007](https://github.com/MyEtherWallet/MyEtherWallet/pull/5007)
+
 ### Release v6.9.13
 
 ### devop
