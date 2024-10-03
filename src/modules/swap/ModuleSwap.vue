@@ -679,7 +679,32 @@ export default {
      */
     actualFromTokens() {
       if (this.isLoading) return [];
+      let validFromTokens = this.fromTokens.filter(item => {
+        if (
+          item.contract.toLowerCase() !==
+          this.toTokenType?.contract?.toLowerCase()
+        )
+          return item;
+      });
+      validFromTokens = this.formatTokenPrice(validFromTokens);
       const tradebleWalletTokens = this.formatTokensForSelect(this.tokensList);
+      const nonChainTokens = this.formatTokensForSelect(
+        validFromTokens.reduce((arr, item) => {
+          if (
+            item.hasOwnProperty('isEth') &&
+            !item.isEth &&
+            item.name &&
+            item.symbol &&
+            item.subtext &&
+            item.symbol !== this.network.type.currencyName
+          ) {
+            delete item['tokenBalance'];
+            delete item['totalBalance'];
+            arr.push(item);
+          }
+          return arr;
+        }, [])
+      );
       const returnableTokens = [
         {
           text: 'Select Token',
@@ -694,7 +719,11 @@ export default {
         {
           header: 'My Wallet'
         },
-        ...tradebleWalletTokens
+        ...tradebleWalletTokens,
+        {
+          header: 'Cross-Chain Tokens'
+        },
+        ...nonChainTokens
       ];
       return returnableTokens;
     },
@@ -1640,7 +1669,10 @@ export default {
     },
     isValidRefundAddress(address) {
       try {
-        return MultiCoinValidator.validate(address, this.fromTokenType.name);
+        if (MultiCoinValidator.validate(address, this.fromTokenType.name)) {
+          return true;
+        }
+        throw new Error('');
       } catch (e) {
         return this.swapper.isValidToAddress({
           provider: 'changelly',
