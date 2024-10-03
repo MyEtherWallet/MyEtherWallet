@@ -56,9 +56,12 @@
         <p class="textMedium--text mb-0">
           {{ dappText }}
           <span v-if="dappLink !== ''">
-            <a target="_blank" class="greenPrimary--text" :href="dappLink">{{
-              $t('common.learn-more')
-            }}</a
+            <a
+              target="_blank"
+              class="greenPrimary--text"
+              :href="dappLink"
+              @click="trackDappClick"
+              >{{ $t('common.learn-more') }}</a
             >{{
           }}</span>
         </p>
@@ -69,8 +72,10 @@
 
 <script>
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
+import handlerAnalyticsMixin from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 export default {
   name: 'TheDappHeader',
+  mixins: [handlerAnalyticsMixin],
   props: {
     dappName: {
       type: String,
@@ -91,7 +96,25 @@ export default {
   },
   data: () => ({
     ROUTE_DAPP_CENTER: ROUTES_WALLET.DAPPS
-  })
+  }),
+  methods: {
+    trackDappClick() {
+      const path = this.$route.path;
+      let name;
+      if (path.includes('eth-blocks')) {
+        name = 'EthBlocks';
+      } else if (path.includes('coinbase')) {
+        name = 'Coinbase';
+      } else if (path.includes('staked')) {
+        name = 'Staked';
+      } else if (path.includes('stakewise')) {
+        name = 'Stakewise';
+      } else if (path.includes('ens')) {
+        name = 'ENSManager';
+      }
+      this.trackDapp(`${name}HelpLink`);
+    }
+  }
 };
 </script>
 

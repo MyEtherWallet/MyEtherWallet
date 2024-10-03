@@ -569,7 +569,7 @@ export default {
       this.trackBuySell(BUY_SELL.SELL_WITH_MOONPAY);
       const id = sha3(this.address)?.substring(0, 42);
       const request = await fetch(
-        `https://qa.mewwallet.dev/v5/purchase/sell?id=${id}&address=${this.address}&fiatCurrency=${this.selectedFiat.name}&amount=${this.amount}&cryptoCurrency=${this.selectedCurrency.symbol}&chain=ETH&iso=US`
+        `https://mainnet.mewwallet.dev/v5/purchase/sell?id=${id}&address=${this.address}&fiatCurrency=${this.selectedFiat.name}&amount=${this.amount}&cryptoCurrency=${this.selectedCurrency.symbol}&chain=ETH&iso=US`
       );
       const response = await request.json();
       const url = response[0].url;
