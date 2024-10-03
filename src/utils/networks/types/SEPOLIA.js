@@ -21,7 +21,7 @@ export default {
     registrarType: 'permanent',
     supportedTld: HOLESKY,
     subgraphPath:
-      'https://api.studio.thegraph.com/proxy/49574/enssepolia/version/latest'
+      'https://api.studio.thegraph.com/query/49574/enssepolia/version/latest'
   },
   isTestNetwork: true,
   icon: network,
