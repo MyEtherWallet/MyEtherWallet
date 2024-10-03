@@ -47,7 +47,7 @@
       >
         <img :src="adBanner" width="100%" />
       </a>
-      <router-link v-else :to="adLink" target="_blank" @click="trackAdClick">
+      <router-link v-else :to="adLink" @click="trackAdClick">
         <img :src="adBanner" width="100%" />
       </router-link>
     </div>
@@ -83,7 +83,7 @@ export default {
     showIsAdBanner() {
       const testTime = localStorage.get('mew-test-date') || '2024-10-03';
       const startDate = new Date(testTime);
-      const endDate = new Date('2024-12-12');
+      const endDate = new Date('2024-12-16');
       const isBetween = moment(new Date(testTime)).isBetween(
         startDate,
         endDate,
@@ -94,29 +94,28 @@ export default {
     },
     adBanner() {
       const testTime = localStorage.get('mew-test-date') || '2024-10-03';
-      const week = moment(new Date(testTime)).week() % 41;
+      const week = moment(new Date(testTime)).week();
       switch (week) {
-        case 0:
+        case 41:
           return require('@/assets/images/ad/Topper1.png');
-        case 1:
+        case 42:
           return require('@/assets/images/ad/CoinbaseOnramp1.png');
-        case 2:
+        case 43:
           return require('@/assets/images/ad/MoonPay1.png');
-        case 3:
+        case 44:
           return require('@/assets/images/ad/Simplex1.png');
-        case 4:
+        case 45:
           return require('@/assets/images/ad/Coinbase1.png');
-        case 5:
+        case 46:
           return require('@/assets/images/ad/Topper2.png');
-        case 6:
+        case 47:
           return require('@/assets/images/ad/CoinbaseOnramp2.png');
-        case 7:
+        case 48:
           return require('@/assets/images/ad/MoonPay2.png');
-        case 8:
+        case 49:
           return require('@/assets/images/ad/Simplex2.png');
-        case 9:
+        case 50:
           return require('@/assets/images/ad/Coinbase2.png');
-
         default:
           return require('@/assets/images/ad/Topper1.png');
       }
