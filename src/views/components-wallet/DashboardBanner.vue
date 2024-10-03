@@ -39,9 +39,17 @@
       </div>
     </div>
     <div v-else class="pb-3">
-      <a :href="adLink" target="_blank" @click="trackAdClick">
+      <a
+        v-if="adLink.href"
+        :href="adLink.href"
+        target="_blank"
+        @click="trackAdClick"
+      >
         <img :src="adBanner" width="100%" />
       </a>
+      <router-link v-else :to="adLink" @click="trackAdClick">
+        <img :src="adBanner" width="100%" />
+      </router-link>
     </div>
   </div>
 </template>
@@ -50,7 +58,7 @@
 import moment from 'moment';
 import 'moment-timezone';
 import { mapState } from 'vuex';
-import localStore from 'store';
+import * as localStorage from 'store';
 
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
@@ -73,9 +81,9 @@ export default {
     ...mapState('wallet', ['identifier', 'isHardware']),
     ...mapState('external', ['selectedEIP6963Info']),
     showIsAdBanner() {
-      const testTime = localStore.get('mew-test-date') || '2024-10-03';
+      const testTime = localStorage.get('mew-test-date') || '2024-10-03';
       const startDate = new Date(testTime);
-      const endDate = new Date('2024-12-29');
+      const endDate = new Date('2024-12-16');
       const isBetween = moment(new Date(testTime)).isBetween(
         startDate,
         endDate,
@@ -85,41 +93,40 @@ export default {
       return isBetween;
     },
     adBanner() {
-      const testTime = localStore.get('mew-test-date') || '2024-10-03';
-      const week = moment(new Date(testTime)).week() % 41;
+      const testTime = localStorage.get('mew-test-date') || '2024-10-03';
+      const week = moment(new Date(testTime)).week();
       switch (week) {
-        case 0:
+        case 41:
           return require('@/assets/images/ad/Topper1.png');
-        case 1:
+        case 42:
           return require('@/assets/images/ad/CoinbaseOnramp1.png');
-        case 2:
+        case 43:
           return require('@/assets/images/ad/MoonPay1.png');
-        case 3:
+        case 44:
           return require('@/assets/images/ad/Simplex1.png');
-        case 4:
+        case 45:
           return require('@/assets/images/ad/Coinbase1.png');
-        case 5:
-          return require('@/assets/images/ad/P2P1.png');
-        case 6:
+        case 46:
           return require('@/assets/images/ad/Topper2.png');
-        case 7:
+        case 47:
           return require('@/assets/images/ad/CoinbaseOnramp2.png');
-        case 8:
+        case 48:
           return require('@/assets/images/ad/MoonPay2.png');
-        case 9:
+        case 49:
           return require('@/assets/images/ad/Simplex2.png');
-        case 10:
+        case 50:
           return require('@/assets/images/ad/Coinbase2.png');
-        case 11:
-          return require('@/assets/images/ad/P2P2.png');
         default:
           return require('@/assets/images/ad/Topper1.png');
       }
     },
     adLink() {
-      return this.adBanner.includes('Enkr')
-        ? 'https://www.enkrypt.com'
-        : 'https://download.mewwallet.com/?source=mew_web_create';
+      return this.adBanner.includes('Topper') ||
+        this.adBanner.includes('CoinbaseOnramp') ||
+        this.adBanner.includes('MoonPay') ||
+        this.adBanner.includes('Simplex')
+        ? { href: 'https://ccswap.myetherwallet.com/' }
+        : { name: ROUTES_WALLET.STAKE.NAME };
     }
   },
   methods: {
