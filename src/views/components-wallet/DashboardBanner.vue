@@ -39,9 +39,17 @@
       </div>
     </div>
     <div v-else class="pb-3">
-      <a :href="adLink" target="_blank" @click="trackAdClick">
+      <a
+        v-if="adLink.href"
+        :href="adLink.href"
+        target="_blank"
+        @click="trackAdClick"
+      >
         <img :src="adBanner" width="100%" />
       </a>
+      <router-link v-else :to="adLink" target="_blank" @click="trackAdClick">
+        <img :src="adBanner" width="100%" />
+      </router-link>
     </div>
   </div>
 </template>
@@ -50,7 +58,7 @@
 import moment from 'moment';
 import 'moment-timezone';
 import { mapState } from 'vuex';
-import localStore from 'store';
+import * as localStorage from 'store';
 
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
@@ -73,7 +81,7 @@ export default {
     ...mapState('wallet', ['identifier', 'isHardware']),
     ...mapState('external', ['selectedEIP6963Info']),
     showIsAdBanner() {
-      const testTime = localStore.get('mew-test-date') || '2024-10-03';
+      const testTime = localStorage.get('mew-test-date') || '2024-10-03';
       const startDate = new Date(testTime);
       const endDate = new Date('2024-12-12');
       const isBetween = moment(new Date(testTime)).isBetween(
@@ -85,7 +93,7 @@ export default {
       return isBetween;
     },
     adBanner() {
-      const testTime = localStore.get('mew-test-date') || '2024-10-03';
+      const testTime = localStorage.get('mew-test-date') || '2024-10-03';
       const week = moment(new Date(testTime)).week() % 41;
       switch (week) {
         case 0:
@@ -118,8 +126,8 @@ export default {
         this.adBanner.includes('CoinbaseOnramp') ||
         this.adBanner.includes('MoonPay') ||
         this.adBanner.includes('Simplex')
-        ? 'https://ccswap.myetherwallet.com/'
-        : 'https://www.myetherwallet.com/wallet/stake/ ';
+        ? { href: 'https://ccswap.myetherwallet.com/' }
+        : { name: ROUTES_WALLET.STAKE.NAME };
     }
   },
   methods: {
