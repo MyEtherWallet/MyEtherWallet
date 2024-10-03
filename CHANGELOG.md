@@ -1,9 +1,21 @@
+### feat
+
+* add new ads [#5010](https://github.com/MyEtherWallet/MyEtherWallet/pull/5010)
+* feat: add "learn more" Links to CoinbaseStaking, Staked, Stakewise, ENS, Eth Blocksdevop: make header white with layout padding changes in out of wallet
+  [#5012](https://github.com/MyEtherWallet/MyEtherWallet/pull/5012)
+* feat buy sell [#5013](https://github.com/MyEtherWallet/MyEtherWallet/pull/5013)
+
+### fix
+
+* fix my token images [#5011](https://github.com/MyEtherWallet/MyEtherWallet/pull/5011)
+* add cross chains to from [#5014](https://github.com/MyEtherWallet/MyEtherWallet/pull/5014)
+
 ### Release v6.9.13-hotfix.1
 
 ### fix
 
-- fix rootstock checksum error [#4993](https://github.com/MyEtherWallet/MyEtherWallet/pull/4993)
-- fix polygon swap [#5007](https://github.com/MyEtherWallet/MyEtherWallet/pull/5007)
+* fix rootstock checksum error [#4993](https://github.com/MyEtherWallet/MyEtherWallet/pull/4993)
+* fix polygon swap [#5007](https://github.com/MyEtherWallet/MyEtherWallet/pull/5007)
 
 ### Release v6.9.13
 
