@@ -376,7 +376,7 @@ export default {
         this.network.type.name === 'Polygon' ? 'POL' : this.network.type.name;
       this.isFetching = true; // prevent multiple requests
       const data = await fetch(
-        `https://qa.mewwallet.dev/v5/purchase/buy?id=${id}&address=${this.address}&fiatCurrency=${this.selectedFiat.name}&amount=${this.amount}&cryptoCurrency=${this.selectedCurrency.symbol}&chain=${network}&iso=US`
+        `https://mainnet.mewwallet.dev/v5/purchase/buy?id=${id}&address=${this.address}&fiatCurrency=${this.selectedFiat.name}&amount=${this.amount}&cryptoCurrency=${this.selectedCurrency.symbol}&chain=${network}&iso=US`
       );
       const response = await data.json();
       this.loading = false;
@@ -391,7 +391,9 @@ export default {
       }
     },
     async fetchNetworks() {
-      const data = await fetch('https://qa.mewwallet.dev/v5/purchase/info');
+      const data = await fetch(
+        'https://mainnet.mewwallet.dev/v5/purchase/info'
+      );
       const response = await data.json();
       const { assets, providers } = response;
       const buyNetworks = assets
