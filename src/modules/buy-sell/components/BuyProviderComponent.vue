@@ -1,25 +1,29 @@
 <template>
   <div class="py-8 px-8 pt-3">
     <div
-      class="d-flex align-center textDark--text mb-10 cursor--pointer"
+      class="d-flex align-center textDark--text mb-5 cursor--pointer"
       @click="closeProviders"
     >
       <v-icon color="textDark">mdi-arrow-left mr-4</v-icon>
       <div class="mew-heading-2">Select a provider to buy</div>
     </div>
-    <div class="mew-heading-2 mb-10">
+    <div class="mew-heading-2 mb-5">
       Spending {{ formattedFiat }} to buy {{ selectedCurrency.symbol }} on
       {{ network.type.name_long }} Network
     </div>
     <div>
-      <div
+      <mew-button
         v-for="(provider, idx) in buyQuote"
         :key="provider.provider + idx"
-        class="section-block ripple pa-5 mb-6"
+        btn-style="outline"
+        :color-theme="$vuetify.theme.dark ? 'white' : 'basic'"
+        has-full-width
+        style="height: initial; min-height: 130px; position: relative"
+        class="custom-provider-button mb-2"
         @click="buyProvider(provider)"
       >
         <div v-if="idx === 0" class="best-rate">Best Rate</div>
-        <div>
+        <div style="width: 100%">
           <div class="d-flex mew-heading-3">
             {{ provider.crypto_amount }}
             <div class="d-flex align-center">
@@ -76,7 +80,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </mew-button>
     </div>
     <div class="pt-2 text-center mew-label">
       Fees, availability, and purchase limits vary between providers, you can
@@ -192,13 +196,22 @@ export default {
       return label ? paymentMethodsLabel : logos;
     },
     parseProviderLogo(provider) {
+      const dark = this.$vuetify.theme.dark;
       const providerLogos = {
         SIMPLEX: require('@/assets/images/providers/icon-simplex.svg'),
         MOONPAY: require('@/assets/images/providers/icon-moonpay.svg'),
         TOPPER: require('@/assets/images/providers/icon-topper.svg'),
         COINBASE: require('@/assets/images/providers/icon-coinbase-light.webp')
       };
-      return providerLogos[provider.provider];
+      const providerLogosDarkMode = {
+        SIMPLEX: require('@/assets/images/providers/icon-simplex-light.svg'),
+        MOONPAY: require('@/assets/images/providers/icon-moonpay-white.svg'),
+        TOPPER: require('@/assets/images/providers/icon-topper-dark.svg'),
+        COINBASE: require('@/assets/images/providers/icon-coinbase.webp')
+      };
+      return dark
+        ? providerLogosDarkMode[provider.provider]
+        : providerLogos[provider.provider];
     },
     generateFeeLabel(provider) {
       const feeLabel = {
@@ -260,10 +273,20 @@ export default {
   background-color: #05c0a5 !important;
   text-align: center;
   font-size: small;
-  width: 64px;
+  width: 80px;
   border-radius: 4px;
-  top: -10px;
+  top: -30px;
+  left: 0;
+  padding: 4px 8px;
   position: absolute;
   color: white;
+}
+</style>
+
+<style lang="scss">
+.custom-provider-button {
+  .v-btn__content > div {
+    position: relative;
+  }
 }
 </style>
