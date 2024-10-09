@@ -98,7 +98,9 @@ const EXCEPTIONS = [
   'qrcode-with-logos', // fix after release
   '@ensdomains/ens-contracts',
   '@shapeshiftoss/hdwallet-core',
-  '@shapeshiftoss/hdwallet-keepkey-webusb'
+  '@shapeshiftoss/hdwallet-keepkey-webusb',
+  '@trezor/connect',
+  '@walletconnect/modal'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
