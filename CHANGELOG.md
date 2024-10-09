@@ -4,6 +4,7 @@
 
 - swap loading [#5016](https://github.com/MyEtherWallet/MyEtherWallet/pull/5016)
 - update version [#5016](https://github.com/MyEtherWallet/MyEtherWallet/pull/5016)
+- buy providers dark mode [#5016](https://github.com/MyEtherWallet/MyEtherWallet/pull/5016)
 
 ### Release v6.9.14
 

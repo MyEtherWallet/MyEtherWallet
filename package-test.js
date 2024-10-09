@@ -99,7 +99,7 @@ const EXCEPTIONS = [
   '@ensdomains/ens-contracts',
   '@shapeshiftoss/hdwallet-core',
   '@shapeshiftoss/hdwallet-keepkey-webusb',
-  '@trezor/connect',
+  '@trezor/connect-web',
   '@walletconnect/modal'
 ];
 const CUSTOM_DIST = {
