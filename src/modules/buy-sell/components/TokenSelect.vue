@@ -29,7 +29,9 @@
         <div
           v-if="searchedCurrencyItems.length > 0"
           class="mt-5"
-          style="height: 200px; overflow: scroll"
+          :style="`${
+            isSell ? 'height: 300px;' : 'height: 200px;'
+          } overflow: scroll`"
         >
           <div v-for="(token, idx) in searchedCurrencyItems" :key="idx">
             <v-btn
@@ -61,11 +63,11 @@
 
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex';
-import { isEmpty } from 'lodash';
+// import { isEmpty } from 'lodash';
 
-import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
-import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
-import * as nodes from '@/utils/networks/nodes';
+// import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
+// import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
+// import * as nodes from '@/utils/networks/nodes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { ETH } from '@/utils/networks/types';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
@@ -90,10 +92,10 @@ export default {
       type: Boolean,
       default: false
     },
-    inWallet: {
-      type: Boolean,
-      default: false
-    },
+    // inWallet: {
+    //   type: Boolean,
+    //   default: false
+    // },
     isSell: {
       type: Boolean,
       default: false
@@ -102,7 +104,7 @@ export default {
   data() {
     return {
       searchValue: '',
-      nodes: nodes,
+      // nodes: nodes,
       fetchedNetworks: [],
       selectedNetwork: {},
       currencyCopy: []
@@ -130,28 +132,20 @@ export default {
     }
   },
   watch: {
-    selectedNetwork(newVal, oldVal) {
+    selectedNetwork(newVal) {
       this.currencyCopy = [];
-      // actual check whether the value was changed or just initially set
-      if (newVal && !isEmpty(newVal) && oldVal && !isEmpty(oldVal)) {
-        const newNode = Object.values(this.nodes).find(
-          item => item.type.name === newVal.name
-        );
-        this.setNewNetwork(newNode);
-        const network = this.networks.find(network => {
-          if (network.chain === newVal.name) return network;
-        });
-
-        this.currencyCopy = network ? network.assets : newVal.assets;
-        const mainToken = this.currencyCopy.find(
-          token => token.contract_address === MAIN_TOKEN_ADDRESS
-        );
-        if (
-          mainToken &&
-          this.selectedCurrency.contract_address !== mainToken.contract_address
-        ) {
-          this.setCurrency(mainToken);
-        }
+      const network = this.networks.find(network => {
+        if (network.chain === newVal.name) return network;
+      });
+      this.currencyCopy = network ? network.assets : newVal.assets;
+      const mainToken = this.currencyCopy.find(
+        token => token.contract_address === MAIN_TOKEN_ADDRESS
+      );
+      if (
+        mainToken &&
+        this.selectedCurrency.contract_address !== mainToken.contract_address
+      ) {
+        this.setCurrency(mainToken);
       }
     },
     open(val) {
@@ -192,33 +186,33 @@ export default {
         };
       });
     },
-    setNewNetwork(network) {
-      if (network.type.name === this.network.type.name) return;
-      this.setNetwork({
-        network: network,
-        walletType: this.instance?.identifier || ''
-      })
-        .then(() => {
-          if (this.inWallet) {
-            const provider =
-              this.identifier === WALLET_TYPES.WEB3_WALLET
-                ? this.setWeb3Instance(this.selectedEIP6963Provider)
-                : this.setWeb3Instance();
-            if (!this.isOfflineApp) {
-              provider.then(() => {
-                this.setTokenAndEthBalance();
-              });
-            }
-          } else {
-            this.setWeb3Instance();
-          }
-          Toast(`Switched network to: ${network.type.name}`, {}, SUCCESS);
-          this.$emit('newNetwork');
-        })
-        .catch(e => {
-          Toast(e, {}, ERROR);
-        });
-    },
+    // setNewNetwork(network) {
+    //   if (network.type.name === this.network.type.name) return;
+    //   this.setNetwork({
+    //     network: network,
+    //     walletType: this.instance?.identifier || ''
+    //   })
+    //     .then(() => {
+    //       if (this.inWallet) {
+    //         const provider =
+    //           this.identifier === WALLET_TYPES.WEB3_WALLET
+    //             ? this.setWeb3Instance(this.selectedEIP6963Provider)
+    //             : this.setWeb3Instance();
+    //         if (!this.isOfflineApp) {
+    //           provider.then(() => {
+    //             this.setTokenAndEthBalance();
+    //           });
+    //         }
+    //       } else {
+    //         this.setWeb3Instance();
+    //       }
+    //       Toast(`Switched network to: ${network.type.name}`, {}, SUCCESS);
+    //       this.$emit('newNetwork');
+    //     })
+    //     .catch(e => {
+    //       Toast(e, {}, ERROR);
+    //     });
+    // },
     tokenSelected(token) {
       this.setCurrency(token);
       this.close();
