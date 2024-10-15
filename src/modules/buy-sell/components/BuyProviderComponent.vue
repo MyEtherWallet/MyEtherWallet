@@ -20,9 +20,15 @@
         has-full-width
         style="height: initial; min-height: 130px; position: relative"
         class="custom-provider-button mb-2"
-        @click="buyProvider(provider)"
+        @click.native="buyProvider(provider)"
       >
-        <div v-if="idx === 0" class="best-rate">Best Rate</div>
+        <div
+          v-if="idx === 0"
+          class="best-rate"
+          :style="$vuetify.breakpoint.smAndDown ? 'top: -25px;' : 'top: -30px;'"
+        >
+          Best Rate
+        </div>
         <div style="width: 100%">
           <div class="d-flex mew-heading-3">
             {{ provider.crypto_amount }}
@@ -74,7 +80,7 @@
                   class="mr-1"
                 />
               </div>
-              <div class="mew-label d-none d-sm-block">
+              <div class="mew-label d-none d-md-block">
                 {{ parsePaymentMethods(provider.payment_methods, true) }}
               </div>
             </div>
@@ -275,7 +281,6 @@ export default {
   font-size: small;
   width: 80px;
   border-radius: 4px;
-  top: -30px;
   left: 0;
   padding: 4px 8px;
   position: absolute;

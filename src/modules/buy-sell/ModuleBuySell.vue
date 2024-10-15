@@ -513,9 +513,11 @@ export default {
     },
     buyProvider(provider) {
       window.open(provider.url, '_blank');
-      this.trackBuySell(BUY_SELL.BUY_PROVIDER_SELECTED, {
-        provider: provider.provider
-      });
+      const prov = provider.provider;
+      const capitalizedProvider = `${prov[0]}${prov
+        .slice(1, prov.length)
+        .toLowerCase()}`;
+      this.trackBuySell(`BuyWith${capitalizedProvider}`);
       this.close();
     },
     setSelectedCurrency(currency) {
