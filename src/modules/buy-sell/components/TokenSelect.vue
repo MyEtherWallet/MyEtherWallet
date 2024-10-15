@@ -137,7 +137,11 @@ export default {
       const network = this.networks.find(network => {
         if (network.chain === newVal.name) return network;
       });
-      this.currencyCopy = network ? network.assets : newVal.assets;
+      this.currencyCopy = network
+        ? network.assets
+        : newVal
+        ? newVal.assets
+        : [];
       const mainToken = this.currencyCopy.find(
         token => token.contract_address === MAIN_TOKEN_ADDRESS
       );
