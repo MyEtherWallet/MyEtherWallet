@@ -521,7 +521,15 @@ export default {
       );
       const response = await request.json();
       if (response.msg) {
-        this.errorMsg = response.msg;
+        const { errors } = response;
+        let error = '';
+        errors.forEach(err => {
+          error += `${err.msg}. `;
+        });
+
+        this.errorMsg = error
+          ? `${response.msg} ${error.trim()}`
+          : response.msg;
         return;
       }
       const url = response[0].url;
