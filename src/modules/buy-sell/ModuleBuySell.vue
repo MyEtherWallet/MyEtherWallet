@@ -252,7 +252,12 @@ export default {
       );
     },
     sellSupported() {
-      return this.network.type.name === ETH.name;
+      return (
+        this.network.type.name === ETH.name ||
+        this.network.type.name === POL.name ||
+        this.network.type.name === OP.name ||
+        this.network.type.name === ARB.name
+      );
     },
     defaultCurrency() {
       if (isEmpty(this.selectedCurrency) && this.supportedNetwork) {
@@ -433,14 +438,12 @@ export default {
           });
         });
 
-      const sellNetworks = buyNetworks
-        .filter(network => network.chain === 'ETH')
-        .map(network => {
-          const filteredTokens = network.assets.filter(asset =>
-            asset.providers.includes('MOONPAY')
-          );
-          return Object.assign({}, network, { assets: filteredTokens });
-        });
+      const sellNetworks = buyNetworks.map(network => {
+        const filteredTokens = network.assets.filter(asset =>
+          asset.providers.includes('MOONPAY')
+        );
+        return Object.assign({}, network, { assets: filteredTokens });
+      });
       const buyFiats = [];
       const sellFiats = providers
         .find(p => p.provider === 'MOONPAY')
@@ -497,6 +500,7 @@ export default {
     },
     close() {
       this.activeTab = 0;
+      this.openTokenSelect = false;
       this.step = 0;
       this.$emit('close', false);
       this.trackBuySell(BUY_SELL.BUY_SELL_CLOSED);
@@ -528,11 +532,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// .top-container {
-//   min-height: 540px;
-// }
-//
-// Force set button border color(greyMedium) for not selected buttons
 .not-selected {
   border: 1px solid var(--v-greyMedium-base);
 }

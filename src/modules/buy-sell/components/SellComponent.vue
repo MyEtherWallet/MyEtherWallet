@@ -131,7 +131,7 @@ import abi from '@/modules/balance/handlers/abiERC20.js';
 import { toBase } from '@/core/helpers/unit';
 import handlerWallet from '@/core/mixins/handlerWallet.mixin';
 import BuySellTokenSelect from '@/modules/buy-sell/components/TokenSelect.vue';
-import { ETH } from '@/utils/networks/types';
+import { ARB, ETH, OP } from '@/utils/networks/types';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { BUY_SELL } from '@/modules/analytics-opt-in/handlers/configs/events';
 export default {
@@ -208,7 +208,7 @@ export default {
         : {};
     },
     supportedNetworks() {
-      return [ETH.name];
+      return [ETH.name, ARB.name, OP.name, 'Polygon'];
     },
     name() {
       return this.selectedCurrency.symbol;
