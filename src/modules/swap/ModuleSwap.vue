@@ -1567,7 +1567,10 @@ export default {
             this.feeError = 'There was an issue with the provider';
             return;
           }
-          if (tradeResponse.provider !== 'changelly') {
+          if (
+            tradeResponse.provider !== 'changelly' &&
+            tradeResponse.transactions
+          ) {
             const filteredTx = tradeResponse.transactions.filter(
               tx => tx.data === '0x'
             );
