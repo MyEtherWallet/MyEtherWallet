@@ -264,9 +264,6 @@ export default {
         ? this.name
         : this.network.type.currencyName;
       const amount = BigNumber(this.amount);
-      if (this.nonMainnetMetamask) {
-        return 'Please switch your network to the Ethereum Mainnet on Metamask.';
-      }
 
       if (BigNumber(this.selectedBalance).eq(0)) {
         return `Address provided has no ${this.selectedCurrency.symbol}`;
@@ -307,9 +304,7 @@ export default {
     },
     nonMainnetMetamask() {
       return (
-        this.instance &&
-        this.instance.identifier === WALLET_TYPES.WEB3_WALLET &&
-        this.network?.type.name !== ETH.name
+        this.instance && this.instance.identifier === WALLET_TYPES.WEB3_WALLET
       );
     },
     isValidAmount() {

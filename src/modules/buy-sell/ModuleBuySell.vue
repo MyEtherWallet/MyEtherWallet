@@ -438,12 +438,15 @@ export default {
           });
         });
 
-      const sellNetworks = buyNetworks.map(network => {
-        const filteredTokens = network.assets.filter(asset =>
-          asset.providers.includes('MOONPAY')
-        );
-        return Object.assign({}, network, { assets: filteredTokens });
-      });
+      const sellNetworks = buyNetworks
+        .map(network => {
+          const filteredTokens = network.assets.filter(
+            asset =>
+              asset.providers.includes('MOONPAY') && asset.is_sell_supported
+          );
+          return Object.assign({}, network, { assets: filteredTokens });
+        })
+        .filter(network => network.assets.length > 0);
       const buyFiats = [];
       const sellFiats = providers
         .find(p => p.provider === 'MOONPAY')
