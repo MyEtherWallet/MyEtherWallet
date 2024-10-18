@@ -58,7 +58,7 @@
 import moment from 'moment';
 import 'moment-timezone';
 import { mapState } from 'vuex';
-import store from 'store';
+// import store from 'store';
 
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
@@ -81,9 +81,7 @@ export default {
     ...mapState('wallet', ['identifier', 'isHardware']),
     ...mapState('external', ['selectedEIP6963Info']),
     showIsAdBanner() {
-      const testTime = store.get('mew-test-date')
-        ? new Date(store.get('mew-test-date'))
-        : new Date();
+      const testTime = new Date();
       const startDate = new Date('2024-10-03');
       const endDate = new Date('2024-12-19');
       const isBetween = moment(testTime).isBetween(
@@ -95,9 +93,7 @@ export default {
       return isBetween;
     },
     adBanner() {
-      const testTime = store.get('mew-test-date')
-        ? new Date(store.get('mew-test-date'))
-        : new Date();
+      const testTime = new Date();
       const week = moment(testTime).week();
       const day = testTime.getDay();
       if ((week === 42 && day >= 3) || (week === 43 && day < 3)) {
