@@ -1,3 +1,15 @@
+### Release v6.9.15
+
+### fix
+
+* swap loading [#5016](https://github.com/MyEtherWallet/MyEtherWallet/pull/5016)
+* update version [#5016](https://github.com/MyEtherWallet/MyEtherWallet/pull/5016)
+* buy providers dark mode [#5016](https://github.com/MyEtherWallet/MyEtherWallet/pull/5016)
+* add more sell tokens [#5016](https://github.com/MyEtherWallet/MyEtherWallet/pull/5016)
+* fix sell [#5016](https://github.com/MyEtherWallet/MyEtherWallet/pull/5016)
+* fix offline address invalid [#5016](https://github.com/MyEtherWallet/MyEtherWallet/pull/5016)
+* fix nft cutoff [#5016](https://github.com/MyEtherWallet/MyEtherWallet/pull/5016)
+
 ### Release v6.9.14
 
 ### feat

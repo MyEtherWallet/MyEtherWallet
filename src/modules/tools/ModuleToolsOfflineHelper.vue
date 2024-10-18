@@ -52,7 +52,7 @@
 
         <div v-if="currentStep === 1">
           <v-sheet color="transparent" max-width="600px" class="mx-auto py-10">
-            <network-switch />
+            <network-switch :is-wallet="false" />
           </v-sheet>
           <mew-button
             btn-size="xlarge"

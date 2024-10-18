@@ -342,6 +342,8 @@ export default {
               this.setTokenAndEthBalance();
               this.$emit('newNetwork');
             });
+          } else {
+            this.setWeb3Instance();
           }
         })
         .catch(e => {

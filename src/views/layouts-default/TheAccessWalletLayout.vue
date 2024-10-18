@@ -363,6 +363,7 @@ export default {
   },
   mounted() {
     window.dispatchEvent(new Event('eip6963:requestProvider'));
+    this.$vuetify.theme.dark = false;
     this.trackAccessWalletAmplitude(COMMON.PAGE_SHOWN);
   },
   methods: {

@@ -27,14 +27,12 @@
   =====================================================================================
   -->
     <div v-if="!loading" class="d-flex align-center full-width">
-      <img height="100" :src="token.image" alt="nft token" @error="onImgErr" />
+      <img width="100" :src="token.image" alt="nft token" @error="onImgErr" />
       <div
-        class="d-flex align-center flex-column flex-md-row flex-lg-row flex-xl-row justify-space-between pa-3 full-width"
+        class="d-flex align-center flex-column flex-md-row flex-lg-column flex-xl-row justify-space-between pa-3 full-width"
       >
         <div class="nft-name pr-2">
-          <span
-            v-if="token"
-            :class="$vuetify.breakpoint.smAndDown ? 'mb-1' : ''"
+          <span v-if="token" class="pb-1 pb-md-0 pb-lg-2 pb-xl-0"
             >#{{ token.name || token.token_id }}</span
           >
         </div>
