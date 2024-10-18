@@ -58,7 +58,7 @@
 import moment from 'moment';
 import 'moment-timezone';
 import { mapState } from 'vuex';
-import store from 'store';
+// import store from 'store';
 
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
