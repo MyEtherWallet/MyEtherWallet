@@ -1,0 +1,13 @@
+diff --git a/node_modules/@amplitude/plugin-autocapture-browser/lib/cjs/constants.js b/node_modules/@amplitude/plugin-autocapture-browser/lib/cjs/constants.js
+index 5772226..c65a57b 100644
+--- a/node_modules/@amplitude/plugin-autocapture-browser/lib/cjs/constants.js
++++ b/node_modules/@amplitude/plugin-autocapture-browser/lib/cjs/constants.js
+@@ -29,7 +29,7 @@ exports.AMPLITUDE_ORIGINS_MAP = {
+     EU: exports.AMPLITUDE_ORIGIN_EU,
+     STAGING: exports.AMPLITUDE_ORIGIN_STAGING,
+ };
+-exports.AMPLITUDE_VISUAL_TAGGING_SELECTOR_SCRIPT_URL = 'https://cdn.amplitude.com/libs/visual-tagging-selector-1.0.0-alpha.js.gz';
++exports.AMPLITUDE_VISUAL_TAGGING_SELECTOR_SCRIPT_URL = '';
+ // This is the class name used by the visual tagging selector to highlight the selected element.
+ // Should not use this class in the selector.
+ exports.AMPLITUDE_VISUAL_TAGGING_HIGHLIGHT_CLASS = 'amp-visual-tagging-selector-highlight';
