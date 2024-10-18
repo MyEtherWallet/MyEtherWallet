@@ -54,8 +54,8 @@
             !loadingContracts && !onNftSend && tabs.length > 0 && !hasNoTokens
           "
           :items="tabs"
-          :is-vertical="$vuetify.breakpoint.mdAndUp"
-          :has-underline="$vuetify.breakpoint.smAndDown"
+          :is-vertical="$vuetify.breakpoint.lgAndUp"
+          :has-underline="$vuetify.breakpoint.mdAndDown"
           :active-tab="activeTab"
           @onTab="onTab"
         >
@@ -63,7 +63,7 @@
             v-for="(contract, idx) in contracts"
             :slot="'tabItemContent' + (idx + 1)"
           >
-            <div :key="idx" class="ml-5">
+            <div :key="idx">
               <!--
     =====================================================================================
       Display all owned tokens by nft

@@ -58,6 +58,7 @@
 import moment from 'moment';
 import 'moment-timezone';
 import { mapState } from 'vuex';
+// import store from 'store';
 
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
@@ -80,44 +81,41 @@ export default {
     ...mapState('wallet', ['identifier', 'isHardware']),
     ...mapState('external', ['selectedEIP6963Info']),
     showIsAdBanner() {
-      const testTime = '2024-10-03';
-      const startDate = new Date(testTime);
-      const endDate = new Date('2024-12-16');
-      const isBetween = moment(new Date(testTime)).isBetween(
+      const testTime = new Date();
+      const startDate = new Date('2024-10-03');
+      const endDate = new Date('2024-12-19');
+      const isBetween = moment(testTime).isBetween(
         startDate,
         endDate,
         undefined,
-        '[]'
+        '[)'
       );
       return isBetween;
     },
     adBanner() {
-      const testTime = '2024-10-03';
-      const week = moment(new Date(testTime)).week();
-      switch (week) {
-        case 41:
-          return require('@/assets/images/ad/Topper1.png');
-        case 42:
-          return require('@/assets/images/ad/CoinbaseOnramp1.png');
-        case 43:
-          return require('@/assets/images/ad/MoonPay1.png');
-        case 44:
-          return require('@/assets/images/ad/Simplex1.png');
-        case 45:
-          return require('@/assets/images/ad/Coinbase1.png');
-        case 46:
-          return require('@/assets/images/ad/Topper2.png');
-        case 47:
-          return require('@/assets/images/ad/CoinbaseOnramp2.png');
-        case 48:
-          return require('@/assets/images/ad/MoonPay2.png');
-        case 49:
-          return require('@/assets/images/ad/Simplex2.png');
-        case 50:
-          return require('@/assets/images/ad/Coinbase2.png');
-        default:
-          return require('@/assets/images/ad/Topper1.png');
+      const testTime = new Date();
+      const week = moment(testTime).week();
+      const day = testTime.getDay();
+      if ((week === 42 && day >= 3) || (week === 43 && day < 3)) {
+        return require('@/assets/images/ad/CoinbaseOnramp1.png');
+      } else if ((week === 43 && day >= 3) || (week === 44 && day < 3)) {
+        return require('@/assets/images/ad/MoonPay1.png');
+      } else if ((week === 44 && day >= 3) || (week === 45 && day < 3)) {
+        return require('@/assets/images/ad/Simplex1.png');
+      } else if ((week === 45 && day >= 3) || (week === 46 && day < 3)) {
+        return require('@/assets/images/ad/Coinbase1.png');
+      } else if ((week === 46 && day >= 3) || (week === 47 && day < 3)) {
+        return require('@/assets/images/ad/Topper2.png');
+      } else if ((week === 47 && day >= 3) || (week === 48 && day < 3)) {
+        return require('@/assets/images/ad/CoinbaseOnramp2.png');
+      } else if ((week === 48 && day >= 3) || (week === 49 && day < 3)) {
+        return require('@/assets/images/ad/MoonPay2.png');
+      } else if ((week === 49 && day >= 3) || (week === 50 && day < 3)) {
+        return require('@/assets/images/ad/Simplex2.png');
+      } else if ((week === 50 && day >= 3) || (week === 51 && day < 3)) {
+        return require('@/assets/images/ad/Coinbase2.png');
       }
+      return require('@/assets/images/ad/Topper1.png');
     },
     adLink() {
       return this.adBanner.includes('Topper') ||

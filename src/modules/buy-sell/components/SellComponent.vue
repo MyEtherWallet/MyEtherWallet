@@ -76,12 +76,18 @@
         network transaction fees.
       </div>
 
-      <div class="d-flex align-center justify-space-between mt-4">
+      <div
+        v-if="errorMsg === ''"
+        class="d-flex align-center justify-space-between mt-4"
+      >
         <div class="mew-body textMedium--text">Estimated Network Fee</div>
         <div v-if="!estimatingFees" class="mew-body textMedium--text">
           ~{{ txFeeInEth }}
         </div>
         <v-skeleton-loader v-else type="text" width="150px" />
+      </div>
+      <div v-else class="d-flex align-center justify-space-between mt-4">
+        <div class="mew-body textMedium--text error--text">{{ errorMsg }}</div>
       </div>
     </div>
 
@@ -122,13 +128,10 @@ import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import handlerSend from '@/modules/send/handlers/handlerSend.js';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common.js';
 import abi from '@/modules/balance/handlers/abiERC20.js';
-// import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 import { toBase } from '@/core/helpers/unit';
-// import { sellContracts } from './tokenList';
 import handlerWallet from '@/core/mixins/handlerWallet.mixin';
 import BuySellTokenSelect from '@/modules/buy-sell/components/TokenSelect.vue';
-// import { getCurrency } from '@/modules/settings/components/currencyList';
-import { ETH, BSC, POL } from '@/utils/networks/types';
+import { ARB, ETH, OP } from '@/utils/networks/types';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { BUY_SELL } from '@/modules/analytics-opt-in/handlers/configs/events';
 export default {
@@ -138,10 +141,6 @@ export default {
   },
   mixins: [handlerWallet, handlerAnalytics],
   props: {
-    orderHandler: {
-      type: Object,
-      default: () => {}
-    },
     close: {
       type: Function,
       default: () => {}
@@ -170,7 +169,6 @@ export default {
       openTokenSelect: false,
       selectedCurrency: this.defaultCurrency,
       amount: '0',
-      fetchedData: {},
       locGasPrice: '0',
       sendHandler: {},
       loading: true,
@@ -180,12 +178,8 @@ export default {
       estimatingFees: true,
       maxBalance: '0',
       selectedBalance: '0',
-      toAddress: ''
-      // currencyRates: [],
-      // names: {
-      //   ETH: 'Ethereum',
-      //   USDC: 'USD Coin'
-      // }
+      toAddress: '',
+      errorMsg: ''
     };
   },
   computed: {
@@ -213,47 +207,11 @@ export default {
           }
         : {};
     },
-    // currencyConfig() {
-    //   const fiat = this.selectedFiat.value;
-    //   const rate = this.currencyRates[fiat];
-    //   const currency = fiat;
-    //   return { rate, currency };
-    // },
-    // preselectedCurrencies() {
-    //   const locArr = sellContracts.reduce((arr, item) => {
-    //     const inList = this.tokensList.find(t => {
-    //       if (t.contract?.toLowerCase() === item?.toLowerCase()) return t;
-    //     });
-    //     if (inList) {
-    //       inList.price = formatFiatValue(inList ? inList.price : '0').value;
-    //       inList.name = this.names[inList.symbol];
-    //       arr.push(inList);
-    //       return arr;
-    //     }
-
-    //     const token = this.contractToToken(item);
-    //     if (token) {
-    //       token.name = this.names[token.symbol];
-    //       token.price = formatFiatValue(
-    //         token ? token.price : '0',
-    //         this.currencyConfig
-    //       ).value;
-    //       arr.push(token);
-    //     }
-    //     return arr;
-    //   }, []);
-    //   return locArr;
-    // },
-    supportedCurrency() {
-      return ['ETH', 'USDT', 'USDC', 'POL', 'BNB'];
-    },
     supportedNetworks() {
-      return [ETH.name, BSC.name, POL.name];
+      return [ETH.name, ARB.name, OP.name, 'Polygon'];
     },
     name() {
-      return this.supportedCurrency.includes(this.selectedCurrency.symbol)
-        ? this.selectedCurrency.symbol
-        : this.network.type.currencyName;
+      return this.selectedCurrency.symbol;
     },
     disableSell() {
       return (
@@ -264,29 +222,32 @@ export default {
         this.errorMessages !== ''
       );
     },
+    foundFiat() {
+      const foundFiat = this.sellFiats.find(
+        fiat => fiat.name === this.selectedFiat.name
+      );
+      return foundFiat
+        ? foundFiat
+        : {
+            name: 'USD',
+            value: 'USD',
+            // eslint-disable-next-line
+            img: require(`@/assets/images/currencies/USD.svg`),
+            limits: {
+              min: 0.015,
+              max: 3
+            }
+          };
+    },
     min() {
-      if (!isEmpty(this.fetchedData)) {
-        const found = this.fetchedData.limits.find(item => {
-          return item.crypto_currency === this.name && item.type === 'WEB';
-        });
-
-        if (found) {
-          return BigNumber(found.limit.min);
-        }
-      }
-      return BigNumber(0.015);
+      return BigNumber(this.foundFiat.limits.min).div(
+        this.selectedCurrency.price
+      );
     },
     max() {
-      if (!isEmpty(this.fetchedData)) {
-        const found = this.fetchedData.limits.find(item => {
-          return item.crypto_currency === this.name && item.type === 'WEB';
-        });
-
-        if (found) {
-          return BigNumber(found.limit.max);
-        }
-      }
-      return BigNumber(3);
+      return BigNumber(this.foundFiat.limits.max).div(
+        this.selectedCurrency.price
+      );
     },
     txFee() {
       return fromWei(
@@ -303,9 +264,6 @@ export default {
         ? this.name
         : this.network.type.currencyName;
       const amount = BigNumber(this.amount);
-      if (this.nonMainnetMetamask) {
-        return 'Please switch your network to the Ethereum Mainnet on Metamask.';
-      }
 
       if (BigNumber(this.selectedBalance).eq(0)) {
         return `Address provided has no ${this.selectedCurrency.symbol}`;
@@ -346,9 +304,7 @@ export default {
     },
     nonMainnetMetamask() {
       return (
-        this.instance &&
-        this.instance.identifier === WALLET_TYPES.WEB3_WALLET &&
-        this.network?.type.name !== ETH.name
+        this.instance && this.instance.identifier === WALLET_TYPES.WEB3_WALLET
       );
     },
     isValidAmount() {
@@ -396,21 +352,10 @@ export default {
         return false;
       }
     },
-    // hasData() {
-    //   return !isEmpty(this.fetchedData);
-    // },
     cryptoAmount() {
-      return BigNumber(this.amount).times(this.priceOb.price).toString();
-    },
-    selectedFiatName() {
-      return this.selectedFiat.name;
-    },
-    priceOb() {
-      return !isEmpty(this.fetchedData)
-        ? this.fetchedData.prices.find(
-            item => item.fiat_currency === this.selectedFiatName
-          )
-        : { crypto_currency: 'ETH', fiat_currency: 'USD', price: '3379.08322' };
+      return BigNumber(this.amount)
+        .times(this.selectedCurrency.price)
+        .toString();
     }
   },
   watch: {
@@ -452,14 +397,6 @@ export default {
     gasLimit(val) {
       this.sendHandler.setGasLimit(val);
     },
-    orderHandler: {
-      handler: function () {
-        this.sendHandler = new handlerSend();
-        this.fetchSellInfo();
-        this.locGasPrice = this.gasPriceByType(this.gasPriceType);
-      },
-      deep: true
-    },
     network() {
       this.maxBalance = '0';
       this.hasPersistentHint = false;
@@ -477,6 +414,12 @@ export default {
   mounted() {
     this.sendHandler = new handlerSend();
     this.fetchSellInfo();
+    const foundFiat = this.sellFiats.find(
+      fiat => fiat.name === this.selectedFiat.name
+    );
+    if (foundFiat) {
+      this.selectedFiat = foundFiat;
+    }
     this.locGasPrice = this.gasPriceByType(this.gasPriceType);
   },
   methods: {
@@ -572,6 +515,18 @@ export default {
         `https://mainnet.mewwallet.dev/v5/purchase/sell?id=${id}&address=${this.address}&fiatCurrency=${this.selectedFiat.name}&amount=${this.amount}&cryptoCurrency=${this.selectedCurrency.symbol}&chain=ETH&iso=US`
       );
       const response = await request.json();
+      if (response.msg) {
+        const { errors } = response;
+        let error = '';
+        errors.forEach(err => {
+          error += `${err.msg}. `;
+        });
+
+        this.errorMsg = error
+          ? `${response.msg} ${error.trim()}`
+          : response.msg;
+        return;
+      }
       const url = response[0].url;
       window.open(url, '_blank');
       this.close();
@@ -606,21 +561,7 @@ export default {
         this.selectedBalance = fromWei('0');
       }
       this.loading = false;
-
-      // this.orderHandler
-      //   .getSupportedFiatToSell(this.name)
-      //   .then(res => {
-      //     this.loading = false;
-      //     this.fetchedData = res[0];
-      //   })
-      //   .catch(e => {
-      //     this.loading = false;
-      //     Toast(e, {}, ERROR);
-      //   });
     },
-    // isValidToAddress(address) {
-    //   return MultiCoinValidator.validate(address, this.selectedCurrency.symbol);
-    // },
     preventCharE(e) {
       if (e.key === 'e') e.preventDefault();
     }
