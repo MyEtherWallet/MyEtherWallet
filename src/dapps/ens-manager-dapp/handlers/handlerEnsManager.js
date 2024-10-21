@@ -1,6 +1,5 @@
 import { tldSupported, getTld } from './helpers/helperTld';
 import PermanentNameModule from './handlerPermanentName';
-import BigNumber from 'bignumber.js';
 
 export default class ENSManager {
   constructor(network, address, web3, ens) {
