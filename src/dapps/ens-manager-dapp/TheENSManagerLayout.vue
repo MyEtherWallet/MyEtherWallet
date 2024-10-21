@@ -595,6 +595,7 @@ export default {
                 }
               : '';
           });
+          console.log(res);
           this.myDomains = res;
         })
         .catch(err => {
