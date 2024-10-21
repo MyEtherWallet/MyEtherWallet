@@ -162,7 +162,7 @@
                       <v-icon small class="call-made"> mdi-call-made </v-icon>
                     </a>
                   </v-col>
-                  <v-col cols="12" md="6" v-else>No controller</v-col>
+                  <v-col v-else cols="12" md="6">No controller</v-col>
                 </v-row>
 
                 <div
