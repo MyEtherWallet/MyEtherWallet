@@ -131,31 +131,37 @@
                   <v-spacer></v-spacer>
 
                   <v-col cols="12" md="6" class="d-flex align-center">
-                    <div>{{ $t('ens.manage-domains.controller') }}</div>
-                    <mew-blockie
-                      :address="domain.controllerAddress"
-                      width="25px"
-                      height="25px"
-                      class="mx-2"
-                    />
-                    <mew-transform-hash :hash="domain.controllerAddress" />
-                    <mew-copy
-                      class="ml-2 mew-body"
-                      :copy-value="domain.controllerAddress"
-                      :is-small="true"
-                    />
-                    <a
-                      class="address-link"
-                      :href="
-                        network.type.blockExplorerAddr.replace(
-                          '[[address]]',
-                          domain.controllerAddress
-                        )
-                      "
-                      target="_blank"
+                    <div
+                      v-if="domain.controllerAddress !== '0x'"
+                      class="d-flex align-center"
                     >
-                      <v-icon small class="call-made"> mdi-call-made </v-icon>
-                    </a>
+                      <div>{{ $t('ens.manage-domains.controller') }}</div>
+                      <mew-blockie
+                        :address="domain.controllerAddress"
+                        width="25px"
+                        height="25px"
+                        class="mx-2"
+                      />
+                      <mew-transform-hash :hash="domain.controllerAddress" />
+                      <mew-copy
+                        class="ml-2 mew-body"
+                        :copy-value="domain.controllerAddress"
+                        :is-small="true"
+                      />
+                      <a
+                        class="address-link"
+                        :href="
+                          network.type.blockExplorerAddr.replace(
+                            '[[address]]',
+                            domain.controllerAddress
+                          )
+                        "
+                        target="_blank"
+                      >
+                        <v-icon small class="call-made"> mdi-call-made </v-icon>
+                      </a>
+                    </div>
+                    <div v-else>No controller</div>
                   </v-col>
                 </v-row>
 
@@ -595,7 +601,6 @@ export default {
                 }
               : '';
           });
-          console.log(res);
           this.myDomains = res;
         })
         .catch(err => {
