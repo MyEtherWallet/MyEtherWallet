@@ -88,6 +88,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters('global', ['getFiatValue', 'network']),
     items() {
       const items = [];
       for (let i = 0; i < 20; i++) {
@@ -109,12 +110,11 @@ export default {
     this.getTotalRenewFeeOnly(1);
   },
   methods: {
-    ...mapGetters('global', ['getFiatValue', 'network']),
     rentPrice() {
       return this.getRentPrice(this.duration).then(resp => {
         if (resp) {
           this.rentPriceETH = formatFloatingPointValue(resp.eth).value;
-          this.rentPriceUSD = this.getFiatValue()(resp.usd);
+          this.rentPriceUSD = this.getFiatValue(resp.usd);
         }
       });
     },

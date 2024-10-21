@@ -84,12 +84,12 @@
           <mew-expand-panel
             :idx-to-expand="null"
             class="my-domains-panel"
-            :panel-items="myDomains"
+            :panel-items="filteredDomains"
             :right-action-text="$t('ens.buy-domain')"
             @onActionClick="buyDomain"
           >
             <template
-              v-for="(domain, idx) in myDomains"
+              v-for="(domain, idx) in filteredDomains"
               :slot="'panelBody' + (idx + 1)"
             >
               <div
@@ -130,39 +130,39 @@
 
                   <v-spacer></v-spacer>
 
-                  <v-col cols="12" md="6" class="d-flex align-center">
-                    <div
-                      v-if="domain.controllerAddress !== '0x'"
-                      class="d-flex align-center"
+                  <v-col
+                    v-if="domain.controllerAddress !== '0x'"
+                    cols="12"
+                    md="6"
+                    class="d-flex align-center"
+                  >
+                    <div>{{ $t('ens.manage-domains.controller') }}</div>
+                    <mew-blockie
+                      :address="domain.controllerAddress"
+                      width="25px"
+                      height="25px"
+                      class="mx-2"
+                    />
+                    <mew-transform-hash :hash="domain.controllerAddress" />
+                    <mew-copy
+                      class="ml-2 mew-body"
+                      :copy-value="domain.controllerAddress"
+                      :is-small="true"
+                    />
+                    <a
+                      class="address-link"
+                      :href="
+                        network.type.blockExplorerAddr.replace(
+                          '[[address]]',
+                          domain.controllerAddress
+                        )
+                      "
+                      target="_blank"
                     >
-                      <div>{{ $t('ens.manage-domains.controller') }}</div>
-                      <mew-blockie
-                        :address="domain.controllerAddress"
-                        width="25px"
-                        height="25px"
-                        class="mx-2"
-                      />
-                      <mew-transform-hash :hash="domain.controllerAddress" />
-                      <mew-copy
-                        class="ml-2 mew-body"
-                        :copy-value="domain.controllerAddress"
-                        :is-small="true"
-                      />
-                      <a
-                        class="address-link"
-                        :href="
-                          network.type.blockExplorerAddr.replace(
-                            '[[address]]',
-                            domain.controllerAddress
-                          )
-                        "
-                        target="_blank"
-                      >
-                        <v-icon small class="call-made"> mdi-call-made </v-icon>
-                      </a>
-                    </div>
-                    <div v-else>No controller</div>
+                      <v-icon small class="call-made"> mdi-call-made </v-icon>
+                    </a>
                   </v-col>
+                  <v-col cols="12" md="6" v-else>No controller</v-col>
                 </v-row>
 
                 <div
@@ -477,7 +477,10 @@ export default {
       );
     },
     totalDomains() {
-      return formatIntegerToString(this.myDomains.length);
+      return formatIntegerToString(this.filteredDomains.length);
+    },
+    filteredDomains() {
+      return this.myDomains.filter(domain => domain.controllerAddress !== '0x');
     }
   },
   watch: {
@@ -590,7 +593,7 @@ export default {
       this.ensManager
         .getAllNamesForAddress()
         .then(res => {
-          res.forEach(domain => {
+          const domains = res.map(domain => {
             domain.hasActiveBorder = !domain.expired;
             domain.disabled = domain.expired;
             domain.colorTheme = domain.expired ? 'redMedium' : 'greyLight';
@@ -600,8 +603,9 @@ export default {
                   text: this.$t('ens.expired')
                 }
               : '';
+            return domain;
           });
-          this.myDomains = res;
+          this.myDomains = domains;
         })
         .catch(err => {
           Toast(err, {}, ERROR);
