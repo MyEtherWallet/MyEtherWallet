@@ -1,3 +1,12 @@
+### devop
+
+* patch amplitude to remove remote code [#5020](https://github.com/MyEtherWallet/MyEtherWallet/pull/5020)
+
+### fix
+
+* fix ens [#5021](https://github.com/MyEtherWallet/MyEtherWallet/pull/5021)
+* fix decimal issue on sell, fix network switch error [#5022](https://github.com/MyEtherWallet/MyEtherWallet/pull/5022)
+
 ### Release v6.9.15
 
 ### fix
