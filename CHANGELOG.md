@@ -1,3 +1,5 @@
+### Release v6.9.16
+
 ### devop
 
 * patch amplitude to remove remote code [#5020](https://github.com/MyEtherWallet/MyEtherWallet/pull/5020)
