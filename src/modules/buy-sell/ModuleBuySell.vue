@@ -254,9 +254,7 @@ export default {
     sellSupported() {
       return (
         this.network.type.name === ETH.name ||
-        this.network.type.name === POL.name ||
-        this.network.type.name === OP.name ||
-        this.network.type.name === ARB.name
+        this.network.type.name === POL.name
       );
     },
     defaultCurrency() {
@@ -421,7 +419,9 @@ export default {
               cgToken.symbol = 'POL';
               cgToken.name = 'Polygon';
             }
-            return Object.assign({}, asset, token, cgToken);
+            return Object.assign({}, asset, token, cgToken, {
+              decimals: token.decimals
+            });
           });
           chain.assets = assets;
           const matchedChain =

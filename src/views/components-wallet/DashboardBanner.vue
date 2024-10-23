@@ -96,23 +96,24 @@ export default {
       const testTime = new Date();
       const week = moment(testTime).week();
       const day = testTime.getDay();
-      if ((week === 42 && day >= 3) || (week === 43 && day < 3)) {
+
+      if ((week === 42 && day > 3) || (week === 43 && day < 4)) {
         return require('@/assets/images/ad/CoinbaseOnramp1.png');
-      } else if ((week === 43 && day >= 3) || (week === 44 && day < 3)) {
+      } else if ((week === 43 && day > 3) || (week === 44 && day < 4)) {
         return require('@/assets/images/ad/MoonPay1.png');
-      } else if ((week === 44 && day >= 3) || (week === 45 && day < 3)) {
+      } else if ((week === 44 && day > 3) || (week === 45 && day < 4)) {
         return require('@/assets/images/ad/Simplex1.png');
-      } else if ((week === 45 && day >= 3) || (week === 46 && day < 3)) {
+      } else if ((week === 45 && day > 3) || (week === 46 && day < 4)) {
         return require('@/assets/images/ad/Coinbase1.png');
-      } else if ((week === 46 && day >= 3) || (week === 47 && day < 3)) {
+      } else if ((week === 46 && day > 3) || (week === 47 && day < 4)) {
         return require('@/assets/images/ad/Topper2.png');
-      } else if ((week === 47 && day >= 3) || (week === 48 && day < 3)) {
+      } else if ((week === 47 && day > 3) || (week === 48 && day < 4)) {
         return require('@/assets/images/ad/CoinbaseOnramp2.png');
-      } else if ((week === 48 && day >= 3) || (week === 49 && day < 3)) {
+      } else if ((week === 48 && day > 3) || (week === 49 && day < 4)) {
         return require('@/assets/images/ad/MoonPay2.png');
-      } else if ((week === 49 && day >= 3) || (week === 50 && day < 3)) {
+      } else if ((week === 49 && day > 3) || (week === 50 && day < 4)) {
         return require('@/assets/images/ad/Simplex2.png');
-      } else if ((week === 50 && day >= 3) || (week === 51 && day < 3)) {
+      } else if ((week === 50 && day > 3) || (week === 51 && day < 4)) {
         return require('@/assets/images/ad/Coinbase2.png');
       }
       return require('@/assets/images/ad/Topper1.png');
