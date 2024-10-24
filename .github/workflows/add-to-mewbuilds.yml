@@ -27,7 +27,7 @@ jobs:
           key: ${{ runner.os }}-node-${{steps.node-version.outputs.NODE_VERSION}}-${{ hashFiles('**/package-lock.json') }}
 
       - name: npm install
-        run: docker run -it --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" mew-build-container /bin/bash -c "npm install --legacy-peer-deps"
+        run: docker run --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" mew-build-container /bin/bash -c "npm install --legacy-peer-deps"
 
       - name: create .env
         run: |

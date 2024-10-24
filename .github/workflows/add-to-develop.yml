@@ -24,7 +24,7 @@ jobs:
           key: ${{ runner.os }}-node-${{steps.node-version.outputs.NODE_VERSION}}-${{ hashFiles('**/package-lock.json') }}
 
       - name: npm install
-        run: docker run -it --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" mew-build-container /bin/bash -c "npm install --legacy-peer-deps"
+        run: docker run --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" mew-build-container /bin/bash -c "npm install --legacy-peer-deps"
 
       - name: build
         run: docker run -e INTERCOM_ID="${{secrets.INTERCOM_ID}}" -e WALLET_CONNECT_PROJECT_ID="${{secrets.WALLET_CONNECT_PROJECT_ID}}" --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:history"
