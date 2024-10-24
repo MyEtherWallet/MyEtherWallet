@@ -6,10 +6,10 @@ jobs:
     runs-on: ubuntu-latest
     if: startsWith(github.head_ref, 'lokalise-') == true
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: '12'
+          node-version: '14'
       - name: remove old lokalise entries
         env:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
