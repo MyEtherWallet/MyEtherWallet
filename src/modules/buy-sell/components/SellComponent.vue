@@ -167,7 +167,7 @@ export default {
         img: require(`@/assets/images/currencies/USD.svg`)
       },
       openTokenSelect: false,
-      selectedCurrency: this.defaultCurrency,
+      selectedCurrency: {},
       amount: '0',
       locGasPrice: '0',
       sendHandler: {},
@@ -187,7 +187,6 @@ export default {
     ...mapState('global', ['gasPriceType']),
     ...mapGetters('wallet', ['balanceInETH', 'balanceInWei', 'tokensList']),
     ...mapGetters('global', ['isEthNetwork', 'network', 'gasPriceByType']),
-    ...mapGetters('external', ['contractToToken']),
     fiatCurrencyItems() {
       return this.sellFiats;
     },
@@ -420,10 +419,22 @@ export default {
     if (foundFiat) {
       this.selectedFiat = foundFiat;
     }
+
+    const currentNetwork = this.sellNetworks.find(
+      network => network.name === this.network.type.name
+    );
+
+    const findMain = currentNetwork.assets.find(
+      asset => asset.contract === MAIN_TOKEN_ADDRESS
+    );
+
+    this.selectedCurrency = findMain
+      ? findMain
+      : this.defaultCurrency || currentNetwork.assets[0];
     this.locGasPrice = this.gasPriceByType(this.gasPriceType);
   },
   methods: {
-    ...mapActions('external', ['setCoinGeckoTokens']),
+    ...mapActions('external', ['setCoinGeckoTokens', 'getCoinGeckoTokenById']),
     getEthBalance() {
       const web3Instance = this.web3;
       web3Instance.eth.getBalance(this.address).then(res => {
