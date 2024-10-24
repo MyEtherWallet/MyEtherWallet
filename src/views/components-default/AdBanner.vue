@@ -1,11 +1,11 @@
 <template>
   <div class="mew-component--advertise-with-us pb-md-15">
     <div class="desktop-content d-none d-lg-block expandHeader">
-      <v-container class="banner-content-container pt-10">
+      <v-container class="banner-content-container pt-16">
         <div
           :class="[
             $vuetify.breakpoint.mdAndDown ? 'mew-subtitle' : 'mew-title',
-            'font-weight-regular white--text mb-11'
+            'font-weight-regular white--text mb-11 mt-16'
           ]"
         >
           Advertise with MEW
@@ -42,7 +42,9 @@
     </div>
     <div class="mobile-content d-block d-lg-none expandHeader pt-5">
       <v-container>
-        <div class="mew-title font-weight-regular white--text text-center">
+        <div
+          class="mew-title font-weight-regular white--text text-center mt-16"
+        >
           Advertise With MEW
         </div>
         <v-row no-gutters>

@@ -52,7 +52,7 @@
 
         <div v-if="currentStep === 1">
           <v-sheet color="transparent" max-width="600px" class="mx-auto py-10">
-            <network-switch />
+            <network-switch :is-wallet="false" />
           </v-sheet>
           <mew-button
             btn-size="xlarge"
@@ -496,7 +496,7 @@ export default {
      * - raw: raw data
      * - details: detailed data (includes more fields)
      ***********************************************************************************/
-    rawTxData() {
+    async rawTxData() {
       try {
         const tx = new Transaction(this.getRawTransaction, {
           common: commonGenerator(this.network)
@@ -554,7 +554,7 @@ export default {
      **********************************************************/
     async setRawTransaction(val) {
       if (val) return (this.rawTransaction = val);
-      const { raw, fee } = this.rawTxData();
+      const { raw, fee } = await this.rawTxData();
       if (raw) {
         this.rawTransaction = JSON.stringify(raw, null, 3);
         const { eth } = this.web3;
@@ -584,9 +584,9 @@ export default {
      * @param {string} val[].title - Name of value
      * @param {string|number} val[].value - Value
      **********************************************************/
-    setRawDetails(val) {
+    async setRawDetails(val) {
       if (val) return (this.transactionDetails = val);
-      const { details } = this.rawTxData();
+      const { details } = await this.rawTxData();
       if (details)
         this.transactionDetails = [
           {

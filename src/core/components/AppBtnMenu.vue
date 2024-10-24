@@ -5,7 +5,6 @@
 </template>
 <script>
 export default {
-  name: 'AppBtnMenu',
-  props: {}
+  name: 'AppBtnMenu'
 };
 </script>

@@ -25,7 +25,7 @@ const webpackConfig = {
       'Strict-Transport-Security':
         'max-age=63072000; includeSubdomains; preload',
       'Content-Security-Policy':
-        "font-src 'self' data: js.intercomcdn.com:443 fonts.intercomcdn.com:443; media-src js.intercomcdn.com:443 'self'; default-src 'self' blob:; frame-src 'self' request-global.czilladx.com:443 verify.walletconnect.com:443 www.walletlink.org:443 connect.trezor.io:443 intercom-sheets.com:443; img-src 'self' downloads.intercomcdn.com:443 www.mewtopia.com:443 gifs.intercomcdn.com:443 js.intercomcdn.com:443 images.ctfassets.net static.intercomassets.com:443 nft.mewapi.io:443 mewcard.mewapi.io:443 img.mewapi.io:443 app.lokalise.com:443 explorer-api.walletconnect.com:443 data: blob: ; script-src 'unsafe-eval' 'unsafe-inline' blob: https:; style-src 'self' 'unsafe-inline' https:; object-src 'none'; connect-src " +
+        "font-src 'self' data: js.intercomcdn.com:443 fonts.intercomcdn.com:443 fonts.gstatic.com:443; media-src js.intercomcdn.com:443 'self'; default-src 'self' blob:; frame-src 'self' request-global.czilladx.com:443 verify.walletconnect.com:443 verify.walletconnect.org:443 www.walletlink.org:443 connect.trezor.io:443 intercom-sheets.com:443 www.google.com:443; img-src 'self' downloads.intercomcdn.com:443 www.mewtopia.com:443 gifs.intercomcdn.com:443 js.intercomcdn.com:443 images.ctfassets.net static.intercomassets.com:443 nft.mewapi.io:443 mewcard.mewapi.io:443 img.mewapi.io:443 app.lokalise.com:443 explorer-api.walletconnect.com:443 data: blob: ; script-src 'unsafe-eval' 'unsafe-inline' blob: https:; style-src 'self' 'unsafe-inline' https:; object-src 'none'; connect-src " +
         allowedConnections.join(' ') +
         ';',
       'X-Content-Type-Options': 'nosniff',
@@ -65,18 +65,17 @@ const webpackConfig = {
         }
       ]
     }),
-    new webpack.DefinePlugin(env_vars)
+    new webpack.DefinePlugin(env_vars),
+    new webpack.optimize.MinChunkSizePlugin({
+      minChunkSize: 1000000
+    })
   ],
-  optimization: {
-    splitChunks: {
-      minSize: 1000000,
-      maxSize: 5242880
-    }
-  },
   output: {
     filename: '[name].[hash].js'
   }
 };
+
+const transpileDependencies = ['@ensdomains/address-encoder'];
 
 const transpilers = config => {
   // GraphQL Loader
@@ -93,6 +92,12 @@ const transpilers = config => {
     .loader('babel-loader')
     .end();
   config.module
+    .rule('transpile-unstorage')
+    .test(/node_modules\/unstorage\/.*\.mjs$/)
+    .use('babel')
+    .loader('babel-loader')
+    .end();
+  config.module
     .rule('transpile-eth2-keystore')
     .test(/node_modules\/@myetherwallet\/eth2-keystore\/.*\.js$/)
     .use('babel')
@@ -101,6 +106,48 @@ const transpilers = config => {
   config.module
     .rule('transpile-web3modal')
     .test(/node_modules\/@web3modal\/.*\.js$/)
+    .use('babel')
+    .loader('babel-loader')
+    .end();
+  config.module
+    .rule('transpile-metamask-cjs')
+    .test(/node_modules\/@metamask\/.*\.cjs$/)
+    .use('babel')
+    .loader('babel-loader')
+    .end();
+  config.module
+    .rule('transpile-metamask-mjs')
+    .test(/node_modules\/@metamask\/.*\.mjs$/)
+    .use('babel')
+    .loader('babel-loader')
+    .end();
+  config.module
+    .rule('transpile-metamask-js')
+    .test(/node_modules\/@metamask\/.*\.js$/)
+    .use('babel')
+    .loader('babel-loader')
+    .end();
+  config.module
+    .rule('transpile-ensdomains')
+    .test(/node_modules\/@ensdomains\/address-encoder\/.*\/.js$/)
+    .use('babel')
+    .loader('babel-loader')
+    .end();
+  config.module
+    .rule('transpile-ethereumjs')
+    .test(/node_modules\/@ethereumjs\/.*\.js$/)
+    .use('babel')
+    .loader('babel-loader')
+    .end();
+  config.module
+    .rule('transpile-noble')
+    .test(/node_modules\/@noble\/.*\.js$/)
+    .use('babel')
+    .loader('babel-loader')
+    .end();
+  config.module
+    .rule('transpile-micro-ftch')
+    .test(/node_modules\/micro-ftch\/.*\.js$/)
     .use('babel')
     .loader('babel-loader')
     .end();
@@ -117,6 +164,42 @@ const transpilers = config => {
     .loader('babel-loader')
     .end();
   config.module
+    .rule('web3-name-sdk')
+    .test(/node_modules\/@web3-name-sdk\/.*\.js$/)
+    .use('babel')
+    .loader('babel-loader')
+    .end();
+  config.module
+    .rule('viem')
+    .test(/node_modules\/viem\/.*\.js$/)
+    .use('babel')
+    .loader('babel-loader')
+    .end();
+  config.module
+    .rule('abitype')
+    .test(/node_modules\/abitype\/.*\.js$/)
+    .use('babel')
+    .loader('babel-loader')
+    .end();
+  config.module
+    .rule('libsodium')
+    .test(/node_modules\/libsodium\/.*\.js$/)
+    .use('babel')
+    .loader('babel-loader')
+    .end();
+  config.module
+    .rule('@sinclair')
+    .test(/node_modules\/@sinclair\/.*\.js$/)
+    .use('babel')
+    .loader('babel-loader')
+    .end();
+  config.module
+    .rule('@sinclair-mjs')
+    .test(/node_modules\/@sinclair\/.*\.mjs$/)
+    .use('babel')
+    .loader('babel-loader')
+    .end();
+  config.module
     .rule('resolve-alias')
     .test(/node_modules\/@ledgerhq\/.*\.js$/)
     .resolve.alias.set('@ledgerhq/devices', '@ledgerhq/devices/lib-es')
@@ -128,4 +211,10 @@ const transpilers = config => {
     .end();
 };
 
-module.exports = { webpackConfig, sourceMapsConfig, env_vars, transpilers };
+module.exports = {
+  webpackConfig,
+  sourceMapsConfig,
+  env_vars,
+  transpilers,
+  transpileDependencies
+};

@@ -47,14 +47,16 @@
 </template>
 
 <script>
+import BigNumber from 'bignumber.js';
+import { mapGetters } from 'vuex';
+import { isBN, toBN } from 'web3-utils';
+
 import {
   AAVE_TABLE_TITLE,
   INTEREST_TYPES,
   AAVE_TABLE_BUTTON,
   AAVE_TABLE_HEADER
 } from '@/dapps/aave-dapp/handlers/helpers';
-import BigNumber from 'bignumber.js';
-import { mapGetters } from 'vuex';
 import {
   formatFloatingPointValue,
   formatPercentageValue
@@ -62,7 +64,6 @@ import {
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import handlerAave from '../handlers/handlerAave.mixin';
 import { EventBus } from '@/core/plugins/eventBus';
-import { isBN, toBN } from 'web3-utils';
 
 export default {
   name: 'AaveTable',
@@ -247,6 +248,9 @@ export default {
               return {
                 token: item.reserve.symbol,
                 tokenImg: `${item.reserve.icon}`,
+                contract: item.reserve.aToken.id,
+                decimals: item.reserve.decimals,
+                price: BigNumber(item.reserve.priceInUSD).toString(),
                 balance: [
                   `${formatFloatingPointValue(item.underlyingBalance).value} ${
                     item.reserve.symbol
@@ -290,6 +294,9 @@ export default {
               return {
                 token: item.reserve.symbol,
                 tokenImg: `${item.reserve.icon}`,
+                contract: item.reserve.aToken.id,
+                decimals: item.reserve.decimals,
+                price: BigNumber(item.reserve.priceInUSD).toString(),
                 balance: [
                   `${formatFloatingPointValue(item.totalBorrows).value} ${
                     item.reserve.symbol

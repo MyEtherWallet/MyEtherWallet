@@ -32,7 +32,7 @@
         />
       </div>
 
-      <app-table v-if="!isMobile" flat divider full-width>
+      <mew-light-table v-if="!isMobile" flat divider full-width>
         <table>
           <thead>
             <tr class="text-uppercase">
@@ -84,7 +84,7 @@
             </tr>
           </tbody>
         </table>
-      </app-table>
+      </mew-light-table>
 
       <div v-else class="mt-6">
         <div
@@ -130,15 +130,11 @@
 </template>
 
 <script>
-import AppTable from '@/core/components/AppTable';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import { mapActions, mapGetters } from 'vuex';
 import { cloneDeep } from 'lodash';
 
 export default {
-  components: {
-    AppTable
-  },
   props: {
     open: {
       default: false,

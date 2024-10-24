@@ -14,7 +14,9 @@ const ERRORS = {
   'execution reverted':
     'Something went wrong with the transaction: execution reverted',
   'MetaMask Message Signature: User denied message signature.':
-    'MetaMask Message Signature: User denied message signature.'
+    'MetaMask Message Signature: User denied message signature.',
+  'MetaMask Personal Message Signature: User denied message signature.':
+    'MetaMask Personal Message Signature: User denied message signature.'
 };
 const WARNINGS = {};
 

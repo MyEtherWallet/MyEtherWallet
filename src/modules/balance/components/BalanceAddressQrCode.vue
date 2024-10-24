@@ -7,7 +7,7 @@
       <div class="textDark--text subtitle-1 font-weight-bold mb-2">
         {{ title }}
       </div>
-      <qr-code :data="value" :height="140" :width="140" />
+      <app-qr-code :data="value" :height="140" :width="140" />
       <v-card flat max-width="160px" class="monospace mt-1">
         {{ value }}
       </v-card>
@@ -27,11 +27,7 @@ export default {
       type: String,
       default: ''
     }
-  },
-  data() {
-    return {};
-  },
-  methods: {}
+  }
 };
 </script>
 

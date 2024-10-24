@@ -25,11 +25,12 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex';
-import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import { toBN } from 'web3-utils';
 import EthDater from 'ethereum-block-by-date';
 import moment from 'moment';
 import { uniqBy } from 'lodash';
+
+import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import handlerBlock from '../handlers/handlerBlock';
 
 export default {

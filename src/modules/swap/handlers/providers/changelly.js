@@ -7,7 +7,21 @@ import { toBN, toHex, toWei } from 'web3-utils';
 import { isValidAddress } from 'ethereumjs-util';
 
 import Web3Contract from 'web3-eth-contract';
-import { ETH } from '@/utils/networks/types';
+import {
+  ETH,
+  ROOTSTOCK,
+  ETC,
+  XDC,
+  MOONBEAM,
+  MOONRIVER,
+  POL,
+  AURORA,
+  ARB,
+  FTM,
+  GNO,
+  OP,
+  COTI
+} from '@/utils/networks/types';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { EventBus } from '@/core/plugins/eventBus';
 import EventNames from '@/utils/web3-provider/events.js';
@@ -48,7 +62,21 @@ class Changelly {
   constructor(web3, chain) {
     this.web3 = web3;
     this.provider = 'changelly';
-    this.supportednetworks = [ETH.name];
+    this.supportednetworks = [
+      ETH.name,
+      ROOTSTOCK.name,
+      ETC.name,
+      XDC.name,
+      MOONBEAM.name,
+      MOONRIVER.name,
+      POL.name,
+      AURORA.name,
+      ARB.name,
+      FTM.name,
+      GNO.name,
+      OP.name,
+      COTI.name
+    ];
     this.chain = chain;
   }
   isSupportedNetwork(chain) {
@@ -154,11 +182,23 @@ class Changelly {
         ]
       )
         .then(response => {
-          const newResponse = isArray(response.data.result)
-            ? response.data.result[0]
-            : response.data.result;
-          if (response.error || !newResponse.result || !newResponse.id) {
-            return [{}];
+          const newResponse = response.data
+            ? isArray(response.data.result)
+              ? response.data.result[0]
+              : response.data.result
+            : null;
+          // return formatted response and let ui handle error
+          if (response.error || !newResponse || !newResponse.id) {
+            return [
+              {
+                exchange: this.provider,
+                provider: this.provider,
+                amount: '0',
+                rateId: '0',
+                minFrom: minmax?.minFrom ? minmax.minFrom : 0,
+                maxFrom: minmax?.maxFrom ? minmax.maxFrom : 0
+              }
+            ];
           }
           return [
             {

@@ -1,33 +1,5 @@
-const setTrackingConsent = function ({ commit, dispatch }, val) {
+const setTrackingConsent = function ({ commit }, val) {
   commit('SET_TRACKING_CONSENT', val);
-  dispatch('setTracking');
-};
-
-const neverShowEnkryptPromo = function ({ commit }) {
-  commit('NEVER_SHOW_ENKRYPT_PROMO');
-};
-
-const setTracking = function ({ state }) {
-  const matomoExists = () => {
-    return new Promise(resolve => {
-      const checkInterval = 50;
-      const timeout = 5000;
-      const waitStart = Date.now();
-      const interval = setInterval(() => {
-        if (this._vm.$matomo) {
-          clearInterval(interval);
-          return resolve();
-        }
-        if (Date.now() >= waitStart + timeout) {
-          clearInterval(interval);
-        }
-      }, checkInterval);
-    });
-  };
-  matomoExists().then(() => {
-    if (state.consentToTrack) this._vm.$matomo.setConsentGiven();
-    else this._vm.$matomo.forgetConsentGiven();
-  });
 };
 
 const neverShowEnkryptLandingPage = function ({ commit }) {
@@ -46,27 +18,25 @@ const closeEnkryptWalletSnackbar = function ({ commit }) {
   commit('CLOSE_WALLET_ENKRYPT_SNACKBAR');
 };
 
-const showSurveyPopup = function ({ commit }) {
-  commit('SHOW_SURVEY_POPUP');
+const setPkSurvey = function ({ commit }) {
+  commit('SET_PK_SURVEY');
 };
 
-const neverShowSurveyPopup = function ({ commit }) {
-  commit('NEVER_SHOW_SURVEY_POPUP');
+const shownPkSurveyCounter = function ({ commit }) {
+  commit('SHOWN_PK_SURVEY_COUNTER');
 };
 
-const neverShowSurveyBanner = function ({ commit }) {
-  commit('NEVER_SHOW_SURVEY_BANNER');
+const setShownEu = function ({ commit }) {
+  commit('SET_SHOWN_EU');
 };
 
 export default {
   setTrackingConsent,
-  setTracking,
-  neverShowEnkryptPromo,
   neverShowEnkryptLandingPage,
   neverShowEnkryptWalletPage,
   showEnkryptWalletSnackbar,
   closeEnkryptWalletSnackbar,
-  showSurveyPopup,
-  neverShowSurveyPopup,
-  neverShowSurveyBanner
+  setPkSurvey,
+  shownPkSurveyCounter,
+  setShownEu
 };

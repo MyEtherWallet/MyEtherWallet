@@ -6,7 +6,8 @@ const exportObj = {
   configureWebpack: config.webpackConfig,
   lintOnSave: process.env.NODE_ENV === 'production' ? 'error' : true,
   integrity: process.env.WEBPACK_INTEGRITY === 'false' ? false : true,
-  chainWebpack: config.transpilers
+  chainWebpack: config.transpilers,
+  transpileDependencies: config.transpileDependencies
 };
 
 module.exports = exportObj;

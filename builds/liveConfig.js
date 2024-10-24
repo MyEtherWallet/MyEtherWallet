@@ -10,11 +10,13 @@ const exportObj = {
   pwa: {
     name: 'MyEtherWallet',
     workboxOptions: {
+      cacheId: `myetherwallet-${JSON.parse(config.env_vars.VERSION)}`,
       importWorkboxFrom: 'local',
       skipWaiting: true,
       clientsClaim: true,
-      navigateFallback: '/index.html',
-      navigateFallbackBlacklist: [/^\/pages/]
+      cleanupOutdatedCaches: true,
+      exclude: [/index\.html$/, /\.map$/, /staking/],
+      navigateFallbackBlacklist: [/staking/]
     },
     iconPaths: {
       faviconSVG: 'icons/favicon.svg',
@@ -25,7 +27,8 @@ const exportObj = {
       msTileImage: 'icons/msapplication-icon-144x144.png'
     }
   },
-  chainWebpack: config.transpilers
+  chainWebpack: config.transpilers,
+  transpileDependencies: config.transpileDependencies
 };
 
 module.exports = exportObj;

@@ -1,6 +1,6 @@
 <template>
   <div class="mew-component--side-info-network">
-    <mew6-white-sheet :sideinfo="!mobile" class="py-5">
+    <white-sheet :sideinfo="!mobile" class="py-5">
       <div class="textDark--text px-5 px-lg-7 mew-heading-2 mb-2">
         {{ $t('common.network') }}
       </div>
@@ -30,12 +30,13 @@
           </div>
         </v-btn>
       </div>
-    </mew6-white-sheet>
+    </white-sheet>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapState } from 'vuex';
+
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 import WALLET_TYPES from '../access-wallet/common/walletTypes';
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
@@ -56,12 +57,10 @@ export default {
       default: false
     }
   },
-  data() {
-    return {};
-  },
   computed: {
     ...mapState('wallet', ['blockNumber', 'identifier', 'isHardware']),
     ...mapState('global', ['validNetwork']),
+    ...mapState('external', ['selectedEIP6963Provider']),
     ...mapGetters('global', ['network']),
     fullName() {
       return this.network.type.name_long;
@@ -74,15 +73,15 @@ export default {
     },
     show() {
       let switchNetworkWeb3Supported = false;
-      if (window.ethereum) {
+      if (this.selectedEIP6963Provider) {
         const isMetaMask =
-          window.ethereum.isMetaMask &&
-          !window.ethereum.hasOwnProperty('isTrust') &&
-          !window.ethereum.hasOwnProperty('isMEWwallet');
+          this.selectedEIP6963Provider.isMetaMask &&
+          !this.selectedEIP6963Provider.hasOwnProperty('isTrust') &&
+          !this.selectedEIP6963Provider.hasOwnProperty('isMEWwallet');
         const isMEWwallet =
-          window.ethereum.isMetaMask &&
-          window.ethereum.isMEWwallet &&
-          window.ethereum.isTrust;
+          this.selectedEIP6963Provider.isMetaMask &&
+          this.selectedEIP6963Provider.isMEWwallet &&
+          this.selectedEIP6963Provider.isTrust;
         switchNetworkWeb3Supported = isMetaMask || isMEWwallet;
       }
 

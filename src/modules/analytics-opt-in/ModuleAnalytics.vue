@@ -82,6 +82,7 @@
 
 <script>
 import { mapMutations } from 'vuex';
+
 import handlerAnalytics from './handlers/handlerAnalytics.mixin';
 
 export default {
@@ -112,6 +113,7 @@ export default {
      * then never displays the dialog again
      */
     onClick(val, showAgain) {
+      this.$amplitude.setOptOut(!val);
       const prom = this.setTrackingConsent(val);
       if (!showAgain) {
         prom.then(this.NEVER_SHOW_TRACKING);

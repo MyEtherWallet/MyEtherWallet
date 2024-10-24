@@ -19,7 +19,7 @@
           <div
             v-if="showSuccessModal"
             v-lottie="successLottie"
-            :class="[{ 'py-7': showSuccessSwap }, 'lottie']"
+            :class="[showSuccessSwap ? 'py-7' : '', 'lottie']"
           />
           <!--
           ====================================================================================
@@ -48,6 +48,7 @@
                 target="_blank"
                 :href="links.explorer"
                 class="d-flex justify-center justify-sm-start"
+                @click="trackExplorrer(explorerText)"
                 >View on {{ explorerText }}
                 <v-icon color="primary" small>mdi-launch</v-icon></a
               >
@@ -61,9 +62,9 @@
 
 <script>
 import { EventBus } from '@/core/plugins/eventBus';
+
 export default {
   name: 'SuccessModal',
-  components: { AppModal: () => import('@/core/components/AppModal') },
   props: {
     showSuccessModal: {
       type: Boolean,
@@ -117,6 +118,14 @@ export default {
     viewProgress() {
       EventBus.$emit('openNotifications');
       this.reset();
+    },
+    trackExplorrer(explorer) {
+      if (explorer.toLowerCase() === 'ethvm') {
+        this.$amplitude.track('EthVMLinkClicked', {
+          path: this.$route.path,
+          network: this.network.type.name
+        });
+      }
     }
   }
 };

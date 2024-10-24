@@ -7,16 +7,12 @@
 </template>
 
 <script>
-import AdBanner from '@/views/components-default/AdBanner.vue';
-import AdPrototype from '@/views/components-default/AdPrototype.vue';
-import AdForm from '@/views/components-default/AdForm.vue';
-
 export default {
   name: 'AdvertiseWithUsLanding',
   components: {
-    AdBanner,
-    AdPrototype,
-    AdForm
+    AdBanner: () => import('@/views/components-default/AdBanner.vue'),
+    AdPrototype: () => import('@/views/components-default/AdPrototype.vue'),
+    AdForm: () => import('@/views/components-default/AdForm.vue')
   }
 };
 </script>

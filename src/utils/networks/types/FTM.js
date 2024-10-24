@@ -24,5 +24,6 @@ export default {
   gasPriceMultiplier: 1,
   canBuy: false,
   coingeckoID: 'fantom',
-  balanceApi: 'https://partners.mewapi.io/balances/ftm/'
+  balanceApi: 'https://partners.mewapi.io/balances/ftm/',
+  ensEnkryptType: 'FTM'
 };

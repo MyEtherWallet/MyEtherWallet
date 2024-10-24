@@ -18,24 +18,15 @@ export default class ReverseRegistrar {
   }
 
   async setReverseRecord(domain, addr) {
-    let resolved = false;
-    let attempts = 0;
-    while (!resolved && attempts < 5) {
-      try {
-        let nonce = await this.signer.getTransactionCount(RNS_REGISTRY_ADDRESS);
-        const setNameResp = await this.reverseRegisterContract.setName(domain, {
-          nonce: nonce + attempts
-        });
-        await setNameResp.wait();
-        nonce = await this.signer.getTransactionCount(RNS_REGISTRY_ADDRESS);
-        await this.reverseRegisterContract.claim(addr.toLowerCase(), {
-          nonce: nonce + attempts
-        });
-        resolved = true;
-      } catch (e) {
-        resolved = false;
-      }
-      attempts++;
-    }
+    const nonce = await this.signer.getTransactionCount();
+
+    /** Set name call */
+    const setNameResp = await this.reverseRegisterContract.setName(domain, {
+      nonce: nonce
+    });
+    await setNameResp.wait();
+    return await this.reverseRegisterContract.claim(addr.toLowerCase(), {
+      nonce: nonce + 1
+    });
   }
 }

@@ -91,7 +91,7 @@
       :not-enough-funds="notEnoughFunds"
       :loading-commit="loadingCommit"
       :loading-reg="loadingReg"
-      :commited="committed"
+      :committed="committed"
       :minimum-age="minimumAge"
       :commit="commit"
       :no-funds-for-reg-fees="noFundsForRegFees"
@@ -107,21 +107,21 @@
 </template>
 <script>
 import { mapGetters, mapState } from 'vuex';
+import { ethers, BigNumber } from 'ethers';
+import { setInterval } from 'timers';
+
 import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
-import TheWrapperDapp from '@/core/components/TheWrapperDapp';
 import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
 import { RNS_MANAGER_ROUTE } from './routes';
 import normalise from '@/core/helpers/normalise';
 import RNSManager from './handlers/handlerRNSManager';
 import ReverseRegister from './handlers/helpers/reverseRegistrar';
-import { ethers, BigNumber } from 'ethers';
-import { setInterval } from 'timers';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin.js';
 
 export default {
   name: 'RNSManagerLayout',
   components: {
-    TheWrapperDapp,
+    TheWrapperDapp: () => import('@/dapps/TheWrapperDapp.vue'),
     ModuleRegisterDomain: () => import('./modules/ModuleRegisterDomain'),
     RnsReverseLookup: () => import('./components/reverse/RnsReverseLookup')
   },
@@ -258,13 +258,12 @@ export default {
       this.loadingReg = false;
       this.name = '';
       this.$router.push({ name: RNS_MANAGER_ROUTE.MANAGE.NAME });
-      this.trackDapp('closeRnsRegister');
+      this.trackDapp('rnsCloseRegister');
     },
     setName(name) {
       this.searchError = '';
       try {
         this.name = normalise(name);
-        this.trackDapp('setRnsDomainName');
       } catch (e) {
         this.searchError = e.message.includes('Failed to validate')
           ? 'Invalid name!'
@@ -273,31 +272,34 @@ export default {
       }
     },
     async register(duration) {
-      this.trackDapp('rnsDomainRegisterEvent');
-      this.loadingReg = true;
-      this.minimumAge = '90';
-      // trigger loader
-      this.loadingCommit = true;
-      this.waitingForReg = true;
+      try {
+        this.loadingReg = true;
+        this.minimumAge = '90';
+        // trigger loader
+        this.loadingCommit = true;
+        this.waitingForReg = true;
 
-      const [label] = this.name.split('.');
-      const address = this.instance.getAddressString();
-      const registerTx = await this.nameHandler.rskRegistrar.register(
-        label,
-        address,
-        this.regSecret,
-        BigNumber.from(duration),
-        this.domainPrice
-      );
+        const [label] = this.name.split('.');
+        const address = this.instance.getAddressString();
+        const registerTx = await this.nameHandler.rskRegistrar.register(
+          label,
+          address,
+          this.regSecret,
+          BigNumber.from(duration),
+          this.domainPrice
+        );
+        await registerTx.wait();
+        await this.reverseHandler.setReverseRecord(this.name, this.address);
+        this.loadingReg = false;
+        this.waitingForReg = false;
 
-      await registerTx.wait();
-      await this.reverseHandler.setReverseRecord(this.name, this.address);
-      this.loadingReg = false;
-      this.waitingForReg = false;
-
-      this.closeRegister();
-      this.trackDapp('rnsDomainRegisterReceipt');
-      Toast(`Registration successful!`, {}, SUCCESS);
+        this.closeRegister();
+        this.trackDapp('rnsDomainsRegisterSuccess');
+        Toast(`Registration successful!`, {}, SUCCESS);
+      } catch (e) {
+        this.trackDapp('rnsDomainRegisterFailed');
+        Toast(e, {}, ERROR);
+      }
     },
     async commit(duration) {
       this.loadingCommit = true;
@@ -320,11 +322,11 @@ export default {
         const intervalId = setInterval(async () => {
           commitmentReady = await canReveal();
           if (commitmentReady) {
-            let id = intervalId;
             if (intervalId && intervalId._id) {
-              id = intervalId._id;
+              clearInterval(intervalId._id);
+            } else {
+              clearInterval(intervalId);
             }
-            clearInterval(id);
             this.loadingCommit = false;
             this.committed = true;
             this.waitingForReg = false;
@@ -338,13 +340,14 @@ export default {
           }
         }, 1000 * 10 * 60);
       } catch (e) {
+        this.trackDapp('rnsDomainRegisterFailed');
         Toast(e, {}, ERROR);
       }
     },
     getRentPrice(duration) {
       const token = this.customTokens.find(token => token.name === 'RIF');
       const [label] = this.name.split('.');
-
+      this.trackDapp('rnsDomainInitializeRegister');
       return this.nameHandler.fetchPrice(label, duration).then(resp => {
         this.commitFeeInEth = resp.eth;
         this.domainPrice = resp.bn;

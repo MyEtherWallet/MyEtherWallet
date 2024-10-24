@@ -1,5 +1,6 @@
 module.exports = {
   collectCoverage: true, //process.env.NODE_ENV === 'production' ? true : false,
+  setupFiles: ['./jest.polyfills.js'],
   globals: {
     WITH_NETWORK: false,
     VERSION: 'test',
@@ -15,7 +16,6 @@ module.exports = {
   ],
   coverageDirectory: '<rootDir>/tests/unit/coverage',
   moduleFileExtensions: ['js', 'jsx', 'json', 'vue', 'node', 'svg'],
-  detectOpenHandles: true,
   reporters: ['default', 'jest-skipped-reporter'],
   transform: {
     '^.+\\.vue$': 'vue-jest',
@@ -42,7 +42,6 @@ module.exports = {
     '**/__tests__/*.(js | jsx | ts | tsx)',
     '**/tests/*.spec.js'
   ],
-  testEnvironmentOptions: {},
   testURL: 'https://localhost:8080',
   setupFilesAfterEnv: ['<rootDir>/tests/unit/__mocks__/mocks.js']
 };

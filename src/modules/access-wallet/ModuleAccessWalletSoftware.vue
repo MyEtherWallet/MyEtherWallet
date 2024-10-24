@@ -100,6 +100,7 @@ import { ROUTES_WALLET } from '../../core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 import handlerAccessWalletSoftware from './software/handlers/handlerAccessWalletSoftware';
+import { ACCESS_WALLET } from '../analytics-opt-in/handlers/configs/events';
 
 export default {
   name: 'ModuleAccessWalletSoftware',
@@ -249,23 +250,35 @@ export default {
         const wallet = !account
           ? this.accessHandler.getWalletInstance()
           : account;
+        const _this = this;
+        let type = '';
+        if (this.type === this.types.KEYSTORE) {
+          type = ACCESS_WALLET.KEYSTORE_CONNECTED;
+        } else if (this.type === this.types.MNEMONIC) {
+          type = ACCESS_WALLET.MNEMONIC_CONNECTED;
+        } else if (this.type === this.types.PRIVATE_KEY) {
+          type = ACCESS_WALLET.PRIVATE_KEY_CONNECTED;
+        }
         this.setWallet([wallet])
           .then(() => {
             if (this.switchAddress) {
               this.close();
               return;
             }
-            if (this.path !== '') {
-              this.$router.push({ path: this.path });
+            _this.trackAccessWalletAmplitude(type);
+            if (_this.path !== '') {
+              _this.$router.push({ path: _this.path });
             } else {
-              const name = this.isOfflineApp
+              const name = _this.isOfflineApp
                 ? ROUTES_WALLET.WALLETS.NAME
                 : ROUTES_WALLET.DASHBOARD.NAME;
-              this.$router.push({ name: name });
+              _this.$router.push({ name: name });
             }
-            this.trackAccessWallet(this.type);
           })
           .catch(e => {
+            this.trackAccessWalletAmplitude(ACCESS_WALLET.ACCESS_FAILED, {
+              wallet: type
+            });
             Toast(e, {}, ERROR);
           });
       } catch (e) {
@@ -281,6 +294,7 @@ export default {
     accessBack() {
       if (this.walletType !== SOFTWARE_WALLET_TYPES.OVERVIEW) {
         try {
+          this.trackAccessWalletAmplitude(ACCESS_WALLET.SOFTWARE_BACK);
           this.$router.push({
             query: { type: SOFTWARE_WALLET_TYPES.OVERVIEW }
           });
@@ -299,6 +313,19 @@ export default {
       if (Object.values(SOFTWARE_WALLET_TYPES).includes(newType)) {
         try {
           this.type = newType;
+          switch (newType) {
+            case SOFTWARE_WALLET_TYPES.KEYSTORE:
+              this.trackAccessWalletAmplitude(ACCESS_WALLET.KEYSTORE_SHOWN);
+              break;
+            case SOFTWARE_WALLET_TYPES.MNEMONIC:
+              this.trackAccessWalletAmplitude(ACCESS_WALLET.MNEMONIC_SHOWN);
+              break;
+            case SOFTWARE_WALLET_TYPES.PRIVATE_KEY:
+              this.trackAccessWalletAmplitude(ACCESS_WALLET.PRIVATE_KEY_SHOWN);
+              break;
+            default:
+              break;
+          }
           this.$router.push({
             query: { type: newType }
           });

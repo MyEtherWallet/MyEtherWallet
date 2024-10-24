@@ -7,6 +7,7 @@ import routesOfflineWallet from './routes-offline-wallet';
 import routesWallet from './routes-wallet';
 import routesNotFound from './routes-not-found';
 import { ROUTES_HOME } from '../configs/configRoutes';
+import Vue from 'vue';
 const routes =
   // eslint-disable-next-line
   BUILD === 'offline'
@@ -46,12 +47,48 @@ router.beforeResolve((to, from, next) => {
     } else {
       if (store.state.external.path !== '') {
         const localPath = store.state.external.path;
+        if (window.navigator.onLine) {
+          Vue.prototype.$amplitude.track('WalletDirectLinkAccess', {
+            to: localPath
+          });
+        }
         store.dispatch('external/setLastPath', '');
         router.push({ path: localPath });
       } else {
         next();
       }
     }
+  }
+});
+router.afterEach(to => {
+  const defaultTitle = 'MyEtherWallet | The Best Crypto Wallet For Web3';
+  const defaultDescription =
+    'Trusted by millions of users, MyEtherWallet is the first and best open source Ethereum wallet. Create a secure crypto wallet, buy, sell, stake and swap.';
+  const desc = document.querySelector('head meta[name="description"]');
+  const ogDesc = document.querySelector('head meta[property="og:description"]');
+  const title = document.querySelector('head title');
+  const ogTitle = document.querySelector('head meta[property="og:title"]');
+
+  if (to.meta) {
+    title.textContent = to.meta.hasOwnProperty('title')
+      ? to.meta.title
+      : defaultTitle;
+    ogTitle.setAttribute(
+      'content',
+      to.meta.hasOwnProperty('title') ? to.meta.title : defaultTitle
+    );
+    desc.setAttribute(
+      'content',
+      to.meta.hasOwnProperty('description')
+        ? to.meta.description
+        : defaultDescription
+    );
+    ogDesc.setAttribute(
+      'content',
+      to.meta.hasOwnProperty('description')
+        ? to.meta.description
+        : defaultDescription
+    );
   }
 });
 

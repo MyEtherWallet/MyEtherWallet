@@ -1,6 +1,6 @@
 <template>
   <div class="module-tokens-value">
-    <mew6-white-sheet class="px-5 px-lg-7 py-5 d-flex justify-space-between">
+    <white-sheet class="px-5 px-lg-7 py-5 d-flex justify-space-between">
       <v-row dense>
         <v-col cols="12">
           <div :class="[draggable ? 'ml-7' : '', 'mew-heading-2 mb-3']">
@@ -17,12 +17,12 @@
             <v-col cols="2">
               <mew-token-container
                 size="medium"
-                :img="token.img"
+                :img="imgConverter(token.img)"
                 class="token-shadow"
               ></mew-token-container>
             </v-col>
             <v-col cols="6" class="mt-2 token-balance textDark--text"
-              >{{ token.balancef }} {{ token.symbol }}</v-col
+              >{{ token.balancef }} {{ token.symbol | concatSymbol }}</v-col
             >
             <v-col
               cols="4"
@@ -38,13 +38,16 @@
                 {{ getText }}
               </div>
             </v-col>
-            <v-col align="right" cols="5">
-              <div class="tokens-link" @click="checkLink">{{ linkText }}</div>
+            <v-col v-if="tokenCount > 0" align="right" cols="5">
+              <div class="tokens-link" @click="checkLink">See All</div>
+            </v-col>
+            <v-col v-if="tokenCount === 0 && canBuy" align="right" cols="5">
+              <div class="tokens-link" @click="checkLink">Buy Crypto</div>
             </v-col>
           </v-row>
         </v-col>
       </v-row>
-    </mew6-white-sheet>
+    </white-sheet>
     <app-modal
       title="My Tokens"
       :close="handleTokensPopup"
@@ -65,17 +68,22 @@
 </template>
 
 <script>
-import { EventBus } from '@/core/plugins/eventBus';
 import { mapGetters, mapState } from 'vuex';
 import { toBN } from 'web3-utils';
-import { BUYSELL_EVENT } from '../buy-sell/helpers';
+
+import buyMore from '@/core/mixins/buyMore.mixin';
 
 export default {
   name: 'ModuleTokensValue',
+  filters: {
+    concatSymbol(value) {
+      return value.length > 6 ? `${value.slice(0, 6)}...` : value;
+    }
+  },
   components: {
-    AppModal: () => import('@/core/components/AppModal'),
     ModuleTokens: () => import('@/modules/balance/ModuleTokens')
   },
+  mixins: [buyMore],
   props: {
     draggable: {
       type: Boolean,
@@ -87,7 +95,10 @@ export default {
     ...mapGetters('wallet', ['tokensList']),
     ...mapState('wallet', ['initialLoad']),
     ...mapGetters('external', ['totalTokenFiatValue']),
-    ...mapGetters('global', ['getFiatValue']),
+    ...mapGetters('global', ['getFiatValue', 'network']),
+    canBuy() {
+      return this.network.type.canBuy;
+    },
     tokenTitle() {
       return `My Token${this.tokenCount !== 1 ? 's' : ''}`;
     },
@@ -123,9 +134,6 @@ export default {
       }
       return '';
     },
-    linkText() {
-      return this.tokenCount > 0 ? 'See all' : 'Buy Crypto';
-    },
     tokenCount() {
       if (
         this.tokensList.length > 0 &&
@@ -137,15 +145,15 @@ export default {
     }
   },
   methods: {
+    imgConverter(img) {
+      return img || this.network.type.icon;
+    },
     handleTokensPopup() {
       this.showPopup = !this.showPopup;
     },
     checkLink() {
       if (this.tokenCount > 0) this.handleTokensPopup();
-      else this.openBuySell();
-    },
-    openBuySell() {
-      EventBus.$emit(BUYSELL_EVENT);
+      else this.openBuySell('ModuleTokensValue');
     }
   }
 };

@@ -7,10 +7,10 @@ export default {
   blockExplorerTX: 'https://arbiscan.io/tx/[[txHash]]',
   blockExplorerAddr: 'https://arbiscan.io/address/[[address]]',
   chainID: 42161,
-  tokens: import('@/_generated/tokens/tokens-arb.json').then(
+  tokens: import('@/_generated/tokens/tokens-eth.json').then(
     module => module.default
   ),
-  contracts: import('@/_generated/contracts/contract-abi-arb.json').then(
+  contracts: import('@/_generated/contracts/contract-abi-eth.json').then(
     module => module.default
   ),
   icon: arbitrum,
@@ -22,7 +22,8 @@ export default {
     websocket: null
   },
   gasPriceMultiplier: 1,
-  canBuy: false,
+  canBuy: true,
   coingeckoID: 'ethereum',
-  balanceApi: 'https://partners.mewapi.io/balances/arb/'
+  balanceApi: 'https://partners.mewapi.io/balances/arb/',
+  ensEnkryptType: 'ARB1'
 };

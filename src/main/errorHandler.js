@@ -65,7 +65,12 @@ export const knownErrors = {
   'Missing or invalid topic field': '',
   'Cannot convert undefined or null to object': '',
   'No matching key. pairing': '',
-  'ResizeObserver loop limit exceeded': ''
+  'ResizeObserver loop limit exceeded': '',
+  'ResizeObserver loop completed with undelivered notifications.': '',
+  'execution reverted: Only manager can call this function.':
+    'Only a manager can call this function',
+  'Network Error':
+    'Network Error! Please make sure your internet connection is working.'
 };
 
 const handleError = err => {

@@ -9,7 +9,8 @@
 <script>
 export default {
   components: {
-    TheWrapperWallet: () => import('@/core/components/TheWrapperWallet'),
+    TheWrapperWallet: () =>
+      import('@/views/components-wallet/TheWrapperWallet'),
     ModuleNftManager: () => import('@/modules/nft-manager/ModuleNftManager')
   }
 };

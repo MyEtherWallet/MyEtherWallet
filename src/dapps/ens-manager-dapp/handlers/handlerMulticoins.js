@@ -1,4 +1,14 @@
-import { formatsByName } from '@ensdomains/address-encoder';
+import {
+  eth,
+  etcLegacy,
+  ltc,
+  btc,
+  doge,
+  mona,
+  rbtc,
+  xrp,
+  bch
+} from '@ensdomains/address-encoder/coins';
 import MultiCoinValidator from 'multicoin-address-validator';
 class MValidator {
   constructor(type) {
@@ -9,77 +19,78 @@ class MValidator {
     return MultiCoinValidator.validate(address, this.type);
   }
 }
+
 export default {
   ETH: {
     id: 60,
     symbol: 'ETH',
     name: 'Ethereum',
     validator: new MValidator('Ethereum'),
-    encode: formatsByName['ETH'].encoder,
-    decode: formatsByName['ETH'].decoder
+    encode: eth.encode,
+    decode: eth.decode
   },
   ETC: {
     id: 61,
     symbol: 'ETC',
     name: 'Ethereum Classic',
     validator: new MValidator('EthereumClassic'),
-    encode: formatsByName['ETC'].encoder,
-    decode: formatsByName['ETC'].decoder
+    encode: etcLegacy.encode,
+    decode: etcLegacy.decode
   },
   LTC: {
     id: 2,
     symbol: 'LTC',
     name: 'Litecoin',
     validator: new MValidator('LiteCoin'),
-    encode: formatsByName['LTC'].encoder,
-    decode: formatsByName['LTC'].decoder
+    encode: ltc.encode,
+    decode: ltc.decode
   },
   BTC: {
     id: 0,
     symbol: 'BTC',
     name: 'Bitcoin',
     validator: new MValidator('Bitcoin'),
-    encode: formatsByName['BTC'].encoder,
-    decode: formatsByName['BTC'].decoder
+    encode: btc.encode,
+    decode: btc.decode
   },
   DOGE: {
     id: 3,
     symbol: 'DOGE',
     name: 'DogeCoin',
     validator: new MValidator('DogeCoin'),
-    encode: formatsByName['DOGE'].encoder,
-    decode: formatsByName['DOGE'].decoder
+    encode: doge.encode,
+    decode: doge.decode
   },
   MONA: {
     id: 22,
     symbol: 'MONA',
     name: 'MonaCoin',
     validator: new MValidator('MonaCoin'),
-    encode: formatsByName['MONA'].encoder,
-    decode: formatsByName['MONA'].decoder
+    encode: mona.encode,
+    decode: mona.decode
   },
   RSK: {
     id: 137,
     symbol: 'RSK',
     name: 'RootStock',
     validator: new MValidator('Ethereum'),
-    encode: formatsByName['RSK'].encoder,
-    decode: formatsByName['RSK'].decoder
+    encode: rbtc.encode,
+    decode: rbtc.decode
   },
   XRP: {
     id: 144,
     symbol: 'XRP',
     name: 'Ripple',
     validator: new MValidator('Ripple'),
-    encode: formatsByName['XRP'].encoder,
-    decode: formatsByName['XRP'].decoder
+    encode: xrp.encode,
+    decode: xrp.decode
   },
   BCH: {
     id: 145,
     symbol: 'BCH',
     name: 'BitcoinCash',
     validator: new MValidator('BitcoinCash'),
-    encode: formatsByName['BCH'].encoder,
-    decode: formatsByName['BCH'].decoder
+    encode: bch.encode,
+    decode: bch.decode
   }
 };

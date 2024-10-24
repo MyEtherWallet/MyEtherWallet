@@ -8,4 +8,8 @@ const setSwapTokens = function ({ commit }, tokens) {
 const resetPrefetch = function ({ commit }) {
   commit('SET_PREFETCH', false);
 };
-export default { setSwapTokens, resetPrefetch };
+
+const setLocalContract = function ({ commit }, localContracts) {
+  commit('SET_LOCAL_CONTRACT', localContracts);
+};
+export default { setSwapTokens, resetPrefetch, setLocalContract };

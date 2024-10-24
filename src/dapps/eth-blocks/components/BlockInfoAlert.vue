@@ -279,7 +279,11 @@
               <a
                 v-if="!isTestNetwork && network.type.canBuy"
                 class="mew-label font-weight-medium buy-more-link"
-                @click="openBuySell"
+                @click="
+                  () => {
+                    openBuySell('ETHBlocksAlert');
+                  }
+                "
               >
                 Buy more {{ network.type.name }}.
 

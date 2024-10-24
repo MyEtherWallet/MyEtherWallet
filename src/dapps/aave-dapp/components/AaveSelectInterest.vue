@@ -64,8 +64,9 @@
 </template>
 
 <script>
-import { INTEREST_TYPES } from '../handlers/helpers';
 import BigNumber from 'bignumber.js';
+
+import { INTEREST_TYPES } from '../handlers/helpers';
 import { formatPercentageValue } from '@/core/helpers/numberFormatHelper';
 
 export default {

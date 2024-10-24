@@ -1,4 +1,5 @@
-import goerli from '@/assets/images/networks/network.svg';
+import { HOLESKY } from '../tlds';
+import network from '@/assets/images/networks/network.svg';
 
 export default {
   name: 'SEPOLIA',
@@ -14,8 +15,16 @@ export default {
   contracts: import('@/_generated/contracts/contract-abi-goerli.json').then(
     val => val.default
   ),
+  ens: {
+    registry: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
+    registrarTLD: 'eth',
+    registrarType: 'permanent',
+    supportedTld: HOLESKY,
+    subgraphPath:
+      'https://api.studio.thegraph.com/query/49574/enssepolia/version/latest'
+  },
   isTestNetwork: true,
-  icon: goerli,
+  icon: network,
   currencyName: 'SEP',
   isEthVMSupported: {
     supported: false,

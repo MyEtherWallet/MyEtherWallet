@@ -46,7 +46,7 @@ const STATUS_TYPES = {
 
 export { ABI_GET_FEES, STATUS_TYPES };
 export default class Staked {
-  constructor(web3, network, address) {
+  constructor(web3, network, address, trackDapp, identifier) {
     /**
      * set up the variables
      */
@@ -64,6 +64,8 @@ export default class Staked {
     this.pendingTxHash = '';
     this.txReceipt = false;
     this.endpoint = configNetworkTypes.network[this.network.type.name].endpoint;
+    this.trackDapp = trackDapp;
+    this.identifier = identifier;
     /**
      * get the initial data (total staked, apr, validators)
      */
@@ -301,15 +303,17 @@ export default class Staked {
     this.transactionData.from = this.address;
     this.transactionData.to =
       configNetworkTypes.network[this.network.type.name].batchContract;
-    this.web3.eth
+    return this.web3.eth
       .sendTransaction(this.transactionData)
       .on('transactionHash', res => {
         this.pendingTxHash = res;
       })
       .on('receipt', () => {
+        this.trackDapp('StakedStakeSuccess', { wallet: this.identifier });
         this.txReceipt = true;
       })
       .catch(err => {
+        this.trackDapp('StakedStakeFail');
         const error = handleError(err);
         if (error) Toast(err, {}, ERROR);
       });

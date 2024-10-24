@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
+    <title>icon\</title>
+    <desc>Created with Sketch.</desc>
+    <g id="icon\" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-4-Copy" transform="translate(3.000000, 3.000000)">
+            <circle id="Oval" fill="#CDF4EE" cx="29" cy="29" r="29"></circle>
+            <g id="Group-6" transform="translate(12.731707, 18.390244)">
+                <g id="Group-4">
+                    <g id="Group-3" transform="translate(8.912195, 1.273171)" stroke="#05C0A5" stroke-linecap="round" stroke-width="4.4">
+                        <polyline id="Line-2" points="0.636585366 10.0439024 5.32538658 10.0439024 22.2804878 10.0439024"></polyline>
+                        <path d="M0.636585366,19.5219512 L22.2804878,19.5219512" id="Line-2"></path>
+                        <path d="M0.636585366,1.13170732 L22.2804878,1.13170732" id="Line-2"></path>
+                    </g>
+                    <circle id="Oval" fill="#5A78F0" cx="2.40487805" cy="2.40487805" r="2.40487805"></circle>
+                    <circle id="Oval-Copy" fill="#5A78F0" cx="2.40487805" cy="11.3170732" r="2.40487805"></circle>
+                    <circle id="Oval-Copy-2" fill="#5A78F0" cx="2.40487805" cy="20.795122" r="2.40487805"></circle>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

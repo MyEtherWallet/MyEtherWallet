@@ -1,0 +1,54 @@
+{
+  "title": "Flyover",
+  "dapp-desc": "Transfer BTC from Bitcoin directly to Rootstock or RBTC to Bitcoin faster",
+  "pegin": {
+    "title": "Pegin",
+    "provider" :"Liquidity Provider",
+    "quote": {
+      "rskAddress": "Wallet Address to get RBTC Refund",
+      "btcAddress": "Wallet Address to get BTC Refund",
+      "btcAddressNote": "Must be a legacy address, segwit addresses are not accepted",
+      "amountBTC": "Amount to Transfer (BTC)",
+      "quoteBtn": "Get a Quote and Continue"
+    },
+    "accept": {
+      "amount": "Amount to deposit (BTC) = Amount to deposit + Call Fee",
+      "confirmations": "Number of block confirmations",
+      "hash": "Quote Hash",
+      "acceptBtn": "Accept Quote & Continue"
+    },
+    "deposit": {
+      "nextStep": "Use a bitcoin wallet to send {amount} btc to {address}.",
+      "doneStep": "Wait for the {blocks} blocks of confirmations to complete the pegin process completion and then verify the funds in your wallet.",
+      "amount": "Amount to deposit (BTC) = Amount to deposit + Call Fee",
+      "address": "BTC Address",
+      "deadline": "You have {ticker} to make the deposit.",
+      "expired": "Quote expired: Generate a new quote to perform the pegin.",
+      "done": "Done"
+    }
+  },
+  "pegout": {
+    "title": "Pegout",
+    "provider" :"Liquidity Provider",
+    "quote": {
+      "rskAddress": "Wallet Address to get RBTC Refund",
+      "btcAddress": "To Address (BTC)",
+      "btcRefund": "Wallet Address to get BTC Refund",
+      "btcAddressNote": "",
+      "amountBTC": "Amount to Transfer (RBTC)",
+      "quoteBtn": "Get a Quote and Continue"
+    },
+    "accept": {
+      "amount": "Amount to deposit (RBTC) = Amount to deposit + Call Fee",
+      "confirmations": "Number of block confirmations",
+      "hash": "Quote Hash",
+      "wait": "Wait for transaction confirmation",
+      "acceptBtn": "Accept Quote & Continue"
+    },
+    "deposit": {
+      "thanks": "Thank you!",
+      "tx": "Your transaction has been executed.",
+      "done": "The operation will be completed within 5-10 minutes."
+    }
+  }
+}

@@ -27,7 +27,11 @@
               : 'header-close-icon-mobile'
           "
         >
-          <v-icon size="x-large" color="grey cursor--pointer" @click="close">
+          <v-icon
+            size="x-large"
+            color="grey cursor--pointer"
+            @click="handleClickX"
+          >
             mdi-close
           </v-icon>
         </v-btn>
@@ -156,7 +160,7 @@
             btn-size="xlarge"
             title="Cancel"
             :has-full-width="$vuetify.breakpoint.xs"
-            @click.native="close"
+            @click.native="handleCloseButton"
           />
         </v-col>
         <v-col
@@ -180,7 +184,7 @@
             btn-size="xlarge"
             title="Close"
             :has-full-width="true"
-            @click.native="close"
+            @click.native="handleCloseButton"
           />
         </v-col>
       </v-row>
@@ -189,6 +193,7 @@
 </template>
 
 <script>
+import { SWAP } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 export default {
   props: {
     title: {
@@ -265,8 +270,13 @@ export default {
   },
   methods: {
     handleClickOutside() {
-      //this.$emit('close');
-      this.close();
+      this.close(SWAP.CLICK_OUTSIDE);
+    },
+    handleCloseButton() {
+      this.close(SWAP.BUTTON_CANCEL);
+    },
+    handleClickX() {
+      this.close(SWAP.X_OUT);
     }
   }
 };

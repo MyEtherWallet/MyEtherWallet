@@ -1,6 +1,6 @@
 <template>
   <div class="mew-component--how-it-works">
-    <the-layout-header :title="$t('howItWorks.title')" />
+    <the-layout-header :title="$t('howItWorks.title')" class="pt-16" />
     <div class="py-7" />
     <v-container>
       <v-sheet color="transparent" max-width="500px" class="mx-auto mb-10">
@@ -13,7 +13,7 @@
     <how-it-works-dapps-center />
     <how-it-works-tokens />
     <how-it-works-more />
-    <app-get-started />
+    <get-started />
   </div>
 </template>
 
@@ -22,13 +22,20 @@ export default {
   name: 'TheHowItWorksLayout',
   components: {
     TheLayoutHeader: () => import('../components-default/TheLayoutHeader'),
-    AppGetStarted: () => import('@/core/components/AppGetStarted'),
     HowItWorksSwap: () => import('../components-default/HowItWorksSwap'),
     HowItWorksSend: () => import('../components-default/HowItWorksSend'),
     HowItWorksDappsCenter: () =>
       import('../components-default/HowItWorksDappsCenter'),
     HowItWorksTokens: () => import('../components-default/HowItWorksTokens'),
-    HowItWorksMore: () => import('../components-default/HowItWorksMore')
+    HowItWorksMore: () => import('../components-default/HowItWorksMore'),
+    GetStarted: () => import('../components-default/GetStarted')
+  },
+  updated() {
+    const id = this.$route.hash.replace('#', '');
+    const container = document.getElementById(id);
+    if (container) {
+      container.scrollIntoView();
+    }
   }
 };
 </script>

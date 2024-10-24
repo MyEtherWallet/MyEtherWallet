@@ -37,7 +37,6 @@
 export default {
   name: 'ModuleToolsWatchOnly',
   components: {
-    AppBlockTitle: () => import('@/core/components/AppBlockTitle'),
     ToolsTableContainer: () => import('./components/ToolsTableContainer')
   },
   data: () => ({

@@ -84,12 +84,12 @@
           <mew-expand-panel
             :idx-to-expand="null"
             class="my-domains-panel"
-            :panel-items="myDomains"
+            :panel-items="filteredDomains"
             :right-action-text="$t('ens.buy-domain')"
             @onActionClick="buyDomain"
           >
             <template
-              v-for="(domain, idx) in myDomains"
+              v-for="(domain, idx) in filteredDomains"
               :slot="'panelBody' + (idx + 1)"
             >
               <div
@@ -130,7 +130,12 @@
 
                   <v-spacer></v-spacer>
 
-                  <v-col cols="12" md="6" class="d-flex align-center">
+                  <v-col
+                    v-if="domain.controllerAddress !== '0x'"
+                    cols="12"
+                    md="6"
+                    class="d-flex align-center"
+                  >
                     <div>{{ $t('ens.manage-domains.controller') }}</div>
                     <mew-blockie
                       :address="domain.controllerAddress"
@@ -157,6 +162,7 @@
                       <v-icon small class="call-made"> mdi-call-made </v-icon>
                     </a>
                   </v-col>
+                  <v-col v-else cols="12" md="6">No controller</v-col>
                 </v-row>
 
                 <div
@@ -290,25 +296,26 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex';
+import { fromWei, toBN, toWei } from 'web3-utils';
+import { clone } from 'lodash';
 import BigNumber from 'bignumber.js';
 import ENS from '@ensdomains/ensjs';
-import { fromWei, toBN, toWei } from 'web3-utils';
+
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin.js';
-import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
 import handlerEnsManager from './handlers/handlerEnsManager';
+import normalise from '@/core/helpers/normalise';
+import stripQuery from '@/core/helpers/stripQuery.js';
+import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
 import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 import { ENS_MANAGER_ROUTE } from './configsRoutes';
-import normalise from '@/core/helpers/normalise';
-import stripQuery from '@/core/helpers/stripQuery.js';
-import { clone } from 'lodash';
 
 export default {
   name: 'ENSManagerLayout',
   components: {
     ModuleRegisterDomain: () => import('./modules/ModuleRegisterDomain'),
     ModuleManageDomain: () => import('./modules/ModuleManageDomain'),
-    TheWrapperDapp: () => import('@/core/components/TheWrapperDapp'),
+    TheWrapperDapp: () => import('@/dapps/TheWrapperDapp.vue'),
     EnsReverseLookup: () => import('./components/reverse/EnsReverseLookup')
   },
   mixins: [handlerAnalytics],
@@ -318,7 +325,9 @@ export default {
       headerImg: require('@/assets/images/icons/dapps/icon-dapp-ensmanager.svg'),
       header: {
         title: this.$t('ens.title'),
-        subtext: this.$t('ens.dapp-desc')
+        subtext: `${this.$t('ens.dapp-desc')}. `,
+        dappLink:
+          'https://help.myetherwallet.com/en/articles/5482841-register-and-manage-eth-domains-with-ens'
       },
       activeTab: 0,
       loadingCommit: false,
@@ -468,7 +477,10 @@ export default {
       );
     },
     totalDomains() {
-      return formatIntegerToString(this.myDomains.length);
+      return formatIntegerToString(this.filteredDomains.length);
+    },
+    filteredDomains() {
+      return this.myDomains.filter(domain => domain.controllerAddress !== '0x');
     }
   },
   watch: {
@@ -581,7 +593,7 @@ export default {
       this.ensManager
         .getAllNamesForAddress()
         .then(res => {
-          res.forEach(domain => {
+          const domains = res.map(domain => {
             domain.hasActiveBorder = !domain.expired;
             domain.disabled = domain.expired;
             domain.colorTheme = domain.expired ? 'redMedium' : 'greyLight';
@@ -591,8 +603,9 @@ export default {
                   text: this.$t('ens.expired')
                 }
               : '';
+            return domain;
           });
-          this.myDomains = res;
+          this.myDomains = domains;
         })
         .catch(err => {
           Toast(err, {}, ERROR);
@@ -601,7 +614,7 @@ export default {
     closeManage() {
       this.onManage = false;
       this.settingIpfs = false;
-      this.trackDapp('closeEnsManageTab');
+      this.trackDapp('ensCloseManageTab');
     },
     transfer(address) {
       this.trackDapp('ensDomainTransferEvent');
@@ -646,7 +659,7 @@ export default {
       this.manageDomainHandler
         .renew(duration, this.balanceToWei)
         .then(() => {
-          this.getDomains;
+          this.getDomains();
           this.trackDapp('ensDomainRenew');
         })
         .catch(err => {
@@ -706,7 +719,7 @@ export default {
     async findDomain() {
       try {
         this.nameHandler = await this.ensManager.searchName(this.name);
-        this.trackDapp('findEnsDomain');
+        this.trackDapp('ensFindDomain');
       } catch (e) {
         Toast(e, {}, ERROR);
       }
@@ -717,9 +730,10 @@ export default {
       this.loadingCommit = false;
       this.loadingReg = false;
       this.name = '';
+      this.minimumAge = '';
       this.nameHandler = {};
       this.$router.push({ name: ENS_MANAGER_ROUTE.ENS_MANAGER.NAME });
-      this.trackDapp('closeEnsRegister');
+      this.trackDapp('ensCloseRegister');
     },
     setName(name) {
       this.searchError = '';
@@ -728,7 +742,6 @@ export default {
       }
       try {
         this.name = normalise(name);
-        this.trackDapp('setEnsDomainName');
       } catch (e) {
         this.searchError = e.message.includes('Failed to validate')
           ? 'Invalid name!'
@@ -738,7 +751,7 @@ export default {
     },
     register(duration) {
       this.trackDapp('ensDomainRegisterEvent');
-      this.nameHandler
+      return this.nameHandler
         .register(duration, this.balanceToWei)
         .on('transactionHash', () => {
           Toast(`Registering ENS name: ${this.name}`, {}, SUCCESS);
@@ -748,20 +761,20 @@ export default {
           setTimeout(() => {
             this.getDomains();
           }, 15000);
-          this.closeRegister();
-          this.trackDapp('ensDomainRegisterReceipt');
+          this.trackDapp('ensDomainRegisterSuccess');
           Toast(`Registration successful!`, {}, SUCCESS);
         })
-        .on('error', err => {
+        .on('error', () => {
           this.loadingReg = false;
-          this.instance.errorHandler(err.message ? err.message : err);
+          this.trackDapp('ensDomainRegisterFail');
+          Toast(`Registering ENS name: ${this.name} failed`, {}, ERROR);
         });
     },
     commit() {
       let waitingTime;
       this.trackDapp('ensDomainCommitEvent');
       this.nameHandler
-        .createCommitment()
+        .createCommitment(this.durationPick)
         .on('transactionHash', () => {
           this.nameHandler.getMinimumAge().then(resp => {
             this.minimumAge = resp;
@@ -784,12 +797,16 @@ export default {
           this.committed = false;
           this.waitingForReg = false;
           this.notEnoughFunds = false;
+          this.trackDapp('ensDomainRegisterFail');
           Toast(err, {}, ERROR);
         });
     },
 
     async getCommitFeeOnly() {
-      const commitFeeOnly = await this.nameHandler.getCommitmentFees(); // ETH
+      this.trackDapp('ensDomainInitializeRegister');
+      const commitFeeOnly = await this.nameHandler.getCommitmentFees(
+        this.durationPick
+      ); // ETH
       this.commitFeeInEth = commitFeeOnly.toString();
       this.commitFeeInWei = toWei(commitFeeOnly);
       this.commitFeeUsd = this.getFiatValue(
@@ -857,6 +874,7 @@ export default {
   .active-border {
     .subheader-container {
       background-color: var(--v-greyLight-base);
+
       div {
         max-width: 400px;
       }

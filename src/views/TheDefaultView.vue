@@ -1,15 +1,12 @@
 <template>
   <div>
-    <the-default-header />
-    <v-main>
+    <the-default-header @openMobileMenu="handleOpen" />
+    <v-main class="js-body">
       <router-view />
     </v-main>
     <the-default-footer />
-    <the-enkrypt-popup v-if="!isOfflineApp" :show="enkryptLandingPopup" />
-    <the-survey-popup
-      v-if="!isOfflineApp"
-      :show="surveyPopup && !neverShowSurveyPopup"
-    />
+    <the-mobile-menu :is-open="mobileOpen" @closeMobileMenu="handleClose" />
+    <gdpr-banner />
   </div>
 </template>
 
@@ -20,17 +17,27 @@ export default {
   name: 'TheDefaultView',
   components: {
     TheDefaultHeader: () => import('./components-default/TheDefaultHeader'),
+    TheMobileMenu: () => import('./components-default/TheMobileMenu'),
+    NewLookBanner: () => import('./components-default/NewLookBanner'),
     TheDefaultFooter: () => import('./components-default/TheDefaultFooter'),
     TheEnkryptPopup: () => import('./components-default/TheEnkryptPopup'),
-    TheSurveyPopup: () => import('./components-default/TheSurveyPopup')
+    GdprBanner: () => import('./components-default/GDPRBanner')
+  },
+  data() {
+    return {
+      mobileOpen: false
+    };
   },
   computed: {
-    ...mapState('popups', [
-      'enkryptLandingPopup',
-      'surveyPopup',
-      'neverShowSurveyPopup'
-    ]),
     ...mapState('wallet', ['isOfflineApp'])
+  },
+  methods: {
+    handleOpen() {
+      this.mobileOpen = true;
+    },
+    handleClose() {
+      this.mobileOpen = false;
+    }
   }
 };
 </script>

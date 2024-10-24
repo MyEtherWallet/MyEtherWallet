@@ -26,7 +26,7 @@
         Transfer Domain
       </div>
     </div>
-    <mew6-white-sheet>
+    <white-sheet>
       <mew-banner :text-obj="topBanner" :banner-img="BG" />
       <mew-tabs :items="tabs" has-underline>
         <template #tabContent1>
@@ -401,7 +401,7 @@
           </v-sheet>
         </template>
       </mew-tabs>
-    </mew6-white-sheet>
+    </white-sheet>
   </div>
 </template>
 

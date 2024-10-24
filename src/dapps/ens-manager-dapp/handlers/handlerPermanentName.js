@@ -22,7 +22,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
     this.expiryTime = expiry;
     this.secretPhrase = '';
     this.expiration = null;
-    this.expired = false;
+    this.expired = true;
     this.redeemable = false;
     this.web3 = web3;
     // Contracts
@@ -43,14 +43,13 @@ export default class PermanentNameModule extends ENSManagerInterface {
   }
   async getNameReverseData(domain) {
     try {
-      const contract = new this.web3.eth.Contract(ReverseRegistrar.abi);
-      contract._address = ReverseRegistrar.address;
-      const tx = {
-        to: ReverseRegistrar.address,
-        from: this.address,
-        data: contract.methods.setName(domain).encodeABI()
-      };
-      return await this.web3.eth.estimateGas(tx);
+      const contract = new this.web3.eth.Contract(
+        ReverseRegistrar.abi,
+        ReverseRegistrar.address
+      );
+      return await contract.methods
+        .setName(domain)
+        .estimateGas({ from: this.address });
     } catch (e) {
       Toast(e, {}, ERROR);
     }
@@ -124,7 +123,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
       const rentPrice = await this.registrarControllerContract.methods
         .rentPrice(this.parsedHostName, this.getActualDuration(duration))
         .call();
-      return rentPrice;
+      return new BigNumber(rentPrice[0]).plus(rentPrice[1]).toString();
     }
   }
   async totalRenewCost(duration) {
@@ -205,18 +204,11 @@ export default class PermanentNameModule extends ENSManagerInterface {
     return this.secretPhrase;
   }
 
-  createCommitment() {
+  createCommitment(duration) {
     const gasPrice = this.gasPriceByType()(this.gasPriceType());
     const txObj = { from: this.address, gasPrice: gasPrice };
     const promiEvent = new EventEmitter();
-    this.registrarControllerContract.methods
-      .makeCommitmentWithConfig(
-        this.parsedHostName,
-        this.address,
-        sha3(this.secretPhrase),
-        this.publicResolverAddress,
-        this.address
-      )
+    this._createContractMethod(duration, true)
       .call()
       .then(commitment => {
         return this.registrarControllerContract.methods
@@ -233,19 +225,14 @@ export default class PermanentNameModule extends ENSManagerInterface {
     return promiEvent;
   }
 
-  async getCommitmentFees() {
+  async getCommitmentFees(duration) {
     try {
       const gasPrice = this.gasPriceByType()(this.gasPriceType());
       const commitTxObj = { from: this.address };
-      const createCommitment = await this.registrarControllerContract.methods
-        .makeCommitmentWithConfig(
-          this.parsedHostName,
-          this.address,
-          sha3(this.secretPhrase),
-          this.publicResolverAddress,
-          this.address
-        )
-        .call();
+      const createCommitment = await this._createContractMethod(
+        duration,
+        true
+      ).call();
       const gasLimit = await this.registrarControllerContract.methods
         .commit(createCommitment)
         .estimateGas(commitTxObj);
@@ -291,12 +278,14 @@ export default class PermanentNameModule extends ENSManagerInterface {
 
   async _getExpiry() {
     if (!this.isAvailable) {
-      this.expired = this.expiryTime * 1000 < new Date().getTime();
+      this.expired = new Date(this.expiryTime * 1000) < new Date();
       if (!this.expired) {
         const date = new Date(this.expiryTime * 1000);
         this.expiration =
           date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear();
       }
+    } else {
+      this.expired = true;
     }
     this._getDnsContract();
   }
@@ -335,8 +324,21 @@ export default class PermanentNameModule extends ENSManagerInterface {
     }
   }
 
+  _createContractMethod(duration, commitment = false) {
+    const method = commitment ? 'makeCommitment' : 'register';
+    return this.registrarControllerContract.methods[method](
+      this.parsedHostName,
+      this.address,
+      this.getActualDuration(duration),
+      sha3(this.secretPhrase),
+      this.publicResolverAddress,
+      [],
+      false,
+      0
+    );
+  }
+
   _registerWithDuration(duration, balance) {
-    const utils = this.web3.utils;
     const promiEvent = new EventEmitter();
     this.getRentPrice(duration).then(rentPrice => {
       const hasBalance = new BigNumber(balance).gte(rentPrice);
@@ -352,20 +354,12 @@ export default class PermanentNameModule extends ENSManagerInterface {
         from: this.address,
         value: withTenPercent
       };
-      const registerWithConfig =
-        this.registrarControllerContract.methods.registerWithConfig(
-          this.parsedHostName,
-          this.address,
-          this.getActualDuration(duration),
-          utils.sha3(this.secretPhrase),
-          this.publicResolverAddress,
-          this.address
-        );
+      const registerWithConfig = this._createContractMethod(duration);
 
       registerWithConfig
         .estimateGas(txObj)
         .then(res => {
-          txObj['gas'] = res;
+          txObj['gas'] = Math.ceil(BigNumber(res).times(1.02).toNumber());
         })
         .then(() => {
           registerWithConfig
@@ -386,6 +380,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
       const gasPrice = this.gasPriceByType()(this.gasPriceType());
       const rentPrice = await this.getRentPrice(duration);
       const hasBalance = new BigNumber(balance).gte(rentPrice);
+
       if (hasBalance) {
         const rentPriceWithTenPercent = new BigNumber(rentPrice)
           .times(1.1)
@@ -395,16 +390,9 @@ export default class PermanentNameModule extends ENSManagerInterface {
           from: this.address,
           value: rentPriceWithTenPercent
         };
-        const gasAmt = await this.registrarControllerContract.methods
-          .registerWithConfig(
-            this.parsedHostName,
-            this.address,
-            this.getActualDuration(duration),
-            sha3(this.secretPhrase),
-            this.publicResolverAddress,
-            this.address
-          )
-          .estimateGas(txObj);
+        const gasAmt = await this._createContractMethod(duration).estimateGas(
+          txObj
+        );
         if (!gasAmt) {
           return false;
         }

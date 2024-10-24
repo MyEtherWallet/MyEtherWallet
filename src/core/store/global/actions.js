@@ -38,11 +38,15 @@ const setGasPriceType = function ({ commit }, type) {
   commit('SET_GAS_PRICE_TYPE', type);
 };
 const setNetwork = async function (
-  { commit, dispatch },
+  { commit, dispatch, rootState },
   { network, walletType }
 ) {
   const chainID = network?.type?.chainID;
-  const matched = await matchNetwork(chainID, walletType);
+  const matched = await matchNetwork(
+    chainID,
+    walletType,
+    rootState.external.selectedEIP6963Provider
+  );
   if (matched) {
     commit('SET_NETWORK', network);
     dispatch('swap/resetPrefetch', null, { root: true });
