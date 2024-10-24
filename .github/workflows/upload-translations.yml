@@ -15,7 +15,7 @@ jobs:
   upload-translaations:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Check and create lokalise branch
         env:
           TOKEN: ${{secrets.LOKALISE_TOKEN}}

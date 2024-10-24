@@ -9,12 +9,14 @@ jobs:
   changelog:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: '12'
+          node-version: '14'
       - name: Compile changelog entries
-        run: npm install --no-package-lock --no-save --quiet remark-cli remark-preset-lint-recommended && node ./scripts/prepChangelog.js && npm run lint:md
+        run: |
+          npm install npm@^8.8 -g
+          npm install --no-package-lock --no-save --quiet remark-cli remark-preset-lint-recommended && node ./scripts/prepChangelog.js && npm run lint:md
       - name: Create PR
         uses: peter-evans/create-pull-request@v3
         with:

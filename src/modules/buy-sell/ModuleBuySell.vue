@@ -212,7 +212,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['address']),
+    ...mapState('wallet', ['address', 'web3']),
     ...mapGetters('wallet', ['tokensList']),
     ...mapGetters('global', ['network']),
     ...mapGetters('external', ['contractToToken', 'getCoinGeckoTokenById']),
@@ -259,9 +259,6 @@ export default {
     },
     defaultCurrency() {
       if (isEmpty(this.selectedCurrency) && this.supportedNetwork) {
-        if (this.inWallet) {
-          return this.tokensList[0];
-        }
         const token = this.contractToToken(MAIN_TOKEN_ADDRESS);
         token.value = token.symbol;
         return token;
@@ -366,6 +363,9 @@ export default {
     network() {
       this.selectedCurrency = {};
       this.selectedCurrency = this.defaultCurrency;
+    },
+    web3() {
+      this.fetchNetworks();
     }
   },
   methods: {
@@ -394,6 +394,11 @@ export default {
       }
     },
     async fetchNetworks() {
+      this.buyNetworks = [];
+      this.sellNetworks = [];
+      this.buyFiats = [];
+      this.sellFiats = [];
+
       const data = await fetch(
         'https://mainnet.mewwallet.dev/v5/purchase/info'
       );
@@ -409,9 +414,8 @@ export default {
         )
         .map(chain => {
           const assets = chain.assets.map(asset => {
-            const cgToken =
-              this.getCoinGeckoTokenById(asset.coingecko_id) || {};
-            const token = this.contractToToken(asset.contract_address) || {};
+            const cgToken = this.getCoinGeckoTokenById(asset.coingecko_id);
+            const token = this.contractToToken(asset.contract_address);
             if (
               chain.chain === 'POL' &&
               asset.contract_address === MAIN_TOKEN_ADDRESS
@@ -419,9 +423,8 @@ export default {
               cgToken.symbol = 'POL';
               cgToken.name = 'Polygon';
             }
-            return Object.assign({}, asset, token, cgToken, {
-              decimals: token.decimals
-            });
+
+            return Object.assign({}, asset, cgToken, token);
           });
           chain.assets = assets;
           const matchedChain =
@@ -489,7 +492,7 @@ export default {
       // check buy networks and set currency
       buyNetworks.forEach(network => {
         network.assets.forEach(asset => {
-          if (asset.symbol === this.defaultCurrency.symbol) {
+          if (asset.contract === this.defaultCurrency.contract) {
             this.selectedCurrency = asset;
           }
         });
@@ -500,6 +503,7 @@ export default {
       this.selectedCurrency = {};
       this.selectedCurrency = this.defaultCurrency;
       this.activeTab = val;
+      this.fetchQuotes();
     },
     close() {
       this.activeTab = 0;
