@@ -350,9 +350,6 @@ export default {
     }
   },
   watch: {
-    selectedBalance() {
-      console.log('selectedBalance', this.selectedBalance);
-    },
     toAddress() {
       this.amount = '0';
     },
