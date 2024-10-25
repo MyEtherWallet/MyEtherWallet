@@ -123,7 +123,6 @@ import { isEmpty, debounce, isNumber, isEqual } from 'lodash';
 import BigNumber from 'bignumber.js';
 import { fromWei, toBN } from 'web3-utils';
 
-import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import handlerSend from '@/modules/send/handlers/handlerSend.js';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common.js';
@@ -200,9 +199,7 @@ export default {
         ? {
             title: 'Max',
             method: this.setMax,
-            disabled:
-              this.nonMainnetMetamask ||
-              BigNumber(this.txFee).gte(this.selectedBalance)
+            disabled: BigNumber(this.txFee).gte(this.selectedBalance)
           }
         : {};
     },
@@ -301,11 +298,6 @@ export default {
 
       return '';
     },
-    nonMainnetMetamask() {
-      return (
-        this.instance && this.instance.identifier === WALLET_TYPES.WEB3_WALLET
-      );
-    },
     isValidAmount() {
       /** !amount */
       if (!this.amount) {
@@ -358,6 +350,9 @@ export default {
     }
   },
   watch: {
+    selectedBalance() {
+      console.log('selectedBalance', this.selectedBalance);
+    },
     toAddress() {
       this.amount = '0';
     },
