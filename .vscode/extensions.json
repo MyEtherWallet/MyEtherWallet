@@ -1,8 +1,9 @@
 {
   "recommendations": [
-    "esbenp.prettier-vscode",
+    "Vue.volar",
+    "vitest.explorer",
+    "browserstackcom.nightwatch",
     "dbaeumer.vscode-eslint",
-    "octref.vetur",
-    "ms-vscode-remote.remote-containers"
+    "esbenp.prettier-vscode"
   ]
 }

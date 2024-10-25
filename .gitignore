@@ -1,17 +1,48 @@
 **/.DS_Store
+.DS_Store
 node_modules/
 /dist/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+
 /tests/unit/coverage/
 /tests/e2e/reports
 selenium-debug.log
 /tests/e2e/reports/
 /download_folder
-/logs
+
 chromedriver.log
 build
+
+
+
+# Generated files
+src/_generated
+
+
+# Apollo files
+src/apollo/global/globalTypes.json
+
+/////
+
+# Logs
+logs/
+*.log
+/logs
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+
+dist-ssr
+coverage
+*.local
+
+/cypress/videos/
+/cypress/screenshots/
+
+
 # Editor directories and files
 .cache
 .idea
@@ -26,10 +57,7 @@ tests_output/
 release
 chrome-extension
 .env
-
-# Generated files
-src/_generated
+.history
 
 
-# Apollo files
-src/apollo/global/globalTypes.json
+*.tsbuildinfo
