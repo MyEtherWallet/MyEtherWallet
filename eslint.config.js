@@ -11,7 +11,7 @@ export default [
 
   {
     name: 'app/files-to-ignore',
-    ignores: ['**/dist/**', '**/dist-ssr/**', '**/coverage/**', 'v6/*', 'scripts/*', 'package-*.js', 'nightwatch/*', 'fetchLists/*', 'builds/*', '.history/*', '.husky/*', '.vscode/*', '.github/*', 'node_modules/*', 'public/*'],
+    ignores: ['**/dist/**', '**/dist-ssr/**', '**/coverage/**', 'v6/*', 'scripts/*', 'package-*.js', 'nightwatch/*', 'fetchLists/*', 'builds/*', '.history/*', '.husky/*', '.vscode/*', '.github/*', 'node_modules/*', 'public/*', 'devmoji.config.js'],
   },
 
   ...pluginVue.configs['flat/essential'],
