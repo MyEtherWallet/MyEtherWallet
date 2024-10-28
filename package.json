@@ -25,7 +25,6 @@
   },
   "devDependencies": {
     "@nightwatch/vue": "^3.1.2",
-    "@tsconfig/node20": "^20.1.4",
     "@types/jsdom": "^21.1.7",
     "@types/node": "^20.16.11",
     "@vitejs/plugin-vue": "^5.1.4",
@@ -33,7 +32,6 @@
     "@vue/eslint-config-prettier": "^10.0.0",
     "@vue/eslint-config-typescript": "^14.0.1",
     "@vue/test-utils": "^2.4.6",
-    "@vue/tsconfig": "^0.5.1",
     "autoprefixer": "^10.4.20",
     "chromedriver": "^129.0.4",
     "eslint": "^9.12.0",
