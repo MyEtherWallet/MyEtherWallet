@@ -155,7 +155,7 @@ export default {
     },
     network(newVal, oldVal) {
       if (this.online && !this.isOfflineApp) {
-        this.web3.eth.clearSubscriptions();
+        // this.web3.eth.clearSubscriptions();
         this.identifier === WALLET_TYPES.WEB3_WALLET
           ? this.setWeb3Instance(this.selectedEIP6963Provider)
           : this.setWeb3Instance();
@@ -403,6 +403,7 @@ export default {
         if (this.selectedEIP6963Provider) {
           try {
             if (foundNetwork) {
+              this.web3.eth.clearSubscriptions();
               await this.setNetwork({
                 network: foundNetwork[0],
                 walletType: this.identifier

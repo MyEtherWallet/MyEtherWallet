@@ -123,7 +123,6 @@ import { isEmpty, debounce, isNumber, isEqual } from 'lodash';
 import BigNumber from 'bignumber.js';
 import { fromWei, toBN } from 'web3-utils';
 
-import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import handlerSend from '@/modules/send/handlers/handlerSend.js';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common.js';
@@ -167,7 +166,7 @@ export default {
         img: require(`@/assets/images/currencies/USD.svg`)
       },
       openTokenSelect: false,
-      selectedCurrency: this.defaultCurrency,
+      selectedCurrency: {},
       amount: '0',
       locGasPrice: '0',
       sendHandler: {},
@@ -187,7 +186,6 @@ export default {
     ...mapState('global', ['gasPriceType']),
     ...mapGetters('wallet', ['balanceInETH', 'balanceInWei', 'tokensList']),
     ...mapGetters('global', ['isEthNetwork', 'network', 'gasPriceByType']),
-    ...mapGetters('external', ['contractToToken']),
     fiatCurrencyItems() {
       return this.sellFiats;
     },
@@ -201,9 +199,7 @@ export default {
         ? {
             title: 'Max',
             method: this.setMax,
-            disabled:
-              this.nonMainnetMetamask ||
-              BigNumber(this.txFee).gte(this.selectedBalance)
+            disabled: BigNumber(this.txFee).gte(this.selectedBalance)
           }
         : {};
     },
@@ -301,11 +297,6 @@ export default {
       }
 
       return '';
-    },
-    nonMainnetMetamask() {
-      return (
-        this.instance && this.instance.identifier === WALLET_TYPES.WEB3_WALLET
-      );
     },
     isValidAmount() {
       /** !amount */
@@ -420,10 +411,22 @@ export default {
     if (foundFiat) {
       this.selectedFiat = foundFiat;
     }
+
+    const currentNetwork = this.sellNetworks.find(
+      network => network.name === this.network.type.name
+    );
+
+    const findMain = currentNetwork.assets.find(
+      asset => asset.contract === MAIN_TOKEN_ADDRESS
+    );
+
+    this.selectedCurrency = findMain
+      ? findMain
+      : this.defaultCurrency || currentNetwork.assets[0];
     this.locGasPrice = this.gasPriceByType(this.gasPriceType);
   },
   methods: {
-    ...mapActions('external', ['setCoinGeckoTokens']),
+    ...mapActions('external', ['setCoinGeckoTokens', 'getCoinGeckoTokenById']),
     getEthBalance() {
       const web3Instance = this.web3;
       web3Instance.eth.getBalance(this.address).then(res => {

@@ -50,7 +50,9 @@ const AUDIT_EXCEPTIONS = [
   'socket.io',
   'semver',
   'path-to-regexp',
-  'body-parser'
+  'body-parser',
+  'secp256k1',
+  'http-proxy-middleware'
 ];
 const execute = (command, callback) => {
   exec(

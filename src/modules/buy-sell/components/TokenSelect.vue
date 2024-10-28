@@ -109,7 +109,7 @@ export default {
   },
   computed: {
     ...mapGetters('global', ['network', 'Networks']),
-    ...mapState('wallet', ['instance', 'identifier']),
+    ...mapState('wallet', ['instance', 'identifier', 'web3']),
     ...mapState('external', ['selectedEIP6963Provider']),
     searchedCurrencyItems() {
       if (this.searchValue) {
@@ -129,6 +129,15 @@ export default {
     }
   },
   watch: {
+    networks() {
+      if (this.networks.length > 0) {
+        this.currencyCopy = [];
+        const network = this.networks.find(network => {
+          if (network.name === this.network.type.name) return network;
+        });
+        this.currencyCopy = network ? network.assets : [];
+      }
+    },
     selectedNetwork(newVal, oldVal) {
       this.currencyCopy = [];
       if (!isEmpty(newVal) && !isEmpty(oldVal)) {
@@ -201,18 +210,14 @@ export default {
         walletType: this.instance?.identifier || ''
       })
         .then(() => {
-          if (this.inWallet) {
-            const provider =
-              this.identifier === WALLET_TYPES.WEB3_WALLET
-                ? this.setWeb3Instance(this.selectedEIP6963Provider)
-                : this.setWeb3Instance();
-            if (!this.isOfflineApp) {
-              provider.then(() => {
-                this.setTokenAndEthBalance();
-              });
-            }
-          } else {
-            this.setWeb3Instance();
+          const provider =
+            this.identifier === WALLET_TYPES.WEB3_WALLET
+              ? this.setWeb3Instance(this.selectedEIP6963Provider)
+              : this.setWeb3Instance();
+          if (!this.isOfflineApp) {
+            provider.then(() => {
+              this.setTokenAndEthBalance();
+            });
           }
           Toast(`Switched network to: ${network.type.name}`, {}, SUCCESS);
           this.$emit('newNetwork');

@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "6.9.15",
+  "version": "6.9.16",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build": "npm run update && vue-cli-service build",
@@ -25,7 +25,7 @@
     "lint:md": "remark . -o",
     "lint:styles": "prettier --write 'src/**/*.{scss,css}' && stylelint 'src/**/*.{scss,css}' --fix",
     "lint:tests": "eslint --fix tests/",
-    "preinstall": "find node_modules -name \".git\" -exec rm -rf {} \\; || true && bash ./scripts/checklockconflicts.sh && npx npm-force-resolutions",
+    "preinstall": "find node_modules -name \".git\" -exec rm -rf {} \\; || true && bash ./scripts/checklockconflicts.sh && npx --yes npm-force-resolutions",
     "start": "npm run update:mainlists && npm run dev",
     "start:history": "npm run update:mainlists && ROUTER_MODE=history npm run dev",
     "start:offline": "npm run update:mainlists && ROUTER_MODE=hash BUILD=offline npm run dev",
@@ -33,7 +33,8 @@
     "update": "npm run update:packages && npm run update:lists",
     "update:lists": "node fetchLists/index.js",
     "update:mainlists": "node fetchLists/fetchMainLists.js",
-    "update:packages": "node package-test.js"
+    "update:packages": "node package-test.js",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@aave/contract-helpers": "1.7.0",
@@ -101,7 +102,6 @@
     "moment-timezone": "0.5.46",
     "node-polyfill-webpack-plugin": "2.0.1",
     "package-json": "7.0.0",
-    "patch-package": "6.5.1",
     "platform": "1.3.6",
     "qrcode-with-logos": "1.0.6",
     "register-service-worker": "1.7.2",
@@ -168,6 +168,7 @@
     "multicoin-address-validator": "git+https://github.com/MyEtherWallet/multicoin-address-validator.git",
     "node-fetch": "2.6.7",
     "node-sass": "7.0.3",
+    "patch-package": "^6.5.1",
     "postcss-import": "12.0.1",
     "postcss-url": "8.0.0",
     "prettier": "2.8.0",

@@ -22,7 +22,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
     this.expiryTime = expiry;
     this.secretPhrase = '';
     this.expiration = null;
-    this.expired = false;
+    this.expired = true;
     this.redeemable = false;
     this.web3 = web3;
     // Contracts
@@ -278,12 +278,14 @@ export default class PermanentNameModule extends ENSManagerInterface {
 
   async _getExpiry() {
     if (!this.isAvailable) {
-      this.expired = this.expiryTime * 1000 < new Date().getTime();
+      this.expired = new Date(this.expiryTime * 1000) < new Date();
       if (!this.expired) {
         const date = new Date(this.expiryTime * 1000);
         this.expiration =
           date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear();
       }
+    } else {
+      this.expired = true;
     }
     this._getDnsContract();
   }
