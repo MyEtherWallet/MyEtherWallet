@@ -9,7 +9,7 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           ref: main
 
@@ -25,15 +25,13 @@ jobs:
           echo ::set-output name=NODE_VERSION::$(docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "node --version")
 
       - name: Cache node modules
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: node_modules
           key: ${{ runner.os }}-node-${{steps.node-version.outputs.NODE_VERSION}}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-${{steps.node-version.outputs.NODE_VERSION}}-
 
       - name: npm install
-        run: docker run --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" mew-build-container /bin/bash -c "npm install"
+        run: docker run --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" mew-build-container /bin/bash -c "npm install --legacy-peer-deps"
 
       - name: Get release tag
         id: get_release_tag

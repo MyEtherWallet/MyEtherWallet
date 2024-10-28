@@ -51,7 +51,8 @@ const AUDIT_EXCEPTIONS = [
   'semver',
   'path-to-regexp',
   'body-parser',
-  'secp256k1'
+  'secp256k1',
+  'http-proxy-middleware'
 ];
 const execute = (command, callback) => {
   exec(
