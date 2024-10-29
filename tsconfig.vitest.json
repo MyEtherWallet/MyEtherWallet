@@ -1,3 +1,5 @@
+// https://www.typescriptlang.org/tsconfig
+//
 // TypeScript config for tests
 {
   "extends": "./tsconfig.app.json",
@@ -9,7 +11,7 @@
     "incremental": true,                                                  // https://www.typescriptlang.org/tsconfig/#incremental
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.vitest.tsbuildinfo", // https://www.typescriptlang.org/tsconfig/#tsBuildInfoFile
 
-    // Module
+    // Language & Environment
     // NodeJS types and JSDOM (mock of browser dom) are available within the the Vitest environment
     "types": ["node", "jsdom"]
   }

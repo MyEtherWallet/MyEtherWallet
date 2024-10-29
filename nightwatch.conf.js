@@ -1,4 +1,10 @@
-module.exports = {
+/** @typedef {import('nightwatch').NightwatchOptions} NightwatchOptions */
+
+// NOTE: this doesn't seem to be used
+// is it still required?
+
+/** @type {NightwatchOptions} */
+const config = {
   // uncomment for windows support
   // webdriver: {
   //   start_process: true,
@@ -18,19 +24,21 @@ module.exports = {
             // take these out on local
             'headless',
             'no-sandbox',
-            'disable-gpu'
+            'disable-gpu',
           ],
           prefs: {
             download: {
               default_directory: './download_folder',
-              prompt_for_download: false
+              prompt_for_download: false,
             },
             profile: {
-              default_content_setting_values: { automatic_downloads: 1 }
-            }
-          }
-        }
-      }
-    }
-  }
-};
+              default_content_setting_values: { automatic_downloads: 1 },
+            },
+          },
+        },
+      },
+    },
+  },
+}
+
+module.exports = config

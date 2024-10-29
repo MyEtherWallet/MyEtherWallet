@@ -12,7 +12,10 @@
 //            |___/
 //
 
-module.exports = {
+/** @typedef {import('nightwatch').NightwatchOptions} */
+
+/** @type {NightwatchOptions} */
+const config = {
   // An array of folders (excluding subfolders) where your tests are located;
   // if this is not specified, the test source must be passed as the second argument to the test runner.
   src_folders: [],
@@ -34,14 +37,14 @@ module.exports = {
 
   vite_dev_server: {
     start_vite: true,
-    port: process.env.CI ? 4173 : 5173
+    port: process.env.CI ? 4173 : 5173,
   },
 
   webdriver: {},
 
   test_workers: {
     enabled: true,
-    workers: 'auto'
+    workers: 'auto',
   },
 
   test_settings: {
@@ -52,30 +55,30 @@ module.exports = {
       screenshots: {
         enabled: false,
         path: 'screens',
-        on_failure: true
+        on_failure: true,
       },
 
       desiredCapabilities: {
-        browserName: 'firefox'
+        browserName: 'firefox',
       },
 
       webdriver: {
         start_process: true,
-        server_path: ''
-      }
+        server_path: '',
+      },
     },
 
     safari: {
       desiredCapabilities: {
         browserName: 'safari',
         alwaysMatch: {
-          acceptInsecureCerts: false
-        }
+          acceptInsecureCerts: false,
+        },
       },
       webdriver: {
         start_process: true,
-        server_path: ''
-      }
+        server_path: '',
+      },
     },
 
     firefox: {
@@ -87,9 +90,9 @@ module.exports = {
             args: [
               // '-headless',
               // '-verbose'
-            ]
-          }
-        }
+            ],
+          },
+        },
       },
       webdriver: {
         start_process: true,
@@ -97,8 +100,8 @@ module.exports = {
         cli_args: [
           // very verbose geckodriver logs
           // '-vv'
-        ]
-      }
+        ],
+      },
     },
 
     chrome: {
@@ -114,8 +117,8 @@ module.exports = {
             //'--ignore-certificate-errors',
             //'--allow-insecure-localhost',
             //'--headless'
-          ]
-        }
+          ],
+        },
       },
 
       webdriver: {
@@ -123,8 +126,8 @@ module.exports = {
         server_path: '',
         cli_args: [
           // --verbose
-        ]
-      }
+        ],
+      },
     },
 
     edge: {
@@ -135,8 +138,8 @@ module.exports = {
           // More info on EdgeDriver: https://docs.microsoft.com/en-us/microsoft-edge/webdriver-chromium/capabilities-edge-options
           args: [
             //'--headless'
-          ]
-        }
+          ],
+        },
       },
 
       webdriver: {
@@ -146,8 +149,10 @@ module.exports = {
         server_path: '',
         cli_args: [
           // --verbose
-        ]
-      }
-    }
-  }
+        ],
+      },
+    },
+  },
 }
+
+module.exports = config
