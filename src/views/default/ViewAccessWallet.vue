@@ -1,6 +1,6 @@
 <template>
   <main>
-    <p>Hello</p>
+    <button>Keystore</button>
   </main>
 </template>
 <script setup lang="ts"></script>
