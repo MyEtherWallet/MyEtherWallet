@@ -1,5 +1,8 @@
+// Used by nightwatch to execute tests
+//
+// This config is mostly provided by Nightwatch's default
+// configuration @ 2024-10-29
 {
-  // "extends": "@tsconfig/node20/tsconfig.json",
   "include": [
     "../node_modules/@nightwatch/**/*",
     "../src/components/**/*",
@@ -10,40 +13,30 @@
     "transpileOnly": true
   },
   "compilerOptions": {
-    // Project
-    "composite": true,                                                         // https://www.typescriptlang.org/tsconfig/#composite
-    "incremental": true,                                                       // https://www.typescriptlang.org/tsconfig/#incremental
-    "noEmit": true,                                                            // https://www.typescriptlang.org/tsconfig/#noEmit
-    "tsBuildInfoFile": "../node_modules/.tmp/tsconfig.nightwatch.tsbuildinfo", // https://www.typescriptlang.org/tsconfig/#tsBuildInfoFile
-
     // Language & Environment
-    // TODO: Target the latest JS?
-    "target": "ESNext",               // https://www.typescriptlang.org/tsconfig/#target
-    "useDefineForClassFields": true,  // https://www.typescriptlang.org/tsconfig/#useDefineForClassFields
-    "lib": ["ESNext", "DOM"],         // https://www.typescriptlang.org/tsconfig/#lib
+    "target": "ES2023",           // https://www.typescriptlang.org/tsconfig/#target
+    // "lib": ["ESNext", "dom"],  // https://www.typescriptlang.org/tsconfig/#lib
 
     // Module
-    // TODO: does this need to be commonjs?
-    "module": "commonjs",           // https://www.typescriptlang.org/tsconfig/#module
-    // TODO: does this need to by updated to something esm compatible?
-    "moduleResolution": "node",     // https://www.typescriptlang.org/tsconfig/#moduleResolution
-    "rootDir": "../",               // https://www.typescriptlang.org/tsconfig/#rootDir
-    "types": ["nightwatch"],
+    // CommonJS & < Node16
+    "module": "commonjs",         // https://www.typescriptlang.org/tsconfig/#module
+    "moduleResolution": "Node",   // https://www.typescriptlang.org/tsconfig/#moduleResolution
+    "resolveJsonModule": true,    // https://www.typescriptlang.org/tsconfig/#resolveJsonModule
+    // "types": ["nightwatch"],
+    "rootDir": "../",             // https://www.typescriptlang.org/tsconfig/#rootDir
 
-    // Type checking
-    "noImplicitThis": true,              // https://www.typescriptlang.org/tsconfig/#noImplicitThis
-    "strict": true,                      // https://www.typescriptlang.org/tsconfig/#strict
-    "alwaysStrict": true,                // https://www.typescriptlang.org/tsconfig/#alwaysStrict
-    "noFallthroughCasesInSwitch": true,  // https://www.typescriptlang.org/tsconfig/#noFallthroughCasesInSwitch
-    "noImplicitOverride": true,          // https://www.typescriptlang.org/tsconfig/#noImplicitOverride
-    "useUnknownInCatchVariables": true,  // https://www.typescriptlang.org/tsconfig/#useUnknownInCatchVariables
+    // JavaScript support
+    "allowJs": true,              // https://www.typescriptlang.org/tsconfig/#allowJs
+
+    // Emit
+    "noEmit": true,               // https://www.typescriptlang.org/tsconfig/#noEmit
 
     // Interop constraints
-    "verbatimModuleSyntax": true,             // https://www.typescriptlang.org/tsconfig/#verbatimModuleSyntax
     "esModuleInterop": true,                  // https://www.typescriptlang.org/tsconfig/#esModuleInterop
+    "allowSyntheticDefaultImports": true,     // https://www.typescriptlang.org/tsconfig/#allowSyntheticDefaultImports
     "forceConsistentCasingInFileNames": true, // https://www.typescriptlang.org/tsconfig/#forceConsistentCasingInFileNames
 
     // Completeness
-    "skipLibCheck": true,  // https://www.typescriptlang.org/tsconfig/#skipLibCheck
+    "skipLibCheck": true,         // https://www.typescriptlang.org/tsconfig/#skipLibCheck
   },
 }

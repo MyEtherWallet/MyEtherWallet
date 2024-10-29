@@ -12,7 +12,8 @@
 //            |___/
 //
 
-/** @typedef {import('nightwatch').NightwatchOptions} */
+/** @typedef {import('nightwatch').NightwatchOptions} NightwatchOptions */
+/** @typedef {import('@nightwatch/vue').GlobalMountOptions} */
 
 /** @type {NightwatchOptions} */
 const config = {
@@ -35,6 +36,8 @@ const config = {
   // See https://nightwatchjs.org/guide/concepts/test-globals.html#external-test-globals
   globals_path: '',
 
+  // Provided by @nightwatch/vue
+  // https://github.com/nightwatchjs/nightwatch-plugin-vue/blob/main/README.md#vite-dev-server
   vite_dev_server: {
     start_vite: true,
     port: process.env.CI ? 4173 : 5173,
@@ -59,7 +62,10 @@ const config = {
       },
 
       desiredCapabilities: {
-        browserName: 'firefox',
+        // TODO: this was Firefox but tests are not working with Firefox.
+        // Should this be Firefox or Chrome?
+        // browserName: 'firefox',
+        browserName: 'chrome',
       },
 
       webdriver: {
