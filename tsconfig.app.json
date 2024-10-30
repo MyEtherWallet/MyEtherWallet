@@ -12,7 +12,7 @@
       "@view-default/*": ["./src/views/default/*"],
       "@view-wallet/*": ["./src/views/wallet/*"],
       "@components/*": ["./src/components/*"],
-      "@assets/*": ["./src/assets/*"],
+      "@assets/*": ["./src/assets/*"]
     }
   }
 }
