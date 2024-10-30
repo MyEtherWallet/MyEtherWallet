@@ -2,6 +2,8 @@ import { ROUTES_HOME } from './routeNames';
 const LayoutDefault = () => import('@components/core_layouts/LayoutDefault.vue')
 const HomeView = () => import('@view-default/ViewAccessWallet.vue')
 const TempView = () => import('@view-default/ViewTemp.vue')
+const KeystoreUpload = () => import('@/modules/access/access_keystore/KeystoreUpload.vue')
+const KeystorePassword = () => import('@/modules/access/access_keystore/KeystorePassword.vue')
 
 const DefaultRoutes = [{
   path: '/',
@@ -14,7 +16,31 @@ const DefaultRoutes = [{
       component: HomeView,
       meta: {
         noAuth: true
-      }
+      },
+    },
+    {
+      path: '/access/keystore',
+      name: 'KeystoreAccess',
+      component: KeystoreUpload,
+      meta: {
+        noAuth: true
+      },
+    },
+    {
+      path: '/access/keystore/upload',
+      name: 'KeystoreAccessUpload',
+      component: KeystoreUpload,
+      meta: {
+        noAuth: true
+      },
+    },
+    {
+      path: '/access/keystore/password',
+      name: 'KeystoreAccessPassword',
+      component: KeystorePassword,
+      meta: {
+        noAuth: true
+      },
     },
     /** Temporary Paths to be removed on v7 release
      *  Right Now components library thinks these exist in the project

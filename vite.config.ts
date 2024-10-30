@@ -18,6 +18,7 @@ export default defineConfig({
       '@view-wallet': fileURLToPath(new URL('./src/views/wallet', import.meta.url)),
       '@components': fileURLToPath(new URL('./src/components', import.meta.url)),
       '@assets': fileURLToPath(new URL('./src/assets', import.meta.url)),
+      '@modules': fileURLToPath(new URL('./src/modules', import.meta.url)),
     }
   }
 })
