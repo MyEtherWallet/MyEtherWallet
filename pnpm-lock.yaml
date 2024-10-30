@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@myetherwallet/vue-common-components':
-        specifier: ^1.2.8
-        version: 1.2.8(vue@3.5.12(typescript@5.5.4))
+        specifier: ^1.2.9
+        version: 1.2.9(vue@3.5.12(typescript@5.5.4))
       '@tanstack/vue-query':
         specifier: ^5.59.16
         version: 5.59.16(vue@3.5.12(typescript@5.5.4))
@@ -1423,8 +1423,8 @@ packages:
     resolution: {integrity: sha512-z10PF9JV6SbjFq+/rYabM+8CVlMokgl8RFGvieSGNTmrkQanfHn+15XBrhG3BgUfvmTeSeyShfOHpG0i9zEdcg==}
     deprecated: Motion One for Vue is deprecated. Use Oku Motion instead https://oku-ui.com/motion
 
-  '@myetherwallet/vue-common-components@1.2.8':
-    resolution: {integrity: sha512-U1mCVKfC8OYbt7Wi4H+EB/5OAyzpwaBZtO4WeMAgkiFzK9zry1a7Ui3zgM5EJzvNWtNn+/W/Fd02JIy0XEI15Q==}
+  '@myetherwallet/vue-common-components@1.2.9':
+    resolution: {integrity: sha512-vy99Dqn4ceYgGSwSR1qwpIfLr/8oR57ZPUZ13JCiyJGRrXK0HSpqFIDsEB4+no/uJUcpB9GgpzM4Mih4pF62Vg==}
 
   '@napi-rs/nice-android-arm-eabi@1.0.1':
     resolution: {integrity: sha512-5qpvOu5IGwDo7MEKVqqyAxF90I6aLj4n07OzpARdgDRfz8UbBztTByBp0RC59r3J1Ij8uzYi6jI7r5Lws7nn6w==}
@@ -7851,7 +7851,7 @@ snapshots:
       '@motionone/dom': 10.18.0
       tslib: 2.8.0
 
-  '@myetherwallet/vue-common-components@1.2.8(vue@3.5.12(typescript@5.5.4))':
+  '@myetherwallet/vue-common-components@1.2.9(vue@3.5.12(typescript@5.5.4))':
     dependencies:
       '@lottiefiles/dotlottie-vue': 0.4.10(vue@3.5.12(typescript@5.5.4))
     transitivePeerDependencies:
@@ -9467,7 +9467,7 @@ snapshots:
 
   babel-plugin-polyfill-corejs2@0.4.11(@babel/core@7.25.9):
     dependencies:
-      '@babel/compat-data': 7.25.9
+      '@babel/compat-data': 7.26.0
       '@babel/core': 7.25.9
       '@babel/helper-define-polyfill-provider': 0.6.2(@babel/core@7.25.9)
       semver: 6.3.1
@@ -9506,7 +9506,7 @@ snapshots:
       '@babel/plugin-syntax-bigint': 7.8.3(@babel/core@7.25.9)
       '@babel/plugin-syntax-class-properties': 7.12.13(@babel/core@7.25.9)
       '@babel/plugin-syntax-class-static-block': 7.14.5(@babel/core@7.25.9)
-      '@babel/plugin-syntax-import-attributes': 7.25.9(@babel/core@7.25.9)
+      '@babel/plugin-syntax-import-attributes': 7.26.0(@babel/core@7.25.9)
       '@babel/plugin-syntax-import-meta': 7.10.4(@babel/core@7.25.9)
       '@babel/plugin-syntax-json-strings': 7.8.3(@babel/core@7.25.9)
       '@babel/plugin-syntax-logical-assignment-operators': 7.10.4(@babel/core@7.25.9)

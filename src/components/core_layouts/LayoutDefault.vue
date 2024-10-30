@@ -21,8 +21,8 @@
     ></div>
     <!-- <main> -->
     <main :class="['max-w-[1392px] px-5 md-header:px-10 mx-auto']">
-      <div>
-        <slot />
+      <div class="pt-16 mt-10">
+        <router-view />
       </div>
     </main>
     <MewFooter

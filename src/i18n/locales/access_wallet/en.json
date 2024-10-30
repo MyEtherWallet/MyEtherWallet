@@ -1,0 +1,10 @@
+{
+    "access_wallet": {
+        "title": "Access MEW Portfolio",
+        "subtext": "You need a wallet to access portfolio explorer.",
+        "subtext_create_wallet": "You can create wallet here.",
+        "subtitle_1": "MEW's Official",
+        "subtitle_2": "Or use your favorite wallet — we support most of them",
+        "search_wallet": "Search for your wallet"
+    }
+}
