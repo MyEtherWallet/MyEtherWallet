@@ -119,13 +119,14 @@ const getBaseFeeBasedOnType = (baseFeeBN, gasPriceType) => {
  * @return {Array} - Array of gas prices (hex)
  */
 const estimateGasList = (network, txs) => {
-   
+  // eslint-disable-next-line no-async-promise-executor
   return new Promise(async (resolve, reject) => {
     const supportedNetworks = {
       ETH: 'https://estimategas.mewapi.io/eth',
-      GOERLI: 'https://estimategas.mewapi.io/goerli',
-      BSC: 'https://estimategas.mewapi.io/bsc',
-      MATIC: 'https://estimategas.mewapi.io/matic'
+      BNB: 'https://estimategas.mewapi.io/bsc',
+      POL: 'https://estimategas.mewapi.io/matic',
+      HOLESKY: 'https://estimategas.mewapi.io/holesky',
+      SEPOLIA: 'https://estimategas.mewapi.io/sepolia'
     };
     const url = supportedNetworks[network];
     if (!url) {

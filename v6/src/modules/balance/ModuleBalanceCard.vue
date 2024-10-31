@@ -30,7 +30,11 @@
               </div>
             </template>
             <v-list width="232px" class="bgWalletBlock">
-              <v-list-item class="cursor-pointer" @click="refresh">
+              <v-list-item
+                v-if="!isOfflineApp"
+                class="cursor-pointer"
+                @click="refresh"
+              >
                 <v-icon color="textDark" class="mr-3">mdi-refresh</v-icon>
                 <v-list-item-title> Refresh Balance</v-list-item-title>
               </v-list-item>
@@ -87,6 +91,13 @@
             </template>
             <span class="textDark--text">{{ getChecksumAddressString }}</span>
           </mew-tooltip>
+        </div>
+        <div>
+          <a :href="blockExplorer" target="_blank">
+            <v-icon small color="white" class="cursor--pointer"
+              >mdi-open-in-new</v-icon
+            >
+          </a>
         </div>
       </div>
       <!--
@@ -152,7 +163,7 @@
             class="info-container--action-btn mr-2 px-0 BalanceCardQR"
             fab
             depressed
-            @click="openQR = true"
+            @click="open"
           >
             <img
               class="info-container--icon"
@@ -257,18 +268,19 @@ import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 
 import wallets from './handlers/config';
 import WALLET_TYPES from '../access-wallet/common/walletTypes';
-import NameResolver from '@/modules/name-resolver/index';
+import Resolver from '@/modules/name-resolver/index';
 import { EventBus } from '@/core/plugins/eventBus';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { DASHBOARD } from '../analytics-opt-in/handlers/configs/events';
 
 export default {
   components: {
-    AppModal: () => import('@/core/components/AppModal'),
-    AppAddrQr: () => import('@/core/components/AppAddrQr'),
     ModuleAccessWalletHardware: () =>
       import('@/modules/access-wallet/ModuleAccessWalletHardware'),
     ModuleAccessWalletSoftware: () =>
       import('@/modules/access-wallet/ModuleAccessWalletSoftware')
   },
+  mixins: [handlerAnalytics],
   props: {
     sidemenuStatus: {
       type: Boolean,
@@ -299,6 +311,12 @@ export default {
     ...mapGetters('global', ['network', 'isTestNetwork', 'getFiatValue']),
     ...mapGetters('wallet', ['tokensList', 'balanceInETH']),
     ...mapState('wallet', ['web3']),
+    blockExplorer() {
+      return this.network.type.blockExplorerAddr.replace(
+        '[[address]]',
+        this.address
+      );
+    },
     /**
      * verifies whether instance exists before giving path
      */
@@ -457,8 +475,8 @@ export default {
      * and creates a new name resolver instance
      */
     async setupNameResolver() {
-      if (this.network.type.ens && this.web3.currentProvider) {
-        this.nameResolver = new NameResolver(this.network, this.web3);
+      if (this.network.type.ensEnkryptType) {
+        this.nameResolver = new Resolver(this.network);
       } else {
         this.nameResolver = null;
       }
@@ -545,6 +563,10 @@ export default {
         SUCCESS
       );
     },
+    open() {
+      this.trackDashboardAmplitude(DASHBOARD.SHOW_RECEIVE_ADDRESS);
+      this.openQR = true;
+    },
     /**
      * set openQR to false
      * to close the modal
@@ -578,6 +600,7 @@ export default {
      */
     onLogout() {
       this.closeLogout();
+      this.trackLogout();
       this.removeWallet();
     }
   }

@@ -9,7 +9,7 @@ const baseColors = {
   asphalt200: '#565B6C',
   asphalt300: '#666C7B',
   asphalt400: '#7B8290',
-  asphalt500: '#8F97A3',
+  asphalt500: '#8F97A3 ',
   asphalt600: '#A3ACB8',
   asphalt700: '#BBC0CB',
   asphalt800: '#D2D6DD',
@@ -26,6 +26,20 @@ export default {
     },
     themes: {
       light: {
+        // Asphalt
+        asphalt10: '#F9FAFE',
+        asphalt25: '#F5F7FB',
+        asphalt50: '#EDF0F5',
+        asphalt75: '#E4E7ED',
+        asphalt100: '#DADEE5',
+        asphalt200: '#CACFD7',
+        asphalt300: '#B7BCC7',
+        asphalt400: '#9BA1AE',
+        asphalt500: '#777E8C',
+        asphalt600: '#626978',
+        asphalt700: '#474D5B',
+        asphalt800: '#333945',
+        asphalt900: '#1F242F',
         // Backgrounds
         bgSideMenu: '#07385f',
         bgWallet: '#F2F4FA',
@@ -34,6 +48,7 @@ export default {
         bgOverlay: '#F2FAFA',
         bgGrey: '#F8F9FB',
         bgBlack: '#000000',
+        bgStorybook: '#FFFFFF',
         // Box shadow
         boxShadow: '#ececec',
         // Text
@@ -41,6 +56,8 @@ export default {
         textDark: '#1F242F',
         textMedium: '#626978',
         textLight: '#9BA1AE',
+        textDarkWhite: '#1F242F',
+        textMediumWhite: '#626978',
         // Grey
         greyPrimary: '#626978',
         greyMedium: '#E4E7ED',
@@ -72,7 +89,6 @@ export default {
         // Buttons
         buttonWhite: '#FFFFFF',
         buttonGrayLight: '#F2F4FA',
-        buttonGrayLightSelected: '#c8ccd3',
         buttonGrayDark: '#626978',
         buttonToggleDark: '#1F242F',
         buttonBorder: '#d1d1d1',
@@ -92,6 +108,7 @@ export default {
         whiteAlways: '#FFFFFF',
         whiteBackground: '#FFFFFF',
         whitePopup: '#FFFFFF',
+        offWhite: '#F8F9FB',
         //old colors
         primaryHover: '#1eb19b',
         primaryActive: '#56c5b4',
@@ -156,6 +173,20 @@ export default {
         surface: '#192133' // name from figma. not sure if its correct
       },
       dark: {
+        // Asphalt
+        asphalt10: '#F9FAFE',
+        asphalt25: '#F5F7FB',
+        asphalt50: '#EDF0F5',
+        asphalt75: '#E4E7ED',
+        asphalt100: '#DADEE5',
+        asphalt200: '#CACFD7',
+        asphalt300: '#B7BCC7',
+        asphalt400: '#9BA1AE',
+        asphalt500: '#777E8C',
+        asphalt600: '#626978',
+        asphalt700: '#474D5B',
+        asphalt800: '#333945',
+        asphalt900: '#1F242F',
         // Backgrounds
         bgSideMenu: '#292B42',
         bgWallet: '#1c2136',
@@ -164,6 +195,7 @@ export default {
         bgOverlay: '#292B42',
         bgGrey: '#F8F9FB',
         bgBlack: '#000000',
+        bgStorybook: '#1c2136',
         //Box shadow
         boxShadow: '#3c3c3c',
         // Text
@@ -171,6 +203,8 @@ export default {
         textDark: '#FFFFFF',
         textMedium: '#A5B0C7',
         textLight: '#9BA1AE',
+        textDarkWhite: '#FFFFFF',
+        textMediumWhite: '#FFFFFF',
         // Grey
         greyPrimary: '#626978',
         greyMedium: '#566075',
@@ -178,7 +212,7 @@ export default {
         // Whites
         alwaysWhite: '#FFFFFF',
         whiteBg: '#151518',
-        popupBg: '#1B1C25',
+        popupBg: '#1B1C25 ',
         // Blue
         bluePrimary: '#6292EB',
         blueMedium: '#355288',
@@ -198,11 +232,10 @@ export default {
         // Disabled
         disabledPrimary: '#606670',
         disabledMedium: '#383F4A',
-        disabledLight: '#242D3E',
+        disabledLight: '#242D3E ',
         // Buttons
         buttonWhite: '#1c2136',
         buttonGrayLight: baseColors.asphalt5,
-        buttonGrayLightSelected: '#3e485c',
         buttonGrayDark: '#FFFFFF',
         buttonToggleDark: '#1F242F',
         buttonBorder: '#4d4f7d',
@@ -222,6 +255,7 @@ export default {
         whiteAlways: '#FFFFFF',
         whiteBackground: '#192439',
         whitePopup: '#202B43',
+        offWhite: '#292B42',
         //old colors
         primaryHover: '#1eb19b',
         primaryActive: '#56c5b4',
@@ -281,7 +315,7 @@ export default {
         tableHeader: '#0f1320',
         selectHeaderBg: '#F8FAFC',
         selectBorder: '#F1F1F1',
-        maxButton: '#F6F8FD',
+        maxButton: '#05071f',
         textBlack: '#202124',
         textBlack2: '#5F6368',
         buttonSelect: '#D7F5F4',

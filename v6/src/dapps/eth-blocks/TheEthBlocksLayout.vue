@@ -24,13 +24,15 @@ import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
 export default {
   name: 'TheEthBlocksLayout',
   components: {
-    TheWrapperDapp: () => import('@/core/components/TheWrapperDapp')
+    TheWrapperDapp: () => import('@/dapps/TheWrapperDapp.vue')
   },
   data() {
     return {
       header: {
         title: 'ETH Blocks',
-        subtext: 'Mint generative art NFTs of Ethereum blocks. '
+        subtext: 'Mint generative art NFTs of Ethereum blocks. ',
+        dappLink:
+          'https://help.myetherwallet.com/en/articles/5708663-how-to-mint-eth-blocks'
       },
       activeTab: 0,
       headerImg: require('@/assets/images/icons/dapps/icon-dapp-ethblocks.svg'),
@@ -140,7 +142,7 @@ export default {
 
     /**
      * Checks web3 Transaction hash.
-     * If reciept is defined, removes transaction hash from
+     * If receipt is defined, removes transaction hash from
      * @param {string} txHash - transaction hash of the
      */
     checkTx(txHash) {

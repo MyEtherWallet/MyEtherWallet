@@ -1,5 +1,8 @@
 <template>
-  <div class="mew-component--create--mnemonic-phrase" style="max-width: 800px">
+  <white-sheet
+    class="mew-component--create--mnemonic-phrase mx-auto px-8 py-4"
+    style="max-width: 800px"
+  >
     <mew-stepper class="mx-md-0" :items="steppers" :on-step="step">
       <!-- ===================================================================================== -->
       <!-- Step 1: Write Down Words -->
@@ -68,10 +71,17 @@
           -->
         <div class="MnemonicWroteThemDown d-flex justify-center mt-6">
           <mew-button
+            title="Back"
+            btn-size="xlarge"
+            btn-style="outline"
+            class="mr-1"
+            @click.native="trackBackToOverview"
+          />
+          <mew-button
             title="I wrote them down"
             btn-size="xlarge"
             :has-full-width="false"
-            @click.native="updateStep(2)"
+            @click.native="trackIWroteThemDown()"
           />
         </div>
         <mew-warning-sheet
@@ -143,7 +153,7 @@
             btn-size="xlarge"
             btn-style="outline"
             class="mx-md-1 my-1"
-            @click.native="updateStep(1)"
+            @click.native="trackBackToStepOne"
           />
           <mew-button
             title="Verify"
@@ -203,30 +213,23 @@
         </div>
       </template>
     </mew-stepper>
-  </div>
+  </white-sheet>
 </template>
 
 <script>
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
+import { CREATE_WALLET } from '@/modules/analytics-opt-in/handlers/configs/events.js';
+import handlerCreateWallet from '../handlers/handlerCreateWallet';
 
 export default {
   name: 'CreateWalletMnemonicPhrase',
   components: {
-    mnemonicPhraseTable: () => import('@/components/MnemonicPhraseTable'),
-    phraseBlock: () => import('@/components/PhraseBlock')
+    mnemonicPhraseTable: () => import('@/core/components/MnemonicPhraseTable'),
+    phraseBlock: () => import('@/core/components/PhraseBlock')
   },
   mixins: [handlerAnalytics],
-  props: {
-    handlerCreateWallet: {
-      type: Object,
-      default: () => {
-        return {};
-      }
-    }
-  },
   data: () => ({
     step: 1,
     validateMnemonicValues: {},
@@ -258,7 +261,8 @@ export default {
     ],
     phraseSize: 12,
     phrase: [],
-    generatedVerification: []
+    generatedVerification: [],
+    createWalletHandler: null
   }),
   computed: {
     canVerify() {
@@ -292,11 +296,12 @@ export default {
     }
   },
   mounted() {
+    this.createWalletHandler = new handlerCreateWallet();
     this.setPhrase();
   },
   methods: {
     generateVerification() {
-      this.generatedVerification = this.handlerCreateWallet.getVerification();
+      this.generatedVerification = this.createWalletHandler.getVerification();
       this.generatedVerification.sort(function (a, b) {
         return a.itemNumber - b.itemNumber;
       });
@@ -308,7 +313,7 @@ export default {
       return Object.values(obj[this.getOnlyKey(obj)]);
     },
     setPhrase() {
-      this.handlerCreateWallet
+      this.createWalletHandler
         .generateMnemonic(this.phraseSize)
         .then(res => {
           this.phrase = res;
@@ -320,10 +325,10 @@ export default {
         });
     },
     verify() {
-      this.handlerCreateWallet
+      this.createWalletHandler
         .validateMnemonic(this.validateMnemonicValues)
         .then(() => {
-          this.trackCreateWallet(WALLET_TYPES.MNEMONIC);
+          this.trackCreateWalletAmplitude(CREATE_WALLET.MNEMONIC_SUCCESS);
           this.updateStep(3);
         })
         .catch(e => {
@@ -335,7 +340,16 @@ export default {
      * Used in Step 3
      */
     goToAccess() {
+      this.trackCreateWalletAmplitude(CREATE_WALLET.MNEMONIC_SUCCESS_ACCESS);
       this.$router.push({ name: ROUTES_HOME.ACCESS_WALLET.NAME });
+    },
+    trackIWroteThemDown() {
+      this.trackCreateWalletAmplitude(CREATE_WALLET.MNEMONIC_WROTE_DOWN);
+      this.updateStep(2);
+    },
+    trackBackToStepOne() {
+      this.trackCreateWalletAmplitude(CREATE_WALLET.MNEMONIC_BACK);
+      this.updateStep(1);
     },
 
     /**
@@ -356,7 +370,17 @@ export default {
     createAnotherWallet() {
       this.extraWord = '';
       this.extraWordVerification = '';
+      this.trackCreateWalletAmplitude(CREATE_WALLET.MNEMONIC_SUCCESS_CREATE);
       this.updateStep(1);
+      this.$routeer.push({
+        name: ROUTES_HOME.CREATE_WALLET_SOFTWARE_OVERVIEW.NAME
+      });
+    },
+    trackBackToOverview() {
+      this.trackCreateWalletAmplitude(CREATE_WALLET.MNEMONIC_BACK);
+      this.$router.push({
+        name: ROUTES_HOME.CREATE_WALLET_SOFTWARE_OVERVIEW.NAME
+      });
     }
   }
 };

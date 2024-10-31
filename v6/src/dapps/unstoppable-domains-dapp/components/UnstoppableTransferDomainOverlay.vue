@@ -3,21 +3,21 @@
     <template #mewOverlayBody>
       <div>
         <h2 class="text-center mb-10">Transfer domain</h2>
-        <mew6-white-sheet>
+        <white-sheet>
           <v-sheet color="transparent" width="600px" class="pa-8">
             <mew-address-select />
             <div class="d-flex justify-center mt-2">
               <mew-button title="Pay" btn-size="xlarge" />
             </div>
           </v-sheet>
-        </mew6-white-sheet>
+        </white-sheet>
       </div>
       <div>
         <h2 class="text-center mb-10">Confirmation</h2>
-        <mew6-white-sheet>
+        <white-sheet>
           <!-- <transaction-confirmation /> -->
-        </mew6-white-sheet>
-        <mew6-white-sheet>
+        </white-sheet>
+        <white-sheet>
           <div class="pa-8">
             <v-sheet
               color="transparent"
@@ -44,7 +44,7 @@
             </v-sheet>
           </div>
           <div class="py-10"></div>
-        </mew6-white-sheet>
+        </white-sheet>
       </div>
     </template>
   </mew-overlay>
@@ -54,9 +54,6 @@
 export default {
   props: {
     open: { default: false, type: Boolean }
-  },
-  data() {
-    return {};
   }
 };
 </script>

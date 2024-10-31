@@ -39,11 +39,12 @@
 import { mapGetters, mapState } from 'vuex';
 import { isObject, throttle } from 'lodash';
 import WAValidator from 'multicoin-address-validator';
-import { getAddressInfo } from '@kleros/address-tags-sdk';
+// import { getAddressInfo } from '@kleros/address-tags-sdk';
 
 import { isAddress, toChecksumAddress } from '@/core/helpers/addressUtils';
-import NameResolver from '@/modules/name-resolver/index';
+import Resolver from '@/modules/name-resolver/index';
 import { ERROR, Toast } from '../toast/handler/handlerToast';
+import { ROOTSTOCK } from '@/utils/networks/types';
 
 const USER_INPUT_TYPES = {
   typed: 'TYPED',
@@ -173,8 +174,8 @@ export default {
   },
   watch: {
     web3() {
-      if (this.network.type.ens && this.web3.currentProvider) {
-        this.nameResolver = new NameResolver(this.network, this.web3);
+      if (this.network.type.ensEnkryptType) {
+        this.nameResolver = new Resolver(this.network);
       } else {
         this.nameResolver = null;
       }
@@ -196,8 +197,8 @@ export default {
         link: ''
       };
     }
-    if (this.network.type.ens && this.web3.currentProvider)
-      this.nameResolver = new NameResolver(this.network, this.web3);
+    if (this.network.type.ensEnkryptType)
+      this.nameResolver = new Resolver(this.network);
     if (this.isHomePage) {
       this.setDonationAddress();
     }
@@ -247,18 +248,18 @@ export default {
           }
           this.loadedAddressValidation = !this.isValidAddress ? false : true;
           /**
-           * Resolve address with ENS/Unstoppable/Kleros
-           */
-          if (this.isValidAddress && !this.isOfflineApp)
-            await this.resolveAddress();
-
-          /**
            * @emits setAddress
            */
           this.$emit('setAddress', value, this.isValidAddress, {
             type: inputType,
             value: isObject(typeVal) ? typeVal.nickname : typeVal
           });
+          /**
+           * Resolve address with ENS/Unstoppable/Kleros
+           */
+          if (this.isValidAddress && !this.isOfflineApp)
+            await this.resolveAddress();
+
           if (!this.isValidAddress) {
             await this.resolveName();
           }
@@ -286,7 +287,18 @@ export default {
               value: value
             });
           } else {
-            this.isValidAddress = false;
+            try {
+              this.inputAddr = value;
+              const isAddValid = this.isValidAddressFunc(this.inputAddr);
+              if (isAddValid instanceof Promise) {
+                const validation = await isAddValid;
+                this.isValidAddress = validation;
+              } else {
+                this.isValidAddress = isAddValid;
+              }
+            } catch (e) {
+              this.isValidAddress = false;
+            }
             this.loadedAddressValidation = true;
             this.$emit('setAddress', value, this.isValidAddress, {
               type: inputType,
@@ -312,8 +324,8 @@ export default {
       });
 
       // Calls setups from mounted
-      if (!this.isOfflineApp && this.network.type.ens)
-        this.nameResolver = new NameResolver(this.network, this.web3);
+      if (!this.isOfflineApp && this.network.type.ensEnkryptType)
+        this.nameResolver = new Resolver(this.network);
       if (this.isHomePage) {
         this.setDonationAddress();
       }
@@ -334,21 +346,15 @@ export default {
     resolveAddress: throttle(async function () {
       if (this.nameResolver) {
         try {
+          // Ethers.js rejects Rootstock checksummed address so use lowercase address.
+          const inputAddress =
+            this.network.type.chainID === ROOTSTOCK.chainID
+              ? this.inputAddr.toLowerCase()
+              : this.inputAddr;
           const reverseName = await this.nameResolver.resolveAddress(
-            this.inputAddr
+            inputAddress
           );
-          if (reverseName && !reverseName.name) {
-            try {
-              await getAddressInfo(
-                toChecksumAddress(this.inputAddr),
-                'https://ipfs.kleros.io'
-              ).then(data => {
-                this.nametag = data?.publicNameTag || '';
-              });
-            } catch (e) {
-              this.nametag = '';
-            }
-          }
+
           this.resolvedAddr = reverseName?.name ? reverseName.name : '';
         } catch (e) {
           Toast(e, {}, ERROR);

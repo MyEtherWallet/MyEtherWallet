@@ -63,13 +63,10 @@
 </template>
 
 <script>
-import AaveTable from '../AaveTable';
-import AaveSummary from '../AaveSummary';
-import AaveAmountForm from '../AaveAmountForm.vue';
-import AaveSelectInterest from '../AaveSelectInterest.vue';
-import { AAVE_TABLE_TITLE } from '../../handlers/helpers';
 import { mapGetters, mapState } from 'vuex';
 import { isEmpty } from 'lodash';
+
+import { AAVE_TABLE_TITLE } from '../../handlers/helpers';
 import handlerAave from '../../handlers/handlerAave.mixin';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { toBase } from '@/core/helpers/unit';
@@ -77,7 +74,12 @@ import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalyti
 
 export default {
   name: 'AaveBorrowOverlay',
-  components: { AaveTable, AaveAmountForm, AaveSelectInterest, AaveSummary },
+  components: {
+    AaveTable: () => import('../AaveTable'),
+    AaveSummary: () => import('../AaveSummary'),
+    AaveAmountForm: () => import('../AaveAmountForm.vue'),
+    AaveSelectInterest: () => import('../AaveSelectInterest.vue')
+  },
   mixins: [handlerAave, handlerAnalytics],
   data() {
     return {

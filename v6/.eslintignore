@@ -1,4 +1,3 @@
 /dist/
 /*.js
 /tests/unit/coverage/
-/v6/

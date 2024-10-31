@@ -13,7 +13,12 @@
       Please use FINNEY to scan the QR code below.
     </p>
     <div align="center" justify="center" class="px-sm-12">
-      <qr-code :data="qrCode" :height="300" :width="300" style="width: 100%" />
+      <app-qr-code
+        :data="qrCode"
+        :height="300"
+        :width="300"
+        style="width: 100%"
+      />
     </div>
     <div v-show="onXwallet" align="center" justify="space-around" class="mt-5">
       <a

@@ -19,7 +19,7 @@
     </div>
     <!--
     =====================================================================================
-      Identicon and acount
+      Identicon and account
     =====================================================================================
     -->
     <div class="d-flex align-center mb-4">
@@ -43,7 +43,7 @@
       />
       <div class="inner-content pa-3 pa-sm-8 d-flex align-center">
         <div class="white pa-1" style="border-radius: 7px">
-          <qr-code :data="address" :height="132" :width="132" />
+          <app-qr-code :data="address" :height="132" :width="132" />
         </div>
         <div class="pl-3">
           <div
@@ -114,9 +114,11 @@ export default {
 
 <style lang="scss" scoped>
 .wallet-card-container {
+  background-color: var(--v-bgWallet-base);
   overflow: hidden;
   border-radius: 20px;
   position: relative;
+  min-height: 172px;
   .container-qr--addr {
     word-break: break-all;
     color: white;

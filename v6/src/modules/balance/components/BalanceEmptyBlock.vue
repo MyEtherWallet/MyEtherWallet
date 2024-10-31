@@ -1,5 +1,5 @@
 <template>
-  <mew6-white-sheet
+  <white-sheet
     :class="[
       isTokens ? 'empty-token-list' : 'empty-network-balance',
       'module-no-balance pa-4 py-7 pa-sm-12'
@@ -24,7 +24,11 @@
           :has-full-width="false"
           title="Buy ETH with a credit card"
           btn-size="xlarge"
-          @click.native="openBuySell"
+          @click.native="
+            () => {
+              openBuySell('BalanceEmptyBlock');
+            }
+          "
         />
         <div class="d-flex align-center mt-5">
           <div>We accept credit card</div>
@@ -76,7 +80,7 @@
         @click.native="openCustomTokens"
       />
     </div>
-  </mew6-white-sheet>
+  </white-sheet>
 </template>
 
 <script>

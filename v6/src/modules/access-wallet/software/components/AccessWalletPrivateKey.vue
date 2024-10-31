@@ -11,7 +11,7 @@
       class="PrivateKeyInput"
       label="Private Key"
       placeholder="Enter your Private Key"
-      :rules="privKeyRulles"
+      :rules="privKeyRules"
       type="password"
     />
     <!--
@@ -20,6 +20,7 @@
     =====================================================================================
     -->
     <div class="text-center">
+      <mew-checkbox v-model="invis" class="checkbox" />
       <mew-checkbox
         v-model="acceptTerms"
         :label="label"
@@ -45,15 +46,19 @@
 <script>
 import { isValidPrivate } from 'ethereumjs-util';
 import { isString } from 'lodash';
+import { mapState } from 'vuex';
 
 import { isPrivateKey } from '../handlers/helpers';
 import {
   getBufferFromHex,
   sanitizeHex
 } from '../../../access-wallet/common/helpers';
-import { mapState } from 'vuex';
+import handlerAnalyticsMixin from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { ACCESS_WALLET } from '@/modules/analytics-opt-in/handlers/configs/events';
+
 export default {
   name: 'AccessWalletPrivateKey',
+  mixins: [handlerAnalyticsMixin],
   props: {
     handlerAccessWallet: {
       type: Object,
@@ -66,6 +71,7 @@ export default {
     return {
       privateKey: '',
       acceptTerms: false,
+      invis: false,
       label: 'To access my wallet, I accept ',
       link: {
         title: 'Terms',
@@ -104,13 +110,32 @@ export default {
         : this.privateKey;
     },
     /**
-     * @returns rulles fot the private key input
+     * @returns rules fot the private key input
      */
-    privKeyRulles() {
+    privKeyRules() {
       return [
         value => !!value || 'Required',
         value => isPrivateKey(value) || 'This is not a real private Key'
       ];
+    }
+  },
+  watch: {
+    privateKey(val) {
+      if (val !== '' && !this.privKey) {
+        this.trackAccessWalletAmplitude(ACCESS_WALLET.SOFTWARE_FAILED, {
+          error: 'This is not a real private Key'
+        });
+      }
+    },
+    acceptTerms(val) {
+      if (val) {
+        this.trackAccessWalletAmplitude(ACCESS_WALLET.PRIV_KEY_TERMS);
+      }
+    },
+    invis(val) {
+      if (val) {
+        this.trackAccessWalletAmplitude(ACCESS_WALLET.PRIV_INVISIBLE_BOX);
+      }
     }
   },
   mounted() {
@@ -132,3 +157,9 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.checkbox {
+  opacity: 0 !important;
+}
+</style>

@@ -116,7 +116,8 @@ class ledgerWallet {
     const txSigner = async txParams => {
       const networkId = store.getters['global/network'].type.chainID;
       const tokenInfo = byContractAddressAndChainId(txParams.to, networkId);
-      if (tokenInfo) await this.ledger.provideERC20TokenInformation(tokenInfo);
+      if (tokenInfo)
+        await this.ledger.provideERC20TokenInformation(tokenInfo.data);
       const legacySigner = async _txParams => {
         const tx = new Transaction(_txParams, {
           common: commonGenerator(store.getters['global/network'])
@@ -159,7 +160,7 @@ class ledgerWallet {
         });
         const message = tx.getMessageToSign(false);
         try {
-           
+          // eslint-disable-next-line no-unused-vars
           const result = await this.ledger.signTransaction(
             accountPath,
             message.toString('hex')

@@ -1,5 +1,5 @@
 <template>
-  <div class="privacy-policy py-12">
+  <div class="privacy-policy py-12 pt-16 mt-13">
     <v-container>
       <div class="wrap">
         <div class="page-container">

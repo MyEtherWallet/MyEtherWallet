@@ -328,7 +328,9 @@ export default {
      * otherwise it will throw toast error
      */
     async checkIfValidAddress() {
-      const codeHash = await this.web3.eth.getCode(this.contractAddress);
+      const codeHash = await this.web3.eth.getCode(
+        this.contractAddress.toLowerCase()
+      );
       if (
         this.contractAddress &&
         isAddress(this.contractAddress) &&
@@ -374,7 +376,7 @@ export default {
     async findTokenInfo() {
       const contract = new this.web3.eth.Contract(
         abiERC20,
-        this.contractAddress
+        this.contractAddress.toLowerCase()
       );
       this.token = this.contractToToken(this.contractAddress) || {};
       try {

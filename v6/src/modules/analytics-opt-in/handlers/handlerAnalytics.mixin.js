@@ -1,24 +1,19 @@
 /**
- * Matomo Analytics Mixin
+ * Amplitude Analytics Mixin
  */
-import { mapState, mapActions } from 'vuex';
+import { mapState, mapActions, mapGetters } from 'vuex';
 import categories from './configs/configCategories';
+import { isEmpty } from 'lodash';
 
 export default {
   name: 'HandlerAnalytics',
   computed: {
-    ...mapState('popups', [
-      'consentToTrack',
-      'displayedTrackingPopup',
-      'enkryptLandingPopup',
-      'enkryptLandingPopupClosed'
-    ]),
+    ...mapState('popups', ['consentToTrack']),
     ...mapState('wallet', ['isOfflineApp']),
+    ...mapState('wallet', ['isOfflineApp']),
+    ...mapGetters('global', ['network']),
     shouldDisplayTrackingPopup() {
       if (this.isOfflineApp) return false;
-      if (!this.enkryptLandingPopup) {
-        return this.displayedTrackingPopup;
-      }
       return true;
     }
   },
@@ -28,131 +23,293 @@ export default {
      * Sets the consent to track on wallet page
      */
     setConsent() {
-      this.setTrackingConsent(!this.consentToTrack);
+      if (this.isOfflineApp) return;
+      if (this.consentToTrack) {
+        this.$amplitude.track(`UserOptOutTracking`, {
+          network: this.network.type.name
+        });
+      }
+
+      const initialValue = this.consentToTrack;
+
+      this.setTrackingConsent(!this.consentToTrack).then(() => {
+        this.$amplitude.setOptOut(!this.consentToTrack);
+        if (!initialValue && this.consentToTrack)
+          this.$amplitude.track(`UserOptInTracking`, {
+            network: this.network.type.name
+          });
+      });
+    },
+    /**
+     *
+     * @param {String} event
+     * tracks all events that happen
+     * inside the landing page
+     */
+    trackLandingPageAmplitude(event, prop) {
+      if (this.isOfflineApp) return;
+      if (this.consentToTrack) {
+        if (!isEmpty(prop)) {
+          const newObj = Object.assign({}, prop, {
+            network: this.network.type.name
+          });
+          this.$amplitude.track(`${categories.landingPage}${event}`, newObj);
+          return;
+        }
+        this.$amplitude.track(`${categories.landingPage}${event}`, {
+          network: this.network.type.name
+        });
+      }
+    },
+    /**
+     *
+     * @param {String} event
+     * tracks all events that happen
+     * inside the landing page
+     */
+    trackNftModule(event, prop) {
+      if (this.isOfflineApp) return;
+      if (this.consentToTrack) {
+        if (!isEmpty(prop)) {
+          const newObj = Object.assign({}, prop, {
+            network: this.network.type.name
+          });
+          this.$amplitude.track(`${categories.nftModule}${event}`, newObj);
+          return;
+        }
+        this.$amplitude.track(`${categories.nftModule}${event}`, {
+          network: this.network.type.name
+        });
+      }
+    },
+    /**
+     *
+     * @param {String} event
+     * tracks all events that happen
+     * inside the header
+     */
+    trackHeaderAmplitude(event, prop) {
+      if (this.isOfflineApp) return;
+      if (this.consentToTrack) {
+        if (!isEmpty(prop)) {
+          const newObj = Object.assign({}, prop, {
+            network: this.network.type.name
+          });
+          this.$amplitude.track(`${categories.header}${event}`, newObj);
+          return;
+        }
+        this.$amplitude.track(`${categories.header}${event}`, {
+          network: this.network.type.name
+        });
+      }
+    },
+    /**
+     *
+     * @param {String} event
+     * tracks all events that happen
+     * inside the footer
+     */
+    trackFooterAmplitude(event) {
+      if (this.isOfflineApp) return;
+      if (this.consentToTrack) {
+        this.$amplitude.track(categories.footer, {
+          to: event,
+          network: this.network.type.name
+        });
+      }
+    },
+    /**
+     *
+     * @param {String} event
+     * tracks all events that happen
+     * inside the dashboard
+     */
+    trackDashboardAmplitude(event, prop) {
+      if (this.isOfflineApp) return;
+      if (this.consentToTrack) {
+        if (!isEmpty(prop)) {
+          const newObj = Object.assign({}, prop, {
+            network: this.network.type.name
+          });
+          this.$amplitude.track(`${categories.dashboard}${event}`, newObj);
+          return;
+        }
+        this.$amplitude.track(`${categories.dashboard}${event}`, {
+          network: this.network.type.name
+        });
+      }
+    },
+    /**
+     *
+     * @param {String} event
+     * tracks all events that happen
+     * inside the swap
+     */
+    trackSwapAmplitude(event, prop) {
+      if (this.isOfflineApp) return;
+      if (this.consentToTrack) {
+        if (!isEmpty(prop)) {
+          const newObj = Object.assign({}, prop, {
+            network: this.network.type.name
+          });
+          this.$amplitude.track(`${categories.swapAmplitude}${event}`, newObj);
+          return;
+        }
+        this.$amplitude.track(`${categories.swapAmplitude}${event}`, {
+          network: this.network.type.name
+        });
+      }
+    },
+    /**
+     *
+     * @param {String} event
+     * tracks all events that happen
+     * inside the create wallet page
+     */
+    trackCreateWalletAmplitude(event) {
+      if (this.isOfflineApp) return;
+      if (this.consentToTrack) {
+        this.$amplitude.track(`${categories.createWallet}${event}`, {
+          network: this.network.type.name
+        });
+      }
+    },
+    /**
+     *
+     * @param {String} event
+     * tracks all events that happen
+     * inside the create wallet page
+     */
+    trackBuyHardwareAmplitude(event) {
+      if (this.isOfflineApp) return;
+      if (this.consentToTrack) {
+        this.$amplitude.track(`${categories.buyHardware}${event}`, {
+          network: this.network.type.name
+        });
+      }
+    },
+    /**
+     *
+     * @param {String} event
+     * tracks all events that happen
+     * inside the access wallet page
+     */
+    trackAccessWalletAmplitude(event, prop) {
+      if (this.isOfflineApp) return;
+      if (this.consentToTrack) {
+        if (!isEmpty(prop)) {
+          const newObj = Object.assign({}, prop, {
+            network: this.network.type.name
+          });
+          this.$amplitude.track(`${categories.accessWallet}${event}`, newObj);
+          return;
+        }
+        this.$amplitude.track(`${categories.accessWallet}${event}`, {
+          network: this.network.type.name
+        });
+      }
     },
     /**
      * Tracks when user lands on landing page
      */
     trackLandingPage() {
-      if (this.$matomo && this.consentToTrack) {
-        this.$matomo.trackEvent(categories.landingPage, 'landed on');
-      }
-    },
-    /**
-     * Tracks when user lands on create wallet
-     * also tracks what type of wallet user creates
-     * (depends on the action being passed in)
-     */
-    trackCreateWallet(action) {
-      if (this.$matomo && action && this.consentToTrack) {
-        this.$matomo.trackEvent(categories.createWallet, action);
-      }
-    },
-    /**
-     * Tracks when user lands on access wallet
-     * also tracks what type of connection user uses to access dashboard
-     * (depends on the action being passed in)
-     */
-    trackAccessWallet(action) {
-      if (this.$matomo && action && this.consentToTrack) {
-        this.$matomo.trackEvent(categories.accessWallet, action);
-      }
-    },
-    /**
-     * Tracks when user switches network
-     */
-    trackNetworkSwitch(action) {
-      if (this.$matomo && action && this.consentToTrack) {
-        this.$matomo.trackEvent(categories.networkSwitch, action);
+      if (this.isOfflineApp) return;
+      if (this.consentToTrack) {
+        this.$amplitude.track('LandingPageShown', {
+          network: this.network.type.name
+        });
       }
     },
     /**
      * Tracks which dapp user navigates to
      */
-    trackDapp(action) {
-      if (this.$matomo && action && this.consentToTrack) {
-        this.$matomo.trackEvent(categories.dapp, action);
+    trackDapp(action, prop) {
+      if (this.isOfflineApp) return;
+      if (action && this.consentToTrack) {
+        if (!isEmpty(prop)) {
+          const newObj = Object.assign({}, prop, {
+            network: this.network.type.name
+          });
+          this.$amplitude.track(`${categories.dapp}${action}`, newObj);
+          return;
+        }
+        this.$amplitude.track(`${categories.dapp}${action}`, {
+          network: this.network.type.name
+        });
       }
     },
     /**
-     * Tracks when user changes gas type
+     * Tracks which dapp user navigates to
      */
-    trackGasSwitch(action) {
-      if (this.$matomo && action && this.consentToTrack) {
-        this.$matomo.trackEvent(categories.gasSwitch, action);
+    trackStaking(action) {
+      if (this.isOfflineApp) return;
+      if (action && this.consentToTrack) {
+        this.$amplitude.track(`${categories.staking}${action}`, {
+          network: this.network.type.name
+        });
       }
     },
     /**
-     * Tracks when global error modal pops up
+     * Tracks ad
      */
-    trackGlobalError(action) {
-      if (this.$matomo && this.consentToTrack) {
-        this.$matomo.trackEvent(categories.globalError, action);
+    trackAd(action) {
+      if (this.isOfflineApp) return;
+      if (action && this.consentToTrack) {
+        this.$amplitude.track(`${categories.advertisement}${action}`, {
+          network: this.network.type.name
+        });
       }
     },
     /**
      * Tracks when user logs out of dashboard
      */
     trackLogout() {
-      if (this.$matomo && this.consentToTrack) {
-        this.$matomo.trackEvent(categories.exitDashboard, 'true');
+      if (this.isOfflineApp) return;
+      if (this.consentToTrack) {
+        this.$amplitude.track(categories.exitDashboard);
       }
     },
     /**
-     * Tracks when user clicks enkrypt install
+     * Track Buy/Sell
      */
-    trackEnkryptInstall() {
-      if (this.$matomo && this.consentToTrack) {
-        this.$matomo.trackEvent(categories.enkrypt, 'true');
-      }
-    },
-    /**
-     * Tracks when user clicks mewwallet install
-     */
-    trackMewWalletInstall() {
-      if (this.$matomo && this.consentToTrack) {
-        this.$matomo.trackEvent(categories.mewwallet, 'true');
-      }
-    },
-    /**
-     * SWAP specific analytics
-     */
-
-    /**
-     * Tracks which swap rate user clicks
-     */
-    trackSwapRate(action) {
-      if (this.$matomo && action && this.consentToTrack) {
-        this.$matomo.trackEvent(categories.swapTokenPair, action);
-      }
-    },
-    /**
-     * Tracks which swap rate user clicks
-     */
-    trackSwapToken(action) {
-      if (this.$matomo && action && this.consentToTrack) {
-        this.$matomo.trackEvent(categories.swapToken, action);
-      }
-    },
-    /**
-     * Tracks what user selects to swap from
-     * and swap to
-     */
-    trackSwap(action, key, value) {
-      if (this.$matomo && action && this.consentToTrack) {
-        if (key && value) {
-          this.$matomo.trackEvent(categories.swap, action, key, value);
-        } else {
-          this.$matomo.trackEvent(categories.swap, action);
+    trackBuySell(action, event = {}) {
+      if (this.isOfflineApp) return;
+      if (this.consentToTrack) {
+        if (!isEmpty(event)) {
+          const newObj = Object.assign({}, event, {
+            network: this.network.type.name
+          });
+          this.$amplitude.track(`${categories.buySell}${action}`, newObj);
+          return;
         }
+        this.$amplitude.track(`${categories.buySell}${action}`, {
+          network: this.network.type.name
+        });
       }
     },
     /**
-     * Tracks what user selects to buy or sell
+     * Track Contract
      */
-    trackBuySell(action) {
-      if (this.$matomo && action && this.consentToTrack) {
-        this.$matomo.trackEvent(categories.buySell, action);
+    trackContract(action, event = {}) {
+      if (this.isOfflineApp) return;
+      if (this.consentToTrack) {
+        if (!isEmpty(event)) {
+          const newObj = Object.assign({}, event, {
+            network: this.network.type.name
+          });
+          this.$amplitude.track(`${categories.contract}${action}`, newObj);
+          return;
+        }
+        this.$amplitude.track(`${categories.contract}${action}`, {
+          network: this.network.type.name
+        });
+      }
+    },
+    trackSurvey(val) {
+      if (this.consentToTrack) {
+        this.$amplitude.track(`Survey${val}`, {
+          network: this.network.type.name
+        });
       }
     }
   }

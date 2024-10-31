@@ -17,7 +17,7 @@ exports.assertion = function elementCount(selectorOrObject, count) {
 
   // when called from a page object element or section
   if (typeof selectorOrObject === 'object' && selectorOrObject.selector) {
-     
+    // eslint-disable-next-line prefer-destructuring
     selector = selectorOrObject.selector;
   } else {
     selector = selectorOrObject;

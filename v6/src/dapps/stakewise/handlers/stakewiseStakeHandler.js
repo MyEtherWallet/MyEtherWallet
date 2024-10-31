@@ -15,7 +15,7 @@ class StakewiseStakeHandler extends StakewiseHandler {
   getTransactionFee() {
     return (
       this.poolContract.methods
-         
+        // eslint-disable-next-line
         .stakeWithReferrerOnBehalf(MEW_REFERRAL_ADDRESS, this.fromAddress)
         .estimateGas({
           from: this.fromAddress,
@@ -27,7 +27,7 @@ class StakewiseStakeHandler extends StakewiseHandler {
   stake() {
     return (
       this.poolContract.methods
-         
+        // eslint-disable-next-line
         .stakeWithReferrerOnBehalf(MEW_REFERRAL_ADDRESS, this.fromAddress)
         .send({
           from: this.fromAddress,

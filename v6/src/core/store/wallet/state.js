@@ -12,7 +12,8 @@ const state = {
   web3: {},
   ensDomains: null,
   tokens: [],
-  loadingWalletInfo: true
+  loadingWalletInfo: true,
+  swapRates: []
 };
 
 export default state;

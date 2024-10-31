@@ -62,7 +62,7 @@
           </div>
         </v-col>
         <v-col cols="auto">
-          <qr-code :data="address" :height="140" :width="140" />
+          <app-qr-code :data="address" :height="140" :width="140" />
         </v-col>
       </v-row>
 
@@ -85,7 +85,12 @@
           </div>
         </v-col>
         <v-col cols="auto">
-          <qr-code :data="key" :height="140" :width="140" :type-number="10" />
+          <app-qr-code
+            :data="key"
+            :height="140"
+            :width="140"
+            :type-number="10"
+          />
         </v-col>
       </v-row>
     </v-container>
@@ -108,9 +113,6 @@ import { toChecksumAddress } from '@/core/helpers/addressUtils';
 
 export default {
   name: 'BalanceAddressPaperWallet',
-  data() {
-    return {};
-  },
   computed: {
     ...mapState('wallet', ['address', 'instance', 'isHardware']),
     key() {

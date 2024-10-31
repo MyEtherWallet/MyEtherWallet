@@ -134,6 +134,7 @@
           :validators="validators"
           :loading="loadingValidators"
           :amount="amount"
+          :refetch-validators="refetchValidators"
         />
       </v-sheet>
     </template>
@@ -150,13 +151,15 @@ import {
 } from '@/core/helpers/numberFormatHelper';
 
 import handlerStaked from './handlers/handlerStaked';
+import handlerAnalyticsMixin from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 export default {
   name: 'TheStakedLayout',
   components: {
-    TheWrapperDapp: () => import('@/core/components/TheWrapperDapp'),
+    TheWrapperDapp: () => import('@/dapps/TheWrapperDapp.vue'),
     StakedStepper: () => import('./components/staked-stepper/StakedStepper'),
     StakedStatus: () => import('./components/StakedStatus')
   },
+  mixins: [handlerAnalyticsMixin],
   data() {
     return {
       validNetworks: SUPPORTED_NETWORKS,
@@ -165,8 +168,10 @@ export default {
       header: {
         title: 'Ethereum 2.0 staking',
         subtext:
-          'Stake on Ethereum 2.0 and earn continuous rewards for providing a public good to the community.',
-        subtextClass: 'textMedium--text'
+          'Stake on Ethereum 2.0 and earn continuous rewards for providing a public good to the community. ',
+        subtextClass: 'textMedium--text',
+        dappLink:
+          'https://help.myetherwallet.com/en/articles/5380731-eth-validator-staking-with-mew-portfolio'
       },
       activeTab: 0,
       handlerStaked: {},
@@ -188,7 +193,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['web3', 'address']),
+    ...mapState('wallet', ['web3', 'address', 'identifier']),
     ...mapGetters('global', ['network']),
     ...mapGetters('article', ['getArticle']),
     /**
@@ -297,7 +302,9 @@ export default {
       this.handlerStaked = new handlerStaked(
         this.web3,
         this.network,
-        this.address
+        this.address,
+        this.trackDapp,
+        this.identifier
       );
     }
   },
@@ -324,8 +331,15 @@ export default {
      * and set amount value for staked status
      */
     sendTransaction(amountETH) {
+      this.trackDapp('StakedSendStake');
       this.handlerStaked.sendTransaction();
       this.amount = amountETH;
+    },
+    /**
+     * refetch validators
+     */
+    refetchValidators() {
+      this.handlerStaked.getValidators();
     }
   }
 };
@@ -335,6 +349,7 @@ export default {
 .staked-tab-inactive {
   background-color: rgba(0, 0, 0, 0.24) !important;
 }
+
 .staked-tab-active::before {
   opacity: 0 !important;
 }

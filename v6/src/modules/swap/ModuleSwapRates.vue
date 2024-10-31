@@ -1,5 +1,5 @@
 <template>
-  <mew6-white-sheet v-if="isEthNetwork" :sideinfo="!mobile">
+  <white-sheet :sideinfo="!mobile">
     <div class="px-5 px-lg-7 py-5">
       <div class="d-flex align-center justify-space-between">
         <span class="mew-heading-2">{{ $t('common.swap') }}</span>
@@ -7,12 +7,12 @@
           btn-style="transparent"
           button-size="small"
           :title="$t('common.more') + '...'"
-          @click.native="() => navigateToSwap()"
+          @click.native="toSwap"
         />
       </div>
     </div>
     <div v-if="!loading && !error && hasSwapRates" class="pa-3">
-      <div v-for="(data, key) in swapData" :key="key">
+      <div v-for="(data, key) in swapRates" :key="key">
         <v-sheet
           v-if="data.rate"
           color="buttonGrayLight"
@@ -59,20 +59,21 @@
     >
       <v-progress-circular indeterminate />
       <h3 class="ma-3">Having issues loading tokens.</h3>
-      <h5 class="mb-2 cursor--pointe greenPrimary--text" @click="fetchRates">
+      <h5 class="mb-2 cursor--pointer greenPrimary--text" @click="fetchRates">
         Try again?
       </h5>
     </div>
-  </mew6-white-sheet>
+  </white-sheet>
 </template>
 
 <script>
 import ethIcon from '@/assets/images/networks/eth.svg';
-import { mapState, mapGetters } from 'vuex';
+import { mapState, mapGetters, mapActions } from 'vuex';
 import { toWei } from 'web3-utils';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { DASHBOARD } from '../analytics-opt-in/handlers/configs/events';
 import handlerSwap from '@/modules/swap/handlers/handlerSwap';
 
 const STATIC_PAIRS = [
@@ -156,7 +157,6 @@ const STATIC_PAIRS = [
 ];
 export default {
   name: 'ModuleSwapRates',
-  components: {},
   mixins: [handlerAnalytics],
   props: {
     mobile: {
@@ -168,20 +168,19 @@ export default {
     return {
       ethIcon: ethIcon,
       swapHandler: null,
-      swapData: null,
       loading: true,
       error: false
     };
   },
   computed: {
-    ...mapState('wallet', ['web3']),
+    ...mapState('wallet', ['web3', 'swapRates']),
     ...mapGetters('global', ['isEthNetwork', 'network']),
     showTokenIssue() {
       return (this.error || !this.hasSwapRates) && !this.loading;
     },
     hasSwapRates() {
-      if (this.swapData) {
-        return this.swapData.some(item => {
+      if (this.swapRates) {
+        return this.swapRates.some(item => {
           return item.rate;
         });
       }
@@ -197,26 +196,30 @@ export default {
     this.setSwapHandler(this.web3, this.network.type.name);
   },
   methods: {
+    ...mapActions('wallet', ['setSwapRates']),
     setSwapHandler(val) {
       if (!this.isEthNetwork) return;
       this.swapHandler = new handlerSwap(val, this.network.type.name);
+      this.loading = this.swapRates.length === 0;
+      if (this.swapRates.length !== 0) return;
       this.fetchRates();
     },
     fetchRates() {
       try {
-        this.swapData = null;
         this.loading = true;
         this.swapHandler.getQuotesForSet(STATIC_PAIRS).then(res => {
-          this.swapData = STATIC_PAIRS.map((itm, idx) => {
-            itm['rate'] =
-              res[idx] &&
-              res[idx].length !== 0 &&
-              res[idx][0] &&
-              res[idx][0]?.amount
-                ? formatFloatingPointValue(res[idx][0]?.amount).value
-                : false;
-            return itm;
-          });
+          this.setSwapRates(
+            STATIC_PAIRS.map((itm, idx) => {
+              itm['rate'] =
+                res[idx] &&
+                res[idx].length !== 0 &&
+                res[idx][0] &&
+                res[idx][0]?.amount
+                  ? formatFloatingPointValue(res[idx][0]?.amount).value
+                  : false;
+              return itm;
+            })
+          );
           this.loading = false;
         });
       } catch (e) {
@@ -225,15 +228,19 @@ export default {
         Toast(e.message, {}, ERROR);
       }
     },
+    toSwap() {
+      this.trackDashboardAmplitude(DASHBOARD.SWAP_PAIRS);
+      this.navigateToSwap();
+    },
     goToSwap(data) {
       const obj = {
         fromToken: data.fromT.contract,
         toToken: data.toT.contract,
         amount: '1'
       };
-      this.trackSwapRate(
-        `fromSwapTokenPairs ${data.fromT.symbol} to ${data.toT.symbol}`
-      );
+      this.trackDashboardAmplitude(DASHBOARD.SWAP_PAIRS, {
+        TokenPair: `${data.fromT.symbol} to ${data.toT.symbol}`
+      });
       this.navigateToSwap(obj);
     },
     navigateToSwap(query) {

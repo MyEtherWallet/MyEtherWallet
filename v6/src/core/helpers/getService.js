@@ -9,7 +9,7 @@ const getService = parsableUrl => {
   const parsedUrl = url.parse(parsableUrl).hostname;
   const splitUrl = parsedUrl.split('.');
   if (splitUrl.length > 2)
-     
+    // eslint-disable-next-line
     return capitalize(`${splitUrl[1]}.${splitUrl[2]}`);
   return capitalize(splitUrl.join('.'));
 };

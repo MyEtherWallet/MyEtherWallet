@@ -6,7 +6,7 @@ import {
 } from '@/core/helpers/numberFormatHelper';
 import abi from '@/modules/balance/handlers/abiERC20.js';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
-import { isValidAddress } from 'ethereumjs-util';
+import { isAddress } from '@/core/helpers/addressUtils.js';
 
 const setCustomToken = function ({ rootGetters, commit }, token) {
   commit('SET_CUSTOM_TOKEN', { token, rootGetters });
@@ -57,10 +57,10 @@ const updateCustomTokenBalances = function ({ dispatch, getters, rootState }) {
   if (getters.hasCustom) {
     getters.customTokens.forEach(item => {
       const newToken = Object.assign({}, item);
-      if (!isValidAddress(item.contract)) return;
+      if (!isAddress(item.contract)) return;
       const newContract = new rootState.wallet.web3.eth.Contract(
         abi,
-        item.contract
+        item.contract.toLowerCase()
       );
       newContract.methods
         .balanceOf(rootState.wallet.address)

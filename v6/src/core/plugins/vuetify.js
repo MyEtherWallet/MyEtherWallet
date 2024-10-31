@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import vuetifyTheme from '@myetherwallet/mew-components/src/assets/styles/vuetifyTheme.js';
+import vuetifyTheme from '@/assets/styles/vuetifyTheme.js';
 import 'vuetify/dist/vuetify.min.css';
 import '@mdi/font/css/materialdesignicons.css';
 
@@ -22,6 +22,7 @@ import Vuetify, {
   VForm,
   VIcon,
   VImg,
+  VInput,
   VList,
   VListItem,
   VListItemAvatar,
@@ -111,6 +112,7 @@ Vue.use(Vuetify, {
     VForm,
     VIcon,
     VImg,
+    VInput,
     VList,
     VListItem,
     VListItemAvatar,

@@ -1,5 +1,5 @@
 <template>
-  <mew6-white-sheet class="mew-component--module-balance-loader pa-6">
+  <white-sheet class="mew-component--module-balance-loader pa-6">
     <v-row>
       <v-col cols="12" sm="6" class="d-flex flex-grow-1 align-center">
         <v-skeleton-loader type="avatar" />
@@ -50,17 +50,8 @@
         <v-skeleton-loader type="image" width="120px" height="50px" />
       </v-col>
     </v-row>
-  </mew6-white-sheet>
+  </white-sheet>
 </template>
-
-<script>
-export default {
-  components: {},
-  data() {
-    return {};
-  }
-};
-</script>
 
 <style lang="scss">
 .mew-component--module-balance-loader .v-skeleton-loader__text {

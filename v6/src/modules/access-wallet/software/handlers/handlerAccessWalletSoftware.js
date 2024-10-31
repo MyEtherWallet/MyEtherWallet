@@ -53,12 +53,10 @@ export default class AccessWallet {
    * Mnemonic Methods
    */
   unlockMnemonicWallet(phrase, password = '') {
-    return (this.walletInstance = new MnemonicWallet(phrase, password).then(
-      wallet => {
-        this.walletInstance = wallet;
-        return this.walletInstance;
-      }
-    ));
+    return MnemonicWallet(phrase, password).then(wallet => {
+      this.walletInstance = wallet;
+      return this.walletInstance;
+    });
   }
 
   async updateMnemonicPath(path) {

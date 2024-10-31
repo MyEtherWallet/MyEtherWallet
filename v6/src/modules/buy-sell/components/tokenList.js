@@ -2,10 +2,18 @@ import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common.js';
 
 const tokenContracts = {
   eth: MAIN_TOKEN_ADDRESS,
-  matic: '0x7D1AfA7B718fb893dB30A3aBc0Cfc608AaCfeBB0',
-  bnb: '0xB8c77482e45F1F44dE1745F52C74426C631bDD52',
+  dai: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
   usdt: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
-  usdc: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
+  usdc: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+  pyusd: '0x6c3ea9036406852006290770BEdFcAbA0e23A0e8',
+  // tusd: '0x0000000000085d4780B73119b644AE5ecd22b376',
+  // fdusdsc: '0xc5f0f7b66764F6ec8C8Dff7BA683102295E16409',
+  // usdcsc: '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d',
+  // usdtsc: '0x55d398326f99059ff775485246999027b3197955',
+  usdcmatic: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
+  usdtmatic: '0xc2132D05D31c914a87C6611C10748AEb04B58e8F',
+  usdtarbitrum: '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9',
+  usdtop: '0x94b008aa00579c1307b0ef2c499ad98a8ce58e58'
 };
 
 const sellContracts = [
@@ -13,12 +21,154 @@ const sellContracts = [
   tokenContracts['usdt'],
   tokenContracts['usdc']
 ];
-const buyContracts = [
-  tokenContracts.eth,
-  tokenContracts.matic,
-  tokenContracts.bnb,
-  tokenContracts.usdt,
-  tokenContracts.usdc
-];
+const buyContracts = {
+  ETH: [
+    tokenContracts.eth,
+    tokenContracts.usdt,
+    tokenContracts.usdc,
+    tokenContracts.dai,
+    tokenContracts.pyusd
+    // tokenContracts.tusd
+  ],
+  // BNB: [tokenContracts.fdusdsc, tokenContracts.usdcsc, tokenContracts.usdtsc],
+  POL: [tokenContracts.eth, tokenContracts.usdcmatic, tokenContracts.usdtmatic],
+  ARB: [tokenContracts.usdtarbitrum],
+  OP: [tokenContracts.usdtop]
+};
 
-export { buyContracts, sellContracts };
+const coingeckoContracts = {
+  ETH: [
+    'ethereum',
+    'dai',
+    'tether',
+    'usd-coin',
+    'paypal-usd'
+    //'true-usd'
+  ],
+  // BNB: [
+  //   'first-digital-usd',
+  //   'binance-bridged-usdc-bnb-smart-chain',
+  //   'binance-bridged-usdt-bnb-smart-chain'
+  // ],
+  POL: [
+    'matic-network',
+    'bridged-usdc-polygon-pos-bridge',
+    'polygon-bridged-usdt-polygon'
+  ],
+  ARB: ['arbitrum-bridged-usdt-arbitrum'],
+  OP: ['bridged-usdt']
+};
+
+const currencySymbols = {
+  ALL: 'Lek',
+  AFN: '؋',
+  ARS: '$',
+  AWG: 'ƒ',
+  AUD: '$',
+  AZN: '₼',
+  BSD: '$',
+  BBD: '$',
+  BYN: 'Br',
+  BZD: 'BZ$',
+  BMD: '$',
+  BOB: '$b',
+  BAM: 'KM',
+  'WP	': 'P',
+  BGN: 'лв',
+  BRL: 'R$',
+  BND: '$',
+  KHR: '៛',
+  CAD: '$',
+  KYD: '$',
+  CLP: '$',
+  CNY: '¥',
+  COP: '$',
+  CRC: '₡',
+  CUP: '₱',
+  CZK: 'Kč',
+  DKK: 'kr',
+  DOP: 'RD$',
+  XCD: '$',
+  EGP: '£',
+  SVC: '$',
+  EUR: '€',
+  FKP: '£',
+  FJD: '$',
+  GHS: '¢',
+  GIP: '£',
+  GTQ: 'Q',
+  GGP: '£',
+  GYD: '$',
+  HNL: 'L',
+  HKD: '$',
+  HUF: 'Ft',
+  ISK: 'kr',
+  INR: '₹',
+  IDR: 'Rp',
+  IRR: '﷼',
+  IMP: '£',
+  ILS: '₪',
+  JMD: 'J$',
+  JPY: '¥',
+  JEP: '£',
+  KZT: 'лв',
+  KPW: '₩',
+  KGS: 'лв',
+  LAK: '₭',
+  LBP: '£',
+  LRD: '$',
+  MKD: 'ден',
+  MYR: 'RM',
+  MUR: '₨',
+  MXN: '$',
+  MNT: '₮',
+  MZN: 'MT',
+  NAD: '$',
+  NPR: '₨',
+  ANG: 'ƒ',
+  NZD: '$',
+  NIO: 'C$',
+  NGN: '₦',
+  NOK: 'kr',
+  OMR: '﷼',
+  PKR: '₨',
+  PAB: 'B /.',
+  PYG: 'Gs',
+  PEN: 'S /.',
+  PHP: '₱',
+  PLN: 'zł',
+  QAR: '﷼',
+  RON: 'lei',
+  RUB: '₽',
+  SHP: '£',
+  SAR: '﷼',
+  RSD: 'Дин.',
+  SCR: '₨',
+  SGD: '$',
+  SBD: '$',
+  SOS: 'S',
+  KRW: '₩',
+  ZAR: 'R',
+  LKR: '₨',
+  SEK: 'kr',
+  CHF: 'CHF',
+  SRD: '$',
+  SYP: '£',
+  TWD: 'NT$',
+  THB: '฿',
+  TTD: 'TT$',
+  TRY: '₺',
+  TVD: '$',
+  UAH: '₴',
+  AED: ' د.إ',
+  GBP: '£',
+  USD: '$',
+  UYU: '$U',
+  UZS: 'лв',
+  VEF: 'Bs',
+  VND: '₫',
+  YER: '﷼',
+  ZWD: 'Z$'
+};
+
+export { buyContracts, sellContracts, coingeckoContracts, currencySymbols };

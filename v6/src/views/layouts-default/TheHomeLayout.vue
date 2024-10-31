@@ -6,9 +6,9 @@
     <home-eth-blocks />
     <home-socials />
     <home-why-mew />
-    <app-mewtopia-block />
-    <app-partners-block />
-    <app-get-started />
+    <mewtopia-block />
+    <partners-block />
+    <get-started />
   </div>
 </template>
 
@@ -22,9 +22,9 @@ export default {
     HomeEthBlocks: () => import('../components-default/HomeEthBlocks'),
     HomeSocials: () => import('../components-default/HomeSocials.vue'),
     HomeWhyMew: () => import('../components-default/HomeWhyMew'),
-    AppMewtopiaBlock: () => import('@/core/components/AppMewtopiaBlock'),
-    AppGetStarted: () => import('@/core/components/AppGetStarted'),
-    AppPartnersBlock: () => import('@/core/components/AppPartnersBlock')
+    GetStarted: () => import('../components-default/GetStarted'),
+    MewtopiaBlock: () => import('../components-default/MewtopiaBlock'),
+    PartnersBlock: () => import('../components-default/PartnersBlock')
   }
 };
 </script>

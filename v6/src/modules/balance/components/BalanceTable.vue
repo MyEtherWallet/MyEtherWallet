@@ -3,7 +3,7 @@
     <!-- ==================================================================== -->
     <!-- Desktop table -->
     <!-- ==================================================================== -->
-    <app-table v-if="!isMobile" full-width flat class="mt-4 mb-4">
+    <mew-light-table v-if="!isMobile" full-width flat class="mt-4 mb-4">
       <table>
         <thead>
           <tr>
@@ -24,7 +24,7 @@
                   size="22px"
                   class="mr-2"
                 />
-                {{ td.token }}
+                {{ td.token | concatSymbol }}
               </div>
             </td>
             <td>
@@ -58,7 +58,7 @@
                 style="font-size: 12px; margin-top: -2px"
                 class="textLight--text"
               >
-                {{ td.balance[1] }}
+                {{ td.balance[1] | concatSymbol }}
               </div>
             </td>
             <td>
@@ -79,12 +79,12 @@
           </tr>
         </tbody>
       </table>
-    </app-table>
+    </mew-light-table>
 
     <!-- ==================================================================== -->
     <!-- Mobile table -->
     <!-- ==================================================================== -->
-    <app-table
+    <mew-light-table
       v-for="(td, dataKey) in tableDataPaginated"
       v-else
       :key="dataKey"
@@ -100,7 +100,7 @@
         <div class="mew-label font-weight-bold">Token</div>
         <div class="mew-label d-flex align-center">
           <mew-token-container :img="td.tokenImg" size="17px" class="mr-2" />
-          {{ td.token }}
+          {{ td.token | concatSymbol }}
         </div>
       </div>
       <div class="d-flex align-center justify-space-between mb-1">
@@ -132,7 +132,7 @@
       <div class="d-flex align-center justify-space-between mb-1">
         <div class="mew-label font-weight-bold">Balance</div>
         <div class="mew-label d-flex align-center">
-          {{ td.balance[0] }} {{ td.balance[1] }}
+          {{ td.balance[0] }} {{ td.balance[1] | concatSymbol }}
         </div>
       </div>
       <div class="text-right mt-3">
@@ -152,7 +152,7 @@
           </v-btn>
         </template>
       </div>
-    </app-table>
+    </mew-light-table>
 
     <!-- ==================================================================== -->
     <!-- Pagination for both desktop and mobile -->
@@ -167,11 +167,13 @@
 </template>
 
 <script>
-import AppTable from '@/core/components/AppTable';
-
 export default {
   name: 'ModulesBalanceTable',
-  components: { AppTable },
+  filters: {
+    concatSymbol(value) {
+      return value.length > 6 ? `${value.slice(0, 6)}...` : value;
+    }
+  },
   props: {
     tableData: {
       type: Array,

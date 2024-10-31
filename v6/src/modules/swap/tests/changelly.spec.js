@@ -8,7 +8,8 @@ describe('Changelly Swap', () => {
           expect.objectContaining({
             contract: '0xeth',
             decimals: 18,
-            img: 'https://img.mewapi.io/?image=https://web-api.changelly.com/api/coins/eth.png',
+            img: 'https://img.mewapi.io/?image=https://cdn.changelly.com/icons/eth.png',
+            isEth: false,
             name: 'Ethereum',
             symbol: 'ETH'
           })

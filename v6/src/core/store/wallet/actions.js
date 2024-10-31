@@ -7,9 +7,10 @@ import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import EventNames from '@/utils/web3-provider/events';
 import { EventBus } from '@/core/plugins/eventBus';
 
-const removeWallet = function ({ commit, state }) {
+const removeWallet = function ({ commit, state, dispatch, rootState }) {
   if (
     state.identifier === WALLET_TYPES.WALLET_CONNECT ||
+    state.identifier === WALLET_TYPES.MEW_WALLET ||
     state.identifier === WALLET_TYPES.WALLET_LINK
   ) {
     const connection = state.instance.getConnection();
@@ -22,12 +23,20 @@ const removeWallet = function ({ commit, state }) {
       }
     }
   }
+
+  if (state.identifier === WALLET_TYPES.WEB3_WALLET) {
+    rootState.external.selectedEIP6963Provider.removeAllListeners();
+    dispatch('external/setSelectedEIP6963Provider', null, { root: true });
+    dispatch('external/setSelectedEIP6963Info', null, { root: true });
+    dispatch('external/clearEIP963Providers', null, { root: true });
+  }
   commit('REMOVE_WALLET');
 };
 
 const setWallet = function ({ commit, dispatch }, params) {
   commit('SET_WALLET', params[0]);
   dispatch('setWeb3Instance', params[1]);
+  dispatch('external/setSelectedEIP6963Provider', params[1], { root: true });
 };
 const setTokens = function ({ commit }, params) {
   commit('SET_TOKENS', params);
@@ -49,12 +58,12 @@ const setWeb3Instance = function (
     ? url.parse(rootState.global.currentNetwork.url)
     : rootGetters['global/Networks']['ETH'][0];
   const options = {};
-   
+  // eslint-disable-next-line
   const parsedUrl = `${hostUrl.protocol}//${hostUrl.host}${
     rootState.global.currentNetwork.port
       ? ':' + rootState.global.currentNetwork.port
       : ''
-  }${hostUrl.pathname}`;
+  }${hostUrl.pathname ? hostUrl.pathname : ''}`;
   rootState.global.currentNetwork.username !== '' &&
   rootState.global.currentNetwork.password !== ''
     ? (options['headers'] = {
@@ -71,7 +80,7 @@ const setWeb3Instance = function (
   web3Instance.eth.transactionConfirmationBlocks = 1;
   web3Instance['mew'] = {};
   web3Instance['mew'].sendBatchTransactions = arr => {
-     
+    // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve, reject) => {
       const nonce = await (arr[0].nonce === undefined
         ? web3Instance.eth.getTransactionCount(state.address)
@@ -138,6 +147,9 @@ const setOfflineApp = function ({ commit }, val) {
 const setLedgerApp = function ({ commit }, val) {
   commit('SET_LEDGER_APP', val);
 };
+const setSwapRates = function ({ commit }, val) {
+  commit('SET_SWAP_RATES', val);
+};
 
 export default {
   removeWallet,
@@ -149,5 +161,6 @@ export default {
   setOwnedDomains,
   setTokens,
   setOfflineApp,
-  setLedgerApp
+  setLedgerApp,
+  setSwapRates
 };

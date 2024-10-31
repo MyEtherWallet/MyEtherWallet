@@ -145,8 +145,7 @@
 
 <script>
 export default {
-  name: 'HomeWhyMew',
-  data: () => ({})
+  name: 'HomeWhyMew'
 };
 </script>
 

@@ -6,38 +6,30 @@ query getEthBalance($hash: String!) {
 
 query getLatestPrices {
   getLatestPrices {
-      id
-      symbol
-      name
-      image
-      contract
-      current_price
-      market_cap
-      total_volume
-      price_change_percentage_24h
-      total_supply
+    id
+    symbol
+    name
+    image
+    contract
+    current_price
+    market_cap
+    total_volume
+    price_change_percentage_24h
+    total_supply
   }
 }
 
-query getBalanceHistory(
-  $timeString: Int!
-  $todaysDate: Int!
-  $key: String!
-  $scale: TimeseriesScale!
-  $_nextKey: String
-) {
-  getTimeseriesData(
-    fromT: $timeString
-    toT: $todaysDate
-    key: $key
-    scale: $scale
-    nextKey: $_nextKey
-  ) {
-    items {
-      value
-      timestamp
-    }
-    nextKey
+query getCoinGeckoTokenMarketDataByIds($ids: [String!]!) {
+  getCoinGeckoTokenMarketDataByIds(coinGeckoTokenIds: $ids) {
+    id
+    symbol
+    name
+    image
+    current_price
+    market_cap
+    total_volume
+    price_change_percentage_24h
+    total_supply
   }
 }
 
