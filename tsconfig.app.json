@@ -59,5 +59,6 @@
 
     // Completeness
     "skipLibCheck": true,  // https://www.typescriptlang.org/tsconfig/#skipLibCheck
+    }
   }
 }

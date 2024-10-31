@@ -3,6 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
+  "engines": {
+    "pnpm": ">=8.15.8",
+    "node": ">=v22.10.0"
+  },
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check \"build-only {@}\" --",
@@ -17,6 +21,7 @@
   "dependencies": {
     "@myetherwallet/vue-common-components": "^1.2.8",
     "@tanstack/vue-query": "^5.59.16",
+    "@vueuse/core": "^11.2.0",
     "@wagmi/vue": "^0.0.56",
     "pinia": "^2.2.4",
     "viem": "2.x",
