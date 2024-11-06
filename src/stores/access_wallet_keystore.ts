@@ -2,7 +2,7 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useAccessWalletKeystore = defineStore('accessWalletKeystore', () => {
-  const keystore = ref('');
+  const keystore = ref({});
 
   const uploadKeystore = (evt: Event) => {
     const input = evt.target as HTMLInputElement;
@@ -16,5 +16,9 @@ export const useAccessWalletKeystore = defineStore('accessWalletKeystore', () =>
     }
   }
 
-  return { uploadKeystore, keystore }
+  const resetKeystore = () => {
+    keystore.value = {};
+  }
+
+  return { uploadKeystore, keystore, resetKeystore }
 })

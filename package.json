@@ -15,6 +15,8 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@ethereumjs/common": "^4.4.0",
+    "@ethereumjs/tx": "^5.4.0",
     "@ethereumjs/util": "^9.1.0",
     "@ethereumjs/wallet": "^2.0.4",
     "@myetherwallet/vue-common-components": "^1.2.8",
@@ -25,7 +27,8 @@
     "vue": "^3.5.12",
     "vue-i18n": "10",
     "vue-router": "^4.4.5",
-    "web3-utils": "^4.3.2"
+    "web3-utils": "^4.3.2",
+    "web3-validator": "^2.0.6"
   },
   "devDependencies": {
     "@nightwatch/vue": "^3.1.2",
