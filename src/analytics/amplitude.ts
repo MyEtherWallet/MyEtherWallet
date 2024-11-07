@@ -6,145 +6,229 @@ import type {
   CreateWalletEvent,
   DashboardEvent,
   EthVMEvent,
-  HeaderEvent,
-  LandingPageEvent,
   StakingEvent,
   SwapEvent,
   WalletDirectLinkAccessEvent,
 } from './events'
-import { type createInstance } from '@amplitude/analytics-browser'
+import type { createInstance } from '@amplitude/analytics-browser'
 
-type AmplitudeAnalyticsOptions = {
+export type AmplitudeAnalyticsOptions = {
   amplitude: ReturnType<typeof createInstance>
 }
 
+export type ExtraContext = {
+  network?: string
+}
+
+const EventType = {
+  ETHVM: 'ethvm',
+  WALLET_DIRECT_LINK_ACCESS: '???wallet_direct_link_access???',
+  CONSENT: 'consent',
+  CONTRACT: 'contract',
+  DASHBOARD: 'dashboard',
+  CREATE_WALLET: 'create_wallet',
+  ACCESS_WALLET: 'access_wallet',
+  BUY_SELL: 'buy_sell',
+  STAKING: 'staking',
+  SWAP: 'swap',
+} as const
+type EventType = (typeof EventType)[keyof typeof EventType]
+
 export class Analytics {
-  amplitude: ReturnType<typeof createInstance>
+  readonly amplitude: ReturnType<typeof createInstance>
+  private _context: ExtraContext
 
   constructor(opts: AmplitudeAnalyticsOptions) {
     const { amplitude } = opts
     this.amplitude = amplitude
+    this._context = {}
   }
 
-  setConsentToTrack(value: boolean): void {
-    this.amplitude.setOptOut(value)
+  /**
+   * Update global Amplitude analytics context
+   *
+   * @param context   New context to merge with existing context
+   */
+  patchContext(context: ExtraContext): void {
+    this._context = {
+      ...this._context,
+      ...context,
+    }
   }
 
+  /**
+   * Opt in or out of tracking
+   *
+   * @param consent  Whether to opt in or out of tracking
+   */
+  setTrackingConsent(consent: boolean): void {
+    this.amplitude.setOptOut(!consent)
+  }
+
+  /**
+   * Send an analytics even to Amplitude
+   *
+   * @param name      Event name
+   * @param payload   Event properties
+   */
   private async _track(
     name: string,
     payload: Record<PropertyKey, unknown>,
   ): Promise<void> {
-    const ret = this.amplitude.track(name, payload)
-    const { promise } = ret
-    await promise
+    try {
+      const ret = this.amplitude.track(name, payload)
+      const { promise } = ret
+      await promise
+    } catch (err) {
+      console.error(`Error tracking event: ${name}`, err)
+    }
   }
 
-  trackEthVMEvent = (
+  /**
+   * Send an EthVM analytics event to Amplitude
+   *
+   * @param event     Type of EthVM event
+   * @param payload   Event properties
+   * @returns         Promise that resolves when the event is tracked
+   */
+  readonly trackEthVMEvent = (
     event: EthVMEvent,
     payload: {
       path: string
-      network: string
     },
   ): Promise<void> => {
-    return this._track('ethvm', { event, ...payload })
+    return this._track(EventType.ETHVM, {
+      event,
+      network: this._context.network,
+      ...payload,
+    })
   }
 
-  trackWalletDirectLinkAccessEvent = (
+  /**
+   * Send a Wallet Direct Link Access analytics event to Amplitude
+   *
+   * @param event     Type of Wallet Direct Link Access event
+   * @param payload   Event properties
+   * @returns         Promise that resolves when the event is tracked
+   */
+  readonly trackWalletDirectLinkAccessEvent = (
     event: WalletDirectLinkAccessEvent,
     payload: {
       to: string
     },
   ): Promise<void> => {
-    return this._track('???wallet_direct_link_access???', { event, ...payload })
+    return this._track(EventType.WALLET_DIRECT_LINK_ACCESS, {
+      event,
+      network: this._context.network,
+      ...payload,
+    })
   }
 
-  trackConsentEvent = (
-    event: ConsentEvent,
-    payload: {
-      network: string
-    },
-  ): Promise<void> => {
-    return this._track('consent', { event, ...payload })
+  /**
+   * Send a Consent analytics event to Amplitude
+   *
+   * @param event   Type of Consent event
+   * @returns       Promise that resolves when the event is tracked
+   */
+  readonly trackConsentEvent = (event: ConsentEvent): Promise<void> => {
+    return this._track(EventType.CONSENT, {
+      event,
+      network: this._context.network,
+    })
   }
 
-  trackLandingPageEvent = (
-    event: LandingPageEvent,
-    payload: {
-      network: string
-    },
-  ): Promise<void> => {
-    return this._track('landing_page', { event, ...payload })
+  /**
+   * Send a Dashboard analytics event to Amplitude
+   *
+   * @param event   Type of Dashboard event
+   * @returns       Promise that resolves when the event is tracked
+   */
+  readonly trackDashboardEvent = (event: DashboardEvent): Promise<void> => {
+    return this._track(EventType.DASHBOARD, {
+      event,
+      network: this._context.network,
+    })
   }
 
-  trackHeaderEvent = (
-    event: HeaderEvent,
-    payload: {
-      network: string
-    },
-  ): Promise<void> => {
-    return this._track('header', { event, ...payload })
-  }
-
-  trackDashboardEvent = (
-    event: DashboardEvent,
-    payload: {
-      network: string
-    },
-  ): Promise<void> => {
-    return this._track('dashboard', { event, ...payload })
-  }
-
-  trackCreateWalletEvent = (
+  /**
+   * Send a Create Wallet analytics event to Amplitude
+   *
+   * @param event   Type of Create Wallet event
+   * @returns       Promise that resolves when the event is tracked
+   */
+  readonly trackCreateWalletEvent = (
     event: CreateWalletEvent,
-    payload: {
-      network: string
-    },
   ): Promise<void> => {
-    return this._track('create_wallet', { event, ...payload })
+    return this._track(EventType.CREATE_WALLET, {
+      event,
+      network: this._context.network,
+    })
   }
 
-  trackAccessWalletEvent = (
+  /**
+   * Send an Access Wallet analytics event to Amplitude
+   *
+   * @param event   Type of Access Wallet event
+   * @returns       Promise that resolves when the event is tracked
+   */
+  readonly trackAccessWalletEvent = (
     event: AccessWalletEvent,
-    payload: {
-      network: string
-    },
   ): Promise<void> => {
-    return this._track('access_wallet', { event, ...payload })
+    return this._track(EventType.ACCESS_WALLET, {
+      event,
+      network: this._context.network,
+    })
   }
 
-  trackBuySellEvent = (
-    event: BuySellEvent,
-    payload: {
-      network: string
-    },
-  ): Promise<void> => {
-    return this._track('buy_sell', { event, ...payload })
+  /**
+   * Send a Buy/Sell analytics event to Amplitude
+   *
+   * @param event   Type of Buy/Sell event
+   * @returns       Promise that resolves when the event is tracked
+   */
+  readonly trackBuySellEvent = (event: BuySellEvent): Promise<void> => {
+    return this._track(EventType.BUY_SELL, {
+      event,
+      network: this._context.network,
+    })
   }
 
-  trackContractEvent = (
-    event: ContractEvent,
-    payload: {
-      network: string
-    },
-  ): Promise<void> => {
-    return this._track('contract', { event, ...payload })
+  /**
+   * Send a Contract analytics event to Amplitude
+   *
+   * @param event   Type of Contract event
+   * @returns       Promise that resolves when the event is tracked
+   */
+  readonly trackContractEvent = (event: ContractEvent): Promise<void> => {
+    return this._track(EventType.CONTRACT, {
+      event,
+      network: this._context.network,
+    })
   }
 
-  trackStakingEvent = (
-    event: StakingEvent,
-    payload: {
-      network: string
-    },
-  ): Promise<void> => {
-    return this._track('staking', { event, ...payload })
+  /**
+   * Send a Staking analytics event to Amplitude
+   *
+   * @param event   Type of Staking event
+   * @returns       Promise that resolves when the event is tracked
+   */
+  readonly trackStakingEvent = (event: StakingEvent): Promise<void> => {
+    return this._track(EventType.STAKING, {
+      event,
+      network: this._context.network,
+    })
   }
 
-  trackSwapEvent = (
-    event: SwapEvent,
-    payload: {
-      network: string
-    },
-  ): Promise<void> => {
-    return this._track('swap', { event, ...payload })
+  /**
+   * Send a Swap analytics event to Amplitude
+   *
+   * @param event   Type of Swap event
+   * @returns       Promise that resolves when the event is tracked
+   */
+  readonly trackSwapEvent = (event: SwapEvent): Promise<void> => {
+    return this._track(EventType.SWAP, {
+      event,
+      network: this._context.network,
+    })
   }
 }

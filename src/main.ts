@@ -26,10 +26,20 @@ const initialPopupStateJson = localStorage.getItem(
 if (initialPopupStateJson) {
   try {
     const initialPopupState = JSON.parse(initialPopupStateJson) as PopupState
-    if (typeof initialPopupState?.consentToTrack === 'boolean') {
-      consentToTrack = initialPopupState?.consentToTrack
-    } else {
-      console.error('Invalid consentToTrack value in popups store')
+    switch (typeof initialPopupState?.consentToTrack) {
+      case 'boolean':
+        // Returning user
+        consentToTrack = initialPopupState?.consentToTrack
+        break
+      case 'undefined':
+        // New user (or local storage wiped)
+        break
+      default:
+        // Invalid / unexpected value
+        console.error(
+          `Invalid consentToTrack value in popups store: ${String(initialPopupState?.consentToTrack)}`,
+        )
+        break
     }
   } catch (err) {
     console.error('Error parsing popups store from localStorage', err)

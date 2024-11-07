@@ -67,7 +67,7 @@ export const usePopupStore = defineStore('popups', (): PopupStore => {
   watch(
     () => storage.value.consentToTrack,
     value => {
-      analytics.setConsentToTrack(value)
+      analytics.setTrackingConsent(value)
     },
   )
 
@@ -79,13 +79,9 @@ export const usePopupStore = defineStore('popups', (): PopupStore => {
     setTrackingConsent: (consent: boolean) => {
       storage.value.consentToTrack = consent
       if (consent) {
-        analytics.trackConsentEvent(ConsentEvent.USER_OPT_IN_TRACKING, {
-          network: 'TODO: network',
-        })
+        analytics.trackConsentEvent(ConsentEvent.USER_OPT_IN_TRACKING)
       } else {
-        analytics.trackConsentEvent(ConsentEvent.USER_OPT_OUT_TRACKING, {
-          network: 'TODO: network',
-        })
+        analytics.trackConsentEvent(ConsentEvent.USER_OPT_OUT_TRACKING)
       }
     },
 
