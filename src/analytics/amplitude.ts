@@ -79,8 +79,9 @@ export class Analytics {
       const ret = this.amplitude.track(name, payload)
       const { promise } = ret
       await promise
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
-      console.error(`Error tracking event: ${name}`, err)
+      // TODO: Send error to Sentry after we've added Sentry
     }
   }
 
