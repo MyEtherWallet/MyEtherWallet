@@ -81,7 +81,7 @@ _A Hardware wallet must meet the following minimum requirements:_
 
 1. Message signing
 2. Data signing
-3. Must be able to sign other ethereum-based chains, specifically, Matic and BSC.
+3. Must be able to sign other ethereum-based chains, specifically, Polygon and BSC.
 4. EIP1559 signing
 
 Reach out to us at <integrations@myetherwallet.com>, so we can determine if we will be able to integrate your hardware wallet.
