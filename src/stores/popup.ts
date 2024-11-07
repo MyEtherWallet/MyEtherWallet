@@ -1,8 +1,12 @@
 import { useLocalStorage } from '@vueuse/core'
 import { defineStore } from 'pinia'
 import { StoreConfigs } from './configs'
+import { computed, inject, watch, type ComputedRef } from 'vue'
+import { Provider } from '@/providers'
+import type { Analytics } from '@/analytics/amplitude'
+import { ConsentEvent } from '@/analytics/events'
 
-type PopupState = {
+export type PopupState = {
   localStore: boolean
   stateVersion: string
   consentToTrack: boolean
@@ -39,9 +43,10 @@ const defaultState: PopupState = {
 }
 
 export type PopupStore = {
+  consent: ComputedRef<boolean>
+
   setTrackingConsent(value: boolean): void
   neverShowEnkryptPromo(): void
-  setTracking(): Promise<void>
   neverShowEnkryptLandingPage(): void
   neverShowEnkryptWalletPage(): void
   showEnkryptWalletSnackbar(): void
@@ -54,19 +59,38 @@ export const usePopupStore = defineStore('popups', (): PopupStore => {
     defaultState,
   )
 
+  // We need to sync some changes back to the analytics engine (Amplitude)
+  const analytics = inject<Analytics>(Provider.ANALYTICS)!
+
+  // Listen to changes the pinia store (Inside this browser tab) and local storage
+  // (other browser tabs) and update analytics (Amplitude) accordingly
+  watch(
+    () => storage.value.consentToTrack,
+    value => {
+      analytics.setConsentToTrack(value)
+    },
+  )
+
   const store: PopupStore = {
-    setTrackingConsent: (value: boolean) => {
-      storage.value.consentToTrack = value
+    consent: computed(() => {
+      return storage.value.consentToTrack
+    }),
+
+    setTrackingConsent: (consent: boolean) => {
+      storage.value.consentToTrack = consent
+      if (consent) {
+        analytics.trackConsentEvent(ConsentEvent.USER_OPT_IN_TRACKING, {
+          network: 'TODO: network',
+        })
+      } else {
+        analytics.trackConsentEvent(ConsentEvent.USER_OPT_OUT_TRACKING, {
+          network: 'TODO: network',
+        })
+      }
     },
 
     neverShowEnkryptPromo: () => {
       storage.value.showEnkryptPromo = false
-    },
-
-    setTracking: () => {
-      storage.value.consentToTrack = true
-      // TODO: Implement tracking
-      return Promise.resolve()
     },
 
     neverShowEnkryptLandingPage: () => {
