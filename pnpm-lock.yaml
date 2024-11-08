@@ -11,9 +11,6 @@ importers:
       '@myetherwallet/vue-common-components':
         specifier: ^1.2.8
         version: 1.2.8(vue@3.5.12(typescript@5.5.4))
-      '@sentry/browser':
-        specifier: ^8.37.1
-        version: 8.37.1
       '@sentry/vue':
         specifier: ^8.37.1
         version: 8.37.1(pinia@2.2.4(typescript@5.5.4)(vue@3.5.12(typescript@5.5.4)))(vue@3.5.12(typescript@5.5.4))
