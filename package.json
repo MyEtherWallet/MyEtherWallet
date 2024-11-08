@@ -19,6 +19,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@amplitude/analytics-browser": "^2.11.9",
     "@myetherwallet/vue-common-components": "^1.2.8",
     "@sentry/vue": "^8.37.1",
     "@tanstack/vue-query": "^5.59.16",
