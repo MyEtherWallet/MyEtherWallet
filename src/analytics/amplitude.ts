@@ -1,3 +1,4 @@
+import { captureException } from '@sentry/vue'
 import type {
   AccessWalletEvent,
   BuySellEvent,
@@ -79,9 +80,8 @@ export class Analytics {
       const ret = this.amplitude.track(name, payload)
       const { promise } = ret
       await promise
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
-      // TODO: Send error to Sentry after we've added Sentry
+      captureException(err)
     }
   }
 
