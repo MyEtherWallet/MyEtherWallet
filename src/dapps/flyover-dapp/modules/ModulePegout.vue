@@ -15,6 +15,7 @@
           :quote-hash="quoteHash"
           :quote-url="quoteUrl"
           :site-key="siteKey"
+          :quote-response="quoteResponse"
           @onSubmit="onSubmit"
         ></accept-quote>
       </template>
@@ -41,6 +42,7 @@ export default {
       quoteUrl: '',
       siteKey: '',
       hash: hash,
+      quoteResponse: {},
       btcAddress: '',
       lbcAddress: '',
       signature: '',
@@ -82,6 +84,7 @@ export default {
         this.btcAddress = val.quote.btcRefundAddr;
         this.finalAmount = calculatedAmount;
         this.siteKey = val.siteKey;
+        this.quoteResponse = val.quote;
       } else if (this.onStep === 3) {
         this.hash = val.hash;
         this.lbcAddress = val.lbcAddress;
