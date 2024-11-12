@@ -6,6 +6,7 @@ import {
   init as sentryInit,
   browserTracingIntegration,
   replayIntegration,
+  captureException,
 } from '@sentry/vue'
 
 import App from './App.vue'
@@ -17,6 +18,27 @@ import type { PopupState } from './stores/popup'
 import { Analytics } from './analytics/amplitude'
 
 const app = createApp(App)
+
+const dsn = import.meta.env.VITE_SENTRY_DSN
+
+if (dsn) {
+  sentryInit({
+    app,
+    dsn,
+    integrations: [browserTracingIntegration({ router }), replayIntegration()],
+    // Tracing
+    tracesSampleRate: 1.0, //  Capture 100% of the transactions
+    // Set 'tracePropagationTargets' to control for which URLs distributed tracing should be enabled
+    tracePropagationTargets: [
+      'localhost',
+      /^https?:\/\/myetherwallet\.com/,
+      /^https?:\/\/www\.myetherwallet\.com/,
+    ],
+    // Session Replay
+    replaysSessionSampleRate: 0.1, // This sets the sample rate at 10%. You may want to change it to 100% while in development and then sample at a lower rate in production.
+    replaysOnErrorSampleRate: 1.0, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.
+  })
+}
 
 // In v6 this is ens_namehash(version)
 // TODO: figure out an appropriate value for it, ens namehash package
@@ -48,6 +70,7 @@ if (initialPopupStateJson) {
     }
   } catch (err) {
     console.error('Error parsing popups store from localStorage', err)
+    captureException(err)
   }
 }
 
@@ -55,6 +78,7 @@ const amplitude = createInstance()
 
 // Initialise Amplitude
 amplitude.init(__TMP_HASHED_VERSION__, {
+  // TODO: should instanceName, apiKey, and serverUrl be environment variables?
   instanceName:
     process.env.NODE_ENV === 'production' ? 'mew-web-prod' : 'mew-web-dev',
   optOut: consentToTrack,
@@ -73,27 +97,6 @@ amplitude.init(__TMP_HASHED_VERSION__, {
     pageViews: false,
   },
 })
-
-const dsn = import.meta.env.VITE_SENTRY_DSN
-
-if (dsn) {
-  sentryInit({
-    app,
-    dsn,
-    integrations: [browserTracingIntegration({ router }), replayIntegration()],
-    // Tracing
-    tracesSampleRate: 1.0, //  Capture 100% of the transactions
-    // Set 'tracePropagationTargets' to control for which URLs distributed tracing should be enabled
-    tracePropagationTargets: [
-      'localhost',
-      /^https?:\/\/myetherwallet\.com/,
-      /^https?:\/\/www\.myetherwallet\.com/,
-    ],
-    // Session Replay
-    replaysSessionSampleRate: 0.1, // This sets the sample rate at 10%. You may want to change it to 100% while in development and then sample at a lower rate in production.
-    replaysOnErrorSampleRate: 1.0, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.
-  })
-}
 
 app.use(createPinia())
 app.use(router).use(i18n)
