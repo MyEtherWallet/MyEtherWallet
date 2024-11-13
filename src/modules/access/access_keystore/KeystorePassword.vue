@@ -32,7 +32,6 @@ const enterPassword = async () => {
     keystore.value as unknown as V3Keystore,
     password.value,
   )
-  console.log(res)
   if (res) {
     // temp: move hardcodes
     const wallet = new WalletInterface(
@@ -42,6 +41,7 @@ const enterPassword = async () => {
       { file: keystore.value, name: res.getV3Filename() },
     )
     resetKeystore()
+    setWallet(wallet)
 
     router.push('/access/wallet')
   }

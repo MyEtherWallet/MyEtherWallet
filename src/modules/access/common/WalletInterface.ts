@@ -117,13 +117,14 @@ export default class WalletInterface {
   // temp any
   signTransaction(txParams: Transaction, signer: (txParams: Transaction) => string) {
     const store = useGlobalStore();
+    // these will change when tx generation is enabled
     const { gasFeeMarketInfo } = store;
     const { network, isEIP1559SupportedNetwork } = storeToRefs(store);
     if (this.isPubOnly && typeof signer !== 'function') throw new Error('Public key wallet needs a signer function');
     if (!this.isPubOnly) {
       return new Promise(resolve => {
         let tx = LegacyTransaction.fromTxData(txParams, { common: commonGenerator(network.value) });
-        if (isEIP1559SupportedNetwork.value) {
+        if (isEIP1559SupportedNetwork.value) { // probably assume this in the future?
           const feeMarket = gasFeeMarketInfo();
           const _txParams = Object.assign(eip1559Params(txParams.gasPrice as bigint, feeMarket), txParams, { gasPrice: null });
           tx = FeeMarketEIP1559Transaction.fromTxData(_txParams, { common: commonGenerator(network.value) }) as unknown as LegacyTransaction; // temp: maybe look into refactoring this
