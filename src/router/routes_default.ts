@@ -22,14 +22,7 @@ const DefaultRoutes = [{
       path: '/access/keystore',
       name: 'KeystoreAccess',
       component: KeystoreUpload,
-      meta: {
-        noAuth: true
-      },
-    },
-    {
-      path: '/access/keystore/upload',
-      name: 'KeystoreAccessUpload',
-      component: KeystoreUpload,
+      alias: '/access/keystore/upload',
       meta: {
         noAuth: true
       },

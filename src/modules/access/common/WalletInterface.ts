@@ -56,7 +56,7 @@ export default class WalletInterface {
           throw new Error('Private key does not satisfy the curve requirements (ie. it is invalid)');
         }
       } catch (e) {
-        throw new Error(e as string);
+        throw e;
       }
       this.privateKey = _privateKey;
       this.publicKey = privateToPublic(this.privateKey);

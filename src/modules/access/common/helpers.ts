@@ -3,16 +3,16 @@ import { bigIntToHex, hexToBigInt } from "@ethereumjs/util";
 import { toBigInt, toWei } from "web3-utils";
 import { Hardfork, Common } from "@ethereumjs/common";
 
-import type { EthSaleKeystore, V3Keystore, MEWKeystore, Transaction, EtherWalletOptions, CreatedWallet } from "./types";
+import type { EthSaleKeystore, V3Keystore, MEWKeystore, Transaction, EtherWalletOptions } from "./types";
 
 /* ***********************  */
 // maybe reused in the future
 // consider moving to a common file
 
-const config = {
-  kdf: 'scrypt',
-  n: 131072
-}
+// const config = {
+//   kdf: 'scrypt',
+//   n: 131072
+// }
 
 const GAS_PRICE_TYPES = {
   ECONOMY: 'economy',

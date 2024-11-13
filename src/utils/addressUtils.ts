@@ -5,6 +5,7 @@ import { useGlobalStore } from '@/stores/global_store';
 import { storeToRefs } from 'pinia';
 
 const isAddress = (address: string): boolean => {
+  if (!address) return false;
   const store = useGlobalStore();
   const { network } = storeToRefs(store);
   const { chainID } = network.value.type;

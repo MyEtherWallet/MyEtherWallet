@@ -29,6 +29,7 @@ const clickUpload = () => {
 
 const uploadKeystoreFile = (e: Event) => {
   uploadKeystore(e)
+  jsonInput.value.value = '' // clear file input
   router.push('/access/keystore/password')
 }
 </script>
