@@ -126,7 +126,7 @@ const getFiatValue =
    * @param {Boolean} options.doNotLocalize - formats value to currency, no rate
    * @returns - Formatted localized currency
    */
-  (value, options = {}) => {
+  (value, options = { doNotLocalize: true }) => {
     const config = options.doNotLocalize
       ? { currency: getters.currencyConfig.currency }
       : getters.currencyConfig;

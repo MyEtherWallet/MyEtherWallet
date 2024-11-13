@@ -66,8 +66,9 @@ export const currencyToNumber = currency =>
  * @returns {string} Converted Number
  */
 const convertNumber = ({ currency, options, convertedPrice }) => {
+  const language = navigator.language ? navigator.language : undefined;
   try {
-    return new Intl.NumberFormat(undefined, {
+    return new Intl.NumberFormat(language, {
       style: 'currency',
       currency,
       currencyDisplay: 'narrowSymbol',
