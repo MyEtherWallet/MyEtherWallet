@@ -65,7 +65,7 @@ export const currencyToNumber = currency =>
  * Converts number to a local currency
  * @returns {string} Converted Number
  */
-const convertNumber = ({ currency, options, convertedPrice }) => {
+const convertNumber = ({ currency = 'USD', options, convertedPrice }) => {
   try {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
