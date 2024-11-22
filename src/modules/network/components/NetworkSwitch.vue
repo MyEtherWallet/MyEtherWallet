@@ -182,7 +182,6 @@ export default {
             item.name === types.AURORA.name ||
             item.name === types.ARB.name ||
             item.name === types.FTM.name ||
-            item.name === types.GNO.name ||
             item.name === types.OP.name ||
             item.name === types.COTI.name
         );

@@ -11,7 +11,6 @@ import {
   AURORA,
   ARB,
   FTM,
-  GNO,
   OP,
   COTI
 } from '@/utils/networks/types';
@@ -100,7 +99,6 @@ const hasSwap = function (state, getters, rootState) {
     name === AURORA.name ||
     name === ARB.name ||
     name === FTM.name ||
-    name === GNO.name ||
     name === OP.name ||
     name === COTI.name
   );
