@@ -255,9 +255,6 @@ class Changelly {
           ? 'ethop'
           : fromT.symbol
         : fromT.symbol;
-    // const parsedToken = Object.assign({}, fromT, {
-    //   symbol: actualNativeTokenSymbol
-    // });
     const queryAmount = fromBase(fromAmount, fromT.decimals);
     const providedRefundAddress = refundAddress ? refundAddress : fromAddress;
     return changellyCallConstructor(
