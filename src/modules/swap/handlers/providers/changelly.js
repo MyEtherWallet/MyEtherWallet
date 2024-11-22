@@ -18,7 +18,6 @@ import {
   AURORA,
   ARB,
   FTM,
-  GNO,
   OP,
   COTI
 } from '@/utils/networks/types';
@@ -73,7 +72,6 @@ class Changelly {
       AURORA.name,
       ARB.name,
       FTM.name,
-      GNO.name,
       OP.name,
       COTI.name
     ];
@@ -153,8 +151,23 @@ class Changelly {
   }
 
   getQuote({ fromT, toT, fromAmount }) {
+    /**
+     * check chain and convert to
+     * actual changelly ticker
+     */
+    const actualNativeTokenSymbol =
+      fromT.symbol === ETH.currencyName
+        ? this.chain === ARB.name
+          ? 'etharb'
+          : this.chain === OP.name
+          ? 'ethop'
+          : fromT.symbol
+        : fromT.symbol;
+    const parsedToken = Object.assign({}, fromT, {
+      symbol: actualNativeTokenSymbol
+    });
     const queryAmount = fromBase(fromAmount, fromT.decimals);
-    return this.getMinMaxAmount({ fromT, toT }).then(minmax => {
+    return this.getMinMaxAmount({ fromT: parsedToken, toT }).then(minmax => {
       if (!minmax || (minmax && (!minmax.minFrom || !minmax.maxFrom))) {
         return [];
       }
@@ -175,7 +188,7 @@ class Changelly {
         CHANGELLY_METHODS.getFixRateForAmount,
         [
           {
-            from: fromT.symbol.toLowerCase(),
+            from: parsedToken.symbol.toLowerCase(),
             to: toT.symbol.toLowerCase(),
             amountFrom: queryAmount
           }
@@ -230,13 +243,28 @@ class Changelly {
     fromAmount,
     refundAddress
   }) {
+    /**
+     * check chain and convert to
+     * actual changelly ticker
+     */
+    const actualNativeTokenSymbol =
+      fromT.symbol === ETH.currencyName
+        ? this.chain === ARB.name
+          ? 'etharb'
+          : this.chain === OP.name
+          ? 'ethop'
+          : fromT.symbol
+        : fromT.symbol;
+    // const parsedToken = Object.assign({}, fromT, {
+    //   symbol: actualNativeTokenSymbol
+    // });
     const queryAmount = fromBase(fromAmount, fromT.decimals);
     const providedRefundAddress = refundAddress ? refundAddress : fromAddress;
     return changellyCallConstructor(
       uuidv4(),
       CHANGELLY_METHODS.createFixTransaction,
       {
-        from: fromT.symbol.toLowerCase(),
+        from: actualNativeTokenSymbol.toLowerCase(),
         to: toT.symbol.toLowerCase(),
         refundAddress: providedRefundAddress,
         address: toAddress,
