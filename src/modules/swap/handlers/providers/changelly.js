@@ -76,6 +76,7 @@ class Changelly {
       COTI.name
     ];
     this.chain = chain;
+    this.changellyTokens = [];
   }
   isSupportedNetwork(chain) {
     return this.supportednetworks.includes(chain);
@@ -88,13 +89,13 @@ class Changelly {
           return;
         }
         const data = response.data.result.filter(d => d.fixRateEnabled);
-        return data.map(d => {
+        this.changellyTokens = data.map(d => {
           const contract = d.contractAddress
             ? d.contractAddress.toLowerCase()
             : '0x' + d.ticker;
           return {
             contract,
-            decimals: 18,
+            decimals: d.blockchainPrecision,
             img: `https://img.mewapi.io/?image=${d.image}`,
             name: d.fullName,
             symbol: d.ticker.toUpperCase(),
@@ -102,6 +103,7 @@ class Changelly {
             cgid: d.fullName.toLowerCase()
           };
         });
+        return this.changellyTokens;
       })
       .catch(err => {
         Toast(err, {}, ERROR);
@@ -155,18 +157,8 @@ class Changelly {
      * check chain and convert to
      * actual changelly ticker
      */
-    const actualNativeTokenSymbol =
-      fromT.symbol === ETH.currencyName
-        ? this.chain === ARB.name
-          ? 'etharb'
-          : this.chain === OP.name
-          ? 'ethop'
-          : this.chain === AURORA.name
-          ? 'ethaurora'
-          : fromT.symbol
-        : fromT.symbol;
     const parsedToken = Object.assign({}, fromT, {
-      symbol: actualNativeTokenSymbol
+      symbol: this._getChangellyTicker(fromT, this.chain)
     });
     const queryAmount = fromBase(fromAmount, fromT.decimals);
     return this.getMinMaxAmount({ fromT: parsedToken, toT }).then(minmax => {
@@ -249,16 +241,7 @@ class Changelly {
      * check chain and convert to
      * actual changelly ticker
      */
-    const actualNativeTokenSymbol =
-      fromT.symbol === ETH.currencyName
-        ? this.chain === ARB.name
-          ? 'etharb'
-          : this.chain === OP.name
-          ? 'ethop'
-          : this.chain === AURORA.name
-          ? 'ethaurora'
-          : fromT.symbol
-        : fromT.symbol;
+    const actualNativeTokenSymbol = this._getChangellyTicker(fromT, this.chain);
     const queryAmount = fromBase(fromAmount, fromT.decimals);
     const providedRefundAddress = refundAddress ? refundAddress : fromAddress;
     return changellyCallConstructor(
@@ -409,6 +392,54 @@ class Changelly {
       .catch(err => {
         Toast(err, {}, ERROR);
       });
+  }
+  /**
+   *
+   * @param {*} token
+   * {
+   *  "balance": string
+   *  "balancef": string
+   *  "usdBalance": string
+   *  "usdBalancef": string
+   *  "name": string
+   *  "symbol": string
+   *  "subtext": string
+   *  "value": string
+   *  "img": string
+   *  "market_cap": number
+   *  "market_capf": string
+   *  "price_change_percentage_24h": number
+   *  "price_change_percentage_24hf": sring
+   *  "price": string
+   *  "pricef": string
+   *  "contract": string
+   *  "decimals": number
+   *  "logo_url": string
+   *  "isHidden": boolean,
+   *  "totalBalance": string
+   *  "tokenBalance": string
+   * }
+   * @param chain: string
+   */
+  _getChangellyTicker(token, chain) {
+    const findNativeToken = this.changellyTokens.find(itm => {
+      if (itm.symbol === `${token.symbol}${chain}`) {
+        return itm;
+      }
+    });
+    const findViaContract = this.changellyTokens.find(item => {
+      if (item.contract.toLowerCase() === token.contract.toLowerCase()) {
+        return item;
+      }
+    });
+
+    if (findNativeToken) {
+      return findNativeToken.symbol;
+    }
+    if (findViaContract) {
+      return findViaContract.symbol;
+    }
+    return token.symbol;
   }
 }
 export default Changelly;
