@@ -161,6 +161,8 @@ class Changelly {
           ? 'etharb'
           : this.chain === OP.name
           ? 'ethop'
+          : this.chain === AURORA.name
+          ? 'ethaurora'
           : fromT.symbol
         : fromT.symbol;
     const parsedToken = Object.assign({}, fromT, {
@@ -253,6 +255,8 @@ class Changelly {
           ? 'etharb'
           : this.chain === OP.name
           ? 'ethop'
+          : this.chain === AURORA.name
+          ? 'ethaurora'
           : fromT.symbol
         : fromT.symbol;
     const queryAmount = fromBase(fromAmount, fromT.decimals);
