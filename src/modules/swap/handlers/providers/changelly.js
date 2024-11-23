@@ -27,6 +27,24 @@ import EventNames from '@/utils/web3-provider/events.js';
 import { fromBase } from '@/core/helpers/unit';
 import { isArray } from 'lodash';
 
+/**
+ * key is our list name
+ * value is changelly name
+ */
+const knownChains = {
+  [XDC.name]: 'xinfin network',
+  [ETH.name]: ETH.name_long.toLowerCase(),
+  [ROOTSTOCK.name]: ROOTSTOCK.name_long.toLowerCase(),
+  [ETC.name]: 'ethereum_classic',
+  [MOONBEAM.name]: MOONBEAM.currencyName.toLowerCase(),
+  [MOONRIVER.name]: MOONRIVER.currencyName.toLowerCase(),
+  [POL.name]: POL.name_long.toLowerCase(),
+  [AURORA.name]: AURORA.name_long.toLowerCase(),
+  [ARB.name]: ARB.name_long.toLowerCase(),
+  [FTM.name]: FTM.name_long.toLowerCase(),
+  [OP.name]: OP.name_long.toLowerCase()
+};
+
 const HOST_URL = 'https://partners.mewapi.io/changelly-v2';
 
 const headers = {
@@ -93,13 +111,14 @@ class Changelly {
           const contract = d.contractAddress
             ? d.contractAddress.toLowerCase()
             : '0x' + d.ticker;
+
           return {
             contract,
             decimals: d.blockchainPrecision,
             img: `https://img.mewapi.io/?image=${d.image}`,
             name: d.fullName,
             symbol: d.ticker.toUpperCase(),
-            isEth: d.contractAddress ? true : false,
+            isEth: d.blockchain === knownChains[this.chain],
             cgid: d.fullName.toLowerCase()
           };
         });
@@ -422,6 +441,22 @@ class Changelly {
    * @param chain: string
    */
   _getChangellyTicker(token, chain) {
+    // const knownChangellyTicker = {
+    //   ETH: {
+    //     ARB: 'etharb',
+    //     AURORA: 'ethaurora',
+    //     OP: 'ethop'
+    //   },
+    //   DAI: {
+    //     Polygon: 'daipolygon'
+    //   },
+    //   USDC: {
+    //     ARB: 'usdcarb',
+    //     Polygon: 'usdcmatic',
+
+    //   }
+    // }
+    console.log(this.changellyTokens, token);
     const findNativeToken = this.changellyTokens.find(itm => {
       if (itm.symbol === `${token.symbol}${chain}`) {
         return itm;
