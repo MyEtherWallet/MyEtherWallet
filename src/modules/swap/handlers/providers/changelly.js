@@ -45,6 +45,37 @@ const knownChains = {
   [OP.name]: OP.name_long.toLowerCase()
 };
 
+/**
+ * map of known tickers
+ * [symbol]: {
+ *    chain: string
+ * }
+ */
+const knowTickers = {
+  ETH: {
+    [ETH.name]: 'eth',
+    [ARB.name]: 'etharb',
+    [AURORA.name]: 'ethaurora',
+    [OP.name]: 'ethop'
+  },
+  DAI: {
+    [POL.name]: 'daipolygon',
+    [ETH.name]: 'dai'
+  },
+  USDC: {
+    [ARB.name]: 'usdcarb',
+    [POL.name]: 'usdcmatic',
+    [ETH.name]: 'usdc',
+    [OP.name]: 'usdcop'
+  },
+  USDT: {
+    [POL.name]: 'usdtpolygon',
+    [ETH.name]: 'usdt',
+    [OP.name]: 'usdtop',
+    [ARB.name]: 'usdtarb'
+  }
+};
+
 const HOST_URL = 'https://partners.mewapi.io/changelly-v2';
 
 const headers = {
@@ -107,7 +138,8 @@ class Changelly {
           return;
         }
         const data = response.data.result.filter(d => d.fixRateEnabled);
-        this.changellyTokens = data.map(d => {
+        this.changellyTokens = data;
+        return data.map(d => {
           const contract = d.contractAddress
             ? d.contractAddress.toLowerCase()
             : '0x' + d.ticker;
@@ -122,7 +154,7 @@ class Changelly {
             cgid: d.fullName.toLowerCase()
           };
         });
-        return this.changellyTokens;
+        // return this.changellyTokens;
       })
       .catch(err => {
         Toast(err, {}, ERROR);
@@ -441,40 +473,9 @@ class Changelly {
    * @param chain: string
    */
   _getChangellyTicker(token, chain) {
-    // const knownChangellyTicker = {
-    //   ETH: {
-    //     ARB: 'etharb',
-    //     AURORA: 'ethaurora',
-    //     OP: 'ethop'
-    //   },
-    //   DAI: {
-    //     Polygon: 'daipolygon'
-    //   },
-    //   USDC: {
-    //     ARB: 'usdcarb',
-    //     Polygon: 'usdcmatic',
-
-    //   }
-    // }
-    console.log(this.changellyTokens, token);
-    const findNativeToken = this.changellyTokens.find(itm => {
-      if (itm.symbol === `${token.symbol}${chain}`) {
-        return itm;
-      }
-    });
-    const findViaContract = this.changellyTokens.find(item => {
-      if (item.contract.toLowerCase() === token.contract.toLowerCase()) {
-        return item;
-      }
-    });
-
-    if (findNativeToken) {
-      return findNativeToken.symbol;
-    }
-    if (findViaContract) {
-      return findViaContract.symbol;
-    }
-    return token.symbol;
+    return knowTickers[token.symbol.toUpperCase()][chain]
+      ? knowTickers[token.symbol.toUpperCase()][chain]
+      : token.symbol.toLowerCase();
   }
 }
 export default Changelly;
