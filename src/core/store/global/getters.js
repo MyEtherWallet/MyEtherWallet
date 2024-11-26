@@ -11,7 +11,6 @@ import {
   AURORA,
   ARB,
   FTM,
-  GNO,
   OP,
   COTI
 } from '@/utils/networks/types';
@@ -100,7 +99,6 @@ const hasSwap = function (state, getters, rootState) {
     name === AURORA.name ||
     name === ARB.name ||
     name === FTM.name ||
-    name === GNO.name ||
     name === OP.name ||
     name === COTI.name
   );
@@ -126,9 +124,9 @@ const getFiatValue =
    * @param {Boolean} options.doNotLocalize - formats value to currency, no rate
    * @returns - Formatted localized currency
    */
-  (value, options = {}) => {
+  (value, options = { doNotLocalize: true }) => {
     const config = options.doNotLocalize
-      ? { currency: getters.currencyConfig.currency }
+      ? { currency: 'USD' } // hard code currency for now
       : getters.currencyConfig;
     return formatFiatValue(value, config).value;
   };

@@ -67,7 +67,7 @@ export const currencyToNumber = currency =>
  */
 const convertNumber = ({ currency, options, convertedPrice }) => {
   try {
-    return new Intl.NumberFormat(undefined, {
+    return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency,
       currencyDisplay: 'narrowSymbol',

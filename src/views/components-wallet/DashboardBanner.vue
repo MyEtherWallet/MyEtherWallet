@@ -47,7 +47,7 @@
       >
         <img :src="adBanner" width="100%" />
       </a>
-      <router-link v-else :to="adLink" @click="trackAdClick">
+      <router-link v-else :to="adLink" @click.native="trackAdClick">
         <img :src="adBanner" width="100%" />
       </router-link>
     </div>

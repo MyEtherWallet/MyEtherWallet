@@ -18,7 +18,6 @@ import {
   AURORA,
   ARB,
   FTM,
-  GNO,
   OP,
   COTI
 } from '@/utils/networks/types';
@@ -27,6 +26,55 @@ import { EventBus } from '@/core/plugins/eventBus';
 import EventNames from '@/utils/web3-provider/events.js';
 import { fromBase } from '@/core/helpers/unit';
 import { isArray } from 'lodash';
+
+/**
+ * key is our list name
+ * value is changelly name
+ */
+const knownChains = {
+  [XDC.name]: 'xinfin network',
+  [ETH.name]: ETH.name_long.toLowerCase(),
+  [ROOTSTOCK.name]: ROOTSTOCK.name_long.toLowerCase(),
+  [ETC.name]: 'ethereum_classic',
+  [MOONBEAM.name]: MOONBEAM.currencyName.toLowerCase(),
+  [MOONRIVER.name]: MOONRIVER.currencyName.toLowerCase(),
+  [POL.name]: POL.name_long.toLowerCase(),
+  [AURORA.name]: AURORA.name_long.toLowerCase(),
+  [ARB.name]: ARB.name_long.toLowerCase(),
+  [FTM.name]: FTM.name_long.toLowerCase(),
+  [OP.name]: OP.name_long.toLowerCase()
+};
+
+/**
+ * map of known tickers
+ * [symbol]: {
+ *    chain: string
+ * }
+ */
+const knowTickers = {
+  ETH: {
+    [ETH.name]: 'eth',
+    [ARB.name]: 'etharb',
+    [AURORA.name]: 'ethaurora',
+    [OP.name]: 'ethop'
+  },
+  DAI: {
+    [POL.name]: 'daipolygon',
+    [ETH.name]: 'dai'
+  },
+  USDC: {
+    [ARB.name]: 'usdcarb',
+    [POL.name]: 'usdcmatic',
+    [ETH.name]: 'usdc',
+    [OP.name]: 'usdcop'
+  },
+  USDT: {
+    [POL.name]: 'usdtpolygon',
+    [ETH.name]: 'usdt',
+    [OP.name]: 'usdtop',
+    [ARB.name]: 'usdtarb'
+  }
+};
 
 const HOST_URL = 'https://partners.mewapi.io/changelly-v2';
 
@@ -73,11 +121,11 @@ class Changelly {
       AURORA.name,
       ARB.name,
       FTM.name,
-      GNO.name,
       OP.name,
       COTI.name
     ];
     this.chain = chain;
+    this.changellyTokens = [];
   }
   isSupportedNetwork(chain) {
     return this.supportednetworks.includes(chain);
@@ -90,20 +138,23 @@ class Changelly {
           return;
         }
         const data = response.data.result.filter(d => d.fixRateEnabled);
+        this.changellyTokens = data;
         return data.map(d => {
           const contract = d.contractAddress
             ? d.contractAddress.toLowerCase()
             : '0x' + d.ticker;
+
           return {
             contract,
-            decimals: 18,
+            decimals: d.blockchainPrecision,
             img: `https://img.mewapi.io/?image=${d.image}`,
             name: d.fullName,
             symbol: d.ticker.toUpperCase(),
-            isEth: d.contractAddress ? true : false,
+            isEth: d.blockchain === knownChains[this.chain],
             cgid: d.fullName.toLowerCase()
           };
         });
+        // return this.changellyTokens;
       })
       .catch(err => {
         Toast(err, {}, ERROR);
@@ -153,8 +204,15 @@ class Changelly {
   }
 
   getQuote({ fromT, toT, fromAmount }) {
+    /**
+     * check chain and convert to
+     * actual changelly ticker
+     */
+    const parsedToken = Object.assign({}, fromT, {
+      symbol: this._getChangellyTicker(fromT, this.chain)
+    });
     const queryAmount = fromBase(fromAmount, fromT.decimals);
-    return this.getMinMaxAmount({ fromT, toT }).then(minmax => {
+    return this.getMinMaxAmount({ fromT: parsedToken, toT }).then(minmax => {
       if (!minmax || (minmax && (!minmax.minFrom || !minmax.maxFrom))) {
         return [];
       }
@@ -175,7 +233,7 @@ class Changelly {
         CHANGELLY_METHODS.getFixRateForAmount,
         [
           {
-            from: fromT.symbol.toLowerCase(),
+            from: parsedToken.symbol.toLowerCase(),
             to: toT.symbol.toLowerCase(),
             amountFrom: queryAmount
           }
@@ -230,13 +288,18 @@ class Changelly {
     fromAmount,
     refundAddress
   }) {
+    /**
+     * check chain and convert to
+     * actual changelly ticker
+     */
+    const actualNativeTokenSymbol = this._getChangellyTicker(fromT, this.chain);
     const queryAmount = fromBase(fromAmount, fromT.decimals);
     const providedRefundAddress = refundAddress ? refundAddress : fromAddress;
     return changellyCallConstructor(
       uuidv4(),
       CHANGELLY_METHODS.createFixTransaction,
       {
-        from: fromT.symbol.toLowerCase(),
+        from: actualNativeTokenSymbol.toLowerCase(),
         to: toT.symbol.toLowerCase(),
         refundAddress: providedRefundAddress,
         address: toAddress,
@@ -380,6 +443,40 @@ class Changelly {
       .catch(err => {
         Toast(err, {}, ERROR);
       });
+  }
+  /**
+   *
+   * @param {*} token
+   * {
+   *  "balance": string
+   *  "balancef": string
+   *  "usdBalance": string
+   *  "usdBalancef": string
+   *  "name": string
+   *  "symbol": string
+   *  "subtext": string
+   *  "value": string
+   *  "img": string
+   *  "market_cap": number
+   *  "market_capf": string
+   *  "price_change_percentage_24h": number
+   *  "price_change_percentage_24hf": sring
+   *  "price": string
+   *  "pricef": string
+   *  "contract": string
+   *  "decimals": number
+   *  "logo_url": string
+   *  "isHidden": boolean,
+   *  "totalBalance": string
+   *  "tokenBalance": string
+   * }
+   * @param chain: string
+   */
+  _getChangellyTicker(token, chain) {
+    return knowTickers[token.symbol.toUpperCase()] &&
+      knowTickers[token.symbol.toUpperCase()][chain]
+      ? knowTickers[token.symbol.toUpperCase()][chain]
+      : token.symbol.toLowerCase();
   }
 }
 export default Changelly;
