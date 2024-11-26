@@ -473,7 +473,8 @@ class Changelly {
    * @param chain: string
    */
   _getChangellyTicker(token, chain) {
-    return knowTickers[token.symbol.toUpperCase()][chain]
+    return knowTickers[token.symbol.toUpperCase()] &&
+      knowTickers[token.symbol.toUpperCase()][chain]
       ? knowTickers[token.symbol.toUpperCase()][chain]
       : token.symbol.toLowerCase();
   }
