@@ -304,7 +304,6 @@ import {
   AURORA,
   ARB,
   FTM,
-  GNO,
   OP,
   COTI
 } from '@/utils/networks/types';
@@ -352,7 +351,6 @@ export default {
           AURORA,
           ARB,
           FTM,
-          GNO,
           OP,
           COTI
         ],
