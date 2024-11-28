@@ -5,6 +5,7 @@
   -->
 <template>
   <v-textarea
+    v-model="inputValue"
     class="mew-text-area"
     outlined
     :rules="rules"
