@@ -90,6 +90,9 @@ module.exports = [
   'https://public-node.rsk.co', // Rootstock
   'https://eiqxqk2yzamq64zayk7zjsz6rq0hywyn.lambda-url.us-east-1.on.aws/', // Flyover
   'https://lps.flyover.rif.technology', // Flyover
+  'https://rootstock-testnet.blockscout.com', // For Rootstock collective dapp
+  'https://rootstock.blockscout.com', // For Rootstock collective dapp
+  'https://api.coingecko.com', // For Rootstock collective dapp
   'https://staked.mewapi.io:443', // staked
   'https://stakedtest.mewapi.io:443', // staked
   'https://ethblocksapi.mewapi.io:443', // Eth Blocks
