@@ -1,0 +1,30 @@
+{
+  "title": "Rootstock Collective",
+  "dapp-desc": "Stake and earn",
+  "collective": {
+    "title": "My Collective",
+    "stakeInputLabel": "Amount to stake",
+    "stakeInputPlaceholder": "RIF Amount",
+    "unstakeInputLabel": "Amount to unstake",
+    "unstakeInputPlaceholder": "RIF Amount",
+    "stake":"Stake",
+    "unstake":"Unstake",
+    "approve":"Approve RIF for Staking"
+  },
+  "proposal": {
+    "title": "My Governance",
+    "proposalNameFieldPlaceholder": "Name your proposal",
+    "proposalNameField": "Name your proposal",
+    "proposalDescFieldPlaceholder": "Description",
+    "proposalDescField": "Description",
+    "proposalTransferFieldPlaceholder": "Transfer To",
+    "proposalTransferField": "Transfer To",
+    "selectAsset": "Select Asset",
+    "createProposal": "Create Proposal",
+    "amount": "Amount",
+    "wallet": "wallet",
+    "votingPower": "Voting power",
+    "voteType": "Vote Type",
+    "voteProposal": "Vote on proposal"
+  }
+}

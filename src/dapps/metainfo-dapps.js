@@ -7,6 +7,7 @@ import unstoppable from './unstoppable-domains-dapp/metainfo';
 import rns from './rns-manager-dapp/metainfo';
 import coinbaseStaking from './coinbase-staking/metainfo';
 import flyover from './flyover-dapp/metainfo';
+import rootstockCollective from './rootstock-collective-dapp/metainfo';
 export default {
   coinbaseStaking,
   staked,
@@ -16,5 +17,6 @@ export default {
   // aave,
   unstoppable,
   rns,
-  flyover
+  flyover,
+  rootstockCollective
 };
