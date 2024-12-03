@@ -414,7 +414,6 @@ export default {
       return hexToNumberString(batchGasPrice);
     },
     txFee() {
-      console.log(this.gasPrice, this.gasLimit);
       const parsedTxFee = BigNumber(toWei(this.gasPrice, 'gwei'))
         .times(this.gasLimit)
         .toString();
