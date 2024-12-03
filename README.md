@@ -66,10 +66,11 @@ If you find a bug, or want a new feature added, please submit it on the [Github 
 2. Clone the repo: `git clone git@github.com:MyEtherWallet/MyEtherWallet.git`
 3. run `git checkout develop`
 4. run `pnpm install` to install node packages.
-5. run `pnpm build`. You can also use the offline version by opening the index file from the dist folder with your preferred browser
-6. start `pnpm dev`
-7. App should be running in `https://localhost:8080`
-8. run `pnpm test:unit` to execute Unit Tests
+5. Run `git config core.hooksPath .husky` to set up git hooks.
+6. run `pnpm build`. You can also use the offline version by opening the index file from the dist folder with your preferred browser
+7. start `pnpm dev`
+8. App should be running in `https://localhost:8080`
+9. run `pnpm test:unit` to execute Unit Tests
 
 EACCESS issue can be resolved by running: `sudo chown -R $(whoami) ~/.npm`
 For other issues, try the steps shown here: <https://github.com/MyEtherWallet/MyEtherWallet/issues/1182#issuecomment-506342875> by @tomwalton78
