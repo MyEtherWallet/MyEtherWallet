@@ -14,6 +14,7 @@ const DefaultRoutes = [{
       path: ROUTES_HOME.HOME.PATH,
       name: ROUTES_HOME.HOME.NAME,
       component: HomeView,
+      alias: '/access',
       meta: {
         noAuth: true
       },
