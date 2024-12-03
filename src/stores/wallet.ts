@@ -53,7 +53,6 @@ type WalletState = {
 }
 
 const defaultState: WalletState = {
-  // Put default (initial) wallet state here
 
   // v6 default wallet state:
   // localStore: false,
