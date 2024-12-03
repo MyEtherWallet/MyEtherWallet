@@ -35,6 +35,26 @@ const DefaultRoutes = [{
         noAuth: true
       },
     },
+    {
+      path: '/wallet',
+      children: [
+        {
+          path: '',
+          name: 'WalletDashboardDefault',
+          component: TempView,
+        },
+        {
+          path: '/dashboard',
+          name: 'WalletDashboard',
+          component: TempView,
+        },
+        {
+          path: '/send',
+          name: 'WalletSend',
+          component: TempView,
+        }
+      ]
+    },
     /** Temporary Paths to be removed on v7 release
      *  Right Now components library thinks these exist in the project
      */

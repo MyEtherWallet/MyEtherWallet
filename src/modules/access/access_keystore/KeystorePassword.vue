@@ -43,7 +43,7 @@ const enterPassword = async () => {
     resetKeystore()
     setWallet(wallet)
 
-    router.push('/access/wallet')
+    router.push('/wallet/dashboard')
   }
 }
 </script>
