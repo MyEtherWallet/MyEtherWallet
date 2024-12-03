@@ -44,9 +44,6 @@ importers:
       commitlint:
         specifier: ^19.6.0
         version: 19.6.0(@types/node@20.17.2)(typescript@5.5.4)
-      husky:
-        specifier: ^9.1.7
-        version: 9.1.7
       pinia:
         specifier: ^2.2.4
         version: 2.2.4(typescript@5.5.4)(vue@3.5.12(typescript@5.5.4))
@@ -111,6 +108,9 @@ importers:
       geckodriver:
         specifier: ^4.5.1
         version: 4.5.1
+      husky:
+        specifier: ^9.1.7
+        version: 9.1.7
       jsdom:
         specifier: ^25.0.1
         version: 25.0.1(bufferutil@4.0.8)(utf-8-validate@5.0.10)
