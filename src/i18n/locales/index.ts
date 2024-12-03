@@ -1,11 +1,11 @@
 const locales = import.meta.glob('./*/*.json', { eager: true })
 
 export interface MessagesSchema {
-  [key: string]: { [key: string]: Object }
+  [key: string]: { [key: string]: object }
 }
 
 interface ModuleImportInterface {
-  default: Object;
+  default: object;
 }
 /**
  * List of supported languages.
