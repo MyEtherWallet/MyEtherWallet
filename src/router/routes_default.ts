@@ -44,12 +44,12 @@ const DefaultRoutes = [{
           component: TempView,
         },
         {
-          path: '/dashboard',
+          path: 'dashboard',
           name: 'WalletDashboard',
           component: TempView,
         },
         {
-          path: '/send',
+          path: 'send',
           name: 'WalletSend',
           component: TempView,
         }
