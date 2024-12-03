@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia'
-import { computed, reactive, toRefs, type ComputedRef } from 'vue'
+// import { computed, reactive, toRefs, type ComputedRef } from 'vue'
+import { reactive } from 'vue'
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const WalletType = {
   LEDGER: 'ledger',
   TREZOR: 'trezor',
@@ -30,6 +32,7 @@ type WalletType = (typeof WalletType)[keyof typeof WalletType]
 // }
 
 type WalletState = {
+  test: boolean
   // Put wallet state here
 
   // v6 wallet state:
@@ -53,8 +56,7 @@ type WalletState = {
 }
 
 const defaultState: WalletState = {
-  // Put default (initial) wallet state here
-
+  test: true
   // v6 default wallet state:
   // localStore: false,
   // address: null,
@@ -75,6 +77,7 @@ const defaultState: WalletState = {
 }
 
 export type WalletStore = {
+  test: boolean
   // Put default(initial) wallet store here
 
   // v6 wallet store:
@@ -107,6 +110,7 @@ export const useWalletStore = defineStore('wallet', (): WalletStore => {
   const state = reactive(defaultState)
 
   const store: WalletStore = {
+    test: state.test
     // v6 store implementation:
     // // Getters
     // balanceInETH: computed(() => {
