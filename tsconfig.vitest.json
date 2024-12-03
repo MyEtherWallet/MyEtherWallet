@@ -1,11 +1,18 @@
+// https://www.typescriptlang.org/tsconfig
+//
+// TypeScript config for tests
 {
   "extends": "./tsconfig.app.json",
+  // Stop excluding test files and directories
   "exclude": [],
   "compilerOptions": {
-    "composite": true,
-    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.vitest.tsbuildinfo",
+    // Project
+    "composite": true,                                                    // https://www.typescriptlang.org/tsconfig/#composite
+    "incremental": true,                                                  // https://www.typescriptlang.org/tsconfig/#incremental
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.vitest.tsbuildinfo", // https://www.typescriptlang.org/tsconfig/#tsBuildInfoFile
 
-    "lib": [],
+    // Language & Environment
+    // NodeJS types and JSDOM (mock of browser dom) are available within the the Vitest environment
     "types": ["node", "jsdom"]
   }
 }

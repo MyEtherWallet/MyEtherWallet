@@ -1,5 +1,10 @@
+// https://www.typescriptlang.org/tsconfig
+//
+// TypeScript config for configuration files, scripts, and executables ran by
+// node during development. Does not apply to the final compiled JS ran from
+// within the browser. For the browser builds' tsconfig.json see `tsconfig.app.json`
+// and for tests see `tsconfig.vitest.json`.
 {
-  "extends": "@tsconfig/node20/tsconfig.json",
   "include": [
     "vite.config.*",
     "vitest.config.*",
@@ -8,12 +13,40 @@
     "playwright.config.*"
   ],
   "compilerOptions": {
-    "composite": true,
-    "noEmit": true,
-    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
+    // Project
+    "composite": true,                                                  // https://www.typescriptlang.org/tsconfig/#composite
+    "incremental": true,                                                // https://www.typescriptlang.org/tsconfig/#incremental
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo", // https://www.typescriptlang.org/tsconfig/#tsBuildInfoFile
 
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "types": ["node"]
+    // Language & Environment
+    "target": "ES2023",                 // https://www.typescriptlang.org/tsconfig/#target
+    "moduleDetection": "force",         // https://www.typescriptlang.org/tsconfig/#moduleDetection
+    "useDefineForClassFields": true,    // https://www.typescriptlang.org/tsconfig/#useDefineForClassFields
+
+    // Module
+    "module": "ESNext",                   // https://www.typescriptlang.org/tsconfig/#module
+    // The node-typescript runner will handle module resolution
+    "moduleResolution": "Bundler",        // https://www.typescriptlang.org/tsconfig/#moduleResolution
+    "noUncheckedSideEffectImports": true, // https://www.typescriptlang.org/tsconfig/#noUncheckedSideEffectImports
+
+    // Emit
+    "noEmit": true,   // https://www.typescriptlang.org/tsconfig/#noEmit
+
+    // Type checking
+    "noImplicitThis": true,              // https://www.typescriptlang.org/tsconfig/#noImplicitThis
+    "strict": true,                      // https://www.typescriptlang.org/tsconfig/#strict
+    "alwaysStrict": true,                // https://www.typescriptlang.org/tsconfig/#alwaysStrict
+    "noFallthroughCasesInSwitch": true,  // https://www.typescriptlang.org/tsconfig/#noFallthroughCasesInSwitch
+    "noImplicitOverride": true,          // https://www.typescriptlang.org/tsconfig/#noImplicitOverride
+    "useUnknownInCatchVariables": true,  // https://www.typescriptlang.org/tsconfig/#useUnknownInCatchVariables
+
+    // Interop constraints
+    "verbatimModuleSyntax": true,             // https://www.typescriptlang.org/tsconfig/#verbatimModuleSyntax
+    "esModuleInterop": true,                  // https://www.typescriptlang.org/tsconfig/#esModuleInterop
+    "forceConsistentCasingInFileNames": true, // https://www.typescriptlang.org/tsconfig/#forceConsistentCasingInFileNames
+    "allowSyntheticDefaultImports": true,     // https://www.typescriptlang.org/tsconfig/#allowSyntheticDefaultImports
+
+    // Completeness
+    "skipLibCheck": true,  // https://www.typescriptlang.org/tsconfig/#skipLibCheck
   }
 }

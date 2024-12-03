@@ -1,7 +1,6 @@
 <template>
   <main>
     <h1 class="mt-10 py-10 title4">{{ $t('access_wallet.title') }}</h1>
-
     <DefaultList />
     <div class="flex flex-col items-center my-10">
       <p>Don't Have a Wallet ?</p>
