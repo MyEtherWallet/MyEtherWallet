@@ -2,22 +2,22 @@ import { ROUTES_WALLET } from './routeNames';
 
 const TempView = () => import('@view-default/ViewTemp.vue')
 const WalletLayoutDefault = () => import('@view-default/ViewWallet.vue')
+const SendView = () => import('@/modules/send/ViewSend.vue')
 
 const DefaultRoutes = [{
   path: ROUTES_WALLET.WALLET.PATH,
-  name: ROUTES_WALLET.WALLET.NAME,
   component: WalletLayoutDefault,
   children: [
     {
-      path: ROUTES_WALLET.DASHBOARD.PATH,
+      path: '',
       name: ROUTES_WALLET.DASHBOARD.NAME,
-      alias: '/wallet/dashboard',
+      alias: ROUTES_WALLET.DASHBOARD.PATH,
       component: TempView,
     },
     {
       path: ROUTES_WALLET.SEND.PATH,
       name: ROUTES_WALLET.SEND.NAME,
-      component: TempView,
+      component: SendView,
     }
   ]
 }]

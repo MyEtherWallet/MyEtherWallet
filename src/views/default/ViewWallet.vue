@@ -2,8 +2,10 @@
   <main class="wallet-layout">
     <!-- sidemenu -->
     <div class="wallet-layout__sidemenu">
-      <router-link :to="ROUTES_WALLET.DASHBOARD.PATH">Dashboard</router-link>
-      <router-link :to="ROUTES_WALLET.SEND.PATH">Send</router-link>
+      <router-link :to="{ name: ROUTES_WALLET.DASHBOARD.NAME }"
+        >Dashboard</router-link
+      >
+      <router-link :to="{ name: ROUTES_WALLET.SEND.NAME }">Send</router-link>
     </div>
     <!-- main content -->
     <div>
