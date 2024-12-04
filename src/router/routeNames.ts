@@ -29,7 +29,7 @@ const ROUTES_HOME = {
 const ROUTES_WALLET = {
   WALLET: { NAME: 'Wallet', PATH: '/wallet' },
   DASHBOARD: { NAME: 'WalletDashboard', PATH: '' },
-  SEND: { NAME: 'WalletSend', PATH: 'send' },
+  SEND: { NAME: 'WalletSend', PATH: '/wallet/send' },
 
   //A-Z
   DAPPS: { NAME: 'Dapps', PATH: 'dapps' },
