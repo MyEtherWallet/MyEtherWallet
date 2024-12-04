@@ -8,6 +8,11 @@ import { nodePolyfills } from 'vite-plugin-node-polyfills'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [vue(), nightwatchPlugin(), vueDevTools(), nodePolyfills()],
+  build: {
+    rollupOptions: {
+      input: './index.html',
+    },
+  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),

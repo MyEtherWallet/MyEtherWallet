@@ -1,7 +1,15 @@
-const ROUTES_HOME = {
+export type RouteNameCollection = {
+  [key: string]: RouteName
+}
+export type RouteName = {
+  NAME: string,
+  PATH: string
+}
+
+const ROUTES_HOME: RouteNameCollection = {
   HOME: { NAME: 'Home', PATH: '' },
   //Default
-  ACCESS_WALLET: { NAME: 'AccessWallet', PATH: 'wallet/access/' },
+  ACCESS_WALLET: { NAME: 'AccessWallet', PATH: '/wallet/access' },
   ACCESS_KEYSTORE: { NAME: 'AccessKeystore', PATH: 'access/keystore' },
   ACCESS_KEYSTORE_PASSWORD: { NAME: 'AccessKeystorePassword', PATH: 'access/keystore/password' },
   ACCESS_MNEMONIC: { NAME: 'AccessMnemonic', PATH: 'access/mnemonic' },
@@ -26,9 +34,9 @@ const ROUTES_HOME = {
   TOOLS_KEYSTORE_2: { NAME: 'ToolsKeystore2', PATH: 'tools-keystore-2' }
 };
 //In Wallet
-const ROUTES_WALLET = {
+const ROUTES_WALLET: RouteNameCollection = {
   WALLET: { NAME: 'Wallet', PATH: '/wallet' },
-  DASHBOARD: { NAME: 'WalletDashboard', PATH: '' },
+  DASHBOARD: { NAME: 'WalletDashboard', PATH: 'dashboard' },
   SEND: { NAME: 'WalletSend', PATH: 'send' },
 
   //A-Z

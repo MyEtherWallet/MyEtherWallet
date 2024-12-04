@@ -1,8 +1,14 @@
 <template>
   <main>
-    <label>Enter Password</label>
+    <label for="enter-password">Enter Password</label>
     <br />
-    <input type="password" v-model="password" style="border: 1px solid black" />
+    <input
+      type="password"
+      v-model="password"
+      style="border: 1px solid black"
+      name="enter-password"
+      aria-label="enter-password"
+    />
     <br />
     <button
       @click="enterPassword"
@@ -47,7 +53,7 @@ const enterPassword = async () => {
     )
     resetKeystore()
     setWallet(wallet)
-    router.push({ name: ROUTES_WALLET.WALLET.NAME })
+    router.push({ path: ROUTES_WALLET.WALLET.PATH })
   }
 }
 </script>
