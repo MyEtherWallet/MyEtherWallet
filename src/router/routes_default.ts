@@ -2,8 +2,8 @@ import { ROUTES_HOME } from './routeNames';
 const LayoutDefault = () => import('@components/core_layouts/LayoutDefault.vue')
 const HomeView = () => import('@view-default/ViewAccessWallet.vue')
 const TempView = () => import('@view-default/ViewTemp.vue')
-const KeystoreUpload = () => import('@/modules/access/access_keystore/KeystoreUpload.vue')
-const KeystorePassword = () => import('@/modules/access/access_keystore/KeystorePassword.vue')
+const KeystoreUpload = () => import('@/modules/access/components/access_keystore/KeystoreUpload.vue')
+const KeystorePassword = () => import('@/modules/access/components/access_keystore/KeystorePassword.vue')
 
 const DefaultRoutes = [{
   path: '/',
@@ -20,8 +20,8 @@ const DefaultRoutes = [{
       },
     },
     {
-      path: '/access/keystore',
-      name: 'KeystoreAccess',
+      path: ROUTES_HOME.ACCESS_KEYSTORE.PATH,
+      name: ROUTES_HOME.ACCESS_KEYSTORE.NAME,
       component: KeystoreUpload,
       alias: '/access/keystore/upload',
       meta: {
@@ -29,32 +29,12 @@ const DefaultRoutes = [{
       },
     },
     {
-      path: '/access/keystore/password',
-      name: 'KeystoreAccessPassword',
+      path: ROUTES_HOME.ACCESS_KEYSTORE_PASSWORD.PATH,
+      name: ROUTES_HOME.ACCESS_KEYSTORE_PASSWORD.NAME,
       component: KeystorePassword,
       meta: {
         noAuth: true
       },
-    },
-    {
-      path: '/wallet',
-      children: [
-        {
-          path: '',
-          name: 'WalletDashboardDefault',
-          component: TempView,
-        },
-        {
-          path: 'dashboard',
-          name: 'WalletDashboard',
-          component: TempView,
-        },
-        {
-          path: 'send',
-          name: 'WalletSend',
-          component: TempView,
-        }
-      ]
     },
     /** Temporary Paths to be removed on v7 release
      *  Right Now components library thinks these exist in the project

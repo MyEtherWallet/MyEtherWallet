@@ -10,7 +10,12 @@
       aria-label="enter-password"
     />
     <br />
-    <button @click="enterPassword">Submit</button>
+    <button
+      @click="enterPassword"
+      class="mt-2 bg-primary p-2 rounded-full text-white"
+    >
+      Submit
+    </button>
   </main>
 </template>
 
@@ -20,9 +25,9 @@ import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 import { useAccessWalletKeystore } from '@/stores/access_wallet_keystore'
 import { useWalletStore } from '@/stores/wallet_store'
-
-import { unlockKeystore, type V3Keystore } from '../common/helpers'
-import WalletInterface from '../common/WalletInterface'
+import { unlockKeystore, type V3Keystore } from '../../common/helpers'
+import WalletInterface from '../../common/WalletInterface'
+import { ROUTES_WALLET } from '@/router/routeNames'
 
 const accessWalletStore = useAccessWalletKeystore()
 const walletStore = useWalletStore()
@@ -48,8 +53,7 @@ const enterPassword = async () => {
     )
     resetKeystore()
     setWallet(wallet)
-
-    router.push('/wallet')
+    router.push({ name: ROUTES_WALLET.WALLET.NAME })
   }
 }
 </script>

@@ -1,14 +1,14 @@
-import './assets/main.css'
+import '@assets/main.css'
 import i18n from './i18n/index'
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import '@assets/fonts/DMSans/DMSans.css';
 import {
   init as sentryInit,
   browserTracingIntegration,
   replayIntegration,
   captureException,
 } from '@sentry/vue'
-
 import App from './App.vue'
 import router from './router'
 import { Types, createInstance } from '@amplitude/analytics-browser'
@@ -99,7 +99,8 @@ amplitude.init(__TMP_HASHED_VERSION__, {
 })
 
 app.use(createPinia())
-app.use(router).use(i18n)
+app.use(router)
+app.use(i18n)
 
 /**
  * Usage:

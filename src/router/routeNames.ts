@@ -1,11 +1,16 @@
 const ROUTES_HOME = {
   HOME: { NAME: 'Home', PATH: '' },
-  //A-Z
-  ACCESS_WALLET: { NAME: 'AccessWallet', PATH: 'wallet/access/:overlay?' },
-  CREATE_WALLET: { NAME: 'CreateWallet', PATH: 'wallet/create/:overlay?' },
+  //Default
+  ACCESS_WALLET: { NAME: 'AccessWallet', PATH: 'wallet/access/' },
+  ACCESS_KEYSTORE: { NAME: 'AccessKeystore', PATH: 'access/keystore' },
+  ACCESS_KEYSTORE_PASSWORD: { NAME: 'AccessKeystorePassword', PATH: 'access/keystore/password' },
+  ACCESS_MNEMONIC: { NAME: 'AccessMnemonic', PATH: 'access/mnemonic' },
+  ACCESS_PRIVATE_KEY: { NAME: 'AccessPrivateKey', PATH: 'access/private-key' },
+  CREATE_WALLET: { NAME: 'CreateWallet', PATH: 'create/' },
   CONVERT_UNITS: { NAME: 'ConvertUnits', PATH: 'convert-units' },
   PAGE_NOT_FOUND: { NAME: 'PageNotFound', PATH: '*' },
   TOOLS: { NAME: 'Tools', PATH: 'tools' },
+
   //TOBE DELETED ON V7
   ABOUT_PAGE: { NAME: 'AboutPage', PATH: 'about' },
   BUY_HARDWARE_WALLET: { NAME: 'BuyHardwareWallet', PATH: 'buy-hardware' },
@@ -20,11 +25,14 @@ const ROUTES_HOME = {
   TOOLS_KEYSTORE_1: { NAME: 'ToolsKeystore1', PATH: 'tools-keystore-1' },
   TOOLS_KEYSTORE_2: { NAME: 'ToolsKeystore2', PATH: 'tools-keystore-2' }
 };
+//In Wallet
 const ROUTES_WALLET = {
-  WALLETS: { NAME: 'Wallets', PATH: '' },
+  WALLET: { NAME: 'Wallet', PATH: '/wallet' },
+  DASHBOARD: { NAME: 'WalletDashboard', PATH: '' },
+  SEND: { NAME: 'WalletSend', PATH: 'send' },
+
   //A-Z
   DAPPS: { NAME: 'Dapps', PATH: 'dapps' },
-  DASHBOARD: { NAME: 'Dashboard', PATH: 'dashboard' },
   DEPLOY_CONTRACT: { NAME: 'DeployContract', PATH: 'deploy' },
   ENS_MANAGER: { NAME: 'ENSManager', PATH: 'ens-manager' },
   ENS_1: { NAME: 'ENS1', PATH: 'ens-1' },
