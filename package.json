@@ -58,7 +58,6 @@
     "geckodriver": "^4.5.1",
     "husky": "^9.1.7",
     "jsdom": "^25.0.1",
-    "less": "^4.2.1",
     "nightwatch": "^3.8.0",
     "npm-run-all2": "^6.2.3",
     "postcss": "^8.4.47",

@@ -9,7 +9,7 @@ export type RouteName = {
 const ROUTES_HOME: RouteNameCollection = {
   HOME: { NAME: 'Home', PATH: '' },
   //Default
-  ACCESS_WALLET: { NAME: 'AccessWallet', PATH: 'wallet/access' },
+  ACCESS_WALLET: { NAME: 'AccessWallet', PATH: '/wallet/access' },
   ACCESS_KEYSTORE: { NAME: 'AccessKeystore', PATH: 'access/keystore' },
   ACCESS_KEYSTORE_PASSWORD: { NAME: 'AccessKeystorePassword', PATH: 'access/keystore/password' },
   ACCESS_MNEMONIC: { NAME: 'AccessMnemonic', PATH: 'access/mnemonic' },
@@ -35,7 +35,7 @@ const ROUTES_HOME: RouteNameCollection = {
 };
 //In Wallet
 const ROUTES_WALLET: RouteNameCollection = {
-  WALLET: { NAME: 'Wallet', PATH: 'wallet' },
+  WALLET: { NAME: 'Wallet', PATH: '/wallet' },
   DASHBOARD: { NAME: 'WalletDashboard', PATH: 'dashboard' },
   SEND: { NAME: 'WalletSend', PATH: 'send' },
 

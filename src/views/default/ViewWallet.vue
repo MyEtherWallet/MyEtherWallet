@@ -1,7 +1,7 @@
 <template>
-  <main class="wallet-layout">
+  <main class="flex justify-between wallet-layout">
     <!-- sidemenu -->
-    <div class="wallet-layout__sidemenu">
+    <div class="bg-blue-950 text-white h-screen flex flex-col w-64">
       <router-link
         :to="{ name: ROUTES_WALLET.DASHBOARD.NAME }"
         aria-label="Navigate to Dashboard"
@@ -14,11 +14,12 @@
       >
     </div>
     <!-- main content -->
-    <div>
+    <div class="">
       <router-view />
     </div>
     <!-- right items -->
-    <div class="wallet-layout__sidebar"></div>
+    <!-- TODO: background remove and place with slots -->
+    <div class="bg-mewBg w-96"></div>
   </main>
 </template>
 
@@ -26,25 +27,3 @@
 import { RouterView } from 'vue-router'
 import { ROUTES_WALLET } from '@/router/routeNames'
 </script>
-
-<style scoped lang="less">
-.wallet-layout {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  height: 100vh;
-
-  &__sidemenu {
-    width: 300px;
-    background-color: #07385f;
-    color: white;
-    display: flex;
-    flex-direction: column;
-  }
-
-  &__sidebar {
-    width: 400px;
-    background-color: gray;
-  }
-}
-</style>

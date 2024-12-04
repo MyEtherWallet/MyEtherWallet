@@ -32,6 +32,7 @@ const amount = ref('')
 const toAddress = ref('')
 
 const handleSubmit = () => {
+  // TODO: Implement send logic once api is provided
   console.log(
     'Send',
     amount.value,

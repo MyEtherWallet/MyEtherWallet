@@ -117,9 +117,6 @@ importers:
       jsdom:
         specifier: ^25.0.1
         version: 25.0.1(bufferutil@4.0.8)(utf-8-validate@5.0.10)
-      less:
-        specifier: ^4.2.1
-        version: 4.2.1
       nightwatch:
         specifier: ^3.8.0
         version: 3.9.0(bufferutil@4.0.8)(chromedriver@129.0.4)(geckodriver@4.5.1)(utf-8-validate@5.0.10)
@@ -11300,6 +11297,7 @@ snapshots:
   copy-anything@2.0.6:
     dependencies:
       is-what: 3.14.1
+    optional: true
 
   copy-anything@3.0.5:
     dependencies:
@@ -12653,7 +12651,8 @@ snapshots:
       call-bind: 1.0.7
       get-intrinsic: 1.2.4
 
-  is-what@3.14.1: {}
+  is-what@3.14.1:
+    optional: true
 
   is-what@4.1.16: {}
 
@@ -12979,6 +12978,7 @@ snapshots:
       mime: 1.6.0
       needle: 3.3.1
       source-map: 0.6.1
+    optional: true
 
   leven@3.1.0: {}
 
@@ -13841,7 +13841,8 @@ snapshots:
 
   parse-ms@4.0.0: {}
 
-  parse-node-version@1.0.1: {}
+  parse-node-version@1.0.1:
+    optional: true
 
   parse5@7.2.1:
     dependencies:
