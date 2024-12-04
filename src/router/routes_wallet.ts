@@ -4,7 +4,7 @@ const TempView = () => import('@view-default/ViewTemp.vue')
 const WalletLayoutDefault = () => import('@view-default/ViewWallet.vue')
 const SendView = () => import('@/modules/send/ViewSend.vue')
 
-const DefaultRoutes = [{
+const WalletRoutes = [{
   path: ROUTES_WALLET.WALLET.PATH,
   component: WalletLayoutDefault,
   children: [
@@ -22,5 +22,5 @@ const DefaultRoutes = [{
   ]
 }]
 
-export default DefaultRoutes
+export default WalletRoutes
 

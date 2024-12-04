@@ -2,10 +2,16 @@
   <main class="wallet-layout">
     <!-- sidemenu -->
     <div class="wallet-layout__sidemenu">
-      <router-link :to="{ name: ROUTES_WALLET.DASHBOARD.NAME }"
+      <router-link
+        :to="{ name: ROUTES_WALLET.DASHBOARD.NAME }"
+        aria-label="Navigate to Dashboard"
         >Dashboard</router-link
       >
-      <router-link :to="{ name: ROUTES_WALLET.SEND.NAME }">Send</router-link>
+      <router-link
+        :to="{ name: ROUTES_WALLET.SEND.NAME }"
+        aria-label="Navigate to Send"
+        >Send</router-link
+      >
     </div>
     <!-- main content -->
     <div>

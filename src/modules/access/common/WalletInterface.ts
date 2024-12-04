@@ -51,13 +51,10 @@ export default class WalletInterface {
 
     if (!isPub) {
       const _privateKey = ArrayBuffer.isView(key) ? key : hexToBytes(key as string);
-      try {
-        if (_privateKey.length !== 32 || !isValidPrivate(_privateKey as Uint8Array)) {
-          throw new Error('Private key does not satisfy the curve requirements (ie. it is invalid)');
-        }
-      } catch (e) {
-        throw e;
+      if (_privateKey.length !== 32 || !isValidPrivate(_privateKey as Uint8Array)) {
+        throw new Error('Private key does not satisfy the curve requirements (ie. it is invalid)');
       }
+
       this.privateKey = _privateKey;
       this.publicKey = privateToPublic(this.privateKey as Uint8Array);
       this.isPubOnly = false
