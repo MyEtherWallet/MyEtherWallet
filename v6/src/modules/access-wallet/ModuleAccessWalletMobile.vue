@@ -58,9 +58,9 @@ import {
   WalletLinkWallet
 } from '@/modules/access-wallet/hybrid/handlers';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
-import WALLET_TYPES from './common/walletTypes';
 
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { ACCESS_WALLET } from '@/modules/analytics-opt-in/handlers/configs/events';
 
 export default {
   name: 'ModuleAccessWalletMobile',
@@ -99,14 +99,20 @@ export default {
     ...mapActions('wallet', ['setWallet']),
     openWalletConnect() {
       try {
+        this.trackAccessWalletAmplitude(ACCESS_WALLET.WALLET_CONNECT_QR_SHOWN);
         WalletConnectWallet()
           .then(_newWallet => {
             this.setWallet([_newWallet]).then(() => {
-              this.trackAccessWallet(WALLET_TYPES.WALLET_CONNECT);
+              this.trackAccessWalletAmplitude(
+                ACCESS_WALLET.WALLET_CONNECT_QR_SUCCESSFUL
+              );
               this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
             });
           })
           .catch(e => {
+            this.trackAccessWalletAmplitude(
+              ACCESS_WALLET.WALLET_CONNECT_QR_FAILED
+            );
             WalletConnectWallet.errorHandler(e);
           });
       } catch (e) {
@@ -115,14 +121,20 @@ export default {
     },
     openWalletLink() {
       try {
+        this.trackAccessWalletAmplitude(ACCESS_WALLET.WALLET_LINK_QR_SHOWN);
         WalletLinkWallet()
           .then(_newWallet => {
             this.setWallet([_newWallet]).then(() => {
-              this.trackAccessWallet(WALLET_TYPES.WALLET_LINK);
+              this.trackAccessWalletAmplitude(
+                ACCESS_WALLET.WALLET_LINK_QR_SUCCESSFUL
+              );
               this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
             });
           })
           .catch(e => {
+            this.trackAccessWalletAmplitude(
+              ACCESS_WALLET.WALLET_LINK_QR_FAILED
+            );
             WalletLinkWallet.errorHandler(e);
           });
       } catch (e) {

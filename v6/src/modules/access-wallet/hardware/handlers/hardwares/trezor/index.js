@@ -1,4 +1,4 @@
-import Trezor from 'trezor-connect';
+import Trezor from '@trezor/connect-web';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import bip44Paths from '@/modules/access-wallet/hardware/handlers/bip44';
 import HDWalletInterface from '@/modules/access-wallet/common/HDWalletInterface';

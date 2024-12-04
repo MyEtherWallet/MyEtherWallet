@@ -209,7 +209,11 @@
               rel="noopener noreferrer"
               target="_blank"
               class="mew-label font-weight-medium buy-more-link"
-              @click="openBuySell"
+              @click="
+                () => {
+                  openBuySell('ETHBlocksInfo');
+                }
+              "
             >
               Buy more {{ network.type.name }}.
 

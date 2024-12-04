@@ -1,196 +1,78 @@
 <template>
   <div class="dapps-stakewise-stake pt-8 pb-13 px-3 pa-sm-15">
-    <v-row>
+    <v-row align="center" justify="center">
+      <v-col cols="10">
+        <mew-warning-sheet
+          class="mb-5"
+          title="StakeWise V3 is now live on
+        mainnet"
+          description="The Stakewise integration on MEW is no longer accepting deposits. You can still unstake your ETH by redeeming your sETH2 and rETH2 tokens."
+          :bottom="false"
+        />
+      </v-col>
       <v-col
         :order="$vuetify.breakpoint.smAndDown ? 'last' : ''"
         cols="12"
-        md="8"
-        :class="$vuetify.breakpoint.smAndDown ? 'my-10' : 'pr-7'"
+        md="10"
+        :class="$vuetify.breakpoint.smAndDown ? 'my-10' : ''"
       >
         <mew-sheet class="pa-15">
-          <div class="mew-heading-2 textDark--text mb-8">
-            Stake {{ currencyName }} with Stakewise
+          <div class="mew-heading-4 font-weight-bold">
+            MEW will no longer be accepting new deposits in the integrated
+            Stakewise app. Unstaking continues to be available. Users who staked
+            with Stakewise via MEW have the following options:
           </div>
-
-          <!-- ======================================================================================= -->
-          <!-- Stake direction information -->
-          <!-- ======================================================================================= -->
-          <div ref="input" class="d-flex align-center text-center">
-            <div
-              class="border-radius--8px bgWalletBlockDark flex-grow-1 pa-5 d-flex flex-column align-center"
-              style="width: 30%"
-            >
-              <div
-                class="mew-caption textMedium--text font-weight-regular mb-2"
-              >
-                You give
-              </div>
-              <div class="stake-icon">
-                <img src="@/assets/images/icons/icon-eth-gray.svg" alt="Eth" />
-              </div>
-              <div class="font-weight-bold mt-2">ETH</div>
-            </div>
-            <div class="px-5">
-              <v-icon color="greenPrimary">mdi-arrow-right</v-icon>
-            </div>
-            <div
-              class="border-radius--8px bgWalletBlockDark flex-grow-1 pa-5 d-flex flex-column align-center"
-              style="width: 30%"
-            >
-              <div
-                class="mew-caption textMedium--text font-weight-regular mb-2"
-              >
-                You will get
-              </div>
-              <div class="stake-icon">
-                <img
-                  src="@/dapps/stakewise/assets/icon-stakewise-green.svg"
-                  alt="Stakewise"
-                />
-              </div>
-              <div class="font-weight-bold mt-2">sETH2</div>
-            </div>
-          </div>
-
-          <!-- ======================================================================================= -->
-          <!-- Amount to stake -->
-          <!-- ======================================================================================= -->
-          <div class="position--relative mt-15">
-            <button-balance :loading="false" :balance="balanceInETH" />
-            <mew-input
-              type="number"
-              :max-btn-obj="{
-                title: 'Max',
-                disabled: !hasEnoughBalanceToStake,
-                method: setMax
-              }"
-              :image="iconEth"
-              label="Amount to stake"
-              placeholder="Enter amount"
-              :value="stakeAmount"
-              :error-messages="errorMessages"
-              :buy-more-str="buyMoreStr"
-              @buyMore="openBuySell"
-              @input="setAmount"
-            />
-          </div>
-
-          <!-- ======================================================================================= -->
-          <!-- Stake status -->
-          <!-- ======================================================================================= -->
-          <div class="stake-status">
-            <div class="d-flex justify-space-between">
-              <div>
-                <div class="mew-body">
-                  Network Fee
-                  <span
-                    class="ml-2 greenPrimary--text cursor--pointer"
-                    @click="openSettings"
-                  >
-                    Edit
-                  </span>
-                </div>
-              </div>
-              <div class="text-right">
-                <div class="">{{ ethTotalFee }} {{ currencyName }}</div>
-                <div v-show="isEthNetwork" class="mew-body textLight--text">
-                  {{ gasPriceFiat }}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- ======================================================================================= -->
-          <!-- Divier -->
-          <!-- ======================================================================================= -->
-          <v-divider class="mt-8" />
-
           <!-- ======================================================================================= -->
           <!-- How stake works -->
           <!-- ======================================================================================= -->
-          <div class="mt-6" @click="$vuetify.goTo(target)">
-            <div class="font-weight-bold mb-2">How staking works</div>
+          <div class="mt-6">
             <ul class="textMedium--text">
               <li class="mb-2">
-                Anyone can deposit any amount of {{ currencyName }} into the
-                Stakewise pool. No minimum required.
+                <a
+                  href="https://help.myetherwallet.com/en/articles/6136823-stake-your-eth-using-stakewise"
+                  target="_blank"
+                  >Unstake your ETH from Stakewise
+                </a>
+                in MEW and re-stake via one of our staking partners - Staked.us,
+                for full validators staking, and Coinbase, for staking any
+                amount with no minimum.
               </li>
               <li class="mb-2">
-                For each new deposit into the pool, Stakewise mints an equal
-                amount of sETH2 (1 {{ currencyName }} = 1 sETH2).
+                Connect your wallet to the
+                <a href="https://app.stakewise.io/" target="_blank"
+                  >Stakewise web app</a
+                >
+                to view and continue managing your stake there.
               </li>
-              <li class="mb-2">
-                Holders of sETH2 will start accruing rETH2 rewards within 24
-                hours of receiving the sETH2 token.
-              </li>
-              <li>Stakewise takes 10% of the staking reward.</li>
             </ul>
-
-            <div class="mt-6">
-              <a
-                href="https://help.myetherwallet.com/en/articles/6136823-stake-your-eth-using-stakewise"
-                target="_blank"
-              >
-                <div class="greenPrimary--text">
-                  View StakeWise guide<v-icon
-                    color="greenPrimary"
-                    small
-                    class="ml-2"
-                  >
-                    mdi-open-in-new
-                  </v-icon>
-                </div>
-              </a>
-            </div>
           </div>
 
           <!-- ======================================================================================= -->
           <!-- Divier -->
           <!-- ======================================================================================= -->
           <v-divider class="mt-9 mb-8" />
-
-          <!-- ======================================================================================= -->
-          <!-- Start staking -->
-          <!-- ======================================================================================= -->
-          <div class="d-flex flex-column align-center">
-            <mew-checkbox
-              v-model="agreeToTerms"
-              label="I have read and agreed to Stakewise terms of
-      service."
-              :link="{
-                title: 'Stakewise terms',
-                url: 'https://stakewise.io/terms-and-conditions/'
-              }"
-            />
-            <mew-button
-              class="mt-8"
-              title="Start staking"
-              btn-size="xlarge"
-              :disabled="!isValid"
-              @click.native="stake"
-            />
-          </div>
+          <v-row>
+            <v-col cols="6">
+              <stakewise-staking
+                class="mb-4"
+                :tx-fee="txFee"
+                :has-enough-balance="hasEnoughBalance"
+                @set-max="setMax"
+                @scroll="scroll"
+                @redeem-to-eth="redeemToEth"
+              />
+            </v-col>
+            <v-col cols="6">
+              <stakewise-rewards
+                v-if="isEthNetwork"
+                :tx-fee="txFee"
+                @set-max="setMax"
+                @scroll="scroll"
+                @redeem-to-eth="redeemToEth"
+              />
+            </v-col>
+          </v-row>
         </mew-sheet>
-      </v-col>
-      <v-col cols="12" md="4">
-        <stakewise-apr class="mb-4" />
-        <stakewise-staking
-          class="mb-4"
-          compound-rewards
-          :tx-fee="txFee"
-          :has-enough-balance="hasEnoughBalance"
-          @set-max="setMax"
-          @scroll="scroll"
-          @redeem-to-eth="redeemToEth"
-        />
-        <stakewise-rewards
-          v-if="isEthNetwork"
-          compound-rewards
-          :tx-fee="txFee"
-          @set-max="setMax"
-          @scroll="scroll"
-          @redeem-to-eth="redeemToEth"
-        />
       </v-col>
     </v-row>
   </div>
@@ -206,7 +88,6 @@ import { debounce, isEmpty, clone, find } from 'lodash';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
-import { EventBus } from '@/core/plugins/eventBus';
 import Notification, {
   NOTIFICATION_TYPES,
   NOTIFICATION_STATUS
@@ -223,21 +104,17 @@ import {
 
 import stakeHandler from '../handlers/stakewiseStakeHandler';
 import Swapper from '@/modules/swap/handlers/handlerSwap';
-import handleError from '@/modules/confirmation/handlers/errorHandler';
 
 const MIN_GAS_LIMIT = 150000;
 export default {
   name: 'ModuleStakewiseStake',
   components: {
-    StakewiseApr: () => import('../components/StakewiseApr'),
     StakewiseStaking: () => import('../components/StakewiseStaking'),
-    StakewiseRewards: () => import('../components/StakewiseRewards'),
-    ButtonBalance: () => import('@/core/components/AppButtonBalance')
+    StakewiseRewards: () => import('../components/StakewiseRewards')
   },
   mixins: [buyMore, handlerAnalytics],
   data() {
     return {
-      iconEth: require('@/assets/images/icons/icon-eth-gray.svg'),
       stakeAmount: '0',
       locGasPrice: '0',
       gasLimit: '21000',
@@ -272,18 +149,8 @@ export default {
     ...mapGetters('external', ['fiatValue']),
     ...mapState('stakewise', ['validatorApr']),
     ...mapState('global', ['gasPriceType']),
-    ...mapState('wallet', ['web3', 'address']),
+    ...mapState('wallet', ['web3', 'address', 'instance']),
     ...mapState('stakewise', ['sethBalance', 'rethBalance']),
-    currencyName() {
-      return this.network.type.currencyName;
-    },
-    totalUserStaked() {
-      const total = BigNumber(this.stakeAmount);
-      const totalStaked = total
-        .minus(BigNumber(this.stakeAmount).times(BigNumber(1).div(100)))
-        .toFixed();
-      return total.gt(0) ? formatFloatingPointValue(totalStaked).value : '0';
-    },
     ethTotalFee() {
       const gasPrice = BigNumber(this.locGasPrice).gt(0)
         ? BigNumber(this.locGasPrice)
@@ -294,12 +161,6 @@ export default {
       const ethFee = fromWei(BigNumber(gasPrice).times(gasLimit).toFixed());
       return formatFloatingPointValue(ethFee).value;
     },
-    gasPriceFiat() {
-      const gasPrice = BigNumber(this.ethTotalFee);
-      return gasPrice.gt(0)
-        ? this.getFiatValue(gasPrice.times(this.fiatValue).toFixed())
-        : '0';
-    },
     hasEnoughBalanceToStake() {
       return BigNumber(this.ethTotalFee)
         .plus(this.stakeAmount)
@@ -307,44 +168,6 @@ export default {
     },
     hasEnoughBalance() {
       return BigNumber(this.ethTotalFee).lte(this.balanceInETH);
-    },
-    isValid() {
-      return (
-        BigNumber(this.stakeAmount).gt(0) &&
-        this.hasEnoughBalanceToStake &&
-        this.agreeToTerms
-      );
-    },
-    errorMessages() {
-      if (!this.hasEnoughBalanceToStake) {
-        return 'Not enough ETH.';
-      }
-
-      if (this.estimateGasError) {
-        return !this.hasEnoughBalanceToStake
-          ? 'Issue with gas estimation. Please check if you have enough balance!'
-          : '';
-      }
-      if (BigNumber(this.stakeAmount).lt(0)) {
-        return 'Value cannot be negative';
-      }
-      if (
-        BigNumber(this.stakeAmount).gt(0) &&
-        !stakeHandler.helpers.hasValidDecimals(
-          BigNumber(this.stakeAmount).toFixed(),
-          18
-        )
-      ) {
-        return 'Invalid decimals. ETH can only have 18 decimals';
-      }
-      return '';
-    },
-    buyMoreStr() {
-      return this.isEthNetwork && !this.hasEnoughBalanceToStake
-        ? this.network.type.canBuy
-          ? 'Buy more.'
-          : ''
-        : null;
     },
     target() {
       const value = this['element'];
@@ -460,38 +283,6 @@ export default {
         this.setAmount(max.toFixed());
       }
     },
-    stake() {
-      this.trackDapp('stakewiseStake');
-      this.stakeHandler
-        .stake()
-        .on('transactionHash', hash => {
-          const info = {
-            hash: hash,
-            amount: this.totalUserStaked
-          };
-          const addTx = this.isEthNetwork
-            ? this.addToPendingTxs
-            : this.addToPendingTxsGoerli;
-          addTx(info).then(() => {
-            // reset stakewise
-            this.setAmount(0);
-            this.stakeAmount = '0';
-            this.locGasPrice = this.gasPriceByType(this.gasPriceType);
-            this.gasLimit = '21000';
-            this.agreeToTerms = false;
-            this.estimateGasError = false;
-          });
-          this.trackDapp('startStake');
-        })
-        .catch(err => {
-          const error = handleError(err);
-          if (error) Toast(err, {}, ERROR);
-          this.setAmount(0);
-        });
-    },
-    openSettings() {
-      EventBus.$emit('openSettings');
-    },
     scroll() {
       this.$vuetify.goTo(this.target);
     },
@@ -565,7 +356,7 @@ export default {
         Toast(err, {}, ERROR);
       }
     },
-    executeTrade() {
+    executeTrade(type) {
       const currentTradeCopy = clone(this.currentTrade);
       try {
         this.loading = false;
@@ -575,6 +366,9 @@ export default {
             this.swapNotificationFormatter(res, currentTradeCopy);
           })
           .then(() => {
+            this.trackDapp(
+              `stakewiseRedeem${type === 'seth' ? 'Seth' : 'Reth'}Fail`
+            );
             this.setAmount(0);
             this.compoundAmount = '0';
             this.locGasPrice = this.gasPriceByType(this.gasPriceType);
@@ -582,12 +376,18 @@ export default {
             this.agreeToTerms = false;
           })
           .catch(err => {
+            this.trackDapp(
+              `stakewiseRedeem${type === 'seth' ? 'Seth' : 'Reth'}Success`
+            );
             this.loading = false;
             Toast(err.message, {}, ERROR);
           });
       } catch (err) {
         this.loading = false;
-        Toast(err.message, {}, ERROR);
+        this.instance.errorHandler(err.message, {}, ERROR);
+        this.trackDapp(
+          `stakewiseRedeem${type === 'seth' ? 'Seth' : 'Reth'}Fail`
+        );
       }
     },
     swapNotificationFormatter(obj, currentTrade) {
@@ -621,6 +421,7 @@ export default {
     },
     async redeemToEth(type, balance) {
       const eth = type === 'seth' ? this.hasSeth : this.hasReth;
+      this.trackDapp(`stakewiseRedeem${type === 'seth' ? 'Seth' : 'Reth'}`);
       await this.getQuote(eth, ETH_Token, balance);
       try {
         this.loading = true;
@@ -630,6 +431,9 @@ export default {
           to: ETH_Token.contract,
           fromType: eth.symbol,
           toType: ETH_Token.symbol,
+          toTokenType: {
+            isEth: true
+          },
           fromImg: eth.img,
           toImg: ETH_Token.img,
           fromVal: balance,
@@ -645,10 +449,10 @@ export default {
           txFee: this.txFee,
           gasPriceType: this.gasPriceType
         };
-        await this.executeTrade();
+        await this.executeTrade(type);
       } catch (err) {
         this.loading = false;
-        Toast(err.message, {}, ERROR);
+        this.instance.errorHandler(err.message, {}, ERROR);
       }
     }
   }

@@ -22,7 +22,8 @@ import { mapGetters } from 'vuex';
 export default {
   components: {
     ModuleSend: () => import('@/modules/send/ModuleSend'),
-    TheWrapperWallet: () => import('@/core/components/TheWrapperWallet'),
+    TheWrapperWallet: () =>
+      import('@/views/components-wallet/TheWrapperWallet'),
     ModuleTokensValue: () => import('@/modules/balance/ModuleTokensValue'),
     ModuleTransferHistory: () =>
       import('@/modules/transfer-history/ModuleTransferHistory')

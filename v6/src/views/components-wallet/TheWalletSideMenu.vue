@@ -27,7 +27,6 @@
         >
           <network-switch
             :filter-types="filterNetworks"
-            :is-swap-page="isSwapPage"
             @newNetwork="closeNetworkOverlay"
           />
         </mew-popup>
@@ -86,7 +85,7 @@
                 v-if="item.hasNew"
                 class="new-dapp-label white--text mew-label px-1"
               >
-                new
+                NEW
               </div>
             </v-list-item>
           </template>
@@ -121,6 +120,12 @@
                   {{ item.title }}
                 </v-list-item-title>
               </v-list-item-content>
+              <div
+                v-if="item.hasNew"
+                class="new-dapp-label white--text mew-label px-1"
+              >
+                NEW
+              </div>
             </v-list-item>
           </template>
         </v-list-item-group>
@@ -161,6 +166,7 @@
                 dense
                 class="pl-4"
                 :to="child.route"
+                @click="child.fn ? child.fn() : () => {}"
               >
                 <v-list-item-content>
                   <v-list-item-title
@@ -274,7 +280,7 @@
 import { mapActions, mapGetters, mapState } from 'vuex';
 import send from '@/assets/images/icons/icon-send.svg';
 import portfolio from '@/assets/images/icons/icon-dashboard-enable.svg';
-// import bridge from '@/assets/images/icons/icon-bridge-enable.svg';
+import stake from '@/assets/images/icons/icon-stake.svg';
 import nft from '@/assets/images/icons/icon-nft.svg';
 import swap from '@/assets/images/icons/icon-swap-enable.svg';
 import receive from '@/assets/images/icons/icon-arrow-down-right.svg';
@@ -285,18 +291,37 @@ import message from '@/assets/images/icons/icon-message-enable.svg';
 import settings from '@/assets/images/icons/icon-setting-enable.svg';
 import logout from '@/assets/images/icons/icon-logout-enable.svg';
 import { EventBus } from '@/core/plugins/eventBus';
-import { ETH, BSC, MATIC } from '@/utils/networks/types';
+import {
+  ETH,
+  HOLESKY,
+  BSC,
+  ROOTSTOCK,
+  ETC,
+  XDC,
+  MOONBEAM,
+  MOONRIVER,
+  POL,
+  AURORA,
+  ARB,
+  FTM,
+  GNO,
+  OP,
+  COTI
+} from '@/utils/networks/types';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import {
+  CONTRACT,
+  DASHBOARD,
+  STAKING
+} from '@/modules/analytics-opt-in/handlers/configs/events';
 import dappsMeta from '@/dapps/metainfo-dapps';
-import { BUYSELL_EVENT } from '@/modules/buy-sell/helpers';
+import stakingMeta from '@/dapps/metainfo-staking';
+import buyMore from '@/core/mixins/buyMore.mixin';
 import isNew from '@/core/helpers/isNew.js';
 
 export default {
   components: {
-    AppModal: () => import('@/core/components/AppModal'),
-    AppAddrQr: () => import('@/core/components/AppAddrQr'),
-    AppBtnMenu: () => import('@/core/components/AppBtnMenu'),
     BalanceCard: () => import('@/modules/balance/ModuleBalanceCard'),
     ModuleSettings: () => import('@/modules/settings/ModuleSettings'),
     ModuleNotifications: () =>
@@ -304,7 +329,7 @@ export default {
     NetworkSwitch: () =>
       import('@/modules/network/components/NetworkSwitch.vue')
   },
-  mixins: [handlerAnalytics],
+  mixins: [handlerAnalytics, buyMore],
   data() {
     const locDarkMode = this.$vuetify.theme.dark;
     return {
@@ -315,8 +340,24 @@ export default {
       onSettings: false,
       showLogoutPopup: false,
       routeNetworks: {
-        [ROUTES_WALLET.SWAP.NAME]: [ETH, BSC, MATIC],
-        [ROUTES_WALLET.NFT_MANAGER.NAME]: [ETH, BSC, MATIC]
+        [ROUTES_WALLET.SWAP.NAME]: [
+          ETH,
+          BSC,
+          ROOTSTOCK,
+          ETC,
+          XDC,
+          MOONBEAM,
+          MOONRIVER,
+          POL,
+          AURORA,
+          ARB,
+          FTM,
+          GNO,
+          OP,
+          COTI
+        ],
+        [ROUTES_WALLET.STAKE.NAME]: [ETH, HOLESKY],
+        [ROUTES_WALLET.NFT_MANAGER.NAME]: [ETH, BSC, POL]
       },
       footer: {
         text: 'Need help?',
@@ -348,17 +389,15 @@ export default {
       }
       return [];
     },
-    /**
-     * Property returns whether or not you are on the swap page
-     * @returns {boolean}
-     */
-    isSwapPage() {
-      return this.$route.name === 'Swap';
-    },
     sectionOne() {
       if (this.online) {
         const hasNew = Object.values(dappsMeta).filter(item => {
-          if (isNew(item.release)) {
+          const dappSupport = item.networks.findIndex(nType => {
+            if (nType.chainID === this.network.type.chainID) {
+              return nType;
+            }
+          });
+          if (isNew(item.release) && dappSupport > -1 && !item.staking) {
             return item;
           }
         });
@@ -395,6 +434,16 @@ export default {
       ];
     },
     sectionTwo() {
+      const hasNew = Object.values(stakingMeta).filter(item => {
+        const stakingSupport = item.networks.findIndex(nType => {
+          if (nType.chainID === this.network.type.chainID) {
+            return nType;
+          }
+        });
+        if (isNew(item.release) && stakingSupport > -1) {
+          return item;
+        }
+      });
       if (this.online) {
         const sectionTwo = [
           {
@@ -414,23 +463,29 @@ export default {
             route: { name: ROUTES_WALLET.SEND_TX.NAME }
           },
           {
+            title: 'Stake',
+            icon: stake,
+            route: { name: ROUTES_WALLET.STAKE.NAME },
+            hasNew: hasNew.length > 0,
+            fn: this.trackToStaking
+          },
+          {
             title: this.$t('interface.menu.receive'),
             icon: receive,
             fn: () => {
+              this.trackDashboardAmplitude(DASHBOARD.SHOW_RECEIVE_ADDRESS);
               this.openQR = true;
             },
             route: undefined
           }
         ];
-        if (
-          this.network.type.name === ETH.name ||
-          this.network.type.name === BSC.name ||
-          this.network.type.name === MATIC.name
-        ) {
+        if (this.network.type.canBuy) {
           sectionTwo.push({
             title: this.$t('interface.menu.buy-sell'),
             icon: buy,
-            fn: this.openBuySell,
+            fn: () => {
+              this.openBuySell('WalletSideMenu');
+            },
             route: undefined
           });
         }
@@ -447,11 +502,13 @@ export default {
             children: [
               {
                 title: this.$t('interface.menu.deploy'),
-                route: { name: ROUTES_WALLET.DEPLOY_CONTRACT.NAME }
+                route: { name: ROUTES_WALLET.DEPLOY_CONTRACT.NAME },
+                fn: this.trackDeploy
               },
               {
                 title: this.$t('interface.menu.interact-contract'),
-                route: { name: ROUTES_WALLET.INTERACT_WITH_CONTRACT.NAME }
+                route: { name: ROUTES_WALLET.INTERACT_WITH_CONTRACT.NAME },
+                fn: this.trackInteract
               }
             ]
           },
@@ -511,11 +568,6 @@ export default {
       this.setDarkMode(val);
       this.$vuetify.theme.dark = val;
     },
-    isOpenNetworkOverlay(newVal) {
-      if (newVal && this.$route.name == ROUTES_WALLET.SWAP.NAME) {
-        this.trackSwap('switchingNetworkOnSwap');
-      }
-    },
     navOpen(newVal) {
       if (this.isOpenNetworkOverlay && !newVal)
         this.isOpenNetworkOverlay = false;
@@ -551,10 +603,16 @@ export default {
     ...mapActions('wallet', ['removeWallet']),
     ...mapActions('global', ['setDarkMode']),
     trackToSwap() {
-      this.trackSwap('fromSideMenu');
+      this.trackDashboardAmplitude(DASHBOARD.SWAP_LEFT_NAVIGATION);
     },
-    trackBuySellFunc() {
-      this.trackBuySell('buySellHome');
+    trackInteract() {
+      this.trackContract(CONTRACT.NAVIGATE_TO_INTERACT);
+    },
+    trackDeploy() {
+      this.trackContract(CONTRACT.NAVIGATE_TO_DEPLOY);
+    },
+    trackToStaking() {
+      this.trackStaking(STAKING.SIDE_MENU);
     },
     closeNetworkOverlay() {
       if (this.validNetwork) {
@@ -573,10 +631,6 @@ export default {
     openNetwork() {
       this.isOpenNetworkOverlay = true;
     },
-    openBuySell() {
-      EventBus.$emit(BUYSELL_EVENT);
-      this.trackBuySellFunc();
-    },
     openNavigation() {
       this.navOpen = true;
     },
@@ -591,6 +645,7 @@ export default {
     onLogout() {
       this.showLogoutPopup = false;
       this.$vuetify.theme.dark = false;
+      this.trackLogout();
       this.removeWallet();
     },
     toggleLogout() {
@@ -741,39 +796,40 @@ export default {
     opacity: 0 !important;
   }
   .v-navigation-drawer__content {
+    scrollbar-width: thin !important;
     margin-right: 2px;
     &::-webkit-scrollbar {
-      width: 4px;
-      height: 4px;
+      width: 4px !important;
+      height: 4px !important;
     }
     &::-webkit-scrollbar-button {
-      width: 0;
-      height: 0;
+      width: 0 !important;
+      height: 0 !important;
     }
     &::-webkit-scrollbar-thumb {
-      background: #7b91ac;
-      border: 0 none #fff;
-      border-radius: 50px;
+      background: #7b91ac !important;
+      border: 0 none #fff !important;
+      border-radius: 50px !important;
     }
     &::-webkit-scrollbar-thumb:hover {
-      background: #7b91ac;
+      background: #7b91ac !important;
     }
     &::-webkit-scrollbar-thumb:active {
-      background: #4b4949;
+      background: #4b4949 !important;
     }
     &::-webkit-scrollbar-track {
-      background: #e1dfdf;
-      border: 0 none #fff;
-      border-radius: 39px;
+      background: #e1dfdf !important;
+      border: 0 none #fff !important;
+      border-radius: 39px !important;
     }
     &::-webkit-scrollbar-track:hover {
-      background: #ddd5d5;
+      background: #ddd5d5 !important;
     }
     &::-webkit-scrollbar-track:active {
-      background: #dedede;
+      background: #dedede !important;
     }
     &::-webkit-scrollbar-corner {
-      background: transparent;
+      background: transparent !important;
     }
   }
   .tracking-switch {

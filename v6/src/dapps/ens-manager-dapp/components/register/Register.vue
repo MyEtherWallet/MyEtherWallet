@@ -108,7 +108,16 @@
     <div v-if="notEnoughFunds || noFundsForRegFees">
       <span class="balance-error d-flex mt-5 justify-center align-center">
         Not enough balance:
-        <a target="_blank" class="link" @click="openBuySell">
+        <a
+          v-show="network.type.canBuy"
+          target="_blank"
+          class="link"
+          @click="
+            () => {
+              openBuySell('ENSRegister');
+            }
+          "
+        >
           <u>Buy More Eth</u>
         </a>
       </span>
@@ -137,6 +146,7 @@
 
 <script>
 import buyMore from '@/core/mixins/buyMore.mixin.js';
+import { mapGetters } from 'vuex';
 export default {
   name: 'EnsRegister',
   mixins: [buyMore],
@@ -212,6 +222,9 @@ export default {
       timer: () => {},
       canRegister: false
     };
+  },
+  computed: {
+    ...mapGetters('global', ['network'])
   },
   watch: {
     minimumAge(newVal) {

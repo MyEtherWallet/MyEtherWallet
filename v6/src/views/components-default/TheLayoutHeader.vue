@@ -1,6 +1,10 @@
 <template>
-  <v-sheet tile class="page-title-container pt-5 pb-11" color="expandHeader">
-    <v-container class="text-center white--text">
+  <v-sheet
+    tile
+    class="page-title-container pt-16 pb-6 pb-md-11"
+    color="expandHeader"
+  >
+    <v-container class="text-center white--text pt-13 pt-md-16">
       <h1 class="mb-3">{{ title }}</h1>
       <div style="max-width: 550px" class="mx-auto">
         <h4>{{ subtitleLineOne }}</h4>
@@ -10,6 +14,7 @@
             v-if="hasLink"
             :to="{ name: routeObj.routeName }"
             class="text-decoration--underline"
+            @click.native="routeObj.func ? routeObj.func : () => {}"
           >
             {{ routeObj.text }}
           </router-link>
@@ -22,7 +27,6 @@
 <script>
 export default {
   name: 'TheLayoutHeader',
-  components: {},
   props: {
     title: { default: '', type: String },
     subtitleLineOne: { default: '', type: String },
@@ -42,7 +46,6 @@ export default {
       type: Object
     },
     hasLink: { default: false, type: Boolean }
-  },
-  computed: {}
+  }
 };
 </script>

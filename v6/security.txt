@@ -1,0 +1,27 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+Contact: https://hackerone.com/myetherwallet
+Contact: mailto:security@myetherwallet.com
+Encryption: https://raw.githubusercontent.com/MyEtherWallet/MyEtherWallet/master/MEW-PUP-KEY-GPG
+Acknowledgments: https://hackerone.com/myetherwallet
+Preferred-Languages: en,ru
+Canonical: https://www.myetherwallet.com/.well-known/security.txt
+Policy: https://hackerone.com/myetherwallet
+-----BEGIN PGP SIGNATURE-----
+
+iQJOBAEBCgA4FiEEL8pKHjr0J49607djfwWcD3uaEvAFAl540ngaHHN1cHBvcnRA
+bXlldGhlcndhbGxldC5jb20ACgkQfwWcD3uaEvBCGxAAm21Xm3PBdaQAB3877DIc
+WXt294m8bobD2x3wzdT/wZkgzICobF8dHOyfzhAUVme1Uz56c5843DI8vNfGXxva
+NRtbnSmD+IotxT6+NYp5o755XY5/atZO91iKCMjVpJPaLsHtAeg6BOo8woPiNSXg
+dJyxWEL+g5FBaRdQ85cSR7n2VHzJlbUPgMalPSEwx7IE4G3KrWhFCtm29uiXKdVM
+l1v9/vM5GfVz4Y+wR50fSaTZS9vo282mWYHWbu8S4HqehsHRXZUuFqu3UNnsn+dH
+C3GipteYAUwHUc7ubgZcU62/osukxQCvBqyAlkMNlunokV74Pp5C5rpyk7vgQyVn
+TJ9wnG262qtYQWu+P9itb14YwMO/lANVE4RXVZj1bGKdpCypVso4JwV8TaJ7lwW6
+ulfjQdF7MjIuXEIngNtOGWlTmZ16AlPWFS1/uji9HcsTFYNkptRtHTRaCHg4odv8
+zy9RvPzoF4VopJR0Xb07zbDqvewDFs1PDkstVF4wXgg2F3tBssG0yEqO/0eMN2tv
+N4xSQEDrbr7kZQ3Lc57N4lmalqMX4U5fkyAXYZx7X7YOJ7Fmu81y8wDBuATFU8rn
+K+3Jbv+sRfGP9qMG0msR6eFYWs6CGb9w8IXF0yK2t3v3r935keamOKkkzOMXb8p2
+A15H/xBiM9znQMjaXqpsEvE=
+=J5Df
+-----END PGP SIGNATURE-----

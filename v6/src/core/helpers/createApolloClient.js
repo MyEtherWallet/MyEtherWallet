@@ -25,7 +25,7 @@ export function createApolloClient(httpsEndpoint, wsEndpoint) {
     if (error.graphQLErrors && process.env.NODE_ENV !== 'production') {
       error.graphQLErrors.map(({ message, locations, path }) => {
         const newError = `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`;
-         
+        // eslint-disable-next-line
         console.error(newError);
       });
     }

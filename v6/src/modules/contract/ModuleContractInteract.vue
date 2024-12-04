@@ -167,8 +167,12 @@ import {
   isContractArgValid
 } from './handlers/common';
 import { ERROR, Toast } from '../toast/handler/handlerToast';
+import handlerAnalyticsMixin from '../analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { CONTRACT } from '../analytics-opt-in/handlers/configs/events';
+
 export default {
   name: 'ModuleContractInteract',
+  mixins: [handlerAnalyticsMixin],
   data() {
     return {
       currentContract: null,
@@ -293,17 +297,25 @@ export default {
     readWrite() {
       const params = [];
       for (const _input of this.selectedMethod.inputs) {
-        if (_input.type.includes('[]'))
-          params.push(stringToArray(_input.value));
-        else params.push(_input.value);
+        if (_input.type.includes('[]')) {
+          if (_input.value === '[]') {
+            params.push([]);
+          } else {
+            params.push(stringToArray(_input.value));
+          }
+        } else {
+          params.push(_input.value);
+        }
       }
       const caller = this.currentContract.methods[
         this.selectedMethod.name
       ].apply(this, params);
       if (this.isViewFunction) {
+        this.trackContract(CONTRACT.INTERACT_W_CONTRACT_READ);
         caller
           .call()
           .then(result => {
+            this.trackContract(CONTRACT.INTERACT_W_CONTRACT_READ_SUCCESS);
             if (this.selectedMethod.outputs.length === 1) {
               this.selectedMethod.outputs[0].value = result;
               Vue.set(
@@ -319,9 +331,11 @@ export default {
             }
           })
           .catch(({ message }) => {
+            this.trackContract(CONTRACT.INTERACT_W_CONTRACT_READ_FAIL);
             Toast(message, {}, ERROR);
           });
       } else if (this.isPayableFunction) {
+        this.trackContract(CONTRACT.INTERACT_W_CONTRACT_WRITE);
         const rawTx = {
           to: this.contractAddress,
           from: this.address,
@@ -332,16 +346,25 @@ export default {
         this.web3.eth
           .estimateGas(rawTx)
           .then(gasLimit => {
+            this.trackContract(CONTRACT.INTERACT_W_CONTRACT_WRITE_SUCCESS);
             rawTx.gas = gasLimit;
             caller.send(rawTx);
           })
           .catch(({ message }) => {
+            this.trackContract(CONTRACT.INTERACT_W_CONTRACT_WRITE_FAIL);
             Toast(message, {}, ERROR);
           });
       } else {
+        this.trackContract(CONTRACT.INTERACT_W_CONTRACT_WRITE);
         caller
           .send({ from: this.address })
-          .catch(({ message }) => Toast(message, {}, ERROR));
+          .then(() => {
+            this.trackContract(CONTRACT.INTERACT_W_CONTRACT_WRITE_SUCCESS);
+          })
+          .catch(({ message }) => {
+            this.trackContract(CONTRACT.INTERACT_W_CONTRACT_WRITE_FAIL);
+            Toast(message, {}, ERROR);
+          });
       }
     },
     payableInput(amount) {

@@ -8,10 +8,7 @@ import {
  * Formatted notification for mew-notification component
  */
 const formatNotification = (obj, network) => {
-  const isEthVMSupported = network.type.isEthVMSupported;
-  const explorer = isEthVMSupported.supported
-    ? isEthVMSupported.blockExplorerTX
-    : network.type.blockExplorerTX;
+  const explorer = network.type.blockExplorerTX;
   const newObj = {
     txHash: {
       value: obj.hash ? obj.hash : '',

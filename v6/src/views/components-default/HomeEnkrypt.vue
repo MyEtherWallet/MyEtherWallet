@@ -43,7 +43,7 @@
                 style="border-radius: 100px !important"
                 btn-size="large"
                 btn-link="https://www.enkrypt.com"
-                rel="dofollow"
+                @click.native="trackEnkrypt"
               >
                 <img
                   :src="browserLogo"
@@ -59,6 +59,7 @@
                 class="text-decoration-underline textSecondary--text ml-5"
                 href="https://www.enkrypt.com"
                 target="_blank"
+                @click="trackEnkryptLearnMore"
                 >Learn more</a
               >
             </div>
@@ -86,11 +87,13 @@
 
 <script>
 import enkryptMarketing from '@/core/mixins/enkryptMarketing.mixin.js';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { LANDING_PAGE } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 export default {
   name: 'HomeEnkrypt',
-  components: {},
-  mixins: [enkryptMarketing],
-  data: () => ({}),
+
+  mixins: [enkryptMarketing, handlerAnalytics],
+
   computed: {
     bgStyle() {
       if (
@@ -103,6 +106,14 @@ export default {
         return 'bgXLarge';
       }
       return 'bgSmall';
+    }
+  },
+  methods: {
+    trackEnkrypt() {
+      this.trackLandingPageAmplitude(LANDING_PAGE.GOOGLE_STORE_2);
+    },
+    trackEnkryptLearnMore() {
+      this.trackLandingPageAmplitude(LANDING_PAGE.ENKRYPT_LEARN_MORE);
     }
   }
 };

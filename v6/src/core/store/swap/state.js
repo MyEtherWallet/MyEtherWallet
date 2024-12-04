@@ -1,7 +1,8 @@
 const state = {
   localStore: false,
   prefetched: false,
-  swapTokens: []
+  swapTokens: [],
+  localContracts: {}
 };
 
 export default state;

@@ -49,6 +49,14 @@ const numberToString = arg => {
   );
 };
 
+/**
+ * wei -> eth
+ * @param {*} weiInput
+ * @param {*} decimals
+ * @param {*} optionsInput
+ * @returns String
+ */
+
 const fromBase = (weiInput, decimals, optionsInput) => {
   let wei = toBN(weiInput);
   const negative = wei.lt(zero);
@@ -72,7 +80,7 @@ const fromBase = (weiInput, decimals, optionsInput) => {
   let whole = wei.div(base).toString(10);
 
   if (options.commify) {
-    whole = whole.replace(/\B(?=(\d{3})+(?!\d))/g, ',');  
+    whole = whole.replace(/\B(?=(\d{3})+(?!\d))/g, ','); // eslint-disable-line
   }
 
   let value = `${whole}${fraction == '0' ? '' : `.${fraction}`}`;
@@ -83,7 +91,12 @@ const fromBase = (weiInput, decimals, optionsInput) => {
 
   return value;
 };
-
+/**
+ * eth -> wei
+ * @param {*} etherInput
+ * @param {*} decimals
+ * @returns String wei
+ */
 const toBase = (etherInput, decimals) => {
   let ether = numberToString(etherInput);
   const base = getValueOfUnit(decimals);

@@ -75,8 +75,9 @@ export default {
       return Object.values(obj)[0];
     },
     callToast(ref) {
-      if (this.$refs[ref] && this.$refs[ref].length > 0)
+      if (this.$refs[ref] && this.$refs[ref].length > 0) {
         this.$refs[ref][0].showToast();
+      }
     }
   }
 };

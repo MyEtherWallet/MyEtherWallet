@@ -129,6 +129,10 @@ h6 {
 }
 
 /* ========== Border ========== */
+.border-radius--15px {
+  border-radius: 15px !important;
+}
+
 .border-radius--12px {
   border-radius: 12px !important;
 }
@@ -235,4 +239,9 @@ input[type=number] {
 
 .v-dialog {
   border-radius: 12px !important;
+}
+
+// just for prototype
+.prototype-background {
+  background: linear-gradient(146.16deg, #C549FF 4.03%, #654BFF 94.83%);
 }

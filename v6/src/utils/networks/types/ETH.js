@@ -1,13 +1,13 @@
 import eth from '@/assets/images/networks/eth.svg';
-import { GOERLI } from '../tlds';
+import { HOLESKY } from '../tlds';
 
 export default {
   name: 'ETH',
   name_long: 'Ethereum',
   homePage: 'https://ethereum.org',
-  blockExplorer: 'Etherscan',
-  blockExplorerTX: 'https://etherscan.io/tx/[[txHash]]',
-  blockExplorerAddr: 'https://etherscan.io/address/[[address]]',
+  blockExplorer: 'ethVM',
+  blockExplorerTX: 'https://ethvm.com/tx/[[txHash]]',
+  blockExplorerAddr: 'https://ethvm.com/address/[[address]]',
   chainID: 1,
   tokens: import('@/_generated/tokens/tokens-eth.json').then(
     module => module.default
@@ -20,8 +20,9 @@ export default {
     registry: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
     registrarTLD: 'eth',
     registrarType: 'permanent',
-    supportedTld: GOERLI,
-    subgraphPath: 'https://api.thegraph.com/subgraphs/name/ensdomains/ens'
+    supportedTld: HOLESKY,
+    subgraphPath:
+      'https://gateway-arbitrum.network.thegraph.com/api/eb17d5e0f1e62e505370ef6bfd7c2844/subgraphs/id/5XqPmWe6gjyrJtFn9cLy237i4cWw2j9HcUJEXsP5qGtH'
   },
   icon: eth,
   currencyName: 'ETH',
@@ -35,5 +36,6 @@ export default {
   gasPriceMultiplier: 1,
   canBuy: true,
   coingeckoID: 'ethereum',
-  balanceApi: 'https://tokenbalance.mewapi.io/eth?address='
+  balanceApi: 'https://tokenbalance.mewapi.io/eth?address=',
+  ensEnkryptType: 'ETH'
 };

@@ -17,8 +17,17 @@
           v-if="noFundsForRenewalFees"
           class="balance-error d-flex mt-2 mb-3 justify-center align-center"
         >
-          Not enough balance:
-          <a target="_blank" class="link" @click="openBuySell">
+          Not enough balance.
+          <a
+            v-show="network.type.canBuy"
+            target="_blank"
+            class="link"
+            @click="
+              () => {
+                openBuySell('ENSRenew');
+              }
+            "
+          >
             <u>Buy More Eth</u>
           </a>
         </span>
@@ -79,6 +88,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters('global', ['getFiatValue', 'network']),
     items() {
       const items = [];
       for (let i = 0; i < 20; i++) {
@@ -100,12 +110,11 @@ export default {
     this.getTotalRenewFeeOnly(1);
   },
   methods: {
-    ...mapGetters('global', ['getFiatValue']),
     rentPrice() {
       return this.getRentPrice(this.duration).then(resp => {
         if (resp) {
           this.rentPriceETH = formatFloatingPointValue(resp.eth).value;
-          this.rentPriceUSD = this.getFiatValue()(resp.usd);
+          this.rentPriceUSD = this.getFiatValue(resp.usd);
         }
       });
     },

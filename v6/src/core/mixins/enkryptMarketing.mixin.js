@@ -3,19 +3,23 @@
  */
 
 import platform from 'platform';
-import { mapState } from 'vuex';
+
 export default {
   name: 'EnkryptMarketingMixing',
   data() {
     return {
       extensionLinks: {
-        chrome: {
-          link: 'https://chrome.google.com/webstore/detail/enkrypt/kkpllkodjeloidieedojogacfhpaihoh',
-          img: require('@/assets/images/icons/icon-chrome.svg')
+        'microsoft edge': {
+          link: 'https://microsoftedge.microsoft.com/addons/detail/enkrypt-ethereum-polkad/gfenajajnjjmmdojhdjmnngomkhlnfjl',
+          img: require('@/assets/images/icons/icon-edge.svg')
         },
         firefox: {
-          link: 'https://chrome.google.com/webstore/detail/enkrypt/kkpllkodjeloidieedojogacfhpaihoh',
+          link: 'https://addons.mozilla.org/en-US/firefox/addon/enkrypt/',
           img: require('@/assets/images/icons/icon-firefox.svg')
+        },
+        safari: {
+          link: 'https://apps.apple.com/app/enkrypt-web3-wallet/id1640164309',
+          img: require('@/assets/images/icons/icon-safari.svg')
         },
         opera: {
           link: 'https://addons.opera.com/en/extensions/details/enkrypt/',
@@ -29,14 +33,9 @@ export default {
     };
   },
   computed: {
-    ...mapState('popups', ['enkryptLandingPopup']),
     browser() {
       const browser = platform.name?.toLowerCase() || '';
-      if (
-        browser !== 'chrome' &&
-        browser !== 'firefox' &&
-        browser !== 'opera'
-      ) {
+      if (!this.extensionLinks[browser]) {
         return 'default';
       }
       return browser;
@@ -58,36 +57,22 @@ export default {
   },
   methods: {
     openEnkrypt() {
-       
-       /*
-       window.open(
-         this.isMobile ? 'https://www.enkrypt.com' : this.browserLink,
-         '_blank'
-       );
-       */
-      window.open('https://www.enkrypt.com', '_blank');
+      // eslint-disable-next-line
+      window.open(
+        this.isMobile ? 'https://www.enkrypt.com' : this.browserLink,
+        '_blank'
+      );
     },
     openMewWallet() {
-      if (this.isMobile) {
-        const userAgent =
-          navigator.userAgent || navigator.vendor || window.opera;
-        const isAndroid = /android/i.test(userAgent);
-        const isApple = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
-
-        if (isAndroid) {
-          window.location.href =
-            'https://play.google.com/store/apps/details?id=com.myetherwallet.mewwallet';
-        } else if (isApple) {
-          window.location.href = 'https://itunes.apple.com/app/id1464614025';
-        }
-      } else {
-         
-         window.open('https://www.mewwallet.com/', '_blank');
-      }
+      // eslint-disable-next-line
+      window.open(
+        'https://download.mewwallet.com/?source=mew_web_create',
+        '_blank'
+      );
     },
     openHelpCenter() {
-       
-       window.open('https://www.enkrypt.com', '_blank');
+      // eslint-disable-next-line
+      window.open('https://www.enkrypt.com', '_blank');
     }
   }
 };

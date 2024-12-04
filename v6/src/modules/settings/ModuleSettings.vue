@@ -18,7 +18,7 @@
       :idx-to-expand="idxToExpand"
       class="mt-6"
     >
-      <template #panelBody1>
+      <template v-if="!hasGasPriceOption" #panelBody1>
         <div class="px-5">
           <settings-gas-price
             :buttons="gasButtons"
@@ -29,13 +29,13 @@
           />
         </div>
       </template>
-      <template #panelBody2>
+      <template #[importPanel]>
         <settings-import-config :import-config="settingsHandler" />
       </template>
-      <template #panelBody3>
+      <template #[exportPanel]>
         <settings-export-config :export-config="exportStore" />
       </template>
-      <template #panelBody4>
+      <template #[addressBookPanel]>
         <div class="pa-6">
           <div class="mb-4">
             {{ $t('interface.address-book.add-up-to') }}
@@ -53,7 +53,7 @@
           </div>
         </div>
       </template>
-      <template #panelBody5>
+      <template #[localPanel]>
         <settings-locale-config />
       </template>
       <!-- <template #panelBody5>
@@ -68,8 +68,7 @@
     <div v-if="online && !addMode && !editMode" class="mt-3 px-8">
       <div class="matomo-tracking-switch">
         <v-switch
-          v-model="dataSharingOn"
-          :label="`Data Sharing is ${dataSharingOn ? 'on' : 'off'}`"
+          :label="`Data tracking ${consentToTrack ? 'On' : 'Off'}`"
           :input-value="consentToTrack"
           inset
           color="greenPrimary"
@@ -94,8 +93,7 @@
 </template>
 
 <script>
-import SettingsAddressTable from './components/SettingsAddressTable';
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
 import handlerSettings from './handler/handlerSettings';
 import gasPriceMixin from './handler/gasPriceMixin';
@@ -105,7 +103,7 @@ const modes = ['add', 'edit'];
 export default {
   name: 'ModuleSettings',
   components: {
-    SettingsAddressTable,
+    SettingsAddressTable: () => import('./components/SettingsAddressTable'),
     SettingsImportConfig: () => import('./components/SettingsImportConfig'),
     SettingsExportConfig: () => import('./components/SettingsExportConfig'),
     SettingsGasPrice: () => import('./components/SettingsGasPrice'),
@@ -126,7 +124,6 @@ export default {
   },
   data() {
     return {
-      dataSharingOn: false,
       settingsHandler: null,
       idxToExpand: null,
       editMode: false,
@@ -139,12 +136,27 @@ export default {
     ...mapState('addressBook', ['addressBookStore']),
     ...mapState('global', ['online']),
     ...mapState('popups', ['consentToTrack']),
+    ...mapGetters('wallet', ['hasGasPriceOption']),
+    importPanel() {
+      return `panelBody${!this.hasGasPriceOption ? 2 : 1}`;
+    },
+    exportPanel() {
+      return `panelBody${!this.hasGasPriceOption ? 3 : 2}`;
+    },
+    addressBookPanel() {
+      return `panelBody${!this.hasGasPriceOption ? 4 : 3}`;
+    },
+    localPanel() {
+      return `panelBody${!this.hasGasPriceOption ? 5 : 4}`;
+    },
     panelItems() {
-      return [
+      const txPriority = [
         {
           name: 'Transaction priority',
           toggleTitle: this.setPriority(this.gasPriceType)
-        },
+        }
+      ];
+      const panels = [
         {
           name: 'Import configurations'
         },
@@ -158,6 +170,7 @@ export default {
           name: 'Currency settings'
         }
       ];
+      return this.hasGasPriceOption ? panels : txPriority.concat(panels);
     },
     onMode() {
       return this.addMode ? modes[0] : modes[1];
@@ -187,7 +200,6 @@ export default {
     this.settingsHandler = new handlerSettings();
   },
   methods: {
-    setConsent() {},
     getAddressBookTableData() {
       this.tableData = [];
       this.addressBookStore.forEach((item, idx) => {

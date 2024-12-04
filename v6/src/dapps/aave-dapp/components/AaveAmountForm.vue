@@ -70,8 +70,9 @@
 
 <script>
 import BigNumber from 'bignumber.js';
-import { ACTION_TYPES } from '@/dapps/aave-dapp/handlers/helpers';
 import { isEmpty } from 'lodash';
+
+import { ACTION_TYPES } from '@/dapps/aave-dapp/handlers/helpers';
 import hasValidDecimals from '@/core/helpers/hasValidDecimals';
 
 export default {

@@ -52,7 +52,7 @@
 
         <div v-if="currentStep === 1">
           <v-sheet color="transparent" max-width="600px" class="mx-auto py-10">
-            <network-switch />
+            <network-switch :is-wallet="false" />
           </v-sheet>
           <mew-button
             btn-size="xlarge"
@@ -390,12 +390,13 @@ export default {
     async txData() {
       const { eth } = this.web3;
       const chainID = await eth.getChainId();
-      const gasPrice = await eth.getGasPrice();
+      const fetchedGasPrice = await eth.getGasPrice();
+      const gasPrice = fromWei(fetchedGasPrice, 'gwei');
       const nonce = await eth.getTransactionCount(this.fromAddress);
       return {
         data: {
           nonce,
-          gasPrice,
+          fetchedGasPrice,
           chainID
         },
         details: {
@@ -436,7 +437,7 @@ export default {
         },
         {
           title: 'Gas Price',
-          value: details.gasPrice
+          value: `${details.gasPrice} gwei`
         }
       ];
       this.exportFile();
@@ -449,7 +450,7 @@ export default {
       let { data } = await this.txData();
       data = {
         nonce: toHex(data.nonce),
-        gasPrice: toHex(data.gasPrice),
+        gasPrice: toHex(data.fetchedGasPrice),
         chainID: toHex(data.chainID)
       };
       const blob = new Blob([JSON.stringify(data)], { type: 'mime' });
@@ -495,7 +496,7 @@ export default {
      * - raw: raw data
      * - details: detailed data (includes more fields)
      ***********************************************************************************/
-    rawTxData() {
+    async rawTxData() {
       try {
         const tx = new Transaction(this.getRawTransaction, {
           common: commonGenerator(this.network)
@@ -508,7 +509,7 @@ export default {
         const basicDetails = {
           from: txFrom,
           nonce: this.gtr(txValues.nonce),
-          gasPrice: fromWei(this.gtr(txValues.gasPrice)),
+          gasPrice: this.gtr(txValues.gasPrice),
           gasLimit: this.gtr(txValues.gasLimit),
           to: txValues.to,
           value: fromWei(this.gtr(txValues.value), 'ether'),
@@ -553,7 +554,7 @@ export default {
      **********************************************************/
     async setRawTransaction(val) {
       if (val) return (this.rawTransaction = val);
-      const { raw, fee } = this.rawTxData();
+      const { raw, fee } = await this.rawTxData();
       if (raw) {
         this.rawTransaction = JSON.stringify(raw, null, 3);
         const { eth } = this.web3;
@@ -583,9 +584,9 @@ export default {
      * @param {string} val[].title - Name of value
      * @param {string|number} val[].value - Value
      **********************************************************/
-    setRawDetails(val) {
+    async setRawDetails(val) {
       if (val) return (this.transactionDetails = val);
-      const { details } = this.rawTxData();
+      const { details } = await this.rawTxData();
       if (details)
         this.transactionDetails = [
           {

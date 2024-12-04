@@ -1,4 +1,4 @@
-/* eslint-disable security/detect-unsafe-regex */
+/* eslint-disable security/detect-unsafe-regex, no-useless-escape */
 import normalise from '@/core/helpers/normalise';
 
 const extractHostname = url => {

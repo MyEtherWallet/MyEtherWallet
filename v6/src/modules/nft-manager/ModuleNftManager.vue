@@ -54,8 +54,8 @@
             !loadingContracts && !onNftSend && tabs.length > 0 && !hasNoTokens
           "
           :items="tabs"
-          :is-vertical="$vuetify.breakpoint.mdAndUp"
-          :has-underline="$vuetify.breakpoint.smAndDown"
+          :is-vertical="$vuetify.breakpoint.lgAndUp"
+          :has-underline="$vuetify.breakpoint.mdAndDown"
           :active-tab="activeTab"
           @onTab="onTab"
         >
@@ -63,7 +63,7 @@
             v-for="(contract, idx) in contracts"
             :slot="'tabItemContent' + (idx + 1)"
           >
-            <div :key="idx" class="ml-5">
+            <div :key="idx">
               <!--
     =====================================================================================
       Display all owned tokens by nft
@@ -152,7 +152,7 @@ import {
 import getService from '@/core/helpers/getService';
 
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
-import { ETH, BSC, MATIC } from '@/utils/networks/types';
+import { ETH, BSC, POL } from '@/utils/networks/types';
 import { toBNSafe } from '@/core/helpers/numberFormatHelper';
 import NFT from './handlers/handlerNftManager';
 import handleError from '@/modules/confirmation/handlers/errorHandler.js';
@@ -295,7 +295,7 @@ export default {
      * List of supported networks
      */
     supportedNetworks() {
-      return [ETH.name, MATIC.name, BSC.name];
+      return [ETH.name, POL.name, BSC.name];
     }
   },
   watch: {
@@ -335,7 +335,7 @@ export default {
       }
     },
     async toAddress(newVal) {
-      if (isAddress(newVal)) {
+      if (isAddress(newVal) && this.enoughFunds) {
         try {
           const gasTypeFee = this.gasPriceByType(this.gasPriceType);
           this.localGasPrice = gasTypeFee;
@@ -351,6 +351,8 @@ export default {
             this.showBalanceError = false;
           }
         } catch (e) {
+          this.enoughFunds = false;
+          this.showBalanceError = false;
           Toast(
             `Can't send NFT! Please double check if everything is correct`,
             {},
@@ -425,7 +427,7 @@ export default {
       if (this.isValid) {
         try {
           let gasPrice = undefined;
-          if (this.network.type.name === 'MATIC')
+          if (this.network.type.name === POL.name)
             gasPrice = `0x${toBN(this.localGasPrice).toString('hex')}`;
           this.nft
             .send(this.toAddress, this.selectedNft, gasPrice)

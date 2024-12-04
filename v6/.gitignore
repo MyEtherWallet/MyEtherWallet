@@ -1,0 +1,36 @@
+**/.DS_Store
+node_modules/
+/dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+/tests/unit/coverage/
+/tests/e2e/reports
+selenium-debug.log
+/tests/e2e/reports/
+/download_folder
+/logs
+chromedriver.log
+build
+# Editor directories and files
+.cache
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+.npm
+.config
+/tests/unit/coverage/
+tests_output/
+release
+chrome-extension
+.env
+.history
+
+# Generated files
+src/_generated
+
+
+# Apollo files
+src/apollo/global/globalTypes.json

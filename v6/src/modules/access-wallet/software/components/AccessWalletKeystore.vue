@@ -102,12 +102,12 @@
 
 <script>
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+import handlerAnalyticsMixin from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { ACCESS_WALLET } from '@/modules/analytics-opt-in/handlers/configs/events';
 
 export default {
   name: 'AccessWalletKeystore',
-  components: {
-    AppBtnRow: () => import('@/core/components/AppBtnRow')
-  },
+  mixins: [handlerAnalyticsMixin],
   props: {
     handlerAccessWallet: {
       type: Object,
@@ -145,8 +145,11 @@ export default {
         try {
           this.file = JSON.parse(evt.target.result);
           this.step = 2;
-        } catch (e) {
-          Toast(e.message, {}, ERROR);
+        } catch (err) {
+          this.trackAccessWalletAmplitude(ACCESS_WALLET.SOFTWARE_FAILED, {
+            error: err.message
+          });
+          Toast(err.message, {}, ERROR);
         }
       };
       reader.readAsBinaryString(e.target.files[0]);
@@ -176,6 +179,9 @@ export default {
         })
         .catch(e => {
           this.isUnlockingKeystore = false;
+          this.trackAccessWalletAmplitude(ACCESS_WALLET.SOFTWARE_FAILED, {
+            error: e.message
+          });
           Toast(e.message, {}, ERROR);
         });
     },

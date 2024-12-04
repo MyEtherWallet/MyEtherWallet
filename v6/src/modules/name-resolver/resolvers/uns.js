@@ -1,23 +1,22 @@
 import Resolution from '@unstoppabledomains/resolution';
 import { toChecksumAddress } from 'web3-utils';
-import Web3 from 'web3';
 export default class UNS {
-  constructor(network, web3) {
-    const networkname = 'mainnet';
-    const polyname = 'polygon-mainnet';
-    const polyprovider = new Web3('https://nodes.mewapi.io/rpc/matic');
+  constructor() {
+    const mainnet = {
+      network: 'mainnet',
+      url: 'https://nodes.mewapi.io/rpc/eth'
+    };
+
+    const polygon = {
+      network: 'polygon-mainnet',
+      url: 'https://nodes.mewapi.io/rpc/matic'
+    };
     const resolution = new Resolution({
       sourceConfig: {
         uns: {
           locations: {
-            Layer1: {
-              network: networkname,
-              url: web3.currentProvider.host
-            },
-            Layer2: {
-              network: polyname,
-              url: polyprovider.currentProvider.host
-            }
+            Layer1: mainnet,
+            Layer2: polygon
           }
         }
       }

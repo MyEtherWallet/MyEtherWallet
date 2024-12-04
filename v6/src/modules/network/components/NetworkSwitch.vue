@@ -1,7 +1,7 @@
 <template>
   <div class="module-network-switch full-width">
     <v-row
-      v-if="!isSwapPage && hasNetworks"
+      v-if="!shouldFilter && hasNetworks"
       class="align-end justify-center justify-sm-space-between pa-0"
     >
       <!-- ===================================================================================== -->
@@ -37,19 +37,22 @@
     <!-- Empty Search Message -->
     <!-- ===================================================================================== -->
     <app-user-msg-block
-      v-if="showEmptySearch || isSwapPage"
+      v-if="showEmptySearch || shouldFilter"
       :message="emptySearchMes"
-      :is-alert="isSwapPage"
+      :is-alert="shouldFilter"
       class="mt-5"
     />
 
     <!-- ===================================================================================== -->
     <!-- Networks -->
     <!-- ===================================================================================== -->
-    <v-radio-group v-model="networkSelected">
+    <v-radio-group
+      v-model="networkSelected"
+      :class="networks.length > 10 ? 'network-container' : ''"
+    >
       <v-container
         v-for="(network, i) in networks"
-        :key="network.name"
+        :key="network.name + network.chainID"
         :class="[
           { 'network-border-first': i === 0 },
           { 'network-border-last': i + 1 === networks.length },
@@ -68,7 +71,12 @@
             {{ network.name }}
           </div>
           <div class="px-2 textLight--text">-</div>
-          <div class="textLight--text">
+          <div
+            :class="[
+              'textLight--text',
+              $vuetify.breakpoint.smAndDown ? 'network-long-name' : ''
+            ]"
+          >
             {{ network.name_long }}
           </div>
           <v-spacer />
@@ -97,25 +105,17 @@ import * as types from '@/utils/networks/types';
 import { Toast, SUCCESS, ERROR } from '@/modules/toast/handler/handlerToast';
 
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-import matchNetwork from '@/core/helpers/matchNetwork';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 
 export default {
   name: 'NetworkSwitch',
-  components: {
-    AppUserMsgBlock: () => import('@/core/components/AppUserMsgBlock')
-  },
   mixins: [handlerAnalytics],
   props: {
     isWallet: { type: Boolean, default: true },
     /** Set this prop to pass specific networks to be displayed */
     filterTypes: { type: Array, default: () => [] },
     /** Set this prop to false if device does not support networks */
-    hasNetworks: { type: Boolean, default: true },
-    isSwapPage: {
-      type: Boolean,
-      default: false
-    }
+    hasNetworks: { type: Boolean, default: true }
   },
   data() {
     return {
@@ -130,7 +130,11 @@ export default {
   computed: {
     ...mapGetters('global', ['network']),
     ...mapState('global', ['validNetwork']),
+    ...mapState('external', ['selectedEIP6963Provider']),
     ...mapState('wallet', ['identifier', 'instance', 'isOfflineApp']),
+    shouldFilter() {
+      return this.$route.name === 'Swap' || this.$route.name === 'NFTManager';
+    },
     /**
      * Property returns sorted network names alphabetically in this order: ETH, main and then test networks
      * @returns {string[]}
@@ -164,12 +168,23 @@ export default {
       this.typeNames.forEach(item => {
         allNetworks.push(types[item]);
       });
-      if (this.isSwapPage) {
+      if (this.shouldFilter || this.identifier === WALLET_TYPES.MEW_WALLET) {
         allNetworks = allNetworks.filter(
           item =>
             item.name === types.ETH.name ||
             item.name === types.BSC.name ||
-            item.name === types.MATIC.name
+            item.name === types.POL.name ||
+            item.name === types.ROOTSTOCK.name ||
+            item.name === types.ETC.name ||
+            item.name === types.XDC.name ||
+            item.name === types.MOONBEAM.name ||
+            item.name === types.MOONRIVER.name ||
+            item.name === types.AURORA.name ||
+            item.name === types.ARB.name ||
+            item.name === types.FTM.name ||
+            item.name === types.GNO.name ||
+            item.name === types.OP.name ||
+            item.name === types.COTI.name
         );
       }
       if (this.searchInput && this.searchInput !== '') {
@@ -201,9 +216,10 @@ export default {
      * @returns {object}
      */
     emptySearchMes() {
-      if (this.isSwapPage && this.typeNames.length === 0) {
+      const msgTitle = this.$route.name === 'Swap' ? 'Swap' : 'NFT Manager';
+      if (this.shouldFilter && this.typeNames.length === 0) {
         return {
-          title: 'Swap is not supported on your device',
+          title: `${msgTitle} is not supported on your device`,
           subtitle: ''
         };
       }
@@ -214,18 +230,26 @@ export default {
         };
       }
       return {
-        title: this.isSwapPage
-          ? 'Swap is only available on these networks'
+        title: this.shouldFilter
+          ? `${msgTitle} is only available on these networks`
           : '',
-        subtitle: this.isSwapPage
+        subtitle: this.shouldFilter
           ? 'Select different feature to see all networks.'
           : 'We do not have a network with this name.'
       };
     }
   },
   watch: {
+    network: {
+      handler: function (newVal, oldVal) {
+        if (newVal.type.name !== oldVal.type.name) {
+          this.networkSelected = newVal.type.name;
+        }
+      },
+      deep: true
+    },
     networkSelected(value) {
-      if (value && (value !== this.network.type.name || !this.validNetwork)) {
+      if (!!value && (value !== this.network.type.name || !this.validNetwork)) {
         this.networkLoading = true;
         this.setNetworkDebounced(value);
       }
@@ -243,17 +267,7 @@ export default {
       }
     },
     validNetwork(val) {
-      if (!val) this.networkSelected = null;
-      else this.networkSelected = this.network.type.name;
-    },
-    async network() {
-      this.networkLoading = true;
-      const matched = await matchNetwork(
-        this.network.type.chainID,
-        this.identifier
-      );
-      if (matched) this.networkSelected = this.network.type.name;
-      this.networkLoading = false;
+      this.networkSelected = val ? this.network.type.name : null;
     },
     /**
      * Set networkSelected on toggle change, if network is in the list
@@ -277,7 +291,8 @@ export default {
   },
   methods: {
     ...mapActions('wallet', ['setWeb3Instance']),
-    ...mapActions('global', ['setNetwork']),
+    ...mapActions('global', ['setNetwork', 'setValidNetwork']),
+    ...mapActions('external', ['setTokenAndEthBalance']),
     /**
      * Method checks whether symbol or name has searchInput substring
      * @returns {boolean}
@@ -307,28 +322,32 @@ export default {
           return item;
         }
       });
+      this.setValidNetwork(true);
       this.setNetwork({
         network: found[0],
         walletType: this.instance?.identifier || ''
       })
         .then(() => {
+          this.networkLoading = false;
           if (this.isWallet) {
             this.networkSelected = this.validNetwork
               ? this.network.type.name
               : '';
-            this.networkLoading = false;
             const setNetworkCall =
               this.identifier === WALLET_TYPES.WEB3_WALLET
-                ? this.setWeb3Instance(window.ethereum)
+                ? this.setWeb3Instance(this.selectedEIP6963Provider)
                 : this.setWeb3Instance();
             setNetworkCall.then(() => {
               Toast(`Switched network to: ${found[0].type.name}`, {}, SUCCESS);
-              this.trackNetworkSwitch(found[0].type.name);
+              this.setTokenAndEthBalance();
               this.$emit('newNetwork');
             });
+          } else {
+            this.setWeb3Instance();
           }
         })
         .catch(e => {
+          this.setValidNetwork(false);
           this.networkSelected = this.validNetwork
             ? this.network.type.name
             : '';
@@ -350,6 +369,13 @@ export default {
 
 <style lang="scss" scoped>
 $borderNetwork: 1px solid #ececec;
+
+.network-container {
+  max-height: 500px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
 .network-border {
   border-bottom: $borderNetwork;
   border-right: $borderNetwork;
@@ -368,5 +394,12 @@ $borderNetwork: 1px solid #ececec;
 .mint-me-color {
   filter: brightness(0) saturate(100%) invert(90%) sepia(3%) saturate(5171%)
     hue-rotate(348deg) brightness(92%) contrast(63%);
+}
+
+.network-long-name {
+  max-width: 90px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>
