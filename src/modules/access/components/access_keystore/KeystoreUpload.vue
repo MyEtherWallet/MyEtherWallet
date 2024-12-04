@@ -34,10 +34,14 @@ const clickUpload = () => {
 }
 
 const uploadKeystoreFile = (e: Event) => {
-  uploadKeystore(e)
-  if (jsonInput.value) {
-    jsonInput.value.value = '' // clear file input
+  try {
+    uploadKeystore(e)
+    if (jsonInput.value) {
+      jsonInput.value.value = '' // clear file input
+    }
+    router.push({ name: ROUTES_HOME.ACCESS_KEYSTORE_PASSWORD.NAME })
+  } catch (error) {
+    console.error('Keystore upload failed:', error)
   }
-  router.push({ name: ROUTES_HOME.ACCESS_KEYSTORE_PASSWORD.NAME })
 }
 </script>

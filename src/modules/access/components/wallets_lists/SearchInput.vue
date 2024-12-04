@@ -7,6 +7,7 @@
       class="grow bg-white border-1 border-white focus:border-primary text-sm rounded-[20px] h-[58px] w-full px-5 py-[14px] text-xl transition-all"
       :placeholder="$t('access_wallet.search_wallet')"
       required
+      aria-label="Search wallets"
       @focus="inFocusInput = true"
       @blur="inFocusInput = false"
       @input="searchWallet"

@@ -23,7 +23,7 @@ const getLocales = (locales: Record<string, ModuleImportInterface>) => {
     messages[lang] = Object.keys(locales)
       .filter(path => path.includes(`/${lang}.json`))
       .reduce((localisedStrings, path) => {
-        return { ...localisedStrings, ...locales[path].default };
+        return Object.assign(localisedStrings, locales[path].default);
       }, {});
     return messages;
   }, {} as MessagesSchema);
@@ -31,3 +31,4 @@ const getLocales = (locales: Record<string, ModuleImportInterface>) => {
 
 const messages = getLocales(locales as Record<string, ModuleImportInterface>)
 export default messages;
+

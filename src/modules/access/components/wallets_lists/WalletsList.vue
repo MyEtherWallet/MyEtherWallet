@@ -1,17 +1,21 @@
 <template>
   <div>
-    <p class="title5 mb-5">All Wallet Options</p>
+    <h1 class="title5 mb-5">All Wallet Options</h1>
     <!-- Filter -->
-    <div class="flex gap-4 mb-5 flex-wrap">
+    <nav
+      class="flex gap-4 mb-5 flex-wrap"
+      role="navigation"
+      aria-label="Wallet filters"
+    >
       <button
         v-for="filter in filterOptions"
         :key="filter.value"
-        @click="clickFilter(filter.value)"
+        @click="clickFilter(filter)"
         class="bg-primary text-white text-center rounded-full py-1 px-4 min-w-[100px]"
       >
         {{ filter.name }}
       </button>
-    </div>
+    </nav>
     <!-- Search -->
     <div class="mb-5 max-w-[600px]">
       <SearchInput @search="searchWallet" />
@@ -19,17 +23,21 @@
     <!-- Wallets-->
     <div
       class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"
+      role="grid"
     >
       <div
         v-for="wallet in displayWallets"
         :key="wallet.id"
         class="flex flex-col items-center bg-white p-4 rounded-lg hoverOpacityHasBG cursor-pointer"
         @click="clickWallet(wallet)"
+        @keyup.enter="clickWallet(wallet)"
+        role="gridcell"
       >
         <AsyncImg
           :asyncImg="wallet.iconUrl"
           :alt="wallet.name"
           class="rounded-lg"
+          aria-hidden="true"
         />
         <p class="text-info pt-2">{{ wallet.name }}</p>
       </div>
@@ -46,6 +54,7 @@ import IconKeystore from '@/assets/icons/software_wallets/icon-keystore-file.svg
 import IconMnemonic from '@/assets/icons/software_wallets/icon-mnemonic.svg'
 import IconPrivateKey from '@/assets/icons/software_wallets/icon-private-key-grey.png'
 import { useRouter } from 'vue-router'
+import { ref } from 'vue'
 /** -------------------
  *  Rainbow Wallets
  * -------------------*/
@@ -63,7 +72,7 @@ const walletRecords = rainndowWallets as unknown as Record<
 >
 
 for (const key in walletRecords) {
-  if (Object.hasOwnProperty.call(walletRecords, key)) {
+  if (Object.prototype.hasOwnProperty.call(walletRecords, key)) {
     const _walletInstance = walletRecords[key]
     const _wallet = _walletInstance({ projectId: WC_PROJECT_ID })
     if (DEFAULT_IDS.includes(_wallet.id)) {
@@ -129,8 +138,11 @@ const filterOptions: Filter[] = [
   { name: 'Mobile', value: 'mobile' },
 ]
 
-const clickFilter = (value: string) => {
-  console.log('clickFilter', value)
+const activeFilter = ref<Filter>(filterOptions[0])
+
+const clickFilter = (_value: Filter) => {
+  console.log('clickFilter', _value)
+  activeFilter.value = _value
 }
 
 const searchWallet = (payload: string) => {
