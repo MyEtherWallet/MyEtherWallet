@@ -17,12 +17,11 @@
       <SearchInput @search="searchWallet" />
     </div>
     <!-- Wallets-->
-    <RouterLink to="/access/keystore">Keystore</RouterLink>
     <div
       class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"
     >
       <div
-        v-for="wallet in wallets"
+        v-for="wallet in displayWallets"
         :key="wallet.id"
         class="flex flex-col items-center bg-white p-4 rounded-lg hoverOpacityHasBG cursor-pointer"
         @click="clickWallet(wallet)"
@@ -39,30 +38,34 @@
 </template>
 <script setup lang="ts">
 import * as rainndowWallets from '@rainbow-me/rainbowkit/wallets'
-import AsyncImg from './components/AsyncImg.vue'
-import {
-  CreateWalletFn,
-  Wallet,
-} from '@rainbow-me/rainbowkit/types/wallets/wallet'
-import SearchInput from './components/SearchInput.vue'
-
+import type { Wallet } from '@rainbow-me/rainbowkit'
+import AsyncImg from './AsyncImg.vue'
+import SearchInput from './SearchInput.vue'
+import { ROUTES_HOME } from '@/router/routeNames'
+import IconKeystore from '@/assets/icons/software_wallets/icon-keystore-file.svg'
+import IconMnemonic from '@/assets/icons/software_wallets/icon-mnemonic.svg'
+import IconPrivateKey from '@/assets/icons/software_wallets/icon-private-key-grey.png'
+import { useRouter } from 'vue-router'
+/** -------------------
+ *  Rainbow Wallets
+ * -------------------*/
 const WC_PROJECT_ID = import.meta.env.VITE_WALLET_CONNECT_PROJECT_ID
-/**
- * Iterates over all properties in the `allWallets` object, which is expected to have keys of type `string` and values of type `Wallet`.
- * Logs each key-value pair to the console.
- *
- * @param {Object.<string, Wallet>} allWallets - An object containing wallet information where each key is a string and each value is of type `Wallet`.
- */
+
 const DEFAULT_IDS = ['enkrypt', 'mew']
-const wallets: CreateWalletFn[] = []
+const wallets: Wallet[] = []
+interface RainbowWalletOptions {
+  projectId: string
+}
+type CreateWalletFn = (config: { projectId: RainbowWalletOptions }) => Wallet
 const walletRecords = rainndowWallets as unknown as Record<
   string,
   CreateWalletFn
 >
+
 for (const key in walletRecords) {
   if (Object.hasOwnProperty.call(walletRecords, key)) {
     const _walletInstance = walletRecords[key]
-    const _wallet = _walletInstance({ projectId: WC_PROJECT_ID }, null)
+    const _wallet = _walletInstance({ projectId: WC_PROJECT_ID })
     if (DEFAULT_IDS.includes(_wallet.id)) {
       wallets.unshift(_wallet)
     } else {
@@ -70,8 +73,47 @@ for (const key in walletRecords) {
     }
   }
 }
-const clickWallet = (wallet: Wallet) => {
-  console.log('clickWallet', wallet)
+/** -------------------
+ *  Core Wallets
+ * -------------------*/
+interface CoreWallet {
+  id: string
+  name: string
+  iconUrl: string
+  routeName?: string
+}
+
+const softwareWallets: CoreWallet[] = [
+  {
+    id: 'keystore',
+    name: 'Keystore',
+    iconUrl: IconKeystore,
+    routeName: ROUTES_HOME.ACCESS_KEYSTORE.NAME,
+  },
+  {
+    id: 'mnemonic',
+    name: 'Mnemonic phrase',
+    iconUrl: IconMnemonic,
+    routeName: ROUTES_HOME.ACCESS_MNEMONIC.NAME,
+  },
+  {
+    id: 'privatekey',
+    name: 'Private Key',
+    iconUrl: IconPrivateKey,
+    routeName: ROUTES_HOME.ACCESS_PRIVATE_KEY.NAME,
+  },
+]
+
+const displayWallets = [...softwareWallets, ...wallets]
+
+/** -------------------
+ *  Click Wallet
+ * -------------------*/
+const router = useRouter()
+const clickWallet = (wallet: Wallet | CoreWallet) => {
+  if ('routeName' in wallet && wallet.routeName) {
+    router.push({ name: wallet.routeName })
+  }
 }
 
 /** -------------------

@@ -22,7 +22,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import AsyncImg from './components/AsyncImg.vue'
+import AsyncImg from './AsyncImg.vue'
 import ImgMewWallet from '@assets/images/mewwallet/icon-mew-wallet.png'
 import ImgEnkrypt from '@assets/images/enkrypt/icon-enkrypt.svg'
 interface Wallet {

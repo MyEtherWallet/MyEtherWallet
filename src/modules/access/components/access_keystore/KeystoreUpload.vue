@@ -1,6 +1,11 @@
 <template>
-  <main>
-    <button @click="clickUpload">Upload Keystore</button>
+  <div>
+    <button
+      @click="clickUpload"
+      class="mt-10 bg-primary p-2 rounded-full text-white"
+    >
+      Upload Keystore
+    </button>
     <input
       ref="jsonInput"
       type="file"
@@ -8,28 +13,31 @@
       style="display: none"
       @change="uploadKeystoreFile"
     />
-  </main>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAccessWalletKeystore } from '@/stores/access_wallet_keystore'
-
-const jsonInput = ref(null)
+import { ROUTES_HOME } from '@/router/routeNames'
+const jsonInput = ref<HTMLInputElement | null>(null)
 const router = useRouter()
 
 const store = useAccessWalletKeystore()
 const { uploadKeystore } = store
 
 const clickUpload = () => {
+  if (!jsonInput.value) return
   jsonInput.value.value = ''
   jsonInput.value.click()
 }
 
 const uploadKeystoreFile = (e: Event) => {
   uploadKeystore(e)
-  jsonInput.value.value = '' // clear file input
-  router.push('/access/keystore/password')
+  if (jsonInput.value) {
+    jsonInput.value.value = '' // clear file input
+  }
+  router.push({ name: ROUTES_HOME.ACCESS_KEYSTORE_PASSWORD.NAME })
 }
 </script>
