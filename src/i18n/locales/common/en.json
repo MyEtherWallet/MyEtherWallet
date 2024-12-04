@@ -1,0 +1,7 @@
+{
+    "common":{
+        "network": "network",
+        "close": "close",
+        "clear_icon": "clear input"
+    }
+}

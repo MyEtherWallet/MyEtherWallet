@@ -1,17 +1,11 @@
 import { createI18n } from 'vue-i18n'
+import messages, { type MessagesSchema } from './locales'
 
-const messages = {
-  en: {
-    message: {
-      hello: 'hello world'
-    }
-  },
-}
 const i18n = createI18n({
   locale: 'en',
   fallbackLocale: 'en',
   legacy: false,
-  messages
+  messages: messages as MessagesSchema
 })
 
 export default i18n
