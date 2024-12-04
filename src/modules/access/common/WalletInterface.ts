@@ -1,10 +1,8 @@
 import {
-  getBufferFromHex,
   getSignTransactionObject,
   calculateChainIdFromV,
   eip1559Params,
   commonGenerator,
-  bufferToHex,
 } from './helpers';
 
 import type {
@@ -21,6 +19,8 @@ import {
   isValidPrivate,
   isValidPublic,
   privateToPublic,
+  hexToBytes,
+  bytesToHex
 } from '@ethereumjs/util';
 
 import { LegacyTransaction, FeeMarketEIP1559Transaction } from '@ethereumjs/tx';
@@ -32,13 +32,13 @@ export default class WalletInterface {
   keystore: { file: EthSaleKeystore | V3Keystore | MEWKeystore | null, name: string } | null;
   identifier: string;
   isPub: boolean;
-  key: string | Buffer;
-  privateKey: Buffer | null;
-  publicKey: Uint8Array | null;
+  key: string | Uint8Array;
+  privateKey: Uint8Array | null | string;
+  publicKey: Uint8Array | null | string;
   isPubOnly: boolean;
   isAddress: boolean;
 
-  constructor(key: string | Buffer, isPub: boolean = false, identifier: string, keystore?: { file: EthSaleKeystore | V3Keystore | MEWKeystore, name: string }) {
+  constructor(key: string | Uint8Array, isPub: boolean = false, identifier: string, keystore?: { file: EthSaleKeystore | V3Keystore | MEWKeystore, name: string }) {
     this.keystore = keystore ? keystore : null;
     this.identifier = identifier;
     this.isPub = isPub;
@@ -50,22 +50,22 @@ export default class WalletInterface {
     this.isAddress = false;
 
     if (!isPub) {
-      const _privateKey = Buffer.isBuffer(key) ? key : getBufferFromHex(key);
+      const _privateKey = ArrayBuffer.isView(key) ? key : hexToBytes(key as string);
       try {
-        if (_privateKey.length !== 32 || !isValidPrivate(_privateKey)) {
+        if (_privateKey.length !== 32 || !isValidPrivate(_privateKey as Uint8Array)) {
           throw new Error('Private key does not satisfy the curve requirements (ie. it is invalid)');
         }
       } catch (e) {
         throw e;
       }
       this.privateKey = _privateKey;
-      this.publicKey = privateToPublic(this.privateKey);
+      this.publicKey = privateToPublic(this.privateKey as Uint8Array);
       this.isPubOnly = false
     } else {
-      const _publicKey = Buffer.isBuffer(key) ? key : getBufferFromHex(key);
+      const _publicKey = ArrayBuffer.isView(key) ? key : hexToBytes(key as string);
       if (_publicKey.length !== 20) {
         try {
-          if (!isValidPublic(_publicKey, true)) throw new Error('Invalid public key');
+          if (!isValidPublic(_publicKey as Uint8Array, true)) throw new Error('Invalid public key');
         } catch {
           throw new Error('Invalid public key');
         }
@@ -85,7 +85,7 @@ export default class WalletInterface {
 
   getPrivateKeyString() {
     if (this.isPubOnly) throw new Error('This is a public key only wallet');
-    return bufferToHex(this.getPrivateKey() as Buffer);
+    return bytesToHex(this.getPrivateKey() as Uint8Array);
   }
 
   getKeystore() {
@@ -98,16 +98,17 @@ export default class WalletInterface {
   }
 
   getPublicKeyString() {
-    return bufferToHex(this.getPublicKey() as Buffer);
+    return bytesToHex(this.getPublicKey() as Uint8Array);
   }
 
   getAddress() {
     if (this.isAddress) return this.publicKey;
-    return publicToAddress(this.publicKey as Buffer, true);
+    return publicToAddress(this.publicKey as Uint8Array, true);
   }
 
   getAddressString() {
-    return bufferToHex(this.getAddress() as Buffer);
+    const address = this.getAddress();
+    return bytesToHex(address as Uint8Array);
   }
 
   getChecksumAddressString() {
