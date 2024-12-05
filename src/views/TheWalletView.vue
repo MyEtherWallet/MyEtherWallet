@@ -289,6 +289,8 @@ export default {
       this.showPaperWallet = false;
     },
     setup() {
+      clearInterval(this.manualBlockSubscription);
+      this.web3.eth.clearSubscriptions();
       this.processNetworkTokens();
       this.subscribeToBlockNumber();
     },
@@ -324,7 +326,6 @@ export default {
       this.updateGasPrice();
     },
     subscribeToBlockNumber: debounce(function () {
-      clearInterval(this.manualBlockSubscription);
       this.web3.eth.getBlockNumber().then(bNumber => {
         this.setBlockNumber(bNumber);
         this.web3.eth.getBlock(bNumber).then(block => {
