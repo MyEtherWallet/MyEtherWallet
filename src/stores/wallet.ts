@@ -56,7 +56,7 @@ type WalletState = {
 }
 
 const defaultState: WalletState = {
-  test: true
+  test: true,
   // v6 default wallet state:
   // localStore: false,
   // address: null,
@@ -110,7 +110,7 @@ export const useWalletStore = defineStore('wallet', (): WalletStore => {
   const state = reactive(defaultState)
 
   const store: WalletStore = {
-    test: state.test
+    test: state.test,
     // v6 store implementation:
     // // Getters
     // balanceInETH: computed(() => {

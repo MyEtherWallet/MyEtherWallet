@@ -7,8 +7,8 @@
   "exclude": [],
   "compilerOptions": {
     // Project
-    "composite": true,                                                    // https://www.typescriptlang.org/tsconfig/#composite
-    "incremental": true,                                                  // https://www.typescriptlang.org/tsconfig/#incremental
+    "composite": true, // https://www.typescriptlang.org/tsconfig/#composite
+    "incremental": true, // https://www.typescriptlang.org/tsconfig/#incremental
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.vitest.tsbuildinfo", // https://www.typescriptlang.org/tsconfig/#tsBuildInfoFile
 
     // Language & Environment

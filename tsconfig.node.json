@@ -14,39 +14,42 @@
   ],
   "compilerOptions": {
     // Project
-    "composite": true,                                                  // https://www.typescriptlang.org/tsconfig/#composite
-    "incremental": true,                                                // https://www.typescriptlang.org/tsconfig/#incremental
+    "composite": true, // https://www.typescriptlang.org/tsconfig/#composite
+    "incremental": true, // https://www.typescriptlang.org/tsconfig/#incremental
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo", // https://www.typescriptlang.org/tsconfig/#tsBuildInfoFile
 
     // Language & Environment
-    "target": "ES2023",                 // https://www.typescriptlang.org/tsconfig/#target
-    "moduleDetection": "force",         // https://www.typescriptlang.org/tsconfig/#moduleDetection
-    "useDefineForClassFields": true,    // https://www.typescriptlang.org/tsconfig/#useDefineForClassFields
+    "target": "ES2023", // https://www.typescriptlang.org/tsconfig/#target
+    "moduleDetection": "force", // https://www.typescriptlang.org/tsconfig/#moduleDetection
+    "useDefineForClassFields": true, // https://www.typescriptlang.org/tsconfig/#useDefineForClassFields
 
     // Module
-    "module": "ESNext",                   // https://www.typescriptlang.org/tsconfig/#module
+    "module": "ESNext", // https://www.typescriptlang.org/tsconfig/#module
     // The node-typescript runner will handle module resolution
-    "moduleResolution": "Bundler",        // https://www.typescriptlang.org/tsconfig/#moduleResolution
+    "moduleResolution": "Bundler", // https://www.typescriptlang.org/tsconfig/#moduleResolution
     "noUncheckedSideEffectImports": true, // https://www.typescriptlang.org/tsconfig/#noUncheckedSideEffectImports
 
     // Emit
-    "noEmit": true,   // https://www.typescriptlang.org/tsconfig/#noEmit
+    "noEmit": true, // https://www.typescriptlang.org/tsconfig/#noEmit
 
     // Type checking
-    "noImplicitThis": true,              // https://www.typescriptlang.org/tsconfig/#noImplicitThis
-    "strict": true,                      // https://www.typescriptlang.org/tsconfig/#strict
-    "alwaysStrict": true,                // https://www.typescriptlang.org/tsconfig/#alwaysStrict
-    "noFallthroughCasesInSwitch": true,  // https://www.typescriptlang.org/tsconfig/#noFallthroughCasesInSwitch
-    "noImplicitOverride": true,          // https://www.typescriptlang.org/tsconfig/#noImplicitOverride
-    "useUnknownInCatchVariables": true,  // https://www.typescriptlang.org/tsconfig/#useUnknownInCatchVariables
+    "noImplicitThis": true, // https://www.typescriptlang.org/tsconfig/#noImplicitThis
+    "strict": true, // https://www.typescriptlang.org/tsconfig/#strict
+    "alwaysStrict": true, // https://www.typescriptlang.org/tsconfig/#alwaysStrict
+    "noFallthroughCasesInSwitch": true, // https://www.typescriptlang.org/tsconfig/#noFallthroughCasesInSwitch
+    "noImplicitOverride": true, // https://www.typescriptlang.org/tsconfig/#noImplicitOverride
+    "useUnknownInCatchVariables": true, // https://www.typescriptlang.org/tsconfig/#useUnknownInCatchVariables
 
     // Interop constraints
-    "verbatimModuleSyntax": true,             // https://www.typescriptlang.org/tsconfig/#verbatimModuleSyntax
-    "esModuleInterop": true,                  // https://www.typescriptlang.org/tsconfig/#esModuleInterop
+    "verbatimModuleSyntax": true, // https://www.typescriptlang.org/tsconfig/#verbatimModuleSyntax
+    "esModuleInterop": true, // https://www.typescriptlang.org/tsconfig/#esModuleInterop
     "forceConsistentCasingInFileNames": true, // https://www.typescriptlang.org/tsconfig/#forceConsistentCasingInFileNames
-    "allowSyntheticDefaultImports": true,     // https://www.typescriptlang.org/tsconfig/#allowSyntheticDefaultImports
+    "allowSyntheticDefaultImports": true, // https://www.typescriptlang.org/tsconfig/#allowSyntheticDefaultImports
 
     // Completeness
-    "skipLibCheck": true,  // https://www.typescriptlang.org/tsconfig/#skipLibCheck
+    "skipLibCheck": true, // https://www.typescriptlang.org/tsconfig/#skipLibCheck
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   }
 }

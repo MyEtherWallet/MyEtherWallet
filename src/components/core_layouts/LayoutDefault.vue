@@ -1,24 +1,39 @@
 <template>
   <div ref="appBodyRef" :class="[coreBackground]">
-    <MewHeader :use-i18n="useI18n" bg-visible :amplitude="analytics.amplitude" :link-component="RouterLink"
-      :user-consent="popupStore.consent" :curr-project="CURR_PROJECT" @update:consent="handleSetConsent">
+    <MewHeader
+      :use-i18n="useI18n"
+      bg-visible
+      :amplitude="analytics.amplitude"
+      :link-component="RouterLink"
+      :user-consent="popupStore.consent"
+      :curr-project="CURR_PROJECT"
+      @update:consent="handleSetConsent"
+    >
       <!-- <template #lang-switch-mobile>
         <AppChangeLocale />
       </template> -->
     </MewHeader>
-    <div :class="[
-      'absolute top-0 inset-x-0 flex justify-center overflow-hidden',
-      background,
-    ]"></div>
+    <div
+      :class="[
+        'absolute top-0 inset-x-0 flex justify-center overflow-hidden',
+        background,
+      ]"
+    ></div>
     <!-- <main> -->
     <main :class="['max-w-[1392px] px-5 md-header:px-10 mx-auto']">
       <div class="pt-16 mt-10">
         <router-view />
       </div>
     </main>
-    <MewFooter :use-i18n="useI18n" :amplitude="analytics.amplitude" :link-component="RouterLink"
-      :package-version="packageVersion" :user-consent="popupStore.consent" :curr-project="CURR_PROJECT"
-      @update:consent="handleSetConsent">
+    <MewFooter
+      :use-i18n="useI18n"
+      :amplitude="analytics.amplitude"
+      :link-component="RouterLink"
+      :package-version="packageVersion"
+      :user-consent="popupStore.consent"
+      :curr-project="CURR_PROJECT"
+      @update:consent="handleSetConsent"
+    >
       <!-- <template #lang-switch-footer>
         <AppChangeLocale class="mt-5" />
       </template> -->

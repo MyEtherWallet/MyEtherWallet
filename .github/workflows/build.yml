@@ -1,0 +1,74 @@
+name: Build all and Check VirusTotal
+
+on: [pull_request]
+
+jobs:
+  buildAll:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Comment Building
+        uses: thollander/actions-comment-pull-request@v3
+        with:
+          message: |
+            :monkey: Monkeys are building your code...
+          comment-tag: pr_build_message
+          mode: upsert
+
+      - name: setup env
+        id: node-version
+        run: |
+          docker build -t mew-build-container .
+          echo "NODE_VERSION=$(docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "node --version")" >> $GITHUB_OUTPUT
+          echo "PNPM_VERSION=$(docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "pnpm --version")" >> $GITHUB_OUTPUT
+
+      - name: Get pnpm cache directory path
+        id: pnpm-cache-dir-path
+        run: echo "dir=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - name: Cache pnpm modules
+        uses: actions/cache@v4
+        id: pnpm-cache
+        with:
+          path: ${{ steps.pnpm-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
+      - name: pnpm install
+        run: docker run --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" enkrypt-build-container /bin/bash -c "pnpm install --silent"
+
+      - name: build
+        env:
+          VIRUS_TOTAL_API_KEY: ${{secrets.VIRUS_TOTAL_API_KEY}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        run: |
+          docker run --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" mew-build-container /bin/bash -c "pnpm build && pnpm zip"
+          FILE_SHA256=`sha256sum  ./dist/release.zip | awk '{print $1}'`
+          curl --request GET --url https://www.virustotal.com/api/v3/files/upload_url --header "x-apikey: $VIRUS_TOTAL_API_KEY"
+          UPLOAD_URL=`curl --request GET --url https://www.virustotal.com/api/v3/files/upload_url --header "x-apikey: $VIRUS_TOTAL_API_KEY" | jq --raw-output '.data'`
+          curl --request POST --url "$UPLOAD_URL" --header "x-apikey: $VIRUS_TOTAL_API_KEY" --header 'Accept: application/json' --header 'Content-Type: multipart/form-data' -F "file=@./dist/release.zip"
+          rm -rf ./dist/release.zip
+          VIRUS_TOTAL_URL=https://www.virustotal.com/gui/file/$FILE_SHA256
+          echo "VIRUS_TOTAL_URL=$VIRUS_TOTAL_URL" >> $GITHUB_ENV
+          echo "SHORT_SHA=`echo $(cat $GITHUB_EVENT_PATH | jq -r .pull_request.head.sha) | cut -c1-8`" >> $GITHUB_ENV
+
+      - uses: actions/upload-artifact@v4
+        id: artifact-upload
+        with:
+          name: mew-web-${{ env.SHORT_SHA }}
+          path: ./dist
+          retention-days: 3
+
+      - name: Comment PR
+        uses: thollander/actions-comment-pull-request@v3
+        with:
+          message: |
+            :briefcase: Build Files
+            web:   [mew-web-${{ env.SHORT_SHA }}.zip](${{ steps.artifact-upload.outputs.artifact-url }})
+
+            :syringe: Virus total analysis
+            web:   [${{ env.SHORT_SHA }}](${{ env.VIRUS_TOTAL_URL }})
+          comment-tag: pr_build_message
+          mode: upsert
