@@ -37,7 +37,7 @@ jobs:
             ${{ runner.os }}-pnpm-
 
       - name: pnpm install
-        run: docker run --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" enkrypt-build-container /bin/bash -c "pnpm install --silent"
+        run: docker run --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" mew-build-container /bin/bash -c "pnpm install --silent"
 
       - name: build
         env:
