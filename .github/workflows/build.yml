@@ -25,7 +25,7 @@ jobs:
 
       - name: Get pnpm cache directory path
         id: pnpm-cache-dir-path
-        run: echo "dir=$(pnpm store path)" >> $GITHUB_OUTPUT
+        run: echo "dir=$(docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "pnpm store path")" >> $GITHUB_OUTPUT
 
       - name: Cache pnpm modules
         uses: actions/cache@v4
