@@ -104,7 +104,7 @@
         <span
           :class="noCapitalize ? '' : 'text-capitalize'"
           class="mt-1 ml-2 basic--text"
-          >{{ item.name ? item.name : item }}
+          >{{ item.name ? item.name : item | concatStr }}
           <span
             v-if="item.subtext"
             :class="noCapitalize ? '' : 'text-capitalize'"
@@ -133,7 +133,7 @@
         class="d-flex align-center justify-center"
       >
         <span :class="noCapitalize ? '' : 'text-capitalize'" class="ml-2 mt-1"
-          >{{ data.item.name ? data.item.name : data.item }}
+          >{{ data.item.name ? data.item.name : data.item | concatStr }}
           <span
             v-if="data.item.subtext"
             :class="noCapitalize ? '' : 'text-capitalize'"
@@ -216,6 +216,14 @@ import { debounce } from 'lodash';
 
 export default {
   name: 'MewSelect',
+  filters: {
+    concatStr(val) {
+      const newVal = `${val}`;
+      // should probably be moved globablly
+      if (newVal.length < 20) return newVal;
+      return `${newVal.substr(0, 7)}...`;
+    }
+  },
   components: {
     MewTokenContainer
   },
