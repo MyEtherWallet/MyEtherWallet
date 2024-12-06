@@ -16,7 +16,7 @@ const unicodeLiteral = str => {
   return result;
 };
 export const getRTLOLTLOSafeString = str => {
-  const isrtloltlo = /[\u202E\u200F]/.test(str) || /[\u202D\u200E]/.test(str);
-  if (isrtloltlo) return unicodeLiteral(str);
+  const dangerous = /[\u202A-\u202E\u2066-\u2069\u200E\u200F\u061C]/.test(str);
+  if (dangerous) return unicodeLiteral(str);
   return str;
 };
