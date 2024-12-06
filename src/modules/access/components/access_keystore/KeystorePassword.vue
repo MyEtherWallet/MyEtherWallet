@@ -25,8 +25,11 @@ import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 import { useAccessWalletKeystore } from '@/stores/access_wallet_keystore'
 import { useWalletStore } from '@/stores/wallet_store'
-import { unlockKeystore, type V3Keystore } from '../../common/helpers'
-import WalletInterface from '../../common/WalletInterface'
+import {
+  unlockKeystore,
+  type V3Keystore,
+} from '@/modules/access/common/helpers'
+import WalletInterface from '@/modules/access/common/WalletInterface'
 import { ROUTES_WALLET } from '@/router/routeNames'
 
 const accessWalletStore = useAccessWalletKeystore()
@@ -49,7 +52,7 @@ const enterPassword = async () => {
       Buffer.from(res.getPrivateKey()),
       false,
       'keystore',
-      { file: keystore.value, name: res.getV3Filename() },
+      { file: keystore.value!, name: res.getV3Filename() },
     )
     resetKeystore()
     setWallet(wallet)

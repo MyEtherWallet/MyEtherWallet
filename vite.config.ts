@@ -7,11 +7,36 @@ import { nodePolyfills } from 'vite-plugin-node-polyfills'
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [vue(), nightwatchPlugin(), vueDevTools(), nodePolyfills()],
+  plugins: [
+    vue(),
+    nightwatchPlugin(),
+    vueDevTools(),
+    nodePolyfills({
+      include: [
+        'crypto',
+        'buffer',
+        'util',
+        'stream',
+        'url',
+        'http',
+        'https',
+        'path',
+      ],
+      protocolImports: true,
+    }),
+  ],
   build: {
     rollupOptions: {
-      input: './index.html',
+      onwarn(warning, warn) {
+        if (warning.code === 'MODULE_LEVEL_DIRECTIVE') {
+          return
+        }
+        warn(warning)
+      },
     },
+  },
+  optimizeDeps: {
+    include: ['vue', '@vueuse/core', 'crypto'],
   },
   resolve: {
     alias: {
@@ -27,6 +52,6 @@ export default defineConfig({
       ),
       '@assets': fileURLToPath(new URL('./src/assets', import.meta.url)),
       '@modules': fileURLToPath(new URL('./src/modules', import.meta.url)),
-    }
-  }
+    },
+  },
 })
