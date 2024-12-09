@@ -23,7 +23,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useWalletStore } from '@/stores/wallet_store'
+import { useWalletStore } from '@/stores/walletStore'
 
 const walletStore = useWalletStore()
 const { wallet } = storeToRefs(walletStore)

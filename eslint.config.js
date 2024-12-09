@@ -46,7 +46,6 @@ export default [
       'check-file': checkFile,
     },
     rules: {
-      'check-file/no-index': 'error',
       'check-file/filename-naming-convention': [
         'error',
         {

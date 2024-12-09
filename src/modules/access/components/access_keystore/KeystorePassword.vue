@@ -24,12 +24,12 @@ import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 import { useAccessWalletKeystore } from '@/stores/accessWalletKeystore'
-import { useWalletStore } from '@/stores/wallet_store'
+import { useWalletStore } from '@/stores/walletStore'
 import {
   unlockKeystore,
   type V3Keystore,
 } from '@/modules/access/common/helpers'
-import WalletInterface from '@/modules/access/common/WalletInterface'
+import WalletInterface from '@/modules/access/common/walletInterface'
 import { ROUTES_WALLET } from '@/router/routeNames'
 
 const accessWalletStore = useAccessWalletKeystore()

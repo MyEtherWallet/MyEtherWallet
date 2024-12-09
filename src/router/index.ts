@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import DefaultRoutes from './routes_default'
-import WalletRoutes from './routes_wallet'
+import DefaultRoutes from './routesDefault'
+import WalletRoutes from './routesWallet'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [...DefaultRoutes, ...WalletRoutes],
@@ -8,9 +8,8 @@ const router = createRouter({
     if (savedPosition) {
       return savedPosition
     } else {
-      return { top: 0, left: 0, behavior: 'smooth' };
+      return { top: 0, left: 0, behavior: 'smooth' }
     }
-
-  }
+  },
 })
 export default router

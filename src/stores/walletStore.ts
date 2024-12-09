@@ -1,16 +1,16 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import type WalletInterface from '@/modules/access/common/WalletInterface';
+import type WalletInterface from '@/modules/access/common/walletInterface'
 
 export const useWalletStore = defineStore('walletStore', () => {
-  const wallet = ref({});
+  const wallet = ref({})
 
   const setWallet = (newWallet: WalletInterface) => {
-    wallet.value = newWallet;
+    wallet.value = newWallet
   }
 
   const removeWallet = () => {
-    wallet.value = {};
+    wallet.value = {}
   }
 
   return { wallet, setWallet, removeWallet }
