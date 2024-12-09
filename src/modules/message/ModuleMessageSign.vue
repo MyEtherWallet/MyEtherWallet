@@ -33,7 +33,7 @@
 
 <script>
 import { mapState } from 'vuex';
-
+import { getRTLOLTLOSafeString } from '@/core/helpers/getRTLOLTLOSafeString.js';
 import SignAndVerifyMessage from '@/modules/message/handlers';
 export default {
   name: 'ModuleMessageSign',
@@ -58,7 +58,7 @@ export default {
     signMessage() {
       try {
         this.signAndVerify
-          .signMessage(this.message)
+          .signMessage(getRTLOLTLOSafeString(this.message))
           .then(() => {
             this.message = '';
           })

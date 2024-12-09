@@ -153,7 +153,7 @@ import { isEmpty } from 'lodash';
 import BigNumber from 'bignumber.js';
 import { sha3 } from 'web3-utils';
 
-import { ETH, OP, ARB, POL } from '@/utils/networks/types';
+import { ETH, OP, ARB, POL, BSC } from '@/utils/networks/types';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 
 import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
@@ -376,7 +376,11 @@ export default {
       this.buyQuote = [];
       const id = sha3(this.address)?.substring(0, 42);
       const network =
-        this.network.type.name === 'Polygon' ? 'POL' : this.network.type.name;
+        this.network.type.name === POL.name
+          ? 'POL'
+          : this.network.type.name === BSC.name
+          ? 'BSC'
+          : this.network.type.name;
       this.isFetching = true; // prevent multiple requests
       const data = await fetch(
         `https://mainnet.mewwallet.dev/v5/purchase/buy?id=${id}&address=${this.address}&fiatCurrency=${this.selectedFiat.name}&amount=${this.amount}&cryptoCurrency=${this.selectedCurrency.symbol}&chain=${network}&iso=US`
@@ -410,7 +414,8 @@ export default {
             asset.chain === ETH.name ||
             asset.chain === 'POL' ||
             asset.chain === OP.name ||
-            asset.chain === ARB.name
+            asset.chain === ARB.name ||
+            asset.chain === 'BSC'
         )
         .map(chain => {
           const assets = chain.assets.map(asset => {
@@ -434,6 +439,8 @@ export default {
               ? OP
               : chain.chain === ARB.name
               ? ARB
+              : chain.chain === 'BSC'
+              ? BSC
               : ETH;
           return Object.assign({}, chain, matchedChain, {
             img: matchedChain.icon,
