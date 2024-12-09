@@ -17,9 +17,11 @@ export const useAccessWalletKeystore = defineStore(
         const file = input.files[0]
         const reader = new FileReader()
         reader.onload = () => {
-          keystore.value = JSON.parse(reader.result as string)
+          keystore.value = JSON.parse(
+            Buffer.from(reader.result as ArrayBuffer).toString('utf8'),
+          )
         }
-        reader.readAsBinaryString(file)
+        reader.readAsArrayBuffer(file)
       }
     }
 

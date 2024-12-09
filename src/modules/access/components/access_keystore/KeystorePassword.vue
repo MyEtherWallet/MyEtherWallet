@@ -23,7 +23,7 @@
 import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
-import { useAccessWalletKeystore } from '@/stores/access_wallet_keystore'
+import { useAccessWalletKeystore } from '@/stores/accessWalletKeystore'
 import { useWalletStore } from '@/stores/wallet_store'
 import {
   unlockKeystore,

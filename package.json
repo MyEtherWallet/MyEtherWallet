@@ -55,6 +55,7 @@
     "autoprefixer": "^10.4.20",
     "chromedriver": "^131.0.1",
     "eslint": "^9.16.0",
+    "eslint-plugin-check-file": "^2.8.0",
     "eslint-plugin-vue": "^9.32.0",
     "geckodriver": "^5.0.0",
     "husky": "^9.1.7",

@@ -19,7 +19,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useAccessWalletKeystore } from '@/stores/access_wallet_keystore'
+import { useAccessWalletKeystore } from '@/stores/accessWalletKeystore'
 import { ROUTES_HOME } from '@/router/routeNames'
 const jsonInput = ref<HTMLInputElement | null>(null)
 const router = useRouter()
