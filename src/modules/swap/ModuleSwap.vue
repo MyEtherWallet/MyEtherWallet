@@ -46,7 +46,7 @@
                     amountErrorMessage === errorMsgs.amountEthIsTooLow
                       ? network.type.canBuy
                         ? 'Buy more.'
-                        : ''
+                        : null
                       : null
                   "
                   :max-btn-obj="maxBtn"
@@ -108,7 +108,7 @@
             class="mt-5"
             :message="msg.lowBalance"
           >
-            <div class="mt-3 mx-n1">
+            <div v-if="network.type.canBuy" class="mt-3 mx-n1">
               <mew-button
                 btn-size="small"
                 btn-style="outline"
