@@ -1,7 +1,5 @@
-function copyValue(value: string): Promise<void> {
-  return new Promise<void>((resolve, reject) => {
-    navigator.clipboard.writeText(value).then(resolve).catch(reject);
-  });
+async function copyValue(value: string): Promise<void> {
+  await navigator.clipboard.writeText(value)
 }
 
 export default copyValue;
